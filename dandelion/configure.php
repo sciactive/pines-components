@@ -2,7 +2,7 @@
 defined('D_RUN') or die('Direct access prohibited');
 
 class tpl_dandelion extends template {
-	var $type = 'xhtml-1.0-strict-desktop';
+	var $format = 'xhtml-1.0-strict-desktop';
 }
 
 $config->template = new tpl_dandelion;

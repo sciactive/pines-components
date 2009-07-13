@@ -56,7 +56,7 @@ class com_newsletter {
 		$page->head("editor.render();\n");
 		$page->head("</script>\n");
 
-		$module = new module('content');
+		$module = new module('com_newsletter', 'edit_mail', 'content');
 		$module->title = $heading;
 		$module->content("<div class=\"yui-skin-sam\">\n");
 		$module->content("<form enctype=\"multipart/form-data\" name=\"editingmail\" method=\"post\">\n");
@@ -95,7 +95,7 @@ class com_newsletter {
 
 		$entities = $config->entity_manager->get_entities_by_tags('com_newsletter', 'mail');
 
-		$module = new module('content');
+		$module = new module('com_newsletter', 'listmails', 'content');
 		$module->title = "Mails";
 
 		foreach($entities as $entity) {

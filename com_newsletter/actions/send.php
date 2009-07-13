@@ -6,7 +6,7 @@ if ( !gatekeeper('com_newsletter/send') ) {
 	return;
 }
 
-$com_newsletter_send = new module('content');
+$com_newsletter_send = new module('com_newsletter', 'send', 'content');
 
 function clean_header($header) {
 	return str_replace("\n", ' ', $header);

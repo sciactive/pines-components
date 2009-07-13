@@ -6,7 +6,7 @@ if ( !gatekeeper('com_newsletter/send') ) {
 	return;
 }
 
-$com_newsletter_sendprep = new module('content');
+$com_newsletter_sendprep = new module('com_newsletter', 'sendprep', 'content');
 
 if ( empty($_REQUEST['mail_id']) ) {
 	display_error('Mail ID not valid!');

@@ -20,6 +20,9 @@ body {
 	display: table;
 	margin: 0 auto;
 }
+.module {
+    margin-bottom: 10px;
+}
 /* ----------- Content Area ----------- */
 #wrapper {
 	position: relative;

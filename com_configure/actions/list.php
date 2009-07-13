@@ -6,7 +6,7 @@ if ( !gatekeeper('com_configure/list') ) {
 	return;
 }
 
-$com_configure_list = new module('content');
+$com_configure_list = new module('com_configure', 'list', 'content');
 $com_configure_list->title = 'Configuration';
 $com_configure_list->content("<table width=\"100%\">\n<caption>Config Files</caption>\n");
 $com_configure_list->content("<thead><tr><th>Component</th><th>Config File Location</th></tr></thead>\n<tbody>\n");

@@ -45,7 +45,7 @@ echo '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>'; ?>
 		?>
 	</div>
 	<?php } if ( count($page->get_error()) ) { ?>
-	<div class="notice error"><span class="close">[x] Close</span>
+	<div class="notice error"><span class="close">[X] Close</span>
 	<?php
 	$error = $page->get_error();
 	foreach ($error as $cur_item) {

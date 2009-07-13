@@ -6,7 +6,7 @@ if ( !gatekeeper() ) {
 	return;
 }
 
-$com_entity_test = new module('content');
+$com_entity_test = new module('com_entity', 'test', 'content');
 $com_entity_test->title = 'Entity Manager Tester';
 
 $com_entity_test->content("This entity manager tester will test the current entity manager for required functionality. If the entity manager does not successfully pass any part of the test, it is not considered to be a compatible entity manager. Please note that this test does not test all aspects of an entity manager, and even if it passes, it may still have bugs.<br /><br /><pre>Test is starting...");

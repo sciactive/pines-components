@@ -150,16 +150,16 @@ class com_user {
 		$entity = new entity; */
 
 		/* TODO: Remove after testing with left and right modules. */
-		$module = new module('left');
+		$module = new module('system', 'false', 'left');
 		$module->title = "Left Users";
 		$module->content("No users here ;)<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />");
 
-		$module = new module('right');
+		$module = new module('system', 'false', 'right');
 		$module->title = "Right Users";
 		$module->content("No users here ;)");
 		/* End remove. */
 
-		$module = new module('content');
+		$module = new module('com_user', 'list_users', 'content');
 		$module->title = "Users";
 
 		$menu = new menu;
@@ -227,28 +227,13 @@ class com_user {
 	}
 
 	function print_login() {
-		global $config;
-		$module = new module('content');
-		$module->content("<form name=\"login\" method=\"post\" action=\"".$config->template->url()."\">\n");
-		$module->content("<div class=\"stylized stdform\">");
-		$module->content("<h2>Login to ".$config->option_title."</h2>\n");
-		$module->content("<p>Please enter your credentials to login.</p>\n");
-		$module->content("<label>Username<input type=\"text\" name=\"username\" /></label>\n");
-		$module->content("<label>Password<span class=\"small\">".($config->com_user->empty_pw ? "May be blank." : "&nbsp;")."</span><input type=\"password\" name=\"password\" /></label>\n");
-		$module->content("<input type=\"hidden\" name=\"option\" value=\"com_user\" />\n");
-		$module->content("<input type=\"hidden\" name=\"action\" value=\"login\" />\n");
-		if ( isset($_REQUEST['url']) )
-			$module->content("<input type=\"hidden\" name=\"url\" value=\"".urlencode($_REQUEST['url'])."\" />\n");
-		$module->content("<label><input type=\"submit\" value=\"Login\" /></label>\n");
-		$module->content("<div class=\"spacer\"></div>\n");
-		$module->content("</div>\n");
-		$module->content("</form>\n");
+		$module = new module('com_user', 'login', 'content');
 	}
 
 	function print_user_form($heading, $new_action, $id = NULL) {
 		global $config, $page;
 		$page->head("<script type=\"text/javascript\" src=\"components/com_user/js/verify.js\"></script>\n");
-		$module = new module('content');
+		$module = new module('com_user', 'user_form', 'content');
 		$module->content("<form method=\"post\" id=\"user_details\" action=\"\" onsubmit=\"return verify_form('user_details');\">\n");
 		$module->content("<div class=\"stylized stdform\">");
 		$module->content("<h2>$heading</h2>\n");

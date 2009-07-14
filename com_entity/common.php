@@ -83,7 +83,6 @@ class com_entity {
 		while ($row) {
 			$entity = new entity;
 			$entity->guid = intval($row['guid']);
-			$entity->name = $row['name'];
 			$entity->parent = (is_null($row['parent']) ? NULL : intval($row['parent']));
 			$entity->tags = $return_tag_array;
 			$data = array();
@@ -162,7 +161,6 @@ class com_entity {
 			if ( $match === true ) {
 				$entity = new entity;
 				$entity->guid = intval($row['guid']);
-				$entity->name = $row['name'];
 				$entity->parent = (is_null($row['parent']) ? NULL : intval($row['parent']));
 				$entity->tags = $return_tag_array;
 				$data = array();
@@ -235,7 +233,6 @@ class com_entity {
 			if ( $match === true ) {
 				$entity = new entity;
 				$entity->guid = intval($row['guid']);
-				$entity->name = $row['name'];
 				$entity->parent = (is_null($row['parent']) ? NULL : intval($row['parent']));
 				$entity->tags = $return_tag_array;
 				$data = array();
@@ -318,7 +315,6 @@ class com_entity {
 			if ( $match === true ) {
 				$entity = new entity;
 				$entity->guid = intval($row['guid']);
-				$entity->name = $row['name'];
 				$entity->parent = (is_null($row['parent']) ? NULL : intval($row['parent']));
 				$entity->tags = $return_tag_array;
 				$data = array();
@@ -365,7 +361,6 @@ class com_entity {
 			return null;
 		}
 		$entity->guid = $guid;
-		$entity->name = $row['name'];
 		$entity->parent = (is_null($row['parent']) ? NULL : intval($row['parent']));
 		$entity->tags = unserialize($row['tags']);
 
@@ -385,9 +380,8 @@ class com_entity {
 		global $config, $com_mysql;
 		$config->db_manager->connect();
 		if ( is_null($entity->guid) ) {
-			$query = sprintf("INSERT INTO `%scom_entity_entities` (`name`, `parent`, `tags`) VALUES ('%s', %s, '%s');",
+			$query = sprintf("INSERT INTO `%scom_entity_entities` (`parent`, `tags`) VALUES (%s, '%s');",
 				$config->com_mysql->prefix,
-				mysql_real_escape_string($entity->name, $com_mysql->link),
 				(is_null($entity->parent) ? 'NULL' : intval($entity->parent)),
 				mysql_real_escape_string(serialize($entity->tags), $com_mysql->link));
 			if ( !(mysql_query($query, $com_mysql->link)) ) {
@@ -409,9 +403,8 @@ class com_entity {
 			}
 			return true;
 		} else {
-			$query = sprintf("UPDATE `%scom_entity_entities` SET `name`='%s', `parent`=%s, `tags`='%s' WHERE `guid`=%u;",
+			$query = sprintf("UPDATE `%scom_entity_entities` SET `parent`=%s, `tags`='%s' WHERE `guid`=%u;",
 				$config->com_mysql->prefix,
-				mysql_real_escape_string($entity->name, $com_mysql->link),
 				(is_null($entity->parent) ? 'NULL' : intval($entity->parent)),
 				mysql_real_escape_string(serialize($entity->tags), $com_mysql->link),
 				intval($entity->guid));

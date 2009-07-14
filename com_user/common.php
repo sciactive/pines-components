@@ -157,12 +157,13 @@ class com_user {
 		$module = new module('system', 'false', 'right');
 		$module->title = "Right Users";
 		$module->content("No users here ;)");
-		/* End remove. */
+		/* End Remove. */
 
 		$module = new module('com_user', 'list_users', 'content');
 		$module->title = "Users";
 
-		$menu = new menu;
+		/*
+        $menu = new menu;
 		$this->get_user_menu(NULL, $menu);
 		$module->content($menu->render(array('<ul class="dropdown dropdown-vertical">', '</ul>'),
 				array('<li>', '</li>'),
@@ -172,22 +173,16 @@ class com_user {
 					"<input type=\"button\" onclick=\"window.location='".$config->template->url('com_user', 'edituser', array('user_id' => '#DATA#'))."';\" value=\"Edit\" /> | ".
 					"<input type=\"button\" onclick=\"if(confirm('Are you sure you want to delete \\'#NAME#\\'?')) {window.location='".$config->template->url('com_user', 'deleteuser', array('user_id' => '#DATA#'))."';}\" value=\"Delete\" />\n",
 				'<hr style="visibility: hidden; clear: both;" />'));
+         */
 
-		/*
-		$entities = $config->entity_manager->get_entities_by_tags('com_user', 'user');
+		$module->users = $config->entity_manager->get_entities_by_tags('com_user', 'user');
+        $module->line_header = $line_header;
+        $module->line_footer = $line_footer;
 
-		foreach($entities as $entity) {
-			$cur_user = $entity->username;
-			$cur_user_id = $entity->guid;
-			$module->content($line_header . "<strong>$cur_user</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-			$module->content("<input type=\"button\" onclick=\"window.location='".$config->template->url('com_user', 'edituser', array('user_id' => urlencode($cur_user_id)))."';\" value=\"Edit\" /> | ");
-			$module->content("<input type=\"button\" onclick=\"if(confirm('Are you sure you want to delete \\'$cur_user\\'?')) {window.location='".$config->template->url('com_user', 'deleteuser', array('user_id' => urlencode($cur_user_id)))."';}\" value=\"Delete\" />");
-			$module->content($line_footer . "<br /><br />\n");
-		}
-
-		if ( empty($entities) )
-			display_notice("There are no users.");
-		 */
+		if ( empty($module->users) ) {
+            $module->detach();
+            display_notice("There are no users.");
+        }
 	}
 
 	function login($id) {

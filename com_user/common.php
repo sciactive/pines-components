@@ -146,8 +146,6 @@ class com_user {
 
 	function list_users($line_header, $line_footer) {
 		global $config;
-		/*$entities = array();
-		$entity = new entity; */
 
 		/* TODO: Remove after testing with left and right modules. */
 		$module = new module('system', 'false', 'left');
@@ -162,6 +160,15 @@ class com_user {
 		$module = new module('com_user', 'list_users', 'content');
 		$module->title = "Users";
 
+		$module->users = $config->entity_manager->get_entities_by_tags('com_user', 'user');
+        $module->line_header = $line_header;
+        $module->line_footer = $line_footer;
+
+		if ( empty($module->users) ) {
+            $module->detach();
+            display_notice("There are no users.");
+        }
+
 		/*
         $menu = new menu;
 		$this->get_user_menu(NULL, $menu);
@@ -174,15 +181,6 @@ class com_user {
 					"<input type=\"button\" onclick=\"if(confirm('Are you sure you want to delete \\'#NAME#\\'?')) {window.location='".$config->template->url('com_user', 'deleteuser', array('user_id' => '#DATA#'))."';}\" value=\"Delete\" />\n",
 				'<hr style="visibility: hidden; clear: both;" />'));
          */
-
-		$module->users = $config->entity_manager->get_entities_by_tags('com_user', 'user');
-        $module->line_header = $line_header;
-        $module->line_footer = $line_footer;
-
-		if ( empty($module->users) ) {
-            $module->detach();
-            display_notice("There are no users.");
-        }
 	}
 
 	function login($id) {
@@ -227,62 +225,30 @@ class com_user {
 
 	function print_user_form($heading, $new_action, $id = NULL) {
 		global $config, $page;
-		$page->head("<script type=\"text/javascript\" src=\"components/com_user/js/verify.js\"></script>\n");
 		$module = new module('com_user', 'user_form', 'content');
-		$module->content("<form method=\"post\" id=\"user_details\" action=\"\" onsubmit=\"return verify_form('user_details');\">\n");
-		$module->content("<div class=\"stylized stdform\">");
-		$module->content("<h2>$heading</h2>\n");
-		$module->content("<p>Provide user details in this form.</p>\n");
 		if ( is_null($id) ) {
-			$username = $name = '';
-			$user_abilities = array();
+			$module->username = $name = '';
+			$module->user_abilities = array();
 		} else {
 			$user = $this->get_user($id);
-			$username = $user->username;
-			$name = $user->name;
-			$email = $user->email;
-			$parent = $user->parent;
-			$user_abilities = $user->abilities;
-			$module->content("<input type=\"hidden\" name=\"user_id\" value=\"$id\" />\n");
+			$module->username = $user->username;
+			$module->name = $user->name;
+			$module->email = $user->email;
+			$module->parent = $user->parent;
+			$module->user_abilities = $user->abilities;
 		}
-		$module->content("<label>Username<input type=\"text\" name=\"username\" value=\"$username\" /></label>\n");
-		$module->content("<label>Name<input type=\"text\" name=\"name\" value=\"$name\" /></label>\n");
-		$module->content("<label>Email<input type=\"text\" name=\"email\" value=\"$email\" /></label>\n");
-		$module->content(is_null($id) ? "<label>Password<span class=\"small\">".($config->com_user->empty_pw ? "May be blank." : "&nbsp;")."</span>" : "<label>Update Password<span class=\"small\">Leave blank, if not changing.</span>");
-		$module->content("<input type=\"password\" name=\"password\" /></label>\n");
-		$module->content("<label>Repeat Password<input type=\"password\" name=\"password2\" /></label>\n");
-		$module->content("<label>Parent<select name=\"parent\">\n");
-		$module->content("<option value=\"none\">--No Parent--</option>\n");
-		$module->content($this->print_user_tree('<option value="#guid#"#selected#>#mark# #name# [#username#]</option>', $this->get_user_array(), $parent));
-		$module->content("</select></label>\n");
-		if ( gatekeeper("com_user/abilities") ) {
-			$module->content("<input type=\"hidden\" name=\"abilities\" value=\"true\" />\n");
-			$module->content("<label>Abilities</label><br />\n");
-			$sections = array('system');
-			foreach ($config->components as $cur_component) {
-				$sections[] = $cur_component;
-			}
-			foreach ($sections as $cur_section) {
-				$section_abilities = $config->ability_manager->get_abilities($cur_section);
-				if ( count($section_abilities) ) {
-					$module->content("<table width=\"100%\">\n<thead><tr><th colspan=\"2\">$cur_section</th></tr></thead>\n<tbody>\n");
-					foreach ($section_abilities as $cur_ability) {
-						$module->content('<tr><td><label><input type="checkbox" name="'.$cur_section.'[]" value="'.$cur_ability['ability'].'"');
-						if ( array_search($cur_section.'/'.$cur_ability['ability'], $user_abilities) !== false ) {
-							$module->content(' checked');
-						}
-						$module->content(' />&nbsp;'.$cur_ability['title'].'</label></td><td style="width: 80%;">'.$cur_ability['description']."</td></tr>\n");
-					}
-					$module->content("</tbody>\n</table>\n");
-				}
-			}
-		}
-		$module->content("<input type=\"hidden\" name=\"action\" value=\"$new_action\" />\n");
-		$module->content("<input type=\"submit\" value=\"Submit\" />\n");
-		$module->content("<input type=\"button\" onclick=\"window.location='".$config->template->url('com_user', 'manageusers')."';\" value=\"Cancel\" />\n");
-		$module->content("<div class=\"spacer\"></div>\n");
-		$module->content("</div>\n");
-		$module->content("</form>\n");
+        $module->heading = $heading;
+        $module->new_action = $new_action;
+        $module->id = $id;
+        $module->display_abilities = gatekeeper("com_user/abilities");
+        $module->sections = array('system');
+        foreach ($config->components as $cur_component) {
+            $module->sections[] = $cur_component;
+        }
+		//$module->content("<label>Parent<select name=\"parent\">\n");
+		//$module->content("<option value=\"none\">--No Parent--</option>\n");
+		//$module->content($this->print_user_tree('<option value="#guid#"#selected#>#mark# #name# [#username#]</option>', $this->get_user_array(), $parent));
+		//$module->content("</select></label>\n");
 	}
 
 	function print_user_tree($mask, $user_array, $selected_id = NULL, $selected = ' selected="selected"', $mark = '') {

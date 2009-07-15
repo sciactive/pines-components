@@ -11,7 +11,7 @@ if ( isset($_REQUEST['user_id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", $config->template->url('com_user', 'manageusers', null, false));
 		return;
 	}
-	$user = new entity;
+	$user = new user;
 	$user = $config->user_manager->get_user($_REQUEST['user_id']);
 	if ( is_null($user) ) {
 		display_error('User doesn\'t exists!');
@@ -34,7 +34,7 @@ if ( isset($_REQUEST['user_id']) ) {
 		display_error('Must specify password!');
 		return;
 	}
-	$user = new entity;
+	$user = new user;
 	$user = $config->user_manager->new_user();
 	if ( is_null($config->user_manager->get_user_by_username($_REQUEST['username'])) ) {
 		$user->username = $_REQUEST['username'];

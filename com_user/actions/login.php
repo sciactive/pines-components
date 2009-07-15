@@ -16,7 +16,7 @@ if ( $_REQUEST['username'] ) {
 		}
 	} else {
 		display_error("Username and password not correct!");
-		print_default();
+        $config->user_manager->print_login();
 	}
 } else {
 	$config->user_manager->print_login();

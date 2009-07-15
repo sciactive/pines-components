@@ -6,7 +6,7 @@ $config->com_user = new DynamicConfig;
 // Allows users to have empty passwords.
 $config->com_user->empty_pw = true;
 
-class user extends entity {
+class able_entity extends entity {
 	// These aren't required.
     /*
     public function &__get($name) {
@@ -48,6 +48,14 @@ class user extends entity {
             return true;
         }
     }
+}
+
+class user extends able_entity {
+
+}
+
+class group extends able_entity {
+
 }
 
 // Abilities

@@ -12,6 +12,17 @@ class com_user {
 		}
 	}
 
+	function delete_group($group_id) {
+		// TODO: delete children
+		$entity = new group;
+		if ( $entity = $this->get_group($group_id) ) {
+			$entity->delete();
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	function delete_user($user_id) {
 		// TODO: delete children
 		$entity = new user;
@@ -45,6 +56,41 @@ class com_user {
 		} else {
 			return false;
 		}
+	}
+
+	function get_group($group_id) {
+        /**
+         * @todo Rewrite specifically for groups.
+         */
+		global $config;
+		$group = new group;
+		$group = $config->entity_manager->get_entity($group_id, group);
+		if ( empty($group) )
+			return null;
+
+		if ( $group->has_tag('com_user', 'group') ) {
+			return $group;
+		} else {
+			return null;
+		}
+	}
+
+	function get_group_by_groupname($groupname) {
+		global $config;
+		$entities = array();
+		$entity = new group;
+		$entities = $config->entity_manager->get_entities_by_data(array('groupname' => $groupname), group);
+		foreach ($entities as $entity) {
+			if ( $entity->has_tag('com_user', 'group') )
+				return $entity;
+		}
+		return null;
+	}
+
+	function get_groupname($group_id) {
+		$entity = new group;
+		$entity = $this->get_group($group_id);
+		return $entity->groupname;
 	}
 
 	function get_user($user_id) {
@@ -131,6 +177,20 @@ class com_user {
 		return $entity->username;
 	}
 
+    function list_groups() {
+		global $config;
+
+        $module = new module('com_user', 'list_groups', 'content');
+		$module->title = "Groups";
+
+		$module->groups = $config->entity_manager->get_entities_by_tags('com_user', 'group', group);
+
+		if ( empty($module->groups) ) {
+            $module->detach();
+            display_notice("There are no groups.");
+        }
+    }
+
 	function list_users() {
 		global $config;
 
@@ -192,6 +252,13 @@ class com_user {
 		session_destroy();
 	}
 
+	function new_group() {
+		$new_group = new user;
+		$new_group->add_tag('com_user', 'group');
+		$new_group->abilities = array();
+		return $new_group;
+	}
+
 	function new_user() {
 		$new_user = new user;
 		$new_user->add_tag('com_user', 'user');
@@ -208,11 +275,43 @@ class com_user {
 		$module = new module('com_user', 'login', 'content');
 	}
 
+	function print_group_form($heading, $new_option, $new_action, $id = NULL) {
+        /**
+         * @todo Rewrite for groups.
+         */
+		global $config, $page;
+		$module = new module('com_user', 'group_form', 'content');
+		if ( is_null($id) ) {
+			$module->groupname = $module->name = '';
+			$module->group_abilities = array();
+		} else {
+			$group = $this->get_group($id);
+			$module->groupname = $group->groupname;
+			$module->name = $group->name;
+			$module->email = $group->email;
+			$module->parent = $group->parent;
+			$module->group_abilities = $group->abilities;
+		}
+        $module->heading = $heading;
+        $module->new_option = $new_option;
+        $module->new_action = $new_action;
+        $module->id = $id;
+        $module->display_abilities = gatekeeper("com_user/abilities");
+        $module->sections = array('system');
+        foreach ($config->components as $cur_component) {
+            $module->sections[] = $cur_component;
+        }
+		//$module->content("<label>Parent<select name=\"parent\">\n");
+		//$module->content("<option value=\"none\">--No Parent--</option>\n");
+		//$module->content($this->print_user_tree('<option value="#guid#"#selected#>#mark# #name# [#username#]</option>', $this->get_user_array(), $parent));
+		//$module->content("</select></label>\n");
+	}
+
 	function print_user_form($heading, $new_option, $new_action, $id = NULL) {
 		global $config, $page;
 		$module = new module('com_user', 'user_form', 'content');
 		if ( is_null($id) ) {
-			$module->username = $name = '';
+			$module->username = $module->name = '';
 			$module->user_abilities = array();
 		} else {
 			$user = $this->get_user($id);

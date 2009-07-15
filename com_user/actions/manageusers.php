@@ -6,5 +6,5 @@ if ( !gatekeeper('com_user/manage') ) {
 	return;
 }
 
-$config->user_manager->list_users('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', '');
+$config->user_manager->list_users();
 ?>

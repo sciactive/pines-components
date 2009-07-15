@@ -6,5 +6,5 @@ if ( !gatekeeper('com_user/new') ) {
 	return;
 }
 
-$config->user_manager->print_user_form('Editing New User', 'saveuser');
+$config->user_manager->print_user_form('Editing New User', 'com_user', 'saveuser');
 ?>

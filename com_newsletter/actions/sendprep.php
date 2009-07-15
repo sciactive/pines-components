@@ -35,7 +35,7 @@ jQuery(document).ready(function(){
 ");
 $page->head("<link href=\"components/com_newsletter/css/checktree.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />");
 
-$com_newsletter_sendprep->content("<form method=\"post\" action=\"\">\n");
+$com_newsletter_sendprep->content("<form method=\"post\" action=\"".$config->template->url()."\">\n");
 $com_newsletter_sendprep->content("<div class=\"stylized stdform\">\n");
 $com_newsletter_sendprep->content("<h2>Sending ".$mail->name."</h2>\n");
 $com_newsletter_sendprep->content("<label>From Email<input type=\"text\" name=\"from\" value=\"".htmlentities($config->com_newsletter->default_from)."\" /></label>\n");

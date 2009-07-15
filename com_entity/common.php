@@ -30,7 +30,7 @@ class com_entity {
 		return true;
 	}
 
-	public function get_entities_by_data($data, $required_tags = array()) {
+	public function get_entities_by_data($data, $required_tags = array(), $class = entity) {
 		global $config, $com_mysql;
 		$config->db_manager->connect();
 		$entities = array();
@@ -55,7 +55,7 @@ class com_entity {
 		}
 
 		while ($row = mysql_fetch_array($result)) {
-			$entity = new entity;
+			$entity = new $class;
 			$entity = $this->get_entity($row['guid']);
 			if ( empty($required_tags) || $entity->has_tag($required_tags) )
 				array_push($entities, $entity);
@@ -65,7 +65,7 @@ class com_entity {
 		return $entities;
 	}
 
-	public function get_entities_by_parent($parent_guid) {
+	public function get_entities_by_parent($parent_guid, $class = entity) {
 		global $config, $com_mysql;
 		$config->db_manager->connect();
 		$entities = array();
@@ -81,7 +81,7 @@ class com_entity {
 
 		$row = mysql_fetch_array($result);
 		while ($row) {
-			$entity = new entity;
+			$entity = new $class;
 			$entity->guid = intval($row['guid']);
 			$entity->parent = (is_null($row['parent']) ? NULL : intval($row['parent']));
 			$entity->tags = $return_tag_array;
@@ -108,11 +108,10 @@ class com_entity {
 	// This needs to be a shortcut to get_entities_by_tags_exclusive
 	public function get_entities_by_tags() {
 		if (is_array(func_get_arg(0))) {
-			$tag_array = func_get_arg(0);
+            return $this->get_entities_by_tags_exclusive(func_get_arg(0), func_get_arg(1));
 		} else {
-			$tag_array = func_get_args();
+            return $this->get_entities_by_tags_exclusive(func_get_args());
 		}
-		return $this->get_entities_by_tags_exclusive($tag_array);
 	}
 
 	/*
@@ -123,8 +122,19 @@ class com_entity {
 		$config->db_manager->connect();
 		if (is_array(func_get_arg(0))) {
 			$tag_array = func_get_arg(0);
+            if (func_num_args() > 1 && is_subclass_of(func_get_arg(1), 'entity')) {
+                $class = func_get_arg(1);
+            } else {
+                $class = entity;
+            }
 		} else {
 			$tag_array = func_get_args();
+            if (is_subclass_of($tag_array[count($tag_array)], 'entity')) {
+                $class = $tag_array[count($tag_array)];
+                unset($tag_array[count($tag_array)]);
+            } else {
+                $class = entity;
+            }
 		}
 		$entities = array();
 
@@ -159,7 +169,7 @@ class com_entity {
 				}
 			}
 			if ( $match === true ) {
-				$entity = new entity;
+				$entity = new $class;
 				$entity->guid = intval($row['guid']);
 				$entity->parent = (is_null($row['parent']) ? NULL : intval($row['parent']));
 				$entity->tags = $return_tag_array;
@@ -195,8 +205,19 @@ class com_entity {
 		$config->db_manager->connect();
 		if (is_array(func_get_arg(0))) {
 			$tag_array = func_get_arg(0);
+            if (func_num_args() > 1 && is_subclass_of(func_get_arg(1), 'entity')) {
+                $class = func_get_arg(1);
+            } else {
+                $class = entity;
+            }
 		} else {
 			$tag_array = func_get_args();
+            if (is_subclass_of($tag_array[count($tag_array)], 'entity')) {
+                $class = $tag_array[count($tag_array)];
+                unset($tag_array[count($tag_array)]);
+            } else {
+                $class = entity;
+            }
 		}
 		$entities = array();
 
@@ -231,7 +252,7 @@ class com_entity {
 				}
 			}
 			if ( $match === true ) {
-				$entity = new entity;
+				$entity = new $class;
 				$entity->guid = intval($row['guid']);
 				$entity->parent = (is_null($row['parent']) ? NULL : intval($row['parent']));
 				$entity->tags = $return_tag_array;
@@ -263,7 +284,7 @@ class com_entity {
 	 * Will return any entities which contain *all* of the exclusive_tags *and*
 	 * *any* of the inclusive_tags.
 	 */
-	public function get_entities_by_tags_mixed($exlusive_tags = array(), $inclusive_tags = array()) {
+	public function get_entities_by_tags_mixed($exlusive_tags = array(), $inclusive_tags = array(), $class = entity) {
 		global $config, $com_mysql;
 		$config->db_manager->connect();
 		$entities = array();
@@ -313,7 +334,7 @@ class com_entity {
 				}
 			}
 			if ( $match === true ) {
-				$entity = new entity;
+				$entity = new $class;
 				$entity->guid = intval($row['guid']);
 				$entity->parent = (is_null($row['parent']) ? NULL : intval($row['parent']));
 				$entity->tags = $return_tag_array;
@@ -341,11 +362,11 @@ class com_entity {
 		return $entities;
 	}
 
-	public function get_entity($guid) {
+	public function get_entity($guid, $class = entity) {
 		global $config, $com_mysql;
 		$config->db_manager->connect();
 
-		$entity = new entity;
+        $entity = new $class;
 		$data = array();
 
 		$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid`=d.`guid` HAVING e.`guid`=%u;",

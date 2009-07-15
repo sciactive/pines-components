@@ -2,7 +2,7 @@
 defined('D_RUN') or die('Direct access prohibited');
 $page->head("<script type=\"text/javascript\" src=\"components/com_user/js/verify.js\"></script>\n");
 ?>
-<form method="post" id="user_details" action="" onsubmit="return verify_form('user_details');">
+<form method="post" id="user_details" action="<?php echo $config->template->url(); ?>" onsubmit="return verify_form('user_details');">
 <div class="stylized stdform">
 <h2><?php echo $this->heading; ?></h2>
 <p>Provide user details in this form.</p>
@@ -40,6 +40,7 @@ $page->head("<script type=\"text/javascript\" src=\"components/com_user/js/verif
         <?php }
     } ?>
 <?php } ?>
+<input type="hidden" name="option" value="<?php echo $this->new_option; ?>" />
 <input type="hidden" name="action" value="<?php echo $this->new_action; ?>" />
 <input type="submit" value="Submit" />
 <input type="button" onclick="window.location='<?php echo $config->template->url('com_user', 'manageusers'); ?>';" value="Cancel" />

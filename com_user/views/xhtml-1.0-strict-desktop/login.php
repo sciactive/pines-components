@@ -1,7 +1,7 @@
 <?php
 defined('D_RUN') or die('Direct access prohibited');
 ?>
-<form name="login" method="post" action="<?php echo $config->template->url(); ?>.">
+<form name="login" method="post" action="<?php echo $config->template->url(); ?>">
     <div class="stylized stdform">
         <h2>Login to <?php echo $config->option_title; ?></h2>
         <p>Please enter your credentials to login.</p>

@@ -1,6 +1,10 @@
 <?php
 defined('D_RUN') or die('Direct access prohibited');
 
+/**
+ * @todo Add tests for custom entity extended classes.
+ */
+
 if ( !gatekeeper() ) {
 	$config->user_manager->punt_user("You are not logged in.", $config->template->url('com_entity', 'test', null, false));
 	return;

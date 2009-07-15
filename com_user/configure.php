@@ -7,10 +7,8 @@ $config->com_user = new DynamicConfig;
 $config->com_user->empty_pw = true;
 
 class user extends entity {
-	//TODO: Write a user entity and use it throughout the code.
-
-	// are these required?
-	/*
+	// These aren't required.
+    /*
     public function &__get($name) {
         return parent::__get($name);
     }
@@ -26,7 +24,30 @@ class user extends entity {
     public function __unset($name) {
         return parent::__unset($name);
     }
+     */
+
+	/**
+	 * Abilities should be named following this form!!
+	 *     com_componentname/abilityname
+	 * If it is a system ability (ie. not part of a component, substitute
+	 * "com_componentname" with "system". The system ability "all" means the
+     * user has every ability available.
 	 */
+    public function grant($ability) {
+        if ( !in_array($ability, $this->__get('abilities')) ) {
+            return $this->__set('abilities', array_merge(array($ability), $this->__get('abilities')));
+        } else {
+            return true;
+        }
+    }
+
+    public function revoke($ability) {
+        if ( in_array($ability, $this->__get('abilities')) ) {
+			return $this->__set('abilities', array_values(array_diff($this->__get('abilities'), array($ability))));
+        } else {
+            return true;
+        }
+    }
 }
 
 // Abilities

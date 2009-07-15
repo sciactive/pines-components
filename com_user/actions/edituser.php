@@ -6,5 +6,5 @@ if ( !gatekeeper('com_user/edit') ) {
 	return;
 }
 
-$config->user_manager->print_user_form('Editing ['.$config->user_manager->get_username($_REQUEST['user_id']).']', 'saveuser', $_REQUEST['user_id']);
+$config->user_manager->print_user_form('Editing ['.$config->user_manager->get_username($_REQUEST['user_id']).']', 'com_user', 'saveuser', $_REQUEST['user_id']);
 ?>

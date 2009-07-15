@@ -9,5 +9,5 @@ if ( !gatekeeper('com_user/delete') ) {
 if ( $config->user_manager->delete_user($_REQUEST['user_id']) )
 	display_notice('User deleted successfully.');
 
-$config->user_manager->list_users('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', '');
+$config->user_manager->list_users();
 ?>

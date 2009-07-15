@@ -47,7 +47,7 @@ if ( isset($_REQUEST['user_id']) ) {
 
 $user->name = $_REQUEST['name'];
 $user->email = $_REQUEST['email'];
-if ( $_REQUEST['parent'] == 'none' ) {
+/*if ( $_REQUEST['parent'] == 'none' ) {
 	$parent = NULL;
 } else {
 	if ( !is_null($config->user_manager->get_user($_REQUEST['parent'])) && $_REQUEST['parent'] !== $user->guid ) {
@@ -57,7 +57,7 @@ if ( $_REQUEST['parent'] == 'none' ) {
 		return;
 	}
 }
-$user->parent = $parent;
+$user->parent = $parent; */
 
 if ( $_REQUEST['abilities'] === 'true' && gatekeeper("com_user/abilities") ) {
 	$sections = array('system');
@@ -69,9 +69,9 @@ if ( $_REQUEST['abilities'] === 'true' && gatekeeper("com_user/abilities") ) {
 		if ( count($section_abilities) ) {
 			foreach ($section_abilities as $cur_ability) {
 				if ( isset($_REQUEST[$cur_section]) && (array_search($cur_ability['ability'], $_REQUEST[$cur_section]) !== false) ) {
-					$user->abilities = $config->user_manager->grant($user->abilities, $cur_section.'/'.$cur_ability['ability']);
+					$user->grant($cur_section.'/'.$cur_ability['ability']);
 				} else {
-					$user->abilities = $config->user_manager->revoke($user->abilities, $cur_section.'/'.$cur_ability['ability']);
+					$user->revoke($cur_section.'/'.$cur_ability['ability']);
 				}
 			}
 		}
@@ -82,5 +82,5 @@ $user->save();
 
 display_notice('Saved user ['.$user->username.']');
 
-$config->user_manager->list_users('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', '');
+$config->user_manager->list_users();
 ?>

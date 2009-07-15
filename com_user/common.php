@@ -3,7 +3,7 @@ defined('D_RUN') or die('Direct access prohibited');
 
 class com_user {
 	function authenticate($username, $password) {
-		$entity = new entity;
+		$entity = new user;
 		$entity = $this->get_user_by_username($username);
 		if ( $entity->password === md5($password.$entity->salt) ) {
 			return $entity->guid;
@@ -14,7 +14,7 @@ class com_user {
 
 	function delete_user($user_id) {
 		// TODO: delete children
-		$entity = new entity;
+		$entity = new user;
 		if ( $entity = $this->get_user($user_id) ) {
 			$entity->delete();
 			return true;
@@ -49,13 +49,13 @@ class com_user {
 
 	function get_user($user_id) {
 		global $config;
-		$entity = new entity;
-		$entity = $config->entity_manager->get_entity($user_id);
-		if ( empty($entity) )
+		$user = new user;
+		$user = $config->entity_manager->get_entity($user_id, user);
+		if ( empty($user) )
 			return null;
-		
-		if ( $entity->has_tag('com_user', 'user') ) {
-			return $entity;
+
+		if ( $user->has_tag('com_user', 'user') ) {
+			return $user;
 		} else {
 			return null;
 		}
@@ -66,7 +66,7 @@ class com_user {
 		global $config;
 		$return = array();
 		if ( is_null($parent_id) ) {
-			$entities = $config->entity_manager->get_entities_by_tags('com_user', 'user');
+			$entities = $config->entity_manager->get_entities_by_tags('com_user', 'user', user);
 			foreach ($entities as $entity) {
 				if ( is_null($entity->parent) ) {
 					$child_array = $this->get_user_array($entity->guid);
@@ -77,7 +77,7 @@ class com_user {
 				}
 			}
 		} else {
-			$entities = $config->entity_manager->get_entities_by_parent($parent_id);
+			$entities = $config->entity_manager->get_entities_by_parent($parent_id, user);
 			foreach ($entities as $entity) {
 				if ( $entity->has_tag('com_user', 'user') ) {
 					$child_array = $this->get_user_array($entity->guid);
@@ -94,8 +94,8 @@ class com_user {
 	function get_user_by_username($username) {
 		global $config;
 		$entities = array();
-		$entity = new entity;
-		$entities = $config->entity_manager->get_entities_by_data(array('username' => $username));
+		$entity = new user;
+		$entities = $config->entity_manager->get_entities_by_data(array('username' => $username), user);
 		foreach ($entities as $entity) {
 			if ( $entity->has_tag('com_user', 'user') )
 				return $entity;
@@ -106,7 +106,7 @@ class com_user {
 	function get_user_menu($parent_id = NULL, &$menu = NULL, $menu_parent = NULL, $top_level = TRUE) {
 		global $config;
 		if ( is_null($parent_id) ) {
-			$entities = $config->entity_manager->get_entities_by_tags('com_user', 'user');
+			$entities = $config->entity_manager->get_entities_by_tags('com_user', 'user', user);
 			foreach ($entities as $entity) {
 				$menu->add($entity->name.' ['.$entity->username.']', $entity->guid, $entity->parent, $entity->guid);
 			}
@@ -126,25 +126,12 @@ class com_user {
 	}
 
 	function get_username($user_id) {
-		$entity = new entity;
+		$entity = new user;
 		$entity = $this->get_user($user_id);
 		return $entity->username;
 	}
 
-	/*
-	 * Abilities should be named following this form!!
-	 *     com_componentname/abilityname
-	 * If it is a system ability (ie. not part of a component, substitute
-	 * "com_componentname" with "system". The system ability "all" means the user
-	 * has every ability available.
-	 */
-	function grant($user_abilities, $ability) {
-		if ( !in_array($ability, $user_abilities) )
-			array_push($user_abilities, $ability);
-		return $user_abilities;
-	}
-
-	function list_users($line_header, $line_footer) {
+	function list_users() {
 		global $config;
 
 		/* TODO: Remove after testing with left and right modules. */
@@ -160,9 +147,7 @@ class com_user {
 		$module = new module('com_user', 'list_users', 'content');
 		$module->title = "Users";
 
-		$module->users = $config->entity_manager->get_entities_by_tags('com_user', 'user');
-        $module->line_header = $line_header;
-        $module->line_footer = $line_footer;
+		$module->users = $config->entity_manager->get_entities_by_tags('com_user', 'user', user);
 
 		if ( empty($module->users) ) {
             $module->detach();
@@ -184,7 +169,7 @@ class com_user {
 	}
 
 	function login($id) {
-		$entity = new entity;
+		$entity = new user;
 
 		$entity = $this->get_user($id);
 
@@ -208,7 +193,7 @@ class com_user {
 	}
 
 	function new_user() {
-		$new_user = new entity;
+		$new_user = new user;
 		$new_user->add_tag('com_user', 'user');
 		$new_user->salt = md5(rand());
 		$new_user->abilities = array();
@@ -223,7 +208,7 @@ class com_user {
 		$module = new module('com_user', 'login', 'content');
 	}
 
-	function print_user_form($heading, $new_action, $id = NULL) {
+	function print_user_form($heading, $new_option, $new_action, $id = NULL) {
 		global $config, $page;
 		$module = new module('com_user', 'user_form', 'content');
 		if ( is_null($id) ) {
@@ -238,6 +223,7 @@ class com_user {
 			$module->user_abilities = $user->abilities;
 		}
         $module->heading = $heading;
+        $module->new_option = $new_option;
         $module->new_action = $new_action;
         $module->id = $id;
         $module->display_abilities = gatekeeper("com_user/abilities");
@@ -274,12 +260,6 @@ class com_user {
 		global $config;
 		header("Location: ".$config->template->url('com_user', 'exit', array('message' => urlencode($message), 'url' => urlencode($url)), false));
 		exit;
-	}
-
-	function revoke($user_abilities, $ability) {
-		if ( in_array($ability, $user_abilities) )
-			unset($user_abilities[array_search($ability, $user_abilities)]);
-		return $user_abilities;
 	}
 }
 

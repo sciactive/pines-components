@@ -55,8 +55,7 @@ class com_entity {
 		}
 
 		while ($row = mysql_fetch_array($result)) {
-			$entity = new $class;
-			$entity = $this->get_entity($row['guid']);
+			$entity = $this->get_entity($row['guid'], $class);
 			if ( empty($required_tags) || $entity->has_tag($required_tags) )
 				array_push($entities, $entity);
 		}

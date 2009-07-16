@@ -84,7 +84,7 @@ class com_entity {
 			$entity = new $class;
 			$entity->guid = intval($row['guid']);
 			$entity->parent = (is_null($row['parent']) ? NULL : intval($row['parent']));
-			$entity->tags = $return_tag_array;
+			$entity->tags = unserialize($row['tags']);
 			$data = array();
 			if (!is_null($row['dname'])) {
 				// This do will keep going and adding the data until the

@@ -1,4 +1,14 @@
 <?php
+/**
+ * com_user's display control.
+ *
+ * @package Dandelion
+ * @subpackage com_user
+ * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
+ * @author Hunter Perrin <hunter@sciactive.com>
+ * @copyright Hunter Perrin
+ * @link http://sciactive.com/
+ */
 defined('D_RUN') or die('Direct access prohibited');
 
 if ( gatekeeper('com_user/new') || gatekeeper('com_user/manage') || gatekeeper('com_user/newg') || gatekeeper('com_user/manageg') ) {

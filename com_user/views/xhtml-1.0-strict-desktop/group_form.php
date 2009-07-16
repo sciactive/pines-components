@@ -1,4 +1,14 @@
 <?php
+/**
+ * Provides a form for the user to edit a group.
+ *
+ * @package Dandelion
+ * @subpackage com_user
+ * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
+ * @author Hunter Perrin <hunter@sciactive.com>
+ * @copyright Hunter Perrin
+ * @link http://sciactive.com/
+ */
 defined('D_RUN') or die('Direct access prohibited');
 ?>
 <form method="post" id="group_details" action="<?php echo $config->template->url(); ?>">

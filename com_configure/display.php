@@ -1,4 +1,14 @@
 <?php
+/**
+ * com_configure's display control.
+ *
+ * @package Dandelion
+ * @subpackage com_configure
+ * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
+ * @author Hunter Perrin <hunter@sciactive.com>
+ * @copyright Hunter Perrin
+ * @link http://sciactive.com/
+ */
 defined('D_RUN') or die('Direct access prohibited');
 
 if ( gatekeeper('com_configure/manage') || gatekeeper('com_configure/list') ) {

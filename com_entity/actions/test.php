@@ -1,4 +1,15 @@
 <?php
+/**
+ * Test an entity manager for compliance with Dandelion's entity management
+ * system.
+ *
+ * @package Dandelion
+ * @subpackage com_entity
+ * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
+ * @author Hunter Perrin <hunter@sciactive.com>
+ * @copyright Hunter Perrin
+ * @link http://sciactive.com/
+ */
 defined('D_RUN') or die('Direct access prohibited');
 
 /**

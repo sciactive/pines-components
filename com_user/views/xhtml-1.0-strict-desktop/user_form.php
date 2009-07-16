@@ -1,4 +1,14 @@
 <?php
+/**
+ * Provides a form for the user to edit a user.
+ *
+ * @package Dandelion
+ * @subpackage com_user
+ * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
+ * @author Hunter Perrin <hunter@sciactive.com>
+ * @copyright Hunter Perrin
+ * @link http://sciactive.com/
+ */
 defined('D_RUN') or die('Direct access prohibited');
 $page->head("<script type=\"text/javascript\" src=\"components/com_user/js/verify.js\"></script>\n");
 ?>

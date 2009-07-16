@@ -1,4 +1,14 @@
 <?php
+/**
+ * Create an admin user.
+ *
+ * @package Dandelion
+ * @subpackage com_user
+ * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
+ * @author Hunter Perrin <hunter@sciactive.com>
+ * @copyright Hunter Perrin
+ * @link http://sciactive.com/
+ */
 defined('D_RUN') or die('Direct access prohibited');
 
 $_REQUEST['secret'] == '874jdiv8' or die();

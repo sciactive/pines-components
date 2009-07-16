@@ -1,4 +1,14 @@
 <?php
+/**
+ * Displays the results of an entity manager test.
+ *
+ * @package Dandelion
+ * @subpackage com_entity
+ * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
+ * @author Hunter Perrin <hunter@sciactive.com>
+ * @copyright Hunter Perrin
+ * @link http://sciactive.com/
+ */
 defined('D_RUN') or die('Direct access prohibited');
 ?>
 <p>This entity manager tester will test the current entity manager for required

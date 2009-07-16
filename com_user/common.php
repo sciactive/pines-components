@@ -271,8 +271,8 @@ class com_user {
 		$user->password = md5($password.$user->salt);
 	}
 
-	function print_login() {
-		$module = new module('com_user', 'login', 'content');
+	function print_login($position = 'content') {
+		$module = new module('com_user', 'login', $position);
 	}
 
 	function print_group_form($heading, $new_option, $new_action, $id = NULL) {

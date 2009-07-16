@@ -51,11 +51,39 @@ class able_entity extends entity {
 }
 
 class user extends able_entity {
+    public function addgroup($group) {
+        if ( !in_array($group, $this->__get('groups')) ) {
+            return $this->__set('groups', array_merge(array($group), $this->__get('groups')));
+        } else {
+            return true;
+        }
+    }
 
+    public function delgroup($group) {
+        if ( in_array($group, $this->__get('groups')) ) {
+			return $this->__set('groups', array_values(array_diff($this->__get('groups'), array($group))));
+        } else {
+            return true;
+        }
+    }
+
+    public function ingroup($group) {
+        return in_array($group, $this->__get('groups'));
+    }
+
+	public function password($password) {
+		return $this->__set('password', md5($password.$this->__get('salt')));
+	}
+
+    public function check_password($password) {
+		return ($this->__get('password') == md5($password.$this->__get('salt')));
+    }
 }
 
 class group extends able_entity {
-
+    /**
+     * @todo Function users() to list users of this group.
+     */
 }
 
 // Abilities

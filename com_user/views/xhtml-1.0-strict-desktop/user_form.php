@@ -19,9 +19,17 @@ $page->head("<script type=\"text/javascript\" src=\"components/com_user/js/verif
 <?php } ?>
 <input type="password" name="password" /></label>
 <label>Repeat Password<input type="password" name="password2" /></label>
+<?php if ( $this->display_groups ) { ?>
+<label>Groups
+<select name="groups[]" multiple="multiple" size="6">
+<?php echo $config->user_manager->print_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->groups); ?>
+</select>
+</label>
+<?php } ?>
 <?php if ( $this->display_abilities ) { ?>
     <input type="hidden" name="abilities" value="true" />
     <label>Abilities</label><br />
+    <label><input type="checkbox" name="inherit_abilities" value="ON" <?php echo ($this->inherit_abilities ? "checked=\"checked\" " : ''); ?>/>Inherit additional abilities from groups.</label><br />
     <?php foreach ($this->sections as $cur_section) {
         $section_abilities = $config->ability_manager->get_abilities($cur_section);
         if ( count($section_abilities) ) { ?>
@@ -31,7 +39,7 @@ $page->head("<script type=\"text/javascript\" src=\"components/com_user/js/verif
                 <?php foreach ($section_abilities as $cur_ability) { ?>
                 <tr><td><label><input type="checkbox" name="<?php echo $cur_section; ?>[]" value="<?php echo $cur_ability['ability']; ?>"
                     <?php if ( array_search($cur_section.'/'.$cur_ability['ability'], $this->user_abilities) !== false ) { ?>
-                        checked
+                        checked="checked"
                     <?php } ?>
                      />&nbsp;<?php echo $cur_ability['title']; ?></label></td><td style="width: 80%;"><?php echo $cur_ability['description']; ?></td></tr>
                 <?php } ?>

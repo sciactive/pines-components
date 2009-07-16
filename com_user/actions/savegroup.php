@@ -7,7 +7,7 @@ if ( empty($_REQUEST['groupname']) ) {
 }
 
 if ( isset($_REQUEST['group_id']) ) {
-	if ( !gatekeeper('com_user/edit') ) {
+	if ( !gatekeeper('com_user/editg') ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", $config->template->url('com_user', 'managegroups', null, false));
 		return;
 	}
@@ -25,7 +25,7 @@ if ( isset($_REQUEST['group_id']) ) {
 		}
 	}
 } else {
-	if ( !gatekeeper('com_user/new') ) {
+	if ( !gatekeeper('com_user/newg') ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", $config->template->url('com_user', 'managegroups', null, false));
 		return;
 	}
@@ -41,17 +41,22 @@ if ( isset($_REQUEST['group_id']) ) {
 
 $group->name = $_REQUEST['name'];
 $group->email = $_REQUEST['email'];
-/*if ( $_REQUEST['parent'] == 'none' ) {
+
+/**
+ * @todo Check if the selected parent is a child of this group.
+ */
+// Clean the requested parent. Make sure it's both valid and not the same group.
+if ( $_REQUEST['parent'] == 'none' ) {
 	$parent = NULL;
 } else {
-	if ( !is_null($config->user_manager->get_group($_REQUEST['parent'])) && $_REQUEST['parent'] !== $group->guid ) {
-		$parent = $_REQUEST['parent'];
-	} else {
+	if ( is_null($config->user_manager->get_group($_REQUEST['parent'])) || $_REQUEST['parent'] == $group->guid ) {
 		display_error('Parent is not valid!');
 		return;
+	} else {
+		$parent = $_REQUEST['parent'];
 	}
 }
-$group->parent = $parent; */
+$group->parent = $parent;
 
 if ( $_REQUEST['abilities'] === 'true' && gatekeeper("com_user/abilities") ) {
 	$sections = array('system');

@@ -5,7 +5,7 @@ class com_user {
 	function authenticate($username, $password) {
 		$entity = new user;
 		$entity = $this->get_user_by_username($username);
-		if ( $entity->password === md5($password.$entity->salt) ) {
+		if ( $entity->check_password($password) ) {
 			return $entity->guid;
 		} else {
 			return null;
@@ -13,7 +13,9 @@ class com_user {
 	}
 
 	function delete_group($group_id) {
-		// TODO: delete children
+		/**
+         * @todo Delete children and remove users.
+         */
 		$entity = new group;
 		if ( $entity = $this->get_group($group_id) ) {
 			$entity->delete();
@@ -24,7 +26,6 @@ class com_user {
 	}
 
 	function delete_user($user_id) {
-		// TODO: delete children
 		$entity = new user;
 		if ( $entity = $this->get_user($user_id) ) {
 			$entity->delete();
@@ -34,14 +35,35 @@ class com_user {
 		}
 	}
 
+    function fill_session() {
+        $_SESSION['user'] = $this->get_user($_SESSION['user_id']);
+        if ($_SESSION['user']->inherit_abilities) {
+            global $config;
+            foreach ($_SESSION['user']->groups as $cur_group) {
+                $cur_entity = $config->entity_manager->get_entity($cur_group, group);
+                $_SESSION['user']->abilities = array_merge($_SESSION['user']->abilities, $cur_entity->abilities);
+            }
+        }
+    }
+
 	function gatekeeper($ability = NULL, $user = NULL) {
 		if ( is_null($user) ) {
+            // If the user is logged in, their abilities are already set up.
 			if ( isset($_SESSION['user']) ) {
 				$user = $_SESSION['user'];
 			} else {
 				unset($user);
 			}
-		}
+		} else {
+            // If the user isn't logged in, their abilities need to be set up.
+            if ($user->inherit_abilities) {
+                global $config;
+                foreach ($user->groups as $cur_group) {
+                    $cur_entity = $config->entity_manager->get_entity($cur_group, group);
+                    $user->abilities = array_merge($user->abilities, $cur_entity->abilities);
+                }
+            }
+        }
 		if ( isset($user) ) {
 			if ( !is_null($ability) ) {
 				if ( isset($user->abilities) ) {
@@ -75,11 +97,41 @@ class com_user {
 		}
 	}
 
+	function get_group_array($parent_id = NULL) {
+		// TODO: check for orphans, they could cause groups to be hidden
+		global $config;
+		$return = array();
+		if ( is_null($parent_id) ) {
+			$entities = $config->entity_manager->get_entities_by_tags('com_user', 'group', group);
+			foreach ($entities as $entity) {
+				if ( is_null($entity->parent) ) {
+					$child_array = $this->get_group_array($entity->guid);
+					$return[$entity->guid]['name'] = $entity->name;
+					$return[$entity->guid]['groupname'] = $entity->groupname;
+					$return[$entity->guid]['email'] = $entity->email;
+					$return[$entity->guid]['children'] = $child_array;
+				}
+			}
+		} else {
+			$entities = $config->entity_manager->get_entities_by_parent($parent_id, group);
+			foreach ($entities as $entity) {
+				if ( $entity->has_tag('com_user', 'group') ) {
+					$child_array = $this->get_group_array($entity->guid);
+					$return[$entity->guid]['name'] = $entity->name;
+					$return[$entity->guid]['groupname'] = $entity->groupname;
+					$return[$entity->guid]['email'] = $entity->email;
+					$return[$entity->guid]['children'] = $child_array;
+				}
+			}
+		}
+		return $return;
+	}
+
 	function get_group_by_groupname($groupname) {
 		global $config;
 		$entities = array();
 		$entity = new group;
-		$entities = $config->entity_manager->get_entities_by_data(array('groupname' => $groupname), group);
+		$entities = $config->entity_manager->get_entities_by_data(array('groupname' => $groupname), array(), group);
 		foreach ($entities as $entity) {
 			if ( $entity->has_tag('com_user', 'group') )
 				return $entity;
@@ -141,7 +193,7 @@ class com_user {
 		global $config;
 		$entities = array();
 		$entity = new user;
-		$entities = $config->entity_manager->get_entities_by_data(array('username' => $username), user);
+		$entities = $config->entity_manager->get_entities_by_data(array('username' => $username), array(), user);
 		foreach ($entities as $entity) {
 			if ( $entity->has_tag('com_user', 'user') )
 				return $entity;
@@ -236,7 +288,7 @@ class com_user {
 		if ( isset($entity->username) ) {
 			if ( $this->gatekeeper('com_user/login', $entity) ) {
 				$_SESSION['user_id'] = $entity->guid;
-				$_SESSION['user'] = $entity;
+				$this->fill_session();
 				return true;
 			} else {
 				return false;
@@ -264,11 +316,9 @@ class com_user {
 		$new_user->add_tag('com_user', 'user');
 		$new_user->salt = md5(rand());
 		$new_user->abilities = array();
+		$new_user->groups = array();
+        $new_user->inherit_abilities = true;
 		return $new_user;
-	}
-
-	function password(&$user, $password) {
-		$user->password = md5($password.$user->salt);
 	}
 
 	function print_login($position = 'content') {
@@ -276,9 +326,6 @@ class com_user {
 	}
 
 	function print_group_form($heading, $new_option, $new_action, $id = NULL) {
-        /**
-         * @todo Rewrite for groups.
-         */
 		global $config, $page;
 		$module = new module('com_user', 'group_form', 'content');
 		if ( is_null($id) ) {
@@ -298,13 +345,29 @@ class com_user {
         $module->id = $id;
         $module->display_abilities = gatekeeper("com_user/abilities");
         $module->sections = array('system');
+        $module->group_array = $this->get_group_array();
         foreach ($config->components as $cur_component) {
             $module->sections[] = $cur_component;
         }
-		//$module->content("<label>Parent<select name=\"parent\">\n");
-		//$module->content("<option value=\"none\">--No Parent--</option>\n");
-		//$module->content($this->print_user_tree('<option value="#guid#"#selected#>#mark# #name# [#username#]</option>', $this->get_user_array(), $parent));
-		//$module->content("</select></label>\n");
+	}
+
+	function print_group_tree($mask, $group_array, $selected_id = NULL, $selected = ' selected="selected"', $mark = '') {
+		$return = '';
+		foreach ($group_array as $key => $group) {
+			$parsed = str_replace('#guid#', $key, $mask);
+			$parsed = str_replace('#name#', $group['name'], $parsed);
+			$parsed = str_replace('#groupname#', $group['groupname'], $parsed);
+			$parsed = str_replace('#mark#', $mark, $parsed);
+            if ( $key == $selected_id || (is_array($selected_id) && in_array($key, $selected_id)) ) {
+				$parsed = str_replace('#selected#', $selected, $parsed);
+			} else {
+				$parsed = str_replace('#selected#', '', $parsed);
+			}
+			$return .= $parsed."\n";
+			if ( !empty($group['children']) )
+				$return .= $this->print_group_tree($mask, $group['children'], $selected_id, $selected, $mark.'-> ');
+		}
+		return $return;
 	}
 
 	function print_user_form($heading, $new_option, $new_action, $id = NULL) {
@@ -313,6 +376,8 @@ class com_user {
 		if ( is_null($id) ) {
 			$module->username = $module->name = '';
 			$module->user_abilities = array();
+            $module->groups = array();
+            $module->inherit_abilities = true;
 		} else {
 			$user = $this->get_user($id);
 			$module->username = $user->username;
@@ -320,13 +385,17 @@ class com_user {
 			$module->email = $user->email;
 			$module->parent = $user->parent;
 			$module->user_abilities = $user->abilities;
+            $module->groups = $user->groups;
+            $module->inherit_abilities = $user->inherit_abilities;
 		}
         $module->heading = $heading;
         $module->new_option = $new_option;
         $module->new_action = $new_action;
         $module->id = $id;
+        $module->display_groups = gatekeeper("com_user/assigng");
         $module->display_abilities = gatekeeper("com_user/abilities");
         $module->sections = array('system');
+        $module->group_array = $this->get_group_array();
         foreach ($config->components as $cur_component) {
             $module->sections[] = $cur_component;
         }
@@ -363,17 +432,24 @@ class com_user {
 }
 
 $config->user_manager = new com_user;
-$config->ability_manager->add('com_user', 'login', 'Login', 'User can login to the system. (Useful for making user categories.)');
+$config->ability_manager->add('com_user', 'login', 'Login', 'User can login to the system.');
+$config->ability_manager->add('com_user', 'self', 'Change Info', 'User can change his own information.');
 $config->ability_manager->add('com_user', 'new', 'Create Users', 'Let user create new users.');
 $config->ability_manager->add('com_user', 'manage', 'Manage Users', 'Let user see and manage other users. Required to access the below abilities.');
 $config->ability_manager->add('com_user', 'edit', 'Edit Users', 'Let user edit other users\' details.');
 $config->ability_manager->add('com_user', 'delete', 'Delete Users', 'Let user delete other users.');
+$config->ability_manager->add('com_user', 'assigng', 'Assign Groups', 'Let user assign users to groups, possibly granting them more abilities.');
+$config->ability_manager->add('com_user', 'newg', 'Create Groups', 'Let user create new groups.');
+$config->ability_manager->add('com_user', 'manageg', 'Manage Groups', 'Let user see and manage groups. Required to access the below abilities.');
+$config->ability_manager->add('com_user', 'editg', 'Edit Groups', 'Let user edit groups\' details.');
+$config->ability_manager->add('com_user', 'deleteg', 'Delete Groups', 'Let user delete groups.');
 $config->ability_manager->add('com_user', 'abilities', 'Manage Abilities', 'Let user manage other users\' and his own abilities.');
 
-if ( isset($_SESSION['user_id']) )
-	$_SESSION['user'] = $config->user_manager->get_user($_SESSION['user_id']);
+if ( isset($_SESSION['user_id']) ) {
+    $config->user_manager->fill_session();
+}
 
-/*
+/**
  * This is a shortcut for a very commonly used function. Any user management
  * component should provide a shortcut for gatekeeper.
  */

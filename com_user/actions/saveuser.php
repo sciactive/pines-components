@@ -7,7 +7,7 @@ if ( empty($_REQUEST['username']) ) {
 }
 
 if ( isset($_REQUEST['user_id']) ) {
-	if ( !gatekeeper('com_user/edit') ) {
+	if ( !gatekeeper('com_user/edit') && (!gatekeeper('com_user/self') || ($_REQUEST['user_id'] != $_SESSION['user_id'])) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", $config->template->url('com_user', 'manageusers', null, false));
 		return;
 	}
@@ -42,24 +42,31 @@ if ( isset($_REQUEST['user_id']) ) {
 		display_error('Username already exists!');
 		return;
 	}
-	$config->user_manager->password($user, $_REQUEST['password']);
+	$user->password($_REQUEST['password']);
 }
 
 $user->name = $_REQUEST['name'];
 $user->email = $_REQUEST['email'];
-/*if ( $_REQUEST['parent'] == 'none' ) {
-	$parent = NULL;
-} else {
-	if ( !is_null($config->user_manager->get_user($_REQUEST['parent'])) && $_REQUEST['parent'] !== $user->guid ) {
-		$parent = $_REQUEST['parent'];
-	} else {
-		display_error('Parent is not valid!');
-		return;
-	}
+
+// Go through a list of all groups, and assign them if they're selected.
+/**
+ * @todo Recode this when users can be limited to controlling users/groups below their level.
+ */
+if ( gatekeeper("com_user/assigng") ) {
+    $groups = $config->entity_manager->get_entities_by_tags('com_user', 'group', group);
+    $ugroups = $_REQUEST['groups'];
+    array_walk($ugroups, 'intval');
+    foreach ($groups as $cur_group) {
+        if ( in_array($cur_group->guid, $ugroups) ) {
+            $user->addgroup($cur_group->guid);
+        } else {
+            $user->delgroup($cur_group->guid);
+        }
+    }
 }
-$user->parent = $parent; */
 
 if ( $_REQUEST['abilities'] === 'true' && gatekeeper("com_user/abilities") ) {
+    $user->inherit_abilities = ($_REQUEST['inherit_abilities'] == 'ON' ? true : false);
 	$sections = array('system');
 	foreach ($config->components as $cur_component) {
 		$sections[] = $cur_component;

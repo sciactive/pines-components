@@ -11,6 +11,12 @@ defined('D_RUN') or die('Direct access prohibited');
 <label>Group Name<input type="text" name="groupname" value="<?php echo $this->groupname; ?>" /></label>
 <label>Display Name<input type="text" name="name" value="<?php echo $this->name; ?>" /></label>
 <label>Email<input type="text" name="email" value="<?php echo $this->email; ?>" /></label>
+<label>Parent
+<select name="parent">
+<option value="none">--No Parent--</option>
+<?php echo $config->user_manager->print_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->parent); ?>
+</select>
+</label>
 <?php if ( $this->display_abilities ) { ?>
     <input type="hidden" name="abilities" value="true" />
     <label>Abilities</label><br />
@@ -23,7 +29,7 @@ defined('D_RUN') or die('Direct access prohibited');
                 <?php foreach ($section_abilities as $cur_ability) { ?>
                 <tr><td><label><input type="checkbox" name="<?php echo $cur_section; ?>[]" value="<?php echo $cur_ability['ability']; ?>"
                     <?php if ( array_search($cur_section.'/'.$cur_ability['ability'], $this->group_abilities) !== false ) { ?>
-                        checked
+                        checked="checked"
                     <?php } ?>
                      />&nbsp;<?php echo $cur_ability['title']; ?></label></td><td style="width: 80%;"><?php echo $cur_ability['description']; ?></td></tr>
                 <?php } ?>

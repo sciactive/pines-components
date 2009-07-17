@@ -18,6 +18,15 @@ if ( !gatekeeper('com_newsletter/send') ) {
 
 $com_newsletter_send = new module('com_newsletter', 'send', 'content');
 
+/**
+ * Clean a mail header of new line characters.
+ *
+ * New line characters can be used to inject arbitrary headers into an email, so
+ * they should always be removed before the header is inserted into the email.
+ *
+ * @param string $header The header to be cleaned.
+ * @return string The cleaned header.
+ */
 function clean_header($header) {
 	return str_replace("\n", ' ', $header);
 }
@@ -51,7 +60,7 @@ foreach ( $_REQUEST['user'] as $cur_user_id) {
 		$bcc = $bcc . (strlen($bcc) ? ', ' : '') . $user->email;
 }
 
-$mailer = &new Mailer(clean_header($_REQUEST['from']), 'undisclosed-recipients <noone@example.com>', clean_header($_REQUEST['subject']), $message);
+$mailer = &new com_mailer(clean_header($_REQUEST['from']), 'undisclosed-recipients <noone@example.com>', clean_header($_REQUEST['subject']), $message);
 $mailer->addHeader('Reply-To', clean_header($_REQUEST['replyto']));
 $mailer->addHeader('Bcc', $bcc);
 
@@ -69,5 +78,5 @@ if ( $mailer->send() ) {
 $com_newsletter_send->content("<h3>Subject: &quot;".clean_header($_REQUEST['subject'])."&quot;.</h3>");
 $com_newsletter_send->content("<div style=\"background: white; border: 2px solid black; padding: 5px; clear: both; overflow: auto;\">$message<br style=\"clear: both;\" /></div><br />");
 
-// com_newsletter::list_mails('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', '');
+// $config->com_newsletter->list_mails('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', '');
 ?>

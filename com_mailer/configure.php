@@ -10,19 +10,26 @@
  * @link http://sciactive.com/
  */
 
-/*
+/**
+ * Creates and sends emails.
+ *
+ * This class supports attachments and custom headers.
+ *
  * Credit for this class goes to Alejandro Gervasio
  * http://www.devshed.com/cp/bio/Alejandro-Gervasio/
+ *
+ * @package Dandelion
+ * @subpackage com_mailer
  */
-
-class Mailer{
+class com_mailer extends component {
 	var $sender;
 	var $recipient;
 	var $subject;
 	var $headers=array();
 	var $mimeTypes=array();
 	var $attachments=array();
-	function Mailer($sender,$recipient,$subject,$message) {
+	
+    function __construct($sender, $recipient, $subject, $message) {
 		// validate incoming parameters
 		if (!preg_match("/^.+@.+$/",$sender)) {
 			display_error('Invalid value for email sender.');
@@ -58,10 +65,12 @@ class Mailer{
 		$this->mimeTypes['text/xml']='xml';
 		$this->mimeTypes['application/pdf']='pdf';
 	}
+
 	// create text part of the message
 	function buildTextPart() {
 		return "--MIME_BOUNDRY\nContent-Type: text/html; charset=iso-8859-1\nContent-Transfer-Encoding: 7bit\n\n\n".$this->message."\n\n";
 	}
+
 	// create attachments part of the message
 	function buildAttachmentPart() {
 		if (count($this->attachments) > 0) {
@@ -74,6 +83,7 @@ class Mailer{
 			return $attachmentPart;
 		}
 	}
+
 	// create message MIME headers
 	function buildHeaders() {
 		foreach($this->headers as $name=>$value) {
@@ -81,10 +91,12 @@ class Mailer{
 		}
 		return implode("\n",$headers)."\nThis is a multi-part message in MIME format.\n";
 	}
+
 	// add new MIME header
 	function addHeader($name,$value) {
 		$this->headers[$name]=$value;
 	}
+
 	// add new attachment
 	function addAttachment($attachment) {
 		if (!file_exists($attachment)) {
@@ -92,6 +104,7 @@ class Mailer{
 		}
 		$this->attachments[]=$attachment;
 	}
+
 	// get MIME Type of attachment
 	function getMimeType($attachment) {
 		$attachment=explode('.',basename($attachment));
@@ -100,6 +113,7 @@ class Mailer{
 		}
 		return $mimeType;
 	}
+
 	// send email
 	function send() {
 		$to=$this->recipient;

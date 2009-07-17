@@ -16,7 +16,15 @@ if ( isset($config->ability_manager) ) {
 	$config->ability_manager->add('com_newsletter', 'send', 'Send', 'Let users send out mailings.');
 }
 
-class com_newsletter {
+/**
+ * com_newsletter main class.
+ *
+ * Manages newsletters to send out to users.
+ *
+ * @package Dandelion
+ * @subpackage com_newsletter
+ */
+class com_newsletter extends component {
 	function delete_attachment(&$mail, $name) {
 		global $config;
 		if ( unlink($config->setting_upload . 'attachments/' . clean_filename($name)) ) {
@@ -123,13 +131,15 @@ class com_newsletter {
 	}
 }
 
+$config->com_newsletter = new com_newsletter;
+
 function print_default() {
     global $config;
     if ( gatekeeper() ) {
         if ( !gatekeeper('com_newsletter/managemails') ) {
             display_notice("You don't have necessary permission.");
         } else {
-            com_newsletter::list_mails('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', '');
+            $config->com_newsletter->list_mails('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', '');
         }
     } else {
         $config->user_manager->print_login();

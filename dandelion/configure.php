@@ -11,7 +11,17 @@
  */
 defined('D_RUN') or die('Direct access prohibited');
 
+/**
+ * Dandelion template class.
+ *
+ * @package Dandelion
+ * @subpackage tpl_dandelion
+ */
 class tpl_dandelion extends template {
+    /**
+     * The template format.
+     * @var string $format
+     */
 	var $format = 'xhtml-1.0-strict-desktop';
 }
 

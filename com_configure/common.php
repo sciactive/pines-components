@@ -16,7 +16,15 @@ if ( isset($config->ability_manager) ) {
 	$config->ability_manager->add('com_configure', 'list', 'List Configuration', 'Let the user see the current configuration settings.');
 }
 
-class com_configure {
+/**
+ * com_configure main class.
+ *
+ * Manages Dandelion configuration.
+ *
+ * @package Dandelion
+ * @subpackage com_configure
+ */
+class com_configure extends component {
 	var $config_files = array();
 
 	function __construct() {

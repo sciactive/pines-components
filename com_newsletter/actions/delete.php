@@ -29,5 +29,5 @@ if ( isset($_REQUEST['mail_id']) ) {
 	display_error("No mail specified!");
 }
 
-com_newsletter::list_mails('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', '');
+$config->com_newsletter->list_mails('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', '');
 ?>

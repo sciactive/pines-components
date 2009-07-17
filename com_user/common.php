@@ -11,7 +11,15 @@
  */
 defined('D_RUN') or die('Direct access prohibited');
 
-class com_user {
+/**
+ * com_user main class.
+ *
+ * Provides an entity manager based user and group manager.
+ *
+ * @package Dandelion
+ * @subpackage com_user
+ */
+class com_user extends component {
 	function authenticate($username, $password) {
 		$entity = new user;
 		$entity = $this->get_user_by_username($username);
@@ -56,6 +64,17 @@ class com_user {
         }
     }
 
+    /**
+     * Check to see if a user has an ability.
+     *
+     * This function will check both user and group abilities, if the user is
+     * marked to inherit the abilities of his group.
+     *
+     * @param string $ability The ability.
+     * @param user $user The user to check. If none is given, the current user is used.
+     * @global DynamicConfig
+     * @return bool
+     */
 	function gatekeeper($ability = NULL, $user = NULL) {
 		if ( is_null($user) ) {
             // If the user is logged in, their abilities are already set up.
@@ -441,6 +460,10 @@ class com_user {
 	}
 }
 
+/**
+ * The user manager.
+ * @global com_user $config->user_manager
+ */
 $config->user_manager = new com_user;
 $config->ability_manager->add('com_user', 'login', 'Login', 'User can login to the system.');
 $config->ability_manager->add('com_user', 'self', 'Change Info', 'User can change his own information.');
@@ -457,15 +480,6 @@ $config->ability_manager->add('com_user', 'abilities', 'Manage Abilities', 'Let 
 
 if ( isset($_SESSION['user_id']) ) {
     $config->user_manager->fill_session();
-}
-
-/**
- * This is a shortcut for a very commonly used function. Any user management
- * component should provide a shortcut for gatekeeper.
- */
-function gatekeeper($ability = NULL) {
-	global $config;
-	return $config->user_manager->gatekeeper($ability);
 }
 
 ?>

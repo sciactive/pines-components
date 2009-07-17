@@ -34,7 +34,7 @@ if ( $_REQUEST['update'] == 'yes' ) {
 	$mail->message = stripslashes($_REQUEST['data']);
 	foreach ( $mail->attachments as $key => $cur_attachment ) {
 		if ( $_REQUEST["attach_".clean_checkbox($cur_attachment)] != 'on' ) {
-			if ( com_newsletter::delete_attachment($mail, $cur_attachment) )
+			if ( $config->com_newsletter->delete_attachment($mail, $cur_attachment) )
 				display_notice("Attachment $cur_attachment removed.");
 		}
 	}
@@ -53,5 +53,5 @@ if ( $_REQUEST['update'] == 'yes' ) {
 	display_notice('Saved "'.$mail->name.'"');
 }
 
-com_newsletter::edit_mail("Editing mail \"" . $mail->name . "\".", $mail, 'com_newsletter', 'edit');
+$config->com_newsletter->edit_mail("Editing mail \"" . $mail->name . "\".", $mail, 'com_newsletter', 'edit');
 ?>

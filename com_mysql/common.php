@@ -11,30 +11,43 @@
  */
 defined('D_RUN') or die('Direct access prohibited');
 
-$com_mysql = new DynamicConfig;
+/**
+ * com_mysql main class.
+ *
+ * Connect to and disconnect from a MySQL database.
+ *
+ * @package Dandelion
+ * @subpackage com_mysql
+ */
+class com_mysql extends component {
+    public $connected = false;
+    public $link = null;
 
-if (!isset($com_mysql->connected))
-	$com_mysql->connected = false;
+    public function __construct($host = null, $user = null, $password = null, $database = null) {
+        $this->connect($host, $user, $password, $database);
+    }
 
-if (!isset($com_mysql->link))
-	$com_mysql->link = 0;
-
-class com_mysql {
-	function connect() {
-		global $com_mysql, $config;
+	function connect($host = null, $user = null, $password = null, $database = null) {
+		global $config;
+        /**
+         * If something changes the host, it could reveal the user and password.
+         */
+        if (is_null($host)) $host = $config->com_mysql->host;
+        if (is_null($user)) $user = $config->com_mysql->user;
+        if (is_null($password)) $password = $config->com_mysql->password;
+        if (is_null($database)) $database = $config->com_mysql->database;
 		// Connecting, selecting database
-		if (!$com_mysql->connected) {
-			$com_mysql->link = mysql_connect($config->com_mysql->host, $config->com_mysql->user, $config->com_mysql->password) or die('Could not connect: ' . mysql_error());
-			mysql_select_db($config->com_mysql->database, $com_mysql->link) or die('Could not select database: ' . mysql_error());
-			$com_mysql->connected = true;
+		if (!$this->connected) {
+			$this->link = mysql_connect($host, $user, $password) or die('Could not connect: ' . mysql_error());
+			mysql_select_db($database, $this->link) or die('Could not select database: ' . mysql_error());
+			$this->connected = true;
 		}
 	}
 
 	function disconnect() {
-		global $com_mysql;
-		if ($com_mysql->connected) {
-			mysql_close($com_mysql->link);
-			$com_mysql->connected = false;
+		if ($this->connected) {
+			mysql_close($this->link);
+			$this->connected = false;
 		}
 	}
 }

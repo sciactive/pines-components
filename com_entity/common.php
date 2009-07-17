@@ -11,7 +11,15 @@
  */
 defined('D_RUN') or die('Direct access prohibited');
 
-class com_entity {
+/**
+ * com_entity main class.
+ *
+ * Provides a MySQL based entity manager for Dandelion.
+ *
+ * @package Dandelion
+ * @subpackage com_entity
+ */
+class com_entity extends component {
 	public function delete_entity(&$entity) {
 		$return = $this->delete_entity_by_id($entity->guid);
 		if ( $return )
@@ -21,19 +29,18 @@ class com_entity {
 	}
 
 	public function delete_entity_by_id($guid) {
-		global $config, $com_mysql;
-		$config->db_manager->connect();
+		global $config;
 		$query = sprintf("DELETE FROM `%scom_entity_entities` WHERE `guid`=%u;",
 			$config->com_mysql->prefix,
 			intval($guid));
-		if ( !(mysql_query($query, $com_mysql->link)) ) {
+		if ( !(mysql_query($query, $config->db_manager->link)) ) {
 			display_error('Query failed: ' . mysql_error());
 			return false;
 		}
 		$query = sprintf("DELETE FROM `%scom_entity_data` WHERE `guid`=%u;",
 			$config->com_mysql->prefix,
 			intval($guid));
-		if ( !(mysql_query($query, $com_mysql->link)) ) {
+		if ( !(mysql_query($query, $config->db_manager->link)) ) {
 			display_error('Query failed: ' . mysql_error());
 			return false;
 		}
@@ -41,25 +48,24 @@ class com_entity {
 	}
 
 	public function get_entities_by_data($data, $required_tags = array(), $class = entity) {
-		global $config, $com_mysql;
-		$config->db_manager->connect();
+		global $config;
 		$entities = array();
 
 		$query = sprintf("SELECT `guid` FROM `%scom_entity_data` WHERE `name`='%s' AND `value`='%s'",
 			$config->com_mysql->prefix,
-			mysql_real_escape_string(key($data), $com_mysql->link),
-			mysql_real_escape_string(serialize(current($data)), $com_mysql->link));
+			mysql_real_escape_string(key($data), $config->db_manager->link),
+			mysql_real_escape_string(serialize(current($data)), $config->db_manager->link));
 
 		for (next($data); current($data); next($data)) {
 			$query .= sprintf(" UNION SELECT `guid` FROM `%scom_entity_data` WHERE `name`='%s' AND `value`='%s'",
 				$config->com_mysql->prefix,
-				mysql_real_escape_string(key($data), $com_mysql->link),
-				mysql_real_escape_string(serialize(current($data)), $com_mysql->link));
+				mysql_real_escape_string(key($data), $config->db_manager->link),
+				mysql_real_escape_string(serialize(current($data)), $config->db_manager->link));
 		}
 
 		$query .= ";";
 
-		if ( !($result = mysql_query($query, $com_mysql->link)) ) {
+		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
 			display_error('Query failed: ' . mysql_error());
 			return false;
 		}
@@ -75,15 +81,14 @@ class com_entity {
 	}
 
 	public function get_entities_by_parent($parent_guid, $class = entity) {
-		global $config, $com_mysql;
-		$config->db_manager->connect();
+		global $config;
 		$entities = array();
 
 		$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid`=d.`guid` HAVING e.`parent`=%u ORDER BY e.`guid`;",
 			$config->com_mysql->prefix,
 			$config->com_mysql->prefix,
 			intval($parent_guid));
-		if ( !($result = mysql_query($query, $com_mysql->link)) ) {
+		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
 			display_error('Query failed: ' . mysql_error());
 			return false;
 		}
@@ -127,8 +132,7 @@ class com_entity {
 	 * Will return any entities which contain *all* of the specified tags.
 	 */
 	public function get_entities_by_tags_exclusive() {
-		global $config, $com_mysql;
-		$config->db_manager->connect();
+		global $config;
 		if (is_array(func_get_arg(0))) {
 			$tag_array = func_get_arg(0);
             if (func_num_args() > 1 && is_subclass_of(func_get_arg(1), 'entity')) {
@@ -161,7 +165,7 @@ class com_entity {
 			$config->com_mysql->prefix,
 			$config->com_mysql->prefix,
 			$tag_query);
-		if ( !($result = mysql_query($query, $com_mysql->link)) ) {
+		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
 			display_error('Query failed: ' . mysql_error());
 			return false;
 		}
@@ -210,8 +214,7 @@ class com_entity {
 	 * Will return any entities which contain *any* of the specified tags.
 	 */
 	public function get_entities_by_tags_inclusive() {
-		global $config, $com_mysql;
-		$config->db_manager->connect();
+		global $config;
 		if (is_array(func_get_arg(0))) {
 			$tag_array = func_get_arg(0);
             if (func_num_args() > 1 && is_subclass_of(func_get_arg(1), 'entity')) {
@@ -244,7 +247,7 @@ class com_entity {
 			$config->com_mysql->prefix,
 			$config->com_mysql->prefix,
 			$tag_query);
-		if ( !($result = mysql_query($query, $com_mysql->link)) ) {
+		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
 			display_error('Query failed: ' . mysql_error());
 			return false;
 		}
@@ -294,8 +297,7 @@ class com_entity {
 	 * *any* of the inclusive_tags.
 	 */
 	public function get_entities_by_tags_mixed($exlusive_tags = array(), $inclusive_tags = array(), $class = entity) {
-		global $config, $com_mysql;
-		$config->db_manager->connect();
+		global $config;
 		$entities = array();
 
 		if (!is_array($exlusive_tags) || !is_array($inclusive_tags)) {
@@ -320,7 +322,7 @@ class com_entity {
 			$config->com_mysql->prefix,
 			$excl_tag_query,
 			$incl_tag_query);
-		if ( !($result = mysql_query($query, $com_mysql->link)) ) {
+		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
 			display_error('Query failed: ' . mysql_error());
 			return false;
 		}
@@ -372,8 +374,7 @@ class com_entity {
 	}
 
 	public function get_entity($guid, $class = entity) {
-		global $config, $com_mysql;
-		$config->db_manager->connect();
+		global $config;
 
         $entity = new $class;
 		$data = array();
@@ -382,7 +383,7 @@ class com_entity {
 			$config->com_mysql->prefix,
 			$config->com_mysql->prefix,
 			intval($guid));
-		if ( !($result = mysql_query($query, $com_mysql->link)) ) {
+		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
 			display_error('Query failed: ' . mysql_error());
 			return false;
 		}
@@ -407,14 +408,13 @@ class com_entity {
 	}
 
 	public function save_entity($entity) {
-		global $config, $com_mysql;
-		$config->db_manager->connect();
+		global $config;
 		if ( is_null($entity->guid) ) {
 			$query = sprintf("INSERT INTO `%scom_entity_entities` (`parent`, `tags`) VALUES (%s, '%s');",
 				$config->com_mysql->prefix,
 				(is_null($entity->parent) ? 'NULL' : intval($entity->parent)),
-				mysql_real_escape_string(serialize($entity->tags), $com_mysql->link));
-			if ( !(mysql_query($query, $com_mysql->link)) ) {
+				mysql_real_escape_string(serialize($entity->tags), $config->db_manager->link));
+			if ( !(mysql_query($query, $config->db_manager->link)) ) {
 				display_error('Query failed: ' . mysql_error());
 				return false;
 			}
@@ -424,9 +424,9 @@ class com_entity {
 				$query = sprintf("INSERT INTO `%scom_entity_data` (`guid`, `name`, `value`) VALUES (%u, '%s', '%s');",
 					$config->com_mysql->prefix,
 					intval($new_id),
-					mysql_real_escape_string($name, $com_mysql->link),
-					mysql_real_escape_string(serialize($value), $com_mysql->link));
-				if ( !(mysql_query($query, $com_mysql->link)) ) {
+					mysql_real_escape_string($name, $config->db_manager->link),
+					mysql_real_escape_string(serialize($value), $config->db_manager->link));
+				if ( !(mysql_query($query, $config->db_manager->link)) ) {
 					display_error('Query failed: ' . mysql_error());
 					return false;
 				}
@@ -436,16 +436,16 @@ class com_entity {
 			$query = sprintf("UPDATE `%scom_entity_entities` SET `parent`=%s, `tags`='%s' WHERE `guid`=%u;",
 				$config->com_mysql->prefix,
 				(is_null($entity->parent) ? 'NULL' : intval($entity->parent)),
-				mysql_real_escape_string(serialize($entity->tags), $com_mysql->link),
+				mysql_real_escape_string(serialize($entity->tags), $config->db_manager->link),
 				intval($entity->guid));
-			if ( !(mysql_query($query, $com_mysql->link)) ) {
+			if ( !(mysql_query($query, $config->db_manager->link)) ) {
 				display_error('Query failed: ' . mysql_error());
 				return false;
 			}
 			$query = sprintf("DELETE FROM `%scom_entity_data` WHERE `guid`=%u;",
 				$config->com_mysql->prefix,
 				intval($entity->guid));
-			if ( !(mysql_query($query, $com_mysql->link)) ) {
+			if ( !(mysql_query($query, $config->db_manager->link)) ) {
 				display_error('Query failed: ' . mysql_error());
 				return false;
 			}
@@ -453,9 +453,9 @@ class com_entity {
 				$query = sprintf("INSERT INTO `%scom_entity_data` (`guid`, `name`, `value`) VALUES (%u, '%s', '%s');",
 					$config->com_mysql->prefix,
 					intval($entity->guid),
-					mysql_real_escape_string($name, $com_mysql->link),
-					mysql_real_escape_string(serialize($value), $com_mysql->link));
-				if ( !(mysql_query($query, $com_mysql->link)) ) {
+					mysql_real_escape_string($name, $config->db_manager->link),
+					mysql_real_escape_string(serialize($value), $config->db_manager->link));
+				if ( !(mysql_query($query, $config->db_manager->link)) ) {
 					display_error('Query failed: ' . mysql_error());
 					return false;
 				}

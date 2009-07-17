@@ -9,7 +9,7 @@
  * @copyright Hunter Perrin
  * @link http://sciactive.com/
  */
-defined('D_RUN') or die('Direct access prohibited');
+defined('X_RUN') or die('Direct access prohibited');
 
 /**
  * com_user main class.
@@ -480,6 +480,19 @@ $config->ability_manager->add('com_user', 'abilities', 'Manage Abilities', 'Let 
 
 if ( isset($_SESSION['user_id']) ) {
     $config->user_manager->fill_session();
+}
+
+function print_default() {
+    global $config;
+    if ( gatekeeper() ) {
+        if ( !gatekeeper('com_user/manageusers') ) {
+            display_notice("You don't have necessary permission.");
+        } else {
+            $config->user_manager->list_users();
+        }
+    } else {
+        $config->user_manager->print_login();
+    }
 }
 
 ?>

@@ -9,7 +9,7 @@
  * @copyright Hunter Perrin
  * @link http://sciactive.com/
  */
-defined('D_RUN') or die('Direct access prohibited');
+defined('X_RUN') or die('Direct access prohibited');
 
 if ( gatekeeper('com_newsletter/managemails') || gatekeeper('com_newsletter/managegroups') || gatekeeper('com_newsletter/send') ) {
 	$com_newsletter_menu_id = $page->main_menu->add('Newsletter');

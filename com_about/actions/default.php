@@ -9,7 +9,7 @@
  * @copyright Hunter Perrin
  * @link http://sciactive.com/
  */
-defined('D_RUN') or die('Direct access prohibited');
+defined('X_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper() ) {
 	$config->user_manager->punt_user("You are not logged in.", $config->template->url('com_about', null, null, false));

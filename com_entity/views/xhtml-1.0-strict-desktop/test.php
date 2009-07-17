@@ -9,7 +9,7 @@
  * @copyright Hunter Perrin
  * @link http://sciactive.com/
  */
-defined('D_RUN') or die('Direct access prohibited');
+defined('X_RUN') or die('Direct access prohibited');
 ?>
 <p>This entity manager tester will test the current entity manager for required
 functionality. If the entity manager does not successfully pass any part of the

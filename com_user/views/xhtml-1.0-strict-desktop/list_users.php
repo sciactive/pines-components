@@ -9,7 +9,7 @@
  * @copyright Hunter Perrin
  * @link http://sciactive.com/
  */
-defined('D_RUN') or die('Direct access prohibited');
+defined('X_RUN') or die('Direct access prohibited');
 ?>
 <?php foreach($this->users as $user) { ?>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo $user->username; ?></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

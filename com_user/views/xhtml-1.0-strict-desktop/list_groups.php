@@ -9,7 +9,7 @@
  * @copyright Hunter Perrin
  * @link http://sciactive.com/
  */
-defined('D_RUN') or die('Direct access prohibited');
+defined('X_RUN') or die('Direct access prohibited');
 ?>
 <?php foreach($this->groups as $group) { ?>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo $group->groupname; ?></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

@@ -9,7 +9,7 @@
  * @copyright Hunter Perrin
  * @link http://sciactive.com/
  */
-defined('D_RUN') or die('Direct access prohibited');
+defined('X_RUN') or die('Direct access prohibited');
 
 if ( isset($config->ability_manager) ) {
 	$config->ability_manager->add('com_newsletter', 'managemails', 'Manage Mails', 'Let users create, edit, and delete mailings.');
@@ -132,18 +132,5 @@ class com_newsletter extends component {
 }
 
 $config->com_newsletter = new com_newsletter;
-
-function print_default() {
-    global $config;
-    if ( gatekeeper() ) {
-        if ( !gatekeeper('com_newsletter/managemails') ) {
-            display_notice("You don't have necessary permission.");
-        } else {
-            $config->com_newsletter->list_mails('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', '');
-        }
-    } else {
-        $config->user_manager->print_login();
-    }
-}
 
 ?>

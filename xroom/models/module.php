@@ -9,7 +9,7 @@
  * @copyright Hunter Perrin
  * @link http://sciactive.com/
  */
-defined('D_RUN') or die('Direct access prohibited');
+defined('X_RUN') or die('Direct access prohibited');
 ?>
 <div class="module<?php echo $this->class_suffix; ?>">
     <?php if ($this->show_title && !empty($this->title)) { ?>

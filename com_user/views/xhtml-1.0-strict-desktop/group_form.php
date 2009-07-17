@@ -9,7 +9,7 @@
  * @copyright Hunter Perrin
  * @link http://sciactive.com/
  */
-defined('D_RUN') or die('Direct access prohibited');
+defined('X_RUN') or die('Direct access prohibited');
 ?>
 <form method="post" id="group_details" action="<?php echo $config->template->url(); ?>">
 <div class="stylized stdform">

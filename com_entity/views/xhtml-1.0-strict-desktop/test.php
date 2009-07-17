@@ -2,7 +2,7 @@
 /**
  * Displays the results of an entity manager test.
  *
- * @package Dandelion
+ * @package XROOM
  * @subpackage com_entity
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>

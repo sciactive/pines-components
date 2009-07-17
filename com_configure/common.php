@@ -2,7 +2,7 @@
 /**
  * com_configure's common file.
  *
- * @package Dandelion
+ * @package XROOM
  * @subpackage com_configure
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
@@ -19,9 +19,9 @@ if ( isset($config->ability_manager) ) {
 /**
  * com_configure main class.
  *
- * Manages Dandelion configuration.
+ * Manages XROOM configuration.
  *
- * @package Dandelion
+ * @package XROOM
  * @subpackage com_configure
  */
 class com_configure extends component {

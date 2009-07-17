@@ -2,7 +2,7 @@
 /**
  * com_newsletter's common file.
  *
- * @package Dandelion
+ * @package XROOM
  * @subpackage com_newsletter
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
@@ -21,7 +21,7 @@ if ( isset($config->ability_manager) ) {
  *
  * Manages newsletters to send out to users.
  *
- * @package Dandelion
+ * @package XROOM
  * @subpackage com_newsletter
  */
 class com_newsletter extends component {

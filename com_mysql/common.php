@@ -2,7 +2,7 @@
 /**
  * com_mysql's common file.
  *
- * @package Dandelion
+ * @package XROOM
  * @subpackage com_mysql
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
@@ -16,7 +16,7 @@ defined('D_RUN') or die('Direct access prohibited');
  *
  * Connect to and disconnect from a MySQL database.
  *
- * @package Dandelion
+ * @package XROOM
  * @subpackage com_mysql
  */
 class com_mysql extends component {

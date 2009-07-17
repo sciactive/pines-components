@@ -1,9 +1,9 @@
 <?php
 /**
- * Test an entity manager for compliance with Dandelion's entity management
+ * Test an entity manager for compliance with XROOM's entity management
  * system.
  *
- * @package Dandelion
+ * @package XROOM
  * @subpackage com_entity
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>

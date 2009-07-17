@@ -2,7 +2,7 @@
 /**
  * Create a user.
  *
- * @package Dandelion
+ * @package XROOM
  * @subpackage com_user
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>

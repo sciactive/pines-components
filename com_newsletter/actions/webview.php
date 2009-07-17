@@ -1,8 +1,8 @@
 <?php
 /**
- * View a newsletter without the Dandelion interface.
+ * View a newsletter without the XROOM interface.
  *
- * @package Dandelion
+ * @package XROOM
  * @subpackage com_newsletter
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>

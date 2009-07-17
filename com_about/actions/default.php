@@ -2,7 +2,7 @@
 /**
  * Display "about" information for the current installation.
  *
- * @package Dandelion
+ * @package XROOM
  * @subpackage com_about
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>

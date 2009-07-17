@@ -2,7 +2,7 @@
 /**
  * com_entity's common file.
  *
- * @package Dandelion
+ * @package XROOM
  * @subpackage com_entity
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
@@ -14,9 +14,9 @@ defined('D_RUN') or die('Direct access prohibited');
 /**
  * com_entity main class.
  *
- * Provides a MySQL based entity manager for Dandelion.
+ * Provides a MySQL based entity manager for XROOM.
  *
- * @package Dandelion
+ * @package XROOM
  * @subpackage com_entity
  */
 class com_entity extends component {

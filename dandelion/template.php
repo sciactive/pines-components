@@ -1,11 +1,11 @@
 <?php
 /**
- * Main page of the Dandelion template.
+ * Main page of the XROOM template.
  *
  * The page which is output to the user is built using this file.
  *
- * @package Dandelion
- * @subpackage tpl_dandelion
+ * @package XROOM
+ * @subpackage tpl_xroom
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -22,7 +22,7 @@ echo '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>'; ?>
 	<title><?php echo $page->get_title(); ?></title>
 	<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="author" content="Hunter Perrin" />
-	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dandelion.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/xroom.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dropdown/dropdown.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dropdown/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dropdown/themes/default/default.css" media="all" rel="stylesheet" type="text/css" />

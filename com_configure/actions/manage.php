@@ -1,8 +1,8 @@
 <?php
 /**
- * Manage Dandelion configuration.
+ * Manage XROOM configuration.
  *
- * @package Dandelion
+ * @package XROOM
  * @subpackage com_configure
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>

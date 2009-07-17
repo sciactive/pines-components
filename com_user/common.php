@@ -2,7 +2,7 @@
 /**
  * com_user's common file.
  *
- * @package Dandelion
+ * @package XROOM
  * @subpackage com_user
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
@@ -16,7 +16,7 @@ defined('D_RUN') or die('Direct access prohibited');
  *
  * Provides an entity manager based user and group manager.
  *
- * @package Dandelion
+ * @package XROOM
  * @subpackage com_user
  */
 class com_user extends component {

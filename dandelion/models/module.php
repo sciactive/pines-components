@@ -2,8 +2,8 @@
 /**
  * Template for a module.
  *
- * @package Dandelion
- * @subpackage tpl_dandelion
+ * @package XROOM
+ * @subpackage tpl_xroom
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin

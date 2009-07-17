@@ -2,7 +2,7 @@
 /**
  * com_user's configuration.
  *
- * @package Dandelion
+ * @package XROOM
  * @subpackage com_user
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
@@ -19,7 +19,7 @@ $config->com_user->empty_pw = true;
 /**
  * Entities which support abilities, such as users and groups.
  *
- * @package Dandelion
+ * @package XROOM
  * @subpackage com_user
  */
 class able_entity extends entity {
@@ -78,9 +78,9 @@ class able_entity extends entity {
 }
 
 /**
- * Dandelion system users.
+ * XROOM system users.
  *
- * @package Dandelion
+ * @package XROOM
  * @subpackage com_user
  */
 class user extends able_entity {
@@ -146,10 +146,10 @@ class user extends able_entity {
 }
 
 /**
- * Dandelion system groups.
+ * XROOM system groups.
  *
  * @todo Function users() to list users of this group.
- * @package Dandelion
+ * @package XROOM
  * @subpackage com_user
  */
 class group extends able_entity {
@@ -159,7 +159,7 @@ class group extends able_entity {
 /**
  * A generic ability manager.
  *
- * @package Dandelion
+ * @package XROOM
  * @subpackage com_user
  */
 class abilities {

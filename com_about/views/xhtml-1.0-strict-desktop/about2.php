@@ -27,7 +27,7 @@ in and only give them permissions they have been allowed.
 The admin can add functions using the premade components, or write his own
 components to provide additional functionality to the system. The system will
 have a dependency verifier, which will inform the admin if he is missing
-required components and where to get them. <?php echo $config->program_title; ?>
+required components and where to get them. <?php echo $config->program_title; ?> 
 was designed to allow maximum flexibility for the developer, while still
 providing a large enough base product to make development easy. The admin can
 choose whatever database environment he uses, even flat files, and thanks to the

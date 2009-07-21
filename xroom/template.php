@@ -19,7 +19,7 @@ echo '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>'; ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
-	<title><?php echo $this->get_title(); ?></title>
+	<title><?php echo $page->get_title(); ?></title>
 	<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="author" content="Hunter Perrin" />
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/xroom.css" media="all" rel="stylesheet" type="text/css" />
@@ -33,42 +33,42 @@ echo '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>'; ?>
 	<!--[if lt IE 7]>
 	<script type="text/javascript" src="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/js/jquery/jquery.dropdown.js"></script>
 	<![endif]-->
-	<?php echo $this->get_head(); ?>
+	<?php echo $page->get_head(); ?>
 </head>
 
 <body>
 
 <div id="content_area">
 	<div class="pagetitle">
-	<span><?php echo $this->get_title(); ?></span>
+	<span><?php echo $page->get_title(); ?></span>
 	</div>
 	<?php
-	$new_menu = $this->main_menu->render();
+	$new_menu = $page->main_menu->render();
 	if ( !empty($new_menu) )
 		echo "<div class=\"mainmenu\">\n$new_menu\n</div>\n";
 	?>
 	<div style="clear: both; height: 1px;">&nbsp;</div>
-	<?php if ( isset($this->modules['header']) ) {?>
+	<?php if ( isset($page->modules['header']) ) {?>
 	<div class="mainpage">
 		<?php
-		foreach ($this->modules['header'] as $cur_module) {
-			echo $cur_module->render() . "\n";
+		foreach ($page->modules['header'] as $cur_module) {
+			echo $cur_module->get_content() . "\n";
 		}
 		?>
 	</div>
-	<?php } if ( count($this->get_error()) ) { ?>
+	<?php } if ( count($page->get_error()) ) { ?>
 	<div class="notice error"><span class="close">[X] Close</span>
 	<?php
-	$error = $this->get_error();
+	$error = $page->get_error();
 	foreach ($error as $cur_item) {
 		echo "$cur_item<br />\n";
 	}
 	?>
 	</div>
-	<?php } if ( count($this->get_notice()) ) { ?>
+	<?php } if ( count($page->get_notice()) ) { ?>
 	<div class="notice"><span class="close">[x] Close</span>
 	<?php
-	$notice = $this->get_notice();
+	$notice = $page->get_notice();
 	foreach ($notice as $cur_item) {
 		echo "$cur_item<br />\n";
 	}
@@ -76,41 +76,41 @@ echo '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>'; ?>
 	</div>
 	<?php } ?>
 	<div id="wrapper">
-		<?php if ( isset($this->modules['content']) ) {?>
+		<?php if ( isset($page->modules['content']) ) {?>
 		<div class="content middle">
 			<?php
-			echo $this->get_content();
-			foreach ($this->modules['content'] as $cur_module) {
-				echo $cur_module->render() . "\n";
+			echo $page->get_content();
+			foreach ($page->modules['content'] as $cur_module) {
+				echo $cur_module->get_content() . "\n";
 			}
 			?>
 		</div>
-		<?php } if ( isset($this->modules['left']) ) {?>
+		<?php } if ( isset($page->modules['left']) ) {?>
 		<div class="content left">
 			<?php
-			echo $this->get_content();
-			foreach ($this->modules['left'] as $cur_module) {
-				echo $cur_module->render() . "\n";
+			echo $page->get_content();
+			foreach ($page->modules['left'] as $cur_module) {
+				echo $cur_module->get_content() . "\n";
 			}
 			?>
 		</div>
-		<?php } if ( isset($this->modules['right']) ) {?>
+		<?php } if ( isset($page->modules['right']) ) {?>
 		<div class="content right">
 			<?php
-			echo $this->get_content();
-			foreach ($this->modules['right'] as $cur_module) {
-				echo $cur_module->render() . "\n";
+			echo $page->get_content();
+			foreach ($page->modules['right'] as $cur_module) {
+				echo $cur_module->get_content() . "\n";
 			}
 			?>
 		</div>
 		<?php } ?>
 		<div style="clear: both; height: 1px;">&nbsp;</div>
 	</div>
-	<?php if ( isset($this->modules['footer']) ) {?>
+	<?php if ( isset($page->modules['footer']) ) {?>
 	<div class="footer">
 		<?php
-		foreach ($this->modules['footer'] as $cur_module) {
-			echo $cur_module->render() . "\n";
+		foreach ($page->modules['footer'] as $cur_module) {
+			echo $cur_module->get_content() . "\n";
 		}
 		?>
 	</div>

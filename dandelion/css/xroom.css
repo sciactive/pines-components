@@ -1,0 +1,182 @@
+/* ----------- Globals ----------- */
+* {
+	margin: 0;
+	padding: 0;
+}
+body {
+	background: #49ea95 url(../images/dandelion.jpg) no-repeat fixed 0 0;
+	color: #024;
+}
+.pagetitle {
+	width: 100%;
+	text-align: center;
+	margin: .8em 0;
+}
+.pagetitle span {
+	font: bold 2em sans-serif;
+}
+.mainmenu {
+	text-align: center;
+	display: table;
+	margin: 0 auto;
+}
+.module {
+    margin-bottom: 10px;
+}
+/* ----------- Content Area ----------- */
+#wrapper {
+	position: relative;
+	height: auto;
+}
+.left {
+	/* position: absolute;
+	top: 0;
+	left: 5px;
+	width: 120px; */
+	float: left;
+	margin-left: 5px;
+	width: 120px;
+}
+.right {
+	float: right;
+	margin-right: 5px;
+	width: 120px;
+}
+.middle {
+	margin-left: 150px;
+	margin-right: 150px;
+}
+.content {
+	padding: 8px;
+	border: 1px solid gray;
+	background-color: #EEE;
+	font: normal smaller sans-serif;
+	color: #024;
+	-moz-border-radius: 1em;
+}
+.content .module_title {
+	font-size: 14px;
+	font-weight: bold;
+	margin-bottom: 8px;
+}
+/* ----------- Standard Notices ----------- */
+.notice {
+	margin: 3px;
+	padding: 5px;
+	border: 1px solid gray;
+	font: bold smaller sans-serif;
+	background-color: #FF7;
+	text-align: center;
+}
+.error {
+	background-color: #F00;
+	color: #000;
+}
+.notice .close {
+	color: gray;
+	float: right;
+	clear: right;
+}
+/* ----------- Standard Forms ----------- */
+.stdform{
+	padding: 14px;
+}
+.spacer{
+	clear: both;
+	height: 1px;
+}
+/* ----------- Stylized Inputs ----------- */
+/*
+.stylized{
+	border:solid 2px #DEDEDE;
+}
+*/
+.stylized h2 {
+	font-size: 14px;
+	font-weight: bold;
+	margin-bottom: 8px;
+}
+.stylized p{
+	font-size: 11px;
+	color: #666666;
+	margin-bottom: 20px;
+	border-bottom: solid 1px #dedede;
+	padding-bottom: 10px;
+}
+.stylized label{
+	clear: left;
+	display: block;
+	float: left;
+	font-weight: bold;
+	margin: 2px 30px 10px;
+	text-align: left;
+}
+.stylized table label{
+	margin: 0;
+}
+.stylized ul label{
+	margin: 0;
+	float: none;
+	display: inline;
+}
+.stylized ul{
+	clear: left;
+}
+.stylized .small{
+	color: #666666;
+	font-size: 11px;
+	font-weight: normal;
+	margin-left: 10px;
+	width: 140px;
+}
+.stylized input{
+	float: left;
+	margin: 2px 0 0 20px;
+	position: relative;
+	width: 200px;
+}
+.stylized table input{
+	width: auto;
+	margin: 2px;
+}
+.stylized ul input{
+	width: auto;
+	margin: 0;
+	float: none;
+	display: inline !important;
+}
+.stylized select{
+	float: left;
+	margin: 2px 0 0 20px;
+	position: relative;
+}
+.stylized table select{
+	margin: 2px;
+}
+.stylized button{
+	clear: both;
+	display: block;
+	margin-left: 150px;
+	background: #888888;
+	color: #FFFFFF;
+	border: solid 1px #666666;
+	font-size: 11px;
+	font-weight: bold;
+	padding: 4px 6px;
+}
+/* ----------- Tables ----------- */
+table caption {
+	background-color: #FF5;
+	border-top: 1px solid #024;
+	border-left: 1px solid #024;
+	border-right: 1px solid #024;
+}
+table th {
+	border-top: 1px solid gray;
+	border-left: 1px solid gray;
+	border-right: 1px solid gray;
+	background-color: #FF9;
+}
+table td {
+	border: 1px solid gray;
+}

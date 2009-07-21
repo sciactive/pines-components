@@ -11,8 +11,8 @@
  */
 defined('X_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper() ) {
-	$config->user_manager->punt_user("You are not logged in.", $config->template->url('com_about', null, null, false));
+if ( !gatekeeper('com_about/show') ) {
+	$config->user_manager->punt_user("You don't have necessary permission.", $config->template->url('com_about', null, null, false));
 	return;
 }
 $com_about_mod1 = new module('com_about', 'about1', 'content');

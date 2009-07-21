@@ -32,7 +32,7 @@
 
 
 ul.dropdown {
-	font-weight: bold;
+	/* font-weight: bold; */
 }
 /* TODO: something here from the other template */
 
@@ -47,18 +47,18 @@ ul.dropdown li {
 	border-width: 1px 1px 1px 0;
 	border-color: #fff #d9d9d9 #d9d9d9;
 	background-color: #f6f6f6;
-	color: #000;
+	color: #658AC5;
 }
 
 ul.dropdown li.hover,
 ul.dropdown li:hover {
 	background-color: #eee;
-	color: #000;
+	color: #658AC5;
 }
 
 ul.dropdown a:link,
-ul.dropdown a:visited	{ color: #000; text-decoration: none; }
-ul.dropdown a:hover		{ color: #000; }
+ul.dropdown a:visited	{ color: #658AC5; text-decoration: none; }
+ul.dropdown a:hover		{ color: #658AC5; }
 ul.dropdown a:active	{ color: #ffa500; }
 
 

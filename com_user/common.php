@@ -276,13 +276,13 @@ class com_user extends component {
 		global $config;
 
 		/* TODO: Remove after testing with left and right modules. */
-		$module = new module('system', 'false', 'left');
+		/*$module = new module('system', 'null', 'left');
 		$module->title = "Left Users";
 		$module->content("No users here ;)<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />");
 
-		$module = new module('system', 'false', 'right');
+		$module = new module('system', 'null', 'right');
 		$module->title = "Right Users";
-		$module->content("No users here ;)");
+		$module->content("No users here ;)");*/
 		/* End Remove. */
 
 		$module = new module('com_user', 'list_users', 'content');

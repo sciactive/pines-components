@@ -3,14 +3,9 @@
 	margin: 0;
 	padding: 0;
 }
-body {
-	background: #49ea95 url(../images/xroom.jpg) no-repeat fixed 0 0;
-	color: #024;
-}
 .pagetitle {
-	width: 100%;
-	text-align: center;
-	margin: .8em 0;
+    text-align: center;
+	margin: 10px 25px;
 }
 .pagetitle span {
 	font: bold 2em sans-serif;
@@ -18,46 +13,186 @@ body {
 .mainmenu {
 	text-align: center;
 	display: table;
-	margin: 0 auto;
+    /* width: 100%; */
+    /* margin-left: 25px; */
+    margin: 0 auto;
 }
 .module {
     margin-bottom: 10px;
 }
-/* ----------- Content Area ----------- */
-#wrapper {
-	position: relative;
-	height: auto;
+/* ----------- Holy Grail CSS ----------- */
+/* General styles */
+body {
+    margin:0;
+    padding:0;
+    border:0;			/* This removes the border around the viewport in old versions of IE */
+    width:100%;
+    background:#fff;
+    min-width:600px;    /* Minimum width of layout - remove line if not required */
+                        /* The min-width property does not work in old versions of Internet Explorer */
+    font-size:90%;
 }
-.left {
-	/* position: absolute;
-	top: 0;
-	left: 5px;
-	width: 120px; */
-	float: left;
-	margin-left: 5px;
-	width: 120px;
+h1, h2, h3 {
+    margin:.8em 0 .2em 0;
+    padding:0;
 }
-.right {
-	float: right;
-	margin-right: 5px;
-	width: 120px;
+p {
+    margin:.4em 0 .8em 0;
+    padding:0;
 }
-.middle {
-	margin-left: 150px;
-	margin-right: 150px;
+img {
+    margin:10px 0 5px;
 }
-.content {
-	padding: 8px;
-	border: 1px solid gray;
-	background-color: #EEE;
-	font: normal smaller sans-serif;
-	color: #024;
-	-moz-border-radius: 1em;
+/* Header styles */
+#header {
+    clear:both;
+    float:left;
+    width:100%;
 }
-.content .module_title {
-	font-size: 14px;
+#header {
+    border-bottom:1px solid #000;
+}
+#header p,
+#header h1,
+#header h2 {
+    padding:.4em 15px 0 15px;
+    margin:0;
+}
+/*
+    Note using Holy Grail style menu.
+#header ul {
+    clear:left;
+    float:left;
+    width:100%;
+    list-style:none;
+    margin:10px 0 0 0;
+    padding:0;
+}
+#header ul li {
+    display:inline;
+    list-style:none;
+    margin:0;
+    padding:0;
+}
+#header ul li a {
+    display:block;
+    float:left;
+    margin:0 0 0 1px;
+    padding:3px 10px;
+    text-align:center;
+    background:#eee;
+    color:#000;
+    text-decoration:none;
+    position:relative;
+    left:15px;
+    line-height:1.3em;
+}
+#header ul li a:hover {
+    background:#369;
+    color:#fff;
+}
+#header ul li a.active,
+#header ul li a.active:hover {
+    color:#fff;
+    background:#000;
+    font-weight:bold;
+}
+#header ul li a span {
+    display:block;
+}
+*/
+/* 'widths' sub menu */
+/* #layoutdims {
+    clear:both;
+    background:#eee;
+    border-top:4px solid #000;
+    margin:0;
+    padding:6px 15px !important;
+    text-align:right;
+} */
+/* column container */
+.colmask {
+    position:relative;		/* This fixes the IE7 overflow hidden bug and stops the layout jumping out of place */
+    clear:both;
+    float:left;
+    width:100%;				/* width of whole page */
+    overflow:hidden;		/* This chops off any overhanging divs */
+}
+/* holy grail 3 column settings */
+.holygrail {
+    background:#F4F4F4;    	/* Right column background colour */
+}
+.holygrail .colmid {
+    float:left;
+    width:200%;
+    margin-left:-200px; 	/* Width of right column */
+    position:relative;
+    right:100%;
+    background:#fff;    	/* Centre column background colour */
+}
+.holygrail .colleft {
+    float:left;
+    width:100%;
+    margin-left:-50%;
+    position:relative;
+    left:400px;         	/* Left column width + right column width */
+    background:#F4F4F4;    	/* Left column background colour */
+}
+.holygrail .col1wrap {
+    float:left;
+    width:50%;
+    position:relative;
+    right:200px;        	/* Width of left column */
+    padding-bottom:1em; 	/* Centre column bottom padding. Leave it out if it's zero */
+}
+.holygrail .col1 {
+    margin:0 215px;     	/* Centre column side padding:
+                            Left padding = left column width + centre column left padding width
+                            Right padding = right column width + centre column right padding width */
+    position:relative;
+    left:200%;
+    overflow:hidden;
+}
+.holygrail .col2 {
+    float:left;
+    float:right;			/* This overrides the float:left above */
+    width:170px;        	/* Width of left column content (left column width minus left and right padding) */
+    position:relative;
+    right:15px;         	/* Width of the left-had side padding on the left column */
+}
+.holygrail .col3 {
+    float:left;
+    float:right;			/* This overrides the float:left above */
+    width:170px;        	/* Width of right column content (right column width minus left and right padding) */
+    margin-right:45px;  	/* Width of right column right-hand padding + left column left and right padding */
+    position:relative;
+    left:50%;
+}
+/* Footer styles */
+#footer {
+    clear:both;
+    float:left;
+    width:100%;
+    border-top:1px solid #000;
+}
+#footer p {
+    padding:10px;
+    margin:0;
+}
+
+/* ----------- Customized CSS ----------- */
+.module_group {
+    padding: 3px;
+}
+.module_group .module_title {
+	font-size: 1.3em;
 	font-weight: bold;
 	margin-bottom: 8px;
+    position: relative;
+    left: -3px;
+}
+#footer .copyright {
+    font-size: .8em;
 }
 /* ----------- Standard Notices ----------- */
 .notice {
@@ -166,7 +301,7 @@ body {
 }
 /* ----------- Tables ----------- */
 table caption {
-	background-color: #FF5;
+	background-color: #DDD;
 	border-top: 1px solid #024;
 	border-left: 1px solid #024;
 	border-right: 1px solid #024;
@@ -175,7 +310,7 @@ table th {
 	border-top: 1px solid gray;
 	border-left: 1px solid gray;
 	border-right: 1px solid gray;
-	background-color: #FF9;
+	background-color: #F4F4F4;
 }
 table td {
 	border: 1px solid gray;

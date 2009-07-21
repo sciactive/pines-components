@@ -32,92 +32,93 @@ echo '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>'; ?>
 
 	<!--[if lt IE 7]>
 	<script type="text/javascript" src="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/js/jquery/jquery.dropdown.js"></script>
-	<![endif]-->
+
+    <style media="screen" type="text/css">
+    .col1 {
+	    width:100%;
+	}
+    </style>
+    <![endif]-->
+
 	<?php echo $page->get_head(); ?>
 </head>
 
 <body>
 
-<div id="content_area">
+<div id="header">
 	<div class="pagetitle">
-	<span><?php echo $page->get_title(); ?></span>
+        <span><?php echo $page->get_title(); ?></span>
 	</div>
-	<?php
-	$new_menu = $page->main_menu->render();
-	if ( !empty($new_menu) )
-		echo "<div class=\"mainmenu\">\n$new_menu\n</div>\n";
-	?>
-	<div style="clear: both; height: 1px;">&nbsp;</div>
 	<?php if ( isset($page->modules['header']) ) {?>
-	<div class="mainpage">
-		<?php
-		foreach ($page->modules['header'] as $cur_module) {
-			echo $cur_module->get_content() . "\n";
-		}
-		?>
-	</div>
-	<?php } if ( count($page->get_error()) ) { ?>
-	<div class="notice error"><span class="close">[X] Close</span>
-	<?php
-	$error = $page->get_error();
-	foreach ($error as $cur_item) {
-		echo "$cur_item<br />\n";
-	}
-	?>
-	</div>
-	<?php } if ( count($page->get_notice()) ) { ?>
-	<div class="notice"><span class="close">[x] Close</span>
-	<?php
-	$notice = $page->get_notice();
-	foreach ($notice as $cur_item) {
-		echo "$cur_item<br />\n";
-	}
-	?>
+	<div class="module_group">
+		<?php echo $page->render_modules('header'); ?>
 	</div>
 	<?php } ?>
-	<div id="wrapper">
-		<?php if ( isset($page->modules['content']) ) {?>
-		<div class="content middle">
-			<?php
-			echo $page->get_content();
-			foreach ($page->modules['content'] as $cur_module) {
-				echo $cur_module->get_content() . "\n";
-			}
-			?>
-		</div>
-		<?php } if ( isset($page->modules['left']) ) {?>
-		<div class="content left">
-			<?php
-			echo $page->get_content();
-			foreach ($page->modules['left'] as $cur_module) {
-				echo $cur_module->get_content() . "\n";
-			}
-			?>
-		</div>
-		<?php } if ( isset($page->modules['right']) ) {?>
-		<div class="content right">
-			<?php
-			echo $page->get_content();
-			foreach ($page->modules['right'] as $cur_module) {
-				echo $cur_module->get_content() . "\n";
-			}
-			?>
-		</div>
-		<?php } ?>
-		<div style="clear: both; height: 1px;">&nbsp;</div>
-	</div>
+	<?php
+    $cur_menu = $page->main_menu->render();
+	if ( !empty($cur_menu) )
+		echo "<div class=\"mainmenu\">\n$cur_menu\n</div>\n";
+	?>
+</div>
+<div class="colmask holygrail">
+    <div class="colmid">
+        <div class="colleft">
+            <div class="col1wrap">
+                <div class="col1">
+                    <?php //TODO: Notice and error models. ?>
+                    <?php if ( count($page->get_error()) ) { ?>
+                    <div class="notice error"><span class="close">[X] Close</span>
+                    <?php
+                    $error = $page->get_error();
+                    foreach ($error as $cur_item) {
+                        echo "$cur_item<br />\n";
+                    }
+                    ?>
+                    </div>
+                    <?php } ?>
+                    <?php if ( count($page->get_notice()) ) { ?>
+                    <div class="notice"><span class="close">[x] Close</span>
+                    <?php
+                    $notice = $page->get_notice();
+                    foreach ($notice as $cur_item) {
+                        echo "$cur_item<br />\n";
+                    }
+                    ?>
+                    </div>
+                    <?php } ?>
+                    <?php if ( isset($page->modules['content']) ) {?>
+                    <div class="module_group">
+                        <?php echo $page->render_modules('content'); ?>
+                    </div>
+                    <?php } ?>
+                </div>
+            </div>
+            <div class="col2">
+                <?php if ( isset($page->modules['left']) ) {?>
+                <div class="module_group">
+                    <?php echo $page->render_modules('left'); ?>
+                </div>
+                <?php } ?>
+            </div>
+            <div class="col3">
+                <?php if ( isset($page->modules['right']) ) {?>
+                <div class="module_group">
+                    <?php echo $page->render_modules('right'); ?>
+                </div>
+                <?php } ?>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="footer">
 	<?php if ( isset($page->modules['footer']) ) {?>
-	<div class="footer">
-		<?php
-		foreach ($page->modules['footer'] as $cur_module) {
-			echo $cur_module->get_content() . "\n";
-		}
-		?>
+	<div class="module_group">
+		<?php echo $page->render_modules('footer'); ?>
 	</div>
 	<?php } ?>
-	<div style="text-align: center;"><small>
-	<?php echo $config->option_copyright_notice; ?>
-	</small></div>
+	<p class="copyright">
+        <?php echo $config->option_copyright_notice; ?>
+    </p>
 </div>
 
 </body>

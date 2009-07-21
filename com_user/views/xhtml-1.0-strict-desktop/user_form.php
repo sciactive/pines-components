@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('X_RUN') or die('Direct access prohibited');
-$page->head("<script type=\"text/javascript\" src=\"components/com_user/js/verify.js\"></script>\n");
+$page->head("<script type=\"text/javascript\" src=\"".$config->rela_location."components/com_user/js/verify.js\"></script>\n");
 ?>
 <form method="post" id="user_details" action="<?php echo $config->template->url(); ?>" onsubmit="return verify_form('user_details');">
 <div class="stylized stdform">

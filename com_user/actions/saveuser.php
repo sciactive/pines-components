@@ -62,7 +62,7 @@ $user->email = $_REQUEST['email'];
 /**
  * @todo Recode this when users can be limited to controlling users/groups below their level.
  */
-if ( gatekeeper("com_user/assigng") ) {
+if ( gatekeeper("com_user/assigng") && !empty($_REQUEST['groups']) ) {
     $groups = $config->entity_manager->get_entities_by_tags('com_user', 'group', group);
     $ugroups = $_REQUEST['groups'];
     array_walk($ugroups, 'intval');

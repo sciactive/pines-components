@@ -34,7 +34,7 @@ if ( isset($_REQUEST['user_id']) ) {
 			display_error('Username ['.$_REQUEST['username'].'] already exists! Continuing with old username...');
 		}
 	}
-	if ( !empty($_REQUEST['password']) ) $config->user_manager->password($user, $_REQUEST['password']);
+	if ( !empty($_REQUEST['password']) ) $user->password($_REQUEST['password']);
 } else {
 	if ( !gatekeeper('com_user/new') ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", $config->template->url('com_user', 'manageusers', null, false));

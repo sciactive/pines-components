@@ -4,6 +4,26 @@
 	padding: 0;
     font-family: sans;
 }
+html, body {
+    height: 100%
+}
+#wrapper {
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto -51px; /* the bottom margin is the negative value of the footer's height */
+}
+#header {
+    background-color: #E6E6E6;
+}
+#footer, .push {
+    background-color: #E6E6E6;
+    height: 50px; /* .push must be the same height as .footer */
+    /* http://ryanfait.com/sticky-footer/ */
+}
+.push {
+    visibility: hidden;
+}
 .pagetitle {
     text-align: center;
 	margin: 10px 25px;
@@ -12,14 +32,16 @@
 	font: bold 2em sans;
 }
 .mainmenu {
-	text-align: center;
-	display: table;
     width: 100%;
     background-color: #F6F6F6;
-    padding-left: 25px;
+    /* padding-left: 25px; */
     font-size: 12px;
     color: #7F7F7F;
-    /* margin: 0 auto; */
+}
+.mainmenu .menuwrap {
+	text-align: center;
+	display: table;
+    margin: 0 auto;
 }
 .module {
     margin-bottom: 10px;
@@ -124,7 +146,7 @@ img {
 }
 /* holy grail 3 column settings */
 .holygrail {
-    background:#F4F4F4;    	/* Right column background colour */
+    /*background:#FF0;    	/* Right column background colour */
 }
 .holygrail .colmid {
     float:left;
@@ -140,7 +162,7 @@ img {
     margin-left:-50%;
     position:relative;
     left:400px;         	/* Left column width + right column width */
-    background:#F4F4F4;    	/* Left column background colour */
+    /*background:#F4F4F4;    	/* Left column background colour */
 }
 .holygrail .col1wrap {
     float:left;
@@ -197,6 +219,7 @@ img {
 }
 #footer .copyright {
     font-size: .8em;
+    text-align: center;
 }
 /* ----------- Standard Notices ----------- */
 .notice {

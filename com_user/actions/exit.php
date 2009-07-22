@@ -12,5 +12,5 @@
 defined('X_RUN') or die('Direct access prohibited');
 
 display_notice(stripslashes($_REQUEST['message']));
-print_default();
+require('components/'.$config->default_component.'/actions/default.php');
 ?>

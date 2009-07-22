@@ -109,6 +109,17 @@ class com_user extends component {
 		}
 	}
 
+    function get_default_component_array() {
+        global $config;
+        $return = array();
+        foreach ($config->components as $cur_component) {
+            if ( file_exists('components/'.$cur_component.'/actions/default.php') ) {
+                array_push($return, $cur_component);
+            }
+        }
+        return $return;
+    }
+
 	function get_group($group_id) {
         /**
          * @todo Rewrite specifically for groups.
@@ -337,6 +348,7 @@ class com_user extends component {
 		$new_user->abilities = array();
 		$new_user->groups = array();
         $new_user->inherit_abilities = true;
+        $new_user->default_component = 'com_user';
 		return $new_user;
 	}
 
@@ -397,6 +409,7 @@ class com_user extends component {
 			$module->user_abilities = array();
             $module->groups = array();
             $module->inherit_abilities = true;
+            $module->default_component = 'com_user';
 		} else {
 			$user = $this->get_user($id);
 			$module->username = $user->username;
@@ -406,6 +419,7 @@ class com_user extends component {
 			$module->user_abilities = $user->abilities;
             $module->groups = $user->groups;
             $module->inherit_abilities = $user->inherit_abilities;
+            $module->default_component = $user->default_component;
 		}
         $module->heading = $heading;
         $module->new_option = $new_option;
@@ -413,8 +427,10 @@ class com_user extends component {
         $module->id = $id;
         $module->display_groups = gatekeeper("com_user/assigng");
         $module->display_abilities = gatekeeper("com_user/abilities");
+        $module->display_default_components = gatekeeper("com_user/default_component");
         $module->sections = array('system');
         $module->group_array = $this->get_group_array();
+        $module->default_components = $this->get_default_component_array();
         foreach ($config->components as $cur_component) {
             $module->sections[] = $cur_component;
         }
@@ -457,6 +473,7 @@ class com_user extends component {
 $config->user_manager = new com_user;
 $config->ability_manager->add('com_user', 'login', 'Login', 'User can login to the system.');
 $config->ability_manager->add('com_user', 'self', 'Change Info', 'User can change his own information.');
+$config->ability_manager->add('com_user', 'default_component', 'Change Default Component', 'User can change default component.');
 $config->ability_manager->add('com_user', 'new', 'Create Users', 'Let user create new users.');
 $config->ability_manager->add('com_user', 'manage', 'Manage Users', 'Let user see and manage other users. Required to access the below abilities.');
 $config->ability_manager->add('com_user', 'edit', 'Edit Users', 'Let user edit other users\' details.');
@@ -470,19 +487,6 @@ $config->ability_manager->add('com_user', 'abilities', 'Manage Abilities', 'Let 
 
 if ( isset($_SESSION['user_id']) ) {
     $config->user_manager->fill_session();
-}
-
-function print_default() {
-    global $config;
-    if ( gatekeeper() ) {
-        if ( !gatekeeper('com_user/manageusers') ) {
-            display_notice("You don't have necessary permission.");
-        } else {
-            $config->user_manager->list_users();
-        }
-    } else {
-        $config->user_manager->print_login();
-    }
 }
 
 ?>

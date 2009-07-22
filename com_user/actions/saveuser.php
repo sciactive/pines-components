@@ -58,6 +58,14 @@ if ( isset($_REQUEST['user_id']) ) {
 $user->name = $_REQUEST['name'];
 $user->email = $_REQUEST['email'];
 
+if ( gatekeeper('com_user/default_component') ) {
+    if ( file_exists('components/'.$_REQUEST['default_component'].'/actions/default.php') ) {
+        $user->default_component = $_REQUEST['default_component'];
+    } else {
+        display_error('Selected component does not support a default action.');
+    }
+}
+
 // Go through a list of all groups, and assign them if they're selected.
 /**
  * @todo Recode this when users can be limited to controlling users/groups below their level.

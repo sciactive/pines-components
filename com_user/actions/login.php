@@ -22,7 +22,7 @@ if ( $_REQUEST['username'] ) {
 			header('Location: '.urldecode($_REQUEST['url']));
 			exit;
 		} else {
-			print_default();
+            require('components/'.$config->default_component.'/actions/default.php');
 		}
 	} else {
 		display_error("Username and password not correct!");

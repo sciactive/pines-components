@@ -16,12 +16,17 @@ $page->head("<script type=\"text/javascript\" src=\"".$config->rela_location."co
 <div class="stylized stdform">
 <h2><?php echo $this->heading; ?></h2>
 <p>Provide user details in this form.</p>
+
 <?php if ( !is_null($this->id) ) { ?>
 <input type="hidden" name="user_id" value="<?php echo $this->id; ?>" />
 <?php } ?>
+
 <label>Username<input type="text" name="username" value="<?php echo $this->username; ?>" /></label>
+
 <label>Name<input type="text" name="name" value="<?php echo $this->name; ?>" /></label>
+
 <label>Email<input type="text" name="email" value="<?php echo $this->email; ?>" /></label>
+
 <?php if (is_null($this->id)) { ?>
 <label>Password<span class="small"><?php echo ($config->com_user->empty_pw ? "May be blank." : "&nbsp;"); ?></span>
 <?php } else { ?>
@@ -29,6 +34,17 @@ $page->head("<script type=\"text/javascript\" src=\"".$config->rela_location."co
 <?php } ?>
 <input type="password" name="password" /></label>
 <label>Repeat Password<input type="password" name="password2" /></label>
+
+<?php if ( $this->display_default_components ) { ?>
+<label>Default Component
+<select name="default_component">
+    <?php foreach ($this->default_components as $cur_component) { ?>
+    <option value="<?php echo $cur_component; ?>"<?php echo (($this->default_component == $cur_component) ? ' selected="selected"' : ''); ?>><?php echo $cur_component; ?></option>
+    <?php } ?>
+</select>
+</label>
+<?php } ?>
+
 <?php if ( $this->display_groups ) { ?>
 <label>Groups
 <select name="groups[]" multiple="multiple" size="6">
@@ -36,6 +52,7 @@ $page->head("<script type=\"text/javascript\" src=\"".$config->rela_location."co
 </select>
 </label>
 <?php } ?>
+
 <?php if ( $this->display_abilities ) { ?>
     <input type="hidden" name="abilities" value="true" />
     <label>Abilities</label><br />
@@ -58,6 +75,7 @@ $page->head("<script type=\"text/javascript\" src=\"".$config->rela_location."co
         <?php }
     } ?>
 <?php } ?>
+
 <input type="hidden" name="option" value="<?php echo $this->new_option; ?>" />
 <input type="hidden" name="action" value="<?php echo $this->new_action; ?>" />
 <input type="submit" value="Submit" />

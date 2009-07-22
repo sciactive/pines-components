@@ -11,13 +11,25 @@
  */
 defined('X_RUN') or die('Direct access prohibited');
 
-$_REQUEST['secret'] == '874jdiv8' or die();
+if (!$config->com_user->create_admin) {
+    display_error('Creating admin user has been disabled.');
+    return;
+}
+if ($_REQUEST['secret'] == $config->com_user->create_admin_secret) {
+    display_error('Wrong secret.');
+    return;
+}
 
 $new_admin_user = $config->user_manager->new_user();
 $new_admin_user->name = 'admin';
-$new_admin_user->username = 'admin';
+$new_admin_user->username = (empty($_REQUEST['username']) ? 'admin' : $_REQUEST['username']);
 $new_admin_user->password('password');
 $new_admin_user->abilities = array('system/all');
+
+if ( !is_null($config->user_manager->get_user_by_username($new_admin_user->username)) ) {
+    display_error('Username already exists!');
+    return;
+}
 
 $new_admin_user->save();
 

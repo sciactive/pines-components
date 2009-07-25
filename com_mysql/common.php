@@ -2,21 +2,21 @@
 /**
  * com_mysql's common file.
  *
- * @package XROOM
+ * @package Pines
  * @subpackage com_mysql
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
  * @link http://sciactive.com/
  */
-defined('X_RUN') or die('Direct access prohibited');
+defined('P_RUN') or die('Direct access prohibited');
 
 /**
  * com_mysql main class.
  *
  * Connect to and disconnect from a MySQL database.
  *
- * @package XROOM
+ * @package Pines
  * @subpackage com_mysql
  */
 class com_mysql extends component {

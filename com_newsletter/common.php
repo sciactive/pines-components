@@ -2,14 +2,14 @@
 /**
  * com_newsletter's common file.
  *
- * @package XROOM
+ * @package Pines
  * @subpackage com_newsletter
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
  * @link http://sciactive.com/
  */
-defined('X_RUN') or die('Direct access prohibited');
+defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($config->ability_manager) ) {
 	$config->ability_manager->add('com_newsletter', 'managemails', 'Manage Mails', 'Let users create, edit, and delete mailings.');
@@ -21,7 +21,7 @@ if ( isset($config->ability_manager) ) {
  *
  * Manages newsletters to send out to users.
  *
- * @package XROOM
+ * @package Pines
  * @subpackage com_newsletter
  */
 class com_newsletter extends component {

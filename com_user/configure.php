@@ -2,14 +2,14 @@
 /**
  * com_user's configuration.
  *
- * @package XROOM
+ * @package Pines
  * @subpackage com_user
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
  * @link http://sciactive.com/
  */
-defined('X_RUN') or die('Direct access prohibited');
+defined('P_RUN') or die('Direct access prohibited');
 
 $config->com_user = new DynamicConfig;
 
@@ -25,7 +25,7 @@ $config->com_user->create_admin_secret = '874jdiv8';
 /**
  * Entities which support abilities, such as users and groups.
  *
- * @package XROOM
+ * @package Pines
  * @subpackage com_user
  */
 class able_entity extends entity {
@@ -84,9 +84,9 @@ class able_entity extends entity {
 }
 
 /**
- * XROOM system users.
+ * Pines system users.
  *
- * @package XROOM
+ * @package Pines
  * @subpackage com_user
  */
 class user extends able_entity {
@@ -152,10 +152,10 @@ class user extends able_entity {
 }
 
 /**
- * XROOM system groups.
+ * Pines system groups.
  *
  * @todo Function users() to list users of this group.
- * @package XROOM
+ * @package Pines
  * @subpackage com_user
  */
 class group extends able_entity {
@@ -165,7 +165,7 @@ class group extends able_entity {
 /**
  * A generic ability manager.
  *
- * @package XROOM
+ * @package Pines
  * @subpackage com_user
  */
 class abilities {

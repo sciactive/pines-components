@@ -2,7 +2,7 @@
 /**
  * com_mailer's configuration.
  *
- * @package XROOM
+ * @package Pines
  * @subpackage com_mailer
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
@@ -18,7 +18,7 @@
  * Credit for this class goes to Alejandro Gervasio
  * http://www.devshed.com/cp/bio/Alejandro-Gervasio/
  *
- * @package XROOM
+ * @package Pines
  * @subpackage com_mailer
  */
 class com_mailer extends component {

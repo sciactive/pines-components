@@ -1,17 +1,17 @@
 <?php
 /**
- * Main page of the XROOM template.
+ * Main page of the Pines template.
  *
  * The page which is output to the user is built using this file.
  *
- * @package XROOM
- * @subpackage tpl_xroom
+ * @package Pines
+ * @subpackage tpl_pines
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
  * @link http://sciactive.com/
  */
-defined('X_RUN') or die('Direct access prohibited');
+defined('P_RUN') or die('Direct access prohibited');
 
 echo '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>'; ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -22,7 +22,7 @@ echo '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>'; ?>
 	<title><?php echo $page->get_title(); ?></title>
 	<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="author" content="Hunter Perrin" />
-	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/xroom.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/pines.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dropdown/dropdown.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dropdown/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dropdown/themes/default/default.ultimate.css" media="all" rel="stylesheet" type="text/css" />

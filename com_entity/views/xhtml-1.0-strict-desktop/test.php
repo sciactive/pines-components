@@ -2,14 +2,14 @@
 /**
  * Displays the results of an entity manager test.
  *
- * @package XROOM
+ * @package Pines
  * @subpackage com_entity
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
  * @link http://sciactive.com/
  */
-defined('X_RUN') or die('Direct access prohibited');
+defined('P_RUN') or die('Direct access prohibited');
 ?>
 <p>This entity manager tester will test the current entity manager for required
 functionality. If the entity manager does not successfully pass any part of the

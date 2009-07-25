@@ -1,15 +1,15 @@
 <?php
 /**
- * View a newsletter without the XROOM interface.
+ * View a newsletter without the Pines interface.
  *
- * @package XROOM
+ * @package Pines
  * @subpackage com_newsletter
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
  * @link http://sciactive.com/
  */
-defined('X_RUN') or die('Direct access prohibited');
+defined('P_RUN') or die('Direct access prohibited');
 
 if ( !isset($_REQUEST['mail_id']) ) {
 	display_error("No mail specified!");

@@ -1,23 +1,23 @@
 <?php
 /**
- * Configuration for the XROOM template.
+ * Configuration for the Pines template.
  *
- * @package XROOM
- * @subpackage tpl_xroom
+ * @package Pines
+ * @subpackage tpl_pines
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
  * @link http://sciactive.com/
  */
-defined('X_RUN') or die('Direct access prohibited');
+defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * XROOM template class.
+ * Pines template class.
  *
- * @package XROOM
- * @subpackage tpl_xroom
+ * @package Pines
+ * @subpackage tpl_pines
  */
-class tpl_xroom extends template {
+class tpl_pines extends template {
     /**
      * The template format.
      * @var string $format
@@ -25,6 +25,6 @@ class tpl_xroom extends template {
 	var $format = 'xhtml-1.0-strict-desktop';
 }
 
-$config->template = new tpl_xroom;
+$config->template = new tpl_pines;
 
 ?>

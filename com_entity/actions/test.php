@@ -1,16 +1,16 @@
 <?php
 /**
- * Test an entity manager for compliance with XROOM's entity management
+ * Test an entity manager for compliance with Pines's entity management
  * system.
  *
- * @package XROOM
+ * @package Pines
  * @subpackage com_entity
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
  * @link http://sciactive.com/
  */
-defined('X_RUN') or die('Direct access prohibited');
+defined('P_RUN') or die('Direct access prohibited');
 
 /**
  * @todo Add tests for custom entity extended classes.

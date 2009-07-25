@@ -1,5 +1,5 @@
 <?php
-defined('X_RUN') or die('Direct access prohibited');
+defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper() ) {
     $config->user_manager->print_login();

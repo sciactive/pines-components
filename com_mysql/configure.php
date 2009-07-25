@@ -22,5 +22,5 @@ $config->com_mysql->password = "password";
 
 $config->com_mysql->database = "pines";
 
-$config->com_mysql->prefix = "ddl_";
+$config->com_mysql->prefix = "pin_";
 ?>

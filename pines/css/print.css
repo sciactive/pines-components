@@ -9,45 +9,59 @@ body {
 #header {
     display: none !important;
 }
-.colmask {
+.module_group {
     position: static !important;
+    float: none !important;
     width: 100% !important;
     height: auto !important;
     padding: 0 !important;
     margin: 0 !important;
-    overflow: auto !important;
+    overflow: visible !important;
+}
+.colmask {
+    position: static !important;
+    float: none !important;
+    width: 100% !important;
+    height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
 }
 .holygrail .colmid {
     position: static !important;
+    float: none !important;
     width: 100% !important;
     height: auto !important;
     padding: 0 !important;
     margin: 0 !important;
-    overflow: auto !important;
+    overflow: visible !important;
 }
 .holygrail .colleft {
     position: static !important;
+    float: none !important;
     width: 100% !important;
     height: auto !important;
     padding: 0 !important;
     margin: 0 !important;
-    overflow: auto !important;
+    overflow: visible !important;
 }
 .holygrail .col1wrap {
     position: static !important;
+    float: none !important;
     width: 100% !important;
     height: auto !important;
     padding: 0 !important;
     margin: 0 !important;
-    overflow: auto !important;
+    overflow: visible !important;
 }
 .holygrail .col1 {
     position: static !important;
+    float: none !important;
     width: 100% !important;
     height: auto !important;
     padding: 0 !important;
     margin: 0 !important;
-    overflow: auto !important;
+    overflow: visible !important;
 }
 .holygrail .col2 {
     display: none !important;
@@ -60,11 +74,4 @@ body {
 }
 .push {
     display: none !important;
-}
-/* ----------- Standard Notices ----------- */
-.notice {
-    display: block !important;
-}
-.error {
-    display: block !important;
 }

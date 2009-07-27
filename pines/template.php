@@ -23,6 +23,7 @@ echo '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>'; ?>
 	<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="author" content="Hunter Perrin" />
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/pines.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/print.css" media="print" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dropdown/dropdown.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dropdown/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dropdown/themes/default/default.ultimate.css" media="all" rel="stylesheet" type="text/css" />

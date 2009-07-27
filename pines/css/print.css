@@ -1,0 +1,70 @@
+/* ----------- Holy Grail CSS ----------- */
+/* Print styles */
+html, body {
+    height: auto !important;
+}
+body {
+    background: #fff !important;
+}
+#header {
+    display: none !important;
+}
+.colmask {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: auto !important;
+}
+.holygrail .colmid {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: auto !important;
+}
+.holygrail .colleft {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: auto !important;
+}
+.holygrail .col1wrap {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: auto !important;
+}
+.holygrail .col1 {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: auto !important;
+}
+.holygrail .col2 {
+    display: none !important;
+}
+.holygrail .col3 {
+    display: none !important;
+}
+#footer {
+    display: none !important;
+}
+.push {
+    display: none !important;
+}
+/* ----------- Standard Notices ----------- */
+.notice {
+    display: block !important;
+}
+.error {
+    display: block !important;
+}

@@ -12,5 +12,8 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 display_notice(stripslashes($_REQUEST['message']));
+/**
+ * Load the default component.
+ */
 require('components/'.$config->default_component.'/actions/default.php');
 ?>

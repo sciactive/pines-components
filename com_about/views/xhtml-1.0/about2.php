@@ -1,6 +1,6 @@
 <?php
 /**
- * Displays Pines's own "about" information.
+ * Displays Pines' own "about" information.
  *
  * @package Pines
  * @subpackage com_about

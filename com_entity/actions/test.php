@@ -1,6 +1,6 @@
 <?php
 /**
- * Test an entity manager for compliance with Pines's entity management
+ * Test an entity manager for compliance with Pines' entity management
  * system.
  *
  * @package Pines

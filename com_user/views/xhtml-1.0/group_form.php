@@ -24,7 +24,7 @@ defined('P_RUN') or die('Direct access prohibited');
 <label>Parent
 <select name="parent">
 <option value="none">--No Parent--</option>
-<?php echo $config->user_manager->print_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->parent); ?>
+<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->parent); ?>
 </select>
 </label>
 <?php if ( $this->display_abilities ) { ?>

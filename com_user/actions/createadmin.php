@@ -20,7 +20,7 @@ if ($_REQUEST['secret'] == $config->com_user->create_admin_secret) {
     return;
 }
 
-$new_admin_user = $config->user_manager->new_user();
+$new_admin_user = new user;
 $new_admin_user->name = 'admin';
 $new_admin_user->username = (empty($_REQUEST['username']) ? 'admin' : $_REQUEST['username']);
 $new_admin_user->password('password');

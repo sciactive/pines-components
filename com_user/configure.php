@@ -29,25 +29,6 @@ $config->com_user->create_admin_secret = '874jdiv8';
  * @subpackage com_user
  */
 class able_entity extends entity {
-	// These aren't required.
-    /*
-    public function &__get($name) {
-        return parent::__get($name);
-    }
-
-    public function __isset($name) {
-        return parent::__isset($name);
-    }
-
-    public function __set($name, $value) {
-        return parent::__set($name, $value);
-    }
-
-    public function __unset($name) {
-        return parent::__unset($name);
-    }
-     */
-
 	/**
      * Grant an ability to a user.
      *
@@ -90,6 +71,16 @@ class able_entity extends entity {
  * @subpackage com_user
  */
 class user extends able_entity {
+    public function __construct() {
+        parent::__construct();
+		$this->add_tag('com_user', 'user');
+		$this->salt = md5(rand());
+		$this->abilities = array();
+		$this->groups = array();
+        $this->inherit_abilities = true;
+        $this->default_component = 'com_user';
+    }
+
     /**
      * Add the user to a group.
      *
@@ -117,7 +108,6 @@ class user extends able_entity {
             return true;
         }
     }
-
 
     /**
      * Check whether the user is in a group.
@@ -159,7 +149,11 @@ class user extends able_entity {
  * @subpackage com_user
  */
 class group extends able_entity {
-    
+    public function __construct() {
+        parent::__construct();
+		$this->add_tag('com_user', 'group');
+		$this->abilities = array();
+    }
 }
 
 /**

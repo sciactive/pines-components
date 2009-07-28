@@ -48,7 +48,7 @@ $page->head("<script type=\"text/javascript\" src=\"".$config->rela_location."co
 <?php if ( $this->display_groups ) { ?>
 <label>Groups
 <select name="groups[]" multiple="multiple" size="6">
-<?php echo $config->user_manager->print_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->groups); ?>
+<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->groups); ?>
 </select>
 </label>
 <?php } ?>

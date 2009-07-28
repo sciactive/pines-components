@@ -61,7 +61,7 @@ $com_newsletter_sendprep->content($user_select_menu->render(array('<ul class="un
 		"<input type=\"checkbox\" name=\"user[]\" value=\"#DATA#\" /><label>#NAME#</label>\n",
 		'<hr style="visibility: hidden; clear: both;" />'));
 /*$com_newsletter_sendprep->content(
-	$config->user_manager->print_user_tree("<label><input type=\"checkbox\" name=\"#guid#\" />#mark##name# [#username#]</label>\n", $config->user_manager->get_user_array())
+	$config->user_manager->get_user_tree("<label><input type=\"checkbox\" name=\"#guid#\" />#mark##name# [#username#]</label>\n", $config->user_manager->get_user_array())
 ); */
 $com_newsletter_sendprep->content("<br />");
 $com_newsletter_sendprep->content("<label>Options</label>\n");

@@ -20,9 +20,19 @@ defined('P_RUN') or die('Direct access prohibited');
  * @subpackage com_user
  */
 class com_user extends component {
+    /**
+     * Authenticate a user's credentials.
+     *
+     * This function will not log a user into the system. It will only check
+     * that the information provided are valid login credentials.
+     *
+     * @param string $username The username of the user.
+     * @param string $password The password of the user.
+     * @return mixed Returns the user's GUID on success, null on failure.
+     */
 	function authenticate($username, $password) {
-		$entity = new user;
 		$entity = $this->get_user_by_username($username);
+        if (is_null($entity)) return null;
 		if ( $entity->check_password($password) ) {
 			return $entity->guid;
 		} else {
@@ -30,11 +40,14 @@ class com_user extends component {
 		}
 	}
 
+    /**
+     * Delete a group from the system.
+     *
+     * @param int $group_id The GUID of the group.
+     * @return bool True on success, false on failure.
+     * @todo Delete children and remove users.
+     */
 	function delete_group($group_id) {
-		/**
-         * @todo Delete children and remove users.
-         */
-		$entity = new group;
 		if ( $entity = $this->get_group($group_id) ) {
 			$entity->delete();
 			return true;
@@ -43,8 +56,13 @@ class com_user extends component {
 		}
 	}
 
+    /**
+     * Delete a user from the system.
+     *
+     * @param int $user_id The GUID of the user.
+     * @return bool True on success, false on failure.
+     */
 	function delete_user($user_id) {
-		$entity = new user;
 		if ( $entity = $this->get_user($user_id) ) {
 			$entity->delete();
 			return true;
@@ -53,6 +71,9 @@ class com_user extends component {
 		}
 	}
 
+    /**
+     * Fill the $_SESSION['user'] variable with the logged in user's data.
+     */
     function fill_session() {
         $_SESSION['user'] = $this->get_user($_SESSION['user_id']);
         if ($_SESSION['user']->inherit_abilities) {
@@ -109,6 +130,15 @@ class com_user extends component {
 		}
 	}
 
+    /**
+     * Gets an array of the components which can be a default component.
+     *
+     * The way a component can be a user's default components is to have a
+     * "default" action, which loads what the user will see when they first log
+     * on.
+     *
+     * @return array The array of component names.
+     */
     function get_default_component_array() {
         global $config;
         $return = array();
@@ -120,12 +150,14 @@ class com_user extends component {
         return $return;
     }
 
+    /**
+     * Get's a group by GUID.
+     *
+     * @param int $group_id The group's GUID.
+     * @return group|null Returns the group if it exists, null if it doesn't.
+     */
 	function get_group($group_id) {
-        /**
-         * @todo Rewrite specifically for groups.
-         */
 		global $config;
-		$group = new group;
 		$group = $config->entity_manager->get_entity($group_id, group);
 		if ( empty($group) )
 			return null;
@@ -137,8 +169,21 @@ class com_user extends component {
 		}
 	}
 
+    /**
+     * Get's an array of groups.
+     *
+     * If no parent id is given, get_group_array() will start with all top level
+     * groups.
+     *
+     * get_group_array() returns a multidimensional hierarchical array. In each
+     * element is 'name', 'groupname', 'email', and 'children'. 'children' is an
+     * array of that group's children.
+     *
+     * @param int $parent_id The GUID of the group to descend from.
+     * @return array The array of groups.
+     * @todo Check for orphans, they could cause groups to be hidden.
+     */
 	function get_group_array($parent_id = NULL) {
-		// TODO: check for orphans, they could cause groups to be hidden
 		global $config;
 		$return = array();
 		if ( is_null($parent_id) ) {
@@ -167,10 +212,15 @@ class com_user extends component {
 		return $return;
 	}
 
+    /**
+     * Get's a group by groupname.
+     *
+     * @param string $groupname The group's groupname.
+     * @return group|null Returns the group if it exists, null if it doesn't.
+     */
 	function get_group_by_groupname($groupname) {
 		global $config;
 		$entities = array();
-		$entity = new group;
 		$entities = $config->entity_manager->get_entities_by_data(array('groupname' => $groupname), array(), group);
 		foreach ($entities as $entity) {
 			if ( $entity->has_tag('com_user', 'group') )
@@ -179,15 +229,65 @@ class com_user extends component {
 		return null;
 	}
 
+    /**
+     * Gets a tree style hierarchy of groups.
+     *
+     * The mask can contain these variables:
+     * #guid#
+     * #name#
+     * #groupname#
+     * #mark#
+     * #selected#
+     *
+     * For each depth level, $mark will be appended with "-> ".
+     *
+     * @param string $mask The line mask to fill with data.
+     * @param array $group_array An array of groups to work with.
+     * @see com_user::get_group_array()
+     * @param int|array $selected_id The ID or array of IDs on which to apply $selected to the mask.
+     * @param string $selected The selection text to apply to the mask on selected items.
+     * @param string $mark The mark to apply (per depth level) to the mask.
+     * @return string The rendered tree.
+     */
+	function get_group_tree($mask, $group_array, $selected_id = NULL, $selected = ' selected="selected"', $mark = '') {
+		$return = '';
+		foreach ($group_array as $key => $group) {
+			$parsed = str_replace('#guid#', $key, $mask);
+			$parsed = str_replace('#name#', $group['name'], $parsed);
+			$parsed = str_replace('#groupname#', $group['groupname'], $parsed);
+			$parsed = str_replace('#mark#', $mark, $parsed);
+            if ( $key == $selected_id || (is_array($selected_id) && in_array($key, $selected_id)) ) {
+				$parsed = str_replace('#selected#', $selected, $parsed);
+			} else {
+				$parsed = str_replace('#selected#', '', $parsed);
+			}
+			$return .= $parsed."\n";
+			if ( !empty($group['children']) )
+				$return .= $this->get_group_tree($mask, $group['children'], $selected_id, $selected, $mark.'-> ');
+		}
+		return $return;
+	}
+
+    /**
+     * Get's a group's groupname by its GUID.
+     *
+     * @param int $group_id The group's GUID.
+     * @return string|null Returns the groupname if the group exists, null if it doesn't.
+     */
 	function get_groupname($group_id) {
-		$entity = new group;
 		$entity = $this->get_group($group_id);
+        if (is_null($entity)) return null;
 		return $entity->groupname;
 	}
 
+    /**
+     * Get's a user by GUID.
+     *
+     * @param int $user_id The user's GUID.
+     * @return user|null Returns the user if it exists, null if it doesn't.
+     */
 	function get_user($user_id) {
 		global $config;
-		$user = new user;
 		$user = $config->entity_manager->get_entity($user_id, user);
 		if ( empty($user) )
 			return null;
@@ -199,6 +299,7 @@ class com_user extends component {
 		}
 	}
 
+    /*
 	function get_user_array($parent_id = NULL) {
 		// TODO: check for orphans, they could cause users to be hidden
 		global $config;
@@ -228,11 +329,20 @@ class com_user extends component {
 		}
 		return $return;
 	}
+     */
 
+    /**
+     * Get's a user by username.
+     *
+     * If there are more than one user with the same username (which shouldn't
+     * happen, but can), the first user found is returned.
+     *
+     * @param string $username The user's username.
+     * @return user|null Returns the user if it exists, null if it doesn't.
+     */
 	function get_user_by_username($username) {
 		global $config;
 		$entities = array();
-		$entity = new user;
 		$entities = $config->entity_manager->get_entities_by_data(array('username' => $username), array(), user);
 		foreach ($entities as $entity) {
 			if ( $entity->has_tag('com_user', 'user') )
@@ -241,6 +351,28 @@ class com_user extends component {
 		return null;
 	}
 
+    /*
+	function get_user_tree($mask, $user_array, $selected_id = NULL, $selected = ' selected="selected"', $mark = '') {
+		$return = '';
+		foreach ($user_array as $key => $user) {
+			$parsed = str_replace('#guid#', $key, $mask);
+			$parsed = str_replace('#name#', $user['name'], $parsed);
+			$parsed = str_replace('#username#', $user['username'], $parsed);
+			$parsed = str_replace('#mark#', $mark, $parsed);
+			if ( $key == $selected_id ) {
+				$parsed = str_replace('#selected#', $selected, $parsed);
+			} else {
+				$parsed = str_replace('#selected#', '', $parsed);
+			}
+			$return .= $parsed."\n";
+			if ( !empty($user['children']) )
+				$return .= $this->get_user_tree($mask, $user['children'], $selected_id, $selected, $mark.'->');
+		}
+		return $return;
+	}
+     */
+
+    /*
 	function get_user_menu($parent_id = NULL, &$menu = NULL, $menu_parent = NULL, $top_level = TRUE) {
 		global $config;
 		if ( is_null($parent_id) ) {
@@ -262,13 +394,23 @@ class com_user extends component {
 			}
 		}
 	}
+     */
 
+    /**
+     * Get's a user's username by its GUID.
+     *
+     * @param int $user_id The user's GUID.
+     * @return string|null Returns the username if the user exists, null if it doesn't.
+     */
 	function get_username($user_id) {
-		$entity = new user;
 		$entity = $this->get_user($user_id);
+        if (is_null($entity)) return null;
 		return $entity->username;
 	}
 
+    /**
+     * Creates and attaches a module which lists groups.
+     */
     function list_groups() {
 		global $config;
 
@@ -283,6 +425,9 @@ class com_user extends component {
         }
     }
 
+    /**
+     * Creates and attaches a module which lists users.
+     */
 	function list_users() {
 		global $config;
 
@@ -310,9 +455,13 @@ class com_user extends component {
          */
 	}
 
+    /**
+     * Logs the given user into the system.
+     *
+     * @param int $id The GUID of the user.
+     * @return bool True on success, false on failure.
+     */
 	function login($id) {
-		$entity = new user;
-
 		$entity = $this->get_user($id);
 
 		if ( isset($entity->username) ) {
@@ -328,36 +477,36 @@ class com_user extends component {
 		}
 	}
 
+    /**
+     * Logs the current user out of the system.
+     */
 	function logout() {
 		unset($_SESSION['user']);
 		session_unset();
 		session_destroy();
 	}
 
-	function new_group() {
-		$new_group = new user;
-		$new_group->add_tag('com_user', 'group');
-		$new_group->abilities = array();
-		return $new_group;
-	}
-
-	function new_user() {
-		$new_user = new user;
-		$new_user->add_tag('com_user', 'user');
-		$new_user->salt = md5(rand());
-		$new_user->abilities = array();
-		$new_user->groups = array();
-        $new_user->inherit_abilities = true;
-        $new_user->default_component = 'com_user';
-		return $new_user;
-	}
-
+    /**
+     * Creates and attaches a module which let's the user log in.
+     *
+     * @param string $position The position in which to place the module.
+     */
 	function print_login($position = 'content') {
 		$module = new module('com_user', 'login', $position);
 	}
 
+    /**
+     * Creates and attaches a module containing a form for editing a group.
+     *
+     * If $id is null, or not given, a blank form will be provided.
+     *
+     * @param string $heading The heading for the form.
+     * @param string $new_option The option to which the form will submit.
+     * @param string $new_action The action to which the form will submit.
+     * @param int $id The GUID of the group to edit.
+     */
 	function print_group_form($heading, $new_option, $new_action, $id = NULL) {
-		global $config, $page;
+		global $config;
 		$module = new module('com_user', 'group_form', 'content');
 		if ( is_null($id) ) {
 			$module->groupname = $module->name = '';
@@ -382,27 +531,18 @@ class com_user extends component {
         }
 	}
 
-	function print_group_tree($mask, $group_array, $selected_id = NULL, $selected = ' selected="selected"', $mark = '') {
-		$return = '';
-		foreach ($group_array as $key => $group) {
-			$parsed = str_replace('#guid#', $key, $mask);
-			$parsed = str_replace('#name#', $group['name'], $parsed);
-			$parsed = str_replace('#groupname#', $group['groupname'], $parsed);
-			$parsed = str_replace('#mark#', $mark, $parsed);
-            if ( $key == $selected_id || (is_array($selected_id) && in_array($key, $selected_id)) ) {
-				$parsed = str_replace('#selected#', $selected, $parsed);
-			} else {
-				$parsed = str_replace('#selected#', '', $parsed);
-			}
-			$return .= $parsed."\n";
-			if ( !empty($group['children']) )
-				$return .= $this->print_group_tree($mask, $group['children'], $selected_id, $selected, $mark.'-> ');
-		}
-		return $return;
-	}
-
+    /**
+     * Creates and attaches a module containing a form for editing a user.
+     *
+     * If $id is null, or not given, a blank form will be provided.
+     *
+     * @param string $heading The heading for the form.
+     * @param string $new_option The option to which the form will submit.
+     * @param string $new_action The action to which the form will submit.
+     * @param int $id The GUID of the user to edit.
+     */
 	function print_user_form($heading, $new_option, $new_action, $id = NULL) {
-		global $config, $page;
+		global $config;
 		$module = new module('com_user', 'user_form', 'content');
 		if ( is_null($id) ) {
 			$module->username = $module->name = '';
@@ -436,29 +576,19 @@ class com_user extends component {
         }
 		//$module->content("<label>Parent<select name=\"parent\">\n");
 		//$module->content("<option value=\"none\">--No Parent--</option>\n");
-		//$module->content($this->print_user_tree('<option value="#guid#"#selected#>#mark# #name# [#username#]</option>', $this->get_user_array(), $parent));
+		//$module->content($this->get_user_tree('<option value="#guid#"#selected#>#mark# #name# [#username#]</option>', $this->get_user_array(), $parent));
 		//$module->content("</select></label>\n");
 	}
 
-	function print_user_tree($mask, $user_array, $selected_id = NULL, $selected = ' selected="selected"', $mark = '') {
-		$return = '';
-		foreach ($user_array as $key => $user) {
-			$parsed = str_replace('#guid#', $key, $mask);
-			$parsed = str_replace('#name#', $user['name'], $parsed);
-			$parsed = str_replace('#username#', $user['username'], $parsed);
-			$parsed = str_replace('#mark#', $mark, $parsed);
-			if ( $key == $selected_id ) {
-				$parsed = str_replace('#selected#', $selected, $parsed);
-			} else {
-				$parsed = str_replace('#selected#', '', $parsed);
-			}
-			$return .= $parsed."\n";
-			if ( !empty($user['children']) )
-				$return .= $this->print_user_tree($mask, $user['children'], $selected_id, $selected, $mark.'->');
-		}
-		return $return;
-	}
-
+    /**
+     * Kick the user out of the current page.
+     *
+     * Note that this method completely terminates execution of the script when
+     * it is called. Code after this function is called will not run.
+     *
+     * @param string $message An optional message to display to the user.
+     * @param string $url An option URL to be included in the query data of the redirection url.
+     */
 	function punt_user($message = NULL, $url = NULL) {
 		global $config;
 		header("Location: ".$config->template->url('com_user', 'exit', array('message' => urlencode($message), 'url' => urlencode($url)), false));

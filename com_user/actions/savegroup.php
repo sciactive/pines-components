@@ -21,7 +21,6 @@ if ( isset($_REQUEST['group_id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", $config->template->url('com_user', 'managegroups', null, false));
 		return;
 	}
-	$group = new group;
 	$group = $config->user_manager->get_group($_REQUEST['group_id']);
 	if ( is_null($group) ) {
 		display_error('Group doesn\'t exists!');
@@ -40,7 +39,6 @@ if ( isset($_REQUEST['group_id']) ) {
 		return;
 	}
 	$group = new group;
-	$group = $config->user_manager->new_group();
 	if ( is_null($config->user_manager->get_group_by_groupname($_REQUEST['groupname'])) ) {
 		$group->groupname = $_REQUEST['groupname'];
 	} else {

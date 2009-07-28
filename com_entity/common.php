@@ -20,6 +20,12 @@ defined('P_RUN') or die('Direct access prohibited');
  * @subpackage com_entity
  */
 class com_entity extends component {
+    /**
+     * Delete an entity from the database.
+     *
+     * @param entity $entity The entity to delete.
+     * @return bool True on success, false on failure.
+     */
 	public function delete_entity(&$entity) {
 		$return = $this->delete_entity_by_id($entity->guid);
 		if ( $return )
@@ -28,6 +34,12 @@ class com_entity extends component {
 		//unset($entity); //no effect
 	}
 
+    /**
+     * Delete an entity by its GUID.
+     *
+     * @param int $guid The GUID of the entity.
+     * @return bool True on success, false on failure.
+     */
 	public function delete_entity_by_id($guid) {
 		global $config;
 		$query = sprintf("DELETE FROM `%scom_entity_entities` WHERE `guid`=%u;",
@@ -47,6 +59,17 @@ class com_entity extends component {
 		return true;
 	}
 
+    /**
+     * Get an array of entities by their data.
+     * 
+     * Note: If a class is specified, it must be a descendent of the entity
+     * class.
+     *
+     * @param array $data An array of name=>value pairs of variables.
+     * @param array $required_tags An array of tags the entities must have.
+     * @param mixed $class The name of the class to use for the entities.
+     * @return array|null An array of entities, or null on failure.
+     */
 	public function get_entities_by_data($data, $required_tags = array(), $class = entity) {
 		global $config;
 		$entities = array();
@@ -67,7 +90,7 @@ class com_entity extends component {
 
 		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
 			display_error('Query failed: ' . mysql_error());
-			return false;
+			return null;
 		}
 
 		while ($row = mysql_fetch_array($result)) {
@@ -80,6 +103,16 @@ class com_entity extends component {
 		return $entities;
 	}
 
+    /**
+     * Get an array of entities by their parent.
+     * 
+     * Note: If a class is specified, it must be a descendent of the entity
+     * class.
+     *
+     * @param int $parent_guid The GUID of the parent entity.
+     * @param mixed $class The name of the class to use for the entities.
+     * @return array|null An array of entities, or null on failure.
+     */
 	public function get_entities_by_parent($parent_guid, $class = entity) {
 		global $config;
 		$entities = array();
@@ -90,7 +123,7 @@ class com_entity extends component {
 			intval($parent_guid));
 		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
 			display_error('Query failed: ' . mysql_error());
-			return false;
+			return null;
 		}
 
 		$row = mysql_fetch_array($result);
@@ -119,7 +152,11 @@ class com_entity extends component {
 		return $entities;
 	}
 
-	// This needs to be a shortcut to get_entities_by_tags_exclusive
+    /**
+     * A shortcut to get_entities_by_tags_exclusive.
+     * 
+     * Note: Entity managers must provide this shortcut.
+     */
 	public function get_entities_by_tags() {
 		if (is_array(func_get_arg(0))) {
             return $this->get_entities_by_tags_exclusive(func_get_arg(0), func_get_arg(1));
@@ -128,9 +165,16 @@ class com_entity extends component {
 		}
 	}
 
-	/*
-	 * Will return any entities which contain *all* of the specified tags.
-	 */
+    /**
+     * Get an array of entities which contain *all* of the specified tags.
+     * 
+     * Note: If a class is specified, it must be a descendent of the entity
+     * class.
+     *
+     * @param mixed $tags,... A list or array of tags.
+     * @param mixed $class The name of the class to use for the entities.
+     * @return array|null An array of entities, or null on failure.
+     */
 	public function get_entities_by_tags_exclusive() {
 		global $config;
 		if (is_array(func_get_arg(0))) {
@@ -153,7 +197,7 @@ class com_entity extends component {
 
 		if (empty($tag_array)) {
 			display_error('Call to get_entities_by_tags_exclusive without tag argument!');
-			return false;
+			return null;
 		}
 		foreach ($tag_array as $cur_tag) {
 			if ( !empty($tag_query) )
@@ -167,7 +211,7 @@ class com_entity extends component {
 			$tag_query);
 		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
 			display_error('Query failed: ' . mysql_error());
-			return false;
+			return null;
 		}
 
 		$row = mysql_fetch_array($result);
@@ -210,9 +254,16 @@ class com_entity extends component {
 		return $entities;
 	}
 
-	/*
-	 * Will return any entities which contain *any* of the specified tags.
-	 */
+    /**
+     * Get an array of entities which contain *any* of the specified tags.
+     *
+     * Note: If a class is specified, it must be a descendent of the entity
+     * class.
+     *
+     * @param mixed $tags,... A list or array of tags.
+     * @param mixed $class The name of the class to use for the entities.
+     * @return array|null An array of entities, or null on failure.
+     */
 	public function get_entities_by_tags_inclusive() {
 		global $config;
 		if (is_array(func_get_arg(0))) {
@@ -235,7 +286,7 @@ class com_entity extends component {
 
 		if (empty($tag_array)) {
 			display_error('Call to get_entities_by_tags_inclusive without tag argument!');
-			return false;
+			return null;
 		}
 		foreach ($tag_array as $cur_tag) {
 			if ( !empty($tag_query) )
@@ -249,7 +300,7 @@ class com_entity extends component {
 			$tag_query);
 		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
 			display_error('Query failed: ' . mysql_error());
-			return false;
+			return null;
 		}
 
 		$row = mysql_fetch_array($result);
@@ -292,17 +343,25 @@ class com_entity extends component {
 		return $entities;
 	}
 
-	/*
-	 * Will return any entities which contain *all* of the exclusive_tags *and*
+    /**
+     * Get an array of entities which contain *all* of the exclusive_tags and
 	 * *any* of the inclusive_tags.
-	 */
+     *
+     * Note: If a class is specified, it must be a descendent of the entity
+     * class.
+     *
+     * @param array $exlusive_tags An array of tags.
+     * @param array $inclusive_tags An array of tags.
+     * @param mixed $class The name of the class to use for the entities.
+     * @return array|null An array of entities, or null on failure.
+     */
 	public function get_entities_by_tags_mixed($exlusive_tags = array(), $inclusive_tags = array(), $class = entity) {
 		global $config;
 		$entities = array();
 
 		if (!is_array($exlusive_tags) || !is_array($inclusive_tags)) {
 			display_error('Call to get_entities_by_tags_mixed with invalid arguments!');
-			return false;
+			return null;
 		}
 
 		foreach ($exlusive_tags as $cur_tag) {
@@ -324,7 +383,7 @@ class com_entity extends component {
 			$incl_tag_query);
 		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
 			display_error('Query failed: ' . mysql_error());
-			return false;
+			return null;
 		}
 
 		$row = mysql_fetch_array($result);
@@ -373,6 +432,16 @@ class com_entity extends component {
 		return $entities;
 	}
 
+    /**
+     * Get an entity by GUID.
+     *
+     * Note: If a class is specified, it must be a descendent of the entity
+     * class.
+     *
+     * @param int $guid The GUID.
+     * @param mixed $class The name of the class to use for the entities.
+     * @return mixed The entity, or null on failure.
+     */
 	public function get_entity($guid, $class = entity) {
 		global $config;
 
@@ -385,7 +454,7 @@ class com_entity extends component {
 			intval($guid));
 		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
 			display_error('Query failed: ' . mysql_error());
-			return false;
+			return null;
 		}
 
 		if ( !($row = mysql_fetch_array($result)) ) {
@@ -407,6 +476,12 @@ class com_entity extends component {
 		return $entity;
 	}
 
+    /**
+     * Save an entity to the database.
+     *
+     * @param mixed $entity The entity.
+     * @return bool True on success, false on failure.
+     */
 	public function save_entity($entity) {
 		global $config;
 		if ( is_null($entity->guid) ) {

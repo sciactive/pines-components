@@ -13,14 +13,27 @@ defined('P_RUN') or die('Direct access prohibited');
 
 $config->com_mysql = new DynamicConfig;
 
-// Database Settings
-$config->com_mysql->host = "localhost";
-
-$config->com_mysql->user = "pines";
-
-$config->com_mysql->password = "password";
-
-$config->com_mysql->database = "pines";
-
-$config->com_mysql->prefix = "pin_";
+/**
+ * Database Settings
+ */
+    /**
+     * The default MySQL host.
+     */
+    $config->com_mysql->host = "localhost";
+    /**
+     * The default MySQL user.
+     */
+    $config->com_mysql->user = "pines";
+    /**
+     * The default MySQL password.
+     */
+    $config->com_mysql->password = "password";
+    /**
+     * The default MySQL database.
+     */
+    $config->com_mysql->database = "pines";
+    /**
+     * The default MySQL table name prefix.
+     */
+    $config->com_mysql->prefix = "pin_";
 ?>

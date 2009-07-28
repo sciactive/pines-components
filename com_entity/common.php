@@ -23,7 +23,7 @@ class com_entity extends component {
     /**
      * Delete an entity from the database.
      *
-     * @param entity $entity The entity to delete.
+     * @param entity &$entity The entity to delete.
      * @return bool True on success, false on failure.
      */
 	public function delete_entity(&$entity) {

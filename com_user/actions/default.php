@@ -22,6 +22,9 @@ if ( !gatekeeper() ) {
         $config->user_manager->list_users();
     } else {
         if (file_exists('components/'.$_SESSION['user']->default_component.'/actions/default.php')) {
+            /**
+             * Load the user's default component.
+             */
             require('components/'.$_SESSION['user']->default_component.'/actions/default.php');
         } else {
             display_error("Action not defined! D:");

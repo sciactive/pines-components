@@ -22,6 +22,9 @@ if ( $_REQUEST['username'] ) {
 			header('Location: '.urldecode($_REQUEST['url']));
 			exit;
 		} else {
+            /**
+             * Load the user's default component.
+             */
             require('components/'.$config->default_component.'/actions/default.php');
 		}
 	} else {

@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($config->ability_manager) ) {
 	$config->ability_manager->add('com_configure', 'manage', 'Manage Configuration', 'Let the user change configuration settings.');
-	$config->ability_manager->add('com_configure', 'list', 'List Configuration', 'Let the user see the current configuration settings.');
+	$config->ability_manager->add('com_configure', 'view', 'View Configuration', 'Let the user see current configuration settings.');
 }
 
 $config->configurator = new com_configure;

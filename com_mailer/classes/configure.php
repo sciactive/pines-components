@@ -1,6 +1,6 @@
 <?php
 /**
- * com_mailer's configuration.
+ * com_mailer class.
  *
  * @package Pines
  * @subpackage com_mailer

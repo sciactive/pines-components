@@ -16,8 +16,13 @@ if ( !gatekeeper('com_configure/list') ) {
 	return;
 }
 
+if (!array_key_exists($_REQUEST['component'], $config->configurator->config_files)) {
+    display_error('Given component either does not exist, or has no configuration file!');
+    return;
+}
 $com_configure_list = new module('com_configure', 'list', 'content');
-$com_configure_list->title = 'Configuration';
+$com_configure_list->title = 'Viewing Configuration for '.$_REQUEST['component'];
+$com_configure_list->config = $config->configurator->get_wddx_array($config->configurator->config_files[$_REQUEST['component']]);
 //TODO: reimplement this configuration listing to show variables (using object iteration)
 //TODO: design a way to define data types and metadata for configuration.
 ?>

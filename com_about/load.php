@@ -1,6 +1,6 @@
 <?php
 /**
- * com_about's configuration.
+ * com_about's loader.
  *
  * @package Pines
  * @subpackage com_about

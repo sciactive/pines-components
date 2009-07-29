@@ -1,6 +1,6 @@
 <?php
 /**
- * com_user's configuration.
+ * com_user's loader.
  *
  * @package Pines
  * @subpackage com_user

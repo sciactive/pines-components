@@ -1,6 +1,6 @@
 <?php
 /**
- * com_mysql's configuration.
+ * com_mysql's loader.
  *
  * @package Pines
  * @subpackage com_mysql

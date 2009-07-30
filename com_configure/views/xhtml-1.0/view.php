@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
-<div style="border: 1px black solid"><?php foreach ($this->config as $cur_var) { ?>
+<div class="config_list" style="border: 1px black solid"><?php foreach ($this->config as $cur_var) { ?>
     <div class="config_listing" style="padding: 0 3px; border-top: 1px black solid;">
         <div style="color: blue; font-weight: bold;">
             <?php echo $cur_var['cname']; ?>:

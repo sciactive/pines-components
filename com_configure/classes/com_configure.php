@@ -57,6 +57,21 @@ class com_configure extends component {
     }
 
     /**
+     * Creates and attaches a module which lists components.
+     */
+	function list_components() {
+		$module = new module('com_configure', 'list', 'content');
+		$module->title = "Configure Components";
+
+        $module->components = array_keys($this->config_files);
+
+		if ( empty($module->components) ) {
+            $module->detach();
+            display_notice("There are no configurable components.");
+        }
+	}
+
+    /**
      * Convert a configuration array into WDDX format and insert it into an
      * existing Pines WDDX configuration file.
      *
@@ -78,8 +93,11 @@ class com_configure extends component {
     function put_wddx_data($wddx_data, $config_file) {
 		if (!file_exists($config_file)) return false;
         if (!($file_contents = file_get_contents($config_file))) return false;
-        $pattern = '/^(\s*return\s*[(]?)\S.*([)]?\s*;)/';
+        $pattern = '/(return\s*[(]?\s*)\S.*([)]?\s*;)/';
         $replacement = '$1"#CODEGOESHERE#"$2';
+        /* simplified pattern, but it replaces parenthesis...
+        $pattern = '/return(\s|[(]).*;/';
+        $replacement = 'return "#CODEGOESHERE#";'; */
         $file_contents = preg_replace($pattern, $replacement, $file_contents, 1);
         $file_contents = str_replace('#CODEGOESHERE#', $wddx_data, $file_contents);
         if (!(file_put_contents($config_file, $file_contents))) return false;

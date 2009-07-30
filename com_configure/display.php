@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( gatekeeper('com_configure/manage') || gatekeeper('com_configure/view') ) {
+if ( gatekeeper('com_configure/edit') || gatekeeper('com_configure/view') ) {
 	$com_configure_menu_id = $page->main_menu->add('Configuration');
 	$page->main_menu->add('List', $config->template->url('com_configure', 'list'), $com_configure_menu_id);
 }

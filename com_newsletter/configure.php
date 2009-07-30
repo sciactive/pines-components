@@ -11,6 +11,21 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-return "<wddxPacket version='1.0'><header/><data><array length='2'><struct><var name='name'><string>default_from</string></var><var name='cname'><string>Default From</string></var><var name='description'><string>The default &quot;from&quot; email.</string></var><var name='value'><string>Nowhere &lt;nowhere@example.com&gt;</string></var></struct><struct><var name='name'><string>default_reply_to</string></var><var name='cname'><string>Default Reply To</string></var><var name='description'><string>The &quot;reply-to&quot; email.</string></var><var name='value'><string>webmaster@example.com</string></var></struct></array></data></wddxPacket>";
+return array (
+  0 => 
+  array (
+    'name' => 'default_from',
+    'cname' => 'Default From',
+    'description' => 'The default "from" email.',
+    'value' => 'Nowhere <nowhere@example.com>',
+  ),
+  1 => 
+  array (
+    'name' => 'default_reply_to',
+    'cname' => 'Default Reply To',
+    'description' => 'The "reply-to" email.',
+    'value' => 'webmaster@example.com',
+  ),
+);
 
 ?>

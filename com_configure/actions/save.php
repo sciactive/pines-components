@@ -21,7 +21,7 @@ if (!array_key_exists($_REQUEST['component'], $config->configurator->config_file
     return;
 }
 
-if (!($cur_config_array = $config->configurator->get_wddx_array($config->configurator->config_files[$_REQUEST['component']]))) return;
+if (!($cur_config_array = $config->configurator->get_config_array($config->configurator->config_files[$_REQUEST['component']]))) return;
 
 foreach ($cur_config_array as $cur_key => $cur_var) {
     if (is_bool($cur_var['value'])) {
@@ -37,7 +37,7 @@ foreach ($cur_config_array as $cur_key => $cur_var) {
     }
 }
 
-$config->configurator->put_wddx_array($cur_config_array, $config->configurator->config_files[$_REQUEST['component']]);
+$config->configurator->put_config_array($cur_config_array, $config->configurator->config_files[$_REQUEST['component']]);
 
 header('Location: '.$config->template->url('com_configure', 'list', null, false));
 

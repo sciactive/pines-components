@@ -11,6 +11,42 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-return "<wddxPacket version='1.0'><header/><data><array length='5'><struct><var name='name'><string>host</string></var><var name='cname'><string>Host</string></var><var name='description'><string>The default MySQL host.</string></var><var name='value'><string>localhost</string></var></struct><struct><var name='name'><string>user</string></var><var name='cname'><string>User</string></var><var name='description'><string>The default MySQL user.</string></var><var name='value'><string>pines</string></var></struct><struct><var name='name'><string>password</string></var><var name='cname'><string>Password</string></var><var name='description'><string>The default MySQL password.</string></var><var name='value'><string>password</string></var></struct><struct><var name='name'><string>database</string></var><var name='cname'><string>Database</string></var><var name='description'><string>The default MySQL database.</string></var><var name='value'><string>pines</string></var></struct><struct><var name='name'><string>prefix</string></var><var name='cname'><string>Table Prefix</string></var><var name='description'><string>The default MySQL table name prefix.</string></var><var name='value'><string>pin_</string></var></struct></array></data></wddxPacket>";
+return array (
+  0 => 
+  array (
+    'name' => 'host',
+    'cname' => 'Host',
+    'description' => 'The default MySQL host.',
+    'value' => 'localhost',
+  ),
+  1 => 
+  array (
+    'name' => 'user',
+    'cname' => 'User',
+    'description' => 'The default MySQL user.',
+    'value' => 'pines',
+  ),
+  2 => 
+  array (
+    'name' => 'password',
+    'cname' => 'Password',
+    'description' => 'The default MySQL password.',
+    'value' => 'password',
+  ),
+  3 => 
+  array (
+    'name' => 'database',
+    'cname' => 'Database',
+    'description' => 'The default MySQL database.',
+    'value' => 'pines',
+  ),
+  4 => 
+  array (
+    'name' => 'prefix',
+    'cname' => 'Table Prefix',
+    'description' => 'The default MySQL table name prefix.',
+    'value' => 'pin_',
+  ),
+);
 
 ?>

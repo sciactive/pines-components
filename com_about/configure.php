@@ -11,6 +11,21 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-return "<wddxPacket version='1.0'><header/><data><array length='2'><struct><var name='name'><string>description</string></var><var name='cname'><string>Description</string></var><var name='description'><string>Description of your installation.</string></var><var name='value'><string>This is the default installation of Pines.</string></var></struct><struct><var name='name'><string>describe_self</string></var><var name='cname'><string>Describe Pines</string></var><var name='description'><string>Whether to show Pines&#039; description underneath yours.</string></var><var name='value'><boolean value='true'/></var></struct></array></data></wddxPacket>";
+return array (
+  0 => 
+  array (
+    'name' => 'description',
+    'cname' => 'Description',
+    'description' => 'Description of your installation.',
+    'value' => 'This is the default installation of Pines.',
+  ),
+  1 => 
+  array (
+    'name' => 'describe_self',
+    'cname' => 'Describe Pines',
+    'description' => 'Whether to show Pines\' description underneath yours.Look!semicolons;;;;;',
+    'value' => true,
+  ),
+);
 
 ?>

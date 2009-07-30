@@ -24,7 +24,7 @@ return array (
     'name' => 'user',
     'cname' => 'User',
     'description' => 'The default MySQL user.',
-    'value' => 'pinese',
+    'value' => 'pines',
   ),
   2 => 
   array (

@@ -12,8 +12,17 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 display_notice(stripslashes($_REQUEST['message']));
-/**
- * Load the default component.
- */
-require('components/'.$config->default_component.'/actions/default.php');
+if (isset($_SESSION['user'])) {
+	if (file_exists('components/'.$_SESSION['user']->default_component.'/actions/default.php')) {
+		/**
+		 * Load the user's default component.
+		 */
+		require('components/'.$_SESSION['user']->default_component.'/actions/default.php');
+	}
+} else {
+	/**
+	 * Load the default component.
+	 */
+	require('components/'.$config->default_component.'/actions/default.php');
+}
 ?>

@@ -20,8 +20,19 @@ defined('P_RUN') or die('Direct access prohibited');
  * @subpackage com_configure
  */
 class com_configure extends component {
+    /**
+     * An array of config files found on the system.
+     *
+     * Each key is the name of the component to which the config file in its
+     * value belongs.
+     *
+     * @var array $config_files
+     */
 	var $config_files = array();
 
+    /**
+     * Fills the $config_files array.
+     */
 	function __construct() {
 		global $config;
 		if (file_exists('configure.php'))
@@ -47,7 +58,7 @@ class com_configure extends component {
     }
 
     /**
-     * Creates and attaches a module which lists components.
+     * Creates and attaches a module which lists configurable components.
      */
 	function list_components() {
 		$module = new module('com_configure', 'list', 'content');

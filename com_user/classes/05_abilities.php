@@ -14,10 +14,17 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * A generic ability manager.
  *
+ * com_user uses this ability manager to build a list of ablities for the user
+ * to select from when editing a user or group.
+ *
  * @package Pines
  * @subpackage com_user
  */
 class abilities {
+    /**
+     * The array used to store defined abilities.
+     * @var array $abilities
+     */
 	public $abilities = array();
 
 	/**

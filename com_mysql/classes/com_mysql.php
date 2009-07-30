@@ -48,7 +48,8 @@ class com_mysql extends component {
      * Connect to a MySQL database.
      *
      * If the host is not specified, all the parameters will be filled with
-     * their defaults. This is a security feature, to keep a component from
+     * their defaults. If the host is specified, none of the parameters are
+     * altered. This is a security feature, to keep a component from
      * accidentally revealing your credentials to another host. It is still
      * possible for a component to do this, but it most likely would not be
      * accidental.

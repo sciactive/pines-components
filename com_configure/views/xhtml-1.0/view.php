@@ -1,6 +1,6 @@
 <?php
 /**
- * Display a list of configuration file locations by component.
+ * Display a list of configuration settings.
  *
  * @package Pines
  * @subpackage com_configure

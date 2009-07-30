@@ -23,6 +23,9 @@ if ( !gatekeeper() ) {
 			display_error('Your default component is set to com_user, but you don\'t have permission to use it.');
 			return;
 		}
+        /**
+         * If com_user is the default component, the default action is manageusers.
+         */
         require('components/com_user/actions/manageusers.php');
     } else {
         if (file_exists('components/'.$_SESSION['user']->default_component.'/actions/default.php')) {

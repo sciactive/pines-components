@@ -46,14 +46,16 @@ class com_entity extends component {
 			$config->com_mysql->prefix,
 			intval($guid));
 		if ( !(mysql_query($query, $config->db_manager->link)) ) {
-			display_error('Query failed: ' . mysql_error());
+            if (function_exists('display_error'))
+                display_error('Query failed: ' . mysql_error());
 			return false;
 		}
 		$query = sprintf("DELETE FROM `%scom_entity_data` WHERE `guid`=%u;",
 			$config->com_mysql->prefix,
 			intval($guid));
 		if ( !(mysql_query($query, $config->db_manager->link)) ) {
-			display_error('Query failed: ' . mysql_error());
+            if (function_exists('display_error'))
+                display_error('Query failed: ' . mysql_error());
 			return false;
 		}
 		return true;
@@ -89,7 +91,8 @@ class com_entity extends component {
 		$query .= ";";
 
 		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
-			display_error('Query failed: ' . mysql_error());
+            if (function_exists('display_error'))
+                display_error('Query failed: ' . mysql_error());
 			return null;
 		}
 
@@ -122,7 +125,8 @@ class com_entity extends component {
 			$config->com_mysql->prefix,
 			intval($parent_guid));
 		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
-			display_error('Query failed: ' . mysql_error());
+            if (function_exists('display_error'))
+                display_error('Query failed: ' . mysql_error());
 			return null;
 		}
 
@@ -196,7 +200,8 @@ class com_entity extends component {
 		$entities = array();
 
 		if (empty($tag_array)) {
-			display_error('Call to get_entities_by_tags_exclusive without tag argument!');
+            if (function_exists('display_error'))
+                display_error('Call to get_entities_by_tags_exclusive without tag argument!');
 			return null;
 		}
 		foreach ($tag_array as $cur_tag) {
@@ -210,7 +215,8 @@ class com_entity extends component {
 			$config->com_mysql->prefix,
 			$tag_query);
 		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
-			display_error('Query failed: ' . mysql_error());
+            if (function_exists('display_error'))
+                display_error('Query failed: ' . mysql_error());
 			return null;
 		}
 
@@ -285,7 +291,8 @@ class com_entity extends component {
 		$entities = array();
 
 		if (empty($tag_array)) {
-			display_error('Call to get_entities_by_tags_inclusive without tag argument!');
+            if (function_exists('display_error'))
+                display_error('Call to get_entities_by_tags_inclusive without tag argument!');
 			return null;
 		}
 		foreach ($tag_array as $cur_tag) {
@@ -299,7 +306,8 @@ class com_entity extends component {
 			$config->com_mysql->prefix,
 			$tag_query);
 		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
-			display_error('Query failed: ' . mysql_error());
+            if (function_exists('display_error'))
+                display_error('Query failed: ' . mysql_error());
 			return null;
 		}
 
@@ -360,7 +368,8 @@ class com_entity extends component {
 		$entities = array();
 
 		if (!is_array($exlusive_tags) || !is_array($inclusive_tags)) {
-			display_error('Call to get_entities_by_tags_mixed with invalid arguments!');
+            if (function_exists('display_error'))
+                display_error('Call to get_entities_by_tags_mixed with invalid arguments!');
 			return null;
 		}
 
@@ -382,7 +391,8 @@ class com_entity extends component {
 			$excl_tag_query,
 			$incl_tag_query);
 		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
-			display_error('Query failed: ' . mysql_error());
+            if (function_exists('display_error'))
+                display_error('Query failed: ' . mysql_error());
 			return null;
 		}
 
@@ -453,7 +463,8 @@ class com_entity extends component {
 			$config->com_mysql->prefix,
 			intval($guid));
 		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
-			display_error('Query failed: ' . mysql_error());
+            if (function_exists('display_error'))
+                display_error('Query failed: ' . mysql_error());
 			return null;
 		}
 
@@ -490,7 +501,8 @@ class com_entity extends component {
 				(is_null($entity->parent) ? 'NULL' : intval($entity->parent)),
 				mysql_real_escape_string(serialize($entity->tags), $config->db_manager->link));
 			if ( !(mysql_query($query, $config->db_manager->link)) ) {
-				display_error('Query failed: ' . mysql_error());
+                if (function_exists('display_error'))
+                    display_error('Query failed: ' . mysql_error());
 				return false;
 			}
 			$new_id = mysql_insert_id();
@@ -502,7 +514,8 @@ class com_entity extends component {
 					mysql_real_escape_string($name, $config->db_manager->link),
 					mysql_real_escape_string(serialize($value), $config->db_manager->link));
 				if ( !(mysql_query($query, $config->db_manager->link)) ) {
-					display_error('Query failed: ' . mysql_error());
+                    if (function_exists('display_error'))
+                        display_error('Query failed: ' . mysql_error());
 					return false;
 				}
 			}
@@ -514,14 +527,16 @@ class com_entity extends component {
 				mysql_real_escape_string(serialize($entity->tags), $config->db_manager->link),
 				intval($entity->guid));
 			if ( !(mysql_query($query, $config->db_manager->link)) ) {
-				display_error('Query failed: ' . mysql_error());
+                if (function_exists('display_error'))
+                    display_error('Query failed: ' . mysql_error());
 				return false;
 			}
 			$query = sprintf("DELETE FROM `%scom_entity_data` WHERE `guid`=%u;",
 				$config->com_mysql->prefix,
 				intval($entity->guid));
 			if ( !(mysql_query($query, $config->db_manager->link)) ) {
-				display_error('Query failed: ' . mysql_error());
+                if (function_exists('display_error'))
+                    display_error('Query failed: ' . mysql_error());
 				return false;
 			}
 			foreach ($entity->get_data() as $name => $value) {
@@ -531,7 +546,8 @@ class com_entity extends component {
 					mysql_real_escape_string($name, $config->db_manager->link),
 					mysql_real_escape_string(serialize($value), $config->db_manager->link));
 				if ( !(mysql_query($query, $config->db_manager->link)) ) {
-					display_error('Query failed: ' . mysql_error());
+                    if (function_exists('display_error'))
+                        display_error('Query failed: ' . mysql_error());
 					return false;
 				}
 			}

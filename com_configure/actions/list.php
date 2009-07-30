@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_configure/edit') && !gatekeeper('com_configure/view') ) {
-	$config->user_manager->punt_user("You don't have necessary permission.", $config->template->url('com_about', null, null, false));
+	$config->user_manager->punt_user("You don't have necessary permission.", $config->template->url('com_configure', 'list', $_GET, false));
 	return;
 }
 

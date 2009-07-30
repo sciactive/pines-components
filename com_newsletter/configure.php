@@ -1,6 +1,6 @@
 <?php
 /**
- * com_newsletter's WDDX configuration.
+ * com_newsletter's configuration.
  *
  * @package Pines
  * @subpackage com_newsletter

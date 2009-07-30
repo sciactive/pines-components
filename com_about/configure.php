@@ -1,6 +1,6 @@
 <?php
 /**
- * com_about's WDDX configuration.
+ * com_about's configuration.
  *
  * @package Pines
  * @subpackage com_about

@@ -1,6 +1,6 @@
 <?php
 /**
- * com_mysql's WDDX configuration.
+ * com_mysql's configuration.
  *
  * @package Pines
  * @subpackage com_mysql

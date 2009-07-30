@@ -1,6 +1,6 @@
 <?php
 /**
- * com_user's WDDX configuration.
+ * com_user's configuration.
  *
  * @package Pines
  * @subpackage com_user

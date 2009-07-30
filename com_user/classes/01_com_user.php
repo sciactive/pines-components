@@ -28,15 +28,15 @@ class com_user extends component {
      *
      * @param string $username The username of the user.
      * @param string $password The password of the user.
-     * @return mixed Returns the user's GUID on success, null on failure.
+     * @return int|bool Returns the user's GUID on success, false on failure.
      */
 	function authenticate($username, $password) {
 		$entity = $this->get_user_by_username($username);
-        if (is_null($entity)) return null;
+        if (is_null($entity)) return false;
 		if ( $entity->check_password($password) ) {
 			return $entity->guid;
 		} else {
-			return null;
+			return false;
 		}
 	}
 

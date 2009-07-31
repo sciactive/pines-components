@@ -11,11 +11,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-/**
- * The user manager.
- * @global com_user $config->user_manager
- */
-$config->user_manager = new com_user;
 $config->ability_manager->add('com_user', 'login', 'Login', 'User can login to the system.');
 $config->ability_manager->add('com_user', 'self', 'Change Info', 'User can change his own information.');
 $config->ability_manager->add('com_user', 'default_component', 'Change Default Component', 'User can change default component.');

@@ -1,9 +1,9 @@
 <?php
 /**
- * com_user's loader.
+ * Description.
  *
  * @package Pines
- * @subpackage com_user
+ * @subpackage com_newsletter
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -11,12 +11,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-/**
- * The user manager.
- * @global com_user $config->user_manager
- */
-$config->user_manager = new com_user;
-
-$config->ability_manager = new abilities;
+$config->newsletter = new com_newsletter;
 
 ?>

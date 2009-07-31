@@ -1,9 +1,9 @@
 <?php
 /**
- * com_mysql's common file.
+ * com_entity's loader.
  *
  * @package Pines
- * @subpackage com_mysql
+ * @subpackage com_entity
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -11,10 +11,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-/**
- * The database manager.
- * @global com_mysql $config->db_manager
- */
-$config->db_manager = new com_mysql;
+$config->entity_manager = new com_entity;
 
 ?>

@@ -16,6 +16,4 @@ if ( isset($config->ability_manager) ) {
 	$config->ability_manager->add('com_newsletter', 'send', 'Send', 'Let users send out mailings.');
 }
 
-$config->com_newsletter = new com_newsletter;
-
 ?>

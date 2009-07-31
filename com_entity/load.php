@@ -11,6 +11,10 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
+/**
+ * The entity manager.
+ * @global com_entity $config->entity_manager
+ */
 $config->entity_manager = new com_entity;
 
 ?>

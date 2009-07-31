@@ -17,6 +17,10 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 $config->user_manager = new com_user;
 
+/**
+ * The ability manager.
+ * @global abilities $config->ability_manager
+ */
 $config->ability_manager = new abilities;
 
 ?>

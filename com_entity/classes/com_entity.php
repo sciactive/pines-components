@@ -191,7 +191,7 @@ class com_entity extends component {
             }
 		} else {
 			$tag_array = func_get_args();
-            if (is_subclass_of($tag_array[count($tag_array)-1], 'entity')) {
+            if (class_exists($tag_array[count($tag_array)-1]) && is_subclass_of($tag_array[count($tag_array)-1], 'entity')) {
                 $class = $tag_array[count($tag_array)-1];
                 unset($tag_array[count($tag_array)-1]);
             } else {
@@ -282,7 +282,7 @@ class com_entity extends component {
             }
 		} else {
 			$tag_array = func_get_args();
-            if (is_subclass_of($tag_array[count($tag_array)-1], 'entity')) {
+            if (class_exists($tag_array[count($tag_array)-1]) && is_subclass_of($tag_array[count($tag_array)-1], 'entity')) {
                 $class = $tag_array[count($tag_array)-1];
                 unset($tag_array[count($tag_array)-1]);
             } else {

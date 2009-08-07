@@ -28,7 +28,7 @@ class com_user extends component {
      *
      * @param string $username The username of the user.
      * @param string $password The password of the user.
-     * @return int|bool Returns the user's GUID on success, false on failure.
+     * @return int|bool The user's GUID on success, false on failure.
      */
 	function authenticate($username, $password) {
 		$entity = $this->get_user_by_username($username);
@@ -154,7 +154,7 @@ class com_user extends component {
      * Get's a group by GUID.
      *
      * @param int $group_id The group's GUID.
-     * @return group|null Returns the group if it exists, null if it doesn't.
+     * @return group|null The group if it exists, null if it doesn't.
      */
 	function get_group($group_id) {
 		global $config;
@@ -216,7 +216,7 @@ class com_user extends component {
      * Get's a group by groupname.
      *
      * @param string $groupname The group's groupname.
-     * @return group|null Returns the group if it exists, null if it doesn't.
+     * @return group|null The group if it exists, null if it doesn't.
      */
 	function get_group_by_groupname($groupname) {
 		global $config;
@@ -227,6 +227,35 @@ class com_user extends component {
 				return $entity;
 		}
 		return null;
+	}
+    
+    /**
+     * Fills a menu with a group hierarchy.
+     * 
+     * @param int $parent_id The GUID of the parent group.
+     * @param menu &$menu The menu to fill.
+     * @param bool $top_level Whether to work on the menu's top level.
+     */
+	function get_group_menu(&$menu = NULL, $parent_id = NULL, $top_level = TRUE) {
+		global $config;
+		if ( is_null($parent_id) ) {
+			$entities = $config->entity_manager->get_entities_by_tags('com_user', 'group', group);
+			foreach ($entities as $entity) {
+				$menu->add($entity->name.' ['.$entity->groupname.']', $entity->guid, $entity->parent, $entity->guid);
+			}
+			$orphans = $menu->orphans();
+			if ( !empty($orphans) )
+				$orphan_menu_id = $menu->add('Orphans', NULL);
+			foreach ($orphans as $orphan) {
+				$menu->add($orphan['name'], $orphan['data'], $orphan_menu_id, $orphan['data']);
+			}
+		} else {
+			$entities = $config->entity_manager->get_entities_by_parent($parent_id);
+			foreach ($entities as $entity) {
+				$new_menu_id = $menu->add($entity->name.' ['.$entity->groupname.']', $entity->guid, ($top_level ? NULL : $entity->parent), $entity->guid);
+				$this->get_group_menu($entity->guid, $menu, $new_menu_id, FALSE);
+			}
+		}
 	}
 
     /**
@@ -272,7 +301,7 @@ class com_user extends component {
      * Get's a group's groupname by its GUID.
      *
      * @param int $group_id The group's GUID.
-     * @return string|null Returns the groupname if the group exists, null if it doesn't.
+     * @return string|null The groupname if the group exists, null if it doesn't.
      */
 	function get_groupname($group_id) {
 		$entity = $this->get_group($group_id);
@@ -284,7 +313,7 @@ class com_user extends component {
      * Get's a user by GUID.
      *
      * @param int $user_id The user's GUID.
-     * @return user|null Returns the user if it exists, null if it doesn't.
+     * @return user|null The user if it exists, null if it doesn't.
      */
 	function get_user($user_id) {
 		global $config;
@@ -338,7 +367,7 @@ class com_user extends component {
      * happen, but can), the first user found is returned.
      *
      * @param string $username The user's username.
-     * @return user|null Returns the user if it exists, null if it doesn't.
+     * @return user|null The user if it exists, null if it doesn't.
      */
 	function get_user_by_username($username) {
 		global $config;
@@ -373,7 +402,7 @@ class com_user extends component {
      */
 
     /*
-	function get_user_menu($parent_id = NULL, &$menu = NULL, $menu_parent = NULL, $top_level = TRUE) {
+	function get_user_menu(&$menu = NULL, $parent_id = NULL, $top_level = TRUE) {
 		global $config;
 		if ( is_null($parent_id) ) {
 			$entities = $config->entity_manager->get_entities_by_tags('com_user', 'user', user);
@@ -400,12 +429,30 @@ class com_user extends component {
      * Get's a user's username by its GUID.
      *
      * @param int $user_id The user's GUID.
-     * @return string|null Returns the username if the user exists, null if it doesn't.
+     * @return string|null The username if the user exists, null if it doesn't.
      */
 	function get_username($user_id) {
 		$entity = $this->get_user($user_id);
         if (is_null($entity)) return null;
 		return $entity->username;
+	}
+
+    /**
+     * Get's an array of users in a group.
+     *
+     * @param int $group_id The group's GUID.
+     * @return array An array of users.
+     */
+	function get_users_by_group($group_id) {
+		global $config;
+		$entities = array();
+		$entities = $config->entity_manager->get_entities_by_tags('com_user', 'user', user);
+        $return = array();
+		foreach ($entities as $entity) {
+			if ( $entity->ingroup($group_id) )
+				$return[] = $entity;
+		}
+		return $return;
 	}
 
     /**

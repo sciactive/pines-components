@@ -52,13 +52,20 @@ if ( $_REQUEST['include_permalink'] == 'on' ) {
 	$message = "<div style=\"text-align: center; font-size: smaller;\">Having trouble reading this message? <a href=\"".$config->template->url('com_newsletter', 'webview', array('mail_id' => $mail_id), true, true)."\" target=\"_blank\">Click here</a> to view this message in your browser.</div>" . $message;
 }
 
-$bcc = '';
-foreach ( $_REQUEST['user'] as $cur_user_id) {
-	$cur_user_id = intval($cur_user_id);
-	$user = $config->user_manager->get_user($cur_user_id);
-	if ( !empty($user->email) )
-		$bcc = $bcc . (strlen($bcc) ? ', ' : '') . $user->email;
+$addresses = array();
+foreach ($_REQUEST['group'] as $cur_group_id) {
+	$cur_group_id = intval($cur_group_id);
+    $users = $config->user_manager->get_users_by_group($cur_group_id);
+    foreach ($users as $cur_user) {
+        if (!empty($cur_user->email))
+            $addresses[$user->guid] = $cur_user->email;
+    }
 }
+
+$bcc = implode(', ', $addresses);
+/*foreach ($addresses as $cur_address) {
+	$bcc = $bcc . (strlen($bcc) ? ', ' : '') . $cur_address;
+}*/
 
 $mailer = &new com_mailer(clean_header($_REQUEST['from']), 'undisclosed-recipients <noone@example.com>', clean_header($_REQUEST['subject']), $message);
 $mailer->addHeader('Reply-To', clean_header($_REQUEST['replyto']));
@@ -75,6 +82,6 @@ if ( $mailer->send() ) {
 	$com_newsletter_send->title = "Failed to send \"".$mail->name."\".";
 }
 
-$com_newsletter_send->content("<h3>Subject: &quot;".clean_header($_REQUEST['subject'])."&quot;.</h3>");
-$com_newsletter_send->content("<div style=\"background: white; border: 2px solid black; padding: 5px; clear: both; overflow: auto;\">$message<br style=\"clear: both;\" /></div><br />");
+$com_newsletter_send->subject = clean_header($_REQUEST['subject']);
+$com_newsletter_send->message = $message;
 ?>

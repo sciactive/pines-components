@@ -32,17 +32,17 @@ $page->head("	animate: true\n");
 $page->head("});\n");
 $page->head("editor._defaultToolbar.titlebar = false;\n");
 $page->head("editor._defaultToolbar.buttonType = 'advanced';\n");
-$page->head("yuiImgUploader(editor, 'data', '".$config->template->url()."upload.php','image');\n");
+$page->head("yuiImgUploader(editor, 'data', '".$config->template->url('com_newsletter', 'upload')."','image');\n");
 $page->head("editor.render();\n");
 $page->head("</script>\n");
 ?>
 <div class="yui-skin-sam">
-<form enctype="multipart/form-data" name="editingmail" method="post">
+<form enctype="multipart/form-data" name="editingmail" method="post" action="<?php echo $config->template->url(); ?>">
 <div class="stylized stdform">
 <input type="submit" value="Save Mail" />
 <input type="button" onclick="window.location='<?php echo $config->template->url($this->close_option, $this->close_action); ?>';" value="Close" /> <small>(Closing will lose any unsaved changes!)</small>
 <br /><br />
-<label>Name<input type="test" name="name" value="<?php echo $this->mail->name; ?>"></label>
+<label>Name<input type="text" name="name" value="<?php echo $this->mail->name; ?>" /></label>
 <label>Subject<input type="text" name="subject" value="<?php echo $this->mail->subject; ?>" /></label>
 <label>Message<textarea rows="30" name="data" id="data" style="width: 99%;"><?php echo $this->mail->message; ?></textarea></label><br />
 <input type="hidden" name="option" value="<?php echo $this->new_option; ?>" />

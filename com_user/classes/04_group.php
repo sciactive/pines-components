@@ -13,8 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 /**
  * Pines system groups.
- *
- * @todo Function users() to list users of this group.
+ * 
  * @package Pines
  * @subpackage com_user
  */

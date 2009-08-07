@@ -31,12 +31,12 @@ class user extends able_entity {
     /**
      * Add the user to a group.
      *
-     * @param string $group The GUID of the group.
+     * @param int $group_id The GUID of the group.
      * @return mixed True if the user is already in the group. The resulting array of group IDs if the user was not.
      */
-    public function addgroup($group) {
-        if ( !in_array($group, $this->__get('groups')) ) {
-            return $this->__set('groups', array_merge(array($group), $this->__get('groups')));
+    public function addgroup($group_id) {
+        if ( !in_array($group_id, $this->__get('groups')) ) {
+            return $this->__set('groups', array_merge(array($group_id), $this->__get('groups')));
         } else {
             return true;
         }
@@ -45,12 +45,12 @@ class user extends able_entity {
     /**
      * Remove the user from a group.
      *
-     * @param string $group The GUID of the group.
+     * @param int $group_id The GUID of the group.
      * @return mixed True if the user wasn't in the group. The resulting array of group IDs if the user was.
      */
-    public function delgroup($group) {
-        if ( in_array($group, $this->__get('groups')) ) {
-			return $this->__set('groups', array_values(array_diff($this->__get('groups'), array($group))));
+    public function delgroup($group_id) {
+        if ( in_array($group_id, $this->__get('groups')) ) {
+			return $this->__set('groups', array_values(array_diff($this->__get('groups'), array($group_id))));
         } else {
             return true;
         }
@@ -59,11 +59,11 @@ class user extends able_entity {
     /**
      * Check whether the user is in a group.
      *
-     * @param string $group The GUID of the group.
+     * @param int $group_id The GUID of the group.
      * @return bool
      */
-    public function ingroup($group) {
-        return in_array($group, $this->__get('groups'));
+    public function ingroup($group_id) {
+        return in_array($group_id, $this->__get('groups'));
     }
 
     /**

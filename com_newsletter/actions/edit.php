@@ -34,7 +34,7 @@ if ( $_REQUEST['update'] == 'yes' ) {
 	$mail->message = stripslashes($_REQUEST['data']);
 	foreach ( $mail->attachments as $key => $cur_attachment ) {
 		if ( $_REQUEST["attach_".clean_checkbox($cur_attachment)] != 'on' ) {
-			if ( $config->com_newsletter->delete_attachment($mail, $cur_attachment) )
+			if ( $config->newsletter->delete_attachment($mail, $cur_attachment) )
 				display_notice("Attachment $cur_attachment removed.");
 		}
 	}
@@ -42,7 +42,6 @@ if ( $_REQUEST['update'] == 'yes' ) {
 		$upload_file = stripslashes(basename($_FILES['attachment']['name']));
 		if ( move_uploaded_file($_FILES['attachment']['tmp_name'], $config->setting_upload.'attachments/'.$upload_file) ) {
 			array_push($mail->attachments, $upload_file);
-			//var_dump($mail->attachments);
 		} else {
 			display_error("Possible file upload attack! Upload failed! D:\n");
 		}
@@ -53,5 +52,5 @@ if ( $_REQUEST['update'] == 'yes' ) {
 	display_notice('Saved "'.$mail->name.'"');
 }
 
-$config->com_newsletter->edit_mail("Editing mail \"" . $mail->name . "\".", $mail, 'com_newsletter', 'edit');
+$config->newsletter->edit_mail("Editing mail \"" . $mail->name . "\".", $mail, 'com_newsletter', 'edit');
 ?>

@@ -77,6 +77,4 @@ if ( $mailer->send() ) {
 
 $com_newsletter_send->content("<h3>Subject: &quot;".clean_header($_REQUEST['subject'])."&quot;.</h3>");
 $com_newsletter_send->content("<div style=\"background: white; border: 2px solid black; padding: 5px; clear: both; overflow: auto;\">$message<br style=\"clear: both;\" /></div><br />");
-
-// $config->com_newsletter->list_mails('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', '');
 ?>

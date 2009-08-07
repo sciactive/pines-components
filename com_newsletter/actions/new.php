@@ -16,5 +16,5 @@ if ( !gatekeeper('com_newsletter/managemails') ) {
 	return;
 }
 
-$config->com_newsletter->edit_mail("New mail.", NULL, 'com_newsletter', 'edit');
+$config->newsletter->edit_mail("New mail.", NULL, 'com_newsletter', 'edit');
 ?>

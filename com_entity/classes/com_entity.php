@@ -162,7 +162,7 @@ class com_entity extends component {
      * Note: Entity managers must provide this shortcut.
      */
 	public function get_entities_by_tags() {
-		if (is_array(func_get_arg(0))) {
+        if (func_num_args() > 0 && is_array(func_get_arg(0))) {
             return $this->get_entities_by_tags_exclusive(func_get_arg(0), func_get_arg(1));
 		} else {
             return $this->get_entities_by_tags_exclusive(func_get_args());

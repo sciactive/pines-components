@@ -23,7 +23,7 @@ return array (
   array (
     'name' => 'describe_self',
     'cname' => 'Describe Pines',
-    'description' => 'Whether to show Pines\' description underneath yours.Look!semicolons;;;;;',
+    'description' => 'Whether to show Pines\' description underneath yours.',
     'value' => true,
   ),
 );

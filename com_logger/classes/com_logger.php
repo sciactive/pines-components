@@ -1,0 +1,110 @@
+<?php
+/**
+ * com_logger class.
+ *
+ * @package Pines
+ * @subpackage com_logger
+ * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
+ * @author Hunter Perrin <hunter@sciactive.com>
+ * @copyright Hunter Perrin
+ * @link http://sciactive.com/
+ */
+defined('P_RUN') or die('Direct access prohibited');
+
+/**
+ * com_logger main class.
+ *
+ * Logs activity to a file.
+ *
+ * @package Pines
+ * @subpackage com_logger
+ */
+class com_logger extends component {
+    /**
+     * A buffer to store info and notice level log messages temporarily.
+     *
+     * This should help reduce overuse of the filesystem.
+     * @var string
+     */
+    var $tmp_log = '';
+
+    /**
+     * Write the $tmp_log buffer to disk.
+     */
+    function __destruct() {
+        if (strlen($this->tmp_log)) $this->write($this->tmp_log);
+    }
+
+    /**
+     * Set up a callback for each hook to log system activity.
+     *
+     * Also deletes the com_logger hooks, so logging won't recursively log itself.
+     */
+    function hook() {
+        global $config;
+        $config->hook->del_hook('$config->log_manager->log');
+        $config->hook->del_hook('$config->log_manager->hook');
+        $config->hook->del_hook('$config->log_manager->write');
+        $hooks = $config->hook->get_hooks();
+        foreach ($hooks as $cur_hook) {
+            $config->hook->add_callback($cur_hook, 1, 'com_logger_hook_log');
+        }
+    }
+
+    /**
+     * Log an entry to the Pines log.
+     *
+     * @param string $message The message to be logged.
+     * @param string $level The level of the message. (info, notice, warning, error, or fatal)
+     * @return bool True on success, false on failure.
+     */
+    function log($message, $level = 'info') {
+        $date = date('c');
+        $user = isset($_SESSION['user']) ? $_SESSION['user']->username : '_no user_';
+        switch ($level) {
+            case 'info':
+            case 'notice':
+                if (strlen($this->tmp_log)) $this->tmp_log .= "\n";
+                $this->tmp_log .= "$date: $level: $user: $message";
+                break;
+            case 'warning':
+            case 'error':
+            case 'fatal':
+                if (strlen($this->tmp_log)) $this->tmp_log .= "\n";
+                $message = $this->tmp_log . "$date: $level: $user: $message";
+                $this->tmp_log = '';
+                return $this->write($message);
+                break;
+        }
+        return true;
+    }
+
+    /**
+     * Write log(s) to the media.
+     *
+     * @param string $logs Log message(s).
+     * @return bool True on success, false on failure.
+     */
+    function write($logs) {
+        if (@$handle = fopen('/tmp/pines.log', 'a')) {
+            fwrite($handle, $logs."\n");
+            fclose($handle);
+            return true;
+        }
+        return false;
+    }
+}
+
+/**
+ * Log a hooked function call.
+ *
+ * @param array $return The return values for the hook.
+ * @return array The return values for the hook.
+ */
+function com_logger_hook_log($return, $hook) {
+    global $config;
+    $config->log_manager->log($hook);
+    return $return;
+}
+
+?>

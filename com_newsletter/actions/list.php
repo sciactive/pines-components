@@ -16,5 +16,5 @@ if ( !gatekeeper('com_newsletter/managemails') && !gatekeeper('com_newsletter/se
 	return;
 }
 
-$config->newsletter->list_mails();
+$config->run_newsletter->list_mails();
 ?>

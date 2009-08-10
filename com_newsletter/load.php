@@ -11,6 +11,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$config->newsletter = new com_newsletter;
+$config->run_newsletter = new com_newsletter;
 
 ?>

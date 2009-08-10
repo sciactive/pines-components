@@ -29,5 +29,5 @@ if ( isset($_REQUEST['mail_id']) ) {
 	display_error("No mail specified!");
 }
 
-$config->newsletter->list_mails();
+$config->run_newsletter->list_mails();
 ?>

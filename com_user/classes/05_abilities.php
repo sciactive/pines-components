@@ -20,7 +20,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * @package Pines
  * @subpackage com_user
  */
-class abilities {
+class abilities extends p_base {
     /**
      * The array used to store defined abilities.
      * @var array $abilities

@@ -1,6 +1,6 @@
 <?php
 /**
- * Description.
+ * com_newsletter's loader.
  *
  * @package Pines
  * @subpackage com_newsletter

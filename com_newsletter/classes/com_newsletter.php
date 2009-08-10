@@ -20,6 +20,13 @@ defined('P_RUN') or die('Direct access prohibited');
  * @subpackage com_newsletter
  */
 class com_newsletter extends component {
+    /**
+     * Delete an attachment from a mailing.
+     *
+     * @param entity &$mail The mailing.
+     * @param string $name The name of the attachment to delete.
+     * @return bool True on success, false on failure.
+     */
 	function delete_attachment(&$mail, $name) {
 		global $config;
 		if ( unlink($config->setting_upload . 'attachments/' . clean_filename($name)) ) {
@@ -32,6 +39,17 @@ class com_newsletter extends component {
 		}
 	}
 
+    /**
+     * Provide a form for the user to edit a mailing.
+     *
+     * @param string $heading The heading to be displayed.
+     * @param entity|null $mail The mailing to edit. If null, a new one is created.
+     * @param string $new_option The option to route to when saved.
+     * @param string $new_action The action to route to when saved.
+     * @param string $close_option The option to route to when closed.
+     * @param string $close_action The action to route to when closed.
+     * @return bool True on success, false on failure.
+     */
 	function edit_mail($heading = '', $mail = NULL, $new_option = '', $new_action = '', $close_option = "com_newsletter", $close_action = "list") {
 		global $config, $page;
 
@@ -51,8 +69,13 @@ class com_newsletter extends component {
         $module->new_action = $new_action;
         $module->close_option = $close_option;
         $module->close_action = $close_action;
+
+        return true;
 	}
 
+    /**
+     * Provides a list of mailings.
+     */
 	function list_mails() {
 		global $config;
 		$entities = array();

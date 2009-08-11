@@ -104,6 +104,7 @@ if ( $_REQUEST['abilities'] === 'true' && gatekeeper("com_user/abilities") ) {
 $user->save();
 
 display_notice('Saved user ['.$user->username.']');
+pines_log('Saved user ['.$user->username.']');
 
 $config->user_manager->list_users();
 ?>

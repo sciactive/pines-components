@@ -16,6 +16,6 @@ if ( isset($config->ability_manager) ) {
 	$config->ability_manager->add('com_logger', 'clear', 'Clear Log', 'Let the user clear (delete) the pines log.');
 }
 
-if ($config->com_logger->level == 'info') $config->log_manager->hook();
+if ($config->com_logger->level == 'debug') $config->log_manager->hook();
 
 ?>

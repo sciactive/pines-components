@@ -88,6 +88,7 @@ if ( $_REQUEST['abilities'] === 'true' && gatekeeper("com_user/abilities") ) {
 $group->save();
 
 display_notice('Saved group ['.$group->groupname.']');
+pines_log('Saved group ['.$group->groupname.']');
 
 $config->user_manager->list_groups();
 ?>

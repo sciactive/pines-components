@@ -76,18 +76,20 @@ class com_logger extends component {
         $user = isset($_SESSION['user']) ? $_SESSION['user']->username.' ('.$_SESSION['user_id'].')' : $_SERVER['REMOTE_ADDR'];
         switch ($level) {
             case 'info':
-                if ($config->com_logger->level != 'info') break;
+                if (!in_array($config->com_logger->level, array('debug', 'info'))) break;
             case 'notice':
-                if ($config->com_logger->level != 'notice' && $config->com_logger->level != 'info') break;
+                if (!in_array($config->com_logger->level, array('debug', 'info', 'notice'))) break;
                 if (strlen($this->tmp_log)) $this->tmp_log .= "\n";
                 $this->tmp_log .= "$date: $level: $user: $message";
                 break;
+            case 'debug':
+                if (!in_array($config->com_logger->level, array('debug'))) break;
             case 'warning':
-                if ($config->com_logger->level != 'warning' && $config->com_logger->level != 'notice' && $config->com_logger->level != 'info') break;
+                if (!in_array($config->com_logger->level, array('debug', 'info', 'notice', 'warning'))) break;
             case 'error':
-                if ($config->com_logger->level != 'error' && $config->com_logger->level != 'warning' && $config->com_logger->level != 'notice' && $config->com_logger->level != 'info') break;
+                if (!in_array($config->com_logger->level, array('debug', 'info', 'notice', 'warning', 'error'))) break;
             case 'fatal':
-                if ($config->com_logger->level != 'fatal' && $config->com_logger->level != 'error' && $config->com_logger->level != 'warning' && $config->com_logger->level != 'notice' && $config->com_logger->level != 'info') break;
+                if (!in_array($config->com_logger->level, array('debug', 'info', 'notice', 'warning', 'error', 'fatal'))) break;
                 if (strlen($this->tmp_log)) $this->tmp_log .= "\n";
                 $message = $this->tmp_log . "$date: $level: $user: $message";
                 $this->tmp_log = '';
@@ -121,7 +123,7 @@ class com_logger extends component {
  */
 function com_logger_hook_log($return, $hook) {
     global $config;
-    $config->log_manager->log($hook);
+    $config->log_manager->log($hook, 'debug');
     return $return;
 }
 

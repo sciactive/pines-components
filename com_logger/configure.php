@@ -1,0 +1,38 @@
+<?php
+/**
+ * com_logger's configuration.
+ *
+ * @package Pines
+ * @subpackage com_logger
+ * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
+ * @author Hunter Perrin <hunter@sciactive.com>
+ * @copyright Hunter Perrin
+ * @link http://sciactive.com/
+ */
+defined('P_RUN') or die('Direct access prohibited');
+
+return array (
+  0 =>
+  array (
+    'name' => 'path',
+    'cname' => 'File Path',
+    'description' => 'The file to which logs will be written. This file can be a URL, as long as it can be opened for writing.',
+    'value' => '/tmp/pines.log',
+  ),
+  1 =>
+  array (
+    'name' => 'level',
+    'cname' => 'Log Level',
+    'description' => 'The level of logging. The most conservative is fatal. The least is info. Choosing info will cause a lot of things to be logged (like all function calls)! Options are: info, notice, warning, error, or fatal.',
+    'value' => 'warning',
+  ),
+  2 =>
+  array (
+    'name' => 'date_format',
+    'cname' => 'Date Format',
+    'description' => 'The date format for the logs. See http://us2.php.net/manual/en/function.date.php',
+    'value' => 'c',
+  ),
+);
+
+?>

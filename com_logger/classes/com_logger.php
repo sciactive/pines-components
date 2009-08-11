@@ -29,6 +29,18 @@ class com_logger extends component {
     var $tmp_log = '';
 
     /**
+     * Used to store the log file location, since it may not be available as
+     * the system is destroying $config.
+     * @var string
+     */
+    var $log_file = '';
+
+    function __construct() {
+        global $config;
+        $this->log_file = $config->com_logger->path;
+    }
+
+    /**
      * Write the $tmp_log buffer to disk.
      */
     function __destruct() {
@@ -56,20 +68,26 @@ class com_logger extends component {
      *
      * @param string $message The message to be logged.
      * @param string $level The level of the message. (info, notice, warning, error, or fatal)
-     * @return bool True on success, false on failure.
+     * @return bool True on success, false on error.
      */
     function log($message, $level = 'info') {
+        global $config;
         $date = date('c');
-        $user = isset($_SESSION['user']) ? $_SESSION['user']->username : '_no user_';
+        $user = isset($_SESSION['user']) ? $_SESSION['user']->username.' ('.$_SESSION['user_id'].')' : $_SERVER['REMOTE_ADDR'];
         switch ($level) {
             case 'info':
+                if ($config->com_logger->level != 'info') break;
             case 'notice':
+                if ($config->com_logger->level != 'notice' && $config->com_logger->level != 'info') break;
                 if (strlen($this->tmp_log)) $this->tmp_log .= "\n";
                 $this->tmp_log .= "$date: $level: $user: $message";
                 break;
             case 'warning':
+                if ($config->com_logger->level != 'warning' && $config->com_logger->level != 'notice' && $config->com_logger->level != 'info') break;
             case 'error':
+                if ($config->com_logger->level != 'error' && $config->com_logger->level != 'warning' && $config->com_logger->level != 'notice' && $config->com_logger->level != 'info') break;
             case 'fatal':
+                if ($config->com_logger->level != 'fatal' && $config->com_logger->level != 'error' && $config->com_logger->level != 'warning' && $config->com_logger->level != 'notice' && $config->com_logger->level != 'info') break;
                 if (strlen($this->tmp_log)) $this->tmp_log .= "\n";
                 $message = $this->tmp_log . "$date: $level: $user: $message";
                 $this->tmp_log = '';
@@ -86,7 +104,7 @@ class com_logger extends component {
      * @return bool True on success, false on failure.
      */
     function write($logs) {
-        if (@$handle = fopen('/tmp/pines.log', 'a')) {
+        if (@$handle = fopen($this->log_file, 'a')) {
             fwrite($handle, $logs."\n");
             fclose($handle);
             return true;

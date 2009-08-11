@@ -11,6 +11,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$config->log_manager->hook();
+if ($config->com_logger->level == 'info') $config->log_manager->hook();
 
 ?>

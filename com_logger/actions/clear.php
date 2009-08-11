@@ -11,6 +11,20 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-display_notice('Not implemented yet.');
+if ( !gatekeeper('com_logger/clear') ) {
+	$config->user_manager->punt_user("You don't have necessary permission.", $config->template->url('com_logger', 'clear', null, false));
+	return;
+}
+
+if (file_put_contents($config->com_logger->path, '') !== false) {
+    display_notice('Log file cleared.');
+} else {
+    display_error('Error writing to log file.');
+}
+
+/**
+ * Forward to view.
+ */
+include 'components/com_logger/actions/view.php';
 
 ?>

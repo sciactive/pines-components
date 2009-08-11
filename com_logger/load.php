@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 $config->log_manager = new com_logger;
 
-if (!function_exists('display_error')) {
+if (!function_exists('display_error') && $config->com_logger->log_errors) {
 	function display_error($error_text) {
 		global $config, $page;
         $config->log_manager->log($error_text, 'error');
@@ -21,7 +21,7 @@ if (!function_exists('display_error')) {
 	}
 }
 
-if (!function_exists('display_notice')) {
+if (!function_exists('display_notice') && $config->com_logger->log_notices) {
 	function display_notice($notice_text) {
 		global $config, $page;
         $config->log_manager->log($notice_text, 'notice');

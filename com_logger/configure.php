@@ -33,6 +33,20 @@ return array (
     'description' => 'The date format for the logs. See http://us2.php.net/manual/en/function.date.php',
     'value' => 'c',
   ),
+  3 =>
+  array (
+    'name' => 'log_notices',
+    'cname' => 'Log Displayed Notices',
+    'description' => 'Log the notices that are displayed to users.',
+    'value' => false,
+  ),
+  4 =>
+  array (
+    'name' => 'log_errors',
+    'cname' => 'Log Displayed Errors',
+    'description' => 'Log the errors that are displayed to users.',
+    'value' => true,
+  ),
 );
 
 ?>

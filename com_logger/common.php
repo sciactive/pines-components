@@ -11,6 +11,11 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
+if ( isset($config->ability_manager) ) {
+	$config->ability_manager->add('com_logger', 'view', 'View Log', 'Let the user view the Pines log.');
+	$config->ability_manager->add('com_logger', 'clear', 'Clear Log', 'Let the user clear (delete) the pines log.');
+}
+
 if ($config->com_logger->level == 'info') $config->log_manager->hook();
 
 ?>

@@ -24,7 +24,7 @@ return array (
     'name' => 'level',
     'cname' => 'Log Level',
     'description' => 'The level of logging. The most conservative is fatal. The least is info. Choosing info will cause a lot of things to be logged (like all function calls)! Options are: info, notice, warning, error, or fatal.',
-    'value' => 'warning',
+    'value' => 'notice',
   ),
   2 =>
   array (

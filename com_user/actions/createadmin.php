@@ -31,6 +31,7 @@ if ( !is_null($config->user_manager->get_user_by_username($new_admin_user->usern
     return;
 }
 
+pines_log("Created admin user $new_admin_user->username.", 'notice');
 $new_admin_user->save();
 
 display_notice('Admin user created.');

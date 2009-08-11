@@ -50,6 +50,7 @@ class com_user extends component {
 	function delete_group($group_id) {
 		if ( $entity = $this->get_group($group_id) ) {
 			$entity->delete();
+            pines_log("Deleted group $entity->groupname.", 'notice');
 			return true;
 		} else {
 			return false;
@@ -65,6 +66,7 @@ class com_user extends component {
 	function delete_user($user_id) {
 		if ( $entity = $this->get_user($user_id) ) {
 			$entity->delete();
+            pines_log("Deleted user $entity->username.", 'notice');
 			return true;
 		} else {
 			return false;

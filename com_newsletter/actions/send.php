@@ -77,8 +77,10 @@ foreach ( $attachments as $cur_attachment ) {
 }
 
 if ( $mailer->send() ) {
+    pines_log("Successfully sent mail, $mail->name.", 'notice');
 	$com_newsletter_send->title = "Success sending \"".$mail->name."\".";
 } else {
+    pines_log("Failure sending mail, $mail->name.", 'notice');
 	$com_newsletter_send->title = "Failed to send \"".$mail->name."\".";
 }
 

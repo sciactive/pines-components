@@ -32,6 +32,7 @@ class com_newsletter extends component {
 		if ( unlink($config->setting_upload . 'attachments/' . clean_filename($name)) ) {
 			if ( in_array($name, $mail->attachments) )
 				unset($mail->attachments[array_search($name, $mail->attachments)]);
+            pines_log("Removed attachment $name from mail $mail->name.", 'notice');
 			return true;
 		} else {
 			display_error('File removal failed!');

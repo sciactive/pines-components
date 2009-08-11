@@ -27,7 +27,10 @@ body {
     margin: 0 !important;
     overflow: visible !important;
     
-    font-size: 10pt !important;
+    font-size: 8pt !important;
+}
+.colmask input, .colmask select, .colmask textarea {
+    font-size:  100%;
 }
 .holygrail .colmid {
     position: static !important;

@@ -26,6 +26,8 @@ body {
     padding: 0 !important;
     margin: 0 !important;
     overflow: visible !important;
+    
+    font-size: 10pt !important;
 }
 .holygrail .colmid {
     position: static !important;

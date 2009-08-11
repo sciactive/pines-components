@@ -17,7 +17,7 @@ return array (
     'name' => 'path',
     'cname' => 'File Path',
     'description' => 'The file to which logs will be written. This file can be a URL, as long as it can be opened for writing.',
-    'value' => '/tmp/pines.log',
+    'value' => realpath(sys_get_temp_dir()).'/pines.log',
   ),
   1 =>
   array (

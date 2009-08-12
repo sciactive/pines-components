@@ -50,7 +50,9 @@ class com_logger extends component {
     /**
      * Set up a callback for each hook to log system activity.
      *
-     * Also deletes the com_logger hooks, so logging won't recursively log itself.
+     * Also deletes the com_logger hooks, so logging won't recursively log
+     * itself. This function is called when log level is set to 'debug' in order
+     * to help diagnose problems with a component.
      */
     function hook() {
         global $config;
@@ -67,7 +69,7 @@ class com_logger extends component {
      * Log an entry to the Pines log.
      *
      * @param string $message The message to be logged.
-     * @param string $level The level of the message. (info, notice, warning, error, or fatal)
+     * @param string $level The level of the message. (debug, info, notice, warning, error, or fatal)
      * @return bool True on success, false on error.
      */
     function log($message, $level = 'info') {

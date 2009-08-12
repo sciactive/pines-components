@@ -59,7 +59,7 @@ class com_logger extends component {
         $config->hook->del_hook('$config->log_manager->write');
         $hooks = $config->hook->get_hooks();
         foreach ($hooks as $cur_hook) {
-            $config->hook->add_callback($cur_hook, 1, 'com_logger_hook_log');
+            $config->hook->add_callback($cur_hook, -1, 'com_logger_hook_log');
         }
     }
 

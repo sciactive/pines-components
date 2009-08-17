@@ -53,7 +53,7 @@ body {
     padding:0;
     border:0;			/* This removes the border around the viewport in old versions of IE */
     width:100%;
-    background:#fff;
+    background:#FFF;
     min-width:600px;    /* Minimum width of layout - remove line if not required */
                         /* The min-width property does not work in old versions of Internet Explorer */
     font-size:90%;
@@ -102,7 +102,7 @@ img {
     margin-left:-160px; 	/* Width of right column */
     position:relative;
     right:100%;
-    background:#fff;    	/* Centre column background colour */
+    background:#FFF;    	/* Centre column background colour */
 }
 .holygrail .colleft {
     float:left;
@@ -204,9 +204,9 @@ img {
 }
 .stylized p{
 	font-size: 0.8em;
-	color: #666666;
+	color: #666;
 	margin-bottom: 20px;
-	border-bottom: solid 1px #dedede;
+	border-bottom: solid 1px #DEDEDE;
 	padding-bottom: 10px;
 }
 .stylized label{
@@ -227,7 +227,7 @@ img {
 	clear: left;
 }
 .stylized .small{
-	color: #666666;
+	color: #666;
 	font-size: 11px;
 	font-weight: normal;
 	margin-left: 10px;
@@ -258,9 +258,9 @@ img {
 	clear: both;
 	display: block;
 	margin-left: 150px;
-	background: #888888;
-	color: #FFFFFF;
-	border: solid 1px #666666;
+	background: #888;
+	color: #FFF;
+	border: solid 1px #666;
 	font-size: 11px;
 	font-weight: bold;
 	padding: 4px 6px;

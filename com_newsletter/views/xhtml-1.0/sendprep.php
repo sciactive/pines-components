@@ -29,10 +29,10 @@ $page->head("<link href=\"".$config->template->url()."components/com_newsletter/
 <form method="post" action="<?php echo $config->template->url(); ?>">
 <div class="stylized stdform">
 <h2>Sending <?php echo $this->mail->name; ?></h2>
-<label>From Email<input type="text" name="from" value="<?php echo htmlentities($config->com_newsletter->default_from); ?>" /></label>
-<label>Reply to Email<input type="text" name="replyto" value="<?php echo htmlentities($config->com_newsletter->default_reply_to); ?>" /></label>
-<label>Subject<input type="text" name="subject" value="<?php echo $this->mail->subject; ?>" /></label>
-<label>Select Groups<span class="small">Click group name to select children as well.</span></label>
+<label>From Email<span class="small">&nbsp;</span><input type="text" name="from" value="<?php echo htmlentities($config->com_newsletter->default_from); ?>" /></label>
+<label>Reply to Email<span class="small">&nbsp;</span><input type="text" name="replyto" value="<?php echo htmlentities($config->com_newsletter->default_reply_to); ?>" /></label>
+<label>Subject<span class="small">&nbsp;</span><input type="text" name="subject" value="<?php echo $this->mail->subject; ?>" /></label>
+<label>Select Groups<span class="small">&nbsp;</span><span class="small">Click group name to select children as well.</span></label>
 <?php
 $group_select_menu = new menu;
 $config->user_manager->get_group_menu($group_select_menu);
@@ -53,8 +53,8 @@ echo $group_select_menu->render(array('<ul class="unorderedlisttree">', '</ul>')
 <input type="hidden" name="action" value="send" />
 <input type="hidden" name="mail_id" value="<?php echo $_REQUEST['mail_id']; ?>" />
 <div class="spacer"></div>
-<input type="submit" value="Submit" />
-<input type="button" onclick="window.location='<?php echo $config->template->url('com_newsletter', 'list'); ?>';" value="Cancel" />
+<span><input type="submit" value="Submit" /></span>
+<span><input type="button" onclick="window.location='<?php echo $config->template->url('com_newsletter', 'list'); ?>';" value="Cancel" /></span>
 <div class="spacer"></div>
 </div>
 </form>

@@ -39,12 +39,12 @@ $page->head("</script>\n");
 <div class="yui-skin-sam">
 <form enctype="multipart/form-data" name="editingmail" method="post" action="<?php echo $config->template->url(); ?>">
 <div class="stylized stdform">
-<input type="submit" value="Save Mail" />
-<input type="button" onclick="window.location='<?php echo $config->template->url($this->close_option, $this->close_action); ?>';" value="Close" /> <small>(Closing will lose any unsaved changes!)</small>
+<span><input type="submit" value="Save Mail" /></span>
+<span><input type="button" onclick="window.location='<?php echo $config->template->url($this->close_option, $this->close_action); ?>';" value="Close" /> <small>(Closing will lose any unsaved changes!)</small></span>
 <br /><br />
-<label>Name<input type="text" name="name" value="<?php echo $this->mail->name; ?>" /></label>
-<label>Subject<input type="text" name="subject" value="<?php echo $this->mail->subject; ?>" /></label>
-<label>Message<textarea rows="30" name="data" id="data" style="width: 99%;"><?php echo $this->mail->message; ?></textarea></label><br />
+<label>Name<span class="small">&nbsp;</span><input type="text" name="name" value="<?php echo $this->mail->name; ?>" /></label>
+<label>Subject<span class="small">&nbsp;</span><input type="text" name="subject" value="<?php echo $this->mail->subject; ?>" /></label>
+<label>Message<span class="small">&nbsp;</span><textarea rows="30" name="data" id="data" style="width: 99%;"><?php echo $this->mail->message; ?></textarea></label><br />
 <input type="hidden" name="option" value="<?php echo $this->new_option; ?>" />
 <input type="hidden" name="action" value="<?php echo $this->new_action; ?>" />
 <input type="hidden" name="update" value="yes" />
@@ -58,8 +58,8 @@ $page->head("</script>\n");
 } ?>
 <label>Upload <input name="attachment" type="file" /></label>
 <div class="spacer"></div>
-<input type="submit" value="Save Mail" />
-<input type="button" onclick="window.location='<?php echo $config->template->url($this->close_option, $this->close_action); ?>';" value="Close" /> <small>(Closing will lose any unsaved changes!)</small>
+<span><input type="submit" value="Save Mail" /></span>
+<span><input type="button" onclick="window.location='<?php echo $config->template->url($this->close_option, $this->close_action); ?>';" value="Close" /> <small>(Closing will lose any unsaved changes!)</small></span>
 <div class="spacer"></div>
 </div>
 </form>

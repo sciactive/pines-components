@@ -214,12 +214,10 @@ img {
 	padding-bottom: 10px;
 }
 .stylized label{
-	clear: left;
-	display: block;
+	clear: both;
 	float: left;
 	font-weight: bold;
 	margin: 2px 30px 10px;
-	text-align: left;
 }
 .stylized table label{
 	margin: 0;
@@ -239,13 +237,19 @@ img {
 	margin-left: 10px;
 	width: 140px;
 }
-.stylized input{
-	float: left;
+.stylized input, .stylized select{
+	display: block;
 	margin: 2px 0 0 20px;
 	position: relative;
+}
+.stylized input{
 	width: 200px;
 }
-.stylized table input{
+.stylized input:first-child{
+    width: auto;
+	display: inline;
+}
+.stylized table input, .stylized table select{
 	width: auto;
 	margin: 2px;
 }
@@ -253,15 +257,7 @@ img {
 	width: auto;
 	margin: 0;
 	float: none;
-	display: inline !important;
-}
-.stylized select{
-	float: left;
-	margin: 2px 0 0 20px;
-	position: relative;
-}
-.stylized table select{
-	margin: 2px;
+	display: inline;
 }
 .stylized button{
 	clear: both;

@@ -18,10 +18,10 @@ defined('P_RUN') or die('Direct access prohibited');
 <?php if ( !is_null($this->id) ) { ?>
 <input type="hidden" name="group_id" value="<?php echo $this->id; ?>" />
 <?php } ?>
-<label>Group Name<input type="text" name="groupname" value="<?php echo $this->groupname; ?>" /></label>
-<label>Display Name<input type="text" name="name" value="<?php echo $this->name; ?>" /></label>
-<label>Email<input type="text" name="email" value="<?php echo $this->email; ?>" /></label>
-<label>Parent
+<label>Group Name<span class="small">&nbsp;</span><input type="text" name="groupname" value="<?php echo $this->groupname; ?>" /></label>
+<label>Display Name<span class="small">&nbsp;</span><input type="text" name="name" value="<?php echo $this->name; ?>" /></label>
+<label>Email<span class="small">&nbsp;</span><input type="text" name="email" value="<?php echo $this->email; ?>" /></label>
+<label>Parent<span class="small">&nbsp;</span>
 <select name="parent">
 <option value="none">--No Parent--</option>
 <?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->parent); ?>
@@ -50,8 +50,8 @@ defined('P_RUN') or die('Direct access prohibited');
 <?php } ?>
 <input type="hidden" name="option" value="<?php echo $this->new_option; ?>" />
 <input type="hidden" name="action" value="<?php echo $this->new_action; ?>" />
-<input type="submit" value="Submit" />
-<input type="button" onclick="window.location='<?php echo $config->template->url('com_user', 'managegroups'); ?>';" value="Cancel" />
+<span><input type="submit" value="Submit" /></span>
+<span><input type="button" onclick="window.location='<?php echo $config->template->url('com_user', 'managegroups'); ?>';" value="Cancel" /></span>
 <div class="spacer"></div>
 </div>
 </form>

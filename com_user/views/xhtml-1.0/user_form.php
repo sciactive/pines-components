@@ -21,11 +21,11 @@ $page->head("<script type=\"text/javascript\" src=\"".$config->rela_location."co
 <input type="hidden" name="user_id" value="<?php echo $this->id; ?>" />
 <?php } ?>
 
-<label>Username<input type="text" name="username" value="<?php echo $this->username; ?>" /></label>
+<label>Username<span class="small">&nbsp;</span><input type="text" name="username" value="<?php echo $this->username; ?>" /></label>
 
-<label>Name<input type="text" name="name" value="<?php echo $this->name; ?>" /></label>
+<label>Name<span class="small">&nbsp;</span><input type="text" name="name" value="<?php echo $this->name; ?>" /></label>
 
-<label>Email<input type="text" name="email" value="<?php echo $this->email; ?>" /></label>
+<label>Email<span class="small">&nbsp;</span><input type="text" name="email" value="<?php echo $this->email; ?>" /></label>
 
 <?php if (is_null($this->id)) { ?>
 <label>Password<span class="small"><?php echo ($config->com_user->empty_pw ? "May be blank." : "&nbsp;"); ?></span>
@@ -33,10 +33,10 @@ $page->head("<script type=\"text/javascript\" src=\"".$config->rela_location."co
 <label>Update Password<span class="small">Leave blank, if not changing.</span>
 <?php } ?>
 <input type="password" name="password" /></label>
-<label>Repeat Password<input type="password" name="password2" /></label>
+<label>Repeat Password<span class="small">&nbsp;</span><input type="password" name="password2" /></label>
 
 <?php if ( $this->display_default_components ) { ?>
-<label>Default Component
+<label>Default Component<span class="small">&nbsp;</span>
 <select name="default_component">
     <?php foreach ($this->default_components as $cur_component) { ?>
     <option value="<?php echo $cur_component; ?>"<?php echo (($this->default_component == $cur_component) ? ' selected="selected"' : ''); ?>><?php echo $cur_component; ?></option>
@@ -46,7 +46,7 @@ $page->head("<script type=\"text/javascript\" src=\"".$config->rela_location."co
 <?php } ?>
 
 <?php if ( $this->display_groups ) { ?>
-<label>Groups
+<label>Groups<span class="small">&nbsp;</span>
 <select name="groups[]" multiple="multiple" size="6">
 <?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->groups); ?>
 </select>
@@ -78,8 +78,8 @@ $page->head("<script type=\"text/javascript\" src=\"".$config->rela_location."co
 
 <input type="hidden" name="option" value="<?php echo $this->new_option; ?>" />
 <input type="hidden" name="action" value="<?php echo $this->new_action; ?>" />
-<input type="submit" value="Submit" />
-<input type="button" onclick="window.location='<?php echo $config->template->url('com_user', 'manageusers'); ?>';" value="Cancel" />
+<span><input type="submit" value="Submit" /></span>
+<span><input type="button" onclick="window.location='<?php echo $config->template->url('com_user', 'manageusers'); ?>';" value="Cancel" /></span>
 <div class="spacer"></div>
 </div>
 </form>

@@ -50,8 +50,9 @@ defined('P_RUN') or die('Direct access prohibited');
 <?php } ?>
 <input type="hidden" name="option" value="<?php echo $this->new_option; ?>" />
 <input type="hidden" name="action" value="<?php echo $this->new_action; ?>" />
+<br class="spacer" />
 <span><input type="submit" value="Submit" /></span>
 <span><input type="button" onclick="window.location='<?php echo $config->template->url('com_user', 'managegroups'); ?>';" value="Cancel" /></span>
-<div class="spacer"></div>
+<br class="spacer" />
 </div>
 </form>

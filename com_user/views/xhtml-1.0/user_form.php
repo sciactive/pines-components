@@ -78,8 +78,9 @@ $page->head("<script type=\"text/javascript\" src=\"".$config->rela_location."co
 
 <input type="hidden" name="option" value="<?php echo $this->new_option; ?>" />
 <input type="hidden" name="action" value="<?php echo $this->new_action; ?>" />
+<br class="spacer" />
 <span><input type="submit" value="Submit" /></span>
 <span><input type="button" onclick="window.location='<?php echo $config->template->url('com_user', 'manageusers'); ?>';" value="Cancel" /></span>
-<div class="spacer"></div>
+<br class="spacer" />
 </div>
 </form>

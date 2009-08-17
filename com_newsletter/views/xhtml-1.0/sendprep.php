@@ -52,9 +52,9 @@ echo $group_select_menu->render(array('<ul class="unorderedlisttree">', '</ul>')
 <input type="hidden" name="option" value="com_newsletter" />
 <input type="hidden" name="action" value="send" />
 <input type="hidden" name="mail_id" value="<?php echo $_REQUEST['mail_id']; ?>" />
-<div class="spacer"></div>
+<br class="spacer" />
 <span><input type="submit" value="Submit" /></span>
 <span><input type="button" onclick="window.location='<?php echo $config->template->url('com_newsletter', 'list'); ?>';" value="Cancel" /></span>
-<div class="spacer"></div>
+<br class="spacer" />
 </div>
 </form>

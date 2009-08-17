@@ -41,7 +41,8 @@ $page->head("</script>\n");
 <div class="stylized stdform">
 <span><input type="submit" value="Save Mail" /></span>
 <span><input type="button" onclick="window.location='<?php echo $config->template->url($this->close_option, $this->close_action); ?>';" value="Close" /> <small>(Closing will lose any unsaved changes!)</small></span>
-<br /><br />
+<br class="spacer" />
+<br />
 <label>Name<span class="small">&nbsp;</span><input type="text" name="name" value="<?php echo $this->mail->name; ?>" /></label>
 <label>Subject<span class="small">&nbsp;</span><input type="text" name="subject" value="<?php echo $this->mail->subject; ?>" /></label>
 <label>Message<span class="small">&nbsp;</span><textarea rows="30" name="data" id="data" style="width: 99%;"><?php echo $this->mail->message; ?></textarea></label><br />
@@ -57,10 +58,10 @@ $page->head("</script>\n");
 <?php }
 } ?>
 <label>Upload <input name="attachment" type="file" /></label>
-<div class="spacer"></div>
+<br class="spacer" />
 <span><input type="submit" value="Save Mail" /></span>
 <span><input type="button" onclick="window.location='<?php echo $config->template->url($this->close_option, $this->close_action); ?>';" value="Close" /> <small>(Closing will lose any unsaved changes!)</small></span>
-<div class="spacer"></div>
+<br class="spacer" />
 </div>
 </form>
 </div>

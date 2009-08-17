@@ -36,7 +36,7 @@ $page->head("<script type=\"text/javascript\" src=\"".$config->rela_location."co
 <label>Repeat Password<span class="small">&nbsp;</span><input type="password" name="password2" /></label>
 
 <?php if ( $this->display_default_components ) { ?>
-<label>Default Component<span class="small">&nbsp;</span>
+<label>Default Component<span class="small">This component will be responsible for the user's home page.</span>
 <select name="default_component">
     <?php foreach ($this->default_components as $cur_component) { ?>
     <option value="<?php echo $cur_component; ?>"<?php echo (($this->default_component == $cur_component) ? ' selected="selected"' : ''); ?>><?php echo $cur_component; ?></option>
@@ -46,7 +46,7 @@ $page->head("<script type=\"text/javascript\" src=\"".$config->rela_location."co
 <?php } ?>
 
 <?php if ( $this->display_groups ) { ?>
-<label>Groups<span class="small">&nbsp;</span>
+<label>Groups<span class="small">Hold Ctrl or Command to select multiple groups.</span>
 <select name="groups[]" multiple="multiple" size="6">
 <?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->groups); ?>
 </select>

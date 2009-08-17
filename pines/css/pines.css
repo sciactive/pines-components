@@ -5,7 +5,7 @@
     font-family: sans;
 }
 html, body {
-    height: 100%
+    height: 100%;
 }
 #wrapper {
 	min-height: 100%;
@@ -157,6 +157,7 @@ img {
 /* ----------- Customized CSS ----------- */
 .module_group {
     padding: 3px;
+    font-size: 0.8em;
 }
 .module_group .module_title {
 	font-size: 1.3em;
@@ -196,18 +197,13 @@ img {
 	height: 1px;
 }
 /* ----------- Stylized Inputs ----------- */
-/*
-.stylized{
-	border:solid 2px #DEDEDE;
-}
-*/
 .stylized h2 {
-	font-size: 14px;
+	font-size: 150%;
 	font-weight: bold;
 	margin-bottom: 8px;
 }
 .stylized p{
-	font-size: 11px;
+	font-size: 0.8em;
 	color: #666666;
 	margin-bottom: 20px;
 	border-bottom: solid 1px #dedede;
@@ -235,7 +231,6 @@ img {
 	font-size: 11px;
 	font-weight: normal;
 	margin-left: 10px;
-	width: 140px;
 }
 .stylized input, .stylized select{
 	display: block;

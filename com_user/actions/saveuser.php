@@ -68,20 +68,27 @@ if ( gatekeeper('com_user/default_component') ) {
 /**
  * @todo Recode this when users can be limited to controlling users/groups below their level.
  */
-if ( gatekeeper("com_user/assigng") && !empty($_REQUEST['groups']) ) {
+if ( gatekeeper("com_user/assigng") ) {
     $groups = $config->entity_manager->get_entities_by_tags('com_user', 'group', group);
-    $ugroup = $_REQUEST['group'];
-    if ( in_array($ugroup, $groups) ) {
-        $user->group = $ugroup;
-    }
+    $ugroup = intval($_REQUEST['gid']);
     $ugroups = $_REQUEST['groups'];
-    array_walk($ugroups, 'intval');
+    if (is_array($ugroups))
+        array_walk($ugroups, 'intval');
     foreach ($groups as $cur_group) {
-        if ( in_array($cur_group->guid, $ugroups) ) {
-            $user->addgroup($cur_group->guid);
-        } else {
-            $user->delgroup($cur_group->guid);
+        if ( $cur_group->guid == $ugroup ) {
+            $user->gid = $ugroup;
         }
+        if (is_array($ugroups)) {
+            if ( in_array($cur_group->guid, $ugroups) ) {
+                $user->addgroup($cur_group->guid);
+            } else {
+                $user->delgroup($cur_group->guid);
+            }
+        }
+    }
+    if ( $_REQUEST['gid'] == 'null' ) {
+        if (isset($user->gid))
+            unset($user->gid);
     }
 }
 

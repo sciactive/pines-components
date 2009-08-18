@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 display_notice(stripslashes($_REQUEST['message']));
-if (isset($_SESSION['user'])) {
+if (is_object($_SESSION['user'])) {
 	if (file_exists('components/'.$_SESSION['user']->default_component.'/actions/default.php')) {
 		/**
 		 * Load the user's default component.

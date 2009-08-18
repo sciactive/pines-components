@@ -46,19 +46,22 @@ $page->head("<script type=\"text/javascript\" src=\"".$config->rela_location."co
 <?php } ?>
 
 <?php if ( $this->display_groups ) { ?>
+<?php if (is_null($this->group_array)) { ?>
+<label>There are no groups to display.</label>
+<?php } else { ?>
 <label>Primary Group<span class="small">&nbsp;</span>
-<select name="group" size="1">
-<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->group); ?>
+<select name="gid" size="1">
+<option value="null">-- No Primary Group --</option>
+<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->gid); ?>
 </select>
 </label>
-<?php } ?>
 
-<?php if ( $this->display_groups ) { ?>
 <label>Groups<span class="small">Hold Ctrl or Command to select multiple groups.</span>
 <select name="groups[]" multiple="multiple" size="6">
 <?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->groups); ?>
 </select>
 </label>
+<?php } ?>
 <?php } ?>
 
 <?php if ( $this->display_abilities ) { ?>

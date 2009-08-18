@@ -71,10 +71,17 @@ class com_entity extends component {
      * @param array $required_tags An array of tags the entities must have.
      * @param mixed $class The name of the class to use for the entities.
      * @return array|null An array of entities, or null on failure.
+     * @todo Optimize this to use fewer database queries. The entity data is already selected.
      */
 	public function get_entities_by_data($data, $required_tags = array(), $class = entity) {
 		global $config;
 		$entities = array();
+
+        if ( !is_array($data) ) {
+            if (function_exists('display_error'))
+                display_error('Call to get_entities_by_data without data array.');
+			return null;
+		}
 
 		$query = sprintf("SELECT `guid` FROM `%scom_entity_data` WHERE `name`='%s' AND `value`='%s'",
 			$config->com_mysql->prefix,
@@ -491,10 +498,10 @@ class com_entity extends component {
     /**
      * Save an entity to the database.
      *
-     * @param mixed $entity The entity.
+     * @param mixed &$entity The entity.
      * @return bool True on success, false on failure.
      */
-	public function save_entity($entity) {
+	public function save_entity(&$entity) {
 		global $config;
 		if ( is_null($entity->guid) ) {
 			$query = sprintf("INSERT INTO `%scom_entity_entities` (`parent`, `tags`) VALUES (%s, '%s');",

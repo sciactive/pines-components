@@ -77,19 +77,27 @@ class com_user extends component {
      * Fill the $_SESSION['user'] variable with the logged in user's data.
      */
     function fill_session() {
-        $_SESSION['user'] = $this->get_user($_SESSION['user_id']);
-        if ($_SESSION['user']->inherit_abilities) {
+        if (is_object($_SESSION['user']))
+            return;
+        unset($_SESSION['user']);
+        $tmp_user = $this->get_user($_SESSION['user_id']);
+        $_SESSION['descendents'] = $this->get_group_descendents($tmp_user->gid);
+        foreach ($tmp_user->groups as $cur_group) {
+            $_SESSION['descendents'] = array_merge($_SESSION['descendents'], $this->get_group_descendents($cur_group));
+        }
+        if ($tmp_user->inherit_abilities) {
             global $config;
-            $_SESSION['inherited_abilities'] = $_SESSION['user']->abilities;
-            foreach ($_SESSION['user']->groups as $cur_group) {
+            $_SESSION['inherited_abilities'] = $tmp_user->abilities;
+            foreach ($tmp_user->groups as $cur_group) {
                 $cur_entity = $config->entity_manager->get_entity($cur_group, group);
                 $_SESSION['inherited_abilities'] = array_merge($_SESSION['inherited_abilities'], $cur_entity->abilities);
             }
-            if (isset($_SESSION['user']->group)) {
-                $cur_entity = $config->entity_manager->get_entity($_SESSION['user']->group, group);
+            if (isset($tmp_user->gid)) {
+                $cur_entity = $config->entity_manager->get_entity($tmp_user->gid, group);
                 $_SESSION['inherited_abilities'] = array_merge($_SESSION['inherited_abilities'], $cur_entity->abilities);
             }
         }
+        $_SESSION['user'] = $tmp_user;
     }
 
     /**
@@ -107,7 +115,7 @@ class com_user extends component {
 		if ( is_null($user) ) {
             // If the user is logged in, their abilities are already set up. We
             // just need to add them to the user.
-			if ( isset($_SESSION['user']) ) {
+			if ( is_object($_SESSION['user']) ) {
 				$user = clone $_SESSION['user'];
                 if (isset($_SESSION['inherited_abilities'])) {
                     $user->abilities = array_merge($user->abilities, $_SESSION['inherited_abilities']);
@@ -124,8 +132,8 @@ class com_user extends component {
                     $cur_entity = $config->entity_manager->get_entity($cur_group, group);
                     $user->abilities = array_merge($user->abilities, $cur_entity->abilities);
                 }
-                if (isset($user->group)) {
-                    $cur_entity = $config->entity_manager->get_entity($user->group, group);
+                if (isset($user->gid)) {
+                    $cur_entity = $config->entity_manager->get_entity($user->gid, group);
                     $user->abilities = array_merge($user->abilities, $cur_entity->abilities);
                 }
             }
@@ -243,6 +251,41 @@ class com_user extends component {
 				return $entity;
 		}
 		return null;
+	}
+
+    /**
+     * Get's an array of a group's descendendents' GUIDs.
+     *
+     * If no parent id is given, get_group_descendents() will start with all top
+     * level groups. (It will return all top level group's descendents.)
+     *
+     * get_group_descendents() returns an array of GUIDs of a group's
+     * descendents.
+     *
+     * @param int $parent_id The GUID of the group to descend from.
+     * @return array The array of group IDs.
+     */
+	function get_group_descendents($parent_id = NULL) {
+		global $config;
+		$return = array();
+		if ( is_null($parent_id) ) {
+			$entities = $config->entity_manager->get_entities_by_tags('com_user', 'group', group);
+			foreach ($entities as $entity) {
+				if ( is_null($entity->parent) ) {
+					$child_array = $this->get_group_descendents($entity->guid);
+                    $return = array_merge($return, $child_array);
+				}
+			}
+		} else {
+			$entities = $config->entity_manager->get_entities_by_parent($parent_id, group);
+			foreach ($entities as $entity) {
+				if ( $entity->has_tag('com_user', 'group') ) {
+					$child_array = $this->get_group_descendents($entity->guid);
+					$return = array_merge($return, array($entity->guid), $child_array);
+				}
+			}
+		}
+		return $return;
 	}
     
     /**
@@ -387,12 +430,9 @@ class com_user extends component {
      */
 	function get_user_by_username($username) {
 		global $config;
-		$entities = array();
-		$entities = $config->entity_manager->get_entities_by_data(array('username' => $username), array(), user);
-		foreach ($entities as $entity) {
-			if ( $entity->has_tag('com_user', 'user') )
-				return $entity;
-		}
+		$entities = $config->entity_manager->get_entities_by_data(array('username' => $username), array('com_user', 'user'), user);
+		if (!is_null($entities))
+            return $entities[0];
 		return null;
 	}
 
@@ -620,7 +660,7 @@ class com_user extends component {
 			$module->email = $user->email;
 			$module->parent = $user->parent;
 			$module->user_abilities = $user->abilities;
-            $module->group = $user->group;
+            $module->gid = $user->gid;
             $module->groups = $user->groups;
             $module->inherit_abilities = $user->inherit_abilities;
             $module->default_component = $user->default_component;

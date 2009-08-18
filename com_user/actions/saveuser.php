@@ -70,6 +70,10 @@ if ( gatekeeper('com_user/default_component') ) {
  */
 if ( gatekeeper("com_user/assigng") && !empty($_REQUEST['groups']) ) {
     $groups = $config->entity_manager->get_entities_by_tags('com_user', 'group', group);
+    $ugroup = $_REQUEST['group'];
+    if ( in_array($ugroup, $groups) ) {
+        $user->group = $ugroup;
+    }
     $ugroups = $_REQUEST['groups'];
     array_walk($ugroups, 'intval');
     foreach ($groups as $cur_group) {

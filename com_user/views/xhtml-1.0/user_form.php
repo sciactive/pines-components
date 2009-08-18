@@ -46,6 +46,14 @@ $page->head("<script type=\"text/javascript\" src=\"".$config->rela_location."co
 <?php } ?>
 
 <?php if ( $this->display_groups ) { ?>
+<label>Primary Group<span class="small">&nbsp;</span>
+<select name="group" size="1">
+<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->group); ?>
+</select>
+</label>
+<?php } ?>
+
+<?php if ( $this->display_groups ) { ?>
 <label>Groups<span class="small">Hold Ctrl or Command to select multiple groups.</span>
 <select name="groups[]" multiple="multiple" size="6">
 <?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->groups); ?>

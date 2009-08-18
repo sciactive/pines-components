@@ -80,9 +80,14 @@ class com_user extends component {
         $_SESSION['user'] = $this->get_user($_SESSION['user_id']);
         if ($_SESSION['user']->inherit_abilities) {
             global $config;
+            $_SESSION['inherited_abilities'] = $_SESSION['user']->abilities;
             foreach ($_SESSION['user']->groups as $cur_group) {
                 $cur_entity = $config->entity_manager->get_entity($cur_group, group);
-                $_SESSION['user']->abilities = array_merge($_SESSION['user']->abilities, $cur_entity->abilities);
+                $_SESSION['inherited_abilities'] = array_merge($_SESSION['inherited_abilities'], $cur_entity->abilities);
+            }
+            if (isset($_SESSION['user']->group)) {
+                $cur_entity = $config->entity_manager->get_entity($_SESSION['user']->group, group);
+                $_SESSION['inherited_abilities'] = array_merge($_SESSION['inherited_abilities'], $cur_entity->abilities);
             }
         }
     }
@@ -100,18 +105,27 @@ class com_user extends component {
      */
 	function gatekeeper($ability = NULL, $user = NULL) {
 		if ( is_null($user) ) {
-            // If the user is logged in, their abilities are already set up.
+            // If the user is logged in, their abilities are already set up. We
+            // just need to add them to the user.
 			if ( isset($_SESSION['user']) ) {
-				$user = $_SESSION['user'];
+				$user = clone $_SESSION['user'];
+                if (isset($_SESSION['inherited_abilities'])) {
+                    $user->abilities = array_merge($user->abilities, $_SESSION['inherited_abilities']);
+                }
 			} else {
 				unset($user);
 			}
 		} else {
             // If the user isn't logged in, their abilities need to be set up.
+            $user = clone $user;
             if ($user->inherit_abilities) {
                 global $config;
                 foreach ($user->groups as $cur_group) {
                     $cur_entity = $config->entity_manager->get_entity($cur_group, group);
+                    $user->abilities = array_merge($user->abilities, $cur_entity->abilities);
+                }
+                if (isset($user->group)) {
+                    $cur_entity = $config->entity_manager->get_entity($user->group, group);
                     $user->abilities = array_merge($user->abilities, $cur_entity->abilities);
                 }
             }
@@ -606,6 +620,7 @@ class com_user extends component {
 			$module->email = $user->email;
 			$module->parent = $user->parent;
 			$module->user_abilities = $user->abilities;
+            $module->group = $user->group;
             $module->groups = $user->groups;
             $module->inherit_abilities = $user->inherit_abilities;
             $module->default_component = $user->default_component;

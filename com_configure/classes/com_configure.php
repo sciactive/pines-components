@@ -37,8 +37,12 @@ class com_configure extends component {
 		global $config;
 		if (file_exists('configure.php'))
 			$this->config_files['system'] = 'configure.php';
-		foreach ($config->components as $cur_component) {
-			$cur_config_file = 'components/'.$cur_component.'/configure.php';
+		foreach ($config->all_components as $cur_component) {
+            if (in_array($cur_component, $config->components)) {
+                $cur_config_file = 'components/'.$cur_component.'/configure.php';
+            } else {
+                $cur_config_file = 'components/.'.$cur_component.'/configure.php';
+            }
 			if (file_exists($cur_config_file))
 				$this->config_files[$cur_component] = $cur_config_file;
 		}
@@ -61,14 +65,18 @@ class com_configure extends component {
      * Creates and attaches a module which lists configurable components.
      */
 	function list_components() {
+        global $config;
 		$module = new module('com_configure', 'list', 'content');
 		$module->title = "Configure Components";
 
-        $module->components = array_keys($this->config_files);
+        $module->components = $config->all_components;
+        $module->config_components = array_keys($this->config_files);
+        $module->disabled_components = array_diff($config->all_components, $config->components);
 
+        //This shouldn't even be possible, but just in case...
 		if ( empty($module->components) ) {
             $module->detach();
-            display_notice("There are no configurable components.");
+            display_notice("There are no installed components.");
         }
 	}
 

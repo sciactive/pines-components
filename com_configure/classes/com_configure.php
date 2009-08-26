@@ -49,6 +49,54 @@ class com_configure extends component {
 	}
 
     /**
+     * Disables a component.
+     *
+     * This function renames the component's directory by adding a dot (.) in
+     * front of the name. This causes Pines to ignore the component.
+     *
+     * @param string $component The name of the component.
+     * @return bool True on success, false on failure.
+     */
+    function disable_component($component) {
+        global $config;
+        if (!in_array($component, $config->all_components)) {
+            pines_log("Failed to disable component $component. Component isn't installed", 'error');
+            return false;
+        }
+        if (in_array($component, $config->components) && rename('components/'.$component, 'components/.'.$component)) {
+            pines_log("Disabled component $component.", 'notice');
+            return true;
+        } else {
+            pines_log("Failed to disable component $component.", 'error');
+            return false;
+        }
+    }
+
+    /**
+     * Enables a component.
+     *
+     * This function renames the component's directory by removing the dot (.)
+     * in front of the name. This causes Pines to recognize the component.
+     *
+     * @param string $component The name of the component.
+     * @return bool True on success, false on failure.
+     */
+    function enable_component($component) {
+        global $config;
+        if (!in_array($component, $config->all_components)) {
+            pines_log("Failed to enable component $component. Component isn't installed", 'error');
+            return false;
+        }
+        if (!in_array($component, $config->components) && rename('components/.'.$component, 'components/'.$component)) {
+            pines_log("Enabled component $component.", 'notice');
+            return true;
+        } else {
+            pines_log("Failed to enable component $component.", 'error');
+            return false;
+        }
+    }
+
+    /**
      * Parse a Pines configuration file.
      *
      * @param string $config_file The config file to read.

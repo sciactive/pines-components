@@ -16,12 +16,7 @@ if ( !gatekeeper('com_configure/edit') ) {
 	return;
 }
 
-if (!in_array($_REQUEST['component'], $config->components)) {
-    display_error('Given component is either not enabled or not installed!');
-    return;
-}
-
-if (rename('components/'.$_REQUEST['component'], 'components/.'.$_REQUEST['component'])) {
+if ($config->configurator->disable_component($_REQUEST['component'])) {
     $cur_loc = $config->template->url('com_configure', 'list', array('message' => urlencode('Component '.$_REQUEST['component'].' successfully disabled.')));
     header('Location: '.$cur_loc);
     return;

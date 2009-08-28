@@ -38,30 +38,52 @@ $page->head("</script>\n");
 ?>
 <div class="yui-skin-sam">
 <form enctype="multipart/form-data" name="editingmail" method="post" action="<?php echo $config->template->url(); ?>">
-<div class="stylized stdform">
-<span><input type="submit" value="Save Mail" /></span>
-<span><input type="button" onclick="window.location='<?php echo $config->template->url($this->close_option, $this->close_action); ?>';" value="Close" /> <small>(Closing will lose any unsaved changes!)</small></span>
-<br class="spacer" />
-<br />
-<label>Name<span class="small">&nbsp;</span><input type="text" name="name" value="<?php echo $this->mail->name; ?>" /></label>
-<label>Subject<span class="small">&nbsp;</span><input type="text" name="subject" value="<?php echo $this->mail->subject; ?>" /></label>
-<label>Message<span class="small">&nbsp;</span><textarea rows="30" name="data" id="data" style="width: 99%;"><?php echo $this->mail->message; ?></textarea></label><br />
-<input type="hidden" name="option" value="<?php echo $this->new_option; ?>" />
-<input type="hidden" name="action" value="<?php echo $this->new_action; ?>" />
-<input type="hidden" name="update" value="yes" />
-<input type="hidden" name="mail_id" value="<?php echo $this->mail->guid; ?>" />
-<div class="spacer"></div>
-<label>Attachments:</label>
-<?php if ( !empty($this->mail->attachments) ) {
-    foreach ($this->mail->attachments as $cur_attachment) { ?>
-        <label><input type="checkbox" name="attach_<?php echo clean_checkbox($cur_attachment); ?>" checked="checked" /><?php echo $cur_attachment; ?></label>
-<?php }
-} ?>
-<label>Upload <input name="attachment" type="file" /></label>
-<br class="spacer" />
-<span><input type="submit" value="Save Mail" /></span>
-<span><input type="button" onclick="window.location='<?php echo $config->template->url($this->close_option, $this->close_action); ?>';" value="Close" /> <small>(Closing will lose any unsaved changes!)</small></span>
-<br class="spacer" />
-</div>
+    <div class="pform">
+        <div class="element buttons" style="padding-left: 0;">
+            <input type="submit" value="Save Mail" />
+            <input type="button" onclick="window.location='<?php echo $config->template->url($this->close_option, $this->close_action); ?>';" value="Close" /> <small>(Closing will lose any unsaved changes!)</small>
+        </div>
+        <div class="element">
+            <label><span>Name</span>
+            <input type="text" name="name" size="20" value="<?php echo $this->mail->name; ?>" /></label>
+        </div>
+        <div class="element">
+            <label><span>Subject</span>
+            <input type="text" name="subject" size="20" value="<?php echo $this->mail->subject; ?>" /></label>
+        </div>
+        <div class="element heading">
+            <h1>Message</h1>
+        </div>
+    </div>
+    <div style="clear: both; margin-bottom: 15px;">
+        <textarea rows="30" name="data" id="data" style="width: 99%;"><?php echo $this->mail->message; ?></textarea>
+    </div>
+    <div class="pform">
+        <div class="element heading">
+            <h1>Attachments</h1>
+        </div>
+        <div class="element">
+            <span>Current Attachments</span>
+            <?php if ( !empty($this->mail->attachments) ) {
+                echo '<div class="group">';
+                foreach ($this->mail->attachments as $cur_attachment) { ?>
+            <label><input type="checkbox" name="attach_<?php echo clean_checkbox($cur_attachment); ?>" checked="checked" /><?php echo htmlentities($cur_attachment); ?></label><br />
+            <?php }
+            echo '</div>';
+            } ?>
+        </div>
+        <div class="element">
+            <label><span>Upload</span>
+            <input name="attachment" type="file" /></label>
+        </div>
+        <div class="element buttons" style="padding-left: 0;">
+            <input type="hidden" name="option" value="<?php echo $this->new_option; ?>" />
+            <input type="hidden" name="action" value="<?php echo $this->new_action; ?>" />
+            <input type="hidden" name="update" value="yes" />
+            <input type="hidden" name="mail_id" value="<?php echo $this->mail->guid; ?>" />
+            <input type="submit" value="Save Mail" />
+            <input type="button" onclick="window.location='<?php echo $config->template->url($this->close_option, $this->close_action); ?>';" value="Close" /> <small>(Closing will lose any unsaved changes!)</small>
+        </div>
+    </div>
 </form>
 </div>

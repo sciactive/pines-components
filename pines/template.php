@@ -73,22 +73,26 @@ echo '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>'; ?>
                         <?php //TODO: Notice and error models. ?>
                         <?php if ( count($page->get_error()) ) { ?>
                         <div class="notice error"><span class="close">[X] Close</span>
-                        <?php
-                        $error = $page->get_error();
-                        foreach ($error as $cur_item) {
-                            echo "$cur_item<br />\n";
-                        }
-                        ?>
+                            <ul>
+                                <?php
+                                $error = $page->get_error();
+                                foreach ($error as $cur_item) {
+                                    echo "<li>$cur_item</li>\n";
+                                }
+                                ?>
+                            </ul>
                         </div>
                         <?php } ?>
                         <?php if ( count($page->get_notice()) ) { ?>
-                        <div class="notice"><span class="close">[x] Close</span>
-                        <?php
-                        $notice = $page->get_notice();
-                        foreach ($notice as $cur_item) {
-                            echo "$cur_item<br />\n";
-                        }
-                        ?>
+                        <div class="notice"><span class="close">[X] Close</span>
+                            <ul>
+                                <?php
+                                $notice = $page->get_notice();
+                                foreach ($notice as $cur_item) {
+                                    echo "<li>$cur_item</li>\n";
+                                }
+                                ?>
+                            </ul>
                         </div>
                         <?php } ?>
                         <?php if ( isset($page->modules['content']) ) {?>

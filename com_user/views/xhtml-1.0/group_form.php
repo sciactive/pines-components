@@ -11,48 +11,64 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
-<form method="post" id="group_details" action="<?php echo $config->template->url(); ?>">
-<div class="stylized stdform">
-<h2><?php echo $this->heading; ?></h2>
-<p>Provide group details in this form.</p>
-<?php if ( !is_null($this->id) ) { ?>
-<input type="hidden" name="group_id" value="<?php echo $this->id; ?>" />
-<?php } ?>
-<label>Group Name<span class="small">&nbsp;</span><input type="text" name="groupname" value="<?php echo $this->groupname; ?>" /></label>
-<label>Display Name<span class="small">&nbsp;</span><input type="text" name="name" value="<?php echo $this->name; ?>" /></label>
-<label>Email<span class="small">&nbsp;</span><input type="text" name="email" value="<?php echo $this->email; ?>" /></label>
-<label>Parent<span class="small">&nbsp;</span>
-<select name="parent">
-<option value="none">--No Parent--</option>
-<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->parent); ?>
-</select>
-</label>
-<?php if ( $this->display_abilities ) { ?>
+<form class="pform" method="post" id="group_details" action="<?php echo $config->template->url(); ?>">
+<fieldset>
+    <legend><?php echo $this->heading; ?></legend>
+    <div class="element heading">
+        <p>Provide group details in this form.</p>
+    </div>
+    <div class="element">
+        <label><span>Group Name</span>
+        <input type="text" name="groupname" size="20" value="<?php echo $this->groupname; ?>" /></label>
+    </div>
+    <div class="element">
+        <label><span>Display Name</span>
+        <input type="text" name="name" size="20" value="<?php echo $this->name; ?>" /></label>
+    </div>
+    <div class="element">
+        <label><span>Email</span>
+        <input type="text" name="email" size="20" value="<?php echo $this->email; ?>" /></label>
+    </div>
+    <div class="element">
+        <label><span>Parent</span>
+        <select name="parent" size="1">
+            <option value="none">--No Parent--</option>
+            <?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->parent); ?>
+        </select></label>
+    </div>
+
+    <?php if ( $this->display_abilities ) { ?>
     <input type="hidden" name="abilities" value="true" />
-    <label>Abilities</label><br />
+    <div class="element heading">
+        <h1>Abilities</h1>
+    </div>
     <?php foreach ($this->sections as $cur_section) {
         $section_abilities = $config->ability_manager->get_abilities($cur_section);
         if ( count($section_abilities) ) { ?>
-        <table width="100%">
-            <thead><tr><th colspan="2"><?php echo $cur_section; ?></th></tr></thead>
-            <tbody>
-                <?php foreach ($section_abilities as $cur_ability) { ?>
-                <tr><td><label><input type="checkbox" name="<?php echo $cur_section; ?>[]" value="<?php echo $cur_ability['ability']; ?>"
-                    <?php if ( array_search($cur_section.'/'.$cur_ability['ability'], $this->group_abilities) !== false ) { ?>
-                        checked="checked"
+            <div class="element"><span>Abilities for <em><?php echo $cur_section; ?></em></span>
+                <div class="group">
+                    <?php foreach ($section_abilities as $cur_ability) { ?>
+                    <label><input type="checkbox" name="<?php echo $cur_section; ?>[]" value="<?php echo $cur_ability['ability']; ?>"
+                        <?php if ( array_search($cur_section.'/'.$cur_ability['ability'], $this->group_abilities) !== false ) { ?>
+                            checked="checked"
+                        <?php } ?>
+                         />&nbsp;<?php echo $cur_ability['title'] . ' <small>(' . $cur_ability['description'] . ')</small>'; ?></label><br />
                     <?php } ?>
-                     />&nbsp;<?php echo $cur_ability['title']; ?></label></td><td style="width: 80%;"><?php echo $cur_ability['description']; ?></td></tr>
-                <?php } ?>
-            </tbody>
-        </table>
+                </div>
+            </div>
         <?php }
+    }
     } ?>
-<?php } ?>
-<input type="hidden" name="option" value="<?php echo $this->new_option; ?>" />
-<input type="hidden" name="action" value="<?php echo $this->new_action; ?>" />
-<br class="spacer" />
-<span><input type="submit" value="Submit" /></span>
-<span><input type="button" onclick="window.location='<?php echo $config->template->url('com_user', 'managegroups'); ?>';" value="Cancel" /></span>
-<br class="spacer" />
-</div>
+
+	<div class="element buttons">
+        <?php if ( !is_null($this->id) ) { ?>
+        <input type="hidden" name="group_id" value="<?php echo $this->id; ?>" />
+        <?php } ?>
+        <input type="hidden" name="option" value="<?php echo $this->new_option; ?>" />
+        <input type="hidden" name="action" value="<?php echo $this->new_action; ?>" />
+        <input type="submit" value="Submit" />
+        <input type="button" onclick="window.location='<?php echo $config->template->url('com_user', 'managegroups'); ?>';" value="Cancel" />
+    </div>
+
+</fieldset>
 </form>

@@ -26,35 +26,54 @@ jQuery(document).ready(function(){
 ");
 $page->head("<link href=\"".$config->template->url()."components/com_newsletter/css/checktree.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />");
 ?>
-<form method="post" action="<?php echo $config->template->url(); ?>">
-<div class="stylized stdform">
-<h2>Sending <?php echo $this->mail->name; ?></h2>
-<label>From Email<span class="small">&nbsp;</span><input type="text" name="from" value="<?php echo htmlentities($config->com_newsletter->default_from); ?>" /></label>
-<label>Reply to Email<span class="small">&nbsp;</span><input type="text" name="replyto" value="<?php echo htmlentities($config->com_newsletter->default_reply_to); ?>" /></label>
-<label>Subject<span class="small">&nbsp;</span><input type="text" name="subject" value="<?php echo $this->mail->subject; ?>" /></label>
-<label>Select Groups<span class="small">&nbsp;</span><span class="small">Click group name to select children as well.</span></label>
-<?php
-$group_select_menu = new menu;
-$config->user_manager->get_group_menu($group_select_menu);
-echo $group_select_menu->render(array('<ul class="unorderedlisttree">', '</ul>'),
-		array('<li>', '</li>'),
-		array('<ul>', '</ul>'),
-		array('<li>', '</li>'),
-		"<input type=\"checkbox\" name=\"group[]\" value=\"#DATA#\" /><label>#NAME#</label>\n",
-		'<hr style="visibility: hidden; clear: both;" />');
-/*$com_newsletter_sendprep->content(
-	$config->user_manager->get_group_tree("<label><input type="checkbox" name="#guid#" />#mark##name# [#groupname#]</label>\n", $config->user_manager->get_group_array())
-); */
-?>
-<br />
-<label>Options</label>
-<label><input type="checkbox" name="include_permalink" checked />&nbsp;Include a link to the mail's web address, for online viewing.</label>
-<input type="hidden" name="option" value="com_newsletter" />
-<input type="hidden" name="action" value="send" />
-<input type="hidden" name="mail_id" value="<?php echo $_REQUEST['mail_id']; ?>" />
-<br class="spacer" />
-<span><input type="submit" value="Submit" /></span>
-<span><input type="button" onclick="window.location='<?php echo $config->template->url('com_newsletter', 'list'); ?>';" value="Cancel" /></span>
-<br class="spacer" />
-</div>
+<form class="pform" method="post" action="<?php echo $config->template->url(); ?>">
+<fieldset>
+    <legend>Sending <?php echo $this->mail->name; ?></legend>
+    <div class="element">
+        <label><span>From Email</span>
+        <input type="text" name="from" size="20" value="<?php echo htmlentities($config->com_newsletter->default_from); ?>" /></label>
+    </div>
+    <div class="element">
+        <label><span>Reply to Email</span>
+        <input type="text" name="replyto" size="20" value="<?php echo htmlentities($config->com_newsletter->default_reply_to); ?>" /></label>
+    </div>
+    <div class="element">
+        <label><span>Subject</span>
+        <input type="text" name="subject" size="20" value="<?php echo htmlentities($this->mail->subject); ?>" /></label>
+    </div>
+    <div class="element">
+        <span>Select Groups</span>
+        <span class="note">Click group name to select children as well.</span>
+        <div class="group">
+        <?php
+        $group_select_menu = new menu;
+        $config->user_manager->get_group_menu($group_select_menu);
+        echo $group_select_menu->render(array('<ul class="unorderedlisttree">', '</ul>'),
+                array('<li>', '</li>'),
+                array('<ul>', '</ul>'),
+                array('<li>', '</li>'),
+                "<input type=\"checkbox\" name=\"group[]\" value=\"#DATA#\" /><label>#NAME#</label>\n",
+                '<hr style="visibility: hidden; clear: both;" />');
+        /*$com_newsletter_sendprep->content(
+            $config->user_manager->get_group_tree("<label><input type="checkbox" name="#guid#" />#mark##name# [#groupname#]</label>\n", $config->user_manager->get_group_array())
+        ); */
+        ?>
+        </div>
+    </div>
+    <div class="element heading">
+        <h1>Options</h1>
+    </div>
+    <div class="element">
+        <label><span>Include a link to the mail's web address.</span>
+        <span class="note">For online viewing.</span>
+        <input type="checkbox" name="include_permalink" checked /></label>
+    </div>
+    <div class="element buttons">
+        <input type="hidden" name="option" value="com_newsletter" />
+        <input type="hidden" name="action" value="send" />
+        <input type="hidden" name="mail_id" value="<?php echo $_REQUEST['mail_id']; ?>" />
+        <input type="submit" value="Submit" />
+        <input type="button" onclick="window.location='<?php echo $config->template->url('com_newsletter', 'list'); ?>';" value="Cancel" />
+    </div>
+</fieldset>
 </form>

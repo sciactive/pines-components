@@ -11,22 +11,29 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
-<form name="login" method="post" action="<?php echo $config->template->url(); ?>">
-    <div class="stylized stdform">
-        <h2>Login to <?php echo $config->option_title; ?></h2>
-        <p>Please enter your credentials to login.</p>
-        <div style="float: left;">
-            <label>Username<span class="small">&nbsp;</span><input type="text" name="username" /></label>
-            <label>Password<span class="small"><?php echo ($config->com_user->empty_pw ? "May be blank." : "&nbsp;"); ?></span><input type="password" name="password" /></label>
+<form class="pform" name="login" method="post" action="<?php echo $config->template->url(); ?>">
+    <fieldset>
+        <legend>Login to <?php echo $config->option_title; ?></legend>
+        <div class="element heading">
+            <p>Please enter your credentials to login.</p>
+        </div>
+        <div class="element">
+            <label><span>Username</span>
+            <input type="text" name="username" size="20" /></label>
+        </div>
+        <div class="element">
+            <label><span>Password</span>
+            <?php echo ($config->com_user->empty_pw ? '<span class="note">May be blank.</span>' : ''); ?>
+            <input type="password" name="password" size="20" /></label>
+        </div>
+        <div class="element buttons">
             <input type="hidden" name="option" value="com_user" />
             <input type="hidden" name="action" value="login" />
             <?php if ( isset($_REQUEST['url']) ) { ?>
-            <input type="hidden" name="url" value="<?php echo urlencode($_REQUEST['url']); ?>" />
+            <input type="hidden" name="url" value="<?php echo htmlentities(urlencode($_REQUEST['url'])); ?>" />
             <?php } ?>
-            <br class="spacer" />
-            <span><input style="float: right;" type="reset" value="Reset" /></span>
-            <span><input style="float: right;" type="submit" value="Login" /></span>
+            <input type="submit" name="submit" value="Login" />
+            <input type="reset" name="reset" value="Reset" />
         </div>
-        <br class="spacer" />
-    </div>
+    </fieldset>
 </form>

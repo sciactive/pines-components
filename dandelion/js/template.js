@@ -6,5 +6,4 @@ jQuery(document).ready(function($){
 		$(this).parent().stopTime("hide_notices").fadeOut(400);
 	});
 	// $(".mainpage").css("opacity",0.95);
-	$(".stylized input:button, .stylized input:submit, .stylized input:reset").css("width","auto");
 });

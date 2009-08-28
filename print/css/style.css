@@ -49,92 +49,68 @@ img {
 	background-color: #F00;
 	color: #000;
 }
-/* ----------- Standard Forms ----------- */
-.stdform{
-	padding: 14px;
+/* ----------- Pines Forms ----------- */
+.pform:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
 }
+.pform fieldset {
+    padding: 5.6px 10px 12px;
+    border: 1px solid #CCC;
+}
+.pform fieldset legend, .pform .heading h1 {
+    font-size: 150%;
+    font-weight: normal;
+}
+.pform div.element {
+    float: left;
+    clear: left;
+    padding-bottom: 15px;
+}
+.pform div.heading {
+    border-bottom: 1px solid #CCC;
+    padding-bottom: 0;
+    margin-bottom: 10px;
+    width: 100%;
+}
+.pform div.heading h1 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.pform div.heading p {
+    clear: left;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.pform div.element span {
+    width: 230px; /* Width of labels. */
+    float: left;
+}
+.pform div.element span.note {
+    clear: left;
+    font-size: 70%;
+    color: #555;
+}
+.pform div.element .group {
+     margin-left: 230px; /* Same as width of labels. */
+}
+.pform div.element input, .pform div.element select, .pform div.element textarea, .pform div.element button {
+    float: none;
+    margin-left: 5px; /* Margin between inputs and labels. */
+}
+.pform div.buttons {
+    padding-left: 215px; /* Width of labels + margin to inputs - button spacing. */
+}
+.pform div.buttons input, .pform div.buttons button {
+    margin-left: 20px; /* Button spacing. */
+}
+/* ----------- Spacer for making a cleared BR ----------- */
 .spacer{
 	clear: both;
 	height: 1px;
-}
-/* ----------- Stylized Inputs ----------- */
-/*
-.stylized{
-	border:solid 2px #DEDEDE;
-}
-*/
-.stylized h2 {
-	font-size: 14px;
-	font-weight: bold;
-	margin-bottom: 8px;
-}
-.stylized p{
-	font-size: 11px;
-	color: #666666;
-	margin-bottom: 20px;
-	border-bottom: solid 1px #dedede;
-	padding-bottom: 10px;
-}
-.stylized label{
-	clear: left;
-	display: block;
-	float: left;
-	font-weight: bold;
-	margin: 2px 30px 10px;
-	text-align: left;
-}
-.stylized table label{
-	margin: 0;
-}
-.stylized ul label{
-	margin: 0;
-	float: none;
-	display: inline;
-}
-.stylized ul{
-	clear: left;
-}
-.stylized .small{
-	color: #666666;
-	font-size: 11px;
-	font-weight: normal;
-	margin-left: 10px;
-	width: 140px;
-}
-.stylized input{
-	float: left;
-	margin: 2px 0 0 20px;
-	position: relative;
-	width: 200px;
-}
-.stylized table input{
-	width: auto;
-	margin: 2px;
-}
-.stylized ul input{
-	width: auto;
-	margin: 0;
-	float: none;
-	display: inline !important;
-}
-.stylized select{
-	float: left;
-	margin: 2px 0 0 20px;
-	position: relative;
-}
-.stylized table select{
-	margin: 2px;
-}
-.stylized button{
-	clear: both;
-	display: block;
-	margin-left: 150px;
-	background: #888888;
-	color: #FFFFFF;
-	border: solid 1px #666666;
-	font-size: 11px;
-	font-weight: bold;
-	padding: 4px 6px;
 }
 /* ----------- Tables ----------- */
 table caption {

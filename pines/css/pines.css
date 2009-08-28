@@ -204,23 +204,25 @@ img {
     font-size: 150%;
     font-weight: normal;
 }
-.pform .heading {
-    border-bottom: 1px solid #CCC;
-    margin-bottom: 10px;
-}
-.pform .heading h1 {
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-.pform .heading p {
-    clear: left;
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
 .pform div.element {
     float: left;
     clear: left;
     padding-bottom: 15px;
+}
+.pform div.heading {
+    border-bottom: 1px solid #CCC;
+    padding-bottom: 0;
+    margin-bottom: 10px;
+    width: 100%;
+}
+.pform div.heading h1 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.pform div.heading p {
+    clear: left;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 .pform div.element span {
     width: 230px; /* Width of labels. */
@@ -228,7 +230,7 @@ img {
 }
 .pform div.element span.note {
     clear: left;
-    font-size: 60%;
+    font-size: 70%;
     color: #555;
 }
 .pform div.element .group {
@@ -244,82 +246,10 @@ img {
 .pform div.buttons input, .pform div.buttons button {
     margin-left: 20px; /* Button spacing. */
 }
-/* ----------- Standard Forms ----------- */
-.stdform{
-	padding: 14px;
-}
+/* ----------- Spacer for making a cleared BR ----------- */
 .spacer{
 	clear: both;
 	height: 1px;
-}
-/* ----------- Stylized Inputs ----------- */
-.stylized h2 {
-	font-size: 150%;
-	font-weight: bold;
-	margin-bottom: 8px;
-}
-.stylized p{
-	font-size: 0.8em;
-	color: #666;
-	margin-bottom: 20px;
-	border-bottom: solid 1px #DEDEDE;
-	padding-bottom: 10px;
-}
-.stylized label{
-	clear: both;
-	float: left;
-	font-weight: bold;
-	margin: 2px 30px 10px;
-}
-.stylized table label{
-	margin: 0;
-}
-.stylized ul label{
-	margin: 0;
-	float: none;
-	display: inline;
-}
-.stylized ul{
-	clear: left;
-}
-.stylized .small{
-	color: #666;
-	font-size: 11px;
-	font-weight: normal;
-	margin-left: 10px;
-}
-.stylized input, .stylized select{
-	display: block;
-	margin: 2px 0 0 20px;
-	position: relative;
-}
-.stylized input{
-	width: 200px;
-}
-.stylized input:first-child{
-    width: auto;
-	display: inline;
-}
-.stylized table input, .stylized table select{
-	width: auto;
-	margin: 2px;
-}
-.stylized ul input{
-	width: auto;
-	margin: 0;
-	float: none;
-	display: inline;
-}
-.stylized button{
-	clear: both;
-	display: block;
-	margin-left: 150px;
-	background: #888;
-	color: #FFF;
-	border: solid 1px #666;
-	font-size: 11px;
-	font-weight: bold;
-	padding: 4px 6px;
 }
 /* ----------- Tables ----------- */
 table caption {

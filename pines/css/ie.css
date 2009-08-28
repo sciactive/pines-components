@@ -1,0 +1,8 @@
+/* Required for IE. */
+.pform {
+    overflow: hidden; /* Hides an extended border. */
+    zoom: 1; /* Encloses the divs in the form. */
+}
+.pform div.element {
+    width: 100%; /* Positions the inputs correctly. */
+}

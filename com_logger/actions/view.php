@@ -18,7 +18,12 @@ if ( !gatekeeper('com_logger/view') ) {
 
 $com_logger_view = new module('com_logger', 'view', 'content');
 $com_logger_view->title = 'Displaying Log File: '.$config->com_logger->path;
-$com_logger_view->log = file_get_contents($config->com_logger->path);
+if (file_exists($config->com_logger->path)) {
+    if (!($com_logger_view->log = file_get_contents($config->com_logger->path)))
+        display_error('Error reading log file '.$config->com_logger->path);
+} else {
+    display_error('Log file '.$config->com_logger->path.' does not exist!');
+}
 if (empty($com_logger_view->log)) $com_logger_view->log = 'Nothing to display.';
 
 ?>

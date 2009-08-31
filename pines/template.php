@@ -21,10 +21,11 @@ defined('P_RUN') or die('Direct access prohibited');
 	<title><?php echo $page->get_title(); ?></title>
 	<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="author" content="Hunter Perrin" />
-	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/pines.css" media="all" rel="stylesheet" type="text/css" />
-	<!--[if IE]>
-	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/ie.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="<?php echo $config->rela_location; ?>system/css/pform.css" media="all" rel="stylesheet" type="text/css" />
+    <!--[if IE]>
+	<link href="<?php echo $config->rela_location; ?>system/css/pform-ie.css" media="all" rel="stylesheet" type="text/css" />
 	<![endif]-->
+	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/pines.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/print.css" media="print" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dropdown/dropdown.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dropdown/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />

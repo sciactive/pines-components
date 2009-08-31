@@ -188,64 +188,6 @@ img {
 	float: right;
 	clear: right;
 }
-/* ----------- Pines Forms ----------- */
-.pform:after {
-    content: ".";
-    display: block;
-    height: 0;
-    clear: both;
-    visibility: hidden;
-}
-.pform fieldset {
-    padding: 5.6px 10px 12px;
-    border: 1px solid #CCC;
-}
-.pform fieldset legend, .pform .heading h1 {
-    font-size: 150%;
-    font-weight: normal;
-}
-.pform div.element {
-    float: left;
-    clear: left;
-    padding-bottom: 15px;
-}
-.pform div.heading {
-    border-bottom: 1px solid #CCC;
-    padding-bottom: 0;
-    margin-bottom: 10px;
-    width: 100%;
-}
-.pform div.heading h1 {
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-.pform div.heading p {
-    clear: left;
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-.pform div.element span {
-    width: 230px; /* Width of labels. */
-    float: left;
-}
-.pform div.element span.note {
-    clear: left;
-    font-size: 70%;
-    color: #555;
-}
-.pform div.element .group {
-     margin-left: 230px; /* Same as width of labels. */
-}
-.pform div.element input, .pform div.element select, .pform div.element textarea, .pform div.element button {
-    float: none;
-    margin-left: 5px; /* Margin between inputs and labels. */
-}
-.pform div.buttons {
-    padding-left: 215px; /* Width of labels + margin to inputs - button spacing. */
-}
-.pform div.buttons input, .pform div.buttons button {
-    margin-left: 20px; /* Button spacing. */
-}
 /* ----------- Spacer for making a cleared BR ----------- */
 .spacer{
 	clear: both;

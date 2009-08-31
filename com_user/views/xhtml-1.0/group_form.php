@@ -18,20 +18,20 @@ defined('P_RUN') or die('Direct access prohibited');
         <p>Provide group details in this form.</p>
     </div>
     <div class="element">
-        <label><span>Group Name</span>
-        <input type="text" name="groupname" size="20" value="<?php echo $this->groupname; ?>" /></label>
+        <label><span class="label">Group Name</span>
+        <input class="field" type="text" name="groupname" size="20" value="<?php echo $this->groupname; ?>" /></label>
     </div>
     <div class="element">
-        <label><span>Display Name</span>
-        <input type="text" name="name" size="20" value="<?php echo $this->name; ?>" /></label>
+        <label><span class="label">Display Name</span>
+        <input class="field" type="text" name="name" size="20" value="<?php echo $this->name; ?>" /></label>
     </div>
     <div class="element">
-        <label><span>Email</span>
-        <input type="text" name="email" size="20" value="<?php echo $this->email; ?>" /></label>
+        <label><span class="label">Email</span>
+        <input class="field" type="text" name="email" size="20" value="<?php echo $this->email; ?>" /></label>
     </div>
     <div class="element">
-        <label><span>Parent</span>
-        <select name="parent" size="1">
+        <label><span class="label">Parent</span>
+        <select class="field" name="parent" size="1">
             <option value="none">--No Parent--</option>
             <?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->parent); ?>
         </select></label>
@@ -45,10 +45,10 @@ defined('P_RUN') or die('Direct access prohibited');
     <?php foreach ($this->sections as $cur_section) {
         $section_abilities = $config->ability_manager->get_abilities($cur_section);
         if ( count($section_abilities) ) { ?>
-            <div class="element"><span>Abilities for <em><?php echo $cur_section; ?></em></span>
+            <div class="element"><span class="label">Abilities for <em><?php echo $cur_section; ?></em></span>
                 <div class="group">
                     <?php foreach ($section_abilities as $cur_ability) { ?>
-                    <label><input type="checkbox" name="<?php echo $cur_section; ?>[]" value="<?php echo $cur_ability['ability']; ?>"
+                    <label><input class="field" type="checkbox" name="<?php echo $cur_section; ?>[]" value="<?php echo $cur_ability['ability']; ?>"
                         <?php if ( array_search($cur_section.'/'.$cur_ability['ability'], $this->group_abilities) !== false ) { ?>
                             checked="checked"
                         <?php } ?>

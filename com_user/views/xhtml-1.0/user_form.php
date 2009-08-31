@@ -19,35 +19,35 @@ $page->head("<script type=\"text/javascript\" src=\"".$config->rela_location."co
         <p>Provide user details in this form.</p>
     </div>
     <div class="element">
-        <label><span>Username</span>
-        <input type="text" name="username" size="20" value="<?php echo $this->username; ?>" /></label>
+        <label><span class="label">Username</span>
+        <input class="field" type="text" name="username" size="20" value="<?php echo $this->username; ?>" /></label>
     </div>
     <div class="element">
-        <label><span>Name</span>
-        <input type="text" name="name" size="20" value="<?php echo $this->name; ?>" /></label>
+        <label><span class="label">Name</span>
+        <input class="field" type="text" name="name" size="20" value="<?php echo $this->name; ?>" /></label>
     </div>
     <div class="element">
-        <label><span>Email</span>
-        <input type="text" name="email" size="20" value="<?php echo $this->email; ?>" /></label>
+        <label><span class="label">Email</span>
+        <input class="field" type="text" name="email" size="20" value="<?php echo $this->email; ?>" /></label>
     </div>
     <div class="element">
-        <label><span><?php if (!is_null($this->id)) echo 'Update '; ?>Password</span>
+        <label><span class="label"><?php if (!is_null($this->id)) echo 'Update '; ?>Password</span>
         <?php if (is_null($this->id)) {
             echo ($config->com_user->empty_pw ? '<span class="note">May be blank.</span>' : '');
         } else {
             echo '<span class="note">Leave blank, if not changing.</span>';
         } ?>
-        <input type="password" name="password" size="20" /></label>
+        <input class="field" type="password" name="password" size="20" /></label>
     </div>
     <div class="element">
-        <label><span>Repeat Password</span>
-        <input type="password" name="password2" size="20" /></label>
+        <label><span class="label">Repeat Password</span>
+        <input class="field" type="password" name="password2" size="20" /></label>
     </div>
     <?php if ( $this->display_default_components ) { ?>
     <div class="element">
-        <label><span>Default Component</span>
+        <label><span class="label">Default Component</span>
         <span class="note">This component will be responsible for the user's home page.</span>
-        <select name="default_component">
+        <select class="field" name="default_component">
             <?php foreach ($this->default_components as $cur_component) { ?>
             <option value="<?php echo $cur_component; ?>"<?php echo (($this->default_component == $cur_component) ? ' selected="selected"' : ''); ?>><?php echo $cur_component; ?></option>
             <?php } ?>
@@ -61,20 +61,20 @@ $page->head("<script type=\"text/javascript\" src=\"".$config->rela_location."co
     </div>
     <?php if (is_null($this->group_array)) { ?>
     <div class="element">
-        <label><span>There are no groups to display.</span></label>
+        <label><span class="label">There are no groups to display.</span></label>
     </div>
     <?php } else { ?>
     <div class="element">
-        <label><span>Primary Group</span>
-        <select name="gid" size="1">
+        <label><span class="label">Primary Group</span>
+        <select class="field" name="gid" size="1">
             <option value="null">-- No Primary Group --</option>
             <?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->gid); ?>
         </select></label>
     </div>
     <div class="element">
-        <label><span>Groups</span>
+        <label><span class="label">Groups</span>
         <span class="note">Hold Ctrl (Command on Mac) to select multiple groups.</span>
-        <select name="groups[]" multiple="multiple" size="6">
+        <select class="field" name="groups[]" multiple="multiple" size="6">
             <?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->groups); ?>
         </select></label>
     </div>
@@ -87,16 +87,16 @@ $page->head("<script type=\"text/javascript\" src=\"".$config->rela_location."co
         <h1>Abilities</h1>
     </div>
     <div class="element">
-        <label><span>Inherit additional abilities from groups.</span>
-        <input type="checkbox" name="inherit_abilities" value="ON" <?php echo ($this->inherit_abilities ? 'checked="checked" ' : ''); ?>/></label>
+        <label><span class="label">Inherit additional abilities from groups.</span>
+        <input class="field" type="checkbox" name="inherit_abilities" value="ON" <?php echo ($this->inherit_abilities ? 'checked="checked" ' : ''); ?>/></label>
     </div>
     <?php foreach ($this->sections as $cur_section) {
         $section_abilities = $config->ability_manager->get_abilities($cur_section);
         if ( count($section_abilities) ) { ?>
-            <div class="element"><span>Abilities for <em><?php echo $cur_section; ?></em></span>
+            <div class="element"><span class="label">Abilities for <em><?php echo $cur_section; ?></em></span>
                 <div class="group">
                     <?php foreach ($section_abilities as $cur_ability) { ?>
-                    <label><input type="checkbox" name="<?php echo $cur_section; ?>[]" value="<?php echo $cur_ability['ability']; ?>"
+                    <label><input class="field" type="checkbox" name="<?php echo $cur_section; ?>[]" value="<?php echo $cur_ability['ability']; ?>"
                         <?php if ( array_search($cur_section.'/'.$cur_ability['ability'], $this->user_abilities) !== false ) { ?>
                             checked="checked"
                         <?php } ?>
@@ -114,8 +114,8 @@ $page->head("<script type=\"text/javascript\" src=\"".$config->rela_location."co
         <?php } ?>
         <input type="hidden" name="option" value="<?php echo $this->new_option; ?>" />
         <input type="hidden" name="action" value="<?php echo $this->new_action; ?>" />
-        <input type="submit" value="Submit" />
-        <input type="button" onclick="window.location='<?php echo $config->template->url('com_user', 'manageusers'); ?>';" value="Cancel" />
+        <input class="button" type="submit" value="Submit" />
+        <input class="button" type="button" onclick="window.location='<?php echo $config->template->url('com_user', 'manageusers'); ?>';" value="Cancel" />
     </div>
 
 </fieldset>

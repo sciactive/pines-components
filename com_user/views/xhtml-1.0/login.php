@@ -18,13 +18,13 @@ defined('P_RUN') or die('Direct access prohibited');
             <p>Please enter your credentials to login.</p>
         </div>
         <div class="element">
-            <label><span>Username</span>
-            <input type="text" name="username" size="20" /></label>
+            <label><span class="label">Username</span>
+            <input class="field" type="text" name="username" size="20" /></label>
         </div>
         <div class="element">
-            <label><span>Password</span>
+            <label><span class="label">Password</span>
             <?php echo ($config->com_user->empty_pw ? '<span class="note">May be blank.</span>' : ''); ?>
-            <input type="password" name="password" size="20" /></label>
+            <input class="field" type="password" name="password" size="20" /></label>
         </div>
         <div class="element buttons">
             <input type="hidden" name="option" value="com_user" />
@@ -32,8 +32,8 @@ defined('P_RUN') or die('Direct access prohibited');
             <?php if ( isset($_REQUEST['url']) ) { ?>
             <input type="hidden" name="url" value="<?php echo htmlentities(urlencode($_REQUEST['url'])); ?>" />
             <?php } ?>
-            <input type="submit" name="submit" value="Login" />
-            <input type="reset" name="reset" value="Reset" />
+            <input class="button" type="submit" name="submit" value="Login" />
+            <input class="button" type="reset" name="reset" value="Reset" />
         </div>
     </fieldset>
 </form>

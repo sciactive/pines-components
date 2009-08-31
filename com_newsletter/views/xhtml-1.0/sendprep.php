@@ -30,19 +30,19 @@ $page->head("<link href=\"".$config->template->url()."components/com_newsletter/
 <fieldset>
     <legend>Sending <?php echo $this->mail->name; ?></legend>
     <div class="element">
-        <label><span>From Email</span>
-        <input type="text" name="from" size="20" value="<?php echo htmlentities($config->com_newsletter->default_from); ?>" /></label>
+        <label><span class="label">From Email</span>
+        <input class="field" type="text" name="from" size="20" value="<?php echo htmlentities($config->com_newsletter->default_from); ?>" /></label>
     </div>
     <div class="element">
-        <label><span>Reply to Email</span>
-        <input type="text" name="replyto" size="20" value="<?php echo htmlentities($config->com_newsletter->default_reply_to); ?>" /></label>
+        <label><span class="label">Reply to Email</span>
+        <input class="field" type="text" name="replyto" size="20" value="<?php echo htmlentities($config->com_newsletter->default_reply_to); ?>" /></label>
     </div>
     <div class="element">
-        <label><span>Subject</span>
-        <input type="text" name="subject" size="20" value="<?php echo htmlentities($this->mail->subject); ?>" /></label>
+        <label><span class="label">Subject</span>
+        <input class="field" type="text" name="subject" size="20" value="<?php echo htmlentities($this->mail->subject); ?>" /></label>
     </div>
     <div class="element">
-        <span>Select Groups</span>
+        <span class="label">Select Groups</span>
         <span class="note">Click group name to select children as well.</span>
         <div class="group">
         <?php
@@ -52,7 +52,7 @@ $page->head("<link href=\"".$config->template->url()."components/com_newsletter/
                 array('<li>', '</li>'),
                 array('<ul>', '</ul>'),
                 array('<li>', '</li>'),
-                "<input type=\"checkbox\" name=\"group[]\" value=\"#DATA#\" /><label>#NAME#</label>\n",
+                "<input class=\"field\" type=\"checkbox\" name=\"group[]\" value=\"#DATA#\" /><label>#NAME#</label>\n",
                 '<hr style="visibility: hidden; clear: both;" />');
         /*$com_newsletter_sendprep->content(
             $config->user_manager->get_group_tree("<label><input type="checkbox" name="#guid#" />#mark##name# [#groupname#]</label>\n", $config->user_manager->get_group_array())
@@ -64,16 +64,16 @@ $page->head("<link href=\"".$config->template->url()."components/com_newsletter/
         <h1>Options</h1>
     </div>
     <div class="element">
-        <label><span>Include a link to the mail's web address.</span>
+        <label><span class="label">Include a link to the mail's web address.</span>
         <span class="note">For online viewing.</span>
-        <input type="checkbox" name="include_permalink" checked /></label>
+        <input class="field" type="checkbox" name="include_permalink" checked /></label>
     </div>
     <div class="element buttons">
         <input type="hidden" name="option" value="com_newsletter" />
         <input type="hidden" name="action" value="send" />
         <input type="hidden" name="mail_id" value="<?php echo $_REQUEST['mail_id']; ?>" />
-        <input type="submit" value="Submit" />
-        <input type="button" onclick="window.location='<?php echo $config->template->url('com_newsletter', 'list'); ?>';" value="Cancel" />
+        <input class="button" type="submit" value="Submit" />
+        <input class="button" type="button" onclick="window.location='<?php echo $config->template->url('com_newsletter', 'list'); ?>';" value="Cancel" />
     </div>
 </fieldset>
 </form>

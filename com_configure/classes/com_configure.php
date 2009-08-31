@@ -117,7 +117,7 @@ class com_configure extends component {
 		$module = new module('com_configure', 'list', 'content');
 		$module->title = "Configure Components";
 
-        $module->components = $config->all_components;
+        $module->components = array_merge(array('system'), $config->all_components);
         $module->config_components = array_keys($this->config_files);
         $module->disabled_components = array_diff($config->all_components, $config->components);
 

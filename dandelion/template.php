@@ -22,8 +22,8 @@ defined('P_RUN') or die('Direct access prohibited');
 	<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="author" content="Hunter Perrin" />
 	<link href="<?php echo $config->rela_location; ?>system/css/pform.css" media="all" rel="stylesheet" type="text/css" />
-    <!--[if IE]>
-	<link href="<?php echo $config->rela_location; ?>system/css/pform-ie.css" media="all" rel="stylesheet" type="text/css" />
+    <!--[if lt IE 8]>
+	<link href="<?php echo $config->rela_location; ?>system/css/pform-ie-lt-8.css" media="all" rel="stylesheet" type="text/css" />
 	<![endif]-->
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dandelion.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dropdown/dropdown.css" media="all" rel="stylesheet" type="text/css" />

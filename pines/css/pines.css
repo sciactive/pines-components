@@ -193,19 +193,3 @@ img {
 	clear: both;
 	height: 1px;
 }
-/* ----------- Tables ----------- */
-table caption {
-	background-color: #DDD;
-	border-top: 1px solid #024;
-	border-left: 1px solid #024;
-	border-right: 1px solid #024;
-}
-table th {
-	border-top: 1px solid gray;
-	border-left: 1px solid gray;
-	border-right: 1px solid gray;
-	background-color: #F4F4F4;
-}
-table td {
-	border: 1px solid gray;
-}

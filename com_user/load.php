@@ -31,6 +31,7 @@ $config->ability_manager = new abilities;
  * - No user is logged in. (Should be managed with abilities.)
  * - The user has the "system/all" ability.
  * - The entity is the user.
+ * - The entity is the user's primary group.
  * - The entity's parent is the user.
  * - The entity's parent is the user's primary group.
  * - The entity's group is the user's primary group.
@@ -67,6 +68,10 @@ function com_user_check_permissions($array) {
                 }
             }
             if ($cur_entity->guid == $_SESSION['user']->guid) {
+                $pass = true;
+                break;
+            }
+            if ($cur_entity->guid == $_SESSION['user']->gid) {
                 $pass = true;
                 break;
             }

@@ -21,6 +21,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	<title><?php echo $page->get_title(); ?></title>
 	<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="author" content="Hunter Perrin" />
+    <link rel="icon" type="image/vnd.microsoft.icon" href="<?php echo $config->rela_location; ?>favicon.ico" />
 	<link href="<?php echo $config->rela_location; ?>system/css/pform.css" media="all" rel="stylesheet" type="text/css" />
     <!--[if lt IE 8]>
 	<link href="<?php echo $config->rela_location; ?>system/css/pform-ie-lt-8.css" media="all" rel="stylesheet" type="text/css" />
@@ -52,7 +53,10 @@ defined('P_RUN') or die('Direct access prohibited');
 <div id="wrapper">
     <div id="header">
         <div class="pagetitle">
+            <a href="<?php echo $config->full_location; ?>"><img class="logo" src="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/images/header.png" alt="header logo" /></a>
+            <!-- Uncomment to show the page title next to the logo.
             <span><?php echo $page->get_title(); ?></span>
+            -->
         </div>
         <?php if ( isset($page->modules['header']) ) {?>
         <div class="module_group">

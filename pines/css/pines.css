@@ -7,45 +7,6 @@
 html, body {
     height: 100%;
 }
-#wrapper {
-	min-height: 100%;
-	height: auto !important;
-	height: 100%;
-	margin: 0 auto -51px; /* the bottom margin is the negative value of the footer's height */
-}
-#header {
-    background-color: #E6E6E6;
-}
-#footer, .push {
-    background-color: #E6E6E6;
-    height: 50px; /* .push must be the same height as .footer */
-    /* http://ryanfait.com/sticky-footer/ */
-}
-.push {
-    visibility: hidden;
-}
-.pagetitle {
-    text-align: center;
-	margin: 10px 25px;
-}
-.pagetitle span {
-	font: bold 2em sans;
-}
-.mainmenu {
-    width: 100%;
-    background-color: #F6F6F6;
-    /* padding-left: 25px; */
-    font-size: 12px;
-    color: #7F7F7F;
-}
-.mainmenu .menuwrap {
-	text-align: center;
-	display: table;
-    margin: 0 auto;
-}
-.module {
-    margin-bottom: 10px;
-}
 /* ----------- Holy Grail CSS ----------- */
 /* General styles */
 body {
@@ -74,9 +35,8 @@ img {
     clear:both;
     float:left;
     width:100%;
-}
-#header {
-    border-bottom:1px solid #000;
+    border-bottom:1px solid #666;
+    background-color: #E6E6E6;
 }
 #header p,
 #header h1,
@@ -91,6 +51,7 @@ img {
     float:left;
     width:100%;				/* width of whole page */
     overflow:hidden;		/* This chops off any overhanging divs */
+    background: transparent url(../images/shadow-top.png) repeat-x scroll left top;
 }
 /* holy grail 3 column settings */
 .holygrail {
@@ -102,7 +63,7 @@ img {
     margin-left:-160px; 	/* Width of right column */
     position:relative;
     right:100%;
-    background:#FFF;    	/* Centre column background colour */
+    /*background-color:#FFF; /*Blocks shadow. /* Centre column background colour */
 }
 .holygrail .colleft {
     float:left;
@@ -110,7 +71,7 @@ img {
     margin-left:-50%;
     position:relative;
     left:320px;         	/* Left column width + right column width */
-    /*background:#F4F4F4;    	/* Left column background colour */
+    background:#F4F4F4 url(../images/shadow-top.png) repeat-x scroll left top; /* Left column background colour */
 }
 .holygrail .col1wrap {
     float:left;
@@ -120,7 +81,7 @@ img {
     padding-bottom:1em; 	/* Centre column bottom padding. Leave it out if it's zero */
 }
 .holygrail .col1 {
-    margin:0 165px;     	/* Centre column side padding:
+    margin:15px 165px 0;     	/* Centre column side padding:
                             Left padding = left column width + centre column left padding width
                             Right padding = right column width + centre column right padding width */
     position:relative;
@@ -132,7 +93,7 @@ img {
     float:right;			/* This overrides the float:left above */
     width:150px;        	/* Width of left column content (left column width minus left and right padding) */
     position:relative;
-    right:5px;         	/* Width of the left-had side padding on the left column */
+    right:5px;         	/* Width of the left-hand side padding on the left column */
 }
 .holygrail .col3 {
     float:left;
@@ -155,6 +116,48 @@ img {
 }
 
 /* ----------- Customized CSS ----------- */
+#wrapper {
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto -51px; /* the bottom margin is the negative value of the footer's height */
+    background: transparent url(../images/left-column.png) repeat-y scroll left top; /* This image needs to be same width and color as left column. */
+}
+#footer, .push {
+    border-top: 1px solid #666;
+    background-color: #E6E6E6;
+    height: 50px; /* .push must be the same height as .footer */
+    /* http://ryanfait.com/sticky-footer/ */
+}
+.push {
+    visibility: hidden;
+}
+#header .logo {
+    vertical-align: middle;
+	margin: 0 0 0 25px;
+    border: 0;
+}
+.pagetitle span {
+    vertical-align: middle;
+	font: bold 2em sans;
+	margin: 10px 50px;
+}
+.mainmenu {
+    clear: both;
+    width: 100%;
+    background-color: #F6F6F6;
+    font-size: 12px;
+    color: #7F7F7F;
+}
+.mainmenu .menuwrap {
+	/*text-align: center; /* Align menu text in the center with this. */
+	display: table;
+    /* margin: 0 auto; /* Align the menu in the center with this. */
+    margin-left: 35px; /* Comment this out if you center the menu. */
+}
+.module {
+    margin-bottom: 10px;
+}
 .module_group {
     padding: 3px;
     font-size: 0.8em;

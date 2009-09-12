@@ -82,16 +82,20 @@ class com_user extends component {
         unset($_SESSION['user']);
         $tmp_user = $this->get_user($_SESSION['user_id']);
         $_SESSION['descendents'] = $this->get_group_descendents($tmp_user->gid);
-        foreach ($tmp_user->groups as $cur_group) {
-            $_SESSION['descendents'] = array_merge($_SESSION['descendents'], $this->get_group_descendents($cur_group));
-        }
+		if (!empty($tmp_user->groups)) {
+			foreach ($tmp_user->groups as $cur_group) {
+				$_SESSION['descendents'] = array_merge($_SESSION['descendents'], $this->get_group_descendents($cur_group));
+			}
+		}
         if ($tmp_user->inherit_abilities) {
             global $config;
             $_SESSION['inherited_abilities'] = $tmp_user->abilities;
-            foreach ($tmp_user->groups as $cur_group) {
-                $cur_entity = $config->entity_manager->get_entity($cur_group, group);
-                $_SESSION['inherited_abilities'] = array_merge($_SESSION['inherited_abilities'], $cur_entity->abilities);
-            }
+			if (!empty($tmp_user->groups)) {
+				foreach ($tmp_user->groups as $cur_group) {
+					$cur_entity = $config->entity_manager->get_entity($cur_group, group);
+					$_SESSION['inherited_abilities'] = array_merge($_SESSION['inherited_abilities'], $cur_entity->abilities);
+				}
+			}
             if (isset($tmp_user->gid)) {
                 $cur_entity = $config->entity_manager->get_entity($tmp_user->gid, group);
                 $_SESSION['inherited_abilities'] = array_merge($_SESSION['inherited_abilities'], $cur_entity->abilities);

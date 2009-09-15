@@ -19,9 +19,7 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class user extends able_entity {
     public function __construct() {
-        parent::__construct();
 		$this->add_tag('com_user', 'user');
-		$this->salt = md5(rand());
 		$this->abilities = array();
 		$this->groups = array();
         $this->inherit_abilities = true;
@@ -69,10 +67,14 @@ class user extends able_entity {
     /**
      * Change the user's password.
      *
+     * This function first checks to see if the user already has a salt. If not,
+     * one will be generated.
+     *
      * @param string $password The new password.
      * @return string The resulting MD5 sum which is stored in the entity.
      */
 	public function password($password) {
+		if (!isset($this->salt)) $this->salt = md5(rand());
 		return $this->__set('password', md5($password.$this->__get('salt')));
 	}
 

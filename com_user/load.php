@@ -32,6 +32,7 @@ $config->ability_manager = new abilities;
  * - The user has the "system/all" ability.
  * - The entity is the user.
  * - The entity is the user's primary group.
+ * - The entity's UID is the user. (It is owned by the user.)
  * - The entity's parent is the user.
  * - The entity's parent is the user's primary group.
  * - The entity's group is the user's primary group.
@@ -75,6 +76,10 @@ function com_user_check_permissions($array) {
                 $pass = true;
                 break;
             }
+            if ($cur_entity->uid == $_SESSION['user']->gid) {
+                $pass = true;
+                break;
+            }
             if ($cur_entity->parent == $_SESSION['user']->guid) {
                 $pass = true;
                 break;
@@ -113,17 +118,32 @@ function com_user_check_permissions($array) {
 }
 
 /**
- * Add the current user's GID to an entity.
+ * Add the current user's GID to a new entity.
  *
- * This occurs right before an entity is saved. This only occurs if the user has
- * a primary group, and the entity is not a user or group.
+ * This occurs right before an entity is saved. It only alters the entity if:
+ * - There is a user logged in.
+ * - The user has a primary group.
+ * - The entity is new (doesn't have a GUID.)
+ * - The entity is not a user or group.
+ *
+ * If you want a new entity to have a different UID and/or GID than the current
+ * user, you must first save it to the database, then change the UID/GID, then
+ * save it again.
  *
  * @param array $array An array of either an entity or another array of entities.
  * @return array An array of either an entity or another array of entities.
  */
 function com_user_add_group($array) {
-    if (is_object($_SESSION['user']) && isset($_SESSION['user']->gid) && !is_a($array[0], 'user') && !is_a($array[0], 'group'))
+    if (is_object($_SESSION['user']) &&
+        isset($_SESSION['user']->gid) &&
+        is_null($array[0]->guid) &&
+        !is_a($array[0], 'user') &&
+        !is_a($array[0], 'group')
+        ) {
+        
+        $array[0]->uid = $_SESSION['user']->guid;
         $array[0]->gid = $_SESSION['user']->gid;
+    }
     return $array;
 }
 

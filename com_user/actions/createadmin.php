@@ -15,7 +15,7 @@ if (!$config->com_user->create_admin) {
     display_error('Creating admin user has been disabled.');
     return;
 }
-if ($_REQUEST['secret'] == $config->com_user->create_admin_secret) {
+if ($_REQUEST['secret'] != $config->com_user->create_admin_secret) {
     display_error('Wrong secret.');
     return;
 }

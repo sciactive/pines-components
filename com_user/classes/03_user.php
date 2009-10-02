@@ -27,7 +27,7 @@ class user extends able_entity {
     }
 
     /**
-     * Add the user to a group.
+     * Add the user to a (secondary) group.
      *
      * @param int $group_id The GUID of the group.
      * @return mixed True if the user is already in the group. The resulting array of group IDs if the user was not.
@@ -41,7 +41,7 @@ class user extends able_entity {
     }
 
     /**
-     * Remove the user from a group.
+     * Remove the user from a (secondary) group.
      *
      * @param int $group_id The GUID of the group.
      * @return mixed True if the user wasn't in the group. The resulting array of group IDs if the user was.
@@ -61,7 +61,7 @@ class user extends able_entity {
      * @return bool
      */
     public function ingroup($group_id) {
-        return in_array($group_id, $this->__get('groups'));
+        return (in_array($group_id, $this->__get('groups')) || ($group_id == $this->__get('gid')));
     }
 
     /**

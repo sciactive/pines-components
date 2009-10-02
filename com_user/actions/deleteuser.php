@@ -16,8 +16,16 @@ if ( !gatekeeper('com_user/delete') ) {
 	return;
 }
 
-if ( $config->user_manager->delete_user($_REQUEST['user_id']) )
-	display_notice('User deleted successfully.');
+$com_user_list = explode(',', $_REQUEST['user_id']);
+foreach ($com_user_list as $cur_user) {
+    if ( !$config->user_manager->delete_user($cur_user) )
+        $com_user_failed_deletes .= (empty($com_user_failed_deletes) ? '' : ', ').$cur_user;
+}
+if (empty($com_user_failed_deletes)) {
+    display_notice('Selected user(s) deleted successfully.');
+} else {
+    display_error('Could not delete users with given IDs: '.$com_user_failed_deletes);
+}
 
 $config->user_manager->list_users();
 ?>

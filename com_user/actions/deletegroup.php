@@ -16,8 +16,16 @@ if ( !gatekeeper('com_user/deleteg') ) {
 	return;
 }
 
-if ( $config->user_manager->delete_group($_REQUEST['group_id']) )
-	display_notice('Group deleted successfully.');
+$com_user_list = explode(',', $_REQUEST['group_id']);
+foreach ($com_user_list as $cur_group) {
+    if ( !$config->user_manager->delete_group($cur_group) )
+        $com_user_failed_deletes .= (empty($com_user_failed_deletes) ? '' : ', ').$cur_group;
+}
+if (empty($com_user_failed_deletes)) {
+    display_notice('Selected group(s) deleted successfully.');
+} else {
+    display_error('Could not delete groups with given IDs: '.$com_user_failed_deletes);
+}
 
 $config->user_manager->list_groups();
 ?>

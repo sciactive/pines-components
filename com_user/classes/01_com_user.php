@@ -521,12 +521,16 @@ class com_user extends component {
     function list_groups() {
 		global $config;
 
+		$pgrid = new module('system', 'pgrid.default', 'content');
+        $pgrid->icons = true;
+
         $module = new module('com_user', 'list_groups', 'content');
 		$module->title = "Groups";
 
 		$module->groups = $config->entity_manager->get_entities_by_tags('com_user', 'group', group);
 
 		if ( empty($module->groups) ) {
+            $pgrid->detach();
             $module->detach();
             display_notice("There are no groups.");
         }
@@ -538,12 +542,16 @@ class com_user extends component {
 	function list_users() {
 		global $config;
 
+		$pgrid = new module('system', 'pgrid.default', 'content');
+        $pgrid->icons = true;
+        
 		$module = new module('com_user', 'list_users', 'content');
 		$module->title = "Users";
 
 		$module->users = $config->entity_manager->get_entities_by_tags('com_user', 'user', user);
 
 		if ( empty($module->users) ) {
+            $pgrid->detach();
             $module->detach();
             display_notice("There are no users.");
         }

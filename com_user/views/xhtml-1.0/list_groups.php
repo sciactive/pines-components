@@ -10,10 +10,75 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
+
+// Build an array of parents, so we can include the parent class on their rows.
+$parents = array();
+foreach($this->groups as $cur_group) {
+    if (!is_null($cur_group->parent) && !in_array($cur_group->parent, $parents)) {
+        array_push($parents, $cur_group->parent);
+    }
+}
 ?>
-<?php foreach($this->groups as $group) { ?>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo $group->groupname; ?></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<input type="button" onclick="window.location='<?php echo $config->template->url('com_user', 'editgroup', array('group_id' => urlencode($group->guid))); ?>';" value="Edit" />
-<input type="button" onclick="if(confirm('Are you sure you want to delete \'<?php echo $group->groupname; ?>\'?')) {window.location='<?php echo $config->template->url('com_user', 'deletegroup', array('group_id' => urlencode($group->guid))); ?>';}" value="Delete" />
-<br /><br />
-<?php } ?>
+<script type="text/javascript">
+    // <![CDATA[
+    var group_grid;
+    var group_grid_state;
+
+    $(document).ready(function(){
+        group_grid = $("#group_grid").pgrid({
+            pgrid_toolbar: true,
+            pgrid_toolbar_contents: [
+                {type: 'button', text: 'New', extra_class: 'icon p_icon_16x16_actions_document-new', selection_optional: true, url: '<?php echo $config->template->url('com_user', 'newgroup'); ?>'},
+                {type: 'button', text: 'Edit', extra_class: 'icon p_icon_16x16_actions_document-open', double_click: true, url: '<?php echo $config->template->url('com_user', 'editgroup', array('group_id' => '#title#')); ?>'},
+                //{type: 'button', text: 'E-Mail', extra_class: 'icon p_icon_16x16_actions_mail-message-new', multi_select: true, url: 'mailto:#col_2#', delimiter: ','},
+                {type: 'separator'},
+                {type: 'button', text: 'Delete', extra_class: 'icon p_icon_16x16_actions_edit-delete', confirm: true, multi_select: true, url: '<?php echo $config->template->url('com_user', 'deletegroup', array('group_id' => '#title#')); ?>', delimiter: ','}
+            ],
+            pgrid_sort_col: 'col_1',
+            pgrid_sort_ord: 'asc'
+        });
+    });
+
+    function save_state() {
+        group_grid_state = group_grid.export_state();
+    }
+
+    function load_state() {
+         group_grid.import_state(group_grid_state);
+    }
+    // ]]>
+</script>
+<table id="group_grid">
+    <thead>
+        <tr>
+            <th>Groupname</th>
+            <th>Display Name</th>
+            <th>Email</th>
+            <th>Members</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach($this->groups as $group) { ?>
+        <tr title="<?php echo $group->guid; ?>" class="<?php
+        if (in_array($group->guid, $parents)) {
+            echo "parent ";
+        }
+        if (!is_null($group->parent)) {
+            echo "child {$group->parent}";
+        }
+        ?>">
+            <td><?php echo $group->groupname; ?></td>
+            <td><?php echo $group->name; ?></td>
+            <td><?php echo $group->email; ?></td>
+            <td><?php
+            $user_array = $config->user_manager->get_users_by_group($group->guid);
+            foreach ($user_array as $cur_user) {
+                $user_list .= (empty($user_list) ? '' : ', ').$cur_user->username;
+            }
+            echo $user_list;
+            unset ($user_list);
+            ?></td>
+        </tr>
+    <?php } ?>
+    </tbody>
+</table>

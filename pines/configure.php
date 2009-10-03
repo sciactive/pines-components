@@ -23,6 +23,11 @@ class tpl_pines extends template {
      * @var string $format
      */
 	var $format = 'xhtml-1.0-strict-desktop';
+    /**
+     * Whether to show a header image, instead of text.
+     * @var bool $header_image
+     */
+	var $header_image = true;
 }
 
 $config->template = new tpl_pines;

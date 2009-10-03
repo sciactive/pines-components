@@ -53,10 +53,13 @@ defined('P_RUN') or die('Direct access prohibited');
 <div id="wrapper">
     <div id="header">
         <div class="pagetitle">
-            <a href="<?php echo $config->full_location; ?>"><img class="logo" src="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/images/header.png" alt="header logo" /></a>
-            <!-- Uncomment to show the page title next to the logo.
-            <span><?php echo $page->get_title(); ?></span>
-            -->
+            <a href="<?php echo $config->full_location; ?>">
+            <?php if ($config->template->header_image) { ?>
+                <img class="logo" src="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/images/header.png" alt="header logo" />
+            <?php } else { ?>
+                <span><?php echo $config->option_title; ?></span>
+            <?php } ?>
+            </a>
         </div>
         <?php if ( isset($page->modules['header']) ) {?>
         <div class="module_group">

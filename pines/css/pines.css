@@ -137,10 +137,17 @@ img {
 	margin: 0 0 0 25px;
     border: 0;
 }
+.pagetitle a {
+    text-decoration: none;
+	font: bold 2em sans;
+    color: black;
+}
 .pagetitle span {
     vertical-align: middle;
-	font: bold 2em sans;
-	margin: 10px 50px;
+	margin: 0 50px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: block;
 }
 .mainmenu {
     clear: both;

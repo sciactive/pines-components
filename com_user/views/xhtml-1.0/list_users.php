@@ -20,11 +20,11 @@ defined('P_RUN') or die('Direct access prohibited');
         user_grid = $("#user_grid").pgrid({
             pgrid_toolbar: true,
             pgrid_toolbar_contents: [
-                {type: 'button', text: 'New', extra_class: 'icon p_icon_16x16_actions_document-new', selection_optional: true, url: '<?php echo $config->template->url('com_user', 'newuser'); ?>'},
-                {type: 'button', text: 'Edit', extra_class: 'icon p_icon_16x16_actions_document-open', double_click: true, url: '<?php echo $config->template->url('com_user', 'edituser', array('user_id' => '#title#')); ?>'},
-                //{type: 'button', text: 'E-Mail', extra_class: 'icon p_icon_16x16_actions_mail-message-new', multi_select: true, url: 'mailto:#col_2#', delimiter: ','},
+                {type: 'button', text: 'New', extra_class: 'icon picon_16x16_actions_document-new', selection_optional: true, url: '<?php echo $config->template->url('com_user', 'newuser'); ?>'},
+                {type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo $config->template->url('com_user', 'edituser', array('user_id' => '#title#')); ?>'},
+                //{type: 'button', text: 'E-Mail', extra_class: 'icon picon_16x16_actions_mail-message-new', multi_select: true, url: 'mailto:#col_2#', delimiter: ','},
                 {type: 'separator'},
-                {type: 'button', text: 'Delete', extra_class: 'icon p_icon_16x16_actions_edit-delete', confirm: true, multi_select: true, url: '<?php echo $config->template->url('com_user', 'deleteuser', array('user_id' => '#title#')); ?>', delimiter: ','}
+                {type: 'button', text: 'Delete', extra_class: 'icon picon_16x16_actions_edit-delete', confirm: true, multi_select: true, url: '<?php echo $config->template->url('com_user', 'deleteuser', array('user_id' => '#title#')); ?>', delimiter: ','}
             ],
             pgrid_sort_col: 'col_1',
             pgrid_sort_ord: 'asc'
@@ -61,11 +61,13 @@ defined('P_RUN') or die('Direct access prohibited');
             <td><?php echo $user->default_component; ?></td>
             <td><?php echo $config->user_manager->get_groupname($user->gid); ?></td>
             <td><?php
-            $groupname_array = array();
-            foreach ($user->groups as $cur_group) {
-                array_push($groupname_array, $config->user_manager->get_groupname($cur_group));
-            }
-            echo implode(', ', $groupname_array);
+			if (is_array($user->groups)) {
+				$groupname_array = array();
+				foreach ($user->groups as $cur_group) {
+					array_push($groupname_array, $config->user_manager->get_groupname($cur_group));
+				}
+				echo implode(', ', $groupname_array);
+			}
             ?></td>
             <td><?php echo $user->inherit_abilities ? "Yes" : "No"; ?></td>
         </tr>

@@ -53,12 +53,14 @@ if ( $_REQUEST['include_permalink'] == 'on' ) {
 }
 
 $addresses = array();
-foreach ($_REQUEST['group'] as $cur_group_id) {
-	$cur_group_id = intval($cur_group_id);
-    $users = $config->user_manager->get_users_by_group($cur_group_id);
-    foreach ($users as $cur_user) {
-        if (!empty($cur_user->email))
-            $addresses[$user->guid] = $cur_user->email;
+if (is_array($_REQUEST['group'])) {
+    foreach ($_REQUEST['group'] as $cur_group_id) {
+        $cur_group_id = intval($cur_group_id);
+        $users = $config->user_manager->get_users_by_group($cur_group_id);
+        foreach ($users as $cur_user) {
+            if (!empty($cur_user->email))
+                $addresses[$user->guid] = $cur_user->email;
+        }
     }
 }
 

@@ -79,17 +79,19 @@ class com_newsletter extends component {
      */
 	function list_mails() {
 		global $config;
-		$entities = array();
-		$entity = new entity;
 
-		$entities = $config->entity_manager->get_entities_by_tags('com_newsletter', 'mail');
+		$pgrid = new module('system', 'pgrid.default', 'content');
+        $pgrid->icons = true;
 
 		$module = new module('com_newsletter', 'list_mails', 'content');
 		$module->title = "Mails";
-        $module->mails = $entities;
+		$module->mails = $config->entity_manager->get_entities_by_tags('com_newsletter', 'mail');
 
-		if ( empty($entities) )
+		if ( empty($module->mails) ) {
+            $pgrid->detach();
+            $module->detach();
 			display_notice("There are no mails.");
+        }
 	}
 }
 

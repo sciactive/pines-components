@@ -526,6 +526,8 @@ class com_user extends component {
 
         $module = new module('com_user', 'list_groups', 'content');
 		$module->title = "Groups";
+        if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+            $module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_user/list_groups'];
 
 		$module->groups = $config->entity_manager->get_entities_by_tags('com_user', 'group', group);
 
@@ -547,6 +549,8 @@ class com_user extends component {
         
 		$module = new module('com_user', 'list_users', 'content');
 		$module->title = "Users";
+        if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+            $module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_user/list_users'];
 
 		$module->users = $config->entity_manager->get_entities_by_tags('com_user', 'user', user);
 

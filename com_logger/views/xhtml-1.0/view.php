@@ -11,4 +11,4 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
-<div style="font-family: monospace; white-space: pre; width: 100%;"><?php echo $this->log; ?></div>
+<div style="font-family: monospace; white-space: pre; width: 100%; overflow: auto;"><?php echo $this->log; ?></div>

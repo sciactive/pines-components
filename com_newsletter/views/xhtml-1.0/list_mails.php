@@ -13,11 +13,10 @@ defined('P_RUN') or die('Direct access prohibited');
 ?>
 <script type="text/javascript">
     // <![CDATA[
-    var mail_grid;
-    var mail_grid_state;
 
     $(document).ready(function(){
-        mail_grid = $("#mail_grid").pgrid({
+        var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
+        var cur_defaults = {
             pgrid_toolbar: true,
             pgrid_toolbar_contents: [
                 {type: 'button', text: 'New', extra_class: 'icon picon_16x16_actions_document-new', selection_optional: true, url: '<?php echo $config->template->url('com_newsletter', 'new'); ?>'},
@@ -30,17 +29,16 @@ defined('P_RUN') or die('Direct access prohibited');
                 {type: 'button', text: 'Select None', extra_class: 'icon picon_16x16_actions_list-remove', select_none: true}
             ],
             pgrid_sort_col: 'col_1',
-            pgrid_sort_ord: 'asc'
-        });
+            pgrid_sort_ord: 'asc',
+            pgrid_state_change: function(state) {
+                var cur_state = JSON.stringify(state);
+                $.post("<?php echo $config->template->url('system', 'pgrid_save_state'); ?>", {view: "com_newsletter/list_mails", state: cur_state});
+            }
+        };
+        var cur_options = $.extend(cur_defaults, cur_state);
+        $("#mail_grid").pgrid(cur_options);
     });
 
-    function save_state() {
-        mail_grid_state = mail_grid.export_state();
-    }
-
-    function load_state() {
-         mail_grid.import_state(mail_grid_state);
-    }
     // ]]>
 </script>
 <table id="mail_grid">

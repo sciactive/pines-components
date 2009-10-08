@@ -76,7 +76,7 @@ class com_logger extends component {
         global $config;
         $date = date('c');
         $user = is_object($_SESSION['user']) ? $_SESSION['user']->username.' ('.$_SESSION['user_id'].')' : $_SERVER['REMOTE_ADDR'];
-        $location = $config->component.', '.(empty($config->action) ? 'default' : $config->action);
+        $location = $config->component.', '.$config->action;
         switch ($level) {
             case 'info':
                 if (!in_array($config->com_logger->level, array('debug', 'info'))) break;

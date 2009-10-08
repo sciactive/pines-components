@@ -14,7 +14,13 @@ defined('P_RUN') or die('Direct access prohibited');
 display_notice(stripslashes($_REQUEST['message']));
 if (is_object($_SESSION['user'])) {
     // Load the user's default component.
-    action($_SESSION['user']->default_component, 'default');
+    if ($_REQUEST['default'] == '1') {
+        $module = new module('com_user', 'default_denied', 'content');
+        $module->title = 'Incorrect User Permission Settings';
+        display_error('Incorrect user permission settings detected.');
+    } else {
+        action($_SESSION['user']->default_component, 'default');
+    }
 } else {
 	// Load the default component.
 	action($config->default_component, 'default');

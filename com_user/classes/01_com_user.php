@@ -707,11 +707,14 @@ class com_user extends component {
      * it is called. Code after this function is called will not run.
      *
      * @param string $message An optional message to display to the user.
-     * @param string $url An option URL to be included in the query data of the redirection url.
+     * @param string $url An optional URL to be included in the query data of the redirection url.
      */
 	function punt_user($message = NULL, $url = NULL) {
 		global $config;
-		header("Location: ".$config->template->url('com_user', 'exit', array('message' => urlencode($message), 'url' => urlencode($url)), false));
+        $default = '0';
+        if ($config->component == $_SESSION['user']->default_component && $config->action == 'default')
+            $default = '1';
+		header("Location: ".$config->template->url('com_user', 'exit', array('default' => $default, 'message' => urlencode($message), 'url' => urlencode($url)), false));
 		exit;
 	}
 }

@@ -54,7 +54,7 @@ $page->head("<link href=\"".$config->template->url()."components/com_newsletter/
                 array('<li>', '</li>'),
                 "<input class=\"field\" type=\"checkbox\" name=\"group[]\" value=\"#DATA#\" /><label>#NAME#</label>\n",
                 '<hr style="visibility: hidden; clear: both;" />');
-        /*$com_newsletter_sendprep->content(
+        /*$sendprep->content(
             $config->user_manager->get_group_tree("<label><input type="checkbox" name="#guid#" />#mark##name# [#groupname#]</label>\n", $config->user_manager->get_group_array())
         ); */
         ?>

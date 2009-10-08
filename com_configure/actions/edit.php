@@ -21,9 +21,9 @@ if (!array_key_exists($_REQUEST['component'], $config->configurator->config_file
     return;
 }
 
-$com_configure_list = new module('com_configure', 'edit', 'content');
-$com_configure_list->title = 'Editing Configuration for '.$_REQUEST['component'];
-$com_configure_list->req_component = $_REQUEST['component'];
-$com_configure_list->config = $config->configurator->get_config_array($config->configurator->config_files[$_REQUEST['component']]);
+$list = new module('com_configure', 'edit', 'content');
+$list->title = 'Editing Configuration for '.$_REQUEST['component'];
+$list->req_component = $_REQUEST['component'];
+$list->config = $config->configurator->get_config_array($config->configurator->config_files[$_REQUEST['component']]);
 
 ?>

@@ -16,7 +16,7 @@ if ( !gatekeeper('com_newsletter/send') ) {
 	return;
 }
 
-$com_newsletter_send = new module('com_newsletter', 'send', 'content');
+$send = new module('com_newsletter', 'send', 'content');
 
 /**
  * Clean a mail header of new line characters.
@@ -80,12 +80,12 @@ foreach ( $attachments as $cur_attachment ) {
 
 if ( $mailer->send() ) {
     pines_log("Successfully sent mail, $mail->name.", 'notice');
-	$com_newsletter_send->title = "Success sending \"".$mail->name."\".";
+	$send->title = "Success sending \"".$mail->name."\".";
 } else {
     pines_log("Failure sending mail, $mail->name.", 'notice');
-	$com_newsletter_send->title = "Failed to send \"".$mail->name."\".";
+	$send->title = "Failed to send \"".$mail->name."\".";
 }
 
-$com_newsletter_send->subject = clean_header($_REQUEST['subject']);
-$com_newsletter_send->message = $message;
+$send->subject = clean_header($_REQUEST['subject']);
+$send->message = $message;
 ?>

@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( $_REQUEST['username'] ) {
 	if ( gatekeeper() ) {
-		display_error('Already logged in!');
+		display_notice('Already logged in!');
 		return;
 	}
 	if ( $id = $config->user_manager->authenticate($_REQUEST['username'], $_REQUEST['password']) ) {
@@ -22,10 +22,8 @@ if ( $_REQUEST['username'] ) {
 			header('Location: '.urldecode($_REQUEST['url']));
 			exit;
 		} else {
-            /**
-             * Load the user's default component.
-             */
-            require('components/'.$config->default_component.'/actions/default.php');
+            // Load the user's default component.
+            action($config->default_component, 'default');
 		}
 	} else {
 		display_error("Username and password not correct!");

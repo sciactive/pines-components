@@ -26,16 +26,9 @@ if ( !gatekeeper() ) {
         /**
          * If com_user is the default component, the default action is manageusers.
          */
-        require('components/com_user/actions/manageusers.php');
+        action('com_user', 'manageusers');
     } else {
-        if (file_exists('components/'.$_SESSION['user']->default_component.'/actions/default.php')) {
-            /**
-             * Load the user's default component.
-             */
-            require('components/'.$_SESSION['user']->default_component.'/actions/default.php');
-        } else {
-            display_error("Action not defined! D:");
-        }
+        action($_SESSION['user']->default_component, 'default');
     }
 }
 

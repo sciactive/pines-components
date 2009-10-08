@@ -4,6 +4,10 @@
 	padding: 0;
     font-family: sans-serif;
 }
+ul, ol {
+    margin: 11px 0;
+    padding-left: 40px;
+}
 body {
     margin:0;
     padding:0;
@@ -48,6 +52,9 @@ img {
 .error {
 	background-color: #F00;
 	color: #000;
+}
+.notice ul, .error ul {
+    margin: 0;
 }
 /* ----------- Spacer for making a cleared BR ----------- */
 .spacer{

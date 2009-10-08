@@ -22,9 +22,4 @@ if (file_put_contents($config->com_logger->path, '') !== false) {
     display_error('Error writing to log file.');
 }
 
-/**
- * Forward to view.
- */
-include 'components/com_logger/actions/view.php';
-
 ?>

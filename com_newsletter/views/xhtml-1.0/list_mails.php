@@ -26,7 +26,11 @@ defined('P_RUN') or die('Direct access prohibited');
                 {type: 'button', text: 'Delete', extra_class: 'icon picon_16x16_actions_edit-delete', confirm: true, multi_select: true, url: '<?php echo $config->template->url('com_newsletter', 'delete', array('mail_id' => '#title#')); ?>', delimiter: ','},
                 {type: 'separator'},
                 {type: 'button', text: 'Select All', extra_class: 'icon picon_16x16_actions_list-add', select_all: true},
-                {type: 'button', text: 'Select None', extra_class: 'icon picon_16x16_actions_list-remove', select_none: true}
+                {type: 'button', text: 'Select None', extra_class: 'icon picon_16x16_actions_list-remove', select_none: true},
+                {type: 'separator'},
+                {type: 'button', text: 'Spreadsheet', extra_class: 'icon picon_16x16_mimetypes_x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
+                    window.open("data:text/csv;charset=utf8," + encodeURIComponent(rows));
+                }}
             ],
             pgrid_sort_col: 'col_1',
             pgrid_sort_ord: 'asc',

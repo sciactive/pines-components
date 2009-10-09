@@ -65,24 +65,26 @@ if ( gatekeeper('com_user/default_component') ) {
 }
 
 // Go through a list of all groups, and assign them if they're selected.
-/**
- * @todo Recode this when users can be limited to controlling users/groups below their level.
- */
+// Groups that the user does not have access to will not be received from the
+// entity manager after com_user filters the result, and thus will not be
+// assigned.
 if ( gatekeeper("com_user/assigng") ) {
     $groups = $config->entity_manager->get_entities_by_tags('com_user', 'group', group);
     $ugroup = intval($_REQUEST['gid']);
     $ugroups = $_REQUEST['groups'];
     if (is_array($ugroups))
         array_walk($ugroups, 'intval');
-    foreach ($groups as $cur_group) {
-        if ( $cur_group->guid == $ugroup ) {
-            $user->gid = $ugroup;
-        }
-        if (is_array($ugroups)) {
-            if ( in_array($cur_group->guid, $ugroups) ) {
-                $user->addgroup($cur_group->guid);
-            } else {
-                $user->delgroup($cur_group->guid);
+    if (is_array($groups)) {
+        foreach ($groups as $cur_group) {
+            if ( $cur_group->guid == $ugroup ) {
+                $user->gid = $ugroup;
+            }
+            if (is_array($ugroups)) {
+                if ( in_array($cur_group->guid, $ugroups) ) {
+                    $user->addgroup($cur_group->guid);
+                } else {
+                    $user->delgroup($cur_group->guid);
+                }
             }
         }
     }

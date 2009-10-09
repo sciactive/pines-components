@@ -23,6 +23,4 @@ if (!array_key_exists($_REQUEST['component'], $config->configurator->config_file
 $list = new module('com_configure', 'view', 'content');
 $list->title = 'Viewing Configuration for '.$_REQUEST['component'];
 $list->config = $config->configurator->get_config_array($config->configurator->config_files[$_REQUEST['component']]);
-//TODO: reimplement this configuration listing to show variables (using object iteration)
-//TODO: design a way to define data types and metadata for configuration.
 ?>

@@ -29,8 +29,8 @@ if ( !empty($_REQUEST['mail_id']) ) {
 }
 
 if ( $_REQUEST['update'] == 'yes' ) {
-	$mail->name = $_REQUEST['name'];
-	$mail->subject = $_REQUEST['subject'];
+	$mail->name = stripslashes($_REQUEST['name']);
+	$mail->subject = stripslashes($_REQUEST['subject']);
 	$mail->message = stripslashes($_REQUEST['data']);
 	foreach ( $mail->attachments as $key => $cur_attachment ) {
 		if ( $_REQUEST["attach_".clean_checkbox($cur_attachment)] != 'on' ) {

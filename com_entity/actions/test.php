@@ -40,6 +40,8 @@ $entity_test->name = "Entity Test ".time();
 $entity_test->parent = 0;
 $entity_test->add_tag('com_entity', 'test');
 $entity_test->test_value = 'test';
+// TODO: Finish wildcard test.
+$entity_test->wilcard_test = '"quotes" %percents% _underscores_ \'single quotes\' /slashes/ \backslashes\ ;semicolons;';
 $test->tests[1] = ($entity_test->save() && !is_null($entity_test->guid));
 
 // Checking entity's has_tag method...

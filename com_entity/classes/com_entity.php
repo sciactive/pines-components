@@ -61,19 +61,47 @@ class com_entity extends component {
 		return true;
 	}
 
+    private function pwilcard_to_mysql($value, $strict) {
+        global $config;
+        if ($strict || !is_string($value))
+            return sprintf("`value`='%s'", mysql_real_escape_string(serialize($value), $config->db_manager->link));
+        $return = mysql_real_escape_string($value, $config->db_manager->link);
+        // Because that function escapes things that may already be escaped, we need to fix them:
+        // Replace \\% with \%
+        $return = str_replace('\\\\%', '\\%');
+        // Replace \\_ with \_
+        $return = str_replace('\\\\_', '\\_');
+        // Replace \\ with \\\\. (http://dev.mysql.com/doc/refman/5.0/en/string-comparison-functions.html)
+        $return = str_replace('\\\\', '\\\\\\\\');
+        return "`value` LIKE BINARY 's:%:\"".$return."\";' ESCAPE '\'";
+    }
+
     /**
      * Get an array of entities by their data.
+     *
+     * If $strict is set to false, the characters % and _ will be wildcards for
+     * any number of characters and one single character, respectively, unless
+     * escaped with a backslash. A literal backslash character must also be
+     * escaped with a backslash.
+     *
+     * Ex: '%Time_/Goal\_100\%%\\' will match:
+     *
+     * - '1: Time4/Goal_100%     \'
+     * - 'Times/Goal_100%g9ds76gf%F86&(F%*^59&^F6"/lIH_(8pUGHLIUgygh9*\'
+     * - '\\\\Time\/Goal_100%\\\\\\\\'
+     * - 'Time_/Goal_100%\'
      *
      * Note: If a class is specified, it must be a descendent of the entity
      * class.
      *
      * @param array $data An array of name=>value pairs of variables.
      * @param array $required_tags An array of tags the entities must have.
+     * @param bool $strict Whether to compare strings without wildcards.
      * @param mixed $class The name of the class to use for the entities.
      * @return array|null An array of entities, or null on failure.
      * @todo Optimize this to use fewer database queries. The entity data is already selected.
      */
-	public function get_entities_by_data($data, $required_tags = array(), $class = entity) {
+	public function get_entities_by_data($data, $required_tags = array(), $strict = true, $class = entity) {
 		global $config;
 		$entities = array();
 
@@ -83,16 +111,16 @@ class com_entity extends component {
 			return null;
 		}
 
-		$query = sprintf("SELECT `guid` FROM `%scom_entity_data` WHERE `name`='%s' AND `value`='%s'",
+		$query = sprintf("SELECT `guid` FROM `%scom_entity_data` WHERE `name`='%s' AND %s",
 			$config->com_mysql->prefix,
 			mysql_real_escape_string(key($data), $config->db_manager->link),
-			mysql_real_escape_string(serialize(current($data)), $config->db_manager->link));
+			$this->pwilcard_to_mysql(current($data), $strict));
 
-		for (next($data); current($data); next($data)) {
-			$query .= sprintf(" UNION SELECT `guid` FROM `%scom_entity_data` WHERE `name`='%s' AND `value`='%s'",
+		for (next($data); !is_null(key($data)); next($data)) {
+			$query .= sprintf(" UNION SELECT `guid` FROM `%scom_entity_data` WHERE `name`='%s' AND %s",
 				$config->com_mysql->prefix,
 				mysql_real_escape_string(key($data), $config->db_manager->link),
-				mysql_real_escape_string(serialize(current($data)), $config->db_manager->link));
+				$this->pwilcard_to_mysql(current($data), $strict));
 		}
 
 		$query .= ";";

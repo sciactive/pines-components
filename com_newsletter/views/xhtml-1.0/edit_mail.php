@@ -44,17 +44,17 @@ $page->head("</script>\n");
     </div>
     <div class="element">
         <label><span class="label">Name</span>
-        <input class="field" type="text" name="name" size="20" value="<?php echo $this->mail->name; ?>" /></label>
+        <input class="field" type="text" name="name" size="20" value="<?php echo htmlentities($this->mail->name); ?>" /></label>
     </div>
     <div class="element">
         <label><span class="label">Subject</span>
-        <input class="field" type="text" name="subject" size="20" value="<?php echo $this->mail->subject; ?>" /></label>
+        <input class="field" type="text" name="subject" size="20" value="<?php echo htmlentities($this->mail->subject); ?>" /></label>
     </div>
     <div class="element heading">
         <h1>Message</h1>
     </div>
     <div class="element">
-        <textarea class="field" rows="30" name="data" id="data" style="width: 99%;"><?php echo $this->mail->message; ?></textarea>
+        <textarea class="field" rows="30" name="data" id="data" style="width: 99%;"><?php echo htmlentities($this->mail->message); ?></textarea>
     </div>
     <div class="element heading">
         <h1>Attachments</h1>

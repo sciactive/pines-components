@@ -109,8 +109,6 @@ class com_entity extends component {
 
 		$query .= ";";
 
-		pines_log($query, 'error');
-
 		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
             if (function_exists('display_error'))
                 display_error('Query failed: ' . mysql_error());

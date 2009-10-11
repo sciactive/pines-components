@@ -249,7 +249,7 @@ class com_user extends component {
 	function get_group_by_groupname($groupname) {
 		global $config;
 		$entities = array();
-		$entities = $config->entity_manager->get_entities_by_data(array('groupname' => $groupname), array(), true, group);
+		$entities = $config->entity_manager->get_entities_by_data(array('groupname' => $groupname), array(), false, group);
 		foreach ($entities as $entity) {
 			if ( $entity->has_tag('com_user', 'group') )
 				return $entity;
@@ -434,7 +434,7 @@ class com_user extends component {
      */
 	function get_user_by_username($username) {
 		global $config;
-		$entities = $config->entity_manager->get_entities_by_data(array('username' => $username), array('com_user', 'user'), true, user);
+		$entities = $config->entity_manager->get_entities_by_data(array('username' => $username), array('com_user', 'user'), false, user);
 		if (!is_null($entities))
             return $entities[0];
 		return null;

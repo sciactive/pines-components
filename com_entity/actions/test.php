@@ -202,6 +202,57 @@ foreach ($entity_result as $cur_entity) {
 $test->tests[17] = (!$found_match);
 unset($entity_result);
 
+// Retrieving entity by data wildcards...
+$entity_result = array();
+$found_match = false;
+$entity_result = $config->entity_manager->get_entities_by_data(array('wilcard_test' => '%'), array(), true);
+foreach ($entity_result as $cur_entity) {
+	if ($cur_entity->name == $entity_test->name)
+		$found_match = true;
+}
+$entity_result = $config->entity_manager->get_entities_by_data(array('wilcard_test' => '________________________________________________________________________________________'), array(), true);
+foreach ($entity_result as $cur_entity) {
+	if ($cur_entity->name == $entity_test->name)
+		$found_match = true;
+}
+$entity_result = $config->entity_manager->get_entities_by_data(array('wilcard_test' => '"%" \%________\% \_underscores\_ \'single quotes\' /%/ \\backslashes\\ ;semicolons;'), array(), true);
+foreach ($entity_result as $cur_entity) {
+	if ($cur_entity->name == $entity_test->name)
+		$found_match = true;
+}
+/* base tests on this:
+$entity_result = $config->entity_manager->get_entities_by_data(array('wilcard_test' => '"quotes" %percents% _underscores_ \'single quotes\' /slashes/ \backslashes\ ;semicolons;'), array(), true);
+foreach ($entity_result as $cur_entity) {
+	if ($cur_entity->name == $entity_test->name)
+		$found_match = true;
+}
+ */
+$test->tests[18] = ($found_match);
+unset($entity_result);
+
+// Testing wrong data wildcards...
+$entity_result = array();
+$found_match = false;
+$entity_result = $config->entity_manager->get_entities_by_data(array('wilcard_test' => '%z%'), array(), true);
+foreach ($entity_result as $cur_entity) {
+	if ($cur_entity->name == $entity_test->name)
+		$found_match = true;
+}
+$entity_result = $config->entity_manager->get_entities_by_data(array('wilcard_test' => '\\\\\\\\'), array(), true);
+foreach ($entity_result as $cur_entity) {
+	if ($cur_entity->name == $entity_test->name)
+		$found_match = true;
+}
+/* base tests on this:
+$entity_result = $config->entity_manager->get_entities_by_data(array('wilcard_test' => '"quotes" %percents% _underscores_ \'single quotes\' /slashes/ \backslashes\ ;semicolons;'), array(), true);
+foreach ($entity_result as $cur_entity) {
+	if ($cur_entity->name == $entity_test->name)
+		$found_match = true;
+}
+ */
+$test->tests[19] = (!$found_match);
+unset($entity_result);
+
 // Retrieving entity by tags and data...
 $entity_result = array();
 $found_match = false;
@@ -210,7 +261,7 @@ foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
-$test->tests[18] = ($found_match);
+$test->tests[20] = ($found_match);
 unset($entity_result);
 
 // Testing wrong tags and right data...
@@ -221,7 +272,7 @@ foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
-$test->tests[19] = (!$found_match);
+$test->tests[21] = (!$found_match);
 unset($entity_result);
 
 // Testing right tags and wrong data...
@@ -232,7 +283,7 @@ foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
-$test->tests[20] = (!$found_match);
+$test->tests[22] = (!$found_match);
 unset($entity_result);
 
 // Testing wrong tags and wrong data...
@@ -243,17 +294,17 @@ foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
-$test->tests[21] = (!$found_match);
+$test->tests[23] = (!$found_match);
 unset($entity_result);
 
 // Deleting entity...
-$test->tests[22] = ($entity_test->delete() && is_null($entity_test->guid));
+$test->tests[24] = ($entity_test->delete() && is_null($entity_test->guid));
 
 // Resaving entity...
-$test->tests[23] = ($entity_test->save() && !is_null($entity_test->guid));
+$test->tests[25] = ($entity_test->save() && !is_null($entity_test->guid));
 
 // Deleting entity by GUID...
-$test->tests[24] = ($config->entity_manager->delete_entity_by_id($entity_test->guid));
+$test->tests[26] = ($config->entity_manager->delete_entity_by_id($entity_test->guid));
 
 $test->time = microtime(true) - $entity_start_time;
 

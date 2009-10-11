@@ -61,28 +61,13 @@ class com_entity extends component {
 		return true;
 	}
 
-    private function pwilcard_to_mysql($value, $strict) {
-        global $config;
-        if ($strict || !is_string($value))
-            return sprintf("`value`='%s'", mysql_real_escape_string(serialize($value), $config->db_manager->link));
-        $return = mysql_real_escape_string($value, $config->db_manager->link);
-        // Because that function escapes things that may already be escaped, we need to fix them:
-        // Replace \\% with \%
-        $return = str_replace('\\\\%', '\\%');
-        // Replace \\_ with \_
-        $return = str_replace('\\\\_', '\\_');
-        // Replace \\ with \\\\. (http://dev.mysql.com/doc/refman/5.0/en/string-comparison-functions.html)
-        $return = str_replace('\\\\', '\\\\\\\\');
-        return "`value` LIKE BINARY 's:%:\"".$return."\";' ESCAPE '\'";
-    }
-
     /**
      * Get an array of entities by their data.
      *
-     * If $strict is set to false, the characters % and _ will be wildcards for
-     * any number of characters and one single character, respectively, unless
-     * escaped with a backslash. A literal backslash character must also be
-     * escaped with a backslash.
+     * If $wildcards is set to true, the characters % and _ will be wildcards
+	 * for any number of characters and one single character, respectively,
+	 * unless escaped with a backslash. A literal backslash character must also
+	 * be escaped with a backslash.
      *
      * Ex: '%Time_/Goal\_100\%%\\' will match:
      *
@@ -96,12 +81,11 @@ class com_entity extends component {
      *
      * @param array $data An array of name=>value pairs of variables.
      * @param array $required_tags An array of tags the entities must have.
-     * @param bool $strict Whether to compare strings without wildcards.
+     * @param bool $wildcards Whether to compare strings with wildcards.
      * @param mixed $class The name of the class to use for the entities.
      * @return array|null An array of entities, or null on failure.
-     * @todo Optimize this to use fewer database queries. The entity data is already selected.
      */
-	public function get_entities_by_data($data, $required_tags = array(), $strict = true, $class = entity) {
+	public function get_entities_by_data($data, $required_tags = array(), $wildcards = false, $class = entity) {
 		global $config;
 		$entities = array();
 
@@ -114,16 +98,18 @@ class com_entity extends component {
 		$query = sprintf("SELECT `guid` FROM `%scom_entity_data` WHERE `name`='%s' AND %s",
 			$config->com_mysql->prefix,
 			mysql_real_escape_string(key($data), $config->db_manager->link),
-			$this->pwilcard_to_mysql(current($data), $strict));
+			$this->pwildcard_to_mysql(current($data), $wildcards));
 
 		for (next($data); !is_null(key($data)); next($data)) {
 			$query .= sprintf(" UNION SELECT `guid` FROM `%scom_entity_data` WHERE `name`='%s' AND %s",
 				$config->com_mysql->prefix,
 				mysql_real_escape_string(key($data), $config->db_manager->link),
-				$this->pwilcard_to_mysql(current($data), $strict));
+				$this->pwildcard_to_mysql(current($data), $wildcards));
 		}
 
 		$query .= ";";
+
+		pines_log($query, 'error');
 
 		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
             if (function_exists('display_error'))
@@ -522,6 +508,33 @@ class com_entity extends component {
 		mysql_free_result($result);
 		return $entity;
 	}
+
+	/**
+	 * Convert pines style wildcards to a MySQL usable query.
+	 *
+	 * If $wildcards is false, or if $value is not a string, a query with an
+	 * = comparison is returned, else a query using LIKE is returned.
+	 *
+	 * @access private
+	 * @global <type> $config
+	 * @param mixed $value The data value to use.
+	 * @param bool $wilcards Whether wildcards were actually requested.
+	 * @return string The generated query part.
+	 */
+    private function pwildcard_to_mysql($value, $wilcards) {
+        global $config;
+        if (!$wilcards || !is_string($value))
+            return sprintf("`value`='%s'", mysql_real_escape_string(serialize($value), $config->db_manager->link));
+        $return = mysql_real_escape_string($value, $config->db_manager->link);
+        // Because that function escapes things that may already be escaped, we need to fix them:
+        // Replace \\% with \%
+        $return = str_replace('\\\\%', '\\%', $return);
+        // Replace \\_ with \_
+        $return = str_replace('\\\\_', '\\_', $return);
+        // Replace \\ with \\\\. (http://dev.mysql.com/doc/refman/5.0/en/string-comparison-functions.html)
+        $return = str_replace('\\\\', '\\\\\\\\', $return);
+        return "`value` LIKE BINARY 's:%:\"".$return."\";' ESCAPE '\\\\'";
+    }
 
     /**
      * Save an entity to the database.

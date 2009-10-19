@@ -30,7 +30,7 @@ defined('P_RUN') or die('Direct access prohibited');
             <input type="hidden" name="option" value="com_user" />
             <input type="hidden" name="action" value="login" />
             <?php if ( isset($_REQUEST['url']) ) { ?>
-            <input type="hidden" name="url" value="<?php echo htmlentities(urlencode($_REQUEST['url'])); ?>" />
+            <input type="hidden" name="url" value="<?php echo htmlentities($_REQUEST['url']); ?>" />
             <?php } ?>
             <input class="button" type="submit" name="submit" value="Login" />
             <input class="button" type="reset" name="reset" value="Reset" />

@@ -11,20 +11,20 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$page->head("<script src=\"".$config->template->url()."components/com_newsletter/js/jquery.js\" type=\"text/javascript\"></script>");
-$page->head("<script src=\"".$config->template->url()."components/com_newsletter/js/jquery.checkboxtree.js\" type=\"text/javascript\"></script>");
+$page->head("<script src=\"{$config->rela_location}components/com_newsletter/js/jquery.js\" type=\"text/javascript\"></script>");
+$page->head("<script src=\"{$config->rela_location}components/com_newsletter/js/jquery.checkboxtree.js\" type=\"text/javascript\"></script>");
 $page->head("<script type=\"text/javascript\">
 jQuery(document).ready(function(){
 	jQuery(\".unorderedlisttree\").checkboxTree({
-			collapsedarrow: \"".$config->template->url()."components/com_newsletter/images/img-arrow-collapsed.gif\",
-			expandedarrow: \"".$config->template->url()."components/com_newsletter/images/img-arrow-expanded.gif\",
-			blankarrow: \"".$config->template->url()."components/com_newsletter/images/img-arrow-blank.gif\",
+			collapsedarrow: \"{$config->rela_location}components/com_newsletter/images/img-arrow-collapsed.gif\",
+			expandedarrow: \"{$config->rela_location}components/com_newsletter/images/img-arrow-expanded.gif\",
+			blankarrow: \"{$config->rela_location}components/com_newsletter/images/img-arrow-blank.gif\",
 			checkchildren: true
 	});
 });
 </script>
 ");
-$page->head("<link href=\"".$config->template->url()."components/com_newsletter/css/checktree.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />");
+$page->head("<link href=\"{$config->rela_location}components/com_newsletter/css/checktree.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />");
 ?>
 <form class="pform" method="post" action="<?php echo $config->template->url(); ?>">
 <fieldset>

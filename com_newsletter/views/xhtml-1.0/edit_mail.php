@@ -23,7 +23,7 @@ $page->head("<script src=\"http://yui.yahooapis.com/2.7.0/build/button/button-mi
 $page->head("<!-- Source file for Rich Text Editor-->\n");
 $page->head("<script src=\"http://yui.yahooapis.com/2.7.0/build/editor/editor-min.js\"></script>\n");
 $page->head("<script src=\"http://yui.yahooapis.com/2.7.0/build/connection/connection-min.js\"></script>\n");
-$page->head("<script src=\"".$config->template->url()."components/com_newsletter/js/yui-image-uploader26.js\"></script>\n");
+$page->head("<script src=\"{$config->rela_location}components/com_newsletter/js/yui-image-uploader26.js\"></script>\n");
 $page->head("<script type=\"text/javascript\">\n");
 $page->head("var editor = new YAHOO.widget.Editor('data', {\n");
 $page->head("	handleSubmit: true,\n");

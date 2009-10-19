@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
-<form class="pform" method="post" id="group_details" action="<?php echo $config->template->url(); ?>">
+<form class="pform" method="post" id="group_details" action="<?php echo $config->template->url($this->new_option, $this->new_action); ?>">
 <fieldset>
     <legend><?php echo $this->heading; ?></legend>
     <div class="element heading">
@@ -64,8 +64,6 @@ defined('P_RUN') or die('Direct access prohibited');
         <?php if ( !is_null($this->id) ) { ?>
         <input type="hidden" name="group_id" value="<?php echo $this->id; ?>" />
         <?php } ?>
-        <input type="hidden" name="option" value="<?php echo $this->new_option; ?>" />
-        <input type="hidden" name="action" value="<?php echo $this->new_action; ?>" />
         <input type="submit" value="Submit" />
         <input type="button" onclick="window.location='<?php echo $config->template->url('com_user', 'managegroups'); ?>';" value="Cancel" />
     </div>

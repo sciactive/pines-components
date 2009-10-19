@@ -26,7 +26,7 @@ jQuery(document).ready(function(){
 ");
 $page->head("<link href=\"{$config->rela_location}components/com_newsletter/css/checktree.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />");
 ?>
-<form class="pform" method="post" action="<?php echo $config->template->url(); ?>">
+<form class="pform" method="post" action="<?php echo $config->template->url('com_newsletter', 'send'); ?>">
 <fieldset>
     <legend>Sending <?php echo $this->mail->name; ?></legend>
     <div class="element">
@@ -69,8 +69,6 @@ $page->head("<link href=\"{$config->rela_location}components/com_newsletter/css/
         <input class="field" type="checkbox" name="include_permalink" checked /></label>
     </div>
     <div class="element buttons">
-        <input type="hidden" name="option" value="com_newsletter" />
-        <input type="hidden" name="action" value="send" />
         <input type="hidden" name="mail_id" value="<?php echo $_REQUEST['mail_id']; ?>" />
         <input class="button" type="submit" value="Submit" />
         <input class="button" type="button" onclick="window.location='<?php echo $config->template->url('com_newsletter', 'list'); ?>';" value="Cancel" />

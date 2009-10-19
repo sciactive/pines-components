@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
-<form action="<?php echo $config->template->url(); ?>" name="configure" method="post">
+<form action="<?php echo $config->template->url('com_configure', 'save'); ?>" name="configure" method="post">
 <div class="config_list" style="border: 1px black solid"><?php foreach ($this->config as $cur_var) { ?>
     <div class="config_listing" style="padding: 0 3px; border-top: 1px black solid;">
         <div style="color: blue; font-weight: bold;">
@@ -36,8 +36,6 @@ defined('P_RUN') or die('Direct access prohibited');
     </div>
 <?php } ?></div>
 <br />
-<input type="hidden" name="option" value="com_configure" />
-<input type="hidden" name="action" value="save" />
 <input type="hidden" name="component" value="<?php echo $this->req_component; ?>" />
 <input type="submit" value="Save" name="save" />
 <input type="reset" value="Reset" name="reset" />

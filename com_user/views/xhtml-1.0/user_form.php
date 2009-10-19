@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 $page->head("<script type=\"text/javascript\" src=\"".$config->rela_location."components/com_user/js/verify.js\"></script>\n");
 ?>
-<form class="pform" method="post" id="user_details" action="<?php echo $config->template->url(); ?>" onsubmit="return verify_form('user_details');">
+<form class="pform" method="post" id="user_details" action="<?php echo $config->template->url($this->new_option, $this->new_action); ?>" onsubmit="return verify_form('user_details');">
 <fieldset>
     <legend><?php echo $this->heading; ?></legend>
     <div class="element heading">
@@ -112,8 +112,6 @@ $page->head("<script type=\"text/javascript\" src=\"".$config->rela_location."co
         <?php if ( !is_null($this->id) ) { ?>
         <input type="hidden" name="user_id" value="<?php echo $this->id; ?>" />
         <?php } ?>
-        <input type="hidden" name="option" value="<?php echo $this->new_option; ?>" />
-        <input type="hidden" name="action" value="<?php echo $this->new_action; ?>" />
         <input class="button" type="submit" value="Submit" />
         <input class="button" type="button" onclick="window.location='<?php echo $config->template->url('com_user', 'manageusers'); ?>';" value="Cancel" />
     </div>

@@ -204,53 +204,81 @@ unset($entity_result);
 
 // Retrieving entity by data wildcards...
 $entity_result = array();
+$passed_all = true;
 $found_match = false;
 $entity_result = $config->entity_manager->get_entities_by_data(array('wilcard_test' => '%'), array(), true);
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
-$entity_result = $config->entity_manager->get_entities_by_data(array('wilcard_test' => '________________________________________________________________________________________'), array(), true);
+$passed_all = $passed_all && $found_match;
+$found_match = false;
+$entity_result = $config->entity_manager->get_entities_by_data(array('wilcard_test' => '%'), array('test'), true);
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
+$passed_all = $passed_all && $found_match;
+$found_match = false;
+$entity_result = $config->entity_manager->get_entities_by_data(array('wilcard_test' => '______________________________________________________________________________________'), array(), true);
+foreach ($entity_result as $cur_entity) {
+	if ($cur_entity->name == $entity_test->name)
+		$found_match = true;
+}
+$passed_all = $passed_all && $found_match;
+$found_match = false;
 $entity_result = $config->entity_manager->get_entities_by_data(array('wilcard_test' => '"%" \%________\% \_underscores\_ \'single quotes\' /%/ \\backslashes\\ ;semicolons;'), array(), true);
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
+$passed_all = $passed_all && $found_match;
 /* base tests on this:
+$found_match = false;
 $entity_result = $config->entity_manager->get_entities_by_data(array('wilcard_test' => '"quotes" %percents% _underscores_ \'single quotes\' /slashes/ \backslashes\ ;semicolons;'), array(), true);
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
+$passed_all = $passed_all && $found_match;
  */
-$test->tests[18] = ($found_match);
+$test->tests[18] = ($passed_all);
 unset($entity_result);
 
 // Testing wrong data wildcards...
 $entity_result = array();
+$passed_all = false;
 $found_match = false;
 $entity_result = $config->entity_manager->get_entities_by_data(array('wilcard_test' => '%z%'), array(), true);
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
+$passed_all = $passed_all || $found_match;
+$found_match = false;
 $entity_result = $config->entity_manager->get_entities_by_data(array('wilcard_test' => '\\\\\\\\'), array(), true);
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
+$passed_all = $passed_all || $found_match;
+$found_match = false;
+$entity_result = $config->entity_manager->get_entities_by_data(array('wilcard_test' => '%'), array('pickle'), true);
+foreach ($entity_result as $cur_entity) {
+	if ($cur_entity->name == $entity_test->name)
+		$found_match = true;
+}
+$passed_all = $passed_all || $found_match;
 /* base tests on this:
+$found_match = false;
 $entity_result = $config->entity_manager->get_entities_by_data(array('wilcard_test' => '"quotes" %percents% _underscores_ \'single quotes\' /slashes/ \backslashes\ ;semicolons;'), array(), true);
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
+$passed_all = $passed_all || $found_match;
  */
-$test->tests[19] = (!$found_match);
+$test->tests[19] = (!$passed_all);
 unset($entity_result);
 
 // Retrieving entity by tags and data...

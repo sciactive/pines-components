@@ -12,10 +12,10 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_customer/new') ) {
-	$config->user_manager->punt_user("You don't have necessary permission.", $config->template->url('com_customer', 'new', null, false));
+	$config->user_manager->punt_user("You don't have necessary permission.", $config->template->url('com_customer', 'newcustomer', null, false));
 	return;
 }
 
-$config->run_customer->print_customer_form('Editing New Customer', 'com_customer', 'save');
+$config->run_customer->print_customer_form('Editing New Customer', 'com_customer', 'savecustomer');
 
 ?>

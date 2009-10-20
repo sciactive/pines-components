@@ -179,6 +179,8 @@ class com_entity extends component {
      * A shortcut to get_entities_by_tags_exclusive.
      *
      * Note: Entity managers must provide this shortcut.
+     *
+     * @return mixed The result of get_entities_by_tags_exclusive().
      */
 	public function get_entities_by_tags() {
         if (is_array(func_get_arg(0))) {

@@ -178,7 +178,7 @@ class com_user extends component {
     }
 
     /**
-     * Get's a group by GUID.
+     * Gets a group by GUID.
      *
      * @param int $group_id The group's GUID.
      * @return group|null The group if it exists, null if it doesn't.
@@ -186,18 +186,13 @@ class com_user extends component {
 	function get_group($group_id) {
 		global $config;
 		$group = $config->entity_manager->get_entity($group_id, group);
-		if ( empty($group) )
-			return null;
-
-		if ( $group->has_tag('com_user', 'group') ) {
-			return $group;
-		} else {
-			return null;
-		}
+        if (is_null($group) || !$group->has_tag('com_user', 'group'))
+            $group = null;
+        return $group;
 	}
 
     /**
-     * Get's an array of groups.
+     * Gets an array of groups.
      *
      * If no parent id is given, get_group_array() will start with all top level
      * groups.
@@ -240,7 +235,7 @@ class com_user extends component {
 	}
 
     /**
-     * Get's a group by groupname.
+     * Gets a group by groupname.
      *
      * @param string $groupname The group's groupname.
      * @return group|null The group if it exists, null if it doesn't.
@@ -257,7 +252,7 @@ class com_user extends component {
 	}
 
     /**
-     * Get's an array of a group's descendendents' GUIDs.
+     * Gets an array of a group's descendendents' GUIDs.
      *
      * If no parent id is given, get_group_descendents() will start with all top
      * level groups. (It will return all top level group's descendents.)
@@ -360,7 +355,7 @@ class com_user extends component {
 	}
 
     /**
-     * Get's a group's groupname by its GUID.
+     * Gets a group's groupname by its GUID.
      *
      * @param int $group_id The group's GUID.
      * @return string|null The groupname if the group exists, null if it doesn't.
@@ -372,7 +367,7 @@ class com_user extends component {
 	}
 
     /**
-     * Get's a user by GUID.
+     * Gets a user by GUID.
      *
      * @param int $user_id The user's GUID.
      * @return user|null The user if it exists, null if it doesn't.
@@ -380,14 +375,9 @@ class com_user extends component {
 	function get_user($user_id) {
 		global $config;
 		$user = $config->entity_manager->get_entity($user_id, user);
-		if ( empty($user) )
-			return null;
-
-		if ( $user->has_tag('com_user', 'user') ) {
-			return $user;
-		} else {
-			return null;
-		}
+        if (is_null($user) || !$user->has_tag('com_user', 'user'))
+            $user = null;
+        return $user;
 	}
 
     /*
@@ -423,7 +413,7 @@ class com_user extends component {
      */
 
     /**
-     * Get's a user by username.
+     * Gets a user by username.
      *
      * If there are more than one user with the same username (which shouldn't
      * happen, but can), the first user found is returned.
@@ -485,7 +475,7 @@ class com_user extends component {
      */
 
     /**
-     * Get's a user's username by its GUID.
+     * Gets a user's username by its GUID.
      *
      * @param int $user_id The user's GUID.
      * @return string|null The username if the user exists, null if it doesn't.
@@ -497,7 +487,7 @@ class com_user extends component {
 	}
 
     /**
-     * Get's an array of users in a group.
+     * Gets an array of users in a group.
      *
      * @param int $group_id The group's GUID.
      * @return array An array of users.
@@ -631,6 +621,11 @@ class com_user extends component {
 			$module->group_abilities = array();
 		} else {
 			$group = $this->get_group($id);
+            if (is_null($user)) {
+                display_error('Requested group id is not accessible.');
+                $module->detach();
+                return;
+            }
 			$module->groupname = $group->groupname;
 			$module->name = $group->name;
 			$module->email = $group->email;
@@ -670,6 +665,11 @@ class com_user extends component {
             $module->default_component = 'com_user';
 		} else {
 			$user = $this->get_user($id);
+            if (is_null($user)) {
+                display_error('Requested user id is not accessible.');
+                $module->detach();
+                return;
+            }
 			$module->username = $user->username;
 			$module->name = $user->name;
 			$module->email = $user->email;

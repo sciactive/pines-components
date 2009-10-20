@@ -1,6 +1,6 @@
 <?php
 /**
- * com_customer's common file.
+ * Save changes to a customer.
  *
  * @package Pines
  * @subpackage com_customer
@@ -11,7 +11,10 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$config->ability_manager->add('com_customer', 'managecustomers', 'Manage', 'User can manage customers.');
-$config->ability_manager->add('com_customer', 'new', 'Create', 'User can create new customers.');
+if ( !gatekeeper('com_customer/managecustomers') ) {
+    $config->user_manager->punt_user("You don't have necessary permission.", $config->template->url('com_customer', 'listcustomers', null, false));
+    return;
+}
 
+$config->run_customer->list_customers();
 ?>

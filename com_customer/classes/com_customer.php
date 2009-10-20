@@ -21,6 +21,42 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class com_customer extends component {
     /**
+     * Gets a customer by GUID.
+     *
+     * @param int $id The customer's GUID.
+     * @return entity|null The customer if it exists, null if it doesn't.
+     */
+    function get_customer($id) {
+        $customer = $config->entity_manager->get_entity($id);
+        if (is_null($customer) || !$customer->has_tag('com_customer', 'customer'))
+            $customer = null;
+        return $customer;
+    }
+
+    /**
+     * Creates and attaches a module which lists users.
+     */
+	function list_customers() {
+		global $config;
+
+		$pgrid = new module('system', 'pgrid.default', 'content');
+        $pgrid->icons = true;
+        
+		$module = new module('com_customer', 'list_customers', 'content');
+		$module->title = "Customers";
+        if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+            $module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_customer/list_customers'];
+
+		$module->customers = $config->entity_manager->get_entities_by_tags('com_customer', 'customer');
+
+		if ( empty($module->customers) ) {
+            $pgrid->detach();
+            $module->detach();
+            display_notice("There are no customers.");
+        }
+	}
+
+    /**
      * Creates and attaches a module containing a form for editing a customer.
      *
      * If $id is null, or not given, a blank form will be provided.
@@ -34,9 +70,14 @@ class com_customer extends component {
 		global $config;
 		$module = new module('com_customer', 'customer_form', 'content');
 		if ( is_null($id) ) {
-			$module->username = $module->name = '';
+			$module->entity = new entity;
 		} else {
-            
+            $module->entity = $this->get_customer($id);
+            if (is_null($module->entity)) {
+                display_error('Requested customer id is not accessible.');
+                $module->detach();
+                return;
+            }
 		}
         $module->heading = $heading;
         $module->new_option = $new_option;

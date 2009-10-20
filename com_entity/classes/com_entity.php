@@ -514,7 +514,6 @@ class com_entity extends component {
 	 * = comparison is returned, else a query using LIKE is returned.
 	 *
 	 * @access private
-	 * @global <type> $config
 	 * @param mixed $value The data value to use.
 	 * @param bool $wilcards Whether wildcards were actually requested.
 	 * @return string The generated query part.

@@ -112,7 +112,6 @@ class com_user extends component {
      *
      * @param string $ability The ability.
      * @param user $user The user to check. If none is given, the current user is used.
-     * @global DynamicConfig
      * @return bool
      */
 	function gatekeeper($ability = NULL, $user = NULL) {

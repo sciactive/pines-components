@@ -10,20 +10,28 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
+$this->show_title = false;
 ?>
-<div class="config_list" style="border: 1px black solid"><?php foreach ($this->config as $cur_var) { ?>
-    <div class="config_listing" style="padding: 0 3px; border-top: 1px black solid;">
-        <div style="color: blue; font-weight: bold;">
-            <?php echo $cur_var['cname']; ?>:
+<form class="pform" action="" method="post">
+    <fieldset>
+        <legend><?php echo $this->title; ?></legend>
+        <?php foreach ($this->config as $cur_var) { ?>
+        <div class="element" style="width: 95%">
+            <label>
+            <span class="label">
+                <?php echo $cur_var['cname']; ?>
+            </span>
+            <span class="note">
+                <?php print_r($cur_var['description']); ?>
+            </span>
+            <div class="group">
+                <span class="field"><?php
+                    if (is_bool($cur_var['value'])) $cur_var['value'] = ($cur_var['value']) ? 'Yes' : 'No';
+                    echo htmlentities(print_r($cur_var['value'], true));
+                ?></span>
+            </div>
+            </label>
         </div>
-        <div style="margin: 2px 10px; padding: 1px; border: 1px gray solid;">
-            <pre><?php
-                if (is_bool($cur_var['value'])) $cur_var['value'] = ($cur_var['value']) ? 'Yes' : 'No';
-                echo htmlentities(print_r($cur_var['value'], true));
-            ?></pre>
-        </div>
-        <div style="margin: 2px 10px;">
-            <?php print_r($cur_var['description']); ?>
-        </div>
-    </div>
-<?php } ?></div>
+        <?php } ?>
+    </fieldset>
+</form>

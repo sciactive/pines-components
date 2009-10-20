@@ -54,6 +54,13 @@ $customer->fax = $_REQUEST['fax'];
 
 $customer->save();
 
+if ($config->com_customer->global_customers) {
+    unset($customer->uid);
+    unset($customer->gid);
+}
+
+$customer->save();
+
 display_notice('Saved customer ['.$customer->name.']');
 
 $config->run_customer->list_customers();

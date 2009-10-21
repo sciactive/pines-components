@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_configure/edit') ) {
-	$config->user_manager->punt_user("You don't have necessary permission.", $config->template->url('com_configure', 'default', false));
+	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_configure', 'default', false));
 	return;
 }
 

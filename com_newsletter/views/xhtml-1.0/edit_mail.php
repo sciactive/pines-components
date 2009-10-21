@@ -32,15 +32,15 @@ $page->head("	animate: true\n");
 $page->head("});\n");
 $page->head("editor._defaultToolbar.titlebar = false;\n");
 $page->head("editor._defaultToolbar.buttonType = 'advanced';\n");
-$page->head("yuiImgUploader(editor, 'data', '".$config->template->url('com_newsletter', 'upload')."','image');\n");
+$page->head("yuiImgUploader(editor, 'data', '".pines_url('com_newsletter', 'upload')."','image');\n");
 $page->head("editor.render();\n");
 $page->head("</script>\n");
 ?>
 <div class="yui-skin-sam">
-<form class="pform" enctype="multipart/form-data" name="editingmail" method="post" action="<?php echo $config->template->url($this->new_option, $this->new_action); ?>">
+<form class="pform" enctype="multipart/form-data" name="editingmail" method="post" action="<?php echo pines_url($this->new_option, $this->new_action); ?>">
     <div class="element buttons" style="padding-left: 0;">
         <input class="button" type="submit" value="Save Mail" />
-        <input class="button" type="button" onclick="window.location='<?php echo $config->template->url($this->close_option, $this->close_action); ?>';" value="Close" /> <small>(Closing will lose any unsaved changes!)</small>
+        <input class="button" type="button" onclick="window.location='<?php echo pines_url($this->close_option, $this->close_action); ?>';" value="Close" /> <small>(Closing will lose any unsaved changes!)</small>
     </div>
     <div class="element">
         <label><span class="label">Name</span>
@@ -77,7 +77,7 @@ $page->head("</script>\n");
         <input type="hidden" name="update" value="yes" />
         <input type="hidden" name="mail_id" value="<?php echo $this->mail->guid; ?>" />
         <input class="button" type="submit" value="Save Mail" />
-        <input class="button" type="button" onclick="window.location='<?php echo $config->template->url($this->close_option, $this->close_action); ?>';" value="Close" /> <small>(Closing will lose any unsaved changes!)</small>
+        <input class="button" type="button" onclick="window.location='<?php echo pines_url($this->close_option, $this->close_action); ?>';" value="Close" /> <small>(Closing will lose any unsaved changes!)</small>
     </div>
 </form>
 </div>

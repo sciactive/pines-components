@@ -27,11 +27,11 @@ foreach($this->groups as $cur_group) {
         var cur_defaults = {
             pgrid_toolbar: true,
             pgrid_toolbar_contents: [
-                {type: 'button', text: 'New', extra_class: 'icon picon_16x16_actions_document-new', selection_optional: true, url: '<?php echo $config->template->url('com_user', 'newgroup'); ?>'},
-                {type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo $config->template->url('com_user', 'editgroup', array('group_id' => '#title#')); ?>'},
+                {type: 'button', text: 'New', extra_class: 'icon picon_16x16_actions_document-new', selection_optional: true, url: '<?php echo pines_url('com_user', 'newgroup'); ?>'},
+                {type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo pines_url('com_user', 'editgroup', array('group_id' => '#title#')); ?>'},
                 //{type: 'button', text: 'E-Mail', extra_class: 'icon picon_16x16_actions_mail-message-new', multi_select: true, url: 'mailto:#col_2#', delimiter: ','},
                 {type: 'separator'},
-                {type: 'button', text: 'Delete', extra_class: 'icon picon_16x16_actions_edit-delete', confirm: true, multi_select: true, url: '<?php echo $config->template->url('com_user', 'deletegroup', array('group_id' => '#title#')); ?>', delimiter: ','},
+                {type: 'button', text: 'Delete', extra_class: 'icon picon_16x16_actions_edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_user', 'deletegroup', array('group_id' => '#title#')); ?>', delimiter: ','},
                 {type: 'separator'},
                 {type: 'button', text: 'Select All', extra_class: 'icon picon_16x16_actions_list-add', select_all: true},
                 {type: 'button', text: 'Select None', extra_class: 'icon picon_16x16_actions_list-remove', select_none: true},
@@ -44,7 +44,7 @@ foreach($this->groups as $cur_group) {
             pgrid_sort_ord: 'asc',
             pgrid_state_change: function(state) {
                 var cur_state = JSON.stringify(state);
-                $.post("<?php echo $config->template->url('system', 'pgrid_save_state'); ?>", {view: "com_user/list_groups", state: cur_state});
+                $.post("<?php echo pines_url('system', 'pgrid_save_state'); ?>", {view: "com_user/list_groups", state: cur_state});
             }
         };
         var cur_options = $.extend(cur_defaults, cur_state);

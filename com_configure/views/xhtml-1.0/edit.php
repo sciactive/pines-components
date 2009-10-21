@@ -12,12 +12,11 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->show_title = false;
 ?>
-<form class="pform" action="<?php echo $config->template->url('com_configure', 'save'); ?>" name="configure" method="post">
+<form class="pform" action="<?php echo pines_url('com_configure', 'save'); ?>" name="configure" method="post">
     <fieldset>
         <legend><?php echo $this->title; ?></legend>
         <?php foreach ($this->config as $cur_var) { ?>
-        <div class="element" style="width: 95%">
-            <label>
+        <div class="element" style="width: 95%;">
             <span class="label">
                 <?php echo $cur_var['cname']; ?>
             </span>
@@ -37,7 +36,6 @@ $this->show_title = false;
                     <textarea class="field" style="width: 100%;" name="opt_serial_<?php echo $cur_var['name']; ?>"><?php echo htmlentities(serialize($cur_var['value']), true); ?></textarea>
                 <?php } ?>
             </div>
-            </label>
         </div>
         <?php } ?>
         <div class="element buttons">

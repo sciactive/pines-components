@@ -17,7 +17,7 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 
 if ( !gatekeeper() ) {
-	$config->user_manager->punt_user("You are not logged in.", $config->template->url('com_entity', 'test', null, false));
+	$config->user_manager->punt_user("You are not logged in.", pines_url('com_entity', 'test', null, false));
 	return;
 }
 

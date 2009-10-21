@@ -18,7 +18,7 @@ if ( empty($_REQUEST['groupname']) ) {
 
 if ( isset($_REQUEST['group_id']) ) {
 	if ( !gatekeeper('com_user/editg') ) {
-		$config->user_manager->punt_user("You don't have necessary permission.", $config->template->url('com_user', 'managegroups', null, false));
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'managegroups', null, false));
 		return;
 	}
 	$group = $config->user_manager->get_group($_REQUEST['group_id']);
@@ -35,7 +35,7 @@ if ( isset($_REQUEST['group_id']) ) {
 	}
 } else {
 	if ( !gatekeeper('com_user/newg') ) {
-		$config->user_manager->punt_user("You don't have necessary permission.", $config->template->url('com_user', 'managegroups', null, false));
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'managegroups', null, false));
 		return;
 	}
 	$group = new group;

@@ -12,7 +12,6 @@
 defined('P_RUN') or die('Direct access prohibited');
 ?>
 <p><strong>Version <?php echo $config->program_version; ?></strong></p>
-<br />
 <p>
 <?php echo $config->program_title; ?> is a <a href="http://sciactive.com/">
 SciActive</a> project written by Hunter Perrin. It is a PHP application
@@ -22,7 +21,6 @@ wants to have a user management system, he simply drops in com_user. When
 com_user takes over user management for the system, it will prompt users to log
 in and only give them permissions they have been allowed.
 </p>
-<br />
 <p>
 The admin can add functions using the premade components, or write his own
 components to provide additional functionality to the system. The system will

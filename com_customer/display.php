@@ -14,9 +14,9 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( gatekeeper('com_customer/new') ) {
 	$com_customer_menu_id = $page->main_menu->add('Customers');
 	if ( gatekeeper('com_user/managecustomers') )
-		$page->main_menu->add('Customers', $config->template->url('com_customer', 'listcustomers'), $com_customer_menu_id);
+		$page->main_menu->add('Customers', pines_url('com_customer', 'listcustomers'), $com_customer_menu_id);
 	if ( gatekeeper('com_user/new') )
-		$page->main_menu->add('New Customer', $config->template->url('com_customer', 'newcustomer'), $com_customer_menu_id);
+		$page->main_menu->add('New Customer', pines_url('com_customer', 'newcustomer'), $com_customer_menu_id);
 }
 
 ?>

@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
-<form class="pform" method="post" id="customer_details" action="<?php echo $config->template->url($this->new_option, $this->new_action); ?>">
+<form class="pform" method="post" id="customer_details" action="<?php echo pines_url($this->new_option, $this->new_action); ?>">
 <fieldset>
     <legend><?php echo $this->heading; ?></legend>
     <div class="element heading">
@@ -88,7 +88,7 @@ defined('P_RUN') or die('Direct access prohibited');
         <input type="hidden" name="user_id" value="<?php echo $this->id; ?>" />
         <?php } ?>
         <input class="button" type="submit" value="Submit" />
-        <input class="button" type="button" onclick="window.location='<?php echo $config->template->url('com_user', 'manageusers'); ?>';" value="Cancel" />
+        <input class="button" type="button" onclick="window.location='<?php echo pines_url('com_user', 'manageusers'); ?>';" value="Cancel" />
     </div>
 </fieldset>
 </form>

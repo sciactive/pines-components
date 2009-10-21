@@ -18,7 +18,7 @@ if ( empty($_REQUEST['username']) ) {
 
 if ( isset($_REQUEST['user_id']) ) {
 	if ( !gatekeeper('com_user/edit') && (!gatekeeper('com_user/self') || ($_REQUEST['user_id'] != $_SESSION['user_id'])) ) {
-		$config->user_manager->punt_user("You don't have necessary permission.", $config->template->url('com_user', 'manageusers', null, false));
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'manageusers', null, false));
 		return;
 	}
 	$user = $config->user_manager->get_user($_REQUEST['user_id']);
@@ -36,7 +36,7 @@ if ( isset($_REQUEST['user_id']) ) {
 	if ( !empty($_REQUEST['password']) ) $user->password($_REQUEST['password']);
 } else {
 	if ( !gatekeeper('com_user/new') ) {
-		$config->user_manager->punt_user("You don't have necessary permission.", $config->template->url('com_user', 'manageusers', null, false));
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'manageusers', null, false));
 		return;
 	}
 	if ( empty($_REQUEST['password']) && !$config->com_user->empty_pw ) {

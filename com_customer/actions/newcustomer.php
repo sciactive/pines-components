@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_customer/new') ) {
-	$config->user_manager->punt_user("You don't have necessary permission.", $config->template->url('com_customer', 'newcustomer', null, false));
+	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_customer', 'newcustomer', null, false));
 	return;
 }
 

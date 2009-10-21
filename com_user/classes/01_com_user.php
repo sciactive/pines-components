@@ -557,8 +557,8 @@ class com_user extends component {
 				array('<ul>', '</ul>'),
 				array('<li>', '</li>'),
 				"<strong>#NAME#</strong><br />".
-					"<input type=\"button\" onclick=\"window.location='".$config->template->url('com_user', 'edituser', array('user_id' => '#DATA#'))."';\" value=\"Edit\" /> | ".
-					"<input type=\"button\" onclick=\"if(confirm('Are you sure you want to delete \\'#NAME#\\'?')) {window.location='".$config->template->url('com_user', 'deleteuser', array('user_id' => '#DATA#'))."';}\" value=\"Delete\" />\n",
+					"<input type=\"button\" onclick=\"window.location='".pines_url('com_user', 'edituser', array('user_id' => '#DATA#'))."';\" value=\"Edit\" /> | ".
+					"<input type=\"button\" onclick=\"if(confirm('Are you sure you want to delete \\'#NAME#\\'?')) {window.location='".pines_url('com_user', 'deleteuser', array('user_id' => '#DATA#'))."';}\" value=\"Delete\" />\n",
 				'<hr style="visibility: hidden; clear: both;" />'));
          */
 	}
@@ -713,7 +713,7 @@ class com_user extends component {
         $default = '0';
         if ($config->component == $_SESSION['user']->default_component && $config->action == 'default')
             $default = '1';
-		header("Location: ".$config->template->url('com_user', 'exit', array('default' => $default, 'message' => urlencode($message), 'url' => urlencode($url)), false));
+		header("Location: ".pines_url('com_user', 'exit', array('default' => $default, 'message' => urlencode($message), 'url' => urlencode($url)), false));
 		exit;
 	}
 }

@@ -18,7 +18,7 @@ if ( empty($_REQUEST['username']) ) {
 
 if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_customer/edit') ) {
-		$config->user_manager->punt_user("You don't have necessary permission.", $config->template->url('com_customer', 'listcustomers', null, false));
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_customer', 'listcustomers', null, false));
 		return;
 	}
 	$customer = $config->run_customer->get_customer($_REQUEST['id']);
@@ -28,7 +28,7 @@ if ( isset($_REQUEST['id']) ) {
     }
 } else {
 	if ( !gatekeeper('com_customer/new') ) {
-		$config->user_manager->punt_user("You don't have necessary permission.", $config->template->url('com_customer', 'listcustomers', null, false));
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_customer', 'listcustomers', null, false));
 		return;
 	}
 	$customer = new entity;

@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
-<form class="pform" name="login" method="post" action="<?php echo $config->template->url(); ?>">
+<form class="pform" name="login" method="post" action="<?php echo pines_url(); ?>">
     <fieldset>
         <legend>Login to <?php echo $config->option_title; ?></legend>
         <div class="element heading">

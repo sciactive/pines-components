@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_configure/edit') ) {
-	$config->user_manager->punt_user("You don't have necessary permission.", $config->template->url('com_configure', 'edit', $_GET, false));
+	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_configure', 'edit', $_GET, false));
 	return;
 }
 
@@ -39,7 +39,7 @@ foreach ($cur_config_array as $cur_key => $cur_var) {
 
 $config->configurator->put_config_array($cur_config_array, $config->configurator->config_files[$_REQUEST['component']]);
 
-header('Location: '.$config->template->url('com_configure', 'list', null, false));
+header('Location: '.pines_url('com_configure', 'list', null, false));
 
 exit;
 

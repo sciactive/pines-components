@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_newsletter/send') ) {
-	$config->user_manager->punt_user("You don't have necessary permission.", $config->template->url('com_newsletter', 'list', null, false));
+	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_newsletter', 'list', null, false));
 	return;
 }
 
@@ -49,7 +49,7 @@ if ( !$mail->has_tag('com_newsletter', 'mail') ) {
 $message = $mail->message;
 if ( $_REQUEST['include_permalink'] == 'on' ) {
 	$mail_id = $_REQUEST['mail_id'];
-	$message = "<div style=\"text-align: center; font-size: smaller;\">Having trouble reading this message? <a href=\"".$config->template->url('com_newsletter', 'webview', array('mail_id' => $mail_id), true, true)."\" target=\"_blank\">Click here</a> to view this message in your browser.</div>" . $message;
+	$message = "<div style=\"text-align: center; font-size: smaller;\">Having trouble reading this message? <a href=\"".pines_url('com_newsletter', 'webview', array('mail_id' => $mail_id), true, true)."\" target=\"_blank\">Click here</a> to view this message in your browser.</div>" . $message;
 }
 
 $addresses = array();

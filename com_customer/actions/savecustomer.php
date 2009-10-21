@@ -35,7 +35,6 @@ if ( isset($_REQUEST['id']) ) {
     $customer->add_tag('com_customer', 'customer');
 }
 
-$customer->username = $_REQUEST['username'];
 $customer->name = $_REQUEST['name'];
 $customer->email = $_REQUEST['email'];
 if (!empty($_REQUEST['password']))

@@ -48,8 +48,7 @@ defined('P_RUN') or die('Direct access prohibited');
 <table id="customer_grid">
     <thead>
         <tr>
-            <th>Username</th>
-            <th>Real Name</th>
+            <th>Name</th>
             <th>Email</th>
             <th>Company</th>
             <th>Job Title</th>
@@ -67,7 +66,6 @@ defined('P_RUN') or die('Direct access prohibited');
     <tbody>
     <?php foreach($this->customers as $customer) { ?>
         <tr title="<?php echo $customer->guid; ?>">
-            <td><?php echo $customer->username; ?></td>
             <td><?php echo $customer->name; ?></td>
             <td><?php echo $customer->email; ?></td>
             <td><?php echo $customer->company; ?></td>

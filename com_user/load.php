@@ -29,6 +29,7 @@ $config->ability_manager = new abilities;
  *
  * One of the following criteria is required for the entity to be returned:
  * - No user is logged in. (Should be managed with abilities.)
+ * - The entity has no uid and no gid.
  * - The user has the "system/all" ability.
  * - The entity is the user.
  * - The entity is the user's primary group.
@@ -67,6 +68,10 @@ function com_user_check_permissions($array) {
                     $pass = true;
                     break;
                 }
+            }
+            if (!isset($cur_entity->uid) && !isset($cur_entity->gid)) {
+                $pass = true;
+                break;
             }
             if ($cur_entity->guid == $_SESSION['user']->guid) {
                 $pass = true;

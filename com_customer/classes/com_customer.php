@@ -27,6 +27,7 @@ class com_customer extends component {
      * @return entity|null The customer if it exists, null if it doesn't.
      */
     function get_customer($id) {
+        global $config;
         $customer = $config->entity_manager->get_entity($id);
         if (is_null($customer) || !$customer->has_tag('com_customer', 'customer'))
             $customer = null;

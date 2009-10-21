@@ -85,6 +85,8 @@ if ( gatekeeper("com_user/assigng") ) {
                 } else {
                     $user->delgroup($cur_group->guid);
                 }
+            } else {
+                $user->delgroup($cur_group->guid);
             }
         }
     }

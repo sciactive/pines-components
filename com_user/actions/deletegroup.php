@@ -16,7 +16,7 @@ if ( !gatekeeper('com_user/deleteg') ) {
 	return;
 }
 
-$list = explode(',', $_REQUEST['group_id']);
+$list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_group) {
     if ( !$config->user_manager->delete_group($cur_group) )
         $failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_group;

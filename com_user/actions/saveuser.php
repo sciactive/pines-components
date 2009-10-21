@@ -16,12 +16,12 @@ if ( empty($_REQUEST['username']) ) {
 	return;
 }
 
-if ( isset($_REQUEST['user_id']) ) {
-	if ( !gatekeeper('com_user/edit') && (!gatekeeper('com_user/self') || ($_REQUEST['user_id'] != $_SESSION['user_id'])) ) {
+if ( isset($_REQUEST['id']) ) {
+	if ( !gatekeeper('com_user/edit') && (!gatekeeper('com_user/self') || ($_REQUEST['id'] != $_SESSION['user_id'])) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'manageusers', null, false));
 		return;
 	}
-	$user = $config->user_manager->get_user($_REQUEST['user_id']);
+	$user = $config->user_manager->get_user($_REQUEST['id']);
 	if ( is_null($user) ) {
 		display_error('User doesn\'t exists!');
 		return;

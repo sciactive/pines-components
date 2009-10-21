@@ -10,10 +10,11 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
+$this->show_title = false;
 ?>
 <form class="pform" method="post" id="customer_details" action="<?php echo pines_url($this->new_option, $this->new_action); ?>">
 <fieldset>
-    <legend><?php echo $this->heading; ?></legend>
+    <legend><?php echo $this->title; ?></legend>
     <div class="element heading">
         <p>Provide customer details in this form.</p>
     </div>
@@ -85,7 +86,7 @@ defined('P_RUN') or die('Direct access prohibited');
     </div>
 	<div class="element buttons">
         <?php if ( !is_null($this->id) ) { ?>
-        <input type="hidden" name="user_id" value="<?php echo $this->id; ?>" />
+        <input type="hidden" name="id" value="<?php echo $this->id; ?>" />
         <?php } ?>
         <input class="button" type="submit" value="Submit" />
         <input class="button" type="button" onclick="window.location='<?php echo pines_url('com_user', 'manageusers'); ?>';" value="Cancel" />

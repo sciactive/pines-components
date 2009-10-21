@@ -43,12 +43,12 @@ class com_user extends component {
     /**
      * Delete a group from the system.
      *
-     * @param int $group_id The GUID of the group.
+     * @param int $id The GUID of the group.
      * @return bool True on success, false on failure.
      * @todo Delete children and remove users.
      */
-	function delete_group($group_id) {
-		if ( $entity = $this->get_group($group_id) ) {
+	function delete_group($id) {
+		if ( $entity = $this->get_group($id) ) {
 			$entity->delete();
             pines_log("Deleted group $entity->groupname.", 'notice');
 			return true;
@@ -60,11 +60,11 @@ class com_user extends component {
     /**
      * Delete a user from the system.
      *
-     * @param int $user_id The GUID of the user.
+     * @param int $id The GUID of the user.
      * @return bool True on success, false on failure.
      */
-	function delete_user($user_id) {
-		if ( $entity = $this->get_user($user_id) ) {
+	function delete_user($id) {
+		if ( $entity = $this->get_user($id) ) {
 			$entity->delete();
             pines_log("Deleted user $entity->username.", 'notice');
 			return true;
@@ -180,12 +180,12 @@ class com_user extends component {
     /**
      * Gets a group by GUID.
      *
-     * @param int $group_id The group's GUID.
+     * @param int $id The group's GUID.
      * @return group|null The group if it exists, null if it doesn't.
      */
-	function get_group($group_id) {
+	function get_group($id) {
 		global $config;
-		$group = $config->entity_manager->get_entity($group_id, group);
+		$group = $config->entity_manager->get_entity($id, group);
         if (is_null($group) || !$group->has_tag('com_user', 'group'))
             $group = null;
         return $group;
@@ -357,11 +357,11 @@ class com_user extends component {
     /**
      * Gets a group's groupname by its GUID.
      *
-     * @param int $group_id The group's GUID.
+     * @param int $id The group's GUID.
      * @return string|null The groupname if the group exists, null if it doesn't.
      */
-	function get_groupname($group_id) {
-		$entity = $this->get_group($group_id);
+	function get_groupname($id) {
+		$entity = $this->get_group($id);
         if (is_null($entity)) return null;
 		return $entity->groupname;
 	}
@@ -369,12 +369,12 @@ class com_user extends component {
     /**
      * Gets a user by GUID.
      *
-     * @param int $user_id The user's GUID.
+     * @param int $id The user's GUID.
      * @return user|null The user if it exists, null if it doesn't.
      */
-	function get_user($user_id) {
+	function get_user($id) {
 		global $config;
-		$user = $config->entity_manager->get_entity($user_id, user);
+		$user = $config->entity_manager->get_entity($id, user);
         if (is_null($user) || !$user->has_tag('com_user', 'user'))
             $user = null;
         return $user;
@@ -477,11 +477,11 @@ class com_user extends component {
     /**
      * Gets a user's username by its GUID.
      *
-     * @param int $user_id The user's GUID.
+     * @param int $id The user's GUID.
      * @return string|null The username if the user exists, null if it doesn't.
      */
-	function get_username($user_id) {
-		$entity = $this->get_user($user_id);
+	function get_username($id) {
+		$entity = $this->get_user($id);
         if (is_null($entity)) return null;
 		return $entity->username;
 	}
@@ -489,16 +489,16 @@ class com_user extends component {
     /**
      * Gets an array of users in a group.
      *
-     * @param int $group_id The group's GUID.
+     * @param int $id The group's GUID.
      * @return array An array of users.
      */
-	function get_users_by_group($group_id) {
+	function get_users_by_group($id) {
 		global $config;
 		$entities = array();
 		$entities = $config->entity_manager->get_entities_by_tags('com_user', 'user', user);
         $return = array();
 		foreach ($entities as $entity) {
-			if ( $entity->ingroup($group_id) )
+			if ( $entity->ingroup($id) )
 				$return[] = $entity;
 		}
 		return $return;
@@ -557,8 +557,8 @@ class com_user extends component {
 				array('<ul>', '</ul>'),
 				array('<li>', '</li>'),
 				"<strong>#NAME#</strong><br />".
-					"<input type=\"button\" onclick=\"window.location='".pines_url('com_user', 'edituser', array('user_id' => '#DATA#'))."';\" value=\"Edit\" /> | ".
-					"<input type=\"button\" onclick=\"if(confirm('Are you sure you want to delete \\'#NAME#\\'?')) {window.location='".pines_url('com_user', 'deleteuser', array('user_id' => '#DATA#'))."';}\" value=\"Delete\" />\n",
+					"<input type=\"button\" onclick=\"window.location='".pines_url('com_user', 'edituser', array('id' => '#DATA#'))."';\" value=\"Edit\" /> | ".
+					"<input type=\"button\" onclick=\"if(confirm('Are you sure you want to delete \\'#NAME#\\'?')) {window.location='".pines_url('com_user', 'deleteuser', array('id' => '#DATA#'))."';}\" value=\"Delete\" />\n",
 				'<hr style="visibility: hidden; clear: both;" />'));
          */
 	}
@@ -616,6 +616,7 @@ class com_user extends component {
 	function print_group_form($heading, $new_option, $new_action, $id = NULL) {
 		global $config;
 		$module = new module('com_user', 'group_form', 'content');
+        $module->title = $heading;
 		if ( is_null($id) ) {
 			$module->groupname = $module->name = '';
 			$module->group_abilities = array();
@@ -632,7 +633,6 @@ class com_user extends component {
 			$module->parent = $group->parent;
 			$module->group_abilities = $group->abilities;
 		}
-        $module->heading = $heading;
         $module->new_option = $new_option;
         $module->new_action = $new_action;
         $module->id = $id;
@@ -657,6 +657,7 @@ class com_user extends component {
 	function print_user_form($heading, $new_option, $new_action, $id = NULL) {
 		global $config;
 		$module = new module('com_user', 'user_form', 'content');
+        $module->title = $heading;
 		if ( is_null($id) ) {
 			$module->username = $module->name = '';
 			$module->user_abilities = array();
@@ -680,7 +681,6 @@ class com_user extends component {
             $module->inherit_abilities = $user->inherit_abilities;
             $module->default_component = $user->default_component;
 		}
-        $module->heading = $heading;
         $module->new_option = $new_option;
         $module->new_action = $new_action;
         $module->id = $id;

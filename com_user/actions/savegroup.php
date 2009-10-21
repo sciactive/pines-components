@@ -16,12 +16,12 @@ if ( empty($_REQUEST['groupname']) ) {
 	return;
 }
 
-if ( isset($_REQUEST['group_id']) ) {
+if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_user/editg') ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'managegroups', null, false));
 		return;
 	}
-	$group = $config->user_manager->get_group($_REQUEST['group_id']);
+	$group = $config->user_manager->get_group($_REQUEST['id']);
 	if ( is_null($group) ) {
 		display_error('Group doesn\'t exists!');
 		return;

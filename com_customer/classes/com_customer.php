@@ -69,6 +69,7 @@ class com_customer extends component {
 	function print_customer_form($heading, $new_option, $new_action, $id = NULL) {
 		global $config;
 		$module = new module('com_customer', 'customer_form', 'content');
+        $module->title = $heading;
 		if ( is_null($id) ) {
 			$module->entity = new entity;
 		} else {
@@ -79,7 +80,6 @@ class com_customer extends component {
                 return;
             }
 		}
-        $module->heading = $heading;
         $module->new_option = $new_option;
         $module->new_action = $new_action;
         $module->id = $id;

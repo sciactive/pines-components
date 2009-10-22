@@ -21,6 +21,22 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class com_customer extends component {
     /**
+     * Delete a customer.
+     *
+     * @param int $id The GUID of the customer.
+     * @return bool True on success, false on failure.
+     */
+	function delete_customer($id) {
+		if ( $entity = $this->get_customer($id) ) {
+			$entity->delete();
+            pines_log("Deleted customer $entity->name.", 'notice');
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+    /**
      * Gets a customer by GUID.
      *
      * @param int $id The customer's GUID.

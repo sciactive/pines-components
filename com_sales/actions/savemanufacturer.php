@@ -37,18 +37,12 @@ if ( isset($_REQUEST['id']) ) {
 
 $manufacturer->name = $_REQUEST['name'];
 $manufacturer->email = $_REQUEST['email'];
-if (!empty($_REQUEST['password']))
-    $manufacturer->password = $_REQUEST['password'];
-$manufacturer->company = $_REQUEST['company'];
-$manufacturer->job_title = $_REQUEST['job_title'];
 $manufacturer->address_1 = $_REQUEST['address_1'];
 $manufacturer->address_2 = $_REQUEST['address_2'];
 $manufacturer->city = $_REQUEST['city'];
 $manufacturer->state = $_REQUEST['state'];
 $manufacturer->zip = $_REQUEST['zip'];
-$manufacturer->phone_home = $_REQUEST['phone_home'];
 $manufacturer->phone_work = $_REQUEST['phone_work'];
-$manufacturer->phone_cell = $_REQUEST['phone_cell'];
 $manufacturer->fax = $_REQUEST['fax'];
 
 $manufacturer->save();

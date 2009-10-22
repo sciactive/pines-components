@@ -85,7 +85,7 @@ $this->show_title = false;
         <input type="hidden" name="id" value="<?php echo $this->id; ?>" />
         <?php } ?>
         <input class="button" type="submit" value="Submit" />
-        <input class="button" type="button" onclick="window.location='<?php echo pines_url('com_user', 'manageusers'); ?>';" value="Cancel" />
+        <input class="button" type="button" onclick="window.location='<?php echo pines_url('com_customer', 'listcustomers'); ?>';" value="Cancel" />
     </div>
 </fieldset>
 </form>

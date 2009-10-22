@@ -27,27 +27,6 @@ $this->show_title = false;
         <input class="field" type="text" name="email" size="20" value="<?php echo $this->entity->email; ?>" /></label>
     </div>
     <div class="element">
-        <label><span class="label"><?php if (!is_null($this->id)) echo 'Update '; ?>Password</span>
-        <?php if (is_null($this->id)) {
-            echo ($config->com_user->empty_pw ? '<span class="note">May be blank.</span>' : '');
-        } else {
-            echo '<span class="note">Leave blank, if not changing.</span>';
-        } ?>
-        <input class="field" type="password" name="password" size="20" /></label>
-    </div>
-    <div class="element">
-        <label><span class="label">Repeat Password</span>
-        <input class="field" type="password" name="password2" size="20" /></label>
-    </div>
-    <div class="element">
-        <label><span class="label">Company</span>
-        <input class="field" type="text" name="company" size="20" value="<?php echo $this->entity->company; ?>" /></label>
-    </div>
-    <div class="element">
-        <label><span class="label">Job Title</span>
-        <input class="field" type="text" name="job_title" size="20" value="<?php echo $this->entity->job_title; ?>" /></label>
-    </div>
-    <div class="element">
         <label><span class="label">Address 1</span>
         <input class="field" type="text" name="address_1" size="20" value="<?php echo $this->entity->address_1; ?>" /></label>
     </div>
@@ -65,16 +44,8 @@ $this->show_title = false;
         <input class="field" type="text" name="zip" size="20" value="<?php echo $this->entity->zip; ?>" /></label>
     </div>
     <div class="element">
-        <label><span class="label">Home Phone</span>
-        <input class="field" type="text" name="phone_home" size="20" value="<?php echo $this->entity->phone_home; ?>" /></label>
-    </div>
-    <div class="element">
         <label><span class="label">Work Phone</span>
         <input class="field" type="text" name="phone_work" size="20" value="<?php echo $this->entity->phone_work; ?>" /></label>
-    </div>
-    <div class="element">
-        <label><span class="label">Cell Phone</span>
-        <input class="field" type="text" name="phone_cell" size="20" value="<?php echo $this->entity->phone_cell; ?>" /></label>
     </div>
     <div class="element">
         <label><span class="label">Fax</span>
@@ -85,7 +56,7 @@ $this->show_title = false;
         <input type="hidden" name="id" value="<?php echo $this->id; ?>" />
         <?php } ?>
         <input class="button" type="submit" value="Submit" />
-        <input class="button" type="button" onclick="window.location='<?php echo pines_url('com_user', 'manageusers'); ?>';" value="Cancel" />
+        <input class="button" type="button" onclick="window.location='<?php echo pines_url('com_sales', 'listmanufacturers'); ?>';" value="Cancel" />
     </div>
 </fieldset>
 </form>

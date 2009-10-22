@@ -50,16 +50,12 @@ defined('P_RUN') or die('Direct access prohibited');
         <tr>
             <th>Name</th>
             <th>Email</th>
-            <th>Company</th>
-            <th>Job Title</th>
             <th>Address 1</th>
             <th>Address 2</th>
             <th>City</th>
             <th>State</th>
             <th>Zip</th>
-            <th>Home Phone</th>
             <th>Work Phone</th>
-            <th>Cell Phone</th>
             <th>Fax</th>
         </tr>
     </thead>
@@ -68,16 +64,12 @@ defined('P_RUN') or die('Direct access prohibited');
         <tr title="<?php echo $manufacturer->guid; ?>">
             <td><?php echo $manufacturer->name; ?></td>
             <td><?php echo $manufacturer->email; ?></td>
-            <td><?php echo $manufacturer->company; ?></td>
-            <td><?php echo $manufacturer->job_title; ?></td>
             <td><?php echo $manufacturer->address_1; ?></td>
             <td><?php echo $manufacturer->address_2; ?></td>
             <td><?php echo $manufacturer->city; ?></td>
             <td><?php echo $manufacturer->state; ?></td>
             <td><?php echo $manufacturer->zip; ?></td>
-            <td><?php echo $manufacturer->phone_home; ?></td>
             <td><?php echo $manufacturer->phone_work; ?></td>
-            <td><?php echo $manufacturer->phone_cell; ?></td>
             <td><?php echo $manufacturer->fax; ?></td>
         </tr>
     <?php } ?>

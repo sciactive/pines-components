@@ -1,6 +1,6 @@
 <?php
 /**
- * Lists customers and provides functions to manipulate them.
+ * Lists manufacturers and provides functions to manipulate them.
  *
  * @package Pines
  * @subpackage com_sales
@@ -19,11 +19,11 @@ defined('P_RUN') or die('Direct access prohibited');
         var cur_defaults = {
             pgrid_toolbar: true,
             pgrid_toolbar_contents: [
-                {type: 'button', text: 'New', extra_class: 'icon picon_16x16_actions_document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'newcustomer'); ?>'},
-                {type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo pines_url('com_sales', 'editcustomer', array('id' => '#title#')); ?>'},
+                {type: 'button', text: 'New', extra_class: 'icon picon_16x16_actions_document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'newmanufacturer'); ?>'},
+                {type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo pines_url('com_sales', 'editmanufacturer', array('id' => '#title#')); ?>'},
                 //{type: 'button', text: 'E-Mail', extra_class: 'icon picon_16x16_actions_mail-message-new', multi_select: true, url: 'mailto:#col_2#', delimiter: ','},
                 {type: 'separator'},
-                {type: 'button', text: 'Delete', extra_class: 'icon picon_16x16_actions_edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_sales', 'deletecustomer', array('id' => '#title#')); ?>', delimiter: ','},
+                {type: 'button', text: 'Delete', extra_class: 'icon picon_16x16_actions_edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_sales', 'deletemanufacturer', array('id' => '#title#')); ?>', delimiter: ','},
                 {type: 'separator'},
                 {type: 'button', text: 'Select All', extra_class: 'icon picon_16x16_actions_list-add', select_all: true},
                 {type: 'button', text: 'Select None', extra_class: 'icon picon_16x16_actions_list-remove', select_none: true},
@@ -36,16 +36,16 @@ defined('P_RUN') or die('Direct access prohibited');
             pgrid_sort_ord: 'asc',
             pgrid_state_change: function(state) {
                 var cur_state = JSON.stringify(state);
-                $.post("<?php echo pines_url('system', 'pgrid_save_state'); ?>", {view: "com_sales/list_customers", state: cur_state});
+                $.post("<?php echo pines_url('system', 'pgrid_save_state'); ?>", {view: "com_sales/list_manufacturers", state: cur_state});
             }
         };
         var cur_options = $.extend(cur_defaults, cur_state);
-        $("#customer_grid").pgrid(cur_options);
+        $("#manufacturer_grid").pgrid(cur_options);
     });
 
     // ]]>
 </script>
-<table id="customer_grid">
+<table id="manufacturer_grid">
     <thead>
         <tr>
             <th>Name</th>
@@ -64,21 +64,21 @@ defined('P_RUN') or die('Direct access prohibited');
         </tr>
     </thead>
     <tbody>
-    <?php foreach($this->customers as $customer) { ?>
-        <tr title="<?php echo $customer->guid; ?>">
-            <td><?php echo $customer->name; ?></td>
-            <td><?php echo $customer->email; ?></td>
-            <td><?php echo $customer->company; ?></td>
-            <td><?php echo $customer->job_title; ?></td>
-            <td><?php echo $customer->address_1; ?></td>
-            <td><?php echo $customer->address_2; ?></td>
-            <td><?php echo $customer->city; ?></td>
-            <td><?php echo $customer->state; ?></td>
-            <td><?php echo $customer->zip; ?></td>
-            <td><?php echo $customer->phone_home; ?></td>
-            <td><?php echo $customer->phone_work; ?></td>
-            <td><?php echo $customer->phone_cell; ?></td>
-            <td><?php echo $customer->fax; ?></td>
+    <?php foreach($this->manufacturers as $manufacturer) { ?>
+        <tr title="<?php echo $manufacturer->guid; ?>">
+            <td><?php echo $manufacturer->name; ?></td>
+            <td><?php echo $manufacturer->email; ?></td>
+            <td><?php echo $manufacturer->company; ?></td>
+            <td><?php echo $manufacturer->job_title; ?></td>
+            <td><?php echo $manufacturer->address_1; ?></td>
+            <td><?php echo $manufacturer->address_2; ?></td>
+            <td><?php echo $manufacturer->city; ?></td>
+            <td><?php echo $manufacturer->state; ?></td>
+            <td><?php echo $manufacturer->zip; ?></td>
+            <td><?php echo $manufacturer->phone_home; ?></td>
+            <td><?php echo $manufacturer->phone_work; ?></td>
+            <td><?php echo $manufacturer->phone_cell; ?></td>
+            <td><?php echo $manufacturer->fax; ?></td>
         </tr>
     <?php } ?>
     </tbody>

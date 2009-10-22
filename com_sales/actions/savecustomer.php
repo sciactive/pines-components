@@ -1,6 +1,6 @@
 <?php
 /**
- * Save changes to a customer.
+ * Save changes to a manufacturer.
  *
  * @package Pines
  * @subpackage com_sales
@@ -17,50 +17,50 @@ if ( empty($_REQUEST['username']) ) {
 }
 
 if ( isset($_REQUEST['id']) ) {
-	if ( !gatekeeper('com_sales/edit') ) {
-		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listcustomers', null, false));
+	if ( !gatekeeper('com_sales/editmanufacturers') ) {
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listmanufacturers', null, false));
 		return;
 	}
-	$customer = $config->run_sales->get_customer($_REQUEST['id']);
-    if (is_null($customer)) {
-        display_error('Requested customer id is not accessible');
+	$manufacturer = $config->run_sales->get_manufacturer($_REQUEST['id']);
+    if (is_null($manufacturer)) {
+        display_error('Requested manufacturer id is not accessible');
         return;
     }
 } else {
-	if ( !gatekeeper('com_sales/new') ) {
-		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listcustomers', null, false));
+	if ( !gatekeeper('com_sales/newmanufacturer') ) {
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listmanufacturers', null, false));
 		return;
 	}
-	$customer = new entity;
-    $customer->add_tag('com_sales', 'customer');
+	$manufacturer = new entity;
+    $manufacturer->add_tag('com_sales', 'manufacturer');
 }
 
-$customer->name = $_REQUEST['name'];
-$customer->email = $_REQUEST['email'];
+$manufacturer->name = $_REQUEST['name'];
+$manufacturer->email = $_REQUEST['email'];
 if (!empty($_REQUEST['password']))
-    $customer->password = $_REQUEST['password'];
-$customer->company = $_REQUEST['company'];
-$customer->job_title = $_REQUEST['job_title'];
-$customer->address_1 = $_REQUEST['address_1'];
-$customer->address_2 = $_REQUEST['address_2'];
-$customer->city = $_REQUEST['city'];
-$customer->state = $_REQUEST['state'];
-$customer->zip = $_REQUEST['zip'];
-$customer->phone_home = $_REQUEST['phone_home'];
-$customer->phone_work = $_REQUEST['phone_work'];
-$customer->phone_cell = $_REQUEST['phone_cell'];
-$customer->fax = $_REQUEST['fax'];
+    $manufacturer->password = $_REQUEST['password'];
+$manufacturer->company = $_REQUEST['company'];
+$manufacturer->job_title = $_REQUEST['job_title'];
+$manufacturer->address_1 = $_REQUEST['address_1'];
+$manufacturer->address_2 = $_REQUEST['address_2'];
+$manufacturer->city = $_REQUEST['city'];
+$manufacturer->state = $_REQUEST['state'];
+$manufacturer->zip = $_REQUEST['zip'];
+$manufacturer->phone_home = $_REQUEST['phone_home'];
+$manufacturer->phone_work = $_REQUEST['phone_work'];
+$manufacturer->phone_cell = $_REQUEST['phone_cell'];
+$manufacturer->fax = $_REQUEST['fax'];
 
-$customer->save();
+$manufacturer->save();
 
-if ($config->com_sales->global_customers) {
-    unset($customer->uid);
-    unset($customer->gid);
+if ($config->com_sales->global_manufacturers) {
+    unset($manufacturer->uid);
+    unset($manufacturer->gid);
 }
 
-$customer->save();
+$manufacturer->save();
 
-display_notice('Saved customer ['.$customer->name.']');
+display_notice('Saved manufacturer ['.$manufacturer->name.']');
 
-$config->run_sales->list_customers();
+$config->run_sales->list_manufacturers();
 ?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Delete a customer.
+ * Delete a manufacturer.
  *
  * @package Pines
  * @subpackage com_sales
@@ -11,21 +11,21 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/delete') ) {
-	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listcustomers', null, false));
+if ( !gatekeeper('com_sales/deletemanufacturers') ) {
+	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listmanufacturers', null, false));
 	return;
 }
 
 $list = explode(',', $_REQUEST['id']);
-foreach ($list as $cur_customer) {
-    if ( !$config->run_sales->delete_customer($cur_customer) )
-        $failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_customer;
+foreach ($list as $cur_manufacturer) {
+    if ( !$config->run_sales->delete_manufacturer($cur_manufacturer) )
+        $failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_manufacturer;
 }
 if (empty($failed_deletes)) {
-    display_notice('Selected customer(s) deleted successfully.');
+    display_notice('Selected manufacturer(s) deleted successfully.');
 } else {
-    display_error('Could not delete customers with given IDs: '.$failed_deletes);
+    display_error('Could not delete manufacturers with given IDs: '.$failed_deletes);
 }
 
-$config->run_sales->list_customers();
+$config->run_sales->list_manufacturers();
 ?>

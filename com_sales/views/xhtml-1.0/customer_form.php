@@ -1,6 +1,6 @@
 <?php
 /**
- * Provides a form for the user to edit a customer.
+ * Provides a form for the user to edit a manufacturer.
  *
  * @package Pines
  * @subpackage com_sales
@@ -12,11 +12,11 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->show_title = false;
 ?>
-<form class="pform" method="post" id="customer_details" action="<?php echo pines_url($this->new_option, $this->new_action); ?>">
+<form class="pform" method="post" id="manufacturer_details" action="<?php echo pines_url($this->new_option, $this->new_action); ?>">
 <fieldset>
     <legend><?php echo $this->title; ?></legend>
     <div class="element heading">
-        <p>Provide customer details in this form.</p>
+        <p>Provide manufacturer details in this form.</p>
     </div>
     <div class="element">
         <label><span class="label">Name</span>

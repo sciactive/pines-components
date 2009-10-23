@@ -14,6 +14,10 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( gatekeeper('com_sales/managemanufacturers') || gatekeeper('com_sales/newmanufacturer') ||
      gatekeeper('com_sales/managevendors') || gatekeeper('com_sales/newvendor') ) {
 	$com_sales_menu_id = $page->main_menu->add('POS');
+	if ( gatekeeper('com_customer/managecustomers') )
+		$page->main_menu->add('Customers', pines_url('com_customer', 'listcustomers'), $com_customer_menu_id);
+	if ( gatekeeper('com_customer/newcustomer') )
+		$page->main_menu->add('New Customer', pines_url('com_customer', 'newcustomer'), $com_customer_menu_id);
 	if ( gatekeeper('com_sales/managemanufacturers') )
 		$page->main_menu->add('Manufacturers', pines_url('com_sales', 'listmanufacturers'), $com_sales_menu_id);
 	if ( gatekeeper('com_sales/newmanufacturer') )

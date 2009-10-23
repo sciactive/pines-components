@@ -17,7 +17,7 @@ if ( empty($_REQUEST['username']) ) {
 }
 
 if ( isset($_REQUEST['id']) ) {
-	if ( !gatekeeper('com_customer/edit') ) {
+	if ( !gatekeeper('com_customer/editcustomer') ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_customer', 'listcustomers', null, false));
 		return;
 	}
@@ -27,7 +27,7 @@ if ( isset($_REQUEST['id']) ) {
         return;
     }
 } else {
-	if ( !gatekeeper('com_customer/new') ) {
+	if ( !gatekeeper('com_customer/newcustomer') ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_customer', 'listcustomers', null, false));
 		return;
 	}

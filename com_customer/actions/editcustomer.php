@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_customer/edit') ) {
+if ( !gatekeeper('com_customer/editcustomer') ) {
 	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_customer', 'editcustomer', array('id' => $_REQUEST['id']), false));
 	return;
 }

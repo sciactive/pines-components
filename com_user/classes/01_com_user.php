@@ -615,7 +615,7 @@ class com_user extends component {
      */
 	function print_group_form($heading, $new_option, $new_action, $id = NULL) {
 		global $config;
-		$module = new module('com_user', 'group_form', 'content');
+		$module = new module('com_user', 'form_group', 'content');
         $module->title = $heading;
 		if ( is_null($id) ) {
 			$module->groupname = $module->name = '';
@@ -656,7 +656,7 @@ class com_user extends component {
      */
 	function print_user_form($heading, $new_option, $new_action, $id = NULL) {
 		global $config;
-		$module = new module('com_user', 'user_form', 'content');
+		$module = new module('com_user', 'form_user', 'content');
         $module->title = $heading;
 		if ( is_null($id) ) {
 			$module->username = $module->name = '';

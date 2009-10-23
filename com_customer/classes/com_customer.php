@@ -85,7 +85,7 @@ class com_customer extends component {
      */
 	function print_customer_form($heading, $new_option, $new_action, $id = NULL) {
 		global $config;
-		$module = new module('com_customer', 'customer_form', 'content');
+		$module = new module('com_customer', 'form_customer', 'content');
         $module->title = $heading;
 		if ( is_null($id) ) {
 			$module->entity = new entity;

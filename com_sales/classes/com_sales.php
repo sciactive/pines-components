@@ -85,7 +85,7 @@ class com_sales extends component {
      */
 	function print_manufacturer_form($heading, $new_option, $new_action, $id = NULL) {
 		global $config;
-		$module = new module('com_sales', 'manufacturer_form', 'content');
+		$module = new module('com_sales', 'form_manufacturer', 'content');
         $module->title = $heading;
 		if ( is_null($id) ) {
 			$module->entity = new entity;

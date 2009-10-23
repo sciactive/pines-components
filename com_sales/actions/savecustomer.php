@@ -3,7 +3,7 @@
  * Save changes to a customer.
  *
  * @package Pines
- * @subpackage com_customer
+ * @subpackage com_sales
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -17,22 +17,22 @@ if ( empty($_REQUEST['username']) ) {
 }
 
 if ( isset($_REQUEST['id']) ) {
-	if ( !gatekeeper('com_customer/editcustomer') ) {
-		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_customer', 'listcustomers', null, false));
+	if ( !gatekeeper('com_sales/editcustomer') ) {
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listcustomers', null, false));
 		return;
 	}
-	$customer = $config->run_customer->get_customer($_REQUEST['id']);
+	$customer = $config->run_sales->get_customer($_REQUEST['id']);
     if (is_null($customer)) {
         display_error('Requested customer id is not accessible');
         return;
     }
 } else {
-	if ( !gatekeeper('com_customer/newcustomer') ) {
-		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_customer', 'listcustomers', null, false));
+	if ( !gatekeeper('com_sales/newcustomer') ) {
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listcustomers', null, false));
 		return;
 	}
 	$customer = new entity;
-    $customer->add_tag('com_customer', 'customer');
+    $customer->add_tag('com_sales', 'customer');
 }
 
 $customer->name = $_REQUEST['name'];
@@ -53,7 +53,7 @@ $customer->fax = $_REQUEST['fax'];
 
 $customer->save();
 
-if ($config->com_customer->global_customers) {
+if ($config->com_sales->global_customers) {
     unset($customer->uid);
     unset($customer->gid);
 }
@@ -62,5 +62,5 @@ $customer->save();
 
 display_notice('Saved customer ['.$customer->name.']');
 
-$config->run_customer->list_customers();
+$config->run_sales->list_customers();
 ?>

@@ -3,7 +3,7 @@
  * Provide a form to edit a customer.
  *
  * @package Pines
- * @subpackage com_customer
+ * @subpackage com_sales
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -11,11 +11,11 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_customer/editcustomer') ) {
-	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_customer', 'editcustomer', array('id' => $_REQUEST['id']), false));
+if ( !gatekeeper('com_sales/editcustomer') ) {
+	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'editcustomer', array('id' => $_REQUEST['id']), false));
 	return;
 }
 
-$config->run_customer->print_customer_form('Editing Customer', 'com_customer', 'savecustomer', $_REQUEST['id']);
+$config->run_sales->print_customer_form('Editing Customer', 'com_sales', 'savecustomer', $_REQUEST['id']);
 
 ?>

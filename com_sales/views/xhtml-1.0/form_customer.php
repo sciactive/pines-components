@@ -3,7 +3,7 @@
  * Provides a form for the user to edit a customer.
  *
  * @package Pines
- * @subpackage com_customer
+ * @subpackage com_sales
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -85,7 +85,7 @@ $this->show_title = false;
         <input type="hidden" name="id" value="<?php echo $this->id; ?>" />
         <?php } ?>
         <input class="button" type="submit" value="Submit" />
-        <input class="button" type="button" onclick="window.location='<?php echo pines_url('com_customer', 'listcustomers'); ?>';" value="Cancel" />
+        <input class="button" type="button" onclick="window.location='<?php echo pines_url('com_sales', 'listcustomers'); ?>';" value="Cancel" />
     </div>
 </fieldset>
 </form>

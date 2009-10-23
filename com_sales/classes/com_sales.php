@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * com_sales main class.
  *
- * Manage manufacturers using the user manager.
+ * Manage sales, customers, manufacturers, vendors, etc.
  *
  * @package Pines
  * @subpackage com_sales
@@ -77,7 +77,7 @@ class com_sales extends component {
     function get_customer($id) {
         global $config;
         $entity = $config->entity_manager->get_entity($id);
-        if (is_null($entity) || !$entity->has_tag('com_customer', 'customer'))
+        if (is_null($entity) || !$entity->has_tag('com_sales', 'customer'))
             $entity = null;
         return $entity;
     }
@@ -119,12 +119,12 @@ class com_sales extends component {
 		$pgrid = new module('system', 'pgrid.default', 'content');
         $pgrid->icons = true;
 
-		$module = new module('com_customer', 'list_customers', 'content');
+		$module = new module('com_sales', 'list_customers', 'content');
 		$module->title = "Customers";
         if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-            $module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_customer/list_customers'];
+            $module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_customers'];
 
-		$module->customers = $config->entity_manager->get_entities_by_tags('com_customer', 'customer');
+		$module->customers = $config->entity_manager->get_entities_by_tags('com_sales', 'customer');
 
 		if ( empty($module->customers) ) {
             $pgrid->detach();
@@ -191,7 +191,7 @@ class com_sales extends component {
      */
 	function print_customer_form($heading, $new_option, $new_action, $id = NULL) {
 		global $config;
-		$module = new module('com_customer', 'form_customer', 'content');
+		$module = new module('com_sales', 'form_customer', 'content');
         $module->title = $heading;
 		if ( is_null($id) ) {
 			$module->entity = new entity;

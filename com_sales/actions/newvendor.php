@@ -1,6 +1,6 @@
 <?php
 /**
- * Provide a form to create a new manufacturer.
+ * Provide a form to create a new vendor.
  *
  * @package Pines
  * @subpackage com_sales
@@ -11,11 +11,11 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/newmanufacturer') ) {
-	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'newmanufacturer', null, false));
+if ( !gatekeeper('com_sales/newvendor') ) {
+	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'newvendor', null, false));
 	return;
 }
 
-$config->run_sales->print_manufacturer_form('Editing New Manufacturer', 'com_sales', 'savemanufacturer');
+$config->run_sales->print_vendor_form('Editing New Vendor', 'com_sales', 'savevendor');
 
 ?>

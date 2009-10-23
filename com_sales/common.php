@@ -15,5 +15,9 @@ $config->ability_manager->add('com_sales', 'managemanufacturers', 'Manage Manufa
 $config->ability_manager->add('com_sales', 'newmanufacturer', 'Create Manufacturers', 'User can create new manufacturers.');
 $config->ability_manager->add('com_sales', 'editmanufacturer', 'Edit Manufacturers', 'User can edit current manufacturers.');
 $config->ability_manager->add('com_sales', 'deletemanufacturer', 'Delete Manufacturers', 'User can delete current manufacturers.');
+$config->ability_manager->add('com_sales', 'managevendors', 'Manage Vendors', 'User can manage vendors.');
+$config->ability_manager->add('com_sales', 'newvendor', 'Create Vendors', 'User can create new vendors.');
+$config->ability_manager->add('com_sales', 'editvendor', 'Edit Vendors', 'User can edit current vendors.');
+$config->ability_manager->add('com_sales', 'deletevendor', 'Delete Vendors', 'User can delete current vendors.');
 
 ?>

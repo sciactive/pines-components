@@ -1,6 +1,6 @@
 <?php
 /**
- * Save changes to a manufacturer.
+ * Save changes to a vendor.
  *
  * @package Pines
  * @subpackage com_sales
@@ -11,10 +11,10 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/managemanufacturers') ) {
-    $config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listmanufacturers', null, false));
+if ( !gatekeeper('com_sales/managevendors') ) {
+    $config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listvendors', null, false));
     return;
 }
 
-$config->run_sales->list_manufacturers();
+$config->run_sales->list_vendors();
 ?>

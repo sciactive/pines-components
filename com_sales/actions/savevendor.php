@@ -1,6 +1,6 @@
 <?php
 /**
- * Save changes to a manufacturer.
+ * Save changes to a vendor.
  *
  * @package Pines
  * @subpackage com_sales
@@ -17,44 +17,44 @@ if ( empty($_REQUEST['username']) ) {
 }
 
 if ( isset($_REQUEST['id']) ) {
-	if ( !gatekeeper('com_sales/editmanufacturers') ) {
-		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listmanufacturers', null, false));
+	if ( !gatekeeper('com_sales/editvendors') ) {
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listvendors', null, false));
 		return;
 	}
-	$manufacturer = $config->run_sales->get_manufacturer($_REQUEST['id']);
-    if (is_null($manufacturer)) {
-        display_error('Requested manufacturer id is not accessible');
+	$vendor = $config->run_sales->get_vendor($_REQUEST['id']);
+    if (is_null($vendor)) {
+        display_error('Requested vendor id is not accessible');
         return;
     }
 } else {
-	if ( !gatekeeper('com_sales/newmanufacturer') ) {
-		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listmanufacturers', null, false));
+	if ( !gatekeeper('com_sales/newvendor') ) {
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listvendors', null, false));
 		return;
 	}
-	$manufacturer = new entity;
-    $manufacturer->add_tag('com_sales', 'manufacturer');
+	$vendor = new entity;
+    $vendor->add_tag('com_sales', 'vendor');
 }
 
-$manufacturer->name = $_REQUEST['name'];
-$manufacturer->email = $_REQUEST['email'];
-$manufacturer->address_1 = $_REQUEST['address_1'];
-$manufacturer->address_2 = $_REQUEST['address_2'];
-$manufacturer->city = $_REQUEST['city'];
-$manufacturer->state = $_REQUEST['state'];
-$manufacturer->zip = $_REQUEST['zip'];
-$manufacturer->phone_work = $_REQUEST['phone_work'];
-$manufacturer->fax = $_REQUEST['fax'];
+$vendor->name = $_REQUEST['name'];
+$vendor->email = $_REQUEST['email'];
+$vendor->address_1 = $_REQUEST['address_1'];
+$vendor->address_2 = $_REQUEST['address_2'];
+$vendor->city = $_REQUEST['city'];
+$vendor->state = $_REQUEST['state'];
+$vendor->zip = $_REQUEST['zip'];
+$vendor->phone_work = $_REQUEST['phone_work'];
+$vendor->fax = $_REQUEST['fax'];
 
-$manufacturer->save();
+$vendor->save();
 
-if ($config->com_sales->global_manufacturers) {
-    unset($manufacturer->uid);
-    unset($manufacturer->gid);
+if ($config->com_sales->global_vendors) {
+    unset($vendor->uid);
+    unset($vendor->gid);
 }
 
-$manufacturer->save();
+$vendor->save();
 
-display_notice('Saved manufacturer ['.$manufacturer->name.']');
+display_notice('Saved vendor ['.$vendor->name.']');
 
-$config->run_sales->list_manufacturers();
+$config->run_sales->list_vendors();
 ?>

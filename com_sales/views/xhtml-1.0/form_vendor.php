@@ -1,6 +1,6 @@
 <?php
 /**
- * Provides a form for the user to edit a manufacturer.
+ * Provides a form for the user to edit a vendor.
  *
  * @package Pines
  * @subpackage com_sales
@@ -12,11 +12,11 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->show_title = false;
 ?>
-<form class="pform" method="post" id="manufacturer_details" action="<?php echo pines_url($this->new_option, $this->new_action); ?>">
+<form class="pform" method="post" id="vendor_details" action="<?php echo pines_url($this->new_option, $this->new_action); ?>">
 <fieldset>
     <legend><?php echo $this->title; ?></legend>
     <div class="element heading">
-        <p>Provide manufacturer details in this form.</p>
+        <p>Provide vendor details in this form.</p>
     </div>
     <div class="element">
         <label><span class="label">Name</span>
@@ -56,7 +56,7 @@ $this->show_title = false;
         <input type="hidden" name="id" value="<?php echo $this->id; ?>" />
         <?php } ?>
         <input class="button" type="submit" value="Submit" />
-        <input class="button" type="button" onclick="window.location='<?php echo pines_url('com_sales', 'listmanufacturers'); ?>';" value="Cancel" />
+        <input class="button" type="button" onclick="window.location='<?php echo pines_url('com_sales', 'listvendors'); ?>';" value="Cancel" />
     </div>
 </fieldset>
 </form>

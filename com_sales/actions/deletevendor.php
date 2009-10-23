@@ -1,6 +1,6 @@
 <?php
 /**
- * Delete a manufacturer.
+ * Delete a vendor.
  *
  * @package Pines
  * @subpackage com_sales
@@ -11,21 +11,21 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/deletemanufacturers') ) {
-	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listmanufacturers', null, false));
+if ( !gatekeeper('com_sales/deletevendors') ) {
+	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listvendors', null, false));
 	return;
 }
 
 $list = explode(',', $_REQUEST['id']);
-foreach ($list as $cur_manufacturer) {
-    if ( !$config->run_sales->delete_manufacturer($cur_manufacturer) )
-        $failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_manufacturer;
+foreach ($list as $cur_vendor) {
+    if ( !$config->run_sales->delete_vendor($cur_vendor) )
+        $failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_vendor;
 }
 if (empty($failed_deletes)) {
-    display_notice('Selected manufacturer(s) deleted successfully.');
+    display_notice('Selected vendor(s) deleted successfully.');
 } else {
-    display_error('Could not delete manufacturers with given IDs: '.$failed_deletes);
+    display_error('Could not delete vendors with given IDs: '.$failed_deletes);
 }
 
-$config->run_sales->list_manufacturers();
+$config->run_sales->list_vendors();
 ?>

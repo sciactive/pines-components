@@ -1,6 +1,6 @@
 <?php
 /**
- * Provide a form to edit a manufacturer.
+ * Provide a form to edit a vendor.
  *
  * @package Pines
  * @subpackage com_sales
@@ -11,11 +11,11 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/editmanufacturers') ) {
-	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'editmanufacturer', array('id' => $_REQUEST['id']), false));
+if ( !gatekeeper('com_sales/editvendors') ) {
+	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'editvendor', array('id' => $_REQUEST['id']), false));
 	return;
 }
 
-$config->run_sales->print_manufacturer_form('Editing Manufacturer', 'com_sales', 'savemanufacturer', $_REQUEST['id']);
+$config->run_sales->print_vendor_form('Editing Vendor', 'com_sales', 'savevendor', $_REQUEST['id']);
 
 ?>

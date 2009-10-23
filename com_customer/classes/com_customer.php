@@ -44,14 +44,14 @@ class com_customer extends component {
      */
     function get_customer($id) {
         global $config;
-        $customer = $config->entity_manager->get_entity($id);
-        if (is_null($customer) || !$customer->has_tag('com_customer', 'customer'))
-            $customer = null;
-        return $customer;
+        $entity = $config->entity_manager->get_entity($id);
+        if (is_null($entity) || !$entity->has_tag('com_customer', 'customer'))
+            $entity = null;
+        return $entity;
     }
 
     /**
-     * Creates and attaches a module which lists users.
+     * Creates and attaches a module which lists customers.
      */
 	function list_customers() {
 		global $config;

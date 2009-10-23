@@ -11,11 +11,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( empty($_REQUEST['username']) ) {
-	display_error('Must specify username!');
-	return;
-}
-
 if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_sales/editcustomer') ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listcustomers', null, false));

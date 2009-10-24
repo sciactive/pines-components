@@ -53,6 +53,22 @@ class com_sales extends component {
 	}
 
     /**
+     * Delete a tax/free.
+     *
+     * @param int $id The GUID of the tax/fee.
+     * @return bool True on success, false on failure.
+     */
+	function delete_tax_free($id) {
+		if ( $entity = $this->get_tax_fee($id) ) {
+			$entity->delete();
+            pines_log("Deleted tax / free $entity->name.", 'notice');
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+    /**
      * Delete a vendor.
      *
      * @param int $id The GUID of the vendor.
@@ -92,6 +108,20 @@ class com_sales extends component {
         global $config;
         $entity = $config->entity_manager->get_entity($id);
         if (is_null($entity) || !$entity->has_tag('com_sales', 'manufacturer'))
+            $entity = null;
+        return $entity;
+    }
+
+    /**
+     * Gets a tax/fee by GUID.
+     *
+     * @param int $id The tax/fee's GUID.
+     * @return entity|null The tax/fee if it exists, null if it doesn't.
+     */
+    function get_tax_fee($id) {
+        global $config;
+        $entity = $config->entity_manager->get_entity($id);
+        if (is_null($entity) || !$entity->has_tag('com_sales', 'tax_fee'))
             $entity = null;
         return $entity;
     }
@@ -153,6 +183,29 @@ class com_sales extends component {
             $pgrid->detach();
             $module->detach();
             display_notice("There are no manufacturers.");
+        }
+	}
+
+    /**
+     * Creates and attaches a module which lists taxes/fees.
+     */
+	function list_tax_fees() {
+		global $config;
+
+		$pgrid = new module('system', 'pgrid.default', 'content');
+        $pgrid->icons = true;
+
+		$module = new module('com_sales', 'list_tax_fees', 'content');
+		$module->title = "Taxes/Fees";
+        if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+            $module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_tax_fees'];
+
+		$module->vendors = $config->entity_manager->get_entities_by_tags('com_sales', 'tax_fee');
+
+		if ( empty($module->vendors) ) {
+            $pgrid->detach();
+            $module->detach();
+            display_notice("There are no taxes/fees.");
         }
 	}
 
@@ -232,6 +285,36 @@ class com_sales extends component {
                 return;
             }
 		}
+        $module->new_option = $new_option;
+        $module->new_action = $new_action;
+        $module->id = $id;
+	}
+
+    /**
+     * Creates and attaches a module containing a form for editing a tax/fee.
+     *
+     * If $id is null, or not given, a blank form will be provided.
+     *
+     * @param string $heading The heading for the form.
+     * @param string $new_option The option to which the form will submit.
+     * @param string $new_action The action to which the form will submit.
+     * @param int $id The GUID of the tax/fee to edit.
+     */
+	function print_tax_fee_form($heading, $new_option, $new_action, $id = NULL) {
+		global $config;
+		$module = new module('com_sales', 'form_tax_fee', 'content');
+        $module->title = $heading;
+		if ( is_null($id) ) {
+			$module->entity = new entity;
+		} else {
+            $module->entity = $this->get_tax_fee($id);
+            if (is_null($module->entity)) {
+                display_error('Requested tax/fee id is not accessible.');
+                $module->detach();
+                return;
+            }
+		}
+        $module->group_array = $config->user_manager->get_group_array();
         $module->new_option = $new_option;
         $module->new_action = $new_action;
         $module->id = $id;

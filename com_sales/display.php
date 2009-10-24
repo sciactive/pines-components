@@ -11,7 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( gatekeeper('com_sales/managemanufacturers') || gatekeeper('com_sales/newmanufacturer') ||
+if ( gatekeeper('com_sales/managecustomers') || gatekeeper('com_sales/newcustomer') ||
+     gatekeeper('com_sales/managemanufacturers') || gatekeeper('com_sales/newmanufacturer') ||
      gatekeeper('com_sales/managevendors') || gatekeeper('com_sales/newvendor') ) {
 	$com_sales_menu_id = $page->main_menu->add('POS');
 	if ( gatekeeper('com_sales/managecustomers') )
@@ -22,6 +23,10 @@ if ( gatekeeper('com_sales/managemanufacturers') || gatekeeper('com_sales/newman
 		$page->main_menu->add('Manufacturers', pines_url('com_sales', 'listmanufacturers'), $com_sales_menu_id);
 	if ( gatekeeper('com_sales/newmanufacturer') )
 		$page->main_menu->add('New Manufacturer', pines_url('com_sales', 'newmanufacturer'), $com_sales_menu_id);
+	if ( gatekeeper('com_sales/managetax_fees') )
+		$page->main_menu->add('Taxes/Fees', pines_url('com_sales', 'listtaxfees'), $com_sales_menu_id);
+	if ( gatekeeper('com_sales/newtax_fee') )
+		$page->main_menu->add('New Tax/Fee', pines_url('com_sales', 'newtaxfee'), $com_sales_menu_id);
 	if ( gatekeeper('com_sales/managevendors') )
 		$page->main_menu->add('Vendors', pines_url('com_sales', 'listvendors'), $com_sales_menu_id);
 	if ( gatekeeper('com_sales/newvendor') )

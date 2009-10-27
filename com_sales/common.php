@@ -19,9 +19,13 @@ $config->ability_manager->add('com_sales', 'managevendors', 'Manage Vendors', 'U
 $config->ability_manager->add('com_sales', 'newvendor', 'Create Vendors', 'User can create new vendors.');
 $config->ability_manager->add('com_sales', 'editvendor', 'Edit Vendors', 'User can edit current vendors.');
 $config->ability_manager->add('com_sales', 'deletevendor', 'Delete Vendors', 'User can delete current vendors.');
-$config->ability_manager->add('com_sales', 'managecustomers', 'Manage', 'User can manage customers.');
-$config->ability_manager->add('com_sales', 'newcustomer', 'Create', 'User can create new customers.');
-$config->ability_manager->add('com_sales', 'editcustomer', 'Edit', 'User can edit current customers.');
-$config->ability_manager->add('com_sales', 'deletecustomer', 'Delete', 'User can delete current customers.');
+$config->ability_manager->add('com_sales', 'managecustomers', 'Manage Customers', 'User can manage customers.');
+$config->ability_manager->add('com_sales', 'newcustomer', 'Create Customers', 'User can create new customers.');
+$config->ability_manager->add('com_sales', 'editcustomer', 'Edit Customers', 'User can edit current customers.');
+$config->ability_manager->add('com_sales', 'deletecustomer', 'Delete Customers', 'User can delete current customers.');
+$config->ability_manager->add('com_sales', 'managetaxfees', 'Manage Taxes/Fees', 'User can manage taxes/fees.');
+$config->ability_manager->add('com_sales', 'newtaxfee', 'Create Taxes/Fees', 'User can create new taxes/fees.');
+$config->ability_manager->add('com_sales', 'edittaxfee', 'Edit Taxes/Fees', 'User can edit current taxes/fees.');
+$config->ability_manager->add('com_sales', 'deletetaxfee', 'Delete Taxes/Fees', 'User can delete current taxes/fees.');
 
 ?>

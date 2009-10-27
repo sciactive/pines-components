@@ -1,6 +1,6 @@
 <?php
 /**
- * Provide a form to create a new tax / fee.
+ * Provide a form to create a new tax/fee.
  *
  * @package Pines
  * @subpackage com_sales
@@ -11,11 +11,11 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/newtax_fee') ) {
+if ( !gatekeeper('com_sales/newtaxfee') ) {
 	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'newtaxfee', null, false));
 	return;
 }
 
-$config->run_sales->print_tax_fee_form('Editing New Tax / Fee', 'com_sales', 'savetax_fee');
+$config->run_sales->print_tax_fee_form('Editing New Tax/Fee', 'com_sales', 'savetaxfee');
 
 ?>

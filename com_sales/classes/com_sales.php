@@ -200,9 +200,9 @@ class com_sales extends component {
         if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
             $module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_tax_fees'];
 
-		$module->vendors = $config->entity_manager->get_entities_by_tags('com_sales', 'tax_fee');
+		$module->tax_fees = $config->entity_manager->get_entities_by_tags('com_sales', 'tax_fee');
 
-		if ( empty($module->vendors) ) {
+		if ( empty($module->tax_fees) ) {
             $pgrid->detach();
             $module->detach();
             display_notice("There are no taxes/fees.");

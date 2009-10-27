@@ -33,6 +33,13 @@ return array (
     'description' => 'Ensure that every user can access all vendors by erasing ownership on vendors.',
     'value' => true,
   ),
+  2 =>
+  array (
+    'name' => 'global_tax_fees',
+    'cname' => 'Globalize Taxes/Fees',
+    'description' => 'Ensure that every user can access all taxes and fees by erasing ownership on taxes/fees.',
+    'value' => true,
+  ),
 );
 
 ?>

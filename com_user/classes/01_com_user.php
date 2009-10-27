@@ -129,15 +129,16 @@ class com_user extends component {
             // If the user is logged in, their abilities are already set up. We
             // just need to add them to the user.
 			if ( is_object($_SESSION['user']) ) {
+                $user = $_SESSION['user'];
                 // Check the cache to see if we've already checked this user.
                 if (isset($this->gatekeeper_cache[$_SESSION['user_id']])) {
-                    $user = $this->gatekeeper_cache[$_SESSION['user_id']];
+                    $abilities = $this->gatekeeper_cache[$_SESSION['user_id']];
                 } else {
-                    $user = clone $_SESSION['user'];
+                    $abilities = $user->abilities;
                     if (isset($_SESSION['inherited_abilities'])) {
-                        $user->abilities = array_merge($user->abilities, $_SESSION['inherited_abilities']);
+                        $abilities = array_merge($abilities, $_SESSION['inherited_abilities']);
                     }
-                    $this->gatekeeper_cache[$_SESSION['user_id']] = $user;
+                    $this->gatekeeper_cache[$_SESSION['user_id']] = $abilities;
                 }
 			} else {
 				unset($user);
@@ -146,27 +147,27 @@ class com_user extends component {
             // If the user isn't logged in, their abilities need to be set up.
             // Check the cache to see if we've already checked this user.
             if (isset($this->gatekeeper_cache[$user->guid])) {
-                $user = $this->gatekeeper_cache[$user->guid];
+                $abilities = $this->gatekeeper_cache[$user->guid];
             } else {
-                $user = clone $user;
                 if ($user->inherit_abilities) {
                     global $config;
+                    $abilities = $user->abilities;
                     foreach ($user->groups as $cur_group) {
                         $cur_entity = $config->entity_manager->get_entity($cur_group, group);
-                        $user->abilities = array_merge($user->abilities, $cur_entity->abilities);
+                        $abilities = array_merge($abilities, $cur_entity->abilities);
                     }
                     if (isset($user->gid)) {
                         $cur_entity = $config->entity_manager->get_entity($user->gid, group);
-                        $user->abilities = array_merge($user->abilities, $cur_entity->abilities);
+                        $abilities = array_merge($abilities, $cur_entity->abilities);
                     }
                 }
-                $this->gatekeeper_cache[$user->guid] = $user;
+                $this->gatekeeper_cache[$user->guid] = $abilities;
             }
         }
 		if ( isset($user) ) {
 			if ( !is_null($ability) ) {
-				if ( isset($user->abilities) ) {
-					return ( in_array($ability, $user->abilities) || in_array('system/all', $user->abilities) );
+				if ( isset($abilities) ) {
+					return ( in_array($ability, $abilities) || in_array('system/all', $abilities) );
 				} else {
 					return false;
 				}

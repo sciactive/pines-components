@@ -86,6 +86,7 @@ class com_logger extends component {
                 $this->tmp_log .= "$date: $level: $location: $user: $message";
                 break;
             case 'debug':
+                // Debug logs should be written immediately, since the system may halt at any time. ;)
                 if (!in_array($config->com_logger->level, array('debug'))) break;
             case 'warning':
                 if (!in_array($config->com_logger->level, array('debug', 'info', 'notice', 'warning'))) break;
@@ -122,6 +123,7 @@ class com_logger extends component {
  * Log a hooked function call.
  *
  * @param array $return The return values for the hook.
+ * @param string $hook The hook that was called.
  * @return array The return values for the hook.
  */
 function com_logger_hook_log($return, $hook) {

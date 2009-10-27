@@ -15,6 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
     // <![CDATA[
 
     $(document).ready(function(){
+        var state_xhr;
         var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
         var cur_defaults = {
             pgrid_toolbar: true,
@@ -35,8 +36,10 @@ defined('P_RUN') or die('Direct access prohibited');
             pgrid_sort_col: 'col_1',
             pgrid_sort_ord: 'asc',
             pgrid_state_change: function(state) {
-                var cur_state = JSON.stringify(state);
-                $.post("<?php echo pines_url('system', 'pgrid_save_state'); ?>", {view: "com_sales/list_customers", state: cur_state});
+                if (typeof state_xhr == "object")
+                    state_xhr.abort();
+                cur_state = JSON.stringify(state);
+                state_xhr = $.post("<?php echo pines_url('system', 'pgrid_save_state'); ?>", {view: "com_sales/list_customers", state: cur_state});
             }
         };
         var cur_options = $.extend(cur_defaults, cur_state);

@@ -164,9 +164,9 @@ class com_user extends component {
             if (isset($this->gatekeeper_cache[$user->guid])) {
                 $abilities = $this->gatekeeper_cache[$user->guid];
             } else {
+                $abilities = $user->abilities;
                 if ($user->inherit_abilities) {
                     global $config;
-                    $abilities = $user->abilities;
                     foreach ($user->groups as $cur_group) {
                         $cur_entity = $config->entity_manager->get_entity($cur_group, group);
                         $abilities = array_merge($abilities, $cur_entity->abilities);
@@ -626,6 +626,9 @@ class com_user extends component {
 		if ( isset($entity->username) ) {
 			if ( $this->gatekeeper('com_user/login', $entity) ) {
 				$_SESSION['user_id'] = $entity->guid;
+                unset($_SESSION['user']);
+                // We're changing users, so clear the gatekeeper cache.
+                $this->gatekeeper_cache = array();
 				$this->fill_session();
 				return true;
 			} else {

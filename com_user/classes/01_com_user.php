@@ -22,13 +22,28 @@ defined('P_RUN') or die('Direct access prohibited');
 class com_user extends component {
     /**
      * Gatekeeper ability cache.
-     * 
+     *
      * Gatekeeper will cache user's abilities that it calculates, so it can
      * check faster if that user has been checked before.
-     * 
+     *
+     * @access private
      * @var array $gatekeeper_cache
      */
     private $gatekeeper_cache = array();
+    /**
+     * Groupname cache.
+     *
+     * @access private
+     * @var array $groupname_cache
+     */
+    private $groupname_cache = array();
+    /**
+     * Username cache.
+     *
+     * @access private
+     * @var array $username_cache
+     */
+    private $username_cache = array();
 
     /**
      * Authenticate a user's credentials.
@@ -383,9 +398,16 @@ class com_user extends component {
      * @return string|null The groupname if the group exists, null if it doesn't.
      */
 	function get_groupname($id) {
-		$entity = $this->get_group($id);
-        if (is_null($entity)) return null;
-		return $entity->groupname;
+        // Check the cache to see if we've already queried this name.
+        if (!isset($this->groupname_cache[$id])) {
+            $entity = $this->get_group($id);
+            if (is_null($entity)) {
+                $this->groupname_cache[$id] = null;
+            } else {
+                $this->groupname_cache[$id] = $entity->groupname;
+            }
+        }
+		return $this->groupname_cache[$id];
 	}
 
     /**
@@ -503,9 +525,16 @@ class com_user extends component {
      * @return string|null The username if the user exists, null if it doesn't.
      */
 	function get_username($id) {
-		$entity = $this->get_user($id);
-        if (is_null($entity)) return null;
-		return $entity->username;
+        // Check the cache to see if we've already queried this name.
+        if (!isset($this->username_cache[$id])) {
+            $entity = $this->get_user($id);
+            if (is_null($entity)) {
+                $this->username_cache[$id] = null;
+            } else {
+                $this->username_cache[$id] = $entity->username;
+            }
+        }
+		return $this->username_cache[$id];
 	}
 
     /**

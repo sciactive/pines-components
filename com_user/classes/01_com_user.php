@@ -77,10 +77,10 @@ class com_user extends component {
      * Fill the $_SESSION['user'] variable with the logged in user's data.
      */
     function fill_session() {
-        if (is_object($_SESSION['user']))
+        $tmp_user = $this->get_user($_SESSION['user_id']);
+        if (is_object($_SESSION['user']) && $_SESSION['user'] == $tmp_user)
             return;
         unset($_SESSION['user']);
-        $tmp_user = $this->get_user($_SESSION['user_id']);
         $_SESSION['descendents'] = $this->get_group_descendents($tmp_user->gid);
 		if (!empty($tmp_user->groups)) {
 			foreach ($tmp_user->groups as $cur_group) {
@@ -144,8 +144,7 @@ class com_user extends component {
 		if ( isset($user) ) {
 			if ( !is_null($ability) ) {
 				if ( isset($user->abilities) ) {
-					if ( in_array($ability, $user->abilities) || in_array('system/all', $user->abilities) )
-						return true;
+					return ( in_array($ability, $user->abilities) || in_array('system/all', $user->abilities) );
 				} else {
 					return false;
 				}

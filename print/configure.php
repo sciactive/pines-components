@@ -25,6 +25,16 @@ class tpl_print extends template {
      * @var string $format
      */
 	var $format = 'xhtml-1.0-strict-print';
+    /**
+     * The editor CSS location.
+     * @var string $editor_css
+     */
+    var $editor_css = '';
+
+    function __construct() {
+        global $config;
+        $this->editor_css = $config->rela_location.'templates/print/css/editor.css';
+    }
 }
 
 $config->template = new tpl_print;

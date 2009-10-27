@@ -24,10 +24,20 @@ class tpl_pines extends template {
      */
 	var $format = 'xhtml-1.0-strict-desktop';
     /**
+     * The editor CSS location.
+     * @var string $editor_css
+     */
+    var $editor_css = '';
+    /**
      * Whether to show a header image, instead of text.
      * @var bool $header_image
      */
 	var $header_image = true;
+
+    function __construct() {
+        global $config;
+        $this->editor_css = $config->rela_location.'templates/pines/css/editor.css';
+    }
 }
 
 $config->template = new tpl_pines;

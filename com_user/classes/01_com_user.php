@@ -21,6 +21,16 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class com_user extends component {
     /**
+     * Gatekeeper ability cache.
+     * 
+     * Gatekeeper will cache user's abilities that it calculates, so it can
+     * check faster if that user has been checked before.
+     * 
+     * @var array $gatekeeper_cache
+     */
+    private $gatekeeper_cache = array();
+
+    /**
      * Authenticate a user's credentials.
      *
      * This function will not log a user into the system. It will only check
@@ -119,26 +129,38 @@ class com_user extends component {
             // If the user is logged in, their abilities are already set up. We
             // just need to add them to the user.
 			if ( is_object($_SESSION['user']) ) {
-				$user = clone $_SESSION['user'];
-                if (isset($_SESSION['inherited_abilities'])) {
-                    $user->abilities = array_merge($user->abilities, $_SESSION['inherited_abilities']);
+                // Check the cache to see if we've already checked this user.
+                if (isset($this->gatekeeper_cache[$_SESSION['user_id']])) {
+                    $user = $this->gatekeeper_cache[$_SESSION['user_id']];
+                } else {
+                    $user = clone $_SESSION['user'];
+                    if (isset($_SESSION['inherited_abilities'])) {
+                        $user->abilities = array_merge($user->abilities, $_SESSION['inherited_abilities']);
+                    }
+                    $this->gatekeeper_cache[$_SESSION['user_id']] = $user;
                 }
 			} else {
 				unset($user);
 			}
 		} else {
             // If the user isn't logged in, their abilities need to be set up.
-            $user = clone $user;
-            if ($user->inherit_abilities) {
-                global $config;
-                foreach ($user->groups as $cur_group) {
-                    $cur_entity = $config->entity_manager->get_entity($cur_group, group);
-                    $user->abilities = array_merge($user->abilities, $cur_entity->abilities);
+            // Check the cache to see if we've already checked this user.
+            if (isset($this->gatekeeper_cache[$user->guid])) {
+                $user = $this->gatekeeper_cache[$user->guid];
+            } else {
+                $user = clone $user;
+                if ($user->inherit_abilities) {
+                    global $config;
+                    foreach ($user->groups as $cur_group) {
+                        $cur_entity = $config->entity_manager->get_entity($cur_group, group);
+                        $user->abilities = array_merge($user->abilities, $cur_entity->abilities);
+                    }
+                    if (isset($user->gid)) {
+                        $cur_entity = $config->entity_manager->get_entity($user->gid, group);
+                        $user->abilities = array_merge($user->abilities, $cur_entity->abilities);
+                    }
                 }
-                if (isset($user->gid)) {
-                    $cur_entity = $config->entity_manager->get_entity($user->gid, group);
-                    $user->abilities = array_merge($user->abilities, $cur_entity->abilities);
-                }
+                $this->gatekeeper_cache[$user->guid] = $user;
             }
         }
 		if ( isset($user) ) {

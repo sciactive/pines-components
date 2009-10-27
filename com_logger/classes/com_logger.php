@@ -119,17 +119,4 @@ class com_logger extends component {
     }
 }
 
-/**
- * Log a hooked function call.
- *
- * @param array $return The return values for the hook.
- * @param string $hook The hook that was called.
- * @return array The return values for the hook.
- */
-function com_logger_hook_log($return, $hook) {
-    global $config;
-    $config->log_manager->log($hook, 'debug');
-    return $return;
-}
-
 ?>

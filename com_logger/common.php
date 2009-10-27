@@ -16,6 +16,19 @@ if ( isset($config->ability_manager) ) {
 	$config->ability_manager->add('com_logger', 'clear', 'Clear Log', 'Let the user clear (delete) the pines log.');
 }
 
+/**
+ * Log a hooked function call.
+ *
+ * @param array $return The return values for the hook.
+ * @param string $hook The hook that was called.
+ * @return array The return values for the hook.
+ */
+function com_logger_hook_log($return, $hook) {
+    global $config;
+    $config->log_manager->log('(microtime='.microtime(true).') '.$hook, 'debug');
+    return $return;
+}
+
 if ($config->com_logger->level == 'debug') $config->log_manager->hook();
 
 ?>

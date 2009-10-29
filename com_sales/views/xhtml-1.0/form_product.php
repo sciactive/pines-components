@@ -118,7 +118,7 @@ $this->show_title = false;
     <div class="element full_width">
         <span class="label">Additional Barcodes</span>
         <div class="group">
-            <input class="field" type="text" name="additional_barcodes" size="20" value="<?php echo $this->entity->additional_barcodes; ?>" />
+            <input class="field" type="text" name="additional_barcodes" size="20" value="<?php echo (is_array($this->entity->additional_barcodes) ? implode(',', $this->entity->additional_barcodes) : ''); ?>" />
             <script type="text/javascript">
                 // <![CDATA[
                 $(document).ready(function(){

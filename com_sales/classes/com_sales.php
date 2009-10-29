@@ -113,6 +113,20 @@ class com_sales extends component {
     }
 
     /**
+     * Gets a product by GUID.
+     *
+     * @param int $id The product's GUID.
+     * @return entity|null The product if it exists, null if it doesn't.
+     */
+    function get_product($id) {
+        global $config;
+        $entity = $config->entity_manager->get_entity($id);
+        if (is_null($entity) || !$entity->has_tag('com_sales', 'product'))
+            $entity = null;
+        return $entity;
+    }
+
+    /**
      * Gets a tax/fee by GUID.
      *
      * @param int $id The tax/fee's GUID.
@@ -285,6 +299,41 @@ class com_sales extends component {
                 return;
             }
 		}
+        $module->new_option = $new_option;
+        $module->new_action = $new_action;
+        $module->id = $id;
+	}
+
+    /**
+     * Creates and attaches a module containing a form for editing a product.
+     *
+     * If $id is null, or not given, a blank form will be provided.
+     *
+     * @param string $heading The heading for the form.
+     * @param string $new_option The option to which the form will submit.
+     * @param string $new_action The action to which the form will submit.
+     * @param int $id The GUID of the product to edit.
+     */
+	function print_product_form($heading, $new_option, $new_action, $id = NULL) {
+		global $config;
+        $config->editor->load();
+		$module = new module('com_sales', 'form_product', 'content');
+        $module->title = $heading;
+		if ( is_null($id) ) {
+			$module->entity = new entity;
+		} else {
+            $module->entity = $this->get_product($id);
+            if (is_null($module->entity)) {
+                display_error('Requested product id is not accessible.');
+                $module->detach();
+                return;
+            }
+		}
+        $module->manufacturers = $config->entity_manager->get_entities_by_tags('com_sales', 'manufacturer');
+        if (!is_array($module->manufacturers)) {
+            $module->manufacturers = array();
+        }
+
         $module->new_option = $new_option;
         $module->new_action = $new_action;
         $module->id = $id;

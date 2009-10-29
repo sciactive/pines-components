@@ -36,6 +36,7 @@ $(document).ready(function(){
         theme_advanced_toolbar_align : "left",
         theme_advanced_statusbar_location : "bottom",
         theme_advanced_resizing : true,
+        theme_advanced_resize_horizontal : false,
 
         // Example content CSS (should be your site CSS)
         content_css : "{$config->template->editor_css}",
@@ -44,13 +45,18 @@ $(document).ready(function(){
         template_external_list_url : "lists/template_list.js",
         external_link_list_url : "lists/link_list.js",
         external_image_list_url : "lists/image_list.js",
-        media_external_list_url : "lists/media_list.js",
+        media_external_list_url : "lists/media_list.js"
+    });
 
-        // Replace values for the template plugin
-        template_replace_values : {
-            username : "Some User",
-            staffid : "991234"
-        }
+    $('textarea.peditor_simple').tinymce({
+        // Location of TinyMCE script
+        script_url : '{$config->rela_location}components/com_tinymce/js/tiny_mce/tiny_mce.js',
+
+        // General options
+        theme : "simple",
+
+        // Example content CSS (should be your site CSS)
+        content_css : "{$config->template->editor_css}"
     });
 });
 // ]]>

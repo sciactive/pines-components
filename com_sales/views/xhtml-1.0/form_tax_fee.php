@@ -24,12 +24,12 @@ $this->show_title = false;
     </div>
     <div class="element">
         <label><span class="label">Enabled</span>
-        <input class="field" type="checkbox" name="enabled" size="20" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
+        <input class="field" type="checkbox" name="enabled" size="20" value="ON"<?php echo ($this->entity->enabled || is_null($this->entity->enabled)) ? ' checked="checked"' : ''; ?> /></label>
     </div>
     <div class="element">
         <label><span class="label">Type</span>
         <span class="note">This determines how the rate is applied to the price of items.</span>
-        <select name="type">
+        <select class="field" name="type">
             <option value="percentage"<?php echo $this->entity->type == 'percentage' ? ' selected="selected"' : ''; ?>>Percentage</option>
             <option value="flat_rate"<?php echo $this->entity->type == 'flat_rate' ? ' selected="selected"' : ''; ?>>Flat Rate</option>
         </select></label>

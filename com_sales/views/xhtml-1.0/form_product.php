@@ -57,10 +57,26 @@ $this->show_title = false;
     </div>
     <div class="element">
         <label><span class="label">Pricing Method</span>
-        <select class="field" name="type">
+        <select class="field" name="pricing_method">
             <option value="fixed"<?php echo $this->entity->type == 'fixed' ? ' selected="selected"' : ''; ?>>Fixed Pricing</option>
             <option value="margin"<?php echo $this->entity->type == 'margin' ? ' selected="selected"' : ''; ?>>Margin Pricing</option>
         </select></label>
+        <script type="text/javascript">
+            // <![CDATA[
+            $(document).ready(function(){
+                $("#product_details [name=pricing_method]").change(function(){
+                    if ($(this).val() == "fixed") {
+                        $("#product_details [name=margin]").attr('disabled', 'disabled');
+                        $("#product_details [name=unit_price]").removeAttr('disabled');
+                    } else {
+                        $("#product_details [name=unit_price]").attr('disabled', 'disabled');
+                        $("#product_details [name=margin]").removeAttr('disabled');
+                    }
+                });
+                $("#product_details [name=pricing_method]").change();
+            });
+            // ]]>
+        </script>
     </div>
     <br />
     <fieldset class="group">
@@ -87,7 +103,7 @@ $this->show_title = false;
         </div>
         <div class="element">
             <label><span class="label">Discountable</span>
-            <input class="field" type="checkbox" name="discountable" size="20" value="ON"<?php echo $this->entity->discountable ? ' checked="checked"' : ''; ?> /></label>
+            <input class="field" type="checkbox" name="discountable" size="20" value="ON"<?php echo ($this->entity->discountable || is_null($this->entity->discountable)) ? ' checked="checked"' : ''; ?> /></label>
         </div>
         <div class="element">
             <label><span class="label">Hide on Invoice</span>
@@ -99,13 +115,28 @@ $this->show_title = false;
         </div>
     </fieldset>
     <br />
-    <div class="element">
-        <label><span class="label">Additional Barcodes</span>
-        <input class="field" type="text" name="additional_barcodes" size="20" value="<?php echo $this->entity->additional_barcodes; ?>" /></label>
+    <div class="element full_width">
+        <span class="label">Additional Barcodes</span>
+        <div class="group">
+            <input class="field" type="text" name="additional_barcodes" size="20" value="<?php echo $this->entity->additional_barcodes; ?>" />
+            <script type="text/javascript">
+                // <![CDATA[
+                $(document).ready(function(){
+                    $("#product_details [name=additional_barcodes]").tagEditor({completeOnBlur: true});
+                });
+                // ]]>
+            </script>
+        </div>
     </div>
     <div class="element">
         <label><span class="label">Additional Taxes/Fees</span>
-        <input class="field" type="text" name="additional_taxfees" size="20" value="<?php echo $this->entity->additional_taxfees; ?>" /></label>
+        <span class="note">These taxes will be applied in addition to the group's default taxes. If you select a tax applied to a group, it will be applied twice to this product for that group.</span>
+        <span class="note">Hold Ctrl (Command on Mac) to select multiple.</span>
+        <select class="field" name="additional_tax_fees" size="6" multiple="multiple">
+            <?php foreach ($this->tax_fees as $cur_tax_fee) { ?>
+                <option value="<?php echo $cur_tax_fee->guid; ?>"<?php echo (is_array($this->entity->additional_tax_fees) && in_array($cur_tax_fee->guid, $this->entity->additional_tax_fees)) ? ' selected="selected"' : ''; ?>><?php echo $cur_tax_fee->name; ?></option>
+            <?php } ?>
+        </select></label>
     </div>
 	<div class="element buttons">
         <?php if ( !is_null($this->id) ) { ?>

@@ -317,6 +317,7 @@ class com_sales extends component {
 	function print_product_form($heading, $new_option, $new_action, $id = NULL) {
 		global $config;
         $config->editor->load();
+		$module = new module('system', 'tag.editor', 'content');
 		$module = new module('com_sales', 'form_product', 'content');
         $module->title = $heading;
 		if ( is_null($id) ) {
@@ -332,6 +333,10 @@ class com_sales extends component {
         $module->manufacturers = $config->entity_manager->get_entities_by_tags('com_sales', 'manufacturer');
         if (!is_array($module->manufacturers)) {
             $module->manufacturers = array();
+        }
+        $module->tax_fees = $config->entity_manager->get_entities_by_tags('com_sales', 'tax_fee');
+        if (!is_array($module->tax_fees)) {
+            $module->tax_fees = array();
         }
 
         $module->new_option = $new_option;

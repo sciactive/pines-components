@@ -14,9 +14,9 @@ defined('P_RUN') or die('Direct access prohibited');
 return array (
   0 =>
   array (
-    'name' => 'global_customers',
-    'cname' => 'Globalize Customers',
-    'description' => 'Ensure that every user can access all customers by erasing ownership on customers.',
+    'name' => 'global_products',
+    'cname' => 'Globalize Products',
+    'description' => 'Ensure that every user can access all products by erasing ownership on products.',
     'value' => true,
   ),
   1 =>
@@ -33,7 +33,14 @@ return array (
     'description' => 'Ensure that every user can access all vendors by erasing ownership on vendors.',
     'value' => true,
   ),
-  2 =>
+  3 =>
+  array (
+    'name' => 'global_customers',
+    'cname' => 'Globalize Customers',
+    'description' => 'Ensure that every user can access all customers by erasing ownership on customers.',
+    'value' => true,
+  ),
+  4 =>
   array (
     'name' => 'global_tax_fees',
     'cname' => 'Globalize Taxes/Fees',

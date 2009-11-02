@@ -36,6 +36,25 @@ $tax_fee->type = $_REQUEST['type'];
 $tax_fee->rate = floatval($_REQUEST['rate']);
 $tax_fee->groups = (is_array($_REQUEST['groups']) ? $_REQUEST['groups'] : array());
 
+if (empty($tax_fee->name)) {
+    $module = $config->run_sales->print_tax_fee_form('Editing Tax/Fee', 'com_sales', 'savetaxfee');
+    $module->entity = $tax_fee;
+    display_error('Please specify a name.');
+    return;
+}
+if (!is_null($config->entity_manager->get_entities_by_data(array('name' => $tax_fee->name), array('com_sales', 'tax_fee')))) {
+    $module = $config->run_sales->print_tax_fee_form('Editing Tax/Fee', 'com_sales', 'savetaxfee');
+    $module->entity = $tax_fee;
+    display_error('There is already a tax/fee with that name. Please choose a different name.');
+    return;
+}
+if (empty($tax_fee->rate)) {
+    $module = $config->run_sales->print_tax_fee_form('Editing Tax/Fee', 'com_sales', 'savetaxfee');
+    $module->entity = $tax_fee;
+    display_error('Please specify a rate.');
+    return;
+}
+
 $tax_fee->save();
 
 if ($config->com_sales->global_tax_fees) {

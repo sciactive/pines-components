@@ -40,6 +40,19 @@ $vendor->zip = $_REQUEST['zip'];
 $vendor->phone_work = $_REQUEST['phone_work'];
 $vendor->fax = $_REQUEST['fax'];
 
+if (empty($vendor->name)) {
+    $module = $config->run_sales->print_vendor_form('Editing Vendor', 'com_sales', 'savevendor');
+    $module->entity = $vendor;
+    display_error('Please specify a name.');
+    return;
+}
+if (!is_null($config->entity_manager->get_entities_by_data(array('name' => $vendor->name), array('com_sales', 'vendor')))) {
+    $module = $config->run_sales->print_vendor_form('Editing Vendor', 'com_sales', 'savevendor');
+    $module->entity = $vendor;
+    display_error('There is already a vendor with that name. Please choose a different name.');
+    return;
+}
+
 $vendor->save();
 
 if ($config->com_sales->global_vendors) {

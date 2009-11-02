@@ -1,0 +1,85 @@
+<?php
+/**
+ * Save changes to a product.
+ *
+ * @package Pines
+ * @subpackage com_sales
+ * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
+ * @author Hunter Perrin <hunter@sciactive.com>
+ * @copyright Hunter Perrin
+ * @link http://sciactive.com/
+ */
+defined('P_RUN') or die('Direct access prohibited');
+
+if ( isset($_REQUEST['id']) ) {
+	if ( !gatekeeper('com_sales/editproduct') ) {
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listproducts', null, false));
+		return;
+	}
+	$product = $config->run_sales->get_product($_REQUEST['id']);
+    if (is_null($product)) {
+        display_error('Requested product id is not accessible');
+        return;
+    }
+} else {
+	if ( !gatekeeper('com_sales/newproduct') ) {
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listproducts', null, false));
+		return;
+	}
+	$product = new entity;
+    $product->add_tag('com_sales', 'product');
+}
+
+$product->name = $_REQUEST['name'];
+$product->enabled = ($_REQUEST['enabled'] == 'ON' ? true : false);
+$product->sku = $_REQUEST['sku'];
+$product->description = $_REQUEST['description'];
+$product->short_description = $_REQUEST['short_description'];
+$product->manufacturer = ($_REQUEST['manufacturer'] == 'null' ? null : intval($_REQUEST['manufacturer']));
+$product->manufacturer_sku = $_REQUEST['manufacturer_sku'];
+$product->average_cost = floatval($_REQUEST['average_cost']);
+$product->pricing_method = $_REQUEST['pricing_method'];
+$product->unit_price = floatval($_REQUEST['unit_price']);
+$product->margin = floatval($_REQUEST['margin']);
+$product->floor = floatval($_REQUEST['floor']);
+$product->rma_after = floatval($_REQUEST['rma_after']);
+$product->discountable = ($_REQUEST['discountable'] == 'ON' ? true : false);
+$product->hide_on_invoice = ($_REQUEST['hide_on_invoice'] == 'ON' ? true : false);
+$product->non_refundable = ($_REQUEST['non_refundable'] == 'ON' ? true : false);
+$product->additional_barcodes = explode(',', $_REQUEST['additional_barcodes']);
+if (is_array($_REQUEST['additional_tax_fees'])) {
+    function com_sales_make_ints(&$item, $key) {
+        $item = intval($item);
+    }
+    $product->additional_tax_fees = $_REQUEST['additional_tax_fees'];
+    array_walk($product->additional_tax_fees, 'com_sales_make_ints');
+} else {
+    $product->additional_tax_fees = array();
+}
+
+if (empty($product->name)) {
+    $module = $config->run_sales->print_product_form('Editing Product', 'com_sales', 'saveproduct');
+    $module->entity = $product;
+    display_error('Please specify a name.');
+    return;
+}
+if (!is_null($config->entity_manager->get_entities_by_data(array('name' => $product->name), array('com_sales', 'product')))) {
+    $module = $config->run_sales->print_product_form('Editing Product', 'com_sales', 'saveproduct');
+    $module->entity = $product;
+    display_error('There is already a product with that name. Please choose a different name.');
+    return;
+}
+
+$product->save();
+
+if ($config->com_sales->global_products) {
+    unset($product->uid);
+    unset($product->gid);
+}
+
+$product->save();
+
+display_notice('Saved product ['.$product->name.']');
+
+$config->run_sales->list_products();
+?>

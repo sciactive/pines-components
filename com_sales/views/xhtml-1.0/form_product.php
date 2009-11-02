@@ -132,7 +132,7 @@ $this->show_title = false;
         <label><span class="label">Additional Taxes/Fees</span>
         <span class="note">These taxes will be applied in addition to the group's default taxes. If you select a tax applied to a group, it will be applied twice to this product for that group.</span>
         <span class="note">Hold Ctrl (Command on Mac) to select multiple.</span>
-        <select class="field" name="additional_tax_fees" size="6" multiple="multiple">
+        <select class="field" name="additional_tax_fees[]" size="6" multiple="multiple">
             <?php foreach ($this->tax_fees as $cur_tax_fee) { ?>
                 <option value="<?php echo $cur_tax_fee->guid; ?>"<?php echo (is_array($this->entity->additional_tax_fees) && in_array($cur_tax_fee->guid, $this->entity->additional_tax_fees)) ? ' selected="selected"' : ''; ?>><?php echo $cur_tax_fee->name; ?></option>
             <?php } ?>

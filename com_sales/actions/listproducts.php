@@ -1,6 +1,6 @@
 <?php
 /**
- * List customers.
+ * List products.
  *
  * @package Pines
  * @subpackage com_sales
@@ -11,10 +11,10 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/managecustomers') ) {
-    $config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listcustomers', null, false));
+if ( !gatekeeper('com_sales/manageproducts') ) {
+    $config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listproducts', null, false));
     return;
 }
 
-$config->run_sales->list_customers();
+$config->run_sales->list_products();
 ?>

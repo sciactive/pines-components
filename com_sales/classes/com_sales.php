@@ -53,6 +53,22 @@ class com_sales extends component {
 	}
 
     /**
+     * Delete a product.
+     *
+     * @param int $id The GUID of the product.
+     * @return bool True on success, false on failure.
+     */
+	function delete_product($id) {
+		if ( $entity = $this->get_product($id) ) {
+			$entity->delete();
+            pines_log("Deleted product $entity->name.", 'notice');
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+    /**
      * Delete a tax/free.
      *
      * @param int $id The GUID of the tax/fee.
@@ -197,6 +213,29 @@ class com_sales extends component {
             $pgrid->detach();
             $module->detach();
             display_notice("There are no manufacturers.");
+        }
+	}
+
+    /**
+     * Creates and attaches a module which lists products.
+     */
+	function list_products() {
+		global $config;
+
+		$pgrid = new module('system', 'pgrid.default', 'content');
+        $pgrid->icons = true;
+
+		$module = new module('com_sales', 'list_products', 'content');
+		$module->title = "Products";
+        if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+            $module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_products'];
+
+		$module->products = $config->entity_manager->get_entities_by_tags('com_sales', 'product');
+
+		if ( empty($module->products) ) {
+            $pgrid->detach();
+            $module->detach();
+            display_notice("There are no products.");
         }
 	}
 

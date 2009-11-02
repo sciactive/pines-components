@@ -1,6 +1,6 @@
 <?php
 /**
- * Save changes to a vendor.
+ * List vendors.
  *
  * @package Pines
  * @subpackage com_sales

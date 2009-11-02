@@ -1,6 +1,6 @@
 <?php
 /**
- * Save changes to a manufacturer.
+ * List manufacturers.
  *
  * @package Pines
  * @subpackage com_sales

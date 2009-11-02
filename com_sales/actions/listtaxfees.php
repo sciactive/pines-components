@@ -1,6 +1,6 @@
 <?php
 /**
- * Save changes to a tax/fee.
+ * List taxes/fees.
  *
  * @package Pines
  * @subpackage com_sales

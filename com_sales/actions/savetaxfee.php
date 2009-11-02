@@ -39,12 +39,15 @@ $tax_fee->groups = (is_array($_REQUEST['groups']) ? $_REQUEST['groups'] : array(
 if (empty($tax_fee->name)) {
     $module = $config->run_sales->print_tax_fee_form('Editing Tax/Fee', 'com_sales', 'savetaxfee');
     $module->entity = $tax_fee;
+    $module->id = $_REQUEST['id'];
     display_error('Please specify a name.');
     return;
 }
-if (!is_null($config->entity_manager->get_entities_by_data(array('name' => $tax_fee->name), array('com_sales', 'tax_fee')))) {
+$test = $config->entity_manager->get_entities_by_data(array('name' => $tax_fee->name), array('com_sales', 'tax_fee'));
+if (!empty($test) && $test[0]->guid != $_REQUEST['id']) {
     $module = $config->run_sales->print_tax_fee_form('Editing Tax/Fee', 'com_sales', 'savetaxfee');
     $module->entity = $tax_fee;
+    $module->id = $_REQUEST['id'];
     display_error('There is already a tax/fee with that name. Please choose a different name.');
     return;
 }

@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-display_notice(stripslashes($_REQUEST['message']));
+display_notice($_REQUEST['message']);
 if (is_object($_SESSION['user'])) {
     // Load the user's default component.
     if ($_REQUEST['default'] == '1') {

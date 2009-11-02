@@ -48,11 +48,7 @@ $product->hide_on_invoice = ($_REQUEST['hide_on_invoice'] == 'ON' ? true : false
 $product->non_refundable = ($_REQUEST['non_refundable'] == 'ON' ? true : false);
 $product->additional_barcodes = explode(',', $_REQUEST['additional_barcodes']);
 if (is_array($_REQUEST['additional_tax_fees'])) {
-    function com_sales_make_ints(&$item, $key) {
-        $item = intval($item);
-    }
-    $product->additional_tax_fees = $_REQUEST['additional_tax_fees'];
-    array_walk($product->additional_tax_fees, 'com_sales_make_ints');
+    $product->additional_tax_fees = array_map('intval', $_REQUEST['additional_tax_fees']);
 } else {
     $product->additional_tax_fees = array();
 }

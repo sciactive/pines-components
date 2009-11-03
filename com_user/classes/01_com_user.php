@@ -561,7 +561,7 @@ class com_user extends component {
     function list_groups() {
 		global $config;
 
-		$pgrid = new module('system', 'pgrid.default', 'content');
+		$pgrid = new module('system', 'pgrid.default', 'head');
         $pgrid->icons = true;
 
         $module = new module('com_user', 'list_groups', 'content');
@@ -584,7 +584,7 @@ class com_user extends component {
 	function list_users() {
 		global $config;
 
-		$pgrid = new module('system', 'pgrid.default', 'content');
+		$pgrid = new module('system', 'pgrid.default', 'head');
         $pgrid->icons = true;
         
 		$module = new module('com_user', 'list_users', 'content');

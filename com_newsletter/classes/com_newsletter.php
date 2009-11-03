@@ -80,7 +80,7 @@ class com_newsletter extends component {
 	function list_mails() {
 		global $config;
 
-		$pgrid = new module('system', 'pgrid.default', 'content');
+		$pgrid = new module('system', 'pgrid.default', 'head');
         $pgrid->icons = true;
 
 		$module = new module('com_newsletter', 'list_mails', 'content');

@@ -176,7 +176,7 @@ class com_sales extends component {
 	function list_customers() {
 		global $config;
 
-		$pgrid = new module('system', 'pgrid.default', 'content');
+		$pgrid = new module('system', 'pgrid.default', 'head');
         $pgrid->icons = true;
 
 		$module = new module('com_sales', 'list_customers', 'content');
@@ -199,7 +199,7 @@ class com_sales extends component {
 	function list_manufacturers() {
 		global $config;
 
-		$pgrid = new module('system', 'pgrid.default', 'content');
+		$pgrid = new module('system', 'pgrid.default', 'head');
         $pgrid->icons = true;
 
 		$module = new module('com_sales', 'list_manufacturers', 'content');
@@ -222,7 +222,7 @@ class com_sales extends component {
 	function list_products() {
 		global $config;
 
-		$pgrid = new module('system', 'pgrid.default', 'content');
+		$pgrid = new module('system', 'pgrid.default', 'head');
         $pgrid->icons = true;
 
 		$module = new module('com_sales', 'list_products', 'content');
@@ -245,7 +245,7 @@ class com_sales extends component {
 	function list_tax_fees() {
 		global $config;
 
-		$pgrid = new module('system', 'pgrid.default', 'content');
+		$pgrid = new module('system', 'pgrid.default', 'head');
         $pgrid->icons = true;
 
 		$module = new module('com_sales', 'list_tax_fees', 'content');
@@ -268,7 +268,7 @@ class com_sales extends component {
 	function list_vendors() {
 		global $config;
 
-		$pgrid = new module('system', 'pgrid.default', 'content');
+		$pgrid = new module('system', 'pgrid.default', 'head');
         $pgrid->icons = true;
 
 		$module = new module('com_sales', 'list_vendors', 'content');
@@ -360,7 +360,7 @@ class com_sales extends component {
 	function print_product_form($heading, $new_option, $new_action, $id = NULL) {
 		global $config;
         $config->editor->load();
-		$module = new module('system', 'tag.editor', 'content');
+		$module = new module('system', 'tag.editor', 'head');
 		$module = new module('com_sales', 'form_product', 'content');
         $module->title = $heading;
 		if ( is_null($id) ) {

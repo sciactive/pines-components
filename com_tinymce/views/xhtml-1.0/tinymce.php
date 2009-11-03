@@ -12,14 +12,13 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 $page->head("<script type=\"text/javascript\" src=\"{$config->rela_location}components/com_tinymce/js/tiny_mce/jquery.tinymce.js\"></script>\n");
-
-$script = <<<EOF
+?>
 <script type="text/javascript">
 // <![CDATA[
 $(document).ready(function(){
     $('textarea.peditor').tinymce({
         // Location of TinyMCE script
-        script_url : '{$config->rela_location}components/com_tinymce/js/tiny_mce/tiny_mce.js',
+        script_url : '<?php echo $config->rela_location; ?>components/com_tinymce/js/tiny_mce/tiny_mce.js',
 
         // General options
         theme : "advanced",
@@ -39,7 +38,7 @@ $(document).ready(function(){
         theme_advanced_resize_horizontal : false,
 
         // Example content CSS (should be your site CSS)
-        content_css : "{$config->template->editor_css}",
+        content_css : "<?php echo $config->template->editor_css; ?>",
 
         // Drop lists for link/image/media/template dialogs
         template_external_list_url : "lists/template_list.js",
@@ -50,20 +49,14 @@ $(document).ready(function(){
 
     $('textarea.peditor_simple').tinymce({
         // Location of TinyMCE script
-        script_url : '{$config->rela_location}components/com_tinymce/js/tiny_mce/tiny_mce.js',
+        script_url : '<?php echo $config->rela_location; ?>components/com_tinymce/js/tiny_mce/tiny_mce.js',
 
         // General options
         theme : "simple",
 
         // Example content CSS (should be your site CSS)
-        content_css : "{$config->template->editor_css}"
+        content_css : "<?php echo $config->template->editor_css; ?>"
     });
 });
 // ]]>
 </script>
-EOF;
-
-$page->head($script);
-
-return;
-?>

@@ -34,7 +34,7 @@ class com_tinymce extends component {
      */
     function load() {
         if (!$this->js_loaded) {
-            $module = new module('com_tinymce', 'tinymce', 'content');
+            $module = new module('com_tinymce', 'tinymce', 'head');
             $this->js_loaded = true;
         }
     }

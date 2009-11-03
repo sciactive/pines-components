@@ -46,6 +46,7 @@ defined('P_RUN') or die('Direct access prohibited');
     <![endif]-->
 
 	<?php echo $page->get_head(); ?>
+        <?php echo $page->render_modules('head'); ?>
 </head>
 
 <body>

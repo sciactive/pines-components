@@ -30,6 +30,83 @@ $this->show_title = false;
         <label><span class="label">Product SKU</span>
         <input class="field" type="text" name="sku" size="20" value="<?php echo $this->entity->sku; ?>" /></label>
     </div>
+    <div class="element">
+        <span class="label">Category</span>
+	<script type="text/javascript">
+	    // <![CDATA[
+	    $(document).ready(function(){
+		var input = $("#category");
+		$("#category_tree").tree({
+		    rules : {
+			multiple : true
+		    },
+		    data : {
+			type : "json",
+			opts : {
+			    "static" : [
+				{
+				    // the short format demo
+				    data : "A node",
+				    attributes : { "id" : "1" },
+				    // here are the children
+				    children : [
+					{
+					    data : "Child node 1",
+					    attributes : { "id" : "3" }
+					},
+					{
+					    data : "Child node 2",
+					    attributes : { "id" : "4" }
+					},
+					{
+					    data : "Child node 3",
+					    attributes : { "id" : "5" }
+					}
+				    ]
+				},
+				{
+				    data : "Another node",
+				    attributes : { "id" : "2" }
+				}
+			    ]
+			}
+		    },
+		    selected : ["1"],
+		    callback : {
+			oncreate : function(NODE, REF_NODE, TYPE, TREE_OBJ, RB) {
+			    NODE.id = "6";
+			    alert(REF_NODE.id+": "+TYPE+", "+NODE.id);
+			    if (REF_NODE.id == "6") {
+				$.tree.rollback(RB);
+				alert("Can't create it.");
+			    }
+			},
+			onrename : function(NODE, TREE_OBJ, RB) {
+			    alert(NODE.id+", "+TREE_OBJ.get_text(NODE));
+			    if (TREE_OBJ.get_text(NODE) == "loser") {
+				$.tree.rollback(RB);
+				alert("No loser for you!");
+			    }
+			},
+			onchange : function(NODE, TREE_OBJ) {
+			    input.val("[]");
+			    $.each(TREE_OBJ.selected_arr, function(){
+				input.val(JSON.stringify($.merge(JSON.parse(input.val()), [this.attr("id")])));
+			    });
+			}
+		    },
+		    plugins : {
+			contextmenu : {}
+		    }
+		});
+	    });
+	    // ]]>
+	</script>
+	<div class="group">
+	    <div id="category_tree" style="border: 1px solid black; float: left;"></div>
+	</div>
+        <input id="category" class="field" type="text" name="category" />
+    </div>
     <div class="element full_width">
         <span class="label">Description</span><br />
         <textarea class="peditor" style="width: 100%;" name="description"><?php echo $this->entity->description; ?></textarea>

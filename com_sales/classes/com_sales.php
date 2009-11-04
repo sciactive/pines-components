@@ -21,6 +21,58 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class com_sales extends component {
     /**
+     * Transform a category array into a JSON-ready structure.
+     *
+     * @param array $category_array The array of categories.
+     * @return array A structured array.
+     */
+    function category_json_struct($category_array) {
+	$struct = array();
+	if (!is_array($category_array))
+	    return $struct;
+	foreach ($category_array as $cur_category) {
+	    if (is_null($cur_category->parent)) {
+		$struct[] = array(
+		    'attributes' => array(
+			'id' => $cur_category->guid
+		    ),
+		    'data' => $cur_category->name,
+		    'children' => $this->category_json_struct_children($cur_category->guid, $category_array)
+		);
+	    }
+	}
+	return $struct;
+    }
+
+    /**
+     * Parse the children of a category into a JSON-ready structure.
+     *
+     * @param int $guid The GUID of the parent.
+     * @param array $category_array The array of categories.
+     * @access private
+     * @return array|null A structured array, or null if category has no children.
+     */
+    protected function category_json_struct_children($guid, $category_array) {
+	$struct = array();
+	if (!is_array($category_array))
+	    return null;
+	foreach ($category_array as $cur_category) {
+	    if ($cur_category->parent == $guid) {
+		$struct[] = (object) array(
+		    'attributes' => (object) array(
+			'id' => $cur_category->guid
+		    ),
+		    'data' => $cur_category->name,
+		    'children' => $this->category_json_struct_children($cur_category->guid, $category_array)
+		);
+	    }
+	}
+	if (empty($struct))
+	    return null;
+	return $struct;
+    }
+
+    /**
      * Delete a customer.
      *
      * @param int $id The GUID of the customer.
@@ -98,6 +150,34 @@ class com_sales extends component {
 	} else {
 	    return false;
 	}
+    }
+
+    /**
+     * Get an array of category entities.
+     *
+     * @return array The array of entities.
+     */
+    function get_category_array() {
+	global $config;
+	$entities = $config->entity_manager->get_entities_by_tags('com_sales', 'category');
+	if (!is_array($entities)) {
+	    $entities = array();
+	}
+	return $entities;
+    }
+
+    /**
+     * Gets a category by GUID.
+     *
+     * @param int $id The category's GUID.
+     * @return entity|null The category if it exists, null if it doesn't.
+     */
+    function get_category($id) {
+	global $config;
+	$entity = $config->entity_manager->get_entity($id);
+	if (is_null($entity) || !$entity->has_tag('com_sales', 'category'))
+	    $entity = null;
+	return $entity;
     }
 
     /**
@@ -283,6 +363,26 @@ class com_sales extends component {
 	    $module->detach();
 	    display_notice("There are no vendors.");
 	}
+    }
+
+    /**
+     * Create and save a new category.
+     *
+     * @param int $parent_id The category's parent's GUID.
+     * @param string $name The category's name.
+     * @return bool True on success, false on failure.
+     */
+    function new_category($parent_id = null, $name = 'untitled') {
+	global $config;
+	$entity = new entity;
+	$entity->add_tag('com_sales', 'category');
+	$entity->name = $name;
+	if (!is_null($parent_id)) {
+	    $parent = $config->entity_manager->get_entity($parent_id);
+	    if (!is_null($parent) && $parent->has_tag('com_sales', 'category'))
+		$entity->parent = $parent_id;
+	}
+	return $entity->save();
     }
 
     /**

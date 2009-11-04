@@ -43,35 +43,11 @@ $this->show_title = false;
 		    data : {
 			type : "json",
 			opts : {
-			    "static" : [
-				{
-				    // the short format demo
-				    data : "A node",
-				    attributes : { "id" : "1" },
-				    // here are the children
-				    children : [
-					{
-					    data : "Child node 1",
-					    attributes : { "id" : "3" }
-					},
-					{
-					    data : "Child node 2",
-					    attributes : { "id" : "4" }
-					},
-					{
-					    data : "Child node 3",
-					    attributes : { "id" : "5" }
-					}
-				    ]
-				},
-				{
-				    data : "Another node",
-				    attributes : { "id" : "2" }
-				}
-			    ]
+			    method : "get",
+			    url : "<?php echo pines_url('com_sales', 'catjson'); ?>"
 			}
 		    },
-		    selected : ["1"],
+		    selected : [],
 		    callback : {
 			oncreate : function(NODE, REF_NODE, TYPE, TREE_OBJ, RB) {
 			    NODE.id = "6";
@@ -105,7 +81,7 @@ $this->show_title = false;
 	<div class="group">
 	    <div id="category_tree" style="border: 1px solid black; float: left;"></div>
 	</div>
-        <input id="category" class="field" type="text" name="category" />
+        <input id="category" class="field" type="hidden" name="category" />
     </div>
     <div class="element full_width">
         <span class="label">Description</span><br />

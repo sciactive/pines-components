@@ -31,11 +31,11 @@ $this->show_title = false;
         <input class="field" type="text" name="sku" size="20" value="<?php echo $this->entity->sku; ?>" /></label>
     </div>
     <div class="element">
-        <span class="label">Category</span>
+        <span class="label">Categories</span>
 	<script type="text/javascript">
 	    // <![CDATA[
 	    $(document).ready(function(){
-		var input = $("#category");
+		var input = $("#categories");
 		$("#category_tree").tree({
 		    rules : {
 			multiple : true
@@ -47,22 +47,158 @@ $this->show_title = false;
 			    url : "<?php echo pines_url('com_sales', 'catjson'); ?>"
 			}
 		    },
-		    selected : [],
+		    selected : <?php echo json_encode(array_map('strval', $config->run_sales->get_product_category_guid_array($this->entity))); ?>,
 		    callback : {
 			oncreate : function(NODE, REF_NODE, TYPE, TREE_OBJ, RB) {
-			    NODE.id = "6";
-			    alert(REF_NODE.id+": "+TYPE+", "+NODE.id);
-			    if (REF_NODE.id == "6") {
-				$.tree.rollback(RB);
-				alert("Can't create it.");
+			    var parent;
+			    var parent_id;
+			    if (TYPE == 'after' || TYPE == 'before') {
+				parent = TREE_OBJ.parent(REF_NODE);
+				if (parent === -1) {
+				    parent_id = "null";
+				} else {
+				    parent_id = parent.attr("id");
+				}
+			    } else {
+				parent_id = REF_NODE.id;
 			    }
+			    $.ajax({
+				type: "POST",
+				url: "<?php echo pines_url('com_sales', 'catjson'); ?>",
+				dataType: "json",
+				data: {
+				    "do": "new",
+				    "parent": parent_id
+				},
+				success: function(data, textStatus) {
+				    if (!data.status) {
+					$.tree.rollback(RB);
+					alert("A problem occurred while trying to create the category.");
+				    } else {
+					NODE.id = data.id;
+				    }
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown) {
+				    $.tree.rollback(RB);
+				    alert("An error occurred trying to reach the server:\n"+textStatus);
+				}
+			    });
 			},
 			onrename : function(NODE, TREE_OBJ, RB) {
-			    alert(NODE.id+", "+TREE_OBJ.get_text(NODE));
-			    if (TREE_OBJ.get_text(NODE) == "loser") {
-				$.tree.rollback(RB);
-				alert("No loser for you!");
+			    $.ajax({
+				type: "POST",
+				url: "<?php echo pines_url('com_sales', 'catjson'); ?>",
+				dataType: "json",
+				data: {
+				    "do": "rename",
+				    "id": NODE.id,
+				    "name": TREE_OBJ.get_text(NODE)
+				},
+				success: function(data, textStatus) {
+				    if (!data.status) {
+					$.tree.rollback(RB);
+					alert("A problem occurred while trying to rename the category.");
+				    }
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown) {
+				    $.tree.rollback(RB);
+				    alert("An error occurred trying to reach the server:\n"+textStatus);
+				}
+			    });
+			},
+			ondelete : function(NODE, TREE_OBJ, RB) {
+			    $.ajax({
+				type: "POST",
+				url: "<?php echo pines_url('com_sales', 'catjson'); ?>",
+				dataType: "json",
+				data: {
+				    "do": "delete",
+				    "id": NODE.id
+				},
+				success: function(data, textStatus) {
+				    if (!data.status) {
+					$.tree.rollback(RB);
+					alert("A problem occurred while trying to delete the category.");
+				    }
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown) {
+				    $.tree.rollback(RB);
+				    alert("An error occurred trying to reach the server:\n"+textStatus);
+				}
+			    });
+			},
+			onmove : function(NODE, REF_NODE, TYPE, TREE_OBJ, RB) {
+			    var parent;
+			    var parent_id;
+			    if (TYPE == 'after' || TYPE == 'before') {
+				parent = TREE_OBJ.parent(REF_NODE);
+				if (parent === -1) {
+				    parent_id = "null";
+				} else {
+				    parent_id = parent.attr("id");
+				}
+			    } else {
+				parent_id = REF_NODE.id;
 			    }
+			    $.ajax({
+				type: "POST",
+				url: "<?php echo pines_url('com_sales', 'catjson'); ?>",
+				dataType: "json",
+				data: {
+				    "do": "move",
+				    "id": NODE.id,
+				    "parent": parent_id
+				},
+				success: function(data, textStatus) {
+				    if (!data.status) {
+					$.tree.rollback(RB);
+					alert("A problem occurred while trying to move the category.");
+				    }
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown) {
+				    $.tree.rollback(RB);
+				    alert("An error occurred trying to reach the server:\n"+textStatus);
+				}
+			    });
+			},
+			oncopy : function(NODE, REF_NODE, TYPE, TREE_OBJ, RB) {
+			    var parent;
+			    var parent_id;
+			    if (TYPE == 'after' || TYPE == 'before') {
+				parent = TREE_OBJ.parent(REF_NODE);
+				if (parent === -1) {
+				    parent_id = "null";
+				} else {
+				    parent_id = parent.attr("id");
+				}
+			    } else {
+				parent_id = REF_NODE.id;
+			    }
+			    $.ajax({
+				type: "POST",
+				url: "<?php echo pines_url('com_sales', 'catjson'); ?>",
+				dataType: "json",
+				data: {
+				    "do": "copy",
+				    "id": NODE.id,
+				    "parent": parent_id
+				},
+				success: function(data, textStatus) {
+				    if (!data.status) {
+					$.tree.rollback(RB);
+					alert("A problem occurred while trying to copy the category.");
+				    }
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown) {
+				    $.tree.rollback(RB);
+				    alert("An error occurred trying to reach the server:\n"+textStatus);
+				}
+			    });
+			},
+			oninit : function(TREE_OBJ) {
+			    $("#category_tree_new").click(function(){
+				TREE_OBJ.create(false, -1);
+			    });
 			},
 			onchange : function(NODE, TREE_OBJ) {
 			    input.val("[]");
@@ -80,8 +216,9 @@ $this->show_title = false;
 	</script>
 	<div class="group">
 	    <div id="category_tree" style="border: 1px solid black; float: left;"></div>
+	    <p style="clear: left;"><a href="#" id="category_tree_new">New Root Category</a></p>
 	</div>
-        <input id="category" class="field" type="hidden" name="category" />
+        <input id="categories" class="field" type="hidden" name="categories" />
     </div>
     <div class="element full_width">
         <span class="label">Description</span><br />

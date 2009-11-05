@@ -73,6 +73,28 @@ class com_sales extends component {
     }
 
     /**
+     * Delete a category recursively.
+     *
+     * @param entity $category The category.
+     * @return bool True on success, false on failure.
+     */
+    function delete_category_recursive($category) {
+	global $config;
+	$children = $config->entity_manager->get_entities_by_parent($category->guid);
+	if (is_array($children)) {
+	    foreach ($children as $cur_child) {
+		if (!$this->delete_category_recursive($cur_child))
+		    return false;
+	    }
+	}
+	if ($category->has_tag('com_sales', 'category')) {
+	    return $category->delete();
+	} else {
+	    return false;
+	}
+    }
+
+    /**
      * Delete a customer.
      *
      * @param int $id The GUID of the customer.
@@ -223,6 +245,40 @@ class com_sales extends component {
     }
 
     /**
+     * Get an array of categories' GUIDs a product belongs to.
+     *
+     * @param entity $product The product.
+     * @return array An array of GUIDs.
+     */
+    function get_product_category_guid_array($product) {
+	if (!is_object($product))
+	    return array();
+	$categories = $this->get_product_category_array($product);
+	foreach ($categories as &$cur_cat) {
+	    $cur_cat = $cur_cat->guid;
+	}
+	return $categories;
+    }
+
+    /**
+     * Get an array of categories a product belongs to.
+     *
+     * @param entity $product The product.
+     * @return array An array of GUIDs.
+     */
+    function get_product_category_array($product) {
+	if (!is_object($product))
+	    return array();
+	$categories = $this->get_category_array();
+	foreach ($categories as $key => $cur_cat) {
+	    if (!is_array($cur_cat->products) || !in_array($product->guid, $cur_cat->products)) {
+		unset($categories[$key]);
+	    }
+	}
+	return $categories;
+    }
+
+    /**
      * Gets a tax/fee by GUID.
      *
      * @param int $id The tax/fee's GUID.
@@ -370,7 +426,7 @@ class com_sales extends component {
      *
      * @param int $parent_id The category's parent's GUID.
      * @param string $name The category's name.
-     * @return bool True on success, false on failure.
+     * @return entity|bool The category on success, false on failure.
      */
     function new_category($parent_id = null, $name = 'untitled') {
 	global $config;
@@ -382,7 +438,11 @@ class com_sales extends component {
 	    if (!is_null($parent) && $parent->has_tag('com_sales', 'category'))
 		$entity->parent = $parent_id;
 	}
-	return $entity->save();
+	if ($entity->save()) {
+	    return $entity;
+	} else {
+	    return false;
+	}
     }
 
     /**

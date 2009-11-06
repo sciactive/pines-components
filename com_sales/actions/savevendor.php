@@ -39,6 +39,18 @@ $vendor->state = $_REQUEST['state'];
 $vendor->zip = $_REQUEST['zip'];
 $vendor->phone_work = $_REQUEST['phone_work'];
 $vendor->fax = $_REQUEST['fax'];
+$vendor->account_number = $_REQUEST['account_number'];
+$vendor->client_username = $_REQUEST['client_username'];
+$vendor->client_password = $_REQUEST['client_password'];
+$vendor->client_rep_name = $_REQUEST['client_rep_name'];
+$vendor->client_email = $_REQUEST['client_email'];
+$vendor->client_web_address = $_REQUEST['client_web_address'];
+$vendor->online_web_address = $_REQUEST['online_web_address'];
+$vendor->online_customer_id = $_REQUEST['online_customer_id'];
+$vendor->online_username = $_REQUEST['online_username'];
+$vendor->online_password = $_REQUEST['online_password'];
+$vendor->terms = $_REQUEST['terms'];
+$vendor->comments = $_REQUEST['comments'];
 
 if (empty($vendor->name)) {
     $module = $config->run_sales->print_vendor_form('Editing Vendor', 'com_sales', 'savevendor');

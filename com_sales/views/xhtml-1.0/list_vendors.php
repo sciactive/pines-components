@@ -60,6 +60,7 @@ defined('P_RUN') or die('Direct access prohibited');
             <th>Zip</th>
             <th>Corporate Phone</th>
             <th>Fax</th>
+            <th>Account #</th>
         </tr>
     </thead>
     <tbody>
@@ -74,6 +75,7 @@ defined('P_RUN') or die('Direct access prohibited');
             <td><?php echo $vendor->zip; ?></td>
             <td><?php echo $vendor->phone_work; ?></td>
             <td><?php echo $vendor->fax; ?></td>
+            <td><?php echo $vendor->account_number; ?></td>
         </tr>
     <?php } ?>
     </tbody>

@@ -60,11 +60,8 @@ if (!empty($test) && $test[0]->guid != $_REQUEST['id']) {
     return;
 }
 
-$customer->save();
-
 if ($config->com_sales->global_customers) {
-    unset($customer->uid);
-    unset($customer->gid);
+    $customer->ac = (object) array('other' => 1);
 }
 
 $customer->save();

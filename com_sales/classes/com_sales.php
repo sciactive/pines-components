@@ -438,6 +438,7 @@ class com_sales extends component {
 	    if (!is_null($parent) && $parent->has_tag('com_sales', 'category'))
 		$entity->parent = $parent_id;
 	}
+	$entity->ac = (object) array('user' => 3, 'group' => 3, 'other' => 3);
 	if ($entity->save()) {
 	    return $entity;
 	} else {

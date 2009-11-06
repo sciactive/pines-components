@@ -56,11 +56,8 @@ if (empty($tax_fee->rate)) {
     return;
 }
 
-$tax_fee->save();
-
 if ($config->com_sales->global_tax_fees) {
-    unset($tax_fee->uid);
-    unset($tax_fee->gid);
+    $tax_fee->ac = (object) array('other' => 1);
 }
 
 $tax_fee->save();

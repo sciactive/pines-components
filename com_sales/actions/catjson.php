@@ -25,6 +25,11 @@ if (!isset($_REQUEST['do'])) {
     $page->override_doc(json_encode($categories_json_struct));
 }
 
+if ( !gatekeeper('com_sales/managecategories') ) {
+	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'catjson', $_REQUEST, false));
+	return;
+}
+
 switch ($_REQUEST['do']) {
     case 'new':
 	$parent_id = (isset($_REQUEST['parent']) && $_REQUEST['parent'] != 'null' ? intval($_REQUEST['parent']) : null);

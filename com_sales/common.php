@@ -31,5 +31,7 @@ $config->ability_manager->add('com_sales', 'manageproducts', 'Manage Products', 
 $config->ability_manager->add('com_sales', 'newproduct', 'Create Products', 'User can create new products.');
 $config->ability_manager->add('com_sales', 'editproduct', 'Edit Products', 'User can edit current products.');
 $config->ability_manager->add('com_sales', 'deleteproduct', 'Delete Products', 'User can delete current products.');
+$config->ability_manager->add('com_sales', 'managecategories', 'Manage Categories', 'User can manage categories.');
+$config->ability_manager->add('com_sales', 'viewcategories', 'View Categories', 'User can view categories.');
 
 ?>

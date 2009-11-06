@@ -54,11 +54,8 @@ if (!empty($test) && $test[0]->guid != $_REQUEST['id']) {
     return;
 }
 
-$vendor->save();
-
 if ($config->com_sales->global_vendors) {
-    unset($vendor->uid);
-    unset($vendor->gid);
+    $vendor->ac = (object) array('other' => 1);
 }
 
 $vendor->save();

@@ -12,21 +12,21 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
-	if ( !gatekeeper('com_sales/editmanufacturer') ) {
-		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listmanufacturers', null, false));
-		return;
-	}
-	$manufacturer = $config->run_sales->get_manufacturer($_REQUEST['id']);
+    if ( !gatekeeper('com_sales/editmanufacturer') ) {
+	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listmanufacturers', null, false));
+	return;
+    }
+    $manufacturer = $config->run_sales->get_manufacturer($_REQUEST['id']);
     if (is_null($manufacturer)) {
-        display_error('Requested manufacturer id is not accessible');
-        return;
+	display_error('Requested manufacturer id is not accessible');
+	return;
     }
 } else {
-	if ( !gatekeeper('com_sales/newmanufacturer') ) {
-		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listmanufacturers', null, false));
-		return;
-	}
-	$manufacturer = new entity;
+    if ( !gatekeeper('com_sales/newmanufacturer') ) {
+	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listmanufacturers', null, false));
+	return;
+    }
+    $manufacturer = new entity;
     $manufacturer->add_tag('com_sales', 'manufacturer');
 }
 
@@ -54,11 +54,8 @@ if (!empty($test) && $test[0]->guid != $_REQUEST['id']) {
     return;
 }
 
-$manufacturer->save();
-
 if ($config->com_sales->global_manufacturers) {
-    unset($manufacturer->uid);
-    unset($manufacturer->gid);
+    $manufacturer->ac = (object) array('other' => 1);
 }
 
 $manufacturer->save();

@@ -158,11 +158,10 @@ function com_user_check_permissions($array) {
 }
 
 /**
- * Add the current user's GID to a new entity.
+ * Add the current user's UID, GID, and access control to a new entity.
  *
  * This occurs right before an entity is saved. It only alters the entity if:
  * - There is a user logged in.
- * - The user has a primary group.
  * - The entity is new (doesn't have a GUID.)
  * - The entity is not a user or group.
  *
@@ -170,12 +169,16 @@ function com_user_check_permissions($array) {
  * user, you must first save it to the database, then change the UID/GID, then
  * save it again.
  *
+ * Default access control is
+ * - user = 3
+ * - group = 3
+ * - other = 0
+ *
  * @param array $array An array of either an entity or another array of entities.
  * @return array An array of either an entity or another array of entities.
  */
 function com_user_add_group($array) {
     if (is_object($_SESSION['user']) &&
-        isset($_SESSION['user']->gid) &&
         is_null($array[0]->guid) &&
         !is_a($array[0], 'user') &&
         !is_a($array[0], 'group')
@@ -183,6 +186,14 @@ function com_user_add_group($array) {
         
         $array[0]->uid = $_SESSION['user']->guid;
         $array[0]->gid = $_SESSION['user']->gid;
+	if (!is_object($array[0]->ac))
+	    $array[0]->ac = (object) array();
+	if (!isset($array[0]->ac->user))
+	    $array[0]->ac->user = 3;
+	if (!isset($array[0]->ac->group))
+	    $array[0]->ac->group = 3;
+	if (!isset($array[0]->ac->other))
+	    $array[0]->ac->other = 0;
     }
     return $array;
 }

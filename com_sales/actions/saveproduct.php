@@ -67,11 +67,8 @@ if (!empty($test) && $test[0]->guid != $_REQUEST['id']) {
     return;
 }
 
-$product->save();
-
 if ($config->com_sales->global_products) {
-    unset($product->uid);
-    unset($product->gid);
+    $product->ac = (object) array('other' => 1);
 }
 
 $product->save();

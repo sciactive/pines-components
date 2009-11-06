@@ -655,15 +655,6 @@ class com_user extends component {
     }
 
     /**
-     * Creates and attaches a module which let's the user log in.
-     *
-     * @param string $position The position in which to place the module.
-     */
-    function print_login($position = 'content') {
-	$module = new module('com_user', 'login', $position);
-    }
-
-    /**
      * Creates and attaches a module containing a form for editing a group.
      *
      * If $id is null, or not given, a blank form will be provided.
@@ -672,6 +663,7 @@ class com_user extends component {
      * @param string $new_option The option to which the form will submit.
      * @param string $new_action The action to which the form will submit.
      * @param int $id The GUID of the group to edit.
+     * @return module|null The new module on success, nothing on failure.
      */
     function print_group_form($heading, $new_option, $new_action, $id = NULL) {
 	global $config;
@@ -695,6 +687,17 @@ class com_user extends component {
 	foreach ($config->components as $cur_component) {
 	    $module->sections[] = $cur_component;
 	}
+
+	return $module;
+    }
+
+    /**
+     * Creates and attaches a module which let's the user log in.
+     *
+     * @param string $position The position in which to place the module.
+     */
+    function print_login($position = 'content') {
+	$module = new module('com_user', 'login', $position);
     }
 
     /**
@@ -706,6 +709,7 @@ class com_user extends component {
      * @param string $new_option The option to which the form will submit.
      * @param string $new_action The action to which the form will submit.
      * @param int $id The GUID of the user to edit.
+     * @return module|null The new module on success, nothing on failure.
      */
     function print_user_form($heading, $new_option, $new_action, $id = NULL) {
 	global $config;
@@ -732,10 +736,12 @@ class com_user extends component {
 	foreach ($config->components as $cur_component) {
 	    $module->sections[] = $cur_component;
 	}
-    //$module->content("<label>Parent<select name=\"parent\">\n");
-    //$module->content("<option value=\"none\">--No Parent--</option>\n");
-    //$module->content($this->get_user_tree('<option value="#guid#"#selected#>#mark# #name# [#username#]</option>', $this->get_user_array(), $parent));
-    //$module->content("</select></label>\n");
+
+	return $module;
+	//$module->content("<label>Parent<select name=\"parent\">\n");
+	//$module->content("<option value=\"none\">--No Parent--</option>\n");
+	//$module->content($this->get_user_tree('<option value="#guid#"#selected#>#mark# #name# [#username#]</option>', $this->get_user_array(), $parent));
+	//$module->content("</select></label>\n");
     }
 
     /**

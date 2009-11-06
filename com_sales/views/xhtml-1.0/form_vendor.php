@@ -63,8 +63,8 @@ $this->show_title = false;
         <input class="field" type="text" name="fax" size="20" value="<?php echo $this->entity->fax; ?>" /></label>
     </div>
 	<div class="element buttons">
-        <?php if ( !is_null($this->id) ) { ?>
-        <input type="hidden" name="id" value="<?php echo $this->id; ?>" />
+        <?php if ( !is_null($this->entity->guid) ) { ?>
+        <input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
         <?php } ?>
         <input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
         <input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_sales', 'listvendors'); ?>';" value="Cancel" />

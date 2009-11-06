@@ -471,11 +471,11 @@ class com_sales extends component {
 	}
 	$module->new_option = $new_option;
 	$module->new_action = $new_action;
-	$module->id = $id;
     }
 
     /**
-     * Creates and attaches a module containing a form for editing a manufacturer.
+     * Creates and attaches a module containing a form for editing a
+     * manufacturer.
      *
      * If $id is null, or not given, a blank form will be provided.
      *
@@ -483,7 +483,7 @@ class com_sales extends component {
      * @param string $new_option The option to which the form will submit.
      * @param string $new_action The action to which the form will submit.
      * @param int $id The GUID of the manufacturer to edit.
-     * @return module The new module.
+     * @return module|null The new module on success, nothing on failure.
      */
     function print_manufacturer_form($heading, $new_option, $new_action, $id = NULL) {
 	global $config;
@@ -501,7 +501,6 @@ class com_sales extends component {
 	}
 	$module->new_option = $new_option;
 	$module->new_action = $new_action;
-	$module->id = $id;
 
 	return $module;
     }
@@ -515,7 +514,7 @@ class com_sales extends component {
      * @param string $new_option The option to which the form will submit.
      * @param string $new_action The action to which the form will submit.
      * @param int $id The GUID of the product to edit.
-     * @return module The new module.
+     * @return module|null The new module on success, nothing on failure.
      */
     function print_product_form($heading, $new_option, $new_action, $id = NULL) {
 	global $config;
@@ -547,7 +546,6 @@ class com_sales extends component {
 
 	$module->new_option = $new_option;
 	$module->new_action = $new_action;
-	$module->id = $id;
 
 	return $module;
     }
@@ -561,7 +559,7 @@ class com_sales extends component {
      * @param string $new_option The option to which the form will submit.
      * @param string $new_action The action to which the form will submit.
      * @param int $id The GUID of the tax/fee to edit.
-     * @return module The new module.
+     * @return module|null The new module on success, nothing on failure.
      */
     function print_tax_fee_form($heading, $new_option, $new_action, $id = NULL) {
 	global $config;
@@ -580,7 +578,6 @@ class com_sales extends component {
 	$module->group_array = $config->user_manager->get_group_array();
 	$module->new_option = $new_option;
 	$module->new_action = $new_action;
-	$module->id = $id;
 
 	return $module;
     }
@@ -594,7 +591,7 @@ class com_sales extends component {
      * @param string $new_option The option to which the form will submit.
      * @param string $new_action The action to which the form will submit.
      * @param int $id The GUID of the vendor to edit.
-     * @return module The new module.
+     * @return module|null The new module on success, nothing on failure.
      */
     function print_vendor_form($heading, $new_option, $new_action, $id = NULL) {
 	global $config;
@@ -612,7 +609,6 @@ class com_sales extends component {
 	}
 	$module->new_option = $new_option;
 	$module->new_action = $new_action;
-	$module->id = $id;
 
 	return $module;
     }

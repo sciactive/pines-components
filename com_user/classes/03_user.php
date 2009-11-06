@@ -19,11 +19,11 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class user extends able_entity {
     public function __construct() {
-		$this->add_tag('com_user', 'user');
-		$this->abilities = array();
-		$this->groups = array();
-        $this->inherit_abilities = true;
-        $this->default_component = 'com_user';
+	$this->add_tag('com_user', 'user');
+	$this->abilities = array();
+	$this->groups = array();
+	$this->inherit_abilities = true;
+	$this->default_component = 'com_user';
     }
 
     /**
@@ -33,11 +33,11 @@ class user extends able_entity {
      * @return mixed True if the user is already in the group. The resulting array of group IDs if the user was not.
      */
     public function addgroup($id) {
-        if ( !in_array($id, $this->__get('groups')) ) {
-            return $this->__set('groups', array_merge(array($id), $this->__get('groups')));
-        } else {
-            return true;
-        }
+	if ( !in_array($id, $this->__get('groups')) ) {
+	    return $this->__set('groups', array_merge(array($id), $this->__get('groups')));
+	} else {
+	    return true;
+	}
     }
 
     /**
@@ -47,11 +47,11 @@ class user extends able_entity {
      * @return mixed True if the user wasn't in the group. The resulting array of group IDs if the user was.
      */
     public function delgroup($id) {
-        if ( in_array($id, $this->__get('groups')) ) {
-			return $this->__set('groups', array_values(array_diff($this->__get('groups'), array($id))));
-        } else {
-            return true;
-        }
+	if ( in_array($id, $this->__get('groups')) ) {
+	    return $this->__set('groups', array_values(array_diff($this->__get('groups'), array($id))));
+	} else {
+	    return true;
+	}
     }
 
     /**
@@ -61,7 +61,7 @@ class user extends able_entity {
      * @return bool
      */
     public function ingroup($id) {
-        return (in_array($id, $this->__get('groups')) || ($id == $this->__get('gid')));
+	return (in_array($id, $this->__get('groups')) || ($id == $this->__get('gid')));
     }
 
     /**
@@ -73,10 +73,10 @@ class user extends able_entity {
      * @param string $password The new password.
      * @return string The resulting MD5 sum which is stored in the entity.
      */
-	public function password($password) {
-		if (!isset($this->salt)) $this->salt = md5(rand());
-		return $this->__set('password', md5($password.$this->__get('salt')));
-	}
+    public function password($password) {
+	if (!isset($this->salt)) $this->salt = md5(rand());
+	return $this->__set('password', md5($password.$this->__get('salt')));
+    }
 
     /**
      * Check if the password given is the correct password for the user's
@@ -86,7 +86,7 @@ class user extends able_entity {
      * @return bool
      */
     public function check_password($password) {
-		return ($this->__get('password') == md5($password.$this->__get('salt')));
+	return ($this->__get('password') == md5($password.$this->__get('salt')));
     }
 }
 

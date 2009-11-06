@@ -18,6 +18,17 @@ $this->show_title = false;
     <div class="element heading">
         <p>Provide tax/fee details in this form.</p>
     </div>
+    <?php if (isset($this->entity->guid)) { ?>
+    <div class="date_info" style="float: right; text-align: right;">
+	<?php if (isset($this->entity->uid)) { ?>
+	<span>Created By: <span class="date"><?php echo $config->user_manager->get_username($this->entity->uid); ?></span></span>
+	<br />
+	<?php } ?>
+	<span>Created On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_cdate); ?></span></span>
+	<br />
+	<span>Modified On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_mdate); ?></span></span>
+    </div>
+    <?php } ?>
     <div class="element">
         <label><span class="label">Name</span>
         <input class="field" type="text" name="name" size="20" value="<?php echo $this->entity->name; ?>" /></label>

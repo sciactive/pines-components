@@ -58,7 +58,7 @@ defined('P_RUN') or die('Direct access prohibited');
             <th>City</th>
             <th>State</th>
             <th>Zip</th>
-            <th>Work Phone</th>
+            <th>Corporate Phone</th>
             <th>Fax</th>
         </tr>
     </thead>

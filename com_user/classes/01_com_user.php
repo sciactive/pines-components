@@ -678,24 +678,17 @@ class com_user extends component {
 	$module = new module('com_user', 'form_group', 'content');
 	$module->title = $heading;
 	if ( is_null($id) ) {
-	    $module->groupname = $module->name = '';
-	    $module->group_abilities = array();
+	    $module->entity = new group;
 	} else {
-	    $group = $this->get_group($id);
-	    if (is_null($user)) {
+	    $module->entity = $this->get_group($id);
+	    if (is_null($module->entity)) {
 		display_error('Requested group id is not accessible.');
 		$module->detach();
 		return;
 	    }
-	    $module->groupname = $group->groupname;
-	    $module->name = $group->name;
-	    $module->email = $group->email;
-	    $module->parent = $group->parent;
-	    $module->group_abilities = $group->abilities;
 	}
 	$module->new_option = $new_option;
 	$module->new_action = $new_action;
-	$module->id = $id;
 	$module->display_abilities = gatekeeper("com_user/abilities");
 	$module->sections = array('system');
 	$module->group_array = $this->get_group_array();
@@ -719,31 +712,17 @@ class com_user extends component {
 	$module = new module('com_user', 'form_user', 'content');
 	$module->title = $heading;
 	if ( is_null($id) ) {
-	    $module->username = $module->name = '';
-	    $module->user_abilities = array();
-	    $module->groups = array();
-	    $module->inherit_abilities = true;
-	    $module->default_component = 'com_user';
+	    $module->entity = new user;
 	} else {
-	    $user = $this->get_user($id);
-	    if (is_null($user)) {
+	    $module->entity = $this->get_user($id);
+	    if (is_null($module->entity)) {
 		display_error('Requested user id is not accessible.');
 		$module->detach();
 		return;
 	    }
-	    $module->username = $user->username;
-	    $module->name = $user->name;
-	    $module->email = $user->email;
-	    $module->parent = $user->parent;
-	    $module->user_abilities = $user->abilities;
-	    $module->gid = $user->gid;
-	    $module->groups = $user->groups;
-	    $module->inherit_abilities = $user->inherit_abilities;
-	    $module->default_component = $user->default_component;
 	}
 	$module->new_option = $new_option;
 	$module->new_action = $new_action;
-	$module->id = $id;
 	$module->display_groups = gatekeeper("com_user/assigng");
 	$module->display_abilities = gatekeeper("com_user/abilities");
 	$module->display_default_components = gatekeeper("com_user/default_component");

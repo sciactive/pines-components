@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->show_title = false;
 ?>
-<form class="pform pform_twocol" method="post" id="product_details" action="<?php echo pines_url($this->new_option, $this->new_action); ?>">
+<form class="pform" method="post" id="product_details" action="<?php echo pines_url($this->new_option, $this->new_action); ?>">
 <fieldset>
     <legend><?php echo $this->title; ?></legend>
     <div class="element heading">
@@ -35,6 +35,7 @@ $this->show_title = false;
 	<script type="text/javascript">
 	    // <![CDATA[
 	    $(document).ready(function(){
+		// Category Tree
 		var input = $("#categories");
 		$("#category_tree").tree({
 		    rules : {
@@ -211,14 +212,43 @@ $this->show_title = false;
 			contextmenu : {}
 		    }
 		});
+
+		// Category Dialog
+		$("#category_dialog").dialog({
+		    bgiframe: true,
+		    autoOpen: false,
+		    modal: true,
+		    buttons: {
+			'Done': function() {
+			    $(this).dialog('close');
+			}
+		    }
+		});
+
+		$('#category_button').click(function() {
+		    $('#category_dialog').dialog('open');
+		}).hover(
+		    function(){
+			$(this).addClass("ui-state-hover");
+		    },
+		    function(){
+			$(this).removeClass("ui-state-hover");
+		    }
+		).mousedown(function(){
+		    $(this).addClass("ui-state-active");
+		}).mouseup(function(){
+		    $(this).removeClass("ui-state-active");
+		});
+
 	    });
 	    // ]]>
 	</script>
-	<div class="group">
-	    <div id="category_tree" style="border: 1px solid black; float: left;"></div>
-	    <p style="clear: left;"><a href="#" id="category_tree_new">New Root Category</a></p>
-	</div>
-        <input id="categories" class="field" type="hidden" name="categories" />
+	<button id="category_button" class="field ui-state-default ui-corner-all" type="button"><span class="ui-icon ui-icon-newwin"></span>Pick Categories</button>
+	<input id="categories" class="field" type="hidden" name="categories" />
+    </div>
+    <div id="category_dialog" title="Categories">
+	<div id="category_tree" style="border: 1px solid black; float: left; width: 100%;"></div>
+	<p style="clear: left;"><a href="#" id="category_tree_new">New Root Category</a></p>
     </div>
     <div class="element full_width">
         <span class="label">Description</span><br />

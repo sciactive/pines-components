@@ -113,8 +113,8 @@ $page->head("<script type=\"text/javascript\" src=\"".$config->rela_location."co
         <?php if ( !is_null($this->id) ) { ?>
         <input type="hidden" name="id" value="<?php echo $this->id; ?>" />
         <?php } ?>
-        <input class="button" type="submit" value="Submit" />
-        <input class="button" type="button" onclick="window.location='<?php echo pines_url('com_user', 'manageusers'); ?>';" value="Cancel" />
+        <input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
+        <input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_user', 'manageusers'); ?>';" value="Cancel" />
     </div>
 
 </fieldset>

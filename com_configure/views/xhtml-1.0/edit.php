@@ -40,8 +40,8 @@ $this->show_title = false;
         <?php } ?>
         <div class="element buttons">
             <input type="hidden" name="component" value="<?php echo $this->req_component; ?>" />
-            <input class="button" type="submit" value="Save" name="save" />
-            <input class="button" type="reset" value="Reset" name="reset" />
+            <input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Save" name="save" />
+            <input class="button ui-state-default ui-priority-secondary ui-corner-all" type="reset" value="Reset" name="reset" />
         </div>
     </fieldset>
 </form>

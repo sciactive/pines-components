@@ -32,8 +32,8 @@ defined('P_RUN') or die('Direct access prohibited');
             <?php if ( isset($_REQUEST['url']) ) { ?>
             <input type="hidden" name="url" value="<?php echo htmlentities($_REQUEST['url']); ?>" />
             <?php } ?>
-            <input class="button" type="submit" name="submit" value="Login" />
-            <input class="button" type="reset" name="reset" value="Reset" />
+            <input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Login" />
+            <input class="button ui-state-default ui-priority-secondary ui-corner-all" type="reset" name="reset" value="Reset" />
         </div>
     </fieldset>
 </form>

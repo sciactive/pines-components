@@ -27,20 +27,41 @@ $config->ability_manager = new abilities;
  * Filter the entities returned by the entity manager for correct user
  * permissions.
  *
- * One of the following criteria is required for the entity to be returned:
- * - No user is logged in. (Should be managed with abilities.)
- * - The entity has no uid and no gid.
- * - The user has the "system/all" ability.
- * - The entity is the user.
- * - The entity is the user's primary group.
- * - The entity's UID is the user. (It is owned by the user.)
- * - The entity's parent is the user.
- * - The entity's parent is the user's primary group.
- * - The entity's group is the user's primary group.
- * - The entity's parent is one of the user's secondary groups.
- * - The entity's group is one of the user's secondary groups.
- * - The entity's parent is a child of one of the user's groups.
- * - The entity's group is a child of one of the user's groups.
+ * This will check the variable "ac" (Access Control) of the entity. It
+ * should be an object that contains the following variables:
+ * - user
+ * - group
+ * - other
+ *
+ * The variable "user" refers to the entity's owner, "group" refers to the
+ * entity's group, and "other" refers to any user who doesn't fit the others.
+ *
+ * Each variable should be either 0, 1, 2, or 3. If it is 0, the user has no
+ * access to the entity. If it is 1, the user has read access to the entity. If
+ * it is 2, the user has read and write access to the entity. If it is 3, the
+ * user has read, write, and delete access to the entity.
+ *
+ * "ac" defaults to:
+ * - user = 3
+ * - group = 3
+ * - other = 0
+ *
+ * The following conditions will result in different checks, which determine
+ * whether the entity is returned:
+ * - No user is logged in. (Always returned, should be managed with abilities.)
+ * - The entity has no uid and no gid. (Always returned.)
+ * - The user has the "system/all" ability. (Always returned.)
+ * - The entity is the user. (Always returned.)
+ * - The entity is the user's primary group. (Always returned.)
+ * - The entity's UID is the user. (It is owned by the user.) (Check user AC.)
+ * - The entity's parent is the user. (Check user AC.)
+ * - The entity's parent is the user's primary group. (Check group AC.)
+ * - The entity's group is the user's primary group. (Check group AC.)
+ * - The entity's parent is one of the user's secondary groups. (Check group AC.)
+ * - The entity's group is one of the user's secondary groups. (Check group AC.)
+ * - The entity's parent is a child of one of the user's groups. (Check group AC.)
+ * - The entity's group is a child of one of the user's groups. (Check group AC.)
+ * - None of the above. (Check other AC.)
  *
  * @param array $array An array of either an entity or another array of entities.
  * @return array An array of either an entity or another array of entities.
@@ -56,6 +77,10 @@ function com_user_check_permissions($array) {
     }
     $return = array();
     foreach ($entities as $cur_entity) {
+	$ac = (object) array('user' => 3, 'group' => 3, 'other' => 0);
+	if (is_object($cur_entity->ac)) {
+	    $ac = $cur_entity->ac;
+	}
         $pass = false;
         // Test for permissions.
         while (true) {
@@ -81,38 +106,48 @@ function com_user_check_permissions($array) {
                 $pass = true;
                 break;
             }
-            if ($cur_entity->uid == $_SESSION['user']->gid) {
-                $pass = true;
+            if ($cur_entity->uid == $_SESSION['user']->guid) {
+		if ($ac->user >= 1)
+		    $pass = true;
                 break;
             }
             if ($cur_entity->parent == $_SESSION['user']->guid) {
-                $pass = true;
+		if ($ac->user >= 1)
+		    $pass = true;
                 break;
             }
             if ($cur_entity->parent == $_SESSION['user']->gid) {
-                $pass = true;
+		if ($ac->group >= 1)
+		    $pass = true;
                 break;
             }
             if ($cur_entity->gid == $_SESSION['user']->gid) {
-                $pass = true;
+		if ($ac->group >= 1)
+		    $pass = true;
                 break;
             }
             if (in_array($cur_entity->parent, $_SESSION['user']->groups)) {
-                $pass = true;
+		if ($ac->group >= 1)
+		    $pass = true;
                 break;
             }
             if (in_array($cur_entity->gid, $_SESSION['user']->groups)) {
-                $pass = true;
+		if ($ac->group >= 1)
+		    $pass = true;
                 break;
             }
             if (in_array($cur_entity->parent, $_SESSION['descendents'])) {
-                $pass = true;
+		if ($ac->group >= 1)
+		    $pass = true;
                 break;
             }
             if (in_array($cur_entity->gid, $_SESSION['descendents'])) {
-                $pass = true;
+		if ($ac->group >= 1)
+		    $pass = true;
                 break;
             }
+	    if ($ac->other >= 1)
+		$pass = true;
             break;
         }
         if ($pass) {

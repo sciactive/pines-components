@@ -18,17 +18,6 @@ $this->show_title = false;
     <div class="element heading">
         <p>Provide product details in this form.</p>
     </div>
-    <?php if (isset($this->entity->guid)) { ?>
-    <div class="date_info" style="float: right; text-align: right;">
-	<?php if (isset($this->entity->uid)) { ?>
-	<span>Created By: <span class="date"><?php echo $config->user_manager->get_username($this->entity->uid); ?></span></span>
-	<br />
-	<?php } ?>
-	<span>Created On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_cdate); ?></span></span>
-	<br />
-	<span>Modified On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_mdate); ?></span></span>
-    </div>
-    <?php } ?>
     <script type="text/javascript">
 	// <![CDATA[
 	$(document).ready(function(){
@@ -39,10 +28,24 @@ $this->show_title = false;
     <div id="product_tabs" style="clear: both;">
 	<ul>
 	    <li><a href="#tab_general">General</a></li>
+	    <li><a href="#tab_images">Images</a></li>
+	    <li><a href="#tab_purchasing">Purchasing</a></li>
 	    <li><a href="#tab_pricing">Pricing</a></li>
 	    <li><a href="#tab_attributes">Attributes</a></li>
+	    <li><a href="#tab_accounting">Accounting</a></li>
 	</ul>
 	<div id="tab_general">
+	    <?php if (isset($this->entity->guid)) { ?>
+	    <div class="date_info" style="float: right; text-align: right;">
+		<?php if (isset($this->entity->uid)) { ?>
+		<span>Created By: <span class="date"><?php echo $config->user_manager->get_username($this->entity->uid); ?></span></span>
+		<br />
+		<?php } ?>
+		<span>Created On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_cdate); ?></span></span>
+		<br />
+		<span>Modified On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_mdate); ?></span></span>
+	    </div>
+	    <?php } ?>
 	    <div class="element">
 		<label><span class="label">Name</span>
 		<input class="field" type="text" name="name" size="20" value="<?php echo $this->entity->name; ?>" /></label>
@@ -298,6 +301,22 @@ $this->show_title = false;
 	    </div>
 	    <br class="spacer" />
 	</div>
+	<div id="tab_images">
+	    <div class="element">
+		<label><span class="label">Upload a New Picture</span>
+		    <span class="note">Doesn't work yet.</span>
+		    <input class="field" type="file" name="image_upload" /></label>
+	    </div>
+	    <br class="spacer" />
+	</div>
+	<div id="tab_purchasing">
+	    <div class="element">
+		<label><span class="label">Available Vendors</span>
+		    <span class="note">Doesn't work yet.</span>
+		    <input class="field" type="text" name="available_vendors" size="20" /></label>
+	    </div>
+	    <br class="spacer" />
+	</div>
 	<div id="tab_pricing">
 	    <div class="element">
 		<label><span class="label">Average Cost</span>
@@ -326,22 +345,21 @@ $this->show_title = false;
 		    // ]]>
 		</script>
 	    </div>
-	    <br />
-	    <fieldset class="group">
-		<legend>Pricing Defaults</legend>
-		<div class="element">
-		    <label><span class="label">Unit Price</span>
-		    <input class="field" type="text" name="unit_price" size="20" value="<?php echo $this->entity->unit_price; ?>" /></label>
-		</div>
-		<div class="element">
-		    <label><span class="label">Margin</span>
-		    <input class="field" type="text" name="margin" size="20" value="<?php echo $this->entity->margin; ?>" /></label>
-		</div>
-		<div class="element">
-		    <label><span class="label">Floor</span>
-		    <input class="field" type="text" name="floor" size="20" value="<?php echo $this->entity->floor; ?>" /></label>
-		</div>
-	    </fieldset>
+	    <div class="element heading">
+		<h1>Defaults</h1>
+	    </div>
+	    <div class="element">
+		<label><span class="label">Unit Price</span>
+		<input class="field" type="text" name="unit_price" size="20" value="<?php echo $this->entity->unit_price; ?>" /></label>
+	    </div>
+	    <div class="element">
+		<label><span class="label">Margin</span>
+		<input class="field" type="text" name="margin" size="20" value="<?php echo $this->entity->margin; ?>" /></label>
+	    </div>
+	    <div class="element">
+		<label><span class="label">Floor</span>
+		<input class="field" type="text" name="floor" size="20" value="<?php echo $this->entity->floor; ?>" /></label>
+	    </div>
 	    <br class="spacer" />
 	</div>
 	<div id="tab_attributes">
@@ -387,6 +405,12 @@ $this->show_title = false;
 			<option value="<?php echo $cur_tax_fee->guid; ?>"<?php echo (is_array($this->entity->additional_tax_fees) && in_array($cur_tax_fee->guid, $this->entity->additional_tax_fees)) ? ' selected="selected"' : ''; ?>><?php echo $cur_tax_fee->name; ?></option>
 		    <?php } ?>
 		</select></label>
+	    </div>
+	    <br class="spacer" />
+	</div>
+	<div id="tab_accounting">
+	    <div class="element">
+		<label><span class="label">Nothing here yet...</span></label>
 	    </div>
 	    <br class="spacer" />
 	</div>

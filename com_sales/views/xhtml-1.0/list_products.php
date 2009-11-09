@@ -51,13 +51,43 @@ defined('P_RUN') or die('Direct access prohibited');
 <table id="product_grid">
     <thead>
         <tr>
+            <th>SKU</th>
             <th>Name</th>
+            <th>Enabled</th>
+            <th>Manufacturer</th>
+            <th>Manufacturer SKU</th>
+            <th>Average Cost</th>
+            <th>Pricing Method</th>
+            <th>Unit Price</th>
+            <th>Margin</th>
+            <th>Floor</th>
+            <th>Weight (lbs)</th>
+            <th>RMA After (days)</th>
+            <th>Discountable</th>
+            <th>Hide on Invoice</th>
+            <th>Non-Refundable</th>
+            <th>Additional Barcodes</th>
         </tr>
     </thead>
     <tbody>
     <?php foreach($this->products as $product) { ?>
         <tr title="<?php echo $product->guid; ?>">
+            <td><?php echo $product->sku; ?></td>
             <td><?php echo $product->name; ?></td>
+            <td><?php echo ($product->enabled ? 'Yes' : 'No'); ?></td>
+            <td><?php echo $product->manufacturer; ?></td>
+            <td><?php echo $product->manufacturer_sku; ?></td>
+            <td>$<?php echo $product->average_cost; ?></td>
+            <td><?php echo $product->pricing_method; ?></td>
+            <td>$<?php echo $product->unit_price; ?></td>
+            <td><?php echo $product->margin; ?>%</td>
+            <td>$<?php echo $product->floor; ?></td>
+            <td><?php echo $product->weight; ?></td>
+            <td><?php echo $product->rma_after; ?></td>
+            <td><?php echo ($product->discountable ? 'Yes' : 'No'); ?></td>
+            <td><?php echo ($product->hide_on_invoice ? 'Yes' : 'No'); ?></td>
+            <td><?php echo ($product->non_refundable ? 'Yes' : 'No'); ?></td>
+            <td><?php echo implode(', ', $product->additional_barcodes); ?></td>
         </tr>
     <?php } ?>
     </tbody>

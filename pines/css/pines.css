@@ -106,6 +106,8 @@ img {
     margin-right:175px;  	/* Had to add column width too. /* Width of right column right-hand padding + left column left and right padding */
     position:relative;
     left:50%;
+
+    margin-top: 15px;
 }
 /* Footer styles */
 #footer {

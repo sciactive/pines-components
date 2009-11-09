@@ -1,7 +1,7 @@
 /* ----------- Globals ----------- */
 * {
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
 }
 ul, ol {
     margin: 11px 0;
@@ -20,7 +20,7 @@ body {
     width:100%;
     background:#FFF;
     min-width:600px;    /* Minimum width of layout - remove line if not required */
-                        /* The min-width property does not work in old versions of Internet Explorer */
+    /* The min-width property does not work in old versions of Internet Explorer */
     font-size:90%;
 }
 h1, h2, h3 {
@@ -103,7 +103,7 @@ img {
     float:left;
     float:right;			/* This overrides the float:left above */
     width:150px;        	/* Width of right column content (right column width minus left and right padding) */
-    margin-right:15px;  	/* Width of right column right-hand padding + left column left and right padding */
+    margin-right:175px;  	/* Had to add column width too. /* Width of right column right-hand padding + left column left and right padding */
     position:relative;
     left:50%;
 }
@@ -121,10 +121,10 @@ img {
 
 /* ----------- Customized CSS ----------- */
 #wrapper {
-	min-height: 100%;
-	height: auto !important;
-	height: 100%;
-	margin: 0 auto -51px; /* the bottom margin is the negative value of the footer's height */
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -51px; /* the bottom margin is the negative value of the footer's height */
     background: transparent url(../images/left-column.png) repeat-y scroll left top; /* This image needs to be same width and color as left column. */
 }
 #footer, .push {
@@ -138,17 +138,17 @@ img {
 }
 #header .logo {
     vertical-align: middle;
-	margin: 0 0 0 25px;
+    margin: 0 0 0 25px;
     border: 0;
 }
 .pagetitle a {
     text-decoration: none;
-	font: bold 2em sans-serif;
+    font: bold 2em sans-serif;
     color: black;
 }
 .pagetitle span {
     vertical-align: middle;
-	margin: 0 50px;
+    margin: 0 50px;
     padding-top: 10px;
     padding-bottom: 10px;
     display: block;
@@ -161,8 +161,8 @@ img {
     color: #7F7F7F;
 }
 .mainmenu .menuwrap {
-	/*text-align: center; /* Align menu text in the center with this. */
-	display: table;
+    /*text-align: center; /* Align menu text in the center with this. */
+    display: table;
     /* margin: 0 auto; /* Align the menu in the center with this. */
     margin-left: 35px; /* Comment this out if you center the menu. */
 }
@@ -174,9 +174,9 @@ img {
     font-size: 0.8em;
 }
 .module_group .module_title {
-	font-size: 1.3em;
-	font-weight: bold;
-	margin-bottom: 8px;
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 8px;
     position: relative;
     left: -3px;
 }
@@ -186,27 +186,27 @@ img {
 }
 /* ----------- Standard Notices ----------- */
 .notice {
-	margin: 3px;
-	padding: 5px;
-	border: 1px solid gray;
-	font: bold smaller sans-serif;
-	background-color: #FFC;
-	text-align: center;
+    margin: 3px;
+    padding: 5px;
+    border: 1px solid gray;
+    font: bold smaller sans-serif;
+    background-color: #FFC;
+    text-align: center;
 }
 .error {
-	background-color: #F00;
-	color: #000;
+    background-color: #F00;
+    color: #000;
 }
 .notice .close {
-	color: gray;
-	float: right;
-	clear: right;
+    color: gray;
+    float: right;
+    clear: right;
 }
 .notice ul, .error ul {
     margin: 0;
 }
 /* ----------- Spacer for making a cleared BR ----------- */
 .spacer{
-	clear: both;
-	height: 1px;
+    clear: both;
+    height: 1px;
 }

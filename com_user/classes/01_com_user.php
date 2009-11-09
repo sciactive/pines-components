@@ -80,7 +80,8 @@ class com_user extends component {
 		if ( !$cur_entity->delete() )
 		    return false;
 	    }
-	    $entity->delete();
+	    if ( !$entity->delete() )
+		return false;
 	    pines_log("Deleted group $entity->groupname.", 'notice');
 	    return true;
 	} else {
@@ -96,7 +97,8 @@ class com_user extends component {
      */
     function delete_user($id) {
 	if ( $entity = $this->get_user($id) ) {
-	    $entity->delete();
+	    if ( !$entity->delete() )
+		return false;
 	    pines_log("Deleted user $entity->username.", 'notice');
 	    return true;
 	} else {

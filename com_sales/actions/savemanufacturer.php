@@ -58,9 +58,11 @@ if ($config->com_sales->global_manufacturers) {
     $manufacturer->ac = (object) array('other' => 1);
 }
 
-$manufacturer->save();
-
-display_notice('Saved manufacturer ['.$manufacturer->name.']');
+if ($manufacturer->save()) {
+    display_notice('Saved manufacturer ['.$manufacturer->name.']');
+} else {
+    display_error('Error saving manufacturer. Do you have permission?');
+}
 
 $config->run_sales->list_manufacturers();
 ?>

@@ -64,9 +64,11 @@ if ($config->com_sales->global_customers) {
     $customer->ac = (object) array('other' => 1);
 }
 
-$customer->save();
-
-display_notice('Saved customer ['.$customer->name.']');
+if ($customer->save()) {
+    display_notice('Saved customer ['.$customer->name.']');
+} else {
+    display_error('Error saving customer. Do you have permission?');
+}
 
 $config->run_sales->list_customers();
 ?>

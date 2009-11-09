@@ -70,9 +70,11 @@ if ($config->com_sales->global_vendors) {
     $vendor->ac = (object) array('other' => 1);
 }
 
-$vendor->save();
-
-display_notice('Saved vendor ['.$vendor->name.']');
+if ($vendor->save()) {
+    display_notice('Saved vendor ['.$vendor->name.']');
+} else {
+    display_error('Error saving vendor. Do you have permission?');
+}
 
 $config->run_sales->list_vendors();
 ?>

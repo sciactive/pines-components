@@ -102,7 +102,8 @@ class com_sales extends component {
      */
     function delete_customer($id) {
 	if ( $entity = $this->get_customer($id) ) {
-	    $entity->delete();
+	    if ( !$entity->delete() )
+		return false;
 	    pines_log("Deleted customer $entity->name.", 'notice');
 	    return true;
 	} else {
@@ -118,7 +119,8 @@ class com_sales extends component {
      */
     function delete_manufacturer($id) {
 	if ( $entity = $this->get_manufacturer($id) ) {
-	    $entity->delete();
+	    if ( !$entity->delete() )
+		return false;
 	    pines_log("Deleted manufacturer $entity->name.", 'notice');
 	    return true;
 	} else {
@@ -134,7 +136,8 @@ class com_sales extends component {
      */
     function delete_product($id) {
 	if ( $entity = $this->get_product($id) ) {
-	    $entity->delete();
+	    if ( !$entity->delete() )
+		return false;
 	    pines_log("Deleted product $entity->name.", 'notice');
 	    return true;
 	} else {
@@ -150,7 +153,8 @@ class com_sales extends component {
      */
     function delete_tax_free($id) {
 	if ( $entity = $this->get_tax_fee($id) ) {
-	    $entity->delete();
+	    if ( !$entity->delete() )
+		return false;
 	    pines_log("Deleted tax / free $entity->name.", 'notice');
 	    return true;
 	} else {
@@ -166,7 +170,8 @@ class com_sales extends component {
      */
     function delete_vendor($id) {
 	if ( $entity = $this->get_vendor($id) ) {
-	    $entity->delete();
+	    if ( !$entity->delete() )
+		return false;
 	    pines_log("Deleted vendor $entity->name.", 'notice');
 	    return true;
 	} else {

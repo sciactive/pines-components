@@ -70,32 +70,32 @@ if (!empty($test) && $test[0]->guid != $_REQUEST['id']) {
 if ($config->com_sales->global_products) {
     $product->ac = (object) array('other' => 1);
 }
+if ($product->save()) {
+    display_notice('Saved product ['.$product->name.']');
+    // Assign the product to the selected categories.
+    // We have to do this here, because new products won't have a GUID until now.
+    $categories = json_decode($_REQUEST['categories']);
+    if (is_array($categories)) {
+	array_map('intval', $categories);
+	$all_categories = $config->run_sales->get_category_array();
+	foreach($all_categories as $cur_cat) {
+	    if (!is_array($cur_cat->products))
+		$cur_cat->products = array();
 
-$product->save();
-
-// Assign the product to the selected categories.
-// We have to do this here, because new products won't have a GUID until now.
-$categories = json_decode($_REQUEST['categories']);
-if (is_array($categories)) {
-    array_map('intval', $categories);
-    $all_categories = $config->run_sales->get_category_array();
-    foreach($all_categories as $cur_cat) {
-	if (!is_array($cur_cat->products))
-	    $cur_cat->products = array();
-
-	if (in_array($cur_cat->guid, $categories) && !in_array($product->guid, $cur_cat->products)) {
-	    $cur_cat->products[] = $product->guid;
-	    if (!$cur_cat->save())
-		display_error('Failed to add product to category: '.$cur_cat->name);
-	} elseif (!in_array($cur_cat->guid, $categories) && in_array($product->guid, $cur_cat->products)) {
-	    $cur_cat->products = array_diff($cur_cat->products, array($product->guid));
-	    if (!$cur_cat->save())
-		display_error('Failed to remove product from category: '.$cur_cat->name);
+	    if (in_array($cur_cat->guid, $categories) && !in_array($product->guid, $cur_cat->products)) {
+		$cur_cat->products[] = $product->guid;
+		if (!$cur_cat->save())
+		    display_error('Failed to add product to category: '.$cur_cat->name);
+	    } elseif (!in_array($cur_cat->guid, $categories) && in_array($product->guid, $cur_cat->products)) {
+		$cur_cat->products = array_diff($cur_cat->products, array($product->guid));
+		if (!$cur_cat->save())
+		    display_error('Failed to remove product from category: '.$cur_cat->name);
+	    }
 	}
     }
+} else {
+    display_error('Error saving product. Do you have permission?');
 }
-
-display_notice('Saved product ['.$product->name.']');
 
 $config->run_sales->list_products();
 ?>

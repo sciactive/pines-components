@@ -30,8 +30,8 @@ class com_entity extends component {
 	$return = $this->delete_entity_by_id($entity->guid);
 	if ( $return )
 	    $entity->guid = null;
+	//unset($entity); //no effect
 	return $return;
-    //unset($entity); //no effect
     }
 
     /**

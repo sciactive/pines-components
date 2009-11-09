@@ -93,10 +93,12 @@ if (!$pass) {
     return;
 }
 
-$group->save();
-
-display_notice('Saved group ['.$group->groupname.']');
-pines_log('Saved group ['.$group->groupname.']');
+if ($group->save()) {
+    display_notice('Saved group ['.$group->groupname.']');
+    pines_log('Saved group ['.$group->groupname.']');
+} else {
+    display_error('Error saving group. Do you have permission?');
+}
 
 $config->user_manager->list_groups();
 ?>

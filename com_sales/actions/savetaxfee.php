@@ -60,9 +60,11 @@ if ($config->com_sales->global_tax_fees) {
     $tax_fee->ac = (object) array('other' => 1);
 }
 
-$tax_fee->save();
-
-display_notice('Saved tax/fee ['.$tax_fee->name.']');
+if ($tax_fee->save()) {
+    display_notice('Saved tax/fee ['.$tax_fee->name.']');
+} else {
+    display_error('Error saving tax/fee. Do you have permission?');
+}
 
 $config->run_sales->list_tax_fees();
 ?>

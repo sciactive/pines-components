@@ -124,10 +124,12 @@ if (!$pass) {
     return;
 }
 
-$user->save();
-
-display_notice('Saved user ['.$user->username.']');
-pines_log('Saved user ['.$user->username.']');
+if ($user->save()) {
+    display_notice('Saved user ['.$user->username.']');
+    pines_log('Saved user ['.$user->username.']');
+} else {
+    display_error('Error saving user. Do you have permission?');
+}
 
 $config->user_manager->list_users();
 ?>

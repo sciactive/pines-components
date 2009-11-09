@@ -42,6 +42,7 @@ $product->pricing_method = $_REQUEST['pricing_method'];
 $product->unit_price = floatval($_REQUEST['unit_price']);
 $product->margin = floatval($_REQUEST['margin']);
 $product->floor = floatval($_REQUEST['floor']);
+$product->weight = floatval($_REQUEST['weight']);
 $product->rma_after = floatval($_REQUEST['rma_after']);
 $product->discountable = ($_REQUEST['discountable'] == 'ON' ? true : false);
 $product->hide_on_invoice = ($_REQUEST['hide_on_invoice'] == 'ON' ? true : false);

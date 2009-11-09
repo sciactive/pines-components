@@ -22,9 +22,11 @@ class tpl_pines extends template {
      * The template format.
      * @var string $format
      */
-	var $format = 'xhtml-1.0-strict-desktop';
+    var $format = 'xhtml-1.0-strict-desktop';
     /**
      * The editor CSS location.
+     *
+     * Filled at runtime.
      * @var string $editor_css
      */
     var $editor_css = '';
@@ -32,11 +34,11 @@ class tpl_pines extends template {
      * Whether to show a header image, instead of text.
      * @var bool $header_image
      */
-	var $header_image = true;
+    var $header_image = true;
 
     function __construct() {
-        global $config;
-        $this->editor_css = $config->rela_location.'templates/pines/css/editor.css';
+	global $config;
+	$this->editor_css = $config->rela_location.'templates/pines/css/editor.css';
     }
 }
 

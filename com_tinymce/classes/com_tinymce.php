@@ -30,7 +30,8 @@ class com_tinymce extends component {
     /**
      * Load the editor.
      *
-     * This will transform any textareas with the "peditor" class into editors.
+     * This will transform any textareas with the "peditor" class into editors
+     * and any textareas with the "peditor_simple" class into simple editors.
      */
     function load() {
         if (!$this->js_loaded) {

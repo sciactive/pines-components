@@ -460,6 +460,7 @@ class com_sales extends component {
      * @param string $new_option The option to which the form will submit.
      * @param string $new_action The action to which the form will submit.
      * @param int $id The GUID of the customer to edit.
+     * @return module|null The new module on success, nothing on failure.
      */
     function print_customer_form($heading, $new_option, $new_action, $id = NULL) {
 	global $config;
@@ -477,6 +478,8 @@ class com_sales extends component {
 	}
 	$module->new_option = $new_option;
 	$module->new_action = $new_action;
+
+	return $module;
     }
 
     /**

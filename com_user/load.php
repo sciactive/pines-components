@@ -97,8 +97,9 @@ function com_user_check_permissions_save($array) {
  * - group
  * - other
  *
- * The variable "user" refers to the entity's owner, "group" refers to the
- * entity's group, and "other" refers to any user who doesn't fit the others.
+ * The variable "user" refers to the entity's owner, "group" refers to all users
+ * in the entity's group and all ancestor groups, and "other" refers to any user
+ * who doesn't fit these descriptions.
  *
  * Each variable should be either 0, 1, 2, or 3. If it is 0, the user has no
  * access to the entity. If it is 1, the user has read access to the entity. If
@@ -127,14 +128,11 @@ function com_user_check_permissions_save($array) {
  * - Its parent is a child of one of the user's groups. (Check group AC.)
  * - None of the above. (Check other AC.)
  *
- * @param object $entity The entity to check.
+ * @param object &$entity The entity to check.
  * @param int $type The lowest level of permission to consider a pass. 1 is read, 2 is write, 3 is delete.
  * @return bool Whether the current user has at least $type permission for the entity.
  */
 function com_user_check_permissions(&$entity, $type = 1) {
-    $ac = (object) array('user' => 3, 'group' => 3, 'other' => 0);
-    if (is_object($entity->ac))
-	$ac = $entity->ac;
     if (!is_object($_SESSION['user']))
 	return true;
     if (function_exists('gatekeeper')) {
@@ -147,42 +145,29 @@ function com_user_check_permissions(&$entity, $type = 1) {
 	return true;
     if ($entity->guid == $_SESSION['user']->gid)
 	return true;
-    if ($entity->uid == $_SESSION['user']->guid) {
-	if ($ac->user >= $type)
-	    return true;
-    }
-    if ($entity->parent == $_SESSION['user']->guid) {
-	if ($ac->user >= $type)
-	    return true;
-    }
-    if ($entity->gid == $_SESSION['user']->gid) {
-	if ($ac->group >= $type)
-	    return true;
-    }
-    if ($entity->parent == $_SESSION['user']->gid) {
-	if ($ac->group >= $type)
-	    return true;
-    }
-    if (in_array($entity->gid, $_SESSION['user']->groups)) {
-	if ($ac->group >= $type)
-	    return true;
-    }
-    if (in_array($entity->parent, $_SESSION['user']->groups)) {
-	if ($ac->group >= $type)
-	    return true;
-    }
-    if (in_array($entity->gid, $_SESSION['descendents'])) {
-	if ($ac->group >= $type)
-	    return true;
-    }
-    if (in_array($entity->parent, $_SESSION['descendents'])) {
-	if ($ac->group >= $type)
-	    return true;
-    }
-    if ($ac->other >= $type)
-	return true;
 
-    return false;
+    // Load access control, since we need it now...
+    $ac = (object) array('user' => 3, 'group' => 3, 'other' => 0);
+    if (is_object($entity->ac))
+	$ac = $entity->ac;
+
+    if ($entity->uid == $_SESSION['user']->guid)
+	return ($ac->user >= $type);
+    if ($entity->parent == $_SESSION['user']->guid)
+	return ($ac->user >= $type);
+    if ($entity->gid == $_SESSION['user']->gid)
+	return ($ac->group >= $type);
+    if ($entity->parent == $_SESSION['user']->gid)
+	return ($ac->group >= $type);
+    if (in_array($entity->gid, $_SESSION['user']->groups))
+	return ($ac->group >= $type);
+    if (in_array($entity->parent, $_SESSION['user']->groups))
+	return ($ac->group >= $type);
+    if (in_array($entity->gid, $_SESSION['descendents']))
+	return ($ac->group >= $type);
+    if (in_array($entity->parent, $_SESSION['descendents']))
+	return ($ac->group >= $type);
+    return ($ac->other >= $type);
 }
 
 /**
@@ -205,7 +190,7 @@ function com_user_check_permissions(&$entity, $type = 1) {
  * @param array $array An array of either an entity or another array of entities.
  * @return array An array of either an entity or another array of entities.
  */
-function com_user_add_group($array) {
+function com_user_add_access($array) {
     if (is_object($_SESSION['user']) &&
         is_null($array[0]->guid) &&
         !is_a($array[0], 'user') &&
@@ -230,7 +215,7 @@ foreach (array('$config->entity_manager->get_entity', '$config->entity_manager->
     $config->hook->add_callback($cur_hook, 10, 'com_user_check_permissions_return');
 }
 
-$config->hook->add_callback('$config->entity_manager->save_entity', -100, 'com_user_add_group');
+$config->hook->add_callback('$config->entity_manager->save_entity', -100, 'com_user_add_access');
 $config->hook->add_callback('$config->entity_manager->save_entity', -99, 'com_user_check_permissions_save');
 
 foreach (array('$config->entity_manager->delete_entity', '$config->entity_manager->delete_entity_by_id') as $cur_hook) {

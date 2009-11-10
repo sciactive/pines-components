@@ -39,6 +39,9 @@ img {
     clear:both;
     float:left;
     width:100%;
+    border-top-width: 0 !important;
+    border-left-width: 0 !important;
+    border-right-width: 0 !important;
     border-bottom:1px solid #666;
     background-color: #E6E6E6;
 }
@@ -115,6 +118,9 @@ img {
     float:left;
     width:100%;
     border-top:1px solid #000;
+    border-left-width: 0 !important;
+    border-right-width: 0 !important;
+    border-bottom-width: 0 !important;
 }
 #footer p {
     padding:10px;
@@ -161,6 +167,7 @@ img {
     background-color: #F6F6F6;
     font-size: 12px;
     color: #7F7F7F;
+    border-width: 0 !important;
 }
 .mainmenu .menuwrap {
     /*text-align: center; /* Align menu text in the center with this. */

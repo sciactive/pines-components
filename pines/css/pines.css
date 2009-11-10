@@ -21,7 +21,7 @@ body {
     background:#FFF;
     min-width:600px;    /* Minimum width of layout - remove line if not required */
     /* The min-width property does not work in old versions of Internet Explorer */
-    font-size:90%;
+    font-size:75%;
 }
 h1, h2, h3 {
     margin:.8em 0 .2em 0;

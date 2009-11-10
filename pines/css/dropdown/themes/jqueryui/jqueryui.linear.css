@@ -20,31 +20,16 @@
 
 ul.dropdown {
  width: 760px;
- background-color: #eee;
- border-bottom: solid 1px #ccc;
 }
 
 	ul.dropdown li {
 	 border: none;
-	 background-color: #eee;
-	}
-
-	ul.dropdown li.hover,
-	ul.dropdown li:hover {
-	 background-color: #f6f6f6;
-	 color: #000;
 	}
 
 	ul.dropdown ul {
 	 width: 760px;
 	 margin-top: 0;
-	 border-top: solid 1px #ccc;
-	 background-color: #f6f6f6;
 	}
-
-		ul.dropdown ul li {
-		 background-color: #f6f6f6;
-		}
 
 		ul.dropdown ul li.hover {
 		 margin: 0;

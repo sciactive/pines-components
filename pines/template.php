@@ -33,7 +33,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/print.css" media="print" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dropdown/dropdown.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dropdown/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
-	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dropdown/themes/default/default.ultimate.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dropdown/themes/jqueryui/jqueryui.css" media="all" rel="stylesheet" type="text/css" />
 	
 	<link href="<?php echo $config->rela_location; ?>system/css/jquery-ui/smoothness/jquery-ui.css" media="all" rel="stylesheet" type="text/css" />
 	<script type="text/javascript" src="<?php echo $config->rela_location; ?>system/js/jquery.min.js"></script>
@@ -74,14 +74,17 @@ defined('P_RUN') or die('Direct access prohibited');
 		</div>
 		<?php } ?>
 		<?php
-		$cur_menu = $page->main_menu->render(array('<ul class="dropdown dropdown-horizontal">', '</ul>'), array('<li class="ui-state-hover">', '</li>'), array('<ul>', '</ul>'), array('<li class="ui-state-hover">', '</li>'), '<a href="#DATA#">#NAME#</a>', '');
+		$cur_menu = $page->main_menu->render(array('<ul class="dropdown dropdown-horizontal">', '</ul>'),
+		    array('<li class="ui-state-default" onmouseover="$(this).addClass(\'ui-state-hover\');" onmouseout="$(this).removeClass(\'ui-state-hover\');">', '</li>'),
+		    array('<ul>', '</ul>'),
+		    array('<li class="ui-state-default" onmouseover="$(this).addClass(\'ui-state-hover\');" onmouseout="$(this).removeClass(\'ui-state-hover\');">', '</li>'), '<a href="#DATA#">#NAME#</a>', '');
 		if ( !empty($cur_menu) )
-		    echo "<div class=\"mainmenu ui-widget ui-state-default\"><div class=\"menuwrap\">\n$cur_menu\n</div></div>\n";
+		    echo "<div class=\"mainmenu ui-widget ui-widget-header\"><div class=\"menuwrap\">\n$cur_menu\n</div></div>\n";
 		?>
 	    </div>
 	    <div class="colmask holygrail">
 		<div class="colmid">
-		    <div class="colleft">
+		    <div class="colleft ui-state-default">
 			<div class="col1wrap">
 			    <div class="col1">
 				<?php //TODO: Notice and error models. ?>
@@ -144,6 +147,9 @@ defined('P_RUN') or die('Direct access prohibited');
 	    <p class="copyright">
 		<?php echo $config->option_copyright_notice; ?>
 	    </p>
+	</div>
+	<div id="pagebg" class="ui-widget ui-widget-content">
+	    <div class="colleft_ghost ui-state-default"></div>
 	</div>
 
     </body>

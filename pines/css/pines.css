@@ -43,7 +43,6 @@ img {
     border-left-width: 0 !important;
     border-right-width: 0 !important;
     border-bottom:1px solid #666;
-    background-color: #E6E6E6;
 }
 #header p,
 #header h1,
@@ -58,7 +57,7 @@ img {
     float:left;
     width:100%;				/* width of whole page */
     overflow:hidden;		/* This chops off any overhanging divs */
-    background: transparent url(../images/shadow-top.png) repeat-x scroll left top;
+    background: transparent url(../images/shadow-top.png) repeat-x scroll left top !important;
 }
 /* holy grail 3 column settings */
 .holygrail {
@@ -73,12 +72,27 @@ img {
     /*background-color:#FFF; /*Blocks shadow. /* Centre column background colour */
 }
 .holygrail .colleft {
+    /* jQuery UI Styling Additions */
+    border-width: 0;
+    background-color: transparent !important;
+    background-image: none !important;
+    /* ----- */
     float:left;
     width:100%;
     margin-left:-50%;
     position:relative;
     left:320px;         	/* Left column width + right column width */
-    background:#F4F4F4 url(../images/shadow-top.png) repeat-x scroll left top; /* Left column background colour */
+}
+#pagebg .colleft_ghost {
+    /* This provides a consistent background down to the footer on the left column. */
+    border-width:0;
+    background-image:none;
+    position:absolute;
+    left:0;
+    top:0;
+    bottom:0;
+    width:160px;    /* Width of the left column. */
+    z-index: -1;
 }
 .holygrail .col1wrap {
     float:left;
@@ -128,16 +142,24 @@ img {
 }
 
 /* ----------- Customized CSS ----------- */
+#pagebg {
+    border-width: 0;
+    position: fixed;
+    background-image:none;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    z-index:-2;
+}
 #wrapper {
     min-height: 100%;
     height: auto !important;
     height: 100%;
     margin: 0 auto -51px; /* the bottom margin is the negative value of the footer's height */
-    background: transparent url(../images/left-column.png) repeat-y scroll left top; /* This image needs to be same width and color as left column. */
 }
 #footer, .push {
     border-top: 1px solid #666;
-    background-color: #E6E6E6;
     height: 50px; /* .push must be the same height as .footer */
     /* http://ryanfait.com/sticky-footer/ */
 }
@@ -148,6 +170,9 @@ img {
     vertical-align: middle;
     margin: 0 0 0 25px;
     border: 0;
+}
+.pagetitle {
+    height: 68px;
 }
 .pagetitle a {
     text-decoration: none;
@@ -164,9 +189,7 @@ img {
 .mainmenu {
     clear: both;
     width: 100%;
-    background-color: #F6F6F6;
     font-size: 12px;
-    color: #7F7F7F;
     border-width: 0 !important;
 }
 .mainmenu .menuwrap {
@@ -176,6 +199,7 @@ img {
     margin-left: 35px; /* Comment this out if you center the menu. */
 }
 .module {
+    padding: 4px;
     margin-bottom: 10px;
 }
 .module_group {
@@ -183,11 +207,9 @@ img {
     font-size: 0.8em;
 }
 .module_group .module_title {
-    font-size: 1.3em;
-    font-weight: bold;
+    font-size: 1.7em;
     margin-bottom: 8px;
-    position: relative;
-    left: -3px;
+    padding: 2px;
 }
 #footer .copyright {
     font-size: .8em;

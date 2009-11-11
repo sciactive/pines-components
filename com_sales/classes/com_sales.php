@@ -528,6 +528,8 @@ class com_sales extends component {
     function print_product_form($heading, $new_option, $new_action, $id = NULL) {
 	global $config;
 	$config->editor->load();
+	$pgrid = new module('system', 'pgrid.default', 'head');
+	$pgrid->icons = true;
 	$jstree = new module('system', 'jstree', 'head');
 	$tageditor = new module('system', 'tag.editor', 'head');
 	$module = new module('com_sales', 'form_product', 'content');
@@ -547,6 +549,10 @@ class com_sales extends component {
 	$module->manufacturers = $config->entity_manager->get_entities_by_tags('com_sales', 'manufacturer');
 	if (!is_array($module->manufacturers)) {
 	    $module->manufacturers = array();
+	}
+	$module->vendors = $config->entity_manager->get_entities_by_tags('com_sales', 'vendor');
+	if (!is_array($module->vendors)) {
+	    $module->vendors = array();
 	}
 	$module->tax_fees = $config->entity_manager->get_entities_by_tags('com_sales', 'tax_fee');
 	if (!is_array($module->tax_fees)) {

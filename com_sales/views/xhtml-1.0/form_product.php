@@ -21,6 +21,37 @@ $this->show_title = false;
     <script type="text/javascript">
 	// <![CDATA[
 	$(document).ready(function(){
+	    
+	    $("#qualified_vendors_table").pgrid({
+		pgrid_paginate: false,
+		pgrid_toolbar: true,
+		pgrid_toolbar_contents : [
+		    {type: 'button', text: 'Add Vendor', extra_class: 'icon picon_16x16_actions_list-add', selection_optional: true, click: function(){
+			$('#vendor_dialog').dialog('open');
+		    }}
+		]
+	    });
+
+	    // Needs to be gridified before it's hidden.
+	    $("#available_vendors").pgrid({
+		pgrid_multi_select: false,
+		pgrid_paginate: false,
+		pgrid_height: '400px;'
+	    });
+
+	    // Vendor Dialog
+	    $("#vendor_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		modal: true,
+		width: 600,
+		buttons: {
+		    'Done': function() {
+			$(this).dialog('close');
+		    }
+		}
+	    });
+			
 	    $("#product_tabs").tabs();
 	});
 	// ]]>
@@ -311,17 +342,56 @@ $this->show_title = false;
 	</div>
 	<div id="tab_purchasing">
 	    <div class="element">
-		<label><span class="label">Available Vendors</span>
-		    <span class="note">Doesn't work yet.</span>
-		    <input class="field" type="text" name="available_vendors" size="20" /></label>
+		<span class="label">Qualified Vendors</span>
+		<div class="group">
+		    <table id="qualified_vendors_table">
+			<thead>
+			    <tr>
+				<th>Vendor</th>
+				<th>Vendor SKU</th>
+				<th>Cost</th>
+			    </tr>
+			</thead>
+			<tbody>
+			    <?php if (is_array($this->entity->vendors)) { foreach ($this->entity->vendors as $cur_vendor) { ?>
+			    <tr title="<?php echo $cur_vendor->guid; ?>">
+				<td><?php echo $cur_vendor->name; ?></td>
+				<td><?php echo $cur_vendor->sku; ?></td>
+				<td><?php echo $cur_vendor->cost; ?></td>
+			    </tr>
+			    <?php } } ?>
+			</tbody>
+		    </table>
+		    <input class="field" type="text" name="qualified_vendors" size="20" />
+		</div>
+	    </div>
+	    <div id="vendor_dialog" title="Add a Vendor">
+		<table id="available_vendors">
+		    <thead>
+			<tr>
+			    <th>Name</th>
+			    <th>Email</th>
+			    <th>Corporate Phone</th>
+			    <th>Fax</th>
+			    <th>Account #</th>
+			</tr>
+		    </thead>
+		    <tbody>
+			<?php foreach ($this->vendors as $cur_vendor) { ?>
+			<tr title="<?php echo $cur_vendor->guid; ?>">
+			    <td><?php echo $cur_vendor->name; ?></td>
+			    <td><?php echo $cur_vendor->email; ?></td>
+			    <td><?php echo $cur_vendor->phone_work; ?></td>
+			    <td><?php echo $cur_vendor->fax; ?></td>
+			    <td><?php echo $cur_vendor->account_number; ?></td>
+			</tr>
+			<?php } ?>
+		    </tbody>
+		</table>
 	    </div>
 	    <br class="spacer" />
 	</div>
 	<div id="tab_pricing">
-	    <div class="element">
-		<label><span class="label">Average Cost</span>
-		<input class="field" type="text" name="average_cost" size="20" value="<?php echo $this->entity->average_cost; ?>" /></label>
-	    </div>
 	    <div class="element">
 		<label><span class="label">Pricing Method</span>
 		<select class="field" name="pricing_method">

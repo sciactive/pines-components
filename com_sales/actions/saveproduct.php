@@ -37,7 +37,6 @@ $product->description = $_REQUEST['description'];
 $product->short_description = $_REQUEST['short_description'];
 $product->manufacturer = ($_REQUEST['manufacturer'] == 'null' ? null : intval($_REQUEST['manufacturer']));
 $product->manufacturer_sku = $_REQUEST['manufacturer_sku'];
-$product->average_cost = floatval($_REQUEST['average_cost']);
 $product->pricing_method = $_REQUEST['pricing_method'];
 $product->unit_price = floatval($_REQUEST['unit_price']);
 $product->margin = floatval($_REQUEST['margin']);

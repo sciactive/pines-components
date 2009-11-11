@@ -56,7 +56,6 @@ defined('P_RUN') or die('Direct access prohibited');
             <th>Enabled</th>
             <th>Manufacturer</th>
             <th>Manufacturer SKU</th>
-            <th>Average Cost</th>
             <th>Pricing Method</th>
             <th>Unit Price</th>
             <th>Margin</th>
@@ -77,7 +76,6 @@ defined('P_RUN') or die('Direct access prohibited');
             <td><?php echo ($product->enabled ? 'Yes' : 'No'); ?></td>
             <td><?php echo $product->manufacturer; ?></td>
             <td><?php echo $product->manufacturer_sku; ?></td>
-            <td>$<?php echo $product->average_cost; ?></td>
             <td><?php echo $product->pricing_method; ?></td>
             <td>$<?php echo $product->unit_price; ?></td>
             <td><?php echo $product->margin; ?>%</td>

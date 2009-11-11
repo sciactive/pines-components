@@ -79,7 +79,7 @@ defined('P_RUN') or die('Direct access prohibited');
 		    array('<ul>', '</ul>'),
 		    array('<li class="ui-state-default" onmouseover="$(this).addClass(\'ui-state-hover\');" onmouseout="$(this).removeClass(\'ui-state-hover\');">', '</li>'), '<a href="#DATA#">#NAME#</a>', '');
 		if ( !empty($cur_menu) )
-		    echo "<div class=\"mainmenu ui-widget ui-widget-header\"><div class=\"menuwrap\">\n$cur_menu\n</div></div>\n";
+		    echo "<div class=\"mainmenu ui-widget-content\"><div class=\"menuwrap\">\n$cur_menu\n</div></div>\n";
 		?>
 	    </div>
 	    <div class="colmask holygrail">

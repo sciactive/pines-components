@@ -207,9 +207,19 @@ img {
     font-size: 0.8em;
 }
 .module_group .module_title {
-    font-size: 1.7em;
     margin-bottom: 8px;
     padding: 2px;
+}
+.module_group .module_title h2 {
+    margin: 0;
+}
+.module_group .module_title p {
+    font-weight: normal;
+    font-size: 1em;
+    margin: 0;
+}
+.module_group .module_content {
+    padding: 0 5px;
 }
 #footer .copyright {
     font-size: .8em;

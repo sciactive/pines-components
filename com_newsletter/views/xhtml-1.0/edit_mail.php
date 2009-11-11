@@ -11,6 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
+$this->title = (is_null($this->entity->guid)) ? 'Editing New Mail' : 'Editing ['.htmlentities($this->entity->name).']';
+
 $page->head("<!-- Skin CSS file -->\n");
 $page->head("<link rel=\"stylesheet\" type=\"text/css\" href=\"http://yui.yahooapis.com/2.7.0/build/assets/skins/sam/skin.css\">\n");
 $page->head("<!-- Utility Dependencies -->\n");

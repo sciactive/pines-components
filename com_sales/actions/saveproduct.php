@@ -54,14 +54,14 @@ if (is_array($_REQUEST['additional_tax_fees'])) {
 }
 
 if (empty($product->name)) {
-    $module = $config->run_sales->print_product_form('Editing Product', 'com_sales', 'saveproduct');
+    $module = $config->run_sales->print_product_form('com_sales', 'saveproduct');
     $module->entity = $product;
     display_error('Please specify a name.');
     return;
 }
 $test = $config->entity_manager->get_entities_by_data(array('name' => $product->name), array('com_sales', 'product'));
 if (!empty($test) && $test[0]->guid != $_REQUEST['id']) {
-    $module = $config->run_sales->print_product_form('Editing Product', 'com_sales', 'saveproduct');
+    $module = $config->run_sales->print_product_form('com_sales', 'saveproduct');
     $module->entity = $product;
     display_error('There is already a product with that name. Please choose a different name.');
     return;

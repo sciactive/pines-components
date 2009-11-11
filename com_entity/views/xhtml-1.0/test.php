@@ -10,6 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
+$this->title = 'Entity Manager Tester';
 ?>
 <p>This entity manager tester will test the current entity manager for required
 functionality. If the entity manager fails any of the tests, it is not

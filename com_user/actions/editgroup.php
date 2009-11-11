@@ -16,5 +16,5 @@ if ( !gatekeeper('com_user/editg') ) {
 	return;
 }
 
-$config->user_manager->print_group_form('Editing ['.$config->user_manager->get_groupname($_REQUEST['id']).']', 'com_user', 'savegroup', $_REQUEST['id']);
+$config->user_manager->print_group_form('com_user', 'savegroup', $_REQUEST['id']);
 ?>

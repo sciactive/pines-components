@@ -52,5 +52,5 @@ if ( $_REQUEST['update'] == 'yes' ) {
 	display_notice('Saved "'.$mail->name.'"');
 }
 
-$config->run_newsletter->edit_mail("Editing mail \"" . $mail->name . "\".", $mail, 'com_newsletter', 'edit');
+$config->run_newsletter->edit_mail($mail, 'com_newsletter', 'edit');
 ?>

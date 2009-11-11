@@ -88,7 +88,7 @@ if ( $_REQUEST['abilities'] === 'true' && gatekeeper("com_user/abilities") ) {
 }
 
 if (!$pass) {
-    $module = $config->user_manager->print_group_form('Editing Group', 'com_user', 'savegroup');
+    $module = $config->user_manager->print_group_form('com_user', 'savegroup');
     $module->entity = $group;
     return;
 }

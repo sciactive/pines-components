@@ -16,5 +16,5 @@ if ( !gatekeeper('com_user/edit') && (!gatekeeper('com_user/self') || ($_REQUEST
     return;
 }
 
-$config->user_manager->print_user_form('Editing ['.$config->user_manager->get_username($_REQUEST['id']).']', 'com_user', 'saveuser', $_REQUEST['id']);
+$config->user_manager->print_user_form('com_user', 'saveuser', $_REQUEST['id']);
 ?>

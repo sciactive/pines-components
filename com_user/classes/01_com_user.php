@@ -573,7 +573,6 @@ class com_user extends component {
 	$pgrid->icons = true;
 
 	$module = new module('com_user', 'list_groups', 'content');
-	$module->title = "Groups";
 	if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	    $module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_user/list_groups'];
 
@@ -596,7 +595,6 @@ class com_user extends component {
 	$pgrid->icons = true;
 
 	$module = new module('com_user', 'list_users', 'content');
-	$module->title = "Users";
 	if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	    $module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_user/list_users'];
 
@@ -661,16 +659,14 @@ class com_user extends component {
      *
      * If $id is null, or not given, a blank form will be provided.
      *
-     * @param string $heading The heading for the form.
      * @param string $new_option The option to which the form will submit.
      * @param string $new_action The action to which the form will submit.
      * @param int $id The GUID of the group to edit.
      * @return module|null The new module on success, nothing on failure.
      */
-    function print_group_form($heading, $new_option, $new_action, $id = NULL) {
+    function print_group_form($new_option, $new_action, $id = NULL) {
 	global $config;
 	$module = new module('com_user', 'form_group', 'content');
-	$module->title = $heading;
 	if ( is_null($id) ) {
 	    $module->entity = new group;
 	} else {
@@ -707,16 +703,14 @@ class com_user extends component {
      *
      * If $id is null, or not given, a blank form will be provided.
      *
-     * @param string $heading The heading for the form.
      * @param string $new_option The option to which the form will submit.
      * @param string $new_action The action to which the form will submit.
      * @param int $id The GUID of the user to edit.
      * @return module|null The new module on success, nothing on failure.
      */
-    function print_user_form($heading, $new_option, $new_action, $id = NULL) {
+    function print_user_form($new_option, $new_action, $id = NULL) {
 	global $config;
 	$module = new module('com_user', 'form_user', 'content');
-	$module->title = $heading;
 	if ( is_null($id) ) {
 	    $module->entity = new user;
 	} else {

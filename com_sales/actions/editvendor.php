@@ -16,6 +16,6 @@ if ( !gatekeeper('com_sales/editvendor') ) {
 	return;
 }
 
-$config->run_sales->print_vendor_form('Editing Vendor', 'com_sales', 'savevendor', $_REQUEST['id']);
+$config->run_sales->print_vendor_form('com_sales', 'savevendor', $_REQUEST['id']);
 
 ?>

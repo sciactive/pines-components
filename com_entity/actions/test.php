@@ -22,7 +22,6 @@ if ( !gatekeeper() ) {
 }
 
 $test = new module('com_entity', 'test', 'content');
-$test->title = 'Entity Manager Tester';
 
 if (!($config->entity_manager)) {
 	$test->error = true;

@@ -21,6 +21,6 @@ if (!array_key_exists($_REQUEST['component'], $config->configurator->config_file
     return;
 }
 $list = new module('com_configure', 'view', 'content');
-$list->title = 'Viewing Configuration for '.$_REQUEST['component'];
+$list->req_component = htmlentities($_REQUEST['component']);
 $list->config = $config->configurator->get_config_array($config->configurator->config_files[$_REQUEST['component']]);
 ?>

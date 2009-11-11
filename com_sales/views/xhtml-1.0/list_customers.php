@@ -10,6 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
+$this->title = 'Customers';
 ?>
 <script type="text/javascript">
     // <![CDATA[

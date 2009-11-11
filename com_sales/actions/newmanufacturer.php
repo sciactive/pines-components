@@ -16,6 +16,6 @@ if ( !gatekeeper('com_sales/newmanufacturer') ) {
 	return;
 }
 
-$config->run_sales->print_manufacturer_form('Editing New Manufacturer', 'com_sales', 'savemanufacturer');
+$config->run_sales->print_manufacturer_form('com_sales', 'savemanufacturer');
 
 ?>

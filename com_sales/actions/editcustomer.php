@@ -16,6 +16,6 @@ if ( !gatekeeper('com_sales/editcustomer') ) {
 	return;
 }
 
-$config->run_sales->print_customer_form('Editing Customer', 'com_sales', 'savecustomer', $_REQUEST['id']);
+$config->run_sales->print_customer_form('com_sales', 'savecustomer', $_REQUEST['id']);
 
 ?>

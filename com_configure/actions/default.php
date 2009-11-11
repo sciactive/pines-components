@@ -17,7 +17,6 @@ if ( !gatekeeper('com_configure/edit') ) {
 }
 
 $list = new module('com_configure', 'edit', 'content');
-$list->title = 'Editing Configuration for system';
 $list->req_component = 'system';
 $list->config = $config->configurator->get_config_array($config->configurator->config_files['system']);
 

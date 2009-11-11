@@ -10,6 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
+$this->title = "About {$config->program_title}";
 ?>
 <p><strong>Version <?php echo $config->program_version; ?></strong></p>
 <p>

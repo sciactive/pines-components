@@ -10,6 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
+$this->title = 'Configure Components';
 ?>
 <?php foreach($this->components as $cur_component) { ?>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo $cur_component; ?></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

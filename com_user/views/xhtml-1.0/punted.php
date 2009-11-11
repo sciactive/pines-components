@@ -10,5 +10,6 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
+$this->title = 'Return';
 ?>
 <a href="<?php echo $this->url; ?>">Return to Previous Page</a>

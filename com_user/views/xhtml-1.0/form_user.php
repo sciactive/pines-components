@@ -10,9 +10,22 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$page->head("<script type=\"text/javascript\" src=\"".$config->rela_location."components/com_user/js/verify.js\"></script>\n");
+$this->title = (is_null($this->entity->guid)) ? 'Editing New User' : 'Editing ['.htmlentities($this->entity->username).']';
 $this->note = 'Provide user details in this form.';
 ?>
+<script type="text/javascript">
+    // <![CDATA[
+    function verify_form(form) {
+	var target_form = document.getElementById('user_details');
+	if (target_form.password.value != target_form.password2.value) {
+	    alert('Your passwords do not match!');
+	    return false;
+	} else {
+	    return true;
+	}
+    }
+    // ]]>
+</script>
 <form class="pform" method="post" id="user_details" action="<?php echo pines_url($this->new_option, $this->new_action); ?>" onsubmit="return verify_form('user_details');">
     <?php if (isset($this->entity->guid)) { ?>
     <div class="date_info" style="float: right; text-align: right;">

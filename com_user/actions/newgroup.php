@@ -16,5 +16,5 @@ if ( !gatekeeper('com_user/newg') ) {
 	return;
 }
 
-$config->user_manager->print_group_form('Editing New Group', 'com_user', 'savegroup');
+$config->user_manager->print_group_form('com_user', 'savegroup');
 ?>

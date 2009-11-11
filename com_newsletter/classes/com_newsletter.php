@@ -43,7 +43,6 @@ class com_newsletter extends component {
     /**
      * Provide a form for the user to edit a mailing.
      *
-     * @param string $heading The heading to be displayed.
      * @param entity|null $mail The mailing to edit. If null, a new one is created.
      * @param string $new_option The option to route to when saved.
      * @param string $new_action The action to route to when saved.
@@ -51,7 +50,7 @@ class com_newsletter extends component {
      * @param string $close_action The action to route to when closed.
      * @return bool True on success, false on failure.
      */
-    function edit_mail($heading = '', $mail = NULL, $new_option = '', $new_action = '', $close_option = "com_newsletter", $close_action = "list") {
+    function edit_mail($mail = NULL, $new_option = '', $new_action = '', $close_option = "com_newsletter", $close_action = "list") {
 	global $config, $page;
 
 	if ( !is_null($mail) ) {
@@ -64,7 +63,6 @@ class com_newsletter extends component {
 	}
 
 	$module = new module('com_newsletter', 'edit_mail', 'content');
-	$module->title = $heading;
 	$module->entity = $mail;
 	$module->new_option = $new_option;
 	$module->new_action = $new_action;
@@ -84,7 +82,6 @@ class com_newsletter extends component {
 	$pgrid->icons = true;
 
 	$module = new module('com_newsletter', 'list_mails', 'content');
-	$module->title = "Mails";
 	$module->mails = $config->entity_manager->get_entities_by_tags('com_newsletter', 'mail');
 	if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	    $module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_newsletter/list_mails'];

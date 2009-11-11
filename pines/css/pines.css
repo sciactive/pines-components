@@ -221,6 +221,9 @@ img {
 .module_group .module_content {
     padding: 0 5px;
 }
+.module_group .module_content a {
+    text-decoration: underline !important;
+}
 #footer .copyright {
     font-size: .8em;
     text-align: center;

@@ -16,6 +16,6 @@ if ( !gatekeeper('com_sales/newcustomer') ) {
 	return;
 }
 
-$config->run_sales->print_customer_form('Editing New Customer', 'com_sales', 'savecustomer');
+$config->run_sales->print_customer_form('com_sales', 'savecustomer');
 
 ?>

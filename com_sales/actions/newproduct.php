@@ -16,6 +16,6 @@ if ( !gatekeeper('com_sales/newproduct') ) {
 	return;
 }
 
-$config->run_sales->print_product_form('Editing New Product', 'com_sales', 'saveproduct');
+$config->run_sales->print_product_form('com_sales', 'saveproduct');
 
 ?>

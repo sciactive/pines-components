@@ -16,9 +16,7 @@ if ( !gatekeeper('com_about/show') ) {
 	return;
 }
 $mod1 = new module('com_about', 'about1', 'content');
-$mod1->title = "About ".$config->option_title." (Powered by ".$config->program_title.")";
 if ( $config->com_about->describe_self ) {
 	$mod2 = new module('com_about', 'about2', 'content');
-	$mod2->title = "About ".$config->program_title;
 }
 ?>

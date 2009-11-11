@@ -10,14 +10,10 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->show_title = false;
+$this->title = (is_null($this->entity->guid)) ? 'Editing New Customer' : 'Editing ['.htmlentities($this->entity->name).']';
+$this->note = 'Provide customer details in this form.';
 ?>
 <form class="pform" method="post" id="customer_details" action="<?php echo pines_url($this->new_option, $this->new_action); ?>">
-<fieldset>
-    <legend><?php echo $this->title; ?></legend>
-    <div class="element heading">
-        <p>Provide customer details in this form.</p>
-    </div>
     <?php if (isset($this->entity->guid)) { ?>
     <div class="date_info" style="float: right; text-align: right;">
 	<?php if (isset($this->entity->uid)) { ?>
@@ -98,5 +94,4 @@ $this->show_title = false;
         <input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
         <input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_sales', 'listcustomers'); ?>';" value="Cancel" />
     </div>
-</fieldset>
 </form>

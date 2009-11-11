@@ -10,5 +10,6 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
+$this->title = "About {$config->option_title} (Powered by {$config->program_title})";
 ?>
 <p><?php echo $config->com_about->description; ?></p>

@@ -119,7 +119,7 @@ if ( $_REQUEST['abilities'] === 'true' && gatekeeper("com_user/abilities") ) {
 }
 
 if (!$pass) {
-    $module = $config->user_manager->print_user_form('Editing User', 'com_user', 'saveuser');
+    $module = $config->user_manager->print_user_form('com_user', 'saveuser');
     $module->entity = $user;
     return;
 }

@@ -10,14 +10,10 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->show_title = false;
+$this->title = (is_null($this->entity->guid)) ? 'Editing New Product' : 'Editing ['.htmlentities($this->entity->name).']';
+$this->note = 'Provide product details in this form.';
 ?>
 <form class="pform" method="post" id="product_details" action="<?php echo pines_url($this->new_option, $this->new_action); ?>">
-<fieldset>
-    <legend><?php echo $this->title; ?></legend>
-    <div class="element heading">
-        <p>Provide product details in this form.</p>
-    </div>
     <script type="text/javascript">
 	// <![CDATA[
 	$(document).ready(function(){
@@ -493,5 +489,4 @@ $this->show_title = false;
         <input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
         <input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_sales', 'listproducts'); ?>';" value="Cancel" />
     </div>
-</fieldset>
 </form>

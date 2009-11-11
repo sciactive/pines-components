@@ -16,6 +16,6 @@ if ( !gatekeeper('com_sales/newtaxfee') ) {
 	return;
 }
 
-$config->run_sales->print_tax_fee_form('Editing New Tax/Fee', 'com_sales', 'savetaxfee');
+$config->run_sales->print_tax_fee_form('com_sales', 'savetaxfee');
 
 ?>

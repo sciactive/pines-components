@@ -321,7 +321,6 @@ class com_sales extends component {
 	$pgrid->icons = true;
 
 	$module = new module('com_sales', 'list_customers', 'content');
-	$module->title = "Customers";
 	if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	    $module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_customers'];
 
@@ -344,7 +343,6 @@ class com_sales extends component {
 	$pgrid->icons = true;
 
 	$module = new module('com_sales', 'list_manufacturers', 'content');
-	$module->title = "Manufacturers";
 	if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	    $module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_manufacturers'];
 
@@ -367,7 +365,6 @@ class com_sales extends component {
 	$pgrid->icons = true;
 
 	$module = new module('com_sales', 'list_products', 'content');
-	$module->title = "Products";
 	if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	    $module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_products'];
 
@@ -390,7 +387,6 @@ class com_sales extends component {
 	$pgrid->icons = true;
 
 	$module = new module('com_sales', 'list_tax_fees', 'content');
-	$module->title = "Taxes/Fees";
 	if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	    $module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_tax_fees'];
 
@@ -413,7 +409,6 @@ class com_sales extends component {
 	$pgrid->icons = true;
 
 	$module = new module('com_sales', 'list_vendors', 'content');
-	$module->title = "Vendors";
 	if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	    $module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_vendors'];
 
@@ -456,16 +451,14 @@ class com_sales extends component {
      *
      * If $id is null, or not given, a blank form will be provided.
      *
-     * @param string $heading The heading for the form.
      * @param string $new_option The option to which the form will submit.
      * @param string $new_action The action to which the form will submit.
      * @param int $id The GUID of the customer to edit.
      * @return module|null The new module on success, nothing on failure.
      */
-    function print_customer_form($heading, $new_option, $new_action, $id = NULL) {
+    function print_customer_form($new_option, $new_action, $id = NULL) {
 	global $config;
 	$module = new module('com_sales', 'form_customer', 'content');
-	$module->title = $heading;
 	if ( is_null($id) ) {
 	    $module->entity = new entity;
 	} else {
@@ -488,16 +481,14 @@ class com_sales extends component {
      *
      * If $id is null, or not given, a blank form will be provided.
      *
-     * @param string $heading The heading for the form.
      * @param string $new_option The option to which the form will submit.
      * @param string $new_action The action to which the form will submit.
      * @param int $id The GUID of the manufacturer to edit.
      * @return module|null The new module on success, nothing on failure.
      */
-    function print_manufacturer_form($heading, $new_option, $new_action, $id = NULL) {
+    function print_manufacturer_form($new_option, $new_action, $id = NULL) {
 	global $config;
 	$module = new module('com_sales', 'form_manufacturer', 'content');
-	$module->title = $heading;
 	if ( is_null($id) ) {
 	    $module->entity = new entity;
 	} else {
@@ -519,13 +510,12 @@ class com_sales extends component {
      *
      * If $id is null, or not given, a blank form will be provided.
      *
-     * @param string $heading The heading for the form.
      * @param string $new_option The option to which the form will submit.
      * @param string $new_action The action to which the form will submit.
      * @param int $id The GUID of the product to edit.
      * @return module|null The new module on success, nothing on failure.
      */
-    function print_product_form($heading, $new_option, $new_action, $id = NULL) {
+    function print_product_form($new_option, $new_action, $id = NULL) {
 	global $config;
 	$config->editor->load();
 	$pgrid = new module('system', 'pgrid.default', 'head');
@@ -533,7 +523,6 @@ class com_sales extends component {
 	$jstree = new module('system', 'jstree', 'head');
 	$tageditor = new module('system', 'tag.editor', 'head');
 	$module = new module('com_sales', 'form_product', 'content');
-	$module->title = $heading;
 	if ( is_null($id) ) {
 	    $module->entity = new entity;
 	} else {
@@ -570,16 +559,14 @@ class com_sales extends component {
      *
      * If $id is null, or not given, a blank form will be provided.
      *
-     * @param string $heading The heading for the form.
      * @param string $new_option The option to which the form will submit.
      * @param string $new_action The action to which the form will submit.
      * @param int $id The GUID of the tax/fee to edit.
      * @return module|null The new module on success, nothing on failure.
      */
-    function print_tax_fee_form($heading, $new_option, $new_action, $id = NULL) {
+    function print_tax_fee_form($new_option, $new_action, $id = NULL) {
 	global $config;
 	$module = new module('com_sales', 'form_tax_fee', 'content');
-	$module->title = $heading;
 	if ( is_null($id) ) {
 	    $module->entity = new entity;
 	} else {
@@ -602,16 +589,14 @@ class com_sales extends component {
      *
      * If $id is null, or not given, a blank form will be provided.
      *
-     * @param string $heading The heading for the form.
      * @param string $new_option The option to which the form will submit.
      * @param string $new_action The action to which the form will submit.
      * @param int $id The GUID of the vendor to edit.
      * @return module|null The new module on success, nothing on failure.
      */
-    function print_vendor_form($heading, $new_option, $new_action, $id = NULL) {
+    function print_vendor_form($new_option, $new_action, $id = NULL) {
 	global $config;
 	$module = new module('com_sales', 'form_vendor', 'content');
-	$module->title = $heading;
 	if ( is_null($id) ) {
 	    $module->entity = new entity;
 	} else {

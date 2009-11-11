@@ -172,7 +172,7 @@ img {
     border: 0;
 }
 .pagetitle {
-    height: 68px;
+    max-height: 68px;
 }
 .pagetitle a {
     text-decoration: none;

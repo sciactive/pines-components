@@ -191,6 +191,7 @@ img {
     width: 100%;
     font-size: 12px;
     border-width: 0 !important;
+    background-image: none !important;
 }
 .mainmenu .menuwrap {
     /*text-align: center; /* Align menu text in the center with this. */

@@ -35,10 +35,24 @@ class tpl_pines extends template {
 	 * @var bool $header_image
 	 */
 	var $header_image = true;
+	/**
+	 * jQuery UI theme to use.
+	 *
+	 * Available are:
+	 * - "dark-hive"
+	 * - "redmond"
+	 * - "smoothness"
+	 * - "start"
+	 * - "ui-darkness"
+	 * - "ui-lightness"
+	 *
+	 * @var string $theme
+	 */
+	var $theme = 'smoothness';
 
 	function __construct() {
-	global $config;
-	$this->editor_css = $config->rela_location.'templates/pines/css/editor.css';
+		global $config;
+		$this->editor_css = $config->rela_location.'templates/pines/css/editor.css';
 	}
 }
 

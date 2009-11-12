@@ -66,7 +66,7 @@ defined('P_RUN') or die('Direct access prohibited');
 		</div>
 		<?php } ?>
 		<?php if ( count($page->get_notice()) ) { ?>
-		<div class="notice"><span class="close">[x] Close</span>
+		<div class="notice"><span class="close">[X] Close</span>
 		<?php
 		$notice = $page->get_notice();
 		foreach ($notice as $cur_item) {

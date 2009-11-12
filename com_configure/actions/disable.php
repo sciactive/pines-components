@@ -17,11 +17,11 @@ if ( !gatekeeper('com_configure/edit') ) {
 }
 
 if ($config->configurator->disable_component($_REQUEST['component'])) {
-    $cur_loc = pines_url('com_configure', 'list', array('message' => urlencode('Component '.$_REQUEST['component'].' successfully disabled.')));
-    header('Location: '.$cur_loc);
-    return;
+	$cur_loc = pines_url('com_configure', 'list', array('message' => urlencode('Component '.$_REQUEST['component'].' successfully disabled.')));
+	header('Location: '.$cur_loc);
+	return;
 } else {
-    display_error('Couldn\'t disable component '.$_REQUEST['component'].'.');
+	display_error('Couldn\'t disable component '.$_REQUEST['component'].'.');
 }
 
 $config->configurator->list_components();

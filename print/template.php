@@ -22,10 +22,10 @@ defined('P_RUN') or die('Direct access prohibited');
 	<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="author" content="Hunter Perrin" />
 	<link href="<?php echo $config->rela_location; ?>system/css/pform.css" media="all" rel="stylesheet" type="text/css" />
-    <!--[if lt IE 8]>
+	<!--[if lt IE 8]>
 	<link href="<?php echo $config->rela_location; ?>system/css/pform-ie-lt-8.css" media="all" rel="stylesheet" type="text/css" />
 	<![endif]-->
-    <!--[if lt IE 7]>
+	<!--[if lt IE 7]>
 	<link href="<?php echo $config->rela_location; ?>system/css/pform-ie-lt-7.css" media="all" rel="stylesheet" type="text/css" />
 	<![endif]-->
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/style.css" media="all" rel="stylesheet" type="text/css" />
@@ -41,45 +41,45 @@ defined('P_RUN') or die('Direct access prohibited');
 	<!--[if lt IE 7]>
 	<script type="text/javascript" src="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/js/jquery/jquery.dropdown.js"></script>
 
-    <style media="screen" type="text/css">
-    .col1 {
-	    width:100%;
+	<style media="screen" type="text/css">
+	.col1 {
+		width:100%;
 	}
-    </style>
-    <![endif]-->
+	</style>
+	<![endif]-->
 
 	<?php echo $page->get_head(); ?>
-        <?php echo $page->render_modules('head'); ?>
+		<?php echo $page->render_modules('head'); ?>
 </head>
 
 <body>
-    <div class="col1">
-        <?php //TODO: Notice and error models. ?>
-        <?php if ( count($page->get_error()) ) { ?>
-        <div class="notice error"><span class="close">[X] Close</span>
-        <?php
-        $error = $page->get_error();
-        foreach ($error as $cur_item) {
-            echo "$cur_item<br />\n";
-        }
-        ?>
-        </div>
-        <?php } ?>
-        <?php if ( count($page->get_notice()) ) { ?>
-        <div class="notice"><span class="close">[x] Close</span>
-        <?php
-        $notice = $page->get_notice();
-        foreach ($notice as $cur_item) {
-            echo "$cur_item<br />\n";
-        }
-        ?>
-        </div>
-        <?php } ?>
-        <?php if ( isset($page->modules['content']) ) {?>
-        <div class="module_group">
-            <?php echo $page->render_modules('content'); ?>
-        </div>
-        <?php } ?>
-    </div>
+	<div class="col1">
+		<?php //TODO: Notice and error models. ?>
+		<?php if ( count($page->get_error()) ) { ?>
+		<div class="notice error"><span class="close">[X] Close</span>
+		<?php
+		$error = $page->get_error();
+		foreach ($error as $cur_item) {
+			echo "$cur_item<br />\n";
+		}
+		?>
+		</div>
+		<?php } ?>
+		<?php if ( count($page->get_notice()) ) { ?>
+		<div class="notice"><span class="close">[x] Close</span>
+		<?php
+		$notice = $page->get_notice();
+		foreach ($notice as $cur_item) {
+			echo "$cur_item<br />\n";
+		}
+		?>
+		</div>
+		<?php } ?>
+		<?php if ( isset($page->modules['content']) ) {?>
+		<div class="module_group">
+			<?php echo $page->render_modules('content'); ?>
+		</div>
+		<?php } ?>
+	</div>
 </body>
 </html>

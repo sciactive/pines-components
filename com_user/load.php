@@ -30,18 +30,18 @@ $config->ability_manager = new abilities;
  * @return array|bool An array of an entity or guid, or false on failure.
  */
 function com_user_check_permissions_delete($array) {
-    global $config;
-    $entity = $array[0];
-    if (is_int($entity))
+	global $config;
+	$entity = $array[0];
+	if (is_int($entity))
 	$entity = $config->entity_manager->get_entity($array[0]);
-    if (!is_object($entity))
+	if (!is_object($entity))
 	return false;
-    // Test for permissions.
-    if (com_user_check_permissions($entity, 3)) {
+	// Test for permissions.
+	if (com_user_check_permissions($entity, 3)) {
 	return $array;
-    } else {
+	} else {
 	return false;
-    }
+	}
 }
 
 /**
@@ -51,22 +51,22 @@ function com_user_check_permissions_delete($array) {
  * @return array An array of either an entity or another array of entities.
  */
 function com_user_check_permissions_return($array) {
-    global $config;
-    if (is_array($array[0])) {
-        $is_array = true;
-        $entities = $array[0];
-    } else {
-        $is_array = false;
-        $entities = $array;
-    }
-    $return = array();
-    foreach ($entities as $cur_entity) {
-        // Test for permissions.
-        if (com_user_check_permissions($cur_entity, 1)) {
-            $return[] = $cur_entity;
-        }
-    }
-    return ($is_array ? array($return) : $return);
+	global $config;
+	if (is_array($array[0])) {
+		$is_array = true;
+		$entities = $array[0];
+	} else {
+		$is_array = false;
+		$entities = $array;
+	}
+	$return = array();
+	foreach ($entities as $cur_entity) {
+		// Test for permissions.
+		if (com_user_check_permissions($cur_entity, 1)) {
+			$return[] = $cur_entity;
+		}
+	}
+	return ($is_array ? array($return) : $return);
 }
 
 /**
@@ -76,16 +76,16 @@ function com_user_check_permissions_return($array) {
  * @return array|bool An array of an entity or false on failure.
  */
 function com_user_check_permissions_save($array) {
-    global $config;
-    $entity = $array[0];
-    if (!is_object($entity))
+	global $config;
+	$entity = $array[0];
+	if (!is_object($entity))
 	return false;
-    // Test for permissions.
-    if (com_user_check_permissions($entity, 2)) {
+	// Test for permissions.
+	if (com_user_check_permissions($entity, 2)) {
 	return $array;
-    } else {
+	} else {
 	return false;
-    }
+	}
 }
 
 /**
@@ -133,41 +133,41 @@ function com_user_check_permissions_save($array) {
  * @return bool Whether the current user has at least $type permission for the entity.
  */
 function com_user_check_permissions(&$entity, $type = 1) {
-    if (!is_object($_SESSION['user']))
+	if (!is_object($_SESSION['user']))
 	return true;
-    if (function_exists('gatekeeper')) {
+	if (function_exists('gatekeeper')) {
 	if (gatekeeper('system/all'))
-	    return true;
-    }
-    if (!isset($entity->uid) && !isset($entity->gid))
+		return true;
+	}
+	if (!isset($entity->uid) && !isset($entity->gid))
 	return true;
-    if ($entity->guid == $_SESSION['user']->guid)
+	if ($entity->guid == $_SESSION['user']->guid)
 	return true;
-    if ($entity->guid == $_SESSION['user']->gid)
+	if ($entity->guid == $_SESSION['user']->gid)
 	return true;
 
-    // Load access control, since we need it now...
-    $ac = (object) array('user' => 3, 'group' => 3, 'other' => 0);
-    if (is_object($entity->ac))
+	// Load access control, since we need it now...
+	$ac = (object) array('user' => 3, 'group' => 3, 'other' => 0);
+	if (is_object($entity->ac))
 	$ac = $entity->ac;
 
-    if ($entity->uid == $_SESSION['user']->guid)
+	if ($entity->uid == $_SESSION['user']->guid)
 	return ($ac->user >= $type);
-    if ($entity->parent == $_SESSION['user']->guid)
+	if ($entity->parent == $_SESSION['user']->guid)
 	return ($ac->user >= $type);
-    if ($entity->gid == $_SESSION['user']->gid)
+	if ($entity->gid == $_SESSION['user']->gid)
 	return ($ac->group >= $type);
-    if ($entity->parent == $_SESSION['user']->gid)
+	if ($entity->parent == $_SESSION['user']->gid)
 	return ($ac->group >= $type);
-    if (in_array($entity->gid, $_SESSION['user']->groups))
+	if (in_array($entity->gid, $_SESSION['user']->groups))
 	return ($ac->group >= $type);
-    if (in_array($entity->parent, $_SESSION['user']->groups))
+	if (in_array($entity->parent, $_SESSION['user']->groups))
 	return ($ac->group >= $type);
-    if (in_array($entity->gid, $_SESSION['descendents']))
+	if (in_array($entity->gid, $_SESSION['descendents']))
 	return ($ac->group >= $type);
-    if (in_array($entity->parent, $_SESSION['descendents']))
+	if (in_array($entity->parent, $_SESSION['descendents']))
 	return ($ac->group >= $type);
-    return ($ac->other >= $type);
+	return ($ac->other >= $type);
 }
 
 /**
@@ -191,35 +191,35 @@ function com_user_check_permissions(&$entity, $type = 1) {
  * @return array An array of either an entity or another array of entities.
  */
 function com_user_add_access($array) {
-    if (is_object($_SESSION['user']) &&
-        is_null($array[0]->guid) &&
-        !is_a($array[0], 'user') &&
-        !is_a($array[0], 'group')
-        ) {
-        
-        $array[0]->uid = $_SESSION['user']->guid;
-        $array[0]->gid = $_SESSION['user']->gid;
+	if (is_object($_SESSION['user']) &&
+		is_null($array[0]->guid) &&
+		!is_a($array[0], 'user') &&
+		!is_a($array[0], 'group')
+		) {
+		
+		$array[0]->uid = $_SESSION['user']->guid;
+		$array[0]->gid = $_SESSION['user']->gid;
 	if (!is_object($array[0]->ac))
-	    $array[0]->ac = (object) array();
+		$array[0]->ac = (object) array();
 	if (!isset($array[0]->ac->user))
-	    $array[0]->ac->user = 3;
+		$array[0]->ac->user = 3;
 	if (!isset($array[0]->ac->group))
-	    $array[0]->ac->group = 3;
+		$array[0]->ac->group = 3;
 	if (!isset($array[0]->ac->other))
-	    $array[0]->ac->other = 0;
-    }
-    return $array;
+		$array[0]->ac->other = 0;
+	}
+	return $array;
 }
 
 foreach (array('$config->entity_manager->get_entity', '$config->entity_manager->get_entities_by_data', '$config->entity_manager->get_entities_by_parent', '$config->entity_manager->get_entities_by_tags', '$config->entity_manager->get_entities_by_tags_exclusive', '$config->entity_manager->get_entities_by_tags_inclusive', '$config->entity_manager->get_entities_by_tags_mixed') as $cur_hook) {
-    $config->hook->add_callback($cur_hook, 10, 'com_user_check_permissions_return');
+	$config->hook->add_callback($cur_hook, 10, 'com_user_check_permissions_return');
 }
 
 $config->hook->add_callback('$config->entity_manager->save_entity', -100, 'com_user_add_access');
 $config->hook->add_callback('$config->entity_manager->save_entity', -99, 'com_user_check_permissions_save');
 
 foreach (array('$config->entity_manager->delete_entity', '$config->entity_manager->delete_entity_by_id') as $cur_hook) {
-    $config->hook->add_callback($cur_hook, -99, 'com_user_check_permissions_delete');
+	$config->hook->add_callback($cur_hook, -99, 'com_user_check_permissions_delete');
 }
 
 ?>

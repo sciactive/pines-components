@@ -20,46 +20,46 @@ defined('P_RUN') or die('Direct access prohibited');
  * @subpackage com_newsletter
  */
 class com_newsletter extends component {
-    /**
-     * Delete an attachment from a mailing.
-     *
-     * @param entity &$mail The mailing.
-     * @param string $name The name of the attachment to delete.
-     * @return bool True on success, false on failure.
-     */
-    function delete_attachment(&$mail, $name) {
+	/**
+	 * Delete an attachment from a mailing.
+	 *
+	 * @param entity &$mail The mailing.
+	 * @param string $name The name of the attachment to delete.
+	 * @return bool True on success, false on failure.
+	 */
+	function delete_attachment(&$mail, $name) {
 	global $config;
 	if ( unlink($config->setting_upload . 'attachments/' . clean_filename($name)) ) {
-	    if ( in_array($name, $mail->attachments) )
+		if ( in_array($name, $mail->attachments) )
 		unset($mail->attachments[array_search($name, $mail->attachments)]);
-	    pines_log("Removed attachment $name from mail $mail->name.", 'notice');
-	    return true;
+		pines_log("Removed attachment $name from mail $mail->name.", 'notice');
+		return true;
 	} else {
-	    display_error('File removal failed!');
-	    return false;
+		display_error('File removal failed!');
+		return false;
 	}
-    }
+	}
 
-    /**
-     * Provide a form for the user to edit a mailing.
-     *
-     * @param entity|null $mail The mailing to edit. If null, a new one is created.
-     * @param string $new_option The option to route to when saved.
-     * @param string $new_action The action to route to when saved.
-     * @param string $close_option The option to route to when closed.
-     * @param string $close_action The action to route to when closed.
-     * @return bool True on success, false on failure.
-     */
-    function edit_mail($mail = NULL, $new_option = '', $new_action = '', $close_option = "com_newsletter", $close_action = "list") {
+	/**
+	 * Provide a form for the user to edit a mailing.
+	 *
+	 * @param entity|null $mail The mailing to edit. If null, a new one is created.
+	 * @param string $new_option The option to route to when saved.
+	 * @param string $new_action The action to route to when saved.
+	 * @param string $close_option The option to route to when closed.
+	 * @param string $close_action The action to route to when closed.
+	 * @return bool True on success, false on failure.
+	 */
+	function edit_mail($mail = NULL, $new_option = '', $new_action = '', $close_option = "com_newsletter", $close_action = "list") {
 	global $config, $page;
 
 	if ( !is_null($mail) ) {
-	    if ( !$mail->has_tag('com_newsletter', 'mail') ) {
+		if ( !$mail->has_tag('com_newsletter', 'mail') ) {
 		display_error('Invalid mail!');
 		return false;
-	    }
+		}
 	} else {
-	    $mail = new entity;
+		$mail = new entity;
 	}
 
 	$module = new module('com_newsletter', 'edit_mail', 'content');
@@ -70,12 +70,12 @@ class com_newsletter extends component {
 	$module->close_action = $close_action;
 
 	return true;
-    }
+	}
 
-    /**
-     * Provides a list of mailings.
-     */
-    function list_mails() {
+	/**
+	 * Provides a list of mailings.
+	 */
+	function list_mails() {
 	global $config;
 
 	$pgrid = new module('system', 'pgrid.default', 'head');
@@ -84,14 +84,14 @@ class com_newsletter extends component {
 	$module = new module('com_newsletter', 'list_mails', 'content');
 	$module->mails = $config->entity_manager->get_entities_by_tags('com_newsletter', 'mail');
 	if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-	    $module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_newsletter/list_mails'];
+		$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_newsletter/list_mails'];
 
 	if ( empty($module->mails) ) {
-	    $pgrid->detach();
-	    $module->detach();
-	    display_notice("There are no mails.");
+		$pgrid->detach();
+		$module->detach();
+		display_notice("There are no mails.");
 	}
-    }
+	}
 }
 
 ?>

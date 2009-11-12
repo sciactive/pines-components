@@ -18,13 +18,13 @@ if ( !gatekeeper('com_sales/deletetaxfee') ) {
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_tax_fee) {
-    if ( !$config->run_sales->delete_tax_fee($cur_tax_fee) )
-        $failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_tax_fee;
+	if ( !$config->run_sales->delete_tax_fee($cur_tax_fee) )
+		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_tax_fee;
 }
 if (empty($failed_deletes)) {
-    display_notice('Selected tax/fee(s) deleted successfully.');
+	display_notice('Selected tax/fee(s) deleted successfully.');
 } else {
-    display_error('Could not delete tax/fees with given IDs: '.$failed_deletes);
+	display_error('Could not delete tax/fees with given IDs: '.$failed_deletes);
 }
 
 $config->run_sales->list_tax_fees();

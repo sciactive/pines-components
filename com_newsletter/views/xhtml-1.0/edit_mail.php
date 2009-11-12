@@ -40,8 +40,8 @@ $page->head("</script>\n");
 ?>
 <div class="yui-skin-sam">
 <form class="pform" enctype="multipart/form-data" name="editingmail" method="post" action="<?php echo pines_url($this->new_option, $this->new_action); ?>">
-    <?php if (isset($this->entity->guid)) { ?>
-    <div class="date_info" style="float: right; text-align: right;">
+	<?php if (isset($this->entity->guid)) { ?>
+	<div class="date_info" style="float: right; text-align: right;">
 	<?php if (isset($this->entity->uid)) { ?>
 	<span>Created By: <span class="date"><?php echo $config->user_manager->get_username($this->entity->uid); ?></span></span>
 	<br />
@@ -49,48 +49,48 @@ $page->head("</script>\n");
 	<span>Created On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_cdate); ?></span></span>
 	<br />
 	<span>Modified On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_mdate); ?></span></span>
-    </div>
-    <?php } ?>
-    <div class="element buttons" style="padding-left: 0;">
-        <input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Save Mail" />
-        <input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url($this->close_option, $this->close_action); ?>';" value="Close" /> <small>(Closing will lose any unsaved changes!)</small>
-    </div>
-    <div class="element">
-        <label><span class="label">Name</span>
-        <input class="field" type="text" name="name" size="20" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
-    </div>
-    <div class="element">
-        <label><span class="label">Subject</span>
-        <input class="field" type="text" name="subject" size="20" value="<?php echo htmlentities($this->entity->subject); ?>" /></label>
-    </div>
-    <div class="element heading">
-        <h1>Message</h1>
-    </div>
-    <div class="element">
-        <textarea class="field" rows="30" name="data" id="data" style="width: 99%;"><?php echo htmlentities($this->entity->message); ?></textarea>
-    </div>
-    <div class="element heading">
-        <h1>Attachments</h1>
-    </div>
-    <div class="element">
-        <span class="label">Current Attachments</span>
-        <?php if ( !empty($this->entity->attachments) ) {
-            echo '<div class="group">';
-            foreach ($this->entity->attachments as $cur_attachment) { ?>
-        <label><input class="field" type="checkbox" name="attach_<?php echo clean_checkbox($cur_attachment); ?>" checked="checked" /><?php echo htmlentities($cur_attachment); ?></label><br />
-        <?php }
-        echo '</div>';
-        } ?>
-    </div>
-    <div class="element">
-        <label><span class="label">Upload</span>
-        <input class="field" name="attachment" type="file" /></label>
-    </div>
-    <div class="element buttons" style="padding-left: 0;">
-        <input type="hidden" name="update" value="yes" />
-        <input type="hidden" name="mail_id" value="<?php echo $this->entity->guid; ?>" />
-        <input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Save Mail" />
-        <input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url($this->close_option, $this->close_action); ?>';" value="Close" /> <small>(Closing will lose any unsaved changes!)</small>
-    </div>
+	</div>
+	<?php } ?>
+	<div class="element buttons" style="padding-left: 0;">
+		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Save Mail" />
+		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url($this->close_option, $this->close_action); ?>';" value="Close" /> <small>(Closing will lose any unsaved changes!)</small>
+	</div>
+	<div class="element">
+		<label><span class="label">Name</span>
+		<input class="field" type="text" name="name" size="20" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
+	</div>
+	<div class="element">
+		<label><span class="label">Subject</span>
+		<input class="field" type="text" name="subject" size="20" value="<?php echo htmlentities($this->entity->subject); ?>" /></label>
+	</div>
+	<div class="element heading">
+		<h1>Message</h1>
+	</div>
+	<div class="element">
+		<textarea class="field" rows="30" name="data" id="data" style="width: 99%;"><?php echo htmlentities($this->entity->message); ?></textarea>
+	</div>
+	<div class="element heading">
+		<h1>Attachments</h1>
+	</div>
+	<div class="element">
+		<span class="label">Current Attachments</span>
+		<?php if ( !empty($this->entity->attachments) ) {
+			echo '<div class="group">';
+			foreach ($this->entity->attachments as $cur_attachment) { ?>
+		<label><input class="field" type="checkbox" name="attach_<?php echo clean_checkbox($cur_attachment); ?>" checked="checked" /><?php echo htmlentities($cur_attachment); ?></label><br />
+		<?php }
+		echo '</div>';
+		} ?>
+	</div>
+	<div class="element">
+		<label><span class="label">Upload</span>
+		<input class="field" name="attachment" type="file" /></label>
+	</div>
+	<div class="element buttons" style="padding-left: 0;">
+		<input type="hidden" name="update" value="yes" />
+		<input type="hidden" name="mail_id" value="<?php echo $this->entity->guid; ?>" />
+		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Save Mail" />
+		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url($this->close_option, $this->close_action); ?>';" value="Close" /> <small>(Closing will lose any unsaved changes!)</small>
+	</div>
 </form>
 </div>

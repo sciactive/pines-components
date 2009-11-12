@@ -18,13 +18,13 @@ if ( !gatekeeper('com_sales/deletevendor') ) {
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_vendor) {
-    if ( !$config->run_sales->delete_vendor($cur_vendor) )
-        $failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_vendor;
+	if ( !$config->run_sales->delete_vendor($cur_vendor) )
+		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_vendor;
 }
 if (empty($failed_deletes)) {
-    display_notice('Selected vendor(s) deleted successfully.');
+	display_notice('Selected vendor(s) deleted successfully.');
 } else {
-    display_error('Could not delete vendors with given IDs: '.$failed_deletes);
+	display_error('Could not delete vendors with given IDs: '.$failed_deletes);
 }
 
 $config->run_sales->list_vendors();

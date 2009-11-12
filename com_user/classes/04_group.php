@@ -18,10 +18,10 @@ defined('P_RUN') or die('Direct access prohibited');
  * @subpackage com_user
  */
 class group extends able_entity {
-    public function __construct() {
+	public function __construct() {
 	$this->add_tag('com_user', 'group');
 	$this->abilities = array();
-    }
+	}
 }
 
 ?>

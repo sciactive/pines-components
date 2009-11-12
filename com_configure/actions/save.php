@@ -17,24 +17,24 @@ if ( !gatekeeper('com_configure/edit') ) {
 }
 
 if (!array_key_exists($_REQUEST['component'], $config->configurator->config_files)) {
-    display_error('Given component either does not exist, or has no configuration file!');
-    return;
+	display_error('Given component either does not exist, or has no configuration file!');
+	return;
 }
 
 if (!($cur_config_array = $config->configurator->get_config_array($config->configurator->config_files[$_REQUEST['component']]))) return;
 
 foreach ($cur_config_array as $cur_key => $cur_var) {
-    if (is_bool($cur_var['value'])) {
-        $cur_config_array[$cur_key]['value'] = (($_REQUEST['opt_bool_'.$cur_var['name']] == 'ON') ? true : false);
-    } elseif (is_int($cur_var['value'])) {
-        $cur_config_array[$cur_key]['value'] = intval($_REQUEST['opt_int_'.$cur_var['name']]);
-    } elseif (is_float($cur_var['value'])) {
-        $cur_config_array[$cur_key]['value'] = floatval($_REQUEST['opt_float_'.$cur_var['name']]);
-    } elseif (is_string($cur_var['value'])) {
-        $cur_config_array[$cur_key]['value'] = strval($_REQUEST['opt_string_'.$cur_var['name']]);
-    } else {
-        $cur_config_array[$cur_key]['value'] = unserialize($_REQUEST['opt_serial_'.$cur_var['name']]);
-    }
+	if (is_bool($cur_var['value'])) {
+		$cur_config_array[$cur_key]['value'] = (($_REQUEST['opt_bool_'.$cur_var['name']] == 'ON') ? true : false);
+	} elseif (is_int($cur_var['value'])) {
+		$cur_config_array[$cur_key]['value'] = intval($_REQUEST['opt_int_'.$cur_var['name']]);
+	} elseif (is_float($cur_var['value'])) {
+		$cur_config_array[$cur_key]['value'] = floatval($_REQUEST['opt_float_'.$cur_var['name']]);
+	} elseif (is_string($cur_var['value'])) {
+		$cur_config_array[$cur_key]['value'] = strval($_REQUEST['opt_string_'.$cur_var['name']]);
+	} else {
+		$cur_config_array[$cur_key]['value'] = unserialize($_REQUEST['opt_serial_'.$cur_var['name']]);
+	}
 }
 
 $config->configurator->put_config_array($cur_config_array, $config->configurator->config_files[$_REQUEST['component']]);

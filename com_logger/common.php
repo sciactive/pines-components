@@ -24,9 +24,9 @@ if ( isset($config->ability_manager) ) {
  * @return array The return values for the hook.
  */
 function com_logger_hook_log($return, $hook) {
-    global $config;
-    $config->log_manager->log('(microtime='.microtime(true).') '.$hook, 'debug');
-    return $return;
+	global $config;
+	$config->log_manager->log('(microtime='.microtime(true).') '.$hook, 'debug');
+	return $return;
 }
 
 if ($config->com_logger->level == 'debug') $config->log_manager->hook();

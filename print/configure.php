@@ -20,21 +20,21 @@ defined('P_RUN') or die('Direct access prohibited');
  * @subpackage tpl_print
  */
 class tpl_print extends template {
-    /**
-     * The template format.
-     * @var string $format
-     */
+	/**
+	 * The template format.
+	 * @var string $format
+	 */
 	var $format = 'xhtml-1.0-strict-print';
-    /**
-     * The editor CSS location.
-     * @var string $editor_css
-     */
-    var $editor_css = '';
+	/**
+	 * The editor CSS location.
+	 * @var string $editor_css
+	 */
+	var $editor_css = '';
 
-    function __construct() {
-        global $config;
-        $this->editor_css = $config->rela_location.'templates/print/css/editor.css';
-    }
+	function __construct() {
+		global $config;
+		$this->editor_css = $config->rela_location.'templates/print/css/editor.css';
+	}
 }
 
 $config->template = new tpl_print;

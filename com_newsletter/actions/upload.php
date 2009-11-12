@@ -39,7 +39,7 @@ if (isset($_FILES['image']['tmp_name'])) {
 	$hout=fopen($path,"w");
 	fwrite($hout,$image);
 	fclose($hout);
-    
+	
 	$path = $config->full_location . $path;
 	$page->override_doc("{status:'UPLOADED', image_url:'$path'}");
 } else {

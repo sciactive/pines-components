@@ -17,8 +17,8 @@ if ( !gatekeeper('com_configure/edit') ) {
 }
 
 if (!array_key_exists($_REQUEST['component'], $config->configurator->config_files)) {
-    display_error('Given component either does not exist, or has no configuration file!');
-    return;
+	display_error('Given component either does not exist, or has no configuration file!');
+	return;
 }
 
 $list = new module('com_configure', 'edit', 'content');

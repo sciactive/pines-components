@@ -20,25 +20,25 @@ defined('P_RUN') or die('Direct access prohibited');
  * @subpackage com_tinymce
  */
 class com_tinymce extends component {
-    /**
-     * Whether the TinyMCE JavaScript has been loaded.
-     * @access private
-     * @var bool $js_loaded
-     */
-    private $js_loaded = false;
+	/**
+	 * Whether the TinyMCE JavaScript has been loaded.
+	 * @access private
+	 * @var bool $js_loaded
+	 */
+	private $js_loaded = false;
 
-    /**
-     * Load the editor.
-     *
-     * This will transform any textareas with the "peditor" class into editors
-     * and any textareas with the "peditor_simple" class into simple editors.
-     */
-    function load() {
-        if (!$this->js_loaded) {
-            $module = new module('com_tinymce', 'tinymce', 'head');
-            $this->js_loaded = true;
-        }
-    }
+	/**
+	 * Load the editor.
+	 *
+	 * This will transform any textareas with the "peditor" class into editors
+	 * and any textareas with the "peditor_simple" class into simple editors.
+	 */
+	function load() {
+		if (!$this->js_loaded) {
+			$module = new module('com_tinymce', 'tinymce', 'head');
+			$this->js_loaded = true;
+		}
+	}
 }
 
 ?>

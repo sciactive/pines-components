@@ -18,10 +18,10 @@ defined('P_RUN') or die('Direct access prohibited');
  * @subpackage tpl_dandelion
  */
 class tpl_dandelion extends template {
-    /**
-     * The template format.
-     * @var string $format
-     */
+	/**
+	 * The template format.
+	 * @var string $format
+	 */
 	var $format = 'xhtml-1.0-strict-desktop';
 }
 

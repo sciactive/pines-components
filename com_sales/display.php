@@ -12,9 +12,9 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( gatekeeper('com_sales/managecustomers') || gatekeeper('com_sales/newcustomer') ||
-     gatekeeper('com_sales/managemanufacturers') || gatekeeper('com_sales/newmanufacturer') ||
-     gatekeeper('com_sales/manageproducts') || gatekeeper('com_sales/newproduct') ||
-     gatekeeper('com_sales/managevendors') || gatekeeper('com_sales/newvendor') ) {
+	 gatekeeper('com_sales/managemanufacturers') || gatekeeper('com_sales/newmanufacturer') ||
+	 gatekeeper('com_sales/manageproducts') || gatekeeper('com_sales/newproduct') ||
+	 gatekeeper('com_sales/managevendors') || gatekeeper('com_sales/newvendor') ) {
 	$com_sales_menu_id = $page->main_menu->add('POS');
 	if ( gatekeeper('com_sales/manageproducts') )
 		$page->main_menu->add('Products', pines_url('com_sales', 'listproducts'), $com_sales_menu_id);

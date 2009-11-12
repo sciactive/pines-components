@@ -17,9 +17,9 @@ if ( !gatekeeper('com_logger/clear') ) {
 }
 
 if (file_put_contents($config->com_logger->path, '') !== false) {
-    display_notice('Log file cleared.');
+	display_notice('Log file cleared.');
 } else {
-    display_error('Error writing to log file.');
+	display_error('Error writing to log file.');
 }
 
 ?>

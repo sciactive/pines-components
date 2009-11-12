@@ -26,7 +26,7 @@ $config->ability_manager->add('com_user', 'deleteg', 'Delete Groups', 'Let user 
 $config->ability_manager->add('com_user', 'abilities', 'Manage Abilities', 'Let user manage other users\' and his own abilities.');
 
 if ( isset($_SESSION['user_id']) ) {
-    $config->user_manager->fill_session();
+	$config->user_manager->fill_session();
 }
 
 ?>

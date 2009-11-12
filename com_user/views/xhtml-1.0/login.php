@@ -14,16 +14,16 @@ $this->title = "Login to {$config->option_title}";
 $this->note = 'Please enter your credentials to login.';
 ?>
 <form class="pform" name="login" method="post" action="<?php echo pines_url(); ?>">
-    <div class="element">
+	<div class="element">
 	<label><span class="label">Username</span>
 	<input class="field" type="text" name="username" size="20" /></label>
-    </div>
-    <div class="element">
+	</div>
+	<div class="element">
 	<label><span class="label">Password</span>
 	<?php echo ($config->com_user->empty_pw ? '<span class="note">May be blank.</span>' : ''); ?>
 	<input class="field" type="password" name="password" size="20" /></label>
-    </div>
-    <div class="element buttons">
+	</div>
+	<div class="element buttons">
 	<input type="hidden" name="option" value="com_user" />
 	<input type="hidden" name="action" value="login" />
 	<?php if ( isset($_REQUEST['url']) ) { ?>
@@ -31,5 +31,5 @@ $this->note = 'Please enter your credentials to login.';
 	<?php } ?>
 	<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Login" />
 	<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="reset" name="reset" value="Reset" />
-    </div>
+	</div>
 </form>

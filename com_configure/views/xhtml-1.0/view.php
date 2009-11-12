@@ -13,22 +13,22 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = "Viewing Configuration for {$this->req_component}";
 ?>
 <form class="pform" action="" method="post">
-    <?php foreach ($this->config as $cur_var) { ?>
-    <div class="element" style="width: 95%">
+	<?php foreach ($this->config as $cur_var) { ?>
+	<div class="element" style="width: 95%">
 	<label>
 	<span class="label">
-	    <?php echo $cur_var['cname']; ?>
+		<?php echo $cur_var['cname']; ?>
 	</span>
 	<span class="note">
-	    <?php print_r($cur_var['description']); ?>
+		<?php print_r($cur_var['description']); ?>
 	</span>
 	<div class="group">
-	    <span class="field"><?php
+		<span class="field"><?php
 		if (is_bool($cur_var['value'])) $cur_var['value'] = ($cur_var['value']) ? 'Yes' : 'No';
 		echo htmlentities(print_r($cur_var['value'], true));
-	    ?></span>
+		?></span>
 	</div>
 	</label>
-    </div>
-    <?php } ?>
+	</div>
+	<?php } ?>
 </form>

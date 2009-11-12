@@ -14,17 +14,17 @@ defined('P_RUN') or die('Direct access prohibited');
 return array (
   0 => 
   array (
-    'name' => 'default_from',
-    'cname' => 'Default From',
-    'description' => 'The default "from" email.',
-    'value' => 'Nowhere <nowhere@example.com>',
+	'name' => 'default_from',
+	'cname' => 'Default From',
+	'description' => 'The default "from" email.',
+	'value' => 'Nowhere <nowhere@example.com>',
   ),
   1 => 
   array (
-    'name' => 'default_reply_to',
-    'cname' => 'Default Reply To',
-    'description' => 'The "reply-to" email.',
-    'value' => 'webmaster@example.com',
+	'name' => 'default_reply_to',
+	'cname' => 'Default Reply To',
+	'description' => 'The "reply-to" email.',
+	'value' => 'webmaster@example.com',
   ),
 );
 

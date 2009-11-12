@@ -15,21 +15,21 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper() ) {
-    $config->user_manager->print_login();
-    return;
+	$config->user_manager->print_login();
+	return;
 } else {
-    if (empty($_SESSION['user']->default_component) || $_SESSION['user']->default_component == 'com_user') {
+	if (empty($_SESSION['user']->default_component) || $_SESSION['user']->default_component == 'com_user') {
 		if ( !gatekeeper('com_user/manage') ) {
 			display_error('Your default component is set to com_user, but you don\'t have permission to use it.');
 			return;
 		}
-        /**
-         * If com_user is the default component, the default action is manageusers.
-         */
-        action('com_user', 'manageusers');
-    } else {
-        action($_SESSION['user']->default_component, 'default');
-    }
+		/**
+		 * If com_user is the default component, the default action is manageusers.
+		 */
+		action('com_user', 'manageusers');
+	} else {
+		action($_SESSION['user']->default_component, 'default');
+	}
 }
 
 ?>

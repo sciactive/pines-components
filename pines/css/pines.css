@@ -1,259 +1,259 @@
 /* ----------- Globals ----------- */
 * {
-    margin: 0;
-    padding: 0;
+	margin: 0;
+	padding: 0;
 }
 ul, ol {
-    margin: 11px 0;
-    padding-left: 40px;
+	margin: 11px 0;
+	padding-left: 40px;
 }
 html, body {
-    height: 100%;
-    font-family: sans-serif;
+	height: 100%;
+	font-family: sans-serif;
 }
 /* ----------- Holy Grail CSS ----------- */
 /* General styles */
 body {
-    margin:0;
-    padding:0;
-    border:0;			/* This removes the border around the viewport in old versions of IE */
-    width:100%;
-    background:#FFF;
-    min-width:600px;    /* Minimum width of layout - remove line if not required */
-    /* The min-width property does not work in old versions of Internet Explorer */
-    font-size:75%;
+	margin:0;
+	padding:0;
+	border:0;			/* This removes the border around the viewport in old versions of IE */
+	width:100%;
+	background:#FFF;
+	min-width:600px;	/* Minimum width of layout - remove line if not required */
+	/* The min-width property does not work in old versions of Internet Explorer */
+	font-size:75%;
 }
 h1, h2, h3 {
-    margin:.8em 0 .2em 0;
-    padding:0;
+	margin:.8em 0 .2em 0;
+	padding:0;
 }
 p {
-    margin:.4em 0 .8em 0;
-    padding:0;
+	margin:.4em 0 .8em 0;
+	padding:0;
 }
 img {
-    margin:10px 0 5px;
+	margin:10px 0 5px;
 }
 /* Header styles */
 #header {
-    clear:both;
-    float:left;
-    width:100%;
-    border-top-width: 0 !important;
-    border-left-width: 0 !important;
-    border-right-width: 0 !important;
-    border-bottom:1px solid #666;
+	clear:both;
+	float:left;
+	width:100%;
+	border-top-width: 0 !important;
+	border-left-width: 0 !important;
+	border-right-width: 0 !important;
+	border-bottom:1px solid #666;
 }
 #header p,
 #header h1,
 #header h2 {
-    padding:.4em 15px 0 15px;
-    margin:0;
+	padding:.4em 15px 0 15px;
+	margin:0;
 }
 /* column container */
 .colmask {
-    position:relative;		/* This fixes the IE7 overflow hidden bug and stops the layout jumping out of place */
-    clear:both;
-    float:left;
-    width:100%;				/* width of whole page */
-    overflow:hidden;		/* This chops off any overhanging divs */
-    background: transparent url(../images/shadow-top.png) repeat-x scroll left top !important;
+	position:relative;		/* This fixes the IE7 overflow hidden bug and stops the layout jumping out of place */
+	clear:both;
+	float:left;
+	width:100%;				/* width of whole page */
+	overflow:hidden;		/* This chops off any overhanging divs */
+	background: transparent url(../images/shadow-top.png) repeat-x scroll left top !important;
 }
 /* holy grail 3 column settings */
 .holygrail {
-    /*background:#FF0;    	/* Right column background colour */
+	/*background:#FF0;		/* Right column background colour */
 }
 .holygrail .colmid {
-    float:left;
-    width:200%;
-    margin-left:-160px; 	/* Width of right column */
-    position:relative;
-    right:100%;
-    /*background-color:#FFF; /*Blocks shadow. /* Centre column background colour */
+	float:left;
+	width:200%;
+	margin-left:-160px; 	/* Width of right column */
+	position:relative;
+	right:100%;
+	/*background-color:#FFF; /*Blocks shadow. /* Centre column background colour */
 }
 .holygrail .colleft {
-    /* jQuery UI Styling Additions */
-    border-width: 0;
-    background-color: transparent !important;
-    background-image: none !important;
-    /* ----- */
-    float:left;
-    width:100%;
-    margin-left:-50%;
-    position:relative;
-    left:320px;         	/* Left column width + right column width */
+	/* jQuery UI Styling Additions */
+	border-width: 0;
+	background-color: transparent !important;
+	background-image: none !important;
+	/* ----- */
+	float:left;
+	width:100%;
+	margin-left:-50%;
+	position:relative;
+	left:320px;		 	/* Left column width + right column width */
 }
 #pagebg .colleft_ghost {
-    /* This provides a consistent background down to the footer on the left column. */
-    border-width:0;
-    background-image:none;
-    position:absolute;
-    left:0;
-    top:0;
-    bottom:0;
-    width:160px;    /* Width of the left column. */
-    z-index: -1;
+	/* This provides a consistent background down to the footer on the left column. */
+	border-width:0;
+	background-image:none;
+	position:absolute;
+	left:0;
+	top:0;
+	bottom:0;
+	width:160px;	/* Width of the left column. */
+	z-index: -1;
 }
 .holygrail .col1wrap {
-    float:left;
-    width:50%;
-    position:relative;
-    right:160px;        	/* Width of left column */
-    padding-bottom:1em; 	/* Centre column bottom padding. Leave it out if it's zero */
+	float:left;
+	width:50%;
+	position:relative;
+	right:160px;			/* Width of left column */
+	padding-bottom:1em; 	/* Centre column bottom padding. Leave it out if it's zero */
 }
 .holygrail .col1 {
-    margin:15px 165px 0;     	/* Centre column side padding:
-                            Left padding = left column width + centre column left padding width
-                            Right padding = right column width + centre column right padding width */
-    position:relative;
-    left:200%;
-    overflow:hidden;
+	margin:15px 165px 0;	 	/* Centre column side padding:
+							Left padding = left column width + centre column left padding width
+							Right padding = right column width + centre column right padding width */
+	position:relative;
+	left:200%;
+	overflow:hidden;
 }
 .holygrail .col2 {
-    float:left;
-    float:right;			/* This overrides the float:left above */
-    width:150px;        	/* Width of left column content (left column width minus left and right padding) */
-    position:relative;
-    right:5px;         	/* Width of the left-hand side padding on the left column */
+	float:left;
+	float:right;			/* This overrides the float:left above */
+	width:150px;			/* Width of left column content (left column width minus left and right padding) */
+	position:relative;
+	right:5px;		 	/* Width of the left-hand side padding on the left column */
 }
 .holygrail .col3 {
-    float:left;
-    float:right;			/* This overrides the float:left above */
-    width:150px;        	/* Width of right column content (right column width minus left and right padding) */
-    margin-right:175px;  	/* Had to add column width too. /* Width of right column right-hand padding + left column left and right padding */
-    position:relative;
-    left:50%;
+	float:left;
+	float:right;			/* This overrides the float:left above */
+	width:150px;			/* Width of right column content (right column width minus left and right padding) */
+	margin-right:175px;  	/* Had to add column width too. /* Width of right column right-hand padding + left column left and right padding */
+	position:relative;
+	left:50%;
 
-    margin-top: 15px;
+	margin-top: 15px;
 }
 /* Footer styles */
 #footer {
-    clear:both;
-    float:left;
-    width:100%;
-    border-top:1px solid #000;
-    border-left-width: 0 !important;
-    border-right-width: 0 !important;
-    border-bottom-width: 0 !important;
+	clear:both;
+	float:left;
+	width:100%;
+	border-top:1px solid #000;
+	border-left-width: 0 !important;
+	border-right-width: 0 !important;
+	border-bottom-width: 0 !important;
 }
 #footer p {
-    padding:10px;
-    margin:0;
+	padding:10px;
+	margin:0;
 }
 
 /* ----------- Customized CSS ----------- */
 #pagebg {
-    border-width: 0;
-    position: fixed;
-    background-image:none;
-    top:0;
-    bottom:0;
-    left:0;
-    right:0;
-    z-index:-2;
+	border-width: 0;
+	position: fixed;
+	background-image:none;
+	top:0;
+	bottom:0;
+	left:0;
+	right:0;
+	z-index:-2;
 }
 #wrapper {
-    min-height: 100%;
-    height: auto !important;
-    height: 100%;
-    margin: 0 auto -51px; /* the bottom margin is the negative value of the footer's height */
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto -51px; /* the bottom margin is the negative value of the footer's height */
 }
 #footer, .push {
-    border-top: 1px solid #666;
-    height: 50px; /* .push must be the same height as .footer */
-    /* http://ryanfait.com/sticky-footer/ */
+	border-top: 1px solid #666;
+	height: 50px; /* .push must be the same height as .footer */
+	/* http://ryanfait.com/sticky-footer/ */
 }
 .push {
-    visibility: hidden;
+	visibility: hidden;
 }
 #header .logo {
-    vertical-align: middle;
-    margin: 0 0 0 25px;
-    border: 0;
+	vertical-align: middle;
+	margin: 0 0 0 25px;
+	border: 0;
 }
 .pagetitle {
-    max-height: 68px;
+	max-height: 68px;
 }
 .pagetitle a {
-    text-decoration: none;
-    font: bold 2em sans-serif;
-    color: black;
+	text-decoration: none;
+	font: bold 2em sans-serif;
+	color: black;
 }
 .pagetitle span {
-    vertical-align: middle;
-    margin: 0 50px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    display: block;
+	vertical-align: middle;
+	margin: 0 50px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	display: block;
 }
 .mainmenu {
-    clear: both;
-    width: 100%;
-    font-size: 12px;
-    background: transparent none no-repeat scroll left top !important;
-    border-bottom-width: 0 !important;
-    border-left-width: 0 !important;
-    border-right-width: 0 !important;
+	clear: both;
+	width: 100%;
+	font-size: 12px;
+	background: transparent none no-repeat scroll left top !important;
+	border-bottom-width: 0 !important;
+	border-left-width: 0 !important;
+	border-right-width: 0 !important;
 }
 .mainmenu .menuwrap {
-    /*text-align: center; /* Align menu text in the center with this. */
-    display: table;
-    /* margin: 0 auto; /* Align the menu in the center with this. */
-    margin-left: 35px; /* Comment this out if you center the menu. */
+	/*text-align: center; /* Align menu text in the center with this. */
+	display: table;
+	/* margin: 0 auto; /* Align the menu in the center with this. */
+	margin-left: 35px; /* Comment this out if you center the menu. */
 }
 .module {
-    padding: 4px;
-    margin-bottom: 10px;
+	padding: 4px;
+	margin-bottom: 10px;
 }
 .module_group {
-    padding: 3px;
-    font-size: 0.8em;
+	padding: 3px;
+	font-size: 0.8em;
 }
 .module_group .module_title {
-    margin-bottom: 8px;
-    padding: 2px;
+	margin-bottom: 8px;
+	padding: 2px;
 }
 .module_group .module_title h2 {
-    margin: 0;
+	margin: 0;
 }
 .module_group .module_title p {
-    font-weight: normal;
-    font-size: 1em;
-    margin: 0;
+	font-weight: normal;
+	font-size: 1em;
+	margin: 0;
 }
 .module_group .module_content {
-    padding: 0 5px;
+	padding: 0 5px;
 }
 .module_group .module_content a {
-    text-decoration: underline !important;
+	text-decoration: underline !important;
 }
 #footer .copyright {
-    font-size: .8em;
-    text-align: center;
+	font-size: .8em;
+	text-align: center;
 }
 /* ----------- Standard Notices ----------- */
 .notice {
-    margin: 3px;
-    padding: 5px;
-    border: 1px solid gray;
-    font: bold smaller sans-serif;
-    background-color: #FFC;
-    text-align: center;
+	margin: 3px;
+	padding: 5px;
+	border: 1px solid gray;
+	font: bold smaller sans-serif;
+	background-color: #FFC;
+	text-align: center;
 }
 .error {
-    background-color: #F00;
-    color: #000;
+	background-color: #F00;
+	color: #000;
 }
 .notice .close {
-    color: gray;
-    float: right;
-    clear: right;
+	color: gray;
+	float: right;
+	clear: right;
 }
 .notice ul, .error ul {
-    margin: 0;
+	margin: 0;
 }
 /* ----------- Spacer for making a cleared BR ----------- */
 .spacer{
-    clear: both;
-    height: 1px;
+	clear: both;
+	height: 1px;
 }

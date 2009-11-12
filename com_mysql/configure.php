@@ -14,38 +14,38 @@ defined('P_RUN') or die('Direct access prohibited');
 return array (
   0 => 
   array (
-    'name' => 'host',
-    'cname' => 'Host',
-    'description' => 'The default MySQL host.',
-    'value' => 'localhost',
+	'name' => 'host',
+	'cname' => 'Host',
+	'description' => 'The default MySQL host.',
+	'value' => 'localhost',
   ),
   1 => 
   array (
-    'name' => 'user',
-    'cname' => 'User',
-    'description' => 'The default MySQL user.',
-    'value' => 'pines',
+	'name' => 'user',
+	'cname' => 'User',
+	'description' => 'The default MySQL user.',
+	'value' => 'pines',
   ),
   2 => 
   array (
-    'name' => 'password',
-    'cname' => 'Password',
-    'description' => 'The default MySQL password.',
-    'value' => 'password',
+	'name' => 'password',
+	'cname' => 'Password',
+	'description' => 'The default MySQL password.',
+	'value' => 'password',
   ),
   3 => 
   array (
-    'name' => 'database',
-    'cname' => 'Database',
-    'description' => 'The default MySQL database.',
-    'value' => 'pines',
+	'name' => 'database',
+	'cname' => 'Database',
+	'description' => 'The default MySQL database.',
+	'value' => 'pines',
   ),
   4 => 
   array (
-    'name' => 'prefix',
-    'cname' => 'Table Prefix',
-    'description' => 'The default MySQL table name prefix.',
-    'value' => 'pin_',
+	'name' => 'prefix',
+	'cname' => 'Table Prefix',
+	'description' => 'The default MySQL table name prefix.',
+	'value' => 'pin_',
   ),
 );
 

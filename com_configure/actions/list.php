@@ -17,7 +17,7 @@ if ( !gatekeeper('com_configure/edit') && !gatekeeper('com_configure/view') ) {
 }
 
 if (isset($_REQUEST['message']))
-    display_notice($_REQUEST['message']);
+	display_notice($_REQUEST['message']);
 
 $config->configurator->list_components();
 

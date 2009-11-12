@@ -32,25 +32,25 @@
 
 
 ul.dropdown {
-    /* font-weight: bold; */
+	/* font-weight: bold; */
 }
 /* TODO: something here from the other template */
 
 ul.dropdown li a {
-    display: block;
-    padding: 7px 10px;
+	display: block;
+	padding: 7px 10px;
 }
 
 
 /* -- level mark -- */
 
 ul.dropdown ul {
-    width: 150px;
-    margin-top: 1px;
+	width: 150px;
+	margin-top: 1px;
 }
 
 ul.dropdown ul li {
-    font-weight: normal;
+	font-weight: normal;
 }
 
 
@@ -62,34 +62,34 @@ ul.dropdown ul li {
 
 
 ul.dropdown *.dir {
-    padding-right: 20px;
-    background-image: url(images/nav-arrow-down.png);
-    background-position: 100% 50%;
-    background-repeat: no-repeat;
+	padding-right: 20px;
+	background-image: url(images/nav-arrow-down.png);
+	background-position: 100% 50%;
+	background-repeat: no-repeat;
 }
 
 
 /* -- Components override -- */
 
 ul.dropdown-horizontal ul *.dir {
-    padding-right: 15px;
-    background-image: url(images/nav-arrow-right.png);
-    background-position: 100% 50%;
-    background-repeat: no-repeat;
+	padding-right: 15px;
+	background-image: url(images/nav-arrow-right.png);
+	background-position: 100% 50%;
+	background-repeat: no-repeat;
 }
 
 ul.dropdown-upward *.dir {
-    background-image: url(images/nav-arrow-top.png);
+	background-image: url(images/nav-arrow-top.png);
 }
 
 ul.dropdown-vertical *.dir,
 ul.dropdown-upward ul *.dir {
-    background-image: url(images/nav-arrow-right.png);
+	background-image: url(images/nav-arrow-right.png);
 }
 
 ul.dropdown-vertical-rtl *.dir {
-    padding-right: 10px;
-    padding-left: 15px;
-    background-image: url(images/nav-arrow-left.png);
-    background-position: 0 50%;
+	padding-right: 10px;
+	padding-left: 15px;
+	background-image: url(images/nav-arrow-left.png);
+	background-position: 0 50%;
 }

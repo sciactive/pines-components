@@ -16,7 +16,7 @@ $this->title = 'Sending Mail';
 <h3>Name: "<?php echo $this->name; ?>"</h3>
 <h3>Subject: "<?php echo $this->subject; ?>"</h3>
 <div style="background: white; border: 2px solid black; padding: 5px; clear: both; overflow: auto;">
-    <?php echo $this->message; ?>
-    <br style="clear: both;" />
+	<?php echo $this->message; ?>
+	<br style="clear: both;" />
 </div>
 <br />

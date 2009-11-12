@@ -17,23 +17,23 @@ if ( isset($_REQUEST['id']) ) {
 		return;
 	}
 	$customer = $config->run_sales->get_customer($_REQUEST['id']);
-    if (is_null($customer)) {
-        display_error('Requested customer id is not accessible');
-        return;
-    }
+	if (is_null($customer)) {
+		display_error('Requested customer id is not accessible');
+		return;
+	}
 } else {
 	if ( !gatekeeper('com_sales/newcustomer') ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listcustomers', null, false));
 		return;
 	}
 	$customer = new entity;
-    $customer->add_tag('com_sales', 'customer');
+	$customer->add_tag('com_sales', 'customer');
 }
 
 $customer->name = $_REQUEST['name'];
 $customer->email = $_REQUEST['email'];
 if (!empty($_REQUEST['password']))
-    $customer->password = $_REQUEST['password'];
+	$customer->password = $_REQUEST['password'];
 $customer->company = $_REQUEST['company'];
 $customer->job_title = $_REQUEST['job_title'];
 $customer->address_1 = $_REQUEST['address_1'];
@@ -47,27 +47,27 @@ $customer->phone_cell = $_REQUEST['phone_cell'];
 $customer->fax = $_REQUEST['fax'];
 
 if (empty($customer->name)) {
-    $module = $config->run_sales->print_customer_form('com_sales', 'savecustomer');
-    $module->entity = $customer;
-    display_error('Please specify a name.');
-    return;
+	$module = $config->run_sales->print_customer_form('com_sales', 'savecustomer');
+	$module->entity = $customer;
+	display_error('Please specify a name.');
+	return;
 }
 $test = $config->entity_manager->get_entities_by_data(array('name' => $customer->name), array('com_sales', 'customer'));
 if (!empty($test) && $test[0]->guid != $_REQUEST['id']) {
-    $module = $config->run_sales->print_customer_form('com_sales', 'savecustomer');
-    $module->entity = $customer;
-    display_error('There is already a customer with that name. Please choose a different name.');
-    return;
+	$module = $config->run_sales->print_customer_form('com_sales', 'savecustomer');
+	$module->entity = $customer;
+	display_error('There is already a customer with that name. Please choose a different name.');
+	return;
 }
 
 if ($config->com_sales->global_customers) {
-    $customer->ac = (object) array('other' => 1);
+	$customer->ac = (object) array('other' => 1);
 }
 
 if ($customer->save()) {
-    display_notice('Saved customer ['.$customer->name.']');
+	display_notice('Saved customer ['.$customer->name.']');
 } else {
-    display_error('Error saving customer. Do you have permission?');
+	display_error('Error saving customer. Do you have permission?');
 }
 
 $config->run_sales->list_customers();

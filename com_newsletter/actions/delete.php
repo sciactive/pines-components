@@ -21,14 +21,14 @@ foreach ($list as $cur_mail) {
 	$mail = new entity;
 	$mail = $config->entity_manager->get_entity($cur_mail);
 	if ( is_null($mail) || !$mail->has_tag('com_newsletter', 'mail') ) {
-        $failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_mail;
+		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_mail;
 	}
 	$mail->delete();
 }
 if (empty($failed_deletes)) {
-    display_notice('Selected mail(s) deleted successfully.');
+	display_notice('Selected mail(s) deleted successfully.');
 } else {
-    display_error('Could not delete mails with given IDs: '.$failed_deletes);
+	display_error('Could not delete mails with given IDs: '.$failed_deletes);
 }
 
 $config->run_newsletter->list_mails();

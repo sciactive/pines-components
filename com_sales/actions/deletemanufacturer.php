@@ -18,13 +18,13 @@ if ( !gatekeeper('com_sales/deletemanufacturer') ) {
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_manufacturer) {
-    if ( !$config->run_sales->delete_manufacturer($cur_manufacturer) )
-        $failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_manufacturer;
+	if ( !$config->run_sales->delete_manufacturer($cur_manufacturer) )
+		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_manufacturer;
 }
 if (empty($failed_deletes)) {
-    display_notice('Selected manufacturer(s) deleted successfully.');
+	display_notice('Selected manufacturer(s) deleted successfully.');
 } else {
-    display_error('Could not delete manufacturers with given IDs: '.$failed_deletes);
+	display_error('Could not delete manufacturers with given IDs: '.$failed_deletes);
 }
 
 $config->run_sales->list_manufacturers();

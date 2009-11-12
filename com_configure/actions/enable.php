@@ -17,13 +17,13 @@ if ( !gatekeeper('com_configure/edit') ) {
 }
 
 if ($config->configurator->enable_component($_REQUEST['component'])) {
-    $cur_loc = pines_url('com_configure', 'list', array('message' => urlencode('Component '.$_REQUEST['component'].' successfully enabled.')));
-    header('Location: '.$cur_loc);
-    return;
-    // Don't add it to enabled yet, because it didn't have a chance to load itself.
-    //$config->components[] = $_REQUEST['component'];
+	$cur_loc = pines_url('com_configure', 'list', array('message' => urlencode('Component '.$_REQUEST['component'].' successfully enabled.')));
+	header('Location: '.$cur_loc);
+	return;
+	// Don't add it to enabled yet, because it didn't have a chance to load itself.
+	//$config->components[] = $_REQUEST['component'];
 } else {
-    display_error('Couldn\'t enable component '.$_REQUEST['component'].'.');
+	display_error('Couldn\'t enable component '.$_REQUEST['component'].'.');
 }
 
 $config->configurator->list_components();

@@ -18,13 +18,13 @@ if ( !gatekeeper('com_sales/deleteproduct') ) {
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_product) {
-    if ( !$config->run_sales->delete_product($cur_product) )
-        $failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_product;
+	if ( !$config->run_sales->delete_product($cur_product) )
+		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_product;
 }
 if (empty($failed_deletes)) {
-    display_notice('Selected product(s) deleted successfully.');
+	display_notice('Selected product(s) deleted successfully.');
 } else {
-    display_error('Could not delete products with given IDs: '.$failed_deletes);
+	display_error('Could not delete products with given IDs: '.$failed_deletes);
 }
 
 $config->run_sales->list_products();

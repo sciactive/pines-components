@@ -12,12 +12,12 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if (!$config->com_user->create_admin) {
-    display_error('Creating admin user has been disabled.');
-    return;
+	display_error('Creating admin user has been disabled.');
+	return;
 }
 if ($_REQUEST['secret'] != $config->com_user->create_admin_secret) {
-    display_error('Wrong secret.');
-    return;
+	display_error('Wrong secret.');
+	return;
 }
 
 $new_admin_user = new user;
@@ -27,8 +27,8 @@ $new_admin_user->password('password');
 $new_admin_user->abilities = array('system/all');
 
 if ( !is_null($config->user_manager->get_user_by_username($new_admin_user->username)) ) {
-    display_error('Username already exists!');
-    return;
+	display_error('Username already exists!');
+	return;
 }
 
 pines_log("Created admin user $new_admin_user->username.", 'notice');

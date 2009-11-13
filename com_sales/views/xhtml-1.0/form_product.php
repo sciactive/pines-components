@@ -286,13 +286,13 @@ $this->note = 'Provide product details in this form.';
 						$('#category_button').click(function() {
 							$('#category_dialog').dialog('open');
 						}).hover(
-						function(){
-							$(this).addClass("ui-state-hover");
-						},
-						function(){
-							$(this).removeClass("ui-state-hover");
-						}
-					).mousedown(function(){
+							function(){
+								$(this).addClass("ui-state-hover");
+							},
+							function(){
+								$(this).removeClass("ui-state-hover");
+							}
+						).mousedown(function(){
 							$(this).addClass("ui-state-active");
 						}).mouseup(function(){
 							$(this).removeClass("ui-state-active");
@@ -361,7 +361,7 @@ $this->note = 'Provide product details in this form.';
 								<td><?php echo $cur_vendor->sku; ?></td>
 								<td><?php echo $cur_vendor->cost; ?></td>
 							</tr>
-								<?php } } ?>
+							<?php } } ?>
 						</tbody>
 					</table>
 					<input class="field" type="hidden" name="qualified_vendors" size="20" />

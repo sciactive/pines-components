@@ -34,8 +34,11 @@ defined('P_RUN') or die('Direct access prohibited');
 		<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dropdown/dropdown.css" media="all" rel="stylesheet" type="text/css" />
 		<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dropdown/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
 		<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dropdown/themes/jqueryui/jqueryui.css" media="all" rel="stylesheet" type="text/css" />
-
+        <?php if ($config->template->theme_switcher) { ?>
+        <link type="text/css" rel="stylesheet" href="http://jqueryui.com/themes/base/ui.all.css" />
+        <?php } else { ?>
 		<link href="<?php echo $config->rela_location; ?>system/css/jquery-ui/<?php echo $config->template->theme; ?>/jquery-ui.css" media="all" rel="stylesheet" type="text/css" />
+        <?php } ?>
 		<script type="text/javascript" src="<?php echo $config->rela_location; ?>system/js/jquery.min.js"></script>
 		<script type="text/javascript" src="<?php echo $config->rela_location; ?>system/js/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/js/jquery/jquery.timers-1.1.2.js"></script>
@@ -50,6 +53,25 @@ defined('P_RUN') or die('Direct access prohibited');
 			}
 		</style>
 		<![endif]-->
+        <?php if ($config->template->theme_switcher) { ?>
+        <script type="text/javascript" src="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/js/jquery/jquery.themeswitcher.js"></script>
+        <script type="text/javascript">
+            // <![CDATA[
+            $(document).ready(function(){
+                $('#switcher').themeswitcher();
+            });
+            // ]]>
+        </script>
+        <style type="text/css">
+            /* <![CDATA[ */
+            #switcher {
+                position: absolute;
+                right: 20px;
+                top: 20px;
+            }
+            /* ]]> */
+        </style>
+        <?php } ?>
 
 		<?php echo $page->get_head(); ?>
 		<?php echo $page->render_modules('head'); ?>
@@ -58,6 +80,9 @@ defined('P_RUN') or die('Direct access prohibited');
 	<body>
 
 		<div id="wrapper">
+            <?php if ( $config->template->theme_switcher ) { ?>
+            <div id="switcher"></div>
+            <?php } ?>
 			<div id="header" class="ui-widget-header">
 				<div class="pagetitle">
 					<a href="<?php echo $config->full_location; ?>">

@@ -43,12 +43,15 @@ img {
 	border-left-width: 0 !important;
 	border-right-width: 0 !important;
 	border-bottom:1px solid #666;
+	max-height: 100px;
 }
-#header p,
-#header h1,
-#header h2 {
-	padding:.4em 15px 0 15px;
-	margin:0;
+#header .pagetitle {
+	margin: 2px 25px;
+	float: left;
+}
+#header .pagetitle h1 {
+	margin: 0;
+	padding: 10px;
 }
 /* column container */
 .colmask {
@@ -156,35 +159,24 @@ img {
 	min-height: 100%;
 	height: auto !important;
 	height: 100%;
-	margin: 0 auto -51px; /* the bottom margin is the negative value of the footer's height */
+	margin: 0 auto -51px; /* the bottom margin is the negative value of the footer's height (+ border) */
 }
 #footer, .push {
 	border-top: 1px solid #666;
+	overflow: auto;
 	height: 50px; /* .push must be the same height as .footer */
 	/* http://ryanfait.com/sticky-footer/ */
 }
 .push {
 	visibility: hidden;
 }
-#header .logo {
-	vertical-align: middle;
-	margin: 0 0 0 25px;
-	border: 0;
-}
 .pagetitle {
 	max-height: 68px;
 }
 .pagetitle a {
 	text-decoration: none;
-	font: bold 2em sans-serif;
+	font: bold 1em sans-serif;
 	color: black;
-}
-.pagetitle span {
-	vertical-align: middle;
-	margin: 0 50px;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	display: block;
 }
 .mainmenu {
 	clear: both;

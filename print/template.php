@@ -21,6 +21,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	<title><?php echo $page->get_title(); ?></title>
 	<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="author" content="Hunter Perrin" />
+	
 	<link href="<?php echo $config->rela_location; ?>system/css/pform.css" media="all" rel="stylesheet" type="text/css" />
 	<!--[if lt IE 8]>
 	<link href="<?php echo $config->rela_location; ?>system/css/pform-ie-lt-8.css" media="all" rel="stylesheet" type="text/css" />
@@ -28,10 +29,12 @@ defined('P_RUN') or die('Direct access prohibited');
 	<!--[if lt IE 7]>
 	<link href="<?php echo $config->rela_location; ?>system/css/pform-ie-lt-7.css" media="all" rel="stylesheet" type="text/css" />
 	<![endif]-->
+
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/style.css" media="all" rel="stylesheet" type="text/css" />
+
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dropdown/dropdown.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dropdown/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
-	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dropdown/themes/default/default.ultimate.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dropdown/themes/jqueryui/jqueryui.css" media="all" rel="stylesheet" type="text/css" />
 
 	<link href="<?php echo $config->rela_location; ?>system/css/jquery-ui/smoothness/jquery-ui.css" media="all" rel="stylesheet" type="text/css" />
 	<script type="text/javascript" src="<?php echo $config->rela_location; ?>system/js/jquery.min.js"></script>
@@ -49,37 +52,32 @@ defined('P_RUN') or die('Direct access prohibited');
 	<![endif]-->
 
 	<?php echo $page->get_head(); ?>
-		<?php echo $page->render_modules('head'); ?>
+	<?php echo $page->render_modules('head', 'module_head', 'module_group_head'); ?>
 </head>
 
 <body>
 	<div class="col1">
-		<?php //TODO: Notice and error models. ?>
 		<?php if ( count($page->get_error()) ) { ?>
-		<div class="notice error"><span class="close">[X] Close</span>
-		<?php
-		$error = $page->get_error();
-		foreach ($error as $cur_item) {
-			echo "$cur_item<br />\n";
-		}
-		?>
+		<div class="notice ui-state-error ui-corner-all ui-helper-clearfix">
+				<?php
+				$error = $page->get_error();
+				foreach ($error as $cur_item) {
+					echo "<p><span class=\"ui-icon ui-icon-alert\" style=\"float: left; margin-right: 0.3em;\"></span><span>$cur_item</span></p>\n";
+				}
+				?>
 		</div>
 		<?php } ?>
 		<?php if ( count($page->get_notice()) ) { ?>
-		<div class="notice"><span class="close">[X] Close</span>
-		<?php
-		$notice = $page->get_notice();
-		foreach ($notice as $cur_item) {
-			echo "$cur_item<br />\n";
-		}
-		?>
+		<div class="notice ui-state-highlight ui-corner-all ui-helper-clearfix">
+				<?php
+				$notice = $page->get_notice();
+				foreach ($notice as $cur_item) {
+					echo "<p><span class=\"ui-icon ui-icon-info\" style=\"float: left; margin-right: 0.3em;\"></span><span>$cur_item</span></p>\n";
+				}
+				?>
 		</div>
 		<?php } ?>
-		<?php if ( isset($page->modules['content']) ) {?>
-		<div class="module_group">
-			<?php echo $page->render_modules('content'); ?>
-		</div>
-		<?php } ?>
+		<?php echo $page->render_modules('content'); ?>
 	</div>
 </body>
 </html>

@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$page->head("<script type=\"text/javascript\" src=\"{$config->rela_location}components/com_tinymce/js/tiny_mce/jquery.tinymce.js\"></script>\n");
+echo ("<script type=\"text/javascript\" src=\"{$config->rela_location}components/com_tinymce/js/tiny_mce/jquery.tinymce.js\"></script>\n");
 ?>
 <script type="text/javascript">
 // <![CDATA[

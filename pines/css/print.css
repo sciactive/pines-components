@@ -6,6 +6,9 @@ html, body {
 body {
 	background: #fff !important;
 }
+#switcher {
+	display: none !important;
+}
 #header {
 	display: none !important;
 }

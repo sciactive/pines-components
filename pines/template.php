@@ -79,7 +79,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	<![endif]-->
 
 	<?php echo $page->get_head(); ?>
-	<?php echo $page->render_modules('head', 'module_head', 'module_group_head'); ?>
+	<?php echo $page->render_modules('head', 'module_head'); ?>
 </head>
 
 <body>
@@ -102,7 +102,7 @@ defined('P_RUN') or die('Direct access prohibited');
 				echo "<div class=\"mainmenu ui-widget-content\"><div class=\"menuwrap\">\n$cur_menu\n</div></div>\n";
 			?>
 		</div>
-		<div class="colmask holygrail">
+		<div class="colmask holygrail ui-helper-clearfix">
 			<div class="colmid">
 				<div class="colleft ui-state-default">
 					<div class="col1wrap">
@@ -140,7 +140,6 @@ defined('P_RUN') or die('Direct access prohibited');
 				</div>
 			</div>
 		</div>
-		<div class="push"></div>
 	</div>
 	<div id="footer" class="ui-widget-header">
 		<?php echo $page->render_modules('footer'); ?>

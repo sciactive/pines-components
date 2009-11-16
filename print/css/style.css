@@ -30,25 +30,25 @@ img {
 	width: 100%;
 }
 /* ----------- Customized CSS ----------- */
-.module_group {
+.module {
 	margin: 3px;
 }
-.module_group .module_title {
+.module .module_title {
 	margin-bottom: 8px;
 	padding: 2px;
 }
-.module_group .module_title h2 {
+.module .module_title h2 {
 	margin: 0;
 }
-.module_group .module_title p {
+.module .module_title p {
 	font-weight: normal;
 	font-size: 1em;
 	margin: 0;
 }
-.module_group .module_content {
+.module .module_content {
 	padding: 0 5px;
 }
-.module_group .module_content a {
+.module .module_content a {
 	text-decoration: underline !important;
 }
 /* ----------- Standard Notices ----------- */

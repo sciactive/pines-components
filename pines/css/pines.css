@@ -144,6 +144,23 @@ img {
 	margin:0;
 }
 
+/* ----------- Sticky Footer ----------- */
+#wrapper {
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+}
+#wrapper .colmask {
+	padding-bottom: 51px; /* the bottom padding is the negative value of the footer's height (+ border) */
+}
+#footer {
+	border-top-width: 1px;
+	overflow: auto;
+	margin-top: -51px;
+	height: 50px;
+	/* http://www.cssstickyfooter.com/ */
+}
+
 /* ----------- Customized CSS ----------- */
 #pagebg {
 	border-width: 0;
@@ -154,21 +171,6 @@ img {
 	left:0;
 	right:0;
 	z-index:-2;
-}
-#wrapper {
-	min-height: 100%;
-	height: auto !important;
-	height: 100%;
-	margin: 0 auto -51px; /* the bottom margin is the negative value of the footer's height (+ border) */
-}
-#footer, .push {
-	border-top: 1px solid #666;
-	overflow: auto;
-	height: 50px; /* .push must be the same height as .footer */
-	/* http://ryanfait.com/sticky-footer/ */
-}
-.push {
-	visibility: hidden;
 }
 .pagetitle {
 	max-height: 68px;
@@ -194,29 +196,27 @@ img {
 	margin-left: 35px; /* Comment this out if you center the menu. */
 }
 .module {
+	margin: 3px;
 	padding: 4px;
 	margin-bottom: 10px;
-}
-.module_group {
-	padding: 3px;
 	font-size: 0.8em;
 }
-.module_group .module_title {
+.module .module_title {
 	margin-bottom: 8px;
 	padding: 2px;
 }
-.module_group .module_title h2 {
+.module .module_title h2 {
 	margin: 0;
 }
-.module_group .module_title p {
+.module .module_title p {
 	font-weight: normal;
 	font-size: 1em;
 	margin: 0;
 }
-.module_group .module_content {
+.module .module_content {
 	padding: 0 5px;
 }
-.module_group .module_content a {
+.module .module_content a {
 	text-decoration: underline !important;
 }
 #footer .copyright {

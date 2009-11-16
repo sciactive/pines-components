@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = "Editing Configuration for {$this->req_component}";
 ?>
-<form class="pform" action="<?php echo pines_url('com_configure', 'save'); ?>" name="configure" method="post">
+<form class="pform" action="<?php echo pines_url('com_configure', 'save'); ?>" method="post">
 	<?php foreach ($this->config as $cur_var) { ?>
 	<div class="element" style="width: 95%;">
 	<span class="label">
@@ -29,9 +29,9 @@ $this->title = "Editing Configuration for {$this->req_component}";
 		<?php } elseif (is_float($cur_var['value'])) { ?>
 		<input class="field" type="text" name="opt_float_<?php echo $cur_var['name']; ?>" value="<?php echo $cur_var['value']; ?>" />
 		<?php } elseif (is_string($cur_var['value'])) { ?>
-		<textarea class="field" style="width: 100%;" name="opt_string_<?php echo $cur_var['name']; ?>"><?php echo htmlentities($cur_var['value'], true); ?></textarea>
+		<textarea rows="3" cols="35" class="field" style="width: 100%;" name="opt_string_<?php echo $cur_var['name']; ?>"><?php echo htmlentities($cur_var['value'], true); ?></textarea>
 		<?php } else { ?>
-		<textarea class="field" style="width: 100%;" name="opt_serial_<?php echo $cur_var['name']; ?>"><?php echo htmlentities(serialize($cur_var['value']), true); ?></textarea>
+		<textarea rows="3" cols="35" class="field" style="width: 100%;" name="opt_serial_<?php echo $cur_var['name']; ?>"><?php echo htmlentities(serialize($cur_var['value']), true); ?></textarea>
 		<?php } ?>
 	</div>
 	</div>

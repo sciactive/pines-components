@@ -102,9 +102,9 @@ $this->note = 'Provide user details in this form.';
 	} ?>
 
 	<?php if ( $this->display_abilities ) { ?>
-	<input type="hidden" name="abilities" value="true" />
 	<div class="element heading">
 		<h1>Abilities</h1>
+		<input type="hidden" name="abilities" value="true" />
 	</div>
 	<div class="element">
 		<label><span class="label">Inherit additional abilities from groups.</span>

@@ -46,9 +46,9 @@ $this->note = 'Provide group details in this form.';
 	</div>
 
 	<?php if ( $this->display_abilities ) { ?>
-	<input type="hidden" name="abilities" value="true" />
 	<div class="element heading">
 		<h1>Abilities</h1>
+		<input type="hidden" name="abilities" value="true" />
 	</div>
 		<?php foreach ($this->sections as $cur_section) {
 			$section_abilities = $config->ability_manager->get_abilities($cur_section);

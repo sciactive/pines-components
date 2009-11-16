@@ -67,7 +67,7 @@ $page->head("</script>\n");
 		<h1>Message</h1>
 	</div>
 	<div class="element">
-		<textarea class="field" rows="30" name="data" id="data" style="width: 99%;"><?php echo htmlentities($this->entity->message); ?></textarea>
+		<textarea rows="3" cols="35" class="field" name="data" id="data" style="width: 99%;"><?php echo htmlentities($this->entity->message); ?></textarea>
 	</div>
 	<div class="element heading">
 		<h1>Attachments</h1>

@@ -360,11 +360,11 @@ $this->note = 'Provide product details in this form.';
 			</div>
 			<div class="element full_width">
 				<span class="label">Description</span><br />
-				<textarea class="peditor" style="width: 100%;" name="description"><?php echo $this->entity->description; ?></textarea>
+				<textarea rows="3" cols="35" class="peditor" style="width: 100%;" name="description"><?php echo $this->entity->description; ?></textarea>
 			</div>
 			<div class="element full_width">
 				<span class="label">Short Description</span><br />
-				<textarea class="peditor_simple" style="width: 100%;" name="short_description"><?php echo $this->entity->short_description; ?></textarea>
+				<textarea rows="3" cols="35" class="peditor_simple" style="width: 100%;" name="short_description"><?php echo $this->entity->short_description; ?></textarea>
 			</div>
 			<div class="element">
 				<label><span class="label">Manufacturer</span>

@@ -13,4 +13,4 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Standard Editor Test';
 ?>
 TinyMCE Test:<br />
-<textarea class="peditor"></textarea>
+<textarea rows="3" cols="35" class="peditor"></textarea>

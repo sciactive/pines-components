@@ -109,11 +109,11 @@ $this->note = 'Provide vendor details in this form.';
 	<br />
 	<div class="element">
 	<label><span class="label">Terms</span>
-		<textarea class="field" name="terms" style="width: 100%;"><?php echo $this->entity->terms; ?></textarea></label>
+		<textarea rows="3" cols="35" class="field" name="terms" style="width: 100%;"><?php echo $this->entity->terms; ?></textarea></label>
 	</div>
 	<div class="element">
 	<label><span class="label">Comments</span>
-		<textarea class="field" name="comments" style="width: 100%;"><?php echo $this->entity->comments; ?></textarea></label>
+		<textarea rows="3" cols="35" class="field" name="comments" style="width: 100%;"><?php echo $this->entity->comments; ?></textarea></label>
 	</div>
 	<div class="element buttons">
 	<?php if ( !is_null($this->entity->guid) ) { ?>

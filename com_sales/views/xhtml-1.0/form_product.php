@@ -17,41 +17,91 @@ $this->note = 'Provide product details in this form.';
 	<script type="text/javascript">
 		// <![CDATA[
 		$(document).ready(function(){
+			var qualified_vendors = $("#qualified_vendors");
+			var qualified_vendors_table = $("#qualified_vendors_table");
+			var available_vendors_table = $("#available_vendors_table");
+			var vendor_dialog = $("#vendor_dialog");
 
-			$("#qualified_vendors_table").pgrid({
+			qualified_vendors_table.pgrid({
 				pgrid_paginate: false,
 				pgrid_toolbar: true,
 				pgrid_toolbar_contents : [
 					{type: 'button', text: 'Add Vendor', extra_class: 'icon picon_16x16_actions_list-add', selection_optional: true, click: function(){
-							$('#vendor_dialog').dialog('open');
+						vendor_dialog.dialog('open');
 					}},
 					{type: 'button', text: 'Remove Vendor', extra_class: 'icon picon_16x16_actions_list-remove', selection_optional: true, click: function(e, rows){
-							//rows.remove();
+						rows.pgrid_delete();
+						update_vendors();
 					}}
 				]
 			});
 
 			// Needs to be gridified before it's hidden.
-			$("#available_vendors").pgrid({
+			available_vendors_table.pgrid({
 				pgrid_multi_select: false,
 				pgrid_paginate: false,
 				pgrid_height: '400px;'
 			});
 
 			// Vendor Dialog
-			$("#vendor_dialog").dialog({
+			vendor_dialog.dialog({
 				bgiframe: true,
 				autoOpen: false,
 				modal: true,
 				width: 600,
 				buttons: {
-					'Done': function() {
+					"Done": function() {
+						var cur_vendor_sku = $("#cur_vendor_sku").val();
+						var cur_vendor_cost = $("#cur_vendor_cost").val();
+						var cur_vendor = available_vendors_table.pgrid_get_selected_rows().pgrid_export_rows();
+						if (!cur_vendor[0]) {
+							$("<div title=\"Alert\">Please select a vendor.</div>").dialog({
+								bgiframe: true,
+								modal: true,
+								buttons: {
+									Ok: function(){
+										$(this).dialog("close");
+									}
+								}
+							});
+							return;
+						}
+						if (cur_vendor_sku == "" || cur_vendor_cost == "") {
+							$("<div title=\"Alert\">Please provide both a SKU and a cost for this vendor.</div>").dialog({
+								bgiframe: true,
+								modal: true,
+								buttons: {
+									Ok: function(){
+										$(this).dialog("close");
+									}
+								}
+							});
+							return;
+						}
+						var new_vendor = [{
+							key: cur_vendor[0].key,
+							values: [
+								cur_vendor[0].values[0],
+								cur_vendor_sku,
+								cur_vendor_cost
+							]
+						}];
+						qualified_vendors_table.pgrid_add(new_vendor);
+						update_vendors();
 						$(this).dialog('close');
 					}
 				}
 			});
 
+			function update_vendors() {
+				available_vendors_table.pgrid_get_selected_rows().pgrid_deselect_rows();
+				$("#cur_vendor_sku").val("");
+				$("#cur_vendor_cost").val("");
+				qualified_vendors.val(JSON.stringify(qualified_vendors_table.pgrid_get_all_rows().pgrid_export_rows()));
+			}
+
 			$("#product_tabs").tabs();
+			update_vendors();
 		});
 		// ]]>
 	</script>
@@ -340,9 +390,6 @@ $this->note = 'Provide product details in this form.';
 			<br class="spacer" />
 		</div>
 		<div id="tab_purchasing">
-			<div class="element heading">
-				<p>This doesn't work yet.</p>
-			</div>
 			<div class="element full_width">
 				<span class="label">Qualified Vendors</span>
 				<div class="group">
@@ -364,11 +411,11 @@ $this->note = 'Provide product details in this form.';
 							<?php } } ?>
 						</tbody>
 					</table>
-					<input class="field" type="hidden" name="qualified_vendors" size="20" />
+					<input class="field" type="text" id="qualified_vendors" name="qualified_vendors" size="20" />
 				</div>
 			</div>
 			<div id="vendor_dialog" title="Add a Vendor">
-				<table id="available_vendors">
+				<table id="available_vendors_table">
 					<thead>
 						<tr>
 							<th>Name</th>
@@ -390,6 +437,17 @@ $this->note = 'Provide product details in this form.';
 						<?php } ?>
 					</tbody>
 				</table>
+				<br class="spacer" />
+				<div style="width: 100%">
+					<label>
+						<span>Vendor SKU</span>
+						<input type="text" name="cur_vendor_sku" id="cur_vendor_sku" />
+					</label>
+					<label>
+						<span>Cost</span>
+						<input type="text" name="cur_vendor_cost" id="cur_vendor_cost" />
+					</label>
+				</div>
 			</div>
 			<br class="spacer" />
 		</div>

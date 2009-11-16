@@ -49,12 +49,12 @@ class tpl_pines extends template {
 	 * @var string $theme
 	 */
 	var $theme = 'smoothness';
-    /**
-     * Provide a theme switcher to choose a jQuery UI theme.
-     *
-     * @var bool $theme_switcher
-     */
-    var $theme_switcher = true;
+	/**
+	 * Provide a theme switcher to choose a jQuery UI theme.
+	 *
+	 * @var bool $theme_switcher
+	 */
+	var $theme_switcher = true;
 
 	function __construct() {
 		global $config;

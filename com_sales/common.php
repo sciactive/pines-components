@@ -19,6 +19,10 @@ $config->ability_manager->add('com_sales', 'managevendors', 'Manage Vendors', 'U
 $config->ability_manager->add('com_sales', 'newvendor', 'Create Vendors', 'User can create new vendors.');
 $config->ability_manager->add('com_sales', 'editvendor', 'Edit Vendors', 'User can edit current vendors.');
 $config->ability_manager->add('com_sales', 'deletevendor', 'Delete Vendors', 'User can delete current vendors.');
+$config->ability_manager->add('com_sales', 'manageshippers', 'Manage Shippers', 'User can manage shippers.');
+$config->ability_manager->add('com_sales', 'newshipper', 'Create Shippers', 'User can create new shippers.');
+$config->ability_manager->add('com_sales', 'editshipper', 'Edit Shippers', 'User can edit current shippers.');
+$config->ability_manager->add('com_sales', 'deleteshipper', 'Delete Shippers', 'User can delete current shippers.');
 $config->ability_manager->add('com_sales', 'managecustomers', 'Manage Customers', 'User can manage customers.');
 $config->ability_manager->add('com_sales', 'newcustomer', 'Create Customers', 'User can create new customers.');
 $config->ability_manager->add('com_sales', 'editcustomer', 'Edit Customers', 'User can edit current customers.');

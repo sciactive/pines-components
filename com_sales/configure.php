@@ -35,12 +35,19 @@ return array (
   ),
   3 =>
   array (
+	'name' => 'global_shippers',
+	'cname' => 'Globalize Shippers',
+	'description' => 'Ensure that every user can access all shippers by setting the "other" access control to read.',
+	'value' => true,
+  ),
+  4 =>
+  array (
 	'name' => 'global_customers',
 	'cname' => 'Globalize Customers',
 	'description' => 'Ensure that every user can access all customers by setting the "other" access control to read.',
 	'value' => true,
   ),
-  4 =>
+  5 =>
   array (
 	'name' => 'global_tax_fees',
 	'cname' => 'Globalize Taxes/Fees',

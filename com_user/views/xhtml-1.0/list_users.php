@@ -71,11 +71,15 @@ $this->title = 'Users';
 			<td><?php echo $config->user_manager->get_groupname($user->gid); ?></td>
 			<td><?php
 			if (is_array($user->groups)) {
-				$groupname_array = array();
-				foreach ($user->groups as $cur_group) {
-					array_push($groupname_array, $config->user_manager->get_groupname($cur_group));
+				if (count($user->groups) < 15) {
+					$groupname_array = array();
+					foreach ($user->groups as $cur_group) {
+						array_push($groupname_array, $config->user_manager->get_groupname($cur_group));
+					}
+					echo implode(', ', $groupname_array);
+				} else {
+					echo count($user->groups).' groups';
 				}
-				echo implode(', ', $groupname_array);
 			}
 			?></td>
 			<td><?php echo $user->inherit_abilities ? "Yes" : "No"; ?></td>

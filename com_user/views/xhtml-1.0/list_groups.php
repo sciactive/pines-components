@@ -81,11 +81,14 @@ foreach($this->groups as $cur_group) {
 			<td><?php echo $group->email; ?></td>
 			<td><?php
 			$user_array = $config->user_manager->get_users_by_group($group->guid);
-			foreach ($user_array as $cur_user) {
-				$user_list .= (empty($user_list) ? '' : ', ').$cur_user->username;
+			if (count($user_array) < 15) {
+				foreach ($user_array as $cur_user) {
+					$user_list .= (empty($user_list) ? '' : ', ').$cur_user->username;
+				}
+				echo $user_list;
+			} else {
+				echo count($user_array).' users';
 			}
-			echo $user_list;
-			unset ($user_list);
 			?></td>
 		</tr>
 	<?php } ?>

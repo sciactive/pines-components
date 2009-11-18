@@ -11,7 +11,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$page->head("<script src=\"{$config->rela_location}components/com_newsletter/js/jquery.js\" type=\"text/javascript\"></script>");
 $page->head("<script src=\"{$config->rela_location}components/com_newsletter/js/jquery.checkboxtree.js\" type=\"text/javascript\"></script>");
 $page->head("<script type=\"text/javascript\">
 jQuery(document).ready(function(){

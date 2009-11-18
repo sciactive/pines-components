@@ -31,7 +31,10 @@ $this->title = 'Products';
 				{type: 'button', text: 'Select None', extra_class: 'icon picon_16x16_actions_list-remove', select_none: true},
 				{type: 'separator'},
 				{type: 'button', text: 'Spreadsheet', extra_class: 'icon picon_16x16_mimetypes_x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					window.open("data:text/csv;charset=utf8," + encodeURIComponent(rows));
+					pines.post("<?php echo $config->template->url('system', 'csv'); ?>", {
+						filename: 'products',
+						content: rows
+					});
 				}}
 			],
 			pgrid_sort_col: 'col_1',

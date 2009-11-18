@@ -45,14 +45,6 @@ img {
 	border-bottom:1px solid #666;
 	max-height: 100px;
 }
-#header .pagetitle {
-	margin: 2px 25px;
-	float: left;
-}
-#header .pagetitle h1 {
-	margin: 0;
-	padding: 10px;
-}
 /* column container */
 .colmask {
 	position:relative;		/* This fixes the IE7 overflow hidden bug and stops the layout jumping out of place */
@@ -172,13 +164,26 @@ img {
 	right:0;
 	z-index:-2;
 }
-.pagetitle {
+#header .pagetitle {
+	margin: 2px 25px;
+	float: left;
 	max-height: 68px;
 }
-.pagetitle a {
+#header .pagetitle h1 {
+	margin: 0;
+	padding: 0;
+}
+#header .pagetitle a {
 	text-decoration: none;
 	font: bold 1em sans-serif;
 	color: black;
+}
+#header .pagetitle span {
+	vertical-align: middle;
+	margin-right: 50px;
+	padding: 20px 0;
+	line-height: 23px;
+	display: block;
 }
 .mainmenu {
 	clear: both;

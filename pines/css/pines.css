@@ -102,7 +102,7 @@ img {
 							Right padding = right column width + centre column right padding width */
 	position:relative;
 	left:200%;
-	overflow:hidden;
+	/*overflow:hidden; Causes long absolute positioned things to be cut off. */
 }
 .holygrail .col2 {
 	float:left;

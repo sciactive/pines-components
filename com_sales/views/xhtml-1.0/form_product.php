@@ -26,15 +26,26 @@ $this->note = 'Provide product details in this form.';
 				pgrid_paginate: false,
 				pgrid_toolbar: true,
 				pgrid_toolbar_contents : [
-					{type: 'button', text: 'Add Vendor', extra_class: 'icon picon_16x16_actions_list-add', selection_optional: true, click: function(){
-						vendor_dialog.dialog('open');
-					}},
-					{type: 'button', text: 'Remove Vendor', extra_class: 'icon picon_16x16_actions_list-remove', selection_optional: true, click: function(e, rows){
-						rows.pgrid_delete();
-						update_vendors();
-					}}
+					{
+						type: 'button',
+						text: 'Add Vendor',
+						extra_class: 'icon picon_16x16_actions_list-add',
+						selection_optional: true,
+						click: function(){
+							vendor_dialog.dialog('open');
+						}
+					},
+					{
+						type: 'button',
+						text: 'Remove Vendor',
+						extra_class: 'icon picon_16x16_actions_list-remove',
+						click: function(e, rows){
+							rows.pgrid_delete();
+							update_vendors();
+						}
+					}
 				]
-			});
+			}).pgrid_add(JSON.parse("<?php echo addslashes(json_encode($this->entity->qualified_vendors)); ?>"));
 
 			// Needs to be gridified before it's hidden.
 			available_vendors_table.pgrid({
@@ -411,7 +422,7 @@ $this->note = 'Provide product details in this form.';
 							<?php } } ?>
 						</tbody>
 					</table>
-					<input class="field" type="text" id="qualified_vendors" name="qualified_vendors" size="20" />
+					<input class="field" type="hidden" id="qualified_vendors" name="qualified_vendors" size="20" />
 				</div>
 			</div>
 			<div id="vendor_dialog" title="Add a Vendor">

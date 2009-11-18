@@ -30,6 +30,7 @@ if ( isset($_REQUEST['id']) ) {
 	$product->add_tag('com_sales', 'product');
 }
 
+// General
 $product->name = $_REQUEST['name'];
 $product->enabled = ($_REQUEST['enabled'] == 'ON' ? true : false);
 $product->sku = $_REQUEST['sku'];
@@ -37,10 +38,17 @@ $product->description = $_REQUEST['description'];
 $product->short_description = $_REQUEST['short_description'];
 $product->manufacturer = ($_REQUEST['manufacturer'] == 'null' ? null : intval($_REQUEST['manufacturer']));
 $product->manufacturer_sku = $_REQUEST['manufacturer_sku'];
+
+// Purchasing
+$product->qualified_vendors = json_decode($_REQUEST['qualified_vendors']);
+
+// Pricing
 $product->pricing_method = $_REQUEST['pricing_method'];
 $product->unit_price = floatval($_REQUEST['unit_price']);
 $product->margin = floatval($_REQUEST['margin']);
 $product->floor = floatval($_REQUEST['floor']);
+
+// Attributes
 $product->weight = floatval($_REQUEST['weight']);
 $product->rma_after = floatval($_REQUEST['rma_after']);
 $product->discountable = ($_REQUEST['discountable'] == 'ON' ? true : false);

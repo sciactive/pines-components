@@ -45,7 +45,7 @@ $this->note = 'Provide product details in this form.';
 						}
 					}
 				]
-			}).pgrid_add(JSON.parse("<?php echo addslashes(json_encode($this->entity->qualified_vendors)); ?>"));
+			});
 
 			// Needs to be gridified before it's hidden.
 			available_vendors_table.pgrid({
@@ -413,11 +413,11 @@ $this->note = 'Provide product details in this form.';
 							</tr>
 						</thead>
 						<tbody>
-							<?php if (is_array($this->entity->vendors)) { foreach ($this->entity->vendors as $cur_vendor) { ?>
-							<tr title="<?php echo $cur_vendor->guid; ?>">
-								<td><?php echo $cur_vendor->name; ?></td>
-								<td><?php echo $cur_vendor->sku; ?></td>
-								<td><?php echo $cur_vendor->cost; ?></td>
+							<?php if (is_array($this->entity->qualified_vendors)) { foreach ($this->entity->qualified_vendors as $cur_vendor) { ?>
+							<tr title="<?php echo $cur_vendor->key; ?>">
+								<td><?php echo $cur_vendor->values[0]; ?></td>
+								<td><?php echo $cur_vendor->values[1]; ?></td>
+								<td><?php echo $cur_vendor->values[2]; ?></td>
 							</tr>
 							<?php } } ?>
 						</tbody>

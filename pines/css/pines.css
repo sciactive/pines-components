@@ -9,7 +9,8 @@ ul, ol {
 }
 html, body {
 	height: 100%;
-	font-family: sans-serif;
+	font-family: Verdana,Arial,sans-serif;
+	/*font-family: 'Palatino Linotype','Book Antiqua',Palatino,serif;*/
 }
 /* ----------- Holy Grail CSS ----------- */
 /* General styles */
@@ -21,7 +22,6 @@ body {
 	background:#FFF;
 	min-width:600px;	/* Minimum width of layout - remove line if not required */
 	/* The min-width property does not work in old versions of Internet Explorer */
-	font-size:75%;
 }
 h1, h2, h3 {
 	margin:.8em 0 .2em 0;
@@ -204,7 +204,6 @@ img {
 	margin: 3px;
 	padding: 4px;
 	margin-bottom: 10px;
-	font-size: 0.8em;
 }
 .module .module_title {
 	margin-bottom: 8px;
@@ -212,17 +211,22 @@ img {
 }
 .module .module_title h2 {
 	margin: 0;
+	font-size: 1em;
 }
 .module .module_title p {
 	font-weight: normal;
-	font-size: 1em;
+	font-size: .7em;
 	margin: 0;
 }
 .module .module_content {
 	padding: 0 5px;
+	font-size: 0.8em;
 }
 .module .module_content a {
 	text-decoration: underline !important;
+}
+.ui-widget.ui-pgrid {
+	font-size: .8em;
 }
 #footer .copyright {
 	font-size: .8em;

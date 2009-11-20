@@ -12,15 +12,6 @@ body {
 #header {
 	display: none !important;
 }
-.module_group {
-	position: static !important;
-	float: none !important;
-	width: 100% !important;
-	height: auto !important;
-	padding: 0 !important;
-	margin: 0 !important;
-	overflow: visible !important;
-}
 .colmask {
 	position: static !important;
 	float: none !important;
@@ -29,8 +20,6 @@ body {
 	padding: 0 !important;
 	margin: 0 !important;
 	overflow: visible !important;
-	
-	font-size: 8pt !important;
 }
 .colmask input, .colmask select, .colmask textarea {
 	font-size:  100%;

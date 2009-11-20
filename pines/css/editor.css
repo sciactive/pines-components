@@ -7,14 +7,11 @@ ul, ol {
 	margin: 11px 0;
 	padding-left: 40px;
 }
-html {
-	font-size: 12pt;
-}
 /* General styles */
 body {
 	font-family: Verdana,Arial,sans-serif;
 	background:#FFF;
-	font-size: 0.75em;
+	font-size: 8pt;
 }
 h1, h2, h3 {
 	margin:.8em 0 .2em 0;

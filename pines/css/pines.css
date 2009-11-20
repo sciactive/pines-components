@@ -10,7 +10,7 @@ ul, ol {
 html, body {
 	height: 100%;
 	font-family: Verdana,Arial,sans-serif;
-	font-size: 12pt;
+	font-size: 9pt;
 	/*font-family: 'Palatino Linotype','Book Antiqua',Palatino,serif;*/
 }
 /* ----------- Holy Grail CSS ----------- */
@@ -174,11 +174,11 @@ img {
 #header .pagetitle h1 {
 	margin: 0;
 	padding: 0;
+	font-size: 2.3em;
 }
 #header .pagetitle a {
 	text-decoration: none;
-	font: bold 1em sans-serif;
-	color: black;
+	color: inherit;
 }
 #header .pagetitle span {
 	vertical-align: middle;
@@ -190,7 +190,7 @@ img {
 .mainmenu {
 	clear: both;
 	width: 100%;
-	font-size: 12px;
+	font-size: 1.2em;
 	background: transparent none no-repeat scroll left top !important;
 	border-bottom-width: 0 !important;
 	border-left-width: 0 !important;
@@ -213,26 +213,28 @@ img {
 }
 .module .module_title h2 {
 	margin: 0;
-	font-size: 1em;
+	font-size: 1.3em;
 }
 .module .module_title p {
 	font-weight: normal;
-	font-size: .7em;
+	font-size: .9em;
 	margin: 0;
 }
 .module .module_content {
 	padding: 0 5px;
-	font-size: 0.75em;
 }
 .module .module_content a {
 	text-decoration: underline !important;
 }
-.ui-widget.ui-pgrid {
-	font-size: .8em;
+body .ui-widget {
+	font-size: 1em !important;
 }
 #header .module, #footer .module {
 	margin: 0;
 	float: left;
+}
+#header .module.right {
+	float: right;
 }
 #header .module .module_title, #footer .module .module_title {
 	margin-bottom: 0;

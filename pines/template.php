@@ -108,6 +108,7 @@ defined('P_RUN') or die('Direct access prohibited');
 				<h1><a href="<?php echo $config->full_location; ?>"><span><?php echo $config->option_title; ?></span></a></h1>
 			</div>
 			<?php echo $page->render_modules('header', 'module_header'); ?>
+			<?php echo $page->render_modules('header_right', 'module_header_right'); ?>
 			<?php
 			$cur_menu = $page->main_menu->render(array('<ul class="dropdown dropdown-horizontal">', '</ul>'),
 				array('<li class="ui-state-default" onmouseover="$(this).addClass(\'ui-state-hover\');" onmouseout="$(this).removeClass(\'ui-state-hover\');">', '</li>'),

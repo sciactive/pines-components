@@ -43,6 +43,21 @@ defined('P_RUN') or die('Direct access prohibited');
 	<script type="text/javascript" src="<?php echo $config->rela_location; ?>system/js/js.php"></script>
 	<script type="text/javascript" src="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/js/jquery/jquery.timers-1.1.2.js"></script>
 	<script type="text/javascript" src="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/js/template.js"></script>
+	
+	<script type="text/javascript">
+		// <![CDATA[
+		$(function(){
+			var wrapper = $("#wrapper");
+			var footer = wrapper.children("#footer");
+			var height = footer.height();
+			var colmask = wrapper.children(".colmask");
+			wrapper.css("min-height", "100%");
+			footer.css("position", "absolute");
+			footer.css("bottom", "0");
+			colmask.css("margin-bottom", height);
+		});
+		// ]]>
+	</script>
 
 	<?php if ($config->template->theme_switcher) { ?>
 	<link type="text/css" rel="stylesheet" href="http://jqueryui.com/themes/base/ui.all.css" />
@@ -147,18 +162,6 @@ defined('P_RUN') or die('Direct access prohibited');
 			</p>
 		</div>
 	</div>
-	<script>
-	$(function(){
-		var wrapper = $("#wrapper");
-		var footer = wrapper.children("#footer");
-		var height = footer.height();
-		var colmask = wrapper.children(".colmask");
-		wrapper.css("min-height", "100%");
-		footer.css("position", "absolute");
-		footer.css("bottom", "0");
-		colmask.css("margin-bottom", height);
-	});
-	</script>
 
 </body>
 </html>

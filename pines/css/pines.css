@@ -148,6 +148,9 @@ img {
 	float: left;
 	height: auto !important;
 	height: 100%;
+	min-width: 100%;
+	width: auto !important;
+	width: 100%;
 }
 #footer {
 	position: relative;

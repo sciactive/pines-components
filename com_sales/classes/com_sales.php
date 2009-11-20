@@ -608,6 +608,52 @@ class com_sales extends component {
 	}
 
 	/**
+	 * Creates and attaches a module containing a form for editing a PO.
+	 *
+	 * If $id is null, or not given, a blank form will be provided.
+	 *
+	 * @param string $new_option The option to which the form will submit.
+	 * @param string $new_action The action to which the form will submit.
+	 * @param int $id The GUID of the po to edit.
+	 * @return module|null The new module on success, nothing on failure.
+	 */
+	function print_po_form($new_option, $new_action, $id = NULL) {
+		global $config;
+		$pgrid = new module('system', 'pgrid.default', 'head');
+		$pgrid->icons = true;
+		$module = new module('com_sales', 'form_po', 'content');
+		if ( is_null($id) ) {
+			$module->entity = new entity;
+		} else {
+			$module->entity = $this->get_po($id);
+			if (is_null($module->entity)) {
+				display_error('Requested PO id is not accessible.');
+				$jstree->detach();
+				$tageditor->detach();
+				$module->detach();
+				return;
+			}
+		}
+		$module->shippers = $config->entity_manager->get_entities_by_tags('com_sales', 'shipper');
+		if (!is_array($module->shippers)) {
+			$module->shippers = array();
+		}
+		$module->vendors = $config->entity_manager->get_entities_by_tags('com_sales', 'vendor');
+		if (!is_array($module->vendors)) {
+			$module->vendors = array();
+		}
+		$module->products = $config->entity_manager->get_entities_by_tags('com_sales', 'product');
+		if (!is_array($module->products)) {
+			$module->products = array();
+		}
+
+		$module->new_option = $new_option;
+		$module->new_action = $new_action;
+
+		return $module;
+	}
+
+	/**
 	 * Creates and attaches a module containing a form for editing a
 	 * shipper.
 	 *

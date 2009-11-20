@@ -35,6 +35,10 @@ $config->ability_manager->add('com_sales', 'manageproducts', 'Manage Products', 
 $config->ability_manager->add('com_sales', 'newproduct', 'Create Products', 'User can create new products.');
 $config->ability_manager->add('com_sales', 'editproduct', 'Edit Products', 'User can edit current products.');
 $config->ability_manager->add('com_sales', 'deleteproduct', 'Delete Products', 'User can delete current products.');
+$config->ability_manager->add('com_sales', 'managepos', 'Manage Purchase Orders', 'User can manage POs.');
+$config->ability_manager->add('com_sales', 'newpo', 'Create Purchase Orders', 'User can create new POs.');
+$config->ability_manager->add('com_sales', 'editpo', 'Edit Purchase Orders', 'User can edit current POs.');
+$config->ability_manager->add('com_sales', 'deletepo', 'Delete Purchase Orders', 'User can delete current POs.');
 $config->ability_manager->add('com_sales', 'managecategories', 'Manage Categories', 'User can manage categories.');
 $config->ability_manager->add('com_sales', 'viewcategories', 'View Categories', 'User can view categories.');
 

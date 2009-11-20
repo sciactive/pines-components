@@ -15,7 +15,8 @@ if ( gatekeeper('com_sales/managecustomers') || gatekeeper('com_sales/newcustome
 	 gatekeeper('com_sales/managemanufacturers') || gatekeeper('com_sales/newmanufacturer') ||
 	 gatekeeper('com_sales/manageshippers') || gatekeeper('com_sales/newshipper') ||
 	 gatekeeper('com_sales/manageproducts') || gatekeeper('com_sales/newproduct') ||
-	 gatekeeper('com_sales/managevendors') || gatekeeper('com_sales/newvendor') ) {
+	 gatekeeper('com_sales/managevendors') || gatekeeper('com_sales/newvendor') ||
+	 gatekeeper('com_sales/managepos') || gatekeeper('com_sales/newpo') ) {
 	$com_sales_menu_id = $page->main_menu->add('POS');
 	if ( gatekeeper('com_sales/manageproducts') )
 		$page->main_menu->add('Products', pines_url('com_sales', 'listproducts'), $com_sales_menu_id);
@@ -41,6 +42,10 @@ if ( gatekeeper('com_sales/managecustomers') || gatekeeper('com_sales/newcustome
 		$page->main_menu->add('Taxes/Fees', pines_url('com_sales', 'listtaxfees'), $com_sales_menu_id);
 	if ( gatekeeper('com_sales/newtaxfee') )
 		$page->main_menu->add('New Tax/Fee', pines_url('com_sales', 'newtaxfee'), $com_sales_menu_id);
+	if ( gatekeeper('com_sales/managepos') )
+		$page->main_menu->add('Purchase Orders', pines_url('com_sales', 'listpos'), $com_sales_menu_id);
+	if ( gatekeeper('com_sales/newpo') )
+		$page->main_menu->add('New PO', pines_url('com_sales', 'newpo'), $com_sales_menu_id);
 }
 
 ?>

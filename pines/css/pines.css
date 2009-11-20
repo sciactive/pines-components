@@ -10,6 +10,7 @@ ul, ol {
 html, body {
 	height: 100%;
 	font-family: Verdana,Arial,sans-serif;
+	font-size: 12pt;
 	/*font-family: 'Palatino Linotype','Book Antiqua',Palatino,serif;*/
 }
 /* ----------- Holy Grail CSS ----------- */
@@ -17,7 +18,7 @@ html, body {
 body {
 	margin:0;
 	padding:0;
-	border:0;			/* This removes the border around the viewport in old versions of IE */
+	border:0 !important;			/* This removes the border around the viewport in old versions of IE */
 	width:100%;
 	background:#FFF;
 	min-width:600px;	/* Minimum width of layout - remove line if not required */
@@ -43,7 +44,8 @@ img {
 	border-left-width: 0 !important;
 	border-right-width: 0 !important;
 	border-bottom:1px solid #666;
-	max-height: 100px;
+	min-height: 100px;
+	background-position: 0 0 !important;
 }
 /* column container */
 .colmask {
@@ -68,7 +70,7 @@ img {
 }
 .holygrail .colleft {
 	/* jQuery UI Styling Additions */
-	border-width: 0;
+	border: 0 !important;
 	background-color: transparent !important;
 	background-image: none !important;
 	/* ----- */
@@ -78,10 +80,10 @@ img {
 	position:relative;
 	left:320px;		 	/* Left column width + right column width */
 }
-#pagebg .colleft_ghost {
+.colleft_ghost {
 	/* This provides a consistent background down to the footer on the left column. */
-	border-width:0;
-	background-image:none;
+	border:0 !important;
+	background-image:none !important;
 	position:absolute;
 	left:0;
 	top:0;
@@ -110,16 +112,18 @@ img {
 	width:150px;			/* Width of left column content (left column width minus left and right padding) */
 	position:relative;
 	right:5px;		 	/* Width of the left-hand side padding on the left column */
+
+	margin-top: 12px; /* col1 top margin - module top margin */
 }
 .holygrail .col3 {
 	float:left;
 	float:right;			/* This overrides the float:left above */
 	width:150px;			/* Width of right column content (right column width minus left and right padding) */
-	margin-right:175px;  	/* Had to add column width too. /* Width of right column right-hand padding + left column left and right padding */
+	margin-right:15px;  	/* Width of right column right-hand padding + left column left and right padding */
 	position:relative;
 	left:50%;
 
-	margin-top: 15px;
+	margin-top: 12px; /* col1 top margin - module top margin */
 }
 /* Footer styles */
 #footer {
@@ -130,6 +134,8 @@ img {
 	border-left-width: 0 !important;
 	border-right-width: 0 !important;
 	border-bottom-width: 0 !important;
+	background-position: 0 0;
+	font-weight: normal;
 }
 #footer p {
 	padding:10px;
@@ -138,19 +144,13 @@ img {
 
 /* ----------- Sticky Footer ----------- */
 #wrapper {
-	min-height: 100%;
+	position: relative;
+	float: left;
 	height: auto !important;
 	height: 100%;
 }
-#wrapper .colmask {
-	padding-bottom: 51px; /* the bottom padding is the negative value of the footer's height (+ border) */
-}
 #footer {
-	border-top-width: 1px;
-	overflow: auto;
-	margin-top: -51px;
-	height: 50px;
-	/* http://www.cssstickyfooter.com/ */
+	position: relative;
 }
 
 /* ----------- Customized CSS ----------- */
@@ -220,7 +220,7 @@ img {
 }
 .module .module_content {
 	padding: 0 5px;
-	font-size: 0.8em;
+	font-size: 0.75em;
 }
 .module .module_content a {
 	text-decoration: underline !important;
@@ -228,7 +228,18 @@ img {
 .ui-widget.ui-pgrid {
 	font-size: .8em;
 }
+#header .module, #footer .module {
+	margin: 0;
+	float: left;
+}
+#header .module .module_title, #footer .module .module_title {
+	margin-bottom: 0;
+}
+#header .module .module_content, #footer .module .module_content {
+	font-weight: normal;
+}
 #footer .copyright {
+	clear: both;
 	font-size: .8em;
 	text-align: center;
 }
@@ -236,6 +247,7 @@ img {
 .notice {
 	margin: 3px;
 	padding: 5px;
+	font-size: 0.75em;
 }
 .notice .close {
 	float: right;

@@ -81,9 +81,10 @@ defined('P_RUN') or die('Direct access prohibited');
 	<?php echo $page->render_modules('head', 'module_head'); ?>
 </head>
 
-<body>
+<body class="ui-widget-content">
 
 	<div id="wrapper">
+		<div class="colleft_ghost ui-state-default"></div>
 		<?php if ( $config->template->theme_switcher ) { ?>
 		<div id="switcher"></div>
 		<?php } ?>
@@ -91,7 +92,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			<div class="pagetitle">
 				<h1><a href="<?php echo $config->full_location; ?>"><span><?php echo $config->option_title; ?></span></a></h1>
 			</div>
-			<?php echo $page->render_modules('header'); ?>
+			<?php echo $page->render_modules('header', 'module_header'); ?>
 			<?php
 			$cur_menu = $page->main_menu->render(array('<ul class="dropdown dropdown-horizontal">', '</ul>'),
 				array('<li class="ui-state-default" onmouseover="$(this).addClass(\'ui-state-hover\');" onmouseout="$(this).removeClass(\'ui-state-hover\');">', '</li>'),
@@ -127,28 +128,37 @@ defined('P_RUN') or die('Direct access prohibited');
 									?>
 							</div>
 							<?php } ?>
-							<?php echo $page->render_modules('content'); ?>
+							<?php echo $page->render_modules('content', 'module_content'); ?>
 						</div>
 					</div>
 					<div class="col2">
 						<?php echo $page->render_modules('left'); ?>
 					</div>
 					<div class="col3">
-						<?php echo $page->render_modules('right'); ?>
+						<?php echo $page->render_modules('right', 'module_right'); ?>
 					</div>
 				</div>
 			</div>
 		</div>
+		<div id="footer" class="ui-widget-header">
+			<?php echo $page->render_modules('footer', 'module_header'); ?>
+			<p class="copyright">
+				<?php echo $config->option_copyright_notice; ?>
+			</p>
+		</div>
 	</div>
-	<div id="footer" class="ui-widget-header">
-		<?php echo $page->render_modules('footer'); ?>
-		<p class="copyright">
-			<?php echo $config->option_copyright_notice; ?>
-		</p>
-	</div>
-	<div id="pagebg" class="ui-widget ui-widget-content">
-		<div class="colleft_ghost ui-state-default"></div>
-	</div>
+	<script>
+	$(function(){
+		var wrapper = $("#wrapper");
+		var footer = wrapper.children("#footer");
+		var height = footer.height();
+		var colmask = wrapper.children(".colmask");
+		wrapper.css("min-height", "100%");
+		footer.css("position", "absolute");
+		footer.css("bottom", "0");
+		colmask.css("margin-bottom", height);
+	});
+	</script>
 
 </body>
 </html>

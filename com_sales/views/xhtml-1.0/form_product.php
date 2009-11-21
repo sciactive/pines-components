@@ -17,12 +17,12 @@ $this->note = 'Provide product details in this form.';
 	<script type="text/javascript">
 		// <![CDATA[
 		$(document).ready(function(){
-			var qualified_vendors = $("#qualified_vendors");
-			var qualified_vendors_table = $("#qualified_vendors_table");
+			var vendors = $("#vendors");
+			var vendors_table = $("#vendors_table");
 			var available_vendors_table = $("#available_vendors_table");
 			var vendor_dialog = $("#vendor_dialog");
 
-			qualified_vendors_table.pgrid({
+			vendors_table.pgrid({
 				pgrid_paginate: false,
 				pgrid_toolbar: true,
 				pgrid_toolbar_contents : [
@@ -97,7 +97,7 @@ $this->note = 'Provide product details in this form.';
 								cur_vendor_cost
 							]
 						}];
-						qualified_vendors_table.pgrid_add(new_vendor);
+						vendors_table.pgrid_add(new_vendor);
 						update_vendors();
 						$(this).dialog('close');
 					}
@@ -108,7 +108,7 @@ $this->note = 'Provide product details in this form.';
 				available_vendors_table.pgrid_get_selected_rows().pgrid_deselect_rows();
 				$("#cur_vendor_sku").val("");
 				$("#cur_vendor_cost").val("");
-				qualified_vendors.val(JSON.stringify(qualified_vendors_table.pgrid_get_all_rows().pgrid_export_rows()));
+				vendors.val(JSON.stringify(vendors_table.pgrid_get_all_rows().pgrid_export_rows()));
 			}
 
 			$("#product_tabs").tabs();
@@ -402,9 +402,9 @@ $this->note = 'Provide product details in this form.';
 		</div>
 		<div id="tab_purchasing">
 			<div class="element full_width">
-				<span class="label">Qualified Vendors</span>
+				<span class="label">Vendors</span>
 				<div class="group">
-					<table id="qualified_vendors_table">
+					<table id="vendors_table">
 						<thead>
 							<tr>
 								<th>Vendor</th>
@@ -413,16 +413,16 @@ $this->note = 'Provide product details in this form.';
 							</tr>
 						</thead>
 						<tbody>
-							<?php if (is_array($this->entity->qualified_vendors)) { foreach ($this->entity->qualified_vendors as $cur_vendor) { ?>
-							<tr title="<?php echo $cur_vendor->key; ?>">
-								<td><?php echo $cur_vendor->values[0]; ?></td>
-								<td><?php echo $cur_vendor->values[1]; ?></td>
-								<td><?php echo $cur_vendor->values[2]; ?></td>
+							<?php if (is_array($this->entity->vendors)) { foreach ($this->entity->vendors as $cur_vendor) { ?>
+							<tr title="<?php echo $cur_vendor->guid; ?>">
+								<td><?php echo $cur_vendor->name; ?></td>
+								<td><?php echo $cur_vendor->sku; ?></td>
+								<td><?php echo $cur_vendor->cost; ?></td>
 							</tr>
 							<?php } } ?>
 						</tbody>
 					</table>
-					<input class="field" type="hidden" id="qualified_vendors" name="qualified_vendors" size="20" />
+					<input class="field" type="hidden" id="vendors" name="vendors" size="20" />
 				</div>
 			</div>
 			<div id="vendor_dialog" title="Add a Vendor">

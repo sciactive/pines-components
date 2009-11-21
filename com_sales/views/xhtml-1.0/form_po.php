@@ -28,8 +28,8 @@ $this->note = 'Provide PO details in this form.';
 				pgrid_toolbar_contents : [
 					{
 						type: 'button',
-						text: 'Add Product',
-						extra_class: 'icon picon_16x16_actions_list-add',
+						text: 'Add',
+						extra_class: 'icon picon_16x16_actions_document-new',
 						selection_optional: true,
 						click: function(){
 							product_dialog.dialog('open');
@@ -37,8 +37,21 @@ $this->note = 'Provide PO details in this form.';
 					},
 					{
 						type: 'button',
-						text: 'Remove Product',
-						extra_class: 'icon picon_16x16_actions_list-remove',
+						text: 'Edit',
+						extra_class: 'icon picon_16x16_actions_document-open',
+						click: function(e, rows){
+							var row_data = products_table.pgrid_export_rows(rows);
+							available_products_table.pgrid_select_rows([row_data[0].key]);
+							$("#cur_product_quantity").val(row_data[0].values[2]);
+							$("#cur_product_cost").val(row_data[0].values[3]);
+							product_dialog.dialog('open');
+							rows.pgrid_delete();
+						}
+					},
+					{
+						type: 'button',
+						text: 'Remove',
+						extra_class: 'icon picon_16x16_actions_edit-delete',
 						click: function(e, rows){
 							rows.pgrid_delete();
 							update_products();
@@ -99,9 +112,11 @@ $this->note = 'Provide PO details in this form.';
 							]
 						}];
 						products_table.pgrid_add(new_product);
-						update_products();
 						$(this).dialog('close');
 					}
+				},
+				close: function(event, ui) {
+					update_products();
 				}
 			});
 

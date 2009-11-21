@@ -40,7 +40,19 @@ $product->manufacturer = ($_REQUEST['manufacturer'] == 'null' ? null : intval($_
 $product->manufacturer_sku = $_REQUEST['manufacturer_sku'];
 
 // Purchasing
-$product->qualified_vendors = json_decode($_REQUEST['qualified_vendors']);
+$product->vendors = json_decode($_REQUEST['vendors']);
+if (!is_array($product->vendors))
+	$product->vendors = array();
+foreach ($product->vendors as &$cur_vendor) {
+	$new_vendor = (object) array(
+		"guid" => intval($cur_vendor->key),
+		"name" => $cur_vendor->values[0],
+		"sku" => $cur_vendor->values[1],
+		"cost" => $cur_vendor->values[2]
+	);
+	$cur_vendor = $new_vendor;
+}
+unset($cur_vendor);
 
 // Pricing
 $product->pricing_method = $_REQUEST['pricing_method'];

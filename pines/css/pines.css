@@ -250,7 +250,8 @@ body .ui-widget {
 /* ----------- Standard Notices ----------- */
 .notice {
 	margin: 3px;
-	padding: 5px;
+	padding: 4px;
+	margin-bottom: 10px;
 }
 .notice .close {
 	float: right;

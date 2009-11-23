@@ -129,6 +129,23 @@ class com_sales extends component {
 	}
 
 	/**
+	 * Delete a PO.
+	 *
+	 * @param int $id The GUID of the PO.
+	 * @return bool True on success, false on failure.
+	 */
+	function delete_po($id) {
+		if ( $entity = $this->get_po($id) ) {
+			if ( !$entity->delete() )
+				return false;
+			pines_log("Deleted PO $entity->name.", 'notice');
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Delete a product.
 	 *
 	 * @param int $id The GUID of the product.
@@ -266,6 +283,20 @@ class com_sales extends component {
 	}
 
 	/**
+	 * Gets a PO by GUID.
+	 *
+	 * @param int $id The PO's GUID.
+	 * @return entity|null The PO if it exists, null if it doesn't.
+	 */
+	function get_po($id) {
+		global $config;
+		$entity = $config->entity_manager->get_entity($id);
+		if (is_null($entity) || !$entity->has_tag('com_sales', 'po'))
+			$entity = null;
+		return $entity;
+	}
+
+	/**
 	 * Gets a product by GUID.
 	 *
 	 * @param int $id The product's GUID.
@@ -328,6 +359,19 @@ class com_sales extends component {
 	}
 
 	/**
+	 * Gets a shipper's name by GUID.
+	 *
+	 * @param int $id The shipper's GUID.
+	 * @return string|null The shipper's name if it exists, null if it doesn't.
+	 */
+	function get_shipper_name($id) {
+		$entity = $this->get_shipper($id);
+		if (is_object($entity))
+			return $entity->name;
+		return null;
+	}
+
+	/**
 	 * Gets a tax/fee by GUID.
 	 *
 	 * @param int $id The tax/fee's GUID.
@@ -353,6 +397,19 @@ class com_sales extends component {
 		if (is_null($entity) || !$entity->has_tag('com_sales', 'vendor'))
 			$entity = null;
 		return $entity;
+	}
+
+	/**
+	 * Gets a vendor's name by GUID.
+	 *
+	 * @param int $id The vendor's GUID.
+	 * @return string|null The vendor's name if it exists, null if it doesn't.
+	 */
+	function get_vendor_name($id) {
+		$entity = $this->get_vendor($id);
+		if (is_object($entity))
+			return $entity->name;
+		return null;
 	}
 
 	/**
@@ -396,6 +453,28 @@ class com_sales extends component {
 			$pgrid->detach();
 			$module->detach();
 			display_notice("There are no manufacturers.");
+		}
+	}
+
+	/**
+	 * Creates and attaches a module which lists pos.
+	 */
+	function list_pos() {
+		global $config;
+
+		$pgrid = new module('system', 'pgrid.default', 'head');
+		$pgrid->icons = true;
+
+		$module = new module('com_sales', 'list_pos', 'content');
+		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_pos'];
+
+		$module->pos = $config->entity_manager->get_entities_by_tags('com_sales', 'po');
+
+		if ( empty($module->pos) ) {
+			$pgrid->detach();
+			$module->detach();
+			display_notice("There are no POs.");
 		}
 	}
 
@@ -753,6 +832,45 @@ class com_sales extends component {
 		$module->new_action = $new_action;
 
 		return $module;
+	}
+
+	/**
+	 * Use gaussian rounding to round a number to a certain decimal point.
+	 *
+	 * @param float $value The number to round.
+	 * @param int $decimal The number of decimal points.
+	 * @param bool $string Whether to return a formatted string, instead of a float.
+	 * @return float|string Float if $string is false, formatted string otherwise.
+	 */
+	function round($value, $decimal, $string = true) {
+		$rnd = 10 ^ $decimal;
+		$mult = $value * $rnd;
+		$value = $this->gaussian_round($mult);
+		$value /= $rnd;
+		if ($string)
+			$value = number_format($value, $decimal);
+		return ($value);
+	}
+
+	/**
+	 * Round a number to the nearest integer value using gaussian rounding.
+	 * 
+	 * @param float $value The number to round.
+	 * @return float The rounded number.
+	 */
+	function gaussian_round($value) {
+		$absolute = abs($value);
+		$sign     = ($value == 0 ? 0 : ($value < 0 ? -1 : 1));
+		$floored  = floor($absolute);
+		if ($absolute - $floored != 0.5) {
+			return round($absolute) * $sign;
+		}
+		if ($floored % 2 == 1) {
+			// Closest even is up.
+			return ceil($absolute) * $sign;
+		}
+		// Closest even is down.
+		return $floored * $sign;
 	}
 }
 

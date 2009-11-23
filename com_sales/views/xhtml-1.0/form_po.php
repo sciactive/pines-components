@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = (is_null($this->entity->guid)) ? 'Editing New Purchase Order' : 'Editing ['.htmlentities($this->entity->name).']';
+$this->title = (is_null($this->entity->guid)) ? 'Editing New Purchase Order' : 'Editing ['.htmlentities($this->entity->po_number).']';
 $this->note = 'Provide PO details in this form.';
 ?>
 <form class="pform" method="post" id="po_details" action="<?php echo pines_url($this->new_option, $this->new_action); ?>">
@@ -65,11 +65,12 @@ $this->note = 'Provide PO details in this form.';
 		}
 
 
-		function select_vendor(vendor_id) {
-			if (cur_vendor == vendor_id) return;
+		function select_vendor(vendor_id, loading) {
+			if (cur_vendor == vendor_id && !loading) return;
 			var select_products = [];
 			available_products_table.pgrid_get_all_rows().pgrid_delete();
-			products_table.pgrid_get_all_rows().pgrid_delete();
+			if (!loading)
+				products_table.pgrid_get_all_rows().pgrid_delete();
 			$.each(all_products, function(){
 				var cur_product = this;
 				$.each(cur_product.vendors, function(){
@@ -229,8 +230,7 @@ $this->note = 'Provide PO details in this form.';
 				}
 			});
 
-			update_products();
-			select_vendor(Number($("select[name=vendor]").val()));
+			select_vendor(cur_vendor, true);
 		});
 		// ]]>
 	</script>
@@ -283,7 +283,7 @@ $this->note = 'Provide PO details in this form.';
 			// ]]>
 		</script>
 		<label><span class="label">ETA</span>
-			<input class="field" type="text" id="eta" name="eta" size="20" value="<?php echo $this->entity->eta; ?>" /></label>
+			<input class="field" type="text" id="eta" name="eta" size="20" value="<?php echo ($this->entity->eta ? date('Y-m-d', $this->entity->eta) : ''); ?>" /></label>
 	</div>
 	<div class="element full_width">
 		<span class="label">Products</span>
@@ -300,12 +300,17 @@ $this->note = 'Provide PO details in this form.';
 						</tr>
 					</thead>
 					<tbody>
-						<?php if (is_array($this->entity->products)) { foreach ($this->entity->products as $cur_product) { ?>
-						<tr title="<?php echo $cur_product->key; ?>">
-							<td><?php echo $cur_product->values[0]; ?></td>
-							<td><?php echo $cur_product->values[1]; ?></td>
-							<td><?php echo $cur_product->values[2]; ?></td>
-							<td><?php echo round(intval($cur_product->values[1]) * floatval($cur_product->values[2]), $config->com_sales->dec); ?></td>
+						<?php if (is_array($this->entity->products)) { foreach ($this->entity->products as $cur_product) {
+								$cur_product_entity = $config->run_sales->get_product($cur_product->guid);
+								if (is_null($cur_product_entity))
+									continue;
+								?>
+						<tr title="<?php echo $cur_product->guid; ?>">
+							<td><?php echo $cur_product_entity->sku; ?></td>
+							<td><?php echo $cur_product_entity->name; ?></td>
+							<td><?php echo $cur_product->quantity; ?></td>
+							<td><?php echo $cur_product->cost; ?></td>
+							<td><?php echo $config->run_sales->round(intval($cur_product->quantity) * floatval($cur_product->cost), $config->com_sales->dec); ?></td>
 						</tr>
 						<?php } } ?>
 					</tbody>

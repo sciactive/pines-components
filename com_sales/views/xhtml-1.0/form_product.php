@@ -404,24 +404,26 @@ $this->note = 'Provide product details in this form.';
 			<div class="element full_width">
 				<span class="label">Vendors</span>
 				<div class="group">
-					<table id="vendors_table">
-						<thead>
-							<tr>
-								<th>Vendor</th>
-								<th>Vendor SKU</th>
-								<th>Cost</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php if (is_array($this->entity->vendors)) { foreach ($this->entity->vendors as $cur_vendor) { ?>
-							<tr title="<?php echo $cur_vendor->guid; ?>">
-								<td><?php echo $cur_vendor->name; ?></td>
-								<td><?php echo $cur_vendor->sku; ?></td>
-								<td><?php echo $cur_vendor->cost; ?></td>
-							</tr>
-							<?php } } ?>
-						</tbody>
-					</table>
+					<div class="field">
+						<table id="vendors_table">
+							<thead>
+								<tr>
+									<th>Vendor</th>
+									<th>Vendor SKU</th>
+									<th>Cost</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php if (is_array($this->entity->vendors)) { foreach ($this->entity->vendors as $cur_vendor) { ?>
+								<tr title="<?php echo $cur_vendor->guid; ?>">
+									<td><?php echo $cur_vendor->name; ?></td>
+									<td><?php echo $cur_vendor->sku; ?></td>
+									<td><?php echo $cur_vendor->cost; ?></td>
+								</tr>
+								<?php } } ?>
+							</tbody>
+						</table>
+					</div>
 					<input class="field" type="hidden" id="vendors" name="vendors" size="20" />
 				</div>
 			</div>

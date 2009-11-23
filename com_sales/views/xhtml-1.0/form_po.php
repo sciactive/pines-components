@@ -16,11 +16,106 @@ $this->note = 'Provide PO details in this form.';
 <form class="pform" method="post" id="po_details" action="<?php echo pines_url($this->new_option, $this->new_action); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
+		var products;
+		var products_table;
+		var available_products_table;
+		var product_dialog;
+		var cur_vendor = <?php echo ($this->entity->vendor ? $this->entity->vendor : 'null'); ?>;
+		// Number of decimal places to round to.
+		var dec = <?php echo intval($config->com_sales->dec); ?>;
+		var all_products = <?php
+		$products = array();
+		foreach ($this->products as $cur_product) {
+			$export_product = (object) array(
+				'guid' => $cur_product->guid,
+				'sku' => $cur_product->sku,
+				'name' => $cur_product->name,
+				'manufacturer' => $config->run_sales->get_manufacturer_name($cur_product->manufacturer),
+				'manufacturer_sku' => $cur_product->manufacturer_sku,
+				'unit_price' => $cur_product->unit_price,
+				'vendors' => $cur_product->vendors
+			);
+			array_push($products, $export_product);
+		}
+		echo json_encode($products);
+		?>;
+
+		function round_to_dec(value) {
+			var rnd = Math.pow(10, dec);
+			var mult = value * rnd;
+			value = gaussianRound(mult);
+			value /= rnd;
+			value = value.toFixed(dec);
+			return (value);
+		}
+
+		function gaussianRound(x) {
+			var absolute = Math.abs(x);
+			var sign     = x == 0 ? 0 : (x < 0 ? -1 : 1);
+			var floored  = Math.floor(absolute);
+			if (absolute - floored != 0.5) {
+				return Math.round(absolute) * sign;
+			}
+			if (floored % 2 == 1) {
+				// Closest even is up.
+				return Math.ceil(absolute) * sign;
+			}
+			// Closest even is down.
+			return floored * sign;
+		}
+
+
+		function select_vendor(vendor_id) {
+			if (cur_vendor == vendor_id) return;
+			var select_products = [];
+			available_products_table.pgrid_get_all_rows().pgrid_delete();
+			products_table.pgrid_get_all_rows().pgrid_delete();
+			$.each(all_products, function(){
+				var cur_product = this;
+				$.each(cur_product.vendors, function(){
+					if (vendor_id == this.guid) {
+						$.merge(select_products, [{
+								"key": cur_product.guid,
+								values: [
+									cur_product.sku,
+									cur_product.name,
+									cur_product.manufacturer,
+									cur_product.manufacturer_sku,
+									this.sku,
+									cur_product.unit_price
+								]
+							}]);
+					}
+				});
+			});
+			available_products_table.pgrid_add(select_products);
+			cur_vendor = vendor_id;
+			update_products();
+		}
+
+		function update_products() {
+			var all_rows = products_table.pgrid_get_all_rows().pgrid_export_rows();
+			var total = 0.00;
+			available_products_table.pgrid_get_selected_rows().pgrid_deselect_rows();
+			$("#cur_product_quantity").val("");
+			$("#cur_product_cost").val("");
+			// Save the data into a hidden form element.
+			products.val(JSON.stringify(all_rows));
+			// Calculate a total based on quantity and cost.
+			$.each(all_rows, function(){
+				if (typeof this.values[2] != "undefined" && typeof this.values[3] != "undefined")
+					total += parseInt(this.values[2]) * parseFloat(this.values[3]);
+			});
+			//
+			total = round_to_dec(total);
+			$("#total").html(total);
+		}
+		
 		$(document).ready(function(){
-			var products = $("#products");
-			var products_table = $("#products_table");
-			var available_products_table = $("#available_products_table");
-			var product_dialog = $("#product_dialog");
+			products = $("#products");
+			products_table = $("#products_table");
+			available_products_table = $("#available_products_table");
+			product_dialog = $("#product_dialog");
 
 			products_table.pgrid({
 				pgrid_paginate: false,
@@ -32,6 +127,18 @@ $this->note = 'Provide PO details in this form.';
 						extra_class: 'icon picon_16x16_actions_document-new',
 						selection_optional: true,
 						click: function(){
+							if (!cur_vendor) {
+								$("<div title=\"Alert\">Please select a vendor.</div>").dialog({
+									bgiframe: true,
+									modal: true,
+									buttons: {
+										Ok: function(){
+											$(this).dialog("close");
+										}
+									}
+								});
+								return;
+							}
 							product_dialog.dialog('open');
 						}
 					},
@@ -39,6 +146,7 @@ $this->note = 'Provide PO details in this form.';
 						type: 'button',
 						text: 'Edit',
 						extra_class: 'icon picon_16x16_actions_document-open',
+						double_click: true,
 						click: function(e, rows){
 							var row_data = products_table.pgrid_export_rows(rows);
 							available_products_table.pgrid_select_rows([row_data[0].key]);
@@ -75,8 +183,8 @@ $this->note = 'Provide PO details in this form.';
 				width: 600,
 				buttons: {
 					"Done": function() {
-						var cur_product_quantity = $("#cur_product_quantity").val();
-						var cur_product_cost = $("#cur_product_cost").val();
+						var cur_product_quantity = parseInt($("#cur_product_quantity").val());
+						var cur_product_cost = parseFloat($("#cur_product_cost").val());
 						var cur_product = available_products_table.pgrid_get_selected_rows().pgrid_export_rows();
 						if (!cur_product[0]) {
 							$("<div title=\"Alert\">Please select a product.</div>").dialog({
@@ -90,7 +198,7 @@ $this->note = 'Provide PO details in this form.';
 							});
 							return;
 						}
-						if (cur_product_quantity == "" || cur_product_cost == "") {
+						if (isNaN(cur_product_quantity) || isNaN(cur_product_cost)) {
 							$("<div title=\"Alert\">Please provide both a quantity and a cost for this product.</div>").dialog({
 								bgiframe: true,
 								modal: true,
@@ -108,7 +216,8 @@ $this->note = 'Provide PO details in this form.';
 								cur_product[0].values[0],
 								cur_product[0].values[1],
 								cur_product_quantity,
-								cur_product_cost
+								cur_product_cost,
+								round_to_dec(cur_product_quantity * cur_product_cost)
 							]
 						}];
 						products_table.pgrid_add(new_product);
@@ -120,12 +229,8 @@ $this->note = 'Provide PO details in this form.';
 				}
 			});
 
-			function update_products() {
-				available_products_table.pgrid_get_selected_rows().pgrid_deselect_rows();
-				$("#cur_product_quantity").val("");
-				$("#cur_product_cost").val("");
-				products.val(JSON.stringify(products_table.pgrid_get_all_rows().pgrid_export_rows()));
-			}
+			update_products();
+			select_vendor(Number($("select[name=vendor]").val()));
 		});
 		// ]]>
 	</script>
@@ -141,8 +246,17 @@ $this->note = 'Provide PO details in this form.';
 	</div>
 	<?php } ?>
 	<div class="element">
+		<label><span class="label">PO #</span>
+			<input class="field" type="text" name="po_number" size="20" value="<?php echo $this->entity->po_number; ?>" /></label>
+	</div>
+	<div class="element">
+		<label><span class="label">Reference #</span>
+			<input class="field" type="text" name="reference_number" size="20" value="<?php echo $this->entity->reference_number; ?>" /></label>
+	</div>
+	<div class="element">
 		<label><span class="label">Vendor</span>
-			<select class="field" name="vendor">
+			<span class="note">Changing this will clear selected products!</span>
+			<select class="field" name="vendor" onchange="void select_vendor(Number(this.value));">
 				<option value="null">-- None --</option>
 				<?php foreach ($this->vendors as $cur_vendor) { ?>
 				<option value="<?php echo $cur_vendor->guid; ?>"<?php echo $this->entity->vendor == $cur_vendor->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_vendor->name; ?></option>
@@ -157,14 +271,6 @@ $this->note = 'Provide PO details in this form.';
 				<option value="<?php echo $cur_shipper->guid; ?>"<?php echo $this->entity->shipper == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_shipper->name; ?></option>
 				<?php } ?>
 			</select></label>
-	</div>
-	<div class="element">
-		<label><span class="label">PO #</span>
-			<input class="field" type="text" name="po_number" size="20" value="<?php echo $this->entity->po_number; ?>" /></label>
-	</div>
-	<div class="element">
-		<label><span class="label">Reference #</span>
-			<input class="field" type="text" name="reference_number" size="20" value="<?php echo $this->entity->reference_number; ?>" /></label>
 	</div>
 	<div class="element">
 		<script type="text/javascript">
@@ -182,27 +288,36 @@ $this->note = 'Provide PO details in this form.';
 	<div class="element full_width">
 		<span class="label">Products</span>
 		<div class="group">
-			<table id="products_table">
-				<thead>
-					<tr>
-						<th>SKU</th>
-						<th>Product</th>
-						<th>Quantity</th>
-						<th>Cost</th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php if (is_array($this->entity->products)) { foreach ($this->entity->products as $cur_product) { ?>
-					<tr title="<?php echo $cur_product->key; ?>">
-						<td><?php echo $cur_product->values[0]; ?></td>
-						<td><?php echo $cur_product->values[1]; ?></td>
-						<td><?php echo $cur_product->values[2]; ?></td>
-					</tr>
-					<?php } } ?>
-				</tbody>
-			</table>
+			<div class="field">
+				<table id="products_table">
+					<thead>
+						<tr>
+							<th>SKU</th>
+							<th>Product</th>
+							<th>Quantity</th>
+							<th>Unit Cost</th>
+							<th>Line Total</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php if (is_array($this->entity->products)) { foreach ($this->entity->products as $cur_product) { ?>
+						<tr title="<?php echo $cur_product->key; ?>">
+							<td><?php echo $cur_product->values[0]; ?></td>
+							<td><?php echo $cur_product->values[1]; ?></td>
+							<td><?php echo $cur_product->values[2]; ?></td>
+							<td><?php echo round(intval($cur_product->values[1]) * floatval($cur_product->values[2]), $config->com_sales->dec); ?></td>
+						</tr>
+						<?php } } ?>
+					</tbody>
+				</table>
+			</div>
 			<input class="field" type="hidden" id="products" name="products" size="20" />
 		</div>
+	</div>
+	<div class="element full_width">
+		<span class="label">Total</span>
+		<span class="note">Due to rounding, this may not be exactly the sum of all line totals.</span>
+		<span class="field">$<span id="total">--</span></span>
 	</div>
 	<div id="product_dialog" title="Add a Product">
 		<table id="available_products_table">
@@ -212,19 +327,12 @@ $this->note = 'Provide PO details in this form.';
 					<th>Name</th>
 					<th>Manufacturer</th>
 					<th>Manufacturer SKU</th>
+					<th>Vendor SKU</th>
 					<th>Unit Price</th>
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach ($this->products as $cur_product) { ?>
-				<tr title="<?php echo $cur_product->guid; ?>">
-					<td><?php echo $cur_product->sku; ?></td>
-					<td><?php echo $cur_product->name; ?></td>
-					<td><?php echo $cur_product->Manufacturer; ?></td>
-					<td><?php echo $cur_product->manufacturer_sku; ?></td>
-					<td><?php echo $cur_product->unit_price; ?></td>
-				</tr>
-				<?php } ?>
+				<tr><td>-----------</td><td>-----------</td><td>-----------</td><td>-----------</td><td>-----------</td><td>-----------</td></tr>
 			</tbody>
 		</table>
 		<br class="spacer" />

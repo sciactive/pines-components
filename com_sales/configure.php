@@ -14,40 +14,47 @@ defined('P_RUN') or die('Direct access prohibited');
 return array (
   0 =>
   array (
+	'name' => 'dec',
+	'cname' => 'Visible Decimal Places',
+	'description' => 'Decimal numbers, though stored in the database more accurately, will only show to this amount of places.',
+	'value' => 2,
+  ),
+  1 =>
+  array (
 	'name' => 'global_products',
 	'cname' => 'Globalize Products',
 	'description' => 'Ensure that every user can access all products by setting the "other" access control to read.',
 	'value' => true,
   ),
-  1 =>
+  2 =>
   array (
 	'name' => 'global_manufacturers',
 	'cname' => 'Globalize Manufacturers',
 	'description' => 'Ensure that every user can access all manufacturers by setting the "other" access control to read.',
 	'value' => true,
   ),
-  2 =>
+  3 =>
   array (
 	'name' => 'global_vendors',
 	'cname' => 'Globalize Vendors',
 	'description' => 'Ensure that every user can access all vendors by setting the "other" access control to read.',
 	'value' => true,
   ),
-  3 =>
+  4 =>
   array (
 	'name' => 'global_shippers',
 	'cname' => 'Globalize Shippers',
 	'description' => 'Ensure that every user can access all shippers by setting the "other" access control to read.',
 	'value' => true,
   ),
-  4 =>
+  5 =>
   array (
 	'name' => 'global_customers',
 	'cname' => 'Globalize Customers',
 	'description' => 'Ensure that every user can access all customers by setting the "other" access control to read.',
 	'value' => true,
   ),
-  5 =>
+  6 =>
   array (
 	'name' => 'global_tax_fees',
 	'cname' => 'Globalize Taxes/Fees',

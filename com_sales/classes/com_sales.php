@@ -253,6 +253,19 @@ class com_sales extends component {
 	}
 
 	/**
+	 * Gets a manufacturer's name by GUID.
+	 *
+	 * @param int $id The manufacturer's GUID.
+	 * @return string|null The manufacturer's name if it exists, null if it doesn't.
+	 */
+	function get_manufacturer_name($id) {
+		$entity = $this->get_manufacturer($id);
+		if (is_object($entity))
+			return $entity->name;
+		return null;
+	}
+
+	/**
 	 * Gets a product by GUID.
 	 *
 	 * @param int $id The product's GUID.

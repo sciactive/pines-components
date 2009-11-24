@@ -18,7 +18,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			<h2><?php echo htmlentities($this->title); ?></h2>
 		<?php } ?>
 		<?php if (!empty($this->note)) { ?>
-			<p><?php echo htmlentities($this->note); ?></p>
+			<p><?php echo $this->note; ?></p>
 		<?php } ?>
 	</div>
 	<?php } ?>

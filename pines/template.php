@@ -29,6 +29,8 @@ defined('P_RUN') or die('Direct access prohibited');
 	<!--[if lt IE 7]>
 	<link href="<?php echo $config->rela_location; ?>system/css/pform-ie-lt-7.css" media="all" rel="stylesheet" type="text/css" />
 	<![endif]-->
+	<link href="<?php echo $config->rela_location; ?>system/css/jquery.pnotify.default.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="<?php echo $config->rela_location; ?>system/css/jquery.pnotify.default.icons.css" media="all" rel="stylesheet" type="text/css" />
 
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/pines.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/print.css" media="print" rel="stylesheet" type="text/css" />
@@ -129,7 +131,7 @@ defined('P_RUN') or die('Direct access prohibited');
 									<?php
 									$error = $page->get_error();
 									foreach ($error as $cur_item) {
-										echo "<p><span class=\"ui-icon ui-icon-alert\" style=\"float: left; margin-right: 0.3em;\"></span><span>$cur_item</span></p>\n";
+										echo "<p class=\"entry\"><span class=\"ui-icon ui-icon-alert\" style=\"float: left; margin-right: 0.3em;\"></span><span class=\"text\">$cur_item</span></p>\n";
 									}
 									?>
 							</div>
@@ -139,7 +141,7 @@ defined('P_RUN') or die('Direct access prohibited');
 									<?php
 									$notice = $page->get_notice();
 									foreach ($notice as $cur_item) {
-										echo "<p><span class=\"ui-icon ui-icon-info\" style=\"float: left; margin-right: 0.3em;\"></span><span>$cur_item</span></p>\n";
+										echo "<p class=\"entry\"><span class=\"ui-icon ui-icon-info\" style=\"float: left; margin-right: 0.3em;\"></span><span class=\"text\">$cur_item</span></p>\n";
 									}
 									?>
 							</div>

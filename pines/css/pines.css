@@ -260,6 +260,10 @@ body .ui-widget {
 .notice p {
 	margin: 1px;
 }
+/* ----------- Pines Notify Notices ----------- */
+.ui-widget.ui-pnotify {
+	z-index: 9999;
+}
 /* ----------- Spacer for making a cleared BR ----------- */
 .spacer{
 	clear: both;

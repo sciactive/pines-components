@@ -129,15 +129,7 @@ $this->note = 'Provide PO details in this form.';
 						selection_optional: true,
 						click: function(){
 							if (!cur_vendor) {
-								$("<div title=\"Alert\">Please select a vendor.</div>").dialog({
-									bgiframe: true,
-									modal: true,
-									buttons: {
-										Ok: function(){
-											$(this).dialog("close");
-										}
-									}
-								});
+								alert("Please select a vendor.");
 								return;
 							}
 							product_dialog.dialog('open');
@@ -188,27 +180,11 @@ $this->note = 'Provide PO details in this form.';
 						var cur_product_cost = parseFloat($("#cur_product_cost").val());
 						var cur_product = available_products_table.pgrid_get_selected_rows().pgrid_export_rows();
 						if (!cur_product[0]) {
-							$("<div title=\"Alert\">Please select a product.</div>").dialog({
-								bgiframe: true,
-								modal: true,
-								buttons: {
-									Ok: function(){
-										$(this).dialog("close");
-									}
-								}
-							});
+							alert("Please select a product.");
 							return;
 						}
 						if (isNaN(cur_product_quantity) || isNaN(cur_product_cost)) {
-							$("<div title=\"Alert\">Please provide both a quantity and a cost for this product.</div>").dialog({
-								bgiframe: true,
-								modal: true,
-								buttons: {
-									Ok: function(){
-										$(this).dialog("close");
-									}
-								}
-							});
+							alert("Please provide both a quantity and a cost for this product.");
 							return;
 						}
 						var new_product = [{

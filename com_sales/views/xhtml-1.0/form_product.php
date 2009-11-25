@@ -66,27 +66,11 @@ $this->note = 'Provide product details in this form.';
 						var cur_vendor_cost = $("#cur_vendor_cost").val();
 						var cur_vendor = available_vendors_table.pgrid_get_selected_rows().pgrid_export_rows();
 						if (!cur_vendor[0]) {
-							$("<div title=\"Alert\">Please select a vendor.</div>").dialog({
-								bgiframe: true,
-								modal: true,
-								buttons: {
-									Ok: function(){
-										$(this).dialog("close");
-									}
-								}
-							});
+							alert("Please select a vendor.");
 							return;
 						}
 						if (cur_vendor_sku == "" || cur_vendor_cost == "") {
-							$("<div title=\"Alert\">Please provide both a SKU and a cost for this vendor.</div>").dialog({
-								bgiframe: true,
-								modal: true,
-								buttons: {
-									Ok: function(){
-										$(this).dialog("close");
-									}
-								}
-							});
+							alert("Please provide both a SKU and a cost for this vendor.");
 							return;
 						}
 						var new_vendor = [{

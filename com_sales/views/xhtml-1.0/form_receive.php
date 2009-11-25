@@ -59,16 +59,7 @@ $this->note = 'Only use this form to receive inventory into your <strong>current
 						var cur_serial = $("#cur_serial").val();
 						var cur_product = $("#upc").val();
 						if (!cur_serial) {
-							$("<div title=\"Alert\">Please provide a serial number.</div>").dialog({
-								bgiframe: true,
-								modal: true,
-								buttons: {
-									Ok: function(){
-										$(this).dialog("close");
-										$("#cur_serial").focus();
-									}
-								}
-							});
+							alert("Please provide a serial number.");
 							return;
 						}
 						var new_product = [{
@@ -90,15 +81,7 @@ $this->note = 'Only use this form to receive inventory into your <strong>current
 
 			product_button.click(function(){
 				if (!$("#upc").val()) {
-					$("<div title=\"Alert\">Please enter a UPC to add a product.</div>").dialog({
-						bgiframe: true,
-						modal: true,
-						buttons: {
-							Ok: function(){
-								$(this).dialog("close");
-							}
-						}
-					});
+					alert("Please enter a UPC to add a product.");
 					return;
 				}
 				product_dialog.dialog('open');

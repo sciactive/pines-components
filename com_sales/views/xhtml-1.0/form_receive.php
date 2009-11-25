@@ -18,6 +18,8 @@ $this->note = 'Only use this form to receive inventory into your <strong>current
 		// <![CDATA[
 		var products;
 		var products_table;
+		var product_dialog;
+		var product_button;
 
 		function update_products() {
 			var all_rows = products_table.pgrid_get_all_rows().pgrid_export_rows();
@@ -29,6 +31,7 @@ $this->note = 'Only use this form to receive inventory into your <strong>current
 			products = $("#products");
 			products_table = $("#products_table");
 			product_dialog = $("#product_dialog");
+			product_button = $("#add_product");
 
 			products_table.pgrid({
 				pgrid_paginate: false,
@@ -62,6 +65,7 @@ $this->note = 'Only use this form to receive inventory into your <strong>current
 								buttons: {
 									Ok: function(){
 										$(this).dialog("close");
+										$("#cur_serial").focus();
 									}
 								}
 							});
@@ -75,8 +79,8 @@ $this->note = 'Only use this form to receive inventory into your <strong>current
 							]
 						}];
 						products_table.pgrid_add(new_product);
-						$("#upc").val("");
-						$(this).dialog('close');
+						$("#upc").val("").focus();
+						product_dialog.dialog('close');
 					}
 				},
 				close: function(event, ui) {
@@ -84,7 +88,7 @@ $this->note = 'Only use this form to receive inventory into your <strong>current
 				}
 			});
 
-			$("#add_product").click(function(){
+			product_button.click(function(){
 				if (!$("#upc").val()) {
 					$("<div title=\"Alert\">Please enter a UPC to add a product.</div>").dialog({
 						bgiframe: true,
@@ -98,6 +102,18 @@ $this->note = 'Only use this form to receive inventory into your <strong>current
 					return;
 				}
 				product_dialog.dialog('open');
+			});
+			$("#upc").keydown(function(eventObject){
+				if (eventObject.keyCode == 13) {
+					product_button.click();
+					return false;
+				}
+			});
+			$("#cur_serial").keydown(function(eventObject){
+				if (eventObject.keyCode == 13) {
+					product_dialog.dialog('option', 'buttons').Done();
+					return false;
+				}
 			});
 
 			products_table.pgrid_get_all_rows().pgrid_delete();

@@ -2,17 +2,18 @@ var _alert;
 
 function convert_standard_notices() {
 	// Turn notices into Pines Notify notices.
-	$(".notice").find("p.entry span.text").each(function(){
-		$.pnotify({
-			pnotify_title: "Notice",
-			pnotify_text: $(this).html()
-		});
-	}).end().remove();
-	$(".error").find("p.entry span.text").each(function(){
+	$(".notice.ui-state-error").find("p.entry span.text").each(function(){
 		$.pnotify({
 			pnotify_title: "Error",
 			pnotify_text: $(this).html(),
-			pnotify_type: "error"
+			pnotify_type: "error",
+			pnotify_hide: false
+		});
+	}).end().remove();
+	$(".notice.ui-state-highlight").find("p.entry span.text").each(function(){
+		$.pnotify({
+			pnotify_title: "Notice",
+			pnotify_text: $(this).html()
 		});
 	}).end().remove();
 }

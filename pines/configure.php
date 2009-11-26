@@ -55,6 +55,12 @@ class tpl_pines extends template {
 	 * @var bool $theme_switcher
 	 */
 	var $theme_switcher = true;
+	/**
+	 * Use Google CDN to host jQuery and jQuery UI.
+	 *
+	 * @var bool $google_cdn
+	 */
+	var $google_cdn = true;
 
 	function __construct() {
 		global $config;

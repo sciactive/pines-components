@@ -35,11 +35,21 @@ function release_alert() {
 	_alert = null;
 }
 
-jQuery(document).ready(function($){
+$(function($){
 	// Just in case Pines Notify isn't working.
 	$(".notice .close, .error .close").css("cursor", "pointer").click(function() {
 		$(this).parent().fadeOut("slow");
 	});
 	convert_standard_notices();
 	consume_alert();
+
+	// Position the footer correctly.
+	var wrapper = $("#wrapper");
+	var footer = wrapper.children("#footer");
+	var height = footer.height();
+	var colmask = wrapper.children(".colmask");
+	wrapper.css("min-height", "100%");
+	footer.css("position", "absolute");
+	footer.css("bottom", "0");
+	colmask.css("margin-bottom", height);
 });

@@ -34,35 +34,29 @@ defined('P_RUN') or die('Direct access prohibited');
 
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/pines.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/print.css" media="print" rel="stylesheet" type="text/css" />
-	<?php if ($config->template->header_image) { ?>
+<?php if ($config->template->header_image) { ?>
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/header-image.css" media="all" rel="stylesheet" type="text/css" />
-	<?php } ?>
+<?php } ?>
 
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dropdown/dropdown.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dropdown/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/css/dropdown/themes/jqueryui/jqueryui.css" media="all" rel="stylesheet" type="text/css" />
 
+<?php if ($config->template->google_cdn) { ?>
 	<script type="text/javascript" src="<?php echo $config->rela_location; ?>system/js/js.php"></script>
-	<script type="text/javascript" src="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/js/jquery/jquery.timers-1.1.2.js"></script>
+<?php } else { ?>
+	<script type="text/javascript" src="<?php echo $config->rela_location; ?>system/js/js.php?exclude=jquery.min.js+jquery-ui.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
+<?php } ?>
 	<script type="text/javascript" src="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/js/template.js"></script>
 	
-	<script type="text/javascript">
-		// <![CDATA[
-		$(function(){
-			var wrapper = $("#wrapper");
-			var footer = wrapper.children("#footer");
-			var height = footer.height();
-			var colmask = wrapper.children(".colmask");
-			wrapper.css("min-height", "100%");
-			footer.css("position", "absolute");
-			footer.css("bottom", "0");
-			colmask.css("margin-bottom", height);
-		});
-		// ]]>
-	</script>
-
-	<?php if ($config->template->theme_switcher) { ?>
+<?php if ($config->template->theme_switcher) {
+	if ($config->template->google_cdn) { ?>
+	<link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/base/ui.all.css" />
+<?php } else { ?>
 	<link type="text/css" rel="stylesheet" href="http://jqueryui.com/themes/base/ui.all.css" />
+<?php } ?>
 	<script type="text/javascript" src="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/js/jquery/jquery.themeswitcher.js"></script>
 	<script type="text/javascript">
 		// <![CDATA[
@@ -80,13 +74,15 @@ defined('P_RUN') or die('Direct access prohibited');
 		}
 		/* ]]> */
 	</style>
-	<?php } else { ?>
+<?php } else {
+	if ($config->template->google_cdn) { ?>
+	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/<?php echo $config->template->theme; ?>/jquery-ui.css" media="all" rel="stylesheet" type="text/css" />
+<?php } else { ?>
 	<link href="<?php echo $config->rela_location; ?>system/css/jquery-ui/<?php echo $config->template->theme; ?>/jquery-ui.css" media="all" rel="stylesheet" type="text/css" />
-	<?php } ?>
+<?php } } ?>
 
 	<!--[if lt IE 7]>
 	<script type="text/javascript" src="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/js/jquery/jquery.dropdown.js"></script>
-
 	<style media="screen" type="text/css">
 		.col1 {
 			width:100%;

@@ -499,6 +499,10 @@ $this->note = 'Provide product details in this form.';
 					<input class="field" type="text" name="rma_after" size="10" value="<?php echo $this->entity->rma_after; ?>" /> days.</label>
 			</div>
 			<div class="element">
+				<label><span class="label">Serialized</span>
+					<input class="field" type="checkbox" name="serialized" size="20" value="ON"<?php echo ($this->entity->serialized || is_null($this->entity->serialized)) ? ' checked="checked"' : ''; ?> /></label>
+			</div>
+			<div class="element">
 				<label><span class="label">Discountable</span>
 					<input class="field" type="checkbox" name="discountable" size="20" value="ON"<?php echo ($this->entity->discountable || is_null($this->entity->discountable)) ? ' checked="checked"' : ''; ?> /></label>
 			</div>

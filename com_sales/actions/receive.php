@@ -39,10 +39,19 @@ foreach ($products_json as $key => $cur_product) {
 foreach ($products as $cur_product) {
 	$cur_product_entity = $config->run_sales->get_product_by_code($cur_product['product_code']);
 	if (is_null($cur_product_entity)) {
-		display_notice("Product with code {$cur_product['product_code']} not found!");
+		display_notice("Product with code {$cur_product['product_code']} not found! Skipping...");
 		continue;
 	}
-	var_dump($cur_product_entity);
+	if ($cur_product_entity->serialized && empty($cur_product['serial'])) {
+		display_notice("Product [{$cur_product_entity->name}] with code {$cur_product['product_code']} requires a serial! Skipping...");
+		continue;
+	}
+	for ($i = 0; $i < $cur_product['quantity']; $i++) {
+		$stock_entity = new entity('com_sales', 'stock_entry');
+		$stock_entity->product_guid = $cur_product_entity->guid;
+		$stock_entity->location = $_SESSION['user']->gid;
+		var_dump($stock_entity);
+	}
 }
 
 ?>

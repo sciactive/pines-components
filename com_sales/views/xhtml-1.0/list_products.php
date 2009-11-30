@@ -66,6 +66,7 @@ $this->title = 'Products';
 			<th>Floor</th>
 			<th>Weight (lbs)</th>
 			<th>RMA After (days)</th>
+			<th>Serialized</th>
 			<th>Discountable</th>
 			<th>Hide on Invoice</th>
 			<th>Non-Refundable</th>
@@ -86,6 +87,7 @@ $this->title = 'Products';
 			<td>$<?php echo $product->floor; ?></td>
 			<td><?php echo $product->weight; ?></td>
 			<td><?php echo $product->rma_after; ?></td>
+			<td><?php echo ($product->serialized ? 'Yes' : 'No'); ?></td>
 			<td><?php echo ($product->discountable ? 'Yes' : 'No'); ?></td>
 			<td><?php echo ($product->hide_on_invoice ? 'Yes' : 'No'); ?></td>
 			<td><?php echo ($product->non_refundable ? 'Yes' : 'No'); ?></td>

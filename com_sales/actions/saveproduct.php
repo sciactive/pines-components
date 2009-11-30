@@ -62,6 +62,7 @@ $product->floor = floatval($_REQUEST['floor']);
 // Attributes
 $product->weight = floatval($_REQUEST['weight']);
 $product->rma_after = floatval($_REQUEST['rma_after']);
+$product->serialized = ($_REQUEST['serialized'] == 'ON' ? true : false);
 $product->discountable = ($_REQUEST['discountable'] == 'ON' ? true : false);
 $product->hide_on_invoice = ($_REQUEST['hide_on_invoice'] == 'ON' ? true : false);
 $product->non_refundable = ($_REQUEST['non_refundable'] == 'ON' ? true : false);

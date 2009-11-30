@@ -16,5 +16,24 @@ if ( !gatekeeper('com_sales/receive') ) {
 	return;
 }
 
-$config->run_sales->print_receive_form('com_sales', 'receive');
+if (is_null($_REQUEST['products'])) {
+	$config->run_sales->print_receive_form('com_sales', 'receive');
+	return;
+}
+
+$products_json = json_decode($_REQUEST['products']);
+if (!is_array($products_json)) {
+	display_notice('Invalid product list!');
+	$config->run_sales->print_receive_form('com_sales', 'receive');
+	return;
+}
+$products = array();
+foreach ($products_json as $key => $cur_product) {
+	$products[$key] = array(
+		'product_code' => $cur_product->values[0],
+		'serial' => $cur_product->values[1],
+		'quantity' => intval($cur_product->values[2])
+	);
+}
+
 ?>

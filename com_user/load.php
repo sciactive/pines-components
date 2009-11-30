@@ -33,14 +33,14 @@ function com_user_check_permissions_delete($array) {
 	global $config;
 	$entity = $array[0];
 	if (is_int($entity))
-	$entity = $config->entity_manager->get_entity($array[0]);
+		$entity = $config->entity_manager->get_entity($array[0]);
 	if (!is_object($entity))
-	return false;
+		return false;
 	// Test for permissions.
 	if (com_user_check_permissions($entity, 3)) {
-	return $array;
+		return $array;
 	} else {
-	return false;
+		return false;
 	}
 }
 
@@ -61,7 +61,7 @@ function com_user_check_permissions_return($array) {
 	}
 	$return = array();
 	foreach ($entities as $cur_entity) {
-		// Test for permissions.
+	// Test for permissions.
 		if (com_user_check_permissions($cur_entity, 1)) {
 			$return[] = $cur_entity;
 		}
@@ -79,12 +79,12 @@ function com_user_check_permissions_save($array) {
 	global $config;
 	$entity = $array[0];
 	if (!is_object($entity))
-	return false;
+		return false;
 	// Test for permissions.
 	if (com_user_check_permissions($entity, 2)) {
-	return $array;
+		return $array;
 	} else {
-	return false;
+		return false;
 	}
 }
 
@@ -134,39 +134,39 @@ function com_user_check_permissions_save($array) {
  */
 function com_user_check_permissions(&$entity, $type = 1) {
 	if (!is_object($_SESSION['user']))
-	return true;
-	if (function_exists('gatekeeper')) {
-	if (gatekeeper('system/all'))
 		return true;
+	if (function_exists('gatekeeper')) {
+		if (gatekeeper('system/all'))
+			return true;
 	}
 	if (!isset($entity->uid) && !isset($entity->gid))
-	return true;
+		return true;
 	if ($entity->guid == $_SESSION['user']->guid)
-	return true;
+		return true;
 	if ($entity->guid == $_SESSION['user']->gid)
-	return true;
+		return true;
 
 	// Load access control, since we need it now...
 	$ac = (object) array('user' => 3, 'group' => 3, 'other' => 0);
 	if (is_object($entity->ac))
-	$ac = $entity->ac;
+		$ac = $entity->ac;
 
 	if ($entity->uid == $_SESSION['user']->guid)
-	return ($ac->user >= $type);
+		return ($ac->user >= $type);
 	if ($entity->parent == $_SESSION['user']->guid)
-	return ($ac->user >= $type);
+		return ($ac->user >= $type);
 	if ($entity->gid == $_SESSION['user']->gid)
-	return ($ac->group >= $type);
+		return ($ac->group >= $type);
 	if ($entity->parent == $_SESSION['user']->gid)
-	return ($ac->group >= $type);
+		return ($ac->group >= $type);
 	if (in_array($entity->gid, $_SESSION['user']->groups))
-	return ($ac->group >= $type);
+		return ($ac->group >= $type);
 	if (in_array($entity->parent, $_SESSION['user']->groups))
-	return ($ac->group >= $type);
+		return ($ac->group >= $type);
 	if (in_array($entity->gid, $_SESSION['descendents']))
-	return ($ac->group >= $type);
+		return ($ac->group >= $type);
 	if (in_array($entity->parent, $_SESSION['descendents']))
-	return ($ac->group >= $type);
+		return ($ac->group >= $type);
 	return ($ac->other >= $type);
 }
 
@@ -195,18 +195,18 @@ function com_user_add_access($array) {
 		is_null($array[0]->guid) &&
 		!is_a($array[0], 'user') &&
 		!is_a($array[0], 'group')
-		) {
-		
+	) {
+
 		$array[0]->uid = $_SESSION['user']->guid;
 		$array[0]->gid = $_SESSION['user']->gid;
-	if (!is_object($array[0]->ac))
-		$array[0]->ac = (object) array();
-	if (!isset($array[0]->ac->user))
-		$array[0]->ac->user = 3;
-	if (!isset($array[0]->ac->group))
-		$array[0]->ac->group = 3;
-	if (!isset($array[0]->ac->other))
-		$array[0]->ac->other = 0;
+		if (!is_object($array[0]->ac))
+			$array[0]->ac = (object) array();
+		if (!isset($array[0]->ac->user))
+			$array[0]->ac->user = 3;
+		if (!isset($array[0]->ac->group))
+			$array[0]->ac->group = 3;
+		if (!isset($array[0]->ac->other))
+			$array[0]->ac->other = 0;
 	}
 	return $array;
 }

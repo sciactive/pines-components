@@ -16,8 +16,8 @@ defined('P_RUN') or die('Direct access prohibited');
  * @todo Add tests for custom entity extended classes.
  */
 
-if ( !gatekeeper() ) {
-	$config->user_manager->punt_user("You are not logged in.", pines_url('com_entity', 'test', null, false));
+if ( !gatekeeper('system/all') ) {
+	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_entity', 'test', null, false));
 	return;
 }
 
@@ -31,15 +31,13 @@ if (!($config->entity_manager)) {
 $entity_start_time = microtime(true);
 
 // Creating entity...
-$entity_test = new entity;
+$entity_test = new entity('com_entity', 'test');
 $test->tests[0] = (is_null($entity_test->guid));
 
 // Saving entity...
 $entity_test->name = "Entity Test ".time();
 $entity_test->parent = 0;
-$entity_test->add_tag('com_entity', 'test');
 $entity_test->test_value = 'test';
-// TODO: Finish wildcard test.
 $entity_test->wilcard_test = '"quotes" %percents% _underscores_ \'single quotes\' /slashes/ \backslashes\ ;semicolons;';
 $test->tests[1] = ($entity_test->save() && !is_null($entity_test->guid));
 
@@ -58,6 +56,18 @@ $entity_result = $config->entity_manager->get_entity($entity_test->guid + 1);
 $test->tests[4] = (empty($entity_result) ? true : ($entity_result->name != $entity_test->name));
 unset($entity_result);
 
+// Retrieving entity by GUID and tags...
+$entity_result = new entity;
+$entity_result = $config->entity_manager->get_entity($entity_test->guid, array('com_entity', 'test'));
+$test->tests[5] = ($entity_result->name == $entity_test->name);
+unset($entity_result);
+
+// Testing GUID and wrong tags...
+$entity_result = new entity;
+$entity_result = $config->entity_manager->get_entity($entity_test->guid, array('com_entity', 'pickles'));
+$test->tests[6] = empty($entity_result);
+unset($entity_result);
+
 // Retrieving entity by parent...
 $entity_result = array();
 $found_match = false;
@@ -66,7 +76,7 @@ foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
-$test->tests[5] = ($found_match);
+$test->tests[7] = ($found_match);
 unset($entity_result);
 
 // Testing wrong parent...
@@ -77,7 +87,7 @@ foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
-$test->tests[6] = (!$found_match);
+$test->tests[8] = (!$found_match);
 unset($entity_result);
 
 // Retrieving entity by tags...
@@ -88,7 +98,7 @@ foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
-$test->tests[7] = ($found_match);
+$test->tests[9] = ($found_match);
 unset($entity_result);
 
 // Testing wrong tags...
@@ -99,7 +109,7 @@ foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
-$test->tests[8] = (!$found_match);
+$test->tests[10] = (!$found_match);
 unset($entity_result);
 
 // Retrieving entity by tags exclusively...
@@ -110,7 +120,7 @@ foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
-$test->tests[9] = ($found_match);
+$test->tests[11] = ($found_match);
 unset($entity_result);
 
 // Testing wrong exclusive tags...
@@ -121,7 +131,7 @@ foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
-$test->tests[10] = (!$found_match);
+$test->tests[12] = (!$found_match);
 unset($entity_result);
 
 // Retrieving entity by tags inclusively...
@@ -132,7 +142,7 @@ foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
-$test->tests[11] = ($found_match);
+$test->tests[13] = ($found_match);
 unset($entity_result);
 
 // Testing wrong inclusive tags...
@@ -143,7 +153,7 @@ foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
-$test->tests[12] = (!$found_match);
+$test->tests[14] = (!$found_match);
 unset($entity_result);
 
 // Retrieving entity by mixed tags...
@@ -154,7 +164,7 @@ foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
-$test->tests[13] = ($found_match);
+$test->tests[15] = ($found_match);
 unset($entity_result);
 
 // Testing wrong inclusive mixed tags...
@@ -165,7 +175,7 @@ foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
-$test->tests[14] = (!$found_match);
+$test->tests[16] = (!$found_match);
 unset($entity_result);
 
 // Testing wrong exclusive mixed tags...
@@ -176,7 +186,7 @@ foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
-$test->tests[15] = (!$found_match);
+$test->tests[17] = (!$found_match);
 unset($entity_result);
 
 // Retrieving entity by data...
@@ -187,7 +197,7 @@ foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
-$test->tests[16] = ($found_match);
+$test->tests[18] = ($found_match);
 unset($entity_result);
 
 // Testing wrong data...
@@ -198,7 +208,7 @@ foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
-$test->tests[17] = (!$found_match);
+$test->tests[19] = (!$found_match);
 unset($entity_result);
 
 // Retrieving entity by data wildcards...
@@ -241,7 +251,7 @@ foreach ($entity_result as $cur_entity) {
 }
 $passed_all = $passed_all && $found_match;
  */
-$test->tests[18] = ($passed_all);
+$test->tests[20] = ($passed_all);
 unset($entity_result);
 
 // Testing wrong data wildcards...
@@ -277,7 +287,7 @@ foreach ($entity_result as $cur_entity) {
 }
 $passed_all = $passed_all || $found_match;
  */
-$test->tests[19] = (!$passed_all);
+$test->tests[21] = (!$passed_all);
 unset($entity_result);
 
 // Retrieving entity by tags and data...
@@ -288,7 +298,7 @@ foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
-$test->tests[20] = ($found_match);
+$test->tests[22] = ($found_match);
 unset($entity_result);
 
 // Testing wrong tags and right data...
@@ -299,7 +309,7 @@ foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
-$test->tests[21] = (!$found_match);
+$test->tests[23] = (!$found_match);
 unset($entity_result);
 
 // Testing right tags and wrong data...
@@ -310,7 +320,7 @@ foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
-$test->tests[22] = (!$found_match);
+$test->tests[24] = (!$found_match);
 unset($entity_result);
 
 // Testing wrong tags and wrong data...
@@ -321,17 +331,17 @@ foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
-$test->tests[23] = (!$found_match);
+$test->tests[25] = (!$found_match);
 unset($entity_result);
 
 // Deleting entity...
-$test->tests[24] = ($entity_test->delete() && is_null($entity_test->guid));
+$test->tests[26] = ($entity_test->delete() && is_null($entity_test->guid));
 
 // Resaving entity...
-$test->tests[25] = ($entity_test->save() && !is_null($entity_test->guid));
+$test->tests[27] = ($entity_test->save() && !is_null($entity_test->guid));
 
 // Deleting entity by GUID...
-$test->tests[26] = ($config->entity_manager->delete_entity_by_id($entity_test->guid));
+$test->tests[28] = ($config->entity_manager->delete_entity_by_id($entity_test->guid));
 
 $test->time = microtime(true) - $entity_start_time;
 

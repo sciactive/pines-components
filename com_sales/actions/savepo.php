@@ -26,8 +26,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listpos', null, false));
 		return;
 	}
-	$po = new entity;
-	$po->add_tag('com_sales', 'po');
+	$po = new entity('com_sales', 'po');
 }
 
 // General

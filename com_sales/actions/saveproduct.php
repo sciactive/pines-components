@@ -26,8 +26,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listproducts', null, false));
 		return;
 	}
-	$product = new entity;
-	$product->add_tag('com_sales', 'product');
+	$product = new entity('com_sales', 'product');
 }
 
 // General

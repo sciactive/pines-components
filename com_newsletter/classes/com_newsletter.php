@@ -28,16 +28,16 @@ class com_newsletter extends component {
 	 * @return bool True on success, false on failure.
 	 */
 	function delete_attachment(&$mail, $name) {
-	global $config;
-	if ( unlink($config->setting_upload . 'attachments/' . clean_filename($name)) ) {
-		if ( in_array($name, $mail->attachments) )
-		unset($mail->attachments[array_search($name, $mail->attachments)]);
-		pines_log("Removed attachment $name from mail $mail->name.", 'notice');
-		return true;
-	} else {
-		display_error('File removal failed!');
-		return false;
-	}
+		global $config;
+		if ( unlink($config->setting_upload . 'attachments/' . clean_filename($name)) ) {
+			if ( in_array($name, $mail->attachments) )
+				unset($mail->attachments[array_search($name, $mail->attachments)]);
+			pines_log("Removed attachment $name from mail $mail->name.", 'notice');
+			return true;
+		} else {
+			display_error('File removal failed!');
+			return false;
+		}
 	}
 
 	/**
@@ -51,46 +51,46 @@ class com_newsletter extends component {
 	 * @return bool True on success, false on failure.
 	 */
 	function edit_mail($mail = NULL, $new_option = '', $new_action = '', $close_option = "com_newsletter", $close_action = "list") {
-	global $config, $page;
+		global $config, $page;
 
-	if ( !is_null($mail) ) {
-		if ( !$mail->has_tag('com_newsletter', 'mail') ) {
-		display_error('Invalid mail!');
-		return false;
+		if ( !is_null($mail) ) {
+			if ( !$mail->has_tag('com_newsletter', 'mail') ) {
+				display_error('Invalid mail!');
+				return false;
+			}
+		} else {
+			$mail = new entity('com_newsletter', 'mail');
 		}
-	} else {
-		$mail = new entity;
-	}
 
-	$module = new module('com_newsletter', 'edit_mail', 'content');
-	$module->entity = $mail;
-	$module->new_option = $new_option;
-	$module->new_action = $new_action;
-	$module->close_option = $close_option;
-	$module->close_action = $close_action;
+		$module = new module('com_newsletter', 'edit_mail', 'content');
+		$module->entity = $mail;
+		$module->new_option = $new_option;
+		$module->new_action = $new_action;
+		$module->close_option = $close_option;
+		$module->close_action = $close_action;
 
-	return true;
+		return true;
 	}
 
 	/**
 	 * Provides a list of mailings.
 	 */
 	function list_mails() {
-	global $config;
+		global $config;
 
-	$pgrid = new module('system', 'pgrid.default', 'head');
-	$pgrid->icons = true;
+		$pgrid = new module('system', 'pgrid.default', 'head');
+		$pgrid->icons = true;
 
-	$module = new module('com_newsletter', 'list_mails', 'content');
-	$module->mails = $config->entity_manager->get_entities_by_tags('com_newsletter', 'mail');
-	if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-		$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_newsletter/list_mails'];
+		$module = new module('com_newsletter', 'list_mails', 'content');
+		$module->mails = $config->entity_manager->get_entities_by_tags('com_newsletter', 'mail');
+		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_newsletter/list_mails'];
 
-	if ( empty($module->mails) ) {
-		$pgrid->detach();
-		$module->detach();
-		display_notice("There are no mails.");
-	}
+		if ( empty($module->mails) ) {
+			$pgrid->detach();
+			$module->detach();
+			display_notice("There are no mails.");
+		}
 	}
 }
 

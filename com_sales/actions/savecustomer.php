@@ -26,8 +26,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listcustomers', null, false));
 		return;
 	}
-	$customer = new entity;
-	$customer->add_tag('com_sales', 'customer');
+	$customer = new entity('com_sales', 'customer');
 }
 
 $customer->name = $_REQUEST['name'];

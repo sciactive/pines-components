@@ -235,9 +235,7 @@ class com_sales extends component {
 	 */
 	function get_category($id) {
 		global $config;
-		$entity = $config->entity_manager->get_entity($id);
-		if (is_null($entity) || !$entity->has_tag('com_sales', 'category'))
-			$entity = null;
+		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'category'));
 		return $entity;
 	}
 
@@ -249,9 +247,7 @@ class com_sales extends component {
 	 */
 	function get_customer($id) {
 		global $config;
-		$entity = $config->entity_manager->get_entity($id);
-		if (is_null($entity) || !$entity->has_tag('com_sales', 'customer'))
-			$entity = null;
+		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'customer'));
 		return $entity;
 	}
 
@@ -263,9 +259,7 @@ class com_sales extends component {
 	 */
 	function get_manufacturer($id) {
 		global $config;
-		$entity = $config->entity_manager->get_entity($id);
-		if (is_null($entity) || !$entity->has_tag('com_sales', 'manufacturer'))
-			$entity = null;
+		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'manufacturer'));
 		return $entity;
 	}
 
@@ -290,9 +284,7 @@ class com_sales extends component {
 	 */
 	function get_po($id) {
 		global $config;
-		$entity = $config->entity_manager->get_entity($id);
-		if (is_null($entity) || !$entity->has_tag('com_sales', 'po'))
-			$entity = null;
+		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'po'));
 		return $entity;
 	}
 
@@ -304,9 +296,7 @@ class com_sales extends component {
 	 */
 	function get_product($id) {
 		global $config;
-		$entity = $config->entity_manager->get_entity($id);
-		if (is_null($entity) || !$entity->has_tag('com_sales', 'product'))
-			$entity = null;
+		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'product'));
 		return $entity;
 	}
 
@@ -352,9 +342,7 @@ class com_sales extends component {
 	 */
 	function get_shipper($id) {
 		global $config;
-		$entity = $config->entity_manager->get_entity($id);
-		if (is_null($entity) || !$entity->has_tag('com_sales', 'shipper'))
-			$entity = null;
+		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'shipper'));
 		return $entity;
 	}
 
@@ -379,9 +367,7 @@ class com_sales extends component {
 	 */
 	function get_tax_fee($id) {
 		global $config;
-		$entity = $config->entity_manager->get_entity($id);
-		if (is_null($entity) || !$entity->has_tag('com_sales', 'tax_fee'))
-			$entity = null;
+		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'tax_fee'));
 		return $entity;
 	}
 
@@ -393,9 +379,7 @@ class com_sales extends component {
 	 */
 	function get_vendor($id) {
 		global $config;
-		$entity = $config->entity_manager->get_entity($id);
-		if (is_null($entity) || !$entity->has_tag('com_sales', 'vendor'))
-			$entity = null;
+		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'vendor'));
 		return $entity;
 	}
 
@@ -575,12 +559,11 @@ class com_sales extends component {
 	 */
 	function new_category($parent_id = null, $name = 'untitled') {
 		global $config;
-		$entity = new entity;
-		$entity->add_tag('com_sales', 'category');
+		$entity = new entity('com_sales', 'category');
 		$entity->name = $name;
 		if (!is_null($parent_id)) {
-			$parent = $config->entity_manager->get_entity($parent_id);
-			if (!is_null($parent) && $parent->has_tag('com_sales', 'category'))
+			$parent = $config->entity_manager->get_entity($parent_id, array('com_sales', 'category'));
+			if (!is_null($parent))
 				$entity->parent = $parent_id;
 		}
 		$entity->ac = (object) array('user' => 3, 'group' => 3, 'other' => 3);

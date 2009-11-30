@@ -16,15 +16,14 @@ if ( !gatekeeper('com_newsletter/managemails') ) {
 	return;
 }
 
-$mail = new entity;
 if ( !empty($_REQUEST['mail_id']) ) {
-	$mail = $config->entity_manager->get_entity($_REQUEST['mail_id']);
-	if ( !$mail->has_tag('com_newsletter', 'mail') ) {
+	$mail = $config->entity_manager->get_entity($_REQUEST['mail_id'], array('com_newsletter', 'mail'));
+	if ( is_null($mail) ) {
 		display_error('Invalid mail!');
 		return false;
 	}
 } else {
-	$mail->add_tag('com_newsletter', 'mail');
+	$mail = new entity('com_newsletter', 'mail');
 	$mail->attachments = array();
 }
 

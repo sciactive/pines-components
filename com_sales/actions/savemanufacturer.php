@@ -26,8 +26,7 @@ if ( isset($_REQUEST['id']) ) {
 	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listmanufacturers', null, false));
 	return;
 	}
-	$manufacturer = new entity;
-	$manufacturer->add_tag('com_sales', 'manufacturer');
+	$manufacturer = new entity('com_sales', 'manufacturer');
 }
 
 $manufacturer->name = $_REQUEST['name'];

@@ -26,8 +26,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listshippers', null, false));
 		return;
 	}
-	$shipper = new entity;
-	$shipper->add_tag('com_sales', 'shipper');
+	$shipper = new entity('com_sales', 'shipper');
 }
 
 $shipper->name = $_REQUEST['name'];

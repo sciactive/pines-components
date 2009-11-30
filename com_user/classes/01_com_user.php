@@ -56,13 +56,13 @@ class com_user extends component {
 	 * @return int|bool The user's GUID on success, false on failure.
 	 */
 	function authenticate($username, $password) {
-	$entity = $this->get_user_by_username($username);
-	if (is_null($entity)) return false;
-	if ( $entity->check_password($password) ) {
-		return $entity->guid;
-	} else {
-		return false;
-	}
+		$entity = $this->get_user_by_username($username);
+		if (is_null($entity)) return false;
+		if ( $entity->check_password($password) ) {
+			return $entity->guid;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -73,20 +73,20 @@ class com_user extends component {
 	 * @todo Remove users.
 	 */
 	function delete_group($id) {
-	if ( $entity = $this->get_group($id) ) {
-		$descendents = $this->get_group_descendents($id);
-		foreach ($descendents as $cur_group) {
-		$cur_entity = $this->get_group($cur_group);
-		if ( !$cur_entity->delete() )
+		if ( $entity = $this->get_group($id) ) {
+			$descendents = $this->get_group_descendents($id);
+			foreach ($descendents as $cur_group) {
+				$cur_entity = $this->get_group($cur_group);
+				if ( !$cur_entity->delete() )
+					return false;
+			}
+			if ( !$entity->delete() )
+				return false;
+			pines_log("Deleted group $entity->groupname.", 'notice');
+			return true;
+		} else {
 			return false;
 		}
-		if ( !$entity->delete() )
-		return false;
-		pines_log("Deleted group $entity->groupname.", 'notice');
-		return true;
-	} else {
-		return false;
-	}
 	}
 
 	/**
@@ -96,45 +96,45 @@ class com_user extends component {
 	 * @return bool True on success, false on failure.
 	 */
 	function delete_user($id) {
-	if ( $entity = $this->get_user($id) ) {
-		if ( !$entity->delete() )
-		return false;
-		pines_log("Deleted user $entity->username.", 'notice');
-		return true;
-	} else {
-		return false;
-	}
+		if ( $entity = $this->get_user($id) ) {
+			if ( !$entity->delete() )
+				return false;
+			pines_log("Deleted user $entity->username.", 'notice');
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
 	 * Fill the $_SESSION['user'] variable with the logged in user's data.
 	 */
 	function fill_session() {
-	$tmp_user = $this->get_user($_SESSION['user_id']);
-	if (is_object($_SESSION['user']) && $_SESSION['user'] == $tmp_user)
-		return;
-	unset($_SESSION['user']);
-	$_SESSION['descendents'] = $this->get_group_descendents($tmp_user->gid);
-	if (!empty($tmp_user->groups)) {
-		foreach ($tmp_user->groups as $cur_group) {
-		$_SESSION['descendents'] = array_merge($_SESSION['descendents'], $this->get_group_descendents($cur_group));
-		}
-	}
-	if ($tmp_user->inherit_abilities) {
-		global $config;
-		$_SESSION['inherited_abilities'] = $tmp_user->abilities;
+		$tmp_user = $this->get_user($_SESSION['user_id']);
+		if (is_object($_SESSION['user']) && $_SESSION['user'] == $tmp_user)
+			return;
+		unset($_SESSION['user']);
+		$_SESSION['descendents'] = $this->get_group_descendents($tmp_user->gid);
 		if (!empty($tmp_user->groups)) {
-		foreach ($tmp_user->groups as $cur_group) {
-			$cur_entity = $config->entity_manager->get_entity($cur_group, group);
-			$_SESSION['inherited_abilities'] = array_merge($_SESSION['inherited_abilities'], $cur_entity->abilities);
+			foreach ($tmp_user->groups as $cur_group) {
+				$_SESSION['descendents'] = array_merge($_SESSION['descendents'], $this->get_group_descendents($cur_group));
+			}
 		}
+		if ($tmp_user->inherit_abilities) {
+			global $config;
+			$_SESSION['inherited_abilities'] = $tmp_user->abilities;
+			if (!empty($tmp_user->groups)) {
+				foreach ($tmp_user->groups as $cur_group) {
+					$cur_entity = $config->entity_manager->get_entity($cur_group, array('com_user', 'group'), group);
+					$_SESSION['inherited_abilities'] = array_merge($_SESSION['inherited_abilities'], $cur_entity->abilities);
+				}
+			}
+			if (isset($tmp_user->gid)) {
+				$cur_entity = $config->entity_manager->get_entity($tmp_user->gid, array('com_user', 'group'), group);
+				$_SESSION['inherited_abilities'] = array_merge($_SESSION['inherited_abilities'], $cur_entity->abilities);
+			}
 		}
-		if (isset($tmp_user->gid)) {
-		$cur_entity = $config->entity_manager->get_entity($tmp_user->gid, group);
-		$_SESSION['inherited_abilities'] = array_merge($_SESSION['inherited_abilities'], $cur_entity->abilities);
-		}
-	}
-	$_SESSION['user'] = $tmp_user;
+		$_SESSION['user'] = $tmp_user;
 	}
 
 	/**
@@ -148,58 +148,58 @@ class com_user extends component {
 	 * @return bool
 	 */
 	function gatekeeper($ability = NULL, $user = NULL) {
-	if ( is_null($user) ) {
-	// If the user is logged in, their abilities are already set up. We
-	// just need to add them to the user.
-		if ( is_object($_SESSION['user']) ) {
-		$user = $_SESSION['user'];
+		if ( is_null($user) ) {
+		// If the user is logged in, their abilities are already set up. We
+		// just need to add them to the user.
+			if ( is_object($_SESSION['user']) ) {
+				$user = $_SESSION['user'];
+				// Check the cache to see if we've already checked this user.
+				if (isset($this->gatekeeper_cache[$_SESSION['user_id']])) {
+					$abilities = $this->gatekeeper_cache[$_SESSION['user_id']];
+				} else {
+					$abilities = $user->abilities;
+					if (isset($_SESSION['inherited_abilities'])) {
+						$abilities = array_merge($abilities, $_SESSION['inherited_abilities']);
+					}
+					$this->gatekeeper_cache[$_SESSION['user_id']] = $abilities;
+				}
+			} else {
+				unset($user);
+			}
+		} else {
+		// If the user isn't logged in, their abilities need to be set up.
 		// Check the cache to see if we've already checked this user.
-		if (isset($this->gatekeeper_cache[$_SESSION['user_id']])) {
-			$abilities = $this->gatekeeper_cache[$_SESSION['user_id']];
-		} else {
-			$abilities = $user->abilities;
-			if (isset($_SESSION['inherited_abilities'])) {
-			$abilities = array_merge($abilities, $_SESSION['inherited_abilities']);
-			}
-			$this->gatekeeper_cache[$_SESSION['user_id']] = $abilities;
-		}
-		} else {
-		unset($user);
-		}
-	} else {
-	// If the user isn't logged in, their abilities need to be set up.
-	// Check the cache to see if we've already checked this user.
-		if (isset($this->gatekeeper_cache[$user->guid])) {
-		$abilities = $this->gatekeeper_cache[$user->guid];
-		} else {
-		$abilities = $user->abilities;
-		if ($user->inherit_abilities) {
-			global $config;
-			foreach ($user->groups as $cur_group) {
-			$cur_entity = $config->entity_manager->get_entity($cur_group, group);
-			$abilities = array_merge($abilities, $cur_entity->abilities);
-			}
-			if (isset($user->gid)) {
-			$cur_entity = $config->entity_manager->get_entity($user->gid, group);
-			$abilities = array_merge($abilities, $cur_entity->abilities);
+			if (isset($this->gatekeeper_cache[$user->guid])) {
+				$abilities = $this->gatekeeper_cache[$user->guid];
+			} else {
+				$abilities = $user->abilities;
+				if ($user->inherit_abilities) {
+					global $config;
+					foreach ($user->groups as $cur_group) {
+						$cur_entity = $config->entity_manager->get_entity($cur_group, array('com_user', 'group'), group);
+						$abilities = array_merge($abilities, $cur_entity->abilities);
+					}
+					if (isset($user->gid)) {
+						$cur_entity = $config->entity_manager->get_entity($user->gid, array('com_user', 'group'), group);
+						$abilities = array_merge($abilities, $cur_entity->abilities);
+					}
+				}
+				$this->gatekeeper_cache[$user->guid] = $abilities;
 			}
 		}
-		$this->gatekeeper_cache[$user->guid] = $abilities;
-		}
-	}
-	if ( isset($user) ) {
-		if ( !is_null($ability) ) {
-		if ( isset($abilities) ) {
-			return ( in_array($ability, $abilities) || in_array('system/all', $abilities) );
+		if ( isset($user) ) {
+			if ( !is_null($ability) ) {
+				if ( isset($abilities) ) {
+					return ( in_array($ability, $abilities) || in_array('system/all', $abilities) );
+				} else {
+					return false;
+				}
+			} else {
+				return true;
+			}
 		} else {
 			return false;
 		}
-		} else {
-		return true;
-		}
-	} else {
-		return false;
-	}
 	}
 
 	/**
@@ -212,14 +212,14 @@ class com_user extends component {
 	 * @return array The array of component names.
 	 */
 	function get_default_component_array() {
-	global $config;
-	$return = array();
-	foreach ($config->components as $cur_component) {
-		if ( file_exists('components/'.$cur_component.'/actions/default.php') ) {
-		array_push($return, $cur_component);
+		global $config;
+		$return = array();
+		foreach ($config->components as $cur_component) {
+			if ( file_exists('components/'.$cur_component.'/actions/default.php') ) {
+				array_push($return, $cur_component);
+			}
 		}
-	}
-	return $return;
+		return $return;
 	}
 
 	/**
@@ -229,11 +229,9 @@ class com_user extends component {
 	 * @return group|null The group if it exists, null if it doesn't.
 	 */
 	function get_group($id) {
-	global $config;
-	$group = $config->entity_manager->get_entity($id, group);
-	if (is_null($group) || !$group->has_tag('com_user', 'group'))
-		$group = null;
-	return $group;
+		global $config;
+		$group = $config->entity_manager->get_entity($id, array('com_user', 'group'), group);
+		return $group;
 	}
 
 	/**
@@ -251,32 +249,32 @@ class com_user extends component {
 	 * @todo Check for orphans, they could cause groups to be hidden.
 	 */
 	function get_group_array($parent_id = NULL) {
-	global $config;
-	$return = array();
-	if ( is_null($parent_id) ) {
-		$entities = $config->entity_manager->get_entities_by_tags('com_user', 'group', group);
-		foreach ($entities as $entity) {
-		if ( is_null($entity->parent) ) {
-			$child_array = $this->get_group_array($entity->guid);
-			$return[$entity->guid]['name'] = $entity->name;
-			$return[$entity->guid]['groupname'] = $entity->groupname;
-			$return[$entity->guid]['email'] = $entity->email;
-			$return[$entity->guid]['children'] = $child_array;
+		global $config;
+		$return = array();
+		if ( is_null($parent_id) ) {
+			$entities = $config->entity_manager->get_entities_by_tags('com_user', 'group', group);
+			foreach ($entities as $entity) {
+				if ( is_null($entity->parent) ) {
+					$child_array = $this->get_group_array($entity->guid);
+					$return[$entity->guid]['name'] = $entity->name;
+					$return[$entity->guid]['groupname'] = $entity->groupname;
+					$return[$entity->guid]['email'] = $entity->email;
+					$return[$entity->guid]['children'] = $child_array;
+				}
+			}
+		} else {
+			$entities = $config->entity_manager->get_entities_by_parent($parent_id, group);
+			foreach ($entities as $entity) {
+				if ( $entity->has_tag('com_user', 'group') ) {
+					$child_array = $this->get_group_array($entity->guid);
+					$return[$entity->guid]['name'] = $entity->name;
+					$return[$entity->guid]['groupname'] = $entity->groupname;
+					$return[$entity->guid]['email'] = $entity->email;
+					$return[$entity->guid]['children'] = $child_array;
+				}
+			}
 		}
-		}
-	} else {
-		$entities = $config->entity_manager->get_entities_by_parent($parent_id, group);
-		foreach ($entities as $entity) {
-		if ( $entity->has_tag('com_user', 'group') ) {
-			$child_array = $this->get_group_array($entity->guid);
-			$return[$entity->guid]['name'] = $entity->name;
-			$return[$entity->guid]['groupname'] = $entity->groupname;
-			$return[$entity->guid]['email'] = $entity->email;
-			$return[$entity->guid]['children'] = $child_array;
-		}
-		}
-	}
-	return $return;
+		return $return;
 	}
 
 	/**
@@ -286,14 +284,14 @@ class com_user extends component {
 	 * @return group|null The group if it exists, null if it doesn't.
 	 */
 	function get_group_by_groupname($groupname) {
-	global $config;
-	$entities = array();
-	$entities = $config->entity_manager->get_entities_by_data(array('groupname' => $groupname), array(), false, group);
-	foreach ($entities as $entity) {
-		if ( $entity->has_tag('com_user', 'group') )
-		return $entity;
-	}
-	return null;
+		global $config;
+		$entities = array();
+		$entities = $config->entity_manager->get_entities_by_data(array('groupname' => $groupname), array(), false, group);
+		foreach ($entities as $entity) {
+			if ( $entity->has_tag('com_user', 'group') )
+				return $entity;
+		}
+		return null;
 	}
 
 	/**
@@ -309,26 +307,26 @@ class com_user extends component {
 	 * @return array The array of group IDs.
 	 */
 	function get_group_descendents($parent_id = NULL) {
-	global $config;
-	$return = array();
-	if ( is_null($parent_id) ) {
-		$entities = $config->entity_manager->get_entities_by_tags('com_user', 'group', group);
-		foreach ($entities as $entity) {
-		if ( is_null($entity->parent) ) {
-			$child_array = $this->get_group_descendents($entity->guid);
-			$return = array_merge($return, $child_array);
+		global $config;
+		$return = array();
+		if ( is_null($parent_id) ) {
+			$entities = $config->entity_manager->get_entities_by_tags('com_user', 'group', group);
+			foreach ($entities as $entity) {
+				if ( is_null($entity->parent) ) {
+					$child_array = $this->get_group_descendents($entity->guid);
+					$return = array_merge($return, $child_array);
+				}
+			}
+		} else {
+			$entities = $config->entity_manager->get_entities_by_parent($parent_id, group);
+			foreach ($entities as $entity) {
+				if ( $entity->has_tag('com_user', 'group') ) {
+					$child_array = $this->get_group_descendents($entity->guid);
+					$return = array_merge($return, array($entity->guid), $child_array);
+				}
+			}
 		}
-		}
-	} else {
-		$entities = $config->entity_manager->get_entities_by_parent($parent_id, group);
-		foreach ($entities as $entity) {
-		if ( $entity->has_tag('com_user', 'group') ) {
-			$child_array = $this->get_group_descendents($entity->guid);
-			$return = array_merge($return, array($entity->guid), $child_array);
-		}
-		}
-	}
-	return $return;
+		return $return;
 	}
 
 	/**
@@ -339,25 +337,25 @@ class com_user extends component {
 	 * @param bool $top_level Whether to work on the menu's top level.
 	 */
 	function get_group_menu(&$menu = NULL, $parent_id = NULL, $top_level = TRUE) {
-	global $config;
-	if ( is_null($parent_id) ) {
-		$entities = $config->entity_manager->get_entities_by_tags('com_user', 'group', group);
-		foreach ($entities as $entity) {
-		$menu->add($entity->name.' ['.$entity->groupname.']', $entity->guid, $entity->parent, $entity->guid);
+		global $config;
+		if ( is_null($parent_id) ) {
+			$entities = $config->entity_manager->get_entities_by_tags('com_user', 'group', group);
+			foreach ($entities as $entity) {
+				$menu->add($entity->name.' ['.$entity->groupname.']', $entity->guid, $entity->parent, $entity->guid);
+			}
+			$orphans = $menu->orphans();
+			if ( !empty($orphans) )
+				$orphan_menu_id = $menu->add('Orphans', NULL);
+			foreach ($orphans as $orphan) {
+				$menu->add($orphan['name'], $orphan['data'], $orphan_menu_id, $orphan['data']);
+			}
+		} else {
+			$entities = $config->entity_manager->get_entities_by_parent($parent_id);
+			foreach ($entities as $entity) {
+				$new_menu_id = $menu->add($entity->name.' ['.$entity->groupname.']', $entity->guid, ($top_level ? NULL : $entity->parent), $entity->guid);
+				$this->get_group_menu($entity->guid, $menu, $new_menu_id, FALSE);
+			}
 		}
-		$orphans = $menu->orphans();
-		if ( !empty($orphans) )
-		$orphan_menu_id = $menu->add('Orphans', NULL);
-		foreach ($orphans as $orphan) {
-		$menu->add($orphan['name'], $orphan['data'], $orphan_menu_id, $orphan['data']);
-		}
-	} else {
-		$entities = $config->entity_manager->get_entities_by_parent($parent_id);
-		foreach ($entities as $entity) {
-		$new_menu_id = $menu->add($entity->name.' ['.$entity->groupname.']', $entity->guid, ($top_level ? NULL : $entity->parent), $entity->guid);
-		$this->get_group_menu($entity->guid, $menu, $new_menu_id, FALSE);
-		}
-	}
 	}
 
 	/**
@@ -381,22 +379,22 @@ class com_user extends component {
 	 * @return string The rendered tree.
 	 */
 	function get_group_tree($mask, $group_array, $selected_id = NULL, $selected = ' selected="selected"', $mark = '') {
-	$return = '';
-	foreach ($group_array as $key => $group) {
-		$parsed = str_replace('#guid#', $key, $mask);
-		$parsed = str_replace('#name#', $group['name'], $parsed);
-		$parsed = str_replace('#groupname#', $group['groupname'], $parsed);
-		$parsed = str_replace('#mark#', $mark, $parsed);
-		if ( $key == $selected_id || (is_array($selected_id) && in_array($key, $selected_id)) ) {
-		$parsed = str_replace('#selected#', $selected, $parsed);
-		} else {
-		$parsed = str_replace('#selected#', '', $parsed);
+		$return = '';
+		foreach ($group_array as $key => $group) {
+			$parsed = str_replace('#guid#', $key, $mask);
+			$parsed = str_replace('#name#', $group['name'], $parsed);
+			$parsed = str_replace('#groupname#', $group['groupname'], $parsed);
+			$parsed = str_replace('#mark#', $mark, $parsed);
+			if ( $key == $selected_id || (is_array($selected_id) && in_array($key, $selected_id)) ) {
+				$parsed = str_replace('#selected#', $selected, $parsed);
+			} else {
+				$parsed = str_replace('#selected#', '', $parsed);
+			}
+			$return .= $parsed."\n";
+			if ( !empty($group['children']) )
+				$return .= $this->get_group_tree($mask, $group['children'], $selected_id, $selected, $mark.'-> ');
 		}
-		$return .= $parsed."\n";
-		if ( !empty($group['children']) )
-		$return .= $this->get_group_tree($mask, $group['children'], $selected_id, $selected, $mark.'-> ');
-	}
-	return $return;
+		return $return;
 	}
 
 	/**
@@ -407,15 +405,15 @@ class com_user extends component {
 	 */
 	function get_groupname($id) {
 	// Check the cache to see if we've already queried this name.
-	if (!isset($this->groupname_cache[$id])) {
-		$entity = $this->get_group($id);
-		if (is_null($entity)) {
-		$this->groupname_cache[$id] = null;
-		} else {
-		$this->groupname_cache[$id] = $entity->groupname;
+		if (!isset($this->groupname_cache[$id])) {
+			$entity = $this->get_group($id);
+			if (is_null($entity)) {
+				$this->groupname_cache[$id] = null;
+			} else {
+				$this->groupname_cache[$id] = $entity->groupname;
+			}
 		}
-	}
-	return $this->groupname_cache[$id];
+		return $this->groupname_cache[$id];
 	}
 
 	/**
@@ -425,11 +423,9 @@ class com_user extends component {
 	 * @return user|null The user if it exists, null if it doesn't.
 	 */
 	function get_user($id) {
-	global $config;
-	$user = $config->entity_manager->get_entity($id, user);
-	if (is_null($user) || !$user->has_tag('com_user', 'user'))
-		$user = null;
-	return $user;
+		global $config;
+		$user = $config->entity_manager->get_entity($id, array('com_user', 'user'), user);
+		return $user;
 	}
 
 	/*
@@ -474,11 +470,11 @@ class com_user extends component {
 	 * @return user|null The user if it exists, null if it doesn't.
 	 */
 	function get_user_by_username($username) {
-	global $config;
-	$entities = $config->entity_manager->get_entities_by_data(array('username' => $username), array('com_user', 'user'), false, user);
-	if (!is_null($entities))
-		return $entities[0];
-	return null;
+		global $config;
+		$entities = $config->entity_manager->get_entities_by_data(array('username' => $username), array('com_user', 'user'), false, user);
+		if (!is_null($entities))
+			return $entities[0];
+		return null;
 	}
 
 	/*
@@ -534,15 +530,15 @@ class com_user extends component {
 	 */
 	function get_username($id) {
 	// Check the cache to see if we've already queried this name.
-	if (!isset($this->username_cache[$id])) {
-		$entity = $this->get_user($id);
-		if (is_null($entity)) {
-		$this->username_cache[$id] = null;
-		} else {
-		$this->username_cache[$id] = $entity->username;
+		if (!isset($this->username_cache[$id])) {
+			$entity = $this->get_user($id);
+			if (is_null($entity)) {
+				$this->username_cache[$id] = null;
+			} else {
+				$this->username_cache[$id] = $entity->username;
+			}
 		}
-	}
-	return $this->username_cache[$id];
+		return $this->username_cache[$id];
 	}
 
 	/**
@@ -552,59 +548,59 @@ class com_user extends component {
 	 * @return array An array of users.
 	 */
 	function get_users_by_group($id) {
-	global $config;
-	$entities = array();
-	$entities = $config->entity_manager->get_entities_by_tags('com_user', 'user', user);
-	$return = array();
-	foreach ($entities as $entity) {
-		if ( $entity->ingroup($id) )
-		$return[] = $entity;
-	}
-	return $return;
+		global $config;
+		$entities = array();
+		$entities = $config->entity_manager->get_entities_by_tags('com_user', 'user', user);
+		$return = array();
+		foreach ($entities as $entity) {
+			if ( $entity->ingroup($id) )
+				$return[] = $entity;
+		}
+		return $return;
 	}
 
 	/**
 	 * Creates and attaches a module which lists groups.
 	 */
 	function list_groups() {
-	global $config;
+		global $config;
 
-	$pgrid = new module('system', 'pgrid.default', 'head');
-	$pgrid->icons = true;
+		$pgrid = new module('system', 'pgrid.default', 'head');
+		$pgrid->icons = true;
 
-	$module = new module('com_user', 'list_groups', 'content');
-	if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-		$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_user/list_groups'];
+		$module = new module('com_user', 'list_groups', 'content');
+		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_user/list_groups'];
 
-	$module->groups = $config->entity_manager->get_entities_by_tags('com_user', 'group', group);
+		$module->groups = $config->entity_manager->get_entities_by_tags('com_user', 'group', group);
 
-	if ( empty($module->groups) ) {
-		$pgrid->detach();
-		$module->detach();
-		display_notice("There are no groups.");
-	}
+		if ( empty($module->groups) ) {
+			$pgrid->detach();
+			$module->detach();
+			display_notice("There are no groups.");
+		}
 	}
 
 	/**
 	 * Creates and attaches a module which lists users.
 	 */
 	function list_users() {
-	global $config;
+		global $config;
 
-	$pgrid = new module('system', 'pgrid.default', 'head');
-	$pgrid->icons = true;
+		$pgrid = new module('system', 'pgrid.default', 'head');
+		$pgrid->icons = true;
 
-	$module = new module('com_user', 'list_users', 'content');
-	if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-		$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_user/list_users'];
+		$module = new module('com_user', 'list_users', 'content');
+		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_user/list_users'];
 
-	$module->users = $config->entity_manager->get_entities_by_tags('com_user', 'user', user);
+		$module->users = $config->entity_manager->get_entities_by_tags('com_user', 'user', user);
 
-	if ( empty($module->users) ) {
-		$pgrid->detach();
-		$module->detach();
-		display_notice("There are no users.");
-	}
+		if ( empty($module->users) ) {
+			$pgrid->detach();
+			$module->detach();
+			display_notice("There are no users.");
+		}
 
 		/*
 		$menu = new menu;
@@ -627,31 +623,31 @@ class com_user extends component {
 	 * @return bool True on success, false on failure.
 	 */
 	function login($id) {
-	$entity = $this->get_user($id);
+		$entity = $this->get_user($id);
 
-	if ( isset($entity->username) ) {
-		if ( $this->gatekeeper('com_user/login', $entity) ) {
-		$_SESSION['user_id'] = $entity->guid;
-		unset($_SESSION['user']);
-		// We're changing users, so clear the gatekeeper cache.
-		$this->gatekeeper_cache = array();
-		$this->fill_session();
-		return true;
+		if ( isset($entity->username) ) {
+			if ( $this->gatekeeper('com_user/login', $entity) ) {
+				$_SESSION['user_id'] = $entity->guid;
+				unset($_SESSION['user']);
+				// We're changing users, so clear the gatekeeper cache.
+				$this->gatekeeper_cache = array();
+				$this->fill_session();
+				return true;
+			} else {
+				return false;
+			}
 		} else {
-		return false;
+			return false;
 		}
-	} else {
-		return false;
-	}
 	}
 
 	/**
 	 * Logs the current user out of the system.
 	 */
 	function logout() {
-	unset($_SESSION['user']);
-	session_unset();
-	session_destroy();
+		unset($_SESSION['user']);
+		session_unset();
+		session_destroy();
 	}
 
 	/**
@@ -665,28 +661,28 @@ class com_user extends component {
 	 * @return module|null The new module on success, nothing on failure.
 	 */
 	function print_group_form($new_option, $new_action, $id = NULL) {
-	global $config;
-	$module = new module('com_user', 'form_group', 'content');
-	if ( is_null($id) ) {
-		$module->entity = new group;
-	} else {
-		$module->entity = $this->get_group($id);
-		if (is_null($module->entity)) {
-		display_error('Requested group id is not accessible.');
-		$module->detach();
-		return;
+		global $config;
+		$module = new module('com_user', 'form_group', 'content');
+		if ( is_null($id) ) {
+			$module->entity = new group;
+		} else {
+			$module->entity = $this->get_group($id);
+			if (is_null($module->entity)) {
+				display_error('Requested group id is not accessible.');
+				$module->detach();
+				return;
+			}
 		}
-	}
-	$module->new_option = $new_option;
-	$module->new_action = $new_action;
-	$module->display_abilities = gatekeeper("com_user/abilities");
-	$module->sections = array('system');
-	$module->group_array = $this->get_group_array();
-	foreach ($config->components as $cur_component) {
-		$module->sections[] = $cur_component;
-	}
+		$module->new_option = $new_option;
+		$module->new_action = $new_action;
+		$module->display_abilities = gatekeeper("com_user/abilities");
+		$module->sections = array('system');
+		$module->group_array = $this->get_group_array();
+		foreach ($config->components as $cur_component) {
+			$module->sections[] = $cur_component;
+		}
 
-	return $module;
+		return $module;
 	}
 
 	/**
@@ -695,7 +691,7 @@ class com_user extends component {
 	 * @param string $position The position in which to place the module.
 	 */
 	function print_login($position = 'content') {
-	$module = new module('com_user', 'login', $position);
+		$module = new module('com_user', 'login', $position);
 	}
 
 	/**
@@ -709,31 +705,31 @@ class com_user extends component {
 	 * @return module|null The new module on success, nothing on failure.
 	 */
 	function print_user_form($new_option, $new_action, $id = NULL) {
-	global $config;
-	$module = new module('com_user', 'form_user', 'content');
-	if ( is_null($id) ) {
-		$module->entity = new user;
-	} else {
-		$module->entity = $this->get_user($id);
-		if (is_null($module->entity)) {
-		display_error('Requested user id is not accessible.');
-		$module->detach();
-		return;
+		global $config;
+		$module = new module('com_user', 'form_user', 'content');
+		if ( is_null($id) ) {
+			$module->entity = new user;
+		} else {
+			$module->entity = $this->get_user($id);
+			if (is_null($module->entity)) {
+				display_error('Requested user id is not accessible.');
+				$module->detach();
+				return;
+			}
 		}
-	}
-	$module->new_option = $new_option;
-	$module->new_action = $new_action;
-	$module->display_groups = gatekeeper("com_user/assigng");
-	$module->display_abilities = gatekeeper("com_user/abilities");
-	$module->display_default_components = gatekeeper("com_user/default_component");
-	$module->sections = array('system');
-	$module->group_array = $this->get_group_array();
-	$module->default_components = $this->get_default_component_array();
-	foreach ($config->components as $cur_component) {
-		$module->sections[] = $cur_component;
-	}
+		$module->new_option = $new_option;
+		$module->new_action = $new_action;
+		$module->display_groups = gatekeeper("com_user/assigng");
+		$module->display_abilities = gatekeeper("com_user/abilities");
+		$module->display_default_components = gatekeeper("com_user/default_component");
+		$module->sections = array('system');
+		$module->group_array = $this->get_group_array();
+		$module->default_components = $this->get_default_component_array();
+		foreach ($config->components as $cur_component) {
+			$module->sections[] = $cur_component;
+		}
 
-	return $module;
+		return $module;
 	//$module->content("<label>Parent<select name=\"parent\">\n");
 	//$module->content("<option value=\"none\">--No Parent--</option>\n");
 	//$module->content($this->get_user_tree('<option value="#guid#"#selected#>#mark# #name# [#username#]</option>', $this->get_user_array(), $parent));
@@ -750,12 +746,12 @@ class com_user extends component {
 	 * @param string $url An optional URL to be included in the query data of the redirection url.
 	 */
 	function punt_user($message = NULL, $url = NULL) {
-	global $config;
-	$default = '0';
-	if ($config->component == $_SESSION['user']->default_component && $config->action == 'default')
-		$default = '1';
-	header("Location: ".pines_url('com_user', 'exit', array('default' => $default, 'message' => urlencode($message), 'url' => urlencode($url)), false));
-	exit;
+		global $config;
+		$default = '0';
+		if ($config->component == $_SESSION['user']->default_component && $config->action == 'default')
+			$default = '1';
+		header("Location: ".pines_url('com_user', 'exit', array('default' => $default, 'message' => urlencode($message), 'url' => urlencode($url)), false));
+		exit;
 	}
 }
 

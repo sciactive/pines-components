@@ -26,8 +26,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listtaxfees', null, false));
 		return;
 	}
-	$tax_fee = new entity;
-	$tax_fee->add_tag('com_sales', 'tax_fee');
+	$tax_fee = new entity('com_sales', 'tax_fee');
 }
 
 $tax_fee->name = $_REQUEST['name'];

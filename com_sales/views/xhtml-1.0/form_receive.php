@@ -57,7 +57,7 @@ $this->note = 'Only use this form to receive inventory into your <strong>current
 				modal: true,
 				buttons: {
 					"Done": function() {
-						var cur_product = $("#upc").val();
+						var cur_product = $("#product_code").val();
 						var new_product;
 						if ($("#serialized").attr("checked")) {
 							var cur_serial = $("#cur_serial").val();
@@ -89,7 +89,7 @@ $this->note = 'Only use this form to receive inventory into your <strong>current
 							}];
 						}
 						products_table.pgrid_add(new_product);
-						$("#upc").val("").focus();
+						$("#product_code").val("").focus();
 						product_dialog.dialog('close');
 					}
 				},
@@ -99,8 +99,8 @@ $this->note = 'Only use this form to receive inventory into your <strong>current
 			});
 
 			product_button.click(function(){
-				if (!$("#upc").val()) {
-					alert("Please enter a UPC to add a product.");
+				if (!$("#product_code").val()) {
+					alert("Please enter a product code to add a product.");
 					return;
 				}
 				product_dialog.dialog('open');
@@ -114,7 +114,7 @@ $this->note = 'Only use this form to receive inventory into your <strong>current
 					$("#cur_quantity").focus().get(0).select();
 				}
 			});
-			$("#upc").keydown(function(eventObject){
+			$("#product_code").keydown(function(eventObject){
 				if (eventObject.keyCode == 13) {
 					product_button.click();
 					return false;
@@ -138,8 +138,8 @@ $this->note = 'Only use this form to receive inventory into your <strong>current
 			<input class="field" type="checkbox" id="serialized" name="serialized" checked="checked" /></label>
 	</div>
 	<div class="element">
-		<label><span class="label">UPC</span>
-			<input class="field" type="text" id="upc" name="upc" size="20" /></label>
+		<label><span class="label">Product Code</span>
+			<input class="field" type="text" id="product_code" name="product_code" size="20" /></label>
 			<input class="button ui-state-default ui-corner-all" type="button" id="add_product" value="Add" />
 	</div>
 	<div class="element full_width">
@@ -149,13 +149,13 @@ $this->note = 'Only use this form to receive inventory into your <strong>current
 				<table id="products_table">
 					<thead>
 						<tr>
-							<th>UPC</th>
+							<th>Product Code</th>
 							<th>Serial</th>
 							<th>Quantity</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr><td>-----------</td><td>-----------</td></tr>
+						<tr><td>-----------</td><td>-----------</td><td>-----------</td></tr>
 					</tbody>
 				</table>
 			</div>

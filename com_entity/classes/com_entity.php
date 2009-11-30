@@ -494,7 +494,7 @@ class com_entity extends component {
 		if ( !($row = mysql_fetch_array($result)) ) {
 			return null;
 		}
-		$entity->guid = $guid;
+		$entity->guid = intval($guid);
 		$entity->parent = (is_null($row['parent']) ? NULL : intval($row['parent']));
 		$entity->tags = unserialize($row['tags']);
 		
@@ -567,7 +567,7 @@ class com_entity extends component {
 				return false;
 			}
 			$new_id = mysql_insert_id();
-			$entity->guid = $new_id;
+			$entity->guid = intval($new_id);
 			foreach ($entity->get_data() as $name => $value) {
 				$query = sprintf("INSERT INTO `%scom_entity_data` (`guid`, `name`, `value`) VALUES (%u, '%s', '%s');",
 					$config->com_mysql->prefix,

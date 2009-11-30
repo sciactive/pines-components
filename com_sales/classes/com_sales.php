@@ -301,6 +301,35 @@ class com_sales extends component {
 	}
 
 	/**
+	 * Gets a product by its code.
+	 *
+	 * The first code checked is the product's SKU. If the product is found, it
+	 * is returned, and searching ends. If not, each product's additional
+	 * barcodes are checked until a match is found. If no product is found, null
+	 * is returned.
+	 *
+	 * @param int $code The product's code.
+	 * @return entity|null The product if it is found, null if it isn't.
+	 */
+	function get_product_by_code($code) {
+		global $config;
+		$entities = $config->entity_manager->get_entities_by_data(array('sku' => $code), array('com_sales', 'product'));
+		if (!empty($entities)) {
+			return $entities[0];
+		}
+		$entities = $config->entity_manager->get_entities_by_tags('com_sales', 'product');
+		if (!is_array($entities))
+			return null;
+		foreach($entities as $cur_entity) {
+			if (!is_array($cur_entity->additional_barcodes))
+				continue;
+			if (in_array($code, $cur_entity->additional_barcodes))
+				return $cur_entity;
+		}
+		return null;
+	}
+
+	/**
 	 * Get an array of categories' GUIDs a product belongs to.
 	 *
 	 * @param entity $product The product.

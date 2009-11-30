@@ -36,4 +36,13 @@ foreach ($products_json as $key => $cur_product) {
 	);
 }
 
+foreach ($products as $cur_product) {
+	$cur_product_entity = $config->run_sales->get_product_by_code($cur_product['product_code']);
+	if (is_null($cur_product_entity)) {
+		display_notice("Product with code {$cur_product['product_code']} not found!");
+		continue;
+	}
+	var_dump($cur_product_entity);
+}
+
 ?>

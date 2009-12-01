@@ -47,10 +47,20 @@ foreach ($products as $cur_product) {
 		continue;
 	}
 	for ($i = 0; $i < $cur_product['quantity']; $i++) {
-		$stock_entity = new entity('com_sales', 'stock_entry');
+		$stock_entity = new stock_entry();
 		$stock_entity->product_guid = $cur_product_entity->guid;
-		$stock_entity->location = $_SESSION['user']->gid;
-		var_dump($stock_entity);
+		if ($cur_product_entity->serialized) {
+			$stock_entity->serial = $cur_product['serial'];
+		}
+		$origin = $stock_entity->inventory_origin();
+		if (is_null($origin)) {
+			display_notice("Product [{$cur_product_entity->name}] with code {$cur_product['product_code']} was not found on any PO! Skipping...");
+			continue;
+		}
+		$stock_entity->vendor_guid = $origin[0]->vendor;
+		$stock_entity->cost = $origin[1]->cost;
+		$stock_entity->receive($origin[0], true);
+		$stock_entity->save();
 	}
 }
 

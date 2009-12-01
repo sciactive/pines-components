@@ -214,6 +214,18 @@ class com_sales extends component {
 	}
 
 	/**
+	 * Gets a category by GUID.
+	 *
+	 * @param int $id The category's GUID.
+	 * @return entity|null The category if it exists, null if it doesn't.
+	 */
+	function get_category($id) {
+		global $config;
+		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'category'));
+		return $entity;
+	}
+
+	/**
 	 * Get an array of category entities.
 	 *
 	 * @return array The array of entities.
@@ -225,18 +237,6 @@ class com_sales extends component {
 			$entities = array();
 		}
 		return $entities;
-	}
-
-	/**
-	 * Gets a category by GUID.
-	 *
-	 * @param int $id The category's GUID.
-	 * @return entity|null The category if it exists, null if it doesn't.
-	 */
-	function get_category($id) {
-		global $config;
-		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'category'));
-		return $entity;
 	}
 
 	/**

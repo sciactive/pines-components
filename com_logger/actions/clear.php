@@ -22,4 +22,6 @@ if (file_put_contents($config->com_logger->path, '') !== false) {
 	display_error('Error writing to log file.');
 }
 
+action('com_logger', 'view');
+
 ?>

@@ -337,6 +337,20 @@ $this->note = 'Provide PO details in this form.';
 			</label>
 		</div>
 	</div>
+	<?php if (!empty($this->entity->received)) { ?>
+	<div class="element">
+		<span class="label">Received Inventory</span>
+		<div class="group">
+			<?php foreach ($this->entity->received as $cur_received) {
+				$cur_entity = $config->entity_manager->get_entity($cur_received, array('com_sales', 'stock_entry'), stock_entry); ?>
+			<div class="field" style="margin-bottom: 5px;">
+				Product: <?php echo $config->run_sales->get_product_name($cur_entity->product_guid); ?><br />
+				Serial: <?php echo $cur_entity->serial; ?>
+			</div>
+			<?php } ?>
+		</div>
+	</div>
+	<?php } ?>
 	<br class="spacer" />
 	<div class="element buttons">
 		<?php if ( !is_null($this->entity->guid) ) { ?>

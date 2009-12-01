@@ -36,6 +36,8 @@ foreach ($products_json as $key => $cur_product) {
 	);
 }
 
+$module = new module('com_sales', 'show_received', 'content');
+
 foreach ($products as $cur_product) {
 	$cur_product_entity = $config->run_sales->get_product_by_code($cur_product['product_code']);
 	if (is_null($cur_product_entity)) {
@@ -61,6 +63,8 @@ foreach ($products as $cur_product) {
 		$stock_entity->cost = $origin[1]->cost;
 		$stock_entity->receive($origin[0], true);
 		$stock_entity->save();
+
+		$module->success[] = array($stock_entity, $origin[0]);
 	}
 }
 

@@ -136,6 +136,9 @@ class com_sales extends component {
 	 */
 	function delete_po($id) {
 		if ( $entity = $this->get_po($id) ) {
+			// Don't delete the PO if it has received items.
+			if (!empty($entity->received))
+				return false;
 			if ( !$entity->delete() )
 				return false;
 			pines_log("Deleted PO $entity->name.", 'notice');

@@ -18,6 +18,22 @@ if ( gatekeeper('com_sales/managecustomers') || gatekeeper('com_sales/newcustome
 	 gatekeeper('com_sales/managevendors') || gatekeeper('com_sales/newvendor') ||
 	 gatekeeper('com_sales/managepos') || gatekeeper('com_sales/newpo') ) {
 	$com_sales_menu_id = $page->main_menu->add('POS');
+	$com_sales_menu_id_sales = $page->main_menu->add('Sales', '#', $com_sales_menu_id);
+	if ( gatekeeper('com_sales/managecustomers') )
+		$page->main_menu->add('Customers', pines_url('com_sales', 'listcustomers'), $com_sales_menu_id_sales);
+	if ( gatekeeper('com_sales/newcustomer') )
+		$page->main_menu->add('New Customer', pines_url('com_sales', 'newcustomer'), $com_sales_menu_id_sales);
+	$com_sales_menu_id_inv = $page->main_menu->add('Inventory', '#', $com_sales_menu_id);
+	if ( gatekeeper('com_sales/receive') )
+		$page->main_menu->add('Receive', pines_url('com_sales', 'receive'), $com_sales_menu_id_inv);
+	if ( gatekeeper('com_sales/managestock') ) {
+		$page->main_menu->add('Current Stock', pines_url('com_sales', 'liststock'), $com_sales_menu_id_inv);
+		$page->main_menu->add('All Stock', pines_url('com_sales', 'liststock', array('all' => 'true')), $com_sales_menu_id_inv);
+	}
+	if ( gatekeeper('com_sales/managepos') )
+		$page->main_menu->add('Purchase Orders', pines_url('com_sales', 'listpos'), $com_sales_menu_id_inv);
+	if ( gatekeeper('com_sales/newpo') )
+		$page->main_menu->add('New PO', pines_url('com_sales', 'newpo'), $com_sales_menu_id_inv);
 	$com_sales_menu_id_setup = $page->main_menu->add('Setup', '#', $com_sales_menu_id);
 	if ( gatekeeper('com_sales/manageproducts') )
 		$page->main_menu->add('Products', pines_url('com_sales', 'listproducts'), $com_sales_menu_id_setup);
@@ -39,22 +55,6 @@ if ( gatekeeper('com_sales/managecustomers') || gatekeeper('com_sales/newcustome
 		$page->main_menu->add('Taxes/Fees', pines_url('com_sales', 'listtaxfees'), $com_sales_menu_id_setup);
 	if ( gatekeeper('com_sales/newtaxfee') )
 		$page->main_menu->add('New Tax/Fee', pines_url('com_sales', 'newtaxfee'), $com_sales_menu_id_setup);
-	$com_sales_menu_id_sales = $page->main_menu->add('Sales', '#', $com_sales_menu_id);
-	if ( gatekeeper('com_sales/managecustomers') )
-		$page->main_menu->add('Customers', pines_url('com_sales', 'listcustomers'), $com_sales_menu_id_sales);
-	if ( gatekeeper('com_sales/newcustomer') )
-		$page->main_menu->add('New Customer', pines_url('com_sales', 'newcustomer'), $com_sales_menu_id_sales);
-	$com_sales_menu_id_inv = $page->main_menu->add('Inventory', '#', $com_sales_menu_id);
-	if ( gatekeeper('com_sales/receive') )
-		$page->main_menu->add('Receive', pines_url('com_sales', 'receive'), $com_sales_menu_id_inv);
-	if ( gatekeeper('com_sales/managestock') ) {
-		$page->main_menu->add('Current Stock', pines_url('com_sales', 'liststock'), $com_sales_menu_id_inv);
-		$page->main_menu->add('All Stock', pines_url('com_sales', 'liststock', array('all' => 'true')), $com_sales_menu_id_inv);
-	}
-	if ( gatekeeper('com_sales/managepos') )
-		$page->main_menu->add('Purchase Orders', pines_url('com_sales', 'listpos'), $com_sales_menu_id_inv);
-	if ( gatekeeper('com_sales/newpo') )
-		$page->main_menu->add('New PO', pines_url('com_sales', 'newpo'), $com_sales_menu_id_inv);
 }
 
 ?>

@@ -145,7 +145,8 @@ img {
 #footer {
 	border-left: 0 !important;
 	border-right: 0 !important;
-	border-bottom: 0 !important;
+	border-top-width: 3px !important;
+	border-bottom-width: 3px !important;
 	background-image: none !important;
 	font-weight: normal;
 }
@@ -237,6 +238,12 @@ body .ui-widget {
 	clear: both;
 	font-size: .8em;
 	text-align: center;
+}
+#bottom, #top {
+	margin: 0 auto;
+	float: left;
+	clear: both;
+	min-height: 0px;
 }
 /* ----------- Standard Notices ----------- */
 .notice {

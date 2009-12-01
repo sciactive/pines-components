@@ -346,6 +346,19 @@ class com_sales extends component {
 	}
 
 	/**
+	 * Gets a product's name by GUID.
+	 *
+	 * @param int $id The product's GUID.
+	 * @return string|null The product's name if it exists, null if it doesn't.
+	 */
+	function get_product_name($id) {
+		$entity = $this->get_product($id);
+		if (is_object($entity))
+			return $entity->name;
+		return null;
+	}
+
+	/**
 	 * Get an array of categories a product belongs to.
 	 *
 	 * @param entity $product The product.
@@ -532,6 +545,31 @@ class com_sales extends component {
 			$pgrid->detach();
 			$module->detach();
 			display_notice("There are no shippers.");
+		}
+	}
+
+	/**
+	 * Creates and attaches a module which lists stock.
+	 *
+	 * @param bool $all Whether to show items that are no longer physically in inventory.
+	 */
+	function list_stock($all = false) {
+		global $config;
+
+		$pgrid = new module('system', 'pgrid.default', 'head');
+		$pgrid->icons = true;
+
+		$module = new module('com_sales', 'list_stock', 'content');
+		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_stock'];
+
+		$module->stock = $config->entity_manager->get_entities_by_tags('com_sales', 'stock_entry', stock_entry);
+		$module->all = $all;
+
+		if ( empty($module->stock) ) {
+			$pgrid->detach();
+			$module->detach();
+			display_notice("There is nothing in stock at your location.");
 		}
 	}
 

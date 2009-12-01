@@ -11,7 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$config->ability_manager->add('com_sales', 'Receive', 'Receive Inventory', 'User can receive inventory into their stock.');
+$config->ability_manager->add('com_sales', 'receive', 'Receive Inventory', 'User can receive inventory into their stock.');
+$config->ability_manager->add('com_sales', 'managestock', 'Manage Stock', 'User can transfer and adjust their stock.');
 $config->ability_manager->add('com_sales', 'managemanufacturers', 'Manage Manufacturers', 'User can manage manufacturers.');
 $config->ability_manager->add('com_sales', 'newmanufacturer', 'Create Manufacturers', 'User can create new manufacturers.');
 $config->ability_manager->add('com_sales', 'editmanufacturer', 'Edit Manufacturers', 'User can edit current manufacturers.');

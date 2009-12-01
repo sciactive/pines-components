@@ -61,7 +61,8 @@ defined('P_RUN') or die('Direct access prohibited');
 	<script type="text/javascript">
 		// <![CDATA[
 		$(document).ready(function(){
-			$('#switcher').themeswitcher();
+			if (!($.browser.msie && $.browser.version == "6.0"))
+				$('#switcher').themeswitcher();
 		});
 		// ]]>
 	</script>
@@ -83,11 +84,6 @@ defined('P_RUN') or die('Direct access prohibited');
 
 	<!--[if lt IE 7]>
 	<script type="text/javascript" src="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/js/jquery/jquery.dropdown.js"></script>
-	<style media="screen" type="text/css">
-		.col1 {
-			width:100%;
-		}
-	</style>
 	<![endif]-->
 
 	<?php echo $page->get_head(); ?>
@@ -117,7 +113,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			echo "<div class=\"mainmenu ui-widget-content\"><div class=\"menuwrap\">\n$cur_menu\n</div></div>\n";
 		?>
 	</div>
-	<div class="colmask holygrail ui-helper-clearfix">
+	<div class="colmask holygrail">
 		<div class="colmid">
 			<div class="colleft ui-state-default">
 				<div class="col1wrap">

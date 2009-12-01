@@ -46,10 +46,10 @@ class stock_entry extends entity {
 					continue;
 				// If the product is already received, we should ignore it.
 				$received = 0;
-				if (is_array($cur_product->received)) {
+				if (is_array($cur_po->received)) {
 					// Count how many of this product has been received.
-					foreach ($cur_product->received as $cur_received) {
-						$cur_received_stock_entity = $config->entity_manager->get_entity($cur_received, array('com_sales', 'stock_entry'));
+					foreach ($cur_po->received as $cur_received) {
+						$cur_received_stock_entity = $config->entity_manager->get_entity($cur_received, array('com_sales', 'stock_entry'), stock_entry);
 						if (!is_null($cur_received_stock_entity) && $cur_product->guid == $cur_received_stock_entity->product_guid) {
 							$received++;
 						}

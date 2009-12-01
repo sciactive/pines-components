@@ -94,10 +94,9 @@ defined('P_RUN') or die('Direct access prohibited');
 	<?php echo $page->render_modules('head', 'module_head'); ?>
 </head>
 
-<body class="ui-widget-content">
+<body>
 
-	<div id="wrapper">
-		<div class="colleft_ghost ui-state-default"></div>
+	<div id="wrapper" class="ui-widget-header">
 		<?php if ( $config->template->theme_switcher ) { ?>
 		<div id="switcher"></div>
 		<?php } ?>
@@ -116,7 +115,7 @@ defined('P_RUN') or die('Direct access prohibited');
 				echo "<div class=\"mainmenu ui-widget-content\"><div class=\"menuwrap\">\n$cur_menu\n</div></div>\n";
 			?>
 		</div>
-		<div class="colmask holygrail ui-helper-clearfix">
+		<div class="colmask holygrail ui-widget-content ui-helper-clearfix">
 			<div class="colmid">
 				<div class="colleft ui-state-default">
 					<div class="col1wrap">

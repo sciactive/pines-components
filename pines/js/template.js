@@ -39,20 +39,22 @@ function release_alert() {
 }
 
 $(function($){
-	// Position the footer correctly.
-	var wrapper = $("#wrapper");
-	var footer = wrapper.children("#footer");
-	var height = footer.height();
-	var colmask = wrapper.children(".colmask");
-	wrapper.css("min-height", "100%");
-	footer.css("position", "absolute");
-	footer.css("bottom", "0");
-	colmask.css("margin-bottom", height);
-
 	convert_standard_notices();
 	consume_alert();
 	// Just in case Pines Notify isn't working.
 	$(".notice .close, .error .close").css("cursor", "pointer").click(function() {
 		$(this).parent().fadeOut("slow");
+	});
+
+	$(".module .module_right_minimize").hover(function(){
+		$(this).addClass("ui-state-hover");
+	}, function(){
+		$(this).removeClass("ui-state-hover");
+	}).toggle(function(){
+		$(this).children("span.ui-icon").removeClass("ui-icon-triangle-1-n").addClass("ui-icon-triangle-1-s")
+		.end().parent().nextAll(".module_content").slideUp("normal");
+	}, function(){
+		$(this).children("span.ui-icon").removeClass("ui-icon-triangle-1-s").addClass("ui-icon-triangle-1-n")
+		.end().parent().nextAll(".module_content").slideDown("normal");
 	});
 });

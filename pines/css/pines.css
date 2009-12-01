@@ -40,65 +40,58 @@ img {
 	clear:both;
 	float:left;
 	width:100%;
-	border-top-width: 0 !important;
-	border-left-width: 0 !important;
-	border-right-width: 0 !important;
-	border-bottom:1px solid #666;
+	border-top: 0 !important;
+	border-left: 0 !important;
+	border-right: 0 !important;
 	background-position: 0 0 !important;
 }
 /* column container */
 .colmask {
+	/* jQuery UI Styling Additions */
+	border: 0 !important;
+	background-image: url(../images/shadow-top.png) !important;
+	background-repeat: repeat-x !important;
+	background-attachment: scroll !important;
+	background-position: left top !important;
+	/* ----- */
 	position:relative;		/* This fixes the IE7 overflow hidden bug and stops the layout jumping out of place */
 	clear:both;
 	float:left;
 	width:100%;				/* width of whole page */
 	overflow:hidden;		/* This chops off any overhanging divs */
-	background: transparent url(../images/shadow-top.png) repeat-x scroll left top !important;
 }
 /* holy grail 3 column settings */
-.holygrail {
-	/*background:#FF0;		/* Right column background colour */
-}
 .holygrail .colmid {
 	float:left;
 	width:200%;
-	margin-left:-160px; 	/* Width of right column */
+	margin-left:-200px; 	/* Width of right column */
 	position:relative;
 	right:100%;
-	/*background-color:#FFF; /*Blocks shadow. /* Centre column background colour */
 }
 .holygrail .colleft {
 	/* jQuery UI Styling Additions */
 	border: 0 !important;
-	background-color: transparent !important;
-	background-image: none !important;
+	background-image: url(../images/shadow-top.png) !important;
+	background-repeat: repeat-x !important;
+	background-attachment: scroll !important;
+	background-position: left top !important;
 	/* ----- */
 	float:left;
 	width:100%;
 	margin-left:-50%;
 	position:relative;
-	left:320px;		 	/* Left column width + right column width */
-}
-.colleft_ghost {
-	/* This provides a consistent background down to the footer on the left column. */
-	border:0 !important;
-	background-image:none !important;
-	position:absolute;
-	left:0;
-	top:0;
-	bottom:0;
-	width:160px;	/* Width of the left column. */
-	z-index: -1;
+	left:400px;		 	/* Left column width + right column width */
 }
 .holygrail .col1wrap {
 	float:left;
 	width:50%;
 	position:relative;
-	right:160px;			/* Width of left column */
+	right:200px;			/* Width of left column */
 	padding-bottom:1em; 	/* Centre column bottom padding. Leave it out if it's zero */
 }
 .holygrail .col1 {
-	margin:15px 165px 0;	 	/* Centre column side padding:
+	/* Margin for module content. */
+	margin:15px 205px 0;	 	/* Centre column side padding:
 							Left padding = left column width + centre column left padding width
 							Right padding = right column width + centre column right padding width */
 	position:relative;
@@ -108,63 +101,58 @@ img {
 .holygrail .col2 {
 	float:left;
 	float:right;			/* This overrides the float:left above */
-	width:150px;			/* Width of left column content (left column width minus left and right padding) */
+	width:190px;			/* Width of left column content (left column width minus left and right padding) */
 	position:relative;
 	right:5px;		 	/* Width of the left-hand side padding on the left column */
 
-	margin-top: 12px; /* col1 top margin - module top margin */
+	/* Margin for module content. */
+	margin-top: 12px; /* col1 top margin */
 }
 .holygrail .col3 {
 	float:left;
 	float:right;			/* This overrides the float:left above */
-	width:150px;			/* Width of right column content (right column width minus left and right padding) */
+	width:190px;			/* Width of right column content (right column width minus left and right padding) */
 	margin-right:15px;  	/* Width of right column right-hand padding + left column left and right padding */
 	position:relative;
 	left:50%;
 
-	margin-top: 12px; /* col1 top margin - module top margin */
+	/* Margin for module content. */
+	margin-top: 12px; /* col1 top margin */
 }
 /* Footer styles */
 #footer {
 	clear:both;
 	float:left;
 	width:100%;
-	border-top:1px solid #000;
-	border-left-width: 0 !important;
-	border-right-width: 0 !important;
-	border-bottom-width: 0 !important;
-	background-position: 0 0;
-	font-weight: normal;
 }
 #footer p {
 	padding:10px;
 	margin:0;
 }
 
-/* ----------- Sticky Footer ----------- */
+/* ----------- Custom Footer ----------- */
 #wrapper {
-	position: relative;
 	float: left;
+	min-height: 100%;
 	height: auto !important;
 	height: 100%;
 	min-width: 100%;
 	width: auto !important;
 	width: 100%;
+	background-image: none !important;
+	border: 0 !important;
 }
 #footer {
-	position: relative;
+	border-left: 0 !important;
+	border-right: 0 !important;
+	border-bottom: 0 !important;
+	background-image: none !important;
+	font-weight: normal;
 }
 
 /* ----------- Customized CSS ----------- */
-#pagebg {
-	border-width: 0;
-	position: fixed;
-	background-image:none;
-	top:0;
-	bottom:0;
-	left:0;
-	right:0;
-	z-index:-2;
+.colmask {
+	min-height: 50%;
 }
 #header .pagetitle {
 	margin: 2px 25px;
@@ -192,9 +180,9 @@ img {
 	width: 100%;
 	font-size: 1.2em;
 	background: transparent none no-repeat scroll left top !important;
-	border-bottom-width: 0 !important;
-	border-left-width: 0 !important;
-	border-right-width: 0 !important;
+	border-bottom: 0 !important;
+	border-left: 0 !important;
+	border-right: 0 !important;
 }
 .mainmenu .menuwrap {
 	/*text-align: center; /* Align menu text in the center with this. */
@@ -225,6 +213,9 @@ img {
 }
 .module .module_content a {
 	text-decoration: underline !important;
+}
+.module .module_right_minimize {
+	float: right;
 }
 body .ui-widget {
 	font-size: 1em !important;
@@ -261,7 +252,7 @@ body .ui-widget {
 	margin: 1px;
 }
 /* ----------- Spacer for making a cleared BR ----------- */
-.spacer{
+.spacer {
 	clear: both;
 	height: 1px;
 }

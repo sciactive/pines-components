@@ -428,38 +428,6 @@ class com_user extends component {
 		return $user;
 	}
 
-	/*
-	function get_user_array($parent_id = NULL) {
-		// TODO: check for orphans, they could cause users to be hidden
-		global $config;
-		$return = array();
-		if ( is_null($parent_id) ) {
-			$entities = $config->entity_manager->get_entities_by_tags('com_user', 'user', user);
-			foreach ($entities as $entity) {
-				if ( is_null($entity->parent) ) {
-					$child_array = $this->get_user_array($entity->guid);
-					$return[$entity->guid]['name'] = $entity->name;
-					$return[$entity->guid]['username'] = $entity->username;
-					$return[$entity->guid]['email'] = $entity->email;
-					$return[$entity->guid]['children'] = $child_array;
-				}
-			}
-		} else {
-			$entities = $config->entity_manager->get_entities_by_parent($parent_id, user);
-			foreach ($entities as $entity) {
-				if ( $entity->has_tag('com_user', 'user') ) {
-					$child_array = $this->get_user_array($entity->guid);
-					$return[$entity->guid]['name'] = $entity->name;
-					$return[$entity->guid]['username'] = $entity->username;
-					$return[$entity->guid]['email'] = $entity->email;
-					$return[$entity->guid]['children'] = $child_array;
-				}
-			}
-		}
-		return $return;
-	}
-	 */
-
 	/**
 	 * Gets a user by username.
 	 *
@@ -476,51 +444,6 @@ class com_user extends component {
 			return $entities[0];
 		return null;
 	}
-
-	/*
-	function get_user_tree($mask, $user_array, $selected_id = NULL, $selected = ' selected="selected"', $mark = '') {
-		$return = '';
-		foreach ($user_array as $key => $user) {
-			$parsed = str_replace('#guid#', $key, $mask);
-			$parsed = str_replace('#name#', $user['name'], $parsed);
-			$parsed = str_replace('#username#', $user['username'], $parsed);
-			$parsed = str_replace('#mark#', $mark, $parsed);
-			if ( $key == $selected_id ) {
-				$parsed = str_replace('#selected#', $selected, $parsed);
-			} else {
-				$parsed = str_replace('#selected#', '', $parsed);
-			}
-			$return .= $parsed."\n";
-			if ( !empty($user['children']) )
-				$return .= $this->get_user_tree($mask, $user['children'], $selected_id, $selected, $mark.'->');
-		}
-		return $return;
-	}
-	 */
-
-	/*
-	function get_user_menu(&$menu = NULL, $parent_id = NULL, $top_level = TRUE) {
-		global $config;
-		if ( is_null($parent_id) ) {
-			$entities = $config->entity_manager->get_entities_by_tags('com_user', 'user', user);
-			foreach ($entities as $entity) {
-				$menu->add($entity->name.' ['.$entity->username.']', $entity->guid, $entity->parent, $entity->guid);
-			}
-			$orphans = $menu->orphans();
-			if ( !empty($orphans) )
-				$orphan_menu_id = $menu->add('Orphans', NULL);
-			foreach ($orphans as $orphan) {
-				$menu->add($orphan['name'], $orphan['data'], $orphan_menu_id, $orphan['data']);
-			}
-		} else {
-			$entities = $config->entity_manager->get_entities_by_parent($parent_id);
-			foreach ($entities as $entity) {
-				$new_menu_id = $menu->add($entity->name.' ['.$entity->username.']', $entity->guid, ($top_level ? NULL : $entity->parent), $entity->guid);
-				$this->get_user_menu($entity->guid, $menu, $new_menu_id, FALSE);
-			}
-		}
-	}
-	 */
 
 	/**
 	 * Gets a user's username by its GUID.
@@ -601,19 +524,6 @@ class com_user extends component {
 			$module->detach();
 			display_notice("There are no users.");
 		}
-
-		/*
-		$menu = new menu;
-		$this->get_user_menu(NULL, $menu);
-		$module->content($menu->render(array('<ul class="dropdown dropdown-vertical">', '</ul>'),
-				array('<li>', '</li>'),
-				array('<ul>', '</ul>'),
-				array('<li>', '</li>'),
-				"<strong>#NAME#</strong><br />".
-					"<input type=\"button\" onclick=\"window.location='".pines_url('com_user', 'edituser', array('id' => '#DATA#'))."';\" value=\"Edit\" /> | ".
-					"<input type=\"button\" onclick=\"if(confirm('Are you sure you want to delete \\'#NAME#\\'?')) {window.location='".pines_url('com_user', 'deleteuser', array('id' => '#DATA#'))."';}\" value=\"Delete\" />\n",
-				'<hr style="visibility: hidden; clear: both;" />'));
-		 */
 	}
 
 	/**
@@ -730,10 +640,6 @@ class com_user extends component {
 		}
 
 		return $module;
-	//$module->content("<label>Parent<select name=\"parent\">\n");
-	//$module->content("<option value=\"none\">--No Parent--</option>\n");
-	//$module->content($this->get_user_tree('<option value="#guid#"#selected#>#mark# #name# [#username#]</option>', $this->get_user_array(), $parent));
-	//$module->content("</select></label>\n");
 	}
 
 	/**

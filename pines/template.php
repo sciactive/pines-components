@@ -118,7 +118,6 @@ defined('P_RUN') or die('Direct access prohibited');
 			<div class="colleft ui-state-default">
 				<div class="col1wrap">
 					<div class="col1">
-						<?php //TODO: Notice and error jQuery plugin (like growl). ?>
 						<?php if ( count($page->get_error()) ) { ?>
 						<div class="notice ui-state-error ui-corner-all ui-helper-clearfix"><p class="close"><span class="ui-icon ui-icon-circle-close"></span></p>
 								<?php

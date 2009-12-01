@@ -18,13 +18,14 @@ if ( !gatekeeper('com_sales/deletepo') ) {
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_po) {
-	if ( !$config->run_sales->delete_po($cur_po) )
+	if ( !empty($cur_po->received) || !$config->run_sales->delete_po($cur_po) )
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_po;
 }
 if (empty($failed_deletes)) {
 	display_notice('Selected PO(s) deleted successfully.');
 } else {
 	display_error('Could not delete POs with given IDs: '.$failed_deletes);
+	display_notice('Note that POs cannot be deleted after items have been received on them.');
 }
 
 $config->run_sales->list_pos();

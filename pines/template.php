@@ -94,77 +94,75 @@ defined('P_RUN') or die('Direct access prohibited');
 	<?php echo $page->render_modules('head', 'module_head'); ?>
 </head>
 
-<body>
+<body class="ui-widget-content">
 
-	<div id="wrapper" class="ui-widget-content">
-		<div id="top">
-			<?php echo $page->render_modules('top', 'module_header'); ?>
+	<div id="top">
+		<?php echo $page->render_modules('top', 'module_header'); ?>
+	</div>
+	<?php if ( $config->template->theme_switcher ) { ?>
+	<div id="switcher"></div>
+	<?php } ?>
+	<div id="header" class="ui-widget-header">
+		<div class="pagetitle">
+			<h1><a href="<?php echo $config->full_location; ?>"><span><?php echo $config->option_title; ?></span></a></h1>
 		</div>
-		<?php if ( $config->template->theme_switcher ) { ?>
-		<div id="switcher"></div>
-		<?php } ?>
-		<div id="header" class="ui-widget-header">
-			<div class="pagetitle">
-				<h1><a href="<?php echo $config->full_location; ?>"><span><?php echo $config->option_title; ?></span></a></h1>
-			</div>
-			<?php echo $page->render_modules('header', 'module_header'); ?>
-			<?php echo $page->render_modules('header_right', 'module_header_right'); ?>
-			<?php
-			$cur_menu = $page->main_menu->render(array('<ul class="dropdown dropdown-horizontal">', '</ul>'),
-				array('<li class="ui-state-default" onmouseover="$(this).addClass(\'ui-state-hover\');" onmouseout="$(this).removeClass(\'ui-state-hover\');">', '</li>'),
-				array('<ul>', '</ul>'),
-				array('<li class="ui-state-default" onmouseover="$(this).addClass(\'ui-state-hover\');" onmouseout="$(this).removeClass(\'ui-state-hover\');">', '</li>'), '<a href="#DATA#">#NAME#</a>', '');
-			if ( !empty($cur_menu) )
-				echo "<div class=\"mainmenu ui-widget-content\"><div class=\"menuwrap\">\n$cur_menu\n</div></div>\n";
-			?>
-		</div>
-		<div class="colmask holygrail ui-helper-clearfix">
-			<div class="colmid">
-				<div class="colleft ui-state-default">
-					<div class="col1wrap">
-						<div class="col1">
-							<?php //TODO: Notice and error jQuery plugin (like growl). ?>
-							<?php if ( count($page->get_error()) ) { ?>
-							<div class="notice ui-state-error ui-corner-all ui-helper-clearfix"><p class="close"><span class="ui-icon ui-icon-circle-close"></span></p>
-									<?php
-									$error = $page->get_error();
-									foreach ($error as $cur_item) {
-										echo "<p class=\"entry\"><span class=\"ui-icon ui-icon-alert\" style=\"float: left; margin-right: 0.3em;\"></span><span class=\"text\">$cur_item</span></p>\n";
-									}
-									?>
-							</div>
-							<?php } ?>
-							<?php if ( count($page->get_notice()) ) { ?>
-							<div class="notice ui-state-highlight ui-corner-all ui-helper-clearfix"><p class="close"><span class="ui-icon ui-icon-circle-close"></span></p>
-									<?php
-									$notice = $page->get_notice();
-									foreach ($notice as $cur_item) {
-										echo "<p class=\"entry\"><span class=\"ui-icon ui-icon-info\" style=\"float: left; margin-right: 0.3em;\"></span><span class=\"text\">$cur_item</span></p>\n";
-									}
-									?>
-							</div>
-							<?php } ?>
-							<?php echo $page->render_modules('content', 'module_content'); ?>
+		<?php echo $page->render_modules('header', 'module_header'); ?>
+		<?php echo $page->render_modules('header_right', 'module_header_right'); ?>
+		<?php
+		$cur_menu = $page->main_menu->render(array('<ul class="dropdown dropdown-horizontal">', '</ul>'),
+			array('<li class="ui-state-default" onmouseover="$(this).addClass(\'ui-state-hover\');" onmouseout="$(this).removeClass(\'ui-state-hover\');">', '</li>'),
+			array('<ul>', '</ul>'),
+			array('<li class="ui-state-default" onmouseover="$(this).addClass(\'ui-state-hover\');" onmouseout="$(this).removeClass(\'ui-state-hover\');">', '</li>'), '<a href="#DATA#">#NAME#</a>', '');
+		if ( !empty($cur_menu) )
+			echo "<div class=\"mainmenu ui-widget-content\"><div class=\"menuwrap\">\n$cur_menu\n</div></div>\n";
+		?>
+	</div>
+	<div class="colmask holygrail ui-helper-clearfix">
+		<div class="colmid">
+			<div class="colleft ui-state-default">
+				<div class="col1wrap">
+					<div class="col1">
+						<?php //TODO: Notice and error jQuery plugin (like growl). ?>
+						<?php if ( count($page->get_error()) ) { ?>
+						<div class="notice ui-state-error ui-corner-all ui-helper-clearfix"><p class="close"><span class="ui-icon ui-icon-circle-close"></span></p>
+								<?php
+								$error = $page->get_error();
+								foreach ($error as $cur_item) {
+									echo "<p class=\"entry\"><span class=\"ui-icon ui-icon-alert\" style=\"float: left; margin-right: 0.3em;\"></span><span class=\"text\">$cur_item</span></p>\n";
+								}
+								?>
 						</div>
+						<?php } ?>
+						<?php if ( count($page->get_notice()) ) { ?>
+						<div class="notice ui-state-highlight ui-corner-all ui-helper-clearfix"><p class="close"><span class="ui-icon ui-icon-circle-close"></span></p>
+								<?php
+								$notice = $page->get_notice();
+								foreach ($notice as $cur_item) {
+									echo "<p class=\"entry\"><span class=\"ui-icon ui-icon-info\" style=\"float: left; margin-right: 0.3em;\"></span><span class=\"text\">$cur_item</span></p>\n";
+								}
+								?>
+						</div>
+						<?php } ?>
+						<?php echo $page->render_modules('content', 'module_content'); ?>
 					</div>
-					<div class="col2">
-						<?php echo $page->render_modules('left'); ?>
-					</div>
-					<div class="col3">
-						<?php echo $page->render_modules('right', 'module_right'); ?>
-					</div>
+				</div>
+				<div class="col2">
+					<?php echo $page->render_modules('left'); ?>
+				</div>
+				<div class="col3">
+					<?php echo $page->render_modules('right', 'module_right'); ?>
 				</div>
 			</div>
 		</div>
-		<div id="footer" class="ui-widget-header">
-			<?php echo $page->render_modules('footer', 'module_header'); ?>
-			<p class="copyright">
-				<?php echo $config->option_copyright_notice; ?>
-			</p>
-		</div>
-		<div id="bottom">
-			<?php echo $page->render_modules('bottom', 'module_header'); ?>
-		</div>
+	</div>
+	<div id="footer" class="ui-widget-header">
+		<?php echo $page->render_modules('footer', 'module_header'); ?>
+		<p class="copyright">
+			<?php echo $config->option_copyright_notice; ?>
+		</p>
+	</div>
+	<div id="bottom">
+		<?php echo $page->render_modules('bottom', 'module_header'); ?>
 	</div>
 
 </body>

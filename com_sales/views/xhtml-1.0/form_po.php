@@ -118,6 +118,7 @@ $this->note = 'Provide PO details in this form.';
 			available_products_table = $("#available_products_table");
 			product_dialog = $("#product_dialog");
 
+			<?php if (empty($this->entity->received)) { ?>
 			products_table.pgrid({
 				pgrid_paginate: false,
 				pgrid_toolbar: true,
@@ -160,7 +161,11 @@ $this->note = 'Provide PO details in this form.';
 					}
 				]
 			});
-
+			<?php } else { ?>
+			products_table.pgrid({
+				pgrid_paginate: false
+			});
+			<?php } ?>
 			// Needs to be gridified before it's hidden.
 			available_products_table.pgrid({
 				pgrid_multi_select: false,
@@ -231,8 +236,12 @@ $this->note = 'Provide PO details in this form.';
 	</div>
 	<div class="element">
 		<label><span class="label">Vendor</span>
-			<span class="note">Changing this will clear selected products!</span>
-			<select class="field" name="vendor" onchange="void select_vendor(Number(this.value));">
+			<?php if (empty($this->entity->received)) { ?>
+				<span class="note">Changing this will clear selected products!</span>
+			<?php } else { ?>
+				<span class="note">Vendor cannot be changed after items have been received on this PO.</span>
+			<?php } ?>
+			<select class="field" name="vendor" onchange="void select_vendor(Number(this.value));"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?>>
 				<option value="null">-- None --</option>
 				<?php foreach ($this->vendors as $cur_vendor) { ?>
 				<option value="<?php echo $cur_vendor->guid; ?>"<?php echo $this->entity->vendor == $cur_vendor->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_vendor->name; ?></option>

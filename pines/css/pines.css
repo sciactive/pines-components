@@ -20,7 +20,6 @@ body {
 	padding:0;
 	border:0 !important;			/* This removes the border around the viewport in old versions of IE */
 	width:100%;
-	background:#FFF;
 	min-width:600px;	/* Minimum width of layout - remove line if not required */
 	/* The min-width property does not work in old versions of Internet Explorer */
 }
@@ -131,14 +130,7 @@ img {
 }
 
 /* ----------- Custom Footer ----------- */
-#wrapper {
-	float: left;
-	min-height: 100%;
-	height: auto !important;
-	height: 100%;
-	min-width: 100%;
-	width: auto !important;
-	width: 100%;
+body {
 	background-image: none !important;
 	border: 0 !important;
 }
@@ -152,9 +144,6 @@ img {
 }
 
 /* ----------- Customized CSS ----------- */
-.colmask {
-	min-height: 50%;
-}
 #header .pagetitle {
 	margin: 2px 25px;
 	float: left;

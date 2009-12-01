@@ -32,23 +32,29 @@ if ( isset($_REQUEST['id']) ) {
 // General
 $po->po_number = $_REQUEST['po_number'];
 $po->reference_number = $_REQUEST['reference_number'];
-$po->vendor = intval($_REQUEST['vendor']);
+// Vendor can't be changed after items have been received.
+if (empty($po->received)) {
+	$po->vendor = intval($_REQUEST['vendor']);
+}
 $po->shipper = intval($_REQUEST['shipper']);
 $po->eta = strtotime($_REQUEST['eta']);
 
 // Products
-$po->products = json_decode($_REQUEST['products']);
-if (!is_array($po->products))
-	$po->products = array();
-foreach ($po->products as &$cur_product) {
-	$new_product = (object) array(
-		"guid" => intval($cur_product->key),
-		"quantity" => intval($cur_product->values[2]),
-		"cost" => floatval($cur_product->values[3])
-	);
-	$cur_product = $new_product;
+// Products can't be changed after items have been received.
+if (empty($po->received)) {
+	$po->products = json_decode($_REQUEST['products']);
+	if (!is_array($po->products))
+		$po->products = array();
+	foreach ($po->products as &$cur_product) {
+		$new_product = (object) array(
+			"guid" => intval($cur_product->key),
+			"quantity" => intval($cur_product->values[2]),
+			"cost" => floatval($cur_product->values[3])
+		);
+		$cur_product = $new_product;
+	}
+	unset($cur_product);
 }
-unset($cur_product);
 
 if (empty($po->po_number)) {
 	$module = $config->run_sales->print_po_form('com_sales', 'savepo');

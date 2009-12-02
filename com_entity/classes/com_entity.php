@@ -184,7 +184,9 @@ class com_entity extends component {
 	 */
 	public function get_entities_by_tags() {
 		if (is_array(func_get_arg(0))) {
-			return $this->get_entities_by_tags_exclusive(func_get_arg(0), func_get_arg(1));
+			$arg1 = func_get_arg(0);
+			$arg2 = func_get_arg(1);
+			return $this->get_entities_by_tags_exclusive($arg1, $arg2);
 		} else {
 			$args = func_get_args();
 			return call_user_func_array(array($this, 'get_entities_by_tags_exclusive'), $args);

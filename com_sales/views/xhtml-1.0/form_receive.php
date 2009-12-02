@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Receive Inventory';
-$this->note = 'Only use this form to receive inventory into your <strong>current</strong> location.';
+$this->note = 'Only use this form to receive inventory into your <strong>current</strong> location ('.(is_null($_REQUEST['user']->gid) ? 'No Location' : $config->user_manager->get_groupname($_REQUEST['user']->gid)).').';
 ?>
 <form class="pform" method="post" id="receive_inventory" action="<?php echo pines_url($this->new_option, $this->new_action); ?>">
 	<script type="text/javascript">

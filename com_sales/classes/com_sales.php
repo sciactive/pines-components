@@ -881,7 +881,7 @@ class com_sales extends component {
 				return;
 			}
 		}
-		$module->group_array = $config->user_manager->get_group_array();
+		$module->locations = $config->user_manager->get_group_array();
 		$module->new_option = $new_option;
 		$module->new_action = $new_action;
 
@@ -915,10 +915,7 @@ class com_sales extends component {
 				return;
 			}
 		}
-		$module->locations = $config->user_manager->get_groups();
-		if (!is_array($module->locations)) {
-			$module->locations = array();
-		}
+		$module->locations = $config->user_manager->get_group_array();
 		$module->shippers = $config->entity_manager->get_entities_by_tags('com_sales', 'shipper');
 		if (!is_array($module->shippers)) {
 			$module->shippers = array();

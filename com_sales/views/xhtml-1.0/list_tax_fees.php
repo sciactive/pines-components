@@ -59,7 +59,7 @@ $this->title = 'Taxes/Fees';
 			<th>Enabled</th>
 			<th>Type</th>
 			<th>Rate</th>
-			<th>Groups</th>
+			<th>Locations</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -70,10 +70,10 @@ $this->title = 'Taxes/Fees';
 			<td><?php echo $tax_fee->type == 'percentage' ? 'Percentage' : 'Flat Rate'; ?></td>
 			<td><?php echo $tax_fee->rate; ?></td>
 			<td><?php
-			if (is_array($tax_fee->groups)) {
+			if (is_array($tax_fee->locations)) {
 				$groupname_array = array();
-				foreach ($tax_fee->groups as $cur_group) {
-					array_push($groupname_array, $config->user_manager->get_groupname($cur_group));
+				foreach ($tax_fee->locations as $cur_locations) {
+					array_push($groupname_array, $config->user_manager->get_groupname($cur_locations));
 				}
 				echo implode(', ', $groupname_array);
 			}

@@ -141,9 +141,7 @@ $this->note = 'Use this form to transfer inventory to another location.';
 				<span class="note">Destination cannot be changed after items have been received on this transfer.</span>
 			<?php } ?>
 			<select class="field" name="destination"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?>>
-				<?php foreach ($this->locations as $cur_location) { ?>
-				<option value="<?php echo $cur_location->guid; ?>"<?php echo $this->entity->destination == $cur_location->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_location->name; ?> [<?php echo $cur_location->groupname; ?>]</option>
-				<?php } ?>
+				<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations, $this->entity->destination); ?>
 			</select></label>
 	</div>
 	<div class="element">

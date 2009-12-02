@@ -47,11 +47,11 @@ $this->note = 'Provide tax/fee details in this form.';
 		<input class="field" type="text" name="rate" size="20" value="<?php echo $this->entity->rate; ?>" /></label>
 	</div>
 	<div class="element">
-		<label><span class="label">Groups</span>
+		<label><span class="label">Locations</span>
 		<span class="note">Sales by users in these groups will be applied this tax.</span>
 		<span class="note">Hold Ctrl (Command on Mac) to select multiple groups.</span>
-		<select class="field" name="groups[]" multiple="multiple" size="6">
-			<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->entity->groups); ?>
+		<select class="field" name="locations[]" multiple="multiple" size="6">
+			<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations, $this->entity->locations); ?>
 		</select></label>
 	</div>
 	<div class="element buttons">

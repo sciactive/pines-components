@@ -417,6 +417,17 @@ class com_user extends component {
 	}
 
 	/**
+	 * Gets all groups.
+	 *
+	 * @return array An array of group entities.
+	 */
+	function get_groups() {
+		global $config;
+		$groups = $config->entity_manager->get_entities_by_tags(array('com_user', 'group'), group);
+		return $groups;
+	}
+
+	/**
 	 * Gets a user by GUID.
 	 *
 	 * @param int $id The user's GUID.
@@ -462,6 +473,17 @@ class com_user extends component {
 			}
 		}
 		return $this->username_cache[$id];
+	}
+
+	/**
+	 * Gets all users.
+	 *
+	 * @return array An array of user entities.
+	 */
+	function get_users() {
+		global $config;
+		$users = $config->entity_manager->get_entities_by_tags(array('com_user', 'user'), user);
+		return $users;
 	}
 
 	/**

@@ -23,6 +23,7 @@ $this->title = 'Stock';
 			pgrid_toolbar_contents: [
 				{type: 'button', text: 'Receive', extra_class: 'icon picon_16x16_actions_document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'receive'); ?>'},
 				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo pines_url('com_sales', 'editstock', array('id' => '#title#')); ?>'},
+				{type: 'button', text: 'Transfer', extra_class: 'icon picon_16x16_actions_go-next', multi_select: true, url: '<?php echo pines_url('com_sales', 'newtransfer', array('id' => '#title#')); ?>', delimiter: ','},
 				//{type: 'button', text: 'E-Mail', extra_class: 'icon picon_16x16_actions_mail-message-new', multi_select: true, url: 'mailto:#col_2#', delimiter: ','},
 				{type: 'separator'},
 				{type: 'button', text: 'Select All', extra_class: 'icon picon_16x16_actions_list-add', select_all: true},

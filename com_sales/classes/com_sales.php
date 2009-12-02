@@ -417,6 +417,18 @@ class com_sales extends component {
 	}
 
 	/**
+	 * Gets a transfer by GUID.
+	 *
+	 * @param int $id The transfer's GUID.
+	 * @return entity|null The transfer if it exists, null if it doesn't.
+	 */
+	function get_transfer($id) {
+		global $config;
+		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'transfer'));
+		return $entity;
+	}
+
+	/**
 	 * Gets a vendor by GUID.
 	 *
 	 * @param int $id The vendor's GUID.
@@ -870,6 +882,52 @@ class com_sales extends component {
 			}
 		}
 		$module->group_array = $config->user_manager->get_group_array();
+		$module->new_option = $new_option;
+		$module->new_action = $new_action;
+
+		return $module;
+	}
+
+	/**
+	 * Creates and attaches a module containing a form for editing a transfer.
+	 *
+	 * If $id is null, or not given, a blank form will be provided.
+	 *
+	 * @param string $new_option The option to which the form will submit.
+	 * @param string $new_action The action to which the form will submit.
+	 * @param int $id The GUID of the transfer to edit.
+	 * @return module|null The new module on success, nothing on failure.
+	 */
+	function print_transfer_form($new_option, $new_action, $id = NULL) {
+		global $config;
+		$pgrid = new module('system', 'pgrid.default', 'head');
+		$pgrid->icons = true;
+		$module = new module('com_sales', 'form_transfer', 'content');
+		if ( is_null($id) ) {
+			$module->entity = new entity;
+		} else {
+			$module->entity = $this->get_transfer($id);
+			if (is_null($module->entity)) {
+				display_error('Requested transfer id is not accessible.');
+				$jstree->detach();
+				$tageditor->detach();
+				$module->detach();
+				return;
+			}
+		}
+		$module->locations = $config->user_manager->get_groups();
+		if (!is_array($module->locations)) {
+			$module->locations = array();
+		}
+		$module->shippers = $config->entity_manager->get_entities_by_tags('com_sales', 'shipper');
+		if (!is_array($module->shippers)) {
+			$module->shippers = array();
+		}
+		$module->stock = $config->entity_manager->get_entities_by_tags('com_sales', 'stock_entry', stock_entry);
+		if (!is_array($module->stock)) {
+			$module->stock = array();
+		}
+
 		$module->new_option = $new_option;
 		$module->new_action = $new_action;
 

@@ -82,9 +82,7 @@ if (is_null($config->run_sales->get_shipper($po->shipper))) {
 	return;
 }
 
-if ($config->com_sales->global_pos) {
-	$po->ac = (object) array('other' => 1);
-}
+$po->ac = (object) array('other' => 2);
 if ($po->save()) {
 	display_notice('Saved PO ['.$po->po_number.']');
 } else {

@@ -26,10 +26,44 @@ class stock_entry extends entity {
 	/**
 	 * Find the PO or transfer that corresponds to an incoming product.
 	 *
-	 * @return array|null An array with the PO, and the product entry, or null if nothing is found.
+	 * @todo Go through each matched transfer/PO and check which one has the earliest ETA.
+	 * @return array|null An array with the PO, and the stock entry, or null if nothing is found.
 	 */
 	function inventory_origin() {
 		global $config;
+		// Get all the transfers.
+		$entities = $config->entity_manager->get_entities_by_tags('com_sales', 'transfer');
+		if (!is_array($entities)) {
+			$entities = array();
+		}
+		// Iterate through all the transfers.
+		foreach ($entities as $cur_transfer) {
+			// If the transfer isn't for our destination, move on.
+			if ($cur_transfer->destination != $_SESSION['user']->gid)
+				continue;
+			if (!is_array($cur_transfer->stock))
+				continue;
+			// Iterate the transfer's stock, looking for a match.
+			foreach ($cur_transfer->stock as $cur_stock_guid) {
+				if (is_array($cur_transfer->received)) {
+					// If the product is already received, we should ignore it.
+					if (in_array($cur_stock_guid, $cur_transfer->received))
+						continue;
+				}
+				$cur_stock = $config->entity_manager->get_entity($cur_stock_guid, array('com_sales', 'stock_entry'), stock_entry);
+				// If it's not the right product, move on.
+				if ($cur_stock->product_id != $this->product_guid)
+					continue;
+				if (!is_null($this->serial)) {
+					// Check the serial with the stock entry's serial.
+					if ($cur_stock->serial != $this->serial)
+						continue;
+				}
+				// If it's a match, return the transfer and the item.
+				return array($cur_transfer, $cur_stock);
+			}
+		}
+
 		// Get all the POs.
 		$entities = $config->entity_manager->get_entities_by_tags('com_sales', 'po');
 		if (!is_array($entities)) {
@@ -37,6 +71,10 @@ class stock_entry extends entity {
 		}
 		// Iterate through all the POs.
 		foreach ($entities as $cur_po) {
+			// If the PO isn't for our destination, move on.
+			if ($cur_po->destination != $_SESSION['user']->gid)
+				continue;
+			// If the PO has no products, move on.
 			if (!is_array($cur_po->products))
 				continue;
 			// Iterate the PO's products, looking for a match.
@@ -55,9 +93,12 @@ class stock_entry extends entity {
 						}
 					}
 				}
-				// If we haven't received all of them yet, return the PO and the item.
+				// If we haven't received all of them yet, return the PO and the stock entry (this one).
 				if ($received < $cur_product->quantity) {
-					return array($cur_po, $cur_product);
+					// Fill in some info for this item.
+					$this->cost = $cur_product->cost;
+					$this->vendor_guid = $cur_po->vendor;
+					return array($cur_po, $this);
 				}
 			}
 		}

@@ -141,7 +141,7 @@ class com_sales extends component {
 				return false;
 			if ( !$entity->delete() )
 				return false;
-			pines_log("Deleted PO $entity->name.", 'notice');
+			pines_log("Deleted PO $entity->po_number.", 'notice');
 			return true;
 		} else {
 			return false;
@@ -193,6 +193,26 @@ class com_sales extends component {
 			if ( !$entity->delete() )
 				return false;
 			pines_log("Deleted tax / free $entity->name.", 'notice');
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Delete a transfer.
+	 *
+	 * @param int $id The GUID of the transfer.
+	 * @return bool True on success, false on failure.
+	 */
+	function delete_transfer($id) {
+		if ( $entity = $this->get_transfer($id) ) {
+			// Don't delete the transfer if it has received items.
+			if (!empty($entity->received))
+				return false;
+			if ( !$entity->delete() )
+				return false;
+			pines_log("Deleted transfer $entity->guid.", 'notice');
 			return true;
 		} else {
 			return false;
@@ -607,6 +627,28 @@ class com_sales extends component {
 			$pgrid->detach();
 			$module->detach();
 			display_notice("There are no taxes/fees.");
+		}
+	}
+
+	/**
+	 * Creates and attaches a module which lists transfers.
+	 */
+	function list_transfers() {
+		global $config;
+
+		$pgrid = new module('system', 'pgrid.default', 'head');
+		$pgrid->icons = true;
+
+		$module = new module('com_sales', 'list_transfers', 'content');
+		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_transfers'];
+
+		$module->transfers = $config->entity_manager->get_entities_by_tags('com_sales', 'transfer');
+
+		if ( empty($module->transfers) ) {
+			$pgrid->detach();
+			$module->detach();
+			display_notice("There are no transfers.");
 		}
 	}
 

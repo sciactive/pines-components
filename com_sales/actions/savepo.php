@@ -36,6 +36,10 @@ $po->reference_number = $_REQUEST['reference_number'];
 if (empty($po->received)) {
 	$po->vendor = intval($_REQUEST['vendor']);
 }
+// Destination can't be changed after items have been received.
+if (empty($po->received)) {
+	$po->destination = intval($_REQUEST['destination']);
+}
 $po->shipper = intval($_REQUEST['shipper']);
 $po->eta = strtotime($_REQUEST['eta']);
 

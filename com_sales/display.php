@@ -29,6 +29,7 @@ if ( gatekeeper('com_sales/managecustomers') || gatekeeper('com_sales/newcustome
 	if ( gatekeeper('com_sales/managestock') ) {
 		$page->main_menu->add('Current Stock', pines_url('com_sales', 'liststock'), $com_sales_menu_id_inv);
 		$page->main_menu->add('All Stock', pines_url('com_sales', 'liststock', array('all' => 'true')), $com_sales_menu_id_inv);
+		$page->main_menu->add('Transfers', pines_url('com_sales', 'listtransfers'), $com_sales_menu_id_inv);
 	}
 	if ( gatekeeper('com_sales/managepos') )
 		$page->main_menu->add('Purchase Orders', pines_url('com_sales', 'listpos'), $com_sales_menu_id_inv);

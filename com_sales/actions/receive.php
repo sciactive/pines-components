@@ -56,11 +56,12 @@ foreach ($products as $cur_product) {
 		}
 		$origin = $stock_entity->inventory_origin();
 		if (is_null($origin)) {
-			display_notice("Product [{$cur_product_entity->name}] with code {$cur_product['product_code']} was not found on any PO! Skipping...");
+			display_notice("Product [{$cur_product_entity->name}] with code {$cur_product['product_code']} was not found on any PO or transfer! Skipping...");
 			continue;
 		}
-		$stock_entity->vendor_guid = $origin[0]->vendor;
-		$stock_entity->cost = $origin[1]->cost;
+		// Replace the stock entry with the one returned by inventory_origin.
+		$stock_entity = $origin[1];
+		
 		$stock_entity->receive($origin[0], true);
 		$stock_entity->save();
 

@@ -117,6 +117,8 @@ $this->note = 'Use this form to transfer inventory to another location.';
 					update_stock();
 				}
 			});
+			
+			update_stock();
 		});
 		// ]]>
 	</script>

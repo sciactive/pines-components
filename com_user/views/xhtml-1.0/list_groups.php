@@ -85,6 +85,7 @@ foreach($this->groups as $cur_group) {
 			<td><?php
 			$user_array = $config->user_manager->get_users_by_group($group->guid);
 			if (count($user_array) < 15) {
+				$user_list = '';
 				foreach ($user_array as $cur_user) {
 					$user_list .= (empty($user_list) ? '' : ', ').$cur_user->username;
 				}

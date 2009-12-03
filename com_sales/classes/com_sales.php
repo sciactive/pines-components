@@ -894,6 +894,11 @@ class com_sales extends component {
 				return;
 			}
 		}
+		$module->shippers = $config->entity_manager->get_entities_by_tags('com_sales', 'shipper');
+		if (!is_array($module->shippers)) {
+			$module->shippers = array();
+		}
+
 		$module->new_option = $new_option;
 		$module->new_action = $new_action;
 

@@ -30,6 +30,23 @@ $this->note = 'Use this form to process a sale.';
 			<input class="field" type="text" name="customer" size="20" value="<?php echo $this->entity->customer; ?>" /></label>
 	</div>
 	<div class="element">
+		<label><span class="label">Shipper</span>
+			<select class="field" name="shipper">
+				<option value="null">-- None --</option>
+				<?php foreach ($this->shippers as $cur_shipper) { ?>
+				<option value="<?php echo $cur_shipper->guid; ?>"<?php echo $this->entity->shipper == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_shipper->name; ?></option>
+				<?php } ?>
+			</select></label>
+	</div>
+	<div class="element">
+		<label><span class="label">Shipping Method</span>
+			<input class="field" type="text" name="shipping_method" size="20" value="<?php echo $this->entity->shipping_method; ?>" /></label>
+	</div>
+	<div class="element">
+		<label><span class="label">Payment Method</span>
+			<input class="field" type="text" name="payment_method" size="20" value="<?php echo $this->entity->payment_method; ?>" /></label>
+	</div>
+	<div class="element">
 		<label><span class="label">Items</span>
 			<input class="field" type="text" name="items" size="20" value="<?php echo $this->entity->items; ?>" /></label>
 	</div>

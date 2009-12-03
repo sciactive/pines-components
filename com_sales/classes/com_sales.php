@@ -872,6 +872,36 @@ class com_sales extends component {
 
 	/**
 	 * Creates and attaches a module containing a form for editing a
+	 * sale.
+	 *
+	 * If $id is null, or not given, a blank form will be provided.
+	 *
+	 * @param string $new_option The option to which the form will submit.
+	 * @param string $new_action The action to which the form will submit.
+	 * @param int $id The GUID of the sale to edit.
+	 * @return module|null The new module on success, nothing on failure.
+	 */
+	function print_sale_form($new_option, $new_action, $id = NULL) {
+		global $config;
+		$module = new module('com_sales', 'form_sale', 'content');
+		if ( is_null($id) ) {
+			$module->entity = new entity;
+		} else {
+			$module->entity = $this->get_sale($id);
+			if (is_null($module->entity)) {
+				display_error('Requested sale id is not accessible.');
+				$module->detach();
+				return;
+			}
+		}
+		$module->new_option = $new_option;
+		$module->new_action = $new_action;
+
+		return $module;
+	}
+
+	/**
+	 * Creates and attaches a module containing a form for editing a
 	 * shipper.
 	 *
 	 * If $id is null, or not given, a blank form will be provided.

@@ -62,7 +62,7 @@ foreach ($products as $cur_product) {
 		// Replace the stock entry with the one returned by inventory_origin.
 		$stock_entity = $origin[1];
 		
-		$stock_entity->receive($origin[0], true);
+		$stock_entity->receive($origin[0]);
 		$stock_entity->save();
 
 		$module->success[] = array($stock_entity, $origin[0]);

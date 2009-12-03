@@ -52,7 +52,7 @@ class stock_entry extends entity {
 				}
 				$cur_stock = $config->entity_manager->get_entity($cur_stock_guid, array('com_sales', 'stock_entry'), stock_entry);
 				// If it's not the right product, move on.
-				if ($cur_stock->product_id != $this->product_guid)
+				if ($cur_stock->product_guid != $this->product_guid)
 					continue;
 				if (!is_null($this->serial)) {
 					// Check the serial with the stock entry's serial.
@@ -133,6 +133,7 @@ class stock_entry extends entity {
 		$this->status = 'available';
 		if ($this->location)
 			$old_location = $this->location;
+		// TODO: Copy location to GID (optional) to allow easier access control.
 		$this->location = $location ? $location : $_SESSION['user']->gid;
 		if ($on_entity->has_tag('po')) {
 			$tx->type = 'received_po';

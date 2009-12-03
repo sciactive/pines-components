@@ -35,7 +35,7 @@ $this->title = 'Received Inventory';
 		<?php if ($cur_success[1]->has_tag('po')) { ?>
 		<span class="field"><?php echo 'PO: '.$cur_success[1]->po_number; ?></span>
 		<?php } elseif($cur_success[1]->has_tag('transfer')) { ?>
-		<span class="field"><?php echo 'Transfer: '.$cur_success[1]->transfer_number; ?></span>
+		<span class="field"><?php echo 'Transfer: '.$cur_success[1]->guid; ?></span>
 		<?php } ?>
 	</div>
 </div>

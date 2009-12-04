@@ -819,7 +819,7 @@ class com_sales extends component {
 		$pgrid = new module('system', 'pgrid.default', 'head');
 		$pgrid->icons = true;
 		$jstree = new module('system', 'jstree', 'head');
-		$tageditor = new module('system', 'tag.editor', 'head');
+		$ptags = new module('system', 'ptags.default', 'head');
 		$module = new module('com_sales', 'form_product', 'content');
 		if ( is_null($id) ) {
 			$module->entity = new entity;
@@ -828,7 +828,7 @@ class com_sales extends component {
 			if (is_null($module->entity)) {
 				display_error('Requested product id is not accessible.');
 				$jstree->detach();
-				$tageditor->detach();
+				$ptags->detach();
 				$module->detach();
 				return;
 			}

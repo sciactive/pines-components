@@ -521,7 +521,7 @@ $this->note = 'Provide product details in this form.';
 					<script type="text/javascript">
 						// <![CDATA[
 						$(document).ready(function(){
-							$("#product_details [name=additional_barcodes]").tagEditor({completeOnBlur: true});
+							$("#product_details [name=additional_barcodes]").ptags();
 						});
 						// ]]>
 					</script>

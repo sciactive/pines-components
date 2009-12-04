@@ -68,6 +68,7 @@ $this->title = 'Products';
 			<th>RMA After (days)</th>
 			<th>Serialized</th>
 			<th>Discountable</th>
+			<th>Require Customer</th>
 			<th>Hide on Invoice</th>
 			<th>Non-Refundable</th>
 			<th>Additional Barcodes</th>
@@ -89,6 +90,7 @@ $this->title = 'Products';
 			<td><?php echo $product->rma_after; ?></td>
 			<td><?php echo ($product->serialized ? 'Yes' : 'No'); ?></td>
 			<td><?php echo ($product->discountable ? 'Yes' : 'No'); ?></td>
+			<td><?php echo ($product->require_customer ? 'Yes' : 'No'); ?></td>
 			<td><?php echo ($product->hide_on_invoice ? 'Yes' : 'No'); ?></td>
 			<td><?php echo ($product->non_refundable ? 'Yes' : 'No'); ?></td>
 			<td><?php echo implode(', ', $product->additional_barcodes); ?></td>

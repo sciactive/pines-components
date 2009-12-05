@@ -50,12 +50,11 @@ if (empty($po->received)) {
 	if (!is_array($po->products))
 		$po->products = array();
 	foreach ($po->products as &$cur_product) {
-		$new_product = (object) array(
-			"guid" => intval($cur_product->key),
-			"quantity" => intval($cur_product->values[2]),
-			"cost" => floatval($cur_product->values[3])
+		$cur_product = array(
+			'entity' => $config->run_sales->get_product(intval($cur_product->key)),
+			'quantity' => intval($cur_product->values[2]),
+			'cost' => floatval($cur_product->values[3])
 		);
-		$cur_product = $new_product;
 	}
 	unset($cur_product);
 }

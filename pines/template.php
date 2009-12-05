@@ -106,9 +106,9 @@ defined('P_RUN') or die('Direct access prohibited');
 		<?php echo $page->render_modules('header_right', 'module_header_right'); ?>
 		<?php
 		$cur_menu = $page->main_menu->render(array('<ul class="dropdown dropdown-horizontal">', '</ul>'),
-			array('<li class="ui-state-default" onmouseover="$(this).addClass(\'ui-state-hover\');" onmouseout="$(this).removeClass(\'ui-state-hover\');">', '</li>'),
+			array('<li class="ui-state-default">', '</li>'),
 			array('<ul>', '</ul>'),
-			array('<li class="ui-state-default" onmouseover="$(this).addClass(\'ui-state-hover\');" onmouseout="$(this).removeClass(\'ui-state-hover\');">', '</li>'), '<a href="#DATA#">#NAME#</a>', '');
+			array('<li class="ui-state-default">', '</li>'), '<a href="#DATA#">#NAME#</a>', '');
 		if ( !empty($cur_menu) )
 			echo "<div class=\"mainmenu ui-widget-content\"><div class=\"menuwrap\">\n$cur_menu\n</div></div>\n";
 		?>

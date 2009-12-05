@@ -43,13 +43,11 @@ $product->vendors = json_decode($_REQUEST['vendors']);
 if (!is_array($product->vendors))
 	$product->vendors = array();
 foreach ($product->vendors as &$cur_vendor) {
-	$new_vendor = (object) array(
-		"guid" => intval($cur_vendor->key),
-		"name" => $cur_vendor->values[0],
-		"sku" => $cur_vendor->values[1],
-		"cost" => $cur_vendor->values[2]
+	$cur_vendor = array(
+		'entity' => $config->run_sales->get_vendor(intval($cur_vendor->key)),
+		'sku' => $cur_vendor->values[1],
+		'cost' => $cur_vendor->values[2]
 	);
-	$cur_vendor = $new_vendor;
 }
 unset($cur_vendor);
 
@@ -97,22 +95,22 @@ if ($product->save()) {
 	// We have to do this here, because new products won't have a GUID until now.
 	$categories = json_decode($_REQUEST['categories']);
 	if (is_array($categories)) {
-	array_map('intval', $categories);
-	$all_categories = $config->run_sales->get_category_array();
-	foreach($all_categories as $cur_cat) {
-		if (!is_array($cur_cat->products))
-		$cur_cat->products = array();
+		array_map('intval', $categories);
+		$all_categories = $config->run_sales->get_category_array();
+		foreach($all_categories as $cur_cat) {
+			if (!is_array($cur_cat->products))
+				$cur_cat->products = array();
 
-		if (in_array($cur_cat->guid, $categories) && !in_array($product->guid, $cur_cat->products)) {
-		$cur_cat->products[] = $product->guid;
-		if (!$cur_cat->save())
-			display_error('Failed to add product to category: '.$cur_cat->name);
-		} elseif (!in_array($cur_cat->guid, $categories) && in_array($product->guid, $cur_cat->products)) {
-		$cur_cat->products = array_diff($cur_cat->products, array($product->guid));
-		if (!$cur_cat->save())
-			display_error('Failed to remove product from category: '.$cur_cat->name);
+			if (in_array($cur_cat->guid, $categories) && !in_array($product->guid, $cur_cat->products)) {
+				$cur_cat->products[] = $product->guid;
+				if (!$cur_cat->save())
+					display_error('Failed to add product to category: '.$cur_cat->name);
+			} elseif (!in_array($cur_cat->guid, $categories) && in_array($product->guid, $cur_cat->products)) {
+				$cur_cat->products = array_diff($cur_cat->products, array($product->guid));
+				if (!$cur_cat->save())
+					display_error('Failed to remove product from category: '.$cur_cat->name);
+			}
 		}
-	}
 	}
 } else {
 	display_error('Error saving product. Do you have permission?');

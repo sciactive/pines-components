@@ -23,9 +23,16 @@ $this->note = 'Provide PO details in this form.';
 		var cur_vendor = <?php echo ($this->entity->vendor ? $this->entity->vendor->guid : 'null'); ?>;
 		// Number of decimal places to round to.
 		var dec = <?php echo intval($config->com_sales->dec); ?>;
-		var all_products = <?php
+		var all_products = JSON.parse("<?php
 		$products = array();
 		foreach ($this->products as $cur_product) {
+			$cur_vendor_guids = array();
+			foreach($cur_product->vendors as $cur_vendor) {
+				$cur_vendor_guids[] = (object) array(
+					'guid' => $cur_vendor['entity']->guid,
+					'sku' => $cur_vendor['sku']
+				);
+			}
 			$export_product = (object) array(
 				'guid' => $cur_product->guid,
 				'sku' => $cur_product->sku,
@@ -33,12 +40,12 @@ $this->note = 'Provide PO details in this form.';
 				'manufacturer' => $cur_product->manufacturer->name,
 				'manufacturer_sku' => $cur_product->manufacturer_sku,
 				'unit_price' => $cur_product->unit_price,
-				'vendors' => $cur_product->vendors
+				'vendors' => $cur_vendor_guids
 			);
 			array_push($products, $export_product);
 		}
-		echo json_encode($products);
-		?>;
+		echo addslashes(json_encode($products));
+		?>");
 
 		function round_to_dec(value) {
 			var rnd = Math.pow(10, dec);
@@ -295,16 +302,15 @@ $this->note = 'Provide PO details in this form.';
 					</thead>
 					<tbody>
 						<?php if (is_array($this->entity->products)) { foreach ($this->entity->products as $cur_product) {
-								$cur_product_entity = $config->run_sales->get_product($cur_product->guid);
-								if (is_null($cur_product_entity))
+								if (is_null($cur_product['entity']))
 									continue;
 								?>
-						<tr title="<?php echo $cur_product->guid; ?>">
-							<td><?php echo $cur_product_entity->sku; ?></td>
-							<td><?php echo $cur_product_entity->name; ?></td>
-							<td><?php echo $cur_product->quantity; ?></td>
-							<td><?php echo $cur_product->cost; ?></td>
-							<td><?php echo $config->run_sales->round(intval($cur_product->quantity) * floatval($cur_product->cost), $config->com_sales->dec); ?></td>
+						<tr title="<?php echo $cur_product['entity']->guid; ?>">
+							<td><?php echo $cur_product['entity']->sku; ?></td>
+							<td><?php echo $cur_product['entity']->name; ?></td>
+							<td><?php echo $cur_product['quantity']; ?></td>
+							<td><?php echo $cur_product['cost']; ?></td>
+							<td><?php echo $config->run_sales->round(intval($cur_product['quantity']) * floatval($cur_product['cost']), $config->com_sales->dec); ?></td>
 						</tr>
 						<?php } } ?>
 					</tbody>
@@ -350,8 +356,7 @@ $this->note = 'Provide PO details in this form.';
 	<div class="element">
 		<span class="label">Received Inventory</span>
 		<div class="group">
-			<?php foreach ($this->entity->received as $cur_received) {
-				$cur_entity = $config->entity_manager->get_entity($cur_received, array('com_sales', 'stock_entry'), stock_entry); ?>
+			<?php foreach ($this->entity->received as $cur_entity) { ?>
 			<div class="field" style="margin-bottom: 5px;">
 				Product: <?php echo $cur_entity->product->name; ?><br />
 				Serial: <?php echo $cur_entity->serial; ?>

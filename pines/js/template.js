@@ -45,6 +45,12 @@ $(function($){
 	$(".notice .close, .error .close").css("cursor", "pointer").click(function() {
 		$(this).parent().fadeOut("slow");
 	});
+	// Menu mouseover effects.
+	$(".mainmenu li").hover(function(){
+		$(this).addClass("ui-state-hover");
+	}, function(){
+		$(this).removeClass("ui-state-hover");
+	});
 
 	$(".module .module_right_minimize").hover(function(){
 		$(this).addClass("ui-state-hover");

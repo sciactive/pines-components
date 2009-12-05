@@ -225,8 +225,7 @@ $this->note = 'Use this form to transfer inventory to another location.';
 	<div class="element">
 		<span class="label">Received Inventory</span>
 		<div class="group">
-			<?php foreach ($this->entity->received as $cur_received) {
-				$cur_entity = $config->entity_manager->get_entity($cur_received, array('com_sales', 'stock_entry'), stock_entry); ?>
+			<?php foreach ($this->entity->received as $cur_entity) { ?>
 			<div class="field" style="margin-bottom: 5px;">
 				Product: <?php echo $cur_entity->product->name; ?><br />
 				Serial: <?php echo $cur_entity->serial; ?>

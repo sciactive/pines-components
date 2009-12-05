@@ -47,8 +47,10 @@ class stock_entry extends entity {
 			foreach ($cur_transfer->stock as $cur_stock_guid) {
 				if (is_array($cur_transfer->received)) {
 					// If the product is already received, we should ignore it.
-					if (in_array($cur_stock_guid, $cur_transfer->received))
-						continue;
+					foreach($cur_transfer->received as $cur_entity) {
+						if ($cur_entity->guid == $cur_stock_guid)
+							continue;
+					}
 				}
 				$cur_stock = $config->entity_manager->get_entity($cur_stock_guid, array('com_sales', 'stock_entry'), stock_entry);
 				// If it's not the right product, move on.
@@ -80,23 +82,22 @@ class stock_entry extends entity {
 			// Iterate the PO's products, looking for a match.
 			foreach ($cur_po->products as $cur_product) {
 				// If it's not the right product, move on.
-				if ($cur_product->guid != $this->product->guid)
+				if ($cur_product['entity']->guid != $this->product->guid)
 					continue;
 				// If the product is already received, we should ignore it.
 				$received = 0;
 				if (is_array($cur_po->received)) {
 					// Count how many of this product has been received.
-					foreach ($cur_po->received as $cur_received) {
-						$cur_received_stock_entity = $config->entity_manager->get_entity($cur_received, array('com_sales', 'stock_entry'), stock_entry);
-						if (!is_null($cur_received_stock_entity) && $cur_product->guid == $cur_received_stock_entity->product->guid) {
+					foreach ($cur_po->received as $cur_received_stock_entity) {
+						if (!is_null($cur_received_stock_entity) && $cur_product['entity']->guid == $cur_received_stock_entity->product->guid) {
 							$received++;
 						}
 					}
 				}
 				// If we haven't received all of them yet, return the PO and the stock entry (this one).
-				if ($received < $cur_product->quantity) {
+				if ($received < $cur_product['quantity']) {
 					// Fill in some info for this item.
-					$this->cost = $cur_product->cost;
+					$this->cost = $cur_product['cost'];
 					$this->vendor = $cur_po->vendor;
 					return array($cur_po, $this);
 				}
@@ -116,7 +117,7 @@ class stock_entry extends entity {
 	 * If $location is not set, the current user's primary group is used.
 	 *
 	 * @param entity $on_entity The entity which the product is to be received on.
-	 * @param int $location The group to use for the new location.
+	 * @param entity $location The group to use for the new location.
 	 * @return bool True on success, false on failure.
 	 */
 	function receive(&$on_entity = null, $location = false) {
@@ -148,7 +149,7 @@ class stock_entry extends entity {
 
 		if (!is_array($on_entity->received))
 			$on_entity->received = array();
-		$on_entity->received[] = $this->guid;
+		$on_entity->received[] = $this;
 		$return = $return && $on_entity->save();
 		
 		$tx->old_status = $old_status;

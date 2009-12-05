@@ -399,10 +399,10 @@ $this->note = 'Provide product details in this form.';
 							</thead>
 							<tbody>
 								<?php if (is_array($this->entity->vendors)) { foreach ($this->entity->vendors as $cur_vendor) { ?>
-								<tr title="<?php echo $cur_vendor->guid; ?>">
-									<td><?php echo $cur_vendor->name; ?></td>
-									<td><?php echo $cur_vendor->sku; ?></td>
-									<td><?php echo $cur_vendor->cost; ?></td>
+								<tr title="<?php echo $cur_vendor['entity']->guid; ?>">
+									<td><?php echo $cur_vendor['entity']->name; ?></td>
+									<td><?php echo $cur_vendor['sku']; ?></td>
+									<td><?php echo $cur_vendor['cost']; ?></td>
 								</tr>
 								<?php } } ?>
 							</tbody>

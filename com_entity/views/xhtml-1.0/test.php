@@ -49,9 +49,11 @@ registered itself as the system's entity manager! Test cannot continue!</p>
 <li style="white-space: pre;">Testing wrong tags and right data...     <span style="color: <? echo ($this->tests[23]) ? 'green' : 'red'; ?>;">[<? echo ($this->tests[23]) ? 'PASS' : 'FAIL'; ?>]</span></li>
 <li style="white-space: pre;">Testing right tags and wrong data...     <span style="color: <? echo ($this->tests[24]) ? 'green' : 'red'; ?>;">[<? echo ($this->tests[24]) ? 'PASS' : 'FAIL'; ?>]</span></li>
 <li style="white-space: pre;">Testing wrong tags and wrong data...     <span style="color: <? echo ($this->tests[25]) ? 'green' : 'red'; ?>;">[<? echo ($this->tests[25]) ? 'PASS' : 'FAIL'; ?>]</span></li>
-<li style="white-space: pre;">Deleting entity...                       <span style="color: <? echo ($this->tests[26]) ? 'green' : 'red'; ?>;">[<? echo ($this->tests[26]) ? 'PASS' : 'FAIL'; ?>]</span></li>
-<li style="white-space: pre;">Resaving entity...                       <span style="color: <? echo ($this->tests[27]) ? 'green' : 'red'; ?>;">[<? echo ($this->tests[27]) ? 'PASS' : 'FAIL'; ?>]</span></li>
-<li style="white-space: pre;">Deleting entity by GUID...               <span style="color: <? echo ($this->tests[28]) ? 'green' : 'red'; ?>;">[<? echo ($this->tests[28]) ? 'PASS' : 'FAIL'; ?>]</span></li>
+<li style="white-space: pre;">Testing referenced entities...           <span style="color: <? echo ($this->tests[26]) ? 'green' : 'red'; ?>;">[<? echo ($this->tests[26]) ? 'PASS' : 'FAIL'; ?>]</span></li>
+<li style="white-space: pre;">Deleting referenced entities...          <span style="color: <? echo ($this->tests[27]) ? 'green' : 'red'; ?>;">[<? echo ($this->tests[27]) ? 'PASS' : 'FAIL'; ?>]</span></li>
+<li style="white-space: pre;">Deleting entity...                       <span style="color: <? echo ($this->tests[28]) ? 'green' : 'red'; ?>;">[<? echo ($this->tests[26]) ? 'PASS' : 'FAIL'; ?>]</span></li>
+<li style="white-space: pre;">Resaving entity...                       <span style="color: <? echo ($this->tests[29]) ? 'green' : 'red'; ?>;">[<? echo ($this->tests[27]) ? 'PASS' : 'FAIL'; ?>]</span></li>
+<li style="white-space: pre;">Deleting entity by GUID...               <span style="color: <? echo ($this->tests[30]) ? 'green' : 'red'; ?>;">[<? echo ($this->tests[28]) ? 'PASS' : 'FAIL'; ?>]</span></li>
 </ol>
 The test is now complete. It took <?php echo $this->time; ?> second(s).
 </div>

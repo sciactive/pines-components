@@ -40,6 +40,7 @@ $entity_test->parent = 0;
 $entity_test->test_value = 'test';
 $entity_test->wilcard_test = '"quotes" %percents% _underscores_ \'single quotes\' /slashes/ \backslashes\ ;semicolons;';
 $test->tests[1] = ($entity_test->save() && !is_null($entity_test->guid));
+$entity_guid = $entity_test->guid;
 
 // Checking entity's has_tag method...
 $test->tests[2] = ($entity_test->has_tag('com_entity', 'test') && !$entity_test->has_tag('pickles'));
@@ -334,14 +335,30 @@ foreach ($entity_result as $cur_entity) {
 $test->tests[25] = (!$found_match);
 unset($entity_result);
 
+// Testing referenced entities.
+$entity_reference_test = new entity('com_entity', 'test');
+$entity_reference_test->save();
+$entity_reference_guid = $entity_reference_test->guid;
+$entity_test->reference = $entity_reference_test;
+$entity_test->save();
+unset($entity_test);
+$entity_reference_test->test = 'good';
+$entity_reference_test->save();
+unset($entity_reference_test);
+$entity_test = $config->entity_manager->get_entity($entity_guid);
+$test->tests[26] = ($entity_test->reference->test == 'good');
+
+// Deleting referenced entities.
+$test->tests[27] = ($entity_test->reference->delete() && is_null($entity_test->reference->guid));
+
 // Deleting entity...
-$test->tests[26] = ($entity_test->delete() && is_null($entity_test->guid));
+$test->tests[28] = ($entity_test->delete() && is_null($entity_test->guid));
 
 // Resaving entity...
-$test->tests[27] = ($entity_test->save() && !is_null($entity_test->guid));
+$test->tests[29] = ($entity_test->save() && !is_null($entity_test->guid));
 
 // Deleting entity by GUID...
-$test->tests[28] = ($config->entity_manager->delete_entity_by_id($entity_test->guid));
+$test->tests[30] = ($config->entity_manager->delete_entity_by_id($entity_test->guid));
 
 $test->time = microtime(true) - $entity_start_time;
 

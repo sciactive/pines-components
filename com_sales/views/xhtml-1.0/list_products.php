@@ -80,7 +80,7 @@ $this->title = 'Products';
 			<td><?php echo $product->sku; ?></td>
 			<td><?php echo $product->name; ?></td>
 			<td><?php echo ($product->enabled ? 'Yes' : 'No'); ?></td>
-			<td><?php echo $product->manufacturer; ?></td>
+			<td><?php echo $config->run_sales->get_manufacturer_name($product->manufacturer); ?></td>
 			<td><?php echo $product->manufacturer_sku; ?></td>
 			<td><?php echo $product->pricing_method; ?></td>
 			<td>$<?php echo $product->unit_price; ?></td>

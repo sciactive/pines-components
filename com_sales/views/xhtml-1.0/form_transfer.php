@@ -29,10 +29,10 @@ $this->note = 'Use this form to transfer inventory to another location.';
 				'key' => (string) $stock->guid,
 				'classes' => '',
 				'values' => array(
-					(string) $config->run_sales->get_product_name($stock->product_guid),
+					(string) $stock->product->name,
 					(string) $stock->serial,
-					(string) $config->run_sales->get_vendor_name($stock->vendor_guid),
-					(string) $config->user_manager->get_groupname($stock->location),
+					(string) $stock->vendor->name,
+					(string) "{$stock->location->name} [{$stock->location->groupname}]",
 					(string) $stock->cost,
 					(string) $stock->status
 				)
@@ -143,7 +143,7 @@ $this->note = 'Use this form to transfer inventory to another location.';
 				<span class="note">Destination cannot be changed after items have been received on this transfer.</span>
 			<?php } ?>
 			<select class="field" name="destination"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?>>
-				<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations, $this->entity->destination); ?>
+				<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations, $this->entity->destination->guid); ?>
 			</select></label>
 	</div>
 	<div class="element">
@@ -151,7 +151,7 @@ $this->note = 'Use this form to transfer inventory to another location.';
 			<select class="field" name="shipper">
 				<option value="null">-- None --</option>
 				<?php foreach ($this->shippers as $cur_shipper) { ?>
-				<option value="<?php echo $cur_shipper->guid; ?>"<?php echo $this->entity->shipper == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_shipper->name; ?></option>
+				<option value="<?php echo $cur_shipper->guid; ?>"<?php echo $this->entity->shipper->guid == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_shipper->name; ?></option>
 				<?php } ?>
 			</select></label>
 	</div>
@@ -190,10 +190,10 @@ $this->note = 'Use this form to transfer inventory to another location.';
 									continue;
 								?>
 						<tr title="<?php echo $stock->guid; ?>">
-							<td><?php echo $config->run_sales->get_product_name($stock->product_guid); ?></td>
+							<td><?php echo $stock->product->name; ?></td>
 							<td><?php echo $stock->serial; ?></td>
-							<td><?php echo $config->run_sales->get_vendor_name($stock->vendor_guid); ?></td>
-							<td><?php echo $config->user_manager->get_groupname($stock->location); ?></td>
+							<td><?php echo $stock->vendor->name; ?></td>
+							<td><?php echo "{$stock->location->name} [{$stock->location->groupname}]"; ?></td>
 							<td><?php echo $stock->cost; ?></td>
 							<td><?php echo $stock->status; ?></td>
 						</tr>
@@ -228,7 +228,7 @@ $this->note = 'Use this form to transfer inventory to another location.';
 			<?php foreach ($this->entity->received as $cur_received) {
 				$cur_entity = $config->entity_manager->get_entity($cur_received, array('com_sales', 'stock_entry'), stock_entry); ?>
 			<div class="field" style="margin-bottom: 5px;">
-				Product: <?php echo $config->run_sales->get_product_name($cur_entity->product_guid); ?><br />
+				Product: <?php echo $cur_entity->product->name; ?><br />
 				Serial: <?php echo $cur_entity->serial; ?>
 			</div>
 			<?php } ?>

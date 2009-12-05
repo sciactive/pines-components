@@ -69,10 +69,10 @@ $this->title = 'Stock';
 				continue;
 		} ?>
 		<tr title="<?php echo $stock->guid; ?>">
-			<td><?php echo $config->run_sales->get_product_name($stock->product_guid); ?></td>
+			<td><?php echo $stock->product->name; ?></td>
 			<td><?php echo $stock->serial; ?></td>
-			<td><?php echo $config->run_sales->get_vendor_name($stock->vendor_guid); ?></td>
-			<td><?php echo $config->user_manager->get_groupname($stock->location); ?></td>
+			<td><?php echo $stock->vendor->name; ?></td>
+			<td><?php echo "{$stock->location->name} [{$stock->location->groupname}]"; ?></td>
 			<td><?php echo $stock->cost; ?></td>
 			<td><?php echo $stock->status; ?></td>
 		</tr>

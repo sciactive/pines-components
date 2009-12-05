@@ -380,6 +380,8 @@ class com_user extends component {
 	 */
 	function get_group_tree($mask, $group_array, $selected_id = NULL, $selected = ' selected="selected"', $mark = '') {
 		$return = '';
+		if (!is_array($group_array))
+			return $return;
 		foreach ($group_array as $key => $group) {
 			$parsed = str_replace('#guid#', $key, $mask);
 			$parsed = str_replace('#name#', $group['name'], $parsed);

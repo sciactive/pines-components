@@ -366,7 +366,7 @@ $this->note = 'Provide product details in this form.';
 					<select class="field" name="manufacturer">
 						<option value="null">-- None --</option>
 						<?php foreach ($this->manufacturers as $cur_manufacturer) { ?>
-						<option value="<?php echo $cur_manufacturer->guid; ?>"<?php echo $this->entity->manufacturer == $cur_manufacturer->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_manufacturer->name; ?></option>
+						<option value="<?php echo $cur_manufacturer->guid; ?>"<?php echo $this->entity->manufacturer->guid == $cur_manufacturer->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_manufacturer->name; ?></option>
 						<?php } ?>
 					</select></label>
 			</div>

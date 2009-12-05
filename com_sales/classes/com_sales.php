@@ -287,19 +287,6 @@ class com_sales extends component {
 	}
 
 	/**
-	 * Gets a manufacturer's name by GUID.
-	 *
-	 * @param int $id The manufacturer's GUID.
-	 * @return string|null The manufacturer's name if it exists, null if it doesn't.
-	 */
-	function get_manufacturer_name($id) {
-		$entity = $this->get_manufacturer($id);
-		if (is_object($entity))
-			return $entity->name;
-		return null;
-	}
-
-	/**
 	 * Gets a PO by GUID.
 	 *
 	 * @param int $id The PO's GUID.
@@ -369,19 +356,6 @@ class com_sales extends component {
 	}
 
 	/**
-	 * Gets a product's name by GUID.
-	 *
-	 * @param int $id The product's GUID.
-	 * @return string|null The product's name if it exists, null if it doesn't.
-	 */
-	function get_product_name($id) {
-		$entity = $this->get_product($id);
-		if (is_object($entity))
-			return $entity->name;
-		return null;
-	}
-
-	/**
 	 * Get an array of categories a product belongs to.
 	 *
 	 * @param entity $product The product.
@@ -409,19 +383,6 @@ class com_sales extends component {
 		global $config;
 		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'shipper'));
 		return $entity;
-	}
-
-	/**
-	 * Gets a shipper's name by GUID.
-	 *
-	 * @param int $id The shipper's GUID.
-	 * @return string|null The shipper's name if it exists, null if it doesn't.
-	 */
-	function get_shipper_name($id) {
-		$entity = $this->get_shipper($id);
-		if (is_object($entity))
-			return $entity->name;
-		return null;
 	}
 
 	/**
@@ -458,19 +419,6 @@ class com_sales extends component {
 		global $config;
 		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'vendor'));
 		return $entity;
-	}
-
-	/**
-	 * Gets a vendor's name by GUID.
-	 *
-	 * @param int $id The vendor's GUID.
-	 * @return string|null The vendor's name if it exists, null if it doesn't.
-	 */
-	function get_vendor_name($id) {
-		$entity = $this->get_vendor($id);
-		if (is_object($entity))
-			return $entity->name;
-		return null;
 	}
 
 	/**
@@ -784,6 +732,7 @@ class com_sales extends component {
 				return;
 			}
 		}
+		$module->locations = $config->user_manager->get_group_array();
 		$module->shippers = $config->entity_manager->get_entities_by_tags('com_sales', 'shipper');
 		if (!is_array($module->shippers)) {
 			$module->shippers = array();

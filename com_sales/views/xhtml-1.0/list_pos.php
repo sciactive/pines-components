@@ -68,9 +68,9 @@ $this->title = 'POs';
 		<tr title="<?php echo $po->guid; ?>">
 			<td><?php echo $po->po_number; ?></td>
 			<td><?php echo $po->reference_number; ?></td>
-			<td><?php echo $config->run_sales->get_vendor_name($po->vendor); ?></td>
-			<td><?php echo $config->user_manager->get_groupname($transfer->destination); ?></td>
-			<td><?php echo $config->run_sales->get_shipper_name($po->shipper); ?></td>
+			<td><?php echo $po->vendor->name; ?></td>
+			<td><?php echo "{$po->destination->name} [{$po->destination->groupname}]"; ?></td>
+			<td><?php echo $po->shipper->name; ?></td>
 			<td><?php echo ($po->eta ? date('Y-m-d', $po->eta) : 'None'); ?></td>
 		</tr>
 	<?php } ?>

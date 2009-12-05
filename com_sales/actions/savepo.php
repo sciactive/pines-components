@@ -34,13 +34,13 @@ $po->po_number = $_REQUEST['po_number'];
 $po->reference_number = $_REQUEST['reference_number'];
 // Vendor can't be changed after items have been received.
 if (empty($po->received)) {
-	$po->vendor = intval($_REQUEST['vendor']);
+	$po->vendor = $config->run_sales->get_vendor(intval($_REQUEST['vendor']));
 }
 // Destination can't be changed after items have been received.
 if (empty($po->received)) {
-	$po->destination = intval($_REQUEST['destination']);
+	$po->destination = $config->user_manager->get_group(intval($_REQUEST['destination']));
 }
-$po->shipper = intval($_REQUEST['shipper']);
+$po->shipper = $config->run_sales->get_shipper(intval($_REQUEST['shipper']));
 $po->eta = strtotime($_REQUEST['eta']);
 
 // Products
@@ -73,13 +73,13 @@ if (!empty($test) && $test[0]->guid != $_REQUEST['id']) {
 	display_error('There is already a PO with that number. Please enter a different number.');
 	return;
 }
-if (is_null($config->run_sales->get_vendor($po->vendor))) {
+if (is_null($po->vendor)) {
 	$module = $config->run_sales->print_po_form('com_sales', 'savepo');
 	$module->entity = $po;
 	display_error('Specified vendor is not valid.');
 	return;
 }
-if (is_null($config->run_sales->get_shipper($po->shipper))) {
+if (is_null($po->shipper)) {
 	$module = $config->run_sales->print_po_form('com_sales', 'savepo');
 	$module->entity = $po;
 	display_error('Specified shipper is not valid.');

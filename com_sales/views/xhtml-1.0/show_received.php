@@ -20,11 +20,11 @@ $this->title = 'Received Inventory';
 <div class="pform">
 	<div class="element">
 		<span class="label">Product</span>
-		<span class="field"><?php echo $config->run_sales->get_product_name($cur_success[0]->product_guid); ?></span>
+		<span class="field"><?php echo $cur_success[0]->product->name; ?></span>
 	</div>
 	<div class="element">
 		<span class="label">Vendor</span>
-		<span class="field"><?php echo $config->run_sales->get_vendor_name($cur_success[0]->vendor_guid); ?></span>
+		<span class="field"><?php echo $cur_success[0]->vendor->name; ?></span>
 	</div>
 	<div class="element">
 		<span class="label">Serial</span>

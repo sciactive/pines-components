@@ -20,7 +20,7 @@ $this->note = 'Provide PO details in this form.';
 		var products_table;
 		var available_products_table;
 		var product_dialog;
-		var cur_vendor = <?php echo ($this->entity->vendor ? $this->entity->vendor : 'null'); ?>;
+		var cur_vendor = <?php echo ($this->entity->vendor ? $this->entity->vendor->guid : 'null'); ?>;
 		// Number of decimal places to round to.
 		var dec = <?php echo intval($config->com_sales->dec); ?>;
 		var all_products = <?php
@@ -30,7 +30,7 @@ $this->note = 'Provide PO details in this form.';
 				'guid' => $cur_product->guid,
 				'sku' => $cur_product->sku,
 				'name' => $cur_product->name,
-				'manufacturer' => $config->run_sales->get_manufacturer_name($cur_product->manufacturer),
+				'manufacturer' => $cur_product->manufacturer->name,
 				'manufacturer_sku' => $cur_product->manufacturer_sku,
 				'unit_price' => $cur_product->unit_price,
 				'vendors' => $cur_product->vendors
@@ -244,7 +244,7 @@ $this->note = 'Provide PO details in this form.';
 			<select class="field" name="vendor" onchange="void select_vendor(Number(this.value));"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?>>
 				<option value="null">-- None --</option>
 				<?php foreach ($this->vendors as $cur_vendor) { ?>
-				<option value="<?php echo $cur_vendor->guid; ?>"<?php echo $this->entity->vendor == $cur_vendor->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_vendor->name; ?></option>
+				<option value="<?php echo $cur_vendor->guid; ?>"<?php echo $this->entity->vendor->guid == $cur_vendor->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_vendor->name; ?></option>
 				<?php } ?>
 			</select></label>
 	</div>
@@ -254,7 +254,7 @@ $this->note = 'Provide PO details in this form.';
 				<span class="note">Destination cannot be changed after items have been received on this transfer.</span>
 			<?php } ?>
 			<select class="field" name="destination"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?>>
-				<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations, $this->entity->destination); ?>
+				<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations, $this->entity->destination->guid); ?>
 			</select></label>
 	</div>
 	<div class="element">
@@ -262,7 +262,7 @@ $this->note = 'Provide PO details in this form.';
 			<select class="field" name="shipper">
 				<option value="null">-- None --</option>
 				<?php foreach ($this->shippers as $cur_shipper) { ?>
-				<option value="<?php echo $cur_shipper->guid; ?>"<?php echo $this->entity->shipper == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_shipper->name; ?></option>
+				<option value="<?php echo $cur_shipper->guid; ?>"<?php echo $this->entity->shipper->guid == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_shipper->name; ?></option>
 				<?php } ?>
 			</select></label>
 	</div>
@@ -353,7 +353,7 @@ $this->note = 'Provide PO details in this form.';
 			<?php foreach ($this->entity->received as $cur_received) {
 				$cur_entity = $config->entity_manager->get_entity($cur_received, array('com_sales', 'stock_entry'), stock_entry); ?>
 			<div class="field" style="margin-bottom: 5px;">
-				Product: <?php echo $config->run_sales->get_product_name($cur_entity->product_guid); ?><br />
+				Product: <?php echo $cur_entity->product->name; ?><br />
 				Serial: <?php echo $cur_entity->serial; ?>
 			</div>
 			<?php } ?>

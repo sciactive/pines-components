@@ -67,8 +67,8 @@ $this->title = 'Transfers';
 		<tr title="<?php echo $transfer->guid; ?>">
 			<td><?php echo $transfer->guid; ?></td>
 			<td><?php echo $transfer->reference_number; ?></td>
-			<td><?php echo $config->user_manager->get_groupname($transfer->destination); ?></td>
-			<td><?php echo $config->run_sales->get_shipper_name($transfer->shipper); ?></td>
+			<td><?php echo "{$transfer->destination->name} [{$transfer->destination->groupname}]"; ?></td>
+			<td><?php echo $transfer->shipper->name; ?></td>
 			<td><?php echo ($transfer->eta ? date('Y-m-d', $transfer->eta) : 'None'); ?></td>
 		</tr>
 	<?php } ?>

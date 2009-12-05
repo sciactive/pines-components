@@ -30,9 +30,9 @@ if ( isset($_REQUEST['id']) ) {
 $transfer->reference_number = $_REQUEST['reference_number'];
 // Destination can't be changed after items have been received.
 if (empty($transfer->received)) {
-	$transfer->destination = intval($_REQUEST['destination']);
+	$transfer->destination = $config->user_manager->get_group(intval($_REQUEST['destination']));
 }
-$transfer->shipper = intval($_REQUEST['shipper']);
+$transfer->shipper = $config->run_sales->get_shipper(intval($_REQUEST['shipper']));
 $transfer->eta = strtotime($_REQUEST['eta']);
 
 // Stock
@@ -49,13 +49,13 @@ if (empty($transfer->received)) {
 	unset($cur_stock);
 }
 
-if (is_null($config->user_manager->get_group($transfer->destination))) {
+if (is_null($transfer->destination)) {
 	$module = $config->run_sales->print_transfer_form('com_sales', 'savetransfer');
 	$module->entity = $transfer;
 	display_error('Specified destination is not valid.');
 	return;
 }
-if (is_null($config->run_sales->get_shipper($transfer->shipper))) {
+if (is_null($transfer->shipper)) {
 	$module = $config->run_sales->print_transfer_form('com_sales', 'savetransfer');
 	$module->entity = $transfer;
 	display_error('Specified shipper is not valid.');

@@ -35,7 +35,7 @@ $product->enabled = ($_REQUEST['enabled'] == 'ON' ? true : false);
 $product->sku = $_REQUEST['sku'];
 $product->description = $_REQUEST['description'];
 $product->short_description = $_REQUEST['short_description'];
-$product->manufacturer = ($_REQUEST['manufacturer'] == 'null' ? null : intval($_REQUEST['manufacturer']));
+$product->manufacturer = ($_REQUEST['manufacturer'] == 'null' ? null : $config->run_sales->get_manufacturer(intval($_REQUEST['manufacturer'])));
 $product->manufacturer_sku = $_REQUEST['manufacturer_sku'];
 
 // Purchasing

@@ -27,13 +27,15 @@ $this->note = 'Use this form to process a sale.';
 	<?php } ?>
 	<script type="text/javascript">
 		// <![CDATA[
+		var customer_box;
 		var customer_search_box;
 		var customer_search_button;
 		var customer_table;
 		var customer_dialog;
 
 		$(document).ready(function(){
-			customer_search_box = $("input[name=customer_search]");
+			customer_box = $("#customer");
+			customer_search_box = $("#customer_search");
 			customer_search_button = $("#customer_search_button");
 			customer_table = $("#customer_table");
 			customer_dialog = $("#customer_dialog");
@@ -60,6 +62,14 @@ $this->note = 'Use this form to process a sale.';
 				width: 600,
 				buttons: {
 					"Done": function() {
+						var rows = customer_table.pgrid_get_selected_rows().pgrid_export_rows();
+						if (!rows[0]) {
+							alert("Please select a customer.");
+							return;
+						} else {
+							var customer = rows[0];
+						}
+						customer_box.val(customer.key+": \""+customer.values[0]+"\"");
 						$(this).dialog('close');
 					}
 				}
@@ -73,7 +83,7 @@ $this->note = 'Use this form to process a sale.';
 			$("#customer_dialog .complete").hide();
 			$("#customer_dialog .loading").show();
 			$.getJSON(
-				"<?php echo $config->template->url("com_sales", "customer_search"); ?>",
+				"<?php echo $config->template->url("com_sales", "customersearch"); ?>",
 				{q: search_string},
 				function(data, textStatus){
 					customer_table.pgrid_add(data);
@@ -86,11 +96,11 @@ $this->note = 'Use this form to process a sale.';
 	</script>
 	<div class="element">
 		<span class="label">Customer</span>
-		<span class="note">Enter a name, email, or phone # to search.</span>
+		<span class="note">Enter part of a name, company, email, or phone # to search.</span>
 		<div class="group">
-			<input class="field" type="text" name="customer" size="20" disabled="disabled" value="<?php echo ($this->entity->customer->guid) ? "{$this->entity->customer->guid}: \"{$this->entity->customer->name}\"" : 'No Customer Selected'; ?>" />
+			<input class="field" type="text" id="customer" name="customer" size="20" disabled="disabled" value="<?php echo ($this->entity->customer->guid) ? "{$this->entity->customer->guid}: \"{$this->entity->customer->name}\"" : 'No Customer Selected'; ?>" />
 			<br />
-			<input class="field" type="text" name="customer_search" size="20" />
+			<input class="field" type="text" id="customer_search" name="customer_search" size="20" />
 			<button type="button" id="customer_search_button"><span class="picon_16x16_actions_system-search" style="height: 16px; width: 16px; float: left"></span>Search</button>
 		</div>
 	</div>

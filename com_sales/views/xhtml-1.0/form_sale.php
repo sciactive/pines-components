@@ -25,22 +25,125 @@ $this->note = 'Use this form to process a sale.';
 		<span>Modified On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_mdate); ?></span></span>
 	</div>
 	<?php } ?>
+	<script type="text/javascript">
+		// <![CDATA[
+		var customer_search_box;
+		var customer_search_button;
+		var customer_table;
+		var customer_dialog;
+
+		$(document).ready(function(){
+			customer_search_box = $("input[name=customer_search]");
+			customer_search_button = $("#customer_search_button");
+			customer_table = $("#customer_table");
+			customer_dialog = $("#customer_dialog");
+
+			customer_search_box.keydown(function(eventObject){
+				if (eventObject.keyCode == 13) {
+					customer_search(this.value);
+					return false;
+				}
+			});
+			customer_search_button.click(function(){
+				customer_search(customer_search_box.val());
+			});
+
+			customer_table.pgrid({
+				pgrid_paginate: true,
+				pgrid_multi_select: false
+			});
+
+			customer_dialog.dialog({
+				bgiframe: true,
+				autoOpen: false,
+				modal: true,
+				width: 600,
+				buttons: {
+					"Done": function() {
+						$(this).dialog('close');
+					}
+				}
+			});
+
+		});
+
+		function customer_search(search_string) {
+			customer_table.pgrid_get_all_rows().pgrid_delete();
+			customer_dialog.dialog('open');
+			$("#customer_dialog .complete").hide();
+			$("#customer_dialog .loading").show();
+			$.getJSON(
+				"<?php echo $config->template->url("com_sales", "customer_search"); ?>",
+				{q: search_string},
+				function(data, textStatus){
+					customer_table.pgrid_add(data);
+					$("#customer_dialog .loading").hide();
+					$("#customer_dialog .complete").show();
+				}
+			);
+		}
+		// ]]>
+	</script>
 	<div class="element">
-		<label><span class="label">Customer</span>
-			<input class="field" type="text" name="customer" size="20" value="<?php echo $this->entity->customer; ?>" /></label>
+		<span class="label">Customer</span>
+		<span class="note">Enter a name, email, or phone # to search.</span>
+		<div class="group">
+			<input class="field" type="text" name="customer" size="20" disabled="disabled" value="<?php echo ($this->entity->customer->guid) ? "{$this->entity->customer->guid}: \"{$this->entity->customer->name}\"" : 'No Customer Selected'; ?>" />
+			<br />
+			<input class="field" type="text" name="customer_search" size="20" />
+			<button type="button" id="customer_search_button"><span class="picon_16x16_actions_system-search" style="height: 16px; width: 16px; float: left"></span>Search</button>
+		</div>
+	</div>
+	<div id="customer_dialog" title="Pick a Customer">
+		<div class="loading">
+			<p>Loading...</p>
+		</div>
+		<div class="complete">
+			<table id="customer_table">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Email</th>
+						<th>Company</th>
+						<th>Job Title</th>
+						<th>Address 1</th>
+						<th>Address 2</th>
+						<th>City</th>
+						<th>State</th>
+						<th>Zip</th>
+						<th>Home Phone</th>
+						<th>Work Phone</th>
+						<th>Cell Phone</th>
+						<th>Fax</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>----------------------</td>
+						<td>----------------------</td>
+						<td>----------------------</td>
+						<td>----------------------</td>
+						<td>----------------------</td>
+						<td>----------------------</td>
+						<td>----------------------</td>
+						<td>----------------------</td>
+						<td>----------------------</td>
+						<td>----------------------</td>
+						<td>----------------------</td>
+						<td>----------------------</td>
+						<td>----------------------</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<br class="spacer" />
 	</div>
 	<div class="element">
-		<label><span class="label">Shipper</span>
+		<label><span class="label">Delivery Method</span>
 			<select class="field" name="shipper">
-				<option value="null">-- None --</option>
-				<?php foreach ($this->shippers as $cur_shipper) { ?>
-				<option value="<?php echo $cur_shipper->guid; ?>"<?php echo $this->entity->shipper == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_shipper->name; ?></option>
-				<?php } ?>
+				<option value="in-store">In Store</option>
+				<option value="drop-shipped">Drop Shipped to Customer</option>
 			</select></label>
-	</div>
-	<div class="element">
-		<label><span class="label">Shipping Method</span>
-			<input class="field" type="text" name="shipping_method" size="20" value="<?php echo $this->entity->shipping_method; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Payment Method</span>

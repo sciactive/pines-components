@@ -32,6 +32,9 @@ $this->note = 'Use this form to process a sale.';
 		var customer_search_button;
 		var customer_table;
 		var customer_dialog;
+		var products;
+		var products_table;
+		var product_code;
 
 		$(document).ready(function(){
 			customer_box = $("#customer");
@@ -39,6 +42,9 @@ $this->note = 'Use this form to process a sale.';
 			customer_search_button = $("#customer_search_button");
 			customer_table = $("#customer_table");
 			customer_dialog = $("#customer_dialog");
+			products = $("#products");
+			products_table = $("#products_table");
+			product_code = $("#product_code");
 
 			customer_search_box.keydown(function(eventObject){
 				if (eventObject.keyCode == 13) {
@@ -75,6 +81,53 @@ $this->note = 'Use this form to process a sale.';
 				}
 			});
 
+			products_table.pgrid({
+				pgrid_paginate: false,
+				pgrid_toolbar: true,
+				pgrid_toolbar_contents : [
+					{
+						type: 'text',
+						label: 'Code',
+						selection_optional: true,
+						keydown: function(eventObject){
+							if (eventObject.keyCode == 13) {
+								alert('Adding product: '+this.value);
+							}
+						}
+					},
+					{
+						type: 'button',
+						text: 'Add',
+						extra_class: 'icon picon_16x16_actions_document-new',
+						selection_optional: true,
+						click: function(){
+							product_dialog.dialog('open');
+						}
+					},
+					{
+						type: 'button',
+						text: 'Edit',
+						extra_class: 'icon picon_16x16_actions_document-open',
+						double_click: true,
+						click: function(e, rows){
+							var row_data = products_table.pgrid_export_rows(rows);
+							$("#cur_product_quantity").val(row_data[0].values[2]);
+							$("#cur_product_cost").val(row_data[0].values[3]);
+							product_dialog.dialog('open');
+							rows.pgrid_delete();
+						}
+					},
+					{
+						type: 'button',
+						text: 'Remove',
+						extra_class: 'icon picon_16x16_actions_edit-delete',
+						click: function(e, rows){
+							rows.pgrid_delete();
+							update_products();
+						}
+					}
+				]
+			});
 		});
 
 		function customer_search(search_string) {
@@ -152,20 +205,58 @@ $this->note = 'Use this form to process a sale.';
 		<label><span class="label">Delivery Method</span>
 			<select class="field" name="shipper">
 				<option value="in-store">In Store</option>
-				<option value="drop-shipped">Drop Shipped to Customer</option>
+				<option value="shipped">Shipped to Customer</option>
 			</select></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Payment Method</span>
 			<input class="field" type="text" name="payment_method" size="20" value="<?php echo $this->entity->payment_method; ?>" /></label>
 	</div>
-	<div class="element">
-		<label><span class="label">Items</span>
-			<input class="field" type="text" name="items" size="20" value="<?php echo $this->entity->items; ?>" /></label>
+	<div class="element full_width">
+		<span class="label">Products</span>
+		<div class="group">
+			<div class="field">
+				Code: <input type="text" id="product_code" name="product_code" size="20" />
+			</div>
+			<div class="field">
+				<table id="products_table">
+					<thead>
+						<tr>
+							<th>SKU</th>
+							<th>Product</th>
+							<th>Serial</th>
+							<th>Quantity</th>
+							<th>Price</th>
+							<th>Line Total</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php if (is_array($this->entity->products)) { foreach ($this->entity->products as $cur_product) {
+								if (is_null($cur_product['entity']))
+									continue;
+								?>
+						<tr title="<?php echo $cur_product['entity']->guid; ?>">
+							<td><?php echo $cur_product['entity']->sku; ?></td>
+							<td><?php echo $cur_product['entity']->name; ?></td>
+							<td><?php echo $cur_product['serial']; ?></td>
+							<td><?php echo $cur_product['quantity']; ?></td>
+							<td><?php echo $cur_product['price']; ?></td>
+							<td><?php echo $config->run_sales->round(intval($cur_product['quantity']) * floatval($cur_product['price']), $config->com_sales->dec); ?></td>
+						</tr>
+						<?php } } ?>
+					</tbody>
+				</table>
+			</div>
+			<input class="field" type="hidden" id="products" name="products" size="20" />
+		</div>
 	</div>
-	<div class="element">
+	<div class="element full_width">
 		<label><span class="label">Comments</span>
-			<textarea rows="3" cols="35" class="field" name="comments" style="width: 100%;"><?php echo $this->entity->comments; ?></textarea></label>
+			<div class="group">
+				<div class="field">
+					<textarea rows="3" cols="35" name="comments" style="width: 100%;"><?php echo $this->entity->comments; ?></textarea>
+				</div>
+			</div></label>
 	</div>
 	<div class="element buttons">
 		<?php if ( !is_null($this->entity->guid) ) { ?>

@@ -87,13 +87,10 @@ $this->note = 'Use this form to process a sale.';
 				pgrid_toolbar_contents : [
 					{
 						type: 'text',
-						label: 'Code',
-						selection_optional: true,
-						keydown: function(eventObject){
-							if (eventObject.keyCode == 13) {
-								alert('Adding product: '+this.value);
-							}
-						}
+						label: 'Code: '
+					},
+					{
+						type: 'separator'
 					},
 					{
 						type: 'button',
@@ -215,9 +212,6 @@ $this->note = 'Use this form to process a sale.';
 	<div class="element full_width">
 		<span class="label">Products</span>
 		<div class="group">
-			<div class="field">
-				Code: <input type="text" id="product_code" name="product_code" size="20" />
-			</div>
 			<div class="field">
 				<table id="products_table">
 					<thead>

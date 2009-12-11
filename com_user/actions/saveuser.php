@@ -20,37 +20,37 @@ if ( empty($_REQUEST['username']) ) {
 
 if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_user/edit') && (!gatekeeper('com_user/self') || ($_REQUEST['id'] != $_SESSION['user_id'])) ) {
-	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'manageusers', null, false));
-	return;
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'manageusers', null, false));
+		return;
 	}
 	$user = $config->user_manager->get_user($_REQUEST['id']);
 	if ( is_null($user) ) {
-	display_error('User doesn\'t exists!');
-	$pass = false;
+		display_error('User doesn\'t exists!');
+		$pass = false;
 	}
 	if ( $user->username != $_REQUEST['username'] ) {
-	if ( is_null($config->user_manager->get_user_by_username($_REQUEST['username'])) ) {
-		$user->username = $_REQUEST['username'];
-	} else {
-		display_error('Username ['.$_REQUEST['username'].'] already exists! Continuing with old username...');
-	}
+		if ( is_null($config->user_manager->get_user_by_username($_REQUEST['username'])) ) {
+			$user->username = $_REQUEST['username'];
+		} else {
+			display_error('Username ['.$_REQUEST['username'].'] already exists! Continuing with old username...');
+		}
 	}
 	if ( !empty($_REQUEST['password']) ) $user->password($_REQUEST['password']);
 } else {
 	if ( !gatekeeper('com_user/new') ) {
-	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'manageusers', null, false));
-	return;
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'manageusers', null, false));
+		return;
 	}
 	if ( empty($_REQUEST['password']) && !$config->com_user->empty_pw ) {
-	display_error('Must specify password!');
-	$pass = false;
+		display_error('Must specify password!');
+		$pass = false;
 	}
 	$user = new user;
 	if ( is_null($config->user_manager->get_user_by_username($_REQUEST['username'])) ) {
-	$user->username = $_REQUEST['username'];
+		$user->username = $_REQUEST['username'];
 	} else {
-	display_error('Username already exists!');
-	$pass = false;
+		display_error('Username already exists!');
+		$pass = false;
 	}
 	$user->password($_REQUEST['password']);
 }
@@ -60,9 +60,9 @@ $user->email = $_REQUEST['email'];
 
 if ( gatekeeper('com_user/default_component') ) {
 	if ( file_exists('components/'.$_REQUEST['default_component'].'/actions/default.php') ) {
-	$user->default_component = $_REQUEST['default_component'];
+		$user->default_component = $_REQUEST['default_component'];
 	} else {
-	display_error('Selected component does not support a default action.');
+		display_error('Selected component does not support a default action.');
 	}
 }
 
@@ -75,26 +75,26 @@ if ( gatekeeper("com_user/assigng") ) {
 	$ugroup = intval($_REQUEST['gid']);
 	$ugroups = $_REQUEST['groups'];
 	if (is_array($ugroups))
-	array_walk($ugroups, 'intval');
+		array_walk($ugroups, 'intval');
 	if (is_array($groups)) {
-	foreach ($groups as $cur_group) {
-		if ( $cur_group->guid == $ugroup ) {
-		$user->gid = $ugroup;
+		foreach ($groups as $cur_group) {
+			if ( $cur_group->guid == $ugroup ) {
+				$user->gid = $ugroup;
+			}
+			if (is_array($ugroups)) {
+				if ( in_array($cur_group->guid, $ugroups) ) {
+					$user->addgroup($cur_group->guid);
+				} else {
+					$user->delgroup($cur_group->guid);
+				}
+			} else {
+				$user->delgroup($cur_group->guid);
+			}
 		}
-		if (is_array($ugroups)) {
-		if ( in_array($cur_group->guid, $ugroups) ) {
-			$user->addgroup($cur_group->guid);
-		} else {
-			$user->delgroup($cur_group->guid);
-		}
-		} else {
-		$user->delgroup($cur_group->guid);
-		}
-	}
 	}
 	if ( $_REQUEST['gid'] == 'null' ) {
-	if (isset($user->gid))
-		unset($user->gid);
+		if (isset($user->gid))
+			unset($user->gid);
 	}
 }
 
@@ -102,19 +102,19 @@ if ( $_REQUEST['abilities'] === 'true' && gatekeeper("com_user/abilities") ) {
 	$user->inherit_abilities = ($_REQUEST['inherit_abilities'] == 'ON' ? true : false);
 	$sections = array('system');
 	foreach ($config->components as $cur_component) {
-	$sections[] = $cur_component;
+		$sections[] = $cur_component;
 	}
 	foreach ($sections as $cur_section) {
-	$section_abilities = $config->ability_manager->get_abilities($cur_section);
-	if ( count($section_abilities) ) {
-		foreach ($section_abilities as $cur_ability) {
-		if ( isset($_REQUEST[$cur_section]) && (array_search($cur_ability['ability'], $_REQUEST[$cur_section]) !== false) ) {
-			$user->grant($cur_section.'/'.$cur_ability['ability']);
-		} else {
-			$user->revoke($cur_section.'/'.$cur_ability['ability']);
+		$section_abilities = $config->ability_manager->get_abilities($cur_section);
+		if ( count($section_abilities) ) {
+			foreach ($section_abilities as $cur_ability) {
+				if ( isset($_REQUEST[$cur_section]) && (array_search($cur_ability['ability'], $_REQUEST[$cur_section]) !== false) ) {
+					$user->grant($cur_section.'/'.$cur_ability['ability']);
+				} else {
+					$user->revoke($cur_section.'/'.$cur_ability['ability']);
+				}
+			}
 		}
-		}
-	}
 	}
 }
 

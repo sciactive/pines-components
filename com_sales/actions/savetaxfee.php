@@ -33,7 +33,15 @@ $tax_fee->name = $_REQUEST['name'];
 $tax_fee->enabled = ($_REQUEST['enabled'] == 'ON' ? true : false);
 $tax_fee->type = $_REQUEST['type'];
 $tax_fee->rate = floatval($_REQUEST['rate']);
-$tax_fee->locations = (is_array($_REQUEST['locations']) ? $_REQUEST['locations'] : array());
+$tax_fee->locations = array();
+if (is_array($_REQUEST['locations'])) {
+	foreach ($_REQUEST['locations'] as $cur_location_guid) {
+		$cur_location = $config->user_manager->get_group($cur_location_guid);
+		if (!is_null($cur_location)) {
+			array_push($tax_fee->locations, $cur_location);
+		}
+	}
+}
 
 if (empty($tax_fee->name)) {
 	$module = $config->run_sales->print_tax_fee_form('com_sales', 'savetaxfee');

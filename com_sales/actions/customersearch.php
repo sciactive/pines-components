@@ -20,7 +20,7 @@ $page->override = true;
 
 $query = strtolower($_REQUEST['q']);
 
-if ($query == '') {
+if (empty($query)) {
 	$customers = array();
 } else {
 	$customers = $config->entity_manager->get_entities_by_tags('com_sales', 'customer');

@@ -73,7 +73,7 @@ $this->title = 'Taxes/Fees';
 			if (is_array($tax_fee->locations)) {
 				$groupname_array = array();
 				foreach ($tax_fee->locations as $cur_locations) {
-					array_push($groupname_array, $config->user_manager->get_groupname($cur_locations));
+					array_push($groupname_array, "{$cur_locations->name} [{$cur_locations->groupname}]");
 				}
 				echo implode(', ', $groupname_array);
 			}

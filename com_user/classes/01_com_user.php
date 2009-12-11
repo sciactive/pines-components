@@ -373,7 +373,7 @@ class com_user extends component {
 	 * @param string $mask The line mask to fill with data.
 	 * @param array $group_array An array of groups to work with.
 	 * @see com_user::get_group_array()
-	 * @param int|array $selected_id The ID or array of IDs on which to apply $selected to the mask.
+	 * @param int|group|array $selected_id The ID/entity or array of IDs/entities on which to apply $selected to the mask.
 	 * @param string $selected The selection text to apply to the mask on selected items.
 	 * @param string $mark The mark to apply (per depth level) to the mask.
 	 * @return string The rendered tree.
@@ -387,7 +387,7 @@ class com_user extends component {
 			$parsed = str_replace('#name#', $group['name'], $parsed);
 			$parsed = str_replace('#groupname#', $group['groupname'], $parsed);
 			$parsed = str_replace('#mark#', $mark, $parsed);
-			if ( $key == $selected_id || (is_array($selected_id) && in_array($key, $selected_id)) ) {
+			if ( $key == $selected_id || $group == $selected_id || (is_array($selected_id) && in_array($key, $selected_id)) || (is_array($selected_id) && in_array($this->get_group($key), $selected_id)) ) {
 				$parsed = str_replace('#selected#', $selected, $parsed);
 			} else {
 				$parsed = str_replace('#selected#', '', $parsed);

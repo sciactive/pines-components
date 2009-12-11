@@ -487,6 +487,23 @@ $this->note = 'Provide product details in this form.';
 				<label><span class="label">Floor</span>
 					<input class="field" type="text" name="floor" size="20" value="<?php echo $this->entity->floor; ?>" /></label>
 			</div>
+			<div class="element heading">
+				<h1>Taxes/Fees</h1>
+			</div>
+			<div class="element">
+				<label><span class="label">Tax Exempt</span>
+					<input class="field" type="checkbox" name="tax_exempt" size="20" value="ON"<?php echo $this->entity->tax_exempt ? ' checked="checked"' : ''; ?> /></label>
+			</div>
+			<div class="element">
+				<label><span class="label">Additional Taxes/Fees</span>
+					<span class="note">These taxes will be applied in addition to the group's default taxes. If you select a tax applied to a group, it will be applied twice to this product for that group.</span>
+					<span class="note">Hold Ctrl (Command on Mac) to select multiple.</span>
+					<select class="field" name="additional_tax_fees[]" size="6" multiple="multiple">
+						<?php foreach ($this->tax_fees as $cur_tax_fee) { ?>
+						<option value="<?php echo $cur_tax_fee->guid; ?>"<?php echo (is_array($this->entity->additional_tax_fees) && in_array($cur_tax_fee, $this->entity->additional_tax_fees)) ? ' selected="selected"' : ''; ?>><?php echo $cur_tax_fee->name; ?></option>
+						<?php } ?>
+					</select></label>
+			</div>
 			<br class="spacer" />
 		</div>
 		<div id="tab_attributes">
@@ -531,16 +548,6 @@ $this->note = 'Provide product details in this form.';
 						// ]]>
 					</script>
 				</div>
-			</div>
-			<div class="element">
-				<label><span class="label">Additional Taxes/Fees</span>
-					<span class="note">These taxes will be applied in addition to the group's default taxes. If you select a tax applied to a group, it will be applied twice to this product for that group.</span>
-					<span class="note">Hold Ctrl (Command on Mac) to select multiple.</span>
-					<select class="field" name="additional_tax_fees[]" size="6" multiple="multiple">
-						<?php foreach ($this->tax_fees as $cur_tax_fee) { ?>
-						<option value="<?php echo $cur_tax_fee->guid; ?>"<?php echo (is_array($this->entity->additional_tax_fees) && in_array($cur_tax_fee->guid, $this->entity->additional_tax_fees)) ? ' selected="selected"' : ''; ?>><?php echo $cur_tax_fee->name; ?></option>
-						<?php } ?>
-					</select></label>
 			</div>
 			<br class="spacer" />
 		</div>

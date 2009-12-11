@@ -56,6 +56,17 @@ $product->pricing_method = $_REQUEST['pricing_method'];
 $product->unit_price = floatval($_REQUEST['unit_price']);
 $product->margin = floatval($_REQUEST['margin']);
 $product->floor = floatval($_REQUEST['floor']);
+// TODO: Tax exempt by location.
+$product->tax_exempt = ($_REQUEST['tax_exempt'] == 'ON' ? true : false);
+$product->additional_tax_fees = array();
+if (is_array($_REQUEST['additional_tax_fees'])) {
+	foreach ($_REQUEST['additional_tax_fees'] as $cur_tax_fee_guid) {
+		$cur_tax_fee = $config->run_sales->get_tax_fee(intval($cur_tax_fee_guid));
+		if (!is_null($cur_tax_fee)) {
+			array_push($product->additional_tax_fees, $cur_tax_fee);
+		}
+	}
+}
 
 // Attributes
 $product->weight = floatval($_REQUEST['weight']);
@@ -66,11 +77,6 @@ $product->require_customer = ($_REQUEST['require_customer'] == 'ON' ? true : fal
 $product->hide_on_invoice = ($_REQUEST['hide_on_invoice'] == 'ON' ? true : false);
 $product->non_refundable = ($_REQUEST['non_refundable'] == 'ON' ? true : false);
 $product->additional_barcodes = explode(',', $_REQUEST['additional_barcodes']);
-if (is_array($_REQUEST['additional_tax_fees'])) {
-	$product->additional_tax_fees = array_map('intval', $_REQUEST['additional_tax_fees']);
-} else {
-	$product->additional_tax_fees = array();
-}
 
 if (empty($product->name)) {
 	$module = $config->run_sales->print_product_form('com_sales', 'saveproduct');

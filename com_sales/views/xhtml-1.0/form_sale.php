@@ -35,6 +35,55 @@ $this->note = 'Use this form to process a sale.';
 		var products;
 		var products_table;
 		var product_code;
+		var require_customer = false;
+
+		// Number of decimal places to round to.
+		var dec = <?php echo intval($config->com_sales->dec); ?>;
+<?php
+		$taxes_percent = array();
+		$taxes_flat = array();
+		foreach ($this->tax_fees as $cur_tax_fee) {
+			if (!$cur_tax_fee->enabled)
+				continue;
+			foreach($cur_tax_fee->locations as $cur_location) {
+				if (!$_SESSION['user']->ingroup($cur_location->guid))
+					continue;
+				if ($cur_tax_fee->type == 'percentage') {
+					$taxes_percent[] = array('name' => $cur_tax_fee->name, 'rate' => $cur_tax_fee->rate);
+					break;
+				} elseif ($cur_tax_fee->type == 'flat_rate') {
+					$taxes_flat[] = array('name' => $cur_tax_fee->name, 'rate' => $cur_tax_fee->rate);
+					break;
+				}
+			}
+		}
+?>
+		var taxes_percent = JSON.parse("<?php echo addSlashes(json_encode($taxes_percent)) ?>");
+		var taxes_flat = JSON.parse("<?php echo addSlashes(json_encode($taxes_flat)) ?>");
+
+		function round_to_dec(value) {
+			var rnd = Math.pow(10, dec);
+			var mult = value * rnd;
+			value = gaussianRound(mult);
+			value /= rnd;
+			value = value.toFixed(dec);
+			return (value);
+		}
+
+		function gaussianRound(x) {
+			var absolute = Math.abs(x);
+			var sign     = x == 0 ? 0 : (x < 0 ? -1 : 1);
+			var floored  = Math.floor(absolute);
+			if (absolute - floored != 0.5) {
+				return Math.round(absolute) * sign;
+			}
+			if (floored % 2 == 1) {
+				// Closest even is up.
+				return Math.ceil(absolute) * sign;
+			}
+			// Closest even is down.
+			return floored * sign;
+		}
 
 		$(document).ready(function(){
 			customer_box = $("#customer");
@@ -58,7 +107,10 @@ $this->note = 'Use this form to process a sale.';
 
 			customer_table.pgrid({
 				pgrid_paginate: true,
-				pgrid_multi_select: false
+				pgrid_multi_select: false,
+				pgrid_double_click: function(){
+					customer_dialog.dialog('option', 'buttons').Done();
+				}
 			});
 
 			customer_dialog.dialog({
@@ -67,7 +119,7 @@ $this->note = 'Use this form to process a sale.';
 				modal: true,
 				width: 600,
 				buttons: {
-					"Done": function() {
+					"Done": function(){
 						var rows = customer_table.pgrid_get_selected_rows().pgrid_export_rows();
 						if (!rows[0]) {
 							alert("Please select a customer.");
@@ -76,7 +128,8 @@ $this->note = 'Use this form to process a sale.';
 							var customer = rows[0];
 						}
 						customer_box.val(customer.key+": \""+customer.values[0]+"\"");
-						$(this).dialog('close');
+						customer_search_box.val("");
+						customer_dialog.dialog('close');
 					}
 				}
 			});
@@ -87,31 +140,103 @@ $this->note = 'Use this form to process a sale.';
 				pgrid_toolbar_contents : [
 					{
 						type: 'text',
-						label: 'Code: '
+						label: 'Code: ',
+						load: function(textbox){
+							textbox.keydown(function(e){
+								if (e.keyCode == 13) {
+									var code = textbox.val();
+									if (code == "") {
+										alert("Please enter a product code.");
+										return;
+									}
+									textbox.val("");
+									var loader;
+									$.ajax({
+										url: "<?php echo $config->template->url('com_sales', 'productsearch'); ?>",
+										type: "POST",
+										dataType: "json",
+										data: {"code": code},
+										beforeSend: function(){
+											loader = pines.alert('Retrieving product from server...', 'Product Search', 'icon picon_16x16_animations_throbber', {pnotify_hide: false});
+										},
+										complete: function(){
+											loader.pnotify_remove();
+										},
+										error: function(XMLHttpRequest, textStatus){
+											pines.error("An error occured while trying to lookup the product code:\n"+textStatus);
+										},
+										success: function(data){
+											if (!data) {
+												alert("No product was found with the code "+code+".");
+												return;
+											}
+											var serial = "";
+											if (data.serialized) {
+												while (!serial) {
+													serial = prompt("This item is serialized. Please provide the serial:");
+												}
+											}
+											products_table.pgrid_add([{key: data.guid, values: [
+													data.sku,
+													data.name,
+													serial,
+													1,
+													data.unit_price,
+													"",
+													""
+											]}], function(){
+												var cur_row = $(this);
+												cur_row.data("product", data);
+											});
+											update_products();
+
+											// delete this when done testing.
+											$("textarea").val((JSON.stringify(data)));
+										}
+									});
+								}
+							});
+						}
 					},
 					{
 						type: 'separator'
 					},
 					{
 						type: 'button',
-						text: 'Add',
-						extra_class: 'icon picon_16x16_actions_document-new',
-						selection_optional: true,
-						click: function(){
-							product_dialog.dialog('open');
+						text: 'Change Serial',
+						extra_class: 'icon picon_16x16_stock_generic_stock_id',
+						double_click: true,
+						click: function(e, rows){
+							var product = rows.data("product");
+							if (!product.serialized)
+								return;
+							var serial = rows.pgrid_get_value(3);
+							do {
+								serial = prompt("This item is serialized. Please provide the serial:", serial);
+							} while (!serial && serial != null);
+							if (serial != null) {
+								rows.pgrid_set_value(3, serial);
+								update_products();
+							}
 						}
 					},
 					{
 						type: 'button',
-						text: 'Edit',
-						extra_class: 'icon picon_16x16_actions_document-open',
+						text: 'Change Quantity',
+						extra_class: 'icon picon_16x16_stock_data_stock_record-number',
 						double_click: true,
 						click: function(e, rows){
-							var row_data = products_table.pgrid_export_rows(rows);
-							$("#cur_product_quantity").val(row_data[0].values[2]);
-							$("#cur_product_cost").val(row_data[0].values[3]);
-							product_dialog.dialog('open');
-							rows.pgrid_delete();
+							var product = rows.data("product");
+							if (product.serialized)
+								return;
+							var qty = rows.pgrid_get_value(4);
+							do {
+								qty = prompt("Please enter a quantity:", qty);
+							} while ((parseInt(qty) < 1 || isNaN(parseInt(qty))) && qty != null);
+							if (qty != null) {
+								rows.pgrid_set_value(4, parseInt(qty));
+								update_products();
+							}
 						}
 					},
 					{
@@ -127,20 +252,81 @@ $this->note = 'Use this form to process a sale.';
 			});
 		});
 
-		function customer_search(search_string) {
-			customer_table.pgrid_get_all_rows().pgrid_delete();
-			customer_dialog.dialog('open');
-			$("#customer_dialog .complete").hide();
-			$("#customer_dialog .loading").show();
-			$.getJSON(
-				"<?php echo $config->template->url("com_sales", "customersearch"); ?>",
-				{q: search_string},
-				function(data, textStatus){
-					customer_table.pgrid_add(data);
-					$("#customer_dialog .loading").hide();
-					$("#customer_dialog .complete").show();
+		function update_products() {
+			var rows = products_table.pgrid_get_all_rows();
+			if (!rows)
+				return;
+			var subtotal = 0;
+			var taxes = 0;
+			var itemtaxes = 0;
+			var total = 0;
+			require_customer = false;
+			rows.each(function(){
+				var cur_row = $(this);
+				var product = cur_row.data("product");
+				if (product.require_customer) {
+					require_customer = true;
 				}
-			);
+				var price = parseFloat(cur_row.pgrid_get_value(5));
+				var qty = parseInt(cur_row.pgrid_get_value(4));
+				var cur_itemtaxes = 0;
+				if (isNaN(price))
+					price = 0;
+				if (isNaN(qty))
+					qty = 1;
+				var line_total = price * qty;
+				if (!product.tax_exempt) {
+					$.each(taxes_percent, function(){
+						taxes += (this.rate / 100) * line_total;
+					});
+					$.each(taxes_flat, function(){
+						taxes += this.rate * qty;
+					});
+					$.each(product.taxes_percent, function(){
+						cur_itemtaxes += (this.rate / 100) * line_total;
+					});
+					$.each(product.taxes_flat, function(){
+						cur_itemtaxes += this.rate * qty;
+					});
+					itemtaxes += cur_itemtaxes;
+				}
+				subtotal += line_total;
+				cur_row.pgrid_set_value(6, round_to_dec(line_total));
+				cur_row.pgrid_set_value(7, round_to_dec(cur_itemtaxes));
+			});
+			total = subtotal + itemtaxes + taxes;
+			$("#subtotal").html(round_to_dec(subtotal));
+			$("#itemtaxesfees").html(round_to_dec(itemtaxes));
+			$("#taxesfees").html(round_to_dec(taxes));
+			$("#total").html(round_to_dec(total));
+		}
+
+		function customer_search(search_string) {
+			var loader;
+			$.ajax({
+				url: "<?php echo $config->template->url("com_sales", "customersearch"); ?>",
+				type: "POST",
+				dataType: "json",
+				data: {"q": search_string},
+				beforeSend: function(){
+					loader = pines.alert('Searching for customers...', 'Customer Search', 'icon picon_16x16_animations_throbber', {pnotify_hide: false});
+					customer_table.pgrid_get_all_rows().pgrid_delete();
+				},
+				complete: function(){
+					loader.pnotify_remove();
+				},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured while trying to find customers:\n"+textStatus);
+				},
+				success: function(data){
+					if (!data) {
+						alert("No customer was found that matched the query.");
+						return;
+					}
+					customer_dialog.dialog('open');
+					customer_table.pgrid_add(data);
+				}
+			});
 		}
 		// ]]>
 	</script>
@@ -151,51 +337,46 @@ $this->note = 'Use this form to process a sale.';
 			<input class="field" type="text" id="customer" name="customer" size="20" disabled="disabled" value="<?php echo ($this->entity->customer->guid) ? "{$this->entity->customer->guid}: \"{$this->entity->customer->name}\"" : 'No Customer Selected'; ?>" />
 			<br />
 			<input class="field" type="text" id="customer_search" name="customer_search" size="20" />
-			<button type="button" id="customer_search_button"><span class="picon_16x16_actions_system-search" style="height: 16px; width: 16px; float: left"></span>Search</button>
+			<button type="button" id="customer_search_button"><span class="picon_16x16_actions_system-search" style="padding-left: 16px; background-repeat: no-repeat;">Search</span></button>
 		</div>
 	</div>
 	<div id="customer_dialog" title="Pick a Customer">
-		<div class="loading">
-			<p>Loading...</p>
-		</div>
-		<div class="complete">
-			<table id="customer_table">
-				<thead>
-					<tr>
-						<th>Name</th>
-						<th>Email</th>
-						<th>Company</th>
-						<th>Job Title</th>
-						<th>Address 1</th>
-						<th>Address 2</th>
-						<th>City</th>
-						<th>State</th>
-						<th>Zip</th>
-						<th>Home Phone</th>
-						<th>Work Phone</th>
-						<th>Cell Phone</th>
-						<th>Fax</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>----------------------</td>
-						<td>----------------------</td>
-						<td>----------------------</td>
-						<td>----------------------</td>
-						<td>----------------------</td>
-						<td>----------------------</td>
-						<td>----------------------</td>
-						<td>----------------------</td>
-						<td>----------------------</td>
-						<td>----------------------</td>
-						<td>----------------------</td>
-						<td>----------------------</td>
-						<td>----------------------</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+		<table id="customer_table">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email</th>
+					<th>Company</th>
+					<th>Job Title</th>
+					<th>Address 1</th>
+					<th>Address 2</th>
+					<th>City</th>
+					<th>State</th>
+					<th>Zip</th>
+					<th>Home Phone</th>
+					<th>Work Phone</th>
+					<th>Cell Phone</th>
+					<th>Fax</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>----------------------</td>
+					<td>----------------------</td>
+					<td>----------------------</td>
+					<td>----------------------</td>
+					<td>----------------------</td>
+					<td>----------------------</td>
+					<td>----------------------</td>
+					<td>----------------------</td>
+					<td>----------------------</td>
+					<td>----------------------</td>
+					<td>----------------------</td>
+					<td>----------------------</td>
+					<td>----------------------</td>
+				</tr>
+			</tbody>
+		</table>
 		<br class="spacer" />
 	</div>
 	<div class="element">
@@ -204,10 +385,6 @@ $this->note = 'Use this form to process a sale.';
 				<option value="in-store">In Store</option>
 				<option value="shipped">Shipped to Customer</option>
 			</select></label>
-	</div>
-	<div class="element">
-		<label><span class="label">Payment Method</span>
-			<input class="field" type="text" name="payment_method" size="20" value="<?php echo $this->entity->payment_method; ?>" /></label>
 	</div>
 	<div class="element full_width">
 		<span class="label">Products</span>
@@ -222,6 +399,7 @@ $this->note = 'Use this form to process a sale.';
 							<th>Quantity</th>
 							<th>Price</th>
 							<th>Line Total</th>
+							<th>Add. Tax/Fee</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -243,6 +421,23 @@ $this->note = 'Use this form to process a sale.';
 			</div>
 			<input class="field" type="hidden" id="products" name="products" size="20" />
 		</div>
+	</div>
+	<div class="element full_width">
+		<span class="label">Ticket Totals</span>
+		<div class="group">
+			<div class="field" style="float: right; font-weight: bold; text-align: right;">
+				<span class="label">Subtotal</span><span class="field" id="subtotal">0.00</span><br />
+				<span class="label">Item Tax/Fees</span><span class="field" id="itemtaxesfees">0.00</span><br />
+				<span class="label">Ticket Tax/Fees</span><span class="field" id="taxesfees">0.00</span><br />
+				<hr /><br />
+				<span class="label">Total</span><span class="field" id="total">0.00</span>
+			</div>
+			<hr class="field" style="clear: both;" />
+		</div>
+	</div>
+	<div class="element">
+		<label><span class="label">Payment Method</span>
+			<input class="field" type="text" name="payment_method" size="20" value="<?php echo $this->entity->payment_method; ?>" /></label>
 	</div>
 	<div class="element full_width">
 		<label><span class="label">Comments</span>

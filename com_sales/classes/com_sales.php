@@ -845,6 +845,10 @@ class com_sales extends component {
 				return;
 			}
 		}
+		$module->tax_fees = $config->entity_manager->get_entities_by_tags('com_sales', 'tax_fee');
+		if (!is_array($module->tax_fees)) {
+			$module->tax_fees = array();
+		}
 
 		$module->new_option = $new_option;
 		$module->new_action = $new_action;

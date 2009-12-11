@@ -495,8 +495,8 @@ $this->note = 'Provide product details in this form.';
 					<input class="field" type="checkbox" name="tax_exempt" size="20" value="ON"<?php echo $this->entity->tax_exempt ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="element">
-				<label><span class="label">Additional Taxes/Fees</span>
-					<span class="note">These taxes will be applied in addition to the group's default taxes. If you select a tax applied to a group, it will be applied twice to this product for that group.</span>
+				<label><span class="label">Additional Fees</span>
+					<span class="note">These fees will be applied in addition to the group's default taxes. If you select a fee/tax applied to a group, it will be applied twice to this product for that group.</span>
 					<span class="note">Hold Ctrl (Command on Mac) to select multiple.</span>
 					<select class="field" name="additional_tax_fees[]" size="6" multiple="multiple">
 						<?php foreach ($this->tax_fees as $cur_tax_fee) { ?>

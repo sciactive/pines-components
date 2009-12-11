@@ -176,15 +176,7 @@ $this->note = 'Use this form to process a sale.';
 													serial = prompt("This item is serialized. Please provide the serial:");
 												}
 											}
-											products_table.pgrid_add([{key: data.guid, values: [
-													data.sku,
-													data.name,
-													serial,
-													1,
-													data.unit_price,
-													"",
-													""
-											]}], function(){
+											products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 1, data.unit_price, "", "", ""]}], function(){
 												var cur_row = $(this);
 												cur_row.data("product", data);
 											});
@@ -198,12 +190,10 @@ $this->note = 'Use this form to process a sale.';
 							});
 						}
 					},
-					{
-						type: 'separator'
-					},
+					{type: 'separator'},
 					{
 						type: 'button',
-						text: 'Change Serial',
+						text: 'Serial',
 						extra_class: 'icon picon_16x16_stock_generic_stock_id',
 						double_click: true,
 						click: function(e, rows){
@@ -222,7 +212,7 @@ $this->note = 'Use this form to process a sale.';
 					},
 					{
 						type: 'button',
-						text: 'Change Quantity',
+						text: 'Quantity',
 						extra_class: 'icon picon_16x16_stock_data_stock_record-number',
 						double_click: true,
 						click: function(e, rows){
@@ -235,6 +225,26 @@ $this->note = 'Use this form to process a sale.';
 							} while ((parseInt(qty) < 1 || isNaN(parseInt(qty))) && qty != null);
 							if (qty != null) {
 								rows.pgrid_set_value(4, parseInt(qty));
+								update_products();
+							}
+						}
+					},
+					{
+						type: 'button',
+						text: 'Discount',
+						extra_class: 'icon picon_16x16_stock_form_stock_form-currency-field',
+						click: function(e, rows){
+							var product = rows.data("product");
+							if (!product.discountable) {
+								alert("The selected product is not discountable.")
+								return;
+							}
+							var discount = rows.pgrid_get_value(6);
+							do {
+								discount = prompt("Enter an amount($#.##) or a percent (#.##%) to discount each unit:", discount);
+							} while ((!discount.match(/^(\$-?\d+(\.\d+)?)|(-?\d+(\.\d+)?%)$/)) && discount != null);
+							if (discount != null) {
+								rows.pgrid_set_value(6, discount);
 								update_products();
 							}
 						}
@@ -258,7 +268,7 @@ $this->note = 'Use this form to process a sale.';
 				return;
 			var subtotal = 0;
 			var taxes = 0;
-			var itemtaxes = 0;
+			var itemfees = 0;
 			var total = 0;
 			require_customer = false;
 			rows.each(function(){
@@ -269,11 +279,27 @@ $this->note = 'Use this form to process a sale.';
 				}
 				var price = parseFloat(cur_row.pgrid_get_value(5));
 				var qty = parseInt(cur_row.pgrid_get_value(4));
-				var cur_itemtaxes = 0;
+				var discount = cur_row.pgrid_get_value(6);
+				var cur_itemfees = 0;
 				if (isNaN(price))
 					price = 0;
 				if (isNaN(qty))
 					qty = 1;
+				if (product.discountable) {
+					if (discount.match(/^\$-?\d+(\.\d+)?$/)) {
+						discount = parseFloat(discount.replace(/[^0-9.-]/, ''));
+						price = price - discount;
+					} else if (discount.match(/^-?\d+(\.\d+)?%$/)) {
+						discount = parseFloat(discount.replace(/[^0-9.-]/, ''));
+						price = price - (price * (discount / 100));
+					}
+					if (!isNaN(product.floor) && round_to_dec(price) < round_to_dec(product.floor)) {
+						alert("The discount lowers the product's price below the limit. The maximum discount possible for this item ["+product.name+"], is $"+round_to_dec(product.unit_price - product.floor)+" or "+round_to_dec((product.unit_price - product.floor) / product.unit_price * 100)+"%.");
+						cur_row.pgrid_set_value(6, "");
+						update_products();
+						return;
+					}
+				}
 				var line_total = price * qty;
 				if (!product.tax_exempt) {
 					$.each(taxes_percent, function(){
@@ -282,22 +308,22 @@ $this->note = 'Use this form to process a sale.';
 					$.each(taxes_flat, function(){
 						taxes += this.rate * qty;
 					});
-					$.each(product.taxes_percent, function(){
-						cur_itemtaxes += (this.rate / 100) * line_total;
-					});
-					$.each(product.taxes_flat, function(){
-						cur_itemtaxes += this.rate * qty;
-					});
-					itemtaxes += cur_itemtaxes;
 				}
+				$.each(product.fees_percent, function(){
+					cur_itemfees += (this.rate / 100) * line_total;
+				});
+				$.each(product.fees_flat, function(){
+					cur_itemfees += this.rate * qty;
+				});
+				itemfees += cur_itemfees;
 				subtotal += line_total;
-				cur_row.pgrid_set_value(6, round_to_dec(line_total));
-				cur_row.pgrid_set_value(7, round_to_dec(cur_itemtaxes));
+				cur_row.pgrid_set_value(7, round_to_dec(line_total));
+				cur_row.pgrid_set_value(8, round_to_dec(cur_itemfees));
 			});
-			total = subtotal + itemtaxes + taxes;
+			total = subtotal + itemfees + taxes;
 			$("#subtotal").html(round_to_dec(subtotal));
-			$("#itemtaxesfees").html(round_to_dec(itemtaxes));
-			$("#taxesfees").html(round_to_dec(taxes));
+			$("#itemfees").html(round_to_dec(itemfees));
+			$("#taxes").html(round_to_dec(taxes));
 			$("#total").html(round_to_dec(total));
 		}
 
@@ -398,8 +424,9 @@ $this->note = 'Use this form to process a sale.';
 							<th>Serial</th>
 							<th>Quantity</th>
 							<th>Price</th>
+							<th>Discount</th>
 							<th>Line Total</th>
-							<th>Add. Tax/Fee</th>
+							<th>Fees</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -427,8 +454,8 @@ $this->note = 'Use this form to process a sale.';
 		<div class="group">
 			<div class="field" style="float: right; font-weight: bold; text-align: right;">
 				<span class="label">Subtotal</span><span class="field" id="subtotal">0.00</span><br />
-				<span class="label">Item Tax/Fees</span><span class="field" id="itemtaxesfees">0.00</span><br />
-				<span class="label">Ticket Tax/Fees</span><span class="field" id="taxesfees">0.00</span><br />
+				<span class="label">Item Fees</span><span class="field" id="itemfees">0.00</span><br />
+				<span class="label">Tax</span><span class="field" id="taxes">0.00</span><br />
 				<hr /><br />
 				<span class="label">Total</span><span class="field" id="total">0.00</span>
 			</div>

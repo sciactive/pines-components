@@ -320,7 +320,7 @@ $this->note = 'Use this form to process a sale.';
 				},
 				success: function(data){
 					if (!data) {
-						alert("No customer was found that matched the query.");
+						alert("No customers were found that matched the query.");
 						return;
 					}
 					customer_dialog.dialog('open');

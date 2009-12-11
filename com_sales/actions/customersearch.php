@@ -62,6 +62,9 @@ foreach ($customers as $key => &$cur_customer) {
 	}
 }
 
+if (empty($customers))
+	$customers = null;
+
 $page->override_doc(json_encode($customers));
 
 ?>

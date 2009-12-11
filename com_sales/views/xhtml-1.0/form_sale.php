@@ -463,18 +463,14 @@ $this->note = 'Use this form to edit a sale.';
 			<hr class="field" style="clear: both;" />
 		</div>
 	</div>
-			<div class="element">
-				<label><span class="label">Payment</span>
-					<span class="note">Double click a payment type to add a payment.</span>
-					<select class="field" name="payment_type" size="5">
-						<?php foreach ($this->payment_types as $cur_payment_type) { ?>
-						<option value="<?php echo $cur_payment_type->guid; ?>"><?php echo $cur_payment_type->name; ?></option>
-						<?php } ?>
-					</select></label>
-			</div>
 	<div class="element">
-		<label><span class="label">Payment Method</span>
-			<input class="field" type="text" name="payment_method" size="20" value="<?php echo $this->entity->payment_method; ?>" /></label>
+		<label><span class="label">Payment</span>
+			<span class="note">Double click a payment type to add a payment.</span>
+			<select class="field" name="payment_type" size="5">
+				<?php foreach ($this->payment_types as $cur_payment_type) { ?>
+				<option value="<?php echo $cur_payment_type->guid; ?>"><?php echo $cur_payment_type->name; ?></option>
+				<?php } ?>
+			</select></label>
 	</div>
 	<div class="element full_width">
 		<label><span class="label">Comments</span>

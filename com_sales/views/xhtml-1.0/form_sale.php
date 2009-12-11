@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = (is_null($this->entity->guid)) ? 'New Sale' : 'Editing ['.htmlentities($this->entity->name).']';
-$this->note = 'Use this form to process a sale.';
+$this->note = 'Use this form to edit a sale.';
 ?>
 <form class="pform" method="post" id="sale_details" action="<?php echo pines_url($this->new_option, $this->new_action); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
@@ -285,19 +285,20 @@ $this->note = 'Use this form to process a sale.';
 					price = 0;
 				if (isNaN(qty))
 					qty = 1;
-				if (product.discountable) {
+				if (product.discountable && discount != "") {
+					var discount_price;
 					if (discount.match(/^\$-?\d+(\.\d+)?$/)) {
 						discount = parseFloat(discount.replace(/[^0-9.-]/, ''));
-						price = price - discount;
+						discount_price = price - discount;
 					} else if (discount.match(/^-?\d+(\.\d+)?%$/)) {
 						discount = parseFloat(discount.replace(/[^0-9.-]/, ''));
-						price = price - (price * (discount / 100));
+						discount_price = price - (price * (discount / 100));
 					}
-					if (!isNaN(product.floor) && round_to_dec(price) < round_to_dec(product.floor)) {
+					if (!isNaN(product.floor) && round_to_dec(discount_price) < round_to_dec(product.floor)) {
 						alert("The discount lowers the product's price below the limit. The maximum discount possible for this item ["+product.name+"], is $"+round_to_dec(product.unit_price - product.floor)+" or "+round_to_dec((product.unit_price - product.floor) / product.unit_price * 100)+"%.");
 						cur_row.pgrid_set_value(6, "");
-						update_products();
-						return;
+					} else {
+						price = discount_price;
 					}
 				}
 				var line_total = price * qty;

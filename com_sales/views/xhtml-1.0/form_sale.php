@@ -469,11 +469,7 @@ $this->note = 'Use this form to edit a sale.';
 	</div>
 	<div class="element full_width">
 		<label><span class="label">Comments</span>
-			<div class="group">
-				<div class="field">
-					<textarea rows="3" cols="35" name="comments" style="width: 100%;"><?php echo $this->entity->comments; ?></textarea>
-				</div>
-			</div></label>
+			<span class="field full_width"><textarea style="width: 100%;" rows="3" cols="35" name="comments"><?php echo $this->entity->comments; ?></textarea></span></label>
 	</div>
 	<div class="element buttons">
 		<?php if ( !is_null($this->entity->guid) ) { ?>

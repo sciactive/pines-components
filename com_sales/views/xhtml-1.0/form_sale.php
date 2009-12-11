@@ -358,8 +358,8 @@ $this->note = 'Use this form to edit a sale.';
 		// ]]>
 	</script>
 	<div class="element">
-		<span class="label">Customer</span>
-		<span class="note">Enter part of a name, company, email, or phone # to search.</span>
+		<label for="customer_search"><span class="label">Customer</span>
+			<span class="note">Enter part of a name, company, email, or phone # to search.</span></label>
 		<div class="group">
 			<input class="field" type="text" id="customer" name="customer" size="20" disabled="disabled" value="<?php echo ($this->entity->customer->guid) ? "{$this->entity->customer->guid}: \"{$this->entity->customer->name}\"" : 'No Customer Selected'; ?>" />
 			<br />
@@ -463,6 +463,15 @@ $this->note = 'Use this form to edit a sale.';
 			<hr class="field" style="clear: both;" />
 		</div>
 	</div>
+			<div class="element">
+				<label><span class="label">Payment</span>
+					<span class="note">Double click a payment type to add a payment.</span>
+					<select class="field" name="payment_type" size="5">
+						<?php foreach ($this->payment_types as $cur_payment_type) { ?>
+						<option value="<?php echo $cur_payment_type->guid; ?>"><?php echo $cur_payment_type->name; ?></option>
+						<?php } ?>
+					</select></label>
+			</div>
 	<div class="element">
 		<label><span class="label">Payment Method</span>
 			<input class="field" type="text" name="payment_method" size="20" value="<?php echo $this->entity->payment_method; ?>" /></label>

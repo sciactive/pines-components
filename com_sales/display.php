@@ -58,6 +58,10 @@ if ( gatekeeper('com_sales/managestock') ||
 		$page->main_menu->add('Shippers', pines_url('com_sales', 'listshippers'), $com_sales_menu_id_setup);
 	if ( gatekeeper('com_sales/newshipper') )
 		$page->main_menu->add('New Shipper', pines_url('com_sales', 'newshipper'), $com_sales_menu_id_setup);
+	if ( gatekeeper('com_sales/managepaymenttypes') )
+		$page->main_menu->add('Payment Types', pines_url('com_sales', 'listpaymenttypes'), $com_sales_menu_id_setup);
+	if ( gatekeeper('com_sales/newpaymenttype') )
+		$page->main_menu->add('New Payment Type', pines_url('com_sales', 'newpaymenttype'), $com_sales_menu_id_setup);
 	if ( gatekeeper('com_sales/managetaxfees') )
 		$page->main_menu->add('Taxes/Fees', pines_url('com_sales', 'listtaxfees'), $com_sales_menu_id_setup);
 	if ( gatekeeper('com_sales/newtaxfee') )

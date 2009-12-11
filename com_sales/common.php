@@ -37,6 +37,10 @@ $config->ability_manager->add('com_sales', 'managetaxfees', 'Manage Taxes/Fees',
 $config->ability_manager->add('com_sales', 'newtaxfee', 'Create Taxes/Fees', 'User can create new taxes/fees.');
 $config->ability_manager->add('com_sales', 'edittaxfee', 'Edit Taxes/Fees', 'User can edit current taxes/fees.');
 $config->ability_manager->add('com_sales', 'deletetaxfee', 'Delete Taxes/Fees', 'User can delete current taxes/fees.');
+$config->ability_manager->add('com_sales', 'managepaymenttypes', 'Manage Payment Types', 'User can manage payment types.');
+$config->ability_manager->add('com_sales', 'newpaymenttype', 'Create Payment Types', 'User can create new payment types.');
+$config->ability_manager->add('com_sales', 'editpaymenttype', 'Edit Payment Types', 'User can edit current payment types.');
+$config->ability_manager->add('com_sales', 'deletepaymenttype', 'Delete Payment Types', 'User can delete current payment types.');
 $config->ability_manager->add('com_sales', 'manageproducts', 'Manage Products', 'User can manage products.');
 $config->ability_manager->add('com_sales', 'newproduct', 'Create Products', 'User can create new products.');
 $config->ability_manager->add('com_sales', 'editproduct', 'Edit Products', 'User can edit current products.');

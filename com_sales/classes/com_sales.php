@@ -129,6 +129,23 @@ class com_sales extends component {
 	}
 
 	/**
+	 * Delete a payment type.
+	 *
+	 * @param int $id The GUID of the payment type.
+	 * @return bool True on success, false on failure.
+	 */
+	function delete_payment_type($id) {
+		if ( $entity = $this->get_payment_type($id) ) {
+			if ( !$entity->delete() )
+				return false;
+			pines_log("Deleted payment type $entity->name.", 'notice');
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Delete a PO.
 	 *
 	 * @param int $id The GUID of the PO.
@@ -183,16 +200,16 @@ class com_sales extends component {
 	}
 
 	/**
-	 * Delete a tax/free.
+	 * Delete a tax/fee.
 	 *
 	 * @param int $id The GUID of the tax/fee.
 	 * @return bool True on success, false on failure.
 	 */
-	function delete_tax_free($id) {
+	function delete_tax_fee($id) {
 		if ( $entity = $this->get_tax_fee($id) ) {
 			if ( !$entity->delete() )
 				return false;
-			pines_log("Deleted tax / free $entity->name.", 'notice');
+			pines_log("Deleted tax/fee $entity->name.", 'notice');
 			return true;
 		} else {
 			return false;
@@ -283,6 +300,18 @@ class com_sales extends component {
 	function get_manufacturer($id) {
 		global $config;
 		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'manufacturer'));
+		return $entity;
+	}
+
+	/**
+	 * Gets a payment type by GUID.
+	 *
+	 * @param int $id The payment type's GUID.
+	 * @return entity|null The payment type if it exists, null if it doesn't.
+	 */
+	function get_payment_type($id) {
+		global $config;
+		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'payment_type'));
 		return $entity;
 	}
 
@@ -462,6 +491,28 @@ class com_sales extends component {
 			$pgrid->detach();
 			$module->detach();
 			display_notice("There are no manufacturers.");
+		}
+	}
+
+	/**
+	 * Creates and attaches a module which lists payment types.
+	 */
+	function list_payment_types() {
+		global $config;
+
+		$pgrid = new module('system', 'pgrid.default', 'head');
+		$pgrid->icons = true;
+
+		$module = new module('com_sales', 'list_payment_types', 'content');
+		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_payment_types'];
+
+		$module->payment_types = $config->entity_manager->get_entities_by_tags('com_sales', 'payment_type');
+
+		if ( empty($module->payment_types) ) {
+			$pgrid->detach();
+			$module->detach();
+			display_notice("There are no payment types.");
 		}
 	}
 
@@ -706,6 +757,35 @@ class com_sales extends component {
 	}
 
 	/**
+	 * Creates and attaches a module containing a form for editing a payment type.
+	 *
+	 * If $id is null, or not given, a blank form will be provided.
+	 *
+	 * @param string $new_option The option to which the form will submit.
+	 * @param string $new_action The action to which the form will submit.
+	 * @param int $id The GUID of the payment type to edit.
+	 * @return module|null The new module on success, nothing on failure.
+	 */
+	function print_payment_type_form($new_option, $new_action, $id = NULL) {
+		global $config;
+		$module = new module('com_sales', 'form_payment_type', 'content');
+		if ( is_null($id) ) {
+			$module->entity = new entity;
+		} else {
+			$module->entity = $this->get_payment_type($id);
+			if (is_null($module->entity)) {
+				display_error('Requested payment type id is not accessible.');
+				$module->detach();
+				return;
+			}
+		}
+		$module->new_option = $new_option;
+		$module->new_action = $new_action;
+
+		return $module;
+	}
+
+	/**
 	 * Creates and attaches a module containing a form for editing a PO.
 	 *
 	 * If $id is null, or not given, a blank form will be provided.
@@ -848,6 +928,15 @@ class com_sales extends component {
 		$module->tax_fees = $config->entity_manager->get_entities_by_tags('com_sales', 'tax_fee');
 		if (!is_array($module->tax_fees)) {
 			$module->tax_fees = array();
+		}
+		$module->payment_types = $config->entity_manager->get_entities_by_tags('com_sales', 'payment_type');
+		if (!is_array($module->payment_types)) {
+			$module->payment_types = array();
+		}
+		foreach ($module->payment_types as $key => $cur_payment_type) {
+			if (!$cur_payment_type->enabled) {
+				unset($module->payment_types[$key]);
+			}
 		}
 
 		$module->new_option = $new_option;

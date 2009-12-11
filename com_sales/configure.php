@@ -56,6 +56,13 @@ return array (
   ),
   6 =>
   array (
+	'name' => 'global_payment_types',
+	'cname' => 'Globalize Payment Types',
+	'description' => 'Ensure that every user can access all payment types by setting the "other" access control to read.',
+	'value' => true,
+  ),
+  7 =>
+  array (
 	'name' => 'global_tax_fees',
 	'cname' => 'Globalize Taxes/Fees',
 	'description' => 'Ensure that every user can access all taxes and fees by setting the "other" access control to read.',

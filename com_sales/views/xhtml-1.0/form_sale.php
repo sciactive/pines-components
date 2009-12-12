@@ -137,6 +137,7 @@ $this->note = 'Use this form to edit a sale.';
 			});
 
 			products_table.pgrid({
+				pgrid_view_height: "160px",
 				pgrid_paginate: false,
 				pgrid_toolbar: true,
 				pgrid_toolbar_contents : [
@@ -183,9 +184,6 @@ $this->note = 'Use this form to edit a sale.';
 												cur_row.data("product", data);
 											});
 											update_products();
-
-											// delete this when done testing.
-											$("textarea").val((JSON.stringify(data)));
 										}
 									});
 								}
@@ -282,6 +280,94 @@ $this->note = 'Use this form to edit a sale.';
 					}
 				]
 			});
+
+			$("button.payment-button").hover(function(){
+				$(this).addClass("ui-state-hover");
+			}, function(){
+				$(this).removeClass("ui-state-hover");
+			}).click(function(){
+				var payment_type = JSON.parse(this.value);
+				// TODO: Minimums
+				$("<div title=\"Payment Amount\" />").each(function(){
+					var amount_dialog = $(this);
+					amount_dialog.append($("<button />").addClass("ui-state-default ui-corner-all").hover(function(){
+						$(this).addClass("ui-state-hover");
+					}, function(){
+						$(this).removeClass("ui-state-hover");
+					}).html($("#amount_due").html()).css({
+						"float": "left",
+						"clear": "both",
+						"min-height": "60px",
+						"width": "100%",
+						"text-align": "center",
+						"margin": "2px"
+					}).click(function(){
+						payments_table.pgrid_add([{key: payment_type.guid, values: [
+							payment_type.name,
+							round_to_dec($("#amount_due").html())
+						]}]);
+						amount_dialog.dialog("close");
+						update_payments();
+					}));
+					$.each([
+						"1",
+						"5",
+						"10",
+						"20",
+						"50",
+						"100"
+					], function(){
+						var cur_amount = this;
+						amount_dialog.append($("<button />").addClass("ui-state-default ui-corner-all").hover(function(){
+							$(this).addClass("ui-state-hover");
+						}, function(){
+							$(this).removeClass("ui-state-hover");
+						}).html(String(cur_amount)).css({
+							"float": "left",
+							"min-height": "60px",
+							"min-width": "60px",
+							"text-align": "center",
+							"margin": "2px"
+						}).click(function(){
+							payments_table.pgrid_add([{key: payment_type.guid, values: [
+								payment_type.name,
+								round_to_dec(cur_amount)
+							]}]);
+							amount_dialog.dialog("close");
+							update_payments();
+						}));
+					});
+					amount_dialog.append($("<button />").addClass("ui-state-default ui-corner-all").hover(function(){
+						$(this).addClass("ui-state-hover");
+					}, function(){
+						$(this).removeClass("ui-state-hover");
+					}).html("Another Amount").css({
+						"float": "left",
+						"clear": "both",
+						"min-height": "60px",
+						"width": "100%",
+						"text-align": "center",
+						"margin": "2px"
+					}).click(function(){
+						var cur_amount = null;
+						do {
+							cur_amount = prompt("Amount in dollars:", cur_amount);
+						} while (isNaN(parseInt(cur_amount)) && cur_amount != null);
+						if (cur_amount != null) {
+							payments_table.pgrid_add([{key: payment_type.guid, values: [
+								payment_type.name,
+								round_to_dec(cur_amount)
+							]}]);
+						}
+						amount_dialog.dialog("close");
+						update_payments();
+					}));
+				}).dialog({
+					bgiframe: true,
+					autoOpen: true,
+					modal: true
+				});
+			});
 		});
 
 		function update_products() {
@@ -348,10 +434,32 @@ $this->note = 'Use this form to edit a sale.';
 			$("#itemfees").html(round_to_dec(itemfees));
 			$("#taxes").html(round_to_dec(taxes));
 			$("#total").html(round_to_dec(total));
+			update_payments();
 		}
 
 		function update_payments() {
-			// TODO: Update amount tendered, amount due, change.
+			var rows = payments_table.pgrid_get_all_rows();
+			var total = parseFloat($("#total").html());
+			var amount_tendered = 0;
+			var amount_due = 0;
+			var change = 0;
+			if (isNaN(total))
+				return;
+			rows.each(function(){
+				var cur_row = $(this);
+				var amount = parseFloat(cur_row.pgrid_get_value(2));
+				if (isNaN(amount))
+					amount = 0;
+				amount_tendered += amount;
+			});
+			amount_due = total - amount_tendered;
+			if (amount_due < 0) {
+				change = Math.abs(amount_due);
+				amount_due = 0;
+			}
+			$("#amount_tendered").html(round_to_dec(amount_tendered));
+			$("#amount_due").html(round_to_dec(amount_due));
+			$("#change").html(round_to_dec(change));
 		}
 
 		function customer_search(search_string) {
@@ -479,7 +587,7 @@ $this->note = 'Use this form to edit a sale.';
 	<div class="element full_width">
 		<span class="label">Ticket Totals</span>
 		<div class="group">
-			<div class="field" style="float: right; font-weight: bold; text-align: right;">
+			<div class="field" style="float: right; font-size: 1.2em; text-align: right;">
 				<span class="label">Subtotal</span><span class="field" id="subtotal">0.00</span><br />
 				<span class="label">Item Fees</span><span class="field" id="itemfees">0.00</span><br />
 				<span class="label">Tax</span><span class="field" id="taxes">0.00</span><br />
@@ -492,101 +600,14 @@ $this->note = 'Use this form to edit a sale.';
 	<div class="element full_width">
 		<span class="label">Payments</span>
 		<div class="group">
-			<script type="text/javascript">
-				// <![CDATA[
-				$(function(){
-					$("button.payment-button").hover(function(){
-						$(this).addClass("ui-state-hover");
-					}, function(){
-						$(this).removeClass("ui-state-hover");
-					}).click(function(){
-						var payment_type = JSON.parse(this.value);
-						// TODO: Minimums
-						$("<div title=\"Payment Amount\" />").each(function(){
-							var amount_dialog = $(this);
-							amount_dialog.append($("<button />").addClass("ui-state-default ui-corner-all").hover(function(){
-								$(this).addClass("ui-state-hover");
-							}, function(){
-								$(this).removeClass("ui-state-hover");
-							}).html($("#total").html()).css({
-								"float": "left",
-								"clear": "both",
-								"min-height": "60px",
-								"width": "100%",
-								"text-align": "center",
-								"margin": "2px"
-							}).click(function(){
-								payments_table.pgrid_add([{key: payment_type.guid, values: [
-									payment_type.name,
-									round_to_dec($("#total").html())
-								]}]);
-								amount_dialog.dialog("close");
-							}));
-							$.each([
-								"1",
-								"5",
-								"10",
-								"20",
-								"50",
-								"100"
-							], function(){
-								var cur_amount = this;
-								amount_dialog.append($("<button />").addClass("ui-state-default ui-corner-all").hover(function(){
-									$(this).addClass("ui-state-hover");
-								}, function(){
-									$(this).removeClass("ui-state-hover");
-								}).html(String(cur_amount)).css({
-									"float": "left",
-									"min-height": "60px",
-									"min-width": "60px",
-									"text-align": "center",
-									"margin": "2px"
-								}).click(function(){
-									payments_table.pgrid_add([{key: payment_type.guid, values: [
-										payment_type.name,
-										round_to_dec(cur_amount)
-									]}]);
-									amount_dialog.dialog("close");
-								}));
-							});
-							amount_dialog.append($("<button />").addClass("ui-state-default ui-corner-all").hover(function(){
-								$(this).addClass("ui-state-hover");
-							}, function(){
-								$(this).removeClass("ui-state-hover");
-							}).html("Another Amount").css({
-								"float": "left",
-								"clear": "both",
-								"min-height": "60px",
-								"width": "100%",
-								"text-align": "center",
-								"margin": "2px"
-							}).click(function(){
-								var cur_amount = null;
-								do {
-									cur_amount = prompt("Amount in dollars:", cur_amount);
-								} while (isNaN(parseInt(cur_amount)) && cur_amount != null);
-								if (cur_amount != null) {
-									payments_table.pgrid_add([{key: payment_type.guid, values: [
-										payment_type.name,
-										round_to_dec(cur_amount)
-									]}]);
-								}
-								amount_dialog.dialog("close");
-							}));
-						}).dialog({
-							bgiframe: true,
-							autoOpen: true,
-							modal: true
-						});
-					});
-				});
-				// ]]>
-			</script>
-			<?php foreach ($this->payment_types as $cur_payment_type) { ?>
-			<button id="payment_<?php echo $cur_payment_type->guid; ?>" class="field ui-state-default ui-corner-all payment-button" type="button" value="<?php echo htmlentities(json_encode((object) array("guid" => $cur_payment_type->guid, "name" => $cur_payment_type->name, "minimum" => $cur_payment_type->minimum))); ?>">
-				<span class="picon_32x32_actions_list-add" style="display: block; padding-top: 32px; min-width: 32px; background-repeat: no-repeat; background-position: top center;"><?php echo $cur_payment_type->name; ?></span>
-			</button>
-			<?php } ?>
+			<div style="float: right;">
+				<?php foreach ($this->payment_types as $cur_payment_type) { ?>
+				<button id="payment_<?php echo $cur_payment_type->guid; ?>" class="field ui-state-default ui-corner-all payment-button" type="button" value="<?php echo htmlentities(json_encode((object) array("guid" => $cur_payment_type->guid, "name" => $cur_payment_type->name, "minimum" => $cur_payment_type->minimum))); ?>">
+					<span class="picon_32x32_actions_list-add" style="display: block; padding-top: 32px; min-width: 32px; background-repeat: no-repeat; background-position: top center;"><?php echo $cur_payment_type->name; ?></span>
+				</button>
+				<?php } ?>
+			</div>
+			<br style="clear: both;" />
 		</div>
 		<div style="margin-top: 5px;" class="group">
 			<div class="field">
@@ -611,6 +632,18 @@ $this->note = 'Use this form to edit a sale.';
 				</table>
 			</div>
 			<input class="field" type="hidden" id="payments" name="payments" size="20" />
+		</div>
+	</div>
+	<div class="element full_width">
+		<span class="label">Tendered</span>
+		<div class="group">
+			<div class="field" style="float: right; font-size: 1.2em; text-align: right;">
+				<span class="label">Amount Tendered</span><span class="field" id="amount_tendered">0.00</span><br />
+				<span class="label">Amount Due</span><span style="font-weight: bold;" class="field" id="amount_due">0.00</span><br />
+				<hr /><br />
+				<span class="label">Change</span><span style="font-weight: bold;" class="field" id="change">0.00</span>
+			</div>
+			<hr class="field" style="clear: both;" />
 		</div>
 	</div>
 	<div class="element full_width">

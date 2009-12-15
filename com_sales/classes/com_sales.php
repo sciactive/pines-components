@@ -1086,7 +1086,7 @@ class com_sales extends component {
 	 * @return float|string Float if $string is false, formatted string otherwise.
 	 */
 	function round($value, $decimal, $string = true) {
-		$rnd = 10 ^ $decimal;
+		$rnd = pow(10, $decimal);
 		$mult = $value * $rnd;
 		$value = $this->gaussian_round($mult);
 		$value /= $rnd;

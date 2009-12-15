@@ -22,8 +22,13 @@ $code = strtolower($_REQUEST['code']);
 
 if (empty($code)) {
 	$product = null;
-} else {
+} elseif(!$_REQUEST['useguid']) {
 	$product = $config->run_sales->get_product_by_code($code);
+	if (!$product->enabled) {
+		$product = null;
+	}
+} else {
+	$product = $config->run_sales->get_product($code);
 	if (!$product->enabled) {
 		$product = null;
 	}

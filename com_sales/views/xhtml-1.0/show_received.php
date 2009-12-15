@@ -11,6 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Received Inventory';
+$i = 1;
 ?>
 <?php if (empty($this->success)) { ?>
 <p>No inventory was received.</p>
@@ -18,6 +19,9 @@ $this->title = 'Received Inventory';
 
 <?php foreach($this->success as $cur_success) { ?>
 <div class="pform">
+	<div class="element heading">
+		<h1>Ietm <?php echo $i; $i++; ?></h1>
+	</div>
 	<div class="element">
 		<span class="label">Product</span>
 		<span class="field"><?php echo $cur_success[0]->product->name; ?></span>

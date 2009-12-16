@@ -80,6 +80,7 @@ foreach ($sale->products as $key => &$cur_product) {
 		$product_error = true;
 	}
 	// Find the stock entry.
+	// TODO: Non-stocked or stock optional items.
 	$stock_entities = array();
 	for ($i = 0; $i < $cur_qty; $i++) {
 		$found = false;

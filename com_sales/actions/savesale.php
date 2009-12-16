@@ -99,7 +99,7 @@ foreach ($sale->products as $key => &$cur_product) {
 		}
 		if (!$found) {
 			// It wasn't found.
-			display_notice("Product with SKU [$cur_sku]".($cur_product_entity->serialized ? " and serial [$cur_serial]" : " and quantity [$cur_qty]")." was not found in the local stock.".($cur_product_entity->serialized ? '' : ' Found: '.count($stock_entities)));
+			display_notice("Product with SKU [$cur_sku]".($cur_product_entity->serialized ? " and serial [$cur_serial]" : " and quantity $cur_qty")." is not in local stock.".($cur_product_entity->serialized && count($stock_entities) ? ' None were found.' : ' Only found '.count($stock_entities)));
 			$product_error = true;
 			break;
 		}

@@ -181,7 +181,7 @@ $this->note = 'Use this form to edit a sale.';
 													serial = prompt("This item is serialized. Please provide the serial:");
 												}
 											}
-											products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 1, data.unit_price, "", "", ""]}], function(){
+											products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'in-store', 1, data.unit_price, "", "", ""]}], function(){
 												var cur_row = $(this);
 												cur_row.data("product", data);
 											});
@@ -214,6 +214,20 @@ $this->note = 'Use this form to edit a sale.';
 					},
 					{
 						type: 'button',
+						text: 'Delivery',
+						extra_class: 'icon picon_16x16_emblems_emblem-package',
+						multi_select: true,
+						click: function(e, rows){
+							rows.each(function(){
+								var delivery = rows.pgrid_get_value(4);
+								delivery = (delivery == 'in-store') ? 'shipped' : 'in-store';
+								rows.pgrid_set_value(4, delivery);
+							});
+							update_products();
+						}
+					},
+					{
+						type: 'button',
 						text: 'Quantity',
 						extra_class: 'icon picon_16x16_stock_data_stock_record-number',
 						double_click: true,
@@ -221,12 +235,12 @@ $this->note = 'Use this form to edit a sale.';
 							var product = rows.data("product");
 							if (product.serialized)
 								return;
-							var qty = rows.pgrid_get_value(4);
+							var qty = rows.pgrid_get_value(5);
 							do {
 								qty = prompt("Please enter a quantity:", qty);
 							} while ((parseInt(qty) < 1 || isNaN(parseInt(qty))) && qty != null);
 							if (qty != null) {
-								rows.pgrid_set_value(4, parseInt(qty));
+								rows.pgrid_set_value(5, parseInt(qty));
 								update_products();
 							}
 						}
@@ -241,12 +255,12 @@ $this->note = 'Use this form to edit a sale.';
 								alert("The selected product is not discountable.")
 								return;
 							}
-							var discount = rows.pgrid_get_value(6);
+							var discount = rows.pgrid_get_value(7);
 							do {
 								discount = prompt("Enter an amount($#.##) or a percent (#.##%) to discount each unit:", discount);
 							} while ((!discount.match(/^(\$-?\d+(\.\d+)?)|(-?\d+(\.\d+)?%)$/)) && discount != null);
 							if (discount != null) {
-								rows.pgrid_set_value(6, discount);
+								rows.pgrid_set_value(7, discount);
 								update_products();
 							}
 						}
@@ -399,9 +413,9 @@ $this->note = 'Use this form to edit a sale.';
 				if (product.require_customer) {
 					require_customer = true;
 				}
-				var price = parseFloat(cur_row.pgrid_get_value(5));
-				var qty = parseInt(cur_row.pgrid_get_value(4));
-				var discount = cur_row.pgrid_get_value(6);
+				var price = parseFloat(cur_row.pgrid_get_value(6));
+				var qty = parseInt(cur_row.pgrid_get_value(5));
+				var discount = cur_row.pgrid_get_value(7);
 				var cur_itemfees = 0;
 				if (isNaN(price))
 					price = 0;
@@ -418,7 +432,7 @@ $this->note = 'Use this form to edit a sale.';
 					}
 					if (!isNaN(product.floor) && round_to_dec(discount_price) < round_to_dec(product.floor)) {
 						alert("The discount lowers the product's price below the limit. The maximum discount possible for this item ["+product.name+"], is $"+round_to_dec(product.unit_price - product.floor)+" or "+round_to_dec((product.unit_price - product.floor) / product.unit_price * 100)+"%.");
-						cur_row.pgrid_set_value(6, "");
+						cur_row.pgrid_set_value(7, "");
 					} else {
 						price = discount_price;
 					}
@@ -440,8 +454,8 @@ $this->note = 'Use this form to edit a sale.';
 				});
 				itemfees += cur_itemfees;
 				subtotal += line_total;
-				cur_row.pgrid_set_value(7, round_to_dec(line_total));
-				cur_row.pgrid_set_value(8, round_to_dec(cur_itemfees));
+				cur_row.pgrid_set_value(8, round_to_dec(line_total));
+				cur_row.pgrid_set_value(9, round_to_dec(cur_itemfees));
 			});
 			total = subtotal + itemfees + taxes;
 			$("#subtotal").html(round_to_dec(subtotal));
@@ -466,7 +480,7 @@ $this->note = 'Use this form to edit a sale.';
 			// Calculate the total payments.
 			rows.each(function(){
 				var cur_row = $(this);
-				var amount = parseFloat(cur_row.pgrid_get_value(2));
+				var amount = parseFloat(cur_row.pgrid_get_value(2).replace(/[^0-9.-]/g, ""));
 				if (isNaN(amount))
 					amount = 0;
 				amount_tendered += amount;
@@ -561,13 +575,6 @@ $this->note = 'Use this form to edit a sale.';
 		</table>
 		<br class="spacer" />
 	</div>
-	<div class="element">
-		<label><span class="label">Delivery Method</span>
-			<select class="field" name="delivery_method">
-				<option value="in-store"<?php echo $this->entity->delivery_method == 'in-store' ? ' selected="selected"' : '' ?>>In Store</option>
-				<option value="shipped"<?php echo $this->entity->delivery_method == 'shipped' ? ' selected="selected"' : '' ?>>Shipped to Customer</option>
-			</select></label>
-	</div>
 	<div class="element full_width">
 		<span class="label">Products</span>
 		<div class="group">
@@ -578,6 +585,7 @@ $this->note = 'Use this form to edit a sale.';
 							<th>SKU</th>
 							<th>Product</th>
 							<th>Serial</th>
+							<th>Delivery</th>
 							<th>Quantity</th>
 							<th>Price</th>
 							<th>Discount</th>
@@ -594,6 +602,7 @@ $this->note = 'Use this form to edit a sale.';
 							<td><?php echo $cur_product['entity']->sku; ?></td>
 							<td><?php echo $cur_product['entity']->name; ?></td>
 							<td><?php echo $cur_product['serial']; ?></td>
+							<td><?php echo $cur_product['delivery']; ?></td>
 							<td><?php echo $cur_product['quantity']; ?></td>
 							<td><?php echo $cur_product['price']; ?></td>
 							<td><?php echo $cur_product['discount']; ?></td>

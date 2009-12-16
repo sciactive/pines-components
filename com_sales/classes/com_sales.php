@@ -1091,7 +1091,7 @@ class com_sales extends component {
 		$value = $this->gaussian_round($mult);
 		$value /= $rnd;
 		if ($string)
-			$value = number_format($value, $decimal);
+			$value = number_format($value, $decimal, '.', '');
 		return ($value);
 	}
 

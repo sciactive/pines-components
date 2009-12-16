@@ -35,9 +35,6 @@ if (preg_match('/^\d+/', $sale->customer)) {
 } else {
 	$sale->customer = null;
 }
-$sale->delivery_method = $_REQUEST['delivery_method'];
-if (!in_array($sale->delivery_method, array('in-store', 'shipped')))
-	$sale->delivery_method = 'in-store';
 // Used for product error checking.
 $product_error = false;
 $sale->products = json_decode($_REQUEST['products']);
@@ -52,9 +49,12 @@ foreach ($sale->products as $key => &$cur_product) {
 	$cur_product_entity = $config->run_sales->get_product(intval($cur_product->key));
 	$cur_sku = $cur_product->values[0];
 	$cur_serial = $cur_product->values[2];
-	$cur_qty = intval($cur_product->values[3]);
-	$cur_price = floatval($cur_product->values[4]);
-	$cur_discount = $cur_product->values[5];
+	$cur_delivery = $cur_product->values[3];
+	if (!in_array($cur_delivery, array('in-store', 'shipped')))
+		$cur_delivery = 'in-store';
+	$cur_qty = intval($cur_product->values[4]);
+	$cur_price = floatval($cur_product->values[5]);
+	$cur_discount = $cur_product->values[6];
 	if (is_null($cur_product_entity)) {
 		display_notice("Product with id [$cur_product->key] and entered SKU [$cur_sku] was not found.");
 		unset($sale->products[$key]);
@@ -110,6 +110,7 @@ foreach ($sale->products as $key => &$cur_product) {
 		'stock_entities' => $stock_entities,
 		'sku' => $cur_sku,
 		'serial' => $cur_serial,
+		'delivery' => $cur_delivery,
 		'quantity' => $cur_qty,
 		'price' => $cur_price,
 		'discount' => $cur_discount

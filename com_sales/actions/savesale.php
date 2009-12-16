@@ -26,7 +26,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listsales', null, false));
 		return;
 	}
-	$sale = new entity('com_sales', 'sale');
+	$sale = new com_sales_sale;
 }
 
 $sale->customer = $_REQUEST['customer'];
@@ -43,6 +43,10 @@ $product_error = false;
 $sale->products = json_decode($_REQUEST['products']);
 if (!is_array($sale->products))
 	$sale->products = array();
+// These will be searched through to match products to stock entries.
+$stock_entries = $config->entity_manager->get_entities_by_tags('com_sales', 'stock', com_sales_stock);
+if (empty($stock_entries))
+	$stock_entries = array();
 foreach ($sale->products as $key => &$cur_product) {
 	// TODO: Save fees, calculate total.
 	$cur_product_entity = $config->run_sales->get_product(intval($cur_product->key));
@@ -75,8 +79,33 @@ foreach ($sale->products as $key => &$cur_product) {
 		display_notice("Product with SKU [$cur_sku] is not discountable.");
 		$product_error = true;
 	}
+	// Find the stock entry.
+	$stock_entities = array();
+	for ($i = 0; $i < $cur_qty; $i++) {
+		$found = false;
+		foreach($stock_entries as $key => &$cur_stock) {
+			if (($cur_stock->status != 'available') ||
+				(!$_SESSION['user']->ingroup($cur_stock->location->guid)) ||
+				($cur_stock->product != $cur_product_entity) ||
+				($cur_product_entity->serialized && ($cur_serial != $cur_stock->serial))) {
+				continue;
+			}
+			// One was found, so save it then take it out of our search stock.
+			$found = true;
+			$stock_entities[] = clone $cur_stock;
+			unset($stock_entries[$key]);
+			break;
+		}
+		if (!$found) {
+			// It wasn't found.
+			display_notice("Product with SKU [$cur_sku]".($cur_product_entity->serialized ? " and serial [$cur_serial]" : " and quantity [$cur_qty]")." was not found in the local stock.".($cur_product_entity->serialized ? '' : ' Found: '.count($stock_entities)));
+			$product_error = true;
+			break;
+		}
+	}
 	$cur_product = array(
 		'entity' => $cur_product_entity,
+		'stock_entities' => $stock_entities,
 		'sku' => $cur_sku,
 		'serial' => $cur_serial,
 		'quantity' => $cur_qty,

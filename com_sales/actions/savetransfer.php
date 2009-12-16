@@ -43,7 +43,7 @@ if (empty($transfer->received)) {
 		$transfer->stock = array();
 	foreach ($transfer->stock as $key => &$cur_stock) {
 		$cur_stock = intval($cur_stock->key);
-		if (is_null($config->entity_manager->get_entity($cur_stock, array('com_sales', 'stock_entry'), stock_entry)))
+		if (is_null($config->entity_manager->get_entity($cur_stock, array('com_sales', 'stock'), com_sales_stock)))
 			unset($transfer->stock[$key]);
 	}
 	unset($cur_stock);

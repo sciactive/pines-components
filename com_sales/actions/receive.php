@@ -49,7 +49,7 @@ foreach ($products as $cur_product) {
 		continue;
 	}
 	for ($i = 0; $i < $cur_product['quantity']; $i++) {
-		$stock_entity = new stock_entry();
+		$stock_entity = new com_sales_stock();
 		$stock_entity->product = $cur_product_entity;
 		if ($cur_product_entity->serialized) {
 			$stock_entity->serial = $cur_product['serial'];
@@ -63,6 +63,7 @@ foreach ($products as $cur_product) {
 		$stock_entity = $origin[1];
 		
 		$stock_entity->receive($origin[0]);
+		$stock_entity->ac = (object) array('user' => 2, 'group' => 2, 'other' => 2);
 		$stock_entity->save();
 
 		$module->success[] = array($stock_entity, $origin[0]);

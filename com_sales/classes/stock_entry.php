@@ -1,6 +1,6 @@
 <?php
 /**
- * stock_entry class.
+ * com_sales_stock class.
  *
  * @package Pines
  * @subpackage com_sales
@@ -17,10 +17,10 @@ defined('P_RUN') or die('Direct access prohibited');
  * @package Pines
  * @subpackage com_sales
  */
-class stock_entry extends entity {
+class com_sales_stock extends entity {
 	public function __construct() {
 		parent::__construct();
-		$this->add_tag('com_sales', 'stock_entry');
+		$this->add_tag('com_sales', 'stock');
 	}
 
 	/**
@@ -52,7 +52,7 @@ class stock_entry extends entity {
 							continue;
 					}
 				}
-				$cur_stock = $config->entity_manager->get_entity($cur_stock_guid, array('com_sales', 'stock_entry'), stock_entry);
+				$cur_stock = $config->entity_manager->get_entity($cur_stock_guid, array('com_sales', 'stock'), com_sales_stock);
 				// If it's not the right product, move on.
 				if ($cur_stock->product->guid != $this->product->guid)
 					continue;

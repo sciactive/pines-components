@@ -185,7 +185,7 @@ $this->note = 'Use this form to transfer inventory to another location.';
 					</thead>
 					<tbody>
 						<?php if (is_array($this->entity->stock)) { foreach ($this->entity->stock as $cur_stock_guid) {
-								$stock = $config->entity_manager->get_entity($cur_stock_guid, array('com_sales', 'stock_entry'), stock_entry);
+								$stock = $config->entity_manager->get_entity($cur_stock_guid, array('com_sales', 'stock'), com_sales_stock);
 								if (is_null($stock))
 									continue;
 								?>

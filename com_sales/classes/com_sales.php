@@ -597,7 +597,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_stock'];
 
-		$module->stock = $config->entity_manager->get_entities_by_tags('com_sales', 'stock_entry', stock_entry);
+		$module->stock = $config->entity_manager->get_entities_by_tags('com_sales', 'stock', com_sales_stock);
 		$module->all = $all;
 
 		if ( empty($module->stock) ) {
@@ -1037,7 +1037,7 @@ class com_sales extends component {
 		if (!is_array($module->shippers)) {
 			$module->shippers = array();
 		}
-		$module->stock = $config->entity_manager->get_entities_by_tags('com_sales', 'stock_entry', stock_entry);
+		$module->stock = $config->entity_manager->get_entities_by_tags('com_sales', 'stock', com_sales_stock);
 		if (!is_array($module->stock)) {
 			$module->stock = array();
 		}

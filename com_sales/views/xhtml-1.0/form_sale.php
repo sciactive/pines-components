@@ -174,7 +174,7 @@ $this->note = 'Use this form to edit a sale.';
 									textbox.val("");
 									var loader;
 									$.ajax({
-										url: "<?php echo $config->template->url('com_sales', 'productsearch'); ?>",
+										url: "<?php echo pines_url('com_sales', 'productsearch'); ?>",
 										type: "POST",
 										dataType: "json",
 										data: {"code": code},
@@ -305,7 +305,7 @@ $this->note = 'Use this form to edit a sale.';
 				var cur_export = cur_row.pgrid_export_rows();
 				var cur_guid = cur_export[0].key;
 				$.ajax({
-					url: "<?php echo $config->template->url('com_sales', 'productsearch'); ?>",
+					url: "<?php echo pines_url('com_sales', 'productsearch'); ?>",
 					type: "POST",
 					async: false,
 					dataType: "json",
@@ -527,7 +527,7 @@ $this->note = 'Use this form to edit a sale.';
 		function customer_search(search_string) {
 			var loader;
 			$.ajax({
-				url: "<?php echo $config->template->url("com_sales", "customersearch"); ?>",
+				url: "<?php echo pines_url("com_sales", "customersearch"); ?>",
 				type: "POST",
 				dataType: "json",
 				data: {"q": search_string},

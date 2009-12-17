@@ -183,6 +183,23 @@ class com_sales extends component {
 	}
 
 	/**
+	 * Delete a sale.
+	 *
+	 * @param int $id The GUID of the sale.
+	 * @return bool True on success, false on failure.
+	 */
+	function delete_sale($id) {
+		if ( $entity = $this->get_sale($id) ) {
+			if ( !$entity->delete() )
+				return false;
+			pines_log("Deleted sale $entity->name.", 'notice');
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Delete a shipper.
 	 *
 	 * @param int $id The GUID of the shipper.
@@ -410,7 +427,7 @@ class com_sales extends component {
 	 */
 	function get_sale($id) {
 		global $config;
-		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'sale'));
+		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'sale'), com_sales_sale);
 		return $entity;
 	}
 
@@ -569,6 +586,28 @@ class com_sales extends component {
 			$pgrid->detach();
 			$module->detach();
 			display_notice("There are no products.");
+		}
+	}
+
+	/**
+	 * Creates and attaches a module which lists sales.
+	 */
+	function list_sales() {
+		global $config;
+
+		$pgrid = new module('system', 'pgrid.default', 'head');
+		$pgrid->icons = true;
+
+		$module = new module('com_sales', 'list_sales', 'content');
+		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_sales'];
+
+		$module->sales = $config->entity_manager->get_entities_by_tags('com_sales', 'sale');
+
+		if ( empty($module->sales) ) {
+			$pgrid->detach();
+			$module->detach();
+			display_notice("There are no sales.");
 		}
 	}
 
@@ -940,6 +979,11 @@ class com_sales extends component {
 		$module->tax_fees = $config->entity_manager->get_entities_by_tags('com_sales', 'tax_fee');
 		if (!is_array($module->tax_fees)) {
 			$module->tax_fees = array();
+		}
+		foreach ($module->tax_fees as $key => $cur_tax_fee) {
+			if (!$cur_tax_fee->enabled) {
+				unset($module->tax_fees[$key]);
+			}
 		}
 		$module->payment_types = $config->entity_manager->get_entities_by_tags('com_sales', 'payment_type');
 		if (!is_array($module->payment_types)) {

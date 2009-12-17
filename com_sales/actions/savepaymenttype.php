@@ -31,6 +31,7 @@ if ( isset($_REQUEST['id']) ) {
 
 $payment_type->name = $_REQUEST['name'];
 $payment_type->enabled = ($_REQUEST['enabled'] == 'ON' ? true : false);
+$payment_type->change_type = ($_REQUEST['change_type'] == 'ON' ? true : false);
 $payment_type->minimum = floatval($_REQUEST['minimum']);
 
 if (empty($payment_type->name)) {
@@ -52,6 +53,21 @@ if (empty($payment_type->minimum)) {
 
 if ($config->com_sales->global_payment_types) {
 	$payment_type->ac = (object) array('other' => 1);
+}
+
+if ($payment_type->change_type) {
+	$change_type = $config->entity_manager->get_entities_by_data(array('change_type' => true), array('com_sales', 'payment_type'));
+	if (is_array($change_type) && !is_null($change_type[0])) {
+		$change_type[0]->change_type = false;
+		if ($change_type[0]->save()) {
+			display_notice("Change type changed from [{$change_type[0]->name}] to [{$payment_type->name}].");
+		} else {
+			$module = $config->run_sales->print_payment_type_form('com_sales', 'savepaymenttype');
+			$module->entity = $payment_type;
+			display_error("There was an error while changing change type from {$change_type[0]->name}. Do you have permission to edit the current change type?");
+			return;
+		}
+	}
 }
 
 if ($payment_type->save()) {

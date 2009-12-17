@@ -13,7 +13,6 @@ defined('P_RUN') or die('Direct access prohibited');
 if (is_null($this->entity->guid)) {
 	$this->title = 'New Sale';
 } elseif ($this->entity->status == 'quoted') {
-	// TODO: Process for quoting sales.
 	$this->title = 'Quoted Sale ['.htmlentities($this->entity->guid).']';
 } elseif ($this->entity->status == 'invoiced') {
 	$this->title = 'Invoiced Sale ['.htmlentities($this->entity->guid).']';
@@ -21,6 +20,7 @@ if (is_null($this->entity->guid)) {
 	$this->title = 'Paid Sale ['.htmlentities($this->entity->guid).']';
 }
 $this->note = 'Use this form to edit a sale.';
+// TODO: After a sale is invoiced, don't calculate totals, just show what's saved.
 ?>
 <form class="pform" method="post" id="sale_details" action="<?php echo pines_url($this->new_option, $this->new_action); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
@@ -54,8 +54,6 @@ $this->note = 'Use this form to edit a sale.';
 		$taxes_percent = array();
 		$taxes_flat = array();
 		foreach ($this->tax_fees as $cur_tax_fee) {
-			if (!$cur_tax_fee->enabled)
-				continue;
 			foreach($cur_tax_fee->locations as $cur_location) {
 				if (!$_SESSION['user']->ingroup($cur_location->guid))
 					continue;
@@ -109,6 +107,7 @@ $this->note = 'Use this form to edit a sale.';
 			payments_table = $("#payments_table");
 			payments = $("#payments");
 
+			<?php if ($this->entity->status != 'invoiced' || $this->entity->status != 'paid') { ?>
 			customer_search_box.keydown(function(eventObject){
 				if (eventObject.keyCode == 13) {
 					customer_search(this.value);
@@ -147,6 +146,7 @@ $this->note = 'Use this form to edit a sale.';
 					}
 				}
 			});
+			<?php } ?>
 
 			<?php if ($this->entity->status == 'invoiced' || $this->entity->status == 'paid') { ?>
 			products_table.pgrid({
@@ -420,6 +420,18 @@ $this->note = 'Use this form to edit a sale.';
 			});
 			<?php } ?>
 
+			$("#comments_dialog").dialog({
+				bgiframe: true,
+				autoOpen: false,
+				modal: true,
+				width: 600,
+				buttons: {
+					"Done": function(){
+						$("#comments_dialog").dialog('close');
+					}
+				}
+			});
+
 			// Load any initial products.
 			update_products();
 		});
@@ -430,7 +442,7 @@ $this->note = 'Use this form to edit a sale.';
 				return;
 			var subtotal = 0;
 			var taxes = 0;
-			var itemfees = 0;
+			var item_fees = 0;
 			var total = 0;
 			require_customer = false;
 			// Calculate ticket totals.
@@ -443,7 +455,7 @@ $this->note = 'Use this form to edit a sale.';
 				var price = parseFloat(cur_row.pgrid_get_value(6));
 				var qty = parseInt(cur_row.pgrid_get_value(5));
 				var discount = cur_row.pgrid_get_value(7);
-				var cur_itemfees = 0;
+				var cur_item_fees = 0;
 				if (isNaN(price))
 					price = 0;
 				if (isNaN(qty))
@@ -474,19 +486,19 @@ $this->note = 'Use this form to edit a sale.';
 					});
 				}
 				$.each(product.fees_percent, function(){
-					cur_itemfees += (this.rate / 100) * line_total;
+					cur_item_fees += (this.rate / 100) * line_total;
 				});
 				$.each(product.fees_flat, function(){
-					cur_itemfees += this.rate * qty;
+					cur_item_fees += this.rate * qty;
 				});
-				itemfees += cur_itemfees;
+				item_fees += cur_item_fees;
 				subtotal += line_total;
 				cur_row.pgrid_set_value(8, round_to_dec(line_total));
-				cur_row.pgrid_set_value(9, round_to_dec(cur_itemfees));
+				cur_row.pgrid_set_value(9, round_to_dec(cur_item_fees));
 			});
-			total = subtotal + itemfees + taxes;
+			total = subtotal + item_fees + taxes;
 			$("#subtotal").html(round_to_dec(subtotal));
-			$("#itemfees").html(round_to_dec(itemfees));
+			$("#item_fees").html(round_to_dec(item_fees));
 			$("#taxes").html(round_to_dec(taxes));
 			$("#total").html(round_to_dec(total));
 
@@ -524,6 +536,7 @@ $this->note = 'Use this form to edit a sale.';
 			payments.val(JSON.stringify(rows.pgrid_export_rows()));
 		}
 
+		<?php if ($this->entity->status != 'invoiced' || $this->entity->status != 'paid') { ?>
 		function customer_search(search_string) {
 			var loader;
 			$.ajax({
@@ -551,16 +564,22 @@ $this->note = 'Use this form to edit a sale.';
 				}
 			});
 		}
+		<?php } ?>
 		// ]]>
 	</script>
 	<div class="element">
 		<label for="customer_search"><span class="label">Customer</span>
-			<span class="note">Enter part of a name, company, email, or phone # to search.</span></label>
+			<?php if ($this->entity->status != 'invoiced' && $this->entity->status != 'paid') { ?>
+			<span class="note">Enter part of a name, company, email, or phone # to search.</span>
+			<?php } ?>
+		</label>
 		<div class="group">
 			<input class="field" type="text" id="customer" name="customer" size="20" onfocus="this.blur();" value="<?php echo htmlentities($this->entity->customer->guid ? "{$this->entity->customer->guid}: \"{$this->entity->customer->name}\"" : 'No Customer Selected'); ?>" />
+			<?php if ($this->entity->status != 'invoiced' && $this->entity->status != 'paid') { ?>
 			<br />
 			<input class="field" type="text" id="customer_search" name="customer_search" size="20" />
 			<button type="button" id="customer_search_button"><span class="picon_16x16_actions_system-search" style="padding-left: 16px; background-repeat: no-repeat;">Search</span></button>
+			<?php } ?>
 		</div>
 	</div>
 	<div id="customer_dialog" title="Pick a Customer">
@@ -648,7 +667,7 @@ $this->note = 'Use this form to edit a sale.';
 		<div class="group">
 			<div class="field" style="float: right; font-size: 1.2em; text-align: right;">
 				<span class="label">Subtotal</span><span class="field" id="subtotal">0.00</span><br />
-				<span class="label">Item Fees</span><span class="field" id="itemfees">0.00</span><br />
+				<span class="label">Item Fees</span><span class="field" id="item_fees">0.00</span><br />
 				<span class="label">Tax</span><span class="field" id="taxes">0.00</span><br />
 				<hr /><br />
 				<span class="label">Total</span><span class="field" id="total">0.00</span>
@@ -718,16 +737,34 @@ $this->note = 'Use this form to edit a sale.';
 			<hr class="field" style="clear: both;" />
 		</div>
 	</div>
-	<div class="element full_width">
+	<div class="element">
 		<label><span class="label">Comments</span>
-			<span class="field full_width"><textarea style="width: 100%;" rows="3" cols="35" name="comments"><?php echo $this->entity->comments; ?></textarea></span></label>
+			<input class="field ui-state-default ui-corner-all" type="button" value="Edit" onclick="$('#comments_dialog').dialog('open');" /></label>
+	</div>
+	<div id="comments_dialog" title="Comments">
+		<div style="height: 100%;">
+			<textarea style="width: 100%; height: 100%;" rows="3" cols="35" name="comments"><?php echo $this->entity->comments; ?></textarea>
+		</div>
 	</div>
 	<div class="element buttons">
 		<?php if ( !is_null($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
+
+		<?php if ($this->entity->status != 'paid') { ?>
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="process" value="Complete" />
+		<?php } ?>
+
+		<?php if ($this->entity->status != 'paid' && $this->entity->status != 'invoiced') { ?>
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="process" value="Invoice" />
+		<?php } ?>
+
+		<?php if ($this->entity->status != 'paid' && $this->entity->status != 'invoiced' && $this->entity->status != 'quoted') { ?>
+		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="process" value="Quote" />
+		<?php } else { ?>
+		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="process" value="Save" />
+		<?php } ?>
+
 		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_sales', 'listsales'); ?>';" value="Cancel" />
 	</div>
 </form>

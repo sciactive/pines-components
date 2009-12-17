@@ -57,6 +57,7 @@ $this->title = 'Payment Types';
 		<tr>
 			<th>Name</th>
 			<th>Enabled</th>
+			<th>Change Type</th>
 			<th>Minimum</th>
 		</tr>
 	</thead>
@@ -65,6 +66,7 @@ $this->title = 'Payment Types';
 		<tr title="<?php echo $payment_type->guid; ?>">
 			<td><?php echo $payment_type->name; ?></td>
 			<td><?php echo $payment_type->enabled ? 'True' : 'False'; ?></td>
+			<td><?php echo $payment_type->change_type ? 'True' : 'False'; ?></td>
 			<td><?php echo $payment_type->minimum; ?></td>
 		</tr>
 	<?php } ?>

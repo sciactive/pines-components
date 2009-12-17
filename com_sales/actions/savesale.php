@@ -29,11 +29,13 @@ if ( isset($_REQUEST['id']) ) {
 	$sale = new com_sales_sale;
 }
 
-$sale->customer = $_REQUEST['customer'];
-if (preg_match('/^\d+/', $sale->customer)) {
-	$sale->customer = $config->run_sales->get_customer(intval($sale->customer));
-} else {
-	$sale->customer = null;
+if ($sale->status != 'invoiced' && $sale->status != 'paid') {
+	$sale->customer = $_REQUEST['customer'];
+	if (preg_match('/^\d+/', $sale->customer)) {
+		$sale->customer = $config->run_sales->get_customer(intval($sale->customer));
+	} else {
+		$sale->customer = null;
+	}
 }
 // Used for product error checking.
 $product_error = false;
@@ -41,82 +43,56 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid') {
 	$sale->products = json_decode($_REQUEST['products']);
 	if (!is_array($sale->products))
 		$sale->products = array();
-	// These will be searched through to match products to stock entries.
-	$stock_entries = $config->entity_manager->get_entities_by_tags('com_sales', 'stock', com_sales_stock);
-	if (empty($stock_entries))
-		$stock_entries = array();
-	foreach ($sale->products as $key => &$cur_product) {
-		$cur_product_entity = $config->run_sales->get_product(intval($cur_product->key));
-		$cur_sku = $cur_product->values[0];
-		$cur_serial = $cur_product->values[2];
-		$cur_delivery = $cur_product->values[3];
-		if (!in_array($cur_delivery, array('in-store', 'shipped')))
-			$cur_delivery = 'in-store';
-		$cur_qty = intval($cur_product->values[4]);
-		$cur_price = floatval($cur_product->values[5]);
-		$cur_discount = $cur_product->values[6];
-		if (is_null($cur_product_entity)) {
-			display_notice("Product with id [$cur_product->key] and entered SKU [$cur_sku] was not found.");
-			unset($sale->products[$key]);
-			$product_error = true;
-			continue;
-		}
-		if ($cur_product_entity->serialized)
-			$cur_qty = 1;
-		if ($cur_product_entity->serialized && empty($cur_serial)) {
-			display_notice("Product with SKU [$cur_sku] requires a serial.");
-			$product_error = true;
-		}
-		if ($cur_qty < 1) {
-			display_notice("Product with SKU [$cur_sku] has a zero or negative quantity.");
-			$product_error = true;
-		}
-		if ($cur_product_entity->unit_price != $cur_price) {
-			display_notice("Product with SKU [$cur_sku] has an incorrect price.");
-			$product_error = true;
-		}
-		if (!$cur_product_entity->discountable && !empty($cur_discount)) {
-			display_notice("Product with SKU [$cur_sku] is not discountable.");
-			$product_error = true;
-		}
-		// Find the stock entry.
-		// TODO: Non-stocked or stock optional items.
-		// TODO: Ship to customer from different stock (Warehouse).
-		$stock_entities = array();
-		for ($i = 0; $i < $cur_qty; $i++) {
-			$found = false;
-			foreach($stock_entries as $key => &$cur_stock) {
-				if (($cur_stock->status != 'available') ||
-					(!$_SESSION['user']->ingroup($cur_stock->location->guid)) ||
-					($cur_stock->product != $cur_product_entity) ||
-					($cur_product_entity->serialized && ($cur_serial != $cur_stock->serial))) {
-					continue;
-				}
-				// One was found, so save it then take it out of our search stock.
-				$found = true;
-				$stock_entities[] = clone $cur_stock;
-				unset($stock_entries[$key]);
-				break;
-			}
-			if (!$found) {
-				// It wasn't found.
-				display_notice("Product with SKU [$cur_sku]".($cur_product_entity->serialized ? " and serial [$cur_serial]" : " and quantity $cur_qty")." is not in local stock.".($cur_product_entity->serialized && count($stock_entities) ? '' : ' Found '.count($stock_entities).'.'));
+	if (empty($sale->products)) {
+		display_notice("No products were selected.");
+		$product_error = true;
+	} else {
+		foreach ($sale->products as $key => &$cur_product) {
+			$cur_product_entity = $config->run_sales->get_product(intval($cur_product->key));
+			$cur_sku = $cur_product->values[0];
+			$cur_serial = $cur_product->values[2];
+			$cur_delivery = $cur_product->values[3];
+			if (!in_array($cur_delivery, array('in-store', 'shipped')))
+				$cur_delivery = 'in-store';
+			$cur_qty = intval($cur_product->values[4]);
+			$cur_price = floatval($cur_product->values[5]);
+			$cur_discount = $cur_product->values[6];
+			if (is_null($cur_product_entity)) {
+				display_error("Product with id [$cur_product->key] and entered SKU [$cur_sku] was not found.");
+				unset($sale->products[$key]);
 				$product_error = true;
-				break;
+				continue;
 			}
+			if ($cur_product_entity->serialized)
+				$cur_qty = 1;
+			if ($cur_product_entity->serialized && empty($cur_serial)) {
+				display_notice("Product with SKU [$cur_sku] requires a serial.");
+				$product_error = true;
+			}
+			if ($cur_qty < 1) {
+				display_notice("Product with SKU [$cur_sku] has a zero or negative quantity.");
+				$product_error = true;
+			}
+			if ($cur_product_entity->unit_price != $cur_price) {
+				display_notice("Product with SKU [$cur_sku] has an incorrect price.");
+				$product_error = true;
+			}
+			if (!$cur_product_entity->discountable && !empty($cur_discount)) {
+				display_notice("Product with SKU [$cur_sku] is not discountable.");
+				$product_error = true;
+			}
+			$cur_product = array(
+				'entity' => $cur_product_entity,
+				'sku' => $cur_sku,
+				'serial' => $cur_serial,
+				'delivery' => $cur_delivery,
+				'quantity' => $cur_qty,
+				'price' => $cur_price,
+				'discount' => $cur_discount
+			);
 		}
-		$cur_product = array(
-			'entity' => $cur_product_entity,
-			'stock_entities' => $stock_entities,
-			'sku' => $cur_sku,
-			'serial' => $cur_serial,
-			'delivery' => $cur_delivery,
-			'quantity' => $cur_qty,
-			'price' => $cur_price,
-			'discount' => $cur_discount
-		);
+		unset($cur_product);
 	}
-	unset($cur_product);
 }
 // Used for payment error checking.
 $payment_error = false;
@@ -125,13 +101,12 @@ if ($sale->status != 'paid') {
 	if (!is_array($sale->payments))
 		$sale->payments = array();
 	foreach ($sale->payments as $key => &$cur_payment) {
-		// TODO: Calculate tendered.
-		$cur_payment_entity = $config->run_sales->get_payment_type(intval($cur_payment->key));
+		$cur_payment_type_entity = $config->run_sales->get_payment_type(intval($cur_payment->key));
 		// Not used, but possibly in the future for logging purposes. (If the type is deleted.)
 		$cur_type = $cur_payment->values[0];
 		$cur_amount = floatval($cur_payment->values[1]);
-		if (is_null($cur_payment_entity)) {
-			display_notice("Payment type with id [$cur_payment->key] was not found.");
+		if (is_null($cur_payment_type_entity)) {
+			display_error("Payment type with id [$cur_payment->key] was not found.");
 			unset($sale->payments[$key]);
 			$payment_error = true;
 			continue;
@@ -140,8 +115,12 @@ if ($sale->status != 'paid') {
 			display_notice("A payment was entered without an amount.");
 			$payment_error = true;
 		}
+		if ($cur_amount < $cur_payment_type_entity->minimum) {
+			display_notice("The payment type [$cur_type] requires a minimum payment of {$cur_payment_type_entity->minimum}.");
+			$payment_error = true;
+		}
 		$cur_payment = array(
-			'entity' => $cur_payment_entity,
+			'entity' => $cur_payment_type_entity,
 			'type' => $cur_type,
 			'amount' => $cur_amount
 		);
@@ -153,20 +132,19 @@ $sale->comments = $_REQUEST['comments'];
 if ($product_error) {
 	$module = $config->run_sales->print_sale_form('com_sales', 'savesale');
 	$module->entity = $sale;
-	display_error('There were product errors. Please check that product details are correct and resubmit.');
 	return;
 }
 if ($payment_error) {
 	$module = $config->run_sales->print_sale_form('com_sales', 'savesale');
 	$module->entity = $sale;
-	display_error('There were payment errors. Please check that payment details are correct and resubmit.');
 	return;
 }
 
 if ($config->com_sales->global_sales) {
 	$sale->ac = (object) array('other' => 1);
+}
 
-if ($sale->status != 'invoiced' && $sale->status != 'paid') {
+if (($_REQUEST['process'] == 'Invoice' || $_REQUEST['process'] == 'Complete') && $sale->status != 'invoiced' && $sale->status != 'paid') {
 	if (!$sale->invoice()) {
 		$module = $config->run_sales->print_sale_form('com_sales', 'savesale');
 		$module->entity = $sale;
@@ -176,30 +154,29 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid') {
 }
 
 if ($_REQUEST['process'] == 'Complete') {
-	if ($sale->amount_due > 0) {
-		$module = $config->run_sales->print_sale_form('com_sales', 'savesale');
-		$module->entity = $sale;
-		display_error('The sale cannot be completed while there is still an amount due. It has been invoiced, but not completed yet.');
-		return;
-	}
 	if (!$sale->complete()) {
 		$module = $config->run_sales->print_sale_form('com_sales', 'savesale');
 		$module->entity = $sale;
-		display_error('There was an error while completing the sale. Please check that all information is correct and resubmit.');
+		display_error('There was an error while completing the sale. It has been invoiced, but not completed yet. Please check that all information is correct and resubmit.');
 		return;
 	}
 }
 
-$module = $config->run_sales->print_sale_form('com_sales', 'savesale');
-$module->entity = $sale;
-return;
-
+if (!isset($sale->status)) {
+	$sale->status = 'quoted';
+	$sale->total();
 }
+
 if ($sale->save()) {
 	display_notice('Saved sale ['.$sale->guid.']');
 } else {
 	display_error('Error saving sale. Do you have permission?');
 }
+
+// TODO: Receipt/invoice view.
+$module = $config->run_sales->print_sale_form('com_sales', 'savesale');
+$module->entity = $sale;
+return;
 
 $config->run_sales->list_sales();
 ?>

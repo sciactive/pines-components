@@ -32,6 +32,7 @@ class com_sales_sale extends entity {
 	 * @return bool True on success, false on any failure.
 	 */
 	public function invoice() {
+		// TODO: Save fees, calculate total.
 		if (!is_array($this->products))
 			return false;
 		// Keep track of the whole process.
@@ -64,6 +65,20 @@ class com_sales_sale extends entity {
 		$return = $return && $tx->save();
 
 		return $return;
+	}
+
+	public function total() {
+		// Here, totals will be calculated.
+		if (!is_array($this->products))
+			return false;
+		// Keep track of the whole process.
+		$return = true;
+		// Go through each product, calculating its line total and fees.
+		foreach ($this->products as &$cur_product) {
+			$price = $cur_product['price'];
+			$qty = $cur_product['quantity'];
+			$discount = $cur_product['discount'];
+		}
 	}
 }
 

@@ -46,7 +46,6 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid') {
 	if (empty($stock_entries))
 		$stock_entries = array();
 	foreach ($sale->products as $key => &$cur_product) {
-		// TODO: Save fees, calculate total.
 		$cur_product_entity = $config->run_sales->get_product(intval($cur_product->key));
 		$cur_sku = $cur_product->values[0];
 		$cur_serial = $cur_product->values[2];
@@ -164,6 +163,9 @@ if ($payment_error) {
 	return;
 }
 
+if ($config->com_sales->global_sales) {
+	$sale->ac = (object) array('other' => 1);
+
 if ($sale->status != 'invoiced' && $sale->status != 'paid') {
 	if (!$sale->invoice()) {
 		$module = $config->run_sales->print_sale_form('com_sales', 'savesale');
@@ -192,8 +194,6 @@ $module = $config->run_sales->print_sale_form('com_sales', 'savesale');
 $module->entity = $sale;
 return;
 
-if ($config->com_sales->global_sales) {
-	$sale->ac = (object) array('other' => 1);
 }
 if ($sale->save()) {
 	display_notice('Saved sale ['.$sale->guid.']');

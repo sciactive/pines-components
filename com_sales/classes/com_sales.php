@@ -403,6 +403,18 @@ class com_sales extends component {
 	}
 
 	/**
+	 * Gets a sale by GUID.
+	 *
+	 * @param int $id The sale's GUID.
+	 * @return entity|null The sale if it exists, null if it doesn't.
+	 */
+	function get_sale($id) {
+		global $config;
+		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'sale'));
+		return $entity;
+	}
+
+	/**
 	 * Gets a shipper by GUID.
 	 *
 	 * @param int $id The shipper's GUID.

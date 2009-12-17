@@ -34,8 +34,8 @@ class user extends able_entity {
 	 * @return mixed True if the user is already in the group. The resulting array of group IDs if the user was not.
 	 */
 	public function addgroup($id) {
-		if ( !in_array($id, $this->__get('groups')) ) {
-			return $this->__set('groups', array_merge(array($id), $this->__get('groups')));
+		if ( !in_array($id, $this->groups) ) {
+			return $this->groups = array_merge(array($id), $this->groups);
 		} else {
 			return true;
 		}
@@ -48,21 +48,21 @@ class user extends able_entity {
 	 * @return mixed True if the user wasn't in the group. The resulting array of group IDs if the user was.
 	 */
 	public function delgroup($id) {
-		if ( in_array($id, $this->__get('groups')) ) {
-			return $this->__set('groups', array_values(array_diff($this->__get('groups'), array($id))));
+		if ( in_array($id, $this->groups) ) {
+			return $this->groups = array_values(array_diff($this->groups, array($id)));
 		} else {
 			return true;
 		}
 	}
 
 	/**
-	 * Check whether the user is in a group.
+	 * Check whether the user is in a (primary or secondary) group.
 	 *
 	 * @param int $id The GUID of the group.
-	 * @return bool
+	 * @return bool True or false.
 	 */
 	public function ingroup($id) {
-		return (in_array($id, $this->__get('groups')) || ($id == $this->__get('gid')));
+		return (in_array($id, $this->groups) || ($id == $this->gid));
 	}
 
 	/**
@@ -76,7 +76,7 @@ class user extends able_entity {
 	 */
 	public function password($password) {
 		if (!isset($this->salt)) $this->salt = md5(rand());
-		return $this->__set('password', md5($password.$this->__get('salt')));
+		return $this->password = md5($password.$this->salt);
 	}
 
 	/**
@@ -84,10 +84,10 @@ class user extends able_entity {
 	 * account.
 	 *
 	 * @param string $password The password in question.
-	 * @return bool
+	 * @return bool True or false.
 	 */
 	public function check_password($password) {
-		return ($this->__get('password') == md5($password.$this->__get('salt')));
+		return ($this->password == md5($password.$this->salt));
 	}
 }
 

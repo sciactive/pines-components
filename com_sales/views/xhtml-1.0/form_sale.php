@@ -10,7 +10,16 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = (is_null($this->entity->guid)) ? 'New Sale' : 'Editing ['.htmlentities($this->entity->name).']';
+if (is_null($this->entity->guid)) {
+	$this->title = 'New Sale';
+} elseif ($this->entity->status == 'quoted') {
+	// TODO: Process for quoting sales.
+	$this->title = 'Quoted Sale ['.htmlentities($this->entity->guid).']';
+} elseif ($this->entity->status == 'invoiced') {
+	$this->title = 'Invoiced Sale ['.htmlentities($this->entity->guid).']';
+} elseif ($this->entity->status == 'paid') {
+	$this->title = 'Paid Sale ['.htmlentities($this->entity->guid).']';
+}
 $this->note = 'Use this form to edit a sale.';
 ?>
 <form class="pform" method="post" id="sale_details" action="<?php echo pines_url($this->new_option, $this->new_action); ?>">
@@ -62,6 +71,7 @@ $this->note = 'Use this form to edit a sale.';
 ?>
 		var taxes_percent = JSON.parse("<?php echo addSlashes(json_encode($taxes_percent)) ?>");
 		var taxes_flat = JSON.parse("<?php echo addSlashes(json_encode($taxes_flat)) ?>");
+		var status = JSON.parse("<?php echo addSlashes(json_encode($this->entity->status)); ?>");
 
 		function round_to_dec(value) {
 			var rnd = Math.pow(10, dec);
@@ -138,6 +148,13 @@ $this->note = 'Use this form to edit a sale.';
 				}
 			});
 
+			<?php if ($this->entity->status == 'invoiced' || $this->entity->status == 'paid') { ?>
+			products_table.pgrid({
+				pgrid_view_height: "160px",
+				pgrid_paginate: false,
+				pgrid_toolbar: false
+			});
+			<?php } else { ?>
 			products_table.pgrid({
 				pgrid_view_height: "160px",
 				pgrid_paginate: false,
@@ -277,6 +294,7 @@ $this->note = 'Use this form to edit a sale.';
 					}
 				]
 			});
+			<?php } ?>
 
 			// Load the data for any existing products.
 			var loader;
@@ -307,6 +325,14 @@ $this->note = 'Use this form to edit a sale.';
 			if (loader)
 				loader.pnotify_remove();
 
+			<?php if ($this->entity->status == 'paid') { ?>
+			payments_table.pgrid({
+				pgrid_view_height: "150px",
+				pgrid_paginate: false,
+				pgrid_footer: false,
+				pgrid_toolbar: false
+			});
+			<?php } else { ?>
 			payments_table.pgrid({
 				pgrid_view_height: "150px",
 				pgrid_paginate: false,
@@ -392,6 +418,7 @@ $this->note = 'Use this form to edit a sale.';
 					modal: true
 				});
 			});
+			<?php } ?>
 
 			// Load any initial products.
 			update_products();
@@ -631,6 +658,7 @@ $this->note = 'Use this form to edit a sale.';
 	</div>
 	<div class="element full_width">
 		<span class="label">Payments</span>
+		<?php if ($this->entity->status != 'paid') { ?>
 		<div class="note">
 			<div style="text-align: left;">
 				<?php foreach ($this->payment_types as $cur_payment_type) { ?>
@@ -640,6 +668,7 @@ $this->note = 'Use this form to edit a sale.';
 				<?php } ?>
 			</div>
 		</div>
+		<?php } ?>
 		<?php /*
 		<div class="group">
 			<div style="float: right;">
@@ -697,7 +726,8 @@ $this->note = 'Use this form to edit a sale.';
 		<?php if ( !is_null($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
+		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="process" value="Complete" />
+		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="process" value="Invoice" />
 		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_sales', 'listsales'); ?>';" value="Cancel" />
 	</div>
 </form>

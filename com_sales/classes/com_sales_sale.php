@@ -22,6 +22,49 @@ class com_sales_sale extends entity {
 		parent::__construct();
 		$this->add_tag('com_sales', 'sale');
 	}
+
+	/**
+	 * Invoice the sale.
+	 *
+	 * This process will remove any sold items from stock. Payment is not
+	 * considered.
+	 *
+	 * @return bool True on success, false on any failure.
+	 */
+	public function invoice() {
+		if (!is_array($this->products))
+			return false;
+		// Keep track of the whole process.
+		$return = true;
+		// Go through each product, marking their stock as sold.
+		foreach ($this->products as &$cur_product) {
+			if (is_array($cur_product['stock_entities'])) {
+				foreach ($cur_product['stock_entities'] as &$cur_stock) {
+					if ($cur_product['delivery'] == 'in-store') {
+						$return = $return && $cur_stock->remove($this, 'sold_at_store');
+					} else {
+						$return = $return && $cur_stock->remove($this, 'sold_pending', $cur_stock->location);
+					}
+				}
+			}
+		}
+		// Make a transaction entry.
+		$tx = new entity('com_sales', 'transaction', 'sale_tx');
+
+		if ($this->status)
+			$old_status = $this->status;
+		$this->status = 'invoiced';
+		$tx->type = 'invoiced';
+
+		// Make sure we have a GUID before saving the tx.
+		if (!($this->guid))
+			$return = $return && $this->save();
+		
+		$tx->ticket = $this;
+		$return = $return && $tx->save();
+
+		return $return;
+	}
 }
 
 ?>

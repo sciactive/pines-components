@@ -110,7 +110,7 @@ class com_sales_stock extends entity {
 	/**
 	 * Receive the stock entry on a PO/transfer/etc.
 	 *
-	 * This process creates a transaction entity. It adds its GUID to the
+	 * This process creates a transaction entity. It adds itself to the
 	 * receiving entity's "received" var. It updates the location of the stock
 	 * entry, and sets the status to "available".
 	 *
@@ -151,7 +151,54 @@ class com_sales_stock extends entity {
 			$on_entity->received = array();
 		$on_entity->received[] = $this;
 		$return = $return && $on_entity->save();
-		
+
+		$tx->old_status = $old_status;
+		$tx->new_status = $this->status;
+		$tx->old_location = $old_location;
+		$tx->new_location = $this->location;
+		$tx->ref = $on_entity;
+		$tx->stock = $this;
+		$return = $return && $tx->save();
+		return $return;
+	}
+
+	/**
+	 * Remove the stock entry from available inventory.
+	 *
+	 * This process creates a transaction entity. It updates the location of the
+	 * stock entry, and sets the status to "other" by default.
+	 *
+	 * If $location is not set, it becomes null, meaning the stock is no longer
+	 * located within the company.
+	 *
+	 * @param entity $on_entity The entity which the product is to be removed by.
+	 * @param string $status The new status for the stock. Such as "sold_at_store".
+	 * @param entity $location The group to use for the new location.
+	 * @return bool True on success, false on failure.
+	 */
+	function remove(&$on_entity = null, $status = 'other', $location = null) {
+		global $config;
+		if (is_null($on_entity))
+			return false;
+
+		// Keep track of the status of the whole process.
+		$return = true;
+		// Make a transaction entry.
+		$tx = new entity('com_sales', 'transaction', 'stock_tx');
+
+		if ($this->status)
+			$old_status = $this->status;
+		$this->status = (string) $status;
+		if ($this->location)
+			$old_location = $this->location;
+		// TODO: Copy location to GID (optional) to allow easier access control.
+		$this->location = $location;
+		$tx->type = 'removed';
+
+		// Make sure we have a GUID before saving the tx.
+		if (!($this->guid))
+			$return = $return && $this->save();
+
 		$tx->old_status = $old_status;
 		$tx->new_status = $this->status;
 		$tx->old_location = $old_location;

@@ -136,32 +136,41 @@ class com_sales_sale extends entity {
 		// Go through each product, and find corresponding stock entries.
 		foreach ($this->products as &$cur_product) {
 			// Find the stock entry.
-			// TODO: Non-stocked or stock optional items.
 			// TODO: Ship to customer from different stock (Warehouse).
-			$stock_entities = array();
-			for ($i = 0; $i < $cur_product['quantity']; $i++) {
-				$found = false;
-				foreach($stock_entries as $key => $cur_stock) {
-					if (($cur_stock->status != 'available') ||
-						(!$_SESSION['user']->ingroup($cur_stock->location->guid)) ||
-						(!$cur_product['entity']->is($cur_stock->product)) ||
-						($cur_product['entity']->serialized && ($cur_product['serial'] != $cur_stock->serial))) {
-						continue;
+			if ($cur_product['entity']->stock_type == 'non_stocked') {
+				$cur_product['stock_entities'] = array();
+			} else {
+				$stock_entities = array();
+				for ($i = 0; $i < $cur_product['quantity']; $i++) {
+					$found = false;
+					foreach($stock_entries as $key => $cur_stock) {
+						if (($cur_stock->status != 'available') ||
+							(!$_SESSION['user']->ingroup($cur_stock->location->guid)) ||
+							(!$cur_product['entity']->is($cur_stock->product)) ||
+							($cur_product['entity']->serialized && ($cur_product['serial'] != $cur_stock->serial))) {
+							continue;
+						}
+						// One was found, so save it then take it out of our search stock.
+						$found = true;
+						$stock_entities[] = clone $cur_stock;
+						unset($stock_entries[$key]);
+						break;
 					}
-					// One was found, so save it then take it out of our search stock.
-					$found = true;
-					$stock_entities[] = clone $cur_stock;
-					unset($stock_entries[$key]);
-					break;
+					if (!$found) {
+						if ($cur_product['entity']->stock_type != 'stock_optional') {
+							// It wasn't found, and its not optional.
+							display_notice("Product with SKU [{$cur_product['sku']}]".($cur_product['entity']->serialized ? " and serial [{$cur_product['serial']}]" : " and quantity {$cur_product['quantity']}")." is not in local stock.".($cur_product['entity']->serialized ? '' : ' Found '.count($stock_entities).'.'));
+							return false;
+							break;
+						} else {
+							// It wasn't found, but it's optional, so mark this item as shipped.
+							// TODO: For multiple quantity items, mark how many need to be shipped.
+							$cur_product['delivery'] = 'shipped';
+						}
+					}
 				}
-				if (!$found) {
-					// It wasn't found.
-					display_notice("Product with SKU [{$cur_product['sku']}]".($cur_product['entity']->serialized ? " and serial [{$cur_product['serial']}]" : " and quantity {$cur_product['quantity']}")." is not in local stock.".($cur_product['entity']->serialized ? '' : ' Found '.count($stock_entities).'.'));
-					return false;
-					break;
-				}
+				$cur_product['stock_entities'] = $stock_entities;
 			}
-			$cur_product['stock_entities'] = $stock_entities;
 		}
 		// Go through each product, marking their stock as sold.
 		foreach ($this->products as &$cur_product) {

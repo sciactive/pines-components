@@ -39,6 +39,7 @@ $product->manufacturer = ($_REQUEST['manufacturer'] == 'null' ? null : $config->
 $product->manufacturer_sku = $_REQUEST['manufacturer_sku'];
 
 // Purchasing
+$product->stock_type = $_REQUEST['stock_type'];
 $product->vendors = json_decode($_REQUEST['vendors']);
 if (!is_array($product->vendors))
 	$product->vendors = array();
@@ -52,7 +53,11 @@ foreach ($product->vendors as &$cur_vendor) {
 unset($cur_vendor);
 
 // Pricing
-$product->pricing_method = $_REQUEST['pricing_method'];
+if ($product->stock_type == 'non_stocked') {
+	$product->pricing_method = 'fixed';
+} else {
+	$product->pricing_method = $_REQUEST['pricing_method'];
+}
 $product->unit_price = floatval($_REQUEST['unit_price']);
 $product->margin = floatval($_REQUEST['margin']);
 $product->floor = floatval($_REQUEST['floor']);

@@ -385,10 +385,38 @@ $this->note = 'Provide product details in this form.';
 			<br class="spacer" />
 		</div>
 		<div id="tab_purchasing">
+			<div class="element">
+				<script type="text/javascript">
+				// <![CDATA[
+				$(function(){
+					$("#stock_type").change(function(){
+						if ($(this).val() == 'non_stocked') {
+							$("#vendors_field").fadeOut("reg", function(){
+								$("#vendors_hidden").fadeIn();
+								$("#product_details [name=pricing_method]").val("fixed").change().attr("disabled", "disabled");
+							});
+						} else {
+							$("#vendors_hidden").fadeOut("reg", function(){
+								$("#vendors_field").fadeIn();
+								$("#product_details [name=pricing_method]").removeAttr("disabled");
+							});
+						}
+					}).change();
+				});
+				// ]]>
+				</script>
+				<label><span class="label">Stock Type</span>
+					<span class="note">Regular stock items cannot be sold without available stock. Stock optional items can be sold without available stock. Non stocked items do not use inventory tracking.</span>
+					<select class="field" id="stock_type" name="stock_type">
+						<?php foreach (array('regular_stock' => 'Regular Stock', 'stock_optional' => 'Stock Optional', 'non_stocked' => 'Non Stocked') as $cur_stock_key => $cur_stock_type) { ?>
+						<option value="<?php echo $cur_stock_key; ?>"<?php echo $this->entity->stock_type == $cur_stock_key ? ' selected="selected"' : ''; ?>><?php echo $cur_stock_type; ?></option>
+						<?php } ?>
+					</select></label>
+			</div>
 			<div class="element full_width">
 				<span class="label">Vendors</span>
 				<div class="group">
-					<div class="field">
+					<div id="vendors_field" class="field">
 						<table id="vendors_table">
 							<thead>
 								<tr>
@@ -408,6 +436,7 @@ $this->note = 'Provide product details in this form.';
 							</tbody>
 						</table>
 					</div>
+					<span id="vendors_hidden" class="field" style="display: none;">Vendors cannot be selected for non stocked items.</span>
 					<input class="field" type="hidden" id="vendors" name="vendors" size="20" />
 				</div>
 			</div>
@@ -466,8 +495,7 @@ $this->note = 'Provide product details in this form.';
 								$("#product_details [name=unit_price]").attr('disabled', 'disabled');
 								$("#product_details [name=margin]").removeAttr('disabled');
 							}
-						});
-						$("#product_details [name=pricing_method]").change();
+						}).change();
 					});
 					// ]]>
 				</script>

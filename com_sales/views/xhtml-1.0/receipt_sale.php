@@ -20,7 +20,7 @@ if ($this->entity->status == 'quoted') {
 	$this->title = 'Sale';
 }
 ?>
-<div class="pform pform_twocol">
+<div id="receipt_sale" class="pform pform_twocol">
 <?php if (isset($this->entity->p_cdate)) { ?>
 	<div class="element">
 		<span class="label">Ticket #</span>
@@ -136,7 +136,7 @@ if ($this->entity->status == 'quoted') {
 		<span class="label"><?php echo $cur_payment['entity']->name; ?></span>
 		<div class="group">
 			<div class="field" style="float: right; text-align: right;">
-				<div><?php echo $config->run_sales->round($cur_product['amount'], $config->com_sales->dec); ?></div>
+				<div><?php echo $config->run_sales->round($cur_payment['amount'], $config->com_sales->dec); ?></div>
 			</div>
 		</div>
 	</div>

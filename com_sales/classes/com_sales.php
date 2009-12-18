@@ -1027,6 +1027,19 @@ class com_sales extends component {
 	}
 
 	/**
+	 * Creates and attaches a module containing a sales total page.
+	 *
+	 * @return module|null The new module on success, nothing on failure.
+	 */
+	function print_sales_total() {
+		global $config;
+		$module = new module('com_sales', 'total_sales', 'content');
+		$module->locations = $config->user_manager->get_group_array();
+
+		return $module;
+	}
+
+	/**
 	 * Creates and attaches a module containing a form for editing a
 	 * shipper.
 	 *

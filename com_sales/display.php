@@ -25,6 +25,8 @@ if ( gatekeeper('com_sales/managestock') ||
 		$page->main_menu->add('Sales', pines_url('com_sales', 'listsales'), $com_sales_menu_id_sales);
 	if ( gatekeeper('com_sales/newsale') )
 		$page->main_menu->add('New Sale', pines_url('com_sales', 'newsale'), $com_sales_menu_id_sales);
+	if ( gatekeeper('com_sales/managesales') )
+		$page->main_menu->add('Sales Totals', pines_url('com_sales', 'totalsales'), $com_sales_menu_id_sales);
 	if ( gatekeeper('com_sales/managecustomers') )
 		$page->main_menu->add('Customers', pines_url('com_sales', 'listcustomers'), $com_sales_menu_id_sales);
 	if ( gatekeeper('com_sales/newcustomer') )

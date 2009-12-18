@@ -22,7 +22,8 @@ $this->title = 'Sales';
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				{type: 'button', text: 'New', extra_class: 'icon picon_16x16_actions_document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'newsale'); ?>'},
-				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo pines_url('com_sales', 'editsale', array('id' => '#title#')); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', url: '<?php echo pines_url('com_sales', 'editsale', array('id' => '#title#')); ?>'},
+				{type: 'button', text: 'Receipt', extra_class: 'icon picon_16x16_actions_document-print-preview', double_click: true, url: '<?php echo pines_url('com_sales', 'receiptsale', array('id' => '#title#')); ?>'},
 				//{type: 'button', text: 'E-Mail', extra_class: 'icon picon_16x16_actions_mail-message-new', multi_select: true, url: 'mailto:#col_2#', delimiter: ','},
 				{type: 'separator'},
 				{type: 'button', text: 'Delete', extra_class: 'icon picon_16x16_actions_edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_sales', 'deletesale', array('id' => '#title#')); ?>', delimiter: ','},

@@ -162,7 +162,7 @@ if ($_REQUEST['process'] == 'Complete') {
 	}
 }
 
-if (!isset($sale->status)) {
+if (!isset($sale->status) || $sale->status == 'quoted') {
 	$sale->status = 'quoted';
 	$sale->total();
 }
@@ -170,13 +170,12 @@ if (!isset($sale->status)) {
 if ($sale->save()) {
 	display_notice('Saved sale ['.$sale->guid.']');
 } else {
+	$module = $config->run_sales->print_sale_form('com_sales', 'savesale');
+	$module->entity = $sale;
 	display_error('Error saving sale. Do you have permission?');
+	return;
 }
 
-// TODO: Receipt/invoice view.
-$module = $config->run_sales->print_sale_form('com_sales', 'savesale');
+$module = $config->run_sales->print_sale_receipt();
 $module->entity = $sale;
-return;
-
-$config->run_sales->list_sales();
 ?>

@@ -1002,6 +1002,31 @@ class com_sales extends component {
 	}
 
 	/**
+	 * Creates and attaches a module containing a receipt for a sale.
+	 *
+	 * If $id is null, or not given, a blank receipt will be displayed.
+	 *
+	 * @param int $id The GUID of the sale to show.
+	 * @return module|null The new module on success, nothing on failure.
+	 */
+	function print_sale_receipt($id = NULL) {
+		global $config;
+		$module = new module('com_sales', 'receipt_sale', 'content');
+		if ( is_null($id) ) {
+			$module->entity = new entity;
+		} else {
+			$module->entity = $this->get_sale($id);
+			if (is_null($module->entity)) {
+				display_error('Requested sale id is not accessible.');
+				$module->detach();
+				return;
+			}
+		}
+
+		return $module;
+	}
+
+	/**
 	 * Creates and attaches a module containing a form for editing a
 	 * shipper.
 	 *

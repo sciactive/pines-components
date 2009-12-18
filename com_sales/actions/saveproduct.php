@@ -82,6 +82,9 @@ $product->require_customer = ($_REQUEST['require_customer'] == 'ON' ? true : fal
 $product->hide_on_invoice = ($_REQUEST['hide_on_invoice'] == 'ON' ? true : false);
 $product->non_refundable = ($_REQUEST['non_refundable'] == 'ON' ? true : false);
 $product->additional_barcodes = explode(',', $_REQUEST['additional_barcodes']);
+$product->actions = $_REQUEST['actions'];
+if (!is_array($product->actions))
+	$product->actions = array();
 
 if (empty($product->name)) {
 	$module = $config->run_sales->print_product_form('com_sales', 'saveproduct');

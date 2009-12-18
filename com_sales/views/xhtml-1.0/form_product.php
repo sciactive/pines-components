@@ -577,6 +577,16 @@ $this->note = 'Provide product details in this form.';
 					</script>
 				</div>
 			</div>
+			<div class="element">
+				<label><span class="label">Product Actions</span>
+					<span class="note">These actions will be executed when an event takes place with this product.</span>
+					<span class="note">Hold Ctrl (Command on Mac) to select multiple.</span>
+					<select class="field" name="actions[]" size="6" multiple="multiple">
+						<?php foreach ($this->actions as $cur_action) { ?>
+						<option value="<?php echo $cur_action['name']; ?>" title="<?php echo $cur_action['description']; ?>"<?php echo (is_array($this->entity->actions) && in_array($cur_action['name'], $this->entity->actions)) ? ' selected="selected"' : ''; ?>><?php echo $cur_action['cname']; ?></option>
+						<?php } ?>
+					</select></label>
+			</div>
 			<br class="spacer" />
 		</div>
 		<div id="tab_accounting">

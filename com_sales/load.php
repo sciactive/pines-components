@@ -13,4 +13,12 @@ defined('P_RUN') or die('Direct access prohibited');
 
 $config->run_sales = new com_sales;
 
+$config->run_sales->product_actions[] = array(
+	'type' => 'sold',
+	'name' => 'com_sales/test',
+	'cname' => 'Testing',
+	'description' => 'This is only used for testing.',
+	'callback' => array($config->run_sales, 'test_action')
+);
+
 ?>

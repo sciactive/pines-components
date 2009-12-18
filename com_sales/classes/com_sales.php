@@ -21,6 +21,75 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class com_sales extends component {
 	/**
+	 * List of product actions.
+	 * 
+	 * Product actions are callbacks that can be called when a product is
+	 * received, adjusted, sold, or returned.
+	 *
+	 * To add a product action, your code must add a new array to $config-> with
+	 * the following values:
+	 *
+	 * - "type" - An array or string of the event(s) the action should be called for. Out of "received", "adjusted", "sold", and "returned".
+	 * - "name" - The name of your action. Ex: 'com_gamephear/create_gamephear_account'
+	 * - "cname" - The canonical name of your action. Ex: 'Create GamePhear Account'
+	 * - "description" - A description of the action. Ex: 'Creates a GamePhear account for the customer.'
+	 * - "callback" - Callback to your function. Ex: array($config->run_gamephear, 'create_account')
+	 *
+	 * The callback will be passed an array which may contain the following
+	 * associative entries:
+	 *
+	 * - "type" - The type of event that has occurred.
+	 * - "product" - The product entity.
+	 * - "stock_entry" - The stock entry entity.
+	 * - "sale" - The sale entity.
+	 * - "po" - The PO entity.
+	 * - "transfer" - The transfer entity.
+	 * 
+	 * @var array $product_actions
+	 */
+	public $product_actions = array();
+
+	function test_action($array) {
+		display_notice("Check it out, {$array['sale']->customer->name} bought a {$array['product']->name}.");
+	}
+
+	/**
+	 * Calls any product actions which match the given arguments.
+	 *
+	 * @param array $arguments The arguments to pass to appropriate callbacks.
+	 * @param int $times How many times to call the callback.
+	 * @return bool True on success, false on failure.
+	 * @todo Finish calling this in all appropriate places.
+	 */
+	function call_product_actions($arguments = array(), $times = 1) {
+		if (!is_array($arguments))
+			return false;
+		if (empty($arguments['type']))
+			return false;
+		if (!is_a($arguments['product'], 'entity'))
+			return false;
+		// If the product has no actions associated with it, don't bother going through the actions.
+		if (!is_array($arguments['product']->actions) || empty($arguments['product']->actions))
+			return true;
+		foreach($this->product_actions as $cur_action) {
+			if (is_array($cur_action['type'])) {
+				if (!in_array($arguments['type'], $cur_action['type']))
+					continue;
+			} else {
+				if ($arguments['type'] != $cur_action['type'])
+					continue;
+			}
+			if (!in_array($cur_action['name'], $arguments['product']->actions))
+				continue;
+			if (!is_callable($cur_action['callback']))
+				continue;
+			for ($i = 0; $i < (int) $times; $i++)
+				call_user_func_array($cur_action['callback'], array($arguments));
+		}
+		return true;
+	}
+
+	/**
 	 * Transform a category array into a JSON-ready structure.
 	 *
 	 * @param array $category_array The array of categories.
@@ -924,6 +993,10 @@ class com_sales extends component {
 		$module->tax_fees = $config->entity_manager->get_entities_by_tags('com_sales', 'tax_fee');
 		if (!is_array($module->tax_fees)) {
 			$module->tax_fees = array();
+		}
+		$module->actions = $this->product_actions;
+		if (!is_array($module->actions)) {
+			$module->actions = array();
 		}
 
 		$module->new_option = $new_option;

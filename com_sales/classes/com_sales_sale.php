@@ -172,8 +172,19 @@ class com_sales_sale extends entity {
 				$cur_product['stock_entities'] = $stock_entities;
 			}
 		}
-		// Go through each product, marking their stock as sold.
+		unset($cur_product);
+		// Go through each product, calling actions, and marking their stock as sold.
 		foreach ($this->products as &$cur_product) {
+			// Call product actions for all products without stock entries.
+			$i = $cur_product['quantity'] - count($cur_product['stock_entities']);
+			if ($i > 0) {
+				$config->run_sales->call_product_actions(array(
+					'type' => 'sold',
+					'product' => $cur_product['entity'],
+					'sale' => $this
+				), $i);
+			}
+			// Remove stock from inventory.
 			if (is_array($cur_product['stock_entities'])) {
 				foreach ($cur_product['stock_entities'] as &$cur_stock) {
 					if ($cur_product['delivery'] == 'in-store') {
@@ -181,6 +192,12 @@ class com_sales_sale extends entity {
 					} else {
 						$return = $return && $cur_stock->remove($this, 'sold_pending', $cur_stock->location) && $cur_stock->save();
 					}
+					$config->run_sales->call_product_actions(array(
+						'type' => 'sold',
+						'product' => $cur_product['entity'],
+						'stock_entry' => $cur_stock,
+						'sale' => $this
+					));
 				}
 			}
 		}

@@ -21,11 +21,8 @@ $this->title = 'Customers';
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
-				{type: 'button', text: 'New', extra_class: 'icon picon_16x16_actions_document-new', selection_optional: true, url: '<?php echo pines_url('com_customer', 'newcustomer'); ?>'},
 				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo pines_url('com_customer', 'editcustomer', array('id' => '#title#')); ?>'},
 				//{type: 'button', text: 'E-Mail', extra_class: 'icon picon_16x16_actions_mail-message-new', multi_select: true, url: 'mailto:#col_2#', delimiter: ','},
-				{type: 'separator'},
-				{type: 'button', text: 'Delete', extra_class: 'icon picon_16x16_actions_edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_customer', 'deletecustomer', array('id' => '#title#')); ?>', delimiter: ','},
 				{type: 'separator'},
 				{type: 'button', text: 'Select All', extra_class: 'icon picon_16x16_actions_list-add', select_all: true},
 				{type: 'button', text: 'Select None', extra_class: 'icon picon_16x16_actions_list-remove', select_none: true},
@@ -56,14 +53,20 @@ $this->title = 'Customers';
 	<thead>
 		<tr>
 			<th>Name</th>
-			<th>Enabled</th>
+			<th>Login</th>
+			<th>Points</th>
+			<th>Peak</th>
+			<th>All-Time</th>
 		</tr>
 	</thead>
 	<tbody>
 	<?php foreach($this->customers as $customer) { ?>
 		<tr title="<?php echo $customer->guid; ?>">
 			<td><?php echo $customer->name; ?></td>
-			<td><?php echo ($customer->enabled ? 'Yes' : 'No'); ?></td>
+			<td><?php echo ($customer->com_customer->login ? 'Yes' : 'No'); ?></td>
+			<td><?php echo $customer->com_customer->points; ?></td>
+			<td><?php echo $customer->com_customer->peak_points; ?></td>
+			<td><?php echo $customer->com_customer->total_points; ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

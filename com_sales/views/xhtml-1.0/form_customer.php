@@ -16,51 +16,51 @@ $this->note = 'Provide customer details in this form.';
 <form class="pform" method="post" id="customer_details" action="<?php echo pines_url($this->new_option, $this->new_action); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
-	<?php if (isset($this->entity->uid)) { ?>
-	<span>Created By: <span class="date"><?php echo $config->user_manager->get_username($this->entity->uid); ?></span></span>
-	<br />
-	<?php } ?>
-	<span>Created On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_cdate); ?></span></span>
-	<br />
-	<span>Modified On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_mdate); ?></span></span>
+			<?php if (isset($this->entity->uid)) { ?>
+		<span>Created By: <span class="date"><?php echo $config->user_manager->get_username($this->entity->uid); ?></span></span>
+		<br />
+			<?php } ?>
+		<span>Created On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_cdate); ?></span></span>
+		<br />
+		<span>Modified On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_mdate); ?></span></span>
 	</div>
 	<?php } ?>
 	<div class="element">
 		<label><span class="label">Name</span>
-		<input class="field" type="text" name="name" size="20" value="<?php echo $this->entity->name; ?>" /></label>
+			<input class="field" type="text" name="name" size="20" value="<?php echo $this->entity->name; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Email</span>
-		<input class="field" type="text" name="email" size="20" value="<?php echo $this->entity->email; ?>" /></label>
+			<input class="field" type="text" name="email" size="20" value="<?php echo $this->entity->email; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label"><?php if (!is_null($this->entity->guid)) echo 'Update '; ?>Password</span>
-		<?php if (is_null($this->entity->guid)) {
-			echo ($config->com_user->empty_pw ? '<span class="note">May be blank.</span>' : '');
-		} else {
-			echo '<span class="note">Leave blank, if not changing.</span>';
-		} ?>
-		<input class="field" type="password" name="password" size="20" /></label>
+			<?php if (is_null($this->entity->guid)) {
+				echo ($config->com_user->empty_pw ? '<span class="note">May be blank.</span>' : '');
+			} else {
+				echo '<span class="note">Leave blank, if not changing.</span>';
+			} ?>
+			<input class="field" type="password" name="password" size="20" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Repeat Password</span>
-		<input class="field" type="password" name="password2" size="20" /></label>
+			<input class="field" type="password" name="password2" size="20" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Company</span>
-		<input class="field" type="text" name="company" size="20" value="<?php echo $this->entity->company; ?>" /></label>
+			<input class="field" type="text" name="company" size="20" value="<?php echo $this->entity->company; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Job Title</span>
-		<input class="field" type="text" name="job_title" size="20" value="<?php echo $this->entity->job_title; ?>" /></label>
+			<input class="field" type="text" name="job_title" size="20" value="<?php echo $this->entity->job_title; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Address 1</span>
-		<input class="field" type="text" name="address_1" size="20" value="<?php echo $this->entity->address_1; ?>" /></label>
+			<input class="field" type="text" name="address_1" size="20" value="<?php echo $this->entity->address_1; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Address 2</span>
-		<input class="field" type="text" name="address_2" size="20" value="<?php echo $this->entity->address_2; ?>" /></label>
+			<input class="field" type="text" name="address_2" size="20" value="<?php echo $this->entity->address_2; ?>" /></label>
 	</div>
 	<div class="element">
 		<span class="label">City, State</span>
@@ -69,23 +69,23 @@ $this->note = 'Provide customer details in this form.';
 	</div>
 	<div class="element">
 		<label><span class="label">Zip</span>
-		<input class="field" type="text" name="zip" size="20" value="<?php echo $this->entity->zip; ?>" /></label>
+			<input class="field" type="text" name="zip" size="20" value="<?php echo $this->entity->zip; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Home Phone</span>
-		<input class="field" type="text" name="phone_home" size="20" value="<?php echo $this->entity->phone_home; ?>" /></label>
+			<input class="field" type="text" name="phone_home" size="20" value="<?php echo $this->entity->phone_home; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Work Phone</span>
-		<input class="field" type="text" name="phone_work" size="20" value="<?php echo $this->entity->phone_work; ?>" /></label>
+			<input class="field" type="text" name="phone_work" size="20" value="<?php echo $this->entity->phone_work; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Cell Phone</span>
-		<input class="field" type="text" name="phone_cell" size="20" value="<?php echo $this->entity->phone_cell; ?>" /></label>
+			<input class="field" type="text" name="phone_cell" size="20" value="<?php echo $this->entity->phone_cell; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Fax</span>
-		<input class="field" type="text" name="fax" size="20" value="<?php echo $this->entity->fax; ?>" /></label>
+			<input class="field" type="text" name="fax" size="20" value="<?php echo $this->entity->fax; ?>" /></label>
 	</div>
 	<div class="element buttons">
 		<?php if ( !is_null($this->entity->guid) ) { ?>

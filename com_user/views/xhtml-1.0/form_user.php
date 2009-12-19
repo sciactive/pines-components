@@ -81,7 +81,7 @@ $this->note = 'Provide user details in this form.';
 	</div>
 		<?php if (is_null($this->group_array)) { ?>
 	<div class="element">
-		<label><span class="label">There are no groups to display.</span></label>
+		<span class="label">There are no groups to display.</span>
 	</div>
 		<?php } else { ?>
 	<div class="element">

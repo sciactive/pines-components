@@ -39,6 +39,7 @@ class com_sales extends component {
 	 * associative entries:
 	 *
 	 * - "type" - The type of event that has occurred.
+	 * - "name" - The name of the action being called.
 	 * - "product" - The product entity.
 	 * - "stock_entry" - The stock entry entity.
 	 * - "sale" - The sale entity.
@@ -48,10 +49,6 @@ class com_sales extends component {
 	 * @var array $product_actions
 	 */
 	public $product_actions = array();
-
-	function test_action($array) {
-		display_notice("Check it out, {$array['sale']->customer->name} bought a {$array['product']->name}.");
-	}
 
 	/**
 	 * Calls any product actions which match the given arguments.
@@ -83,6 +80,7 @@ class com_sales extends component {
 				continue;
 			if (!is_callable($cur_action['callback']))
 				continue;
+			$arguments['name'] = $cur_action['name'];
 			for ($i = 0; $i < (int) $times; $i++)
 				call_user_func_array($cur_action['callback'], array($arguments));
 		}

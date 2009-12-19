@@ -22,32 +22,75 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class com_customer extends component {
 	/**
-	 * Delete a customer.
+	 * Add points to a customer for a product sale.
 	 *
-	 * @param int $id The GUID of the customer.
-	 * @return bool True on success, false on failure.
+	 * @param array $array The details array.
 	 */
-	function delete_customer($id) {
-		if ( $entity = $this->get_customer($id) ) {
-			if ( !$entity->delete() )
-				return false;
-			pines_log("Deleted customer $entity->name.", 'notice');
-			return true;
-		} else {
-			return false;
+	function product_action_add_points($array) {
+		switch ($array['name']) {
+			case 'com_customer/add_points_1':
+				$this->adjust_points($array['sale']->customer, 1);
+				break;
+			case 'com_customer/add_points_5':
+				$this->adjust_points($array['sale']->customer, 5);
+				break;
+			case 'com_customer/add_points_10':
+				$this->adjust_points($array['sale']->customer, 10);
+				break;
+			case 'com_customer/add_points_50':
+				$this->adjust_points($array['sale']->customer, 50);
+				break;
+			case 'com_customer/add_points_60':
+				$this->adjust_points($array['sale']->customer, 60);
+				break;
+			case 'com_customer/add_points_100':
+				$this->adjust_points($array['sale']->customer, 100);
+				break;
+			case 'com_customer/add_points_120':
+				$this->adjust_points($array['sale']->customer, 120);
+				break;
+			case 'com_customer/add_points_250':
+				$this->adjust_points($array['sale']->customer, 250);
+				break;
+			case 'com_customer/add_points_500':
+				$this->adjust_points($array['sale']->customer, 500);
+				break;
+			case 'com_customer/add_points_1000':
+				$this->adjust_points($array['sale']->customer, 1000);
+				break;
 		}
+		$array['sale']->customer->save();
 	}
 
 	/**
-	 * Gets a customer by GUID.
+	 * Add or subtract points from a customer's account.
 	 *
-	 * @param int $id The customer's GUID.
-	 * @return entity|null The customer if it exists, null if it doesn't.
+	 * @param entity $customer The customer entity.
+	 * @param int $point_adjust The positive or negative point value to add.
 	 */
-	function get_customer($id) {
-		global $config;
-		$entity = $config->entity_manager->get_entity($id, array('com_customer', 'customer'));
-		return $entity;
+	function adjust_points(&$customer, $point_adjust) {
+		if (!is_a($customer, 'entity'))
+			return;
+		if (!isset($customer->com_customer))
+			$customer->com_customer = (object) array();
+		$point_adjust = (int) $point_adjust;
+		// Check that there is a point value.
+		if (!is_int($customer->com_customer->points))
+			$customer->com_customer->points = 0;
+		// Check the total value.
+		if (!is_int($customer->com_customer->total_points))
+			$customer->com_customer->total_points = $customer->com_customer->points;
+		// Check the peak value.
+		if (!is_int($customer->com_customer->peak_points))
+			$customer->com_customer->peak_points = $customer->com_customer->points;
+		// Do the adjustment.
+		if ($point_adjust != 0) {
+			if ($point_adjust > 0)
+				$customer->com_customer->total_points += $point_adjust;
+			$customer->com_customer->points += $point_adjust;
+			if ($customer->com_customer->points > $customer->com_customer->peak_points)
+				$customer->com_customer->peak_points = $customer->com_customer->points;
+		}
 	}
 
 	/**
@@ -63,7 +106,7 @@ class com_customer extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_customer/list_customers'];
 
-		$module->customers = $config->entity_manager->get_entities_by_tags('com_customer', 'customer');
+		$module->customers = $config->entity_manager->get_entities_by_tags('com_sales', 'customer');
 
 		if ( empty($module->customers) ) {
 			$pgrid->detach();
@@ -92,7 +135,7 @@ class com_customer extends component {
 		if ( is_null($id) ) {
 			$module->entity = new entity;
 		} else {
-			$module->entity = $this->get_customer($id);
+			$module->entity = $config->run_sales->get_customer($id);
 			if (is_null($module->entity)) {
 				display_error('Requested customer id is not accessible.');
 				$module->detach();

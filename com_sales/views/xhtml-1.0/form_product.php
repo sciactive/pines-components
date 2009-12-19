@@ -591,7 +591,7 @@ $this->note = 'Provide product details in this form.';
 		</div>
 		<div id="tab_accounting">
 			<div class="element">
-				<label><span class="label">Nothing here yet...</span></label>
+				<span class="label">Nothing here yet...</span>
 			</div>
 			<br class="spacer" />
 		</div>

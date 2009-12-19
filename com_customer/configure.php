@@ -14,9 +14,9 @@ defined('P_RUN') or die('Direct access prohibited');
 return array (
   0 =>
   array (
-	'name' => 'global_customers',
-	'cname' => 'Globalize Customers',
-	'description' => 'Ensure that every user can access all customers by setting the "other" access control to read.',
+	'name' => 'adjustpoints',
+	'cname' => 'Adjustable Points',
+	'description' => 'Allow customer\'s points to be adjusted by users with the ability.',
 	'value' => true,
   ),
 );

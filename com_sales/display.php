@@ -20,6 +20,8 @@ if ( gatekeeper('com_sales/managestock') ||
 	 gatekeeper('com_sales/managevendors') || gatekeeper('com_sales/newvendor') ||
 	 gatekeeper('com_sales/managepos') || gatekeeper('com_sales/newpo') ) {
 	$com_sales_menu_id = $page->main_menu->add('POS');
+	if ( gatekeeper('com_sales/newsale') )
+		$page->main_menu->add('New Sale', pines_url('com_sales', 'newsale'), $com_sales_menu_id);
 	$com_sales_menu_id_sales = $page->main_menu->add('Sales', '#', $com_sales_menu_id);
 	if ( gatekeeper('com_sales/managesales') )
 		$page->main_menu->add('Sales', pines_url('com_sales', 'listsales'), $com_sales_menu_id_sales);

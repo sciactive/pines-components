@@ -52,6 +52,15 @@ class com_customer extends component {
 		}
 	}
 
+	/**
+	 * Display a sidebar with a link to edit a customer account.
+	 *
+	 * When a customer is edited in com_sales, this is called and provides a
+	 * sidebar with info about the customer's account, and a link to open it.
+	 *
+	 * @param array $array The arguments array.
+	 * @return array The arguments array.
+	 */
 	function hook_customer_view($array) {
 		global $config;
 		if ( gatekeeper('com_customer/editcustomer') && is_numeric($array[2]) ) {

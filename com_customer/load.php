@@ -14,7 +14,10 @@ defined('P_RUN') or die('Direct access prohibited');
 $config->run_customer = new com_customer;
 
 // Product actions to add points to a customer's account.
-foreach(array(1, 5, 10, 50, 60, 100, 120, 250, 500, 1000) as $cur_value) {
+foreach(explode(',', $config->com_customer->pointvalues) as $cur_value) {
+	if (!is_numeric($cur_value))
+		continue;
+	$cur_value = intval($cur_value);
 	$config->run_sales->product_actions[] = array(
 		'type' => 'sold',
 		'name' => "com_customer/add_points_$cur_value",

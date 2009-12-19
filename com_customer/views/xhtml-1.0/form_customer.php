@@ -196,16 +196,16 @@ $this->note = 'Provide customer account details in this form.';
 				</div>
 			</div>
 			<div class="element">
-				<label><span class="label">Login</span>
-					<input class="field" type="checkbox" name="login" size="20" value="ON"<?php echo $this->entity->com_customer->login ? ' checked="checked"' : ''; ?> /></label>
+				<label><span class="label">Disable Login</span>
+					<input class="field" type="checkbox" name="disable_login" size="20" value="ON"<?php echo $this->entity->com_customer->disable_login ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="element full_width">
 				<span class="label">Description</span><br />
-				<textarea rows="3" cols="35" class="peditor" style="width: 100%;" name="description"><?php echo $this->entity->com_customer->description; ?></textarea>
+				<textarea rows="3" cols="35" class="field peditor" style="width: 100%;" name="description"><?php echo $this->entity->com_customer->description; ?></textarea>
 			</div>
 			<div class="element full_width">
 				<span class="label">Short Description</span><br />
-				<textarea rows="3" cols="35" class="peditor_simple" style="width: 100%;" name="short_description"><?php echo $this->entity->com_customer->short_description; ?></textarea>
+				<textarea rows="3" cols="35" class="field peditor_simple" style="width: 100%;" name="short_description"><?php echo $this->entity->com_customer->short_description; ?></textarea>
 			</div>
 			<br class="spacer" />
 		</div>

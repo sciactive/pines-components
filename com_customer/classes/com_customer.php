@@ -125,39 +125,16 @@ class com_customer extends component {
 	 * @param array $array The details array.
 	 */
 	function product_action_add_points($array) {
-		switch ($array['name']) {
-			case 'com_customer/add_points_1':
-				$this->adjust_points($array['sale']->customer, 1);
-				break;
-			case 'com_customer/add_points_5':
-				$this->adjust_points($array['sale']->customer, 5);
-				break;
-			case 'com_customer/add_points_10':
-				$this->adjust_points($array['sale']->customer, 10);
-				break;
-			case 'com_customer/add_points_50':
-				$this->adjust_points($array['sale']->customer, 50);
-				break;
-			case 'com_customer/add_points_60':
-				$this->adjust_points($array['sale']->customer, 60);
-				break;
-			case 'com_customer/add_points_100':
-				$this->adjust_points($array['sale']->customer, 100);
-				break;
-			case 'com_customer/add_points_120':
-				$this->adjust_points($array['sale']->customer, 120);
-				break;
-			case 'com_customer/add_points_250':
-				$this->adjust_points($array['sale']->customer, 250);
-				break;
-			case 'com_customer/add_points_500':
-				$this->adjust_points($array['sale']->customer, 500);
-				break;
-			case 'com_customer/add_points_1000':
-				$this->adjust_points($array['sale']->customer, 1000);
-				break;
+		global $config;
+		foreach(explode(',', $config->com_customer->pointvalues) as $cur_value) {
+			if (!is_numeric($cur_value))
+				continue;
+			$cur_value = intval($cur_value);
+			if ($array['name'] == "com_customer/add_points_$cur_value") {
+				$this->adjust_points($array['sale']->customer, $cur_value);
+				$array['sale']->customer->save();
+			}
 		}
-		$array['sale']->customer->save();
 	}
 }
 

@@ -27,7 +27,7 @@ if (!isset($customer->com_customer))
 	$customer->com_customer = (object) array();
 
 // General
-$customer->com_customer->login = ($_REQUEST['login'] == 'ON' ? true : false);
+$customer->com_customer->disable_login = ($_REQUEST['disable_login'] == 'ON' ? true : false);
 $customer->com_customer->description = $_REQUEST['description'];
 $customer->com_customer->short_description = $_REQUEST['short_description'];
 

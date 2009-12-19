@@ -35,8 +35,8 @@ class com_configure extends component {
 	 */
 	function __construct() {
 	global $config;
-	if (file_exists('configure.php'))
-		$this->config_files['system'] = 'configure.php';
+	if (file_exists('system/configure.php'))
+		$this->config_files['system'] = 'system/configure.php';
 	foreach ($config->all_components as $cur_component) {
 		if (in_array($cur_component, $config->components)) {
 		$cur_config_file = 'components/'.$cur_component.'/configure.php';

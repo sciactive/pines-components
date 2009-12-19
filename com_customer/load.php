@@ -13,6 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 $config->run_customer = new com_customer;
 
+// Product actions to add points to a customer's account.
 foreach(array(1, 5, 10, 50, 60, 100, 120, 250, 500, 1000) as $cur_value) {
 	$config->run_sales->product_actions[] = array(
 		'type' => 'sold',
@@ -24,5 +25,6 @@ foreach(array(1, 5, 10, 50, 60, 100, 120, 250, 500, 1000) as $cur_value) {
 }
 
 // Hook com_sales' customer form to give a link to mine.
+$config->hook->add_callback('$config->run_sales->print_customer_form', -1, array($config->run_customer, 'hook_customer_view'));
 
 ?>

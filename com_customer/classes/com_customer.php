@@ -22,47 +22,6 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class com_customer extends component {
 	/**
-	 * Add points to a customer for a product sale.
-	 *
-	 * @param array $array The details array.
-	 */
-	function product_action_add_points($array) {
-		switch ($array['name']) {
-			case 'com_customer/add_points_1':
-				$this->adjust_points($array['sale']->customer, 1);
-				break;
-			case 'com_customer/add_points_5':
-				$this->adjust_points($array['sale']->customer, 5);
-				break;
-			case 'com_customer/add_points_10':
-				$this->adjust_points($array['sale']->customer, 10);
-				break;
-			case 'com_customer/add_points_50':
-				$this->adjust_points($array['sale']->customer, 50);
-				break;
-			case 'com_customer/add_points_60':
-				$this->adjust_points($array['sale']->customer, 60);
-				break;
-			case 'com_customer/add_points_100':
-				$this->adjust_points($array['sale']->customer, 100);
-				break;
-			case 'com_customer/add_points_120':
-				$this->adjust_points($array['sale']->customer, 120);
-				break;
-			case 'com_customer/add_points_250':
-				$this->adjust_points($array['sale']->customer, 250);
-				break;
-			case 'com_customer/add_points_500':
-				$this->adjust_points($array['sale']->customer, 500);
-				break;
-			case 'com_customer/add_points_1000':
-				$this->adjust_points($array['sale']->customer, 1000);
-				break;
-		}
-		$array['sale']->customer->save();
-	}
-
-	/**
 	 * Add or subtract points from a customer's account.
 	 *
 	 * @param entity $customer The customer entity.
@@ -91,6 +50,18 @@ class com_customer extends component {
 			if ($customer->com_customer->points > $customer->com_customer->peak_points)
 				$customer->com_customer->peak_points = $customer->com_customer->points;
 		}
+	}
+
+	function hook_customer_view($array) {
+		global $config;
+		if ( gatekeeper('com_customer/editcustomer') && is_numeric($array[2]) ) {
+			$customer = $config->run_sales->get_customer((int) $array[2]);
+			if (!is_null($customer)) {
+				$module = new module('com_customer', 'sidebar_customer', 'right');
+				$module->entity = $customer;
+			}
+		}
+		return $array;
 	}
 
 	/**
@@ -146,6 +117,47 @@ class com_customer extends component {
 		$module->new_action = $new_action;
 
 		return $module;
+	}
+
+	/**
+	 * Add points to a customer for a product sale.
+	 *
+	 * @param array $array The details array.
+	 */
+	function product_action_add_points($array) {
+		switch ($array['name']) {
+			case 'com_customer/add_points_1':
+				$this->adjust_points($array['sale']->customer, 1);
+				break;
+			case 'com_customer/add_points_5':
+				$this->adjust_points($array['sale']->customer, 5);
+				break;
+			case 'com_customer/add_points_10':
+				$this->adjust_points($array['sale']->customer, 10);
+				break;
+			case 'com_customer/add_points_50':
+				$this->adjust_points($array['sale']->customer, 50);
+				break;
+			case 'com_customer/add_points_60':
+				$this->adjust_points($array['sale']->customer, 60);
+				break;
+			case 'com_customer/add_points_100':
+				$this->adjust_points($array['sale']->customer, 100);
+				break;
+			case 'com_customer/add_points_120':
+				$this->adjust_points($array['sale']->customer, 120);
+				break;
+			case 'com_customer/add_points_250':
+				$this->adjust_points($array['sale']->customer, 250);
+				break;
+			case 'com_customer/add_points_500':
+				$this->adjust_points($array['sale']->customer, 500);
+				break;
+			case 'com_customer/add_points_1000':
+				$this->adjust_points($array['sale']->customer, 1000);
+				break;
+		}
+		$array['sale']->customer->save();
 	}
 }
 

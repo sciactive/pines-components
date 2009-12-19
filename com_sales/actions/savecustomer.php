@@ -51,13 +51,6 @@ if (empty($customer->name)) {
 	display_error('Please specify a name.');
 	return;
 }
-$test = $config->entity_manager->get_entities_by_data(array('name' => $customer->name), array('com_sales', 'customer'));
-if (!empty($test) && $test[0]->guid != $_REQUEST['id']) {
-	$module = $config->run_sales->print_customer_form('com_sales', 'savecustomer');
-	$module->entity = $customer;
-	display_error('There is already a customer with that name. Please choose a different name.');
-	return;
-}
 
 if ($config->com_sales->global_customers) {
 	$customer->ac = (object) array('other' => 1);

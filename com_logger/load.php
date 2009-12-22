@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$config->log_manager = new com_logger;
+$config->log_manager = 'com_logger';
 
 if (!function_exists('display_error') && $config->com_logger->log_errors) {
 	/**

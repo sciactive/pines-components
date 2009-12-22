@@ -15,13 +15,13 @@ defined('P_RUN') or die('Direct access prohibited');
  * The user manager.
  * @global com_user $config->user_manager
  */
-$config->user_manager = new com_user;
+$config->user_manager = 'com_user';
 
 /**
  * The ability manager.
  * @global abilities $config->ability_manager
  */
-$config->ability_manager = new abilities;
+$config->ability_manager = 'abilities';
 
 /**
  * Filter entities being deleted for user permissions.

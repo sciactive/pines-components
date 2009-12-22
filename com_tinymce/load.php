@@ -15,6 +15,6 @@ defined('P_RUN') or die('Direct access prohibited');
  * The standard editor.
  * @global com_tinymce $config->editor
  */
-$config->editor = new com_tinymce;
+$config->editor = 'com_tinymce';
 
 ?>

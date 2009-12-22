@@ -15,6 +15,6 @@ defined('P_RUN') or die('Direct access prohibited');
  * The configurator.
  * @global com_configure $config->configurator
  */
-$config->configurator = new com_configure;
+$config->configurator = 'com_configure';
 
 ?>

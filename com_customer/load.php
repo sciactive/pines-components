@@ -11,8 +11,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$config->run_customer = new com_customer;
-
 // Product actions to add points to a customer's account.
 foreach(explode(',', $config->com_customer->pointvalues) as $cur_value) {
 	if (!is_numeric($cur_value))

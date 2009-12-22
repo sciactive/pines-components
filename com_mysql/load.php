@@ -15,6 +15,6 @@ defined('P_RUN') or die('Direct access prohibited');
  * The database manager.
  * @global com_mysql $config->db_manager
  */
-$config->db_manager = new com_mysql;
+$config->db_manager = 'com_mysql';
 
 ?>

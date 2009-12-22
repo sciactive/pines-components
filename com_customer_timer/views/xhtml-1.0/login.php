@@ -43,7 +43,7 @@ $this->note = 'Please enter your info, or scan your barcode to login or logout.'
 			<input class="field" type="password" name="password" size="20" /></label>
 	</div>
 	<div class="element buttons">
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Login" />
+		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Submit" />
 		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="reset" name="reset" value="Reset" />
 	</div>
 </form>

@@ -206,11 +206,7 @@ $this->note = 'Provide customer account details in this form.';
 					} else {
 						echo '<span class="note">Leave blank, if not changing.</span>';
 					} ?>
-					<input class="field" type="password" name="password" size="20" /></label>
-			</div>
-			<div class="element">
-				<label><span class="label">Repeat Password</span>
-					<input class="field" type="password" name="password2" size="20" /></label>
+					<input class="field" type="text" name="password" size="20" /></label>
 			</div>
 			<div class="element full_width">
 				<span class="label">Description</span><br />

@@ -10,18 +10,33 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Customer Login';
-$this->note = 'Please enter your info, or scan your barcode to login.';
+$this->title = 'Customer Login/Logout';
+$this->note = 'Please enter your info, or scan your barcode to login or logout.';
 ?>
 <form class="pform" id="customer_login" name="customer_login" method="post" action="<?php echo pines_url('com_customer_timer', 'login'); ?>">
 	<script type="text/javascript">
 	// <![CDATA[
-	
+	var id_box;
+	var pw_box;
+	$(function(){
+		id_box = $("#customer_login [name=id]");
+		pw_box = $("#customer_login [name=password]");
+		id_box.change(function(){
+			if (id_box.val().indexOf("|") > 0) {
+				pw_box.val(id_box.val().replace(/^[^|]*\|/, ""));
+				id_box.val(id_box.val().replace(/\|.*$/, ""));
+			}
+		});
+		$("#customer_login").submit(function(){
+			id_box.change();
+		});
+		id_box.focus();
+	});
 	// ]]>
 	</script>
 	<div class="element">
 		<label><span class="label">Customer ID</span>
-			<input class="field" type="text" name="id" size="20" /></label>
+			<input class="field" type="password" name="id" size="20" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Password</span>

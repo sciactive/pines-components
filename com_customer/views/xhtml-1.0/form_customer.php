@@ -196,8 +196,21 @@ $this->note = 'Provide customer account details in this form.';
 				</div>
 			</div>
 			<div class="element">
-				<label><span class="label">Disable Login</span>
-					<input class="field" type="checkbox" name="disable_login" size="20" value="ON"<?php echo $this->entity->com_customer->disable_login ? ' checked="checked"' : ''; ?> /></label>
+				<label><span class="label">Login Disabled</span>
+					<input class="field" type="checkbox" name="login_disabled" size="20" value="ON"<?php echo $this->entity->com_customer->login_disabled ? ' checked="checked"' : ''; ?> /></label>
+			</div>
+			<div class="element">
+				<label><span class="label"><?php if (!is_null($this->entity->com_customer->password)) echo 'Update '; ?>Password</span>
+					<?php if (is_null($this->entity->com_customer->password)) {
+						echo ($config->com_user->empty_pw ? '<span class="note">May be blank.</span>' : '');
+					} else {
+						echo '<span class="note">Leave blank, if not changing.</span>';
+					} ?>
+					<input class="field" type="password" name="password" size="20" /></label>
+			</div>
+			<div class="element">
+				<label><span class="label">Repeat Password</span>
+					<input class="field" type="password" name="password2" size="20" /></label>
 			</div>
 			<div class="element full_width">
 				<span class="label">Description</span><br />

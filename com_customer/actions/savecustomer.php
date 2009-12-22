@@ -21,13 +21,19 @@ if ( isset($_REQUEST['id']) ) {
 		display_error('Requested customer id is not accessible');
 		return;
 	}
+} else {
+	display_notice('No customer ID given.');
+	$config->run_customer->list_customers();
+	return;
 }
 
 if (!isset($customer->com_customer))
 	$customer->com_customer = (object) array();
 
 // General
-$customer->com_customer->disable_login = ($_REQUEST['disable_login'] == 'ON' ? true : false);
+$customer->com_customer->login_disabled = ($_REQUEST['login_disabled'] == 'ON' ? true : false);
+if (!empty($_REQUEST['password']))
+	$customer->com_customer->password = $_REQUEST['password'];
 $customer->com_customer->description = $_REQUEST['description'];
 $customer->com_customer->short_description = $_REQUEST['short_description'];
 

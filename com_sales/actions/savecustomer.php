@@ -31,8 +31,6 @@ if ( isset($_REQUEST['id']) ) {
 
 $customer->name = $_REQUEST['name'];
 $customer->email = $_REQUEST['email'];
-if (!empty($_REQUEST['password']))
-	$customer->password = $_REQUEST['password'];
 $customer->company = $_REQUEST['company'];
 $customer->job_title = $_REQUEST['job_title'];
 $customer->address_1 = $_REQUEST['address_1'];

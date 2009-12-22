@@ -11,6 +11,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$config->run_customer = new com_customer_timer;
+$config->run_customer_timer = new com_customer_timer;
 
 ?>

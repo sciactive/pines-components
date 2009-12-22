@@ -53,7 +53,7 @@ $this->title = 'Customers';
 	<thead>
 		<tr>
 			<th>Name</th>
-			<th>Disable Login</th>
+			<th>Login Disabled</th>
 			<th>Points</th>
 			<th>Peak</th>
 			<th>All-Time</th>
@@ -63,7 +63,7 @@ $this->title = 'Customers';
 	<?php foreach($this->customers as $customer) { ?>
 		<tr title="<?php echo $customer->guid; ?>">
 			<td><?php echo $customer->name; ?></td>
-			<td><?php echo ($customer->com_customer->disable_login ? 'Yes' : 'No'); ?></td>
+			<td><?php echo ($customer->com_customer->login_disabled ? 'Yes' : 'No'); ?></td>
 			<td><?php echo $customer->com_customer->points; ?></td>
 			<td><?php echo $customer->com_customer->peak_points; ?></td>
 			<td><?php echo $customer->com_customer->total_points; ?></td>

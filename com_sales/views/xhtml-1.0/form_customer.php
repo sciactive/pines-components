@@ -34,19 +34,6 @@ $this->note = 'Provide customer details in this form.';
 			<input class="field" type="text" name="email" size="20" value="<?php echo $this->entity->email; ?>" /></label>
 	</div>
 	<div class="element">
-		<label><span class="label"><?php if (!is_null($this->entity->guid)) echo 'Update '; ?>Password</span>
-			<?php if (is_null($this->entity->guid)) {
-				echo ($config->com_user->empty_pw ? '<span class="note">May be blank.</span>' : '');
-			} else {
-				echo '<span class="note">Leave blank, if not changing.</span>';
-			} ?>
-			<input class="field" type="password" name="password" size="20" /></label>
-	</div>
-	<div class="element">
-		<label><span class="label">Repeat Password</span>
-			<input class="field" type="password" name="password2" size="20" /></label>
-	</div>
-	<div class="element">
 		<label><span class="label">Company</span>
 			<input class="field" type="text" name="company" size="20" value="<?php echo $this->entity->company; ?>" /></label>
 	</div>

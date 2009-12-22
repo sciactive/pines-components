@@ -44,7 +44,9 @@ $this->title = 'Customer Timer Status';
 					show_status(this);
 				});
 				var filter_selector = ":not(.customer_box_"+guids.join(", .customer_box_")+")";
-				customer_status.children(filter_selector).fadeOut("slow");
+				customer_status.children(filter_selector).fadeOut("slow", function(){
+					$(this).remove();
+				});
 				sort_customers();
 			}
 		});

@@ -45,7 +45,7 @@ $this->note = 'Use this form to see the sales totals for a given time period and
 			// ]]>
 		</script>
 		<label><span class="label">Start Date</span>
-			<input class="field" type="text" id="date_start" name="date_start" size="20" value="<?php echo date('Y-m-d'); ?>" /></label>
+			<input class="field" type="text" id="date_start" name="date_start" size="24" value="<?php echo date('Y-m-d'); ?>" /></label>
 	</div>
 	<div class="element">
 		<script type="text/javascript">
@@ -58,6 +58,6 @@ $this->note = 'Use this form to see the sales totals for a given time period and
 			// ]]>
 		</script>
 		<label><span class="label">End Date</span>
-			<input class="field" type="text" id="date_end" name="date_end" size="20" value="<?php echo date('Y-m-d'); ?>" /></label>
+			<input class="field" type="text" id="date_end" name="date_end" size="24" value="<?php echo date('Y-m-d'); ?>" /></label>
 	</div>
 </div>

@@ -123,15 +123,15 @@ $this->note = 'Provide product details in this form.';
 			<?php } ?>
 			<div class="element">
 				<label><span class="label">Name</span>
-					<input class="field" type="text" name="name" size="20" value="<?php echo $this->entity->name; ?>" /></label>
+					<input class="field" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
 			</div>
 			<div class="element">
 				<label><span class="label">Enabled</span>
-					<input class="field" type="checkbox" name="enabled" size="20" value="ON"<?php echo ($this->entity->enabled || is_null($this->entity->enabled)) ? ' checked="checked"' : ''; ?> /></label>
+					<input class="field" type="checkbox" name="enabled" size="24" value="ON"<?php echo ($this->entity->enabled || is_null($this->entity->enabled)) ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="element">
 				<label><span class="label">Product SKU</span>
-					<input class="field" type="text" name="sku" size="20" value="<?php echo $this->entity->sku; ?>" /></label>
+					<input class="field" type="text" name="sku" size="24" value="<?php echo $this->entity->sku; ?>" /></label>
 			</div>
 			<div class="element">
 				<span class="label">Categories</span>
@@ -372,7 +372,7 @@ $this->note = 'Provide product details in this form.';
 			</div>
 			<div class="element">
 				<label><span class="label">Manufacturer SKU</span>
-					<input class="field" type="text" name="manufacturer_sku" size="20" value="<?php echo $this->entity->manufacturer_sku; ?>" /></label>
+					<input class="field" type="text" name="manufacturer_sku" size="24" value="<?php echo $this->entity->manufacturer_sku; ?>" /></label>
 			</div>
 			<br class="spacer" />
 		</div>
@@ -437,7 +437,7 @@ $this->note = 'Provide product details in this form.';
 						</table>
 					</div>
 					<span id="vendors_hidden" class="field" style="display: none;">Vendors cannot be selected for non stocked items.</span>
-					<input class="field" type="hidden" id="vendors" name="vendors" size="20" />
+					<input class="field" type="hidden" id="vendors" name="vendors" size="24" />
 				</div>
 			</div>
 			<div id="vendor_dialog" title="Add a Vendor">
@@ -505,22 +505,22 @@ $this->note = 'Provide product details in this form.';
 			</div>
 			<div class="element">
 				<label><span class="label">Unit Price</span>
-					<input class="field" type="text" name="unit_price" size="20" value="<?php echo $this->entity->unit_price; ?>" /></label>
+					<input class="field" type="text" name="unit_price" size="24" value="<?php echo $this->entity->unit_price; ?>" /></label>
 			</div>
 			<div class="element">
 				<label><span class="label">Margin</span>
-					<input class="field" type="text" name="margin" size="20" value="<?php echo $this->entity->margin; ?>" /></label>
+					<input class="field" type="text" name="margin" size="24" value="<?php echo $this->entity->margin; ?>" /></label>
 			</div>
 			<div class="element">
 				<label><span class="label">Floor</span>
-					<input class="field" type="text" name="floor" size="20" value="<?php echo $this->entity->floor; ?>" /></label>
+					<input class="field" type="text" name="floor" size="24" value="<?php echo $this->entity->floor; ?>" /></label>
 			</div>
 			<div class="element heading">
 				<h1>Taxes/Fees</h1>
 			</div>
 			<div class="element">
 				<label><span class="label">Tax Exempt</span>
-					<input class="field" type="checkbox" name="tax_exempt" size="20" value="ON"<?php echo $this->entity->tax_exempt ? ' checked="checked"' : ''; ?> /></label>
+					<input class="field" type="checkbox" name="tax_exempt" size="24" value="ON"<?php echo $this->entity->tax_exempt ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="element">
 				<label><span class="label">Additional Fees</span>
@@ -545,29 +545,29 @@ $this->note = 'Provide product details in this form.';
 			</div>
 			<div class="element">
 				<label><span class="label">Serialized</span>
-					<input class="field" type="checkbox" name="serialized" size="20" value="ON"<?php echo ($this->entity->serialized || is_null($this->entity->serialized)) ? ' checked="checked"' : ''; ?> /></label>
+					<input class="field" type="checkbox" name="serialized" size="24" value="ON"<?php echo ($this->entity->serialized || is_null($this->entity->serialized)) ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="element">
 				<label><span class="label">Discountable</span>
-					<input class="field" type="checkbox" name="discountable" size="20" value="ON"<?php echo ($this->entity->discountable || is_null($this->entity->discountable)) ? ' checked="checked"' : ''; ?> /></label>
+					<input class="field" type="checkbox" name="discountable" size="24" value="ON"<?php echo ($this->entity->discountable || is_null($this->entity->discountable)) ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="element">
 				<label><span class="label">Require Customer</span>
 					<span class="note">This means a customer must be selected when selling this item.</span>
-					<input class="field" type="checkbox" name="require_customer" size="20" value="ON"<?php echo ($this->entity->require_customer || is_null($this->entity->require_customer)) ? ' checked="checked"' : ''; ?> /></label>
+					<input class="field" type="checkbox" name="require_customer" size="24" value="ON"<?php echo ($this->entity->require_customer || is_null($this->entity->require_customer)) ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="element">
 				<label><span class="label">Hide on Invoice</span>
-					<input class="field" type="checkbox" name="hide_on_invoice" size="20" value="ON"<?php echo $this->entity->hide_on_invoice ? ' checked="checked"' : ''; ?> /></label>
+					<input class="field" type="checkbox" name="hide_on_invoice" size="24" value="ON"<?php echo $this->entity->hide_on_invoice ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="element">
 				<label><span class="label">Non-Refundable</span>
-					<input class="field" type="checkbox" name="non_refundable" size="20" value="ON"<?php echo $this->entity->non_refundable ? ' checked="checked"' : ''; ?> /></label>
+					<input class="field" type="checkbox" name="non_refundable" size="24" value="ON"<?php echo $this->entity->non_refundable ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="element full_width">
 				<span class="label">Additional Barcodes</span>
 				<div class="group">
-					<input class="field" type="text" name="additional_barcodes" size="20" value="<?php echo (is_array($this->entity->additional_barcodes) ? implode(',', $this->entity->additional_barcodes) : ''); ?>" />
+					<input class="field" type="text" name="additional_barcodes" size="24" value="<?php echo (is_array($this->entity->additional_barcodes) ? implode(',', $this->entity->additional_barcodes) : ''); ?>" />
 					<script type="text/javascript">
 						// <![CDATA[
 						$(document).ready(function(){

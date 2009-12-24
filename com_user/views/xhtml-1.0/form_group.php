@@ -27,15 +27,15 @@ $this->note = 'Provide group details in this form.';
 	<?php } ?>
 	<div class="element">
 		<label><span class="label">Group Name</span>
-			<input class="field" type="text" name="groupname" size="20" value="<?php echo $this->entity->groupname; ?>" /></label>
+			<input class="field" type="text" name="groupname" size="24" value="<?php echo $this->entity->groupname; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Display Name</span>
-			<input class="field" type="text" name="name" size="20" value="<?php echo $this->entity->name; ?>" /></label>
+			<input class="field" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Email</span>
-			<input class="field" type="text" name="email" size="20" value="<?php echo $this->entity->email; ?>" /></label>
+			<input class="field" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Parent</span>

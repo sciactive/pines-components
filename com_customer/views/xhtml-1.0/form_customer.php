@@ -197,7 +197,7 @@ $this->note = 'Provide customer account details in this form.';
 			</div>
 			<div class="element">
 				<label><span class="label">Login Disabled</span>
-					<input class="field" type="checkbox" name="login_disabled" size="20" value="ON"<?php echo $this->entity->com_customer->login_disabled ? ' checked="checked"' : ''; ?> /></label>
+					<input class="field" type="checkbox" name="login_disabled" size="24" value="ON"<?php echo $this->entity->com_customer->login_disabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="element">
 				<label><span class="label"><?php if (!is_null($this->entity->com_customer->password)) echo 'Update '; ?>Password</span>
@@ -206,7 +206,7 @@ $this->note = 'Provide customer account details in this form.';
 					} else {
 						echo '<span class="note">Leave blank, if not changing.</span>';
 					} ?>
-					<input class="field" type="text" name="password" size="20" /></label>
+					<input class="field" type="text" name="password" size="24" /></label>
 			</div>
 			<div class="element full_width">
 				<span class="label">Description</span><br />
@@ -235,7 +235,7 @@ $this->note = 'Provide customer account details in this form.';
 			<div class="element">
 				<label><span class="label">Adjust Points</span>
 					<span class="note">Use a negative value to subtract points.</span>
-					<input class="field" type="text" name="adjust_points" size="20" value="0" /></label>
+					<input class="field" type="text" name="adjust_points" size="24" value="0" /></label>
 			</div>
 			<?php } ?>
 			<br class="spacer" />
@@ -268,7 +268,7 @@ $this->note = 'Provide customer account details in this form.';
 							<?php } } ?>
 						</tbody>
 					</table>
-					<input class="field" type="hidden" id="addresses" name="addresses" size="20" />
+					<input class="field" type="hidden" id="addresses" name="addresses" size="24" />
 				</div>
 			</div>
 			<div id="address_dialog" title="Add an Address">
@@ -276,19 +276,19 @@ $this->note = 'Provide customer account details in this form.';
 					<div class="element">
 						<label>
 							<span class="label">Name</span>
-							<input class="field" type="text" size="20" name="cur_address_name" id="cur_address_name" />
+							<input class="field" type="text" size="24" name="cur_address_name" id="cur_address_name" />
 						</label>
 					</div>
 					<div class="element">
 						<label>
 							<span class="label">Address 1</span>
-							<input class="field" type="text" size="20" name="cur_address_addr1" id="cur_address_addr1" />
+							<input class="field" type="text" size="24" name="cur_address_addr1" id="cur_address_addr1" />
 						</label>
 					</div>
 					<div class="element">
 						<label>
 							<span class="label">Address 2</span>
-							<input class="field" type="text" size="20" name="cur_address_addr2" id="cur_address_addr2" />
+							<input class="field" type="text" size="24" name="cur_address_addr2" id="cur_address_addr2" />
 						</label>
 					</div>
 					<div class="element">
@@ -324,7 +324,7 @@ $this->note = 'Provide customer account details in this form.';
 							<?php } } ?>
 						</tbody>
 					</table>
-					<input class="field" type="hidden" id="attributes" name="attributes" size="20" />
+					<input class="field" type="hidden" id="attributes" name="attributes" />
 				</div>
 			</div>
 			<div id="attribute_dialog" title="Add an Attribute">

@@ -27,19 +27,19 @@ $this->note = 'Provide vendor details in this form.';
 	<?php } ?>
 	<div class="element">
 		<label><span class="label">Name</span>
-			<input class="field" type="text" name="name" size="20" value="<?php echo $this->entity->name; ?>" /></label>
+			<input class="field" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Email</span>
-			<input class="field" type="text" name="email" size="20" value="<?php echo $this->entity->email; ?>" /></label>
+			<input class="field" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Address 1</span>
-			<input class="field" type="text" name="address_1" size="20" value="<?php echo $this->entity->address_1; ?>" /></label>
+			<input class="field" type="text" name="address_1" size="24" value="<?php echo $this->entity->address_1; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Address 2</span>
-			<input class="field" type="text" name="address_2" size="20" value="<?php echo $this->entity->address_2; ?>" /></label>
+			<input class="field" type="text" name="address_2" size="24" value="<?php echo $this->entity->address_2; ?>" /></label>
 	</div>
 	<div class="element">
 		<span class="label">City, State</span>
@@ -48,42 +48,42 @@ $this->note = 'Provide vendor details in this form.';
 	</div>
 	<div class="element">
 		<label><span class="label">Zip</span>
-			<input class="field" type="text" name="zip" size="20" value="<?php echo $this->entity->zip; ?>" /></label>
+			<input class="field" type="text" name="zip" size="24" value="<?php echo $this->entity->zip; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Corporate Phone</span>
-			<input class="field" type="text" name="phone_work" size="20" value="<?php echo $this->entity->phone_work; ?>" /></label>
+			<input class="field" type="text" name="phone_work" size="24" value="<?php echo $this->entity->phone_work; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Fax</span>
-			<input class="field" type="text" name="fax" size="20" value="<?php echo $this->entity->fax; ?>" /></label>
+			<input class="field" type="text" name="fax" size="24" value="<?php echo $this->entity->fax; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Account #</span>
-			<input class="field" type="text" name="account_number" size="20" value="<?php echo $this->entity->account_number; ?>" /></label>
+			<input class="field" type="text" name="account_number" size="24" value="<?php echo $this->entity->account_number; ?>" /></label>
 	</div>
 	<br />
 	<fieldset class="group">
 		<legend>Client Details</legend>
 		<div class="element">
 			<label><span class="label">Username</span>
-				<input class="field" type="text" name="client_username" size="20" value="<?php echo $this->entity->client_username; ?>" /></label>
+				<input class="field" type="text" name="client_username" size="24" value="<?php echo $this->entity->client_username; ?>" /></label>
 		</div>
 		<div class="element">
 			<label><span class="label">Password</span>
-				<input class="field" type="text" name="client_password" size="20" value="<?php echo $this->entity->client_password; ?>" /></label>
+				<input class="field" type="text" name="client_password" size="24" value="<?php echo $this->entity->client_password; ?>" /></label>
 		</div>
 		<div class="element">
 			<label><span class="label">Rep Name</span>
-				<input class="field" type="text" name="client_rep_name" size="20" value="<?php echo $this->entity->client_rep_name; ?>" /></label>
+				<input class="field" type="text" name="client_rep_name" size="24" value="<?php echo $this->entity->client_rep_name; ?>" /></label>
 		</div>
 		<div class="element">
 			<label><span class="label">Email</span>
-				<input class="field" type="text" name="client_email" size="20" value="<?php echo $this->entity->client_email; ?>" /></label>
+				<input class="field" type="text" name="client_email" size="24" value="<?php echo $this->entity->client_email; ?>" /></label>
 		</div>
 		<div class="element">
 			<label><span class="label">Web Address</span>
-				<input class="field" type="text" name="client_web_address" size="20" value="<?php echo $this->entity->client_web_address; ?>" /></label>
+				<input class="field" type="text" name="client_web_address" size="24" value="<?php echo $this->entity->client_web_address; ?>" /></label>
 		</div>
 	</fieldset>
 	<br />
@@ -91,19 +91,19 @@ $this->note = 'Provide vendor details in this form.';
 		<legend>Online Ordering</legend>
 		<div class="element">
 			<label><span class="label">Web Address</span>
-				<input class="field" type="text" name="online_web_address" size="20" value="<?php echo $this->entity->online_web_address; ?>" /></label>
+				<input class="field" type="text" name="online_web_address" size="24" value="<?php echo $this->entity->online_web_address; ?>" /></label>
 		</div>
 		<div class="element">
 			<label><span class="label">Customer ID</span>
-				<input class="field" type="text" name="online_customer_id" size="20" value="<?php echo $this->entity->online_customer_id; ?>" /></label>
+				<input class="field" type="text" name="online_customer_id" size="24" value="<?php echo $this->entity->online_customer_id; ?>" /></label>
 		</div>
 		<div class="element">
 			<label><span class="label">Username</span>
-				<input class="field" type="text" name="online_username" size="20" value="<?php echo $this->entity->online_username; ?>" /></label>
+				<input class="field" type="text" name="online_username" size="24" value="<?php echo $this->entity->online_username; ?>" /></label>
 		</div>
 		<div class="element">
 			<label><span class="label">Password</span>
-				<input class="field" type="text" name="online_password" size="20" value="<?php echo $this->entity->online_password; ?>" /></label>
+				<input class="field" type="text" name="online_password" size="24" value="<?php echo $this->entity->online_password; ?>" /></label>
 		</div>
 	</fieldset>
 	<br />

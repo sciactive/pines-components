@@ -29,7 +29,9 @@ if ( isset($_REQUEST['id']) ) {
 	$customer = new entity('com_sales', 'customer');
 }
 
-$customer->name = $_REQUEST['name'];
+$customer->name_first = $_REQUEST['name_first'];
+$customer->name_last = $_REQUEST['name_last'];
+$customer->name = "{$customer->name_first} {$customer->name_last}";
 $customer->email = $_REQUEST['email'];
 $customer->company = $_REQUEST['company'];
 $customer->job_title = $_REQUEST['job_title'];

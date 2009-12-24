@@ -235,11 +235,11 @@ $this->note = 'Provide PO details in this form.';
 	<?php } ?>
 	<div class="element">
 		<label><span class="label">PO #</span>
-			<input class="field" type="text" name="po_number" size="20" value="<?php echo $this->entity->po_number; ?>" /></label>
+			<input class="field" type="text" name="po_number" size="24" value="<?php echo $this->entity->po_number; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Reference #</span>
-			<input class="field" type="text" name="reference_number" size="20" value="<?php echo $this->entity->reference_number; ?>" /></label>
+			<input class="field" type="text" name="reference_number" size="24" value="<?php echo $this->entity->reference_number; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Vendor</span>
@@ -284,7 +284,7 @@ $this->note = 'Provide PO details in this form.';
 			// ]]>
 		</script>
 		<label><span class="label">ETA</span>
-			<input class="field" type="text" id="eta" name="eta" size="20" value="<?php echo ($this->entity->eta ? date('Y-m-d', $this->entity->eta) : ''); ?>" /></label>
+			<input class="field" type="text" id="eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? date('Y-m-d', $this->entity->eta) : ''); ?>" /></label>
 	</div>
 	<div class="element full_width">
 		<span class="label">Products</span>
@@ -316,7 +316,7 @@ $this->note = 'Provide PO details in this form.';
 					</tbody>
 				</table>
 			</div>
-			<input class="field" type="hidden" id="products" name="products" size="20" />
+			<input class="field" type="hidden" id="products" name="products" size="24" />
 		</div>
 	</div>
 	<div class="element full_width">

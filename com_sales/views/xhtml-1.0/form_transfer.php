@@ -135,7 +135,7 @@ $this->note = 'Use this form to transfer inventory to another location.';
 	<?php } ?>
 	<div class="element">
 		<label><span class="label">Reference #</span>
-			<input class="field" type="text" name="reference_number" size="20" value="<?php echo $this->entity->reference_number; ?>" /></label>
+			<input class="field" type="text" name="reference_number" size="24" value="<?php echo $this->entity->reference_number; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Destination</span>
@@ -166,7 +166,7 @@ $this->note = 'Use this form to transfer inventory to another location.';
 			// ]]>
 		</script>
 		<label><span class="label">ETA</span>
-			<input class="field" type="text" id="eta" name="eta" size="20" value="<?php echo ($this->entity->eta ? date('Y-m-d', $this->entity->eta) : ''); ?>" /></label>
+			<input class="field" type="text" id="eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? date('Y-m-d', $this->entity->eta) : ''); ?>" /></label>
 	</div>
 	<div class="element full_width">
 		<span class="label">Stock</span>
@@ -201,7 +201,7 @@ $this->note = 'Use this form to transfer inventory to another location.';
 					</tbody>
 				</table>
 			</div>
-			<input class="field" type="hidden" id="stock" name="stock" size="20" />
+			<input class="field" type="hidden" id="stock" name="stock" size="24" />
 		</div>
 	</div>
 	<div id="stock_dialog" title="Add Stock">

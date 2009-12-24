@@ -57,11 +57,11 @@ $page->head("</script>\n");
 	</div>
 	<div class="element">
 		<label><span class="label">Name</span>
-		<input class="field" type="text" name="name" size="20" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
+		<input class="field" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Subject</span>
-		<input class="field" type="text" name="subject" size="20" value="<?php echo htmlentities($this->entity->subject); ?>" /></label>
+		<input class="field" type="text" name="subject" size="24" value="<?php echo htmlentities($this->entity->subject); ?>" /></label>
 	</div>
 	<div class="element heading">
 		<h1>Message</h1>

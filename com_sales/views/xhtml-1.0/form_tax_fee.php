@@ -27,11 +27,11 @@ $this->note = 'Provide tax/fee details in this form.';
 	<?php } ?>
 	<div class="element">
 		<label><span class="label">Name</span>
-		<input class="field" type="text" name="name" size="20" value="<?php echo $this->entity->name; ?>" /></label>
+		<input class="field" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Enabled</span>
-		<input class="field" type="checkbox" name="enabled" size="20" value="ON"<?php echo ($this->entity->enabled || is_null($this->entity->enabled)) ? ' checked="checked"' : ''; ?> /></label>
+		<input class="field" type="checkbox" name="enabled" size="24" value="ON"<?php echo ($this->entity->enabled || is_null($this->entity->enabled)) ? ' checked="checked"' : ''; ?> /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Type</span>
@@ -44,7 +44,7 @@ $this->note = 'Provide tax/fee details in this form.';
 	<div class="element">
 		<label><span class="label">Rate</span>
 		<span class="note">Enter a percentage (5 for 5%) or a flat rate in dollars (5 for $5).</span>
-		<input class="field" type="text" name="rate" size="20" value="<?php echo $this->entity->rate; ?>" /></label>
+		<input class="field" type="text" name="rate" size="24" value="<?php echo $this->entity->rate; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Locations</span>

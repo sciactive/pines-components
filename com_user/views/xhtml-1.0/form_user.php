@@ -40,15 +40,15 @@ $this->note = 'Provide user details in this form.';
 	<?php } ?>
 	<div class="element">
 		<label><span class="label">Username</span>
-			<input class="field" type="text" name="username" size="20" value="<?php echo $this->entity->username; ?>" /></label>
+			<input class="field" type="text" name="username" size="24" value="<?php echo $this->entity->username; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Name</span>
-			<input class="field" type="text" name="name" size="20" value="<?php echo $this->entity->name; ?>" /></label>
+			<input class="field" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Email</span>
-			<input class="field" type="text" name="email" size="20" value="<?php echo $this->entity->email; ?>" /></label>
+			<input class="field" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label"><?php if (!is_null($this->entity->guid)) echo 'Update '; ?>Password</span>
@@ -57,11 +57,11 @@ $this->note = 'Provide user details in this form.';
 			} else {
 				echo '<span class="note">Leave blank, if not changing.</span>';
 			} ?>
-			<input class="field" type="password" name="password" size="20" /></label>
+			<input class="field" type="password" name="password" size="24" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Repeat Password</span>
-			<input class="field" type="password" name="password2" size="20" /></label>
+			<input class="field" type="password" name="password2" size="24" /></label>
 	</div>
 	<?php if ( $this->display_default_components ) { ?>
 	<div class="element">

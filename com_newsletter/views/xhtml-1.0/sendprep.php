@@ -30,15 +30,15 @@ $page->head("<link href=\"{$config->rela_location}components/com_newsletter/css/
 	<legend>Sending <?php echo $this->mail->name; ?></legend>
 	<div class="element">
 		<label><span class="label">From Email</span>
-		<input class="field" type="text" name="from" size="20" value="<?php echo htmlentities($config->com_newsletter->default_from); ?>" /></label>
+		<input class="field" type="text" name="from" size="24" value="<?php echo htmlentities($config->com_newsletter->default_from); ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Reply to Email</span>
-		<input class="field" type="text" name="replyto" size="20" value="<?php echo htmlentities($config->com_newsletter->default_reply_to); ?>" /></label>
+		<input class="field" type="text" name="replyto" size="24" value="<?php echo htmlentities($config->com_newsletter->default_reply_to); ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Subject</span>
-		<input class="field" type="text" name="subject" size="20" value="<?php echo htmlentities($this->mail->subject); ?>" /></label>
+		<input class="field" type="text" name="subject" size="24" value="<?php echo htmlentities($this->mail->subject); ?>" /></label>
 	</div>
 	<div class="element">
 		<span class="label">Select Groups</span>

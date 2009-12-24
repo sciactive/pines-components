@@ -36,11 +36,11 @@ $this->note = 'Please enter your info, or scan your barcode to login or logout.'
 	</script>
 	<div class="element">
 		<label><span class="label">Customer ID</span>
-			<input class="field" type="password" name="id" size="20" /></label>
+			<input class="field" type="password" name="id" size="24" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Password</span>
-			<input class="field" type="password" name="password" size="20" /></label>
+			<input class="field" type="password" name="password" size="24" /></label>
 	</div>
 	<div class="element buttons">
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Submit" />

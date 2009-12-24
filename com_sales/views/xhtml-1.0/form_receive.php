@@ -139,7 +139,7 @@ $this->note = 'Only use this form to receive inventory into your <strong>current
 	</div>
 	<div class="element">
 		<label><span class="label">Product Code</span>
-			<input class="field" type="text" id="product_code" name="product_code" size="20" /></label>
+			<input class="field" type="text" id="product_code" name="product_code" size="24" /></label>
 			<input class="button ui-state-default ui-corner-all" type="button" id="add_product" value="Add" />
 	</div>
 	<div class="element full_width">
@@ -159,7 +159,7 @@ $this->note = 'Only use this form to receive inventory into your <strong>current
 					</tbody>
 				</table>
 			</div>
-			<input class="field" type="hidden" id="products" name="products" size="20" />
+			<input class="field" type="hidden" id="products" name="products" size="24" />
 		</div>
 	</div>
 	<div id="product_dialog" title="Receive Inventory">

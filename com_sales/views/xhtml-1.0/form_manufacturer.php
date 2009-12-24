@@ -27,19 +27,19 @@ $this->note = 'Provide manufacturer details in this form.';
 	<?php } ?>
 	<div class="element">
 		<label><span class="label">Name</span>
-		<input class="field" type="text" name="name" size="20" value="<?php echo $this->entity->name; ?>" /></label>
+		<input class="field" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Email</span>
-		<input class="field" type="text" name="email" size="20" value="<?php echo $this->entity->email; ?>" /></label>
+		<input class="field" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Address 1</span>
-		<input class="field" type="text" name="address_1" size="20" value="<?php echo $this->entity->address_1; ?>" /></label>
+		<input class="field" type="text" name="address_1" size="24" value="<?php echo $this->entity->address_1; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Address 2</span>
-		<input class="field" type="text" name="address_2" size="20" value="<?php echo $this->entity->address_2; ?>" /></label>
+		<input class="field" type="text" name="address_2" size="24" value="<?php echo $this->entity->address_2; ?>" /></label>
 	</div>
 	<div class="element">
 		<span class="label">City, State</span>
@@ -48,15 +48,15 @@ $this->note = 'Provide manufacturer details in this form.';
 	</div>
 	<div class="element">
 		<label><span class="label">Zip</span>
-		<input class="field" type="text" name="zip" size="20" value="<?php echo $this->entity->zip; ?>" /></label>
+		<input class="field" type="text" name="zip" size="24" value="<?php echo $this->entity->zip; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Corporate Phone</span>
-		<input class="field" type="text" name="phone_work" size="20" value="<?php echo $this->entity->phone_work; ?>" /></label>
+		<input class="field" type="text" name="phone_work" size="24" value="<?php echo $this->entity->phone_work; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Fax</span>
-		<input class="field" type="text" name="fax" size="20" value="<?php echo $this->entity->fax; ?>" /></label>
+		<input class="field" type="text" name="fax" size="24" value="<?php echo $this->entity->fax; ?>" /></label>
 	</div>
 	<div class="element buttons">
 		<?php if ( !is_null($this->entity->guid) ) { ?>

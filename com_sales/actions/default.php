@@ -1,6 +1,6 @@
 <?php
 /**
- * Display sales total page.
+ * Default action of com_sales.
  *
  * @package Pines
  * @subpackage com_sales
@@ -11,10 +11,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/totalsales') ) {
-	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'totalsales', null, false));
-	return;
-}
+action('com_sales', 'listsales');
 
-$config->run_sales->print_sales_total();
 ?>

@@ -13,6 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 $config->ability_manager->add('com_sales', 'receive', 'Receive Inventory', 'User can receive inventory into their stock.');
 $config->ability_manager->add('com_sales', 'managestock', 'Manage Stock', 'User can transfer and adjust stock.');
+$config->ability_manager->add('com_sales', 'totalsales', 'Total Sales', 'User can see sales totals.');
 $config->ability_manager->add('com_sales', 'managesales', 'Manage Sales', 'User can manage sales.');
 $config->ability_manager->add('com_sales', 'newsale', 'Create Sales', 'User can create new sales.');
 $config->ability_manager->add('com_sales', 'editsale', 'Edit Sales', 'User can edit current sales.');

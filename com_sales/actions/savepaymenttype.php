@@ -37,14 +37,14 @@ $payment_type->minimum = floatval($_REQUEST['minimum']);
 if (empty($payment_type->name)) {
 	$module = $config->run_sales->print_payment_type_form('com_sales', 'savepaymenttype');
 	$module->entity = $payment_type;
-	display_error('Please specify a name.');
+	display_notice('Please specify a name.');
 	return;
 }
 $test = $config->entity_manager->get_entities_by_data(array('name' => $payment_type->name), array('com_sales', 'payment_type'));
 if (!empty($test) && $test[0]->guid != $_REQUEST['id']) {
 	$module = $config->run_sales->print_payment_type_form('com_sales', 'savepaymenttype');
 	$module->entity = $payment_type;
-	display_error('There is already a payment type with that name. Please choose a different name.');
+	display_notice('There is already a payment type with that name. Please choose a different name.');
 	return;
 }
 if (empty($payment_type->minimum)) {

@@ -29,26 +29,34 @@ if ( isset($_REQUEST['id']) ) {
 	$customer = new entity('com_sales', 'customer');
 }
 
-$customer->name_first = $_REQUEST['name_first'];
-$customer->name_last = $_REQUEST['name_last'];
+$customer->name_first = $config->run_sales->title_case($_REQUEST['name_first']);
+$customer->name_last = $config->run_sales->title_case($_REQUEST['name_last']);
 $customer->name = "{$customer->name_first} {$customer->name_last}";
 $customer->email = $_REQUEST['email'];
 $customer->company = $_REQUEST['company'];
 $customer->job_title = $_REQUEST['job_title'];
+$customer->address_type = $_REQUEST['address_type'];
 $customer->address_1 = $_REQUEST['address_1'];
 $customer->address_2 = $_REQUEST['address_2'];
 $customer->city = $_REQUEST['city'];
 $customer->state = $_REQUEST['state'];
 $customer->zip = $_REQUEST['zip'];
-$customer->phone_home = $_REQUEST['phone_home'];
-$customer->phone_work = $_REQUEST['phone_work'];
+$customer->address_international = $_REQUEST['address_international'];
 $customer->phone_cell = $_REQUEST['phone_cell'];
+$customer->phone_work = $_REQUEST['phone_work'];
+$customer->phone_home = $_REQUEST['phone_home'];
 $customer->fax = $_REQUEST['fax'];
 
 if (empty($customer->name)) {
 	$module = $config->run_sales->print_customer_form('com_sales', 'savecustomer');
 	$module->entity = $customer;
-	display_error('Please specify a name.');
+	display_notice('Please specify a name.');
+	return;
+}
+if (empty($customer->phone_cell) && empty($customer->phone_work) && empty($customer->phone_home)) {
+	$module = $config->run_sales->print_customer_form('com_sales', 'savecustomer');
+	$module->entity = $customer;
+	display_notice('Please specify at least one phone number.');
 	return;
 }
 

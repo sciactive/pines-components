@@ -62,14 +62,14 @@ if (empty($po->received)) {
 if (empty($po->po_number)) {
 	$module = $config->run_sales->print_po_form('com_sales', 'savepo');
 	$module->entity = $po;
-	display_error('Please specify a PO number.');
+	display_notice('Please specify a PO number.');
 	return;
 }
 $test = $config->entity_manager->get_entities_by_data(array('po_number' => $po->po_number), array('com_sales', 'po'));
 if (!empty($test) && $test[0]->guid != $_REQUEST['id']) {
 	$module = $config->run_sales->print_po_form('com_sales', 'savepo');
 	$module->entity = $po;
-	display_error('There is already a PO with that number. Please enter a different number.');
+	display_notice('There is already a PO with that number. Please enter a different number.');
 	return;
 }
 if (is_null($po->vendor)) {

@@ -54,14 +54,14 @@ $vendor->comments = $_REQUEST['comments'];
 if (empty($vendor->name)) {
 	$module = $config->run_sales->print_vendor_form('com_sales', 'savevendor');
 	$module->entity = $vendor;
-	display_error('Please specify a name.');
+	display_notice('Please specify a name.');
 	return;
 }
 $test = $config->entity_manager->get_entities_by_data(array('name' => $vendor->name), array('com_sales', 'vendor'));
 if (!empty($test) && $test[0]->guid != $_REQUEST['id']) {
 	$module = $config->run_sales->print_vendor_form('com_sales', 'savevendor');
 	$module->entity = $vendor;
-	display_error('There is already a vendor with that name. Please choose a different name.');
+	display_notice('There is already a vendor with that name. Please choose a different name.');
 	return;
 }
 

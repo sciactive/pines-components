@@ -45,14 +45,14 @@ $shipper->comments = $_REQUEST['comments'];
 if (empty($shipper->name)) {
 	$module = $config->run_sales->print_shipper_form('com_sales', 'saveshipper');
 	$module->entity = $shipper;
-	display_error('Please specify a name.');
+	display_notice('Please specify a name.');
 	return;
 }
 $test = $config->entity_manager->get_entities_by_data(array('name' => $shipper->name), array('com_sales', 'shipper'));
 if (!empty($test) && $test[0]->guid != $_REQUEST['id']) {
 	$module = $config->run_sales->print_shipper_form('com_sales', 'saveshipper');
 	$module->entity = $shipper;
-	display_error('There is already a shipper with that name. Please choose a different name.');
+	display_notice('There is already a shipper with that name. Please choose a different name.');
 	return;
 }
 

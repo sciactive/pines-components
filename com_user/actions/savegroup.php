@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $pass = true;
 
 if ( empty($_REQUEST['groupname']) ) {
-	display_error('Must specify groupname!');
+	display_notice('Must specify groupname!');
 	$pass = false;
 }
 
@@ -32,7 +32,7 @@ if ( isset($_REQUEST['id']) ) {
 		if ( is_null($config->user_manager->get_group_by_groupname($_REQUEST['groupname'])) ) {
 			$group->groupname = $_REQUEST['groupname'];
 		} else {
-			display_error('Groupname ['.$_REQUEST['groupname'].'] already exists! Continuing with old groupname...');
+			display_notice('Groupname ['.$_REQUEST['groupname'].'] already exists! Continuing with old groupname...');
 		}
 	}
 } else {
@@ -44,7 +44,7 @@ if ( isset($_REQUEST['id']) ) {
 	if ( is_null($config->user_manager->get_group_by_groupname($_REQUEST['groupname'])) ) {
 		$group->groupname = $_REQUEST['groupname'];
 	} else {
-		display_error('Groupname already exists!');
+		display_notice('Groupname already exists!');
 		$pass = false;
 	}
 }

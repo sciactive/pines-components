@@ -59,6 +59,7 @@ $this->title = 'Customers';
 			<th>Email</th>
 			<th>Company</th>
 			<th>Job Title</th>
+			<th>Address</th>
 			<th>Address 1</th>
 			<th>Address 2</th>
 			<th>City</th>
@@ -77,6 +78,7 @@ $this->title = 'Customers';
 			<td><?php echo $customer->email; ?></td>
 			<td><?php echo $customer->company; ?></td>
 			<td><?php echo $customer->job_title; ?></td>
+			<td><?php echo $customer->address_type == 'international' ? 'Intl' : 'US'; ?></td>
 			<td><?php echo $customer->address_1; ?></td>
 			<td><?php echo $customer->address_2; ?></td>
 			<td><?php echo $customer->city; ?></td>

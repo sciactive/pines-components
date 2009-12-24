@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $pass = true;
 
 if ( empty($_REQUEST['username']) ) {
-	display_error('Must specify username!');
+	display_notice('Must specify username!');
 	$pass = false;
 }
 
@@ -32,7 +32,7 @@ if ( isset($_REQUEST['id']) ) {
 		if ( is_null($config->user_manager->get_user_by_username($_REQUEST['username'])) ) {
 			$user->username = $_REQUEST['username'];
 		} else {
-			display_error('Username ['.$_REQUEST['username'].'] already exists! Continuing with old username...');
+			display_notice('Username ['.$_REQUEST['username'].'] already exists! Continuing with old username...');
 		}
 	}
 	if ( !empty($_REQUEST['password']) ) $user->password($_REQUEST['password']);
@@ -42,14 +42,14 @@ if ( isset($_REQUEST['id']) ) {
 		return;
 	}
 	if ( empty($_REQUEST['password']) && !$config->com_user->empty_pw ) {
-		display_error('Must specify password!');
+		display_notice('Must specify password!');
 		$pass = false;
 	}
 	$user = new user;
 	if ( is_null($config->user_manager->get_user_by_username($_REQUEST['username'])) ) {
 		$user->username = $_REQUEST['username'];
 	} else {
-		display_error('Username already exists!');
+		display_notice('Username already exists!');
 		$pass = false;
 	}
 	$user->password($_REQUEST['password']);
@@ -62,7 +62,7 @@ if ( gatekeeper('com_user/default_component') ) {
 	if ( file_exists('components/'.$_REQUEST['default_component'].'/actions/default.php') ) {
 		$user->default_component = $_REQUEST['default_component'];
 	} else {
-		display_error('Selected component does not support a default action.');
+		display_notice('Selected component does not support a default action.');
 	}
 }
 

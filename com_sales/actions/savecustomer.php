@@ -53,6 +53,12 @@ if (empty($customer->name)) {
 	display_notice('Please specify a name.');
 	return;
 }
+if (empty($customer->email)) {
+	$module = $config->run_sales->print_customer_form('com_sales', 'savecustomer');
+	$module->entity = $customer;
+	display_notice('Please specify an email.');
+	return;
+}
 if (empty($customer->phone_cell) && empty($customer->phone_work) && empty($customer->phone_home)) {
 	$module = $config->run_sales->print_customer_form('com_sales', 'savecustomer');
 	$module->entity = $customer;

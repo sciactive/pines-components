@@ -30,7 +30,7 @@ $this->title = 'Customer Timer Status';
 				setTimeout(update_status, 5000);
 			},
 			error: function(XMLHttpRequest, textStatus){
-				pines.error("An error occured while trying to refreash the status:\n"+textStatus);
+				pines.error("An error occured while trying to refreash the status:\n"+XMLHttpRequest.status+": "+textStatus);
 			},
 			success: function(data){
 				customer_status.children(".loading").remove();
@@ -78,7 +78,7 @@ $this->title = 'Customer Timer Status';
 						data: {"id": customer.guid},
 						dataType: "json",
 						error: function(XMLHttpRequest, textStatus){
-							pines.error("An error occured while trying to log the user out:\n"+textStatus);
+							pines.error("An error occured while trying to log the user out:\n"+XMLHttpRequest.status+": "+textStatus);
 						},
 						success: function(data){
 							if (!data) {

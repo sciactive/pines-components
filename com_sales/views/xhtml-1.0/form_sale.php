@@ -185,7 +185,7 @@ $this->note = 'Use this form to edit a sale.';
 											loader.pnotify_remove();
 										},
 										error: function(XMLHttpRequest, textStatus){
-											pines.error("An error occured while trying to lookup the product code:\n"+textStatus);
+											pines.error("An error occured while trying to lookup the product code:\n"+XMLHttpRequest.status+": "+textStatus);
 										},
 										success: function(data){
 											if (!data) {
@@ -311,7 +311,7 @@ $this->note = 'Use this form to edit a sale.';
 					dataType: "json",
 					data: {"code": cur_guid, "useguid": true},
 					error: function(XMLHttpRequest, textStatus){
-						pines.error("An error occured while trying to lookup a product:\n"+textStatus);
+						pines.error("An error occured while trying to lookup a product:\n"+XMLHttpRequest.status+": "+textStatus);
 					},
 					success: function(data){
 						if (!data) {
@@ -552,7 +552,7 @@ $this->note = 'Use this form to edit a sale.';
 					loader.pnotify_remove();
 				},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to find customers:\n"+textStatus);
+					pines.error("An error occured while trying to find customers:\n"+XMLHttpRequest.status+": "+textStatus);
 				},
 				success: function(data){
 					if (!data) {

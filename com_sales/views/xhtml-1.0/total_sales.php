@@ -13,15 +13,6 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Sales Totals';
 $this->note = 'Use this form to see the sales totals for a given time period and location.';
 ?>
-<script type="text/javascript">
-	// <![CDATA[
-
-	$(function(){
-		// TODO: Ajax calls to get sales data.
-	});
-
-	// ]]>
-</script>
 <div class="pform">
 	<div class="element heading">
 		<h1>Date</h1>
@@ -65,20 +56,42 @@ $this->note = 'Use this form to see the sales totals for a given time period and
 	<div class="element buttons">
 		<script type="text/javascript">
 			// <![CDATA[
-			var location;
-			var date_start;
-			var date_end;
-			var result_totals;
+			var com_sales_location;
+			var com_sales_date_start;
+			var com_sales_date_end;
+			var com_sales_result_totals;
 
 			$(function(){
-				location = $("#location");
-				date_start = $("#date_start");
-				date_end = $("#date_end");
-				result_totals = $("#result_totals");
-			});
+				com_sales_location = $("#location");
+				com_sales_date_start = $("#date_start");
+				com_sales_date_end = $("#date_end");
+				com_sales_result_totals = $("#result_totals");
 
-			$("#retrieve_totals").click(function(){
-				
+				$("#retrieve_totals").click(function(){
+					var loader;
+					$.ajax({
+						url: "<?php echo pines_url('com_sales', 'total_json'); ?>",
+						type: "POST",
+						dataType: "json",
+						data: {"location": com_sales_location.val(), "date_start": com_sales_date_start.val(), "date_end": com_sales_date_end.val()},
+						beforeSend: function(){
+							loader = pines.alert('Retrieving totals from server...', 'Sales Totals', 'icon picon_16x16_animations_throbber', {pnotify_hide: false});
+						},
+						complete: function(){
+							loader.pnotify_remove();
+						},
+						error: function(XMLHttpRequest, textStatus){
+							pines.error("An error occured while trying to retrieve totals:\n"+XMLHttpRequest.status+": "+textStatus);
+						},
+						success: function(data){
+							if (!data) {
+								alert("No sales data was returned.");
+								return;
+							}
+							// Handle return data.
+						}
+					});
+				});
 			});
 			// ]]>
 		</script>

@@ -184,7 +184,7 @@ $this->note = 'Provide product details in this form.';
 										},
 										error: function(XMLHttpRequest, textStatus, errorThrown) {
 											$.tree.rollback(RB);
-											alert("An error occurred trying to reach the server:\n"+textStatus);
+											alert("An error occurred trying to reach the server:\n"+XMLHttpRequest.status+": "+textStatus);
 										}
 									});
 								},
@@ -206,7 +206,7 @@ $this->note = 'Provide product details in this form.';
 										},
 										error: function(XMLHttpRequest, textStatus, errorThrown) {
 											$.tree.rollback(RB);
-											alert("An error occurred trying to reach the server:\n"+textStatus);
+											alert("An error occurred trying to reach the server:\n"+XMLHttpRequest.status+": "+textStatus);
 										}
 									});
 								},
@@ -227,7 +227,7 @@ $this->note = 'Provide product details in this form.';
 										},
 										error: function(XMLHttpRequest, textStatus, errorThrown) {
 											$.tree.rollback(RB);
-											alert("An error occurred trying to reach the server:\n"+textStatus);
+											alert("An error occurred trying to reach the server:\n"+XMLHttpRequest.status+": "+textStatus);
 										}
 									});
 								},
@@ -261,7 +261,7 @@ $this->note = 'Provide product details in this form.';
 										},
 										error: function(XMLHttpRequest, textStatus, errorThrown) {
 											$.tree.rollback(RB);
-											alert("An error occurred trying to reach the server:\n"+textStatus);
+											alert("An error occurred trying to reach the server:\n"+XMLHttpRequest.status+": "+textStatus);
 										}
 									});
 								},
@@ -295,7 +295,7 @@ $this->note = 'Provide product details in this form.';
 										},
 										error: function(XMLHttpRequest, textStatus, errorThrown) {
 											$.tree.rollback(RB);
-											alert("An error occurred trying to reach the server:\n"+textStatus);
+											alert("An error occurred trying to reach the server:\n"+XMLHttpRequest.status+": "+textStatus);
 										}
 									});
 								},

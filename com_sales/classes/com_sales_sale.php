@@ -48,7 +48,7 @@ class com_sales_sale extends entity {
 			display_notice('The sale cannot be completed while there is still an amount due.');
 			return false;
 		}
-		if ($this->change < 0.00) {
+		if ($this->change > 0.00) {
 			$change_type = $config->entity_manager->get_entities_by_data(array('change_type' => true), array('com_sales', 'payment_type'));
 			if (!is_array($change_type) || is_null($change_type[0])) {
 				display_notice('Change is due to be given, but no payment type has been set to give change.');
@@ -71,7 +71,7 @@ class com_sales_sale extends entity {
 			$tx->ticket = $this;
 			$return = $return && $tx->save();
 		}
-		if ($this->change < 0.00) {
+		if ($this->change > 0.00) {
 			// Make a transaction entry.
 			$tx = new entity('com_sales', 'transaction', 'payment_tx');
 			$tx->type = 'change_given';

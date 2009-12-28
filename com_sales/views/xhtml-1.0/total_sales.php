@@ -70,7 +70,7 @@ $this->note = 'Use this form to see the sales totals for a given time period and
 				$("#retrieve_totals").click(function(){
 					var loader;
 					$.ajax({
-						url: "<?php echo pines_url('com_sales', 'total_json'); ?>",
+						url: "<?php echo pines_url('com_sales', 'totaljson'); ?>",
 						type: "POST",
 						dataType: "json",
 						data: {"location": com_sales_location.val(), "date_start": com_sales_date_start.val(), "date_end": com_sales_date_end.val()},

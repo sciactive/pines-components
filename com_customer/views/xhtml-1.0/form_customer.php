@@ -82,20 +82,20 @@ $this->note = 'Provide customer account details in this form.';
 				width: 600,
 				buttons: {
 					"Done": function() {
-						var cur_address_name = $("#cur_address_name").val();
+						var cur_address_type = $("#cur_address_type").val();
 						var cur_address_addr1 = $("#cur_address_addr1").val();
 						var cur_address_addr2 = $("#cur_address_addr2").val();
 						var cur_address_city = $("#cur_address_city").val();
 						var cur_address_state = $("#cur_address_state").val();
 						var cur_address_zip = $("#cur_address_zip").val();
-						if (cur_address_name == "" || cur_address_addr1 == "") {
+						if (cur_address_type == "" || cur_address_addr1 == "") {
 							alert("Please provide a name and a street address.");
 							return;
 						}
 						var new_address = [{
 							key: null,
 							values: [
-								cur_address_name,
+								cur_address_type,
 								cur_address_addr1,
 								cur_address_addr2,
 								cur_address_city,
@@ -139,7 +139,7 @@ $this->note = 'Provide customer account details in this form.';
 			});
 
 			function update_addresses() {
-				$("#cur_address_name, #cur_address_addr1, #cur_address_addr2, #cur_address_city, #cur_address_state, #cur_address_zip").val("");
+				$("#cur_address_type, #cur_address_addr1, #cur_address_addr2, #cur_address_city, #cur_address_state, #cur_address_zip").val("");
 				addresses.val(JSON.stringify(addresses_table.pgrid_get_all_rows().pgrid_export_rows()));
 			}
 
@@ -241,13 +241,29 @@ $this->note = 'Provide customer account details in this form.';
 			<br class="spacer" />
 		</div>
 		<div id="tab_addresses">
+			<div class="element">
+				<span class="label">Main Address</span>
+				<div class="group">
+					<div class="field">
+						<?php if ($this->entity->address_type == 'us') { ?>
+							<?php echo $this->entity->address_1; ?><br />
+							<?php if (isset($this->entity->address_2)) { ?>
+								<?php echo $this->entity->address_2; ?><br />
+							<?php } ?>
+							<?php echo $this->entity->city; ?>, <?php echo $this->entity->state; ?> <?php echo $this->entity->zip; ?>
+						<?php } else { ?>
+							<?php echo str_replace("\n", "<br />\n", htmlentities($this->entity->address_international)); ?>
+						<?php } ?>
+					</div>
+				</div>
+			</div>
 			<div class="element full_width">
-				<span class="label">Addresses</span>
+				<span class="label">Additional Addresses</span>
 				<div class="group">
 					<table id="addresses_table">
 						<thead>
 							<tr>
-								<th>Name</th>
+								<th>Type</th>
 								<th>Address 1</th>
 								<th>Address 2</th>
 								<th>City</th>
@@ -275,8 +291,8 @@ $this->note = 'Provide customer account details in this form.';
 				<div class="pform">
 					<div class="element">
 						<label>
-							<span class="label">Name</span>
-							<input class="field" type="text" size="24" name="cur_address_name" id="cur_address_name" />
+							<span class="label">Type</span>
+							<input class="field" type="text" size="24" name="cur_address_type" id="cur_address_type" />
 						</label>
 					</div>
 					<div class="element">

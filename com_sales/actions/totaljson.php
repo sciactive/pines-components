@@ -82,8 +82,11 @@ foreach ($tx_array as $key => &$cur_tx) {
 		} elseif ($cur_tx->has_tag('payment_tx')) {
 			if ($cur_tx->type == 'payment_received') {
 				$payment_array[$cur_tx->ref->name]['total'] += (float) $cur_tx->amount;
+				$payment_array[$cur_tx->ref->name]['net_total'] += (float) $cur_tx->amount;
+				$payment_array[$cur_tx->ref->name]['count']++;
 			} elseif ($cur_tx->type == 'change_given') {
-				$payment_array[$cur_tx->ref->name]['change'] += (float) $cur_tx->amount;
+				$payment_array[$cur_tx->ref->name]['change_given'] += (float) $cur_tx->amount;
+				$payment_array[$cur_tx->ref->name]['net_total'] -= (float) $cur_tx->amount;
 			}
 		}
 	} else {
@@ -94,7 +97,15 @@ foreach ($tx_array as $key => &$cur_tx) {
 if (empty($tx_array)) {
 	$return = null;
 } else {
-	$return = array('invoice' => $invoice_array, 'sale' => $sale_array, 'user' => $user_array, 'payment' => $payment_array);
+	$return = array(
+		'location' => is_int($location) ? $config->user_manager->get_groupname($location) : $location,
+		'date_start' => date('Y-m-d', $date_start),
+		'date_end' => date('Y-m-d', $date_end),
+		'invoice' => $invoice_array,
+		'sale' => $sale_array,
+		'user' => $user_array,
+		'payment' => $payment_array
+	);
 }
 
 $page->override_doc(json_encode($return));

@@ -11,11 +11,20 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Sales Totals';
-$this->note = 'Use this form to see the sales totals for a given time period and location.';
 ?>
-<div class="pform">
+<div id="sales_totals" class="pform">
 	<div class="element heading">
-		<h1>Date</h1>
+		<script type="text/javascript">
+			// <![CDATA[
+			$(function(){
+				$("#hide_parameters").click(function(){
+					$("#sales_totals").children(".element:not(.heading)").slideToggle();
+				});
+			});
+			// ]]>
+		</script>
+		<button id="hide_parameters" class="ui-state-default ui-corner-all" style="float: right;" onmouseover="$(this).addClass('ui-state-hover')" onmouseout="$(this).removeClass('ui-state-hover')">Toggle Form</button>
+		<h1>Parameters</h1>
 	</div>
 	<div class="element">
 		<label><span class="label">Location</span>
@@ -76,6 +85,7 @@ $this->note = 'Use this form to see the sales totals for a given time period and
 						data: {"location": com_sales_location.val(), "date_start": com_sales_date_start.val(), "date_end": com_sales_date_end.val()},
 						beforeSend: function(){
 							loader = pines.alert('Retrieving totals from server...', 'Sales Totals', 'icon picon_16x16_animations_throbber', {pnotify_hide: false});
+							com_sales_result_totals.hide("normal");
 						},
 						complete: function(){
 							loader.pnotify_remove();
@@ -88,7 +98,26 @@ $this->note = 'Use this form to see the sales totals for a given time period and
 								alert("No sales data was returned.");
 								return;
 							}
-							// Handle return data.
+							"\""
+							com_sales_result_totals.find(".total_location").html(data.location);
+							com_sales_result_totals.find(".total_date").html(data.date_start == data.date_end ? data.date_start : data.date_start+" - "+data.date_end);
+							com_sales_result_totals.find(".total_invoice_count").html(data.invoice.count);
+							com_sales_result_totals.find(".total_invoice_total").html(data.invoice.total);
+							com_sales_result_totals.find(".total_sale_count").html(data.sale.count);
+							com_sales_result_totals.find(".total_sale_total").html(data.sale.total);
+							com_sales_result_totals.find(".total_users").empty().each(function(){
+								var total_users = $(this);
+								$.each(data.user, function(i, val){
+									total_users.append("<div class=\"element\"><span class=\"label\">"+i+"</span><div class=\"group\"><span class=\"field\">Count: </span><span class=\"field\">"+val.count+"</span><br /><span class=\"field\">Total: </span><span class=\"field\">$"+val.total+"</span></div></div>");
+								});
+							});
+							com_sales_result_totals.find(".total_payments").empty().each(function(){
+								var total_payments = $(this);
+								$.each(data.payment, function(i, val){
+									total_payments.append("<div class=\"element\"><span class=\"label\">"+i+"</span><div class=\"group\"><span class=\"field\">Count: </span><span class=\"field\">"+val.count+"</span><br /><span class=\"field\">Total: </span><span class=\"field\">$"+val.total+"</span>"+(val.change_given ? "<br /><span class=\"field\">Change Given: </span><span class=\"field\">$"+val.change_given+"</span><br /><span class=\"field\">Net Total: </span><span class=\"field\">$"+val.net_total+"</span>" : "")+"</div></div>");
+								});
+							});
+							com_sales_result_totals.show("normal");
 						}
 					});
 				});
@@ -97,5 +126,66 @@ $this->note = 'Use this form to see the sales totals for a given time period and
 		</script>
 		<button id="retrieve_totals" class="button ui-state-default ui-corner-all" onmouseover="$(this).addClass('ui-state-hover');" onmouseout="$(this).removeClass('ui-state-hover');">Retrieve</button>
 	</div>
-	<div id="result_totals"></div>
+	<div id="result_totals" style="clear: both; display: none;">
+		<div class="element">
+			<span class="label">Location</span>
+			<span class="field"><span class="total_location">null</span></span>
+		</div>
+		<div class="element">
+			<span class="label">Date</span>
+			<span class="field"><span class="total_date">null</span></span>
+		</div>
+		<div class="element heading">
+			<h1>Invoices</h1>
+		</div>
+		<div class="element">
+			<span class="label">Count</span>
+			<span class="field"><span class="total_invoice_count">null</span></span>
+		</div>
+		<div class="element">
+			<span class="label">Total</span>
+			<span class="field">$<span class="total_invoice_total">null</span></span>
+		</div>
+		<div class="element heading">
+			<h1>Sales</h1>
+		</div>
+		<div class="element">
+			<span class="label">Count</span>
+			<span class="field"><span class="total_sale_count">null</span></span>
+		</div>
+		<div class="element">
+			<span class="label">Total</span>
+			<span class="field">$<span class="total_sale_total">null</span></span>
+		</div>
+		<div class="element heading">
+			<h1>Users</h1>
+		</div>
+		<div class="total_users">
+			<div class="element">
+				<span class="label">1: name [name]</span>
+				<div class="group">
+					<span class="field">Count: </span>
+					<span class="field">1</span><br />
+					<span class="field">Total: </span>
+					<span class="field">1.00</span>
+				</div>
+			</div>
+		</div>
+		<div class="element heading">
+			<h1>Payments</h1>
+		</div>
+		<div class="total_payments">
+			<div class="element">
+				<span class="label">name</span>
+				<div class="group">
+					<span class="field">Count: </span>
+					<span class="field">1</span><br />
+					<span class="field">Total: </span>
+					<span class="field">1.00</span><br />
+					<span class="field">Change Given: </span>
+					<span class="field">1.00</span>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

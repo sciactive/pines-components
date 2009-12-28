@@ -15,7 +15,7 @@ $this->title = 'Stock';
 <script type="text/javascript">
 	// <![CDATA[
 
-	$(document).ready(function(){
+	$(function(){
 		var state_xhr;
 		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
 		var cur_defaults = {

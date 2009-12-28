@@ -60,7 +60,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	<script type="text/javascript" src="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/js/jquery/jquery.themeswitcher.js"></script>
 	<script type="text/javascript">
 		// <![CDATA[
-		$(document).ready(function(){
+		$(function(){
 			if (!($.browser.msie && $.browser.version == "6.0"))
 				$('#switcher').themeswitcher();
 		});

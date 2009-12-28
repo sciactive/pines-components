@@ -50,7 +50,7 @@ $this->note = 'Use this form to transfer inventory to another location.';
 			stock.val(JSON.stringify(all_rows));
 		}
 		
-		$(document).ready(function(){
+		$(function(){
 			stock = $("#stock");
 			stock_table = $("#stock_table");
 			available_stock_table = $("#available_stock_table");
@@ -158,7 +158,7 @@ $this->note = 'Use this form to transfer inventory to another location.';
 	<div class="element">
 		<script type="text/javascript">
 			// <![CDATA[
-			$(document).ready(function(){
+			$(function(){
 				$("#eta").datepicker({
 					dateFormat: "yy-mm-dd"
 				});

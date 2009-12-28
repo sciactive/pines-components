@@ -16,7 +16,7 @@ $this->note = 'Provide customer account details in this form.';
 <form class="pform" method="post" id="customer_details" action="<?php echo pines_url($this->new_option, $this->new_action); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
-		$(document).ready(function(){
+		$(function(){
 			var addresses = $("#addresses");
 			var addresses_table = $("#addresses_table");
 			var address_dialog = $("#address_dialog");

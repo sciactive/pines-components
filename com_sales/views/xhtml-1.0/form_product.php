@@ -16,7 +16,7 @@ $this->note = 'Provide product details in this form.';
 <form class="pform" method="post" id="product_details" action="<?php echo pines_url($this->new_option, $this->new_action); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
-		$(document).ready(function(){
+		$(function(){
 			var vendors = $("#vendors");
 			var vendors_table = $("#vendors_table");
 			var available_vendors_table = $("#available_vendors_table");
@@ -137,7 +137,7 @@ $this->note = 'Provide product details in this form.';
 				<span class="label">Categories</span>
 				<script type="text/javascript">
 					// <![CDATA[
-					$(document).ready(function(){
+					$(function(){
 						// Category Tree
 						var input = $("#categories");
 						$("#category_tree").tree({
@@ -486,7 +486,7 @@ $this->note = 'Provide product details in this form.';
 					</select></label>
 				<script type="text/javascript">
 					// <![CDATA[
-					$(document).ready(function(){
+					$(function(){
 						$("#product_details [name=pricing_method]").change(function(){
 							if ($(this).val() == "fixed") {
 								$("#product_details [name=margin]").attr('disabled', 'disabled');
@@ -570,7 +570,7 @@ $this->note = 'Provide product details in this form.';
 					<input class="field" type="text" name="additional_barcodes" size="24" value="<?php echo (is_array($this->entity->additional_barcodes) ? implode(',', $this->entity->additional_barcodes) : ''); ?>" />
 					<script type="text/javascript">
 						// <![CDATA[
-						$(document).ready(function(){
+						$(function(){
 							$("#product_details [name=additional_barcodes]").ptags();
 						});
 						// ]]>

@@ -15,7 +15,7 @@ echo ("<script type=\"text/javascript\" src=\"{$config->rela_location}components
 ?>
 <script type="text/javascript">
 // <![CDATA[
-$(document).ready(function(){
+$(function(){
 	$('textarea.peditor').tinymce({
 		// Location of TinyMCE script
 		script_url : '<?php echo $config->rela_location; ?>components/com_tinymce/js/tiny_mce/tiny_mce.js',

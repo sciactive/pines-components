@@ -95,7 +95,7 @@ $this->note = 'Use this form to edit a sale.';
 			return floored * sign;
 		}
 
-		$(document).ready(function(){
+		$(function(){
 			customer_box = $("#customer");
 			customer_search_box = $("#customer_search");
 			customer_search_button = $("#customer_search_button");

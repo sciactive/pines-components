@@ -119,7 +119,7 @@ $this->note = 'Provide PO details in this form.';
 			$("#total").html(total);
 		}
 		
-		$(document).ready(function(){
+		$(function(){
 			products = $("#products");
 			products_table = $("#products_table");
 			available_products_table = $("#available_products_table");
@@ -276,7 +276,7 @@ $this->note = 'Provide PO details in this form.';
 	<div class="element">
 		<script type="text/javascript">
 			// <![CDATA[
-			$(document).ready(function(){
+			$(function(){
 				$("#eta").datepicker({
 					dateFormat: "yy-mm-dd"
 				});

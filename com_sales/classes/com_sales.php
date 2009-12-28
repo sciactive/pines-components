@@ -1106,6 +1106,7 @@ class com_sales extends component {
 		global $config;
 		$module = new module('com_sales', 'total_sales', 'content');
 		$module->locations = $config->user_manager->get_group_array();
+		$module->show_all = gatekeeper('com_sales/totalothersales');
 
 		return $module;
 	}

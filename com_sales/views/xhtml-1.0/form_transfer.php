@@ -140,7 +140,7 @@ $this->note = 'Use this form to transfer inventory to another location.';
 	<div class="element">
 		<label><span class="label">Destination</span>
 			<?php if (!empty($this->entity->received)) { ?>
-				<span class="note">Destination cannot be changed after items have been received on this transfer.</span>
+				<span class="note">Destination cannot be changed after items have been received.</span>
 			<?php } ?>
 			<select class="field" name="destination"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?>>
 				<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations, $this->entity->destination->guid); ?>

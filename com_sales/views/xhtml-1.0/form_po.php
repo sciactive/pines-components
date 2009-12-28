@@ -246,7 +246,7 @@ $this->note = 'Provide PO details in this form.';
 			<?php if (empty($this->entity->received)) { ?>
 				<span class="note">Changing this will clear selected products!</span>
 			<?php } else { ?>
-				<span class="note">Vendor cannot be changed after items have been received on this PO.</span>
+				<span class="note">Vendor cannot be changed after items have been received.</span>
 			<?php } ?>
 			<select class="field" name="vendor" onchange="void select_vendor(Number(this.value));"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?>>
 				<option value="null">-- None --</option>
@@ -258,7 +258,7 @@ $this->note = 'Provide PO details in this form.';
 	<div class="element">
 		<label><span class="label">Destination</span>
 			<?php if (!empty($this->entity->received)) { ?>
-				<span class="note">Destination cannot be changed after items have been received on this transfer.</span>
+				<span class="note">Destination cannot be changed after items have been received.</span>
 			<?php } ?>
 			<select class="field" name="destination"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?>>
 				<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations, $this->entity->destination->guid); ?>

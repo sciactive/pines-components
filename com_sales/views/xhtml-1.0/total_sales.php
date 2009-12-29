@@ -98,7 +98,6 @@ $this->title = 'Sales Totals';
 								alert("No sales data was returned.");
 								return;
 							}
-							"\""
 							com_sales_result_totals.find(".total_location").html(data.location);
 							com_sales_result_totals.find(".total_date").html(data.date_start == data.date_end ? data.date_start : data.date_start+" - "+data.date_end);
 							com_sales_result_totals.find(".total_invoice_count").html(data.invoice.count);

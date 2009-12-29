@@ -33,8 +33,8 @@ if (is_null($user)) {
 	return;
 }
 
-if (!is_object($user->com_sales))
-	$user->com_sales = (object) array();
+if (!is_a($user->com_sales, 'com_sales_employee_data'))
+	$user->com_sales = new com_sales_employee_data;
 
 if (!is_array($user->com_sales->timeclock))
 	$user->com_sales->timeclock = array();
@@ -45,6 +45,6 @@ if ($user->com_sales->timeclock[count($user->com_sales->timeclock) - 1]['status'
 	$user->com_sales->timeclock[] = array('status' => 'in', 'time' => time());
 }
 
-$page->override_doc(json_encode(array($user->save(), $user->com_sales->timeclock[count($user->com_sales->timeclock) - 1])));
+$page->override_doc(json_encode(array($user->com_sales->save() && $user->save(), $user->com_sales->timeclock[count($user->com_sales->timeclock) - 1])));
 
 ?>

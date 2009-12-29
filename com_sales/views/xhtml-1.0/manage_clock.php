@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Timeclock';
+$this->title = 'Employee Timeclock';
 ?>
 <script type="text/javascript">
 	// <![CDATA[

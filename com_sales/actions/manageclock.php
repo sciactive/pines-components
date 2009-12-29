@@ -19,7 +19,7 @@ if ( !gatekeeper('com_sales/manageclock') ) {
 $users = $config->user_manager->get_users();
 
 foreach($users as $key => &$cur_user) {
-	if (!gatekeeper('com_sales/clock', $cur_user))
+	if (!gatekeeper('com_sales/clock', $cur_user) && !is_array($cur_user->com_sales->timeclock))
 		unset($users[$key]);
 }
 

@@ -11,6 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
+$config->ability_manager->add('com_sales', 'clock', 'Clock In/Out', 'User can use the employee timeclock.');
+$config->ability_manager->add('com_sales', 'manageclock', 'Manage Clock', 'User can manage the employee timeclock.');
 $config->ability_manager->add('com_sales', 'receive', 'Receive Inventory', 'User can receive inventory into their stock.');
 $config->ability_manager->add('com_sales', 'managestock', 'Manage Stock', 'User can transfer and adjust stock.');
 $config->ability_manager->add('com_sales', 'totalsales', 'Total Sales', 'User can see sales totals.');

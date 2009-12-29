@@ -42,6 +42,11 @@ if ( gatekeeper('com_sales/managestock') || gatekeeper('com_sales/receive') ||
 		if ( gatekeeper('com_sales/totalsales') )
 			$page->main_menu->add('Sales Totals', pines_url('com_sales', 'totalsales'), $com_sales_menu_id_sales);
 	 }
+	if ( gatekeeper('com_sales/manageclock') ) {
+		$com_sales_menu_id_employees = $page->main_menu->add('Employees', '#', $com_sales_menu_id);
+		if ( gatekeeper('com_sales/manageclock') )
+			$page->main_menu->add('Timeclock', pines_url('com_sales', 'manageclock'), $com_sales_menu_id_employees);
+	 }
 	if ( gatekeeper('com_sales/managestock') || gatekeeper('com_sales/receive') ||
 		 gatekeeper('com_sales/managepos') || gatekeeper('com_sales/newpo') ) {
 		$com_sales_menu_id_inv = $page->main_menu->add('Inventory', '#', $com_sales_menu_id);
@@ -89,6 +94,10 @@ if ( gatekeeper('com_sales/managestock') || gatekeeper('com_sales/receive') ||
 		if ( gatekeeper('com_sales/newtaxfee') )
 			$page->main_menu->add('New Tax/Fee', pines_url('com_sales', 'newtaxfee'), $com_sales_menu_id_setup);
 	}
+}
+
+if (gatekeeper('com_sales/clock')) {
+	$com_sales_clockin_module = new module('com_sales', 'clock', 'right');
 }
 
 ?>

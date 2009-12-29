@@ -1,0 +1,50 @@
+<?php
+/**
+ * Perform actions on categories, returning JSON.
+ *
+ * @package Pines
+ * @subpackage com_sales
+ * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
+ * @author Hunter Perrin <hunter@sciactive.com>
+ * @copyright Hunter Perrin
+ * @link http://sciactive.com/
+ */
+defined('P_RUN') or die('Direct access prohibited');
+
+if ( !gatekeeper('com_sales/clock') && !gatekeeper('com_sales/manageclock') ) {
+	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'clock', $_REQUEST, false));
+	return;
+}
+
+$page->override = true;
+
+if ($_REQUEST['id'] == 'self') {
+	$user = $_SESSION['user'];
+} else {
+	if ( !gatekeeper('com_sales/manageclock') ) {
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'clock', $_REQUEST, false));
+		return;
+	}
+	$user = $config->user_manager->get_user((int) $_REQUEST['id']);
+}
+
+if (is_null($user)) {
+	$page->override_doc('false');
+	return;
+}
+
+if (!is_object($user->com_sales))
+	$user->com_sales = (object) array();
+
+if (!is_array($user->com_sales->timeclock))
+	$user->com_sales->timeclock = array();
+
+if ($user->com_sales->timeclock[count($user->com_sales->timeclock) - 1]['status'] == 'in') {
+	$user->com_sales->timeclock[] = array('status' => 'out', 'time' => time());
+} else {
+	$user->com_sales->timeclock[] = array('status' => 'in', 'time' => time());
+}
+
+$page->override_doc(json_encode(array($user->save(), $user->com_sales->timeclock[count($user->com_sales->timeclock) - 1])));
+
+?>

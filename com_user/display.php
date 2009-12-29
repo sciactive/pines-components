@@ -22,7 +22,7 @@ if ( gatekeeper('com_user/new') || gatekeeper('com_user/manage') || gatekeeper('
 	if ( gatekeeper('com_user/newg') )
 		$page->main_menu->add('New Group', pines_url('com_user', 'newgroup'), $com_user_menu_id);
 }
-if ( gatekeeper('com_user/self') ) $page->main_menu->add('My Account', pines_url('com_user', 'edituser', array('id' => $_SESSION['user_id'])));
+if ( gatekeeper('com_user/self') ) $page->main_menu->add('My Account', pines_url('com_user', 'editself'));
 if ( gatekeeper() ) $page->main_menu->add('Logout', pines_url('com_user', 'logout'));
 
 ?>

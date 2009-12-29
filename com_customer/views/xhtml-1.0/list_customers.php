@@ -52,6 +52,7 @@ $this->title = 'Customers';
 <table id="customer_grid">
 	<thead>
 		<tr>
+			<th>ID</th>
 			<th>Name</th>
 			<th>Login Disabled</th>
 			<th>Points</th>
@@ -62,6 +63,7 @@ $this->title = 'Customers';
 	<tbody>
 	<?php foreach($this->customers as $customer) { ?>
 		<tr title="<?php echo $customer->guid; ?>">
+			<td><?php echo $customer->guid; ?></td>
 			<td><?php echo $customer->name; ?></td>
 			<td><?php echo ($customer->com_customer->login_disabled ? 'Yes' : 'No'); ?></td>
 			<td><?php echo $customer->com_customer->points; ?></td>

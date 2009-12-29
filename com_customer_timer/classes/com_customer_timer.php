@@ -21,6 +21,13 @@ defined('P_RUN') or die('Direct access prohibited');
  * @subpackage com_customer_timer
  */
 class com_customer_timer extends component {
+	/**
+	 * Logs a customer in or out, depending on their current status.
+	 *
+	 * @param int $id The customer's GUID.
+	 * @param string $password The customer's password.
+	 * @return bool True on success, false on failure.
+	 */
 	function login_logout($id, $password) {
 		global $config;
 		if (!is_numeric($id)) {
@@ -52,7 +59,14 @@ class com_customer_timer extends component {
 		return $this->login($customer, $logins);
 	}
 
-	function login(&$customer, $logins) {
+	/**
+	 * Logs a customer into the timer.
+	 *
+	 * @param entity $customer The customer.
+	 * @param entity $logins The login tracker entity.
+	 * @return bool True on success, false on failure.
+	 */
+	function login(&$customer, &$logins) {
 		if (!isset($customer->com_customer_timer))
 			$customer->com_customer_timer = (object) array();
 		// Save the time the customer logged in.
@@ -65,7 +79,16 @@ class com_customer_timer extends component {
 		return true;
 	}
 
-	function logout(&$customer, $logins) {
+	/**
+	 * Logs a customer out of the timer.
+	 *
+	 * This process creates a transaction entity.
+	 *
+	 * @param entity $customer The customer.
+	 * @param entity $logins The login tracker entity.
+	 * @return bool True on success, false on failure.
+	 */
+	function logout(&$customer, &$logins) {
 		global $config;
 		// Remove the customer from the login tracker.
 		foreach ($logins->customers as $key => &$cur_customer) {
@@ -89,7 +112,13 @@ class com_customer_timer extends component {
 		display_notice("Goodbye, you have been logged out. This session was {$session_info['minutes']} minutes long, for {$session_info['points']} points.");
 		return true;
 	}
-	
+
+	/**
+	 * Calculates information about a customer's session.
+	 *
+	 * @param entity $customer The customer.
+	 * @return array An array of point and minute values the customer has used.
+	 */
 	function get_session_info(&$customer) {
 		global $config;
 		// Calculate how many minutes they've been logged in.
@@ -99,6 +128,14 @@ class com_customer_timer extends component {
 		return array('minutes' => $minutes, 'points' => $points);
 	}
 
+	/**
+	 * Retrieve the login tracker entity.
+	 *
+	 * If no login tracker exists yet, one is created and given write access to
+	 * "other".
+	 *
+	 * @return entity The login tracker.
+	 */
 	function get_login_entity() {
 		global $config;
 		$entities = $config->entity_manager->get_entities_by_tags('com_customer_timer', 'logins');

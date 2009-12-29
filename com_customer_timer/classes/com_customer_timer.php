@@ -54,7 +54,8 @@ class com_customer_timer extends component {
 		}
 		if ($customer->com_customer->points <= 0) {
 			display_notice('Your account balance has reached zero.');
-			return false;
+			if (!$config->com_customer_timer->debtlogin)
+				return false;
 		}
 		return $this->login($customer, $logins);
 	}
@@ -122,7 +123,7 @@ class com_customer_timer extends component {
 	function get_session_info(&$customer) {
 		global $config;
 		// Calculate how many minutes they've been logged in.
-		$minutes = (int) floor((time() - $customer->com_customer_timer->last_login) / 60);
+		$minutes = (int) round((time() - $customer->com_customer_timer->last_login) / 60);
 		// And how many points that costs.
 		$points = $minutes * (int) $config->com_customer_timer->ppm;
 		return array('minutes' => $minutes, 'points' => $points);

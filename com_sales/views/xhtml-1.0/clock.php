@@ -55,6 +55,7 @@ $this->title = 'Timeclock';
 							$("#timeclock button").html("Clock In");
 						}
 						format_time();
+						$("#timeclock").effect("highlight");
 					}
 				});
 			});

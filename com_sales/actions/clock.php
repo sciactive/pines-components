@@ -1,6 +1,6 @@
 <?php
 /**
- * Perform actions on categories, returning JSON.
+ * Clock an employee in or out, returning their status in JSON.
  *
  * @package Pines
  * @subpackage com_sales

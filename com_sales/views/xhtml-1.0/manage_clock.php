@@ -106,7 +106,7 @@ $this->title = 'Employee Timeclock';
 		<tr title="<?php echo $user->guid; ?>">
 			<td><?php echo $user->name; ?></td>
 			<td><?php echo $user->username; ?></td>
-			<td><?php echo $user->com_sales->timeclock[count($_SESSION['user']->com_sales->timeclock) - 1]['status']; ?></td>
+			<td><?php echo $user->com_sales->timeclock[count($user->com_sales->timeclock) - 1]['status']; ?></td>
 			<td class="time"><?php echo $user->com_sales->timeclock[count($_SESSION['user']->com_sales->timeclock) - 1]['time']; ?></td>
 			<td><?php echo round($user->com_sales->time_sum(strtotime('Today 12:00 AM')) / (60 * 60), 2).' hours'; ?></td>
 			<td><?php echo round($user->com_sales->time_sum() / (60 * 60), 2).' hours'; ?></td>

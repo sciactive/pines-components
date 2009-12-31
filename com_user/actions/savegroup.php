@@ -51,6 +51,7 @@ if ( isset($_REQUEST['id']) ) {
 
 $group->name = $_REQUEST['name'];
 $group->email = $_REQUEST['email'];
+$group->timezone = $_REQUEST['timezone'];
 
 /**
  * @todo Check if the selected parent is a descendant of this group.

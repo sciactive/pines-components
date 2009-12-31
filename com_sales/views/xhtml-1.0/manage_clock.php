@@ -22,9 +22,9 @@ $this->title = 'Employee Timeclock';
 			return d.toLocaleString();
 		}
 
-		$("#timeclock_grid .time").each(function(){
+		/*$("#timeclock_grid .time").each(function(){
 			$(this).html(format_time($(this).html()));
-		});
+		});*/
 
 		var state_xhr;
 		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
@@ -107,9 +107,10 @@ $this->title = 'Employee Timeclock';
 			<td><?php echo $user->name; ?></td>
 			<td><?php echo $user->username; ?></td>
 			<td><?php echo $user->com_sales->timeclock[count($user->com_sales->timeclock) - 1]['status']; ?></td>
-			<td class="time"><?php echo $user->com_sales->timeclock[count($_SESSION['user']->com_sales->timeclock) - 1]['time']; ?></td>
-			<td><?php echo round($user->com_sales->time_sum(strtotime('Today 12:00 AM')) / (60 * 60), 2).' hours'; ?></td>
-			<td><?php echo round($user->com_sales->time_sum() / (60 * 60), 2).' hours'; ?></td>
+			<td class="time"><?php $date = new DateTime(date('F j, Y, g:i a', $user->com_sales->timeclock[count($user->com_sales->timeclock) - 1]['time']), new DateTimeZone($user->get_timezone()));
+			echo isset($user->com_sales) ? $date->format('Y M d H:i T') : ''; ?></td>
+			<td><?php echo isset($user->com_sales) ? round($user->com_sales->time_sum(strtotime('Today 12:00 AM')) / (60 * 60), 2).' hours' : ''; ?></td>
+			<td><?php echo isset($user->com_sales) ? round($user->com_sales->time_sum() / (60 * 60), 2).' hours' : ''; ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

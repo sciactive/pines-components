@@ -38,6 +38,18 @@ $this->note = 'Provide group details in this form.';
 			<input class="field" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>
 	</div>
 	<div class="element">
+		<label><span class="label">Timezone</span>
+			<span class="note">Users with this group as their primary will inherit this timezone.</span>
+			<select class="field" name="timezone" size="1">
+				<option value="">--System Default--</option>
+				<?php $tz = DateTimeZone::listIdentifiers();
+				sort($tz);
+				foreach ($tz as $cur_tz) { ?>
+				<option value="<?php echo $cur_tz; ?>"<?php echo $this->entity->timezone == $cur_tz ? ' selected="selected"' : ''; ?>><?php echo $cur_tz; ?></option>
+				<?php } ?>
+			</select></label>
+	</div>
+	<div class="element">
 		<label><span class="label">Parent</span>
 			<select class="field" name="parent" size="1">
 				<option value="none">--No Parent--</option>

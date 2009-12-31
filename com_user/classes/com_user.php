@@ -108,6 +108,8 @@ class com_user extends component {
 
 	/**
 	 * Fill the $_SESSION['user'] variable with the logged in user's data.
+	 *
+	 * Also sets the default timezone to the user's timezone.
 	 */
 	function fill_session() {
 		$tmp_user = $this->get_user($_SESSION['user_id']);
@@ -135,6 +137,7 @@ class com_user extends component {
 			}
 		}
 		$_SESSION['user'] = $tmp_user;
+		date_default_timezone_set($tmp_user->get_timezone());
 	}
 
 	/**

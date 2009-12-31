@@ -42,6 +42,17 @@ class user extends able_entity {
 	}
 
 	/**
+	 * Check if the password given is the correct password for the user's
+	 * account.
+	 *
+	 * @param string $password The password in question.
+	 * @return bool True or false.
+	 */
+	public function check_password($password) {
+		return ($this->password == md5($password.$this->salt));
+	}
+
+	/**
 	 * Remove the user from a (secondary) group.
 	 *
 	 * @param int $id The GUID of the group.
@@ -79,15 +90,14 @@ class user extends able_entity {
 		return $this->password = md5($password.$this->salt);
 	}
 
-	/**
-	 * Check if the password given is the correct password for the user's
-	 * account.
-	 *
-	 * @param string $password The password in question.
-	 * @return bool True or false.
-	 */
-	public function check_password($password) {
-		return ($this->password == md5($password.$this->salt));
+	public function get_timezone() {
+		global $config;
+		if (isset($this->gid)) {
+			$group = $config->user_manager->get_group($this->gid);
+			if (!empty($group->timezone))
+				return $group->timezone;
+		}
+		return $config->timezone;
 	}
 }
 

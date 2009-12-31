@@ -66,6 +66,7 @@ foreach($this->groups as $cur_group) {
 			<th>Groupname</th>
 			<th>Display Name</th>
 			<th>Email</th>
+			<th>Timezone</th>
 			<th>Members</th>
 		</tr>
 	</thead>
@@ -82,6 +83,7 @@ foreach($this->groups as $cur_group) {
 			<td><?php echo $group->groupname; ?></td>
 			<td><?php echo $group->name; ?></td>
 			<td><?php echo $group->email; ?></td>
+			<td><?php echo $group->timezone; ?></td>
 			<td><?php
 			$user_array = $config->user_manager->get_users_by_group($group->guid);
 			if (count($user_array) < 15) {

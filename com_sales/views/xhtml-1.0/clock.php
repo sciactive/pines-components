@@ -11,6 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Timeclock';
+$_SESSION['user']->refresh();
 ?>
 <div class="pform" id="timeclock">
 	<script type="text/javascript">

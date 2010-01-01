@@ -39,7 +39,7 @@ $this->note = 'Provide group details in this form.';
 	</div>
 	<div class="element">
 		<label><span class="label">Timezone</span>
-			<span class="note">Users with this group as their primary will inherit this timezone.</span>
+			<span class="note">Users in this group will inherit this timezone. Primary group has priority over secondary groups.</span>
 			<select class="field" name="timezone" size="1">
 				<option value="">--System Default--</option>
 				<?php $tz = DateTimeZone::listIdentifiers();

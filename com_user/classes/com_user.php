@@ -113,8 +113,10 @@ class com_user extends component {
 	 */
 	function fill_session() {
 		$tmp_user = $this->get_user($_SESSION['user_id']);
-		if (is_object($_SESSION['user']) && $_SESSION['user'] == $tmp_user)
+		if (is_object($_SESSION['user']) && $_SESSION['user']->equals($tmp_user)) {
+			date_default_timezone_set($tmp_user->get_timezone());
 			return;
+		}
 		unset($_SESSION['user']);
 		$_SESSION['descendents'] = $this->get_group_descendents($tmp_user->gid);
 		if (!empty($tmp_user->groups)) {

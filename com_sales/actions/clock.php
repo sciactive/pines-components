@@ -39,12 +39,13 @@ if (!is_a($user->com_sales, 'com_sales_employee_data'))
 if (!is_array($user->com_sales->timeclock))
 	$user->com_sales->timeclock = array();
 
-if ($user->com_sales->timeclock[count($user->com_sales->timeclock) - 1]['status'] == 'in') {
+if (!empty($user->com_sales->timeclock) && $user->com_sales->timeclock[count($user->com_sales->timeclock) - 1]['status'] == 'in') {
 	$user->com_sales->timeclock[] = array('status' => 'out', 'time' => time());
 } else {
 	$user->com_sales->timeclock[] = array('status' => 'in', 'time' => time());
 }
 
-$page->override_doc(json_encode(array($user->com_sales->save() && $user->save(), $user->com_sales->timeclock[count($user->com_sales->timeclock) - 1])));
+$entry = $user->com_sales->timeclock[count($user->com_sales->timeclock) - 1]['time'];
+$page->override_doc(json_encode(array($user->com_sales->save() && $user->save(), pines_date_format($entry))));
 
 ?>

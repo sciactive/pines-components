@@ -51,6 +51,18 @@ $this->note = 'Provide user details in this form.';
 			<input class="field" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>
 	</div>
 	<div class="element">
+		<label><span class="label">Timezone</span>
+			<span class="note">This overrides the primary group's timezone.</span>
+			<select class="field" name="timezone" size="1">
+				<option value="">--Inherit From Group--</option>
+				<?php $tz = DateTimeZone::listIdentifiers();
+				sort($tz);
+				foreach ($tz as $cur_tz) { ?>
+				<option value="<?php echo $cur_tz; ?>"<?php echo $this->entity->timezone == $cur_tz ? ' selected="selected"' : ''; ?>><?php echo $cur_tz; ?></option>
+				<?php } ?>
+			</select></label>
+	</div>
+	<div class="element">
 		<label><span class="label"><?php if (!is_null($this->entity->guid)) echo 'Update '; ?>Password</span>
 			<?php if (is_null($this->entity->guid)) {
 				echo ($config->com_user->empty_pw ? '<span class="note">May be blank.</span>' : '');

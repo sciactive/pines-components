@@ -16,12 +16,6 @@ $this->title = 'Timeclock';
 	<script type="text/javascript">
 		// <![CDATA[
 		$(function(){
-			function format_time() {
-				var d = new Date();
-				d.setTime(parseInt($("#timeclock .time").html()) * 1000);
-				$("#timeclock .time").html(d.toLocaleString());
-			}
-
 			$("#timeclock button").click(function(){
 				var loader;
 				$.ajax({
@@ -54,20 +48,17 @@ $this->title = 'Timeclock';
 						} else {
 							$("#timeclock button").html("Clock In");
 						}
-						format_time();
 						$("#timeclock").effect("highlight");
 					}
 				});
 			});
-
-			format_time();
 		});
 		// ]]>
 	</script>
 	<div class="element">
 		<span class="label"><span>User: </span><span><?php echo $_SESSION['user']->name; ?></span></span>
 		<span class="note"><span>Status: </span><span class="status"><?php echo $_SESSION['user']->com_sales->timeclock[count($_SESSION['user']->com_sales->timeclock) - 1]['status']; ?></span></span>
-		<span class="note"><span>Time: </span><span class="time"><?php echo $_SESSION['user']->com_sales->timeclock[count($_SESSION['user']->com_sales->timeclock) - 1]['time']; ?></span></span>
+		<span class="note"><span>Time: </span><span class="time"><?php echo pines_date_format($_SESSION['user']->com_sales->timeclock[count($_SESSION['user']->com_sales->timeclock) - 1]['time']); ?></span></span>
 	</div>
 	<div class="element full_width">
 		<button type="button" class="field ui-state-default ui-corner-all" style="float: right;" onmouseover="$(this).addClass('ui-state-hover');" onmouseout="$(this).removeClass('ui-state-hover');"><?php echo $_SESSION['user']->com_sales->timeclock[count($_SESSION['user']->com_sales->timeclock) - 1]['status'] == 'in' ? 'Clock Out' : 'Clock In'; ?></button>

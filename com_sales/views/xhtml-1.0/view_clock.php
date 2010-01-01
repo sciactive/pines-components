@@ -14,18 +14,7 @@ $this->title = "Employee Timeclock for {$this->user->name} [{$this->user->userna
 ?>
 <script type="text/javascript">
 	// <![CDATA[
-
 	$(function(){
-		function format_time(timestamp) {
-			var d = new Date();
-			d.setTime(timestamp * 1000);
-			return d.toLocaleString();
-		}
-
-		$("#timeclock_grid .time").each(function(){
-			$(this).html(format_time($(this).html()));
-		});
-		
 		var state_xhr;
 		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
 		var cur_defaults = {
@@ -42,22 +31,21 @@ $this->title = "Employee Timeclock for {$this->user->name} [{$this->user->userna
 		var cur_options = $.extend(cur_defaults, cur_state);
 		$("#timeclock_grid").pgrid(cur_options);
 	});
-
 	// ]]>
 </script>
 <table id="timeclock_grid">
 	<thead>
 		<tr>
-			<th>UTC ISO Time</th>
 			<th>Local Time</th>
+			<th>UTC ISO Time</th>
 			<th>Status</th>
 		</tr>
 	</thead>
 	<tbody>
 	<?php foreach($this->user->com_sales->timeclock as $key => $entry) { ?>
 		<tr title="<?php echo $key; ?>">
+			<td><?php echo pines_date_format($entry['time'], $this->user->get_timezone(true)); ?></td>
 			<td><?php echo gmdate('c', $entry['time']); ?></td>
-			<td class="time"><?php echo $entry['time']; ?></td>
 			<td><?php echo $entry['status']; ?></td>
 		</tr>
 	<?php } ?>

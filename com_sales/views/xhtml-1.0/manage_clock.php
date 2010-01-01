@@ -16,16 +16,6 @@ $this->title = 'Employee Timeclock';
 	// <![CDATA[
 
 	$(function(){
-		function format_time(timestamp) {
-			var d = new Date();
-			d.setTime(timestamp * 1000);
-			return d.toLocaleString();
-		}
-
-		/*$("#timeclock_grid .time").each(function(){
-			$(this).html(format_time($(this).html()));
-		});*/
-
 		var state_xhr;
 		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
 		var cur_defaults = {
@@ -107,8 +97,7 @@ $this->title = 'Employee Timeclock';
 			<td><?php echo $user->name; ?></td>
 			<td><?php echo $user->username; ?></td>
 			<td><?php echo $user->com_sales->timeclock[count($user->com_sales->timeclock) - 1]['status']; ?></td>
-			<td class="time"><?php $date = new DateTime(date('F j, Y, g:i a', $user->com_sales->timeclock[count($user->com_sales->timeclock) - 1]['time']), new DateTimeZone($user->get_timezone()));
-			echo isset($user->com_sales) ? $date->format('Y M d H:i T') : ''; ?></td>
+			<td><?php echo pines_date_format($user->com_sales->timeclock[count($user->com_sales->timeclock) - 1]['time'], $user->get_timezone(true)); ?></td>
 			<td><?php echo isset($user->com_sales) ? round($user->com_sales->time_sum(strtotime('Today 12:00 AM')) / (60 * 60), 2).' hours' : ''; ?></td>
 			<td><?php echo isset($user->com_sales) ? round($user->com_sales->time_sum() / (60 * 60), 2).' hours' : ''; ?></td>
 		</tr>

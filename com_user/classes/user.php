@@ -90,14 +90,33 @@ class user extends able_entity {
 		return $this->password = md5($password.$this->salt);
 	}
 
-	public function get_timezone() {
+	/**
+	 * Return the user's timezone.
+	 *
+	 * First checks if the user has a timezone set, then the primary group, then
+	 * the secondary groups, then the system default. The first timezone found
+	 * is returned.
+	 *
+	 * @param bool $return_date_time_zone_object Whether to return an object of the DateTimeZone class, instead of an identifier string.
+	 * @return string|DateTimeZone The timezone identifier or the DateTimeZone object.
+	 */
+	public function get_timezone($return_date_time_zone_object = false) {
 		global $config;
+		if (!empty($this->timezone))
+			return $return_date_time_zone_object ? new DateTimeZone($this->timezone) : $this->timezone;
 		if (isset($this->gid)) {
 			$group = $config->user_manager->get_group($this->gid);
 			if (!empty($group->timezone))
-				return $group->timezone;
+				return $return_date_time_zone_object ? new DateTimeZone($group->timezone) : $group->timezone;
 		}
-		return $config->timezone;
+		if (is_array($this->groups)) {
+			foreach($this->groups as $cur_group_id) {
+				$group = $config->user_manager->get_group($cur_group_id);
+				if (!empty($group->timezone))
+					return $return_date_time_zone_object ? new DateTimeZone($group->timezone) : $group->timezone;
+			}
+		}
+		return $return_date_time_zone_object ? new DateTimeZone($config->timezone) : $config->timezone;
 	}
 }
 

@@ -57,6 +57,7 @@ if ( isset($_REQUEST['id']) ) {
 
 $user->name = $_REQUEST['name'];
 $user->email = $_REQUEST['email'];
+$user->timezone = $_REQUEST['timezone'];
 
 if ( gatekeeper('com_user/default_component') ) {
 	if ( file_exists('components/'.$_REQUEST['default_component'].'/actions/default.php') ) {

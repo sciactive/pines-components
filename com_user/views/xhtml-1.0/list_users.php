@@ -58,6 +58,7 @@ $this->title = 'Users';
 			<th>Username</th>
 			<th>Real Name</th>
 			<th>Email</th>
+			<th>Timezone</th>
 			<th>Default Component</th>
 			<th>Primary Group</th>
 			<th>Groups</th>
@@ -70,6 +71,7 @@ $this->title = 'Users';
 			<td><?php echo $user->username; ?></td>
 			<td><?php echo $user->name; ?></td>
 			<td><?php echo $user->email; ?></td>
+			<td><?php echo $user->get_timezone().(empty($user->timezone) ? ' (I)' : ' (A)'); ?></td>
 			<td><?php echo $user->default_component; ?></td>
 			<td><?php echo $config->user_manager->get_groupname($user->gid); ?></td>
 			<td><?php
@@ -90,3 +92,4 @@ $this->title = 'Users';
 	<?php } ?>
 	</tbody>
 </table>
+<small>Note: Under timezones (I) means inherited and (A) means assigned.</small>

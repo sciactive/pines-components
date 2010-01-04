@@ -234,6 +234,19 @@ body .ui-widget {
 	clear: both;
 	min-height: 0px;
 }
+.user1, .user3 {
+	width: 50%;
+	float: left;
+	margin-top: -3px;
+}
+.user2, .user4 {
+	width: 50%;
+	float: right;
+	margin-top: -3px;
+}
+.content {
+	clear: both;
+}
 /* ----------- Standard Notices ----------- */
 .notice {
 	margin: 3px;

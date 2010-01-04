@@ -138,7 +138,21 @@ defined('P_RUN') or die('Direct access prohibited');
 								?>
 						</div>
 						<?php } ?>
-						<?php echo $page->render_modules('content', 'module_content'); ?>
+						<div class="user1">
+							<?php echo $page->render_modules('user1'); ?>
+						</div>
+						<div class="user2">
+							<?php echo $page->render_modules('user2'); ?>
+						</div>
+						<div class="content">
+							<?php echo $page->render_modules('content', 'module_content'); ?>
+						</div>
+						<div class="user3">
+							<?php echo $page->render_modules('user3'); ?>
+						</div>
+						<div class="user4">
+							<?php echo $page->render_modules('user4'); ?>
+						</div>
 					</div>
 				</div>
 				<div class="col2">

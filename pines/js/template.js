@@ -19,6 +19,7 @@ function convert_standard_notices() {
 }
 
 function consume_alert() {
+	// Take over the alert() function, so alerts get displayed through Pines Notify.
 	if (_alert) return;
 	_alert = window.alert;
 	window.alert = function(message) {
@@ -30,6 +31,7 @@ function consume_alert() {
 }
 
 function release_alert() {
+	// Return the alert() function to normal, so alerts are displayed by the browser.
 	if (!_alert) return;
 	window.alert = _alert;
 	_alert = null;
@@ -50,6 +52,7 @@ $(function($){
 		$(this).removeClass("ui-state-hover");
 	});
 
+	// Minimize the right modules.
 	$(".module .module_right_minimize").hover(function(){
 		$(this).addClass("ui-state-hover");
 	}, function(){
@@ -61,7 +64,8 @@ $(function($){
 		$(this).children("span.ui-icon").removeClass("ui-icon-triangle-1-s").addClass("ui-icon-triangle-1-n")
 		.end().parent().nextAll(".module_content").slideDown("normal");
 	});
-	
+
+	// Style UI buttons on hover.
 	$("button.ui-state-default, input.ui-state-default:button, input.ui-state-default:submit, input.ui-state-default:reset, input.ui-state-default:file").hover(function(){
 		$(this).addClass("ui-state-hover");
 	}, function(){

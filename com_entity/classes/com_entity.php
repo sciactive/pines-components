@@ -493,9 +493,8 @@ class com_entity extends component {
 			return null;
 		}
 		
-		if ( !($row = mysql_fetch_array($result)) ) {
+		if ( !($row = mysql_fetch_array($result)) )
 			return null;
-		}
 		$entity->guid = intval($guid);
 		$entity->parent = (is_null($row['parent']) ? NULL : intval($row['parent']));
 		$entity->tags = unserialize($row['tags']);

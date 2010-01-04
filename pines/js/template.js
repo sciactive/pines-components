@@ -61,4 +61,10 @@ $(function($){
 		$(this).children("span.ui-icon").removeClass("ui-icon-triangle-1-s").addClass("ui-icon-triangle-1-n")
 		.end().parent().nextAll(".module_content").slideDown("normal");
 	});
+	
+	$("button.ui-state-default, input.ui-state-default:button, input.ui-state-default:submit, input.ui-state-default:reset, input.ui-state-default:file").hover(function(){
+		$(this).addClass("ui-state-hover");
+	}, function(){
+		$(this).removeClass("ui-state-hover");
+	})
 });

@@ -112,7 +112,7 @@ $this->title = "Edit Timeclock for {$this->user->name} [{$this->user->username}]
 <?php foreach($this->user->com_sales->timeclock as $key => $entry) { ?>
 	<div class="element full_width entry">
 		<div style="padding: 3px;" class="ui-helper-clearfix ui-widget-content ui-corner-all">
-			<button style="float: right; margin: 3px;" class="ui-state-default ui-corner-all" onmouseover="$(this).addClass('ui-state-hover')" onmouseout="$(this).removeClass('ui-state-hover')">Delete</button>
+			<button style="float: right; margin: 3px;" class="ui-state-default ui-corner-all">Delete</button>
 			<span class="label time" style="cursor: pointer;"><?php echo pines_date_format($entry['time'], $this->user->get_timezone(true)); ?></span>
 			<span class="note timestamp"><?php echo $entry['time']; ?></span>
 			<span class="field status"><?php echo $entry['status']; ?></span>
@@ -121,13 +121,13 @@ $this->title = "Edit Timeclock for {$this->user->name} [{$this->user->username}]
 <?php } ?>
 	<div id="timeclock_entry_template" class="element full_width" style="display: none;">
 		<div style="padding: 3px;" class="ui-helper-clearfix ui-widget-content ui-corner-all">
-			<button style="float: right; margin: 3px;" class="ui-state-default ui-corner-all" onmouseover="$(this).addClass('ui-state-hover')" onmouseout="$(this).removeClass('ui-state-hover')">Delete</button>
+			<button style="float: right; margin: 3px;" class="ui-state-default ui-corner-all">Delete</button>
 			<span class="label time" style="cursor: pointer;"></span>
 			<span class="note timestamp"></span>
 			<span class="field status"></span>
 		</div>
 	</div>
-	<button style="float: right; margin: 3px;" class="add-button ui-state-default ui-corner-all" onmouseover="$(this).addClass('ui-state-hover')" onmouseout="$(this).removeClass('ui-state-hover')">Add</button>
+	<button style="float: right; margin: 3px;" class="add-button ui-state-default ui-corner-all">Add</button>
 	<div id="date_time_dialog" title="Adjust Time">
 		<span>Time:</span><br />
 		<input id="cur_time" type="text" size="24" /><br />

@@ -62,6 +62,6 @@ $_SESSION['user']->refresh();
 		<span class="note"><span>Time: </span><span class="time"><?php echo pines_date_format($_SESSION['user']->com_sales->timeclock[count($_SESSION['user']->com_sales->timeclock) - 1]['time']); ?></span></span>
 	</div>
 	<div class="element full_width">
-		<button type="button" class="field ui-state-default ui-corner-all" style="float: right;" onmouseover="$(this).addClass('ui-state-hover');" onmouseout="$(this).removeClass('ui-state-hover');"><?php echo $_SESSION['user']->com_sales->timeclock[count($_SESSION['user']->com_sales->timeclock) - 1]['status'] == 'in' ? 'Clock Out' : 'Clock In'; ?></button>
+		<button type="button" class="field ui-state-default ui-corner-all" style="float: right;"><?php echo $_SESSION['user']->com_sales->timeclock[count($_SESSION['user']->com_sales->timeclock) - 1]['status'] == 'in' ? 'Clock Out' : 'Clock In'; ?></button>
 	</div>
 </div>

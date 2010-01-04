@@ -23,7 +23,7 @@ $this->title = 'Sales Totals';
 			});
 			// ]]>
 		</script>
-		<button id="hide_parameters" class="ui-state-default ui-corner-all" style="float: right;" onmouseover="$(this).addClass('ui-state-hover')" onmouseout="$(this).removeClass('ui-state-hover')">Toggle Form</button>
+		<button id="hide_parameters" class="ui-state-default ui-corner-all" style="float: right;">Toggle Form</button>
 		<h1>Parameters</h1>
 	</div>
 	<div class="element">
@@ -123,7 +123,7 @@ $this->title = 'Sales Totals';
 			});
 			// ]]>
 		</script>
-		<button id="retrieve_totals" class="button ui-state-default ui-corner-all" onmouseover="$(this).addClass('ui-state-hover');" onmouseout="$(this).removeClass('ui-state-hover');">Retrieve</button>
+		<button id="retrieve_totals" class="button ui-state-default ui-corner-all">Retrieve</button>
 	</div>
 	<div id="result_totals" style="clear: both; display: none;">
 		<div class="element">

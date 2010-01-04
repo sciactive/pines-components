@@ -30,6 +30,6 @@ $this->title = 'Account';
 		<span class="field"><?php echo $this->entity->com_customer->total_points; ?></span>
 	</div>
 	<div class="element buttons" style="padding-left: 10px;">
-		<input class="button ui-state-default ui-corner-all" type="button" onclick="if (confirm('Leaving this page will lose any changes. Are you sure?')) window.location='<?php echo pines_url('com_customer', 'editcustomer', array('id' => $this->entity->guid)); ?>';" value="Edit Account" onmouseover="$(this).addClass('ui-state-hover')" onmouseout="$(this).removeClass('ui-state-hover')" />
+		<input class="button ui-state-default ui-corner-all" type="button" onclick="if (confirm('Leaving this page will lose any changes. Are you sure?')) window.location='<?php echo pines_url('com_customer', 'editcustomer', array('id' => $this->entity->guid)); ?>';" value="Edit Account" />
 	</div>
 </div>

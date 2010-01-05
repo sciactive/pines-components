@@ -24,12 +24,10 @@ class tpl_pines extends template {
 	 */
 	var $format = 'xhtml-1.0-strict-desktop';
 	/**
-	 * The editor CSS location.
-	 *
-	 * Filled at runtime.
+	 * The editor CSS location, relative to Pines' directory.
 	 * @var string $editor_css
 	 */
-	var $editor_css = '';
+	var $editor_css = 'templates/pines/css/editor.css';
 	/**
 	 * Whether to show a header image, instead of text.
 	 * @var bool $header_image
@@ -61,11 +59,6 @@ class tpl_pines extends template {
 	 * @var bool $google_cdn
 	 */
 	var $google_cdn = true;
-
-	function __construct() {
-		global $config;
-		$this->editor_css = $config->rela_location.'templates/pines/css/editor.css';
-	}
 }
 
 $config->template = new tpl_pines;

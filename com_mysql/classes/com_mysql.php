@@ -44,6 +44,13 @@ class com_mysql extends component {
 		$this->connect($host, $user, $password, $database);
 	}
 
+    /**
+     * Disconnect from the database on destruction.
+     */
+    public function __destruct() {
+        $this->disconnect();
+    }
+
 	/**
 	 * Connect to a MySQL database.
 	 *

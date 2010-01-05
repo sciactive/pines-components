@@ -549,7 +549,7 @@ class com_entity extends component {
 	 *
 	 * The variable "p_mdate" is set to the current Unix timestamp.
 	 *
-     * @todo Use one big insert query.
+	 * @todo Use one big insert query.
 	 * @param mixed &$entity The entity.
 	 * @return bool True on success, false on failure.
 	 */
@@ -569,7 +569,7 @@ class com_entity extends component {
 			}
 			$new_id = mysql_insert_id();
 			$entity->guid = intval($new_id);
-            $data = $entity->get_data();
+			$data = $entity->get_data();
 			foreach ($data as $name => $value) {
 				$query = sprintf("INSERT INTO `%scom_entity_data` (`guid`, `name`, `value`) VALUES (%u, '%s', '%s');",
 					$config->com_mysql->prefix,
@@ -603,7 +603,7 @@ class com_entity extends component {
 					display_error('Query failed: ' . mysql_error());
 				return false;
 			}
-            $data = $entity->get_data();
+			$data = $entity->get_data();
 			foreach ($data as $name => $value) {
 				$query = sprintf("INSERT INTO `%scom_entity_data` (`guid`, `name`, `value`) VALUES (%u, '%s', '%s');",
 					$config->com_mysql->prefix,

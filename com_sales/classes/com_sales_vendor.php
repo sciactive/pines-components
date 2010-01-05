@@ -1,6 +1,6 @@
 <?php
 /**
- * com_sales_po class.
+ * com_sales_vendor class.
  *
  * @package Pines
  * @subpackage com_sales
@@ -12,29 +12,26 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * A PO.
+ * A vendor.
  *
  * @package Pines
  * @subpackage com_sales
  */
-class com_sales_po extends entity {
+class com_sales_vendor extends entity {
 	public function __construct() {
 		parent::__construct();
-		$this->add_tag('com_sales', 'po');
+		$this->add_tag('com_sales', 'vendor');
 	}
 
 	public function delete() {
-		// Don't delete the PO if it has received items.
-		if (!empty($this->received))
-			return false;
 		if (!parent::delete())
 			return false;
-		pines_log("Deleted PO $this->po_number.", 'notice');
+		pines_log("Deleted vendor $this->name.", 'notice');
 		return true;
 	}
 
 	public function save() {
-		if (!isset($this->po_number))
+		if (!isset($this->name))
 			return false;
 		return parent::save();
 	}

@@ -44,12 +44,12 @@ class com_mysql extends component {
 		$this->connect($host, $user, $password, $database);
 	}
 
-    /**
-     * Disconnect from the database on destruction.
-     */
-    public function __destruct() {
-        $this->disconnect();
-    }
+	/**
+	 * Disconnect from the database on destruction.
+	 */
+	public function __destruct() {
+		$this->disconnect();
+	}
 
 	/**
 	 * Connect to a MySQL database.
@@ -89,7 +89,7 @@ class com_mysql extends component {
 						display_error('Could not select database: ' . mysql_error());
 				}
 			} else {
-                $this->connected = false;
+				$this->connected = false;
 				if (function_exists('display_error'))
 					display_error('Could not connect: ' . mysql_error());
 			}

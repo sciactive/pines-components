@@ -32,8 +32,8 @@ class able_entity extends entity {
 	 * @param string $ability The ability.
 	 */
 	public function grant($ability) {
-		if ( !in_array($ability, $this->__get('abilities')) ) {
-			return $this->__set('abilities', array_merge(array($ability), $this->__get('abilities')));
+		if ( !in_array($ability, $this->abilities) ) {
+			return $this->abilities = array_merge(array($ability), $this->abilities);
 		} else {
 			return true;
 		}
@@ -45,8 +45,8 @@ class able_entity extends entity {
 	 * @param string $ability The ability.
 	 */
 	public function revoke($ability) {
-		if ( in_array($ability, $this->__get('abilities')) ) {
-			return $this->__set('abilities', array_values(array_diff($this->__get('abilities'), array($ability))));
+		if ( in_array($ability, $this->abilities) ) {
+			return $this->abilities = array_values(array_diff($this->abilities, array($ability)));
 		} else {
 			return true;
 		}

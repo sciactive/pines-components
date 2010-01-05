@@ -30,7 +30,6 @@ class com_entity extends component {
 		$return = $this->delete_entity_by_id($entity->guid);
 		if ( $return )
 			$entity->guid = null;
-		//unset($entity); //no effect
 		return $return;
 	}
 	
@@ -550,6 +549,7 @@ class com_entity extends component {
 	 *
 	 * The variable "p_mdate" is set to the current Unix timestamp.
 	 *
+     * @todo Use one big insert query.
 	 * @param mixed &$entity The entity.
 	 * @return bool True on success, false on failure.
 	 */
@@ -569,7 +569,8 @@ class com_entity extends component {
 			}
 			$new_id = mysql_insert_id();
 			$entity->guid = intval($new_id);
-			foreach ($entity->get_data() as $name => $value) {
+            $data = $entity->get_data();
+			foreach ($data as $name => $value) {
 				$query = sprintf("INSERT INTO `%scom_entity_data` (`guid`, `name`, `value`) VALUES (%u, '%s', '%s');",
 					$config->com_mysql->prefix,
 					intval($new_id),
@@ -602,7 +603,8 @@ class com_entity extends component {
 					display_error('Query failed: ' . mysql_error());
 				return false;
 			}
-			foreach ($entity->get_data() as $name => $value) {
+            $data = $entity->get_data();
+			foreach ($data as $name => $value) {
 				$query = sprintf("INSERT INTO `%scom_entity_data` (`guid`, `name`, `value`) VALUES (%u, '%s', '%s');",
 					$config->com_mysql->prefix,
 					intval($entity->guid),

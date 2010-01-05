@@ -84,10 +84,12 @@ class com_mysql extends component {
 				if ( mysql_select_db($database, $this->link) ) {
 					$this->connected = true;
 				} else {
+					$this->connected = false;
 					if (function_exists('display_error'))
 						display_error('Could not select database: ' . mysql_error());
 				}
 			} else {
+                $this->connected = false;
 				if (function_exists('display_error'))
 					display_error('Could not connect: ' . mysql_error());
 			}

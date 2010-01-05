@@ -38,8 +38,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	<!--[if lt IE 7]>
 	<script type="text/javascript" src="<?php echo $config->rela_location; ?>templates/<?php echo $config->current_template; ?>/js/jquery/jquery.dropdown.js"></script>
 	<![endif]-->
-	<?php echo $page->get_head(); ?>
-		<?php echo $page->render_modules('head'); ?>
+    <?php echo $page->render_modules('head'); ?>
 </head>
 
 <body>

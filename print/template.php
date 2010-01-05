@@ -50,7 +50,6 @@ defined('P_RUN') or die('Direct access prohibited');
 	</style>
 	<![endif]-->
 
-	<?php echo $page->get_head(); ?>
 	<?php echo $page->render_modules('head', 'module_head'); ?>
 </head>
 

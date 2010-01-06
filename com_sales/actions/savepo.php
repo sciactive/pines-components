@@ -54,7 +54,7 @@ if (empty($po->received)) {
 		$po->products = array();
 	foreach ($po->products as &$cur_product) {
 		$cur_product = array(
-			'entity' => new com_sales_product(intval($cur_product->key)),
+			'entity' => com_sales_product::factory(intval($cur_product->key)),
 			'quantity' => intval($cur_product->values[2]),
 			'cost' => floatval($cur_product->values[3])
 		);

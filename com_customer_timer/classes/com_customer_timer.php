@@ -35,7 +35,7 @@ class com_customer_timer extends component {
 			return false;
 		}
 		$id = (int) $id;
-		$customer = $config->run_sales->get_customer($id);
+		$customer = com_sales_customer::factory($id);
 		if (is_null($customer)) {
 			display_notice('Customer ID not found.');
 			return false;
@@ -45,6 +45,8 @@ class com_customer_timer extends component {
 			return false;
 		}
 		$logins = $this->get_login_entity();
+		if (!is_array($logins->customers))
+			$logins->customers = array();
 		if (in_array($customer, $logins->customers)) {
 			return $this->logout($customer, $logins);
 		}

@@ -22,7 +22,7 @@ $return = false;
 
 if (isset($_REQUEST['id'])) {
 	$id = (int) $_REQUEST['id'];
-	$customer = $config->run_sales->get_customer($id);
+	$customer = com_sales_customer::factory($id);
 	if (is_null($customer)) {
 		display_notice('Customer ID not found.');
 		$return = false;

@@ -96,7 +96,7 @@ class com_sales_product extends entity {
 		if (!is_array($module->tax_fees)) {
 			$module->tax_fees = array();
 		}
-		$module->actions = $this->product_actions;
+		$module->actions = $config->run_sales->product_actions;
 		if (!is_array($module->actions)) {
 			$module->actions = array();
 		}

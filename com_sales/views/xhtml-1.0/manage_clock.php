@@ -52,7 +52,7 @@ $this->title = 'Employee Timeclock';
 									return;
 								}
 								cur_row.pgrid_set_value(3, data[1].status);
-								cur_row.pgrid_set_value(4, format_time(data[1].time));
+								cur_row.pgrid_set_value(4, data[1].time);
 							}
 						});
 					});

@@ -45,7 +45,8 @@ if (!empty($user->com_sales->timeclock) && $user->com_sales->timeclock[count($us
 	$user->com_sales->timeclock[] = array('status' => 'in', 'time' => time());
 }
 
-$entry = $user->com_sales->timeclock[count($user->com_sales->timeclock) - 1]['time'];
-$page->override_doc(json_encode(array($user->com_sales->save() && $user->save(), pines_date_format($entry))));
+$entry = $user->com_sales->timeclock[count($user->com_sales->timeclock) - 1];
+$entry['time'] = pines_date_format($entry['time']);
+$page->override_doc(json_encode(array($user->com_sales->save() && $user->save(), $entry)));
 
 ?>

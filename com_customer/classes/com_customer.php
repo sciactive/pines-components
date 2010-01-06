@@ -117,7 +117,7 @@ class com_customer extends component {
 		if ( is_null($id) ) {
 			$module->entity = new entity;
 		} else {
-			$module->entity = $config->run_sales->get_customer($id);
+			$module->entity = com_sales_customer::factory($id);
 			if (is_null($module->entity)) {
 				display_error('Requested customer id is not accessible.');
 				$module->detach();

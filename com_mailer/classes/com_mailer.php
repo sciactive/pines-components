@@ -229,11 +229,10 @@ class com_mailer extends component {
 		$headers=$this->buildHeaders();
 		$message=$this->buildTextPart().$this->buildAttachmentPart()."--MIME_BOUNDRY--\n";
 		if (!mail($to,$subject,$message,$headers)) {
-			display_error('Error sendind email.');
+			display_error('Error sending email.');
 			return false;
-		} else {
-			return true;
 		}
+		return true;
 	}
 }
 ?>

@@ -48,7 +48,7 @@ if ( $_REQUEST['update'] == 'yes' ) {
 
 	$mail->save();
 
-	display_notice('Saved "'.$mail->name.'"');
+	display_notice("Saved mail [$mail->name]");
 }
 
 $config->run_newsletter->edit_mail($mail, 'com_newsletter', 'edit');

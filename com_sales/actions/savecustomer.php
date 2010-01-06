@@ -16,8 +16,8 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listcustomers', null, false));
 		return;
 	}
-	$customer = $config->run_sales->get_customer($_REQUEST['id']);
-	if (is_null($customer)) {
+	$customer = new com_sales_customer((int) $_REQUEST['id']);
+	if (!isset($customer->guid)) {
 		display_error('Requested customer id is not accessible');
 		return;
 	}
@@ -26,7 +26,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listcustomers', null, false));
 		return;
 	}
-	$customer = new entity('com_sales', 'customer');
+	$customer = new com_sales_customer;
 }
 
 $customer->name_first = $config->run_sales->title_case($_REQUEST['name_first']);
@@ -48,20 +48,17 @@ $customer->phone_home = $_REQUEST['phone_home'];
 $customer->fax = $_REQUEST['fax'];
 
 if (empty($customer->name)) {
-	$module = $config->run_sales->print_customer_form('com_sales', 'savecustomer');
-	$module->entity = $customer;
+	$customer->print_form();
 	display_notice('Please specify a name.');
 	return;
 }
 if (empty($customer->email)) {
-	$module = $config->run_sales->print_customer_form('com_sales', 'savecustomer');
-	$module->entity = $customer;
+	$customer->print_form();
 	display_notice('Please specify an email.');
 	return;
 }
 if (empty($customer->phone_cell) && empty($customer->phone_work) && empty($customer->phone_home)) {
-	$module = $config->run_sales->print_customer_form('com_sales', 'savecustomer');
-	$module->entity = $customer;
+	$customer->print_form();
 	display_notice('Please specify at least one phone number.');
 	return;
 }

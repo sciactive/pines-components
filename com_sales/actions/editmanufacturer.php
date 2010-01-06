@@ -16,6 +16,7 @@ if ( !gatekeeper('com_sales/editmanufacturer') ) {
 	return;
 }
 
-$config->run_sales->print_manufacturer_form('com_sales', 'savemanufacturer', $_REQUEST['id']);
+$entity = new com_sales_manufacturer((int) $_REQUEST['id']);
+$entity->print_form();
 
 ?>

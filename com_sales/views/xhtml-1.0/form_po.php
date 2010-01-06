@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = (is_null($this->entity->guid)) ? 'Editing New Purchase Order' : 'Editing ['.htmlentities($this->entity->po_number).']';
 $this->note = 'Provide PO details in this form.';
 ?>
-<form class="pform" method="post" id="po_details" action="<?php echo pines_url($this->new_option, $this->new_action); ?>">
+<form class="pform" method="post" id="po_details" action="<?php echo pines_url('com_sales', 'savepo'); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
 		var products;

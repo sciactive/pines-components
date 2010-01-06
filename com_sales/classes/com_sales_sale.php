@@ -18,9 +18,79 @@ defined('P_RUN') or die('Direct access prohibited');
  * @subpackage com_sales
  */
 class com_sales_sale extends entity {
-	public function __construct() {
+	/**
+	 * Load a sale.
+	 * @param int $id The ID of the sale to load, null for a new sale.
+	 */
+	public function __construct($id = null) {
 		parent::__construct();
 		$this->add_tag('com_sales', 'sale');
+		if (!is_null($id)) {
+			global $config;
+			$entity = $config->entity_manager->get_entity($id, $this->tags, get_class($this));
+			if (is_null($entity))
+				return;
+			$this->guid = $entity->guid;
+			$this->parent = $entity->parent;
+			$this->tags = $entity->tags;
+			$this->entity_cache = array();
+			$this->put_data($entity->get_data());
+		}
+	}
+
+	/**
+	 * Delete the sale.
+	 * @return bool True on success, false on failure.
+	 */
+	public function delete() {
+		if (!parent::delete())
+			return false;
+		pines_log("Deleted sale $this->name.", 'notice');
+		return true;
+	}
+
+	/**
+	 * Print a form to edit the sale.
+	 * @return module The form's module.
+	 */
+	public function print_form() {
+		global $config;
+		$pgrid = new module('system', 'pgrid.default', 'head');
+		$pgrid->icons = true;
+		$module = new module('com_sales', 'form_sale', 'content');
+		$module->entity = $this;
+		$module->tax_fees = $config->entity_manager->get_entities_by_tags('com_sales', 'tax_fee', com_sales_tax_fee);
+		if (!is_array($module->tax_fees)) {
+			$module->tax_fees = array();
+		}
+		foreach ($module->tax_fees as $key => $cur_tax_fee) {
+			if (!$cur_tax_fee->enabled) {
+				unset($module->tax_fees[$key]);
+			}
+		}
+		$module->payment_types = $config->entity_manager->get_entities_by_tags('com_sales', 'payment_type', com_sales_payment_type);
+		if (!is_array($module->payment_types)) {
+			$module->payment_types = array();
+		}
+		foreach ($module->payment_types as $key => $cur_payment_type) {
+			if (!$cur_payment_type->enabled) {
+				unset($module->payment_types[$key]);
+			}
+		}
+
+		return $module;
+	}
+
+	/**
+	 * Print a receipt of the sale.
+	 * @return module The form's module.
+	 */
+	function print_receipt($id = NULL) {
+		global $config;
+		$module = new module('com_sales', 'receipt_sale', 'content');
+		$module->entity = $this;
+
+		return $module;
 	}
 
 	/**
@@ -49,7 +119,7 @@ class com_sales_sale extends entity {
 			return false;
 		}
 		if ($this->change > 0.00) {
-			$change_type = $config->entity_manager->get_entities_by_data(array('change_type' => true), array('com_sales', 'payment_type'));
+			$change_type = $config->entity_manager->get_entities_by_data(array('change_type' => true), array('com_sales', 'payment_type'), false, com_sales_payment_type);
 			if (!is_array($change_type) || is_null($change_type[0])) {
 				display_notice('Change is due to be given, but no payment type has been set to give change.');
 				return false;
@@ -59,7 +129,7 @@ class com_sales_sale extends entity {
 		}
 		foreach ($this->payments as &$cur_payment) {
 			// Make a transaction entry.
-			$tx = new entity('com_sales', 'transaction', 'payment_tx');
+			$tx = new com_sales_tx('com_sales', 'transaction', 'payment_tx');
 			$tx->type = 'payment_received';
 			$tx->amount = (float) $cur_payment['amount'];
 			$tx->ref = $cur_payment['entity'];
@@ -73,7 +143,7 @@ class com_sales_sale extends entity {
 		}
 		if ($this->change > 0.00) {
 			// Make a transaction entry.
-			$tx = new entity('com_sales', 'transaction', 'payment_tx');
+			$tx = new com_sales_tx('com_sales', 'transaction', 'payment_tx');
 			$tx->type = 'change_given';
 			$tx->amount = (float) $this->change;
 			$tx->ref = $change_type;
@@ -86,7 +156,7 @@ class com_sales_sale extends entity {
 			$return = $return && $tx->save();
 		}
 		// Make a transaction entry.
-		$tx = new entity('com_sales', 'transaction', 'sale_tx');
+		$tx = new com_sales_tx('com_sales', 'transaction', 'sale_tx');
 
 		$this->status = 'paid';
 		$tx->type = 'paid';
@@ -114,8 +184,10 @@ class com_sales_sale extends entity {
 	 */
 	public function invoice() {
 		global $config;
-		if (!is_array($this->products))
+		if (!is_array($this->products)) {
+			display_notice('Sale has no products');
 			return false;
+		}
 		// Keep track of the whole process.
 		$return = true;
 		// These will be searched through to match products to stock entries.
@@ -131,6 +203,7 @@ class com_sales_sale extends entity {
 		unset($cur_product);
 		// Calculate and save the sale's totals.
 		if (!$this->total()) {
+			display_notice('Couldn\'t total sale.');
 			return false;
 		}
 		// Go through each product, and find corresponding stock entries.
@@ -202,8 +275,9 @@ class com_sales_sale extends entity {
 			}
 		}
 		unset($cur_product);
+
 		// Make a transaction entry.
-		$tx = new entity('com_sales', 'transaction', 'sale_tx');
+		$tx = new com_sales_tx('com_sales', 'transaction', 'sale_tx');
 
 		$this->status = 'invoiced';
 		$tx->type = 'invoiced';

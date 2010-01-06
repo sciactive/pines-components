@@ -16,6 +16,7 @@ if ( !gatekeeper('com_sales/editshipper') ) {
 	return;
 }
 
-$config->run_sales->print_shipper_form('com_sales', 'saveshipper', $_REQUEST['id']);
+$entity = new com_sales_shipper((int) $_REQUEST['id']);
+$entity->print_form();
 
 ?>

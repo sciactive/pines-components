@@ -16,6 +16,7 @@ if ( !gatekeeper('com_sales/newproduct') ) {
 	return;
 }
 
-$config->run_sales->print_product_form('com_sales', 'saveproduct');
+$entity = new com_sales_product;
+$entity->print_form();
 
 ?>

@@ -16,6 +16,7 @@ if ( !gatekeeper('com_sales/editpaymenttype') ) {
 	return;
 }
 
-$config->run_sales->print_payment_type_form('com_sales', 'savepaymenttype', $_REQUEST['id']);
+$entity = new com_sales_payment_type((int) $_REQUEST['id']);
+$entity->print_form();
 
 ?>

@@ -16,6 +16,7 @@ if ( !gatekeeper('com_sales/editsale') && !gatekeeper('com_sales/newsale') ) {
 	return;
 }
 
-$config->run_sales->print_sale_receipt($_REQUEST['id']);
+$entity = new com_sales_sale((int) $_REQUEST['id']);
+$entity->print_receipt();
 
 ?>

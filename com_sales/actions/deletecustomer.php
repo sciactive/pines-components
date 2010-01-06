@@ -18,7 +18,8 @@ if ( !gatekeeper('com_sales/deletecustomer') ) {
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_customer) {
-	if ( !$config->run_sales->delete_customer($cur_customer) )
+	$cur_entity = new com_sales_customer((int) $cur_customer);
+	if ( is_null($cur_entity->guid) || !$cur_entity->delete() )
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_customer;
 }
 if (empty($failed_deletes)) {

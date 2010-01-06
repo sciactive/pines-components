@@ -16,6 +16,7 @@ if ( !gatekeeper('com_sales/newpaymenttype') ) {
 	return;
 }
 
-$config->run_sales->print_payment_type_form('com_sales', 'savepaymenttype');
+$entity = new com_sales_payment_type;
+$entity->print_form();
 
 ?>

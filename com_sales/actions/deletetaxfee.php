@@ -18,7 +18,8 @@ if ( !gatekeeper('com_sales/deletetaxfee') ) {
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_tax_fee) {
-	if ( !$config->run_sales->delete_tax_fee($cur_tax_fee) )
+	$cur_entity = new com_sales_tax_fee((int) $cur_tax_fee);
+	if ( is_null($cur_entity->guid) || !$cur_entity->delete() )
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_tax_fee;
 }
 if (empty($failed_deletes)) {

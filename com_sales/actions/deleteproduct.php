@@ -18,7 +18,8 @@ if ( !gatekeeper('com_sales/deleteproduct') ) {
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_product) {
-	if ( !$config->run_sales->delete_product($cur_product) )
+	$cur_entity = new com_sales_product((int) $cur_product);
+	if ( is_null($cur_entity->guid) || !$cur_entity->delete() )
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_product;
 }
 if (empty($failed_deletes)) {

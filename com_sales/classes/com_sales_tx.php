@@ -1,6 +1,6 @@
 <?php
 /**
- * Provide a form to create a new vendor.
+ * com_sales_tx class.
  *
  * @package Pines
  * @subpackage com_sales
@@ -11,12 +11,12 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/newvendor') ) {
-	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'newvendor', null, false));
-	return;
-}
-
-$entity = new com_sales_vendor;
-$entity->print_form();
+/**
+ * A transaction.
+ *
+ * @package Pines
+ * @subpackage com_sales
+ */
+class com_sales_tx extends entity { }
 
 ?>

@@ -16,6 +16,7 @@ if ( !gatekeeper('com_sales/newtaxfee') ) {
 	return;
 }
 
-$config->run_sales->print_tax_fee_form('com_sales', 'savetaxfee');
+$entity = new com_sales_tax_fee;
+$entity->print_form();
 
 ?>

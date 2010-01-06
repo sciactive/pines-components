@@ -16,6 +16,7 @@ if ( !gatekeeper('com_sales/newshipper') ) {
 	return;
 }
 
-$config->run_sales->print_shipper_form('com_sales', 'saveshipper');
+$entity = new com_sales_shipper;
+$entity->print_form();
 
 ?>

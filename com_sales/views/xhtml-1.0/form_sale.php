@@ -22,7 +22,7 @@ if (is_null($this->entity->guid)) {
 $this->note = 'Use this form to edit a sale.';
 // TODO: After a sale is invoiced, don't calculate totals, just show what's saved.
 ?>
-<form class="pform" method="post" id="sale_details" action="<?php echo pines_url($this->new_option, $this->new_action); ?>">
+<form class="pform" method="post" id="sale_details" action="<?php echo pines_url('com_sales', 'savesale'); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 			<?php if (isset($this->entity->uid)) { ?>

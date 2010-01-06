@@ -16,6 +16,7 @@ if ( !gatekeeper('com_sales/newpo') ) {
 	return;
 }
 
-$config->run_sales->print_po_form('com_sales', 'savepo');
+$entity = new com_sales_po;
+$entity->print_form();
 
 ?>

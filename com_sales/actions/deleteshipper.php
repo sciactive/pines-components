@@ -18,7 +18,8 @@ if ( !gatekeeper('com_sales/deleteshipper') ) {
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_shipper) {
-	if ( !$config->run_sales->delete_shipper($cur_shipper) )
+	$cur_entity = new com_sales_shipper((int) $cur_shipper);
+	if ( is_null($cur_entity->guid) || !$cur_entity->delete() )
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_shipper;
 }
 if (empty($failed_deletes)) {

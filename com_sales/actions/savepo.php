@@ -16,8 +16,8 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listpos', null, false));
 		return;
 	}
-	$po = $config->run_sales->get_po($_REQUEST['id']);
-	if (is_null($po)) {
+	$po = new com_sales_po((int) $_REQUEST['id']);
+	if (!isset($po->guid)) {
 		display_error('Requested PO id is not accessible');
 		return;
 	}
@@ -26,7 +26,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listpos', null, false));
 		return;
 	}
-	$po = new entity('com_sales', 'po');
+	$po = new com_sales_po;
 }
 
 // General
@@ -34,13 +34,16 @@ $po->po_number = $_REQUEST['po_number'];
 $po->reference_number = $_REQUEST['reference_number'];
 // Vendor can't be changed after items have been received.
 if (empty($po->received)) {
-	$po->vendor = $config->run_sales->get_vendor(intval($_REQUEST['vendor']));
+	$po->vendor = new com_sales_vendor(intval($_REQUEST['vendor']));
+	if (!isset($po->vendor->guid))
+		$po->vendor = null;
 }
 // Destination can't be changed after items have been received.
-if (empty($po->received)) {
+if (empty($po->received))
 	$po->destination = $config->user_manager->get_group(intval($_REQUEST['destination']));
-}
-$po->shipper = $config->run_sales->get_shipper(intval($_REQUEST['shipper']));
+$po->shipper = new com_sales_shipper(intval($_REQUEST['shipper']));
+if (!isset($po->shipper->guid))
+	$po->shipper = null;
 $po->eta = strtotime($_REQUEST['eta']);
 
 // Products
@@ -51,36 +54,34 @@ if (empty($po->received)) {
 		$po->products = array();
 	foreach ($po->products as &$cur_product) {
 		$cur_product = array(
-			'entity' => $config->run_sales->get_product(intval($cur_product->key)),
+			'entity' => new com_sales_product(intval($cur_product->key)),
 			'quantity' => intval($cur_product->values[2]),
 			'cost' => floatval($cur_product->values[3])
 		);
+		if (!isset($cur_product['entity']->guid))
+			$cur_product['entity'] = null;
 	}
 	unset($cur_product);
 }
 
 if (empty($po->po_number)) {
-	$module = $config->run_sales->print_po_form('com_sales', 'savepo');
-	$module->entity = $po;
+	$po->print_form();
 	display_notice('Please specify a PO number.');
 	return;
 }
-$test = $config->entity_manager->get_entities_by_data(array('po_number' => $po->po_number), array('com_sales', 'po'));
+$test = $config->entity_manager->get_entities_by_data(array('po_number' => $po->po_number), array('com_sales', 'po'), false, com_sales_po);
 if (!empty($test) && $test[0]->guid != $_REQUEST['id']) {
-	$module = $config->run_sales->print_po_form('com_sales', 'savepo');
-	$module->entity = $po;
+	$po->print_form();
 	display_notice('There is already a PO with that number. Please enter a different number.');
 	return;
 }
 if (is_null($po->vendor)) {
-	$module = $config->run_sales->print_po_form('com_sales', 'savepo');
-	$module->entity = $po;
+	$po->print_form();
 	display_error('Specified vendor is not valid.');
 	return;
 }
 if (is_null($po->shipper)) {
-	$module = $config->run_sales->print_po_form('com_sales', 'savepo');
-	$module->entity = $po;
+	$po->print_form();
 	display_error('Specified shipper is not valid.');
 	return;
 }

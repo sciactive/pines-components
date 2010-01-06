@@ -23,16 +23,16 @@ if (empty($list)) {
 	return;
 }
 
-$module = $config->run_sales->print_transfer_form('com_sales', 'savetransfer');
-$module->entity = new entity('com_sales', 'transfer');
-$module->entity->stock = array();
+$entity = new com_sales_transfer;
+$entity->stock = array();
 if (is_array($list)) {
 	foreach ($list as $cur_stock_guid) {
 		$cur_stock = $config->entity_manager->get_entity($cur_stock_guid, array('com_sales', 'stock'), com_sales_stock);
 		if (!is_null($cur_stock)) {
-			$module->entity->stock[] = $cur_stock_guid;
+			$entity->stock[] = $cur_stock_guid;
 		}
 	}
 }
+$entity->print_form();
 
 ?>

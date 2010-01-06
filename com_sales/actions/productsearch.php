@@ -28,8 +28,8 @@ if (empty($code)) {
 		$product = null;
 	}
 } else {
-	$product = $config->run_sales->get_product($code);
-	if (!$product->enabled) {
+	$product = new com_sales_product((int) $code);
+	if (!isset($product->guid) || !$product->enabled) {
 		$product = null;
 	}
 }

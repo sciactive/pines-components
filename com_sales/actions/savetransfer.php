@@ -17,13 +17,13 @@ if ( !gatekeeper('com_sales/managestock') ) {
 }
 
 if ( isset($_REQUEST['id']) ) {
-	$transfer = $config->run_sales->get_transfer($_REQUEST['id']);
-	if (is_null($transfer)) {
+	$transfer = new com_sales_transfer((int) $_REQUEST['id']);
+	if (!isset($transfer->guid)) {
 		display_error('Requested transfer id is not accessible');
 		return;
 	}
 } else {
-	$transfer = new entity('com_sales', 'transfer');
+	$transfer = new com_sales_transfer;
 }
 
 // General
@@ -32,7 +32,9 @@ $transfer->reference_number = $_REQUEST['reference_number'];
 if (empty($transfer->received)) {
 	$transfer->destination = $config->user_manager->get_group(intval($_REQUEST['destination']));
 }
-$transfer->shipper = $config->run_sales->get_shipper(intval($_REQUEST['shipper']));
+$transfer->shipper = new com_sales_shipper(intval($_REQUEST['shipper']));
+if (!isset($transfer->shipper->guid))
+	$transfer->shipper = null;
 $transfer->eta = strtotime($_REQUEST['eta']);
 
 // Stock
@@ -50,14 +52,12 @@ if (empty($transfer->received)) {
 }
 
 if (is_null($transfer->destination)) {
-	$module = $config->run_sales->print_transfer_form('com_sales', 'savetransfer');
-	$module->entity = $transfer;
+	$transfer->print_form();
 	display_error('Specified destination is not valid.');
 	return;
 }
 if (is_null($transfer->shipper)) {
-	$module = $config->run_sales->print_transfer_form('com_sales', 'savetransfer');
-	$module->entity = $transfer;
+	$transfer->print_form();
 	display_error('Specified shipper is not valid.');
 	return;
 }

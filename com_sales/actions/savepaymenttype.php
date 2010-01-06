@@ -16,8 +16,8 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listpaymenttypes', null, false));
 		return;
 	}
-	$payment_type = $config->run_sales->get_payment_type($_REQUEST['id']);
-	if (is_null($payment_type)) {
+	$payment_type = new com_sales_payment_type((int) $_REQUEST['id']);
+	if (!isset($payment_type->guid)) {
 		display_error('Requested payment type id is not accessible');
 		return;
 	}
@@ -26,7 +26,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listpaymenttypes', null, false));
 		return;
 	}
-	$payment_type = new entity('com_sales', 'payment_type');
+	$payment_type = new com_sales_payment_type;
 }
 
 $payment_type->name = $_REQUEST['name'];
@@ -35,15 +35,13 @@ $payment_type->change_type = ($_REQUEST['change_type'] == 'ON' ? true : false);
 $payment_type->minimum = floatval($_REQUEST['minimum']);
 
 if (empty($payment_type->name)) {
-	$module = $config->run_sales->print_payment_type_form('com_sales', 'savepaymenttype');
-	$module->entity = $payment_type;
+	$payment_type->print_form();
 	display_notice('Please specify a name.');
 	return;
 }
-$test = $config->entity_manager->get_entities_by_data(array('name' => $payment_type->name), array('com_sales', 'payment_type'));
+$test = $config->entity_manager->get_entities_by_data(array('name' => $payment_type->name), array('com_sales', 'payment_type'), false, com_sales_payment_type);
 if (!empty($test) && $test[0]->guid != $_REQUEST['id']) {
-	$module = $config->run_sales->print_payment_type_form('com_sales', 'savepaymenttype');
-	$module->entity = $payment_type;
+	$payment_type->print_form();
 	display_notice('There is already a payment type with that name. Please choose a different name.');
 	return;
 }
@@ -56,7 +54,7 @@ if ($config->com_sales->global_payment_types) {
 }
 
 if ($payment_type->change_type) {
-	$change_type = $config->entity_manager->get_entities_by_data(array('change_type' => true), array('com_sales', 'payment_type'));
+	$change_type = $config->entity_manager->get_entities_by_data(array('change_type' => true), array('com_sales', 'payment_type'), false, com_sales_payment_type);
 	if (is_array($change_type) && !is_null($change_type[0])) {
 		$change_type[0]->change_type = false;
 		if ($change_type[0]->save()) {

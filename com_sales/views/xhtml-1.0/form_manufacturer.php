@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = (is_null($this->entity->guid)) ? 'Editing New Manufacturer' : 'Editing ['.htmlentities($this->entity->name).']';
 $this->note = 'Provide manufacturer details in this form.';
 ?>
-<form class="pform" method="post" id="manufacturer_details" action="<?php echo pines_url($this->new_option, $this->new_action); ?>">
+<form class="pform" method="post" id="manufacturer_details" action="<?php echo pines_url('com_sales', 'savemanufacturer'); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 	<?php if (isset($this->entity->uid)) { ?>

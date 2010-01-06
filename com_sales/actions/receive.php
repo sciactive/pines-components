@@ -49,7 +49,7 @@ foreach ($products as $cur_product) {
 		continue;
 	}
 	for ($i = 0; $i < $cur_product['quantity']; $i++) {
-		$stock_entity = new com_sales_stock();
+		$stock_entity = new com_sales_stock;
 		$stock_entity->product = $cur_product_entity;
 		if ($cur_product_entity->serialized) {
 			$stock_entity->serial = $cur_product['serial'];

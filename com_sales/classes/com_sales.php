@@ -162,182 +162,6 @@ class com_sales extends component {
 	}
 
 	/**
-	 * Delete a customer.
-	 *
-	 * @param int $id The GUID of the customer.
-	 * @return bool True on success, false on failure.
-	 */
-	function delete_customer($id) {
-		if ( $entity = $this->get_customer($id) ) {
-			if ( !$entity->delete() )
-				return false;
-			pines_log("Deleted customer $entity->name.", 'notice');
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * Delete a manufacturer.
-	 *
-	 * @param int $id The GUID of the manufacturer.
-	 * @return bool True on success, false on failure.
-	 */
-	function delete_manufacturer($id) {
-		if ( $entity = $this->get_manufacturer($id) ) {
-			if ( !$entity->delete() )
-				return false;
-			pines_log("Deleted manufacturer $entity->name.", 'notice');
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * Delete a payment type.
-	 *
-	 * @param int $id The GUID of the payment type.
-	 * @return bool True on success, false on failure.
-	 */
-	function delete_payment_type($id) {
-		if ( $entity = $this->get_payment_type($id) ) {
-			if ( !$entity->delete() )
-				return false;
-			pines_log("Deleted payment type $entity->name.", 'notice');
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * Delete a PO.
-	 *
-	 * @param int $id The GUID of the PO.
-	 * @return bool True on success, false on failure.
-	 */
-	function delete_po($id) {
-		if ( $entity = $this->get_po($id) ) {
-			// Don't delete the PO if it has received items.
-			if (!empty($entity->received))
-				return false;
-			if ( !$entity->delete() )
-				return false;
-			pines_log("Deleted PO $entity->po_number.", 'notice');
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * Delete a product.
-	 *
-	 * @param int $id The GUID of the product.
-	 * @return bool True on success, false on failure.
-	 */
-	function delete_product($id) {
-		if ( $entity = $this->get_product($id) ) {
-			if ( !$entity->delete() )
-				return false;
-			pines_log("Deleted product $entity->name.", 'notice');
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * Delete a sale.
-	 *
-	 * @param int $id The GUID of the sale.
-	 * @return bool True on success, false on failure.
-	 */
-	function delete_sale($id) {
-		if ( $entity = $this->get_sale($id) ) {
-			if ( !$entity->delete() )
-				return false;
-			pines_log("Deleted sale $entity->name.", 'notice');
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * Delete a shipper.
-	 *
-	 * @param int $id The GUID of the shipper.
-	 * @return bool True on success, false on failure.
-	 */
-	function delete_shipper($id) {
-		if ( $entity = $this->get_shipper($id) ) {
-			if ( !$entity->delete() )
-				return false;
-			pines_log("Deleted shipper $entity->name.", 'notice');
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * Delete a tax/fee.
-	 *
-	 * @param int $id The GUID of the tax/fee.
-	 * @return bool True on success, false on failure.
-	 */
-	function delete_tax_fee($id) {
-		if ( $entity = $this->get_tax_fee($id) ) {
-			if ( !$entity->delete() )
-				return false;
-			pines_log("Deleted tax/fee $entity->name.", 'notice');
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * Delete a transfer.
-	 *
-	 * @param int $id The GUID of the transfer.
-	 * @return bool True on success, false on failure.
-	 */
-	function delete_transfer($id) {
-		if ( $entity = $this->get_transfer($id) ) {
-			// Don't delete the transfer if it has received items.
-			if (!empty($entity->received))
-				return false;
-			if ( !$entity->delete() )
-				return false;
-			pines_log("Deleted transfer $entity->guid.", 'notice');
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * Delete a vendor.
-	 *
-	 * @param int $id The GUID of the vendor.
-	 * @return bool True on success, false on failure.
-	 */
-	function delete_vendor($id) {
-		if ( $entity = $this->get_vendor($id) ) {
-			if ( !$entity->delete() )
-				return false;
-			pines_log("Deleted vendor $entity->name.", 'notice');
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
 	 * Gets a category by GUID.
 	 *
 	 * @param int $id The category's GUID.
@@ -364,66 +188,6 @@ class com_sales extends component {
 	}
 
 	/**
-	 * Gets a customer by GUID.
-	 *
-	 * @param int $id The customer's GUID.
-	 * @return entity|null The customer if it exists, null if it doesn't.
-	 */
-	function get_customer($id) {
-		global $config;
-		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'customer'));
-		return $entity;
-	}
-
-	/**
-	 * Gets a manufacturer by GUID.
-	 *
-	 * @param int $id The manufacturer's GUID.
-	 * @return entity|null The manufacturer if it exists, null if it doesn't.
-	 */
-	function get_manufacturer($id) {
-		global $config;
-		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'manufacturer'));
-		return $entity;
-	}
-
-	/**
-	 * Gets a payment type by GUID.
-	 *
-	 * @param int $id The payment type's GUID.
-	 * @return entity|null The payment type if it exists, null if it doesn't.
-	 */
-	function get_payment_type($id) {
-		global $config;
-		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'payment_type'));
-		return $entity;
-	}
-
-	/**
-	 * Gets a PO by GUID.
-	 *
-	 * @param int $id The PO's GUID.
-	 * @return entity|null The PO if it exists, null if it doesn't.
-	 */
-	function get_po($id) {
-		global $config;
-		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'po'));
-		return $entity;
-	}
-
-	/**
-	 * Gets a product by GUID.
-	 *
-	 * @param int $id The product's GUID.
-	 * @return entity|null The product if it exists, null if it doesn't.
-	 */
-	function get_product($id) {
-		global $config;
-		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'product'));
-		return $entity;
-	}
-
-	/**
 	 * Gets a product by its code.
 	 *
 	 * The first code checked is the product's SKU. If the product is found, it
@@ -436,11 +200,11 @@ class com_sales extends component {
 	 */
 	function get_product_by_code($code) {
 		global $config;
-		$entities = $config->entity_manager->get_entities_by_data(array('sku' => $code), array('com_sales', 'product'));
+		$entities = $config->entity_manager->get_entities_by_data(array('sku' => $code), array('com_sales', 'product'), false, com_sales_product);
 		if (!empty($entities)) {
 			return $entities[0];
 		}
-		$entities = $config->entity_manager->get_entities_by_tags('com_sales', 'product');
+		$entities = $config->entity_manager->get_entities_by_tags('com_sales', 'product', com_sales_product);
 		if (!is_array($entities))
 			return null;
 		foreach($entities as $cur_entity) {
@@ -487,66 +251,6 @@ class com_sales extends component {
 	}
 
 	/**
-	 * Gets a sale by GUID.
-	 *
-	 * @param int $id The sale's GUID.
-	 * @return entity|null The sale if it exists, null if it doesn't.
-	 */
-	function get_sale($id) {
-		global $config;
-		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'sale'), com_sales_sale);
-		return $entity;
-	}
-
-	/**
-	 * Gets a shipper by GUID.
-	 *
-	 * @param int $id The shipper's GUID.
-	 * @return entity|null The shipper if it exists, null if it doesn't.
-	 */
-	function get_shipper($id) {
-		global $config;
-		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'shipper'));
-		return $entity;
-	}
-
-	/**
-	 * Gets a tax/fee by GUID.
-	 *
-	 * @param int $id The tax/fee's GUID.
-	 * @return entity|null The tax/fee if it exists, null if it doesn't.
-	 */
-	function get_tax_fee($id) {
-		global $config;
-		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'tax_fee'));
-		return $entity;
-	}
-
-	/**
-	 * Gets a transfer by GUID.
-	 *
-	 * @param int $id The transfer's GUID.
-	 * @return entity|null The transfer if it exists, null if it doesn't.
-	 */
-	function get_transfer($id) {
-		global $config;
-		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'transfer'));
-		return $entity;
-	}
-
-	/**
-	 * Gets a vendor by GUID.
-	 *
-	 * @param int $id The vendor's GUID.
-	 * @return entity|null The vendor if it exists, null if it doesn't.
-	 */
-	function get_vendor($id) {
-		global $config;
-		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'vendor'));
-		return $entity;
-	}
-
-	/**
 	 * Creates and attaches a module which lists customers.
 	 */
 	function list_customers() {
@@ -559,7 +263,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_customers'];
 
-		$module->customers = $config->entity_manager->get_entities_by_tags('com_sales', 'customer');
+		$module->customers = $config->entity_manager->get_entities_by_tags('com_sales', 'customer', com_sales_customer);
 
 		if ( empty($module->customers) ) {
 			$pgrid->detach();
@@ -581,7 +285,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_manufacturers'];
 
-		$module->manufacturers = $config->entity_manager->get_entities_by_tags('com_sales', 'manufacturer');
+		$module->manufacturers = $config->entity_manager->get_entities_by_tags('com_sales', 'manufacturer', com_sales_manufacturer);
 
 		if ( empty($module->manufacturers) ) {
 			$pgrid->detach();
@@ -603,7 +307,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_payment_types'];
 
-		$module->payment_types = $config->entity_manager->get_entities_by_tags('com_sales', 'payment_type');
+		$module->payment_types = $config->entity_manager->get_entities_by_tags('com_sales', 'payment_type', com_sales_payment_type);
 
 		if ( empty($module->payment_types) ) {
 			$pgrid->detach();
@@ -625,7 +329,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_pos'];
 
-		$module->pos = $config->entity_manager->get_entities_by_tags('com_sales', 'po');
+		$module->pos = $config->entity_manager->get_entities_by_tags('com_sales', 'po', com_sales_po);
 
 		if ( empty($module->pos) ) {
 			$pgrid->detach();
@@ -647,7 +351,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_products'];
 
-		$module->products = $config->entity_manager->get_entities_by_tags('com_sales', 'product');
+		$module->products = $config->entity_manager->get_entities_by_tags('com_sales', 'product', com_sales_product);
 
 		if ( empty($module->products) ) {
 			$pgrid->detach();
@@ -669,7 +373,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_sales'];
 
-		$module->sales = $config->entity_manager->get_entities_by_tags('com_sales', 'sale');
+		$module->sales = $config->entity_manager->get_entities_by_tags('com_sales', 'sale', com_sales_sale);
 
 		if ( empty($module->sales) ) {
 			$pgrid->detach();
@@ -691,7 +395,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_shippers'];
 
-		$module->shippers = $config->entity_manager->get_entities_by_tags('com_sales', 'shipper');
+		$module->shippers = $config->entity_manager->get_entities_by_tags('com_sales', 'shipper', com_sales_shipper);
 
 		if ( empty($module->shippers) ) {
 			$pgrid->detach();
@@ -738,7 +442,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_tax_fees'];
 
-		$module->tax_fees = $config->entity_manager->get_entities_by_tags('com_sales', 'tax_fee');
+		$module->tax_fees = $config->entity_manager->get_entities_by_tags('com_sales', 'tax_fee', com_sales_tax_fee);
 
 		if ( empty($module->tax_fees) ) {
 			$pgrid->detach();
@@ -760,7 +464,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_transfers'];
 
-		$module->transfers = $config->entity_manager->get_entities_by_tags('com_sales', 'transfer');
+		$module->transfers = $config->entity_manager->get_entities_by_tags('com_sales', 'transfer', com_sales_transfer);
 
 		if ( empty($module->transfers) ) {
 			$pgrid->detach();
@@ -782,7 +486,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_vendors'];
 
-		$module->vendors = $config->entity_manager->get_entities_by_tags('com_sales', 'vendor');
+		$module->vendors = $config->entity_manager->get_entities_by_tags('com_sales', 'vendor', com_sales_vendor);
 
 		if ( empty($module->vendors) ) {
 			$pgrid->detach();
@@ -816,194 +520,6 @@ class com_sales extends component {
 	}
 
 	/**
-	 * Creates and attaches a module containing a form for editing a customer.
-	 *
-	 * If $id is null, or not given, a blank form will be provided.
-	 *
-	 * @param string $new_option The option to which the form will submit.
-	 * @param string $new_action The action to which the form will submit.
-	 * @param int $id The GUID of the customer to edit.
-	 * @return module|null The new module on success, nothing on failure.
-	 */
-	function print_customer_form($new_option, $new_action, $id = NULL) {
-		global $config;
-		$module = new module('com_sales', 'form_customer', 'content');
-		if ( is_null($id) ) {
-			$module->entity = new entity;
-		} else {
-			$module->entity = $this->get_customer($id);
-			if (is_null($module->entity)) {
-				display_error('Requested customer id is not accessible.');
-				$module->detach();
-				return;
-			}
-		}
-		$module->new_option = $new_option;
-		$module->new_action = $new_action;
-
-		return $module;
-	}
-
-	/**
-	 * Creates and attaches a module containing a form for editing a
-	 * manufacturer.
-	 *
-	 * If $id is null, or not given, a blank form will be provided.
-	 *
-	 * @param string $new_option The option to which the form will submit.
-	 * @param string $new_action The action to which the form will submit.
-	 * @param int $id The GUID of the manufacturer to edit.
-	 * @return module|null The new module on success, nothing on failure.
-	 */
-	function print_manufacturer_form($new_option, $new_action, $id = NULL) {
-		global $config;
-		$module = new module('com_sales', 'form_manufacturer', 'content');
-		if ( is_null($id) ) {
-			$module->entity = new entity;
-		} else {
-			$module->entity = $this->get_manufacturer($id);
-			if (is_null($module->entity)) {
-				display_error('Requested manufacturer id is not accessible.');
-				$module->detach();
-				return;
-			}
-		}
-		$module->new_option = $new_option;
-		$module->new_action = $new_action;
-
-		return $module;
-	}
-
-	/**
-	 * Creates and attaches a module containing a form for editing a payment type.
-	 *
-	 * If $id is null, or not given, a blank form will be provided.
-	 *
-	 * @param string $new_option The option to which the form will submit.
-	 * @param string $new_action The action to which the form will submit.
-	 * @param int $id The GUID of the payment type to edit.
-	 * @return module|null The new module on success, nothing on failure.
-	 */
-	function print_payment_type_form($new_option, $new_action, $id = NULL) {
-		global $config;
-		$module = new module('com_sales', 'form_payment_type', 'content');
-		if ( is_null($id) ) {
-			$module->entity = new entity;
-		} else {
-			$module->entity = $this->get_payment_type($id);
-			if (is_null($module->entity)) {
-				display_error('Requested payment type id is not accessible.');
-				$module->detach();
-				return;
-			}
-		}
-		$module->new_option = $new_option;
-		$module->new_action = $new_action;
-
-		return $module;
-	}
-
-	/**
-	 * Creates and attaches a module containing a form for editing a PO.
-	 *
-	 * If $id is null, or not given, a blank form will be provided.
-	 *
-	 * @param string $new_option The option to which the form will submit.
-	 * @param string $new_action The action to which the form will submit.
-	 * @param int $id The GUID of the po to edit.
-	 * @return module|null The new module on success, nothing on failure.
-	 */
-	function print_po_form($new_option, $new_action, $id = NULL) {
-		global $config;
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
-		$module = new module('com_sales', 'form_po', 'content');
-		if ( is_null($id) ) {
-			$module->entity = new entity;
-		} else {
-			$module->entity = $this->get_po($id);
-			if (is_null($module->entity)) {
-				display_error('Requested PO id is not accessible.');
-				$jstree->detach();
-				$tageditor->detach();
-				$module->detach();
-				return;
-			}
-		}
-		$module->locations = $config->user_manager->get_group_array();
-		$module->shippers = $config->entity_manager->get_entities_by_tags('com_sales', 'shipper');
-		if (!is_array($module->shippers)) {
-			$module->shippers = array();
-		}
-		$module->vendors = $config->entity_manager->get_entities_by_tags('com_sales', 'vendor');
-		if (!is_array($module->vendors)) {
-			$module->vendors = array();
-		}
-		$module->products = $config->entity_manager->get_entities_by_tags('com_sales', 'product');
-		if (!is_array($module->products)) {
-			$module->products = array();
-		}
-
-		$module->new_option = $new_option;
-		$module->new_action = $new_action;
-
-		return $module;
-	}
-
-	/**
-	 * Creates and attaches a module containing a form for editing a product.
-	 *
-	 * If $id is null, or not given, a blank form will be provided.
-	 *
-	 * @param string $new_option The option to which the form will submit.
-	 * @param string $new_action The action to which the form will submit.
-	 * @param int $id The GUID of the product to edit.
-	 * @return module|null The new module on success, nothing on failure.
-	 */
-	function print_product_form($new_option, $new_action, $id = NULL) {
-		global $config;
-		$config->editor->load();
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
-		$jstree = new module('system', 'jstree', 'head');
-		$ptags = new module('system', 'ptags.default', 'head');
-		$module = new module('com_sales', 'form_product', 'content');
-		if ( is_null($id) ) {
-			$module->entity = new entity;
-		} else {
-			$module->entity = $this->get_product($id);
-			if (is_null($module->entity)) {
-				display_error('Requested product id is not accessible.');
-				$jstree->detach();
-				$ptags->detach();
-				$module->detach();
-				return;
-			}
-		}
-		$module->manufacturers = $config->entity_manager->get_entities_by_tags('com_sales', 'manufacturer');
-		if (!is_array($module->manufacturers)) {
-			$module->manufacturers = array();
-		}
-		$module->vendors = $config->entity_manager->get_entities_by_tags('com_sales', 'vendor');
-		if (!is_array($module->vendors)) {
-			$module->vendors = array();
-		}
-		$module->tax_fees = $config->entity_manager->get_entities_by_tags('com_sales', 'tax_fee');
-		if (!is_array($module->tax_fees)) {
-			$module->tax_fees = array();
-		}
-		$module->actions = $this->product_actions;
-		if (!is_array($module->actions)) {
-			$module->actions = array();
-		}
-
-		$module->new_option = $new_option;
-		$module->new_action = $new_action;
-
-		return $module;
-	}
-
-	/**
 	 * Creates and attaches a module containing a form for receiving inventory.
 	 *
 	 * @param string $new_option The option to which the form will submit.
@@ -1022,82 +538,6 @@ class com_sales extends component {
 	}
 
 	/**
-	 * Creates and attaches a module containing a form for editing a
-	 * sale.
-	 *
-	 * If $id is null, or not given, a blank form will be provided.
-	 *
-	 * @param string $new_option The option to which the form will submit.
-	 * @param string $new_action The action to which the form will submit.
-	 * @param int $id The GUID of the sale to edit.
-	 * @return module|null The new module on success, nothing on failure.
-	 */
-	function print_sale_form($new_option, $new_action, $id = NULL) {
-		global $config;
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
-		$module = new module('com_sales', 'form_sale', 'content');
-		if ( is_null($id) ) {
-			$module->entity = new entity;
-		} else {
-			$module->entity = $this->get_sale($id);
-			if (is_null($module->entity)) {
-				display_error('Requested sale id is not accessible.');
-				$module->detach();
-				return;
-			}
-		}
-		$module->tax_fees = $config->entity_manager->get_entities_by_tags('com_sales', 'tax_fee');
-		if (!is_array($module->tax_fees)) {
-			$module->tax_fees = array();
-		}
-		foreach ($module->tax_fees as $key => $cur_tax_fee) {
-			if (!$cur_tax_fee->enabled) {
-				unset($module->tax_fees[$key]);
-			}
-		}
-		$module->payment_types = $config->entity_manager->get_entities_by_tags('com_sales', 'payment_type');
-		if (!is_array($module->payment_types)) {
-			$module->payment_types = array();
-		}
-		foreach ($module->payment_types as $key => $cur_payment_type) {
-			if (!$cur_payment_type->enabled) {
-				unset($module->payment_types[$key]);
-			}
-		}
-
-		$module->new_option = $new_option;
-		$module->new_action = $new_action;
-
-		return $module;
-	}
-
-	/**
-	 * Creates and attaches a module containing a receipt for a sale.
-	 *
-	 * If $id is null, or not given, a blank receipt will be displayed.
-	 *
-	 * @param int $id The GUID of the sale to show.
-	 * @return module|null The new module on success, nothing on failure.
-	 */
-	function print_sale_receipt($id = NULL) {
-		global $config;
-		$module = new module('com_sales', 'receipt_sale', 'content');
-		if ( is_null($id) ) {
-			$module->entity = new entity;
-		} else {
-			$module->entity = $this->get_sale($id);
-			if (is_null($module->entity)) {
-				display_error('Requested sale id is not accessible.');
-				$module->detach();
-				return;
-			}
-		}
-
-		return $module;
-	}
-
-	/**
 	 * Creates and attaches a module containing a sales total page.
 	 *
 	 * @return module|null The new module on success, nothing on failure.
@@ -1107,138 +547,6 @@ class com_sales extends component {
 		$module = new module('com_sales', 'total_sales', 'content');
 		$module->locations = $config->user_manager->get_group_array();
 		$module->show_all = gatekeeper('com_sales/totalothersales');
-
-		return $module;
-	}
-
-	/**
-	 * Creates and attaches a module containing a form for editing a
-	 * shipper.
-	 *
-	 * If $id is null, or not given, a blank form will be provided.
-	 *
-	 * @param string $new_option The option to which the form will submit.
-	 * @param string $new_action The action to which the form will submit.
-	 * @param int $id The GUID of the shipper to edit.
-	 * @return module|null The new module on success, nothing on failure.
-	 */
-	function print_shipper_form($new_option, $new_action, $id = NULL) {
-		global $config;
-		$module = new module('com_sales', 'form_shipper', 'content');
-		if ( is_null($id) ) {
-			$module->entity = new entity;
-		} else {
-			$module->entity = $this->get_shipper($id);
-			if (is_null($module->entity)) {
-				display_error('Requested shipper id is not accessible.');
-				$module->detach();
-				return;
-			}
-		}
-		$module->new_option = $new_option;
-		$module->new_action = $new_action;
-
-		return $module;
-	}
-
-	/**
-	 * Creates and attaches a module containing a form for editing a tax/fee.
-	 *
-	 * If $id is null, or not given, a blank form will be provided.
-	 *
-	 * @param string $new_option The option to which the form will submit.
-	 * @param string $new_action The action to which the form will submit.
-	 * @param int $id The GUID of the tax/fee to edit.
-	 * @return module|null The new module on success, nothing on failure.
-	 */
-	function print_tax_fee_form($new_option, $new_action, $id = NULL) {
-		global $config;
-		$module = new module('com_sales', 'form_tax_fee', 'content');
-		if ( is_null($id) ) {
-			$module->entity = new entity;
-		} else {
-			$module->entity = $this->get_tax_fee($id);
-			if (is_null($module->entity)) {
-				display_error('Requested tax/fee id is not accessible.');
-				$module->detach();
-				return;
-			}
-		}
-		$module->locations = $config->user_manager->get_group_array();
-		$module->new_option = $new_option;
-		$module->new_action = $new_action;
-
-		return $module;
-	}
-
-	/**
-	 * Creates and attaches a module containing a form for editing a transfer.
-	 *
-	 * If $id is null, or not given, a blank form will be provided.
-	 *
-	 * @param string $new_option The option to which the form will submit.
-	 * @param string $new_action The action to which the form will submit.
-	 * @param int $id The GUID of the transfer to edit.
-	 * @return module|null The new module on success, nothing on failure.
-	 */
-	function print_transfer_form($new_option, $new_action, $id = NULL) {
-		global $config;
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
-		$module = new module('com_sales', 'form_transfer', 'content');
-		if ( is_null($id) ) {
-			$module->entity = new entity;
-		} else {
-			$module->entity = $this->get_transfer($id);
-			if (is_null($module->entity)) {
-				display_error('Requested transfer id is not accessible.');
-				$jstree->detach();
-				$tageditor->detach();
-				$module->detach();
-				return;
-			}
-		}
-		$module->locations = $config->user_manager->get_group_array();
-		$module->shippers = $config->entity_manager->get_entities_by_tags('com_sales', 'shipper');
-		if (!is_array($module->shippers)) {
-			$module->shippers = array();
-		}
-		$module->stock = $config->entity_manager->get_entities_by_tags('com_sales', 'stock', com_sales_stock);
-		if (!is_array($module->stock)) {
-			$module->stock = array();
-		}
-
-		$module->new_option = $new_option;
-		$module->new_action = $new_action;
-
-		return $module;
-	}
-
-	/**
-	 * Creates and attaches a module containing a form for editing a vendor.
-	 *
-	 * If $id is null, or not given, a blank form will be provided.
-	 *
-	 * @param string $new_option The option to which the form will submit.
-	 * @param string $new_action The action to which the form will submit.
-	 * @param int $id The GUID of the vendor to edit.
-	 * @return module|null The new module on success, nothing on failure.
-	 */
-	function print_vendor_form($new_option, $new_action, $id = NULL) {
-		global $config;
-		$module = new module('com_sales', 'form_vendor', 'content');
-		if ( is_null($id) ) {
-			$module->entity = new entity;
-		} else {
-			$module->entity = $this->get_vendor($id);
-			if (is_null($module->entity)) {
-				display_error('Requested vendor id is not accessible.');
-				$module->detach();
-				return;
-			}
-		}
-		$module->new_option = $new_option;
-		$module->new_action = $new_action;
 
 		return $module;
 	}

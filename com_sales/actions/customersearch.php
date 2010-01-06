@@ -23,7 +23,7 @@ $query = strtolower($_REQUEST['q']);
 if (empty($query)) {
 	$customers = array();
 } else {
-	$customers = $config->entity_manager->get_entities_by_tags('com_sales', 'customer');
+	$customers = $config->entity_manager->get_entities_by_tags('com_sales', 'customer', com_sales_customer);
 	if (!is_array($customers))
 		$customers = array();
 }

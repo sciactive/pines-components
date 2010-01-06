@@ -32,7 +32,7 @@ class com_sales_stock extends entity {
 	function inventory_origin() {
 		global $config;
 		// Get all the transfers.
-		$entities = $config->entity_manager->get_entities_by_tags('com_sales', 'transfer');
+		$entities = $config->entity_manager->get_entities_by_tags('com_sales', 'transfer', com_sales_transfer);
 		if (!is_array($entities)) {
 			$entities = array();
 		}
@@ -67,7 +67,7 @@ class com_sales_stock extends entity {
 		}
 
 		// Get all the POs.
-		$entities = $config->entity_manager->get_entities_by_tags('com_sales', 'po');
+		$entities = $config->entity_manager->get_entities_by_tags('com_sales', 'po', com_sales_po);
 		if (!is_array($entities)) {
 			$entities = array();
 		}
@@ -128,7 +128,7 @@ class com_sales_stock extends entity {
 		// Keep track of the status of the whole process.
 		$return = true;
 		// Make a transaction entry.
-		$tx = new entity('com_sales', 'transaction', 'stock_tx');
+		$tx = new com_sales_tx('com_sales', 'transaction', 'stock_tx');
 
 		if ($this->status)
 			$old_status = $this->status;
@@ -184,7 +184,7 @@ class com_sales_stock extends entity {
 		// Keep track of the status of the whole process.
 		$return = true;
 		// Make a transaction entry.
-		$tx = new entity('com_sales', 'transaction', 'stock_tx');
+		$tx = new com_sales_tx('com_sales', 'transaction', 'stock_tx');
 
 		if ($this->status)
 			$old_status = $this->status;

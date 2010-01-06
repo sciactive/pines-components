@@ -16,8 +16,8 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listvendors', null, false));
 		return;
 	}
-	$vendor = $config->run_sales->get_vendor($_REQUEST['id']);
-	if (is_null($vendor)) {
+	$vendor = new com_sales_vendor((int) $_REQUEST['id']);
+	if (!isset($vendor->guid)) {
 		display_error('Requested vendor id is not accessible');
 		return;
 	}
@@ -26,7 +26,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listvendors', null, false));
 		return;
 	}
-	$vendor = new entity('com_sales', 'vendor');
+	$vendor = new com_sales_vendor;
 }
 
 $vendor->name = $_REQUEST['name'];
@@ -52,15 +52,13 @@ $vendor->terms = $_REQUEST['terms'];
 $vendor->comments = $_REQUEST['comments'];
 
 if (empty($vendor->name)) {
-	$module = $config->run_sales->print_vendor_form('com_sales', 'savevendor');
-	$module->entity = $vendor;
+	$vendor->print_form();
 	display_notice('Please specify a name.');
 	return;
 }
-$test = $config->entity_manager->get_entities_by_data(array('name' => $vendor->name), array('com_sales', 'vendor'));
+$test = $config->entity_manager->get_entities_by_data(array('name' => $vendor->name), array('com_sales', 'vendor'), false, com_sales_vendor);
 if (!empty($test) && $test[0]->guid != $_REQUEST['id']) {
-	$module = $config->run_sales->print_vendor_form('com_sales', 'savevendor');
-	$module->entity = $vendor;
+	$vendor->print_form();
 	display_notice('There is already a vendor with that name. Please choose a different name.');
 	return;
 }

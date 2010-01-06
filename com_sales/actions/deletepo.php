@@ -18,8 +18,8 @@ if ( !gatekeeper('com_sales/deletepo') ) {
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_po) {
-	$this_po = $config->run_sales->get_po($cur_po);
-	if ( !empty($this_po->received) || !$config->run_sales->delete_po($cur_po) )
+	$cur_entity = new com_sales_po((int) $cur_po);
+	if ( is_null($cur_entity->guid) || !$cur_entity->delete() )
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_po;
 }
 if (empty($failed_deletes)) {

@@ -16,8 +16,8 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listsales', null, false));
 		return;
 	}
-	$sale = $config->run_sales->get_sale($_REQUEST['id']);
-	if (is_null($sale)) {
+	$sale = new com_sales_sale((int) $_REQUEST['id']);
+	if (!isset($sale->guid)) {
 		display_error('Requested sale id is not accessible');
 		return;
 	}
@@ -32,7 +32,9 @@ if ( isset($_REQUEST['id']) ) {
 if ($sale->status != 'invoiced' && $sale->status != 'paid') {
 	$sale->customer = $_REQUEST['customer'];
 	if (preg_match('/^\d+/', $sale->customer)) {
-		$sale->customer = $config->run_sales->get_customer(intval($sale->customer));
+		$sale->customer = new com_sales_customer(intval($sale->customer));
+		if (!isset($sale->customer->guid))
+			$sale->customer = null;
 	} else {
 		$sale->customer = null;
 	}
@@ -48,7 +50,7 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid') {
 		$product_error = true;
 	} else {
 		foreach ($sale->products as $key => &$cur_product) {
-			$cur_product_entity = $config->run_sales->get_product(intval($cur_product->key));
+			$cur_product_entity = new com_sales_product(intval($cur_product->key));
 			$cur_sku = $cur_product->values[0];
 			$cur_serial = $cur_product->values[2];
 			$cur_delivery = $cur_product->values[3];
@@ -57,7 +59,7 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid') {
 			$cur_qty = intval($cur_product->values[4]);
 			$cur_price = floatval($cur_product->values[5]);
 			$cur_discount = $cur_product->values[6];
-			if (is_null($cur_product_entity)) {
+			if (!isset($cur_product_entity->guid)) {
 				display_error("Product with id [$cur_product->key] and entered SKU [$cur_sku] was not found.");
 				unset($sale->products[$key]);
 				$product_error = true;
@@ -101,11 +103,11 @@ if ($sale->status != 'paid') {
 	if (!is_array($sale->payments))
 		$sale->payments = array();
 	foreach ($sale->payments as $key => &$cur_payment) {
-		$cur_payment_type_entity = $config->run_sales->get_payment_type(intval($cur_payment->key));
+		$cur_payment_type_entity = new com_sales_payment_type(intval($cur_payment->key));
 		// Not used, but possibly in the future for logging purposes. (If the type is deleted.)
 		$cur_type = $cur_payment->values[0];
 		$cur_amount = floatval($cur_payment->values[1]);
-		if (is_null($cur_payment_type_entity)) {
+		if (!isset($cur_payment_type_entity->guid)) {
 			display_error("Payment type with id [$cur_payment->key] was not found.");
 			unset($sale->payments[$key]);
 			$payment_error = true;
@@ -129,14 +131,8 @@ if ($sale->status != 'paid') {
 }
 $sale->comments = $_REQUEST['comments'];
 
-if ($product_error) {
-	$module = $config->run_sales->print_sale_form('com_sales', 'savesale');
-	$module->entity = $sale;
-	return;
-}
-if ($payment_error) {
-	$module = $config->run_sales->print_sale_form('com_sales', 'savesale');
-	$module->entity = $sale;
+if ($product_error || $payment_error) {
+	$sale->print_form();
 	return;
 }
 
@@ -146,8 +142,7 @@ if ($config->com_sales->global_sales) {
 
 if (($_REQUEST['process'] == 'Invoice' || $_REQUEST['process'] == 'Complete') && $sale->status != 'invoiced' && $sale->status != 'paid') {
 	if (!$sale->invoice()) {
-		$module = $config->run_sales->print_sale_form('com_sales', 'savesale');
-		$module->entity = $sale;
+		$sale->print_form();
 		display_error('There was an error while invoicing the sale. Please check that all information is correct and resubmit.');
 		return;
 	}
@@ -155,8 +150,7 @@ if (($_REQUEST['process'] == 'Invoice' || $_REQUEST['process'] == 'Complete') &&
 
 if ($_REQUEST['process'] == 'Complete') {
 	if (!$sale->complete()) {
-		$module = $config->run_sales->print_sale_form('com_sales', 'savesale');
-		$module->entity = $sale;
+		$sale->print_form();
 		display_error('There was an error while completing the sale. It has been invoiced, but not completed yet. Please check that all information is correct and resubmit.');
 		return;
 	}
@@ -170,12 +164,10 @@ if (!isset($sale->status) || $sale->status == 'quoted') {
 if ($sale->save()) {
 	display_notice('Saved sale ['.$sale->guid.']');
 } else {
-	$module = $config->run_sales->print_sale_form('com_sales', 'savesale');
-	$module->entity = $sale;
+	$sale->print_form();
 	display_error('Error saving sale. Do you have permission?');
 	return;
 }
 
-$module = $config->run_sales->print_sale_receipt();
-$module->entity = $sale;
+$sale->print_receipt();
 ?>

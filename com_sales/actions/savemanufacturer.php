@@ -13,20 +13,20 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_sales/editmanufacturer') ) {
-	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listmanufacturers', null, false));
-	return;
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listmanufacturers', null, false));
+		return;
 	}
-	$manufacturer = $config->run_sales->get_manufacturer($_REQUEST['id']);
-	if (is_null($manufacturer)) {
-	display_error('Requested manufacturer id is not accessible');
-	return;
+	$manufacturer = new com_sales_manufacturer((int) $_REQUEST['id']);
+	if (!isset($manufacturer->guid)) {
+		display_error('Requested manufacturer id is not accessible');
+		return;
 	}
 } else {
 	if ( !gatekeeper('com_sales/newmanufacturer') ) {
-	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listmanufacturers', null, false));
-	return;
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listmanufacturers', null, false));
+		return;
 	}
-	$manufacturer = new entity('com_sales', 'manufacturer');
+	$manufacturer = new com_sales_manufacturer;
 }
 
 $manufacturer->name = $_REQUEST['name'];
@@ -40,15 +40,13 @@ $manufacturer->phone_work = $_REQUEST['phone_work'];
 $manufacturer->fax = $_REQUEST['fax'];
 
 if (empty($manufacturer->name)) {
-	$module = $config->run_sales->print_manufacturer_form('com_sales', 'savemanufacturer');
-	$module->entity = $manufacturer;
+	$manufacturer->print_form();
 	display_notice('Please specify a name.');
 	return;
 }
-$test = $config->entity_manager->get_entities_by_data(array('name' => $manufacturer->name), array('com_sales', 'manufacturer'));
+$test = $config->entity_manager->get_entities_by_data(array('name' => $manufacturer->name), array('com_sales', 'manufacturer'), false, com_sales_manufacturer);
 if (!empty($test) && $test[0]->guid != $_REQUEST['id']) {
-	$module = $config->run_sales->print_manufacturer_form('com_sales', 'savemanufacturer');
-	$module->entity = $manufacturer;
+	$manufacturer->print_form();
 	display_notice('There is already a manufacturer with that name. Please choose a different name.');
 	return;
 }

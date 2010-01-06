@@ -16,8 +16,8 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listproducts', null, false));
 		return;
 	}
-	$product = $config->run_sales->get_product($_REQUEST['id']);
-	if (is_null($product)) {
+	$product = new com_sales_product((int) $_REQUEST['id']);
+	if (!isset($product->guid)) {
 		display_error('Requested product id is not accessible');
 		return;
 	}
@@ -26,7 +26,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listproducts', null, false));
 		return;
 	}
-	$product = new entity('com_sales', 'product');
+	$product = new com_sales_product;
 }
 
 // General
@@ -45,10 +45,12 @@ if (!is_array($product->vendors))
 	$product->vendors = array();
 foreach ($product->vendors as &$cur_vendor) {
 	$cur_vendor = array(
-		'entity' => $config->run_sales->get_vendor(intval($cur_vendor->key)),
+		'entity' => new com_sales_vendor(intval($cur_vendor->key)),
 		'sku' => $cur_vendor->values[1],
 		'cost' => $cur_vendor->values[2]
 	);
+	if (!isset($cur_vendor['entity']->guid))
+		$cur_vendor['entity'] = null;
 }
 unset($cur_vendor);
 
@@ -66,10 +68,9 @@ $product->tax_exempt = ($_REQUEST['tax_exempt'] == 'ON' ? true : false);
 $product->additional_tax_fees = array();
 if (is_array($_REQUEST['additional_tax_fees'])) {
 	foreach ($_REQUEST['additional_tax_fees'] as $cur_tax_fee_guid) {
-		$cur_tax_fee = $config->run_sales->get_tax_fee(intval($cur_tax_fee_guid));
-		if (!is_null($cur_tax_fee)) {
+		$cur_tax_fee = new com_sales_tax_fee(intval($cur_tax_fee_guid));
+		if (isset($cur_tax_fee->guid))
 			array_push($product->additional_tax_fees, $cur_tax_fee);
-		}
 	}
 }
 
@@ -87,15 +88,13 @@ if (!is_array($product->actions))
 	$product->actions = array();
 
 if (empty($product->name)) {
-	$module = $config->run_sales->print_product_form('com_sales', 'saveproduct');
-	$module->entity = $product;
+	$product->print_form();
 	display_notice('Please specify a name.');
 	return;
 }
-$test = $config->entity_manager->get_entities_by_data(array('name' => $product->name), array('com_sales', 'product'));
+$test = $config->entity_manager->get_entities_by_data(array('name' => $product->name), array('com_sales', 'product'), false, com_sales_product);
 if (!empty($test) && $test[0]->guid != $_REQUEST['id']) {
-	$module = $config->run_sales->print_product_form('com_sales', 'saveproduct');
-	$module->entity = $product;
+	$product->print_form();
 	display_notice('There is already a product with that name. Please choose a different name.');
 	return;
 }

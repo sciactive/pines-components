@@ -16,6 +16,7 @@ if ( !gatekeeper('com_sales/editproduct') ) {
 	return;
 }
 
-$config->run_sales->print_product_form('com_sales', 'saveproduct', $_REQUEST['id']);
+$entity = new com_sales_product((int) $_REQUEST['id']);
+$entity->print_form();
 
 ?>

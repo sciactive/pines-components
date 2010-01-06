@@ -16,6 +16,7 @@ if ( !gatekeeper('com_sales/newcustomer') ) {
 	return;
 }
 
-$config->run_sales->print_customer_form('com_sales', 'savecustomer');
+$entity = new com_sales_customer;
+$entity->print_form();
 
 ?>

@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = (is_null($this->entity->guid)) ? 'Editing New Transfer' : 'Editing ['.htmlentities($this->entity->guid).']';
 $this->note = 'Use this form to transfer inventory to another location.';
 ?>
-<form class="pform" method="post" id="transfer_details" action="<?php echo pines_url($this->new_option, $this->new_action); ?>">
+<form class="pform" method="post" id="transfer_details" action="<?php echo pines_url('com_sales', 'savetransfer'); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
 		var stock;

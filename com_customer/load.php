@@ -26,6 +26,6 @@ foreach(explode(',', $config->com_customer->pointvalues) as $cur_value) {
 }
 
 // Hook com_sales' customer form to give a link to mine.
-$config->hook->add_callback('$config->run_sales->print_customer_form', -1, array($config->run_customer, 'hook_customer_view'));
+$config->hook->add_callback('com_sales_customer->print_form', -1, array($config->run_customer, 'hook_customer_view'));
 
 ?>

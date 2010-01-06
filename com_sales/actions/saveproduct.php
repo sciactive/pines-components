@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listproducts', null, false));
 		return;
 	}
-	$product = new com_sales_product((int) $_REQUEST['id']);
+	$product = com_sales_product::factory((int) $_REQUEST['id']);
 	if (!isset($product->guid)) {
 		display_error('Requested product id is not accessible');
 		return;
@@ -26,7 +26,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listproducts', null, false));
 		return;
 	}
-	$product = new com_sales_product;
+	$product = com_sales_product::factory();
 }
 
 // General
@@ -68,7 +68,7 @@ $product->tax_exempt = ($_REQUEST['tax_exempt'] == 'ON' ? true : false);
 $product->additional_tax_fees = array();
 if (is_array($_REQUEST['additional_tax_fees'])) {
 	foreach ($_REQUEST['additional_tax_fees'] as $cur_tax_fee_guid) {
-		$cur_tax_fee = new com_sales_tax_fee(intval($cur_tax_fee_guid));
+		$cur_tax_fee = com_sales_tax_fee::factory(intval($cur_tax_fee_guid));
 		if (isset($cur_tax_fee->guid))
 			array_push($product->additional_tax_fees, $cur_tax_fee);
 	}

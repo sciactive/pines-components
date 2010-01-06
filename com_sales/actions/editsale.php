@@ -16,7 +16,7 @@ if ( !gatekeeper('com_sales/editsale') ) {
 	return;
 }
 
-$entity = new com_sales_sale((int) $_REQUEST['id']);
+$entity = com_sales_sale::factory((int) $_REQUEST['id']);
 $entity->print_form();
 
 ?>

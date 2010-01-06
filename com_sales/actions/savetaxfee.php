@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listtaxfees', null, false));
 		return;
 	}
-	$tax_fee = new com_sales_tax_fee((int) $_REQUEST['id']);
+	$tax_fee = com_sales_tax_fee::factory((int) $_REQUEST['id']);
 	if (!isset($tax_fee->guid)) {
 		display_error('Requested tax/fee id is not accessible');
 		return;
@@ -26,7 +26,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listtaxfees', null, false));
 		return;
 	}
-	$tax_fee = new com_sales_tax_fee;
+	$tax_fee = com_sales_tax_fee::factory();
 }
 
 $tax_fee->name = $_REQUEST['name'];

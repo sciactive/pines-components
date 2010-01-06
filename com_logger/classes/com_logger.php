@@ -56,13 +56,7 @@ class com_logger extends component {
 	 */
 	function hook() {
 		global $config;
-		$config->hook->del_hook('$config->log_manager->log');
-		$config->hook->del_hook('$config->log_manager->hook');
-		$config->hook->del_hook('$config->log_manager->write');
-		$hooks = $config->hook->get_hooks();
-		foreach ($hooks as $cur_hook) {
-			$config->hook->add_callback($cur_hook, -1, 'com_logger_hook_log');
-		}
+		$config->hook->add_callback('all', -1, 'com_logger_hook_log');
 	}
 
 	/**

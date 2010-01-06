@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listpos', null, false));
 		return;
 	}
-	$po = new com_sales_po((int) $_REQUEST['id']);
+	$po = com_sales_po::factory((int) $_REQUEST['id']);
 	if (!isset($po->guid)) {
 		display_error('Requested PO id is not accessible');
 		return;
@@ -26,7 +26,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listpos', null, false));
 		return;
 	}
-	$po = new com_sales_po;
+	$po = com_sales_po::factory();
 }
 
 // General
@@ -34,14 +34,14 @@ $po->po_number = $_REQUEST['po_number'];
 $po->reference_number = $_REQUEST['reference_number'];
 // Vendor can't be changed after items have been received.
 if (empty($po->received)) {
-	$po->vendor = new com_sales_vendor(intval($_REQUEST['vendor']));
+	$po->vendor = com_sales_vendor::factory(intval($_REQUEST['vendor']));
 	if (!isset($po->vendor->guid))
 		$po->vendor = null;
 }
 // Destination can't be changed after items have been received.
 if (empty($po->received))
 	$po->destination = $config->user_manager->get_group(intval($_REQUEST['destination']));
-$po->shipper = new com_sales_shipper(intval($_REQUEST['shipper']));
+$po->shipper = com_sales_shipper::factory(intval($_REQUEST['shipper']));
 if (!isset($po->shipper->guid))
 	$po->shipper = null;
 $po->eta = strtotime($_REQUEST['eta']);

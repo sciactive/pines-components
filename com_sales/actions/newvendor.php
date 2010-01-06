@@ -16,7 +16,7 @@ if ( !gatekeeper('com_sales/newvendor') ) {
 	return;
 }
 
-$entity = new com_sales_vendor;
+$entity = com_sales_vendor::factory();
 $entity->print_form();
 
 ?>

@@ -39,6 +39,18 @@ class com_sales_vendor extends entity {
 	}
 
 	/**
+	 * Create a new instance.
+	 */
+	public static function factory() {
+		global $config;
+		$class = get_class();
+		$args = func_get_args();
+		$entity = new $class($args[0]);
+		$config->hook->hook_object($entity, $class.'->', false);
+		return $entity;
+	}
+
+	/**
 	 * Delete the vendor.
 	 * @return bool True on success, false on failure.
 	 */

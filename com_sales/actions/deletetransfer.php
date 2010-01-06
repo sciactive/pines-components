@@ -18,7 +18,7 @@ if ( !gatekeeper('com_sales/managestock') ) {
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_transfer) {
-	$cur_entity = new com_sales_transfer((int) $cur_transfer);
+	$cur_entity = com_sales_transfer::factory((int) $cur_transfer);
 	if ( is_null($cur_entity->guid) || !$cur_entity->delete() )
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_transfer;
 }

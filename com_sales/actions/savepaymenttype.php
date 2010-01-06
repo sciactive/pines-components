@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listpaymenttypes', null, false));
 		return;
 	}
-	$payment_type = new com_sales_payment_type((int) $_REQUEST['id']);
+	$payment_type = com_sales_payment_type::factory((int) $_REQUEST['id']);
 	if (!isset($payment_type->guid)) {
 		display_error('Requested payment type id is not accessible');
 		return;
@@ -26,7 +26,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listpaymenttypes', null, false));
 		return;
 	}
-	$payment_type = new com_sales_payment_type;
+	$payment_type = com_sales_payment_type::factory();
 }
 
 $payment_type->name = $_REQUEST['name'];

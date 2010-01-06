@@ -25,6 +25,18 @@ class com_sales_employee_data extends entity {
 	}
 
 	/**
+	 * Create a new instance.
+	 */
+	public static function factory() {
+		global $config;
+		$class = get_class();
+		$args = func_get_args();
+		$entity = new $class($args[0]);
+		$config->hook->hook_object($entity, $class.'->', false);
+		return $entity;
+	}
+
+	/**
 	 * Calculate the time an employee has worked between two given times.
 	 *
 	 * @param int $time_start Unix time stamp of start time.

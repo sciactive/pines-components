@@ -16,7 +16,7 @@ if ( !gatekeeper('com_sales/editpaymenttype') ) {
 	return;
 }
 
-$entity = new com_sales_payment_type((int) $_REQUEST['id']);
+$entity = com_sales_payment_type::factory((int) $_REQUEST['id']);
 $entity->print_form();
 
 ?>

@@ -16,7 +16,7 @@ if ( !gatekeeper('com_sales/newpo') ) {
 	return;
 }
 
-$entity = new com_sales_po;
+$entity = com_sales_po::factory();
 $entity->print_form();
 
 ?>

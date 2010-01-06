@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listsales', null, false));
 		return;
 	}
-	$sale = new com_sales_sale((int) $_REQUEST['id']);
+	$sale = com_sales_sale::factory((int) $_REQUEST['id']);
 	if (!isset($sale->guid)) {
 		display_error('Requested sale id is not accessible');
 		return;
@@ -26,13 +26,13 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listsales', null, false));
 		return;
 	}
-	$sale = new com_sales_sale;
+	$sale = com_sales_sale::factory();
 }
 
 if ($sale->status != 'invoiced' && $sale->status != 'paid') {
 	$sale->customer = $_REQUEST['customer'];
 	if (preg_match('/^\d+/', $sale->customer)) {
-		$sale->customer = new com_sales_customer(intval($sale->customer));
+		$sale->customer = com_sales_customer::factory(intval($sale->customer));
 		if (!isset($sale->customer->guid))
 			$sale->customer = null;
 	} else {
@@ -50,7 +50,7 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid') {
 		$product_error = true;
 	} else {
 		foreach ($sale->products as $key => &$cur_product) {
-			$cur_product_entity = new com_sales_product(intval($cur_product->key));
+			$cur_product_entity = com_sales_product::factory(intval($cur_product->key));
 			$cur_sku = $cur_product->values[0];
 			$cur_serial = $cur_product->values[2];
 			$cur_delivery = $cur_product->values[3];
@@ -103,7 +103,7 @@ if ($sale->status != 'paid') {
 	if (!is_array($sale->payments))
 		$sale->payments = array();
 	foreach ($sale->payments as $key => &$cur_payment) {
-		$cur_payment_type_entity = new com_sales_payment_type(intval($cur_payment->key));
+		$cur_payment_type_entity = com_sales_payment_type::factory(intval($cur_payment->key));
 		// Not used, but possibly in the future for logging purposes. (If the type is deleted.)
 		$cur_type = $cur_payment->values[0];
 		$cur_amount = floatval($cur_payment->values[1]);

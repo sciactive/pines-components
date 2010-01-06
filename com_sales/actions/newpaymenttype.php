@@ -16,7 +16,7 @@ if ( !gatekeeper('com_sales/newpaymenttype') ) {
 	return;
 }
 
-$entity = new com_sales_payment_type;
+$entity = com_sales_payment_type::factory();
 $entity->print_form();
 
 ?>

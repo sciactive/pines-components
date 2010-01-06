@@ -16,7 +16,7 @@ if ( !gatekeeper('com_sales/editcustomer') ) {
 	return;
 }
 
-$entity = new com_sales_customer((int) $_REQUEST['id']);
+$entity = com_sales_customer::factory((int) $_REQUEST['id']);
 $entity->print_form();
 
 ?>

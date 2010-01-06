@@ -16,7 +16,7 @@ if ( !gatekeeper('com_sales/editshipper') ) {
 	return;
 }
 
-$entity = new com_sales_shipper((int) $_REQUEST['id']);
+$entity = com_sales_shipper::factory((int) $_REQUEST['id']);
 $entity->print_form();
 
 ?>

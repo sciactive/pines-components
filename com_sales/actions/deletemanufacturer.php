@@ -18,7 +18,7 @@ if ( !gatekeeper('com_sales/deletemanufacturer') ) {
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_manufacturer) {
-	$cur_entity = new com_sales_manufacturer((int) $cur_manufacturer);
+	$cur_entity = com_sales_manufacturer::factory((int) $cur_manufacturer);
 	if ( is_null($cur_entity->guid) || !$cur_entity->delete() )
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_manufacturer;
 }

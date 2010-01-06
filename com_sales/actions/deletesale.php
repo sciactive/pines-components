@@ -18,7 +18,7 @@ if ( !gatekeeper('com_sales/deletesale') ) {
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_sale) {
-	$cur_entity = new com_sales_sale((int) $cur_sale);
+	$cur_entity = com_sales_sale::factory((int) $cur_sale);
 	if ( is_null($cur_entity->guid) || !$cur_entity->delete() )
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_sale;
 }

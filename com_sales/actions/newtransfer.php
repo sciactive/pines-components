@@ -23,7 +23,7 @@ if (empty($list)) {
 	return;
 }
 
-$entity = new com_sales_transfer;
+$entity = com_sales_transfer::factory();
 $entity->stock = array();
 if (is_array($list)) {
 	foreach ($list as $cur_stock_guid) {

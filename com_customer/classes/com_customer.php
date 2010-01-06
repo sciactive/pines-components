@@ -59,13 +59,15 @@ class com_customer extends component {
 	 * sidebar with info about the customer's account, and a link to open it.
 	 *
 	 * @param array $array The arguments array.
+	 * @param string $hook The name of the hook.
+	 * @param mixed $object The object on with the hook was called.
 	 * @return array The arguments array.
 	 */
-	function hook_customer_view($array) {
+	function hook_customer_view($array, $hook, $object) {
 		global $config;
-		if ( gatekeeper('com_customer/editcustomer') && is_numeric($array[2]) ) {
-			$customer = $config->run_sales->get_customer((int) $array[2]);
-			if (!is_null($customer)) {
+		if ( gatekeeper('com_customer/editcustomer') && isset($object->guid) ) {
+			$customer = com_sales_customer::factory($object->guid);
+			if (isset($customer->guid)) {
 				$module = new module('com_customer', 'sidebar_customer', 'right');
 				$module->entity = $customer;
 			}

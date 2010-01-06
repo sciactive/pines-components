@@ -34,7 +34,7 @@ if (is_null($user)) {
 }
 
 if (!is_a($user->com_sales, 'com_sales_employee_data'))
-	$user->com_sales = new com_sales_employee_data;
+	$user->com_sales = com_sales_employee_data::factory();
 
 if (!is_array($user->com_sales->timeclock))
 	$user->com_sales->timeclock = array();

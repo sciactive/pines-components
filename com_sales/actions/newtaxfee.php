@@ -16,7 +16,7 @@ if ( !gatekeeper('com_sales/newtaxfee') ) {
 	return;
 }
 
-$entity = new com_sales_tax_fee;
+$entity = com_sales_tax_fee::factory();
 $entity->print_form();
 
 ?>

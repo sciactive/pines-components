@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listvendors', null, false));
 		return;
 	}
-	$vendor = new com_sales_vendor((int) $_REQUEST['id']);
+	$vendor = com_sales_vendor::factory((int) $_REQUEST['id']);
 	if (!isset($vendor->guid)) {
 		display_error('Requested vendor id is not accessible');
 		return;
@@ -26,7 +26,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listvendors', null, false));
 		return;
 	}
-	$vendor = new com_sales_vendor;
+	$vendor = com_sales_vendor::factory();
 }
 
 $vendor->name = $_REQUEST['name'];

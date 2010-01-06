@@ -24,6 +24,18 @@ class com_sales_stock extends entity {
 	}
 
 	/**
+	 * Create a new instance.
+	 */
+	public static function factory() {
+		global $config;
+		$class = get_class();
+		$args = func_get_args();
+		$entity = new $class($args[0]);
+		$config->hook->hook_object($entity, $class.'->', false);
+		return $entity;
+	}
+
+	/**
 	 * Find the PO or transfer that corresponds to an incoming product.
 	 *
 	 * @todo Go through each matched transfer/PO and check which one has the earliest ETA.
@@ -128,7 +140,7 @@ class com_sales_stock extends entity {
 		// Keep track of the status of the whole process.
 		$return = true;
 		// Make a transaction entry.
-		$tx = new com_sales_tx('com_sales', 'transaction', 'stock_tx');
+		$tx = com_sales_tx::factory('com_sales', 'transaction', 'stock_tx');
 
 		if ($this->status)
 			$old_status = $this->status;
@@ -184,7 +196,7 @@ class com_sales_stock extends entity {
 		// Keep track of the status of the whole process.
 		$return = true;
 		// Make a transaction entry.
-		$tx = new com_sales_tx('com_sales', 'transaction', 'stock_tx');
+		$tx = com_sales_tx::factory('com_sales', 'transaction', 'stock_tx');
 
 		if ($this->status)
 			$old_status = $this->status;

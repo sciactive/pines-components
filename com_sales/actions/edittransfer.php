@@ -16,7 +16,7 @@ if ( !gatekeeper('com_sales/managestock') ) {
 	return;
 }
 
-$entity = new com_sales_transfer((int) $_REQUEST['id']);
+$entity = com_sales_transfer::factory((int) $_REQUEST['id']);
 $entity->print_form();
 
 ?>

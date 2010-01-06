@@ -28,7 +28,7 @@ if (empty($code)) {
 		$product = null;
 	}
 } else {
-	$product = new com_sales_product((int) $code);
+	$product = com_sales_product::factory((int) $code);
 	if (!isset($product->guid) || !$product->enabled) {
 		$product = null;
 	}

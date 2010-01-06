@@ -39,6 +39,18 @@ class com_sales_sale extends entity {
 	}
 
 	/**
+	 * Create a new instance.
+	 */
+	public static function factory() {
+		global $config;
+		$class = get_class();
+		$args = func_get_args();
+		$entity = new $class($args[0]);
+		$config->hook->hook_object($entity, $class.'->', false);
+		return $entity;
+	}
+
+	/**
 	 * Delete the sale.
 	 * @return bool True on success, false on failure.
 	 */
@@ -129,7 +141,7 @@ class com_sales_sale extends entity {
 		}
 		foreach ($this->payments as &$cur_payment) {
 			// Make a transaction entry.
-			$tx = new com_sales_tx('com_sales', 'transaction', 'payment_tx');
+			$tx = com_sales_tx::factory('com_sales', 'transaction', 'payment_tx');
 			$tx->type = 'payment_received';
 			$tx->amount = (float) $cur_payment['amount'];
 			$tx->ref = $cur_payment['entity'];
@@ -143,7 +155,7 @@ class com_sales_sale extends entity {
 		}
 		if ($this->change > 0.00) {
 			// Make a transaction entry.
-			$tx = new com_sales_tx('com_sales', 'transaction', 'payment_tx');
+			$tx = com_sales_tx::factory('com_sales', 'transaction', 'payment_tx');
 			$tx->type = 'change_given';
 			$tx->amount = (float) $this->change;
 			$tx->ref = $change_type;
@@ -156,7 +168,7 @@ class com_sales_sale extends entity {
 			$return = $return && $tx->save();
 		}
 		// Make a transaction entry.
-		$tx = new com_sales_tx('com_sales', 'transaction', 'sale_tx');
+		$tx = com_sales_tx::factory('com_sales', 'transaction', 'sale_tx');
 
 		$this->status = 'paid';
 		$tx->type = 'paid';
@@ -277,7 +289,7 @@ class com_sales_sale extends entity {
 		unset($cur_product);
 
 		// Make a transaction entry.
-		$tx = new com_sales_tx('com_sales', 'transaction', 'sale_tx');
+		$tx = com_sales_tx::factory('com_sales', 'transaction', 'sale_tx');
 
 		$this->status = 'invoiced';
 		$tx->type = 'invoiced';

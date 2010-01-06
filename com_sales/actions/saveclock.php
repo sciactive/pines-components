@@ -23,7 +23,7 @@ if (is_null($user)) {
 }
 
 if (!isset($user->com_sales))
-	$user->com_sales = new com_sales_employee_data;
+	$user->com_sales = com_sales_employee_data::factory();
 
 $user->com_sales->timeclock = array();
 

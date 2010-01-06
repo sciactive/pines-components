@@ -18,7 +18,7 @@ if ( !gatekeeper('com_sales/deletepaymenttype') ) {
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_payment_type) {
-	$cur_entity = new com_sales_payment_type((int) $cur_payment_type);
+	$cur_entity = com_sales_payment_type::factory((int) $cur_payment_type);
 	if ( is_null($cur_entity->guid) || !$cur_entity->delete() )
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_payment_type;
 }

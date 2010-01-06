@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listmanufacturers', null, false));
 		return;
 	}
-	$manufacturer = new com_sales_manufacturer((int) $_REQUEST['id']);
+	$manufacturer = com_sales_manufacturer::factory((int) $_REQUEST['id']);
 	if (!isset($manufacturer->guid)) {
 		display_error('Requested manufacturer id is not accessible');
 		return;
@@ -26,7 +26,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listmanufacturers', null, false));
 		return;
 	}
-	$manufacturer = new com_sales_manufacturer;
+	$manufacturer = com_sales_manufacturer::factory();
 }
 
 $manufacturer->name = $_REQUEST['name'];

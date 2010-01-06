@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listshippers', null, false));
 		return;
 	}
-	$shipper = new com_sales_shipper((int) $_REQUEST['id']);
+	$shipper = com_sales_shipper::factory((int) $_REQUEST['id']);
 	if (!isset($shipper->guid)) {
 		display_error('Requested shipper id is not accessible');
 		return;
@@ -26,7 +26,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listshippers', null, false));
 		return;
 	}
-	$shipper = new com_sales_shipper;
+	$shipper = com_sales_shipper::factory();
 }
 
 $shipper->name = $_REQUEST['name'];

@@ -16,7 +16,7 @@ if ( !gatekeeper('com_sales/newshipper') ) {
 	return;
 }
 
-$entity = new com_sales_shipper;
+$entity = com_sales_shipper::factory();
 $entity->print_form();
 
 ?>

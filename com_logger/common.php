@@ -25,7 +25,8 @@ if ( isset($config->ability_manager) ) {
  */
 function com_logger_hook_log($return, $hook) {
 	global $config;
-	$config->log_manager->log('(microtime='.microtime(true).') '.$hook, 'debug');
+	if (!in_array($hook, array('$config->log_manager->log', '$config->log_manager->hook', '$config->log_manager->write')))
+		$config->log_manager->log('(microtime='.microtime(true).') '.$hook, 'debug');
 	return $return;
 }
 

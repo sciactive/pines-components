@@ -20,5 +20,4 @@ if ( $config->com_about->describe_self ) {
 	$mod2 = new module('com_about', 'about2', 'content');
 }
 
-$entity = com_sales_customer::factory();
 ?>

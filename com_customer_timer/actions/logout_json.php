@@ -27,11 +27,7 @@ if (isset($_REQUEST['id'])) {
 		$return = false;
 	} else {
 		$logins = com_customer_timer_login_tracker::factory();
-		if (in_array($customer, $logins->customers)) {
-			$return = $logins->logout($customer);
-		} else {
-			$return = true;
-		}
+		$return = $logins->logout($customer);
 	}
 }
 

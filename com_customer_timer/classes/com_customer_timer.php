@@ -45,9 +45,8 @@ class com_customer_timer extends component {
 			return false;
 		}
 		$logins = com_customer_timer_login_tracker::factory();
-		if (in_array($customer, $logins->customers)) {
+		if ($customer->in_array($logins->customers))
 			return $logins->logout($customer);
-		}
 		if ($customer->com_customer->login_disabled) {
 			display_notice('Login has been disabled for your account.');
 			return false;

@@ -89,11 +89,15 @@ class com_customer_timer_login_tracker extends entity {
 	function logout(&$customer) {
 		global $config;
 		// Remove the customer from the login tracker.
+		$found = false;
 		foreach ($this->customers as $key => &$cur_customer) {
 			if ($customer->is($cur_customer)) {
 				unset($this->customers[$key]);
+				$found = true;
 			}
 		}
+		if (!$found)
+			return true;
 		$this->save();
 		$session_info = $config->run_customer_timer->get_session_info($customer);
 		// Take points off the customer's account.

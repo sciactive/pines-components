@@ -79,9 +79,8 @@ class com_user extends component {
 		unset($_SESSION['user']);
 		$_SESSION['descendents'] = $this->get_group_descendents($tmp_user->gid);
 		if (!empty($tmp_user->groups)) {
-			foreach ($tmp_user->groups as $cur_group) {
+			foreach ($tmp_user->groups as $cur_group)
 				$_SESSION['descendents'] = array_merge($_SESSION['descendents'], $this->get_group_descendents($cur_group));
-			}
 		}
 		if ($tmp_user->inherit_abilities) {
 			global $config;

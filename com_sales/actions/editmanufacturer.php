@@ -11,9 +11,16 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/editmanufacturer') ) {
-	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'editmanufacturer', array('id' => $_REQUEST['id']), false));
-	return;
+if (isset($_REQUEST['id'])) {
+	if ( !gatekeeper('com_sales/editmanufacturer') ) {
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'editmanufacturer', array('id' => $_REQUEST['id']), false));
+		return;
+	}
+} else {
+	if ( !gatekeeper('com_sales/newmanufacturer') ) {
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'editmanufacturer', null, false));
+		return;
+	}
 }
 
 $entity = com_sales_manufacturer::factory((int) $_REQUEST['id']);

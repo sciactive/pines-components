@@ -11,9 +11,16 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/editpo') ) {
-	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'editpo', array('id' => $_REQUEST['id']), false));
-	return;
+if (isset($_REQUEST['id'])) {
+	if ( !gatekeeper('com_sales/editpo') ) {
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'editpo', array('id' => $_REQUEST['id']), false));
+		return;
+	}
+} else {
+	if ( !gatekeeper('com_sales/newpo') ) {
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'editpo', null, false));
+		return;
+	}
 }
 
 $entity = com_sales_po::factory((int) $_REQUEST['id']);

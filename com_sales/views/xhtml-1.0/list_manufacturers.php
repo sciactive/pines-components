@@ -21,7 +21,7 @@ $this->title = 'Manufacturers';
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
-				{type: 'button', text: 'New', extra_class: 'icon picon_16x16_actions_document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'newmanufacturer'); ?>'},
+				{type: 'button', text: 'New', extra_class: 'icon picon_16x16_actions_document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'editmanufacturer'); ?>'},
 				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo pines_url('com_sales', 'editmanufacturer', array('id' => '#title#')); ?>'},
 				//{type: 'button', text: 'E-Mail', extra_class: 'icon picon_16x16_actions_mail-message-new', multi_select: true, url: 'mailto:#col_2#', delimiter: ','},
 				{type: 'separator'},

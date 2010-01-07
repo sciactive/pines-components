@@ -16,11 +16,11 @@ if ( gatekeeper('com_user/new') || gatekeeper('com_user/manage') || gatekeeper('
 	if ( gatekeeper('com_user/manage') )
 		$page->main_menu->add('Users', pines_url('com_user', 'manageusers'), $com_user_menu_id);
 	if ( gatekeeper('com_user/new') )
-		$page->main_menu->add('New User', pines_url('com_user', 'newuser'), $com_user_menu_id);
+		$page->main_menu->add('New User', pines_url('com_user', 'edituser'), $com_user_menu_id);
 	if ( gatekeeper('com_user/manageg') )
 		$page->main_menu->add('Groups', pines_url('com_user', 'managegroups'), $com_user_menu_id);
 	if ( gatekeeper('com_user/newg') )
-		$page->main_menu->add('New Group', pines_url('com_user', 'newgroup'), $com_user_menu_id);
+		$page->main_menu->add('New Group', pines_url('com_user', 'editgroup'), $com_user_menu_id);
 }
 if ( gatekeeper('com_user/self') ) $page->main_menu->add('My Account', pines_url('com_user', 'editself'));
 if ( gatekeeper() ) $page->main_menu->add('Logout', pines_url('com_user', 'logout'));

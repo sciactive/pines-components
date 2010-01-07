@@ -56,8 +56,8 @@ class com_user extends component {
 	 * @return int|bool The user's GUID on success, false on failure.
 	 */
 	function authenticate($username, $password) {
-		$entity = $this->get_user_by_username($username);
-		if (is_null($entity)) return false;
+		$entity = user::factory($username);
+		if (is_null($entity->guid)) return false;
 		if ( $entity->check_password($password) ) {
 			return $entity->guid;
 		} else {
@@ -71,7 +71,7 @@ class com_user extends component {
 	 * Also sets the default timezone to the user's timezone.
 	 */
 	function fill_session() {
-		$tmp_user = $this->get_user($_SESSION['user_id']);
+		$tmp_user = user::factory($_SESSION['user_id']);
 		if (is_object($_SESSION['user']) && $_SESSION['user']->equals($tmp_user)) {
 			date_default_timezone_set($tmp_user->get_timezone());
 			return;
@@ -322,7 +322,7 @@ class com_user extends component {
 			$parsed = str_replace('#name#', $group['name'], $parsed);
 			$parsed = str_replace('#groupname#', $group['groupname'], $parsed);
 			$parsed = str_replace('#mark#', $mark, $parsed);
-			if ( $key == $selected_id || $group == $selected_id || (is_array($selected_id) && in_array($key, $selected_id)) || (is_array($selected_id) && in_array($this->get_group($key), $selected_id)) ) {
+			if ( $key == $selected_id || $group == $selected_id || (is_array($selected_id) && in_array($key, $selected_id)) || (is_array($selected_id) && group::factory($key)->in_array($selected_id)) ) {
 				$parsed = str_replace('#selected#', $selected, $parsed);
 			} else {
 				$parsed = str_replace('#selected#', '', $parsed);

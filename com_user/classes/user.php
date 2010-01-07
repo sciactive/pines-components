@@ -34,10 +34,9 @@ class user extends able_entity {
 			if (is_int($id)) {
 				$entity = $config->entity_manager->get_entity($id, $this->tags, get_class($this));
 			} else {
-				$entities = $config->entity_manager->get_entities_by_data(array('username' => $username), $this->tags, false, get_class($this));
-				if (!is_null($entities)) {
+				$entities = $config->entity_manager->get_entities_by_data(array('username' => $id), $this->tags, false, get_class($this));
+				if (!is_null($entities))
 					$entity = $entities[0];
-				}
 			}
 			if (is_null($entity))
 				return;

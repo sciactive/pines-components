@@ -18,9 +18,24 @@ defined('P_RUN') or die('Direct access prohibited');
  * @subpackage com_sales
  */
 class com_sales_stock extends entity {
-	public function __construct() {
+	/**
+	 * Load a stock entry.
+	 * @param int $id The ID of the stock entry to load, null for a new entry.
+	 */
+	public function __construct($id = null) {
 		parent::__construct();
 		$this->add_tag('com_sales', 'stock');
+		if (!is_null($id)) {
+			global $config;
+			$entity = $config->entity_manager->get_entity($id, $this->tags, get_class($this));
+			if (is_null($entity))
+				return;
+			$this->guid = $entity->guid;
+			$this->parent = $entity->parent;
+			$this->tags = $entity->tags;
+			$this->entity_cache = array();
+			$this->put_data($entity->get_data());
+		}
 	}
 
 	/**
@@ -64,7 +79,7 @@ class com_sales_stock extends entity {
 							continue;
 					}
 				}
-				$cur_stock = $config->entity_manager->get_entity($cur_stock_guid, array('com_sales', 'stock'), com_sales_stock);
+				$cur_stock = com_sales_stock::factory($cur_stock_guid);
 				// If it's not the right product, move on.
 				if ($cur_stock->product->guid != $this->product->guid)
 					continue;

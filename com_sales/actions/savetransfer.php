@@ -44,8 +44,8 @@ if (empty($transfer->received)) {
 	if (!is_array($transfer->stock))
 		$transfer->stock = array();
 	foreach ($transfer->stock as $key => &$cur_stock) {
-		$cur_stock = intval($cur_stock->key);
-		if (is_null($config->entity_manager->get_entity($cur_stock, array('com_sales', 'stock'), com_sales_stock)))
+		$cur_stock = com_sales_stock::factory(intval($cur_stock->key));
+		if (!isset($cur_stock->guid))
 			unset($transfer->stock[$key]);
 	}
 	unset($cur_stock);

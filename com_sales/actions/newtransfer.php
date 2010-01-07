@@ -27,10 +27,9 @@ $entity = com_sales_transfer::factory();
 $entity->stock = array();
 if (is_array($list)) {
 	foreach ($list as $cur_stock_guid) {
-		$cur_stock = $config->entity_manager->get_entity($cur_stock_guid, array('com_sales', 'stock'), com_sales_stock);
-		if (!is_null($cur_stock)) {
+		$cur_stock = com_sales_stock::factory($cur_stock_guid);
+		if (isset($cur_stock->guid))
 			$entity->stock[] = $cur_stock_guid;
-		}
 	}
 }
 $entity->print_form();

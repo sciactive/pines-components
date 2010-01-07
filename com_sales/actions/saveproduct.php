@@ -70,7 +70,7 @@ if (is_array($_REQUEST['additional_tax_fees'])) {
 	foreach ($_REQUEST['additional_tax_fees'] as $cur_tax_fee_guid) {
 		$cur_tax_fee = com_sales_tax_fee::factory(intval($cur_tax_fee_guid));
 		if (isset($cur_tax_fee->guid))
-			array_push($product->additional_tax_fees, $cur_tax_fee);
+			$product->additional_tax_fees[] = $cur_tax_fee;
 	}
 }
 

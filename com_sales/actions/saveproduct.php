@@ -17,7 +17,7 @@ if ( isset($_REQUEST['id']) ) {
 		return;
 	}
 	$product = com_sales_product::factory((int) $_REQUEST['id']);
-	if (!isset($product->guid)) {
+	if (is_null($product->guid)) {
 		display_error('Requested product id is not accessible');
 		return;
 	}
@@ -49,7 +49,7 @@ foreach ($product->vendors as &$cur_vendor) {
 		'sku' => $cur_vendor->values[1],
 		'cost' => $cur_vendor->values[2]
 	);
-	if (!isset($cur_vendor['entity']->guid))
+	if (is_null($cur_vendor['entity']->guid))
 		$cur_vendor['entity'] = null;
 }
 unset($cur_vendor);

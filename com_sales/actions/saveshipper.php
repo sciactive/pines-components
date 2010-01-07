@@ -17,7 +17,7 @@ if ( isset($_REQUEST['id']) ) {
 		return;
 	}
 	$shipper = com_sales_shipper::factory((int) $_REQUEST['id']);
-	if (!isset($shipper->guid)) {
+	if (is_null($shipper->guid)) {
 		display_error('Requested shipper id is not accessible');
 		return;
 	}

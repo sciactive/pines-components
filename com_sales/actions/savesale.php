@@ -17,7 +17,7 @@ if ( isset($_REQUEST['id']) ) {
 		return;
 	}
 	$sale = com_sales_sale::factory((int) $_REQUEST['id']);
-	if (!isset($sale->guid)) {
+	if (is_null($sale->guid)) {
 		display_error('Requested sale id is not accessible');
 		return;
 	}
@@ -33,7 +33,7 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid') {
 	$sale->customer = $_REQUEST['customer'];
 	if (preg_match('/^\d+/', $sale->customer)) {
 		$sale->customer = com_sales_customer::factory(intval($sale->customer));
-		if (!isset($sale->customer->guid))
+		if (is_null($sale->customer->guid))
 			$sale->customer = null;
 	} else {
 		$sale->customer = null;
@@ -59,7 +59,7 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid') {
 			$cur_qty = intval($cur_product->values[4]);
 			$cur_price = floatval($cur_product->values[5]);
 			$cur_discount = $cur_product->values[6];
-			if (!isset($cur_product_entity->guid)) {
+			if (is_null($cur_product_entity->guid)) {
 				display_error("Product with id [$cur_product->key] and entered SKU [$cur_sku] was not found.");
 				unset($sale->products[$key]);
 				$product_error = true;
@@ -107,7 +107,7 @@ if ($sale->status != 'paid') {
 		// Not used, but possibly in the future for logging purposes. (If the type is deleted.)
 		$cur_type = $cur_payment->values[0];
 		$cur_amount = floatval($cur_payment->values[1]);
-		if (!isset($cur_payment_type_entity->guid)) {
+		if (is_null($cur_payment_type_entity->guid)) {
 			display_error("Payment type with id [$cur_payment->key] was not found.");
 			unset($sale->payments[$key]);
 			$payment_error = true;

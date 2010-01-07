@@ -25,15 +25,15 @@ if ($_REQUEST['id'] == 'self') {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'clock', $_REQUEST, false));
 		return;
 	}
-	$user = $config->user_manager->get_user((int) $_REQUEST['id']);
+	$user = user::factory((int) $_REQUEST['id']);
 }
 
-if (is_null($user)) {
+if (is_null($user->guid)) {
 	$page->override_doc('false');
 	return;
 }
 
-if (!is_a($user->com_sales, 'com_sales_employee_data'))
+if (!is_object($user->com_sales))
 	$user->com_sales = com_sales_employee_data::factory();
 
 if (!is_array($user->com_sales->timeclock))

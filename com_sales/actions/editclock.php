@@ -16,7 +16,7 @@ if ( !gatekeeper('com_sales/manageclock') ) {
 	return;
 }
 
-$user = $config->user_manager->get_user((int) $_REQUEST['id']);
+$user = user::factory((int) $_REQUEST['id']);
 
 if (!gatekeeper('com_sales/clock', $user) && !is_array($user->com_sales->timeclock)) {
 	display_notice("No timeclock data is stored for user [{$user->username}].");

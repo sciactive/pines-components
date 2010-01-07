@@ -163,7 +163,7 @@ class com_sales_stock extends entity {
 		if ($this->location)
 			$old_location = $this->location;
 		// TODO: Copy location to GID (optional) to allow easier access control.
-		$this->location = ($location ? $location : $config->user_manager->get_group($_SESSION['user']->gid));
+		$this->location = ($location ? $location : group::factory($_SESSION['user']->gid));
 		if ($on_entity->has_tag('po')) {
 			$tx->type = 'received_po';
 		} elseif ($on_entity->has_tag('transfer')) {

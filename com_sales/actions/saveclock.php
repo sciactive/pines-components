@@ -16,8 +16,8 @@ if ( !gatekeeper('com_sales/manageclock') ) {
 	return;
 }
 
-$user = $config->user_manager->get_user((int) $_REQUEST['id']);
-if (is_null($user)) {
+$user = user::factory((int) $_REQUEST['id']);
+if (is_null($user->guid)) {
 	display_error('Requested user id is not accessible');
 	return;
 }

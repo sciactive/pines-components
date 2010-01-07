@@ -23,13 +23,14 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'manageusers', null, false));
 		return;
 	}
-	$user = $config->user_manager->get_user($_REQUEST['id']);
-	if ( is_null($user) ) {
+	$user = user::factory((int) $_REQUEST['id']);
+	if ( is_null($user->guid) ) {
 		display_error('User doesn\'t exists!');
 		$pass = false;
 	}
 	if ( $user->username != $_REQUEST['username'] ) {
-		if ( is_null($config->user_manager->get_user_by_username($_REQUEST['username'])) ) {
+		$test = user::factory($_REQUEST['username']);
+		if ( is_null($test->guid) ) {
 			$user->username = $_REQUEST['username'];
 		} else {
 			display_notice('Username ['.$_REQUEST['username'].'] already exists! Continuing with old username...');
@@ -45,8 +46,9 @@ if ( isset($_REQUEST['id']) ) {
 		display_notice('Must specify password!');
 		$pass = false;
 	}
-	$user = new user;
-	if ( is_null($config->user_manager->get_user_by_username($_REQUEST['username'])) ) {
+	$user = user::factory();
+	$test = user::factory($_REQUEST['username']);
+	if ( is_null($test->guid) ) {
 		$user->username = $_REQUEST['username'];
 	} else {
 		display_notice('Username already exists!');
@@ -120,8 +122,7 @@ if ( $_REQUEST['abilities'] === 'true' && gatekeeper("com_user/abilities") ) {
 }
 
 if (!$pass) {
-	$module = $config->user_manager->print_user_form('com_user', 'saveuser');
-	$module->entity = $user;
+	$user->print_form();
 	return;
 }
 

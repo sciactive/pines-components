@@ -17,7 +17,7 @@ if ( isset($_REQUEST['id']) ) {
 		return;
 	}
 	$vendor = com_sales_vendor::factory((int) $_REQUEST['id']);
-	if (!isset($vendor->guid)) {
+	if (is_null($vendor->guid)) {
 		display_error('Requested vendor id is not accessible');
 		return;
 	}

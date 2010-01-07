@@ -16,5 +16,7 @@ if ( !gatekeeper('com_user/edit') && (!gatekeeper('com_user/self') || ($_REQUEST
 	return;
 }
 
-$config->user_manager->print_user_form('com_user', 'saveuser', $_REQUEST['id']);
+$user = user::factory((int) $_REQUEST['id']);
+$user->print_form();
+
 ?>

@@ -29,7 +29,7 @@ if (empty($code)) {
 	}
 } else {
 	$product = com_sales_product::factory((int) $code);
-	if (!isset($product->guid) || !$product->enabled) {
+	if (is_null($product->guid) || !$product->enabled) {
 		$product = null;
 	}
 }

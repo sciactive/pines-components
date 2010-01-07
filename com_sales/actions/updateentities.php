@@ -22,19 +22,19 @@ if (!is_array($array))
 	$array = array();
 foreach ($array as $cur) {
 	$cur->vendor = com_sales_vendor::factory($cur->vendor->guid);
-	if (!isset($cur->vendor->guid))
+	if (is_null($cur->vendor->guid))
 		$cur->vendor = null;
 	$cur->shipper = com_sales_shipper::factory($cur->shipper->guid);
-	if (!isset($cur->shipper->guid))
+	if (is_null($cur->shipper->guid))
 		$cur->shipper = null;
 	foreach ($cur->products as &$cur2) {
 		$cur2['entity'] = com_sales_product::factory($cur2['entity']->guid);
-		if (!isset($cur2['entity']->guid))
+		if (is_null($cur2['entity']->guid))
 			$cur2['entity'] = null;
 		if (is_array($cur2['stock_entities'])) {
 			foreach ($cur2['stock_entities'] as $key => &$cur3) {
 				$cur3 = com_sales_stock::factory($cur3->guid);
-				if (!isset($cur3->guid))
+				if (is_null($cur3->guid))
 					unset($cur2['stock_entities'][$key]);
 			}
 		}
@@ -50,16 +50,16 @@ if (!is_array($array))
 	$array = array();
 foreach ($array as $cur) {
 	$cur->manufacturer = com_sales_manufacturer::factory($cur->manufacturer->guid);
-	if (!isset($cur->manufacturer->guid))
+	if (is_null($cur->manufacturer->guid))
 		$cur->manufacturer = null;
 	foreach ($cur->additional_tax_fees as $key => &$cur2) {
 		$cur2 = com_sales_tax_fee::factory($cur2->guid);
-		if (!isset($cur2->guid))
+		if (is_null($cur2->guid))
 			unset($cur->additional_tax_fees[$key]);
 	}
 	foreach ($cur->vendors as &$cur2) {
 		$cur2['entity'] = com_sales_vendor::factory($cur2['entity']->guid);
-		if (!isset($cur2['entity']->guid))
+		if (is_null($cur2['entity']->guid))
 			$cur2['entity'] = null;
 	}
 	unset($cur2);
@@ -72,17 +72,17 @@ if (!is_array($array))
 	$array = array();
 foreach ($array as $cur) {
 	$cur->customer = com_sales_customer::factory($cur->customer->guid);
-	if (!isset($cur->customer->guid))
+	if (is_null($cur->customer->guid))
 		$cur->customer = null;
 	foreach ($cur->products as &$cur2) {
 		$cur2['entity'] = com_sales_product::factory($cur2['entity']->guid);
-		if (!isset($cur2['entity']->guid))
+		if (is_null($cur2['entity']->guid))
 			$cur2['entity'] = null;
 	}
 	unset($cur2);
 	foreach ($cur->payments as &$cur2) {
 		$cur2['entity'] = com_sales_payment_type::factory($cur2['entity']->guid);
-		if (!isset($cur2['entity']->guid))
+		if (is_null($cur2['entity']->guid))
 			$cur2['entity'] = null;
 	}
 	unset($cur2);
@@ -95,11 +95,11 @@ if (!is_array($array))
 	$array = array();
 foreach ($array as $cur) {
 	$cur->shipper = com_sales_shipper::factory($cur->shipper->guid);
-	if (!isset($cur->shipper->guid))
+	if (is_null($cur->shipper->guid))
 		$cur->shipper = null;
 	foreach ($cur->stock as $key => &$cur2) {
 		$cur2 = com_sales_stock::factory($cur2->guid);
-		if (!isset($cur2->guid))
+		if (is_null($cur2->guid))
 			unset($cur->stock[$key]);
 	}
 	unset($cur2);
@@ -112,10 +112,10 @@ if (!is_array($array))
 	$array = array();
 foreach ($array as $cur) {
 	$cur->vendor = com_sales_vendor::factory($cur->vendor->guid);
-	if (!isset($cur->vendor->guid))
+	if (is_null($cur->vendor->guid))
 		$cur->vendor = null;
 	$cur->product = com_sales_product::factory($cur->product->guid);
-	if (!isset($cur->product->guid))
+	if (is_null($cur->product->guid))
 		$cur->product = null;
 	$cur->save();
 }
@@ -126,10 +126,10 @@ if (!is_array($array))
 	$array = array();
 foreach ($array as $cur) {
 	$cur->ref = com_sales_payment_type::factory($cur->ref->guid);
-	if (!isset($cur->ref->guid))
+	if (is_null($cur->ref->guid))
 		$cur->ref = null;
 	$cur->ticket = com_sales_sale::factory($cur->ticket->guid);
-	if (!isset($cur->ticket->guid))
+	if (is_null($cur->ticket->guid))
 		$cur->ticket = null;
 	$cur->save();
 }
@@ -140,7 +140,7 @@ if (!is_array($array))
 	$array = array();
 foreach ($array as $cur) {
 	$cur->ticket = com_sales_sale::factory($cur->ticket->guid);
-	if (!isset($cur->ticket->guid))
+	if (is_null($cur->ticket->guid))
 		$cur->ticket = null;
 	$cur->save();
 }
@@ -151,15 +151,15 @@ if (!is_array($array))
 	$array = array();
 foreach ($array as $cur) {
 	$cur->stock = com_sales_stock::factory($cur->stock->guid);
-	if (!isset($cur->stock->guid))
+	if (is_null($cur->stock->guid))
 		$cur->stock = null;
 	if ($cur->ref->has_tag('po')) {
 		$cur->ref = com_sales_po::factory($cur->ref->guid);
-		if (!isset($cur->ref->guid))
+		if (is_null($cur->ref->guid))
 			$cur->ref = null;
 	} elseif ($cur->ref->has_tag('transfer')) {
 		$cur->ref = com_sales_transfer::factory($cur->ref->guid);
-		if (!isset($cur->ref->guid))
+		if (is_null($cur->ref->guid))
 			$cur->ref = null;
 	}
 	$cur->save();
@@ -171,7 +171,7 @@ if (!is_array($array))
 	$array = array();
 foreach ($array as $cur) {
 	$cur->customer = com_customer_customer::factory($cur->customer->guid);
-	if (!isset($cur->customer->guid))
+	if (is_null($cur->customer->guid))
 		$cur->customer = null;
 	$cur->save();
 }

@@ -17,7 +17,7 @@ if ( isset($_REQUEST['id']) ) {
 		return;
 	}
 	$customer = com_sales_customer::factory((int) $_REQUEST['id']);
-	if (!isset($customer->guid)) {
+	if (is_null($customer->guid)) {
 		display_error('Requested customer id is not accessible');
 		return;
 	}

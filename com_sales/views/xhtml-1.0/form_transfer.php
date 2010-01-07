@@ -186,7 +186,7 @@ $this->note = 'Use this form to transfer inventory to another location.';
 					<tbody>
 						<?php if (is_array($this->entity->stock)) { foreach ($this->entity->stock as $cur_stock_guid) {
 								$stock = com_sales_stock::factory($cur_stock_guid);
-								if (!isset($stock->guid))
+								if (is_null($stock->guid))
 									continue;
 								?>
 						<tr title="<?php echo $stock->guid; ?>">

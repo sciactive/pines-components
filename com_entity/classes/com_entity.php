@@ -479,7 +479,8 @@ class com_entity extends component {
 	public function get_entity($guid, $exclusive_tags = array(), $class = entity) {
 		global $config;
 		
-		$entity = new $class;
+		$methods = get_class_methods($class);
+		$entity = call_user_func(array($class, 'factory'));
 		$data = array();
 		
 		$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid`=d.`guid` HAVING e.`guid`=%u;",

@@ -26,7 +26,7 @@ $this->note = 'Provide user details in this form.';
 	}
 	// ]]>
 </script>
-<form class="pform" method="post" id="user_details" action="<?php echo pines_url($this->new_option, $this->new_action); ?>" onsubmit="return verify_form('user_details');">
+<form class="pform" method="post" id="user_details" action="<?php echo pines_url('com_user', 'saveuser'); ?>" onsubmit="return verify_form('user_details');">
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 			<?php if (isset($this->entity->uid)) { ?>

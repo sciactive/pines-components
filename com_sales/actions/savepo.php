@@ -17,7 +17,7 @@ if ( isset($_REQUEST['id']) ) {
 		return;
 	}
 	$po = com_sales_po::factory((int) $_REQUEST['id']);
-	if (!isset($po->guid)) {
+	if (is_null($po->guid)) {
 		display_error('Requested PO id is not accessible');
 		return;
 	}
@@ -35,14 +35,17 @@ $po->reference_number = $_REQUEST['reference_number'];
 // Vendor can't be changed after items have been received.
 if (empty($po->received)) {
 	$po->vendor = com_sales_vendor::factory(intval($_REQUEST['vendor']));
-	if (!isset($po->vendor->guid))
+	if (is_null($po->vendor->guid))
 		$po->vendor = null;
 }
 // Destination can't be changed after items have been received.
-if (empty($po->received))
-	$po->destination = $config->user_manager->get_group(intval($_REQUEST['destination']));
+if (empty($po->received)) {
+	$po->destination = group::factory(intval($_REQUEST['destination']));
+	if (is_null($po->destination->guid))
+		$po->destination = null;
+}
 $po->shipper = com_sales_shipper::factory(intval($_REQUEST['shipper']));
-if (!isset($po->shipper->guid))
+if (is_null($po->shipper->guid))
 	$po->shipper = null;
 $po->eta = strtotime($_REQUEST['eta']);
 
@@ -58,7 +61,7 @@ if (empty($po->received)) {
 			'quantity' => intval($cur_product->values[2]),
 			'cost' => floatval($cur_product->values[3])
 		);
-		if (!isset($cur_product['entity']->guid))
+		if (is_null($cur_product['entity']->guid))
 			$cur_product['entity'] = null;
 	}
 	unset($cur_product);

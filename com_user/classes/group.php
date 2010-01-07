@@ -18,10 +18,91 @@ defined('P_RUN') or die('Direct access prohibited');
  * @subpackage com_user
  */
 class group extends able_entity {
-	public function __construct() {
+	/**
+	 * Load a group.
+	 * @param int $id The ID of the group to load, null for a new group.
+	 */
+	public function __construct($id = null) {
 		parent::__construct();
 		$this->add_tag('com_user', 'group');
 		$this->abilities = array();
+		if (!is_null($id)) {
+			global $config;
+			if (is_int($id)) {
+				$entity = $config->entity_manager->get_entity($id, $this->tags, get_class($this));
+			} else {
+				$entities = $config->entity_manager->get_entities_by_data(array('groupname' => $id), $this->tags, false, get_class($this));
+				if (!is_null($entities)) {
+					$entity = $entities[0];
+				}
+			}
+			if (is_null($entity))
+				return;
+			$this->guid = $entity->guid;
+			$this->parent = $entity->parent;
+			$this->tags = $entity->tags;
+			$this->entity_cache = array();
+			$this->put_data($entity->get_data());
+		}
+	}
+
+	/**
+	 * Create a new instance.
+	 */
+	public static function factory() {
+		global $config;
+		$class = get_class();
+		$args = func_get_args();
+		$entity = new $class($args[0]);
+		$config->hook->hook_object($entity, $class.'->', false);
+		return $entity;
+	}
+
+	/**
+	 * Delete the group.
+	 * @return bool True on success, false on failure.
+	 */
+	public function delete() {
+		global $config;
+		$descendents = $config->user_manager->get_group_descendents($this->guid);
+		foreach ($descendents as $cur_group) {
+			$cur_entity = group::factory($cur_group);
+			if (isset($cur_entity->guid)) {
+				if ( !$cur_entity->delete() )
+					return false;
+			}
+		}
+		if (!parent::delete())
+			return false;
+		pines_log("Deleted group $this->name [$this->groupname].", 'notice');
+		return true;
+	}
+
+	/**
+	 * Save the group.
+	 * @return bool True on success, false on failure.
+	 */
+	public function save() {
+		if (!isset($this->groupname))
+			return false;
+		return parent::save();
+	}
+
+	/**
+	 * Print a form to edit the group.
+	 * @return module The form's module.
+	 */
+	public function print_form() {
+		$module = new module('com_user', 'form_group', 'content');
+		$module->entity = $this;
+		$module->display_abilities = gatekeeper("com_user/abilities");
+		$module->sections = array('system');
+		$module->group_array = $this->get_group_array();
+		foreach ($config->components as $cur_component) {
+			$module->sections[] = $cur_component;
+		}
+
+		return $module;
 	}
 }
 

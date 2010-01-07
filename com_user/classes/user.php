@@ -18,13 +18,88 @@ defined('P_RUN') or die('Direct access prohibited');
  * @subpackage com_user
  */
 class user extends able_entity {
-	public function __construct() {
+	/**
+	 * Load a user.
+	 * @param int|string $id The ID or username of the user to load, null for a new user.
+	 */
+	public function __construct($id = null) {
 		parent::__construct();
 		$this->add_tag('com_user', 'user');
 		$this->abilities = array();
 		$this->groups = array();
 		$this->inherit_abilities = true;
 		$this->default_component = 'com_user';
+		if (!is_null($id)) {
+			global $config;
+			if (is_int($id)) {
+				$entity = $config->entity_manager->get_entity($id, $this->tags, get_class($this));
+			} else {
+				$entities = $config->entity_manager->get_entities_by_data(array('username' => $username), $this->tags, false, get_class($this));
+				if (!is_null($entities)) {
+					$entity = $entities[0];
+				}
+			}
+			if (is_null($entity))
+				return;
+			$this->guid = $entity->guid;
+			$this->parent = $entity->parent;
+			$this->tags = $entity->tags;
+			$this->entity_cache = array();
+			$this->put_data($entity->get_data());
+		}
+	}
+
+	/**
+	 * Create a new instance.
+	 */
+	public static function factory() {
+		global $config;
+		$class = get_class();
+		$args = func_get_args();
+		$entity = new $class($args[0]);
+		$config->hook->hook_object($entity, $class.'->', false);
+		return $entity;
+	}
+
+	/**
+	 * Delete the user.
+	 * @return bool True on success, false on failure.
+	 */
+	public function delete() {
+		if (!parent::delete())
+			return false;
+		pines_log("Deleted user $this->name [$this->username].", 'notice');
+		return true;
+	}
+
+	/**
+	 * Save the user.
+	 * @return bool True on success, false on failure.
+	 */
+	public function save() {
+		if (!isset($this->username))
+			return false;
+		return parent::save();
+	}
+
+	/**
+	 * Print a form to edit the user.
+	 * @return module The form's module.
+	 */
+	public function print_form() {
+		$module = new module('com_user', 'form_user', 'content');
+		$module->entity = $this;
+		$module->display_groups = gatekeeper("com_user/assigng");
+		$module->display_abilities = gatekeeper("com_user/abilities");
+		$module->display_default_components = gatekeeper("com_user/default_component");
+		$module->sections = array('system');
+		$module->group_array = $this->get_group_array();
+		$module->default_components = $this->get_default_component_array();
+		foreach ($config->components as $cur_component) {
+			$module->sections[] = $cur_component;
+		}
+
+		return $module;
 	}
 
 	/**
@@ -105,13 +180,13 @@ class user extends able_entity {
 		if (!empty($this->timezone))
 			return $return_date_time_zone_object ? new DateTimeZone($this->timezone) : $this->timezone;
 		if (isset($this->gid)) {
-			$group = $config->user_manager->get_group($this->gid);
+			$group = group::factory($this->gid);
 			if (!empty($group->timezone))
 				return $return_date_time_zone_object ? new DateTimeZone($group->timezone) : $group->timezone;
 		}
 		if (is_array($this->groups)) {
 			foreach($this->groups as $cur_group_id) {
-				$group = $config->user_manager->get_group($cur_group_id);
+				$group = group::factory($cur_group_id);
 				if (!empty($group->timezone))
 					return $return_date_time_zone_object ? new DateTimeZone($group->timezone) : $group->timezone;
 			}

@@ -23,13 +23,14 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'managegroups', null, false));
 		return;
 	}
-	$group = $config->user_manager->get_group($_REQUEST['id']);
-	if ( is_null($group) ) {
+	$group = group::factory((int) $_REQUEST['id']);
+	if ( is_null($group->guid) ) {
 		display_error('Group doesn\'t exists!');
 		$pass = false;
 	}
 	if ( $group->groupname != $_REQUEST['groupname'] ) {
-		if ( is_null($config->user_manager->get_group_by_groupname($_REQUEST['groupname'])) ) {
+		$test = group::factory($_REQUEST['groupname']);
+		if ( is_null($test->guid) ) {
 			$group->groupname = $_REQUEST['groupname'];
 		} else {
 			display_notice('Groupname ['.$_REQUEST['groupname'].'] already exists! Continuing with old groupname...');
@@ -40,8 +41,9 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'managegroups', null, false));
 		return;
 	}
-	$group = new group;
-	if ( is_null($config->user_manager->get_group_by_groupname($_REQUEST['groupname'])) ) {
+	$group = group::factory();
+	$test = group::factory($_REQUEST['groupname']);
+	if ( is_null($test->guid) ) {
 		$group->groupname = $_REQUEST['groupname'];
 	} else {
 		display_notice('Groupname already exists!');
@@ -60,7 +62,7 @@ $group->timezone = $_REQUEST['timezone'];
 if ( $_REQUEST['parent'] == 'none' ) {
 	$parent = NULL;
 } else {
-	if ( is_null($config->user_manager->get_group($_REQUEST['parent'])) || $_REQUEST['parent'] == $group->guid ) {
+	if ( is_null(group::factory($_REQUEST['parent'])->guid) || $_REQUEST['parent'] == $group->guid ) {
 		display_error('Parent is not valid!');
 		$pass = false;
 	} else {
@@ -89,8 +91,7 @@ if ( $_REQUEST['abilities'] === 'true' && gatekeeper("com_user/abilities") ) {
 }
 
 if (!$pass) {
-	$module = $config->user_manager->print_group_form('com_user', 'savegroup');
-	$module->entity = $group;
+	$group->print_form();
 	return;
 }
 

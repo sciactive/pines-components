@@ -17,7 +17,7 @@ if ( isset($_REQUEST['id']) ) {
 		return;
 	}
 	$tax_fee = com_sales_tax_fee::factory((int) $_REQUEST['id']);
-	if (!isset($tax_fee->guid)) {
+	if (is_null($tax_fee->guid)) {
 		display_error('Requested tax/fee id is not accessible');
 		return;
 	}
@@ -36,8 +36,8 @@ $tax_fee->rate = floatval($_REQUEST['rate']);
 $tax_fee->locations = array();
 if (is_array($_REQUEST['locations'])) {
 	foreach ($_REQUEST['locations'] as $cur_location_guid) {
-		$cur_location = $config->user_manager->get_group($cur_location_guid);
-		if (!is_null($cur_location)) {
+		$cur_location = group::factory($cur_location_guid);
+		if (isset($cur_location->guid)) {
 			array_push($tax_fee->locations, $cur_location);
 		}
 	}

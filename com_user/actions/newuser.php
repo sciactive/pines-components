@@ -16,5 +16,7 @@ if ( !gatekeeper('com_user/new') ) {
 	return;
 }
 
-$config->user_manager->print_user_form('com_user', 'saveuser');
+$user = user::factory();
+$user->print_form();
+
 ?>

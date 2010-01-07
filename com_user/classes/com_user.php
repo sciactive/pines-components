@@ -66,47 +66,6 @@ class com_user extends component {
 	}
 
 	/**
-	 * Delete a group from the system recursively.
-	 *
-	 * @param int $id The GUID of the group.
-	 * @return bool True on success, false on failure.
-	 * @todo Remove users.
-	 */
-	function delete_group($id) {
-		if ( $entity = $this->get_group($id) ) {
-			$descendents = $this->get_group_descendents($id);
-			foreach ($descendents as $cur_group) {
-				$cur_entity = $this->get_group($cur_group);
-				if ( !$cur_entity->delete() )
-					return false;
-			}
-			if ( !$entity->delete() )
-				return false;
-			pines_log("Deleted group $entity->groupname.", 'notice');
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * Delete a user from the system.
-	 *
-	 * @param int $id The GUID of the user.
-	 * @return bool True on success, false on failure.
-	 */
-	function delete_user($id) {
-		if ( $entity = $this->get_user($id) ) {
-			if ( !$entity->delete() )
-				return false;
-			pines_log("Deleted user $entity->username.", 'notice');
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
 	 * Fill the $_SESSION['user'] variable with the logged in user's data.
 	 *
 	 * Also sets the default timezone to the user's timezone.
@@ -228,18 +187,6 @@ class com_user extends component {
 	}
 
 	/**
-	 * Gets a group by GUID.
-	 *
-	 * @param int $id The group's GUID.
-	 * @return group|null The group if it exists, null if it doesn't.
-	 */
-	function get_group($id) {
-		global $config;
-		$group = $config->entity_manager->get_entity($id, array('com_user', 'group'), group);
-		return $group;
-	}
-
-	/**
 	 * Gets an array of groups.
 	 *
 	 * If no parent id is given, get_group_array() will start with all top level
@@ -280,23 +227,6 @@ class com_user extends component {
 			}
 		}
 		return $return;
-	}
-
-	/**
-	 * Gets a group by groupname.
-	 *
-	 * @param string $groupname The group's groupname.
-	 * @return group|null The group if it exists, null if it doesn't.
-	 */
-	function get_group_by_groupname($groupname) {
-		global $config;
-		$entities = array();
-		$entities = $config->entity_manager->get_entities_by_data(array('groupname' => $groupname), array(), false, group);
-		foreach ($entities as $entity) {
-			if ( $entity->has_tag('com_user', 'group') )
-				return $entity;
-		}
-		return null;
 	}
 
 	/**
@@ -413,8 +343,8 @@ class com_user extends component {
 	function get_groupname($id) {
 	// Check the cache to see if we've already queried this name.
 		if (!isset($this->groupname_cache[$id])) {
-			$entity = $this->get_group($id);
-			if (is_null($entity)) {
+			$entity = group::factory($id);
+			if (is_null($entity->guid)) {
 				$this->groupname_cache[$id] = null;
 			} else {
 				$this->groupname_cache[$id] = $entity->groupname;
@@ -435,35 +365,6 @@ class com_user extends component {
 	}
 
 	/**
-	 * Gets a user by GUID.
-	 *
-	 * @param int $id The user's GUID.
-	 * @return user|null The user if it exists, null if it doesn't.
-	 */
-	function get_user($id) {
-		global $config;
-		$user = $config->entity_manager->get_entity($id, array('com_user', 'user'), user);
-		return $user;
-	}
-
-	/**
-	 * Gets a user by username.
-	 *
-	 * If there are more than one user with the same username (which shouldn't
-	 * happen, but can), the first user found is returned.
-	 *
-	 * @param string $username The user's username.
-	 * @return user|null The user if it exists, null if it doesn't.
-	 */
-	function get_user_by_username($username) {
-		global $config;
-		$entities = $config->entity_manager->get_entities_by_data(array('username' => $username), array('com_user', 'user'), false, user);
-		if (!is_null($entities))
-			return $entities[0];
-		return null;
-	}
-
-	/**
 	 * Gets a user's username by its GUID.
 	 *
 	 * @param int $id The user's GUID.
@@ -472,8 +373,8 @@ class com_user extends component {
 	function get_username($id) {
 	// Check the cache to see if we've already queried this name.
 		if (!isset($this->username_cache[$id])) {
-			$entity = $this->get_user($id);
-			if (is_null($entity)) {
+			$entity = user::factory($id);
+			if (is_null($entity->guid)) {
 				$this->username_cache[$id] = null;
 			} else {
 				$this->username_cache[$id] = $entity->username;
@@ -562,7 +463,7 @@ class com_user extends component {
 	 * @return bool True on success, false on failure.
 	 */
 	function login($id) {
-		$entity = $this->get_user($id);
+		$entity = user::factory($id);
 
 		if ( isset($entity->username) ) {
 			if ( $this->gatekeeper('com_user/login', $entity) ) {
@@ -590,85 +491,12 @@ class com_user extends component {
 	}
 
 	/**
-	 * Creates and attaches a module containing a form for editing a group.
-	 *
-	 * If $id is null, or not given, a blank form will be provided.
-	 *
-	 * @param string $new_option The option to which the form will submit.
-	 * @param string $new_action The action to which the form will submit.
-	 * @param int $id The GUID of the group to edit.
-	 * @return module|null The new module on success, nothing on failure.
-	 */
-	function print_group_form($new_option, $new_action, $id = NULL) {
-		global $config;
-		$module = new module('com_user', 'form_group', 'content');
-		if ( is_null($id) ) {
-			$module->entity = new group;
-		} else {
-			$module->entity = $this->get_group($id);
-			if (is_null($module->entity)) {
-				display_error('Requested group id is not accessible.');
-				$module->detach();
-				return;
-			}
-		}
-		$module->new_option = $new_option;
-		$module->new_action = $new_action;
-		$module->display_abilities = gatekeeper("com_user/abilities");
-		$module->sections = array('system');
-		$module->group_array = $this->get_group_array();
-		foreach ($config->components as $cur_component) {
-			$module->sections[] = $cur_component;
-		}
-
-		return $module;
-	}
-
-	/**
 	 * Creates and attaches a module which let's the user log in.
 	 *
 	 * @param string $position The position in which to place the module.
 	 */
 	function print_login($position = 'content') {
 		$module = new module('com_user', 'login', $position);
-	}
-
-	/**
-	 * Creates and attaches a module containing a form for editing a user.
-	 *
-	 * If $id is null, or not given, a blank form will be provided.
-	 *
-	 * @param string $new_option The option to which the form will submit.
-	 * @param string $new_action The action to which the form will submit.
-	 * @param int $id The GUID of the user to edit.
-	 * @return module|null The new module on success, nothing on failure.
-	 */
-	function print_user_form($new_option, $new_action, $id = NULL) {
-		global $config;
-		$module = new module('com_user', 'form_user', 'content');
-		if ( is_null($id) ) {
-			$module->entity = new user;
-		} else {
-			$module->entity = $this->get_user($id);
-			if (is_null($module->entity)) {
-				display_error('Requested user id is not accessible.');
-				$module->detach();
-				return;
-			}
-		}
-		$module->new_option = $new_option;
-		$module->new_action = $new_action;
-		$module->display_groups = gatekeeper("com_user/assigng");
-		$module->display_abilities = gatekeeper("com_user/abilities");
-		$module->display_default_components = gatekeeper("com_user/default_component");
-		$module->sections = array('system');
-		$module->group_array = $this->get_group_array();
-		$module->default_components = $this->get_default_component_array();
-		foreach ($config->components as $cur_component) {
-			$module->sections[] = $cur_component;
-		}
-
-		return $module;
 	}
 
 	/**

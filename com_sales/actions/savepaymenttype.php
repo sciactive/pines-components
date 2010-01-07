@@ -17,7 +17,7 @@ if ( isset($_REQUEST['id']) ) {
 		return;
 	}
 	$payment_type = com_sales_payment_type::factory((int) $_REQUEST['id']);
-	if (!isset($payment_type->guid)) {
+	if (is_null($payment_type->guid)) {
 		display_error('Requested payment type id is not accessible');
 		return;
 	}

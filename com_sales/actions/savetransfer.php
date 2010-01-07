@@ -18,7 +18,7 @@ if ( !gatekeeper('com_sales/managestock') ) {
 
 if ( isset($_REQUEST['id']) ) {
 	$transfer = com_sales_transfer::factory((int) $_REQUEST['id']);
-	if (!isset($transfer->guid)) {
+	if (is_null($transfer->guid)) {
 		display_error('Requested transfer id is not accessible');
 		return;
 	}
@@ -30,10 +30,12 @@ if ( isset($_REQUEST['id']) ) {
 $transfer->reference_number = $_REQUEST['reference_number'];
 // Destination can't be changed after items have been received.
 if (empty($transfer->received)) {
-	$transfer->destination = $config->user_manager->get_group(intval($_REQUEST['destination']));
+	$transfer->destination = group::factory(intval($_REQUEST['destination']));
+	if (is_null($transfer->destination->guid))
+		$transfer->destination = null;
 }
 $transfer->shipper = com_sales_shipper::factory(intval($_REQUEST['shipper']));
-if (!isset($transfer->shipper->guid))
+if (is_null($transfer->shipper->guid))
 	$transfer->shipper = null;
 $transfer->eta = strtotime($_REQUEST['eta']);
 
@@ -45,7 +47,7 @@ if (empty($transfer->received)) {
 		$transfer->stock = array();
 	foreach ($transfer->stock as $key => &$cur_stock) {
 		$cur_stock = com_sales_stock::factory(intval($cur_stock->key));
-		if (!isset($cur_stock->guid))
+		if (is_null($cur_stock->guid))
 			unset($transfer->stock[$key]);
 	}
 	unset($cur_stock);

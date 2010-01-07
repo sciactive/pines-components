@@ -17,7 +17,7 @@ if ( isset($_REQUEST['id']) ) {
 		return;
 	}
 	$manufacturer = com_sales_manufacturer::factory((int) $_REQUEST['id']);
-	if (!isset($manufacturer->guid)) {
+	if (is_null($manufacturer->guid)) {
 		display_error('Requested manufacturer id is not accessible');
 		return;
 	}

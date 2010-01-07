@@ -196,6 +196,8 @@ $this->note = 'Use this form to edit a sale.';
 											if (data.serialized) {
 												while (!serial) {
 													serial = prompt("This item is serialized. Please provide the serial:");
+													if (serial == null)
+														return;
 												}
 											}
 											products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'in-store', 1, data.unit_price, "", "", ""]}], function(){

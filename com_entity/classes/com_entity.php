@@ -150,7 +150,7 @@ class com_entity extends component {
 		
 		$row = mysql_fetch_array($result);
 		while ($row) {
-			$entity = new $class;
+			$entity = call_user_func(array($class, 'factory'));
 			$entity->guid = intval($row['guid']);
 			$entity->parent = (is_null($row['parent']) ? NULL : intval($row['parent']));
 			$entity->tags = unserialize($row['tags']);
@@ -255,7 +255,7 @@ class com_entity extends component {
 				}
 			}
 			if ( $match === true ) {
-				$entity = new $class;
+				$entity = call_user_func(array($class, 'factory'));
 				$entity->guid = intval($row['guid']);
 				$entity->parent = (is_null($row['parent']) ? NULL : intval($row['parent']));
 				$entity->tags = $return_tag_array;
@@ -346,7 +346,7 @@ class com_entity extends component {
 				}
 			}
 			if ( $match === true ) {
-				$entity = new $class;
+				$entity = call_user_func(array($class, 'factory'));
 				$entity->guid = intval($row['guid']);
 				$entity->parent = (is_null($row['parent']) ? NULL : intval($row['parent']));
 				$entity->tags = $return_tag_array;
@@ -437,7 +437,7 @@ class com_entity extends component {
 				}
 			}
 			if ( $match === true ) {
-				$entity = new $class;
+				$entity = call_user_func(array($class, 'factory'));
 				$entity->guid = intval($row['guid']);
 				$entity->parent = (is_null($row['parent']) ? NULL : intval($row['parent']));
 				$entity->tags = $return_tag_array;

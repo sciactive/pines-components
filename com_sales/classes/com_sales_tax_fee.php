@@ -76,6 +76,7 @@ class com_sales_tax_fee extends entity {
 	 * @return module The form's module.
 	 */
 	public function print_form() {
+		global $config;
 		$module = new module('com_sales', 'form_tax_fee', 'content');
 		$module->entity = $this;
 		$module->locations = $config->user_manager->get_group_array();

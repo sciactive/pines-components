@@ -22,37 +22,6 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class com_customer extends component {
 	/**
-	 * Add or subtract points from a customer's account.
-	 *
-	 * @param entity $customer The customer entity.
-	 * @param int $point_adjust The positive or negative point value to add.
-	 */
-	function adjust_points(&$customer, $point_adjust) {
-		if (!is_a($customer, 'entity'))
-			return;
-		if (!isset($customer->com_customer))
-			$customer->com_customer = (object) array();
-		$point_adjust = (int) $point_adjust;
-		// Check that there is a point value.
-		if (!is_int($customer->com_customer->points))
-			$customer->com_customer->points = 0;
-		// Check the total value.
-		if (!is_int($customer->com_customer->total_points))
-			$customer->com_customer->total_points = $customer->com_customer->points;
-		// Check the peak value.
-		if (!is_int($customer->com_customer->peak_points))
-			$customer->com_customer->peak_points = $customer->com_customer->points;
-		// Do the adjustment.
-		if ($point_adjust != 0) {
-			if ($point_adjust > 0)
-				$customer->com_customer->total_points += $point_adjust;
-			$customer->com_customer->points += $point_adjust;
-			if ($customer->com_customer->points > $customer->com_customer->peak_points)
-				$customer->com_customer->peak_points = $customer->com_customer->points;
-		}
-	}
-
-	/**
 	 * Display a sidebar with a link to edit a customer account.
 	 *
 	 * When a customer is edited in com_sales, this is called and provides a
@@ -95,39 +64,6 @@ class com_customer extends component {
 			$module->detach();
 			display_notice("There are no customers.");
 		}
-	}
-
-	/**
-	 * Creates and attaches a module containing a form for editing a
-	 * customer.
-	 *
-	 * If $id is null, or not given, a blank form will be provided.
-	 *
-	 * @param string $new_option The option to which the form will submit.
-	 * @param string $new_action The action to which the form will submit.
-	 * @param int $id The GUID of the customer to edit.
-	 * @return module|null The new module on success, nothing on failure.
-	 */
-	function print_customer_form($new_option, $new_action, $id = NULL) {
-		global $config;
-		$config->editor->load();
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
-		$module = new module('com_customer', 'form_customer', 'content');
-		if ( is_null($id) ) {
-			$module->entity = new entity;
-		} else {
-			$module->entity = com_sales_customer::factory($id);
-			if (is_null($module->entity)) {
-				display_error('Requested customer id is not accessible.');
-				$module->detach();
-				return;
-			}
-		}
-		$module->new_option = $new_option;
-		$module->new_action = $new_action;
-
-		return $module;
 	}
 
 	/**

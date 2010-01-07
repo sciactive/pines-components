@@ -16,7 +16,6 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * @package Pines
  * @subpackage com_customer
- * @todo Move functions from com_customer class to here.
  */
 class com_customer_customer extends com_sales_customer {
 	/**
@@ -52,10 +51,42 @@ class com_customer_customer extends com_sales_customer {
 	}
 
 	/**
+	 * Add or subtract points from the customer's account.
+	 *
+	 * @param int $point_adjust The positive or negative point value to add.
+	 */
+	function adjust_points($point_adjust) {
+		if (!isset($this->com_customer))
+			$this->com_customer = (object) array();
+		$point_adjust = (int) $point_adjust;
+		// Check that there is a point value.
+		if (!is_int($this->com_customer->points))
+			$this->com_customer->points = 0;
+		// Check the total value.
+		if (!is_int($this->com_customer->total_points))
+			$this->com_customer->total_points = $this->com_customer->points;
+		// Check the peak value.
+		if (!is_int($this->com_customer->peak_points))
+			$this->com_customer->peak_points = $this->com_customer->points;
+		// Do the adjustment.
+		if ($point_adjust != 0) {
+			if ($point_adjust > 0)
+				$this->com_customer->total_points += $point_adjust;
+			$this->com_customer->points += $point_adjust;
+			if ($this->com_customer->points > $this->com_customer->peak_points)
+				$this->com_customer->peak_points = $this->com_customer->points;
+		}
+	}
+
+	/**
 	 * Print a form to edit the customer's account.
 	 * @return module The form's module.
 	 */
 	public function print_form() {
+		global $config;
+		$config->editor->load();
+		$pgrid = new module('system', 'pgrid.default', 'head');
+		$pgrid->icons = true;
 		$module = new module('com_customer', 'form_customer', 'content');
 		$module->entity = $this;
 

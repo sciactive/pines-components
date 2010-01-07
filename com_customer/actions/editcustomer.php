@@ -16,6 +16,7 @@ if ( !gatekeeper('com_customer/editcustomer') ) {
 	return;
 }
 
-$config->run_customer->print_customer_form('com_customer', 'savecustomer', $_REQUEST['id']);
+$entity = com_customer_customer::factory((int) $_REQUEST['id']);
+$entity->print_form();
 
 ?>

@@ -35,7 +35,7 @@ class com_customer_timer extends component {
 			return false;
 		}
 		$id = (int) $id;
-		$customer = com_sales_customer::factory($id);
+		$customer = com_customer_customer::factory($id);
 		if (is_null($customer)) {
 			display_notice('Customer ID not found.');
 			return false;
@@ -44,11 +44,9 @@ class com_customer_timer extends component {
 			display_notice('Customer ID and password do not match.');
 			return false;
 		}
-		$logins = $this->get_login_entity();
-		if (!is_array($logins->customers))
-			$logins->customers = array();
+		$logins = com_customer_timer_login_tracker::factory();
 		if (in_array($customer, $logins->customers)) {
-			return $this->logout($customer, $logins);
+			return $logins->logout($customer);
 		}
 		if ($customer->com_customer->login_disabled) {
 			display_notice('Login has been disabled for your account.');
@@ -59,61 +57,7 @@ class com_customer_timer extends component {
 			if (!$config->com_customer_timer->debtlogin)
 				return false;
 		}
-		return $this->login($customer, $logins);
-	}
-
-	/**
-	 * Logs a customer into the timer.
-	 *
-	 * @param entity $customer The customer.
-	 * @param entity $logins The login tracker entity.
-	 * @return bool True on success, false on failure.
-	 */
-	function login(&$customer, &$logins) {
-		if (!isset($customer->com_customer_timer))
-			$customer->com_customer_timer = (object) array();
-		// Save the time the customer logged in.
-		$customer->com_customer_timer->last_login = time();
-		$customer->save();
-		// Add the customer to the login tracker.
-		$logins->customers[] = $customer;
-		$logins->save();
-		display_notice("Welcome {$customer->name}. You have been logged in.");
-		return true;
-	}
-
-	/**
-	 * Logs a customer out of the timer.
-	 *
-	 * This process creates a transaction entity.
-	 *
-	 * @param entity $customer The customer.
-	 * @param entity $logins The login tracker entity.
-	 * @return bool True on success, false on failure.
-	 */
-	function logout(&$customer, &$logins) {
-		global $config;
-		// Remove the customer from the login tracker.
-		foreach ($logins->customers as $key => &$cur_customer) {
-			if ($customer->is($cur_customer)) {
-				unset($logins->customers[$key]);
-			}
-		}
-		$logins->save();
-		$session_info = $this->get_session_info($customer);
-		// Take points off the customer's account.
-		$config->run_customer->adjust_points($customer, -1 * $session_info['points']);
-		$customer->save();
-		// Save a transaction.
-		$tx = new entity('com_customer_timer', 'transaction', 'account_tx');
-		$tx->customer = $customer;
-		$tx->minutes = $session_info['minutes'];
-		$tx->points = $session_info['points'];
-		$tx->login_time = $customer->com_customer_timer->last_login;
-		$tx->logout_time = time();
-		$tx->save();
-		display_notice("Goodbye, you have been logged out. This session was {$session_info['minutes']} minutes long, for {$session_info['points']} points.");
-		return true;
+		return $logins->login($customer);
 	}
 
 	/**
@@ -129,32 +73,6 @@ class com_customer_timer extends component {
 		// And how many points that costs.
 		$points = $minutes * (int) $config->com_customer_timer->ppm;
 		return array('minutes' => $minutes, 'points' => $points);
-	}
-
-	/**
-	 * Retrieve the login tracker entity.
-	 *
-	 * If no login tracker exists yet, one is created and given write access to
-	 * "other".
-	 *
-	 * @return entity The login tracker.
-	 */
-	function get_login_entity() {
-		global $config;
-		$entities = $config->entity_manager->get_entities_by_tags('com_customer_timer', 'logins');
-		if (empty($entities)) {
-			$return = new entity('com_customer_timer', 'logins');
-			$return->ac = (object) array('other' => 2);
-			$return->customers = array();
-		} else {
-			if (count($entities) > 1) {
-				for ($i = 1; $i < count($entities); $i++) {
-					$entities[$i]->delete();
-				}
-			}
-			$return = $entities[0];
-		}
-		return $return;
 	}
 }
 

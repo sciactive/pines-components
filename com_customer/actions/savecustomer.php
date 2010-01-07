@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_customer', 'listcustomers', null, false));
 		return;
 	}
-	$customer = com_sales_customer::factory((int) $_REQUEST['id']);
+	$customer = com_customer_customer::factory((int) $_REQUEST['id']);
 	if (!isset($customer->guid)) {
 		display_error('Requested customer id is not accessible');
 		return;
@@ -39,7 +39,7 @@ $customer->com_customer->short_description = $_REQUEST['short_description'];
 
 // Points
 if ($config->com_customer->adjustpoints && gatekeeper('com_customer/adjustpoints')) {
-	$config->run_customer->adjust_points($customer, (int) $_REQUEST['adjust_points']);
+	$customer->adjust_points((int) $_REQUEST['adjust_points']);
 }
 
 // Addresses

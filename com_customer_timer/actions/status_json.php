@@ -18,7 +18,7 @@ if ( !gatekeeper('com_customer_timer/viewstatus') ) {
 
 $page->override = true;
 
-$logins = $config->run_customer_timer->get_login_entity();
+$logins = com_customer_timer_login_tracker::factory();
 $return = array();
 
 foreach ($logins->customers as $cur_customer) {

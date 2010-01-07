@@ -21,15 +21,16 @@ $page->override = true;
 $return = false;
 
 if (isset($_REQUEST['id'])) {
-	$id = (int) $_REQUEST['id'];
-	$customer = com_sales_customer::factory($id);
-	if (is_null($customer)) {
+	$customer = com_customer_customer::factory((int) $_REQUEST['id']);
+	if (!isset($customer->guid)) {
 		display_notice('Customer ID not found.');
 		$return = false;
 	} else {
-		$logins = $config->run_customer_timer->get_login_entity();
+		$logins = com_customer_timer_login_tracker::factory();
 		if (in_array($customer, $logins->customers)) {
-			$return = $config->run_customer_timer->logout($customer, $logins);
+			$return = $logins->logout($customer);
+		} else {
+			$return = true;
 		}
 	}
 }

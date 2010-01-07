@@ -93,14 +93,14 @@ class group extends able_entity {
 	 * @return module The form's module.
 	 */
 	public function print_form() {
+		global $config;
 		$module = new module('com_user', 'form_group', 'content');
 		$module->entity = $this;
 		$module->display_abilities = gatekeeper("com_user/abilities");
 		$module->sections = array('system');
-		$module->group_array = $this->get_group_array();
-		foreach ($config->components as $cur_component) {
+		$module->group_array = $config->user_manager->get_group_array();
+		foreach ($config->components as $cur_component)
 			$module->sections[] = $cur_component;
-		}
 
 		return $module;
 	}

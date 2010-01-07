@@ -86,17 +86,17 @@ class user extends able_entity {
 	 * @return module The form's module.
 	 */
 	public function print_form() {
+		global $config;
 		$module = new module('com_user', 'form_user', 'content');
 		$module->entity = $this;
 		$module->display_groups = gatekeeper("com_user/assigng");
 		$module->display_abilities = gatekeeper("com_user/abilities");
 		$module->display_default_components = gatekeeper("com_user/default_component");
 		$module->sections = array('system');
-		$module->group_array = $this->get_group_array();
-		$module->default_components = $this->get_default_component_array();
-		foreach ($config->components as $cur_component) {
+		$module->group_array = $config->user_manager->get_group_array();
+		$module->default_components = $config->user_manager->get_default_component_array();
+		foreach ($config->components as $cur_component)
 			$module->sections[] = $cur_component;
-		}
 
 		return $module;
 	}

@@ -30,11 +30,11 @@ if ( isset($_REQUEST['id']) ) {
 $transfer->reference_number = $_REQUEST['reference_number'];
 // Destination can't be changed after items have been received.
 if (empty($transfer->received)) {
-	$transfer->destination = group::factory(intval($_REQUEST['destination']));
+	$transfer->destination = group::factory((int) $_REQUEST['destination']);
 	if (is_null($transfer->destination->guid))
 		$transfer->destination = null;
 }
-$transfer->shipper = com_sales_shipper::factory(intval($_REQUEST['shipper']));
+$transfer->shipper = com_sales_shipper::factory((int) $_REQUEST['shipper']);
 if (is_null($transfer->shipper->guid))
 	$transfer->shipper = null;
 $transfer->eta = strtotime($_REQUEST['eta']);

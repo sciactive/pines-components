@@ -36,10 +36,9 @@ $tax_fee->rate = floatval($_REQUEST['rate']);
 $tax_fee->locations = array();
 if (is_array($_REQUEST['locations'])) {
 	foreach ($_REQUEST['locations'] as $cur_location_guid) {
-		$cur_location = group::factory($cur_location_guid);
-		if (isset($cur_location->guid)) {
-			array_push($tax_fee->locations, $cur_location);
-		}
+		$cur_location = group::factory((int) $cur_location_guid);
+		if (isset($cur_location->guid))
+			$tax_fee->locations[] = $cur_location;
 	}
 }
 

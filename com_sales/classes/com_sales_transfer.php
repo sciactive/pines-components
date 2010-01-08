@@ -69,7 +69,7 @@ class com_sales_transfer extends entity {
 	 * @return bool True on success, false on failure.
 	 */
 	public function save() {
-		if (!isset($this->transfer_number))
+		if (!is_array($this->stock))
 			return false;
 		return parent::save();
 	}
@@ -86,13 +86,11 @@ class com_sales_transfer extends entity {
 		$module->entity = $this;
 		$module->locations = $config->user_manager->get_group_array();
 		$module->shippers = $config->entity_manager->get_entities_by_tags('com_sales', 'shipper', com_sales_shipper);
-		if (!is_array($module->shippers)) {
+		if (!is_array($module->shippers))
 			$module->shippers = array();
-		}
 		$module->stock = $config->entity_manager->get_entities_by_tags('com_sales', 'stock', com_sales_stock);
-		if (!is_array($module->stock)) {
+		if (!is_array($module->stock))
 			$module->stock = array();
-		}
 
 		return $module;
 	}

@@ -51,9 +51,8 @@ foreach ($products as $cur_product) {
 	for ($i = 0; $i < $cur_product['quantity']; $i++) {
 		$stock_entity = com_sales_stock::factory();
 		$stock_entity->product = $cur_product_entity;
-		if ($cur_product_entity->serialized) {
+		if ($cur_product_entity->serialized)
 			$stock_entity->serial = $cur_product['serial'];
-		}
 		$origin = $stock_entity->inventory_origin();
 		if (is_null($origin)) {
 			display_notice("Product [{$cur_product_entity->name}] with code {$cur_product['product_code']} was not found on any PO or transfer! Skipping...");

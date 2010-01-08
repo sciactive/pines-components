@@ -60,9 +60,8 @@ class com_sales_stock extends entity {
 		global $config;
 		// Get all the transfers.
 		$entities = $config->entity_manager->get_entities_by_tags('com_sales', 'transfer', com_sales_transfer);
-		if (!is_array($entities)) {
+		if (!is_array($entities))
 			$entities = array();
-		}
 		// Iterate through all the transfers.
 		foreach ($entities as $cur_transfer) {
 			// If the transfer isn't for our destination, move on.
@@ -71,19 +70,16 @@ class com_sales_stock extends entity {
 			if (!is_array($cur_transfer->stock))
 				continue;
 			// Iterate the transfer's stock, looking for a match.
-			foreach ($cur_transfer->stock as $cur_stock_guid) {
+			foreach ($cur_transfer->stock as $cur_stock) {
 				if (is_array($cur_transfer->received)) {
 					// If the product is already received, we should ignore it.
-					foreach($cur_transfer->received as $cur_entity) {
-						if ($cur_entity->guid == $cur_stock_guid)
-							continue;
-					}
+					if ($cur_stock->in_array($cur_transfer->received))
+						continue;
 				}
-				$cur_stock = com_sales_stock::factory($cur_stock_guid);
 				// If it's not the right product, move on.
 				if ($cur_stock->product->guid != $this->product->guid)
 					continue;
-				if (!is_null($this->serial)) {
+				if (!is_null($this->serial) || !is_null($cur_stock->serial)) {
 					// Check the serial with the stock entry's serial.
 					if ($cur_stock->serial != $this->serial)
 						continue;

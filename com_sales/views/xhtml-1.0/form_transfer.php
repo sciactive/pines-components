@@ -184,18 +184,17 @@ $this->note = 'Use this form to transfer inventory to another location.';
 						</tr>
 					</thead>
 					<tbody>
-						<?php if (is_array($this->entity->stock)) { foreach ($this->entity->stock as $cur_stock_guid) {
-								$stock = com_sales_stock::factory($cur_stock_guid);
-								if (is_null($stock->guid))
+						<?php if (is_array($this->entity->stock)) { foreach ($this->entity->stock as $cur_stock) {
+								if (is_null($cur_stock->guid))
 									continue;
 								?>
-						<tr title="<?php echo $stock->guid; ?>">
-							<td><?php echo $stock->product->name; ?></td>
-							<td><?php echo $stock->serial; ?></td>
-							<td><?php echo $stock->vendor->name; ?></td>
-							<td><?php echo "{$stock->location->name} [{$stock->location->groupname}]"; ?></td>
-							<td><?php echo $stock->cost; ?></td>
-							<td><?php echo $stock->status; ?></td>
+						<tr title="<?php echo $cur_stock->guid; ?>">
+							<td><?php echo $cur_stock->product->name; ?></td>
+							<td><?php echo $cur_stock->serial; ?></td>
+							<td><?php echo $cur_stock->vendor->name; ?></td>
+							<td><?php echo "{$cur_stock->location->name} [{$cur_stock->location->groupname}]"; ?></td>
+							<td><?php echo $cur_stock->cost; ?></td>
+							<td><?php echo $cur_stock->status; ?></td>
 						</tr>
 						<?php } } ?>
 					</tbody>

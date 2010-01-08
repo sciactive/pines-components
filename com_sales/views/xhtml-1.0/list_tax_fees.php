@@ -72,9 +72,8 @@ $this->title = 'Taxes/Fees';
 			<td><?php
 			if (is_array($tax_fee->locations)) {
 				$groupname_array = array();
-				foreach ($tax_fee->locations as $cur_locations) {
-					array_push($groupname_array, "{$cur_locations->name} [{$cur_locations->groupname}]");
-				}
+				foreach ($tax_fee->locations as $cur_location)
+					$groupname_array[] = "{$cur_location->name} [{$cur_location->groupname}]";
 				echo implode(', ', $groupname_array);
 			}
 			?></td>

@@ -66,9 +66,9 @@ $(function($){
 	});
 
 	// Style UI buttons on hover.
-	$("button.ui-state-default, input.ui-state-default:button, input.ui-state-default:submit, input.ui-state-default:reset, input.ui-state-default:file").hover(function(){
+	$("button.ui-state-default, input.ui-state-default:button, input.ui-state-default:submit, input.ui-state-default:reset, input.ui-state-default:file").live('mouseover', function(){
 		$(this).addClass("ui-state-hover");
-	}, function(){
+	}).live('mouseout', function(){
 		$(this).removeClass("ui-state-hover");
-	})
+	});
 });

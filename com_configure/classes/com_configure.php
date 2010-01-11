@@ -103,6 +103,7 @@ class com_configure extends component {
 	 * @return array|bool The array of configuration variables on success, false on failure.
 	 */
 	function get_config_array($config_file) {
+		global $config, $page;
 		if (!file_exists($config_file)) return false;
 		$config_array = include($config_file);
 		if (!is_array($config_array)) return false;

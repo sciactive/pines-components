@@ -94,7 +94,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 		previewimg.attr("src", "about:blank");
 		if (null !== dindex) {
-			previewimg.attr("src", "<?php echo pines_url('com_pdf', 'pdfimg', array('file' => '#file#', 'page' => '#page#')) ; ?>".replace("#file#", file).replace("#page#", displays[dindex].page)).load(function(){
+			previewimg.attr("src", "<?php echo pines_url('com_pdf', 'image', array('file' => '#file#', 'page' => '#page#'), false) ; ?>".replace("#file#", file).replace("#page#", displays[dindex].page)).load(function(){
 				elem.css("left", (displays[dindex].left * parent.width())+"px");
 				elem.css("top", (displays[dindex].top * parent.height())+"px");
 
@@ -233,112 +233,112 @@ defined('P_RUN') or die('Direct access prohibited');
 </script>
 <div id="com_pdf_editor">
 	<div id="left_div" style="float: left; width: 200px;">
-        <div id="displays_div" style="float: left; clear: left; margin-bottom: 15px;">
-            <label>Displays:<br />
-            <select id="displays" onchange="get_values();">
-            </select></label>
-            <input type="button" class="ui-state-default ui-corner-all" value="+" name="display_add" onclick="display_add();" />
-            <input type="button" class="ui-state-default ui-corner-all" value="-" name="display_remove" onclick="display_remove();" />
-        </div>
-        <div id="form_div" style="float: left; clear: left;">
-            <div style="float: left; clear: left;">
-                <label>Page:<br />
-                <select id="page" name="page" onchange="set_values();">
-                </select></label>
-            </div>
-            <div style="float: left; clear: left;">
-                <label>Left: <small>(% of 1)</small><br />
-                <input type="text" id="x" name="x" value="0" onkeyup="set_values();" onchange="set_values();" /></label>
-            </div>
-            <div style="float: left; clear: left;">
-                <label>Top: <small>(% of 1)</small><br />
-                <input type="text" id="y" name="y" value="0" onkeyup="set_values();" onchange="set_values();" /></label>
-            </div>
-            <div style="float: left; clear: left;">
-                <label>Width: <small>(% of 1)</small><br />
-                <input type="text" id="width" name="width" value="0.33" onkeyup="set_values();" onchange="set_values();" /></label>
-            </div>
-            <div style="float: left; clear: left;">
-                <label>Height: <small>(% of 1)</small><br />
-                <input type="text" id="height" name="height" value="0.03" onkeyup="set_values();" onchange="set_values();" /></label>
-            </div>
-            <div style="float: left; clear: left;">
-                <label>Overflow: <input type="checkbox" id="overflow" name="overflow" value="ON" onchange="set_values();" checked="checked" /></label>
-            </div>
-            <div style="float: left; clear: left;">
-                <label>Bold: <input type="checkbox" id="bold" name="bold" value="ON" onchange="set_values();" /></label>
-                <label>Italic: <input type="checkbox" id="italic" name="italic" value="ON" onchange="set_values();" /></label>
-            </div>
-            <div style="float: left; clear: left;">
-                <label>Font Family:<br />
-                <input type="text" id="fontfamily" name="fontfamily" value="Times" onkeyup="set_values();" /></label>
-            </div>
-            <div style="float: left; clear: left;">
-                <label>Font Size: <small>(pt)</small><br />
-                <input type="text" id="fontsize" name="fontsize" value="12" onkeyup="set_values();" /></label>
-            </div>
-            <div style="float: left; clear: left;">
-                <label>Font Color:<br /><small>(Name or Hex)</small><br />
-                <input type="text" id="fontcolor" name="fontcolor" value="black" onkeyup="set_values();" /></label>
-            </div>
-            <div style="float: left; clear: left;">
-                <label>Add Spacing: <input type="checkbox" id="addspacing" name="addspacing" value="ON" onchange="set_values();" /></label>
-                <br /><small>(For justifying characters.)</small>
-            </div>
-            <div style="float: left; clear: left;">
-                <label>Border: <input type="checkbox" id="border" name="border" value="ON" onchange="set_values();" /></label>
-                <br /><small>(A simple black border.)</small>
-            </div>
-            <!-- <div style="float: left; clear: left;">
-                <label>Letter Spacing:<br /><small>("normal" or Pixels)</small><br />
-                <input type="text" id="letterspacing" name="letterspacing" value="normal" onkeyup="set_values();" /></label>
-            </div>
-            <div style="float: left; clear: left;">
-                <label>Word Spacing:<br /><small>("normal" or Pixels)</small><br />
-                <input type="text" id="wordspacing" name="wordspacing" value="normal" onkeyup="set_values();" /></label>
-            </div> -->
-            <div style="float: left; clear: left;">
-                <label>Text Align:<br />
-                <select id="textalign" name="textalign" onchange="set_values();">
-                    <option value="left">Left</option>
-                    <option value="center">Center</option>
-                    <option value="right">Right</option>
-                    <option value="justify">Justify</option>
-                </select></label>
-            </div>
-            <div style="float: left; clear: left;">
-                <label>Text Decoration:<br />
-                <select id="textdecoration" name="textdecoration" onchange="set_values();">
-                    <option value="none">None</option>
-                    <option value="line-through">Line-Through</option>
-                    <option value="underline">Underline</option>
-                </select></label>
-            </div>
-            <div style="float: left; clear: left;">
-                <label>Text Transform<br />
-                <select id="texttransform" name="texttransform" onchange="set_values();">
-                    <option value="none">None</option>
-                    <option value="capitalize">Capitalize</option>
-                    <option value="uppercase">Uppercase</option>
-                    <option value="lowercase">Lowercase</option>
-                </select></label>
-            </div>
-            <div style="float: left; clear: left;">
-                <label>Direction<br />
-                <select id="direction" name="direction" onchange="set_values();">
-                    <option value="ltr">Left to Right</option>
-                    <option value="rtl">Right to Left</option>
-                </select></label>
-            </div>
-        </div>
-    </div>
-    <div id="preview_div" style="position: absolute; top: 10px; left: 200px; height: auto; width: auto; border: 3px solid black;">
-        <div>
-            <div id="drag_me" style="width: 80px; height: 30px; background-color: #0FF; position: absolute;"><span id="previewtext">This is how the text will look.</span></div>
-            <img id="previewimg" src="" alt="pdf" />
-        </div>
-    </div>
-    <div id="notice_div" style="float: left; margin-left: 20px; border: 1px dotted gray; color: gray;">
-        There are no displays. You can add a display using the buttons to the left.
-    </div>
+		<div id="displays_div" style="float: left; clear: left; margin-bottom: 15px;">
+			<label>Displays:<br />
+				<select id="displays" onchange="get_values();">
+				</select></label>
+			<input type="button" class="ui-state-default ui-corner-all" value="+" name="display_add" onclick="display_add();" />
+			<input type="button" class="ui-state-default ui-corner-all" value="-" name="display_remove" onclick="display_remove();" />
+		</div>
+		<div id="form_div" style="float: left; clear: left;">
+			<div style="float: left; clear: left;">
+				<label>Page:<br />
+					<select id="page" name="page" onchange="set_values();">
+					</select></label>
+			</div>
+			<div style="float: left; clear: left;">
+				<label>Left: <small>(% of 1)</small><br />
+					<input type="text" id="x" name="x" value="0" onkeyup="set_values();" onchange="set_values();" /></label>
+			</div>
+			<div style="float: left; clear: left;">
+				<label>Top: <small>(% of 1)</small><br />
+					<input type="text" id="y" name="y" value="0" onkeyup="set_values();" onchange="set_values();" /></label>
+			</div>
+			<div style="float: left; clear: left;">
+				<label>Width: <small>(% of 1)</small><br />
+					<input type="text" id="width" name="width" value="0.33" onkeyup="set_values();" onchange="set_values();" /></label>
+			</div>
+			<div style="float: left; clear: left;">
+				<label>Height: <small>(% of 1)</small><br />
+					<input type="text" id="height" name="height" value="0.03" onkeyup="set_values();" onchange="set_values();" /></label>
+			</div>
+			<div style="float: left; clear: left;">
+				<label>Overflow: <input type="checkbox" id="overflow" name="overflow" value="ON" onchange="set_values();" checked="checked" /></label>
+			</div>
+			<div style="float: left; clear: left;">
+				<label>Bold: <input type="checkbox" id="bold" name="bold" value="ON" onchange="set_values();" /></label>
+				<label>Italic: <input type="checkbox" id="italic" name="italic" value="ON" onchange="set_values();" /></label>
+			</div>
+			<div style="float: left; clear: left;">
+				<label>Font Family:<br />
+					<input type="text" id="fontfamily" name="fontfamily" value="Times" onkeyup="set_values();" /></label>
+			</div>
+			<div style="float: left; clear: left;">
+				<label>Font Size: <small>(pt)</small><br />
+					<input type="text" id="fontsize" name="fontsize" value="12" onkeyup="set_values();" /></label>
+			</div>
+			<div style="float: left; clear: left;">
+				<label>Font Color:<br /><small>(Name or Hex)</small><br />
+					<input type="text" id="fontcolor" name="fontcolor" value="black" onkeyup="set_values();" /></label>
+			</div>
+			<div style="float: left; clear: left;">
+				<label>Add Spacing: <input type="checkbox" id="addspacing" name="addspacing" value="ON" onchange="set_values();" /></label>
+				<br /><small>(For justifying characters.)</small>
+			</div>
+			<div style="float: left; clear: left;">
+				<label>Border: <input type="checkbox" id="border" name="border" value="ON" onchange="set_values();" /></label>
+				<br /><small>(A simple black border.)</small>
+			</div>
+			<!-- <div style="float: left; clear: left;">
+				<label>Letter Spacing:<br /><small>("normal" or Pixels)</small><br />
+				<input type="text" id="letterspacing" name="letterspacing" value="normal" onkeyup="set_values();" /></label>
+			</div>
+			<div style="float: left; clear: left;">
+				<label>Word Spacing:<br /><small>("normal" or Pixels)</small><br />
+				<input type="text" id="wordspacing" name="wordspacing" value="normal" onkeyup="set_values();" /></label>
+			</div> -->
+			<div style="float: left; clear: left;">
+				<label>Text Align:<br />
+					<select id="textalign" name="textalign" onchange="set_values();">
+						<option value="left">Left</option>
+						<option value="center">Center</option>
+						<option value="right">Right</option>
+						<option value="justify">Justify</option>
+					</select></label>
+			</div>
+			<div style="float: left; clear: left;">
+				<label>Text Decoration:<br />
+					<select id="textdecoration" name="textdecoration" onchange="set_values();">
+						<option value="none">None</option>
+						<option value="line-through">Line-Through</option>
+						<option value="underline">Underline</option>
+					</select></label>
+			</div>
+			<div style="float: left; clear: left;">
+				<label>Text Transform<br />
+					<select id="texttransform" name="texttransform" onchange="set_values();">
+						<option value="none">None</option>
+						<option value="capitalize">Capitalize</option>
+						<option value="uppercase">Uppercase</option>
+						<option value="lowercase">Lowercase</option>
+					</select></label>
+			</div>
+			<div style="float: left; clear: left;">
+				<label>Direction<br />
+					<select id="direction" name="direction" onchange="set_values();">
+						<option value="ltr">Left to Right</option>
+						<option value="rtl">Right to Left</option>
+					</select></label>
+			</div>
+		</div>
+	</div>
+	<div id="preview_div" style="position: absolute; top: 10px; left: 200px; height: auto; width: auto; border: 3px solid black;">
+		<div>
+			<div id="drag_me" style="width: 80px; height: 30px; background-color: #0FF; position: absolute;"><span id="previewtext">This is how the text will look.</span></div>
+			<img id="previewimg" src="" alt="pdf" />
+		</div>
+	</div>
+	<div id="notice_div" style="float: left; margin-left: 20px; border: 1px dotted gray; color: gray;">
+		There are no displays. You can add a display using the buttons to the left.
+	</div>
 </div>

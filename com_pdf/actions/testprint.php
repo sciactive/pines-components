@@ -16,6 +16,7 @@ if ( !gatekeeper('system/all') ) {
 	return;
 }
 
+// An example display entity.
 $displays = com_pdf_displays::factory();
 $displays->pdf_file = 'blank.pdf';
 $displays->pdf_dl_filename = 'test.pdf';
@@ -24,6 +25,7 @@ $displays->pdf_author = 'Person McAuthor';
 $displays->pdf_creator = 'Pines';
 $displays->pdf_subject = 'A PDF generator test.';
 $displays->pdf_keywords = 'test';
+// This reads the display data from the script set up by load_editors().
 $displays->read_request_data();
 
 $entity = entity::factory();

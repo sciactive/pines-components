@@ -65,6 +65,9 @@ class com_pdf_displays extends entity {
 
 	/**
 	 * Load the JavaScript to insert display editors into the page.
+	 *
+	 * This adds additional functions to any pform fields in an element div with
+	 * the 'display_edit' class.
 	 */
 	public function load_editors() {
 		$this->page_count();
@@ -182,10 +185,10 @@ class com_pdf_displays extends entity {
 							$align = 'L';
 							break;
 						case 'right':
-							$align = 'C';
+							$align = 'R';
 							break;
 						case 'center':
-							$align = 'R';
+							$align = 'C';
 							break;
 						case 'justify':
 							$align = 'J';

@@ -18,15 +18,22 @@ if ( !gatekeeper('system/all') ) {
 
 $module = new module('com_pdf', 'test', 'content');
 
-$entity = com_pdf_displays::factory();
-$entity->pdf_file = 'blank.pdf';
-$entity->pdf_dl_filename = 'test.pdf';
-$entity->pdf_title = 'PDF Test';
-$entity->pdf_author = 'Person McAuthor';
-$entity->pdf_creator = 'Pines';
-$entity->pdf_subject = 'A PDF generator test.';
-$entity->pdf_keywords = 'test';
-$entity->displays['favfood'] = json_decode('[{"page":1,"left":0.393790849673,"top":0.0681003584229,"width":0.566993464052,"height":0.0227001194743,"overflow":false,"bold":true,"italic":true,"fontfamily":"Courier","fontsize":12,"fontcolor":"black","addspacing":false,"border":false,"letterspacing":"normal","wordspacing":"normal","textalign":"left","textdecoration":"none","texttransform":"none","direction":"ltr"}]');
-$entity->load_editors();
+// This is an example display entity.
+$displays = com_pdf_displays::factory();
+$displays->pdf_file = 'blank.pdf';
+$displays->pdf_dl_filename = 'test.pdf';
+$displays->pdf_title = 'PDF Test';
+$displays->pdf_author = 'Person McAuthor';
+$displays->pdf_creator = 'Pines';
+$displays->pdf_subject = 'A PDF generator test.';
+$displays->pdf_keywords = 'test';
+// This is an example display setting. The user will be able to edit this.
+// These displays will be filled out with the variable named 'favfood' on the
+// entity passed to the render() function on the display entity.
+// Check out testprint.pdf to see this being done.
+$displays->displays['favfood'] = json_decode('[{"page":1,"left":0.393790849673,"top":0.0681003584229,"width":0.566993464052,"height":0.0227001194743,"overflow":false,"bold":true,"italic":true,"fontfamily":"Courier","fontsize":12,"fontcolor":"black","addspacing":false,"border":false,"letterspacing":"normal","wordspacing":"normal","textalign":"left","textdecoration":"none","texttransform":"none","direction":"ltr"}]');
+// This will set up any pform fields with the 'display_edit' class to be
+// editabled displays.
+$displays->load_editors();
 
 ?>

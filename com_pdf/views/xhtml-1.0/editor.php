@@ -22,6 +22,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	$(function(){
 		$("*:not(html, body, #com_pdf_editor, #com_pdf_editor *)").hide();
 		$("#com_pdf_editor").parents().show();
+		alert("Please note that the preview is approximate and may not exactly resemble what is generated. Remember to test fully.");
 	});
 
 	window.load_editor = function(){
@@ -271,6 +272,25 @@ defined('P_RUN') or die('Direct access prohibited');
 			</div>
 			<div style="float: left; clear: left;">
 				<label>Font Family:<br />
+					<select id="fontfamily_suggest" name="fontfamily_suggest" size="1" onchange="$('#fontfamily').val(this.value); this.value='--'; set_values();">
+						<option value="--">Installed Fonts</option>
+					<?php
+					$fonts = array();
+					if ($fontsdir = opendir('components/com_pdf/includes/tcpdf/fonts/')) {
+						while (($file = readdir($fontsdir)) !== false) {
+							if (substr($file, -4) == '.php')
+								$fonts[] = strtolower(basename($file, '.php'));
+						}
+						closedir($fontsdir);
+						sort($fonts);
+					} else {
+						$fonts[] = 'Can\'t read fonts.';
+					}
+					foreach ($fonts as $cur_font) {
+					?>
+						<option value="<?php echo $cur_font; ?>"><?php echo $cur_font; ?></option>
+					<?php } ?>
+					</select>
 					<input type="text" id="fontfamily" name="fontfamily" value="Times" onkeyup="set_values();" /></label>
 			</div>
 			<div style="float: left; clear: left;">
@@ -299,7 +319,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			</div> -->
 			<div style="float: left; clear: left;">
 				<label>Text Align:<br />
-					<select id="textalign" name="textalign" onchange="set_values();">
+					<select id="textalign" name="textalign" onchange="set_values(); if (this.value == 'justify') { alert('Even though it can\'t be shown in the preview, single lines will justify.'); }">
 						<option value="left">Left</option>
 						<option value="center">Center</option>
 						<option value="right">Right</option>

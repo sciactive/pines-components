@@ -41,7 +41,9 @@ $this->title = 'Sales Totals';
 			// <![CDATA[
 			$(function(){
 				$("#date_start").datepicker({
-					dateFormat: "yy-mm-dd"
+					dateFormat: "yy-mm-dd",
+					changeMonth: true,
+					changeYear: true
 				});
 			});
 			// ]]>
@@ -54,7 +56,9 @@ $this->title = 'Sales Totals';
 			// <![CDATA[
 			$(function(){
 				$("#date_end").datepicker({
-					dateFormat: "yy-mm-dd"
+					dateFormat: "yy-mm-dd",
+					changeMonth: true,
+					changeYear: true
 				});
 			});
 			// ]]>

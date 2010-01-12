@@ -31,7 +31,7 @@ if ( isset($_REQUEST['id']) ) {
 
 // General
 $product->name = $_REQUEST['name'];
-$product->enabled = ($_REQUEST['enabled'] == 'ON' ? true : false);
+$product->enabled = ($_REQUEST['enabled'] == 'ON');
 $product->sku = $_REQUEST['sku'];
 $product->description = $_REQUEST['description'];
 $product->short_description = $_REQUEST['short_description'];
@@ -66,7 +66,7 @@ $product->unit_price = floatval($_REQUEST['unit_price']);
 $product->margin = floatval($_REQUEST['margin']);
 $product->floor = floatval($_REQUEST['floor']);
 // TODO: Tax exempt by location.
-$product->tax_exempt = ($_REQUEST['tax_exempt'] == 'ON' ? true : false);
+$product->tax_exempt = ($_REQUEST['tax_exempt'] == 'ON');
 $product->additional_tax_fees = array();
 if (is_array($_REQUEST['additional_tax_fees'])) {
 	foreach ($_REQUEST['additional_tax_fees'] as $cur_tax_fee_guid) {
@@ -79,11 +79,11 @@ if (is_array($_REQUEST['additional_tax_fees'])) {
 // Attributes
 $product->weight = floatval($_REQUEST['weight']);
 $product->rma_after = floatval($_REQUEST['rma_after']);
-$product->serialized = ($_REQUEST['serialized'] == 'ON' ? true : false);
-$product->discountable = ($_REQUEST['discountable'] == 'ON' ? true : false);
-$product->require_customer = ($_REQUEST['require_customer'] == 'ON' ? true : false);
-$product->hide_on_invoice = ($_REQUEST['hide_on_invoice'] == 'ON' ? true : false);
-$product->non_refundable = ($_REQUEST['non_refundable'] == 'ON' ? true : false);
+$product->serialized = ($_REQUEST['serialized'] == 'ON');
+$product->discountable = ($_REQUEST['discountable'] == 'ON');
+$product->require_customer = ($_REQUEST['require_customer'] == 'ON');
+$product->hide_on_invoice = ($_REQUEST['hide_on_invoice'] == 'ON');
+$product->non_refundable = ($_REQUEST['non_refundable'] == 'ON');
 $product->additional_barcodes = explode(',', $_REQUEST['additional_barcodes']);
 $product->actions = $_REQUEST['actions'];
 if (!is_array($product->actions))

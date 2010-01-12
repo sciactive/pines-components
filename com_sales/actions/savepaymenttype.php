@@ -30,8 +30,8 @@ if ( isset($_REQUEST['id']) ) {
 }
 
 $payment_type->name = $_REQUEST['name'];
-$payment_type->enabled = ($_REQUEST['enabled'] == 'ON' ? true : false);
-$payment_type->change_type = ($_REQUEST['change_type'] == 'ON' ? true : false);
+$payment_type->enabled = ($_REQUEST['enabled'] == 'ON');
+$payment_type->change_type = ($_REQUEST['change_type'] == 'ON');
 $payment_type->minimum = floatval($_REQUEST['minimum']);
 
 if (empty($payment_type->name)) {

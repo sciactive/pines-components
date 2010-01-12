@@ -25,7 +25,7 @@ if (!($cur_config_array = $config->configurator->get_config_array($config->confi
 
 foreach ($cur_config_array as $cur_key => $cur_var) {
 	if (is_bool($cur_var['value'])) {
-		$cur_config_array[$cur_key]['value'] = (($_REQUEST['opt_bool_'.$cur_var['name']] == 'ON') ? true : false);
+		$cur_config_array[$cur_key]['value'] = ($_REQUEST['opt_bool_'.$cur_var['name']] == 'ON');
 	} elseif (is_int($cur_var['value'])) {
 		$cur_config_array[$cur_key]['value'] = intval($_REQUEST['opt_int_'.$cur_var['name']]);
 	} elseif (is_float($cur_var['value'])) {

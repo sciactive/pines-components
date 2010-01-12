@@ -102,7 +102,7 @@ if ( gatekeeper("com_user/assigng") ) {
 }
 
 if ( $_REQUEST['abilities'] === 'true' && gatekeeper("com_user/abilities") ) {
-	$user->inherit_abilities = ($_REQUEST['inherit_abilities'] == 'ON' ? true : false);
+	$user->inherit_abilities = ($_REQUEST['inherit_abilities'] == 'ON');
 	$sections = array('system');
 	foreach ($config->components as $cur_component) {
 		$sections[] = $cur_component;

@@ -30,7 +30,7 @@ if ( isset($_REQUEST['id']) ) {
 }
 
 $tax_fee->name = $_REQUEST['name'];
-$tax_fee->enabled = ($_REQUEST['enabled'] == 'ON' ? true : false);
+$tax_fee->enabled = ($_REQUEST['enabled'] == 'ON');
 $tax_fee->type = $_REQUEST['type'];
 $tax_fee->rate = floatval($_REQUEST['rate']);
 $tax_fee->locations = array();

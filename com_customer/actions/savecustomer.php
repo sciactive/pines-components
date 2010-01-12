@@ -31,7 +31,7 @@ if (!isset($customer->com_customer))
 	$customer->com_customer = (object) array();
 
 // General
-$customer->com_customer->login_disabled = ($_REQUEST['login_disabled'] == 'ON' ? true : false);
+$customer->com_customer->login_disabled = ($_REQUEST['login_disabled'] == 'ON');
 if (!empty($_REQUEST['password']))
 	$customer->com_customer->password = $_REQUEST['password'];
 $customer->com_customer->description = $_REQUEST['description'];

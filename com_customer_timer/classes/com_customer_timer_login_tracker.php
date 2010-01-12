@@ -66,6 +66,8 @@ class com_customer_timer_login_tracker extends entity {
 	 * @return bool True on success, false on failure.
 	 */
 	function login(&$customer) {
+		if (is_null($customer->guid))
+			return false;
 		if (!isset($customer->com_customer_timer))
 			$customer->com_customer_timer = (object) array();
 		// Save the time the customer logged in.

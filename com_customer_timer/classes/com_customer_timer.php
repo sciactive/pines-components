@@ -36,7 +36,7 @@ class com_customer_timer extends component {
 		}
 		$id = (int) $id;
 		$customer = com_customer_customer::factory($id);
-		if (is_null($customer)) {
+		if (is_null($customer->guid)) {
 			display_notice('Customer ID not found.');
 			return false;
 		}

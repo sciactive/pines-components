@@ -68,6 +68,13 @@ return array (
 	'description' => 'Ensure that every user can access all taxes and fees by setting the "other" access control to read.',
 	'value' => true,
   ),
+  8 =>
+  array (
+	'name' => 'ssn_field',
+	'cname' => 'SSN Field',
+	'description' => 'Allow Pines to store a Social Security Number for customers.',
+	'value' => true,
+  ),
 );
 
 ?>

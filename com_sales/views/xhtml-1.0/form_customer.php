@@ -33,6 +33,12 @@ $this->note = 'Provide customer details in this form.';
 		<label><span class="label">Last Name</span>
 			<input class="field" type="text" name="name_last" size="24" value="<?php echo $this->entity->name_last; ?>" /></label>
 	</div>
+	<?php if ($config->com_sales->ssn_field) { ?>
+	<div class="element">
+		<label><span class="label">SSN</span>
+			<input class="field" type="text" name="ssn" size="24" value="<?php echo $this->entity->ssn; ?>" /></label>
+	</div>
+	<?php } ?>
 	<div class="element">
 		<label><span class="label">Email</span>
 			<input class="field" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>

@@ -32,6 +32,8 @@ if ( isset($_REQUEST['id']) ) {
 $customer->name_first = $config->run_sales->title_case($_REQUEST['name_first']);
 $customer->name_last = $config->run_sales->title_case($_REQUEST['name_last']);
 $customer->name = "{$customer->name_first} {$customer->name_last}";
+if ($config->com_sales->ssn_field)
+	$customer->ssn = $_REQUEST['ssn'];
 $customer->email = $_REQUEST['email'];
 $customer->company = $_REQUEST['company'];
 $customer->job_title = $_REQUEST['job_title'];

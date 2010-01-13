@@ -48,7 +48,10 @@ if (preg_match('/\d{4}-\d{2}-\d{2}/', $_REQUEST['date_end'])) {
 }
 
 // Get all transactions.
-$tx_array = $config->entity_manager->get_entities_by_tags_mixed(array('com_sales', 'transaction'), array('sale_tx', 'payment_tx'), com_sales_tx);
+$tx_array = $config->entity_manager->get_entities(array(
+		'tags' => array('com_sales', 'transaction'),
+		'tags_i' => array('sale_tx', 'payment_tx'),
+		'class' => com_sales_tx));
 if (!is_array($tx_array))
 	$tx_array = array();
 $invoice_array = array('total' => 0.00, 'count' => 0);

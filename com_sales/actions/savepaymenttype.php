@@ -39,8 +39,8 @@ if (empty($payment_type->name)) {
 	display_notice('Please specify a name.');
 	return;
 }
-$test = $config->entity_manager->get_entities_by_data(array('name' => $payment_type->name), array('com_sales', 'payment_type'), false, com_sales_payment_type);
-if (!empty($test) && $test[0]->guid != $_REQUEST['id']) {
+$test = $config->entity_manager->get_entity(array('data' => array('name' => $payment_type->name), 'tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));
+if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$payment_type->print_form();
 	display_notice('There is already a payment type with that name. Please choose a different name.');
 	return;
@@ -54,7 +54,7 @@ if ($config->com_sales->global_payment_types) {
 }
 
 if ($payment_type->change_type) {
-	$change_type = $config->entity_manager->get_entities_by_data(array('change_type' => true), array('com_sales', 'payment_type'), false, com_sales_payment_type);
+	$change_type = $config->entity_manager->get_entities(array('data' => array('change_type' => true), 'tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));
 	if (is_array($change_type) && !is_null($change_type[0])) {
 		$change_type[0]->change_type = false;
 		if ($change_type[0]->save()) {

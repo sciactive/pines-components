@@ -27,7 +27,7 @@ class com_sales_po extends entity {
 		$this->add_tag('com_sales', 'po');
 		if (!is_null($id)) {
 			global $config;
-			$entity = $config->entity_manager->get_entity($id, $this->tags, get_class($this));
+			$entity = $config->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
 			if (is_null($entity))
 				return;
 			$this->guid = $entity->guid;
@@ -85,15 +85,15 @@ class com_sales_po extends entity {
 		$module = new module('com_sales', 'form_po', 'content');
 		$module->entity = $this;
 		$module->locations = $config->user_manager->get_group_array();
-		$module->shippers = $config->entity_manager->get_entities_by_tags('com_sales', 'shipper', com_sales_shipper);
+		$module->shippers = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'shipper'), 'class' => com_sales_shipper));
 		if (!is_array($module->shippers)) {
 			$module->shippers = array();
 		}
-		$module->vendors = $config->entity_manager->get_entities_by_tags('com_sales', 'vendor', com_sales_vendor);
+		$module->vendors = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'vendor'), 'class' => com_sales_vendor));
 		if (!is_array($module->vendors)) {
 			$module->vendors = array();
 		}
-		$module->products = $config->entity_manager->get_entities_by_tags('com_sales', 'product', com_sales_product);
+		$module->products = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'product'), 'class' => com_sales_product));
 		if (!is_array($module->products)) {
 			$module->products = array();
 		}

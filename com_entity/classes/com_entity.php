@@ -59,412 +59,30 @@ class com_entity extends component {
 		}
 		return true;
 	}
-	
-	/**
-	 * Get an array of entities by their data.
-	 *
-	 * If $wildcards is set to true, the characters % and _ will be wildcards
-	 * for any number of characters and one single character, respectively,
-	 * unless escaped with a backslash. A literal backslash character must also
-	 * be escaped with a backslash.
-	 *
-	 * Ex: '%Time_/Goal\_100\%%\\' will match:
-	 *
-	 * - '1: Time4/Goal_100%	 \'
-	 * - 'Times/Goal_100%g9ds76gf%F86&(F%*^59&^F6"/lIH_(8pUGHLIUgygh9*\'
-	 * - '\\\\Time\/Goal_100%\\\\\\\\'
-	 * - 'Time_/Goal_100%\'
-	 *
-	 * Note: If a class is specified, it must be a descendent of the entity
-	 * class.
-	 *
-	 * @param array $data An array of name=>value pairs of variables.
-	 * @param array $required_tags An array of tags the entities must have.
-	 * @param bool $wildcards Whether to compare strings with wildcards.
-	 * @param mixed $class The name of the class to use for the entities.
-	 * @return array|null An array of entities, or null on failure.
-	 */
-	public function get_entities_by_data($data, $required_tags = array(), $wildcards = false, $class = entity) {
-		global $config;
-		$entities = array();
-		
-		if ( !is_array($data) ) {
-			if (function_exists('display_error'))
-				display_error('Call to get_entities_by_data without data array.');
-			return null;
-		}
-		
-		$query = sprintf("SELECT `guid` FROM `%scom_entity_data` WHERE `name`='%s' AND %s",
-			$config->com_mysql->prefix,
-			mysql_real_escape_string(key($data), $config->db_manager->link),
-			$this->pwildcard_to_mysql(current($data), $wildcards));
-		
-		for (next($data); !is_null(key($data)); next($data)) {
-			$query .= sprintf(" UNION SELECT `guid` FROM `%scom_entity_data` WHERE `name`='%s' AND %s",
-				$config->com_mysql->prefix,
-				mysql_real_escape_string(key($data), $config->db_manager->link),
-				$this->pwildcard_to_mysql(current($data), $wildcards));
-		}
-		
-		$query .= ";";
-		
-		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
-			if (function_exists('display_error'))
-				display_error('Query failed: ' . mysql_error());
-			return null;
-		}
-		
-		while ($row = mysql_fetch_array($result)) {
-			$entity = $this->get_entity($row['guid'], array(), $class);
-			if ( empty($required_tags) || $entity->has_tag($required_tags) )
-				array_push($entities, $entity);
-		}
-		
-		mysql_free_result($result);
-		return $entities;
-	}
-	
-	/**
-	 * Get an array of entities by their parent.
-	 *
-	 * Note: If a class is specified, it must be a descendent of the entity
-	 * class.
-	 *
-	 * @param int $parent_guid The GUID of the parent entity.
-	 * @param mixed $class The name of the class to use for the entities.
-	 * @return array|null An array of entities, or null on failure.
-	 */
-	public function get_entities_by_parent($parent_guid, $class = entity) {
-		global $config;
-		$entities = array();
-		
-		$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid`=d.`guid` HAVING e.`parent`=%u ORDER BY e.`guid`;",
-			$config->com_mysql->prefix,
-			$config->com_mysql->prefix,
-			intval($parent_guid));
-		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
-			if (function_exists('display_error'))
-				display_error('Query failed: ' . mysql_error());
-			return null;
-		}
-		
-		$row = mysql_fetch_array($result);
-		while ($row) {
-			$entity = call_user_func(array($class, 'factory'));
-			$entity->guid = intval($row['guid']);
-			$entity->parent = (is_null($row['parent']) ? NULL : intval($row['parent']));
-			$entity->tags = unserialize($row['tags']);
-			$data = array();
-			if (!is_null($row['dname'])) {
-			// This do will keep going and adding the data until the
-			// next entity is reached. $row will end on the next entity.
-				do {
-					$data[$row['dname']] = unserialize($row['dvalue']);
-					$row = mysql_fetch_array($result);
-				} while (intval($row['guid']) === $entity->guid);
-			} else {
-			// Make sure that $row is incremented :)
-				$row = mysql_fetch_array($result);
-			}
-			$entity->put_data($data);
-			array_push($entities, $entity);
-		}
-		
-		mysql_free_result($result);
-		return $entities;
-	}
-	
-	/**
-	 * A shortcut to get_entities_by_tags_exclusive.
-	 *
-	 * Note: Entity managers must provide this shortcut.
-	 *
-	 * @return mixed The result of get_entities_by_tags_exclusive().
-	 */
-	public function get_entities_by_tags() {
-		if (is_array(func_get_arg(0))) {
-			$arg1 = func_get_arg(0);
-			$arg2 = func_get_arg(1);
-			return $this->get_entities_by_tags_exclusive($arg1, $arg2);
-		} else {
-			$args = func_get_args();
-			return call_user_func_array(array($this, 'get_entities_by_tags_exclusive'), $args);
-		}
-	}
-	
-	/**
-	 * Get an array of entities which contain *all* of the specified tags.
-	 *
-	 * Note: If a class is specified, it must be a descendent of the entity
-	 * class.
-	 *
-	 * @param mixed $tags,... A list or array of tags.
-	 * @param mixed $class The name of the class to use for the entities.
-	 * @return array|null An array of entities, or null on failure.
-	 */
-	public function get_entities_by_tags_exclusive() {
-		global $config;
-		if (is_array(func_get_arg(0))) {
-			$tag_array = func_get_arg(0);
-			if (func_num_args() > 1 && is_subclass_of(func_get_arg(1), 'entity')) {
-				$class = func_get_arg(1);
-			} else {
-				$class = entity;
-			}
-		} else {
-			$tag_array = func_get_args();
-			if (class_exists($tag_array[count($tag_array)-1]) && is_subclass_of($tag_array[count($tag_array)-1], 'entity')) {
-				$class = $tag_array[count($tag_array)-1];
-				unset($tag_array[count($tag_array)-1]);
-			} else {
-				$class = entity;
-			}
-		}
-		$entities = array();
-		
-		if (empty($tag_array)) {
-			if (function_exists('display_error'))
-				display_error('Call to get_entities_by_tags_exclusive without tag argument!');
-			return null;
-		}
-		foreach ($tag_array as $cur_tag) {
-			if ( !empty($tag_query) )
-				$tag_query .= ' AND ';
-			$tag_query .= "e.`tags` LIKE '%\\\"$cur_tag\\\"%'";
-		}
-		
-		$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid`=d.`guid` HAVING (%s) ORDER BY e.`guid`;",
-			$config->com_mysql->prefix,
-			$config->com_mysql->prefix,
-			$tag_query);
-		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
-			if (function_exists('display_error'))
-				display_error('Query failed: ' . mysql_error());
-			return null;
-		}
-		
-		$row = mysql_fetch_array($result);
-		while ($row) {
-		// Just to make sure that the entity really is tagged with
-			$return_tag_array = unserialize($row['tags']);
-			$match = true;
-			foreach ($tag_array as $tag) {
-				if ( !in_array($tag, $return_tag_array) ) {
-					$match = false;
-					break;
-				}
-			}
-			if ( $match === true ) {
-				$entity = call_user_func(array($class, 'factory'));
-				$entity->guid = intval($row['guid']);
-				$entity->parent = (is_null($row['parent']) ? NULL : intval($row['parent']));
-				$entity->tags = $return_tag_array;
-				$data = array();
-				if (!is_null($row['dname'])) {
-				// This do will keep going and adding the data until the
-				// next entity is reached. $row will end on the next entity.
-					do {
-						$data[$row['dname']] = unserialize($row['dvalue']);
-						$row = mysql_fetch_array($result);
-					} while (intval($row['guid']) === $entity->guid);
-				} else {
-				// Make sure that $row is incremented :)
-					$row = mysql_fetch_array($result);
-				}
-				$entity->put_data($data);
-				array_push($entities, $entity);
-			} else {
-			// Make sure that $row is incremented :)
-				$row = mysql_fetch_array($result);
-			}
-		}
-		
-		mysql_free_result($result);
-		return $entities;
-	}
-	
-	/**
-	 * Get an array of entities which contain *any* of the specified tags.
-	 *
-	 * Note: If a class is specified, it must be a descendent of the entity
-	 * class.
-	 *
-	 * @param mixed $tags,... A list or array of tags.
-	 * @param mixed $class The name of the class to use for the entities.
-	 * @return array|null An array of entities, or null on failure.
-	 */
-	public function get_entities_by_tags_inclusive() {
-		global $config;
-		if (is_array(func_get_arg(0))) {
-			$tag_array = func_get_arg(0);
-			if (func_num_args() > 1 && is_subclass_of(func_get_arg(1), 'entity')) {
-				$class = func_get_arg(1);
-			} else {
-				$class = entity;
-			}
-		} else {
-			$tag_array = func_get_args();
-			if (class_exists($tag_array[count($tag_array)-1]) && is_subclass_of($tag_array[count($tag_array)-1], 'entity')) {
-				$class = $tag_array[count($tag_array)-1];
-				unset($tag_array[count($tag_array)-1]);
-			} else {
-				$class = entity;
-			}
-		}
-		$entities = array();
-		
-		if (empty($tag_array)) {
-			if (function_exists('display_error'))
-				display_error('Call to get_entities_by_tags_inclusive without tag argument!');
-			return null;
-		}
-		foreach ($tag_array as $cur_tag) {
-			if ( !empty($tag_query) )
-				$tag_query .= ' OR ';
-			$tag_query .= "e.`tags` LIKE '%\\\"$cur_tag\\\"%'";
-		}
-		
-		$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid`=d.`guid` HAVING (%s) ORDER BY e.`guid`;",
-			$config->com_mysql->prefix,
-			$config->com_mysql->prefix,
-			$tag_query);
-		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
-			if (function_exists('display_error'))
-				display_error('Query failed: ' . mysql_error());
-			return null;
-		}
-		
-		$row = mysql_fetch_array($result);
-		while ($row) {
-		// Just to make sure that the entity really is tagged with
-			$return_tag_array = unserialize($row['tags']);
-			$match = false;
-			foreach ($tag_array as $tag) {
-				if ( in_array($tag, $return_tag_array) ) {
-					$match = true;
-					break;
-				}
-			}
-			if ( $match === true ) {
-				$entity = call_user_func(array($class, 'factory'));
-				$entity->guid = intval($row['guid']);
-				$entity->parent = (is_null($row['parent']) ? NULL : intval($row['parent']));
-				$entity->tags = $return_tag_array;
-				$data = array();
-				if (!is_null($row['dname'])) {
-				// This do will keep going and adding the data until the
-				// next entity is reached. $row will end on the next entity.
-					do {
-						$data[$row['dname']] = unserialize($row['dvalue']);
-						$row = mysql_fetch_array($result);
-					} while (intval($row['guid']) === $entity->guid);
-				} else {
-				// Make sure that $row is incremented :)
-					$row = mysql_fetch_array($result);
-				}
-				$entity->put_data($data);
-				array_push($entities, $entity);
-			} else {
-			// Make sure that $row is incremented :)
-				$row = mysql_fetch_array($result);
-			}
-		}
-		
-		mysql_free_result($result);
-		return $entities;
-	}
-	
-	/**
-	 * Get an array of entities which contain *all* of the exclusive_tags and
-	 * *any* of the inclusive_tags.
-	 *
-	 * Note: If a class is specified, it must be a descendent of the entity
-	 * class.
-	 *
-	 * @param array $exclusive_tags An array of tags.
-	 * @param array $inclusive_tags An array of tags.
-	 * @param mixed $class The name of the class to use for the entities.
-	 * @return array|null An array of entities, or null on failure.
-	 */
-	public function get_entities_by_tags_mixed($exclusive_tags = array(), $inclusive_tags = array(), $class = entity) {
-		global $config;
-		$entities = array();
-		
-		if (!is_array($exclusive_tags) || !is_array($inclusive_tags)) {
-			if (function_exists('display_error'))
-				display_error('Call to get_entities_by_tags_mixed with invalid arguments!');
-			return null;
-		}
-		
-		foreach ($exclusive_tags as $cur_tag) {
-			if ( !empty($excl_tag_query) )
-				$excl_tag_query .= ' AND ';
-			$excl_tag_query .= "e.`tags` LIKE '%\\\"$cur_tag\\\"%'";
-		}
-		
-		foreach ($inclusive_tags as $cur_tag) {
-			if ( !empty($incl_tag_query) )
-				$incl_tag_query .= ' OR ';
-			$incl_tag_query .= "e.`tags` LIKE '%\\\"$cur_tag\\\"%'";
-		}
-		
-		$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid`=d.`guid` HAVING ((%s) AND (%s)) ORDER BY e.`guid`;",
-			$config->com_mysql->prefix,
-			$config->com_mysql->prefix,
-			$excl_tag_query,
-			$incl_tag_query);
-		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
-			if (function_exists('display_error'))
-				display_error('Query failed: ' . mysql_error());
-			return null;
-		}
-		
-		$row = mysql_fetch_array($result);
-		while ($row) {
-			// Just to make sure that the entity really is tagged with
-			$return_tag_array = unserialize($row['tags']);
-			$match = false;
-			foreach ($inclusive_tags as $tag) {
-				if ( in_array($tag, $return_tag_array) ) {
-					$match = true;
-					break;
-				}
-			}
-			foreach ($exclusive_tags as $tag) {
-				if ( !in_array($tag, $return_tag_array) ) {
-					$match = false;
-					break;
-				}
-			}
-			if ( $match === true ) {
-				$entity = call_user_func(array($class, 'factory'));
-				$entity->guid = intval($row['guid']);
-				$entity->parent = (is_null($row['parent']) ? NULL : intval($row['parent']));
-				$entity->tags = $return_tag_array;
-				$data = array();
-				if (!is_null($row['dname'])) {
-				// This do will keep going and adding the data until the
-				// next entity is reached. $row will end on the next entity.
-					do {
-						$data[$row['dname']] = unserialize($row['dvalue']);
-						$row = mysql_fetch_array($result);
-					} while (intval($row['guid']) === $entity->guid);
-				} else {
-				// Make sure that $row is incremented :)
-					$row = mysql_fetch_array($result);
-				}
-				$entity->put_data($data);
-				array_push($entities, $entity);
-			} else {
-			// Make sure that $row is incremented :)
-				$row = mysql_fetch_array($result);
-			}
-		}
-		
-		mysql_free_result($result);
-		return $entities;
-	}
 
+	/**
+	 * Get an array of entities.
+	 *
+	 * $options can contain the following key/values:
+	 *
+	 * - guid - A GUID or array of GUIDs.
+	 * - parent - A GUID or array of GUIDs.
+	 * - tags - An array of tags. The entity must have each one.
+	 * - tags_i - An array of inclusive tags. The entity must have at least one.
+	 * - data - An array of key/values corresponding to var/values.
+	 * - data_i - An array of inclusive key/values corresponding to var/values.
+	 * - match - An array of key/regex corresponding to var/values.
+	 * - match_i - An array of inclusive key/regex corresponding to var/values.
+	 * - class - The class to create each entity with.
+	 *
+	 * For regex matching, preg_match() is used.
+	 *
+	 * If a class is specified, it must have a factory() static method which
+	 * returns a new instance.
+	 *
+	 * @param array $options The options to search for.
+	 * @return array|null An array of entities, or null on failure.
+	 */
 	public function get_entities($options = array()) {
 		global $config;
 		$entities = array();
@@ -484,7 +102,7 @@ class com_entity extends component {
 							$cur_query .= "e.`guid` = ".intval($cur_guid);
 						}
 					} else {
-						$cur_query = "e.`guid` = ".intval($cur_guid);
+						$cur_query = "e.`guid` = ".intval($option);
 					}
 					break;
 				case 'parent':
@@ -495,42 +113,21 @@ class com_entity extends component {
 							$cur_query .= "e.`parent` = ".intval($cur_parent);
 						}
 					} else {
-						$cur_query = "e.`parent` = ".intval($cur_parent);
+						$cur_query = "e.`parent` = ".intval($option);
 					}
 					break;
-				case 'tags_exclusive':
+				case 'tags':
 					foreach ($option as $cur_tag) {
 						if ( !empty($cur_query) )
 							$cur_query .= ' AND ';
-						$cur_query .= "e.`tags` LIKE '%\\\"$cur_tag\\\"%'";
+						$cur_query .= 'e.`tags` LIKE \'%\"'.mysql_real_escape_string($cur_tag, $config->db_manager->link).'\"%\'';
 					}
 					break;
-				case 'tags_inclusive':
+				case 'tags_i':
 					foreach ($option as $cur_tag) {
 						if ( !empty($cur_query) )
 							$cur_query .= ' OR ';
-						$cur_query .= "e.`tags` LIKE '%\\\"$cur_tag\\\"%'";
-					}
-					break;
-				/*case 'data_exclusive':
-				case 'data_inclusive':
-					// Have to check data after the query.
-					foreach ($option as $cur_key => $cur_data) {
-						if ( !empty($cur_query) )
-							$cur_query .= ' OR ';
-						$cur_query .= sprintf("(d.`name` = '%s' AND d.`value` = '%s')",
-							mysql_real_escape_string($cur_key, $config->db_manager->link),
-							mysql_real_escape_string(serialize($cur_data), $config->db_manager->link));
-					}
-					break;*/
-				// Need to find a way to check these after the query.
-				case 'wildcards':
-					foreach ($option as $cur_key => $cur_data) {
-						if ( !empty($cur_query) )
-							$cur_query .= ' AND ';
-						$cur_query .= sprintf("(d.`name` = '%s' AND %s)",
-							mysql_real_escape_string($cur_key, $config->db_manager->link),
-							$this->pwildcard($cur_data));
+						$cur_query .= 'e.`tags` LIKE \'%\"'.mysql_real_escape_string($cur_tag, $config->db_manager->link).'\"%\'';
 					}
 					break;
 			}
@@ -591,25 +188,49 @@ class com_entity extends component {
 							$pass = $pass && ($entity->parent == $option);
 						}
 						break;
-					case 'tags_exclusive':
+					case 'tags':
 						$pass = $pass && $entity->has_tag($option);
 						break;
-					case 'tags_inclusive':
+					case 'tags_i':
 						$found = false;
-						foreach ($option as $cur_option)
-							$found = $found || $entity->has_tag($cur_option);
+						foreach ($option as $cur_option) {
+							if ($entity->has_tag($cur_option)) {
+								$found = true;
+								break;
+							}
+						}
 						$pass = $pass && $found;
 						break;
-					case 'data_exclusive':
+					case 'data':
 						$found = true;
 						foreach ($option as $cur_key => $cur_option)
 							$found = $found && ($entity->$cur_key == $cur_option);
 						$pass = $pass && $found;
 						break;
-					case 'data_inclusive':
+					case 'data_i':
 						$found = false;
+						foreach ($option as $cur_key => $cur_option) {
+							if ($entity->$cur_key == $cur_option) {
+								$found = true;
+								break;
+							}
+						}
+						$pass = $pass && $found;
+						break;
+					case 'match':
+						$found = true;
 						foreach ($option as $cur_key => $cur_option)
-							$found = $found || ($entity->$cur_key == $cur_option);
+							$found = $found && preg_match($cur_option, $entity->$cur_key);
+						$pass = $pass && $found;
+						break;
+					case 'match_i':
+						$found = false;
+						foreach ($option as $cur_key => $cur_option) {
+							if (preg_match($cur_option, $entity->$cur_key)) {
+								$found = true;
+								break;
+							}
+						}
 						$pass = $pass && $found;
 						break;
 				}
@@ -623,107 +244,22 @@ class com_entity extends component {
 		mysql_free_result($result);
 		return $entities;
 	}
-	
-	/**
-	 * Get an entity by GUID.
-	 *
-	 * Note: If a class is specified, it must be a descendent of the entity
-	 * class.
-	 *
-	 * @param int $guid The GUID.
-	 * @param array $exclusive_tags An array of tags, which the entity must have.
-	 * @param mixed $class The name of the class to use for the entities.
-	 * @return mixed The entity, or null on failure.
-	 */
-	public function get_entity($guid, $exclusive_tags = array(), $class = entity) {
-		global $config;
-		
-		$methods = get_class_methods($class);
-		$entity = call_user_func(array($class, 'factory'));
-		$data = array();
-		
-		$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid`=d.`guid` HAVING e.`guid`=%u;",
-			$config->com_mysql->prefix,
-			$config->com_mysql->prefix,
-			intval($guid));
-		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
-			if (function_exists('display_error'))
-				display_error('Query failed: ' . mysql_error());
-			return null;
-		}
-		
-		if ( !($row = mysql_fetch_array($result)) )
-			return null;
-		$entity->guid = intval($guid);
-		$entity->parent = (is_null($row['parent']) ? NULL : intval($row['parent']));
-		$entity->tags = unserialize($row['tags']);
-		
-		if ( !is_null($row['dname']) ) {
-			do {
-				$data[$row['dname']] = unserialize($row['dvalue']);
-			} while ($row = mysql_fetch_array($result));
-		}
-		
-		$entity->put_data($data);
-		
-		mysql_free_result($result);
-		
-		if (empty($exclusive_tags) || $entity->has_tag($exclusive_tags)) {
-			return $entity;
-		} else {
-			return null;
-		}
-	}
 
 	/**
-	 * Convert pines style wildcards to a MySQL usable query.
+	 * Get the first entity to match all options.
 	 *
-	 * If $wildcards is false, or if $value is not a string, a query with an
-	 * = comparison is returned, else a query using LIKE is returned.
+	 * $options is the same as in get_entities().
 	 *
-	 * @access private
-	 * @param mixed $value The data value to use.
-	 * @param bool $wilcards Whether wildcards were actually requested.
-	 * @return string The generated query part.
+	 * @param array|int|float|string $options The options to search for, or just a GUID.
+	 * @return mixed An entity, or null on failure.
 	 */
-	private function pwildcard_to_mysql($value, $wilcards) {
-		global $config;
-		if (!$wilcards || !is_string($value))
-			return sprintf("`value`='%s'", mysql_real_escape_string(serialize($value), $config->db_manager->link));
-		$return = mysql_real_escape_string($value, $config->db_manager->link);
-		// Because that function escapes things that may already be escaped, we need to fix them:
-		// Replace \\% with \%
-		$return = str_replace('\\\\%', '\\%', $return);
-		// Replace \\_ with \_
-		$return = str_replace('\\\\_', '\\_', $return);
-		// Replace \\ with \\\\. (http://dev.mysql.com/doc/refman/5.0/en/string-comparison-functions.html)
-		$return = str_replace('\\\\', '\\\\\\\\', $return);
-		return "`value` LIKE BINARY 's:%:\"".$return."\";' ESCAPE '\\\\'";
-	}
-
-	/**
-	 * Convert pines style wildcards to a MySQL usable query.
-	 *
-	 * If $value is not a string, a query with an = comparison is returned, else
-	 * a query using LIKE is returned.
-	 *
-	 * @access private
-	 * @param mixed $value The data value to use.
-	 * @return string The generated query part.
-	 */
-	private function pwildcard($value) {
-		global $config;
-		if (!is_string($value))
-			return sprintf("d.`value`='%s'", mysql_real_escape_string(serialize($value), $config->db_manager->link));
-		$return = mysql_real_escape_string($value, $config->db_manager->link);
-		// Because that function escapes things that may already be escaped, we need to fix them:
-		// Replace \\% with \%
-		$return = str_replace('\\\\%', '\\%', $return);
-		// Replace \\_ with \_
-		$return = str_replace('\\\\_', '\\_', $return);
-		// Replace \\ with \\\\. (http://dev.mysql.com/doc/refman/5.0/en/string-comparison-functions.html)
-		$return = str_replace('\\\\', '\\\\\\\\', $return);
-		return "d.`value` LIKE BINARY 's:%:\"".$return."\";' ESCAPE '\\\\'";
+	public function get_entity($options) {
+		if (!is_array($options))
+			$options = array('guid' => (int) $options);
+		$entities = $this->get_entities($options);
+		if (empty($entities))
+			return null;
+		return $entities[0];
 	}
 	
 	/**

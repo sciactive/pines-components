@@ -29,12 +29,9 @@ class group extends able_entity {
 		if (!is_null($id)) {
 			global $config;
 			if (is_int($id)) {
-				$entity = $config->entity_manager->get_entity($id, $this->tags, get_class($this));
+				$entity = $config->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
 			} else {
-				$entities = $config->entity_manager->get_entities_by_data(array('groupname' => $id), $this->tags, false, get_class($this));
-				if (!is_null($entities)) {
-					$entity = $entities[0];
-				}
+				$entity = $config->entity_manager->get_entity(array('data' => array('groupname' => $id), 'tags' => $this->tags, 'class' => get_class($this)));
 			}
 			if (is_null($entity))
 				return;

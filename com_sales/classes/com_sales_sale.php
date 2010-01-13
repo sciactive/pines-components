@@ -27,7 +27,7 @@ class com_sales_sale extends entity {
 		$this->add_tag('com_sales', 'sale');
 		if (!is_null($id)) {
 			global $config;
-			$entity = $config->entity_manager->get_entity($id, $this->tags, get_class($this));
+			$entity = $config->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
 			if (is_null($entity))
 				return;
 			$this->guid = $entity->guid;
@@ -71,7 +71,7 @@ class com_sales_sale extends entity {
 		$pgrid->icons = true;
 		$module = new module('com_sales', 'form_sale', 'content');
 		$module->entity = $this;
-		$module->tax_fees = $config->entity_manager->get_entities_by_tags('com_sales', 'tax_fee', com_sales_tax_fee);
+		$module->tax_fees = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'tax_fee'), 'class' => com_sales_tax_fee));
 		if (!is_array($module->tax_fees)) {
 			$module->tax_fees = array();
 		}
@@ -80,7 +80,7 @@ class com_sales_sale extends entity {
 				unset($module->tax_fees[$key]);
 			}
 		}
-		$module->payment_types = $config->entity_manager->get_entities_by_tags('com_sales', 'payment_type', com_sales_payment_type);
+		$module->payment_types = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));
 		if (!is_array($module->payment_types)) {
 			$module->payment_types = array();
 		}
@@ -131,12 +131,10 @@ class com_sales_sale extends entity {
 			return false;
 		}
 		if ($this->change > 0.00) {
-			$change_type = $config->entity_manager->get_entities_by_data(array('change_type' => true), array('com_sales', 'payment_type'), false, com_sales_payment_type);
-			if (!is_array($change_type) || is_null($change_type[0])) {
+			$change_type = $config->entity_manager->get_entity(array('data' => array('change_type' => true), 'tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));
+			if (is_null($change_type)) {
 				display_notice('Change is due to be given, but no payment type has been set to give change.');
 				return false;
-			} else {
-				$change_type = $change_type[0];
 			}
 		}
 		foreach ($this->payments as &$cur_payment) {
@@ -203,7 +201,7 @@ class com_sales_sale extends entity {
 		// Keep track of the whole process.
 		$return = true;
 		// These will be searched through to match products to stock entries.
-		$stock_entries = $config->entity_manager->get_entities_by_tags('com_sales', 'stock', com_sales_stock);
+		$stock_entries = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'stock'), 'class' => com_sales_stock));
 		if (!is_array($stock_entries))
 			$stock_entries = array();
 		foreach ($this->products as &$cur_product) {
@@ -349,7 +347,7 @@ class com_sales_sale extends entity {
 		if (!is_array($this->products))
 			return false;
 		// We need a list of taxes and fees.
-		$tax_fees = $config->entity_manager->get_entities_by_tags('com_sales', 'tax_fee');
+		$tax_fees = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'tax_fee')));
 		if (!is_array($tax_fees)) {
 			$tax_fees = array();
 		}

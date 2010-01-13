@@ -27,7 +27,7 @@ class com_sales_transfer extends entity {
 		$this->add_tag('com_sales', 'transfer');
 		if (!is_null($id)) {
 			global $config;
-			$entity = $config->entity_manager->get_entity($id, $this->tags, get_class($this));
+			$entity = $config->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
 			if (is_null($entity))
 				return;
 			$this->guid = $entity->guid;
@@ -85,10 +85,10 @@ class com_sales_transfer extends entity {
 		$module = new module('com_sales', 'form_transfer', 'content');
 		$module->entity = $this;
 		$module->locations = $config->user_manager->get_group_array();
-		$module->shippers = $config->entity_manager->get_entities_by_tags('com_sales', 'shipper', com_sales_shipper);
+		$module->shippers = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'shipper'), 'class' => com_sales_shipper));
 		if (!is_array($module->shippers))
 			$module->shippers = array();
-		$module->stock = $config->entity_manager->get_entities_by_tags('com_sales', 'stock', com_sales_stock);
+		$module->stock = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'stock'), 'class' => com_sales_stock));
 		if (!is_array($module->stock))
 			$module->stock = array();
 

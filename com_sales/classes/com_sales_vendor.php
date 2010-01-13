@@ -27,7 +27,7 @@ class com_sales_vendor extends entity {
 		$this->add_tag('com_sales', 'vendor');
 		if (!is_null($id)) {
 			global $config;
-			$entity = $config->entity_manager->get_entity($id, $this->tags, get_class($this));
+			$entity = $config->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
 			if (is_null($entity))
 				return;
 			$this->guid = $entity->guid;

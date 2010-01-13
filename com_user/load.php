@@ -211,7 +211,7 @@ function com_user_add_access($array) {
 	return $array;
 }
 
-foreach (array('$config->entity_manager->get_entity', '$config->entity_manager->get_entities_by_data', '$config->entity_manager->get_entities_by_parent', '$config->entity_manager->get_entities_by_tags', '$config->entity_manager->get_entities_by_tags_exclusive', '$config->entity_manager->get_entities_by_tags_inclusive', '$config->entity_manager->get_entities_by_tags_mixed') as $cur_hook) {
+foreach (array('$config->entity_manager->get_entity', '$config->entity_manager->get_entities') as $cur_hook) {
 	$config->hook->add_callback($cur_hook, 10, 'com_user_check_permissions_return');
 }
 

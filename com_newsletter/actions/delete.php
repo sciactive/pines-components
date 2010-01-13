@@ -18,7 +18,7 @@ if ( !gatekeeper('com_newsletter/managemails') ) {
 
 $list = explode(',', $_REQUEST['mail_id']);
 foreach ($list as $cur_mail) {
-	$mail = $config->entity_manager->get_entity($cur_mail, array('com_newsletter', 'mail'));
+	$mail = $config->entity_manager->get_entity(array('guid' => $cur_mail, 'tags' => array('com_newsletter', 'mail')));
 	if ( is_null($mail) ) {
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_mail;
 	}

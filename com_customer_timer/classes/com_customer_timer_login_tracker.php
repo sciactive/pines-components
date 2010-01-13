@@ -32,7 +32,7 @@ class com_customer_timer_login_tracker extends entity {
 		$this->ac = (object) array('other' => 2);
 		$this->customers = array();
 		global $config;
-		$entities = $config->entity_manager->get_entities_by_tags('com_customer_timer', 'logins');
+		$entities = $config->entity_manager->get_entities(array('tags' => array('com_customer_timer', 'logins')));
 		if (empty($entities))
 			return;
 		if (count($entities) > 1) {

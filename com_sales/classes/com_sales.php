@@ -147,7 +147,7 @@ class com_sales extends component {
 	 */
 	function delete_category_recursive($category) {
 		global $config;
-		$children = $config->entity_manager->get_entities_by_parent($category->guid);
+		$children = $config->entity_manager->get_entities(array('parent' => $category->guid));
 		if (is_array($children)) {
 			foreach ($children as $cur_child) {
 				if (!$this->delete_category_recursive($cur_child))
@@ -169,7 +169,7 @@ class com_sales extends component {
 	 */
 	function get_category($id) {
 		global $config;
-		$entity = $config->entity_manager->get_entity($id, array('com_sales', 'category'));
+		$entity = $config->entity_manager->get_entity(array('guid' => $id, 'tags' => array('com_sales', 'category')));
 		return $entity;
 	}
 
@@ -180,7 +180,7 @@ class com_sales extends component {
 	 */
 	function get_category_array() {
 		global $config;
-		$entities = $config->entity_manager->get_entities_by_tags('com_sales', 'category');
+		$entities = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'category')));
 		if (!is_array($entities)) {
 			$entities = array();
 		}
@@ -200,11 +200,11 @@ class com_sales extends component {
 	 */
 	function get_product_by_code($code) {
 		global $config;
-		$entities = $config->entity_manager->get_entities_by_data(array('sku' => $code), array('com_sales', 'product'), false, com_sales_product);
-		if (!empty($entities)) {
-			return $entities[0];
-		}
-		$entities = $config->entity_manager->get_entities_by_tags('com_sales', 'product', com_sales_product);
+		$entity = $config->entity_manager->get_entity(array('data' => array('sku' => $code), 'tags' => array('com_sales', 'product'), 'class' => com_sales_product));
+		if (!is_null($entity))
+			return $entity;
+		
+		$entities = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'product'), 'class' => com_sales_product));
 		if (!is_array($entities))
 			return null;
 		foreach($entities as $cur_entity) {
@@ -263,7 +263,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_customers'];
 
-		$module->customers = $config->entity_manager->get_entities_by_tags('com_sales', 'customer', com_sales_customer);
+		$module->customers = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'customer'), 'class' => com_sales_customer));
 
 		if ( empty($module->customers) ) {
 			$pgrid->detach();
@@ -285,7 +285,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_manufacturers'];
 
-		$module->manufacturers = $config->entity_manager->get_entities_by_tags('com_sales', 'manufacturer', com_sales_manufacturer);
+		$module->manufacturers = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'manufacturer'), 'class' => com_sales_manufacturer));
 
 		if ( empty($module->manufacturers) ) {
 			$pgrid->detach();
@@ -307,7 +307,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_payment_types'];
 
-		$module->payment_types = $config->entity_manager->get_entities_by_tags('com_sales', 'payment_type', com_sales_payment_type);
+		$module->payment_types = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));
 
 		if ( empty($module->payment_types) ) {
 			$pgrid->detach();
@@ -329,7 +329,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_pos'];
 
-		$module->pos = $config->entity_manager->get_entities_by_tags('com_sales', 'po', com_sales_po);
+		$module->pos = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'po'), 'class' => com_sales_po));
 
 		if ( empty($module->pos) ) {
 			$pgrid->detach();
@@ -351,7 +351,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_products'];
 
-		$module->products = $config->entity_manager->get_entities_by_tags('com_sales', 'product', com_sales_product);
+		$module->products = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'product'), 'class' => com_sales_product));
 
 		if ( empty($module->products) ) {
 			$pgrid->detach();
@@ -373,7 +373,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_sales'];
 
-		$module->sales = $config->entity_manager->get_entities_by_tags('com_sales', 'sale', com_sales_sale);
+		$module->sales = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'sale'), 'class' => com_sales_sale));
 
 		if ( empty($module->sales) ) {
 			$pgrid->detach();
@@ -395,7 +395,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_shippers'];
 
-		$module->shippers = $config->entity_manager->get_entities_by_tags('com_sales', 'shipper', com_sales_shipper);
+		$module->shippers = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'shipper'), 'class' => com_sales_shipper));
 
 		if ( empty($module->shippers) ) {
 			$pgrid->detach();
@@ -419,7 +419,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_stock'];
 
-		$module->stock = $config->entity_manager->get_entities_by_tags('com_sales', 'stock', com_sales_stock);
+		$module->stock = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'stock'), 'class' => com_sales_stock));
 		$module->all = $all;
 
 		if ( empty($module->stock) ) {
@@ -442,7 +442,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_tax_fees'];
 
-		$module->tax_fees = $config->entity_manager->get_entities_by_tags('com_sales', 'tax_fee', com_sales_tax_fee);
+		$module->tax_fees = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'tax_fee'), 'class' => com_sales_tax_fee));
 
 		if ( empty($module->tax_fees) ) {
 			$pgrid->detach();
@@ -464,7 +464,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_transfers'];
 
-		$module->transfers = $config->entity_manager->get_entities_by_tags('com_sales', 'transfer', com_sales_transfer);
+		$module->transfers = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'transfer'), 'class' => com_sales_transfer));
 
 		if ( empty($module->transfers) ) {
 			$pgrid->detach();
@@ -486,7 +486,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_vendors'];
 
-		$module->vendors = $config->entity_manager->get_entities_by_tags('com_sales', 'vendor', com_sales_vendor);
+		$module->vendors = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'vendor'), 'class' => com_sales_vendor));
 
 		if ( empty($module->vendors) ) {
 			$pgrid->detach();
@@ -507,7 +507,7 @@ class com_sales extends component {
 		$entity = new entity('com_sales', 'category');
 		$entity->name = $name;
 		if (!is_null($parent_id)) {
-			$parent = $config->entity_manager->get_entity($parent_id, array('com_sales', 'category'));
+			$parent = $config->entity_manager->get_entity(array('guid' => $parent_id, 'tags' => array('com_sales', 'category')));
 			if (!is_null($parent))
 				$entity->parent = $parent_id;
 		}

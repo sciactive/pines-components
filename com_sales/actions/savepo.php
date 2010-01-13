@@ -72,8 +72,8 @@ if (empty($po->po_number)) {
 	display_notice('Please specify a PO number.');
 	return;
 }
-$test = $config->entity_manager->get_entities_by_data(array('po_number' => $po->po_number), array('com_sales', 'po'), false, com_sales_po);
-if (!empty($test) && $test[0]->guid != $_REQUEST['id']) {
+$test = $config->entity_manager->get_entity(array('data' => array('po_number' => $po->po_number), 'tags' => array('com_sales', 'po'), 'class' => com_sales_po));
+if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$po->print_form();
 	display_notice('There is already a PO with that number. Please enter a different number.');
 	return;

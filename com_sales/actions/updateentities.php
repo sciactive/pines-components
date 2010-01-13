@@ -17,7 +17,7 @@ if ( !gatekeeper('system/all') ) {
 }
 
 // POs
-$array = $config->entity_manager->get_entities_by_tags('com_sales', 'po', com_sales_po);
+$array = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'po'), 'class' => com_sales_po));
 if (!is_array($array))
 	$array = array();
 foreach ($array as $cur) {
@@ -45,7 +45,7 @@ foreach ($array as $cur) {
 }
 
 // Products
-$array = $config->entity_manager->get_entities_by_tags('com_sales', 'product', com_sales_product);
+$array = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'product'), 'class' => com_sales_product));
 if (!is_array($array))
 	$array = array();
 foreach ($array as $cur) {
@@ -67,7 +67,7 @@ foreach ($array as $cur) {
 }
 
 // Sales
-$array = $config->entity_manager->get_entities_by_tags('com_sales', 'sale', com_sales_sale);
+$array = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'sale'), 'class' => com_sales_sale));
 if (!is_array($array))
 	$array = array();
 foreach ($array as $cur) {
@@ -90,7 +90,7 @@ foreach ($array as $cur) {
 }
 
 // Transfers
-$array = $config->entity_manager->get_entities_by_tags('com_sales', 'transfer', com_sales_transfer);
+$array = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'transfer'), 'class' => com_sales_transfer));
 if (!is_array($array))
 	$array = array();
 foreach ($array as $cur) {
@@ -107,7 +107,7 @@ foreach ($array as $cur) {
 }
 
 // Stock
-$array = $config->entity_manager->get_entities_by_tags('com_sales', 'stock', com_sales_stock);
+$array = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'stock'), 'class' => com_sales_stock));
 if (!is_array($array))
 	$array = array();
 foreach ($array as $cur) {
@@ -121,7 +121,7 @@ foreach ($array as $cur) {
 }
 
 // Transactions - payment
-$array = $config->entity_manager->get_entities_by_tags('com_sales', 'transaction', 'payment_tx', com_sales_tx);
+$array = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'transaction', 'payment_tx'), 'class' => com_sales_tx));
 if (!is_array($array))
 	$array = array();
 foreach ($array as $cur) {
@@ -135,7 +135,7 @@ foreach ($array as $cur) {
 }
 
 // Transactions - sale
-$array = $config->entity_manager->get_entities_by_tags('com_sales', 'transaction', 'sale_tx', com_sales_tx);
+$array = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'transaction', 'sale_tx'), 'class' => com_sales_tx));
 if (!is_array($array))
 	$array = array();
 foreach ($array as $cur) {
@@ -146,7 +146,7 @@ foreach ($array as $cur) {
 }
 
 // Transactions - stock
-$array = $config->entity_manager->get_entities_by_tags('com_sales', 'transaction', 'stock_tx', com_sales_tx);
+$array = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'transaction', 'stock_tx'), 'class' => com_sales_tx));
 if (!is_array($array))
 	$array = array();
 foreach ($array as $cur) {
@@ -166,7 +166,7 @@ foreach ($array as $cur) {
 }
 
 // Transactions - timer
-$array = $config->entity_manager->get_entities_by_tags('com_customer_timer', 'transaction', com_customer_timer_tx);
+$array = $config->entity_manager->get_entities(array('tags' => array('com_customer_timer', 'transaction'), 'class' => com_customer_timer_tx));
 if (!is_array($array))
 	$array = array();
 foreach ($array as $cur) {

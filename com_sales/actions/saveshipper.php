@@ -47,8 +47,8 @@ if (empty($shipper->name)) {
 	display_notice('Please specify a name.');
 	return;
 }
-$test = $config->entity_manager->get_entities_by_data(array('name' => $shipper->name), array('com_sales', 'shipper'), false, com_sales_shipper);
-if (!empty($test) && $test[0]->guid != $_REQUEST['id']) {
+$test = $config->entity_manager->get_entity(array('data' => array('name' => $shipper->name), 'tags' => array('com_sales', 'shipper'), 'class' => com_sales_shipper));
+if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$shipper->print_form();
 	display_notice('There is already a shipper with that name. Please choose a different name.');
 	return;

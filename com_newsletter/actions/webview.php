@@ -16,7 +16,7 @@ if ( !isset($_REQUEST['mail_id']) ) {
 	return false;
 }
 
-$mail = $config->entity_manager->get_entity($_REQUEST['mail_id'], array('com_newsletter', 'mail'));
+$mail = $config->entity_manager->get_entity(array('guid' => $_REQUEST['mail_id'], 'tags' => array('com_newsletter', 'mail')));
 if ( is_null($mail) ) {
 	display_error('Invalid mail!');
 	return false;

@@ -82,7 +82,7 @@ class com_newsletter extends component {
 		$pgrid->icons = true;
 
 		$module = new module('com_newsletter', 'list_mails', 'content');
-		$module->mails = $config->entity_manager->get_entities_by_tags('com_newsletter', 'mail');
+		$module->mails = $config->entity_manager->get_entities(array('tags' => array('com_newsletter', 'mail')));
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_newsletter/list_mails'];
 

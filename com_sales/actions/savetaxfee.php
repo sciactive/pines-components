@@ -47,8 +47,8 @@ if (empty($tax_fee->name)) {
 	display_notice('Please specify a name.');
 	return;
 }
-$test = $config->entity_manager->get_entities_by_data(array('name' => $tax_fee->name), array('com_sales', 'tax_fee'), false, com_sales_tax_fee);
-if (!empty($test) && $test[0]->guid != $_REQUEST['id']) {
+$test = $config->entity_manager->get_entity(array('data' => array('name' => $tax_fee->name), 'tags' => array('com_sales', 'tax_fee'), 'class' => com_sales_tax_fee));
+if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$tax_fee->print_form();
 	display_notice('There is already a tax/fee with that name. Please choose a different name.');
 	return;

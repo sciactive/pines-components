@@ -74,7 +74,7 @@ if ( gatekeeper('com_user/default_component') ) {
 // entity manager after com_user filters the result, and thus will not be
 // assigned.
 if ( gatekeeper("com_user/assigng") ) {
-	$groups = $config->entity_manager->get_entities_by_tags('com_user', 'group', group);
+	$groups = $config->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
 	$ugroup = intval($_REQUEST['gid']);
 	$ugroups = $_REQUEST['groups'];
 	if (is_array($ugroups))

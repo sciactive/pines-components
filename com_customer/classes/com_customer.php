@@ -57,7 +57,7 @@ class com_customer extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_customer/list_customers'];
 
-		$module->customers = $config->entity_manager->get_entities_by_tags('com_sales', 'customer');
+		$module->customers = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'customer'), 'class' => com_customer_customer));
 
 		if ( empty($module->customers) ) {
 			$pgrid->detach();

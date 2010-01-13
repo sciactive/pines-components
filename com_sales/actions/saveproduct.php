@@ -94,8 +94,8 @@ if (empty($product->name)) {
 	display_notice('Please specify a name.');
 	return;
 }
-$test = $config->entity_manager->get_entities_by_data(array('name' => $product->name), array('com_sales', 'product'), false, com_sales_product);
-if (!empty($test) && $test[0]->guid != $_REQUEST['id']) {
+$test = $config->entity_manager->get_entity(array('data' => array('name' => $product->name), 'tags' => array('com_sales', 'product'), 'class' => com_sales_product));
+if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$product->print_form();
 	display_notice('There is already a product with that name. Please choose a different name.');
 	return;

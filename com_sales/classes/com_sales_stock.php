@@ -27,7 +27,7 @@ class com_sales_stock extends entity {
 		$this->add_tag('com_sales', 'stock');
 		if (!is_null($id)) {
 			global $config;
-			$entity = $config->entity_manager->get_entity($id, $this->tags, get_class($this));
+			$entity = $config->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
 			if (is_null($entity))
 				return;
 			$this->guid = $entity->guid;
@@ -59,7 +59,7 @@ class com_sales_stock extends entity {
 	function inventory_origin() {
 		global $config;
 		// Get all the transfers.
-		$entities = $config->entity_manager->get_entities_by_tags('com_sales', 'transfer', com_sales_transfer);
+		$entities = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'transfer'), 'class' => com_sales_transfer));
 		if (!is_array($entities))
 			$entities = array();
 		// Iterate through all the transfers.
@@ -90,7 +90,7 @@ class com_sales_stock extends entity {
 		}
 
 		// Get all the POs.
-		$entities = $config->entity_manager->get_entities_by_tags('com_sales', 'po', com_sales_po);
+		$entities = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'po'), 'class' => com_sales_po));
 		if (!is_array($entities)) {
 			$entities = array();
 		}

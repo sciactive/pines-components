@@ -87,12 +87,12 @@ class com_user extends component {
 			$_SESSION['inherited_abilities'] = $tmp_user->abilities;
 			if (!empty($tmp_user->groups)) {
 				foreach ($tmp_user->groups as $cur_group) {
-					$cur_entity = $config->entity_manager->get_entity($cur_group, array('com_user', 'group'), group);
+					$cur_entity = $config->entity_manager->get_entity(array('guid' => $cur_group, 'tags' => array('com_user', 'group'), 'class' => group));
 					$_SESSION['inherited_abilities'] = array_merge($_SESSION['inherited_abilities'], $cur_entity->abilities);
 				}
 			}
 			if (isset($tmp_user->gid)) {
-				$cur_entity = $config->entity_manager->get_entity($tmp_user->gid, array('com_user', 'group'), group);
+				$cur_entity = $config->entity_manager->get_entity(array('guid' => $tmp_user->gid, 'tags' => array('com_user', 'group'), 'class' => group));
 				$_SESSION['inherited_abilities'] = array_merge($_SESSION['inherited_abilities'], $cur_entity->abilities);
 			}
 		}
@@ -139,11 +139,11 @@ class com_user extends component {
 				if ($user->inherit_abilities) {
 					global $config;
 					foreach ($user->groups as $cur_group) {
-						$cur_entity = $config->entity_manager->get_entity($cur_group, array('com_user', 'group'), group);
+						$cur_entity = $config->entity_manager->get_entity(array('guid' => $cur_group, 'tags' => array('com_user', 'group'), 'class' => group));
 						$abilities = array_merge($abilities, $cur_entity->abilities);
 					}
 					if (isset($user->gid)) {
-						$cur_entity = $config->entity_manager->get_entity($user->gid, array('com_user', 'group'), group);
+						$cur_entity = $config->entity_manager->get_entity(array('guid' => $user->gid, 'tags' => array('com_user', 'group'), 'class' => group));
 						$abilities = array_merge($abilities, $cur_entity->abilities);
 					}
 				}
@@ -203,7 +203,7 @@ class com_user extends component {
 		global $config;
 		$return = array();
 		if ( is_null($parent_id) ) {
-			$entities = $config->entity_manager->get_entities_by_tags('com_user', 'group', group);
+			$entities = $config->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
 			foreach ($entities as $entity) {
 				if ( is_null($entity->parent) ) {
 					$child_array = $this->get_group_array($entity->guid);
@@ -214,7 +214,7 @@ class com_user extends component {
 				}
 			}
 		} else {
-			$entities = $config->entity_manager->get_entities_by_parent($parent_id, group);
+			$entities = $config->entity_manager->get_entities(array('parent' => $parent_id, 'class' => group));
 			foreach ($entities as $entity) {
 				if ( $entity->has_tag('com_user', 'group') ) {
 					$child_array = $this->get_group_array($entity->guid);
@@ -244,7 +244,7 @@ class com_user extends component {
 		global $config;
 		$return = array();
 		if ( is_null($parent_id) ) {
-			$entities = $config->entity_manager->get_entities_by_tags('com_user', 'group', group);
+			$entities = $config->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
 			foreach ($entities as $entity) {
 				if ( is_null($entity->parent) ) {
 					$child_array = $this->get_group_descendents($entity->guid);
@@ -252,7 +252,7 @@ class com_user extends component {
 				}
 			}
 		} else {
-			$entities = $config->entity_manager->get_entities_by_parent($parent_id, group);
+			$entities = $config->entity_manager->get_entities(array('parent' => $parent_id, 'class' => group));
 			foreach ($entities as $entity) {
 				if ( $entity->has_tag('com_user', 'group') ) {
 					$child_array = $this->get_group_descendents($entity->guid);
@@ -273,7 +273,7 @@ class com_user extends component {
 	function get_group_menu(&$menu = NULL, $parent_id = NULL, $top_level = TRUE) {
 		global $config;
 		if ( is_null($parent_id) ) {
-			$entities = $config->entity_manager->get_entities_by_tags('com_user', 'group', group);
+			$entities = $config->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
 			foreach ($entities as $entity) {
 				$menu->add($entity->name.' ['.$entity->groupname.']', $entity->guid, $entity->parent, $entity->guid);
 			}
@@ -284,7 +284,7 @@ class com_user extends component {
 				$menu->add($orphan['name'], $orphan['data'], $orphan_menu_id, $orphan['data']);
 			}
 		} else {
-			$entities = $config->entity_manager->get_entities_by_parent($parent_id);
+			$entities = $config->entity_manager->get_entities(array('parent' => $parent_id, 'class' => group));
 			foreach ($entities as $entity) {
 				$new_menu_id = $menu->add($entity->name.' ['.$entity->groupname.']', $entity->guid, ($top_level ? NULL : $entity->parent), $entity->guid);
 				$this->get_group_menu($entity->guid, $menu, $new_menu_id, FALSE);
@@ -359,7 +359,7 @@ class com_user extends component {
 	 */
 	function get_groups() {
 		global $config;
-		$groups = $config->entity_manager->get_entities_by_tags(array('com_user', 'group'), group);
+		$groups = $config->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
 		return $groups;
 	}
 
@@ -389,7 +389,7 @@ class com_user extends component {
 	 */
 	function get_users() {
 		global $config;
-		$users = $config->entity_manager->get_entities_by_tags(array('com_user', 'user'), user);
+		$users = $config->entity_manager->get_entities(array('tags' => array('com_user', 'user'), 'class' => user));
 		return $users;
 	}
 
@@ -402,7 +402,7 @@ class com_user extends component {
 	function get_users_by_group($id) {
 		global $config;
 		$entities = array();
-		$entities = $config->entity_manager->get_entities_by_tags('com_user', 'user', user);
+		$entities = $config->entity_manager->get_entities(array('tags' => array('com_user', 'user'), 'class' => user));
 		$return = array();
 		foreach ($entities as $entity) {
 			if ( $entity->ingroup($id) )
@@ -424,7 +424,7 @@ class com_user extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_user/list_groups'];
 
-		$module->groups = $config->entity_manager->get_entities_by_tags('com_user', 'group', group);
+		$module->groups = $config->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
 
 		if ( empty($module->groups) ) {
 			$pgrid->detach();
@@ -446,7 +446,7 @@ class com_user extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_user/list_users'];
 
-		$module->users = $config->entity_manager->get_entities_by_tags('com_user', 'user', user);
+		$module->users = $config->entity_manager->get_entities(array('tags' => array('com_user', 'user'), 'class' => user));
 
 		if ( empty($module->users) ) {
 			$pgrid->detach();

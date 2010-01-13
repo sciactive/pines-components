@@ -27,7 +27,7 @@ class com_sales_product extends entity {
 		$this->add_tag('com_sales', 'product');
 		if (!is_null($id)) {
 			global $config;
-			$entity = $config->entity_manager->get_entity($id, $this->tags, get_class($this));
+			$entity = $config->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
 			if (is_null($entity))
 				return;
 			$this->guid = $entity->guid;
@@ -84,15 +84,15 @@ class com_sales_product extends entity {
 		$ptags = new module('system', 'ptags.default', 'head');
 		$module = new module('com_sales', 'form_product', 'content');
 		$module->entity = $this;
-		$module->manufacturers = $config->entity_manager->get_entities_by_tags('com_sales', 'manufacturer', com_sales_manufacturer);
+		$module->manufacturers = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'manufacturer'), 'class' => com_sales_manufacturer));
 		if (!is_array($module->manufacturers)) {
 			$module->manufacturers = array();
 		}
-		$module->vendors = $config->entity_manager->get_entities_by_tags('com_sales', 'vendor', com_sales_vendor);
+		$module->vendors = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'vendor'), 'class' => com_sales_vendor));
 		if (!is_array($module->vendors)) {
 			$module->vendors = array();
 		}
-		$module->tax_fees = $config->entity_manager->get_entities_by_tags('com_sales', 'tax_fee', com_sales_tax_fee);
+		$module->tax_fees = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'tax_fee'), 'class' => com_sales_tax_fee));
 		if (!is_array($module->tax_fees)) {
 			$module->tax_fees = array();
 		}

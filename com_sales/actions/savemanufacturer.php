@@ -44,8 +44,8 @@ if (empty($manufacturer->name)) {
 	display_notice('Please specify a name.');
 	return;
 }
-$test = $config->entity_manager->get_entities_by_data(array('name' => $manufacturer->name), array('com_sales', 'manufacturer'), false, com_sales_manufacturer);
-if (!empty($test) && $test[0]->guid != $_REQUEST['id']) {
+$test = $config->entity_manager->get_entity(array('data' => array('name' => $manufacturer->name), 'tags' => array('com_sales', 'manufacturer'), 'class' => com_sales_manufacturer));
+if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$manufacturer->print_form();
 	display_notice('There is already a manufacturer with that name. Please choose a different name.');
 	return;

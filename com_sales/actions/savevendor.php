@@ -56,8 +56,8 @@ if (empty($vendor->name)) {
 	display_notice('Please specify a name.');
 	return;
 }
-$test = $config->entity_manager->get_entities_by_data(array('name' => $vendor->name), array('com_sales', 'vendor'), false, com_sales_vendor);
-if (!empty($test) && $test[0]->guid != $_REQUEST['id']) {
+$test = $config->entity_manager->get_entity(array('data' => array('name' => $vendor->name), 'tags' => array('com_sales', 'vendor'), 'class' => com_sales_vendor));
+if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$vendor->print_form();
 	display_notice('There is already a vendor with that name. Please choose a different name.');
 	return;

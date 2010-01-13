@@ -464,6 +464,165 @@ class com_entity extends component {
 		mysql_free_result($result);
 		return $entities;
 	}
+
+	public function get_entities($options = array()) {
+		global $config;
+		$entities = array();
+
+		$query_parts = array();
+		
+		$class = isset($options['class']) ? $options['class'] : entity;
+		
+		foreach ($options as $key => $option) {
+			$cur_query = '';
+			switch ($key) {
+				case 'guid':
+					if (is_array($option)) {
+						foreach ($option as $cur_guid) {
+							if ( !empty($cur_query) )
+								$cur_query .= ' OR ';
+							$cur_query .= "e.`guid` = ".intval($cur_guid);
+						}
+					} else {
+						$cur_query = "e.`guid` = ".intval($cur_guid);
+					}
+					break;
+				case 'parent':
+					if (is_array($option)) {
+						foreach ($option as $cur_parent) {
+							if ( !empty($cur_query) )
+								$cur_query .= ' OR ';
+							$cur_query .= "e.`parent` = ".intval($cur_parent);
+						}
+					} else {
+						$cur_query = "e.`parent` = ".intval($cur_parent);
+					}
+					break;
+				case 'tags_exclusive':
+					foreach ($option as $cur_tag) {
+						if ( !empty($cur_query) )
+							$cur_query .= ' AND ';
+						$cur_query .= "e.`tags` LIKE '%\\\"$cur_tag\\\"%'";
+					}
+					break;
+				case 'tags_inclusive':
+					foreach ($option as $cur_tag) {
+						if ( !empty($cur_query) )
+							$cur_query .= ' OR ';
+						$cur_query .= "e.`tags` LIKE '%\\\"$cur_tag\\\"%'";
+					}
+					break;
+				/*case 'data_exclusive':
+				case 'data_inclusive':
+					// Have to check data after the query.
+					foreach ($option as $cur_key => $cur_data) {
+						if ( !empty($cur_query) )
+							$cur_query .= ' OR ';
+						$cur_query .= sprintf("(d.`name` = '%s' AND d.`value` = '%s')",
+							mysql_real_escape_string($cur_key, $config->db_manager->link),
+							mysql_real_escape_string(serialize($cur_data), $config->db_manager->link));
+					}
+					break;*/
+				// Need to find a way to check these after the query.
+				case 'wildcards':
+					foreach ($option as $cur_key => $cur_data) {
+						if ( !empty($cur_query) )
+							$cur_query .= ' AND ';
+						$cur_query .= sprintf("(d.`name` = '%s' AND %s)",
+							mysql_real_escape_string($cur_key, $config->db_manager->link),
+							$this->pwildcard($cur_data));
+					}
+					break;
+			}
+			if (!empty($cur_query))
+				$query_parts[] = $cur_query;
+		}
+
+		if (empty($query_parts)) {
+			$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid` = d.`guid` ORDER BY e.`guid`;",
+				$config->com_mysql->prefix,
+				$config->com_mysql->prefix);
+		} else {
+			$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid` = d.`guid` HAVING (%s) ORDER BY e.`guid`;",
+				$config->com_mysql->prefix,
+				$config->com_mysql->prefix,
+				'('.implode(') AND (', $query_parts).')');
+		}
+		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
+			if (function_exists('display_error'))
+				display_error('Query failed: ' . mysql_error());
+			return null;
+		}
+
+		$row = mysql_fetch_array($result);
+		while ($row) {
+			$entity = call_user_func(array($class, 'factory'));
+			$entity->guid = intval($row['guid']);
+			$entity->parent = (is_null($row['parent']) ? NULL : intval($row['parent']));
+			$entity->tags = unserialize($row['tags']);
+			$data = array();
+			if (!is_null($row['dname'])) {
+				// This do will keep going and adding the data until the
+				// next entity is reached. $row will end on the next entity.
+				do {
+					$data[$row['dname']] = unserialize($row['dvalue']);
+					$row = mysql_fetch_array($result);
+				} while (intval($row['guid']) === $entity->guid);
+			} else {
+				// Make sure that $row is incremented :)
+				$row = mysql_fetch_array($result);
+			}
+			$entity->put_data($data);
+			// Recheck all conditions.
+			$pass = true;
+			foreach ($options as $key => $option) {
+				switch ($key) {
+					case 'guid':
+						if (is_array($option)) {
+							$pass = $pass && in_array($entity->guid, $option);
+						} else {
+							$pass = $pass && ($entity->guid == $option);
+						}
+						break;
+					case 'parent':
+						if (is_array($option)) {
+							$pass = $pass && in_array($entity->parent, $option);
+						} else {
+							$pass = $pass && ($entity->parent == $option);
+						}
+						break;
+					case 'tags_exclusive':
+						$pass = $pass && $entity->has_tag($option);
+						break;
+					case 'tags_inclusive':
+						$found = false;
+						foreach ($option as $cur_option)
+							$found = $found || $entity->has_tag($cur_option);
+						$pass = $pass && $found;
+						break;
+					case 'data_exclusive':
+						$found = true;
+						foreach ($option as $cur_key => $cur_option)
+							$found = $found && ($entity->$cur_key == $cur_option);
+						$pass = $pass && $found;
+						break;
+					case 'data_inclusive':
+						$found = false;
+						foreach ($option as $cur_key => $cur_option)
+							$found = $found || ($entity->$cur_key == $cur_option);
+						$pass = $pass && $found;
+						break;
+				}
+				if (!$pass)
+					break;
+			}
+			if ($pass)
+				array_push($entities, $entity);
+		}
+
+		mysql_free_result($result);
+		return $entities;
+	}
 	
 	/**
 	 * Get an entity by GUID.
@@ -515,7 +674,7 @@ class com_entity extends component {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Convert pines style wildcards to a MySQL usable query.
 	 *
@@ -540,6 +699,31 @@ class com_entity extends component {
 		// Replace \\ with \\\\. (http://dev.mysql.com/doc/refman/5.0/en/string-comparison-functions.html)
 		$return = str_replace('\\\\', '\\\\\\\\', $return);
 		return "`value` LIKE BINARY 's:%:\"".$return."\";' ESCAPE '\\\\'";
+	}
+
+	/**
+	 * Convert pines style wildcards to a MySQL usable query.
+	 *
+	 * If $value is not a string, a query with an = comparison is returned, else
+	 * a query using LIKE is returned.
+	 *
+	 * @access private
+	 * @param mixed $value The data value to use.
+	 * @return string The generated query part.
+	 */
+	private function pwildcard($value) {
+		global $config;
+		if (!is_string($value))
+			return sprintf("d.`value`='%s'", mysql_real_escape_string(serialize($value), $config->db_manager->link));
+		$return = mysql_real_escape_string($value, $config->db_manager->link);
+		// Because that function escapes things that may already be escaped, we need to fix them:
+		// Replace \\% with \%
+		$return = str_replace('\\\\%', '\\%', $return);
+		// Replace \\_ with \_
+		$return = str_replace('\\\\_', '\\_', $return);
+		// Replace \\ with \\\\. (http://dev.mysql.com/doc/refman/5.0/en/string-comparison-functions.html)
+		$return = str_replace('\\\\', '\\\\\\\\', $return);
+		return "d.`value` LIKE BINARY 's:%:\"".$return."\";' ESCAPE '\\\\'";
 	}
 	
 	/**

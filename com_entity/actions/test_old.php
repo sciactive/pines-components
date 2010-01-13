@@ -72,7 +72,7 @@ unset($entity_result);
 // Retrieving entity by parent...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('parent' => $entity_test->parent));
+$entity_result = $config->entity_manager->get_entities_by_parent($entity_test->parent);
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -83,7 +83,7 @@ unset($entity_result);
 // Testing wrong parent...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('parent' => 1));
+$entity_result = $config->entity_manager->get_entities_by_parent(1);
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -94,7 +94,7 @@ unset($entity_result);
 // Retrieving entity by tags...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('tags_exclusive' => array('com_entity', 'test')));
+$entity_result = $config->entity_manager->get_entities_by_tags('com_entity', 'test');
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -105,7 +105,7 @@ unset($entity_result);
 // Testing wrong tags...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('tags_exclusive' => array('pickles')));
+$entity_result = $config->entity_manager->get_entities_by_tags('pickles');
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -116,7 +116,7 @@ unset($entity_result);
 // Retrieving entity by tags exclusively...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('tags_exclusive' => array('com_entity', 'test')));
+$entity_result = $config->entity_manager->get_entities_by_tags_exclusive('com_entity', 'test');
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -127,7 +127,7 @@ unset($entity_result);
 // Testing wrong exclusive tags...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('tags_exclusive' => array('pickles')));
+$entity_result = $config->entity_manager->get_entities_by_tags_exclusive('pickles');
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -138,7 +138,7 @@ unset($entity_result);
 // Retrieving entity by tags inclusively...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('tags_inclusive' => array('pickles', 'test', 'barbecue')));
+$entity_result = $config->entity_manager->get_entities_by_tags_inclusive('pickles', 'test', 'barbecue');
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -149,7 +149,7 @@ unset($entity_result);
 // Testing wrong inclusive tags...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('tags_inclusive' => array('pickles', 'barbecue')));
+$entity_result = $config->entity_manager->get_entities_by_tags_inclusive('pickles', 'barbecue');
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -160,7 +160,7 @@ unset($entity_result);
 // Retrieving entity by mixed tags...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('tags_exclusive' => array('com_entity'), 'tags_inclusive' => array('pickles', 'test', 'barbecue')));
+$entity_result = $config->entity_manager->get_entities_by_tags_mixed(array('com_entity'), array('pickles', 'test', 'barbecue'));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -171,7 +171,7 @@ unset($entity_result);
 // Testing wrong inclusive mixed tags...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('tags_exclusive' => array('com_entity'), 'tags_inclusive' => array('pickles', 'barbecue')));
+$entity_result = $config->entity_manager->get_entities_by_tags_mixed(array('com_entity'), array('pickles', 'barbecue'));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -182,7 +182,7 @@ unset($entity_result);
 // Testing wrong exclusive mixed tags...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('tags_exclusive' => array('pickles'), 'tags_inclusive' => array('test', 'barbecue')));
+$entity_result = $config->entity_manager->get_entities_by_tags_mixed(array('pickles'), array('test', 'barbecue'));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -193,7 +193,7 @@ unset($entity_result);
 // Retrieving entity by data...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('data_exclusive' => array('test_value' => 'test')));
+$entity_result = $config->entity_manager->get_entities_by_data(array('test_value' => 'test'));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -204,7 +204,7 @@ unset($entity_result);
 // Testing wrong data...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('data_exclusive' => array('test_value' => 'pickles')));
+$entity_result = $config->entity_manager->get_entities_by_data(array('test_value' => 'pickles'));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -216,28 +216,28 @@ unset($entity_result);
 $entity_result = array();
 $passed_all = true;
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('wildcards' => array('wilcard_test' => '%')));
+$entity_result = $config->entity_manager->get_entities_by_data(array('wilcard_test' => '%'), array(), true);
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
 $passed_all = $passed_all && $found_match;
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('wildcards' => array('wilcard_test' => '%'), 'tags_exclusive' => array('test')));
+$entity_result = $config->entity_manager->get_entities_by_data(array('wilcard_test' => '%'), array('test'), true);
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
 $passed_all = $passed_all && $found_match;
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('wildcards' => array('wilcard_test' => '______________________________________________________________________________________')));
+$entity_result = $config->entity_manager->get_entities_by_data(array('wilcard_test' => '______________________________________________________________________________________'), array(), true);
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
 $passed_all = $passed_all && $found_match;
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('wildcards' => array('wilcard_test' => '"%" \%________\% \_underscores\_ \'single quotes\' /%/ \\backslashes\\ ;semicolons;')));
+$entity_result = $config->entity_manager->get_entities_by_data(array('wilcard_test' => '"%" \%________\% \_underscores\_ \'single quotes\' /%/ \\backslashes\\ ;semicolons;'), array(), true);
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -259,21 +259,21 @@ unset($entity_result);
 $entity_result = array();
 $passed_all = false;
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('wildcards' => array('wilcard_test' => '%z%')));
+$entity_result = $config->entity_manager->get_entities_by_data(array('wilcard_test' => '%z%'), array(), true);
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
 $passed_all = $passed_all || $found_match;
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('wildcards' => array('wilcard_test' => '\\\\\\\\')));
+$entity_result = $config->entity_manager->get_entities_by_data(array('wilcard_test' => '\\\\\\\\'), array(), true);
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
 $passed_all = $passed_all || $found_match;
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('wildcards' => array('wilcard_test' => '%'), 'tags_exclusive' => array('pickle')));
+$entity_result = $config->entity_manager->get_entities_by_data(array('wilcard_test' => '%'), array('pickle'), true);
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -294,7 +294,7 @@ unset($entity_result);
 // Retrieving entity by tags and data...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('data_exclusive' => array('test_value' => 'test'), 'tags_exclusive' => array('com_entity', 'test')));
+$entity_result = $config->entity_manager->get_entities_by_data(array('test_value' => 'test'), array('com_entity', 'test'));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -305,7 +305,7 @@ unset($entity_result);
 // Testing wrong tags and right data...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('data_exclusive' => array('test_value' => 'test'), 'tags_exclusive' => array('pickles')));
+$entity_result = $config->entity_manager->get_entities_by_data(array('test_value' => 'test'), array('pickles'));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -316,7 +316,7 @@ unset($entity_result);
 // Testing right tags and wrong data...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('data_exclusive' => array('test_value' => 'pickles'), 'tags_exclusive' => array('com_entity', 'test')));
+$entity_result = $config->entity_manager->get_entities_by_data(array('test_value' => 'pickles'), array('com_entity', 'test'));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -327,7 +327,7 @@ unset($entity_result);
 // Testing wrong tags and wrong data...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('data_exclusive' => array('test_value' => 'pickles'), 'tags_exclusive' => array('pickles')));
+$entity_result = $config->entity_manager->get_entities_by_data(array('test_value' => 'pickles'), array('pickles'));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;

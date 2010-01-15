@@ -59,7 +59,7 @@ $customer->description = $_REQUEST['description'];
 $customer->short_description = $_REQUEST['short_description'];
 
 // Points
-if ($config->adjustpoints && gatekeeper('com_customer/adjustpoints')) {
+if ($config->com_customer->adjustpoints && gatekeeper('com_customer/adjustpoints')) {
 	$customer->adjust_points((int) $_REQUEST['adjust_points']);
 }
 

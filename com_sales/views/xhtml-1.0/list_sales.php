@@ -81,7 +81,7 @@ $this->title = 'Sales';
 			<td><?php $user = user::factory($sale->uid);
 			echo is_null($user->guid) ? '' : "{$user->name} [{$user->username}]"; ?></td>
 			<?php if ($config->run_sales->com_customer) { ?>
-			<td><?php var_dump($sale->customer); echo htmlentities($sale->customer->guid ? "{$sale->customer->guid}: \"{$sale->customer->name}\"" : ''); ?></td>
+			<td><?php echo htmlentities($sale->customer->guid ? "{$sale->customer->guid}: \"{$sale->customer->name}\"" : ''); ?></td>
 			<?php } ?>
 			<td><?php if (is_array($sale->products)) {
 				$number = 0;

@@ -25,6 +25,8 @@ $this->title = 'Customers';
 				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo pines_url('com_customer', 'editcustomer', array('id' => '#title#')); ?>'},
 				//{type: 'button', text: 'E-Mail', extra_class: 'icon picon_16x16_actions_mail-message-new', multi_select: true, url: 'mailto:#col_2#', delimiter: ','},
 				{type: 'separator'},
+				{type: 'button', text: 'Delete', extra_class: 'icon picon_16x16_actions_edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_customer', 'deletecustomer', array('id' => '#title#')); ?>', delimiter: ','},
+				{type: 'separator'},
 				{type: 'button', text: 'Select All', extra_class: 'icon picon_16x16_actions_list-add', select_all: true},
 				{type: 'button', text: 'Select None', extra_class: 'icon picon_16x16_actions_list-remove', select_none: true},
 				{type: 'separator'},

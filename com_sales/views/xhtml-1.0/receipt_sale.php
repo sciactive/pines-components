@@ -39,7 +39,7 @@ if ($this->entity->status == 'quoted') {
 		<span class="field"><?php echo $config->user_manager->get_username($this->entity->uid); ?></span>
 	</div>
 <?php } ?>
-<?php if (!is_null($this->entity->customer)) { ?>
+<?php if ($config->run_sales->com_customer && !is_null($this->entity->customer)) { ?>
 	<div class="element heading">
 		<h1>Customer</h1>
 	</div>

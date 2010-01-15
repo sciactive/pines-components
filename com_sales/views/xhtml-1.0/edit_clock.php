@@ -146,7 +146,7 @@ $this->title = "Edit Timeclock for {$this->user->name} [{$this->user->username}]
 		<input type="hidden" name="id" value="<?php echo $this->user->guid; ?>" />
 		<div class="element buttons">
 			<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-			<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_sales', 'listcustomers'); ?>';" value="Cancel" />
+			<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_sales', 'manageclock'); ?>';" value="Cancel" />
 		</div>
 	</form>
 </div>

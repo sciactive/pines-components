@@ -3,7 +3,7 @@
  * Search customers, returning JSON.
  *
  * @package Pines
- * @subpackage com_sales
+ * @subpackage com_customer
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -11,8 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/newsale') || !gatekeeper('com_sales/editsale') ) {
-	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'customersearch', $_REQUEST, false));
+if ( !gatekeeper('com_customer/managecustomers') ) {
+	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_customer', 'customersearch', $_REQUEST, false));
 	return;
 }
 
@@ -24,7 +24,7 @@ if (empty($query)) {
 	$customers = array();
 } else {
 	// TODO: Use 'match_i' instead.
-	$customers = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'customer'), 'class' => com_sales_customer));
+	$customers = $config->entity_manager->get_entities(array('tags' => array('com_customer', 'customer'), 'class' => com_customer_customer));
 	if (!is_array($customers))
 		$customers = array();
 }

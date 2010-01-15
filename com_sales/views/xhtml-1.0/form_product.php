@@ -551,11 +551,13 @@ $this->note = 'Provide product details in this form.';
 				<label><span class="label">Discountable</span>
 					<input class="field" type="checkbox" name="discountable" size="24" value="ON"<?php echo ($this->entity->discountable || is_null($this->entity->discountable)) ? ' checked="checked"' : ''; ?> /></label>
 			</div>
+			<?php if ($config->run_sales->com_customer) { ?>
 			<div class="element">
 				<label><span class="label">Require Customer</span>
 					<span class="note">This means a customer must be selected when selling this item.</span>
 					<input class="field" type="checkbox" name="require_customer" size="24" value="ON"<?php echo ($this->entity->require_customer || is_null($this->entity->require_customer)) ? ' checked="checked"' : ''; ?> /></label>
 			</div>
+			<?php } ?>
 			<div class="element">
 				<label><span class="label">Hide on Invoice</span>
 					<input class="field" type="checkbox" name="hide_on_invoice" size="24" value="ON"<?php echo $this->entity->hide_on_invoice ? ' checked="checked"' : ''; ?> /></label>

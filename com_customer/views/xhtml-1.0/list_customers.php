@@ -21,6 +21,7 @@ $this->title = 'Customers';
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
+				{type: 'button', text: 'New', extra_class: 'icon picon_16x16_actions_document-new', selection_optional: true, url: '<?php echo pines_url('com_customer', 'editcustomer'); ?>'},
 				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo pines_url('com_customer', 'editcustomer', array('id' => '#title#')); ?>'},
 				//{type: 'button', text: 'E-Mail', extra_class: 'icon picon_16x16_actions_mail-message-new', multi_select: true, url: 'mailto:#col_2#', delimiter: ','},
 				{type: 'separator'},
@@ -58,6 +59,20 @@ $this->title = 'Customers';
 			<th>Points</th>
 			<th>Peak</th>
 			<th>All-Time</th>
+			<th>Name</th>
+			<th>Email</th>
+			<th>Company</th>
+			<th>Job Title</th>
+			<th>Address</th>
+			<th>Address 1</th>
+			<th>Address 2</th>
+			<th>City</th>
+			<th>State</th>
+			<th>Zip</th>
+			<th>Home Phone</th>
+			<th>Work Phone</th>
+			<th>Cell Phone</th>
+			<th>Fax</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -65,10 +80,24 @@ $this->title = 'Customers';
 		<tr title="<?php echo $customer->guid; ?>">
 			<td><?php echo $customer->guid; ?></td>
 			<td><?php echo $customer->name; ?></td>
-			<td><?php echo ($customer->com_customer->login_disabled ? 'Yes' : 'No'); ?></td>
-			<td><?php echo $customer->com_customer->points; ?></td>
-			<td><?php echo $customer->com_customer->peak_points; ?></td>
-			<td><?php echo $customer->com_customer->total_points; ?></td>
+			<td><?php echo ($customer->login_disabled ? 'Yes' : 'No'); ?></td>
+			<td><?php echo $customer->points; ?></td>
+			<td><?php echo $customer->peak_points; ?></td>
+			<td><?php echo $customer->total_points; ?></td>
+			<td><?php echo $customer->name; ?></td>
+			<td><?php echo $customer->email; ?></td>
+			<td><?php echo $customer->company; ?></td>
+			<td><?php echo $customer->job_title; ?></td>
+			<td><?php echo $customer->address_type == 'international' ? 'Intl' : 'US'; ?></td>
+			<td><?php echo $customer->address_1; ?></td>
+			<td><?php echo $customer->address_2; ?></td>
+			<td><?php echo $customer->city; ?></td>
+			<td><?php echo $customer->state; ?></td>
+			<td><?php echo $customer->zip; ?></td>
+			<td><?php echo $customer->phone_home; ?></td>
+			<td><?php echo $customer->phone_work; ?></td>
+			<td><?php echo $customer->phone_cell; ?></td>
+			<td><?php echo $customer->fax; ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

@@ -60,7 +60,9 @@ $this->title = 'Sales';
 			<th>Date</th>
 			<th>Status</th>
 			<th>User</th>
+			<?php if ($config->run_sales->com_customer) { ?>
 			<th>Customer</th>
+			<?php } ?>
 			<th>Products</th>
 			<th>Subtotal</th>
 			<th>Item Fees</th>
@@ -78,7 +80,9 @@ $this->title = 'Sales';
 			<td><?php echo ucwords($sale->status); ?></td>
 			<td><?php $user = user::factory($sale->uid);
 			echo is_null($user->guid) ? '' : "{$user->name} [{$user->username}]"; ?></td>
-			<td><?php echo htmlentities($sale->customer->guid ? "{$sale->customer->guid}: \"{$sale->customer->name}\"" : ''); ?></td>
+			<?php if ($config->run_sales->com_customer) { ?>
+			<td><?php var_dump($sale->customer); echo htmlentities($sale->customer->guid ? "{$sale->customer->guid}: \"{$sale->customer->name}\"" : ''); ?></td>
+			<?php } ?>
 			<td><?php if (is_array($sale->products)) {
 				$number = 0;
 				foreach ($sale->products as $cur_product) {

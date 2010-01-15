@@ -40,18 +40,18 @@ class com_customer_timer extends component {
 			display_notice('Customer ID not found.');
 			return false;
 		}
-		if ($customer->com_customer->password != $password) {
+		if ($customer->password != $password) {
 			display_notice('Customer ID and password do not match.');
 			return false;
 		}
 		$logins = com_customer_timer_login_tracker::factory();
 		if ($customer->in_array($logins->customers))
 			return $logins->logout($customer);
-		if ($customer->com_customer->login_disabled) {
+		if ($customer->login_disabled) {
 			display_notice('Login has been disabled for your account.');
 			return false;
 		}
-		if ($customer->com_customer->points <= 0) {
+		if ($customer->points <= 0) {
 			display_notice('Your account balance has reached zero.');
 			if (!$config->com_customer_timer->debtlogin)
 				return false;

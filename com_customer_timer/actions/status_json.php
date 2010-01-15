@@ -27,10 +27,10 @@ foreach ($logins->customers as $cur_customer) {
 		'guid' => $cur_customer->guid,
 		'name' => $cur_customer->name,
 		'login_time' => $cur_customer->com_customer_timer->last_login,
-		'points' => $cur_customer->com_customer->points,
+		'points' => $cur_customer->points,
 		'ses_minutes' => $session_info['minutes'],
 		'ses_points' => $session_info['points'],
-		'points_remain' => ($cur_customer->com_customer->points - $session_info['points'])
+		'points_remain' => ($cur_customer->points - $session_info['points'])
 	);
 }
 

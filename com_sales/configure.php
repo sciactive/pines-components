@@ -49,30 +49,16 @@ return array (
   ),
   5 =>
   array (
-	'name' => 'global_customers',
-	'cname' => 'Globalize Customers',
-	'description' => 'Ensure that every user can access all customers by setting the "other" access control to read.',
-	'value' => true,
-  ),
-  6 =>
-  array (
 	'name' => 'global_payment_types',
 	'cname' => 'Globalize Payment Types',
 	'description' => 'Ensure that every user can access all payment types by setting the "other" access control to read.',
 	'value' => true,
   ),
-  7 =>
+  6 =>
   array (
 	'name' => 'global_tax_fees',
 	'cname' => 'Globalize Taxes/Fees',
 	'description' => 'Ensure that every user can access all taxes and fees by setting the "other" access control to read.',
-	'value' => true,
-  ),
-  8 =>
-  array (
-	'name' => 'ssn_field',
-	'cname' => 'SSN Field',
-	'description' => 'Allow Pines to store a Social Security Number for customers.',
 	'value' => true,
   ),
 );

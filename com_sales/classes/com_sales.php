@@ -14,12 +14,19 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * com_sales main class.
  *
- * Manage sales, customers, manufacturers, vendors, etc.
+ * Manage sales, products, manufacturers, vendors, etc.
  *
  * @package Pines
  * @subpackage com_sales
  */
 class com_sales extends component {
+	/**
+	 * Whether to integrate with com_customer.
+	 *
+	 * @var bool $com_customer
+	 */
+	var $com_customer;
+
 	/**
 	 * List of product actions.
 	 * 
@@ -49,6 +56,16 @@ class com_sales extends component {
 	 * @var array $product_actions
 	 */
 	public $product_actions = array();
+
+	/**
+	 * Check whether com_customer is installed and we should integrate with it.
+	 *
+	 * Places the result in $this->com_customer.
+	 */
+	function __construct() {
+		global $config;
+		$this->com_customer = $config->depend->check('component', 'com_customer');
+	}
 
 	/**
 	 * Calls any product actions which match the given arguments.
@@ -248,28 +265,6 @@ class com_sales extends component {
 			}
 		}
 		return $categories;
-	}
-
-	/**
-	 * Creates and attaches a module which lists customers.
-	 */
-	function list_customers() {
-		global $config;
-
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
-
-		$module = new module('com_sales', 'list_customers', 'content');
-		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_customers'];
-
-		$module->customers = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'customer'), 'class' => com_sales_customer));
-
-		if ( empty($module->customers) ) {
-			$pgrid->detach();
-			$module->detach();
-			display_notice("There are no customers.");
-		}
 	}
 
 	/**

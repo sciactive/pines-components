@@ -36,17 +36,11 @@ $this->note = 'Use this form to edit a sale.';
 	<?php } ?>
 	<script type="text/javascript">
 		// <![CDATA[
-		var customer_box;
-		var customer_search_box;
-		var customer_search_button;
-		var customer_table;
-		var customer_dialog;
-		var products;
-		var products_table;
-		var product_code;
-		var payments;
-		var payments_table;
+		<?php if ($config->run_sales->com_customer) { ?>
+		var customer_box, customer_search_box, customer_search_button, customer_table, customer_dialog;
 		var require_customer = false;
+		<?php } ?>
+		var products, products_table, product_code, payments, payments_table;
 
 		// Number of decimal places to round to.
 		var dec = <?php echo intval($config->com_sales->dec); ?>;
@@ -96,18 +90,20 @@ $this->note = 'Use this form to edit a sale.';
 		}
 
 		$(function(){
+			<?php if ($config->run_sales->com_customer) { ?>
 			customer_box = $("#customer");
 			customer_search_box = $("#customer_search");
 			customer_search_button = $("#customer_search_button");
 			customer_table = $("#customer_table");
 			customer_dialog = $("#customer_dialog");
+			<?php } ?>
 			products = $("#products");
 			products_table = $("#products_table");
 			product_code = $("#product_code");
 			payments_table = $("#payments_table");
 			payments = $("#payments");
 
-			<?php if ($this->entity->status != 'invoiced' || $this->entity->status != 'paid') { ?>
+			<?php if ($config->run_sales->com_customer && ($this->entity->status != 'invoiced' || $this->entity->status != 'paid')) { ?>
 			customer_search_box.keydown(function(eventObject){
 				if (eventObject.keyCode == 13) {
 					customer_search(this.value);
@@ -446,14 +442,17 @@ $this->note = 'Use this form to edit a sale.';
 			var taxes = 0;
 			var item_fees = 0;
 			var total = 0;
+			<?php if ($config->run_sales->com_customer) { ?>
 			require_customer = false;
+			<?php } ?>
 			// Calculate ticket totals.
 			rows.each(function(){
 				var cur_row = $(this);
 				var product = cur_row.data("product");
-				if (product.require_customer) {
+				<?php if ($config->run_sales->com_customer) { ?>
+				if (product.require_customer)
 					require_customer = true;
-				}
+				<?php } ?>
 				var price = parseFloat(cur_row.pgrid_get_value(6));
 				var qty = parseInt(cur_row.pgrid_get_value(5));
 				var discount = cur_row.pgrid_get_value(7);
@@ -538,11 +537,11 @@ $this->note = 'Use this form to edit a sale.';
 			payments.val(JSON.stringify(rows.pgrid_export_rows()));
 		}
 
-		<?php if ($this->entity->status != 'invoiced' || $this->entity->status != 'paid') { ?>
+		<?php if ($config->run_sales->com_customer && ($this->entity->status != 'invoiced' || $this->entity->status != 'paid')) { ?>
 		function customer_search(search_string) {
 			var loader;
 			$.ajax({
-				url: "<?php echo pines_url("com_sales", "customersearch"); ?>",
+				url: "<?php echo pines_url("com_customer", "customersearch"); ?>",
 				type: "POST",
 				dataType: "json",
 				data: {"q": search_string},
@@ -569,6 +568,7 @@ $this->note = 'Use this form to edit a sale.';
 		<?php } ?>
 		// ]]>
 	</script>
+	<?php if ($config->run_sales->com_customer) { ?>
 	<div class="element">
 		<label for="customer_search"><span class="label">Customer</span>
 			<?php if ($this->entity->status != 'invoiced' && $this->entity->status != 'paid') { ?>
@@ -623,6 +623,7 @@ $this->note = 'Use this form to edit a sale.';
 		</table>
 		<br class="spacer" />
 	</div>
+	<?php } ?>
 	<div class="element full_width">
 		<span class="label">Products</span>
 		<div class="group">

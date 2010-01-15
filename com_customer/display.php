@@ -11,8 +11,12 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( gatekeeper('com_customer/managecustomers') ) {
-	$com_customer_menu_id = $page->main_menu->add('Customer Accounts', pines_url('com_customer', 'listcustomers'));
+if ( gatekeeper('com_customer/managecustomers') || gatekeeper('com_customer/newcustomer') ) {
+	$com_customer_menu_id = $page->main_menu->add('CRM');
+	if ( gatekeeper('com_customer/managecustomers') )
+		$page->main_menu->add('Customers', pines_url('com_customer', 'listcustomers'), $com_customer_menu_id);
+	if ( gatekeeper('com_customer/newcustomer') )
+		$page->main_menu->add('New Customer', pines_url('com_customer', 'editcustomer'), $com_customer_menu_id);
 }
 
 ?>

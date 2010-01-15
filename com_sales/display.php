@@ -14,7 +14,6 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( gatekeeper('com_sales/managestock') || gatekeeper('com_sales/receive') ||
 	 gatekeeper('com_sales/totalsales') ||
 	 gatekeeper('com_sales/managesales') || gatekeeper('com_sales/newsale') ||
-	 gatekeeper('com_sales/managecustomers') || gatekeeper('com_sales/newcustomer') ||
 	 gatekeeper('com_sales/managemanufacturers') || gatekeeper('com_sales/newmanufacturer') ||
 	 gatekeeper('com_sales/manageshippers') || gatekeeper('com_sales/newshipper') ||
 	 gatekeeper('com_sales/manageproducts') || gatekeeper('com_sales/newproduct') ||
@@ -25,13 +24,6 @@ if ( gatekeeper('com_sales/managestock') || gatekeeper('com_sales/receive') ||
 	$com_sales_menu_id = $page->main_menu->add('POS');
 	if ( gatekeeper('com_sales/newsale') )
 		$page->main_menu->add('New Sale', pines_url('com_sales', 'editsale'), $com_sales_menu_id);
-	if ( gatekeeper('com_sales/managecustomers') || gatekeeper('com_sales/newcustomer') ) {
-		$com_sales_menu_id_customers = $page->main_menu->add('Customers', '#', $com_sales_menu_id);
-		if ( gatekeeper('com_sales/managecustomers') )
-			$page->main_menu->add('Customers', pines_url('com_sales', 'listcustomers'), $com_sales_menu_id_customers);
-		if ( gatekeeper('com_sales/newcustomer') )
-			$page->main_menu->add('New Customer', pines_url('com_sales', 'editcustomer'), $com_sales_menu_id_customers);
-	 }
 	if ( gatekeeper('com_sales/totalsales') ||
 		gatekeeper('com_sales/managesales') || gatekeeper('com_sales/newsale') ) {
 		$com_sales_menu_id_sales = $page->main_menu->add('Sales', '#', $com_sales_menu_id);

@@ -12,19 +12,19 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * A com_sales customer, with extended functionality.
+ * A customer.
  *
  * @package Pines
  * @subpackage com_customer
  */
-class com_customer_customer extends com_sales_customer {
+class com_customer_customer extends entity {
 	/**
 	 * Load a customer.
 	 * @param int $id The ID of the customer to load, null for a new customer.
 	 */
 	public function __construct($id = null) {
 		parent::__construct();
-		$this->add_tag('com_sales', 'customer');
+		$this->add_tag('com_customer', 'customer');
 		if (!is_null($id)) {
 			global $config;
 			$entity = $config->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
@@ -51,35 +51,54 @@ class com_customer_customer extends com_sales_customer {
 	}
 
 	/**
+	 * Delete the customer.
+	 * @return bool True on success, false on failure.
+	 */
+	public function delete() {
+		if (!parent::delete())
+			return false;
+		pines_log("Deleted customer $this->name.", 'notice');
+		return true;
+	}
+
+	/**
+	 * Save the customer.
+	 * @return bool True on success, false on failure.
+	 */
+	public function save() {
+		if (!isset($this->name))
+			return false;
+		return parent::save();
+	}
+
+	/**
 	 * Add or subtract points from the customer's account.
 	 *
 	 * @param int $point_adjust The positive or negative point value to add.
 	 */
 	function adjust_points($point_adjust) {
-		if (!isset($this->com_customer))
-			$this->com_customer = (object) array();
 		$point_adjust = (int) $point_adjust;
 		// Check that there is a point value.
-		if (!is_int($this->com_customer->points))
-			$this->com_customer->points = 0;
+		if (!is_int($this->points))
+			$this->points = 0;
 		// Check the total value.
-		if (!is_int($this->com_customer->total_points))
-			$this->com_customer->total_points = $this->com_customer->points;
+		if (!is_int($this->total_points))
+			$this->total_points = $this->points;
 		// Check the peak value.
-		if (!is_int($this->com_customer->peak_points))
-			$this->com_customer->peak_points = $this->com_customer->points;
+		if (!is_int($this->peak_points))
+			$this->peak_points = $this->points;
 		// Do the adjustment.
 		if ($point_adjust != 0) {
 			if ($point_adjust > 0)
-				$this->com_customer->total_points += $point_adjust;
-			$this->com_customer->points += $point_adjust;
-			if ($this->com_customer->points > $this->com_customer->peak_points)
-				$this->com_customer->peak_points = $this->com_customer->points;
+				$this->total_points += $point_adjust;
+			$this->points += $point_adjust;
+			if ($this->points > $this->peak_points)
+				$this->peak_points = $this->points;
 		}
 	}
 
 	/**
-	 * Print a form to edit the customer's account.
+	 * Print a form to edit the customer.
 	 * @return module The form's module.
 	 */
 	public function print_form() {

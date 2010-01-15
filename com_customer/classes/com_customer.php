@@ -14,34 +14,27 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * com_customer main class.
  *
- * Extends com_sales' native customer management, providing several enhanced
- * features.
+ * Provides a CRM.
  *
  * @package Pines
  * @subpackage com_customer
  */
 class com_customer extends component {
 	/**
-	 * Display a sidebar with a link to edit a customer account.
-	 *
-	 * When a customer is edited in com_sales, this is called and provides a
-	 * sidebar with info about the customer's account, and a link to open it.
-	 *
-	 * @param array $array The arguments array.
-	 * @param string $hook The name of the hook.
-	 * @param mixed $object The object on with the hook was called.
-	 * @return array The arguments array.
+	 * Whether to integrate with com_sales.
+	 * 
+	 * @var bool $com_sales
 	 */
-	function hook_customer_view($array, $hook, $object) {
+	var $com_sales;
+
+	/**
+	 * Check whether com_sales is installed and we should integrate with it.
+	 *
+	 * Places the result in $this->com_sales.
+	 */
+	function __construct() {
 		global $config;
-		if ( gatekeeper('com_customer/editcustomer') && isset($object->guid) ) {
-			$customer = com_sales_customer::factory($object->guid);
-			if (isset($customer->guid)) {
-				$module = new module('com_customer', 'sidebar_customer', 'right');
-				$module->entity = $customer;
-			}
-		}
-		return $array;
+		$this->com_sales = $config->depend->check('component', 'com_sales');
 	}
 
 	/**
@@ -57,7 +50,7 @@ class com_customer extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_customer/list_customers'];
 
-		$module->customers = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'customer'), 'class' => com_customer_customer));
+		$module->customers = $config->entity_manager->get_entities(array('tags' => array('com_customer', 'customer'), 'class' => com_customer_customer));
 
 		if ( empty($module->customers) ) {
 			$pgrid->detach();

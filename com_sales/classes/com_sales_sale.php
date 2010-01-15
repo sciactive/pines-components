@@ -204,10 +204,12 @@ class com_sales_sale extends entity {
 		$stock_entries = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'stock'), 'class' => com_sales_stock));
 		if (!is_array($stock_entries))
 			$stock_entries = array();
-		foreach ($this->products as &$cur_product) {
-			if (!$cur_product['entity'] || ($cur_product['entity']->require_customer && !$this->customer)) {
-				display_notice('One of the products on this sale requires a customer. Please select a customer for this sale before invoicing.');
-				return false;
+		if ($config->run_sales->com_customer) {
+			foreach ($this->products as &$cur_product) {
+				if (!$cur_product['entity'] || ($cur_product['entity']->require_customer && !$this->customer)) {
+					display_notice('One of the products on this sale requires a customer. Please select a customer for this sale before invoicing.');
+					return false;
+				}
 			}
 		}
 		unset($cur_product);

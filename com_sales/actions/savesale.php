@@ -29,10 +29,10 @@ if ( isset($_REQUEST['id']) ) {
 	$sale = com_sales_sale::factory();
 }
 
-if ($sale->status != 'invoiced' && $sale->status != 'paid') {
+if ($config->run_sales->com_customer && $sale->status != 'invoiced' && $sale->status != 'paid') {
 	$sale->customer = $_REQUEST['customer'];
 	if (preg_match('/^\d+/', $sale->customer)) {
-		$sale->customer = com_sales_customer::factory(intval($sale->customer));
+		$sale->customer = com_customer_customer::factory(intval($sale->customer));
 		if (is_null($sale->customer->guid))
 			$sale->customer = null;
 	} else {

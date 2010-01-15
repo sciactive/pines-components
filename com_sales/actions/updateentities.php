@@ -71,7 +71,7 @@ $array = $config->entity_manager->get_entities(array('tags' => array('com_sales'
 if (!is_array($array))
 	$array = array();
 foreach ($array as $cur) {
-	$cur->customer = com_sales_customer::factory($cur->customer->guid);
+	$cur->customer = com_customer_customer::factory($cur->customer->guid);
 	if (is_null($cur->customer->guid))
 		$cur->customer = null;
 	foreach ($cur->products as &$cur2) {
@@ -86,6 +86,21 @@ foreach ($array as $cur) {
 			$cur2['entity'] = null;
 	}
 	unset($cur2);
+	$cur->save();
+}
+
+// Customers
+$array = $config->entity_manager->get_entities(array('tags' => array('customer'), 'tags_inclusive' => array('com_sales', 'com_customer'), 'class' => com_sales_customer));
+if (!is_array($array))
+	$array = array();
+foreach ($array as $cur) {
+	$cur->add_tag('com_customer');
+	$cur->remove_tag('com_sales');
+	if (is_object($cur->com_customer)) {
+		foreach ($cur->com_customer as $key => $value)
+			$cur->$key = $value;
+		unset($cur->com_customer);
+	}
 	$cur->save();
 }
 

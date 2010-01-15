@@ -55,11 +55,6 @@ $this->title = 'Customers';
 		<tr>
 			<th>ID</th>
 			<th>Name</th>
-			<th>Login Disabled</th>
-			<th>Points</th>
-			<th>Peak</th>
-			<th>All-Time</th>
-			<th>Name</th>
 			<th>Email</th>
 			<th>Company</th>
 			<th>Job Title</th>
@@ -73,17 +68,16 @@ $this->title = 'Customers';
 			<th>Work Phone</th>
 			<th>Cell Phone</th>
 			<th>Fax</th>
+			<th>Login Disabled</th>
+			<th>Points</th>
+			<th>Peak</th>
+			<th>All-Time</th>
 		</tr>
 	</thead>
 	<tbody>
 	<?php foreach($this->customers as $customer) { ?>
 		<tr title="<?php echo $customer->guid; ?>">
 			<td><?php echo $customer->guid; ?></td>
-			<td><?php echo $customer->name; ?></td>
-			<td><?php echo ($customer->login_disabled ? 'Yes' : 'No'); ?></td>
-			<td><?php echo $customer->points; ?></td>
-			<td><?php echo $customer->peak_points; ?></td>
-			<td><?php echo $customer->total_points; ?></td>
 			<td><?php echo $customer->name; ?></td>
 			<td><?php echo $customer->email; ?></td>
 			<td><?php echo $customer->company; ?></td>
@@ -98,6 +92,10 @@ $this->title = 'Customers';
 			<td><?php echo $customer->phone_work; ?></td>
 			<td><?php echo $customer->phone_cell; ?></td>
 			<td><?php echo $customer->fax; ?></td>
+			<td><?php echo ($customer->login_disabled ? 'Yes' : 'No'); ?></td>
+			<td><?php echo $customer->points; ?></td>
+			<td><?php echo $customer->peak_points; ?></td>
+			<td><?php echo $customer->total_points; ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

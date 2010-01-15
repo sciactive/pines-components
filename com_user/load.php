@@ -193,8 +193,8 @@ function com_user_check_permissions(&$entity, $type = 1) {
 function com_user_add_access($array) {
 	if (is_object($_SESSION['user']) &&
 		is_null($array[0]->guid) &&
-		!is_a($array[0], 'user') &&
-		!is_a($array[0], 'group')
+		!$array[0]->has_tag('com_user', 'user') &&
+		!$array[0]->has_tag('com_user', 'group')
 	) {
 
 		$array[0]->uid = $_SESSION['user']->guid;

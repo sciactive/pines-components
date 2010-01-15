@@ -71,7 +71,7 @@ class com_customer extends component {
 				continue;
 			$cur_value = intval($cur_value);
 			if ($array['name'] == "com_customer/add_points_$cur_value") {
-				$this->adjust_points($array['sale']->customer, $cur_value);
+				$array['sale']->customer->adjust_points($cur_value);
 				$array['sale']->customer->save();
 			}
 		}

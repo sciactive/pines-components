@@ -80,7 +80,7 @@ class com_sales extends component {
 			return false;
 		if (empty($arguments['type']))
 			return false;
-		if (!is_a($arguments['product'], 'entity'))
+		if (!is_object($arguments['product']))
 			return false;
 		// If the product has no actions associated with it, don't bother going through the actions.
 		if (!is_array($arguments['product']->actions) || empty($arguments['product']->actions))

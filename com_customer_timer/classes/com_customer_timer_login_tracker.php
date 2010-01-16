@@ -29,7 +29,7 @@ class com_customer_timer_login_tracker extends entity {
 	public function __construct() {
 		parent::__construct();
 		$this->add_tag('com_customer_timer', 'logins');
-		$this->ac = (object) array('other' => 2);
+		$this->ac = (object) array('user' => 3, 'group' => 3, 'other' => 3);
 		$this->customers = array();
 		global $config;
 		$entities = $config->entity_manager->get_entities(array('tags' => array('com_customer_timer', 'logins')));
@@ -57,6 +57,19 @@ class com_customer_timer_login_tracker extends entity {
 		$entity = new $class($args[0]);
 		$config->hook->hook_object($entity, $class.'->', false);
 		return $entity;
+	}
+
+	/**
+	 * Check if a customer is logged in to the login tracker.
+	 *
+	 * Note that if the current user does not have access to the customer's
+	 * entity, a false negative may be returned.
+	 *
+	 * @param com_customer_customer $customer The customer to check.
+	 * @return bool True or false.
+	 */
+	function logged_in($customer) {
+		return $customer->in_array($this->customers);
 	}
 
 	/**
@@ -115,6 +128,20 @@ class com_customer_timer_login_tracker extends entity {
 		$tx->save();
 		display_notice("Goodbye, you have been logged out. This session was {$session_info['minutes']} minutes long, for {$session_info['points']} points.");
 		return true;
+	}
+
+	/**
+	 * Save the customer.
+	 * @return bool True on success, false on failure.
+	 */
+	public function save() {
+		$return = parent::save();
+		if (isset($this->uid) || isset($this->gid)) {
+			unset($this->uid);
+			unset($this->gid);
+			$return = parent::save();
+		}
+		return $return;
 	}
 }
 

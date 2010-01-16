@@ -76,6 +76,39 @@ class com_customer extends component {
 			}
 		}
 	}
+
+	/**
+	 * Transform a string to title case.
+	 *
+	 * @param string $string The string to transform.
+	 * @param array $delimiters An array of strings used to delimit parts (words) of the string.
+	 * @param array $exceptions An array of words which should not be changed.
+	 * @return string The transformed string.
+	 */
+	function title_case($string, $delimiters = array(" ", "-", "O'", "Mc"), $exceptions = array("to", "a", "the", "of", "by", "and", "with", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X")) {
+		/*
+		* Exceptions in lower case are words you don't want converted
+		* Exceptions all in upper case are any words you don't want converted to title case
+		*   but should be converted to upper case, e.g.:
+		*   king henry viii or king henry Viii should be King Henry VIII
+		*/
+		foreach ($delimiters as $delimiter){
+			$words = explode($delimiter, $string);
+			$newwords = array();
+			foreach ($words as $word){
+				if (in_array(strtoupper($word), $exceptions)){
+					// check exceptions list for any words that should be in upper case
+					$word = strtoupper($word);
+				} elseif (!in_array($word, $exceptions)){
+					// convert to uppercase
+					$word = ucfirst($word);
+				}
+				array_push($newwords, $word);
+			}
+			$string = join($delimiter, $newwords);
+		}
+		return $string;
+	}
 }
 
 ?>

@@ -22,6 +22,21 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class com_customer_timer extends component {
 	/**
+	 * Calculates information about a customer's session.
+	 *
+	 * @param entity $customer The customer.
+	 * @return array An array of point and minute values the customer has used.
+	 */
+	function get_session_info(&$customer) {
+		global $config;
+		// Calculate how many minutes they've been logged in.
+		$minutes = (int) round((time() - $customer->com_customer_timer->last_login) / 60);
+		// And how many points that costs.
+		$points = $minutes * (int) $config->com_customer_timer->ppm;
+		return array('minutes' => $minutes, 'points' => $points);
+	}
+
+	/**
 	 * Logs a customer in or out, depending on their current status.
 	 *
 	 * @param int $id The customer's GUID.
@@ -57,21 +72,6 @@ class com_customer_timer extends component {
 				return false;
 		}
 		return $logins->login($customer);
-	}
-
-	/**
-	 * Calculates information about a customer's session.
-	 *
-	 * @param entity $customer The customer.
-	 * @return array An array of point and minute values the customer has used.
-	 */
-	function get_session_info(&$customer) {
-		global $config;
-		// Calculate how many minutes they've been logged in.
-		$minutes = (int) round((time() - $customer->com_customer_timer->last_login) / 60);
-		// And how many points that costs.
-		$points = $minutes * (int) $config->com_customer_timer->ppm;
-		return array('minutes' => $minutes, 'points' => $points);
 	}
 }
 

@@ -217,11 +217,11 @@ $this->note = 'Provide customer account details in this form.';
 			</div>
 			<div class="element">
 				<label><span class="label">Login Disabled</span>
-					<input class="field" type="checkbox" name="login_disabled" size="24" value="ON"<?php echo $this->entity->com_customer->login_disabled ? ' checked="checked"' : ''; ?> /></label>
+					<input class="field" type="checkbox" name="login_disabled" size="24" value="ON"<?php echo $this->entity->login_disabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="element">
-				<label><span class="label"><?php if (!is_null($this->entity->com_customer->password)) echo 'Update '; ?>Password</span>
-					<?php if (is_null($this->entity->com_customer->password)) {
+				<label><span class="label"><?php if (!is_null($this->entity->password)) echo 'Update '; ?>Password</span>
+					<?php if (is_null($this->entity->password)) {
 						echo ($config->com_user->empty_pw ? '<span class="note">May be blank.</span>' : '');
 					} else {
 						echo '<span class="note">Leave blank, if not changing.</span>';
@@ -230,22 +230,22 @@ $this->note = 'Provide customer account details in this form.';
 			</div>
 			<div class="element full_width">
 				<span class="label">Description</span><br />
-				<textarea rows="3" cols="35" class="field peditor" style="width: 100%;" name="description"><?php echo $this->entity->com_customer->description; ?></textarea>
+				<textarea rows="3" cols="35" class="field peditor" style="width: 100%;" name="description"><?php echo $this->entity->description; ?></textarea>
 			</div>
 			<br class="spacer" />
 		</div>
 		<div id="tab_points">
 			<div class="element">
 				<span class="label">Current Points</span>
-				<span class="field"><?php echo $this->entity->com_customer->points; ?></span>
+				<span class="field"><?php echo $this->entity->points; ?></span>
 			</div>
 			<div class="element">
 				<span class="label">Peak Points</span>
-				<span class="field"><?php echo $this->entity->com_customer->peak_points; ?></span>
+				<span class="field"><?php echo $this->entity->peak_points; ?></span>
 			</div>
 			<div class="element">
 				<span class="label">Total Points in All Time</span>
-				<span class="field"><?php echo $this->entity->com_customer->total_points; ?></span>
+				<span class="field"><?php echo $this->entity->total_points; ?></span>
 			</div>
 			<?php if ($config->com_customer->adjustpoints && gatekeeper('com_customer/adjustpoints')) { ?>
 			<div class="element">
@@ -383,14 +383,14 @@ $this->note = 'Provide customer account details in this form.';
 							</tr>
 						</thead>
 						<tbody>
-							<?php if (is_array($this->entity->com_customer->addresses)) { foreach ($this->entity->com_customer->addresses as $cur_address) { ?>
-							<tr title="<?php echo $cur_address->key; ?>">
-								<td><?php echo $cur_address->values[0]; ?></td>
-								<td><?php echo $cur_address->values[1]; ?></td>
-								<td><?php echo $cur_address->values[2]; ?></td>
-								<td><?php echo $cur_address->values[3]; ?></td>
-								<td><?php echo $cur_address->values[4]; ?></td>
-								<td><?php echo $cur_address->values[5]; ?></td>
+							<?php if (is_array($this->entity->addresses)) { foreach ($this->entity->addresses as $cur_address) { ?>
+							<tr>
+								<td><?php echo $cur_address['type']; ?></td>
+								<td><?php echo $cur_address['address_1']; ?></td>
+								<td><?php echo $cur_address['address_2']; ?></td>
+								<td><?php echo $cur_address['city']; ?></td>
+								<td><?php echo $cur_address['state']; ?></td>
+								<td><?php echo $cur_address['zip']; ?></td>
 							</tr>
 							<?php } } ?>
 						</tbody>
@@ -443,10 +443,10 @@ $this->note = 'Provide customer account details in this form.';
 							</tr>
 						</thead>
 						<tbody>
-							<?php if (is_array($this->entity->com_customer->attributes)) { foreach ($this->entity->com_customer->attributes as $cur_attribute) { ?>
-							<tr title="<?php echo $cur_attribute->key; ?>">
-								<td><?php echo $cur_attribute->values[0]; ?></td>
-								<td><?php echo $cur_attribute->values[1]; ?></td>
+							<?php if (is_array($this->entity->attributes)) { foreach ($this->entity->attributes as $cur_attribute) { ?>
+							<tr>
+								<td><?php echo $cur_attribute['name']; ?></td>
+								<td><?php echo $cur_attribute['value']; ?></td>
 							</tr>
 							<?php } } ?>
 						</tbody>

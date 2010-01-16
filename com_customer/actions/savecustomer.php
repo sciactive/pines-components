@@ -63,9 +63,33 @@ $customer->state = $_REQUEST['state'];
 $customer->zip = $_REQUEST['zip'];
 $customer->address_international = $_REQUEST['address_international'];
 $customer->addresses = json_decode($_REQUEST['addresses']);
+if (!is_array($customer->addresses))
+	$customer->addresses = array();
+foreach ($customer->addresses as &$cur_address) {
+	$array = array(
+		'type' => $cur_address->values[0],
+		'address_1' => $cur_address->values[1],
+		'address_2' => $cur_address->values[2],
+		'city' => $cur_address->values[3],
+		'state' => $cur_address->values[4],
+		'zip' => $cur_address->values[5]
+	);
+	$cur_address = $array;
+}
+unset($cur_address);
 
 // Attributes
 $customer->attributes = json_decode($_REQUEST['attributes']);
+if (!is_array($customer->attributes))
+	$customer->attributes = array();
+foreach ($customer->attributes as &$cur_attribute) {
+	$array = array(
+		'name' => $cur_attribute->values[0],
+		'value' => $cur_attribute->values[1]
+	);
+	$cur_attribute = $array;
+}
+unset($cur_attribute);
 
 if (empty($customer->name)) {
 	$customer->print_form();

@@ -121,9 +121,8 @@ class com_user extends component {
 					$abilities = $this->gatekeeper_cache[$_SESSION['user_id']];
 				} else {
 					$abilities = $user->abilities;
-					if (isset($_SESSION['inherited_abilities'])) {
+					if (isset($_SESSION['inherited_abilities']))
 						$abilities = array_merge($abilities, $_SESSION['inherited_abilities']);
-					}
 					$this->gatekeeper_cache[$_SESSION['user_id']] = $abilities;
 				}
 			} else {
@@ -178,9 +177,8 @@ class com_user extends component {
 		global $config;
 		$return = array();
 		foreach ($config->components as $cur_component) {
-			if ( file_exists('components/'.$cur_component.'/actions/default.php') ) {
-				array_push($return, $cur_component);
-			}
+			if ( file_exists('components/'.$cur_component.'/actions/default.php') )
+				$return[] = $cur_component;
 		}
 		return $return;
 	}
@@ -359,8 +357,7 @@ class com_user extends component {
 	 */
 	function get_groups() {
 		global $config;
-		$groups = $config->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
-		return $groups;
+		return $config->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
 	}
 
 	/**
@@ -389,8 +386,7 @@ class com_user extends component {
 	 */
 	function get_users() {
 		global $config;
-		$users = $config->entity_manager->get_entities(array('tags' => array('com_user', 'user'), 'class' => user));
-		return $users;
+		return $config->entity_manager->get_entities(array('tags' => array('com_user', 'user'), 'class' => user));
 	}
 
 	/**
@@ -508,12 +504,12 @@ class com_user extends component {
 	 * @param string $url An optional URL to be included in the query data of the redirection url.
 	 */
 	function punt_user($message = NULL, $url = NULL) {
-		global $config;
+		global $config, $page;
 		$default = '0';
 		if ($config->component == $_SESSION['user']->default_component && $config->action == 'default')
 			$default = '1';
 		header("Location: ".pines_url('com_user', 'exit', array('default' => $default, 'message' => urlencode($message), 'url' => urlencode($url)), false));
-		exit;
+		exit($message);
 	}
 }
 

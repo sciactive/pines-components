@@ -11,10 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_logger/clear') ) {
+if ( !gatekeeper('com_logger/clear') )
 	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_logger', 'clear', null, false));
-	return;
-}
 
 if (file_put_contents($config->com_logger->path, '') !== false) {
 	display_notice('Log file cleared.');

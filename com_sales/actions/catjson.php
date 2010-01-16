@@ -11,10 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/managecategories') || !gatekeeper('com_sales/viewcategories') ) {
+if ( !gatekeeper('com_sales/managecategories') || !gatekeeper('com_sales/viewcategories') )
 	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'catjson', $_REQUEST, false));
-	return;
-}
 
 $page->override = true;
 
@@ -25,10 +23,8 @@ if (!isset($_REQUEST['do'])) {
 	$page->override_doc(json_encode($categories_json_struct));
 }
 
-if ( !gatekeeper('com_sales/managecategories') ) {
+if ( !gatekeeper('com_sales/managecategories') )
 	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'catjson', $_REQUEST, false));
-	return;
-}
 
 switch ($_REQUEST['do']) {
 	case 'new':

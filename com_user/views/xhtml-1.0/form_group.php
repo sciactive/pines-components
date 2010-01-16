@@ -85,6 +85,6 @@ $this->note = 'Provide group details in this form.';
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_user', 'managegroups'); ?>';" value="Cancel" />
+		<input class="ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_user', 'listgroups'); ?>';" value="Cancel" />
 	</div>
 </form>

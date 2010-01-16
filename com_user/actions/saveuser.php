@@ -19,8 +19,8 @@ if ( empty($_REQUEST['username']) ) {
 }
 
 if ( isset($_REQUEST['id']) ) {
-	if ( !gatekeeper('com_user/edit') && (!gatekeeper('com_user/self') || ($_REQUEST['id'] != $_SESSION['user_id'])) ) {
-		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'manageusers', null, false));
+	if ( !gatekeeper('com_user/edituser') && (!gatekeeper('com_user/self') || ($_REQUEST['id'] != $_SESSION['user_id'])) ) {
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'listusers', null, false));
 		return;
 	}
 	$user = user::factory((int) $_REQUEST['id']);
@@ -38,10 +38,8 @@ if ( isset($_REQUEST['id']) ) {
 	}
 	if ( !empty($_REQUEST['password']) ) $user->password($_REQUEST['password']);
 } else {
-	if ( !gatekeeper('com_user/new') ) {
-		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'manageusers', null, false));
-		return;
-	}
+	if ( !gatekeeper('com_user/newuser') )
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'listusers', null, false));
 	if ( empty($_REQUEST['password']) && !$config->com_user->empty_pw ) {
 		display_notice('Must specify password!');
 		$pass = false;
@@ -62,7 +60,7 @@ $user->email = $_REQUEST['email'];
 $user->timezone = $_REQUEST['timezone'];
 
 if ( gatekeeper('com_user/default_component') ) {
-	if ( file_exists('components/'.$_REQUEST['default_component'].'/actions/default.php') ) {
+	if ( file_exists("components/{$_REQUEST['default_component']}/actions/default.php") ) {
 		$user->default_component = $_REQUEST['default_component'];
 	} else {
 		display_notice('Selected component does not support a default action.');
@@ -73,7 +71,7 @@ if ( gatekeeper('com_user/default_component') ) {
 // Groups that the user does not have access to will not be received from the
 // entity manager after com_user filters the result, and thus will not be
 // assigned.
-if ( gatekeeper("com_user/assigng") ) {
+if ( gatekeeper("com_user/assigngroup") ) {
 	$groups = $config->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
 	$ugroup = intval($_REQUEST['gid']);
 	$ugroups = $_REQUEST['groups'];

@@ -12,20 +12,16 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
-	if ( !gatekeeper('com_sales/editpaymenttype') ) {
+	if ( !gatekeeper('com_sales/editpaymenttype') )
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listpaymenttypes', null, false));
-		return;
-	}
 	$payment_type = com_sales_payment_type::factory((int) $_REQUEST['id']);
 	if (is_null($payment_type->guid)) {
 		display_error('Requested payment type id is not accessible');
 		return;
 	}
 } else {
-	if ( !gatekeeper('com_sales/newpaymenttype') ) {
+	if ( !gatekeeper('com_sales/newpaymenttype') )
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listpaymenttypes', null, false));
-		return;
-	}
 	$payment_type = com_sales_payment_type::factory();
 }
 

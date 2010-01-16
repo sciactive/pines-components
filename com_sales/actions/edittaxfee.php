@@ -12,15 +12,11 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if (isset($_REQUEST['id'])) {
-	if ( !gatekeeper('com_sales/edittaxfee') ) {
+	if ( !gatekeeper('com_sales/edittaxfee') )
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'edittaxfee', array('id' => $_REQUEST['id']), false));
-		return;
-	}
 } else {
-	if ( !gatekeeper('com_sales/newtaxfee') ) {
+	if ( !gatekeeper('com_sales/newtaxfee') )
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'edittaxfee', null, false));
-		return;
-	}
 }
 
 $entity = com_sales_tax_fee::factory((int) $_REQUEST['id']);

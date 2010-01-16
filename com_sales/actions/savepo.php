@@ -12,20 +12,16 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
-	if ( !gatekeeper('com_sales/editpo') ) {
+	if ( !gatekeeper('com_sales/editpo') )
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listpos', null, false));
-		return;
-	}
 	$po = com_sales_po::factory((int) $_REQUEST['id']);
 	if (is_null($po->guid)) {
 		display_error('Requested PO id is not accessible');
 		return;
 	}
 } else {
-	if ( !gatekeeper('com_sales/newpo') ) {
+	if ( !gatekeeper('com_sales/newpo') )
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listpos', null, false));
-		return;
-	}
 	$po = com_sales_po::factory();
 }
 

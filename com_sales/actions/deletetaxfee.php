@@ -11,10 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/deletetaxfee') ) {
+if ( !gatekeeper('com_sales/deletetaxfee') )
 	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listtaxfees', null, false));
-	return;
-}
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_tax_fee) {

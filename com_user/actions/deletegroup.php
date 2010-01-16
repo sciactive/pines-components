@@ -11,10 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_user/deleteg') ) {
-	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'managegroups', null, false));
-	return;
-}
+if ( !gatekeeper('com_user/deletegroup') )
+	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'listgroups', null, false));
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_group) {

@@ -11,10 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_customer_timer/viewstatus') ) {
+if ( !gatekeeper('com_customer_timer/viewstatus') )
 	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_customer_timer', 'status', null, false));
-	return;
-}
 
 $module = new module('com_customer_timer', 'status', 'content');
 ?>

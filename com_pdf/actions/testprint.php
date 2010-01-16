@@ -11,10 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('system/all') ) {
+if ( !gatekeeper('system/all') )
 	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_pdf', 'testprint', $_REQUEST, false));
-	return;
-}
 
 // An example display entity.
 $displays = com_pdf_displays::factory();

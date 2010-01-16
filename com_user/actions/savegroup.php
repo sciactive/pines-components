@@ -19,10 +19,8 @@ if ( empty($_REQUEST['groupname']) ) {
 }
 
 if ( isset($_REQUEST['id']) ) {
-	if ( !gatekeeper('com_user/editg') ) {
-		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'managegroups', null, false));
-		return;
-	}
+	if ( !gatekeeper('com_user/editgroup') )
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'listgroups', null, false));
 	$group = group::factory((int) $_REQUEST['id']);
 	if ( is_null($group->guid) ) {
 		display_error('Group doesn\'t exists!');
@@ -37,10 +35,8 @@ if ( isset($_REQUEST['id']) ) {
 		}
 	}
 } else {
-	if ( !gatekeeper('com_user/newg') ) {
-		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'managegroups', null, false));
-		return;
-	}
+	if ( !gatekeeper('com_user/newgroup') )
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'listgroups', null, false));
 	$group = group::factory();
 	$test = group::factory($_REQUEST['groupname']);
 	if ( is_null($test->guid) ) {

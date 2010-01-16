@@ -12,18 +12,15 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if (isset($_REQUEST['id'])) {
-	if ( !gatekeeper('com_user/edit') && (!gatekeeper('com_user/self') || ($_REQUEST['id'] != $_SESSION['user_id'])) ) {
-		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'manageusers', null, false));
-		return;
-	}
+	if ( !gatekeeper('com_user/edituser') && (!gatekeeper('com_user/self') || ($_REQUEST['id'] != $_SESSION['user_id'])) )
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'listusers', null, false));
+	$user = user::factory((int) $_REQUEST['id']);
 } else {
-	if ( !gatekeeper('com_user/new') ) {
-		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'manageusers', null, false));
-		return;
-	}
+	if ( !gatekeeper('com_user/newuser') )
+		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'listusers', null, false));
+	$user = user::factory();
 }
 
-$user = user::factory((int) $_REQUEST['id']);
 $user->print_form();
 
 ?>

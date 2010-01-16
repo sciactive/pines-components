@@ -11,10 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/receive') ) {
+if ( !gatekeeper('com_sales/receive') )
 	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'receive', null, false));
-	return;
-}
 
 if (is_null($_REQUEST['products'])) {
 	$config->run_sales->print_receive_form('com_sales', 'receive');

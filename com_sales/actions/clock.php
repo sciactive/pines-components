@@ -11,20 +11,16 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/clock') && !gatekeeper('com_sales/manageclock') ) {
+if ( !gatekeeper('com_sales/clock') && !gatekeeper('com_sales/manageclock') )
 	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'clock', $_REQUEST, false));
-	return;
-}
 
 $page->override = true;
 
 if ($_REQUEST['id'] == 'self') {
 	$user = $_SESSION['user'];
 } else {
-	if ( !gatekeeper('com_sales/manageclock') ) {
+	if ( !gatekeeper('com_sales/manageclock') )
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'clock', $_REQUEST, false));
-		return;
-	}
 	$user = user::factory((int) $_REQUEST['id']);
 }
 

@@ -12,20 +12,16 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
-	if ( !gatekeeper('com_sales/editmanufacturer') ) {
+	if ( !gatekeeper('com_sales/editmanufacturer') )
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listmanufacturers', null, false));
-		return;
-	}
 	$manufacturer = com_sales_manufacturer::factory((int) $_REQUEST['id']);
 	if (is_null($manufacturer->guid)) {
 		display_error('Requested manufacturer id is not accessible');
 		return;
 	}
 } else {
-	if ( !gatekeeper('com_sales/newmanufacturer') ) {
+	if ( !gatekeeper('com_sales/newmanufacturer') )
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listmanufacturers', null, false));
-		return;
-	}
 	$manufacturer = com_sales_manufacturer::factory();
 }
 

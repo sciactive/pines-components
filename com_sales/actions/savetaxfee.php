@@ -12,20 +12,16 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
-	if ( !gatekeeper('com_sales/edittaxfee') ) {
+	if ( !gatekeeper('com_sales/edittaxfee') )
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listtaxfees', null, false));
-		return;
-	}
 	$tax_fee = com_sales_tax_fee::factory((int) $_REQUEST['id']);
 	if (is_null($tax_fee->guid)) {
 		display_error('Requested tax/fee id is not accessible');
 		return;
 	}
 } else {
-	if ( !gatekeeper('com_sales/newtaxfee') ) {
+	if ( !gatekeeper('com_sales/newtaxfee') )
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listtaxfees', null, false));
-		return;
-	}
 	$tax_fee = com_sales_tax_fee::factory();
 }
 

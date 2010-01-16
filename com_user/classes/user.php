@@ -87,7 +87,7 @@ class user extends able_entity {
 		global $config;
 		$module = new module('com_user', 'form_user', 'content');
 		$module->entity = $this;
-		$module->display_groups = gatekeeper("com_user/assigng");
+		$module->display_groups = gatekeeper("com_user/assigngroup");
 		$module->display_abilities = gatekeeper("com_user/abilities");
 		$module->display_default_components = gatekeeper("com_user/default_component");
 		$module->sections = array('system');

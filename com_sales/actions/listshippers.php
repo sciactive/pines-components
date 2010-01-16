@@ -11,10 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/manageshippers') ) {
+if ( !gatekeeper('com_sales/manageshippers') )
 	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listshippers', null, false));
-	return;
-}
 
 $config->run_sales->list_shippers();
 ?>

@@ -11,10 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/managesales') ) {
+if ( !gatekeeper('com_sales/managesales') )
 	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listsales', null, false));
-	return;
-}
 
 $config->run_sales->list_sales();
 ?>

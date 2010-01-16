@@ -12,20 +12,16 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
-	if ( !gatekeeper('com_customer/editcustomer') ) {
+	if ( !gatekeeper('com_customer/editcustomer') )
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_customer', 'listcustomers', null, false));
-		return;
-	}
 	$customer = com_customer_customer::factory((int) $_REQUEST['id']);
 	if (is_null($customer->guid)) {
 		display_error('Requested customer id is not accessible');
 		return;
 	}
 } else {
-	if ( !gatekeeper('com_customer/newcustomer') ) {
+	if ( !gatekeeper('com_customer/newcustomer') )
 		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_customer', 'listcustomers', null, false));
-		return;
-	}
 	$customer = com_customer_customer::factory();
 }
 

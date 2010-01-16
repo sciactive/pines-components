@@ -200,6 +200,67 @@ $this->note = 'Provide customer account details in this form.';
 					<input class="field" type="text" name="job_title" size="24" value="<?php echo $this->entity->job_title; ?>" /></label>
 			</div>
 			<div class="element">
+				<label><span class="label">Cell Phone</span>
+					<input class="field" type="text" name="phone_cell" size="24" value="<?php echo $this->entity->phone_cell; ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+			</div>
+			<div class="element">
+				<label><span class="label">Work Phone</span>
+					<input class="field" type="text" name="phone_work" size="24" value="<?php echo $this->entity->phone_work; ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+			</div>
+			<div class="element">
+				<label><span class="label">Home Phone</span>
+					<input class="field" type="text" name="phone_home" size="24" value="<?php echo $this->entity->phone_home; ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+			</div>
+			<div class="element">
+				<label><span class="label">Fax</span>
+					<input class="field" type="text" name="fax" size="24" value="<?php echo $this->entity->fax; ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+			</div>
+			<div class="element">
+				<label><span class="label">Login Disabled</span>
+					<input class="field" type="checkbox" name="login_disabled" size="24" value="ON"<?php echo $this->entity->com_customer->login_disabled ? ' checked="checked"' : ''; ?> /></label>
+			</div>
+			<div class="element">
+				<label><span class="label"><?php if (!is_null($this->entity->com_customer->password)) echo 'Update '; ?>Password</span>
+					<?php if (is_null($this->entity->com_customer->password)) {
+						echo ($config->com_user->empty_pw ? '<span class="note">May be blank.</span>' : '');
+					} else {
+						echo '<span class="note">Leave blank, if not changing.</span>';
+					} ?>
+					<input class="field" type="text" name="password" size="24" /></label>
+			</div>
+			<div class="element full_width">
+				<span class="label">Description</span><br />
+				<textarea rows="3" cols="35" class="field peditor" style="width: 100%;" name="description"><?php echo $this->entity->com_customer->description; ?></textarea>
+			</div>
+			<br class="spacer" />
+		</div>
+		<div id="tab_points">
+			<div class="element">
+				<span class="label">Current Points</span>
+				<span class="field"><?php echo $this->entity->com_customer->points; ?></span>
+			</div>
+			<div class="element">
+				<span class="label">Peak Points</span>
+				<span class="field"><?php echo $this->entity->com_customer->peak_points; ?></span>
+			</div>
+			<div class="element">
+				<span class="label">Total Points in All Time</span>
+				<span class="field"><?php echo $this->entity->com_customer->total_points; ?></span>
+			</div>
+			<?php if ($config->com_customer->adjustpoints && gatekeeper('com_customer/adjustpoints')) { ?>
+			<div class="element">
+				<label><span class="label">Adjust Points</span>
+					<span class="note">Use a negative value to subtract points.</span>
+					<input class="field" type="text" name="adjust_points" size="24" value="0" /></label>
+			</div>
+			<?php } ?>
+			<br class="spacer" />
+		</div>
+		<div id="tab_addresses">
+			<div class="element heading">
+				<h1>Main Address</h1>
+			</div>
+			<div class="element">
 				<script type="text/javascript">
 					// <![CDATA[
 					$(function(){
@@ -304,83 +365,8 @@ $this->note = 'Provide customer account details in this form.';
 					<span class="field full_width"><textarea style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo $this->entity->address_international; ?></textarea></span></label>
 				</div>
 			</div>
-			<div class="element">
-				<label><span class="label">Cell Phone</span>
-					<input class="field" type="text" name="phone_cell" size="24" value="<?php echo $this->entity->phone_cell; ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
-			</div>
-			<div class="element">
-				<label><span class="label">Work Phone</span>
-					<input class="field" type="text" name="phone_work" size="24" value="<?php echo $this->entity->phone_work; ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
-			</div>
-			<div class="element">
-				<label><span class="label">Home Phone</span>
-					<input class="field" type="text" name="phone_home" size="24" value="<?php echo $this->entity->phone_home; ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
-			</div>
-			<div class="element">
-				<label><span class="label">Fax</span>
-					<input class="field" type="text" name="fax" size="24" value="<?php echo $this->entity->fax; ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
-			</div>
-			<div class="element">
-				<label><span class="label">Login Disabled</span>
-					<input class="field" type="checkbox" name="login_disabled" size="24" value="ON"<?php echo $this->entity->com_customer->login_disabled ? ' checked="checked"' : ''; ?> /></label>
-			</div>
-			<div class="element">
-				<label><span class="label"><?php if (!is_null($this->entity->com_customer->password)) echo 'Update '; ?>Password</span>
-					<?php if (is_null($this->entity->com_customer->password)) {
-						echo ($config->com_user->empty_pw ? '<span class="note">May be blank.</span>' : '');
-					} else {
-						echo '<span class="note">Leave blank, if not changing.</span>';
-					} ?>
-					<input class="field" type="text" name="password" size="24" /></label>
-			</div>
-			<div class="element full_width">
-				<span class="label">Description</span><br />
-				<textarea rows="3" cols="35" class="field peditor" style="width: 100%;" name="description"><?php echo $this->entity->com_customer->description; ?></textarea>
-			</div>
-			<div class="element full_width">
-				<span class="label">Short Description</span><br />
-				<textarea rows="3" cols="35" class="field peditor_simple" style="width: 100%;" name="short_description"><?php echo $this->entity->com_customer->short_description; ?></textarea>
-			</div>
-			<br class="spacer" />
-		</div>
-		<div id="tab_points">
-			<div class="element">
-				<span class="label">Current Points</span>
-				<span class="field"><?php echo $this->entity->com_customer->points; ?></span>
-			</div>
-			<div class="element">
-				<span class="label">Peak Points</span>
-				<span class="field"><?php echo $this->entity->com_customer->peak_points; ?></span>
-			</div>
-			<div class="element">
-				<span class="label">Total Points in All Time</span>
-				<span class="field"><?php echo $this->entity->com_customer->total_points; ?></span>
-			</div>
-			<?php if ($config->com_customer->adjustpoints && gatekeeper('com_customer/adjustpoints')) { ?>
-			<div class="element">
-				<label><span class="label">Adjust Points</span>
-					<span class="note">Use a negative value to subtract points.</span>
-					<input class="field" type="text" name="adjust_points" size="24" value="0" /></label>
-			</div>
-			<?php } ?>
-			<br class="spacer" />
-		</div>
-		<div id="tab_addresses">
-			<div class="element">
-				<span class="label">Main Address</span>
-				<div class="group">
-					<div class="field">
-						<?php if ($this->entity->address_type == 'us') { ?>
-							<?php echo $this->entity->address_1; ?><br />
-							<?php if (isset($this->entity->address_2)) { ?>
-								<?php echo $this->entity->address_2; ?><br />
-							<?php } ?>
-							<?php echo $this->entity->city; ?>, <?php echo $this->entity->state; ?> <?php echo $this->entity->zip; ?>
-						<?php } else { ?>
-							<?php echo str_replace("\n", "<br />\n", htmlentities($this->entity->address_international)); ?>
-						<?php } ?>
-					</div>
-				</div>
+			<div class="element heading">
+				<h1>Additional Addresses</h1>
 			</div>
 			<div class="element full_width">
 				<span class="label">Additional Addresses</span>

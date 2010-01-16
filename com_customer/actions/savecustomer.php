@@ -41,13 +41,6 @@ if ($config->com_customer->ssn_field)
 $customer->email = $_REQUEST['email'];
 $customer->company = $_REQUEST['company'];
 $customer->job_title = $_REQUEST['job_title'];
-$customer->address_type = $_REQUEST['address_type'];
-$customer->address_1 = $_REQUEST['address_1'];
-$customer->address_2 = $_REQUEST['address_2'];
-$customer->city = $_REQUEST['city'];
-$customer->state = $_REQUEST['state'];
-$customer->zip = $_REQUEST['zip'];
-$customer->address_international = $_REQUEST['address_international'];
 $customer->phone_cell = $_REQUEST['phone_cell'];
 $customer->phone_work = $_REQUEST['phone_work'];
 $customer->phone_home = $_REQUEST['phone_home'];
@@ -56,13 +49,19 @@ $customer->login_disabled = ($_REQUEST['login_disabled'] == 'ON');
 if (!empty($_REQUEST['password']))
 	$customer->password = $_REQUEST['password'];
 $customer->description = $_REQUEST['description'];
-$customer->short_description = $_REQUEST['short_description'];
 
 // Points
 if ($config->com_customer->adjustpoints && gatekeeper('com_customer/adjustpoints'))
 	$customer->adjust_points((int) $_REQUEST['adjust_points']);
 
 // Addresses
+$customer->address_type = $_REQUEST['address_type'];
+$customer->address_1 = $_REQUEST['address_1'];
+$customer->address_2 = $_REQUEST['address_2'];
+$customer->city = $_REQUEST['city'];
+$customer->state = $_REQUEST['state'];
+$customer->zip = $_REQUEST['zip'];
+$customer->address_international = $_REQUEST['address_international'];
 $customer->addresses = json_decode($_REQUEST['addresses']);
 
 // Attributes

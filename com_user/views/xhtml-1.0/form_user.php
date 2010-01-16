@@ -63,7 +63,7 @@ $this->note = 'Provide user details in this form.';
 			</select></label>
 	</div>
 	<div class="element">
-		<label><span class="label"><?php if (!is_null($this->entity->guid)) echo 'Update '; ?>Password</span>
+		<label><span class="label"><?php if (isset($this->entity->guid)) echo 'Update '; ?>Password</span>
 			<?php if (is_null($this->entity->guid)) {
 				echo ($config->com_user->empty_pw ? '<span class="note">May be blank.</span>' : '');
 			} else {
@@ -141,7 +141,7 @@ $this->note = 'Provide user details in this form.';
 	} ?>
 
 	<div class="element buttons">
-		<?php if ( !is_null($this->entity->guid) ) { ?>
+		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />

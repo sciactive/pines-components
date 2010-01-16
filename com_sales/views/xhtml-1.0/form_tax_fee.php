@@ -55,7 +55,7 @@ $this->note = 'Provide tax/fee details in this form.';
 		</select></label>
 	</div>
 	<div class="element buttons">
-		<?php if ( !is_null($this->entity->guid) ) { ?>
+		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />

@@ -116,7 +116,7 @@ $this->note = 'Provide vendor details in this form.';
 			<span class="field full_width"><textarea style="width: 100%;" rows="3" cols="35" name="comments"><?php echo $this->entity->comments; ?></textarea></span></label>
 	</div>
 	<div class="element buttons">
-		<?php if ( !is_null($this->entity->guid) ) { ?>
+		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />

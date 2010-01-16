@@ -750,7 +750,7 @@ $this->note = 'Use this form to edit a sale.';
 		</div>
 	</div>
 	<div class="element buttons">
-		<?php if ( !is_null($this->entity->guid) ) { ?>
+		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 

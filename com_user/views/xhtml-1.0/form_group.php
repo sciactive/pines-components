@@ -81,7 +81,7 @@ $this->note = 'Provide group details in this form.';
 	} ?>
 
 	<div class="element buttons">
-		<?php if ( !is_null($this->entity->guid) ) { ?>
+		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />

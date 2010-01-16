@@ -59,7 +59,7 @@ $this->note = 'Provide manufacturer details in this form.';
 		<input class="field" type="text" name="fax" size="24" value="<?php echo $this->entity->fax; ?>" /></label>
 	</div>
 	<div class="element buttons">
-		<?php if ( !is_null($this->entity->guid) ) { ?>
+		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />

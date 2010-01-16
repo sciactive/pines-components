@@ -38,7 +38,7 @@ $(function(){
 		theme_advanced_resize_horizontal : false,
 
 		// Example content CSS (should be your site CSS)
-		content_css : "<?php echo '../../../../'.$config->rela_location.$config->template->editor_css; ?>",
+		content_css : "<?php echo $config->rela_location.$config->template->editor_css; ?>",
 
 		// Drop lists for link/image/media/template dialogs
 		template_external_list_url : "lists/template_list.js",
@@ -55,7 +55,7 @@ $(function(){
 		theme : "simple",
 
 		// Example content CSS (should be your site CSS)
-		content_css : "<?php echo '../../../../'.$config->rela_location.$config->template->editor_css; ?>"
+		content_css : "<?php echo $config->rela_location.$config->template->editor_css; ?>"
 	});
 });
 // ]]>

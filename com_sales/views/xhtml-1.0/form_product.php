@@ -600,7 +600,7 @@ $this->note = 'Provide product details in this form.';
 	</div>
 	<br />
 	<div class="element buttons">
-		<?php if ( !is_null($this->entity->guid) ) { ?>
+		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />

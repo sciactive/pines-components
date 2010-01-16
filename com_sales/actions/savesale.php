@@ -30,13 +30,11 @@ if ( isset($_REQUEST['id']) ) {
 }
 
 if ($config->run_sales->com_customer && $sale->status != 'invoiced' && $sale->status != 'paid') {
-	$sale->customer = $_REQUEST['customer'];
-	if (preg_match('/^\d+/', $sale->customer)) {
-		$sale->customer = com_customer_customer::factory(intval($sale->customer));
+	$sale->customer = null;
+	if (preg_match('/^\d+/', $_REQUEST['customer'])) {
+		$sale->customer = com_customer_customer::factory(intval($_REQUEST['customer']));
 		if (is_null($sale->customer->guid))
 			$sale->customer = null;
-	} else {
-		$sale->customer = null;
 	}
 }
 // Used for product error checking.

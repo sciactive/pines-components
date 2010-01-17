@@ -20,12 +20,14 @@ defined('P_RUN') or die('Direct access prohibited');
 class com_sales_po extends entity {
 	/**
 	 * Load a PO.
-	 * @param int $id The ID of the PO to load, null for a new PO.
+	 * @param int $id The ID of the PO to load, 0 for a new PO.
 	 */
-	public function __construct($id = null) {
+	public function __construct($id = 0) {
 		parent::__construct();
 		$this->add_tag('com_sales', 'po');
-		if (!is_null($id)) {
+		// Defaults.
+		$this->products = array();
+		if ($id > 0) {
 			global $config;
 			$entity = $config->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
 			if (is_null($entity))
@@ -33,7 +35,6 @@ class com_sales_po extends entity {
 			$this->guid = $entity->guid;
 			$this->parent = $entity->parent;
 			$this->tags = $entity->tags;
-			$this->entity_cache = array();
 			$this->put_data($entity->get_data());
 		}
 	}

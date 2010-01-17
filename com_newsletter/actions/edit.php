@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_newsletter/managemails') )
-	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_newsletter', 'list', null, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_newsletter', 'list', null, false));
 
 if ( !empty($_REQUEST['mail_id']) ) {
 	$mail = $config->entity_manager->get_entity(array('guid' => $_REQUEST['mail_id'], 'tags' => array('com_newsletter', 'mail')));

@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_customer/managecustomers') )
-	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_customer', 'customersearch', $_REQUEST, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'customersearch', $_REQUEST, false));
 
 $page->override = true;
 

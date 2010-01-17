@@ -83,15 +83,12 @@ $this->title = 'Sales';
 			<?php if ($config->run_sales->com_customer) { ?>
 			<td><?php echo htmlentities($sale->customer->guid ? "{$sale->customer->guid}: \"{$sale->customer->name}\"" : ''); ?></td>
 			<?php } ?>
-			<td><?php if (is_array($sale->products)) {
-				$number = 0;
-				foreach ($sale->products as $cur_product) {
-					$number += (int) $cur_product['quantity'];
-				}
-				echo $number;
-			} else {
-				echo '0';
-			} ?></td>
+			<td><?php
+			$number = 0;
+			foreach ($sale->products as $cur_product) {
+				$number += (int) $cur_product['quantity'];
+			}
+			echo $number; ?></td>
 			<td><?php echo $sale->subtotal; ?></td>
 			<td><?php echo $sale->item_fees; ?></td>
 			<td><?php echo $sale->taxes; ?></td>

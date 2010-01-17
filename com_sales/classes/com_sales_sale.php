@@ -20,12 +20,15 @@ defined('P_RUN') or die('Direct access prohibited');
 class com_sales_sale extends entity {
 	/**
 	 * Load a sale.
-	 * @param int $id The ID of the sale to load, null for a new sale.
+	 * @param int $id The ID of the sale to load, 0 for a new sale.
 	 */
-	public function __construct($id = null) {
+	public function __construct($id = 0) {
 		parent::__construct();
 		$this->add_tag('com_sales', 'sale');
-		if (!is_null($id)) {
+		// Defaults.
+		$this->products = array();
+		$this->payments = array();
+		if ($id > 0) {
 			global $config;
 			$entity = $config->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
 			if (is_null($entity))
@@ -33,7 +36,6 @@ class com_sales_sale extends entity {
 			$this->guid = $entity->guid;
 			$this->parent = $entity->parent;
 			$this->tags = $entity->tags;
-			$this->entity_cache = array();
 			$this->put_data($entity->get_data());
 		}
 	}

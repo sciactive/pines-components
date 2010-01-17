@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_customer_timer/login') && !$config->com_customer_timer->openlogin )
-	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_customer_timer', 'login', null, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_customer_timer', 'login', null, false));
 
 if (isset($_REQUEST['id'])) {
 	$id = (int) $_REQUEST['id'];

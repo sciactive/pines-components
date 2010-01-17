@@ -20,7 +20,7 @@ if ( empty($_REQUEST['username']) ) {
 
 if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_user/edituser') && (!gatekeeper('com_user/self') || ($_REQUEST['id'] != $_SESSION['user_id'])) ) {
-		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'listusers', null, false));
+		punt_user('You don\'t have necessary permission.', pines_url('com_user', 'listusers', null, false));
 		return;
 	}
 	$user = user::factory((int) $_REQUEST['id']);
@@ -39,7 +39,7 @@ if ( isset($_REQUEST['id']) ) {
 	if ( !empty($_REQUEST['password']) ) $user->password($_REQUEST['password']);
 } else {
 	if ( !gatekeeper('com_user/newuser') )
-		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_user', 'listusers', null, false));
+		punt_user('You don\'t have necessary permission.', pines_url('com_user', 'listusers', null, false));
 	if ( empty($_REQUEST['password']) && !$config->com_user->empty_pw ) {
 		display_notice('Must specify password!');
 		$pass = false;

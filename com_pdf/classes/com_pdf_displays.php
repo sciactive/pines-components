@@ -24,9 +24,9 @@ class com_pdf_displays extends entity {
 	/**
 	 * Load a display holder.
 	 * 
-	 * @param int $id The ID of the display entity to load, null for a new display entity.
+	 * @param int $id The ID of the display entity to load, 0 for a new display entity.
 	 */
-	public function __construct($id = null) {
+	public function __construct($id = 0) {
 		global $config;
 		parent::__construct();
 		$this->add_tag('com_pdf', 'displays');
@@ -39,14 +39,13 @@ class com_pdf_displays extends entity {
 		$this->pdf_creator = 'Pines';
 		$this->pdf_subject = '';
 		$this->pdf_keywords = '';
-		if (!is_null($id)) {
+		if ($id > 0) {
 			$entity = $config->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
 			if (is_null($entity))
 				return;
 			$this->guid = $entity->guid;
 			$this->parent = $entity->parent;
 			$this->tags = $entity->tags;
-			$this->entity_cache = array();
 			$this->put_data($entity->get_data());
 		}
 	}

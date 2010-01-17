@@ -12,17 +12,17 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_sales/receive') )
-	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'receive', null, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'receive', null, false));
 
 if (is_null($_REQUEST['products'])) {
-	$config->run_sales->print_receive_form('com_sales', 'receive');
+	$config->run_sales->print_receive_form();
 	return;
 }
 
 $products_json = json_decode($_REQUEST['products']);
 if (!is_array($products_json)) {
 	display_notice('Invalid product list!');
-	$config->run_sales->print_receive_form('com_sales', 'receive');
+	$config->run_sales->print_receive_form();
 	return;
 }
 $products = array();

@@ -20,13 +20,14 @@ defined('P_RUN') or die('Direct access prohibited');
 class group extends able_entity {
 	/**
 	 * Load a group.
-	 * @param int $id The ID of the group to load, null for a new group.
+	 * @param int $id The ID of the group to load, 0 for a new group.
 	 */
-	public function __construct($id = null) {
+	public function __construct($id = 0) {
 		parent::__construct();
 		$this->add_tag('com_user', 'group');
+		// Defaults.
 		$this->abilities = array();
-		if (!is_null($id)) {
+		if ($id > 0 || is_string($id)) {
 			global $config;
 			if (is_int($id)) {
 				$entity = $config->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
@@ -38,7 +39,6 @@ class group extends able_entity {
 			$this->guid = $entity->guid;
 			$this->parent = $entity->parent;
 			$this->tags = $entity->tags;
-			$this->entity_cache = array();
 			$this->put_data($entity->get_data());
 		}
 	}

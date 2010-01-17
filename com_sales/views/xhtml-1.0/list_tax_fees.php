@@ -70,12 +70,11 @@ $this->title = 'Taxes/Fees';
 			<td><?php echo $tax_fee->type == 'percentage' ? 'Percentage' : 'Flat Rate'; ?></td>
 			<td><?php echo $tax_fee->rate; ?></td>
 			<td><?php
-			if (is_array($tax_fee->locations)) {
-				$groupname_array = array();
-				foreach ($tax_fee->locations as $cur_location)
-					$groupname_array[] = "{$cur_location->name} [{$cur_location->groupname}]";
-				echo implode(', ', $groupname_array);
+			$groupname_array = array();
+			foreach ($tax_fee->locations as $cur_location) {
+				$groupname_array[] = "{$cur_location->name} [{$cur_location->groupname}]";
 			}
+			echo implode(', ', $groupname_array);
 			?></td>
 		</tr>
 	<?php } ?>

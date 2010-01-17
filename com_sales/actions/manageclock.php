@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_sales/manageclock') )
-	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'manageclock', null, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'manageclock', null, false));
 
 $users = $config->user_manager->get_users();
 

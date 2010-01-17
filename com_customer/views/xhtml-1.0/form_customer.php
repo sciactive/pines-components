@@ -280,7 +280,7 @@ $this->note = 'Provide customer account details in this form.';
 					// ]]>
 				</script>
 				<span class="label">Address Type</span>
-				<label><input class="field" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us' || empty($this->entity->address_type)) ? ' checked="checked"' : ''; ?> /> US</label>
+				<label><input class="field" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
 				<label><input class="field" type="radio" name="address_type" value="international"<?php echo $this->entity->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
 			</div>
 			<div id="address_us" style="display: none;">
@@ -383,7 +383,7 @@ $this->note = 'Provide customer account details in this form.';
 							</tr>
 						</thead>
 						<tbody>
-							<?php if (is_array($this->entity->addresses)) { foreach ($this->entity->addresses as $cur_address) { ?>
+							<?php foreach ($this->entity->addresses as $cur_address) { ?>
 							<tr>
 								<td><?php echo $cur_address['type']; ?></td>
 								<td><?php echo $cur_address['address_1']; ?></td>
@@ -392,7 +392,7 @@ $this->note = 'Provide customer account details in this form.';
 								<td><?php echo $cur_address['state']; ?></td>
 								<td><?php echo $cur_address['zip']; ?></td>
 							</tr>
-							<?php } } ?>
+							<?php } ?>
 						</tbody>
 					</table>
 					<input class="field" type="hidden" id="addresses" name="addresses" size="24" />
@@ -443,12 +443,12 @@ $this->note = 'Provide customer account details in this form.';
 							</tr>
 						</thead>
 						<tbody>
-							<?php if (is_array($this->entity->attributes)) { foreach ($this->entity->attributes as $cur_attribute) { ?>
+							<?php foreach ($this->entity->attributes as $cur_attribute) { ?>
 							<tr>
 								<td><?php echo $cur_attribute['name']; ?></td>
 								<td><?php echo $cur_attribute['value']; ?></td>
 							</tr>
-							<?php } } ?>
+							<?php } ?>
 						</tbody>
 					</table>
 					<input class="field" type="hidden" id="attributes" name="attributes" />

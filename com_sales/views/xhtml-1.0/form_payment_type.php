@@ -31,7 +31,7 @@ $this->note = 'Provide payment type details in this form.';
 	</div>
 	<div class="element">
 		<label><span class="label">Enabled</span>
-			<input class="field" type="checkbox" name="enabled" size="24" value="ON"<?php echo ($this->entity->enabled || is_null($this->entity->enabled)) ? ' checked="checked"' : ''; ?> /></label>
+			<input class="field" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Change Type</span>

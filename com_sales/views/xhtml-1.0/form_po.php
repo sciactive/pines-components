@@ -301,7 +301,7 @@ $this->note = 'Provide PO details in this form.';
 						</tr>
 					</thead>
 					<tbody>
-						<?php if (is_array($this->entity->products)) { foreach ($this->entity->products as $cur_product) {
+						<?php foreach ($this->entity->products as $cur_product) {
 								if (is_null($cur_product['entity']))
 									continue;
 								?>
@@ -312,7 +312,7 @@ $this->note = 'Provide PO details in this form.';
 							<td><?php echo $cur_product['cost']; ?></td>
 							<td><?php echo $config->run_sales->round(intval($cur_product['quantity']) * floatval($cur_product['cost']), $config->com_sales->dec); ?></td>
 						</tr>
-						<?php } } ?>
+						<?php } ?>
 					</tbody>
 				</table>
 			</div>

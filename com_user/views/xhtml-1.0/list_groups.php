@@ -73,12 +73,10 @@ foreach($this->groups as $cur_group) {
 	<tbody>
 	<?php foreach($this->groups as $group) { ?>
 		<tr title="<?php echo $group->guid; ?>" class="<?php
-		if (in_array($group->guid, $parents)) {
+		if (in_array($group->guid, $parents))
 			echo "parent ";
-		}
-		if (!is_null($group->parent)) {
+		if (!is_null($group->parent))
 			echo "child {$group->parent}";
-		}
 		?>">
 			<td><?php echo $group->groupname; ?></td>
 			<td><?php echo $group->name; ?></td>

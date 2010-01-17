@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_sales/editsale') )
-		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listsales', null, false));
+		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listsales', null, false));
 	$sale = com_sales_sale::factory((int) $_REQUEST['id']);
 	if (is_null($sale->guid)) {
 		display_error('Requested sale id is not accessible');
@@ -21,7 +21,7 @@ if ( isset($_REQUEST['id']) ) {
 	}
 } else {
 	if ( !gatekeeper('com_sales/newsale') )
-		$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'listsales', null, false));
+		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listsales', null, false));
 	$sale = com_sales_sale::factory();
 }
 
@@ -134,7 +134,7 @@ if ($config->com_sales->global_sales) {
 	$sale->ac = (object) array('other' => 1);
 }
 
-if (($_REQUEST['process'] == 'Invoice' || $_REQUEST['process'] == 'Complete') && $sale->status != 'invoiced' && $sale->status != 'paid') {
+if (($_REQUEST['process'] == 'Invoice' || $_REQUEST['process'] == 'Tender') && $sale->status != 'invoiced' && $sale->status != 'paid') {
 	if (!$sale->invoice()) {
 		$sale->print_form();
 		display_error('There was an error while invoicing the sale. Please check that all information is correct and resubmit.');
@@ -142,7 +142,7 @@ if (($_REQUEST['process'] == 'Invoice' || $_REQUEST['process'] == 'Complete') &&
 	}
 }
 
-if ($_REQUEST['process'] == 'Complete') {
+if ($_REQUEST['process'] == 'Tender') {
 	if (!$sale->complete()) {
 		$sale->print_form();
 		display_error('There was an error while completing the sale. It has been invoiced, but not completed yet. Please check that all information is correct and resubmit.');

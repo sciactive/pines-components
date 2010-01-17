@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_sales/manageclock') )
-	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'editclock', array('id' => $_REQUEST['id']), false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'editclock', array('id' => $_REQUEST['id']), false));
 
 $user = user::factory((int) $_REQUEST['id']);
 if (is_null($user->guid)) {

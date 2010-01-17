@@ -20,12 +20,19 @@ defined('P_RUN') or die('Direct access prohibited');
 class com_customer_customer extends entity {
 	/**
 	 * Load a customer.
-	 * @param int $id The ID of the customer to load, null for a new customer.
+	 * @param int $id The ID of the customer to load, 0 for a new customer.
 	 */
-	public function __construct($id = null) {
+	public function __construct($id = 0) {
 		parent::__construct();
 		$this->add_tag('com_customer', 'customer');
-		if (!is_null($id)) {
+		// Defaults.
+		$this->points = 0;
+		$this->peak_points = 0;
+		$this->total_points = 0;
+		$this->address_type == 'us';
+		$this->addresses = array();
+		$this->attributes = array();
+		if ($id > 0) {
 			global $config;
 			$entity = $config->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
 			if (is_null($entity))
@@ -33,7 +40,6 @@ class com_customer_customer extends entity {
 			$this->guid = $entity->guid;
 			$this->parent = $entity->parent;
 			$this->tags = $entity->tags;
-			$this->entity_cache = array();
 			$this->put_data($entity->get_data());
 		}
 	}

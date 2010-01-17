@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('system/all') )
-	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_pdf', 'test', null, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_pdf', 'test', null, false));
 
 $module = new module('com_pdf', 'test', 'content');
 

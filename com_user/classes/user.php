@@ -20,16 +20,17 @@ defined('P_RUN') or die('Direct access prohibited');
 class user extends able_entity {
 	/**
 	 * Load a user.
-	 * @param int|string $id The ID or username of the user to load, null for a new user.
+	 * @param int|string $id The ID or username of the user to load, 0 for a new user.
 	 */
-	public function __construct($id = null) {
+	public function __construct($id = 0) {
 		parent::__construct();
 		$this->add_tag('com_user', 'user');
+		// Defaults.
 		$this->abilities = array();
 		$this->groups = array();
 		$this->inherit_abilities = true;
 		$this->default_component = 'com_user';
-		if (!is_null($id)) {
+		if ($id > 0 || is_string($id)) {
 			global $config;
 			if (is_int($id)) {
 				$entity = $config->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
@@ -41,7 +42,6 @@ class user extends able_entity {
 			$this->guid = $entity->guid;
 			$this->parent = $entity->parent;
 			$this->tags = $entity->tags;
-			$this->entity_cache = array();
 			$this->put_data($entity->get_data());
 		}
 	}

@@ -643,7 +643,7 @@ $this->note = 'Use this form to edit a sale.';
 						</tr>
 					</thead>
 					<tbody>
-						<?php if (is_array($this->entity->products)) { foreach ($this->entity->products as $cur_product) {
+						<?php foreach ($this->entity->products as $cur_product) {
 								if (is_null($cur_product['entity']))
 									continue;
 								?>
@@ -658,7 +658,7 @@ $this->note = 'Use this form to edit a sale.';
 							<td><?php echo $config->run_sales->round($cur_product['line_total'], $config->com_sales->dec); ?></td>
 							<td><?php echo $config->run_sales->round($cur_product['fees'], $config->com_sales->dec); ?></td>
 						</tr>
-						<?php } } ?>
+						<?php } ?>
 					</tbody>
 				</table>
 			</div>
@@ -684,7 +684,7 @@ $this->note = 'Use this form to edit a sale.';
 		<div class="note">
 			<div style="text-align: left;">
 				<?php foreach ($this->payment_types as $cur_payment_type) { ?>
-				<button id="payment_<?php echo $cur_payment_type->guid; ?>" class="ui-state-default ui-corner-all payment-button" type="button" style="margin-bottom: 2px;" value="<?php echo htmlentities(json_encode((object) array("guid" => $cur_payment_type->guid, "name" => $cur_payment_type->name, "minimum" => $cur_payment_type->minimum))); ?>">
+				<button id="payment_<?php echo $cur_payment_type->guid; ?>" class="ui-state-default ui-corner-all payment-button" type="button" style="margin-bottom: 2px;" value="<?php echo htmlentities(json_encode((object) array('guid' => $cur_payment_type->guid, 'name' => $cur_payment_type->name, 'minimum' => $cur_payment_type->minimum))); ?>">
 					<span class="picon_32x32_actions_list-add" style="display: block; padding-top: 32px; min-width: 50px; background-repeat: no-repeat; background-position: top center;"><?php echo $cur_payment_type->name; ?></span>
 				</button>
 				<?php } ?>
@@ -713,7 +713,7 @@ $this->note = 'Use this form to edit a sale.';
 						</tr>
 					</thead>
 					<tbody>
-						<?php if (is_array($this->entity->payments)) { foreach ($this->entity->payments as $cur_payment) {
+						<?php foreach ($this->entity->payments as $cur_payment) {
 								if (is_null($cur_payment['entity']))
 									continue;
 								?>
@@ -721,7 +721,7 @@ $this->note = 'Use this form to edit a sale.';
 							<td><?php echo $cur_payment['entity']->name; ?></td>
 							<td><?php echo $config->run_sales->round($cur_payment['amount'], $config->com_sales->dec); ?></td>
 						</tr>
-						<?php } } ?>
+						<?php } ?>
 					</tbody>
 				</table>
 			</div>
@@ -755,7 +755,7 @@ $this->note = 'Use this form to edit a sale.';
 		<?php } ?>
 
 		<?php if ($this->entity->status != 'paid') { ?>
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="process" value="Complete" />
+		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="process" value="Tender" />
 		<?php } ?>
 
 		<?php if ($this->entity->status != 'paid' && $this->entity->status != 'invoiced') { ?>

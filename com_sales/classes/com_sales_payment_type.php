@@ -20,12 +20,14 @@ defined('P_RUN') or die('Direct access prohibited');
 class com_sales_payment_type extends entity {
 	/**
 	 * Load a payment type.
-	 * @param int $id The ID of the payment type to load, null for a new payment type.
+	 * @param int $id The ID of the payment type to load, 0 for a new payment type.
 	 */
-	public function __construct($id = null) {
+	public function __construct($id = 0) {
 		parent::__construct();
 		$this->add_tag('com_sales', 'payment_type');
-		if (!is_null($id)) {
+		// Defaults.
+		$this->enabled = true;
+		if ($id > 0) {
 			global $config;
 			$entity = $config->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
 			if (is_null($entity))
@@ -33,7 +35,6 @@ class com_sales_payment_type extends entity {
 			$this->guid = $entity->guid;
 			$this->parent = $entity->parent;
 			$this->tags = $entity->tags;
-			$this->entity_cache = array();
 			$this->put_data($entity->get_data());
 		}
 	}

@@ -127,7 +127,7 @@ $this->note = 'Provide product details in this form.';
 			</div>
 			<div class="element">
 				<label><span class="label">Enabled</span>
-					<input class="field" type="checkbox" name="enabled" size="24" value="ON"<?php echo ($this->entity->enabled || is_null($this->entity->enabled)) ? ' checked="checked"' : ''; ?> /></label>
+					<input class="field" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="element">
 				<label><span class="label">Product SKU</span>
@@ -528,7 +528,7 @@ $this->note = 'Provide product details in this form.';
 					<span class="note">Hold Ctrl (Command on Mac) to select multiple.</span>
 					<select class="field" name="additional_tax_fees[]" size="6" multiple="multiple">
 						<?php foreach ($this->tax_fees as $cur_tax_fee) { ?>
-						<option value="<?php echo $cur_tax_fee->guid; ?>"<?php echo (is_array($this->entity->additional_tax_fees) && in_array($cur_tax_fee, $this->entity->additional_tax_fees)) ? ' selected="selected"' : ''; ?>><?php echo $cur_tax_fee->name; ?></option>
+						<option value="<?php echo $cur_tax_fee->guid; ?>"<?php echo ($cur_tax_fee->in_array($this->entity->additional_tax_fees)) ? ' selected="selected"' : ''; ?>><?php echo $cur_tax_fee->name; ?></option>
 						<?php } ?>
 					</select></label>
 			</div>
@@ -545,17 +545,17 @@ $this->note = 'Provide product details in this form.';
 			</div>
 			<div class="element">
 				<label><span class="label">Serialized</span>
-					<input class="field" type="checkbox" name="serialized" size="24" value="ON"<?php echo ($this->entity->serialized || is_null($this->entity->serialized)) ? ' checked="checked"' : ''; ?> /></label>
+					<input class="field" type="checkbox" name="serialized" size="24" value="ON"<?php echo $this->entity->serialized ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="element">
 				<label><span class="label">Discountable</span>
-					<input class="field" type="checkbox" name="discountable" size="24" value="ON"<?php echo ($this->entity->discountable || is_null($this->entity->discountable)) ? ' checked="checked"' : ''; ?> /></label>
+					<input class="field" type="checkbox" name="discountable" size="24" value="ON"<?php echo $this->entity->discountable ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<?php if ($config->run_sales->com_customer) { ?>
 			<div class="element">
 				<label><span class="label">Require Customer</span>
 					<span class="note">This means a customer must be selected when selling this item.</span>
-					<input class="field" type="checkbox" name="require_customer" size="24" value="ON"<?php echo ($this->entity->require_customer || is_null($this->entity->require_customer)) ? ' checked="checked"' : ''; ?> /></label>
+					<input class="field" type="checkbox" name="require_customer" size="24" value="ON"<?php echo $this->entity->require_customer ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<?php } ?>
 			<div class="element">
@@ -569,7 +569,7 @@ $this->note = 'Provide product details in this form.';
 			<div class="element full_width">
 				<span class="label">Additional Barcodes</span>
 				<div class="group">
-					<input class="field" type="text" name="additional_barcodes" size="24" value="<?php echo (is_array($this->entity->additional_barcodes) ? implode(',', $this->entity->additional_barcodes) : ''); ?>" />
+					<input class="field" type="text" name="additional_barcodes" size="24" value="<?php echo implode(',', $this->entity->additional_barcodes); ?>" />
 					<script type="text/javascript">
 						// <![CDATA[
 						$(function(){
@@ -585,7 +585,7 @@ $this->note = 'Provide product details in this form.';
 					<span class="note">Hold Ctrl (Command on Mac) to select multiple.</span>
 					<select class="field" name="actions[]" size="6" multiple="multiple">
 						<?php foreach ($this->actions as $cur_action) { ?>
-						<option value="<?php echo $cur_action['name']; ?>" title="<?php echo $cur_action['description']; ?>"<?php echo (is_array($this->entity->actions) && in_array($cur_action['name'], $this->entity->actions)) ? ' selected="selected"' : ''; ?>><?php echo $cur_action['cname']; ?></option>
+						<option value="<?php echo $cur_action['name']; ?>" title="<?php echo $cur_action['description']; ?>"<?php echo in_array($cur_action['name'], $this->entity->actions) ? ' selected="selected"' : ''; ?>><?php echo $cur_action['cname']; ?></option>
 						<?php } ?>
 					</select></label>
 			</div>

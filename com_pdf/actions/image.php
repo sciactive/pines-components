@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if (!gatekeeper())
-	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_pdf', 'image', $_GET, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_pdf', 'image', $_GET, false));
 
 $page->override = true;
 

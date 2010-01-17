@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_configure/edit') && !gatekeeper('com_configure/view') )
-	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_configure', 'list', $_GET, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_configure', 'list', $_GET, false));
 
 if (isset($_REQUEST['message']))
 	display_notice($_REQUEST['message']);

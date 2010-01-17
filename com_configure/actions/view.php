@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_configure/view') )
-	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_configure', 'view', $_GET, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_configure', 'view', $_GET, false));
 
 if (!array_key_exists($_REQUEST['component'], $config->configurator->config_files)) {
 	display_error('Given component either does not exist, or has no configuration file!');

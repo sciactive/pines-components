@@ -184,7 +184,7 @@ $this->note = 'Use this form to transfer inventory to another location.';
 						</tr>
 					</thead>
 					<tbody>
-						<?php if (is_array($this->entity->stock)) { foreach ($this->entity->stock as $cur_stock) {
+						<?php foreach ($this->entity->stock as $cur_stock) {
 								if (is_null($cur_stock->guid))
 									continue;
 								?>
@@ -196,7 +196,7 @@ $this->note = 'Use this form to transfer inventory to another location.';
 							<td><?php echo $cur_stock->cost; ?></td>
 							<td><?php echo $cur_stock->status; ?></td>
 						</tr>
-						<?php } } ?>
+						<?php } ?>
 					</tbody>
 				</table>
 			</div>

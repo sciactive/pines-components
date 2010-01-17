@@ -63,6 +63,8 @@ class com_entity extends component {
 	/**
 	 * Get an array of entities.
 	 *
+	 * GUIDs start at one (1) and must be integers.
+	 *
 	 * $options can contain the following key/values:
 	 *
 	 * - guid - A GUID or array of GUIDs.

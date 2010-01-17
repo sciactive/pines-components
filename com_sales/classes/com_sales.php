@@ -517,17 +517,13 @@ class com_sales extends component {
 	/**
 	 * Creates and attaches a module containing a form for receiving inventory.
 	 *
-	 * @param string $new_option The option to which the form will submit.
-	 * @param string $new_action The action to which the form will submit.
 	 * @return module|null The new module on success, nothing on failure.
 	 */
-	function print_receive_form($new_option, $new_action) {
+	function print_receive_form() {
 		global $config;
 		$pgrid = new module('system', 'pgrid.default', 'head');
 		$pgrid->icons = true;
 		$module = new module('com_sales', 'form_receive', 'content');
-		$module->new_option = $new_option;
-		$module->new_action = $new_action;
 
 		return $module;
 	}

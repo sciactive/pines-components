@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('system/all') )
-	$config->user_manager->punt_user("You don't have necessary permission.", pines_url('com_sales', 'updateentities', null, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'updateentities', null, false));
 
 // POs
 $array = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'po'), 'class' => com_sales_po));

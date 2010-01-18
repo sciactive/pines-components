@@ -29,6 +29,7 @@ $payment_type->name = $_REQUEST['name'];
 $payment_type->enabled = ($_REQUEST['enabled'] == 'ON');
 $payment_type->change_type = ($_REQUEST['change_type'] == 'ON');
 $payment_type->minimum = floatval($_REQUEST['minimum']);
+$payment_type->maximum = floatval($_REQUEST['maximum']);
 
 if (empty($payment_type->name)) {
 	$payment_type->print_form();
@@ -41,9 +42,10 @@ if (isset($test) && $test->guid != $_REQUEST['id']) {
 	display_notice('There is already a payment type with that name. Please choose a different name.');
 	return;
 }
-if (empty($payment_type->minimum)) {
+if (empty($payment_type->minimum))
 	$payment_type->minimum = 0;
-}
+if (empty($payment_type->maximum))
+	$payment_type->maximum = null;
 
 if ($config->com_sales->global_payment_types) {
 	$payment_type->ac = (object) array('other' => 1);

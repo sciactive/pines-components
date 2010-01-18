@@ -139,7 +139,18 @@ class com_sales_sale extends entity {
 				return false;
 			}
 		}
+
+		// Process the payments.
 		foreach ($this->payments as &$cur_payment) {
+			// If its already tendered, skip it.
+			if ($cur_payment['tendered'])
+				continue;
+			// Check minimum and maximum values.
+			if ((float) $cur_payment['amount'] < $cur_payment['entity']->minimum || (float) $cur_payment['amount'] > $cur_payment['entity']->maximum) {
+				$cur_payment->tendered = false;
+				$return = false;
+				continue;
+			}
 			// Make a transaction entry.
 			$tx = com_sales_tx::factory('com_sales', 'transaction', 'payment_tx');
 			$tx->type = 'payment_received';
@@ -151,9 +162,13 @@ class com_sales_sale extends entity {
 				$return = $return && $this->save();
 
 			$tx->ticket = $this;
+			// Mark payment as tendered.
+			$cur_payment['tendered'] = true;
 			$return = $return && $tx->save();
 		}
-		if ($this->change > 0.00) {
+
+		// Process the change.
+		if (!$this->change_given && $this->change > 0.00) {
 			// Make a transaction entry.
 			$tx = com_sales_tx::factory('com_sales', 'transaction', 'payment_tx');
 			$tx->type = 'change_given';
@@ -165,20 +180,26 @@ class com_sales_sale extends entity {
 				$return = $return && $this->save();
 
 			$tx->ticket = $this;
+			// Mark the change as given.
+			$this->change_given = true;
 			$return = $return && $tx->save();
 		}
-		// Make a transaction entry.
-		$tx = com_sales_tx::factory('com_sales', 'transaction', 'sale_tx');
 
-		$this->status = 'paid';
-		$tx->type = 'paid';
+		// Complete the transaction.
+		if ($return) {
+			// Make a transaction entry.
+			$tx = com_sales_tx::factory('com_sales', 'transaction', 'sale_tx');
 
-		// Make sure we have a GUID before saving the tx.
-		if (!($this->guid))
-			$return = $return && $this->save();
+			$this->status = 'paid';
+			$tx->type = 'paid';
 
-		$tx->ticket = $this;
-		$return = $return && $tx->save();
+			// Make sure we have a GUID before saving the tx.
+			if (!($this->guid))
+				$return = $return && $this->save();
+
+			$tx->ticket = $this;
+			$return = $return && $tx->save();
+		}
 
 		return $return;
 	}

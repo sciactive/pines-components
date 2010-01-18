@@ -43,6 +43,11 @@ $this->note = 'Provide payment type details in this form.';
 			<span class="note">The minimum charge in dollars that this payment type will accept.</span>
 			<input class="field" type="text" name="minimum" size="24" value="<?php echo $this->entity->minimum; ?>" /></label>
 	</div>
+	<div class="element">
+		<label><span class="label">Maximum Charge</span>
+			<span class="note">The maximum charge in dollars that this payment type will accept.</span>
+			<input class="field" type="text" name="maximum" size="24" value="<?php echo $this->entity->maximum; ?>" /></label>
+	</div>
 	<div class="element buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />

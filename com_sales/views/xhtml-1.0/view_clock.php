@@ -19,7 +19,7 @@ $this->title = "Employee Timeclock for {$this->user->name} [{$this->user->userna
 		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
 		var cur_defaults = {
 			pgrid_toolbar: false,
-			pgrid_sort_col: 'col_1',
+			pgrid_sort_col: 1,
 			pgrid_sort_ord: 'asc',
 			pgrid_state_change: function(state) {
 				if (typeof state_xhr == "object")

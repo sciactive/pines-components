@@ -36,7 +36,7 @@ $this->title = 'Stock';
 					});
 				}}
 			],
-			pgrid_sort_col: 'col_1',
+			pgrid_sort_col: 1,
 			pgrid_sort_ord: 'asc',
 			pgrid_state_change: function(state) {
 				if (typeof state_xhr == "object")

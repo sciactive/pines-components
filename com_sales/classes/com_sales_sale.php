@@ -108,6 +108,113 @@ class com_sales_sale extends entity {
 	}
 
 	/**
+	 * Approve each payment.
+	 *
+	 * @return bool True on success, false on failure.
+	 */
+	public function approve_payments() {
+		global $config;
+		$return = true;
+		// Go through each payment, and process its approval.
+		foreach ($this->payments as &$cur_payment) {
+			// If its already approved or tendered, skip it.
+			if (in_array($cur_payment['status'], array('approved', 'declined', 'tendered')))
+				continue;
+			// Check minimum and maximum values.
+			if ((float) $cur_payment['amount'] < $cur_payment['entity']->minimum) {
+				display_notice("The payment type [{$cur_payment['entity']->name}] requires a minimum payment of {$cur_payment['entity']->minimum}.");
+				$cur_payment['status'] = 'declined';
+				$return = false;
+				continue;
+			}
+			if (isset($cur_payment['entity']->maximum) && (float) $cur_payment['amount'] > $cur_payment['entity']->maximum) {
+				display_notice("The payment type [{$cur_payment['entity']->name}] requires a maximum payment of {$cur_payment['entity']->maximum}.");
+				$cur_payment['status'] = 'declined';
+				$return = false;
+				continue;
+			}
+			// Call the payment processing for approval.
+			$config->run_sales->call_payment_process(array(
+				'action' => 'approve',
+				'name' => $cur_payment['entity']->processing_type,
+				'payment' => &$cur_payment,
+				'sale' => &$this
+			));
+			if (!in_array($cur_payment['status'], array('approved', 'declined')))
+				$return = false;
+		}
+		return $return;
+	}
+
+	/**
+	 * Process each payment.
+	 *
+	 * This process updates "amount_tendered", "amount_due", and "change" on the
+	 * sale itself.
+	 *
+	 * @return bool True on success, false on failure.
+	 */
+	public function tender_payments() {
+		global $config;
+		if (!is_array($this->payments))
+			$this->payments = array();
+		if (!is_numeric($this->total))
+			return false;
+		$total = (float) $this->total;
+		$amount_tendered = (float) $this->amount_tendered;
+		$amount_due = 0.00;
+		$change = 0.00;
+		$return = true;
+		foreach ($this->payments as &$cur_payment) {
+			// If its already tendered, skip it.
+			if (in_array($cur_payment['status'], array('declined', 'tendered')))
+				continue;
+			// If its not approved, sale can't be tendered.
+			if ($cur_payment['status'] != 'approved') {
+				$return = false;
+				continue;
+			}
+			// Call the payment processing.
+			$config->run_sales->call_payment_process(array(
+				'action' => 'tender',
+				'name' => $cur_payment['entity']->processing_type,
+				'payment' => &$cur_payment,
+				'sale' => &$this
+			));
+			// If the payment went through, record it, if it didn't and it
+			// wasn't declined, consider it a failure.
+			if ($cur_payment['status'] != 'tendered') {
+				if ($cur_payment['status'] != 'declined')
+					$return = false;
+			} else {
+				// If it was tendered, add to the amount tendered.
+				$amount_tendered += (float) $cur_payment['amount'];
+				// Make a transaction entry.
+				$tx = com_sales_tx::factory('com_sales', 'transaction', 'payment_tx');
+				$tx->type = 'payment_received';
+				$tx->amount = (float) $cur_payment['amount'];
+				$tx->ref = $cur_payment['entity'];
+
+				// Make sure we have a GUID before saving the tx.
+				if (!($this->guid))
+					$return = $return && $this->save();
+
+				$tx->ticket = $this;
+				$return = $return && $tx->save();
+			}
+		}
+		$amount_due = $total - $amount_tendered;
+		if ($amount_due < 0.00) {
+			$change = abs($amount_due);
+			$amount_due = 0.00;
+		}
+		$this->amount_tendered = $amount_tendered;
+		$this->amount_due = $amount_due;
+		$this->change = $change;
+		return $return;
+	}
+
+	/**
 	 * Complete the sale.
 	 *
 	 * This process creates payment transaction entries for each payment and any
@@ -124,8 +231,12 @@ class com_sales_sale extends entity {
 			return false;
 		// Keep track of the whole process.
 		$return = true;
-		if (!$this->tender()) {
-			display_error('There was an error while tendering payments.');
+		if (!$this->approve_payments()) {
+			display_notice('The sale cannot be completed until all payments have been approved or declined.');
+			return false;
+		}
+		if (!$this->tender_payments()) {
+			display_notice('All payments have not been tendered. The sale was not completed. Please check the status on each payment.');
 			return false;
 		}
 		if (!isset($this->amount_due) || $this->amount_due > 0) {
@@ -140,49 +251,30 @@ class com_sales_sale extends entity {
 			}
 		}
 
-		// Process the payments.
-		foreach ($this->payments as &$cur_payment) {
-			// If its already tendered, skip it.
-			if ($cur_payment['tendered'])
-				continue;
-			// Check minimum and maximum values.
-			if ((float) $cur_payment['amount'] < $cur_payment['entity']->minimum || (float) $cur_payment['amount'] > $cur_payment['entity']->maximum) {
-				$cur_payment->tendered = false;
-				$return = false;
-				continue;
-			}
-			// Make a transaction entry.
-			$tx = com_sales_tx::factory('com_sales', 'transaction', 'payment_tx');
-			$tx->type = 'payment_received';
-			$tx->amount = (float) $cur_payment['amount'];
-			$tx->ref = $cur_payment['entity'];
-
-			// Make sure we have a GUID before saving the tx.
-			if (!($this->guid))
-				$return = $return && $this->save();
-
-			$tx->ticket = $this;
-			// Mark payment as tendered.
-			$cur_payment['tendered'] = true;
-			$return = $return && $tx->save();
-		}
-
 		// Process the change.
 		if (!$this->change_given && $this->change > 0.00) {
-			// Make a transaction entry.
-			$tx = com_sales_tx::factory('com_sales', 'transaction', 'payment_tx');
-			$tx->type = 'change_given';
-			$tx->amount = (float) $this->change;
-			$tx->ref = $change_type;
+			$config->run_sales->call_payment_process(array(
+				'action' => 'change',
+				'name' => $change_type->processing_type,
+				'sale' => &$this
+			));
+			if (!$this->change_given) {
+				display_notice('Change is due, but the payment type designated to give change declined the request.');
+				$return = false;
+			} else {
+				// Make a transaction entry.
+				$tx = com_sales_tx::factory('com_sales', 'transaction', 'payment_tx');
+				$tx->type = 'change_given';
+				$tx->amount = (float) $this->change;
+				$tx->ref = $change_type;
 
-			// Make sure we have a GUID before saving the tx.
-			if (!($this->guid))
-				$return = $return && $this->save();
+				// Make sure we have a GUID before saving the tx.
+				if (!($this->guid))
+					$return = $return && $this->save();
 
-			$tx->ticket = $this;
-			// Mark the change as given.
-			$this->change_given = true;
-			$return = $return && $tx->save();
+				$tx->ticket = $this;
+				$return = $return && $tx->save();
+			}
 		}
 
 		// Complete the transaction.
@@ -311,6 +403,8 @@ class com_sales_sale extends entity {
 		}
 		unset($cur_product);
 
+		$this->approve_payments();
+
 		// Make a transaction entry.
 		$tx = com_sales_tx::factory('com_sales', 'transaction', 'sale_tx');
 
@@ -325,38 +419,6 @@ class com_sales_sale extends entity {
 		$return = $return && $tx->save();
 
 		return $return;
-	}
-
-	/**
-	 * Calculate and set the sale's payment totals.
-	 *
-	 * This process adds "amount_tendered", "amount_due", and "change" to the
-	 * sale itself.
-	 *
-	 * @return bool True on success, false on failure.
-	 */
-	public function tender() {
-		global $config;
-		if (!is_array($this->payments))
-			$this->payments = array();
-		if (!is_numeric($this->total))
-			return false;
-		$total = (float) $this->total;
-		$amount_tendered = 0.00;
-		$amount_due = 0.00;
-		$change = 0.00;
-		foreach ($this->payments as &$cur_payment) {
-			$amount_tendered += (float) $cur_payment['amount'];
-		}
-		$amount_due = $total - $amount_tendered;
-		if ($amount_due < 0.00) {
-			$change = abs($amount_due);
-			$amount_due = 0.00;
-		}
-		$this->amount_tendered = $config->run_sales->round($amount_tendered, $config->com_sales->dec);
-		$this->amount_due = $config->run_sales->round($amount_due, $config->com_sales->dec);
-		$this->change = $config->run_sales->round($change, $config->com_sales->dec);
-		return true;
 	}
 
 	/**

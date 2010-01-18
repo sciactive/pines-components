@@ -343,7 +343,15 @@ $this->note = 'Use this form to edit a sale.';
 						extra_class: 'icon picon_16x16_actions_edit-delete',
 						multi_select: true,
 						click: function(e, rows){
-							rows.pgrid_delete();
+							rows.each(function(){
+								var cur_row = $(this);
+								var cur_status = cur_row.pgrid_get_value(3);
+								if (cur_status == "approved" || cur_status == "declined" || cur_status == "tendered") {
+									alert("Payments cannot be removed if they have been approved, declined, or tendered.");
+									return;
+								}
+								cur_row.pgrid_delete();
+							});
 							update_payments();
 						}
 					}
@@ -368,7 +376,8 @@ $this->note = 'Use this form to edit a sale.';
 					.click(function(){
 						payments_table.pgrid_add([{key: payment_type.guid, values: [
 							payment_type.name,
-							round_to_dec($("#amount_due").html())
+							round_to_dec($("#amount_due").html()),
+							"pending"
 						]}]);
 						amount_dialog.dialog("close");
 						update_payments();
@@ -384,7 +393,8 @@ $this->note = 'Use this form to edit a sale.';
 						.click(function(){
 							payments_table.pgrid_add([{key: payment_type.guid, values: [
 								payment_type.name,
-								round_to_dec(cur_amount)
+								round_to_dec(cur_amount),
+								"pending"
 							]}]);
 							amount_dialog.dialog("close");
 							update_payments();
@@ -404,7 +414,8 @@ $this->note = 'Use this form to edit a sale.';
 						if (cur_amount != null) {
 							payments_table.pgrid_add([{key: payment_type.guid, values: [
 								payment_type.name,
-								round_to_dec(cur_amount)
+								round_to_dec(cur_amount),
+								"pending"
 							]}]);
 						}
 						amount_dialog.dialog("close");
@@ -710,16 +721,15 @@ $this->note = 'Use this form to edit a sale.';
 						<tr>
 							<th>Type</th>
 							<th>Amount</th>
+							<th>Status</th>
 						</tr>
 					</thead>
 					<tbody>
-						<?php foreach ($this->entity->payments as $cur_payment) {
-								if (is_null($cur_payment['entity']))
-									continue;
-								?>
+						<?php foreach ($this->entity->payments as $cur_payment) { ?>
 						<tr title="<?php echo $cur_payment['entity']->guid; ?>">
 							<td><?php echo $cur_payment['entity']->name; ?></td>
 							<td><?php echo $config->run_sales->round($cur_payment['amount'], $config->com_sales->dec); ?></td>
+							<td><?php echo $cur_payment['status']; ?></td>
 						</tr>
 						<?php } ?>
 					</tbody>

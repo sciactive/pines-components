@@ -25,6 +25,7 @@ class com_sales_payment_type extends entity {
 	public function __construct($id = 0) {
 		parent::__construct();
 		$this->add_tag('com_sales', 'payment_type');
+		$this->processing_type = 'com_sales/instant';
 		// Defaults.
 		$this->enabled = true;
 		if ($id > 0) {
@@ -77,8 +78,13 @@ class com_sales_payment_type extends entity {
 	 * @return module The form's module.
 	 */
 	public function print_form() {
+		global $config;
 		$module = new module('com_sales', 'form_payment_type', 'content');
 		$module->entity = $this;
+		$module->processing_types = $config->run_sales->processing_types;
+		if (!is_array($module->processing_types)) {
+			$module->processing_types = array();
+		}
 
 		return $module;
 	}

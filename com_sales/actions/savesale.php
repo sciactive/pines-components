@@ -93,17 +93,23 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid') {
 // Used for payment error checking.
 $payment_error = false;
 if ($sale->status != 'paid') {
-	$sale->payments = json_decode($_REQUEST['payments']);
-	if (!is_array($sale->payments))
-		$sale->payments = array();
-	foreach ($sale->payments as $key => &$cur_payment) {
-		$cur_payment_type_entity = com_sales_payment_type::factory(intval($cur_payment->key));
+	foreach ($sale->payments as $key => $cur_payment) {
+		if (!in_array($cur_payment['status'], array('approved', 'declined', 'tendered')))
+			unset($sale->payments[$key]);
+	}
+	$payments = json_decode($_REQUEST['payments']);
+	if (!is_array($payments))
+		$payments = array();
+	foreach ($payments as $cur_payment) {
+		$cur_payment_type_entity = com_sales_payment_type::factory((int) $cur_payment->key);
 		// Not used, but possibly in the future for logging purposes. (If the type is deleted.)
 		$cur_type = $cur_payment->values[0];
 		$cur_amount = floatval($cur_payment->values[1]);
+		$cur_status = $cur_payment->values[2];
+		if (in_array($cur_status, array('approved', 'declined', 'tendered')))
+			continue;
 		if (is_null($cur_payment_type_entity->guid)) {
 			display_error("Payment type with id [$cur_payment->key] was not found.");
-			unset($sale->payments[$key]);
 			$payment_error = true;
 			continue;
 		}
@@ -111,17 +117,13 @@ if ($sale->status != 'paid') {
 			display_notice("A payment was entered without an amount.");
 			$payment_error = true;
 		}
-		if ($cur_amount < $cur_payment_type_entity->minimum) {
-			display_notice("The payment type [$cur_type] requires a minimum payment of {$cur_payment_type_entity->minimum}.");
-			$payment_error = true;
-		}
-		$cur_payment = array(
+		$sale->payments[] = array(
 			'entity' => $cur_payment_type_entity,
 			'type' => $cur_type,
-			'amount' => $cur_amount
+			'amount' => $cur_amount,
+			'status' => $cur_status
 		);
 	}
-	unset($cur_payment);
 }
 $sale->comments = $_REQUEST['comments'];
 
@@ -136,6 +138,7 @@ if ($config->com_sales->global_sales) {
 
 if (($_REQUEST['process'] == 'Invoice' || $_REQUEST['process'] == 'Tender') && $sale->status != 'invoiced' && $sale->status != 'paid') {
 	if (!$sale->invoice()) {
+		$sale->save();
 		$sale->print_form();
 		display_error('There was an error while invoicing the sale. Please check that all information is correct and resubmit.');
 		return;
@@ -144,6 +147,7 @@ if (($_REQUEST['process'] == 'Invoice' || $_REQUEST['process'] == 'Tender') && $
 
 if ($_REQUEST['process'] == 'Tender') {
 	if (!$sale->complete()) {
+		$sale->save();
 		$sale->print_form();
 		display_error('There was an error while completing the sale. It has been invoiced, but not completed yet. Please check that all information is correct and resubmit.');
 		return;

@@ -48,6 +48,15 @@ $this->note = 'Provide payment type details in this form.';
 			<span class="note">The maximum charge in dollars that this payment type will accept.</span>
 			<input class="field" type="text" name="maximum" size="24" value="<?php echo $this->entity->maximum; ?>" /></label>
 	</div>
+	<div class="element">
+		<label><span class="label">Processing Type</span>
+			<span class="note">This will determine how the payment is approved and processed.</span>
+			<select class="field" name="processing_type" size="6">
+				<?php foreach ($this->processing_types as $cur_type) { ?>
+				<option value="<?php echo $cur_type['name']; ?>" title="<?php echo $cur_type['description']; ?>"<?php echo $this->entity->processing_type == $cur_type['name'] ? ' selected="selected"' : ''; ?>><?php echo $cur_type['cname']; ?></option>
+				<?php } ?>
+			</select></label>
+	</div>
 	<div class="element buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />

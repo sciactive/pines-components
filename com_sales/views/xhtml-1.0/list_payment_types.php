@@ -59,6 +59,8 @@ $this->title = 'Payment Types';
 			<th>Enabled</th>
 			<th>Change Type</th>
 			<th>Minimum</th>
+			<th>Maximum</th>
+			<th>Processing Type</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -68,6 +70,8 @@ $this->title = 'Payment Types';
 			<td><?php echo $payment_type->enabled ? 'True' : 'False'; ?></td>
 			<td><?php echo $payment_type->change_type ? 'True' : 'False'; ?></td>
 			<td><?php echo $payment_type->minimum; ?></td>
+			<td><?php echo $payment_type->maximum; ?></td>
+			<td><?php echo $payment_type->processing_type; ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

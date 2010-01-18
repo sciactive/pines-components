@@ -28,13 +28,57 @@ class com_sales extends component {
 	var $com_customer;
 
 	/**
+	 * List of payment processing types.
+	 *
+	 * Payment processing types allow another component to handle the processing
+	 * of payments, such as credit card or gift card payments.
+	 *
+	 * To add a processing type, your code must add a new array with the
+	 * following values:
+	 *
+	 * - "name" - The name of your type. Ex: 'com_giftcard/giftcard'
+	 * - "cname" - The canonical name of your action. Ex: 'Gift Card'
+	 * - "description" - A description of the action. Ex: 'Deduct the payment from a gift card.'
+	 * - "callback" - Callback to your function. Ex: array($config->run_giftcard, 'process_giftcard')
+	 *
+	 * The callback will be passed an array which may contain the following
+	 * associative entries:
+	 *
+	 * - "action" - The processing which is being requested.
+	 * - "name" - The name of the type being called.
+	 * - "payment" - The sale's payment entry. This holds information about the payment.
+	 * - "sale" - The sale entity.
+	 *
+	 * "action" will be one of:
+	 *
+	 * - "request" - The payment type has been selected.
+	 * - "approve" - The sale is being invoiced, and the payment needs to be approved.
+	 * - "tender" - The sale is being processed, and the payment needs to be processed.
+	 * - "change" - The sale requires change to be given, and this payment type has been selected to give change.
+	 * - "return" - The payment is being returned and the funds need to be returned.
+	 *
+	 * If "action" is "approve", the callback needs to set the "status" entry on
+	 * the payment array to "approved", "declined", "info_requested", or
+	 * "manager_approval_needed".
+	 *
+	 * If "action" is "tender", the callback can then also set the "status" to
+	 * "tendered".
+	 *
+	 * If "action" is "change", the callback needs to set the "change_given"
+	 * variable on the sale object to true or false.
+	 *
+	 * @var array $processing_types
+	 */
+	public $processing_types = array();
+
+	/**
 	 * List of product actions.
-	 * 
+	 *
 	 * Product actions are callbacks that can be called when a product is
 	 * received, adjusted, sold, or returned.
 	 *
-	 * To add a product action, your code must add a new array to $config-> with
-	 * the following values:
+	 * To add a product action, your code must add a new array with the
+	 * following values:
 	 *
 	 * - "type" - An array or string of the event(s) the action should be called for. Out of "received", "adjusted", "sold", and "returned".
 	 * - "name" - The name of your action. Ex: 'com_gamephear/create_gamephear_account'
@@ -52,7 +96,7 @@ class com_sales extends component {
 	 * - "sale" - The sale entity.
 	 * - "po" - The PO entity.
 	 * - "transfer" - The transfer entity.
-	 * 
+	 *
 	 * @var array $product_actions
 	 */
 	public $product_actions = array();
@@ -65,6 +109,47 @@ class com_sales extends component {
 	function __construct() {
 		global $config;
 		$this->com_customer = $config->depend->check('component', 'com_customer');
+	}
+
+	/**
+	 * Process an instant approval payment.
+	 *
+	 * @param array $args The argument array.
+	 */
+	function payment_instant($args) {
+		switch ($args['action']) {
+			case 'approve':
+				$args['payment']['status'] = 'approved';
+				break;
+			case 'tender':
+				$args['payment']['status'] = 'tendered';
+				break;
+			case 'change':
+				$args['sale']->change_given = true;
+				break;
+		}
+	}
+
+	function payment_manager() {
+		//return
+	}
+	
+	function call_payment_process($arguments = array()) {
+		global $config;
+		if (!is_array($arguments))
+			return false;
+		if (empty($arguments['action']))
+			return false;
+		if (!is_object($arguments['sale']))
+			return false;
+		foreach ($this->processing_types as $cur_type) {
+			if ($arguments['name'] != $cur_type['name'])
+				continue;
+			if (!is_callable($cur_type['callback']))
+				continue;
+			call_user_func_array($cur_type['callback'], array($arguments));
+		}
+		return true;
 	}
 
 	/**
@@ -85,7 +170,7 @@ class com_sales extends component {
 		// If the product has no actions associated with it, don't bother going through the actions.
 		if (!is_array($arguments['product']->actions) || empty($arguments['product']->actions))
 			return true;
-		foreach($this->product_actions as $cur_action) {
+		foreach ($this->product_actions as $cur_action) {
 			if (is_array($cur_action['type'])) {
 				if (!in_array($arguments['type'], $cur_action['type']))
 					continue;

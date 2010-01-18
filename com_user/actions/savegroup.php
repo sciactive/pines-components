@@ -58,7 +58,7 @@ $group->timezone = $_REQUEST['timezone'];
 if ( $_REQUEST['parent'] == 'none' ) {
 	$parent = NULL;
 } else {
-	if ( is_null(group::factory($_REQUEST['parent'])->guid) || $_REQUEST['parent'] == $group->guid ) {
+	if ( is_null(group::factory($_REQUEST['parent'])) || $_REQUEST['parent'] == $group->guid ) {
 		display_error('Parent is not valid!');
 		$pass = false;
 	} else {

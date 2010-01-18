@@ -184,6 +184,7 @@ $this->note = 'Provide customer account details in this form.';
 			<?php if ($config->com_customer->ssn_field) { ?>
 			<div class="element">
 				<label><span class="label">SSN</span>
+					<span class="note">Format ###-##-####</span>
 					<input class="field" type="text" name="ssn" size="24" value="<?php echo $this->entity->ssn; ?>" /></label>
 			</div>
 			<?php } ?>

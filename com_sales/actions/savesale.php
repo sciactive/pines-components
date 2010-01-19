@@ -106,6 +106,7 @@ if ($sale->status != 'paid') {
 		$cur_type = $cur_payment->values[0];
 		$cur_amount = floatval($cur_payment->values[1]);
 		$cur_status = $cur_payment->values[2];
+		$data = json_decode($cur_payment->values[3]);
 		if (in_array($cur_status, array('approved', 'declined', 'tendered')))
 			continue;
 		if (is_null($cur_payment_type_entity->guid)) {
@@ -117,11 +118,18 @@ if ($sale->status != 'paid') {
 			display_notice("A payment was entered without an amount.");
 			$payment_error = true;
 		}
+		$data_array = array();
+		if (is_array($data->data)) {
+			foreach ($data->data as $cur_data) {
+				$data_array[$cur_data->name] = $cur_data->value;
+			}
+		}
 		$sale->payments[] = array(
 			'entity' => $cur_payment_type_entity,
 			'type' => $cur_type,
 			'amount' => $cur_amount,
-			'status' => $cur_status
+			'status' => $cur_status,
+			'data' => $data_array
 		);
 	}
 }
@@ -138,7 +146,6 @@ if ($config->com_sales->global_sales) {
 
 if (($_REQUEST['process'] == 'Invoice' || $_REQUEST['process'] == 'Tender') && $sale->status != 'invoiced' && $sale->status != 'paid') {
 	if (!$sale->invoice()) {
-		$sale->save();
 		$sale->print_form();
 		display_error('There was an error while invoicing the sale. Please check that all information is correct and resubmit.');
 		return;

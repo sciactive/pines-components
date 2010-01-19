@@ -118,6 +118,7 @@ function com_user_check_permissions_save($array) {
  * - The user has the "system/all" ability. (Always returned.)
  * - The entity is the user. (Always returned.)
  * - It is the user's primary group. (Always returned.)
+ * - The entity is a user or group. (Always returned.)
  * - Its UID is the user. (It is owned by the user.) (Check user AC.)
  * - Its parent is the user. (Check user AC.)
  * - Its GID is the user's primary group. (Check group AC.)
@@ -144,6 +145,8 @@ function com_user_check_permissions(&$entity, $type = 1) {
 	if ($entity->guid == $_SESSION['user']->guid)
 		return true;
 	if ($entity->guid == $_SESSION['user']->gid)
+		return true;
+	if ($entity->has_tag('com_user', 'user') || $entity->has_tag('com_user', 'group'))
 		return true;
 
 	// Load access control, since we need it now...

@@ -326,6 +326,7 @@ $this->note = 'Use this form to edit a sale.';
 			<?php if ($this->entity->status == 'paid') { ?>
 			payments_table.pgrid({
 				pgrid_view_height: "150px",
+				pgrid_hidden_cols: [4],
 				pgrid_paginate: false,
 				pgrid_footer: false,
 				pgrid_toolbar: false
@@ -333,10 +334,62 @@ $this->note = 'Use this form to edit a sale.';
 			<?php } else { ?>
 			payments_table.pgrid({
 				pgrid_view_height: "150px",
+				pgrid_hidden_cols: [4],
 				pgrid_paginate: false,
 				pgrid_footer: false,
 				pgrid_toolbar: true,
 				pgrid_toolbar_contents : [
+					{
+						type: 'button',
+						text: 'Data',
+						extra_class: 'icon picon_16x16_stock_data_stock_data-edit-table',
+						click: function(e, rows){
+							var loader;
+							var payment_data = JSON.parse(rows.pgrid_get_value(4));
+							$.ajax({
+								url: "<?php echo pines_url('com_sales', 'paymentform'); ?>",
+								type: "POST",
+								dataType: "html",
+								data: {"name": payment_data.processing_type},
+								beforeSend: function(){
+									loader = pines.alert('Retrieving data form from server...', 'Payment Data', 'icon picon_16x16_animations_throbber', {pnotify_hide: false, pnotify_history: false});
+								},
+								complete: function(){
+									loader.pnotify_remove();
+								},
+								error: function(XMLHttpRequest, textStatus){
+									pines.error("An error occured while trying to retreive the data form:\n"+XMLHttpRequest.status+": "+textStatus);
+								},
+								success: function(data){
+									if (data == "")
+										return;
+									var form = $("<div title=\"Data for "+rows.pgrid_get_value(1)+" Payment\" />").append(data);
+									form.find("form").submit(function(){
+										form.dialog('option', 'buttons').Done();
+										return false;
+									});
+									if (payment_data.data) {
+										$.each(payment_data.data, function(i, val){
+											form.find(":input[name="+val.name+"]").val(val.value);
+										});
+									}
+									form.dialog({
+										bgiframe: true,
+										autoOpen: true,
+										modal: true,
+										buttons: {
+											"Done": function(){
+												var newdata = {processing_type: payment_data.processing_type, data: form.find("form :input").serializeArray()};
+												rows.pgrid_set_value(4, JSON.stringify(newdata));
+												update_payments();
+												form.dialog('close');
+											}
+										}
+									});
+								}
+							});
+						}
+					},
 					{
 						type: 'button',
 						text: 'Remove',
@@ -364,7 +417,7 @@ $this->note = 'Use this form to edit a sale.';
 				$(this).removeClass("ui-state-hover");
 			}).click(function(){
 				var payment_type = JSON.parse(this.value);
-				// TODO: Minimums
+				// TODO: Minimums, maximums
 				$("<div title=\"Payment Amount\" />").each(function(){
 					var amount_dialog = $(this);
 					// A button for the current amount due.
@@ -377,7 +430,8 @@ $this->note = 'Use this form to edit a sale.';
 						payments_table.pgrid_add([{key: payment_type.guid, values: [
 							payment_type.name,
 							round_to_dec($("#amount_due").html()),
-							"pending"
+							"pending",
+							JSON.stringify({processing_type: payment_type.processing_type})
 						]}]);
 						amount_dialog.dialog("close");
 						update_payments();
@@ -394,7 +448,8 @@ $this->note = 'Use this form to edit a sale.';
 							payments_table.pgrid_add([{key: payment_type.guid, values: [
 								payment_type.name,
 								round_to_dec(cur_amount),
-								"pending"
+								"pending",
+								JSON.stringify({processing_type: payment_type.processing_type})
 							]}]);
 							amount_dialog.dialog("close");
 							update_payments();
@@ -415,7 +470,8 @@ $this->note = 'Use this form to edit a sale.';
 							payments_table.pgrid_add([{key: payment_type.guid, values: [
 								payment_type.name,
 								round_to_dec(cur_amount),
-								"pending"
+								"pending",
+								JSON.stringify({processing_type: payment_type.processing_type})
 							]}]);
 						}
 						amount_dialog.dialog("close");
@@ -531,10 +587,12 @@ $this->note = 'Use this form to edit a sale.';
 			// Calculate the total payments.
 			rows.each(function(){
 				var cur_row = $(this);
-				var amount = parseFloat(cur_row.pgrid_get_value(2).replace(/[^0-9.-]/g, ""));
-				if (isNaN(amount))
-					amount = 0;
-				amount_tendered += amount;
+				if (cur_row.pgrid_get_value(3) != "declined") {
+					var amount = parseFloat(cur_row.pgrid_get_value(2).replace(/[^0-9.-]/g, ""));
+					if (isNaN(amount))
+						amount = 0;
+					amount_tendered += amount;
+				}
 			});
 			amount_due = total - amount_tendered;
 			if (amount_due < 0) {
@@ -695,7 +753,7 @@ $this->note = 'Use this form to edit a sale.';
 		<div class="note">
 			<div style="text-align: left;">
 				<?php foreach ($this->payment_types as $cur_payment_type) { ?>
-				<button id="payment_<?php echo $cur_payment_type->guid; ?>" class="ui-state-default ui-corner-all payment-button" type="button" style="margin-bottom: 2px;" value="<?php echo htmlentities(json_encode((object) array('guid' => $cur_payment_type->guid, 'name' => $cur_payment_type->name, 'minimum' => $cur_payment_type->minimum))); ?>">
+				<button id="payment_<?php echo $cur_payment_type->guid; ?>" class="ui-state-default ui-corner-all payment-button" type="button" style="margin-bottom: 2px;" value="<?php echo htmlentities(json_encode((object) array('guid' => $cur_payment_type->guid, 'name' => $cur_payment_type->name, 'minimum' => $cur_payment_type->minimum, 'maximum' => $cur_payment_type->maximum, 'processing_type' => $cur_payment_type->processing_type))); ?>">
 					<span class="picon_32x32_actions_list-add" style="display: block; padding-top: 32px; min-width: 50px; background-repeat: no-repeat; background-position: top center;"><?php echo $cur_payment_type->name; ?></span>
 				</button>
 				<?php } ?>
@@ -722,14 +780,24 @@ $this->note = 'Use this form to edit a sale.';
 							<th>Type</th>
 							<th>Amount</th>
 							<th>Status</th>
+							<th>Data</th>
 						</tr>
 					</thead>
 					<tbody>
 						<?php foreach ($this->entity->payments as $cur_payment) { ?>
 						<tr title="<?php echo $cur_payment['entity']->guid; ?>">
 							<td><?php echo $cur_payment['entity']->name; ?></td>
-							<td><?php echo $config->run_sales->round($cur_payment['amount'], $config->com_sales->dec); ?></td>
+							<td><?php echo $config->run_sales->round($cur_payment['amount'], $config->com_sales->dec, true); ?></td>
 							<td><?php echo $cur_payment['status']; ?></td>
+							<td><?php
+							$data = array();
+							foreach ($cur_payment['data'] as $cur_key => $cur_value) {
+								$data[] = (object) array('name' => $cur_key, 'value' => $cur_value);
+							}
+							echo json_encode((object) array(
+								'processing_type' => $cur_payment['entity']->processing_type,
+								'data' => $data
+							)); ?></td>
 						</tr>
 						<?php } ?>
 					</tbody>

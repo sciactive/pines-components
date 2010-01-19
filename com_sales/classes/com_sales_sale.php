@@ -361,7 +361,6 @@ class com_sales_sale extends entity {
 							// It wasn't found, and its not optional.
 							display_notice("Product with SKU [{$cur_product['sku']}]".($cur_product['entity']->serialized ? " and serial [{$cur_product['serial']}]" : " and quantity {$cur_product['quantity']}")." is not in local stock.".($cur_product['entity']->serialized ? '' : ' Found '.count($stock_entities).'.'));
 							return false;
-							break;
 						} else {
 							// It wasn't found, but it's optional, so mark this item as shipped.
 							// TODO: For multiple quantity items, mark how many need to be shipped.
@@ -402,8 +401,6 @@ class com_sales_sale extends entity {
 			}
 		}
 		unset($cur_product);
-
-		$this->approve_payments();
 
 		// Make a transaction entry.
 		$tx = com_sales_tx::factory('com_sales', 'transaction', 'sale_tx');

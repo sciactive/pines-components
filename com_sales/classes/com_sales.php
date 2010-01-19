@@ -57,6 +57,14 @@ class com_sales extends component {
 	 * - "change" - The sale requires change to be given, and this payment type has been selected to give change.
 	 * - "return" - The payment is being returned and the funds need to be returned.
 	 *
+	 * If "action" is "request", the callback can provide a form to collect
+	 * information from the user by calling $page->override_doc() with the HTML
+	 * of the form. It is recommended to use a module to provide the form's
+	 * HTML. Use $module->render() to get the HTML from the module. If you do
+	 * not need any information from the user, simply don't do anything. The
+	 * form's inputs will be parsed into an array and saved as "data" in the
+	 * payment entry.
+	 *
 	 * If "action" is "approve", the callback needs to set the "status" entry on
 	 * the payment array to "approved", "declined", "info_requested", or
 	 * "manager_approval_needed".
@@ -112,35 +120,19 @@ class com_sales extends component {
 	}
 
 	/**
-	 * Process an instant approval payment.
+	 * Calls the first payment process which matches the given arguments.
 	 *
-	 * @param array $args The argument array.
+	 * @param array $arguments The arguments to pass to appropriate callbacks.
+	 * @return bool True on success, false on failure.
+	 * @todo Finish calling this in all appropriate places.
 	 */
-	function payment_instant($args) {
-		switch ($args['action']) {
-			case 'approve':
-				$args['payment']['status'] = 'approved';
-				break;
-			case 'tender':
-				$args['payment']['status'] = 'tendered';
-				break;
-			case 'change':
-				$args['sale']->change_given = true;
-				break;
-		}
-	}
-
-	function payment_manager() {
-		//return
-	}
-	
 	function call_payment_process($arguments = array()) {
-		global $config;
+		global $config, $page;
 		if (!is_array($arguments))
 			return false;
 		if (empty($arguments['action']))
 			return false;
-		if (!is_object($arguments['sale']))
+		if ($arguments['action'] != 'request' && !is_object($arguments['sale']))
 			return false;
 		foreach ($this->processing_types as $cur_type) {
 			if ($arguments['name'] != $cur_type['name'])
@@ -148,8 +140,8 @@ class com_sales extends component {
 			if (!is_callable($cur_type['callback']))
 				continue;
 			call_user_func_array($cur_type['callback'], array($arguments));
+			return true;
 		}
-		return true;
 	}
 
 	/**
@@ -203,7 +195,7 @@ class com_sales extends component {
 			if (is_null($cur_category->parent)) {
 				$struct[] = array(
 					'attributes' => array(
-					'id' => $cur_category->guid
+						'id' => $cur_category->guid
 					),
 					'data' => $cur_category->name,
 					'children' => $this->category_json_struct_children($cur_category->guid, $category_array)
@@ -229,7 +221,7 @@ class com_sales extends component {
 			if ($cur_category->parent == $guid) {
 				$struct[] = (object) array(
 					'attributes' => (object) array(
-					'id' => $cur_category->guid
+						'id' => $cur_category->guid
 					),
 					'data' => $cur_category->name,
 					'children' => $this->category_json_struct_children($cur_category->guid, $category_array)
@@ -596,6 +588,62 @@ class com_sales extends component {
 			return $entity;
 		} else {
 			return false;
+		}
+	}
+
+	/**
+	 * Process an instant approval payment.
+	 *
+	 * @param array $args The argument array.
+	 */
+	function payment_instant($args) {
+		switch ($args['action']) {
+			case 'approve':
+				$args['payment']['status'] = 'approved';
+				break;
+			case 'tender':
+				$args['payment']['status'] = 'tendered';
+				break;
+			case 'change':
+				$args['sale']->change_given = true;
+				break;
+		}
+	}
+
+	/**
+	 * Process a manager approval payment.
+	 *
+	 * @param array $args The argument array.
+	 */
+	function payment_manager($args) {
+		global $config, $page;
+		switch ($args['action']) {
+			case 'request':
+				$module = new module('com_sales', 'payment_form_manager');
+				$page->override_doc($module->render());
+				break;
+			case 'approve':
+				if (gatekeeper('com_sales/manager')) {
+					unset($args['payment']['data']['username']);
+					unset($args['payment']['data']['password']);
+					$args['payment']['status'] = 'approved';
+				} else {
+					if ($id = $config->user_manager->authenticate($args['payment']['data']['username'], $args['payment']['data']['password'])) {
+						$user = user::factory($id);
+						$args['payment']['status'] = gatekeeper('com_sales/manager', $user) ? 'approved' : 'manager_approval_needed';
+					} else {
+						$args['payment']['status'] = 'manager_approval_needed';
+					}
+					unset($args['payment']['data']['username']);
+					unset($args['payment']['data']['password']);
+				}
+				break;
+			case 'tender':
+				$args['payment']['status'] = 'tendered';
+				break;
+			case 'change':
+				$args['sale']->change_given = true;
+				break;
 		}
 	}
 

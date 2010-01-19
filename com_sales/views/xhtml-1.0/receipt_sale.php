@@ -108,9 +108,9 @@ if ($this->entity->status == 'quoted') {
 				<?php } ?>
 			</div>
 			<div class="field" style="float: right; text-align: right;">
-				<div>x <?php echo $cur_product['quantity']; ?> at $<?php echo $config->run_sales->round($cur_product['price'], $config->com_sales->dec); ?><?php echo empty($cur_product['discount']) ? '' : " - {$cur_product['discount']}"; ?> = <?php echo $config->run_sales->round($cur_product['line_total'], $config->com_sales->dec); ?></div>
+				<div>x <?php echo $cur_product['quantity']; ?> at $<?php echo $config->run_sales->round($cur_product['price'], $config->com_sales->dec, true); ?><?php echo empty($cur_product['discount']) ? '' : " - {$cur_product['discount']}"; ?> = <?php echo $config->run_sales->round($cur_product['line_total'], $config->com_sales->dec, true); ?></div>
 				<?php if ($cur_product['fees'] > 0.00) { ?>
-				<div>(fees) <?php echo $config->run_sales->round($cur_product['fees'], $config->com_sales->dec); ?></div>
+				<div>(fees) <?php echo $config->run_sales->round($cur_product['fees'], $config->com_sales->dec, true); ?></div>
 				<?php } ?>
 			</div>
 		</div>
@@ -120,10 +120,10 @@ if ($this->entity->status == 'quoted') {
 	<span class="label">Ticket Totals</span>
 	<div class="group">
 		<div class="field" style="float: right; text-align: right;">
-			<span class="label">Subtotal: </span><span class="field"><?php echo $config->run_sales->round($this->entity->subtotal, $config->com_sales->dec); ?></span><br />
-			<span class="label">Item Fees: </span><span class="field"><?php echo $config->run_sales->round($this->entity->item_fees, $config->com_sales->dec); ?></span><br />
-			<span class="label">Tax: </span><span class="field"><?php echo $config->run_sales->round($this->entity->taxes, $config->com_sales->dec); ?></span><br />
-			<span class="label"><strong>Total</strong>: </span><span class="field"><?php echo $config->run_sales->round($this->entity->total, $config->com_sales->dec); ?></span>
+			<span class="label">Subtotal: </span><span class="field"><?php echo $config->run_sales->round($this->entity->subtotal, $config->com_sales->dec, true); ?></span><br />
+			<span class="label">Item Fees: </span><span class="field"><?php echo $config->run_sales->round($this->entity->item_fees, $config->com_sales->dec, true); ?></span><br />
+			<span class="label">Tax: </span><span class="field"><?php echo $config->run_sales->round($this->entity->taxes, $config->com_sales->dec, true); ?></span><br />
+			<span class="label"><strong>Total</strong>: </span><span class="field"><?php echo $config->run_sales->round($this->entity->total, $config->com_sales->dec, true); ?></span>
 		</div>
 	</div>
 </div>
@@ -136,7 +136,7 @@ if ($this->entity->status == 'quoted') {
 		<span class="label"><?php echo $cur_payment['entity']->name; ?></span>
 		<div class="group">
 			<div class="field" style="float: right; text-align: right;">
-				<div><?php echo $config->run_sales->round($cur_payment['amount'], $config->com_sales->dec); ?></div>
+				<div><?php echo $config->run_sales->round($cur_payment['amount'], $config->com_sales->dec, true); ?></div>
 			</div>
 		</div>
 	</div>
@@ -145,8 +145,8 @@ if ($this->entity->status == 'quoted') {
 		<span class="label">Tendered</span>
 		<div class="group">
 			<div class="field" style="float: right; text-align: right;">
-				<span class="label"><strong>Amount Tendered</strong>: </span><span class="field"><?php echo $config->run_sales->round($this->entity->amount_tendered, $config->com_sales->dec); ?></span><br />
-				<span class="label"><strong>Change</strong>: </span><span class="field"><?php echo $config->run_sales->round($this->entity->change, $config->com_sales->dec); ?></span>
+				<span class="label"><strong>Amount Tendered</strong>: </span><span class="field"><?php echo $config->run_sales->round($this->entity->amount_tendered, $config->com_sales->dec, true); ?></span><br />
+				<span class="label"><strong>Change</strong>: </span><span class="field"><?php echo $config->run_sales->round($this->entity->change, $config->com_sales->dec, true); ?></span>
 			</div>
 		</div>
 	</div>

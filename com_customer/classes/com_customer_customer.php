@@ -29,7 +29,7 @@ class com_customer_customer extends entity {
 		$this->points = 0;
 		$this->peak_points = 0;
 		$this->total_points = 0;
-		$this->address_type == 'us';
+		$this->address_type = 'us';
 		$this->addresses = array();
 		$this->attributes = array();
 		if ($id > 0) {

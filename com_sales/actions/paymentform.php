@@ -11,13 +11,30 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/editsale') && !gatekeeper('com_sales/newsale') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'payment_form', null, false));
+if ( isset($_REQUEST['id']) ) {
+	if ( !gatekeeper('com_sales/editsale') )
+		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listsales', null, false));
+	$sale = com_sales_sale::factory((int) $_REQUEST['id']);
+} else {
+	if ( !gatekeeper('com_sales/newsale') )
+		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listsales', null, false));
+	$sale = com_sales_sale::factory();
+}
+
+if ($config->run_sales->com_customer && $sale->status != 'invoiced' && $sale->status != 'paid') {
+	$sale->customer = null;
+	if (preg_match('/^\d+/', $_REQUEST['customer'])) {
+		$sale->customer = com_customer_customer::factory(intval($_REQUEST['customer']));
+		if (is_null($sale->customer->guid))
+			$sale->customer = null;
+	}
+}
 
 $page->override = true;
 $config->run_sales->call_payment_process(array(
 	'action' => 'request',
-	'name' => $_REQUEST['name']
+	'name' => $_REQUEST['name'],
+	'sale' => $sale
 ));
 
 ?>

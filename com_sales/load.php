@@ -1,6 +1,6 @@
 <?php
 /**
- * com_sales's loader.
+ * com_sales' loader.
  *
  * @package Pines
  * @subpackage com_sales

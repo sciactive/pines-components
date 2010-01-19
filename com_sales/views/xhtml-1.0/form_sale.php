@@ -350,7 +350,7 @@ $this->note = 'Use this form to edit a sale.';
 								url: "<?php echo pines_url('com_sales', 'paymentform'); ?>",
 								type: "POST",
 								dataType: "html",
-								data: {"name": payment_data.processing_type},
+								data: {"name": payment_data.processing_type, "id": $("#sale_details [name=id]").val(), "customer": $("#customer").val()},
 								beforeSend: function(){
 									loader = pines.alert('Retrieving data form from server...', 'Payment Data', 'icon picon_16x16_animations_throbber', {pnotify_hide: false, pnotify_history: false});
 								},

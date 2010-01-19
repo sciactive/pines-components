@@ -114,6 +114,6 @@ defined('P_RUN') or die('Direct access prohibited');
 			<option value="<?php echo date('y', strtotime("+$i years")); ?>"<? echo $this->card_exp_year == date('y', strtotime("+$i years")) ? ' selected="selected"' : ''; ?>><?php echo date('y', strtotime("+$i years")); ?></option>
 			<?php } ?>
 		</select>
-		<input class="field" type="text" name="cid" size="3" value="<?php echo $this->cid; ?>" />
+		<input class="field" type="password" name="cid" size="3" value="<?php echo $this->cid; ?>" />
 	</div>
 </form>

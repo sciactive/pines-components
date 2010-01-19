@@ -260,7 +260,7 @@ class com_sales_sale extends entity {
 			));
 			if (!$this->change_given) {
 				display_notice('Change is due, but the payment type designated to give change declined the request.');
-				$return = false;
+				return false;
 			} else {
 				// Make a transaction entry.
 				$tx = com_sales_tx::factory('com_sales', 'transaction', 'payment_tx');

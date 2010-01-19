@@ -5,8 +5,8 @@
  * @package Pines
  * @subpackage com_authorizenet
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
- * @author Hunter Perrin <hunter@sciactive.com>
- * @copyright Hunter Perrin
+ * @author Zak Huber <zakhuber@gmail.com>
+ * @copyright Zak Huber
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');

@@ -3,7 +3,7 @@
  * Provides a printable payment form.
  *
  * @package Pines
- * @subpackage com_authnet
+ * @subpackage com_authorizenet
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Zak Huber <zakhuber@gmail.com>
  * @copyright Zak Huber

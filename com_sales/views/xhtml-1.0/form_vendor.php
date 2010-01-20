@@ -62,8 +62,8 @@ $this->note = 'Provide vendor details in this form.';
 		<label><span class="label">Account #</span>
 			<input class="field" type="text" name="account_number" size="24" value="<?php echo $this->entity->account_number; ?>" /></label>
 	</div>
-	<br />
 	<fieldset class="group">
+		<br />
 		<legend>Client Details</legend>
 		<div class="element">
 			<label><span class="label">Username</span>
@@ -85,9 +85,10 @@ $this->note = 'Provide vendor details in this form.';
 			<label><span class="label">Web Address</span>
 				<input class="field" type="text" name="client_web_address" size="24" value="<?php echo $this->entity->client_web_address; ?>" /></label>
 		</div>
+		<br />
 	</fieldset>
-	<br />
 	<fieldset class="group">
+		<br />
 		<legend>Online Ordering</legend>
 		<div class="element">
 			<label><span class="label">Web Address</span>
@@ -105,8 +106,8 @@ $this->note = 'Provide vendor details in this form.';
 			<label><span class="label">Password</span>
 				<input class="field" type="text" name="online_password" size="24" value="<?php echo $this->entity->online_password; ?>" /></label>
 		</div>
+		<br />
 	</fieldset>
-	<br />
 	<div class="element full_width">
 		<label><span class="label">Terms</span>
 			<span class="field full_width"><textarea style="width: 100%;" rows="3" cols="35" name="terms"><?php echo $this->entity->terms; ?></textarea></span></label>

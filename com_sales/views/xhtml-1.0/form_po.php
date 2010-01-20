@@ -365,7 +365,7 @@ $this->note = 'Provide PO details in this form.';
 		</div>
 	</div>
 	<?php } ?>
-	<br class="spacer" />
+	<div><br class="spacer" /></div>
 	<div class="element buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />

@@ -470,8 +470,8 @@ $this->note = 'Provide customer account details in this form.';
 			<br class="spacer" />
 		</div>
 	</div>
-	<br />
 	<div class="element buttons">
+		<br />
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>

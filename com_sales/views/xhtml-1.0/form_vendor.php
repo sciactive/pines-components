@@ -62,8 +62,8 @@ $this->note = 'Provide vendor details in this form.';
 		<label><span class="label">Account #</span>
 			<input class="field" type="text" name="account_number" size="24" value="<?php echo $this->entity->account_number; ?>" /></label>
 	</div>
+	<br />
 	<fieldset class="group">
-		<br />
 		<legend>Client Details</legend>
 		<div class="element">
 			<label><span class="label">Username</span>
@@ -87,8 +87,8 @@ $this->note = 'Provide vendor details in this form.';
 		</div>
 		<br />
 	</fieldset>
+	<br />
 	<fieldset class="group">
-		<br />
 		<legend>Online Ordering</legend>
 		<div class="element">
 			<label><span class="label">Web Address</span>

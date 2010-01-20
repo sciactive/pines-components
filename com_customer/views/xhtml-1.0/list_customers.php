@@ -58,6 +58,7 @@ $this->title = 'Customers';
 			<th>ID</th>
 			<th>Name</th>
 			<th>Email</th>
+			<th>DOB</th>
 			<th>Company</th>
 			<th>Job Title</th>
 			<th>Country</th>
@@ -81,6 +82,7 @@ $this->title = 'Customers';
 			<td><?php echo $customer->guid; ?></td>
 			<td><?php echo $customer->name; ?></td>
 			<td><?php echo $customer->email; ?></td>
+			<td><?php echo $customer->dob ? date('Y-m-d', $customer->dob) : ''; ?></td>
 			<td><?php echo $customer->company->name; ?></td>
 			<td><?php echo $customer->job_title; ?></td>
 			<td><?php echo $customer->address_type == 'us' ? 'US' : 'Intl'; ?></td>

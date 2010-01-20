@@ -178,6 +178,10 @@ $this->note = 'Provide customer account details in this form.';
 					<input class="field" type="text" name="name_first" size="24" value="<?php echo $this->entity->name_first; ?>" /></label>
 			</div>
 			<div class="element">
+				<label><span class="label">Middle Name</span>
+					<input class="field" type="text" name="name_middle" size="24" value="<?php echo $this->entity->name_middle; ?>" /></label>
+			</div>
+			<div class="element">
 				<label><span class="label">Last Name</span>
 					<input class="field" type="text" name="name_last" size="24" value="<?php echo $this->entity->name_last; ?>" /></label>
 			</div>
@@ -188,6 +192,21 @@ $this->note = 'Provide customer account details in this form.';
 					<input class="field" type="text" name="ssn" size="24" value="<?php echo $this->entity->ssn; ?>" /></label>
 			</div>
 			<?php } ?>
+			<div class="element">
+				<script type="text/javascript">
+					// <![CDATA[
+					$(function(){
+						$("#customer_details [name=dob]").datepicker({
+							dateFormat: "yy-mm-dd",
+							changeMonth: true,
+							changeYear: true
+						});
+					});
+					// ]]>
+				</script>
+				<label><span class="label">Date of Birth</span>
+					<input class="field" type="text" name="dob" size="24" value="<?php echo $this->entity->dob ? date('Y-m-d', $this->entity->dob) : ''; ?>" /></label>
+			</div>
 			<div class="element">
 				<label><span class="label">Email</span>
 					<input class="field" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>

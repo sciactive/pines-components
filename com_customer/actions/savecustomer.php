@@ -30,10 +30,12 @@ if (!isset($customer))
 
 // General
 $customer->name_first = $config->run_customer->title_case($_REQUEST['name_first']);
+$customer->name_middle = $config->run_customer->title_case($_REQUEST['name_middle']);
 $customer->name_last = $config->run_customer->title_case($_REQUEST['name_last']);
 $customer->name = "{$customer->name_first} {$customer->name_last}";
 if ($config->com_customer->ssn_field)
 	$customer->ssn = $_REQUEST['ssn'];
+$customer->dob = strtotime($_REQUEST['dob']);
 $customer->email = $_REQUEST['email'];
 $customer->company = null;
 if (preg_match('/^\d+/', $_REQUEST['company'])) {

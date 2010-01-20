@@ -35,7 +35,12 @@ $customer->name = "{$customer->name_first} {$customer->name_last}";
 if ($config->com_customer->ssn_field)
 	$customer->ssn = $_REQUEST['ssn'];
 $customer->email = $_REQUEST['email'];
-$customer->company = $_REQUEST['company'];
+$customer->company = null;
+if (preg_match('/^\d+/', $_REQUEST['company'])) {
+	$customer->company = com_customer_company::factory(intval($_REQUEST['company']));
+	if (is_null($customer->company->guid))
+		$customer->company = null;
+}
 $customer->job_title = $_REQUEST['job_title'];
 $customer->phone_cell = $_REQUEST['phone_cell'];
 $customer->phone_work = $_REQUEST['phone_work'];

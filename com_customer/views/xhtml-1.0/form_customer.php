@@ -192,9 +192,131 @@ $this->note = 'Provide customer account details in this form.';
 				<label><span class="label">Email</span>
 					<input class="field" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>
 			</div>
+			<script type="text/javascript">
+				// <![CDATA[
+				var company_box;
+				var company_search_box;
+				var company_search_button;
+				var company_table;
+				var company_dialog;
+
+				$(function(){
+					company_box = $("#company");
+					company_search_box = $("#company_search");
+					company_search_button = $("#company_search_button");
+					company_table = $("#company_table");
+					company_dialog = $("#company_dialog");
+
+					company_search_box.keydown(function(eventObject){
+						if (eventObject.keyCode == 13) {
+							company_search(this.value);
+							return false;
+						}
+					});
+					company_search_button.click(function(){
+						company_search(company_search_box.val());
+					});
+
+					company_table.pgrid({
+						pgrid_paginate: true,
+						pgrid_multi_select: false,
+						pgrid_double_click: function(){
+							company_dialog.dialog('option', 'buttons').Done();
+						}
+					});
+
+					company_dialog.dialog({
+						bgiframe: true,
+						autoOpen: false,
+						modal: true,
+						width: 600,
+						buttons: {
+							"Done": function(){
+								var rows = company_table.pgrid_get_selected_rows().pgrid_export_rows();
+								if (!rows[0]) {
+									alert("Please select a company.");
+									return;
+								} else {
+									var company = rows[0];
+								}
+								company_box.val(company.key+": \""+company.values[0]+"\"");
+								company_search_box.val("");
+								company_dialog.dialog('close');
+							}
+						}
+					});
+				});
+
+				function company_search(search_string) {
+					var loader;
+					$.ajax({
+						url: "<?php echo pines_url("com_customer", "companysearch"); ?>",
+						type: "POST",
+						dataType: "json",
+						data: {"q": search_string},
+						beforeSend: function(){
+							loader = pines.alert('Searching for companies...', 'Company Search', 'icon picon_16x16_animations_throbber', {pnotify_hide: false, pnotify_history: false});
+							company_table.pgrid_get_all_rows().pgrid_delete();
+						},
+						complete: function(){
+							loader.pnotify_remove();
+						},
+						error: function(XMLHttpRequest, textStatus){
+							pines.error("An error occured while trying to find customers:\n"+XMLHttpRequest.status+": "+textStatus);
+						},
+						success: function(data){
+							if (!data) {
+								alert("No companies were found that matched the query.");
+								return;
+							}
+							company_dialog.dialog('open');
+							company_table.pgrid_add(data);
+						}
+					});
+				}
+				// ]]>
+			</script>
 			<div class="element">
-				<label><span class="label">Company</span>
-					<input class="field" type="text" name="company" size="24" value="<?php echo $this->entity->company; ?>" /></label>
+				<label for="company_search"><span class="label">Company</span>
+					<span class="note">Enter part of a company name, email, or phone # to search.</span>
+				</label>
+				<div class="group">
+					<input class="field" type="text" id="company" name="company" size="24" onfocus="this.blur();" value="<?php echo htmlentities($this->entity->company->guid ? "{$this->entity->company->guid}: \"{$this->entity->company->name}\"" : 'No Company Selected'); ?>" />
+					<br />
+					<input class="field" type="text" id="company_search" name="company_search" size="24" />
+					<button type="button" id="company_search_button"><span class="picon_16x16_actions_system-search" style="padding-left: 16px; background-repeat: no-repeat;">Search</span></button>
+				</div>
+			</div>
+			<div id="company_dialog" title="Pick a Company">
+				<table id="company_table">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Address</th>
+							<th>City</th>
+							<th>State</th>
+							<th>Zip</th>
+							<th>Email</th>
+							<th>Phone</th>
+							<th>Fax</th>
+							<th>Website</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>----------------------</td>
+							<td>----------------------</td>
+							<td>----------------------</td>
+							<td>----------------------</td>
+							<td>----------------------</td>
+							<td>----------------------</td>
+							<td>----------------------</td>
+							<td>----------------------</td>
+							<td>----------------------</td>
+						</tr>
+					</tbody>
+				</table>
+				<br class="spacer" />
 			</div>
 			<div class="element">
 				<label><span class="label">Job Title</span>

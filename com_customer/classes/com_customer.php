@@ -38,6 +38,28 @@ class com_customer extends component {
 	}
 
 	/**
+	 * Creates and attaches a module which lists companies.
+	 */
+	function list_companies() {
+		global $config;
+
+		$pgrid = new module('system', 'pgrid.default', 'head');
+		$pgrid->icons = true;
+
+		$module = new module('com_customer', 'list_companies', 'content');
+		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_customer/list_companies'];
+
+		$module->companies = $config->entity_manager->get_entities(array('tags' => array('com_customer', 'company'), 'class' => com_customer_company));
+
+		if ( empty($module->companies) ) {
+			$pgrid->detach();
+			$module->detach();
+			display_notice("There are no companies.");
+		}
+	}
+	
+	/**
 	 * Creates and attaches a module which lists customers.
 	 */
 	function list_customers() {

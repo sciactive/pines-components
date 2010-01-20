@@ -15,6 +15,10 @@ $config->ability_manager->add('com_customer', 'managecustomers', 'Manage Custome
 $config->ability_manager->add('com_customer', 'newcustomer', 'Create Customers', 'User can create new customers.');
 $config->ability_manager->add('com_customer', 'editcustomer', 'Edit Customers', 'User can edit current customers.');
 $config->ability_manager->add('com_customer', 'deletecustomer', 'Delete Customers', 'User can delete current customers.');
+$config->ability_manager->add('com_customer', 'managecompanies', 'Manage Companies', 'User can manage companies.');
+$config->ability_manager->add('com_customer', 'newcompany', 'Create Companies', 'User can create new companies.');
+$config->ability_manager->add('com_customer', 'editcompany', 'Edit Companies', 'User can edit current companies.');
+$config->ability_manager->add('com_customer', 'deletecompany', 'Delete Companies', 'User can delete current companies.');
 $config->ability_manager->add('com_customer', 'adjustpoints', 'Adjust Points', 'User can adjust customer\'s points.');
 
 ?>

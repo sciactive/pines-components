@@ -17,6 +17,11 @@ if ( gatekeeper('com_customer/managecustomers') || gatekeeper('com_customer/newc
 		$page->main_menu->add('Customers', pines_url('com_customer', 'listcustomers'), $com_customer_menu_id);
 	if ( gatekeeper('com_customer/newcustomer') )
 		$page->main_menu->add('New Customer', pines_url('com_customer', 'editcustomer'), $com_customer_menu_id);
+	$com_customer_company_menu_id = $page->main_menu->add('Companies', '#', $com_customer_menu_id);
+	if ( gatekeeper('com_customer/managecompanies') )
+		$page->main_menu->add('Companies', pines_url('com_customer', 'listcompanies'), $com_customer_company_menu_id);
+	if ( gatekeeper('com_customer/newcompany') )
+		$page->main_menu->add('New Company', pines_url('com_customer', 'editcompany'), $com_customer_company_menu_id);
 }
 
 ?>

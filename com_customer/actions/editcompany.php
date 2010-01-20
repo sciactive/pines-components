@@ -12,10 +12,10 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if (isset($_REQUEST['id'])) {
-	if ( !gatekeeper('com_customer/editcustomer') )
+	if ( !gatekeeper('com_customer/editcompany') )
 		punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'editcompany', array('id' => $_REQUEST['id']), false));
 } else {
-	if ( !gatekeeper('com_customer/newcustomer') )
+	if ( !gatekeeper('com_customer/newcompany') )
 		punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'editcompany', null, false));
 }
 

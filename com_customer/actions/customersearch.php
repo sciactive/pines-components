@@ -31,7 +31,7 @@ foreach ($customers as $key => &$cur_customer) {
 	if (
 		(strpos(strtolower($cur_customer->name), $query) !== false) ||
 		(strpos(strtolower($cur_customer->email), $query) !== false) ||
-		(strpos(strtolower($cur_customer->company), $query) !== false) ||
+		(strpos(strtolower("{$cur_customer->company->name}"), $query) !== false) ||
 		(strpos(strtolower("{$cur_customer->phone_home}"), $query) !== false) ||
 		(strpos(strtolower("{$cur_customer->phone_work}"), $query) !== false) ||
 		(strpos(strtolower("{$cur_customer->phone_cell}"), $query) !== false) ||
@@ -42,7 +42,7 @@ foreach ($customers as $key => &$cur_customer) {
 			'values' => array(
 				$cur_customer->name,
 				$cur_customer->email,
-				$cur_customer->company,
+				$cur_customer->company->name ? $cur_customer->company->name : '',
 				$cur_customer->job_title,
 				$cur_customer->address_1,
 				$cur_customer->address_2,

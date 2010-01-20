@@ -25,9 +25,6 @@ if ( isset($_REQUEST['id']) ) {
 	$company = com_customer_company::factory();
 }
 
-if (!isset($company))
-	$company = (object) array();
-
 // General
 $company->name = $_REQUEST['name'];
 $company->email = $_REQUEST['email'];

@@ -25,9 +25,6 @@ if ( isset($_REQUEST['id']) ) {
 	$customer = com_customer_customer::factory();
 }
 
-if (!isset($customer))
-	$customer = (object) array();
-
 // General
 $customer->name_first = $config->run_customer->title_case($_REQUEST['name_first']);
 $customer->name_middle = $config->run_customer->title_case($_REQUEST['name_middle']);

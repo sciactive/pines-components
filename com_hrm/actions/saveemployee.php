@@ -25,9 +25,6 @@ if ( isset($_REQUEST['id']) ) {
 	$employee = com_hrm_employee::factory();
 }
 
-if (!isset($employee))
-	$employee = (object) array();
-
 // General
 $employee->name_first = $config->run_hrm->title_case($_REQUEST['name_first']);
 $employee->name_middle = $config->run_hrm->title_case($_REQUEST['name_middle']);

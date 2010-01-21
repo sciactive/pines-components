@@ -35,8 +35,8 @@ foreach ($companies as $key => &$cur_company) {
 		(strpos(strtolower($cur_company->state), $query) !== false) ||
 		(strpos(strtolower($cur_company->zip), $query) !== false) ||
 		(strpos(strtolower($cur_company->email), $query) !== false) ||
-		(strpos(preg_replace('/\D/', '', $cur_company->phone), preg_replace('/\D/', '', $query)) !== false) ||
-		(strpos(preg_replace('/\D/', '', $cur_company->fax), preg_replace('/\D/', '', $query)) !== false) ||
+		(preg_replace('/\D/', '', $query) != '' && strpos(preg_replace('/\D/', '', $cur_company->phone), preg_replace('/\D/', '', $query)) !== false) ||
+		(preg_replace('/\D/', '', $query) != '' && strpos(preg_replace('/\D/', '', $cur_company->fax), preg_replace('/\D/', '', $query)) !== false) ||
 		(strpos(strtolower("{$cur_company->website}"), $query) !== false)
 		) {
 		$json_struct = (object) array(

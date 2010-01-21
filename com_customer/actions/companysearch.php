@@ -35,16 +35,15 @@ foreach ($companies as $key => &$cur_company) {
 		(strpos(strtolower($cur_company->state), $query) !== false) ||
 		(strpos(strtolower($cur_company->zip), $query) !== false) ||
 		(strpos(strtolower($cur_company->email), $query) !== false) ||
-		(strpos(strtolower("{$cur_company->phone}"), $query) !== false) ||
-		(strpos(strtolower("{$cur_company->fax}"), $query) !== false) ||
+		(strpos(preg_replace('/\D/', '', $cur_company->phone), preg_replace('/\D/', '', $query)) !== false) ||
+		(strpos(preg_replace('/\D/', '', $cur_company->fax), preg_replace('/\D/', '', $query)) !== false) ||
 		(strpos(strtolower("{$cur_company->website}"), $query) !== false)
 		) {
-		$cur_address = $cur_company->address_type == 'us' ? $cur_company->address_1 : $cur_company->address_international;
 		$json_struct = (object) array(
 			'key' => $cur_company->guid,
 			'values' => array(
 				$cur_company->name,
-				$cur_address,
+				$cur_company->address_type == 'us' ? $cur_company->address_1 : $cur_company->address_international,
 				$cur_company->city,
 				$cur_company->state,
 				$cur_company->zip,

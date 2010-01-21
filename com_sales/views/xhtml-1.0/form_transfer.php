@@ -135,20 +135,20 @@ $this->note = 'Use this form to transfer inventory to another location.';
 	<?php } ?>
 	<div class="element">
 		<label><span class="label">Reference #</span>
-			<input class="field" type="text" name="reference_number" size="24" value="<?php echo $this->entity->reference_number; ?>" /></label>
+			<input class="field ui-widget-content" type="text" name="reference_number" size="24" value="<?php echo $this->entity->reference_number; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Destination</span>
 			<?php if (!empty($this->entity->received)) { ?>
 				<span class="note">Destination cannot be changed after items have been received.</span>
 			<?php } ?>
-			<select class="field" name="destination"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?>>
+			<select class="field ui-widget-content" name="destination"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?>>
 				<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations, $this->entity->destination->guid); ?>
 			</select></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Shipper</span>
-			<select class="field" name="shipper">
+			<select class="field ui-widget-content" name="shipper">
 				<option value="null">-- None --</option>
 				<?php foreach ($this->shippers as $cur_shipper) { ?>
 				<option value="<?php echo $cur_shipper->guid; ?>"<?php echo $this->entity->shipper->guid == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_shipper->name; ?></option>
@@ -166,7 +166,7 @@ $this->note = 'Use this form to transfer inventory to another location.';
 			// ]]>
 		</script>
 		<label><span class="label">ETA</span>
-			<input class="field" type="text" id="eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? date('Y-m-d', $this->entity->eta) : ''); ?>" /></label>
+			<input class="field ui-widget-content" type="text" id="eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? date('Y-m-d', $this->entity->eta) : ''); ?>" /></label>
 	</div>
 	<div class="element full_width">
 		<span class="label">Stock</span>
@@ -200,7 +200,7 @@ $this->note = 'Use this form to transfer inventory to another location.';
 					</tbody>
 				</table>
 			</div>
-			<input class="field" type="hidden" id="stock" name="stock" size="24" />
+			<input type="hidden" id="stock" name="stock" size="24" />
 		</div>
 	</div>
 	<div id="stock_dialog" title="Add Stock">

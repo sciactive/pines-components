@@ -645,10 +645,10 @@ $this->note = 'Use this form to edit a sale.';
 			<?php } ?>
 		</label>
 		<div class="group">
-			<input class="field" type="text" id="customer" name="customer" size="24" onfocus="this.blur();" value="<?php echo htmlentities($this->entity->customer->guid ? "{$this->entity->customer->guid}: \"{$this->entity->customer->name}\"" : 'No Customer Selected'); ?>" />
+			<input class="field ui-widget-content" type="text" id="customer" name="customer" size="24" onfocus="this.blur();" value="<?php echo htmlentities($this->entity->customer->guid ? "{$this->entity->customer->guid}: \"{$this->entity->customer->name}\"" : 'No Customer Selected'); ?>" />
 			<?php if ($this->entity->status != 'invoiced' && $this->entity->status != 'paid') { ?>
 			<br />
-			<input class="field" type="text" id="customer_search" name="customer_search" size="24" />
+			<input class="field ui-widget-content" type="text" id="customer_search" name="customer_search" size="24" />
 			<button type="button" id="customer_search_button"><span class="picon_16x16_actions_system-search" style="padding-left: 16px; background-repeat: no-repeat;">Search</span></button>
 			<?php } ?>
 		</div>
@@ -731,7 +731,7 @@ $this->note = 'Use this form to edit a sale.';
 					</tbody>
 				</table>
 			</div>
-			<input class="field" type="hidden" id="products" name="products" size="24" />
+			<input type="hidden" id="products" name="products" size="24" />
 		</div>
 	</div>
 	<div class="element full_width">
@@ -803,7 +803,7 @@ $this->note = 'Use this form to edit a sale.';
 					</tbody>
 				</table>
 			</div>
-			<input class="field" type="hidden" id="payments" name="payments" size="24" />
+			<input type="hidden" id="payments" name="payments" size="24" />
 		</div>
 	</div>
 	<div class="element full_width">
@@ -820,7 +820,7 @@ $this->note = 'Use this form to edit a sale.';
 	</div>
 	<div class="element">
 		<label><span class="label">Comments</span>
-			<input class="field ui-state-default ui-corner-all" type="button" value="Edit" onclick="$('#comments_dialog').dialog('open');" /></label>
+			<input class="field ui-widget-content ui-state-default ui-corner-all" type="button" value="Edit" onclick="$('#comments_dialog').dialog('open');" /></label>
 	</div>
 	<div id="comments_dialog" title="Comments">
 		<div style="height: 100%;">

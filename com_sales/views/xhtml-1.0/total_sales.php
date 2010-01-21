@@ -28,7 +28,7 @@ $this->title = 'Sales Totals';
 	</div>
 	<div class="element">
 		<label><span class="label">Location</span>
-			<select class="field" id="location" name="location">
+			<select class="field ui-widget-content" id="location" name="location">
 				<option value="current">-- Current --</option>
 				<?php if ($this->show_all) { ?>
 				<option value="all">-- All --</option>
@@ -49,7 +49,7 @@ $this->title = 'Sales Totals';
 			// ]]>
 		</script>
 		<label><span class="label">Start Date</span>
-			<input class="field" type="text" id="date_start" name="date_start" size="24" value="<?php echo date('Y-m-d'); ?>" /></label>
+			<input class="field ui-widget-content" type="text" id="date_start" name="date_start" size="24" value="<?php echo date('Y-m-d'); ?>" /></label>
 	</div>
 	<div class="element">
 		<script type="text/javascript">
@@ -64,7 +64,7 @@ $this->title = 'Sales Totals';
 			// ]]>
 		</script>
 		<label><span class="label">End Date</span>
-			<input class="field" type="text" id="date_end" name="date_end" size="24" value="<?php echo date('Y-m-d'); ?>" /></label>
+			<input class="field ui-widget-content" type="text" id="date_end" name="date_end" size="24" value="<?php echo date('Y-m-d'); ?>" /></label>
 	</div>
 	<div class="element buttons">
 		<script type="text/javascript">

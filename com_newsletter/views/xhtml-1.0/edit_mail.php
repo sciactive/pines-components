@@ -57,17 +57,17 @@ $page->head("</script>\n");
 	</div>
 	<div class="element">
 		<label><span class="label">Name</span>
-		<input class="field" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
+		<input class="field ui-widget-content" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Subject</span>
-		<input class="field" type="text" name="subject" size="24" value="<?php echo htmlentities($this->entity->subject); ?>" /></label>
+		<input class="field ui-widget-content" type="text" name="subject" size="24" value="<?php echo htmlentities($this->entity->subject); ?>" /></label>
 	</div>
 	<div class="element heading">
 		<h1>Message</h1>
 	</div>
 	<div class="element">
-		<textarea rows="3" cols="35" class="field" name="data" id="data" style="width: 99%;"><?php echo htmlentities($this->entity->message); ?></textarea>
+		<textarea rows="3" cols="35" class="field ui-widget-content" name="data" id="data" style="width: 99%;"><?php echo htmlentities($this->entity->message); ?></textarea>
 	</div>
 	<div class="element heading">
 		<h1>Attachments</h1>
@@ -77,14 +77,14 @@ $page->head("</script>\n");
 		<?php if ( !empty($this->entity->attachments) ) {
 			echo '<div class="group">';
 			foreach ($this->entity->attachments as $cur_attachment) { ?>
-		<label><input class="field" type="checkbox" name="attach_<?php echo clean_checkbox($cur_attachment); ?>" checked="checked" /><?php echo htmlentities($cur_attachment); ?></label><br />
+		<label><input class="field ui-widget-content" type="checkbox" name="attach_<?php echo clean_checkbox($cur_attachment); ?>" checked="checked" /><?php echo htmlentities($cur_attachment); ?></label><br />
 		<?php }
 		echo '</div>';
 		} ?>
 	</div>
 	<div class="element">
 		<label><span class="label">Upload</span>
-		<input class="field" name="attachment" type="file" /></label>
+		<input class="field ui-widget-content" name="attachment" type="file" /></label>
 	</div>
 	<div class="element buttons" style="padding-left: 0;">
 		<input type="hidden" name="update" value="yes" />

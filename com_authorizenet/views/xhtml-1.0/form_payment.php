@@ -14,19 +14,19 @@ defined('P_RUN') or die('Direct access prohibited');
 <form class="pform" method="post" action="">
 	<div class="element">
 		<label><span class="label">Cardholder First Name</span>
-			<input class="field" type="text" name="name_first" value="<?php echo $this->name_first; ?>" /></label>
+			<input class="field ui-widget-content" type="text" name="name_first" value="<?php echo $this->name_first; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Cardholder Last Name</span>
-			<input class="field" type="text" name="name_last" value="<?php echo $this->name_last; ?>" /></label>
+			<input class="field ui-widget-content" type="text" name="name_last" value="<?php echo $this->name_last; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Cardholder Address</span>
-			<input class="field" type="text" name="address" value="<?php echo $this->address; ?>" /></label>
+			<input class="field ui-widget-content" type="text" name="address" value="<?php echo $this->address; ?>" /></label>
 	</div>
 	<div class="element">
 		<span class="label">Cardholder State, Zip</span>
-		<select class="field" name="state">
+		<select class="field ui-widget-content" name="state">
 			<?php foreach (array(
 					'AL' => 'Alabama',
 					'AK' => 'Alaska',
@@ -83,15 +83,15 @@ defined('P_RUN') or die('Direct access prohibited');
 			<option value="<?php echo $key; ?>"<?php echo $this->state == $key ? ' selected="selected"' : ''; ?>><?php echo $cur_state; ?></option>
 			<?php } ?>
 		</select>
-		<input class="field" type="text" name="zip" size="5" value="<?php echo $this->zip; ?>" />
+		<input class="field ui-widget-content" type="text" name="zip" size="5" value="<?php echo $this->zip; ?>" />
 	</div>
 	<div class="element">
 		<label><span class="label">Card Number</span>
-			<input class="field" type="text" name="card_number" value="<?php echo $this->card_number; ?>" /></label>
+			<input class="field ui-widget-content" type="text" name="card_number" value="<?php echo $this->card_number; ?>" /></label>
 	</div>
 	<div class="element">
 		<span class="label">Expiration Date, CID</span>
-		<select class="field" name="card_exp_month">
+		<select class="field ui-widget-content" name="card_exp_month">
 			<?php foreach (array(
 					'01' => '01 January',
 					'02' => '02 February',
@@ -109,11 +109,11 @@ defined('P_RUN') or die('Direct access prohibited');
 			<option value="<?php echo $key; ?>"<? echo $this->card_exp_month == $key ? ' selected="selected"' : ''; ?>><?php echo $value; ?></option>
 			<?php } ?>
 		</select>
-		<select class="field" name="card_exp_year">
+		<select class="field ui-widget-content" name="card_exp_year">
 			<?php for ($i = 0; $i <= 25; $i++) { ?>
 			<option value="<?php echo date('y', strtotime("+$i years")); ?>"<? echo $this->card_exp_year == date('y', strtotime("+$i years")) ? ' selected="selected"' : ''; ?>><?php echo date('y', strtotime("+$i years")); ?></option>
 			<?php } ?>
 		</select>
-		<input class="field" type="password" name="cid" size="3" value="<?php echo $this->cid; ?>" />
+		<input class="field ui-widget-content" type="password" name="cid" size="3" value="<?php echo $this->cid; ?>" />
 	</div>
 </form>

@@ -27,20 +27,20 @@ $this->note = 'Provide group details in this form.';
 	<?php } ?>
 	<div class="element">
 		<label><span class="label">Group Name</span>
-			<input class="field" type="text" name="groupname" size="24" value="<?php echo $this->entity->groupname; ?>" /></label>
+			<input class="field ui-widget-content" type="text" name="groupname" size="24" value="<?php echo $this->entity->groupname; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Display Name</span>
-			<input class="field" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
+			<input class="field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Email</span>
-			<input class="field" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>
+			<input class="field ui-widget-content" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Timezone</span>
 			<span class="note">Users in this group will inherit this timezone. Primary group has priority over secondary groups.</span>
-			<select class="field" name="timezone" size="1">
+			<select class="field ui-widget-content" name="timezone" size="1">
 				<option value="">--System Default--</option>
 				<?php $tz = DateTimeZone::listIdentifiers();
 				sort($tz);
@@ -51,7 +51,7 @@ $this->note = 'Provide group details in this form.';
 	</div>
 	<div class="element">
 		<label><span class="label">Parent</span>
-			<select class="field" name="parent" size="1">
+			<select class="field ui-widget-content" name="parent" size="1">
 				<option value="none">--No Parent--</option>
 				<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->entity->parent); ?>
 			</select></label>
@@ -68,7 +68,7 @@ $this->note = 'Provide group details in this form.';
 	<div class="element"><span class="label">Abilities for <em><?php echo $cur_section; ?></em></span>
 		<div class="group">
 						<?php foreach ($section_abilities as $cur_ability) { ?>
-			<label><input class="field" type="checkbox" name="<?php echo $cur_section; ?>[]" value="<?php echo $cur_ability['ability']; ?>"
+			<label><input class="field ui-widget-content" type="checkbox" name="<?php echo $cur_section; ?>[]" value="<?php echo $cur_ability['ability']; ?>"
 								<?php if ( array_search($cur_section.'/'.$cur_ability['ability'], $this->entity->abilities) !== false ) { ?>
 						  checked="checked"
 										  <?php } ?>

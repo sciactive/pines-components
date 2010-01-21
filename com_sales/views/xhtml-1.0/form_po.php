@@ -235,11 +235,11 @@ $this->note = 'Provide PO details in this form.';
 	<?php } ?>
 	<div class="element">
 		<label><span class="label">PO #</span>
-			<input class="field" type="text" name="po_number" size="24" value="<?php echo $this->entity->po_number; ?>" /></label>
+			<input class="field ui-widget-content" type="text" name="po_number" size="24" value="<?php echo $this->entity->po_number; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Reference #</span>
-			<input class="field" type="text" name="reference_number" size="24" value="<?php echo $this->entity->reference_number; ?>" /></label>
+			<input class="field ui-widget-content" type="text" name="reference_number" size="24" value="<?php echo $this->entity->reference_number; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Vendor</span>
@@ -248,7 +248,7 @@ $this->note = 'Provide PO details in this form.';
 			<?php } else { ?>
 				<span class="note">Vendor cannot be changed after items have been received.</span>
 			<?php } ?>
-			<select class="field" name="vendor" onchange="void select_vendor(Number(this.value));"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?>>
+			<select class="field ui-widget-content" name="vendor" onchange="void select_vendor(Number(this.value));"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?>>
 				<option value="null">-- None --</option>
 				<?php foreach ($this->vendors as $cur_vendor) { ?>
 				<option value="<?php echo $cur_vendor->guid; ?>"<?php echo $this->entity->vendor->guid == $cur_vendor->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_vendor->name; ?></option>
@@ -260,13 +260,13 @@ $this->note = 'Provide PO details in this form.';
 			<?php if (!empty($this->entity->received)) { ?>
 				<span class="note">Destination cannot be changed after items have been received.</span>
 			<?php } ?>
-			<select class="field" name="destination"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?>>
+			<select class="field ui-widget-content" name="destination"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?>>
 				<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations, $this->entity->destination->guid); ?>
 			</select></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Shipper</span>
-			<select class="field" name="shipper">
+			<select class="field ui-widget-content" name="shipper">
 				<option value="null">-- None --</option>
 				<?php foreach ($this->shippers as $cur_shipper) { ?>
 				<option value="<?php echo $cur_shipper->guid; ?>"<?php echo $this->entity->shipper->guid == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_shipper->name; ?></option>
@@ -284,7 +284,7 @@ $this->note = 'Provide PO details in this form.';
 			// ]]>
 		</script>
 		<label><span class="label">ETA</span>
-			<input class="field" type="text" id="eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? date('Y-m-d', $this->entity->eta) : ''); ?>" /></label>
+			<input class="field ui-widget-content" type="text" id="eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? date('Y-m-d', $this->entity->eta) : ''); ?>" /></label>
 	</div>
 	<div class="element full_width">
 		<span class="label">Products</span>
@@ -316,7 +316,7 @@ $this->note = 'Provide PO details in this form.';
 					</tbody>
 				</table>
 			</div>
-			<input class="field" type="hidden" id="products" name="products" size="24" />
+			<input type="hidden" id="products" name="products" size="24" />
 		</div>
 	</div>
 	<div class="element full_width">

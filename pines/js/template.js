@@ -66,9 +66,13 @@ $(function($){
 	});
 
 	// Style UI buttons on hover.
-	$("button.ui-state-default, input.ui-state-default:button, input.ui-state-default:submit, input.ui-state-default:reset, input.ui-state-default:file").live('mouseover', function(){
+	$(".ui-state-default:input:enabled:not(:text, textarea)").live('mouseover', function(){
 		$(this).addClass("ui-state-hover");
 	}).live('mouseout', function(){
 		$(this).removeClass("ui-state-hover");
 	});
+
+	$(".ui-widget-content:input:disabled").addClass("ui-state-disabled");
+
+	$(".ui-widget-content:text, .ui-widget-content:password").addClass("ui-corner-right");
 });

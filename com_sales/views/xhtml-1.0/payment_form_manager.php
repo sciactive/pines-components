@@ -22,11 +22,11 @@ defined('P_RUN') or die('Direct access prohibited');
 	<?php } else { ?>
 		<div class="element">
 			<label><span class="label">Username</span>
-				<input class="field" type="text" name="username" size="24" /></label>
+				<input class="field ui-widget-content" type="text" name="username" size="24" /></label>
 		</div>
 		<div class="element">
 			<label><span class="label">Password</span>
-				<input class="field" type="password" name="password" size="24" /></label>
+				<input class="field ui-widget-content" type="password" name="password" size="24" /></label>
 		</div>
 	<?php } ?>
 </form>

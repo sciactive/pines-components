@@ -27,7 +27,7 @@ $this->note = 'Provide company account details in this form.';
 	<?php } ?>
 	<div class="element">
 		<label><span class="label">Company Name</span>
-			<input class="field" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
+			<input class="field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
 	</div>
 	<div class="element">
 				<script type="text/javascript">
@@ -49,21 +49,21 @@ $this->note = 'Provide company account details in this form.';
 					// ]]>
 				</script>
 				<span class="label">Address Type</span>
-				<label><input class="field" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
-				<label><input class="field" type="radio" name="address_type" value="international"<?php echo $this->entity->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
+				<label><input class="field ui-widget-content" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
+				<label><input class="field ui-widget-content" type="radio" name="address_type" value="international"<?php echo $this->entity->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
 			</div>
 			<div id="address_us" style="display: none;">
 				<div class="element">
 					<label><span class="label">Address 1</span>
-						<input class="field" type="text" name="address_1" size="24" value="<?php echo $this->entity->address_1; ?>" /></label>
+						<input class="field ui-widget-content" type="text" name="address_1" size="24" value="<?php echo $this->entity->address_1; ?>" /></label>
 				</div>
 				<div class="element">
 					<label><span class="label">Address 2</span>
-						<input class="field" type="text" name="address_2" size="24" value="<?php echo $this->entity->address_2; ?>" /></label>
+						<input class="field ui-widget-content" type="text" name="address_2" size="24" value="<?php echo $this->entity->address_2; ?>" /></label>
 				</div>
 				<div class="element">
 					<span class="label">City, State</span>
-					<input class="field" type="text" name="city" size="15" value="<?php echo $this->entity->city; ?>" />
+					<input class="field ui-widget-content" type="text" name="city" size="15" value="<?php echo $this->entity->city; ?>" />
 					<select name="state">
 						<option value="">None</option>
 						<?php foreach (array(
@@ -125,7 +125,7 @@ $this->note = 'Provide company account details in this form.';
 				</div>
 				<div class="element">
 					<label><span class="label">Zip</span>
-						<input class="field" type="text" name="zip" size="24" value="<?php echo $this->entity->zip; ?>" /></label>
+						<input class="field ui-widget-content" type="text" name="zip" size="24" value="<?php echo $this->entity->zip; ?>" /></label>
 				</div>
 			</div>
 			<div id="address_international" style="display: none;">
@@ -136,20 +136,20 @@ $this->note = 'Provide company account details in this form.';
 			</div>
 	<div class="element">
 		<label><span class="label">Email</span>
-			<input class="field" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>
+			<input class="field ui-widget-content" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Phone Number</span>
-			<input class="field" type="text" name="phone" size="24" value="<?php echo $this->entity->phone; ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+			<input class="field ui-widget-content" type="text" name="phone" size="24" value="<?php echo $this->entity->phone; ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Fax</span>
-			<input class="field" type="text" name="fax" size="24" value="<?php echo $this->entity->fax; ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+			<input class="field ui-widget-content" type="text" name="fax" size="24" value="<?php echo $this->entity->fax; ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Website</span>
 			<span class="note">ex: http://www.website.com</span>
-			<input class="field" type="text" name="website" size="24" value="<?php echo $this->entity->website; ?>" /></label>
+			<input class="field ui-widget-content" type="text" name="website" size="24" value="<?php echo $this->entity->website; ?>" /></label>
 	</div>
 	<div class="element buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>

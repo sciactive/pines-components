@@ -23,15 +23,15 @@ $this->title = "Editing Configuration for {$this->req_component}";
 					<?php print_r($cur_var['description']); ?>
 			</span>
 				<?php if (is_bool($cur_var['value'])) { ?>
-			<input class="field" type="checkbox" name="opt_bool_<?php echo $cur_var['name']; ?>" value="ON" <?php echo ($cur_var['value'] ? 'checked="checked" ' : ''); ?>/>
+			<input class="field ui-widget-content" type="checkbox" name="opt_bool_<?php echo $cur_var['name']; ?>" value="ON" <?php echo ($cur_var['value'] ? 'checked="checked" ' : ''); ?>/>
 				<?php } elseif (is_int($cur_var['value'])) { ?>
-			<input class="field" type="text" name="opt_int_<?php echo $cur_var['name']; ?>" value="<?php echo $cur_var['value']; ?>" />
+			<input class="field ui-widget-content" type="text" name="opt_int_<?php echo $cur_var['name']; ?>" value="<?php echo $cur_var['value']; ?>" />
 				<?php } elseif (is_float($cur_var['value'])) { ?>
-			<input class="field" type="text" name="opt_float_<?php echo $cur_var['name']; ?>" value="<?php echo $cur_var['value']; ?>" />
+			<input class="field ui-widget-content" type="text" name="opt_float_<?php echo $cur_var['name']; ?>" value="<?php echo $cur_var['value']; ?>" />
 				<?php } elseif (is_string($cur_var['value'])) { ?>
-			<span class="field full_width"><textarea rows="3" cols="35" style="width: 100%;" name="opt_string_<?php echo $cur_var['name']; ?>"><?php echo htmlentities($cur_var['value'], true); ?></textarea></span>
+			<span class="field full_width"><textarea rows="3" cols="35" class="ui-widget-content" style="width: 100%;" name="opt_string_<?php echo $cur_var['name']; ?>"><?php echo htmlentities($cur_var['value'], true); ?></textarea></span>
 				<?php } else { ?>
-			<span class="field full_width"><textarea rows="3" cols="35" style="width: 100%;" name="opt_serial_<?php echo $cur_var['name']; ?>"><?php echo htmlentities(serialize($cur_var['value']), true); ?></textarea></span>
+			<span class="field full_width"><textarea rows="3" cols="35" class="ui-widget-content" style="width: 100%;" name="opt_serial_<?php echo $cur_var['name']; ?>"><?php echo htmlentities(serialize($cur_var['value']), true); ?></textarea></span>
 				<?php } ?>
 		</label>
 	</div>

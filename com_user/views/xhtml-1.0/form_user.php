@@ -42,20 +42,20 @@ $this->note = 'Provide user details in this form.';
 	<?php } ?>
 	<div class="element">
 		<label><span class="label">Username</span>
-			<input class="field" type="text" name="username" size="24" value="<?php echo $this->entity->username; ?>" /></label>
+			<input class="field ui-widget-content" type="text" name="username" size="24" value="<?php echo $this->entity->username; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Name</span>
-			<input class="field" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
+			<input class="field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Email</span>
-			<input class="field" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>
+			<input class="field ui-widget-content" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Timezone</span>
 			<span class="note">This overrides the primary group's timezone.</span>
-			<select class="field" name="timezone" size="1">
+			<select class="field ui-widget-content" name="timezone" size="1">
 				<option value="">--Inherit From Group--</option>
 				<?php $tz = DateTimeZone::listIdentifiers();
 				sort($tz);
@@ -71,17 +71,17 @@ $this->note = 'Provide user details in this form.';
 			} else {
 				echo '<span class="note">Leave blank, if not changing.</span>';
 			} ?>
-			<input class="field" type="password" name="password" size="24" /></label>
+			<input class="field ui-widget-content" type="password" name="password" size="24" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Repeat Password</span>
-			<input class="field" type="password" name="password2" size="24" /></label>
+			<input class="field ui-widget-content" type="password" name="password2" size="24" /></label>
 	</div>
 	<?php if ( $this->display_default_components ) { ?>
 		<div class="element">
 			<label><span class="label">Default Component</span>
 				<span class="note">This component will be responsible for the user's home page.</span>
-				<select class="field" name="default_component">
+				<select class="field ui-widget-content" name="default_component">
 						<?php foreach ($this->default_components as $cur_component) { ?>
 					<option value="<?php echo $cur_component; ?>"<?php echo (($this->entity->default_component == $cur_component) ? ' selected="selected"' : ''); ?>><?php echo $cur_component; ?></option>
 						<?php } ?>
@@ -100,7 +100,7 @@ $this->note = 'Provide user details in this form.';
 		<?php } else { ?>
 		<div class="element">
 			<label><span class="label">Primary Group</span>
-				<select class="field" name="gid" size="1">
+				<select class="field ui-widget-content" name="gid" size="1">
 					<option value="null">-- No Primary Group --</option>
 							<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->entity->gid); ?>
 				</select></label>
@@ -108,7 +108,7 @@ $this->note = 'Provide user details in this form.';
 		<div class="element">
 			<label><span class="label">Groups</span>
 				<span class="note">Hold Ctrl (Command on Mac) to select multiple groups.</span>
-				<select class="field" name="groups[]" multiple="multiple" size="6">
+				<select class="field ui-widget-content" name="groups[]" multiple="multiple" size="6">
 							<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->entity->groups); ?>
 				</select></label>
 		</div>
@@ -122,7 +122,7 @@ $this->note = 'Provide user details in this form.';
 		</div>
 		<div class="element">
 			<label><span class="label">Inherit additional abilities from groups.</span>
-				<input class="field" type="checkbox" name="inherit_abilities" value="ON" <?php echo ($this->entity->inherit_abilities ? 'checked="checked" ' : ''); ?>/></label>
+				<input class="field ui-widget-content" type="checkbox" name="inherit_abilities" value="ON" <?php echo ($this->entity->inherit_abilities ? 'checked="checked" ' : ''); ?>/></label>
 		</div>
 		<?php foreach ($this->sections as $cur_section) {
 			$section_abilities = $config->ability_manager->get_abilities($cur_section);
@@ -130,7 +130,7 @@ $this->note = 'Provide user details in this form.';
 			<div class="element"><span class="label">Abilities for <em><?php echo $cur_section; ?></em></span>
 				<div class="group">
 								<?php foreach ($section_abilities as $cur_ability) { ?>
-					<label><input class="field" type="checkbox" name="<?php echo $cur_section; ?>[]" value="<?php echo $cur_ability['ability']; ?>"
+					<label><input class="field ui-widget-content" type="checkbox" name="<?php echo $cur_section; ?>[]" value="<?php echo $cur_ability['ability']; ?>"
 										<?php if ( array_search($cur_section.'/'.$cur_ability['ability'], $this->entity->abilities) !== false ) { ?>
 								  checked="checked"
 												  <?php } ?>

@@ -174,50 +174,50 @@ $this->note = 'Provide employee account details in this form.';
 			<?php } ?>
 			<div class="element">
 				<label><span class="label">First Name</span>
-					<input class="field" type="text" name="name_first" size="24" value="<?php echo $this->entity->name_first; ?>" /></label>
+					<input class="field ui-widget-content" type="text" name="name_first" size="24" value="<?php echo $this->entity->name_first; ?>" /></label>
 			</div>
 			<div class="element">
 				<label><span class="label">Middle Name</span>
-					<input class="field" type="text" name="name_middle" size="24" value="<?php echo $this->entity->name_middle; ?>" /></label>
+					<input class="field ui-widget-content" type="text" name="name_middle" size="24" value="<?php echo $this->entity->name_middle; ?>" /></label>
 			</div>
 			<div class="element">
 				<label><span class="label">Last Name</span>
-					<input class="field" type="text" name="name_last" size="24" value="<?php echo $this->entity->name_last; ?>" /></label>
+					<input class="field ui-widget-content" type="text" name="name_last" size="24" value="<?php echo $this->entity->name_last; ?>" /></label>
 			</div>
 			<?php if ($config->com_hrm->ssn_field) { ?>
 			<div class="element">
 				<label><span class="label">SSN</span>
 					<span class="note">Format ###-##-####</span>
-					<input class="field" type="text" name="ssn" size="24" value="<?php echo $this->entity->ssn; ?>" /></label>
+					<input class="field ui-widget-content" type="text" name="ssn" size="24" value="<?php echo $this->entity->ssn; ?>" /></label>
 			</div>
 			<?php } ?>
 			<div class="element">
 				<label><span class="label">Email</span>
-					<input class="field" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>
+					<input class="field ui-widget-content" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>
 			</div>
 			<div class="element">
 				<label><span class="label">Job Title</span>
-					<input class="field" type="text" name="job_title" size="24" value="<?php echo $this->entity->job_title; ?>" /></label>
+					<input class="field ui-widget-content" type="text" name="job_title" size="24" value="<?php echo $this->entity->job_title; ?>" /></label>
 			</div>
 			<div class="element">
 				<label><span class="label">Cell Phone</span>
-					<input class="field" type="text" name="phone_cell" size="24" value="<?php echo $this->entity->phone_cell; ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+					<input class="field ui-widget-content" type="text" name="phone_cell" size="24" value="<?php echo $this->entity->phone_cell; ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
 			<div class="element">
 				<label><span class="label">Work Phone</span>
-					<input class="field" type="text" name="phone_work" size="24" value="<?php echo $this->entity->phone_work; ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+					<input class="field ui-widget-content" type="text" name="phone_work" size="24" value="<?php echo $this->entity->phone_work; ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
 			<div class="element">
 				<label><span class="label">Home Phone</span>
-					<input class="field" type="text" name="phone_home" size="24" value="<?php echo $this->entity->phone_home; ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+					<input class="field ui-widget-content" type="text" name="phone_home" size="24" value="<?php echo $this->entity->phone_home; ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
 			<div class="element">
 				<label><span class="label">Fax</span>
-					<input class="field" type="text" name="fax" size="24" value="<?php echo $this->entity->fax; ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+					<input class="field ui-widget-content" type="text" name="fax" size="24" value="<?php echo $this->entity->fax; ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
 			<div class="element">
 				<label><span class="label">Login Disabled</span>
-					<input class="field" type="checkbox" name="login_disabled" size="24" value="ON"<?php echo $this->entity->login_disabled ? ' checked="checked"' : ''; ?> /></label>
+					<input class="field ui-widget-content" type="checkbox" name="login_disabled" size="24" value="ON"<?php echo $this->entity->login_disabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="element">
 				<label><span class="label"><?php if (!is_null($this->entity->password)) echo 'Update '; ?>Password</span>
@@ -226,7 +226,7 @@ $this->note = 'Provide employee account details in this form.';
 					} else {
 						echo '<span class="note">Leave blank, if not changing.</span>';
 					} ?>
-					<input class="field" type="text" name="password" size="24" /></label>
+					<input class="field ui-widget-content" type="text" name="password" size="24" /></label>
 			</div>
 			<div class="element full_width">
 				<span class="label">Description</span><br />
@@ -258,21 +258,21 @@ $this->note = 'Provide employee account details in this form.';
 					// ]]>
 				</script>
 				<span class="label">Address Type</span>
-				<label><input class="field" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
-				<label><input class="field" type="radio" name="address_type" value="international"<?php echo $this->entity->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
+				<label><input class="field ui-widget-content" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
+				<label><input class="field ui-widget-content" type="radio" name="address_type" value="international"<?php echo $this->entity->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
 			</div>
 			<div id="address_us" style="display: none;">
 				<div class="element">
 					<label><span class="label">Address 1</span>
-						<input class="field" type="text" name="address_1" size="24" value="<?php echo $this->entity->address_1; ?>" /></label>
+						<input class="field ui-widget-content" type="text" name="address_1" size="24" value="<?php echo $this->entity->address_1; ?>" /></label>
 				</div>
 				<div class="element">
 					<label><span class="label">Address 2</span>
-						<input class="field" type="text" name="address_2" size="24" value="<?php echo $this->entity->address_2; ?>" /></label>
+						<input class="field ui-widget-content" type="text" name="address_2" size="24" value="<?php echo $this->entity->address_2; ?>" /></label>
 				</div>
 				<div class="element">
 					<span class="label">City, State</span>
-					<input class="field" type="text" name="city" size="15" value="<?php echo $this->entity->city; ?>" />
+					<input class="field ui-widget-content" type="text" name="city" size="15" value="<?php echo $this->entity->city; ?>" />
 					<select name="state">
 						<option value="">None</option>
 						<?php foreach (array(
@@ -334,7 +334,7 @@ $this->note = 'Provide employee account details in this form.';
 				</div>
 				<div class="element">
 					<label><span class="label">Zip</span>
-						<input class="field" type="text" name="zip" size="24" value="<?php echo $this->entity->zip; ?>" /></label>
+						<input class="field ui-widget-content" type="text" name="zip" size="24" value="<?php echo $this->entity->zip; ?>" /></label>
 				</div>
 			</div>
 			<div id="address_international" style="display: none;">
@@ -373,7 +373,7 @@ $this->note = 'Provide employee account details in this form.';
 							<?php } ?>
 						</tbody>
 					</table>
-					<input class="field" type="hidden" id="addresses" name="addresses" size="24" />
+					<input type="hidden" id="addresses" name="addresses" size="24" />
 				</div>
 			</div>
 			<div id="address_dialog" title="Add an Address">
@@ -381,27 +381,27 @@ $this->note = 'Provide employee account details in this form.';
 					<div class="element">
 						<label>
 							<span class="label">Type</span>
-							<input class="field" type="text" size="24" name="cur_address_type" id="cur_address_type" />
+							<input class="field ui-widget-content" type="text" size="24" name="cur_address_type" id="cur_address_type" />
 						</label>
 					</div>
 					<div class="element">
 						<label>
 							<span class="label">Address 1</span>
-							<input class="field" type="text" size="24" name="cur_address_addr1" id="cur_address_addr1" />
+							<input class="field ui-widget-content" type="text" size="24" name="cur_address_addr1" id="cur_address_addr1" />
 						</label>
 					</div>
 					<div class="element">
 						<label>
 							<span class="label">Address 2</span>
-							<input class="field" type="text" size="24" name="cur_address_addr2" id="cur_address_addr2" />
+							<input class="field ui-widget-content" type="text" size="24" name="cur_address_addr2" id="cur_address_addr2" />
 						</label>
 					</div>
 					<div class="element">
 						<label>
 							<span class="label">City, State, Zip</span>
-							<input class="field" type="text" size="8" name="cur_address_city" id="cur_address_city" />
-							<input class="field" type="text" size="2" name="cur_address_state" id="cur_address_state" />
-							<input class="field" type="text" size="5" name="cur_address_zip" id="cur_address_zip" />
+							<input class="field ui-widget-content" type="text" size="8" name="cur_address_city" id="cur_address_city" />
+							<input class="field ui-widget-content" type="text" size="2" name="cur_address_state" id="cur_address_state" />
+							<input class="field ui-widget-content" type="text" size="5" name="cur_address_zip" id="cur_address_zip" />
 						</label>
 					</div>
 				</div>
@@ -429,7 +429,7 @@ $this->note = 'Provide employee account details in this form.';
 							<?php } ?>
 						</tbody>
 					</table>
-					<input class="field" type="hidden" id="attributes" name="attributes" />
+					<input type="hidden" id="attributes" name="attributes" />
 				</div>
 			</div>
 			<div id="attribute_dialog" title="Add an Attribute">

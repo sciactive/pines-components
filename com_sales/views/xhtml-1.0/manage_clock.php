@@ -21,8 +21,10 @@ $this->title = 'Employee Timeclock';
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
+				<?php if (gatekeeper('com_sales/manageclock')) { ?>
 				{type: 'button', text: 'View', extra_class: 'icon picon_16x16_actions_document-new', double_click: true, url: '<?php echo pines_url('com_sales', 'viewclock', array('id' => '#title#')); ?>'},
 				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', url: '<?php echo pines_url('com_sales', 'editclock', array('id' => '#title#')); ?>'},
+				<?php } if (gatekeeper('com_sales/clock')) { ?>
 				{type: 'button', text: 'Clock In/Out', extra_class: 'icon picon_16x16_stock_generic_stock_timer', multi_select: true, click: function(e, rows){
 					var loader;
 					rows.each(function(){
@@ -57,6 +59,7 @@ $this->title = 'Employee Timeclock';
 						});
 					});
 				}},
+				<?php } ?>
 				{type: 'separator'},
 				{type: 'button', text: 'Select All', extra_class: 'icon picon_16x16_actions_list-add', select_all: true},
 				{type: 'button', text: 'Select None', extra_class: 'icon picon_16x16_actions_list-remove', select_none: true},

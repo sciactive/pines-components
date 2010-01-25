@@ -21,12 +21,17 @@ $this->title = 'Employees';
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
+				<?php if (gatekeeper('com_sales/newemployee')) { ?>
 				{type: 'button', text: 'New', extra_class: 'icon picon_16x16_actions_document-new', selection_optional: true, url: '<?php echo pines_url('com_hrm', 'editemployee'); ?>'},
+				<?php } if (gatekeeper('com_sales/editemployee')) { ?>
 				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo pines_url('com_hrm', 'editemployee', array('id' => '#title#')); ?>'},
+				<?php } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'icon picon_16x16_actions_mail-message-new', multi_select: true, url: 'mailto:#col_2#', delimiter: ','},
 				{type: 'separator'},
+				<?php if (gatekeeper('com_sales/deleteemployee')) { ?>
 				{type: 'button', text: 'Delete', extra_class: 'icon picon_16x16_actions_edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_hrm', 'deleteemployee', array('id' => '#title#')); ?>', delimiter: ','},
 				{type: 'separator'},
+				<?php } ?>
 				{type: 'button', text: 'Select All', extra_class: 'icon picon_16x16_actions_list-add', select_all: true},
 				{type: 'button', text: 'Select None', extra_class: 'icon picon_16x16_actions_list-remove', select_none: true},
 				{type: 'separator'},
@@ -59,9 +64,8 @@ $this->title = 'Employees';
 			<th>Name</th>
 			<th>Email</th>
 			<th>Job Title</th>
+			<th>Country</th>
 			<th>Address</th>
-			<th>Address 1</th>
-			<th>Address 2</th>
 			<th>City</th>
 			<th>State</th>
 			<th>Zip</th>
@@ -79,9 +83,8 @@ $this->title = 'Employees';
 			<td><?php echo $employee->name; ?></td>
 			<td><?php echo $employee->email; ?></td>
 			<td><?php echo $employee->job_title; ?></td>
-			<td><?php echo $employee->address_type == 'international' ? 'Intl' : 'US'; ?></td>
-			<td><?php echo $employee->address_1; ?></td>
-			<td><?php echo $employee->address_2; ?></td>
+			<td><?php echo $employee->address_type == 'us' ? 'US' : 'Intl'; ?></td>
+			<td><?php echo $employee->address_type == 'us' ? $employee->address_1.' '.$employee->address_2 :  $employee->address_international; ?></td>
 			<td><?php echo $employee->city; ?></td>
 			<td><?php echo $employee->state; ?></td>
 			<td><?php echo $employee->zip; ?></td>

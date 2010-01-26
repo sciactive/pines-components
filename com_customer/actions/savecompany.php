@@ -28,8 +28,8 @@ if ( isset($_REQUEST['id']) ) {
 // General
 $company->name = $_REQUEST['name'];
 $company->email = $_REQUEST['email'];
-$company->phone = $_REQUEST['phone'];
-$company->fax = $_REQUEST['fax'];
+$company->phone = preg_replace('/\D/', '', $_REQUEST['phone']);
+$company->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
 $company->website = $_REQUEST['website'];
 
 // Address

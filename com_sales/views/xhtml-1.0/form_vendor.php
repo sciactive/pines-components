@@ -52,11 +52,11 @@ $this->note = 'Provide vendor details in this form.';
 	</div>
 	<div class="element">
 		<label><span class="label">Corporate Phone</span>
-			<input class="field ui-widget-content" type="text" name="phone_work" size="24" value="<?php echo $this->entity->phone_work; ?>" /></label>
+			<input class="field ui-widget-content" type="text" name="phone_work" size="24" value="<?php echo pines_phone_format($this->entity->phone_work); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Fax</span>
-			<input class="field ui-widget-content" type="text" name="fax" size="24" value="<?php echo $this->entity->fax; ?>" /></label>
+			<input class="field ui-widget-content" type="text" name="fax" size="24" value="<?php echo pines_phone_format($this->entity->fax); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Account #</span>

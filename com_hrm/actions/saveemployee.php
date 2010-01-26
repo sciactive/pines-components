@@ -31,13 +31,13 @@ $employee->name_middle = $config->run_hrm->title_case($_REQUEST['name_middle']);
 $employee->name_last = $config->run_hrm->title_case($_REQUEST['name_last']);
 $employee->name = "{$employee->name_first} {$employee->name_last}";
 if ($config->com_hrm->ssn_field)
-	$employee->ssn = $_REQUEST['ssn'];
+	$employee->ssn = preg_replace('/\D/', '', $_REQUEST['ssn']);
 $employee->email = $_REQUEST['email'];
 $employee->job_title = $_REQUEST['job_title'];
-$employee->phone_cell = $_REQUEST['phone_cell'];
-$employee->phone_work = $_REQUEST['phone_work'];
-$employee->phone_home = $_REQUEST['phone_home'];
-$employee->fax = $_REQUEST['fax'];
+$employee->phone_cell = preg_replace('/\D/', '', $_REQUEST['phone_cell']);
+$employee->phone_work = preg_replace('/\D/', '', $_REQUEST['phone_work']);
+$employee->phone_home = preg_replace('/\D/', '', $_REQUEST['phone_home']);
+$employee->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
 $employee->login_disabled = ($_REQUEST['login_disabled'] == 'ON');
 if (!empty($_REQUEST['password']))
 	$employee->password = $_REQUEST['password'];

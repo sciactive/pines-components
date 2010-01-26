@@ -32,10 +32,10 @@ foreach ($customers as $key => &$cur_customer) {
 		(strpos(strtolower($cur_customer->name), $query) !== false) ||
 		(strpos(strtolower($cur_customer->email), $query) !== false) ||
 		(strpos(strtolower("{$cur_customer->company->name}"), $query) !== false) ||
-		(preg_replace('/\D/', '', $query) != '' && strpos(preg_replace('/\D/', '', $cur_customer->phone_home), preg_replace('/\D/', '', $query)) !== false) ||
-		(preg_replace('/\D/', '', $query) != '' && strpos(preg_replace('/\D/', '', $cur_customer->phone_work), preg_replace('/\D/', '', $query)) !== false) ||
-		(preg_replace('/\D/', '', $query) != '' && strpos(preg_replace('/\D/', '', $cur_customer->phone_cell), preg_replace('/\D/', '', $query)) !== false) ||
-		(preg_replace('/\D/', '', $query) != '' && strpos(preg_replace('/\D/', '', $cur_customer->fax), preg_replace('/\D/', '', $query)) !== false)
+		(preg_replace('/\D/', '', $query) != '' && strpos($cur_customer->phone_home, preg_replace('/\D/', '', $query)) !== false) ||
+		(preg_replace('/\D/', '', $query) != '' && strpos($cur_customer->phone_work, preg_replace('/\D/', '', $query)) !== false) ||
+		(preg_replace('/\D/', '', $query) != '' && strpos($cur_customer->phone_cell, preg_replace('/\D/', '', $query)) !== false) ||
+		(preg_replace('/\D/', '', $query) != '' && strpos($cur_customer->fax, preg_replace('/\D/', '', $query)) !== false)
 		) {
 		$json_struct = (object) array(
 			'key' => $cur_customer->guid,
@@ -49,10 +49,10 @@ foreach ($customers as $key => &$cur_customer) {
 				$cur_customer->city,
 				$cur_customer->state,
 				$cur_customer->zip,
-				$cur_customer->phone_home,
-				$cur_customer->phone_work,
-				$cur_customer->phone_cell,
-				$cur_customer->fax
+				pines_phone_format($cur_customer->phone_home),
+				pines_phone_format($cur_customer->phone_work),
+				pines_phone_format($cur_customer->phone_cell),
+				pines_phone_format($cur_customer->fax)
 			)
 		);
 		$cur_customer = $json_struct;

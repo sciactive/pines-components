@@ -88,10 +88,10 @@ $this->title = 'Employees';
 			<td><?php echo $employee->city; ?></td>
 			<td><?php echo $employee->state; ?></td>
 			<td><?php echo $employee->zip; ?></td>
-			<td><?php echo $employee->phone_home; ?></td>
-			<td><?php echo $employee->phone_work; ?></td>
-			<td><?php echo $employee->phone_cell; ?></td>
-			<td><?php echo $employee->fax; ?></td>
+			<td><?php echo pines_phone_format($employee->phone_home); ?></td>
+			<td><?php echo pines_phone_format($employee->phone_work); ?></td>
+			<td><?php echo pines_phone_format($employee->phone_cell); ?></td>
+			<td><?php echo pines_phone_format($employee->fax); ?></td>
 			<td><?php echo ($employee->login_disabled ? 'Yes' : 'No'); ?></td>
 		</tr>
 	<?php } ?>

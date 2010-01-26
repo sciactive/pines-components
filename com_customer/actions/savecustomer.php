@@ -31,7 +31,7 @@ $customer->name_middle = $config->run_customer->title_case($_REQUEST['name_middl
 $customer->name_last = $config->run_customer->title_case($_REQUEST['name_last']);
 $customer->name = "{$customer->name_first} {$customer->name_last}";
 if ($config->com_customer->ssn_field)
-	$customer->ssn = $_REQUEST['ssn'];
+	$customer->ssn = preg_replace('/\D/', '', $_REQUEST['ssn']);
 $customer->dob = strtotime($_REQUEST['dob']);
 $customer->email = $_REQUEST['email'];
 $customer->company = null;
@@ -41,10 +41,10 @@ if (preg_match('/^\d+/', $_REQUEST['company'])) {
 		$customer->company = null;
 }
 $customer->job_title = $_REQUEST['job_title'];
-$customer->phone_cell = $_REQUEST['phone_cell'];
-$customer->phone_work = $_REQUEST['phone_work'];
-$customer->phone_home = $_REQUEST['phone_home'];
-$customer->fax = $_REQUEST['fax'];
+$customer->phone_cell = preg_replace('/\D/', '', $_REQUEST['phone_cell']);
+$customer->phone_work = preg_replace('/\D/', '', $_REQUEST['phone_work']);
+$customer->phone_home = preg_replace('/\D/', '', $_REQUEST['phone_home']);
+$customer->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
 $customer->login_disabled = ($_REQUEST['login_disabled'] == 'ON');
 if (!empty($_REQUEST['password']))
 	$customer->password = $_REQUEST['password'];

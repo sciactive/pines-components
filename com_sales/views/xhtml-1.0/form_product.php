@@ -456,8 +456,8 @@ $this->note = 'Provide product details in this form.';
 						<tr title="<?php echo $cur_vendor->guid; ?>">
 							<td><?php echo $cur_vendor->name; ?></td>
 							<td><?php echo $cur_vendor->email; ?></td>
-							<td><?php echo $cur_vendor->phone_work; ?></td>
-							<td><?php echo $cur_vendor->fax; ?></td>
+							<td><?php echo pines_phone_format($cur_vendor->phone_work); ?></td>
+							<td><?php echo pines_phone_format($cur_vendor->fax); ?></td>
 							<td><?php echo $cur_vendor->account_number; ?></td>
 						</tr>
 						<?php } ?>

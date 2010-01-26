@@ -95,10 +95,10 @@ $this->title = 'Customers';
 			<td><?php echo $customer->city; ?></td>
 			<td><?php echo $customer->state; ?></td>
 			<td><?php echo $customer->zip; ?></td>
-			<td><?php echo $customer->phone_home; ?></td>
-			<td><?php echo $customer->phone_work; ?></td>
-			<td><?php echo $customer->phone_cell; ?></td>
-			<td><?php echo $customer->fax; ?></td>
+			<td><?php echo pines_phone_format($customer->phone_home); ?></td>
+			<td><?php echo pines_phone_format($customer->phone_work); ?></td>
+			<td><?php echo pines_phone_format($customer->phone_cell); ?></td>
+			<td><?php echo pines_phone_format($customer->fax); ?></td>
 			<td><?php echo ($customer->login_disabled ? 'Yes' : 'No'); ?></td>
 			<td><?php echo $customer->points; ?></td>
 			<td><?php echo $customer->peak_points; ?></td>

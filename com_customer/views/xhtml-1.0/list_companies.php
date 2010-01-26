@@ -84,8 +84,8 @@ $this->title = 'Companies';
 			<td><?php echo $company->state; ?></td>
 			<td><?php echo $company->zip; ?></td>
 			<td><?php echo $company->email; ?></td>
-			<td><?php echo $company->phone; ?></td>
-			<td><?php echo $company->fax; ?></td>
+			<td><?php echo pines_phone_format($company->phone); ?></td>
+			<td><?php echo pines_phone_format($company->fax); ?></td>
 			<td><?php echo $company->website; ?></td>
 		</tr>
 	<?php } ?>

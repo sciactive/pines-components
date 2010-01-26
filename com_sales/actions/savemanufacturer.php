@@ -32,8 +32,8 @@ $manufacturer->address_2 = $_REQUEST['address_2'];
 $manufacturer->city = $_REQUEST['city'];
 $manufacturer->state = $_REQUEST['state'];
 $manufacturer->zip = $_REQUEST['zip'];
-$manufacturer->phone_work = $_REQUEST['phone_work'];
-$manufacturer->fax = $_REQUEST['fax'];
+$manufacturer->phone_work = preg_replace('/\D/', '', $_REQUEST['phone_work']);
+$manufacturer->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
 
 if (empty($manufacturer->name)) {
 	$manufacturer->print_form();

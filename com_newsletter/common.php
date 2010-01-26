@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($config->ability_manager) ) {
-	$config->ability_manager->add('com_newsletter', 'managemails', 'Manage Mails', 'Let users create, edit, and delete mailings.');
+	$config->ability_manager->add('com_newsletter', 'listmail', 'List Mail', 'Let users view the mailbox.');
 	$config->ability_manager->add('com_newsletter', 'send', 'Send', 'Let users send out mailings.');
 }
 

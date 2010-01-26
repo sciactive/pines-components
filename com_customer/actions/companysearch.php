@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_customer/managecompanies') )
+if ( !gatekeeper('com_customer/listcompanies') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'companysearch', $_REQUEST, false));
 
 $page->override = true;

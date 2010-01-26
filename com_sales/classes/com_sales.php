@@ -407,6 +407,19 @@ class com_sales extends component {
 			$pgrid->detach();
 			$module->detach();
 			display_notice("There are no POs.");
+			return;
+		}
+		
+		// Check the purchase orders to see if any have not been received on time.
+		$errors = array();
+		foreach ($module->pos as $po) {
+			if ($po->eta < time() && empty($po->received))
+				$errors[] .= 'PO #'. $po->po_number .' was not recieved on time.';
+		}
+		if (!empty($errors)) {
+			$type = 'Reminder';
+			$head = 'Purchase Orders';
+			$this->notify($type,$head,$errors);
 		}
 	}
 
@@ -712,6 +725,19 @@ class com_sales extends component {
 		}
 		// Closest even is down.
 		return $floored * $sign;
+	}
+
+	/**
+	 * Notify the user of anything important.
+	 * @return module The notifcation's module.
+	 */
+	public function notify($title, $header, $note) {
+		global $config;
+		$module = new module('com_sales', 'show_note', 'left');
+		$module->title = $title;
+		$module->header = $header;
+		$module->message = $note;
+		return $module;
 	}
 }
 

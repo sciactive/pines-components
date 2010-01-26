@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_hrm/manageemployees') )
+if ( !gatekeeper('com_hrm/listemployees') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'listemployees', null, false));
 
 $config->run_hrm->list_employees();

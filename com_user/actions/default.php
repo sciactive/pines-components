@@ -19,7 +19,7 @@ if ( !gatekeeper() ) {
 	return;
 } else {
 	if (empty($_SESSION['user']->default_component) || $_SESSION['user']->default_component == 'com_user') {
-		if ( !gatekeeper('com_user/manageusers') ) {
+		if ( !gatekeeper('com_user/listusers') ) {
 			display_error('Your default component is set to com_user, but you don\'t have permission to use it.');
 			return;
 		}

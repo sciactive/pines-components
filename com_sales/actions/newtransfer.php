@@ -27,7 +27,7 @@ if (is_array($list)) {
 	foreach ($list as $cur_stock_guid) {
 		$cur_stock = com_sales_stock::factory($cur_stock_guid);
 		if (isset($cur_stock->guid))
-			$entity->stock[] = $cur_stock_guid;
+			$entity->stock[] = $cur_stock;
 	}
 }
 $entity->print_form();

@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/newsale') && !gatekeeper('com_sales/editsale') )
+if ( !gatekeeper('com_sales/listproducts') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'productsearch', $_REQUEST, false));
 
 $page->override = true;

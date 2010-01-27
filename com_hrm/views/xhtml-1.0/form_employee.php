@@ -187,6 +187,7 @@ $this->note = 'Provide employee account details in this form.';
 			<?php if ($config->com_hrm->ssn_field) { ?>
 			<div class="element">
 				<label><span class="label">SSN</span>
+					<span class="note">Without dashes.</span>
 					<input class="field ui-widget-content" type="text" name="ssn" size="24" value="<?php echo $this->entity->ssn; ?>" /></label>
 			</div>
 			<?php } ?>

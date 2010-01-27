@@ -203,6 +203,16 @@ class com_entity extends component {
 						}
 						$pass = $pass && $found;
 						break;
+					case 'ref':
+						// Todo: Check in arrays.
+						$found = true;
+						foreach ($option as $cur_key => $cur_option)
+							$found = $found && (is_array($data[$cur_key]) && $data[$cur_key][0] == 'pines_entity_reference' && $data[$cur_key][1] == $cur_option);
+						$pass = $pass && $found;
+						break;
+					case 'ref_i':
+						// Todo: Inclusive references.
+						break;
 					case 'data':
 						$found = true;
 						foreach ($option as $cur_key => $cur_option)

@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$config->ability_manager->add('com_hrm', 'listemployees', 'List Employees', 'User can view employee list.');
+$config->ability_manager->add('com_hrm', 'listemployees', 'List Employees', 'User can see employees.');
 $config->ability_manager->add('com_hrm', 'newemployee', 'Create Employees', 'User can create new employees.');
 $config->ability_manager->add('com_hrm', 'editemployee', 'Edit Employees', 'User can edit current employees.');
 $config->ability_manager->add('com_hrm', 'deleteemployee', 'Delete Employees', 'User can delete current employees.');

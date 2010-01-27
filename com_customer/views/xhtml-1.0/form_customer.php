@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = (is_null($this->entity->guid)) ? 'Editing New Customer' : 'Editing ['.htmlentities($this->entity->name).']';
-$this->note = 'Provide customer account details in this form.';
+$this->note = 'Provide customer profile details in this form.';
 ?>
 <form class="pform" method="post" id="customer_details" action="<?php echo pines_url('com_customer', 'savecustomer'); ?>">
 	<script type="text/javascript">

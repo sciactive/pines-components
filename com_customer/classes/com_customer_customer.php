@@ -78,7 +78,7 @@ class com_customer_customer extends entity {
 	}
 
 	/**
-	 * Add or subtract points from the customer's account.
+	 * Add or subtract points from the customer's profile.
 	 *
 	 * @param int $point_adjust The positive or negative point value to add.
 	 */

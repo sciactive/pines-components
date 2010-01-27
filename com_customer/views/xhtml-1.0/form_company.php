@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = (is_null($this->entity->guid)) ? 'Editing New Company' : 'Editing ['.htmlentities($this->entity->name).']';
-$this->note = 'Provide company account details in this form.';
+$this->note = 'Provide company profile details in this form.';
 ?>
 <form class="pform" method="post" id="company_details" action="<?php echo pines_url('com_customer', 'savecompany'); ?>">
 	<?php if (isset($this->entity->guid)) { ?>

@@ -32,7 +32,7 @@ class com_entity extends component {
 			$entity->guid = null;
 		return $return;
 	}
-	
+
 	/**
 	 * Delete an entity by its GUID.
 	 *
@@ -41,20 +41,16 @@ class com_entity extends component {
 	 */
 	public function delete_entity_by_id($guid) {
 		global $config;
-		$query = sprintf("DELETE FROM `%scom_entity_entities` WHERE `guid`=%u;",
+		$query = sprintf("DELETE e, d FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid`=d.`guid` WHERE e.`guid`=%u;",
+			$config->com_mysql->prefix,
+			$config->com_mysql->prefix,
+			$config->com_mysql->prefix,
 			$config->com_mysql->prefix,
 			intval($guid));
 		if ( !(mysql_query($query, $config->db_manager->link)) ) {
 			if (function_exists('display_error'))
 				display_error('Query failed: ' . mysql_error());
-			return false;
-		}
-		$query = sprintf("DELETE FROM `%scom_entity_data` WHERE `guid`=%u;",
-			$config->com_mysql->prefix,
-			intval($guid));
-		if ( !(mysql_query($query, $config->db_manager->link)) ) {
-			if (function_exists('display_error'))
-				display_error('Query failed: ' . mysql_error());
+			display_error($query);
 			return false;
 		}
 		return true;
@@ -101,9 +97,9 @@ class com_entity extends component {
 	/**
 	 * Get an array of entities.
 	 *
-	 * GUIDs start at one (1) and must be integers.
+	 * GUIDs are integers and start at one (1).
 	 *
-	 * $options can contain the following key/values:
+	 * $options can contain the following key - values:
 	 *
 	 * - guid - A GUID or array of GUIDs.
 	 * - parent - A GUID or array of GUIDs.
@@ -116,6 +112,8 @@ class com_entity extends component {
 	 * - ref - An array of key/values corresponding to var/values.
 	 * - ref_i - An array of inclusive key/values corresponding to var/values.
 	 * - class - The class to create each entity with.
+	 * - limit - The limit of entities to be returned.
+	 * - offset - The offset from the first (0) to start retrieving entities.
 	 *
 	 * For regex matching, preg_match() is used.
 	 *
@@ -134,9 +132,14 @@ class com_entity extends component {
 		$entities = array();
 
 		$query_parts = array();
-		
+
 		$class = isset($options['class']) ? $options['class'] : entity;
-		
+
+		$count = 0;
+		$limit = 0;
+		$ocount = 0;
+		$offset = 0;
+
 		foreach ($options as $key => $option) {
 			$cur_query = '';
 			// Any options having to do with data have to wait until after the
@@ -178,6 +181,12 @@ class com_entity extends component {
 						$cur_query .= 'e.`tags` LIKE \'%\"'.mysql_real_escape_string($cur_tag, $config->db_manager->link).'\"%\'';
 					}
 					break;
+				case 'limit':
+					$limit = $option;
+					break;
+				case 'offset':
+					$offset = $option;
+					break;
 			}
 			if (!empty($cur_query))
 				$query_parts[] = $cur_query;
@@ -215,6 +224,10 @@ class com_entity extends component {
 			} else {
 				// Make sure that $row is incremented :)
 				$row = mysql_fetch_array($result);
+			}
+			if ($ocount < $offset) {
+				$ocount++;
+				continue;
 			}
 			// Recheck all conditions.
 			$pass = true;
@@ -255,7 +268,7 @@ class com_entity extends component {
 					case 'data':
 						$found = true;
 						foreach ($option as $cur_key => $cur_option) {
-							if ($data[$cur_key] != $cur_option) {
+							if (!key_exists($cur_key, $data) || $data[$cur_key] != $cur_option) {
 								$found = false;
 								break;
 							}
@@ -265,7 +278,7 @@ class com_entity extends component {
 					case 'data_i':
 						$found = false;
 						foreach ($option as $cur_key => $cur_option) {
-							if ($data[$cur_key] == $cur_option) {
+							if (key_exists($cur_key, $data) && $data[$cur_key] == $cur_option) {
 								$found = true;
 								break;
 							}
@@ -275,7 +288,7 @@ class com_entity extends component {
 					case 'match':
 						$found = true;
 						foreach ($option as $cur_key => $cur_option) {
-							if (!preg_match($cur_option, $data[$cur_key])) {
+							if (!key_exists($cur_key, $data) || !preg_match($cur_option, $data[$cur_key])) {
 								$found = false;
 								break;
 							}
@@ -285,7 +298,7 @@ class com_entity extends component {
 					case 'match_i':
 						$found = false;
 						foreach ($option as $cur_key => $cur_option) {
-							if (preg_match($cur_option, $data[$cur_key])) {
+							if (key_exists($cur_key, $data) && preg_match($cur_option, $data[$cur_key])) {
 								$found = true;
 								break;
 							}
@@ -295,6 +308,10 @@ class com_entity extends component {
 					case 'ref':
 						$found = true;
 						foreach ($option as $cur_key => $cur_option) {
+							if (!key_exists($cur_key, $data)) {
+								$found = false;
+								break;
+							}
 							// If it's an array of values, make sure that each value is met.
 							if (is_array($cur_option)) {
 								foreach ($cur_option as $cur_cur_option) {
@@ -315,7 +332,7 @@ class com_entity extends component {
 					case 'ref_i':
 						$found = false;
 						foreach ($option as $cur_key => $cur_option) {
-							if ($this->entity_reference_search($data[$cur_key], $cur_option)) {
+							if (key_exists($cur_key, $data) && $this->entity_reference_search($data[$cur_key], $cur_option)) {
 								$found = true;
 								break;
 							}
@@ -333,6 +350,9 @@ class com_entity extends component {
 				$entity->tags = $tags;
 				$entity->put_data($data);
 				array_push($entities, $entity);
+				$count++;
+				if ($limit && $count >= $limit)
+					break;
 			}
 		}
 
@@ -345,18 +365,23 @@ class com_entity extends component {
 	 *
 	 * $options is the same as in get_entities().
 	 *
-	 * @param array|int|float|string $options The options to search for, or just a GUID.
-	 * @return mixed An entity, or null on failure.
+	 * This function is equivalent to setting $options['limit'] to 1 for
+	 * get_entities(), except that it will return an entity or null, instead of
+	 * an array.
+	 *
+	 * @param mixed $options The options to search for, or just a GUID.
+	 * @return mixed An entity, or null on failure and nothing found.
 	 */
 	public function get_entity($options) {
 		if (!is_array($options))
 			$options = array('guid' => (int) $options);
+		$options['limit'] = 1;
 		$entities = $this->get_entities($options);
 		if (empty($entities))
 			return null;
 		return $entities[0];
 	}
-	
+
 	/**
 	 * Save an entity to the database.
 	 *

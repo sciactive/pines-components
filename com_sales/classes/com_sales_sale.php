@@ -123,13 +123,11 @@ class com_sales_sale extends entity {
 			// Check minimum and maximum values.
 			if ((float) $cur_payment['amount'] < $cur_payment['entity']->minimum) {
 				display_notice("The payment type [{$cur_payment['entity']->name}] requires a minimum payment of {$cur_payment['entity']->minimum}.");
-				$cur_payment['status'] = 'declined';
 				$return = false;
 				continue;
 			}
 			if (isset($cur_payment['entity']->maximum) && (float) $cur_payment['amount'] > $cur_payment['entity']->maximum) {
 				display_notice("The payment type [{$cur_payment['entity']->name}] requires a maximum payment of {$cur_payment['entity']->maximum}.");
-				$cur_payment['status'] = 'declined';
 				$return = false;
 				continue;
 			}

@@ -57,6 +57,9 @@ if ($this->entity->status == 'quoted') {
 		border-bottom: 1px solid black;
 		padding: 2px;
 	}
+	#receipt_sale .receipt_note, #receipt_sale .comments {
+		font-size: 75%;
+	}
 	/* ]]> */
 </style>
 <div id="receipt_sale" class="pform pform_twocol">
@@ -145,7 +148,7 @@ if ($this->entity->status == 'quoted') {
 			<hr style="clear: both;" />
 			<div class="right_text">
 				<?php foreach ($this->entity->payments as $cur_payment) { ?>
-				<span><?php echo $cur_payment['label']; ?></span>
+				<span><?php echo $cur_payment['label']; ?>:</span>
 				<?php } ?>
 				<hr style="visibility: hidden;" />
 				<span>Amount Tendered:</span>
@@ -191,7 +194,7 @@ if ($this->entity->status == 'quoted') {
 		<div class="field">
 			<span class="label">Comments:</span>
 			<br />
-			<span class="field"><?php echo $this->entity->comments; ?></span>
+			<span class="field comments"><?php echo $this->entity->comments; ?></span>
 		</div>
 	</div>
 	<?php } ?>
@@ -211,7 +214,7 @@ if ($this->entity->status == 'quoted') {
 				}
 			?></span>
 			<br />
-			<div class="field" style="font-size: 75%;"><?php
+			<div class="field receipt_note"><?php
 				switch ($this->entity->status) {
 					case 'quoted':
 						echo $config->com_sales->quote_note_text;

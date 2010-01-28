@@ -616,6 +616,7 @@ class com_sales extends component {
 				break;
 			case 'tender':
 				$args['payment']['status'] = 'tendered';
+				$args['payment']['label'] = $args['payment']['entity']->name;
 				break;
 			case 'change':
 				$args['sale']->change_given = true;
@@ -653,6 +654,7 @@ class com_sales extends component {
 				break;
 			case 'tender':
 				$args['payment']['status'] = 'tendered';
+				$args['payment']['label'] = $args['payment']['entity']->name;
 				break;
 			case 'change':
 				$args['sale']->change_given = true;

@@ -21,6 +21,40 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class com_authorizenet extends component {
 	/**
+	 * Determine the type of credit card that is being charged.
+	 *
+	 * @param string $card_num The credit card number.
+	 * @return string The credit card type.
+	 */
+	function card_type($card_num) {
+		$prefix = substr($card_num, 0, 1);
+		if ($prefix == '4') {
+			return 'VISA';
+		} else {
+			$prefix = substr($card_num, 0, 2);
+			if ($prefix == '30' || $prefix == '36' || $prefix == '38') {
+				return 'DC';
+			} else if ($prefix == '34' || $prefix == '37') {
+				return 'AMEX';
+			} else if ($prefix == '35') {
+				return 'JCB';
+			} else if ($prefix == '51' || $prefix == '52' || $prefix == '53' || $prefix == '54' || $prefix == '55') {
+				return 'MC';
+			} else if ($prefix == '64' || $prefix == '65') {
+				return 'DISC';
+			} else {
+				$prefix = substr($card_num, 0, 4);
+				if ($prefix == '6011') {
+					return 'DISC';
+				} else if ($prefix == '5610' || $prefix == '5602') {
+					return 'BC';
+				}
+			}
+		}
+		return 'OTHER';
+	}
+	
+	/**
 	 * Process a payment.
 	 *
 	 * @param array $args The argument array.
@@ -111,6 +145,7 @@ class com_authorizenet extends component {
 				switch ($response_array[0]) {
 					case 1:
 						$args['payment']['status'] = 'tendered';
+						$args['payment']['label'] = $this->card_type($args['payment']['data']['card_number']) . ' ' . substr($args['payment']['data']['card_number'], -4, 4);
 						unset($args['payment']['data']['name_first']);
 						unset($args['payment']['data']['name_last']);
 						unset($args['payment']['data']['address']);
@@ -123,6 +158,7 @@ class com_authorizenet extends component {
 						break;
 					case 2:
 						$args['payment']['status'] = 'declined';
+						$args['payment']['label'] = $this->card_type($args['payment']['data']['card_number']) . ' ' . substr($args['payment']['data']['card_number'], -4, 4);
 						unset($args['payment']['data']['name_first']);
 						unset($args['payment']['data']['name_last']);
 						unset($args['payment']['data']['address']);

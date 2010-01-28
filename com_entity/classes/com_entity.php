@@ -61,6 +61,44 @@ class com_entity extends component {
 	}
 
 	/**
+	 * Search through a value for an entity reference.
+	 *
+	 * @param mixed $value Any value to search.
+	 * @param array|entity|int $entity An entity, GUID, or array of the two to search for.
+	 * @return bool True if the reference is found, false otherwise.
+	 */
+	private function entity_reference_search($value, $entity) {
+		if (!is_array($value))
+			return false;
+		if (is_null($entity))
+			return false;
+		// Get the GUID, if the passed $entity is an object.
+		if (is_array($entity)) {
+			foreach($entity as &$cur_entity) {
+				if (is_object($cur_entity))
+					$cur_entity = $cur_entity->guid;
+			}
+			unset($cur_entity);
+		} elseif (is_object($entity)) {
+			$entity = array($entity->guid);
+		} else {
+			$entity = array((int) $entity);
+		}
+		if (is_null($entity))
+			return false;
+		if ($value[0] == 'pines_entity_reference' && in_array($value[1], $entity)) {
+			return true;
+		} else {
+			// Search through multidimensional arrays looking for the reference.
+			foreach ($value as $cur_value) {
+				if ($this->entity_reference_search($cur_value, $entity))
+					return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Get an array of entities.
 	 *
 	 * GUIDs start at one (1) and must be integers.
@@ -75,9 +113,15 @@ class com_entity extends component {
 	 * - data_i - An array of inclusive key/values corresponding to var/values.
 	 * - match - An array of key/regex corresponding to var/values.
 	 * - match_i - An array of inclusive key/regex corresponding to var/values.
+	 * - ref - An array of key/values corresponding to var/values.
+	 * - ref_i - An array of inclusive key/values corresponding to var/values.
 	 * - class - The class to create each entity with.
 	 *
 	 * For regex matching, preg_match() is used.
+	 *
+	 * For reference searching, the values can be an entity, GUID, or an array
+	 * of either. Inclusive ref can't be a single value, as that wouldn't make
+	 * sense.
 	 *
 	 * If a class is specified, it must have a factory() static method which
 	 * returns a new instance.
@@ -95,6 +139,8 @@ class com_entity extends component {
 		
 		foreach ($options as $key => $option) {
 			$cur_query = '';
+			// Any options having to do with data have to wait until after the
+			// data is selected, so that each entity's data can be gathered.
 			switch ($key) {
 				case 'guid':
 					if (is_array($option)) {
@@ -155,10 +201,9 @@ class com_entity extends component {
 
 		$row = mysql_fetch_array($result);
 		while ($row) {
-			$entity = call_user_func(array($class, 'factory'));
-			$entity->guid = intval($row['guid']);
-			$entity->parent = (is_null($row['parent']) ? NULL : intval($row['parent']));
-			$entity->tags = unserialize($row['tags']);
+			$guid = intval($row['guid']);
+			$parent = (is_null($row['parent']) ? NULL : intval($row['parent']));
+			$tags = unserialize($row['tags']);
 			$data = array();
 			if (!is_null($row['dname'])) {
 				// This do will keep going and adding the data until the
@@ -166,63 +211,61 @@ class com_entity extends component {
 				do {
 					$data[$row['dname']] = unserialize($row['dvalue']);
 					$row = mysql_fetch_array($result);
-				} while (intval($row['guid']) === $entity->guid);
+				} while (intval($row['guid']) === $guid);
 			} else {
 				// Make sure that $row is incremented :)
 				$row = mysql_fetch_array($result);
 			}
-			$entity->put_data($data);
 			// Recheck all conditions.
 			$pass = true;
 			foreach ($options as $key => $option) {
 				switch ($key) {
 					case 'guid':
 						if (is_array($option)) {
-							$pass = $pass && in_array($entity->guid, $option);
+							$pass = $pass && in_array($guid, $option);
 						} else {
-							$pass = $pass && ($entity->guid == $option);
+							$pass = $pass && ($guid == $option);
 						}
 						break;
 					case 'parent':
 						if (is_array($option)) {
-							$pass = $pass && in_array($entity->parent, $option);
+							$pass = $pass && in_array($parent, $option);
 						} else {
-							$pass = $pass && ($entity->parent == $option);
+							$pass = $pass && ($parent == $option);
 						}
 						break;
 					case 'tags':
-						$pass = $pass && $entity->has_tag($option);
+						if (is_array($option)) {
+							foreach($option as $cur_option)
+								$pass = $pass && in_array($cur_option, $tags);
+						} else {
+							$pass = $pass && in_array($option, $tags);
+						}
 						break;
 					case 'tags_i':
 						$found = false;
 						foreach ($option as $cur_option) {
-							if ($entity->has_tag($cur_option)) {
+							if (in_array($cur_option, $tags)) {
 								$found = true;
 								break;
 							}
 						}
 						$pass = $pass && $found;
 						break;
-					case 'ref':
-						// Todo: Check in arrays.
-						$found = true;
-						foreach ($option as $cur_key => $cur_option)
-							$found = $found && (is_array($data[$cur_key]) && $data[$cur_key][0] == 'pines_entity_reference' && $data[$cur_key][1] == $cur_option);
-						$pass = $pass && $found;
-						break;
-					case 'ref_i':
-						// Todo: Inclusive references.
-						break;
 					case 'data':
 						$found = true;
-						foreach ($option as $cur_key => $cur_option)
-							$found = $found && ($entity->$cur_key == $cur_option);
+						foreach ($option as $cur_key => $cur_option) {
+							if ($data[$cur_key] != $cur_option) {
+								$found = false;
+								break;
+							}
+						}
 						$pass = $pass && $found;
 						break;
 					case 'data_i':
 						$found = false;
 						foreach ($option as $cur_key => $cur_option) {
-							if ($entity->$cur_key == $cur_option) {
+							if ($data[$cur_key] == $cur_option) {
 								$found = true;
 								break;
 							}
@@ -231,14 +274,48 @@ class com_entity extends component {
 						break;
 					case 'match':
 						$found = true;
-						foreach ($option as $cur_key => $cur_option)
-							$found = $found && preg_match($cur_option, $entity->$cur_key);
+						foreach ($option as $cur_key => $cur_option) {
+							if (!preg_match($cur_option, $data[$cur_key])) {
+								$found = false;
+								break;
+							}
+						}
 						$pass = $pass && $found;
 						break;
 					case 'match_i':
 						$found = false;
 						foreach ($option as $cur_key => $cur_option) {
-							if (preg_match($cur_option, $entity->$cur_key)) {
+							if (preg_match($cur_option, $data[$cur_key])) {
+								$found = true;
+								break;
+							}
+						}
+						$pass = $pass && $found;
+						break;
+					case 'ref':
+						$found = true;
+						foreach ($option as $cur_key => $cur_option) {
+							// If it's an array of values, make sure that each value is met.
+							if (is_array($cur_option)) {
+								foreach ($cur_option as $cur_cur_option) {
+									if (!$this->entity_reference_search($data[$cur_key], $cur_cur_option)) {
+										$found = false;
+										break 2;
+									}
+								}
+							} else {
+								if (!$this->entity_reference_search($data[$cur_key], $cur_option)) {
+									$found = false;
+									break;
+								}
+							}
+						}
+						$pass = $pass && $found;
+						break;
+					case 'ref_i':
+						$found = false;
+						foreach ($option as $cur_key => $cur_option) {
+							if ($this->entity_reference_search($data[$cur_key], $cur_option)) {
 								$found = true;
 								break;
 							}
@@ -249,8 +326,14 @@ class com_entity extends component {
 				if (!$pass)
 					break;
 			}
-			if ($pass)
+			if ($pass) {
+				$entity = call_user_func(array($class, 'factory'));
+				$entity->guid = $guid;
+				$entity->parent = $parent;
+				$entity->tags = $tags;
+				$entity->put_data($data);
 				array_push($entities, $entity);
+			}
 		}
 
 		mysql_free_result($result);

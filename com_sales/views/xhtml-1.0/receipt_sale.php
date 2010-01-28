@@ -130,7 +130,7 @@ if ($this->entity->status == 'quoted') {
 				<tr>
 					<td><?php echo $cur_product['entity']->sku; ?></td>
 					<td><?php echo $cur_product['entity']->name; ?></td>
-					<td><?php echo $cur_product['entity']->description; ?></td>
+					<td><?php echo $cur_product['entity']->short_description; ?></td>
 					<td class="right_text"><?php echo $cur_product['quantity']; ?></td>
 					<td class="right_text">$<?php echo $config->run_sales->round($cur_product['price'], $config->com_sales->dec, true); ?><?php echo empty($cur_product['discount']) ? '' : " - {$cur_product['discount']}"; ?></td>
 					<td class="right_text">$<?php echo $config->run_sales->round($cur_product['line_total'], $config->com_sales->dec, true); ?></td>

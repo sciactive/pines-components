@@ -20,135 +20,210 @@ if ($this->entity->status == 'quoted') {
 	$this->title = 'Sale';
 }
 ?>
+<style type="text/css">
+	/* <![CDATA[ */
+	#receipt_sale .left_side {
+		margin-bottom: 10px;
+		float: left;
+		clear: left;
+	}
+	#receipt_sale .right_side {
+		margin-bottom: 10px;
+		float: right;
+		clear: right;
+	}
+	#receipt_sale .right_text {
+		text-align: right;
+	}
+	#receipt_sale .left_side div, #receipt_sale .right_side div {
+		float: left;
+	}
+	#receipt_sale .left_side .data_col, #receipt_sale .right_side .data_col {
+		float: left;
+		margin-left: 10px;
+	}
+	#receipt_sale .left_side span, #receipt_sale .right_side span {
+		display: block;
+	}
+	#receipt_sale .location .aligner {
+		visibility: hidden;
+	}
+	#item_list {
+		text-align: left;
+		border-bottom: 1px solid black;
+		border-collapse: collapse;
+	}
+	#item_list th {
+		border-bottom: 1px solid black;
+		padding: 2px;
+	}
+	/* ]]> */
+</style>
 <div id="receipt_sale" class="pform pform_twocol">
-<?php if (isset($this->entity->p_cdate)) { ?>
-	<div class="element">
-		<span class="label">Ticket #</span>
-		<span class="field"><?php echo $this->entity->guid; ?></span>
+	<?php $sales_rep = user::factory((int) $this->entity->uid); if (isset($sales_rep->guid)) { ?>
+	<div class="left_side location">
+		<div class="aligner">
+			<strong>Bill To:</strong>
+		</div>
+		<div class="data_col">
+			<span class="name"><?php echo $config->user_manager->get_groupname($sales_rep->gid); ?></span>
+			<span>Address</span>
+			<span>City, State Country Zip</span>
+			<span>Phone</span>
+		</div>
 	</div>
-<?php } ?>
-<?php if (isset($this->entity->p_cdate)) { ?>
-	<div class="element">
-		<span class="label">Date</span>
-		<span class="field"><?php echo date('Y-m-d', $this->entity->p_cdate); ?></span>
+	<?php } ?>
+	<div class="right_side receipt_info">
+		<div class="info_labels right_text">
+			<span><?php echo $this->title; ?> #:</span>
+			<span>Tendered On:</span>
+			<span>Sales Person:</span>
+			<span>Tendered By:</span>
+		</div>
+		<div class="data_col">
+			<span><?php echo $this->entity->guid; ?></span>
+			<span><?php echo pines_date_format($this->entity->p_cdate, null, 'n-j-Y g:i A'); ?></span>
+			<?php if (isset($sales_rep->guid)) { ?>
+				<span><?php echo $sales_rep->name; ?></span>
+				<span><?php echo $sales_rep->name; ?></span>
+			<?php } ?>
+		</div>
 	</div>
-<?php } ?>
-<?php if (isset($this->entity->uid)) { ?>
-	<div class="element">
-		<span class="label">Sales Rep</span>
-		<span class="field"><?php echo $config->user_manager->get_username($this->entity->uid); ?></span>
-	</div>
-<?php } ?>
 <?php if ($config->run_sales->com_customer && !is_null($this->entity->customer)) { ?>
-	<div class="element heading">
-		<h1>Customer</h1>
-	</div>
-	<div class="element">
-		<span class="label">Customer</span>
-		<span class="field"><?php echo $this->entity->customer->name; ?></span>
-	</div>
-	<?php if (!empty($this->entity->customer->email)) { ?>
-		<div class="element">
-			<span class="label">Email</span>
-			<span class="field"><?php echo $this->entity->customer->email; ?></span>
+	<div class="left_side customer">
+		<div>
+			<strong>Bill To:</strong>
 		</div>
-	<?php } ?>
-	<?php if (!empty($this->entity->customer->company)) { ?>
-		<div class="element">
-			<span class="label">Company</span>
-			<span class="field"><?php echo $this->entity->customer->company; ?></span>
-		</div>
-	<?php } ?>
-	<?php if (!empty($this->entity->customer->address_1)) { ?>
-		<div class="element">
-			<span class="label">Address</span>
-			<div class="group">
-				<span class="field"><?php echo $this->entity->customer->address_1; ?></span>
-				<?php if (!empty($this->entity->customer->address_2)) { ?>
-				<span class="field"><?php echo $this->entity->customer->address_2; ?></span>
+		<div class="data_col">
+			<span><strong>
+				<?php echo $this->entity->customer->name; ?>
+				<?php if (isset($this->entity->customer->company)) { ?>
+					( <?php echo $this->entity->customer->company->name; ?> )
 				<?php } ?>
-				<span class="field"><?php echo $this->entity->customer->city; ?>, <?php echo $this->entity->customer->state; ?> <?php echo $this->entity->customer->zip; ?></span>
+			</strong></span>
+			<?php if ($this->entity->customer->address_type == 'us') { ?>
+			<span><?php echo $this->entity->customer->address_1.' '.$this->entity->customer->address_2; ?></span>
+			<span><?php echo $this->entity->customer->city; ?>, <?php echo $this->entity->customer->state; ?> <?php echo $this->entity->customer->zip; ?></span>
+			<?php } else {?>
+			<span><?php echo $this->entity->customer->address_international; ?></span>
+			<?php } ?>
+		</div>
+	</div>
+<?php } ?>
+	<div class="element full_width left_side">
+		<table id="item_list" width="100%">
+			<thead>
+				<tr>
+					<th>SKU</th>
+					<th>Item</th>
+					<th>Description</th>
+					<th class="right_text">Qty</th>
+					<th class="right_text">Price</th>
+					<th class="right_text">Total</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php if (is_array($this->entity->products)) { foreach ($this->entity->products as $cur_product) { ?>
+				<tr>
+					<td><?php echo $cur_product['entity']->sku; ?></td>
+					<td><?php echo $cur_product['entity']->name; ?></td>
+					<td><?php echo $cur_product['entity']->description; ?></td>
+					<td class="right_text"><?php echo $cur_product['quantity']; ?></td>
+					<td class="right_text">$<?php echo $config->run_sales->round($cur_product['price'], $config->com_sales->dec, true); ?><?php echo empty($cur_product['discount']) ? '' : " - {$cur_product['discount']}"; ?></td>
+					<td class="right_text">$<?php echo $config->run_sales->round($cur_product['line_total'], $config->com_sales->dec, true); ?></td>
+				</tr>
+				<?php } } ?>
+			</tbody>
+		</table>
+	</div>
+	<div class="element full_width">
+		<?php if ($this->entity->status == 'paid' && is_array($this->entity->payments)) { ?>
+		<div class="left_side">
+			<div>
+				<span><strong>Payments:</strong></span>
+			</div>
+			<hr style="clear: both;" />
+			<div class="right_text">
+				<?php foreach ($this->entity->payments as $cur_payment) { ?>
+				<span><?php echo $cur_payment['label']; ?></span>
+				<?php } ?>
+				<hr style="visibility: hidden;" />
+				<span>Amount Tendered:</span>
+				<span>Change:</span>
+			</div>
+			<div class="data_col right_text">
+				<?php foreach ($this->entity->payments as $cur_payment) { ?>
+				<span>$<?php echo $config->run_sales->round($cur_payment['amount'], $config->com_sales->dec, true); ?></span>
+				<?php } ?>
+				<hr />
+				<span>$<?php echo $config->run_sales->round($this->entity->amount_tendered, $config->com_sales->dec, true); ?></span>
+				<span>$<?php echo $config->run_sales->round($this->entity->change, $config->com_sales->dec, true); ?></span>
 			</div>
 		</div>
-	<?php } ?>
-	<?php if (!empty($this->entity->customer->phone_home) || !empty($this->entity->customer->phone_work) || !empty($this->entity->customer->phone_cell) || !empty($this->entity->customer->fax)) { ?>
-		<div class="element">
-			<span class="label">Phone</span>
-			<span class="field">
-				<?php if (!empty($this->entity->customer->phone_home)) { ?>
-				Home: <?php echo $this->entity->customer->phone_home; ?>
-				<?php } ?>
-				<?php if (!empty($this->entity->customer->phone_work)) { ?>
-				Work: <?php echo $this->entity->customer->phone_work; ?>
-				<?php } ?>
-				<?php if (!empty($this->entity->customer->phone_cell)) { ?>
-				Cell: <?php echo $this->entity->customer->phone_cell; ?>
-				<?php } ?>
-				<?php if (!empty($this->entity->customer->fax)) { ?>
-				Fax: <?php echo $this->entity->customer->fax; ?>
-				<?php } ?>
-			</span>
-		</div>
-	<?php } ?>
-<?php } ?>
-<div class="element heading">
-	<h1>Products</h1>
-</div>
-<?php if (is_array($this->entity->products)) { foreach ($this->entity->products as $cur_product) { ?>
-	<div class="element full_width">
-		<span class="label"><?php echo $cur_product['entity']->name; ?></span>
-		<?php if ($cur_product['delivery'] == 'shipped') { ?>
-			<div class="note">This item is shipped.</div>
 		<?php } ?>
-		<div class="group">
-			<div class="field" style="float: left; text-align: left;">
-				<div>SKU: <?php echo $cur_product['entity']->sku; ?></div>
-				<?php if (!empty($cur_product['serial'])) { ?>
-				<div>Serial: <?php echo $cur_product['serial']; ?></div>
-				<?php } ?>
+		<div class="right_side">
+			<div>
+				<span><strong>Totals:</strong></span>
 			</div>
-			<div class="field" style="float: right; text-align: right;">
-				<div>x <?php echo $cur_product['quantity']; ?> at $<?php echo $config->run_sales->round($cur_product['price'], $config->com_sales->dec, true); ?><?php echo empty($cur_product['discount']) ? '' : " - {$cur_product['discount']}"; ?> = <?php echo $config->run_sales->round($cur_product['line_total'], $config->com_sales->dec, true); ?></div>
-				<?php if ($cur_product['fees'] > 0.00) { ?>
-				<div>(fees) <?php echo $config->run_sales->round($cur_product['fees'], $config->com_sales->dec, true); ?></div>
+			<hr style="clear: both;" />
+			<div class="right_text">
+				<span>Subtotal:</span>
+				<?php if ($this->entity->item_fees > 0) { ?>
+				<span>Item Fees:</span>
 				<?php } ?>
+				<span>Tax:</span>
+				<hr style="visibility: hidden;" />
+				<span><strong>Total: </strong></span>
+			</div>
+			<div class="data_col right_text">
+				<span>$<?php echo $config->run_sales->round($this->entity->subtotal, $config->com_sales->dec, true); ?></span>
+				<?php if ($this->entity->item_fees > 0) { ?>
+				<span>$<?php echo $config->run_sales->round($this->entity->item_fees, $config->com_sales->dec, true); ?></span>
+				<?php } ?>
+				<span>$<?php echo $config->run_sales->round($this->entity->taxes, $config->com_sales->dec, true); ?></span>
+				<hr />
+				<span><strong>$<?php echo $config->run_sales->round($this->entity->total, $config->com_sales->dec, true); ?></strong></span>
 			</div>
 		</div>
 	</div>
-<?php } } ?>
-<div class="element full_width">
-	<span class="label">Ticket Totals</span>
-	<div class="group">
-		<div class="field" style="float: right; text-align: right;">
-			<span class="label">Subtotal: </span><span class="field"><?php echo $config->run_sales->round($this->entity->subtotal, $config->com_sales->dec, true); ?></span><br />
-			<span class="label">Item Fees: </span><span class="field"><?php echo $config->run_sales->round($this->entity->item_fees, $config->com_sales->dec, true); ?></span><br />
-			<span class="label">Tax: </span><span class="field"><?php echo $config->run_sales->round($this->entity->taxes, $config->com_sales->dec, true); ?></span><br />
-			<span class="label"><strong>Total</strong>: </span><span class="field"><?php echo $config->run_sales->round($this->entity->total, $config->com_sales->dec, true); ?></span>
-		</div>
-	</div>
-</div>
-<?php if ($this->entity->status == 'paid' && is_array($this->entity->payments)) { ?>
-	<div class="element heading">
-		<h1>Payments</h1>
-	</div>
-	<?php foreach ($this->entity->payments as $cur_payment) { ?>
+	<?php if (!empty($this->entity->comments)) { ?>
 	<div class="element full_width">
-		<span class="label"><?php echo $cur_payment['entity']->name; ?></span>
-		<div class="group">
-			<div class="field" style="float: right; text-align: right;">
-				<div><?php echo $config->run_sales->round($cur_payment['amount'], $config->com_sales->dec, true); ?></div>
-			</div>
+		<div class="field">
+			<span class="label">Comments:</span>
+			<br />
+			<span class="field"><?php echo $this->entity->comments; ?></span>
 		</div>
 	</div>
 	<?php } ?>
 	<div class="element full_width">
-		<span class="label">Tendered</span>
-		<div class="group">
-			<div class="field" style="float: right; text-align: right;">
-				<span class="label"><strong>Amount Tendered</strong>: </span><span class="field"><?php echo $config->run_sales->round($this->entity->amount_tendered, $config->com_sales->dec, true); ?></span><br />
-				<span class="label"><strong>Change</strong>: </span><span class="field"><?php echo $config->run_sales->round($this->entity->change, $config->com_sales->dec, true); ?></span>
-			</div>
+		<div class="field">
+			<span class="label"><?php
+				switch ($this->entity->status) {
+					case 'quoted':
+						echo $config->com_sales->quote_note_label;
+						break;
+					case 'invoiced':
+						echo $config->com_sales->invoice_note_label;
+						break;
+					case 'paid':
+						echo $config->com_sales->receipt_note_label;
+						break;
+				}
+			?></span>
+			<br />
+			<div class="field" style="font-size: 75%;"><?php
+				switch ($this->entity->status) {
+					case 'quoted':
+						echo $config->com_sales->quote_note_text;
+						break;
+					case 'invoiced':
+						echo $config->com_sales->invoice_note_text;
+						break;
+					case 'paid':
+						echo $config->com_sales->receipt_note_text;
+						break;
+				}
+			?></div>
 		</div>
 	</div>
-<?php } ?>
 </div>

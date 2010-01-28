@@ -40,7 +40,7 @@ $this->note = 'Use this form to edit a sale.';
 		var customer_box, customer_search_box, customer_search_button, customer_table, customer_dialog;
 		var require_customer = false;
 		<?php } ?>
-		var products, products_table, product_code, payments, payments_table;
+		var comments, comments_box, products, products_table, product_code, payments, payments_table;
 
 		// Number of decimal places to round to.
 		var dec = <?php echo intval($config->com_sales->dec); ?>;
@@ -97,6 +97,8 @@ $this->note = 'Use this form to edit a sale.';
 			customer_table = $("#customer_table");
 			customer_dialog = $("#customer_dialog");
 			<?php } ?>
+			comments = $("#comment_saver");
+			comments_box = $("#comments");
 			products = $("#products");
 			products_table = $("#products_table");
 			product_code = $("#product_code");
@@ -492,6 +494,7 @@ $this->note = 'Use this form to edit a sale.';
 				width: 600,
 				buttons: {
 					"Done": function(){
+						comments.val(comments_box.val());
 						$("#comments_dialog").dialog('close');
 					}
 				}
@@ -823,11 +826,10 @@ $this->note = 'Use this form to edit a sale.';
 			<input class="field ui-widget-content ui-state-default ui-corner-all" type="button" value="Edit" onclick="$('#comments_dialog').dialog('open');" /></label>
 	</div>
 	<div id="comments_dialog" title="Comments">
-		<div style="height: 100%;">
-			<textarea style="width: 100%; height: 100%;" rows="3" cols="35" name="comments"><?php echo $this->entity->comments; ?></textarea>
-		</div>
+		<textarea class="field" style="width: 100%; height: 100%;" rows="3" cols="35" id="comments" name="comments"><?php echo $this->entity->comments; ?></textarea>
 	</div>
 	<div class="element buttons">
+		<input type="hidden" id="comment_saver" name="comment_saver" value="<?php echo $this->entity->comments; ?>" />
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>

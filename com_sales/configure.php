@@ -61,6 +61,48 @@ return array (
 	'description' => 'Ensure that every user can access all taxes and fees by setting the "other" access control to read.',
 	'value' => true,
   ),
+  7 =>
+  array (
+	'name' => 'receipt_note_label',
+	'cname' => 'Receipt Note Label',
+	'description' => 'The receipt note will be appended to all receipts.',
+	'value' => 'Return Policy:',
+  ),
+  8 =>
+  array (
+	'name' => 'receipt_note_text',
+	'cname' => 'Receipt Note Text',
+	'description' => 'The receipt note will be appended to all receipts.',
+	'value' => 'You (Buyer) have 14 (fourteen) calendar days from the date on your Sales Invoice to Return the item(s) purchased. All returns will be subject to a 15% restocking fee made payable at the time of return. All restocking fees must be in the form of credit card or money order. All returns must be in original condition including item purchased, packaging, accessories, software, cords or other items. We reserve the right to request identification and to deny any return.',
+  ),
+  9 =>
+  array (
+	'name' => 'invoice_note_label',
+	'cname' => 'Invoice Note Label',
+	'description' => 'The invoice note will be appended to all invoices.',
+	'value' => 'Return Policy:',
+  ),
+  10 =>
+  array (
+	'name' => 'invoice_note_text',
+	'cname' => 'Invoice Note Text',
+	'description' => 'The invoice note will be appended to all invoices.',
+	'value' => 'You (Buyer) have 14 (fourteen) calendar days from the date on your Sales Invoice to Return the item(s) purchased. All returns will be subject to a 15% restocking fee made payable at the time of return. All restocking fees must be in the form of credit card or money order. All returns must be in original condition including item purchased, packaging, accessories, software, cords or other items. We reserve the right to request identification and to deny any return.',
+  ),
+  11 =>
+  array (
+	'name' => 'quote_note_label',
+	'cname' => 'Quote Note Label',
+	'description' => 'The quote note will be appended to all quotes.',
+	'value' => 'Return Policy:',
+  ),
+  12 =>
+  array (
+	'name' => 'quote_note_text',
+	'cname' => 'Quote Note Text',
+	'description' => 'The quote note will be appended to all quotes.',
+	'value' => 'You (Buyer) have 14 (fourteen) calendar days from the date on your Sales Invoice to Return the item(s) purchased. All returns will be subject to a 15% restocking fee made payable at the time of return. All restocking fees must be in the form of credit card or money order. All returns must be in original condition including item purchased, packaging, accessories, software, cords or other items. We reserve the right to request identification and to deny any return.',
+  ),
 );
 
 ?>

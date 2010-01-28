@@ -133,7 +133,7 @@ if ($sale->status != 'paid') {
 		);
 	}
 }
-$sale->comments = $_REQUEST['comments'];
+$sale->comments = $_REQUEST['comment_saver'];
 
 if ($product_error || $payment_error) {
 	$sale->print_form();

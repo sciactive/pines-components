@@ -44,13 +44,10 @@ class com_entity extends component {
 		$query = sprintf("DELETE e, d FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid`=d.`guid` WHERE e.`guid`=%u;",
 			$config->com_mysql->prefix,
 			$config->com_mysql->prefix,
-			$config->com_mysql->prefix,
-			$config->com_mysql->prefix,
 			intval($guid));
 		if ( !(mysql_query($query, $config->db_manager->link)) ) {
 			if (function_exists('display_error'))
 				display_error('Query failed: ' . mysql_error());
-			display_error($query);
 			return false;
 		}
 		return true;

@@ -16,7 +16,7 @@ if ($config->run_customer->com_sales) {
 	foreach(explode(',', $config->com_customer->pointvalues) as $cur_value) {
 		if (!is_numeric($cur_value))
 			continue;
-		$cur_value = intval($cur_value);
+		$cur_value = (int) $cur_value;
 		$config->run_sales->product_actions[] = array(
 			'type' => 'sold',
 			'name' => "com_customer/add_points_$cur_value",

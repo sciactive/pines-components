@@ -91,7 +91,7 @@ class com_customer extends component {
 		foreach(explode(',', $config->com_customer->pointvalues) as $cur_value) {
 			if (!is_numeric($cur_value))
 				continue;
-			$cur_value = intval($cur_value);
+			$cur_value = (int) $cur_value;
 			if ($array['name'] == "com_customer/add_points_$cur_value") {
 				$array['sale']->customer->adjust_points($cur_value);
 				$array['sale']->customer->save();

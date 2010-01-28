@@ -503,6 +503,7 @@ $test->tests['resave'][1] = microtime(true);
 $test->tests['resave'][2] = 'Resaving entity...';
 
 // Deleting entity by GUID...
+// This shouldn't be used in regular code. Instead, call the entity's delete() method.
 $test->tests['del_guid'][0] = ($config->entity_manager->delete_entity_by_id($entity_test->guid));
 $test->tests['del_guid'][1] = microtime(true);
 $test->tests['del_guid'][2] = 'Deleting entity by GUID...';

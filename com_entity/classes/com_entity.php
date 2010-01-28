@@ -44,7 +44,7 @@ class com_entity extends component {
 		$query = sprintf("DELETE e, d FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid`=d.`guid` WHERE e.`guid`=%u;",
 			$config->com_mysql->prefix,
 			$config->com_mysql->prefix,
-			intval($guid));
+			(int) $guid);
 		if ( !(mysql_query($query, $config->db_manager->link)) ) {
 			if (function_exists('display_error'))
 				display_error('Query failed: ' . mysql_error());
@@ -57,13 +57,11 @@ class com_entity extends component {
 	 * Search through a value for an entity reference.
 	 *
 	 * @param mixed $value Any value to search.
-	 * @param array|entity|int $entity An entity, GUID, or array of the two to search for.
+	 * @param array|entity|int $entity An entity, GUID, or array of either to search for.
 	 * @return bool True if the reference is found, false otherwise.
 	 */
 	private function entity_reference_search($value, $entity) {
-		if (!is_array($value))
-			return false;
-		if (is_null($entity))
+		if (!is_array($value) || is_null($entity))
 			return false;
 		// Get the GUID, if the passed $entity is an object.
 		if (is_array($entity)) {
@@ -77,10 +75,8 @@ class com_entity extends component {
 		} else {
 			$entity = array((int) $entity);
 		}
-		if (is_null($entity))
-			return false;
-		if ($value[0] == 'pines_entity_reference' && in_array($value[1], $entity)) {
-			return true;
+		if ($value[0] == 'pines_entity_reference') {
+			return in_array($value[1], $entity);
 		} else {
 			// Search through multidimensional arrays looking for the reference.
 			foreach ($value as $cur_value) {
@@ -127,15 +123,9 @@ class com_entity extends component {
 	public function get_entities($options = array()) {
 		global $config;
 		$entities = array();
-
 		$query_parts = array();
-
 		$class = isset($options['class']) ? $options['class'] : entity;
-
-		$count = 0;
-		$limit = 0;
-		$ocount = 0;
-		$offset = 0;
+		$count = $limit = $ocount = $offset = 0;
 
 		foreach ($options as $key => $option) {
 			$cur_query = '';
@@ -145,35 +135,35 @@ class com_entity extends component {
 				case 'guid':
 					if (is_array($option)) {
 						foreach ($option as $cur_guid) {
-							if ( !empty($cur_query) )
+							if ( $cur_query )
 								$cur_query .= ' OR ';
-							$cur_query .= "e.`guid` = ".intval($cur_guid);
+							$cur_query .= "e.`guid` = ".(int) $cur_guid;
 						}
 					} else {
-						$cur_query = "e.`guid` = ".intval($option);
+						$cur_query = "e.`guid` = ".(int) $option;
 					}
 					break;
 				case 'parent':
 					if (is_array($option)) {
 						foreach ($option as $cur_parent) {
-							if ( !empty($cur_query) )
+							if ( $cur_query )
 								$cur_query .= ' OR ';
-							$cur_query .= "e.`parent` = ".intval($cur_parent);
+							$cur_query .= "e.`parent` = ".(int) $cur_parent;
 						}
 					} else {
-						$cur_query = "e.`parent` = ".intval($option);
+						$cur_query = "e.`parent` = ".(int) $option;
 					}
 					break;
 				case 'tags':
 					foreach ($option as $cur_tag) {
-						if ( !empty($cur_query) )
+						if ( $cur_query )
 							$cur_query .= ' AND ';
 						$cur_query .= 'e.`tags` LIKE \'%\"'.mysql_real_escape_string($cur_tag, $config->db_manager->link).'\"%\'';
 					}
 					break;
 				case 'tags_i':
 					foreach ($option as $cur_tag) {
-						if ( !empty($cur_query) )
+						if ( $cur_query )
 							$cur_query .= ' OR ';
 						$cur_query .= 'e.`tags` LIKE \'%\"'.mysql_real_escape_string($cur_tag, $config->db_manager->link).'\"%\'';
 					}
@@ -185,19 +175,19 @@ class com_entity extends component {
 					$offset = $option;
 					break;
 			}
-			if (!empty($cur_query))
+			if ( $cur_query )
 				$query_parts[] = $cur_query;
 		}
 
-		if (empty($query_parts)) {
-			$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid` = d.`guid` ORDER BY e.`guid`;",
-				$config->com_mysql->prefix,
-				$config->com_mysql->prefix);
-		} else {
+		if ($query_parts) {
 			$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid` = d.`guid` HAVING (%s) ORDER BY e.`guid`;",
 				$config->com_mysql->prefix,
 				$config->com_mysql->prefix,
 				'('.implode(') AND (', $query_parts).')');
+		} else {
+			$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid` = d.`guid` ORDER BY e.`guid`;",
+				$config->com_mysql->prefix,
+				$config->com_mysql->prefix);
 		}
 		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
 			if (function_exists('display_error'))
@@ -207,8 +197,11 @@ class com_entity extends component {
 
 		$row = mysql_fetch_array($result);
 		while ($row) {
-			$guid = intval($row['guid']);
-			$parent = (is_null($row['parent']) ? NULL : intval($row['parent']));
+			$guid = (int) $row['guid'];
+			if (is_null($row['parent']))
+				$parent = NULL;
+			else
+				$parent = (int) $row['parent'];
 			$tags = unserialize($row['tags']);
 			$data = array();
 			if (!is_null($row['dname'])) {
@@ -394,7 +387,9 @@ class com_entity extends component {
 	public function save_entity(&$entity) {
 		global $config;
 		if ( is_null($entity->guid) ) {
+			// Save the created date.
 			$entity->p_cdate = time();
+			// And modified date.
 			$entity->p_mdate = time();
 			$query = sprintf("INSERT INTO `%scom_entity_entities` (`parent`, `tags`) VALUES (%s, '%s');",
 				$config->com_mysql->prefix,
@@ -406,12 +401,12 @@ class com_entity extends component {
 				return false;
 			}
 			$new_id = mysql_insert_id();
-			$entity->guid = intval($new_id);
+			$entity->guid = (int) $new_id;
 			$data = $entity->get_data();
 			foreach ($data as $name => $value) {
 				$query = sprintf("INSERT INTO `%scom_entity_data` (`guid`, `name`, `value`) VALUES (%u, '%s', '%s');",
 					$config->com_mysql->prefix,
-					intval($new_id),
+					(int) $new_id,
 					mysql_real_escape_string($name, $config->db_manager->link),
 					mysql_real_escape_string(serialize($value), $config->db_manager->link));
 				if ( !(mysql_query($query, $config->db_manager->link)) ) {
@@ -422,6 +417,7 @@ class com_entity extends component {
 			}
 			return true;
 		} else {
+			// Save the modified date.
 			$entity->p_mdate = time();
 			$query = sprintf("UPDATE `%scom_entity_entities` SET `parent`=%s, `tags`='%s' WHERE `guid`=%u;",
 				$config->com_mysql->prefix,

@@ -16,7 +16,7 @@ if ( !gatekeeper('com_sales/listproducts') )
 
 $page->override = true;
 
-$code = strtolower($_REQUEST['code']);
+$code = $_REQUEST['code'];
 
 if (empty($code)) {
 	$product = null;

@@ -72,6 +72,11 @@ body {
 .push {
 	display: none !important;
 }
+/* Pines Notify */
 .ui-pnotify-history-container {
 	display: none !important;
+}
+html > body .ui-pnotify {
+	position: static;
+	margin-bottom: 10px;
 }

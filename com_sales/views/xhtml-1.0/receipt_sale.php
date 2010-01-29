@@ -79,13 +79,23 @@ if ($this->entity->status == 'quoted') {
 	<div class="right_side receipt_info">
 		<div class="info_labels right_text">
 			<span><?php echo $this->title; ?> #:</span>
-			<span>Tendered On:</span>
+			<span>Date:</span>
 			<span>Sales Person:</span>
-			<span>Tendered By:</span>
+			<span>Date:</span>
 		</div>
 		<div class="data_col">
 			<span><?php echo $this->entity->guid; ?></span>
-			<span><?php echo pines_date_format($this->entity->p_cdate, null, 'n-j-Y g:i A'); ?></span>
+			<?php switch($this->entity->status) {
+				case 'invoiced':
+					echo '<span>'.pines_date_format($this->entity->invoice_date, null, 'Y-n-j g:i A').'</span>';
+					break;
+				case 'paid':
+					echo '<span>'.pines_date_format($this->entity->tender_date, null, 'Y-n-j g:i A').'</span>';
+					break;
+				default:
+					echo '<span>'.pines_date_format($this->entity->p_cdate, null, 'Y-n-j g:i A').'</span>';
+					break;
+			} ?>
 			<?php if (isset($sales_rep->guid)) { ?>
 				<span><?php echo $sales_rep->name; ?></span>
 				<span><?php echo $sales_rep->name; ?></span>

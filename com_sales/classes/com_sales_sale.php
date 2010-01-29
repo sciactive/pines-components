@@ -99,12 +99,29 @@ class com_sales_sale extends entity {
 	 * Print a receipt of the sale.
 	 * @return module The form's module.
 	 */
-	function print_receipt($id = NULL) {
-		global $config;
+	function print_receipt() {
 		$module = new module('com_sales', 'receipt_sale', 'content');
 		$module->entity = $this;
 
 		return $module;
+	}
+
+	/**
+	 * Email a receipt of the sale to the customer's email.
+	 */
+	function email_receipt() {
+		if (!$this->customer->email)
+			return;
+		$module = new module('com_sales', 'receipt_sale', 'content');
+		$module->entity = $this;
+		$content = "<style type=\"text/css\">/* <![CDATA[ */\n";
+		$content .= file_get_contents('system/css/pform.css');
+		$content .= "\n/* ]]> */</style>";
+		$content .= $module->render();
+		$module->detach();
+
+		$mail = com_mailer_mail::factory('test@example.com', $this->customer->email, 'Receipt for sale from Pines', $content);
+		$mail->send();
 	}
 
 	/**
@@ -291,6 +308,8 @@ class com_sales_sale extends entity {
 			$return = $return && $tx->save();
 		}
 
+		$this->tender_date = time();
+
 		return $return;
 	}
 
@@ -412,6 +431,8 @@ class com_sales_sale extends entity {
 		
 		$tx->ticket = $this;
 		$return = $return && $tx->save();
+
+		$this->invoice_date = time();
 
 		return $return;
 	}

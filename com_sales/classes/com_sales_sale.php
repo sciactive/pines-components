@@ -110,6 +110,7 @@ class com_sales_sale extends entity {
 	 * Email a receipt of the sale to the customer's email.
 	 */
 	function email_receipt() {
+		global $config;
 		if (!$this->customer->email)
 			return;
 		$module = new module('com_sales', 'receipt_sale', 'content');
@@ -120,7 +121,7 @@ class com_sales_sale extends entity {
 		$content .= $module->render();
 		$module->detach();
 
-		$mail = com_mailer_mail::factory('test@example.com', $this->customer->email, 'Receipt for sale from Pines', $content);
+		$mail = com_mailer_mail::factory($config->com_sales->email_from_address, $this->customer->email, 'Receipt for sale from Pines', $content);
 		$mail->send();
 	}
 

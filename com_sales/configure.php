@@ -103,6 +103,20 @@ return array (
 	'description' => 'The quote note will be appended to all quotes.',
 	'value' => 'You (Buyer) have 14 (fourteen) calendar days from the date on your Sales Invoice to Return the item(s) purchased. All returns will be subject to a 15% restocking fee made payable at the time of return. All restocking fees must be in the form of credit card or money order. All returns must be in original condition including item purchased, packaging, accessories, software, cords or other items. We reserve the right to request identification and to deny any return.',
   ),
+  13 =>
+  array (
+	'name' => 'email_receipt',
+	'cname' => 'Email Receipt',
+	'description' => 'Email a copy of the receipt to the customer when the sale is tendered.',
+	'value' => true,
+  ),
+  13 =>
+  array (
+	'name' => 'email_from_address',
+	'cname' => 'From Address',
+	'description' => 'The address the email will be sent from.',
+	'value' => 'sales@sciactive.com',
+  ),
 );
 
 ?>

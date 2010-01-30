@@ -24,13 +24,10 @@ if ( gatekeeper('com_sales/managestock') || gatekeeper('com_sales/receive') ||
 	$com_sales_menu_id = $page->main_menu->add('POS');
 	if ( gatekeeper('com_sales/newsale') )
 		$page->main_menu->add('New Sale', pines_url('com_sales', 'editsale'), $com_sales_menu_id);
-	if ( gatekeeper('com_sales/totalsales') ||
-		gatekeeper('com_sales/listsales') || gatekeeper('com_sales/newsale') ) {
+	if ( gatekeeper('com_sales/totalsales') || gatekeeper('com_sales/listsales') ) {
 		$com_sales_menu_id_sales = $page->main_menu->add('Sales', '#', $com_sales_menu_id);
 		if ( gatekeeper('com_sales/listsales') )
 			$page->main_menu->add('Sales', pines_url('com_sales', 'listsales'), $com_sales_menu_id_sales);
-		if ( gatekeeper('com_sales/newsale') )
-			$page->main_menu->add('New Sale', pines_url('com_sales', 'editsale'), $com_sales_menu_id_sales);
 		if ( gatekeeper('com_sales/totalsales') )
 			$page->main_menu->add('Sales Totals', pines_url('com_sales', 'totalsales'), $com_sales_menu_id_sales);
 	 }
@@ -88,8 +85,7 @@ if ( gatekeeper('com_sales/managestock') || gatekeeper('com_sales/receive') ||
 	}
 }
 
-if (gatekeeper('com_sales/clock')) {
+if (gatekeeper('com_sales/clock'))
 	$com_sales_clockin_module = new module('com_sales', 'clock', 'right');
-}
 
 ?>

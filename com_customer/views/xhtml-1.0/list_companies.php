@@ -21,14 +21,14 @@ $this->title = 'Companies';
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
-				<?php if (gatekeeper('com_sales/newcompany')) { ?>
+				<?php if (gatekeeper('com_customer/newcompany')) { ?>
 				{type: 'button', text: 'New', extra_class: 'icon picon_16x16_actions_document-new', selection_optional: true, url: '<?php echo pines_url('com_customer', 'editcompany'); ?>'},
-				<?php } if (gatekeeper('com_sales/editcompany')) { ?>
+				<?php } if (gatekeeper('com_customer/editcompany')) { ?>
 				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo pines_url('com_customer', 'editcompany', array('id' => '#title#')); ?>'},
 				<?php } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'icon picon_16x16_actions_mail-message-new', multi_select: true, url: 'mailto:#col_2#', delimiter: ','},
 				{type: 'separator'},
-				<?php if (gatekeeper('com_sales/deletecompany')) { ?>
+				<?php if (gatekeeper('com_customer/deletecompany')) { ?>
 				{type: 'button', text: 'Delete', extra_class: 'icon picon_16x16_actions_edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_customer', 'deletecompany', array('id' => '#title#')); ?>', delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>

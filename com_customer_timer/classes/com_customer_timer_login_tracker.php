@@ -35,8 +35,8 @@ class com_customer_timer_login_tracker extends entity {
 		$entities = $config->entity_manager->get_entities(array('tags' => array('com_customer_timer', 'logins')));
 		if (empty($entities))
 			return;
-		if (count($entities) > 1) {
-			for ($i = 1; $i < count($entities); $i++)
+		if (($count = count($entities)) > 1) {
+			for ($i = 1; $i < $count; $i++)
 				$entities[$i]->delete();
 		}
 		$entity = $entities[0];
@@ -111,7 +111,7 @@ class com_customer_timer_login_tracker extends entity {
 			}
 		}
 		if (!$found)
-			return true;
+			return false;
 		$this->save();
 		$session_info = $config->run_customer_timer->get_session_info($customer);
 		// Take points off the customer's account.

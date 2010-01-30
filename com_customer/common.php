@@ -20,5 +20,6 @@ $config->ability_manager->add('com_customer', 'newcompany', 'Create Companies', 
 $config->ability_manager->add('com_customer', 'editcompany', 'Edit Companies', 'User can edit current companies.');
 $config->ability_manager->add('com_customer', 'deletecompany', 'Delete Companies', 'User can delete current companies.');
 $config->ability_manager->add('com_customer', 'adjustpoints', 'Adjust Points', 'User can adjust customer\'s points.');
+$config->ability_manager->add('com_customer', 'resetpoints', 'Reset Points', 'User can reset customer\'s points. (Including peak and total.)');
 
 ?>

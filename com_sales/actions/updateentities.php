@@ -14,6 +14,27 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('system/all') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'updateentities', null, false));
 
+
+if ($_REQUEST['deleteallsales'] == 'really delete them') {
+	$array2 = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'transaction', 'payment_tx'), 'class' => com_sales_tx));
+	if (!is_array($array2))
+		$array2 = array();
+	foreach ($array2 as $cur_entity)
+		$cur_entity->delete();
+	$array3 = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'transaction', 'sale_tx'), 'class' => com_sales_tx));
+	if (!is_array($array3))
+		$array3 = array();
+	foreach ($array3 as $cur_entity)
+		$cur_entity->delete();
+	$array = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'sale'), 'class' => com_sales_sale));
+	if (!is_array($array))
+		$array = array();
+	foreach ($array as $cur_entity)
+		$cur_entity->delete();
+	display_notice('Deleted all sales data. All that data... :\'(');
+	return;
+}
+
 // POs
 $array = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'po'), 'class' => com_sales_po));
 if (!is_array($array))

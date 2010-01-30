@@ -49,7 +49,17 @@ if ( isset($_REQUEST['id']) ) {
 
 $group->name = $_REQUEST['name'];
 $group->email = $_REQUEST['email'];
+$group->phone = preg_replace('/\D/', '', $_REQUEST['phone']);
+$group->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
 $group->timezone = $_REQUEST['timezone'];
+// Location
+$group->address_type = $_REQUEST['address_type'];
+$group->address_1 = $_REQUEST['address_1'];
+$group->address_2 = $_REQUEST['address_2'];
+$group->city = $_REQUEST['city'];
+$group->state = $_REQUEST['state'];
+$group->zip = $_REQUEST['zip'];
+$group->address_international = $_REQUEST['address_international'];
 
 /**
  * @todo Check if the selected parent is a descendant of this group.

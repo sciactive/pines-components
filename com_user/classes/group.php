@@ -27,6 +27,7 @@ class group extends able_entity {
 		$this->add_tag('com_user', 'group');
 		// Defaults.
 		$this->abilities = array();
+		$this->address_type = 'us';
 		if ($id > 0 || is_string($id)) {
 			global $config;
 			if (is_int($id)) {

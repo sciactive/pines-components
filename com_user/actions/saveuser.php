@@ -57,7 +57,17 @@ if ( isset($_REQUEST['id']) ) {
 
 $user->name = $_REQUEST['name'];
 $user->email = $_REQUEST['email'];
+$user->phone = preg_replace('/\D/', '', $_REQUEST['phone']);
+$user->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
 $user->timezone = $_REQUEST['timezone'];
+// Location
+$user->address_type = $_REQUEST['address_type'];
+$user->address_1 = $_REQUEST['address_1'];
+$user->address_2 = $_REQUEST['address_2'];
+$user->city = $_REQUEST['city'];
+$user->state = $_REQUEST['state'];
+$user->zip = $_REQUEST['zip'];
+$user->address_international = $_REQUEST['address_international'];
 
 if ( gatekeeper('com_user/default_component') ) {
 	if ( file_exists("components/{$_REQUEST['default_component']}/actions/default.php") ) {

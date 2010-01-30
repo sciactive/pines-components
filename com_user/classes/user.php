@@ -30,6 +30,7 @@ class user extends able_entity {
 		$this->groups = array();
 		$this->inherit_abilities = true;
 		$this->default_component = 'com_user';
+		$this->address_type = 'us';
 		if ($id > 0 || is_string($id)) {
 			global $config;
 			if (is_int($id)) {

@@ -27,7 +27,7 @@ $this->note = 'Provide group details in this form.';
 	<?php } ?>
 	<div class="element">
 		<label><span class="label">Group Name</span>
-			<input class="field ui-widget-content" type="text" name="groupname" size="24" maxlength="5" value="<?php echo $this->entity->groupname; ?>" /></label>
+			<input class="field ui-widget-content" type="text" name="groupname" size="24" value="<?php echo $this->entity->groupname; ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Display Name</span>

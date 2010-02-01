@@ -241,7 +241,7 @@ class com_sales extends component {
 	 */
 	function delete_category_recursive($category) {
 		global $config;
-		$children = $config->entity_manager->get_entities(array('parent' => $category->guid));
+		$children = $config->entity_manager->get_entities(array('data' => array('parent' => $category->guid)));
 		if (is_array($children)) {
 			foreach ($children as $cur_child) {
 				if (!$this->delete_category_recursive($cur_child))

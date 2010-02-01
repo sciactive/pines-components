@@ -95,7 +95,6 @@ class com_entity extends component {
 	 * $options can contain the following key - values:
 	 *
 	 * - guid - A GUID or array of GUIDs.
-	 * - parent - A GUID or array of GUIDs.
 	 * - tags - An array of tags. The entity must have each one.
 	 * - tags_i - An array of inclusive tags. The entity must have at least one.
 	 * - data - An array of key/values corresponding to var/values.
@@ -143,17 +142,6 @@ class com_entity extends component {
 						$cur_query = "e.`guid` = ".(int) $option;
 					}
 					break;
-				case 'parent':
-					if (is_array($option)) {
-						foreach ($option as $cur_parent) {
-							if ( $cur_query )
-								$cur_query .= ' OR ';
-							$cur_query .= "e.`parent` = ".(int) $cur_parent;
-						}
-					} else {
-						$cur_query = "e.`parent` = ".(int) $option;
-					}
-					break;
 				case 'tags':
 					foreach ($option as $cur_tag) {
 						if ( $cur_query )
@@ -198,10 +186,6 @@ class com_entity extends component {
 		$row = mysql_fetch_array($result);
 		while ($row) {
 			$guid = (int) $row['guid'];
-			if (is_null($row['parent']))
-				$parent = NULL;
-			else
-				$parent = (int) $row['parent'];
 			$tags = unserialize($row['tags']);
 			$data = array();
 			if (!is_null($row['dname'])) {
@@ -228,13 +212,6 @@ class com_entity extends component {
 							$pass = $pass && in_array($guid, $option);
 						} else {
 							$pass = $pass && ($guid == $option);
-						}
-						break;
-					case 'parent':
-						if (is_array($option)) {
-							$pass = $pass && in_array($parent, $option);
-						} else {
-							$pass = $pass && ($parent == $option);
 						}
 						break;
 					case 'tags':
@@ -338,7 +315,6 @@ class com_entity extends component {
 				$entity->guid = $guid;
 				$entity->tags = $tags;
 				$entity->put_data($data);
-				if (isset($parent) && !key_exists('parent', $data)) $entity->parent = $parent;
 				array_push($entities, $entity);
 				$count++;
 				if ($limit && $count >= $limit)

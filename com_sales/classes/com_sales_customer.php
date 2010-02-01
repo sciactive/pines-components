@@ -34,7 +34,6 @@ class com_sales_customer extends com_customer_customer {
 			if (is_null($entity))
 				return;
 			$this->guid = $entity->guid;
-			$this->parent = $entity->parent;
 			$this->tags = $entity->tags;
 			$this->put_data($entity->get_data());
 		}

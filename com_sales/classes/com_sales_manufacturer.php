@@ -31,7 +31,6 @@ class com_sales_manufacturer extends entity {
 			if (is_null($entity))
 				return;
 			$this->guid = $entity->guid;
-			$this->parent = $entity->parent;
 			$this->tags = $entity->tags;
 			$this->put_data($entity->get_data());
 		}

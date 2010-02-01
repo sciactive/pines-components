@@ -38,7 +38,6 @@ $test->tests['create'][2] = 'Creating entity...';
 
 // Saving entity...
 $entity_test->name = "Entity Test ".time();
-$entity_test->parent = 0;
 $entity_test->test_value = 'test';
 $entity_test->match_test = "Hello, my name is Edward McCheese. It is a pleasure to meet you. As you can see, I have several hats of the most pleasant nature.
 
@@ -82,32 +81,6 @@ $test->tests['guid_wr_tags'][1] = microtime(true);
 $test->tests['guid_wr_tags'][2] = 'Testing GUID and wrong tags...';
 unset($entity_result);
 
-// Retrieving entity by parent...
-$entity_result = array();
-$found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('parent' => $entity_test->parent));
-foreach ($entity_result as $cur_entity) {
-	if ($cur_entity->name == $entity_test->name)
-		$found_match = true;
-}
-$test->tests['parent'][0] = ($found_match);
-$test->tests['parent'][1] = microtime(true);
-$test->tests['parent'][2] = 'Retrieving entity by parent...';
-unset($entity_result);
-
-// Testing wrong parent...
-$entity_result = array();
-$found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('parent' => 1));
-foreach ($entity_result as $cur_entity) {
-	if ($cur_entity->name == $entity_test->name)
-		$found_match = true;
-}
-$test->tests['wr_parent'][0] = (!$found_match);
-$test->tests['wr_parent'][1] = microtime(true);
-$test->tests['wr_parent'][2] = 'Testing wrong parent...';
-unset($entity_result);
-
 // Retrieving entity by tags...
 $entity_result = array();
 $found_match = false;
@@ -132,32 +105,6 @@ foreach ($entity_result as $cur_entity) {
 $test->tests['wr_tags'][0] = (!$found_match);
 $test->tests['wr_tags'][1] = microtime(true);
 $test->tests['wr_tags'][2] = 'Testing wrong tags...';
-unset($entity_result);
-
-// Retrieving entity by tags exclusively...
-$entity_result = array();
-$found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('tags' => array('com_entity', 'test')));
-foreach ($entity_result as $cur_entity) {
-	if ($cur_entity->name == $entity_test->name)
-		$found_match = true;
-}
-$test->tests['tags_exc'][0] = ($found_match);
-$test->tests['tags_exc'][1] = microtime(true);
-$test->tests['tags_exc'][2] = 'Retrieving entity by tags exclusively...';
-unset($entity_result);
-
-// Testing wrong exclusive tags...
-$entity_result = array();
-$found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('tags' => array('pickles')));
-foreach ($entity_result as $cur_entity) {
-	if ($cur_entity->name == $entity_test->name)
-		$found_match = true;
-}
-$test->tests['wr_tags_exc'][0] = (!$found_match);
-$test->tests['wr_tags_exc'][1] = microtime(true);
-$test->tests['wr_tags_exc'][2] = 'Testing wrong exclusive tags...';
 unset($entity_result);
 
 // Retrieving entity by tags inclusively...

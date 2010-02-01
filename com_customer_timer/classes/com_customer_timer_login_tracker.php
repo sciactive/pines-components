@@ -41,7 +41,6 @@ class com_customer_timer_login_tracker extends entity {
 		}
 		$entity = $entities[0];
 		$this->guid = $entity->guid;
-		$this->parent = $entity->parent;
 		$this->tags = $entity->tags;
 		$this->put_data($entity->get_data());
 	}

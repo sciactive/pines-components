@@ -120,13 +120,9 @@ function com_user_check_permissions_save($array) {
  * - It is the user's primary group. (Always returned.)
  * - The entity is a user or group. (Always returned.)
  * - Its UID is the user. (It is owned by the user.) (Check user AC.)
- * - Its parent is the user. (Check user AC.)
  * - Its GID is the user's primary group. (Check group AC.)
- * - Its parent is the user's primary group. (Check group AC.)
  * - Its GID is one of the user's secondary groups. (Check group AC.)
- * - Its parent is one of the user's secondary groups. (Check group AC.)
  * - Its GID is a child of one of the user's groups. (Check group AC.)
- * - Its parent is a child of one of the user's groups. (Check group AC.)
  * - None of the above. (Check other AC.)
  *
  * @param object &$entity The entity to check.
@@ -142,9 +138,9 @@ function com_user_check_permissions(&$entity, $type = 1) {
 	}
 	if (!isset($entity->uid) && !isset($entity->gid))
 		return true;
-	if ($entity->guid == $_SESSION['user']->guid)
+	if ($entity->is($_SESSION['user']))
 		return true;
-	if ($entity->guid == $_SESSION['user']->gid)
+	if ($entity->is($_SESSION['user']->group))
 		return true;
 	if ($entity->has_tag('com_user', 'user') || $entity->has_tag('com_user', 'group'))
 		return true;
@@ -156,19 +152,11 @@ function com_user_check_permissions(&$entity, $type = 1) {
 
 	if ($entity->uid == $_SESSION['user']->guid)
 		return ($ac->user >= $type);
-	if ($entity->parent == $_SESSION['user']->guid)
-		return ($ac->user >= $type);
-	if ($entity->gid == $_SESSION['user']->gid)
+	if ($entity->gid == $_SESSION['user']->group->guid)
 		return ($ac->group >= $type);
-	if ($entity->parent == $_SESSION['user']->gid)
+	if (group::factory((int) $entity->gid)->in_array($_SESSION['user']->groups))
 		return ($ac->group >= $type);
-	if (in_array($entity->gid, $_SESSION['user']->groups))
-		return ($ac->group >= $type);
-	if (in_array($entity->parent, $_SESSION['user']->groups))
-		return ($ac->group >= $type);
-	if (in_array($entity->gid, $_SESSION['descendents']))
-		return ($ac->group >= $type);
-	if (in_array($entity->parent, $_SESSION['descendents']))
+	if (group::factory((int) $entity->gid)->in_array($_SESSION['descendents']))
 		return ($ac->group >= $type);
 	return ($ac->other >= $type);
 }
@@ -201,7 +189,7 @@ function com_user_add_access($array) {
 	) {
 
 		$array[0]->uid = $_SESSION['user']->guid;
-		$array[0]->gid = $_SESSION['user']->gid;
+		$array[0]->gid = $_SESSION['user']->group->guid;
 		if (!is_object($array[0]->ac))
 			$array[0]->ac = (object) array();
 		if (!isset($array[0]->ac->user))

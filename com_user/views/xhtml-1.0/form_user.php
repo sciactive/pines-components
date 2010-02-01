@@ -218,9 +218,9 @@ $this->note = 'Provide user details in this form.';
 		<?php } else { ?>
 		<div class="element">
 			<label><span class="label">Primary Group</span>
-				<select class="field ui-widget-content" name="gid" size="1">
+				<select class="field ui-widget-content" name="group" size="1">
 					<option value="null">-- No Primary Group --</option>
-							<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->entity->gid); ?>
+							<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->entity->group); ?>
 				</select></label>
 		</div>
 		<div class="element">

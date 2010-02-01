@@ -94,8 +94,9 @@ class user extends able_entity {
 		$module->sections = array('system');
 		$module->group_array = $config->user_manager->get_group_array();
 		$module->default_components = $config->user_manager->get_default_component_array();
-		foreach ($config->components as $cur_component)
+		foreach ($config->components as $cur_component) {
 			$module->sections[] = $cur_component;
+		}
 
 		return $module;
 	}
@@ -103,12 +104,13 @@ class user extends able_entity {
 	/**
 	 * Add the user to a (secondary) group.
 	 *
-	 * @param int $id The GUID of the group.
-	 * @return mixed True if the user is already in the group. The resulting array of group IDs if the user was not.
+	 * @param group $group The group.
+	 * @return mixed True if the user is already in the group. The resulting array of groups if the user was not.
 	 */
-	public function addgroup($id) {
-		if ( !in_array($id, $this->groups) ) {
-			return $this->groups = array_merge(array($id), $this->groups);
+	public function addgroup($group) {
+		if ( !$group->in_array($this->groups) ) {
+			$this->groups[] = $group;
+			return $this->groups;
 		} else {
 			return true;
 		}
@@ -128,12 +130,16 @@ class user extends able_entity {
 	/**
 	 * Remove the user from a (secondary) group.
 	 *
-	 * @param int $id The GUID of the group.
-	 * @return mixed True if the user wasn't in the group. The resulting array of group IDs if the user was.
+	 * @param group $group The group.
+	 * @return mixed True if the user wasn't in the group. The resulting array of groups if the user was.
 	 */
-	public function delgroup($id) {
-		if ( in_array($id, $this->groups) ) {
-			return $this->groups = array_values(array_diff($this->groups, array($id)));
+	public function delgroup($group) {
+		if ( $group->in_array($this->groups) ) {
+			foreach ($this->groups as $key => $cur_group) {
+				if ($group->is($cur_group))
+					unset($this->groups[$key]);
+			}
+			return $this->groups;
 		} else {
 			return true;
 		}
@@ -142,11 +148,11 @@ class user extends able_entity {
 	/**
 	 * Check whether the user is in a (primary or secondary) group.
 	 *
-	 * @param int $id The GUID of the group.
+	 * @param group $group The group.
 	 * @return bool True or false.
 	 */
-	public function ingroup($id) {
-		return (in_array($id, $this->groups) || ($id == $this->gid));
+	public function ingroup($group) {
+		return ($group->in_array($this->groups) || $group->is($this->group));
 	}
 
 	/**
@@ -159,7 +165,8 @@ class user extends able_entity {
 	 * @return string The resulting MD5 sum which is stored in the entity.
 	 */
 	public function password($password) {
-		if (!isset($this->salt)) $this->salt = md5(rand());
+		if (!isset($this->salt))
+			$this->salt = md5(rand());
 		return $this->password = md5($password.$this->salt);
 	}
 
@@ -177,17 +184,13 @@ class user extends able_entity {
 		global $config;
 		if (!empty($this->timezone))
 			return $return_date_time_zone_object ? new DateTimeZone($this->timezone) : $this->timezone;
-		if (isset($this->gid)) {
-			$group = group::factory($this->gid);
-			if (!empty($group->timezone))
-				return $return_date_time_zone_object ? new DateTimeZone($group->timezone) : $group->timezone;
+		if (isset($this->group)) {
+			if (!empty($this->group->timezone))
+				return $return_date_time_zone_object ? new DateTimeZone($this->group->timezone) : $this->group->timezone;
 		}
-		if (is_array($this->groups)) {
-			foreach($this->groups as $cur_group_id) {
-				$group = group::factory($cur_group_id);
-				if (!empty($group->timezone))
-					return $return_date_time_zone_object ? new DateTimeZone($group->timezone) : $group->timezone;
-			}
+		foreach($this->groups as $cur_group) {
+			if (!empty($cur_group->timezone))
+				return $return_date_time_zone_object ? new DateTimeZone($cur_group->timezone) : $cur_group->timezone;
 		}
 		return $return_date_time_zone_object ? new DateTimeZone($config->timezone) : $config->timezone;
 	}

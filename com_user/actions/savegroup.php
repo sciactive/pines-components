@@ -11,42 +11,21 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$pass = true;
-
-if ( empty($_REQUEST['groupname']) ) {
-	display_notice('Must specify groupname!');
-	$pass = false;
-}
-
 if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_user/editgroup') )
 		punt_user('You don\'t have necessary permission.', pines_url('com_user', 'listgroups', null, false));
 	$group = group::factory((int) $_REQUEST['id']);
-	if ( is_null($group->guid) ) {
-		display_error('Group doesn\'t exists!');
-		$pass = false;
-	}
-	if ( $group->groupname != $_REQUEST['groupname'] ) {
-		$test = group::factory($_REQUEST['groupname']);
-		if ( is_null($test->guid) ) {
-			$group->groupname = $_REQUEST['groupname'];
-		} else {
-			display_notice('Groupname ['.$_REQUEST['groupname'].'] already exists! Continuing with old groupname...');
-		}
+	if (is_null($group->guid)) {
+		display_error('Requested group id is not accessible.');
+		return;
 	}
 } else {
 	if ( !gatekeeper('com_user/newgroup') )
 		punt_user('You don\'t have necessary permission.', pines_url('com_user', 'listgroups', null, false));
 	$group = group::factory();
-	$test = group::factory($_REQUEST['groupname']);
-	if ( is_null($test->guid) ) {
-		$group->groupname = $_REQUEST['groupname'];
-	} else {
-		display_notice('Groupname already exists!');
-		$pass = false;
-	}
 }
 
+$group->groupname = $_REQUEST['groupname'];
 $group->name = $_REQUEST['name'];
 $group->email = $_REQUEST['email'];
 $group->phone = preg_replace('/\D/', '', $_REQUEST['phone']);
@@ -66,16 +45,10 @@ $group->address_international = $_REQUEST['address_international'];
  */
 // Clean the requested parent. Make sure it's both valid and not the same group.
 if ( $_REQUEST['parent'] == 'none' ) {
-	$parent = NULL;
+	$group->parent = NULL;
 } else {
-	if ( is_null(group::factory($_REQUEST['parent'])) || $_REQUEST['parent'] == $group->guid ) {
-		display_error('Parent is not valid!');
-		$pass = false;
-	} else {
-		$parent = $_REQUEST['parent'];
-	}
+	$group->parent = group::factory((int) $_REQUEST['parent']);
 }
-$group->parent = $parent;
 
 if ( $_REQUEST['abilities'] === 'true' && gatekeeper("com_user/abilities") ) {
 	$sections = array('system');
@@ -96,8 +69,20 @@ if ( $_REQUEST['abilities'] === 'true' && gatekeeper("com_user/abilities") ) {
 	}
 }
 
-if (!$pass) {
+if (empty($group->groupname)) {
 	$group->print_form();
+	display_notice('Please specify a groupname.');
+	return;
+}
+$test = group::factory($_REQUEST['groupname']);
+if (isset($test->guid) && !$group->is($test)) {
+	$group->print_form();
+	display_notice('There is already a group with that groupname. Please choose a different groupname.');
+	return;
+}
+if (isset($group->parent) && (is_null($parent->guid) || $group->is($parent))) {
+	$group->print_form();
+	display_notice('Parent group is not valid.');
 	return;
 }
 

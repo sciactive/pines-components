@@ -97,8 +97,9 @@ class group extends able_entity {
 		$module->display_abilities = gatekeeper("com_user/abilities");
 		$module->sections = array('system');
 		$module->group_array = $config->user_manager->get_group_array();
-		foreach ($config->components as $cur_component)
+		foreach ($config->components as $cur_component) {
 			$module->sections[] = $cur_component;
+		}
 
 		return $module;
 	}

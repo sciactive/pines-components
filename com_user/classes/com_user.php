@@ -57,12 +57,11 @@ class com_user extends component {
 	 */
 	function authenticate($username, $password) {
 		$entity = user::factory($username);
-		if (is_null($entity->guid)) return false;
-		if ( $entity->check_password($password) ) {
-			return $entity->guid;
-		} else {
+		if (is_null($entity->guid))
 			return false;
-		}
+		if ( $entity->check_password($password) )
+			return $entity->guid;
+		return false;
 	}
 
 	/**
@@ -77,24 +76,17 @@ class com_user extends component {
 			return;
 		}
 		unset($_SESSION['user']);
-		$_SESSION['descendents'] = $this->get_group_descendents($tmp_user->gid);
-		if (!empty($tmp_user->groups)) {
-			foreach ($tmp_user->groups as $cur_group)
-				$_SESSION['descendents'] = array_merge($_SESSION['descendents'], $this->get_group_descendents($cur_group));
+		$_SESSION['descendents'] = $this->get_group_descendents($tmp_user->group);
+		foreach ($tmp_user->groups as $cur_group) {
+			$_SESSION['descendents'] = array_merge($_SESSION['descendents'], $this->get_group_descendents($cur_group));
 		}
 		if ($tmp_user->inherit_abilities) {
-			global $config;
 			$_SESSION['inherited_abilities'] = $tmp_user->abilities;
-			if (!empty($tmp_user->groups)) {
-				foreach ($tmp_user->groups as $cur_group) {
-					$cur_entity = $config->entity_manager->get_entity(array('guid' => $cur_group, 'tags' => array('com_user', 'group'), 'class' => group));
-					$_SESSION['inherited_abilities'] = array_merge($_SESSION['inherited_abilities'], $cur_entity->abilities);
-				}
+			foreach ($tmp_user->groups as $cur_group) {
+				$_SESSION['inherited_abilities'] = array_merge($_SESSION['inherited_abilities'], $cur_group->abilities);
 			}
-			if (isset($tmp_user->gid)) {
-				$cur_entity = $config->entity_manager->get_entity(array('guid' => $tmp_user->gid, 'tags' => array('com_user', 'group'), 'class' => group));
-				$_SESSION['inherited_abilities'] = array_merge($_SESSION['inherited_abilities'], $cur_entity->abilities);
-			}
+			if (isset($tmp_user->group))
+				$_SESSION['inherited_abilities'] = array_merge($_SESSION['inherited_abilities'], $tmp_user->group->abilities);
 		}
 		$_SESSION['user'] = $tmp_user;
 		date_default_timezone_set($tmp_user->get_timezone());
@@ -105,6 +97,11 @@ class com_user extends component {
 	 *
 	 * This function will check both user and group abilities, if the user is
 	 * marked to inherit the abilities of his group.
+	 * 
+	 * If $ability and $user are null, it will check to see if a user is
+	 * currently logged in.
+	 *
+	 * If the user has the "system/all" ability, this function will return true.
 	 *
 	 * @param string $ability The ability.
 	 * @param user $user The user to check. If none is given, the current user is used.
@@ -112,9 +109,11 @@ class com_user extends component {
 	 */
 	function gatekeeper($ability = NULL, $user = NULL) {
 		if ( is_null($user) ) {
-		// If the user is logged in, their abilities are already set up. We
-		// just need to add them to the user.
+			// If the user is logged in, their abilities are already set up. We
+			// just need to add them to the user's.
 			if ( is_object($_SESSION['user']) ) {
+				if ( is_null($ability) )
+					return true;
 				$user = $_SESSION['user'];
 				// Check the cache to see if we've already checked this user.
 				if (isset($this->gatekeeper_cache[$_SESSION['user_id']])) {
@@ -125,43 +124,29 @@ class com_user extends component {
 						$abilities = array_merge($abilities, $_SESSION['inherited_abilities']);
 					$this->gatekeeper_cache[$_SESSION['user_id']] = $abilities;
 				}
-			} else {
-				unset($user);
 			}
 		} else {
-		// If the user isn't logged in, their abilities need to be set up.
-		// Check the cache to see if we've already checked this user.
+			// If the user isn't logged in, their abilities need to be set up.
+			// Check the cache to see if we've already checked this user.
 			if (isset($this->gatekeeper_cache[$user->guid])) {
 				$abilities = $this->gatekeeper_cache[$user->guid];
 			} else {
 				$abilities = $user->abilities;
 				if ($user->inherit_abilities) {
-					global $config;
 					foreach ($user->groups as $cur_group) {
-						$cur_entity = $config->entity_manager->get_entity(array('guid' => $cur_group, 'tags' => array('com_user', 'group'), 'class' => group));
-						$abilities = array_merge($abilities, $cur_entity->abilities);
+						$abilities = array_merge($abilities, $cur_group->abilities);
 					}
-					if (isset($user->gid)) {
-						$cur_entity = $config->entity_manager->get_entity(array('guid' => $user->gid, 'tags' => array('com_user', 'group'), 'class' => group));
-						$abilities = array_merge($abilities, $cur_entity->abilities);
-					}
+					if (isset($user->group))
+						$abilities = array_merge($abilities, $user->group->abilities);
 				}
 				$this->gatekeeper_cache[$user->guid] = $abilities;
 			}
 		}
-		if ( isset($user) ) {
-			if ( !is_null($ability) ) {
-				if ( isset($abilities) ) {
-					return ( in_array($ability, $abilities) || in_array('system/all', $abilities) );
-				} else {
-					return false;
-				}
-			} else {
-				return true;
-			}
-		} else {
+		if ( !isset($user) )
 			return false;
-		}
+		if ( !is_array($abilities) )
+			return false;
+		return (in_array($ability, $abilities) || in_array('system/all', $abilities));
 	}
 
 	/**
@@ -186,25 +171,25 @@ class com_user extends component {
 	/**
 	 * Gets an array of groups.
 	 *
-	 * If no parent id is given, get_group_array() will start with all top level
+	 * If no parent is given, get_group_array() will start with all top level
 	 * groups.
 	 *
 	 * get_group_array() returns a multidimensional hierarchical array. In each
 	 * element is 'name', 'groupname', 'email', and 'children'. 'children' is an
 	 * array of that group's children.
 	 *
-	 * @param int $parent_id The GUID of the group to descend from.
+	 * @param group $parent The group to descend from.
 	 * @return array The array of groups.
 	 * @todo Check for orphans, they could cause groups to be hidden.
 	 */
-	function get_group_array($parent_id = NULL) {
+	function get_group_array($parent = NULL) {
 		global $config;
 		$return = array();
-		if ( is_null($parent_id) ) {
+		if ( is_null($parent) ) {
 			$entities = $config->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
 			foreach ($entities as $entity) {
 				if ( is_null($entity->parent) ) {
-					$child_array = $this->get_group_array($entity->guid);
+					$child_array = $this->get_group_array($entity);
 					$return[$entity->guid]['name'] = $entity->name;
 					$return[$entity->guid]['groupname'] = $entity->groupname;
 					$return[$entity->guid]['email'] = $entity->email;
@@ -212,50 +197,45 @@ class com_user extends component {
 				}
 			}
 		} else {
-			$entities = $config->entity_manager->get_entities(array('parent' => $parent_id, 'class' => group));
+			$entities = $config->entity_manager->get_entities(array('ref' => array('parent' => $parent), 'tags' => array('com_user', 'group'), 'class' => group));
 			foreach ($entities as $entity) {
-				if ( $entity->has_tag('com_user', 'group') ) {
-					$child_array = $this->get_group_array($entity->guid);
-					$return[$entity->guid]['name'] = $entity->name;
-					$return[$entity->guid]['groupname'] = $entity->groupname;
-					$return[$entity->guid]['email'] = $entity->email;
-					$return[$entity->guid]['children'] = $child_array;
-				}
+				$child_array = $this->get_group_array($entity);
+				$return[$entity->guid]['name'] = $entity->name;
+				$return[$entity->guid]['groupname'] = $entity->groupname;
+				$return[$entity->guid]['email'] = $entity->email;
+				$return[$entity->guid]['children'] = $child_array;
 			}
 		}
 		return $return;
 	}
 
 	/**
-	 * Gets an array of a group's descendendents' GUIDs.
+	 * Gets an array of a group's descendendents.
 	 *
-	 * If no parent id is given, get_group_descendents() will start with all top
-	 * level groups. (It will return all top level group's descendents.)
+	 * If no parent is given, get_group_descendents() will start with all top
+	 * level groups. (It will return all top level groups' descendents.)
 	 *
-	 * get_group_descendents() returns an array of GUIDs of a group's
-	 * descendents.
+	 * get_group_descendents() returns an array of a group's descendents.
 	 *
-	 * @param int $parent_id The GUID of the group to descend from.
-	 * @return array The array of group IDs.
+	 * @param group $parent The group to descend from.
+	 * @return array The array of groups.
 	 */
-	function get_group_descendents($parent_id = NULL) {
+	function get_group_descendents($parent = NULL) {
 		global $config;
 		$return = array();
-		if ( is_null($parent_id) ) {
+		if ( is_null($parent) ) {
 			$entities = $config->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
 			foreach ($entities as $entity) {
 				if ( is_null($entity->parent) ) {
-					$child_array = $this->get_group_descendents($entity->guid);
+					$child_array = $this->get_group_descendents($entity);
 					$return = array_merge($return, $child_array);
 				}
 			}
 		} else {
-			$entities = $config->entity_manager->get_entities(array('parent' => $parent_id, 'class' => group));
+			$entities = $config->entity_manager->get_entities(array('ref' => array('parent' => $parent), 'tags' => array('com_user', 'group'), 'class' => group));
 			foreach ($entities as $entity) {
-				if ( $entity->has_tag('com_user', 'group') ) {
-					$child_array = $this->get_group_descendents($entity->guid);
-					$return = array_merge($return, array($entity->guid), $child_array);
-				}
+				$child_array = $this->get_group_descendents($entity);
+				$return = array_merge($return, array($entity), $child_array);
 			}
 		}
 		return $return;
@@ -264,28 +244,29 @@ class com_user extends component {
 	/**
 	 * Fills a menu with a group hierarchy.
 	 *
-	 * @param int $parent_id The GUID of the parent group.
 	 * @param menu &$menu The menu to fill.
+	 * @param group $parent The parent group.
 	 * @param bool $top_level Whether to work on the menu's top level.
 	 */
-	function get_group_menu(&$menu = NULL, $parent_id = NULL, $top_level = TRUE) {
+	function get_group_menu(&$menu = NULL, $parent = NULL, $top_level = TRUE) {
 		global $config;
-		if ( is_null($parent_id) ) {
+		if ( is_null($parent) ) {
 			$entities = $config->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
 			foreach ($entities as $entity) {
-				$menu->add($entity->name.' ['.$entity->groupname.']', $entity->guid, $entity->parent, $entity->guid);
+				$menu->add("{$entity->name} [{$entity->groupname}]", $entity->guid, $entity->parent->guid, $entity->guid);
 			}
 			$orphans = $menu->orphans();
-			if ( !empty($orphans) )
+			if ( !empty($orphans) ) {
 				$orphan_menu_id = $menu->add('Orphans', NULL);
-			foreach ($orphans as $orphan) {
-				$menu->add($orphan['name'], $orphan['data'], $orphan_menu_id, $orphan['data']);
+				foreach ($orphans as $orphan) {
+					$menu->add($orphan['name'], $orphan['data'], $orphan_menu_id, $orphan['data']);
+				}
 			}
 		} else {
-			$entities = $config->entity_manager->get_entities(array('parent' => $parent_id, 'class' => group));
+			$entities = $config->entity_manager->get_entities(array('ref' => array('parent' => $parent), 'tags' => array('com_user', 'group'), 'class' => group));
 			foreach ($entities as $entity) {
-				$new_menu_id = $menu->add($entity->name.' ['.$entity->groupname.']', $entity->guid, ($top_level ? NULL : $entity->parent), $entity->guid);
-				$this->get_group_menu($entity->guid, $menu, $new_menu_id, FALSE);
+				$new_menu_id = $menu->add("{$entity->name} [{$entity->groupname}]", $entity->guid, ($top_level ? NULL : $entity->parent->guid), $entity->guid);
+				$this->get_group_menu($menu, $entity, FALSE);
 			}
 		}
 	}
@@ -319,7 +300,7 @@ class com_user extends component {
 			$parsed = str_replace('#name#', $group['name'], $parsed);
 			$parsed = str_replace('#groupname#', $group['groupname'], $parsed);
 			$parsed = str_replace('#mark#', $mark, $parsed);
-			if ( $key == $selected_id || $group == $selected_id || (is_array($selected_id) && in_array($key, $selected_id)) || (is_array($selected_id) && group::factory($key)->in_array($selected_id)) ) {
+			if ( $key == $selected_id || $key == $selected_id->guid || (is_array($selected_id) && in_array($key, $selected_id)) || (is_array($selected_id) && group::factory($key)->in_array($selected_id)) ) {
 				$parsed = str_replace('#selected#', $selected, $parsed);
 			} else {
 				$parsed = str_replace('#selected#', '', $parsed);
@@ -392,19 +373,12 @@ class com_user extends component {
 	/**
 	 * Gets an array of users in a group.
 	 *
-	 * @param int $id The group's GUID.
+	 * @param group $group The group.
 	 * @return array An array of users.
 	 */
-	function get_users_by_group($id) {
+	function get_users_by_group($group) {
 		global $config;
-		$entities = array();
-		$entities = $config->entity_manager->get_entities(array('tags' => array('com_user', 'user'), 'class' => user));
-		$return = array();
-		foreach ($entities as $entity) {
-			if ( $entity->ingroup($id) )
-				$return[] = $entity;
-		}
-		return $return;
+		return $config->entity_manager->get_entities(array('ref_i' => array('group' => $group, 'groups' => $group), 'tags' => array('com_user', 'user'), 'class' => user));
 	}
 
 	/**
@@ -460,7 +434,7 @@ class com_user extends component {
 	function login($id) {
 		$entity = user::factory($id);
 
-		if ( isset($entity->username) ) {
+		if ( isset($entity->guid) ) {
 			if ( $this->gatekeeper('com_user/login', $entity) ) {
 				$_SESSION['user_id'] = $entity->guid;
 				unset($_SESSION['user']);

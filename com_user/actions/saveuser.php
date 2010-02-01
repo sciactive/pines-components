@@ -11,50 +11,24 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$pass = true;
-
-if ( empty($_REQUEST['username']) ) {
-	display_notice('Must specify username!');
-	$pass = false;
-}
-
 if ( isset($_REQUEST['id']) ) {
-	if ( !gatekeeper('com_user/edituser') && (!gatekeeper('com_user/self') || ($_REQUEST['id'] != $_SESSION['user_id'])) ) {
+	if ( !gatekeeper('com_user/edituser') && (!gatekeeper('com_user/self') || ($_REQUEST['id'] != $_SESSION['user_id'])) )
 		punt_user('You don\'t have necessary permission.', pines_url('com_user', 'listusers', null, false));
+	$user = user::factory((int) $_REQUEST['id']);
+	if (is_null($user->guid)) {
+		display_error('Requested user id is not accessible.');
 		return;
 	}
-	$user = user::factory((int) $_REQUEST['id']);
-	if ( is_null($user->guid) ) {
-		display_error('User doesn\'t exists!');
-		$pass = false;
-	}
-	if ( $user->username != $_REQUEST['username'] ) {
-		$test = user::factory($_REQUEST['username']);
-		if ( is_null($test->guid) ) {
-			$user->username = $_REQUEST['username'];
-		} else {
-			display_notice('Username ['.$_REQUEST['username'].'] already exists! Continuing with old username...');
-		}
-	}
-	if ( !empty($_REQUEST['password']) ) $user->password($_REQUEST['password']);
+	if ( !empty($_REQUEST['password']) )
+		$user->password($_REQUEST['password']);
 } else {
 	if ( !gatekeeper('com_user/newuser') )
 		punt_user('You don\'t have necessary permission.', pines_url('com_user', 'listusers', null, false));
-	if ( empty($_REQUEST['password']) && !$config->com_user->empty_pw ) {
-		display_notice('Must specify password!');
-		$pass = false;
-	}
 	$user = user::factory();
-	$test = user::factory($_REQUEST['username']);
-	if ( is_null($test->guid) ) {
-		$user->username = $_REQUEST['username'];
-	} else {
-		display_notice('Username already exists!');
-		$pass = false;
-	}
 	$user->password($_REQUEST['password']);
 }
 
+$user->username = $_REQUEST['username'];
 $user->name = $_REQUEST['name'];
 $user->email = $_REQUEST['email'];
 $user->phone = preg_replace('/\D/', '', $_REQUEST['phone']);
@@ -82,31 +56,23 @@ if ( gatekeeper('com_user/default_component') ) {
 // entity manager after com_user filters the result, and thus will not be
 // assigned.
 if ( gatekeeper("com_user/assigngroup") ) {
-	$groups = $config->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
-	$ugroup = intval($_REQUEST['gid']);
-	$ugroups = $_REQUEST['groups'];
-	if (is_array($ugroups))
-		array_walk($ugroups, 'intval');
-	if (is_array($groups)) {
-		foreach ($groups as $cur_group) {
-			if ( $cur_group->guid == $ugroup ) {
-				$user->gid = $ugroup;
-			}
-			if (is_array($ugroups)) {
-				if ( in_array($cur_group->guid, $ugroups) ) {
-					$user->addgroup($cur_group->guid);
-				} else {
-					$user->delgroup($cur_group->guid);
-				}
-			} else {
-				$user->delgroup($cur_group->guid);
-			}
+	$sys_groups = $config->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
+	$group = group::factory((int) $_REQUEST['group']);
+	$groups = $_REQUEST['groups'];
+	if (!is_array($groups))
+		$groups = array();
+	array_walk($groups, 'intval');
+	foreach ($sys_groups as $cur_group) {
+		if ($cur_group->is($group))
+			$user->group = $group;
+		if (is_array($groups) && in_array($cur_group->guid, $groups)) {
+			$user->addgroup($cur_group);
+		} else {
+			$user->delgroup($cur_group);
 		}
 	}
-	if ( $_REQUEST['gid'] == 'null' ) {
-		if (isset($user->gid))
-			unset($user->gid);
-	}
+	if ($_REQUEST['group'] == 'null')
+		unset($user->group);
 }
 
 if ( $_REQUEST['abilities'] === 'true' && gatekeeper("com_user/abilities") ) {
@@ -117,20 +83,30 @@ if ( $_REQUEST['abilities'] === 'true' && gatekeeper("com_user/abilities") ) {
 	}
 	foreach ($sections as $cur_section) {
 		$section_abilities = $config->ability_manager->get_abilities($cur_section);
-		if ( count($section_abilities) ) {
-			foreach ($section_abilities as $cur_ability) {
-				if ( isset($_REQUEST[$cur_section]) && (array_search($cur_ability['ability'], $_REQUEST[$cur_section]) !== false) ) {
-					$user->grant($cur_section.'/'.$cur_ability['ability']);
-				} else {
-					$user->revoke($cur_section.'/'.$cur_ability['ability']);
-				}
+		foreach ($section_abilities as $cur_ability) {
+			if ( isset($_REQUEST[$cur_section]) && (array_search($cur_ability['ability'], $_REQUEST[$cur_section]) !== false) ) {
+				$user->grant($cur_section.'/'.$cur_ability['ability']);
+			} else {
+				$user->revoke($cur_section.'/'.$cur_ability['ability']);
 			}
 		}
 	}
 }
 
-if (!$pass) {
+if (empty($user->username)) {
 	$user->print_form();
+	display_notice('Please specify a username.');
+	return;
+}
+$test = user::factory($_REQUEST['username']);
+if (isset($test->guid) && !$user->is($test)) {
+	$user->print_form();
+	display_notice('There is already a user with that username. Please choose a different username.');
+	return;
+}
+if (empty($user->password) && !$config->com_user->empty_pw) {
+	$user->print_form();
+	display_notice('Please specify a password.');
 	return;
 }
 

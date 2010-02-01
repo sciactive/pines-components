@@ -15,8 +15,8 @@ $this->title = 'Groups';
 // Build an array of parents, so we can include the parent class on their rows.
 $parents = array();
 foreach($this->groups as $cur_group) {
-	if (!is_null($cur_group->parent) && !in_array($cur_group->parent, $parents)) {
-		array_push($parents, $cur_group->parent);
+	if (isset($cur_group->parent) && !in_array($cur_group->parent, $parents)) {
+		array_push($parents, $cur_group->parent->guid);
 	}
 }
 ?>
@@ -80,15 +80,15 @@ foreach($this->groups as $cur_group) {
 		<tr title="<?php echo $group->guid; ?>" class="<?php
 		if (in_array($group->guid, $parents))
 			echo "parent ";
-		if (!is_null($group->parent))
-			echo "child {$group->parent}";
+		if (isset($group->parent))
+			echo "child {$group->parent->guid}";
 		?>">
 			<td><?php echo $group->groupname; ?></td>
 			<td><?php echo $group->name; ?></td>
 			<td><?php echo $group->email; ?></td>
 			<td><?php echo $group->timezone; ?></td>
 			<td><?php
-			$user_array = $config->user_manager->get_users_by_group($group->guid);
+			$user_array = $config->user_manager->get_users_by_group($group);
 			if (count($user_array) < 15) {
 				$user_list = '';
 				foreach ($user_array as $cur_user) {

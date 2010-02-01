@@ -336,9 +336,9 @@ class com_entity extends component {
 			if ($pass) {
 				$entity = call_user_func(array($class, 'factory'));
 				$entity->guid = $guid;
-				$entity->parent = $parent;
 				$entity->tags = $tags;
 				$entity->put_data($data);
+				if (isset($parent) && !key_exists('parent', $data)) $entity->parent = $parent;
 				array_push($entities, $entity);
 				$count++;
 				if ($limit && $count >= $limit)
@@ -391,9 +391,8 @@ class com_entity extends component {
 			$entity->p_cdate = time();
 			// And modified date.
 			$entity->p_mdate = time();
-			$query = sprintf("INSERT INTO `%scom_entity_entities` (`parent`, `tags`) VALUES (%s, '%s');",
+			$query = sprintf("INSERT INTO `%scom_entity_entities` (`tags`) VALUES ('%s');",
 				$config->com_mysql->prefix,
-				(is_null($entity->parent) ? 'NULL' : intval($entity->parent)),
 				mysql_real_escape_string(serialize($entity->tags), $config->db_manager->link));
 			if ( !(mysql_query($query, $config->db_manager->link)) ) {
 				if (function_exists('display_error'))
@@ -419,9 +418,8 @@ class com_entity extends component {
 		} else {
 			// Save the modified date.
 			$entity->p_mdate = time();
-			$query = sprintf("UPDATE `%scom_entity_entities` SET `parent`=%s, `tags`='%s' WHERE `guid`=%u;",
+			$query = sprintf("UPDATE `%scom_entity_entities` SET `tags`='%s' WHERE `guid`=%u;",
 				$config->com_mysql->prefix,
-				(is_null($entity->parent) ? 'NULL' : intval($entity->parent)),
 				mysql_real_escape_string(serialize($entity->tags), $config->db_manager->link),
 				intval($entity->guid));
 			if ( !(mysql_query($query, $config->db_manager->link)) ) {

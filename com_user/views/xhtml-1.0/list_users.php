@@ -78,21 +78,19 @@ $this->title = 'Users';
 			<td><?php echo $user->email; ?></td>
 			<td><?php echo $user->get_timezone().(empty($user->timezone) ? ' (I)' : ' (A)'); ?></td>
 			<td><?php echo $user->default_component; ?></td>
-			<td><?php echo $config->user_manager->get_groupname($user->gid); ?></td>
+			<td><?php echo $user->group->groupname; ?></td>
 			<td><?php
-			if (is_array($user->groups)) {
-				if (count($user->groups) < 15) {
-					$groupname_array = array();
-					foreach ($user->groups as $cur_group) {
-						array_push($groupname_array, $config->user_manager->get_groupname($cur_group));
-					}
-					echo implode(', ', $groupname_array);
-				} else {
-					echo count($user->groups).' groups';
+			if (count($user->groups) < 15) {
+				$group_list = '';
+				foreach ($user->groups as $cur_group) {
+					$group_list .= (empty($group_list) ? '' : ', ').$cur_group->groupname;
 				}
+				echo $group_list;
+			} else {
+				echo count($user->groups).' groups';
 			}
 			?></td>
-			<td><?php echo $user->inherit_abilities ? "Yes" : "No"; ?></td>
+			<td><?php echo $user->inherit_abilities ? 'Yes' : 'No'; ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

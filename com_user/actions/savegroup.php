@@ -80,7 +80,7 @@ if (isset($test->guid) && !$group->is($test)) {
 	display_notice('There is already a group with that groupname. Please choose a different groupname.');
 	return;
 }
-if (isset($group->parent) && (is_null($parent->guid) || $group->is($parent))) {
+if (isset($group->parent) && (is_null($group->parent->guid) || $group->is($group->parent))) {
 	$group->print_form();
 	display_notice('Parent group is not valid.');
 	return;

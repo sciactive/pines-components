@@ -480,7 +480,7 @@ class com_user extends component {
 	function punt_user($message = NULL, $url = NULL) {
 		global $config, $page;
 		$default = '0';
-		if ($config->component == $_SESSION['user']->default_component && $config->action == 'default')
+		if ($config->request_component == $_SESSION['user']->default_component && $config->request_action == 'default')
 			$default = '1';
 		header("Location: ".pines_url('com_user', 'exit', array('default' => $default, 'message' => urlencode($message), 'url' => urlencode($url)), false));
 		exit($message);

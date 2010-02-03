@@ -157,6 +157,7 @@ $this->note = 'Provide employee account details in this form.';
 	<div id="employee_tabs" style="clear: both;">
 		<ul>
 			<li><a href="#tab_general">General</a></li>
+			<li><a href="#tab_user_account">User Account</a></li>
 			<li><a href="#tab_addresses">Addresses</a></li>
 			<li><a href="#tab_attributes">Attributes</a></li>
 		</ul>
@@ -215,22 +216,21 @@ $this->note = 'Provide employee account details in this form.';
 				<label><span class="label">Fax</span>
 					<input class="field ui-widget-content" type="text" name="fax" size="24" value="<?php echo pines_phone_format($this->entity->fax); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Login Disabled</span>
-					<input class="field ui-widget-content" type="checkbox" name="login_disabled" size="24" value="ON"<?php echo $this->entity->login_disabled ? ' checked="checked"' : ''; ?> /></label>
-			</div>
-			<div class="element">
-				<label><span class="label"><?php if (!is_null($this->entity->password)) echo 'Update '; ?>Password</span>
-					<?php if (is_null($this->entity->password)) {
-						echo ($config->com_user->empty_pw ? '<span class="note">May be blank.</span>' : '');
-					} else {
-						echo '<span class="note">Leave blank, if not changing.</span>';
-					} ?>
-					<input class="field ui-widget-content" type="text" name="password" size="24" /></label>
-			</div>
 			<div class="element full_width">
 				<span class="label">Description</span><br />
 				<textarea rows="3" cols="35" class="field peditor" style="width: 100%;" name="description"><?php echo $this->entity->description; ?></textarea>
+			</div>
+			<br class="spacer" />
+		</div>
+		<div id="tab_user_account">
+			<div class="element heading">
+				<p>Attach a user to this employee.</p>
+			</div>
+			<div class="element">
+				<label><span class="label">Username</span>
+					<span class="note">Provide either the username or GUID of the user to attach.</span>
+					<span class="note">Leave blank to remove any currently attached user.</span>
+					<input class="field ui-widget-content" type="text" name="username" size="24" value="<?php echo $this->entity->user_account->username; ?>" /></label>
 			</div>
 			<br class="spacer" />
 		</div>

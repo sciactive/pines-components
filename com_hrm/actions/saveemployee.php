@@ -38,10 +38,14 @@ $employee->phone_cell = preg_replace('/\D/', '', $_REQUEST['phone_cell']);
 $employee->phone_work = preg_replace('/\D/', '', $_REQUEST['phone_work']);
 $employee->phone_home = preg_replace('/\D/', '', $_REQUEST['phone_home']);
 $employee->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
-$employee->login_disabled = ($_REQUEST['login_disabled'] == 'ON');
-if (!empty($_REQUEST['password']))
-	$employee->password = $_REQUEST['password'];
 $employee->description = $_REQUEST['description'];
+
+// User Account
+if (empty($_REQUEST['username'])) {
+	$employee->user_account = null;
+} else {
+	$employee->user_account = user::factory(preg_match('/^\d+$/', $_REQUEST['username']) ? (int) $_REQUEST['username'] : $_REQUEST['username']);
+}
 
 // Addresses
 $employee->address_type = $_REQUEST['address_type'];
@@ -93,6 +97,17 @@ if (empty($employee->email)) {
 if (empty($employee->phone_cell) && empty($employee->phone_work) && empty($employee->phone_home)) {
 	$employee->print_form();
 	display_notice('Please specify at least one phone number.');
+	return;
+}
+if (!is_null($employee->user_account) && is_null($employee->user_account->guid)) {
+	$employee->print_form();
+	display_notice('The user account specified is not accessible.');
+	return;
+}
+$test = $config->entity_manager->get_entity(array('ref' => array('user_account' => $employee->user_account), 'tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
+if (isset($test) && !$employee->is($test)) {
+	$employee->print_form();
+	display_notice("The user account specified is already attached to {$test->name}.");
 	return;
 }
 

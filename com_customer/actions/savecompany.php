@@ -66,9 +66,8 @@ if ($company->address_type == 'international' && empty($company->address_interna
 	display_notice('Please specify an address.');
 	return;
 }
-if ($config->com_customer->global_customers) {
-	$company->ac = (object) array('other' => 1);
-}
+if ($config->com_customer->global_customers)
+	$company->ac->other = 1;
 
 if ($company->save()) {
 	display_notice('Saved company ['.$company->name.']');

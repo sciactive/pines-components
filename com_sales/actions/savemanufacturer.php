@@ -47,9 +47,8 @@ if (isset($test) && $test->guid != $_REQUEST['id']) {
 	return;
 }
 
-if ($config->com_sales->global_manufacturers) {
-	$manufacturer->ac = (object) array('other' => 1);
-}
+if ($config->com_sales->global_manufacturers)
+	$manufacturer->ac->other = 1;
 
 if ($manufacturer->save()) {
 	display_notice('Saved manufacturer ['.$manufacturer->name.']');

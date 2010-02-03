@@ -53,9 +53,8 @@ if (empty($payment_type->minimum))
 if (empty($payment_type->maximum))
 	$payment_type->maximum = null;
 
-if ($config->com_sales->global_payment_types) {
-	$payment_type->ac = (object) array('other' => 1);
-}
+if ($config->com_sales->global_payment_types)
+	$payment_type->ac->other = 1;
 
 if ($payment_type->change_type) {
 	$change_type = $config->entity_manager->get_entity(array('data' => array('change_type' => true), 'tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));

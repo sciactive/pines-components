@@ -107,9 +107,8 @@ if (empty($customer->phone_cell) && empty($customer->phone_work) && empty($custo
 	return;
 }
 
-if ($config->com_customer->global_customers) {
-	$customer->ac = (object) array('other' => 1);
-}
+if ($config->com_customer->global_customers)
+	$customer->ac->other = 1;
 
 if ($customer->save()) {
 	display_notice('Saved customer ['.$customer->name.']');

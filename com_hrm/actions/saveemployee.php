@@ -111,9 +111,8 @@ if (isset($test) && !$employee->is($test)) {
 	return;
 }
 
-if ($config->com_hrm->global_employees) {
-	$employee->ac = (object) array('other' => 1);
-}
+if ($config->com_hrm->global_employees)
+	$employee->ac->other = 1;
 
 if ($employee->save()) {
 	display_notice('Saved employee ['.$employee->name.']');

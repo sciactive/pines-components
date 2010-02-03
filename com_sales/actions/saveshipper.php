@@ -50,9 +50,8 @@ if (isset($test) && $test->guid != $_REQUEST['id']) {
 	return;
 }
 
-if ($config->com_sales->global_shippers) {
-	$shipper->ac = (object) array('other' => 1);
-}
+if ($config->com_sales->global_shippers)
+	$shipper->ac->other = 1;
 
 if ($shipper->save()) {
 	display_notice('Saved shipper ['.$shipper->name.']');

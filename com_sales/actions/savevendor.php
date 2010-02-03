@@ -59,9 +59,8 @@ if (isset($test) && $test->guid != $_REQUEST['id']) {
 	return;
 }
 
-if ($config->com_sales->global_vendors) {
-	$vendor->ac = (object) array('other' => 1);
-}
+if ($config->com_sales->global_vendors)
+	$vendor->ac->other = 1;
 
 if ($vendor->save()) {
 	display_notice('Saved vendor ['.$vendor->name.']');

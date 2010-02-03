@@ -97,9 +97,9 @@ if (isset($test) && $test->guid != $_REQUEST['id']) {
 	return;
 }
 
-if ($config->com_sales->global_products) {
-	$product->ac = (object) array('other' => 1);
-}
+if ($config->com_sales->global_products)
+	$product->ac->other = 1;
+
 if ($product->save()) {
 	display_notice('Saved product ['.$product->name.']');
 	// Assign the product to the selected categories.

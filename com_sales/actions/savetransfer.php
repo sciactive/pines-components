@@ -62,7 +62,8 @@ if (is_null($transfer->shipper)) {
 	return;
 }
 
-$transfer->ac = (object) array('other' => 2);
+$transfer->ac->other = 2;
+
 if ($transfer->save()) {
 	display_notice('Saved transfer ['.$transfer->guid.']');
 } else {

@@ -55,9 +55,8 @@ if (empty($tax_fee->rate)) {
 	return;
 }
 
-if ($config->com_sales->global_tax_fees) {
-	$tax_fee->ac = (object) array('other' => 1);
-}
+if ($config->com_sales->global_tax_fees)
+	$tax_fee->ac->other = 1;
 
 if ($tax_fee->save()) {
 	display_notice('Saved tax/fee ['.$tax_fee->name.']');

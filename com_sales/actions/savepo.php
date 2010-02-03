@@ -85,7 +85,8 @@ if (is_null($po->shipper)) {
 	return;
 }
 
-$po->ac = (object) array('other' => 2);
+$po->ac->other = 2;
+
 if ($po->save()) {
 	display_notice('Saved PO ['.$po->po_number.']');
 } else {

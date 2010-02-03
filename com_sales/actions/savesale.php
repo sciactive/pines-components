@@ -140,9 +140,8 @@ if ($product_error || $payment_error) {
 	return;
 }
 
-if ($config->com_sales->global_sales) {
-	$sale->ac = (object) array('other' => 1);
-}
+if ($config->com_sales->global_sales)
+	$sale->ac->other = 1;
 
 if (($_REQUEST['process'] == 'Invoice' || $_REQUEST['process'] == 'Tender') && $sale->status != 'invoiced' && $sale->status != 'paid') {
 	if (!$sale->invoice()) {

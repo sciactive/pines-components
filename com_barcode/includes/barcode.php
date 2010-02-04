@@ -39,12 +39,12 @@ define('BCS_ALIGN_LEFT'     ,    8);
 define('BCS_ALIGN_RIGHT'    ,   16);
 define('BCS_IMAGE_JPEG'     ,   32);
 define('BCS_IMAGE_PNG'      ,   64);
-define('BCS_DRAW_TEXT'      ,  128);
-define('BCS_STRETCH_TEXT'   ,  256);
-define('BCS_REVERSE_COLOR'  ,  512);
+define('BCS_IMAGE_GIF'      ,  128);
+define('BCS_DRAW_TEXT'      ,  256);
+define('BCS_STRETCH_TEXT'   ,  512);
+//define('BCS_REVERSE_COLOR'  , 1024); // Unused
 /* For the I25 Only  */
-define('BCS_I25_DRAW_CHECK' , 2048);
-define('BCS_IMAGE_GIF'      , 4096);
+//define('BCS_I25_DRAW_CHECK' , 2048); // Unused
 
 /* Default values */
 //Margins
@@ -224,12 +224,33 @@ class BarcodeObject {
 	 * Color the barcode using our configurable colors.
 	 * 
 	 * @author Zak Huber <zakhuber@gmail.com>
-	 * @param string $barcode_color The barcode stripe color.
+	 * @param string $background_color The background color.
+	 * @param string $barcode_color The barcode and text color.
 	 */
-	function ColorObject($barcode_color) {
-		//Create a transparent background for our image.
-		$bg_color = ImageColorAllocate($this->mImg, 255, 255, 255);
-		$this->mBgcolor = ImageColorTransparent($this->mImg, $bg_color);
+	function ColorObject($background_color, $barcode_color) {
+		//Create a background for our image.
+		if (isset($this->mColors[strtolower($background_color)]))
+			$background_color = $this->mColors[strtolower($background_color)];
+		if (preg_match('/^\d+,\d+,\d+$/', $background_color)) {
+			$colors = explode(',', $background_color);
+			$bgred = (int) $colors[0];
+			$bggreen = (int) $colors[1];
+			$bgblue = (int) $colors[2];
+		} else if (preg_match('/^#[0-9a-fA-F]{3}$/', $background_color)) {
+			$bgred = hexdec(substr($background_color, 1, 1).substr($background_color, 1, 1));
+			$bggreen = hexdec(substr($background_color, 2, 1).substr($background_color, 2, 1));
+			$bgblue = hexdec(substr($background_color, 3, 1).substr($background_color, 3, 1));
+		} else if (preg_match('/^#[0-9a-fA-F]{6}$/', $background_color)) {
+			$bgred = hexdec(substr($background_color, 1, 2));
+			$bggreen = hexdec(substr($background_color, 3, 2));
+			$bgblue = hexdec(substr($background_color, 5, 2));
+		}
+		$this->mBgcolor = ImageColorAllocate($this->mImg, (int) $bgred, (int) $bggreen, (int) $bgblue);
+		// If transparency is enabled, set the transparent color to the bgcolor.
+		if ($this->mStyle & BCS_TRANSPARENT)
+			$this->mBgcolor = ImageColorTransparent($this->mImg, $this->mBgcolor);
+		// Fill the image with the bgcolor.
+		ImageFill($this->mImg, $this->mWidth, $this->mHeight, $this->mBgcolor);
 		//Create a foreground brush with our specified color.
 		if (isset($this->mColors[strtolower($barcode_color)]))
 			$barcode_color = $this->mColors[strtolower($barcode_color)];
@@ -248,8 +269,6 @@ class BarcodeObject {
 			$blue = hexdec(substr($barcode_color, 5, 2));
 		}
 		$this->mBrush = ImageColorAllocate($this->mImg, (int) $red, (int) $green, (int) $blue);
-		if (!($this->mStyle & BCS_TRANSPARENT))
-			ImageFill($this->mImg, $this->mWidth, $this->mHeight, $this->mBgcolor);
 	}
 
 	function DrawObject($xres) {

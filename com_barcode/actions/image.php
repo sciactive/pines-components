@@ -2,6 +2,43 @@
 /**
  * Create a barcode.
  *
+ * You can use this action to create an image of a barcode. Parameters are
+ * passed as POST, GET, or COOKIE data, and the image is generated and printed
+ * to the browser. Therefore, you can use this action as the SRC of an IMG tag.
+ * The following parameters can be given:
+ *
+ * - code - The text of the barcode.
+ * - type - The type of barcode to generate.
+ * - style - See below for information about this parameter.
+ * - width - The width of the image to generate.
+ * - height - The height of the barcode.
+ * - xres - The width of the bars (1, 2, or 3).
+ * - font - The font to use for any barcode text. (1-5)
+ * - bgcolor - The background color.
+ * - color - The color of the barcode and text.
+ *
+ * The style parameter defines various aspects of the style of the generated
+ * image. It is a number made by adding the numbers of the styles you want. The
+ * available styles are:
+ *
+ * - 1 - Draw a border around the barcode.
+ * - 2 - Make the background transparent.
+ * - 4 - Align the barcode in the center of the image.
+ * - 8 - Align the barcode in the left of the image.
+ * - 16 - Align the barcode in the right of the image.
+ * - 32 - Output the image in JPEG format. (Does not support transparency.)
+ * - 64 - Output the image in PNG format.
+ * - 128 - Output the image in GIF format.
+ * - 256 - Print the text beneath the barcode.
+ * - 512 - Stretch the text across the image.
+ *
+ * For example, if you want your barcode to be a centered, transparent PNG, with
+ * stretched text beneath it, this is how you would calculate the style value:
+ *
+ * 2 + 4 + 64 + 256 + 512 = 838
+ *
+ * Style defaults to 2 + 4 + (32, 64, or 128, depending on configuration).
+ *
  * @package Pines
  * @subpackage com_barcode
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
@@ -28,12 +65,13 @@ require_once('components/com_barcode/includes/barcode.php');
 $style = 0;
 
 $code = strtoupper($_REQUEST['code']);
-$type = $_REQUEST['type'];
+$type = strtoupper($_REQUEST['type']);
 $style = (int) $_REQUEST['style'];
 $width = $_REQUEST['width'];
 $height = $_REQUEST['height'];
 $xres = $_REQUEST['xres'];
 $font = $_REQUEST['font'];
+$bgcolor = $_REQUEST['bgcolor'];
 $color = $_REQUEST['color'];
 
 if (!isset($type))
@@ -46,10 +84,12 @@ if (!isset($xres))
 	$xres = $config->com_barcode->xres;
 if (!isset($font))
 	$font = $config->com_barcode->font;
+if (!isset($bgcolor))
+	$bgcolor = $config->com_barcode->bgcolor;
 if (!isset($color))
 	$color = $config->com_barcode->color;
 if (!$style)
-	$style = $config->com_barcode->output_type == 'jpg' ? 36 : ($config->com_barcode->output_type == 'gif' ? 4100 : 68);
+	$style = $config->com_barcode->output_type == 'jpg' ? 36 : ($config->com_barcode->output_type == 'gif' ? 134 : 70);
 
 switch ($type) {
 	case 'I25':
@@ -91,11 +131,16 @@ switch ($type) {
 }
 
 if ($obj) {
-	$obj->ColorObject($color);
+	$obj->ColorObject($bgcolor, $color);
 	$obj->SetFont($font);
 	$obj->DrawObject($xres);
-	$obj->FlushObject();
-	$obj->DestroyObject();
+	if (isset($obj->mError)) {
+		pines_log("Barcode generation error: {$obj->mError}", 'error');
+		echo $obj->mError;
+	} else {
+		$obj->FlushObject();
+		$obj->DestroyObject();
+	}
 	unset($obj);
 }
 

@@ -51,13 +51,20 @@ return array (
   array (
     'name' => 'font',
     'cname' => 'Font',
-    'description' => 'The font of the text generated underneath the barcode. (Text is not enabled by default.)',
-    'value' => 5,
+    'description' => 'The font of the text generated underneath the barcode. (1-5) (Text is not enabled by default.)',
+    'value' => 2,
   ),
   6 =>
   array (
+    'name' => 'bgcolor',
+    'cname' => 'Background Color',
+    'description' => 'Use comma separated RGB color values, or HTML color codes/names.',
+    'value' => 'white',
+  ),
+  7 =>
+  array (
     'name' => 'color',
-    'cname' => 'Barcode Color',
+    'cname' => 'Barcode and Text Color',
     'description' => 'Use comma separated RGB color values, or HTML color codes/names.',
     'value' => 'black',
   ),

@@ -7,7 +7,7 @@
  * to the browser. Therefore, you can use this action as the SRC of an IMG tag.
  * The following parameters can be given:
  *
- * - code - The text of the barcode.
+ * - code - The text of the barcode. (Required)
  * - type - The type of barcode to generate.
  * - style - See below for information about this parameter.
  * - width - The width of the image to generate.
@@ -16,6 +16,8 @@
  * - font - The font to use for any barcode text. (1-5)
  * - bgcolor - The background color.
  * - color - The color of the barcode and text.
+ *
+ * If a parameter is not given, the default will be used.
  *
  * The style parameter defines various aspects of the style of the generated
  * image. It is a number made by adding the numbers of the styles you want. The

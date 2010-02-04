@@ -21,6 +21,9 @@ if (is_null($_REQUEST['code'])) {
 	return;
 }
 
+/**
+ * Require the barcode base class.
+ */
 require_once('components/com_barcode/includes/barcode.php');
 $style = 0;
 
@@ -50,23 +53,38 @@ if (!$style)
 
 switch ($type) {
 	case 'I25':
+		/**
+		 * I25 barcode class.
+		 */
 		require_once('components/com_barcode/includes/i25object.php');
 		$obj = new I25Object($width, $height, $style, $code);
 		break;
 	case 'C128A':
+		/**
+		 * C128A barcode class.
+		 */
 		require_once('components/com_barcode/includes/c128aobject.php');
 		$obj = new C128AObject($width, $height, $style, $code);
 		break;
 	case 'C128B':
+		/**
+		 * C128B barcode class.
+		 */
 		require_once('components/com_barcode/includes/c128bobject.php');
 		$obj = new C128BObject($width, $height, $style, $code);
 		break;
 	case 'C128C':
+		/**
+		 * C128C barcode class.
+		 */
 		require_once('components/com_barcode/includes/c128cobject.php');
 		$obj = new C128CObject($width, $height, $style, $code);
 		break;
 	case 'C39':
 	default:
+		/**
+		 * C39 barcode class.
+		 */
 		require_once('components/com_barcode/includes/c39object.php');
 		$obj = new C39Object($width, $height, $style, $code);
 		break;

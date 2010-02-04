@@ -20,7 +20,13 @@ $file = 'media/pdf/'.clean_filename($_REQUEST['file']);
 $pdfpage = intval($_REQUEST['page']) - 1;
 
 /* Determine PDF's size */
+/**
+ * Require the TCPDF class.
+ */
 require_once('components/com_pdf/includes/tcpdf/tcpdf.php');
+/**
+ * Require the FPDI class.
+ */
 require_once('components/com_pdf/includes/fpdi/fpdi.php');
 
 $pdf = new FPDI();

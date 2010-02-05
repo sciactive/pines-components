@@ -32,7 +32,7 @@ $this->note = 'Provide user details in this form.';
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 			<?php if (isset($this->entity->uid)) { ?>
-		<span>Created By: <span class="date"><?php echo $config->user_manager->get_username($this->entity->uid); ?></span></span>
+		<span>Created By: <span class="date"><?php echo $pines->user_manager->get_username($this->entity->uid); ?></span></span>
 		<br />
 			<?php } ?>
 		<span>Created On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_cdate); ?></span></span>
@@ -75,7 +75,7 @@ $this->note = 'Provide user details in this form.';
 	<div class="element">
 		<label><span class="label"><?php if (isset($this->entity->guid)) echo 'Update '; ?>Password</span>
 			<?php if (is_null($this->entity->guid)) {
-				echo ($config->com_user->empty_pw ? '<span class="note">May be blank.</span>' : '');
+				echo ($pines->com_user->empty_pw ? '<span class="note">May be blank.</span>' : '');
 			} else {
 				echo '<span class="note">Leave blank, if not changing.</span>';
 			} ?>
@@ -220,14 +220,14 @@ $this->note = 'Provide user details in this form.';
 			<label><span class="label">Primary Group</span>
 				<select class="field ui-widget-content" name="group" size="1">
 					<option value="null">-- No Primary Group --</option>
-							<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->entity->group); ?>
+							<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->entity->group); ?>
 				</select></label>
 		</div>
 		<div class="element">
 			<label><span class="label">Groups</span>
 				<span class="note">Hold Ctrl (Command on Mac) to select multiple groups.</span>
 				<select class="field ui-widget-content" name="groups[]" multiple="multiple" size="6">
-							<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->entity->groups); ?>
+							<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->entity->groups); ?>
 				</select></label>
 		</div>
 		<?php }
@@ -246,7 +246,7 @@ $this->note = 'Provide user details in this form.';
 		</label>
 	</div>
 		<?php foreach ($this->sections as $cur_section) {
-			$section_abilities = $config->ability_manager->get_abilities($cur_section);
+			$section_abilities = $pines->ability_manager->get_abilities($cur_section);
 			if ( count($section_abilities) ) { ?>
 	<div class="element"><span class="label">Abilities for <em><?php echo $cur_section; ?></em></span>
 		<div class="group">

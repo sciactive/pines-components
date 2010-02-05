@@ -28,11 +28,11 @@ class com_customer_timer extends component {
 	 * @return array An array of point and minute values the customer has used.
 	 */
 	function get_session_info(&$customer) {
-		global $config;
+		global $pines;
 		// Calculate how many minutes they've been logged in.
 		$minutes = (int) round((time() - $customer->com_customer_timer->last_login) / 60);
 		// And how many points that costs.
-		$points = $minutes * (int) $config->com_customer_timer->ppm;
+		$points = $minutes * (int) $pines->com_customer_timer->ppm;
 		return array('minutes' => $minutes, 'points' => $points);
 	}
 
@@ -44,7 +44,7 @@ class com_customer_timer extends component {
 	 * @return bool True on success, false on failure.
 	 */
 	function login_logout($id, $password) {
-		global $config;
+		global $pines;
 		if (!is_numeric($id)) {
 			display_notice('Please provide a customer ID.');
 			return false;
@@ -68,7 +68,7 @@ class com_customer_timer extends component {
 		}
 		if ($customer->points <= 0) {
 			display_notice('Your account balance has reached zero.');
-			if (!$config->com_customer_timer->debtlogin)
+			if (!$pines->com_customer_timer->debtlogin)
 				return false;
 		}
 		return $logins->login($customer);

@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_customer_timer/forcelogout') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_customer_timer', 'forcelogout', null, false));
 
-$config->page->override = true;
+$pines->page->override = true;
 
 $return = false;
 
@@ -29,6 +29,6 @@ if (isset($_REQUEST['id'])) {
 	}
 }
 
-$config->page->override_doc(json_encode($return));
+$pines->page->override_doc(json_encode($return));
 
 ?>

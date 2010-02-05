@@ -16,15 +16,15 @@ if ( !isset($_REQUEST['mail_id']) ) {
 	return false;
 }
 
-$mail = $config->entity_manager->get_entity(array('guid' => $_REQUEST['mail_id'], 'tags' => array('com_newsletter', 'mail')));
+$mail = $pines->entity_manager->get_entity(array('guid' => $_REQUEST['mail_id'], 'tags' => array('com_newsletter', 'mail')));
 if ( is_null($mail) ) {
 	display_error('Invalid mail!');
 	return false;
 }
 
-$config->page->override = true;
+$pines->page->override = true;
 
-$config->page->override_doc('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+$pines->page->override_doc('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 

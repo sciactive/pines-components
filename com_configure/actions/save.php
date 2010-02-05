@@ -14,12 +14,12 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_configure/edit') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_configure', 'edit', $_GET, false));
 
-if (!array_key_exists($_REQUEST['component'], $config->configurator->config_files)) {
+if (!array_key_exists($_REQUEST['component'], $pines->configurator->config_files)) {
 	display_error('Given component either does not exist, or has no configuration file!');
 	return;
 }
 
-if (!($cur_config_array = $config->configurator->get_config_array($config->configurator->config_files[$_REQUEST['component']]))) return;
+if (!($cur_config_array = $pines->configurator->get_config_array($pines->configurator->config_files[$_REQUEST['component']]))) return;
 
 foreach ($cur_config_array as $cur_key => $cur_var) {
 	if (is_bool($cur_var['value'])) {
@@ -35,7 +35,7 @@ foreach ($cur_config_array as $cur_key => $cur_var) {
 	}
 }
 
-$config->configurator->put_config_array($cur_config_array, $config->configurator->config_files[$_REQUEST['component']]);
+$pines->configurator->put_config_array($cur_config_array, $pines->configurator->config_files[$_REQUEST['component']]);
 
 header('Location: '.pines_url('com_configure', 'list', null, false));
 

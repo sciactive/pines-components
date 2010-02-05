@@ -66,7 +66,7 @@ if ($company->address_type == 'international' && empty($company->address_interna
 	display_notice('Please specify an address.');
 	return;
 }
-if ($config->com_customer->global_customers)
+if ($pines->com_customer->global_customers)
 	$company->ac->other = 1;
 
 if ($company->save()) {
@@ -75,5 +75,5 @@ if ($company->save()) {
 	display_error('Error saving company. Do you have permission?');
 }
 
-$config->run_customer->list_companies();
+$pines->run_customer->list_companies();
 ?>

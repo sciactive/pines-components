@@ -11,15 +11,15 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$config->ability_manager->add('com_customer', 'listcustomers', 'List Customers', 'User can see customers.');
-$config->ability_manager->add('com_customer', 'newcustomer', 'Create Customers', 'User can create new customers.');
-$config->ability_manager->add('com_customer', 'editcustomer', 'Edit Customers', 'User can edit current customers.');
-$config->ability_manager->add('com_customer', 'deletecustomer', 'Delete Customers', 'User can delete current customers.');
-$config->ability_manager->add('com_customer', 'listcompanies', 'List Companies', 'User can see companies.');
-$config->ability_manager->add('com_customer', 'newcompany', 'Create Companies', 'User can create new companies.');
-$config->ability_manager->add('com_customer', 'editcompany', 'Edit Companies', 'User can edit current companies.');
-$config->ability_manager->add('com_customer', 'deletecompany', 'Delete Companies', 'User can delete current companies.');
-$config->ability_manager->add('com_customer', 'adjustpoints', 'Adjust Points', 'User can adjust customer\'s points.');
-$config->ability_manager->add('com_customer', 'resetpoints', 'Reset Points', 'User can reset customer\'s points. (Including peak and total.)');
+$pines->ability_manager->add('com_customer', 'listcustomers', 'List Customers', 'User can see customers.');
+$pines->ability_manager->add('com_customer', 'newcustomer', 'Create Customers', 'User can create new customers.');
+$pines->ability_manager->add('com_customer', 'editcustomer', 'Edit Customers', 'User can edit current customers.');
+$pines->ability_manager->add('com_customer', 'deletecustomer', 'Delete Customers', 'User can delete current customers.');
+$pines->ability_manager->add('com_customer', 'listcompanies', 'List Companies', 'User can see companies.');
+$pines->ability_manager->add('com_customer', 'newcompany', 'Create Companies', 'User can create new companies.');
+$pines->ability_manager->add('com_customer', 'editcompany', 'Edit Companies', 'User can edit current companies.');
+$pines->ability_manager->add('com_customer', 'deletecompany', 'Delete Companies', 'User can delete current companies.');
+$pines->ability_manager->add('com_customer', 'adjustpoints', 'Adjust Points', 'User can adjust customer\'s points.');
+$pines->ability_manager->add('com_customer', 'resetpoints', 'Reset Points', 'User can reset customer\'s points. (Including peak and total.)');
 
 ?>

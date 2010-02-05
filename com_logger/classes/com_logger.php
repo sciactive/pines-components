@@ -30,14 +30,14 @@ class com_logger extends component {
 
 	/**
 	 * Used to store the log file location, since it may not be available as
-	 * the system is destroying $config.
+	 * the system is destroying $pines.
 	 * @var string
 	 */
 	var $log_file = '';
 
 	function __construct() {
-		global $config;
-		$this->log_file = $config->com_logger->path;
+		global $pines;
+		$this->log_file = $pines->com_logger->path;
 	}
 
 	/**
@@ -55,8 +55,8 @@ class com_logger extends component {
 	 * to help diagnose problems with a component.
 	 */
 	function hook() {
-		global $config;
-		$config->hook->add_callback('all', -1, 'com_logger_hook_log');
+		global $pines;
+		$pines->hook->add_callback('all', -1, 'com_logger_hook_log');
 	}
 
 	/**
@@ -67,27 +67,27 @@ class com_logger extends component {
 	 * @return bool True on success, false on error.
 	 */
 	function log($message, $level = 'info') {
-		global $config;
+		global $pines;
 		$date = date('c');
 		$user = is_object($_SESSION['user']) ? $_SESSION['user']->username.' ('.$_SESSION['user_id'].')' : $_SERVER['REMOTE_ADDR'];
-		$location = $config->component.', '.$config->action;
+		$location = $pines->component.', '.$pines->action;
 		switch ($level) {
 			case 'info':
-				if (!in_array($config->com_logger->level, array('debug', 'info'))) break;
+				if (!in_array($pines->com_logger->level, array('debug', 'info'))) break;
 			case 'notice':
-				if (!in_array($config->com_logger->level, array('debug', 'info', 'notice'))) break;
+				if (!in_array($pines->com_logger->level, array('debug', 'info', 'notice'))) break;
 				if (strlen($this->tmp_log)) $this->tmp_log .= "\n";
 				$this->tmp_log .= "$date: $level: $location: $user: $message";
 				break;
 			case 'debug':
 				// Debug logs should be written immediately, since the system may halt at any time. ;)
-				if (!in_array($config->com_logger->level, array('debug'))) break;
+				if (!in_array($pines->com_logger->level, array('debug'))) break;
 			case 'warning':
-				if (!in_array($config->com_logger->level, array('debug', 'info', 'notice', 'warning'))) break;
+				if (!in_array($pines->com_logger->level, array('debug', 'info', 'notice', 'warning'))) break;
 			case 'error':
-				if (!in_array($config->com_logger->level, array('debug', 'info', 'notice', 'warning', 'error'))) break;
+				if (!in_array($pines->com_logger->level, array('debug', 'info', 'notice', 'warning', 'error'))) break;
 			case 'fatal':
-				if (!in_array($config->com_logger->level, array('debug', 'info', 'notice', 'warning', 'error', 'fatal'))) break;
+				if (!in_array($pines->com_logger->level, array('debug', 'info', 'notice', 'warning', 'error', 'fatal'))) break;
 				if (strlen($this->tmp_log)) $this->tmp_log .= "\n";
 				$message = $this->tmp_log . "$date: $level: $location: $user: $message";
 				$this->tmp_log = '';

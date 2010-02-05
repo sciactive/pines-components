@@ -13,15 +13,15 @@ defined('P_RUN') or die('Direct access prohibited');
 
 /**
  * The user manager.
- * @global com_user $config->user_manager
+ * @global com_user $pines->user_manager
  */
-$config->user_manager = 'com_user';
+$pines->user_manager = 'com_user';
 
 /**
  * The ability manager.
- * @global abilities $config->ability_manager
+ * @global abilities $pines->ability_manager
  */
-$config->ability_manager = 'abilities';
+$pines->ability_manager = 'abilities';
 
 /**
  * Filter entities being deleted for user permissions.
@@ -30,10 +30,10 @@ $config->ability_manager = 'abilities';
  * @return array|bool An array of an entity or guid, or false on failure.
  */
 function com_user_check_permissions_delete($array) {
-	global $config;
+	global $pines;
 	$entity = $array[0];
 	if (is_int($entity))
-		$entity = $config->entity_manager->get_entity($array[0]);
+		$entity = $pines->entity_manager->get_entity($array[0]);
 	if (!is_object($entity))
 		return false;
 	// Test for permissions.
@@ -51,7 +51,7 @@ function com_user_check_permissions_delete($array) {
  * @return array An array of either an entity or another array of entities.
  */
 function com_user_check_permissions_return($array) {
-	global $config;
+	global $pines;
 	if (is_array($array[0])) {
 		$is_array = true;
 		$entities = $array[0];
@@ -76,7 +76,7 @@ function com_user_check_permissions_return($array) {
  * @return array|bool An array of an entity or false on failure.
  */
 function com_user_check_permissions_save($array) {
-	global $config;
+	global $pines;
 	$entity = $array[0];
 	if (!is_object($entity))
 		return false;
@@ -202,15 +202,15 @@ function com_user_add_access($array) {
 	return $array;
 }
 
-foreach (array('$config->entity_manager->get_entity', '$config->entity_manager->get_entities') as $cur_hook) {
-	$config->hook->add_callback($cur_hook, 10, 'com_user_check_permissions_return');
+foreach (array('$pines->entity_manager->get_entity', '$pines->entity_manager->get_entities') as $cur_hook) {
+	$pines->hook->add_callback($cur_hook, 10, 'com_user_check_permissions_return');
 }
 
-$config->hook->add_callback('$config->entity_manager->save_entity', -100, 'com_user_add_access');
-$config->hook->add_callback('$config->entity_manager->save_entity', -99, 'com_user_check_permissions_save');
+$pines->hook->add_callback('$pines->entity_manager->save_entity', -100, 'com_user_add_access');
+$pines->hook->add_callback('$pines->entity_manager->save_entity', -99, 'com_user_check_permissions_save');
 
-foreach (array('$config->entity_manager->delete_entity', '$config->entity_manager->delete_entity_by_id') as $cur_hook) {
-	$config->hook->add_callback($cur_hook, -99, 'com_user_check_permissions_delete');
+foreach (array('$pines->entity_manager->delete_entity', '$pines->entity_manager->delete_entity_by_id') as $cur_hook) {
+	$pines->hook->add_callback($cur_hook, -99, 'com_user_check_permissions_delete');
 }
 
 ?>

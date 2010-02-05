@@ -11,30 +11,30 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$config->page->head("<script src=\"{$config->rela_location}components/com_newsletter/js/jquery.checkboxtree.js\" type=\"text/javascript\"></script>");
-$config->page->head("<script type=\"text/javascript\">
+$pines->page->head("<script src=\"{$pines->rela_location}components/com_newsletter/js/jquery.checkboxtree.js\" type=\"text/javascript\"></script>");
+$pines->page->head("<script type=\"text/javascript\">
 jQuery(document).ready(function(){
 	jQuery(\".unorderedlisttree\").checkboxTree({
-			collapsedarrow: \"{$config->rela_location}components/com_newsletter/images/img-arrow-collapsed.gif\",
-			expandedarrow: \"{$config->rela_location}components/com_newsletter/images/img-arrow-expanded.gif\",
-			blankarrow: \"{$config->rela_location}components/com_newsletter/images/img-arrow-blank.gif\",
+			collapsedarrow: \"{$pines->rela_location}components/com_newsletter/images/img-arrow-collapsed.gif\",
+			expandedarrow: \"{$pines->rela_location}components/com_newsletter/images/img-arrow-expanded.gif\",
+			blankarrow: \"{$pines->rela_location}components/com_newsletter/images/img-arrow-blank.gif\",
 			checkchildren: true
 	});
 });
 </script>
 ");
-$config->page->head("<link href=\"{$config->rela_location}components/com_newsletter/css/checktree.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />");
+$pines->page->head("<link href=\"{$pines->rela_location}components/com_newsletter/css/checktree.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />");
 ?>
 <form class="pform" method="post" action="<?php echo pines_url('com_newsletter', 'send'); ?>">
 <fieldset>
 	<legend>Sending <?php echo $this->mail->name; ?></legend>
 	<div class="element">
 		<label><span class="label">From Email</span>
-		<input class="field ui-widget-content" type="text" name="from" size="24" value="<?php echo htmlentities($config->com_newsletter->default_from); ?>" /></label>
+		<input class="field ui-widget-content" type="text" name="from" size="24" value="<?php echo htmlentities($pines->com_newsletter->default_from); ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Reply to Email</span>
-		<input class="field ui-widget-content" type="text" name="replyto" size="24" value="<?php echo htmlentities($config->com_newsletter->default_reply_to); ?>" /></label>
+		<input class="field ui-widget-content" type="text" name="replyto" size="24" value="<?php echo htmlentities($pines->com_newsletter->default_reply_to); ?>" /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Subject</span>
@@ -46,7 +46,7 @@ $config->page->head("<link href=\"{$config->rela_location}components/com_newslet
 		<div class="group">
 		<?php
 		$group_select_menu = new menu;
-		$config->user_manager->get_group_menu($group_select_menu);
+		$pines->user_manager->get_group_menu($group_select_menu);
 		echo $group_select_menu->render(array('<ul class="unorderedlisttree">', '</ul>'),
 				array('<li>', '</li>'),
 				array('<ul>', '</ul>'),
@@ -54,7 +54,7 @@ $config->page->head("<link href=\"{$config->rela_location}components/com_newslet
 				"<input class=\"field\" type=\"checkbox\" name=\"group[]\" value=\"#DATA#\" /><label>#NAME#</label>\n",
 				'<hr style="visibility: hidden; clear: both;" />');
 		/*$sendprep->content(
-			$config->user_manager->get_group_tree("<label><input type="checkbox" name="#guid#" />#mark##name# [#groupname#]</label>\n", $config->user_manager->get_group_array())
+			$pines->user_manager->get_group_tree("<label><input type="checkbox" name="#guid#" />#mark##name# [#groupname#]</label>\n", $pines->user_manager->get_group_array())
 		); */
 		?>
 		</div>

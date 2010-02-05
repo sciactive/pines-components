@@ -31,8 +31,8 @@ class com_customer_timer_login_tracker extends entity {
 		$this->add_tag('com_customer_timer', 'logins');
 		$this->ac = (object) array('user' => 3, 'group' => 3, 'other' => 3);
 		$this->customers = array();
-		global $config;
-		$entities = $config->entity_manager->get_entities(array('tags' => array('com_customer_timer', 'logins')));
+		global $pines;
+		$entities = $pines->entity_manager->get_entities(array('tags' => array('com_customer_timer', 'logins')));
 		if (empty($entities))
 			return;
 		if (($count = count($entities)) > 1) {
@@ -49,11 +49,11 @@ class com_customer_timer_login_tracker extends entity {
 	 * Create a new instance.
 	 */
 	public static function factory() {
-		global $config;
+		global $pines;
 		$class = get_class();
 		$args = func_get_args();
 		$entity = new $class($args[0]);
-		$config->hook->hook_object($entity, $class.'->', false);
+		$pines->hook->hook_object($entity, $class.'->', false);
 		return $entity;
 	}
 
@@ -100,7 +100,7 @@ class com_customer_timer_login_tracker extends entity {
 	 * @return bool True on success, false on failure.
 	 */
 	function logout(&$customer) {
-		global $config;
+		global $pines;
 		// Remove the customer from the login tracker.
 		$found = false;
 		foreach ($this->customers as $key => &$cur_customer) {
@@ -112,7 +112,7 @@ class com_customer_timer_login_tracker extends entity {
 		if (!$found)
 			return false;
 		$this->save();
-		$session_info = $config->run_customer_timer->get_session_info($customer);
+		$session_info = $pines->run_customer_timer->get_session_info($customer);
 		// Take points off the customer's account.
 		$customer->adjust_points(-1 * $session_info['points']);
 		$customer->save();

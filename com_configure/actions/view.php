@@ -14,11 +14,11 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_configure/view') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_configure', 'view', $_GET, false));
 
-if (!array_key_exists($_REQUEST['component'], $config->configurator->config_files)) {
+if (!array_key_exists($_REQUEST['component'], $pines->configurator->config_files)) {
 	display_error('Given component either does not exist, or has no configuration file!');
 	return;
 }
 $list = new module('com_configure', 'view', 'content');
 $list->req_component = htmlentities($_REQUEST['component']);
-$list->config = $config->configurator->get_config_array($config->configurator->config_files[$_REQUEST['component']]);
+$list->config = $pines->configurator->get_config_array($pines->configurator->config_files[$_REQUEST['component']]);
 ?>

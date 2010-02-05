@@ -21,7 +21,7 @@ if ( isset($_REQUEST['id']) ) {
 	$sale = com_sales_sale::factory();
 }
 
-if ($config->run_sales->com_customer && $sale->status != 'invoiced' && $sale->status != 'paid') {
+if ($pines->run_sales->com_customer && $sale->status != 'invoiced' && $sale->status != 'paid') {
 	$sale->customer = null;
 	if (preg_match('/^\d+/', $_REQUEST['customer'])) {
 		$sale->customer = com_customer_customer::factory(intval($_REQUEST['customer']));
@@ -30,8 +30,8 @@ if ($config->run_sales->com_customer && $sale->status != 'invoiced' && $sale->st
 	}
 }
 
-$config->page->override = true;
-$config->run_sales->call_payment_process(array(
+$pines->page->override = true;
+$pines->run_sales->call_payment_process(array(
 	'action' => 'request',
 	'name' => $_REQUEST['name'],
 	'sale' => $sale

@@ -43,14 +43,14 @@ if (empty($shipper->name)) {
 	display_notice('Please specify a name.');
 	return;
 }
-$test = $config->entity_manager->get_entity(array('data' => array('name' => $shipper->name), 'tags' => array('com_sales', 'shipper'), 'class' => com_sales_shipper));
+$test = $pines->entity_manager->get_entity(array('data' => array('name' => $shipper->name), 'tags' => array('com_sales', 'shipper'), 'class' => com_sales_shipper));
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$shipper->print_form();
 	display_notice('There is already a shipper with that name. Please choose a different name.');
 	return;
 }
 
-if ($config->com_sales->global_shippers)
+if ($pines->com_sales->global_shippers)
 	$shipper->ac->other = 1;
 
 if ($shipper->save()) {
@@ -59,5 +59,5 @@ if ($shipper->save()) {
 	display_error('Error saving shipper. Do you have permission?');
 }
 
-$config->run_sales->list_shippers();
+$pines->run_sales->list_shippers();
 ?>

@@ -74,7 +74,7 @@ $this->title = 'Products';
 			<th>RMA After (days)</th>
 			<th>Serialized</th>
 			<th>Discountable</th>
-			<?php if ($config->run_sales->com_customer) { ?>
+			<?php if ($pines->run_sales->com_customer) { ?>
 			<th>Require Customer</th>
 			<?php } ?>
 			<th>Hide on Invoice</th>
@@ -99,7 +99,7 @@ $this->title = 'Products';
 			<td><?php echo $product->rma_after; ?></td>
 			<td><?php echo ($product->serialized ? 'Yes' : 'No'); ?></td>
 			<td><?php echo ($product->discountable ? 'Yes' : 'No'); ?></td>
-			<?php if ($config->run_sales->com_customer) { ?>
+			<?php if ($pines->run_sales->com_customer) { ?>
 			<td><?php echo ($product->require_customer ? 'Yes' : 'No'); ?></td>
 			<?php } ?>
 			<td><?php echo ($product->hide_on_invoice ? 'Yes' : 'No'); ?></td>

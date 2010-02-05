@@ -26,5 +26,5 @@ if (empty($failed_deletes)) {
 	display_error('Could not delete employees with given IDs: '.$failed_deletes);
 }
 
-$config->run_hrm->list_employees();
+$pines->run_hrm->list_employees();
 ?>

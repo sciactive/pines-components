@@ -37,7 +37,7 @@ if (empty($payment_type->name)) {
 	display_notice('Please specify a name.');
 	return;
 }
-$test = $config->entity_manager->get_entity(array('data' => array('name' => $payment_type->name), 'tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));
+$test = $pines->entity_manager->get_entity(array('data' => array('name' => $payment_type->name), 'tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$payment_type->print_form();
 	display_notice('There is already a payment type with that name. Please choose a different name.');
@@ -53,17 +53,17 @@ if (empty($payment_type->minimum))
 if (empty($payment_type->maximum))
 	$payment_type->maximum = null;
 
-if ($config->com_sales->global_payment_types)
+if ($pines->com_sales->global_payment_types)
 	$payment_type->ac->other = 1;
 
 if ($payment_type->change_type) {
-	$change_type = $config->entity_manager->get_entity(array('data' => array('change_type' => true), 'tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));
+	$change_type = $pines->entity_manager->get_entity(array('data' => array('change_type' => true), 'tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));
 	if (isset($change_type) && $change_type->guid != $_REQUEST['id']) {
 		$change_type->change_type = false;
 		if ($change_type->save()) {
 			display_notice("Change type changed from [{$change_type->name}] to [{$payment_type->name}].");
 		} else {
-			$module = $config->run_sales->print_payment_type_form('com_sales', 'savepaymenttype');
+			$module = $pines->run_sales->print_payment_type_form('com_sales', 'savepaymenttype');
 			$module->entity = $payment_type;
 			display_error("There was an error while changing change type from {$change_type->name}. Do you have permission to edit the current change type?");
 			return;
@@ -77,5 +77,5 @@ if ($payment_type->save()) {
 	display_error('Error saving payment type. Do you have permission?');
 }
 
-$config->run_sales->list_payment_types();
+$pines->run_sales->list_payment_types();
 ?>

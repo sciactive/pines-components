@@ -29,8 +29,8 @@ class com_sales_sale extends entity {
 		$this->products = array();
 		$this->payments = array();
 		if ($id > 0) {
-			global $config;
-			$entity = $config->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
+			global $pines;
+			$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
 			if (is_null($entity))
 				return;
 			$this->guid = $entity->guid;
@@ -43,11 +43,11 @@ class com_sales_sale extends entity {
 	 * Create a new instance.
 	 */
 	public static function factory() {
-		global $config;
+		global $pines;
 		$class = get_class();
 		$args = func_get_args();
 		$entity = new $class($args[0]);
-		$config->hook->hook_object($entity, $class.'->', false);
+		$pines->hook->hook_object($entity, $class.'->', false);
 		return $entity;
 	}
 
@@ -67,12 +67,12 @@ class com_sales_sale extends entity {
 	 * @return module The form's module.
 	 */
 	public function print_form() {
-		global $config;
+		global $pines;
 		$pgrid = new module('system', 'pgrid.default', 'head');
 		$pgrid->icons = true;
 		$module = new module('com_sales', 'form_sale', 'content');
 		$module->entity = $this;
-		$module->tax_fees = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'tax_fee'), 'class' => com_sales_tax_fee));
+		$module->tax_fees = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'tax_fee'), 'class' => com_sales_tax_fee));
 		if (!is_array($module->tax_fees)) {
 			$module->tax_fees = array();
 		}
@@ -81,7 +81,7 @@ class com_sales_sale extends entity {
 				unset($module->tax_fees[$key]);
 			}
 		}
-		$module->payment_types = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));
+		$module->payment_types = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));
 		if (!is_array($module->payment_types)) {
 			$module->payment_types = array();
 		}
@@ -109,7 +109,7 @@ class com_sales_sale extends entity {
 	 * Email a receipt of the sale to the customer's email.
 	 */
 	function email_receipt() {
-		global $config;
+		global $pines;
 		if (!$this->customer->email)
 			return;
 		$module = new module('com_sales', 'receipt_sale', 'content');
@@ -120,7 +120,7 @@ class com_sales_sale extends entity {
 		$content .= $module->render();
 		$module->detach();
 
-		$mail = com_mailer_mail::factory($config->com_sales->email_from_address, $this->customer->email, 'Receipt for sale from Pines', $content);
+		$mail = com_mailer_mail::factory($pines->com_sales->email_from_address, $this->customer->email, 'Receipt for sale from Pines', $content);
 		$mail->send();
 	}
 
@@ -130,7 +130,7 @@ class com_sales_sale extends entity {
 	 * @return bool True on success, false on failure.
 	 */
 	public function approve_payments() {
-		global $config;
+		global $pines;
 		$return = true;
 		// Go through each payment, and process its approval.
 		foreach ($this->payments as &$cur_payment) {
@@ -149,7 +149,7 @@ class com_sales_sale extends entity {
 				continue;
 			}
 			// Call the payment processing for approval.
-			$config->run_sales->call_payment_process(array(
+			$pines->run_sales->call_payment_process(array(
 				'action' => 'approve',
 				'name' => $cur_payment['entity']->processing_type,
 				'payment' => &$cur_payment,
@@ -170,7 +170,7 @@ class com_sales_sale extends entity {
 	 * @return bool True on success, false on failure.
 	 */
 	public function tender_payments() {
-		global $config;
+		global $pines;
 		if (!is_array($this->payments))
 			$this->payments = array();
 		if (!is_numeric($this->total))
@@ -190,7 +190,7 @@ class com_sales_sale extends entity {
 				continue;
 			}
 			// Call the payment processing.
-			$config->run_sales->call_payment_process(array(
+			$pines->run_sales->call_payment_process(array(
 				'action' => 'tender',
 				'name' => $cur_payment['entity']->processing_type,
 				'payment' => &$cur_payment,
@@ -241,7 +241,7 @@ class com_sales_sale extends entity {
 	 * @return bool True on success, false on any failure.
 	 */
 	public function complete() {
-		global $config;
+		global $pines;
 		if (!is_array($this->payments))
 			return false;
 		// Keep track of the whole process.
@@ -259,7 +259,7 @@ class com_sales_sale extends entity {
 			return false;
 		}
 		if ($this->change > 0.00) {
-			$change_type = $config->entity_manager->get_entity(array('data' => array('change_type' => true), 'tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));
+			$change_type = $pines->entity_manager->get_entity(array('data' => array('change_type' => true), 'tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));
 			if (is_null($change_type)) {
 				display_notice('Change is due to be given, but no payment type has been set to give change.');
 				return false;
@@ -268,7 +268,7 @@ class com_sales_sale extends entity {
 
 		// Process the change.
 		if (!$this->change_given && $this->change > 0.00) {
-			$config->run_sales->call_payment_process(array(
+			$pines->run_sales->call_payment_process(array(
 				'action' => 'change',
 				'name' => $change_type->processing_type,
 				'sale' => &$this
@@ -325,7 +325,7 @@ class com_sales_sale extends entity {
 	 * @return bool True on success, false on any failure.
 	 */
 	public function invoice() {
-		global $config;
+		global $pines;
 		if (!is_array($this->products)) {
 			display_notice('Sale has no products');
 			return false;
@@ -333,10 +333,10 @@ class com_sales_sale extends entity {
 		// Keep track of the whole process.
 		$return = true;
 		// These will be searched through to match products to stock entries.
-		$stock_entries = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'stock'), 'class' => com_sales_stock));
+		$stock_entries = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'stock'), 'class' => com_sales_stock));
 		if (!is_array($stock_entries))
 			$stock_entries = array();
-		if ($config->run_sales->com_customer) {
+		if ($pines->run_sales->com_customer) {
 			foreach ($this->products as &$cur_product) {
 				if (!$cur_product['entity'] || ($cur_product['entity']->require_customer && !$this->customer)) {
 					display_notice('One of the products on this sale requires a customer. Please select a customer for this sale before invoicing.');
@@ -394,7 +394,7 @@ class com_sales_sale extends entity {
 			// Call product actions for all products without stock entries.
 			$i = $cur_product['quantity'] - count($cur_product['stock_entities']);
 			if ($i > 0) {
-				$config->run_sales->call_product_actions(array(
+				$pines->run_sales->call_product_actions(array(
 					'type' => 'sold',
 					'product' => $cur_product['entity'],
 					'sale' => $this
@@ -408,7 +408,7 @@ class com_sales_sale extends entity {
 					} else {
 						$return = $return && $cur_stock->remove($this, 'sold_pending', $cur_stock->location) && $cur_stock->save();
 					}
-					$config->run_sales->call_product_actions(array(
+					$pines->run_sales->call_product_actions(array(
 						'type' => 'sold',
 						'product' => $cur_product['entity'],
 						'stock_entry' => $cur_stock,
@@ -446,11 +446,11 @@ class com_sales_sale extends entity {
 	 * @return bool True on success, false on failure.
 	 */
 	public function total() {
-		global $config;
+		global $pines;
 		if (!is_array($this->products))
 			return false;
 		// We need a list of taxes and fees.
-		$tax_fees = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'tax_fee')));
+		$tax_fees = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'tax_fee')));
 		if (!is_array($tax_fees)) {
 			$tax_fees = array();
 		}
@@ -489,7 +489,7 @@ class com_sales_sale extends entity {
 					$discount_price = $price - ($price * ($discount / 100));
 				}
 				// Check that the discount doesn't lower the item's price below the floor.
-				if ($cur_product['entity']->floor && $config->run_sales->round($discount_price, $config->com_sales->dec) < $config->run_sales->round($cur_product['entity']->floor, $config->com_sales->dec)) {
+				if ($cur_product['entity']->floor && $pines->run_sales->round($discount_price, $pines->com_sales->dec) < $pines->run_sales->round($cur_product['entity']->floor, $pines->com_sales->dec)) {
 					display_notice("The discount on {$cur_product['entity']->name} lowers the product's price below the limit. The discount was removed.");
 					$discount = $cur_product['discount'] = '';
 				} else {
@@ -519,15 +519,15 @@ class com_sales_sale extends entity {
 			}
 			$item_fees += (float) $cur_item_fees;
 			$subtotal += (float) $line_total;
-			$cur_product['line_total'] = $config->run_sales->round($line_total, $config->com_sales->dec);
-			$cur_product['fees'] = $config->run_sales->round($cur_item_fees, $config->com_sales->dec);
+			$cur_product['line_total'] = $pines->run_sales->round($line_total, $pines->com_sales->dec);
+			$cur_product['fees'] = $pines->run_sales->round($cur_item_fees, $pines->com_sales->dec);
 		}
 		// The total can now be calculated.
 		$total = $subtotal + $item_fees + $taxes;
-		$this->subtotal = $config->run_sales->round($subtotal, $config->com_sales->dec);
-		$this->item_fees = $config->run_sales->round($item_fees, $config->com_sales->dec);
-		$this->taxes = $config->run_sales->round($taxes, $config->com_sales->dec);
-		$this->total = $config->run_sales->round($total, $config->com_sales->dec);
+		$this->subtotal = $pines->run_sales->round($subtotal, $pines->com_sales->dec);
+		$this->item_fees = $pines->run_sales->round($item_fees, $pines->com_sales->dec);
+		$this->taxes = $pines->run_sales->round($taxes, $pines->com_sales->dec);
+		$this->total = $pines->run_sales->round($total, $pines->com_sales->dec);
 		return true;
 	}
 }

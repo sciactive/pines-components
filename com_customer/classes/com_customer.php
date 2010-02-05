@@ -33,15 +33,15 @@ class com_customer extends component {
 	 * Places the result in $this->com_sales.
 	 */
 	function __construct() {
-		global $config;
-		$this->com_sales = $config->depend->check('component', 'com_sales');
+		global $pines;
+		$this->com_sales = $pines->depend->check('component', 'com_sales');
 	}
 
 	/**
 	 * Creates and attaches a module which lists companies.
 	 */
 	function list_companies() {
-		global $config;
+		global $pines;
 
 		$pgrid = new module('system', 'pgrid.default', 'head');
 		$pgrid->icons = true;
@@ -50,7 +50,7 @@ class com_customer extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_customer/list_companies'];
 
-		$module->companies = $config->entity_manager->get_entities(array('tags' => array('com_customer', 'company'), 'class' => com_customer_company));
+		$module->companies = $pines->entity_manager->get_entities(array('tags' => array('com_customer', 'company'), 'class' => com_customer_company));
 
 		if ( empty($module->companies) ) {
 			$pgrid->detach();
@@ -63,7 +63,7 @@ class com_customer extends component {
 	 * Creates and attaches a module which lists customers.
 	 */
 	function list_customers() {
-		global $config;
+		global $pines;
 
 		$pgrid = new module('system', 'pgrid.default', 'head');
 		$pgrid->icons = true;
@@ -72,7 +72,7 @@ class com_customer extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_customer/list_customers'];
 
-		$module->customers = $config->entity_manager->get_entities(array('tags' => array('com_customer', 'customer'), 'class' => com_customer_customer));
+		$module->customers = $pines->entity_manager->get_entities(array('tags' => array('com_customer', 'customer'), 'class' => com_customer_customer));
 
 		if ( empty($module->customers) ) {
 			$pgrid->detach();
@@ -87,8 +87,8 @@ class com_customer extends component {
 	 * @param array $array The details array.
 	 */
 	function product_action_add_points($array) {
-		global $config;
-		foreach(explode(',', $config->com_customer->pointvalues) as $cur_value) {
+		global $pines;
+		foreach(explode(',', $pines->com_customer->pointvalues) as $cur_value) {
 			if (!is_numeric($cur_value))
 				continue;
 			$cur_value = (int) $cur_value;

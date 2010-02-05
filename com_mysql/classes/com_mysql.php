@@ -68,15 +68,15 @@ class com_mysql extends component {
 	 * @return bool Whether this instance is connected to a MySQL database after the method has run.
 	 */
 	function connect($host = null, $user = null, $password = null, $database = null) {
-		global $config;
+		global $pines;
 		/**
 		 * If something changes the host, it could reveal the user and password.
 		 */
 		if (is_null($host)) {
-			$host = $config->com_mysql->host;
-			if (is_null($user)) $user = $config->com_mysql->user;
-			if (is_null($password)) $password = $config->com_mysql->password;
-			if (is_null($database)) $database = $config->com_mysql->database;
+			$host = $pines->com_mysql->host;
+			if (is_null($user)) $user = $pines->com_mysql->user;
+			if (is_null($password)) $password = $pines->com_mysql->password;
+			if (is_null($database)) $database = $pines->com_mysql->database;
 		}
 		// Connecting, selecting database
 		if (!$this->connected) {

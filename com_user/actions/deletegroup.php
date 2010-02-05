@@ -26,5 +26,5 @@ if (empty($failed_deletes)) {
 	display_error('Could not delete groups with given IDs: '.$failed_deletes);
 }
 
-$config->user_manager->list_groups();
+$pines->user_manager->list_groups();
 ?>

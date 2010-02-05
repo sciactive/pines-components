@@ -11,9 +11,9 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( isset($config->ability_manager) ) {
-	$config->ability_manager->add('com_configure', 'edit', 'Edit Configuration', 'Let the user change (and see) configuration settings.');
-	$config->ability_manager->add('com_configure', 'view', 'View Configuration', 'Let the user see current configuration settings.');
+if ( isset($pines->ability_manager) ) {
+	$pines->ability_manager->add('com_configure', 'edit', 'Edit Configuration', 'Let the user change (and see) configuration settings.');
+	$pines->ability_manager->add('com_configure', 'view', 'View Configuration', 'Let the user see current configuration settings.');
 }
 
 ?>

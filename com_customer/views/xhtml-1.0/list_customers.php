@@ -25,7 +25,7 @@ $this->title = 'Customers';
 				{type: 'button', text: 'New', extra_class: 'icon picon_16x16_actions_document-new', selection_optional: true, url: '<?php echo pines_url('com_customer', 'editcustomer'); ?>'},
 				<?php } if (gatekeeper('com_customer/editcustomer')) { ?>
 				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo pines_url('com_customer', 'editcustomer', array('id' => '#title#')); ?>'},
-				<?php } if ($config->com_customer->resetpoints && gatekeeper('com_customer/resetpoints')) { ?>
+				<?php } if ($pines->com_customer->resetpoints && gatekeeper('com_customer/resetpoints')) { ?>
 				{type: 'button', text: 'Reset Points', extra_class: 'icon picon_16x16_actions_edit-clear', multi_select: true, url: '<?php echo pines_url('com_customer', 'resetpoints', array('id' => '#title#')); ?>', delimiter: ','},
 				<?php } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'icon picon_16x16_actions_mail-message-new', multi_select: true, url: 'mailto:#col_2#', delimiter: ','},

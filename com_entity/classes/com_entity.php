@@ -40,12 +40,12 @@ class com_entity extends component {
 	 * @return bool True on success, false on failure.
 	 */
 	public function delete_entity_by_id($guid) {
-		global $config;
+		global $pines;
 		$query = sprintf("DELETE e, d FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid`=d.`guid` WHERE e.`guid`=%u;",
-			$config->com_mysql->prefix,
-			$config->com_mysql->prefix,
+			$pines->com_mysql->prefix,
+			$pines->com_mysql->prefix,
 			(int) $guid);
-		if ( !(mysql_query($query, $config->db_manager->link)) ) {
+		if ( !(mysql_query($query, $pines->db_manager->link)) ) {
 			if (function_exists('display_error'))
 				display_error('Query failed: ' . mysql_error());
 			return false;
@@ -120,7 +120,7 @@ class com_entity extends component {
 	 * @return array|null An array of entities, or null on failure.
 	 */
 	public function get_entities($options = array()) {
-		global $config;
+		global $pines;
 		$entities = array();
 		$query_parts = array();
 		$class = isset($options['class']) ? $options['class'] : entity;
@@ -146,14 +146,14 @@ class com_entity extends component {
 					foreach ($option as $cur_tag) {
 						if ( $cur_query )
 							$cur_query .= ' AND ';
-						$cur_query .= 'e.`tags` LIKE \'%\"'.mysql_real_escape_string($cur_tag, $config->db_manager->link).'\"%\'';
+						$cur_query .= 'e.`tags` LIKE \'%\"'.mysql_real_escape_string($cur_tag, $pines->db_manager->link).'\"%\'';
 					}
 					break;
 				case 'tags_i':
 					foreach ($option as $cur_tag) {
 						if ( $cur_query )
 							$cur_query .= ' OR ';
-						$cur_query .= 'e.`tags` LIKE \'%\"'.mysql_real_escape_string($cur_tag, $config->db_manager->link).'\"%\'';
+						$cur_query .= 'e.`tags` LIKE \'%\"'.mysql_real_escape_string($cur_tag, $pines->db_manager->link).'\"%\'';
 					}
 					break;
 				case 'limit':
@@ -169,15 +169,15 @@ class com_entity extends component {
 
 		if ($query_parts) {
 			$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid` = d.`guid` HAVING (%s) ORDER BY e.`guid`;",
-				$config->com_mysql->prefix,
-				$config->com_mysql->prefix,
+				$pines->com_mysql->prefix,
+				$pines->com_mysql->prefix,
 				'('.implode(') AND (', $query_parts).')');
 		} else {
 			$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid` = d.`guid` ORDER BY e.`guid`;",
-				$config->com_mysql->prefix,
-				$config->com_mysql->prefix);
+				$pines->com_mysql->prefix,
+				$pines->com_mysql->prefix);
 		}
-		if ( !($result = mysql_query($query, $config->db_manager->link)) ) {
+		if ( !($result = mysql_query($query, $pines->db_manager->link)) ) {
 			if (function_exists('display_error'))
 				display_error('Query failed: ' . mysql_error());
 			return null;
@@ -361,16 +361,16 @@ class com_entity extends component {
 	 * @return bool True on success, false on failure.
 	 */
 	public function save_entity(&$entity) {
-		global $config;
+		global $pines;
 		if ( is_null($entity->guid) ) {
 			// Save the created date.
 			$entity->p_cdate = time();
 			// And modified date.
 			$entity->p_mdate = time();
 			$query = sprintf("INSERT INTO `%scom_entity_entities` (`tags`) VALUES ('%s');",
-				$config->com_mysql->prefix,
-				mysql_real_escape_string(serialize($entity->tags), $config->db_manager->link));
-			if ( !(mysql_query($query, $config->db_manager->link)) ) {
+				$pines->com_mysql->prefix,
+				mysql_real_escape_string(serialize($entity->tags), $pines->db_manager->link));
+			if ( !(mysql_query($query, $pines->db_manager->link)) ) {
 				if (function_exists('display_error'))
 					display_error('Query failed: ' . mysql_error());
 				return false;
@@ -380,11 +380,11 @@ class com_entity extends component {
 			$data = $entity->get_data();
 			foreach ($data as $name => $value) {
 				$query = sprintf("INSERT INTO `%scom_entity_data` (`guid`, `name`, `value`) VALUES (%u, '%s', '%s');",
-					$config->com_mysql->prefix,
+					$pines->com_mysql->prefix,
 					(int) $new_id,
-					mysql_real_escape_string($name, $config->db_manager->link),
-					mysql_real_escape_string(serialize($value), $config->db_manager->link));
-				if ( !(mysql_query($query, $config->db_manager->link)) ) {
+					mysql_real_escape_string($name, $pines->db_manager->link),
+					mysql_real_escape_string(serialize($value), $pines->db_manager->link));
+				if ( !(mysql_query($query, $pines->db_manager->link)) ) {
 					if (function_exists('display_error'))
 						display_error('Query failed: ' . mysql_error());
 					return false;
@@ -395,18 +395,18 @@ class com_entity extends component {
 			// Save the modified date.
 			$entity->p_mdate = time();
 			$query = sprintf("UPDATE `%scom_entity_entities` SET `tags`='%s' WHERE `guid`=%u;",
-				$config->com_mysql->prefix,
-				mysql_real_escape_string(serialize($entity->tags), $config->db_manager->link),
+				$pines->com_mysql->prefix,
+				mysql_real_escape_string(serialize($entity->tags), $pines->db_manager->link),
 				intval($entity->guid));
-			if ( !(mysql_query($query, $config->db_manager->link)) ) {
+			if ( !(mysql_query($query, $pines->db_manager->link)) ) {
 				if (function_exists('display_error'))
 					display_error('Query failed: ' . mysql_error());
 				return false;
 			}
 			$query = sprintf("DELETE FROM `%scom_entity_data` WHERE `guid`=%u;",
-				$config->com_mysql->prefix,
+				$pines->com_mysql->prefix,
 				intval($entity->guid));
-			if ( !(mysql_query($query, $config->db_manager->link)) ) {
+			if ( !(mysql_query($query, $pines->db_manager->link)) ) {
 				if (function_exists('display_error'))
 					display_error('Query failed: ' . mysql_error());
 				return false;
@@ -414,11 +414,11 @@ class com_entity extends component {
 			$data = $entity->get_data();
 			foreach ($data as $name => $value) {
 				$query = sprintf("INSERT INTO `%scom_entity_data` (`guid`, `name`, `value`) VALUES (%u, '%s', '%s');",
-					$config->com_mysql->prefix,
+					$pines->com_mysql->prefix,
 					intval($entity->guid),
-					mysql_real_escape_string($name, $config->db_manager->link),
-					mysql_real_escape_string(serialize($value), $config->db_manager->link));
-				if ( !(mysql_query($query, $config->db_manager->link)) ) {
+					mysql_real_escape_string($name, $pines->db_manager->link),
+					mysql_real_escape_string(serialize($value), $pines->db_manager->link));
+				if ( !(mysql_query($query, $pines->db_manager->link)) ) {
 					if (function_exists('display_error'))
 						display_error('Query failed: ' . mysql_error());
 					return false;

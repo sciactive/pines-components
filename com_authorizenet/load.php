@@ -11,11 +11,11 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$config->run_sales->processing_types[] = array(
+$pines->run_sales->processing_types[] = array(
 	'name' => 'com_authorizenet/credit',
 	'cname' => 'Credit Card',
 	'description' => 'Process credit card payment using Authorize.net.',
-	'callback' => array($config->run_authorizenet, 'payment_credit')
+	'callback' => array($pines->run_authorizenet, 'payment_credit')
 );
 
 ?>

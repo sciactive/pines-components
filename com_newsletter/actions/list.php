@@ -14,5 +14,5 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_newsletter/listmail') && !gatekeeper('com_newsletter/send') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_newsletter', 'list', null, false));
 
-$config->run_newsletter->list_mails();
+$pines->run_newsletter->list_mails();
 ?>

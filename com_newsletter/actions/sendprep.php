@@ -21,7 +21,7 @@ if ( empty($_REQUEST['mail_id']) ) {
 	return;
 }
 
-$mail = $config->entity_manager->get_entity(array('guid' => $_REQUEST['mail_id'], 'tags' => array('com_newsletter', 'mail')));
+$mail = $pines->entity_manager->get_entity(array('guid' => $_REQUEST['mail_id'], 'tags' => array('com_newsletter', 'mail')));
 if ( is_null($mail) ) {
 	display_error('Invalid mail specified!');
 	return;

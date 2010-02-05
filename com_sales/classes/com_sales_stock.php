@@ -26,8 +26,8 @@ class com_sales_stock extends entity {
 		parent::__construct();
 		$this->add_tag('com_sales', 'stock');
 		if ($id > 0) {
-			global $config;
-			$entity = $config->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
+			global $pines;
+			$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
 			if (is_null($entity))
 				return;
 			$this->guid = $entity->guid;
@@ -40,11 +40,11 @@ class com_sales_stock extends entity {
 	 * Create a new instance.
 	 */
 	public static function factory() {
-		global $config;
+		global $pines;
 		$class = get_class();
 		$args = func_get_args();
 		$entity = new $class($args[0]);
-		$config->hook->hook_object($entity, $class.'->', false);
+		$pines->hook->hook_object($entity, $class.'->', false);
 		return $entity;
 	}
 
@@ -55,9 +55,9 @@ class com_sales_stock extends entity {
 	 * @return array|null An array with the PO, and the stock entry, or null if nothing is found.
 	 */
 	function inventory_origin() {
-		global $config;
+		global $pines;
 		// Get all the transfers.
-		$entities = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'transfer'), 'class' => com_sales_transfer));
+		$entities = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'transfer'), 'class' => com_sales_transfer));
 		if (!is_array($entities))
 			$entities = array();
 		// Iterate through all the transfers.
@@ -88,7 +88,7 @@ class com_sales_stock extends entity {
 		}
 
 		// Get all the POs.
-		$entities = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'po'), 'class' => com_sales_po));
+		$entities = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'po'), 'class' => com_sales_po));
 		if (!is_array($entities)) {
 			$entities = array();
 		}
@@ -142,7 +142,7 @@ class com_sales_stock extends entity {
 	 * @return bool True on success, false on failure.
 	 */
 	function receive(&$on_entity = null, $location = false) {
-		global $config;
+		global $pines;
 		if (is_null($on_entity))
 			return false;
 
@@ -198,7 +198,7 @@ class com_sales_stock extends entity {
 	 * @return bool True on success, false on failure.
 	 */
 	function remove(&$on_entity = null, $status = 'other', $location = null) {
-		global $config;
+		global $pines;
 		if (is_null($on_entity))
 			return false;
 

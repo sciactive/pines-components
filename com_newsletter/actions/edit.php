@@ -15,7 +15,7 @@ if ( !gatekeeper('com_newsletter/listmail') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_newsletter', 'list', null, false));
 
 if ( !empty($_REQUEST['mail_id']) ) {
-	$mail = $config->entity_manager->get_entity(array('guid' => $_REQUEST['mail_id'], 'tags' => array('com_newsletter', 'mail')));
+	$mail = $pines->entity_manager->get_entity(array('guid' => $_REQUEST['mail_id'], 'tags' => array('com_newsletter', 'mail')));
 	if ( is_null($mail) ) {
 		display_error('Invalid mail!');
 		return false;
@@ -31,13 +31,13 @@ if ( $_REQUEST['update'] == 'yes' ) {
 	$mail->message = $_REQUEST['data'];
 	foreach ( $mail->attachments as $key => $cur_attachment ) {
 		if ( $_REQUEST["attach_".clean_checkbox($cur_attachment)] != 'on' ) {
-			if ( $config->run_newsletter->delete_attachment($mail, $cur_attachment) )
+			if ( $pines->run_newsletter->delete_attachment($mail, $cur_attachment) )
 				display_notice("Attachment $cur_attachment removed.");
 		}
 	}
 	if ( !$_FILES['attachment']['error'] ) {
 		$upload_file = stripslashes(basename($_FILES['attachment']['name']));
-		if ( move_uploaded_file($_FILES['attachment']['tmp_name'], $config->setting_upload.'attachments/'.$upload_file) ) {
+		if ( move_uploaded_file($_FILES['attachment']['tmp_name'], $pines->setting_upload.'attachments/'.$upload_file) ) {
 			array_push($mail->attachments, $upload_file);
 		} else {
 			display_error("Possible file upload attack! Upload failed! D:\n");
@@ -49,5 +49,5 @@ if ( $_REQUEST['update'] == 'yes' ) {
 	display_notice("Saved mail [$mail->name]");
 }
 
-$config->run_newsletter->edit_mail($mail, 'com_newsletter', 'edit');
+$pines->run_newsletter->edit_mail($mail, 'com_newsletter', 'edit');
 ?>

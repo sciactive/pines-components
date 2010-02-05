@@ -26,5 +26,5 @@ if (empty($failed_deletes)) {
 	display_error('Could not delete tax/fees with given IDs: '.$failed_deletes);
 }
 
-$config->run_sales->list_tax_fees();
+$pines->run_sales->list_tax_fees();
 ?>

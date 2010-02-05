@@ -34,7 +34,7 @@ if ( !isset($_REQUEST['mail_id']) ) {
 	return false;
 }
 
-$mail = $config->entity_manager->get_entity(array('guid' => $_REQUEST['mail_id'], 'tags' => array('com_newsletter', 'mail')));
+$mail = $pines->entity_manager->get_entity(array('guid' => $_REQUEST['mail_id'], 'tags' => array('com_newsletter', 'mail')));
 if ( is_null($mail) ) {
 	display_error('Invalid mail!');
 	return false;
@@ -53,7 +53,7 @@ $addresses = array();
 if (is_array($_REQUEST['group'])) {
 	foreach ($_REQUEST['group'] as $cur_group_id) {
 	$cur_group_id = (int) $cur_group_id;
-	$users = $config->user_manager->get_users_by_group($cur_group_id);
+	$users = $pines->user_manager->get_users_by_group($cur_group_id);
 	foreach ($users as $cur_user) {
 		if (!empty($cur_user->email))
 		$addresses[$user->guid] = $cur_user->email;
@@ -72,7 +72,7 @@ $mailer->addHeader('Bcc', $bcc);
 
 $attachments = $mail->attachments;
 foreach ( $attachments as $cur_attachment ) {
-	$mailer->addAttachment($config->setting_upload . 'attachments/' . $cur_attachment);
+	$mailer->addAttachment($pines->setting_upload . 'attachments/' . $cur_attachment);
 }
 
 if ( $mailer->send() ) {

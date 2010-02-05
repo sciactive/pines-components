@@ -29,8 +29,8 @@ class com_sales_customer extends com_customer_customer {
 		parent::__construct();
 		$this->add_tag('com_customer', 'customer');
 		if ($id > 0) {
-			global $config;
-			$entity = $config->entity_manager->get_entity(array('guid' => $id, 'class' => get_class($this)));
+			global $pines;
+			$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'class' => get_class($this)));
 			if (is_null($entity))
 				return;
 			$this->guid = $entity->guid;
@@ -43,11 +43,11 @@ class com_sales_customer extends com_customer_customer {
 	 * Create a new instance.
 	 */
 	public static function factory() {
-		global $config;
+		global $pines;
 		$class = get_class();
 		$args = func_get_args();
 		$entity = new $class($args[0]);
-		$config->hook->hook_object($entity, $class.'->', false);
+		$pines->hook->hook_object($entity, $class.'->', false);
 		return $entity;
 	}
 }

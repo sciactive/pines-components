@@ -69,7 +69,7 @@ if ($this->entity->status == 'quoted') {
 			<strong>Bill To:</strong>
 		</div>
 		<div class="data_col">
-			<span class="name"><?php echo $config->user_manager->get_groupname($sales_rep->gid); ?></span>
+			<span class="name"><?php echo $pines->user_manager->get_groupname($sales_rep->gid); ?></span>
 			<span>Address</span>
 			<span>City, State Country Zip</span>
 			<span>Phone</span>
@@ -102,7 +102,7 @@ if ($this->entity->status == 'quoted') {
 			<?php } ?>
 		</div>
 	</div>
-<?php if ($config->run_sales->com_customer && !is_null($this->entity->customer)) { ?>
+<?php if ($pines->run_sales->com_customer && !is_null($this->entity->customer)) { ?>
 	<div class="left_side customer">
 		<div>
 			<strong>Bill To:</strong>
@@ -142,8 +142,8 @@ if ($this->entity->status == 'quoted') {
 					<td><?php echo $cur_product['entity']->name; ?></td>
 					<td><?php echo $cur_product['entity']->short_description; ?></td>
 					<td class="right_text"><?php echo $cur_product['quantity']; ?></td>
-					<td class="right_text">$<?php echo $config->run_sales->round($cur_product['price'], $config->com_sales->dec, true); ?><?php echo empty($cur_product['discount']) ? '' : " - {$cur_product['discount']}"; ?></td>
-					<td class="right_text">$<?php echo $config->run_sales->round($cur_product['line_total'], $config->com_sales->dec, true); ?></td>
+					<td class="right_text">$<?php echo $pines->run_sales->round($cur_product['price'], $pines->com_sales->dec, true); ?><?php echo empty($cur_product['discount']) ? '' : " - {$cur_product['discount']}"; ?></td>
+					<td class="right_text">$<?php echo $pines->run_sales->round($cur_product['line_total'], $pines->com_sales->dec, true); ?></td>
 				</tr>
 				<?php } } ?>
 			</tbody>
@@ -166,11 +166,11 @@ if ($this->entity->status == 'quoted') {
 			</div>
 			<div class="data_col right_text">
 				<?php foreach ($this->entity->payments as $cur_payment) { ?>
-				<span>$<?php echo $config->run_sales->round($cur_payment['amount'], $config->com_sales->dec, true); ?></span>
+				<span>$<?php echo $pines->run_sales->round($cur_payment['amount'], $pines->com_sales->dec, true); ?></span>
 				<?php } ?>
 				<hr />
-				<span>$<?php echo $config->run_sales->round($this->entity->amount_tendered, $config->com_sales->dec, true); ?></span>
-				<span>$<?php echo $config->run_sales->round($this->entity->change, $config->com_sales->dec, true); ?></span>
+				<span>$<?php echo $pines->run_sales->round($this->entity->amount_tendered, $pines->com_sales->dec, true); ?></span>
+				<span>$<?php echo $pines->run_sales->round($this->entity->change, $pines->com_sales->dec, true); ?></span>
 			</div>
 		</div>
 		<?php } ?>
@@ -189,13 +189,13 @@ if ($this->entity->status == 'quoted') {
 				<span><strong>Total: </strong></span>
 			</div>
 			<div class="data_col right_text">
-				<span>$<?php echo $config->run_sales->round($this->entity->subtotal, $config->com_sales->dec, true); ?></span>
+				<span>$<?php echo $pines->run_sales->round($this->entity->subtotal, $pines->com_sales->dec, true); ?></span>
 				<?php if ($this->entity->item_fees > 0) { ?>
-				<span>$<?php echo $config->run_sales->round($this->entity->item_fees, $config->com_sales->dec, true); ?></span>
+				<span>$<?php echo $pines->run_sales->round($this->entity->item_fees, $pines->com_sales->dec, true); ?></span>
 				<?php } ?>
-				<span>$<?php echo $config->run_sales->round($this->entity->taxes, $config->com_sales->dec, true); ?></span>
+				<span>$<?php echo $pines->run_sales->round($this->entity->taxes, $pines->com_sales->dec, true); ?></span>
 				<hr />
-				<span><strong>$<?php echo $config->run_sales->round($this->entity->total, $config->com_sales->dec, true); ?></strong></span>
+				<span><strong>$<?php echo $pines->run_sales->round($this->entity->total, $pines->com_sales->dec, true); ?></strong></span>
 			</div>
 		</div>
 	</div>
@@ -213,13 +213,13 @@ if ($this->entity->status == 'quoted') {
 			<span class="label"><?php
 				switch ($this->entity->status) {
 					case 'quoted':
-						echo $config->com_sales->quote_note_label;
+						echo $pines->com_sales->quote_note_label;
 						break;
 					case 'invoiced':
-						echo $config->com_sales->invoice_note_label;
+						echo $pines->com_sales->invoice_note_label;
 						break;
 					case 'paid':
-						echo $config->com_sales->receipt_note_label;
+						echo $pines->com_sales->receipt_note_label;
 						break;
 				}
 			?></span>
@@ -227,13 +227,13 @@ if ($this->entity->status == 'quoted') {
 			<div class="field receipt_note"><?php
 				switch ($this->entity->status) {
 					case 'quoted':
-						echo $config->com_sales->quote_note_text;
+						echo $pines->com_sales->quote_note_text;
 						break;
 					case 'invoiced':
-						echo $config->com_sales->invoice_note_text;
+						echo $pines->com_sales->invoice_note_text;
 						break;
 					case 'paid':
-						echo $config->com_sales->receipt_note_text;
+						echo $pines->com_sales->receipt_note_text;
 						break;
 				}
 			?></div>

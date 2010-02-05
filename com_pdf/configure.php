@@ -24,7 +24,7 @@ return array (
 	'name' => 'pdf_path',
 	'cname' => 'PDF Library Path',
 	'description' => 'The relative path of the directory containing the PDFs. End this path with a slash!',
-	'value' => $config->setting_upload.'pdf/',
+	'value' => $pines->setting_upload.'pdf/',
   ),
 );
 

@@ -32,7 +32,7 @@ $this->title = 'Sales Totals';
 				<option value="current">-- Current --</option>
 				<?php if ($this->show_all) { ?>
 				<option value="all">-- All --</option>
-				<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations); ?>
+				<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations); ?>
 				<?php } ?>
 			</select></label>
 	</div>

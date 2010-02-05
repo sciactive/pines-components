@@ -52,11 +52,11 @@ if ( $_REQUEST['parent'] == 'none' ) {
 
 if ( $_REQUEST['abilities'] === 'true' && gatekeeper("com_user/abilities") ) {
 	$sections = array('system');
-	foreach ($config->components as $cur_component) {
+	foreach ($pines->components as $cur_component) {
 		$sections[] = $cur_component;
 	}
 	foreach ($sections as $cur_section) {
-		$section_abilities = $config->ability_manager->get_abilities($cur_section);
+		$section_abilities = $pines->ability_manager->get_abilities($cur_section);
 		if ( count($section_abilities) ) {
 			foreach ($section_abilities as $cur_ability) {
 				if ( isset($_REQUEST[$cur_section]) && (array_search($cur_ability['ability'], $_REQUEST[$cur_section]) !== false) ) {
@@ -93,5 +93,5 @@ if ($group->save()) {
 	display_error('Error saving group. Do you have permission?');
 }
 
-$config->user_manager->list_groups();
+$pines->user_manager->list_groups();
 ?>

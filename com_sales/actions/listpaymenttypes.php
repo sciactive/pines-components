@@ -14,5 +14,5 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_sales/listpaymenttypes') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listpaymenttypes', null, false));
 
-$config->run_sales->list_payment_types();
+$pines->run_sales->list_payment_types();
 ?>

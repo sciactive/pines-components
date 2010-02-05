@@ -13,8 +13,8 @@ defined('P_RUN') or die('Direct access prohibited');
 
 /**
  * The entity manager.
- * @global com_entity $config->entity_manager
+ * @global com_entity $pines->entity_manager
  */
-$config->entity_manager = 'com_entity';
+$pines->entity_manager = 'com_entity';
 
 ?>

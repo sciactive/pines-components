@@ -13,8 +13,8 @@ defined('P_RUN') or die('Direct access prohibited');
 
 /**
  * The configurator.
- * @global com_configure $config->configurator
+ * @global com_configure $pines->configurator
  */
-$config->configurator = 'com_configure';
+$pines->configurator = 'com_configure';
 
 ?>

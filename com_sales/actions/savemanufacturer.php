@@ -40,14 +40,14 @@ if (empty($manufacturer->name)) {
 	display_notice('Please specify a name.');
 	return;
 }
-$test = $config->entity_manager->get_entity(array('data' => array('name' => $manufacturer->name), 'tags' => array('com_sales', 'manufacturer'), 'class' => com_sales_manufacturer));
+$test = $pines->entity_manager->get_entity(array('data' => array('name' => $manufacturer->name), 'tags' => array('com_sales', 'manufacturer'), 'class' => com_sales_manufacturer));
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$manufacturer->print_form();
 	display_notice('There is already a manufacturer with that name. Please choose a different name.');
 	return;
 }
 
-if ($config->com_sales->global_manufacturers)
+if ($pines->com_sales->global_manufacturers)
 	$manufacturer->ac->other = 1;
 
 if ($manufacturer->save()) {
@@ -56,5 +56,5 @@ if ($manufacturer->save()) {
 	display_error('Error saving manufacturer. Do you have permission?');
 }
 
-$config->run_sales->list_manufacturers();
+$pines->run_sales->list_manufacturers();
 ?>

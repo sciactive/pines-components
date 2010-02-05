@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_configure/edit') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_configure', 'edit', $_GET, false));
 
-if ($config->configurator->disable_component($_REQUEST['component'])) {
+if ($pines->configurator->disable_component($_REQUEST['component'])) {
 	$cur_loc = pines_url('com_configure', 'list', array('message' => urlencode('Component '.$_REQUEST['component'].' successfully disabled.')));
 	header('Location: '.$cur_loc);
 	return;
@@ -22,6 +22,6 @@ if ($config->configurator->disable_component($_REQUEST['component'])) {
 	display_error("Couldn't disable component {$_REQUEST['component']}.");
 }
 
-$config->configurator->list_components();
+$pines->configurator->list_components();
 
 ?>

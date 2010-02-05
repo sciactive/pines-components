@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_customer/listcustomers') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'customersearch', $_REQUEST, false));
 
-$config->page->override = true;
+$pines->page->override = true;
 
 $query = strtolower($_REQUEST['q']);
 
@@ -22,7 +22,7 @@ if (empty($query)) {
 	$customers = array();
 } else {
 	// TODO: Use 'match_i' instead.
-	$customers = $config->entity_manager->get_entities(array('tags' => array('com_customer', 'customer'), 'class' => com_customer_customer));
+	$customers = $pines->entity_manager->get_entities(array('tags' => array('com_customer', 'customer'), 'class' => com_customer_customer));
 	if (!is_array($customers))
 		$customers = array();
 }
@@ -64,6 +64,6 @@ foreach ($customers as $key => &$cur_customer) {
 if (empty($customers))
 	$customers = null;
 
-$config->page->override_doc(json_encode($customers));
+$pines->page->override_doc(json_encode($customers));
 
 ?>

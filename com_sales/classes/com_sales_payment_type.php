@@ -29,8 +29,8 @@ class com_sales_payment_type extends entity {
 		// Defaults.
 		$this->enabled = true;
 		if ($id > 0) {
-			global $config;
-			$entity = $config->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
+			global $pines;
+			$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
 			if (is_null($entity))
 				return;
 			$this->guid = $entity->guid;
@@ -43,11 +43,11 @@ class com_sales_payment_type extends entity {
 	 * Create a new instance.
 	 */
 	public static function factory() {
-		global $config;
+		global $pines;
 		$class = get_class();
 		$args = func_get_args();
 		$entity = new $class($args[0]);
-		$config->hook->hook_object($entity, $class.'->', false);
+		$pines->hook->hook_object($entity, $class.'->', false);
 		return $entity;
 	}
 
@@ -77,10 +77,10 @@ class com_sales_payment_type extends entity {
 	 * @return module The form's module.
 	 */
 	public function print_form() {
-		global $config;
+		global $pines;
 		$module = new module('com_sales', 'form_payment_type', 'content');
 		$module->entity = $this;
-		$module->processing_types = $config->run_sales->processing_types;
+		$module->processing_types = $pines->run_sales->processing_types;
 		if (!is_array($module->processing_types)) {
 			$module->processing_types = array();
 		}

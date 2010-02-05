@@ -34,8 +34,8 @@ class com_sales_product extends entity {
 		$this->additional_barcodes = array();
 		$this->actions = array();
 		if ($id > 0) {
-			global $config;
-			$entity = $config->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
+			global $pines;
+			$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
 			if (is_null($entity))
 				return;
 			$this->guid = $entity->guid;
@@ -48,11 +48,11 @@ class com_sales_product extends entity {
 	 * Create a new instance.
 	 */
 	public static function factory() {
-		global $config;
+		global $pines;
 		$class = get_class();
 		$args = func_get_args();
 		$entity = new $class($args[0]);
-		$config->hook->hook_object($entity, $class.'->', false);
+		$pines->hook->hook_object($entity, $class.'->', false);
 		return $entity;
 	}
 
@@ -82,27 +82,27 @@ class com_sales_product extends entity {
 	 * @return module The form's module.
 	 */
 	public function print_form() {
-		global $config;
-		$config->editor->load();
+		global $pines;
+		$pines->editor->load();
 		$pgrid = new module('system', 'pgrid.default', 'head');
 		$pgrid->icons = true;
 		$jstree = new module('system', 'jstree', 'head');
 		$ptags = new module('system', 'ptags.default', 'head');
 		$module = new module('com_sales', 'form_product', 'content');
 		$module->entity = $this;
-		$module->manufacturers = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'manufacturer'), 'class' => com_sales_manufacturer));
+		$module->manufacturers = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'manufacturer'), 'class' => com_sales_manufacturer));
 		if (!is_array($module->manufacturers)) {
 			$module->manufacturers = array();
 		}
-		$module->vendors = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'vendor'), 'class' => com_sales_vendor));
+		$module->vendors = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'vendor'), 'class' => com_sales_vendor));
 		if (!is_array($module->vendors)) {
 			$module->vendors = array();
 		}
-		$module->tax_fees = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'tax_fee'), 'class' => com_sales_tax_fee));
+		$module->tax_fees = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'tax_fee'), 'class' => com_sales_tax_fee));
 		if (!is_array($module->tax_fees)) {
 			$module->tax_fees = array();
 		}
-		$module->actions = $config->run_sales->product_actions;
+		$module->actions = $pines->run_sales->product_actions;
 		if (!is_array($module->actions)) {
 			$module->actions = array();
 		}

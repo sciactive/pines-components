@@ -165,7 +165,7 @@ $this->note = 'Provide employee account details in this form.';
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
 					<?php if (isset($this->entity->uid)) { ?>
-				<span>Created By: <span class="date"><?php echo $config->user_manager->get_username($this->entity->uid); ?></span></span>
+				<span>Created By: <span class="date"><?php echo $pines->user_manager->get_username($this->entity->uid); ?></span></span>
 				<br />
 					<?php } ?>
 				<span>Created On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_cdate); ?></span></span>
@@ -185,7 +185,7 @@ $this->note = 'Provide employee account details in this form.';
 				<label><span class="label">Last Name</span>
 					<input class="field ui-widget-content" type="text" name="name_last" size="24" value="<?php echo $this->entity->name_last; ?>" /></label>
 			</div>
-			<?php if ($config->com_hrm->ssn_field) { ?>
+			<?php if ($pines->com_hrm->ssn_field) { ?>
 			<div class="element">
 				<label><span class="label">SSN</span>
 					<span class="note">Without dashes.</span>

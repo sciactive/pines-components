@@ -15,7 +15,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper() ) {
-	$config->user_manager->print_login();
+	$pines->user_manager->print_login();
 	return;
 } else {
 	if (empty($_SESSION['user']->default_component) || $_SESSION['user']->default_component == 'com_user') {

@@ -32,11 +32,11 @@ class user extends able_entity {
 		$this->default_component = 'com_user';
 		$this->address_type = 'us';
 		if ($id > 0 || is_string($id)) {
-			global $config;
+			global $pines;
 			if (is_int($id)) {
-				$entity = $config->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
+				$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
 			} else {
-				$entity = $config->entity_manager->get_entity(array('data' => array('username' => $id), 'tags' => $this->tags, 'class' => get_class($this)));
+				$entity = $pines->entity_manager->get_entity(array('data' => array('username' => $id), 'tags' => $this->tags, 'class' => get_class($this)));
 			}
 			if (is_null($entity))
 				return;
@@ -50,11 +50,11 @@ class user extends able_entity {
 	 * Create a new instance.
 	 */
 	public static function factory() {
-		global $config;
+		global $pines;
 		$class = get_class();
 		$args = func_get_args();
 		$entity = new $class($args[0]);
-		$config->hook->hook_object($entity, $class.'->', false);
+		$pines->hook->hook_object($entity, $class.'->', false);
 		return $entity;
 	}
 
@@ -84,16 +84,16 @@ class user extends able_entity {
 	 * @return module The form's module.
 	 */
 	public function print_form() {
-		global $config;
+		global $pines;
 		$module = new module('com_user', 'form_user', 'content');
 		$module->entity = $this;
 		$module->display_groups = gatekeeper("com_user/assigngroup");
 		$module->display_abilities = gatekeeper("com_user/abilities");
 		$module->display_default_components = gatekeeper("com_user/default_component");
 		$module->sections = array('system');
-		$module->group_array = $config->user_manager->get_group_array();
-		$module->default_components = $config->user_manager->get_default_component_array();
-		foreach ($config->components as $cur_component) {
+		$module->group_array = $pines->user_manager->get_group_array();
+		$module->default_components = $pines->user_manager->get_default_component_array();
+		foreach ($pines->components as $cur_component) {
 			$module->sections[] = $cur_component;
 		}
 
@@ -180,7 +180,7 @@ class user extends able_entity {
 	 * @return string|DateTimeZone The timezone identifier or the DateTimeZone object.
 	 */
 	public function get_timezone($return_date_time_zone_object = false) {
-		global $config;
+		global $pines;
 		if (!empty($this->timezone))
 			return $return_date_time_zone_object ? new DateTimeZone($this->timezone) : $this->timezone;
 		if (isset($this->group)) {
@@ -191,7 +191,7 @@ class user extends able_entity {
 			if (!empty($cur_group->timezone))
 				return $return_date_time_zone_object ? new DateTimeZone($cur_group->timezone) : $cur_group->timezone;
 		}
-		return $return_date_time_zone_object ? new DateTimeZone($config->timezone) : $config->timezone;
+		return $return_date_time_zone_object ? new DateTimeZone($pines->timezone) : $pines->timezone;
 	}
 }
 

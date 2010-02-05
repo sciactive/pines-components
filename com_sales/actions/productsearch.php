@@ -14,14 +14,14 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_sales/listproducts') && !gatekeeper('com_sales/newsale') && !gatekeeper('com_sales/editsale'))
 	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'productsearch', $_REQUEST, false));
 
-$config->page->override = true;
+$pines->page->override = true;
 
 $code = $_REQUEST['code'];
 
 if (empty($code)) {
 	$product = null;
 } elseif(!$_REQUEST['useguid']) {
-	$product = $config->run_sales->get_product_by_code($code);
+	$product = $pines->run_sales->get_product_by_code($code);
 	if (!$product->enabled) {
 		$product = null;
 	}
@@ -65,6 +65,6 @@ if (!is_null($product)) {
 	$product = $json_struct;
 }
 
-$config->page->override_doc(json_encode($product));
+$pines->page->override_doc(json_encode($product));
 
 ?>

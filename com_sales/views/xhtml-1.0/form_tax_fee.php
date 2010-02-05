@@ -17,7 +17,7 @@ $this->note = 'Provide tax/fee details in this form.';
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 	<?php if (isset($this->entity->uid)) { ?>
-	<span>Created By: <span class="date"><?php echo $config->user_manager->get_username($this->entity->uid); ?></span></span>
+	<span>Created By: <span class="date"><?php echo $pines->user_manager->get_username($this->entity->uid); ?></span></span>
 	<br />
 	<?php } ?>
 	<span>Created On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_cdate); ?></span></span>
@@ -51,7 +51,7 @@ $this->note = 'Provide tax/fee details in this form.';
 		<span class="note">Sales by users in these groups will be applied this tax.</span>
 		<span class="note">Hold Ctrl (Command on Mac) to select multiple groups.</span>
 		<select class="field ui-widget-content" name="locations[]" multiple="multiple" size="6">
-			<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations, $this->entity->locations); ?>
+			<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations, $this->entity->locations); ?>
 		</select></label>
 	</div>
 	<div class="element buttons">

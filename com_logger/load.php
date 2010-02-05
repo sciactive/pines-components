@@ -11,9 +11,9 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$config->log_manager = 'com_logger';
+$pines->log_manager = 'com_logger';
 
-if (!function_exists('display_error') && $config->com_logger->log_errors) {
+if (!function_exists('display_error') && $pines->com_logger->log_errors) {
 	/**
 	 * Log a displayed error.
 	 *
@@ -21,13 +21,13 @@ if (!function_exists('display_error') && $config->com_logger->log_errors) {
 	 * @ignore
 	 */
 	function display_error($error_text) {
-		global $config;
-		$config->log_manager->log($error_text, 'error');
-		$config->page->error($error_text);
+		global $pines;
+		$pines->log_manager->log($error_text, 'error');
+		$pines->page->error($error_text);
 	}
 }
 
-if (!function_exists('display_notice') && $config->com_logger->log_notices) {
+if (!function_exists('display_notice') && $pines->com_logger->log_notices) {
 	/**
 	 * Log a displayed notice.
 	 *
@@ -35,9 +35,9 @@ if (!function_exists('display_notice') && $config->com_logger->log_notices) {
 	 * @ignore
 	 */
 	function display_notice($notice_text) {
-		global $config;
-		$config->log_manager->log($notice_text, 'notice');
-		$config->page->notice($notice_text);
+		global $pines;
+		$pines->log_manager->log($notice_text, 'notice');
+		$pines->page->notice($notice_text);
 	}
 }
 

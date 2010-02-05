@@ -33,15 +33,15 @@ class com_hrm extends component {
 	 * Places the result in $this->com_sales.
 	 */
 	function __construct() {
-		global $config;
-		$this->com_sales = $config->depend->check('component', 'com_sales');
+		global $pines;
+		$this->com_sales = $pines->depend->check('component', 'com_sales');
 	}
 
 	/**
 	 * Creates and attaches a module which lists employees.
 	 */
 	function list_employees() {
-		global $config;
+		global $pines;
 
 		$pgrid = new module('system', 'pgrid.default', 'head');
 		$pgrid->icons = true;
@@ -50,7 +50,7 @@ class com_hrm extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_hrm/list_employees'];
 
-		$module->employees = $config->entity_manager->get_entities(array('tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
+		$module->employees = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
 
 		if ( empty($module->employees) ) {
 			$pgrid->detach();
@@ -99,8 +99,8 @@ class com_hrm extends component {
 	function provide_clockin() {
 		if (empty($_SESSION['user']) || !gatekeeper('com_hrm/clock'))
 			return null;
-		global $config;
-		$employee = $config->entity_manager->get_entity(array('ref' => array('user_account' => $_SESSION['user']), 'tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
+		global $pines;
+		$employee = $pines->entity_manager->get_entity(array('ref' => array('user_account' => $_SESSION['user']), 'tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
 		if (is_null($employee))
 			return null;
 		return $employee->print_clockin();

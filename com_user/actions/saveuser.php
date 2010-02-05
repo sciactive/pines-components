@@ -56,7 +56,7 @@ if ( gatekeeper('com_user/default_component') ) {
 // entity manager after com_user filters the result, and thus will not be
 // assigned.
 if ( gatekeeper("com_user/assigngroup") ) {
-	$sys_groups = $config->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
+	$sys_groups = $pines->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
 	$group = group::factory((int) $_REQUEST['group']);
 	$groups = $_REQUEST['groups'];
 	if (!is_array($groups))
@@ -78,11 +78,11 @@ if ( gatekeeper("com_user/assigngroup") ) {
 if ( $_REQUEST['abilities'] === 'true' && gatekeeper("com_user/abilities") ) {
 	$user->inherit_abilities = ($_REQUEST['inherit_abilities'] == 'ON');
 	$sections = array('system');
-	foreach ($config->components as $cur_component) {
+	foreach ($pines->components as $cur_component) {
 		$sections[] = $cur_component;
 	}
 	foreach ($sections as $cur_section) {
-		$section_abilities = $config->ability_manager->get_abilities($cur_section);
+		$section_abilities = $pines->ability_manager->get_abilities($cur_section);
 		foreach ($section_abilities as $cur_ability) {
 			if ( isset($_REQUEST[$cur_section]) && (array_search($cur_ability['ability'], $_REQUEST[$cur_section]) !== false) ) {
 				$user->grant($cur_section.'/'.$cur_ability['ability']);
@@ -104,7 +104,7 @@ if (isset($test->guid) && !$user->is($test)) {
 	display_notice('There is already a user with that username. Please choose a different username.');
 	return;
 }
-if (empty($user->password) && !$config->com_user->empty_pw) {
+if (empty($user->password) && !$pines->com_user->empty_pw) {
 	$user->print_form();
 	display_notice('Please specify a password.');
 	return;
@@ -117,5 +117,5 @@ if ($user->save()) {
 	display_error('Error saving user. Do you have permission?');
 }
 
-$config->user_manager->list_users();
+$pines->user_manager->list_users();
 ?>

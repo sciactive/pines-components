@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !$config->com_customer->resetpoints && !gatekeeper('com_customer/resetpoints') )
+if ( !$pines->com_customer->resetpoints && !gatekeeper('com_customer/resetpoints') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'listcustomers', null, false));
 
 $list = explode(',', $_REQUEST['id']);
@@ -33,5 +33,5 @@ if (!$failed_resets) {
 	display_error("Could not reset points of customers with given IDs: $failed_resets");
 }
 
-$config->run_customer->list_customers();
+$pines->run_customer->list_customers();
 ?>

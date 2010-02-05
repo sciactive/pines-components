@@ -74,7 +74,7 @@ class com_mailer_mail extends p_base {
 	 * @param string $message The message text.
 	 */
 	function __construct($sender, $recipient, $subject, $message) {
-		global $config;
+		global $pines;
 		// validate incoming parameters
 		if (!preg_match('/^.+@.+$/',$sender))
 			display_error('Invalid value for email sender.');
@@ -97,7 +97,7 @@ class com_mailer_mail extends p_base {
 		//$this->headers['X-Mailer'] = 'PHP5';
 		$this->headers['X-Sender'] = $this->sender;
 		$this->headers['X-Priority'] = '3';
-		$this->headers['User-Agent'] = "{$config->program_title} {$config->program_version}";
+		$this->headers['User-Agent'] = "{$pines->program_title} {$pines->program_version}";
 		// Define some default MIME types
 		$this->mimeTypes['doc'] = 'application/msword';
 		$this->mimeTypes['pdf'] = 'application/pdf';
@@ -147,10 +147,10 @@ class com_mailer_mail extends p_base {
 	 * @param string $message The message text.
 	 */
 	public static function factory($sender, $recipient, $subject, $message) {
-		global $config;
+		global $pines;
 		$class = get_class();
 		$instance = new $class($sender, $recipient, $subject, $message);
-		$config->hook->hook_object($instance, $class.'->', false);
+		$pines->hook->hook_object($instance, $class.'->', false);
 		return $instance;
 	}
 

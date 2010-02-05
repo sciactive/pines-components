@@ -25,7 +25,7 @@ if ( isset($_REQUEST['id']) ) {
 	$sale = com_sales_sale::factory();
 }
 
-if ($config->run_sales->com_customer && $sale->status != 'invoiced' && $sale->status != 'paid') {
+if ($pines->run_sales->com_customer && $sale->status != 'invoiced' && $sale->status != 'paid') {
 	$sale->customer = null;
 	if (preg_match('/^\d+/', $_REQUEST['customer'])) {
 		$sale->customer = com_customer_customer::factory(intval($_REQUEST['customer']));
@@ -140,7 +140,7 @@ if ($product_error || $payment_error) {
 	return;
 }
 
-if ($config->com_sales->global_sales)
+if ($pines->com_sales->global_sales)
 	$sale->ac->other = 1;
 
 if (($_REQUEST['process'] == 'Invoice' || $_REQUEST['process'] == 'Tender') && $sale->status != 'invoiced' && $sale->status != 'paid') {

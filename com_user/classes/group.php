@@ -29,11 +29,11 @@ class group extends able_entity {
 		$this->abilities = array();
 		$this->address_type = 'us';
 		if ($id > 0 || is_string($id)) {
-			global $config;
+			global $pines;
 			if (is_int($id)) {
-				$entity = $config->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
+				$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
 			} else {
-				$entity = $config->entity_manager->get_entity(array('data' => array('groupname' => $id), 'tags' => $this->tags, 'class' => get_class($this)));
+				$entity = $pines->entity_manager->get_entity(array('data' => array('groupname' => $id), 'tags' => $this->tags, 'class' => get_class($this)));
 			}
 			if (is_null($entity))
 				return;
@@ -47,11 +47,11 @@ class group extends able_entity {
 	 * Create a new instance.
 	 */
 	public static function factory() {
-		global $config;
+		global $pines;
 		$class = get_class();
 		$args = func_get_args();
 		$entity = new $class($args[0]);
-		$config->hook->hook_object($entity, $class.'->', false);
+		$pines->hook->hook_object($entity, $class.'->', false);
 		return $entity;
 	}
 
@@ -60,8 +60,8 @@ class group extends able_entity {
 	 * @return bool True on success, false on failure.
 	 */
 	public function delete() {
-		global $config;
-		$descendents = $config->user_manager->get_group_descendents($this->guid);
+		global $pines;
+		$descendents = $pines->user_manager->get_group_descendents($this->guid);
 		foreach ($descendents as $cur_group) {
 			$cur_entity = group::factory($cur_group);
 			if (isset($cur_entity->guid)) {
@@ -90,13 +90,13 @@ class group extends able_entity {
 	 * @return module The form's module.
 	 */
 	public function print_form() {
-		global $config;
+		global $pines;
 		$module = new module('com_user', 'form_group', 'content');
 		$module->entity = $this;
 		$module->display_abilities = gatekeeper("com_user/abilities");
 		$module->sections = array('system');
-		$module->group_array = $config->user_manager->get_group_array();
-		foreach ($config->components as $cur_component) {
+		$module->group_array = $pines->user_manager->get_group_array();
+		foreach ($pines->components as $cur_component) {
 			$module->sections[] = $cur_component;
 		}
 

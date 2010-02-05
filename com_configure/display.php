@@ -12,8 +12,8 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( gatekeeper('com_configure/edit') || gatekeeper('com_configure/view') ) {
-	$com_configure_menu_id = $config->page->main_menu->add('Configuration');
-	$config->page->main_menu->add('Components', pines_url('com_configure', 'list'), $com_configure_menu_id);
+	$com_configure_menu_id = $pines->page->main_menu->add('Configuration');
+	$pines->page->main_menu->add('Components', pines_url('com_configure', 'list'), $com_configure_menu_id);
 }
 
 ?>

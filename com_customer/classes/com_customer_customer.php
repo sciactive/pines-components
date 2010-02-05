@@ -33,8 +33,8 @@ class com_customer_customer extends entity {
 		$this->addresses = array();
 		$this->attributes = array();
 		if ($id > 0) {
-			global $config;
-			$entity = $config->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
+			global $pines;
+			$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
 			if (is_null($entity))
 				return;
 			$this->guid = $entity->guid;
@@ -47,11 +47,11 @@ class com_customer_customer extends entity {
 	 * Create a new instance.
 	 */
 	public static function factory() {
-		global $config;
+		global $pines;
 		$class = get_class();
 		$args = func_get_args();
 		$entity = new $class($args[0]);
-		$config->hook->hook_object($entity, $class.'->', false);
+		$pines->hook->hook_object($entity, $class.'->', false);
 		return $entity;
 	}
 
@@ -107,8 +107,8 @@ class com_customer_customer extends entity {
 	 * @return module The form's module.
 	 */
 	public function print_form() {
-		global $config;
-		$config->editor->load();
+		global $pines;
+		$pines->editor->load();
 		$pgrid = new module('system', 'pgrid.default', 'head');
 		$pgrid->icons = true;
 		$module = new module('com_customer', 'form_customer', 'content');

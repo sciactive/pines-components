@@ -13,8 +13,8 @@ defined('P_RUN') or die('Direct access prohibited');
 
 /**
  * The standard editor.
- * @global com_tinymce $config->editor
+ * @global com_tinymce $pines->editor
  */
-$config->editor = 'com_tinymce';
+$pines->editor = 'com_tinymce';
 
 ?>

@@ -26,5 +26,5 @@ if (empty($failed_deletes)) {
 	display_error('Could not delete shippers with given IDs: '.$failed_deletes);
 }
 
-$config->run_sales->list_shippers();
+$pines->run_sales->list_shippers();
 ?>

@@ -61,6 +61,6 @@ class tpl_pines extends template {
 	var $google_cdn = true;
 }
 
-$config->template = new tpl_pines;
+$pines->template = new tpl_pines;
 
 ?>

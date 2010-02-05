@@ -35,10 +35,13 @@ class abilities extends p_base {
 	 * have to give your users abilities yourself.
 	 *
 	 * A good way to do this is have the following in your common.php
-	 * if ( isset($config->ability_manager) ) {
-	 * 	$config->ability_manager->add('com_whatever', 'firstability', 'title', 'description');
-	 * 	$config->ability_manager->add('com_whatever', 'secondability', 'title', 'description');
+	 *
+	 * <code>
+	 * if ( isset($pines->ability_manager) ) {
+	 *	$pines->ability_manager->add('com_whatever', 'firstability', 'title', 'description');
+	 *	$pines->ability_manager->add('com_whatever', 'secondability', 'title', 'description');
 	 * }
+	 * </code>
 	 *
 	 * @param string $component The component under which to place the ability.
 	 * @param string $ability The name of the ability to manage.

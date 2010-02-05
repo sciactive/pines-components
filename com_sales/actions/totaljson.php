@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_sales/totalsales') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'totaljson', $_REQUEST, false));
 
-$config->page->override = true;
+$pines->page->override = true;
 
 // Format the location.
 $location = $_REQUEST['location'];
@@ -22,12 +22,12 @@ if (is_null($location) || $location == 'current') {
 	$location = 'current';
 } elseif ($location == 'all') {
 	if (!gatekeeper('com_sales/totalothersales')) {
-		$config->page->override_doc('false');
+		$pines->page->override_doc('false');
 		return;
 	}
 } else {
 	if (!gatekeeper('com_sales/totalothersales')) {
-		$config->page->override_doc('false');
+		$pines->page->override_doc('false');
 		return;
 	}
 	$location = (int) $_REQUEST['location'];
@@ -46,7 +46,7 @@ if (preg_match('/\d{4}-\d{2}-\d{2}/', $_REQUEST['date_end'])) {
 }
 
 // Get all transactions.
-$tx_array = $config->entity_manager->get_entities(array(
+$tx_array = $pines->entity_manager->get_entities(array(
 		'tags' => array('com_sales', 'transaction'),
 		'tags_i' => array('sale_tx', 'payment_tx'),
 		'class' => com_sales_tx));
@@ -99,7 +99,7 @@ if (empty($tx_array)) {
 	$return = null;
 } else {
 	$return = array(
-		'location' => is_int($location) ? $config->user_manager->get_groupname($location) : $location,
+		'location' => is_int($location) ? $pines->user_manager->get_groupname($location) : $location,
 		'date_start' => date('Y-m-d', $date_start),
 		'date_end' => date('Y-m-d', $date_end),
 		'invoice' => $invoice_array,
@@ -109,6 +109,6 @@ if (empty($tx_array)) {
 	);
 }
 
-$config->page->override_doc(json_encode($return));
+$pines->page->override_doc(json_encode($return));
 
 ?>

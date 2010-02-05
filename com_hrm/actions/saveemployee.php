@@ -26,11 +26,11 @@ if ( isset($_REQUEST['id']) ) {
 }
 
 // General
-$employee->name_first = $config->run_hrm->title_case($_REQUEST['name_first']);
-$employee->name_middle = $config->run_hrm->title_case($_REQUEST['name_middle']);
-$employee->name_last = $config->run_hrm->title_case($_REQUEST['name_last']);
+$employee->name_first = $pines->run_hrm->title_case($_REQUEST['name_first']);
+$employee->name_middle = $pines->run_hrm->title_case($_REQUEST['name_middle']);
+$employee->name_last = $pines->run_hrm->title_case($_REQUEST['name_last']);
 $employee->name = "{$employee->name_first} {$employee->name_last}";
-if ($config->com_hrm->ssn_field)
+if ($pines->com_hrm->ssn_field)
 	$employee->ssn = preg_replace('/\D/', '', $_REQUEST['ssn']);
 $employee->email = $_REQUEST['email'];
 $employee->job_title = $_REQUEST['job_title'];
@@ -104,14 +104,14 @@ if (!is_null($employee->user_account) && is_null($employee->user_account->guid))
 	display_notice('The user account specified is not accessible.');
 	return;
 }
-$test = $config->entity_manager->get_entity(array('ref' => array('user_account' => $employee->user_account), 'tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
+$test = $pines->entity_manager->get_entity(array('ref' => array('user_account' => $employee->user_account), 'tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
 if (isset($test) && !$employee->is($test)) {
 	$employee->print_form();
 	display_notice("The user account specified is already attached to {$test->name}.");
 	return;
 }
 
-if ($config->com_hrm->global_employees)
+if ($pines->com_hrm->global_employees)
 	$employee->ac->other = 1;
 
 if ($employee->save()) {
@@ -120,5 +120,5 @@ if ($employee->save()) {
 	display_error('Error saving employee. Do you have permission?');
 }
 
-$config->run_hrm->list_employees();
+$pines->run_hrm->list_employees();
 ?>

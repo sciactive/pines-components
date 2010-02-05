@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$config->user_manager->logout();
+$pines->user_manager->logout();
 punt_user('You have been logged out.');
 
 ?>

@@ -22,7 +22,7 @@ $this->note = 'Provide PO details in this form.';
 		var product_dialog;
 		var cur_vendor = <?php echo ($this->entity->vendor ? $this->entity->vendor->guid : 'null'); ?>;
 		// Number of decimal places to round to.
-		var dec = <?php echo intval($config->com_sales->dec); ?>;
+		var dec = <?php echo intval($pines->com_sales->dec); ?>;
 		var all_products = JSON.parse("<?php
 		$products = array();
 		foreach ($this->products as $cur_product) {
@@ -225,7 +225,7 @@ $this->note = 'Provide PO details in this form.';
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 			<?php if (isset($this->entity->uid)) { ?>
-		<span>Created By: <span class="date"><?php echo $config->user_manager->get_username($this->entity->uid); ?></span></span>
+		<span>Created By: <span class="date"><?php echo $pines->user_manager->get_username($this->entity->uid); ?></span></span>
 		<br />
 			<?php } ?>
 		<span>Created On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_cdate); ?></span></span>
@@ -261,7 +261,7 @@ $this->note = 'Provide PO details in this form.';
 				<span class="note">Destination cannot be changed after items have been received.</span>
 			<?php } ?>
 			<select class="field ui-widget-content" name="destination"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?>>
-				<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations, $this->entity->destination->guid); ?>
+				<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations, $this->entity->destination->guid); ?>
 			</select></label>
 	</div>
 	<div class="element">
@@ -310,7 +310,7 @@ $this->note = 'Provide PO details in this form.';
 							<td><?php echo $cur_product['entity']->name; ?></td>
 							<td><?php echo $cur_product['quantity']; ?></td>
 							<td><?php echo $cur_product['cost']; ?></td>
-							<td><?php echo $config->run_sales->round(intval($cur_product['quantity']) * floatval($cur_product['cost']), $config->com_sales->dec); ?></td>
+							<td><?php echo $pines->run_sales->round(intval($cur_product['quantity']) * floatval($cur_product['cost']), $pines->com_sales->dec); ?></td>
 						</tr>
 						<?php } ?>
 					</tbody>

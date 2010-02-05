@@ -90,14 +90,14 @@ if (empty($product->name)) {
 	display_notice('Please specify a name.');
 	return;
 }
-$test = $config->entity_manager->get_entity(array('data' => array('name' => $product->name), 'tags' => array('com_sales', 'product'), 'class' => com_sales_product));
+$test = $pines->entity_manager->get_entity(array('data' => array('name' => $product->name), 'tags' => array('com_sales', 'product'), 'class' => com_sales_product));
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$product->print_form();
 	display_notice('There is already a product with that name. Please choose a different name.');
 	return;
 }
 
-if ($config->com_sales->global_products)
+if ($pines->com_sales->global_products)
 	$product->ac->other = 1;
 
 if ($product->save()) {
@@ -107,7 +107,7 @@ if ($product->save()) {
 	$categories = json_decode($_REQUEST['categories']);
 	if (is_array($categories)) {
 		array_map('intval', $categories);
-		$all_categories = $config->run_sales->get_category_array();
+		$all_categories = $pines->run_sales->get_category_array();
 		foreach($all_categories as $cur_cat) {
 			if (!is_array($cur_cat->products))
 				$cur_cat->products = array();
@@ -127,5 +127,5 @@ if ($product->save()) {
 	display_error('Error saving product. Do you have permission?');
 }
 
-$config->run_sales->list_products();
+$pines->run_sales->list_products();
 ?>

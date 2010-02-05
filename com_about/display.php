@@ -11,6 +11,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( gatekeeper('com_about/show') ) $config->page->main_menu->add('About', pines_url('com_about'));
+if ( gatekeeper('com_about/show') ) $pines->page->main_menu->add('About', pines_url('com_about'));
 
 ?>

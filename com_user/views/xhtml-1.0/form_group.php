@@ -17,7 +17,7 @@ $this->note = 'Provide group details in this form.';
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 			<?php if (isset($this->entity->uid)) { ?>
-		<span>Created By: <span class="date"><?php echo $config->user_manager->get_username($this->entity->uid); ?></span></span>
+		<span>Created By: <span class="date"><?php echo $pines->user_manager->get_username($this->entity->uid); ?></span></span>
 		<br />
 			<?php } ?>
 		<span>Created On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_cdate); ?></span></span>
@@ -61,7 +61,7 @@ $this->note = 'Provide group details in this form.';
 		<label><span class="label">Parent</span>
 			<select class="field ui-widget-content" name="parent" size="1">
 				<option value="none">--No Parent--</option>
-				<?php echo $config->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->entity->parent); ?>
+				<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->entity->parent); ?>
 			</select></label>
 	</div>
 	
@@ -181,7 +181,7 @@ $this->note = 'Provide group details in this form.';
 		<input type="hidden" name="abilities" value="true" />
 	</div>
 		<?php foreach ($this->sections as $cur_section) {
-			$section_abilities = $config->ability_manager->get_abilities($cur_section);
+			$section_abilities = $pines->ability_manager->get_abilities($cur_section);
 			if ( count($section_abilities) ) { ?>
 	<div class="element"><span class="label">Abilities for <em><?php echo $cur_section; ?></em></span>
 		<div class="group">

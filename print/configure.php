@@ -32,11 +32,11 @@ class tpl_print extends template {
 	var $editor_css = '';
 
 	function __construct() {
-		global $config;
-		$this->editor_css = $config->rela_location.'templates/print/css/editor.css';
+		global $pines;
+		$this->editor_css = $pines->rela_location.'templates/print/css/editor.css';
 	}
 }
 
-$config->template = new tpl_print;
+$pines->template = new tpl_print;
 
 ?>

@@ -28,8 +28,8 @@ class com_newsletter extends component {
 	 * @return bool True on success, false on failure.
 	 */
 	function delete_attachment(&$mail, $name) {
-		global $config;
-		if ( unlink($config->setting_upload . 'attachments/' . clean_filename($name)) ) {
+		global $pines;
+		if ( unlink($pines->setting_upload . 'attachments/' . clean_filename($name)) ) {
 			if ( in_array($name, $mail->attachments) )
 				unset($mail->attachments[array_search($name, $mail->attachments)]);
 			pines_log("Removed attachment $name from mail $mail->name.", 'notice');
@@ -51,7 +51,7 @@ class com_newsletter extends component {
 	 * @return bool True on success, false on failure.
 	 */
 	function edit_mail($mail = NULL, $new_option = '', $new_action = '', $close_option = "com_newsletter", $close_action = "list") {
-		global $config;
+		global $pines;
 
 		if ( !is_null($mail) ) {
 			if ( !$mail->has_tag('com_newsletter', 'mail') ) {
@@ -76,13 +76,13 @@ class com_newsletter extends component {
 	 * Provides a list of mailings.
 	 */
 	function list_mails() {
-		global $config;
+		global $pines;
 
 		$pgrid = new module('system', 'pgrid.default', 'head');
 		$pgrid->icons = true;
 
 		$module = new module('com_newsletter', 'list_mails', 'content');
-		$module->mails = $config->entity_manager->get_entities(array('tags' => array('com_newsletter', 'mail')));
+		$module->mails = $pines->entity_manager->get_entities(array('tags' => array('com_newsletter', 'mail')));
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_newsletter/list_mails'];
 

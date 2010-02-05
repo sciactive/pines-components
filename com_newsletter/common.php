@@ -11,9 +11,9 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( isset($config->ability_manager) ) {
-	$config->ability_manager->add('com_newsletter', 'listmail', 'List Mail', 'Let users view the mailbox.');
-	$config->ability_manager->add('com_newsletter', 'send', 'Send', 'Let users send out mailings.');
+if ( isset($pines->ability_manager) ) {
+	$pines->ability_manager->add('com_newsletter', 'listmail', 'List Mail', 'Let users view the mailbox.');
+	$pines->ability_manager->add('com_newsletter', 'send', 'Send', 'Let users send out mailings.');
 }
 
 ?>

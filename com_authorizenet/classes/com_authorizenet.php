@@ -60,7 +60,7 @@ class com_authorizenet extends component {
 	 * @param array $args The argument array.
 	 */
 	function payment_credit($args) {
-		global $config;
+		global $pines;
 		switch ($args['action']) {
 			case 'request':
 				$module = new module('com_authorizenet', 'form_payment');
@@ -71,7 +71,7 @@ class com_authorizenet extends component {
 					$module->state = $args['sale']->customer->state;
 					$module->zip = $args['sale']->customer->zip;
 				}
-				$config->page->override_doc($module->render());
+				$pines->page->override_doc($module->render());
 				break;
 			case 'approve':
 				$args['payment']['status'] = 'approved';
@@ -98,9 +98,9 @@ class com_authorizenet extends component {
 
 				$post_values = array(
 					// the API Login ID and Transaction Key must be replaced with valid values
-					'x_login'			=> $config->com_authorizenet->apilogin,
-					'x_tran_key'		=> $config->com_authorizenet->tran_key,
-					'x_test_request'	=> ($config->com_authorizenet->test_mode) ? 'TRUE' : 'FALSE',
+					'x_login'			=> $pines->com_authorizenet->apilogin,
+					'x_tran_key'		=> $pines->com_authorizenet->tran_key,
+					'x_test_request'	=> ($pines->com_authorizenet->test_mode) ? 'TRUE' : 'FALSE',
 
 					'x_version'			=> '3.1',
 					'x_delim_data'		=> 'TRUE',
@@ -127,7 +127,7 @@ class com_authorizenet extends component {
 				}
 				$post_string = rtrim($post_string, "& ");
 
-				$request = curl_init($config->com_authorizenet->post_url);
+				$request = curl_init($pines->com_authorizenet->post_url);
 				curl_setopt($request, CURLOPT_HEADER, 0);
 				curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
 				curl_setopt($request, CURLOPT_POSTFIELDS, $post_string);

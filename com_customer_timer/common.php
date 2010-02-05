@@ -11,8 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$config->ability_manager->add('com_customer_timer', 'viewstatus', 'View Customer Status', 'User can view the timer status of logged in customers.');
-$config->ability_manager->add('com_customer_timer', 'login', 'Login Users', 'User can log a customer in to the time tracker.');
-$config->ability_manager->add('com_customer_timer', 'forcelogout', 'Force Logout', 'User can log a customer out of the time tracker.');
+$pines->ability_manager->add('com_customer_timer', 'viewstatus', 'View Customer Status', 'User can view the timer status of logged in customers.');
+$pines->ability_manager->add('com_customer_timer', 'login', 'Login Users', 'User can log a customer in to the time tracker.');
+$pines->ability_manager->add('com_customer_timer', 'forcelogout', 'Force Logout', 'User can log a customer out of the time tracker.');
 
 ?>

@@ -11,12 +11,12 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_customer_timer/login') && !$config->com_customer_timer->openlogin )
+if ( !gatekeeper('com_customer_timer/login') && !$pines->com_customer_timer->openlogin )
 	punt_user('You don\'t have necessary permission.', pines_url('com_customer_timer', 'login', null, false));
 
 if (isset($_REQUEST['id'])) {
 	$id = (int) $_REQUEST['id'];
-	$config->run_customer_timer->login_logout($id, $_REQUEST['password']);
+	$pines->run_customer_timer->login_logout($id, $_REQUEST['password']);
 }
 
 $module = new module('com_customer_timer', 'login', 'content');

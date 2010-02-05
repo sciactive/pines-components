@@ -26,11 +26,11 @@ if ( isset($_REQUEST['id']) ) {
 }
 
 // General
-$customer->name_first = $config->run_customer->title_case($_REQUEST['name_first']);
-$customer->name_middle = $config->run_customer->title_case($_REQUEST['name_middle']);
-$customer->name_last = $config->run_customer->title_case($_REQUEST['name_last']);
+$customer->name_first = $pines->run_customer->title_case($_REQUEST['name_first']);
+$customer->name_middle = $pines->run_customer->title_case($_REQUEST['name_middle']);
+$customer->name_last = $pines->run_customer->title_case($_REQUEST['name_last']);
 $customer->name = "{$customer->name_first} {$customer->name_last}";
-if ($config->com_customer->ssn_field)
+if ($pines->com_customer->ssn_field)
 	$customer->ssn = preg_replace('/\D/', '', $_REQUEST['ssn']);
 $customer->dob = strtotime($_REQUEST['dob']);
 $customer->email = $_REQUEST['email'];
@@ -51,7 +51,7 @@ if (!empty($_REQUEST['password']))
 $customer->description = $_REQUEST['description'];
 
 // Points
-if ($config->com_customer->adjustpoints && gatekeeper('com_customer/adjustpoints'))
+if ($pines->com_customer->adjustpoints && gatekeeper('com_customer/adjustpoints'))
 	$customer->adjust_points((int) $_REQUEST['adjust_points']);
 
 // Addresses
@@ -107,7 +107,7 @@ if (empty($customer->phone_cell) && empty($customer->phone_work) && empty($custo
 	return;
 }
 
-if ($config->com_customer->global_customers)
+if ($pines->com_customer->global_customers)
 	$customer->ac->other = 1;
 
 if ($customer->save()) {
@@ -116,5 +116,5 @@ if ($customer->save()) {
 	display_error('Error saving customer. Do you have permission?');
 }
 
-$config->run_customer->list_customers();
+$pines->run_customer->list_customers();
 ?>

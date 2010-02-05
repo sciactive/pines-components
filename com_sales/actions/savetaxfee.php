@@ -43,7 +43,7 @@ if (empty($tax_fee->name)) {
 	display_notice('Please specify a name.');
 	return;
 }
-$test = $config->entity_manager->get_entity(array('data' => array('name' => $tax_fee->name), 'tags' => array('com_sales', 'tax_fee'), 'class' => com_sales_tax_fee));
+$test = $pines->entity_manager->get_entity(array('data' => array('name' => $tax_fee->name), 'tags' => array('com_sales', 'tax_fee'), 'class' => com_sales_tax_fee));
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$tax_fee->print_form();
 	display_notice('There is already a tax/fee with that name. Please choose a different name.');
@@ -55,7 +55,7 @@ if (empty($tax_fee->rate)) {
 	return;
 }
 
-if ($config->com_sales->global_tax_fees)
+if ($pines->com_sales->global_tax_fees)
 	$tax_fee->ac->other = 1;
 
 if ($tax_fee->save()) {
@@ -64,5 +64,5 @@ if ($tax_fee->save()) {
 	display_error('Error saving tax/fee. Do you have permission?');
 }
 
-$config->run_sales->list_tax_fees();
+$pines->run_sales->list_tax_fees();
 ?>

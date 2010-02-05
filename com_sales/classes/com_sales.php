@@ -39,7 +39,7 @@ class com_sales extends component {
 	 * - "name" - The name of your type. Ex: 'com_giftcard/giftcard'
 	 * - "cname" - The canonical name of your action. Ex: 'Gift Card'
 	 * - "description" - A description of the action. Ex: 'Deduct the payment from a gift card.'
-	 * - "callback" - Callback to your function. Ex: array($config->run_giftcard, 'process_giftcard')
+	 * - "callback" - Callback to your function. Ex: array($pines->run_giftcard, 'process_giftcard')
 	 *
 	 * The callback will be passed an array which may contain the following
 	 * associative entries:
@@ -58,7 +58,7 @@ class com_sales extends component {
 	 * - "return" - The payment is being returned and the funds need to be returned.
 	 *
 	 * If "action" is "request", the callback can provide a form to collect
-	 * information from the user by calling $config->page->override_doc() with
+	 * information from the user by calling $pines->page->override_doc() with
 	 * the HTML of the form. It is recommended to use a module to provide the
 	 * form's HTML. Use $module->render() to get the HTML from the module. If
 	 * you do not need any information from the user, simply don't do anything.
@@ -92,7 +92,7 @@ class com_sales extends component {
 	 * - "name" - The name of your action. Ex: 'com_gamephear/create_gamephear_account'
 	 * - "cname" - The canonical name of your action. Ex: 'Create GamePhear Account'
 	 * - "description" - A description of the action. Ex: 'Creates a GamePhear account for the customer.'
-	 * - "callback" - Callback to your function. Ex: array($config->run_gamephear, 'create_account')
+	 * - "callback" - Callback to your function. Ex: array($pines->run_gamephear, 'create_account')
 	 *
 	 * The callback will be passed an array which may contain the following
 	 * associative entries:
@@ -115,8 +115,8 @@ class com_sales extends component {
 	 * Places the result in $this->com_customer.
 	 */
 	function __construct() {
-		global $config;
-		$this->com_customer = $config->depend->check('component', 'com_customer');
+		global $pines;
+		$this->com_customer = $pines->depend->check('component', 'com_customer');
 	}
 
 	/**
@@ -127,7 +127,7 @@ class com_sales extends component {
 	 * @todo Finish calling this in all appropriate places.
 	 */
 	function call_payment_process($arguments = array()) {
-		global $config;
+		global $pines;
 		if (!is_array($arguments))
 			return false;
 		if (empty($arguments['action']))
@@ -240,8 +240,8 @@ class com_sales extends component {
 	 * @return bool True on success, false on failure.
 	 */
 	function delete_category_recursive($category) {
-		global $config;
-		$children = $config->entity_manager->get_entities(array('data' => array('parent' => $category->guid)));
+		global $pines;
+		$children = $pines->entity_manager->get_entities(array('data' => array('parent' => $category->guid)));
 		if (is_array($children)) {
 			foreach ($children as $cur_child) {
 				if (!$this->delete_category_recursive($cur_child))
@@ -262,8 +262,8 @@ class com_sales extends component {
 	 * @return entity|null The category if it exists, null if it doesn't.
 	 */
 	function get_category($id) {
-		global $config;
-		$entity = $config->entity_manager->get_entity(array('guid' => $id, 'tags' => array('com_sales', 'category')));
+		global $pines;
+		$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => array('com_sales', 'category')));
 		return $entity;
 	}
 
@@ -273,8 +273,8 @@ class com_sales extends component {
 	 * @return array The array of entities.
 	 */
 	function get_category_array() {
-		global $config;
-		$entities = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'category')));
+		global $pines;
+		$entities = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'category')));
 		if (!is_array($entities)) {
 			$entities = array();
 		}
@@ -293,12 +293,12 @@ class com_sales extends component {
 	 * @return entity|null The product if it is found, null if it isn't.
 	 */
 	function get_product_by_code($code) {
-		global $config;
-		$entity = $config->entity_manager->get_entity(array('data' => array('sku' => $code), 'tags' => array('com_sales', 'product'), 'class' => com_sales_product));
+		global $pines;
+		$entity = $pines->entity_manager->get_entity(array('data' => array('sku' => $code), 'tags' => array('com_sales', 'product'), 'class' => com_sales_product));
 		if (!is_null($entity))
 			return $entity;
 		
-		$entities = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'product'), 'class' => com_sales_product));
+		$entities = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'product'), 'class' => com_sales_product));
 		if (!is_array($entities))
 			return null;
 		foreach($entities as $cur_entity) {
@@ -348,7 +348,7 @@ class com_sales extends component {
 	 * Creates and attaches a module which lists manufacturers.
 	 */
 	function list_manufacturers() {
-		global $config;
+		global $pines;
 
 		$pgrid = new module('system', 'pgrid.default', 'head');
 		$pgrid->icons = true;
@@ -357,7 +357,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_manufacturers'];
 
-		$module->manufacturers = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'manufacturer'), 'class' => com_sales_manufacturer));
+		$module->manufacturers = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'manufacturer'), 'class' => com_sales_manufacturer));
 
 		if ( empty($module->manufacturers) ) {
 			$pgrid->detach();
@@ -370,7 +370,7 @@ class com_sales extends component {
 	 * Creates and attaches a module which lists payment types.
 	 */
 	function list_payment_types() {
-		global $config;
+		global $pines;
 
 		$pgrid = new module('system', 'pgrid.default', 'head');
 		$pgrid->icons = true;
@@ -379,7 +379,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_payment_types'];
 
-		$module->payment_types = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));
+		$module->payment_types = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));
 
 		if ( empty($module->payment_types) ) {
 			$pgrid->detach();
@@ -392,7 +392,7 @@ class com_sales extends component {
 	 * Creates and attaches a module which lists pos.
 	 */
 	function list_pos() {
-		global $config;
+		global $pines;
 
 		$pgrid = new module('system', 'pgrid.default', 'head');
 		$pgrid->icons = true;
@@ -401,7 +401,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_pos'];
 
-		$module->pos = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'po'), 'class' => com_sales_po));
+		$module->pos = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'po'), 'class' => com_sales_po));
 
 		if ( empty($module->pos) ) {
 			$pgrid->detach();
@@ -427,7 +427,7 @@ class com_sales extends component {
 	 * Creates and attaches a module which lists products.
 	 */
 	function list_products() {
-		global $config;
+		global $pines;
 
 		$pgrid = new module('system', 'pgrid.default', 'head');
 		$pgrid->icons = true;
@@ -436,7 +436,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_products'];
 
-		$module->products = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'product'), 'class' => com_sales_product));
+		$module->products = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'product'), 'class' => com_sales_product));
 
 		if ( empty($module->products) ) {
 			$pgrid->detach();
@@ -449,7 +449,7 @@ class com_sales extends component {
 	 * Creates and attaches a module which lists sales.
 	 */
 	function list_sales() {
-		global $config;
+		global $pines;
 
 		$pgrid = new module('system', 'pgrid.default', 'head');
 		$pgrid->icons = true;
@@ -458,7 +458,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_sales'];
 
-		$module->sales = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'sale'), 'class' => com_sales_sale));
+		$module->sales = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'sale'), 'class' => com_sales_sale));
 
 		if ( empty($module->sales) ) {
 			$pgrid->detach();
@@ -471,7 +471,7 @@ class com_sales extends component {
 	 * Creates and attaches a module which lists shippers.
 	 */
 	function list_shippers() {
-		global $config;
+		global $pines;
 
 		$pgrid = new module('system', 'pgrid.default', 'head');
 		$pgrid->icons = true;
@@ -480,7 +480,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_shippers'];
 
-		$module->shippers = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'shipper'), 'class' => com_sales_shipper));
+		$module->shippers = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'shipper'), 'class' => com_sales_shipper));
 
 		if ( empty($module->shippers) ) {
 			$pgrid->detach();
@@ -495,7 +495,7 @@ class com_sales extends component {
 	 * @param bool $all Whether to show items that are no longer physically in inventory.
 	 */
 	function list_stock($all = false) {
-		global $config;
+		global $pines;
 
 		$pgrid = new module('system', 'pgrid.default', 'head');
 		$pgrid->icons = true;
@@ -504,7 +504,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_stock'];
 
-		$module->stock = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'stock'), 'class' => com_sales_stock));
+		$module->stock = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'stock'), 'class' => com_sales_stock));
 		$module->all = $all;
 
 		if ( empty($module->stock) ) {
@@ -518,7 +518,7 @@ class com_sales extends component {
 	 * Creates and attaches a module which lists taxes/fees.
 	 */
 	function list_tax_fees() {
-		global $config;
+		global $pines;
 
 		$pgrid = new module('system', 'pgrid.default', 'head');
 		$pgrid->icons = true;
@@ -527,7 +527,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_tax_fees'];
 
-		$module->tax_fees = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'tax_fee'), 'class' => com_sales_tax_fee));
+		$module->tax_fees = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'tax_fee'), 'class' => com_sales_tax_fee));
 
 		if ( empty($module->tax_fees) ) {
 			$pgrid->detach();
@@ -540,7 +540,7 @@ class com_sales extends component {
 	 * Creates and attaches a module which lists transfers.
 	 */
 	function list_transfers() {
-		global $config;
+		global $pines;
 
 		$pgrid = new module('system', 'pgrid.default', 'head');
 		$pgrid->icons = true;
@@ -549,7 +549,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_transfers'];
 
-		$module->transfers = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'transfer'), 'class' => com_sales_transfer));
+		$module->transfers = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'transfer'), 'class' => com_sales_transfer));
 
 		if ( empty($module->transfers) ) {
 			$pgrid->detach();
@@ -562,7 +562,7 @@ class com_sales extends component {
 	 * Creates and attaches a module which lists vendors.
 	 */
 	function list_vendors() {
-		global $config;
+		global $pines;
 
 		$pgrid = new module('system', 'pgrid.default', 'head');
 		$pgrid->icons = true;
@@ -571,7 +571,7 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_vendors'];
 
-		$module->vendors = $config->entity_manager->get_entities(array('tags' => array('com_sales', 'vendor'), 'class' => com_sales_vendor));
+		$module->vendors = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'vendor'), 'class' => com_sales_vendor));
 
 		if ( empty($module->vendors) ) {
 			$pgrid->detach();
@@ -588,11 +588,11 @@ class com_sales extends component {
 	 * @return entity|bool The category on success, false on failure.
 	 */
 	function new_category($parent_id = null, $name = 'untitled') {
-		global $config;
+		global $pines;
 		$entity = new entity('com_sales', 'category');
 		$entity->name = $name;
 		if (!is_null($parent_id)) {
-			$parent = $config->entity_manager->get_entity(array('guid' => $parent_id, 'tags' => array('com_sales', 'category')));
+			$parent = $pines->entity_manager->get_entity(array('guid' => $parent_id, 'tags' => array('com_sales', 'category')));
 			if (!is_null($parent))
 				$entity->parent = $parent_id;
 		}
@@ -630,11 +630,11 @@ class com_sales extends component {
 	 * @param array $args The argument array.
 	 */
 	function payment_manager($args) {
-		global $config;
+		global $pines;
 		switch ($args['action']) {
 			case 'request':
 				$module = new module('com_sales', 'payment_form_manager');
-				$config->page->override_doc($module->render());
+				$pines->page->override_doc($module->render());
 				break;
 			case 'approve':
 				if (gatekeeper('com_sales/manager')) {
@@ -642,7 +642,7 @@ class com_sales extends component {
 					unset($args['payment']['data']['password']);
 					$args['payment']['status'] = 'approved';
 				} else {
-					if ($id = $config->user_manager->authenticate($args['payment']['data']['username'], $args['payment']['data']['password'])) {
+					if ($id = $pines->user_manager->authenticate($args['payment']['data']['username'], $args['payment']['data']['password'])) {
 						$user = user::factory($id);
 						$args['payment']['status'] = gatekeeper('com_sales/manager', $user) ? 'approved' : 'manager_approval_needed';
 					} else {
@@ -668,7 +668,7 @@ class com_sales extends component {
 	 * @return module|null The new module on success, nothing on failure.
 	 */
 	function print_receive_form() {
-		global $config;
+		global $pines;
 		$pgrid = new module('system', 'pgrid.default', 'head');
 		$pgrid->icons = true;
 		$module = new module('com_sales', 'form_receive', 'content');
@@ -682,9 +682,9 @@ class com_sales extends component {
 	 * @return module|null The new module on success, nothing on failure.
 	 */
 	function print_sales_total() {
-		global $config;
+		global $pines;
 		$module = new module('com_sales', 'total_sales', 'content');
-		$module->locations = $config->user_manager->get_group_array();
+		$module->locations = $pines->user_manager->get_group_array();
 		$module->show_all = gatekeeper('com_sales/totalothersales');
 
 		return $module;
@@ -734,7 +734,7 @@ class com_sales extends component {
 	 * @return module The notifcation's module.
 	 */
 	public function notify($title, $header, $note) {
-		global $config;
+		global $pines;
 		$module = new module('com_sales', 'show_note', 'left');
 		$module->title = $title;
 		$module->header = $header;

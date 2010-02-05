@@ -13,8 +13,8 @@ defined('P_RUN') or die('Direct access prohibited');
 
 /**
  * The database manager.
- * @global com_mysql $config->db_manager
+ * @global com_mysql $pines->db_manager
  */
-$config->db_manager = 'com_mysql';
+$pines->db_manager = 'com_mysql';
 
 ?>

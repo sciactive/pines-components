@@ -29,8 +29,8 @@ class com_sales_tax_fee extends entity {
 		$this->enabled = true;
 		$this->locations = array();
 		if ($id > 0) {
-			global $config;
-			$entity = $config->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
+			global $pines;
+			$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
 			if (is_null($entity))
 				return;
 			$this->guid = $entity->guid;
@@ -43,11 +43,11 @@ class com_sales_tax_fee extends entity {
 	 * Create a new instance.
 	 */
 	public static function factory() {
-		global $config;
+		global $pines;
 		$class = get_class();
 		$args = func_get_args();
 		$entity = new $class($args[0]);
-		$config->hook->hook_object($entity, $class.'->', false);
+		$pines->hook->hook_object($entity, $class.'->', false);
 		return $entity;
 	}
 
@@ -77,10 +77,10 @@ class com_sales_tax_fee extends entity {
 	 * @return module The form's module.
 	 */
 	public function print_form() {
-		global $config;
+		global $pines;
 		$module = new module('com_sales', 'form_tax_fee', 'content');
 		$module->entity = $this;
-		$module->locations = $config->user_manager->get_group_array();
+		$module->locations = $pines->user_manager->get_group_array();
 
 		return $module;
 	}

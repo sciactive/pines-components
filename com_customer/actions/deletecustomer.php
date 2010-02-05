@@ -26,5 +26,5 @@ if (empty($failed_deletes)) {
 	display_error('Could not delete customers with given IDs: '.$failed_deletes);
 }
 
-$config->run_customer->list_customers();
+$pines->run_customer->list_customers();
 ?>

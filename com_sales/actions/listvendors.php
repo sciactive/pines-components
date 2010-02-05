@@ -14,5 +14,5 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_sales/listvendors') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listvendors', null, false));
 
-$config->run_sales->list_vendors();
+$pines->run_sales->list_vendors();
 ?>

@@ -21,7 +21,7 @@ if ( !gatekeeper('system/all') )
 
 $test = new module('com_entity', 'test', 'content');
 
-if (!($config->entity_manager)) {
+if (!($pines->entity_manager)) {
 	$test->error = true;
 	return;
 }
@@ -51,7 +51,7 @@ $entity_guid = $entity_test->guid;
 
 // Retrieving entity by GUID...
 $entity_result = new entity;
-$entity_result = $config->entity_manager->get_entity($entity_test->guid);
+$entity_result = $pines->entity_manager->get_entity($entity_test->guid);
 $test->tests['by_guid'][0] = ($entity_result->name == $entity_test->name);
 $test->tests['by_guid'][1] = microtime(true);
 $test->tests['by_guid'][2] = 'Retrieving entity by GUID...';
@@ -59,7 +59,7 @@ unset($entity_result);
 
 // Testing wrong GUID...
 $entity_result = new entity;
-$entity_result = $config->entity_manager->get_entity($entity_test->guid + 1);
+$entity_result = $pines->entity_manager->get_entity($entity_test->guid + 1);
 $test->tests['wrong_guid'][0] = (empty($entity_result) ? true : ($entity_result->name != $entity_test->name));
 $test->tests['wrong_guid'][1] = microtime(true);
 $test->tests['wrong_guid'][2] = 'Testing wrong GUID...';
@@ -67,7 +67,7 @@ unset($entity_result);
 
 // Retrieving entity by GUID and tags...
 $entity_result = new entity;
-$entity_result = $config->entity_manager->get_entity(array('guid' => $entity_test->guid, 'tags' => array('com_entity', 'test')));
+$entity_result = $pines->entity_manager->get_entity(array('guid' => $entity_test->guid, 'tags' => array('com_entity', 'test')));
 $test->tests['guid_tags'][0] = ($entity_result->name == $entity_test->name);
 $test->tests['guid_tags'][1] = microtime(true);
 $test->tests['guid_tags'][2] = 'Retrieving entity by GUID and tags...';
@@ -75,7 +75,7 @@ unset($entity_result);
 
 // Testing GUID and wrong tags...
 $entity_result = new entity;
-$entity_result = $config->entity_manager->get_entity(array('guid' => $entity_test->guid, 'tags' => array('com_entity', 'pickles')));
+$entity_result = $pines->entity_manager->get_entity(array('guid' => $entity_test->guid, 'tags' => array('com_entity', 'pickles')));
 $test->tests['guid_wr_tags'][0] = empty($entity_result);
 $test->tests['guid_wr_tags'][1] = microtime(true);
 $test->tests['guid_wr_tags'][2] = 'Testing GUID and wrong tags...';
@@ -84,7 +84,7 @@ unset($entity_result);
 // Retrieving entity by tags...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('tags' => array('com_entity', 'test')));
+$entity_result = $pines->entity_manager->get_entities(array('tags' => array('com_entity', 'test')));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -97,7 +97,7 @@ unset($entity_result);
 // Testing wrong tags...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('tags' => array('pickles')));
+$entity_result = $pines->entity_manager->get_entities(array('tags' => array('pickles')));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -110,7 +110,7 @@ unset($entity_result);
 // Retrieving entity by tags inclusively...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('tags_i' => array('pickles', 'test', 'barbecue')));
+$entity_result = $pines->entity_manager->get_entities(array('tags_i' => array('pickles', 'test', 'barbecue')));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -123,7 +123,7 @@ unset($entity_result);
 // Testing wrong inclusive tags...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('tags_i' => array('pickles', 'barbecue')));
+$entity_result = $pines->entity_manager->get_entities(array('tags_i' => array('pickles', 'barbecue')));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -136,7 +136,7 @@ unset($entity_result);
 // Retrieving entity by mixed tags...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('tags' => array('com_entity'), 'tags_i' => array('pickles', 'test', 'barbecue')));
+$entity_result = $pines->entity_manager->get_entities(array('tags' => array('com_entity'), 'tags_i' => array('pickles', 'test', 'barbecue')));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -149,7 +149,7 @@ unset($entity_result);
 // Testing wrong inclusive mixed tags...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('tags' => array('com_entity'), 'tags_i' => array('pickles', 'barbecue')));
+$entity_result = $pines->entity_manager->get_entities(array('tags' => array('com_entity'), 'tags_i' => array('pickles', 'barbecue')));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -162,7 +162,7 @@ unset($entity_result);
 // Testing wrong exclusive mixed tags...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('tags' => array('pickles'), 'tags_i' => array('test', 'barbecue')));
+$entity_result = $pines->entity_manager->get_entities(array('tags' => array('pickles'), 'tags_i' => array('test', 'barbecue')));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -175,7 +175,7 @@ unset($entity_result);
 // Retrieving entity by data...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('data' => array('test_value' => 'test')));
+$entity_result = $pines->entity_manager->get_entities(array('data' => array('test_value' => 'test')));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -188,7 +188,7 @@ unset($entity_result);
 // Testing wrong data...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('data' => array('test_value' => 'pickles')));
+$entity_result = $pines->entity_manager->get_entities(array('data' => array('test_value' => 'pickles')));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -202,35 +202,35 @@ unset($entity_result);
 $entity_result = array();
 $passed_all = true;
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('match' => array('match_test' => '/.*/'))); // anything
+$entity_result = $pines->entity_manager->get_entities(array('match' => array('match_test' => '/.*/'))); // anything
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
 $passed_all = $passed_all && $found_match;
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('match' => array('match_test' => '/Edward McCheese/'), 'tags' => array('com_entity', 'test'))); // a substring
+$entity_result = $pines->entity_manager->get_entities(array('match' => array('match_test' => '/Edward McCheese/'), 'tags' => array('com_entity', 'test'))); // a substring
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
 $passed_all = $passed_all && $found_match;
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('match_i' => array('test_value' => '/\d/', 'match_test' => '/Edward McCheese/'), 'tags' => array('com_entity', 'test'))); // inclusive test
+$entity_result = $pines->entity_manager->get_entities(array('match_i' => array('test_value' => '/\d/', 'match_test' => '/Edward McCheese/'), 'tags' => array('com_entity', 'test'))); // inclusive test
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
 $passed_all = $passed_all && $found_match;
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('match' => array('match_test' => '/\b[\w\-+]+@[\w-]+\.\w{2,4}\b/'), 'tags' => array('com_entity', 'test'))); // a simple email
+$entity_result = $pines->entity_manager->get_entities(array('match' => array('match_test' => '/\b[\w\-+]+@[\w-]+\.\w{2,4}\b/'), 'tags' => array('com_entity', 'test'))); // a simple email
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
 $passed_all = $passed_all && $found_match;
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('match' => array('match_test' => '/\(\d{3}\)\s\d{3}-\d{4}/'), 'tags' => array('com_entity', 'test'))); // a phone number
+$entity_result = $pines->entity_manager->get_entities(array('match' => array('match_test' => '/\(\d{3}\)\s\d{3}-\d{4}/'), 'tags' => array('com_entity', 'test'))); // a phone number
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -245,21 +245,21 @@ unset($entity_result);
 $entity_result = array();
 $passed_all = false;
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('match' => array('match_test' => '/Q/')));
+$entity_result = $pines->entity_manager->get_entities(array('match' => array('match_test' => '/Q/')));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
 $passed_all = $passed_all || $found_match;
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('match' => array('match_test' => '/.*/'), 'tags' => array('pickle')));
+$entity_result = $pines->entity_manager->get_entities(array('match' => array('match_test' => '/.*/'), 'tags' => array('pickle')));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
 }
 $passed_all = $passed_all || $found_match;
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('match_i' => array('test_value' => '/\d/', 'match_test' => '/,,/')));
+$entity_result = $pines->entity_manager->get_entities(array('match_i' => array('test_value' => '/\d/', 'match_test' => '/,,/')));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -273,7 +273,7 @@ unset($entity_result);
 // Retrieving entity by tags and data...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('data' => array('test_value' => 'test'), 'tags' => array('com_entity', 'test')));
+$entity_result = $pines->entity_manager->get_entities(array('data' => array('test_value' => 'test'), 'tags' => array('com_entity', 'test')));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -286,7 +286,7 @@ unset($entity_result);
 // Testing wrong tags and right data...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('data' => array('test_value' => 'test'), 'tags' => array('pickles')));
+$entity_result = $pines->entity_manager->get_entities(array('data' => array('test_value' => 'test'), 'tags' => array('pickles')));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -299,7 +299,7 @@ unset($entity_result);
 // Testing right tags and wrong data...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('data' => array('test_value' => 'pickles'), 'tags' => array('com_entity', 'test')));
+$entity_result = $pines->entity_manager->get_entities(array('data' => array('test_value' => 'pickles'), 'tags' => array('com_entity', 'test')));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -312,7 +312,7 @@ unset($entity_result);
 // Testing wrong tags and wrong data...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('data' => array('test_value' => 'pickles'), 'tags' => array('pickles')));
+$entity_result = $pines->entity_manager->get_entities(array('data' => array('test_value' => 'pickles'), 'tags' => array('pickles')));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -333,7 +333,7 @@ unset($entity_test);
 $entity_reference_test->test = 'good';
 $entity_reference_test->save();
 unset($entity_reference_test);
-$entity_test = $config->entity_manager->get_entity($entity_guid);
+$entity_test = $pines->entity_manager->get_entity($entity_guid);
 $test->tests['ref'][0] = ($entity_test->reference->test == 'good');
 $test->tests['ref'][1] = microtime(true);
 $test->tests['ref'][2] = 'Testing referenced entities...';
@@ -346,7 +346,7 @@ $test->tests['ref_array'][2] = 'Testing referenced entity arrays...';
 // Retrieving entity by reference...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('ref' => array('reference' => $entity_reference_guid)));
+$entity_result = $pines->entity_manager->get_entities(array('ref' => array('reference' => $entity_reference_guid)));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -359,7 +359,7 @@ unset($entity_result);
 // Testing wrong reference...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('ref' => array('reference' => array($entity_reference_guid, $entity_reference_guid + 1))));
+$entity_result = $pines->entity_manager->get_entities(array('ref' => array('reference' => array($entity_reference_guid, $entity_reference_guid + 1))));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -372,7 +372,7 @@ unset($entity_result);
 // Testing non-existent reference...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('ref' => array('pickle' => $entity_reference_guid)));
+$entity_result = $pines->entity_manager->get_entities(array('ref' => array('pickle' => $entity_reference_guid)));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -385,7 +385,7 @@ unset($entity_result);
 // Retrieving entity by inclusive reference...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('ref_i' => array('reference' => array($entity_reference_guid, $entity_reference_guid + 1))));
+$entity_result = $pines->entity_manager->get_entities(array('ref_i' => array('reference' => array($entity_reference_guid, $entity_reference_guid + 1))));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -398,7 +398,7 @@ unset($entity_result);
 // Testing wrong inclusive reference...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('ref_i' => array('reference' => array($entity_reference_guid + 2, $entity_reference_guid + 1))));
+$entity_result = $pines->entity_manager->get_entities(array('ref_i' => array('reference' => array($entity_reference_guid + 2, $entity_reference_guid + 1))));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -411,7 +411,7 @@ unset($entity_result);
 // Retrieving entity by array reference...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('ref' => array('ref_array' => $entity_reference_guid)));
+$entity_result = $pines->entity_manager->get_entities(array('ref' => array('ref_array' => $entity_reference_guid)));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -424,7 +424,7 @@ unset($entity_result);
 // Testing wrong array reference...
 $entity_result = array();
 $found_match = false;
-$entity_result = $config->entity_manager->get_entities(array('ref' => array('ref_array' => array($entity_reference_guid, $entity_reference_guid + 1))));
+$entity_result = $pines->entity_manager->get_entities(array('ref' => array('ref_array' => array($entity_reference_guid, $entity_reference_guid + 1))));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;
@@ -451,7 +451,7 @@ $test->tests['resave'][2] = 'Resaving entity...';
 
 // Deleting entity by GUID...
 // This shouldn't be used in regular code. Instead, call the entity's delete() method.
-$test->tests['del_guid'][0] = ($config->entity_manager->delete_entity_by_id($entity_test->guid));
+$test->tests['del_guid'][0] = ($pines->entity_manager->delete_entity_by_id($entity_test->guid));
 $test->tests['del_guid'][1] = microtime(true);
 $test->tests['del_guid'][2] = 'Deleting entity by GUID...';
 

@@ -34,11 +34,11 @@ class com_configure extends component {
 	 * Fills the $config_files array.
 	 */
 	function __construct() {
-		global $config;
+		global $pines;
 		if (file_exists('system/configure.php'))
 			$this->config_files['system'] = 'system/configure.php';
-		foreach ($config->all_components as $cur_component) {
-			if (in_array($cur_component, $config->components)) {
+		foreach ($pines->all_components as $cur_component) {
+			if (in_array($cur_component, $pines->components)) {
 				$cur_config_file = 'components/'.$cur_component.'/configure.php';
 			} else {
 				$cur_config_file = 'components/.'.$cur_component.'/configure.php';
@@ -58,12 +58,12 @@ class com_configure extends component {
 	 * @return bool True on success, false on failure.
 	 */
 	function disable_component($component) {
-		global $config;
-		if (!in_array($component, $config->all_components)) {
+		global $pines;
+		if (!in_array($component, $pines->all_components)) {
 			pines_log("Failed to disable component $component. Component isn't installed", 'error');
 			return false;
 		}
-		if (in_array($component, $config->components) && rename('components/'.$component, 'components/.'.$component)) {
+		if (in_array($component, $pines->components) && rename('components/'.$component, 'components/.'.$component)) {
 			pines_log("Disabled component $component.", 'notice');
 			return true;
 		} else {
@@ -82,12 +82,12 @@ class com_configure extends component {
 	 * @return bool True on success, false on failure.
 	 */
 	function enable_component($component) {
-		global $config;
-		if (!in_array($component, $config->all_components)) {
+		global $pines;
+		if (!in_array($component, $pines->all_components)) {
 			pines_log("Failed to enable component $component. Component isn't installed", 'error');
 			return false;
 		}
-		if (!in_array($component, $config->components) && rename('components/.'.$component, 'components/'.$component)) {
+		if (!in_array($component, $pines->components) && rename('components/.'.$component, 'components/'.$component)) {
 			pines_log("Enabled component $component.", 'notice');
 			return true;
 		} else {
@@ -103,7 +103,6 @@ class com_configure extends component {
 	 * @return array|bool The array of configuration variables on success, false on failure.
 	 */
 	function get_config_array($config_file) {
-		global $config;
 		if (!file_exists($config_file)) return false;
 		$config_array = include($config_file);
 		if (!is_array($config_array)) return false;
@@ -114,12 +113,12 @@ class com_configure extends component {
 	 * Creates and attaches a module which lists configurable components.
 	 */
 	function list_components() {
-		global $config;
+		global $pines;
 		$module = new module('com_configure', 'list', 'content');
 
-		$module->components = array_merge(array('system'), $config->all_components);
+		$module->components = array_merge(array('system'), $pines->all_components);
 		$module->config_components = array_keys($this->config_files);
-		$module->disabled_components = array_diff($config->all_components, $config->components);
+		$module->disabled_components = array_diff($pines->all_components, $pines->components);
 
 		//This shouldn't even be possible, but just in case...
 		if ( empty($module->components) ) {

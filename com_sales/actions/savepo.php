@@ -68,7 +68,7 @@ if (empty($po->po_number)) {
 	display_notice('Please specify a PO number.');
 	return;
 }
-$test = $config->entity_manager->get_entity(array('data' => array('po_number' => $po->po_number), 'tags' => array('com_sales', 'po'), 'class' => com_sales_po));
+$test = $pines->entity_manager->get_entity(array('data' => array('po_number' => $po->po_number), 'tags' => array('com_sales', 'po'), 'class' => com_sales_po));
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$po->print_form();
 	display_notice('There is already a PO with that number. Please enter a different number.');
@@ -93,5 +93,5 @@ if ($po->save()) {
 	display_error('Error saving PO. Do you have permission?');
 }
 
-$config->run_sales->list_pos();
+$pines->run_sales->list_pos();
 ?>

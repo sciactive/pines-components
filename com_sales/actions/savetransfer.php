@@ -70,5 +70,5 @@ if ($transfer->save()) {
 	display_error('Error saving transfer. Do you have permission?');
 }
 
-$config->run_sales->list_transfers();
+$pines->run_sales->list_transfers();
 ?>

@@ -27,7 +27,7 @@ class com_pdf_displays extends entity {
 	 * @param int $id The ID of the display entity to load, 0 for a new display entity.
 	 */
 	public function __construct($id = 0) {
-		global $config;
+		global $pines;
 		parent::__construct();
 		$this->add_tag('com_pdf', 'displays');
 		$this->displays = array();
@@ -35,12 +35,12 @@ class com_pdf_displays extends entity {
 		$this->pdf_dl_filename = 'blank.pdf';
 		$this->pdf_pages = 1;
 		$this->pdf_title = 'blank';
-		$this->pdf_author = $config->com_pdf->author;
+		$this->pdf_author = $pines->com_pdf->author;
 		$this->pdf_creator = 'Pines';
 		$this->pdf_subject = '';
 		$this->pdf_keywords = '';
 		if ($id > 0) {
-			$entity = $config->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
+			$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
 			if (is_null($entity))
 				return;
 			$this->guid = $entity->guid;
@@ -53,11 +53,11 @@ class com_pdf_displays extends entity {
 	 * Create a new instance.
 	 */
 	public static function factory() {
-		global $config;
+		global $pines;
 		$class = get_class();
 		$args = func_get_args();
 		$entity = new $class($args[0]);
-		$config->hook->hook_object($entity, $class.'->', false);
+		$pines->hook->hook_object($entity, $class.'->', false);
 		return $entity;
 	}
 
@@ -79,11 +79,11 @@ class com_pdf_displays extends entity {
 	 * @return int The page count of the current PDF.
 	 */
 	public function page_count() {
-		global $config;
+		global $pines;
 		require_once('components/com_pdf/includes/tcpdf/tcpdf.php');
 		require_once('components/com_pdf/includes/fpdi/fpdi.php');
 		$pdf = new FPDI();
-		$this->pdf_pages = $pdf->setSourceFile($config->com_pdf->pdf_path.clean_filename($this->pdf_file));
+		$this->pdf_pages = $pdf->setSourceFile($pines->com_pdf->pdf_path.clean_filename($this->pdf_file));
 		return $this->pdf_pages;
 	}
 
@@ -115,7 +115,7 @@ class com_pdf_displays extends entity {
 	 * @return string The generated PDF contents.
 	 */
 	public function render($entity, $print = true) {
-		global $config;
+		global $pines;
 		require_once('components/com_pdf/includes/tcpdf/tcpdf.php');
 		require_once('components/com_pdf/includes/fpdi/fpdi.php');
 
@@ -153,7 +153,7 @@ class com_pdf_displays extends entity {
 			}
 		}
 
-		$pagecount = $pdf->setSourceFile($config->com_pdf->pdf_path.clean_filename($this->pdf_file));
+		$pagecount = $pdf->setSourceFile($pines->com_pdf->pdf_path.clean_filename($this->pdf_file));
 		// Go through each display.
 		for ($i = 1; $i <= $pagecount; $i++) {
 			$tplidx = $pdf->importPage($i);
@@ -233,11 +233,11 @@ class com_pdf_displays extends entity {
 		$output = $pdf->Output($this->pdf_title, 'S');
 		if ($print) {
 			// Print it out to the user.
-			global $config;
-			$config->page->override = true;
+			global $pines;
+			$pines->page->override = true;
 			header('Content-type: application/pdf');
 			header('Content-Disposition: attachment; filename="'.$this->pdf_dl_filename.'" size='.strlen($output));
-			$config->page->override_doc($output);
+			$pines->page->override_doc($output);
 		}
 		return $output;
 	}

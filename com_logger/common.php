@@ -11,9 +11,9 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( isset($config->ability_manager) ) {
-	$config->ability_manager->add('com_logger', 'view', 'View Log', 'Let the user view the Pines log.');
-	$config->ability_manager->add('com_logger', 'clear', 'Clear Log', 'Let the user clear (delete) the pines log.');
+if ( isset($pines->ability_manager) ) {
+	$pines->ability_manager->add('com_logger', 'view', 'View Log', 'Let the user view the Pines log.');
+	$pines->ability_manager->add('com_logger', 'clear', 'Clear Log', 'Let the user clear (delete) the pines log.');
 }
 
 /**
@@ -24,12 +24,12 @@ if ( isset($config->ability_manager) ) {
  * @return array The return values for the hook.
  */
 function com_logger_hook_log($return, $hook) {
-	global $config;
-	if (!in_array($hook, array('$config->log_manager->log', '$config->log_manager->hook', '$config->log_manager->write')))
-		$config->log_manager->log('(microtime='.microtime(true).') '.$hook, 'debug');
+	global $pines;
+	if (!in_array($hook, array('$pines->log_manager->log', '$pines->log_manager->hook', '$pines->log_manager->write')))
+		$pines->log_manager->log('(microtime='.microtime(true).') '.$hook, 'debug');
 	return $return;
 }
 
-if ($config->com_logger->level == 'debug') $config->log_manager->hook();
+if ($pines->com_logger->level == 'debug') $pines->log_manager->hook();
 
 ?>

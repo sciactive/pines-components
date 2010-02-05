@@ -159,9 +159,9 @@ class com_user extends component {
 	 * @return array The array of component names.
 	 */
 	function get_default_component_array() {
-		global $config;
+		global $pines;
 		$return = array();
-		foreach ($config->components as $cur_component) {
+		foreach ($pines->components as $cur_component) {
 			if ( file_exists('components/'.$cur_component.'/actions/default.php') )
 				$return[] = $cur_component;
 		}
@@ -183,10 +183,10 @@ class com_user extends component {
 	 * @todo Check for orphans, they could cause groups to be hidden.
 	 */
 	function get_group_array($parent = NULL) {
-		global $config;
+		global $pines;
 		$return = array();
 		if ( is_null($parent) ) {
-			$entities = $config->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
+			$entities = $pines->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
 			foreach ($entities as $entity) {
 				if ( is_null($entity->parent) ) {
 					$child_array = $this->get_group_array($entity);
@@ -197,7 +197,7 @@ class com_user extends component {
 				}
 			}
 		} else {
-			$entities = $config->entity_manager->get_entities(array('ref' => array('parent' => $parent), 'tags' => array('com_user', 'group'), 'class' => group));
+			$entities = $pines->entity_manager->get_entities(array('ref' => array('parent' => $parent), 'tags' => array('com_user', 'group'), 'class' => group));
 			foreach ($entities as $entity) {
 				$child_array = $this->get_group_array($entity);
 				$return[$entity->guid]['name'] = $entity->name;
@@ -221,10 +221,10 @@ class com_user extends component {
 	 * @return array The array of groups.
 	 */
 	function get_group_descendents($parent = NULL) {
-		global $config;
+		global $pines;
 		$return = array();
 		if ( is_null($parent) ) {
-			$entities = $config->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
+			$entities = $pines->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
 			foreach ($entities as $entity) {
 				if ( is_null($entity->parent) ) {
 					$child_array = $this->get_group_descendents($entity);
@@ -232,7 +232,7 @@ class com_user extends component {
 				}
 			}
 		} else {
-			$entities = $config->entity_manager->get_entities(array('ref' => array('parent' => $parent), 'tags' => array('com_user', 'group'), 'class' => group));
+			$entities = $pines->entity_manager->get_entities(array('ref' => array('parent' => $parent), 'tags' => array('com_user', 'group'), 'class' => group));
 			foreach ($entities as $entity) {
 				$child_array = $this->get_group_descendents($entity);
 				$return = array_merge($return, array($entity), $child_array);
@@ -249,9 +249,9 @@ class com_user extends component {
 	 * @param bool $top_level Whether to work on the menu's top level.
 	 */
 	function get_group_menu(&$menu = NULL, $parent = NULL, $top_level = TRUE) {
-		global $config;
+		global $pines;
 		if ( is_null($parent) ) {
-			$entities = $config->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
+			$entities = $pines->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
 			foreach ($entities as $entity) {
 				$menu->add("{$entity->name} [{$entity->groupname}]", $entity->guid, $entity->parent->guid, $entity->guid);
 			}
@@ -263,7 +263,7 @@ class com_user extends component {
 				}
 			}
 		} else {
-			$entities = $config->entity_manager->get_entities(array('ref' => array('parent' => $parent), 'tags' => array('com_user', 'group'), 'class' => group));
+			$entities = $pines->entity_manager->get_entities(array('ref' => array('parent' => $parent), 'tags' => array('com_user', 'group'), 'class' => group));
 			foreach ($entities as $entity) {
 				$new_menu_id = $menu->add("{$entity->name} [{$entity->groupname}]", $entity->guid, ($top_level ? NULL : $entity->parent->guid), $entity->guid);
 				$this->get_group_menu($menu, $entity, FALSE);
@@ -337,8 +337,8 @@ class com_user extends component {
 	 * @return array An array of group entities.
 	 */
 	function get_groups() {
-		global $config;
-		return $config->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
+		global $pines;
+		return $pines->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
 	}
 
 	/**
@@ -366,8 +366,8 @@ class com_user extends component {
 	 * @return array An array of user entities.
 	 */
 	function get_users() {
-		global $config;
-		return $config->entity_manager->get_entities(array('tags' => array('com_user', 'user'), 'class' => user));
+		global $pines;
+		return $pines->entity_manager->get_entities(array('tags' => array('com_user', 'user'), 'class' => user));
 	}
 
 	/**
@@ -377,15 +377,15 @@ class com_user extends component {
 	 * @return array An array of users.
 	 */
 	function get_users_by_group($group) {
-		global $config;
-		return $config->entity_manager->get_entities(array('ref_i' => array('group' => $group, 'groups' => $group), 'tags' => array('com_user', 'user'), 'class' => user));
+		global $pines;
+		return $pines->entity_manager->get_entities(array('ref_i' => array('group' => $group, 'groups' => $group), 'tags' => array('com_user', 'user'), 'class' => user));
 	}
 
 	/**
 	 * Creates and attaches a module which lists groups.
 	 */
 	function list_groups() {
-		global $config;
+		global $pines;
 
 		$pgrid = new module('system', 'pgrid.default', 'head');
 		$pgrid->icons = true;
@@ -394,7 +394,7 @@ class com_user extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_user/list_groups'];
 
-		$module->groups = $config->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
+		$module->groups = $pines->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
 
 		if ( empty($module->groups) ) {
 			$pgrid->detach();
@@ -407,7 +407,7 @@ class com_user extends component {
 	 * Creates and attaches a module which lists users.
 	 */
 	function list_users() {
-		global $config;
+		global $pines;
 
 		$pgrid = new module('system', 'pgrid.default', 'head');
 		$pgrid->icons = true;
@@ -416,7 +416,7 @@ class com_user extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_user/list_users'];
 
-		$module->users = $config->entity_manager->get_entities(array('tags' => array('com_user', 'user'), 'class' => user));
+		$module->users = $pines->entity_manager->get_entities(array('tags' => array('com_user', 'user'), 'class' => user));
 
 		if ( empty($module->users) ) {
 			$pgrid->detach();
@@ -478,9 +478,9 @@ class com_user extends component {
 	 * @param string $url An optional URL to be included in the query data of the redirection url.
 	 */
 	function punt_user($message = NULL, $url = NULL) {
-		global $config;
+		global $pines;
 		$default = '0';
-		if ($config->request_component == $_SESSION['user']->default_component && $config->request_action == 'default')
+		if ($pines->request_component == $_SESSION['user']->default_component && $pines->request_action == 'default')
 			$default = '1';
 		header("Location: ".pines_url('com_user', 'exit', array('default' => $default, 'message' => urlencode($message), 'url' => urlencode($url)), false));
 		exit($message);

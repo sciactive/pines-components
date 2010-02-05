@@ -65,7 +65,7 @@ $this->title = 'Sales';
 			<th>Date</th>
 			<th>Status</th>
 			<th>User</th>
-			<?php if ($config->run_sales->com_customer) { ?>
+			<?php if ($pines->run_sales->com_customer) { ?>
 			<th>Customer</th>
 			<?php } ?>
 			<th>Products</th>
@@ -85,7 +85,7 @@ $this->title = 'Sales';
 			<td><?php echo ucwords($sale->status); ?></td>
 			<td><?php $user = user::factory($sale->uid);
 			echo is_null($user->guid) ? '' : "{$user->name} [{$user->username}]"; ?></td>
-			<?php if ($config->run_sales->com_customer) { ?>
+			<?php if ($pines->run_sales->com_customer) { ?>
 			<td><?php echo htmlentities($sale->customer->guid ? "{$sale->customer->guid}: \"{$sale->customer->name}\"" : ''); ?></td>
 			<?php } ?>
 			<td><?php

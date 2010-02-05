@@ -53,10 +53,10 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$config->page->override = true;
+$pines->page->override = true;
 
 if (is_null($_REQUEST['code'])) {
-	$config->page->override_doc("\0");
+	$pines->page->override_doc("\0");
 	return;
 }
 
@@ -77,21 +77,21 @@ $bgcolor = $_REQUEST['bgcolor'];
 $color = $_REQUEST['color'];
 
 if (!isset($type))
-	$type = $config->com_barcode->type;
+	$type = $pines->com_barcode->type;
 if (!isset($width))
-	$width = $config->com_barcode->width;
+	$width = $pines->com_barcode->width;
 if (!isset($height))
-	$height = $config->com_barcode->height;
+	$height = $pines->com_barcode->height;
 if (!isset($xres))
-	$xres = $config->com_barcode->xres;
+	$xres = $pines->com_barcode->xres;
 if (!isset($font))
-	$font = $config->com_barcode->font;
+	$font = $pines->com_barcode->font;
 if (!isset($bgcolor))
-	$bgcolor = $config->com_barcode->bgcolor;
+	$bgcolor = $pines->com_barcode->bgcolor;
 if (!isset($color))
-	$color = $config->com_barcode->color;
+	$color = $pines->com_barcode->color;
 if (!$style)
-	$style = $config->com_barcode->output_type == 'jpg' ? 36 : ($config->com_barcode->output_type == 'gif' ? 134 : 70);
+	$style = $pines->com_barcode->output_type == 'jpg' ? 36 : ($pines->com_barcode->output_type == 'gif' ? 134 : 70);
 
 switch ($type) {
 	case 'I25':

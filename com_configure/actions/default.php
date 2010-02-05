@@ -16,6 +16,6 @@ if ( !gatekeeper('com_configure/edit') )
 
 $list = new module('com_configure', 'edit', 'content');
 $list->req_component = 'system';
-$list->config = $config->configurator->get_config_array($config->configurator->config_files['system']);
+$list->config = $pines->configurator->get_config_array($pines->configurator->config_files['system']);
 
 ?>

@@ -3,20 +3,20 @@
  * Edits an employees timeclock history.
  *
  * @package Pines
- * @subpackage com_sales
+ * @subpackage com_hrm
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = "Edit Timeclock for {$this->user->name} [{$this->user->username}]";
+$this->title = "Edit Timeclock for {$this->entity->name}";
 ?>
 <script type="text/javascript">
 	// <![CDATA[
 	$(function(){
 		var cur_entry;
-		var timezone = "<?php echo addslashes($this->user->get_timezone()); ?>";
+		var timezone = "<?php echo addslashes($this->entity->get_timezone()); ?>";
 		function format_time(elem, timestamp) {
 			elem.html("Formatting...");
 			$.ajax({
@@ -109,11 +109,11 @@ $this->title = "Edit Timeclock for {$this->user->name} [{$this->user->username}]
 	// ]]>
 </script>
 <div class="pform" id="timeclock_edit">
-<?php foreach($this->user->com_sales->timeclock as $key => $entry) { ?>
+<?php foreach($this->entity->timeclock as $key => $entry) { ?>
 	<div class="element full_width entry">
 		<div style="padding: 3px;" class="ui-helper-clearfix ui-widget-content ui-corner-all">
 			<button style="float: right; margin: 3px;" class="ui-state-default ui-corner-all">Delete</button>
-			<span class="label time" style="cursor: pointer;"><?php echo pines_date_format($entry['time'], $this->user->get_timezone(true)); ?></span>
+			<span class="label time" style="cursor: pointer;"><?php echo pines_date_format($entry['time'], $this->entity->get_timezone(true)); ?></span>
 			<span class="note timestamp"><?php echo $entry['time']; ?></span>
 			<span class="field status"><?php echo $entry['status']; ?></span>
 		</div>
@@ -141,12 +141,12 @@ $this->title = "Edit Timeclock for {$this->user->name} [{$this->user->username}]
 		<small>next Thursday</small><br />
 		<small>last Monday 4pm</small>
 	</div>
-	<form method="post" id="timeclock_form" action="<?php echo pines_url('com_sales', 'saveclock'); ?>">
+	<form method="post" id="timeclock_form" action="<?php echo pines_url('com_hrm', 'savetimeclock'); ?>">
 		<input type="hidden" name="clock" value="" />
-		<input type="hidden" name="id" value="<?php echo $this->user->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<div class="element buttons">
 			<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-			<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_sales', 'manageclock'); ?>';" value="Cancel" />
+			<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_hrm', 'listtimeclocks'); ?>';" value="Cancel" />
 		</div>
 	</form>
 </div>

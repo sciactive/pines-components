@@ -3,7 +3,7 @@
  * Lists employees and provides functions to manipulate their timeclock.
  *
  * @package Pines
- * @subpackage com_sales
+ * @subpackage com_hrm
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -21,16 +21,16 @@ $this->title = 'Employee Timeclock';
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
-				<?php if (gatekeeper('com_sales/manageclock')) { ?>
-				{type: 'button', text: 'View', extra_class: 'icon picon_16x16_actions_document-new', double_click: true, url: '<?php echo pines_url('com_sales', 'viewclock', array('id' => '#title#')); ?>'},
-				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', url: '<?php echo pines_url('com_sales', 'editclock', array('id' => '#title#')); ?>'},
-				<?php } if (gatekeeper('com_sales/clock')) { ?>
+				{type: 'button', text: 'View', extra_class: 'icon picon_16x16_actions_document-new', double_click: true, url: '<?php echo pines_url('com_hrm', 'viewtimeclock', array('id' => '#title#')); ?>'},
+				<?php if (gatekeeper('com_hrm/manageclock')) { ?>
+				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', url: '<?php echo pines_url('com_hrm', 'edittimeclock', array('id' => '#title#')); ?>'},
+				<?php } if (gatekeeper('com_hrm/clock') || gatekeeper('com_hrm/manageclock')) { ?>
 				{type: 'button', text: 'Clock In/Out', extra_class: 'icon picon_16x16_stock_generic_stock_timer', multi_select: true, click: function(e, rows){
 					var loader;
 					rows.each(function(){
 						var cur_row = $(this);
 						$.ajax({
-							url: "<?php echo pines_url('com_sales', 'clock'); ?>",
+							url: "<?php echo pines_url('com_hrm', 'clock'); ?>",
 							type: "POST",
 							dataType: "json",
 							data: {"id": cur_row.pgrid_export_rows()[0].key},
@@ -77,7 +77,7 @@ $this->title = 'Employee Timeclock';
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo pines_url('system', 'pgrid_save_state'); ?>", {view: "com_sales/manage_clock", state: cur_state});
+				state_xhr = $.post("<?php echo pines_url('system', 'pgrid_save_state'); ?>", {view: "com_hrm/list_timeclocks", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
@@ -89,8 +89,8 @@ $this->title = 'Employee Timeclock';
 <table id="timeclock_grid">
 	<thead>
 		<tr>
+			<th>ID</th>
 			<th>Name</th>
-			<th>Username</th>
 			<th>Status</th>
 			<th>Time</th>
 			<th>Time Today</th>
@@ -98,14 +98,14 @@ $this->title = 'Employee Timeclock';
 		</tr>
 	</thead>
 	<tbody>
-	<?php foreach($this->users as $user) { ?>
-		<tr title="<?php echo $user->guid; ?>">
-			<td><?php echo $user->name; ?></td>
-			<td><?php echo $user->username; ?></td>
-			<td><?php echo $user->com_sales->timeclock[count($user->com_sales->timeclock) - 1]['status']; ?></td>
-			<td><?php echo pines_date_format($user->com_sales->timeclock[count($user->com_sales->timeclock) - 1]['time'], $user->get_timezone(true)); ?></td>
-			<td><?php echo isset($user->com_sales) ? round($user->com_sales->time_sum(strtotime('Today 12:00 AM')) / (60 * 60), 2).' hours' : ''; ?></td>
-			<td><?php echo isset($user->com_sales) ? round($user->com_sales->time_sum() / (60 * 60), 2).' hours' : ''; ?></td>
+	<?php foreach($this->employees as $employee) { ?>
+		<tr title="<?php echo $employee->guid; ?>">
+			<td><?php echo $employee->guid; ?></td>
+			<td><?php echo $employee->name; ?></td>
+			<td><?php echo empty($employee->timeclock) ? '' : $employee->timeclock[count($employee->timeclock) - 1]['status']; ?></td>
+			<td><?php echo empty($employee->timeclock) ? '' : pines_date_format($employee->timeclock[count($employee->timeclock) - 1]['time'], $employee->get_timezone(true)); ?></td>
+			<td><?php echo empty($employee->timeclock) ? '' : round($employee->time_sum(strtotime('Today 12:00 AM')) / (60 * 60), 2).' hours'; ?></td>
+			<td><?php echo empty($employee->timeclock) ? '' : round($employee->time_sum() / (60 * 60), 2).' hours'; ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

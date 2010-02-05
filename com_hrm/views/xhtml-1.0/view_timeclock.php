@@ -3,14 +3,14 @@
  * Shows an employees timeclock history.
  *
  * @package Pines
- * @subpackage com_sales
+ * @subpackage com_hrm
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = "Employee Timeclock for {$this->user->name} [{$this->user->username}]";
+$this->title = "Employee Timeclock for {$this->entity->name}";
 ?>
 <script type="text/javascript">
 	// <![CDATA[
@@ -25,7 +25,7 @@ $this->title = "Employee Timeclock for {$this->user->name} [{$this->user->userna
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo pines_url('system', 'pgrid_save_state'); ?>", {view: "com_sales/view_clock", state: cur_state});
+				state_xhr = $.post("<?php echo pines_url('system', 'pgrid_save_state'); ?>", {view: "com_hrm/view_timeclock", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
@@ -42,9 +42,9 @@ $this->title = "Employee Timeclock for {$this->user->name} [{$this->user->userna
 		</tr>
 	</thead>
 	<tbody>
-	<?php foreach($this->user->com_sales->timeclock as $key => $entry) { ?>
+	<?php foreach($this->entity->timeclock as $key => $entry) { ?>
 		<tr title="<?php echo $key; ?>">
-			<td><?php echo pines_date_format($entry['time'], $this->user->get_timezone(true)); ?></td>
+			<td><?php echo pines_date_format($entry['time'], $this->entity->get_timezone(true)); ?></td>
 			<td><?php echo gmdate('c', $entry['time']); ?></td>
 			<td><?php echo $entry['status']; ?></td>
 		</tr>

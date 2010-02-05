@@ -60,6 +60,28 @@ class com_hrm extends component {
 	}
 
 	/**
+	 * Creates and attaches a module which lists employees' timeclocks.
+	 */
+	function list_timeclocks() {
+		global $pines;
+
+		$pgrid = new module('system', 'pgrid.default', 'head');
+		$pgrid->icons = true;
+
+		$module = new module('com_hrm', 'list_timeclocks', 'content');
+		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_hrm/list_timeclocks'];
+
+		$module->employees = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
+
+		if ( empty($module->employees) ) {
+			$pgrid->detach();
+			$module->detach();
+			display_notice("There are no employees.");
+		}
+	}
+
+	/**
 	 * Transform a string to title case.
 	 *
 	 * @param string $string The string to transform.

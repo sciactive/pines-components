@@ -82,6 +82,19 @@ class com_hrm_employee extends entity {
 	}
 
 	/**
+	 * Return the employee's timezone.
+	 *
+	 * @param bool $return_date_time_zone_object Whether to return an object of the DateTimeZone class, instead of an identifier string.
+	 * @return string|DateTimeZone The timezone identifier or the DateTimeZone object.
+	 */
+	public function get_timezone($return_date_time_zone_object = false) {
+		global $pines;
+		if (isset($this->user_account->guid))
+			return $this->user_account->get_timezone($return_date_time_zone_object);
+		return $return_date_time_zone_object ? new DateTimeZone($pines->timezone) : $pines->timezone;
+	}
+
+	/**
 	 * Create a new instance.
 	 */
 	public static function factory() {
@@ -127,6 +140,31 @@ class com_hrm_employee extends entity {
 		$module->entity = $this;
 
 		return $module;
+	}
+
+	/**
+	 * Print a form to edit the employee's timeclock.
+	 * @return module The form's module.
+	 */
+	public function print_timeclock() {
+		$module = new module('com_hrm', 'form_timeclock', 'content');
+		$module->entity = $this;
+
+		return $module;
+	}
+
+	/**
+	 * Print a module to see the employee's timeclock.
+	 * @return module The module.
+	 */
+	public function print_timeclock_view() {
+		$pgrid = new module('system', 'pgrid.default', 'head');
+		$pgrid->icons = true;
+
+		$module = new module('com_hrm', 'view_timeclock', 'content');
+		$module->entity = $this;
+		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_hrm/view_timeclock'];
 	}
 
 	/**

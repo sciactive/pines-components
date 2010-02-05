@@ -15,9 +15,9 @@ $pines->ability_manager->add('com_hrm', 'listemployees', 'List Employees', 'User
 $pines->ability_manager->add('com_hrm', 'newemployee', 'Create Employees', 'User can create new employees.');
 $pines->ability_manager->add('com_hrm', 'editemployee', 'Edit Employees', 'User can edit current employees.');
 $pines->ability_manager->add('com_hrm', 'deleteemployee', 'Delete Employees', 'User can delete current employees.');
-$pines->ability_manager->add('com_hrm', 'clock', 'Clock In/Out', 'User can use the employee timeclock. (If attached to employee.)');
+$pines->ability_manager->add('com_hrm', 'clock', 'Clock In/Out', 'User can use the employee timeclock to clock in. (If attached to employee.)');
 $pines->ability_manager->add('com_hrm', 'viewownclock', 'View Own Timeclock', 'User can view their own timeclock.');
 $pines->ability_manager->add('com_hrm', 'viewclock', 'View Timeclock', 'User can view the employee timeclock (including times).');
-$pines->ability_manager->add('com_hrm', 'manageclock', 'Manage Timeclock', 'User can manage the employee timeclock.');
+$pines->ability_manager->add('com_hrm', 'manageclock', 'Manage Timeclock', 'User can manage and edit the employee timeclock.');
 
 ?>

@@ -109,7 +109,7 @@ if (empty($customer->phone_cell) && empty($customer->phone_work) && empty($custo
 $test = $pines->entity_manager->get_entity(array('data' => array('ssn' => $customer->ssn), 'class' => com_customer_customer));
 if (isset($test) && !$customer->is($test)) {
 	$customer->print_form();
-	display_notice('Another customer already exists with this SSN.');
+	display_notice("The customer {$test->name} already has this SSN.");
 	return;
 }
 

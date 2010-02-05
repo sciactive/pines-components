@@ -3,7 +3,7 @@
  * Allows the user to clock in and out of the timeclock.
  *
  * @package Pines
- * @subpackage com_sales
+ * @subpackage com_hrm
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Timeclock';
-$_SESSION['user']->refresh();
+$entry_count = count($this->entity->timeclock);
 ?>
 <div class="pform" id="timeclock">
 	<script type="text/javascript">
@@ -20,7 +20,7 @@ $_SESSION['user']->refresh();
 			$("#timeclock button").click(function(){
 				var loader;
 				$.ajax({
-					url: "<?php echo pines_url('com_sales', 'clock'); ?>",
+					url: "<?php echo pines_url('com_hrm', 'clock'); ?>",
 					type: "POST",
 					dataType: "json",
 					data: {"id": "self"},
@@ -57,11 +57,11 @@ $_SESSION['user']->refresh();
 		// ]]>
 	</script>
 	<div class="element">
-		<span class="label"><span>User: </span><span><?php echo $_SESSION['user']->name; ?></span></span>
-		<span class="note"><span>Status: </span><span class="status"><?php echo $_SESSION['user']->com_sales->timeclock[count($_SESSION['user']->com_sales->timeclock) - 1]['status']; ?></span></span>
-		<span class="note"><span>Time: </span><span class="time"><?php echo pines_date_format($_SESSION['user']->com_sales->timeclock[count($_SESSION['user']->com_sales->timeclock) - 1]['time']); ?></span></span>
+		<span class="label"><?php echo $this->entity->name; ?></span>
+		<span class="note"><span>Status: </span><span class="status"><?php echo empty($this->entity->timeclock) ? 'out' : $this->entity->timeclock[$entry_count - 1]['status']; ?></span></span>
+		<span class="note"><span>Time: </span><span class="time"><?php echo empty($this->entity->timeclock) ? 'No Timeclock Data' : pines_date_format($this->entity->timeclock[$entry_count - 1]['time']); ?></span></span>
 	</div>
 	<div class="element full_width">
-		<button type="button" class="field ui-state-default ui-corner-all" style="float: right;"><?php echo $_SESSION['user']->com_sales->timeclock[count($_SESSION['user']->com_sales->timeclock) - 1]['status'] == 'in' ? 'Clock Out' : 'Clock In'; ?></button>
+		<button type="button" class="field ui-state-default ui-corner-all" style="float: right;"><?php echo $this->entity->timeclock[$entry_count - 1]['status'] == 'in' ? 'Clock Out' : 'Clock In'; ?></button>
 	</div>
 </div>

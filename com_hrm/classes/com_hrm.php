@@ -67,7 +67,7 @@ class com_hrm extends component {
 	 * @param array $exceptions An array of words which should not be changed.
 	 * @return string The transformed string.
 	 */
-	function title_case($string, $delimiters = array(" ", "-", "O'", "Mc"), $exceptions = array("to", "a", "the", "of", "by", "and", "with", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X")) {
+	function title_case($string, $delimiters = array(' ', '-', 'O\'', 'Mc'), $exceptions = array('to', 'a', 'the', 'of', 'by', 'and', 'with', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X')) {
 		/*
 		* Exceptions in lower case are words you don't want converted
 		* Exceptions all in upper case are any words you don't want converted to title case
@@ -90,6 +90,20 @@ class com_hrm extends component {
 			$string = join($delimiter, $newwords);
 		}
 		return $string;
+	}
+
+	/**
+	 * Print a form for the current user to clockin, if they're allowed.
+	 * @return module|null The form's module or null.
+	 */
+	function provide_clockin() {
+		if (empty($_SESSION['user']) || !gatekeeper('com_hrm/clock'))
+			return null;
+		global $config;
+		$employee = $config->entity_manager->get_entity(array('ref' => array('user_account' => $_SESSION['user']), 'tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
+		if (is_null($employee))
+			return null;
+		return $employee->print_clockin();
 	}
 }
 

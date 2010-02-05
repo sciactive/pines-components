@@ -62,6 +62,7 @@ $this->title = 'Employees';
 		<tr>
 			<th>ID</th>
 			<th>Name</th>
+			<th>User</th>
 			<th>Email</th>
 			<th>Job Title</th>
 			<th>Country</th>
@@ -73,7 +74,6 @@ $this->title = 'Employees';
 			<th>Work Phone</th>
 			<th>Cell Phone</th>
 			<th>Fax</th>
-			<th>Login Disabled</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -81,6 +81,7 @@ $this->title = 'Employees';
 		<tr title="<?php echo $employee->guid; ?>">
 			<td><?php echo $employee->guid; ?></td>
 			<td><?php echo $employee->name; ?></td>
+			<td><?php echo isset($employee->user_account) ? $employee->user_account->username : ''; ?></td>
 			<td><?php echo $employee->email; ?></td>
 			<td><?php echo $employee->job_title; ?></td>
 			<td><?php echo $employee->address_type == 'us' ? 'US' : 'Intl'; ?></td>
@@ -92,7 +93,6 @@ $this->title = 'Employees';
 			<td><?php echo pines_phone_format($employee->phone_work); ?></td>
 			<td><?php echo pines_phone_format($employee->phone_cell); ?></td>
 			<td><?php echo pines_phone_format($employee->fax); ?></td>
-			<td><?php echo ($employee->login_disabled ? 'Yes' : 'No'); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

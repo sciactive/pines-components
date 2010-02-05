@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_customer_timer/viewstatus') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_customer_timer', 'status', null, false));
 
-$page->override = true;
+$config->page->override = true;
 
 $logins = com_customer_timer_login_tracker::factory();
 $return = array();
@@ -32,6 +32,6 @@ foreach ($logins->customers as $cur_customer) {
 	);
 }
 
-$page->override_doc(json_encode($return));
+$config->page->override_doc(json_encode($return));
 
 ?>

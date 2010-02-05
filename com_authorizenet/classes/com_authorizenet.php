@@ -60,7 +60,7 @@ class com_authorizenet extends component {
 	 * @param array $args The argument array.
 	 */
 	function payment_credit($args) {
-		global $config, $page;
+		global $config;
 		switch ($args['action']) {
 			case 'request':
 				$module = new module('com_authorizenet', 'form_payment');
@@ -71,7 +71,7 @@ class com_authorizenet extends component {
 					$module->state = $args['sale']->customer->state;
 					$module->zip = $args['sale']->customer->zip;
 				}
-				$page->override_doc($module->render());
+				$config->page->override_doc($module->render());
 				break;
 			case 'approve':
 				$args['payment']['status'] = 'approved';

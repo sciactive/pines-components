@@ -51,7 +51,7 @@ class com_newsletter extends component {
 	 * @return bool True on success, false on failure.
 	 */
 	function edit_mail($mail = NULL, $new_option = '', $new_action = '', $close_option = "com_newsletter", $close_action = "list") {
-		global $config, $page;
+		global $config;
 
 		if ( !is_null($mail) ) {
 			if ( !$mail->has_tag('com_newsletter', 'mail') ) {

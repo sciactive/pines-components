@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_sales/listproducts') && !gatekeeper('com_sales/newsale') && !gatekeeper('com_sales/editsale'))
 	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'productsearch', $_REQUEST, false));
 
-$page->override = true;
+$config->page->override = true;
 
 $code = $_REQUEST['code'];
 
@@ -65,6 +65,6 @@ if (!is_null($product)) {
 	$product = $json_struct;
 }
 
-$page->override_doc(json_encode($product));
+$config->page->override_doc(json_encode($product));
 
 ?>

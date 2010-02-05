@@ -53,10 +53,10 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$page->override = true;
+$config->page->override = true;
 
 if (is_null($_REQUEST['code'])) {
-	$page->override_doc("\0");
+	$config->page->override_doc("\0");
 	return;
 }
 

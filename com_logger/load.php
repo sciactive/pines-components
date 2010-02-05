@@ -21,9 +21,9 @@ if (!function_exists('display_error') && $config->com_logger->log_errors) {
 	 * @ignore
 	 */
 	function display_error($error_text) {
-		global $config, $page;
+		global $config;
 		$config->log_manager->log($error_text, 'error');
-		$page->error($error_text);
+		$config->page->error($error_text);
 	}
 }
 
@@ -35,9 +35,9 @@ if (!function_exists('display_notice') && $config->com_logger->log_notices) {
 	 * @ignore
 	 */
 	function display_notice($notice_text) {
-		global $config, $page;
+		global $config;
 		$config->log_manager->log($notice_text, 'notice');
-		$page->notice($notice_text);
+		$config->page->notice($notice_text);
 	}
 }
 

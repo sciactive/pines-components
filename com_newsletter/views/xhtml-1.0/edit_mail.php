@@ -13,30 +13,30 @@ defined('P_RUN') or die('Direct access prohibited');
 
 $this->title = (is_null($this->entity->guid)) ? 'Editing New Mail' : 'Editing ['.htmlentities($this->entity->name).']';
 
-$page->head("<!-- Skin CSS file -->\n");
-$page->head("<link rel=\"stylesheet\" type=\"text/css\" href=\"http://yui.yahooapis.com/2.7.0/build/assets/skins/sam/skin.css\">\n");
-$page->head("<!-- Utility Dependencies -->\n");
-$page->head("<script type=\"text/javascript\" src=\"http://yui.yahooapis.com/2.7.0/build/yahoo-dom-event/yahoo-dom-event.js\"></script>\n");
-$page->head("<script type=\"text/javascript\" src=\"http://yui.yahooapis.com/2.7.0/build/element/element-min.js\"></script>\n");
-$page->head("<!-- Needed for Menus, Buttons and Overlays used in the Toolbar -->\n");
-$page->head("<script src=\"http://yui.yahooapis.com/2.7.0/build/container/container_core-min.js\"></script>\n");
-$page->head("<script src=\"http://yui.yahooapis.com/2.7.0/build/menu/menu-min.js\"></script>\n");
-$page->head("<script src=\"http://yui.yahooapis.com/2.7.0/build/button/button-min.js\"></script>\n");
-$page->head("<!-- Source file for Rich Text Editor-->\n");
-$page->head("<script src=\"http://yui.yahooapis.com/2.7.0/build/editor/editor-min.js\"></script>\n");
-$page->head("<script src=\"http://yui.yahooapis.com/2.7.0/build/connection/connection-min.js\"></script>\n");
-$page->head("<script src=\"{$config->rela_location}components/com_newsletter/js/yui-image-uploader26.js\"></script>\n");
-$page->head("<script type=\"text/javascript\">\n");
-$page->head("var editor = new YAHOO.widget.Editor('data', {\n");
-$page->head("	handleSubmit: true,\n");
-$page->head("	dompath: true,\n");
-$page->head("	animate: true\n");
-$page->head("});\n");
-$page->head("editor._defaultToolbar.titlebar = false;\n");
-$page->head("editor._defaultToolbar.buttonType = 'advanced';\n");
-$page->head("yuiImgUploader(editor, 'data', '".pines_url('com_newsletter', 'upload')."','image');\n");
-$page->head("editor.render();\n");
-$page->head("</script>\n");
+$config->page->head("<!-- Skin CSS file -->\n");
+$config->page->head("<link rel=\"stylesheet\" type=\"text/css\" href=\"http://yui.yahooapis.com/2.7.0/build/assets/skins/sam/skin.css\">\n");
+$config->page->head("<!-- Utility Dependencies -->\n");
+$config->page->head("<script type=\"text/javascript\" src=\"http://yui.yahooapis.com/2.7.0/build/yahoo-dom-event/yahoo-dom-event.js\"></script>\n");
+$config->page->head("<script type=\"text/javascript\" src=\"http://yui.yahooapis.com/2.7.0/build/element/element-min.js\"></script>\n");
+$config->page->head("<!-- Needed for Menus, Buttons and Overlays used in the Toolbar -->\n");
+$config->page->head("<script src=\"http://yui.yahooapis.com/2.7.0/build/container/container_core-min.js\"></script>\n");
+$config->page->head("<script src=\"http://yui.yahooapis.com/2.7.0/build/menu/menu-min.js\"></script>\n");
+$config->page->head("<script src=\"http://yui.yahooapis.com/2.7.0/build/button/button-min.js\"></script>\n");
+$config->page->head("<!-- Source file for Rich Text Editor-->\n");
+$config->page->head("<script src=\"http://yui.yahooapis.com/2.7.0/build/editor/editor-min.js\"></script>\n");
+$config->page->head("<script src=\"http://yui.yahooapis.com/2.7.0/build/connection/connection-min.js\"></script>\n");
+$config->page->head("<script src=\"{$config->rela_location}components/com_newsletter/js/yui-image-uploader26.js\"></script>\n");
+$config->page->head("<script type=\"text/javascript\">\n");
+$config->page->head("var editor = new YAHOO.widget.Editor('data', {\n");
+$config->page->head("	handleSubmit: true,\n");
+$config->page->head("	dompath: true,\n");
+$config->page->head("	animate: true\n");
+$config->page->head("});\n");
+$config->page->head("editor._defaultToolbar.titlebar = false;\n");
+$config->page->head("editor._defaultToolbar.buttonType = 'advanced';\n");
+$config->page->head("yuiImgUploader(editor, 'data', '".pines_url('com_newsletter', 'upload')."','image');\n");
+$config->page->head("editor.render();\n");
+$config->page->head("</script>\n");
 ?>
 <div class="yui-skin-sam">
 <form class="pform" enctype="multipart/form-data" name="editingmail" method="post" action="<?php echo pines_url($this->new_option, $this->new_action); ?>">

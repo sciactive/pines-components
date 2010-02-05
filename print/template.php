@@ -18,10 +18,10 @@ defined('P_RUN') or die('Direct access prohibited');
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
-	<title><?php echo $page->get_title(); ?></title>
+	<title><?php echo $config->page->get_title(); ?></title>
 	<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
-	<meta name="author" content="Hunter Perrin" />
-	
+	<link rel="icon" type="image/vnd.microsoft.icon" href="<?php echo $config->rela_location; ?>favicon.ico" />
+
 	<link href="<?php echo $config->rela_location; ?>system/css/pform.css" media="all" rel="stylesheet" type="text/css" />
 	<!--[if lt IE 8]>
 	<link href="<?php echo $config->rela_location; ?>system/css/pform-ie-lt-8.css" media="all" rel="stylesheet" type="text/css" />
@@ -50,32 +50,32 @@ defined('P_RUN') or die('Direct access prohibited');
 	</style>
 	<![endif]-->
 
-	<?php echo $page->render_modules('head', 'module_head'); ?>
+	<?php echo $config->page->render_modules('head', 'module_head'); ?>
 </head>
 
 <body>
 	<div class="col1">
-		<?php if ( count($page->get_error()) ) { ?>
+		<?php if ( count($config->page->get_error()) ) { ?>
 		<div class="notice ui-state-error ui-corner-all ui-helper-clearfix">
 				<?php
-				$error = $page->get_error();
+				$error = $config->page->get_error();
 				foreach ($error as $cur_item) {
 					echo "<p><span class=\"ui-icon ui-icon-alert\" style=\"float: left; margin-right: 0.3em;\"></span><span>$cur_item</span></p>\n";
 				}
 				?>
 		</div>
 		<?php } ?>
-		<?php if ( count($page->get_notice()) ) { ?>
+		<?php if ( count($config->page->get_notice()) ) { ?>
 		<div class="notice ui-state-highlight ui-corner-all ui-helper-clearfix">
 				<?php
-				$notice = $page->get_notice();
+				$notice = $config->page->get_notice();
 				foreach ($notice as $cur_item) {
 					echo "<p><span class=\"ui-icon ui-icon-info\" style=\"float: left; margin-right: 0.3em;\"></span><span>$cur_item</span></p>\n";
 				}
 				?>
 		</div>
 		<?php } ?>
-		<?php echo $page->render_modules('content'); ?>
+		<?php echo $config->page->render_modules('content'); ?>
 	</div>
 </body>
 </html>

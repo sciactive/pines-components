@@ -12,11 +12,11 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( gatekeeper('com_logger/view') || gatekeeper('com_logger/clear') ) {
-	$com_logger_menu_id = $page->main_menu->add('Logs');
+	$com_logger_menu_id = $config->page->main_menu->add('Logs');
 	if ( gatekeeper('com_logger/view') )
-		$page->main_menu->add('View', pines_url('com_logger', 'view'), $com_logger_menu_id);
+		$config->page->main_menu->add('View', pines_url('com_logger', 'view'), $com_logger_menu_id);
 	if ( gatekeeper('com_logger/clear') )
-		$page->main_menu->add('Clear', pines_url('com_logger', 'clear'), $com_logger_menu_id);
+		$config->page->main_menu->add('Clear', pines_url('com_logger', 'clear'), $com_logger_menu_id);
 }
 
 ?>

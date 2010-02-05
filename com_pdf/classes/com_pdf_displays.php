@@ -233,11 +233,11 @@ class com_pdf_displays extends entity {
 		$output = $pdf->Output($this->pdf_title, 'S');
 		if ($print) {
 			// Print it out to the user.
-			global $page;
-			$page->override = true;
+			global $config;
+			$config->page->override = true;
 			header('Content-type: application/pdf');
 			header('Content-Disposition: attachment; filename="'.$this->pdf_dl_filename.'" size='.strlen($output));
-			$page->override_doc($output);
+			$config->page->override_doc($output);
 		}
 		return $output;
 	}

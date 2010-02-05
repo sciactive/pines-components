@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_sales/totalsales') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'totaljson', $_REQUEST, false));
 
-$page->override = true;
+$config->page->override = true;
 
 // Format the location.
 $location = $_REQUEST['location'];
@@ -22,12 +22,12 @@ if (is_null($location) || $location == 'current') {
 	$location = 'current';
 } elseif ($location == 'all') {
 	if (!gatekeeper('com_sales/totalothersales')) {
-		$page->override_doc('false');
+		$config->page->override_doc('false');
 		return;
 	}
 } else {
 	if (!gatekeeper('com_sales/totalothersales')) {
-		$page->override_doc('false');
+		$config->page->override_doc('false');
 		return;
 	}
 	$location = (int) $_REQUEST['location'];
@@ -109,6 +109,6 @@ if (empty($tx_array)) {
 	);
 }
 
-$page->override_doc(json_encode($return));
+$config->page->override_doc(json_encode($return));
 
 ?>

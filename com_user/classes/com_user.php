@@ -478,7 +478,7 @@ class com_user extends component {
 	 * @param string $url An optional URL to be included in the query data of the redirection url.
 	 */
 	function punt_user($message = NULL, $url = NULL) {
-		global $config, $page;
+		global $config;
 		$default = '0';
 		if ($config->request_component == $_SESSION['user']->default_component && $config->request_action == 'default')
 			$default = '1';

@@ -58,11 +58,11 @@ class com_sales extends component {
 	 * - "return" - The payment is being returned and the funds need to be returned.
 	 *
 	 * If "action" is "request", the callback can provide a form to collect
-	 * information from the user by calling $page->override_doc() with the HTML
-	 * of the form. It is recommended to use a module to provide the form's
-	 * HTML. Use $module->render() to get the HTML from the module. If you do
-	 * not need any information from the user, simply don't do anything. The
-	 * form's inputs will be parsed into an array and saved as "data" in the
+	 * information from the user by calling $config->page->override_doc() with
+	 * the HTML of the form. It is recommended to use a module to provide the
+	 * form's HTML. Use $module->render() to get the HTML from the module. If
+	 * you do not need any information from the user, simply don't do anything.
+	 * The form's inputs will be parsed into an array and saved as "data" in the
 	 * payment entry.
 	 *
 	 * If "action" is "approve", the callback needs to set the "status" entry on
@@ -127,7 +127,7 @@ class com_sales extends component {
 	 * @todo Finish calling this in all appropriate places.
 	 */
 	function call_payment_process($arguments = array()) {
-		global $config, $page;
+		global $config;
 		if (!is_array($arguments))
 			return false;
 		if (empty($arguments['action']))
@@ -630,11 +630,11 @@ class com_sales extends component {
 	 * @param array $args The argument array.
 	 */
 	function payment_manager($args) {
-		global $config, $page;
+		global $config;
 		switch ($args['action']) {
 			case 'request':
 				$module = new module('com_sales', 'payment_form_manager');
-				$page->override_doc($module->render());
+				$config->page->override_doc($module->render());
 				break;
 			case 'approve':
 				if (gatekeeper('com_sales/manager')) {

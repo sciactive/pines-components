@@ -11,8 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$page->head("<script src=\"{$config->rela_location}components/com_newsletter/js/jquery.checkboxtree.js\" type=\"text/javascript\"></script>");
-$page->head("<script type=\"text/javascript\">
+$config->page->head("<script src=\"{$config->rela_location}components/com_newsletter/js/jquery.checkboxtree.js\" type=\"text/javascript\"></script>");
+$config->page->head("<script type=\"text/javascript\">
 jQuery(document).ready(function(){
 	jQuery(\".unorderedlisttree\").checkboxTree({
 			collapsedarrow: \"{$config->rela_location}components/com_newsletter/images/img-arrow-collapsed.gif\",
@@ -23,7 +23,7 @@ jQuery(document).ready(function(){
 });
 </script>
 ");
-$page->head("<link href=\"{$config->rela_location}components/com_newsletter/css/checktree.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />");
+$config->page->head("<link href=\"{$config->rela_location}components/com_newsletter/css/checktree.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />");
 ?>
 <form class="pform" method="post" action="<?php echo pines_url('com_newsletter', 'send'); ?>">
 <fieldset>

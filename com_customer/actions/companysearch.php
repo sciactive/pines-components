@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_customer/listcompanies') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'companysearch', $_REQUEST, false));
 
-$page->override = true;
+$config->page->override = true;
 
 $query = strtolower($_REQUEST['q']);
 
@@ -62,6 +62,6 @@ foreach ($companies as $key => &$cur_company) {
 if (empty($companies))
 	$companies = null;
 
-$page->override_doc(json_encode($companies));
+$config->page->override_doc(json_encode($companies));
 
 ?>

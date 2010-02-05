@@ -12,11 +12,11 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( gatekeeper('com_customer_timer/viewstatus') || gatekeeper('com_customer_timer/login') ) {
-	$com_customer_timer_menu_id = $page->main_menu->add('Customer Timer', '#', $com_customer_menu_id);
+	$com_customer_timer_menu_id = $config->page->main_menu->add('Customer Timer', '#', $com_customer_menu_id);
 	if ( gatekeeper('com_customer_timer/viewstatus') )
-		$page->main_menu->add('Status', pines_url('com_customer_timer', 'status'), $com_customer_timer_menu_id);
+		$config->page->main_menu->add('Status', pines_url('com_customer_timer', 'status'), $com_customer_timer_menu_id);
 	if ( gatekeeper('com_customer_timer/login') )
-		$page->main_menu->add('Login', pines_url('com_customer_timer', 'login'), $com_customer_timer_menu_id);
+		$config->page->main_menu->add('Login', pines_url('com_customer_timer', 'login'), $com_customer_timer_menu_id);
 }
 
 ?>

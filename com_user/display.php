@@ -12,19 +12,19 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( gatekeeper('com_user/newuser') || gatekeeper('com_user/listusers') || gatekeeper('com_user/newgroup') || gatekeeper('com_user/listgroups') ) {
-	$com_user_menu_id = $page->main_menu->add('User Manager');
+	$com_user_menu_id = $config->page->main_menu->add('User Manager');
 	if ( gatekeeper('com_user/listusers') )
-		$page->main_menu->add('Users', pines_url('com_user', 'listusers'), $com_user_menu_id);
+		$config->page->main_menu->add('Users', pines_url('com_user', 'listusers'), $com_user_menu_id);
 	if ( gatekeeper('com_user/newuser') )
-		$page->main_menu->add('New User', pines_url('com_user', 'edituser'), $com_user_menu_id);
+		$config->page->main_menu->add('New User', pines_url('com_user', 'edituser'), $com_user_menu_id);
 	if ( gatekeeper('com_user/listgroups') )
-		$page->main_menu->add('Groups', pines_url('com_user', 'listgroups'), $com_user_menu_id);
+		$config->page->main_menu->add('Groups', pines_url('com_user', 'listgroups'), $com_user_menu_id);
 	if ( gatekeeper('com_user/newgroup') )
-		$page->main_menu->add('New Group', pines_url('com_user', 'editgroup'), $com_user_menu_id);
+		$config->page->main_menu->add('New Group', pines_url('com_user', 'editgroup'), $com_user_menu_id);
 }
 if ( gatekeeper('com_user/self') )
-	$page->main_menu->add('My Account', pines_url('com_user', 'editself'));
+	$config->page->main_menu->add('My Account', pines_url('com_user', 'editself'));
 if ( gatekeeper() )
-	$page->main_menu->add('Logout', pines_url('com_user', 'logout'));
+	$config->page->main_menu->add('Logout', pines_url('com_user', 'logout'));
 
 ?>

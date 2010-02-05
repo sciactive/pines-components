@@ -30,7 +30,7 @@ if ($config->run_sales->com_customer && $sale->status != 'invoiced' && $sale->st
 	}
 }
 
-$page->override = true;
+$config->page->override = true;
 $config->run_sales->call_payment_process(array(
 	'action' => 'request',
 	'name' => $_REQUEST['name'],

@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 if (!gatekeeper())
 	punt_user('You don\'t have necessary permission.', pines_url('com_pdf', 'image', $_GET, false));
 
-$page->override = true;
+$config->page->override = true;
 
 $file = 'media/pdf/'.clean_filename($_REQUEST['file']);
 $pdfpage = intval($_REQUEST['page']) - 1;
@@ -42,9 +42,9 @@ if ($pdfpage >= 0 && $pdfpage < $pagecount) {
 
 	$output = $im->getimageblob();
 	header('Content-Type: image/png');
-	$page->override_doc($output);
+	$config->page->override_doc($output);
 } else {
-	$page->override_doc('Invalid file or page.');
+	$config->page->override_doc('Invalid file or page.');
 }
 
 ?>

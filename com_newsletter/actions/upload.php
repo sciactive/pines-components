@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_newsletter/listmail') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_newsletter', 'list', null, false));
 
-$page->override = true;
+$config->page->override = true;
 
 header("content-type: text/html"); // the return type must be text/html
 //if file has been sent successfully:
@@ -26,7 +26,7 @@ if (isset($_FILES['image']['tmp_name'])) {
 	fclose($himage);
 	//if image can't be opened, either its not a valid format or even an image:
 	if ($image === FALSE) {
-		$page->override_doc("{status:'Error Reading Uploaded File.'}");
+		$config->page->override_doc("{status:'Error Reading Uploaded File.'}");
 		return;
 	}
 	// create a new random numeric name to avoid rewriting other images already on the server...
@@ -39,9 +39,9 @@ if (isset($_FILES['image']['tmp_name'])) {
 	fclose($hout);
 	
 	$path = $config->full_location . $path;
-	$page->override_doc("{status:'UPLOADED', image_url:'$path'}");
+	$config->page->override_doc("{status:'UPLOADED', image_url:'$path'}");
 } else {
-	$page->override_doc("{status:'No file was submitted'}");
+	$config->page->override_doc("{status:'No file was submitted'}");
 }
 
 ?>

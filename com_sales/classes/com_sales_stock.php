@@ -63,7 +63,7 @@ class com_sales_stock extends entity {
 		// Iterate through all the transfers.
 		foreach ($entities as $cur_transfer) {
 			// If the transfer isn't for our destination, move on.
-			if ($cur_transfer->destination->guid != $_SESSION['user']->gid)
+			if (!$_SESSION['user']->ingroup($cur_transfer->destination))
 				continue;
 			if (!is_array($cur_transfer->stock))
 				continue;
@@ -95,7 +95,7 @@ class com_sales_stock extends entity {
 		// Iterate through all the POs.
 		foreach ($entities as $cur_po) {
 			// If the PO isn't for our destination, move on.
-			if ($cur_po->destination->guid != $_SESSION['user']->gid)
+			if (!$_SESSION['user']->ingroup($cur_po->destination))
 				continue;
 			// If the PO has no products, move on.
 			if (!is_array($cur_po->products))
@@ -157,7 +157,7 @@ class com_sales_stock extends entity {
 		if ($this->location)
 			$old_location = $this->location;
 		// TODO: Copy location to GID (optional) to allow easier access control.
-		$this->location = ($location ? $location : group::factory($_SESSION['user']->gid));
+		$this->location = ($location ? $location : $_SESSION['user']->group);
 		if ($on_entity->has_tag('po')) {
 			$tx->type = 'received_po';
 		} elseif ($on_entity->has_tag('transfer')) {

@@ -49,7 +49,7 @@ $this->note = 'Use this form to edit a sale.';
 		$taxes_flat = array();
 		foreach ($this->tax_fees as $cur_tax_fee) {
 			foreach($cur_tax_fee->locations as $cur_location) {
-				if (!$_SESSION['user']->ingroup($cur_location->guid))
+				if (!$_SESSION['user']->ingroup($cur_location))
 					continue;
 				if ($cur_tax_fee->type == 'percentage') {
 					$taxes_percent[] = array('name' => $cur_tax_fee->name, 'rate' => $cur_tax_fee->rate);

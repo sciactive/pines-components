@@ -362,7 +362,7 @@ class com_sales_sale extends entity {
 					$found = false;
 					foreach($stock_entries as $key => $cur_stock) {
 						if (($cur_stock->status != 'available') ||
-							(!$_SESSION['user']->ingroup($cur_stock->location->guid)) ||
+							(!$_SESSION['user']->ingroup($cur_stock->location)) ||
 							(!$cur_product['entity']->is($cur_stock->product)) ||
 							($cur_product['entity']->serialized && ($cur_product['serial'] != $cur_stock->serial))) {
 							continue;
@@ -462,7 +462,7 @@ class com_sales_sale extends entity {
 			}
 			foreach($cur_tax_fee->locations as $cur_location) {
 				// If we're in one of its groups, don't remove it.
-				if ($_SESSION['user']->ingroup($cur_location->guid))
+				if ($_SESSION['user']->ingroup($cur_location))
 					continue 2;
 			}
 			// We're not in any of its groups, so remove it.

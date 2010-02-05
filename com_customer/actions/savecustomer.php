@@ -106,6 +106,12 @@ if (empty($customer->phone_cell) && empty($customer->phone_work) && empty($custo
 	display_notice('Please specify at least one phone number.');
 	return;
 }
+$test = $pines->entity_manager->get_entity(array('data' => array('ssn' => $customer->ssn), 'class' => com_customer_customer));
+if (isset($test) && !$customer->is($existing_customer)) {
+	$customer->print_form();
+	display_notice('Another customer already exists with this SSN.');
+	return;
+}
 
 if ($pines->com_customer->global_customers)
 	$customer->ac->other = 1;

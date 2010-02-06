@@ -147,10 +147,14 @@ class user extends able_entity {
 	/**
 	 * Check whether the user is in a (primary or secondary) group.
 	 *
-	 * @param group $group The group.
+	 * @param mixed $group The group, or the group's GUID.
 	 * @return bool True or false.
 	 */
-	public function ingroup($group) {
+	public function ingroup($group = null) {
+		if (is_numeric($group))
+			$group = group::factory((int) $group);
+		if (is_null($group->guid))
+			return false;
 		return ($group->in_array($this->groups) || $group->is($this->group));
 	}
 

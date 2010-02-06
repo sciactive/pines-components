@@ -33,6 +33,27 @@ return array (
 	'description' => 'The secret necessary to create an admin user.',
 	'value' => '874jdiv8',
   ),
+  3 =>
+  array (
+	'name' => 'resize_logos',
+	'cname' => 'Resize Logos',
+	'description' => 'Resize the group logos before saving them.',
+	'value' => false,
+  ),
+  4 =>
+  array (
+	'name' => 'logo_width',
+	'cname' => 'Logo Width',
+	'description' => 'If resizing logos, use this width.',
+	'value' => 200,
+  ),
+  5 =>
+  array (
+	'name' => 'logo_height',
+	'cname' => 'Logo Height',
+	'description' => 'If resizing logos, use this height.',
+	'value' => 75,
+  ),
 );
 
 ?>

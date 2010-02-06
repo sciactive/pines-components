@@ -45,7 +45,7 @@ $group->address_international = $_REQUEST['address_international'];
  */
 // Clean the requested parent. Make sure it's both valid and not the same group.
 if ( $_REQUEST['parent'] == 'none' ) {
-	$group->parent = NULL;
+	unset($group->parent);
 } else {
 	$group->parent = group::factory((int) $_REQUEST['parent']);
 }
@@ -84,6 +84,93 @@ if (isset($group->parent) && (is_null($group->parent->guid) || $group->is($group
 	$group->print_form();
 	display_notice('Parent group is not valid.');
 	return;
+}
+
+// Logo image upload and resizing.
+$image = $_FILES['image'];
+if (!empty($image['name'])) {
+	if ($image['size'] > 205000) {
+		$group->print_form();
+		display_notice('Images cannot exceed 200KB.');
+		return;
+	}
+	if ($image['error'] > 0) {
+		$group->print_form();
+		display_error("Image Error: {$image['error']}");
+		return;
+	}
+	if (!in_array($image['type'], array('image/jpeg', 'image/png', 'image/gif'))) {
+		$group->print_form();
+		display_notice('Acceptable image types are jpg, png, and gif.');
+		return;
+	}
+	if (is_null($group->guid) && !$group->save()) {
+		$group->print_form();
+		display_error('Error saving group.');
+		return;
+	}
+	// Resize and create the image with the Pines logo naming scheme.
+	if (isset($group->logo) && file_exists("{$pines->setting_upload}logos/{$group->logo}"))
+		unlink("{$pines->setting_upload}logos/{$group->logo}");
+	switch ($image['type']) {
+		case 'image/jpeg':
+			$group->logo = "{$group->guid}_logo.jpg";
+			if ($pines->com_user->resize_logos) {
+				$img_raw = imagecreatefromjpeg($image['tmp_name']);
+				$currwidth = imagesx($img_raw);
+				$currheight = imagesy($img_raw);
+				$img_resized = imagecreate($pines->com_user->logo_width, $pines->com_user->logo_height);
+				imagecopyresized($img_resized, $img_raw, 0, 0, 0, 0, $pines->com_user->logo_width, $pines->com_user->logo_height, $currwidth, $currheight);
+				imagejpeg($img_resized, "{$pines->setting_upload}logos/{$group->logo}");
+				imagedestroy($img_raw);
+				imagedestroy($img_resized);
+			} else {
+				move_uploaded_file($image['tmp_name'], "{$pines->setting_upload}logos/{$group->logo}");
+			}
+			break;
+		case 'image/png':
+			$group->logo = "{$group->guid}_logo.png";
+			if ($pines->com_user->resize_logos) {
+				$img_raw = imagecreatefrompng($image['tmp_name']);
+				$currwidth = imagesx($img_raw);
+				$currheight = imagesy($img_raw);
+				$img_resized = imagecreate($pines->com_user->logo_width, $pines->com_user->logo_height);
+				imagecopyresized($img_resized, $img_raw, 0, 0, 0, 0, $pines->com_user->logo_width, $pines->com_user->logo_height, $currwidth, $currheight);
+				imagepng($img_resized, "{$pines->setting_upload}logos/{$group->logo}");
+				imagedestroy($img_raw);
+				imagedestroy($img_resized);
+			} else {
+				move_uploaded_file($image['tmp_name'], "{$pines->setting_upload}logos/{$group->logo}");
+			}
+			break;
+		case 'image/gif':
+			$group->logo = "{$group->guid}_logo.gif";
+			if ($pines->com_user->resize_logos) {
+				$img_raw = imagecreatefromgif($image['tmp_name']);
+				$currwidth = imagesx($img_raw);
+				$currheight = imagesy($img_raw);
+				$img_resized = imagecreatetruecolor($pines->com_user->logo_width, $pines->com_user->logo_height);
+				$blank = imagecolortransparent($img_raw);
+				// If the image has alpha values (transparency) fill our resized image with blank space.
+				if( $blank >= 0 && $blank < imagecolorstotal($img_raw) ) {
+					$trans = imagecolorsforindex($img_raw, $blank);
+					$trans_color = imagecolorallocate($img_resized, $trans['red'], $trans['green'], $trans['blue']);
+					imagefill( $img_resized, 0, 0, $trans_color );
+					imagecolortransparent( $img_resized, $trans_color );
+				}
+				imagecopyresized($img_resized, $img_raw, 0, 0, 0, 0, $pines->com_user->logo_width, $pines->com_user->logo_height, $currwidth, $currheight);
+				imagegif($img_resized, "{$pines->setting_upload}logos/{$group->logo}");
+				imagedestroy($img_raw);
+				imagedestroy($img_resized);
+			} else {
+				move_uploaded_file($image['tmp_name'], "{$pines->setting_upload}logos/{$group->logo}");
+			}
+			break;
+	}
+} else if ($_REQUEST['remove_logo'] == 'ON' && isset($group->logo)) {
+	if (file_exists("{$pines->setting_upload}logos/{$group->logo}"))
+		unlink("{$pines->setting_upload}logos/{$group->logo}");
+	unset($group->logo);
 }
 
 if ($group->save()) {

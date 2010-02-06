@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = (is_null($this->entity->guid)) ? 'Editing New Group' : 'Editing ['.htmlentities($this->entity->groupname).']';
 $this->note = 'Provide group details in this form.';
 ?>
-<form class="pform" method="post" id="group_details" action="<?php echo pines_url('com_user', 'savegroup'); ?>">
+<form enctype="multipart/form-data" class="pform" method="post" id="group_details" action="<?php echo pines_url('com_user', 'savegroup'); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 			<?php if (isset($this->entity->uid)) { ?>
@@ -64,7 +64,23 @@ $this->note = 'Provide group details in this form.';
 				<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->entity->parent); ?>
 			</select></label>
 	</div>
-	
+	<div class="element heading">
+		<h1>Logo</h1>
+	</div>
+	<div class="element">
+		<span class="label"><?php echo (isset($this->entity->logo)) ? 'Currently Set Logo' : 'Inherited Logo'; ?></span>
+		<div class="group">
+			<span class="field"><img src="<?php echo $this->entity->get_logo(); ?>" alt="Group Logo" /></span>
+			<?php if (isset($this->entity->logo)) { ?>
+			<br />
+			<label><span class="field"><input class="field ui-widget-content" type="checkbox" name="remove_logo" value="ON" />Remove this logo.</span></label>
+			<?php } ?>
+		</div>
+	</div>
+	<div class="element">
+		<label><span class="label">Change Logo</span>
+			<input class="field ui-widget-content" type="file" name="image" /></label>
+	</div>
 	<div class="element heading">
 		<h1>Location</h1>
 	</div>

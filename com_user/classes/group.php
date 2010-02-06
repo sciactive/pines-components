@@ -86,6 +86,21 @@ class group extends able_entity {
 	}
 
 	/**
+	 * Find the location of the group's current logo image.
+	 *
+	 * @param bool $rela_location Return a relative URL, instead of a full one.
+	 * @return string The URL of the logo image.
+	 */
+	public function get_logo($rela_location = false) {
+		global $pines;
+		if (isset($this->logo))
+			return ($rela_location ? $pines->rela_location : $pines->full_location)."{$pines->setting_upload}logos/{$this->logo}";
+		if (isset($this->parent))
+			return $this->parent->get_logo($rela_location);
+		return ($rela_location ? $pines->rela_location : $pines->full_location)."{$pines->setting_upload}logos/default_logo.png";
+	}
+
+	/**
 	 * Print a form to edit the group.
 	 * @return module The form's module.
 	 */

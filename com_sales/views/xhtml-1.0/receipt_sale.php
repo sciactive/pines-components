@@ -11,17 +11,20 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 if ($this->entity->status == 'quoted') {
-	$this->title = 'Quote';
+	$this->doc_title = 'Quote';
 } elseif ($this->entity->status == 'invoiced') {
-	$this->title = 'Invoice';
+	$this->doc_title = 'Invoice';
 } elseif ($this->entity->status == 'paid') {
-	$this->title = 'Receipt';
+	$this->doc_title = 'Receipt';
 } else {
-	$this->title = 'Sale';
+	$this->doc_title = 'Sale';
 }
 ?>
 <style type="text/css">
 	/* <![CDATA[ */
+	#receipt_sale .data_col .name {
+		font-weight: bold;
+	}
 	#receipt_sale .left_side {
 		margin-bottom: 10px;
 		float: left;
@@ -32,6 +35,14 @@ if ($this->entity->status == 'quoted') {
 		float: right;
 		clear: right;
 	}
+	#receipt_sale .barcode h1 {
+		margin-bottom: 0px;
+		padding-right: 15px;
+		text-align: right;
+	}
+	#receipt_sale .barcode img {
+		margin-top: 0px;
+	}
 	#receipt_sale .right_text {
 		text-align: right;
 	}
@@ -41,12 +52,13 @@ if ($this->entity->status == 'quoted') {
 	#receipt_sale .left_side .data_col, #receipt_sale .right_side .data_col {
 		float: left;
 		margin-left: 10px;
+		padding-right: 15px;
 	}
 	#receipt_sale .left_side span, #receipt_sale .right_side span {
 		display: block;
 	}
-	#receipt_sale .location .aligner {
-		visibility: hidden;
+	#receipt_sale .location .aligner, #receipt_sale .customer .aligner {
+		width: 48px;
 	}
 	#item_list {
 		text-align: left;
@@ -63,49 +75,72 @@ if ($this->entity->status == 'quoted') {
 	/* ]]> */
 </style>
 <div id="receipt_sale" class="pform pform_twocol">
-	<?php $sales_rep = user::factory((int) $this->entity->uid); if (isset($sales_rep->guid)) { ?>
-	<div class="left_side location">
-		<div class="aligner">
-			<strong>Bill To:</strong>
+	<?php
+		// Sales rep and sales group entities.
+		$sales_rep = user::factory((int) $this->entity->uid);
+		$sales_group = $sales_rep->group;
+		// Set the location of the group logo image.
+		$group_logo = $sales_group->get_logo();
+		// Document id number.
+		// TODO: Change this to an incremental naming scheme.
+		$doc_id = $sales_group->groupname . strtoupper(substr($this->doc_title, 0, 2)) . $this->entity->guid;
+	?>
+	<div class="left_side">
+		<span><img src="<?php echo $group_logo; ?>" alt="<?php echo $pines->page->get_title(); ?>" /></span>
 		</div>
+	<div class="right_side barcode">
+		<h1><?php echo $this->doc_title; ?></h1>
+		<img src="<?php echo pines_url('com_barcode', 'image', array('code' => $doc_id)); ?>" alt="Barcode" />
+	</div>
+	<?php if (isset($sales_rep->guid)) { ?>
+	<div class="left_side location">
+		<div class="aligner">&nbsp;</div>
 		<div class="data_col">
-			<span class="name"><?php echo $pines->user_manager->get_groupname($sales_rep->gid); ?></span>
-			<span>Address</span>
-			<span>City, State Country Zip</span>
-			<span>Phone</span>
+			<span class="name"><?php echo $sales_group->name; ?></span>
+			<span><?php echo ($sales_group->address_type == 'us') ? $sales_group->address_1.' '.$sales_group->address_2 : $sales_group->address_international; ?></span>
+			<?php if ($sales_group->address_type == 'us') { ?>
+			<span><?php echo $sales_group->city; ?>, <?php echo $sales_group->state; ?> USA <?php echo $sales_group->zip; ?></span>
+			<?php } else { ?>
+			<span>International</span>
+			<?php } ?>
+			<span><?php echo pines_phone_format($sales_group->phone); ?></span>
 		</div>
 	</div>
 	<?php } ?>
 	<div class="right_side receipt_info">
 		<div class="info_labels right_text">
-			<span><?php echo $this->title; ?> #:</span>
+			<span><?php echo $this->doc_title; ?> #:</span>
 			<span>Date:</span>
+			<span>Time:</span>
+			<?php if (isset($sales_rep->guid)) { ?>
 			<span>Sales Person:</span>
-			<span>Date:</span>
+			<?php } ?>
 		</div>
 		<div class="data_col">
-			<span><?php echo $this->entity->guid; ?></span>
+			<span><?php echo $doc_id; ?></span>
 			<?php switch($this->entity->status) {
 				case 'invoiced':
-					echo '<span>'.pines_date_format($this->entity->invoice_date, null, 'Y-n-j g:i A').'</span>';
+					echo '<span>'.pines_date_format($this->entity->invoice_date, null, 'Y-m-d').'</span>';
+					echo '<span>'.pines_date_format($this->entity->invoice_date, null, 'g:i A T').'</span>';
 					break;
 				case 'paid':
-					echo '<span>'.pines_date_format($this->entity->tender_date, null, 'Y-n-j g:i A').'</span>';
+					echo '<span>'.pines_date_format($this->entity->tender_date, null, 'Y-m-d').'</span>';
+					echo '<span>'.pines_date_format($this->entity->tender_date, null, 'g:i A T').'</span>';
 					break;
 				default:
-					echo '<span>'.pines_date_format($this->entity->p_cdate, null, 'Y-n-j g:i A').'</span>';
+					echo '<span>'.pines_date_format($this->entity->p_cdate, null, 'Y-m-d').'</span>';
+					echo '<span>'.pines_date_format($this->entity->p_cdate, null, 'g:i A T').'</span>';
 					break;
 			} ?>
 			<?php if (isset($sales_rep->guid)) { ?>
-				<span><?php echo $sales_rep->name; ?></span>
 				<span><?php echo $sales_rep->name; ?></span>
 			<?php } ?>
 		</div>
 	</div>
 <?php if ($pines->run_sales->com_customer && !is_null($this->entity->customer)) { ?>
 	<div class="left_side customer">
-		<div>
-			<strong>Bill To:</strong>
+		<div class="aligner">
+			<span>Bill To:</span>
 		</div>
 		<div class="data_col">
 			<span><strong>

@@ -39,5 +39,5 @@ if ($employee->save()) {
 	display_error('Error saving timeclock. Do you have permission?');
 }
 
-$pines->run_hrm->list_timeclocks();
+$pines->com_hrm->list_timeclocks();
 ?>

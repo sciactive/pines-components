@@ -25,7 +25,7 @@ $pines->page->head("<script src=\"http://yui.yahooapis.com/2.7.0/build/button/bu
 $pines->page->head("<!-- Source file for Rich Text Editor-->\n");
 $pines->page->head("<script src=\"http://yui.yahooapis.com/2.7.0/build/editor/editor-min.js\"></script>\n");
 $pines->page->head("<script src=\"http://yui.yahooapis.com/2.7.0/build/connection/connection-min.js\"></script>\n");
-$pines->page->head("<script src=\"{$pines->rela_location}components/com_newsletter/js/yui-image-uploader26.js\"></script>\n");
+$pines->page->head("<script src=\"{$pines->config->rela_location}components/com_newsletter/js/yui-image-uploader26.js\"></script>\n");
 $pines->page->head("<script type=\"text/javascript\">\n");
 $pines->page->head("var editor = new YAHOO.widget.Editor('data', {\n");
 $pines->page->head("	handleSubmit: true,\n");

@@ -39,7 +39,7 @@ class com_sales extends component {
 	 * - "name" - The name of your type. Ex: 'com_giftcard/giftcard'
 	 * - "cname" - The canonical name of your action. Ex: 'Gift Card'
 	 * - "description" - A description of the action. Ex: 'Deduct the payment from a gift card.'
-	 * - "callback" - Callback to your function. Ex: array($pines->run_giftcard, 'process_giftcard')
+	 * - "callback" - Callback to your function. Ex: array($pines->com_giftcard, 'process_giftcard')
 	 *
 	 * The callback will be passed an array which may contain the following
 	 * associative entries:
@@ -92,7 +92,7 @@ class com_sales extends component {
 	 * - "name" - The name of your action. Ex: 'com_gamephear/create_gamephear_account'
 	 * - "cname" - The canonical name of your action. Ex: 'Create GamePhear Account'
 	 * - "description" - A description of the action. Ex: 'Creates a GamePhear account for the customer.'
-	 * - "callback" - Callback to your function. Ex: array($pines->run_gamephear, 'create_account')
+	 * - "callback" - Callback to your function. Ex: array($pines->com_gamephear, 'create_account')
 	 *
 	 * The callback will be passed an array which may contain the following
 	 * associative entries:

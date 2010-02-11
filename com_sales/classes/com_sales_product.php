@@ -102,7 +102,7 @@ class com_sales_product extends entity {
 		if (!is_array($module->tax_fees)) {
 			$module->tax_fees = array();
 		}
-		$module->actions = $pines->run_sales->product_actions;
+		$module->actions = $pines->com_sales->product_actions;
 		if (!is_array($module->actions)) {
 			$module->actions = array();
 		}

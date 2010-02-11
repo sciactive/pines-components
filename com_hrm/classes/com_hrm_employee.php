@@ -91,7 +91,7 @@ class com_hrm_employee extends entity {
 		global $pines;
 		if (isset($this->user_account->guid))
 			return $this->user_account->get_timezone($return_date_time_zone_object);
-		return $return_date_time_zone_object ? new DateTimeZone($pines->timezone) : $pines->timezone;
+		return $return_date_time_zone_object ? new DateTimeZone($pines->config->timezone) : $pines->config->timezone;
 	}
 
 	/**

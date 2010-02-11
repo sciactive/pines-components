@@ -35,7 +35,7 @@ class com_pdf_displays extends entity {
 		$this->pdf_dl_filename = 'blank.pdf';
 		$this->pdf_pages = 1;
 		$this->pdf_title = 'blank';
-		$this->pdf_author = $pines->com_pdf->author;
+		$this->pdf_author = $pines->config->com_pdf->author;
 		$this->pdf_creator = 'Pines';
 		$this->pdf_subject = '';
 		$this->pdf_keywords = '';
@@ -83,7 +83,7 @@ class com_pdf_displays extends entity {
 		require_once('components/com_pdf/includes/tcpdf/tcpdf.php');
 		require_once('components/com_pdf/includes/fpdi/fpdi.php');
 		$pdf = new FPDI();
-		$this->pdf_pages = $pdf->setSourceFile($pines->com_pdf->pdf_path.clean_filename($this->pdf_file));
+		$this->pdf_pages = $pdf->setSourceFile($pines->config->com_pdf->pdf_path.clean_filename($this->pdf_file));
 		return $this->pdf_pages;
 	}
 
@@ -153,7 +153,7 @@ class com_pdf_displays extends entity {
 			}
 		}
 
-		$pagecount = $pdf->setSourceFile($pines->com_pdf->pdf_path.clean_filename($this->pdf_file));
+		$pagecount = $pdf->setSourceFile($pines->config->com_pdf->pdf_path.clean_filename($this->pdf_file));
 		// Go through each display.
 		for ($i = 1; $i <= $pagecount; $i++) {
 			$tplidx = $pdf->importPage($i);

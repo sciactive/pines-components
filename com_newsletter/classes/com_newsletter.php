@@ -29,7 +29,7 @@ class com_newsletter extends component {
 	 */
 	function delete_attachment(&$mail, $name) {
 		global $pines;
-		if ( unlink($pines->setting_upload . 'attachments/' . clean_filename($name)) ) {
+		if ( unlink($pines->config->setting_upload . 'attachments/' . clean_filename($name)) ) {
 			if ( in_array($name, $mail->attachments) )
 				unset($mail->attachments[array_search($name, $mail->attachments)]);
 			pines_log("Removed attachment $name from mail $mail->name.", 'notice');

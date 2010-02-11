@@ -98,10 +98,10 @@ $this->title = 'Customer Timer Status';
 		box.find(".ses_minutes .value").html(customer.ses_minutes);
 		box.find(".ses_points .value").html(customer.ses_points);
 		box.find(".points_remain .value").html(customer.points_remain);
-		if (customer.points_remain <= <?php echo (int) $pines->com_customer_timer->level_critical; ?>) {
+		if (customer.points_remain <= <?php echo (int) $pines->config->com_customer_timer->level_critical; ?>) {
 			box.removeClass("ok").removeClass("warning").addClass("critical").children(".customer_header").removeClass("ui-state-highlight").addClass("ui-state-error");
 			box.find(".status .value").html("Critical");
-		} else if (customer.points_remain <= <?php echo (int) $pines->com_customer_timer->level_warning; ?>) {
+		} else if (customer.points_remain <= <?php echo (int) $pines->config->com_customer_timer->level_warning; ?>) {
 			box.removeClass("ok").addClass("warning").removeClass("critical").children(".customer_header").addClass("ui-state-highlight").removeClass("ui-state-error");
 			box.find(".status .value").html("Warning");
 		} else {

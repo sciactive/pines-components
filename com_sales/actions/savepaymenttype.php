@@ -53,7 +53,7 @@ if (empty($payment_type->minimum))
 if (empty($payment_type->maximum))
 	$payment_type->maximum = null;
 
-if ($pines->com_sales->global_payment_types)
+if ($pines->config->com_sales->global_payment_types)
 	$payment_type->ac->other = 1;
 
 if ($payment_type->change_type) {
@@ -63,7 +63,7 @@ if ($payment_type->change_type) {
 		if ($change_type->save()) {
 			display_notice("Change type changed from [{$change_type->name}] to [{$payment_type->name}].");
 		} else {
-			$module = $pines->run_sales->print_payment_type_form('com_sales', 'savepaymenttype');
+			$module = $pines->com_sales->print_payment_type_form('com_sales', 'savepaymenttype');
 			$module->entity = $payment_type;
 			display_error("There was an error while changing change type from {$change_type->name}. Do you have permission to edit the current change type?");
 			return;
@@ -77,5 +77,5 @@ if ($payment_type->save()) {
 	display_error('Error saving payment type. Do you have permission?');
 }
 
-$pines->run_sales->list_payment_types();
+$pines->com_sales->list_payment_types();
 ?>

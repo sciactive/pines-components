@@ -32,7 +32,7 @@ class com_customer_timer extends component {
 		// Calculate how many minutes they've been logged in.
 		$minutes = (int) round((time() - $customer->com_customer_timer->last_login) / 60);
 		// And how many points that costs.
-		$points = $minutes * (int) $pines->com_customer_timer->ppm;
+		$points = $minutes * (int) $pines->config->com_customer_timer->ppm;
 		return array('minutes' => $minutes, 'points' => $points);
 	}
 
@@ -68,7 +68,7 @@ class com_customer_timer extends component {
 		}
 		if ($customer->points <= 0) {
 			display_notice('Your account balance has reached zero.');
-			if (!$pines->com_customer_timer->debtlogin)
+			if (!$pines->config->com_customer_timer->debtlogin)
 				return false;
 		}
 		return $logins->login($customer);

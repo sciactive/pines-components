@@ -32,13 +32,13 @@ if (isset($_FILES['image']['tmp_name'])) {
 	// create a new random numeric name to avoid rewriting other images already on the server...
 	$ran = rand ();
 	$ran2 = $ran.'.';
-	$path = $pines->setting_upload.'images/'.$ran2.'jpg';
+	$path = $pines->config->setting_upload.'images/'.$ran2.'jpg';
 	// copy the image to the server, alert on fail
 	$hout=fopen($path,"w");
 	fwrite($hout,$image);
 	fclose($hout);
 	
-	$path = $pines->full_location . $path;
+	$path = $pines->config->full_location . $path;
 	$pines->page->override_doc("{status:'UPLOADED', image_url:'$path'}");
 } else {
 	$pines->page->override_doc("{status:'No file was submitted'}");

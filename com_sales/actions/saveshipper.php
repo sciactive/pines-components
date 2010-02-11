@@ -50,7 +50,7 @@ if (isset($test) && $test->guid != $_REQUEST['id']) {
 	return;
 }
 
-if ($pines->com_sales->global_shippers)
+if ($pines->config->com_sales->global_shippers)
 	$shipper->ac->other = 1;
 
 if ($shipper->save()) {
@@ -59,5 +59,5 @@ if ($shipper->save()) {
 	display_error('Error saving shipper. Do you have permission?');
 }
 
-$pines->run_sales->list_shippers();
+$pines->com_sales->list_shippers();
 ?>

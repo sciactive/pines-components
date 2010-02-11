@@ -15,11 +15,11 @@ if ( !gatekeeper('com_logger/view') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_logger', 'view', null, false));
 
 $view = new module('com_logger', 'view', 'content');
-if (file_exists($pines->com_logger->path)) {
-	if (($view->log = file_get_contents($pines->com_logger->path)) === false)
-		display_error('Error reading log file '.$pines->com_logger->path);
+if (file_exists($pines->config->com_logger->path)) {
+	if (($view->log = file_get_contents($pines->config->com_logger->path)) === false)
+		display_error('Error reading log file '.$pines->config->com_logger->path);
 } else {
-	display_error('Log file '.$pines->com_logger->path.' does not exist!');
+	display_error('Log file '.$pines->config->com_logger->path.' does not exist!');
 }
 if (empty($view->log)) $view->log = 'Log file is empty.';
 

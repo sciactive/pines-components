@@ -72,7 +72,7 @@ $mailer->addHeader('Bcc', $bcc);
 
 $attachments = $mail->attachments;
 foreach ( $attachments as $cur_attachment ) {
-	$mailer->addAttachment($pines->setting_upload . 'attachments/' . $cur_attachment);
+	$mailer->addAttachment($pines->config->setting_upload . 'attachments/' . $cur_attachment);
 }
 
 if ( $mailer->send() ) {

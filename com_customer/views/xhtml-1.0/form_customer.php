@@ -185,7 +185,7 @@ $this->note = 'Provide customer profile details in this form.';
 				<label><span class="label">Last Name</span>
 					<input class="field ui-widget-content" type="text" name="name_last" size="24" value="<?php echo $this->entity->name_last; ?>" /></label>
 			</div>
-			<?php if ($pines->com_customer->ssn_field) { ?>
+			<?php if ($pines->config->com_customer->ssn_field) { ?>
 			<div class="element">
 				<label><span class="label">SSN</span>
 					<span class="note">Without dashes.</span>
@@ -364,7 +364,7 @@ $this->note = 'Provide customer profile details in this form.';
 			<div class="element">
 				<label><span class="label"><?php if (!is_null($this->entity->password)) echo 'Update '; ?>Password</span>
 					<?php if (is_null($this->entity->password)) {
-						echo ($pines->com_user->empty_pw ? '<span class="note">May be blank.</span>' : '');
+						echo ($pines->config->com_user->empty_pw ? '<span class="note">May be blank.</span>' : '');
 					} else {
 						echo '<span class="note">Leave blank, if not changing.</span>';
 					} ?>
@@ -389,7 +389,7 @@ $this->note = 'Provide customer profile details in this form.';
 				<span class="label">Total Points in All Time</span>
 				<span class="field"><?php echo $this->entity->total_points; ?></span>
 			</div>
-			<?php if ($pines->com_customer->adjustpoints && gatekeeper('com_customer/adjustpoints')) { ?>
+			<?php if ($pines->config->com_customer->adjustpoints && gatekeeper('com_customer/adjustpoints')) { ?>
 			<div class="element">
 				<label><span class="label">Adjust Points</span>
 					<span class="note">Use a negative value to subtract points.</span>

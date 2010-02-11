@@ -22,10 +22,10 @@ if (is_object($_SESSION['user'])) {
 			$module = new module('com_user', 'punted', 'right');
 			$module->url = urldecode($_REQUEST['url']);
 		}
-		action($pines->default_component, 'default');
+		action($pines->config->default_component, 'default');
 	}
 } else {
 // Load the default component.
-	action($pines->default_component, 'default');
+	action($pines->config->default_component, 'default');
 }
 ?>

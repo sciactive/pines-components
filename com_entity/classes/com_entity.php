@@ -42,8 +42,8 @@ class com_entity extends component {
 	public function delete_entity_by_id($guid) {
 		global $pines;
 		$query = sprintf("DELETE e, d FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid`=d.`guid` WHERE e.`guid`=%u;",
-			$pines->com_mysql->prefix,
-			$pines->com_mysql->prefix,
+			$pines->config->com_mysql->prefix,
+			$pines->config->com_mysql->prefix,
 			(int) $guid);
 		if ( !(mysql_query($query, $pines->db_manager->link)) ) {
 			if (function_exists('display_error'))
@@ -169,13 +169,13 @@ class com_entity extends component {
 
 		if ($query_parts) {
 			$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid` = d.`guid` HAVING (%s) ORDER BY e.`guid`;",
-				$pines->com_mysql->prefix,
-				$pines->com_mysql->prefix,
+				$pines->config->com_mysql->prefix,
+				$pines->config->com_mysql->prefix,
 				'('.implode(') AND (', $query_parts).')');
 		} else {
 			$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid` = d.`guid` ORDER BY e.`guid`;",
-				$pines->com_mysql->prefix,
-				$pines->com_mysql->prefix);
+				$pines->config->com_mysql->prefix,
+				$pines->config->com_mysql->prefix);
 		}
 		if ( !($result = mysql_query($query, $pines->db_manager->link)) ) {
 			if (function_exists('display_error'))
@@ -368,7 +368,7 @@ class com_entity extends component {
 			// And modified date.
 			$entity->p_mdate = time();
 			$query = sprintf("INSERT INTO `%scom_entity_entities` (`tags`) VALUES ('%s');",
-				$pines->com_mysql->prefix,
+				$pines->config->com_mysql->prefix,
 				mysql_real_escape_string(serialize($entity->tags), $pines->db_manager->link));
 			if ( !(mysql_query($query, $pines->db_manager->link)) ) {
 				if (function_exists('display_error'))
@@ -380,7 +380,7 @@ class com_entity extends component {
 			$data = $entity->get_data();
 			foreach ($data as $name => $value) {
 				$query = sprintf("INSERT INTO `%scom_entity_data` (`guid`, `name`, `value`) VALUES (%u, '%s', '%s');",
-					$pines->com_mysql->prefix,
+					$pines->config->com_mysql->prefix,
 					(int) $new_id,
 					mysql_real_escape_string($name, $pines->db_manager->link),
 					mysql_real_escape_string(serialize($value), $pines->db_manager->link));
@@ -395,7 +395,7 @@ class com_entity extends component {
 			// Save the modified date.
 			$entity->p_mdate = time();
 			$query = sprintf("UPDATE `%scom_entity_entities` SET `tags`='%s' WHERE `guid`=%u;",
-				$pines->com_mysql->prefix,
+				$pines->config->com_mysql->prefix,
 				mysql_real_escape_string(serialize($entity->tags), $pines->db_manager->link),
 				intval($entity->guid));
 			if ( !(mysql_query($query, $pines->db_manager->link)) ) {
@@ -404,7 +404,7 @@ class com_entity extends component {
 				return false;
 			}
 			$query = sprintf("DELETE FROM `%scom_entity_data` WHERE `guid`=%u;",
-				$pines->com_mysql->prefix,
+				$pines->config->com_mysql->prefix,
 				intval($entity->guid));
 			if ( !(mysql_query($query, $pines->db_manager->link)) ) {
 				if (function_exists('display_error'))
@@ -414,7 +414,7 @@ class com_entity extends component {
 			$data = $entity->get_data();
 			foreach ($data as $name => $value) {
 				$query = sprintf("INSERT INTO `%scom_entity_data` (`guid`, `name`, `value`) VALUES (%u, '%s', '%s');",
-					$pines->com_mysql->prefix,
+					$pines->config->com_mysql->prefix,
 					intval($entity->guid),
 					mysql_real_escape_string($name, $pines->db_manager->link),
 					mysql_real_escape_string(serialize($value), $pines->db_manager->link));

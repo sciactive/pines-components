@@ -30,6 +30,6 @@ function com_logger_hook_log($return, $hook) {
 	return $return;
 }
 
-if ($pines->com_logger->level == 'debug') $pines->log_manager->hook();
+if ($pines->config->com_logger->level == 'debug') $pines->log_manager->hook();
 
 ?>

@@ -77,21 +77,21 @@ $bgcolor = $_REQUEST['bgcolor'];
 $color = $_REQUEST['color'];
 
 if (!isset($type))
-	$type = $pines->com_barcode->type;
+	$type = $pines->config->com_barcode->type;
 if (!isset($width))
-	$width = $pines->com_barcode->width;
+	$width = $pines->config->com_barcode->width;
 if (!isset($height))
-	$height = $pines->com_barcode->height;
+	$height = $pines->config->com_barcode->height;
 if (!isset($xres))
-	$xres = $pines->com_barcode->xres;
+	$xres = $pines->config->com_barcode->xres;
 if (!isset($font))
-	$font = $pines->com_barcode->font;
+	$font = $pines->config->com_barcode->font;
 if (!isset($bgcolor))
-	$bgcolor = $pines->com_barcode->bgcolor;
+	$bgcolor = $pines->config->com_barcode->bgcolor;
 if (!isset($color))
-	$color = $pines->com_barcode->color;
+	$color = $pines->config->com_barcode->color;
 if (!$style)
-	$style = $pines->com_barcode->output_type == 'jpg' ? 36 : ($pines->com_barcode->output_type == 'gif' ? 134 : 70);
+	$style = $pines->config->com_barcode->output_type == 'jpg' ? 36 : ($pines->config->com_barcode->output_type == 'gif' ? 134 : 70);
 
 switch ($type) {
 	case 'I25':

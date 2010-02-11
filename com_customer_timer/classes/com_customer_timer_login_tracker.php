@@ -112,7 +112,7 @@ class com_customer_timer_login_tracker extends entity {
 		if (!$found)
 			return false;
 		$this->save();
-		$session_info = $pines->run_customer_timer->get_session_info($customer);
+		$session_info = $pines->com_customer_timer->get_session_info($customer);
 		// Take points off the customer's account.
 		$customer->adjust_points(-1 * $session_info['points']);
 		$customer->save();

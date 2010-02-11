@@ -195,7 +195,7 @@ class user extends able_entity {
 			if (!empty($cur_group->timezone))
 				return $return_date_time_zone_object ? new DateTimeZone($cur_group->timezone) : $cur_group->timezone;
 		}
-		return $return_date_time_zone_object ? new DateTimeZone($pines->timezone) : $pines->timezone;
+		return $return_date_time_zone_object ? new DateTimeZone($pines->config->timezone) : $pines->config->timezone;
 	}
 }
 

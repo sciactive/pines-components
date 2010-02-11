@@ -36,14 +36,14 @@ $this->note = 'Use this form to edit a sale.';
 	<?php } ?>
 	<script type="text/javascript">
 		// <![CDATA[
-		<?php if ($pines->run_sales->com_customer) { ?>
+		<?php if ($pines->com_sales->com_customer) { ?>
 		var customer_box, customer_search_box, customer_search_button, customer_table, customer_dialog;
 		var require_customer = false;
 		<?php } ?>
 		var comments, comments_box, products, products_table, product_code, payments, payments_table;
 
 		// Number of decimal places to round to.
-		var dec = <?php echo intval($pines->com_sales->dec); ?>;
+		var dec = <?php echo intval($pines->config->com_sales->dec); ?>;
 <?php
 		$taxes_percent = array();
 		$taxes_flat = array();
@@ -90,7 +90,7 @@ $this->note = 'Use this form to edit a sale.';
 		}
 
 		$(function(){
-			<?php if ($pines->run_sales->com_customer) { ?>
+			<?php if ($pines->com_sales->com_customer) { ?>
 			customer_box = $("#customer");
 			customer_search_box = $("#customer_search");
 			customer_search_button = $("#customer_search_button");
@@ -105,7 +105,7 @@ $this->note = 'Use this form to edit a sale.';
 			payments_table = $("#payments_table");
 			payments = $("#payments");
 
-			<?php if ($pines->run_sales->com_customer && ($this->entity->status != 'invoiced' || $this->entity->status != 'paid')) { ?>
+			<?php if ($pines->com_sales->com_customer && ($this->entity->status != 'invoiced' || $this->entity->status != 'paid')) { ?>
 			customer_search_box.keydown(function(eventObject){
 				if (eventObject.keyCode == 13) {
 					customer_search(this.value);
@@ -512,14 +512,14 @@ $this->note = 'Use this form to edit a sale.';
 			var taxes = 0;
 			var item_fees = 0;
 			var total = 0;
-			<?php if ($pines->run_sales->com_customer) { ?>
+			<?php if ($pines->com_sales->com_customer) { ?>
 			require_customer = false;
 			<?php } ?>
 			// Calculate ticket totals.
 			rows.each(function(){
 				var cur_row = $(this);
 				var product = cur_row.data("product");
-				<?php if ($pines->run_sales->com_customer) { ?>
+				<?php if ($pines->com_sales->com_customer) { ?>
 				if (product.require_customer)
 					require_customer = true;
 				<?php } ?>
@@ -609,7 +609,7 @@ $this->note = 'Use this form to edit a sale.';
 			payments.val(JSON.stringify(rows.pgrid_export_rows()));
 		}
 
-		<?php if ($pines->run_sales->com_customer && ($this->entity->status != 'invoiced' || $this->entity->status != 'paid')) { ?>
+		<?php if ($pines->com_sales->com_customer && ($this->entity->status != 'invoiced' || $this->entity->status != 'paid')) { ?>
 		function customer_search(search_string) {
 			var loader;
 			$.ajax({
@@ -640,7 +640,7 @@ $this->note = 'Use this form to edit a sale.';
 		<?php } ?>
 		// ]]>
 	</script>
-	<?php if ($pines->run_sales->com_customer) { ?>
+	<?php if ($pines->com_sales->com_customer) { ?>
 	<div class="element">
 		<label for="customer_search"><span class="label">Customer</span>
 			<?php if ($this->entity->status != 'invoiced' && $this->entity->status != 'paid') { ?>
@@ -727,8 +727,8 @@ $this->note = 'Use this form to edit a sale.';
 							<td><?php echo $cur_product['quantity']; ?></td>
 							<td><?php echo $cur_product['price']; ?></td>
 							<td><?php echo $cur_product['discount']; ?></td>
-							<td><?php echo $pines->run_sales->round($cur_product['line_total'], $pines->com_sales->dec); ?></td>
-							<td><?php echo $pines->run_sales->round($cur_product['fees'], $pines->com_sales->dec); ?></td>
+							<td><?php echo $pines->com_sales->round($cur_product['line_total'], $pines->config->com_sales->dec); ?></td>
+							<td><?php echo $pines->com_sales->round($cur_product['fees'], $pines->config->com_sales->dec); ?></td>
 						</tr>
 						<?php } ?>
 					</tbody>
@@ -790,7 +790,7 @@ $this->note = 'Use this form to edit a sale.';
 						<?php foreach ($this->entity->payments as $cur_payment) { ?>
 						<tr title="<?php echo $cur_payment['entity']->guid; ?>">
 							<td><?php echo $cur_payment['entity']->name; ?></td>
-							<td><?php echo $pines->run_sales->round($cur_payment['amount'], $pines->com_sales->dec, true); ?></td>
+							<td><?php echo $pines->com_sales->round($cur_payment['amount'], $pines->config->com_sales->dec, true); ?></td>
 							<td><?php echo $cur_payment['status']; ?></td>
 							<td><?php
 							$data = array();

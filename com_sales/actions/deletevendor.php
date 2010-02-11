@@ -26,5 +26,5 @@ if (empty($failed_deletes)) {
 	display_error('Could not delete vendors with given IDs: '.$failed_deletes);
 }
 
-$pines->run_sales->list_vendors();
+$pines->com_sales->list_vendors();
 ?>

@@ -185,7 +185,7 @@ $this->note = 'Provide employee account details in this form.';
 				<label><span class="label">Last Name</span>
 					<input class="field ui-widget-content" type="text" name="name_last" size="24" value="<?php echo $this->entity->name_last; ?>" /></label>
 			</div>
-			<?php if ($pines->com_hrm->ssn_field) { ?>
+			<?php if ($pines->config->com_hrm->ssn_field) { ?>
 			<div class="element">
 				<label><span class="label">SSN</span>
 					<span class="note">Without dashes.</span>

@@ -94,10 +94,10 @@ class group extends able_entity {
 	public function get_logo($rela_location = false) {
 		global $pines;
 		if (isset($this->logo))
-			return ($rela_location ? $pines->rela_location : $pines->full_location)."{$pines->setting_upload}logos/{$this->logo}";
+			return ($rela_location ? $pines->config->rela_location : $pines->config->full_location)."{$pines->config->setting_upload}logos/{$this->logo}";
 		if (isset($this->parent))
 			return $this->parent->get_logo($rela_location);
-		return ($rela_location ? $pines->rela_location : $pines->full_location)."{$pines->setting_upload}logos/default_logo.png";
+		return ($rela_location ? $pines->config->rela_location : $pines->config->full_location)."{$pines->config->setting_upload}logos/default_logo.png";
 	}
 
 	/**

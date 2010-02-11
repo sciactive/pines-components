@@ -14,5 +14,5 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_sales/listtaxfees') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listtaxfees', null, false));
 
-$pines->run_sales->list_tax_fees();
+$pines->com_sales->list_tax_fees();
 ?>

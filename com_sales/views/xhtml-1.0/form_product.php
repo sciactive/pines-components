@@ -151,7 +151,7 @@ $this->note = 'Provide product details in this form.';
 									url : "<?php echo pines_url('com_sales', 'catjson'); ?>"
 								}
 							},
-							selected : <?php echo json_encode(array_map('strval', $pines->run_sales->get_product_category_guid_array($this->entity))); ?>,
+							selected : <?php echo json_encode(array_map('strval', $pines->com_sales->get_product_category_guid_array($this->entity))); ?>,
 							callback : {
 								oncreate : function(NODE, REF_NODE, TYPE, TREE_OBJ, RB) {
 									var parent;
@@ -551,7 +551,7 @@ $this->note = 'Provide product details in this form.';
 				<label><span class="label">Discountable</span>
 					<input class="field ui-widget-content" type="checkbox" name="discountable" size="24" value="ON"<?php echo $this->entity->discountable ? ' checked="checked"' : ''; ?> /></label>
 			</div>
-			<?php if ($pines->run_sales->com_customer) { ?>
+			<?php if ($pines->com_sales->com_customer) { ?>
 			<div class="element">
 				<label><span class="label">Require Customer</span>
 					<span class="note">This means a customer must be selected when selling this item.</span>

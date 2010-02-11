@@ -27,5 +27,5 @@ if (empty($failed_deletes)) {
 	display_notice('Note that POs cannot be deleted after items have been received on them.');
 }
 
-$pines->run_sales->list_pos();
+$pines->com_sales->list_pos();
 ?>

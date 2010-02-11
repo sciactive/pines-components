@@ -37,7 +37,7 @@ class com_logger extends component {
 
 	function __construct() {
 		global $pines;
-		$this->log_file = $pines->com_logger->path;
+		$this->log_file = $pines->config->com_logger->path;
 	}
 
 	/**
@@ -73,21 +73,21 @@ class com_logger extends component {
 		$location = $pines->component.', '.$pines->action;
 		switch ($level) {
 			case 'info':
-				if (!in_array($pines->com_logger->level, array('debug', 'info'))) break;
+				if (!in_array($pines->config->com_logger->level, array('debug', 'info'))) break;
 			case 'notice':
-				if (!in_array($pines->com_logger->level, array('debug', 'info', 'notice'))) break;
+				if (!in_array($pines->config->com_logger->level, array('debug', 'info', 'notice'))) break;
 				if (strlen($this->tmp_log)) $this->tmp_log .= "\n";
 				$this->tmp_log .= "$date: $level: $location: $user: $message";
 				break;
 			case 'debug':
 				// Debug logs should be written immediately, since the system may halt at any time. ;)
-				if (!in_array($pines->com_logger->level, array('debug'))) break;
+				if (!in_array($pines->config->com_logger->level, array('debug'))) break;
 			case 'warning':
-				if (!in_array($pines->com_logger->level, array('debug', 'info', 'notice', 'warning'))) break;
+				if (!in_array($pines->config->com_logger->level, array('debug', 'info', 'notice', 'warning'))) break;
 			case 'error':
-				if (!in_array($pines->com_logger->level, array('debug', 'info', 'notice', 'warning', 'error'))) break;
+				if (!in_array($pines->config->com_logger->level, array('debug', 'info', 'notice', 'warning', 'error'))) break;
 			case 'fatal':
-				if (!in_array($pines->com_logger->level, array('debug', 'info', 'notice', 'warning', 'error', 'fatal'))) break;
+				if (!in_array($pines->config->com_logger->level, array('debug', 'info', 'notice', 'warning', 'error', 'fatal'))) break;
 				if (strlen($this->tmp_log)) $this->tmp_log .= "\n";
 				$message = $this->tmp_log . "$date: $level: $location: $user: $message";
 				$this->tmp_log = '';

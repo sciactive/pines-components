@@ -19,44 +19,44 @@ defined('P_RUN') or die('Direct access prohibited');
 <head>
 	<title><?php echo $pines->page->get_title(); ?></title>
 	<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
-	<link rel="icon" type="image/vnd.microsoft.icon" href="<?php echo $pines->rela_location; ?>favicon.ico" />
+	<link rel="icon" type="image/vnd.microsoft.icon" href="<?php echo $pines->config->rela_location; ?>favicon.ico" />
 
-	<link href="<?php echo $pines->rela_location; ?>system/css/pform.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="<?php echo $pines->config->rela_location; ?>system/css/pform.css" media="all" rel="stylesheet" type="text/css" />
 	<!--[if lt IE 8]>
-	<link href="<?php echo $pines->rela_location; ?>system/css/pform-ie-lt-8.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="<?php echo $pines->config->rela_location; ?>system/css/pform-ie-lt-8.css" media="all" rel="stylesheet" type="text/css" />
 	<![endif]-->
 	<!--[if lt IE 7]>
-	<link href="<?php echo $pines->rela_location; ?>system/css/pform-ie-lt-7.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="<?php echo $pines->config->rela_location; ?>system/css/pform-ie-lt-7.css" media="all" rel="stylesheet" type="text/css" />
 	<![endif]-->
-	<link href="<?php echo $pines->rela_location; ?>system/css/jquery.pnotify.default.css" media="all" rel="stylesheet" type="text/css" />
-	<link href="<?php echo $pines->rela_location; ?>system/css/jquery.pnotify.default.icons.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="<?php echo $pines->config->rela_location; ?>system/css/jquery.pnotify.default.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="<?php echo $pines->config->rela_location; ?>system/css/jquery.pnotify.default.icons.css" media="all" rel="stylesheet" type="text/css" />
 
-	<link href="<?php echo $pines->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/pines.css" media="all" rel="stylesheet" type="text/css" />
-	<link href="<?php echo $pines->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/print.css" media="print" rel="stylesheet" type="text/css" />
-<?php if ($pines->tpl_pines->header_image) { ?>
-	<link href="<?php echo $pines->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/header-image.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/pines.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/print.css" media="print" rel="stylesheet" type="text/css" />
+<?php if ($pines->config->tpl_pines->header_image) { ?>
+	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/header-image.css" media="all" rel="stylesheet" type="text/css" />
 <?php } ?>
 
-	<link href="<?php echo $pines->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/dropdown/dropdown.css" media="all" rel="stylesheet" type="text/css" />
-	<link href="<?php echo $pines->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/dropdown/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
-	<link href="<?php echo $pines->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/dropdown/themes/jqueryui/jqueryui.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/dropdown/dropdown.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/dropdown/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/dropdown/themes/jqueryui/jqueryui.css" media="all" rel="stylesheet" type="text/css" />
 
-<?php if ($pines->tpl_pines->google_cdn) { ?>
+<?php if ($pines->config->tpl_pines->google_cdn) { ?>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="<?php echo $pines->rela_location; ?>system/js/js.php?exclude=jquery.min.js+jquery-ui.min.js"></script>
+	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>system/js/js.php?exclude=jquery.min.js+jquery-ui.min.js"></script>
 <?php } else { ?>
-	<script type="text/javascript" src="<?php echo $pines->rela_location; ?>system/js/js.php"></script>
+	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>system/js/js.php"></script>
 <?php } ?>
-	<script type="text/javascript" src="<?php echo $pines->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/template.js"></script>
+	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/template.js"></script>
 	
-<?php if ($pines->tpl_pines->theme_switcher) {
-	if ($pines->tpl_pines->google_cdn) { ?>
-	<link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/<?php echo $pines->tpl_pines->theme; ?>/ui.all.css" />
+<?php if ($pines->config->tpl_pines->theme_switcher) {
+	if ($pines->config->tpl_pines->google_cdn) { ?>
+	<link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/<?php echo $pines->config->tpl_pines->theme; ?>/ui.all.css" />
 <?php } else { ?>
-	<link type="text/css" rel="stylesheet" href="http://jqueryui.com/themes/<?php echo $pines->tpl_pines->theme; ?>/ui.all.css" />
+	<link type="text/css" rel="stylesheet" href="http://jqueryui.com/themes/<?php echo $pines->config->tpl_pines->theme; ?>/ui.all.css" />
 <?php } ?>
-	<script type="text/javascript" src="<?php echo $pines->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/jquery/jquery.themeswitcher.js"></script>
+	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/jquery/jquery.themeswitcher.js"></script>
 	<script type="text/javascript">
 		// <![CDATA[
 		$(function(){
@@ -75,14 +75,14 @@ defined('P_RUN') or die('Direct access prohibited');
 		/* ]]> */
 	</style>
 <?php } else {
-	if ($pines->tpl_pines->google_cdn) { ?>
-	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/<?php echo $pines->tpl_pines->theme; ?>/jquery-ui.css" media="all" rel="stylesheet" type="text/css" />
+	if ($pines->config->tpl_pines->google_cdn) { ?>
+	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/<?php echo $pines->config->tpl_pines->theme; ?>/jquery-ui.css" media="all" rel="stylesheet" type="text/css" />
 <?php } else { ?>
-	<link href="<?php echo $pines->rela_location; ?>system/css/jquery-ui/<?php echo $pines->tpl_pines->theme; ?>/jquery-ui.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="<?php echo $pines->config->rela_location; ?>system/css/jquery-ui/<?php echo $pines->config->tpl_pines->theme; ?>/jquery-ui.css" media="all" rel="stylesheet" type="text/css" />
 <?php } } ?>
 
 	<!--[if lt IE 7]>
-	<script type="text/javascript" src="<?php echo $pines->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/jquery/jquery.dropdown.js"></script>
+	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/jquery/jquery.dropdown.js"></script>
 	<![endif]-->
 
 	<?php echo $pines->page->render_modules('head', 'module_head'); ?>
@@ -93,12 +93,12 @@ defined('P_RUN') or die('Direct access prohibited');
 	<div id="top">
 		<?php echo $pines->page->render_modules('top', 'module_header'); ?>
 	</div>
-	<?php if ( $pines->tpl_pines->theme_switcher ) { ?>
+	<?php if ( $pines->config->tpl_pines->theme_switcher ) { ?>
 	<div id="switcher"></div>
 	<?php } ?>
 	<div id="header" class="ui-widget-header">
 		<div class="pagetitle">
-			<h1><a href="<?php echo $pines->full_location; ?>"><span><?php echo $pines->option_title; ?></span></a></h1>
+			<h1><a href="<?php echo $pines->config->full_location; ?>"><span><?php echo $pines->config->option_title; ?></span></a></h1>
 		</div>
 		<?php echo $pines->page->render_modules('header', 'module_header'); ?>
 		<?php echo $pines->page->render_modules('header_right', 'module_header_right'); ?>
@@ -165,7 +165,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	<div id="footer" class="ui-widget-header">
 		<?php echo $pines->page->render_modules('footer', 'module_header'); ?>
 		<p class="copyright">
-			<?php echo $pines->option_copyright_notice; ?>
+			<?php echo $pines->config->option_copyright_notice; ?>
 		</p>
 	</div>
 	<div id="bottom">

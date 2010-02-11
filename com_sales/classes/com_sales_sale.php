@@ -120,7 +120,7 @@ class com_sales_sale extends entity {
 		$content .= $module->render();
 		$module->detach();
 
-		$mail = com_mailer_mail::factory($pines->com_sales->email_from_address, $this->customer->email, 'Receipt for sale from Pines', $content);
+		$mail = com_mailer_mail::factory($pines->config->com_sales->email_from_address, $this->customer->email, 'Receipt for sale from Pines', $content);
 		$mail->send();
 	}
 
@@ -149,7 +149,7 @@ class com_sales_sale extends entity {
 				continue;
 			}
 			// Call the payment processing for approval.
-			$pines->run_sales->call_payment_process(array(
+			$pines->com_sales->call_payment_process(array(
 				'action' => 'approve',
 				'name' => $cur_payment['entity']->processing_type,
 				'payment' => &$cur_payment,
@@ -190,7 +190,7 @@ class com_sales_sale extends entity {
 				continue;
 			}
 			// Call the payment processing.
-			$pines->run_sales->call_payment_process(array(
+			$pines->com_sales->call_payment_process(array(
 				'action' => 'tender',
 				'name' => $cur_payment['entity']->processing_type,
 				'payment' => &$cur_payment,
@@ -268,7 +268,7 @@ class com_sales_sale extends entity {
 
 		// Process the change.
 		if (!$this->change_given && $this->change > 0.00) {
-			$pines->run_sales->call_payment_process(array(
+			$pines->com_sales->call_payment_process(array(
 				'action' => 'change',
 				'name' => $change_type->processing_type,
 				'sale' => &$this
@@ -336,7 +336,7 @@ class com_sales_sale extends entity {
 		$stock_entries = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'stock'), 'class' => com_sales_stock));
 		if (!is_array($stock_entries))
 			$stock_entries = array();
-		if ($pines->run_sales->com_customer) {
+		if ($pines->com_sales->com_customer) {
 			foreach ($this->products as &$cur_product) {
 				if (!$cur_product['entity'] || ($cur_product['entity']->require_customer && !$this->customer)) {
 					display_notice('One of the products on this sale requires a customer. Please select a customer for this sale before invoicing.');
@@ -394,7 +394,7 @@ class com_sales_sale extends entity {
 			// Call product actions for all products without stock entries.
 			$i = $cur_product['quantity'] - count($cur_product['stock_entities']);
 			if ($i > 0) {
-				$pines->run_sales->call_product_actions(array(
+				$pines->com_sales->call_product_actions(array(
 					'type' => 'sold',
 					'product' => $cur_product['entity'],
 					'sale' => $this
@@ -408,7 +408,7 @@ class com_sales_sale extends entity {
 					} else {
 						$return = $return && $cur_stock->remove($this, 'sold_pending', $cur_stock->location) && $cur_stock->save();
 					}
-					$pines->run_sales->call_product_actions(array(
+					$pines->com_sales->call_product_actions(array(
 						'type' => 'sold',
 						'product' => $cur_product['entity'],
 						'stock_entry' => $cur_stock,
@@ -489,7 +489,7 @@ class com_sales_sale extends entity {
 					$discount_price = $price - ($price * ($discount / 100));
 				}
 				// Check that the discount doesn't lower the item's price below the floor.
-				if ($cur_product['entity']->floor && $pines->run_sales->round($discount_price, $pines->com_sales->dec) < $pines->run_sales->round($cur_product['entity']->floor, $pines->com_sales->dec)) {
+				if ($cur_product['entity']->floor && $pines->com_sales->round($discount_price, $pines->config->com_sales->dec) < $pines->com_sales->round($cur_product['entity']->floor, $pines->config->com_sales->dec)) {
 					display_notice("The discount on {$cur_product['entity']->name} lowers the product's price below the limit. The discount was removed.");
 					$discount = $cur_product['discount'] = '';
 				} else {
@@ -519,15 +519,15 @@ class com_sales_sale extends entity {
 			}
 			$item_fees += (float) $cur_item_fees;
 			$subtotal += (float) $line_total;
-			$cur_product['line_total'] = $pines->run_sales->round($line_total, $pines->com_sales->dec);
-			$cur_product['fees'] = $pines->run_sales->round($cur_item_fees, $pines->com_sales->dec);
+			$cur_product['line_total'] = $pines->com_sales->round($line_total, $pines->config->com_sales->dec);
+			$cur_product['fees'] = $pines->com_sales->round($cur_item_fees, $pines->config->com_sales->dec);
 		}
 		// The total can now be calculated.
 		$total = $subtotal + $item_fees + $taxes;
-		$this->subtotal = $pines->run_sales->round($subtotal, $pines->com_sales->dec);
-		$this->item_fees = $pines->run_sales->round($item_fees, $pines->com_sales->dec);
-		$this->taxes = $pines->run_sales->round($taxes, $pines->com_sales->dec);
-		$this->total = $pines->run_sales->round($total, $pines->com_sales->dec);
+		$this->subtotal = $pines->com_sales->round($subtotal, $pines->config->com_sales->dec);
+		$this->item_fees = $pines->com_sales->round($item_fees, $pines->config->com_sales->dec);
+		$this->taxes = $pines->com_sales->round($taxes, $pines->config->com_sales->dec);
+		$this->total = $pines->com_sales->round($total, $pines->config->com_sales->dec);
 		return true;
 	}
 }

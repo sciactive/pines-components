@@ -20,7 +20,7 @@ $logins = com_customer_timer_login_tracker::factory();
 $return = array();
 
 foreach ($logins->customers as $cur_customer) {
-	$session_info = $pines->run_customer_timer->get_session_info($cur_customer);
+	$session_info = $pines->com_customer_timer->get_session_info($cur_customer);
 	$return[] = (object) array(
 		'guid' => $cur_customer->guid,
 		'name' => $cur_customer->name,

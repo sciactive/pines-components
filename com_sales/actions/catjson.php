@@ -16,10 +16,10 @@ if ( !gatekeeper('com_sales/managecategories') || !gatekeeper('com_sales/viewcat
 
 $pines->page->override = true;
 
-$categories = $pines->run_sales->get_category_array();
+$categories = $pines->com_sales->get_category_array();
 
 if (!isset($_REQUEST['do'])) {
-	$categories_json_struct = $pines->run_sales->category_json_struct($categories);
+	$categories_json_struct = $pines->com_sales->category_json_struct($categories);
 	$pines->page->override_doc(json_encode($categories_json_struct));
 }
 
@@ -30,7 +30,7 @@ switch ($_REQUEST['do']) {
 	case 'new':
 		$parent_id = (isset($_REQUEST['parent']) && $_REQUEST['parent'] != 'null' ? intval($_REQUEST['parent']) : null);
 		$name = (isset($_REQUEST['name']) ? $_REQUEST['name'] : 'untitled');
-		$entity = $pines->run_sales->new_category($parent_id, $name);
+		$entity = $pines->com_sales->new_category($parent_id, $name);
 		if ($entity !== false) {
 			$pines->page->override_doc(json_encode((object) array(
 				"status" => true,
@@ -45,7 +45,7 @@ switch ($_REQUEST['do']) {
 	case 'rename':
 		$guid = (isset($_REQUEST['id']) ? intval($_REQUEST['id']) : null);
 		$name = (isset($_REQUEST['name']) ? $_REQUEST['name'] : 'untitled');
-		$entity = $pines->run_sales->get_category($guid);
+		$entity = $pines->com_sales->get_category($guid);
 		if (is_null($entity)) {
 			$pines->page->override_doc(json_encode((object) array(
 				"status" => false
@@ -59,22 +59,22 @@ switch ($_REQUEST['do']) {
 		break;
 	case 'delete':
 		$guid = (isset($_REQUEST['id']) ? intval($_REQUEST['id']) : null);
-		$entity = $pines->run_sales->get_category($guid);
+		$entity = $pines->com_sales->get_category($guid);
 		if (is_null($entity)) {
 			$pines->page->override_doc(json_encode((object) array(
 				"status" => false
 			)));
 		} else {
 			$pines->page->override_doc(json_encode((object) array(
-				"status" => $pines->run_sales->delete_category_recursive($entity)
+				"status" => $pines->com_sales->delete_category_recursive($entity)
 			)));
 		}
 		break;
 	case 'move':
 		$guid = (isset($_REQUEST['id']) ? intval($_REQUEST['id']) : null);
 		$parent_id = (isset($_REQUEST['parent']) && $_REQUEST['parent'] != 'null' ? intval($_REQUEST['parent']) : null);
-		$parent = is_null($parent_id) ? null : $pines->run_sales->get_category($parent_id);
-		$entity = $pines->run_sales->get_category($guid);
+		$parent = is_null($parent_id) ? null : $pines->com_sales->get_category($parent_id);
+		$entity = $pines->com_sales->get_category($guid);
 		if (is_null($entity) || (!is_null($parent_id) && is_null($parent))) {
 			$pines->page->override_doc(json_encode((object) array(
 				"status" => false
@@ -89,8 +89,8 @@ switch ($_REQUEST['do']) {
 	case 'copy':
 		$guid = (isset($_REQUEST['id']) ? intval($_REQUEST['id']) : null);
 		$parent_id = (isset($_REQUEST['parent']) && $_REQUEST['parent'] != 'null' ? intval($_REQUEST['parent']) : null);
-		$parent = is_null($parent_id) ? null : $pines->run_sales->get_category($parent_id);
-		$entity = $pines->run_sales->get_category($guid);
+		$parent = is_null($parent_id) ? null : $pines->com_sales->get_category($parent_id);
+		$entity = $pines->com_sales->get_category($guid);
 		if (is_null($entity) || (!is_null($parent_id) && is_null($parent))) {
 			$pines->page->override_doc(json_encode((object) array(
 				"status" => false

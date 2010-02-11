@@ -47,7 +47,7 @@ if (isset($test) && $test->guid != $_REQUEST['id']) {
 	return;
 }
 
-if ($pines->com_sales->global_manufacturers)
+if ($pines->config->com_sales->global_manufacturers)
 	$manufacturer->ac->other = 1;
 
 if ($manufacturer->save()) {
@@ -56,5 +56,5 @@ if ($manufacturer->save()) {
 	display_error('Error saving manufacturer. Do you have permission?');
 }
 
-$pines->run_sales->list_manufacturers();
+$pines->com_sales->list_manufacturers();
 ?>

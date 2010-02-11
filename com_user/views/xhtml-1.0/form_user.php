@@ -75,7 +75,7 @@ $this->note = 'Provide user details in this form.';
 	<div class="element">
 		<label><span class="label"><?php if (isset($this->entity->guid)) echo 'Update '; ?>Password</span>
 			<?php if (is_null($this->entity->guid)) {
-				echo ($pines->com_user->empty_pw ? '<span class="note">May be blank.</span>' : '');
+				echo ($pines->config->com_user->empty_pw ? '<span class="note">May be blank.</span>' : '');
 			} else {
 				echo '<span class="note">Leave blank, if not changing.</span>';
 			} ?>

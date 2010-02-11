@@ -21,7 +21,7 @@ $code = $_REQUEST['code'];
 if (empty($code)) {
 	$product = null;
 } elseif(!$_REQUEST['useguid']) {
-	$product = $pines->run_sales->get_product_by_code($code);
+	$product = $pines->com_sales->get_product_by_code($code);
 	if (!$product->enabled) {
 		$product = null;
 	}

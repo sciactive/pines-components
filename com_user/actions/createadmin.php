@@ -11,11 +11,11 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if (!$pines->com_user->create_admin) {
+if (!$pines->config->com_user->create_admin) {
 	display_notice('Creating admin user has been disabled.');
 	return;
 }
-if ($_REQUEST['secret'] != $pines->com_user->create_admin_secret) {
+if ($_REQUEST['secret'] != $pines->config->com_user->create_admin_secret) {
 	display_notice('Wrong secret.');
 	return;
 }

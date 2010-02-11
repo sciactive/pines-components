@@ -26,11 +26,11 @@ if ( isset($_REQUEST['id']) ) {
 }
 
 // General
-$employee->name_first = $pines->run_hrm->title_case($_REQUEST['name_first']);
-$employee->name_middle = $pines->run_hrm->title_case($_REQUEST['name_middle']);
-$employee->name_last = $pines->run_hrm->title_case($_REQUEST['name_last']);
+$employee->name_first = $pines->com_hrm->title_case($_REQUEST['name_first']);
+$employee->name_middle = $pines->com_hrm->title_case($_REQUEST['name_middle']);
+$employee->name_last = $pines->com_hrm->title_case($_REQUEST['name_last']);
 $employee->name = "{$employee->name_first} {$employee->name_last}";
-if ($pines->com_hrm->ssn_field)
+if ($pines->config->com_hrm->ssn_field)
 	$employee->ssn = preg_replace('/\D/', '', $_REQUEST['ssn']);
 $employee->email = $_REQUEST['email'];
 $employee->job_title = $_REQUEST['job_title'];
@@ -41,7 +41,7 @@ $employee->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
 $employee->description = $_REQUEST['description'];
 
 // User Account
-if (empty($_REQUEST['username']) || !$pines->com_hrm->allow_attach) {
+if (empty($_REQUEST['username']) || !$pines->config->com_hrm->allow_attach) {
 	$employee->user_account = null;
 } else {
 	$employee->user_account = user::factory(preg_match('/^\d+$/', $_REQUEST['username']) ? (int) $_REQUEST['username'] : $_REQUEST['username']);
@@ -111,7 +111,7 @@ if (isset($test) && !$employee->is($test)) {
 	return;
 }
 
-if ($pines->com_hrm->global_employees)
+if ($pines->config->com_hrm->global_employees)
 	$employee->ac->other = 1;
 
 if ($employee->save()) {
@@ -120,5 +120,5 @@ if ($employee->save()) {
 	display_error('Error saving employee. Do you have permission?');
 }
 
-$pines->run_hrm->list_employees();
+$pines->com_hrm->list_employees();
 ?>

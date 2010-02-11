@@ -97,7 +97,7 @@ if (isset($test) && $test->guid != $_REQUEST['id']) {
 	return;
 }
 
-if ($pines->com_sales->global_products)
+if ($pines->config->com_sales->global_products)
 	$product->ac->other = 1;
 
 if ($product->save()) {
@@ -107,7 +107,7 @@ if ($product->save()) {
 	$categories = json_decode($_REQUEST['categories']);
 	if (is_array($categories)) {
 		array_map('intval', $categories);
-		$all_categories = $pines->run_sales->get_category_array();
+		$all_categories = $pines->com_sales->get_category_array();
 		foreach($all_categories as $cur_cat) {
 			if (!is_array($cur_cat->products))
 				$cur_cat->products = array();
@@ -127,5 +127,5 @@ if ($product->save()) {
 	display_error('Error saving product. Do you have permission?');
 }
 
-$pines->run_sales->list_products();
+$pines->com_sales->list_products();
 ?>

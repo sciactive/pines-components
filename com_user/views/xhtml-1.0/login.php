@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = "Login to {$pines->option_title}";
+$this->title = "Login to {$pines->config->option_title}";
 $this->note = 'Please enter your credentials to login.';
 ?>
 <form class="pform" name="login" method="post" action="<?php echo pines_url(); ?>">
@@ -20,7 +20,7 @@ $this->note = 'Please enter your credentials to login.';
 	</div>
 	<div class="element">
 		<label><span class="label">Password</span>
-			<?php echo ($pines->com_user->empty_pw ? '<span class="note">May be blank.</span>' : ''); ?>
+			<?php echo ($pines->config->com_user->empty_pw ? '<span class="note">May be blank.</span>' : ''); ?>
 			<input class="field ui-widget-content" type="password" name="password" size="24" /></label>
 	</div>
 	<div class="element buttons">

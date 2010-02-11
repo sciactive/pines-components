@@ -55,7 +55,7 @@ if (empty($tax_fee->rate)) {
 	return;
 }
 
-if ($pines->com_sales->global_tax_fees)
+if ($pines->config->com_sales->global_tax_fees)
 	$tax_fee->ac->other = 1;
 
 if ($tax_fee->save()) {
@@ -64,5 +64,5 @@ if ($tax_fee->save()) {
 	display_error('Error saving tax/fee. Do you have permission?');
 }
 
-$pines->run_sales->list_tax_fees();
+$pines->com_sales->list_tax_fees();
 ?>

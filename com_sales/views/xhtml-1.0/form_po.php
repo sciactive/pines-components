@@ -22,7 +22,7 @@ $this->note = 'Provide PO details in this form.';
 		var product_dialog;
 		var cur_vendor = <?php echo ($this->entity->vendor ? $this->entity->vendor->guid : 'null'); ?>;
 		// Number of decimal places to round to.
-		var dec = <?php echo intval($pines->com_sales->dec); ?>;
+		var dec = <?php echo intval($pines->config->com_sales->dec); ?>;
 		var all_products = JSON.parse("<?php
 		$products = array();
 		foreach ($this->products as $cur_product) {
@@ -310,7 +310,7 @@ $this->note = 'Provide PO details in this form.';
 							<td><?php echo $cur_product['entity']->name; ?></td>
 							<td><?php echo $cur_product['quantity']; ?></td>
 							<td><?php echo $cur_product['cost']; ?></td>
-							<td><?php echo $pines->run_sales->round(intval($cur_product['quantity']) * floatval($cur_product['cost']), $pines->com_sales->dec); ?></td>
+							<td><?php echo $pines->com_sales->round(intval($cur_product['quantity']) * floatval($cur_product['cost']), $pines->config->com_sales->dec); ?></td>
 						</tr>
 						<?php } ?>
 					</tbody>

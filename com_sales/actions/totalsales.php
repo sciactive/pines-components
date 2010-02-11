@@ -14,5 +14,5 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_sales/totalsales') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'totalsales', null, false));
 
-$pines->run_sales->print_sales_total();
+$pines->com_sales->print_sales_total();
 ?>

@@ -21,6 +21,6 @@ if ( gatekeeper('com_hrm/listemployees') || gatekeeper('com_hrm/newemployee') ) 
 		$pines->page->main_menu->add('New Employee', pines_url('com_hrm', 'editemployee'), $com_hrm_menu_id);
 }
 
-$pines->run_hrm->provide_clockin();
+$pines->com_hrm->provide_clockin();
 
 ?>

@@ -23,7 +23,7 @@ if ( $_REQUEST['username'] ) {
 			exit;
 		} else {
 		// Load the user's default component.
-			action($pines->default_component, 'default');
+			action($pines->config->default_component, 'default');
 		}
 	} else {
 		display_notice("Username and password not correct!");

@@ -59,7 +59,7 @@ if (isset($test) && $test->guid != $_REQUEST['id']) {
 	return;
 }
 
-if ($pines->com_sales->global_vendors)
+if ($pines->config->com_sales->global_vendors)
 	$vendor->ac->other = 1;
 
 if ($vendor->save()) {
@@ -68,5 +68,5 @@ if ($vendor->save()) {
 	display_error('Error saving vendor. Do you have permission?');
 }
 
-$pines->run_sales->list_vendors();
+$pines->com_sales->list_vendors();
 ?>

@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 $pines->log_manager = 'com_logger';
 
-if (!function_exists('display_error') && $pines->com_logger->log_errors) {
+if (!function_exists('display_error') && $pines->config->com_logger->log_errors) {
 	/**
 	 * Log a displayed error.
 	 *
@@ -27,7 +27,7 @@ if (!function_exists('display_error') && $pines->com_logger->log_errors) {
 	}
 }
 
-if (!function_exists('display_notice') && $pines->com_logger->log_notices) {
+if (!function_exists('display_notice') && $pines->config->com_logger->log_notices) {
 	/**
 	 * Log a displayed notice.
 	 *

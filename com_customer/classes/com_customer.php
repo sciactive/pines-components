@@ -88,7 +88,7 @@ class com_customer extends component {
 	 */
 	function product_action_add_points($array) {
 		global $pines;
-		foreach(explode(',', $pines->com_customer->pointvalues) as $cur_value) {
+		foreach(explode(',', $pines->config->com_customer->pointvalues) as $cur_value) {
 			if (!is_numeric($cur_value))
 				continue;
 			$cur_value = (int) $cur_value;

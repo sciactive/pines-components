@@ -93,5 +93,5 @@ if ($po->save()) {
 	display_error('Error saving PO. Do you have permission?');
 }
 
-$pines->run_sales->list_pos();
+$pines->com_sales->list_pos();
 ?>

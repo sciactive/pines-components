@@ -23,8 +23,9 @@ return array (
   array (
 	'name' => 'theme',
 	'cname' => 'Theme',
-	'description' => 'jQuery UI theme to use. (dark-hive, redmond, smoothness, start, ui-darkness, and ui-lightness are included by default.)',
+	'description' => 'jQuery UI theme to use.',
 	'value' => 'smoothness',
+	'options' => array('dark-hive', 'redmond', 'smoothness', 'start', 'ui-darkness', 'ui-lightness')
   ),
   2 =>
   array (

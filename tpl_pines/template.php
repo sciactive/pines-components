@@ -52,9 +52,9 @@ defined('P_RUN') or die('Direct access prohibited');
 	
 <?php if ($pines->tpl_pines->theme_switcher) {
 	if ($pines->tpl_pines->google_cdn) { ?>
-	<link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/base/ui.all.css" />
+	<link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/<?php echo $pines->tpl_pines->theme; ?>/ui.all.css" />
 <?php } else { ?>
-	<link type="text/css" rel="stylesheet" href="http://jqueryui.com/themes/base/ui.all.css" />
+	<link type="text/css" rel="stylesheet" href="http://jqueryui.com/themes/<?php echo $pines->tpl_pines->theme; ?>/ui.all.css" />
 <?php } ?>
 	<script type="text/javascript" src="<?php echo $pines->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/jquery/jquery.themeswitcher.js"></script>
 	<script type="text/javascript">

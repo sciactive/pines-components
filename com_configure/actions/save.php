@@ -22,14 +22,22 @@ if (!array_key_exists($_REQUEST['component'], $pines->configurator->config_files
 if (!($cur_config_array = $pines->configurator->get_config_array($pines->configurator->config_files[$_REQUEST['component']]))) return;
 
 foreach ($cur_config_array as $cur_key => $cur_var) {
-	if (is_bool($cur_var['value'])) {
+	if (is_array($cur_var['options'])) {
+		$rvalue = unserialize($_REQUEST['opt_multi_'.$cur_var['name']]);
+		foreach ($cur_var['options'] as $cur_option) {
+			if ($rvalue === $cur_option) {
+				$cur_config_array[$cur_key]['value'] = $cur_option;
+				break;
+			}
+		}
+	} elseif (is_bool($cur_var['value'])) {
 		$cur_config_array[$cur_key]['value'] = ($_REQUEST['opt_bool_'.$cur_var['name']] == 'ON');
 	} elseif (is_int($cur_var['value'])) {
-		$cur_config_array[$cur_key]['value'] = intval($_REQUEST['opt_int_'.$cur_var['name']]);
+		$cur_config_array[$cur_key]['value'] = (int) $_REQUEST['opt_int_'.$cur_var['name']];
 	} elseif (is_float($cur_var['value'])) {
-		$cur_config_array[$cur_key]['value'] = floatval($_REQUEST['opt_float_'.$cur_var['name']]);
+		$cur_config_array[$cur_key]['value'] = (float) $_REQUEST['opt_float_'.$cur_var['name']];
 	} elseif (is_string($cur_var['value'])) {
-		$cur_config_array[$cur_key]['value'] = strval($_REQUEST['opt_string_'.$cur_var['name']]);
+		$cur_config_array[$cur_key]['value'] = (string) $_REQUEST['opt_string_'.$cur_var['name']];
 	} else {
 		$cur_config_array[$cur_key]['value'] = unserialize($_REQUEST['opt_serial_'.$cur_var['name']]);
 	}
@@ -39,6 +47,6 @@ $pines->configurator->put_config_array($cur_config_array, $pines->configurator->
 
 header('Location: '.pines_url('com_configure', 'list', null, false));
 
-exit;
+$pines->page->override = true;
 
 ?>

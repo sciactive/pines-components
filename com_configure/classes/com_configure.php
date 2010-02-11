@@ -38,10 +38,11 @@ class com_configure extends component {
 		if (file_exists('system/configure.php'))
 			$this->config_files['system'] = 'system/configure.php';
 		foreach ($pines->all_components as $cur_component) {
+			$cur_dir = (substr($cur_component, 0, 4) != 'tpl_') ? 'components' : 'templates';
 			if (in_array($cur_component, $pines->components)) {
-				$cur_config_file = 'components/'.$cur_component.'/configure.php';
+				$cur_config_file = "$cur_dir/$cur_component/configure.php";
 			} else {
-				$cur_config_file = 'components/.'.$cur_component.'/configure.php';
+				$cur_config_file = "$cur_dir/.$cur_component/configure.php";
 			}
 			if (file_exists($cur_config_file))
 				$this->config_files[$cur_component] = $cur_config_file;
@@ -63,7 +64,8 @@ class com_configure extends component {
 			pines_log("Failed to disable component $component. Component isn't installed", 'error');
 			return false;
 		}
-		if (in_array($component, $pines->components) && rename('components/'.$component, 'components/.'.$component)) {
+		$cur_dir = (substr($component, 0, 4) != 'tpl_') ? 'components' : 'templates';
+		if (in_array($component, $pines->components) && rename("$cur_dir/$component", "$cur_dir/.$component")) {
 			pines_log("Disabled component $component.", 'notice');
 			return true;
 		} else {
@@ -87,7 +89,8 @@ class com_configure extends component {
 			pines_log("Failed to enable component $component. Component isn't installed", 'error');
 			return false;
 		}
-		if (!in_array($component, $pines->components) && rename('components/.'.$component, 'components/'.$component)) {
+		$cur_dir = (substr($component, 0, 4) != 'tpl_') ? 'components' : 'templates';
+		if (!in_array($component, $pines->components) && rename("$cur_dir/.$component", "$cur_dir/$component")) {
 			pines_log("Enabled component $component.", 'notice');
 			return true;
 		} else {
@@ -135,8 +138,10 @@ class com_configure extends component {
 	 * @return bool True on success, false on failure.
 	 */
 	function put_config_array($config_array, $config_file) {
-		if (!file_exists($config_file)) return false;
-		if (!($file_contents = file_get_contents($config_file))) return false;
+		if (!file_exists($config_file))
+			return false;
+		if (!($file_contents = file_get_contents($config_file)))
+			return false;
 		$pattern = '/(return\s*\(?\s*)\S.*(\)?\s*;)/s';
 		$replacement = '$1#CODEGOESHERE#$2';
 		/* simplified pattern, but it replaces parenthesis...
@@ -144,7 +149,8 @@ class com_configure extends component {
 		$replacement = 'return #CODEGOESHERE#;'; */
 		$file_contents = preg_replace($pattern, $replacement, $file_contents, 1);
 		$file_contents = str_replace('#CODEGOESHERE#', var_export($config_array, true), $file_contents);
-		if (!(file_put_contents($config_file, $file_contents))) return false;
+		if (!(file_put_contents($config_file, $file_contents)))
+			return false;
 		pines_log("Saved new config to $config_file.", 'notice');
 		return true;
 	}

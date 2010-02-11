@@ -23,12 +23,56 @@ if (!($cur_config_array = $pines->configurator->get_config_array($pines->configu
 
 foreach ($cur_config_array as $cur_key => $cur_var) {
 	if (is_array($cur_var['options'])) {
-		$rvalue = unserialize($_REQUEST['opt_multi_'.$cur_var['name']]);
-		foreach ($cur_var['options'] as $cur_option) {
-			if ($rvalue === $cur_option) {
-				$cur_config_array[$cur_key]['value'] = $cur_option;
-				break;
+		if (is_array($cur_var['value'])) {
+			$rvalue = $_REQUEST['opt_multi_'.$cur_var['name']];
+			if (!is_array($rvalue))
+				$rvalue = array();
+			foreach ($rvalue as &$cur_rvalue) {
+				$cur_rvalue = unserialize($cur_rvalue);
 			}
+			unset($cur_rvalue);
+			foreach ($rvalue as $cur_rkey => $cur_rvalue) {
+				if (!in_array($cur_rvalue, $cur_var['options']))
+					unset($rvalue[$cur_rkey]);
+			}
+			$cur_config_array[$cur_key]['value'] = $rvalue;
+		} else {
+			$rvalue = unserialize($_REQUEST['opt_multi_'.$cur_var['name']]);
+			foreach ($cur_var['options'] as $cur_option) {
+				if ($rvalue === $cur_option) {
+					$cur_config_array[$cur_key]['value'] = $cur_option;
+					break;
+				}
+			}
+		}
+	} elseif (is_array($cur_var['value'])) {
+		if (is_int($cur_var['value'][0])) {
+			$rvalue = explode(';;', $_REQUEST['opt_int_'.$cur_var['name']]);
+			if (!is_array($rvalue))
+				$rvalue = array();
+			foreach ($rvalue as &$cur_rvalue) {
+				$cur_rvalue = (int) $cur_rvalue;
+			}
+			unset($cur_rvalue);
+			$cur_config_array[$cur_key]['value'] = $rvalue;
+		} elseif (is_float($cur_var['value'][0])) {
+			$rvalue = explode(';;', $_REQUEST['opt_float_'.$cur_var['name']]);
+			if (!is_array($rvalue))
+				$rvalue = array();
+			foreach ($rvalue as &$cur_rvalue) {
+				$cur_rvalue = (float) $cur_rvalue;
+			}
+			unset($cur_rvalue);
+			$cur_config_array[$cur_key]['value'] = $rvalue;
+		} elseif (is_string($cur_var['value'][0])) {
+			$rvalue = explode(';;', $_REQUEST['opt_string_'.$cur_var['name']]);
+			if (!is_array($rvalue))
+				$rvalue = array();
+			foreach ($rvalue as &$cur_rvalue) {
+				$cur_rvalue = (string) $cur_rvalue;
+			}
+			unset($cur_rvalue);
+			$cur_config_array[$cur_key]['value'] = $rvalue;
 		}
 	} elseif (is_bool($cur_var['value'])) {
 		$cur_config_array[$cur_key]['value'] = ($_REQUEST['opt_bool_'.$cur_var['name']] == 'ON');

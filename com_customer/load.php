@@ -13,10 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 // Product actions to add points to a customer's profile.
 if ($pines->com_customer->com_sales) {
-	foreach(explode(',', $pines->config->com_customer->pointvalues) as $cur_value) {
-		if (!is_numeric($cur_value))
-			continue;
-		$cur_value = (int) $cur_value;
+	foreach($pines->config->com_customer->pointvalues as $cur_value) {
 		$pines->com_sales->product_actions[] = array(
 			'type' => 'sold',
 			'name' => "com_customer/add_points_$cur_value",

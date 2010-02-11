@@ -15,20 +15,27 @@ $this->title = "Viewing Configuration for {$this->req_component}";
 <form class="pform" action="" method="post">
 	<?php foreach ($this->config as $cur_var) { ?>
 	<div class="element" style="width: 95%">
-		<label>
-			<span class="label">
-				<?php echo $cur_var['cname']; ?>
-			</span>
-			<span class="note">
-				<?php print_r($cur_var['description']); ?>
-			</span>
-			<span class="group">
-				<span class="field"><?php
-				if (is_bool($cur_var['value'])) $cur_var['value'] = ($cur_var['value']) ? 'Yes' : 'No';
+		<span class="label">
+			<?php echo $cur_var['cname']; ?>
+		</span>
+		<span class="note">
+			<?php echo $cur_var['description']; ?>
+		</span>
+		<div class="group">
+			<?php if (is_array($cur_var['value'])) {
+				echo '<div class="field"><ul>';
+				foreach ($cur_var['value'] as $cur_value) {
+					echo '<li>'.htmlentities(print_r($cur_value, true)).'</li>';
+				}
+				echo '</ul></div>';
+			} else {
+				echo '<span class="field">';
+				if (is_bool($cur_var['value']))
+					$cur_var['value'] = ($cur_var['value']) ? 'Yes' : 'No';
 				echo htmlentities(print_r($cur_var['value'], true));
-				?></span>
-			</span>
-		</label>
+				echo '</span>';
+			} ?>
+		</div>
 	</div>
 	<?php } ?>
 </form>

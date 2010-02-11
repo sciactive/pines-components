@@ -26,6 +26,20 @@ return array (
 	'description' => 'Allow Pines to store a Social Security Number for employees.',
 	'value' => true,
   ),
+  2 =>
+  array (
+	'name' => 'allow_attach',
+	'cname' => 'Allow User Attach',
+	'description' => 'Allow users to be attached to employees.',
+	'value' => true,
+  ),
+  3 =>
+  array (
+	'name' => 'user_templates',
+	'cname' => 'User Templates',
+	'description' => 'Users to use as templates to allow new users to be created by the HRM. Comma seperated list of Name=ID pairs. Such as "Manager=11,Inventory=12,Salesman=13".',
+	'value' => '',
+  ),
 );
 
 ?>

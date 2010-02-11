@@ -41,7 +41,7 @@ $employee->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
 $employee->description = $_REQUEST['description'];
 
 // User Account
-if (empty($_REQUEST['username'])) {
+if (empty($_REQUEST['username']) || !$pines->com_hrm->allow_attach) {
 	$employee->user_account = null;
 } else {
 	$employee->user_account = user::factory(preg_match('/^\d+$/', $_REQUEST['username']) ? (int) $_REQUEST['username'] : $_REQUEST['username']);

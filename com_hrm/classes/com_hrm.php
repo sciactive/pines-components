@@ -26,6 +26,10 @@ class com_hrm extends component {
 	 * @var bool $com_sales
 	 */
 	var $com_sales;
+	/**
+	 *
+	 */
+	private $user_templates;
 
 	/**
 	 * Check whether com_sales is installed and we should integrate with it.
@@ -35,6 +39,14 @@ class com_hrm extends component {
 	function __construct() {
 		global $pines;
 		$this->com_sales = $pines->depend->check('component', 'com_sales');
+	}
+
+	function get_user_templates() {
+		if (isset($this->user_templates))
+			return $this->user_templates;
+		global $config;
+		$array = $config->com_hrm->user_templates;
+		// TODO: Make an array out of the config value.
 	}
 
 	/**

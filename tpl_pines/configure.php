@@ -1,6 +1,6 @@
 <?php
 /**
- * Configuration for the Pines template.
+ * tpl_pines' configuration.
  *
  * @package Pines
  * @subpackage tpl_pines
@@ -11,56 +11,35 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-/**
- * Pines template class.
- *
- * @package Pines
- * @subpackage tpl_pines
- */
-class tpl_pines extends template {
-	/**
-	 * The template format.
-	 * @var string $format
-	 */
-	var $format = 'xhtml-1.0-strict-desktop';
-	/**
-	 * The editor CSS location, relative to Pines' directory.
-	 * @var string $editor_css
-	 */
-	var $editor_css = 'templates/pines/css/editor.css';
-	/**
-	 * Whether to show a header image, instead of text.
-	 * @var bool $header_image
-	 */
-	var $header_image = true;
-	/**
-	 * jQuery UI theme to use.
-	 *
-	 * Available are:
-	 * - "dark-hive"
-	 * - "redmond"
-	 * - "smoothness"
-	 * - "start"
-	 * - "ui-darkness"
-	 * - "ui-lightness"
-	 *
-	 * @var string $theme
-	 */
-	var $theme = 'smoothness';
-	/**
-	 * Provide a theme switcher to choose a jQuery UI theme.
-	 *
-	 * @var bool $theme_switcher
-	 */
-	var $theme_switcher = true;
-	/**
-	 * Use Google CDN to host jQuery and jQuery UI.
-	 *
-	 * @var bool $google_cdn
-	 */
-	var $google_cdn = true;
-}
-
-$pines->template = new tpl_pines;
+return array (
+  0 =>
+  array (
+	'name' => 'header_image',
+	'cname' => 'Use Header Image',
+	'description' => 'Whether to show a header image (instead of just text) at the top of the page.',
+	'value' => true,
+  ),
+  1 =>
+  array (
+	'name' => 'theme',
+	'cname' => 'Theme',
+	'description' => 'jQuery UI theme to use. (dark-hive, redmond, smoothness, start, ui-darkness, and ui-lightness are included by default.)',
+	'value' => 'smoothness',
+  ),
+  2 =>
+  array (
+	'name' => 'theme_switcher',
+	'cname' => 'Theme Switcher',
+	'description' => 'Provide a theme switcher widget in the corner to choose a jQuery UI theme.',
+	'value' => true,
+  ),
+  3 =>
+  array (
+	'name' => 'google_cdn',
+	'cname' => 'Use Google\'s CDN',
+	'description' => 'Use Google\'s content delivery network to host jQuery and jQuery UI.',
+	'value' => true,
+  ),
+);
 
 ?>

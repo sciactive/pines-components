@@ -1,6 +1,6 @@
 <?php
 /**
- * Configuration for the Pines template.
+ * tpl_print class.
  *
  * @package Pines
  * @subpackage tpl_print
@@ -12,9 +12,10 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * Print template class.
+ * tpl_print main class.
  *
- * This template will only show the content modules, and has no border/graphics.
+ * A simple template which only outputs the content position. Good for printing
+ * a page.
  *
  * @package Pines
  * @subpackage tpl_print
@@ -24,19 +25,12 @@ class tpl_print extends template {
 	 * The template format.
 	 * @var string $format
 	 */
-	var $format = 'xhtml-1.0-strict-print';
+	var $format = 'xhtml-1.0-strict-desktop';
 	/**
-	 * The editor CSS location.
+	 * The editor CSS location, relative to Pines' directory.
 	 * @var string $editor_css
 	 */
-	var $editor_css = '';
-
-	function __construct() {
-		global $pines;
-		$this->editor_css = $pines->rela_location.'templates/print/css/editor.css';
-	}
+	var $editor_css = 'templates/tpl_print/css/editor.css';
 }
-
-$pines->template = new tpl_print;
 
 ?>

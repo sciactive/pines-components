@@ -19,7 +19,6 @@ defined('P_RUN') or die('Direct access prohibited');
 <head>
 	<title><?php echo $pines->page->get_title(); ?></title>
 	<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
-	<meta name="author" content="Hunter Perrin" />
 	<link rel="icon" type="image/vnd.microsoft.icon" href="<?php echo $pines->rela_location; ?>favicon.ico" />
 
 	<link href="<?php echo $pines->rela_location; ?>system/css/pform.css" media="all" rel="stylesheet" type="text/css" />
@@ -34,7 +33,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 	<link href="<?php echo $pines->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/pines.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $pines->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/print.css" media="print" rel="stylesheet" type="text/css" />
-<?php if ($pines->template->header_image) { ?>
+<?php if ($pines->tpl_pines->header_image) { ?>
 	<link href="<?php echo $pines->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/header-image.css" media="all" rel="stylesheet" type="text/css" />
 <?php } ?>
 
@@ -42,7 +41,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	<link href="<?php echo $pines->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/dropdown/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $pines->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/dropdown/themes/jqueryui/jqueryui.css" media="all" rel="stylesheet" type="text/css" />
 
-<?php if ($pines->template->google_cdn) { ?>
+<?php if ($pines->tpl_pines->google_cdn) { ?>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="<?php echo $pines->rela_location; ?>system/js/js.php?exclude=jquery.min.js+jquery-ui.min.js"></script>
@@ -51,8 +50,8 @@ defined('P_RUN') or die('Direct access prohibited');
 <?php } ?>
 	<script type="text/javascript" src="<?php echo $pines->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/template.js"></script>
 	
-<?php if ($pines->template->theme_switcher) {
-	if ($pines->template->google_cdn) { ?>
+<?php if ($pines->tpl_pines->theme_switcher) {
+	if ($pines->tpl_pines->google_cdn) { ?>
 	<link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/base/ui.all.css" />
 <?php } else { ?>
 	<link type="text/css" rel="stylesheet" href="http://jqueryui.com/themes/base/ui.all.css" />
@@ -76,10 +75,10 @@ defined('P_RUN') or die('Direct access prohibited');
 		/* ]]> */
 	</style>
 <?php } else {
-	if ($pines->template->google_cdn) { ?>
-	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/<?php echo $pines->template->theme; ?>/jquery-ui.css" media="all" rel="stylesheet" type="text/css" />
+	if ($pines->tpl_pines->google_cdn) { ?>
+	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/<?php echo $pines->tpl_pines->theme; ?>/jquery-ui.css" media="all" rel="stylesheet" type="text/css" />
 <?php } else { ?>
-	<link href="<?php echo $pines->rela_location; ?>system/css/jquery-ui/<?php echo $pines->template->theme; ?>/jquery-ui.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="<?php echo $pines->rela_location; ?>system/css/jquery-ui/<?php echo $pines->tpl_pines->theme; ?>/jquery-ui.css" media="all" rel="stylesheet" type="text/css" />
 <?php } } ?>
 
 	<!--[if lt IE 7]>
@@ -94,7 +93,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	<div id="top">
 		<?php echo $pines->page->render_modules('top', 'module_header'); ?>
 	</div>
-	<?php if ( $pines->template->theme_switcher ) { ?>
+	<?php if ( $pines->tpl_pines->theme_switcher ) { ?>
 	<div id="switcher"></div>
 	<?php } ?>
 	<div id="header" class="ui-widget-header">

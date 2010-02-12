@@ -11,87 +11,79 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-return array (
-  0 =>
-  array (
-	'name' => 'type',
-	'cname' => 'Default Code Type',
-	'description' => 'The type of barcode.',
-	'value' => 'C39',
-	'options' => array(
-		'I25',
-		'C39',
-		'C128A',
-		'C128B',
-		'C128C'
-	)
-  ),
-  1 =>
-  array (
-	'name' => 'output_type',
-	'cname' => 'Default Image Type',
-	'description' => 'The format of the generated image.',
-	'value' => 'png',
-	'options' => array(
-		'png',
-		'gif',
-		'jpg'
-	)
-  ),
-  2 =>
-  array (
-	'name' => 'width',
-	'cname' => 'Default Width',
-	'description' => 'The width of the image the barcoded will be generated in.',
-	'value' => 200,
-  ),
-  3 =>
-  array (
-	'name' => 'height',
-	'cname' => 'Default Height',
-	'description' => 'The height of the actual barcode.',
-	'value' => 50,
-  ),
-  4 =>
-  array (
-	'name' => 'xres',
-	'cname' => 'Default x-Resolution',
-	'description' => 'Thickness of the bars.',
-	'value' => 1,
-	'options' => array(
-		1,
-		2,
-		3
-	)
-  ),
-  5 =>
-  array (
-	'name' => 'font',
-	'cname' => 'Default Font',
-	'description' => 'The font of the text generated underneath the barcode. (Text is not enabled by default.)',
-	'value' => 2,
-	'options' => array(
-		1,
-		2,
-		3,
-		4,
-		5
-	)
-  ),
-  6 =>
-  array (
-	'name' => 'bgcolor',
-	'cname' => 'Default Background Color',
-	'description' => 'Use comma separated RGB color values, or HTML color codes/names.',
-	'value' => 'white',
-  ),
-  7 =>
-  array (
-	'name' => 'color',
-	'cname' => 'Default Barcode and Text Color',
-	'description' => 'Use comma separated RGB color values, or HTML color codes/names.',
-	'value' => 'black',
-  ),
+return array(
+	array(
+		'name' => 'type',
+		'cname' => 'Default Code Type',
+		'description' => 'The type of barcode.',
+		'value' => 'C39',
+		'options' => array(
+			'Interleaved 2 of 5' => 'I25',
+			'Code 39' => 'C39',
+			'Code 128A' => 'C128A',
+			'Code 128B' => 'C128B',
+			'Code 128C' => 'C128C'
+		)
+	),
+	array(
+		'name' => 'output_type',
+		'cname' => 'Default Image Type',
+		'description' => 'The format of the generated image.',
+		'value' => 'png',
+		'options' => array(
+			'PNG' => 'png',
+			'GIF' => 'gif',
+			'JPG (Does not support transparency.)' => 'jpg'
+		)
+	),
+	array(
+		'name' => 'width',
+		'cname' => 'Default Width',
+		'description' => 'The width of the image the barcoded will be generated in.',
+		'value' => 200,
+	),
+	array(
+		'name' => 'height',
+		'cname' => 'Default Height',
+		'description' => 'The height of the actual barcode.',
+		'value' => 50,
+	),
+	array(
+		'name' => 'xres',
+		'cname' => 'Default x-Resolution',
+		'description' => 'Thickness of the bars.',
+		'value' => 1,
+		'options' => array(
+			1,
+			2,
+			3
+		)
+	),
+	array(
+		'name' => 'font',
+		'cname' => 'Default Font',
+		'description' => 'The font of the text generated underneath the barcode. (Text is not enabled by default.)',
+		'value' => 2,
+		'options' => array(
+			'Small' => 1,
+			'Medium' => 2,
+			'Medium Bold' => 3,
+			'Large' => 4,
+			'Large Bold' => 5
+		)
+	),
+	array(
+		'name' => 'bgcolor',
+		'cname' => 'Default Background Color',
+		'description' => 'Use comma separated RGB color values, or HTML color codes/names.',
+		'value' => 'white',
+	),
+	array(
+		'name' => 'color',
+		'cname' => 'Default Barcode and Text Color',
+		'description' => 'Use comma separated RGB color values, or HTML color codes/names.',
+		'value' => 'black',
+	),
 );
 
 ?>

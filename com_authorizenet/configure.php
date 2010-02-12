@@ -11,35 +11,31 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-return array (
-  0 =>
-  array (
-	'name' => 'apilogin',
-	'cname' => 'API Login',
-	'description' => 'The API login Authorize.Net provided you.',
-	'value' => '',
-  ),
-  1 =>
-  array (
-	'name' => 'tran_key',
-	'cname' => 'Transaction Key',
-	'description' => 'The transaction key Authorize.Net provided you.',
-	'value' => '',
-  ),
-  2 =>
-  array (
-	'name' => 'post_url',
-	'cname' => 'Post URL',
-	'description' => 'The URL Pines will use to communicate with Authorize.Net.',
-	'value' => 'https://secure.authorize.net/gateway/transact.dll',
-  ),
-  3 =>
-  array (
-	'name' => 'test_mode',
-	'cname' => 'Test Mode',
-	'description' => 'Enabled this will prevent payments from actually being processed.',
-	'value' => true,
-  ),
+return array(
+	array(
+		'name' => 'apilogin',
+		'cname' => 'API Login',
+		'description' => 'The API login Authorize.Net provided you.',
+		'value' => '',
+	),
+	array(
+		'name' => 'tran_key',
+		'cname' => 'Transaction Key',
+		'description' => 'The transaction key Authorize.Net provided you.',
+		'value' => '',
+	),
+	array(
+		'name' => 'post_url',
+		'cname' => 'Post URL',
+		'description' => 'The URL Pines will use to communicate with Authorize.Net.',
+		'value' => 'https://secure.authorize.net/gateway/transact.dll',
+	),
+	array(
+		'name' => 'test_mode',
+		'cname' => 'Test Mode',
+		'description' => 'Enabling this will prevent payments from actually being processed.',
+		'value' => true,
+	),
 );
 
 ?>

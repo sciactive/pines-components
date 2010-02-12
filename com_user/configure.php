@@ -11,49 +11,43 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-return array (
-  0 => 
-  array (
-	'name' => 'empty_pw',
-	'cname' => 'Empty Passwords',
-	'description' => 'Allow users to have empty passwords.',
-	'value' => false,
-  ),
-  1 => 
-  array (
-	'name' => 'create_admin',
-	'cname' => 'Create Admin',
-	'description' => 'Allow the creation of an admin user.',
-	'value' => true,
-  ),
-  2 => 
-  array (
-	'name' => 'create_admin_secret',
-	'cname' => 'Create Admin Secret',
-	'description' => 'The secret necessary to create an admin user.',
-	'value' => '874jdiv8',
-  ),
-  3 =>
-  array (
-	'name' => 'resize_logos',
-	'cname' => 'Resize Logos',
-	'description' => 'Resize the group logos before saving them.',
-	'value' => false,
-  ),
-  4 =>
-  array (
-	'name' => 'logo_width',
-	'cname' => 'Logo Width',
-	'description' => 'If resizing logos, use this width.',
-	'value' => 200,
-  ),
-  5 =>
-  array (
-	'name' => 'logo_height',
-	'cname' => 'Logo Height',
-	'description' => 'If resizing logos, use this height.',
-	'value' => 75,
-  ),
+return array(
+	array(
+		'name' => 'empty_pw',
+		'cname' => 'Empty Passwords',
+		'description' => 'Allow users to have empty passwords.',
+		'value' => false,
+	),
+	array(
+		'name' => 'create_admin',
+		'cname' => 'Create Admin',
+		'description' => 'Allow the creation of an admin user.',
+		'value' => true,
+	),
+	array(
+		'name' => 'create_admin_secret',
+		'cname' => 'Create Admin Secret',
+		'description' => 'The secret necessary to create an admin user.',
+		'value' => '874jdiv8',
+	),
+	array(
+		'name' => 'resize_logos',
+		'cname' => 'Resize Logos',
+		'description' => 'Resize the group logos before saving them.',
+		'value' => false,
+	),
+	array(
+		'name' => 'logo_width',
+		'cname' => 'Logo Width',
+		'description' => 'If resizing logos, use this width.',
+		'value' => 200,
+	),
+	array(
+		'name' => 'logo_height',
+		'cname' => 'Logo Height',
+		'description' => 'If resizing logos, use this height.',
+		'value' => 75,
+	),
 );
 
 ?>

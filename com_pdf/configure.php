@@ -11,21 +11,19 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-return array (
-  0 =>
-  array (
-	'name' => 'author',
-	'cname' => 'Default Author',
-	'description' => 'The default author of PDFs created by com_pdf.',
-	'value' => 'Hunter Perrin',
-  ),
-  1 =>
-  array (
-	'name' => 'pdf_path',
-	'cname' => 'PDF Library Path',
-	'description' => 'The relative path of the directory containing the PDFs. End this path with a slash!',
-	'value' => $pines->config->setting_upload.'pdf/',
-  ),
+return array(
+	array(
+		'name' => 'author',
+		'cname' => 'Default Author',
+		'description' => 'The default author of PDFs created by com_pdf.',
+		'value' => 'Hunter Perrin',
+	),
+	array(
+		'name' => 'pdf_path',
+		'cname' => 'PDF Library Path',
+		'description' => 'The relative path of the directory containing the PDFs. End this path with a slash!',
+		'value' => $pines->config->setting_upload.'pdf/',
+	),
 );
 
 ?>

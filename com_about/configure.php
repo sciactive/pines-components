@@ -11,21 +11,19 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-return array (
-  0 => 
-  array (
-	'name' => 'description',
-	'cname' => 'Description',
-	'description' => 'Description of your installation.',
-	'value' => 'This is the default installation of Pines.',
-  ),
-  1 => 
-  array (
-	'name' => 'describe_self',
-	'cname' => 'Describe Pines',
-	'description' => 'Whether to show Pines\' description underneath yours.',
-	'value' => true,
-  ),
+return array(
+	array(
+		'name' => 'description',
+		'cname' => 'Description',
+		'description' => 'Description of your installation.',
+		'value' => 'This is the default installation of Pines.',
+	),
+	array(
+		'name' => 'describe_self',
+		'cname' => 'Describe Pines',
+		'description' => 'Whether to show Pines\' description underneath yours.',
+		'value' => true,
+	),
 );
 
 ?>

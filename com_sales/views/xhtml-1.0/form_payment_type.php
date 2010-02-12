@@ -34,6 +34,11 @@ $this->note = 'Provide payment type details in this form.';
 			<input class="field ui-widget-content" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 	</div>
 	<div class="element">
+		<label><span class="label">Kick Drawer</span>
+			<span class="note">If set, when this payment type is used, the cash drawer will be kicked open.</span>
+			<input class="field ui-widget-content" type="checkbox" name="kick_drawer" size="24" value="ON"<?php echo $this->entity->kick_drawer ? ' checked="checked"' : ''; ?> /></label>
+	</div>
+	<div class="element">
 		<label><span class="label">Change Type</span>
 			<span class="note">If set, change will be given from this payment type. Usually "Cash" is the change type.</span>
 			<input class="field ui-widget-content" type="checkbox" name="change_type" size="24" value="ON"<?php echo $this->entity->change_type ? ' checked="checked"' : ''; ?> /></label>

@@ -143,7 +143,7 @@ if ($product_error || $payment_error) {
 if ($pines->config->com_sales->global_sales)
 	$sale->ac->other = 1;
 
-if (($_REQUEST['process'] == 'Invoice' || $_REQUEST['process'] == 'Tender') && $sale->status != 'invoiced' && $sale->status != 'paid') {
+if (($_REQUEST['process'] == 'invoice' || $_REQUEST['process'] == 'tender') && $sale->status != 'invoiced' && $sale->status != 'paid') {
 	if (!$sale->invoice()) {
 		$sale->print_form();
 		display_error('There was an error while invoicing the sale. Please check that all information is correct and resubmit.');
@@ -151,7 +151,7 @@ if (($_REQUEST['process'] == 'Invoice' || $_REQUEST['process'] == 'Tender') && $
 	}
 }
 
-if ($_REQUEST['process'] == 'Tender') {
+if ($_REQUEST['process'] == 'tender') {
 	if (!$sale->complete()) {
 		$sale->save();
 		$sale->print_form();

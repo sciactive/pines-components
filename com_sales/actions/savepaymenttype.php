@@ -27,6 +27,7 @@ if ( isset($_REQUEST['id']) ) {
 
 $payment_type->name = $_REQUEST['name'];
 $payment_type->enabled = ($_REQUEST['enabled'] == 'ON');
+$payment_type->kick_drawer = ($_REQUEST['kick_drawer'] == 'ON');
 $payment_type->change_type = ($_REQUEST['change_type'] == 'ON');
 $payment_type->minimum = floatval($_REQUEST['minimum']);
 $payment_type->maximum = floatval($_REQUEST['maximum']);

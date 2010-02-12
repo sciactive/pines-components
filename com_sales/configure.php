@@ -102,6 +102,12 @@ return array(
 		'description' => 'The address the email will be sent from.',
 		'value' => 'sales@sciactive.com',
 	),
+	array(
+		'name' => 'cash_drawer',
+		'cname' => 'Cash Drawer',
+		'description' => 'Integrate the POS with a cash drawer.',
+		'value' => true,
+	),
 );
 
 ?>

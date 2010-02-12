@@ -62,6 +62,7 @@ $this->title = 'Payment Types';
 		<tr>
 			<th>Name</th>
 			<th>Enabled</th>
+			<th>Kick Drawer</th>
 			<th>Change Type</th>
 			<th>Minimum</th>
 			<th>Maximum</th>
@@ -72,8 +73,9 @@ $this->title = 'Payment Types';
 	<?php foreach($this->payment_types as $payment_type) { ?>
 		<tr title="<?php echo $payment_type->guid; ?>">
 			<td><?php echo $payment_type->name; ?></td>
-			<td><?php echo $payment_type->enabled ? 'True' : 'False'; ?></td>
-			<td><?php echo $payment_type->change_type ? 'True' : 'False'; ?></td>
+			<td><?php echo $payment_type->enabled ? 'Yes' : 'No'; ?></td>
+			<td><?php echo $payment_type->kick_drawer ? 'Yes' : 'No'; ?></td>
+			<td><?php echo $payment_type->change_type ? 'Yes' : 'No'; ?></td>
 			<td><?php echo $payment_type->minimum; ?></td>
 			<td><?php echo $payment_type->maximum; ?></td>
 			<td><?php echo $payment_type->processing_type; ?></td>

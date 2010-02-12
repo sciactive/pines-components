@@ -60,10 +60,16 @@ $this->note = 'Use this form to edit a sale.';
 				}
 			}
 		}
+		$drawer_kickers = array();
+		foreach ($this->payment_types as $cur_payment_type) {
+			if ($cur_payment_type->kick_drawer)
+				$drawer_kickers[] = $cur_payment_type->guid;
+		}
 ?>
-		var taxes_percent = JSON.parse("<?php echo addSlashes(json_encode($taxes_percent)) ?>");
-		var taxes_flat = JSON.parse("<?php echo addSlashes(json_encode($taxes_flat)) ?>");
-		var status = JSON.parse("<?php echo addSlashes(json_encode($this->entity->status)); ?>");
+		var taxes_percent = JSON.parse("<?php echo addslashes(json_encode($taxes_percent)) ?>");
+		var taxes_flat = JSON.parse("<?php echo addslashes(json_encode($taxes_flat)) ?>");
+		var drawer_kickers = JSON.parse("<?php echo addslashes(json_encode($drawer_kickers)); ?>");
+		var status = JSON.parse("<?php echo addslashes(json_encode($this->entity->status)); ?>");
 
 		function round_to_dec(value) {
 			var rnd = Math.pow(10, dec);
@@ -638,6 +644,56 @@ $this->note = 'Use this form to edit a sale.';
 			});
 		}
 		<?php } ?>
+
+		function run_drawer() {
+			var keep_checking = function(status){
+				switch (status) {
+					case "is_open":
+						break;
+					case "is_closed":
+						run_submit();
+						return;
+						break;
+					case "not_supported":
+						alert("The drawer program does not support the correct return codes.");
+						break;
+					case "error":
+						alert("There was an error with the drawer.");
+						break;
+					case "not_found":
+						alert("The drawer was not found. Make sure it is plugged in.");
+						break;
+					case "misconfigured":
+						alert("The drawer program is misconfigured or not installed.");
+						break;
+				}
+				setTimeout(function(){
+					pines.drawer_check(keep_checking);
+				}, 500);
+			};
+
+			var kicked = false;
+			$.each(payments_table.pgrid_get_all_rows().pgrid_export_rows(), function(){
+				if (this.values[2] != "pending")
+					return;
+				if ($.inArray(parseInt(this.key), drawer_kickers) > -1) {
+					pines.drawer_open(keep_checking);
+					kicked = true;
+				}
+			});
+
+			if (parseFloat($("#change").html()) > 0) {
+				pines.drawer_open(keep_checking);
+				kicked = true;
+			}
+
+			if (!kicked)
+				$("#sale_details").submit();
+		}
+
+		function run_submit() {
+			$("#sale_details").submit();
+		}
 		// ]]>
 	</script>
 	<?php if ($pines->com_sales->com_customer) { ?>
@@ -834,18 +890,20 @@ $this->note = 'Use this form to edit a sale.';
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 
+		<input type="hidden" id="sale_process_type" name="process" value="quote" />
+
 		<?php if ($this->entity->status != 'paid') { ?>
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="process" value="Tender" />
+		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Tender" onclick="$('#sale_process_type').val('tender'); run_drawer();" />
 		<?php } ?>
 
 		<?php if ($this->entity->status != 'paid' && $this->entity->status != 'invoiced') { ?>
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="process" value="Invoice" />
+		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Invoice" onclick="$('#sale_process_type').val('invoice'); run_submit();" />
 		<?php } ?>
 
 		<?php if ($this->entity->status != 'paid' && $this->entity->status != 'invoiced' && $this->entity->status != 'quoted') { ?>
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="process" value="Quote" />
+		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Quote" onclick="$('#sale_process_type').val('quote'); run_submit();" />
 		<?php } else { ?>
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="process" value="Save" />
+		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Save" onclick="$('#sale_process_type').val('save'); run_submit();" />
 		<?php } ?>
 
 		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_sales', 'listsales'); ?>';" value="Cancel" />

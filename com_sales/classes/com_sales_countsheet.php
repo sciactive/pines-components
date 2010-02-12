@@ -2,7 +2,8 @@
 /**
  * com_sales_sheet class.
  *
- * @package com_sales
+ * @package Pines
+ * @subpackage com_sales
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Zak Huber <zakhuber@gmail.com>
  * @copyright Zak Huber

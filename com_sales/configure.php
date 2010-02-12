@@ -105,8 +105,14 @@ return array(
 	array(
 		'name' => 'cash_drawer',
 		'cname' => 'Cash Drawer',
-		'description' => 'Integrate the POS with a cash drawer.',
+		'description' => 'Integrate the POS with a cash drawer. (Requires the Pines Cash Drawer Firefox addon.)',
 		'value' => true,
+	),
+	array(
+		'name' => 'cash_drawer_group',
+		'cname' => 'Cash Drawer Group',
+		'description' => 'Only use the cash drawer for users in this group. (Enter the group\'s GUID or 0 for all groups.)',
+		'value' => 242,
 	),
 );
 

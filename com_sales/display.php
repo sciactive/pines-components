@@ -86,6 +86,4 @@ if ( gatekeeper('com_sales/managestock') || gatekeeper('com_sales/receive') ||
 	}
 }
 
-$com_sales_cash_drawer = new module('com_sales', 'cash_drawer', 'head');
-
 ?>

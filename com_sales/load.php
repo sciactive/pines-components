@@ -24,4 +24,12 @@ $pines->com_sales->processing_types[] = array(
 	'callback' => array($pines->com_sales, 'payment_manager')
 );
 
+if ($pines->config->com_sales->cash_drawer &&
+		(
+			$pines->config->com_sales->cash_drawer_group == 0 ||
+			(isset($_SESSION['user']) && $_SESSION['user']->ingroup($pines->config->com_sales->cash_drawer_group))
+		)
+	)
+	$com_sales_cash_drawer = new module('com_sales', 'cash_drawer', 'head');
+
 ?>

@@ -18,7 +18,7 @@ return array(
 		'description' => 'The type of barcode.',
 		'value' => 'C39',
 		'options' => array(
-			'Interleaved 2 of 5' => 'I25',
+			'I25' => 'I25',
 			'Code 39' => 'C39',
 			'Code 128A' => 'C128A',
 			'Code 128B' => 'C128B',

@@ -98,6 +98,11 @@ if (empty($user->username)) {
 	display_notice('Please specify a username.');
 	return;
 }
+if ($pines->com_user->max_username_length > 0 && strlen($user->username) > $pines->com_user->max_username_length) {
+	$user->print_form();
+	display_notice("Usernames must not exceed {$pines->com_user->max_username_length} characters.");
+	return;
+}
 $test = user::factory($_REQUEST['username']);
 if (isset($test->guid) && !$user->is($test)) {
 	$user->print_form();

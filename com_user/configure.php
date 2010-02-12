@@ -30,6 +30,18 @@ return array(
 		'description' => 'The secret necessary to create an admin user.',
 		'value' => '874jdiv8',
 	),
+	array (
+		'name' => 'max_username_length',
+		'cname' => 'Username Max Length',
+		'description' => 'The maximum length for usernames. 0 for unlimited.',
+		'value' => 0,
+	),
+	array (
+		'name' => 'max_groupname_length',
+		'cname' => 'Groupname Max Length',
+		'description' => 'The maximum length for groupnames. 0 for unlimited.',
+		'value' => 0,
+	),
 	array(
 		'name' => 'resize_logos',
 		'cname' => 'Resize Logos',

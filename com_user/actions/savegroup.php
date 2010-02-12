@@ -74,6 +74,11 @@ if (empty($group->groupname)) {
 	display_notice('Please specify a groupname.');
 	return;
 }
+if ($pines->com_user->max_groupname_length > 0 && strlen($group->groupname) > $pines->com_user->max_groupname_length) {
+	$group->print_form();
+	display_notice("Groupnames must not exceed {$pines->com_user->max_groupname_length} characters.");
+	return;
+}
 $test = group::factory($_REQUEST['groupname']);
 if (isset($test->guid) && !$group->is($test)) {
 	$group->print_form();

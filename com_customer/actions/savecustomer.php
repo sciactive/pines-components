@@ -106,6 +106,11 @@ if (empty($customer->phone_cell) && empty($customer->phone_work) && empty($custo
 	display_notice('Please specify at least one phone number.');
 	return;
 }
+if (gatekeeper('com_customer/requiressn') && empty($customer->ssn)) {
+	$customer->print_form();
+	display_notice('Please provide an SSN.');
+	return;
+}
 $test = $pines->entity_manager->get_entity(array('data' => array('ssn' => $customer->ssn), 'class' => com_customer_customer));
 if (isset($test) && !$customer->is($test)) {
 	$customer->print_form();

@@ -19,5 +19,7 @@ $pines->ability_manager->add('com_hrm', 'clock', 'Clock In/Out', 'User can use t
 $pines->ability_manager->add('com_hrm', 'viewownclock', 'View Own Timeclock', 'User can view their own timeclock.');
 $pines->ability_manager->add('com_hrm', 'viewclock', 'View Timeclock', 'User can view the employee timeclock (including times).');
 $pines->ability_manager->add('com_hrm', 'manageclock', 'Manage Timeclock', 'User can manage and edit the employee timeclock.');
+$pines->ability_manager->add('com_hrm', 'requiressn', 'Require SSN', 'User must store Social Security Numbers for employees.');
+$pines->ability_manager->add('com_hrm', 'showssn', 'Show SSN', 'User can see and edit Social Security Numbers.');
 
 ?>

@@ -99,6 +99,11 @@ if (empty($employee->phone_cell) && empty($employee->phone_work) && empty($emplo
 	display_notice('Please specify at least one phone number.');
 	return;
 }
+if (gatekeeper('com_hrm/requiressn') && empty($employee->ssn)) {
+	$employee->print_form();
+	display_notice('Please provide an SSN.');
+	return;
+}
 if (!is_null($employee->user_account) && is_null($employee->user_account->guid)) {
 	$employee->print_form();
 	display_notice('The user account specified is not accessible.');

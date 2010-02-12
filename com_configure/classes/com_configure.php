@@ -149,7 +149,7 @@ class com_configure extends component {
 		$pattern = '/return(\s|[(]).*;/s';
 		$replacement = 'return #CODEGOESHERE#;'; */
 		$file_contents = preg_replace($pattern, $replacement, $file_contents, 1);
-		$file_contents = str_replace('#CODEGOESHERE#', 'unserialize("'.addslashes(serialize($config_array)).'")', $file_contents);
+		$file_contents = str_replace('#CODEGOESHERE#', 'unserialize(stripslashes("'.addslashes(serialize($config_array)).'"))', $file_contents);
 		if (!(file_put_contents($config_file, $file_contents)))
 			return false;
 		pines_log("Saved new config to $config_file.", 'notice');

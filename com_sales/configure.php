@@ -112,7 +112,7 @@ return array(
 		'name' => 'cash_drawer_group',
 		'cname' => 'Cash Drawer Group',
 		'description' => 'Only use the cash drawer for users in this group. (Enter the group\'s GUID or 0 for all groups.)',
-		'value' => 242,
+		'value' => 0,
 	),
 );
 

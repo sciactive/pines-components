@@ -48,6 +48,12 @@ $pines->ability_manager->add('com_sales', 'listpos', 'List Purchase Orders', 'Us
 $pines->ability_manager->add('com_sales', 'newpo', 'Create Purchase Orders', 'User can create new POs.');
 $pines->ability_manager->add('com_sales', 'editpo', 'Edit Purchase Orders', 'User can edit current POs.');
 $pines->ability_manager->add('com_sales', 'deletepo', 'Delete Purchase Orders', 'User can delete current POs.');
+$pines->ability_manager->add('com_sales', 'listcountsheets', 'List Countsheets', 'User can see countsheets.');
+$pines->ability_manager->add('com_sales', 'newcountsheet', 'Create Countsheets', 'User can create new countsheets.');
+$pines->ability_manager->add('com_sales', 'editcountsheet', 'Edit Countsheets', 'User can edit current countsheets.');
+$pines->ability_manager->add('com_sales', 'deletecountsheet', 'Delete Countsheets', 'User can delete current countsheets.');
+$pines->ability_manager->add('com_sales', 'printcountsheet', 'Print Countsheets', 'User can print countsheets.');
+$pines->ability_manager->add('com_sales', 'approvecountsheet', 'Approve Countsheets', 'User can approve countsheets.');
 $pines->ability_manager->add('com_sales', 'managecategories', 'Manage Categories', 'User can manage categories.');
 $pines->ability_manager->add('com_sales', 'viewcategories', 'View Categories', 'User can view categories.');
 

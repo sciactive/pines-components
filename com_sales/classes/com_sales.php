@@ -345,6 +345,70 @@ class com_sales extends component {
 	}
 
 	/**
+	 * Inform the user of anything important.
+	 * @return module The notifcation's module.
+	 */
+	public function inform($title, $header, $note) {
+		global $pines;
+		$module = new module('com_sales', 'show_note', 'left');
+		$module->title = $title;
+		$module->header = $header;
+		$module->message = $note;
+		return $module;
+	}
+
+	/**
+	 * Creates and attaches a module which lists countsheets.
+	 */
+	function list_countsheets() {
+		global $pines;
+
+		$pgrid = new module('system', 'pgrid.default', 'head');
+		$pgrid->icons = true;
+
+		$module = new module('com_sales', 'list_countsheets', 'content');
+		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_countsheets'];
+
+		$module->countsheets = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'countsheet'), 'class' => com_sales_countsheet));
+
+		if ( empty($module->countsheets) ) {
+			$pgrid->detach();
+			$module->detach();
+			display_notice("There are no countsheets.");
+			return;
+		}
+
+		if (gatekeeper('com_sales/approvecountsheet')) {
+			// Check the countsheets for any missing products.
+			$errors = array();
+			foreach ($module->countsheets as $sheet) {
+					foreach ($sheet->entries as $sheet_item) {
+						$error_msg = '';
+						$stock_entity = $pines->entity_manager->get_entity(array('data' => array('serial' => $sheet_item->values[0]), 'tags' => array('com_sales', 'stock'), 'class' => com_sales_stock));
+						if (is_null($stock_entity)) {
+							$error_msg = "[$sheet->guid] #<strong>{$sheet_item->values[0]}</strong> is not in stock.";
+
+							$sheet_product = $pines->entity_manager->get_entity(array('data' => array('sku' => $sheet_item->values[0]), 'tags' => array('com_sales', 'product'), 'class' => com_sales_product));
+							if (!is_null($sheet_product)) {
+								$entity = $pines->entity_manager->get_entity(array('ref' => array('product' => $sheet_product), 'tags' => array('com_sales', 'stock'), 'class' => com_sales_stock));
+								if (!is_null($entity) && $entity->status == 'available')
+									$error_msg = '';
+							}
+						}
+						if (!empty($error_msg))
+							$errors[] = $error_msg;
+					}
+			}
+			if (!empty($errors)) {
+				$type = 'Reminder';
+				$head = 'Missing Items';
+				$this->inform($type, $head, implode("\n", $errors));
+			}
+		}
+	}
+
+	/**
 	 * Creates and attaches a module which lists manufacturers.
 	 */
 	function list_manufacturers() {
@@ -419,7 +483,7 @@ class com_sales extends component {
 		if (!empty($errors)) {
 			$type = 'Reminder';
 			$head = 'Purchase Orders';
-			$this->notify($type,$head,$errors);
+			$this->inform($type, $head, $errors);
 		}
 	}
 
@@ -727,19 +791,6 @@ class com_sales extends component {
 		}
 		// Closest even is down.
 		return $floored * $sign;
-	}
-
-	/**
-	 * Notify the user of anything important.
-	 * @return module The notifcation's module.
-	 */
-	public function notify($title, $header, $note) {
-		global $pines;
-		$module = new module('com_sales', 'show_note', 'left');
-		$module->title = $title;
-		$module->header = $header;
-		$module->message = $note;
-		return $module;
 	}
 }
 

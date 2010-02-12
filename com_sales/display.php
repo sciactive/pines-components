@@ -20,7 +20,8 @@ if ( gatekeeper('com_sales/managestock') || gatekeeper('com_sales/receive') ||
 	 gatekeeper('com_sales/listvendors') || gatekeeper('com_sales/newvendor') ||
 	 gatekeeper('com_sales/listpaymenttypes') || gatekeeper('com_sales/newpaymenttype') ||
 	 gatekeeper('com_sales/listtaxfees') || gatekeeper('com_sales/newtaxfee') ||
-	 gatekeeper('com_sales/listpos') || gatekeeper('com_sales/newpo') ) {
+	 gatekeeper('com_sales/listpos') || gatekeeper('com_sales/newpo') ||
+	 gatekeeper('com_sales/listcountsheets') || gatekeeper('com_sales/newcountsheet') ) {
 	$com_sales_menu_id = $pines->page->main_menu->add('POS');
 	if ( gatekeeper('com_sales/newsale') )
 		$pines->page->main_menu->add('New Sale', pines_url('com_sales', 'editsale'), $com_sales_menu_id);
@@ -32,7 +33,8 @@ if ( gatekeeper('com_sales/managestock') || gatekeeper('com_sales/receive') ||
 			$pines->page->main_menu->add('Sales Totals', pines_url('com_sales', 'totalsales'), $com_sales_menu_id_sales);
 	 }
 	if ( gatekeeper('com_sales/managestock') || gatekeeper('com_sales/receive') ||
-		 gatekeeper('com_sales/listpos') || gatekeeper('com_sales/newpo') ) {
+		 gatekeeper('com_sales/listpos') || gatekeeper('com_sales/newpo') ||
+		 gatekeeper('com_sales/listcountsheets') || gatekeeper('com_sales/newcountsheet') ) {
 		$com_sales_menu_id_inv = $pines->page->main_menu->add('Inventory', '#', $com_sales_menu_id);
 		if ( gatekeeper('com_sales/receive') )
 			$pines->page->main_menu->add('Receive', pines_url('com_sales', 'receive'), $com_sales_menu_id_inv);
@@ -45,6 +47,10 @@ if ( gatekeeper('com_sales/managestock') || gatekeeper('com_sales/receive') ||
 			$pines->page->main_menu->add('Purchase Orders', pines_url('com_sales', 'listpos'), $com_sales_menu_id_inv);
 		if ( gatekeeper('com_sales/newpo') )
 			$pines->page->main_menu->add('New PO', pines_url('com_sales', 'editpo'), $com_sales_menu_id_inv);
+		if ( gatekeeper('com_sales/listcountsheets') )
+			$pines->page->main_menu->add('Countsheets', pines_url('com_sales', 'listcountsheets'), $com_sales_menu_id_inv);
+		if ( gatekeeper('com_sales/newcountsheet') )
+			$pines->page->main_menu->add('New Countsheet', pines_url('com_sales', 'editcountsheet'), $com_sales_menu_id_inv);
 	}
 	if ( gatekeeper('com_sales/listmanufacturers') || gatekeeper('com_sales/newmanufacturer') ||
 		 gatekeeper('com_sales/listshippers') || gatekeeper('com_sales/newshipper') ||

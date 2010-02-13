@@ -112,7 +112,7 @@ if (gatekeeper('com_customer/requiressn') && empty($customer->ssn)) {
 	return;
 }
 $test = $pines->entity_manager->get_entity(array('data' => array('ssn' => $customer->ssn), 'class' => com_customer_customer));
-if (isset($test) && !$customer->is($test)) {
+if (gatekeeper('com_customer/requiressn') && isset($test) && !$customer->is($test)) {
 	$customer->print_form();
 	display_notice("The customer {$test->name} already has this SSN.");
 	return;

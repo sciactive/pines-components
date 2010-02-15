@@ -50,7 +50,9 @@ if (!empty($_REQUEST['password']))
 	$customer->password = $_REQUEST['password'];
 $customer->description = $_REQUEST['description'];
 
-// Points
+// Account
+$customer->member = ($_REQUEST['member'] == 'ON');
+$customer->member_exp = strtotime($_REQUEST['member_exp']);
 if ($pines->config->com_customer->adjustpoints && gatekeeper('com_customer/adjustpoints'))
 	$customer->adjust_points((int) $_REQUEST['adjust_points']);
 
@@ -111,11 +113,13 @@ if (gatekeeper('com_customer/requiressn') && empty($customer->ssn)) {
 	display_notice('Please provide an SSN.');
 	return;
 }
-$test = $pines->entity_manager->get_entity(array('data' => array('ssn' => $customer->ssn), 'class' => com_customer_customer));
-if (gatekeeper('com_customer/requiressn') && isset($test) && !$customer->is($test)) {
-	$customer->print_form();
-	display_notice("The customer {$test->name} already has this SSN.");
-	return;
+if (isset($customer->ssn)) {
+	$test = $pines->entity_manager->get_entity(array('data' => array('ssn' => $customer->ssn), 'tags' => array('com_customer', 'customer'), 'class' => com_customer_customer));
+	if (isset($test) && !$customer->is($test)) {
+		$customer->print_form();
+		display_notice("The customer {$test->name} already has this SSN.");
+		return;
+	}
 }
 
 if ($pines->config->com_customer->global_customers)

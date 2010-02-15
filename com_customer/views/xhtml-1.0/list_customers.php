@@ -78,6 +78,9 @@ $this->title = 'Customers';
 			<th>Cell Phone</th>
 			<th>Fax</th>
 			<th>Login Disabled</th>
+			<th>Member</th>
+			<th>Expired</th>
+			<th>Expiration Date</th>
 			<th>Points</th>
 			<th>Peak</th>
 			<th>All-Time</th>
@@ -102,6 +105,9 @@ $this->title = 'Customers';
 			<td><?php echo pines_phone_format($customer->phone_cell); ?></td>
 			<td><?php echo pines_phone_format($customer->fax); ?></td>
 			<td><?php echo ($customer->login_disabled ? 'Yes' : 'No'); ?></td>
+			<td><?php echo ($customer->member ? 'Yes' : 'No'); ?></td>
+			<td><?php echo ($customer->member ? ($customer->valid_member() ? 'Yes' : 'No') : ''); ?></td>
+			<td><?php echo $customer->member_exp ? date('Y-m-d', $customer->member_exp) : ''; ?></td>
 			<td><?php echo $customer->points; ?></td>
 			<td><?php echo $customer->peak_points; ?></td>
 			<td><?php echo $customer->total_points; ?></td>

@@ -157,7 +157,7 @@ $this->note = 'Provide customer profile details in this form.';
 	<div id="customer_tabs" style="clear: both;">
 		<ul>
 			<li><a href="#tab_general">General</a></li>
-			<li><a href="#tab_points">Points</a></li>
+			<li><a href="#tab_account">Account</a></li>
 			<li><a href="#tab_addresses">Addresses</a></li>
 			<li><a href="#tab_attributes">Attributes</a></li>
 		</ul>
@@ -376,7 +376,10 @@ $this->note = 'Provide customer profile details in this form.';
 			</div>
 			<br class="spacer" />
 		</div>
-		<div id="tab_points">
+		<div id="tab_account">
+			<div class="element heading">
+				<h1>Points</h1>
+			</div>
 			<div class="element">
 				<span class="label">Current Points</span>
 				<span class="field"><?php echo $this->entity->points; ?></span>
@@ -396,6 +399,28 @@ $this->note = 'Provide customer profile details in this form.';
 					<input class="field ui-widget-content" type="text" name="adjust_points" size="24" value="0" /></label>
 			</div>
 			<?php } ?>
+			<div class="element heading">
+				<h1>Membership</h1>
+			</div>
+			<div class="element">
+				<label><span class="label">Member</span>
+					<input class="field ui-widget-content" type="checkbox" name="member" size="24" value="ON"<?php echo $this->entity->member ? ' checked="checked"' : ''; ?> /></label>
+			</div>
+			<div class="element">
+				<script type="text/javascript">
+					// <![CDATA[
+					$(function(){
+						$("#customer_details [name=member_exp]").datepicker({
+							dateFormat: "yy-mm-dd",
+							changeMonth: true,
+							changeYear: true
+						});
+					});
+					// ]]>
+				</script>
+				<label><span class="label">Membership Expiration</span>
+					<input class="field ui-widget-content" type="text" name="member_exp" size="24" value="<?php echo $this->entity->member_exp ? date('Y-m-d', $this->entity->member_exp) : ''; ?>" /></label>
+			</div>
 			<br class="spacer" />
 		</div>
 		<div id="tab_addresses">

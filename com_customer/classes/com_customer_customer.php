@@ -116,6 +116,16 @@ class com_customer_customer extends entity {
 
 		return $module;
 	}
+
+	/**
+	 * Check whether a customer is a valid member (not expired).
+	 * @return bool
+	 */
+	function valid_member() {
+		if (!$this->member)
+			return false;
+		return (time() < $this->member_exp);
+	}
 }
 
 ?>

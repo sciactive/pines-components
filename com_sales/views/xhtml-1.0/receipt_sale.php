@@ -58,7 +58,7 @@ if ($this->entity->status == 'quoted') {
 		display: block;
 	}
 	#receipt_sale .location .aligner, #receipt_sale .customer .aligner {
-		width: 48px;
+		width: 55px;
 	}
 	#item_list {
 		text-align: left;
@@ -90,18 +90,18 @@ if ($this->entity->status == 'quoted') {
 		</div>
 	<div class="right_side barcode">
 		<h1><?php echo $this->doc_title; ?></h1>
-		<img src="<?php echo pines_url('com_barcode', 'image', array('code' => $doc_id)); ?>" alt="Barcode" />
+		<img src="<?php echo pines_url('com_barcode', 'image', array('code' => $doc_id, 'width' => '250')); ?>" alt="Barcode" />
 	</div>
 	<?php if (isset($sales_rep->guid)) { ?>
 	<div class="left_side location">
-		<div class="aligner">&nbsp;</div>
+		<div class="aligner">Location:</div>
 		<div class="data_col">
 			<span class="name"><?php echo $sales_group->name; ?></span>
-			<span><?php echo ($sales_group->address_type == 'us') ? $sales_group->address_1.' '.$sales_group->address_2 : $sales_group->address_international; ?></span>
 			<?php if ($sales_group->address_type == 'us') { ?>
-			<span><?php echo $sales_group->city; ?>, <?php echo $sales_group->state; ?> USA <?php echo $sales_group->zip; ?></span>
+			<span><?php echo "{$sales_group->address_1}\n{$sales_group->address_2}"; ?></span>
+			<span><?php echo $sales_group->city; ?>, <?php echo $sales_group->state; ?> <?php echo $sales_group->zip; ?></span>
 			<?php } else { ?>
-			<span>International</span>
+			<span><?php echo $sales_group->address_international; ?></span>
 			<?php } ?>
 			<span><?php echo pines_phone_format($sales_group->phone); ?></span>
 		</div>

@@ -53,6 +53,7 @@ if (!is_null($product)) {
 		'unit_price' => $product->unit_price,
 		'margin' => $product->margin,
 		'floor' => $product->floor,
+		'ceiling' => $product->ceiling,
 		'tax_exempt' => $product->tax_exempt,
 		'serialized' => $product->serialized,
 		'discountable' => $product->discountable,

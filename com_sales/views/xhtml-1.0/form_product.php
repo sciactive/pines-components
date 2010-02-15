@@ -389,17 +389,25 @@ $this->note = 'Provide product details in this form.';
 				<script type="text/javascript">
 				// <![CDATA[
 				$(function(){
-					$("#stock_type").change(function(){
-						if ($(this).val() == 'non_stocked') {
-							$("#vendors_field").fadeOut("reg", function(){
-								$("#vendors_hidden").fadeIn();
-								$("#product_details [name=pricing_method]").val("fixed").change().attr("disabled", "disabled").addClass("ui-state-disabled");
+					var stock_type = $("#product_details [name=stock_type]");
+					var pricing_method = $("#product_details [name=pricing_method]");
+					var vendors_field = $("#vendors_field");
+					var vendors_hidden = $("#vendors_hidden");
+					stock_type.change(function(){
+						if (stock_type.val() == "non_stocked") {
+							vendors_field.fadeOut(null, function(){
+								vendors_field.css("display", "none");
+								vendors_hidden.fadeIn();
 							});
+							pricing_method.children("[value=margin]").attr("disabled", "disabled").end().change();
+							if (pricing_method.val() == "margin")
+								pricing_method.val("fixed");
 						} else {
-							$("#vendors_hidden").fadeOut("reg", function(){
-								$("#vendors_field").fadeIn();
-								$("#product_details [name=pricing_method]").removeAttr("disabled").removeClass("ui-state-disabled");
+							vendors_hidden.fadeOut(null, function(){
+								vendors_hidden.css("display", "none");
+								vendors_field.fadeIn();
 							});
+							pricing_method.children("[value=margin]").removeAttr("disabled");
 						}
 					}).change();
 				});
@@ -407,7 +415,7 @@ $this->note = 'Provide product details in this form.';
 				</script>
 				<label><span class="label">Stock Type</span>
 					<span class="note">Regular stock items cannot be sold without available stock. Stock optional items can be sold without available stock. Non stocked items do not use inventory tracking.</span>
-					<select class="field ui-widget-content" id="stock_type" name="stock_type">
+					<select class="field ui-widget-content" name="stock_type">
 						<?php foreach (array('regular_stock' => 'Regular Stock', 'stock_optional' => 'Stock Optional', 'non_stocked' => 'Non Stocked') as $cur_stock_key => $cur_stock_type) { ?>
 						<option value="<?php echo $cur_stock_key; ?>"<?php echo $this->entity->stock_type == $cur_stock_key ? ' selected="selected"' : ''; ?>><?php echo $cur_stock_type; ?></option>
 						<?php } ?>
@@ -479,26 +487,30 @@ $this->note = 'Provide product details in this form.';
 		</div>
 		<div id="tab_pricing">
 			<div class="element">
-				<label><span class="label">Pricing Method</span>
-					<select class="field ui-widget-content" name="pricing_method">
-						<option value="fixed"<?php echo $this->entity->type == 'fixed' ? ' selected="selected"' : ''; ?>>Fixed Pricing</option>
-						<option value="margin"<?php echo $this->entity->type == 'margin' ? ' selected="selected"' : ''; ?>>Margin Pricing</option>
-					</select></label>
 				<script type="text/javascript">
 					// <![CDATA[
 					$(function(){
-						$("#product_details [name=pricing_method]").change(function(){
-							if ($(this).val() == "fixed") {
-								$("#product_details [name=margin]").attr('disabled', 'disabled');
-								$("#product_details [name=unit_price]").removeAttr('disabled');
+						var pricing_method = $("#product_details [name=pricing_method]");
+						var unit_price = $("#product_details [name=unit_price]");
+						var margin = $("#product_details [name=margin]");
+						pricing_method.change(function(){
+							if (pricing_method.val() == "margin") {
+								unit_price.attr('disabled', 'disabled').addClass("ui-state-disabled");
+								margin.removeAttr('disabled').removeClass("ui-state-disabled");
 							} else {
-								$("#product_details [name=unit_price]").attr('disabled', 'disabled');
-								$("#product_details [name=margin]").removeAttr('disabled');
+								margin.attr('disabled', 'disabled').addClass("ui-state-disabled");
+								unit_price.removeAttr('disabled').removeClass("ui-state-disabled");
 							}
 						}).change();
 					});
 					// ]]>
 				</script>
+				<label><span class="label">Pricing Method</span>
+					<select class="field ui-widget-content" name="pricing_method">
+						<option value="fixed" title="Only one price will be available."<?php echo $this->entity->pricing_method == 'fixed' ? ' selected="selected"' : ''; ?>>Fixed Pricing</option>
+						<option value="variable" title="An employee can increase/decrease the price."<?php echo $this->entity->pricing_method == 'variable' ? ' selected="selected"' : ''; ?>>Variable Pricing</option>
+						<option value="margin" title="The price is based on the cost of the item."<?php echo $this->entity->pricing_method == 'margin' ? ' selected="selected"' : ''; ?>>Margin Pricing</option>
+					</select></label>
 			</div>
 			<div class="element heading">
 				<h1>Defaults</h1>
@@ -513,7 +525,13 @@ $this->note = 'Provide product details in this form.';
 			</div>
 			<div class="element">
 				<label><span class="label">Floor</span>
+					<span class="note">The lowest price allowed.</span>
 					<input class="field ui-widget-content" type="text" name="floor" size="24" value="<?php echo $this->entity->floor; ?>" /></label>
+			</div>
+			<div class="element">
+				<label><span class="label">Ceiling</span>
+					<span class="note">The highest price allowed.</span>
+					<input class="field ui-widget-content" type="text" name="ceiling" size="24" value="<?php echo $this->entity->ceiling; ?>" /></label>
 			</div>
 			<div class="element heading">
 				<h1>Taxes/Fees</h1>

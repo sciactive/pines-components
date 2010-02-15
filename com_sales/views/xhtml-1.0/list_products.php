@@ -69,6 +69,7 @@ $this->title = 'Products';
 			<th>Unit Price</th>
 			<th>Margin</th>
 			<th>Floor</th>
+			<th>Ceiling</th>
 			<th>Tax Exempt</th>
 			<th>Weight (lbs)</th>
 			<th>RMA After (days)</th>
@@ -94,6 +95,7 @@ $this->title = 'Products';
 			<td>$<?php echo $product->unit_price; ?></td>
 			<td><?php echo $product->margin; ?>%</td>
 			<td>$<?php echo $product->floor; ?></td>
+			<td>$<?php echo $product->ceiling; ?></td>
 			<td><?php echo ($product->tax_exempt ? 'Yes' : 'No'); ?></td>
 			<td><?php echo $product->weight; ?></td>
 			<td><?php echo $product->rma_after; ?></td>

@@ -69,7 +69,7 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid') {
 				display_notice("Product with SKU [$cur_sku] has a zero or negative quantity.");
 				$product_error = true;
 			}
-			if ($cur_product_entity->unit_price != $cur_price) {
+			if ($cur_product_entity->pricing_method != 'variable' && $cur_product_entity->unit_price != $cur_price) {
 				display_notice("Product with SKU [$cur_sku] has an incorrect price.");
 				$product_error = true;
 			}
@@ -106,7 +106,7 @@ if ($sale->status != 'paid') {
 		$cur_type = $cur_payment->values[0];
 		$cur_amount = floatval($cur_payment->values[1]);
 		$cur_status = $cur_payment->values[2];
-		$data = json_decode($cur_payment->values[3]);
+		$data = $cur_payment->data;
 		if (in_array($cur_status, array('approved', 'declined', 'tendered')))
 			continue;
 		if (is_null($cur_payment_type_entity->guid)) {

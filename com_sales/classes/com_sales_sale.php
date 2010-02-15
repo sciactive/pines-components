@@ -451,9 +451,8 @@ class com_sales_sale extends entity {
 			return false;
 		// We need a list of taxes and fees.
 		$tax_fees = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'tax_fee')));
-		if (!is_array($tax_fees)) {
+		if (!is_array($tax_fees))
 			$tax_fees = array();
-		}
 		foreach ($tax_fees as $key => $cur_tax_fee) {
 			if (!$cur_tax_fee->enabled) {
 				// It isn't even enabled, so remove it now.
@@ -495,6 +494,16 @@ class com_sales_sale extends entity {
 				} else {
 					$price = $discount_price;
 				}
+			}
+			// Check that the price is above the floor of the product.
+			if ($cur_product['entity']->floor && $price < $cur_product['entity']->floor) {
+				display_notice("The product {$cur_product['entity']->name} cannot be priced lower than {$cur_product['entity']->floor}.");
+				return false;
+			}
+			// Check that the price is below the ceiling of the product.
+			if ($cur_product['entity']->ceiling && $price > $cur_product['entity']->ceiling) {
+				display_notice("The product {$cur_product['entity']->name} cannot be priced higher than {$cur_product['entity']->ceiling}.");
+				return false;
 			}
 			$line_total = $price * $qty;
 			if (!$cur_product['entity']->tax_exempt) {

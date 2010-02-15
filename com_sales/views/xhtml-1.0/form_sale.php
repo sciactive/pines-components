@@ -251,7 +251,7 @@ $this->note = 'Use this form to edit a sale.';
 					},
 					{
 						type: 'button',
-						text: 'Quantity',
+						text: 'Qty',
 						extra_class: 'icon picon_16x16_stock_data_stock_record-number',
 						double_click: true,
 						click: function(e, rows){
@@ -270,8 +270,34 @@ $this->note = 'Use this form to edit a sale.';
 					},
 					{
 						type: 'button',
-						text: 'Discount',
+						text: 'Price',
 						extra_class: 'icon picon_16x16_stock_form_stock_form-currency-field',
+						click: function(e, rows){
+							var product = rows.data("product");
+							if (product.pricing_method != "variable") {
+								alert("The selected product does not allow variable pricing.")
+								return;
+							}
+							var price = rows.pgrid_get_value(6);
+							price = parseFloat(prompt("Enter a new price:", price));
+							if (!isNaN(price)) {
+								if (product.floor > 0 && price < product.floor) {
+									alert("The minimum price for the selected product is "+product.floor+".");
+									return;
+								}
+								if (product.ceiling > 0 && price > product.ceiling) {
+									alert("The maximum price for the selected product is "+product.ceiling+".");
+									return;
+								}
+								rows.pgrid_set_value(6, price);
+								update_products();
+							}
+						}
+					},
+					{
+						type: 'button',
+						text: 'Discount',
+						extra_class: 'icon picon_16x16_actions_go-down',
 						click: function(e, rows){
 							var product = rows.data("product");
 							if (!product.discountable) {
@@ -334,7 +360,6 @@ $this->note = 'Use this form to edit a sale.';
 			<?php if ($this->entity->status == 'paid') { ?>
 			payments_table.pgrid({
 				pgrid_view_height: "150px",
-				pgrid_hidden_cols: [4],
 				pgrid_paginate: false,
 				pgrid_footer: false,
 				pgrid_toolbar: false
@@ -342,7 +367,6 @@ $this->note = 'Use this form to edit a sale.';
 			<?php } else { ?>
 			payments_table.pgrid({
 				pgrid_view_height: "150px",
-				pgrid_hidden_cols: [4],
 				pgrid_paginate: false,
 				pgrid_footer: false,
 				pgrid_toolbar: true,
@@ -352,50 +376,7 @@ $this->note = 'Use this form to edit a sale.';
 						text: 'Data',
 						extra_class: 'icon picon_16x16_stock_data_stock_data-edit-table',
 						click: function(e, rows){
-							var loader;
-							var payment_data = JSON.parse(rows.pgrid_get_value(4));
-							$.ajax({
-								url: "<?php echo pines_url('com_sales', 'paymentform'); ?>",
-								type: "POST",
-								dataType: "html",
-								data: {"name": payment_data.processing_type, "id": $("#sale_details [name=id]").val(), "customer": $("#customer").val()},
-								beforeSend: function(){
-									loader = pines.alert('Retrieving data form from server...', 'Payment Data', 'icon picon_16x16_animations_throbber', {pnotify_hide: false, pnotify_history: false});
-								},
-								complete: function(){
-									loader.pnotify_remove();
-								},
-								error: function(XMLHttpRequest, textStatus){
-									pines.error("An error occured while trying to retreive the data form:\n"+XMLHttpRequest.status+": "+textStatus);
-								},
-								success: function(data){
-									if (data == "")
-										return;
-									var form = $("<div title=\"Data for "+rows.pgrid_get_value(1)+" Payment\" />").append(data);
-									form.find("form").submit(function(){
-										form.dialog('option', 'buttons').Done();
-										return false;
-									});
-									if (payment_data.data) {
-										$.each(payment_data.data, function(i, val){
-											form.find(":input[name="+val.name+"]").val(val.value);
-										});
-									}
-									form.dialog({
-										bgiframe: true,
-										autoOpen: true,
-										modal: true,
-										buttons: {
-											"Done": function(){
-												var newdata = {processing_type: payment_data.processing_type, data: form.find("form :input").serializeArray()};
-												rows.pgrid_set_value(4, JSON.stringify(newdata));
-												update_payments();
-												form.dialog('close');
-											}
-										}
-									});
-								}
-							});
+							payments_table.data_form(rows);
 						}
 					},
 					{
@@ -419,6 +400,47 @@ $this->note = 'Use this form to edit a sale.';
 				]
 			});
 
+			payments_table.data_form = function(row){
+				var payment_data = row.data("payment_data");
+				$.ajax({
+					url: "<?php echo pines_url('com_sales', 'paymentform'); ?>",
+					type: "POST",
+					dataType: "html",
+					data: {"name": payment_data.processing_type, "id": $("#sale_details [name=id]").val(), "customer": $("#customer").val()},
+					error: function(XMLHttpRequest, textStatus){
+						pines.error("An error occured while trying to retreive the data form:\n"+XMLHttpRequest.status+": "+textStatus);
+					},
+					success: function(data){
+						if (data == "")
+							return;
+						var form = $("<div title=\"Data for "+row.pgrid_get_value(1)+" Payment\" />").append(data);
+						form.find("form").submit(function(){
+							form.dialog('option', 'buttons').Done();
+							return false;
+						});
+						if (payment_data.data) {
+							$.each(payment_data.data, function(i, val){
+								form.find(":input[name="+val.name+"]").val(val.value);
+							});
+						}
+						form.dialog({
+							bgiframe: true,
+							autoOpen: true,
+							modal: true,
+							buttons: {
+								"Done": function(){
+									var newdata = {processing_type: payment_data.processing_type, data: form.find("form :input").serializeArray()};
+									row.data("payment_data", newdata);
+									update_payments();
+									form.dialog('close');
+									form.remove();
+								}
+							}
+						});
+					}
+				});
+			};
+
 			$("button.payment-button").hover(function(){
 				$(this).addClass("ui-state-hover");
 			}, function(){
@@ -438,9 +460,12 @@ $this->note = 'Use this form to edit a sale.';
 						payments_table.pgrid_add([{key: payment_type.guid, values: [
 							payment_type.name,
 							round_to_dec($("#amount_due").html()),
-							"pending",
-							JSON.stringify({processing_type: payment_type.processing_type})
-						]}]);
+							"pending"
+						]}], function(){
+							var row = $(this);
+							row.data("payment_data", payment_type);
+							payments_table.data_form(row);
+						});
 						amount_dialog.dialog("close");
 						update_payments();
 					}));
@@ -456,9 +481,12 @@ $this->note = 'Use this form to edit a sale.';
 							payments_table.pgrid_add([{key: payment_type.guid, values: [
 								payment_type.name,
 								round_to_dec(cur_amount),
-								"pending",
-								JSON.stringify({processing_type: payment_type.processing_type})
-							]}]);
+								"pending"
+							]}], function(){
+								var row = $(this);
+								row.data("payment_data", payment_type);
+								payments_table.data_form(row);
+							});
 							amount_dialog.dialog("close");
 							update_payments();
 						}));
@@ -478,9 +506,12 @@ $this->note = 'Use this form to edit a sale.';
 							payments_table.pgrid_add([{key: payment_type.guid, values: [
 								payment_type.name,
 								round_to_dec(cur_amount),
-								"pending",
-								JSON.stringify({processing_type: payment_type.processing_type})
-							]}]);
+								"pending"
+							]}], function(){
+								var row = $(this);
+								row.data("payment_data", payment_type);
+								payments_table.data_form(row);
+							});
 						}
 						amount_dialog.dialog("close");
 						update_payments();
@@ -492,6 +523,39 @@ $this->note = 'Use this form to edit a sale.';
 				});
 			});
 			<?php } ?>
+
+			
+			<?php if (!empty($this->entity->payments)) { foreach ($this->entity->payments as $cur_payment) { ?>
+			(function(){
+				var table_entry = JSON.parse("<?php
+				$object = (object) array(
+					'key' => $cur_payment['entity']->guid,
+					'values' => array(
+						$cur_payment['entity']->name,
+						$pines->com_sales->round($cur_payment['amount'], $pines->config->com_sales->dec, true),
+						$cur_payment['status']
+					)
+				);
+				echo addslashes(json_encode($object)); ?>");
+				
+				<?php if (!empty($cur_payment['data'])) { ?>
+					var data = JSON.parse("<?php
+					$data = array();
+					foreach ($cur_payment['data'] as $cur_key => $cur_value) {
+						$data[] = (object) array('name' => $cur_key, 'value' => $cur_value);
+					}
+					echo addslashes(json_encode((object) array(
+						'processing_type' => $cur_payment['entity']->processing_type,
+						'data' => $data
+					))); ?>");
+					payments_table.pgrid_add([table_entry], function(){
+						$(this).data("payment_data", data);
+					});
+				<?php } else { ?>
+					payments_table.pgrid_add([table_entry]);
+				<?php } ?>
+			})();
+			<?php } } ?>
 
 			$("#comments_dialog").dialog({
 				bgiframe: true,
@@ -593,8 +657,9 @@ $this->note = 'Use this form to edit a sale.';
 			var change = 0;
 			if (isNaN(total))
 				return;
+			var submit_val = rows.pgrid_export_rows();
 			// Calculate the total payments.
-			rows.each(function(){
+			rows.each(function(i){
 				var cur_row = $(this);
 				if (cur_row.pgrid_get_value(3) != "declined") {
 					var amount = parseFloat(cur_row.pgrid_get_value(2).replace(/[^0-9.-]/g, ""));
@@ -602,6 +667,7 @@ $this->note = 'Use this form to edit a sale.';
 						amount = 0;
 					amount_tendered += amount;
 				}
+				submit_val[i].data = cur_row.data("payment_data");
 			});
 			amount_due = total - amount_tendered;
 			if (amount_due < 0) {
@@ -612,7 +678,7 @@ $this->note = 'Use this form to edit a sale.';
 			$("#amount_due").html(round_to_dec(amount_due));
 			$("#change").html(round_to_dec(change));
 			
-			payments.val(JSON.stringify(rows.pgrid_export_rows()));
+			payments.val(JSON.stringify(submit_val));
 		}
 
 		<?php if ($pines->com_sales->com_customer && ($this->entity->status != 'invoiced' || $this->entity->status != 'paid')) { ?>
@@ -839,26 +905,9 @@ $this->note = 'Use this form to edit a sale.';
 							<th>Type</th>
 							<th>Amount</th>
 							<th>Status</th>
-							<th>Data</th>
 						</tr>
 					</thead>
 					<tbody>
-						<?php foreach ($this->entity->payments as $cur_payment) { ?>
-						<tr title="<?php echo $cur_payment['entity']->guid; ?>">
-							<td><?php echo $cur_payment['entity']->name; ?></td>
-							<td><?php echo $pines->com_sales->round($cur_payment['amount'], $pines->config->com_sales->dec, true); ?></td>
-							<td><?php echo $cur_payment['status']; ?></td>
-							<td><?php
-							$data = array();
-							foreach ($cur_payment['data'] as $cur_key => $cur_value) {
-								$data[] = (object) array('name' => $cur_key, 'value' => $cur_value);
-							}
-							echo json_encode((object) array(
-								'processing_type' => $cur_payment['entity']->processing_type,
-								'data' => $data
-							)); ?></td>
-						</tr>
-						<?php } ?>
 					</tbody>
 				</table>
 			</div>

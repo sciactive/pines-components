@@ -53,14 +53,11 @@ foreach ($product->vendors as &$cur_vendor) {
 unset($cur_vendor);
 
 // Pricing
-if ($product->stock_type == 'non_stocked') {
-	$product->pricing_method = 'fixed';
-} else {
-	$product->pricing_method = $_REQUEST['pricing_method'];
-}
+$product->pricing_method = $_REQUEST['pricing_method'];
 $product->unit_price = floatval($_REQUEST['unit_price']);
 $product->margin = floatval($_REQUEST['margin']);
 $product->floor = floatval($_REQUEST['floor']);
+$product->ceiling = floatval($_REQUEST['ceiling']);
 // TODO: Tax exempt by location.
 $product->tax_exempt = ($_REQUEST['tax_exempt'] == 'ON');
 $product->additional_tax_fees = array();
@@ -88,6 +85,11 @@ if (!is_array($product->actions))
 if (empty($product->name)) {
 	$product->print_form();
 	display_notice('Please specify a name.');
+	return;
+}
+if ($product->stock_type == 'non_stocked' && $product->pricing_method == 'margin') {
+	$product->print_form();
+	display_notice('Margin pricing is not available for non stocked items.');
 	return;
 }
 $test = $pines->entity_manager->get_entity(array('data' => array('name' => $product->name), 'tags' => array('com_sales', 'product'), 'class' => com_sales_product));

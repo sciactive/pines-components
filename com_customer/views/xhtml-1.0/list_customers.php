@@ -65,14 +65,7 @@ $this->title = 'Customers';
 			<th>ID</th>
 			<th>Name</th>
 			<th>Email</th>
-			<th>DOB</th>
 			<th>Company</th>
-			<th>Job Title</th>
-			<th>Country</th>
-			<th>Address</th>
-			<th>City</th>
-			<th>State</th>
-			<th>Zip</th>
 			<th>Home Phone</th>
 			<th>Work Phone</th>
 			<th>Cell Phone</th>
@@ -81,8 +74,6 @@ $this->title = 'Customers';
 			<th>Member</th>
 			<th>Expiration</th>
 			<th>Points</th>
-			<th>Peak</th>
-			<th>All-Time</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -91,14 +82,7 @@ $this->title = 'Customers';
 			<td><?php echo $customer->guid; ?></td>
 			<td><?php echo $customer->name; ?></td>
 			<td><?php echo $customer->email; ?></td>
-			<td><?php echo $customer->dob ? date('Y-m-d', $customer->dob) : ''; ?></td>
 			<td><?php echo $customer->company->name; ?></td>
-			<td><?php echo $customer->job_title; ?></td>
-			<td><?php echo $customer->address_type == 'us' ? 'US' : 'Intl'; ?></td>
-			<td><?php echo $customer->address_type == 'us' ? $customer->address_1.' '.$customer->address_2 : $customer->address_international; ?></td>
-			<td><?php echo $customer->city; ?></td>
-			<td><?php echo $customer->state; ?></td>
-			<td><?php echo $customer->zip; ?></td>
 			<td><?php echo pines_phone_format($customer->phone_home); ?></td>
 			<td><?php echo pines_phone_format($customer->phone_work); ?></td>
 			<td><?php echo pines_phone_format($customer->phone_cell); ?></td>
@@ -107,8 +91,6 @@ $this->title = 'Customers';
 			<td><?php echo ($customer->member ? ($customer->valid_member() ? 'Yes' : 'Expired') : 'No'); ?></td>
 			<td><?php echo $customer->member_exp ? date('Y-m-d', $customer->member_exp) : ''; ?></td>
 			<td><?php echo $customer->points; ?></td>
-			<td><?php echo $customer->peak_points; ?></td>
-			<td><?php echo $customer->total_points; ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

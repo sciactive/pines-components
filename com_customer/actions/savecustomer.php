@@ -113,7 +113,7 @@ if (gatekeeper('com_customer/requiressn') && empty($customer->ssn)) {
 	display_notice('Please provide an SSN.');
 	return;
 }
-if (isset($customer->ssn)) {
+if (!empty($customer->ssn)) {
 	$test = $pines->entity_manager->get_entity(array('data' => array('ssn' => $customer->ssn), 'tags' => array('com_customer', 'customer'), 'class' => com_customer_customer));
 	if (isset($test) && !$customer->is($test)) {
 		$customer->print_form();

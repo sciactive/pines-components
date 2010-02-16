@@ -79,18 +79,18 @@ if ($this->entity->status == 'quoted') {
 </style>
 <div id="receipt_sale" class="pform pform_twocol">
 	<?php
-		// Sales rep and sales group entities.
-		$sales_rep = user::factory((int) $this->entity->uid);
-		$sales_group = $sales_rep->group;
-		// Set the location of the group logo image.
-		$group_logo = $sales_group->get_logo();
-		// Document id number.
-		// TODO: Change this to an incremental naming scheme.
-		$doc_id = $sales_group->groupname . strtoupper(substr($this->doc_title, 0, 2)) . $this->entity->guid;
+	// Sales rep and sales group entities.
+	$sales_rep = user::factory((int) $this->entity->uid);
+	$sales_group = $sales_rep->group;
+	// Set the location of the group logo image.
+	$group_logo = $sales_group->get_logo();
+	// Document id number.
+	// TODO: Change this to an incremental naming scheme.
+	$doc_id = $sales_group->groupname . strtoupper(substr($this->doc_title, 0, 2)) . $this->entity->guid;
 	?>
 	<div class="left_side">
 		<span><img src="<?php echo $group_logo; ?>" alt="<?php echo $pines->page->get_title(); ?>" /></span>
-		</div>
+	</div>
 	<div class="right_side barcode">
 		<h1><?php echo $this->doc_title; ?></h1>
 		<img src="<?php echo pines_url('com_barcode', 'image', array('code' => $doc_id, 'width' => '250')); ?>" alt="Barcode" />
@@ -152,10 +152,10 @@ if ($this->entity->status == 'quoted') {
 					( <?php echo $this->entity->customer->company->name; ?> )
 				<?php } ?>
 			</strong></span>
-			<?php if ($this->entity->customer->address_type == 'us') { ?>
+			<?php if ($this->entity->customer->address_type == 'us') { if (!empty($this->entity->customer->address_1)) { ?>
 			<span><?php echo $this->entity->customer->address_1.' '.$this->entity->customer->address_2; ?></span>
 			<span><?php echo $this->entity->customer->city; ?>, <?php echo $this->entity->customer->state; ?> <?php echo $this->entity->customer->zip; ?></span>
-			<?php } else {?>
+			<?php } } else {?>
 			<span><?php echo $this->entity->customer->address_international; ?></span>
 			<?php } ?>
 		</div>

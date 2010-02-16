@@ -75,16 +75,22 @@ class com_authorizenet extends component {
 				break;
 			case 'approve':
 				$args['payment']['status'] = 'approved';
-				if (empty($args['payment']['data']['name_first']) ||
-					empty($args['payment']['data']['name_last']) ||
-					empty($args['payment']['data']['address']) ||
-					empty($args['payment']['data']['state']) ||
-					empty($args['payment']['data']['zip']) ||
-					empty($args['payment']['data']['card_number']) ||
-					empty($args['payment']['data']['card_exp_month']) ||
-					empty($args['payment']['data']['card_exp_year']) ||
-					empty($args['payment']['data']['cid']))
-					$args['payment']['status'] = 'info_requested';
+				if ($args['payment']['data']['card_swiped'] == 'ON') {
+					if (empty($args['payment']['data']['name_first']) ||
+						empty($args['payment']['data']['name_last']) ||
+						empty($args['payment']['data']['card_number']) ||
+						empty($args['payment']['data']['card_exp_month']) ||
+						empty($args['payment']['data']['card_exp_year']))
+						$args['payment']['status'] = 'info_requested';
+				} else {
+					if (empty($args['payment']['data']['name_first']) ||
+						empty($args['payment']['data']['name_last']) ||
+						empty($args['payment']['data']['card_number']) ||
+						empty($args['payment']['data']['card_exp_month']) ||
+						empty($args['payment']['data']['card_exp_year']) ||
+						empty($args['payment']['data']['cid']))
+						$args['payment']['status'] = 'info_requested';
+				}
 				break;
 			case 'tender':
 				$firstname = $args['payment']['data']['name_first'];
@@ -141,7 +147,15 @@ class com_authorizenet extends component {
 				}
 
 				$response_array = explode($post_values["x_delim_char"],$post_response);
-				$args['payment']['com_authorize_credit_info'] = array_merge((array) $args['payment']['data']);
+				$args['payment']['com_authorizenet_credit_info'] = array();
+				$args['payment']['com_authorizenet_credit_info']['name_first'] = $args['payment']['data']['name_first'];
+				$args['payment']['com_authorizenet_credit_info']['name_last'] = $args['payment']['data']['name_last'];
+				$args['payment']['com_authorizenet_credit_info']['address'] = $args['payment']['data']['address'];
+				$args['payment']['com_authorizenet_credit_info']['state'] = $args['payment']['data']['state'];
+				$args['payment']['com_authorizenet_credit_info']['zip'] = $args['payment']['data']['zip'];
+				$args['payment']['com_authorizenet_credit_info']['card_number'] = $args['payment']['data']['card_number'];
+				$args['payment']['com_authorizenet_credit_info']['card_exp_month'] = $args['payment']['data']['card_exp_month'];
+				$args['payment']['com_authorizenet_credit_info']['card_exp_year'] = $args['payment']['data']['card_exp_year'];
 				switch ($response_array[0]) {
 					case 1:
 						$args['payment']['status'] = 'tendered';

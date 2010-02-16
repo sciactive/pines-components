@@ -413,27 +413,32 @@ $this->note = 'Use this form to edit a sale.';
 					success: function(data){
 						if (data == "")
 							return;
-						var form = $("<div title=\"Data for "+row.pgrid_get_value(1)+" Payment\" />").append(data);
-						form.find("form").submit(function(){
-							form.dialog('option', 'buttons').Done();
-							return false;
-						});
-						if (payment_data.data) {
-							$.each(payment_data.data, function(i, val){
-								form.find(":input[name="+val.name+"]").val(val.value);
-							});
-						}
+						var form = $("<div title=\"Data for "+row.pgrid_get_value(1)+" Payment\" />");
 						form.dialog({
 							bgiframe: true,
 							autoOpen: true,
 							modal: true,
+							open: function(){
+								form.append(data);
+								form.find("form").submit(function(){
+									form.dialog('option', 'buttons').Done();
+									return false;
+								});
+								if (payment_data.data) {
+									$.each(payment_data.data, function(i, val){
+										form.find(":input[name="+val.name+"]").val(val.value);
+									});
+								}
+							},
+							close: function(){
+								form.remove();
+							},
 							buttons: {
 								"Done": function(){
 									var newdata = {processing_type: payment_data.processing_type, data: form.find("form :input").serializeArray()};
 									row.data("payment_data", newdata);
 									update_payments();
 									form.dialog('close');
-									form.remove();
 								}
 							}
 						});
@@ -565,7 +570,7 @@ $this->note = 'Use this form to edit a sale.';
 				buttons: {
 					"Done": function(){
 						comments.val(comments_box.val());
-						$("#comments_dialog").dialog('close');
+						$(this).dialog('close');
 					}
 				}
 			});

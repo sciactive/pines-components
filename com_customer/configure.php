@@ -32,7 +32,7 @@ return array(
 	),
 	array(
 		'name' => 'pointvalues',
-		'cname' => 'Point Values',
+		'cname' => 'Static Point Values',
 		'description' => 'List of the point values available to add as product actions in the POS (com_sales). Values can be negative to take away points.',
 		'value' => array(
 			60,
@@ -40,6 +40,38 @@ return array(
 			120,
 			500,
 			1000
+		),
+	),
+	array(
+		'name' => 'guest_point_lookup',
+		'cname' => 'Guest Point Lookup',
+		'description' => 'When a non-member customer purchases points, this table is used to calculate the number of points to add. Entries should be the lowest price, then a colon, then the price per point for that price range.',
+		'value' => array(
+			'0:0.198',
+			'4.99:0.1848',
+			'9.99:0.1537',
+			'14.99:0.1199',
+			'19.99:0.0999',
+			'49.99:0.09085',
+			'99.99:0.07999',
+			'199.99:0.07017',
+			'499.99:0.06101'
+		),
+	),
+	array(
+		'name' => 'member_point_lookup',
+		'cname' => 'Member Point Lookup',
+		'description' => 'When a member customer purchases points, this table is used to calculate the number of points to add.',
+		'value' => array(
+			'0:0.165',
+			'4.99:0.1188',
+			'9.99:0.1',
+			'14.99:0.0855',
+			'19.99:0.0754',
+			'49.99:0.0649',
+			'99.99:0.0606',
+			'199.99:0.05755',
+			'499.99:0.05555'
 		),
 	),
 	array(

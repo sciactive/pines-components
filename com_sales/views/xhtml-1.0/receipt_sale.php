@@ -60,14 +60,17 @@ if ($this->entity->status == 'quoted') {
 	#receipt_sale .location .aligner, #receipt_sale .customer .aligner {
 		width: 55px;
 	}
-	#item_list {
+	#receipt_sale #item_list {
 		text-align: left;
 		border-bottom: 1px solid black;
 		border-collapse: collapse;
 	}
-	#item_list th {
+	#receipt_sale #item_list th {
 		border-bottom: 1px solid black;
 		padding: 2px;
+	}
+	#receipt_sale #item_list tr td p {
+		margin: 0;
 	}
 	#receipt_sale .receipt_note, #receipt_sale .comments {
 		font-size: 75%;

@@ -88,14 +88,36 @@ class com_customer extends component {
 	 */
 	function product_action_add_points($array) {
 		global $pines;
-		foreach(explode(',', $pines->config->com_customer->pointvalues) as $cur_value) {
-			if (!is_numeric($cur_value))
-				continue;
-			$cur_value = (int) $cur_value;
-			if ($array['name'] == "com_customer/add_points_$cur_value") {
-				$array['sale']->customer->adjust_points($cur_value);
-				$array['sale']->customer->save();
+		$type = $array['sale']->customer->valid_member() ? 'member' : 'guest';
+		if ($array['name'] == 'com_customer/add_points') {
+			// Search through the right lookup table to find the divisor.
+			$table = $array['sale']->customer->valid_member() ? $pines->config->com_customer->member_point_lookup : $pines->config->com_customer->guest_point_lookup;
+			foreach ($table as $cur_price) {
+				if ((float) preg_replace('/:.*$/', '', $cur_price) < $array['price'])
+					$high_price = $cur_price;
 			}
+			$divisor = (float) preg_replace('/^[^:]*:/', '', $high_price);
+			if (!$divisor)
+				return;
+			$points = (int) round($array['price'] / $divisor);
+		} else {
+			// Search through the static point values.
+			foreach(explode(',', $pines->config->com_customer->pointvalues) as $cur_value) {
+				if (!is_numeric($cur_value))
+					continue;
+				$cur_value = (int) $cur_value;
+				if ($array['name'] == "com_customer/add_points_$cur_value") {
+					$points = (int) $cur_value;
+					break;
+				}
+			}
+		}
+		// Add the points and save the customer.
+		$array['sale']->customer->adjust_points($points);
+		if ($array['sale']->customer->save()) {
+			display_notice("Added $points points to $type {$array['sale']->customer->name}.");
+		} else {
+			display_error("Error adding $points points to $type {$array['sale']->customer->name}.");
 		}
 	}
 

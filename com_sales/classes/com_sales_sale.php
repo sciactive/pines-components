@@ -397,7 +397,13 @@ class com_sales_sale extends entity {
 				$pines->com_sales->call_product_actions(array(
 					'type' => 'sold',
 					'product' => $cur_product['entity'],
-					'sale' => $this
+					'sale' => $this,
+					'serial' => $cur_product['serial'],
+					'delivery' => $cur_product['delivery'],
+					'price' => $cur_product['price'],
+					'discount' => $cur_product['discount'],
+					'line_total' => $cur_product['line_total'],
+					'fees' => $cur_product['fees']
 				), $i);
 			}
 			// Remove stock from inventory.
@@ -412,7 +418,13 @@ class com_sales_sale extends entity {
 						'type' => 'sold',
 						'product' => $cur_product['entity'],
 						'stock_entry' => $cur_stock,
-						'sale' => $this
+						'sale' => $this,
+						'serial' => $cur_product['serial'],
+						'delivery' => $cur_product['delivery'],
+						'price' => $cur_product['price'],
+						'discount' => $cur_product['discount'],
+						'line_total' => $cur_product['line_total'],
+						'fees' => $cur_product['fees']
 					));
 				}
 			}

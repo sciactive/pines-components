@@ -76,15 +76,13 @@ class com_authorizenet extends component {
 			case 'approve':
 				$args['payment']['status'] = 'approved';
 				if ($args['payment']['data']['card_swiped'] == 'ON') {
-					if (empty($args['payment']['data']['name_first']) ||
-						empty($args['payment']['data']['name_last']) ||
+					if (empty($args['payment']['data']['name_last']) ||
 						empty($args['payment']['data']['card_number']) ||
 						empty($args['payment']['data']['card_exp_month']) ||
 						empty($args['payment']['data']['card_exp_year']))
 						$args['payment']['status'] = 'info_requested';
 				} else {
-					if (empty($args['payment']['data']['name_first']) ||
-						empty($args['payment']['data']['name_last']) ||
+					if (empty($args['payment']['data']['name_last']) ||
 						empty($args['payment']['data']['card_number']) ||
 						empty($args['payment']['data']['card_exp_month']) ||
 						empty($args['payment']['data']['card_exp_year']) ||

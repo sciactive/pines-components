@@ -65,7 +65,6 @@ defined('P_RUN') or die('Direct access prohibited');
 					card_swipe.val("");
 					$("#authorize_net_form input[name=card_swiped]").val("ON");
 					form.submit();
-					return false;
 				}
 			});
 		});

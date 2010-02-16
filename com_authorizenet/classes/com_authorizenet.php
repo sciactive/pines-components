@@ -156,7 +156,7 @@ class com_authorizenet extends component {
 					//'address'			=> $args['payment']['data']['address'],
 					//'state'			=> $args['payment']['data']['state'],
 					//'zip'				=> $args['payment']['data']['zip'],
-					'card_number'		=> $args['payment']['data']['card_number'],
+					'card_number'		=> substr($args['payment']['data']['card_number'], -4),
 					'card_exp_month'	=> $args['payment']['data']['card_exp_month'],
 					'card_exp_year'		=> $args['payment']['data']['card_exp_year'],
 					'card_swiped'		=> $args['payment']['data']['card_swiped']
@@ -164,7 +164,7 @@ class com_authorizenet extends component {
 				switch ($response_array[0]) {
 					case 1:
 						$args['payment']['status'] = 'tendered';
-						$args['payment']['label'] = $this->card_type($args['payment']['data']['card_number']) . ' ' . substr($args['payment']['data']['card_number'], -4, 4);
+						$args['payment']['label'] = $this->card_type($args['payment']['data']['card_number']) . ' ' . substr($args['payment']['data']['card_number'], -4);
 						unset($args['payment']['data']['name_first']);
 						unset($args['payment']['data']['name_last']);
 						//unset($args['payment']['data']['address']);
@@ -177,7 +177,7 @@ class com_authorizenet extends component {
 						break;
 					case 2:
 						$args['payment']['status'] = 'declined';
-						$args['payment']['label'] = $this->card_type($args['payment']['data']['card_number']) . ' ' . substr($args['payment']['data']['card_number'], -4, 4);
+						$args['payment']['label'] = $this->card_type($args['payment']['data']['card_number']) . ' ' . substr($args['payment']['data']['card_number'], -4);
 						unset($args['payment']['data']['name_first']);
 						unset($args['payment']['data']['name_last']);
 						//unset($args['payment']['data']['address']);

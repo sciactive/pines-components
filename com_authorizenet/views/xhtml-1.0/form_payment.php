@@ -93,6 +93,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			<label><span class="label">Cardholder Last Name</span>
 				<input class="field ui-widget-content" type="text" name="name_last" value="<?php echo $this->name_last; ?>" /></label>
 		</div>
+		<?php /* Address is unnecessary.
 		<div class="element">
 			<label><span class="label">Cardholder Address</span>
 				<input class="field ui-widget-content" type="text" name="address" value="<?php echo $this->address; ?>" /></label>
@@ -159,6 +160,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			</select>
 			<input class="field ui-widget-content" type="text" name="zip" size="5" value="<?php echo $this->zip; ?>" />
 		</div>
+		 */ ?>
 		<div class="element">
 			<label><span class="label">Card Number</span>
 				<input class="field ui-widget-content" type="text" name="card_number" value="<?php echo $this->card_number; ?>" /></label>

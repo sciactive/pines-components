@@ -98,9 +98,10 @@ class com_authorizenet extends component {
 				$amt = (float) $args['payment']['amount'];
 				$card_num = $args['payment']['data']['card_number'];
 				$exp_date = $args['payment']['data']['card_exp_month'].$args['payment']['data']['card_exp_year'];
-				$address = $args['payment']['data']['address'];
-				$state = $args['payment']['data']['state'];
-				$zip = $args['payment']['data']['zip'];
+				//$address = $args['payment']['data']['address'];
+				//$state = $args['payment']['data']['state'];
+				//$zip = $args['payment']['data']['zip'];
+				$card_code = $args['payment']['data']['cid'];
 
 				$post_values = array(
 					// the API Login ID and Transaction Key must be replaced with valid values
@@ -123,10 +124,12 @@ class com_authorizenet extends component {
 
 					'x_first_name'		=> $firstname,
 					'x_last_name'		=> $lastname,
-					'x_address'			=> $address,
-					'x_state'			=> $state,
-					'x_zip'				=> $zip
+					'x_address'			=> '', //$address,
+					'x_state'			=> '', //$state,
+					'x_zip'				=> '' //$zip
 				);
+				if ($args['payment']['data']['card_swiped'] != 'ON')
+					$post_values['x_card_code'] = $card_code;
 				$post_string = "";
 				foreach ($post_values as $key => $value) {
 					$post_string .= "$key=" . urlencode($value) . "&";
@@ -147,24 +150,26 @@ class com_authorizenet extends component {
 				}
 
 				$response_array = explode($post_values["x_delim_char"],$post_response);
-				$args['payment']['com_authorizenet_credit_info'] = array();
-				$args['payment']['com_authorizenet_credit_info']['name_first'] = $args['payment']['data']['name_first'];
-				$args['payment']['com_authorizenet_credit_info']['name_last'] = $args['payment']['data']['name_last'];
-				$args['payment']['com_authorizenet_credit_info']['address'] = $args['payment']['data']['address'];
-				$args['payment']['com_authorizenet_credit_info']['state'] = $args['payment']['data']['state'];
-				$args['payment']['com_authorizenet_credit_info']['zip'] = $args['payment']['data']['zip'];
-				$args['payment']['com_authorizenet_credit_info']['card_number'] = $args['payment']['data']['card_number'];
-				$args['payment']['com_authorizenet_credit_info']['card_exp_month'] = $args['payment']['data']['card_exp_month'];
-				$args['payment']['com_authorizenet_credit_info']['card_exp_year'] = $args['payment']['data']['card_exp_year'];
+				$args['payment']['com_authorizenet_credit_info'] = array(
+					'name_first'		=> $args['payment']['data']['name_first'],
+					'name_last'			=> $args['payment']['data']['name_last'],
+					//'address'			=> $args['payment']['data']['address'],
+					//'state'			=> $args['payment']['data']['state'],
+					//'zip'				=> $args['payment']['data']['zip'],
+					'card_number'		=> $args['payment']['data']['card_number'],
+					'card_exp_month'	=> $args['payment']['data']['card_exp_month'],
+					'card_exp_year'		=> $args['payment']['data']['card_exp_year'],
+					'card_swiped'		=> $args['payment']['data']['card_swiped']
+				);
 				switch ($response_array[0]) {
 					case 1:
 						$args['payment']['status'] = 'tendered';
 						$args['payment']['label'] = $this->card_type($args['payment']['data']['card_number']) . ' ' . substr($args['payment']['data']['card_number'], -4, 4);
 						unset($args['payment']['data']['name_first']);
 						unset($args['payment']['data']['name_last']);
-						unset($args['payment']['data']['address']);
-						unset($args['payment']['data']['state']);
-						unset($args['payment']['data']['zip']);
+						//unset($args['payment']['data']['address']);
+						//unset($args['payment']['data']['state']);
+						//unset($args['payment']['data']['zip']);
 						unset($args['payment']['data']['card_number']);
 						unset($args['payment']['data']['card_exp_month']);
 						unset($args['payment']['data']['card_exp_year']);
@@ -175,9 +180,9 @@ class com_authorizenet extends component {
 						$args['payment']['label'] = $this->card_type($args['payment']['data']['card_number']) . ' ' . substr($args['payment']['data']['card_number'], -4, 4);
 						unset($args['payment']['data']['name_first']);
 						unset($args['payment']['data']['name_last']);
-						unset($args['payment']['data']['address']);
-						unset($args['payment']['data']['state']);
-						unset($args['payment']['data']['zip']);
+						//unset($args['payment']['data']['address']);
+						//unset($args['payment']['data']['state']);
+						//unset($args['payment']['data']['zip']);
 						unset($args['payment']['data']['card_number']);
 						unset($args['payment']['data']['card_exp_month']);
 						unset($args['payment']['data']['card_exp_year']);

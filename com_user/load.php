@@ -61,7 +61,7 @@ function com_user_check_permissions_return($array) {
 	}
 	$return = array();
 	foreach ($entities as $cur_entity) {
-	// Test for permissions.
+		// Test for permissions.
 		if (com_user_check_permissions($cur_entity, 1)) {
 			$return[] = $cur_entity;
 		}
@@ -92,12 +92,13 @@ function com_user_check_permissions_save($array) {
  * Check an entity's permissions for the currently logged in user.
  *
  * This will check the variable "ac" (Access Control) of the entity. It should
- * be an object that contains the following variables:
+ * be an object that contains the following properties:
+ *
  * - user
  * - group
  * - other
  *
- * The variable "user" refers to the entity's owner, "group" refers to all users
+ * The property "user" refers to the entity's owner, "group" refers to all users
  * in the entity's group and all ancestor groups, and "other" refers to any user
  * who doesn't fit these descriptions.
  *
@@ -107,12 +108,14 @@ function com_user_check_permissions_save($array) {
  * user has read, write, and delete access to the entity.
  *
  * "ac" defaults to:
+ * 
  * - user = 3
  * - group = 3
  * - other = 0
  *
  * The following conditions will result in different checks, which determine
  * whether the check passes:
+ * 
  * - No user is logged in. (Always returned, should be managed with abilities.)
  * - The entity has no uid and no gid. (Always returned.)
  * - The user has the "system/all" ability. (Always returned.)
@@ -183,11 +186,9 @@ function com_user_check_permissions(&$entity, $type = 1) {
  */
 function com_user_add_access($array) {
 	if (is_object($_SESSION['user']) &&
-		is_null($array[0]->guid) &&
+		!isset($array[0]->guid) &&
 		!$array[0]->has_tag('com_user', 'user') &&
-		!$array[0]->has_tag('com_user', 'group')
-	) {
-
+		!$array[0]->has_tag('com_user', 'group') ) {
 		$array[0]->uid = $_SESSION['user']->guid;
 		$array[0]->gid = $_SESSION['user']->group->guid;
 		if (!is_object($array[0]->ac))

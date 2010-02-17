@@ -51,7 +51,11 @@ if (!empty($_REQUEST['password']))
 $customer->description = $_REQUEST['description'];
 
 // Account
-$customer->member = ($_REQUEST['member'] == 'ON');
+if ($_REQUEST['member'] == 'ON') {
+	$customer->make_member();
+} else {
+	$customer->member = false;
+}
 $customer->member_exp = strtotime($_REQUEST['member_exp']);
 if ($pines->config->com_customer->adjustpoints && gatekeeper('com_customer/adjustpoints'))
 	$customer->adjust_points((int) $_REQUEST['adjust_points']);

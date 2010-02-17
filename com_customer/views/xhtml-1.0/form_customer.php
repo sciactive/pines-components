@@ -386,10 +386,12 @@ $this->note = 'Provide customer profile details in this form.';
 			</div>
 			<div class="element">
 				<span class="label">Peak Points</span>
+				<span class="note">The highest amount of points the customer has ever had.</span>
 				<span class="field"><?php echo $this->entity->peak_points; ?></span>
 			</div>
 			<div class="element">
 				<span class="label">Total Points in All Time</span>
+				<span class="note">The total amount of points the customer has ever had.</span>
 				<span class="field"><?php echo $this->entity->total_points; ?></span>
 			</div>
 			<?php if ($pines->config->com_customer->adjustpoints && gatekeeper('com_customer/adjustpoints')) { ?>
@@ -406,6 +408,12 @@ $this->note = 'Provide customer profile details in this form.';
 				<label><span class="label">Member</span>
 					<input class="field ui-widget-content" type="checkbox" name="member" size="24" value="ON"<?php echo $this->entity->member ? ' checked="checked"' : ''; ?> /></label>
 			</div>
+			<?php if ($this->entity->member) { ?>
+			<div class="element">
+				<span class="label">Member Since</span>
+				<span class="field"><?php echo pines_date_format($this->entity->member_since); ?></span>
+			</div>
+			<?php } ?>
 			<div class="element">
 				<script type="text/javascript">
 					// <![CDATA[

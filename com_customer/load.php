@@ -29,6 +29,15 @@ if ($pines->com_customer->com_sales) {
 			'callback' => array($pines->com_customer, 'product_action_add_points')
 		);
 	}
+	foreach($pines->config->com_customer->membervalues as $cur_value) {
+		$pines->com_sales->product_actions[] = array(
+			'type' => 'sold',
+			'name' => "com_customer/add_member_days_$cur_value",
+			'cname' => "Add $cur_value Member Days",
+			'description' => "Add $cur_value days of membership to the customer's profile. (Make them a member if they aren't one.)",
+			'callback' => array($pines->com_customer, 'product_action_add_member_days')
+		);
+	}
 }
 
 ?>

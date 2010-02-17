@@ -31,6 +31,15 @@ return array(
 		'value' => true,
 	),
 	array(
+		'name' => 'membervalues',
+		'cname' => 'Member Day Values',
+		'description' => 'List of the days of membership available to add as product actions in the POS (com_sales).',
+		'value' => array(
+			30,
+			60
+		),
+	),
+	array(
 		'name' => 'pointvalues',
 		'cname' => 'Static Point Values',
 		'description' => 'List of the point values available to add as product actions in the POS (com_sales). Values can be negative to take away points.',

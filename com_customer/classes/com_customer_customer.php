@@ -56,28 +56,26 @@ class com_customer_customer extends entity {
 	}
 
 	/**
-	 * Delete the customer.
-	 * @return bool True on success, false on failure.
+	 * Add days to the customer's profile.
+	 *
+	 * If the customer's membership expires in the future, $day_adjust will be
+	 * added to that date. If not, $day_adjust will be added to today's date.
+	 * 
+	 * @param int $day_adjust The number of days to add. Negative values will be ignored.
 	 */
-	public function delete() {
-		if (!parent::delete())
-			return false;
-		pines_log("Deleted customer $this->name.", 'notice');
-		return true;
+	function adjust_membership($day_adjust) {
+		$day_adjust = (int) $day_adjust;
+		if ($day_adjust <= 0)
+			return;
+		if (time() < $this->member_exp) {
+			$this->member_exp = strtotime("+$day_adjust days 00:00", $this->member_exp);
+		} else {
+			$this->member_exp = strtotime("+$day_adjust days 00:00");
+		}
 	}
 
 	/**
-	 * Save the customer.
-	 * @return bool True on success, false on failure.
-	 */
-	public function save() {
-		if (!isset($this->name))
-			return false;
-		return parent::save();
-	}
-
-	/**
-	 * Add or subtract points from the customer's profile.
+	 * Add to or subtract from the customer's points.
 	 *
 	 * @param int $point_adjust The positive or negative point value to add.
 	 */
@@ -100,6 +98,41 @@ class com_customer_customer extends entity {
 			if ($this->points > $this->peak_points)
 				$this->peak_points = $this->points;
 		}
+	}
+
+	/**
+	 * Delete the customer.
+	 * @return bool True on success, false on failure.
+	 */
+	public function delete() {
+		if (!parent::delete())
+			return false;
+		pines_log("Deleted customer $this->name.", 'notice');
+		return true;
+	}
+
+	/**
+	 * Make the customer a member.
+	 *
+	 * If the customer is already a member, make_member() does nothing. It not,
+	 * make_member() will set $this->member to true and set $this->member_since
+	 * to the current timestamp.
+	 */
+	public function make_member() {
+		if ($this->member)
+			return;
+		$this->member = true;
+		$this->member_since = time();
+	}
+
+	/**
+	 * Save the customer.
+	 * @return bool True on success, false on failure.
+	 */
+	public function save() {
+		if (!isset($this->name))
+			return false;
+		return parent::save();
 	}
 
 	/**

@@ -82,6 +82,34 @@ class com_customer extends component {
 	}
 
 	/**
+	 * Add membership days to a customer for a product sale.
+	 *
+	 * @param array $array The details array.
+	 */
+	function product_action_add_member_days($array) {
+		global $pines;
+		$array['sale']->customer->make_member();
+		$days = 0;
+		// Search through the membership day values.
+		foreach($pines->config->com_customer->membervalues as $cur_value) {
+			if (!is_numeric($cur_value))
+				continue;
+			$cur_value = (int) $cur_value;
+			if ($array['name'] == "com_customer/add_member_days_$cur_value") {
+				$days = (int) $cur_value;
+				break;
+			}
+		}
+		// Add the days and save the customer.
+		$array['sale']->customer->adjust_membership($days);
+		if ($array['sale']->customer->save()) {
+			display_notice("Added $days days to {$array['sale']->customer->name}. Their membership now expires on ".pines_date_format($array['sale']->customer->member_exp).'.');
+		} else {
+			display_error("Error adding $days days to {$array['sale']->customer->name}.");
+		}
+	}
+
+	/**
 	 * Add points to a customer for a product sale.
 	 *
 	 * @param array $array The details array.
@@ -89,6 +117,7 @@ class com_customer extends component {
 	function product_action_add_points($array) {
 		global $pines;
 		$type = $array['sale']->customer->valid_member() ? 'member' : 'guest';
+		$points = 0;
 		if ($array['name'] == 'com_customer/add_points') {
 			// Search through the right lookup table to find the divisor.
 			$table = $array['sale']->customer->valid_member() ? $pines->config->com_customer->member_point_lookup : $pines->config->com_customer->guest_point_lookup;
@@ -102,7 +131,7 @@ class com_customer extends component {
 			$points = (int) round($array['price'] / $divisor);
 		} else {
 			// Search through the static point values.
-			foreach(explode(',', $pines->config->com_customer->pointvalues) as $cur_value) {
+			foreach($pines->config->com_customer->pointvalues as $cur_value) {
 				if (!is_numeric($cur_value))
 					continue;
 				$cur_value = (int) $cur_value;

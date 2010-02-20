@@ -55,7 +55,7 @@ if ( gatekeeper('com_user/default_component') ) {
 // Groups that the user does not have access to will not be received from the
 // entity manager after com_user filters the result, and thus will not be
 // assigned.
-if ( gatekeeper("com_user/assigngroup") ) {
+if ( gatekeeper('com_user/assigngroup') ) {
 	$sys_groups = $pines->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
 	$group = group::factory((int) $_REQUEST['group']);
 	$groups = $_REQUEST['groups'];
@@ -75,7 +75,7 @@ if ( gatekeeper("com_user/assigngroup") ) {
 		unset($user->group);
 }
 
-if ( $_REQUEST['abilities'] === 'true' && gatekeeper("com_user/abilities") ) {
+if ( $_REQUEST['abilities'] === 'true' && gatekeeper('com_user/abilities') ) {
 	$user->inherit_abilities = ($_REQUEST['inherit_abilities'] == 'ON');
 	$sections = array('system');
 	foreach ($pines->components as $cur_component) {

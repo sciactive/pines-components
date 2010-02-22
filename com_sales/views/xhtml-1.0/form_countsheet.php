@@ -11,20 +11,10 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = (is_null($this->entity->guid)) ? 'New Countsheet' : 'Editing Countsheet ['.htmlentities($this->entity->guid).']';
-$this->note = 'Provide info into the form below.';
+if (isset($this->entity->guid))
+	$this->note = 'Created by ' . $pines->user_manager->get_username($this->entity->uid) . ' on ' . date('Y-m-d', $this->entity->p_cdate) . ' - Last Modified on ' . date('Y-m-d', $this->entity->p_mdate);
 ?>
 <form class="pform" method="post" id="countsheet_details" action="<?php echo pines_url('com_sales', 'savecountsheet'); ?>">
-	<?php if (isset($this->entity->guid)) { ?>
-	<div class="date_info" style="float: right; text-align: right;">
-		<?php if (isset($this->entity->uid)) { ?>
-		<span>Created By: <span class="date"><?php echo $pines->user_manager->get_username($this->entity->uid); ?></span></span>
-		<br />
-		<?php } ?>
-		<span>Created On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_cdate); ?></span></span>
-		<br />
-		<span>Modified On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_mdate); ?></span></span>
-	</div>
-	<?php } ?>
 	<script type="text/javascript">
 		// <![CDATA[
 		var entries, entries_table, entry_counter;

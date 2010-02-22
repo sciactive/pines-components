@@ -13,12 +13,6 @@ defined('P_RUN') or die('Direct access prohibited');
 <div class="pform" id="notemodule">
 	<div class="element">
 		<span class="label"><?php echo $this->header; ?></span>
-		<span class="note">
-			<?php 
-				foreach($this->message as $msg) {
-					echo $msg . '<br/>';
-				}
-			?>
-		</span>
+		<span class="note"><?php echo str_replace("\n", "<br />\n", $this->message); ?></span>
 	</div>
 </div>

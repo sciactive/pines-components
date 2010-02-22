@@ -11,14 +11,14 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-echo ("<script type=\"text/javascript\" src=\"{$pines->config->rela_location}components/com_tinymce/js/tiny_mce/jquery.tinymce.js\"></script>\n");
+echo ("<script type=\"text/javascript\" src=\"{$pines->config->rela_location}components/com_tinymce/includes/tiny_mce/jquery.tinymce.js\"></script>\n");
 ?>
 <script type="text/javascript">
 // <![CDATA[
 $(function(){
 	$('textarea.peditor').tinymce({
 		// Location of TinyMCE script
-		script_url : '<?php echo $pines->config->rela_location; ?>components/com_tinymce/js/tiny_mce/tiny_mce.js',
+		script_url : '<?php echo $pines->config->rela_location; ?>components/com_tinymce/includes/tiny_mce/tiny_mce.js',
 
 		// General options
 		theme : "advanced",
@@ -49,7 +49,7 @@ $(function(){
 
 	$('textarea.peditor_simple').tinymce({
 		// Location of TinyMCE script
-		script_url : '<?php echo $pines->config->rela_location; ?>components/com_tinymce/js/tiny_mce/tiny_mce.js',
+		script_url : '<?php echo $pines->config->rela_location; ?>components/com_tinymce/includes/tiny_mce/tiny_mce.js',
 
 		// General options
 		theme : "simple",

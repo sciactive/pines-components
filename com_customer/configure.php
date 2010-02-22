@@ -89,6 +89,58 @@ return array(
 		'description' => 'Allow Pines to store a Social Security Number for customers.',
 		'value' => true,
 	),
+	array(
+		'name' => 'shown_fields_customer',
+		'cname' => 'Shown Fields',
+		'description' => 'These fields will be displayed when creating a customer.',
+		'value' => array(
+			'name',
+			'ssn',
+			'dob',
+			'email',
+			'company',
+			'phone',
+			'password',
+			'description',
+			'membership',
+			'address'
+		),
+		'options' => array(
+			'Name' => 'name',
+			'SSN' => 'ssn',
+			'DOB' => 'dob',
+			'Email' => 'email',
+			'Company' => 'company',
+			'Phone' => 'phone',
+			'Password' => 'password',
+			'Description' => 'description',
+			'Points' => 'points',
+			'Membership' => 'membership',
+			'Address' => 'address',
+			'Attributes' => 'attributes',
+		)
+	),
+	array(
+		'name' => 'required_fields_customer',
+		'cname' => 'Required Fields',
+		'description' => 'These fields must be filled out when creating a customer.',
+		'value' => array(
+			'name',
+			'ssn',
+			'phone'
+		),
+		'options' => array(
+			'Name' => 'name',
+			'SSN' => 'ssn',
+			'DOB' => 'dob',
+			'Email' => 'email',
+			'Company' => 'company',
+			'Phone' => 'phone',
+			'Password' => 'password',
+			'Description' => 'description',
+			'Address' => 'address'
+		)
+	),
 );
 
 ?>

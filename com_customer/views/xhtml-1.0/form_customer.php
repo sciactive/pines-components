@@ -17,13 +17,10 @@ $this->note = 'Provide customer profile details in this form.';
 	<script type="text/javascript">
 		// <![CDATA[
 		$(function(){
+			<?php if (in_array('address', $pines->config->com_customer->shown_fields_customer)) { ?>
 			var addresses = $("#addresses");
 			var addresses_table = $("#addresses_table");
 			var address_dialog = $("#address_dialog");
-			var attributes = $("#attributes");
-			var attributes_table = $("#attributes_table");
-			var attribute_dialog = $("#attribute_dialog");
-
 			addresses_table.pgrid({
 				pgrid_paginate: false,
 				pgrid_toolbar: true,
@@ -44,31 +41,6 @@ $this->note = 'Provide customer profile details in this form.';
 						click: function(e, rows){
 							rows.pgrid_delete();
 							update_address();
-						}
-					}
-				]
-			});
-
-			attributes_table.pgrid({
-				pgrid_paginate: false,
-				pgrid_toolbar: true,
-				pgrid_toolbar_contents : [
-					{
-						type: 'button',
-						text: 'Add Attribute',
-						extra_class: 'icon picon_16x16_actions_list-add',
-						selection_optional: true,
-						click: function(){
-							attribute_dialog.dialog('open');
-						}
-					},
-					{
-						type: 'button',
-						text: 'Remove Attribute',
-						extra_class: 'icon picon_16x16_actions_list-remove',
-						click: function(e, rows){
-							rows.pgrid_delete();
-							update_attributes();
 						}
 					}
 				]
@@ -109,6 +81,43 @@ $this->note = 'Provide customer profile details in this form.';
 					}
 				}
 			});
+			
+			function update_addresses() {
+				$("#cur_address_type, #cur_address_addr1, #cur_address_addr2, #cur_address_city, #cur_address_state, #cur_address_zip").val("");
+				addresses.val(JSON.stringify(addresses_table.pgrid_get_all_rows().pgrid_export_rows()));
+			}
+
+			update_addresses();
+
+			<?php } if (in_array('attributes', $pines->config->com_customer->shown_fields_customer)) { ?>
+			var attributes = $("#attributes");
+			var attributes_table = $("#attributes_table");
+			var attribute_dialog = $("#attribute_dialog");
+
+			attributes_table.pgrid({
+				pgrid_paginate: false,
+				pgrid_toolbar: true,
+				pgrid_toolbar_contents : [
+					{
+						type: 'button',
+						text: 'Add Attribute',
+						extra_class: 'icon picon_16x16_actions_list-add',
+						selection_optional: true,
+						click: function(){
+							attribute_dialog.dialog('open');
+						}
+					},
+					{
+						type: 'button',
+						text: 'Remove Attribute',
+						extra_class: 'icon picon_16x16_actions_list-remove',
+						click: function(e, rows){
+							rows.pgrid_delete();
+							update_attributes();
+						}
+					}
+				]
+			});
 
 			// Attribute Dialog
 			attribute_dialog.dialog({
@@ -138,19 +147,15 @@ $this->note = 'Provide customer profile details in this form.';
 				}
 			});
 
-			function update_addresses() {
-				$("#cur_address_type, #cur_address_addr1, #cur_address_addr2, #cur_address_city, #cur_address_state, #cur_address_zip").val("");
-				addresses.val(JSON.stringify(addresses_table.pgrid_get_all_rows().pgrid_export_rows()));
-			}
-
 			function update_attributes() {
 				$("#cur_attribute_name, #cur_attribute_value").val("");
 				attributes.val(JSON.stringify(attributes_table.pgrid_get_all_rows().pgrid_export_rows()));
 			}
-
-			$("#customer_tabs").tabs();
-			update_addresses();
+			
 			update_attributes();
+			<?php } ?>
+				
+			$("#customer_tabs").tabs();
 		});
 		// ]]>
 	</script>
@@ -158,8 +163,11 @@ $this->note = 'Provide customer profile details in this form.';
 		<ul>
 			<li><a href="#tab_general">General</a></li>
 			<li><a href="#tab_account">Account</a></li>
+			<?php if (in_array('address', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<li><a href="#tab_addresses">Addresses</a></li>
+			<?php } if (in_array('attributes', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<li><a href="#tab_attributes">Attributes</a></li>
+			<?php } ?>
 		</ul>
 		<div id="tab_general">
 			<?php if (isset($this->entity->guid)) { ?>
@@ -172,7 +180,7 @@ $this->note = 'Provide customer profile details in this form.';
 				<br />
 				<span>Modified On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_mdate); ?></span></span>
 			</div>
-			<?php } ?>
+			<?php } if (in_array('name', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="element">
 				<label><span class="label">First Name</span>
 					<input class="field ui-widget-content" type="text" name="name_first" size="24" value="<?php echo $this->entity->name_first; ?>" /></label>
@@ -185,13 +193,13 @@ $this->note = 'Provide customer profile details in this form.';
 				<label><span class="label">Last Name</span>
 					<input class="field ui-widget-content" type="text" name="name_last" size="24" value="<?php echo $this->entity->name_last; ?>" /></label>
 			</div>
-			<?php if ($pines->config->com_customer->ssn_field && gatekeeper('com_customer/showssn')) { ?>
+			<?php } if (in_array('ssn', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="element">
 				<label><span class="label">SSN</span>
 					<span class="note">Without dashes.</span>
 					<input class="field ui-widget-content" type="text" name="ssn" size="24" value="<?php echo $this->entity->ssn; ?>" /></label>
 			</div>
-			<?php } ?>
+			<?php } if (in_array('dob', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="element">
 				<script type="text/javascript">
 					// <![CDATA[
@@ -207,10 +215,12 @@ $this->note = 'Provide customer profile details in this form.';
 				<label><span class="label">Date of Birth</span>
 					<input class="field ui-widget-content" type="text" name="dob" size="24" value="<?php echo $this->entity->dob ? date('Y-m-d', $this->entity->dob) : ''; ?>" /></label>
 			</div>
+			<?php } if (in_array('email', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="element">
 				<label><span class="label">Email</span>
 					<input class="field ui-widget-content" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>
 			</div>
+			<?php } if (in_array('company', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<script type="text/javascript">
 				// <![CDATA[
 				var company_box;
@@ -341,6 +351,7 @@ $this->note = 'Provide customer profile details in this form.';
 				<label><span class="label">Job Title</span>
 					<input class="field ui-widget-content" type="text" name="job_title" size="24" value="<?php echo $this->entity->job_title; ?>" /></label>
 			</div>
+			<?php } if (in_array('phone', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="element">
 				<label><span class="label">Cell Phone</span>
 					<input class="field ui-widget-content" type="text" name="phone_cell" size="24" value="<?php echo pines_phone_format($this->entity->phone_cell); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
@@ -357,10 +368,12 @@ $this->note = 'Provide customer profile details in this form.';
 				<label><span class="label">Fax</span>
 					<input class="field ui-widget-content" type="text" name="fax" size="24" value="<?php echo pines_phone_format($this->entity->fax); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
+			<?php } ?>
 			<div class="element">
 				<label><span class="label">Login Disabled</span>
 					<input class="field ui-widget-content" type="checkbox" name="login_disabled" size="24" value="ON"<?php echo $this->entity->login_disabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
+			<?php if (in_array('password', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="element">
 				<label><span class="label"><?php if (!is_null($this->entity->password)) echo 'Update '; ?>Password</span>
 					<?php if (is_null($this->entity->password)) {
@@ -368,15 +381,18 @@ $this->note = 'Provide customer profile details in this form.';
 					} else {
 						echo '<span class="note">Leave blank, if not changing.</span>';
 					} ?>
-					<input class="field ui-widget-content" type="text" name="password" size="24" /></label>
+					<input class="field ui-widget-content" type="text" name="password" size="24" value="<?php echo $this->entity->tmp_password; ?>" /></label>
 			</div>
+			<?php } if (in_array('description', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="element full_width">
 				<span class="label">Description</span><br />
 				<textarea rows="3" cols="35" class="field peditor" style="width: 100%;" name="description"><?php echo $this->entity->description; ?></textarea>
 			</div>
+			<?php } ?>
 			<br class="spacer" />
 		</div>
 		<div id="tab_account">
+			<?php if (in_array('points', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="element heading">
 				<h1>Points</h1>
 			</div>
@@ -400,7 +416,7 @@ $this->note = 'Provide customer profile details in this form.';
 					<span class="note">Use a negative value to subtract points.</span>
 					<input class="field ui-widget-content" type="text" name="adjust_points" size="24" value="0" /></label>
 			</div>
-			<?php } ?>
+			<?php } } if (in_array('membership', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="element heading">
 				<h1>Membership</h1>
 			</div>
@@ -429,8 +445,10 @@ $this->note = 'Provide customer profile details in this form.';
 				<label><span class="label">Membership Expiration</span>
 					<input class="field ui-widget-content" type="text" name="member_exp" size="24" value="<?php echo $this->entity->member_exp ? date('Y-m-d', $this->entity->member_exp) : ''; ?>" /></label>
 			</div>
+			<?php } ?>
 			<br class="spacer" />
 		</div>
+		<?php if (in_array('address', $pines->config->com_customer->shown_fields_customer)) { ?>
 		<div id="tab_addresses">
 			<div class="element heading">
 				<h1>Main Address</h1>
@@ -606,6 +624,7 @@ $this->note = 'Provide customer profile details in this form.';
 			</div>
 			<br class="spacer" />
 		</div>
+		<?php } if (in_array('attributes', $pines->config->com_customer->shown_fields_customer)) { ?>
 		<div id="tab_attributes">
 			<div class="element full_width">
 				<span class="label">Attributes</span>
@@ -643,6 +662,7 @@ $this->note = 'Provide customer profile details in this form.';
 			</div>
 			<br class="spacer" />
 		</div>
+		<?php } ?>
 	</div>
 	<div class="element buttons">
 		<br />

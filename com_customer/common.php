@@ -21,7 +21,5 @@ $pines->ability_manager->add('com_customer', 'editcompany', 'Edit Companies', 'U
 $pines->ability_manager->add('com_customer', 'deletecompany', 'Delete Companies', 'User can delete current companies.');
 $pines->ability_manager->add('com_customer', 'adjustpoints', 'Adjust Points', 'User can adjust customer\'s points.');
 $pines->ability_manager->add('com_customer', 'resetpoints', 'Reset Points', 'User can reset customer\'s points. (Including peak and total.)');
-$pines->ability_manager->add('com_customer', 'requiressn', 'Require SSN', 'User must store Social Security Numbers for customers.');
-$pines->ability_manager->add('com_customer', 'showssn', 'Show SSN', 'User can see and edit Social Security Numbers.');
 
 ?>

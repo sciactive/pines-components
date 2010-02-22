@@ -21,5 +21,7 @@ $pines->ability_manager->add('com_hrm', 'viewclock', 'View Timeclock', 'User can
 $pines->ability_manager->add('com_hrm', 'manageclock', 'Manage Timeclock', 'User can manage and edit the employee timeclock.');
 $pines->ability_manager->add('com_hrm', 'requiressn', 'Require SSN', 'User must store Social Security Numbers for employees.');
 $pines->ability_manager->add('com_hrm', 'showssn', 'Show SSN', 'User can see and edit Social Security Numbers.');
+$pines->ability_manager->add('com_hrm', 'editcalendar', 'Edit Calendar', 'User can edit the group calendar.');
+$pines->ability_manager->add('com_hrm', 'viewcalendar', 'View Calendar', 'User can view the group calendar.');
 
 ?>

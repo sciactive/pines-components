@@ -36,6 +36,12 @@ return array(
 		'description' => 'Users to use as templates to allow new users to be created by the HRM. Comma seperated list of Name=ID pairs. Such as "Manager=11,Inventory=12,Salesman=13".',
 		'value' => '',
 	),
+	array(
+		'name' => 'employee_departments',
+		'cname' => 'Department Names & Colors',
+		'description' => 'These groups will show up in the calendar with their associated colors.',
+		'value' => 'Company Wide:cornflowerblue, Corporate:gold, IT:blueviolet, Sales:olive',
+	),
 );
 
 ?>

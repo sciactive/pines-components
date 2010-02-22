@@ -39,6 +39,7 @@ $employee->phone_work = preg_replace('/\D/', '', $_REQUEST['phone_work']);
 $employee->phone_home = preg_replace('/\D/', '', $_REQUEST['phone_home']);
 $employee->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
 $employee->description = $_REQUEST['description'];
+$employee->color = $_REQUEST['color'];
 
 // User Account
 if (empty($_REQUEST['username']) || !$pines->config->com_hrm->allow_attach) {

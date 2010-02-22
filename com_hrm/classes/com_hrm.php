@@ -20,11 +20,11 @@ defined('P_RUN') or die('Direct access prohibited');
  * @subpackage com_hrm
  */
 class com_hrm extends component {
-	/**
-	 * Whether to integrate with com_sales.
-	 * 
-	 * @var bool $com_sales
-	 */
+/**
+ * Whether to integrate with com_sales.
+ *
+ * @var bool $com_sales
+ */
 	var $com_sales;
 	/**
 	 *
@@ -41,12 +41,22 @@ class com_hrm extends component {
 		$this->com_sales = $pines->depend->check('component', 'com_sales');
 	}
 
+	/**
+	 * Clears all events from the calendar.
+	 */
+	function clear_calendar() {
+		global $pines;
+		$calendar_events = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'event'), 'class' => com_hrm_event));
+		foreach ($calendar_events as $cur_event)
+			$cur_event->delete();
+	}
+
 	function get_user_templates() {
 		if (isset($this->user_templates))
 			return $this->user_templates;
 		global $config;
 		$array = $config->com_hrm->user_templates;
-		// TODO: Make an array out of the config value.
+	// TODO: Make an array out of the config value.
 	}
 
 	/**
@@ -113,10 +123,10 @@ class com_hrm extends component {
 			$newwords = array();
 			foreach ($words as $word){
 				if (in_array(strtoupper($word), $exceptions)){
-					// check exceptions list for any words that should be in upper case
+				// check exceptions list for any words that should be in upper case
 					$word = strtoupper($word);
 				} elseif (!in_array($word, $exceptions)){
-					// convert to uppercase
+				// convert to uppercase
 					$word = ucfirst($word);
 				}
 				array_push($newwords, $word);
@@ -138,6 +148,23 @@ class com_hrm extends component {
 		if (is_null($employee))
 			return null;
 		return $employee->print_clockin();
+	}
+
+	/**
+	 * Creates and attaches a module which shows the calendar.
+	 */
+	function show_calendar($id = null) {
+		global $pines;
+		if (gatekeeper('com_hrm/editcalendar')) {
+			$form = new module('com_hrm', 'form_calendar', 'left');
+			$form->employees = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
+			// If an id is specified, the event info will be displayed for editing.
+			if (isset($id))
+				$form->event = com_hrm_event::factory((int) $id);
+		}
+		$calendar_head = new module('com_hrm', 'show_calendar_head', 'head');
+		$calendar = new module('com_hrm', 'show_calendar', 'content');
+		$calendar->events = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'event'), 'class' => com_hrm_event));
 	}
 }
 

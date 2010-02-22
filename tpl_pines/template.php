@@ -42,7 +42,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/dropdown/themes/jqueryui/jqueryui.css" media="all" rel="stylesheet" type="text/css" />
 
 <?php if ($pines->config->tpl_pines->google_cdn) { ?>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>system/js/js.php?exclude=jquery.min.js+jquery-ui.min.js"></script>
 <?php } else { ?>

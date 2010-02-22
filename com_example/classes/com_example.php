@@ -1,0 +1,64 @@
+<?php
+/**
+ * com_example class.
+ *
+ * @package Pines
+ * @subpackage com_example
+ * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
+ * @author Hunter Perrin <hunter@sciactive.com>
+ * @copyright Hunter Perrin
+ * @link http://sciactive.com/
+ */
+defined('P_RUN') or die('Direct access prohibited');
+
+/**
+ * com_example main class.
+ *
+ * @package Pines
+ * @subpackage com_example
+ */
+class com_example extends component {
+	/**
+	 * Creates and attaches a module which lists widgets.
+	 */
+	function list_widgets() {
+		global $pines;
+
+		$pgrid = new module('system', 'pgrid.default', 'head');
+		$pgrid->icons = true;
+
+		$module = new module('com_example', 'list_widgets', 'content');
+		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_example/list_widgets'];
+
+		$module->widgets = $pines->entity_manager->get_entities(array('tags' => array('com_example', 'widget'), 'class' => com_example_widget));
+
+		if ( empty($module->widgets) ) {
+			$pgrid->detach();
+			$module->detach();
+			display_notice("There are no widgets.");
+		}
+	}
+
+	/**
+	 * Creates and attaches example modules in various positions.
+	 */
+	function print_content() {
+		$module = new module('com_example', 'content_long', 'content');
+		$module = new module('com_example', 'content_short', 'left');
+		$module = new module('com_example', 'content_short', 'right');
+		$module = new module('com_example', 'content_medium', 'left');
+		$module = new module('com_example', 'content_medium', 'right');
+		$module = new module('com_example', 'content_short', 'top');
+		$module = new module('com_example', 'content_short', 'header');
+		$module = new module('com_example', 'content_short', 'header_right');
+		$module = new module('com_example', 'content_medium', 'footer');
+		$module = new module('com_example', 'content_short', 'bottom');
+		$module = new module('com_example', 'content_short', 'user1');
+		$module = new module('com_example', 'content_short', 'user2');
+		$module = new module('com_example', 'content_short', 'user3');
+		$module = new module('com_example', 'content_short', 'user4');
+	}
+}
+
+?>

@@ -19,29 +19,9 @@ return array(
 		'value' => true,
 	),
 	array(
-		'name' => 'theme',
-		'cname' => 'Theme',
-		'description' => 'jQuery UI theme to use.',
-		'value' => 'smoothness',
-		'options' => array(
-			'Dark Hive' => 'dark-hive',
-			'Redmond' => 'redmond',
-			'Smoothness' => 'smoothness',
-			'Start' => 'start',
-			'UI Darkness' => 'ui-darkness',
-			'UI Lightness' => 'ui-lightness'
-		)
-	),
-	array(
 		'name' => 'theme_switcher',
 		'cname' => 'Theme Switcher',
 		'description' => 'Provide a theme switcher widget in the corner to choose a jQuery UI theme.',
-		'value' => true,
-	),
-	array(
-		'name' => 'google_cdn',
-		'cname' => 'Use Google\'s CDN',
-		'description' => 'Use Google\'s content delivery network to host jQuery and jQuery UI.',
 		'value' => true,
 	),
 );

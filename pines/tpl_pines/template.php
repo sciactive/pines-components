@@ -41,21 +41,10 @@ defined('P_RUN') or die('Direct access prohibited');
 	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/dropdown/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/dropdown/themes/jqueryui/jqueryui.css" media="all" rel="stylesheet" type="text/css" />
 
-<?php if ($pines->config->tpl_pines->google_cdn) { ?>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>system/js/js.php?exclude=jquery.min.js+jquery-ui.min.js"></script>
-<?php } else { ?>
 	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>system/js/js.php"></script>
-<?php } ?>
 	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/template.js"></script>
 	
-<?php if ($pines->config->tpl_pines->theme_switcher) {
-	if ($pines->config->tpl_pines->google_cdn) { ?>
-	<link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/<?php echo $pines->config->tpl_pines->theme; ?>/ui.all.css" />
-<?php } else { ?>
-	<link type="text/css" rel="stylesheet" href="http://jqueryui.com/themes/<?php echo $pines->config->tpl_pines->theme; ?>/ui.all.css" />
-<?php } ?>
+<?php if ($pines->config->tpl_pines->theme_switcher) { ?>
 	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/jquery/jquery.themeswitcher.js"></script>
 	<script type="text/javascript">
 		// <![CDATA[
@@ -74,12 +63,7 @@ defined('P_RUN') or die('Direct access prohibited');
 		}
 		/* ]]> */
 	</style>
-<?php } else {
-	if ($pines->config->tpl_pines->google_cdn) { ?>
-	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/<?php echo $pines->config->tpl_pines->theme; ?>/jquery-ui.css" media="all" rel="stylesheet" type="text/css" />
-<?php } else { ?>
-	<link href="<?php echo $pines->config->rela_location; ?>system/css/jquery-ui/<?php echo $pines->config->tpl_pines->theme; ?>/jquery-ui.css" media="all" rel="stylesheet" type="text/css" />
-<?php } } ?>
+<?php } ?>
 
 	<!--[if lt IE 7]>
 	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/jquery/jquery.dropdown.js"></script>

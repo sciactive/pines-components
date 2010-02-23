@@ -57,7 +57,7 @@ defined('P_RUN') or die('Direct access prohibited');
 				dialog.find("p.dialog_text").html(
 					drawer_opened_properly ?
 						"<span style=\"font-size: 2em;\">Close the cash drawer when you are finished in order to continue.</span>" :
-						"<span style=\"font-size: 2em; color: red;\">The cash drawer has been opened without authorization. Close the cash drawer immediately. The manager has been notified.</span>"
+						"<span style=\"font-size: 2em; color: red;\">The cash drawer has been opened without authorization. Close the cash drawer immediately. Corporate has been notified and the incident has been logged.</span>"
 				);
 				if (!drawer_opened_properly) {
 					// notify manager
@@ -74,7 +74,7 @@ defined('P_RUN') or die('Direct access prohibited');
 		pines.drawer_not_found = function(event){
 			if (!dialog.dialog("isOpen")) {
 				dialog.find("p.dialog_text").html(
-					"<span style=\"font-size: 2em; color: red;\">The cash drawer has been disconnected. Reconnect the cash drawer immediately. The manager has been notified.</span>"
+					"<span style=\"font-size: 2em; color: red;\">The cash drawer has been disconnected. Reconnect the cash drawer immediately. Corporate has been notified and the incident has been logged.</span>"
 				);
 				if (!drawer_opened_properly) {
 					// notify manager

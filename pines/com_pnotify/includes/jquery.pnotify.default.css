@@ -16,43 +16,35 @@
 	/* Ensure that the notices are on top of everything else. */
 	z-index: 9999;
 }
-
 /* This hides position: fixed from IE6, which doesn't understand it. */
 html > body .ui-pnotify {
 	position: fixed;
 }
-
 .ui-pnotify-container {
 	background-position: 0 0;
 	padding: 8px;
 	height: 100%;
 }
-
 .ui-pnotify-closer {
 	float: right;
 	margin-left: 2px;
 }
-
 .ui-pnotify-title {
 	display: block;
 	font-size: 1.2em;
 	font-weight: bold;
 	margin-bottom: 4px;
 }
-
 .ui-pnotify-text {
 	display: block;
 }
-
 .ui-pnotify-icon, .ui-pnotify-icon span {
 	display: block;
 	float: left;
 	margin-right: 2px;
 }
-
 /* History Pulldown
 ----------------------------------*/
-
 .ui-pnotify-history-container {
 	position: absolute;
 	top: 0;
@@ -62,21 +54,17 @@ html > body .ui-pnotify {
 	/* Ensure that the history container is on top of the notices. */
 	z-index: 10000;
 }
-
 .ui-pnotify-history-container .ui-pnotify-history-header {
 	padding: 2px;
 }
-
 .ui-pnotify-history-container .ui-pnotify-history-all {
 	display: block;
 	width: 100%;
 }
-
 .ui-pnotify-history-container .ui-pnotify-history-last {
 	display: block;
 	width: 100%;
 }
-
 .ui-pnotify-history-container .ui-pnotify-history-pulldown {
 	display: block;
 	margin: 0 auto;

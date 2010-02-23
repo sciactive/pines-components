@@ -28,8 +28,6 @@ defined('P_RUN') or die('Direct access prohibited');
 	<!--[if lt IE 7]>
 	<link href="<?php echo $pines->config->rela_location; ?>system/css/pform-ie-lt-7.css" media="all" rel="stylesheet" type="text/css" />
 	<![endif]-->
-	<link href="<?php echo $pines->config->rela_location; ?>system/css/jquery.pnotify.default.css" media="all" rel="stylesheet" type="text/css" />
-	<link href="<?php echo $pines->config->rela_location; ?>system/css/jquery.pnotify.default.icons.css" media="all" rel="stylesheet" type="text/css" />
 
 	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/pines.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/print.css" media="print" rel="stylesheet" type="text/css" />
@@ -42,8 +40,14 @@ defined('P_RUN') or die('Direct access prohibited');
 	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/dropdown/themes/jqueryui/jqueryui.css" media="all" rel="stylesheet" type="text/css" />
 
 	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>system/js/js.php"></script>
+
+	<!--[if lt IE 7]>
+	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/jquery/jquery.dropdown.js"></script>
+	<![endif]-->
+
+	<?php echo $pines->page->render_modules('head', 'module_head'); ?>
+
 	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/template.js"></script>
-	
 <?php if ($pines->config->tpl_pines->theme_switcher) { ?>
 	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/jquery/jquery.themeswitcher.js"></script>
 	<script type="text/javascript">
@@ -64,12 +68,6 @@ defined('P_RUN') or die('Direct access prohibited');
 		/* ]]> */
 	</style>
 <?php } ?>
-
-	<!--[if lt IE 7]>
-	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/jquery/jquery.dropdown.js"></script>
-	<![endif]-->
-
-	<?php echo $pines->page->render_modules('head', 'module_head'); ?>
 </head>
 
 <body class="ui-widget-content">

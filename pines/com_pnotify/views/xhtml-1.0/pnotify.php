@@ -1,9 +1,9 @@
 <?php
 /**
- * A view to load jQuery UI.
+ * A view to load Pines Notify.
  *
  * @package Pines
- * @subpackage com_jquery
+ * @subpackage com_pnotify
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin

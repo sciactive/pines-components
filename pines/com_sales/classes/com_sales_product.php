@@ -87,7 +87,7 @@ class com_sales_product extends entity {
 		$pgrid = new module('system', 'pgrid.default', 'head');
 		$pgrid->icons = true;
 		$jstree = new module('system', 'jstree', 'head');
-		$ptags = new module('system', 'ptags.default', 'head');
+		//$ptags = new module('system', 'ptags.default', 'head');
 		$module = new module('com_sales', 'form_product', 'content');
 		$module->entity = $this;
 		$module->manufacturers = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'manufacturer'), 'class' => com_sales_manufacturer));

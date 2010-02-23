@@ -31,6 +31,7 @@
 				return;
 			$.each(body_data, function(){
 				var s = this.opts.pnotify_stack;
+				if (!s) return;
 				if (!s.nextpos1)
 					s.nextpos1 = s.firstpos1;
 				if (!s.nextpos2)
@@ -195,9 +196,11 @@
 			});
 			// Reset the next position data.
 			$.each(body_data, function(){
-				this.opts.pnotify_stack.nextpos1 = this.opts.pnotify_stack.firstpos1;
-				this.opts.pnotify_stack.nextpos2 = this.opts.pnotify_stack.firstpos2;
-				this.opts.pnotify_stack.addpos2 = 0;
+				var s = this.opts.pnotify_stack;
+				if (!s) return;
+				s.nextpos1 = s.firstpos1;
+				s.nextpos2 = s.firstpos2;
+				s.addpos2 = 0;
 			});
 		},
 		pnotify: function(options) {

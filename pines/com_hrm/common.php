@@ -11,6 +11,10 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
+$pines->ability_manager->add('com_hrm', 'listusertemplates', 'List User Templates', 'User can see user templates.');
+$pines->ability_manager->add('com_hrm', 'newusertemplate', 'Create User Templates', 'User can create new user templates.');
+$pines->ability_manager->add('com_hrm', 'editusertemplate', 'Edit User Templates', 'User can edit current user templates.');
+$pines->ability_manager->add('com_hrm', 'deleteusertemplate', 'Delete User Templates', 'User can delete current user templates.');
 $pines->ability_manager->add('com_hrm', 'listemployees', 'List Employees', 'User can see employees.');
 $pines->ability_manager->add('com_hrm', 'newemployee', 'Create Employees', 'User can create new employees.');
 $pines->ability_manager->add('com_hrm', 'editemployee', 'Edit Employees', 'User can edit current employees.');

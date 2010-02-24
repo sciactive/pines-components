@@ -104,6 +104,28 @@ class com_hrm extends component {
 	}
 
 	/**
+	 * Creates and attaches a module which lists user templates.
+	 */
+	function list_user_templates() {
+		global $pines;
+
+		$pgrid = new module('system', 'pgrid.default', 'head');
+		$pgrid->icons = true;
+
+		$module = new module('com_hrm', 'list_user_templates', 'content');
+		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_hrm/list_user_templates'];
+
+		$module->user_templates = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'user_template'), 'class' => com_hrm_user_template));
+
+		if ( empty($module->user_templates) ) {
+			$pgrid->detach();
+			$module->detach();
+			display_notice("There are no user templates.");
+		}
+	}
+
+	/**
 	 * Transform a string to title case.
 	 *
 	 * @param string $string The string to transform.

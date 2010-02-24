@@ -19,6 +19,12 @@ return array(
 		'value' => true,
 	),
 	array(
+		'name' => 'global_user_templates',
+		'cname' => 'Globalize User Templates',
+		'description' => 'Ensure that every user can access all user templates by setting the "other" access control to read.',
+		'value' => true,
+	),
+	array(
 		'name' => 'ssn_field',
 		'cname' => 'SSN Field',
 		'description' => 'Allow Pines to store a Social Security Number for employees.',
@@ -29,12 +35,6 @@ return array(
 		'cname' => 'Allow User Attach',
 		'description' => 'Allow users to be attached to employees.',
 		'value' => true,
-	),
-	array(
-		'name' => 'user_templates',
-		'cname' => 'User Templates',
-		'description' => 'Users to use as templates to allow new users to be created by the HRM. Comma seperated list of Name=ID pairs. Such as "Manager=11,Inventory=12,Salesman=13".',
-		'value' => '',
 	),
 	array(
 		'name' => 'employee_departments',

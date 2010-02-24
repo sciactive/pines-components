@@ -30,6 +30,7 @@ class com_hrm_employee extends entity {
 		$this->addresses = array();
 		$this->attributes = array();
 		$this->timeclock = array();
+		$this->sync_user = true;
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
@@ -124,6 +125,20 @@ class com_hrm_employee extends entity {
 	public function save() {
 		if (!isset($this->name))
 			return false;
+		if ($this->sync_user && isset($this->user_account)) {
+			$this->user_account->name = $this->name;
+			$this->user_account->email = $this->email;
+			$this->user_account->phone = $this->phone_work;
+			$this->user_account->fax = $this->fax;
+			$this->user_account->address_type = $this->address_type;
+			$this->user_account->address_1 = $this->address_1;
+			$this->user_account->address_2 = $this->address_2;
+			$this->user_account->city = $this->city;
+			$this->user_account->state = $this->state;
+			$this->user_account->zip = $this->zip;
+			$this->user_account->address_international = $this->address_international;
+			$this->user_account->save();
+		}
 		return parent::save();
 	}
 
@@ -138,6 +153,7 @@ class com_hrm_employee extends entity {
 		$pgrid->icons = true;
 		$module = new module('com_hrm', 'form_employee', 'content');
 		$module->entity = $this;
+		$module->user_templates = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'user_template'), 'class' => com_hrm_user_template));
 
 		return $module;
 	}

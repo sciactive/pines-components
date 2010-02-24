@@ -174,23 +174,6 @@ $this->note = 'Provide employee account details in this form.';
 			</div>
 			<?php } ?>
 			<div class="element">
-				<label><span class="label">Schedule Color</span>
-					<select name="color">
-						<option value="blue" <?php echo ($this->entity->color == 'blue') ? 'selected="selected"' : ''; ?>>Blue</option>
-						<option value="blueviolet" <?php echo ($this->entity->color == 'blueviolet') ? 'selected="selected"' : ''; ?>>Blue Violet</option>
-						<option value="brown" <?php echo ($this->entity->color == 'brown') ? 'selected="selected"' : ''; ?>>Brown</option>
-						<option value="cornflowerblue" <?php echo ($this->entity->color == 'cornflowerblue') ? 'selected="selected"' : ''; ?>>Cornflower Blue</option>
-						<option value="darkorange" <?php echo ($this->entity->color == 'darkorange') ? 'selected="selected"' : ''; ?>>Dark Orange</option>
-						<option value="gainsboro" <?php echo ($this->entity->color == 'gainsboro') ? 'selected="selected"' : ''; ?>>Gainsboro</option>
-						<option value="gold" <?php echo ($this->entity->color == 'gold') ? 'selected="selected"' : ''; ?>>Gold</option>
-						<option value="greenyellow" <?php echo ($this->entity->color == 'greenyellow') ? 'selected="selected"' : ''; ?>>Green Yellow</option>
-						<option value="lightpink" <?php echo ($this->entity->color == 'lightpink') ? 'selected="selected"' : ''; ?>>Light Pink</option>
-						<option value="olive" <?php echo ($this->entity->color == 'olive') ? 'selected="selected"' : ''; ?>>Olive</option>
-						<option value="red" <?php echo ($this->entity->color == 'red') ? 'selected="selected"' : ''; ?>>Red</option>
-						<option value="vanilla" <?php echo ($this->entity->color == 'vanilla') ? 'selected="selected"' : ''; ?>>Vanilla</option>
-					</select></label>
-			</div>
-			<div class="element">
 				<label><span class="label">First Name</span>
 					<input class="field ui-widget-content" type="text" name="name_first" size="24" value="<?php echo $this->entity->name_first; ?>" /></label>
 			</div>
@@ -233,6 +216,23 @@ $this->note = 'Provide employee account details in this form.';
 				<label><span class="label">Fax</span>
 					<input class="field ui-widget-content" type="text" name="fax" size="24" value="<?php echo pines_phone_format($this->entity->fax); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
+			<div class="element">
+				<label><span class="label">Schedule Color</span>
+					<select name="color">
+						<option value="blue" <?php echo ($this->entity->color == 'blue') ? 'selected="selected"' : ''; ?>>Blue</option>
+						<option value="blueviolet" <?php echo ($this->entity->color == 'blueviolet') ? 'selected="selected"' : ''; ?>>Blue Violet</option>
+						<option value="brown" <?php echo ($this->entity->color == 'brown') ? 'selected="selected"' : ''; ?>>Brown</option>
+						<option value="cornflowerblue" <?php echo ($this->entity->color == 'cornflowerblue') ? 'selected="selected"' : ''; ?>>Cornflower Blue</option>
+						<option value="darkorange" <?php echo ($this->entity->color == 'darkorange') ? 'selected="selected"' : ''; ?>>Dark Orange</option>
+						<option value="gainsboro" <?php echo ($this->entity->color == 'gainsboro') ? 'selected="selected"' : ''; ?>>Gainsboro</option>
+						<option value="gold" <?php echo ($this->entity->color == 'gold') ? 'selected="selected"' : ''; ?>>Gold</option>
+						<option value="greenyellow" <?php echo ($this->entity->color == 'greenyellow') ? 'selected="selected"' : ''; ?>>Green Yellow</option>
+						<option value="lightpink" <?php echo ($this->entity->color == 'lightpink') ? 'selected="selected"' : ''; ?>>Light Pink</option>
+						<option value="olive" <?php echo ($this->entity->color == 'olive') ? 'selected="selected"' : ''; ?>>Olive</option>
+						<option value="red" <?php echo ($this->entity->color == 'red') ? 'selected="selected"' : ''; ?>>Red</option>
+						<option value="vanilla" <?php echo ($this->entity->color == 'vanilla') ? 'selected="selected"' : ''; ?>>Vanilla</option>
+					</select></label>
+			</div>
 			<div class="element full_width">
 				<span class="label">Description</span><br />
 				<textarea rows="3" cols="35" class="field peditor" style="width: 100%;" name="description"><?php echo $this->entity->description; ?></textarea>
@@ -246,9 +246,86 @@ $this->note = 'Provide employee account details in this form.';
 			<div class="element">
 				<label><span class="label">Username</span>
 					<span class="note">Provide either the username or GUID of the user to attach.</span>
-					<span class="note">Leave blank to remove any currently attached user.</span>
+					<span class="note">Blank to remove any currently attached user.</span>
 					<input class="field ui-widget-content" type="text" name="username" size="24" value="<?php echo $this->entity->user_account->username; ?>" /></label>
 			</div>
+			<div class="element">
+				<span class="label">Sync User</span>
+				<label>
+					<input class="field ui-widget-content" type="checkbox" name="sync_user" value="ON" <?php echo ($this->entity->sync_user ? 'checked="checked" ' : ''); ?>/> Keep the user's data in sync with this employee's. (Employee data will overwrite user data.)
+				</label>
+			</div>
+			<fieldset class="group">
+				<legend>User Templates</legend>
+				<div class="element heading">
+					<p>You can use a template to create a user for this employee.</p>
+				</div>
+				<script type="text/javascript">
+					// <![CDATA[
+					$(function(){
+						var template = $("#employee_details [name=user_template]");
+						var pgroupselects = $("#employee_details .user_template_group");
+						template.change(function(){
+							pgroupselects.hide();
+							if (this.value != "null")
+								$("#employee_details [name=user_template_group_"+this.value+"]").show();
+							return true;
+						});
+						pgroupselects.hide();
+					});
+					// ]]>
+				</script>
+				<div class="element">
+					<label><span class="label">User Template</span>
+						<select class="field ui-widget-content" name="user_template" size="1">
+							<option value="null">-- Select a Template --</option>
+							<?php foreach ($this->user_templates as $cur_template) { ?>
+							<option value="<?php echo $cur_template->guid; ?>"><?php echo $cur_template->name; ?></option>
+							<?php } ?>
+						</select></label>
+				</div>
+				<div class="element">
+					<label><span class="label">Primary Group</span>
+						<?php foreach ($this->user_templates as $cur_template) { ?>
+						<select class="field ui-widget-content user_template_group" name="user_template_group_<?php echo $cur_template->guid; ?>" size="1">
+							<?php if (!isset($cur_template->group)) { ?>
+							<option value="null">-- No Primary Group --</option>
+							<?php } else { ?>
+							<option value="<?php echo $cur_template->group->guid; ?>"><?php echo $cur_template->group->name; ?> [<?php echo $cur_template->group->groupname; ?>]</option>
+							<?php echo $pines->user_manager->get_group_tree('<option value="#guid#">#mark##name# [#groupname#]</option>', $pines->user_manager->get_group_array($cur_template->group->guid), null, '', '-> '); ?>
+							<?php } ?>
+						</select>
+						<?php } ?>
+					</label>
+				</div>
+				<div class="element">
+					<label><span class="label">Username</span>
+						<input class="field ui-widget-content" type="text" name="user_template_username" size="24" /></label>
+				</div>
+				<script type="text/javascript">
+					// <![CDATA[
+					$(function(){
+						var password = $("#employee_details [name=user_template_password]");
+						var password2 = $("#employee_details [name=user_template_password2]");
+						$("#employee_details").submit(function(){
+							if (password.val() != password2.val()) {
+								alert("Your passwords do not match.");
+								return false;
+							}
+							return true;
+						});
+					});
+					// ]]>
+				</script>
+				<div class="element">
+					<label><span class="label">Password</span>
+						<input class="field ui-widget-content" type="password" name="user_template_password" size="24" /></label>
+				</div>
+				<div class="element">
+					<label><span class="label">Repeat Password</span>
+						<input class="field ui-widget-content" type="password" name="user_template_password2" size="24" /></label>
+				</div>
+			</fieldset>
 			<br class="spacer" />
 		</div>
 		<div id="tab_addresses">

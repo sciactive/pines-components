@@ -47,6 +47,7 @@ if (empty($_REQUEST['username']) || !$pines->config->com_hrm->allow_attach) {
 } else {
 	$employee->user_account = user::factory(preg_match('/^\d+$/', $_REQUEST['username']) ? (int) $_REQUEST['username'] : $_REQUEST['username']);
 }
+$employee->sync_user = ($_REQUEST['sync_user'] == 'ON');
 
 // Addresses
 $employee->address_type = $_REQUEST['address_type'];
@@ -115,6 +116,27 @@ if (isset($test) && !$employee->is($test)) {
 	$employee->print_form();
 	display_notice("The user account specified is already attached to {$test->name}.");
 	return;
+}
+if ($pines->config->com_hrm->allow_attach && $_REQUEST['user_template'] != 'null') {
+	$new_user = user::factory($_REQUEST['user_template_username']);
+	if (isset($new_user->guid)) {
+		$employee->print_form();
+		display_notice('Selected username is already taken. Please provide a different username.');
+		return;
+	}
+	$user_template = com_hrm_user_template::factory((int) $_REQUEST['user_template']);
+	$new_user->username = $_REQUEST['user_template_username'];
+	$new_user->password($_REQUEST['user_template_password']);
+	$new_user->default_component = $user_template->default_component;
+	if (isset($user_template->group)) {
+		$group = group::factory((int) $_REQUEST["user_template_group_{$user_template->guid}"]);
+		if ($group->is($user_template->group) || $group->in_array($pines->com_user->get_group_descendents($user_template->group)))
+			$new_user->group = $group;
+	}
+	if (is_array($user_template->groups))
+		$new_user->groups = $user_template->groups;
+	if ($new_user->save())
+		$employee->user_account = $new_user;
 }
 
 if ($pines->config->com_hrm->global_employees)

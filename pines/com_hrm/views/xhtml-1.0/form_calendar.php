@@ -28,6 +28,10 @@ $this->title = (is_null($this->event->guid)) ? 'New Event' : $this->event->title
 		width: 155px;
 		text-align: center;
 	}
+	.form_date {
+		width: 100px;
+		text-align: center;
+	}
 	.form_select {
 		width: 160px;
 	}
@@ -68,8 +72,8 @@ $this->title = (is_null($this->event->guid)) ? 'New Event' : $this->event->title
 				?>
 		</select>
 	</div>
-	<div class="element">
-		<input class="ui-corner-all form_text" type="text" id="event_label" name="event_label" size="12" value="<?php echo (isset($this->event->label)) ? $this->event->label : 'Label'; ?>" onfocus="if(this.value==this.defaultValue)this.value=''" onblur="if(this.value=='')this.value=this.defaultValue" />
+	<div class="element" style="padding-bottom: 0px;">
+		<input class="ui-corner-all form_text" type="text" id="event_label" name="event_label" value="<?php echo (isset($this->event->label)) ? $this->event->label : 'Label'; ?>" onfocus="if(this.value==this.defaultValue)this.value=''" onblur="if(this.value=='')this.value=this.defaultValue" />
 	</div>
 	<?php
 		if ($this->event->guid) {
@@ -79,14 +83,21 @@ $this->title = (is_null($this->event->guid)) ? 'New Event' : $this->event->title
 			$end_time = pines_date_format($this->event->end, null, 'H');				
 		}
 	?>
-	<div class="element">
-		<input class="ui-corner-all form_text" type="text" id="event_date" name="event_date" size="12" value="<?php echo empty($start_date) ? date('n/j/Y') : $start_date; ?>" />
+	<script type="text/javascript">
+			// <![CDATA[
+			$(function(){
+				$("#event_date").change(function(){
+					$("#event_enddate").val($(this).val());
+				}).change();
+			});
+			// ]]>
+	</script>
+	<div class="element" style="padding-bottom: 0px;">
+		<span class="note">Start</span><input class="ui-corner-all form_text" type="text" id="event_date" name="event_date" value="<?php echo empty($start_date) ? date('n/j/Y') : $start_date; ?>" />
 	</div>
-	<?php if ($end_date != $start_date) { ?>
 	<div class="element">
-		<input class="ui-corner-all form_text" type="text" id="event_enddate" name="event_enddate" size="12" value="<?php echo $end_date; ?>" />
+		<span class="note">End</span><input class="ui-corner-all form_text" type="text" id="event_enddate" name="event_enddate" value="<?php echo $end_date; ?>" />
 	</div>
-	<?php } ?>
 	<div class="element">
 		<script type="text/javascript">
 			// <![CDATA[

@@ -101,6 +101,14 @@ class com_entity extends component {
 	 * - data_i - An array of inclusive key/values corresponding to var/values.
 	 * - match - An array of key/regex corresponding to var/values.
 	 * - match_i - An array of inclusive key/regex corresponding to var/values.
+	 * - gt - An array of key/numbers corresponding to var/values.
+	 * - gt_i - An array of inclusive key/numbers corresponding to var/values.
+	 * - gte - An array of key/numbers corresponding to var/values.
+	 * - gte_i - An array of inclusive key/numbers corresponding to var/values.
+	 * - lt - An array of key/numbers corresponding to var/values.
+	 * - lt_i - An array of inclusive key/numbers corresponding to var/values.
+	 * - lte - An array of key/numbers corresponding to var/values.
+	 * - lte_i - An array of inclusive key/numbers corresponding to var/values.
 	 * - ref - An array of key/values corresponding to var/values.
 	 * - ref_i - An array of inclusive key/values corresponding to var/values.
 	 * - class - The class to create each entity with.
@@ -108,6 +116,10 @@ class com_entity extends component {
 	 * - offset - The offset from the first (0) to start retrieving entities.
 	 *
 	 * For regex matching, preg_match() is used.
+	 *
+	 * The gt/gte/lt/lte options check whether a variable is greater than/
+	 * greater or equal to/less than/less than or equal to a number,
+	 * respectively.
 	 *
 	 * For reference searching, the values can be an entity, GUID, or an array
 	 * of either. Inclusive ref can't be a single value, as that wouldn't make
@@ -118,6 +130,7 @@ class com_entity extends component {
 	 *
 	 * @param array $options The options to search for.
 	 * @return array|null An array of entities, or null on failure.
+	 * @todo Implement gt/lt options.
 	 */
 	public function get_entities($options = array()) {
 		global $pines;
@@ -216,8 +229,10 @@ class com_entity extends component {
 						break;
 					case 'tags':
 						if (is_array($option)) {
-							foreach($option as $cur_option)
-								$pass = $pass && in_array($cur_option, $tags);
+							foreach($option as $cur_option) {
+								if (!($pass = $pass && in_array($cur_option, $tags)))
+									break 2;
+							}
 						} else {
 							$pass = $pass && in_array($option, $tags);
 						}

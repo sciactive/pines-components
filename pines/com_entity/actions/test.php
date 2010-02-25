@@ -44,6 +44,7 @@ $entity_test->match_test = "Hello, my name is Edward McCheese. It is a pleasure 
 This one's email address is nice_hat-wednesday+newyork@im-a-hat.hat.
 This one's phone number is (555) 555-1818.
 This one's zip code is 92064.";
+$entity_test->test_number = 30;
 $test->tests['save'][0] = ($entity_test->save() && !is_null($entity_test->guid));
 $test->tests['save'][1] = microtime(true);
 $test->tests['save'][2] = 'Saving entity...';
@@ -55,7 +56,7 @@ $entity_result = $pines->entity_manager->get_entity($entity_test->guid);
 $test->tests['by_guid'][0] = ($entity_result->name == $entity_test->name);
 $test->tests['by_guid'][1] = microtime(true);
 $test->tests['by_guid'][2] = 'Retrieving entity by GUID...';
-unset($entity_result);
+//unset($entity_result);
 
 // Testing wrong GUID...
 $entity_result = new entity;
@@ -63,7 +64,7 @@ $entity_result = $pines->entity_manager->get_entity($entity_test->guid + 1);
 $test->tests['wrong_guid'][0] = (empty($entity_result) ? true : ($entity_result->name != $entity_test->name));
 $test->tests['wrong_guid'][1] = microtime(true);
 $test->tests['wrong_guid'][2] = 'Testing wrong GUID...';
-unset($entity_result);
+//unset($entity_result);
 
 // Retrieving entity by GUID and tags...
 $entity_result = new entity;
@@ -71,7 +72,7 @@ $entity_result = $pines->entity_manager->get_entity(array('guid' => $entity_test
 $test->tests['guid_tags'][0] = ($entity_result->name == $entity_test->name);
 $test->tests['guid_tags'][1] = microtime(true);
 $test->tests['guid_tags'][2] = 'Retrieving entity by GUID and tags...';
-unset($entity_result);
+//unset($entity_result);
 
 // Testing GUID and wrong tags...
 $entity_result = new entity;
@@ -79,7 +80,7 @@ $entity_result = $pines->entity_manager->get_entity(array('guid' => $entity_test
 $test->tests['guid_wr_tags'][0] = empty($entity_result);
 $test->tests['guid_wr_tags'][1] = microtime(true);
 $test->tests['guid_wr_tags'][2] = 'Testing GUID and wrong tags...';
-unset($entity_result);
+//unset($entity_result);
 
 // Retrieving entity by tags...
 $entity_result = array();
@@ -92,7 +93,7 @@ foreach ($entity_result as $cur_entity) {
 $test->tests['tags'][0] = ($found_match);
 $test->tests['tags'][1] = microtime(true);
 $test->tests['tags'][2] = 'Retrieving entity by tags...';
-unset($entity_result);
+//unset($entity_result);
 
 // Testing wrong tags...
 $entity_result = array();
@@ -105,7 +106,7 @@ foreach ($entity_result as $cur_entity) {
 $test->tests['wr_tags'][0] = (!$found_match);
 $test->tests['wr_tags'][1] = microtime(true);
 $test->tests['wr_tags'][2] = 'Testing wrong tags...';
-unset($entity_result);
+//unset($entity_result);
 
 // Retrieving entity by tags inclusively...
 $entity_result = array();
@@ -118,7 +119,7 @@ foreach ($entity_result as $cur_entity) {
 $test->tests['tags_inc'][0] = ($found_match);
 $test->tests['tags_inc'][1] = microtime(true);
 $test->tests['tags_inc'][2] = 'Retrieving entity by tags inclusively...';
-unset($entity_result);
+//unset($entity_result);
 
 // Testing wrong inclusive tags...
 $entity_result = array();
@@ -131,7 +132,7 @@ foreach ($entity_result as $cur_entity) {
 $test->tests['wr_tags_inc'][0] = (!$found_match);
 $test->tests['wr_tags_inc'][1] = microtime(true);
 $test->tests['wr_tags_inc'][2] = 'Testing wrong inclusive tags...';
-unset($entity_result);
+//unset($entity_result);
 
 // Retrieving entity by mixed tags...
 $entity_result = array();
@@ -144,7 +145,7 @@ foreach ($entity_result as $cur_entity) {
 $test->tests['mixed_tags'][0] = ($found_match);
 $test->tests['mixed_tags'][1] = microtime(true);
 $test->tests['mixed_tags'][2] = 'Retrieving entity by mixed tags...';
-unset($entity_result);
+//unset($entity_result);
 
 // Testing wrong inclusive mixed tags...
 $entity_result = array();
@@ -157,7 +158,7 @@ foreach ($entity_result as $cur_entity) {
 $test->tests['wr_inc_mx_tags'][0] = (!$found_match);
 $test->tests['wr_inc_mx_tags'][1] = microtime(true);
 $test->tests['wr_inc_mx_tags'][2] = 'Testing wrong inclusive mixed tags...';
-unset($entity_result);
+//unset($entity_result);
 
 // Testing wrong exclusive mixed tags...
 $entity_result = array();
@@ -170,7 +171,7 @@ foreach ($entity_result as $cur_entity) {
 $test->tests['wr_exc_mx_tags'][0] = (!$found_match);
 $test->tests['wr_exc_mx_tags'][1] = microtime(true);
 $test->tests['wr_exc_mx_tags'][2] = 'Testing wrong exclusive mixed tags...';
-unset($entity_result);
+//unset($entity_result);
 
 // Retrieving entity by data...
 $entity_result = array();
@@ -183,7 +184,7 @@ foreach ($entity_result as $cur_entity) {
 $test->tests['data'][0] = ($found_match);
 $test->tests['data'][1] = microtime(true);
 $test->tests['data'][2] = 'Retrieving entity by data...';
-unset($entity_result);
+//unset($entity_result);
 
 // Testing wrong data...
 $entity_result = array();
@@ -196,7 +197,7 @@ foreach ($entity_result as $cur_entity) {
 $test->tests['wr_data'][0] = (!$found_match);
 $test->tests['wr_data'][1] = microtime(true);
 $test->tests['wr_data'][2] = 'Testing wrong data...';
-unset($entity_result);
+//unset($entity_result);
 
 // Retrieving entity by regex match...
 $entity_result = array();
@@ -239,7 +240,7 @@ $passed_all = $passed_all && $found_match;
 $test->tests['match'][0] = ($passed_all);
 $test->tests['match'][1] = microtime(true);
 $test->tests['match'][2] = 'Retrieving entity by regex match...';
-unset($entity_result);
+//unset($entity_result);
 
 // Testing wrong regex match...
 $entity_result = array();
@@ -268,7 +269,7 @@ $passed_all = $passed_all || $found_match;
 $test->tests['wr_match'][0] = (!$passed_all);
 $test->tests['wr_match'][1] = microtime(true);
 $test->tests['wr_match'][2] = 'Testing wrong regex match...';
-unset($entity_result);
+//unset($entity_result);
 
 // Retrieving entity by tags and data...
 $entity_result = array();
@@ -281,7 +282,7 @@ foreach ($entity_result as $cur_entity) {
 $test->tests['tags_data'][0] = ($found_match);
 $test->tests['tags_data'][1] = microtime(true);
 $test->tests['tags_data'][2] = 'Retrieving entity by tags and data...';
-unset($entity_result);
+//unset($entity_result);
 
 // Testing wrong tags and right data...
 $entity_result = array();
@@ -294,7 +295,7 @@ foreach ($entity_result as $cur_entity) {
 $test->tests['wr_tags_data'][0] = (!$found_match);
 $test->tests['wr_tags_data'][1] = microtime(true);
 $test->tests['wr_tags_data'][2] = 'Testing wrong tags and right data...';
-unset($entity_result);
+//unset($entity_result);
 
 // Testing right tags and wrong data...
 $entity_result = array();
@@ -307,7 +308,7 @@ foreach ($entity_result as $cur_entity) {
 $test->tests['tags_wr_data'][0] = (!$found_match);
 $test->tests['tags_wr_data'][1] = microtime(true);
 $test->tests['tags_wr_data'][2] = 'Testing right tags and wrong data...';
-unset($entity_result);
+//unset($entity_result);
 
 // Testing wrong tags and wrong data...
 $entity_result = array();
@@ -320,7 +321,59 @@ foreach ($entity_result as $cur_entity) {
 $test->tests['wr_tags_wr_data'][0] = (!$found_match);
 $test->tests['wr_tags_wr_data'][1] = microtime(true);
 $test->tests['wr_tags_wr_data'][2] = 'Testing wrong tags and wrong data...';
-unset($entity_result);
+//unset($entity_result);
+
+// Retrieving entity by inequality...
+$entity_result = array();
+$found_match = false;
+$entity_result = $pines->entity_manager->get_entities(array('gte_i' => array('test_number' => 30, 'pickles' => 100)));
+foreach ($entity_result as $cur_entity) {
+	if ($cur_entity->name == $entity_test->name)
+		$found_match = true;
+}
+$test->tests['ineq'][0] = ($found_match);
+$test->tests['ineq'][1] = microtime(true);
+$test->tests['ineq'][2] = 'Retrieving entity by inequality...';
+//unset($entity_result);
+
+// Testing wrong inequality...
+$entity_result = array();
+$found_match = false;
+$entity_result = $pines->entity_manager->get_entities(array('lte' => array('test_number' => 29.99)));
+foreach ($entity_result as $cur_entity) {
+	if ($cur_entity->name == $entity_test->name)
+		$found_match = true;
+}
+$test->tests['wr_ineq'][0] = (!$found_match);
+$test->tests['wr_ineq'][1] = microtime(true);
+$test->tests['wr_ineq'][2] = 'Testing wrong inequality...';
+//unset($entity_result);
+
+// Retrieving entity by time...
+$entity_result = array();
+$found_match = false;
+$entity_result = $pines->entity_manager->get_entities(array('gt' => array('p_cdate' => time() - 10), 'tags' => array('com_entity', 'test')));
+foreach ($entity_result as $cur_entity) {
+	if ($cur_entity->name == $entity_test->name)
+		$found_match = true;
+}
+$test->tests['time'][0] = ($found_match);
+$test->tests['time'][1] = microtime(true);
+$test->tests['time'][2] = 'Retrieving entity by time...';
+//unset($entity_result);
+
+// Testing wrong time...
+$entity_result = array();
+$found_match = false;
+$entity_result = $pines->entity_manager->get_entities(array('gt' => array('p_cdate' => time() + 10), 'tags' => array('com_entity', 'test')));
+foreach ($entity_result as $cur_entity) {
+	if ($cur_entity->name == $entity_test->name)
+		$found_match = true;
+}
+$test->tests['wr_time'][0] = (!$found_match);
+$test->tests['wr_time'][1] = microtime(true);
+$test->tests['wr_time'][2] = 'Testing wrong time...';
+//unset($entity_result);
 
 // Testing referenced entities...
 $entity_reference_test = new entity('com_entity', 'test');
@@ -354,7 +407,7 @@ foreach ($entity_result as $cur_entity) {
 $test->tests['ref_get'][0] = ($found_match);
 $test->tests['ref_get'][1] = microtime(true);
 $test->tests['ref_get'][2] = 'Retrieving entity by reference...';
-unset($entity_result);
+//unset($entity_result);
 
 // Testing wrong reference...
 $entity_result = array();
@@ -367,7 +420,7 @@ foreach ($entity_result as $cur_entity) {
 $test->tests['ref_wr_get'][0] = (!$found_match);
 $test->tests['ref_wr_get'][1] = microtime(true);
 $test->tests['ref_wr_get'][2] = 'Testing wrong reference...';
-unset($entity_result);
+//unset($entity_result);
 
 // Testing non-existent reference...
 $entity_result = array();
@@ -380,7 +433,7 @@ foreach ($entity_result as $cur_entity) {
 $test->tests['ref_ne_get'][0] = (!$found_match);
 $test->tests['ref_ne_get'][1] = microtime(true);
 $test->tests['ref_ne_get'][2] = 'Testing non-existent reference...';
-unset($entity_result);
+//unset($entity_result);
 
 // Retrieving entity by inclusive reference...
 $entity_result = array();
@@ -393,7 +446,7 @@ foreach ($entity_result as $cur_entity) {
 $test->tests['ref_i_get'][0] = ($found_match);
 $test->tests['ref_i_get'][1] = microtime(true);
 $test->tests['ref_i_get'][2] = 'Retrieving entity by inclusive reference...';
-unset($entity_result);
+//unset($entity_result);
 
 // Testing wrong inclusive reference...
 $entity_result = array();
@@ -406,7 +459,7 @@ foreach ($entity_result as $cur_entity) {
 $test->tests['ref_wr_i_get'][0] = (!$found_match);
 $test->tests['ref_wr_i_get'][1] = microtime(true);
 $test->tests['ref_wr_i_get'][2] = 'Testing wrong inclusive reference...';
-unset($entity_result);
+//unset($entity_result);
 
 // Retrieving entity by array reference...
 $entity_result = array();
@@ -419,7 +472,7 @@ foreach ($entity_result as $cur_entity) {
 $test->tests['ref_a_get'][0] = ($found_match);
 $test->tests['ref_a_get'][1] = microtime(true);
 $test->tests['ref_a_get'][2] = 'Retrieving entity by array reference...';
-unset($entity_result);
+//unset($entity_result);
 
 // Testing wrong array reference...
 $entity_result = array();
@@ -432,7 +485,7 @@ foreach ($entity_result as $cur_entity) {
 $test->tests['ref_wr_a_get'][0] = (!$found_match);
 $test->tests['ref_wr_a_get'][1] = microtime(true);
 $test->tests['ref_wr_a_get'][2] = 'Testing wrong array reference...';
-unset($entity_result);
+//unset($entity_result);
 
 // Deleting referenced entities...
 $test->tests['del_ref'][0] = ($entity_test->reference->delete() && is_null($entity_test->reference->guid));

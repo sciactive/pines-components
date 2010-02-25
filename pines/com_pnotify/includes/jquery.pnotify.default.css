@@ -20,7 +20,6 @@
 html > body .ui-pnotify {
 	position: fixed;
 }
-/* This is in development. It may be removed. */
 .ui-pnotify .ui-pnotify-shadow {
 	margin: 0;
 	position: absolute;

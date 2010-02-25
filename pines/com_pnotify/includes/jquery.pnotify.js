@@ -248,10 +248,8 @@
 			});
 			pnotify.opts = opts;
 			// Create a drop shadow.
-			if (opts.pnotify_shadow) {
-				pnotify.shadow_container = $("<div />", {"class": "ui-widget-shadow ui-pnotify-shadow"})
-				.appendTo(pnotify);
-			}
+			if (opts.pnotify_shadow)
+				pnotify.shadow_container = $("<div />", {"class": "ui-widget-shadow ui-pnotify-shadow"}).prependTo(pnotify);
 			// Create a container for the notice contents.
 			pnotify.container = $("<div />", {"class": "ui-corner-all ui-pnotify-container "+(opts.pnotify_type == "error" ? "ui-state-error" : "ui-state-highlight")})
 			.appendTo(pnotify);
@@ -268,6 +266,13 @@
 					opts = $.extend({}, opts, options);
 				}
 				pnotify.opts = opts;
+				// Update the shadow.
+				if (opts.pnotify_shadow != old_opts.pnotify_shadow) {
+					if (opts.pnotify_shadow)
+						pnotify.shadow_container = $("<div />", {"class": "ui-widget-shadow ui-pnotify-shadow"}).prependTo(pnotify);
+					else
+						pnotify.children(".ui-pnotify-shadow").remove();
+				}
 				// Update the additional classes.
 				if (opts.pnotify_addclass === false) {
 					pnotify.removeClass(old_opts.pnotify_addclass);
@@ -608,7 +613,7 @@
 		pnotify_animate_speed: "slow",
 		// Opacity of the notice.
 		pnotify_opacity: 1,
-		// Display a drop shadow. (In development. May be removed.)
+		// Display a drop shadow.
 		pnotify_shadow: false,
 		// Provide a button for the user to manually close the notice.
 		pnotify_closer: true,

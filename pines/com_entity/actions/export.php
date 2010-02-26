@@ -12,12 +12,9 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('system/all') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_entity', 'export', array('filename' => $_REQUEST['filename']), false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_entity', 'export', null, false));
 
-if ($pines->entity_manager->export($pines->config->setting_upload.$_REQUEST['filename'])) {
-	display_notice('Export complete.');
-} else {
-	display_notice('Export failed.');
-}
+@set_time_limit(3600);
+$pines->entity_manager->export();
 
 ?>

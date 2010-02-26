@@ -12,12 +12,17 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('system/all') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_entity', 'import', array('filename' => $_REQUEST['filename']), false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_entity', 'import', null, false));
 
-if ($pines->entity_manager->import($pines->config->setting_upload.$_REQUEST['filename'])) {
-	display_notice('Import complete.');
-} else {
-	display_notice('Import failed.');
+if (!empty($_FILES['entity_import']['tmp_name'])) {
+	set_time_limit(3600);
+	if ($pines->entity_manager->import($_FILES['entity_import']['tmp_name'])) {
+		display_notice('Import complete.');
+	} else {
+		display_notice('Import failed.');
+	}
 }
+
+$module = new module('com_entity', 'import', 'content');
 
 ?>

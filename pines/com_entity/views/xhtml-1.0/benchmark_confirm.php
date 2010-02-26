@@ -16,7 +16,7 @@ $this->title = 'Entity Manager Benchmark';
 	<div class="element heading">
 		<p>
 			This entity manager benchmark will create, retrieve and delete
-			100,000 entities and display the timing results here. It will take a
+			10,000 entities and display the timing results here. It will take a
 			<strong>VERY</strong> long time to complete. Are you sure you want
 			to proceed?
 		</p>

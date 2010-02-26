@@ -30,9 +30,9 @@ set_time_limit(3600);
 $entity_start_time = microtime(true);
 $benchmark->time_start = $entity_start_time;
 
-// Creating 100000 entities...
+// Creating 10000 entities...
 $pass = true;
-for ($i=0; $i<100000; $i++) {
+for ($i=0; $i<10000; $i++) {
 	$entity = entity::factory();
 	$entity->add_tag('com_entity', 'benchmark');
 	$entity->name = "Entity Benchmark ".time();
@@ -48,15 +48,18 @@ $benchmark->tests['create'][1] = microtime(true);
 $benchmark->tests['create'][2] = 'Creating 100000 entities...';
 
 // Retrieving entities...
-$entities = $pines->entity_manager->get_entities(array('tags' => array('com_entity', 'benchmark')));
+for ($i=0; $i<10000; $i++) {
+	$entities = $pines->entity_manager->get_entities(array('offset' => $i, 'limit' => 1, 'tags' => array('com_entity', 'benchmark')));
+}
 $benchmark->tests['retrieve'][0] = count($entities);
 $benchmark->tests['retrieve'][1] = microtime(true);
 $benchmark->tests['retrieve'][2] = 'Retrieving entities...';
 
 // Deleting entities...
 $pass = true;
-foreach ($entities as $entity) {
-	$pass = $pass && $entity->delete();
+for ($i=0; $i<10000; $i++) {
+	$entities = $pines->entity_manager->get_entities(array('offset' => $i, 'limit' => 1, 'tags' => array('com_entity', 'benchmark')));
+	$pass = $pass && $entities[0]->delete();
 }
 $benchmark->tests['delete'][0] = $pass;
 $benchmark->tests['delete'][1] = microtime(true);

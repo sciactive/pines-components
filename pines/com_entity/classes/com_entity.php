@@ -158,100 +158,22 @@ class com_entity extends component {
 					foreach ($option as $cur_tag) {
 						if ( $cur_query )
 							$cur_query .= ' AND ';
-						$cur_query .= 'e.`tags` LIKE \'%\"'.mysql_real_escape_string($cur_tag, $pines->db_manager->link).'\"%\'';
+						$cur_query .= 'LOCATE(\'\"'.mysql_real_escape_string($cur_tag, $pines->db_manager->link).'\"\', e.`tags`)';
 					}
 					break;
 				case 'tags_i':
 					foreach ($option as $cur_tag) {
 						if ( $cur_query )
 							$cur_query .= ' OR ';
-						$cur_query .= 'e.`tags` LIKE \'%\"'.mysql_real_escape_string($cur_tag, $pines->db_manager->link).'\"%\'';
+						$cur_query .= 'LOCATE(\'\"'.mysql_real_escape_string($cur_tag, $pines->db_manager->link).'\"\', e.`tags`)';
 					}
 					break;
 				case 'data':
-					foreach ($option as $cur_name => $cur_value) {
-						if ( $cur_query )
-							$cur_query .= ' AND ';
-						$cur_query .= 'EXISTS (SELECT * FROM `'.$pines->config->com_mysql->prefix.'com_entity_data` d WHERE e.`guid`=d.`guid` AND d.`name`=\''.mysql_real_escape_string($cur_name, $pines->db_manager->link).'\')';
-					}
-					break;
-				case 'data_i':
-					foreach ($option as $cur_name => $cur_value) {
-						if ( $cur_query )
-							$cur_query .= ' OR ';
-						$cur_query .= 'EXISTS (SELECT * FROM `'.$pines->config->com_mysql->prefix.'com_entity_data` d WHERE e.`guid`=d.`guid` AND d.`name`=\''.mysql_real_escape_string($cur_name, $pines->db_manager->link).'\')';
-					}
-					break;
 				case 'match':
-					foreach ($option as $cur_name => $cur_value) {
-						if ( $cur_query )
-							$cur_query .= ' AND ';
-						$cur_query .= 'EXISTS (SELECT * FROM `'.$pines->config->com_mysql->prefix.'com_entity_data` d WHERE e.`guid`=d.`guid` AND d.`name`=\''.mysql_real_escape_string($cur_name, $pines->db_manager->link).'\')';
-					}
-					break;
-				case 'match_i':
-					foreach ($option as $cur_name => $cur_value) {
-						if ( $cur_query )
-							$cur_query .= ' OR ';
-						$cur_query .= 'EXISTS (SELECT * FROM `'.$pines->config->com_mysql->prefix.'com_entity_data` d WHERE e.`guid`=d.`guid` AND d.`name`=\''.mysql_real_escape_string($cur_name, $pines->db_manager->link).'\')';
-					}
-					break;
 				case 'gt':
-					foreach ($option as $cur_name => $cur_value) {
-						if ( $cur_query )
-							$cur_query .= ' AND ';
-						$cur_query .= 'EXISTS (SELECT * FROM `'.$pines->config->com_mysql->prefix.'com_entity_data` d WHERE e.`guid`=d.`guid` AND d.`name`=\''.mysql_real_escape_string($cur_name, $pines->db_manager->link).'\')';
-					}
-					break;
-				case 'gt_i':
-					foreach ($option as $cur_name => $cur_value) {
-						if ( $cur_query )
-							$cur_query .= ' OR ';
-						$cur_query .= 'EXISTS (SELECT * FROM `'.$pines->config->com_mysql->prefix.'com_entity_data` d WHERE e.`guid`=d.`guid` AND d.`name`=\''.mysql_real_escape_string($cur_name, $pines->db_manager->link).'\')';
-					}
-					break;
 				case 'gte':
-					foreach ($option as $cur_name => $cur_value) {
-						if ( $cur_query )
-							$cur_query .= ' AND ';
-						$cur_query .= 'EXISTS (SELECT * FROM `'.$pines->config->com_mysql->prefix.'com_entity_data` d WHERE e.`guid`=d.`guid` AND d.`name`=\''.mysql_real_escape_string($cur_name, $pines->db_manager->link).'\')';
-					}
-					break;
-				case 'gte_i':
-					foreach ($option as $cur_name => $cur_value) {
-						if ( $cur_query )
-							$cur_query .= ' OR ';
-						$cur_query .= 'EXISTS (SELECT * FROM `'.$pines->config->com_mysql->prefix.'com_entity_data` d WHERE e.`guid`=d.`guid` AND d.`name`=\''.mysql_real_escape_string($cur_name, $pines->db_manager->link).'\')';
-					}
-					break;
 				case 'lt':
-					foreach ($option as $cur_name => $cur_value) {
-						if ( $cur_query )
-							$cur_query .= ' AND ';
-						$cur_query .= 'EXISTS (SELECT * FROM `'.$pines->config->com_mysql->prefix.'com_entity_data` d WHERE e.`guid`=d.`guid` AND d.`name`=\''.mysql_real_escape_string($cur_name, $pines->db_manager->link).'\')';
-					}
-					break;
-				case 'lt_i':
-					foreach ($option as $cur_name => $cur_value) {
-						if ( $cur_query )
-							$cur_query .= ' OR ';
-						$cur_query .= 'EXISTS (SELECT * FROM `'.$pines->config->com_mysql->prefix.'com_entity_data` d WHERE e.`guid`=d.`guid` AND d.`name`=\''.mysql_real_escape_string($cur_name, $pines->db_manager->link).'\')';
-					}
-					break;
 				case 'lte':
-					foreach ($option as $cur_name => $cur_value) {
-						if ( $cur_query )
-							$cur_query .= ' AND ';
-						$cur_query .= 'EXISTS (SELECT * FROM `'.$pines->config->com_mysql->prefix.'com_entity_data` d WHERE e.`guid`=d.`guid` AND d.`name`=\''.mysql_real_escape_string($cur_name, $pines->db_manager->link).'\')';
-					}
-					break;
-				case 'lte_i':
-					foreach ($option as $cur_name => $cur_value) {
-						if ( $cur_query )
-							$cur_query .= ' OR ';
-						$cur_query .= 'EXISTS (SELECT * FROM `'.$pines->config->com_mysql->prefix.'com_entity_data` d WHERE e.`guid`=d.`guid` AND d.`name`=\''.mysql_real_escape_string($cur_name, $pines->db_manager->link).'\')';
-					}
-					break;
 				case 'ref':
 					foreach ($option as $cur_name => $cur_value) {
 						if ( $cur_query )
@@ -259,6 +181,12 @@ class com_entity extends component {
 						$cur_query .= 'EXISTS (SELECT * FROM `'.$pines->config->com_mysql->prefix.'com_entity_data` d WHERE e.`guid`=d.`guid` AND d.`name`=\''.mysql_real_escape_string($cur_name, $pines->db_manager->link).'\')';
 					}
 					break;
+				case 'data_i':
+				case 'match_i':
+				case 'gt_i':
+				case 'gte_i':
+				case 'lt_i':
+				case 'lte_i':
 				case 'ref_i':
 					foreach ($option as $cur_name => $cur_value) {
 						if ( $cur_query )

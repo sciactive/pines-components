@@ -352,7 +352,7 @@ $test->tests['wr_ineq'][2] = 'Testing wrong inequality...';
 // Retrieving entity by time...
 $entity_result = array();
 $found_match = false;
-$entity_result = $pines->entity_manager->get_entities(array('gt' => array('p_cdate' => time() - 10), 'tags' => array('com_entity', 'test')));
+$entity_result = $pines->entity_manager->get_entities(array('gt' => array('p_cdate' => time() - 120), 'tags' => array('com_entity', 'test')));
 foreach ($entity_result as $cur_entity) {
 	if ($cur_entity->name == $entity_test->name)
 		$found_match = true;

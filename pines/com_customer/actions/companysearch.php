@@ -1,6 +1,6 @@
 <?php
 /**
- * Search customers, returning JSON.
+ * Search companies, returning JSON.
  *
  * @package Pines
  * @subpackage com_customer

@@ -13,16 +13,15 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
-		'name' => 'report_duration',
-		'cname' => 'Report Duration',
-		'description' => 'Monthly, Weekly or Daily.',
-		'value' => 'Daily',
-	),
-	array(
 		'name' => 'timespans',
-		'cname' => 'Timespans',
-		'description' => 'Hours separated by dashes, using 24-hour times.',
-		'value' => '10-13, 13-16, 16-19, 19-24',
+		'cname' => 'Report Timespans',
+		'description' => 'Hours separated by dashes, using the 24-hour time format.',
+		'value' => array(
+			'10-13',
+			'13-16',
+			'16-19',
+			'19-24'
+		),
 	),
 );
 

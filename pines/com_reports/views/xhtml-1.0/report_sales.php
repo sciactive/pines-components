@@ -21,7 +21,6 @@ $days = $total_seconds/(24*60*60);
 
 $date_array = array();
 $total = array();
-$timespans = explode(', ', $pines->config->com_reports->timespans);
 foreach ($this->sales as $cur_sale) {
 	$event_month = date('n', $cur_sale->p_cdate);
 	$event_day = date('j', $cur_sale->p_cdate);
@@ -29,7 +28,7 @@ foreach ($this->sales as $cur_sale) {
 	// This is used to identify daily sales, divided into timespan totals.
 	$date_str = date('n/j/Y', $cur_sale->p_cdate);
 	$sale_time = date('H', $cur_sale->p_cdate);
-	foreach ($timespans as $timespan) {
+	foreach ($pines->config->com_reports->timespans as $timespan) {
 		$span = explode('-', $timespan);
 		if ( ($sale_time >= $span[0]) && ($sale_time < $span[1]) ) {
 			if ($date_array[$date_str][$timespan]) {
@@ -116,6 +115,7 @@ foreach ($this->sales as $cur_sale) {
 					}
 				}
 				unset($date_array);
+				unset($total);
 				?>
 			],
 			viewDisplay: function(view) {

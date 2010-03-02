@@ -100,6 +100,9 @@ class com_authorizenet extends component {
 				//$state = $args['payment']['data']['state'];
 				//$zip = $args['payment']['data']['zip'];
 				$card_code = $args['payment']['data']['cid'];
+				// TODO: Find a better name for transactions.
+				$invoice_num = $args['sale']->transaction_id;
+				$transaction_name = $args['sale']->products[0]->entity->name;
 
 				$post_values = array(
 					// the API Login ID and Transaction Key must be replaced with valid values
@@ -118,6 +121,7 @@ class com_authorizenet extends component {
 					'x_exp_date'		=> $exp_date,
 
 					'x_amount'			=> $amt,
+					'x_invoice_num'		=> $invoice_num,
 					'x_description'		=> $transaction_name,
 
 					'x_first_name'		=> $firstname,

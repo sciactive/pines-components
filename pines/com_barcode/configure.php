@@ -40,7 +40,7 @@ return array(
 		'name' => 'width',
 		'cname' => 'Default Width',
 		'description' => 'The width of the image the barcoded will be generated in.',
-		'value' => 200,
+		'value' => 250,
 	),
 	array(
 		'name' => 'height',

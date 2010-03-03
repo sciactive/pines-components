@@ -28,24 +28,25 @@ foreach ($this->sales as $cur_sale) {
 	// This is used to identify daily sales, divided into timespan totals.
 	$date_str = date('n/j/Y', $cur_sale->p_cdate);
 	$sale_time = date('H', $cur_sale->p_cdate);
+	if (!$total[$date_str]) {
+		$total[$date_str][0] = $cur_sale->p_cdate;
+		$total[$date_str][1] = mktime(23,0,0,$event_month,$event_day,$event_year);
+		$total[$date_str][2] = mktime(23,0,0,$event_month,$event_day,$event_year);
+		$total[$date_str][3] = 0;
+	}
 	foreach ($pines->config->com_reports->timespans as $timespan) {
 		$span = explode('-', $timespan);
-		if ( ($sale_time >= $span[0]) && ($sale_time < $span[1]) ) {
-			if ($date_array[$date_str][$timespan]) {
-				$date_array[$date_str][$timespan][3] += $cur_sale->total;
-				// Daily totals.
-				$total[$date_str][0] = $cur_sale->p_cdate;
-				$total[$date_str][1] += $cur_sale->total;
-			} else {
-				$date_array[$date_str][$timespan][0] = $cur_sale->p_cdate;
-				$date_array[$date_str][$timespan][1] = mktime($span[0],0,0,$event_month,$event_day,$event_year);
-				$date_array[$date_str][$timespan][2] = mktime($span[1],0,0,$event_month,$event_day,$event_year);
-				$date_array[$date_str][$timespan][3] = $cur_sale->total;
-				// Daily totals.
-				$total[$date_str][0] = $cur_sale->p_cdate;
-				$total[$date_str][1] += $cur_sale->total;
-			}
+		if (!$date_array[$date_str][$timespan]) {
+			$date_array[$date_str][$timespan][0] = $cur_sale->p_cdate;
+			$date_array[$date_str][$timespan][1] = mktime($span[0],0,0,$event_month,$event_day,$event_year);
+			$date_array[$date_str][$timespan][2] = mktime($span[1],0,0,$event_month,$event_day,$event_year);
+			$date_array[$date_str][$timespan][3] = 0;
 		}
+		if ( ($sale_time >= $span[0]) && ($sale_time < $span[1]) ) {
+			$date_array[$date_str][$timespan][3] += $cur_sale->total;
+			$total[$date_str][3] += $cur_sale->total;
+		}
+		$span_count++;
 	}
 }
 ?>
@@ -104,13 +105,14 @@ foreach ($this->sales as $cur_sale) {
 				}
 				// Total sales for each day.
 				foreach ($total as $cur_total) {
-					echo ',';
+					if ($event_counter > 0)
+						echo ',';
 					echo '{';
 					echo 'id: 0,';
 					echo '_id: 0,';
-					echo 'title: \'$'. $cur_total[1] .'\',';
-					echo 'start: '. $cur_total[0] .',';
-					echo 'end: '. $cur_total[0] .',';
+					echo 'title: \'$'. $cur_total[3] .'\',';
+					echo 'start: '. $cur_total[1] .',';
+					echo 'end: '. $cur_total[2] .',';
 					echo 'className: \'mint_total\',';
 					echo 'allDay: true,';
 					echo '}';

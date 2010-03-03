@@ -30,8 +30,8 @@ foreach ($this->sales as $cur_sale) {
 	$sale_time = date('H', $cur_sale->p_cdate);
 	if (!$total[$date_str]) {
 		$total[$date_str][0] = $cur_sale->p_cdate;
-		$total[$date_str][1] = mktime(23,0,0,$event_month,$event_day,$event_year);
-		$total[$date_str][2] = mktime(23,0,0,$event_month,$event_day,$event_year);
+		$total[$date_str][1] = mktime(23,59,59,$event_month,$event_day,$event_year);
+		$total[$date_str][2] = mktime(23,59,59,$event_month,$event_day,$event_year);
 		$total[$date_str][3] = 0;
 	}
 	foreach ($pines->config->com_reports->timespans as $timespan) {

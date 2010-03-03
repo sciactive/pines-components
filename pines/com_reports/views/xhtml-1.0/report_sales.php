@@ -33,14 +33,17 @@ foreach ($this->sales as $cur_sale) {
 		if ( ($sale_time >= $span[0]) && ($sale_time < $span[1]) ) {
 			if ($date_array[$date_str][$timespan]) {
 				$date_array[$date_str][$timespan][3] += $cur_sale->total;
-				$total[$date_str][1] += $cur_sale->total;
+				if ($days <= 8)
+					$total[$date_str][1] += $cur_sale->total;
 			} else {
 				$date_array[$date_str][$timespan][0] = $cur_sale->p_cdate;
 				$date_array[$date_str][$timespan][1] = mktime($span[0],0,0,$event_month,$event_day,$event_year);
 				$date_array[$date_str][$timespan][2] = mktime($span[1],0,0,$event_month,$event_day,$event_year);
 				$date_array[$date_str][$timespan][3] = $cur_sale->total;
-				$total[$date_str][0] += $cur_sale->p_cdate;
-				$total[$date_str][1] += $cur_sale->total;
+				if ($days <= 8) {
+					$total[$date_str][0] += $cur_sale->p_cdate;
+					$total[$date_str][1] += $cur_sale->total;
+				}
 			}
 		}
 	}
@@ -98,21 +101,19 @@ foreach ($this->sales as $cur_sale) {
 						$event_counter++;
 					}
 				}
-				if ($days <= 8) {
-					// Total sales for each day.
-					foreach ($total as $cur_total) {
-						echo ',';
-						echo '{';
-						echo 'id: 0,';
-						echo '_id: 0,';
-						echo 'title: \'$'. $cur_total[1] .'\',';
-						echo 'start: '. $cur_total[0] .',';
-						echo 'end: '. $cur_total[0] .',';
-						echo 'className: \''.$class.'\',';
-						echo 'allDay: true,';
-						echo '}';
-						$event_counter++;
-					}
+				// Total sales for each day.
+				foreach ($total as $cur_total) {
+					echo ',';
+					echo '{';
+					echo 'id: 0,';
+					echo '_id: 0,';
+					echo 'title: \'$'. $cur_total[1] .'\',';
+					echo 'start: '. $cur_total[0] .',';
+					echo 'end: '. $cur_total[0] .',';
+					echo 'className: \'mint_total\',';
+					echo 'allDay: true,';
+					echo '}';
+					$event_counter++;
 				}
 				unset($date_array);
 				unset($total);

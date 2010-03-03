@@ -401,7 +401,16 @@ table.fc-header {
 	text-align: center;
 	text-decoration: none;
 }
-
+.mint_total,
+.fc-agenda .myclass .fc-event-time,
+.mint_total a {
+	background-color: gold;
+	border-color: black;
+	color: black;
+	font-size: 14pt;
+	text-align: center;
+	text-decoration: none;
+}
 /* Horizontal Events
 ------------------------------------------------------------------------*/
 

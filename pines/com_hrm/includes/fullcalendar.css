@@ -386,7 +386,7 @@ table.fc-header {
 .mint_month,
 .fc-agenda .myclass .fc-event-time,
 .mint_month a {
-	background-color: lightgreen;
+	background-color: cornsilk;
 	border-color: black;
 	color: black;
 	text-decoration: none;
@@ -394,7 +394,7 @@ table.fc-header {
 .mint,
 .fc-agenda .myclass .fc-event-time,
 .mint a {
-	background-color: lightgreen;
+	background-color: cornsilk;
 	border-color: black;
 	color: black;
 	font-size: 14pt;
@@ -404,7 +404,7 @@ table.fc-header {
 .mint_total,
 .fc-agenda .myclass .fc-event-time,
 .mint_total a {
-	background-color: gold;
+	background-color: lightgreen;
 	border-color: black;
 	color: black;
 	font-size: 14pt;

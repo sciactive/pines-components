@@ -19,4 +19,7 @@ if ( gatekeeper('com_customer_timer/viewstatus') || gatekeeper('com_customer_tim
 		$pines->page->main_menu->add('Login', pines_url('com_customer_timer', 'login'), $com_customer_timer_menu_id);
 }
 
+//if (gatekeeper('com_customer_timer/viewstatus'))
+//	$com_customer_timer_module = new module('com_customer_timer', 'status_check', 'head');
+
 ?>

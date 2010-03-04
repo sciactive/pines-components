@@ -108,9 +108,8 @@ $this->title = 'Customer Timer Status';
 			box.addClass("ok").removeClass("warning").removeClass("critical").children(".customer_header").removeClass("ui-state-highlight").removeClass("ui-state-error");
 			box.find(".status .value").html("OK");
 		}
-		if (customer.points_remain < 0) {
+		if (customer.points_remain < 0)
 			box.find(".status .value").html("Overdrawn");
-		}
 	}
 
 	function sort_customers() {

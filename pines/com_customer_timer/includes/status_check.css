@@ -1,0 +1,12 @@
+.com_customer_timer_dialog {
+    height: 75% !important;
+	width: 75% !important;
+}
+.com_customer_timer_dialog .com_customer_timer_alert .customers {
+    padding: 20px;
+}
+.com_customer_timer_dialog .com_customer_timer_alert .customers .customer {
+    padding: 1px;
+	border-bottom-width: 1px;
+	font-weight: bold;
+}

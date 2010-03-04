@@ -16,11 +16,12 @@ $this->title = "About {$pines->config->program_title}";
 <p>
 <?php echo $pines->config->program_title; ?> is a <a href="http://sciactive.com/">
 SciActive</a> project written by Hunter Perrin. It is a PHP application
-framework. Designed to be an extensible MVC based framework. The manager drops
-in components to add the functionality he desires. For example, if the manager
-wants to have a user management system, he simply drops in com_user. When
-com_user takes over user management for the system, it will prompt users to log
-in and only give them permissions they have been allowed.
+framework, designed to be an extensible MVC based framework. It allows easy
+development, easy implementation, easy maintenance, and extreme flexibility. The
+manager drops in components to add the functionality he desires. For example, if
+the manager wants to have a user management system, he simply drops in com_user.
+When com_user takes over user management for the system, it will prompt users to
+log in and only give them permissions they have been allowed.
 </p>
 <p>
 The admin can add functions using the premade components, or write his own

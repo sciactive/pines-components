@@ -50,7 +50,7 @@ if ( $_REQUEST['parent'] == 'none' ) {
 	$group->parent = group::factory((int) $_REQUEST['parent']);
 }
 
-if ( $_REQUEST['abilities'] === 'true' && gatekeeper("com_user/abilities") ) {
+if ( $_REQUEST['abilities'] === 'true' && gatekeeper('com_user/abilities') ) {
 	$sections = array('system');
 	foreach ($pines->components as $cur_component) {
 		$sections[] = $cur_component;

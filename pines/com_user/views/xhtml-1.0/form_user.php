@@ -142,7 +142,6 @@ $this->note = 'Provide user details in this form.';
 				<script type="text/javascript">
 					// <![CDATA[
 					$(function(){
-						var addresses = $("#addresses");
 						var address_us = $("#address_us");
 						var address_international = $("#address_international");
 						$("#user_details [name=address_type]").change(function(){
@@ -240,8 +239,8 @@ $this->note = 'Provide user details in this form.';
 			</div>
 			<div id="address_international" style="display: none;">
 				<div class="element full_width">
-				<label><span class="label">Address</span>
-					<span class="field full_width"><textarea style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo $this->entity->address_international; ?></textarea></span></label>
+					<label><span class="label">Address</span>
+						<span class="field full_width"><textarea style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo $this->entity->address_international; ?></textarea></span></label>
 				</div>
 			</div>
 			<br class="spacer" />

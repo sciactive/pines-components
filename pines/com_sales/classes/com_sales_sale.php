@@ -68,27 +68,22 @@ class com_sales_sale extends entity {
 	 */
 	public function print_form() {
 		global $pines;
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
+		$pines->com_pgrid->load();
 		$module = new module('com_sales', 'form_sale', 'content');
 		$module->entity = $this;
 		$module->tax_fees = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'tax_fee'), 'class' => com_sales_tax_fee));
-		if (!is_array($module->tax_fees)) {
+		if (!is_array($module->tax_fees))
 			$module->tax_fees = array();
-		}
 		foreach ($module->tax_fees as $key => $cur_tax_fee) {
-			if (!$cur_tax_fee->enabled) {
+			if (!$cur_tax_fee->enabled)
 				unset($module->tax_fees[$key]);
-			}
 		}
 		$module->payment_types = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));
-		if (!is_array($module->payment_types)) {
+		if (!is_array($module->payment_types))
 			$module->payment_types = array();
-		}
 		foreach ($module->payment_types as $key => $cur_payment_type) {
-			if (!$cur_payment_type->enabled) {
+			if (!$cur_payment_type->enabled)
 				unset($module->payment_types[$key]);
-			}
 		}
 
 		return $module;

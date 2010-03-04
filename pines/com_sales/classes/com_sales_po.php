@@ -80,23 +80,19 @@ class com_sales_po extends entity {
 	 */
 	public function print_form() {
 		global $pines;
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
+		$pines->com_pgrid->load();
 		$module = new module('com_sales', 'form_po', 'content');
 		$module->entity = $this;
 		$module->locations = $pines->user_manager->get_group_array();
 		$module->shippers = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'shipper'), 'class' => com_sales_shipper));
-		if (!is_array($module->shippers)) {
+		if (!is_array($module->shippers))
 			$module->shippers = array();
-		}
 		$module->vendors = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'vendor'), 'class' => com_sales_vendor));
-		if (!is_array($module->vendors)) {
+		if (!is_array($module->vendors))
 			$module->vendors = array();
-		}
 		$module->products = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'product'), 'class' => com_sales_product));
-		if (!is_array($module->products)) {
+		if (!is_array($module->products))
 			$module->products = array();
-		}
 
 		return $module;
 	}

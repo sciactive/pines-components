@@ -387,8 +387,7 @@ class com_user extends component {
 	function list_groups() {
 		global $pines;
 
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
+		$pines->com_pgrid->load();
 
 		$module = new module('com_user', 'list_groups', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
@@ -409,8 +408,7 @@ class com_user extends component {
 	function list_users() {
 		global $pines;
 
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
+		$pines->com_pgrid->load();
 
 		$module = new module('com_user', 'list_users', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))

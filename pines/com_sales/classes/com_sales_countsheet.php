@@ -67,8 +67,7 @@ class com_sales_countsheet extends entity {
 	 */
 	public function print_form() {
 		global $pines;
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
+		$pines->com_pgrid->load();
 		$module = new module('com_sales', 'form_countsheet', 'content');
 		$module->entity = $this;
 

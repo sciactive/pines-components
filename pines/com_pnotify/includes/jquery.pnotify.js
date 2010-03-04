@@ -260,11 +260,10 @@
 			pnotify.pnotify = function(options) {
 				// Update the notice.
 				var old_opts = opts;
-				if (typeof options == "string") {
+				if (typeof options == "string")
 					opts.pnotify_text = options;
-				} else {
+				else
 					opts = $.extend({}, opts, options);
-				}
 				pnotify.opts = opts;
 				// Update the shadow.
 				if (opts.pnotify_shadow != old_opts.pnotify_shadow) {
@@ -274,17 +273,15 @@
 						pnotify.children(".ui-pnotify-shadow").remove();
 				}
 				// Update the additional classes.
-				if (opts.pnotify_addclass === false) {
+				if (opts.pnotify_addclass === false)
 					pnotify.removeClass(old_opts.pnotify_addclass);
-				} else if (opts.pnotify_addclass !== old_opts.pnotify_addclass) {
+				else if (opts.pnotify_addclass !== old_opts.pnotify_addclass)
 					pnotify.removeClass(old_opts.pnotify_addclass).addClass(opts.pnotify_addclass);
-				}
 				// Update the title.
-				if (opts.pnotify_title === false) {
+				if (opts.pnotify_title === false)
 					pnotify.title_container.hide("fast");
-				} else if (opts.pnotify_title !== old_opts.pnotify_title) {
+				else if (opts.pnotify_title !== old_opts.pnotify_title)
 					pnotify.title_container.html(opts.pnotify_title).show("fast");
-				}
 				// Update the text.
 				if (opts.pnotify_text === false) {
 					pnotify.text_container.hide("fast");
@@ -318,11 +315,10 @@
 				// Update the opacity.
 				if (opts.pnotify_opacity !== old_opts.pnotify_opacity)
 					pnotify.fadeTo(opts.pnotify_animate_speed, opts.pnotify_opacity);
-				if (!opts.pnotify_hide) {
+				if (!opts.pnotify_hide)
 					pnotify.pnotify_cancel_remove();
-				} else if (!old_opts.pnotify_hide) {
+				else if (!old_opts.pnotify_hide)
 					pnotify.pnotify_queue_remove();
-				}
 				pnotify.pnotify_queue_position();
 				return pnotify;
 			};
@@ -395,26 +391,23 @@
 				// Declare that the notice is animating in. (Or has completed animating in.)
 				animating = "in";
 				var animation;
-				if (typeof opts.pnotify_animation.effect_in != "undefined") {
+				if (typeof opts.pnotify_animation.effect_in != "undefined")
 					animation = opts.pnotify_animation.effect_in;
-				} else {
+				else
 					animation = opts.pnotify_animation;
-				}
 				if (animation == "none") {
 					pnotify.show();
 					callback();
-				} else if (animation == "show") {
+				} else if (animation == "show")
 					pnotify.show(opts.pnotify_animate_speed, callback);
-				} else if (animation == "fade") {
+				else if (animation == "fade")
 					pnotify.show().fadeTo(opts.pnotify_animate_speed, opts.pnotify_opacity, callback);
-				} else if (animation == "slide") {
+				else if (animation == "slide")
 					pnotify.slideDown(opts.pnotify_animate_speed, callback);
-				} else if (typeof animation == "function") {
+				else if (typeof animation == "function")
 					animation("in", callback, pnotify);
-				} else {
-					if (pnotify.effect)
-						pnotify.effect(animation, {}, opts.pnotify_animate_speed, callback);
-				}
+				else if (pnotify.effect)
+					pnotify.effect(animation, {}, opts.pnotify_animate_speed, callback);
 			};
 
 			// Animate the notice out.
@@ -422,26 +415,23 @@
 				// Declare that the notice is animating out. (Or has completed animating out.)
 				animating = "out";
 				var animation;
-				if (typeof opts.pnotify_animation.effect_out != "undefined") {
+				if (typeof opts.pnotify_animation.effect_out != "undefined")
 					animation = opts.pnotify_animation.effect_out;
-				} else {
+				else
 					animation = opts.pnotify_animation;
-				}
 				if (animation == "none") {
 					pnotify.hide();
 					callback();
-				} else if (animation == "show") {
+				} else if (animation == "show")
 					pnotify.hide(opts.pnotify_animate_speed, callback);
-				} else if (animation == "fade") {
+				else if (animation == "fade")
 					pnotify.fadeOut(opts.pnotify_animate_speed, callback);
-				} else if (animation == "slide") {
+				else if (animation == "slide")
 					pnotify.slideUp(opts.pnotify_animate_speed, callback);
-				} else if (typeof animation == "function") {
+				else if (typeof animation == "function")
 					animation("out", callback, pnotify);
-				} else {
-					if (pnotify.effect)
-						pnotify.effect(animation, {}, opts.pnotify_animate_speed, callback);
-				}
+				else if (pnotify.effect)
+					pnotify.effect(animation, {}, opts.pnotify_animate_speed, callback);
 			};
 
 			// Cancel any pending removal timer.

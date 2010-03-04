@@ -24,8 +24,7 @@ class com_example extends component {
 	function list_widgets() {
 		global $pines;
 
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
+		$pines->com_pgrid->load();
 
 		$module = new module('com_example', 'list_widgets', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))

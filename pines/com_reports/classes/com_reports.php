@@ -42,8 +42,7 @@ class com_reports extends component {
 	 */
 	function report_sales($start = 'now', $end = 'now') {
 		global $pines;
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
+		$pines->com_pgrid->load();
 		$date_start = strtotime($start);
 		$date_end = strtotime("+23 hours +59 minutes", strtotime($end));
 		

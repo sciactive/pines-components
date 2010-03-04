@@ -84,28 +84,23 @@ class com_sales_product extends entity {
 	public function print_form() {
 		global $pines;
 		$pines->editor->load();
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
+		$pines->com_pgrid->load();
+		$pines->com_ptags->load();
 		$jstree = new module('system', 'jstree', 'head');
-		//$ptags = new module('system', 'ptags.default', 'head');
 		$module = new module('com_sales', 'form_product', 'content');
 		$module->entity = $this;
 		$module->manufacturers = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'manufacturer'), 'class' => com_sales_manufacturer));
-		if (!is_array($module->manufacturers)) {
+		if (!is_array($module->manufacturers))
 			$module->manufacturers = array();
-		}
 		$module->vendors = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'vendor'), 'class' => com_sales_vendor));
-		if (!is_array($module->vendors)) {
+		if (!is_array($module->vendors))
 			$module->vendors = array();
-		}
 		$module->tax_fees = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'tax_fee'), 'class' => com_sales_tax_fee));
-		if (!is_array($module->tax_fees)) {
+		if (!is_array($module->tax_fees))
 			$module->tax_fees = array();
-		}
 		$module->actions = $pines->com_sales->product_actions;
-		if (!is_array($module->actions)) {
+		if (!is_array($module->actions))
 			$module->actions = array();
-		}
 
 		return $module;
 	}

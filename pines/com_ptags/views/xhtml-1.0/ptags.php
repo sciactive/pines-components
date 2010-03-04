@@ -1,6 +1,6 @@
 <?php
 /**
- * A view to load Pines Notify.
+ * A view to load Pines Tags.
  *
  * @package Pines
  * @subpackage com_ptags

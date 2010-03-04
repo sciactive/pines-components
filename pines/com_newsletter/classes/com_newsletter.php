@@ -78,8 +78,7 @@ class com_newsletter extends component {
 	function list_mails() {
 		global $pines;
 
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
+		$pines->com_pgrid->load();
 
 		$module = new module('com_newsletter', 'list_mails', 'content');
 		$module->mails = $pines->entity_manager->get_entities(array('tags' => array('com_newsletter', 'mail')));

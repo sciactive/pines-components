@@ -149,8 +149,7 @@ class com_hrm_employee extends entity {
 	public function print_form() {
 		global $pines;
 		$pines->editor->load();
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
+		$pines->com_pgrid->load();
 		$module = new module('com_hrm', 'form_employee', 'content');
 		$module->entity = $this;
 		$module->user_templates = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'user_template'), 'class' => com_hrm_user_template));
@@ -174,8 +173,8 @@ class com_hrm_employee extends entity {
 	 * @return module The module.
 	 */
 	public function print_timeclock_view() {
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
+		global $pines;
+		$pines->com_pgrid->load();
 
 		$module = new module('com_hrm', 'view_timeclock', 'content');
 		$module->entity = $this;

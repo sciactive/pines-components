@@ -363,8 +363,7 @@ class com_sales extends component {
 	function list_countsheets() {
 		global $pines;
 
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
+		$pines->com_pgrid->load();
 
 		$module = new module('com_sales', 'list_countsheets', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
@@ -414,8 +413,7 @@ class com_sales extends component {
 	function list_manufacturers() {
 		global $pines;
 
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
+		$pines->com_pgrid->load();
 
 		$module = new module('com_sales', 'list_manufacturers', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
@@ -436,8 +434,7 @@ class com_sales extends component {
 	function list_payment_types() {
 		global $pines;
 
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
+		$pines->com_pgrid->load();
 
 		$module = new module('com_sales', 'list_payment_types', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
@@ -458,8 +455,7 @@ class com_sales extends component {
 	function list_pos() {
 		global $pines;
 
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
+		$pines->com_pgrid->load();
 
 		$module = new module('com_sales', 'list_pos', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
@@ -493,8 +489,7 @@ class com_sales extends component {
 	function list_products() {
 		global $pines;
 
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
+		$pines->com_pgrid->load();
 
 		$module = new module('com_sales', 'list_products', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
@@ -515,8 +510,7 @@ class com_sales extends component {
 	function list_sales() {
 		global $pines;
 
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
+		$pines->com_pgrid->load();
 
 		$module = new module('com_sales', 'list_sales', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
@@ -537,8 +531,7 @@ class com_sales extends component {
 	function list_shippers() {
 		global $pines;
 
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
+		$pines->com_pgrid->load();
 
 		$module = new module('com_sales', 'list_shippers', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
@@ -561,8 +554,7 @@ class com_sales extends component {
 	function list_stock($all = false) {
 		global $pines;
 
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
+		$pines->com_pgrid->load();
 
 		$module = new module('com_sales', 'list_stock', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
@@ -584,8 +576,7 @@ class com_sales extends component {
 	function list_tax_fees() {
 		global $pines;
 
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
+		$pines->com_pgrid->load();
 
 		$module = new module('com_sales', 'list_tax_fees', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
@@ -606,8 +597,7 @@ class com_sales extends component {
 	function list_transfers() {
 		global $pines;
 
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
+		$pines->com_pgrid->load();
 
 		$module = new module('com_sales', 'list_transfers', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
@@ -628,8 +618,7 @@ class com_sales extends component {
 	function list_vendors() {
 		global $pines;
 
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
+		$pines->com_pgrid->load();
 
 		$module = new module('com_sales', 'list_vendors', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
@@ -733,8 +722,7 @@ class com_sales extends component {
 	 */
 	function print_receive_form() {
 		global $pines;
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
+		$pines->com_pgrid->load();
 		$module = new module('com_sales', 'form_receive', 'content');
 
 		return $module;

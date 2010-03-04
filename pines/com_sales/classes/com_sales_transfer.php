@@ -80,8 +80,7 @@ class com_sales_transfer extends entity {
 	 */
 	public function print_form() {
 		global $pines;
-		$pgrid = new module('system', 'pgrid.default', 'head');
-		$pgrid->icons = true;
+		$pines->com_pgrid->load();
 		$module = new module('com_sales', 'form_transfer', 'content');
 		$module->entity = $this;
 		$module->locations = $pines->user_manager->get_group_array();

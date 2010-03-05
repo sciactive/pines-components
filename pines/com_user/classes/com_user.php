@@ -65,6 +65,82 @@ class com_user extends component {
 	}
 
 	/**
+	 * Check an entity's permissions for the currently logged in user.
+	 *
+	 * This will check the variable "ac" (Access Control) of the entity. It should
+	 * be an object that contains the following properties:
+	 *
+	 * - user
+	 * - group
+	 * - other
+	 *
+	 * The property "user" refers to the entity's owner, "group" refers to all users
+	 * in the entity's group and all ancestor groups, and "other" refers to any user
+	 * who doesn't fit these descriptions.
+	 *
+	 * Each variable should be either 0, 1, 2, or 3. If it is 0, the user has no
+	 * access to the entity. If it is 1, the user has read access to the entity. If
+	 * it is 2, the user has read and write access to the entity. If it is 3, the
+	 * user has read, write, and delete access to the entity.
+	 *
+	 * "ac" defaults to:
+	 *
+	 * - user = 3
+	 * - group = 3
+	 * - other = 0
+	 *
+	 * The following conditions will result in different checks, which determine
+	 * whether the check passes:
+	 *
+	 * - No user is logged in. (Always returned, should be managed with abilities.)
+	 * - The entity has no uid and no gid. (Always returned.)
+	 * - The user has the "system/all" ability. (Always returned.)
+	 * - The entity is the user. (Always returned.)
+	 * - It is the user's primary group. (Always returned.)
+	 * - The entity is a user or group. (Always returned.)
+	 * - Its UID is the user. (It is owned by the user.) (Check user AC.)
+	 * - Its GID is the user's primary group. (Check group AC.)
+	 * - Its GID is one of the user's secondary groups. (Check group AC.)
+	 * - Its GID is a child of one of the user's groups. (Check group AC.)
+	 * - None of the above. (Check other AC.)
+	 *
+	 * @param object &$entity The entity to check.
+	 * @param int $type The lowest level of permission to consider a pass. 1 is read, 2 is write, 3 is delete.
+	 * @return bool Whether the current user has at least $type permission for the entity.
+	 */
+	function check_permissions(&$entity, $type = 1) {
+		if (!is_object($_SESSION['user']))
+			return true;
+		if (function_exists('gatekeeper')) {
+			if (gatekeeper('system/all'))
+				return true;
+		}
+		if (!isset($entity->uid) && !isset($entity->gid))
+			return true;
+		if ($entity->is($_SESSION['user']))
+			return true;
+		if ($entity->is($_SESSION['user']->group))
+			return true;
+		if ($entity->has_tag('com_user', 'user') || $entity->has_tag('com_user', 'group'))
+			return true;
+
+		// Load access control, since we need it now...
+		$ac = (object) array('user' => 3, 'group' => 3, 'other' => 0);
+		if (is_object($entity->ac))
+			$ac = $entity->ac;
+
+		if ($entity->uid == $_SESSION['user']->guid)
+			return ($ac->user >= $type);
+		if ($entity->gid == $_SESSION['user']->group->guid)
+			return ($ac->group >= $type);
+		if (group::factory((int) $entity->gid)->in_array($_SESSION['user']->groups))
+			return ($ac->group >= $type);
+		if (group::factory((int) $entity->gid)->in_array($_SESSION['descendents']))
+			return ($ac->group >= $type);
+		return ($ac->other >= $type);
+	}
+
+	/**
 	 * Fill the $_SESSION['user'] variable with the logged in user's data.
 	 *
 	 * Also sets the default timezone to the user's timezone.

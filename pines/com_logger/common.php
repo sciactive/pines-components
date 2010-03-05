@@ -23,7 +23,7 @@ if ( isset($pines->ability_manager) ) {
  * @param string $hook The hook that was called.
  * @return array The return values for the hook.
  */
-function com_logger_hook_log($return, $hook) {
+function com_logger__hook_log($return, $hook) {
 	global $pines;
 	if (!in_array($hook, array('$pines->log_manager->log', '$pines->log_manager->hook', '$pines->log_manager->write')))
 		$pines->log_manager->log('(microtime='.microtime(true).') '.$hook, 'debug');

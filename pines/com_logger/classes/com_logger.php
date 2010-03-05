@@ -56,7 +56,7 @@ class com_logger extends component {
 	 */
 	function hook() {
 		global $pines;
-		$pines->hook->add_callback('all', -1, 'com_logger_hook_log');
+		$pines->hook->add_callback('all', -1, 'com_logger__hook_log');
 	}
 
 	/**

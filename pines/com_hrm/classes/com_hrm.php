@@ -20,11 +20,11 @@ defined('P_RUN') or die('Direct access prohibited');
  * @subpackage com_hrm
  */
 class com_hrm extends component {
-/**
- * Whether to integrate with com_sales.
- *
- * @var bool $com_sales
- */
+	/**
+	 * Whether to integrate with com_sales.
+	 *
+	 * @var bool $com_sales
+	 */
 	var $com_sales;
 	/**
 	 *
@@ -49,14 +49,6 @@ class com_hrm extends component {
 		$calendar_events = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'event'), 'class' => com_hrm_event));
 		foreach ($calendar_events as $cur_event)
 			$cur_event->delete();
-	}
-
-	function get_user_templates() {
-		if (isset($this->user_templates))
-			return $this->user_templates;
-		global $config;
-		$array = $config->com_hrm->user_templates;
-	// TODO: Make an array out of the config value.
 	}
 
 	/**

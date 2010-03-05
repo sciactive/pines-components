@@ -19,7 +19,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * @param object $object The customer being deleted.
  * @return array|bool An array of an entity, or false if the customer is logged in.
  */
-function com_customer_timer_check_delete($arguments, $name, $object) {
+function com_customer_timer__check_delete($arguments, $name, $object) {
 	if (!is_object($object))
 		return $arguments;
 	$logins = com_customer_timer_login_tracker::factory();
@@ -30,6 +30,6 @@ function com_customer_timer_check_delete($arguments, $name, $object) {
 	return $arguments;
 }
 
-$pines->hook->add_callback('com_customer_customer->delete', -10, 'com_customer_timer_check_delete');
+$pines->hook->add_callback('com_customer_customer->delete', -10, 'com_customer_timer__check_delete');
 
 ?>

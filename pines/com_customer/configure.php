@@ -102,8 +102,10 @@ return array(
 			'phone',
 			'password',
 			'description',
+			'points',
 			'membership',
-			'address'
+			'address',
+			'attributes'
 		),
 		'options' => array(
 			'Name' => 'name',

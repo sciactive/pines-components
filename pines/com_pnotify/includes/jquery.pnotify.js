@@ -503,7 +503,10 @@
 			var body_data = body.data("pnotify");
 			if (body_data == null || typeof body_data != "object")
 				body_data = [];
-			body_data = $.merge(body_data, [pnotify]);
+			if (opts.pnotify_stack.push == "top")
+				body_data = $.merge([pnotify], body_data);
+			else
+				body_data = $.merge(body_data, [pnotify]);
 			body.data("pnotify", body_data);
 
 			// Run callback.
@@ -616,6 +619,6 @@
 		// Change new lines to br tags.
 		pnotify_insert_brs: true,
 		// The stack on which the notices will be placed. Also controls the direction the notices stack.
-		pnotify_stack: {"dir1": "down", "dir2": "left"}
+		pnotify_stack: {"dir1": "down", "dir2": "left", "push": "bottom"}
 	};
 })(jQuery);

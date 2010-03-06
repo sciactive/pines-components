@@ -3,7 +3,7 @@
  * Shows customer timer status.
  *
  * @package Pines
- * @subpackage com_customer_timer
+ * @subpackage com_customertimer
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -23,7 +23,7 @@ $this->title = 'Customer Timer Status';
 
 	function update_status() {
 		$.ajax({
-			url: "<?php echo pines_url('com_customer_timer', 'status_json'); ?>",
+			url: "<?php echo pines_url('com_customertimer', 'status_json'); ?>",
 			type: "GET",
 			dataType: "json",
 			complete: function(){
@@ -73,7 +73,7 @@ $this->title = 'Customer Timer Status';
 					$(this).removeClass("ui-state-hover");
 				}).click(function(){
 					$.ajax({
-						url: "<?php echo pines_url('com_customer_timer', 'logout_json'); ?>",
+						url: "<?php echo pines_url('com_customertimer', 'logout_json'); ?>",
 						type: "POST",
 						data: {"id": customer.guid},
 						dataType: "json",
@@ -98,10 +98,10 @@ $this->title = 'Customer Timer Status';
 		box.find(".ses_minutes .value").html(customer.ses_minutes);
 		box.find(".ses_points .value").html(customer.ses_points);
 		box.find(".points_remain .value").html(customer.points_remain);
-		if (customer.points_remain <= <?php echo (int) $pines->config->com_customer_timer->level_critical; ?>) {
+		if (customer.points_remain <= <?php echo (int) $pines->config->com_customertimer->level_critical; ?>) {
 			box.removeClass("ok").removeClass("warning").addClass("critical").children(".customer_header").removeClass("ui-state-highlight").addClass("ui-state-error");
 			box.find(".status .value").html("Critical");
-		} else if (customer.points_remain <= <?php echo (int) $pines->config->com_customer_timer->level_warning; ?>) {
+		} else if (customer.points_remain <= <?php echo (int) $pines->config->com_customertimer->level_warning; ?>) {
 			box.removeClass("ok").addClass("warning").removeClass("critical").children(".customer_header").addClass("ui-state-highlight").removeClass("ui-state-error");
 			box.find(".status .value").html("Warning");
 		} else {

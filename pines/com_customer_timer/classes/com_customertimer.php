@@ -1,9 +1,9 @@
 <?php
 /**
- * com_customer_timer class.
+ * com_customertimer class.
  *
  * @package Pines
- * @subpackage com_customer_timer
+ * @subpackage com_customertimer
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -12,15 +12,15 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * com_customer_timer main class.
+ * com_customertimer main class.
  *
  * Uses the points from com_customer to time customers, and notify when they are
  * out of points.
  *
  * @package Pines
- * @subpackage com_customer_timer
+ * @subpackage com_customertimer
  */
-class com_customer_timer extends component {
+class com_customertimer extends component {
 	/**
 	 * Calculates information about a customer's session.
 	 *
@@ -30,9 +30,9 @@ class com_customer_timer extends component {
 	function get_session_info(&$customer) {
 		global $pines;
 		// Calculate how many minutes they've been logged in.
-		$minutes = (int) round((time() - $customer->com_customer_timer->last_login) / 60);
+		$minutes = (int) round((time() - $customer->com_customertimer->last_login) / 60);
 		// And how many points that costs.
-		$points = $minutes * (int) $pines->config->com_customer_timer->ppm;
+		$points = $minutes * (int) $pines->config->com_customertimer->ppm;
 		return array('minutes' => $minutes, 'points' => $points);
 	}
 
@@ -59,7 +59,7 @@ class com_customer_timer extends component {
 			display_notice('Customer ID and password do not match.');
 			return false;
 		}
-		$logins = com_customer_timer_login_tracker::factory();
+		$logins = com_customertimer_login_tracker::factory();
 		if ($customer->in_array($logins->customers))
 			return $logins->logout($customer);
 		if ($customer->login_disabled) {
@@ -68,7 +68,7 @@ class com_customer_timer extends component {
 		}
 		if ($customer->points <= 0) {
 			display_notice('Your account balance has reached zero.');
-			if (!$pines->config->com_customer_timer->debtlogin)
+			if (!$pines->config->com_customertimer->debtlogin)
 				return false;
 		}
 		return $logins->login($customer);

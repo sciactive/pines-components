@@ -3,7 +3,7 @@
  * Provides a form for the customer to login.
  *
  * @package Pines
- * @subpackage com_customer_timer
+ * @subpackage com_customertimer
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Customer Login/Logout';
 $this->note = 'Please enter your info, or scan your barcode to login or logout.';
 ?>
-<form class="pform" id="customer_login" name="customer_login" method="post" action="<?php echo pines_url('com_customer_timer', 'login'); ?>">
+<form class="pform" id="customer_login" name="customer_login" method="post" action="<?php echo pines_url('com_customertimer', 'login'); ?>">
 	<script type="text/javascript">
 	// <![CDATA[
 	var id_box;

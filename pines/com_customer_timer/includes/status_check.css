@@ -1,27 +1,27 @@
 @import "../../../system/css/tango-icon-theme/icons.css";
-.com_customer_timer_dialog {
+.com_customertimer_dialog {
 	position: absolute !important;
 	width: auto !important;
 	right: 20px !important;
 	left: 20px !important;
 	top: 20px !important;
 }
-.com_customer_timer_dialog .ui-dialog-title {
+.com_customertimer_dialog .ui-dialog-title {
 	font-size: 2.5em !important;
 }
-.com_customer_timer_dialog .com_customer_timer_alert .customers {
+.com_customertimer_dialog .com_customertimer_alert .customers {
 	font-size: 2.5em !important;
     padding: 20px 20px 40px 20px;
 	margin-bottom: 10px;
 	border-width: 15px;
 }
-.com_customer_timer_dialog .com_customer_timer_alert .customers .icon {
+.com_customertimer_dialog .com_customertimer_alert .customers .icon {
 	background-color: transparent;
 	background-repeat: no-repeat;
 	background-position: center left;
 	padding: 16px;
 }
-.com_customer_timer_dialog .com_customer_timer_alert .customers .customer {
+.com_customertimer_dialog .com_customertimer_alert .customers .customer {
     padding: 1px;
 	border-bottom: 3px solid;
 	font-weight: bold;

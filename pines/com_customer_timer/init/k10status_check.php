@@ -3,7 +3,7 @@
  * Load the customer status checker.
  *
  * @package Pines
- * @subpackage com_customer_timer
+ * @subpackage com_customertimer
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if (gatekeeper('com_customer_timer/viewstatus'))
-	$com_customer_timer_module = new module('com_customer_timer', 'status_check', 'head');
+if (gatekeeper('com_customertimer/viewstatus'))
+	$com_customertimer_module = new module('com_customertimer', 'status_check', 'head');
 
 ?>

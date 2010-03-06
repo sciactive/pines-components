@@ -1,9 +1,9 @@
 <?php
 /**
- * com_customer_timer_tx class.
+ * com_customertimer_tx class.
  *
  * @package Pines
- * @subpackage com_customer_timer
+ * @subpackage com_customertimer
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -15,9 +15,9 @@ defined('P_RUN') or die('Direct access prohibited');
  * A transaction.
  *
  * @package Pines
- * @subpackage com_customer_timer
+ * @subpackage com_customertimer
  */
-class com_customer_timer_tx extends entity {
+class com_customertimer_tx extends entity {
 	/**
 	 * Create a new instance.
 	 */

@@ -3,7 +3,7 @@
  * Logout a user and return a JSON result.
  *
  * @package Pines
- * @subpackage com_customer_timer
+ * @subpackage com_customertimer
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -11,8 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_customer_timer/forcelogout') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_customer_timer', 'forcelogout', null, false));
+if ( !gatekeeper('com_customertimer/forcelogout') )
+	punt_user('You don\'t have necessary permission.', pines_url('com_customertimer', 'forcelogout', null, false));
 
 $pines->page->override = true;
 
@@ -24,7 +24,7 @@ if (isset($_REQUEST['id'])) {
 		display_notice('Customer ID not found.');
 		$return = false;
 	} else {
-		$logins = com_customer_timer_login_tracker::factory();
+		$logins = com_customertimer_login_tracker::factory();
 		$return = $logins->logout($customer);
 	}
 }

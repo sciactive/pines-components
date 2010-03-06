@@ -1,9 +1,9 @@
 <?php
 /**
- * com_customer_timer's configuration.
+ * com_customertimer's configuration.
  *
  * @package Pines
- * @subpackage com_customer_timer
+ * @subpackage com_customertimer
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin

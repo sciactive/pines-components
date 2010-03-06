@@ -1,9 +1,9 @@
 <?php
 /**
- * com_customer_timer_login_tracker class.
+ * com_customertimer_login_tracker class.
  *
  * @package Pines
- * @subpackage com_customer_timer
+ * @subpackage com_customertimer
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -17,9 +17,9 @@ defined('P_RUN') or die('Direct access prohibited');
  * Calling factory() will retrieve the login tracker entity.
  *
  * @package Pines
- * @subpackage com_customer_timer
+ * @subpackage com_customertimer
  */
-class com_customer_timer_login_tracker extends entity {
+class com_customertimer_login_tracker extends entity {
 	/**
 	 * Load the tracker.
 	 *
@@ -28,11 +28,11 @@ class com_customer_timer_login_tracker extends entity {
 	 */
 	public function __construct() {
 		parent::__construct();
-		$this->add_tag('com_customer_timer', 'logins');
+		$this->add_tag('com_customertimer', 'logins');
 		$this->ac = (object) array('user' => 3, 'group' => 3, 'other' => 3);
 		$this->customers = array();
 		global $pines;
-		$entities = $pines->entity_manager->get_entities(array('tags' => array('com_customer_timer', 'logins')));
+		$entities = $pines->entity_manager->get_entities(array('tags' => array('com_customertimer', 'logins')));
 		if (empty($entities))
 			return;
 		if (($count = count($entities)) > 1) {
@@ -79,10 +79,10 @@ class com_customer_timer_login_tracker extends entity {
 	function login(&$customer) {
 		if (is_null($customer->guid))
 			return false;
-		if (!isset($customer->com_customer_timer))
-			$customer->com_customer_timer = (object) array();
+		if (!isset($customer->com_customertimer))
+			$customer->com_customertimer = (object) array();
 		// Save the time the customer logged in.
-		$customer->com_customer_timer->last_login = time();
+		$customer->com_customertimer->last_login = time();
 		$customer->save();
 		// Add the customer to the login tracker.
 		$this->customers[] = $customer;
@@ -112,16 +112,16 @@ class com_customer_timer_login_tracker extends entity {
 		if (!$found)
 			return false;
 		$this->save();
-		$session_info = $pines->com_customer_timer->get_session_info($customer);
+		$session_info = $pines->com_customertimer->get_session_info($customer);
 		// Take points off the customer's account.
 		$customer->adjust_points(-1 * $session_info['points']);
 		$customer->save();
 		// Save a transaction.
-		$tx = com_customer_timer_tx::factory('com_customer_timer', 'transaction', 'account_tx');
+		$tx = com_customertimer_tx::factory('com_customertimer', 'transaction', 'account_tx');
 		$tx->customer = $customer;
 		$tx->minutes = $session_info['minutes'];
 		$tx->points = $session_info['points'];
-		$tx->login_time = $customer->com_customer_timer->last_login;
+		$tx->login_time = $customer->com_customertimer->last_login;
 		$tx->logout_time = time();
 		$tx->save();
 		display_notice("Goodbye, you have been logged out. This session was {$session_info['minutes']} minutes long, for {$session_info['points']} points.");

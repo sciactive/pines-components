@@ -1,0 +1,30 @@
+<?php
+/**
+ * Add menu entries.
+ *
+ * @package Pines
+ * @subpackage com_customer
+ * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
+ * @author Hunter Perrin <hunter@sciactive.com>
+ * @copyright Hunter Perrin
+ * @link http://sciactive.com/
+ */
+defined('P_RUN') or die('Direct access prohibited');
+
+if ( gatekeeper('com_customer/listcustomers') || gatekeeper('com_customer/newcustomer') ||
+	gatekeeper('com_customer/listcompanies') || gatekeeper('com_customer/newcompany')) {
+	$com_customer_menu_id = $pines->page->main_menu->add('CRM');
+	if ( gatekeeper('com_customer/listcustomers') )
+		$pines->page->main_menu->add('Customers', pines_url('com_customer', 'listcustomers'), $com_customer_menu_id);
+	if ( gatekeeper('com_customer/newcustomer') )
+		$pines->page->main_menu->add('New Customer', pines_url('com_customer', 'editcustomer'), $com_customer_menu_id);
+	if (gatekeeper('com_customer/listcompanies') || gatekeeper('com_customer/newcompany')) {
+		$com_customer_company_menu_id = $pines->page->main_menu->add('Companies', '#', $com_customer_menu_id);
+		if ( gatekeeper('com_customer/listcompanies') )
+			$pines->page->main_menu->add('Companies', pines_url('com_customer', 'listcompanies'), $com_customer_company_menu_id);
+		if ( gatekeeper('com_customer/newcompany') )
+			$pines->page->main_menu->add('New Company', pines_url('com_customer', 'editcompany'), $com_customer_company_menu_id);
+	}
+}
+
+?>

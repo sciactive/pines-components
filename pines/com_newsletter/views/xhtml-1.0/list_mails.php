@@ -43,7 +43,7 @@ $this->title = 'Mails';
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo pines_url('system', 'pgrid_save_state'); ?>", {view: "com_newsletter/list_mails", state: cur_state});
+				state_xhr = $.post("<?php echo pines_url('com_pgrid', 'save_state'); ?>", {view: "com_newsletter/list_mails", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);

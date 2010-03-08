@@ -50,7 +50,7 @@ class com_newsletter extends component {
 	 * @param string $close_action The action to route to when closed.
 	 * @return bool True on success, false on failure.
 	 */
-	function edit_mail($mail = NULL, $new_option = '', $new_action = '', $close_option = "com_newsletter", $close_action = "list") {
+	function edit_mail($mail = NULL, $new_option = '', $new_action = '', $close_option = 'com_newsletter', $close_action = "list") {
 		global $pines;
 
 		if ( !is_null($mail) ) {
@@ -61,7 +61,7 @@ class com_newsletter extends component {
 		} else {
 			$mail = new entity('com_newsletter', 'mail');
 		}
-
+		$calendar_head = new module('com_newsletter', 'edit_mail_head', 'head');
 		$module = new module('com_newsletter', 'edit_mail', 'content');
 		$module->entity = $mail;
 		$module->new_option = $new_option;

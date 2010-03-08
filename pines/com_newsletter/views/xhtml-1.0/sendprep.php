@@ -10,20 +10,6 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-
-$pines->page->head("<script src=\"{$pines->config->rela_location}components/com_newsletter/js/jquery.checkboxtree.js\" type=\"text/javascript\"></script>");
-$pines->page->head("<script type=\"text/javascript\">
-jQuery(document).ready(function(){
-	jQuery(\".unorderedlisttree\").checkboxTree({
-			collapsedarrow: \"{$pines->config->rela_location}components/com_newsletter/images/img-arrow-collapsed.gif\",
-			expandedarrow: \"{$pines->config->rela_location}components/com_newsletter/images/img-arrow-expanded.gif\",
-			blankarrow: \"{$pines->config->rela_location}components/com_newsletter/images/img-arrow-blank.gif\",
-			checkchildren: true
-	});
-});
-</script>
-");
-$pines->page->head("<link href=\"{$pines->config->rela_location}components/com_newsletter/css/checktree.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />");
 ?>
 <form class="pform" method="post" action="<?php echo pines_url('com_newsletter', 'send'); ?>">
 <fieldset>

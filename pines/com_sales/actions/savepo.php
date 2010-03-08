@@ -15,7 +15,7 @@ if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_sales/editpo') )
 		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listpos', null, false));
 	$po = com_sales_po::factory((int) $_REQUEST['id']);
-	if (is_null($po->guid)) {
+	if (is_null($po->guid) || $po->final) {
 		display_error('Requested PO id is not accessible');
 		return;
 	}
@@ -87,8 +87,15 @@ if (is_null($po->shipper)) {
 
 $po->ac->other = 2;
 
+if ($_REQUEST['save'] == 'commit')
+	$po->final = true;
+
 if ($po->save()) {
-	display_notice('Saved PO ['.$po->po_number.']');
+	if ($po->final) {
+		display_notice('Committed PO ['.$po->guid.']');
+	} else {
+		display_notice('Saved PO ['.$po->guid.']');
+	}
 } else {
 	display_error('Error saving PO. Do you have permission?');
 }

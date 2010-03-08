@@ -474,12 +474,12 @@ class com_sales extends component {
 		$errors = array();
 		foreach ($module->pos as $po) {
 			if ($po->eta < time() && empty($po->received))
-				$errors[] .= 'PO #'. $po->po_number .' was not recieved on time.';
+				$errors[] = "#<strong>{$po->po_number}</strong> was not received on time.";
 		}
 		if (!empty($errors)) {
 			$type = 'Reminder';
 			$head = 'Purchase Orders';
-			$this->inform($type, $head, $errors);
+			$this->inform($type, $head, implode("\n", $errors));
 		}
 	}
 

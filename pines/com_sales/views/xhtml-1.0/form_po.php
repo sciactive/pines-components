@@ -10,8 +10,11 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = (is_null($this->entity->guid)) ? 'Editing New Purchase Order' : 'Editing ['.htmlentities($this->entity->po_number).']';
+$this->title = (is_null($this->entity->guid)) ? 'Editing New Purchase Order' : (($this->entity->final) ? 'Viewing' : 'Editing').' PO ['.htmlentities($this->entity->po_number).']';
 $this->note = 'Provide PO details in this form.';
+$read_only = '';
+if ($this->entity->final)
+	$read_only = 'readonly="readonly"';
 ?>
 <form class="pform" method="post" id="po_details" action="<?php echo pines_url('com_sales', 'savepo'); ?>">
 	<script type="text/javascript">
@@ -235,11 +238,11 @@ $this->note = 'Provide PO details in this form.';
 	<?php } ?>
 	<div class="element">
 		<label><span class="label">PO #</span>
-			<input class="field ui-widget-content" type="text" name="po_number" size="24" value="<?php echo $this->entity->po_number; ?>" /></label>
+			<input class="field ui-widget-content" type="text" name="po_number" size="24" value="<?php echo $this->entity->po_number; ?>" <?php echo $read_only; ?> /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Reference #</span>
-			<input class="field ui-widget-content" type="text" name="reference_number" size="24" value="<?php echo $this->entity->reference_number; ?>" /></label>
+			<input class="field ui-widget-content" type="text" name="reference_number" size="24" value="<?php echo $this->entity->reference_number; ?>" <?php echo $read_only; ?> /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Vendor</span>
@@ -248,7 +251,7 @@ $this->note = 'Provide PO details in this form.';
 			<?php } else { ?>
 				<span class="note">Vendor cannot be changed after items have been received.</span>
 			<?php } ?>
-			<select class="field ui-widget-content" name="vendor" onchange="void select_vendor(Number(this.value));"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?>>
+			<select class="field ui-widget-content" name="vendor" onchange="void select_vendor(Number(this.value));"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?> <?php echo $read_only; ?>>
 				<option value="null">-- None --</option>
 				<?php foreach ($this->vendors as $cur_vendor) { ?>
 				<option value="<?php echo $cur_vendor->guid; ?>"<?php echo $this->entity->vendor->guid == $cur_vendor->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_vendor->name; ?></option>
@@ -260,13 +263,13 @@ $this->note = 'Provide PO details in this form.';
 			<?php if (!empty($this->entity->received)) { ?>
 				<span class="note">Destination cannot be changed after items have been received.</span>
 			<?php } ?>
-			<select class="field ui-widget-content" name="destination"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?>>
+			<select class="field ui-widget-content" name="destination"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?> <?php echo $read_only; ?>>
 				<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations, $this->entity->destination->guid); ?>
 			</select></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Shipper</span>
-			<select class="field ui-widget-content" name="shipper">
+			<select class="field ui-widget-content" name="shipper" <?php echo $read_only; ?>>
 				<option value="null">-- None --</option>
 				<?php foreach ($this->shippers as $cur_shipper) { ?>
 				<option value="<?php echo $cur_shipper->guid; ?>"<?php echo $this->entity->shipper->guid == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_shipper->name; ?></option>
@@ -274,6 +277,7 @@ $this->note = 'Provide PO details in this form.';
 			</select></label>
 	</div>
 	<div class="element">
+		<?php if (!$this->entity->final) { ?>
 		<script type="text/javascript">
 			// <![CDATA[
 			$(function(){
@@ -283,8 +287,9 @@ $this->note = 'Provide PO details in this form.';
 			});
 			// ]]>
 		</script>
+		<?php } ?>
 		<label><span class="label">ETA</span>
-			<input class="field ui-widget-content" type="text" id="eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? date('Y-m-d', $this->entity->eta) : ''); ?>" /></label>
+			<input class="field ui-widget-content" type="text" id="eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? date('Y-m-d', $this->entity->eta) : ''); ?>" <?php echo $read_only; ?> /></label>
 	</div>
 	<div class="element full_width">
 		<span class="label">Products</span>
@@ -304,7 +309,7 @@ $this->note = 'Provide PO details in this form.';
 						<?php foreach ($this->entity->products as $cur_product) {
 								if (is_null($cur_product['entity']))
 									continue;
-								?>
+						?>
 						<tr title="<?php echo $cur_product['entity']->guid; ?>">
 							<td><?php echo $cur_product['entity']->sku; ?></td>
 							<td><?php echo $cur_product['entity']->name; ?></td>
@@ -316,7 +321,7 @@ $this->note = 'Provide PO details in this form.';
 					</tbody>
 				</table>
 			</div>
-			<input type="hidden" id="products" name="products" size="24" />
+			<input type="hidden" id="products" name="products" size="24" <?php echo $read_only; ?> />
 		</div>
 	</div>
 	<div class="element full_width">
@@ -344,11 +349,11 @@ $this->note = 'Provide PO details in this form.';
 		<div style="width: 100%">
 			<label>
 				<span>Quantity</span>
-				<input type="text" name="cur_product_quantity" id="cur_product_quantity" />
+				<input type="text" name="cur_product_quantity" id="cur_product_quantity" <?php echo $read_only; ?> />
 			</label>
 			<label>
 				<span>Cost</span>
-				<input type="text" name="cur_product_cost" id="cur_product_cost" />
+				<input type="text" name="cur_product_cost" id="cur_product_cost" <?php echo $read_only; ?> />
 			</label>
 		</div>
 	</div>
@@ -367,9 +372,14 @@ $this->note = 'Provide PO details in this form.';
 	<?php } ?>
 	<div class="element buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
-		<?php } ?>
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
+		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" <?php echo $read_only; ?> />
+		<?php } if (!$this->entity->final) { ?>
+		<input type="hidden" id="save" name="save" value="" />
+		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" onclick="$('#save').val('save');" />
+		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Commit" onclick="$('#save').val('commit');" />
 		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_sales', 'listpos'); ?>';" value="Cancel" />
+		<?php } else { ?>
+		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_sales', 'listpos'); ?>';" value="&laquo; Close" />
+		<?php } ?>
 	</div>
 </form>

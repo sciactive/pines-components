@@ -10,8 +10,11 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = (is_null($this->entity->guid)) ? 'Editing New Transfer' : 'Editing ['.htmlentities($this->entity->guid).']';
+$this->title = (is_null($this->entity->guid)) ? 'Editing New Transfer' : (($this->entity->final) ? 'Viewing ' : 'Editing ').' Transfer ['.htmlentities($this->entity->guid).']';
 $this->note = 'Use this form to transfer inventory to another location.';
+$read_only = '';
+if ($this->entity->final)
+	$read_only = 'readonly="readonly"';
 ?>
 <form class="pform" method="post" id="transfer_details" action="<?php echo pines_url('com_sales', 'savetransfer'); ?>">
 	<script type="text/javascript">
@@ -135,20 +138,20 @@ $this->note = 'Use this form to transfer inventory to another location.';
 	<?php } ?>
 	<div class="element">
 		<label><span class="label">Reference #</span>
-			<input class="field ui-widget-content" type="text" name="reference_number" size="24" value="<?php echo $this->entity->reference_number; ?>" /></label>
+			<input class="field ui-widget-content" type="text" name="reference_number" size="24" value="<?php echo $this->entity->reference_number; ?>" <?php echo $read_only; ?> /></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Destination</span>
 			<?php if (!empty($this->entity->received)) { ?>
 				<span class="note">Destination cannot be changed after items have been received.</span>
 			<?php } ?>
-			<select class="field ui-widget-content" name="destination"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?>>
+			<select class="field ui-widget-content" name="destination"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?> <?php echo $read_only; ?>>
 				<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations, $this->entity->destination->guid); ?>
 			</select></label>
 	</div>
 	<div class="element">
 		<label><span class="label">Shipper</span>
-			<select class="field ui-widget-content" name="shipper">
+			<select class="field ui-widget-content" name="shipper" <?php echo $read_only; ?>>
 				<option value="null">-- None --</option>
 				<?php foreach ($this->shippers as $cur_shipper) { ?>
 				<option value="<?php echo $cur_shipper->guid; ?>"<?php echo $this->entity->shipper->guid == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_shipper->name; ?></option>
@@ -156,6 +159,7 @@ $this->note = 'Use this form to transfer inventory to another location.';
 			</select></label>
 	</div>
 	<div class="element">
+		<?php if (!$this->entity->final) { ?>
 		<script type="text/javascript">
 			// <![CDATA[
 			$(function(){
@@ -165,8 +169,9 @@ $this->note = 'Use this form to transfer inventory to another location.';
 			});
 			// ]]>
 		</script>
+		<?php } ?>
 		<label><span class="label">ETA</span>
-			<input class="field ui-widget-content" type="text" id="eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? date('Y-m-d', $this->entity->eta) : ''); ?>" /></label>
+			<input class="field ui-widget-content" type="text" id="eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? date('Y-m-d', $this->entity->eta) : ''); ?>" <?php echo $read_only; ?> /></label>
 	</div>
 	<div class="element full_width">
 		<span class="label">Stock</span>
@@ -237,8 +242,11 @@ $this->note = 'Use this form to transfer inventory to another location.';
 	<div class="element buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
-		<?php } ?>
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
+		<?php } if (!$this->entity->final) { ?>
+		<input type="hidden" id="save" name="save" value="" />
+		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" onclick="$('#save').val('save');" />
+		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Commit" onclick="$('#save').val('commit');" />
 		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_sales', 'listtransfers'); ?>';" value="Cancel" />
+		<?php } ?>
 	</div>
 </form>

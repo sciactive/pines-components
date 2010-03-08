@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = (is_null($this->entity->guid)) ? 'New Countsheet' : 'Editing Countsheet ['.htmlentities($this->entity->guid).']';
+$this->title = (is_null($this->entity->guid)) ? 'New Countsheet' : (($this->entity->final) ? 'Viewing' : 'Editing').' Countsheet ['.htmlentities($this->entity->guid).']';
 if (isset($this->entity->guid))
 	$this->note = 'Created by ' . $pines->user_manager->get_username($this->entity->uid) . ' on ' . date('Y-m-d', $this->entity->p_cdate) . ' - Last Modified on ' . date('Y-m-d', $this->entity->p_mdate);
 ?>
@@ -26,7 +26,8 @@ if (isset($this->entity->guid))
 			
 			entries_table.pgrid({
 				pgrid_view_height: "360px",
-				pgrid_paginate: false,
+				pgrid_paginate: false
+				<?php if ( !$this->entity->final ) { ?>,
 				pgrid_toolbar: true,
 				pgrid_toolbar_contents : [
 					{
@@ -61,7 +62,11 @@ if (isset($this->entity->guid))
 							}
 					}
 				]
+				<?php } ?>
 			});
+		});
+		$(document).ready(function() {
+			entries.val(JSON.stringify(entries_table.pgrid_get_all_rows().pgrid_export_rows()));
 		});
 		// ]]>
 	</script>
@@ -80,17 +85,22 @@ if (isset($this->entity->guid))
 						<td><?php echo $cur_entry->values[0]; ?></td>
 					</tr>
 					<?php $entry_count++; } ?>
-					<input type="hidden" id="entry_counter" name="entry_counter" value="<?php echo $entry_count; ?>">
 				</tbody>
 			</table>
 		</div>
-		<input type="hidden" id="entries" name="entries" size="24" />
 	</div>
 	<div class="element buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
-		<?php } ?>
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Submit" />
+		<?php } if (!$this->entity->final) { ?>
+		<input type="hidden" id="entry_counter" name="entry_counter" value="<?php echo $entry_count; ?>" />
+		<input type="hidden" id="entries" name="entries" value="<?php echo $entry_dump; ?>" />
+		<input type="hidden" id="save" name="save" value="" />
+		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" onclick="$('#save').val('save');" />
+		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Commit" onclick="$('#save').val('commit');" />
 		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_sales', 'listcountsheets'); ?>';" value="Cancel" />
+		<?php } else { ?>
+		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_sales', 'listcountsheets'); ?>';" value="&laquo; Close" />
+		<?php } ?>
 	</div>
 </form>

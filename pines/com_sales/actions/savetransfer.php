@@ -16,7 +16,7 @@ if ( !gatekeeper('com_sales/managestock') )
 
 if ( isset($_REQUEST['id']) ) {
 	$transfer = com_sales_transfer::factory((int) $_REQUEST['id']);
-	if (is_null($transfer->guid)) {
+	if (is_null($transfer->guid) || $transfer->final) {
 		display_error('Requested transfer id is not accessible');
 		return;
 	}
@@ -64,8 +64,15 @@ if (is_null($transfer->shipper)) {
 
 $transfer->ac->other = 2;
 
+if ($_REQUEST['save'] == 'commit')
+	$transfer->final = true;
+
 if ($transfer->save()) {
-	display_notice('Saved transfer ['.$transfer->guid.']');
+	if ($transfer->final) {
+		display_notice('Committed transfer ['.$transfer->guid.']');
+	} else {
+		display_notice('Saved transfer ['.$transfer->guid.']');
+	}
 } else {
 	display_error('Error saving transfer. Do you have permission?');
 }

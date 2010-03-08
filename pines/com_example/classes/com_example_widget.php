@@ -15,7 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * A widget.
  *
  * @package Pines
- * @subpackage com_sales
+ * @subpackage com_example
  */
 class com_example_widget extends entity {
 	/**

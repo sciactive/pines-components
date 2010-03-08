@@ -52,9 +52,8 @@ class com_customer extends component {
 		$module->companies = $pines->entity_manager->get_entities(array('tags' => array('com_customer', 'company'), 'class' => com_customer_company));
 
 		if ( empty($module->companies) ) {
-			$pgrid->detach();
-			$module->detach();
-			display_notice("There are no companies.");
+			//$module->detach();
+			display_notice('There are no companies.');
 		}
 	}
 	
@@ -73,9 +72,8 @@ class com_customer extends component {
 		$module->customers = $pines->entity_manager->get_entities(array('tags' => array('com_customer', 'customer'), 'class' => com_customer_customer));
 
 		if ( empty($module->customers) ) {
-			$pgrid->detach();
-			$module->detach();
-			display_notice("There are no customers.");
+			//$module->detach();
+			display_notice('There are no customers.');
 		}
 	}
 

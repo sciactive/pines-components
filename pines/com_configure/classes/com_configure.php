@@ -126,8 +126,8 @@ class com_configure extends component {
 
 		//This shouldn't even be possible, but just in case...
 		if ( empty($module->components) ) {
-			$module->detach();
-			display_notice("There are no installed components.");
+			//$module->detach();
+			display_notice('There are no installed components.');
 		}
 	}
 

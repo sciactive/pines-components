@@ -66,9 +66,8 @@ class com_hrm extends component {
 		$module->employees = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
 
 		if ( empty($module->employees) ) {
-			$pgrid->detach();
-			$module->detach();
-			display_notice("There are no employees.");
+			//$module->detach();
+			display_notice('There are no employees.');
 		}
 	}
 
@@ -87,9 +86,8 @@ class com_hrm extends component {
 		$module->employees = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
 
 		if ( empty($module->employees) ) {
-			$pgrid->detach();
-			$module->detach();
-			display_notice("There are no employees.");
+			//$module->detach();
+			display_notice('There are no employees.');
 		}
 	}
 
@@ -108,9 +106,8 @@ class com_hrm extends component {
 		$module->user_templates = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'user_template'), 'class' => com_hrm_user_template));
 
 		if ( empty($module->user_templates) ) {
-			$pgrid->detach();
-			$module->detach();
-			display_notice("There are no user templates.");
+			//$module->detach();
+			display_notice('There are no user templates.');
 		}
 	}
 

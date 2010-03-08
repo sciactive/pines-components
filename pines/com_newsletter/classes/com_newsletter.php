@@ -86,9 +86,8 @@ class com_newsletter extends component {
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_newsletter/list_mails'];
 
 		if ( empty($module->mails) ) {
-			$pgrid->detach();
-			$module->detach();
-			display_notice("There are no mails.");
+			//$module->detach();
+			display_notice('There are no mails.');
 		}
 	}
 }

@@ -33,9 +33,8 @@ class com_example extends component {
 		$module->widgets = $pines->entity_manager->get_entities(array('tags' => array('com_example', 'widget'), 'class' => com_example_widget));
 
 		if ( empty($module->widgets) ) {
-			$pgrid->detach();
-			$module->detach();
-			display_notice("There are no widgets.");
+			//$module->detach();
+			display_notice('There are no widgets.');
 		}
 	}
 

@@ -472,9 +472,8 @@ class com_user extends component {
 		$module->groups = $pines->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
 
 		if ( empty($module->groups) ) {
-			$pgrid->detach();
-			$module->detach();
-			display_notice("There are no groups.");
+			//$module->detach();
+			display_notice('There are no groups.');
 		}
 	}
 
@@ -493,9 +492,8 @@ class com_user extends component {
 		$module->users = $pines->entity_manager->get_entities(array('tags' => array('com_user', 'user'), 'class' => user));
 
 		if ( empty($module->users) ) {
-			$pgrid->detach();
-			$module->detach();
-			display_notice("There are no users.");
+			//$module->detach();
+			display_notice('There are no users.');
 		}
 	}
 

@@ -372,9 +372,8 @@ class com_sales extends component {
 		$module->countsheets = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'countsheet'), 'class' => com_sales_countsheet));
 
 		if ( empty($module->countsheets) ) {
-			$pgrid->detach();
-			$module->detach();
-			display_notice("There are no countsheets.");
+			//$module->detach();
+			display_notice('There are no countsheets.');
 			return;
 		}
 
@@ -422,9 +421,8 @@ class com_sales extends component {
 		$module->manufacturers = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'manufacturer'), 'class' => com_sales_manufacturer));
 
 		if ( empty($module->manufacturers) ) {
-			$pgrid->detach();
-			$module->detach();
-			display_notice("There are no manufacturers.");
+			//$module->detach();
+			display_notice('There are no manufacturers.');
 		}
 	}
 
@@ -443,9 +441,8 @@ class com_sales extends component {
 		$module->payment_types = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));
 
 		if ( empty($module->payment_types) ) {
-			$pgrid->detach();
-			$module->detach();
-			display_notice("There are no payment types.");
+			//$module->detach();
+			display_notice('There are no payment types.');
 		}
 	}
 
@@ -464,9 +461,8 @@ class com_sales extends component {
 		$module->pos = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'po'), 'class' => com_sales_po));
 
 		if ( empty($module->pos) ) {
-			$pgrid->detach();
-			$module->detach();
-			display_notice("There are no POs.");
+			//$module->detach();
+			display_notice('There are no POs.');
 			return;
 		}
 		
@@ -498,9 +494,8 @@ class com_sales extends component {
 		$module->products = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'product'), 'class' => com_sales_product));
 
 		if ( empty($module->products) ) {
-			$pgrid->detach();
-			$module->detach();
-			display_notice("There are no products.");
+			//$module->detach();
+			display_notice('There are no products.');
 		}
 	}
 
@@ -519,9 +514,8 @@ class com_sales extends component {
 		$module->sales = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'sale'), 'class' => com_sales_sale));
 
 		if ( empty($module->sales) ) {
-			$pgrid->detach();
-			$module->detach();
-			display_notice("There are no sales.");
+			//$module->detach();
+			display_notice('There are no sales.');
 		}
 	}
 
@@ -540,9 +534,8 @@ class com_sales extends component {
 		$module->shippers = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'shipper'), 'class' => com_sales_shipper));
 
 		if ( empty($module->shippers) ) {
-			$pgrid->detach();
-			$module->detach();
-			display_notice("There are no shippers.");
+			//$module->detach();
+			display_notice('There are no shippers.');
 		}
 	}
 
@@ -564,9 +557,8 @@ class com_sales extends component {
 		$module->all = $all;
 
 		if ( empty($module->stock) ) {
-			$pgrid->detach();
-			$module->detach();
-			display_notice("There is nothing in stock at your location.");
+			//$module->detach();
+			display_notice('There is nothing in stock at your location.');
 		}
 	}
 
@@ -585,9 +577,8 @@ class com_sales extends component {
 		$module->tax_fees = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'tax_fee'), 'class' => com_sales_tax_fee));
 
 		if ( empty($module->tax_fees) ) {
-			$pgrid->detach();
-			$module->detach();
-			display_notice("There are no taxes/fees.");
+			//$module->detach();
+			display_notice('There are no taxes/fees.');
 		}
 	}
 
@@ -606,9 +597,8 @@ class com_sales extends component {
 		$module->transfers = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'transfer'), 'class' => com_sales_transfer));
 
 		if ( empty($module->transfers) ) {
-			$pgrid->detach();
-			$module->detach();
-			display_notice("There are no transfers.");
+			//$module->detach();
+			display_notice('There are no transfers.');
 		}
 	}
 
@@ -627,9 +617,8 @@ class com_sales extends component {
 		$module->vendors = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'vendor'), 'class' => com_sales_vendor));
 
 		if ( empty($module->vendors) ) {
-			$pgrid->detach();
-			$module->detach();
-			display_notice("There are no vendors.");
+			//$module->detach();
+			display_notice('There are no vendors.');
 		}
 	}
 

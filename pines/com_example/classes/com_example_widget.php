@@ -3,7 +3,7 @@
  * com_example_widget class.
  *
  * @package Pines
- * @subpackage com_sales
+ * @subpackage com_example
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin

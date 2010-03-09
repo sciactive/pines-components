@@ -1,6 +1,6 @@
 <?php
 /**
- * com_configure's configuration. (Used for testing.)
+ * com_configure's configuration defaults. (Used for testing.)
  *
  * @package Pines
  * @subpackage com_configure
@@ -112,7 +112,7 @@ return array(
 		'name' => 'multi_integer',
 		'cname' => 'Integer Selection',
 		'description' => 'A selection of whole numbers.',
-		'value' => array(32),
+		'value' => array('Thirty-Two' => 32),
 		'options' => array(
 			1,
 			2,
@@ -146,6 +146,38 @@ return array(
 			'this',
 			'and',
 			'that'
+		),
+	),
+);
+
+?>
+<?php
+/*
+ * Sample config.php file.
+ */
+defined('P_RUN') or die('Direct access prohibited');
+
+return array(
+	array(
+		'name' => 'boolean',
+		'value' => false,
+	),
+	array(
+		'name' => 'integer',
+		'value' => 3,
+	),
+	array(
+		'name' => 'array_string',
+		'value' => array(
+			'this',
+			'and',
+			'that'
+		),
+	),
+	array(
+		'name' => 'multi_string',
+		'value' => array(
+			'and',
 		),
 	),
 );

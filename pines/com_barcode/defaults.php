@@ -1,6 +1,6 @@
 <?php
 /**
- * com_barcode's configuration.
+ * com_barcode's configuration defaults.
  *
  * @package Pines
  * @subpackage com_barcode

@@ -10,10 +10,10 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = "Viewing Configuration for {$this->req_component}";
+$this->title = "Viewing Configuration for {$this->comp->name}";
 ?>
 <form class="pform" action="" method="post">
-	<?php foreach ($this->config as $cur_var) { ?>
+	<?php foreach ($this->comp->get_full_config_array() as $cur_var) { ?>
 	<div class="element" style="width: 95%">
 		<span class="label">
 			<?php echo $cur_var['cname']; ?>

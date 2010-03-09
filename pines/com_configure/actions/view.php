@@ -18,7 +18,8 @@ if (!array_key_exists($_REQUEST['component'], $pines->configurator->config_files
 	display_error('Given component either does not exist, or has no configuration file!');
 	return;
 }
-$list = new module('com_configure', 'view', 'content');
-$list->req_component = htmlentities($_REQUEST['component']);
-$list->config = $pines->configurator->get_config_array($pines->configurator->config_files[$_REQUEST['component']]);
+
+$component = com_configure_component::factory($_REQUEST['component']);
+$component->print_view();
+
 ?>

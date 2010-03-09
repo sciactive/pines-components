@@ -1,6 +1,6 @@
 <?php
 /**
- * com_reports's configuration.
+ * com_reports' configuration defaults.
  *
  * @package Pines
  * @subpackage com_reports

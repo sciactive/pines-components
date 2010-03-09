@@ -1,6 +1,6 @@
 <?php
 /**
- * com_sales' configuration.
+ * com_sales' configuration defaults.
  *
  * @package Pines
  * @subpackage com_sales

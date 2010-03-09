@@ -1,6 +1,6 @@
 <?php
 /**
- * com_newsletter's configuration.
+ * com_newsletter's configuration defaults.
  *
  * @package Pines
  * @subpackage com_newsletter

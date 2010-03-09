@@ -1,6 +1,6 @@
 <?php
 /**
- * com_pdf's configuration.
+ * com_pdf's configuration defaults.
  *
  * @package Pines
  * @subpackage com_pdf

@@ -14,8 +14,8 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_configure/edit') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_configure', 'default', false));
 
-$list = new module('com_configure', 'edit', 'content');
-$list->req_component = 'system';
-$list->config = $pines->configurator->get_config_array($pines->configurator->config_files['system']);
+$module = new module('com_configure', 'edit', 'content');
+$module->req_component = 'system';
+$module->config = $pines->configurator->get_config_array('system');
 
 ?>

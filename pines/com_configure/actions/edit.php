@@ -19,9 +19,7 @@ if (!array_key_exists($_REQUEST['component'], $pines->configurator->config_files
 	return;
 }
 
-$pines->com_ptags->load();
-$list = new module('com_configure', 'edit', 'content');
-$list->req_component = htmlentities($_REQUEST['component']);
-$list->config = $pines->configurator->get_config_array($pines->configurator->config_files[$_REQUEST['component']]);
+$component = com_configure_component::factory($_REQUEST['component']);
+$component->print_form();
 
 ?>

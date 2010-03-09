@@ -1,6 +1,6 @@
 <?php
 /**
- * com_authorizenet's configuration.
+ * com_authorizenet's configuration defaults.
  *
  * @package Pines
  * @subpackage com_authorizenet

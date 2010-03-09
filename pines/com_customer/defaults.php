@@ -1,6 +1,6 @@
 <?php
 /**
- * com_customer's configuration.
+ * com_customer's configuration defaults.
  *
  * @package Pines
  * @subpackage com_customer

@@ -1,6 +1,6 @@
 <?php
 /**
- * com_hrm's configuration.
+ * com_hrm's configuration defaults.
  *
  * @package Pines
  * @subpackage com_hrm

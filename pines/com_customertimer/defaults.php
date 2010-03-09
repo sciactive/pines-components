@@ -1,6 +1,6 @@
 <?php
 /**
- * com_customertimer's configuration.
+ * com_customertimer's configuration defaults.
  *
  * @package Pines
  * @subpackage com_customertimer

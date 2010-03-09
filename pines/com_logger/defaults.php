@@ -1,6 +1,6 @@
 <?php
 /**
- * com_logger's configuration.
+ * com_logger's configuration defaults.
  *
  * @package Pines
  * @subpackage com_logger

@@ -63,13 +63,15 @@ $this->title = "Editing Configuration for {$this->comp->name}";
 				</div>
 				<?php } ?>
 			<?php } elseif (is_array($cur_var['value'])) { ?>
-				<?php if (is_int($cur_var['value'][0])) { ?>
-				<input class="field ui-widget-content do_tags" type="text" name="opt_int_<?php echo $cur_var['name']; ?>" value="<?php echo implode(';;', $cur_value); ?>" />
-				<?php } elseif (is_float($cur_var['value'][0])) { ?>
-				<input class="field ui-widget-content do_tags" type="text" name="opt_float_<?php echo $cur_var['name']; ?>" value="<?php echo implode(';;', $cur_value); ?>" />
-				<?php } elseif (is_string($cur_var['value'][0])) { ?>
-				<span class="field full_width"><textarea rows="3" cols="35" class="ui-widget-content do_tags" style="width: 100%;" name="opt_string_<?php echo $cur_var['name']; ?>"><?php echo htmlentities(implode(';;', $cur_value), true); ?></textarea></span>
-				<?php } ?>
+				<div class="group">
+					<?php if (is_int($cur_var['value'][0])) { ?>
+					<input class="field ui-widget-content do_tags" type="text" name="opt_int_<?php echo $cur_var['name']; ?>" value="<?php echo implode(';;', $cur_value); ?>" />
+					<?php } elseif (is_float($cur_var['value'][0])) { ?>
+					<input class="field ui-widget-content do_tags" type="text" name="opt_float_<?php echo $cur_var['name']; ?>" value="<?php echo implode(';;', $cur_value); ?>" />
+					<?php } elseif (is_string($cur_var['value'][0])) { ?>
+					<span class="field full_width"><textarea rows="3" cols="35" class="ui-widget-content do_tags" style="width: 100%;" name="opt_string_<?php echo $cur_var['name']; ?>"><?php echo htmlentities(implode(';;', $cur_value), true); ?></textarea></span>
+					<?php } ?>
+				</div>
 			<?php } else { ?>
 				<?php if (is_bool($cur_var['value'])) { ?>
 				<input class="field ui-widget-content" type="checkbox" name="opt_bool_<?php echo $cur_var['name']; ?>" value="ON" <?php echo ($cur_value ? 'checked="checked" ' : ''); ?>/>

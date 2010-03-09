@@ -94,18 +94,18 @@ return array(
 		'cname' => 'Shown Fields',
 		'description' => 'These fields will be displayed when creating a customer.',
 		'value' => array(
-			'name',
-			'ssn',
-			'dob',
-			'email',
-			'company',
-			'phone',
-			'password',
-			'description',
-			'points',
-			'membership',
-			'address',
-			'attributes'
+			'Name' => 'name',
+			'SSN' => 'ssn',
+			'DOB' => 'dob',
+			'Email' => 'email',
+			'Company' => 'company',
+			'Phone' => 'phone',
+			'Password' => 'password',
+			'Description' => 'description',
+			'Points' => 'points',
+			'Membership' => 'membership',
+			'Address' => 'address',
+			'Attributes' => 'attributes',
 		),
 		'options' => array(
 			'Name' => 'name',
@@ -127,8 +127,8 @@ return array(
 		'cname' => 'Required Fields',
 		'description' => 'These fields must be filled out when creating a customer.',
 		'value' => array(
-			'name',
-			'phone'
+			'Name' => 'name',
+			'Phone' => 'phone',
 		),
 		'options' => array(
 			'Name' => 'name',

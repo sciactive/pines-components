@@ -128,7 +128,6 @@ return array(
 		'description' => 'These fields must be filled out when creating a customer.',
 		'value' => array(
 			'name',
-			'ssn',
 			'phone'
 		),
 		'options' => array(

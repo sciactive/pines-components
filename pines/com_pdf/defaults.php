@@ -16,7 +16,7 @@ return array(
 		'name' => 'author',
 		'cname' => 'Default Author',
 		'description' => 'The default author of PDFs created by com_pdf.',
-		'value' => 'Hunter Perrin',
+		'value' => 'Pines',
 	),
 	array(
 		'name' => 'pdf_path',

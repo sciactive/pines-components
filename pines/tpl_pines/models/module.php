@@ -11,14 +11,14 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
-<div class="module<?php echo htmlentities($this->class_suffix); ?>">
+<div class="module <?php echo htmlentities($this->classes); ?>">
 	<?php if ($this->show_title && (!empty($this->title) || !empty($this->note))) { ?>
 	<div class="module_title ui-widget-header ui-corner-all">
 		<?php if (!empty($this->title)) { ?>
-			<h2><?php echo htmlentities($this->title); ?></h2>
+			<h2><?php echo $this->title; ?></h2>
 		<?php } ?>
 		<?php if (!empty($this->note)) { ?>
-			<p><?php echo htmlentities($this->note); ?></p>
+			<p><?php echo $this->note; ?></p>
 		<?php } ?>
 	</div>
 	<?php } ?>

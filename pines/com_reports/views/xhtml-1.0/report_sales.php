@@ -15,6 +15,13 @@
  * http://arshaw.com/fullcalendar/
  */
 defined('P_RUN') or die('Direct access prohibited');
+
+if (isset($_REQUEST['date_start'])) {
+	$this->date[0] = strtotime($_REQUEST['date_start']);
+	$this->date[1] = strtotime($_REQUEST['date_end']);
+}
+$this->sales = $pines->entity_manager->get_entities(array('gte' => array('p_cdate' => $this->date[0]), 'lte' => array('p_cdate' => $this->date[1]), 'tags' => array('com_sales', 'sale')));
+
 // Convert the timespan into the number of days that it covers.
 $total_seconds = $this->date[1]-$this->date[0];
 $days = $total_seconds/(24*60*60);
@@ -86,7 +93,7 @@ foreach ($this->sales as $cur_sale) {
 			events: [
 				<?php
 				$event_counter = 0;
-				// Timespanned sales totals (10am-1pm, 7pm-12pm, etc).
+				// Timespan totals (10am-1pm, 7pm-12pm, etc).
 				foreach ($date_array as $item) {
 					foreach ($item as $cur_item) {
 						if ($event_counter > 0)
@@ -103,7 +110,7 @@ foreach ($this->sales as $cur_sale) {
 						$event_counter++;
 					}
 				}
-				// Total sales for each day.
+				// Total sales for each entire day.
 				foreach ($total as $cur_total) {
 					if ($event_counter > 0)
 						echo ',';
@@ -130,8 +137,9 @@ foreach ($this->sales as $cur_sale) {
 					alert('Loading Relevant Sales');
 					var view_start = view.start.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1');
 					var view_end = view.end.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1');
-					var cur_location = location.toString().replace(/reports\/.*/, 'reports/');
-					pines.get(cur_location +'reportsales/?start='+view_start+'&end='+view_end);
+					$("#date_start").val(view_start);
+					$("#date_end").val(view_end);
+					$("#calendar_dates").submit();
 				}
 			}
 		});
@@ -140,4 +148,8 @@ foreach ($this->sales as $cur_sale) {
 	});
 // ]]>
 </script>
+<form name="calendar_dates" id="calendar_dates" method="post" action="">
+	<input type="hidden" name="date_start" id="date_start" value="">
+	<input type="hidden" name="date_end" id="date_end" value="">
+</form>
 <div id="calendar"></div>

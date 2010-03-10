@@ -56,7 +56,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	<div class="element buttons">
 		<input type="hidden" name="mail_id" value="<?php echo $_REQUEST['mail_id']; ?>" />
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_newsletter', 'list'); ?>';" value="Cancel" />
+		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url('com_newsletter', 'list'); ?>');" value="Cancel" />
 	</div>
 </fieldset>
 </form>

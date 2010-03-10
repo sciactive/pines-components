@@ -28,7 +28,7 @@ $this->title = (is_null($this->entity->guid)) ? 'Editing New Mail' : 'Editing ['
 	<?php } ?>
 	<div class="element buttons" style="padding-left: 0;">
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Save Mail" />
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url($this->close_option, $this->close_action); ?>';" value="Close" /> <small>(Closing will lose any unsaved changes!)</small>
+		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url($this->close_option, $this->close_action); ?>');" value="Close" /> <small>(Closing will lose any unsaved changes!)</small>
 	</div>
 	<div class="element">
 		<label><span class="label">Name</span>
@@ -65,7 +65,7 @@ $this->title = (is_null($this->entity->guid)) ? 'Editing New Mail' : 'Editing ['
 		<input type="hidden" name="update" value="yes" />
 		<input type="hidden" name="mail_id" value="<?php echo $this->entity->guid; ?>" />
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Save Mail" />
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url($this->close_option, $this->close_action); ?>';" value="Close" /> <small>(Closing will lose any unsaved changes!)</small>
+		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url($this->close_option, $this->close_action); ?>');" value="Close" /> <small>(Closing will lose any unsaved changes!)</small>
 	</div>
 </form>
 </div>

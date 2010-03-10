@@ -131,7 +131,7 @@ foreach ($this->sales as $cur_sale) {
 					var view_start = view.start.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1');
 					var view_end = view.end.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1');
 					var cur_location = location.toString().replace(/reports\/.*/, 'reports/');
-					window.location = cur_location +'reportsales/?start='+view_start+'&end='+view_end;
+					pines.get(cur_location +'reportsales/?start='+view_start+'&end='+view_end);
 				}
 			}
 		});

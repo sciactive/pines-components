@@ -15,13 +15,13 @@ $this->title = 'Configure Components';
 <?php foreach($this->components as $cur_component) { ?>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo $cur_component; ?></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <?php if ($cur_component != 'system') { if (in_array($cur_component, $this->disabled_components)) { ?>
-<input class="ui-state-default ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_configure', 'enable', array('component' => urlencode($cur_component))); ?>';" value="Enable" />
+<input class="ui-state-default ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url('com_configure', 'enable', array('component' => urlencode($cur_component))); ?>');" value="Enable" />
 <?php } else { ?>
-<input class="ui-state-default ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_configure', 'disable', array('component' => urlencode($cur_component))); ?>';" value="Disable" />
+<input class="ui-state-default ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url('com_configure', 'disable', array('component' => urlencode($cur_component))); ?>');" value="Disable" />
 <?php } } ?>
 <?php if (in_array($cur_component, $this->config_components)) { ?>
-<input class="ui-state-default ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_configure', 'edit', array('component' => urlencode($cur_component))); ?>';" value="Configure" />
-<input class="ui-state-default ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_configure', 'view', array('component' => urlencode($cur_component))); ?>';" value="View Config" />
+<input class="ui-state-default ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url('com_configure', 'edit', array('component' => urlencode($cur_component))); ?>');" value="Configure" />
+<input class="ui-state-default ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url('com_configure', 'view', array('component' => urlencode($cur_component))); ?>');" value="View Config" />
 <?php } ?>
 <br /><br />
 <?php } ?>

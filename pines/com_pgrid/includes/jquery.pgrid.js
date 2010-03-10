@@ -1012,8 +1012,12 @@
 								}
 								if (val.new_window)
 									return window.open(parsed_url);
-								else
+								else {
+									// If Pines is loaded, use its get method instead of setting location.
+									if (typeof pines == "object" && pines.get)
+										return pines.get(parsed_url);
 									return (window.location = parsed_url);
+								}
 							}
 							return true;
 						}).mousedown(function(){

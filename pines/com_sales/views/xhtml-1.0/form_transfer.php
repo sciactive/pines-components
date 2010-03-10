@@ -246,7 +246,7 @@ if ($this->entity->final)
 		<input type="hidden" id="save" name="save" value="" />
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" onclick="$('#save').val('save');" />
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Commit" onclick="$('#save').val('commit');" />
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_sales', 'listtransfers'); ?>';" value="Cancel" />
+		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url('com_sales', 'listtransfers'); ?>');" value="Cancel" />
 		<?php } ?>
 	</div>
 </form>

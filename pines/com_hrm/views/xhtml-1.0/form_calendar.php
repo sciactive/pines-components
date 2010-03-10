@@ -178,7 +178,7 @@ $this->title = (is_null($this->event->guid)) ? 'New Event' : $this->event->title
 	<div class="element">
 			<?php if (isset($this->event->guid)) { ?>
 			<input type="hidden" name="id" value="<?php echo $this->event->guid; ?>" />
-			<input type="submit" value="Save Event &raquo;" /><input type="button" onclick="window.location='<?php echo pines_url('com_hrm', 'editcalendar'); ?>';" value="Cancel" />
+			<input type="submit" value="Save Event &raquo;" /><input type="button" onclick="pines.get('<?php echo pines_url('com_hrm', 'editcalendar'); ?>');" value="Cancel" />
 			<?php } else { ?>
 			<input type="submit" value="Add Event &raquo;" class="form_select" />
 			<?php } ?>

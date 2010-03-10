@@ -12,6 +12,33 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
+/* Experimental AJAX code.
+if (strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
+	$return = array(
+		'notices' => $pines->page->get_notice(),
+		'errors' => $pines->page->get_error(),
+		'main_menu' => $pines->page->main_menu->render(array('<ul class="dropdown dropdown-horizontal">', '</ul>'),
+			array('<li class="ui-state-default">', '</li>'),
+			array('<ul>', '</ul>'),
+			array('<li class="ui-state-default">', '</li>'), '<a href="#DATA#">#NAME#</a>', ''),
+		'head' => $pines->page->render_modules('head', 'module_head'),
+		'top' => $pines->page->render_modules('top', 'module_header'),
+		'header' => $pines->page->render_modules('header', 'module_header'),
+		'header_right' => $pines->page->render_modules('header_right', 'module_header_right'),
+		'user1' => $pines->page->render_modules('user1'),
+		'user2' => $pines->page->render_modules('user2'),
+		'content' => $pines->page->render_modules('content', 'module_content'),
+		'user3' => $pines->page->render_modules('user3'),
+		'user4' => $pines->page->render_modules('user4'),
+		'left' => $pines->page->render_modules('left'),
+		'right' => $pines->page->render_modules('right', 'module_right'),
+		'footer' => $pines->page->render_modules('footer', 'module_header'),
+		'bottom' => $pines->page->render_modules('bottom', 'module_header')
+	);
+	echo json_encode($return);
+	return;
+}
+*/
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">

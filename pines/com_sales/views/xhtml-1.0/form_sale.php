@@ -960,6 +960,6 @@ $this->note = 'Use this form to edit a sale.';
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Save" onclick="$('#sale_process_type').val('save'); run_submit();" />
 		<?php } ?>
 
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_sales', 'listsales'); ?>';" value="Cancel" />
+		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url('com_sales', 'listsales'); ?>');" value="Cancel" />
 	</div>
 </form>

@@ -98,9 +98,9 @@ if (isset($this->entity->guid))
 		<input type="hidden" id="save" name="save" value="" />
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" onclick="$('#save').val('save');" />
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Commit" onclick="$('#save').val('commit');" />
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_sales', 'listcountsheets'); ?>';" value="Cancel" />
+		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url('com_sales', 'listcountsheets'); ?>');" value="Cancel" />
 		<?php } else { ?>
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_sales', 'listcountsheets'); ?>';" value="&laquo; Close" />
+		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url('com_sales', 'listcountsheets'); ?>');" value="&laquo; Close" />
 		<?php } ?>
 	</div>
 </form>

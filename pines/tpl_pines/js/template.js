@@ -1,8 +1,7 @@
-var _alert;
-
-function convert_standard_notices() {
+$(function($){
+	$.pnotify.defaults.pnotify_opacity = .9;
 	// Turn notices into Pines Notify notices.
-	$(".notice.ui-state-error").find("p.entry span.text").each(function(){
+	$(".notice.ui-state-error p.entry span.text").each(function(){
 		$.pnotify({
 			pnotify_title: "Error",
 			pnotify_text: $(this).html(),
@@ -10,37 +9,13 @@ function convert_standard_notices() {
 			pnotify_hide: false
 		});
 	}).end().remove();
-	$(".notice.ui-state-highlight").find("p.entry span.text").each(function(){
+	$(".notice.ui-state-highlight p.entry span.text").each(function(){
 		$.pnotify({
 			pnotify_title: "Notice",
 			pnotify_text: $(this).html()
 		});
 	}).end().remove();
-}
-
-function consume_alert() {
-	// Take over the alert() function, so alerts get displayed through Pines Notify.
-	if (_alert) return;
-	_alert = window.alert;
-	window.alert = function(message) {
-		$.pnotify({
-			pnotify_title: "Alert",
-			pnotify_text: String(message).replace("\n", "<br />")
-		});
-	};
-}
-
-function release_alert() {
-	// Return the alert() function to normal, so alerts are displayed by the browser.
-	if (!_alert) return;
-	window.alert = _alert;
-	_alert = null;
-}
-
-$(function($){
-	$.pnotify.defaults.pnotify_opacity = .9;
-	convert_standard_notices();
-	consume_alert();
+	
 	// Just in case Pines Notify isn't working.
 	$(".notice .close, .error .close").css("cursor", "pointer").click(function() {
 		$(this).parent().fadeOut("slow");
@@ -75,4 +50,59 @@ $(function($){
 	$(".ui-widget-content:input:disabled").addClass("ui-state-disabled");
 
 	$(".ui-widget-content:text, .ui-widget-content:password").addClass("ui-corner-right");
+
+	/* Experimental AJAX code.
+	var load_page_ajax = function(url){
+		$.ajax({
+			"type": "GET",
+			"url": url,
+			"dataType": "json",
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader("Accept", "application/json");
+			},
+			complete: function(xhr, textStatus){
+				alert(xhr.status+": "+textStatus);
+			},
+			success: function(data, textStatus){
+				$("body > div#header > div.mainmenu > div.menuwrap").html(data.main_menu);
+				$("head").append(data.head);
+				$("body > div#top").html(data.top);
+				$("body > div#header > div:not(.pagetitle, .mainmenu)").remove();
+				$("body > div#header > div.pagetitle").after(data.header).after(data.header_right);
+				$("body > div.colmask > div.colmid > div.colleft > div.col1wrap > div.col1")
+				.children("div.user1").html(data.user1).end()
+				.children("div.user2").html(data.user2).end()
+				.children("div.content").html(data.content).end()
+				.children("div.user3").html(data.user3).end()
+				.children("div.user4").html(data.user4);
+				$("body > div.colmask > div.colmid > div.colleft > div.col2").html(data.left);
+				$("body > div.colmask > div.colmid > div.colleft > div.col3").html(data.right);
+				$("body > div#footer").children(":not(p.copyright)").remove().end().prepend(data.footer);
+				$("body > div#bottom").html(data.bottom);
+				$.each(data.errors, function(){
+					$.pnotify({
+						pnotify_title: "Error",
+						pnotify_text: this,
+						pnotify_type: "error",
+						pnotify_hide: false
+					});
+				});
+				$.each(data.errors, function(){
+					$.pnotify({
+						pnotify_title: "Notice",
+						pnotify_text: this
+					});
+				});
+			}
+		});
+	};
+	$("body").delegate("a", "click", function(e){
+		var cur_link = $(this);
+		load_page_ajax(cur_link.attr("href"));
+		return false;
+	});
+	pines.get = function(url){
+		load_page_ajax(url);
+	};
+	*/
 });

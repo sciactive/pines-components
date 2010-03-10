@@ -112,7 +112,7 @@ defined('P_RUN') or die('Direct access prohibited');
 				pines.error("An error occured while trying to add events to the calendar.");
 			}
 		});
-		window.location = "<?php echo pines_url('com_hrm', 'editcalendar'); ?>";
+		pines.get("<?php echo pines_url('com_hrm', 'editcalendar'); ?>");
 	}
 	// Save all of the calendar events by exporting the data to their entities.
 	function save_calendar() {

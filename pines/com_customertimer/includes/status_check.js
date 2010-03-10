@@ -10,7 +10,7 @@ $(function(){
 		resizable: false,
 		buttons: {
 			"Go to Status Page": function(){
-				window.location = pines.com_customertimer.status_page_url;
+				pines.get(pines.com_customertimer.status_page_url);
 			},
 			"Hide for 5 Minutes": function(){
 				var date = new Date();

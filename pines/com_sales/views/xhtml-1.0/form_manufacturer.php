@@ -63,6 +63,6 @@ $this->note = 'Provide manufacturer details in this form.';
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url('com_sales', 'listmanufacturers'); ?>';" value="Cancel" />
+		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url('com_sales', 'listmanufacturers'); ?>');" value="Cancel" />
 	</div>
 </form>

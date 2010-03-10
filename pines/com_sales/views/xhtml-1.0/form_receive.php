@@ -178,6 +178,6 @@ $this->note = 'Only use this form to receive inventory into your <strong>current
 	</div>
 	<div class="element buttons">
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="window.location='<?php echo pines_url(); ?>';" value="Cancel" />
+		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url(); ?>');" value="Cancel" />
 	</div>
 </form>

@@ -16,12 +16,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if (isset($_REQUEST['date_start'])) {
-	$this->date[0] = strtotime($_REQUEST['date_start']);
-	$this->date[1] = strtotime($_REQUEST['date_end']);
-}
-$this->sales = $pines->entity_manager->get_entities(array('gte' => array('p_cdate' => $this->date[0]), 'lte' => array('p_cdate' => $this->date[1]), 'tags' => array('com_sales', 'sale')));
-
 // Convert the timespan into the number of days that it covers.
 $total_seconds = $this->date[1]-$this->date[0];
 $days = $total_seconds/(24*60*60);

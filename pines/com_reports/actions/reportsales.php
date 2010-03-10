@@ -18,6 +18,10 @@ if ( isset($_REQUEST['report_start']) ) {
 	$start = $_REQUEST['report_start'];
 	$end = $_REQUEST['report_end'];
 	$pines->com_reports->report_sales($start, $end);
+} else if ( isset($_REQUEST['date_start']) ) {
+	$start = $_REQUEST['date_start'];
+	$end = $_REQUEST['date_end'];
+	$pines->com_reports->report_sales($start, $end);
 } else {
 	$pines->com_reports->report_sales(date('n/j/Y', strtotime('now')), date('n/j/Y', strtotime('now')));
 }

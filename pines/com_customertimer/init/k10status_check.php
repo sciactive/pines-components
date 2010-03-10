@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if (gatekeeper('com_customertimer/viewstatus'))
+if (gatekeeper('com_customertimer/viewstatus') && !gatekeeper('com_customertimer/ignorestatus'))
 	$com_customertimer_module = new module('com_customertimer', 'status_check', 'head');
 
 ?>

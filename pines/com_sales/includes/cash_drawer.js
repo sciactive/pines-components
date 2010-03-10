@@ -16,6 +16,7 @@ $(function(){
 		$.each(current, function(index, value){
 			value("not_supported");
 		});
+		setTimeout(pines.drawer_check, 5000);
 	};
 	window.addEventListener("pines_cash_drawer_not_supported", pines.drawer_not_supported, false);
 	pines.drawer_error = function(event){
@@ -24,6 +25,7 @@ $(function(){
 		$.each(current, function(index, value){
 			value("error");
 		});
+		setTimeout(pines.drawer_check, 5000);
 	};
 	window.addEventListener("pines_cash_drawer_error", pines.drawer_error, false);
 	pines.drawer_is_closed = function(event){
@@ -35,6 +37,7 @@ $(function(){
 		$.each(current, function(index, value){
 			value("is_closed");
 		});
+		setTimeout(pines.drawer_check, 5000);
 	};
 	window.addEventListener("pines_cash_drawer_is_closed", pines.drawer_is_closed, false);
 	pines.drawer_is_open = function(event){
@@ -54,6 +57,7 @@ $(function(){
 		$.each(current, function(index, value){
 			value("is_open");
 		});
+		setTimeout(pines.drawer_check, 5000);
 	};
 	window.addEventListener("pines_cash_drawer_is_open", pines.drawer_is_open, false);
 	pines.drawer_not_found = function(event){
@@ -71,6 +75,7 @@ $(function(){
 		$.each(current, function(index, value){
 			value("not_found");
 		});
+		setTimeout(pines.drawer_check, 5000);
 	};
 	window.addEventListener("pines_cash_drawer_not_found", pines.drawer_not_found, false);
 	pines.drawer_misconfigured = function(event){
@@ -79,6 +84,7 @@ $(function(){
 		$.each(current, function(index, value){
 			value("misconfigured");
 		});
+		setTimeout(pines.drawer_check, 5000);
 	};
 	window.addEventListener("pines_cash_drawer_misconfigured", pines.drawer_misconfigured, false);
 	pines.drawer_check = function(callback){
@@ -97,5 +103,5 @@ $(function(){
 		window.dispatchEvent(evt);
 	};
 
-	setInterval(pines.drawer_check, 5000);
+	setTimeout(pines.drawer_check, 5000);
 });

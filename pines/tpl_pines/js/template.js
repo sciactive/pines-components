@@ -1,7 +1,7 @@
 $(function($){
 	$.pnotify.defaults.pnotify_opacity = .9;
 	// Turn notices into Pines Notify notices.
-	$(".notice.ui-state-error p.entry span.text").each(function(){
+	$("div.col1 > div.notice.ui-state-error").find("p.entry span.text").each(function(){
 		$.pnotify({
 			pnotify_title: "Error",
 			pnotify_text: $(this).html(),
@@ -9,7 +9,7 @@ $(function($){
 			pnotify_hide: false
 		});
 	}).end().remove();
-	$(".notice.ui-state-highlight p.entry span.text").each(function(){
+	$("div.col1 > div.notice.ui-state-highlight").find("p.entry span.text").each(function(){
 		$.pnotify({
 			pnotify_title: "Notice",
 			pnotify_text: $(this).html()

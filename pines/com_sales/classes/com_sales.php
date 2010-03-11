@@ -501,8 +501,10 @@ class com_sales extends component {
 
 	/**
 	 * Creates and attaches a module which lists sales.
+	 * @param int $start_date The start date of sales to show.
+	 * @param int $end_date The end date of sales to show.
 	 */
-	function list_sales() {
+	function list_sales($start_date = null, $end_date = null) {
 		global $pines;
 
 		$pines->com_pgrid->load();
@@ -511,11 +513,18 @@ class com_sales extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_sales'];
 
-		$module->sales = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'sale'), 'class' => com_sales_sale));
+		$options = array('tags' => array('com_sales', 'sale'), 'class' => com_sales_sale);
+		if (isset($start_date))
+			$options['gte'] = array('p_cdate' => (int) $start_date);
+		if (isset($end_date))
+			$options['lte'] = array('p_cdate' => (int) $end_date);
+		$module->sales = $pines->entity_manager->get_entities($options);
+		$module->start_date = $start_date;
+		$module->end_date = $end_date;
 
 		if ( empty($module->sales) ) {
 			//$module->detach();
-			display_notice('There are no sales.');
+			display_notice('No sales found.');
 		}
 	}
 

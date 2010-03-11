@@ -58,6 +58,34 @@ $this->title = 'Sales';
 
 	// ]]>
 </script>
+<form id="sale_date_form" action="<?php echo pines_url('com_sales', 'listsales'); ?>" method="post">
+	<div class="ui-helper-clearfix" style="margin-bottom: 5px;">
+		<div style="float: left;">
+			<script type="text/javascript">
+				// <![CDATA[
+				$(function(){
+					$("#sale_date_form [name=start_date], #sale_date_form [name=end_date]").datepicker({
+						dateFormat: "yy-mm-dd",
+						changeMonth: true,
+						changeYear: true
+					});
+				});
+				// ]]>
+			</script>
+			<label>
+				<span class="label">Start Date</span>
+				<input class="ui-widget-content" type="text" name="start_date" size="24" value="<?php echo $this->start_date ? date('Y-m-d', $this->start_date) : ''; ?>" />
+			</label>
+			<label>
+				<span class="label">End Date</span>
+				<input class="ui-widget-content" type="text" name="end_date" size="24" value="<?php echo $this->end_date ? date('Y-m-d', $this->end_date) : ''; ?>" />
+			</label>
+		</div>
+		<div style="float: right;">
+			<input class="ui-state-default ui-corner-all" type="submit" value="Update" />
+		</div>
+	</div>
+</form>
 <table id="sale_grid">
 	<thead>
 		<tr>

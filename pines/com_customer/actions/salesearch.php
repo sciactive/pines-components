@@ -38,7 +38,9 @@ foreach ($sales as $key => &$cur_sale) {
 		) {
 		$item_dump = '';
 		foreach ($cur_sale->products as $cur_item) {
-			$item_dump .= $cur_item['entity']->name.','.$cur_item['serial'].'|';
+			if ($item_dump != '')
+				$item_dump .= '|';
+			$item_dump .= $cur_item['quantity'].','.$cur_item['entity']->name.','.$cur_item['serial'].','.$cur_item['price'];
 		}
 
 		$json_struct = (object) array(

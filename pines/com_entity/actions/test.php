@@ -37,7 +37,7 @@ $test->tests['create'][1] = microtime(true);
 $test->tests['create'][2] = 'Creating entity...';
 
 // Saving entity...
-$entity_test->name = "Entity Test ".time();
+$entity_test->name = 'Entity Test '.time();
 $entity_test->test_value = 'test';
 $entity_test->match_test = "Hello, my name is Edward McCheese. It is a pleasure to meet you. As you can see, I have several hats of the most pleasant nature.
 

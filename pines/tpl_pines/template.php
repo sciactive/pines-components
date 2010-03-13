@@ -107,6 +107,8 @@ if (strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
 		<div class="pagetitle">
 			<h1><a href="<?php echo $pines->config->full_location; ?>"><span><?php echo $pines->config->option_title; ?></span></a></h1>
 		</div>
+		<?php echo $pines->page->render_modules('header', 'module_header'); ?>
+		<?php echo $pines->page->render_modules('header_right', 'module_header_right'); ?>
 		<div class="mainmenu ui-widget-content">
 			<div class="menuwrap"><?php echo $pines->page->render_modules('main_menu', 'module_head'); ?></div>
 		</div>

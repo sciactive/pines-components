@@ -35,7 +35,11 @@ defined('P_RUN') or die('Direct access prohibited');
 			},
 			firstHour: 8,
 			theme: true,
+			<?php if (gatekeeper('com_hrm/editcalendar')) { ?>
 			editable: true,
+			<?php } else { ?>
+			editable: false,
+			<?php } ?>
 			events: [
 				<?php
 				// Read in all existing events.
@@ -98,8 +102,10 @@ defined('P_RUN') or die('Direct access prohibited');
 				$("#calendar").fullCalendar('refetchEvents');
 			}
 		});
-		// Right-Click Menu.
-		$('#calendar').vscontext({menuBlock: 'vs-context-menu'});
+		<?php if (gatekeeper('com_hrm/editcalendar')) { ?>
+			// Right-Click Menu.
+			$('#calendar').vscontext({menuBlock: 'vs-context-menu'});
+		<?php } ?>
 	});
 	// Add new events to the calendar, mostly for duplicating events.
 	function add_events(events) {
@@ -154,6 +160,7 @@ defined('P_RUN') or die('Direct access prohibited');
 // ]]>
 </script>
 <div id="calendar">
+	<?php if (gatekeeper('com_hrm/editcalendar')) { ?>
 	<div class="vs-context-menu">
 		<ul>
 			<li class="copy"><a href="javascript:copy();" id="menu_1">Duplicate</a></li>
@@ -164,4 +171,5 @@ defined('P_RUN') or die('Direct access prohibited');
 			<li class="help"><a href="javascript:help();" id="menu_6">Help</a></li>
 		</ul>
 	</div>
+	<?php } ?>
 </div>

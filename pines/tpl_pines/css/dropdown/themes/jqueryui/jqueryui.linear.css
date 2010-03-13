@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 /** 
- * Default Linear CSS Drop-Down Menu Theme
+ * jQuery UI Friendly Linear CSS Drop-Down Menu Theme
  *
  * @file		default.linear.css
  * @name		Default
@@ -19,25 +19,25 @@
 
 
 ul.dropdown {
- width: 760px;
+	width: 760px;
 }
 
-	ul.dropdown li {
-	 border: none;
-	}
+ul.dropdown li {
+	border: none;
+}
 
-	ul.dropdown ul {
-	 width: 760px;
-	 margin-top: 0;
-	}
+ul.dropdown ul {
+	width: 760px;
+	margin-top: 0;
+}
 
-		ul.dropdown ul li.hover {
-		 margin: 0;
-		 border: none;
-		}
+ul.dropdown ul li.hover {
+	margin: 0;
+	border: none;
+}
 
 
 ul.dropdown ul *.dir {
- padding-right: 7px;
- background-image: none;
+	padding-right: 7px;
+	background-image: none;
 }

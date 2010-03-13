@@ -1,0 +1,48 @@
+[
+	{
+		"path": "main_menu/com_customer",
+		"text": "CRM",
+		"depend": {
+			"ability": "com_customer/listcustomers|com_customer/newcustomer|com_customer/listcompanies|com_customer/newcompany"
+		}
+	},
+		{
+			"path": "main_menu/com_customer/customers",
+			"text": "Customers",
+			"href": ["com_customer","listcustomers"],
+			"depend": {
+				"ability": "com_customer/listcustomers"
+			}
+		},
+		{
+			"path": "main_menu/com_customer/newcustomer",
+			"text": "New Customer",
+			"href": ["com_customer","editcustomer"],
+			"depend": {
+				"ability": "com_customer/newcustomer"
+			}
+		},
+		{
+			"path": "main_menu/com_customer/companies",
+			"text": "Companies",
+			"depend": {
+				"ability": "com_customer/listcompanies|com_customer/newcompany"
+			}
+		},
+			{
+				"path": "main_menu/com_customer/companies/companies",
+				"text": "Companies",
+				"href": ["com_customer","listcompanies"],
+				"depend": {
+					"ability": "com_customer/listcompanies"
+				}
+			},
+			{
+				"path": "main_menu/com_customer/companies/editcompany",
+				"text": "New Company",
+				"href": ["com_customer","editcompany"],
+				"depend": {
+					"ability": "com_customer/newcompany"
+				}
+			}
+]

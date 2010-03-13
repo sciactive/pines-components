@@ -1,0 +1,214 @@
+[
+	{
+		"path": "main_menu/com_sales",
+		"text": "POS",
+		"depend": {
+			"ability": "com_sales/managestock|com_sales/receive|com_sales/totalsales|com_sales/listsales|com_sales/newsale|com_sales/listmanufacturers|com_sales/newmanufacturer|com_sales/listshippers|com_sales/newshipper|com_sales/listproducts|com_sales/newproduct|com_sales/listvendors|com_sales/newvendor|com_sales/listpaymenttypes|com_sales/newpaymenttype|com_sales/listtaxfees|com_sales/newtaxfee|com_sales/listpos|com_sales/newpo|com_sales/listcountsheets|com_sales/newcountsheet"
+		}
+	},
+		{
+			"path": "main_menu/com_sales/newsale",
+			"text": "New Sale",
+			"href": ["com_sales","editsale"],
+			"depend": {
+				"ability": "com_sales/newsale"
+			}
+		},
+		{
+			"path": "main_menu/com_sales/sales",
+			"text": "Sales",
+			"depend": {
+				"ability": "com_sales/totalsales|com_sales/listsales"
+			}
+		},
+			{
+				"path": "main_menu/com_sales/sales/sales",
+				"text": "Sales",
+				"href": ["com_sales","listsales"],
+				"depend": {
+					"ability": "com_sales/listsales"
+				}
+			},
+			{
+				"path": "main_menu/com_sales/sales/salestotals",
+				"text": "Sales Totals",
+				"href": ["com_sales","totalsales"],
+				"depend": {
+					"ability": "com_sales/totalsales"
+				}
+			},
+		{
+			"path": "main_menu/com_sales/inventory",
+			"text": "Inventory",
+			"depend": {
+				"ability": "com_sales/managestock|com_sales/receive|com_sales/listpos|com_sales/newpo|com_sales/listcountsheets|com_sales/newcountsheet"
+			}
+		},
+			{
+				"path": "main_menu/com_sales/inventory/receive",
+				"text": "Receive",
+				"href": ["com_sales","receive"],
+				"depend": {
+					"ability": "com_sales/receive"
+				}
+			},
+			{
+				"path": "main_menu/com_sales/inventory/currentstock",
+				"text": "Current Stock",
+				"href": ["com_sales","liststock"],
+				"depend": {
+					"ability": "com_sales/managestock"
+				}
+			},
+			{
+				"path": "main_menu/com_sales/inventory/allstock",
+				"text": "All Stock",
+				"href": ["com_sales","liststock",{"all":"true"}],
+				"depend": {
+					"ability": "com_sales/managestock"
+				}
+			},
+			{
+				"path": "main_menu/com_sales/inventory/transfers",
+				"text": "Transfers",
+				"href": ["com_sales","listtransfers"],
+				"depend": {
+					"ability": "com_sales/managestock"
+				}
+			},
+			{
+				"path": "main_menu/com_sales/inventory/purchaseorders",
+				"text": "Purchase Orders",
+				"href": ["com_sales","listpos"],
+				"depend": {
+					"ability": "com_sales/listpos"
+				}
+			},
+			{
+				"path": "main_menu/com_sales/inventory/newpo",
+				"text": "New PO",
+				"href": ["com_sales","editpo"],
+				"depend": {
+					"ability": "com_sales/newpo"
+				}
+			},
+			{
+				"path": "main_menu/com_sales/inventory/countsheets",
+				"text": "Countsheets",
+				"href": ["com_sales","listcountsheets"],
+				"depend": {
+					"ability": "com_sales/listcountsheets"
+				}
+			},
+			{
+				"path": "main_menu/com_sales/inventory/newcountsheet",
+				"text": "New Countsheet",
+				"href": ["com_sales","editcountsheet"],
+				"depend": {
+					"ability": "com_sales/newcountsheet"
+				}
+			},
+		{
+			"path": "main_menu/com_sales/setup",
+			"text": "Setup",
+			"depend": {
+				"ability": "com_sales/listmanufacturers|com_sales/newmanufacturer|com_sales/listshippers|com_sales/newshipper|com_sales/listproducts|com_sales/newproduct|com_sales/listvendors|com_sales/newvendor|com_sales/listpaymenttypes|com_sales/newpaymenttype|com_sales/listtaxfees|com_sales/newtaxfee"
+			}
+		},
+			{
+				"path": "main_menu/com_sales/setup/products",
+				"text": "Products",
+				"href": ["com_sales","listproducts"],
+				"depend": {
+					"ability": "com_sales/listproducts"
+				}
+			},
+			{
+				"path": "main_menu/com_sales/setup/newproduct",
+				"text": "New Product",
+				"href": ["com_sales","editproduct"],
+				"depend": {
+					"ability": "com_sales/newproduct"
+				}
+			},
+			{
+				"path": "main_menu/com_sales/setup/manufacturers",
+				"text": "Manufacturers",
+				"href": ["com_sales","listmanufacturers"],
+				"depend": {
+					"ability": "com_sales/listmanufacturers"
+				}
+			},
+			{
+				"path": "main_menu/com_sales/setup/newmanufacturer",
+				"text": "New Manufacturer",
+				"href": ["com_sales","editmanufacturer"],
+				"depend": {
+					"ability": "com_sales/newmanufacturer"
+				}
+			},
+			{
+				"path": "main_menu/com_sales/setup/vendors",
+				"text": "Vendors",
+				"href": ["com_sales","listvendors"],
+				"depend": {
+					"ability": "com_sales/listvendors"
+				}
+			},
+			{
+				"path": "main_menu/com_sales/setup/newvendor",
+				"text": "New Vendor",
+				"href": ["com_sales","editvendor"],
+				"depend": {
+					"ability": "com_sales/newvendor"
+				}
+			},
+			{
+				"path": "main_menu/com_sales/setup/shippers",
+				"text": "Shippers",
+				"href": ["com_sales","listshippers"],
+				"depend": {
+					"ability": "com_sales/listshippers"
+				}
+			},
+			{
+				"path": "main_menu/com_sales/setup/newshipper",
+				"text": "New Shipper",
+				"href": ["com_sales","editshipper"],
+				"depend": {
+					"ability": "com_sales/newshipper"
+				}
+			},
+			{
+				"path": "main_menu/com_sales/setup/paymenttypes",
+				"text": "Payment Types",
+				"href": ["com_sales","listpaymenttypes"],
+				"depend": {
+					"ability": "com_sales/listpaymenttypes"
+				}
+			},
+			{
+				"path": "main_menu/com_sales/setup/newpaymenttype",
+				"text": "New Payment Type",
+				"href": ["com_sales","editpaymenttype"],
+				"depend": {
+					"ability": "com_sales/newpaymenttype"
+				}
+			},
+			{
+				"path": "main_menu/com_sales/setup/taxesfees",
+				"text": "Taxes/Fees",
+				"href": ["com_sales","listtaxfees"],
+				"depend": {
+					"ability": "com_sales/listtaxfees"
+				}
+			},
+			{
+				"path": "main_menu/com_sales/setup/newtaxfee",
+				"text": "New Tax/Fee",
+				"href": ["com_sales","edittaxfee"],
+				"depend": {
+					"ability": "com_sales/newtaxfee"
+				}
+			}
+]

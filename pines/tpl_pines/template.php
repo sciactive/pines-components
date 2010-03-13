@@ -96,9 +96,7 @@ if (strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
 	</style>
 <?php } ?>
 </head>
-
 <body class="ui-widget-content">
-
 	<div id="top">
 		<?php echo $pines->page->render_modules('top', 'module_header'); ?>
 	</div>
@@ -109,16 +107,9 @@ if (strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
 		<div class="pagetitle">
 			<h1><a href="<?php echo $pines->config->full_location; ?>"><span><?php echo $pines->config->option_title; ?></span></a></h1>
 		</div>
-		<?php echo $pines->page->render_modules('header', 'module_header'); ?>
-		<?php echo $pines->page->render_modules('header_right', 'module_header_right'); ?>
-		<?php
-		$cur_menu = $pines->page->main_menu->render(array('<ul class="dropdown dropdown-horizontal">', '</ul>'),
-			array('<li class="ui-state-default">', '</li>'),
-			array('<ul>', '</ul>'),
-			array('<li class="ui-state-default">', '</li>'), '<a href="#DATA#">#NAME#</a>', '');
-		if ( !empty($cur_menu) )
-			echo "<div class=\"mainmenu ui-widget-content\"><div class=\"menuwrap\">\n$cur_menu\n</div></div>\n";
-		?>
+		<div class="mainmenu ui-widget-content">
+			<div class="menuwrap"><?php echo $pines->page->render_modules('main_menu', 'module_head'); ?></div>
+		</div>
 	</div>
 	<div class="colmask holygrail">
 		<div class="colmid">
@@ -180,6 +171,5 @@ if (strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
 	<div id="bottom">
 		<?php echo $pines->page->render_modules('bottom', 'module_header'); ?>
 	</div>
-
 </body>
 </html>

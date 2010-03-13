@@ -218,7 +218,7 @@ $this->note = 'Provide employee account details in this form.';
 			</div>
 			<div class="element">
 				<label><span class="label">Schedule Color</span>
-					<select name="color">
+					<select class="field ui-widget-content" name="color">
 						<option value="blue" <?php echo ($this->entity->color == 'blue') ? 'selected="selected"' : ''; ?>>Blue</option>
 						<option value="blueviolet" <?php echo ($this->entity->color == 'blueviolet') ? 'selected="selected"' : ''; ?>>Blue Violet</option>
 						<option value="brown" <?php echo ($this->entity->color == 'brown') ? 'selected="selected"' : ''; ?>>Brown</option>

@@ -1,0 +1,57 @@
+[
+	{
+		"path": "main_menu/user_manager",
+		"text": "User Manager",
+		"depend": {
+			"ability": "com_user/newuser|com_user/listusers|com_user/newgroup|com_user/listgroups"
+		}
+	},
+		{
+			"path": "main_menu/user_manager/users",
+			"text": "Users",
+			"href": ["com_user","listusers"],
+			"depend": {
+				"ability": "com_user/listusers"
+			}
+		},
+		{
+			"path": "main_menu/user_manager/newuser",
+			"text": "New User",
+			"href": ["com_user","edituser"],
+			"depend": {
+				"ability": "com_user/newuser"
+			}
+		},
+		{
+			"path": "main_menu/user_manager/Groups",
+			"text": "Groups",
+			"href": ["com_user","listgroups"],
+			"depend": {
+				"ability": "com_user/listgroups"
+			}
+		},
+		{
+			"path": "main_menu/user_manager/newgroup",
+			"text": "New Group",
+			"href": ["com_user","editgroup"],
+			"depend": {
+				"ability": "com_user/newgroup"
+			}
+		},
+	{
+		"path": "main_menu/myaccount",
+		"text": "My Account",
+		"href": ["com_user","editself"],
+		"depend": {
+			"ability": "com_user/self"
+		}
+	},
+	{
+		"path": "main_menu/logout",
+		"text": "Logout",
+		"href": ["com_user","logout"],
+		"depend": {
+			"ability": ""
+		}
+	}
+]

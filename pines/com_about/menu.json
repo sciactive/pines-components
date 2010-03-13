@@ -1,0 +1,10 @@
+[
+	{
+		"path": "main_menu/com_about",
+		"text": "About",
+		"href": ["com_about"],
+		"depend": {
+			"ability": "com_about/show"
+		}
+	}
+]

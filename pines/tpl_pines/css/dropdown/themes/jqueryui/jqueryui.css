@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 /** 
-* Default CSS Drop-Down Menu Theme
+* jQuery UI Friendly CSS Drop-Down Menu Theme
 *
 * @file		default.css
 * @name		Default
@@ -17,9 +17,6 @@
 * Expected directory tag - li
 *
 */
-/*
-@import "helper.css";
-*/
 
 /*-------------------------------------------------/
 * @section		Base Drop-Down Styling
@@ -30,12 +27,6 @@
 * @level sep	ul
 */
 
-
-ul.dropdown {
-	/* font-weight: bold; */
-	font-family: Verdana,Arial,sans-serif;
-}
-/* TODO: something here from the other template */
 
 ul.dropdown li a {
 	display: block;
@@ -68,6 +59,9 @@ ul.dropdown *.dir {
 	background-position: 100% 50%;
 	background-repeat: no-repeat;
 }
+ul.dropdown *.dir:hover {
+	background-image: url(images/nav-arrow-down-white.png);
+}
 
 
 /* -- Components override -- */
@@ -78,14 +72,24 @@ ul.dropdown-horizontal ul *.dir {
 	background-position: 100% 50%;
 	background-repeat: no-repeat;
 }
+ul.dropdown-horizontal ul *.dir:hover {
+	background-image: url(images/nav-arrow-right-white.png);
+}
 
 ul.dropdown-upward *.dir {
 	background-image: url(images/nav-arrow-top.png);
+}
+ul.dropdown-upward *.dir:hover {
+	background-image: url(images/nav-arrow-top-white.png);
 }
 
 ul.dropdown-vertical *.dir,
 ul.dropdown-upward ul *.dir {
 	background-image: url(images/nav-arrow-right.png);
+}
+ul.dropdown-vertical *.dir:hover,
+ul.dropdown-upward ul *.dir:hover {
+	background-image: url(images/nav-arrow-right-white.png);
 }
 
 ul.dropdown-vertical-rtl *.dir {
@@ -93,4 +97,7 @@ ul.dropdown-vertical-rtl *.dir {
 	padding-left: 15px;
 	background-image: url(images/nav-arrow-left.png);
 	background-position: 0 50%;
+}
+ul.dropdown-vertical-rtl *.dir:hover {
+	background-image: url(images/nav-arrow-left-white.png);
 }

@@ -1,0 +1,25 @@
+[
+	{
+		"path": "main_menu/com_customer/com_customer_timer",
+		"text": "Customer Timer",
+		"depend": {
+			"ability": "com_customertimer/viewstatus|com_customertimer/login"
+		}
+	},
+		{
+			"path": "main_menu/com_customer/com_customer_timer/status",
+			"text": "Status",
+			"href": ["com_customertimer","status"],
+			"depend": {
+				"ability": "com_customertimer/viewstatus"
+			}
+		},
+		{
+			"path": "main_menu/com_customer/com_customer_timer/login",
+			"text": "Login",
+			"href": ["com_customertimer","status"],
+			"depend": {
+				"ability": "com_customertimer/login"
+			}
+		}
+]

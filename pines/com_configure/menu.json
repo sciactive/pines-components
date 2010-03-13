@@ -1,0 +1,14 @@
+[
+	{
+		"path": "main_menu/configurator",
+		"text": "Configuration",
+		"depend": {
+			"ability": "com_configure/edit|com_configure/view"
+		}
+	},
+		{
+			"path": "main_menu/configurator/components",
+			"text": "Components",
+			"href": ["com_configure","list"]
+		}
+]

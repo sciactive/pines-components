@@ -1,0 +1,33 @@
+[
+	{
+		"path": "main_menu/com_reports",
+		"text": "Reports",
+		"depend": {
+			"ability": "com_reports/listsales|com_reports/listinventory|com_reports/listemployees"
+		}
+	},
+		{
+			"path": "main_menu/com_reports/salesreport",
+			"text": "Sales Report",
+			"href": ["com_reports","reportsales"],
+			"depend": {
+				"ability": "com_reports/listsales"
+			}
+		},
+		{
+			"path": "main_menu/com_reports/inventoryreport",
+			"text": "Inventory Report",
+			"href": ["com_reports","reportinventory"],
+			"depend": {
+				"ability": "com_reports/listinventory"
+			}
+		},
+		{
+			"path": "main_menu/com_reports/employeereport",
+			"text": "Employee Report",
+			"href": ["com_reports","reportemployees"],
+			"depend": {
+				"ability": "com_reports/listemployees"
+			}
+		}
+]

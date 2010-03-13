@@ -1,0 +1,25 @@
+[
+	{
+		"path": "main_menu/log_manager",
+		"text": "Logs",
+		"depend": {
+			"ability": "com_logger/view|com_logger/clear"
+		}
+	},
+		{
+			"path": "main_menu/log_manager/view",
+			"text": "View",
+			"href": ["com_logger","view"],
+			"depend": {
+				"ability": "com_logger/view"
+			}
+		},
+		{
+			"path": "main_menu/log_manager/clear",
+			"text": "Clear",
+			"href": ["com_logger","clear"],
+			"depend": {
+				"ability": "com_logger/clear"
+			}
+		}
+]

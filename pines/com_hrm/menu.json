@@ -1,0 +1,57 @@
+[
+	{
+		"path": "main_menu/com_hrm",
+		"text": "HRM",
+		"depend": {
+			"ability": "com_hrm/editcalendar|com_hrm/viewcalendar|com_hrm/manageclock|com_hrm/listemployees|com_hrm/newemployee|com_hrm/listusertemplates|com_hrm/newusertemplate"
+		}
+	},
+		{
+			"path": "main_menu/com_hrm/calendar",
+			"text": "Calendar",
+			"href": ["com_hrm","editcalendar"],
+			"depend": {
+				"ability": "com_hrm/editcalendar|com_hrm/viewcalendar"
+			}
+		},
+		{
+			"path": "main_menu/com_hrm/timeclock",
+			"text": "Timeclock",
+			"href": ["com_hrm","listtimeclocks"],
+			"depend": {
+				"ability": "com_hrm/manageclock"
+			}
+		},
+		{
+			"path": "main_menu/com_hrm/employees",
+			"text": "Employees",
+			"href": ["com_hrm","listemployees"],
+			"depend": {
+				"ability": "com_hrm/listemployees"
+			}
+		},
+		{
+			"path": "main_menu/com_hrm/newemployee",
+			"text": "New Employee",
+			"href": ["com_hrm","editemployee"],
+			"depend": {
+				"ability": "com_hrm/newemployee"
+			}
+		},
+		{
+			"path": "main_menu/com_hrm/usertemplates",
+			"text": "User Templates",
+			"href": ["com_hrm","listusertemplates"],
+			"depend": {
+				"ability": "com_hrm/listusertemplates"
+			}
+		},
+		{
+			"path": "main_menu/com_hrm/newusertemplate",
+			"text": "New User Template",
+			"href": ["com_hrm","editusertemplate"],
+			"depend": {
+				"ability": "com_hrm/newusertemplate"
+			}
+		}
+]

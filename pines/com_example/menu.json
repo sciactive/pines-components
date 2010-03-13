@@ -1,0 +1,33 @@
+[
+	{
+		"path": "main_menu/com_example",
+		"text": "Example",
+		"depend": {
+			"ability": "com_example/listwidgets|com_example/newwidget|com_example/content"
+		}
+	},
+		{
+			"path": "main_menu/com_example/widgets",
+			"text": "Widgets",
+			"href": ["com_example","listwidgets"],
+			"depend": {
+				"ability": "com_example/listwidgets"
+			}
+		},
+		{
+			"path": "main_menu/com_example/newwidget",
+			"text": "New Widget",
+			"href": ["com_example","editwidget"],
+			"depend": {
+				"ability": "com_example/newwidget"
+			}
+		},
+		{
+			"path": "main_menu/com_example/examplecontent",
+			"text": "Example Content",
+			"href": ["com_example","content"],
+			"depend": {
+				"ability": "com_example/content"
+			}
+		}
+]

@@ -17,6 +17,7 @@ return array(
 		'cname' => 'Description',
 		'description' => 'Description of your installation.',
 		'value' => 'This is the default installation of Pines.',
+		'peruserconfig' => true,
 	),
 	array(
 		'name' => 'describe_self',

@@ -34,7 +34,8 @@ class abilities extends p_base {
 	 * ability in your component. If you don't let the system know, you will
 	 * have to give your users abilities yourself.
 	 *
-	 * A good way to do this is have the following in your common.php
+	 * A good way to do this is have the following in an init file (like
+	 * i30abilities.php)
 	 *
 	 * <code>
 	 * if ( isset($pines->ability_manager) ) {

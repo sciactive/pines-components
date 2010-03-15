@@ -3,12 +3,24 @@
 		"path": "main_menu/configurator",
 		"text": "Configuration",
 		"depend": {
-			"ability": "com_configure/edit|com_configure/view"
+			"ability": "com_configure/edit|com_configure/view|com_configure/peruser"
 		}
 	},
 		{
 			"path": "main_menu/configurator/components",
 			"text": "Components",
-			"href": ["com_configure","list"]
+			"href": ["com_configure","list"],
+			"depend": {
+				"ability": "com_configure/edit|com_configure/view"
+			}
+		},
+		{
+			"path": "main_menu/configurator/perusergroup",
+			"text": "Per User/Group",
+			"href": ["com_configure","listperuser"],
+			"depend": {
+				"ability": "com_configure/peruser",
+				"service": "user_manager"
+			}
 		}
 ]

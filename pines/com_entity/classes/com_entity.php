@@ -45,7 +45,7 @@ class com_entity extends component {
 			$pines->config->com_mysql->prefix,
 			$pines->config->com_mysql->prefix,
 			(int) $guid);
-		if ( !(mysql_query($query, $pines->db_manager->link)) ) {
+		if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 			if (function_exists('display_error'))
 				display_error('Query failed: ' . mysql_error());
 			return false;
@@ -65,8 +65,8 @@ class com_entity extends component {
 		global $pines;
 		$query = sprintf("DELETE FROM `%scom_entity_uids` WHERE `name`='%s';",
 			$pines->config->com_mysql->prefix,
-			mysql_real_escape_string($name, $pines->db_manager->link));
-		if ( !(mysql_query($query, $pines->db_manager->link)) ) {
+			mysql_real_escape_string($name, $pines->com_mysql->link));
+		if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 			if (function_exists('display_error'))
 				display_error('Query failed: ' . mysql_error());
 			return false;
@@ -114,16 +114,18 @@ class com_entity extends component {
 	 * An entity manager doesn't necessarily need to provide export and import
 	 * functions, however if it does, this is the file format:
 	 * 
-	 * <code>
+	 * <pre>
 	 * # Comments begin with #
 	 *    # And can have white space before them.
 	 * # This defines a UID.
-	 * <name/of/uid>[5]
-	 * <another uid>[8000]
-	 * # For UIDs, the name is in angle brackets (<>) and the value follows in square brackets ([]).
+	 * &lt;name/of/uid&gt;[5]
+	 * &lt;another uid&gt;[8000]
+	 * # For UIDs, the name is in angle brackets (&lt;&gt;) and the value follows in
+	 * #  square brackets ([]).
 	 * # This starts a new entity.
 	 * {1}[tag,list,with,commas]
-	 * # For entities, the GUID is in curly brackets ({}) and the comma separated tag list follows in square brackets ([]).
+	 * # For entities, the GUID is in curly brackets ({}) and the comma
+	 * #  separated tag list follows in square brackets ([]).
 	 * # Variables are stored like this:
 	 * # varname=json_encode(serialize(value))
 	 *     abilities="a:1:{i:0;s:10:\"system\/all\";}"
@@ -135,7 +137,7 @@ class com_entity extends component {
 	 * {2}[tag,list]
 	 *     another="s:23:\"This is another entity.\";"
 	 *     newline="s:1:\"\n\";"
-	 * </code>
+	 * </pre>
 	 *
 	 * @return bool True on success, false on failure.
 	 * @todo Replace the version number.
@@ -162,7 +164,7 @@ class com_entity extends component {
 		$query = sprintf("SELECT * FROM `%scom_entity_uids`;",
 			$pines->config->com_mysql->prefix,
 			$pines->config->com_mysql->prefix);
-		if ( !($result = mysql_query($query, $pines->db_manager->link)) ) {
+		if ( !($result = mysql_query($query, $pines->com_mysql->link)) ) {
 			if (function_exists('display_error'))
 				display_error('Query failed: ' . mysql_error());
 			return false;
@@ -184,7 +186,7 @@ class com_entity extends component {
 		$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid`=d.`guid` ORDER BY e.`guid`;",
 			$pines->config->com_mysql->prefix,
 			$pines->config->com_mysql->prefix);
-		if ( !($result = mysql_query($query, $pines->db_manager->link)) ) {
+		if ( !($result = mysql_query($query, $pines->com_mysql->link)) ) {
 			if (function_exists('display_error'))
 				display_error('Query failed: ' . mysql_error());
 			return false;
@@ -224,7 +226,7 @@ class com_entity extends component {
 		$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid`=d.`guid` ORDER BY e.`guid`;",
 			$pines->config->com_mysql->prefix,
 			$pines->config->com_mysql->prefix);
-		if ( !($result = mysql_query($query, $pines->db_manager->link)) ) {
+		if ( !($result = mysql_query($query, $pines->com_mysql->link)) ) {
 			if (function_exists('display_error'))
 				display_error('Query failed: ' . mysql_error());
 			return false;
@@ -321,14 +323,14 @@ class com_entity extends component {
 					foreach ($option as $cur_tag) {
 						if ( $cur_query )
 							$cur_query .= ' AND ';
-						$cur_query .= 'LOCATE(\','.mysql_real_escape_string($cur_tag, $pines->db_manager->link).',\', e.`tags`)';
+						$cur_query .= 'LOCATE(\','.mysql_real_escape_string($cur_tag, $pines->com_mysql->link).',\', e.`tags`)';
 					}
 					break;
 				case 'tags_i':
 					foreach ($option as $cur_tag) {
 						if ( $cur_query )
 							$cur_query .= ' OR ';
-						$cur_query .= 'LOCATE(\','.mysql_real_escape_string($cur_tag, $pines->db_manager->link).',\', e.`tags`)';
+						$cur_query .= 'LOCATE(\','.mysql_real_escape_string($cur_tag, $pines->com_mysql->link).',\', e.`tags`)';
 					}
 					break;
 				case 'data':
@@ -341,7 +343,7 @@ class com_entity extends component {
 					foreach ($option as $cur_name => $cur_value) {
 						if ( $cur_query )
 							$cur_query .= ' AND ';
-						$cur_query .= 'LOCATE(\','.mysql_real_escape_string($cur_name, $pines->db_manager->link).',\', e.`varlist`)';
+						$cur_query .= 'LOCATE(\','.mysql_real_escape_string($cur_name, $pines->com_mysql->link).',\', e.`varlist`)';
 					}
 					break;
 				case 'data_i':
@@ -354,7 +356,7 @@ class com_entity extends component {
 					foreach ($option as $cur_name => $cur_value) {
 						if ( $cur_query )
 							$cur_query .= ' OR ';
-						$cur_query .= 'LOCATE(\','.mysql_real_escape_string($cur_name, $pines->db_manager->link).',\', e.`varlist`)';
+						$cur_query .= 'LOCATE(\','.mysql_real_escape_string($cur_name, $pines->com_mysql->link).',\', e.`varlist`)';
 					}
 					break;
 				case 'limit':
@@ -378,7 +380,7 @@ class com_entity extends component {
 				$pines->config->com_mysql->prefix,
 				$pines->config->com_mysql->prefix);
 		}
-		if ( !($result = mysql_query($query, $pines->db_manager->link)) ) {
+		if ( !($result = mysql_query($query, $pines->com_mysql->link)) ) {
 			if (function_exists('display_error'))
 				display_error('Query failed: ' . mysql_error());
 			return null;
@@ -629,8 +631,8 @@ class com_entity extends component {
 		global $pines;
 		$query = sprintf("SELECT `cur_uid` FROM `%scom_entity_uids` WHERE `name`='%s';",
 			$pines->config->com_mysql->prefix,
-			mysql_real_escape_string($name, $pines->db_manager->link));
-		if ( !($result = mysql_query($query, $pines->db_manager->link)) ) {
+			mysql_real_escape_string($name, $pines->com_mysql->link));
+		if ( !($result = mysql_query($query, $pines->com_mysql->link)) ) {
 			if (function_exists('display_error'))
 				display_error('Query failed: ' . mysql_error());
 			return null;
@@ -668,9 +670,9 @@ class com_entity extends component {
 					$query = sprintf("REPLACE INTO `%scom_entity_entities` (`guid`, `tags`, `varlist`) VALUES (%u, '%s', '%s');",
 						$pines->config->com_mysql->prefix,
 						$guid,
-						mysql_real_escape_string(','.$tags.',', $pines->db_manager->link),
-						mysql_real_escape_string(','.implode(',', array_keys($data)).',', $pines->db_manager->link));
-					if ( !(mysql_query($query, $pines->db_manager->link)) ) {
+						mysql_real_escape_string(','.$tags.',', $pines->com_mysql->link),
+						mysql_real_escape_string(','.implode(',', array_keys($data)).',', $pines->com_mysql->link));
+					if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 						if (function_exists('display_error'))
 							display_error('Query failed: ' . mysql_error());
 						return false;
@@ -678,7 +680,7 @@ class com_entity extends component {
 					$query = sprintf("DELETE FROM `%scom_entity_data` WHERE `guid`=%u;",
 						$pines->config->com_mysql->prefix,
 						$guid);
-					if ( !(mysql_query($query, $pines->db_manager->link)) ) {
+					if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 						if (function_exists('display_error'))
 							display_error('Query failed: ' . mysql_error());
 						return false;
@@ -688,11 +690,11 @@ class com_entity extends component {
 						foreach ($data as $name => $value) {
 							$query .= sprintf("(%u, '%s', '%s'),",
 								$guid,
-								mysql_real_escape_string($name, $pines->db_manager->link),
-								mysql_real_escape_string($value, $pines->db_manager->link));
+								mysql_real_escape_string($name, $pines->com_mysql->link),
+								mysql_real_escape_string($value, $pines->com_mysql->link));
 						}
 						$query = substr($query, 0, -1).';';
-						if ( !(mysql_query($query, $pines->db_manager->link)) ) {
+						if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 							if (function_exists('display_error'))
 								display_error('Query failed: ' . mysql_error());
 							return false;
@@ -713,10 +715,10 @@ class com_entity extends component {
 				// Add the UID.
 				$query = sprintf("INSERT INTO `%scom_entity_uids` (`name`, `cur_uid`) VALUES ('%s', %u) ON DUPLICATE KEY UPDATE `cur_uid`=%u;",
 					$pines->config->com_mysql->prefix,
-					mysql_real_escape_string($matches[1], $pines->db_manager->link),
+					mysql_real_escape_string($matches[1], $pines->com_mysql->link),
 					(int) $matches[2],
 					(int) $matches[2]);
-				if ( !(mysql_query($query, $pines->db_manager->link)) ) {
+				if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 					if (function_exists('display_error'))
 						display_error('Query failed: ' . mysql_error());
 					return false;
@@ -729,9 +731,9 @@ class com_entity extends component {
 			$query = sprintf("REPLACE INTO `%scom_entity_entities` (`guid`, `tags`, `varlist`) VALUES (%u, '%s', '%s');",
 				$pines->config->com_mysql->prefix,
 				$guid,
-				mysql_real_escape_string(','.$tags.',', $pines->db_manager->link),
-				mysql_real_escape_string(','.implode(',', array_keys($data)).',', $pines->db_manager->link));
-			if ( !(mysql_query($query, $pines->db_manager->link)) ) {
+				mysql_real_escape_string(','.$tags.',', $pines->com_mysql->link),
+				mysql_real_escape_string(','.implode(',', array_keys($data)).',', $pines->com_mysql->link));
+			if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 				if (function_exists('display_error'))
 					display_error('Query failed: ' . mysql_error());
 				return false;
@@ -739,7 +741,7 @@ class com_entity extends component {
 			$query = sprintf("DELETE FROM `%scom_entity_data` WHERE `guid`=%u;",
 				$pines->config->com_mysql->prefix,
 				$guid);
-			if ( !(mysql_query($query, $pines->db_manager->link)) ) {
+			if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 				if (function_exists('display_error'))
 					display_error('Query failed: ' . mysql_error());
 				return false;
@@ -749,11 +751,11 @@ class com_entity extends component {
 				foreach ($data as $name => $value) {
 					$query .= sprintf("(%u, '%s', '%s'),",
 						$guid,
-						mysql_real_escape_string($name, $pines->db_manager->link),
-						mysql_real_escape_string($value, $pines->db_manager->link));
+						mysql_real_escape_string($name, $pines->com_mysql->link),
+						mysql_real_escape_string($value, $pines->com_mysql->link));
 				}
 				$query = substr($query, 0, -1).';';
-				if ( !(mysql_query($query, $pines->db_manager->link)) ) {
+				if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 					if (function_exists('display_error'))
 						display_error('Query failed: ' . mysql_error());
 					return false;
@@ -794,24 +796,24 @@ class com_entity extends component {
 		global $pines;
 		$query = sprintf("SELECT GET_LOCK('%scom_entity_uids_%s', 10);",
 			$pines->config->com_mysql->prefix,
-			mysql_real_escape_string($name, $pines->db_manager->link));
-		if ( !(mysql_query($query, $pines->db_manager->link)) ) {
+			mysql_real_escape_string($name, $pines->com_mysql->link));
+		if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 			if (function_exists('display_error'))
 				display_error('Query failed: ' . mysql_error());
 			return null;
 		}
 		$query = sprintf("INSERT INTO `%scom_entity_uids` (`name`, `cur_uid`) VALUES ('%s', 1) ON DUPLICATE KEY UPDATE `cur_uid`=`cur_uid`+1;",
 			$pines->config->com_mysql->prefix,
-			mysql_real_escape_string($name, $pines->db_manager->link));
-		if ( !(mysql_query($query, $pines->db_manager->link)) ) {
+			mysql_real_escape_string($name, $pines->com_mysql->link));
+		if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 			if (function_exists('display_error'))
 				display_error('Query failed: ' . mysql_error());
 			return null;
 		}
 		$query = sprintf("SELECT `cur_uid` FROM `%scom_entity_uids` WHERE `name`='%s';",
 			$pines->config->com_mysql->prefix,
-			mysql_real_escape_string($name, $pines->db_manager->link));
-		if ( !($result = mysql_query($query, $pines->db_manager->link)) ) {
+			mysql_real_escape_string($name, $pines->com_mysql->link));
+		if ( !($result = mysql_query($query, $pines->com_mysql->link)) ) {
 			if (function_exists('display_error'))
 				display_error('Query failed: ' . mysql_error());
 			return null;
@@ -820,8 +822,8 @@ class com_entity extends component {
 		mysql_free_result($result);
 		$query = sprintf("SELECT RELEASE_LOCK('%scom_entity_uids_%s');",
 			$pines->config->com_mysql->prefix,
-			mysql_real_escape_string($name, $pines->db_manager->link));
-		if ( !(mysql_query($query, $pines->db_manager->link)) ) {
+			mysql_real_escape_string($name, $pines->com_mysql->link));
+		if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 			if (function_exists('display_error'))
 				display_error('Query failed: ' . mysql_error());
 			return null;
@@ -842,9 +844,9 @@ class com_entity extends component {
 		global $pines;
 		$query = sprintf("UPDATE `%scom_entity_uids` SET `name`='%s' WHERE `name`='%s';",
 			$pines->config->com_mysql->prefix,
-			mysql_real_escape_string($new_name, $pines->db_manager->link),
-			mysql_real_escape_string($old_name, $pines->db_manager->link));
-		if ( !(mysql_query($query, $pines->db_manager->link)) ) {
+			mysql_real_escape_string($new_name, $pines->com_mysql->link),
+			mysql_real_escape_string($old_name, $pines->com_mysql->link));
+		if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 			if (function_exists('display_error'))
 				display_error('Query failed: ' . mysql_error());
 			return false;
@@ -874,9 +876,9 @@ class com_entity extends component {
 			$data = $entity->get_data();
 			$query = sprintf("INSERT INTO `%scom_entity_entities` (`tags`, `varlist`) VALUES ('%s', '%s');",
 				$pines->config->com_mysql->prefix,
-				mysql_real_escape_string(','.implode(',', $entity->tags).',', $pines->db_manager->link),
-				mysql_real_escape_string(','.implode(',', array_keys($data)).',', $pines->db_manager->link));
-			if ( !(mysql_query($query, $pines->db_manager->link)) ) {
+				mysql_real_escape_string(','.implode(',', $entity->tags).',', $pines->com_mysql->link),
+				mysql_real_escape_string(','.implode(',', array_keys($data)).',', $pines->com_mysql->link));
+			if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 				if (function_exists('display_error'))
 					display_error('Query failed: ' . mysql_error());
 				return false;
@@ -887,9 +889,9 @@ class com_entity extends component {
 				$query = sprintf("INSERT INTO `%scom_entity_data` (`guid`, `name`, `value`) VALUES (%u, '%s', '%s');",
 					$pines->config->com_mysql->prefix,
 					(int) $new_id,
-					mysql_real_escape_string($name, $pines->db_manager->link),
-					mysql_real_escape_string(serialize($value), $pines->db_manager->link));
-				if ( !(mysql_query($query, $pines->db_manager->link)) ) {
+					mysql_real_escape_string($name, $pines->com_mysql->link),
+					mysql_real_escape_string(serialize($value), $pines->com_mysql->link));
+				if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 					if (function_exists('display_error'))
 						display_error('Query failed: ' . mysql_error());
 					return false;
@@ -902,10 +904,10 @@ class com_entity extends component {
 			$data = $entity->get_data();
 			$query = sprintf("UPDATE `%scom_entity_entities` SET `tags`='%s', `varlist`='%s' WHERE `guid`=%u;",
 				$pines->config->com_mysql->prefix,
-				mysql_real_escape_string(','.implode(',', $entity->tags).',', $pines->db_manager->link),
-				mysql_real_escape_string(','.implode(',', array_keys($data)).',', $pines->db_manager->link),
+				mysql_real_escape_string(','.implode(',', $entity->tags).',', $pines->com_mysql->link),
+				mysql_real_escape_string(','.implode(',', array_keys($data)).',', $pines->com_mysql->link),
 				intval($entity->guid));
-			if ( !(mysql_query($query, $pines->db_manager->link)) ) {
+			if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 				if (function_exists('display_error'))
 					display_error('Query failed: ' . mysql_error());
 				return false;
@@ -913,7 +915,7 @@ class com_entity extends component {
 			$query = sprintf("DELETE FROM `%scom_entity_data` WHERE `guid`=%u;",
 				$pines->config->com_mysql->prefix,
 				intval($entity->guid));
-			if ( !(mysql_query($query, $pines->db_manager->link)) ) {
+			if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 				if (function_exists('display_error'))
 					display_error('Query failed: ' . mysql_error());
 				return false;
@@ -922,9 +924,9 @@ class com_entity extends component {
 				$query = sprintf("INSERT INTO `%scom_entity_data` (`guid`, `name`, `value`) VALUES (%u, '%s', '%s');",
 					$pines->config->com_mysql->prefix,
 					intval($entity->guid),
-					mysql_real_escape_string($name, $pines->db_manager->link),
-					mysql_real_escape_string(serialize($value), $pines->db_manager->link));
-				if ( !(mysql_query($query, $pines->db_manager->link)) ) {
+					mysql_real_escape_string($name, $pines->com_mysql->link),
+					mysql_real_escape_string(serialize($value), $pines->com_mysql->link));
+				if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 					if (function_exists('display_error'))
 						display_error('Query failed: ' . mysql_error());
 					return false;
@@ -947,10 +949,10 @@ class com_entity extends component {
 		global $pines;
 		$query = sprintf("INSERT INTO `%scom_entity_uids` (`name`, `cur_uid`) VALUES ('%s', %u) ON DUPLICATE KEY UPDATE `cur_uid`=%u;",
 			$pines->config->com_mysql->prefix,
-			mysql_real_escape_string($name, $pines->db_manager->link),
+			mysql_real_escape_string($name, $pines->com_mysql->link),
 			(int) $value,
 			(int) $value);
-		if ( !(mysql_query($query, $pines->db_manager->link)) ) {
+		if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 			if (function_exists('display_error'))
 				display_error('Query failed: ' . mysql_error());
 			return false;

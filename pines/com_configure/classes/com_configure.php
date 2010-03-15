@@ -109,6 +109,20 @@ class com_configure extends component {
 		$module->config_components = array_keys($this->config_files);
 		$module->disabled_components = array_diff($pines->all_components, $pines->components);
 	}
+
+	/**
+	 * Creates and attaches a module which lists per user config components.
+	 *
+	 * @todo Create a view for per user components.
+	 */
+	function list_components_peruser() {
+		global $pines;
+		$module = new module('com_configure', 'list', 'content');
+
+		$module->components = array_merge(array('system'), $pines->all_components);
+		$module->config_components = array_keys($this->config_files);
+		$module->disabled_components = array_diff($pines->all_components, $pines->components);
+	}
 }
 
 ?>

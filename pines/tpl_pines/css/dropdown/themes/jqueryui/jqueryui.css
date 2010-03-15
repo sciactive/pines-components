@@ -37,12 +37,14 @@ ul.dropdown li a {
 /* -- level mark -- */
 
 ul.dropdown ul {
-	width: 150px;
+	min-width: 150px;
+	width: auto;
 	margin-top: 1px;
 }
 
 ul.dropdown ul li {
 	font-weight: normal;
+	white-space: nowrap;
 }
 
 
@@ -53,6 +55,16 @@ ul.dropdown ul li {
 */
 
 
+ul.dropdown li {
+	position: relative;
+}
+ul.dropdown li span.ui-icon {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	width: 14px;
+	height: 14px;
+}
 ul.dropdown *.dir {
 	padding-right: 20px;
 	background-image: url(images/nav-arrow-down.png);

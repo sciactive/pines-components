@@ -3,7 +3,7 @@
  * Test an entity manager's UID functions.
  *
  * @package Pines
- * @subpackage com_entity
+ * @subpackage com_entitytools
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -12,9 +12,9 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('system/all') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_entity', 'testuid', null, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_entitytools', 'testuid', null, false));
 
-$name = 'com_entity/uid_test_'.time();
+$name = 'com_entitytools/uid_test_'.time();
 $id = $pines->entity_manager->new_uid($name);
 var_dump($id);
 $id = $pines->entity_manager->get_uid($name);

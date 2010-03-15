@@ -3,7 +3,7 @@
  * Runs a benchmark of the entity manager.
  *
  * @package Pines
- * @subpackage com_entity
+ * @subpackage com_entitytools
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -14,7 +14,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Entity Manager Benchmark';
 ?>
-<form class="pform" method="post" action="<?php echo pines_url('com_entity', 'benchmark'); ?>">
+<form class="pform" method="post" action="<?php echo pines_url('com_entitytools', 'benchmark'); ?>">
 	<div class="element heading">
 		<p>
 			This entity manager benchmark will create, retrieve and delete

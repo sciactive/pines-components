@@ -1,9 +1,9 @@
 <?php
 /**
- * Import the entities in the database to a file.
+ * Import entities from a file into the entity manager.
  *
  * @package Pines
- * @subpackage com_entity
+ * @subpackage com_entitytools
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -12,7 +12,12 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('system/all') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_entity', 'import', null, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_entitytools', 'import', null, false));
+
+if (!is_callable(array($pines->entity_manager, 'import'))) {
+	display_notice('The currently installed entity manager doesn\'t support importing.');
+	return;
+}
 
 if (!empty($_FILES['entity_import']['tmp_name'])) {
 	set_time_limit(3600);
@@ -23,6 +28,6 @@ if (!empty($_FILES['entity_import']['tmp_name'])) {
 	}
 }
 
-$module = new module('com_entity', 'import', 'content');
+$module = new module('com_entitytools', 'import', 'content');
 
 ?>

@@ -3,7 +3,7 @@
  * Run a benchmark.
  *
  * @package Pines
- * @subpackage com_entity
+ * @subpackage com_entitytools
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('system/all') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_entity', 'benchmark', null, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_entitytools', 'benchmark', null, false));
 
 $pines->page->override = true;
 
@@ -24,7 +24,7 @@ $benchmark->time_start = microtime(true);
 $pass = true;
 for ($i=0; $i<1000; $i++) {
 	$entity = entity::factory();
-	$entity->add_tag('com_entity', 'benchmark');
+	$entity->add_tag('com_entitytools', 'benchmark');
 	$entity->name = "Entity Benchmark ".time();
 	$entity->int = 1000;
 	$entity->float = 10.5;
@@ -37,7 +37,7 @@ $benchmark->create[0] = $pass;
 $benchmark->create[1] = microtime(true);
 
 // Retrieving entities...
-$entities = $pines->entity_manager->get_entities(array('limit' => 1000, 'tags' => array('com_entity', 'benchmark')));
+$entities = $pines->entity_manager->get_entities(array('limit' => 1000, 'tags' => array('com_entitytools', 'benchmark')));
 $benchmark->retrieve[0] = count($entities) == 1000;
 $benchmark->retrieve[1] = microtime(true);
 

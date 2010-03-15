@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('system/all') )
+if ( !gatekeeper('com_entitytools/test') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_entitytools', 'benchmark', null, false));
 
 $pines->page->override = true;

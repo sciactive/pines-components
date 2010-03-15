@@ -15,7 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * @todo Add tests for custom entity extended classes.
  */
 
-if ( !gatekeeper('system/all') )
+if ( !gatekeeper('com_entitytools/test') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_entitytools', 'test', null, false));
 
 $test = new module('com_entitytools', 'test', 'content');

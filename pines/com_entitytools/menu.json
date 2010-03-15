@@ -1,0 +1,42 @@
+[
+	{
+		"path": "main_menu/com_entitytools",
+		"text": "Entity Tools",
+		"depend": {
+			"ability": "com_entitytools/test|com_entitytools/export|com_entitytools/import",
+			"service": "entity_manager"
+		}
+	},
+		{
+			"path": "main_menu/com_entitytools/test",
+			"text": "Test",
+			"href": ["com_entitytools","test"],
+			"depend": {
+				"ability": "com_entitytools/test"
+			}
+		},
+		{
+			"path": "main_menu/com_entitytools/benchmark",
+			"text": "Benchmark",
+			"href": ["com_entitytools","benchmark"],
+			"depend": {
+				"ability": "com_entitytools/test"
+			}
+		},
+		{
+			"path": "main_menu/com_entitytools/export",
+			"text": "Export",
+			"href": ["com_entitytools","export"],
+			"depend": {
+				"ability": "com_entitytools/export"
+			}
+		},
+		{
+			"path": "main_menu/com_entitytools/import",
+			"text": "Import",
+			"href": ["com_entitytools","import"],
+			"depend": {
+				"ability": "com_entitytools/import"
+			}
+		}
+]

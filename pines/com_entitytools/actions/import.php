@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('system/all') )
+if ( !gatekeeper('com_entitytools/import') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_entitytools', 'import', null, false));
 
 if (!is_callable(array($pines->entity_manager, 'import'))) {

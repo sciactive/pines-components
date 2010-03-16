@@ -771,7 +771,7 @@ class com_entity extends component {
 	 * Unique IDs, or UIDs, are ID numbers, similar to GUIDs, but without any
 	 * constraints on how they are used. UIDs can be named anything, however a
 	 * good naming convention, in order to avoid conflicts, is to use your
-	 * components name, a slash, then a descriptive name of the objects being
+	 * component's name, a slash, then a descriptive name of the objects being
 	 * identified. E.g. "com_example/widget" or "com_hrm/employee".
 	 *
 	 * A UID can be used to identify an object when the GUID doesn't suffice. On

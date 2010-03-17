@@ -1,13 +1,13 @@
 [
 	{
-		"path": "main_menu/com_customer/com_customer_timer",
+		"path": "main_menu/business/com_customer/com_customer_timer",
 		"text": "Customer Timer",
 		"depend": {
-			"ability": "com_customertimer/viewstatus|com_customertimer/login"
+			"children": true
 		}
 	},
 		{
-			"path": "main_menu/com_customer/com_customer_timer/status",
+			"path": "main_menu/business/com_customer/com_customer_timer/status",
 			"text": "Status",
 			"href": ["com_customertimer","status"],
 			"depend": {
@@ -15,7 +15,7 @@
 			}
 		},
 		{
-			"path": "main_menu/com_customer/com_customer_timer/login",
+			"path": "main_menu/business/com_customer/com_customer_timer/login",
 			"text": "Login",
 			"href": ["com_customertimer","status"],
 			"depend": {

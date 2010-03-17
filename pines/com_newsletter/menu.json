@@ -1,18 +1,18 @@
 [
 	{
-		"path": "main_menu/com_newsletter",
+		"path": "main_menu/business/com_newsletter",
 		"text": "Newsletter",
 		"depend": {
-			"ability": "com_newsletter/listmail|com_newsletter/send"
+			"children": true
 		}
 	},
 		{
-			"path": "main_menu/com_newsletter/mails",
+			"path": "main_menu/business/com_newsletter/mails",
 			"text": "Mails",
 			"href": ["com_newsletter","list"]
 		},
 		{
-			"path": "main_menu/com_newsletter/newmail",
+			"path": "main_menu/business/com_newsletter/newmail",
 			"text": "New Mail",
 			"href": ["com_newsletter","new"]
 		}

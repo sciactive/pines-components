@@ -1,13 +1,13 @@
 [
 	{
-		"path": "main_menu/log_manager",
+		"path": "main_menu/system/log_manager",
 		"text": "Logs",
 		"depend": {
-			"ability": "com_logger/view|com_logger/clear"
+			"children": true
 		}
 	},
 		{
-			"path": "main_menu/log_manager/view",
+			"path": "main_menu/system/log_manager/view",
 			"text": "View",
 			"href": ["com_logger","view"],
 			"depend": {
@@ -15,7 +15,7 @@
 			}
 		},
 		{
-			"path": "main_menu/log_manager/clear",
+			"path": "main_menu/system/log_manager/clear",
 			"text": "Clear",
 			"href": ["com_logger","clear"],
 			"depend": {

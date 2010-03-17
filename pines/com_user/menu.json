@@ -1,13 +1,13 @@
 [
 	{
-		"path": "main_menu/user_manager",
+		"path": "main_menu/system/user_manager",
 		"text": "User Manager",
 		"depend": {
-			"ability": "com_user/newuser|com_user/listusers|com_user/newgroup|com_user/listgroups"
+			"children": true
 		}
 	},
 		{
-			"path": "main_menu/user_manager/users",
+			"path": "main_menu/system/user_manager/users",
 			"text": "Users",
 			"href": ["com_user","listusers"],
 			"depend": {
@@ -15,7 +15,7 @@
 			}
 		},
 		{
-			"path": "main_menu/user_manager/newuser",
+			"path": "main_menu/system/user_manager/newuser",
 			"text": "New User",
 			"href": ["com_user","edituser"],
 			"depend": {
@@ -23,7 +23,7 @@
 			}
 		},
 		{
-			"path": "main_menu/user_manager/Groups",
+			"path": "main_menu/system/user_manager/Groups",
 			"text": "Groups",
 			"href": ["com_user","listgroups"],
 			"depend": {
@@ -31,7 +31,7 @@
 			}
 		},
 		{
-			"path": "main_menu/user_manager/newgroup",
+			"path": "main_menu/system/user_manager/newgroup",
 			"text": "New Group",
 			"href": ["com_user","editgroup"],
 			"depend": {
@@ -39,26 +39,19 @@
 			}
 		},
 	{
-		"path": "main_menu/account",
-		"text": "Account",
+	"path": "main_menu/myaccount",
+		"text": "My Account",
+		"href": ["com_user","editself"],
+		"depend": {
+			"ability": "com_user/self"
+		}
+	},
+	{
+		"path": "main_menu/logout",
+		"text": "Logout",
+		"href": ["com_user","logout"],
 		"depend": {
 			"ability": null
 		}
-	},
-		{
-		"path": "main_menu/account/myaccount",
-			"text": "My Account",
-			"href": ["com_user","editself"],
-			"depend": {
-				"ability": "com_user/self"
-			}
-		},
-		{
-			"path": "main_menu/account/logout",
-			"text": "Logout",
-			"href": ["com_user","logout"],
-			"depend": {
-				"ability": null
-			}
-		}
+	}
 ]

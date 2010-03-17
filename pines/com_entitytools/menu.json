@@ -1,14 +1,14 @@
 [
 	{
-		"path": "main_menu/com_entitytools",
+		"path": "main_menu/system/com_entitytools",
 		"text": "Entity Tools",
 		"depend": {
-			"ability": "com_entitytools/test|com_entitytools/export|com_entitytools/import",
+			"children": true,
 			"service": "entity_manager"
 		}
 	},
 		{
-			"path": "main_menu/com_entitytools/test",
+			"path": "main_menu/system/com_entitytools/test",
 			"text": "Test",
 			"href": ["com_entitytools","test"],
 			"depend": {
@@ -16,7 +16,7 @@
 			}
 		},
 		{
-			"path": "main_menu/com_entitytools/benchmark",
+			"path": "main_menu/system/com_entitytools/benchmark",
 			"text": "Benchmark",
 			"href": ["com_entitytools","benchmark"],
 			"depend": {
@@ -24,7 +24,7 @@
 			}
 		},
 		{
-			"path": "main_menu/com_entitytools/export",
+			"path": "main_menu/system/com_entitytools/export",
 			"text": "Export",
 			"href": ["com_entitytools","export"],
 			"depend": {
@@ -32,7 +32,7 @@
 			}
 		},
 		{
-			"path": "main_menu/com_entitytools/import",
+			"path": "main_menu/system/com_entitytools/import",
 			"text": "Import",
 			"href": ["com_entitytools","import"],
 			"depend": {

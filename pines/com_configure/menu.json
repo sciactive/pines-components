@@ -1,13 +1,13 @@
 [
 	{
-		"path": "main_menu/configurator",
+		"path": "main_menu/system/configurator",
 		"text": "Configuration",
 		"depend": {
-			"ability": "com_configure/edit|com_configure/view|com_configure/peruser"
+			"children": true
 		}
 	},
 		{
-			"path": "main_menu/configurator/components",
+			"path": "main_menu/system/configurator/components",
 			"text": "Components",
 			"href": ["com_configure","list"],
 			"depend": {
@@ -15,7 +15,7 @@
 			}
 		},
 		{
-			"path": "main_menu/configurator/perusergroup",
+			"path": "main_menu/system/configurator/perusergroup",
 			"text": "Per User/Group",
 			"href": ["com_configure","listperuser"],
 			"depend": {

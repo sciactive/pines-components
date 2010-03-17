@@ -7,27 +7,40 @@
 		}
 	},
 		{
-			"path": "main_menu/com_reports/salesreport",
-			"text": "Sales Report",
-			"href": ["com_reports","reportsales"],
+			"path": "main_menu/com_reports/sales",
+			"text": "Sales",
 			"depend": {
 				"ability": "com_reports/listsales"
 			}
 		},
+			{
+				"path": "main_menu/com_reports/sales/salestotals",
+				"text": "Sales Totals",
+				"href": ["com_reports","reportsales"],
+				"depend": {
+					"ability": "com_reports/reportsales"
+				}
+			},
 		{
-			"path": "main_menu/com_reports/inventoryreport",
-			"text": "Inventory Report",
-			"href": ["com_reports","reportinventory"],
+			"path": "main_menu/com_reports/inventory",
+			"text": "Inventory",
 			"depend": {
 				"ability": "com_reports/listinventory"
 			}
 		},
 		{
-			"path": "main_menu/com_reports/employeereport",
-			"text": "Employee Report",
-			"href": ["com_reports","reportemployees"],
+			"path": "main_menu/com_reports/hrm",
+			"text": "HRM",
 			"depend": {
 				"ability": "com_reports/listemployees"
 			}
-		}
+		},
+			{
+				"path": "main_menu/com_reports/hrm/time_attendance",
+				"text": "Time & Attendance",
+				"href": ["com_reports","reportattendance"],
+				"depend": {
+					"ability": "com_reports/listemployees"
+				}
+			}
 ]

@@ -12,7 +12,6 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 $this->title = 'New Report';
-
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */

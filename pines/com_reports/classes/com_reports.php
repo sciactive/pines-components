@@ -25,7 +25,7 @@ class com_reports extends component {
 	 * 
 	 * @var bool $com_sales
 	 */
-	var $com_sales;
+	public $com_sales;
 
 	/**
 	 * Check whether com_sales is installed and we should integrate with it.
@@ -36,27 +36,54 @@ class com_reports extends component {
 		global $pines;
 		$this->com_sales = $pines->depend->check('component', 'com_sales');
 	}
-	
+
+	/**
+	 * Creates and attaches a module which reports sales.
+	 */
+	function report_attendance($start, $end, $location = null, $user = null) {
+		global $pines;
+		$pines->com_pgrid->load();
+		$date_start = strtotime('00:00', $start);
+		$date_end = strtotime('23:59', $end);
+		$location = (int) $location;
+		
+		$form = new module('com_reports', 'form_hrm', 'left');
+		$module = new module('com_reports', 'report_attendance', 'content');
+		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_reports/report_attendance'];
+
+		if (is_null($user)) {
+			$module->employees = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
+			foreach ($module->employees as $key => &$cur_employee) {
+				if (!$cur_employee->user_account || !$cur_employee->user_account->ingroup($location))
+					unset($module->employees[$key]);
+			}
+		} else {
+			$module->employee = com_hrm_employee::factory((int) $user);
+		}
+		$module->date[0] = $form->date[0] = $date_start;
+		$module->date[1] = $form->date[1] = $date_end;
+		$module->location = $form->location = $location;
+	}
+
 	/**
 	 * Creates and attaches a module which reports sales.
 	 */
 	function report_sales($start = 'now', $end = 'now') {
 		global $pines;
 		$pines->com_pgrid->load();
-		$date_start = strtotime($start);
-		$date_end = strtotime("+23 hours +59 minutes", strtotime($end));
+		$date_start = strtotime('00:00', strtotime($start));
+		$date_end = strtotime('23:59', strtotime($end));
 		
 		$form = new module('com_reports', 'form_sales', 'left');
 		$head = new module('com_hrm', 'show_calendar_head', 'head');
 		$module = new module('com_reports', 'report_sales', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_reports/report_sales'];
-		$module->sales = $pines->entity_manager->get_entities(array('gte' => array('p_cdate' => $date_start), 'lte' => array('p_cdate' => $date_end), 'tags' => array('com_sales', 'sale')));
+		$module->sales = $pines->entity_manager->get_entities(array('gte' => array('p_cdate' => $date_start), 'lte' => array('p_cdate' => $date_end), 'tags' => array('com_sales', 'sale'), 'class' => com_sales_sale));
 
-		$form->date[0] = $date_start;
-		$form->date[1] = $date_end;
-		$module->date[0] = $date_start;
-		$module->date[1] = $date_end;
+		$module->date[0] = $form->date[0] = $date_start;
+		$module->date[1] = $form->date[1] = $date_end;
 	}
 }
 

@@ -26,8 +26,13 @@ ul.dropdown ul {
 
 ul.dropdown {
 	position: relative;
-	z-index: 597;
+	/* Lowered index by one. */
+	z-index: 596;
 	float: left;
+}
+/* Added this hover style to raise index above any other menus on the page. */
+ul.dropdown:hover {
+	z-index: 597;
 }
 
 ul.dropdown li {

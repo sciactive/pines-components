@@ -204,6 +204,9 @@ body {
 .module .module_content a {
 	text-decoration: underline !important;
 }
+.module .module_content .ui-state-default a {
+	text-decoration: none !important;
+}
 .module .module_right_minimize {
 	float: right;
 }
@@ -246,6 +249,10 @@ body .ui-widget {
 }
 .content {
 	clear: both;
+}
+/* ----------- Menus ----------- */
+.col2 ul.dropdown.dropdown-vertical, .col3 ul.dropdown.dropdown-vertical {
+	width: 100%;
 }
 /* ----------- Standard Notices ----------- */
 .notice {

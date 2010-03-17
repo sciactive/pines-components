@@ -9,11 +9,17 @@
 		{
 			"path": "main_menu/business/com_newsletter/mails",
 			"text": "Mails",
-			"href": ["com_newsletter","list"]
+			"href": ["com_newsletter","list"],
+			"depend": {
+				"ability": "com_newsletter/listmail"
+			}
 		},
 		{
 			"path": "main_menu/business/com_newsletter/newmail",
 			"text": "New Mail",
-			"href": ["com_newsletter","new"]
+			"href": ["com_newsletter","new"],
+			"depend": {
+				"ability": "com_newsletter/listmail"
+			}
 		}
 ]

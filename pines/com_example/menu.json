@@ -29,5 +29,35 @@
 			"depend": {
 				"ability": "com_example/content"
 			}
+		},
+	{
+		"path": "com_example_left",
+		"text": "Left Menu",
+		"position": "left",
+		"depend": {
+			"option": "com_example",
+			"action": "content",
+			"ability": "com_example/content"
+		}
+	},
+		{
+			"path": "com_example_left/entry1",
+			"text": "Entry 1"
+		},
+			{
+				"path": "com_example_left/entry1/entry11",
+				"text": "Entry 1-1"
+			},
+			{
+				"path": "com_example_left/entry1/entry12",
+				"text": "Entry 1-2"
+			},
+		{
+			"path": "com_example_left/entry2",
+			"text": "Entry 2"
+		},
+		{
+			"path": "com_example_left/entry3",
+			"text": "Entry 3"
 		}
 ]

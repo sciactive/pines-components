@@ -45,7 +45,7 @@ class com_example extends component {
 		$module = new module('com_example', 'content_long', 'content');
 		$module = new module('com_example', 'content_short', 'left');
 		$module = new module('com_example', 'content_short', 'right');
-		$module = new module('com_example', 'content_medium', 'left');
+		//$module = new module('com_example', 'content_medium', 'left');
 		$module = new module('com_example', 'content_medium', 'right');
 		$module = new module('com_example', 'content_short', 'top');
 		$module = new module('com_example', 'content_short', 'header');

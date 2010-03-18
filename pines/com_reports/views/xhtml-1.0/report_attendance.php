@@ -41,9 +41,9 @@ $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name 
 				<?php } else { ?>
 				{type: 'button', text: '&laquo; All Employees', extra_class: 'icon picon_16x16_apps_system-users', selection_optional: true, click: function(e, rows){
 					pines.post("<?php echo pines_url('com_reports', 'reportattendance'); ?>", {
-						"start": "<?php echo pines_date_format($this->date[0], null, 'Y-m-d'); ?>",
-						"end": "<?php echo pines_date_format($this->date[1], null, 'Y-m-d'); ?>",
-						"location": "<?php echo $this->location->guid; ?>"
+						start: "<?php echo pines_date_format($this->date[0], null, 'Y-m-d'); ?>",
+						end: "<?php echo pines_date_format($this->date[1], null, 'Y-m-d'); ?>",
+						location: "<?php echo $this->location->guid; ?>"
 					});
 				}}
 				<?php } ?>

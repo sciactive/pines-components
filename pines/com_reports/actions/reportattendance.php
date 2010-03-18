@@ -23,6 +23,7 @@ if ( isset($_REQUEST['start']) ) {
 	$end = strtotime($_REQUEST['end']);
 	$pines->com_reports->report_attendance($start, $end, $location, $user);
 } else {
-	$pines->com_reports->report_attendance(strtotime('-1 week'), time());
+	$days = date('N')-1;
+	$pines->com_reports->report_attendance(strtotime('-'.$days.' days'), time());
 }
 ?>

@@ -11,18 +11,15 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_reports/listsales') )
+if ( !gatekeeper('com_reports/reportsales') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_reports', 'reportsales', null, false));
 	
-if ( isset($_REQUEST['report_start']) ) {
-	$start = $_REQUEST['report_start'];
-	$end = $_REQUEST['report_end'];
-	$pines->com_reports->report_sales($start, $end);
-} else if ( isset($_REQUEST['date_start']) ) {
-	$start = $_REQUEST['date_start'];
-	$end = $_REQUEST['date_end'];
+if ( isset($_REQUEST['start']) ) {
+	$start = strtotime($_REQUEST['start']);
+	$end = strtotime($_REQUEST['end']);
 	$pines->com_reports->report_sales($start, $end);
 } else {
-	$pines->com_reports->report_sales(date('n/j/Y', strtotime('now')), date('n/j/Y', strtotime('now')));
+	$days = date('N')-1;
+	$pines->com_reports->report_sales(strtotime('-'.$days.' days'), time());
 }
 ?>

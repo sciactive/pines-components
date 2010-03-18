@@ -25,7 +25,7 @@
 			"path": "main_menu/business/com_reports/inventory",
 			"text": "Inventory",
 			"depend": {
-				"ability": "com_reports/listinventory"
+				"children": true
 			}
 		},
 		{
@@ -40,7 +40,7 @@
 				"text": "Time & Attendance",
 				"href": ["com_reports","reportattendance"],
 				"depend": {
-					"ability": "com_reports/listemployees"
+					"ability": "com_reports/reportattendance"
 				}
 			}
 ]

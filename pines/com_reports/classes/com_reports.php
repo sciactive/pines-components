@@ -45,7 +45,6 @@ class com_reports extends component {
 		$pines->com_pgrid->load();
 		$date_start = strtotime('00:00', $start);
 		$date_end = strtotime('23:59', $end);
-		$location = (int) $location;
 		
 		$form = new module('com_reports', 'form_hrm', 'left');
 		$module = new module('com_reports', 'report_attendance', 'content');
@@ -69,11 +68,11 @@ class com_reports extends component {
 	/**
 	 * Creates and attaches a module which reports sales.
 	 */
-	function report_sales($start = 'now', $end = 'now') {
+	function report_sales($start, $end) {
 		global $pines;
 		$pines->com_pgrid->load();
-		$date_start = strtotime('00:00', strtotime($start));
-		$date_end = strtotime('23:59', strtotime($end));
+		$date_start = strtotime('00:00', $start);
+		$date_end = strtotime('23:59', $end);
 		
 		$form = new module('com_reports', 'form_sales', 'left');
 		$head = new module('com_hrm', 'show_calendar_head', 'head');

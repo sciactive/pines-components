@@ -23,12 +23,12 @@ $days = $total_seconds/(24*60*60);
 $date_array = array();
 $total = array();
 foreach ($this->sales as $cur_sale) {
-	$event_month = date('n', $cur_sale->p_cdate);
-	$event_day = date('j', $cur_sale->p_cdate);
-	$event_year = date('Y', $cur_sale->p_cdate);
+	$event_month = pines_date_format($cur_sale->p_cdate, null, 'n');
+	$event_day = pines_date_format($cur_sale->p_cdate, null, 'j');
+	$event_year = pines_date_format($cur_sale->p_cdate, null, 'Y');
 	// This is used to identify daily sales, divided into timespan totals.
-	$date_str = date('n/j/Y', $cur_sale->p_cdate);
-	$sale_time = date('H', $cur_sale->p_cdate);
+	$date_str = pines_date_format($cur_sale->p_cdate, null, 'n/j/Y');
+	$sale_time = pines_date_format($cur_sale->p_cdate, null, 'H');
 	if (!$total[$date_str]) {
 		$total[$date_str][0] = $cur_sale->p_cdate;
 		$total[$date_str][1] = mktime(23,59,59,$event_month,$event_day,$event_year);
@@ -131,8 +131,8 @@ foreach ($this->sales as $cur_sale) {
 					alert('Loading Relevant Sales');
 					var view_start = view.start.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1');
 					var view_end = view.end.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1');
-					$("#date_start").val(view_start);
-					$("#date_end").val(view_end);
+					$("#start").val(view_start);
+					$("#end").val(view_end);
 					$("#calendar_dates").submit();
 				}
 			}
@@ -143,7 +143,7 @@ foreach ($this->sales as $cur_sale) {
 // ]]>
 </script>
 <form name="calendar_dates" id="calendar_dates" method="post" action="">
-	<input type="hidden" name="date_start" id="date_start" value="">
-	<input type="hidden" name="date_end" id="date_end" value="">
+	<input type="hidden" name="start" id="start" value="">
+	<input type="hidden" name="end" id="end" value="">
 </form>
 <div id="calendar"></div>

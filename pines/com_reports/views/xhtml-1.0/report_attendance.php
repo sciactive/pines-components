@@ -10,10 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$group = group::factory((int)$this->location);
-if (!$group->guid)
-	unset($group);
-$this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name : $group->name).' ('.pines_date_format($this->date[0],null,'Y-m-d').' - '.pines_date_format($this->date[1],null,'Y-m-d').')';
+$this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name : $this->location->name).' ('.pines_date_format($this->date[0],null,'Y-m-d').' - '.pines_date_format($this->date[1],null,'Y-m-d').')';
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
@@ -29,10 +26,11 @@ $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name 
 		var state_xhr;
 		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
 		var cur_defaults = {
-			<?php if (isset($this->employees)) { ?>
+			
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
-				{type: 'button', text: 'View', extra_class: 'icon picon_16x16_apps_user-info', double_click: true, url: '<?php echo pines_url('com_reports', 'reportattendance', array('user' => '#title#', 'start' => pines_date_format($this->date[0], null, 'Y-m-d'), 'end' => pines_date_format($this->date[1], null, 'Y-m-d'), 'location' => $this->location), false); ?>'},
+				<?php if (isset($this->employees)) { ?>
+				{type: 'button', text: 'View', extra_class: 'icon picon_16x16_apps_user-info', double_click: true, url: '<?php echo pines_url('com_reports', 'reportattendance', array('user' => '#title#', 'start' => pines_date_format($this->date[0], null, 'Y-m-d'), 'end' => pines_date_format($this->date[1], null, 'Y-m-d'), 'location' => $this->location->guid), false); ?>'},
 				{type: 'separator'},
 				{type: 'button', text: 'Spreadsheet', extra_class: 'icon picon_16x16_mimetypes_x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
 					pines.post("<?php echo pines_url('system', 'csv'); ?>", {
@@ -40,10 +38,16 @@ $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name 
 						content: rows
 					});
 				}}
+				<?php } else { ?>
+				{type: 'button', text: '&laquo; All Employees', extra_class: 'icon picon_16x16_apps_system-users', selection_optional: true, click: function(e, rows){
+					pines.post("<?php echo pines_url('com_reports', 'reportattendance'); ?>", {
+						"start": "<?php echo pines_date_format($this->date[0], null, 'Y-m-d'); ?>",
+						"end": "<?php echo pines_date_format($this->date[1], null, 'Y-m-d'); ?>",
+						"location": "<?php echo $this->location->guid; ?>"
+					});
+				}}
+				<?php } ?>
 			],
-			<?php } else { ?>
-			pgrid_toolbar: false,
-			<?php } ?>
 			pgrid_sortable: false,
 			pgrid_state_change: function(state) {
 				if (typeof state_xhr == "object")
@@ -104,15 +108,6 @@ $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name 
 	</tbody>
 </table>
 <?php } else if (isset($this->employee)) { ?>
-<div style="float: right; margin-bottom: 5px;">
-	<form method="post" action="<?php echo pines_url('com_reports', 'reportattendance'); ?>">
-		<input type="hidden" name="location" value="<?php echo $this->location; ?>" />
-		<input type="hidden" name="start" value="<?php echo pines_date_format($this->date[0], null, 'Y-m-d'); ?>" />
-		<input type="hidden" name="end" value="<?php echo pines_date_format($this->date[1], null, 'Y-m-d'); ?>" />
-		<button type="submit" class="ui-corner-all ui-state-default">&laquo; Back To All Employees <span class="picon_16x16_apps_system-users" style="height: 16px; width: 16px; display: inline-block; margin: 2px 2px 0 2px;"></span></button>
-	</form>
-</div>
-<br class="spacer" />
 <table id="timeclock_grid">
 	<thead>
 		<tr>
@@ -155,7 +150,7 @@ $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name 
 		foreach ($dates as $cur_date) { ?>
 		<tr>
 			<td><?php echo $cur_date['date']; ?></td>
-			<td><?php echo $group->name; ?></td>
+			<td><?php echo $this->location->name; ?></td>
 			<td>Scheduled</td>
 			<td></td>
 			<td></td>

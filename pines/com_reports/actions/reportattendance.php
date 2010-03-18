@@ -11,12 +11,14 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_reports/listemployees') )
+if ( !gatekeeper('com_reports/reportattendance') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_reports', 'reportattendance', null, false));
 	
 if ( isset($_REQUEST['start']) ) {
 	$user = $_REQUEST['user'];
-	$location = $_REQUEST['location'];
+	$location = group::factory((int) $_REQUEST['location']);
+	if (!isset($location->guid))
+		unset($location);
 	$start = strtotime($_REQUEST['start']);
 	$end = strtotime($_REQUEST['end']);
 	$pines->com_reports->report_attendance($start, $end, $location, $user);

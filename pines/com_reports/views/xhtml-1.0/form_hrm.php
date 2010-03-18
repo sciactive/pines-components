@@ -39,10 +39,8 @@ $this->title = 'New Report';
 <form class="pform" method="post" id="report_details" action="<?php echo pines_url('com_reports', 'reportattendance'); ?>">
 	<div class="element" style="padding-bottom: 0px;">
 		<span class="note">Location</span>
-		<select class="field ui-widget-content form_date" name="location">
-			<?php foreach ($pines->user_manager->get_groups() as $cur_group) { ?>
-			<option value="<?php echo $cur_group->guid; ?>" <?php echo ($this->location == $cur_group->guid) ? 'selected="selected"' : ''; ?>><?php echo $cur_group->name; ?></option>
-			<?php } ?>
+		<select class="field ui-widget-content form_date" style="text-align: left;" name="location" id="location">
+			<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $pines->user_manager->get_group_array(), $this->location->guid); ?>
 		</select>
 	</div>
 	<div class="element" style="padding-bottom: 0px;">

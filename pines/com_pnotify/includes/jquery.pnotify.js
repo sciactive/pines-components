@@ -206,15 +206,15 @@
 				"css": {"display": "none"},
 				"mouseenter": function(){
 					// If it's animating out, animate back in really quick.
-					if (animating == "out") {
+					if (animating == "out" && opts.pnotify_mouse_reset) {
 						pnotify.stop(true);
 						pnotify.css("height", "auto").animate({"width": opts.pnotify_width, "opacity": opts.pnotify_opacity}, "fast");
 					}
-					if (opts.pnotify_hide) pnotify.pnotify_cancel_remove();
+					if (opts.pnotify_hide && opts.pnotify_mouse_reset) pnotify.pnotify_cancel_remove();
 					if (opts.pnotify_closer) pnotify.closer.show();
 				},
 				"mouseleave": function(){
-					if (opts.pnotify_hide) pnotify.pnotify_queue_remove();
+					if (opts.pnotify_hide && opts.pnotify_mouse_reset) pnotify.pnotify_queue_remove();
 					pnotify.closer.hide();
 					$.pnotify_position_all();
 				}
@@ -590,6 +590,8 @@
 		pnotify_hide: true,
 		// Delay in milliseconds before the notice is removed.
 		pnotify_delay: 8000,
+		// Reset the hide timer if the mouse moves over the notice.
+		pnotify_mouse_reset: true,
 		// Remove the notice's elements from the DOM after it is removed.
 		pnotify_remove: true,
 		// Change new lines to br tags.

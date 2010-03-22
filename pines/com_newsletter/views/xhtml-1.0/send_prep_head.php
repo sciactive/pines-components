@@ -24,4 +24,4 @@ defined('P_RUN') or die('Direct access prohibited');
 	});
 	// ]]>
 </script>
-<link href="<?php echo $pines->config->rela_location; ?>components/com_newsletter/css/checktree.css" media="all" rel="stylesheet" type="text/css" />"
+<link href="<?php echo $pines->config->rela_location; ?>components/com_newsletter/css/checktree.css" media="all" rel="stylesheet" type="text/css" />

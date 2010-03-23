@@ -17,7 +17,7 @@
 		{
 			"path": "main_menu/business/com_customer/com_customer_timer/login",
 			"text": "Login",
-			"href": ["com_customertimer","status"],
+			"href": ["com_customertimer","login"],
 			"depend": {
 				"ability": "com_customertimer/login"
 			}

@@ -1,6 +1,6 @@
 <?php
 /**
- * Logout a user and return a JSON result.
+ * Login a user and return a JSON result.
  *
  * @package Pines
  * @subpackage com_customertimer
@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_customertimer/logout') )
+if ( !gatekeeper('com_customertimer/login') ||  !gatekeeper('com_customertimer/loginpwless') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_customertimer', 'status', null, false));
 
 $pines->page->override = true;
@@ -25,7 +25,7 @@ if (isset($_REQUEST['id'])) {
 		$return = false;
 	} else {
 		$logins = com_customertimer_login_tracker::factory();
-		$return = $logins->logout($customer);
+		$return = $logins->login($customer);
 	}
 }
 

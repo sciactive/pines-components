@@ -68,17 +68,12 @@ $this->title = 'Products';
 			<th>Pricing Method</th>
 			<th>Unit Price</th>
 			<th>Margin</th>
-			<th>Floor</th>
-			<th>Ceiling</th>
 			<th>Tax Exempt</th>
-			<th>Weight (lbs)</th>
-			<th>RMA After (days)</th>
 			<th>Serialized</th>
 			<th>Discountable</th>
 			<?php if ($pines->com_sales->com_customer) { ?>
 			<th>Require Customer</th>
 			<?php } ?>
-			<th>Hide on Invoice</th>
 			<th>Non-Refundable</th>
 			<th>Additional Barcodes</th>
 		</tr>
@@ -94,17 +89,12 @@ $this->title = 'Products';
 			<td><?php echo $product->pricing_method; ?></td>
 			<td>$<?php echo $product->unit_price; ?></td>
 			<td><?php echo $product->margin; ?>%</td>
-			<td>$<?php echo $product->floor; ?></td>
-			<td>$<?php echo $product->ceiling; ?></td>
 			<td><?php echo ($product->tax_exempt ? 'Yes' : 'No'); ?></td>
-			<td><?php echo $product->weight; ?></td>
-			<td><?php echo $product->rma_after; ?></td>
 			<td><?php echo ($product->serialized ? 'Yes' : 'No'); ?></td>
 			<td><?php echo ($product->discountable ? 'Yes' : 'No'); ?></td>
 			<?php if ($pines->com_sales->com_customer) { ?>
 			<td><?php echo ($product->require_customer ? 'Yes' : 'No'); ?></td>
 			<?php } ?>
-			<td><?php echo ($product->hide_on_invoice ? 'Yes' : 'No'); ?></td>
 			<td><?php echo ($product->non_refundable ? 'Yes' : 'No'); ?></td>
 			<td><?php echo implode(', ', $product->additional_barcodes); ?></td>
 		</tr>

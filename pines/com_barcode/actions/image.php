@@ -5,6 +5,7 @@
  * You can use this action to create an image of a barcode. Parameters are
  * passed as POST, GET, or COOKIE data, and the image is generated and printed
  * to the browser. Therefore, you can use this action as the SRC of an IMG tag.
+ * Or you can have the image created as a temporary file.
  * The following parameters can be given:
  *
  * - code - The text of the barcode. (Required)
@@ -16,6 +17,7 @@
  * - font - The font to use for any barcode text. (1-5)
  * - bgcolor - The background color.
  * - color - The color of the barcode and text.
+ * - tmpfile - Create a tmp file and echo its location instead. ("ON") (in development, dont use)
  *
  * If a parameter is not given, the default will be used.
  *
@@ -66,6 +68,8 @@ if (is_null($_REQUEST['code'])) {
 require_once('components/com_barcode/includes/barcode.php');
 $style = 0;
 
+//if ($_REQUEST['tmpfile'] == 'ON')
+//	$filename = tempnam('dummy', 'pin');
 $code = strtoupper($_REQUEST['code']);
 $type = strtoupper($_REQUEST['type']);
 $style = (int) $_REQUEST['style'];
@@ -140,6 +144,8 @@ if ($obj) {
 		pines_log("Barcode generation error: {$obj->mError}", 'error');
 		echo $obj->mError;
 	} else {
+		if (isset($filename))
+			$obj->filename = $filename;
 		$obj->FlushObject();
 		$obj->DestroyObject();
 	}

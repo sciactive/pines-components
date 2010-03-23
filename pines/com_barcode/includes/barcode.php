@@ -1,26 +1,26 @@
 <?php
 /*
-Barcode Render Class for PHP using the GD graphics library 
+Barcode Render Class for PHP using the GD graphics library
 Copyright (C) 2001  Karim Mribti
-								
-   Version  0.0.7a  2001-04-01  
-								
+
+   Version  0.0.7a  2001-04-01
+
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
 License as published by the Free Software Foundation; either
 version 2.1 of the License, or (at your option) any later version.
-																  
+
 This library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 Lesser General Public License for more details.
-											   
+
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-																		 
+
 Copy of GNU Lesser General Public License at: http://www.gnu.org/copyleft/lesser.txt
-													 
+
 Source code home page: http://www.mribti.com/barcode/
 Contact author at: barcode@mribti.com
 */
@@ -222,7 +222,7 @@ class BarcodeObject {
 
 	/*
 	 * Color the barcode using our configurable colors.
-	 * 
+	 *
 	 * @author Zak Huber <zakhuber@gmail.com>
 	 * @param string $background_color The background color.
 	 * @param string $barcode_color The barcode and text color.
@@ -331,14 +331,29 @@ class BarcodeObject {
 		if (($this->mStyle & BCS_BORDER))
 			$this->DrawBorder();
 		if ($this->mStyle & BCS_IMAGE_PNG) {
-			Header('Content-Type: image/png');
-			ImagePng($this->mImg);
+			if (isset($this->filename)) {
+				ImagePng($this->mImg, $this->filename);
+				echo $this->filename;
+			} else {
+				Header('Content-Type: image/png');
+				ImagePng($this->mImg);
+			}
 		} else if ($this->mStyle & BCS_IMAGE_JPEG) {
-			Header('Content-Type: image/jpeg');
-			ImageJpeg($this->mImg);
+			if (isset($this->filename)) {
+				ImageJpeg($this->mImg, $this->filename);
+				echo $this->filename;
+			} else {
+				Header('Content-Type: image/jpeg');
+				ImageJpeg($this->mImg);
+			}
 		} else if ($this->mStyle & BCS_IMAGE_GIF) {
-			Header('Content-Type: image/gif');
-			ImageGif($this->mImg);
+			if (isset($this->filename)) {
+				ImageGif($this->mImg, $this->filename);
+				echo $this->filename;
+			} else {
+				Header('Content-Type: image/gif');
+				ImageGif($this->mImg);
+			}
 		} //else __DEBUG__('FlushObject: No output type');
 	}
 

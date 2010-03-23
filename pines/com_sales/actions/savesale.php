@@ -35,6 +35,8 @@ if ($pines->com_sales->com_customer && $sale->status != 'invoiced' && $sale->sta
 }
 // Used for product error checking.
 $product_error = false;
+// Used to check products which allow only one per ticket.
+$one_per_ticket_guids = array();
 if ($sale->status != 'invoiced' && $sale->status != 'paid') {
 	$sale->products = json_decode($_REQUEST['products']);
 	if (!is_array($sale->products))
@@ -45,7 +47,7 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid') {
 	} else {
 		foreach ($sale->products as $key => &$cur_product) {
 			$cur_product_entity = com_sales_product::factory(intval($cur_product->key));
-			$cur_sku = $cur_product->values[0];
+			$cur_sku = $cur_product_entity->sku;
 			$cur_serial = $cur_product->values[2];
 			$cur_delivery = $cur_product->values[3];
 			if (!in_array($cur_delivery, array('in-store', 'shipped')))
@@ -76,6 +78,16 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid') {
 			if (!$cur_product_entity->discountable && !empty($cur_discount)) {
 				display_notice("Product with SKU [$cur_sku] is not discountable.");
 				$product_error = true;
+			}
+			if ($cur_product_entity->one_per_ticket) {
+				// This causes products with >1 qtys to not be added to $one_per_ticket_guids,
+				// but that's ok, since they're already an erroneous entry.
+				if ($cur_qty > 1 || in_array($cur_product_entity->guid, $one_per_ticket_guids)) {
+					display_notice("Only one of product with SKU [$cur_sku] is allowed on a ticket.");
+					$product_error = true;
+				} else {
+					$one_per_ticket_guids[] = $cur_product_entity->guid;
+				}
 			}
 			$cur_product = array(
 				'entity' => $cur_product_entity,

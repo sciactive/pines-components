@@ -577,6 +577,11 @@ $this->note = 'Provide product details in this form.';
 			</div>
 			<?php } ?>
 			<div class="element">
+				<label><span class="label">One Per Ticket</span>
+					<span class="note">Only allow one of this item on a sales ticket.</span>
+					<input class="field ui-widget-content" type="checkbox" name="one_per_ticket" size="24" value="ON"<?php echo $this->entity->one_per_ticket ? ' checked="checked"' : ''; ?> /></label>
+			</div>
+			<div class="element">
 				<label><span class="label">Hide on Invoice</span>
 					<input class="field ui-widget-content" type="checkbox" name="hide_on_invoice" size="24" value="ON"<?php echo $this->entity->hide_on_invoice ? ' checked="checked"' : ''; ?> /></label>
 			</div>

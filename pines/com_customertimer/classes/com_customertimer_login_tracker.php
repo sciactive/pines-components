@@ -90,7 +90,7 @@ class com_customertimer_login_tracker extends entity {
 		// Add the customer to the login tracker.
 		$this->customers[] = $customer;
 		if (!$this->save()) {
-			display_notice("Time tracker could not be updated.");
+			display_notice('Time tracker could not be updated.');
 			return false;
 		}
 		display_notice("Welcome {$customer->name}. You have been logged in.");
@@ -118,7 +118,7 @@ class com_customertimer_login_tracker extends entity {
 		if (!$found)
 			return false;
 		if (!$this->save()) {
-			display_notice("Time tracker could not be updated.");
+			display_notice('Time tracker could not be updated.');
 			return false;
 		}
 		$session_info = $pines->com_customertimer->get_session_info($customer);

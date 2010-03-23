@@ -204,6 +204,18 @@ $this->note = 'Use this form to edit a sale.';
 														return;
 												}
 											}
+											if (data.one_per_ticket) {
+												var cur_products = products_table.pgrid_get_all_rows().pgrid_export_rows();
+												var pass = true;
+												$.each(cur_products, function(){
+													if (parseInt(this.key) == data.guid) {
+														alert("Only one of this product is allowed per ticket.");
+														pass = false;
+													}
+												});
+												if (!pass)
+													return;
+											}
 											products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'in-store', 1, data.unit_price, "", "", ""]}], function(){
 												var cur_row = $(this);
 												cur_row.data("product", data);
@@ -258,6 +270,10 @@ $this->note = 'Use this form to edit a sale.';
 							var product = rows.data("product");
 							if (product.serialized)
 								return;
+							if (product.one_per_ticket) {
+								alert("Only one of this product is allowed per ticket.");
+								return;
+							}
 							var qty = rows.pgrid_get_value(5);
 							do {
 								qty = prompt("Please enter a quantity:", qty);
@@ -716,6 +732,12 @@ $this->note = 'Use this form to edit a sale.';
 		}
 		<?php } ?>
 
+		<?php if ($pines->config->com_sales->cash_drawer &&
+					(
+						$pines->config->com_sales->cash_drawer_group == 0 ||
+						(isset($_SESSION['user']) && $_SESSION['user']->ingroup($pines->config->com_sales->cash_drawer_group))
+					)
+				) { ?>
 		function run_drawer() {
 			var keep_checking = function(status){
 				switch (status) {
@@ -761,6 +783,11 @@ $this->note = 'Use this form to edit a sale.';
 			if (!kicked)
 				$("#sale_details").submit();
 		}
+		<?php } else { ?>
+		function run_drawer() {
+			run_submit();
+		}
+		<?php } ?>
 
 		function run_submit() {
 			$("#sale_details").submit();

@@ -75,6 +75,7 @@ $product->rma_after = floatval($_REQUEST['rma_after']);
 $product->serialized = ($_REQUEST['serialized'] == 'ON');
 $product->discountable = ($_REQUEST['discountable'] == 'ON');
 $product->require_customer = ($_REQUEST['require_customer'] == 'ON');
+$product->one_per_ticket = ($_REQUEST['one_per_ticket'] == 'ON');
 $product->hide_on_invoice = ($_REQUEST['hide_on_invoice'] == 'ON');
 $product->non_refundable = ($_REQUEST['non_refundable'] == 'ON');
 $product->additional_barcodes = explode(',', $_REQUEST['additional_barcodes']);

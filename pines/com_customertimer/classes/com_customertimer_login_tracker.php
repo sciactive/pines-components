@@ -83,10 +83,16 @@ class com_customertimer_login_tracker extends entity {
 			$customer->com_customertimer = (object) array();
 		// Save the time the customer logged in.
 		$customer->com_customertimer->last_login = time();
-		$customer->save();
+		if (!$customer->save()) {
+			display_notice("Customer {$customer->name} cannot be saved.");
+			return false;
+		}
 		// Add the customer to the login tracker.
 		$this->customers[] = $customer;
-		$this->save();
+		if (!$this->save()) {
+			display_notice("Time tracker could not be updated.");
+			return false;
+		}
 		display_notice("Welcome {$customer->name}. You have been logged in.");
 		return true;
 	}
@@ -111,11 +117,17 @@ class com_customertimer_login_tracker extends entity {
 		}
 		if (!$found)
 			return false;
-		$this->save();
+		if (!$this->save()) {
+			display_notice("Time tracker could not be updated.");
+			return false;
+		}
 		$session_info = $pines->com_customertimer->get_session_info($customer);
 		// Take points off the customer's account.
 		$customer->adjust_points(-1 * $session_info['points']);
-		$customer->save();
+		if (!$customer->save()) {
+			display_notice("Customer {$customer->name} cannot be saved. Their points could not be deducted.");
+			return false;
+		}
 		// Save a transaction.
 		$tx = com_customertimer_tx::factory('com_customertimer', 'transaction', 'account_tx');
 		$tx->customer = $customer;

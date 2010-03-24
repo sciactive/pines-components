@@ -52,7 +52,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	<?php echo $pines->page->render_modules('head', 'module_head'); ?>
 </head>
 
-<body>
+<body class="ui-widget-content">
 	<div class="col1">
 		<?php if ( count($pines->page->get_error()) ) { ?>
 		<div class="notice ui-state-error ui-corner-all ui-helper-clearfix">

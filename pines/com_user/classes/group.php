@@ -54,20 +54,39 @@ class group extends able_entity {
 		$pines->hook->hook_object($entity, $class.'->', false);
 		return $entity;
 	}
+	
+	/**
+	 * Check whether the group is a descendent of a group.
+	 *
+	 * @param mixed $group The group, or the group's GUID.
+	 * @return bool True or false.
+	 */
+	public function is_descendent($group = null) {
+		if (is_numeric($group))
+			$group = group::factory((int) $group);
+		if (is_null($group->guid))
+			return false;
+		// Check to see if the group is a descendent of the given group.
+		if (!isset($this->parent))
+			return false;
+		if ($this->parent->is($group))
+			return true;
+		if ($this->parent->is_descendent($group))
+			return true;
+		return false;
+	}
 
 	/**
 	 * Delete the group.
 	 * @return bool True on success, false on failure.
+	 * @todo Fix this to delete only its children, who will delete their children.
 	 */
 	public function delete() {
 		global $pines;
-		$descendents = $pines->user_manager->get_group_descendents($this->guid);
+		$descendents = $pines->user_manager->get_group_descendents($this);
 		foreach ($descendents as $cur_group) {
-			$cur_entity = group::factory($cur_group);
-			if (isset($cur_entity->guid)) {
-				if ( !$cur_entity->delete() )
-					return false;
-			}
+			if ( !$cur_group->delete() )
+				return false;
 		}
 		if (!parent::delete())
 			return false;

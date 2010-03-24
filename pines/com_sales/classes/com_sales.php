@@ -218,7 +218,7 @@ class com_sales extends component {
 		if (!is_array($category_array))
 			return null;
 		foreach ($category_array as $cur_category) {
-			if ($cur_category->parent == $guid) {
+			if ($cur_category->parent == $guid || $cur_category->parent->guid == $guid) {
 				$struct[] = (object) array(
 					'attributes' => (object) array(
 						'id' => $cur_category->guid

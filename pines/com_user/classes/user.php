@@ -159,6 +159,27 @@ class user extends able_entity {
 	}
 
 	/**
+	 * Check whether the user is a descendent of a group.
+	 *
+	 * @param mixed $group The group, or the group's GUID.
+	 * @return bool True or false.
+	 */
+	public function is_descendent($group = null) {
+		if (is_numeric($group))
+			$group = group::factory((int) $group);
+		if (is_null($group->guid))
+			return false;
+		// Check to see if the user is in a descendent group of the given group.
+		if (isset($this->group) && $this->group->is_descendent($group))
+			return true;
+		foreach ($this->groups as $cur_group) {
+			if ($cur_group->is_descendent($group))
+				return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Change the user's password.
 	 *
 	 * This function first checks to see if the user already has a salt. If not,

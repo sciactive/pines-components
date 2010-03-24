@@ -33,16 +33,34 @@ $this->title = 'New Report';
 			changeMonth: true,
 			changeYear: true
 		});
+		// Category Tree
+		var location = $("#location");
+		$("#location_tree").tree({
+			rules : {
+				multiple : false
+			},
+			data : {
+				type : "json",
+				opts : {
+					method : "get",
+					url : "<?php echo pines_url('com_reports', 'groupjson'); ?>"
+				}
+			},
+			selected : ["<?php echo $this->location->guid; ?>"],
+			callback : {
+				onchange : function(NODE, TREE_OBJ) {
+					location.val(TREE_OBJ.selected.attr("id"));
+				},
+				check_move: function(NODE, REF_NODE, TYPE, TREE_OBJ) {
+					return false;
+				}
+			}
+		});
 	});
 	// ]]>
 </script>
 <form class="pform" method="post" id="report_details" action="<?php echo pines_url('com_reports', 'reportattendance'); ?>">
-	<div class="element" style="padding-bottom: 0px;">
-		<span class="note">Location</span>
-		<select class="field ui-widget-content form_date" style="text-align: left;" name="location" id="location">
-			<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $pines->user_manager->get_group_array(), $this->location->guid); ?>
-		</select>
-	</div>
+	<div class="element" style="padding-bottom: 0px;" id="location_tree"></div>
 	<div class="element" style="padding-bottom: 0px;">
 		<span class="note">Start</span>
 		<input class="field ui-corner-all ui-widget-content form_date" type="text" name="start" value="<?php echo ($this->date[0]) ? pines_date_format($this->date[0], null, 'Y-m-d') : pines_date_format(time(), null, 'Y-m-d'); ?>" />
@@ -52,6 +70,7 @@ $this->title = 'New Report';
 		<input class="field ui-corner-all ui-widget-content form_date" type="text" name="end" value="<?php echo ($this->date[1]) ? pines_date_format($this->date[1], null, 'Y-m-d') : pines_date_format(time(), null, 'Y-m-d'); ?>" />
 	</div>
 	<div class="element">
+		<input type="hidden" name="location" id="location" />
 		<input type="submit" value="View Report &raquo;" class="ui-corner-all ui-state-default form_input" />
 	</div>
 </form>

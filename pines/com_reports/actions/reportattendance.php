@@ -13,7 +13,11 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_reports/reportattendance') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_reports', 'reportattendance', null, false));
-	
+if ($_REQUEST['user'] === '') {
+	display_notice('Please select an employee.');
+	unset($_REQUEST['user']);
+}
+
 if ( isset($_REQUEST['start']) ) {
 	$user = $_REQUEST['user'];
 	$location = group::factory((int) $_REQUEST['location']);
@@ -23,7 +27,7 @@ if ( isset($_REQUEST['start']) ) {
 	$end = strtotime($_REQUEST['end']);
 	$pines->com_reports->report_attendance($start, $end, $location, $user);
 } else {
-	$days = date('N')-1;
-	$pines->com_reports->report_attendance(strtotime('-'.$days.' days'), time());
+	// strtotime('next monday', time() - 604800) gets today if it's Monday, or the last Monday.
+	$pines->com_reports->report_attendance(strtotime('next monday', time() - 604800), time(), $_SESSION['user']->group);
 }
 ?>

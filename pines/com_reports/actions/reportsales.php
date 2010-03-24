@@ -19,7 +19,6 @@ if ( isset($_REQUEST['start']) ) {
 	$end = strtotime($_REQUEST['end']);
 	$pines->com_reports->report_sales($start, $end);
 } else {
-	$days = date('N')-1;
-	$pines->com_reports->report_sales(strtotime('-'.$days.' days'), time());
+	$pines->com_reports->report_sales(strtotime('next monday', time() - 604800), time());
 }
 ?>

@@ -15,7 +15,6 @@ $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name 
 <style type="text/css" >
 	/* <![CDATA[ */
 	#timeclock_grid tr.total td {
-		background-color: #FFFCCC;
 		font-weight: bold;
 	}
 	/* ]]> */
@@ -26,7 +25,6 @@ $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name 
 		var state_xhr;
 		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
 		var cur_defaults = {
-			
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				<?php if (isset($this->employees)) { ?>
@@ -73,7 +71,7 @@ $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name 
 		</tr>
 	</thead>
 	<tbody>
-	<?php
+		<?php
 		$clocked_in = 0;
 		$total_count = 0;
 		$totals = array();
@@ -91,19 +89,23 @@ $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name 
 						$clocked_in = $clock['time'];
 					}
 				}
-			} ?>
-			<tr title="<?php echo $cur_employee->guid; ?>">
-				<td><?php echo $cur_employee->name; ?></td>
-				<td><?php echo round($totals[$total_count]['scheduled']/(60*60),2); ?></td>
-				<td><?php echo round($totals[$total_count]['clocked']/(60*60),2); ?> hours</td>
-				<td><?php echo round(($totals[$total_count]['clocked'] - $totals[$total_count]['scheduled'])/(60*60),2); ?> hours</td>
-			</tr>
-	<?php $all_totals['scheduled'] += 0; $all_totals['clocked'] += $totals[$total_count]['clocked']; $total_count++; } ?>
-		<tr class="total">
+			}
+			?>
+		<tr title="<?php echo $cur_employee->guid; ?>">
+			<td><?php echo $cur_employee->name; ?></td>
+			<td><?php echo round($totals[$total_count]['scheduled'] / 3600, 2); ?></td>
+			<td><?php echo round($totals[$total_count]['clocked'] / 3600, 2); ?> hours</td>
+			<td><?php echo round(($totals[$total_count]['clocked'] - $totals[$total_count]['scheduled']) / 3600, 2); ?> hours</td>
+		</tr>
+			<?php
+			$all_totals['scheduled'] += 0; $all_totals['clocked'] += $totals[$total_count]['clocked']; $total_count++;
+		}
+		?>
+		<tr class="ui-state-highlight total">
 			<td>Total</td>
-			<td><?php echo round($all_totals['scheduled']/(60*60),2); ?></td>
-			<td><?php echo round($all_totals['clocked']/(60*60),2); ?> hours</td>
-			<td><?php echo round(($all_totals['clocked'] - $all_totals['scheduled'])/(60*60),2); ?> hours</td>
+			<td><?php echo round($all_totals['scheduled'] / 3600, 2); ?></td>
+			<td><?php echo round($all_totals['clocked'] / 3600, 2); ?> hours</td>
+			<td><?php echo round(($all_totals['clocked'] - $all_totals['scheduled']) / 3600, 2); ?> hours</td>
 		</tr>
 	</tbody>
 </table>
@@ -120,7 +122,7 @@ $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name 
 		</tr>
 	</thead>
 	<tbody>
-	<?php
+		<?php
 		$clocks = array();
 		$dates = array();
 		$clock_count = 0;
@@ -147,15 +149,16 @@ $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name 
 			}
 		}
 		$counter = 1;
-		foreach ($dates as $cur_date) { ?>
-		<tr>
-			<td><?php echo $cur_date['date']; ?></td>
-			<td><?php echo $this->location->name; ?></td>
-			<td>Scheduled</td>
-			<td></td>
-			<td></td>
-			<td></td>
-		</tr>
+		foreach ($dates as $cur_date) {
+			?>
+			<tr>
+				<td><?php echo $cur_date['date']; ?></td>
+				<td><?php echo $this->location->name; ?></td>
+				<td>Scheduled</td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
 			<?php foreach ($clocks as $cur_clock) { if ($cur_clock['date'] == $counter) { ?>
 				<tr>
 					<td></td>
@@ -166,16 +169,16 @@ $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name 
 					<td></td>
 				</tr>
 			<?php } }
-			$total_hours = floor($cur_date['total']/(60*60));
-			$total_mins = round(($cur_date['total']/(60))-($total_hours*60)); ?>
-		<tr class="total">
-			<td></td>
-			<td></td>
-			<td>Total</td>
-			<td></td>
-			<td></td>
-			<td><?php echo ($total_hours > 0) ? $total_hours.'hours ' : ''; echo ($total_mins > 0) ? $total_mins.'min' : ''; ?></td>
-		</tr>
+			$total_hours = floor($cur_date['total'] / 3600);
+			$total_mins = round(($cur_date['total'] / 60) - ($total_hours * 60)); ?>
+			<tr class="ui-state-highlight total">
+				<td></td>
+				<td></td>
+				<td>Total</td>
+				<td></td>
+				<td></td>
+				<td><?php echo ($total_hours > 0) ? $total_hours.'hours ' : ''; echo ($total_mins > 0) ? $total_mins.'min' : ''; ?></td>
+			</tr>
 		<?php $counter++; } ?>
 	</tbody>
 </table>

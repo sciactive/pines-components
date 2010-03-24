@@ -45,7 +45,8 @@ class com_reports extends component {
 		$pines->com_pgrid->load();
 		$date_start = strtotime('00:00', $start);
 		$date_end = strtotime('23:59', $end);
-		
+
+		$jstree = new module('system', 'jstree', 'head');
 		$form = new module('com_reports', 'form_hrm', 'left');
 		$module = new module('com_reports', 'report_attendance', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
@@ -54,7 +55,7 @@ class com_reports extends component {
 		if (is_null($user)) {
 			$module->employees = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
 			foreach ($module->employees as $key => &$cur_employee) {
-				if (!$cur_employee->user_account || !$cur_employee->user_account->ingroup($location))
+				if (!$cur_employee->user_account || !($cur_employee->user_account->ingroup($location) || $cur_employee->user_account->is_descendent($location)))
 					unset($module->employees[$key]);
 			}
 		} else {

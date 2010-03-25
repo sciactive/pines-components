@@ -18,6 +18,7 @@ return array(
 		'description' => 'jQuery UI theme to use.',
 		'value' => 'smoothness',
 		'options' => array(
+			'Black Hole' => 'black-hole',
 			'Dark Hive' => 'dark-hive',
 			'Dot Luv' => 'dot-luv',
 			'Redmond' => 'redmond',

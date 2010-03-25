@@ -113,6 +113,9 @@ if (strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
 			<div class="menuwrap"><?php echo $pines->page->render_modules('main_menu', 'module_head'); ?></div>
 		</div>
 	</div>
+	<div class="pre_content">
+		<?php echo $pines->page->render_modules('pre_content', 'module_header'); ?>
+	</div>
 	<div class="colmask holygrail">
 		<div class="colmid">
 			<div class="colleft ui-state-default">
@@ -138,20 +141,20 @@ if (strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
 								?>
 						</div>
 						<?php } ?>
-						<div class="user1">
-							<?php echo $pines->page->render_modules('user1'); ?>
+						<div class="content_top_left">
+							<?php echo $pines->page->render_modules('content_top_left'); ?>
 						</div>
-						<div class="user2">
-							<?php echo $pines->page->render_modules('user2'); ?>
+						<div class="content_top_right">
+							<?php echo $pines->page->render_modules('content_top_right'); ?>
 						</div>
 						<div class="content">
 							<?php echo $pines->page->render_modules('content', 'module_content'); ?>
 						</div>
-						<div class="user3">
-							<?php echo $pines->page->render_modules('user3'); ?>
+						<div class="content_bottom_left">
+							<?php echo $pines->page->render_modules('content_bottom_left'); ?>
 						</div>
-						<div class="user4">
-							<?php echo $pines->page->render_modules('user4'); ?>
+						<div class="content_bottom_right">
+							<?php echo $pines->page->render_modules('content_bottom_right'); ?>
 						</div>
 					</div>
 				</div>
@@ -163,6 +166,9 @@ if (strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
 				</div>
 			</div>
 		</div>
+	</div>
+	<div class="post_content">
+		<?php echo $pines->page->render_modules('post_content', 'module_header'); ?>
 	</div>
 	<div id="footer" class="ui-widget-header">
 		<?php echo $pines->page->render_modules('footer', 'module_header'); ?>

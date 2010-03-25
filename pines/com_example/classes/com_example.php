@@ -42,7 +42,13 @@ class com_example extends component {
 	 * Creates and attaches example modules in various positions.
 	 */
 	function print_content() {
+		$module = new module('com_example', 'content_short', 'content_top_left');
+		$module = new module('com_example', 'content_short', 'content_top_right');
+		$module = new module('com_example', 'content_medium', 'pre_content');
 		$module = new module('com_example', 'content_long', 'content');
+		$module = new module('com_example', 'content_medium', 'post_content');
+		$module = new module('com_example', 'content_short', 'content_bottom_left');
+		$module = new module('com_example', 'content_short', 'content_bottom_right');
 		$module = new module('com_example', 'content_short', 'left');
 		$module = new module('com_example', 'content_short', 'right');
 		//$module = new module('com_example', 'content_medium', 'left');
@@ -52,10 +58,6 @@ class com_example extends component {
 		$module = new module('com_example', 'content_short', 'header_right');
 		$module = new module('com_example', 'content_medium', 'footer');
 		$module = new module('com_example', 'content_short', 'bottom');
-		$module = new module('com_example', 'content_short', 'user1');
-		$module = new module('com_example', 'content_short', 'user2');
-		$module = new module('com_example', 'content_short', 'user3');
-		$module = new module('com_example', 'content_short', 'user4');
 	}
 }
 

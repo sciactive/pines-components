@@ -14,6 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 <div class="module ui-widget-content ui-corner-all ui-clearfix <?php echo htmlentities($this->classes); ?>">
 	<?php if ($this->show_title && (!empty($this->title) || !empty($this->note))) { ?>
 	<div class="module_title ui-widget-header ui-corner-all">
+		<div class="module_maximize ui-state-default ui-corner-all"><span class="ui-icon ui-icon-arrow-4-diag"></span></div>
 		<?php if (!empty($this->title)) { ?>
 			<h2><?php echo $this->title; ?></h2>
 		<?php } ?>

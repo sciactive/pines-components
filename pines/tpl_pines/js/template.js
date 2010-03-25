@@ -20,30 +20,37 @@ $(function($){
 	$(".notice .close, .error .close").css("cursor", "pointer").click(function() {
 		$(this).parent().fadeOut("slow");
 	});
+
 	// Menu mouseover effects.
-	$(".mainmenu li").hover(function(){
+	$(".dropdown li").live("mouseenter", function(){
 		$(this).addClass("ui-state-hover");
-	}, function(){
+	}).live("mouseleave", function(){
 		$(this).removeClass("ui-state-hover");
+	});
+
+	// Maximize the content modules.
+	$(".module .module_maximize").live("mouseenter", function(){
+		$(this).addClass("ui-state-hover");
+	}).live("mouseleave", function(){
+		$(this).removeClass("ui-state-hover");
+	}).live("click", function(){
+		$(this).closest(".module").toggleClass("module_maximized");
 	});
 
 	// Minimize the right modules.
-	$(".module .module_right_minimize").hover(function(){
+	$(".module .module_minimize").live("mouseenter", function(){
 		$(this).addClass("ui-state-hover");
-	}, function(){
+	}).live("mouseleave", function(){
 		$(this).removeClass("ui-state-hover");
-	}).toggle(function(){
-		$(this).children("span.ui-icon").removeClass("ui-icon-triangle-1-n").addClass("ui-icon-triangle-1-s")
-		.end().parent().nextAll(".module_content").slideUp("normal");
-	}, function(){
-		$(this).children("span.ui-icon").removeClass("ui-icon-triangle-1-s").addClass("ui-icon-triangle-1-n")
-		.end().parent().nextAll(".module_content").slideDown("normal");
+	}).live("click", function(){
+		$(this).children("span.ui-icon").toggleClass("ui-icon-triangle-1-n").toggleClass("ui-icon-triangle-1-s")
+		.end().parent().nextAll(".module_content").slideToggle("normal");
 	});
 
 	// Style UI buttons on hover.
-	$(".ui-state-default:input:enabled:not(:text, textarea)").live('mouseover', function(){
+	$(".ui-state-default:input:enabled:not(:text, textarea)").live("mouseenter", function(){
 		$(this).addClass("ui-state-hover");
-	}).live('mouseout', function(){
+	}).live("mouseleave", function(){
 		$(this).removeClass("ui-state-hover");
 	});
 

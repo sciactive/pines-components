@@ -185,6 +185,19 @@ body {
 	padding: 4px;
 	margin-bottom: 10px;
 }
+.module.module_maximized {
+	position: fixed;
+	top: 0px;
+	right: 0px;
+	left: 0px;
+	bottom: 0px;
+	margin: 0px;
+	z-index: 1000;
+	overflow: auto;
+}
+.module .module_minimize, .module .module_maximize {
+	float: right;
+}
 .module .module_title {
 	margin-bottom: 8px;
 	padding: 2px;
@@ -206,9 +219,6 @@ body {
 }
 .module .module_content .ui-state-default a {
 	text-decoration: none !important;
-}
-.module .module_right_minimize {
-	float: right;
 }
 body .ui-widget {
 	font-size: 1em !important;
@@ -237,17 +247,17 @@ body .ui-widget {
 	clear: both;
 	min-height: 0px;
 }
-.user1, .user3 {
+.content_top_left, .content_bottom_left {
 	width: 50%;
 	float: left;
 	margin-top: -3px;
 }
-.user2, .user4 {
+.content_top_right, .content_bottom_right {
 	width: 50%;
 	float: right;
 	margin-top: -3px;
 }
-.content {
+.content, .pre_content, .post_content {
 	clear: both;
 }
 /* ----------- Menus ----------- */

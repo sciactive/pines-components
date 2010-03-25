@@ -19,6 +19,7 @@ return array(
 		'value' => 'smoothness',
 		'options' => array(
 			'Dark Hive' => 'dark-hive',
+			'Dot Luv' => 'dot-luv',
 			'Redmond' => 'redmond',
 			'Smoothness' => 'smoothness',
 			'Start' => 'start',

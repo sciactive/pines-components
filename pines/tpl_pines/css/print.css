@@ -77,6 +77,6 @@ body {
 	display: none !important;
 }
 html > body .ui-pnotify {
-	position: static;
+	position: static !important;
 	margin-bottom: 10px;
 }

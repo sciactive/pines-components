@@ -18,11 +18,11 @@ $return = array();
 
 $warning = false;
 $critical = false;
-foreach ($logins->customers as $cur_customer) {
-	$session_info = $pines->com_customertimer->get_session_info($cur_customer);
-	if (($cur_customer->points - $session_info['points']) < $pines->config->com_customertimer->level_warning)
+foreach ($logins->customers as $cur_entry) {
+	$session_info = $pines->com_customertimer->get_session_info($cur_entry['customer']);
+	if (($cur_entry['customer']->points - $session_info['points']) < $pines->config->com_customertimer->level_warning)
 		$warning = true;
-	if (($cur_customer->points - $session_info['points']) < $pines->config->com_customertimer->level_critical)
+	if (($cur_entry['customer']->points - $session_info['points']) < $pines->config->com_customertimer->level_critical)
 		$critical = true;
 }
 

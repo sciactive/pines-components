@@ -34,13 +34,13 @@ return array(
 		'name' => 'level_warning',
 		'cname' => 'Warning Level',
 		'description' => 'Amount of points to consider the customer to be in the warning level.',
-		'value' => 15,
+		'value' => 10,
 	),
 	array(
 		'name' => 'level_critical',
 		'cname' => 'Critical Level',
 		'description' => 'Amount of points to consider the customer to be in the critical level.',
-		'value' => 5,
+		'value' => 3,
 	),
 );
 

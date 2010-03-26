@@ -67,7 +67,11 @@ class com_customertimer_login_tracker extends entity {
 	 * @return bool True or false.
 	 */
 	function logged_in($customer) {
-		return $customer->in_array($this->customers);
+		foreach ($this->customers as $cur_entry) {
+			if ($customer->is($cur_entry['customer']))
+				return true;
+		}
+		return false;
 	}
 
 	/**
@@ -76,7 +80,7 @@ class com_customertimer_login_tracker extends entity {
 	 * @param com_customer_customer $customer The customer.
 	 * @return bool True on success, false on failure.
 	 */
-	function login(&$customer) {
+	function login(&$customer, $station = null) {
 		if (is_null($customer->guid))
 			return false;
 		if (!isset($customer->com_customertimer))
@@ -88,7 +92,7 @@ class com_customertimer_login_tracker extends entity {
 			return false;
 		}
 		// Add the customer to the login tracker.
-		$this->customers[] = $customer;
+		$this->customers[] = array('customer' => $customer, 'station' => $station);
 		if (!$this->save()) {
 			display_notice('Time tracker could not be updated.');
 			return false;
@@ -109,8 +113,8 @@ class com_customertimer_login_tracker extends entity {
 		global $pines;
 		// Remove the customer from the login tracker.
 		$found = false;
-		foreach ($this->customers as $key => &$cur_customer) {
-			if ($customer->is($cur_customer)) {
+		foreach ($this->customers as $key => &$cur_entry) {
+			if ($customer->is($cur_entry['customer'])) {
 				unset($this->customers[$key]);
 				$found = true;
 			}

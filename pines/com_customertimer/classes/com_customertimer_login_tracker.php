@@ -83,6 +83,8 @@ class com_customertimer_login_tracker extends entity {
 	function login(&$customer, $station = null) {
 		if (is_null($customer->guid))
 			return false;
+		if ($this->logged_in($customer))
+			return false;
 		if (!isset($customer->com_customertimer))
 			$customer->com_customertimer = (object) array();
 		// Save the time the customer logged in.

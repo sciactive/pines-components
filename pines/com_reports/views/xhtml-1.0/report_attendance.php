@@ -72,21 +72,17 @@ $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name 
 	</thead>
 	<tbody>
 		<?php
-		$clocked_in = 0;
-		$total_count = 0;
 		$totals = array();
-		$all_totals['scheduled'] = 0;
-		$all_totals['clocked'] = 0;
+		$total_group['scheduled'] = $total_group['clocked'] = $time_punch = $total_count = 0;
 		foreach($this->employees as $cur_employee) {
-			$totals[$total_count]['scheduled'] = 0;
-			$totals[$total_count]['clocked'] = 0;
+			$totals[$total_count]['scheduled'] = $totals[$total_count]['clocked'] = 0;
 			foreach($cur_employee->timeclock as $clock) {
 				if ($clock['time'] >= $this->date[0] && $clock['time'] <= $this->date[1]) {
-					if ($clock['status'] == 'out' && ($clocked_in > 0)) {
-						$totals[$total_count]['clocked'] += ($clock['time'] - $clocked_in);
-						$clocked_in = 0;
+					if ($clock['status'] == 'out' && ($time_punch > 0)) {
+						$totals[$total_count]['clocked'] += ($clock['time'] - $time_punch);
+						$time_punch = 0;
 					} else if ($clock['status'] == 'in') {
-						$clocked_in = $clock['time'];
+						$time_punch = $clock['time'];
 					}
 				}
 			}
@@ -98,14 +94,14 @@ $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name 
 			<td><?php echo round(($totals[$total_count]['clocked'] - $totals[$total_count]['scheduled']) / 3600, 2); ?> hours</td>
 		</tr>
 			<?php
-			$all_totals['scheduled'] += 0; $all_totals['clocked'] += $totals[$total_count]['clocked']; $total_count++;
+			$total_group['scheduled'] += 0; $total_group['clocked'] += $totals[$total_count]['clocked']; $total_count++;
 		}
 		?>
 		<tr class="ui-state-highlight total">
 			<td>Total</td>
-			<td><?php echo round($all_totals['scheduled'] / 3600, 2); ?></td>
-			<td><?php echo round($all_totals['clocked'] / 3600, 2); ?> hours</td>
-			<td><?php echo round(($all_totals['clocked'] - $all_totals['scheduled']) / 3600, 2); ?> hours</td>
+			<td><?php echo round($total_group['scheduled'] / 3600, 2); ?></td>
+			<td><?php echo round($total_group['clocked'] / 3600, 2); ?> hours</td>
+			<td><?php echo round(($total_group['clocked'] - $total_group['scheduled']) / 3600, 2); ?> hours</td>
 		</tr>
 	</tbody>
 </table>
@@ -119,17 +115,17 @@ $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name 
 			<th>In</th>
 			<th>Out</th>
 			<th>Total</th>
+			<th>Variance</th>
 		</tr>
 	</thead>
 	<tbody>
 		<?php
-		$clocks = array();
-		$dates = array();
-		$clock_count = 0;
-		$date_count = 0;
+		$clocks = $dates = array();
+		$clock_count = $date_count = 0;
 		foreach($this->employee->timeclock as $key => $entry) {
 			if ($entry['time'] >= $this->date[0] && $entry['time'] <= $this->date[1]) {
 				if ($dates[$date_count]['date'] == pines_date_format($entry['time'], null, 'Y-m-d')) {
+					// The employee clocked out the same day that they clocked in.
 					if ($entry['status'] == 'out') {
 						$clocks[$clock_count]['out'] = $entry['time'];
 						$dates[$date_count]['total'] += $this->employee->time_sum($clocks[$clock_count]['in'], $entry['time']);
@@ -139,16 +135,24 @@ $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name 
 						$clocks[$clock_count]['in'] = $entry['time'];
 					}
 				} else {
-					$clock_count++;
-					$date_count++;
-					$dates[$date_count]['date'] = pines_date_format($entry['time'], null, 'Y-m-d');
-					$dates[$date_count]['total'] = 0;
-					$clocks[$clock_count]['date'] = $date_count;
-					$clocks[$clock_count]['in'] = $entry['time'];
+					// The employee clocked out at a later date after clocking in.
+					if ($entry['status'] == 'out') {
+						$clocks[$clock_count]['over'] = pines_date_format($entry['time'], null, 'n/j');
+						$clocks[$clock_count]['out'] = $entry['time'];
+						$dates[$date_count]['total'] += $this->employee->time_sum($clocks[$clock_count]['in'], $entry['time']);
+					} else {
+						$clock_count++;
+						$date_count++;
+						$dates[$date_count]['date'] = pines_date_format($entry['time'], null, 'Y-m-d');
+						$dates[$date_count]['scheduled'] = 0;
+						$dates[$date_count]['total'] = 0;
+						$clocks[$clock_count]['date'] = $date_count;
+						$clocks[$clock_count]['in'] = $entry['time'];
+					}
 				}
 			}
 		}
-		$counter = 1;
+		$clock_count = 1;
 		foreach ($dates as $cur_date) {
 			?>
 			<tr>
@@ -157,15 +161,22 @@ $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name 
 				<td>Scheduled</td>
 				<td></td>
 				<td></td>
+				<td><?php echo $cur_date['scheduled']; ?></td>
 				<td></td>
 			</tr>
-			<?php foreach ($clocks as $cur_clock) { if ($cur_clock['date'] == $counter) { ?>
+			<?php foreach ($clocks as $cur_clock) { if ($cur_clock['date'] == $clock_count) { ?>
 				<tr>
 					<td></td>
 					<td></td>
 					<td>Clocked</td>
 					<td><?php echo pines_date_format($cur_clock['in'], null, 'g:i a'); ?></td>
-					<td><?php echo pines_date_format($cur_clock['out'], null, 'g:i a'); ?></td>
+					<td>
+					<?php
+						echo pines_date_format($cur_clock['out'], null, 'g:i a');
+						echo (isset($cur_clock['over']) ? ' ('.$cur_clock['over'].')' : '');
+					?>
+					</td>
+					<td></td>
 					<td></td>
 				</tr>
 			<?php } }
@@ -178,8 +189,9 @@ $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name 
 				<td></td>
 				<td></td>
 				<td><?php echo ($total_hours > 0) ? $total_hours.'hours ' : ''; echo ($total_mins > 0) ? $total_mins.'min' : ''; ?></td>
+				<td><?php echo round(($cur_date['total'] - $cur_date['scheduled']) / 3600, 2); ?> hours</td>
 			</tr>
-		<?php $counter++; } ?>
+		<?php $clock_count++; } ?>
 	</tbody>
 </table>
 <?php } ?>

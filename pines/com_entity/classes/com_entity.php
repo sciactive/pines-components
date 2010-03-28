@@ -154,7 +154,7 @@ class com_entity extends component {
 		echo "# sciactive.com\n";
 		echo "#\n";
 		echo "# Generation Time: ".date('r')."\n";
-		echo "# Pines Version: {$pines->config->program_version}\n\n";
+		echo "# Pines Version: {$pines->info->version}\n\n";
 
 		echo "#\n";
 		echo "# UIDs\n";

@@ -10,6 +10,6 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = "About {$pines->config->option_title} (Powered by {$pines->config->program_title})";
+$this->title = "About {$pines->config->option_title} (Powered by {$pines->info->name})";
 ?>
 <p><?php echo $pines->config->com_about->description; ?></p>

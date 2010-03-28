@@ -10,11 +10,11 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = "About {$pines->config->program_title}";
+$this->title = "About {$pines->info->name}";
 ?>
-<p><strong>Version <?php echo $pines->config->program_version; ?></strong></p>
+<p><strong>Version <?php echo $pines->info->version; ?> <?php echo $pines->info->identifier; ?></strong></p>
 <p>
-<?php echo $pines->config->program_title; ?> is a <a href="http://sciactive.com/">
+<?php echo $pines->info->name; ?> is a <a href="http://sciactive.com/">
 SciActive</a> project written by Hunter Perrin. It is a PHP application
 framework, designed to be an extensible MVC based framework. It allows easy
 development, easy implementation, easy maintenance, and extreme flexibility. The
@@ -27,7 +27,7 @@ log in and only give them permissions they have been allowed.
 The admin can add functions using the premade components, or write his own
 components to provide additional functionality to the system. The system will
 have a dependency verifier, which will inform the admin if he is missing
-required components and where to get them. <?php echo $pines->config->program_title; ?> 
+required components and where to get them. <?php echo $pines->info->name; ?>
 was designed to allow maximum flexibility for the developer, while still
 providing a large enough base product to make development easy. The admin can
 choose whatever database environment he uses, even flat files, and thanks to the

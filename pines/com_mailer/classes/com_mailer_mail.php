@@ -97,7 +97,7 @@ class com_mailer_mail extends p_base {
 		//$this->headers['X-Mailer'] = 'PHP5';
 		$this->headers['X-Sender'] = $this->sender;
 		$this->headers['X-Priority'] = '3';
-		$this->headers['User-Agent'] = "{$pines->config->program_title} {$pines->config->program_version}";
+		$this->headers['User-Agent'] = "{$pines->info->name} {$pines->info->version}";
 		// Define some default MIME types
 		$this->mimeTypes['doc'] = 'application/msword';
 		$this->mimeTypes['pdf'] = 'application/pdf';

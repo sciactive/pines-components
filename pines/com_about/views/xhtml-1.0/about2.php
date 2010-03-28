@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = "About {$pines->info->name}";
 ?>
-<p><strong>Version <?php echo $pines->info->version; ?> <?php echo $pines->info->identifier; ?></strong></p>
+<p><strong>Version <?php echo $pines->info->version; ?></strong></p>
 <p>
 <?php echo $pines->info->name; ?> is a <a href="http://sciactive.com/">
 SciActive</a> project written by Hunter Perrin. It is a PHP application

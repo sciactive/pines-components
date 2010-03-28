@@ -1,9 +1,9 @@
 <?php
 /**
- * com_about's information.
+ * com_logger's information.
  *
  * @package Pines
- * @subpackage com_about
+ * @subpackage com_logger
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -12,12 +12,13 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 return array(
-	'name' => 'About',
+	'name' => 'Logger',
 	'author' => 'SciActive',
 	'version' => '1.0.0',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
-	'short_description' => 'Configurable about dialog',
-	'description' => 'Displays configurable information about Pines and your installation.',
+	'services' => array('log_manager'),
+	'short_description' => 'System log manager',
+	'description' => 'Provides a method for components to log their activity.',
 );
 
 ?>

@@ -4,7 +4,7 @@
  *
  * @package Pines
  * @subpackage com_financial
- * @license http://www.gnu.org/licenses/agpl-3.0.html
+ * @license http://www.gnu.org/licenses/gpl.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
  * @link http://sciactive.com/

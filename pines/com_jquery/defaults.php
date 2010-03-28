@@ -1,6 +1,6 @@
 <?php
 /**
- * tpl_pines' configuration.
+ * com_jquery' configuration.
  *
  * @package Pines
  * @subpackage com_jquery

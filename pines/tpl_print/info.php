@@ -1,9 +1,9 @@
 <?php
 /**
- * com_about's information.
+ * tpl_print's information.
  *
  * @package Pines
- * @subpackage com_about
+ * @subpackage tpl_print
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -12,12 +12,13 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 return array(
-	'name' => 'About',
+	'name' => 'Print Template',
 	'author' => 'SciActive',
 	'version' => '1.0.0',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
-	'short_description' => 'Configurable about dialog',
-	'description' => 'Displays configurable information about Pines and your installation.',
+	'services' => array('template'),
+	'short_description' => 'Simple template suitable for printing',
+	'description' => 'This template only shows the content modules. It\'s suitable for letting the user print the page without any excess information.',
 );
 
 ?>

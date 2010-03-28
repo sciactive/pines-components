@@ -1,9 +1,9 @@
 <?php
 /**
- * com_about's information.
+ * com_user's information.
  *
  * @package Pines
- * @subpackage com_about
+ * @subpackage com_user
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -12,12 +12,13 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 return array(
-	'name' => 'About',
+	'name' => 'User Manager',
 	'author' => 'SciActive',
 	'version' => '1.0.0',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
-	'short_description' => 'Configurable about dialog',
-	'description' => 'Displays configurable information about Pines and your installation.',
+	'services' => array('user_manager', 'ability_manager'),
+	'short_description' => 'Entity based user manager',
+	'description' => 'Manages system users, groups, and abilities. Uses an entity manager as a storage backend.',
 );
 
 ?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * com_about's information.
+ * com_configure's information.
  *
  * @package Pines
  * @subpackage com_configure
@@ -16,7 +16,8 @@ return array(
 	'author' => 'SciActive',
 	'version' => '1.0.0',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
-	'short_description' => 'Manages System Configuration',
+	'services' => array('configurator'),
+	'short_description' => 'Manages system configuration',
 	'description' => 'Allows you to edit your system\'s configuration and the configuration of any installed components.',
 );
 

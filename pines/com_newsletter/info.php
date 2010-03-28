@@ -1,9 +1,9 @@
 <?php
 /**
- * com_about's information.
+ * com_newsletter's information.
  *
  * @package Pines
- * @subpackage com_about
+ * @subpackage com_newsletter
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -12,12 +12,12 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 return array(
-	'name' => 'About',
+	'name' => 'Newsletter Manager',
 	'author' => 'SciActive',
 	'version' => '1.0.0',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
-	'short_description' => 'Configurable about dialog',
-	'description' => 'Displays configurable information about Pines and your installation.',
+	'short_description' => 'Manage newsletters to your users',
+	'description' => 'Create and send newsletters to your users.',
 );
 
 ?>

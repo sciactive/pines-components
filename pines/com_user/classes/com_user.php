@@ -147,7 +147,7 @@ class com_user extends component {
 	 */
 	function fill_session() {
 		$tmp_user = user::factory($_SESSION['user_id']);
-		if (is_object($_SESSION['user']) && $_SESSION['user']->equals($tmp_user)) {
+		if (is_object($_SESSION['user']) && $_SESSION['user']->p_mdate == $tmp_user->p_mdate) {
 			date_default_timezone_set($tmp_user->get_timezone());
 			return;
 		}

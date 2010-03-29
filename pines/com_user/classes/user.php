@@ -208,10 +208,8 @@ class user extends able_entity {
 		global $pines;
 		if (!empty($this->timezone))
 			return $return_date_time_zone_object ? new DateTimeZone($this->timezone) : $this->timezone;
-		if (isset($this->group)) {
-			if (!empty($this->group->timezone))
-				return $return_date_time_zone_object ? new DateTimeZone($this->group->timezone) : $this->group->timezone;
-		}
+		if (isset($this->group) && !empty($this->group->timezone))
+			return $return_date_time_zone_object ? new DateTimeZone($this->group->timezone) : $this->group->timezone;
 		foreach($this->groups as $cur_group) {
 			if (!empty($cur_group->timezone))
 				return $return_date_time_zone_object ? new DateTimeZone($cur_group->timezone) : $cur_group->timezone;

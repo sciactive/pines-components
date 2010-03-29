@@ -20,6 +20,7 @@ if ($pines->configurator->disable_component($_REQUEST['component'])) {
 		action($pines->config->default_component, 'default');
 	} else {
 		$cur_loc = pines_url('com_configure', 'list', array('message' => urlencode('Component '.$_REQUEST['component'].' successfully disabled.')));
+		header('HTTP/1.1 303 See Other', true, 303);
 		header('Location: '.$cur_loc);
 		$pines->page->override = true;
 	}

@@ -58,24 +58,25 @@ class com_configure_component extends p_base {
 	 * @var string
 	 */
 	protected $config_file;
+	/**
+	 * The info file.
+	 * @var string
+	 */
+	protected $info_file;
 
 	/**
-	 * Load a component's configuration.
+	 * Load a component's configuration and info.
 	 * @param string $component The name of the component to load.
 	 */
 	public function __construct($component) {
 		global $pines;
-		if (!key_exists($component, $pines->com_configure->config_files))
+		if (!key_exists($component, $pines->com_configure->component_files))
 			return;
 		$this->component = $component;
 		$this->name = $component;
-		if ($component == 'system') {
-			$this->info = $pines->info;
-		} else {
-			$this->info = $pines->info->$component;
-		}
-		$this->defaults_file = $pines->com_configure->config_files[$component]['defaults'];
-		$this->config_file = $pines->com_configure->config_files[$component]['config'];
+		$this->defaults_file = $pines->com_configure->component_files[$component]['defaults'];
+		$this->config_file = $pines->com_configure->component_files[$component]['config'];
+		$this->info_file = $pines->com_configure->component_files[$component]['info'];
 		if (file_exists($this->defaults_file))
 			$this->defaults = include($this->defaults_file);
 		if (file_exists($this->config_file)) {
@@ -84,6 +85,8 @@ class com_configure_component extends p_base {
 				$this->config_keys[$cur_val['name']] = $cur_val['value'];
 			}
 		}
+		if (file_exists($this->info_file))
+			$this->info = (object) include($this->info_file);
 	}
 
 	/**
@@ -93,9 +96,9 @@ class com_configure_component extends p_base {
 		global $pines;
 		$class = get_class();
 		$args = func_get_args();
-		$entity = new $class($args[0]);
-		$pines->hook->hook_object($entity, $class.'->', false);
-		return $entity;
+		$object = new $class($args[0]);
+		$pines->hook->hook_object($object, $class.'->', false);
+		return $object;
 	}
 
 	/**
@@ -109,6 +112,23 @@ class com_configure_component extends p_base {
 				$cur_val['value'] = $this->config_keys[$cur_val['name']];
 		}
 		return $array;
+	}
+
+	/**
+	 * Check if a component is configurable.
+	 * @return bool True or false.
+	 */
+	public function is_configurable() {
+		return !empty($this->defaults);
+	}
+
+	/**
+	 * Check if a component is disabled.
+	 * @return bool True or false.
+	 */
+	public function is_disabled() {
+		global $pines;
+		return ($this->component != 'system' && in_array($this->component, array_diff($pines->all_components, $pines->components)));
 	}
 
 	/**

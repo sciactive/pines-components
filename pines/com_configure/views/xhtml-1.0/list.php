@@ -34,10 +34,9 @@ $this->title = 'Configure Components';
 	}
 	.component_list .short_description {
 		font-size: 1.1em;
-		margin-bottom: .5em;
 	}
-	.component_list .license {
-		margin-bottom: .5em;
+	.component_list .license, .component_list .description, .component_list .service {
+		margin-top: .5em;
 	}
 	/* ]]> */
 </style>
@@ -51,30 +50,31 @@ $this->title = 'Configure Components';
 	// ]]>
 </script>
 <div class="component_list">
-	<?php foreach($this->components as $cur_component) {
-		$info = $cur_component == 'system' ? $pines->info: $pines->info->$cur_component;
-	?>
-	<h3 class="ui-helper-clearfix">
+	<?php foreach($this->components as $cur_component) { ?>
+	<h3 class="ui-helper-clearfix<?php echo $cur_component->is_disabled() ? ' ui-priority-secondary' : ''; ?>">
 		<a href="#">
-			<span class="title"><?php echo $info->name; ?></span>
-			<span class="version"><?php echo $cur_component; ?> <?php echo $info->version; ?></span>
+			<span class="title"><?php echo $cur_component->info->name; ?><?php echo $cur_component->is_disabled() ? ' (Disabled)' : ''; ?></span>
+			<span class="version"><?php echo $cur_component->name; ?> <?php echo $cur_component->info->version; ?></span>
 		</a>
 	</h3>
-	<div class="component_entry">
+	<div class="component_entry<?php echo $cur_component->is_disabled() ? ' ui-priority-secondary' : ''; ?>">
 		<div class="buttons">
-			<?php if (in_array($cur_component, $this->config_components)) { ?>
-			<input type="button" onclick="pines.get('<?php echo pines_url('com_configure', 'edit', array('component' => urlencode($cur_component))); ?>');" value="Configure" />
-			<input type="button" onclick="pines.get('<?php echo pines_url('com_configure', 'view', array('component' => urlencode($cur_component))); ?>');" value="View Config" />
+			<?php if ($cur_component->is_configurable()) { ?>
+			<input type="button" onclick="pines.get('<?php echo pines_url('com_configure', 'edit', array('component' => urlencode($cur_component->name))); ?>');" value="Configure" />
+			<input type="button" onclick="pines.get('<?php echo pines_url('com_configure', 'view', array('component' => urlencode($cur_component->name))); ?>');" value="View Config" />
 			<?php } ?>
-			<?php if ($cur_component != 'system') { if (in_array($cur_component, $this->disabled_components)) { ?>
-			<input type="button" onclick="pines.get('<?php echo pines_url('com_configure', 'enable', array('component' => urlencode($cur_component))); ?>');" value="Enable" />
+			<?php if ($cur_component->name != 'system') { if ($cur_component->is_disabled()) { ?>
+			<input type="button" onclick="pines.get('<?php echo pines_url('com_configure', 'enable', array('component' => urlencode($cur_component->name))); ?>');" value="Enable" />
 			<?php } else { ?>
-			<input type="button" onclick="pines.get('<?php echo pines_url('com_configure', 'disable', array('component' => urlencode($cur_component))); ?>');" value="Disable" />
+			<input type="button" onclick="pines.get('<?php echo pines_url('com_configure', 'disable', array('component' => urlencode($cur_component->name))); ?>');" value="Disable" />
 			<?php } } ?>
 		</div>
-		<div class="short_description"><?php echo $info->short_description; ?></div>
-		<div class="license">License: <?php echo $info->license; ?></div>
-		<div class="description"><?php echo $info->description; ?></div>
+		<div class="short_description"><?php echo $cur_component->info->short_description; ?></div>
+		<?php if (is_array($cur_component->info->services)) { ?>
+		<div class="service">This component provides <?php echo (count($cur_component->info->services) == 1) ? 'a service' : 'services'; ?>: <?php echo implode(', ', $cur_component->info->services); ?></div>
+		<?php } ?>
+		<div class="license">License: <?php echo (substr($cur_component->info->license, 0, 4) == 'http') ? '<a href="'.htmlentities($cur_component->info->license).'" onclick="window.open(this.href); return false;">'.htmlentities($cur_component->info->license).'</a>' : htmlentities($cur_component->info->license); ?></div>
+		<div class="description"><?php echo $cur_component->info->description; ?></div>
 	</div>
 	<?php } ?>
 </div>

@@ -26,25 +26,25 @@ class com_configure extends component {
 	 * Each key is the name of the component to which the config file in its
 	 * value belongs.
 	 *
-	 * @var array $config_files
+	 * @var array $component_files
 	 */
-	var $config_files = array();
+	var $component_files = array();
 
 	/**
-	 * Fills the $config_files array.
+	 * Fills the $component_files array.
 	 */
 	function __construct() {
 		global $pines;
-		$this->config_files['system'] = array('defaults' => 'system/defaults.php', 'config' => 'system/config.php');
+		$this->component_files['system'] = array('defaults' => 'system/defaults.php', 'config' => 'system/config.php', 'info' => 'system/info.php');
 		foreach ($pines->all_components as $cur_component) {
 			$cur_dir = (substr($cur_component, 0, 4) != 'tpl_') ? 'components' : 'templates';
 			if (in_array($cur_component, $pines->components)) {
-				$cur_config_file = array('defaults' => "$cur_dir/$cur_component/defaults.php", 'config' => "$cur_dir/$cur_component/config.php");
+				$cur_files = array('defaults' => "$cur_dir/$cur_component/defaults.php", 'config' => "$cur_dir/$cur_component/config.php", 'info' => "$cur_dir/$cur_component/info.php");
 			} else {
-				$cur_config_file = array('defaults' => "$cur_dir/.$cur_component/defaults.php", 'config' => "$cur_dir/.$cur_component/config.php");
+				$cur_files = array('defaults' => "$cur_dir/.$cur_component/defaults.php", 'config' => "$cur_dir/.$cur_component/config.php", 'info' => "$cur_dir/.$cur_component/info.php");
 			}
-			if (file_exists($cur_config_file['defaults']))
-				$this->config_files[$cur_component] = $cur_config_file;
+			if (file_exists($cur_files['defaults']) || file_exists($cur_files['info']))
+				$this->component_files[$cur_component] = $cur_files;
 		}
 	}
 
@@ -105,9 +105,11 @@ class com_configure extends component {
 		global $pines;
 		$module = new module('com_configure', 'list', 'content');
 
-		$module->components = array_merge(array('system'), $pines->all_components);
-		$module->config_components = array_keys($this->config_files);
-		$module->disabled_components = array_diff($pines->all_components, $pines->components);
+		$module->components = array();
+		$module->components[] = com_configure_component::factory('system');
+		foreach ($pines->all_components as $cur_component) {
+			$module->components[] = com_configure_component::factory($cur_component);
+		}
 	}
 
 	/**
@@ -119,9 +121,11 @@ class com_configure extends component {
 		global $pines;
 		$module = new module('com_configure', 'list', 'content');
 
-		$module->components = array_merge(array('system'), $pines->all_components);
-		$module->config_components = array_keys($this->config_files);
-		$module->disabled_components = array_diff($pines->all_components, $pines->components);
+		$module->components = array();
+		$module->components[] = com_configure_component::factory('system');
+		foreach ($pines->all_components as $cur_component) {
+			$module->components[] = com_configure_component::factory($cur_component);
+		}
 	}
 }
 

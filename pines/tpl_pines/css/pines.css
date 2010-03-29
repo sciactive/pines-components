@@ -195,8 +195,9 @@ body {
 	z-index: 1000;
 	overflow: auto;
 }
-.module .module_minimize, .module .module_maximize {
+.module .module_title .module_minimize, .module .module_title .module_maximize {
 	float: right;
+	margin-left: 2px;
 }
 .module .module_title {
 	margin-bottom: 8px;

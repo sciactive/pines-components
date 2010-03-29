@@ -2,24 +2,9 @@
 	{
 		"path": "main_menu/business/com_customer/com_customer_timer",
 		"text": "Customer Timer",
+		"href": ["com_customertimer","stations"],
 		"depend": {
-			"children": true
+			"ability": "com_customertimer/viewstatus"
 		}
-	},
-		{
-			"path": "main_menu/business/com_customer/com_customer_timer/status",
-			"text": "Status",
-			"href": ["com_customertimer","status"],
-			"depend": {
-				"ability": "com_customertimer/viewstatus"
-			}
-		},
-		{
-			"path": "main_menu/business/com_customer/com_customer_timer/login",
-			"text": "Login",
-			"href": ["com_customertimer","login"],
-			"depend": {
-				"ability": "com_customertimer/login"
-			}
-		}
+	}
 ]

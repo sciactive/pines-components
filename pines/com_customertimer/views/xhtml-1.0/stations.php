@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Customer Stations';
+$this->title = 'Customer Timer';
 ?>
 <style type="text/css">
 	/* <![CDATA[ */
@@ -65,18 +65,15 @@ $this->title = 'Customer Stations';
 		color: white;
 	}
 	.station_layout.warning {
-		background-color: goldenrod;
+		background-color: gold;
 	}
 	.station_layout.critical {
 		background-color: crimson;
 	}
 
-	.customer_actions {
-		text-align: center;
-	}
-	.customer_actions button {
-		width: 120px;
-		height: 20px;
+	/* Customer Action Dialog */
+	.customer_action div div {
+		margin-bottom: .2em;
 	}
 	/* ]]> */
 </style>
@@ -313,7 +310,6 @@ $this->title = 'Customer Stations';
 			};
 			station.insert_customer = function (customer){
 				// Insert a customer into the station.
-				station.customer = customer;
 				station.element.addClass("filled").children("span.ui-button-text").append($("<span />", {
 					"class": "points_remain"
 				})).append($("<span />", {
@@ -329,6 +325,7 @@ $this->title = 'Customer Stations';
 			};
 			station.update_customer = function (customer){
 				// Update the customer's info.
+				station.customer = customer;
 				station.element.find(".name").html(customer.name);
 				station.element.find(".points_remain").html(customer.points_remain);
 				if (customer.points_remain <= <?php echo (int) $pines->config->com_customertimer->level_critical; ?>) {
@@ -342,7 +339,9 @@ $this->title = 'Customer Stations';
 					station.element.addClass("ok").removeClass("warning").removeClass("critical");
 				}
 				if (customer.points_remain <= 0)
-					station.element.effect("pulsate");
+					station.start_pulsing();
+				else
+					station.stop_pulsing();
 			};
 			station.remove_customer = function (){
 				// Remove the customer from the station.
@@ -350,6 +349,21 @@ $this->title = 'Customer Stations';
 				station.element.children("span.ui-button-text").children(".name").remove();
 				station.element.children("span.ui-button-text").children(".points_remain").remove();
 				station.element.removeClass("filled").removeClass("ok").removeClass("warning").removeClass("critical");
+			};
+			station.start_pulsing = function (){
+				if (station.pulsing)
+					return;
+				station.pulsing = true;
+				var again = function(){
+					$(this).fadeTo("reg", .2).fadeTo("reg", 1, again);
+				};
+				station.element.fadeTo("reg", .2).fadeTo("reg", 1, again);
+			};
+			station.stop_pulsing = function (){
+				if (!station.pulsing)
+					return;
+				station.pulsing = false;
+				station.element.stop(true).fadeTo("reg", 1);
 			};
 		});
 
@@ -363,7 +377,7 @@ $this->title = 'Customer Stations';
 				dataType: "json",
 				complete: function(){
 					window.clearTimeout(timer);
-					timer = setTimeout(update_status, 20000);
+					timer = setTimeout(update_status, 10000);
 				},
 				error: function(XMLHttpRequest, textStatus){
 					pines.error("An error occured while trying to refresh the status:\n"+XMLHttpRequest.status+": "+textStatus);
@@ -406,14 +420,26 @@ $this->title = 'Customer Stations';
 </div>
 <div id="com_customertimer_dialogs" style="display: none;">
 	<div class="customer_action" title="">
-		<div class="customer_id">Customer ID: <span class="value"></span></div>
-		<div class="login_time">Login Time: <span class="value"></span></div>
-		<div class="points">Points in Account: <span class="value"></span></div>
-		<div class="ses_minutes">Minutes this Session: <span class="value"></span></div>
-		<div class="ses_points">Points Used: <span class="value"></span></div>
-		<div class="points_remain">Points Left: <span class="value"></span></div>
-		<br />
-		<div class="status">Status: <span class="value"></span></div>
+		<div style="float: left;">
+			<div class="customer_id">Customer ID:</div>
+			<div class="login_time">Login Time:</div>
+			<div class="points">Points in Account:</div>
+			<div class="ses_minutes">Minutes this Session:</div>
+			<div class="ses_points">Points Used:</div>
+			<div class="points_remain">Points Left:</div>
+			<br />
+			<div class="status">Status:</div>
+		</div>
+		<div style="float: left; margin-left: 1em;">
+			<div class="customer_id"><span class="value"></span></div>
+			<div class="login_time"><span class="value"></span></div>
+			<div class="points"><span class="value"></span></div>
+			<div class="ses_minutes"><span class="value"></span></div>
+			<div class="ses_points"><span class="value"></span></div>
+			<div class="points_remain"><span class="value"></span></div>
+			<br />
+			<div class="status"><span class="value"></span></div>
+		</div>
 	</div>
 	<div class="customer_search" title="Choose a Customer">
 		<div class="pform">

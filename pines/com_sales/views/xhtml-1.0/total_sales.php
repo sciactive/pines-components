@@ -120,7 +120,7 @@ $this->title = 'Sales Totals';
 									total_payments.append("<div class=\"element\"><span class=\"label\">"+i+"</span><div class=\"group\"><span class=\"field\">Count: </span><span class=\"field\">"+val.count+"</span><br /><span class=\"field\">Total: </span><span class=\"field\">$"+val.total+"</span>"+(val.change_given ? "<br /><span class=\"field\">Change Given: </span><span class=\"field\">$"+val.change_given+"</span><br /><span class=\"field\">Net Total: </span><span class=\"field\">$"+val.net_total+"</span>" : "")+"</div></div>");
 								});
 							});
-							com_sales_result_totals.show("normal");
+							com_sales_result_totals.show(400);
 						}
 					});
 				});

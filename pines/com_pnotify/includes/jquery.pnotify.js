@@ -254,14 +254,14 @@
 				if (opts.pnotify_title === false)
 					pnotify.title_container.hide("fast");
 				else if (opts.pnotify_title !== old_opts.pnotify_title)
-					pnotify.title_container.html(opts.pnotify_title).show("fast");
+					pnotify.title_container.html(opts.pnotify_title).show(200);
 				// Update the text.
 				if (opts.pnotify_text === false) {
 					pnotify.text_container.hide("fast");
 				} else if (opts.pnotify_text !== old_opts.pnotify_text) {
 					if (opts.pnotify_insert_brs)
 						opts.pnotify_text = opts.pnotify_text.replace("\n", "<br />");
-					pnotify.text_container.html(opts.pnotify_text).show("fast");
+					pnotify.text_container.html(opts.pnotify_text).show(200);
 				}
 				pnotify.pnotify_history = opts.pnotify_history;
 				// Change the notice type.

@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = "Editing Configuration for {$this->comp->name}";
+$this->title = "Editing Configuration for {$this->comp->info->name} {$this->comp->info->version} ({$this->comp->name})";
 ?>
 <style type="text/css">
 	/* <![CDATA[ */
@@ -41,7 +41,7 @@ $this->title = "Editing Configuration for {$this->comp->name}";
 </script>
 <form id="configuration_form" class="pform" action="<?php echo pines_url('com_configure', 'save'); ?>" method="post">
 	<div class="element heading">
-		<p>Check a setting to set it manually, or uncheck it to use the default setting.</p>
+		<p>Check a setting to set it manually, or leave it unchecked it to use the default setting.</p>
 	</div>
 	<?php foreach ($this->comp->defaults as $cur_var) {
 		if (key_exists($cur_var['name'], $this->comp->config_keys)) {

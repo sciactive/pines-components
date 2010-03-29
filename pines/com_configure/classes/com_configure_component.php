@@ -34,6 +34,11 @@ class com_configure_component extends p_base {
 	 */
 	public $config_keys = array();
 	/**
+	 * The info object of the component.
+	 * @var object
+	 */
+	public $info;
+	/**
 	 * The component.
 	 * @var string
 	 */
@@ -64,6 +69,11 @@ class com_configure_component extends p_base {
 			return;
 		$this->component = $component;
 		$this->name = $component;
+		if ($component == 'system') {
+			$this->info = $pines->info;
+		} else {
+			$this->info = $pines->info->$component;
+		}
 		$this->defaults_file = $pines->com_configure->config_files[$component]['defaults'];
 		$this->config_file = $pines->com_configure->config_files[$component]['config'];
 		if (file_exists($this->defaults_file))

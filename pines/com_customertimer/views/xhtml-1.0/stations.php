@@ -64,6 +64,10 @@ $this->title = 'Customer Timer';
 		background-color: red;
 		color: white;
 	}
+	.station_layout .station.critical.pulse {
+		background-color: pink;
+		color: black;
+	}
 	.station_layout.warning {
 		background-color: gold;
 	}
@@ -354,16 +358,17 @@ $this->title = 'Customer Timer';
 				if (station.pulsing)
 					return;
 				station.pulsing = true;
-				var again = function(){
-					$(this).fadeTo("reg", .2).fadeTo("reg", 1, again);
+				var pulse = function(){
+					station.element.toggleClass("pulse");
 				};
-				station.element.fadeTo("reg", .2).fadeTo("reg", 1, again);
+				station.pulse_timer = setInterval(pulse, 1000);
 			};
 			station.stop_pulsing = function (){
 				if (!station.pulsing)
 					return;
 				station.pulsing = false;
-				station.element.stop(true).fadeTo("reg", 1);
+				window.clearInterval(station.pulse_timer);
+				station.element.removeClass("pulse");
 			};
 		});
 
@@ -377,7 +382,7 @@ $this->title = 'Customer Timer';
 				dataType: "json",
 				complete: function(){
 					window.clearTimeout(timer);
-					timer = setTimeout(update_status, 10000);
+					timer = setTimeout(update_status, 20000);
 				},
 				error: function(XMLHttpRequest, textStatus){
 					pines.error("An error occured while trying to refresh the status:\n"+XMLHttpRequest.status+": "+textStatus);

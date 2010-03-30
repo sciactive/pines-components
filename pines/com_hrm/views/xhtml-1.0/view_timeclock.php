@@ -19,6 +19,7 @@ $this->title = "Employee Timeclock for {$this->entity->name}";
 		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
 		var cur_defaults = {
 			pgrid_toolbar: false,
+			pgrid_select: false,
 			pgrid_sort_col: 1,
 			pgrid_sort_ord: 'asc',
 			pgrid_state_change: function(state) {
@@ -43,7 +44,7 @@ $this->title = "Employee Timeclock for {$this->entity->name}";
 	</thead>
 	<tbody>
 	<?php foreach($this->entity->timeclock as $key => $entry) { ?>
-		<tr title="<?php echo $key; ?>">
+		<tr title="<?php echo $key; ?>" class="<?php echo ($entry['status'] == 'in') ? 'ui-state-active' : 'ui-state-default'; ?>">
 			<td><?php echo pines_date_format($entry['time'], $this->entity->get_timezone(true)); ?></td>
 			<td><?php echo gmdate('c', $entry['time']); ?></td>
 			<td><?php echo $entry['status']; ?></td>

@@ -16,6 +16,7 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 	// <![CDATA[
 	$(function(){
 		var cur_entry;
+		var new_entry;
 		var timezone = "<?php echo addslashes($this->entity->get_timezone()); ?>";
 		function format_time(elem, timestamp) {
 			elem.html("Formatting...");
@@ -56,7 +57,11 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 			$("#timeclock_form input[name=clock]").val(JSON.stringify(entries));
 		}
 
-		$("#timeclock_edit .time").live("click", function(){
+		$("#timeclock_edit .time").live("mouseover", function(){
+			$(this).closest("div").addClass("ui-state-hover");
+		}).live("mouseout", function(){
+			$(this).closest("div").removeClass("ui-state-hover");
+		}).live("click", function(){
 			cur_entry = $(this).closest(".element");
 			$("#cur_time").val($(this).text());
 			$("#date_time_dialog").dialog("open");
@@ -70,12 +75,15 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 		});
 
 		$("#timeclock_edit button.add-button").click(function(){
-			var new_entry = $("#timeclock_entry_template").clone().addClass("entry").removeAttr("id");
+			new_entry = $("#timeclock_entry_template").clone().addClass("entry").removeAttr("id");
 			$(this).before(new_entry);
 			new_entry.find(".timestamp").html(Math.floor(new Date().getTime() / 1000));
 			format_time(new_entry.find(".time"), new_entry.find(".timestamp").text());
 			clean_up();
 			new_entry.slideDown("normal");
+			//var time_now = "<?php echo pines_date_format(time(), new DateTimeZone(addslashes($this->entity->get_timezone())), 'Y-m-d H:i T'); ?>";
+			$("#new_time").val("now");
+			$("#add_time_dialog").dialog("open");
 		});
 
 		$("#date_time_dialog").dialog({
@@ -97,13 +105,40 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 							$("#date_time_dialog").dialog('close');
 							cur_entry.find(".timestamp").html(data);
 							format_time(cur_entry.find(".time"), data);
+							cur_entry.find("div").addClass("ui-state-highlight");
 							clean_up();
 						}
 					});
 				}
 			}
 		});
-
+		
+		$("#add_time_dialog").dialog({
+			bgiframe: true,
+			autoOpen: false,
+			modal: true,
+			buttons: {
+				"Done": function() {
+					$.ajax({
+						url: "<?php echo pines_url('system', 'date_get_timestamp'); ?>",
+						type: "POST",
+						dataType: "text",
+						data: {"date": $("#new_time").val(), "timezone": timezone},
+						error: function(){
+							alert("Couldn't get a timestamp from the server.");
+							$("#add_time_dialog").dialog('close');
+						},
+						success: function(data){
+							$("#add_time_dialog").dialog('close');
+							new_entry.find(".timestamp").html(data);
+							format_time(new_entry.find(".time"), data);
+							new_entry.find("div").addClass("ui-state-highlight");
+							clean_up();
+						}
+					});
+				}
+			}
+		});
 		save_to_form();
 	});
 	// ]]>
@@ -136,6 +171,19 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 		<small>now</small><br />
 		<small>10 September 2000 8:13 AM</small><br />
 		<small>10 September 2000 8:13 AM +8 hours</small><br />
+		<small>-1 day</small><br />
+		<small>+1 week 2 days 4 hours 2 seconds</small><br />
+		<small>next Thursday</small><br />
+		<small>last Monday 4pm</small>
+	</div>
+	<div id="add_time_dialog" title="Add a New Time">
+		<span>Time:</span><br />
+		<input id="new_time" type="text" size="24" /><br />
+		<small>Relative times are calculated from now, so "-1 day" means 24 hours ago.</small><br />
+		<br /><span>Examples:</span><br />
+		<small>2 hours ago</small><br />
+		<small>Jul 10 8:13</small><br />
+		<small>10 July 2000 8:13 AM PST</small><br />
 		<small>-1 day</small><br />
 		<small>+1 week 2 days 4 hours 2 seconds</small><br />
 		<small>next Thursday</small><br />

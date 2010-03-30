@@ -11,6 +11,35 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
+<script type='text/javascript'>
+	// <![CDATA[
+	$(function(){
+		// Category Tree
+		var location = $("#location");
+		$("#location_tree").tree({
+			rules : {
+				multiple : false
+			},
+			data : {
+				type : "json",
+				opts : {
+					method : "get",
+					url : "<?php echo pines_url('com_reports', 'groupjson'); ?>"
+				}
+			},
+			selected : ["<?php echo $_SESSION['user']->group->guid; ?>"],
+			callback : {
+				onchange : function(NODE, TREE_OBJ) {
+					location.val(TREE_OBJ.selected.attr("id"));
+				},
+				check_move: function(NODE, REF_NODE, TYPE, TREE_OBJ) {
+					return false;
+				}
+			}
+		});
+	});
+	// ]]>
+</script>
 <form class="pform" method="post" action="<?php echo pines_url('com_newsletter', 'send'); ?>">
 <fieldset>
 	<legend>Sending <?php echo $this->mail->name; ?></legend>
@@ -29,22 +58,8 @@ defined('P_RUN') or die('Direct access prohibited');
 	<div class="element">
 		<span class="label">Select Groups</span>
 		<span class="note">Click group name to select children as well.</span>
-		<div class="group">
-		<?php
-		$group_select_menu = new menu;
-		$pines->user_manager->get_group_menu($group_select_menu);
-		echo $group_select_menu->render(array('<ul class="unorderedlisttree">', '</ul>'),
-				array('<li>', '</li>'),
-				array('<ul>', '</ul>'),
-				array('<li>', '</li>'),
-				"<input class=\"field\" type=\"checkbox\" name=\"group[]\" value=\"#DATA#\" /><label>#NAME#</label>\n",
-				'<hr style="visibility: hidden; clear: both;" />');
-		/*$sendprep->content(
-			$pines->user_manager->get_group_tree("<label><input type="checkbox" name="#guid#" />#mark##name# [#groupname#]</label>\n", $pines->user_manager->get_group_array())
-		); */
-		?>
-		</div>
 	</div>
+	<div class="element" id="location_tree"></div>
 	<div class="element heading">
 		<h1>Options</h1>
 	</div>
@@ -55,6 +70,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	</div>
 	<div class="element buttons">
 		<input type="hidden" name="mail_id" value="<?php echo $_REQUEST['mail_id']; ?>" />
+		<input type="hidden" name="location" id="location" />
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
 		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url('com_newsletter', 'list'); ?>');" value="Cancel" />
 	</div>

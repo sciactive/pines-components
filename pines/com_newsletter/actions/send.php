@@ -49,24 +49,24 @@ if ( $_REQUEST['include_permalink'] == 'on' ) {
 	$message = "<div style=\"text-align: center; font-size: smaller;\">Having trouble reading this message? <a href=\"".pines_url('com_newsletter', 'webview', array('mail_id' => $mail_id), true, true)."\" target=\"_blank\">Click here</a> to view this message in your browser.</div>" . $message;
 }
 
-$addresses = array();
-if (is_array($_REQUEST['group'])) {
-	foreach ($_REQUEST['group'] as $cur_group_id) {
-	$cur_group_id = (int) $cur_group_id;
-	$users = $pines->user_manager->get_users_by_group($cur_group_id);
-	foreach ($users as $cur_user) {
-		if (!empty($cur_user->email))
-		$addresses[$user->guid] = $cur_user->email;
-	}
+$location = group::factory((int) $_REQUEST['location']);
+if (isset($location->guid)) {
+	$addresses = array();
+	$group_users = $pines->entity_manager->get_entities(array('tags' => array('com_user', 'user'), 'class' => user));
+	foreach ($group_users as $key => &$cur_user) {
+		if (!($cur_user->ingroup($location) || $cur_user->is_descendent($location) || empty($cur_user->email))) {
+			unset($group_users[$key]);
+		} else {
+			$addresses[$cur_user->guid] = $cur_user->email;
+		}
 	}
 }
-
 $bcc = implode(', ', $addresses);
 /*foreach ($addresses as $cur_address) {
 	$bcc = $bcc . (strlen($bcc) ? ', ' : '') . $cur_address;
 }*/
 
-$mailer = &new com_mailer(clean_header($_REQUEST['from']), 'undisclosed-recipients <noone@example.com>', clean_header($_REQUEST['subject']), $message);
+$mailer = &new com_mailer_mail(clean_header($_REQUEST['from']), 'undisclosed-recipients <noone@example.com>', clean_header($_REQUEST['subject']), $message);
 $mailer->addHeader('Reply-To', clean_header($_REQUEST['replyto']));
 $mailer->addHeader('Bcc', $bcc);
 

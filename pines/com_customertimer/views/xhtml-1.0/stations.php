@@ -182,7 +182,11 @@ $this->title = 'Customer Timer';
 					pgrid_multi_select: false,
 					pgrid_perpage: 5,
 					pgrid_filtering: false,
-					pgrid_view_height: "200px"
+					pgrid_view_height: "200px",
+					pgrid_double_click: function(){
+						var dialog = $(this).closest(".customer_search");
+						dialog.dialog('option', 'buttons').Login(dialog);
+					}
 				})
 				.end()
 				.find("button.search_button").click(function(){
@@ -219,9 +223,11 @@ $this->title = 'Customer Timer';
 					"width": "500px",
 					"modal": true,
 					"buttons": {
-						"Login": function(){
+						"Login": function(dialog){
 							// Add the selected customer.
-							var customer = $(this).find("table.customer_table").pgrid_get_selected_rows().pgrid_export_rows()[0];
+							if (!dialog)
+								dialog = $(this);
+							var customer = dialog.find("table.customer_table").pgrid_get_selected_rows().pgrid_export_rows()[0];
 							if (customer.key) {
 								$.ajax({
 									url: "<?php echo pines_url('com_customertimer', 'login_json'); ?>",
@@ -240,7 +246,7 @@ $this->title = 'Customer Timer';
 										}
 									}
 								});
-								$(this).dialog("close").remove();
+								dialog.dialog("close").remove();
 							} else {
 								alert("Please select a customer.");
 							}

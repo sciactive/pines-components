@@ -117,6 +117,7 @@ class com_customertimer_login_tracker extends entity {
 		$found = false;
 		foreach ($this->customers as $key => &$cur_entry) {
 			if ($customer->is($cur_entry['customer'])) {
+				$station = $cur_entry['station'];
 				unset($this->customers[$key]);
 				$found = true;
 			}
@@ -137,8 +138,10 @@ class com_customertimer_login_tracker extends entity {
 		// Save a transaction.
 		$tx = com_customertimer_tx::factory('com_customertimer', 'transaction', 'account_tx');
 		$tx->customer = $customer;
+		$tx->station = $station;
 		$tx->minutes = $session_info['minutes'];
 		$tx->points = $session_info['points'];
+		$tx->points_remain = $customer->points;
 		$tx->login_time = $customer->com_customertimer->last_login;
 		$tx->logout_time = time();
 		$tx->save();

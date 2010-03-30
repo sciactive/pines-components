@@ -37,7 +37,6 @@ defined('P_RUN') or die('Direct access prohibited');
 	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/dropdown/themes/jqueryui/jqueryui.css" media="all" rel="stylesheet" type="text/css" />
 
 	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>system/js/js.php"></script>
-	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/jquery/jquery.timers-1.1.2.js"></script>
 
 	<!--[if lt IE 7]>
 	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/jquery/jquery.dropdown.js"></script>
@@ -50,6 +49,8 @@ defined('P_RUN') or die('Direct access prohibited');
 	<![endif]-->
 
 	<?php echo $pines->page->render_modules('head', 'module_head'); ?>
+
+	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/jquery/jquery.timers-1.1.2.js"></script>
 </head>
 
 <body class="ui-widget-content">

@@ -19,7 +19,7 @@ $this->title = 'Customer Timer';
 	}
 	.station_layout .station_layout_bg {
 		float: left;
-		width: 100%;
+		width: 98%;
 		height: auto;
 	}
 	.station_layout .station {

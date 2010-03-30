@@ -137,6 +137,8 @@ class com_customertimer_login_tracker extends entity {
 		}
 		// Save a transaction.
 		$tx = com_customertimer_tx::factory('com_customertimer', 'transaction', 'account_tx');
+		$tx->user = $_SESSION['user'];
+		$tx->location = $_SESSION['user']->group;
 		$tx->customer = $customer;
 		$tx->station = $station;
 		$tx->minutes = $session_info['minutes'];

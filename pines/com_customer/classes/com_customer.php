@@ -118,7 +118,7 @@ class com_customer extends component {
 			// Search through the right lookup table to find the divisor.
 			$table = $array['sale']->customer->valid_member() ? $pines->config->com_customer->member_point_lookup : $pines->config->com_customer->guest_point_lookup;
 			foreach ($table as $cur_price) {
-				if ((float) preg_replace('/:.*$/', '', $cur_price) < $array['price'])
+				if ((float) preg_replace('/:.*$/', '', $cur_price) <= $array['price'])
 					$high_price = $cur_price;
 			}
 			$divisor = (float) preg_replace('/^[^:]*:/', '', $high_price);

@@ -10,6 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
+$this->title = "Sending {$this->mail->name}";
 ?>
 <script type='text/javascript'>
 	// <![CDATA[
@@ -41,14 +42,12 @@ defined('P_RUN') or die('Direct access prohibited');
 	// ]]>
 </script>
 <form class="pform" method="post" action="<?php echo pines_url('com_newsletter', 'send'); ?>">
-<fieldset>
-	<legend>Sending <?php echo $this->mail->name; ?></legend>
 	<div class="element">
-		<label><span class="label">From Email</span>
+		<label><span class="label">From Address</span>
 		<input class="field ui-widget-content" type="text" name="from" size="24" value="<?php echo htmlentities($pines->config->com_newsletter->default_from); ?>" /></label>
 	</div>
 	<div class="element">
-		<label><span class="label">Reply to Email</span>
+		<label><span class="label">Reply to Address</span>
 		<input class="field ui-widget-content" type="text" name="replyto" size="24" value="<?php echo htmlentities($pines->config->com_newsletter->default_reply_to); ?>" /></label>
 	</div>
 	<div class="element">
@@ -74,5 +73,4 @@ defined('P_RUN') or die('Direct access prohibited');
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
 		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url('com_newsletter', 'list'); ?>');" value="Cancel" />
 	</div>
-</fieldset>
 </form>

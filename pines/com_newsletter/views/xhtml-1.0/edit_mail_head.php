@@ -26,7 +26,7 @@ defined('P_RUN') or die('Direct access prohibited');
 <!-- Source file for Rich Text Editor-->
 <script type="text/javascript" src="http://yui.yahooapis.com/2.7.0/build/editor/editor-min.js"></script>
 <script type="text/javascript" src="http://yui.yahooapis.com/2.7.0/build/connection/connection-min.js"></script>
-<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>components/com_newsletter/js/yui-image-uploader26.js"></script>
+<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>components/com_newsletter/includes/yui-image-uploader26.js"></script>
 
 <script type="text/javascript">
 	// <![CDATA[

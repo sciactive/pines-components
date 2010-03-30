@@ -15,7 +15,6 @@ if ( !gatekeeper('com_newsletter/send') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_newsletter', 'list', null, false));
 
 $jstree = new module('system', 'jstree', 'head');
-$sendprep_head = new module('com_newsletter', 'send_prep_head', 'head');
 $sendprep = new module('com_newsletter', 'sendprep', 'content');
 
 if ( empty($_REQUEST['mail_id']) ) {

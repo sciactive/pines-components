@@ -11,6 +11,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-action('com_customertimer', 'status');
+action('com_customertimer', 'stations');
 
 ?>

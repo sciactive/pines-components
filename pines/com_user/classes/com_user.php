@@ -508,10 +508,11 @@ class com_user extends component {
 
 		if ( isset($entity->guid) ) {
 			if ( $this->gatekeeper('com_user/login', $entity) ) {
+				// Destroy session data.
+				$this->logout();
+				// Start a new session.
+				session_start();
 				$_SESSION['user_id'] = $entity->guid;
-				unset($_SESSION['user']);
-				// We're changing users, so clear the gatekeeper cache.
-				$this->gatekeeper_cache = array();
 				$this->fill_session();
 				return true;
 			} else {
@@ -526,7 +527,10 @@ class com_user extends component {
 	 * Logs the current user out of the system.
 	 */
 	function logout() {
+		unset($_SESSION['user_id']);
 		unset($_SESSION['user']);
+		// We're changing users, so clear the gatekeeper cache.
+		$this->gatekeeper_cache = array();
 		session_unset();
 		session_destroy();
 	}
@@ -535,9 +539,11 @@ class com_user extends component {
 	 * Creates and attaches a module which let's the user log in.
 	 *
 	 * @param string $position The position in which to place the module.
+	 * @return module The new module.
 	 */
 	function print_login($position = 'content') {
 		$module = new module('com_user', 'login', $position);
+		return $module;
 	}
 
 	/**

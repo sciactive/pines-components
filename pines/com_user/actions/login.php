@@ -11,8 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( $_REQUEST['username'] ) {
-	if ( gatekeeper() ) {
+if ( isset($_REQUEST['username']) && !empty($_REQUEST['username']) ) {
+	if ( gatekeeper() && $_REQUEST['username'] == $_SESSION['user']->username ) {
 		display_notice('Already logged in!');
 		return;
 	}
@@ -22,7 +22,7 @@ if ( $_REQUEST['username'] ) {
 			header('Location: '.urldecode($_REQUEST['url']));
 			exit;
 		} else {
-		// Load the user's default component.
+			// Load the user's default component.
 			action($pines->config->default_component, 'default');
 		}
 	} else {

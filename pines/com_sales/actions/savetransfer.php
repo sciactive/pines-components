@@ -40,9 +40,7 @@ $transfer->eta = strtotime($_REQUEST['eta']);
 // Stock
 // Stock can't be changed after items have been received.
 if (empty($transfer->received)) {
-	$transfer->stock = json_decode($_REQUEST['stock']);
-	if (!is_array($transfer->stock))
-		$transfer->stock = array();
+	$transfer->stock = (array) json_decode($_REQUEST['stock']);
 	foreach ($transfer->stock as $key => &$cur_stock) {
 		$cur_stock = com_sales_stock::factory(intval($cur_stock->key));
 		if (is_null($cur_stock->guid))

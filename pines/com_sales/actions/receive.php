@@ -19,8 +19,8 @@ if (is_null($_REQUEST['products'])) {
 	return;
 }
 
-$products_json = json_decode($_REQUEST['products']);
-if (!is_array($products_json)) {
+$products_json = (array) json_decode($_REQUEST['products']);
+if (empty($products_json)) {
 	pines_notice('Invalid product list!');
 	$pines->com_sales->print_receive_form();
 	return;

@@ -27,9 +27,7 @@ if ( isset($_REQUEST['id']) ) {
 
 if (is_null($countsheet->creator))
 	$countsheet->creator = $_SESSION['user'];
-$countsheet->entries = json_decode($_REQUEST['entries']);
-if (!is_array($countsheet->entries))
-	$countsheet->entries = array();
+$countsheet->entries = (array) json_decode($_REQUEST['entries']);
 
 if (empty($countsheet->entries)) {
 	pines_notice("No products were counted.");

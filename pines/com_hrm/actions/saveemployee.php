@@ -57,9 +57,7 @@ $employee->city = $_REQUEST['city'];
 $employee->state = $_REQUEST['state'];
 $employee->zip = $_REQUEST['zip'];
 $employee->address_international = $_REQUEST['address_international'];
-$employee->addresses = json_decode($_REQUEST['addresses']);
-if (!is_array($employee->addresses))
-	$employee->addresses = array();
+$employee->addresses = (array) json_decode($_REQUEST['addresses']);
 foreach ($employee->addresses as &$cur_address) {
 	$array = array(
 		'type' => $cur_address->values[0],
@@ -74,9 +72,7 @@ foreach ($employee->addresses as &$cur_address) {
 unset($cur_address);
 
 // Attributes
-$employee->attributes = json_decode($_REQUEST['attributes']);
-if (!is_array($employee->attributes))
-	$employee->attributes = array();
+$employee->attributes = (array) json_decode($_REQUEST['attributes']);
 foreach ($employee->attributes as &$cur_attribute) {
 	$array = array(
 		'name' => $cur_attribute->values[0],

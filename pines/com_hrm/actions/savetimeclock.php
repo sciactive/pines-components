@@ -22,9 +22,7 @@ if (is_null($employee->guid)) {
 
 $employee->timeclock = array();
 
-$clock = json_decode($_REQUEST['clock']);
-if (!is_array($clock))
-	$clock = array();
+$clock = (array) json_decode($_REQUEST['clock']);
 
 foreach($clock as $cur_entry) {
 	$employee->timeclock[] = array(

@@ -32,7 +32,7 @@ $widget->description = $_REQUEST['description'];
 $widget->short_description = $_REQUEST['short_description'];
 
 // Attributes
-$widget->attributes = json_decode($_REQUEST['attributes']);
+$widget->attributes = (array) json_decode($_REQUEST['attributes']);
 foreach ($widget->attributes as &$cur_attribute) {
 	$array = array(
 		'name' => $cur_attribute->values[0],

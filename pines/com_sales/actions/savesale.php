@@ -38,9 +38,7 @@ $product_error = false;
 // Used to check products which allow only one per ticket.
 $one_per_ticket_guids = array();
 if ($sale->status != 'invoiced' && $sale->status != 'paid') {
-	$sale->products = json_decode($_REQUEST['products']);
-	if (!is_array($sale->products))
-		$sale->products = array();
+	$sale->products = (array) json_decode($_REQUEST['products']);
 	if (empty($sale->products)) {
 		pines_notice("No products were selected.");
 		$product_error = true;
@@ -109,9 +107,7 @@ if ($sale->status != 'paid') {
 		if (!in_array($cur_payment['status'], array('approved', 'declined', 'tendered')))
 			unset($sale->payments[$key]);
 	}
-	$payments = json_decode($_REQUEST['payments']);
-	if (!is_array($payments))
-		$payments = array();
+	$payments = (array) json_decode($_REQUEST['payments']);
 	foreach ($payments as $cur_payment) {
 		$cur_payment_type_entity = com_sales_payment_type::factory((int) $cur_payment->key);
 		// Not used, but possibly in the future for logging purposes. (If the type is deleted.)

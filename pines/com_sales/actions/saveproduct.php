@@ -38,9 +38,7 @@ $product->manufacturer_sku = $_REQUEST['manufacturer_sku'];
 
 // Purchasing
 $product->stock_type = $_REQUEST['stock_type'];
-$product->vendors = json_decode($_REQUEST['vendors']);
-if (!is_array($product->vendors))
-	$product->vendors = array();
+$product->vendors = (array) json_decode($_REQUEST['vendors']);
 foreach ($product->vendors as &$cur_vendor) {
 	$cur_vendor = array(
 		'entity' => new com_sales_vendor(intval($cur_vendor->key)),
@@ -79,9 +77,7 @@ $product->one_per_ticket = ($_REQUEST['one_per_ticket'] == 'ON');
 $product->hide_on_invoice = ($_REQUEST['hide_on_invoice'] == 'ON');
 $product->non_refundable = ($_REQUEST['non_refundable'] == 'ON');
 $product->additional_barcodes = explode(',', $_REQUEST['additional_barcodes']);
-$product->actions = $_REQUEST['actions'];
-if (!is_array($product->actions))
-	$product->actions = array();
+$product->actions = (array) $_REQUEST['actions'];
 
 if (empty($product->name)) {
 	$product->print_form();
@@ -107,23 +103,21 @@ if ($product->save()) {
 	pines_notice('Saved product ['.$product->name.']');
 	// Assign the product to the selected categories.
 	// We have to do this here, because new products won't have a GUID until now.
-	$categories = json_decode($_REQUEST['categories']);
-	if (is_array($categories)) {
-		array_map('intval', $categories);
-		$all_categories = $pines->com_sales->get_category_array();
-		foreach($all_categories as $cur_cat) {
-			if (!is_array($cur_cat->products))
-				$cur_cat->products = array();
+	$categories = (array) json_decode($_REQUEST['categories']);
+	array_map('intval', $categories);
+	$all_categories = $pines->com_sales->get_category_array();
+	foreach($all_categories as $cur_cat) {
+		if (!is_array($cur_cat->products))
+			$cur_cat->products = array();
 
-			if (in_array($cur_cat->guid, $categories) && !in_array($product->guid, $cur_cat->products)) {
-				$cur_cat->products[] = $product->guid;
-				if (!$cur_cat->save())
-					pines_error('Failed to add product to category: '.$cur_cat->name);
-			} elseif (!in_array($cur_cat->guid, $categories) && in_array($product->guid, $cur_cat->products)) {
-				$cur_cat->products = array_diff($cur_cat->products, array($product->guid));
-				if (!$cur_cat->save())
-					pines_error('Failed to remove product from category: '.$cur_cat->name);
-			}
+		if (in_array($cur_cat->guid, $categories) && !in_array($product->guid, $cur_cat->products)) {
+			$cur_cat->products[] = $product->guid;
+			if (!$cur_cat->save())
+				pines_error('Failed to add product to category: '.$cur_cat->name);
+		} elseif (!in_array($cur_cat->guid, $categories) && in_array($product->guid, $cur_cat->products)) {
+			$cur_cat->products = array_diff($cur_cat->products, array($product->guid));
+			if (!$cur_cat->save())
+				pines_error('Failed to remove product from category: '.$cur_cat->name);
 		}
 	}
 } else {

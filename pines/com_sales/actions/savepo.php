@@ -48,9 +48,7 @@ $po->eta = strtotime($_REQUEST['eta']);
 // Products
 // Products can't be changed after items have been received.
 if (empty($po->received)) {
-	$po->products = json_decode($_REQUEST['products']);
-	if (!is_array($po->products))
-		$po->products = array();
+	$po->products = (array) json_decode($_REQUEST['products']);
 	foreach ($po->products as &$cur_product) {
 		$cur_product = array(
 			'entity' => com_sales_product::factory(intval($cur_product->key)),

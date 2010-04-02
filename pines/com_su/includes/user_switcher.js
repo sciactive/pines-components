@@ -16,7 +16,6 @@ $(function(){
 				pnotify_title: "Switch User",
 				pnotify_text: data,
 				pnotify_notice_icon: '',
-				pnotify_width: 'auto',
 				pnotify_hide: false,
 				pnotify_insert_brs: false
 			}).find("input").eq(0).focus();

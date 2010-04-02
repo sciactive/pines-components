@@ -16,7 +16,8 @@ if ( !gatekeeper() )
 
 $pines->page->override = true;
 
-$login = $pines->user_manager->print_login();
+$login = new module('com_su', 'login');
+$login->hide_password = gatekeeper('com_su/nopassword');
 $loginhtml = $login->render('module_head');
 $pines->page->override_doc($loginhtml);
 

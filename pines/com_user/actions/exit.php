@@ -11,21 +11,23 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-display_notice($_REQUEST['message']);
+if (!empty($_REQUEST['message']))
+	display_notice($_REQUEST['message']);
+
+// Show some info if the user is still logged in.
 if (is_object($_SESSION['user'])) {
-// Load the user's default component.
 	if ($_REQUEST['default'] == '1') {
 		$module = new module('com_user', 'default_denied', 'content');
 		display_error('Incorrect user permission settings detected.');
-	} else {
-		if ( !empty($_REQUEST['url']) ) {
-			$module = new module('com_user', 'punted', 'right');
-			$module->url = urldecode($_REQUEST['url']);
-		}
-		action($pines->config->default_component, 'default');
+		return;
 	}
-} else {
-// Load the default component.
-	action($pines->config->default_component, 'default');
+	if ( !empty($_REQUEST['url']) ) {
+		$module = new module('com_user', 'punted', 'right');
+		$module->url = urldecode($_REQUEST['url']);
+	}
 }
+
+// Load the user's default component.
+action($pines->config->default_component, 'default');
+
 ?>

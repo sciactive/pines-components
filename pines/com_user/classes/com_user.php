@@ -46,25 +46,6 @@ class com_user extends component {
 	private $username_cache = array();
 
 	/**
-	 * Authenticate a user's credentials.
-	 *
-	 * This function will not log a user into the system. It will only check
-	 * that the information provided are valid login credentials.
-	 *
-	 * @param string $username The username of the user.
-	 * @param string $password The password of the user.
-	 * @return int|bool The user's GUID on success, false on failure.
-	 */
-	function authenticate($username, $password) {
-		$entity = user::factory($username);
-		if (is_null($entity->guid))
-			return false;
-		if ( $entity->check_password($password) )
-			return $entity->guid;
-		return false;
-	}
-
-	/**
 	 * Check an entity's permissions for the currently logged in user.
 	 *
 	 * This will check the variable "ac" (Access Control) of the entity. It should
@@ -500,24 +481,18 @@ class com_user extends component {
 	/**
 	 * Logs the given user into the system.
 	 *
-	 * @param int $id The GUID of the user.
+	 * @param user $user The user.
 	 * @return bool True on success, false on failure.
 	 */
-	function login($id) {
-		$entity = user::factory($id);
-
-		if ( isset($entity->guid) ) {
-			if ( $this->gatekeeper('com_user/login', $entity) ) {
-				// Destroy session data.
-				$this->logout();
-				// Start a new session.
-				session_start();
-				$_SESSION['user_id'] = $entity->guid;
-				$this->fill_session();
-				return true;
-			} else {
-				return false;
-			}
+	function login($user) {
+		if ( isset($user->guid) && $this->gatekeeper('com_user/login', $user) ) {
+			// Destroy session data.
+			$this->logout();
+			// Start a new session.
+			session_start();
+			$_SESSION['user_id'] = $user->guid;
+			$this->fill_session();
+			return true;
 		} else {
 			return false;
 		}

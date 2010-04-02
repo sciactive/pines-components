@@ -11,25 +11,25 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( isset($_REQUEST['username']) && !empty($_REQUEST['username']) ) {
-	if ( gatekeeper() && $_REQUEST['username'] == $_SESSION['user']->username ) {
-		display_notice('Already logged in!');
-		return;
+if ( empty($_REQUEST['username']) ) {
+	$pines->user_manager->print_login();
+	return;
+}
+if ( gatekeeper() && $_REQUEST['username'] == $_SESSION['user']->username ) {
+	display_notice('Already logged in!');
+	return;
+}
+$user = user::factory($_REQUEST['username']);
+if ( isset($user->guid) && $user->check_password($_REQUEST['password']) ) {
+	$pines->user_manager->login($user);
+	if ( !empty($_REQUEST['url']) ) {
+		header('Location: '.urldecode($_REQUEST['url']));
+		exit;
 	}
-	if ( $id = $pines->user_manager->authenticate($_REQUEST['username'], $_REQUEST['password']) ) {
-		$pines->user_manager->login($id);
-		if ( !empty($_REQUEST['url']) ) {
-			header('Location: '.urldecode($_REQUEST['url']));
-			exit;
-		} else {
-			// Load the user's default component.
-			action($pines->config->default_component, 'default');
-		}
-	} else {
-		display_notice("Username and password not correct!");
-		$pines->user_manager->print_login();
-	}
+	// Load the user's default component.
+	action($pines->config->default_component, 'default');
 } else {
+	display_notice("Username and password not correct!");
 	$pines->user_manager->print_login();
 }
 

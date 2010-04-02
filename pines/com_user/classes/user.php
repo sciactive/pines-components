@@ -31,6 +31,7 @@ class user extends able_entity {
 		$this->inherit_abilities = true;
 		$this->default_component = 'com_user';
 		$this->address_type = 'us';
+		$this->attributes = array();
 		if ($id > 0 || is_string($id)) {
 			global $pines;
 			if (is_int($id)) {
@@ -85,6 +86,7 @@ class user extends able_entity {
 	 */
 	public function print_form() {
 		global $pines;
+		$pines->com_pgrid->load();
 		$module = new module('com_user', 'form_user', 'content');
 		$module->entity = $this;
 		$module->display_groups = gatekeeper("com_user/assigngroup");

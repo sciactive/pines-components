@@ -51,6 +51,17 @@ if ( gatekeeper('com_user/default_component') ) {
 	}
 }
 
+// Attributes
+$user->attributes = (array) json_decode($_REQUEST['attributes']);
+foreach ($user->attributes as &$cur_attribute) {
+	$array = array(
+		'name' => $cur_attribute->values[0],
+		'value' => $cur_attribute->values[1]
+	);
+	$cur_attribute = $array;
+}
+unset($cur_attribute);
+
 // Go through a list of all groups, and assign them if they're selected.
 // Groups that the user does not have access to will not be received from the
 // entity manager after com_user filters the result, and thus will not be

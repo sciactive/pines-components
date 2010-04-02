@@ -16,6 +16,72 @@ $this->note = 'Provide group details in this form.';
 <script type="text/javascript">
 	// <![CDATA[
 	$(function(){
+		// Attributes
+		var attributes = $("#tab_attributes .attributes");
+		var attributes_table = $("#tab_attributes .attributes_table");
+		var attribute_dialog = $("#tab_attributes .attribute_dialog");
+
+		attributes_table.pgrid({
+			pgrid_paginate: false,
+			pgrid_toolbar: true,
+			pgrid_toolbar_contents : [
+				{
+					type: 'button',
+					text: 'Add Attribute',
+					extra_class: 'icon picon_16x16_actions_list-add',
+					selection_optional: true,
+					click: function(){
+						attribute_dialog.dialog('open');
+					}
+				},
+				{
+					type: 'button',
+					text: 'Remove Attribute',
+					extra_class: 'icon picon_16x16_actions_list-remove',
+					click: function(e, rows){
+						rows.pgrid_delete();
+						update_attributes();
+					}
+				}
+			]
+		});
+
+		// Attribute Dialog
+		attribute_dialog.dialog({
+			bgiframe: true,
+			autoOpen: false,
+			modal: true,
+			width: 600,
+			buttons: {
+				"Done": function() {
+					var cur_attribute_name = $("#tab_attributes input[name=cur_attribute_name]").val();
+					var cur_attribute_value = $("#tab_attributes input[name=cur_attribute_value]").val();
+					if (cur_attribute_name == "" || cur_attribute_value == "") {
+						alert("Please provide both a name and a value for this attribute.");
+						return;
+					}
+					var new_attribute = [{
+						key: null,
+						values: [
+							cur_attribute_name,
+							cur_attribute_value
+						]
+					}];
+					attributes_table.pgrid_add(new_attribute);
+					update_attributes();
+					$(this).dialog('close');
+				}
+			}
+		});
+
+		function update_attributes() {
+			$("#cur_attribute_name").val("");
+			$("#cur_attribute_value").val("");
+			attributes.val(JSON.stringify(attributes_table.pgrid_get_all_rows().pgrid_export_rows()));
+		}
+
+		update_attributes();
+
 		$("#group_tabs").tabs();
 	});
 	// ]]>
@@ -27,6 +93,7 @@ $this->note = 'Provide group details in this form.';
 			<li><a href="#tab_logo">Logo</a></li>
 			<li><a href="#tab_location">Location</a></li>
 			<li><a href="#tab_abilities">Abilities</a></li>
+			<li><a href="#tab_attributes">Attributes</a></li>
 		</ul>
 		<div id="tab_general">
 			<?php if (isset($this->entity->guid)) { ?>
@@ -240,6 +307,43 @@ $this->note = 'Provide group details in this form.';
 				<p>You do not have sufficient privileges to edit abilities.</p>
 			</div>
 			<?php } ?>
+			<br class="spacer" />
+		</div>
+		<div id="tab_attributes">
+			<div class="element full_width">
+				<span class="label">Attributes</span>
+				<div class="group">
+					<table class="attributes_table">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Value</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php foreach ($this->entity->attributes as $cur_attribute) { ?>
+							<tr>
+								<td><?php echo $cur_attribute['name']; ?></td>
+								<td><?php echo $cur_attribute['value']; ?></td>
+							</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+					<input type="hidden" name="attributes" size="24" />
+				</div>
+			</div>
+			<div class="attribute_dialog" title="Add an Attribute">
+				<div style="width: 100%">
+					<label>
+						<span>Name</span>
+						<input type="text" name="cur_attribute_name" />
+					</label>
+					<label>
+						<span>Value</span>
+						<input type="text" name="cur_attribute_value" />
+					</label>
+				</div>
+			</div>
 			<br class="spacer" />
 		</div>
 	</div>

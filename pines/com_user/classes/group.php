@@ -28,6 +28,7 @@ class group extends able_entity {
 		// Defaults.
 		$this->abilities = array();
 		$this->address_type = 'us';
+		$this->attributes = array();
 		if ($id > 0 || is_string($id)) {
 			global $pines;
 			if (is_int($id)) {
@@ -125,6 +126,7 @@ class group extends able_entity {
 	 */
 	public function print_form() {
 		global $pines;
+		$pines->com_pgrid->load();
 		$module = new module('com_user', 'form_group', 'content');
 		$module->entity = $this;
 		$module->display_abilities = gatekeeper("com_user/abilities");

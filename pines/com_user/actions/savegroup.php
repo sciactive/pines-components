@@ -40,6 +40,17 @@ $group->state = $_REQUEST['state'];
 $group->zip = $_REQUEST['zip'];
 $group->address_international = $_REQUEST['address_international'];
 
+// Attributes
+$group->attributes = (array) json_decode($_REQUEST['attributes']);
+foreach ($group->attributes as &$cur_attribute) {
+	$array = array(
+		'name' => $cur_attribute->values[0],
+		'value' => $cur_attribute->values[1]
+	);
+	$cur_attribute = $array;
+}
+unset($cur_attribute);
+
 /**
  * @todo Check if the selected parent is a descendant of this group.
  */

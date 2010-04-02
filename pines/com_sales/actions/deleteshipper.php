@@ -21,9 +21,9 @@ foreach ($list as $cur_shipper) {
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_shipper;
 }
 if (empty($failed_deletes)) {
-	display_notice('Selected shipper(s) deleted successfully.');
+	pines_notice('Selected shipper(s) deleted successfully.');
 } else {
-	display_error('Could not delete shippers with given IDs: '.$failed_deletes);
+	pines_error('Could not delete shippers with given IDs: '.$failed_deletes);
 }
 
 $pines->com_sales->list_shippers();

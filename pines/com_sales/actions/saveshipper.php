@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listshippers', null, false));
 	$shipper = com_sales_shipper::factory((int) $_REQUEST['id']);
 	if (is_null($shipper->guid)) {
-		display_error('Requested shipper id is not accessible');
+		pines_error('Requested shipper id is not accessible');
 		return;
 	}
 } else {
@@ -40,13 +40,13 @@ $shipper->comments = $_REQUEST['comments'];
 
 if (empty($shipper->name)) {
 	$shipper->print_form();
-	display_notice('Please specify a name.');
+	pines_notice('Please specify a name.');
 	return;
 }
 $test = $pines->entity_manager->get_entity(array('data' => array('name' => $shipper->name), 'tags' => array('com_sales', 'shipper'), 'class' => com_sales_shipper));
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$shipper->print_form();
-	display_notice('There is already a shipper with that name. Please choose a different name.');
+	pines_notice('There is already a shipper with that name. Please choose a different name.');
 	return;
 }
 
@@ -54,9 +54,9 @@ if ($pines->config->com_sales->global_shippers)
 	$shipper->ac->other = 1;
 
 if ($shipper->save()) {
-	display_notice('Saved shipper ['.$shipper->name.']');
+	pines_notice('Saved shipper ['.$shipper->name.']');
 } else {
-	display_error('Error saving shipper. Do you have permission?');
+	pines_error('Error saving shipper. Do you have permission?');
 }
 
 $pines->com_sales->list_shippers();

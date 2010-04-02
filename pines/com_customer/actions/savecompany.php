@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'listcompanies', null, false));
 	$company = com_customer_company::factory((int) $_REQUEST['id']);
 	if (is_null($company->guid)) {
-		display_error('Requested company id is not accessible');
+		pines_error('Requested company id is not accessible');
 		return;
 	}
 } else {
@@ -43,36 +43,36 @@ $company->zip = $_REQUEST['zip'];
 
 if (empty($company->name)) {
 	$company->print_form();
-	display_notice('Please specify a company name.');
+	pines_notice('Please specify a company name.');
 	return;
 }
 if (empty($company->email)) {
 	$company->print_form();
-	display_notice('Please specify an email address.');
+	pines_notice('Please specify an email address.');
 	return;
 }
 if (empty($company->phone)) {
 	$company->print_form();
-	display_notice('Please specify a phone number.');
+	pines_notice('Please specify a phone number.');
 	return;
 }
 if ($company->address_type == 'us' && (empty($company->address_1) || empty($company->city) || empty($company->state) || empty($company->zip))) {
 	$company->print_form();
-	display_notice('Please specify an address.');
+	pines_notice('Please specify an address.');
 	return;
 }
 if ($company->address_type == 'international' && empty($company->address_international)) {
 	$company->print_form();
-	display_notice('Please specify an address.');
+	pines_notice('Please specify an address.');
 	return;
 }
 if ($pines->config->com_customer->global_customers)
 	$company->ac->other = 1;
 
 if ($company->save()) {
-	display_notice('Saved company ['.$company->name.']');
+	pines_notice('Saved company ['.$company->name.']');
 } else {
-	display_error('Error saving company. Do you have permission?');
+	pines_error('Error saving company. Do you have permission?');
 }
 
 $pines->com_customer->list_companies();

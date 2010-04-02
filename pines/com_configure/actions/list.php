@@ -15,7 +15,7 @@ if ( !gatekeeper('com_configure/edit') && !gatekeeper('com_configure/view') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_configure', 'list', $_GET, false));
 
 if (isset($_REQUEST['message']))
-	display_notice($_REQUEST['message']);
+	pines_notice($_REQUEST['message']);
 
 $pines->configurator->list_components();
 

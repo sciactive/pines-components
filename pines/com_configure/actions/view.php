@@ -15,7 +15,7 @@ if ( !gatekeeper('com_configure/view') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_configure', 'view', $_GET, false));
 
 if (!array_key_exists($_REQUEST['component'], $pines->configurator->component_files)) {
-	display_error('Given component either does not exist, or has no configuration file!');
+	pines_error('Given component either does not exist, or has no configuration file!');
 	return;
 }
 

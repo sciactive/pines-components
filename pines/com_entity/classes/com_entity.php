@@ -46,8 +46,8 @@ class com_entity extends component {
 			$pines->config->com_mysql->prefix,
 			(int) $guid);
 		if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
-			if (function_exists('display_error'))
-				display_error('Query failed: ' . mysql_error());
+			if (function_exists('pines_error'))
+				pines_error('Query failed: ' . mysql_error());
 			return false;
 		}
 		return true;
@@ -67,8 +67,8 @@ class com_entity extends component {
 			$pines->config->com_mysql->prefix,
 			mysql_real_escape_string($name, $pines->com_mysql->link));
 		if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
-			if (function_exists('display_error'))
-				display_error('Query failed: ' . mysql_error());
+			if (function_exists('pines_error'))
+				pines_error('Query failed: ' . mysql_error());
 			return false;
 		}
 		return true;
@@ -165,8 +165,8 @@ class com_entity extends component {
 			$pines->config->com_mysql->prefix,
 			$pines->config->com_mysql->prefix);
 		if ( !($result = mysql_query($query, $pines->com_mysql->link)) ) {
-			if (function_exists('display_error'))
-				display_error('Query failed: ' . mysql_error());
+			if (function_exists('pines_error'))
+				pines_error('Query failed: ' . mysql_error());
 			return false;
 		}
 		$row = mysql_fetch_array($result);
@@ -187,8 +187,8 @@ class com_entity extends component {
 			$pines->config->com_mysql->prefix,
 			$pines->config->com_mysql->prefix);
 		if ( !($result = mysql_query($query, $pines->com_mysql->link)) ) {
-			if (function_exists('display_error'))
-				display_error('Query failed: ' . mysql_error());
+			if (function_exists('pines_error'))
+				pines_error('Query failed: ' . mysql_error());
 			return false;
 		}
 		$row = mysql_fetch_array($result);
@@ -227,8 +227,8 @@ class com_entity extends component {
 			$pines->config->com_mysql->prefix,
 			$pines->config->com_mysql->prefix);
 		if ( !($result = mysql_query($query, $pines->com_mysql->link)) ) {
-			if (function_exists('display_error'))
-				display_error('Query failed: ' . mysql_error());
+			if (function_exists('pines_error'))
+				pines_error('Query failed: ' . mysql_error());
 			return false;
 		}
 
@@ -381,8 +381,8 @@ class com_entity extends component {
 				$pines->config->com_mysql->prefix);
 		}
 		if ( !($result = mysql_query($query, $pines->com_mysql->link)) ) {
-			if (function_exists('display_error'))
-				display_error('Query failed: ' . mysql_error());
+			if (function_exists('pines_error'))
+				pines_error('Query failed: ' . mysql_error());
 			return null;
 		}
 
@@ -633,8 +633,8 @@ class com_entity extends component {
 			$pines->config->com_mysql->prefix,
 			mysql_real_escape_string($name, $pines->com_mysql->link));
 		if ( !($result = mysql_query($query, $pines->com_mysql->link)) ) {
-			if (function_exists('display_error'))
-				display_error('Query failed: ' . mysql_error());
+			if (function_exists('pines_error'))
+				pines_error('Query failed: ' . mysql_error());
 			return null;
 		}
 		$row = mysql_fetch_row($result);
@@ -673,16 +673,16 @@ class com_entity extends component {
 						mysql_real_escape_string(','.$tags.',', $pines->com_mysql->link),
 						mysql_real_escape_string(','.implode(',', array_keys($data)).',', $pines->com_mysql->link));
 					if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
-						if (function_exists('display_error'))
-							display_error('Query failed: ' . mysql_error());
+						if (function_exists('pines_error'))
+							pines_error('Query failed: ' . mysql_error());
 						return false;
 					}
 					$query = sprintf("DELETE FROM `%scom_entity_data` WHERE `guid`=%u;",
 						$pines->config->com_mysql->prefix,
 						$guid);
 					if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
-						if (function_exists('display_error'))
-							display_error('Query failed: ' . mysql_error());
+						if (function_exists('pines_error'))
+							pines_error('Query failed: ' . mysql_error());
 						return false;
 					}
 					if ($data) {
@@ -695,8 +695,8 @@ class com_entity extends component {
 						}
 						$query = substr($query, 0, -1).';';
 						if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
-							if (function_exists('display_error'))
-								display_error('Query failed: ' . mysql_error());
+							if (function_exists('pines_error'))
+								pines_error('Query failed: ' . mysql_error());
 							return false;
 						}
 					}
@@ -719,8 +719,8 @@ class com_entity extends component {
 					(int) $matches[2],
 					(int) $matches[2]);
 				if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
-					if (function_exists('display_error'))
-						display_error('Query failed: ' . mysql_error());
+					if (function_exists('pines_error'))
+						pines_error('Query failed: ' . mysql_error());
 					return false;
 				}
 			}
@@ -734,16 +734,16 @@ class com_entity extends component {
 				mysql_real_escape_string(','.$tags.',', $pines->com_mysql->link),
 				mysql_real_escape_string(','.implode(',', array_keys($data)).',', $pines->com_mysql->link));
 			if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
-				if (function_exists('display_error'))
-					display_error('Query failed: ' . mysql_error());
+				if (function_exists('pines_error'))
+					pines_error('Query failed: ' . mysql_error());
 				return false;
 			}
 			$query = sprintf("DELETE FROM `%scom_entity_data` WHERE `guid`=%u;",
 				$pines->config->com_mysql->prefix,
 				$guid);
 			if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
-				if (function_exists('display_error'))
-					display_error('Query failed: ' . mysql_error());
+				if (function_exists('pines_error'))
+					pines_error('Query failed: ' . mysql_error());
 				return false;
 			}
 			if ($data) {
@@ -756,8 +756,8 @@ class com_entity extends component {
 				}
 				$query = substr($query, 0, -1).';';
 				if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
-					if (function_exists('display_error'))
-						display_error('Query failed: ' . mysql_error());
+					if (function_exists('pines_error'))
+						pines_error('Query failed: ' . mysql_error());
 					return false;
 				}
 			}
@@ -798,24 +798,24 @@ class com_entity extends component {
 			$pines->config->com_mysql->prefix,
 			mysql_real_escape_string($name, $pines->com_mysql->link));
 		if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
-			if (function_exists('display_error'))
-				display_error('Query failed: ' . mysql_error());
+			if (function_exists('pines_error'))
+				pines_error('Query failed: ' . mysql_error());
 			return null;
 		}
 		$query = sprintf("INSERT INTO `%scom_entity_uids` (`name`, `cur_uid`) VALUES ('%s', 1) ON DUPLICATE KEY UPDATE `cur_uid`=`cur_uid`+1;",
 			$pines->config->com_mysql->prefix,
 			mysql_real_escape_string($name, $pines->com_mysql->link));
 		if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
-			if (function_exists('display_error'))
-				display_error('Query failed: ' . mysql_error());
+			if (function_exists('pines_error'))
+				pines_error('Query failed: ' . mysql_error());
 			return null;
 		}
 		$query = sprintf("SELECT `cur_uid` FROM `%scom_entity_uids` WHERE `name`='%s';",
 			$pines->config->com_mysql->prefix,
 			mysql_real_escape_string($name, $pines->com_mysql->link));
 		if ( !($result = mysql_query($query, $pines->com_mysql->link)) ) {
-			if (function_exists('display_error'))
-				display_error('Query failed: ' . mysql_error());
+			if (function_exists('pines_error'))
+				pines_error('Query failed: ' . mysql_error());
 			return null;
 		}
 		$row = mysql_fetch_row($result);
@@ -824,8 +824,8 @@ class com_entity extends component {
 			$pines->config->com_mysql->prefix,
 			mysql_real_escape_string($name, $pines->com_mysql->link));
 		if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
-			if (function_exists('display_error'))
-				display_error('Query failed: ' . mysql_error());
+			if (function_exists('pines_error'))
+				pines_error('Query failed: ' . mysql_error());
 			return null;
 		}
 		return isset($row[0]) ? (int) $row[0] : null;
@@ -847,8 +847,8 @@ class com_entity extends component {
 			mysql_real_escape_string($new_name, $pines->com_mysql->link),
 			mysql_real_escape_string($old_name, $pines->com_mysql->link));
 		if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
-			if (function_exists('display_error'))
-				display_error('Query failed: ' . mysql_error());
+			if (function_exists('pines_error'))
+				pines_error('Query failed: ' . mysql_error());
 			return false;
 		}
 		return true;
@@ -879,8 +879,8 @@ class com_entity extends component {
 				mysql_real_escape_string(','.implode(',', $entity->tags).',', $pines->com_mysql->link),
 				mysql_real_escape_string(','.implode(',', array_keys($data)).',', $pines->com_mysql->link));
 			if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
-				if (function_exists('display_error'))
-					display_error('Query failed: ' . mysql_error());
+				if (function_exists('pines_error'))
+					pines_error('Query failed: ' . mysql_error());
 				return false;
 			}
 			$new_id = mysql_insert_id();
@@ -892,8 +892,8 @@ class com_entity extends component {
 					mysql_real_escape_string($name, $pines->com_mysql->link),
 					mysql_real_escape_string(serialize($value), $pines->com_mysql->link));
 				if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
-					if (function_exists('display_error'))
-						display_error('Query failed: ' . mysql_error());
+					if (function_exists('pines_error'))
+						pines_error('Query failed: ' . mysql_error());
 					return false;
 				}
 			}
@@ -908,16 +908,16 @@ class com_entity extends component {
 				mysql_real_escape_string(','.implode(',', array_keys($data)).',', $pines->com_mysql->link),
 				intval($entity->guid));
 			if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
-				if (function_exists('display_error'))
-					display_error('Query failed: ' . mysql_error());
+				if (function_exists('pines_error'))
+					pines_error('Query failed: ' . mysql_error());
 				return false;
 			}
 			$query = sprintf("DELETE FROM `%scom_entity_data` WHERE `guid`=%u;",
 				$pines->config->com_mysql->prefix,
 				intval($entity->guid));
 			if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
-				if (function_exists('display_error'))
-					display_error('Query failed: ' . mysql_error());
+				if (function_exists('pines_error'))
+					pines_error('Query failed: ' . mysql_error());
 				return false;
 			}
 			foreach ($data as $name => $value) {
@@ -927,8 +927,8 @@ class com_entity extends component {
 					mysql_real_escape_string($name, $pines->com_mysql->link),
 					mysql_real_escape_string(serialize($value), $pines->com_mysql->link));
 				if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
-					if (function_exists('display_error'))
-						display_error('Query failed: ' . mysql_error());
+					if (function_exists('pines_error'))
+						pines_error('Query failed: ' . mysql_error());
 					return false;
 				}
 			}
@@ -953,8 +953,8 @@ class com_entity extends component {
 			(int) $value,
 			(int) $value);
 		if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
-			if (function_exists('display_error'))
-				display_error('Query failed: ' . mysql_error());
+			if (function_exists('pines_error'))
+				pines_error('Query failed: ' . mysql_error());
 			return false;
 		}
 		return true;

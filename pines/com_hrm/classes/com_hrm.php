@@ -67,7 +67,7 @@ class com_hrm extends component {
 
 		if ( empty($module->employees) ) {
 			//$module->detach();
-			display_notice('There are no employees.');
+			pines_notice('There are no employees.');
 		}
 	}
 
@@ -87,7 +87,7 @@ class com_hrm extends component {
 
 		if ( empty($module->employees) ) {
 			//$module->detach();
-			display_notice('There are no employees.');
+			pines_notice('There are no employees.');
 		}
 	}
 
@@ -107,7 +107,7 @@ class com_hrm extends component {
 
 		if ( empty($module->user_templates) ) {
 			//$module->detach();
-			display_notice('There are no user templates.');
+			pines_notice('There are no user templates.');
 		}
 	}
 

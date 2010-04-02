@@ -21,9 +21,9 @@ foreach ($list as $cur_user_template) {
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_user_template;
 }
 if (empty($failed_deletes)) {
-	display_notice('Selected user template(s) deleted successfully.');
+	pines_notice('Selected user template(s) deleted successfully.');
 } else {
-	display_error('Could not delete user templates with given IDs: '.$failed_deletes);
+	pines_error('Could not delete user templates with given IDs: '.$failed_deletes);
 }
 
 $pines->com_hrm->list_user_templates();

@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		punt_user('You don\'t have necessary permission.', pines_url('com_user', 'listusers', null, false));
 	$user = user::factory((int) $_REQUEST['id']);
 	if (is_null($user->guid)) {
-		display_error('Requested user id is not accessible.');
+		pines_error('Requested user id is not accessible.');
 		return;
 	}
 	if ( !empty($_REQUEST['password']) )
@@ -47,7 +47,7 @@ if ( gatekeeper('com_user/default_component') ) {
 	if ( file_exists("components/{$_REQUEST['default_component']}/actions/default.php") ) {
 		$user->default_component = $_REQUEST['default_component'];
 	} else {
-		display_notice('Selected component does not support a default action.');
+		pines_notice('Selected component does not support a default action.');
 	}
 }
 
@@ -95,31 +95,31 @@ if ( $_REQUEST['abilities'] === 'true' && gatekeeper('com_user/abilities') ) {
 
 if (empty($user->username)) {
 	$user->print_form();
-	display_notice('Please specify a username.');
+	pines_notice('Please specify a username.');
 	return;
 }
 if ($pines->com_user->max_username_length > 0 && strlen($user->username) > $pines->com_user->max_username_length) {
 	$user->print_form();
-	display_notice("Usernames must not exceed {$pines->com_user->max_username_length} characters.");
+	pines_notice("Usernames must not exceed {$pines->com_user->max_username_length} characters.");
 	return;
 }
 $test = user::factory($_REQUEST['username']);
 if (isset($test->guid) && !$user->is($test)) {
 	$user->print_form();
-	display_notice('There is already a user with that username. Please choose a different username.');
+	pines_notice('There is already a user with that username. Please choose a different username.');
 	return;
 }
 if (empty($user->password) && !$pines->config->com_user->empty_pw) {
 	$user->print_form();
-	display_notice('Please specify a password.');
+	pines_notice('Please specify a password.');
 	return;
 }
 
 if ($user->save()) {
-	display_notice('Saved user ['.$user->username.']');
+	pines_notice('Saved user ['.$user->username.']');
 	pines_log('Saved user ['.$user->username.']');
 } else {
-	display_error('Error saving user. Do you have permission?');
+	pines_error('Error saving user. Do you have permission?');
 }
 
 $pines->user_manager->list_users();

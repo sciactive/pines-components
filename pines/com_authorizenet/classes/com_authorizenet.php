@@ -147,7 +147,7 @@ class com_authorizenet extends component {
 				curl_close($request);
 
 				if ($post_response === false) {
-					display_error('Credit processing gateway cannot be reached. Please try again, and if the problem persists, please contact an administrator.');
+					pines_error('Credit processing gateway cannot be reached. Please try again, and if the problem persists, please contact an administrator.');
 					break;
 				}
 
@@ -194,14 +194,14 @@ class com_authorizenet extends component {
 						$args['payment']['status'] = 'info_requested';
 						break;
 					case 4:
-						display_notice('Payment is held for review.');
+						pines_notice('Payment is held for review.');
 						break;
 					default:
 						$args['payment']['status'] = 'pending';
-						display_error('Credit processing failed. Please try again, and if the problem persists, please contact an administrator.');
+						pines_error('Credit processing failed. Please try again, and if the problem persists, please contact an administrator.');
 						break;
 				}
-				display_notice($response_array[3]);
+				pines_notice($response_array[3]);
 				break;
 		}
 	}

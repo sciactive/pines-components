@@ -21,7 +21,7 @@ $return = false;
 if (isset($_REQUEST['id'])) {
 	$customer = com_customer_customer::factory((int) $_REQUEST['id']);
 	if (is_null($customer->guid)) {
-		display_notice('Customer ID not found.');
+		pines_notice('Customer ID not found.');
 		$return = false;
 	} else {
 		$logins = com_customertimer_login_tracker::factory();

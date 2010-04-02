@@ -90,16 +90,16 @@ class com_customertimer_login_tracker extends entity {
 		// Save the time the customer logged in.
 		$customer->com_customertimer->last_login = time();
 		if (!$customer->save()) {
-			display_notice("Customer {$customer->name} cannot be saved.");
+			pines_notice("Customer {$customer->name} cannot be saved.");
 			return false;
 		}
 		// Add the customer to the login tracker.
 		$this->customers[] = array('customer' => $customer, 'station' => $station);
 		if (!$this->save()) {
-			display_notice('Time tracker could not be updated.');
+			pines_notice('Time tracker could not be updated.');
 			return false;
 		}
-		display_notice("Welcome {$customer->name}. You have been logged in.");
+		pines_notice("Welcome {$customer->name}. You have been logged in.");
 		return true;
 	}
 
@@ -125,14 +125,14 @@ class com_customertimer_login_tracker extends entity {
 		if (!$found)
 			return false;
 		if (!$this->save()) {
-			display_notice('Time tracker could not be updated.');
+			pines_notice('Time tracker could not be updated.');
 			return false;
 		}
 		$session_info = $pines->com_customertimer->get_session_info($customer);
 		// Take points off the customer's account.
 		$customer->adjust_points(-1 * $session_info['points']);
 		if (!$customer->save()) {
-			display_notice("Customer {$customer->name} cannot be saved. Their points could not be deducted.");
+			pines_notice("Customer {$customer->name} cannot be saved. Their points could not be deducted.");
 			return false;
 		}
 		// Save a transaction.
@@ -147,7 +147,7 @@ class com_customertimer_login_tracker extends entity {
 		$tx->login_time = $customer->com_customertimer->last_login;
 		$tx->logout_time = time();
 		$tx->save();
-		display_notice("Goodbye, you have been logged out. This session was {$session_info['minutes']} minutes long, for {$session_info['points']} points.");
+		pines_notice("Goodbye, you have been logged out. This session was {$session_info['minutes']} minutes long, for {$session_info['points']} points.");
 		return true;
 	}
 

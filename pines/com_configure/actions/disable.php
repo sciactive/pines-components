@@ -16,7 +16,7 @@ if ( !gatekeeper('com_configure/edit') )
 
 if ($pines->configurator->disable_component($_REQUEST['component'])) {
 	if ($_REQUEST['component'] == 'com_configure') {
-		display_notice('com_configure has been disabled. If you need it enabled, you will have to do it manually. To do this, under the components directory, rename ".com_configure" to "com_configure".');
+		pines_notice('com_configure has been disabled. If you need it enabled, you will have to do it manually. To do this, under the components directory, rename ".com_configure" to "com_configure".');
 		action($pines->config->default_component, 'default');
 	} else {
 		$cur_loc = pines_url('com_configure', 'list', array('message' => urlencode('Component '.$_REQUEST['component'].' successfully disabled.')));
@@ -26,7 +26,7 @@ if ($pines->configurator->disable_component($_REQUEST['component'])) {
 	}
 	return;
 } else {
-	display_error("Couldn't disable component {$_REQUEST['component']}.");
+	pines_error("Couldn't disable component {$_REQUEST['component']}.");
 }
 
 $pines->configurator->list_components();

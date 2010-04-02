@@ -21,9 +21,9 @@ foreach ($list as $cur_group) {
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_group;
 }
 if (empty($failed_deletes)) {
-	display_notice('Selected group(s) deleted successfully.');
+	pines_notice('Selected group(s) deleted successfully.');
 } else {
-	display_error('Could not delete groups with given IDs: '.$failed_deletes);
+	pines_error('Could not delete groups with given IDs: '.$failed_deletes);
 }
 
 $pines->user_manager->list_groups();

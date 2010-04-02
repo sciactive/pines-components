@@ -21,9 +21,9 @@ foreach ($list as $cur_customer) {
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_customer;
 }
 if (empty($failed_deletes)) {
-	display_notice('Selected customer(s) deleted successfully.');
+	pines_notice('Selected customer(s) deleted successfully.');
 } else {
-	display_error('Could not delete customers with given IDs: '.$failed_deletes);
+	pines_error('Could not delete customers with given IDs: '.$failed_deletes);
 }
 
 $pines->com_customer->list_customers();

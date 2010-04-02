@@ -34,7 +34,7 @@ if (isset($_REQUEST['employee'])) {
 	if (isset($_REQUEST['id'])) {
 		$event = com_hrm_event::factory((int) $_REQUEST['id']);
 		if (is_null($event->guid)) {
-			display_error('The calendar was altered while editing the event.');
+			pines_error('The calendar was altered while editing the event.');
 			$pines->com_hrm->show_calendar();
 			return;
 		}
@@ -59,9 +59,9 @@ if (isset($_REQUEST['employee'])) {
 
 	if ($event->save()) {
 		$action = ( isset($_REQUEST['id']) ) ? 'Saved ' : 'Entered ';
-		display_notice($action.'['.$event->title.']');
+		pines_notice($action.'['.$event->title.']');
 	} else {
-		display_error('Error saving event. Do you have permission?');
+		pines_error('Error saving event. Do you have permission?');
 	}
 }
 

@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		punt_user('You don\'t have necessary permission.', pines_url('com_user', 'listgroups', null, false));
 	$group = group::factory((int) $_REQUEST['id']);
 	if (is_null($group->guid)) {
-		display_error('Requested group id is not accessible.');
+		pines_error('Requested group id is not accessible.');
 		return;
 	}
 } else {
@@ -71,23 +71,23 @@ if ( $_REQUEST['abilities'] === 'true' && gatekeeper('com_user/abilities') ) {
 
 if (empty($group->groupname)) {
 	$group->print_form();
-	display_notice('Please specify a groupname.');
+	pines_notice('Please specify a groupname.');
 	return;
 }
 if ($pines->com_user->max_groupname_length > 0 && strlen($group->groupname) > $pines->com_user->max_groupname_length) {
 	$group->print_form();
-	display_notice("Groupnames must not exceed {$pines->com_user->max_groupname_length} characters.");
+	pines_notice("Groupnames must not exceed {$pines->com_user->max_groupname_length} characters.");
 	return;
 }
 $test = group::factory($_REQUEST['groupname']);
 if (isset($test->guid) && !$group->is($test)) {
 	$group->print_form();
-	display_notice('There is already a group with that groupname. Please choose a different groupname.');
+	pines_notice('There is already a group with that groupname. Please choose a different groupname.');
 	return;
 }
 if (isset($group->parent) && (is_null($group->parent->guid) || $group->is($group->parent))) {
 	$group->print_form();
-	display_notice('Parent group is not valid.');
+	pines_notice('Parent group is not valid.');
 	return;
 }
 
@@ -96,22 +96,22 @@ $image = $_FILES['image'];
 if (!empty($image['name'])) {
 	if ($image['size'] > 205000) {
 		$group->print_form();
-		display_notice('Images cannot exceed 200KB.');
+		pines_notice('Images cannot exceed 200KB.');
 		return;
 	}
 	if ($image['error'] > 0) {
 		$group->print_form();
-		display_error("Image Error: {$image['error']}");
+		pines_error("Image Error: {$image['error']}");
 		return;
 	}
 	if (!in_array($image['type'], array('image/jpeg', 'image/png', 'image/gif'))) {
 		$group->print_form();
-		display_notice('Acceptable image types are jpg, png, and gif.');
+		pines_notice('Acceptable image types are jpg, png, and gif.');
 		return;
 	}
 	if (is_null($group->guid) && !$group->save()) {
 		$group->print_form();
-		display_error('Error saving group.');
+		pines_error('Error saving group.');
 		return;
 	}
 	// Resize and create the image with the Pines logo naming scheme.
@@ -179,10 +179,10 @@ if (!empty($image['name'])) {
 }
 
 if ($group->save()) {
-	display_notice('Saved group ['.$group->groupname.']');
+	pines_notice('Saved group ['.$group->groupname.']');
 	pines_log('Saved group ['.$group->groupname.']');
 } else {
-	display_error('Error saving group. Do you have permission?');
+	pines_error('Error saving group. Do you have permission?');
 }
 
 $pines->user_manager->list_groups();

@@ -16,7 +16,7 @@ if ( empty($_REQUEST['username']) ) {
 	return;
 }
 if ( gatekeeper() && $_REQUEST['username'] == $_SESSION['user']->username ) {
-	display_notice('Already logged in!');
+	pines_notice('Already logged in!');
 	return;
 }
 $user = user::factory($_REQUEST['username']);
@@ -29,7 +29,7 @@ if ( isset($user->guid) && $user->check_password($_REQUEST['password']) ) {
 	// Load the user's default component.
 	action($pines->config->default_component, 'default');
 } else {
-	display_notice("Username and password not correct!");
+	pines_notice("Username and password not correct!");
 	$pines->user_manager->print_login();
 }
 

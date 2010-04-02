@@ -34,7 +34,7 @@ class com_example extends component {
 
 		if ( empty($module->widgets) ) {
 			//$module->detach();
-			display_notice('There are no widgets.');
+			pines_notice('There are no widgets.');
 		}
 	}
 

@@ -16,19 +16,19 @@ if ( !gatekeeper('com_hrm/manageclock') && !gatekeeper('com_hrm/viewclock') && !
 
 $employee = com_hrm_employee::factory((int) $_REQUEST['id']);
 if (is_null($employee->guid)) {
-	display_error('Requested employee id is not accessible.');
+	pines_error('Requested employee id is not accessible.');
 	return;
 }
 
 if (!gatekeeper('com_hrm/manageclock') && !gatekeeper('com_hrm/viewclock')) {
 	if (!$_SESSION['user']->is($employee->user_account)) {
-		display_notice('You only have the ability to view your own timeclock.');
+		pines_notice('You only have the ability to view your own timeclock.');
 		return;
 	}
 }
 
 if ( empty($employee->timeclock) )
-	display_notice("No timeclock data is stored for employee [{$employee->name}].");
+	pines_notice("No timeclock data is stored for employee [{$employee->name}].");
 
 $employee->print_timeclock_view();
 

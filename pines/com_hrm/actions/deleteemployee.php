@@ -21,9 +21,9 @@ foreach ($list as $cur_employee) {
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_employee;
 }
 if (empty($failed_deletes)) {
-	display_notice('Selected employee(s) deleted successfully.');
+	pines_notice('Selected employee(s) deleted successfully.');
 } else {
-	display_error('Could not delete employees with given IDs: '.$failed_deletes);
+	pines_error('Could not delete employees with given IDs: '.$failed_deletes);
 }
 
 $pines->com_hrm->list_employees();

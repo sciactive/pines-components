@@ -21,7 +21,7 @@ if (is_null($_REQUEST['products'])) {
 
 $products_json = json_decode($_REQUEST['products']);
 if (!is_array($products_json)) {
-	display_notice('Invalid product list!');
+	pines_notice('Invalid product list!');
 	$pines->com_sales->print_receive_form();
 	return;
 }
@@ -39,11 +39,11 @@ $module = new module('com_sales', 'show_received', 'content');
 foreach ($products as $cur_product) {
 	$cur_product_entity = $pines->com_sales->get_product_by_code($cur_product['product_code']);
 	if (is_null($cur_product_entity)) {
-		display_notice("Product with code {$cur_product['product_code']} not found! Skipping...");
+		pines_notice("Product with code {$cur_product['product_code']} not found! Skipping...");
 		continue;
 	}
 	if ($cur_product_entity->serialized && empty($cur_product['serial'])) {
-		display_notice("Product [{$cur_product_entity->name}] with code {$cur_product['product_code']} requires a serial! Skipping...");
+		pines_notice("Product [{$cur_product_entity->name}] with code {$cur_product['product_code']} requires a serial! Skipping...");
 		continue;
 	}
 	for ($i = 0; $i < $cur_product['quantity']; $i++) {
@@ -53,7 +53,7 @@ foreach ($products as $cur_product) {
 			$stock_entity->serial = $cur_product['serial'];
 		$origin = $stock_entity->inventory_origin();
 		if (is_null($origin)) {
-			display_notice("Product [{$cur_product_entity->name}] with code {$cur_product['product_code']} was not found on any PO or transfer! Skipping...");
+			pines_notice("Product [{$cur_product_entity->name}] with code {$cur_product['product_code']} was not found on any PO or transfer! Skipping...");
 			continue;
 		}
 		// Replace the stock entry with the one returned by inventory_origin.

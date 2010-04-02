@@ -15,7 +15,7 @@ if ( !gatekeeper('com_entitytools/export') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_entitytools', 'export', null, false));
 
 if (!is_callable(array($pines->entity_manager, 'export'))) {
-	display_notice('The currently installed entity manager doesn\'t support exporting.');
+	pines_notice('The currently installed entity manager doesn\'t support exporting.');
 	return;
 }
 

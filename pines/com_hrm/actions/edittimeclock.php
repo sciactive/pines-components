@@ -16,12 +16,12 @@ if ( !gatekeeper('com_hrm/manageclock') )
 
 $employee = com_hrm_employee::factory((int) $_REQUEST['id']);
 if (is_null($employee->guid)) {
-	display_error('Requested employee id is not accessible.');
+	pines_error('Requested employee id is not accessible.');
 	return;
 }
 
 if ( empty($employee->timeclock) )
-	display_notice("No timeclock data is stored for employee [{$employee->name}].");
+	pines_notice("No timeclock data is stored for employee [{$employee->name}].");
 
 $employee->print_timeclock();
 

@@ -21,9 +21,9 @@ foreach ($list as $cur_widget) {
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_widget;
 }
 if (empty($failed_deletes)) {
-	display_notice('Selected widget(s) deleted successfully.');
+	pines_notice('Selected widget(s) deleted successfully.');
 } else {
-	display_error('Could not delete widgets with given IDs: '.$failed_deletes);
+	pines_error('Could not delete widgets with given IDs: '.$failed_deletes);
 }
 
 $pines->com_example->list_widgets();

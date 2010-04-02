@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'listemployees', null, false));
 	$employee = com_hrm_employee::factory((int) $_REQUEST['id']);
 	if (is_null($employee->guid)) {
-		display_error('Requested employee id is not accessible');
+		pines_error('Requested employee id is not accessible');
 		return;
 	}
 } else {
@@ -88,40 +88,40 @@ unset($cur_attribute);
 
 if (empty($employee->name)) {
 	$employee->print_form();
-	display_notice('Please specify a name.');
+	pines_notice('Please specify a name.');
 	return;
 }
 if (empty($employee->email)) {
 	$employee->print_form();
-	display_notice('Please specify an email.');
+	pines_notice('Please specify an email.');
 	return;
 }
 if (empty($employee->phone_cell) && empty($employee->phone_work) && empty($employee->phone_home)) {
 	$employee->print_form();
-	display_notice('Please specify at least one phone number.');
+	pines_notice('Please specify at least one phone number.');
 	return;
 }
 if (gatekeeper('com_hrm/requiressn') && empty($employee->ssn)) {
 	$employee->print_form();
-	display_notice('Please provide an SSN.');
+	pines_notice('Please provide an SSN.');
 	return;
 }
 if (!is_null($employee->user_account) && is_null($employee->user_account->guid)) {
 	$employee->print_form();
-	display_notice('The user account specified is not accessible.');
+	pines_notice('The user account specified is not accessible.');
 	return;
 }
 $test = $pines->entity_manager->get_entity(array('ref' => array('user_account' => $employee->user_account), 'tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
 if (isset($test) && !$employee->is($test)) {
 	$employee->print_form();
-	display_notice("The user account specified is already attached to {$test->name}.");
+	pines_notice("The user account specified is already attached to {$test->name}.");
 	return;
 }
 if ($pines->config->com_hrm->allow_attach && $_REQUEST['user_template'] != 'null') {
 	$new_user = user::factory($_REQUEST['user_template_username']);
 	if (isset($new_user->guid)) {
 		$employee->print_form();
-		display_notice('Selected username is already taken. Please provide a different username.');
+		pines_notice('Selected username is already taken. Please provide a different username.');
 		return;
 	}
 	$user_template = com_hrm_user_template::factory((int) $_REQUEST['user_template']);
@@ -143,9 +143,9 @@ if ($pines->config->com_hrm->global_employees)
 	$employee->ac->other = 1;
 
 if ($employee->save()) {
-	display_notice('Saved employee ['.$employee->name.']');
+	pines_notice('Saved employee ['.$employee->name.']');
 } else {
-	display_error('Error saving employee. Do you have permission?');
+	pines_error('Error saving employee. Do you have permission?');
 }
 
 $pines->com_hrm->list_employees();

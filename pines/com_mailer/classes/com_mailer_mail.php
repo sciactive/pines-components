@@ -77,13 +77,13 @@ class com_mailer_mail extends p_base {
 		global $pines;
 		// validate incoming parameters
 		if (!preg_match('/^.+@.+$/',$sender))
-			display_error('Invalid value for email sender.');
+			pines_error('Invalid value for email sender.');
 		if (!preg_match('/^.+@.+$/',$recipient))
-			display_error('Invalid value for email recipient.');
+			pines_error('Invalid value for email recipient.');
 		if (!$subject||strlen($subject)>255)
-			display_error('Invalid length for email subject.');
+			pines_error('Invalid length for email subject.');
 		if (!$message)
-			display_error('Invalid value for email message.');
+			pines_error('Invalid value for email message.');
 		$this->sender = $sender;
 		$this->recipient = $recipient;
 		$this->subject = $subject;
@@ -210,7 +210,7 @@ class com_mailer_mail extends p_base {
 	 */
 	function addAttachment($attachment) {
 		if (!file_exists($attachment)) {
-			display_error('Invalid attachment.');
+			pines_error('Invalid attachment.');
 			return false;
 		}
 		$this->attachments[] = $attachment;
@@ -226,7 +226,7 @@ class com_mailer_mail extends p_base {
 	function getMimeType($attachment) {
 		$attachment = explode('.',basename($attachment));
 		if (!isset($this->mimeTypes[strtolower($attachment[count($attachment)-1])])) {
-			display_error('MIME Type not found.');
+			pines_error('MIME Type not found.');
 			return null;
 		}
 		return $this->mimeTypes[strtolower($attachment[count($attachment)-1])];
@@ -243,7 +243,7 @@ class com_mailer_mail extends p_base {
 		$headers = $this->buildHeaders();
 		$message = $this->buildTextPart().$this->buildAttachmentPart()."--MIME_BOUNDRY--\n";
 		if (!mail($to, $subject, $message, $headers, '-femail@example.com')) {
-			display_error('Error sending email.');
+			pines_error('Error sending email.');
 			return false;
 		}
 		return true;

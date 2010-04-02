@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listvendors', null, false));
 	$vendor = com_sales_vendor::factory((int) $_REQUEST['id']);
 	if (is_null($vendor->guid)) {
-		display_error('Requested vendor id is not accessible');
+		pines_error('Requested vendor id is not accessible');
 		return;
 	}
 } else {
@@ -49,13 +49,13 @@ $vendor->comments = $_REQUEST['comments'];
 
 if (empty($vendor->name)) {
 	$vendor->print_form();
-	display_notice('Please specify a name.');
+	pines_notice('Please specify a name.');
 	return;
 }
 $test = $pines->entity_manager->get_entity(array('data' => array('name' => $vendor->name), 'tags' => array('com_sales', 'vendor'), 'class' => com_sales_vendor));
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$vendor->print_form();
-	display_notice('There is already a vendor with that name. Please choose a different name.');
+	pines_notice('There is already a vendor with that name. Please choose a different name.');
 	return;
 }
 
@@ -63,9 +63,9 @@ if ($pines->config->com_sales->global_vendors)
 	$vendor->ac->other = 1;
 
 if ($vendor->save()) {
-	display_notice('Saved vendor ['.$vendor->name.']');
+	pines_notice('Saved vendor ['.$vendor->name.']');
 } else {
-	display_error('Error saving vendor. Do you have permission?');
+	pines_error('Error saving vendor. Do you have permission?');
 }
 
 $pines->com_sales->list_vendors();

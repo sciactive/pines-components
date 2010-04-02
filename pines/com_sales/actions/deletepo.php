@@ -21,10 +21,10 @@ foreach ($list as $cur_po) {
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_po;
 }
 if (empty($failed_deletes)) {
-	display_notice('Selected PO(s) deleted successfully.');
+	pines_notice('Selected PO(s) deleted successfully.');
 } else {
-	display_error('Could not delete POs with given IDs: '.$failed_deletes);
-	display_notice('Note that POs cannot be deleted after items have been received on them.');
+	pines_error('Could not delete POs with given IDs: '.$failed_deletes);
+	pines_notice('Note that POs cannot be deleted after items have been received on them.');
 }
 
 $pines->com_sales->list_pos();

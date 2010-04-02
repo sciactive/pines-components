@@ -454,7 +454,7 @@ class com_user extends component {
 
 		if ( empty($module->groups) ) {
 			//$module->detach();
-			display_notice('There are no groups.');
+			pines_notice('There are no groups.');
 		}
 	}
 
@@ -474,7 +474,7 @@ class com_user extends component {
 
 		if ( empty($module->users) ) {
 			//$module->detach();
-			display_notice('There are no users.');
+			pines_notice('There are no users.');
 		}
 	}
 

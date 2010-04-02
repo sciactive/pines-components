@@ -12,13 +12,13 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if (!empty($_REQUEST['message']))
-	display_notice($_REQUEST['message']);
+	pines_notice($_REQUEST['message']);
 
 // Show some info if the user is still logged in.
 if (is_object($_SESSION['user'])) {
 	if ($_REQUEST['default'] == '1') {
 		$module = new module('com_user', 'default_denied', 'content');
-		display_error('Incorrect user permission settings detected.');
+		pines_error('Incorrect user permission settings detected.');
 		return;
 	}
 	if ( !empty($_REQUEST['url']) ) {

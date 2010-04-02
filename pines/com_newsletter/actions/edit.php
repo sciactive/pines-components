@@ -17,7 +17,7 @@ if ( !gatekeeper('com_newsletter/listmail') )
 if ( !empty($_REQUEST['mail_id']) ) {
 	$mail = $pines->entity_manager->get_entity(array('guid' => $_REQUEST['mail_id'], 'tags' => array('com_newsletter', 'mail')));
 	if ( is_null($mail) ) {
-		display_error('Invalid mail!');
+		pines_error('Invalid mail!');
 		return false;
 	}
 } else {
@@ -32,7 +32,7 @@ if ( $_REQUEST['update'] == 'yes' ) {
 	foreach ( $mail->attachments as $key => $cur_attachment ) {
 		if ( $_REQUEST["attach_".clean_checkbox($cur_attachment)] != 'on' ) {
 			if ( $pines->com_newsletter->delete_attachment($mail, $cur_attachment) )
-				display_notice("Attachment $cur_attachment removed.");
+				pines_notice("Attachment $cur_attachment removed.");
 		}
 	}
 	if ( !$_FILES['attachment']['error'] ) {
@@ -40,13 +40,13 @@ if ( $_REQUEST['update'] == 'yes' ) {
 		if ( move_uploaded_file($_FILES['attachment']['tmp_name'], $pines->config->setting_upload.'attachments/'.$upload_file) ) {
 			array_push($mail->attachments, $upload_file);
 		} else {
-			display_error("Possible file upload attack! Upload failed! D:\n");
+			pines_error("Possible file upload attack! Upload failed! D:\n");
 		}
 	}
 
 	$mail->save();
 
-	display_notice("Saved mail [$mail->name]");
+	pines_notice("Saved mail [$mail->name]");
 }
 
 $pines->com_newsletter->edit_mail($mail, 'com_newsletter', 'edit');

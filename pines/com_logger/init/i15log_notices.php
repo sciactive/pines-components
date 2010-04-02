@@ -11,32 +11,32 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if (!function_exists('display_error') && $pines->config->com_logger->log_errors) {
+if ($pines->config->com_logger->log_errors) {
 	/**
 	 * Log a displayed error.
 	 *
-	 * @param string $error_text The error text.
-	 * @ignore
+	 * @param string $args The error text.
 	 */
-	function display_error($error_text) {
+	function com_logger_log_error($args) {
 		global $pines;
-		$pines->log_manager->log($error_text, 'error');
-		$pines->page->error($error_text);
+		$pines->log_manager->log($args[0], 'error');
+		return $args;
 	}
+	$pines->hook->add_callback('$pines->page->error', -15, 'com_logger_log_error');
 }
 
-if (!function_exists('display_notice') && $pines->config->com_logger->log_notices) {
+if ($pines->config->com_logger->log_notices) {
 	/**
 	 * Log a displayed notice.
 	 *
-	 * @param string $notice_text The notice text.
-	 * @ignore
+	 * @param string $args The notice text.
 	 */
-	function display_notice($notice_text) {
+	function com_logger_log_notice($args) {
 		global $pines;
-		$pines->log_manager->log($notice_text, 'notice');
-		$pines->page->notice($notice_text);
+		$pines->log_manager->log($args[0], 'notice');
+		return $args;
 	}
+	$pines->hook->add_callback('$pines->page->notice', -15, 'com_logger_log_notice');
 }
 
 ?>

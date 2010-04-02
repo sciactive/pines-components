@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listpos', null, false));
 	$po = com_sales_po::factory((int) $_REQUEST['id']);
 	if (is_null($po->guid) || $po->final) {
-		display_error('Requested PO id is not accessible');
+		pines_error('Requested PO id is not accessible');
 		return;
 	}
 } else {
@@ -65,23 +65,23 @@ if (empty($po->received)) {
 
 if (empty($po->po_number)) {
 	$po->print_form();
-	display_notice('Please specify a PO number.');
+	pines_notice('Please specify a PO number.');
 	return;
 }
 $test = $pines->entity_manager->get_entity(array('data' => array('po_number' => $po->po_number), 'tags' => array('com_sales', 'po'), 'class' => com_sales_po));
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$po->print_form();
-	display_notice('There is already a PO with that number. Please enter a different number.');
+	pines_notice('There is already a PO with that number. Please enter a different number.');
 	return;
 }
 if (is_null($po->vendor)) {
 	$po->print_form();
-	display_error('Specified vendor is not valid.');
+	pines_error('Specified vendor is not valid.');
 	return;
 }
 if (is_null($po->shipper)) {
 	$po->print_form();
-	display_error('Specified shipper is not valid.');
+	pines_error('Specified shipper is not valid.');
 	return;
 }
 
@@ -92,12 +92,12 @@ if ($_REQUEST['save'] == 'commit')
 
 if ($po->save()) {
 	if ($po->final) {
-		display_notice('Committed PO ['.$po->guid.']');
+		pines_notice('Committed PO ['.$po->guid.']');
 	} else {
-		display_notice('Saved PO ['.$po->guid.']');
+		pines_notice('Saved PO ['.$po->guid.']');
 	}
 } else {
-	display_error('Error saving PO. Do you have permission?');
+	pines_error('Error saving PO. Do you have permission?');
 }
 
 $pines->com_sales->list_pos();

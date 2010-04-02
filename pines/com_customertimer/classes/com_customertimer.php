@@ -46,17 +46,17 @@ class com_customertimer extends component {
 	function login_logout($id, $password) {
 		global $pines;
 		if (!is_numeric($id)) {
-			display_notice('Please provide a customer ID.');
+			pines_notice('Please provide a customer ID.');
 			return false;
 		}
 		$id = (int) $id;
 		$customer = com_customer_customer::factory($id);
 		if (is_null($customer->guid)) {
-			display_notice('Customer ID not found.');
+			pines_notice('Customer ID not found.');
 			return false;
 		}
 		if ($customer->password != $password) {
-			display_notice('Customer ID and password do not match.');
+			pines_notice('Customer ID and password do not match.');
 			return false;
 		}
 		$logins = com_customertimer_login_tracker::factory();
@@ -65,11 +65,11 @@ class com_customertimer extends component {
 				return $logins->logout($customer);
 		}
 		if ($customer->login_disabled) {
-			display_notice('Login has been disabled for your account.');
+			pines_notice('Login has been disabled for your account.');
 			return false;
 		}
 		if ($customer->points <= 0) {
-			display_notice('Your account balance has reached zero.');
+			pines_notice('Your account balance has reached zero.');
 			if (!$pines->config->com_customertimer->debtlogin)
 				return false;
 		}

@@ -15,16 +15,16 @@ if ( !gatekeeper('com_entitytools/import') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_entitytools', 'import', null, false));
 
 if (!is_callable(array($pines->entity_manager, 'import'))) {
-	display_notice('The currently installed entity manager doesn\'t support importing.');
+	pines_notice('The currently installed entity manager doesn\'t support importing.');
 	return;
 }
 
 if (!empty($_FILES['entity_import']['tmp_name'])) {
 	set_time_limit(3600);
 	if ($pines->entity_manager->import($_FILES['entity_import']['tmp_name'])) {
-		display_notice('Import complete.');
+		pines_notice('Import complete.');
 	} else {
-		display_notice('Import failed.');
+		pines_notice('Import failed.');
 	}
 }
 

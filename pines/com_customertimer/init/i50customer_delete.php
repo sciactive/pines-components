@@ -24,7 +24,7 @@ function com_customertimer__check_delete($arguments, $name, $object) {
 		return $arguments;
 	$logins = com_customertimer_login_tracker::factory();
 	if ($logins->logged_in($object)) {
-		display_notice("{$object->guid}: {$object->name} is currently logged in to the customer timer and cannot be deleted until logged out.");
+		pines_notice("{$object->guid}: {$object->name} is currently logged in to the customer timer and cannot be deleted until logged out.");
 		return false;
 	}
 	return $arguments;

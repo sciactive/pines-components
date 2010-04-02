@@ -35,7 +35,7 @@ class com_newsletter extends component {
 			pines_log("Removed attachment $name from mail $mail->name.", 'notice');
 			return true;
 		} else {
-			display_error('File removal failed!');
+			pines_error('File removal failed!');
 			return false;
 		}
 	}
@@ -55,7 +55,7 @@ class com_newsletter extends component {
 
 		if ( !is_null($mail) ) {
 			if ( !$mail->has_tag('com_newsletter', 'mail') ) {
-				display_error('Invalid mail!');
+				pines_error('Invalid mail!');
 				return false;
 			}
 		} else {
@@ -87,7 +87,7 @@ class com_newsletter extends component {
 
 		if ( empty($module->mails) ) {
 			//$module->detach();
-			display_notice('There are no mails.');
+			pines_notice('There are no mails.');
 		}
 	}
 }

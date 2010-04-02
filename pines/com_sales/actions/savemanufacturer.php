@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listmanufacturers', null, false));
 	$manufacturer = com_sales_manufacturer::factory((int) $_REQUEST['id']);
 	if (is_null($manufacturer->guid)) {
-		display_error('Requested manufacturer id is not accessible');
+		pines_error('Requested manufacturer id is not accessible');
 		return;
 	}
 } else {
@@ -37,13 +37,13 @@ $manufacturer->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
 
 if (empty($manufacturer->name)) {
 	$manufacturer->print_form();
-	display_notice('Please specify a name.');
+	pines_notice('Please specify a name.');
 	return;
 }
 $test = $pines->entity_manager->get_entity(array('data' => array('name' => $manufacturer->name), 'tags' => array('com_sales', 'manufacturer'), 'class' => com_sales_manufacturer));
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$manufacturer->print_form();
-	display_notice('There is already a manufacturer with that name. Please choose a different name.');
+	pines_notice('There is already a manufacturer with that name. Please choose a different name.');
 	return;
 }
 
@@ -51,9 +51,9 @@ if ($pines->config->com_sales->global_manufacturers)
 	$manufacturer->ac->other = 1;
 
 if ($manufacturer->save()) {
-	display_notice('Saved manufacturer ['.$manufacturer->name.']');
+	pines_notice('Saved manufacturer ['.$manufacturer->name.']');
 } else {
-	display_error('Error saving manufacturer. Do you have permission?');
+	pines_error('Error saving manufacturer. Do you have permission?');
 }
 
 $pines->com_sales->list_manufacturers();

@@ -134,12 +134,12 @@ class com_sales_sale extends entity {
 				continue;
 			// Check minimum and maximum values.
 			if ((float) $cur_payment['amount'] < $cur_payment['entity']->minimum) {
-				display_notice("The payment type [{$cur_payment['entity']->name}] requires a minimum payment of {$cur_payment['entity']->minimum}.");
+				pines_notice("The payment type [{$cur_payment['entity']->name}] requires a minimum payment of {$cur_payment['entity']->minimum}.");
 				$return = false;
 				continue;
 			}
 			if (isset($cur_payment['entity']->maximum) && (float) $cur_payment['amount'] > $cur_payment['entity']->maximum) {
-				display_notice("The payment type [{$cur_payment['entity']->name}] requires a maximum payment of {$cur_payment['entity']->maximum}.");
+				pines_notice("The payment type [{$cur_payment['entity']->name}] requires a maximum payment of {$cur_payment['entity']->maximum}.");
 				$return = false;
 				continue;
 			}
@@ -242,21 +242,21 @@ class com_sales_sale extends entity {
 		// Keep track of the whole process.
 		$return = true;
 		if (!$this->approve_payments()) {
-			display_notice('The sale cannot be completed until all payments have been approved or declined.');
+			pines_notice('The sale cannot be completed until all payments have been approved or declined.');
 			return false;
 		}
 		if (!$this->tender_payments()) {
-			display_notice('All payments have not been tendered. The sale was not completed. Please check the status on each payment.');
+			pines_notice('All payments have not been tendered. The sale was not completed. Please check the status on each payment.');
 			return false;
 		}
 		if (!isset($this->amount_due) || $this->amount_due > 0) {
-			display_notice('The sale cannot be completed while there is still an amount due.');
+			pines_notice('The sale cannot be completed while there is still an amount due.');
 			return false;
 		}
 		if ($this->change > 0.00) {
 			$change_type = $pines->entity_manager->get_entity(array('data' => array('change_type' => true), 'tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));
 			if (is_null($change_type)) {
-				display_notice('Change is due to be given, but no payment type has been set to give change.');
+				pines_notice('Change is due to be given, but no payment type has been set to give change.');
 				return false;
 			}
 		}
@@ -269,7 +269,7 @@ class com_sales_sale extends entity {
 				'sale' => &$this
 			));
 			if (!$this->change_given) {
-				display_notice('Change is due, but the payment type designated to give change declined the request.');
+				pines_notice('Change is due, but the payment type designated to give change declined the request.');
 				return false;
 			} else {
 				// Make a transaction entry.
@@ -322,7 +322,7 @@ class com_sales_sale extends entity {
 	public function invoice() {
 		global $pines;
 		if (!is_array($this->products)) {
-			display_notice('Sale has no products');
+			pines_notice('Sale has no products');
 			return false;
 		}
 		// Keep track of the whole process.
@@ -334,7 +334,7 @@ class com_sales_sale extends entity {
 		if ($pines->com_sales->com_customer) {
 			foreach ($this->products as &$cur_product) {
 				if (!$cur_product['entity'] || ($cur_product['entity']->require_customer && !$this->customer)) {
-					display_notice('One of the products on this sale requires a customer. Please select a customer for this sale before invoicing.');
+					pines_notice('One of the products on this sale requires a customer. Please select a customer for this sale before invoicing.');
 					return false;
 				}
 			}
@@ -342,7 +342,7 @@ class com_sales_sale extends entity {
 		unset($cur_product);
 		// Calculate and save the sale's totals.
 		if (!$this->total()) {
-			display_notice('Couldn\'t total sale.');
+			pines_notice('Couldn\'t total sale.');
 			return false;
 		}
 		// Go through each product, and find corresponding stock entries.
@@ -371,7 +371,7 @@ class com_sales_sale extends entity {
 					if (!$found) {
 						if ($cur_product['entity']->stock_type != 'stock_optional') {
 							// It wasn't found, and its not optional.
-							display_notice("Product with SKU [{$cur_product['sku']}]".($cur_product['entity']->serialized ? " and serial [{$cur_product['serial']}]" : " and quantity {$cur_product['quantity']}")." is not in local stock.".($cur_product['entity']->serialized ? '' : ' Found '.count($stock_entities).'.'));
+							pines_notice("Product with SKU [{$cur_product['sku']}]".($cur_product['entity']->serialized ? " and serial [{$cur_product['serial']}]" : " and quantity {$cur_product['quantity']}")." is not in local stock.".($cur_product['entity']->serialized ? '' : ' Found '.count($stock_entities).'.'));
 							return false;
 						} else {
 							// It wasn't found, but it's optional, so mark this item as shipped.
@@ -496,7 +496,7 @@ class com_sales_sale extends entity {
 				}
 				// Check that the discount doesn't lower the item's price below the floor.
 				if ($cur_product['entity']->floor && $pines->com_sales->round($discount_price, $pines->config->com_sales->dec) < $pines->com_sales->round($cur_product['entity']->floor, $pines->config->com_sales->dec)) {
-					display_notice("The discount on {$cur_product['entity']->name} lowers the product's price below the limit. The discount was removed.");
+					pines_notice("The discount on {$cur_product['entity']->name} lowers the product's price below the limit. The discount was removed.");
 					$discount = $cur_product['discount'] = '';
 				} else {
 					$price = $discount_price;
@@ -504,12 +504,12 @@ class com_sales_sale extends entity {
 			}
 			// Check that the price is above the floor of the product.
 			if ($cur_product['entity']->floor && $price < $cur_product['entity']->floor) {
-				display_notice("The product {$cur_product['entity']->name} cannot be priced lower than {$cur_product['entity']->floor}.");
+				pines_notice("The product {$cur_product['entity']->name} cannot be priced lower than {$cur_product['entity']->floor}.");
 				return false;
 			}
 			// Check that the price is below the ceiling of the product.
 			if ($cur_product['entity']->ceiling && $price > $cur_product['entity']->ceiling) {
-				display_notice("The product {$cur_product['entity']->name} cannot be priced higher than {$cur_product['entity']->ceiling}.");
+				pines_notice("The product {$cur_product['entity']->name} cannot be priced higher than {$cur_product['entity']->ceiling}.");
 				return false;
 			}
 			$line_total = $price * $qty;

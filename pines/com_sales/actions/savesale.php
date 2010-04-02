@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listsales', null, false));
 	$sale = com_sales_sale::factory((int) $_REQUEST['id']);
 	if (is_null($sale->guid)) {
-		display_error('Requested sale id is not accessible');
+		pines_error('Requested sale id is not accessible');
 		return;
 	}
 } else {
@@ -42,7 +42,7 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid') {
 	if (!is_array($sale->products))
 		$sale->products = array();
 	if (empty($sale->products)) {
-		display_notice("No products were selected.");
+		pines_notice("No products were selected.");
 		$product_error = true;
 	} else {
 		foreach ($sale->products as $key => &$cur_product) {
@@ -56,7 +56,7 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid') {
 			$cur_price = floatval($cur_product->values[5]);
 			$cur_discount = $cur_product->values[6];
 			if (is_null($cur_product_entity->guid)) {
-				display_error("Product with id [$cur_product->key] and entered SKU [$cur_sku] was not found.");
+				pines_error("Product with id [$cur_product->key] and entered SKU [$cur_sku] was not found.");
 				unset($sale->products[$key]);
 				$product_error = true;
 				continue;
@@ -64,26 +64,26 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid') {
 			if ($cur_product_entity->serialized)
 				$cur_qty = 1;
 			if ($cur_product_entity->serialized && empty($cur_serial)) {
-				display_notice("Product with SKU [$cur_sku] requires a serial.");
+				pines_notice("Product with SKU [$cur_sku] requires a serial.");
 				$product_error = true;
 			}
 			if ($cur_qty < 1) {
-				display_notice("Product with SKU [$cur_sku] has a zero or negative quantity.");
+				pines_notice("Product with SKU [$cur_sku] has a zero or negative quantity.");
 				$product_error = true;
 			}
 			if ($cur_product_entity->pricing_method != 'variable' && $cur_product_entity->unit_price != $cur_price) {
-				display_notice("Product with SKU [$cur_sku] has an incorrect price.");
+				pines_notice("Product with SKU [$cur_sku] has an incorrect price.");
 				$product_error = true;
 			}
 			if (!$cur_product_entity->discountable && !empty($cur_discount)) {
-				display_notice("Product with SKU [$cur_sku] is not discountable.");
+				pines_notice("Product with SKU [$cur_sku] is not discountable.");
 				$product_error = true;
 			}
 			if ($cur_product_entity->one_per_ticket) {
 				// This causes products with >1 qtys to not be added to $one_per_ticket_guids,
 				// but that's ok, since they're already an erroneous entry.
 				if ($cur_qty > 1 || in_array($cur_product_entity->guid, $one_per_ticket_guids)) {
-					display_notice("Only one of product with SKU [$cur_sku] is allowed on a ticket.");
+					pines_notice("Only one of product with SKU [$cur_sku] is allowed on a ticket.");
 					$product_error = true;
 				} else {
 					$one_per_ticket_guids[] = $cur_product_entity->guid;
@@ -122,12 +122,12 @@ if ($sale->status != 'paid') {
 		if (in_array($cur_status, array('approved', 'declined', 'tendered')))
 			continue;
 		if (is_null($cur_payment_type_entity->guid)) {
-			display_error("Payment type with id [$cur_payment->key] was not found.");
+			pines_error("Payment type with id [$cur_payment->key] was not found.");
 			$payment_error = true;
 			continue;
 		}
 		if ($cur_amount <= 0) {
-			display_notice("A payment was entered without an amount.");
+			pines_notice("A payment was entered without an amount.");
 			$payment_error = true;
 		}
 		$data_array = array();
@@ -158,7 +158,7 @@ if ($pines->config->com_sales->global_sales)
 if (($_REQUEST['process'] == 'invoice' || $_REQUEST['process'] == 'tender') && $sale->status != 'invoiced' && $sale->status != 'paid') {
 	if (!$sale->invoice()) {
 		$sale->print_form();
-		display_error('There was an error while invoicing the sale. Please check that all information is correct and resubmit.');
+		pines_error('There was an error while invoicing the sale. Please check that all information is correct and resubmit.');
 		return;
 	}
 }
@@ -167,7 +167,7 @@ if ($_REQUEST['process'] == 'tender') {
 	if (!$sale->complete()) {
 		$sale->save();
 		$sale->print_form();
-		display_error('There was an error while completing the sale. It has been invoiced, but not completed yet. Please check that all information is correct and resubmit.');
+		pines_error('There was an error while completing the sale. It has been invoiced, but not completed yet. Please check that all information is correct and resubmit.');
 		return;
 	}
 }
@@ -178,10 +178,10 @@ if (!isset($sale->status) || $sale->status == 'quoted') {
 }
 
 if ($sale->save()) {
-	display_notice('Saved sale ['.$sale->guid.']');
+	pines_notice('Saved sale ['.$sale->guid.']');
 } else {
 	$sale->print_form();
-	display_error('Error saving sale. Do you have permission?');
+	pines_error('Error saving sale. Do you have permission?');
 	return;
 }
 

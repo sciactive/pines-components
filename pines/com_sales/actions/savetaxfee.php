@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listtaxfees', null, false));
 	$tax_fee = com_sales_tax_fee::factory((int) $_REQUEST['id']);
 	if (is_null($tax_fee->guid)) {
-		display_error('Requested tax/fee id is not accessible');
+		pines_error('Requested tax/fee id is not accessible');
 		return;
 	}
 } else {
@@ -40,18 +40,18 @@ if (is_array($_REQUEST['locations'])) {
 
 if (empty($tax_fee->name)) {
 	$tax_fee->print_form();
-	display_notice('Please specify a name.');
+	pines_notice('Please specify a name.');
 	return;
 }
 $test = $pines->entity_manager->get_entity(array('data' => array('name' => $tax_fee->name), 'tags' => array('com_sales', 'tax_fee'), 'class' => com_sales_tax_fee));
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$tax_fee->print_form();
-	display_notice('There is already a tax/fee with that name. Please choose a different name.');
+	pines_notice('There is already a tax/fee with that name. Please choose a different name.');
 	return;
 }
 if (empty($tax_fee->rate)) {
 	$tax_fee->print_form();
-	display_notice('Please specify a rate.');
+	pines_notice('Please specify a rate.');
 	return;
 }
 
@@ -59,9 +59,9 @@ if ($pines->config->com_sales->global_tax_fees)
 	$tax_fee->ac->other = 1;
 
 if ($tax_fee->save()) {
-	display_notice('Saved tax/fee ['.$tax_fee->name.']');
+	pines_notice('Saved tax/fee ['.$tax_fee->name.']');
 } else {
-	display_error('Error saving tax/fee. Do you have permission?');
+	pines_error('Error saving tax/fee. Do you have permission?');
 }
 
 $pines->com_sales->list_tax_fees();

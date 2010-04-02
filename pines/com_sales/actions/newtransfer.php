@@ -17,7 +17,7 @@ if ( !gatekeeper('com_sales/managestock') )
 $list = explode(',', $_REQUEST['id']);
 
 if (empty($list)) {
-	display_notice('No inventory specified for transfer!');
+	pines_notice('No inventory specified for transfer!');
 	return;
 }
 

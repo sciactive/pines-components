@@ -23,9 +23,9 @@ foreach ($list as $cur_mail) {
 	$mail->delete();
 }
 if (empty($failed_deletes)) {
-	display_notice('Selected mail(s) deleted successfully.');
+	pines_notice('Selected mail(s) deleted successfully.');
 } else {
-	display_error('Could not delete mails with given IDs: '.$failed_deletes);
+	pines_error('Could not delete mails with given IDs: '.$failed_deletes);
 }
 
 $pines->com_newsletter->list_mails();

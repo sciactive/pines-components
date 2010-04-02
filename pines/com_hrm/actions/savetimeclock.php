@@ -16,7 +16,7 @@ if ( !gatekeeper('com_hrm/manageclock') )
 
 $employee = com_hrm_employee::factory((int) $_REQUEST['id']);
 if (is_null($employee->guid)) {
-	display_error('Requested employee id is not accessible.');
+	pines_error('Requested employee id is not accessible.');
 	return;
 }
 
@@ -34,9 +34,9 @@ foreach($clock as $cur_entry) {
 }
 
 if ($employee->save()) {
-	display_notice("Saved timeclock for {$employee->name}.");
+	pines_notice("Saved timeclock for {$employee->name}.");
 } else {
-	display_error('Error saving timeclock. Do you have permission?');
+	pines_error('Error saving timeclock. Do you have permission?');
 }
 
 $pines->com_hrm->list_timeclocks();

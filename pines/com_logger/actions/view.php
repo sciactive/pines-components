@@ -17,9 +17,9 @@ if ( !gatekeeper('com_logger/view') )
 $view = new module('com_logger', 'view', 'content');
 if (file_exists($pines->config->com_logger->path)) {
 	if (($view->log = file_get_contents($pines->config->com_logger->path)) === false)
-		display_error('Error reading log file '.$pines->config->com_logger->path);
+		pines_error('Error reading log file '.$pines->config->com_logger->path);
 } else {
-	display_error('Log file '.$pines->config->com_logger->path.' does not exist!');
+	pines_error('Log file '.$pines->config->com_logger->path.' does not exist!');
 }
 if (empty($view->log)) $view->log = 'Log file is empty.';
 

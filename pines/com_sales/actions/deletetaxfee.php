@@ -21,9 +21,9 @@ foreach ($list as $cur_tax_fee) {
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_tax_fee;
 }
 if (empty($failed_deletes)) {
-	display_notice('Selected tax/fee(s) deleted successfully.');
+	pines_notice('Selected tax/fee(s) deleted successfully.');
 } else {
-	display_error('Could not delete tax/fees with given IDs: '.$failed_deletes);
+	pines_error('Could not delete tax/fees with given IDs: '.$failed_deletes);
 }
 
 $pines->com_sales->list_tax_fees();

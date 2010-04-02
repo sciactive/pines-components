@@ -21,9 +21,9 @@ foreach ($list as $cur_manufacturer) {
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_manufacturer;
 }
 if (empty($failed_deletes)) {
-	display_notice('Selected manufacturer(s) deleted successfully.');
+	pines_notice('Selected manufacturer(s) deleted successfully.');
 } else {
-	display_error('Could not delete manufacturers with given IDs: '.$failed_deletes);
+	pines_error('Could not delete manufacturers with given IDs: '.$failed_deletes);
 }
 
 $pines->com_sales->list_manufacturers();

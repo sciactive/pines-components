@@ -12,13 +12,13 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !isset($_REQUEST['mail_id']) ) {
-	display_error("No mail specified!");
+	pines_error("No mail specified!");
 	return false;
 }
 
 $mail = $pines->entity_manager->get_entity(array('guid' => $_REQUEST['mail_id'], 'tags' => array('com_newsletter', 'mail')));
 if ( is_null($mail) ) {
-	display_error('Invalid mail!');
+	pines_error('Invalid mail!');
 	return false;
 }
 

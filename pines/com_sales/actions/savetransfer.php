@@ -17,7 +17,7 @@ if ( !gatekeeper('com_sales/managestock') )
 if ( isset($_REQUEST['id']) ) {
 	$transfer = com_sales_transfer::factory((int) $_REQUEST['id']);
 	if (is_null($transfer->guid) || $transfer->final) {
-		display_error('Requested transfer id is not accessible');
+		pines_error('Requested transfer id is not accessible');
 		return;
 	}
 } else {
@@ -53,12 +53,12 @@ if (empty($transfer->received)) {
 
 if (is_null($transfer->destination)) {
 	$transfer->print_form();
-	display_error('Specified destination is not valid.');
+	pines_error('Specified destination is not valid.');
 	return;
 }
 if (is_null($transfer->shipper)) {
 	$transfer->print_form();
-	display_error('Specified shipper is not valid.');
+	pines_error('Specified shipper is not valid.');
 	return;
 }
 
@@ -69,12 +69,12 @@ if ($_REQUEST['save'] == 'commit')
 
 if ($transfer->save()) {
 	if ($transfer->final) {
-		display_notice('Committed transfer ['.$transfer->guid.']');
+		pines_notice('Committed transfer ['.$transfer->guid.']');
 	} else {
-		display_notice('Saved transfer ['.$transfer->guid.']');
+		pines_notice('Saved transfer ['.$transfer->guid.']');
 	}
 } else {
-	display_error('Error saving transfer. Do you have permission?');
+	pines_error('Error saving transfer. Do you have permission?');
 }
 
 $pines->com_sales->list_transfers();

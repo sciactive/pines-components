@@ -21,9 +21,9 @@ foreach ($list as $cur_vendor) {
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_vendor;
 }
 if (empty($failed_deletes)) {
-	display_notice('Selected vendor(s) deleted successfully.');
+	pines_notice('Selected vendor(s) deleted successfully.');
 } else {
-	display_error('Could not delete vendors with given IDs: '.$failed_deletes);
+	pines_error('Could not delete vendors with given IDs: '.$failed_deletes);
 }
 
 $pines->com_sales->list_vendors();

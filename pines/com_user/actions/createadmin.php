@@ -12,11 +12,11 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if (!$pines->config->com_user->create_admin) {
-	display_notice('Creating admin user has been disabled.');
+	pines_notice('Creating admin user has been disabled.');
 	return;
 }
 if ($_REQUEST['secret'] != $pines->config->com_user->create_admin_secret) {
-	display_notice('Wrong secret.');
+	pines_notice('Wrong secret.');
 	return;
 }
 
@@ -28,13 +28,13 @@ $new_admin_user->abilities = array('system/all');
 
 $test = user::factory($_REQUEST['username']);
 if ( isset($test->guid) ) {
-	display_notice('Username already exists!');
+	pines_notice('Username already exists!');
 	return;
 }
 
 pines_log("Created admin user $new_admin_user->username.", 'notice');
 $new_admin_user->save();
 
-display_notice('Admin user created.');
+pines_notice('Admin user created.');
 
 ?>

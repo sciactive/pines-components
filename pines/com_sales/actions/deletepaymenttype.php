@@ -21,9 +21,9 @@ foreach ($list as $cur_payment_type) {
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_payment_type;
 }
 if (empty($failed_deletes)) {
-	display_notice('Selected payment type(s) deleted successfully.');
+	pines_notice('Selected payment type(s) deleted successfully.');
 } else {
-	display_error('Could not delete payment types with given IDs: '.$failed_deletes);
+	pines_error('Could not delete payment types with given IDs: '.$failed_deletes);
 }
 
 $pines->com_sales->list_payment_types();

@@ -21,10 +21,10 @@ foreach ($list as $cur_sheet) {
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_sheet;
 }
 if (empty($failed_deletes)) {
-	display_notice('Selected countsheet(s) deleted successfully.');
+	pines_notice('Selected countsheet(s) deleted successfully.');
 } else {
-	display_error('Could not delete countsheets with given IDs: '.$failed_deletes);
-	display_notice('Note that countsheets cannot be deleted after items have been received on them.');
+	pines_error('Could not delete countsheets with given IDs: '.$failed_deletes);
+	pines_notice('Note that countsheets cannot be deleted after items have been received on them.');
 }
 
 $pines->com_sales->list_countsheets();

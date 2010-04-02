@@ -21,7 +21,7 @@ if ($pines->configurator->enable_component($_REQUEST['component'])) {
 	$pines->page->override = true;
 	return;
 } else {
-	display_error('Couldn\'t enable component '.$_REQUEST['component'].'.');
+	pines_error('Couldn\'t enable component '.$_REQUEST['component'].'.');
 }
 
 $pines->configurator->list_components();

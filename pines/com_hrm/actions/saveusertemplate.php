@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'listusertemplates', null, false));
 	$user_template = com_hrm_user_template::factory((int) $_REQUEST['id']);
 	if (is_null($user_template->guid)) {
-		display_error('Requested user template id is not accessible');
+		pines_error('Requested user template id is not accessible');
 		return;
 	}
 } else {
@@ -43,13 +43,13 @@ if (is_array($_REQUEST['groups'])) {
 
 if (empty($user_template->name)) {
 	$user_template->print_form();
-	display_notice('Please specify a name.');
+	pines_notice('Please specify a name.');
 	return;
 }
 $test = $pines->entity_manager->get_entity(array('data' => array('name' => $user_template->name), 'tags' => array('com_hrm', 'user_template'), 'class' => com_hrm_user_template));
 if (isset($test) && !$user_template->is($test)) {
 	$user_template->print_form();
-	display_notice('There is already a user template with that name. Please choose a different name.');
+	pines_notice('There is already a user template with that name. Please choose a different name.');
 	return;
 }
 
@@ -57,9 +57,9 @@ if ($pines->config->com_hrm->global_user_templates)
 	$user_template->ac->other = 1;
 
 if ($user_template->save()) {
-	display_notice('Saved user template ['.$user_template->name.']');
+	pines_notice('Saved user template ['.$user_template->name.']');
 } else {
-	display_error('Error saving user template. Do you have permission?');
+	pines_error('Error saving user template. Do you have permission?');
 }
 
 $pines->com_hrm->list_user_templates();

@@ -18,13 +18,13 @@ $jstree = new module('system', 'jstree', 'head');
 $sendprep = new module('com_newsletter', 'sendprep', 'content');
 
 if ( empty($_REQUEST['mail_id']) ) {
-	display_error('Mail ID not valid!');
+	pines_error('Mail ID not valid!');
 	return;
 }
 
 $mail = $pines->entity_manager->get_entity(array('guid' => $_REQUEST['mail_id'], 'tags' => array('com_newsletter', 'mail')));
 if ( is_null($mail) ) {
-	display_error('Invalid mail specified!');
+	pines_error('Invalid mail specified!');
 	return;
 }
 

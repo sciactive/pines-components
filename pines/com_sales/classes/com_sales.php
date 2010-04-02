@@ -373,7 +373,7 @@ class com_sales extends component {
 
 		if ( empty($module->countsheets) ) {
 			//$module->detach();
-			display_notice('There are no countsheets.');
+			pines_notice('There are no countsheets.');
 			return;
 		}
 
@@ -422,7 +422,7 @@ class com_sales extends component {
 
 		if ( empty($module->manufacturers) ) {
 			//$module->detach();
-			display_notice('There are no manufacturers.');
+			pines_notice('There are no manufacturers.');
 		}
 	}
 
@@ -442,7 +442,7 @@ class com_sales extends component {
 
 		if ( empty($module->payment_types) ) {
 			//$module->detach();
-			display_notice('There are no payment types.');
+			pines_notice('There are no payment types.');
 		}
 	}
 
@@ -462,7 +462,7 @@ class com_sales extends component {
 
 		if ( empty($module->pos) ) {
 			//$module->detach();
-			display_notice('There are no POs.');
+			pines_notice('There are no POs.');
 			return;
 		}
 		
@@ -495,7 +495,7 @@ class com_sales extends component {
 
 		if ( empty($module->products) ) {
 			//$module->detach();
-			display_notice('There are no products.');
+			pines_notice('There are no products.');
 		}
 	}
 
@@ -524,7 +524,7 @@ class com_sales extends component {
 
 		if ( empty($module->sales) ) {
 			//$module->detach();
-			display_notice('No sales found.');
+			pines_notice('No sales found.');
 		}
 	}
 
@@ -544,7 +544,7 @@ class com_sales extends component {
 
 		if ( empty($module->shippers) ) {
 			//$module->detach();
-			display_notice('There are no shippers.');
+			pines_notice('There are no shippers.');
 		}
 	}
 
@@ -567,7 +567,7 @@ class com_sales extends component {
 
 		if ( empty($module->stock) ) {
 			//$module->detach();
-			display_notice('There is nothing in stock at your location.');
+			pines_notice('There is nothing in stock at your location.');
 		}
 	}
 
@@ -587,7 +587,7 @@ class com_sales extends component {
 
 		if ( empty($module->tax_fees) ) {
 			//$module->detach();
-			display_notice('There are no taxes/fees.');
+			pines_notice('There are no taxes/fees.');
 		}
 	}
 
@@ -607,7 +607,7 @@ class com_sales extends component {
 
 		if ( empty($module->transfers) ) {
 			//$module->detach();
-			display_notice('There are no transfers.');
+			pines_notice('There are no transfers.');
 		}
 	}
 
@@ -627,7 +627,7 @@ class com_sales extends component {
 
 		if ( empty($module->vendors) ) {
 			//$module->detach();
-			display_notice('There are no vendors.');
+			pines_notice('There are no vendors.');
 		}
 	}
 

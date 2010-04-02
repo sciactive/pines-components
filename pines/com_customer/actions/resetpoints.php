@@ -28,9 +28,9 @@ foreach ($list as $cur_customer) {
 		$failed_resets .= ($failed_resets ? ', ' : '').$cur_customer;
 }
 if (!$failed_resets) {
-	display_notice('Customer points reset successfully.');
+	pines_notice('Customer points reset successfully.');
 } else {
-	display_error("Could not reset points of customers with given IDs: $failed_resets");
+	pines_error("Could not reset points of customers with given IDs: $failed_resets");
 }
 
 $pines->com_customer->list_customers();

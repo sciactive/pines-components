@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		punt_user('You don\'t have necessary permission.', pines_url('com_example', 'listwidgets', null, false));
 	$widget = com_example_widget::factory((int) $_REQUEST['id']);
 	if (is_null($widget->guid)) {
-		display_error('Requested widget id is not accessible');
+		pines_error('Requested widget id is not accessible');
 		return;
 	}
 } else {
@@ -44,13 +44,13 @@ unset($cur_attribute);
 
 if (empty($widget->name)) {
 	$widget->print_form();
-	display_notice('Please specify a name.');
+	pines_notice('Please specify a name.');
 	return;
 }
 $test = $pines->entity_manager->get_entity(array('data' => array('name' => $widget->name), 'tags' => array('com_example', 'widget'), 'class' => com_example_widget));
 if (isset($test->guid) && $test->guid != $_REQUEST['id']) {
 	$widget->print_form();
-	display_notice('There is already a widget with that name. Please choose a different name.');
+	pines_notice('There is already a widget with that name. Please choose a different name.');
 	return;
 }
 
@@ -58,9 +58,9 @@ if ($pines->config->com_example->global_widgets)
 	$widget->ac->other = 1;
 
 if ($widget->save()) {
-	display_notice('Saved widget ['.$widget->name.']');
+	pines_notice('Saved widget ['.$widget->name.']');
 } else {
-	display_error('Error saving widget. Do you have permission?');
+	pines_error('Error saving widget. Do you have permission?');
 }
 
 $pines->com_example->list_widgets();

@@ -53,7 +53,7 @@ class com_customer extends component {
 
 		if ( empty($module->companies) ) {
 			//$module->detach();
-			display_notice('There are no companies.');
+			pines_notice('There are no companies.');
 		}
 	}
 	
@@ -73,7 +73,7 @@ class com_customer extends component {
 
 		if ( empty($module->customers) ) {
 			//$module->detach();
-			display_notice('There are no customers.');
+			pines_notice('There are no customers.');
 		}
 	}
 
@@ -99,9 +99,9 @@ class com_customer extends component {
 		// Add the days and save the customer.
 		$array['sale']->customer->adjust_membership($days);
 		if ($array['sale']->customer->save()) {
-			display_notice("Added $days days to {$array['sale']->customer->name}. Their membership now expires on ".pines_date_format($array['sale']->customer->member_exp).'.');
+			pines_notice("Added $days days to {$array['sale']->customer->name}. Their membership now expires on ".pines_date_format($array['sale']->customer->member_exp).'.');
 		} else {
-			display_error("Error adding $days days to {$array['sale']->customer->name}.");
+			pines_error("Error adding $days days to {$array['sale']->customer->name}.");
 		}
 	}
 
@@ -140,9 +140,9 @@ class com_customer extends component {
 		// Add the points and save the customer.
 		$array['sale']->customer->adjust_points($points);
 		if ($array['sale']->customer->save()) {
-			display_notice("Added $points points to $type {$array['sale']->customer->name}.");
+			pines_notice("Added $points points to $type {$array['sale']->customer->name}.");
 		} else {
-			display_error("Error adding $points points to $type {$array['sale']->customer->name}.");
+			pines_error("Error adding $points points to $type {$array['sale']->customer->name}.");
 		}
 	}
 

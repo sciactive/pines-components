@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listcountsheets', null, false));
 	$countsheet = com_sales_countsheet::factory((int) $_REQUEST['id']);
 	if (is_null($countsheet->guid) || $countsheet->final) {
-		display_error('Requested countsheet id is not accessible');
+		pines_error('Requested countsheet id is not accessible');
 		return;
 	}
 } else {
@@ -32,7 +32,7 @@ if (!is_array($countsheet->entries))
 	$countsheet->entries = array();
 
 if (empty($countsheet->entries)) {
-	display_notice("No products were counted.");
+	pines_notice("No products were counted.");
 	$countsheet->print_form();
 	return;
 }
@@ -45,13 +45,13 @@ if ($_REQUEST['save'] == 'commit')
 	
 if ($countsheet->save()) {
 	if ($countsheet->final) {
-		display_notice('Committed countsheet ['.$countsheet->guid.']');
+		pines_notice('Committed countsheet ['.$countsheet->guid.']');
 	} else {
-		display_notice('Saved countsheet ['.$countsheet->guid.']');
+		pines_notice('Saved countsheet ['.$countsheet->guid.']');
 	}
 } else {
 	$countsheet->print_form();
-	display_error('Error saving countsheet. Do you have permission?');
+	pines_error('Error saving countsheet. Do you have permission?');
 	return;
 }
 

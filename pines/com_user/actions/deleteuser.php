@@ -21,9 +21,9 @@ foreach ($list as $cur_user) {
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_user;
 }
 if (empty($failed_deletes)) {
-	display_notice('Selected user(s) deleted successfully.');
+	pines_notice('Selected user(s) deleted successfully.');
 } else {
-	display_error('Could not delete users with given IDs: '.$failed_deletes);
+	pines_error('Could not delete users with given IDs: '.$failed_deletes);
 }
 
 $pines->user_manager->list_users();

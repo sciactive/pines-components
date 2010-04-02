@@ -21,9 +21,9 @@ foreach ($list as $cur_sale) {
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_sale;
 }
 if (empty($failed_deletes)) {
-	display_notice('Selected sale(s) deleted successfully.');
+	pines_notice('Selected sale(s) deleted successfully.');
 } else {
-	display_error('Could not delete sales with given IDs: '.$failed_deletes);
+	pines_error('Could not delete sales with given IDs: '.$failed_deletes);
 }
 
 $pines->com_sales->list_sales();

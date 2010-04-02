@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listproducts', null, false));
 	$product = com_sales_product::factory((int) $_REQUEST['id']);
 	if (is_null($product->guid)) {
-		display_error('Requested product id is not accessible');
+		pines_error('Requested product id is not accessible');
 		return;
 	}
 } else {
@@ -85,18 +85,18 @@ if (!is_array($product->actions))
 
 if (empty($product->name)) {
 	$product->print_form();
-	display_notice('Please specify a name.');
+	pines_notice('Please specify a name.');
 	return;
 }
 if ($product->stock_type == 'non_stocked' && $product->pricing_method == 'margin') {
 	$product->print_form();
-	display_notice('Margin pricing is not available for non stocked items.');
+	pines_notice('Margin pricing is not available for non stocked items.');
 	return;
 }
 $test = $pines->entity_manager->get_entity(array('data' => array('name' => $product->name), 'tags' => array('com_sales', 'product'), 'class' => com_sales_product));
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$product->print_form();
-	display_notice('There is already a product with that name. Please choose a different name.');
+	pines_notice('There is already a product with that name. Please choose a different name.');
 	return;
 }
 
@@ -104,7 +104,7 @@ if ($pines->config->com_sales->global_products)
 	$product->ac->other = 1;
 
 if ($product->save()) {
-	display_notice('Saved product ['.$product->name.']');
+	pines_notice('Saved product ['.$product->name.']');
 	// Assign the product to the selected categories.
 	// We have to do this here, because new products won't have a GUID until now.
 	$categories = json_decode($_REQUEST['categories']);
@@ -118,16 +118,16 @@ if ($product->save()) {
 			if (in_array($cur_cat->guid, $categories) && !in_array($product->guid, $cur_cat->products)) {
 				$cur_cat->products[] = $product->guid;
 				if (!$cur_cat->save())
-					display_error('Failed to add product to category: '.$cur_cat->name);
+					pines_error('Failed to add product to category: '.$cur_cat->name);
 			} elseif (!in_array($cur_cat->guid, $categories) && in_array($product->guid, $cur_cat->products)) {
 				$cur_cat->products = array_diff($cur_cat->products, array($product->guid));
 				if (!$cur_cat->save())
-					display_error('Failed to remove product from category: '.$cur_cat->name);
+					pines_error('Failed to remove product from category: '.$cur_cat->name);
 			}
 		}
 	}
 } else {
-	display_error('Error saving product. Do you have permission?');
+	pines_error('Error saving product. Do you have permission?');
 }
 
 $pines->com_sales->list_products();

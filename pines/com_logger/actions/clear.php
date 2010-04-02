@@ -15,9 +15,9 @@ if ( !gatekeeper('com_logger/clear') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_logger', 'clear', null, false));
 
 if (file_put_contents($pines->config->com_logger->path, '') !== false) {
-	display_notice('Log file cleared.');
+	pines_notice('Log file cleared.');
 } else {
-	display_error('Error writing to log file.');
+	pines_error('Error writing to log file.');
 }
 
 action('com_logger', 'view');

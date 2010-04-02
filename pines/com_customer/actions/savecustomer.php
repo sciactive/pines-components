@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'listcustomers', null, false));
 	$customer = com_customer_customer::factory((int) $_REQUEST['id']);
 	if (is_null($customer->guid)) {
-		display_error('Requested customer id is not accessible');
+		pines_error('Requested customer id is not accessible');
 		return;
 	}
 } else {
@@ -101,41 +101,41 @@ unset($cur_attribute);
 // Customer validation to ensure that the fields were filled out correctly.
 if (in_array('name', $pines->config->com_customer->required_fields_customer) && empty($customer->name)) {
 	$customer->print_form();
-	display_notice('Please specify a name.');
+	pines_notice('Please specify a name.');
 	return;
 }
 if (empty($customer->ssn)) {
 	if (in_array('ssn', $pines->config->com_customer->required_fields_customer)) {
 		$customer->print_form();
-		display_notice('Please provide an SSN.');
+		pines_notice('Please provide an SSN.');
 		return;
 	}
 } else {
 	if (!preg_match('/\d{9}/', $customer->ssn)) {
 		$customer->print_form();
-		display_notice('The SSN must be a 9 digit number.');
+		pines_notice('The SSN must be a 9 digit number.');
 		return;
 	}
 	$test = $pines->entity_manager->get_entity(array('data' => array('ssn' => $customer->ssn), 'tags' => array('com_customer', 'customer'), 'class' => com_customer_customer));
 	if (isset($test) && !$customer->is($test)) {
 		$customer->print_form();
-		display_notice("The customer {$test->name} already has this SSN.");
+		pines_notice("The customer {$test->name} already has this SSN.");
 		return;
 	}
 }
 if (in_array('dob', $pines->config->com_customer->required_fields_customer) && empty($customer->dob)) {
 	$customer->print_form();
-	display_notice('Please specify a date of birth.');
+	pines_notice('Please specify a date of birth.');
 	return;
 }
 if (in_array('email', $pines->config->com_customer->required_fields_customer) && empty($customer->email)) {
 	$customer->print_form();
-	display_notice('Please specify an email.');
+	pines_notice('Please specify an email.');
 	return;
 }
 if (in_array('company', $pines->config->com_customer->required_fields_customer) && empty($customer->company)) {
 	$customer->print_form();
-	display_notice('Please specify a company.');
+	pines_notice('Please specify a company.');
 	return;
 }
 if (in_array('phone', $pines->config->com_customer->required_fields_customer) &&
@@ -143,17 +143,17 @@ if (in_array('phone', $pines->config->com_customer->required_fields_customer) &&
 	empty($customer->phone_work) &&
 	empty($customer->phone_home)) {
 	$customer->print_form();
-	display_notice('Please specify at least one phone number.');
+	pines_notice('Please specify at least one phone number.');
 	return;
 }
 if (in_array('password', $pines->config->com_customer->required_fields_customer) && empty($customer->tmp_password)) {
 	$customer->print_form();
-	display_notice('Please specify a password.');
+	pines_notice('Please specify a password.');
 	return;
 }
 if (in_array('description', $pines->config->com_customer->required_fields_customer) && empty($customer->description)) {
 	$customer->print_form();
-	display_notice('Please specify a description.');
+	pines_notice('Please specify a description.');
 	return;
 }
 if ( in_array('address', $pines->config->com_customer->required_fields_customer) ) {
@@ -163,14 +163,14 @@ if ( in_array('address', $pines->config->com_customer->required_fields_customer)
 					empty($customer->city) ||
 					empty($customer->state)) {
 					$customer->print_form();
-					display_notice('Please specify a complete address.');
+					pines_notice('Please specify a complete address.');
 					return;
 				}
 				break;
 			case 'international':
 				if (empty($customer->address_international)) {
 					$customer->print_form();
-					display_notice('Please specify an address.');
+					pines_notice('Please specify an address.');
 					return;
 				}
 				break;
@@ -185,9 +185,9 @@ if ($pines->config->com_customer->global_customers)
 	$customer->ac->other = 1;
 
 if ($customer->save()) {
-	display_notice('Saved customer ['.$customer->name.']');
+	pines_notice('Saved customer ['.$customer->name.']');
 } else {
-	display_error('Error saving customer. Do you have permission?');
+	pines_error('Error saving customer. Do you have permission?');
 }
 
 $pines->com_customer->list_customers();

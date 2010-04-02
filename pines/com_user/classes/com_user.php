@@ -535,7 +535,8 @@ class com_user extends component {
 		$default = '0';
 		if ($pines->request_component == $_SESSION['user']->default_component && $pines->request_action == 'default')
 			$default = '1';
-		header("Location: ".pines_url('com_user', 'exit', array('default' => $default, 'message' => urlencode($message), 'url' => urlencode($url)), false));
+		header('HTTP/1.1 303 See Other', true, 303);
+		header('Location: '.pines_url('com_user', 'exit', array('default' => $default, 'message' => urlencode($message), 'url' => urlencode($url)), false));
 		exit($message);
 	}
 }

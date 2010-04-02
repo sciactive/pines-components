@@ -21,11 +21,16 @@ if ( gatekeeper() && $_REQUEST['username'] == $_SESSION['user']->username ) {
 }
 $user = user::factory($_REQUEST['username']);
 if ( isset($user->guid) && (gatekeeper('com_su/nopassword') || $user->check_password($_REQUEST['password'])) ) {
-	$pines->user_manager->login($user);
-	// Load the default component.
-	action($pines->config->default_component, 'default');
+	if ($pines->user_manager->login($user)) {
+		header('HTTP/1.1 303 See Other', true, 303);
+		header('Location: '.pines_url(null, null, array(), false));
+	} else {
+		pines_error('Could not switch users.');
+		// Load the default component.
+		action($pines->config->default_component, 'default');
+	}
 } else {
-	pines_notice("Username and password not correct!");
+	pines_notice('Username and password not correct!');
 	$pines->user_manager->print_login();
 }
 

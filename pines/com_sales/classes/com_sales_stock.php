@@ -137,7 +137,7 @@ class com_sales_stock extends entity {
 	 *
 	 * If $location is not set, the current user's primary group is used.
 	 *
-	 * @param entity $on_entity The entity which the product is to be received on.
+	 * @param entity &$on_entity The entity which the product is to be received on.
 	 * @param entity $location The group to use for the new location.
 	 * @return bool True on success, false on failure.
 	 */
@@ -192,7 +192,7 @@ class com_sales_stock extends entity {
 	 * If $location is not set, it becomes null, meaning the stock is no longer
 	 * located within the company.
 	 *
-	 * @param entity $on_entity The entity which the product is to be removed by.
+	 * @param entity &$on_entity The entity which the product is to be removed by.
 	 * @param string $status The new status for the stock. Such as "sold_at_store".
 	 * @param entity $location The group to use for the new location.
 	 * @return bool True on success, false on failure.

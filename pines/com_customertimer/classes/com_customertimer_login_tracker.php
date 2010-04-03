@@ -77,7 +77,8 @@ class com_customertimer_login_tracker extends entity {
 	/**
 	 * Logs a customer into the timer.
 	 *
-	 * @param com_customer_customer $customer The customer.
+	 * @param com_customer_customer &$customer The customer.
+	 * @param string &$station The station the customer is assigned.
 	 * @return bool True on success, false on failure.
 	 */
 	function login(&$customer, $station = null) {
@@ -108,7 +109,7 @@ class com_customertimer_login_tracker extends entity {
 	 *
 	 * This process creates a transaction entity.
 	 *
-	 * @param com_customer_customer $customer The customer.
+	 * @param com_customer_customer &$customer The customer.
 	 * @return bool True on success, false on failure.
 	 */
 	function logout(&$customer) {

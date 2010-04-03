@@ -17,7 +17,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * jQuery loader.
  *
  * @package Pines
- * @subpackage com_tinymce
+ * @subpackage com_jquery
  */
 class com_jquery extends component {
 	/**

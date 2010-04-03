@@ -160,6 +160,7 @@ class com_hrm extends component {
 
 	/**
 	 * Creates and attaches a module which shows the calendar.
+	 * @param int $id An event GUID.
 	 */
 	function show_calendar($id = null) {
 		global $pines;

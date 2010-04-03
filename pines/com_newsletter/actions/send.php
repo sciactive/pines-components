@@ -25,7 +25,7 @@ $send = new module('com_newsletter', 'send', 'content');
  * @param string $header The header to be cleaned.
  * @return string The cleaned header.
  */
-function clean_header($header) {
+function com_newsletter__clean_header($header) {
 	return str_replace("\n", ' ', $header);
 }
 
@@ -66,8 +66,8 @@ $bcc = implode(', ', $addresses);
 	$bcc = $bcc . (strlen($bcc) ? ', ' : '') . $cur_address;
 }*/
 
-$mailer = &new com_mailer_mail(clean_header($_REQUEST['from']), 'undisclosed-recipients <noone@example.com>', clean_header($_REQUEST['subject']), $message);
-$mailer->addHeader('Reply-To', clean_header($_REQUEST['replyto']));
+$mailer = &new com_mailer_mail(com_newsletter__clean_header($_REQUEST['from']), 'undisclosed-recipients <noone@example.com>', com_newsletter__clean_header($_REQUEST['subject']), $message);
+$mailer->addHeader('Reply-To', com_newsletter__clean_header($_REQUEST['replyto']));
 $mailer->addHeader('Bcc', $bcc);
 
 $attachments = $mail->attachments;
@@ -84,6 +84,6 @@ if ( $mailer->send() ) {
 }
 
 $send->name = $mail->name;
-$send->subject = clean_header($_REQUEST['subject']);
+$send->subject = com_newsletter__clean_header($_REQUEST['subject']);
 $send->message = $message;
 ?>

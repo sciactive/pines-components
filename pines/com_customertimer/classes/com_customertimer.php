@@ -24,7 +24,7 @@ class com_customertimer extends component {
 	/**
 	 * Calculates information about a customer's session.
 	 *
-	 * @param entity $customer The customer.
+	 * @param entity &$customer The customer.
 	 * @return array An array of point and minute values the customer has used.
 	 */
 	function get_session_info(&$customer) {

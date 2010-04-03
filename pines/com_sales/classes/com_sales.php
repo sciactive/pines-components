@@ -346,6 +346,10 @@ class com_sales extends component {
 
 	/**
 	 * Inform the user of anything important.
+	 *
+	 * @param string $title The title or category of the message.
+	 * @param string $header The header title for the message.
+	 * @param string $note The content of the message.
 	 * @return module The notifcation's module.
 	 */
 	public function inform($title, $header, $note) {

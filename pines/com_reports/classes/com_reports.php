@@ -39,6 +39,12 @@ class com_reports extends component {
 
 	/**
 	 * Creates and attaches a module which reports sales.
+	 *
+	 * @param int $start The start date of the report.
+	 * @param int $end The end date of the report.
+	 * @param group $location The group to report on.
+	 * @param int $user The guid of the employee to report on.
+	 * @return module The attendance report module.
 	 */
 	function report_attendance($start, $end, $location = null, $user = null) {
 		global $pines;
@@ -68,6 +74,10 @@ class com_reports extends component {
 
 	/**
 	 * Creates and attaches a module which reports sales.
+	 * 
+	 * @param int $start The start date of the report.
+	 * @param int $end The end date of the report.
+	 * @return module The sales report module.
 	 */
 	function report_sales($start, $end) {
 		global $pines;

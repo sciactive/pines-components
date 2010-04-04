@@ -125,7 +125,21 @@ if (empty($user->password) && !$pines->config->com_user->empty_pw) {
 	pines_notice('Please specify a password.');
 	return;
 }
+if (gatekeeper('com_user/assignpin') && !empty($_REQUEST['pin'])) {
+	$user->pin = $_REQUEST['pin'];
+	$test = $pines->entity_manager->get_entity(array('data' => array('pin' => $user->pin), 'tags' => array('com_user', 'user'), 'class' => user));
+	if (isset($test) && !$user->is($test)) {
+		$user->print_form();
+		pines_notice("The user {$test->name} already has this PIN.");
+		return;
+	}
 
+	if ($pines->com_user->max_pin_length > 0 && strlen($user->pin) > $pines->com_user->max_pin_length) {
+		$group->print_form();
+		pines_notice("User PINs must not exceed {$pines->com_user->max_pin_length} characters.");
+		return;
+	}
+}
 if ($user->save()) {
 	pines_notice('Saved user ['.$user->username.']');
 	pines_log('Saved user ['.$user->username.']');

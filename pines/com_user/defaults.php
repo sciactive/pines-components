@@ -42,6 +42,12 @@ return array(
 		'description' => 'The maximum length for groupnames. 0 for unlimited.',
 		'value' => 0,
 	),
+	array (
+		'name' => 'max_pin_length',
+		'cname' => 'User PIN Max Length',
+		'description' => 'The maximum length for user PINs. 0 for unlimited.',
+		'value' => 5,
+	),
 	array(
 		'name' => 'resize_logos',
 		'cname' => 'Resize Logos',

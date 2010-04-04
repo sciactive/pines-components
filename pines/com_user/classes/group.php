@@ -129,7 +129,7 @@ class group extends able_entity {
 		$pines->com_pgrid->load();
 		$module = new module('com_user', 'form_group', 'content');
 		$module->entity = $this;
-		$module->display_abilities = gatekeeper("com_user/abilities");
+		$module->display_abilities = gatekeeper('com_user/abilities');
 		$module->sections = array('system');
 		$module->group_array = $pines->user_manager->get_group_array();
 		foreach ($pines->components as $cur_component) {

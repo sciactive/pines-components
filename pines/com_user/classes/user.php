@@ -89,9 +89,10 @@ class user extends able_entity {
 		$pines->com_pgrid->load();
 		$module = new module('com_user', 'form_user', 'content');
 		$module->entity = $this;
-		$module->display_groups = gatekeeper("com_user/assigngroup");
-		$module->display_abilities = gatekeeper("com_user/abilities");
-		$module->display_default_components = gatekeeper("com_user/default_component");
+		$module->display_pin = gatekeeper('com_user/assignpin');
+		$module->display_groups = gatekeeper('com_user/assigngroup');
+		$module->display_abilities = gatekeeper('com_user/abilities');
+		$module->display_default_components = gatekeeper('com_user/default_component');
 		$module->sections = array('system');
 		$module->group_array = $pines->user_manager->get_group_array();
 		$module->default_components = $pines->user_manager->get_default_component_array();

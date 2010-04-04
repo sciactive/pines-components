@@ -162,10 +162,12 @@ $this->note = 'Provide user details in this form.';
 				<label><span class="label">Repeat Password</span>
 					<input class="field ui-widget-content" type="password" name="password2" size="24" /></label>
 			</div>
+			<?php if ( $this->display_pin ) { ?>
 			<div class="element">
 				<label><span class="label">PIN code</span>
-					<input class="field ui-widget-content" type="password" name="pin" size="5" <?php echo $pines->config->com_user->max_pin_length > 0 ? 'maxlength="'.$pines->config->com_user->max_pin_length.'"' : ''; ?>/></label>
+					<input class="field ui-widget-content" type="password" name="pin" size="5" <?php echo $pines->config->com_user->max_pin_length > 0 ? "maxlength=\"{$pines->config->com_user->max_pin_length}\"" : ''; ?>/></label>
 			</div>
+			<?php } ?>
 			<?php if ( $this->display_default_components ) { ?>
 				<div class="element">
 					<label><span class="label">Default Component</span>

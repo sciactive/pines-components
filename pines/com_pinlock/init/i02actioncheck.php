@@ -1,6 +1,6 @@
 <?php
 /**
- * Check and take over actions.
+ * Check and protect actions.
  *
  * @package Pines
  * @subpackage com_pinlock
@@ -14,20 +14,29 @@ defined('P_RUN') or die('Direct access prohibited');
 if (!isset($_SESSION['user']) || !isset($_SESSION['user']->pin))
 	return;
 
-if (in_array("{$pines->request_component}/{$pines->request_action}", $pines->config->com_pinlock->actions)) {
-	if ($_POST['com_pinlock_continue'] == 'true') {
-		if ($_POST['pin'] == $_SESSION['user']->pin) {
-			$sessionid = $_POST['sessionid'];
-			$_POST = $_SESSION[$sessionid]['post'];
-			$_GET = $_SESSION[$sessionid]['get'];
-			return;
-		}
-		$pines->page->notice('Incorrect PIN.');
+if (!in_array("{$pines->request_component}/{$pines->request_action}", $pines->config->com_pinlock->actions))
+	return;
+
+if ($_POST['com_pinlock_continue'] == 'true') {
+	$com_pinlock__sessionid = $_POST['sessionid'];
+	if ($_POST['pin'] == $_SESSION['user']->pin) {
+		$_POST = unserialize($_SESSION[$com_pinlock__sessionid]['post']);
+		$_GET = unserialize($_SESSION[$com_pinlock__sessionid]['get']);
+		unset($_SESSION[$com_pinlock__sessionid]);
+		return;
 	}
-	$pines->com_pinlock->component = $pines->request_component;
-	$pines->com_pinlock->action = $pines->request_action;
-	$pines->request_component = 'com_pinlock';
-	$pines->request_action = 'enterpin';
+	$pines->com_pinlock->sessionid = $com_pinlock__sessionid;
+	$pines->page->notice('Incorrect PIN.');
+} else {
+	$pines->com_pinlock->sessionid = 'com_pinlock'.rand(0, 1000000000);
+	$_SESSION[$pines->com_pinlock->sessionid] = array(
+		'post' => serialize($_POST),
+		'get' => serialize($_GET)
+	);
 }
+$pines->com_pinlock->component = $pines->request_component;
+$pines->com_pinlock->action = $pines->request_action;
+$pines->request_component = 'com_pinlock';
+$pines->request_action = 'enterpin';
 
 ?>

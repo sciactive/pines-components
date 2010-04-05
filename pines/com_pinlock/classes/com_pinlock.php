@@ -28,6 +28,11 @@ class com_pinlock extends component {
 	 * @var string $action
 	 */
 	public $action;
+	/**
+	 * A unique session ID used to remember POST and GET data.
+	 * @var string $sessionid
+	 */
+	public $sessionid;
 }
 
 ?>

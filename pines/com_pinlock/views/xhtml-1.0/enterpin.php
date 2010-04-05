@@ -17,7 +17,7 @@ $this->title = 'Verify Access';
 		<label>
 			<span class="label">PIN</span>
 			<span class="note">Please enter your PIN to continue.</span>
-			<input class="field ui-widget-content" type="password" name="pin " size="24" />
+			<input class="field ui-widget-content" type="password" name="pin" size="24" />
 		</label>
 	</div>
 	<div class="element buttons">

@@ -12,7 +12,14 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Verify Access';
 ?>
-<form class="pform" name="login" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
+<script type="text/javascript">
+	// <![CDATA[
+	$(function(){
+		$("#com_pinlock__login input[name=pin]").focus();
+	});
+	// ]]>
+</script>
+<form class="pform" id="com_pinlock__login" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
 	<div class="element">
 		<label>
 			<span class="label">PIN</span>

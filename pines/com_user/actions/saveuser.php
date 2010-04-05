@@ -34,6 +34,7 @@ $user->email = $_REQUEST['email'];
 $user->phone = preg_replace('/\D/', '', $_REQUEST['phone']);
 $user->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
 $user->timezone = $_REQUEST['timezone'];
+
 // Location
 $user->address_type = $_REQUEST['address_type'];
 $user->address_1 = $_REQUEST['address_1'];
@@ -50,6 +51,9 @@ if ( gatekeeper('com_user/default_component') ) {
 		pines_notice('Selected component does not support a default action.');
 	}
 }
+
+if (gatekeeper('com_user/assignpin'))
+	$user->pin = $_REQUEST['pin'];
 
 // Attributes
 $user->attributes = (array) json_decode($_REQUEST['attributes']);
@@ -125,8 +129,7 @@ if (empty($user->password) && !$pines->config->com_user->empty_pw) {
 	pines_notice('Please specify a password.');
 	return;
 }
-if (gatekeeper('com_user/assignpin') && !empty($_REQUEST['pin'])) {
-	$user->pin = $_REQUEST['pin'];
+if (gatekeeper('com_user/assignpin')) {
 	$test = $pines->entity_manager->get_entity(array('data' => array('pin' => $user->pin), 'tags' => array('com_user', 'user'), 'class' => user));
 	if (isset($test) && !$user->is($test)) {
 		$user->print_form();

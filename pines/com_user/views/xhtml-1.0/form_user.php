@@ -165,7 +165,7 @@ $this->note = 'Provide user details in this form.';
 			<?php if ( $this->display_pin ) { ?>
 			<div class="element">
 				<label><span class="label">PIN code</span>
-					<input class="field ui-widget-content" type="password" name="pin" size="5" <?php echo $pines->config->com_user->max_pin_length > 0 ? "maxlength=\"{$pines->config->com_user->max_pin_length}\"" : ''; ?>/></label>
+					<input class="field ui-widget-content" type="password" name="pin" size="5" value="<?php echo $this->entity->pin; ?>" <?php echo $pines->config->com_user->max_pin_length > 0 ? "maxlength=\"{$pines->config->com_user->max_pin_length}\"" : ''; ?>/></label>
 			</div>
 			<?php } ?>
 			<?php if ( $this->display_default_components ) { ?>

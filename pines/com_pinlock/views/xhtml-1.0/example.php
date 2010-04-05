@@ -1,9 +1,9 @@
 <?php
 /**
- * Provide display editors for the fields of a Pines Form.
+ * Test view for PIN locked actions.
  *
  * @package Pines
- * @subpackage com_pdf
+ * @subpackage com_pinlock
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin

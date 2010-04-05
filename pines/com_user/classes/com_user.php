@@ -506,8 +506,8 @@ class com_user extends component {
 		unset($_SESSION['user']);
 		// We're changing users, so clear the gatekeeper cache.
 		$this->gatekeeper_cache = array();
-		session_unset();
-		session_destroy();
+		@session_unset();
+		@session_destroy();
 	}
 
 	/**

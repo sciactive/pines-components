@@ -18,6 +18,18 @@ return array(
 		'description' => 'These actions will require the user to enter their PIN before access.',
 		'value' => array('com_pinlock/example'),
 	),
+	array(
+		'name' => 'allow_switch',
+		'cname' => 'Allow User Switch',
+		'description' => 'Allow switching users based on PIN entries.',
+		'value' => false,
+	),
+	array(
+		'name' => 'max_tries',
+		'cname' => 'Max Failed Attempts',
+		'description' => 'The maximum failed attempts before the user is logged out.',
+		'value' => 4,
+	),
 );
 
 ?>

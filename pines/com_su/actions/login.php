@@ -21,6 +21,7 @@ if ( gatekeeper() && $_REQUEST['username'] == $_SESSION['user']->username ) {
 }
 $user = user::factory($_REQUEST['username']);
 if ( isset($user->guid) && (gatekeeper('com_su/nopassword') || $user->check_password($_REQUEST['password'])) ) {
+	pines_log("Switching user from {$_SESSION['user']->username} to {$user->username}.", 'notice');
 	if ($pines->user_manager->login($user)) {
 		header('HTTP/1.1 303 See Other', true, 303);
 		header('Location: '.pines_url(null, null, array(), false));

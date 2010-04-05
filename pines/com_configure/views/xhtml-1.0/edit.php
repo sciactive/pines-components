@@ -69,7 +69,7 @@ $this->title = "Editing Configuration for {$this->comp->info->name} {$this->comp
 					<?php } elseif (is_float($cur_var['value'][0])) { ?>
 					<input class="field ui-widget-content do_tags" type="text" name="opt_float_<?php echo $cur_var['name']; ?>" value="<?php echo implode(';;', $cur_value); ?>" />
 					<?php } elseif (is_string($cur_var['value'][0])) { ?>
-					<span class="field full_width"><textarea rows="3" cols="35" class="ui-widget-content do_tags" style="width: 100%;" name="opt_string_<?php echo $cur_var['name']; ?>"><?php echo htmlentities(implode(';;', $cur_value), true); ?></textarea></span>
+					<div class="field"><textarea rows="3" cols="35" class="ui-widget-content do_tags" style="width: 100%;" name="opt_string_<?php echo $cur_var['name']; ?>"><?php echo htmlentities(implode(';;', $cur_value), true); ?></textarea></div>
 					<?php } ?>
 				</div>
 			<?php } else { ?>
@@ -80,9 +80,9 @@ $this->title = "Editing Configuration for {$this->comp->info->name} {$this->comp
 				<?php } elseif (is_float($cur_var['value'])) { ?>
 				<input class="field ui-widget-content" type="text" name="opt_float_<?php echo $cur_var['name']; ?>" value="<?php echo $cur_value; ?>" />
 				<?php } elseif (is_string($cur_var['value'])) { ?>
-				<span class="field full_width"><textarea rows="3" cols="35" class="ui-widget-content" style="width: 100%;" name="opt_string_<?php echo $cur_var['name']; ?>"><?php echo htmlentities($cur_value, true); ?></textarea></span>
+				<div class="field full_width"><textarea rows="3" cols="35" class="ui-widget-content" style="width: 100%;" name="opt_string_<?php echo $cur_var['name']; ?>"><?php echo htmlentities($cur_value, true); ?></textarea></div>
 				<?php } else { ?>
-				<span class="field full_width"><textarea rows="3" cols="35" class="ui-widget-content" style="width: 100%;" name="opt_serial_<?php echo $cur_var['name']; ?>"><?php echo htmlentities(serialize($cur_value), true); ?></textarea></span>
+				<div class="field full_width"><textarea rows="3" cols="35" class="ui-widget-content" style="width: 100%;" name="opt_serial_<?php echo $cur_var['name']; ?>"><?php echo htmlentities(serialize($cur_value), true); ?></textarea></div>
 				<?php } ?>
 			<?php } ?>
 		</div>

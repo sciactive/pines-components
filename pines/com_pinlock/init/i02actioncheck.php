@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if (!isset($_SESSION['user']) || !isset($_SESSION['user']->pin))
+if (!isset($_SESSION['user']) || empty($_SESSION['user']->pin))
 	return;
 
 if (!in_array("{$pines->request_component}/{$pines->request_action}", $pines->config->com_pinlock->actions))

@@ -21,9 +21,9 @@ $this->title = 'Verify Access';
 		</label>
 	</div>
 	<div class="element buttons">
-		<input type="hidden" name="option" value="<?php echo $this->component; ?>" />
-		<input type="hidden" name="action" value="<?php echo $this->action; ?>" />
-		<input type="hidden" name="sessionid" value="<?php echo $this->sessionid; ?>" />
+		<input type="hidden" name="option" value="<?php echo $this->orig_component; ?>" />
+		<input type="hidden" name="action" value="<?php echo $this->orig_action; ?>" />
+		<input type="hidden" name="sessionid" value="<?php echo $this->orig_sessionid; ?>" />
 		<input type="hidden" name="com_pinlock_continue" value="true" />
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Continue" />
 		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="reset" name="reset" value="Reset" />

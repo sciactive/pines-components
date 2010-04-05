@@ -133,13 +133,13 @@ if (gatekeeper('com_user/assignpin')) {
 	$test = $pines->entity_manager->get_entity(array('data' => array('pin' => $user->pin), 'tags' => array('com_user', 'user'), 'class' => user));
 	if (isset($test) && !$user->is($test)) {
 		$user->print_form();
-		pines_notice("The user {$test->name} already has this PIN.");
+		pines_notice('This PIN is already in use.');
 		return;
 	}
 
-	if ($pines->com_user->max_pin_length > 0 && strlen($user->pin) > $pines->com_user->max_pin_length) {
+	if ($pines->com_user->min_pin_length > 0 && strlen($user->pin) < $pines->com_user->min_pin_length) {
 		$group->print_form();
-		pines_notice("User PINs must not exceed {$pines->com_user->max_pin_length} characters.");
+		pines_notice("User PINs must be at least {$pines->com_user->min_pin_length} characters.");
 		return;
 	}
 }

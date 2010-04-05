@@ -43,9 +43,9 @@ return array(
 		'value' => 0,
 	),
 	array (
-		'name' => 'max_pin_length',
-		'cname' => 'User PIN Max Length',
-		'description' => 'The maximum length for user PINs. 0 for unlimited.',
+		'name' => 'min_pin_length',
+		'cname' => 'User PIN Min Length',
+		'description' => 'The minimum length for user PINs. 0 for no minimum.',
 		'value' => 5,
 	),
 	array(

@@ -19,7 +19,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * @package Pines
  * @subpackage com_configure
  */
-class com_configure extends component {
+class com_configure extends component implements configurator_interface {
 	/**
 	 * An array of config files found on the system.
 	 *
@@ -28,12 +28,12 @@ class com_configure extends component {
 	 *
 	 * @var array $component_files
 	 */
-	var $component_files = array();
+	public $component_files = array();
 
 	/**
 	 * Fills the $component_files array.
 	 */
-	function __construct() {
+	public function __construct() {
 		global $pines;
 		$this->component_files['system'] = array('defaults' => 'system/defaults.php', 'config' => 'system/config.php', 'info' => 'system/info.php');
 		foreach ($pines->all_components as $cur_component) {
@@ -57,7 +57,7 @@ class com_configure extends component {
 	 * @param string $component The name of the component.
 	 * @return bool True on success, false on failure.
 	 */
-	function disable_component($component) {
+	public function disable_component($component) {
 		global $pines;
 		if (!in_array($component, $pines->all_components)) {
 			pines_log("Failed to disable component $component. Component isn't installed", 'error');
@@ -82,7 +82,7 @@ class com_configure extends component {
 	 * @param string $component The name of the component.
 	 * @return bool True on success, false on failure.
 	 */
-	function enable_component($component) {
+	public function enable_component($component) {
 		global $pines;
 		if (!in_array($component, $pines->all_components)) {
 			pines_log("Failed to enable component $component. Component isn't installed", 'error');
@@ -100,16 +100,19 @@ class com_configure extends component {
 
 	/**
 	 * Creates and attaches a module which lists configurable components.
+	 * @return module The module.
 	 */
-	function list_components() {
+	public function list_components() {
 		global $pines;
 		$module = new module('com_configure', 'list', 'content');
 
 		$module->components = array();
-		$module->components[] = com_configure_component::factory('system');
+		$module->components[] = configurator_component::factory('system');
 		foreach ($pines->all_components as $cur_component) {
-			$module->components[] = com_configure_component::factory($cur_component);
+			$module->components[] = configurator_component::factory($cur_component);
 		}
+
+		return $module;
 	}
 
 	/**
@@ -117,14 +120,14 @@ class com_configure extends component {
 	 *
 	 * @todo Create a view for per user components.
 	 */
-	function list_components_peruser() {
+	public function list_components_peruser() {
 		global $pines;
 		$module = new module('com_configure', 'list', 'content');
 
 		$module->components = array();
-		$module->components[] = com_configure_component::factory('system');
+		$module->components[] = configurator_component::factory('system');
 		foreach ($pines->all_components as $cur_component) {
-			$module->components[] = com_configure_component::factory($cur_component);
+			$module->components[] = configurator_component::factory($cur_component);
 		}
 	}
 }

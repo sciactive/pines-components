@@ -1,6 +1,6 @@
 <?php
 /**
- * com_configure_component class.
+ * configurator_component class.
  *
  * @package Pines
  * @subpackage com_configure
@@ -17,7 +17,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * @package Pines
  * @subpackage com_configure
  */
-class com_configure_component extends p_base {
+class configurator_component extends p_base implements configurator_component_interface {
 	/**
 	 * The configuration defaults.
 	 * @var array
@@ -66,7 +66,7 @@ class com_configure_component extends p_base {
 
 	/**
 	 * Load a component's configuration and info.
-	 * @param string $component The name of the component to load.
+	 * @param string $component The component to load.
 	 */
 	public function __construct($component) {
 		global $pines;
@@ -91,8 +91,9 @@ class com_configure_component extends p_base {
 
 	/**
 	 * Create a new instance.
+	 * @param string $component The component to load.
 	 */
-	public static function factory() {
+	public static function factory($component) {
 		global $pines;
 		$class = get_class();
 		$args = func_get_args();

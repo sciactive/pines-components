@@ -19,7 +19,7 @@ if (!array_key_exists($_REQUEST['component'], $pines->configurator->component_fi
 	return;
 }
 
-$component = com_configure_component::factory($_REQUEST['component']);
+$component = configurator_component::factory($_REQUEST['component']);
 $component->print_view();
 
 ?>

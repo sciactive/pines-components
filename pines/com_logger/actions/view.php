@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_logger/view') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_logger', 'view', null, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_logger', 'view'));
 
 $view = new module('com_logger', 'view', 'content');
 if (file_exists($pines->config->com_logger->path)) {

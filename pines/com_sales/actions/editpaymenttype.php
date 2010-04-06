@@ -13,10 +13,10 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if (isset($_REQUEST['id'])) {
 	if ( !gatekeeper('com_sales/editpaymenttype') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'editpaymenttype', array('id' => $_REQUEST['id']), false));
+		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'editpaymenttype', array('id' => $_REQUEST['id'])));
 } else {
 	if ( !gatekeeper('com_sales/newpaymenttype') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'editpaymenttype', null, false));
+		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'editpaymenttype'));
 }
 
 $entity = com_sales_payment_type::factory((int) $_REQUEST['id']);

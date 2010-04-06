@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_hrm/viewclock') && !gatekeeper('com_hrm/manageclock') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'listtimeclocks', null, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'listtimeclocks'));
 
 $pines->com_hrm->list_timeclocks();
 ?>

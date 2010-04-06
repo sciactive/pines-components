@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_user/edituser') && (!gatekeeper('com_user/self') || ($_REQUEST['id'] != $_SESSION['user_id'])) )
-		punt_user('You don\'t have necessary permission.', pines_url('com_user', 'listusers', null, false));
+		punt_user('You don\'t have necessary permission.', pines_url('com_user', 'listusers'));
 	$user = user::factory((int) $_REQUEST['id']);
 	if (is_null($user->guid)) {
 		pines_error('Requested user id is not accessible.');
@@ -23,7 +23,7 @@ if ( isset($_REQUEST['id']) ) {
 		$user->password($_REQUEST['password']);
 } else {
 	if ( !gatekeeper('com_user/newuser') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_user', 'listusers', null, false));
+		punt_user('You don\'t have necessary permission.', pines_url('com_user', 'listusers'));
 	$user = user::factory();
 	$user->password($_REQUEST['password']);
 }

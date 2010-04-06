@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_sales/deletevendor') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listvendors', null, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listvendors'));
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_vendor) {

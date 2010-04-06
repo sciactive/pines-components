@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_entitytools/test') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_entitytools', 'testuid', null, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_entitytools', 'testuid'));
 
 $name = 'com_entitytools/uid_test_'.time();
 $id = $pines->entity_manager->new_uid($name);

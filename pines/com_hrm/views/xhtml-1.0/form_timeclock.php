@@ -189,12 +189,12 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 		<small>next Thursday</small><br />
 		<small>last Monday 4pm</small>
 	</div>
-	<form method="post" id="timeclock_form" action="<?php echo pines_url('com_hrm', 'savetimeclock'); ?>">
+	<form method="post" id="timeclock_form" action="<?php echo htmlentities(pines_url('com_hrm', 'savetimeclock')); ?>">
 		<input type="hidden" name="clock" value="" />
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<div class="element buttons">
 			<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-			<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url('com_hrm', 'listtimeclocks'); ?>');" value="Cancel" />
+			<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_hrm', 'listtimeclocks')); ?>');" value="Cancel" />
 		</div>
 	</form>
 </div>

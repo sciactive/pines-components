@@ -96,7 +96,7 @@ $this->note = 'Provide user details in this form.';
 	});
 	// ]]>
 </script>
-<form class="pform" method="post" id="user_details" action="<?php echo pines_url('com_user', 'saveuser'); ?>">
+<form class="pform" method="post" id="user_details" action="<?php echo htmlentities(pines_url('com_user', 'saveuser')); ?>">
 	<div id="user_tabs" style="clear: both;">
 		<ul>
 			<li><a href="#tab_general">General</a></li>
@@ -406,6 +406,6 @@ $this->note = 'Provide user details in this form.';
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url('com_user', 'listusers'); ?>');" value="Cancel" />
+		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_user', 'listusers')); ?>');" value="Cancel" />
 	</div>
 </form>

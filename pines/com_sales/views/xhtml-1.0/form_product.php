@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = (is_null($this->entity->guid)) ? 'Editing New Product' : 'Editing ['.htmlentities($this->entity->name).']';
 $this->note = 'Provide product details in this form.';
 ?>
-<form class="pform" method="post" id="product_details" action="<?php echo pines_url('com_sales', 'saveproduct'); ?>">
+<form class="pform" method="post" id="product_details" action="<?php echo htmlentities(pines_url('com_sales', 'saveproduct')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
 		$(function(){
@@ -627,6 +627,6 @@ $this->note = 'Provide product details in this form.';
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url('com_sales', 'listproducts'); ?>');" value="Cancel" />
+		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'listproducts')); ?>');" value="Cancel" />
 	</div>
 </form>

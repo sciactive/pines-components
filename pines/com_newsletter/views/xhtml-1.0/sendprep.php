@@ -41,7 +41,7 @@ $this->title = "Sending {$this->mail->name}";
 	});
 	// ]]>
 </script>
-<form class="pform" method="post" action="<?php echo pines_url('com_newsletter', 'send'); ?>">
+<form class="pform" method="post" action="<?php echo htmlentities(pines_url('com_newsletter', 'send')); ?>">
 	<div class="element">
 		<label><span class="label">From Address</span>
 		<input class="field ui-widget-content" type="text" name="from" size="24" value="<?php echo htmlentities($pines->config->com_newsletter->default_from); ?>" /></label>
@@ -71,6 +71,6 @@ $this->title = "Sending {$this->mail->name}";
 		<input type="hidden" name="mail_id" value="<?php echo $_REQUEST['mail_id']; ?>" />
 		<input type="hidden" name="location" id="location" />
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url('com_newsletter', 'list'); ?>');" value="Cancel" />
+		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_newsletter', 'list')); ?>');" value="Cancel" />
 	</div>
 </form>

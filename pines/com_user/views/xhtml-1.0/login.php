@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = "Login to {$pines->config->option_title}";
 $this->note = 'Please enter your credentials to login.';
 ?>
-<form class="pform" name="login" method="post" action="<?php echo pines_url(); ?>">
+<form class="pform" name="login" method="post" action="<?php echo htmlentities(pines_url()); ?>">
 	<div class="element">
 		<label><span class="label">Username</span>
 			<input class="field ui-widget-content" type="text" name="username" size="24" /></label>

@@ -59,7 +59,7 @@ $this->title = 'New Report';
 	});
 	// ]]>
 </script>
-<form class="pform" method="post" id="report_details" action="<?php echo pines_url('com_reports', 'reportattendance'); ?>">
+<form class="pform" method="post" id="report_details" action="<?php echo htmlentities(pines_url('com_reports', 'reportattendance')); ?>">
 	<div class="element" style="padding-bottom: 0px;" id="location_tree"></div>
 	<div class="element" style="padding-bottom: 0px;">
 		<span class="note">Start</span>

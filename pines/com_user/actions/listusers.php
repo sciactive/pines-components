@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_user/listusers') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_user', 'listusers', null, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_user', 'listusers'));
 
 $pines->user_manager->list_users();
 ?>

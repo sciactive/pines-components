@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_sales/editproduct') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listproducts', null, false));
+		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listproducts'));
 	$product = com_sales_product::factory((int) $_REQUEST['id']);
 	if (is_null($product->guid)) {
 		pines_error('Requested product id is not accessible');
@@ -21,7 +21,7 @@ if ( isset($_REQUEST['id']) ) {
 	}
 } else {
 	if ( !gatekeeper('com_sales/newproduct') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listproducts', null, false));
+		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listproducts'));
 	$product = com_sales_product::factory();
 }
 

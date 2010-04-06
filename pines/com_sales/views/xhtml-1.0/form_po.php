@@ -16,7 +16,7 @@ $read_only = '';
 if ($this->entity->final)
 	$read_only = 'readonly="readonly"';
 ?>
-<form class="pform" method="post" id="po_details" action="<?php echo pines_url('com_sales', 'savepo'); ?>">
+<form class="pform" method="post" id="po_details" action="<?php echo htmlentities(pines_url('com_sales', 'savepo')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
 		var products;
@@ -377,9 +377,9 @@ if ($this->entity->final)
 		<input type="hidden" id="save" name="save" value="" />
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" onclick="$('#save').val('save');" />
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Commit" onclick="$('#save').val('commit');" />
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url('com_sales', 'listpos'); ?>');" value="Cancel" />
+		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'listpos')); ?>');" value="Cancel" />
 		<?php } else { ?>
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url('com_sales', 'listpos'); ?>');" value="&laquo; Close" />
+		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'listpos')); ?>');" value="&laquo; Close" />
 		<?php } ?>
 	</div>
 </form>

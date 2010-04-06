@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Receive Inventory';
 $this->note = 'Only use this form to receive inventory into your <strong>current</strong> location ('.(is_null($_SESSION['user']->group) ? 'No Location' : $_SESSION['user']->group->name).').';
 ?>
-<form class="pform" method="post" id="receive_inventory" action="<?php echo pines_url('com_sales', 'receive'); ?>">
+<form class="pform" method="post" id="receive_inventory" action="<?php echo htmlentities(pines_url('com_sales', 'receive')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
 		var products;
@@ -178,6 +178,6 @@ $this->note = 'Only use this form to receive inventory into your <strong>current
 	</div>
 	<div class="element buttons">
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url(); ?>');" value="Cancel" />
+		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url()); ?>');" value="Cancel" />
 	</div>
 </form>

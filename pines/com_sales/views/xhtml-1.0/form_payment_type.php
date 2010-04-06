@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = (is_null($this->entity->guid)) ? 'Editing New Payment Type' : 'Editing ['.htmlentities($this->entity->name).']';
 $this->note = 'Provide payment type details in this form.';
 ?>
-<form class="pform" method="post" id="payment_type_details" action="<?php echo pines_url('com_sales', 'savepaymenttype'); ?>">
+<form class="pform" method="post" id="payment_type_details" action="<?php echo htmlentities(pines_url('com_sales', 'savepaymenttype')); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 			<?php if (isset($this->entity->uid)) { ?>
@@ -67,6 +67,6 @@ $this->note = 'Provide payment type details in this form.';
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url('com_sales', 'listpaymenttypes'); ?>');" value="Cancel" />
+		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'listpaymenttypes')); ?>');" value="Cancel" />
 	</div>
 </form>

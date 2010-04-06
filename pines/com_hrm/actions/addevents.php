@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_sales/editcalendar') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'editcalendar', null, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'editcalendar'));
 
 $dupe_count = 0;
 if (isset($_REQUEST['events'])) {

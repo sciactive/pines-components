@@ -16,7 +16,7 @@ $read_only = '';
 if ($this->entity->final)
 	$read_only = 'readonly="readonly"';
 ?>
-<form class="pform" method="post" id="transfer_details" action="<?php echo pines_url('com_sales', 'savetransfer'); ?>">
+<form class="pform" method="post" id="transfer_details" action="<?php echo htmlentities(pines_url('com_sales', 'savetransfer')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
 		var stock;
@@ -246,7 +246,7 @@ if ($this->entity->final)
 		<input type="hidden" id="save" name="save" value="" />
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" onclick="$('#save').val('save');" />
 		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Commit" onclick="$('#save').val('commit');" />
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url('com_sales', 'listtransfers'); ?>');" value="Cancel" />
+		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'listtransfers')); ?>');" value="Cancel" />
 		<?php } ?>
 	</div>
 </form>

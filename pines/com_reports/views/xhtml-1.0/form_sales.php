@@ -36,7 +36,7 @@ $this->title = 'New Report';
 	});
 // ]]>
 </script>
-<form class="pform" method="post" id="report_details" action="<?php echo pines_url('com_reports', 'reportsales'); ?>">
+<form class="pform" method="post" id="report_details" action="<?php echo htmlentities(pines_url('com_reports', 'reportsales')); ?>">
 	<div class="element" style="padding-bottom: 0px;">
 		<span class="note">Start</span>
 		<input class="ui-corner-all form_date" type="text" name="start" value="<?php echo ($this->date[0]) ? pines_date_format($this->date[0], null, 'Y-m-d') : pines_date_format(time(), null, 'Y-m-d'); ?>" />
@@ -46,6 +46,6 @@ $this->title = 'New Report';
 		<input class="ui-corner-all form_date" type="text" name="end" value="<?php echo ($this->date[1]) ? pines_date_format($this->date[1], null, 'Y-m-d') : pines_date_format(time(), null, 'Y-m-d'); ?>" />
 	</div>
 	<div class="element">
-			<input type="submit" value="View Report &raquo;" class="ui-corner-all form_input" />
+		<input type="submit" value="View Report &raquo;" class="ui-corner-all form_input" />
 	</div>
 </form>

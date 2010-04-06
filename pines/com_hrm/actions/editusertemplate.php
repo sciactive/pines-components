@@ -13,10 +13,10 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if (isset($_REQUEST['id'])) {
 	if ( !gatekeeper('com_hrm/editusertemplate') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'editusertemplate', array('id' => $_REQUEST['id']), false));
+		punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'editusertemplate', array('id' => $_REQUEST['id'])));
 } else {
 	if ( !gatekeeper('com_hrm/newusertemplate') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'editusertemplate', null, false));
+		punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'editusertemplate'));
 }
 
 $entity = com_hrm_user_template::factory((int) $_REQUEST['id']);

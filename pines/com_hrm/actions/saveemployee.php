@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_hrm/editemployee') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'listemployees', null, false));
+		punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'listemployees'));
 	$employee = com_hrm_employee::factory((int) $_REQUEST['id']);
 	if (is_null($employee->guid)) {
 		pines_error('Requested employee id is not accessible');
@@ -21,7 +21,7 @@ if ( isset($_REQUEST['id']) ) {
 	}
 } else {
 	if ( !gatekeeper('com_hrm/newemployee') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'listemployees', null, false));
+		punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'listemployees'));
 	$employee = com_hrm_employee::factory();
 }
 

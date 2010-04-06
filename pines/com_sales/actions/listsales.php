@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_sales/listsales') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listsales', null, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listsales'));
 
 if (!empty($_REQUEST['start_date'])) {
 	$start_date = strtotime($_REQUEST['start_date'].' 00:00');

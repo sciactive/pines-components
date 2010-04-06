@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'PDF Display Editor Testing'
 	?>
-<form class="pform" method="post" action="<?php echo pines_url('com_pdf', 'testprint'); ?>">
+<form class="pform" method="post" action="<?php echo htmlentities(pines_url('com_pdf', 'testprint')); ?>">
 	<div class="element display_edit" id="name">
 		<label><span class="label">Name</span>
 			<input class="field ui-widget-content" type="text" name="name" value="<?php echo $entity->name; ?>" /></label>

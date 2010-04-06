@@ -53,7 +53,7 @@ $this->title = (is_null($this->event->guid)) ? 'New Event' : $this->event->title
 	});
 // ]]>
 </script>
-<form class="pform" method="post" id="calendar_details" action="<?php echo pines_url('com_hrm', 'saveevent'); ?>">
+<form class="pform" method="post" id="calendar_details" action="<?php echo htmlentities(pines_url('com_hrm', 'saveevent')); ?>">
 	<div class="element">
 		<select name="employee" class="form_select">
 				<?php
@@ -178,7 +178,7 @@ $this->title = (is_null($this->event->guid)) ? 'New Event' : $this->event->title
 	<div class="element">
 			<?php if (isset($this->event->guid)) { ?>
 			<input type="hidden" name="id" value="<?php echo $this->event->guid; ?>" />
-			<input type="submit" value="Save Event &raquo;" /><input type="button" onclick="pines.get('<?php echo pines_url('com_hrm', 'editcalendar'); ?>');" value="Cancel" />
+			<input type="submit" value="Save Event &raquo;" /><input type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_hrm', 'editcalendar')); ?>');" value="Cancel" />
 			<?php } else { ?>
 			<input type="submit" value="Add Event &raquo;" class="form_select" />
 			<?php } ?>

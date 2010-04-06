@@ -14,7 +14,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Entity Manager Benchmark';
 ?>
-<form class="pform" method="post" action="<?php echo pines_url('com_entitytools', 'benchmark'); ?>">
+<form class="pform" method="post" action="<?php echo htmlentities(pines_url('com_entitytools', 'benchmark')); ?>">
 	<div class="element heading">
 		<p>
 			This entity manager benchmark will create, retrieve and delete

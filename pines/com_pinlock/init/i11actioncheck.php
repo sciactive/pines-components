@@ -50,7 +50,7 @@ if ($_POST['com_pinlock_continue'] == 'true') {
 	if ($_SESSION['com_pinlock__attempts'] >= $pines->config->com_pinlock->max_tries) {
 		pines_log('Maximum failed login attempts reached.', 'warning');
 		$pines->user_manager->logout();
-		punt_user('Maximum failed login attempts reached.', pines_url(null, null, null, false));
+		punt_user('Maximum failed login attempts reached.', pines_url());
 	}
 	pines_notice('Incorrect PIN.');
 	unset($com_pinlock__sessionid);

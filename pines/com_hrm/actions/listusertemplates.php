@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_hrm/listusertemplates') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'listusertemplates', null, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'listusertemplates'));
 
 $pines->com_hrm->list_user_templates();
 ?>

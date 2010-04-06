@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_sales/managecategories') || !gatekeeper('com_sales/viewcategories') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'catjson', $_REQUEST, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'catjson', $_REQUEST));
 
 $pines->page->override = true;
 
@@ -24,7 +24,7 @@ if (!isset($_REQUEST['do'])) {
 }
 
 if ( !gatekeeper('com_sales/managecategories') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'catjson', $_REQUEST, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'catjson', $_REQUEST));
 
 switch ($_REQUEST['do']) {
 	case 'new':

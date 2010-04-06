@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Entity Manager Import';
 ?>
-<form enctype="multipart/form-data" class="pform" method="post" action="<?php echo pines_url('com_entitytools', 'import'); ?>">
+<form enctype="multipart/form-data" class="pform" method="post" action="<?php echo htmlentities(pines_url('com_entitytools', 'import')); ?>">
 	<div class="element heading">
 		<p>
 			Use this feature to import entities from a file made by a Pines

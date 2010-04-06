@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_configure/edit') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_configure', 'edit', $_GET, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_configure', 'edit', $_GET));
 
 if (!array_key_exists($_REQUEST['component'], $pines->configurator->component_files)) {
 	pines_error('Given component either does not exist, or has no configuration file!');
@@ -112,7 +112,7 @@ if (!$component->save_config()) {
 }
 
 header('HTTP/1.1 303 See Other', true, 303);
-header('Location: '.pines_url('com_configure', 'list', null, false));
+header('Location: '.pines_url('com_configure', 'list'));
 
 $pines->page->override = true;
 

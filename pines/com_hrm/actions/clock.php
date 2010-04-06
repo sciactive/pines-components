@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_hrm/clock') && !gatekeeper('com_hrm/manageclock') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'clock', $_REQUEST, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'clock', $_REQUEST));
 
 $pines->page->override = true;
 
@@ -35,7 +35,7 @@ if ($_REQUEST['id'] == 'self') {
 	$id_array = $pines->hook->add_callback('$pines->user_manager->check_permissions', -100, 'com_hrm__override_ac');
 } else {
 	if ( !gatekeeper('com_hrm/manageclock') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'clock', $_REQUEST, false));
+		punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'clock', $_REQUEST));
 	$employee = com_hrm_employee::factory((int) $_REQUEST['id']);
 }
 

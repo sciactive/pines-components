@@ -39,7 +39,7 @@ $this->title = "Editing Configuration for {$this->comp->info->name} {$this->comp
 	});
 	// ]]>
 </script>
-<form id="configuration_form" class="pform" action="<?php echo pines_url('com_configure', 'save'); ?>" method="post">
+<form id="configuration_form" class="pform" action="<?php echo htmlentities(pines_url('com_configure', 'save')); ?>" method="post">
 	<div class="element heading">
 		<p>Check a setting to set it manually, or leave it unchecked to use the default setting.</p>
 	</div>

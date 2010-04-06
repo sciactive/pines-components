@@ -29,7 +29,7 @@ $this->title = "Switch User";
 	}
 	/* ]]> */
 </style>
-<form class="pform com_su_login_form" name="login" method="post" action="<?php echo pines_url(); ?>">
+<form class="pform com_su_login_form" name="login" method="post" action="<?php echo htmlentities(pines_url()); ?>">
 	<?php if ($this->pin_login) { ?>
 	<div class="element">
 		<label><span class="label">PIN</span>

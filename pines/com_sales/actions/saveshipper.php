@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_sales/editshipper') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listshippers', null, false));
+		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listshippers'));
 	$shipper = com_sales_shipper::factory((int) $_REQUEST['id']);
 	if (is_null($shipper->guid)) {
 		pines_error('Requested shipper id is not accessible');
@@ -21,7 +21,7 @@ if ( isset($_REQUEST['id']) ) {
 	}
 } else {
 	if ( !gatekeeper('com_sales/newshipper') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listshippers', null, false));
+		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listshippers'));
 	$shipper = com_sales_shipper::factory();
 }
 

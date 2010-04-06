@@ -57,7 +57,7 @@ class tpl_pines extends template {
 	 */
 	public function sub_menu($menu) {
 		$return = '<li class="ui-state-default"><a href="'.
-			(isset($menu[0]['href']) ? $menu[0]['href'] : '#').
+			(isset($menu[0]['href']) ? htmlentities($menu[0]['href']) : '#').
 			(isset($menu[0]['onclick']) ? "\" onclick=\"{$menu[0]['onclick']}\">" : '">').
 			htmlentities($menu[0]['text']).
 			(count($menu) > 1 ? '<span class="ui-icon ui-icon-triangle-1-se"></span>' : '').'</a>';

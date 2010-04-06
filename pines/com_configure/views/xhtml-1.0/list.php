@@ -60,13 +60,13 @@ $this->title = 'Configure Components';
 	<div class="component_entry<?php echo $cur_component->is_disabled() ? ' ui-priority-secondary' : ''; ?>">
 		<div class="buttons">
 			<?php if ($cur_component->is_configurable()) { ?>
-			<input type="button" onclick="pines.get('<?php echo pines_url('com_configure', 'edit', array('component' => urlencode($cur_component->name))); ?>');" value="Configure" />
-			<input type="button" onclick="pines.get('<?php echo pines_url('com_configure', 'view', array('component' => urlencode($cur_component->name))); ?>');" value="View Config" />
+			<input type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_configure', 'edit', array('component' => urlencode($cur_component->name)))); ?>');" value="Configure" />
+			<input type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_configure', 'view', array('component' => urlencode($cur_component->name)))); ?>');" value="View Config" />
 			<?php } ?>
 			<?php if ($cur_component->name != 'system') { if ($cur_component->is_disabled()) { ?>
-			<input type="button" onclick="pines.get('<?php echo pines_url('com_configure', 'enable', array('component' => urlencode($cur_component->name))); ?>');" value="Enable" />
+			<input type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_configure', 'enable', array('component' => urlencode($cur_component->name)))); ?>');" value="Enable" />
 			<?php } else { ?>
-			<input type="button" onclick="pines.get('<?php echo pines_url('com_configure', 'disable', array('component' => urlencode($cur_component->name))); ?>');" value="Disable" />
+			<input type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_configure', 'disable', array('component' => urlencode($cur_component->name)))); ?>');" value="Disable" />
 			<?php } } ?>
 		</div>
 		<div class="short_description"><?php echo $cur_component->info->short_description; ?></div>

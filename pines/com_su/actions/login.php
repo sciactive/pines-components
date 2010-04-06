@@ -39,7 +39,7 @@ if ( isset($user, $user->guid) ) {
 	pines_log("Switching user from {$_SESSION['user']->username} to {$user->username}.", 'notice');
 	if ($pines->user_manager->login($user)) {
 		header('HTTP/1.1 303 See Other', true, 303);
-		header('Location: '.pines_url(null, null, array(), false));
+		header('Location: '.pines_url());
 	} else {
 		pines_error('Could not switch users.');
 		// Load the default component.

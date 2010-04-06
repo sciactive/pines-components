@@ -94,7 +94,7 @@ if ($this->entity->status == 'quoted') {
 	</div>
 	<div class="right_side barcode">
 		<h1><?php echo $this->doc_title; ?></h1>
-		<img src="<?php echo pines_url('com_barcode', 'image', array('code' => $doc_id, 'width' => '250')); ?>" alt="Barcode" />
+		<img src="<?php echo htmlentities(pines_url('com_barcode', 'image', array('code' => $doc_id, 'width' => '250'))); ?>" alt="Barcode" />
 	</div>
 	<?php if (isset($sales_rep->guid)) { ?>
 	<div class="left_side location">

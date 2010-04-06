@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper() )
-	punt_user('You don\'t have necessary permission.', pines_url('com_example', 'content', null, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_example', 'content'));
 
 $pines->com_example->print_content();
 ?>

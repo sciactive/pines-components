@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_customer/listcustomers') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'salesearch', $_REQUEST, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'salesearch', $_REQUEST));
 
 $pines->page->override = true;
 

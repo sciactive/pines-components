@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_sales/editcountsheet') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listcountsheets', null, false));
+		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listcountsheets'));
 	$countsheet = com_sales_countsheet::factory((int) $_REQUEST['id']);
 	if (is_null($countsheet->guid) || $countsheet->final) {
 		pines_error('Requested countsheet id is not accessible');
@@ -21,7 +21,7 @@ if ( isset($_REQUEST['id']) ) {
 	}
 } else {
 	if ( !gatekeeper('com_sales/newcountsheet') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listcountsheets', null, false));
+		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listcountsheets'));
 	$countsheet = com_sales_countsheet::factory();
 }
 

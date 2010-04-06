@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_newsletter/send') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_newsletter', 'list', null, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_newsletter', 'list'));
 
 $jstree = new module('system', 'jstree', 'head');
 $sendprep = new module('com_newsletter', 'sendprep', 'content');

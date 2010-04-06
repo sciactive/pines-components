@@ -52,7 +52,7 @@ foreach ($this->sales as $cur_sale) {
 }
 ?>
 <script type='text/javascript'>
-// <![CDATA[
+	// <![CDATA[
 	var view_changes = 0;
 	$(document).ready(function() {
 		// Create the calendar object.
@@ -139,6 +139,6 @@ foreach ($this->sales as $cur_sale) {
 		var current_date = $.fullCalendar.parseDate(<?php echo $this->date[0]; ?>);
 		$('#calendar').fullCalendar('gotoDate', current_date);
 	});
-// ]]>
+	// ]]>
 </script>
 <div id="calendar"></div>

@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_reports/reportattendance') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_reports', 'reportattendance', null, false));
+	punt_user('You don\'t have necessary permission.', pines_url('com_reports', 'reportattendance'));
 if ($_REQUEST['user'] === '') {
 	pines_notice('Please select an employee.');
 	unset($_REQUEST['user']);

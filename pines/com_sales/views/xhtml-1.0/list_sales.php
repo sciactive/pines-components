@@ -58,7 +58,7 @@ $this->title = 'Sales';
 
 	// ]]>
 </script>
-<form id="sale_date_form" action="<?php echo pines_url('com_sales', 'listsales'); ?>" method="post">
+<form id="sale_date_form" action="<?php echo htmlentities(pines_url('com_sales', 'listsales')); ?>" method="post">
 	<div class="ui-helper-clearfix" style="margin-bottom: 5px;">
 		<div style="float: left;">
 			<script type="text/javascript">

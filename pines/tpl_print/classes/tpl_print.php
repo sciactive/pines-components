@@ -59,7 +59,7 @@ class tpl_print extends template {
 	public function sub_menu($menu) {
 		$return = '<li class="ui-state-default"><a'.
 			(count($menu) > 1 ? ' class="dir" href="' : ' href="').
-			(isset($menu[0]['href']) ? $menu[0]['href'] : '#').
+			(isset($menu[0]['href']) ? htmlentities($menu[0]['href']) : '#').
 			(isset($menu[0]['onclick']) ? "\" onclick=\"{$menu[0]['onclick']}\">" : '">').
 			htmlentities($menu[0]['text']).'</a>';
 		if (count($menu) > 1) {

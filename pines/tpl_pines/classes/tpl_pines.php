@@ -24,12 +24,12 @@ class tpl_pines extends template {
 	 * The template format.
 	 * @var string $format
 	 */
-	var $format = 'xhtml-1.0-strict-desktop';
+	public $format = 'xhtml-1.0-strict-desktop';
 	/**
 	 * The editor CSS location, relative to Pines' directory.
 	 * @var string $editor_css
 	 */
-	var $editor_css = 'templates/tpl_pines/css/editor.css';
+	public $editor_css = 'templates/tpl_pines/css/editor.css';
 
 	/**
 	 * Format a menu in HTML.

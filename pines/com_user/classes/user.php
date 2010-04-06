@@ -18,10 +18,6 @@ defined('P_RUN') or die('Direct access prohibited');
  * @subpackage com_user
  */
 class user extends able_object implements user_interface {
-	/**
-	 * Load a user.
-	 * @param int|string $id The ID or username of the user to load, 0 for a new user.
-	 */
 	public function __construct($id = 0) {
 		parent::__construct();
 		$this->add_tag('com_user', 'user');
@@ -47,10 +43,6 @@ class user extends able_object implements user_interface {
 		}
 	}
 
-	/**
-	 * Create a new instance.
-	 * @param int|string $id The ID or username of the user to load, 0 for a new user.
-	 */
 	public static function factory($id = 0) {
 		global $pines;
 		$class = get_class();
@@ -60,10 +52,6 @@ class user extends able_object implements user_interface {
 		return $entity;
 	}
 
-	/**
-	 * Delete the user.
-	 * @return bool True on success, false on failure.
-	 */
 	public function delete() {
 		if (!parent::delete())
 			return false;
@@ -71,20 +59,12 @@ class user extends able_object implements user_interface {
 		return true;
 	}
 
-	/**
-	 * Save the user.
-	 * @return bool True on success, false on failure.
-	 */
 	public function save() {
 		if (!isset($this->username))
 			return false;
 		return parent::save();
 	}
 
-	/**
-	 * Print a form to edit the user.
-	 * @return module The form's module.
-	 */
 	public function print_form() {
 		global $pines;
 		$pines->com_pgrid->load();
@@ -104,12 +84,6 @@ class user extends able_object implements user_interface {
 		return $module;
 	}
 
-	/**
-	 * Add the user to a (secondary) group.
-	 *
-	 * @param group $group The group.
-	 * @return mixed True if the user is already in the group. The resulting array of groups if the user was not.
-	 */
 	public function addgroup($group) {
 		if ( !$group->in_array($this->groups) ) {
 			$this->groups[] = $group;
@@ -119,23 +93,10 @@ class user extends able_object implements user_interface {
 		}
 	}
 
-	/**
-	 * Check if the password given is the correct password for the user's
-	 * account.
-	 *
-	 * @param string $password The password in question.
-	 * @return bool True or false.
-	 */
 	public function check_password($password) {
 		return ($this->password == md5($password.$this->salt));
 	}
 
-	/**
-	 * Remove the user from a (secondary) group.
-	 *
-	 * @param group $group The group.
-	 * @return mixed True if the user wasn't in the group. The resulting array of groups if the user was.
-	 */
 	public function delgroup($group) {
 		if ( $group->in_array($this->groups) ) {
 			foreach ($this->groups as $key => $cur_group) {
@@ -148,12 +109,6 @@ class user extends able_object implements user_interface {
 		}
 	}
 
-	/**
-	 * Check whether the user is in a (primary or secondary) group.
-	 *
-	 * @param mixed $group The group, or the group's GUID.
-	 * @return bool True or false.
-	 */
 	public function ingroup($group = null) {
 		if (is_numeric($group))
 			$group = group::factory((int) $group);
@@ -162,12 +117,6 @@ class user extends able_object implements user_interface {
 		return ($group->in_array($this->groups) || $group->is($this->group));
 	}
 
-	/**
-	 * Check whether the user is a descendent of a group.
-	 *
-	 * @param mixed $group The group, or the group's GUID.
-	 * @return bool True or false.
-	 */
 	public function is_descendent($group = null) {
 		if (is_numeric($group))
 			$group = group::factory((int) $group);
@@ -184,13 +133,8 @@ class user extends able_object implements user_interface {
 	}
 
 	/**
-	 * Change the user's password.
-	 *
 	 * This function first checks to see if the user already has a salt. If not,
 	 * one will be generated.
-	 *
-	 * @param string $password The new password.
-	 * @return string The resulting MD5 sum which is stored in the entity.
 	 */
 	public function password($password) {
 		if (!isset($this->salt))
@@ -199,14 +143,9 @@ class user extends able_object implements user_interface {
 	}
 
 	/**
-	 * Return the user's timezone.
-	 *
 	 * First checks if the user has a timezone set, then the primary group, then
 	 * the secondary groups, then the system default. The first timezone found
 	 * is returned.
-	 *
-	 * @param bool $return_date_time_zone_object Whether to return an object of the DateTimeZone class, instead of an identifier string.
-	 * @return string|DateTimeZone The timezone identifier or the DateTimeZone object.
 	 */
 	public function get_timezone($return_date_time_zone_object = false) {
 		global $pines;

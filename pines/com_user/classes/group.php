@@ -18,10 +18,6 @@ defined('P_RUN') or die('Direct access prohibited');
  * @subpackage com_user
  */
 class group extends able_object implements group_interface {
-	/**
-	 * Load a group.
-	 * @param int $id The ID of the group to load, 0 for a new group.
-	 */
 	public function __construct($id = 0) {
 		parent::__construct();
 		$this->add_tag('com_user', 'group');
@@ -44,10 +40,6 @@ class group extends able_object implements group_interface {
 		}
 	}
 
-	/**
-	 * Create a new instance.
-	 * @param int $id The ID of the group to load, 0 for a new group.
-	 */
 	public static function factory($id = 0) {
 		global $pines;
 		$class = get_class();
@@ -56,13 +48,7 @@ class group extends able_object implements group_interface {
 		$pines->hook->hook_object($entity, $class.'->', false);
 		return $entity;
 	}
-	
-	/**
-	 * Check whether the group is a descendent of a group.
-	 *
-	 * @param mixed $group The group, or the group's GUID.
-	 * @return bool True or false.
-	 */
+
 	public function is_descendent($group = null) {
 		if (is_numeric($group))
 			$group = group::factory((int) $group);
@@ -79,8 +65,6 @@ class group extends able_object implements group_interface {
 	}
 
 	/**
-	 * Delete the group.
-	 * @return bool True on success, false on failure.
 	 * @todo Fix this to delete only its children, who will delete their children.
 	 */
 	public function delete() {
@@ -96,22 +80,12 @@ class group extends able_object implements group_interface {
 		return true;
 	}
 
-	/**
-	 * Save the group.
-	 * @return bool True on success, false on failure.
-	 */
 	public function save() {
 		if (!isset($this->groupname))
 			return false;
 		return parent::save();
 	}
 
-	/**
-	 * Find the location of the group's current logo image.
-	 *
-	 * @param bool $rela_location Return a relative URL, instead of a full one.
-	 * @return string The URL of the logo image.
-	 */
 	public function get_logo($rela_location = false) {
 		global $pines;
 		if (isset($this->logo))
@@ -121,10 +95,6 @@ class group extends able_object implements group_interface {
 		return ($rela_location ? $pines->config->rela_location : $pines->config->full_location)."{$pines->config->setting_upload}logos/default_logo.png";
 	}
 
-	/**
-	 * Print a form to edit the group.
-	 * @return module The form's module.
-	 */
 	public function print_form() {
 		global $pines;
 		$pines->com_pgrid->load();

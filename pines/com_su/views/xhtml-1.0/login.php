@@ -43,6 +43,9 @@ $this->title = "Switch User";
 			<input class="field ui-widget-content" type="password" name="password" size="15" /></label>
 	</div>
 	<?php } ?>
+	<?php if ($this->pin_login) { ?>
+	
+	<?php } ?>
 	<div class="element buttons centered">
 		<input type="hidden" name="option" value="com_su" />
 		<input type="hidden" name="action" value="login" />

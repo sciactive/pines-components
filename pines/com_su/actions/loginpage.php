@@ -18,6 +18,7 @@ $pines->page->override = true;
 
 $login = new module('com_su', 'login');
 $login->hide_password = gatekeeper('com_su/nopassword');
+$login->pin_login = $pines->config->com_su->allow_pins;
 $loginhtml = $login->render('module_head');
 $pines->page->override_doc($loginhtml);
 

@@ -30,9 +30,15 @@ $this->title = "Switch User";
 	/* ]]> */
 </style>
 <form class="pform com_su_login_form" name="login" method="post" action="<?php echo pines_url(); ?>">
-	<div class="element heading">
-		<p>Enter login credentials below.</p>
+	<?php if ($this->pin_login) { ?>
+	<div class="element">
+		<label><span class="label">PIN</span>
+			<input class="field ui-widget-content" type="password" name="pin" size="15" /></label>
 	</div>
+	<div class="element full_width">
+		<div class="group"><strong class="field">OR</strong></div>
+	</div>
+	<?php } ?>
 	<div class="element">
 		<label><span class="label">Username</span>
 			<input class="field ui-widget-content" type="text" name="username" size="15" /></label>
@@ -42,9 +48,6 @@ $this->title = "Switch User";
 		<label><span class="label">Password</span>
 			<input class="field ui-widget-content" type="password" name="password" size="15" /></label>
 	</div>
-	<?php } ?>
-	<?php if ($this->pin_login) { ?>
-	
 	<?php } ?>
 	<div class="element buttons centered">
 		<input type="hidden" name="option" value="com_su" />

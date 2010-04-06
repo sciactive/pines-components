@@ -17,7 +17,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * @package Pines
  * @subpackage com_user
  */
-class user extends able_entity {
+class user extends able_object implements user_interface {
 	/**
 	 * Load a user.
 	 * @param int|string $id The ID or username of the user to load, 0 for a new user.
@@ -49,8 +49,9 @@ class user extends able_entity {
 
 	/**
 	 * Create a new instance.
+	 * @param int|string $id The ID or username of the user to load, 0 for a new user.
 	 */
-	public static function factory() {
+	public static function factory($id = 0) {
 		global $pines;
 		$class = get_class();
 		$args = func_get_args();

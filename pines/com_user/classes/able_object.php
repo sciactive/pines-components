@@ -1,6 +1,6 @@
 <?php
 /**
- * able_entity class.
+ * able_object class.
  *
  * @package Pines
  * @subpackage com_user
@@ -17,9 +17,9 @@ defined('P_RUN') or die('Direct access prohibited');
  * @package Pines
  * @subpackage com_user
  */
-class able_entity extends entity {
+class able_object extends entity implements able_object_interface {
 	/**
-	 * Grant an ability to a user.
+	 * Grant an ability.
 	 *
 	 * Abilities should be named following this form!!
 	 *

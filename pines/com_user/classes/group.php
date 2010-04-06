@@ -17,7 +17,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * @package Pines
  * @subpackage com_user
  */
-class group extends able_entity {
+class group extends able_object implements group_interface {
 	/**
 	 * Load a group.
 	 * @param int $id The ID of the group to load, 0 for a new group.
@@ -46,8 +46,9 @@ class group extends able_entity {
 
 	/**
 	 * Create a new instance.
+	 * @param int $id The ID of the group to load, 0 for a new group.
 	 */
-	public static function factory() {
+	public static function factory($id = 0) {
 		global $pines;
 		$class = get_class();
 		$args = func_get_args();

@@ -153,7 +153,7 @@ class com_customertimer_login_tracker extends entity {
 	}
 
 	/**
-	 * Save the customer.
+	 * Save the login tracker.
 	 * @return bool True on success, false on failure.
 	 */
 	public function save() {

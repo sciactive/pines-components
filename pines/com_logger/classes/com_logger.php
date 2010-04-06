@@ -19,7 +19,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * @package Pines
  * @subpackage com_logger
  */
-class com_logger extends component {
+class com_logger extends component implements log_manager_interface {
 	/**
 	 * A buffer to store info and notice level log messages temporarily.
 	 *
@@ -35,7 +35,7 @@ class com_logger extends component {
 	 */
 	var $log_file = '';
 
-	function __construct() {
+	public function __construct() {
 		global $pines;
 		$this->log_file = $pines->config->com_logger->path;
 	}
@@ -43,18 +43,17 @@ class com_logger extends component {
 	/**
 	 * Write the $tmp_log buffer to disk.
 	 */
-	function __destruct() {
+	public function __destruct() {
 		if (strlen($this->tmp_log)) $this->write($this->tmp_log);
 	}
 
 	/**
-	 * Set up a callback for each hook to log system activity.
+	 * Set up a callback for all hooks to log system activity.
 	 *
-	 * Also deletes the com_logger hooks, so logging won't recursively log
-	 * itself. This function is called when log level is set to 'debug' in order
-	 * to help diagnose problems with a component.
+	 * This function is called when log level is set to 'debug' in order to help
+	 * diagnose problems with a component.
 	 */
-	function hook() {
+	public function hook() {
 		global $pines;
 		$pines->hook->add_callback('all', -1, 'com_logger__hook_log');
 	}
@@ -66,7 +65,7 @@ class com_logger extends component {
 	 * @param string $level The level of the message. (debug, info, notice, warning, error, or fatal)
 	 * @return bool True on success, false on error.
 	 */
-	function log($message, $level = 'info') {
+	public function log($message, $level = 'info') {
 		global $pines;
 		$date = date('c');
 		$user = is_object($_SESSION['user']) ? $_SESSION['user']->username.' ('.$_SESSION['user_id'].')' : $_SERVER['REMOTE_ADDR'];
@@ -103,7 +102,7 @@ class com_logger extends component {
 	 * @param string $logs Log message(s).
 	 * @return bool True on success, false on failure.
 	 */
-	function write($logs) {
+	public function write($logs) {
 		if (@$handle = fopen($this->log_file, 'a')) {
 			fwrite($handle, $logs."\n");
 			fclose($handle);

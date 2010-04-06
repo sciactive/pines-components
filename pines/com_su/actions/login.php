@@ -19,7 +19,7 @@ if ( gatekeeper() && $_REQUEST['username'] == $_SESSION['user']->username ) {
 	pines_notice('Already logged in!');
 	return;
 }
-if (isset($_REQUEST['pin']) && $pines->config->com_su->allow_pins) {
+if (!empty($_REQUEST['pin']) && $pines->config->com_su->allow_pins) {
 	$users = $pines->user_manager->get_users();
 	foreach ($users as $cur_user) {
 		if (empty($cur_user->pin))

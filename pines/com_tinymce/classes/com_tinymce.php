@@ -19,7 +19,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * @package Pines
  * @subpackage com_tinymce
  */
-class com_tinymce extends component {
+class com_tinymce extends component implements editor_interface {
 	/**
 	 * Whether the TinyMCE JavaScript has been loaded.
 	 * @access private
@@ -27,13 +27,7 @@ class com_tinymce extends component {
 	 */
 	private $js_loaded = false;
 
-	/**
-	 * Load the editor.
-	 *
-	 * This will transform any textareas with the "peditor" class into editors
-	 * and any textareas with the "peditor_simple" class into simple editors.
-	 */
-	function load() {
+	public function load() {
 		if (!$this->js_loaded) {
 			$module = new module('com_tinymce', 'tinymce', 'head');
 			$this->js_loaded = true;

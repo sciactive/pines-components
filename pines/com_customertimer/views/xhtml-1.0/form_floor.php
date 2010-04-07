@@ -17,6 +17,7 @@ $this->note = 'Provide floor details in this form.';
 	/* <![CDATA[ */
 	.station_layout {
 		position: relative;
+		border: 1px solid;
 	}
 	.station_layout .station_layout_bg {
 		float: left;
@@ -43,6 +44,7 @@ $this->note = 'Provide floor details in this form.';
 
 			var stations = JSON.parse("<?php echo addslashes(json_encode($this->entity->stations)); ?>");
 
+			// Remove all the DOM elements.
 			function remove_station_elements() {
 				station_floor.find("div.station").remove();
 				$.each(stations, function(station_id, station){
@@ -51,6 +53,7 @@ $this->note = 'Provide floor details in this form.';
 				});
 			}
 
+			// Make buttons for each station.
 			function update_layout() {
 				remove_station_elements();
 				$.each(stations, function(station_id, station){
@@ -101,6 +104,7 @@ $this->note = 'Provide floor details in this form.';
 
 			$("#floor_tabs").tabs();
 			$("#floor_tabs .station_layout_buttonset").buttonset();
+			// Save the station object to the hidden input.
 			$("#floor_tabs .station_layout_save").button().click(function(){
 				var stationobject = $.extend({}, stations);
 				$.each(stationobject, function(){
@@ -110,11 +114,72 @@ $this->note = 'Provide floor details in this form.';
 				station_input.val(JSON.stringify(stationobject));
 				alert("Saved layout.");
 			});
+			// Revert the changes to the station object since the last save.
 			$("#floor_tabs .station_layout_revert").button().click(function(){
 				stations = JSON.parse(station_input.val());
 				alert("Reverted layout.");
 				update_layout();
 			});
+			// Import a station object.
+			$("#floor_tabs .station_layout_import").button().click(function(){
+				$("<div />", {
+					"title": "Station Layout Import",
+					"html": $("<textarea />", {
+						"css": {
+							"width": "100%",
+							"height": "440px"
+						}
+					})
+				}).dialog({
+					"width": "640px",
+					"modal": true,
+					"buttons": {
+						"Import": function(){
+							var dialog = $(this);
+							try {
+								var newdata = JSON.parse(dialog.find("textarea").val());
+							} catch(err) {
+								alert("Could not interpret data!");
+								return;
+							}
+							if (typeof newdata == "object") {
+								stations = newdata;
+								alert("Import complete.");
+								dialog.dialog("close").remove();
+								update_layout();
+							} else {
+								alert("Data is not formatted correctly!");
+							}
+						}
+					}
+				});
+			});
+			// Export the station object.
+			$("#floor_tabs .station_layout_export").button().click(function(){
+				var stationobject = $.extend({}, stations);
+				$.each(stationobject, function(){
+					if (this.element)
+						delete this.element;
+				});
+				$("<div />", {
+					"title": "Station Layout Export",
+					"html": $("<textarea />", {
+						"css": {
+							"width": "100%",
+							"height": "440px"
+						},
+						"val": JSON.stringify(stationobject),
+						"click": function(){
+							if (this.select)
+								this.select();
+						}
+					})
+				}).dialog({
+					"width": "640px",
+					"modal": true
+				});
+			});
+			// Add a new station to the layout.
 			$("#floor_tabs .station_layout_add").button().click(function(){
 				var name;
 				do {
@@ -125,6 +190,7 @@ $this->note = 'Provide floor details in this form.';
 				stations[name] = {"left": .45, "top": .45, "width": .1, "height": .1};
 				update_layout();
 			});
+			// Delete all the stations in the layout.
 			$("#floor_tabs .station_layout_clear").button().click(function(){
 				remove_station_elements();
 				stations = {};
@@ -180,16 +246,21 @@ $this->note = 'Provide floor details in this form.';
 			<br class="spacer" />
 		</div>
 		<div id="tab_layout">
-			<div>
+			<div class="ui-widget-header ui-corner-all" style="padding: 10px;">
 				<span class="station_layout_buttonset">
 					<button type="button" class="station_layout_save"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_actions_document-save"></span> Save</button>
 					<button type="button" class="station_layout_revert"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_actions_document-revert"></span> Revert</button>
+				</span>
+				<span class="station_layout_buttonset">
+					<button type="button" class="station_layout_import"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_actions_go-down"></span> Import</button>
+					<button type="button" class="station_layout_export"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_actions_go-up"></span> Export</button>
 				</span>
 				<span class="station_layout_buttonset">
 					<button type="button" class="station_layout_add"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_actions_list-add"></span> Add</button>
 					<button type="button" class="station_layout_clear"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_actions_edit-clear"></span> Clear</button>
 				</span>
 			</div>
+			<br class="spacer" />
 			<div class="station_layout">
 				<img src="<?php echo $pines->config->rela_location.$this->entity->get_background(); ?>" class="station_layout_bg" alt="Station Layout" />
 				<div class="station_floor"></div>

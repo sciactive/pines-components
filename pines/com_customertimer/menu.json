@@ -1,10 +1,33 @@
 [
 	{
-		"path": "main_menu/business/com_customer/com_customer_timer",
-		"text": "Customer Timer",
+		"path": "main_menu/business/com_customer/com_customertimerold",
+		"text": "Customer Timer (Old)",
 		"href": ["com_customertimer","stations"],
 		"depend": {
 			"ability": "com_customertimer/viewstatus"
 		}
-	}
+	},
+	{
+		"path": "main_menu/business/com_customer/com_customertimer",
+		"text": "Customer Timer",
+		"depend": {
+			"children": true
+		}
+	},
+		{
+			"path": "main_menu/business/com_customer/com_customertimer/floors",
+			"text": "Floors",
+			"href": ["com_customertimer","listfloors"],
+			"depend": {
+				"ability": "com_customertimer/listfloors"
+			}
+		},
+		{
+			"path": "main_menu/business/com_customer/com_customertimer/newfloor",
+			"text": "New Floor",
+			"href": ["com_customertimer","editfloor"],
+			"depend": {
+				"ability": "com_customertimer/newfloor"
+			}
+		}
 ]

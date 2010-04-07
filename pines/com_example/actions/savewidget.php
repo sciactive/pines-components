@@ -48,7 +48,7 @@ if (empty($widget->name)) {
 	return;
 }
 $test = $pines->entity_manager->get_entity(array('data' => array('name' => $widget->name), 'tags' => array('com_example', 'widget'), 'class' => com_example_widget));
-if (isset($test->guid) && $test->guid != $_REQUEST['id']) {
+if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$widget->print_form();
 	pines_notice('There is already a widget with that name. Please choose a different name.');
 	return;

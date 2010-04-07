@@ -37,6 +37,26 @@ class com_customertimer extends component {
 	}
 
 	/**
+	 * Creates and attaches a module which lists floors.
+	 */
+	function list_floors() {
+		global $pines;
+
+		$pines->com_pgrid->load();
+
+		$module = new module('com_customertimer', 'list_floors', 'content');
+		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_customertimer/list_floors'];
+
+		$module->floors = $pines->entity_manager->get_entities(array('tags' => array('com_customertimer', 'floor'), 'class' => com_customertimer_floor));
+
+		if ( empty($module->floors) ) {
+			//$module->detach();
+			pines_notice('There are no floors.');
+		}
+	}
+
+	/**
 	 * Logs a customer in or out, depending on their current status.
 	 *
 	 * @param int $id The customer's GUID.

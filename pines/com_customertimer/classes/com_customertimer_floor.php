@@ -64,7 +64,7 @@ class com_customertimer_floor extends entity {
 
 	public function get_background() {
 		global $pines;
-		return "{$pines->config->rela_location}{$pines->config->setting_upload}floorplans/{$this->background}";
+		return "{$pines->config->setting_upload}floorplans/{$this->background}";
 	}
 
 	/**

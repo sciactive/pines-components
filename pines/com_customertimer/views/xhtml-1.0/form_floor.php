@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = (is_null($this->entity->guid)) ? 'Editing New Floor' : 'Editing ['.htmlentities($this->entity->name).']';
 $this->note = 'Provide floor details in this form.';
 ?>
-<form class="pform" method="post" id="floor_details" action="<?php echo htmlentities(pines_url('com_customertimer', 'savefloor')); ?>">
+<form enctype="multipart/form-data" class="pform" method="post" id="floor_details" action="<?php echo htmlentities(pines_url('com_customertimer', 'savefloor')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
 		$(function(){
@@ -58,10 +58,10 @@ $this->note = 'Provide floor details in this form.';
 				<textarea class="field ui-widget-content" rows="3" cols="35" name="description"><?php echo $this->entity->description; ?></textarea>
 			</div>
 			<?php if (isset($this->entity->background)) { ?>
-			<div class="element">
+			<div class="element full_width">
 				<span class="label">Current Background</span>
 				<div class="group">
-					<span class="field"><img src="<?php echo $this->entity->get_background(); ?>" alt="Floor Background" /></span>
+					<span class="field"><img src="<?php echo $pines->config->rela_location.$this->entity->get_background(); ?>" alt="Floor Background" style="max-width: 100%; width: auto; height: auto;" /></span>
 					<br />
 					<label><span class="field"><input class="field ui-widget-content" type="checkbox" name="remove_background" value="ON" />Remove this background.</span></label>
 				</div>

@@ -37,6 +37,34 @@ if (isset($test) && !$floor->is($test)) {
 	return;
 }
 
+// Background image upload and resizing.
+$image = $_FILES['background'];
+if (!empty($image['name'])) {
+	if ($image['error'] > 0) {
+		$floor->print_form();
+		pines_error("Image Error: {$image['error']}");
+		return;
+	}
+	if (!in_array($image['type'], array('image/jpeg', 'image/png', 'image/gif'))) {
+		$floor->print_form();
+		pines_notice('Acceptable image types are jpg, png, and gif.');
+		return;
+	}
+	if (!isset($floor->guid) && !$floor->save()) {
+		$floor->print_form();
+		pines_error('Error saving floor.');
+		return;
+	}
+	if (isset($floor->background) && file_exists("{$pines->config->setting_upload}floorplans/{$floor->background}"))
+		unlink("{$pines->config->setting_upload}floorplans/{$floor->background}");
+	$floor->background = clean_filename($image['name']);
+	move_uploaded_file($image['tmp_name'], "{$pines->config->setting_upload}floorplans/{$floor->background}");
+} else if ($_REQUEST['remove_background'] == 'ON' && isset($floor->background)) {
+	if (file_exists("{$pines->config->setting_upload}floorplans/{$floor->background}"))
+		unlink("{$pines->config->setting_upload}floorplans/{$floor->background}");
+	unset($floor->background);
+}
+
 if ($pines->config->com_customertimer->global_floors)
 	$floor->ac->other = 1;
 

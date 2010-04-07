@@ -120,7 +120,7 @@ if (!empty($image['name'])) {
 		pines_notice('Acceptable image types are jpg, png, and gif.');
 		return;
 	}
-	if (is_null($group->guid) && !$group->save()) {
+	if (!isset($group->guid) && !$group->save()) {
 		$group->print_form();
 		pines_error('Error saving group.');
 		return;

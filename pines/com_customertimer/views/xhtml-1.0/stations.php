@@ -147,28 +147,6 @@ $this->title = 'Customer Timer';
 			})
 			.button()
 			.appendTo(station_floor);
-			/*
-			.draggable({
-				"stop": function(){
-					$("#position").html(
-						"left: "+$(this).position().left/$(this).parent().parent().width()+"<br />"+
-						"top: "+$(this).position().top/$(this).parent().parent().height()+"<br />"+
-						"width: "+$(this).width()/$(this).parent().parent().width()+"<br />"+
-						"height: "+$(this).height()/$(this).parent().parent().height()
-					);
-				}
-			})
-			.resizable({
-				"stop": function(){
-					$("#position").html(
-						"left: "+$(this).position().left/$(this).parent().parent().width()+"<br />"+
-						"top: "+$(this).position().top/$(this).parent().parent().height()+"<br />"+
-						"width: "+$(this).width()/$(this).parent().parent().width()+"<br />"+
-						"height: "+$(this).height()/$(this).parent().parent().height()
-					);
-				}
-			});
-			*/
 
 			station.pick_customer = function (){
 				// A dialog for logging a customer into a station.

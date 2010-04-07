@@ -13,17 +13,123 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = (is_null($this->entity->guid)) ? 'Editing New Floor' : 'Editing ['.htmlentities($this->entity->name).']';
 $this->note = 'Provide floor details in this form.';
 ?>
+<style type="text/css">
+	/* <![CDATA[ */
+	.station_layout {
+		position: relative;
+	}
+	.station_layout .station_layout_bg {
+		float: left;
+		width: 98%;
+		height: auto;
+	}
+	.station_layout .station {
+		position: absolute;
+		background-image: none;
+	}
+	.station_layout .station .station_id {
+		display: block;
+		margin: 5px;
+		font: bold large sans-serif;
+	}
+	/* ]]> */
+</style>
 <form enctype="multipart/form-data" class="pform" method="post" id="floor_details" action="<?php echo htmlentities(pines_url('com_customertimer', 'savefloor')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
 		$(function(){
-			var layout = $("#layout");
+			var station_floor = $("#floor_tabs .station_layout .station_floor");
+			var station_input = $("#floor_tabs input[name=stations]");
+
+			var stations = JSON.parse("<?php echo addslashes(json_encode($this->entity->stations)); ?>");
+
+			function remove_station_elements() {
+				station_floor.find("div.station").remove();
+				$.each(stations, function(station_id, station){
+					if (station.element)
+						delete station.element;
+				});
+			}
 
 			function update_layout() {
-				
+				remove_station_elements();
+				$.each(stations, function(station_id, station){
+					station.element = $("<div />", {
+						"class": "station",
+						"css": {
+							"left": (station.left*100)+"%",
+							"top": (station.top*100)+"%",
+							"width": (station.width*100)+"%",
+							"height": (station.height*100)+"%"
+						},
+						"html": $("<span />", {
+							"class": "station_id",
+							"html": station_id
+						}),
+						"dblclick": function(){
+							var name;
+							do {
+								name = prompt("Change Station's Name:", station_id);
+							} while (name == "");
+							if (name == null || name == "")
+								return;
+							stations[name] = station;
+							delete stations[station_id];
+							update_layout();
+						}
+					})
+					.button()
+					.appendTo(station_floor)
+					.draggable({
+						"stop": function(){
+							station.left = $(this).position().left/$(this).parent().parent().width();
+							station.top = $(this).position().top/$(this).parent().parent().height();
+							station.width = $(this).width()/$(this).parent().parent().width();
+							station.height = $(this).height()/$(this).parent().parent().height();
+						}
+					})
+					.resizable({
+						"stop": function(){
+							station.left = $(this).position().left/$(this).parent().parent().width();
+							station.top = $(this).position().top/$(this).parent().parent().height();
+							station.width = $(this).width()/$(this).parent().parent().width();
+							station.height = $(this).height()/$(this).parent().parent().height();
+						}
+					});
+				});
 			}
 
 			$("#floor_tabs").tabs();
+			$("#floor_tabs .station_layout_buttonset").buttonset();
+			$("#floor_tabs .station_layout_save").button().click(function(){
+				var stationobject = $.extend({}, stations);
+				$.each(stationobject, function(){
+					if (this.element)
+						delete this.element;
+				});
+				station_input.val(JSON.stringify(stationobject));
+				alert("Saved layout.");
+			});
+			$("#floor_tabs .station_layout_revert").button().click(function(){
+				stations = JSON.parse(station_input.val());
+				alert("Reverted layout.");
+				update_layout();
+			});
+			$("#floor_tabs .station_layout_add").button().click(function(){
+				var name;
+				do {
+					name = prompt("New Station's Name:");
+				} while (name == "");
+				if (name == null || name == "")
+					return;
+				stations[name] = {"left": .45, "top": .45, "width": .1, "height": .1};
+				update_layout();
+			});
+			$("#floor_tabs .station_layout_clear").button().click(function(){
+				remove_station_elements();
+				stations = {};
+			});
+
 			update_layout();
 		});
 		// ]]>
@@ -31,7 +137,7 @@ $this->note = 'Provide floor details in this form.';
 	<div id="floor_tabs" style="clear: both;">
 		<ul>
 			<li><a href="#tab_general">General</a></li>
-			<li><a href="#tab_layout">Layout</a></li>
+			<li><a href="#tab_layout">Station Layout</a></li>
 		</ul>
 		<div id="tab_general">
 			<?php if (isset($this->entity->guid)) { ?>
@@ -74,6 +180,22 @@ $this->note = 'Provide floor details in this form.';
 			<br class="spacer" />
 		</div>
 		<div id="tab_layout">
+			<div>
+				<span class="station_layout_buttonset">
+					<button type="button" class="station_layout_save"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_actions_document-save"></span> Save</button>
+					<button type="button" class="station_layout_revert"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_actions_document-revert"></span> Revert</button>
+				</span>
+				<span class="station_layout_buttonset">
+					<button type="button" class="station_layout_add"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_actions_list-add"></span> Add</button>
+					<button type="button" class="station_layout_clear"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_actions_edit-clear"></span> Clear</button>
+				</span>
+			</div>
+			<div class="station_layout">
+				<img src="<?php echo $pines->config->rela_location.$this->entity->get_background(); ?>" class="station_layout_bg" alt="Station Layout" />
+				<div class="station_floor"></div>
+				<br class="spacer" />
+			</div>
+			<input type="hidden" name="stations" value="<?php echo htmlentities(json_encode($this->entity->stations)); ?>" />
 			<br class="spacer" />
 		</div>
 	</div>

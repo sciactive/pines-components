@@ -30,6 +30,9 @@ $floor->name = $_REQUEST['name'];
 $floor->enabled = ($_REQUEST['enabled'] == 'ON');
 $floor->description = $_REQUEST['description'];
 
+// Station Layout
+$floor->stations = json_decode($_REQUEST['stations'], true);
+
 $test = $pines->entity_manager->get_entity(array('data' => array('name' => $floor->name), 'tags' => array('com_customertimer', 'floor'), 'class' => com_customertimer_floor));
 if (isset($test) && !$floor->is($test)) {
 	$floor->print_form();

@@ -27,7 +27,7 @@ class com_customertimer_floor extends entity {
 		$this->add_tag('com_customertimer', 'floor');
 		// Defaults.
 		$this->enabled = true;
-		$this->layout = array();
+		$this->stations = array();
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));

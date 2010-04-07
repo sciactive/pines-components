@@ -58,13 +58,6 @@ class com_logger extends component implements log_manager_interface {
 		$pines->hook->add_callback('all', -1, 'com_logger__hook_log');
 	}
 
-	/**
-	 * Log an entry to the Pines log.
-	 *
-	 * @param string $message The message to be logged.
-	 * @param string $level The level of the message. (debug, info, notice, warning, error, or fatal)
-	 * @return bool True on success, false on error.
-	 */
 	public function log($message, $level = 'info') {
 		global $pines;
 		$date = date('c');

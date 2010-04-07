@@ -1,6 +1,6 @@
 <?php
 /**
- * Set the system user and ability managers.
+ * Set the system user manager and ability manager.
  *
  * @package Pines
  * @subpackage com_user
@@ -19,8 +19,8 @@ $pines->user_manager = 'com_user';
 
 /**
  * The ability manager.
- * @global abilities $pines->ability_manager
+ * @global com_user_abilities $pines->ability_manager
  */
-$pines->ability_manager = 'abilities';
+$pines->ability_manager = 'com_user_abilities';
 
 ?>

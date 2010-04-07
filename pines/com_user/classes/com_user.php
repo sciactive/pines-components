@@ -14,12 +14,12 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * com_user main class.
  *
- * Provides an entity manager based user and group manager.
+ * Provides an entity based user and group manager.
  *
  * @package Pines
  * @subpackage com_user
  */
-class com_user extends component {
+class com_user extends component implements user_manager_interface {
 	/**
 	 * Gatekeeper ability cache.
 	 *
@@ -45,51 +45,7 @@ class com_user extends component {
 	 */
 	private $username_cache = array();
 
-	/**
-	 * Check an entity's permissions for the currently logged in user.
-	 *
-	 * This will check the variable "ac" (Access Control) of the entity. It should
-	 * be an object that contains the following properties:
-	 *
-	 * - user
-	 * - group
-	 * - other
-	 *
-	 * The property "user" refers to the entity's owner, "group" refers to all users
-	 * in the entity's group and all ancestor groups, and "other" refers to any user
-	 * who doesn't fit these descriptions.
-	 *
-	 * Each variable should be either 0, 1, 2, or 3. If it is 0, the user has no
-	 * access to the entity. If it is 1, the user has read access to the entity. If
-	 * it is 2, the user has read and write access to the entity. If it is 3, the
-	 * user has read, write, and delete access to the entity.
-	 *
-	 * "ac" defaults to:
-	 *
-	 * - user = 3
-	 * - group = 3
-	 * - other = 0
-	 *
-	 * The following conditions will result in different checks, which determine
-	 * whether the check passes:
-	 *
-	 * - No user is logged in. (Always returned, should be managed with abilities.)
-	 * - The entity has no uid and no gid. (Always returned.)
-	 * - The user has the "system/all" ability. (Always returned.)
-	 * - The entity is the user. (Always returned.)
-	 * - It is the user's primary group. (Always returned.)
-	 * - The entity is a user or group. (Always returned.)
-	 * - Its UID is the user. (It is owned by the user.) (Check user AC.)
-	 * - Its GID is the user's primary group. (Check group AC.)
-	 * - Its GID is one of the user's secondary groups. (Check group AC.)
-	 * - Its GID is a child of one of the user's groups. (Check group AC.)
-	 * - None of the above. (Check other AC.)
-	 *
-	 * @param object &$entity The entity to check.
-	 * @param int $type The lowest level of permission to consider a pass. 1 is read, 2 is write, 3 is delete.
-	 * @return bool Whether the current user has at least $type permission for the entity.
-	 */
-	function check_permissions(&$entity, $type = 1) {
+	public function check_permissions(&$entity, $type = 1) {
 		if (!is_object($_SESSION['user']))
 			return true;
 		if (function_exists('gatekeeper')) {
@@ -121,12 +77,7 @@ class com_user extends component {
 		return ($ac->other >= $type);
 	}
 
-	/**
-	 * Fill the $_SESSION['user'] variable with the logged in user's data.
-	 *
-	 * Also sets the default timezone to the user's timezone.
-	 */
-	function fill_session() {
+	public function fill_session() {
 		$tmp_user = user::factory($_SESSION['user_id']);
 		if (is_object($_SESSION['user']) && $_SESSION['user']->p_mdate == $tmp_user->p_mdate) {
 			date_default_timezone_set($tmp_user->get_timezone());
@@ -153,18 +104,9 @@ class com_user extends component {
 	 * Check to see if a user has an ability.
 	 *
 	 * This function will check both user and group abilities, if the user is
-	 * marked to inherit the abilities of his group.
-	 * 
-	 * If $ability and $user are null, it will check to see if a user is
-	 * currently logged in.
-	 *
-	 * If the user has the "system/all" ability, this function will return true.
-	 *
-	 * @param string $ability The ability.
-	 * @param user $user The user to check. If none is given, the current user is used.
-	 * @return bool
+	 * marked to inherit the abilities of its group.
 	 */
-	function gatekeeper($ability = NULL, $user = NULL) {
+	public function gatekeeper($ability = NULL, $user = NULL) {
 		if ( is_null($user) ) {
 			// If the user is logged in, their abilities are already set up. We
 			// just need to add them to the user's.
@@ -206,16 +148,7 @@ class com_user extends component {
 		return (in_array($ability, $abilities) || in_array('system/all', $abilities));
 	}
 
-	/**
-	 * Gets an array of the components which can be a default component.
-	 *
-	 * The way a component can be a user's default components is to have a
-	 * "default" action, which loads what the user will see when they first log
-	 * on.
-	 *
-	 * @return array The array of component names.
-	 */
-	function get_default_component_array() {
+	public function get_default_component_array() {
 		global $pines;
 		$return = array();
 		foreach ($pines->components as $cur_component) {
@@ -239,7 +172,7 @@ class com_user extends component {
 	 * @return array The array of groups.
 	 * @todo Check for orphans, they could cause groups to be hidden.
 	 */
-	function get_group_array($parent = NULL) {
+	public function get_group_array($parent = NULL) {
 		global $pines;
 		$return = array();
 		if ( is_null($parent) ) {
@@ -266,18 +199,7 @@ class com_user extends component {
 		return $return;
 	}
 
-	/**
-	 * Gets an array of a group's descendendents.
-	 *
-	 * If no parent is given, get_group_descendents() will start with all top
-	 * level groups. (It will return all top level groups' descendents.)
-	 *
-	 * get_group_descendents() returns an array of a group's descendents.
-	 *
-	 * @param group $parent The group to descend from.
-	 * @return array The array of groups.
-	 */
-	function get_group_descendents($parent = NULL) {
+	public function get_group_descendents($parent = NULL) {
 		global $pines;
 		$return = array();
 		if ( is_null($parent) ) {
@@ -305,7 +227,7 @@ class com_user extends component {
 	 * @param group $parent The parent group.
 	 * @param bool $top_level Whether to work on the menu's top level.
 	 */
-	function get_group_menu(&$menu = NULL, $parent = NULL, $top_level = TRUE) {
+	public function get_group_menu(&$menu = NULL, $parent = NULL, $top_level = TRUE) {
 		global $pines;
 		if ( is_null($parent) ) {
 			$entities = $pines->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
@@ -348,7 +270,7 @@ class com_user extends component {
 	 * @param string $mark The mark to apply (per depth level) to the mask.
 	 * @return string The rendered tree.
 	 */
-	function get_group_tree($mask, $group_array, $selected_id = NULL, $selected = ' selected="selected"', $mark = '') {
+	public function get_group_tree($mask, $group_array, $selected_id = NULL, $selected = ' selected="selected"', $mark = '') {
 		$return = '';
 		if (!is_array($group_array))
 			return $return;
@@ -369,13 +291,7 @@ class com_user extends component {
 		return $return;
 	}
 
-	/**
-	 * Gets a group's groupname by its GUID.
-	 *
-	 * @param int $id The group's GUID.
-	 * @return string|null The groupname if the group exists, null if it doesn't.
-	 */
-	function get_groupname($id) {
+	public function get_groupname($id) {
 	// Check the cache to see if we've already queried this name.
 		if (!isset($this->groupname_cache[$id])) {
 			$entity = group::factory($id);
@@ -388,23 +304,12 @@ class com_user extends component {
 		return $this->groupname_cache[$id];
 	}
 
-	/**
-	 * Gets all groups.
-	 *
-	 * @return array An array of group entities.
-	 */
-	function get_groups() {
+	public function get_groups() {
 		global $pines;
 		return $pines->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
 	}
 
-	/**
-	 * Gets a user's username by its GUID.
-	 *
-	 * @param int $id The user's GUID.
-	 * @return string|null The username if the user exists, null if it doesn't.
-	 */
-	function get_username($id) {
+	public function get_username($id) {
 	// Check the cache to see if we've already queried this name.
 		if (!isset($this->username_cache[$id])) {
 			$entity = user::factory($id);
@@ -417,12 +322,7 @@ class com_user extends component {
 		return $this->username_cache[$id];
 	}
 
-	/**
-	 * Gets all users.
-	 *
-	 * @return array An array of user entities.
-	 */
-	function get_users() {
+	public function get_users() {
 		global $pines;
 		return $pines->entity_manager->get_entities(array('tags' => array('com_user', 'user'), 'class' => user));
 	}
@@ -433,7 +333,7 @@ class com_user extends component {
 	 * @param group $group The group.
 	 * @return array An array of users.
 	 */
-	function get_users_by_group($group) {
+	public function get_users_by_group($group) {
 		global $pines;
 		return $pines->entity_manager->get_entities(array('ref_i' => array('group' => $group, 'groups' => $group), 'tags' => array('com_user', 'user'), 'class' => user));
 	}
@@ -441,7 +341,7 @@ class com_user extends component {
 	/**
 	 * Creates and attaches a module which lists groups.
 	 */
-	function list_groups() {
+	public function list_groups() {
 		global $pines;
 
 		$pines->com_pgrid->load();
@@ -461,7 +361,7 @@ class com_user extends component {
 	/**
 	 * Creates and attaches a module which lists users.
 	 */
-	function list_users() {
+	public function list_users() {
 		global $pines;
 
 		$pines->com_pgrid->load();
@@ -478,13 +378,7 @@ class com_user extends component {
 		}
 	}
 
-	/**
-	 * Logs the given user into the system.
-	 *
-	 * @param user $user The user.
-	 * @return bool True on success, false on failure.
-	 */
-	function login($user) {
+	public function login($user) {
 		if ( isset($user->guid) && $this->gatekeeper('com_user/login', $user) ) {
 			// Destroy session data.
 			$this->logout();
@@ -498,10 +392,7 @@ class com_user extends component {
 		}
 	}
 
-	/**
-	 * Logs the current user out of the system.
-	 */
-	function logout() {
+	public function logout() {
 		unset($_SESSION['user_id']);
 		unset($_SESSION['user']);
 		// We're changing users, so clear the gatekeeper cache.
@@ -510,27 +401,12 @@ class com_user extends component {
 		@session_destroy();
 	}
 
-	/**
-	 * Creates and attaches a module which let's the user log in.
-	 *
-	 * @param string $position The position in which to place the module.
-	 * @return module The new module.
-	 */
-	function print_login($position = 'content') {
+	public function print_login($position = 'content') {
 		$module = new module('com_user', 'login', $position);
 		return $module;
 	}
 
-	/**
-	 * Kick the user out of the current page.
-	 *
-	 * Note that this method completely terminates execution of the script when
-	 * it is called. Code after this function is called will not run.
-	 *
-	 * @param string $message An optional message to display to the user.
-	 * @param string $url An optional URL to be included in the query data of the redirection url.
-	 */
-	function punt_user($message = NULL, $url = NULL) {
+	public function punt_user($message = null, $url = null) {
 		global $pines;
 		$default = '0';
 		if ($pines->request_component == $_SESSION['user']->default_component && $pines->request_action == 'default')

@@ -129,7 +129,7 @@ if (empty($user->password) && !$pines->config->com_user->empty_pw) {
 	pines_notice('Please specify a password.');
 	return;
 }
-if (gatekeeper('com_user/assignpin')) {
+if (gatekeeper('com_user/assignpin') && !empty($user->pin)) {
 	$test = $pines->entity_manager->get_entity(array('data' => array('pin' => $user->pin), 'tags' => array('com_user', 'user'), 'class' => user));
 	if (isset($test) && !$user->is($test)) {
 		$user->print_form();

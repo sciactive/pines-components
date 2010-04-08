@@ -12,4 +12,4 @@
 defined('P_RUN') or die('Direct access prohibited');
 ?>
 <link href="<?php echo $pines->config->rela_location; ?>components/com_ptags/includes/jquery.ptags.default.css" media="all" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>components/com_ptags/includes/jquery.ptags.js"></script>
+<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>components/com_ptags/includes/jquery.ptags.min.js"></script>

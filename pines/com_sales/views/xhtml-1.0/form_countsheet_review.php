@@ -17,28 +17,21 @@ if (isset($this->entity->guid))
 <style type="text/css" >
 	/* <![CDATA[ */
 	#countsheet_details fieldset.missing {
-		//background-color: whitesmoke;
 		border: 1px dotted red;
 		color: red;
 	}
 	#countsheet_details fieldset.matched {
-		//background-color: cornsilk;
 		border: 1px dashed green;
 		color: green;
 	}
 	#countsheet_details fieldset.sold {
-		//background-color: whitesmoke;
 		border: 1px dotted chocolate;
 		color: chocolate;
 	}
 	#countsheet_details fieldset.sold hr {
 		border-top: 1px dashed chocolate;
 		border-bottom: 0px;
-		width: 50%;
-	}
-	#countsheet_details fieldset.extraneous {
-		background-color: aliceblue;
-		color: black;
+		width: 75%;
 	}
 	/* ]]> */
 </style>
@@ -70,12 +63,12 @@ if (isset($this->entity->guid))
 		</div>
 		<?php } ?>
 	</fieldset>
-	<?php } if (count($this->extraneous) > 0) { ?>
+	<?php } if (count($this->extra) > 0) { ?>
 	<fieldset class="group ui-priority-secondary">
 		<legend>Extraneous Items</legend>
-		<?php foreach ($this->extraneous as $cur_extraneous) { ?>
+		<?php foreach ($this->extra as $cur_extra) { ?>
 		<div class="element-full-width">
-			<span class="label"><?php echo $cur_extraneous; ?></span>
+			<span class="label"><?php echo $cur_extra; ?></span>
 		</div>
 		<?php } ?>
 	</fieldset>

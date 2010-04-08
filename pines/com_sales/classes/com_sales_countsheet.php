@@ -77,6 +77,20 @@ class com_sales_countsheet extends entity {
 
 	/**
 	 * Print a form to review the countsheet.
+	 *
+	 * This function searches through all items in the inventory of the countsheet's location.
+	 * It compares the countsheet entries to each item and checks off matching items.
+	 * Leftovers create a missing items list, while unidentified entries either
+	 * have potential matches or are extraneous.
+	 *
+	 * Items are broken down into categories as follows:
+	 * MATCHED:	If an item is on the countsheet and in the current inventory.
+	 * MISSING:	If an item is not on the countsheet but is in the current inventory.
+	 * SOLD:	List of potential items that the user may have meant with an extraneous search string:
+	 *			- A serialized item matches the search string but is not in current inventory.
+	 *			- A SKU item matches the search string but is not in the current inventory.
+	 * EXTRA:	If an item is not in the inventory at all, whether sold or in stock.
+	 * 
 	 * @return module The form's module.
 	 */
 	public function print_review() {
@@ -88,10 +102,10 @@ class com_sales_countsheet extends entity {
 		$sold_status['available'] = 'in stock';
 		$sold_status['unavailable'] = 'not for sale';
 		$sold_status['sold_pending'] = 'sold (pending)';
-		$sold_status['sold_at_store'] = 'sold on location';
+		$sold_status['sold_at_store'] = 'sold';
 
 		$in_stock = array('available', 'unavailable', 'sold_pending');
-		$module->missing = $module->matched = $module->sold = $module->extraneous = $sold_array = $marked_items = array();
+		$module->missing = $module->matched = $module->sold = $module->extra = $sold_array = $marked_items = array();
 		// Grab all stock items for this location's inventory.
 		$expected = $pines->entity_manager->get_entities(array('data' => array('gid' => $this->gid), 'tags' => array('com_sales', 'stock'), 'class' => com_sales_stock));
 		foreach ($expected as $key => $checklist) {
@@ -113,10 +127,9 @@ class com_sales_countsheet extends entity {
 						// A serialized item is not on the checklist but has a serial matching the search string
 						if (!in_array($checklist->guid, $marked_items)) {
 							$marked_items[] = $checklist->guid;
-							//by ref = $checklist->product wont work either because of sales having products array instead of a product reference
 							$sale = $pines->entity_manager->get_entity(array('ref' => array('products' => $checklist->product), 'tags' => array('com_sales', 'sale'), 'class' => com_sales_sale));
 							$sold_array[$item->values[0]]['found'] = true;
-							$sold_array[$item->values[0]]['entries'][] = '#'.$checklist->serial.' ('.$checklist->product->name.' SKU:['.$checklist->product->sku.']) was '.$sold_status[$checklist->status].'   -   '.$sale->guid;
+							$sold_array[$item->values[0]]['entries'][] = '#'.$checklist->serial.' ('.$checklist->product->name.' SKU:['.$checklist->product->sku.']) was '.$sold_status[$checklist->status].' to '.$sale->customer->name.' on '.pines_date_format($sale->p_cdate);
 						}
 					}
 				}
@@ -130,8 +143,9 @@ class com_sales_countsheet extends entity {
 					} else {
 						if (!in_array($checklist->guid, $marked_items)) {
 							$marked_items[] = $checklist->guid;
+							$sale = $pines->entity_manager->get_entity(array('ref' => array('products' => $checklist->product), 'tags' => array('com_sales', 'sale'), 'class' => com_sales_sale));
 							$sold_array[$item->values[0]]['found'] = true;
-							$sold_array[$item->values[0]]['entries'][] = $checklist->product->name.' SKU:['.$checklist->product->sku.'] was '.$sold_status[$checklist->status];
+							$sold_array[$item->values[0]]['entries'][] = $checklist->product->name.' SKU:['.$checklist->product->sku.'] was '.$sold_status[$checklist->status].' to '.$sale->customer->name.' on '.pines_date_format($sale->p_cdate);
 						}
 					}
 				}
@@ -139,8 +153,9 @@ class com_sales_countsheet extends entity {
 					// A serialized item is not on the checklist but has a SKU matching the search string.
 					if (!in_array($checklist->guid, $marked_items)) {
 						$marked_items[] = $checklist->guid;
+						$sale = $pines->entity_manager->get_entity(array('ref' => array('products' => $checklist->product), 'tags' => array('com_sales', 'sale'), 'class' => com_sales_sale));
 						$sold_array[$item->values[0]]['found'] = true;
-						$sold_array[$item->values[0]]['entries'][] = '#'.$checklist->serial.' ('.$checklist->product->name.' SKU:['.$checklist->product->sku.']) was '.$sold_status[$checklist->status];
+						$sold_array[$item->values[0]]['entries'][] = '#'.$checklist->serial.' ('.$checklist->product->name.' SKU:['.$checklist->product->sku.']) was '.$sold_status[$checklist->status].' to '.$sale->customer->name.' on '.pines_date_format($sale->p_cdate);
 					}
 				}
 			}
@@ -157,7 +172,7 @@ class com_sales_countsheet extends entity {
 		foreach ($this->entries as $item) {
 			if ($sold_array[$item->values[0]]['found'] == false) {
 				// There were no potential matches for this unidentifed search string.
-				$module->extraneous[] = '"'.$item->values[0].'" has no record in this location\'s inventory.';
+				$module->extra[] = '"'.$item->values[0].'" has no record in this location\'s inventory.';
 				unset($sold_array[$item->values[0]]);
 			} else {
 				// Build the list of potential matches for this search string.

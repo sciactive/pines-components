@@ -1,7 +1,7 @@
 [
 	{
 		"path": "main_menu/business/com_customer/com_customertimerold",
-		"text": "Customer Timer (Old)",
+		"text": "Customer Timer",
 		"href": ["com_customertimer","stations"],
 		"depend": {
 			"ability": "com_customertimer/viewstatus"
@@ -11,7 +11,8 @@
 		"path": "main_menu/business/com_customer/com_customertimer",
 		"text": "Customer Timer",
 		"depend": {
-			"children": true
+			"children": true,
+			"ability": "system/all"
 		}
 	},
 		{

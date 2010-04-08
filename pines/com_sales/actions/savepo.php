@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listpos'));
 	$po = com_sales_po::factory((int) $_REQUEST['id']);
 	if (is_null($po->guid) || $po->final) {
-		pines_error('Requested PO id is not accessible');
+		pines_error('Requested PO id is not accessible.');
 		return;
 	}
 } else {

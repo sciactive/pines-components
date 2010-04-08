@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'listemployees'));
 	$employee = com_hrm_employee::factory((int) $_REQUEST['id']);
 	if (is_null($employee->guid)) {
-		pines_error('Requested employee id is not accessible');
+		pines_error('Requested employee id is not accessible.');
 		return;
 	}
 } else {

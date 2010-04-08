@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listcountsheets'));
 	$countsheet = com_sales_countsheet::factory((int) $_REQUEST['id']);
 	if (is_null($countsheet->guid) || $countsheet->final) {
-		pines_error('Requested countsheet id is not accessible');
+		pines_error('Requested countsheet id is not accessible.');
 		return;
 	}
 } else {

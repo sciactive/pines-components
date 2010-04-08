@@ -22,7 +22,8 @@ $this->title = 'Floors';
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				{type: 'button', text: 'New', extra_class: 'icon picon_16x16_actions_document-new', selection_optional: true, url: '<?php echo pines_url('com_customertimer', 'editfloor'); ?>'},
-				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo pines_url('com_customertimer', 'editfloor', array('id' => '#title#')); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', url: '<?php echo pines_url('com_customertimer', 'editfloor', array('id' => '#title#')); ?>'},
+				{type: 'button', text: 'Timer', extra_class: 'icon picon_16x16_stock_generic_stock_timer', double_click: true, url: '<?php echo pines_url('com_customertimer', 'timefloor', array('id' => '#title#')); ?>'},
 				//{type: 'button', text: 'E-Mail', extra_class: 'icon picon_16x16_actions_mail-message-new', multi_select: true, url: 'mailto:#col_2#', delimiter: ','},
 				{type: 'separator'},
 				{type: 'button', text: 'Delete', extra_class: 'icon picon_16x16_actions_edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_customertimer', 'deletefloor', array('id' => '#title#')); ?>', delimiter: ','},

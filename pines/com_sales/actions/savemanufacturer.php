@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listmanufacturers'));
 	$manufacturer = com_sales_manufacturer::factory((int) $_REQUEST['id']);
 	if (is_null($manufacturer->guid)) {
-		pines_error('Requested manufacturer id is not accessible');
+		pines_error('Requested manufacturer id is not accessible.');
 		return;
 	}
 } else {

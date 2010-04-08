@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listshippers'));
 	$shipper = com_sales_shipper::factory((int) $_REQUEST['id']);
 	if (is_null($shipper->guid)) {
-		pines_error('Requested shipper id is not accessible');
+		pines_error('Requested shipper id is not accessible.');
 		return;
 	}
 } else {

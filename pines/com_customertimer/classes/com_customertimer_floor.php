@@ -82,8 +82,20 @@ class com_customertimer_floor extends entity {
 	 * @return module The form's module.
 	 */
 	public function print_form() {
-		global $pines;
 		$module = new module('com_customertimer', 'form_floor', 'content');
+		$module->entity = $this;
+
+		return $module;
+	}
+
+	/**
+	 * Print a form to time customers on the floor.
+	 * @return module The form's module.
+	 */
+	public function print_timer() {
+		global $pines;
+		$pines->com_pgrid->load();
+		$module = new module('com_customertimer', 'form_floor_timer', 'content');
 		$module->entity = $this;
 
 		return $module;

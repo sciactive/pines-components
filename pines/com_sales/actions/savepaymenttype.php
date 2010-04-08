@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listpaymenttypes'));
 	$payment_type = com_sales_payment_type::factory((int) $_REQUEST['id']);
 	if (is_null($payment_type->guid)) {
-		pines_error('Requested payment type id is not accessible');
+		pines_error('Requested payment type id is not accessible.');
 		return;
 	}
 } else {

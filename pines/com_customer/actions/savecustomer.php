@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'listcustomers'));
 	$customer = com_customer_customer::factory((int) $_REQUEST['id']);
 	if (is_null($customer->guid)) {
-		pines_error('Requested customer id is not accessible');
+		pines_error('Requested customer id is not accessible.');
 		return;
 	}
 } else {

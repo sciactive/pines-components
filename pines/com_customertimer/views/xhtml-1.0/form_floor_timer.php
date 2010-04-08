@@ -1,6 +1,6 @@
 <?php
 /**
- * Shows customer stations.
+ * Provides a form for the user to manager customers on a floor.
  *
  * @package Pines
  * @subpackage com_customertimer
@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Customer Timer';
+$this->title = 'Floor Timer ['.htmlentities($this->entity->name).']';
 ?>
 <style type="text/css">
 	/* <![CDATA[ */
@@ -86,45 +86,10 @@ $this->title = 'Customer Timer';
 	$(function(){
 		var station_layout = $(".station_layout");
 		var station_floor = $(".station_layout .station_floor");
-		
-		var stations = {
-			"1": {"left": .059178743961352656, "top": .01529051987767584, "width": .0785024154589372, "height": .12538226299694188},
-			"2a": {"left": .18115942028985507, "top": .01529051987767584, "width": .0785024154589372, "height": .12538226299694188},
-			"2b": {"left": .18115942028985507, "top": .15749235474006115, "width": .0785024154589372, "height": .12385321100917432},
-			"3": {"left": .286231884057971, "top": .01529051987767584, "width": .0785024154589372, "height": .12538226299694188},
-			"4a": {"left": .3888888888888889, "top": .01529051987767584, "width": .0785024154589372, "height": .12538226299694188},
-			"4b": {"left": .3888888888888889, "top": .15749235474006115, "width": .0785024154589372, "height": .12385321100917432},
-			"5": {"left": .4927536231884058, "top": .01529051987767584, "width": .0785024154589372, "height": .12538226299694188},
-			"6a": {"left": .5978260869565217, "top": .01529051987767584, "width": .0785024154589372, "height": .12538226299694188},
-			"6b": {"left": .5978260869565217, "top": .15749235474006115, "width": .0785024154589372, "height": .12385321100917432},
-			"7": {"left": .7004830917874396, "top": .01529051987767584, "width": .0785024154589372, "height": .12538226299694188},
-			"8": {"left": .8031400966183575, "top": .01529051987767584, "width": .0785024154589372, "height": .12538226299694188},
+		var floor_id = "<?php echo $this->entity->guid; ?>";
 
-			"9a": {"left": .8454106280193237, "top": .1636085626911315, "width": .15217391304347827, "height": .08409785932721713},
-			"9b": {"left": .8454106280193237, "top": .2492354740061162, "width": .15217391304347827, "height": .08256880733944955},
-			"9c": {"left": .8454106280193237, "top": .3333333333333333, "width": .15217391304347827, "height": .08256880733944955},
-			"9d": {"left": .8454106280193237, "top": .41743119266055045, "width": .15217391304347827, "height": .08256880733944955},
+		var stations = JSON.parse("<?php echo addslashes(json_encode($this->entity->stations)); ?>");
 
-			"10a": {"left": .8454106280193237, "top": .5152905198776758, "width": .15217391304347827, "height": .08409785932721713},
-			"10b": {"left": .8454106280193237, "top": .6009174311926605, "width": .15217391304347827, "height": .08256880733944955},
-			"10c": {"left": .8454106280193237, "top": .6850152905198776, "width": .15217391304347827, "height": .08256880733944955},
-			"10d": {"left": .8454106280193237, "top": .7691131498470948, "width": .15217391304347827, "height": .08256880733944955},
-
-			"11": {"left": .8055555555555556, "top": .8746177370030581, "width": .07729468599033816, "height": .11467889908256881},
-			"12": {"left": .7028985507246377, "top": .8746177370030581, "width": .07729468599033816, "height": .11467889908256881},
-			"13a": {"left": .5990338164251208, "top": .8746177370030581, "width": .0785024154589372, "height": .11467889908256881},
-			"13b": {"left": .5990338164251208, "top": .7370540140601108, "width": .0785024154589372, "height": .11467889908256881},
-			"14": {"left": .4939613526570048, "top": .8746177370030581, "width": .0785024154589372, "height": .11467889908256881},
-			"15a": {"left": .391304347826087, "top": .8746177370030581, "width": .0785024154589372, "height": .11467889908256881},
-			"15b": {"left": .391304347826087, "top": .7370540140601108, "width": .0785024154589372, "height": .11467889908256881},
-			"16": {"left": .059178743961352656, "top": .8593272171253823, "width": .0785024154589372, "height": .12996941896024464},
-
-			"17": {"left": .0036231884057971015, "top": .746177370030581, "width": .10144927536231885, "height": .09938837920489296},
-			"18": {"left": .0036231884057971015, "top": .6284403669724771, "width": .10144927536231885, "height": .09785932721712538},
-			"19": {"left": .0036231884057971015, "top": .28287461773700306, "width": .10144927536231885, "height": .10397553516819572},
-			"20": {"left": .0036231884057971015, "top": .15749235474006115, "width": .10144927536231885, "height": .10397553516819572}
-		};
-		
 		$.each(stations, function(station_id, station){
 			station.element = $("<div />", {
 				"class": "station",
@@ -162,8 +127,9 @@ $this->title = 'Customer Timer';
 					pgrid_filtering: false,
 					pgrid_view_height: "200px",
 					pgrid_double_click: function(){
+						// Calling the function using call() allows it to use "this".
 						var dialog = $(this).closest(".customer_search");
-						dialog.dialog('option', 'buttons').Login(dialog);
+						dialog.dialog('option', 'buttons').Login.call(dialog);
 					}
 				})
 				.end()
@@ -201,16 +167,15 @@ $this->title = 'Customer Timer';
 					"width": "500px",
 					"modal": true,
 					"buttons": {
-						"Login": function(dialog){
+						"Login": function(){
 							// Add the selected customer.
-							if (!dialog)
-								dialog = $(this);
+							var dialog = $(this);
 							var customer = dialog.find("table.customer_table").pgrid_get_selected_rows().pgrid_export_rows()[0];
 							if (customer.key) {
 								$.ajax({
 									url: "<?php echo pines_url('com_customertimer', 'login_json'); ?>",
 									type: "POST",
-									data: {"id": customer.key, "station": station_id},
+									data: {"id": customer.key, "floor": floor_id, "station": station_id},
 									dataType: "json",
 									error: function(XMLHttpRequest, textStatus){
 										pines.error("An error occured while trying to log the user in:\n"+XMLHttpRequest.status+": "+textStatus);
@@ -267,7 +232,7 @@ $this->title = 'Customer Timer';
 							$.ajax({
 								url: "<?php echo pines_url('com_customertimer', 'logout_json'); ?>",
 								type: "POST",
-								data: {"id": station.customer.guid},
+								data: {"id": station.customer.guid, "floor": floor_id, "station": station_id},
 								dataType: "json",
 								error: function(XMLHttpRequest, textStatus){
 									pines.error("An error occured while trying to log the user out:\n"+XMLHttpRequest.status+": "+textStatus);
@@ -363,6 +328,7 @@ $this->title = 'Customer Timer';
 			$.ajax({
 				url: "<?php echo pines_url('com_customertimer', 'status_json'); ?>",
 				type: "GET",
+				data: {"floor": floor_id},
 				dataType: "json",
 				complete: function(){
 					window.clearTimeout(timer);
@@ -403,7 +369,7 @@ $this->title = 'Customer Timer';
 	// ]]>
 </script>
 <div class="station_layout">
-	<img src="<?php echo $pines->config->rela_location; ?>components/com_customertimer/includes/station_floor.png" class="station_layout_bg" alt="Station Layout" />
+	<img src="<?php echo $pines->config->rela_location.$this->entity->get_background(); ?>" class="station_layout_bg" alt="Station Layout" />
 	<div class="station_floor"></div>
 	<br class="spacer" />
 </div>

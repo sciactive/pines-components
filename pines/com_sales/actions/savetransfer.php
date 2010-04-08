@@ -17,7 +17,7 @@ if ( !gatekeeper('com_sales/managestock') )
 if ( isset($_REQUEST['id']) ) {
 	$transfer = com_sales_transfer::factory((int) $_REQUEST['id']);
 	if (is_null($transfer->guid) || $transfer->final) {
-		pines_error('Requested transfer id is not accessible');
+		pines_error('Requested transfer id is not accessible.');
 		return;
 	}
 } else {

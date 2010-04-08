@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		punt_user('You don\'t have necessary permission.', pines_url('com_example', 'listwidgets'));
 	$widget = com_example_widget::factory((int) $_REQUEST['id']);
 	if (is_null($widget->guid)) {
-		pines_error('Requested widget id is not accessible');
+		pines_error('Requested widget id is not accessible.');
 		return;
 	}
 } else {

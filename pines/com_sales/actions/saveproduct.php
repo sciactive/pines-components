@@ -16,7 +16,7 @@ if ( isset($_REQUEST['id']) ) {
 		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listproducts'));
 	$product = com_sales_product::factory((int) $_REQUEST['id']);
 	if (is_null($product->guid)) {
-		pines_error('Requested product id is not accessible');
+		pines_error('Requested product id is not accessible.');
 		return;
 	}
 } else {

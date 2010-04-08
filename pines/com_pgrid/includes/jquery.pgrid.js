@@ -929,11 +929,11 @@
 				$.each(pgrid.pgrid_toolbar_contents, function(key, val){
 					if (val.type == "button") {
 						var cur_button = $("<span />").addClass("ui-pgrid-toolbar-button ui-state-default ui-corner-all").append(
-								$("<span><span>"+val.text+"</span></span>").each(function(){
-									if (val.extra_class)
-										$(this).addClass(val.extra_class);
-								})
-							).click(function(e){
+							$("<span><span>"+val.text+"</span></span>").each(function(){
+								if (val.extra_class)
+									$(this).addClass(val.extra_class);
+							})
+						).click(function(e){
 							var selected_rows = (val.return_all_rows ? pgrid.children("tbody").children("tr:not(.ui-helper-hidden)") : pgrid.children("tbody").children("tr.ui-pgrid-table-row-selected"));
 							if (!val.selection_optional && !val.select_all && !val.select_none && selected_rows.length === 0) {
 								alert("Please make a selection before performing this operation.");
@@ -1084,19 +1084,18 @@
 					pgrid.footer.append(
 						$("<div />").addClass("ui-pgrid-footer-filter-container").each(function(){
 							$(this).append($("<span>Filter: </span>").append(
-									$("<input />").addClass("ui-state-default ui-corner-all").attr({
-										type: "text",
-										value: pgrid.pgrid_filter,
-										size: "10"
-									}).keyup(function(){
-										pgrid.do_filter($(this).val());
-									})
-								).append(
-									$("<button type=\"button\">X</button>").addClass("ui-state-default ui-corner-all").click(function(){
-										$(this).prev("input").val("").keyup().focus();
-									})
-								)
-							);
+								$("<input />").addClass("ui-state-default ui-corner-all").attr({
+									type: "text",
+									value: pgrid.pgrid_filter,
+									size: "10"
+								}).keyup(function(){
+									pgrid.do_filter($(this).val());
+								})
+							).append(
+								$("<button type=\"button\">X</button>").addClass("ui-state-default ui-corner-all").click(function(){
+									$(this).prev("input").val("").keyup().focus();
+								})
+							));
 						})
 					);
 				}

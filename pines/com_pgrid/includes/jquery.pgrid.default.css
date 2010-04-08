@@ -86,8 +86,12 @@
 	margin-left: 5px;
 	font-weight: normal;
 }
-.ui-pgrid-footer .ui-pgrid-footer-filter-container button {
-	padding: 0 1px;
+.ui-pgrid-footer button {
+	padding: 1px 2px;
+	margin: 0;
+}
+.ui-pgrid-footer input {
+	padding: 2px;
 	margin: 0;
 }
 .ui-pgrid-footer .ui-pgrid-footer-pager-container {
@@ -95,12 +99,8 @@
 	margin-left: 5px;
 	font-weight: normal;
 }
-.ui-pgrid-footer button, .ui-pgrid-footer input {
-	padding: 1px;
-	margin: 0;
-}
-.ui-pgrid-footer .ui-pgrid-footer-pager-button-container {
-	display: inline;
+.ui-pgrid-footer .ui-pgrid-footer-pager-container input {
+	text-align: right;
 }
 .ui-pgrid-footer .ui-pgrid-footer-count-container {
 	float: right;
@@ -129,6 +129,13 @@
 .ui-pgrid-table tr {
 	overflow: hidden;
 	height: 1em;
+	cursor: default;
+}
+.ui-pgrid-table.ui-pgrid-selectable tr {
+	cursor: pointer;
+}
+.ui-pgrid-table.ui-pgrid-selectable tr td.ui-pgrid-table-expander {
+	cursor: default;
 }
 .ui-pgrid-table thead tr {
 	position: relative;

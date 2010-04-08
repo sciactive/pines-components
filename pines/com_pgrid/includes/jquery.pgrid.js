@@ -40,7 +40,6 @@
 			pgrid.do_sort(false, true);
 			pgrid.do_filter(false, true);
 			pgrid.paginate(true);
-			pgrid.make_page_buttons();
 			pgrid.update_selected();
 
 			if (row_callback)
@@ -249,6 +248,8 @@
 
 			// Add the pgrid class.
 			pgrid.addClass("ui-pgrid-table");
+			if (pgrid.pgrid_select)
+				pgrid.addClass("ui-pgrid-selectable");
 			// All arrays and objects in our options need to be copied,
 			// since they just have a pointer to the defaults if we don't.
 			pgrid.pgrid_toolbar_contents = pgrid.pgrid_toolbar_contents.slice();
@@ -350,9 +351,9 @@
 			pgrid.pagenum = function(pagenum) {
 				// Change the current page.
 				pgrid.pgrid_page = pagenum;
-				if (pgrid.pgrid_page < 0)
+				if (isNaN(pgrid.pgrid_page) || pgrid.pgrid_page < 0)
 					pgrid.pgrid_page = 0;
-				if (pgrid.pgrid_page >= pgrid.pgrid_pages)
+				else if (pgrid.pgrid_page >= pgrid.pgrid_pages)
 					pgrid.pgrid_page = pgrid.pgrid_pages - 1;
 				pgrid.paginate();
 			};
@@ -364,28 +365,6 @@
 				if (pgrid.pgrid_perpage === 0)
 					pgrid.pgrid_perpage = 1;
 				pgrid.paginate();
-				pgrid.make_page_buttons();
-			};
-
-			pgrid.make_page_buttons = function() {
-				// Make a button in the footer to jump to each page.
-				if (pgrid.pgrid_paginate && pgrid.pgrid_footer) {
-					var button_container = pgrid.footer.children("div.ui-pgrid-footer-pager-container").children("div.ui-pgrid-footer-pager-button-container");
-					var buttons = button_container.children();
-					if (pgrid.pgrid_pages == buttons.length) return;
-					if (pgrid.pgrid_pages < buttons.length) {
-						buttons.filter("button:eq("+pgrid.pgrid_pages+"), button:gt("+pgrid.pgrid_pages+")").remove();
-						return;
-					}
-					for (var cur_page = buttons.length; cur_page < pgrid.pgrid_pages; cur_page++) {
-						button_container.append(
-							$("<button type=\"button\">"+(cur_page+1)+"</button>").addClass("ui-state-default ui-corner-all").click(function(){
-								pgrid.pagenum(parseInt($(this).text()) - 1);
-								return false;
-							})
-						);
-					}
-				}
 			};
 
 			pgrid.hide_children = function(jq_rows) {
@@ -436,7 +415,6 @@
 				pgrid.do_sort(false, true);
 				pgrid.do_filter(false, true);
 				pgrid.paginate(true);
-				pgrid.make_page_buttons();
 				pgrid.update_selected();
 			};
 
@@ -463,7 +441,8 @@
 					pgrid.show_children(elempage);
 					// Update the page number and count in the footer.
 					if (pgrid.pgrid_footer)
-						pgrid.footer.find("span.page_number").html(pgrid.pgrid_page+1).end().find("span.page_total").html(pgrid.pgrid_pages);
+						pgrid.footer.find("input.ui-pgrid-page-number").val(pgrid.pgrid_page+1).end()
+						.find("span.ui-pgrid-page-total").html(pgrid.pgrid_pages);
 				}
 				// The grid's state has probably changed.
 				if (!loading) pgrid.state_changed();
@@ -492,8 +471,6 @@
 						if (!loading) {
 							// Paginate, since we may have disabled rows.
 							pgrid.paginate();
-							// Make new page buttons, since the enabled record total may have changed.
-							pgrid.make_page_buttons();
 						}
 						// If the filter is only 1 letter, the basic search is fine.
 						if (pgrid.pgrid_filter.length > 1) {
@@ -508,8 +485,6 @@
 									if (!loading) {
 										// Paginate, since we may have disabled rows.
 										pgrid.paginate();
-										// Make new page buttons, since the enabled record total may have changed.
-										pgrid.make_page_buttons();
 										// Update the selected items, and the record counts.
 										pgrid.update_selected();
 									}
@@ -531,8 +506,6 @@
 											if (!loading) {
 												// Paginate, since we may have disabled rows.
 												pgrid.paginate();
-												// Make new page buttons, since the enabled record total may have changed.
-												pgrid.make_page_buttons();
 											}
 										} else
 											row.addClass("ui-helper-hidden");
@@ -550,8 +523,6 @@
 						if (!loading) {
 							// Paginate, since we may have disabled rows.
 							pgrid.paginate();
-							// Make new page buttons, since the enabled record total may have changed.
-							pgrid.make_page_buttons();
 							// Update the selected items, and the record counts.
 							pgrid.update_selected();
 						}
@@ -1131,7 +1102,8 @@
 					pgrid.footer.append(
 						$("<div />").addClass("ui-pgrid-footer-pager-container").each(function(){
 							var footer_pager = $(this);
-							footer_pager.append($("<span>Display #</span>").append(
+							footer_pager.append("Display ")
+							.append(
 								$("<input />").addClass("ui-state-default ui-corner-all").attr({
 									type: "text",
 									value: pgrid.pgrid_perpage,
@@ -1141,29 +1113,36 @@
 									pgrid.set_per_page(Math.abs(parseInt(display_number.val())));
 									display_number.val(pgrid.pgrid_perpage);
 								})
-							).append(" "));
-							footer_pager.append($("<button type=\"button\">&lt;&lt; Start</button>").addClass("ui-state-default ui-corner-all").click(function(){
+							)
+							.append(" ")
+							.append($("<button type=\"button\">&lt;&lt; Start</button>").addClass("ui-state-default ui-corner-all").click(function(){
 								pgrid.pagestart();
-							}));
-							footer_pager.append($("<button type=\"button\">&lt; Prev</button>").addClass("ui-state-default ui-corner-all").click(function(){
+							}))
+							.append($("<button type=\"button\">&lt; Prev</button>").addClass("ui-state-default ui-corner-all").click(function(){
 								pgrid.pageprev();
-							}));
-							footer_pager.append($("<div />").addClass("ui-pgrid-footer-pager-button-container"));
-							footer_pager.append($("<button type=\"button\">Next &gt;</button>").addClass("ui-state-default ui-corner-all").click(function(){
+							}))
+							.append(" Page ")
+							.append(
+								$("<input />").addClass("ui-state-default ui-corner-all ui-pgrid-page-number").attr({
+									type: "text",
+									value: pgrid.pgrid_page,
+									size: "3"
+								}).change(function(){
+									pgrid.pagenum(Math.abs(parseInt($(this).val())) - 1);
+								})
+							)
+							.append(" of <span class=\"ui-pgrid-page-total\">1</span> ")
+							.append($("<button type=\"button\">Next &gt;</button>").addClass("ui-state-default ui-corner-all").click(function(){
 								pgrid.pagenext();
-							}));
-							footer_pager.append($("<button type=\"button\">End &gt;&gt;</button>").addClass("ui-state-default ui-corner-all").click(function(){
+							}))
+							.append($("<button type=\"button\">End &gt;&gt;</button>").addClass("ui-state-default ui-corner-all").click(function(){
 								pgrid.pageend();
 							}));
-							footer_pager.append($("<span> Page <span class=\"page_number\">1</span> of <span class=\"page_total\">1</span></span>"));
 						})
 					);
 				}
 				// Perform the pagination and update the controls' text.
 				pgrid.paginate(true);
-				// Make page buttons in the footer.
-				if (pgrid.pgrid_footer)
-					pgrid.make_page_buttons();
 			}
 
 			// Make selected and total record counters.
@@ -1175,7 +1154,7 @@
 							var footer_counter = $(this);
 							if (pgrid.pgrid_select)
 								footer_counter.append($("<span><span class=\"ui-pgrid-footer-count-select\">0</span> selected of </span>"));
-							footer_counter.append($("<span><span class=\"ui-pgrid-footer-count-total\">0</span> total.</span>"));
+							footer_counter.append($("<span><span class=\"ui-pgrid-footer-count-total\">0</span> rows</span>"));
 						})
 					);
 					// Update the selected and total count.
@@ -1209,8 +1188,6 @@
 	};
 
 	$.fn.pgrid.defaults = {
-		// Use a custom class instead of "ui-pgrid". (Not implemented.)
-		//pgrid_custom_class: null,
 		// Show a toolbar.
 		pgrid_toolbar: false,
 		// Contents of the toolbar.

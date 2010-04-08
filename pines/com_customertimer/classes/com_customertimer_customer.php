@@ -19,11 +19,14 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class com_customertimer_customer extends com_customer_customer {
 	public function com_customertimer_login(&$floor, $station) {
-		//
+		if ($this->com_customertimer_is_logged_in($floor, $station))
+			return true;
+		
 	}
 
 	public function com_customertimer_logout(&$floor, $station) {
-		//
+		if (!$this->com_customertimer_is_logged_in($floor, $station))
+			return true;
 	}
 
 	public function com_customertimer_is_logged_in(&$floor, $station = null) {

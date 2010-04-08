@@ -3,8 +3,8 @@
 */
 
 #header .pagetitle {
-	height: 63px;
-	min-width: 200px;
+	height: 65px;
+	min-width: 250px;
 	background: transparent url("../images/header.png") no-repeat 0 -2px;
 }
 

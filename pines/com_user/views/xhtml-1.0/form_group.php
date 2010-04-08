@@ -279,17 +279,38 @@ $this->note = 'Provide group details in this form.';
 			<script type="text/javascript">
 				// <![CDATA[
 				$(function(){
-					$("#group_details .abilities_accordian").accordion({autoHeight: false, collapsible: true});
+					var sections = $("#group_details .abilities_accordian");
+					sections.accordion({
+						autoHeight: false,
+						collapsible: true,
+						active: false
+					});
+					$("#group_details button.expand_all").button().click(function(){
+						sections.each(function(){
+							var section = $(this);
+							if (section.accordion("option", "active") === false)
+								section.accordion("activate", 0);
+						});
+					});
+					$("#group_details button.collapse_all").button().click(function(){
+						sections.accordion("activate", false);
+					});
 				});
 				// ]]>
 			</script>
+			<div class="element full_width ui-helper-clearfix">
+				<div style="float: right; clear: both;">
+					<button type="button" class="expand_all">Expand All</button>
+					<button type="button" class="collapse_all">Collapse All</button>
+				</div>
+			</div>
 			<br class="spacer" />
 			<?php foreach ($this->sections as $cur_section) {
 				$section_abilities = $pines->ability_manager->get_abilities($cur_section);
 				if ( !count($section_abilities) ) continue; ?>
 			<div class="abilities_accordian">
 				<h3><a href="#"><?php echo $cur_section; ?></a></h3>
-				<div style="max-height: 250px">
+				<div>
 					<div class="element">
 						<?php foreach ($section_abilities as $cur_ability) { ?>
 						<label>

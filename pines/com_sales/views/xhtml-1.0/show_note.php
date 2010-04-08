@@ -1,6 +1,6 @@
 <?php
 /**
- * Displays a note to the user filling out a faxsheet.
+ * Displays a note to the user.
  *
  * @package com_sales
  * @license http://www.gnu.org/licenses/agpl-3.0.html

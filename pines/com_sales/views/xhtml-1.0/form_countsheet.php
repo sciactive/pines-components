@@ -26,8 +26,7 @@ if (isset($this->entity->guid))
 			
 			entries_table.pgrid({
 				pgrid_view_height: "360px",
-				pgrid_paginate: false
-				<?php if ( !$this->entity->final ) { ?>,
+				<?php if ( !$this->entity->final ) { ?>
 				pgrid_toolbar: true,
 				pgrid_toolbar_contents : [
 					{
@@ -51,18 +50,60 @@ if (isset($this->entity->guid))
 					},
 					{type: 'separator'},
 					{
-							type: 'button',
-							text: 'Remove',
-							extra_class: 'icon picon_16x16_actions_edit-delete',
-							confirm: true,
-							multi_select: true,
-							click: function(e, rows){
-								rows.pgrid_delete();
-								entries.val(JSON.stringify(entries_table.pgrid_get_all_rows().pgrid_export_rows()));
-							}
+						type: 'button',
+						text: 'Quantity',
+						extra_class: 'icon picon_16x16_stock_data_stock_record-number',
+						confirm: false,
+						multi_select: false,
+						click: function(e, rows){
+							var loader;
+							$.ajax({
+								url: "<?php echo pines_url('com_sales', 'productsearch'); ?>",
+								type: "POST",
+								dataType: "json",
+								data: {"code": rows.pgrid_get_value(1)},
+								beforeSend: function(){
+									loader = pines.alert('Retrieving product from server...', 'Product Search', 'icon picon_16x16_animations_throbber', {pnotify_hide: false, pnotify_history: false});
+								},
+								complete: function(){
+									loader.pnotify_remove();
+								},
+								error: function(XMLHttpRequest, textStatus){
+									pines.error("An error occured while trying to lookup the product code:\n"+XMLHttpRequest.status+": "+textStatus);
+								},
+								success: function(data){
+									if (!data) {
+										alert("No product was found with the SKU ["+rows.pgrid_get_value(1)+"].");
+										return;
+									}
+									var qty = 0;
+									do {
+										qty = prompt("Please enter a quantity:", qty);
+									} while ((parseInt(qty) < 1 || isNaN(parseInt(qty))) && qty != null);
+									qty--;
+									while (qty > 0) {
+										entries_table.pgrid_add([{key: null, values: [rows.pgrid_get_value(1)]}]);
+										qty--;
+									}
+									entries.val(JSON.stringify(entries_table.pgrid_get_all_rows().pgrid_export_rows()));
+								}
+							});
+						}
+					},
+					{
+						type: 'button',
+						text: 'Remove',
+						extra_class: 'icon picon_16x16_actions_edit-delete',
+						confirm: true,
+						multi_select: true,
+						click: function(e, rows){
+							rows.pgrid_delete();
+							entries.val(JSON.stringify(entries_table.pgrid_get_all_rows().pgrid_export_rows()));
+						}
 					}
-				]
+				],
 				<?php } ?>
+				pgrid_paginate: false
 			});
 		});
 		$(document).ready(function() {
@@ -70,6 +111,14 @@ if (isset($this->entity->guid))
 		});
 		// ]]>
 	</script>
+	<?php if (!empty($this->entity->review_comments)) {?>
+	<div class="element">
+		<label>
+			<span class="label">Reviewer Comments:</span>
+			<span class="field full_width"><strong><?php echo $this->entity->review_comments; ?></strong></span>
+		</label>
+	</div>
+	<?php } ?>
 	<div class="element full_width">
 		<div class="field">
 			<table id="entries_table">
@@ -88,6 +137,12 @@ if (isset($this->entity->guid))
 				</tbody>
 			</table>
 		</div>
+	</div>
+	<div class="element full_width">
+		<span class="label">Comments:</span>
+	</div>
+	<div class="element full_width">
+		<span class="field"><textarea style="width: 98%;" rows="3" cols="35" name="comments"><?php echo $this->entity->comments; ?></textarea></span>
 	</div>
 	<div class="element buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>

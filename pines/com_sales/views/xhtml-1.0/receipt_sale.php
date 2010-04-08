@@ -161,7 +161,8 @@ if ($this->entity->status == 'quoted') {
 			<?php } ?>
 		</div>
 	</div>
-<?php } ?>
+<?php }
+var_dump($this->entity->products); ?>
 	<div class="element full_width left_side">
 		<table id="item_list" width="100%">
 			<thead>

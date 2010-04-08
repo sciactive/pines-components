@@ -20,7 +20,7 @@ $i = 1;
 <?php foreach($this->success as $cur_success) { ?>
 <div class="pform">
 	<div class="element heading">
-		<h1>Ietm <?php echo $i; $i++; ?></h1>
+		<h1>Item <?php echo $i; $i++; ?></h1>
 	</div>
 	<div class="element">
 		<span class="label">Product</span>

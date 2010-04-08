@@ -25,6 +25,8 @@ $this->title = 'Countsheets';
 				{type: 'button', text: 'New', extra_class: 'icon picon_16x16_actions_document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'editcountsheet'); ?>'},
 				<?php } if (gatekeeper('com_sales/editcountsheet')) { ?>
 				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo pines_url('com_sales', 'editcountsheet', array('id' => '#title#')); ?>'},
+				<?php } if (gatekeeper('com_sales/approvecountsheet')) { ?>
+				{type: 'button', text: 'Review', extra_class: 'icon picon_16x16_stock_generic_stock_mark', url: '<?php echo pines_url('com_sales', 'approvecountsheet', array('id' => '#title#')); ?>'},
 				<?php } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'icon picon_16x16_actions_mail-message-new', multi_select: true, url: 'mailto:#col_2#', delimiter: ','},
 				{type: 'separator'},
@@ -64,6 +66,8 @@ $this->title = 'Countsheets';
 			<th>Created By</th>
 			<th>Created</th>
 			<th>Modified</th>
+			<th>Committed</th>
+			<th>Status</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -73,6 +77,24 @@ $this->title = 'Countsheets';
 			<td><?php echo $countsheet->creator->name; ?></td>
 			<td><?php echo pines_date_format($countsheet->p_cdate); ?></td>
 			<td><?php echo pines_date_format($countsheet->p_mdate); ?></td>
+			<td><?php echo $countsheet->final ? 'Yes' : 'No'; ?></td>
+			<td><?php switch ($countsheet->status) {
+			case 'approved':
+				echo 'Approved';
+				break;
+			case 'declined':
+				echo 'Declined';
+				break;
+			case 'info_requested':
+				echo 'Info Requested';
+				break;
+			case 'pending':
+				echo 'Pending';
+				break;
+			default:
+				echo 'Unrecognized';
+				break;
+		} ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

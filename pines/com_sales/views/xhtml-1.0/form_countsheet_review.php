@@ -31,7 +31,10 @@ if (isset($this->entity->guid))
 	#countsheet_details fieldset.sold hr {
 		border-top: 1px dashed chocolate;
 		border-bottom: 0px;
-		width: 75%;
+	}
+	#countsheet_details fieldset.sold ul {
+		list-style-type: circle;
+		margin-top: 2px;
 	}
 	/* ]]> */
 </style>
@@ -41,7 +44,7 @@ if (isset($this->entity->guid))
 		<legend>Missing Items</legend>
 		<?php foreach ($this->missing as $cur_missing) { ?>
 		<div class="element-full-width">
-			<span class="label"><?php echo $cur_missing; ?></span>
+			<span class="label"><?php echo $cur_missing->serial ? '#'.$cur_missing->serial.' - '.$cur_missing->product->name.' (SKU:['.$cur_missing->product->sku.'])' : $cur_missing->product->name.' (SKU:['.$cur_missing->product->sku.'])'; ?></span>
 		</div>
 		<?php } ?>
 	</fieldset>
@@ -50,7 +53,7 @@ if (isset($this->entity->guid))
 		<legend>Matched Items</legend>
 		<?php foreach ($this->matched as $cur_matched) { ?>
 		<div class="element-full-width">
-			<span class="label"><?php echo $cur_matched; ?></span>
+			<span class="label"><?php echo $cur_matched->serial ? '#'.$cur_matched->serial.' - '.$cur_matched->product->name.' (SKU:['.$cur_matched->product->sku.'])' : $cur_matched->product->name.' (SKU:['.$cur_matched->product->sku.'])'; ?></span>
 		</div>
 		<?php } ?>
 	</fieldset>
@@ -59,7 +62,26 @@ if (isset($this->entity->guid))
 		<legend>Potential Matches</legend>
 		<?php foreach ($this->sold as $cur_sold) { ?>
 		<div class="element-full-width">
-			<span class="label"><?php echo $cur_sold; ?></span>
+			<span class="label">
+				Items Matching "<strong><?php echo $cur_sold['name']; ?></strong>":<hr/>
+				<ul>
+				<?php foreach ($cur_sold['closest'] as $cur_closest) {
+						$likely_match = $cur_closest->serial ? '#'.$cur_closest->serial.' - '.$cur_closest->product->name.' (SKU:[<strong>'.$cur_closest->product->sku.'</strong>])' : $cur_closest->product->name.' (SKU:['.$cur_closest->product->sku.'])';
+						echo '<li>'.$likely_match.'</li>';
+					}
+				?>
+				</ul>
+				<ul>
+				<?php foreach ($cur_sold['entries'] as $cur_entry) {
+						$sales = $pines->entity_manager->get_entities(array('ref' => array('products' => $cur_entry->product), 'data' => array('gid' => $this->entity->gid), 'tags' => array('com_sales', 'sale'), 'class' => com_sales_sale));
+						foreach ($sales as $cur_sale) {
+							$potential_match = $cur_matched->serial ? '#'.$cur_entry->serial.' - '.$cur_entry->product->name.' (SKU:['.$cur_entry->product->sku.'])' : $cur_entry->product->name.' (SKU:['.$cur_entry->product->sku.'])';
+							echo '<li>'.$potential_match.' was sold on '.pines_date_format($cur_sale->p_cdate).' to '.$cur_sale->customer->name.'~~~'.$cur_sale->products[0]['entity']->serial.'</li>';
+						}
+					}
+				?>
+				</ul>
+			</span>
 		</div>
 		<?php } ?>
 	</fieldset>
@@ -68,7 +90,7 @@ if (isset($this->entity->guid))
 		<legend>Extraneous Items</legend>
 		<?php foreach ($this->extra as $cur_extra) { ?>
 		<div class="element-full-width">
-			<span class="label"><?php echo $cur_extra; ?></span>
+			<span class="label">"<?php echo $cur_extra; ?>" has no record in this location's inventory</span>
 		</div>
 		<?php } ?>
 	</fieldset>

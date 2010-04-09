@@ -32,10 +32,6 @@ if (isset($this->entity->guid))
 		border-top: 1px dashed chocolate;
 		border-bottom: 0px;
 	}
-	#countsheet_details fieldset.sold ul {
-		list-style-type: circle;
-		margin-top: 2px;
-	}
 	/* ]]> */
 </style>
 <form class="pform" method="post" id="countsheet_details" action="<?php echo pines_url('com_sales', 'savecountsheetstatus'); ?>">
@@ -64,21 +60,35 @@ if (isset($this->entity->guid))
 		<div class="element-full-width">
 			<span class="label">
 				Items Matching "<strong><?php echo $cur_sold['name']; ?></strong>":<hr/>
-				<ul>
+				<ul style="list-style-type: circle;">
 				<?php foreach ($cur_sold['closest'] as $cur_closest) {
 						$likely_match = $cur_closest->serial ? '#'.$cur_closest->serial.' - '.$cur_closest->product->name.' (SKU:[<strong>'.$cur_closest->product->sku.'</strong>])' : $cur_closest->product->name.' (SKU:['.$cur_closest->product->sku.'])';
 						echo '<li>'.$likely_match.'</li>';
 					}
 				?>
 				</ul>
-				<ul>
-				<?php foreach ($cur_sold['entries'] as $cur_entry) {
+				<ul style="list-style-type: square;">
+				<?php $checked_sales = array();
+					foreach ($cur_sold['entries'] as $cur_entry) {
 						$sales = $pines->entity_manager->get_entities(array('ref' => array('products' => $cur_entry->product), 'data' => array('gid' => $this->entity->gid), 'tags' => array('com_sales', 'sale'), 'class' => com_sales_sale));
 						foreach ($sales as $cur_sale) {
-							$potential_match = $cur_matched->serial ? '#'.$cur_entry->serial.' - '.$cur_entry->product->name.' (SKU:['.$cur_entry->product->sku.'])' : $cur_entry->product->name.' (SKU:['.$cur_entry->product->sku.'])';
-							echo '<li>'.$potential_match.' was sold on '.pines_date_format($cur_sale->p_cdate).' to '.$cur_sale->customer->name.'~~~'.$cur_sale->products[0]['entity']->serial.'</li>';
+							if (in_array($cur_sale->guid, $checked_sales))
+								continue;
+							$checked_sales[] = $cur_sale->guid;
+							$serial_match = false;
+							foreach ($cur_sale->products as $cur_product) {
+								if ($cur_product['serial'] == $cur_matched->serial)
+									$serial_match = true;
+							}
+							if ($serial_match) {
+								$potential_match = '#'.$cur_entry->serial.' - '.$cur_entry->product->name.' (SKU:['.$cur_entry->product->sku.'])';
+							} else {
+								$potential_match = $cur_entry->product->name.' (SKU:['.$cur_entry->product->sku.'])';
+							}
+							echo '<li>'.$potential_match.' was sold on '.pines_date_format($cur_sale->p_cdate).' to '.$cur_sale->customer->name.'</li>';
 						}
 					}
+					unset($checked_sales);
 				?>
 				</ul>
 			</span>

@@ -74,26 +74,28 @@ if (isset($this->entity->guid))
 	</fieldset>
 	<?php } if (!empty($this->entity->comments)) {?>
 	<div class="element">
-		<label>
-			<span class="label">Comments:</span>
-			<span class="field"><?php echo $this->entity->comments; ?></span>
-		</label>
+		<span class="label">Comments</span>
+		<div class="group">
+			<div class="field"><?php echo $this->entity->comments; ?></div>
+		</div>
 	</div>
 	<?php } ?>
 	<div class="element">
-		<label><span class="label">Update Status To:</span>
-		<select class="field ui-widget-content" name="status" size="1">
+		<label>
+			<span class="label">Update Status</span>
+			<select class="field ui-widget-content" name="status" size="1">
 				<option value="approved" <?php echo ($this->entity->status == 'approved') ? 'selected="selected"' : ''; ?>>Approved</option>
 				<option value="declined" <?php echo ($this->entity->status == 'declined') ? 'selected="selected"' : ''; ?>>Declined</option>
 				<option value="info_requested" <?php echo ($this->entity->status == 'info_requested') ? 'selected="selected"' : ''; ?>>Info Requested</option>
 				<option value="pending" <?php echo ($this->entity->status == 'pending') ? 'selected="selected"' : ''; ?>>Pending</option>
-		</select></label>
+			</select>
+		</label>
 	</div>
 	<div class="element full_width">
-		<span class="label">Review Comments:</span>
-	</div>
-	<div class="element full_width">
-		<span class="field"><textarea style="width: 98%;" rows="3" cols="35" name="review_comments"><?php echo $this->entity->review_comments; ?></textarea></span>
+		<label>
+			<span class="label">Review Comments</span>
+			<span class="field full_width"><textarea style="width: 98%;" rows="3" cols="35" name="review_comments"><?php echo $this->entity->review_comments; ?></textarea></span>
+		</label>
 	</div>
 	<div class="element buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>

@@ -15,8 +15,12 @@ if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_sales/editcountsheet') )
 		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listcountsheets'));
 	$countsheet = com_sales_countsheet::factory((int) $_REQUEST['id']);
-	if (is_null($countsheet->guid) || $countsheet->final) {
+	if (is_null($countsheet->guid)) {
 		pines_error('Requested countsheet id is not accessible.');
+		return;
+	}
+	if ($countsheet->final) {
+		pines_notice('Requested countsheet has been committed.');
 		return;
 	}
 } else {
@@ -28,11 +32,14 @@ if ( isset($_REQUEST['id']) ) {
 if (is_null($countsheet->creator))
 	$countsheet->creator = $_SESSION['user'];
 $countsheet->entries = (array) json_decode($_REQUEST['entries']);
-
+foreach ($countsheet->entries as &$cur_entry) {
+	$cur_entry = $cur_entry->values[0];
+}
+unset($cur_entry);
 $countsheet->comments = $_REQUEST['comments'];
 
 if (empty($countsheet->entries)) {
-	pines_notice("No products were counted.");
+	pines_notice('No products were counted.');
 	$countsheet->print_form();
 	return;
 }
@@ -42,8 +49,8 @@ if ($pines->config->com_sales->global_countsheets)
 
 if ($_REQUEST['save'] == 'commit') {
 	$countsheet->final = true;
-	if (isset($_SESSION['user']->task_inventory)) {
-		unset($_SESSION['user']->task_inventory);
+	if (isset($_SESSION['user']->com_sales_task_countsheet)) {
+		unset($_SESSION['user']->com_sales_task_countsheet);
 		$_SESSION['user']->save();
 	}
 	//Automatically decline the countsheet if they are missing an item.
@@ -51,23 +58,20 @@ if ($_REQUEST['save'] == 'commit') {
 	array_walk($in_stock, 'preg_quote');
 	$regex = '/'.implode('|', $in_stock).'/';
 	// Check the countsheet for any missing items.
-	$missing = false;
-	$expected = $pines->entity_manager->get_entities(array('match' => array('status' => $regex), 'tags' => array('com_sales', 'stock'), 'class' => com_sales_stock));
-	foreach ($expected as $key => &$checklist) {
-		foreach ($countsheet->entries as $itemkey => $item) {
-			if ($checklist->serial == $item->values[0]) {
-				unset($expected[$key]);
-			} else if ($checklist->product->sku == $item->values[0]) {
-				unset($expected[$key]);
-			}
+	// Get all stock entries at the current location.
+	$expected_stock = $pines->entity_manager->get_entities(array('match' => array('status' => $regex), 'ref' => array('location' => $_SESSION['user']->group), 'tags' => array('com_sales', 'stock'), 'class' => com_sales_stock));
+	foreach ($expected_stock as &$cur_stock_entry) {
+		$found = false;
+		foreach ($countsheet->entries as $cur_item) {
+			if ((isset($cur_stock_entry->serial) && $cur_stock_entry->serial == $cur_item) || $cur_stock_entry->product->sku == $cur_item)
+				$found = true;
 		}
-		if (isset($expected[$key])) {
-			$missing = true;
+		if (!$found) {
+			$countsheet->status = 'declined';
 			break;
 		}
 	}
-	if ($missing)
-		$countsheet->status = 'declined';
+	unset($cur_stock_entry);
 }
 if ($countsheet->save()) {
 	if ($countsheet->final) {

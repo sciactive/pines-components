@@ -15,7 +15,7 @@ if (!gatekeeper('com_sales/approvecountsheet') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'editcountsheet', array('id' => $_REQUEST['id'])));
 
 if (!isset($_REQUEST['id'])) {
-	pines_error('Requested countsheet id is not accessible');
+	pines_error('Requested countsheet id is not accessible.');
 	$pines->com_sales->list_countsheets();
 	return;
 }

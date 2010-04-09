@@ -368,7 +368,7 @@ class com_sales extends component {
 		global $pines;
 
 		$pines->com_pgrid->load();
-		
+
 		$module = new module('com_sales', 'list_countsheets', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_countsheets'];
@@ -379,11 +379,8 @@ class com_sales extends component {
 			pines_notice('There are no countsheets.');
 			return;
 		}
-		if ($_SESSION['user']->task_inventory) {
-			$type = 'Reminder';
-			$head = 'Inventory Countsheet';
-			$this->inform($type, $head, "Please fill out a countsheet for your location when you are not busy. Corporate is awaiting the submission of an inventory count.");
-		}
+		if ($_SESSION['user']->com_sales_task_countsheet)
+			$this->inform('Reminder', 'Inventory Countsheet', 'Please fill out a countsheet for your location when you are not busy. Corporate is awaiting the submission of an inventory count.');
 	}
 
 	/**

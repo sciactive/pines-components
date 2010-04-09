@@ -120,7 +120,6 @@ $this->title = 'Sales';
 			$number = 0;
 			foreach ($sale->products as $cur_product) {
 				$number += (int) $cur_product['quantity'];
-				//$cur_product['entity']->serial;
 			}
 			echo $number; ?></td>
 			<td><?php echo $sale->subtotal; ?></td>

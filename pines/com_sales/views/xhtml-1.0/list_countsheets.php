@@ -79,22 +79,22 @@ $this->title = 'Countsheets';
 			<td><?php echo pines_date_format($countsheet->p_mdate); ?></td>
 			<td><?php echo $countsheet->final ? 'Yes' : 'No'; ?></td>
 			<td><?php switch ($countsheet->status) {
-			case 'approved':
-				echo 'Approved';
-				break;
-			case 'declined':
-				echo 'Declined';
-				break;
-			case 'info_requested':
-				echo 'Info Requested';
-				break;
-			case 'pending':
-				echo 'Pending';
-				break;
-			default:
-				echo 'Unrecognized';
-				break;
-		} ?></td>
+				case 'approved':
+					echo 'Approved';
+					break;
+				case 'declined':
+					echo 'Declined';
+					break;
+				case 'info_requested':
+					echo 'Info Requested';
+					break;
+				case 'pending':
+					echo 'Pending';
+					break;
+				default:
+					echo 'Unrecognized';
+					break;
+			} ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

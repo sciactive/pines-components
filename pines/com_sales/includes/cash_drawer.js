@@ -1,4 +1,6 @@
 $(function(){
+	if ($.browser.msie)
+		return;
 	var callbacks = [];
 	var drawer_opened_properly = false;
 

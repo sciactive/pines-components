@@ -75,34 +75,30 @@ if (strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
 	<?php echo $pines->page->render_modules('head', 'module_head'); ?>
 
 	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/template.js"></script>
-<?php if ($pines->config->tpl_pines->theme_switcher) { ?>
-	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/jquery/jquery.themeswitcher.js"></script>
-	<script type="text/javascript">
-		// <![CDATA[
-		$(function(){
-			if (!($.browser.msie && $.browser.version == "6.0"))
-				$('#switcher').themeswitcher();
-		});
-		// ]]>
-	</script>
-	<style type="text/css">
-		/* <![CDATA[ */
-		#switcher {
-			position: absolute;
-			right: 20px;
-			top: 20px;
-		}
-		/* ]]> */
-	</style>
-<?php } ?>
 </head>
 <body class="ui-widget-content">
 	<div id="top">
-		<?php echo $pines->page->render_modules('top', 'module_header'); ?>
+		<?php echo $pines->page->render_modules('top', 'module_header');
+		$error = $pines->page->get_error();
+		$notice = $pines->page->get_notice();
+		if ( $error || $notice ) { ?>
+		<div class="notices">
+			<?php if ( $error ) { ?>
+			<div class="notice ui-state-error ui-corner-all ui-helper-clearfix">
+				<?php foreach ($error as $cur_item) {
+					echo "<p class=\"entry\"><span class=\"ui-icon ui-icon-alert\" style=\"float: left; margin-right: 0.3em;\"></span><span class=\"text\">$cur_item</span></p>\n";
+				} ?>
+			</div>
+			<?php }  if ( $notice ) { ?>
+			<div class="notice ui-state-highlight ui-corner-all ui-helper-clearfix">
+				<?php foreach ($notice as $cur_item) {
+					echo "<p class=\"entry\"><span class=\"ui-icon ui-icon-info\" style=\"float: left; margin-right: 0.3em;\"></span><span class=\"text\">$cur_item</span></p>\n";
+				} ?>
+			</div>
+			<?php } ?>
+		</div>
+		<?php } ?>
 	</div>
-	<?php if ( $pines->config->tpl_pines->theme_switcher ) { ?>
-	<div id="switcher"></div>
-	<?php } ?>
 	<div id="header" class="ui-widget-header">
 		<div class="pagetitle">
 			<h1><a href="<?php echo $pines->config->full_location; ?>"><span><?php echo $pines->config->option_title; ?></span></a></h1>
@@ -121,26 +117,6 @@ if (strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
 			<div class="colleft ui-state-default">
 				<div class="col1wrap">
 					<div class="col1">
-						<?php if ( count($pines->page->get_error()) ) { ?>
-						<div class="notice ui-state-error ui-corner-all ui-helper-clearfix"><p class="close"><span class="ui-icon ui-icon-circle-close"></span></p>
-								<?php
-								$error = $pines->page->get_error();
-								foreach ($error as $cur_item) {
-									echo "<p class=\"entry\"><span class=\"ui-icon ui-icon-alert\" style=\"float: left; margin-right: 0.3em;\"></span><span class=\"text\">$cur_item</span></p>\n";
-								}
-								?>
-						</div>
-						<?php } ?>
-						<?php if ( count($pines->page->get_notice()) ) { ?>
-						<div class="notice ui-state-highlight ui-corner-all ui-helper-clearfix"><p class="close"><span class="ui-icon ui-icon-circle-close"></span></p>
-								<?php
-								$notice = $pines->page->get_notice();
-								foreach ($notice as $cur_item) {
-									echo "<p class=\"entry\"><span class=\"ui-icon ui-icon-info\" style=\"float: left; margin-right: 0.3em;\"></span><span class=\"text\">$cur_item</span></p>\n";
-								}
-								?>
-						</div>
-						<?php } ?>
 						<div class="content_top_left">
 							<?php echo $pines->page->render_modules('content_top_left'); ?>
 						</div>

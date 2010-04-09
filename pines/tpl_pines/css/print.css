@@ -1,17 +1,8 @@
 /* ----------- Holy Grail CSS ----------- */
 /* Print styles */
-html, body {
-	height: auto !important;
-}
-body {
-	background: #fff !important;
-}
-#switcher {
-	display: none !important;
-}
-#header {
-	display: none !important;
-}
+html, body {height: auto !important;}
+body {background: #fff !important;}
+#header {display: none !important;}
 .colmask {
 	position: static !important;
 	float: none !important;
@@ -21,9 +12,7 @@ body {
 	margin: 0 !important;
 	overflow: visible !important;
 }
-.colmask input, .colmask select, .colmask textarea {
-	font-size:  100%;
-}
+.colmask input, .colmask select, .colmask textarea {font-size:  100%;}
 .holygrail .colmid {
 	position: static !important;
 	float: none !important;
@@ -60,24 +49,11 @@ body {
 	margin: 0 !important;
 	overflow: visible !important;
 }
-.holygrail .col2 {
-	display: none !important;
-}
-.holygrail .col3 {
-	display: none !important;
-}
-#footer {
-	display: none !important;
-}
+.holygrail .col2 {display: none !important;}
+.holygrail .col3 {display: none !important;}
+#footer {display: none !important;}
 /* Titlebar Icons */
-.module_maximize, .module_minimize {
-	display: none !important;
-}
+.module_maximize, .module_minimize {display: none !important;}
 /* Pines Notify */
-.ui-pnotify-history-container {
-	display: none !important;
-}
-html > body .ui-pnotify {
-	position: static !important;
-	margin-bottom: 10px;
-}
+.ui-pnotify-history-container {display: none !important;}
+html > body .ui-pnotify {position: static !important; margin-bottom: 10px;}

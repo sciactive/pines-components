@@ -1,26 +1,5 @@
-/* 
-	Use this sheet to style the header image.
-*/
-
-#header .pagetitle {
-	height: 65px;
-	min-width: 250px;
-	background: transparent url("../images/header.png") no-repeat 0 -2px;
-}
-
-#header .pagetitle h1 {
-	height: 100%;
-	width: 100%;
-	margin: 0;
-	padding: 0;
-}
-
-#header .pagetitle h1 a {
-	display: block;
-	height: 100%;
-	width: 100%;
-}
-
-#header .pagetitle h1 a span {
-	visibility: hidden;
-}
+/* Use this sheet to style the header image. */
+#header .pagetitle {height: 65px; min-width: 250px; background: transparent url("../images/header.png") no-repeat 0 -2px;}
+#header .pagetitle h1 {height: 100%; width: 100%; margin: 0; padding: 0;}
+#header .pagetitle h1 a {display: block; height: 100%; width: 100%;}
+#header .pagetitle h1 a span {visibility: hidden;}

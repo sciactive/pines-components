@@ -56,4 +56,4 @@ work.
 	<button type="button" onclick="window.open('http://pines.sourceforge.net/pines-docs/');">Visit API Documentation</button>
 	<button type="button" onclick="window.open('http://sourceforge.net/donate/index.php?group_id=264165');">Donate</button>
 </p>
-<br class="spacer" />
+<br style="clear: both; height: 1px;" />

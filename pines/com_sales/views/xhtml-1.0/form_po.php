@@ -345,7 +345,7 @@ if ($this->entity->final)
 				<tr><td>-----------</td><td>-----------</td><td>-----------</td><td>-----------</td><td>-----------</td><td>-----------</td></tr>
 			</tbody>
 		</table>
-		<br class="spacer" />
+		<br class="clearing" />
 		<div style="width: 100%">
 			<label>
 				<span>Quantity</span>

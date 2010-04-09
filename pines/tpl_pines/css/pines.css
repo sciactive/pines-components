@@ -265,21 +265,12 @@ body .ui-widget {
 .col2 ul.dropdown.dropdown-vertical, .col3 ul.dropdown.dropdown-vertical {
 	width: 100%;
 }
-/* ----------- Standard Notices ----------- */
-.notice {
+/* ----------- Notices ----------- */
+#top div.notices div.notice {
 	margin: 3px;
 	padding: 4px;
 	margin-bottom: 10px;
 }
-.notice .close {
-	float: right;
-	clear: right;
-}
-.notice p {
+#top div.notices div.notice p {
 	margin: 1px;
-}
-/* ----------- Spacer for making a cleared BR ----------- */
-.spacer {
-	clear: both;
-	height: 1px;
 }

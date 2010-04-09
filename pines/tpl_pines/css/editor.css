@@ -1,31 +1,7 @@
-/* ----------- Globals ----------- */
-* {
-	margin: 0;
-	padding: 0;
-}
-ul, ol {
-	margin: 11px 0;
-	padding-left: 40px;
-}
+* {margin: 0; padding: 0;}
+ul, ol {margin: 11px 0; padding-left: 40px;}
 /* General styles */
-body {
-	font-family: Verdana,Arial,sans-serif;
-	background:#FFF;
-	font-size: 8pt;
-}
-h1, h2, h3 {
-	margin:.8em 0 .2em 0;
-	padding:0;
-}
-p {
-	margin:.4em 0 .8em 0;
-	padding:0;
-}
-img {
-	margin:10px 0 5px;
-}
-/* ----------- Spacer for making a cleared BR ----------- */
-.spacer{
-	clear: both;
-	height: 1px;
-}
+body {font-family: Verdana,Arial,sans-serif; background:#FFF; font-size: 8pt;}
+h1, h2, h3 {margin:.8em 0 .2em 0; padding:0;}
+p {margin:.4em 0 .8em 0; padding:0;}
+img {margin:10px 0 5px;}

@@ -238,7 +238,7 @@ if ($this->entity->final)
 		</div>
 	</div>
 	<?php } ?>
-	<br class="spacer" />
+	<br class="clearing" />
 	<div class="element buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />

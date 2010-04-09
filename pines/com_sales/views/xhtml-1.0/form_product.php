@@ -374,7 +374,7 @@ $this->note = 'Provide product details in this form.';
 				<label><span class="label">Manufacturer SKU</span>
 					<input class="field ui-widget-content" type="text" name="manufacturer_sku" size="24" value="<?php echo $this->entity->manufacturer_sku; ?>" /></label>
 			</div>
-			<br class="spacer" />
+			<br class="clearing" />
 		</div>
 		<div id="tab_images">
 			<div class="element">
@@ -382,7 +382,7 @@ $this->note = 'Provide product details in this form.';
 					<span class="note">Doesn't work yet.</span>
 					<input class="field ui-widget-content" type="file" name="image_upload" /></label>
 			</div>
-			<br class="spacer" />
+			<br class="clearing" />
 		</div>
 		<div id="tab_purchasing">
 			<div class="element">
@@ -471,7 +471,7 @@ $this->note = 'Provide product details in this form.';
 						<?php } ?>
 					</tbody>
 				</table>
-				<br class="spacer" />
+				<br class="clearing" />
 				<div style="width: 100%">
 					<label>
 						<span>Vendor SKU</span>
@@ -483,7 +483,7 @@ $this->note = 'Provide product details in this form.';
 					</label>
 				</div>
 			</div>
-			<br class="spacer" />
+			<br class="clearing" />
 		</div>
 		<div id="tab_pricing">
 			<div class="element">
@@ -550,7 +550,7 @@ $this->note = 'Provide product details in this form.';
 						<?php } ?>
 					</select></label>
 			</div>
-			<br class="spacer" />
+			<br class="clearing" />
 		</div>
 		<div id="tab_attributes">
 			<div class="element">
@@ -612,13 +612,13 @@ $this->note = 'Provide product details in this form.';
 						<?php } ?>
 					</select></label>
 			</div>
-			<br class="spacer" />
+			<br class="clearing" />
 		</div>
 		<div id="tab_accounting">
 			<div class="element">
 				<span class="label">Nothing here yet...</span>
 			</div>
-			<br class="spacer" />
+			<br class="clearing" />
 		</div>
 	</div>
 	<div class="element buttons">

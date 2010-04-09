@@ -118,7 +118,7 @@ $this->note = 'Provide widget details in this form.';
 				<span class="label">Short Description</span><br />
 				<textarea rows="3" cols="35" class="peditor_simple" style="width: 100%;" name="short_description"><?php echo $this->entity->short_description; ?></textarea>
 			</div>
-			<br class="spacer" />
+			<br class="clearing" />
 		</div>
 		<div id="tab_attributes">
 			<div class="element full_width">
@@ -155,7 +155,7 @@ $this->note = 'Provide widget details in this form.';
 					</label>
 				</div>
 			</div>
-			<br class="spacer" />
+			<br class="clearing" />
 		</div>
 	</div>
 	<br />

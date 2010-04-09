@@ -243,7 +243,7 @@ $this->note = 'Provide floor details in this form.';
 				<label><span class="label">Change Background</span>
 					<input class="field ui-widget-content" type="file" name="background" /></label>
 			</div>
-			<br class="spacer" />
+			<br class="clearing" />
 		</div>
 		<div id="tab_layout">
 			<div class="ui-widget-header ui-corner-all" style="padding: 10px;">
@@ -260,14 +260,14 @@ $this->note = 'Provide floor details in this form.';
 					<button type="button" class="station_layout_clear"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_actions_edit-clear"></span> Clear</button>
 				</span>
 			</div>
-			<br class="spacer" />
+			<br class="clearing" />
 			<div class="station_layout">
 				<img src="<?php echo $pines->config->rela_location.$this->entity->get_background(); ?>" class="station_layout_bg" alt="Station Layout" />
 				<div class="station_floor"></div>
-				<br class="spacer" />
+				<br class="clearing" />
 			</div>
 			<input type="hidden" name="stations" value="<?php echo htmlentities(json_encode($this->entity->stations)); ?>" />
-			<br class="spacer" />
+			<br class="clearing" />
 		</div>
 	</div>
 	<br />

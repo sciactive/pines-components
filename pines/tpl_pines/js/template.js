@@ -1,62 +1,42 @@
-$(function($){
+$(function(){
 	$.pnotify.defaults.pnotify_opacity = .9;
+	var hover = function(elements){
+		(typeof elements == "string" ? $(elements) : elements).live("mouseenter", function(){
+			$(this).addClass("ui-state-hover");
+		}).live("mouseleave", function(){
+			$(this).removeClass("ui-state-hover");
+		});
+	};
+
 	// Turn notices into Pines Notify notices.
-	$("div.col1 > div.notice.ui-state-error").find("p.entry span.text").each(function(){
-		$.pnotify({
-			pnotify_title: "Error",
-			pnotify_text: $(this).html(),
-			pnotify_type: "error",
-			pnotify_hide: false
-		});
+	$("#top div.notices").find("div.ui-state-error span.text").each(function(){
+		$.pnotify({pnotify_title: "Error", pnotify_text: $(this).html(), pnotify_type: "error", pnotify_hide: false});
+	}).end().find("div.ui-state-highlight span.text").each(function(){
+		$.pnotify({pnotify_title: "Notice", pnotify_text: $(this).html()});
 	}).end().remove();
-	$("div.col1 > div.notice.ui-state-highlight").find("p.entry span.text").each(function(){
-		$.pnotify({
-			pnotify_title: "Notice",
-			pnotify_text: $(this).html()
-		});
-	}).end().remove();
-	
-	// Just in case Pines Notify isn't working.
-	$(".notice .close, .error .close").css("cursor", "pointer").click(function() {
-		$(this).parent().fadeOut("slow");
-	});
 
-	// Menu mouseover effects.
-	$(".dropdown li").live("mouseenter", function(){
-		$(this).addClass("ui-state-hover");
-	}).live("mouseleave", function(){
-		$(this).removeClass("ui-state-hover");
-	});
+	// Main menu corners.
+	$(".mainmenu").find(".dropdown > li:first-child").addClass("ui-corner-left").end()
+	.find(".dropdown > li:last-child").addClass("ui-corner-right").end()
+	.find(".dropdown li ul li:first-child").addClass("ui-corner-tr").end()
+	.find(".dropdown li ul li:last-child").addClass("ui-corner-bottom");
 
-	// Maximize the content modules.
-	$(".module .module_maximize").live("mouseenter", function(){
-		$(this).addClass("ui-state-hover");
-	}).live("mouseleave", function(){
-		$(this).removeClass("ui-state-hover");
-	}).live("click", function(){
+	// Maximize modules.
+	hover($(".module .module_maximize").live("click", function(){
 		$(this).closest(".module").toggleClass("module_maximized");
-	});
+	}));
 
-	// Minimize the right modules.
-	$(".module .module_minimize").live("mouseenter", function(){
-		$(this).addClass("ui-state-hover");
-	}).live("mouseleave", function(){
-		$(this).removeClass("ui-state-hover");
-	}).live("click", function(){
+	// Shade modules.
+	hover($(".module .module_minimize").live("click", function(){
 		$(this).children("span.ui-icon").toggleClass("ui-icon-triangle-1-n").toggleClass("ui-icon-triangle-1-s")
 		.end().parent().nextAll(".module_content").slideToggle("normal");
-	});
-
-	// Style UI buttons on hover.
-	$(".ui-state-default:input:enabled:not(:text, textarea)").live("mouseenter", function(){
-		$(this).addClass("ui-state-hover");
-	}).live("mouseleave", function(){
-		$(this).removeClass("ui-state-hover");
-	});
+	}));
 
 	$(".ui-widget-content:input:disabled").addClass("ui-state-disabled");
-
 	$(".ui-widget-content:text, .ui-widget-content:password").addClass("ui-corner-right");
+
+	// Menu and UI buttons hover.
+	hover(".dropdown li, .ui-state-default:input:enabled:not(:text, textarea)");
 
 	/* Experimental AJAX code.
 	var load_page_ajax = function(url){

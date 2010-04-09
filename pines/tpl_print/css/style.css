@@ -1,66 +1,18 @@
 /* ----------- Globals ----------- */
-* {
-	margin: 0;
-	padding: 0;
-}
-ul, ol {
-	margin: 11px 0;
-	padding-left: 40px;
-}
-body {
-	margin:0;
-	padding:0;
-	border:0;
-	background:#fff;
-	font-size:75%;
-	font-family: sans-serif;
-}
-h1, h2, h3 {
-	margin:.8em 0 .2em 0;
-	padding:0;
-}
-p {
-	margin:.4em 0 .8em 0;
-	padding:0;
-}
-img {
-	margin:10px 0 5px;
-}
-.col1 {
-	width: 100%;
-}
+* {margin: 0; padding: 0;}
+ul, ol {margin: 11px 0; padding-left: 40px;}
+body {margin:0; padding:0; border:0; background:#fff; font-size:75%; font-family: sans-serif;}
+h1, h2, h3 {margin:.8em 0 .2em 0; padding:0;}
+p {margin:.4em 0 .8em 0; padding:0;}
+img {margin:10px 0 5px;}
+.col1 {width: 100%;}
 /* ----------- Customized CSS ----------- */
-.module {
-	margin: 3px;
-}
-.module .module_title {
-	margin-bottom: 8px;
-	padding: 2px;
-}
-.module .module_title h2 {
-	margin: 0;
-}
-.module .module_title p {
-	font-weight: normal;
-	font-size: 1em;
-	margin: 0;
-}
-.module .module_content {
-	padding: 0 5px;
-}
-.module .module_content a {
-	text-decoration: underline !important;
-}
+.module {margin: 3px;}
+.module .module_title {margin-bottom: 8px; padding: 2px;}
+.module .module_title h2 {margin: 0;}
+.module .module_title p {font-weight: normal; font-size: 1em; margin: 0;}
+.module .module_content {padding: 0 5px;}
+.module .module_content a {text-decoration: underline !important;}
 /* ----------- Standard Notices ----------- */
-.notice {
-	margin: 3px;
-	padding: 5px;
-}
-.notice p {
-	margin: 1px;
-}
-/* ----------- Spacer for making a cleared BR ----------- */
-.spacer{
-	clear: both;
-	height: 1px;
-}
+.notice {margin: 3px; padding: 5px;}
+.notice p {margin: 1px;}

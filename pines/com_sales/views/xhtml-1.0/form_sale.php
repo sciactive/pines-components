@@ -847,7 +847,7 @@ $this->note = 'Use this form to edit a sale.';
 				</tr>
 			</tbody>
 		</table>
-		<br class="spacer" />
+		<br class="clearing" />
 	</div>
 	<?php } ?>
 	<div class="element full_width">

@@ -405,7 +405,7 @@ $this->title = 'Customer Timer';
 <div class="station_layout">
 	<img src="<?php echo $pines->config->rela_location; ?>components/com_customertimer/includes/station_floor.png" class="station_layout_bg" alt="Station Layout" />
 	<div class="station_floor"></div>
-	<br class="spacer" />
+	<br style="clear: both; height: 1px;" />
 </div>
 <div id="com_customertimer_dialogs" style="display: none;">
 	<div class="customer_action" title="">
@@ -477,6 +477,6 @@ $this->title = 'Customer Timer';
 				</tr>
 			</tbody>
 		</table>
-		<br class="spacer" />
+		<br style="clear: both; height: 1px;" />
 	</div>
 </div>

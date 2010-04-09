@@ -146,7 +146,7 @@ $this->note = 'Provide group details in this form.';
 						<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->entity->parent); ?>
 					</select></label>
 			</div>
-			<br class="spacer" />
+			<br class="clearing" />
 		</div>
 		<div id="tab_logo">
 			<div class="element">
@@ -163,7 +163,7 @@ $this->note = 'Provide group details in this form.';
 				<label><span class="label">Change Logo</span>
 					<input class="field ui-widget-content" type="file" name="image" /></label>
 			</div>
-			<br class="spacer" />
+			<br class="clearing" />
 		</div>
 		<div id="tab_location">
 			<div class="element">
@@ -271,7 +271,7 @@ $this->note = 'Provide group details in this form.';
 						<span class="field full_width"><textarea style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo $this->entity->address_international; ?></textarea></span></label>
 				</div>
 			</div>
-			<br class="spacer" />
+			<br class="clearing" />
 		</div>
 		<div id="tab_abilities">
 			<?php if ( $this->display_abilities ) { ?>
@@ -304,7 +304,7 @@ $this->note = 'Provide group details in this form.';
 					<button type="button" class="collapse_all">Collapse All</button>
 				</div>
 			</div>
-			<br class="spacer" />
+			<br class="clearing" />
 			<?php foreach ($this->sections as $cur_section) {
 				$section_abilities = $pines->ability_manager->get_abilities($cur_section);
 				if ( !count($section_abilities) ) continue; ?>
@@ -317,7 +317,7 @@ $this->note = 'Provide group details in this form.';
 							<input class="ui-widget-content" type="checkbox" name="<?php echo $cur_section; ?>[]" value="<?php echo $cur_ability['ability']; ?>" <?php echo (array_search("{$cur_section}/{$cur_ability['ability']}", $this->entity->abilities) !== false) ? 'checked="checked" ' : ''; ?>/>
 							<?php echo $cur_ability['title']; ?>&nbsp;<small><?php echo $cur_ability['description']; ?></small>
 						</label>
-						<br class="spacer" />
+						<br class="clearing" />
 						<?php } ?>
 					</div>
 				</div>
@@ -328,7 +328,7 @@ $this->note = 'Provide group details in this form.';
 				<p>You do not have sufficient privileges to edit abilities.</p>
 			</div>
 			<?php } ?>
-			<br class="spacer" />
+			<br class="clearing" />
 		</div>
 		<div id="tab_attributes">
 			<div class="element full_width">
@@ -365,7 +365,7 @@ $this->note = 'Provide group details in this form.';
 					</label>
 				</div>
 			</div>
-			<br class="spacer" />
+			<br class="clearing" />
 		</div>
 	</div>
 

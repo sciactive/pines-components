@@ -345,7 +345,7 @@ $this->note = 'Provide customer profile details in this form.';
 						</tr>
 					</tbody>
 				</table>
-				<br class="spacer" />
+				<br class="clearing" />
 			</div>
 			<div class="element">
 				<label><span class="label">Job Title</span>
@@ -389,7 +389,7 @@ $this->note = 'Provide customer profile details in this form.';
 				<textarea rows="3" cols="35" class="field peditor" style="width: 100%;" name="description"><?php echo $this->entity->description; ?></textarea>
 			</div>
 			<?php } ?>
-			<br class="spacer" />
+			<br class="clearing" />
 		</div>
 		<div id="tab_account">
 			<?php if (in_array('points', $pines->config->com_customer->shown_fields_customer)) { ?>
@@ -446,7 +446,7 @@ $this->note = 'Provide customer profile details in this form.';
 					<input class="field ui-widget-content" type="text" name="member_exp" size="24" value="<?php echo $this->entity->member_exp ? date('Y-m-d', $this->entity->member_exp) : ''; ?>" /></label>
 			</div>
 			<?php } ?>
-			<br class="spacer" />
+			<br class="clearing" />
 		</div>
 		<?php if (in_array('address', $pines->config->com_customer->shown_fields_customer)) { ?>
 		<div id="tab_addresses">
@@ -620,9 +620,9 @@ $this->note = 'Provide customer profile details in this form.';
 						</label>
 					</div>
 				</div>
-				<br class="spacer" />
+				<br class="clearing" />
 			</div>
-			<br class="spacer" />
+			<br class="clearing" />
 		</div>
 		<?php } if (in_array('attributes', $pines->config->com_customer->shown_fields_customer)) { ?>
 		<div id="tab_attributes">
@@ -660,7 +660,7 @@ $this->note = 'Provide customer profile details in this form.';
 					</label>
 				</div>
 			</div>
-			<br class="spacer" />
+			<br class="clearing" />
 		</div>
 		<?php } ?>
 	</div>

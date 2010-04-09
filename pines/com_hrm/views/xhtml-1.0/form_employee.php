@@ -237,7 +237,7 @@ $this->note = 'Provide employee account details in this form.';
 				<span class="label">Description</span><br />
 				<textarea rows="3" cols="35" class="field peditor" style="width: 100%;" name="description"><?php echo $this->entity->description; ?></textarea>
 			</div>
-			<br class="spacer" />
+			<br class="clearing" />
 		</div>
 		<div id="tab_user_account">
 			<div class="element heading">
@@ -326,7 +326,7 @@ $this->note = 'Provide employee account details in this form.';
 						<input class="field ui-widget-content" type="password" name="user_template_password2" size="24" /></label>
 				</div>
 			</fieldset>
-			<br class="spacer" />
+			<br class="clearing" />
 		</div>
 		<div id="tab_addresses">
 			<div class="element heading">
@@ -499,9 +499,9 @@ $this->note = 'Provide employee account details in this form.';
 						</label>
 					</div>
 				</div>
-				<br class="spacer" />
+				<br class="clearing" />
 			</div>
-			<br class="spacer" />
+			<br class="clearing" />
 		</div>
 		<div id="tab_attributes">
 			<div class="element full_width">
@@ -538,7 +538,7 @@ $this->note = 'Provide employee account details in this form.';
 					</label>
 				</div>
 			</div>
-			<br class="spacer" />
+			<br class="clearing" />
 		</div>
 	</div>
 	<div class="element buttons">

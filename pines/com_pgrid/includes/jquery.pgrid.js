@@ -461,7 +461,13 @@
 						var filter_rows = pgrid.children("tbody")
 						.children("tr:not(.ui-helper-hidden)").addClass("ui-helper-hidden").end()
 						.children().filter(function(){
-							var cur_text = this.textContent.toLowerCase();
+							var cur_text;
+							if (this.innerText != undefined)
+								cur_text = this.innerText.toLowerCase();
+							else if (this.textContent != undefined)
+								cur_text = this.textContent.toLowerCase();
+							else
+								return true;
 							for (var i in filter_arr) {
 								if (cur_text.indexOf(filter_arr[i]) == -1)
 									return false;
@@ -496,7 +502,12 @@
 								// Add spaces between cell values, so they're not falsely matched.
 								// ex: "mest" would match the cells "James" and "Teacher" if they were concatenated.
 								row.children("td.ui-pgrid-table-cell-text").each(function(){
-									cur_text += " "+this.textContent.toLowerCase();
+									if (this.innerText != undefined)
+										cur_text += " "+this.innerText.toLowerCase();
+									else if (this.textContent != undefined)
+										cur_text += " "+this.textContent.toLowerCase();
+									else
+										cur_text += " "+$(this).text().toLowerCase();
 								});
 								// Go through each search term and if any one doesn't match, hide the row.
 								for (var i in filter_arr) {
@@ -592,12 +603,17 @@
 
 					// Calculate their sort keys and store them in their DOM objects.
 					$.each(rows, function() {
-						if (is_str) {
-							this.sortKey = this.children[pgrid.pgrid_sort_col].textContent.toUpperCase(); //.replace("├ ", "").replace("└ ", "").toUpperCase();
-						} else {
+						var children = this.children[pgrid.pgrid_sort_col];
+						if (this.innerText != undefined)
+							this.sortKey = children.innerText.toUpperCase();
+						else if (this.textContent != undefined)
+							this.sortKey = children.textContent.toUpperCase();
+						else
+							this.sortKey = $(children).text().toUpperCase(); //.replace("├ ", "").replace("└ ", "").toUpperCase();
+						if (!is_str) {
 							// If this column contains only numbers (currency signs and # included), parse it as floats.
 							// Strip non numerical characters except for the decimal separator. Replace that with a period, then parse it.
-							this.sortKey = parseFloat(this.children[pgrid.pgrid_sort_col].textContent.replace((new RegExp("[^0-9"+pgrid.pgrid_decimal_sep+"]", "g")), "").replace(pgrid.pgrid_decimal_sep, "."));
+							this.sortKey = parseFloat(this.sortKey.replace((new RegExp("[^0-9"+pgrid.pgrid_decimal_sep+"]", "g")), "").replace(pgrid.pgrid_decimal_sep, "."));
 						}
 					});
 					// Sort them by their keys.

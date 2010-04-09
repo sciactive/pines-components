@@ -111,80 +111,61 @@ class com_sales_countsheet extends entity {
 		$sold_status['sold_at_store'] = 'sold';
 
 		$in_stock = array('available', 'unavailable', 'sold_pending');
-		$module->missing = $module->matched = $module->sold = $module->extra = $sold_array = $marked_items = array();
+		$module->missing = $module->matched = $module->sold = $module->extra = array();
 		// Grab all stock items for this location's inventory.
-		$expected_stock = $pines->entity_manager->get_entities(array('ref' => array('location' => $this->gid), 'tags' => array('com_sales', 'stock'), 'class' => com_sales_stock));
+		$expected_stock = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'stock'), 'class' => com_sales_stock));
 		foreach ($expected_stock as $key => $checklist) {
+			$in_store = ($checklist->location->guid == $this->gid) ? true : false;
 			foreach ($this->entries as $itemkey => $item) {
-				if (!isset($sold_array[$item])) {
-					$sold_array[$item] = array();
-					$sold_array[$item]['found'] = false;
-					//This will be unset later if there are no previously sold inventory items matching it.
-					$sold_array[$item]['entries'][] = 'Items matching "<strong>'.$item.'</strong>":<hr/>';
+				if (!isset($module->sold[$item])) {
+					$module->sold[$item] = array();
+					$module->sold[$item]['name'] = $item;
+					$module->sold[$item]['found'] = false;
+					$module->sold[$item]['closest'] = array();
+					$module->sold[$item]['entries'] = array();
 				}
-				if ($checklist->serial == $item) {
+				if ($checklist->serial == $item ||
+					($checklist->product->sku == $item && !isset($checklist->serial))) {
 					if (in_array($checklist->status, $in_stock)) {
 						// The serialized item is on the checklist & countsheet, its a MATCH.
-						$module->matched[] = '#'.$item.' ('.$checklist->product->name.' SKU:['.$checklist->product->sku.'])';
+						$module->matched[] = $checklist;
 						unset($expected_stock[$key]);
 						unset($this->entries[$itemkey]);
+						unset($module->sold[$item]);
 						break;
 					} else {
 						// A serialized item is not on the checklist but has a serial matching the search string
-						if (!in_array($checklist->guid, $marked_items)) {
-							$marked_items[] = $checklist->guid;
-							$sale = $pines->entity_manager->get_entity(array('ref' => array('products' => $checklist->product), 'tags' => array('com_sales', 'sale'), 'class' => com_sales_sale));
-							$sold_array[$item]['found'] = true;
-							$sold_array[$item]['entries'][] = '#'.$checklist->serial.' ('.$checklist->product->name.' SKU:['.$checklist->product->sku.']) was '.$sold_status[$checklist->status].' to '.$sale->customer->name.' on '.pines_date_format($sale->p_cdate);
+						if (!in_array($checklist, $module->sold[$item]['entries'])) {
+							$module->sold[$item]['found'] = true;
+							$module->sold[$item]['entries'][] = $checklist;
 						}
 					}
-				}
-				if ($checklist->product->sku == $item && !isset($checklist->serial)) {
-					if (in_array($checklist->status, $in_stock)) {
-						// The SKU item is on the checklist & countsheet, its a MATCH.
-						$module->matched[] = $checklist->product->name.' SKU:['.$item.']';
-						unset($expected_stock[$key]);
-						unset($this->entries[$itemkey]);
-						break;
-					} else {
-						if (!in_array($checklist->guid, $marked_items)) {
-							$marked_items[] = $checklist->guid;
-							$sale = $pines->entity_manager->get_entity(array('ref' => array('products' => $checklist->product), 'tags' => array('com_sales', 'sale'), 'class' => com_sales_sale));
-							$sold_array[$item]['found'] = true;
-							$sold_array[$item]['entries'][] = $checklist->product->name.' SKU:['.$checklist->product->sku.'] was '.$sold_status[$checklist->status].' to '.$sale->customer->name.' on '.pines_date_format($sale->p_cdate);
-						}
-					}
-				}
-				if ($checklist->product->sku == $item && isset($checklist->serial)) {
+				} else if ($checklist->product->sku == $item && isset($checklist->serial)) {
 					// A serialized item is not on the checklist but has a SKU matching the search string.
-					if (!in_array($checklist->guid, $marked_items)) {
-						$marked_items[] = $checklist->guid;
-						$sale = $pines->entity_manager->get_entity(array('ref' => array('products' => $checklist->product), 'tags' => array('com_sales', 'sale'), 'class' => com_sales_sale));
-						$sold_array[$item]['found'] = true;
-						$sold_array[$item]['entries'][] = '#'.$checklist->serial.' ('.$checklist->product->name.' SKU:['.$checklist->product->sku.']) was '.$sold_status[$checklist->status].' to '.$sale->customer->name.' on '.pines_date_format($sale->p_cdate);
-					}
+					if (!in_array($checklist, $module->sold[$item]['closest']) && $in_store) {
+						$module->sold[$item]['found'] = true;
+						$module->sold[$item]['closest'][] = $checklist;
+					} else if (!in_array($checklist, $module->sold[$item]['entries']) && !$in_store) {
+						$module->sold[$item]['found'] = true;
+						$module->sold[$item]['entries'][] = $checklist;
+					} 
 				}
 			}
-			if (isset($expected_stock[$key]) && in_array($checklist->status, $in_stock)) {
+			if (isset($expected_stock[$key]) && in_array($checklist->status, $in_stock) && $in_store) {
 				// An item from the checklist is missing on the countsheet.
 				if (isset($checklist->serial)) {
-					$module->missing[] = '#'.$checklist->serial.' ('.$checklist->product->name.' SKU:['.$checklist->product->sku.']) is '.$sold_status[$checklist->status];
+					$module->missing[] = $checklist;
 				} else {
-					$module->missing[] = $checklist->product->name.' SKU:['.$checklist->product->sku.'] is '.$sold_status[$checklist->status];
+					$module->missing[] = $checklist;
 				}
 			}
 		}
 		// See if any of the extraneous items matched any sold items in the inventory.
 		foreach ($this->entries as $item) {
-			if ($sold_array[$item]['found'] == false) {
+			if ($module->sold[$item]['found'] == false) {
 				// There were no potential matches for this unidentifed search string.
-				$module->extra[] = '"'.$item.'" has no record in this location\'s inventory.';
-				unset($sold_array[$item]);
-			} else {
-				// Build the list of potential matches for this search string.
-				foreach ($sold_array[$item]['entries'] as $cur_sold) {
-					$module->sold[] = $cur_sold;
-				}
+				$module->extra[] = $item;
+				unset($module->sold[$item]);
 			}
 		}
 		return $module;

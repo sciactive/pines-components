@@ -14,8 +14,80 @@ $this->title = 'Countsheets';
 ?>
 <script type="text/javascript">
 	// <![CDATA[
-
+	var employee_search_box;
+	var employee_search_button;
+	var employee_table;
+	var employee_dialog;
 	$(function(){
+		var assign_dialog = $("#assign_dialog");
+		employee_box = $("#employee");
+		employee_search_box = $("#employee_search");
+		employee_search_button = $("#employee_search_button");
+		employee_table = $("#employee_table");
+		employee_dialog = $("#employee_dialog");
+
+		assign_dialog.find("form").submit(function(){
+			assign_dialog.dialog('option', 'buttons').Done();
+			return false;
+		});
+		assign_dialog.dialog({
+			bgiframe: true,
+			autoOpen: false,
+			modal: true,
+			buttons: {
+				"Done": function(){
+					var assign_to = assign_dialog.find(":input[name=employee]").val();
+					if (assign_to == "No Employee Selected") {
+						alert("Please select an employee");
+					} else {
+						pines.post("<?php echo pines_url('com_sales', 'assigncountsheet'); ?>", {
+							employee: assign_to
+						});
+						assign_dialog.dialog("close");
+					}
+				}
+			}
+		});
+
+		employee_search_box.keydown(function(eventObject){
+			if (eventObject.keyCode == 13) {
+				employee_search(this.value);
+				return false;
+			}
+		});
+		employee_search_button.click(function(){
+			employee_search(employee_search_box.val());
+		});
+
+		employee_table.pgrid({
+			pgrid_paginate: true,
+			pgrid_multi_select: false,
+			pgrid_double_click: function(){
+				employee_dialog.dialog('option', 'buttons').Done();
+			}
+		});
+
+		employee_dialog.dialog({
+			bgiframe: true,
+			autoOpen: false,
+			modal: true,
+			width: 600,
+			buttons: {
+				"Done": function(){
+					var rows = employee_table.pgrid_get_selected_rows().pgrid_export_rows();
+					if (!rows[0]) {
+						alert("Please select an employee.");
+						return;
+					} else {
+						var employee = rows[0];
+					}
+					employee_box.val(employee.key+": \""+employee.values[0]+" "+employee.values[1]+"\"");
+					employee_search_box.val("");
+					employee_dialog.dialog('close');
+				}
+			}
+		});
+
 		var state_xhr;
 		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
 		var cur_defaults = {
@@ -27,8 +99,11 @@ $this->title = 'Countsheets';
 				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo pines_url('com_sales', 'editcountsheet', array('id' => '#title#')); ?>'},
 				<?php } if (gatekeeper('com_sales/approvecountsheet')) { ?>
 				{type: 'button', text: 'Review', extra_class: 'icon picon_16x16_stock_generic_stock_mark', url: '<?php echo pines_url('com_sales', 'approvecountsheet', array('id' => '#title#')); ?>'},
+				<?php } if (gatekeeper('com_sales/assigncountsheet')) { ?>
+				{type: 'button', text: 'Assign', extra_class: 'icon picon_16x16_emblems_emblem-shared', selection_optional: true, click: function(e, rows){
+					assign_dialog.dialog("open");
+				}},
 				<?php } ?>
-				//{type: 'button', text: 'E-Mail', extra_class: 'icon picon_16x16_actions_mail-message-new', multi_select: true, url: 'mailto:#col_2#', delimiter: ','},
 				{type: 'separator'},
 				<?php if (gatekeeper('com_sales/deletecountsheet')) { ?>
 				{type: 'button', text: 'Delete', extra_class: 'icon picon_16x16_actions_edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_sales', 'deletecountsheet', array('id' => '#title#')); ?>', delimiter: ','},
@@ -56,6 +131,34 @@ $this->title = 'Countsheets';
 		var cur_options = $.extend(cur_defaults, cur_state);
 		$("#countsheet_grid").pgrid(cur_options);
 	});
+	
+	function employee_search(search_string) {
+		var loader;
+		$.ajax({
+			url: "<?php echo pines_url("com_hrm", "employeesearch"); ?>",
+			type: "POST",
+			dataType: "json",
+			data: {"q": search_string},
+			beforeSend: function(){
+				loader = pines.alert('Searching for employees...', 'Employee Search', 'icon picon_16x16_animations_throbber', {pnotify_hide: false, pnotify_history: false});
+				employee_table.pgrid_get_all_rows().pgrid_delete();
+			},
+			complete: function(){
+				loader.pnotify_remove();
+			},
+			error: function(XMLHttpRequest, textStatus){
+				pines.error("An error occured while trying to find employee:\n"+XMLHttpRequest.status+": "+textStatus);
+			},
+			success: function(data){
+				if (!data) {
+					alert("No employees were found that matched the query.");
+					return;
+				}
+				employee_dialog.dialog('open');
+				employee_table.pgrid_add(data);
+			}
+		});
+	}
 
 	// ]]>
 </script>
@@ -99,3 +202,41 @@ $this->title = 'Countsheets';
 	<?php } ?>
 	</tbody>
 </table>
+<div id="assign_dialog" title="Assign a Countsheet" style="overflow: hidden; display: none;">
+	<form class="pform" method="post" action="">
+		<div class="element header">Assign the Countsheet to</div>
+		<div class="element">
+			<input class="field ui-widget-content" type="text" id="employee" name="employee" size="24" onfocus="this.blur();" value="No Employee Selected" /><br />
+			<input class="field ui-widget-content" type="text" id="employee_search" name="employee_search" size="24" style="height: 22px;" /><button type="button" id="employee_search_button"><span class="picon_16x16_actions_system-search" style="padding-left: 16px; background-repeat: no-repeat;"></span></button>
+		</div>
+	</form>
+</div>
+<div id="employee_dialog" title="Pick an Employee">
+	<table id="employee_table">
+		<thead>
+			<tr>
+				<th>First Name</th>
+				<th>Last Name</th>
+				<th>Job Title</th>
+				<th>Email</th>
+				<th>City</th>
+				<th>State</th>
+				<th>Zip</th>
+				<th>Cell Phone</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>----------------------</td>
+				<td>----------------------</td>
+				<td>----------------------</td>
+				<td>----------------------</td>
+				<td>----------------------</td>
+				<td>----------------------</td>
+				<td>----------------------</td>
+				<td>----------------------</td>
+			</tr>
+		</tbody>
+	</table>
+	<br class="spacer" />
+</div>

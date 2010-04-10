@@ -75,6 +75,18 @@ class com_sales_countsheet extends entity {
 		return $module;
 	}
 
+	private function sort_stock_by_location_serial($a, $b) {
+		if ($a->location->guid == $this->gid && $b->location->guid != $this->gid)
+			return -1;
+		if ($a->location->guid != $this->gid && $b->location->guid == $this->gid)
+			return 1;
+		if (isset($a->serial) && !isset($b->serial))
+			return -1;
+		if (!isset($a->serial) && isset($b->serial))
+			return 1;
+		return 0;
+	}
+
 	/**
 	 * Print a form to review the countsheet.
 	 *
@@ -111,61 +123,60 @@ class com_sales_countsheet extends entity {
 		$sold_status['sold_at_store'] = 'sold';
 
 		$in_stock = array('available', 'unavailable', 'sold_pending');
-		$module->missing = $module->matched = $module->sold = $module->extra = array();
+		$module->missing = $module->matched = $module->potential = $module->extra = array();
 		// Grab all stock items for this location's inventory.
 		$expected_stock = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'stock'), 'class' => com_sales_stock));
-		foreach ($expected_stock as $key => $checklist) {
-			$in_store = ($checklist->location->guid == $this->gid) ? true : false;
+		usort($expected_stock, array($this, 'sort_stock_by_location_serial'));
+		foreach ($expected_stock as $key => $cur_stock_entry) {
+			$in_store = ($cur_stock_entry->location->guid == $this->gid);
 			foreach ($this->entries as $itemkey => $item) {
-				if (!isset($module->sold[$item])) {
-					$module->sold[$item] = array();
-					$module->sold[$item]['name'] = $item;
-					$module->sold[$item]['found'] = false;
-					$module->sold[$item]['closest'] = array();
-					$module->sold[$item]['entries'] = array();
+				if (!isset($module->potential[$item])) {
+					$module->potential[$item] = array(
+						'name' => $item,
+						'found' => false,
+						'closest' => array(),
+						'entries' => array()
+					);
 				}
-				if ($checklist->serial == $item ||
-					($checklist->product->sku == $item && !isset($checklist->serial))) {
-					if (in_array($checklist->status, $in_stock)) {
-						// The serialized item is on the checklist & countsheet, its a MATCH.
-						$module->matched[] = $checklist;
+				if ($cur_stock_entry->serial == $item || ($cur_stock_entry->product->sku == $item && !isset($cur_stock_entry->serial))) {
+					// The item is a serial match; or it is a sku match, and the entry is not serialized.
+					if ($in_store) {
+						// The item is found.
+						$module->matched[] = $cur_stock_entry;
 						unset($expected_stock[$key]);
 						unset($this->entries[$itemkey]);
-						unset($module->sold[$item]);
+						// Clear out the 'potential' entry for this item string.
+						if (!$module->potential[$item]['found'])
+							unset($module->potential[$item]);
 						break;
-					} else {
-						// A serialized item is not on the checklist but has a serial matching the search string
-						if (!in_array($checklist, $module->sold[$item]['entries'])) {
-							$module->sold[$item]['found'] = true;
-							$module->sold[$item]['entries'][] = $checklist;
-						}
+					} elseif (!$cur_stock_entry->in_array($module->potential[$item]['entries'])) {
+						// The item is not in the location but matches the search string.
+						$module->potential[$item]['found'] = true;
+						$module->potential[$item]['entries'][] = $cur_stock_entry;
 					}
-				} else if ($checklist->product->sku == $item && isset($checklist->serial)) {
-					// A serialized item is not on the checklist but has a SKU matching the search string.
-					if (!in_array($checklist, $module->sold[$item]['closest']) && $in_store) {
-						$module->sold[$item]['found'] = true;
-						$module->sold[$item]['closest'][] = $checklist;
-					} else if (!in_array($checklist, $module->sold[$item]['entries']) && !$in_store) {
-						$module->sold[$item]['found'] = true;
-						$module->sold[$item]['entries'][] = $checklist;
-					} 
+				} elseif ($cur_stock_entry->product->sku == $item && isset($cur_stock_entry->serial)) {
+					// A serialized item has a SKU matching the search string.
+					$module->potential[$item]['found'] = true;
+					if ($in_store) {
+						if (!$cur_stock_entry->in_array($module->potential[$item]['closest']))
+							$module->potential[$item]['closest'][] = $cur_stock_entry;
+					} else {
+						if (!$cur_stock_entry->in_array($module->potential[$item]['entries']))
+							$module->potential[$item]['entries'][] = $cur_stock_entry;
+					}
 				}
 			}
-			if (isset($expected_stock[$key]) && in_array($checklist->status, $in_stock) && $in_store) {
-				// An item from the checklist is missing on the countsheet.
-				if (isset($checklist->serial)) {
-					$module->missing[] = $checklist;
-				} else {
-					$module->missing[] = $checklist;
-				}
+			if ($in_store && isset($expected_stock[$key])) {
+				// An stock entry at this location is missing on the countsheet.
+				$module->missing[] = $cur_stock_entry;
 			}
 		}
 		// See if any of the extraneous items matched any sold items in the inventory.
 		foreach ($this->entries as $item) {
-			if ($module->sold[$item]['found'] == false) {
-				// There were no potential matches for this unidentifed search string.
+			if ($module->potential[$item]['found'] == false) {
+				// There were no potential matches for this search string.
 				$module->extra[] = $item;
-				unset($module->sold[$item]);
+				unset($module->potential[$item]);
 			}
 		}
 		return $module;

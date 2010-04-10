@@ -14,17 +14,41 @@ $this->title = 'Countsheets';
 ?>
 <script type="text/javascript">
 	// <![CDATA[
-	var employee_search_box;
-	var employee_search_button;
-	var employee_table;
-	var employee_dialog;
 	$(function(){
+		var employee_search = function(search_string){
+			var loader;
+			$.ajax({
+				url: "<?php echo pines_url("com_hrm", "employeesearch"); ?>",
+				type: "POST",
+				dataType: "json",
+				data: {"q": search_string},
+				beforeSend: function(){
+					loader = pines.alert('Searching for employees...', 'Employee Search', 'icon picon_16x16_animations_throbber', {pnotify_hide: false, pnotify_history: false});
+					employee_table.pgrid_get_all_rows().pgrid_delete();
+				},
+				complete: function(){
+					loader.pnotify_remove();
+				},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured while trying to find employee:\n"+XMLHttpRequest.status+": "+textStatus);
+				},
+				success: function(data){
+					if (!data) {
+						alert("No employees were found that matched the query.");
+						return;
+					}
+					employee_dialog.dialog('open');
+					employee_table.pgrid_add(data);
+				}
+			});
+		};
+
 		var assign_dialog = $("#assign_dialog");
-		employee_box = $("#employee");
-		employee_search_box = $("#employee_search");
-		employee_search_button = $("#employee_search_button");
-		employee_table = $("#employee_table");
-		employee_dialog = $("#employee_dialog");
+		var employee_box = $("#employee");
+		var employee_search_box = $("#employee_search");
+		var employee_search_button = $("#employee_search_button");
+		var employee_table = $("#employee_table");
+		var employee_dialog = $("#employee_dialog");
 
 		assign_dialog.find("form").submit(function(){
 			assign_dialog.dialog('option', 'buttons').Done();
@@ -34,6 +58,7 @@ $this->title = 'Countsheets';
 			bgiframe: true,
 			autoOpen: false,
 			modal: true,
+			width: "350px",
 			buttons: {
 				"Done": function(){
 					var assign_to = assign_dialog.find(":input[name=employee]").val();
@@ -60,7 +85,7 @@ $this->title = 'Countsheets';
 		});
 
 		employee_table.pgrid({
-			pgrid_paginate: true,
+			pgrid_paginate: false,
 			pgrid_multi_select: false,
 			pgrid_double_click: function(){
 				employee_dialog.dialog('option', 'buttons').Done();
@@ -131,35 +156,6 @@ $this->title = 'Countsheets';
 		var cur_options = $.extend(cur_defaults, cur_state);
 		$("#countsheet_grid").pgrid(cur_options);
 	});
-	
-	function employee_search(search_string) {
-		var loader;
-		$.ajax({
-			url: "<?php echo pines_url("com_hrm", "employeesearch"); ?>",
-			type: "POST",
-			dataType: "json",
-			data: {"q": search_string},
-			beforeSend: function(){
-				loader = pines.alert('Searching for employees...', 'Employee Search', 'icon picon_16x16_animations_throbber', {pnotify_hide: false, pnotify_history: false});
-				employee_table.pgrid_get_all_rows().pgrid_delete();
-			},
-			complete: function(){
-				loader.pnotify_remove();
-			},
-			error: function(XMLHttpRequest, textStatus){
-				pines.error("An error occured while trying to find employee:\n"+XMLHttpRequest.status+": "+textStatus);
-			},
-			success: function(data){
-				if (!data) {
-					alert("No employees were found that matched the query.");
-					return;
-				}
-				employee_dialog.dialog('open');
-				employee_table.pgrid_add(data);
-			}
-		});
-	}
-
 	// ]]>
 </script>
 <table id="countsheet_grid">
@@ -202,14 +198,9 @@ $this->title = 'Countsheets';
 	<?php } ?>
 	</tbody>
 </table>
-<div id="assign_dialog" title="Assign a Countsheet" style="overflow: hidden; display: none;">
-	<form class="pform" method="post" action="">
-		<div class="element header">Assign the Countsheet to</div>
-		<div class="element">
-			<input class="field ui-widget-content" type="text" id="employee" name="employee" size="24" onfocus="this.blur();" value="No Employee Selected" /><br />
-			<input class="field ui-widget-content" type="text" id="employee_search" name="employee_search" size="24" style="height: 22px;" /><button type="button" id="employee_search_button"><span class="picon_16x16_actions_system-search" style="padding-left: 16px; background-repeat: no-repeat;"></span></button>
-		</div>
-	</form>
+<div id="assign_dialog" title="Assign a Countsheet" style="display: none;">
+	<input class="field ui-widget-content" type="text" id="employee" name="employee" size="24" onfocus="this.blur();" value="No Employee Selected" /><br />
+	<input class="field ui-widget-content" type="text" id="employee_search" name="employee_search" size="24" /><button type="button" id="employee_search_button"><span class="picon_16x16_actions_system-search" style="padding-left: 16px; background-repeat: no-repeat;"> Search</span></button>
 </div>
 <div id="employee_dialog" title="Pick an Employee">
 	<table id="employee_table">

@@ -20,6 +20,9 @@ if (isset($this->entity->guid))
 		border: 1px dotted red;
 		color: red;
 	}
+	#countsheet_details fieldset.missing legend {
+		font-weight: bold;
+	}
 	#countsheet_details fieldset.matched {
 		border: 1px dashed green;
 		color: green;
@@ -28,81 +31,87 @@ if (isset($this->entity->guid))
 		border: 1px dotted chocolate;
 		color: chocolate;
 	}
-	#countsheet_details fieldset.sold hr {
-		border-top: 1px dashed chocolate;
-		border-bottom: 0px;
+	#countsheet_details fieldset.sold div.element.heading {
+		border-bottom: 1px dotted chocolate;
 	}
 	/* ]]> */
 </style>
 <form class="pform" method="post" id="countsheet_details" action="<?php echo pines_url('com_sales', 'savecountsheetstatus'); ?>">
-	<?php if (count($this->missing) > 0) { ?>
+	<?php if ($this->missing) { ?>
 	<fieldset class="group missing">
 		<legend>Missing Items</legend>
-		<?php foreach ($this->missing as $cur_missing) { ?>
-		<div class="element-full-width">
-			<span class="label"><?php echo $cur_missing->serial ? '#'.$cur_missing->serial.' - '.$cur_missing->product->name.' (SKU:['.$cur_missing->product->sku.'])' : $cur_missing->product->name.' (SKU:['.$cur_missing->product->sku.'])'; ?></span>
-		</div>
-		<?php } ?>
+		<ul style="list-style-type: circle;">
+			<?php foreach ($this->missing as $cur_entry) { ?>
+			<li><?php echo "{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku})"; ?></li>
+			<?php } ?>
+		</ul>
 	</fieldset>
-	<?php } if (count($this->matched) > 0) { ?>
+	<?php } if ($this->matched) { ?>
 	<fieldset class="group matched">
 		<legend>Matched Items</legend>
-		<?php foreach ($this->matched as $cur_matched) { ?>
-		<div class="element-full-width">
-			<span class="label"><?php echo $cur_matched->serial ? '#'.$cur_matched->serial.' - '.$cur_matched->product->name.' (SKU:['.$cur_matched->product->sku.'])' : $cur_matched->product->name.' (SKU:['.$cur_matched->product->sku.'])'; ?></span>
-		</div>
-		<?php } ?>
+		<ul style="list-style-type: square;">
+			<?php foreach ($this->matched as $cur_entry) { ?>
+			<li><?php echo "{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku})"; ?></li>
+			<?php } ?>
+		</ul>
 	</fieldset>
-	<?php } if (count($this->sold) > 0) { ?>
+	<?php } if ($this->potential) { ?>
 	<fieldset class="group sold">
 		<legend>Potential Matches</legend>
-		<?php foreach ($this->sold as $cur_sold) { ?>
-		<div class="element-full-width">
-			<span class="label">
-				Items Matching "<strong><?php echo $cur_sold['name']; ?></strong>":<hr/>
-				<ul style="list-style-type: circle;">
-				<?php foreach ($cur_sold['closest'] as $cur_closest) {
-						$likely_match = $cur_closest->serial ? '#'.$cur_closest->serial.' - '.$cur_closest->product->name.' (SKU:[<strong>'.$cur_closest->product->sku.'</strong>])' : $cur_closest->product->name.' (SKU:['.$cur_closest->product->sku.'])';
-						echo '<li>'.$likely_match.'</li>';
-					}
-				?>
-				</ul>
-				<ul style="list-style-type: square;">
-				<?php $checked_sales = array();
-					foreach ($cur_sold['entries'] as $cur_entry) {
-						$sales = $pines->entity_manager->get_entities(array('ref' => array('products' => $cur_entry->product), 'data' => array('gid' => $this->entity->gid), 'tags' => array('com_sales', 'sale'), 'class' => com_sales_sale));
-						foreach ($sales as $cur_sale) {
-							if (in_array($cur_sale->guid, $checked_sales))
+		<?php foreach ($this->potential as $cur_entry) { ?>
+			<?php if ($cur_entry['closest']) { ?>
+			<div class="element heading">
+				<p>Items Matching "<strong><?php echo $cur_entry['name']; ?></strong>" in Location</p>
+			</div>
+			<ul style="list-style-type: disc;">
+				<?php foreach ($cur_entry['closest'] as $cur_closest) { ?>
+				<li><?php echo "{$cur_closest->product->name} (".(isset($cur_closest->serial) ? "Serial: {$cur_closest->serial}, " : '')."SKU: {$cur_closest->product->sku})"; ?></li>
+				<?php } ?>
+			</ul>
+			<?php } if ($cur_entry['entries']) { ?>
+			<div class="element heading">
+				<p>Items Matching "<strong><?php echo $cur_entry['name']; ?></strong>" Not in Location</p>
+			</div>
+			<ul style="list-style-type: disc;">
+				<?php foreach ($cur_entry['entries'] as $cur_entry) {
+					switch ($cur_entry->status) {
+						case 'sold_at_store':
+							$txs = $pines->entity_manager->get_entities(array('ref' => array('stock' => $cur_entry), 'data' => array('type' => 'removed'), 'tags' => array('com_sales', 'transaction', 'stock_tx'), 'class' => com_sales_tx));
+							if (!$txs) {
+								echo "<li>{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku}, Sold at an unknown store)</li>";
 								continue;
-							$checked_sales[] = $cur_sale->guid;
-							$serial_match = false;
-							foreach ($cur_sale->products as $cur_product) {
-								if ($cur_product['serial'] == $cur_matched->serial)
-									$serial_match = true;
 							}
-							if ($serial_match) {
-								$potential_match = '#'.$cur_entry->serial.' - '.$cur_entry->product->name.' (SKU:['.$cur_entry->product->sku.'])';
-							} else {
-								$potential_match = $cur_entry->product->name.' (SKU:['.$cur_entry->product->sku.'])';
+							$tx = end($txs);
+							unset($txs);
+							echo "<li>{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku}, Sold on ".pines_date_format($tx->p_cdate)." from: {$tx->old_location->name} [{$tx->old_location->groupname}])</li>";
+							break;
+						case 'sold_pending':
+							$txs = $pines->entity_manager->get_entities(array('ref' => array('stock' => $cur_entry), 'data' => array('type' => 'removed'), 'tags' => array('com_sales', 'transaction', 'stock_tx'), 'class' => com_sales_tx));
+							if (!$txs) {
+								echo "<li>{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku}, Sold and awaiting pickup at an unkown store)</li>";
+								continue;
 							}
-							echo '<li>'.$potential_match.' was sold on '.pines_date_format($cur_sale->p_cdate).' to '.$cur_sale->customer->name.'</li>';
-						}
+							$tx = end($txs);
+							unset($txs);
+							echo "<li>{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku}, Sold on ".pines_date_format($tx->p_cdate)." and awaiting pickup from: {$cur_entry->location->name} [{$cur_entry->location->groupname}])</li>";
+							break;
+						default:
+							echo "<li>{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku}, Location: Location: {$cur_entry->location->name} [{$cur_entry->location->groupname}])</li>";
+							break;
 					}
-					unset($checked_sales);
-				?>
-				</ul>
-			</span>
-		</div>
+				} ?>
+			</ul>
+			<?php } ?>
 		<?php } ?>
 	</fieldset>
-	<?php } if (count($this->extra) > 0) { ?>
+	<?php } if ($this->extra) { ?>
 	<fieldset class="group ui-priority-secondary">
 		<legend>Extraneous Items</legend>
-		<?php foreach ($this->extra as $cur_extra) { ?>
-		<div class="element-full-width">
-			<span class="label">"<?php echo $cur_extra; ?>" has no record in this location's inventory</span>
-		</div>
-		<?php } ?>
+		<ul style="list-style-type: circle;">
+			<?php foreach ($this->extra as $cur_entry) { ?>
+			<li>"<?php echo $cur_entry; ?>" has no record in this location's inventory.</li>
+			<?php } ?>
+		</ul>
 	</fieldset>
 	<?php } if (!empty($this->entity->comments)) {?>
 	<div class="element">

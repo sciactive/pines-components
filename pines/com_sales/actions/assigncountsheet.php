@@ -20,7 +20,8 @@ if (preg_match('/^\d+/', $_REQUEST['employee'])) {
 		$employee = null;
 }
 
-if (!isset($employee) || isset($employee->user_account->guid)) {
+// Todo: Don't use employees. Use users.
+if (!isset($employee) || !isset($employee->user_account->guid)) {
 	pines_error('Requested employee id is not accessible.');
 	$pines->com_sales->list_countsheets();
 	return;

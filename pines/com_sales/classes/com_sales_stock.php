@@ -63,7 +63,7 @@ class com_sales_stock extends entity {
 		// Iterate through all the transfers.
 		foreach ($entities as $cur_transfer) {
 			// If the transfer isn't for our destination, move on.
-			if (!$_SESSION['user']->ingroup($cur_transfer->destination))
+			if (!$_SESSION['user']->in_group($cur_transfer->destination))
 				continue;
 			if (!is_array($cur_transfer->stock))
 				continue;
@@ -95,7 +95,7 @@ class com_sales_stock extends entity {
 		// Iterate through all the POs.
 		foreach ($entities as $cur_po) {
 			// If the PO isn't for our destination, move on.
-			if (!$_SESSION['user']->ingroup($cur_po->destination))
+			if (!$_SESSION['user']->in_group($cur_po->destination))
 				continue;
 			// If the PO has no products, move on.
 			if (!is_array($cur_po->products))

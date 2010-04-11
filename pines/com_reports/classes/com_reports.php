@@ -61,7 +61,7 @@ class com_reports extends component {
 		if (is_null($user)) {
 			$module->employees = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
 			foreach ($module->employees as $key => &$cur_employee) {
-				if (!$cur_employee->user_account || !($cur_employee->user_account->ingroup($location) || $cur_employee->user_account->is_descendent($location)))
+				if (!$cur_employee->user_account || !($cur_employee->user_account->in_group($location) || $cur_employee->user_account->is_descendent($location)))
 					unset($module->employees[$key]);
 			}
 		} else {

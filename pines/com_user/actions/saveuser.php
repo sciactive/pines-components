@@ -81,9 +81,9 @@ if ( gatekeeper('com_user/assigngroup') ) {
 		if ($cur_group->is($group))
 			$user->group = $group;
 		if (is_array($groups) && in_array($cur_group->guid, $groups)) {
-			$user->addgroup($cur_group);
+			$user->add_group($cur_group);
 		} else {
-			$user->delgroup($cur_group);
+			$user->del_group($cur_group);
 		}
 	}
 	if ($_REQUEST['group'] == 'null')

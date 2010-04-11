@@ -84,7 +84,7 @@ class user extends able_object implements user_interface {
 		return $module;
 	}
 
-	public function addgroup($group) {
+	public function add_group($group) {
 		if ( !$group->in_array($this->groups) ) {
 			$this->groups[] = $group;
 			return $this->groups;
@@ -97,7 +97,7 @@ class user extends able_object implements user_interface {
 		return ($this->password == md5($password.$this->salt));
 	}
 
-	public function delgroup($group) {
+	public function del_group($group) {
 		if ( $group->in_array($this->groups) ) {
 			foreach ($this->groups as $key => $cur_group) {
 				if ($group->is($cur_group))
@@ -109,7 +109,7 @@ class user extends able_object implements user_interface {
 		}
 	}
 
-	public function ingroup($group = null) {
+	public function in_group($group = null) {
 		if (is_numeric($group))
 			$group = group::factory((int) $group);
 		if (is_null($group->guid))

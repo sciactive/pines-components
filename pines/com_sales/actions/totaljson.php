@@ -63,7 +63,7 @@ foreach ($tx_array as $key => &$cur_tx) {
 		$cur_tx->p_cdate <= $date_end &&
 		(
 			$location == 'all' ||
-			($location == 'current' && $_SESSION['user']->ingroup($cur_tx->gid)) ||
+			($location == 'current' && $_SESSION['user']->in_group($cur_tx->gid)) ||
 			$location == $cur_tx->gid
 		)
 		) {

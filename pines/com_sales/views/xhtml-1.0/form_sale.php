@@ -49,7 +49,7 @@ $this->note = 'Use this form to edit a sale.';
 		$taxes_flat = array();
 		foreach ($this->tax_fees as $cur_tax_fee) {
 			foreach($cur_tax_fee->locations as $cur_location) {
-				if (!$_SESSION['user']->ingroup($cur_location))
+				if (!$_SESSION['user']->in_group($cur_location))
 					continue;
 				if ($cur_tax_fee->type == 'percentage') {
 					$taxes_percent[] = array('name' => $cur_tax_fee->name, 'rate' => $cur_tax_fee->rate);
@@ -735,7 +735,7 @@ $this->note = 'Use this form to edit a sale.';
 		<?php if ($pines->config->com_sales->cash_drawer &&
 					(
 						$pines->config->com_sales->cash_drawer_group == 0 ||
-						(isset($_SESSION['user']) && $_SESSION['user']->ingroup($pines->config->com_sales->cash_drawer_group))
+						(isset($_SESSION['user']) && $_SESSION['user']->in_group($pines->config->com_sales->cash_drawer_group))
 					)
 				) { ?>
 		function run_drawer() {

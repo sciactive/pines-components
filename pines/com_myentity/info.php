@@ -1,9 +1,9 @@
 <?php
 /**
- * com_entity's information.
+ * com_myentity's information.
  *
  * @package Pines
- * @subpackage com_entity
+ * @subpackage com_myentity
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin

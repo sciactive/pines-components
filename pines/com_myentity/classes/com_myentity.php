@@ -1,9 +1,9 @@
 <?php
 /**
- * com_entity class.
+ * com_myentity class.
  *
  * @package Pines
- * @subpackage com_entity
+ * @subpackage com_myentity
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -12,14 +12,14 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * com_entity main class.
+ * com_myentity main class.
  *
  * Provides a MySQL based entity manager for Pines.
  *
  * @package Pines
- * @subpackage com_entity
+ * @subpackage com_myentity
  */
-class com_entity extends component implements entity_manager_interface {
+class com_myentity extends component implements entity_manager_interface {
 	public function delete_entity(&$entity) {
 		$return = $this->delete_entity_by_id($entity->guid);
 		if ( $return )
@@ -29,7 +29,7 @@ class com_entity extends component implements entity_manager_interface {
 
 	public function delete_entity_by_id($guid) {
 		global $pines;
-		$query = sprintf("DELETE e, d FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid`=d.`guid` WHERE e.`guid`=%u;",
+		$query = sprintf("DELETE e, d FROM `%scom_myentity_entities` e LEFT JOIN `%scom_myentity_data` d ON e.`guid`=d.`guid` WHERE e.`guid`=%u;",
 			$pines->config->com_mysql->prefix,
 			$pines->config->com_mysql->prefix,
 			(int) $guid);
@@ -45,7 +45,7 @@ class com_entity extends component implements entity_manager_interface {
 		if (!$name)
 			return false;
 		global $pines;
-		$query = sprintf("DELETE FROM `%scom_entity_uids` WHERE `name`='%s';",
+		$query = sprintf("DELETE FROM `%scom_myentity_uids` WHERE `name`='%s';",
 			$pines->config->com_mysql->prefix,
 			mysql_real_escape_string($name, $pines->com_mysql->link));
 		if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
@@ -96,7 +96,7 @@ class com_entity extends component implements entity_manager_interface {
 		if (!$fhandle = fopen($filename, 'w'))
 			return false;
 		fwrite($fhandle, "# Pines Entity Export\n");
-		fwrite($fhandle, "# com_entity version {$pines->info->com_entity->version}\n");
+		fwrite($fhandle, "# com_myentity version {$pines->info->com_myentity->version}\n");
 		fwrite($fhandle, "# sciactive.com\n");
 		fwrite($fhandle, "#\n");
 		fwrite($fhandle, "# Generation Time: ".date('r')."\n");
@@ -107,7 +107,7 @@ class com_entity extends component implements entity_manager_interface {
 		fwrite($fhandle, "#\n\n");
 
 		// Export UIDs.
-		$query = sprintf("SELECT * FROM `%scom_entity_uids`;",
+		$query = sprintf("SELECT * FROM `%scom_myentity_uids`;",
 			$pines->config->com_mysql->prefix,
 			$pines->config->com_mysql->prefix);
 		if ( !($result = mysql_query($query, $pines->com_mysql->link)) ) {
@@ -129,7 +129,7 @@ class com_entity extends component implements entity_manager_interface {
 		fwrite($fhandle, "#\n\n");
 
 		// Export entities.
-		$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid`=d.`guid` ORDER BY e.`guid`;",
+		$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_myentity_entities` e LEFT JOIN `%scom_myentity_data` d ON e.`guid`=d.`guid` ORDER BY e.`guid`;",
 			$pines->config->com_mysql->prefix,
 			$pines->config->com_mysql->prefix);
 		if ( !($result = mysql_query($query, $pines->com_mysql->link)) ) {
@@ -165,7 +165,7 @@ class com_entity extends component implements entity_manager_interface {
 		// End all output buffering.
 		while (@ob_end_clean());
 		echo "# Pines Entity Export\n";
-		echo "# com_entity version {$pines->info->com_entity->version}\n";
+		echo "# com_myentity version {$pines->info->com_myentity->version}\n";
 		echo "# sciactive.com\n";
 		echo "#\n";
 		echo "# Generation Time: ".date('r')."\n";
@@ -176,7 +176,7 @@ class com_entity extends component implements entity_manager_interface {
 		echo "#\n\n";
 
 		// Export UIDs.
-		$query = sprintf("SELECT * FROM `%scom_entity_uids`;",
+		$query = sprintf("SELECT * FROM `%scom_myentity_uids`;",
 			$pines->config->com_mysql->prefix,
 			$pines->config->com_mysql->prefix);
 		if ( !($result = mysql_query($query, $pines->com_mysql->link)) ) {
@@ -198,7 +198,7 @@ class com_entity extends component implements entity_manager_interface {
 		echo "#\n\n";
 
 		// Export entities.
-		$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid`=d.`guid` ORDER BY e.`guid`;",
+		$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_myentity_entities` e LEFT JOIN `%scom_myentity_data` d ON e.`guid`=d.`guid` ORDER BY e.`guid`;",
 			$pines->config->com_mysql->prefix,
 			$pines->config->com_mysql->prefix);
 		if ( !($result = mysql_query($query, $pines->com_mysql->link)) ) {
@@ -301,12 +301,12 @@ class com_entity extends component implements entity_manager_interface {
 		}
 
 		if ($query_parts) {
-			$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid`=d.`guid` HAVING %s ORDER BY e.`guid`;",
+			$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_myentity_entities` e LEFT JOIN `%scom_myentity_data` d ON e.`guid`=d.`guid` HAVING %s ORDER BY e.`guid`;",
 				$pines->config->com_mysql->prefix,
 				$pines->config->com_mysql->prefix,
 				'('.implode(') AND (', $query_parts).')');
 		} else {
-			$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_entity_entities` e LEFT JOIN `%scom_entity_data` d ON e.`guid`=d.`guid` ORDER BY e.`guid`;",
+			$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_myentity_entities` e LEFT JOIN `%scom_myentity_data` d ON e.`guid`=d.`guid` ORDER BY e.`guid`;",
 				$pines->config->com_mysql->prefix,
 				$pines->config->com_mysql->prefix);
 		}
@@ -541,7 +541,7 @@ class com_entity extends component implements entity_manager_interface {
 		if (!$name)
 			return null;
 		global $pines;
-		$query = sprintf("SELECT `cur_uid` FROM `%scom_entity_uids` WHERE `name`='%s';",
+		$query = sprintf("SELECT `cur_uid` FROM `%scom_myentity_uids` WHERE `name`='%s';",
 			$pines->config->com_mysql->prefix,
 			mysql_real_escape_string($name, $pines->com_mysql->link));
 		if ( !($result = mysql_query($query, $pines->com_mysql->link)) ) {
@@ -573,7 +573,7 @@ class com_entity extends component implements entity_manager_interface {
 			if (preg_match('/^\s*{(\d+)}\[([\w,]+)\]\s*$/', $line, $matches)) {
 				// Save the current entity.
 				if ($guid) {
-					$query = sprintf("REPLACE INTO `%scom_entity_entities` (`guid`, `tags`, `varlist`) VALUES (%u, '%s', '%s');",
+					$query = sprintf("REPLACE INTO `%scom_myentity_entities` (`guid`, `tags`, `varlist`) VALUES (%u, '%s', '%s');",
 						$pines->config->com_mysql->prefix,
 						$guid,
 						mysql_real_escape_string(','.$tags.',', $pines->com_mysql->link),
@@ -583,7 +583,7 @@ class com_entity extends component implements entity_manager_interface {
 							pines_error('Query failed: ' . mysql_error());
 						return false;
 					}
-					$query = sprintf("DELETE FROM `%scom_entity_data` WHERE `guid`=%u;",
+					$query = sprintf("DELETE FROM `%scom_myentity_data` WHERE `guid`=%u;",
 						$pines->config->com_mysql->prefix,
 						$guid);
 					if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
@@ -592,7 +592,7 @@ class com_entity extends component implements entity_manager_interface {
 						return false;
 					}
 					if ($data) {
-						$query = "INSERT INTO `{$pines->config->com_mysql->prefix}com_entity_data` (`guid`, `name`, `value`) VALUES ";
+						$query = "INSERT INTO `{$pines->config->com_mysql->prefix}com_myentity_data` (`guid`, `name`, `value`) VALUES ";
 						foreach ($data as $name => $value) {
 							$query .= sprintf("(%u, '%s', '%s'),",
 								$guid,
@@ -619,7 +619,7 @@ class com_entity extends component implements entity_manager_interface {
 					$data[$matches[1]] = json_decode($matches[2]);
 			} elseif (preg_match('/^\s*<([^>]+)>\[(\d+)\]\s*$/', $line, $matches)) {
 				// Add the UID.
-				$query = sprintf("INSERT INTO `%scom_entity_uids` (`name`, `cur_uid`) VALUES ('%s', %u) ON DUPLICATE KEY UPDATE `cur_uid`=%u;",
+				$query = sprintf("INSERT INTO `%scom_myentity_uids` (`name`, `cur_uid`) VALUES ('%s', %u) ON DUPLICATE KEY UPDATE `cur_uid`=%u;",
 					$pines->config->com_mysql->prefix,
 					mysql_real_escape_string($matches[1], $pines->com_mysql->link),
 					(int) $matches[2],
@@ -634,7 +634,7 @@ class com_entity extends component implements entity_manager_interface {
 		}
 		// Save the last entity.
 		if ($guid) {
-			$query = sprintf("REPLACE INTO `%scom_entity_entities` (`guid`, `tags`, `varlist`) VALUES (%u, '%s', '%s');",
+			$query = sprintf("REPLACE INTO `%scom_myentity_entities` (`guid`, `tags`, `varlist`) VALUES (%u, '%s', '%s');",
 				$pines->config->com_mysql->prefix,
 				$guid,
 				mysql_real_escape_string(','.$tags.',', $pines->com_mysql->link),
@@ -644,7 +644,7 @@ class com_entity extends component implements entity_manager_interface {
 					pines_error('Query failed: ' . mysql_error());
 				return false;
 			}
-			$query = sprintf("DELETE FROM `%scom_entity_data` WHERE `guid`=%u;",
+			$query = sprintf("DELETE FROM `%scom_myentity_data` WHERE `guid`=%u;",
 				$pines->config->com_mysql->prefix,
 				$guid);
 			if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
@@ -653,7 +653,7 @@ class com_entity extends component implements entity_manager_interface {
 				return false;
 			}
 			if ($data) {
-				$query = "INSERT INTO `{$pines->config->com_mysql->prefix}com_entity_data` (`guid`, `name`, `value`) VALUES ";
+				$query = "INSERT INTO `{$pines->config->com_mysql->prefix}com_myentity_data` (`guid`, `name`, `value`) VALUES ";
 				foreach ($data as $name => $value) {
 					$query .= sprintf("(%u, '%s', '%s'),",
 						$guid,
@@ -675,7 +675,7 @@ class com_entity extends component implements entity_manager_interface {
 		if (!$name)
 			return null;
 		global $pines;
-		$query = sprintf("SELECT GET_LOCK('%scom_entity_uids_%s', 10);",
+		$query = sprintf("SELECT GET_LOCK('%scom_myentity_uids_%s', 10);",
 			$pines->config->com_mysql->prefix,
 			mysql_real_escape_string($name, $pines->com_mysql->link));
 		if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
@@ -683,7 +683,7 @@ class com_entity extends component implements entity_manager_interface {
 				pines_error('Query failed: ' . mysql_error());
 			return null;
 		}
-		$query = sprintf("INSERT INTO `%scom_entity_uids` (`name`, `cur_uid`) VALUES ('%s', 1) ON DUPLICATE KEY UPDATE `cur_uid`=`cur_uid`+1;",
+		$query = sprintf("INSERT INTO `%scom_myentity_uids` (`name`, `cur_uid`) VALUES ('%s', 1) ON DUPLICATE KEY UPDATE `cur_uid`=`cur_uid`+1;",
 			$pines->config->com_mysql->prefix,
 			mysql_real_escape_string($name, $pines->com_mysql->link));
 		if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
@@ -691,7 +691,7 @@ class com_entity extends component implements entity_manager_interface {
 				pines_error('Query failed: ' . mysql_error());
 			return null;
 		}
-		$query = sprintf("SELECT `cur_uid` FROM `%scom_entity_uids` WHERE `name`='%s';",
+		$query = sprintf("SELECT `cur_uid` FROM `%scom_myentity_uids` WHERE `name`='%s';",
 			$pines->config->com_mysql->prefix,
 			mysql_real_escape_string($name, $pines->com_mysql->link));
 		if ( !($result = mysql_query($query, $pines->com_mysql->link)) ) {
@@ -701,7 +701,7 @@ class com_entity extends component implements entity_manager_interface {
 		}
 		$row = mysql_fetch_row($result);
 		mysql_free_result($result);
-		$query = sprintf("SELECT RELEASE_LOCK('%scom_entity_uids_%s');",
+		$query = sprintf("SELECT RELEASE_LOCK('%scom_myentity_uids_%s');",
 			$pines->config->com_mysql->prefix,
 			mysql_real_escape_string($name, $pines->com_mysql->link));
 		if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
@@ -716,7 +716,7 @@ class com_entity extends component implements entity_manager_interface {
 		if (!$old_name || !$new_name)
 			return false;
 		global $pines;
-		$query = sprintf("UPDATE `%scom_entity_uids` SET `name`='%s' WHERE `name`='%s';",
+		$query = sprintf("UPDATE `%scom_myentity_uids` SET `name`='%s' WHERE `name`='%s';",
 			$pines->config->com_mysql->prefix,
 			mysql_real_escape_string($new_name, $pines->com_mysql->link),
 			mysql_real_escape_string($old_name, $pines->com_mysql->link));
@@ -739,7 +739,7 @@ class com_entity extends component implements entity_manager_interface {
 			// And modified date.
 			$entity->p_mdate = microtime(true);
 			$data = $entity->get_data();
-			$query = sprintf("INSERT INTO `%scom_entity_entities` (`tags`, `varlist`) VALUES ('%s', '%s');",
+			$query = sprintf("INSERT INTO `%scom_myentity_entities` (`tags`, `varlist`) VALUES ('%s', '%s');",
 				$pines->config->com_mysql->prefix,
 				mysql_real_escape_string(','.implode(',', $entity->tags).',', $pines->com_mysql->link),
 				mysql_real_escape_string(','.implode(',', array_keys($data)).',', $pines->com_mysql->link));
@@ -751,7 +751,7 @@ class com_entity extends component implements entity_manager_interface {
 			$new_id = mysql_insert_id();
 			$entity->guid = (int) $new_id;
 			foreach ($data as $name => $value) {
-				$query = sprintf("INSERT INTO `%scom_entity_data` (`guid`, `name`, `value`) VALUES (%u, '%s', '%s');",
+				$query = sprintf("INSERT INTO `%scom_myentity_data` (`guid`, `name`, `value`) VALUES (%u, '%s', '%s');",
 					$pines->config->com_mysql->prefix,
 					(int) $new_id,
 					mysql_real_escape_string($name, $pines->com_mysql->link),
@@ -767,7 +767,7 @@ class com_entity extends component implements entity_manager_interface {
 			// Save the modified date.
 			$entity->p_mdate = microtime(true);
 			$data = $entity->get_data();
-			$query = sprintf("UPDATE `%scom_entity_entities` SET `tags`='%s', `varlist`='%s' WHERE `guid`=%u;",
+			$query = sprintf("UPDATE `%scom_myentity_entities` SET `tags`='%s', `varlist`='%s' WHERE `guid`=%u;",
 				$pines->config->com_mysql->prefix,
 				mysql_real_escape_string(','.implode(',', $entity->tags).',', $pines->com_mysql->link),
 				mysql_real_escape_string(','.implode(',', array_keys($data)).',', $pines->com_mysql->link),
@@ -777,7 +777,7 @@ class com_entity extends component implements entity_manager_interface {
 					pines_error('Query failed: ' . mysql_error());
 				return false;
 			}
-			$query = sprintf("DELETE FROM `%scom_entity_data` WHERE `guid`=%u;",
+			$query = sprintf("DELETE FROM `%scom_myentity_data` WHERE `guid`=%u;",
 				$pines->config->com_mysql->prefix,
 				intval($entity->guid));
 			if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
@@ -786,7 +786,7 @@ class com_entity extends component implements entity_manager_interface {
 				return false;
 			}
 			foreach ($data as $name => $value) {
-				$query = sprintf("INSERT INTO `%scom_entity_data` (`guid`, `name`, `value`) VALUES (%u, '%s', '%s');",
+				$query = sprintf("INSERT INTO `%scom_myentity_data` (`guid`, `name`, `value`) VALUES (%u, '%s', '%s');",
 					$pines->config->com_mysql->prefix,
 					intval($entity->guid),
 					mysql_real_escape_string($name, $pines->com_mysql->link),
@@ -805,7 +805,7 @@ class com_entity extends component implements entity_manager_interface {
 		if (!$name)
 			return false;
 		global $pines;
-		$query = sprintf("INSERT INTO `%scom_entity_uids` (`name`, `cur_uid`) VALUES ('%s', %u) ON DUPLICATE KEY UPDATE `cur_uid`=%u;",
+		$query = sprintf("INSERT INTO `%scom_myentity_uids` (`name`, `cur_uid`) VALUES ('%s', %u) ON DUPLICATE KEY UPDATE `cur_uid`=%u;",
 			$pines->config->com_mysql->prefix,
 			mysql_real_escape_string($name, $pines->com_mysql->link),
 			(int) $value,

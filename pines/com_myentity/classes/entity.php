@@ -3,7 +3,7 @@
  * entity class.
  *
  * @package Pines
- * @subpackage com_entity
+ * @subpackage com_myentity
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -15,7 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * Database abstraction object.
  *
  * @package Pines
- * @subpackage com_entity
+ * @subpackage com_myentity
  */
 class entity extends p_base implements entity_interface {
 	/**

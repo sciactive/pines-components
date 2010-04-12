@@ -43,10 +43,10 @@ class com_reports extends component {
 	 * @param int $start The start date of the report.
 	 * @param int $end The end date of the report.
 	 * @param group $location The group to report on.
-	 * @param int $user The guid of the employee to report on.
+	 * @param int $employee The employee to report on.
 	 * @return module The attendance report module.
 	 */
-	function report_attendance($start, $end, $location = null, $user = null) {
+	function report_attendance($start, $end, $location = null, $employee = null) {
 		global $pines;
 		$pines->com_pgrid->load();
 		$date_start = strtotime('00:00', $start);
@@ -58,14 +58,14 @@ class com_reports extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_reports/report_attendance'];
 
-		if (is_null($user)) {
+		if (is_null($employee)) {
 			$module->employees = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
 			foreach ($module->employees as $key => &$cur_employee) {
 				if (!$cur_employee->user_account || !($cur_employee->user_account->in_group($location) || $cur_employee->user_account->is_descendent($location)))
 					unset($module->employees[$key]);
 			}
 		} else {
-			$module->employee = com_hrm_employee::factory((int) $user);
+			$module->employee = $employee;
 		}
 		$module->date[0] = $form->date[0] = $date_start;
 		$module->date[1] = $form->date[1] = $date_end;

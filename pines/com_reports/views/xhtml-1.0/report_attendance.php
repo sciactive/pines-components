@@ -28,7 +28,7 @@ $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name 
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				<?php if (isset($this->employees)) { ?>
-				{type: 'button', text: 'View', extra_class: 'icon picon_16x16_apps_user-info', double_click: true, url: '<?php echo pines_url('com_reports', 'reportattendance', array('user' => '#title#', 'start' => pines_date_format($this->date[0], null, 'Y-m-d'), 'end' => pines_date_format($this->date[1], null, 'Y-m-d'), 'location' => $this->location->guid), false); ?>'},
+				{type: 'button', text: 'View', extra_class: 'icon picon_16x16_apps_user-info', double_click: true, url: '<?php echo pines_url('com_reports', 'reportattendance', array('employee' => '#title#', 'start' => pines_date_format($this->date[0], null, 'Y-m-d'), 'end' => pines_date_format($this->date[1], null, 'Y-m-d'), 'location' => $this->location->guid), false); ?>'},
 				{type: 'separator'},
 				{type: 'button', text: 'Spreadsheet', extra_class: 'icon picon_16x16_mimetypes_x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
 					pines.post("<?php echo pines_url('system', 'csv'); ?>", {

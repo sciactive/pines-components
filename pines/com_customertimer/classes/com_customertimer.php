@@ -22,21 +22,6 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class com_customertimer extends component {
 	/**
-	 * Calculates information about a customer's session.
-	 *
-	 * @param entity &$customer The customer.
-	 * @return array An array of point and minute values the customer has used.
-	 */
-	public function get_session_info(&$customer) {
-		global $pines;
-		// Calculate how many minutes they've been logged in.
-		$minutes = (int) round((time() - $customer->com_customertimer->last_login) / 60);
-		// And how many points that costs.
-		$points = $minutes * (int) $pines->config->com_customertimer->ppm;
-		return array('minutes' => $minutes, 'points' => $points);
-	}
-
-	/**
 	 * Creates and attaches a module which lists floors.
 	 */
 	public function list_floors() {
@@ -50,19 +35,11 @@ class com_customertimer extends component {
 
 		$module->floors = $pines->entity_manager->get_entities(array('tags' => array('com_customertimer', 'floor'), 'class' => com_customertimer_floor));
 
-		if ( empty($module->floors) ) {
-			//$module->detach();
+		if ( empty($module->floors) )
 			pines_notice('There are no floors.');
-		}
 	}
 
-	/**
-	 * Logs a customer in or out, depending on their current status.
-	 *
-	 * @param int $id The customer's GUID.
-	 * @param string $password The customer's password.
-	 * @return bool True on success, false on failure.
-	 */
+	/* Keeping this to use some code later.
 	public function login_logout($id, $password) {
 		global $pines;
 		if (!is_numeric($id)) {
@@ -90,11 +67,12 @@ class com_customertimer extends component {
 		}
 		if ($customer->points <= 0) {
 			pines_notice('Your account balance has reached zero.');
-			if (!$pines->config->com_customertimer->debtlogin)
+			if (!$pines->config->com_customertimer->debt_login)
 				return false;
 		}
 		return $logins->login($customer);
 	}
+	 */
 }
 
 ?>

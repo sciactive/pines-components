@@ -13,13 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
-		'name' => 'openlogin',
-		'cname' => 'Open Login',
-		'description' => 'Allow all users and guests to see the customer login page.',
-		'value' => true,
-	),
-	array(
-		'name' => 'debtlogin',
+		'name' => 'debt_login',
 		'cname' => 'Debt Login',
 		'description' => 'Allow customers to log in when their account is overdrawn.',
 		'value' => false,

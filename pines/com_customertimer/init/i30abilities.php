@@ -20,9 +20,4 @@ $pines->ability_manager->add('com_customertimer', 'login', 'Login Users', 'User 
 $pines->ability_manager->add('com_customertimer', 'loginpwless', 'Bypass Passwords', 'User can log a customer in without providing its password.');
 $pines->ability_manager->add('com_customertimer', 'logout', 'Logout Users', 'User can log a customer out of the time tracker.');
 
-// Old abilities.
-$pines->ability_manager->add('com_customertimer', 'viewstatus', 'View Customer Status', 'User can view the timer status of logged in customers.');
-$pines->ability_manager->add('com_customertimer', 'notifystatus', 'Notify Customer Status', 'User is notified when customers are running out of points.');
-$pines->ability_manager->add('com_customertimer', 'ignorestatus', 'Ignore Customer Status', 'Customer status is not monitored. Use this to cancel the above ability. Prevents unnecessary server load.');
-
 ?>

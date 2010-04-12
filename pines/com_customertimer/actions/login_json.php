@@ -18,15 +18,14 @@ $pines->page->override = true;
 
 $return = false;
 
-if (isset($_REQUEST['id'])) {
-	$customer = com_customer_customer::factory((int) $_REQUEST['id']);
-	$station = $_REQUEST['station'];
-	if (is_null($customer->guid)) {
-		pines_notice('Customer ID not found.');
+if (isset($_REQUEST['id'], $_REQUEST['floor'], $_REQUEST['station'])) {
+	$customer = com_customertimer_customer::factory((int) $_REQUEST['id']);
+	$floor = com_customertimer_floor::factory((int) $_REQUEST['floor']);
+	if (!isset($customer->guid, $floor->guid)) {
+		pines_error('Requested entries not found.');
 		$return = false;
 	} else {
-		$logins = com_customertimer_login_tracker::factory();
-		$return = $logins->login($customer, $station);
+		$return = $customer->com_customertimer_login($floor, $_REQUEST['station']);
 	}
 }
 

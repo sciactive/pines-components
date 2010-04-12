@@ -18,40 +18,171 @@ defined('P_RUN') or die('Direct access prohibited');
  * @subpackage com_customertimer
  */
 class com_customertimer_customer extends com_customer_customer {
-	public function com_customertimer_login(&$floor, $station) {
-		// Todo: Write something to the customer so we know we have write access.
-		if ($this->com_customertimer_is_logged_in($floor, $station)) {
-			pines_notice('This customer is already logged in here.');
-			return true;
-		}
-		if (isset($floor->active_stations[$station])) {
-			pines_error('There is already a customer logged in to this station.');
-			return false;
-		}
-		$floor->active_stations[$station] = array(
-			'customer' => $this,
-			'time_in' => time(),
-			'logged_in_by' => $_SESSION['user']
-		);
+	/**
+	 * Create a new instance.
+	 */
+	public static function factory() {
+		global $pines;
+		$class = get_class();
+		$args = func_get_args();
+		$entity = new $class($args[0]);
+		$pines->hook->hook_object($entity, $class.'->', false);
+		return $entity;
 	}
 
-	public function com_customertimer_logout(&$floor, $station) {
+	/**
+	 * Calculate information about a customer's session.
+	 *
+	 * @param com_customertimer_floor &$floor The floor to use.
+	 * @param string $station The station on the floor.
+	 * @return array An array of point and minute values the customer has used.
+	 */
+	public function com_customertimer_get_session_info(&$floor, $station) {
+		global $pines;
+		// Make sure the customer is actually logged in.
 		if (!$this->com_customertimer_is_logged_in($floor, $station)) {
 			pines_notice('This customer is not logged in here.');
 			return true;
 		}
-		// Todo: Subtract points, make transaction.
-		unset($floor->active_stations[$station]);
+
+		// Calculate how many minutes they've been logged in.
+		$minutes = (int) round((time() - $floor->active_stations[$station]['time_in']) / 60);
+
+		// And how many points that costs.
+		$ppm = (int) $pines->config->com_customertimer->ppm;
+		$points = $minutes * $ppm;
+
+		// Get any additional minutes the customer is using.
+		// Todo: Check other floors to see if the customer is logged in there.
+		$other_minutes = 0;
+		foreach ($floor->active_stations as $cur_station => $cur_entry) {
+			if ($cur_station == $station || !$this->is($cur_entry['customer']))
+				continue;
+			$other_minutes += time() - $cur_entry['time_in'];
+		}
+		$other_minutes = (int) round($other_minutes / 60);
+		$other_points = $other_minutes * $ppm;
+
+		// Check how many points the customer has left in their account.
+		$points_remain = $this->points - ($points + $other_points);
+
+		return array('minutes' => $minutes, 'points' => $points, 'other_minutes' => $other_minutes, 'other_points' => $other_points, 'points_remain' => $points_remain);
 	}
 
+	/**
+	 * Check if a customer is logged into a given location.
+	 *
+	 * @param com_customertimer_floor &$floor The floor to check.
+	 * @param string|null $station The station on the floor, or null to check all stations.
+	 * @return bool
+	 */
 	public function com_customertimer_is_logged_in(&$floor, $station = null) {
+		// If a station is requested, check that the customer is in that station.
 		if (isset($station))
 			return (isset($floor->active_stations[$station]) && $this->is($floor->active_stations[$station]['customer']));
+		// If no station is requested, look through each one.
 		foreach ($floor->active_stations as $cur_station) {
 			if (!isset($station) && $this->is($cur_station['customer']))
 				return true;
 		}
+		// The customer is not logged in on this floor.
 		return false;
+	}
+
+	/**
+	 * Log the customer into a station on a floor.
+	 *
+	 * @param com_customertimer_floor &$floor The floor to log the customer into.
+	 * @param string $station The station on the floor.
+	 * @return bool True on success, false on failure.
+	 * @todo Password and login disabling support.
+	 */
+	public function com_customertimer_login(&$floor, $station) {
+		// Make sure the customer is not already logged in.
+		if ($this->com_customertimer_is_logged_in($floor, $station)) {
+			pines_notice('This customer is already logged in here.');
+			return true;
+		}
+
+		// Make sure we have write access to the customer.
+		if (!$this->save()) {
+			pines_error('Customer cannot be saved. Do you have permission?');
+			return false;
+		}
+
+		// Make sure the station is available.
+		if (isset($floor->active_stations[$station])) {
+			pines_error('There is already a customer logged in to this station.');
+			return false;
+		}
+
+		// Place the customer in the station.
+		$floor->active_stations[$station] = array(
+			'customer' => $this,
+			'time_in' => time(),
+			'points_in' => $this->points,
+			'user' => $_SESSION['user']
+		);
+
+		// Save the floor.
+		if (!$floor->save()) {
+			pines_error('Floor entry cannot be saved. Do you have permission?');
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Log the customer out of a station on a floor.
+	 *
+	 * @param com_customertimer_floor &$floor The floor to log the customer out of.
+	 * @param string $station The station on the floor.
+	 * @return bool True on success, false on failure.
+	 */
+	public function com_customertimer_logout(&$floor, $station) {
+		// Make sure the customer is actually logged in.
+		if (!$this->com_customertimer_is_logged_in($floor, $station)) {
+			pines_notice('This customer is not logged in here.');
+			return true;
+		}
+
+		// Make sure we have write access to the floor.
+		if (!$floor->save()) {
+			pines_notice('Floor entry cannot be saved. Do you have permission?');
+			return false;
+		}
+
+		// Take points off the customer's account.
+		$session_info = $this->com_customertimer_get_session_info($floor, $station);
+		$this->adjust_points(-1 * $session_info['points']);
+		if (!$this->save()) {
+			pines_notice("Customer {$this->name} cannot be saved. Their points have not been deducted. Do you have permission?");
+			return false;
+		}
+
+		// Save a transaction.
+		$tx = com_customertimer_tx::factory('com_customertimer', 'transaction', 'account_tx');
+		$tx->user = $_SESSION['user'];
+		$tx->location = $_SESSION['user']->group;
+		$tx->floor = $floor;
+		$tx->customer = $this;
+		$tx->station = $station;
+		$tx->minutes = $session_info['minutes'];
+		$tx->points = $session_info['points'];
+		$tx->points_in = $floor->active_stations[$station]['points_in'];
+		$tx->points_remain = $session_info['points_remain'];
+		$tx->login_time = $floor->active_stations[$station]['time_in'];
+		$tx->logout_time = time();
+		$tx->save();
+
+		// Take the customer out of the floor.
+		unset($floor->active_stations[$station]);
+		if (!$floor->save()) {
+			pines_error('Floor entry cannot be saved. Do you have permission?');
+			return false;
+		}
+		pines_notice("Goodbye, you have been logged out. This session was {$session_info['minutes']} minutes long, for {$session_info['points']} points.");
+		return true;
 	}
 }
 

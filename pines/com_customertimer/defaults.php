@@ -42,6 +42,12 @@ return array(
 		'description' => 'Amount of points to consider the customer to be in the critical level.',
 		'value' => 3,
 	),
+	array(
+		'name' => 'global_floors',
+		'cname' => 'Globalize Floors',
+		'description' => 'Ensure that every user can access all floors by setting the "other" access control to read.',
+		'value' => true,
+	),
 );
 
 ?>

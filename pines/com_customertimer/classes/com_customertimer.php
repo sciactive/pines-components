@@ -27,7 +27,7 @@ class com_customertimer extends component {
 	 * @param entity &$customer The customer.
 	 * @return array An array of point and minute values the customer has used.
 	 */
-	function get_session_info(&$customer) {
+	public function get_session_info(&$customer) {
 		global $pines;
 		// Calculate how many minutes they've been logged in.
 		$minutes = (int) round((time() - $customer->com_customertimer->last_login) / 60);
@@ -39,7 +39,7 @@ class com_customertimer extends component {
 	/**
 	 * Creates and attaches a module which lists floors.
 	 */
-	function list_floors() {
+	public function list_floors() {
 		global $pines;
 
 		$pines->com_pgrid->load();
@@ -63,7 +63,7 @@ class com_customertimer extends component {
 	 * @param string $password The customer's password.
 	 * @return bool True on success, false on failure.
 	 */
-	function login_logout($id, $password) {
+	public function login_logout($id, $password) {
 		global $pines;
 		if (!is_numeric($id)) {
 			pines_notice('Please provide a customer ID.');

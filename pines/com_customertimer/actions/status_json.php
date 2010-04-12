@@ -16,20 +16,26 @@ if ( !gatekeeper('com_customertimer/viewstatus') )
 
 $pines->page->override = true;
 
-$logins = com_customertimer_login_tracker::factory();
+$floor = com_customertimer_floor::factory((int) $_REQUEST['floor']);
 $return = array();
 
-foreach ($logins->customers as $cur_entry) {
-	$session_info = $pines->com_customertimer->get_session_info($cur_entry['customer']);
+foreach ($floor->active_stations as $cur_station => $cur_entry) {
+	if (!$cur_entry['customer']) {
+		// TODO: Make a warning about this rogue entry.
+		continue;
+	}
+	$session_info = $cur_entry['customer']->com_customertimer_get_session_info($floor, $cur_station);
 	$return[] = (object) array(
 		'guid' => $cur_entry['customer']->guid,
 		'name' => $cur_entry['customer']->name,
-		'login_time' => $cur_entry['customer']->com_customertimer->last_login,
+		'login_time' => $cur_entry['time_in'],
 		'points' => $cur_entry['customer']->points,
 		'ses_minutes' => $session_info['minutes'],
 		'ses_points' => $session_info['points'],
-		'points_remain' => ($cur_entry['customer']->points - $session_info['points']),
-		'station' => $cur_entry['station']
+		'other_minutes' => $session_info['other_minutes'],
+		'other_points' => $session_info['other_points'],
+		'points_remain' => $session_info['points_remain'],
+		'station' => $cur_station
 	);
 }
 

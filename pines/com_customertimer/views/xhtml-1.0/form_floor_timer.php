@@ -214,6 +214,8 @@ $this->title = 'Floor Timer ['.htmlentities($this->entity->name).']';
 				.find(".points .value").html(station.customer.points).end()
 				.find(".ses_minutes .value").html(station.customer.ses_minutes).end()
 				.find(".ses_points .value").html(station.customer.ses_points).end()
+				.find(".other_minutes .value").html(station.customer.other_minutes).end()
+				.find(".other_points .value").html(station.customer.other_points).end()
 				.find(".points_remain .value").html(station.customer.points_remain).end()
 				.find(".status .value").html(
 					station.customer.points_remain < 0 ?
@@ -380,7 +382,9 @@ $this->title = 'Floor Timer ['.htmlentities($this->entity->name).']';
 			<div class="login_time">Login Time:</div>
 			<div class="points">Points in Account:</div>
 			<div class="ses_minutes">Minutes this Session:</div>
-			<div class="ses_points">Points Used:</div>
+			<div class="ses_points">Points this Session:</div>
+			<div class="other_minutes">Minutes in other Sessions:</div>
+			<div class="other_points">Points in other Sessions:</div>
 			<div class="points_remain">Points Left:</div>
 			<br />
 			<div class="status">Status:</div>
@@ -391,6 +395,8 @@ $this->title = 'Floor Timer ['.htmlentities($this->entity->name).']';
 			<div class="points"><span class="value"></span></div>
 			<div class="ses_minutes"><span class="value"></span></div>
 			<div class="ses_points"><span class="value"></span></div>
+			<div class="other_minutes"><span class="value"></span></div>
+			<div class="other_points"><span class="value"></span></div>
 			<div class="points_remain"><span class="value"></span></div>
 			<br />
 			<div class="status"><span class="value"></span></div>

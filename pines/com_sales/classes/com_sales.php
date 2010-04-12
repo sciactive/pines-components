@@ -368,19 +368,24 @@ class com_sales extends component {
 		global $pines;
 
 		$pines->com_pgrid->load();
-
+		
+		$jstree = new module('system', 'jstree', 'head');
 		$module = new module('com_sales', 'list_countsheets', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_countsheets'];
 
 		$module->countsheets = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'countsheet'), 'class' => com_sales_countsheet));
 
+		if ($_SESSION['user']) {
+			$_SESSION['user']->refresh();
+			if ($_SESSION['user']->group->com_sales_task_countsheet)
+				$this->inform('Reminder', 'Inventory Countsheet', 'Please fill out a countsheet for your location when you are not busy. Corporate is awaiting the submission of an inventory count.');
+		}
+	
 		if ( empty($module->countsheets) ) {
 			pines_notice('There are no countsheets.');
 			return;
 		}
-		if ($_SESSION['user']->com_sales_task_countsheet)
-			$this->inform('Reminder', 'Inventory Countsheet', 'Please fill out a countsheet for your location when you are not busy. Corporate is awaiting the submission of an inventory count.');
 	}
 
 	/**

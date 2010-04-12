@@ -49,9 +49,9 @@ if ($pines->config->com_sales->global_countsheets)
 
 if ($_REQUEST['save'] == 'commit') {
 	$countsheet->final = true;
-	if (isset($_SESSION['user']->com_sales_task_countsheet)) {
-		unset($_SESSION['user']->com_sales_task_countsheet);
-		$_SESSION['user']->save();
+	if (isset($_SESSION['user']->group->com_sales_task_countsheet)) {
+		unset($_SESSION['user']->group->com_sales_task_countsheet);
+		$_SESSION['user']->group->save();
 	}
 	//Automatically decline the countsheet if they are missing an item.
 	$in_stock = array('available', 'unavailable', 'sold_pending');

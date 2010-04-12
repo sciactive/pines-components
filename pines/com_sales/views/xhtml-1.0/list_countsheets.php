@@ -15,40 +15,30 @@ $this->title = 'Countsheets';
 <script type="text/javascript">
 	// <![CDATA[
 	$(function(){
-		var employee_search = function(search_string){
-			var loader;
-			$.ajax({
-				url: "<?php echo pines_url("com_hrm", "employeesearch"); ?>",
-				type: "POST",
-				dataType: "json",
-				data: {"q": search_string},
-				beforeSend: function(){
-					loader = pines.alert('Searching for employees...', 'Employee Search', 'icon picon_16x16_animations_throbber', {pnotify_hide: false, pnotify_history: false});
-					employee_table.pgrid_get_all_rows().pgrid_delete();
-				},
-				complete: function(){
-					loader.pnotify_remove();
-				},
-				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to find employee:\n"+XMLHttpRequest.status+": "+textStatus);
-				},
-				success: function(data){
-					if (!data) {
-						alert("No employees were found that matched the query.");
-						return;
-					}
-					employee_dialog.dialog('open');
-					employee_table.pgrid_add(data);
+		// Group Tree
+		var location = $("#assign_dialog [name=location]");
+		$("#location_tree").tree({
+			rules : {
+				multiple : false
+			},
+			data : {
+				type : "json",
+				opts : {
+					method : "get",
+					url : "<?php echo pines_url('com_sales', 'groupjson'); ?>"
 				}
-			});
-		};
+			},
+			callback : {
+				onchange : function(NODE, TREE_OBJ) {
+					location.val(TREE_OBJ.selected.attr("id"));
+				},
+				check_move: function(NODE, REF_NODE, TYPE, TREE_OBJ) {
+					return false;
+				}
+			}
+		});
 
 		var assign_dialog = $("#assign_dialog");
-		var employee_box = $("#employee");
-		var employee_search_box = $("#employee_search");
-		var employee_search_button = $("#employee_search_button");
-		var employee_table = $("#employee_table");
-		var employee_dialog = $("#employee_dialog");
 
 		assign_dialog.find("form").submit(function(){
 			assign_dialog.dialog('option', 'buttons').Done();
@@ -58,57 +48,18 @@ $this->title = 'Countsheets';
 			bgiframe: true,
 			autoOpen: false,
 			modal: true,
-			width: "350px",
+			width: "250px",
 			buttons: {
-				"Done": function(){
-					var assign_to = assign_dialog.find(":input[name=employee]").val();
-					if (assign_to == "No Employee Selected") {
-						alert("Please select an employee");
+				"Assign": function(){
+					var assign_to = assign_dialog.find(":input[name=location]").val();
+					if (assign_to == "") {
+						alert("Please select a group");
 					} else {
 						pines.post("<?php echo pines_url('com_sales', 'assigncountsheet'); ?>", {
-							employee: assign_to
+							location: assign_to
 						});
 						assign_dialog.dialog("close");
 					}
-				}
-			}
-		});
-
-		employee_search_box.keydown(function(eventObject){
-			if (eventObject.keyCode == 13) {
-				employee_search(this.value);
-				return false;
-			}
-		});
-		employee_search_button.click(function(){
-			employee_search(employee_search_box.val());
-		});
-
-		employee_table.pgrid({
-			pgrid_paginate: false,
-			pgrid_multi_select: false,
-			pgrid_double_click: function(){
-				employee_dialog.dialog('option', 'buttons').Done();
-			}
-		});
-
-		employee_dialog.dialog({
-			bgiframe: true,
-			autoOpen: false,
-			modal: true,
-			width: 600,
-			buttons: {
-				"Done": function(){
-					var rows = employee_table.pgrid_get_selected_rows().pgrid_export_rows();
-					if (!rows[0]) {
-						alert("Please select an employee.");
-						return;
-					} else {
-						var employee = rows[0];
-					}
-					employee_box.val(employee.key+": \""+employee.values[0]+" "+employee.values[1]+"\"");
-					employee_search_box.val("");
-					employee_dialog.dialog('close');
 				}
 			}
 		});
@@ -198,36 +149,7 @@ $this->title = 'Countsheets';
 	<?php } ?>
 	</tbody>
 </table>
-<div id="assign_dialog" title="Assign a Countsheet" style="display: none;">
-	<input class="field ui-widget-content" type="text" id="employee" name="employee" size="24" onfocus="this.blur();" value="No Employee Selected" /><br />
-	<input class="field ui-widget-content" type="text" id="employee_search" name="employee_search" size="24" /><button type="button" id="employee_search_button"><span class="picon_16x16_actions_system-search" style="padding-left: 16px; background-repeat: no-repeat;"> Search</span></button>
-</div>
-<div id="employee_dialog" title="Pick an Employee">
-	<table id="employee_table">
-		<thead>
-			<tr>
-				<th>First Name</th>
-				<th>Last Name</th>
-				<th>Job Title</th>
-				<th>Email</th>
-				<th>City</th>
-				<th>State</th>
-				<th>Zip</th>
-				<th>Cell Phone</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td>----------------------</td>
-				<td>----------------------</td>
-				<td>----------------------</td>
-				<td>----------------------</td>
-				<td>----------------------</td>
-				<td>----------------------</td>
-				<td>----------------------</td>
-				<td>----------------------</td>
-			</tr>
-		</tbody>
-	</table>
-	<br class="spacer" />
+<div id="assign_dialog" title="Assign a Countsheet to" style="display: none;">
+	<div id="location_tree"></div>
+	<input type="hidden" name="location" />
 </div>

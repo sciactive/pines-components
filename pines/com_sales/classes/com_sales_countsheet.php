@@ -101,7 +101,7 @@ class com_sales_countsheet extends entity {
 	 * <ul>
 	 *  <li>Matched - If an item is on the countsheet and in the current inventory.</li>
 	 *  <li>Missing - If an item is not on the countsheet but is in the current inventory.</li>
-	 *  <li>Sold - List of items that match the search string, which the user may have included by accident:
+	 *  <li>Potential - List of items that match the search string, which the user may have included by accident:
 	 *	 <ul>
 	 *    <li>A serialized item matches the search string but is not in current inventory.</li>
 	 *    <li>An item's SKU matches the search string but is not in the current inventory.</li>

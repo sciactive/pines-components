@@ -53,8 +53,8 @@ $this->title = (is_null($this->event->guid)) ? 'New Event' : $this->event->title
 	});
 // ]]>
 </script>
-<form class="pform" method="post" id="calendar_details" action="<?php echo htmlentities(pines_url('com_hrm', 'saveevent')); ?>">
-	<div class="element">
+<form class="pf-form" method="post" id="calendar_details" action="<?php echo htmlentities(pines_url('com_hrm', 'saveevent')); ?>">
+	<div class="pf-element">
 		<select name="employee" class="form_select">
 				<?php
 				$employee_depts = explode(', ', $pines->config->com_hrm->employee_departments);
@@ -72,7 +72,7 @@ $this->title = (is_null($this->event->guid)) ? 'New Event' : $this->event->title
 				?>
 		</select>
 	</div>
-	<div class="element" style="padding-bottom: 0px;">
+	<div class="pf-element" style="padding-bottom: 0px;">
 		<input class="ui-corner-all form_text" type="text" id="event_label" name="event_label" value="<?php echo (isset($this->event->label)) ? $this->event->label : 'Label'; ?>" onfocus="if(this.value==this.defaultValue)this.value=''" onblur="if(this.value=='')this.value=this.defaultValue" />
 	</div>
 	<?php
@@ -92,13 +92,13 @@ $this->title = (is_null($this->event->guid)) ? 'New Event' : $this->event->title
 			});
 			// ]]>
 	</script>
-	<div class="element" style="padding-bottom: 0px;">
-		<span class="note">Start</span><input class="ui-corner-all form_text" type="text" id="event_date" name="event_date" value="<?php echo empty($start_date) ? date('n/j/Y') : $start_date; ?>" />
+	<div class="pf-element" style="padding-bottom: 0px;">
+		<span class="pf-note">Start</span><input class="ui-corner-all form_text" type="text" id="event_date" name="event_date" value="<?php echo empty($start_date) ? date('n/j/Y') : $start_date; ?>" />
 	</div>
-	<div class="element">
-		<span class="note">End</span><input class="ui-corner-all form_text" type="text" id="event_enddate" name="event_enddate" value="<?php echo $end_date; ?>" />
+	<div class="pf-element">
+		<span class="pf-note">End</span><input class="ui-corner-all form_text" type="text" id="event_enddate" name="event_enddate" value="<?php echo $end_date; ?>" />
 	</div>
-	<div class="element">
+	<div class="pf-element">
 		<script type="text/javascript">
 			// <![CDATA[
 			$(function(){
@@ -114,11 +114,11 @@ $this->title = (is_null($this->event->guid)) ? 'New Event' : $this->event->title
 			});
 			// ]]>
 		</script>
-		<label><input class="field ui-widget-content" type="radio" name="all_day" value="timeSpan" checked="checked" />Timespan</label>
-		<label><input class="field ui-widget-content" type="radio" name="all_day" value="allDay" />All Day</label>
+		<label><input class="pf-field ui-widget-content" type="radio" name="all_day" value="timeSpan" checked="checked" />Timespan</label>
+		<label><input class="pf-field ui-widget-content" type="radio" name="all_day" value="allDay" />All Day</label>
 	</div>
 	<div id="timespan" style="text-align: center;">
-		<div class="element">
+		<div class="pf-element">
 			<label><select name="event_start">
 					<option value="24" <?php echo ($start_time == '24') ? 'selected="selected"' : ''; ?>>12:00 AM</option>
 					<option value="1" <?php echo ($start_time == '1') ? 'selected="selected"' : ''; ?>>1:00 AM</option>
@@ -146,7 +146,7 @@ $this->title = (is_null($this->event->guid)) ? 'New Event' : $this->event->title
 					<option value="23" <?php echo ($start_time == '23') ? 'selected="selected"' : ''; ?>>11:00 PM</option>
 			</select> Event Start</label>
 		</div>
-		<div class="element">
+		<div class="pf-element">
 			<label><select name="event_end">
 					<option value="24" <?php echo ($end_time == '24') ? 'selected="selected"' : ''; ?>>12:00 AM</option>
 					<option value="1" <?php echo ($end_time == '1') ? 'selected="selected"' : ''; ?>>1:00 AM</option>
@@ -175,7 +175,7 @@ $this->title = (is_null($this->event->guid)) ? 'New Event' : $this->event->title
 			</select> Event End</label>
 		</div>
 	</div>
-	<div class="element">
+	<div class="pf-element">
 			<?php if (isset($this->event->guid)) { ?>
 			<input type="hidden" name="id" value="<?php echo $this->event->guid; ?>" />
 			<input type="submit" value="Save Event &raquo;" /><input type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_hrm', 'editcalendar')); ?>');" value="Cancel" />

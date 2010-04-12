@@ -18,28 +18,28 @@ $i = 1;
 <?php return; } ?>
 
 <?php foreach($this->success as $cur_success) { ?>
-<div class="pform">
-	<div class="element heading">
+<div class="pf-form">
+	<div class="pf-element pf-heading">
 		<h1>Item <?php echo $i; $i++; ?></h1>
 	</div>
-	<div class="element">
-		<span class="label">Product</span>
-		<span class="field"><?php echo $cur_success[0]->product->name; ?></span>
+	<div class="pf-element">
+		<span class="pf-label">Product</span>
+		<span class="pf-field"><?php echo $cur_success[0]->product->name; ?></span>
 	</div>
-	<div class="element">
-		<span class="label">Vendor</span>
-		<span class="field"><?php echo $cur_success[0]->vendor->name; ?></span>
+	<div class="pf-element">
+		<span class="pf-label">Vendor</span>
+		<span class="pf-field"><?php echo $cur_success[0]->vendor->name; ?></span>
 	</div>
-	<div class="element">
-		<span class="label">Serial</span>
-		<span class="field"><?php echo $cur_success[0]->serial; ?></span>
+	<div class="pf-element">
+		<span class="pf-label">Serial</span>
+		<span class="pf-field"><?php echo $cur_success[0]->serial; ?></span>
 	</div>
-	<div class="element">
-		<span class="label">Received On</span>
+	<div class="pf-element">
+		<span class="pf-label">Received On</span>
 		<?php if ($cur_success[1]->has_tag('po')) { ?>
-		<span class="field"><?php echo 'PO: '.$cur_success[1]->po_number; ?></span>
+		<span class="pf-field"><?php echo 'PO: '.$cur_success[1]->po_number; ?></span>
 		<?php } elseif($cur_success[1]->has_tag('transfer')) { ?>
-		<span class="field"><?php echo 'Transfer: '.$cur_success[1]->guid; ?></span>
+		<span class="pf-field"><?php echo 'Transfer: '.$cur_success[1]->guid; ?></span>
 		<?php } ?>
 	</div>
 </div>

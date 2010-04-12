@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = (is_null($this->entity->guid)) ? 'Editing New Employee' : 'Editing ['.htmlentities($this->entity->name).']';
 $this->note = 'Provide employee account details in this form.';
 ?>
-<form class="pform" method="post" id="employee_details" action="<?php echo htmlentities(pines_url('com_hrm', 'saveemployee')); ?>">
+<form class="pf-form" method="post" id="employee_details" action="<?php echo htmlentities(pines_url('com_hrm', 'saveemployee')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
 		$(function(){
@@ -173,52 +173,52 @@ $this->note = 'Provide employee account details in this form.';
 				<span>Modified On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_mdate); ?></span></span>
 			</div>
 			<?php } ?>
-			<div class="element">
-				<label><span class="label">First Name</span>
-					<input class="field ui-widget-content" type="text" name="name_first" size="24" value="<?php echo $this->entity->name_first; ?>" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">First Name</span>
+					<input class="pf-field ui-widget-content" type="text" name="name_first" size="24" value="<?php echo $this->entity->name_first; ?>" /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Middle Name</span>
-					<input class="field ui-widget-content" type="text" name="name_middle" size="24" value="<?php echo $this->entity->name_middle; ?>" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Middle Name</span>
+					<input class="pf-field ui-widget-content" type="text" name="name_middle" size="24" value="<?php echo $this->entity->name_middle; ?>" /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Last Name</span>
-					<input class="field ui-widget-content" type="text" name="name_last" size="24" value="<?php echo $this->entity->name_last; ?>" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Last Name</span>
+					<input class="pf-field ui-widget-content" type="text" name="name_last" size="24" value="<?php echo $this->entity->name_last; ?>" /></label>
 			</div>
 			<?php if ($pines->config->com_hrm->ssn_field && gatekeeper('com_hrm/showssn')) { ?>
-			<div class="element">
-				<label><span class="label">SSN</span>
-					<span class="note">Without dashes.</span>
-					<input class="field ui-widget-content" type="text" name="ssn" size="24" value="<?php echo $this->entity->ssn; ?>" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">SSN</span>
+					<span class="pf-note">Without dashes.</span>
+					<input class="pf-field ui-widget-content" type="text" name="ssn" size="24" value="<?php echo $this->entity->ssn; ?>" /></label>
 			</div>
 			<?php } ?>
-			<div class="element">
-				<label><span class="label">Email</span>
-					<input class="field ui-widget-content" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Email</span>
+					<input class="pf-field ui-widget-content" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Job Title</span>
-					<input class="field ui-widget-content" type="text" name="job_title" size="24" value="<?php echo $this->entity->job_title; ?>" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Job Title</span>
+					<input class="pf-field ui-widget-content" type="text" name="job_title" size="24" value="<?php echo $this->entity->job_title; ?>" /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Cell Phone</span>
-					<input class="field ui-widget-content" type="text" name="phone_cell" size="24" value="<?php echo pines_phone_format($this->entity->phone_cell); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Cell Phone</span>
+					<input class="pf-field ui-widget-content" type="text" name="phone_cell" size="24" value="<?php echo pines_phone_format($this->entity->phone_cell); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Work Phone</span>
-					<input class="field ui-widget-content" type="text" name="phone_work" size="24" value="<?php echo pines_phone_format($this->entity->phone_work); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Work Phone</span>
+					<input class="pf-field ui-widget-content" type="text" name="phone_work" size="24" value="<?php echo pines_phone_format($this->entity->phone_work); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Home Phone</span>
-					<input class="field ui-widget-content" type="text" name="phone_home" size="24" value="<?php echo pines_phone_format($this->entity->phone_home); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Home Phone</span>
+					<input class="pf-field ui-widget-content" type="text" name="phone_home" size="24" value="<?php echo pines_phone_format($this->entity->phone_home); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Fax</span>
-					<input class="field ui-widget-content" type="text" name="fax" size="24" value="<?php echo pines_phone_format($this->entity->fax); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Fax</span>
+					<input class="pf-field ui-widget-content" type="text" name="fax" size="24" value="<?php echo pines_phone_format($this->entity->fax); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Schedule Color</span>
-					<select class="field ui-widget-content" name="color">
+			<div class="pf-element">
+				<label><span class="pf-label">Schedule Color</span>
+					<select class="pf-field ui-widget-content" name="color">
 						<option value="blue" <?php echo ($this->entity->color == 'blue') ? 'selected="selected"' : ''; ?>>Blue</option>
 						<option value="blueviolet" <?php echo ($this->entity->color == 'blueviolet') ? 'selected="selected"' : ''; ?>>Blue Violet</option>
 						<option value="brown" <?php echo ($this->entity->color == 'brown') ? 'selected="selected"' : ''; ?>>Brown</option>
@@ -233,31 +233,31 @@ $this->note = 'Provide employee account details in this form.';
 						<option value="vanilla" <?php echo ($this->entity->color == 'vanilla') ? 'selected="selected"' : ''; ?>>Vanilla</option>
 					</select></label>
 			</div>
-			<div class="element full_width">
-				<span class="label">Description</span><br />
-				<textarea rows="3" cols="35" class="field peditor" style="width: 100%;" name="description"><?php echo $this->entity->description; ?></textarea>
+			<div class="pf-element pf-full-width">
+				<span class="pf-label">Description</span><br />
+				<textarea rows="3" cols="35" class="pf-field peditor" style="width: 100%;" name="description"><?php echo $this->entity->description; ?></textarea>
 			</div>
-			<br class="clearing" />
+			<br class="pf-clearing" />
 		</div>
 		<div id="tab_user_account">
-			<div class="element heading">
+			<div class="pf-element pf-heading">
 				<p>Attach a user to this employee.</p>
 			</div>
-			<div class="element">
-				<label><span class="label">Username</span>
-					<span class="note">Provide either the username or GUID of the user to attach.</span>
-					<span class="note">Blank to remove any currently attached user.</span>
-					<input class="field ui-widget-content" type="text" name="username" size="24" value="<?php echo $this->entity->user_account->username; ?>" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Username</span>
+					<span class="pf-note">Provide either the username or GUID of the user to attach.</span>
+					<span class="pf-note">Blank to remove any currently attached user.</span>
+					<input class="pf-field ui-widget-content" type="text" name="username" size="24" value="<?php echo $this->entity->user_account->username; ?>" /></label>
 			</div>
-			<div class="element">
-				<span class="label">Sync User</span>
+			<div class="pf-element">
+				<span class="pf-label">Sync User</span>
 				<label>
-					<input class="field ui-widget-content" type="checkbox" name="sync_user" value="ON" <?php echo ($this->entity->sync_user ? 'checked="checked" ' : ''); ?>/> Keep the user's data in sync with this employee's. (Employee data will overwrite user data.)
+					<input class="pf-field ui-widget-content" type="checkbox" name="sync_user" value="ON" <?php echo ($this->entity->sync_user ? 'checked="checked" ' : ''); ?>/> Keep the user's data in sync with this employee's. (Employee data will overwrite user data.)
 				</label>
 			</div>
-			<fieldset class="group">
+			<fieldset class="pf-group">
 				<legend>User Templates</legend>
-				<div class="element heading">
+				<div class="pf-element pf-heading">
 					<p>You can use a template to create a user for this employee.</p>
 				</div>
 				<script type="text/javascript">
@@ -275,19 +275,19 @@ $this->note = 'Provide employee account details in this form.';
 					});
 					// ]]>
 				</script>
-				<div class="element">
-					<label><span class="label">User Template</span>
-						<select class="field ui-widget-content" name="user_template" size="1">
+				<div class="pf-element">
+					<label><span class="pf-label">User Template</span>
+						<select class="pf-field ui-widget-content" name="user_template" size="1">
 							<option value="null">-- Select a Template --</option>
 							<?php foreach ($this->user_templates as $cur_template) { ?>
 							<option value="<?php echo $cur_template->guid; ?>"><?php echo $cur_template->name; ?></option>
 							<?php } ?>
 						</select></label>
 				</div>
-				<div class="element">
-					<label><span class="label">Primary Group</span>
+				<div class="pf-element">
+					<label><span class="pf-label">Primary Group</span>
 						<?php foreach ($this->user_templates as $cur_template) { ?>
-						<select class="field ui-widget-content user_template_group" name="user_template_group_<?php echo $cur_template->guid; ?>" size="1">
+						<select class="pf-field ui-widget-content user_template_group" name="user_template_group_<?php echo $cur_template->guid; ?>" size="1">
 							<?php if (!isset($cur_template->group)) { ?>
 							<option value="null">-- No Primary Group --</option>
 							<?php } else { ?>
@@ -298,9 +298,9 @@ $this->note = 'Provide employee account details in this form.';
 						<?php } ?>
 					</label>
 				</div>
-				<div class="element">
-					<label><span class="label">Username</span>
-						<input class="field ui-widget-content" type="text" name="user_template_username" size="24" /></label>
+				<div class="pf-element">
+					<label><span class="pf-label">Username</span>
+						<input class="pf-field ui-widget-content" type="text" name="user_template_username" size="24" /></label>
 				</div>
 				<script type="text/javascript">
 					// <![CDATA[
@@ -317,22 +317,22 @@ $this->note = 'Provide employee account details in this form.';
 					});
 					// ]]>
 				</script>
-				<div class="element">
-					<label><span class="label">Password</span>
-						<input class="field ui-widget-content" type="password" name="user_template_password" size="24" /></label>
+				<div class="pf-element">
+					<label><span class="pf-label">Password</span>
+						<input class="pf-field ui-widget-content" type="password" name="user_template_password" size="24" /></label>
 				</div>
-				<div class="element">
-					<label><span class="label">Repeat Password</span>
-						<input class="field ui-widget-content" type="password" name="user_template_password2" size="24" /></label>
+				<div class="pf-element">
+					<label><span class="pf-label">Repeat Password</span>
+						<input class="pf-field ui-widget-content" type="password" name="user_template_password2" size="24" /></label>
 				</div>
 			</fieldset>
-			<br class="clearing" />
+			<br class="pf-clearing" />
 		</div>
 		<div id="tab_addresses">
-			<div class="element heading">
+			<div class="pf-element pf-heading">
 				<h1>Main Address</h1>
 			</div>
-			<div class="element">
+			<div class="pf-element">
 				<script type="text/javascript">
 					// <![CDATA[
 					$(function(){
@@ -351,22 +351,22 @@ $this->note = 'Provide employee account details in this form.';
 					});
 					// ]]>
 				</script>
-				<span class="label">Address Type</span>
-				<label><input class="field ui-widget-content" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
-				<label><input class="field ui-widget-content" type="radio" name="address_type" value="international"<?php echo $this->entity->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
+				<span class="pf-label">Address Type</span>
+				<label><input class="pf-field ui-widget-content" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
+				<label><input class="pf-field ui-widget-content" type="radio" name="address_type" value="international"<?php echo $this->entity->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
 			</div>
 			<div id="address_us" style="display: none;">
-				<div class="element">
-					<label><span class="label">Address 1</span>
-						<input class="field ui-widget-content" type="text" name="address_1" size="24" value="<?php echo $this->entity->address_1; ?>" /></label>
+				<div class="pf-element">
+					<label><span class="pf-label">Address 1</span>
+						<input class="pf-field ui-widget-content" type="text" name="address_1" size="24" value="<?php echo $this->entity->address_1; ?>" /></label>
 				</div>
-				<div class="element">
-					<label><span class="label">Address 2</span>
-						<input class="field ui-widget-content" type="text" name="address_2" size="24" value="<?php echo $this->entity->address_2; ?>" /></label>
+				<div class="pf-element">
+					<label><span class="pf-label">Address 2</span>
+						<input class="pf-field ui-widget-content" type="text" name="address_2" size="24" value="<?php echo $this->entity->address_2; ?>" /></label>
 				</div>
-				<div class="element">
-					<span class="label">City, State</span>
-					<input class="field ui-widget-content" type="text" name="city" size="15" value="<?php echo $this->entity->city; ?>" />
+				<div class="pf-element">
+					<span class="pf-label">City, State</span>
+					<input class="pf-field ui-widget-content" type="text" name="city" size="15" value="<?php echo $this->entity->city; ?>" />
 					<select name="state">
 						<option value="">None</option>
 						<?php foreach (array(
@@ -426,23 +426,23 @@ $this->note = 'Provide employee account details in this form.';
 						<?php } ?>
 					</select>
 				</div>
-				<div class="element">
-					<label><span class="label">Zip</span>
-						<input class="field ui-widget-content" type="text" name="zip" size="24" value="<?php echo $this->entity->zip; ?>" /></label>
+				<div class="pf-element">
+					<label><span class="pf-label">Zip</span>
+						<input class="pf-field ui-widget-content" type="text" name="zip" size="24" value="<?php echo $this->entity->zip; ?>" /></label>
 				</div>
 			</div>
 			<div id="address_international" style="display: none;">
-				<div class="element full_width">
-				<label><span class="label">Address</span>
-					<span class="field full_width"><textarea style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo $this->entity->address_international; ?></textarea></span></label>
+				<div class="pf-element pf-full-width">
+				<label><span class="pf-label">Address</span>
+					<span class="pf-field pf-full-width"><textarea style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo $this->entity->address_international; ?></textarea></span></label>
 				</div>
 			</div>
-			<div class="element heading">
+			<div class="pf-element pf-heading">
 				<h1>Additional Addresses</h1>
 			</div>
-			<div class="element full_width">
-				<span class="label">Additional Addresses</span>
-				<div class="group">
+			<div class="pf-element pf-full-width">
+				<span class="pf-label">Additional Addresses</span>
+				<div class="pf-group">
 					<table id="addresses_table">
 						<thead>
 							<tr>
@@ -471,42 +471,42 @@ $this->note = 'Provide employee account details in this form.';
 				</div>
 			</div>
 			<div id="address_dialog" title="Add an Address">
-				<div class="pform">
-					<div class="element">
+				<div class="pf-form">
+					<div class="pf-element">
 						<label>
-							<span class="label">Type</span>
-							<input class="field ui-widget-content" type="text" size="24" name="cur_address_type" id="cur_address_type" />
+							<span class="pf-label">Type</span>
+							<input class="pf-field ui-widget-content" type="text" size="24" name="cur_address_type" id="cur_address_type" />
 						</label>
 					</div>
-					<div class="element">
+					<div class="pf-element">
 						<label>
-							<span class="label">Address 1</span>
-							<input class="field ui-widget-content" type="text" size="24" name="cur_address_addr1" id="cur_address_addr1" />
+							<span class="pf-label">Address 1</span>
+							<input class="pf-field ui-widget-content" type="text" size="24" name="cur_address_addr1" id="cur_address_addr1" />
 						</label>
 					</div>
-					<div class="element">
+					<div class="pf-element">
 						<label>
-							<span class="label">Address 2</span>
-							<input class="field ui-widget-content" type="text" size="24" name="cur_address_addr2" id="cur_address_addr2" />
+							<span class="pf-label">Address 2</span>
+							<input class="pf-field ui-widget-content" type="text" size="24" name="cur_address_addr2" id="cur_address_addr2" />
 						</label>
 					</div>
-					<div class="element">
+					<div class="pf-element">
 						<label>
-							<span class="label">City, State, Zip</span>
-							<input class="field ui-widget-content" type="text" size="8" name="cur_address_city" id="cur_address_city" />
-							<input class="field ui-widget-content" type="text" size="2" name="cur_address_state" id="cur_address_state" />
-							<input class="field ui-widget-content" type="text" size="5" name="cur_address_zip" id="cur_address_zip" />
+							<span class="pf-label">City, State, Zip</span>
+							<input class="pf-field ui-widget-content" type="text" size="8" name="cur_address_city" id="cur_address_city" />
+							<input class="pf-field ui-widget-content" type="text" size="2" name="cur_address_state" id="cur_address_state" />
+							<input class="pf-field ui-widget-content" type="text" size="5" name="cur_address_zip" id="cur_address_zip" />
 						</label>
 					</div>
 				</div>
-				<br class="clearing" />
+				<br class="pf-clearing" />
 			</div>
-			<br class="clearing" />
+			<br class="pf-clearing" />
 		</div>
 		<div id="tab_attributes">
-			<div class="element full_width">
-				<span class="label">Attributes</span>
-				<div class="group">
+			<div class="pf-element pf-full-width">
+				<span class="pf-label">Attributes</span>
+				<div class="pf-group">
 					<table id="attributes_table">
 						<thead>
 							<tr>
@@ -538,15 +538,15 @@ $this->note = 'Provide employee account details in this form.';
 					</label>
 				</div>
 			</div>
-			<br class="clearing" />
+			<br class="pf-clearing" />
 		</div>
 	</div>
-	<div class="element buttons">
+	<div class="pf-element pf-buttons">
 		<br />
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_hrm', 'listemployees')); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_hrm', 'listemployees')); ?>');" value="Cancel" />
 	</div>
 </form>

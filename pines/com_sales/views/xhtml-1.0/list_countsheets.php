@@ -199,8 +199,8 @@ $this->title = 'Countsheets';
 	</tbody>
 </table>
 <div id="assign_dialog" title="Assign a Countsheet" style="display: none;">
-	<input class="field ui-widget-content" type="text" id="employee" name="employee" size="24" onfocus="this.blur();" value="No Employee Selected" /><br />
-	<input class="field ui-widget-content" type="text" id="employee_search" name="employee_search" size="24" /><button type="button" id="employee_search_button"><span class="picon_16x16_actions_system-search" style="padding-left: 16px; background-repeat: no-repeat;"> Search</span></button>
+	<input class="ui-widget-content" type="text" id="employee" name="employee" size="24" onfocus="this.blur();" value="No Employee Selected" /><br />
+	<input class="ui-widget-content" type="text" id="employee_search" name="employee_search" size="24" /><button type="button" id="employee_search_button"><span class="picon_16x16_actions_system-search" style="padding-left: 16px; background-repeat: no-repeat;"> Search</span></button>
 </div>
 <div id="employee_dialog" title="Pick an Employee">
 	<table id="employee_table">
@@ -229,5 +229,5 @@ $this->title = 'Countsheets';
 			</tr>
 		</tbody>
 	</table>
-	<br class="spacer" />
+	<br style="clear: both; height: 1px;" />
 </div>

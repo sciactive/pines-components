@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = (is_null($this->entity->guid)) ? 'Editing New Product' : 'Editing ['.htmlentities($this->entity->name).']';
 $this->note = 'Provide product details in this form.';
 ?>
-<form class="pform" method="post" id="product_details" action="<?php echo htmlentities(pines_url('com_sales', 'saveproduct')); ?>">
+<form class="pf-form" method="post" id="product_details" action="<?php echo htmlentities(pines_url('com_sales', 'saveproduct')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
 		$(function(){
@@ -121,20 +121,20 @@ $this->note = 'Provide product details in this form.';
 				<span>Modified On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_mdate); ?></span></span>
 			</div>
 			<?php } ?>
-			<div class="element">
-				<label><span class="label">Name</span>
-					<input class="field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Name</span>
+					<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Enabled</span>
-					<input class="field ui-widget-content" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Enabled</span>
+					<input class="pf-field ui-widget-content" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Product SKU</span>
-					<input class="field ui-widget-content" type="text" name="sku" size="24" value="<?php echo $this->entity->sku; ?>" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Product SKU</span>
+					<input class="pf-field ui-widget-content" type="text" name="sku" size="24" value="<?php echo $this->entity->sku; ?>" /></label>
 			</div>
-			<div class="element">
-				<span class="label">Categories</span>
+			<div class="pf-element">
+				<span class="pf-label">Categories</span>
 				<script type="text/javascript">
 					// <![CDATA[
 					$(function(){
@@ -346,46 +346,46 @@ $this->note = 'Provide product details in this form.';
 					});
 					// ]]>
 				</script>
-				<button id="category_button" class="field ui-state-default ui-corner-all" type="button">Pick Categories</button>
+				<button id="category_button" class="pf-field ui-state-default ui-corner-all" type="button">Pick Categories</button>
 				<input id="categories" type="hidden" name="categories" />
 			</div>
 			<div id="category_dialog" title="Categories">
 				<div id="category_tree" style="border: 1px solid black; float: left; width: 100%;"></div>
 				<p style="clear: left;"><a href="#" id="category_tree_new">New Root Category</a></p>
 			</div>
-			<div class="element full_width">
-				<span class="label">Description</span><br />
+			<div class="pf-element pf-full-width">
+				<span class="pf-label">Description</span><br />
 				<textarea rows="3" cols="35" class="peditor" style="width: 100%;" name="description"><?php echo $this->entity->description; ?></textarea>
 			</div>
-			<div class="element full_width">
-				<span class="label">Short Description</span><br />
+			<div class="pf-element pf-full-width">
+				<span class="pf-label">Short Description</span><br />
 				<textarea rows="3" cols="35" class="peditor_simple" style="width: 100%;" name="short_description"><?php echo $this->entity->short_description; ?></textarea>
 			</div>
-			<div class="element">
-				<label><span class="label">Manufacturer</span>
-					<select class="field ui-widget-content" name="manufacturer">
+			<div class="pf-element">
+				<label><span class="pf-label">Manufacturer</span>
+					<select class="pf-field ui-widget-content" name="manufacturer">
 						<option value="null">-- None --</option>
 						<?php foreach ($this->manufacturers as $cur_manufacturer) { ?>
 						<option value="<?php echo $cur_manufacturer->guid; ?>"<?php echo $this->entity->manufacturer->guid == $cur_manufacturer->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_manufacturer->name; ?></option>
 						<?php } ?>
 					</select></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Manufacturer SKU</span>
-					<input class="field ui-widget-content" type="text" name="manufacturer_sku" size="24" value="<?php echo $this->entity->manufacturer_sku; ?>" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Manufacturer SKU</span>
+					<input class="pf-field ui-widget-content" type="text" name="manufacturer_sku" size="24" value="<?php echo $this->entity->manufacturer_sku; ?>" /></label>
 			</div>
-			<br class="clearing" />
+			<br class="pf-clearing" />
 		</div>
 		<div id="tab_images">
-			<div class="element">
-				<label><span class="label">Upload a New Picture</span>
-					<span class="note">Doesn't work yet.</span>
-					<input class="field ui-widget-content" type="file" name="image_upload" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Upload a New Picture</span>
+					<span class="pf-note">Doesn't work yet.</span>
+					<input class="pf-field ui-widget-content" type="file" name="image_upload" /></label>
 			</div>
-			<br class="clearing" />
+			<br class="pf-clearing" />
 		</div>
 		<div id="tab_purchasing">
-			<div class="element">
+			<div class="pf-element">
 				<script type="text/javascript">
 				// <![CDATA[
 				$(function(){
@@ -413,18 +413,18 @@ $this->note = 'Provide product details in this form.';
 				});
 				// ]]>
 				</script>
-				<label><span class="label">Stock Type</span>
-					<span class="note">Regular stock items cannot be sold without available stock. Stock optional items can be sold without available stock. Non stocked items do not use inventory tracking.</span>
-					<select class="field ui-widget-content" name="stock_type">
+				<label><span class="pf-label">Stock Type</span>
+					<span class="pf-note">Regular stock items cannot be sold without available stock. Stock optional items can be sold without available stock. Non stocked items do not use inventory tracking.</span>
+					<select class="pf-field ui-widget-content" name="stock_type">
 						<?php foreach (array('regular_stock' => 'Regular Stock', 'stock_optional' => 'Stock Optional', 'non_stocked' => 'Non Stocked') as $cur_stock_key => $cur_stock_type) { ?>
 						<option value="<?php echo $cur_stock_key; ?>"<?php echo $this->entity->stock_type == $cur_stock_key ? ' selected="selected"' : ''; ?>><?php echo $cur_stock_type; ?></option>
 						<?php } ?>
 					</select></label>
 			</div>
-			<div class="element full_width">
-				<span class="label">Vendors</span>
-				<div class="group">
-					<div id="vendors_field" class="field">
+			<div class="pf-element pf-full-width">
+				<span class="pf-label">Vendors</span>
+				<div class="pf-group">
+					<div id="vendors_field" class="pf-field">
 						<table id="vendors_table">
 							<thead>
 								<tr>
@@ -444,7 +444,7 @@ $this->note = 'Provide product details in this form.';
 							</tbody>
 						</table>
 					</div>
-					<span id="vendors_hidden" class="field" style="display: none;">Vendors cannot be selected for non stocked items.</span>
+					<span id="vendors_hidden" class="pf-field" style="display: none;">Vendors cannot be selected for non stocked items.</span>
 					<input type="hidden" id="vendors" name="vendors" size="24" />
 				</div>
 			</div>
@@ -471,7 +471,7 @@ $this->note = 'Provide product details in this form.';
 						<?php } ?>
 					</tbody>
 				</table>
-				<br class="clearing" />
+				<br class="pf-clearing" />
 				<div style="width: 100%">
 					<label>
 						<span>Vendor SKU</span>
@@ -483,10 +483,10 @@ $this->note = 'Provide product details in this form.';
 					</label>
 				</div>
 			</div>
-			<br class="clearing" />
+			<br class="pf-clearing" />
 		</div>
 		<div id="tab_pricing">
-			<div class="element">
+			<div class="pf-element">
 				<script type="text/javascript">
 					// <![CDATA[
 					$(function(){
@@ -505,94 +505,94 @@ $this->note = 'Provide product details in this form.';
 					});
 					// ]]>
 				</script>
-				<label><span class="label">Pricing Method</span>
-					<select class="field ui-widget-content" name="pricing_method">
+				<label><span class="pf-label">Pricing Method</span>
+					<select class="pf-field ui-widget-content" name="pricing_method">
 						<option value="fixed" title="Only one price will be available."<?php echo $this->entity->pricing_method == 'fixed' ? ' selected="selected"' : ''; ?>>Fixed Pricing</option>
 						<option value="variable" title="An employee can increase/decrease the price."<?php echo $this->entity->pricing_method == 'variable' ? ' selected="selected"' : ''; ?>>Variable Pricing</option>
 						<option value="margin" title="The price is based on the cost of the item."<?php echo $this->entity->pricing_method == 'margin' ? ' selected="selected"' : ''; ?>>Margin Pricing</option>
 					</select></label>
 			</div>
-			<div class="element heading">
+			<div class="pf-element pf-heading">
 				<h1>Defaults</h1>
 			</div>
-			<div class="element">
-				<label><span class="label">Unit Price</span>
-					<input class="field ui-widget-content" type="text" name="unit_price" size="24" value="<?php echo $this->entity->unit_price; ?>" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Unit Price</span>
+					<input class="pf-field ui-widget-content" type="text" name="unit_price" size="24" value="<?php echo $this->entity->unit_price; ?>" /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Margin</span>
-					<input class="field ui-widget-content" type="text" name="margin" size="24" value="<?php echo $this->entity->margin; ?>" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Margin</span>
+					<input class="pf-field ui-widget-content" type="text" name="margin" size="24" value="<?php echo $this->entity->margin; ?>" /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Floor</span>
-					<span class="note">The lowest price allowed.</span>
-					<input class="field ui-widget-content" type="text" name="floor" size="24" value="<?php echo $this->entity->floor; ?>" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Floor</span>
+					<span class="pf-note">The lowest price allowed.</span>
+					<input class="pf-field ui-widget-content" type="text" name="floor" size="24" value="<?php echo $this->entity->floor; ?>" /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Ceiling</span>
-					<span class="note">The highest price allowed.</span>
-					<input class="field ui-widget-content" type="text" name="ceiling" size="24" value="<?php echo $this->entity->ceiling; ?>" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Ceiling</span>
+					<span class="pf-note">The highest price allowed.</span>
+					<input class="pf-field ui-widget-content" type="text" name="ceiling" size="24" value="<?php echo $this->entity->ceiling; ?>" /></label>
 			</div>
-			<div class="element heading">
+			<div class="pf-element pf-heading">
 				<h1>Taxes/Fees</h1>
 			</div>
-			<div class="element">
-				<label><span class="label">Tax Exempt</span>
-					<input class="field ui-widget-content" type="checkbox" name="tax_exempt" size="24" value="ON"<?php echo $this->entity->tax_exempt ? ' checked="checked"' : ''; ?> /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Tax Exempt</span>
+					<input class="pf-field ui-widget-content" type="checkbox" name="tax_exempt" size="24" value="ON"<?php echo $this->entity->tax_exempt ? ' checked="checked"' : ''; ?> /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Additional Fees</span>
-					<span class="note">These fees will be applied in addition to the group's default taxes. If you select a fee/tax applied to a group, it will be applied twice to this product for that group.</span>
-					<span class="note">Hold Ctrl (Command on Mac) to select multiple.</span>
-					<select class="field ui-widget-content" name="additional_tax_fees[]" size="6" multiple="multiple">
+			<div class="pf-element">
+				<label><span class="pf-label">Additional Fees</span>
+					<span class="pf-note">These fees will be applied in addition to the group's default taxes. If you select a fee/tax applied to a group, it will be applied twice to this product for that group.</span>
+					<span class="pf-note">Hold Ctrl (Command on Mac) to select multiple.</span>
+					<select class="pf-field ui-widget-content" name="additional_tax_fees[]" size="6" multiple="multiple">
 						<?php foreach ($this->tax_fees as $cur_tax_fee) { ?>
 						<option value="<?php echo $cur_tax_fee->guid; ?>"<?php echo ($cur_tax_fee->in_array($this->entity->additional_tax_fees)) ? ' selected="selected"' : ''; ?>><?php echo $cur_tax_fee->name; ?></option>
 						<?php } ?>
 					</select></label>
 			</div>
-			<br class="clearing" />
+			<br class="pf-clearing" />
 		</div>
 		<div id="tab_attributes">
-			<div class="element">
-				<label><span class="label">Weight</span>
-					<input class="field ui-widget-content" type="text" name="weight" size="10" value="<?php echo $this->entity->weight; ?>" /> lbs.</label>
+			<div class="pf-element">
+				<label><span class="pf-label">Weight</span>
+					<input class="pf-field ui-widget-content" type="text" name="weight" size="10" value="<?php echo $this->entity->weight; ?>" /> lbs.</label>
 			</div>
-			<div class="element">
-				<label><span class="label">RMA Available After</span>
-					<input class="field ui-widget-content" type="text" name="rma_after" size="10" value="<?php echo $this->entity->rma_after; ?>" /> days.</label>
+			<div class="pf-element">
+				<label><span class="pf-label">RMA Available After</span>
+					<input class="pf-field ui-widget-content" type="text" name="rma_after" size="10" value="<?php echo $this->entity->rma_after; ?>" /> days.</label>
 			</div>
-			<div class="element">
-				<label><span class="label">Serialized</span>
-					<input class="field ui-widget-content" type="checkbox" name="serialized" size="24" value="ON"<?php echo $this->entity->serialized ? ' checked="checked"' : ''; ?> /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Serialized</span>
+					<input class="pf-field ui-widget-content" type="checkbox" name="serialized" size="24" value="ON"<?php echo $this->entity->serialized ? ' checked="checked"' : ''; ?> /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Discountable</span>
-					<input class="field ui-widget-content" type="checkbox" name="discountable" size="24" value="ON"<?php echo $this->entity->discountable ? ' checked="checked"' : ''; ?> /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Discountable</span>
+					<input class="pf-field ui-widget-content" type="checkbox" name="discountable" size="24" value="ON"<?php echo $this->entity->discountable ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<?php if ($pines->com_sales->com_customer) { ?>
-			<div class="element">
-				<label><span class="label">Require Customer</span>
-					<span class="note">This means a customer must be selected when selling this item.</span>
-					<input class="field ui-widget-content" type="checkbox" name="require_customer" size="24" value="ON"<?php echo $this->entity->require_customer ? ' checked="checked"' : ''; ?> /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Require Customer</span>
+					<span class="pf-note">This means a customer must be selected when selling this item.</span>
+					<input class="pf-field ui-widget-content" type="checkbox" name="require_customer" size="24" value="ON"<?php echo $this->entity->require_customer ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<?php } ?>
-			<div class="element">
-				<label><span class="label">One Per Ticket</span>
-					<span class="note">Only allow one of this item on a sales ticket.</span>
-					<input class="field ui-widget-content" type="checkbox" name="one_per_ticket" size="24" value="ON"<?php echo $this->entity->one_per_ticket ? ' checked="checked"' : ''; ?> /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">One Per Ticket</span>
+					<span class="pf-note">Only allow one of this item on a sales ticket.</span>
+					<input class="pf-field ui-widget-content" type="checkbox" name="one_per_ticket" size="24" value="ON"<?php echo $this->entity->one_per_ticket ? ' checked="checked"' : ''; ?> /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Hide on Invoice</span>
-					<input class="field ui-widget-content" type="checkbox" name="hide_on_invoice" size="24" value="ON"<?php echo $this->entity->hide_on_invoice ? ' checked="checked"' : ''; ?> /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Hide on Invoice</span>
+					<input class="pf-field ui-widget-content" type="checkbox" name="hide_on_invoice" size="24" value="ON"<?php echo $this->entity->hide_on_invoice ? ' checked="checked"' : ''; ?> /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Non-Refundable</span>
-					<input class="field ui-widget-content" type="checkbox" name="non_refundable" size="24" value="ON"<?php echo $this->entity->non_refundable ? ' checked="checked"' : ''; ?> /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Non-Refundable</span>
+					<input class="pf-field ui-widget-content" type="checkbox" name="non_refundable" size="24" value="ON"<?php echo $this->entity->non_refundable ? ' checked="checked"' : ''; ?> /></label>
 			</div>
-			<div class="element full_width">
-				<span class="label">Additional Barcodes</span>
-				<div class="group">
-					<input class="field ui-widget-content" type="text" name="additional_barcodes" size="24" value="<?php echo implode(',', $this->entity->additional_barcodes); ?>" />
+			<div class="pf-element pf-full-width">
+				<span class="pf-label">Additional Barcodes</span>
+				<div class="pf-group">
+					<input class="pf-field ui-widget-content" type="text" name="additional_barcodes" size="24" value="<?php echo implode(',', $this->entity->additional_barcodes); ?>" />
 					<script type="text/javascript">
 						// <![CDATA[
 						$(function(){
@@ -602,31 +602,31 @@ $this->note = 'Provide product details in this form.';
 					</script>
 				</div>
 			</div>
-			<div class="element">
-				<label><span class="label">Product Actions</span>
-					<span class="note">These actions will be executed when an event takes place with this product.</span>
-					<span class="note">Hold Ctrl (Command on Mac) to select multiple.</span>
-					<select class="field ui-widget-content" name="actions[]" size="6" multiple="multiple">
+			<div class="pf-element">
+				<label><span class="pf-label">Product Actions</span>
+					<span class="pf-note">These actions will be executed when an event takes place with this product.</span>
+					<span class="pf-note">Hold Ctrl (Command on Mac) to select multiple.</span>
+					<select class="pf-field ui-widget-content" name="actions[]" size="6" multiple="multiple">
 						<?php foreach ($this->actions as $cur_action) { ?>
 						<option value="<?php echo $cur_action['name']; ?>" title="<?php echo $cur_action['description']; ?>"<?php echo in_array($cur_action['name'], $this->entity->actions) ? ' selected="selected"' : ''; ?>><?php echo $cur_action['cname']; ?></option>
 						<?php } ?>
 					</select></label>
 			</div>
-			<br class="clearing" />
+			<br class="pf-clearing" />
 		</div>
 		<div id="tab_accounting">
-			<div class="element">
-				<span class="label">Nothing here yet...</span>
+			<div class="pf-element">
+				<span class="pf-label">Nothing here yet...</span>
 			</div>
-			<br class="clearing" />
+			<br class="pf-clearing" />
 		</div>
 	</div>
-	<div class="element buttons">
+	<div class="pf-element pf-buttons">
 		<br />
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'listproducts')); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'listproducts')); ?>');" value="Cancel" />
 	</div>
 </form>

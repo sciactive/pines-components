@@ -39,9 +39,9 @@ defined('P_RUN') or die('Direct access prohibited');
 			current_holder.val(new_json);
 		}
 
-		$(".pform div.element.display_edit").each(function(){
+		$(".pf-form div.pf-element.display_edit").each(function(){
 			$(this).append($("<div />")
-				.addClass("displays_div group")
+				.addClass("displays_div pf-group")
 				.append($("<input />")
 					.attr({type: "hidden", value: (undefined !== display_jsons[$(this).attr("id")] ? JSON.stringify(display_jsons[$(this).attr("id")]) : "[]"), name: $(this).attr("id")+"_displays_json"})
 					.addClass("displays_holder")

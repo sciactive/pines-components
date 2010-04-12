@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
-<form id="authorize_net_form" class="pform" method="post" action="">
+<form id="authorize_net_form" class="pf-form" method="post" action="">
 	<script type="text/javascript">
 		// <![CDATA[
 		$(function(){
@@ -71,12 +71,12 @@ defined('P_RUN') or die('Direct access prohibited');
 		// ]]>
 	</script>
 	<div id="authorize_net_swipe">
-		<div class="element">
-			<label><span class="label">Swipe Card</span>
-				<input class="field ui-widget-content" type="password" name="card_swipe" value="" /></label>
+		<div class="pf-element">
+			<label><span class="pf-label">Swipe Card</span>
+				<input class="pf-field ui-widget-content" type="password" name="card_swipe" value="" /></label>
 		</div>
-		<div class="element">
-			<button class="field ui-state-default ui-corner-all" type="button" onclick="
+		<div class="pf-element">
+			<button class="pf-field ui-state-default ui-corner-all" type="button" onclick="
 				$('#authorize_net_swipe').slideUp('fast');
 				$('#authorize_net_manual').slideDown('fast');
 				$('#authorize_net_form input[name=card_swiped]').val('');
@@ -84,22 +84,22 @@ defined('P_RUN') or die('Direct access prohibited');
 		</div>
 	</div>
 	<div id="authorize_net_manual" style="display: none;">
-		<div class="element">
-			<label><span class="label">Cardholder First Name</span>
-				<input class="field ui-widget-content" type="text" name="name_first" value="<?php echo $this->name_first; ?>" /></label>
+		<div class="pf-element">
+			<label><span class="pf-label">Cardholder First Name</span>
+				<input class="pf-field ui-widget-content" type="text" name="name_first" value="<?php echo $this->name_first; ?>" /></label>
 		</div>
-		<div class="element">
-			<label><span class="label">Cardholder Last Name</span>
-				<input class="field ui-widget-content" type="text" name="name_last" value="<?php echo $this->name_last; ?>" /></label>
+		<div class="pf-element">
+			<label><span class="pf-label">Cardholder Last Name</span>
+				<input class="pf-field ui-widget-content" type="text" name="name_last" value="<?php echo $this->name_last; ?>" /></label>
 		</div>
 		<?php /* Address is unnecessary.
-		<div class="element">
-			<label><span class="label">Cardholder Address</span>
-				<input class="field ui-widget-content" type="text" name="address" value="<?php echo $this->address; ?>" /></label>
+		<div class="pf-element">
+			<label><span class="pf-label">Cardholder Address</span>
+				<input class="pf-field ui-widget-content" type="text" name="address" value="<?php echo $this->address; ?>" /></label>
 		</div>
-		<div class="element">
-			<span class="label">Cardholder State, Zip</span>
-			<select class="field ui-widget-content" name="state">
+		<div class="pf-element">
+			<span class="pf-label">Cardholder State, Zip</span>
+			<select class="pf-field ui-widget-content" name="state">
 				<?php foreach (array(
 						'' => '-- Choose State --',
 						'AL' => 'Alabama',
@@ -157,16 +157,16 @@ defined('P_RUN') or die('Direct access prohibited');
 				<option value="<?php echo $key; ?>"<?php echo $this->state == $key ? ' selected="selected"' : ''; ?>><?php echo $cur_state; ?></option>
 				<?php } ?>
 			</select>
-			<input class="field ui-widget-content" type="text" name="zip" size="5" value="<?php echo $this->zip; ?>" />
+			<input class="pf-field ui-widget-content" type="text" name="zip" size="5" value="<?php echo $this->zip; ?>" />
 		</div>
 		 */ ?>
-		<div class="element">
-			<label><span class="label">Card Number</span>
-				<input class="field ui-widget-content" type="text" name="card_number" value="<?php echo $this->card_number; ?>" /></label>
+		<div class="pf-element">
+			<label><span class="pf-label">Card Number</span>
+				<input class="pf-field ui-widget-content" type="text" name="card_number" value="<?php echo $this->card_number; ?>" /></label>
 		</div>
-		<div class="element">
-			<span class="label">Expiration Date, CCV</span>
-			<select class="field ui-widget-content" name="card_exp_month">
+		<div class="pf-element">
+			<span class="pf-label">Expiration Date, CCV</span>
+			<select class="pf-field ui-widget-content" name="card_exp_month">
 				<?php foreach (array(
 						'01' => '01 January',
 						'02' => '02 February',
@@ -184,12 +184,12 @@ defined('P_RUN') or die('Direct access prohibited');
 				<option value="<?php echo $key; ?>"<? echo $this->card_exp_month == $key ? ' selected="selected"' : ''; ?>><?php echo $value; ?></option>
 				<?php } ?>
 			</select>
-			<select class="field ui-widget-content" name="card_exp_year">
+			<select class="pf-field ui-widget-content" name="card_exp_year">
 				<?php for ($i = 0; $i <= 25; $i++) { ?>
 				<option value="<?php echo date('y', strtotime("+$i years")); ?>"<? echo $this->card_exp_year == date('y', strtotime("+$i years")) ? ' selected="selected"' : ''; ?>><?php echo date('y', strtotime("+$i years")); ?></option>
 				<?php } ?>
 			</select>
-			<input class="field ui-widget-content" type="password" name="cid" size="3" value="<?php echo $this->cid; ?>" />
+			<input class="pf-field ui-widget-content" type="password" name="cid" size="3" value="<?php echo $this->cid; ?>" />
 		</div>
 	</div>
 	<input type="hidden" name="card_swiped" value="" />

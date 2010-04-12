@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Timeclock';
 $entry_count = count($this->entity->timeclock);
 ?>
-<div class="pform" id="timeclock">
+<div class="pf-form" id="timeclock">
 	<script type="text/javascript">
 		// <![CDATA[
 		$(function(){
@@ -56,12 +56,12 @@ $entry_count = count($this->entity->timeclock);
 		});
 		// ]]>
 	</script>
-	<div class="element">
-		<span class="label"><?php echo $this->entity->name; ?></span>
-		<span class="note"><span>Status: </span><span class="status"><?php echo empty($this->entity->timeclock) ? 'out' : $this->entity->timeclock[$entry_count - 1]['status']; ?></span></span>
-		<span class="note"><span>Time: </span><span class="time"><?php echo empty($this->entity->timeclock) ? 'No Timeclock Data' : pines_date_format($this->entity->timeclock[$entry_count - 1]['time']); ?></span></span>
+	<div class="pf-element">
+		<span class="pf-label"><?php echo $this->entity->name; ?></span>
+		<span class="pf-note"><span>Status: </span><span class="status"><?php echo empty($this->entity->timeclock) ? 'out' : $this->entity->timeclock[$entry_count - 1]['status']; ?></span></span>
+		<span class="pf-note"><span>Time: </span><span class="time"><?php echo empty($this->entity->timeclock) ? 'No Timeclock Data' : pines_date_format($this->entity->timeclock[$entry_count - 1]['time']); ?></span></span>
 	</div>
-	<div class="element full_width">
-		<button type="button" class="field ui-state-default ui-corner-all" style="float: right;"><?php echo $this->entity->timeclock[$entry_count - 1]['status'] == 'in' ? 'Clock Out' : 'Clock In'; ?></button>
+	<div class="pf-element pf-full-width">
+		<button type="button" class="pf-field ui-state-default ui-corner-all" style="float: right;"><?php echo $this->entity->timeclock[$entry_count - 1]['status'] == 'in' ? 'Clock Out' : 'Clock In'; ?></button>
 	</div>
 </div>

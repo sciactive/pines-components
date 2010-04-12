@@ -31,14 +31,14 @@ if (isset($this->entity->guid))
 		border: 1px dotted chocolate;
 		color: chocolate;
 	}
-	#countsheet_details fieldset.sold div.element.heading {
+	#countsheet_details fieldset.sold div.pf-element.pf-heading {
 		border-bottom: 1px dotted chocolate;
 	}
 	/* ]]> */
 </style>
-<form class="pform" method="post" id="countsheet_details" action="<?php echo pines_url('com_sales', 'savecountsheetstatus'); ?>">
+<form class="pf-form" method="post" id="countsheet_details" action="<?php echo pines_url('com_sales', 'savecountsheetstatus'); ?>">
 	<?php if ($this->missing) { ?>
-	<fieldset class="group missing">
+	<fieldset class="pf-group missing">
 		<legend>Missing Items</legend>
 		<ul style="list-style-type: circle;">
 			<?php foreach ($this->missing as $cur_entry) { ?>
@@ -47,7 +47,7 @@ if (isset($this->entity->guid))
 		</ul>
 	</fieldset>
 	<?php } if ($this->matched) { ?>
-	<fieldset class="group matched">
+	<fieldset class="pf-group matched">
 		<legend>Matched Items</legend>
 		<ul style="list-style-type: square;">
 			<?php foreach ($this->matched as $cur_entry) { ?>
@@ -56,11 +56,11 @@ if (isset($this->entity->guid))
 		</ul>
 	</fieldset>
 	<?php } if ($this->potential) { ?>
-	<fieldset class="group sold">
+	<fieldset class="pf-group sold">
 		<legend>Potential Matches</legend>
 		<?php foreach ($this->potential as $cur_entry) { ?>
 			<?php if ($cur_entry['closest']) { ?>
-			<div class="element heading">
+			<div class="pf-element pf-heading">
 				<p>Items Matching "<strong><?php echo $cur_entry['name']; ?></strong>" in Location</p>
 			</div>
 			<ul style="list-style-type: disc;">
@@ -69,7 +69,7 @@ if (isset($this->entity->guid))
 				<?php } ?>
 			</ul>
 			<?php } if ($cur_entry['entries']) { ?>
-			<div class="element heading">
+			<div class="pf-element pf-heading">
 				<p>Items Matching "<strong><?php echo $cur_entry['name']; ?></strong>" Not in Location</p>
 			</div>
 			<ul style="list-style-type: disc;">
@@ -105,7 +105,7 @@ if (isset($this->entity->guid))
 		<?php } ?>
 	</fieldset>
 	<?php } if ($this->extra) { ?>
-	<fieldset class="group ui-priority-secondary">
+	<fieldset class="pf-group ui-priority-secondary">
 		<legend>Extraneous Items</legend>
 		<ul style="list-style-type: circle;">
 			<?php foreach ($this->extra as $cur_entry) { ?>
@@ -114,17 +114,17 @@ if (isset($this->entity->guid))
 		</ul>
 	</fieldset>
 	<?php } if (!empty($this->entity->comments)) {?>
-	<div class="element">
-		<span class="label">Comments</span>
-		<div class="group">
-			<div class="field"><?php echo $this->entity->comments; ?></div>
+	<div class="pf-element">
+		<span class="pf-label">Comments</span>
+		<div class="pf-group">
+			<div class="pf-field"><?php echo $this->entity->comments; ?></div>
 		</div>
 	</div>
 	<?php } ?>
-	<div class="element">
+	<div class="pf-element">
 		<label>
-			<span class="label">Update Status</span>
-			<select class="field ui-widget-content" name="status" size="1">
+			<span class="pf-label">Update Status</span>
+			<select class="pf-field ui-widget-content" name="status" size="1">
 				<option value="approved" <?php echo ($this->entity->status == 'approved') ? 'selected="selected"' : ''; ?>>Approved</option>
 				<option value="declined" <?php echo ($this->entity->status == 'declined') ? 'selected="selected"' : ''; ?>>Declined</option>
 				<option value="info_requested" <?php echo ($this->entity->status == 'info_requested') ? 'selected="selected"' : ''; ?>>Info Requested</option>
@@ -132,17 +132,17 @@ if (isset($this->entity->guid))
 			</select>
 		</label>
 	</div>
-	<div class="element full_width">
+	<div class="pf-element pf-full-width">
 		<label>
-			<span class="label">Review Comments</span>
-			<span class="field full_width"><textarea style="width: 98%;" rows="3" cols="35" name="review_comments"><?php echo $this->entity->review_comments; ?></textarea></span>
+			<span class="pf-label">Review Comments</span>
+			<span class="pf-field pf-full-width"><textarea style="width: 98%;" rows="3" cols="35" name="review_comments"><?php echo $this->entity->review_comments; ?></textarea></span>
 		</label>
 	</div>
-	<div class="element buttons">
+	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
-		<input name="approve" class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url('com_sales', 'listcountsheets'); ?>');" value="Cancel" />
+		<input name="approve" class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url('com_sales', 'listcountsheets'); ?>');" value="Cancel" />
 	</div>
 </form>

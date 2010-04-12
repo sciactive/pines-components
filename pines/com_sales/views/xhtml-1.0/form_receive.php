@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Receive Inventory';
 $this->note = 'Only use this form to receive inventory into your <strong>current</strong> location ('.(is_null($_SESSION['user']->group) ? 'No Location' : $_SESSION['user']->group->name).').';
 ?>
-<form class="pform" method="post" id="receive_inventory" action="<?php echo htmlentities(pines_url('com_sales', 'receive')); ?>">
+<form class="pf-form" method="post" id="receive_inventory" action="<?php echo htmlentities(pines_url('com_sales', 'receive')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
 		var products;
@@ -132,20 +132,20 @@ $this->note = 'Only use this form to receive inventory into your <strong>current
 		});
 		// ]]>
 	</script>
-	<div class="element">
-		<label><span class="label">Serialized</span>
-			<span class="note">Set before you scan. Serialized items require a serial number.</span>
-			<input class="field ui-widget-content" type="checkbox" id="serialized" name="serialized" checked="checked" /></label>
+	<div class="pf-element">
+		<label><span class="pf-label">Serialized</span>
+			<span class="pf-note">Set before you scan. Serialized items require a serial number.</span>
+			<input class="pf-field ui-widget-content" type="checkbox" id="serialized" name="serialized" checked="checked" /></label>
 	</div>
-	<div class="element">
-		<label><span class="label">Product Code</span>
-			<input class="field ui-widget-content" type="text" id="product_code" name="product_code" size="24" /></label>
-			<input class="button ui-state-default ui-corner-all" type="button" id="add_product" value="Add" />
+	<div class="pf-element">
+		<label><span class="pf-label">Product Code</span>
+			<input class="pf-field ui-widget-content" type="text" id="product_code" name="product_code" size="24" /></label>
+			<input class="pf-button ui-state-default ui-corner-all" type="button" id="add_product" value="Add" />
 	</div>
-	<div class="element full_width">
-		<span class="label">Products</span>
-		<div class="group">
-			<div class="field">
+	<div class="pf-element pf-full-width">
+		<span class="pf-label">Products</span>
+		<div class="pf-group">
+			<div class="pf-field">
 				<table id="products_table">
 					<thead>
 						<tr>
@@ -176,8 +176,8 @@ $this->note = 'Only use this form to receive inventory into your <strong>current
 			</label>
 		</div>
 	</div>
-	<div class="element buttons">
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url()); ?>');" value="Cancel" />
+	<div class="pf-element pf-buttons">
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url()); ?>');" value="Cancel" />
 	</div>
 </form>

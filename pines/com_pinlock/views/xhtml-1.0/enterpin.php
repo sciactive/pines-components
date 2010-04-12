@@ -19,20 +19,20 @@ $this->title = 'Verify Access';
 	});
 	// ]]>
 </script>
-<form class="pform" id="com_pinlock__login" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
-	<div class="element">
+<form class="pf-form" id="com_pinlock__login" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
+	<div class="pf-element">
 		<label>
-			<span class="label">PIN</span>
-			<span class="note">Please enter your PIN to continue.</span>
-			<input class="field ui-widget-content" type="password" name="pin" size="24" />
+			<span class="pf-label">PIN</span>
+			<span class="pf-note">Please enter your PIN to continue.</span>
+			<input class="pf-field ui-widget-content" type="password" name="pin" size="24" />
 		</label>
 	</div>
-	<div class="element buttons">
+	<div class="pf-element pf-buttons">
 		<input type="hidden" name="option" value="<?php echo $this->orig_component; ?>" />
 		<input type="hidden" name="action" value="<?php echo $this->orig_action; ?>" />
 		<input type="hidden" name="sessionid" value="<?php echo $this->orig_sessionid; ?>" />
 		<input type="hidden" name="com_pinlock_continue" value="true" />
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Continue" />
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="reset" name="reset" value="Reset" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Continue" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="reset" name="reset" value="Reset" />
 	</div>
 </form>

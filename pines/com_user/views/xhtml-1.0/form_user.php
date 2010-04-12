@@ -96,7 +96,7 @@ $this->note = 'Provide user details in this form.';
 	});
 	// ]]>
 </script>
-<form class="pform" method="post" id="user_details" action="<?php echo htmlentities(pines_url('com_user', 'saveuser')); ?>">
+<form class="pf-form" method="post" id="user_details" action="<?php echo htmlentities(pines_url('com_user', 'saveuser')); ?>">
 	<div id="user_tabs" style="clear: both;">
 		<ul>
 			<li><a href="#tab_general">General</a></li>
@@ -117,30 +117,30 @@ $this->note = 'Provide user details in this form.';
 				<span>Modified On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_mdate); ?></span></span>
 			</div>
 			<?php } ?>
-			<div class="element">
-				<label><span class="label">Username</span>
-					<input class="field ui-widget-content" type="text" name="username" size="24" value="<?php echo $this->entity->username; ?>" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Username</span>
+					<input class="pf-field ui-widget-content" type="text" name="username" size="24" value="<?php echo $this->entity->username; ?>" /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Name</span>
-					<input class="field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Name</span>
+					<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Email</span>
-					<input class="field ui-widget-content" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Email</span>
+					<input class="pf-field ui-widget-content" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Phone</span>
-					<input class="field ui-widget-content" type="text" name="phone" size="24" value="<?php echo pines_phone_format($this->entity->phone); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Phone</span>
+					<input class="pf-field ui-widget-content" type="text" name="phone" size="24" value="<?php echo pines_phone_format($this->entity->phone); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Fax</span>
-					<input class="field ui-widget-content" type="text" name="fax" size="24" value="<?php echo pines_phone_format($this->entity->fax); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Fax</span>
+					<input class="pf-field ui-widget-content" type="text" name="fax" size="24" value="<?php echo pines_phone_format($this->entity->fax); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Timezone</span>
-					<span class="note">This overrides the primary group's timezone.</span>
-					<select class="field ui-widget-content" name="timezone" size="1">
+			<div class="pf-element">
+				<label><span class="pf-label">Timezone</span>
+					<span class="pf-note">This overrides the primary group's timezone.</span>
+					<select class="pf-field ui-widget-content" name="timezone" size="1">
 						<option value="">--Inherit From Group--</option>
 						<?php $tz = DateTimeZone::listIdentifiers();
 						sort($tz);
@@ -149,69 +149,69 @@ $this->note = 'Provide user details in this form.';
 						<?php } ?>
 					</select></label>
 			</div>
-			<div class="element">
-				<label><span class="label"><?php if (isset($this->entity->guid)) echo 'Update '; ?>Password</span>
+			<div class="pf-element">
+				<label><span class="pf-label"><?php if (isset($this->entity->guid)) echo 'Update '; ?>Password</span>
 					<?php if (is_null($this->entity->guid)) {
-						echo ($pines->config->com_user->empty_pw ? '<span class="note">May be blank.</span>' : '');
+						echo ($pines->config->com_user->empty_pw ? '<span class="pf-note">May be blank.</span>' : '');
 					} else {
-						echo '<span class="note">Leave blank, if not changing.</span>';
+						echo '<span class="pf-note">Leave blank, if not changing.</span>';
 					} ?>
-					<input class="field ui-widget-content" type="password" name="password" size="24" /></label>
+					<input class="pf-field ui-widget-content" type="password" name="password" size="24" /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Repeat Password</span>
-					<input class="field ui-widget-content" type="password" name="password2" size="24" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Repeat Password</span>
+					<input class="pf-field ui-widget-content" type="password" name="password2" size="24" /></label>
 			</div>
 			<?php if ( $this->display_pin ) { ?>
-			<div class="element">
-				<label><span class="label">PIN code</span>
-					<input class="field ui-widget-content" type="password" name="pin" size="5" value="<?php echo $this->entity->pin; ?>" <?php echo $pines->config->com_user->max_pin_length > 0 ? "maxlength=\"{$pines->config->com_user->max_pin_length}\"" : ''; ?>/></label>
+			<div class="pf-element">
+				<label><span class="pf-label">PIN code</span>
+					<input class="pf-field ui-widget-content" type="password" name="pin" size="5" value="<?php echo $this->entity->pin; ?>" <?php echo $pines->config->com_user->max_pin_length > 0 ? "maxlength=\"{$pines->config->com_user->max_pin_length}\"" : ''; ?>/></label>
 			</div>
 			<?php } ?>
 			<?php if ( $this->display_default_components ) { ?>
-				<div class="element">
-					<label><span class="label">Default Component</span>
-						<span class="note">This component will be responsible for the user's home page.</span>
-						<select class="field ui-widget-content" name="default_component">
+				<div class="pf-element">
+					<label><span class="pf-label">Default Component</span>
+						<span class="pf-note">This component will be responsible for the user's home page.</span>
+						<select class="pf-field ui-widget-content" name="default_component">
 								<?php foreach ($this->default_components as $cur_component) { ?>
 							<option value="<?php echo $cur_component; ?>"<?php echo (($this->entity->default_component == $cur_component) ? ' selected="selected"' : ''); ?>><?php echo $cur_component; ?></option>
 								<?php } ?>
 						</select></label>
 				</div>
 			<?php } ?>
-			<br class="clearing" />
+			<br class="pf-clearing" />
 		</div>
 		<div id="tab_groups">
 			<?php if ( $this->display_groups ) { ?>
 				<?php if (empty($this->group_array)) { ?>
-				<div class="element">
-					<span class="label">There are no groups to display.</span>
+				<div class="pf-element">
+					<span class="pf-label">There are no groups to display.</span>
 				</div>
 				<?php } else { ?>
-				<div class="element">
-					<label><span class="label">Primary Group</span>
-						<select class="field ui-widget-content" name="group" size="1">
+				<div class="pf-element">
+					<label><span class="pf-label">Primary Group</span>
+						<select class="pf-field ui-widget-content" name="group" size="1">
 							<option value="null">-- No Primary Group --</option>
 									<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->entity->group); ?>
 						</select></label>
 				</div>
-				<div class="element">
-					<label><span class="label">Groups</span>
-						<span class="note">Hold Ctrl (Command on Mac) to select multiple groups.</span>
-						<select class="field ui-widget-content" name="groups[]" multiple="multiple" size="6">
+				<div class="pf-element">
+					<label><span class="pf-label">Groups</span>
+						<span class="pf-note">Hold Ctrl (Command on Mac) to select multiple groups.</span>
+						<select class="pf-field ui-widget-content" name="groups[]" multiple="multiple" size="6">
 									<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->entity->groups); ?>
 						</select></label>
 				</div>
 				<?php }
 			} else { ?>
-			<div class="element">
+			<div class="pf-element">
 				<p>You do not have sufficient privileges to edit group membership.</p>
 			</div>
 			<?php } ?>
-			<br class="clearing" />
+			<br class="pf-clearing" />
 		</div>
 		<div id="tab_location">
-			<div class="element">
+			<div class="pf-element">
 				<script type="text/javascript">
 					// <![CDATA[
 					$(function(){
@@ -230,22 +230,22 @@ $this->note = 'Provide user details in this form.';
 					});
 					// ]]>
 				</script>
-				<span class="label">Address Type</span>
-				<label><input class="field ui-widget-content" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
-				<label><input class="field ui-widget-content" type="radio" name="address_type" value="international"<?php echo $this->entity->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
+				<span class="pf-label">Address Type</span>
+				<label><input class="pf-field ui-widget-content" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
+				<label><input class="pf-field ui-widget-content" type="radio" name="address_type" value="international"<?php echo $this->entity->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
 			</div>
 			<div id="address_us" style="display: none;">
-				<div class="element">
-					<label><span class="label">Address 1</span>
-						<input class="field ui-widget-content" type="text" name="address_1" size="24" value="<?php echo $this->entity->address_1; ?>" /></label>
+				<div class="pf-element">
+					<label><span class="pf-label">Address 1</span>
+						<input class="pf-field ui-widget-content" type="text" name="address_1" size="24" value="<?php echo $this->entity->address_1; ?>" /></label>
 				</div>
-				<div class="element">
-					<label><span class="label">Address 2</span>
-						<input class="field ui-widget-content" type="text" name="address_2" size="24" value="<?php echo $this->entity->address_2; ?>" /></label>
+				<div class="pf-element">
+					<label><span class="pf-label">Address 2</span>
+						<input class="pf-field ui-widget-content" type="text" name="address_2" size="24" value="<?php echo $this->entity->address_2; ?>" /></label>
 				</div>
-				<div class="element">
-					<span class="label">City, State</span>
-					<input class="field ui-widget-content" type="text" name="city" size="15" value="<?php echo $this->entity->city; ?>" />
+				<div class="pf-element">
+					<span class="pf-label">City, State</span>
+					<input class="pf-field ui-widget-content" type="text" name="city" size="15" value="<?php echo $this->entity->city; ?>" />
 					<select name="state">
 						<option value="">None</option>
 						<?php foreach (array(
@@ -305,18 +305,18 @@ $this->note = 'Provide user details in this form.';
 						<?php } ?>
 					</select>
 				</div>
-				<div class="element">
-					<label><span class="label">Zip</span>
-						<input class="field ui-widget-content" type="text" name="zip" size="24" value="<?php echo $this->entity->zip; ?>" /></label>
+				<div class="pf-element">
+					<label><span class="pf-label">Zip</span>
+						<input class="pf-field ui-widget-content" type="text" name="zip" size="24" value="<?php echo $this->entity->zip; ?>" /></label>
 				</div>
 			</div>
 			<div id="address_international" style="display: none;">
-				<div class="element full_width">
-					<label><span class="label">Address</span>
-						<span class="field full_width"><textarea style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo $this->entity->address_international; ?></textarea></span></label>
+				<div class="pf-element pf-full-width">
+					<label><span class="pf-label">Address</span>
+						<span class="pf-field pf-full-width"><textarea style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo $this->entity->address_international; ?></textarea></span></label>
 				</div>
 			</div>
-			<br class="clearing" />
+			<br class="pf-clearing" />
 		</div>
 		<div id="tab_abilities">
 			<?php if ( $this->display_abilities ) { ?>
@@ -343,49 +343,49 @@ $this->note = 'Provide user details in this form.';
 				});
 				// ]]>
 			</script>
-			<div class="element">
-				<span class="label">Inherit</span>
+			<div class="pf-element">
+				<span class="pf-label">Inherit</span>
 				<label>
-					<input class="field ui-widget-content" type="checkbox" name="inherit_abilities" value="ON" <?php echo ($this->entity->inherit_abilities ? 'checked="checked" ' : ''); ?>/>
+					<input class="pf-field ui-widget-content" type="checkbox" name="inherit_abilities" value="ON" <?php echo ($this->entity->inherit_abilities ? 'checked="checked" ' : ''); ?>/>
 					&nbsp;Inherit additional abilities from groups.
 				</label>
 			</div>
-			<div class="element full_width ui-helper-clearfix">
+			<div class="pf-element pf-full-width ui-helper-clearfix">
 				<div style="float: right; clear: both;">
 					<button type="button" class="expand_all">Expand All</button>
 					<button type="button" class="collapse_all">Collapse All</button>
 				</div>
 			</div>
-			<br class="clearing" />
+			<br class="pf-clearing" />
 			<?php foreach ($this->sections as $cur_section) {
 				$section_abilities = $pines->ability_manager->get_abilities($cur_section);
 				if ( !count($section_abilities) ) continue; ?>
 			<div class="abilities_accordian">
 				<h3><a href="#"><?php echo $cur_section; ?></a></h3>
 				<div>
-					<div class="element">
+					<div class="pf-element">
 						<?php foreach ($section_abilities as $cur_ability) { ?>
 						<label>
 							<input class="ui-widget-content" type="checkbox" name="<?php echo $cur_section; ?>[]" value="<?php echo $cur_ability['ability']; ?>" <?php echo (array_search("{$cur_section}/{$cur_ability['ability']}", $this->entity->abilities) !== false) ? 'checked="checked" ' : ''; ?>/>
 							<?php echo $cur_ability['title']; ?>&nbsp;<small><?php echo $cur_ability['description']; ?></small>
 						</label>
-						<br class="clearing" />
+						<br class="pf-clearing" />
 						<?php } ?>
 					</div>
 				</div>
 			</div>
 			<?php } ?>
 			<?php } else { ?>
-			<div class="element">
+			<div class="pf-element">
 				<p>You do not have sufficient privileges to edit abilities.</p>
 			</div>
 			<?php } ?>
-			<br class="clearing" />
+			<br class="pf-clearing" />
 		</div>
 		<div id="tab_attributes">
-			<div class="element full_width">
-				<span class="label">Attributes</span>
-				<div class="group">
+			<div class="pf-element pf-full-width">
+				<span class="pf-label">Attributes</span>
+				<div class="pf-group">
 					<table class="attributes_table">
 						<thead>
 							<tr>
@@ -417,16 +417,16 @@ $this->note = 'Provide user details in this form.';
 					</label>
 				</div>
 			</div>
-			<br class="clearing" />
+			<br class="pf-clearing" />
 		</div>
 	</div>
 
-	<div class="element buttons">
+	<div class="pf-element pf-buttons">
 		<br />
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_user', 'listusers')); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_user', 'listusers')); ?>');" value="Cancel" />
 	</div>
 </form>

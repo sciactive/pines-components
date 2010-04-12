@@ -62,13 +62,13 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 		}).live("mouseout", function(){
 			$(this).closest("div").removeClass("ui-state-hover");
 		}).live("click", function(){
-			cur_entry = $(this).closest(".element");
+			cur_entry = $(this).closest(".pf-element");
 			$("#cur_time").val($(this).text());
 			$("#date_time_dialog").dialog("open");
 		});
 
 		$("#timeclock_edit div.entry button").live("click", function(){
-			$(this).closest(".element").animate({height: 0, opacity: 0}, "normal", function(){
+			$(this).closest(".pf-element").animate({height: 0, opacity: 0}, "normal", function(){
 				$(this).remove();
 				clean_up();
 			});
@@ -143,23 +143,23 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 	});
 	// ]]>
 </script>
-<div class="pform" id="timeclock_edit">
+<div class="pf-form" id="timeclock_edit">
 <?php foreach($this->entity->timeclock as $key => $entry) { ?>
-	<div class="element full_width entry">
+	<div class="pf-element pf-full-width entry">
 		<div style="padding: 3px;" class="ui-helper-clearfix ui-widget-content ui-corner-all">
 			<button style="float: right; margin: 3px;" class="ui-state-default ui-corner-all">Delete</button>
-			<span class="label time" style="cursor: pointer;"><?php echo pines_date_format($entry['time'], $this->entity->get_timezone(true)); ?></span>
-			<span class="note timestamp"><?php echo $entry['time']; ?></span>
-			<span class="field status"><?php echo $entry['status']; ?></span>
+			<span class="pf-label time" style="cursor: pointer;"><?php echo pines_date_format($entry['time'], $this->entity->get_timezone(true)); ?></span>
+			<span class="pf-note timestamp"><?php echo $entry['time']; ?></span>
+			<span class="pf-field status"><?php echo $entry['status']; ?></span>
 		</div>
 	</div>
 <?php } ?>
-	<div id="timeclock_entry_template" class="element full_width" style="display: none;">
+	<div id="timeclock_entry_template" class="pf-element pf-full-width" style="display: none;">
 		<div style="padding: 3px;" class="ui-helper-clearfix ui-widget-content ui-corner-all">
 			<button style="float: right; margin: 3px;" class="ui-state-default ui-corner-all">Delete</button>
-			<span class="label time" style="cursor: pointer;"></span>
-			<span class="note timestamp"></span>
-			<span class="field status"></span>
+			<span class="pf-label time" style="cursor: pointer;"></span>
+			<span class="pf-note timestamp"></span>
+			<span class="pf-field status"></span>
 		</div>
 	</div>
 	<button style="float: right; margin: 3px;" class="add-button ui-state-default ui-corner-all">Add</button>
@@ -192,9 +192,9 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 	<form method="post" id="timeclock_form" action="<?php echo htmlentities(pines_url('com_hrm', 'savetimeclock')); ?>">
 		<input type="hidden" name="clock" value="" />
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
-		<div class="element buttons">
-			<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-			<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_hrm', 'listtimeclocks')); ?>');" value="Cancel" />
+		<div class="pf-element pf-buttons">
+			<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
+			<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_hrm', 'listtimeclocks')); ?>');" value="Cancel" />
 		</div>
 	</form>
 </div>

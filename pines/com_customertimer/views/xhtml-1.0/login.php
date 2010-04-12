@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Customer Login/Logout';
 $this->note = 'Please enter your info, or scan your barcode to login or logout.';
 ?>
-<form class="pform" id="customer_login" name="customer_login" method="post" action="<?php echo htmlentities(pines_url('com_customertimer', 'login')); ?>">
+<form class="pf-form" id="customer_login" name="customer_login" method="post" action="<?php echo htmlentities(pines_url('com_customertimer', 'login')); ?>">
 	<script type="text/javascript">
 	// <![CDATA[
 	var id_box;
@@ -34,16 +34,16 @@ $this->note = 'Please enter your info, or scan your barcode to login or logout.'
 	});
 	// ]]>
 	</script>
-	<div class="element">
-		<label><span class="label">Customer ID</span>
-			<input class="field ui-widget-content" type="password" name="id" size="24" /></label>
+	<div class="pf-element">
+		<label><span class="pf-label">Customer ID</span>
+			<input class="pf-field ui-widget-content" type="password" name="id" size="24" /></label>
 	</div>
-	<div class="element">
-		<label><span class="label">Password</span>
-			<input class="field ui-widget-content" type="password" name="password" size="24" /></label>
+	<div class="pf-element">
+		<label><span class="pf-label">Password</span>
+			<input class="pf-field ui-widget-content" type="password" name="password" size="24" /></label>
 	</div>
-	<div class="element buttons">
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Submit" />
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="reset" name="reset" value="Reset" />
+	<div class="pf-element pf-buttons">
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Submit" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="reset" name="reset" value="Reset" />
 	</div>
 </form>

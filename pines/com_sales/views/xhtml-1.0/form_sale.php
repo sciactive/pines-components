@@ -22,7 +22,7 @@ if (is_null($this->entity->guid)) {
 $this->note = 'Use this form to edit a sale.';
 // TODO: After a sale is invoiced, don't calculate totals, just show what's saved.
 ?>
-<form class="pform" method="post" id="sale_details" action="<?php echo htmlentities(pines_url('com_sales', 'savesale')); ?>">
+<form class="pf-form" method="post" id="sale_details" action="<?php echo htmlentities(pines_url('com_sales', 'savesale')); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 			<?php if (isset($this->entity->uid)) { ?>
@@ -795,17 +795,17 @@ $this->note = 'Use this form to edit a sale.';
 		// ]]>
 	</script>
 	<?php if ($pines->com_sales->com_customer) { ?>
-	<div class="element">
-		<label for="customer_search"><span class="label">Customer</span>
+	<div class="pf-element">
+		<label for="customer_search"><span class="pf-label">Customer</span>
 			<?php if ($this->entity->status != 'invoiced' && $this->entity->status != 'paid') { ?>
-			<span class="note">Enter part of a name, company, email, or phone # to search.</span>
+			<span class="pf-note">Enter part of a name, company, email, or phone # to search.</span>
 			<?php } ?>
 		</label>
-		<div class="group">
-			<input class="field ui-widget-content" type="text" id="customer" name="customer" size="24" onfocus="this.blur();" value="<?php echo htmlentities($this->entity->customer->guid ? "{$this->entity->customer->guid}: \"{$this->entity->customer->name}\"" : 'No Customer Selected'); ?>" />
+		<div class="pf-group">
+			<input class="pf-field ui-widget-content" type="text" id="customer" name="customer" size="24" onfocus="this.blur();" value="<?php echo htmlentities($this->entity->customer->guid ? "{$this->entity->customer->guid}: \"{$this->entity->customer->name}\"" : 'No Customer Selected'); ?>" />
 			<?php if ($this->entity->status != 'invoiced' && $this->entity->status != 'paid') { ?>
 			<br />
-			<input class="field ui-widget-content" type="text" id="customer_search" name="customer_search" size="24" />
+			<input class="pf-field ui-widget-content" type="text" id="customer_search" name="customer_search" size="24" />
 			<button type="button" id="customer_search_button"><span class="picon_16x16_actions_system-search" style="padding-left: 16px; background-repeat: no-repeat;">Search</span></button>
 			<?php } ?>
 		</div>
@@ -847,13 +847,13 @@ $this->note = 'Use this form to edit a sale.';
 				</tr>
 			</tbody>
 		</table>
-		<br class="clearing" />
+		<br class="pf-clearing" />
 	</div>
 	<?php } ?>
-	<div class="element full_width">
-		<span class="label">Products</span>
-		<div class="group">
-			<div class="field">
+	<div class="pf-element pf-full-width">
+		<span class="pf-label">Products</span>
+		<div class="pf-group">
+			<div class="pf-field">
 				<table id="products_table">
 					<thead>
 						<tr>
@@ -891,23 +891,23 @@ $this->note = 'Use this form to edit a sale.';
 			<input type="hidden" id="products" name="products" size="24" />
 		</div>
 	</div>
-	<div class="element full_width">
-		<span class="label">Ticket Totals</span>
-		<div class="group">
-			<div class="field" style="float: right; font-size: 1.2em; text-align: right;">
-				<span class="label">Subtotal</span><span class="field" id="subtotal">0.00</span><br />
-				<span class="label">Item Fees</span><span class="field" id="item_fees">0.00</span><br />
-				<span class="label">Tax</span><span class="field" id="taxes">0.00</span><br />
+	<div class="pf-element pf-full-width">
+		<span class="pf-label">Ticket Totals</span>
+		<div class="pf-group">
+			<div class="pf-field" style="float: right; font-size: 1.2em; text-align: right;">
+				<span class="pf-label">Subtotal</span><span class="pf-field" id="subtotal">0.00</span><br />
+				<span class="pf-label">Item Fees</span><span class="pf-field" id="item_fees">0.00</span><br />
+				<span class="pf-label">Tax</span><span class="pf-field" id="taxes">0.00</span><br />
 				<hr /><br />
-				<span class="label">Total</span><span class="field" id="total">0.00</span>
+				<span class="pf-label">Total</span><span class="pf-field" id="total">0.00</span>
 			</div>
-			<hr class="field" style="clear: both;" />
+			<hr class="pf-field" style="clear: both;" />
 		</div>
 	</div>
-	<div class="element full_width">
-		<span class="label">Payments</span>
+	<div class="pf-element pf-full-width">
+		<span class="pf-label">Payments</span>
 		<?php if ($this->entity->status != 'paid') { ?>
-		<div class="note">
+		<div class="pf-note">
 			<div style="text-align: left;">
 				<?php foreach ($this->payment_types as $cur_payment_type) { ?>
 				<button id="payment_<?php echo $cur_payment_type->guid; ?>" class="ui-state-default ui-corner-all payment-button" type="button" style="margin-bottom: 2px;" value="<?php echo htmlentities(json_encode((object) array('guid' => $cur_payment_type->guid, 'name' => $cur_payment_type->name, 'minimum' => $cur_payment_type->minimum, 'maximum' => $cur_payment_type->maximum, 'processing_type' => $cur_payment_type->processing_type))); ?>">
@@ -918,10 +918,10 @@ $this->note = 'Use this form to edit a sale.';
 		</div>
 		<?php } ?>
 		<?php /*
-		<div class="group">
+		<div class="pf-group">
 			<div style="float: right;">
 				<?php foreach ($this->payment_types as $cur_payment_type) { ?>
-				<button id="payment_<?php echo $cur_payment_type->guid; ?>" class="field ui-state-default ui-corner-all payment-button" type="button" value="<?php echo htmlentities(json_encode((object) array("guid" => $cur_payment_type->guid, "name" => $cur_payment_type->name, "minimum" => $cur_payment_type->minimum))); ?>">
+				<button id="payment_<?php echo $cur_payment_type->guid; ?>" class="pf-field ui-state-default ui-corner-all payment-button" type="button" value="<?php echo htmlentities(json_encode((object) array("guid" => $cur_payment_type->guid, "name" => $cur_payment_type->name, "minimum" => $cur_payment_type->minimum))); ?>">
 					<span class="picon_32x32_actions_list-add" style="display: block; padding-top: 32px; min-width: 32px; background-repeat: no-repeat; background-position: top center;"><?php echo $cur_payment_type->name; ?></span>
 				</button>
 				<?php } ?>
@@ -929,8 +929,8 @@ $this->note = 'Use this form to edit a sale.';
 			<br style="clear: both;" />
 		</div>
 		 */ ?>
-		<div style="margin-top: 5px;" class="group">
-			<div class="field">
+		<div style="margin-top: 5px;" class="pf-group">
+			<div class="pf-field">
 				<table id="payments_table">
 					<thead>
 						<tr>
@@ -946,26 +946,26 @@ $this->note = 'Use this form to edit a sale.';
 			<input type="hidden" id="payments" name="payments" size="24" />
 		</div>
 	</div>
-	<div class="element full_width">
-		<span class="label">Tendered</span>
-		<div class="group">
-			<div class="field" style="float: right; font-size: 1.2em; text-align: right;">
-				<span class="label">Amount Tendered</span><span class="field" id="amount_tendered">0.00</span><br />
-				<span class="label">Amount Due</span><span style="font-weight: bold;" class="field" id="amount_due">0.00</span><br />
+	<div class="pf-element pf-full-width">
+		<span class="pf-label">Tendered</span>
+		<div class="pf-group">
+			<div class="pf-field" style="float: right; font-size: 1.2em; text-align: right;">
+				<span class="pf-label">Amount Tendered</span><span class="pf-field" id="amount_tendered">0.00</span><br />
+				<span class="pf-label">Amount Due</span><span style="font-weight: bold;" class="pf-field" id="amount_due">0.00</span><br />
 				<hr /><br />
-				<span class="label">Change</span><span style="font-weight: bold;" class="field" id="change">0.00</span>
+				<span class="pf-label">Change</span><span style="font-weight: bold;" class="pf-field" id="change">0.00</span>
 			</div>
-			<hr class="field" style="clear: both;" />
+			<hr class="pf-field" style="clear: both;" />
 		</div>
 	</div>
-	<div class="element">
-		<label><span class="label">Comments</span>
-			<input class="field ui-widget-content ui-state-default ui-corner-all" type="button" value="Edit" onclick="$('#comments_dialog').dialog('open');" /></label>
+	<div class="pf-element">
+		<label><span class="pf-label">Comments</span>
+			<input class="pf-field ui-widget-content ui-state-default ui-corner-all" type="button" value="Edit" onclick="$('#comments_dialog').dialog('open');" /></label>
 	</div>
 	<div id="comments_dialog" title="Comments">
-		<textarea class="field" style="width: 100%; height: 100%;" rows="3" cols="35" id="comments" name="comments"><?php echo $this->entity->comments; ?></textarea>
+		<textarea class="pf-field" style="width: 100%; height: 100%;" rows="3" cols="35" id="comments" name="comments"><?php echo $this->entity->comments; ?></textarea>
 	</div>
-	<div class="element buttons">
+	<div class="pf-element pf-buttons">
 		<input type="hidden" id="comment_saver" name="comment_saver" value="<?php echo $this->entity->comments; ?>" />
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
@@ -974,19 +974,19 @@ $this->note = 'Use this form to edit a sale.';
 		<input type="hidden" id="sale_process_type" name="process" value="quote" />
 
 		<?php if ($this->entity->status != 'paid') { ?>
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Tender" onclick="$('#sale_process_type').val('tender'); run_drawer();" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Tender" onclick="$('#sale_process_type').val('tender'); run_drawer();" />
 		<?php } ?>
 
 		<?php if ($this->entity->status != 'paid' && $this->entity->status != 'invoiced') { ?>
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Invoice" onclick="$('#sale_process_type').val('invoice'); run_submit();" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Invoice" onclick="$('#sale_process_type').val('invoice'); run_submit();" />
 		<?php } ?>
 
 		<?php if ($this->entity->status != 'paid' && $this->entity->status != 'invoiced' && $this->entity->status != 'quoted') { ?>
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Quote" onclick="$('#sale_process_type').val('quote'); run_submit();" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Quote" onclick="$('#sale_process_type').val('quote'); run_submit();" />
 		<?php } else { ?>
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Save" onclick="$('#sale_process_type').val('save'); run_submit();" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Save" onclick="$('#sale_process_type').val('save'); run_submit();" />
 		<?php } ?>
 
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'listsales')); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'listsales')); ?>');" value="Cancel" />
 	</div>
 </form>

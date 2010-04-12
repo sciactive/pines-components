@@ -77,7 +77,7 @@ if ($this->entity->status == 'quoted') {
 	}
 	/* ]]> */
 </style>
-<div id="receipt_sale" class="pform pform_twocol">
+<div id="receipt_sale" class="pf-form pf-form-twocol">
 	<?php
 	// Sales rep and sales group entities.
 	$sales_rep = user::factory((int) $this->entity->uid);
@@ -162,7 +162,7 @@ if ($this->entity->status == 'quoted') {
 		</div>
 	</div>
 <?php } ?>
-	<div class="element full_width left_side">
+	<div class="pf-element pf-full-width left_side">
 		<table id="item_list" width="100%">
 			<thead>
 				<tr>
@@ -188,7 +188,7 @@ if ($this->entity->status == 'quoted') {
 			</tbody>
 		</table>
 	</div>
-	<div class="element full_width">
+	<div class="pf-element pf-full-width">
 		<?php if ($this->entity->status == 'paid' && is_array($this->entity->payments)) { ?>
 		<div class="left_side">
 			<div>
@@ -239,17 +239,17 @@ if ($this->entity->status == 'quoted') {
 		</div>
 	</div>
 	<?php if (!empty($this->entity->comments)) { ?>
-	<div class="element full_width">
-		<div class="field">
-			<span class="label">Comments:</span>
+	<div class="pf-element pf-full-width">
+		<div class="pf-field">
+			<span class="pf-label">Comments:</span>
 			<br />
-			<span class="field comments"><?php echo $this->entity->comments; ?></span>
+			<span class="pf-field comments"><?php echo $this->entity->comments; ?></span>
 		</div>
 	</div>
 	<?php } ?>
-	<div class="element full_width">
-		<div class="field">
-			<span class="label"><?php
+	<div class="pf-element pf-full-width">
+		<div class="pf-field">
+			<span class="pf-label"><?php
 				switch ($this->entity->status) {
 					case 'quoted':
 						echo $pines->config->com_sales->quote_note_label;
@@ -263,7 +263,7 @@ if ($this->entity->status == 'quoted') {
 				}
 			?></span>
 			<br />
-			<div class="field receipt_note"><?php
+			<div class="pf-field receipt_note"><?php
 				switch ($this->entity->status) {
 					case 'quoted':
 						echo $pines->config->com_sales->quote_note_text;

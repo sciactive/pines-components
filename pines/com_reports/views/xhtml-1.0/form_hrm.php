@@ -59,17 +59,17 @@ $this->title = 'New Report';
 	});
 	// ]]>
 </script>
-<form class="pform" method="post" id="report_details" action="<?php echo htmlentities(pines_url('com_reports', 'reportattendance')); ?>">
-	<div class="element" style="padding-bottom: 0px;" id="location_tree"></div>
-	<div class="element" style="padding-bottom: 0px;">
-		<span class="note">Start</span>
-		<input class="field ui-corner-all ui-widget-content form_date" type="text" name="start" value="<?php echo ($this->date[0]) ? pines_date_format($this->date[0], null, 'Y-m-d') : pines_date_format(time(), null, 'Y-m-d'); ?>" />
+<form class="pf-form" method="post" id="report_details" action="<?php echo htmlentities(pines_url('com_reports', 'reportattendance')); ?>">
+	<div class="pf-element" style="padding-bottom: 0px;" id="location_tree"></div>
+	<div class="pf-element" style="padding-bottom: 0px;">
+		<span class="pf-note">Start</span>
+		<input class="pf-field ui-corner-all ui-widget-content form_date" type="text" name="start" value="<?php echo ($this->date[0]) ? pines_date_format($this->date[0], null, 'Y-m-d') : pines_date_format(time(), null, 'Y-m-d'); ?>" />
 	</div>
-	<div class="element">
-		<span class="note">End</span>
-		<input class="field ui-corner-all ui-widget-content form_date" type="text" name="end" value="<?php echo ($this->date[1]) ? pines_date_format($this->date[1], null, 'Y-m-d') : pines_date_format(time(), null, 'Y-m-d'); ?>" />
+	<div class="pf-element">
+		<span class="pf-note">End</span>
+		<input class="pf-field ui-corner-all ui-widget-content form_date" type="text" name="end" value="<?php echo ($this->date[1]) ? pines_date_format($this->date[1], null, 'Y-m-d') : pines_date_format(time(), null, 'Y-m-d'); ?>" />
 	</div>
-	<div class="element">
+	<div class="pf-element">
 		<input type="hidden" name="location" id="location" />
 		<input type="submit" value="View Report &raquo;" class="ui-corner-all ui-state-default form_input" />
 	</div>

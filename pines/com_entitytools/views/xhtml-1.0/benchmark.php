@@ -14,8 +14,8 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Entity Manager Benchmark';
 ?>
-<form class="pform" method="post" action="<?php echo htmlentities(pines_url('com_entitytools', 'benchmark')); ?>">
-	<div class="element heading">
+<form class="pf-form" method="post" action="<?php echo htmlentities(pines_url('com_entitytools', 'benchmark')); ?>">
+	<div class="pf-element pf-heading">
 		<p>
 			This entity manager benchmark will create, retrieve and delete
 			1,000,000 entities and display the timing results here. It may take
@@ -23,8 +23,8 @@ $this->title = 'Entity Manager Benchmark';
 			to proceed?
 		</p>
 	</div>
-	<div class="element buttons">
+	<div class="pf-element pf-buttons">
 		<input type="hidden" name="sure" value="yes" />
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Yes, proceed." />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Yes, proceed." />
 	</div>
 </form>

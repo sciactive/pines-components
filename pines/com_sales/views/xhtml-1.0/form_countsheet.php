@@ -113,20 +113,20 @@ if (isset($this->entity->guid))
 	});
 	// ]]>
 </script>
-<form class="pform" method="post" id="countsheet_details" action="<?php echo htmlentities(pines_url('com_sales', 'savecountsheet')); ?>">
+<form class="pf-form" method="post" id="countsheet_details" action="<?php echo htmlentities(pines_url('com_sales', 'savecountsheet')); ?>">
 	<?php if (!empty($this->entity->review_comments)) {?>
-	<div class="element heading">
+	<div class="pf-element pf-heading">
 		<h1>Reviewer Comments</h1>
 	</div>
-	<div class="element full_width">
-		<div class="field"><?php echo $this->entity->review_comments; ?></div>
+	<div class="pf-element pf-full-width">
+		<div class="pf-field"><?php echo $this->entity->review_comments; ?></div>
 	</div>
 	<?php } ?>
-	<div class="element heading">
+	<div class="pf-element pf-heading">
 		<h1>Entries</h1>
 	</div>
-	<div class="element full_width">
-		<div class="field">
+	<div class="pf-element pf-full-width">
+		<div class="pf-field">
 			<table id="entries_table">
 				<thead>
 					<tr>
@@ -143,23 +143,23 @@ if (isset($this->entity->guid))
 			</table>
 		</div>
 	</div>
-	<div class="element heading">
+	<div class="pf-element pf-heading">
 		<h1>Comments</h1>
 	</div>
-	<div class="element full_width">
-		<span class="field"><textarea style="width: 98%;" rows="3" cols="35" name="comments"><?php echo $this->entity->comments; ?></textarea></span>
+	<div class="pf-element pf-full-width">
+		<span class="pf-field"><textarea style="width: 98%;" rows="3" cols="35" name="comments"><?php echo $this->entity->comments; ?></textarea></span>
 	</div>
-	<div class="element buttons">
+	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } if (!$this->entity->final) { ?>
 		<input type="hidden" name="entries" value="" />
 		<input type="hidden" name="save" value="" />
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" onclick="$('#countsheet_details input[name=save]').val('save');" />
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Commit" onclick="$('#countsheet_details input[name=save]').val('commit');" />
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'listcountsheets')); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" onclick="$('#countsheet_details input[name=save]').val('save');" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Commit" onclick="$('#countsheet_details input[name=save]').val('commit');" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'listcountsheets')); ?>');" value="Cancel" />
 		<?php } else { ?>
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'listcountsheets')); ?>');" value="&laquo; Close" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'listcountsheets')); ?>');" value="&laquo; Close" />
 		<?php } ?>
 	</div>
 </form>

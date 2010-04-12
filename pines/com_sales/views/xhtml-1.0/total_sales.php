@@ -12,13 +12,13 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Sales Totals';
 ?>
-<div id="sales_totals" class="pform">
-	<div class="element heading">
+<div id="sales_totals" class="pf-form">
+	<div class="pf-element pf-heading">
 		<script type="text/javascript">
 			// <![CDATA[
 			$(function(){
 				$("#hide_parameters").click(function(){
-					$("#sales_totals").children(".element:not(.heading)").slideToggle();
+					$("#sales_totals").children(".pf-element:not(.pf-heading)").slideToggle();
 				});
 			});
 			// ]]>
@@ -26,9 +26,9 @@ $this->title = 'Sales Totals';
 		<button id="hide_parameters" class="ui-state-default ui-corner-all" style="float: right;">Toggle Form</button>
 		<h1>Parameters</h1>
 	</div>
-	<div class="element">
-		<label><span class="label">Location</span>
-			<select class="field ui-widget-content" id="location" name="location">
+	<div class="pf-element">
+		<label><span class="pf-label">Location</span>
+			<select class="pf-field ui-widget-content" id="location" name="location">
 				<option value="current">-- Current --</option>
 				<?php if ($this->show_all) { ?>
 				<option value="all">-- All --</option>
@@ -36,7 +36,7 @@ $this->title = 'Sales Totals';
 				<?php } ?>
 			</select></label>
 	</div>
-	<div class="element">
+	<div class="pf-element">
 		<script type="text/javascript">
 			// <![CDATA[
 			$(function(){
@@ -48,10 +48,10 @@ $this->title = 'Sales Totals';
 			});
 			// ]]>
 		</script>
-		<label><span class="label">Start Date</span>
-			<input class="field ui-widget-content" type="text" id="date_start" name="date_start" size="24" value="<?php echo date('Y-m-d'); ?>" /></label>
+		<label><span class="pf-label">Start Date</span>
+			<input class="pf-field ui-widget-content" type="text" id="date_start" name="date_start" size="24" value="<?php echo date('Y-m-d'); ?>" /></label>
 	</div>
-	<div class="element">
+	<div class="pf-element">
 		<script type="text/javascript">
 			// <![CDATA[
 			$(function(){
@@ -63,10 +63,10 @@ $this->title = 'Sales Totals';
 			});
 			// ]]>
 		</script>
-		<label><span class="label">End Date</span>
-			<input class="field ui-widget-content" type="text" id="date_end" name="date_end" size="24" value="<?php echo date('Y-m-d'); ?>" /></label>
+		<label><span class="pf-label">End Date</span>
+			<input class="pf-field ui-widget-content" type="text" id="date_end" name="date_end" size="24" value="<?php echo date('Y-m-d'); ?>" /></label>
 	</div>
-	<div class="element buttons">
+	<div class="pf-element pf-buttons">
 		<script type="text/javascript">
 			// <![CDATA[
 			var com_sales_location;
@@ -111,13 +111,13 @@ $this->title = 'Sales Totals';
 							com_sales_result_totals.find(".total_users").empty().each(function(){
 								var total_users = $(this);
 								$.each(data.user, function(i, val){
-									total_users.append("<div class=\"element\"><span class=\"label\">"+i+"</span><div class=\"group\"><span class=\"field\">Count: </span><span class=\"field\">"+val.count+"</span><br /><span class=\"field\">Total: </span><span class=\"field\">$"+val.total+"</span></div></div>");
+									total_users.append("<div class=\"pf-element\"><span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><span class=\"pf-field\">Count: </span><span class=\"pf-field\">"+val.count+"</span><br /><span class=\"pf-field\">Total: </span><span class=\"pf-field\">$"+val.total+"</span></div></div>");
 								});
 							});
 							com_sales_result_totals.find(".total_payments").empty().each(function(){
 								var total_payments = $(this);
 								$.each(data.payment, function(i, val){
-									total_payments.append("<div class=\"element\"><span class=\"label\">"+i+"</span><div class=\"group\"><span class=\"field\">Count: </span><span class=\"field\">"+val.count+"</span><br /><span class=\"field\">Total: </span><span class=\"field\">$"+val.total+"</span>"+(val.change_given ? "<br /><span class=\"field\">Change Given: </span><span class=\"field\">$"+val.change_given+"</span><br /><span class=\"field\">Net Total: </span><span class=\"field\">$"+val.net_total+"</span>" : "")+"</div></div>");
+									total_payments.append("<div class=\"pf-element\"><span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><span class=\"pf-field\">Count: </span><span class=\"pf-field\">"+val.count+"</span><br /><span class=\"pf-field\">Total: </span><span class=\"pf-field\">$"+val.total+"</span>"+(val.change_given ? "<br /><span class=\"pf-field\">Change Given: </span><span class=\"pf-field\">$"+val.change_given+"</span><br /><span class=\"pf-field\">Net Total: </span><span class=\"pf-field\">$"+val.net_total+"</span>" : "")+"</div></div>");
 								});
 							});
 							com_sales_result_totals.show(400);
@@ -127,66 +127,66 @@ $this->title = 'Sales Totals';
 			});
 			// ]]>
 		</script>
-		<button id="retrieve_totals" class="button ui-state-default ui-corner-all">Retrieve</button>
+		<button id="retrieve_totals" class="pf-button ui-state-default ui-corner-all">Retrieve</button>
 	</div>
 	<div id="result_totals" style="clear: both; display: none;">
-		<div class="element">
-			<span class="label">Location</span>
-			<span class="field"><span class="total_location">null</span></span>
+		<div class="pf-element">
+			<span class="pf-label">Location</span>
+			<span class="pf-field"><span class="total_location">null</span></span>
 		</div>
-		<div class="element">
-			<span class="label">Date</span>
-			<span class="field"><span class="total_date">null</span></span>
+		<div class="pf-element">
+			<span class="pf-label">Date</span>
+			<span class="pf-field"><span class="total_date">null</span></span>
 		</div>
-		<div class="element heading">
+		<div class="pf-element pf-heading">
 			<h1>Invoices</h1>
 		</div>
-		<div class="element">
-			<span class="label">Count</span>
-			<span class="field"><span class="total_invoice_count">null</span></span>
+		<div class="pf-element">
+			<span class="pf-label">Count</span>
+			<span class="pf-field"><span class="total_invoice_count">null</span></span>
 		</div>
-		<div class="element">
-			<span class="label">Total</span>
-			<span class="field">$<span class="total_invoice_total">null</span></span>
+		<div class="pf-element">
+			<span class="pf-label">Total</span>
+			<span class="pf-field">$<span class="total_invoice_total">null</span></span>
 		</div>
-		<div class="element heading">
+		<div class="pf-element pf-heading">
 			<h1>Sales</h1>
 		</div>
-		<div class="element">
-			<span class="label">Count</span>
-			<span class="field"><span class="total_sale_count">null</span></span>
+		<div class="pf-element">
+			<span class="pf-label">Count</span>
+			<span class="pf-field"><span class="total_sale_count">null</span></span>
 		</div>
-		<div class="element">
-			<span class="label">Total</span>
-			<span class="field">$<span class="total_sale_total">null</span></span>
+		<div class="pf-element">
+			<span class="pf-label">Total</span>
+			<span class="pf-field">$<span class="total_sale_total">null</span></span>
 		</div>
-		<div class="element heading">
+		<div class="pf-element pf-heading">
 			<h1>Users</h1>
 		</div>
 		<div class="total_users">
-			<div class="element">
-				<span class="label">1: name [name]</span>
-				<div class="group">
-					<span class="field">Count: </span>
-					<span class="field">1</span><br />
-					<span class="field">Total: </span>
-					<span class="field">1.00</span>
+			<div class="pf-element">
+				<span class="pf-label">1: name [name]</span>
+				<div class="pf-group">
+					<span class="pf-field">Count: </span>
+					<span class="pf-field">1</span><br />
+					<span class="pf-field">Total: </span>
+					<span class="pf-field">1.00</span>
 				</div>
 			</div>
 		</div>
-		<div class="element heading">
+		<div class="pf-element pf-heading">
 			<h1>Payments</h1>
 		</div>
 		<div class="total_payments">
-			<div class="element">
-				<span class="label">name</span>
-				<div class="group">
-					<span class="field">Count: </span>
-					<span class="field">1</span><br />
-					<span class="field">Total: </span>
-					<span class="field">1.00</span><br />
-					<span class="field">Change Given: </span>
-					<span class="field">1.00</span>
+			<div class="pf-element">
+				<span class="pf-label">name</span>
+				<div class="pf-group">
+					<span class="pf-field">Count: </span>
+					<span class="pf-field">1</span><br />
+					<span class="pf-field">Total: </span>
+					<span class="pf-field">1.00</span><br />
+					<span class="pf-field">Change Given: </span>
+					<span class="pf-field">1.00</span>
 				</div>
 			</div>
 		</div>

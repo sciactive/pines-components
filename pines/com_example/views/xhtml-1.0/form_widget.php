@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = (is_null($this->entity->guid)) ? 'Editing New Widget' : 'Editing ['.htmlentities($this->entity->name).']';
 $this->note = 'Provide widget details in this form.';
 ?>
-<form class="pform" method="post" id="widget_details" action="<?php echo htmlentities(pines_url('com_example', 'savewidget')); ?>">
+<form class="pf-form" method="post" id="widget_details" action="<?php echo htmlentities(pines_url('com_example', 'savewidget')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
 		$(function(){
@@ -102,28 +102,28 @@ $this->note = 'Provide widget details in this form.';
 				<span>Modified On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_mdate); ?></span></span>
 			</div>
 			<?php } ?>
-			<div class="element">
-				<label><span class="label">Name</span>
-					<input class="field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Name</span>
+					<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Enabled</span>
-					<input class="field ui-widget-content" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Enabled</span>
+					<input class="pf-field ui-widget-content" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
-			<div class="element full_width">
-				<span class="label">Description</span><br />
+			<div class="pf-element pf-full-width">
+				<span class="pf-label">Description</span><br />
 				<textarea rows="3" cols="35" class="peditor" style="width: 100%;" name="description"><?php echo $this->entity->description; ?></textarea>
 			</div>
-			<div class="element full_width">
-				<span class="label">Short Description</span><br />
+			<div class="pf-element pf-full-width">
+				<span class="pf-label">Short Description</span><br />
 				<textarea rows="3" cols="35" class="peditor_simple" style="width: 100%;" name="short_description"><?php echo $this->entity->short_description; ?></textarea>
 			</div>
-			<br class="clearing" />
+			<br class="pf-clearing" />
 		</div>
 		<div id="tab_attributes">
-			<div class="element full_width">
-				<span class="label">Attributes</span>
-				<div class="group">
+			<div class="pf-element pf-full-width">
+				<span class="pf-label">Attributes</span>
+				<div class="pf-group">
 					<table id="attributes_table">
 						<thead>
 							<tr>
@@ -155,15 +155,15 @@ $this->note = 'Provide widget details in this form.';
 					</label>
 				</div>
 			</div>
-			<br class="clearing" />
+			<br class="pf-clearing" />
 		</div>
 	</div>
 	<br />
-	<div class="element buttons">
+	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_example', 'listwidgets')); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_example', 'listwidgets')); ?>');" value="Cancel" />
 	</div>
 </form>

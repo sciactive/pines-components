@@ -10,9 +10,9 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
-<div class="pform" id="notemodule">
-	<div class="element">
-		<span class="label"><?php echo $this->header; ?></span>
-		<span class="note"><?php echo str_replace("\n", "<br />\n", $this->message); ?></span>
+<div class="pf-form" id="notemodule">
+	<div class="pf-element">
+		<span class="pf-label"><?php echo $this->header; ?></span>
+		<span class="pf-note"><?php echo str_replace("\n", "<br />\n", $this->message); ?></span>
 	</div>
 </div>

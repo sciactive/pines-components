@@ -73,11 +73,11 @@ $this->title = 'Sales';
 				// ]]>
 			</script>
 			<label>
-				<span class="label">Start Date</span>
+				<span class="pf-label">Start Date</span>
 				<input class="ui-widget-content" type="text" name="start_date" size="24" value="<?php echo $this->start_date ? date('Y-m-d', $this->start_date) : ''; ?>" />
 			</label>
 			<label>
-				<span class="label">End Date</span>
+				<span class="pf-label">End Date</span>
 				<input class="ui-widget-content" type="text" name="end_date" size="24" value="<?php echo $this->end_date ? date('Y-m-d', $this->end_date) : ''; ?>" />
 			</label>
 		</div>

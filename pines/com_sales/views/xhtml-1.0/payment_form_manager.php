@@ -12,17 +12,17 @@
 defined('P_RUN') or die('Direct access prohibited');
 ?>
 <?php if (!gatekeeper('com_sales/manager')) { ?>
-<form class="pform" method="post" action="">
-	<div class="element heading">
+<form class="pf-form" method="post" action="">
+	<div class="pf-element pf-heading">
 		<h1>Manager Login</h1>
 	</div>
-	<div class="element">
-		<label><span class="label">Username</span>
-			<input class="field ui-widget-content" type="text" name="username" size="24" /></label>
+	<div class="pf-element">
+		<label><span class="pf-label">Username</span>
+			<input class="pf-field ui-widget-content" type="text" name="username" size="24" /></label>
 	</div>
-	<div class="element">
-		<label><span class="label">Password</span>
-			<input class="field ui-widget-content" type="password" name="password" size="24" /></label>
+	<div class="pf-element">
+		<label><span class="pf-label">Password</span>
+			<input class="pf-field ui-widget-content" type="password" name="password" size="24" /></label>
 	</div>
 </form>
 <?php } ?>

@@ -35,7 +35,7 @@ $this->note = 'Provide floor details in this form.';
 	}
 	/* ]]> */
 </style>
-<form enctype="multipart/form-data" class="pform" method="post" id="floor_details" action="<?php echo htmlentities(pines_url('com_customertimer', 'savefloor')); ?>">
+<form enctype="multipart/form-data" class="pf-form" method="post" id="floor_details" action="<?php echo htmlentities(pines_url('com_customertimer', 'savefloor')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
 		$(function(){
@@ -217,33 +217,33 @@ $this->note = 'Provide floor details in this form.';
 				<span>Modified On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_mdate); ?></span></span>
 			</div>
 			<?php } ?>
-			<div class="element">
-				<label><span class="label">Name</span>
-					<input class="field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Name</span>
+					<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Enabled</span>
-					<input class="field ui-widget-content" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Enabled</span>
+					<input class="pf-field ui-widget-content" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
-			<div class="element">
-				<span class="label">Description</span>
-				<textarea class="field ui-widget-content" rows="3" cols="35" name="description"><?php echo $this->entity->description; ?></textarea>
+			<div class="pf-element">
+				<span class="pf-label">Description</span>
+				<textarea class="pf-field ui-widget-content" rows="3" cols="35" name="description"><?php echo $this->entity->description; ?></textarea>
 			</div>
 			<?php if (isset($this->entity->background)) { ?>
-			<div class="element full_width">
-				<span class="label">Current Background</span>
-				<div class="group">
-					<span class="field"><img src="<?php echo $pines->config->rela_location.$this->entity->get_background(); ?>" alt="Floor Background" style="max-width: 100%; width: auto; height: auto;" /></span>
+			<div class="pf-element pf-full-width">
+				<span class="pf-label">Current Background</span>
+				<div class="pf-group">
+					<span class="pf-field"><img src="<?php echo $pines->config->rela_location.$this->entity->get_background(); ?>" alt="Floor Background" style="max-width: 100%; width: auto; height: auto;" /></span>
 					<br />
-					<label><span class="field"><input class="field ui-widget-content" type="checkbox" name="remove_background" value="ON" />Remove this background.</span></label>
+					<label><span class="pf-field"><input class="pf-field ui-widget-content" type="checkbox" name="remove_background" value="ON" />Remove this background.</span></label>
 				</div>
 			</div>
 			<?php } ?>
-			<div class="element">
-				<label><span class="label">Change Background</span>
-					<input class="field ui-widget-content" type="file" name="background" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Change Background</span>
+					<input class="pf-field ui-widget-content" type="file" name="background" /></label>
 			</div>
-			<br class="clearing" />
+			<br class="pf-clearing" />
 		</div>
 		<div id="tab_layout">
 			<div class="ui-widget-header ui-corner-all" style="padding: 10px;">
@@ -260,22 +260,22 @@ $this->note = 'Provide floor details in this form.';
 					<button type="button" class="station_layout_clear"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_actions_edit-clear"></span> Clear</button>
 				</span>
 			</div>
-			<br class="clearing" />
+			<br class="pf-clearing" />
 			<div class="station_layout">
 				<img src="<?php echo $pines->config->rela_location.$this->entity->get_background(); ?>" class="station_layout_bg" alt="Station Layout" />
 				<div class="station_floor"></div>
-				<br class="clearing" />
+				<br class="pf-clearing" />
 			</div>
 			<input type="hidden" name="stations" value="<?php echo htmlentities(json_encode($this->entity->stations)); ?>" />
-			<br class="clearing" />
+			<br class="pf-clearing" />
 		</div>
 	</div>
 	<br />
-	<div class="element buttons">
+	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_customertimer', 'listfloors')); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_customertimer', 'listfloors')); ?>');" value="Cancel" />
 	</div>
 </form>

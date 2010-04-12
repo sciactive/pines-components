@@ -16,7 +16,7 @@ $read_only = '';
 if ($this->entity->final)
 	$read_only = 'readonly="readonly"';
 ?>
-<form class="pform" method="post" id="transfer_details" action="<?php echo htmlentities(pines_url('com_sales', 'savetransfer')); ?>">
+<form class="pf-form" method="post" id="transfer_details" action="<?php echo htmlentities(pines_url('com_sales', 'savetransfer')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
 		var stock;
@@ -136,29 +136,29 @@ if ($this->entity->final)
 		<span>Modified On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_mdate); ?></span></span>
 	</div>
 	<?php } ?>
-	<div class="element">
-		<label><span class="label">Reference #</span>
-			<input class="field ui-widget-content" type="text" name="reference_number" size="24" value="<?php echo $this->entity->reference_number; ?>" <?php echo $read_only; ?> /></label>
+	<div class="pf-element">
+		<label><span class="pf-label">Reference #</span>
+			<input class="pf-field ui-widget-content" type="text" name="reference_number" size="24" value="<?php echo $this->entity->reference_number; ?>" <?php echo $read_only; ?> /></label>
 	</div>
-	<div class="element">
-		<label><span class="label">Destination</span>
+	<div class="pf-element">
+		<label><span class="pf-label">Destination</span>
 			<?php if (!empty($this->entity->received)) { ?>
-				<span class="note">Destination cannot be changed after items have been received.</span>
+				<span class="pf-note">Destination cannot be changed after items have been received.</span>
 			<?php } ?>
-			<select class="field ui-widget-content" name="destination"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?> <?php echo $read_only; ?>>
+			<select class="pf-field ui-widget-content" name="destination"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?> <?php echo $read_only; ?>>
 				<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations, $this->entity->destination->guid); ?>
 			</select></label>
 	</div>
-	<div class="element">
-		<label><span class="label">Shipper</span>
-			<select class="field ui-widget-content" name="shipper" <?php echo $read_only; ?>>
+	<div class="pf-element">
+		<label><span class="pf-label">Shipper</span>
+			<select class="pf-field ui-widget-content" name="shipper" <?php echo $read_only; ?>>
 				<option value="null">-- None --</option>
 				<?php foreach ($this->shippers as $cur_shipper) { ?>
 				<option value="<?php echo $cur_shipper->guid; ?>"<?php echo $this->entity->shipper->guid == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_shipper->name; ?></option>
 				<?php } ?>
 			</select></label>
 	</div>
-	<div class="element">
+	<div class="pf-element">
 		<?php if (!$this->entity->final) { ?>
 		<script type="text/javascript">
 			// <![CDATA[
@@ -170,13 +170,13 @@ if ($this->entity->final)
 			// ]]>
 		</script>
 		<?php } ?>
-		<label><span class="label">ETA</span>
-			<input class="field ui-widget-content" type="text" id="eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? date('Y-m-d', $this->entity->eta) : ''); ?>" <?php echo $read_only; ?> /></label>
+		<label><span class="pf-label">ETA</span>
+			<input class="pf-field ui-widget-content" type="text" id="eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? date('Y-m-d', $this->entity->eta) : ''); ?>" <?php echo $read_only; ?> /></label>
 	</div>
-	<div class="element full_width">
-		<span class="label">Stock</span>
-		<div class="group">
-			<div class="field">
+	<div class="pf-element pf-full-width">
+		<span class="pf-label">Stock</span>
+		<div class="pf-group">
+			<div class="pf-field">
 				<table id="stock_table">
 					<thead>
 						<tr>
@@ -226,11 +226,11 @@ if ($this->entity->final)
 		</table>
 	</div>
 	<?php if (!empty($this->entity->received)) { ?>
-	<div class="element">
-		<span class="label">Received Inventory</span>
-		<div class="group">
+	<div class="pf-element">
+		<span class="pf-label">Received Inventory</span>
+		<div class="pf-group">
 			<?php foreach ($this->entity->received as $cur_entity) { ?>
-			<div class="field" style="margin-bottom: 5px;">
+			<div class="pf-field" style="margin-bottom: 5px;">
 				Product: <?php echo $cur_entity->product->name; ?><br />
 				Serial: <?php echo $cur_entity->serial; ?>
 			</div>
@@ -238,15 +238,15 @@ if ($this->entity->final)
 		</div>
 	</div>
 	<?php } ?>
-	<br class="clearing" />
-	<div class="element buttons">
+	<br class="pf-clearing" />
+	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } if (!$this->entity->final) { ?>
 		<input type="hidden" id="save" name="save" value="" />
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" onclick="$('#save').val('save');" />
-		<input class="button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Commit" onclick="$('#save').val('commit');" />
-		<input class="button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'listtransfers')); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" onclick="$('#save').val('save');" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Commit" onclick="$('#save').val('commit');" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'listtransfers')); ?>');" value="Cancel" />
 		<?php } ?>
 	</div>
 </form>

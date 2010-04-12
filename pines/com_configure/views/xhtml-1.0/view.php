@@ -12,24 +12,24 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = "Viewing Configuration for {$this->comp->info->name} {$this->comp->info->version} ({$this->comp->name})";
 ?>
-<form class="pform" action="" method="post">
+<form class="pf-form" action="" method="post">
 	<?php foreach ($this->comp->get_full_config_array() as $cur_var) { ?>
-	<div class="element" style="width: 95%">
-		<span class="label">
+	<div class="pf-element" style="width: 95%">
+		<span class="pf-label">
 			<?php echo $cur_var['cname']; ?>
 		</span>
-		<span class="note">
+		<span class="pf-note">
 			<?php echo $cur_var['description']; ?>
 		</span>
-		<div class="group">
+		<div class="pf-group">
 			<?php if (is_array($cur_var['value'])) {
-				echo '<div class="field"><ul>';
+				echo '<div class="pf-field"><ul>';
 				foreach ($cur_var['value'] as $cur_value) {
 					echo '<li>'.htmlentities(print_r($cur_value, true)).'</li>';
 				}
 				echo '</ul></div>';
 			} else {
-				echo '<span class="field">';
+				echo '<span class="pf-field">';
 				if (is_bool($cur_var['value']))
 					$cur_var['value'] = ($cur_var['value']) ? 'Yes' : 'No';
 				echo htmlentities(print_r($cur_var['value'], true));

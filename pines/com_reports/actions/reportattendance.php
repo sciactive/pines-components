@@ -19,7 +19,7 @@ if ($_REQUEST['user'] === '') {
 }
 
 if ( isset($_REQUEST['start']) ) {
-	$user = (int) $_REQUEST['user'];
+	$user = isset($_REQUEST['user']) ? (int) $_REQUEST['user'] : null;
 	$location = group::factory((int) $_REQUEST['location']);
 	if (!isset($location->guid))
 		unset($location);

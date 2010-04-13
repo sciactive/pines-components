@@ -223,7 +223,7 @@ class BarcodeObject {
 	/*
 	 * Color the barcode using our configurable colors.
 	 *
-	 * @author Zak Huber <zakhuber@gmail.com>
+	 * @author Zak Huber <zak@sciactive.com>
 	 * @param string $background_color The background color.
 	 * @param string $barcode_color The barcode and text color.
 	 */

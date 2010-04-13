@@ -21,13 +21,19 @@ $this->title = 'Floors';
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
+				<?php if (gatekeeper('com_customertimer/newfloor')) { ?>
 				{type: 'button', text: 'New', extra_class: 'icon picon_16x16_actions_document-new', selection_optional: true, url: '<?php echo pines_url('com_customertimer', 'editfloor'); ?>'},
+				<?php } if (gatekeeper('com_customertimer/editfloor')) { ?>
 				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', url: '<?php echo pines_url('com_customertimer', 'editfloor', array('id' => '#title#')); ?>'},
+				<?php } if (gatekeeper('com_customertimer/timefloor')) { ?>
 				{type: 'button', text: 'Timer', extra_class: 'icon picon_16x16_stock_generic_stock_timer', double_click: true, url: '<?php echo pines_url('com_customertimer', 'timefloor', array('id' => '#title#')); ?>'},
+				<?php } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'icon picon_16x16_actions_mail-message-new', multi_select: true, url: 'mailto:#col_2#', delimiter: ','},
 				{type: 'separator'},
+				<?php if (gatekeeper('com_customertimer/deletefloor')) { ?>
 				{type: 'button', text: 'Delete', extra_class: 'icon picon_16x16_actions_edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_customertimer', 'deletefloor', array('id' => '#title#')); ?>', delimiter: ','},
 				{type: 'separator'},
+				<?php } ?>
 				{type: 'button', text: 'Select All', extra_class: 'icon picon_16x16_actions_list-add', select_all: true},
 				{type: 'button', text: 'Select None', extra_class: 'icon picon_16x16_actions_list-remove', select_none: true},
 				{type: 'separator'},

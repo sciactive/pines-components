@@ -6,7 +6,7 @@
  * @subpackage com_entitytools
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
- * @copyright Hunter Perrin
+ * @copyright SciActive.com
  * @link http://sciactive.com/
  *
  * @todo Finish the benchmarking utility.

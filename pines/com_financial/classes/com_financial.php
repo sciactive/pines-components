@@ -6,7 +6,7 @@
  * @subpackage com_financial
  * @license http://www.gnu.org/licenses/gpl.html
  * @author Hunter Perrin <hunter@sciactive.com>
- * @copyright Hunter Perrin
+ * @copyright SciActive.com
  * @link http://sciactive.com/
  */
 /*

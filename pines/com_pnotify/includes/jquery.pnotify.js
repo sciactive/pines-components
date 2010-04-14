@@ -500,8 +500,11 @@
 					.append($("<button />", {
 							"class": "ui-pnotify-history-all ui-state-default ui-corner-all",
 							"text": "All",
-							"hover": function(){
-								$(this).toggleClass("ui-state-hover");
+							"mouseenter": function(){
+								$(this).addClass("ui-state-hover");
+							},
+							"mouseleave": function(){
+								$(this).removeClass("ui-state-hover");
 							},
 							"click": function(){
 								// Display all notices. (Disregarding non-history notices.)
@@ -515,8 +518,11 @@
 					.append($("<button />", {
 							"class": "ui-pnotify-history-last ui-state-default ui-corner-all",
 							"text": "Last",
-							"hover": function(){
-								$(this).toggleClass("ui-state-hover");
+							"mouseenter": function(){
+								$(this).addClass("ui-state-hover");
+							},
+							"mouseleave": function(){
+								$(this).removeClass("ui-state-hover");
 							},
 							"click": function(){
 								// Look up the last history notice, and display it.

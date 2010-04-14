@@ -66,11 +66,8 @@ html > body .ui-pnotify {
 .ui-pnotify-history-container .ui-pnotify-history-header {
 	padding: 2px;
 }
-.ui-pnotify-history-container .ui-pnotify-history-all {
-	display: block;
-	width: 100%;
-}
-.ui-pnotify-history-container .ui-pnotify-history-last {
+.ui-pnotify-history-container button {
+	cursor: pointer;
 	display: block;
 	width: 100%;
 }

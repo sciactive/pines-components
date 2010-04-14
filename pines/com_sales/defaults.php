@@ -55,6 +55,12 @@ return array(
 		'value' => true,
 	),
 	array(
+		'name' => 'com_customer',
+		'cname' => 'CRM Integration',
+		'description' => 'Integrate with com_customer.',
+		'value' => true,
+	),
+	array(
 		'name' => 'receipt_note_label',
 		'cname' => 'Receipt Note Label',
 		'description' => 'The receipt note will be appended to all receipts.',

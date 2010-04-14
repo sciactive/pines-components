@@ -21,23 +21,6 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class com_customer extends component {
 	/**
-	 * Whether to integrate with com_sales.
-	 * 
-	 * @var bool $com_sales
-	 */
-	var $com_sales;
-
-	/**
-	 * Check whether com_sales is installed and we should integrate with it.
-	 *
-	 * Places the result in $this->com_sales.
-	 */
-	function __construct() {
-		global $pines;
-		$this->com_sales = $pines->depend->check('component', 'com_sales');
-	}
-
-	/**
 	 * Creates and attaches a module which lists companies.
 	 */
 	function list_companies() {

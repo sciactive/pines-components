@@ -25,7 +25,7 @@ if ( isset($_REQUEST['id']) ) {
 	$sale = com_sales_sale::factory();
 }
 
-if ($pines->com_sales->com_customer && $sale->status != 'invoiced' && $sale->status != 'paid') {
+if ($pines->config->com_sales->com_customer && $sale->status != 'invoiced' && $sale->status != 'paid') {
 	$sale->customer = null;
 	if (preg_match('/^\d+/', $_REQUEST['customer'])) {
 		$sale->customer = com_customer_customer::factory(intval($_REQUEST['customer']));

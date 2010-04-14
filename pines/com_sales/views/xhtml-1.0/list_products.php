@@ -71,7 +71,7 @@ $this->title = 'Products';
 			<th>Tax Exempt</th>
 			<th>Serialized</th>
 			<th>Discountable</th>
-			<?php if ($pines->com_sales->com_customer) { ?>
+			<?php if ($pines->config->com_sales->com_customer) { ?>
 			<th>Require Customer</th>
 			<?php } ?>
 			<th>Non-Refundable</th>
@@ -92,7 +92,7 @@ $this->title = 'Products';
 			<td><?php echo ($product->tax_exempt ? 'Yes' : 'No'); ?></td>
 			<td><?php echo ($product->serialized ? 'Yes' : 'No'); ?></td>
 			<td><?php echo ($product->discountable ? 'Yes' : 'No'); ?></td>
-			<?php if ($pines->com_sales->com_customer) { ?>
+			<?php if ($pines->config->com_sales->com_customer) { ?>
 			<td><?php echo ($product->require_customer ? 'Yes' : 'No'); ?></td>
 			<?php } ?>
 			<td><?php echo ($product->non_refundable ? 'Yes' : 'No'); ?></td>

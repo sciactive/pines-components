@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$pines->com_sales->processing_types[] = array(
+$pines->config->com_sales->processing_types[] = array(
 	'name' => 'com_authorizenet/credit',
 	'cname' => 'Credit Card',
 	'description' => 'Process credit card payment using Authorize.net.',

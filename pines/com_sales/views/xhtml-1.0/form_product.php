@@ -569,7 +569,7 @@ $this->note = 'Provide product details in this form.';
 				<label><span class="pf-label">Discountable</span>
 					<input class="pf-field ui-widget-content" type="checkbox" name="discountable" size="24" value="ON"<?php echo $this->entity->discountable ? ' checked="checked"' : ''; ?> /></label>
 			</div>
-			<?php if ($pines->com_sales->com_customer) { ?>
+			<?php if ($pines->config->com_sales->com_customer) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Require Customer</span>
 					<span class="pf-note">This means a customer must be selected when selling this item.</span>

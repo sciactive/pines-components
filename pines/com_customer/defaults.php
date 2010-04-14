@@ -19,6 +19,12 @@ return array(
 		'value' => true,
 	),
 	array(
+		'name' => 'com_sales',
+		'cname' => 'Sales Integration',
+		'description' => 'Integrate with com_sales.',
+		'value' => true,
+	),
+	array(
 		'name' => 'adjustpoints',
 		'cname' => 'Allow Point Adjust',
 		'description' => 'Allow customer\'s points to be adjusted by users with the ability.',

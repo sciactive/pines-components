@@ -12,8 +12,11 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 // Product actions to add points to a customer's profile.
-if ($pines->com_customer->com_sales) {
-	$pines->com_sales->product_actions[] = array(
+if ($pines->config->com_customer->com_sales && !$pines->depend->check('component', 'com_sales'))
+	$pines->config->com_customer->com_sales = false;
+
+if ($pines->config->com_customer->com_sales) {
+	$pines->config->com_sales->product_actions[] = array(
 		'type' => 'sold',
 		'name' => 'com_customer/add_points',
 		'cname' => 'Add Points',
@@ -21,7 +24,7 @@ if ($pines->com_customer->com_sales) {
 		'callback' => array($pines->com_customer, 'product_action_add_points')
 	);
 	foreach($pines->config->com_customer->pointvalues as $cur_value) {
-		$pines->com_sales->product_actions[] = array(
+		$pines->config->com_sales->product_actions[] = array(
 			'type' => 'sold',
 			'name' => "com_customer/add_points_$cur_value",
 			'cname' => "Add $cur_value Points",
@@ -30,7 +33,7 @@ if ($pines->com_customer->com_sales) {
 		);
 	}
 	foreach($pines->config->com_customer->membervalues as $cur_value) {
-		$pines->com_sales->product_actions[] = array(
+		$pines->config->com_sales->product_actions[] = array(
 			'type' => 'sold',
 			'name' => "com_customer/add_member_days_$cur_value",
 			'cname' => "Add $cur_value Member Days",

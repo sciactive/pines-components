@@ -36,7 +36,7 @@ $this->note = 'Use this form to edit a sale.';
 	<?php } ?>
 	<script type="text/javascript">
 		// <![CDATA[
-		<?php if ($pines->com_sales->com_customer) { ?>
+		<?php if ($pines->config->com_sales->com_customer) { ?>
 		var customer_box, customer_search_box, customer_search_button, customer_table, customer_dialog;
 		var require_customer = false;
 		<?php } ?>
@@ -96,7 +96,7 @@ $this->note = 'Use this form to edit a sale.';
 		}
 
 		$(function(){
-			<?php if ($pines->com_sales->com_customer) { ?>
+			<?php if ($pines->config->com_sales->com_customer) { ?>
 			customer_box = $("#customer");
 			customer_search_box = $("#customer_search");
 			customer_search_button = $("#customer_search_button");
@@ -111,7 +111,7 @@ $this->note = 'Use this form to edit a sale.';
 			payments_table = $("#payments_table");
 			payments = $("#payments");
 
-			<?php if ($pines->com_sales->com_customer && ($this->entity->status != 'invoiced' || $this->entity->status != 'paid')) { ?>
+			<?php if ($pines->config->com_sales->com_customer && ($this->entity->status != 'invoiced' || $this->entity->status != 'paid')) { ?>
 			customer_search_box.keydown(function(eventObject){
 				if (eventObject.keyCode == 13) {
 					customer_search(this.value);
@@ -603,14 +603,14 @@ $this->note = 'Use this form to edit a sale.';
 			var taxes = 0;
 			var item_fees = 0;
 			var total = 0;
-			<?php if ($pines->com_sales->com_customer) { ?>
+			<?php if ($pines->config->com_sales->com_customer) { ?>
 			require_customer = false;
 			<?php } ?>
 			// Calculate ticket totals.
 			rows.each(function(){
 				var cur_row = $(this);
 				var product = cur_row.data("product");
-				<?php if ($pines->com_sales->com_customer) { ?>
+				<?php if ($pines->config->com_sales->com_customer) { ?>
 				if (product.require_customer)
 					require_customer = true;
 				<?php } ?>
@@ -702,7 +702,7 @@ $this->note = 'Use this form to edit a sale.';
 			payments.val(JSON.stringify(submit_val));
 		}
 
-		<?php if ($pines->com_sales->com_customer && ($this->entity->status != 'invoiced' || $this->entity->status != 'paid')) { ?>
+		<?php if ($pines->config->com_sales->com_customer && ($this->entity->status != 'invoiced' || $this->entity->status != 'paid')) { ?>
 		function customer_search(search_string) {
 			var loader;
 			$.ajax({
@@ -794,7 +794,7 @@ $this->note = 'Use this form to edit a sale.';
 		}
 		// ]]>
 	</script>
-	<?php if ($pines->com_sales->com_customer) { ?>
+	<?php if ($pines->config->com_sales->com_customer) { ?>
 	<div class="pf-element">
 		<label for="customer_search"><span class="pf-label">Customer</span>
 			<?php if ($this->entity->status != 'invoiced' && $this->entity->status != 'paid') { ?>

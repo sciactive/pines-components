@@ -10,10 +10,12 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = "Viewing Configuration for {$this->comp->info->name} {$this->comp->info->version} ({$this->comp->name})";
+$this->title = "Viewing Configuration for {$this->entity->info->name} {$this->entity->info->version} ({$this->entity->name})";
+if ($this->entity->peruser)
+	$this->note = "For user/group {$this->entity->user->name} [{$this->entity->user->username}{$this->entity->user->groupname}].";
 ?>
 <form class="pf-form" action="" method="post">
-	<?php foreach ($this->comp->get_full_config_array() as $cur_var) { ?>
+	<?php foreach ($this->entity->get_full_config_array() as $cur_var) { ?>
 	<div class="pf-element" style="width: 95%">
 		<span class="pf-label">
 			<?php echo $cur_var['cname']; ?>

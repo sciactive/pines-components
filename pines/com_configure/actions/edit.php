@@ -20,6 +20,8 @@ if (!array_key_exists($_REQUEST['component'], $pines->configurator->component_fi
 }
 
 $component = configurator_component::factory($_REQUEST['component']);
+if ($_REQUEST['peruser'])
+	$component->set_peruser();
 $component->print_form();
 
 ?>

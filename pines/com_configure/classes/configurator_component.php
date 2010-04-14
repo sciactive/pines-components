@@ -140,7 +140,7 @@ class configurator_component extends p_base implements configurator_component_in
 		global $pines;
 		$pines->com_ptags->load();
 		$module = new module('com_configure', 'edit', 'content');
-		$module->comp = $this;
+		$module->entity = $this;
 
 		return $module;
 	}
@@ -152,7 +152,7 @@ class configurator_component extends p_base implements configurator_component_in
 	public function print_view() {
 		global $pines;
 		$module = new module('com_configure', 'view', 'content');
-		$module->comp = $this;
+		$module->entity = $this;
 
 		return $module;
 	}
@@ -167,6 +167,37 @@ class configurator_component extends p_base implements configurator_component_in
 			var_export($this->config, true)
 		);
 		return file_put_contents($this->config_file, $file_contents);
+	}
+
+	/**
+	 * Configure this component load only user configurable settings.
+	 *
+	 * The current settings will be updated to reflect the settings of
+	 * $usergroup.
+	 *
+	 * @var user|group $usergroup The user or group which is being configured.
+	 */
+	public function set_peruser($usergroup = null) {
+		if (!isset($usergroup) && isset($_SESSION['user']))
+			$usergroup = $_SESSION['user'];
+		$this->peruser = true;
+		foreach ($this->defaults as $key => &$cur_entry) {
+			if (!$cur_entry['peruser']) {
+				unset($this->defaults[$key]);
+			} else {
+				if (isset($this->config_keys[$cur_entry['name']]))
+					$cur_entry['value'] = $this->config_keys[$cur_entry['name']];
+			}
+		}
+		if (!isset($usergroup)) {
+			$this->config = array();
+			$this->config_keys = array();
+			return;
+		}
+		// Load the config for the user/group.
+		$this->config = array();
+		$this->config_keys = array();
+		$this->user = $usergroup;
 	}
 }
 

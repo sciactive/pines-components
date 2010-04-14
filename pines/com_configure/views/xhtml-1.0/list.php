@@ -50,7 +50,8 @@ $this->title = 'Configure Components';
 	// ]]>
 </script>
 <div class="component_list">
-	<?php foreach($this->components as $cur_component) { ?>
+	<?php foreach($this->components as $cur_component) {
+		if ($this->peruser && !$cur_component->is_configurable()) continue; ?>
 	<h3 class="ui-helper-clearfix<?php echo $cur_component->is_disabled() ? ' ui-priority-secondary' : ''; ?>">
 		<a href="#">
 			<span class="title"><?php echo $cur_component->info->name; ?><?php echo $cur_component->is_disabled() ? ' (Disabled)' : ''; ?></span>
@@ -60,14 +61,16 @@ $this->title = 'Configure Components';
 	<div class="component_entry<?php echo $cur_component->is_disabled() ? ' ui-priority-secondary' : ''; ?>">
 		<div class="buttons">
 			<?php if ($cur_component->is_configurable()) { ?>
-			<input type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_configure', 'edit', array('component' => urlencode($cur_component->name)))); ?>');" value="Configure" />
-			<input type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_configure', 'view', array('component' => urlencode($cur_component->name)))); ?>');" value="View Config" />
+			<input type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_configure', 'edit', array('component' => urlencode($cur_component->name), 'peruser' => urlencode($this->peruser)))); ?>');" value="Configure" />
+			<input type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_configure', 'view', array('component' => urlencode($cur_component->name), 'peruser' => urlencode($this->peruser)))); ?>');" value="View Config" />
 			<?php } ?>
-			<?php if ($cur_component->name != 'system') { if ($cur_component->is_disabled()) { ?>
-			<input type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_configure', 'enable', array('component' => urlencode($cur_component->name)))); ?>');" value="Enable" />
-			<?php } else { ?>
-			<input type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_configure', 'disable', array('component' => urlencode($cur_component->name)))); ?>');" value="Disable" />
-			<?php } } ?>
+			<?php if (!$this->peruser) { ?>
+				<?php if ($cur_component->name != 'system') { if ($cur_component->is_disabled()) { ?>
+				<input type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_configure', 'enable', array('component' => urlencode($cur_component->name)))); ?>');" value="Enable" />
+				<?php } else { ?>
+				<input type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_configure', 'disable', array('component' => urlencode($cur_component->name)))); ?>');" value="Disable" />
+				<?php } } ?>
+			<?php } ?>
 		</div>
 		<div class="short_description"><?php echo $cur_component->info->short_description; ?></div>
 		<?php if (is_array($cur_component->info->services)) { ?>

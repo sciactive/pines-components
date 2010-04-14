@@ -108,6 +108,7 @@ class com_configure extends component implements configurator_interface {
 
 		$module->components = array();
 		$module->components[] = configurator_component::factory('system');
+		$module->peruser = false;
 		foreach ($pines->all_components as $cur_component) {
 			$module->components[] = configurator_component::factory($cur_component);
 		}
@@ -117,7 +118,7 @@ class com_configure extends component implements configurator_interface {
 
 	/**
 	 * Creates and attaches a module which lists per user config components.
-	 *
+	 * @return module The module.
 	 * @todo Create a view for per user components.
 	 */
 	public function list_components_peruser() {
@@ -126,9 +127,15 @@ class com_configure extends component implements configurator_interface {
 
 		$module->components = array();
 		$module->components[] = configurator_component::factory('system');
+		$module->peruser = true;
 		foreach ($pines->all_components as $cur_component) {
 			$module->components[] = configurator_component::factory($cur_component);
 		}
+		foreach ($module->components as &$cur_component) {
+			$cur_component->set_peruser();
+		}
+
+		return $module;
 	}
 }
 

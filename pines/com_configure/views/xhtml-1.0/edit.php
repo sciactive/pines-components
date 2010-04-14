@@ -10,7 +10,9 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = "Editing Configuration for {$this->comp->info->name} {$this->comp->info->version} ({$this->comp->name})";
+$this->title = "Editing Configuration for {$this->entity->info->name} {$this->entity->info->version} ({$this->entity->name})";
+if ($this->entity->peruser)
+	$this->note = "For user/group {$this->entity->user->name} [{$this->entity->user->username}{$this->entity->user->groupname}].";
 ?>
 <style type="text/css">
 	/* <![CDATA[ */
@@ -41,12 +43,12 @@ $this->title = "Editing Configuration for {$this->comp->info->name} {$this->comp
 </script>
 <form id="configuration_form" class="pf-form" action="<?php echo htmlentities(pines_url('com_configure', 'save')); ?>" method="post">
 	<div class="pf-element pf-heading">
-		<p>Check a setting to set it manually, or leave it unchecked to use the default setting.</p>
+		<p>Check a setting to set it manually, or leave it unchecked to use the <?php echo $this->entity->peruser ? 'system configured' : 'default'; ?> setting.</p>
 	</div>
-	<?php foreach ($this->comp->defaults as $cur_var) {
-		if (key_exists($cur_var['name'], $this->comp->config_keys)) {
+	<?php foreach ($this->entity->defaults as $cur_var) {
+		if (key_exists($cur_var['name'], $this->entity->config_keys)) {
 			$is_default = false;
-			$cur_value = $this->comp->config_keys[$cur_var['name']];
+			$cur_value = $this->entity->config_keys[$cur_var['name']];
 		} else {
 			$is_default = true;
 			$cur_value = $cur_var['value'];
@@ -102,7 +104,10 @@ $this->title = "Editing Configuration for {$this->comp->info->name} {$this->comp
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-buttons">
-		<input type="hidden" name="component" value="<?php echo $this->comp->name; ?>" />
+		<?php if ($this->entity->peruser) { ?>
+		<input type="hidden" name="peruser" value="1" />
+		<?php } ?>
+		<input type="hidden" name="component" value="<?php echo $this->entity->name; ?>" />
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Save" name="save" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="reset" value="Reset" name="reset" />
 	</div>

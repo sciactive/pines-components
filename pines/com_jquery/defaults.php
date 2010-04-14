@@ -18,6 +18,7 @@ return array(
 		'description' => 'jQuery UI theme to use.',
 		'value' => 'smoothness',
 		'options' => array(
+			'Comet' => 'comet',
 			'Titan' => 'titan',
 			'Black Hole' => 'black-hole',
 			'UI lightness' => 'ui-lightness',

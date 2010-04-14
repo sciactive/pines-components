@@ -1243,7 +1243,7 @@
 		// Add a hover effect to the rows.
 		pgrid_row_hover_effect: true,
 		// Height of the box (viewport) containing the grid. (Not including the toolbar and footer.)
-		pgrid_view_height: "360px",
+		pgrid_view_height: "410px",
 		// State change. Gets called whenever the user changes the state of the grid. The state from export_state() will be passed.
 		pgrid_state_change: null
 	};

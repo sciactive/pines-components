@@ -306,16 +306,20 @@ $this->note = 'Provide group details in this form.';
 			</div>
 			<br class="pf-clearing" />
 			<?php foreach ($this->sections as $cur_section) {
-				$section_abilities = $pines->ability_manager->get_abilities($cur_section);
-				if ( !count($section_abilities) ) continue; ?>
+				if ($cur_section == 'system') {
+					$section_abilities = (array) $pines->info->abilities;
+				} else {
+					$section_abilities = (array) $pines->info->$cur_section->abilities;
+				}
+				if (!$section_abilities) continue; ?>
 			<div class="abilities_accordian">
 				<h3><a href="#"><?php echo $cur_section; ?></a></h3>
 				<div>
 					<div class="pf-element">
 						<?php foreach ($section_abilities as $cur_ability) { ?>
 						<label>
-							<input class="ui-widget-content" type="checkbox" name="<?php echo $cur_section; ?>[]" value="<?php echo $cur_ability['ability']; ?>" <?php echo (array_search("{$cur_section}/{$cur_ability['ability']}", $this->entity->abilities) !== false) ? 'checked="checked" ' : ''; ?>/>
-							<?php echo $cur_ability['title']; ?>&nbsp;<small><?php echo $cur_ability['description']; ?></small>
+							<input class="ui-widget-content" type="checkbox" name="<?php echo $cur_section; ?>[]" value="<?php echo $cur_ability[0]; ?>" <?php echo (array_search("{$cur_section}/{$cur_ability[0]}", $this->entity->abilities) !== false) ? 'checked="checked" ' : ''; ?>/>
+							<?php echo $cur_ability[1]; ?>&nbsp;<small><?php echo $cur_ability[2]; ?></small>
 						</label>
 						<br class="pf-clearing" />
 						<?php } ?>

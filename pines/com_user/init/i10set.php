@@ -1,6 +1,6 @@
 <?php
 /**
- * Set the system user manager and ability manager.
+ * Set the system user manager.
  *
  * @package Pines
  * @subpackage com_user
@@ -16,11 +16,5 @@ defined('P_RUN') or die('Direct access prohibited');
  * @global com_user $pines->user_manager
  */
 $pines->user_manager = 'com_user';
-
-/**
- * The ability manager.
- * @global com_user_abilities $pines->ability_manager
- */
-$pines->ability_manager = 'com_user_abilities';
 
 ?>

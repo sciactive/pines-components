@@ -67,14 +67,16 @@ if ( $_REQUEST['abilities'] === 'true' && gatekeeper('com_user/abilities') ) {
 		$sections[] = $cur_component;
 	}
 	foreach ($sections as $cur_section) {
-		$section_abilities = $pines->ability_manager->get_abilities($cur_section);
-		if ( count($section_abilities) ) {
-			foreach ($section_abilities as $cur_ability) {
-				if ( isset($_REQUEST[$cur_section]) && (array_search($cur_ability['ability'], $_REQUEST[$cur_section]) !== false) ) {
-					$group->grant($cur_section.'/'.$cur_ability['ability']);
-				} else {
-					$group->revoke($cur_section.'/'.$cur_ability['ability']);
-				}
+		if ($cur_section == 'system') {
+			$section_abilities = (array) $pines->info->abilities;
+		} else {
+			$section_abilities = (array) $pines->info->$cur_section->abilities;
+		}
+		foreach ($section_abilities as $cur_ability) {
+			if ( isset($_REQUEST[$cur_section]) && (array_search($cur_ability[0], $_REQUEST[$cur_section]) !== false) ) {
+				$group->grant($cur_section.'/'.$cur_ability[0]);
+			} else {
+				$group->revoke($cur_section.'/'.$cur_ability[0]);
 			}
 		}
 	}

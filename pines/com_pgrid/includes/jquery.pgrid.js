@@ -597,7 +597,7 @@
 					var cols = all_rows.children("td.col_"+pgrid.pgrid_sort_col).addClass("ui-pgrid-table-cell-sorted");
 
 					// Is this column only numbers, or is there a string?
-					var is_str = !!cols.contents().text().match(/[^0-9.,¤$€£¥#]/);
+					var is_str = !!cols.contents().text().match(/[^0-9.,¤$€£¥#-]/);
 
 					var rows = all_rows.get();
 
@@ -613,7 +613,7 @@
 						if (!is_str) {
 							// If this column contains only numbers (currency signs and # included), parse it as floats.
 							// Strip non numerical characters except for the decimal separator. Replace that with a period, then parse it.
-							this.sortKey = parseFloat(this.sortKey.replace((new RegExp("[^0-9"+pgrid.pgrid_decimal_sep+"]", "g")), "").replace(pgrid.pgrid_decimal_sep, "."));
+							this.sortKey = parseFloat(this.sortKey.replace((new RegExp("[^0-9"+pgrid.pgrid_decimal_sep+"-]", "g")), "").replace(pgrid.pgrid_decimal_sep, "."));
 						}
 					});
 					// Sort them by their keys.

@@ -1,19 +1,11 @@
 $(document).ready(function(){
-
-	$("ul.dropdown li").dropdown();
-
-});
-
-$.fn.dropdown = function() {
-
-	$(this).hover(function(){
+	$("ul.dropdown li").live("mouseenter", function(){
 		$(this).addClass("hover");
 		$('> .dir',this).addClass("open");
-		$('ul:first',this).css('visibility', 'visible');
-	},function(){
+		$('ul:first',this).css({'visibility': 'visible', 'display': 'block'});
+	}).live("mouseleave", function(){
 		$(this).removeClass("hover");
 		$('.open',this).removeClass("open");
-		$('ul:first',this).css('visibility', 'hidden');
+		$('ul:first',this).css({'visibility': 'hidden', 'display': 'none'});
 	});
-
-}
+});

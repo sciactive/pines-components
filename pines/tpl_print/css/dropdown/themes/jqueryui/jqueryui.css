@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 /** 
-* Default CSS Drop-Down Menu Theme
+* jQuery UI Friendly CSS Drop-Down Menu Theme
 *
 * @file		default.css
 * @name		Default
@@ -17,9 +17,6 @@
 * Expected directory tag - li
 *
 */
-/*
-@import "helper.css";
-*/
 
 /*-------------------------------------------------/
 * @section		Base Drop-Down Styling
@@ -31,46 +28,23 @@
 */
 
 
-ul.dropdown {
-	/* font-weight: bold; */
-}
-/* TODO: something here from the other template */
-
-ul.dropdown input {
-	border: solid 1px black;
-	background-color: white;
-}
-
-ul.dropdown li {
+ul.dropdown li a {
+	display: block;
 	padding: 7px 10px;
-	border-style: solid;
-	border-width: 1px 1px 1px 0;
-	border-color: #fff #d9d9d9 #d9d9d9;
-	background-color: #f6f6f6;
-	color: #658AC5;
 }
-
-ul.dropdown li.hover,
-ul.dropdown li:hover {
-	background-color: #eee;
-	color: #658AC5;
-}
-
-ul.dropdown a:link,
-ul.dropdown a:visited	{ color: #658AC5; text-decoration: none; }
-ul.dropdown a:hover		{ color: #658AC5; }
-ul.dropdown a:active	{ color: #ffa500; }
 
 
 /* -- level mark -- */
 
 ul.dropdown ul {
-	width: 150px;
+	min-width: 150px;
+	width: auto;
 	margin-top: 1px;
 }
 
 ul.dropdown ul li {
 	font-weight: normal;
+	white-space: nowrap;
 }
 
 
@@ -81,11 +55,24 @@ ul.dropdown ul li {
 */
 
 
+ul.dropdown li {
+	position: relative;
+}
+ul.dropdown li span.ui-icon {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	width: 14px;
+	height: 14px;
+}
 ul.dropdown *.dir {
 	padding-right: 20px;
 	background-image: url(images/nav-arrow-down.png);
 	background-position: 100% 50%;
 	background-repeat: no-repeat;
+}
+ul.dropdown *.dir:hover {
+	background-image: url(images/nav-arrow-down-white.png);
 }
 
 
@@ -97,14 +84,24 @@ ul.dropdown-horizontal ul *.dir {
 	background-position: 100% 50%;
 	background-repeat: no-repeat;
 }
+ul.dropdown-horizontal ul *.dir:hover {
+	background-image: url(images/nav-arrow-right-white.png);
+}
 
 ul.dropdown-upward *.dir {
 	background-image: url(images/nav-arrow-top.png);
+}
+ul.dropdown-upward *.dir:hover {
+	background-image: url(images/nav-arrow-top-white.png);
 }
 
 ul.dropdown-vertical *.dir,
 ul.dropdown-upward ul *.dir {
 	background-image: url(images/nav-arrow-right.png);
+}
+ul.dropdown-vertical *.dir:hover,
+ul.dropdown-upward ul *.dir:hover {
+	background-image: url(images/nav-arrow-right-white.png);
 }
 
 ul.dropdown-vertical-rtl *.dir {
@@ -112,4 +109,7 @@ ul.dropdown-vertical-rtl *.dir {
 	padding-left: 15px;
 	background-image: url(images/nav-arrow-left.png);
 	background-position: 0 50%;
+}
+ul.dropdown-vertical-rtl *.dir:hover {
+	background-image: url(images/nav-arrow-left-white.png);
 }

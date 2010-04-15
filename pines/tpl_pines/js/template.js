@@ -37,7 +37,7 @@ $(function(){
 
 	// Menu and UI buttons hover.
 	hover(".dropdown li");
-	$(".ui-state-default:button, .ui-state-default:submit").button();
+	$(".ui-state-default:button, .ui-state-default:submit, .ui-state-default:reset").button();
 
 
 	/* Experimental AJAX code.

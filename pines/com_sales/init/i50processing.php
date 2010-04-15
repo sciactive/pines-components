@@ -11,17 +11,28 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
+function com_sales__payment_instant() {
+	global $pines;
+	$args = func_get_args();
+	return call_user_func_array(array($pines->com_sales, 'payment_instant'), $args);
+}
+function com_sales__payment_manager() {
+	global $pines;
+	$args = func_get_args();
+	return call_user_func_array(array($pines->com_sales, 'payment_manager'), $args);
+}
+
 $pines->config->com_sales->processing_types[] = array(
 	'name' => 'com_sales/instant',
 	'cname' => 'Instant Processing',
 	'description' => 'Approval and processing happen immediately. For example, a cash transaction.',
-	'callback' => array($pines->com_sales, 'payment_instant')
+	'callback' => 'com_sales__payment_instant'
 );
 $pines->config->com_sales->processing_types[] = array(
 	'name' => 'com_sales/manager',
 	'cname' => 'Manager Approval',
 	'description' => 'Approval happens only after a manager verifies the payment. For example, a large cash transaction.',
-	'callback' => array($pines->com_sales, 'payment_manager')
+	'callback' => 'com_sales__payment_manager'
 );
 
 ?>

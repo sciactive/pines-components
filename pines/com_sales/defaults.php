@@ -13,10 +13,36 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
+		'name' => 'remove_stock',
+		'cname' => 'Remove Stock',
+		'description' => 'When (in the sale process) to take stock out of inventory.',
+		'value' => 'tender',
+		'options' => array(
+			'When the sale is invoiced.' => 'invoice',
+			'When the sale is tendered.' => 'tender'
+		),
+	),
+	array(
+		'name' => 'perform_actions',
+		'cname' => 'Perform Product Actions',
+		'description' => 'When (in the sale process) to perform any product actions defined on the products being sold.',
+		'value' => 'tender',
+		'options' => array(
+			'When the sale is invoiced.' => 'invoice',
+			'When the sale is tendered.' => 'tender'
+		),
+	),
+	array(
 		'name' => 'dec',
 		'cname' => 'Visible Decimal Places',
 		'description' => 'Decimal numbers, though stored in the database more accurately, will only be displayed to this number of places.',
 		'value' => 2,
+	),
+	array(
+		'name' => 'com_customer',
+		'cname' => 'CRM Integration',
+		'description' => 'Integrate with com_customer.',
+		'value' => true,
 	),
 	array(
 		'name' => 'global_products',
@@ -52,12 +78,6 @@ return array(
 		'name' => 'global_tax_fees',
 		'cname' => 'Globalize Taxes/Fees',
 		'description' => 'Ensure that every user can access all taxes and fees by setting the "other" access control to read.',
-		'value' => true,
-	),
-	array(
-		'name' => 'com_customer',
-		'cname' => 'CRM Integration',
-		'description' => 'Integrate with com_customer.',
 		'value' => true,
 	),
 	array(
@@ -112,7 +132,7 @@ return array(
 		'name' => 'cash_drawer',
 		'cname' => 'Cash Drawer',
 		'description' => 'Integrate the POS with a cash drawer. (Requires the Pines Cash Drawer Firefox addon.)',
-		'value' => true,
+		'value' => false,
 	),
 	array(
 		'name' => 'cash_drawer_group',

@@ -12,12 +12,12 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 return array(
-	'name' => 'Sales Manager',
+	'name' => 'POS',
 	'author' => 'SciActive',
 	'version' => '1.0.0',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'short_description' => 'Point of Sales system',
-	'description' => 'Allow users to create sales. Manage products, inventory, sales, shipments, etc.',
+	'description' => 'Manage products, inventory, sales, shipments, etc. Sell merchandise. Integrates with a cash drawer.',
 );
 
 ?>

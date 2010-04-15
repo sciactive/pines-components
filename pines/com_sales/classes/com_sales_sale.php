@@ -287,6 +287,18 @@ class com_sales_sale extends entity {
 			}
 		}
 
+		if ($pines->config->com_sales->remove_stock == 'tender') {
+			// Remove stock.
+			$stock_result = $this->remove_stock();
+			$return = $return && $stock_result;
+			if (!$stock_result)
+				pines_notice('Not all stock could be removed from inventory while tendering. Please check that all stock was correctly entered.');
+		}
+		if ($pines->config->com_sales->perform_actions == 'tender') {
+			// Perform actions.
+			$this->perform_actions();
+		}
+
 		// Complete the transaction.
 		if ($return) {
 			// Make a transaction entry.
@@ -384,47 +396,18 @@ class com_sales_sale extends entity {
 			}
 		}
 		unset($cur_product);
-		// Go through each product, calling actions, and marking their stock as sold.
-		foreach ($this->products as &$cur_product) {
-			// Call product actions for all products without stock entries.
-			$i = $cur_product['quantity'] - count($cur_product['stock_entities']);
-			if ($i > 0) {
-				$pines->com_sales->call_product_actions(array(
-					'type' => 'sold',
-					'product' => $cur_product['entity'],
-					'sale' => $this,
-					'serial' => $cur_product['serial'],
-					'delivery' => $cur_product['delivery'],
-					'price' => $cur_product['price'],
-					'discount' => $cur_product['discount'],
-					'line_total' => $cur_product['line_total'],
-					'fees' => $cur_product['fees']
-				), $i);
-			}
-			// Remove stock from inventory.
-			if (is_array($cur_product['stock_entities'])) {
-				foreach ($cur_product['stock_entities'] as &$cur_stock) {
-					if ($cur_product['delivery'] == 'in-store') {
-						$return = $return && $cur_stock->remove($this, 'sold_at_store') && $cur_stock->save();
-					} else {
-						$return = $return && $cur_stock->remove($this, 'sold_pending', $cur_stock->location) && $cur_stock->save();
-					}
-					$pines->com_sales->call_product_actions(array(
-						'type' => 'sold',
-						'product' => $cur_product['entity'],
-						'stock_entry' => $cur_stock,
-						'sale' => $this,
-						'serial' => $cur_product['serial'],
-						'delivery' => $cur_product['delivery'],
-						'price' => $cur_product['price'],
-						'discount' => $cur_product['discount'],
-						'line_total' => $cur_product['line_total'],
-						'fees' => $cur_product['fees']
-					));
-				}
-			}
+
+		if ($pines->config->com_sales->remove_stock == 'invoice') {
+			// Remove stock.
+			$stock_result = $this->remove_stock();
+			$return = $return && $stock_result;
+			if (!$stock_result)
+				pines_notice('Not all stock could be removed from inventory while invoicing. Please check that all stock was correctly entered.');
 		}
-		unset($cur_product);
+		if ($pines->config->com_sales->perform_actions == 'invoice') {
+			// Perform actions.
+			$this->perform_actions();
+		}
 
 		// Make a transaction entry.
 		$tx = com_sales_tx::factory('com_sales', 'transaction', 'sale_tx');
@@ -442,6 +425,71 @@ class com_sales_sale extends entity {
 		$this->invoice_date = time();
 
 		return $return;
+	}
+
+	/**
+	 * Remove the inventory on this sale from current stock.
+	 * @return bool True on success, false on any failure.
+	 */
+	public function remove_stock() {
+		// Keep track of the whole process.
+		$return = true;
+		// Go through each product, marking its stock as sold.
+		foreach ($this->products as &$cur_product) {
+			// Remove stock from inventory.
+			if (!is_array($cur_product['stock_entities']))
+				continue;
+			foreach ($cur_product['stock_entities'] as &$cur_stock) {
+				if ($cur_product['delivery'] == 'in-store') {
+					$return = $return && $cur_stock->remove($this, 'sold_at_store') && $cur_stock->save();
+				} else {
+					$return = $return && $cur_stock->remove($this, 'sold_pending', $cur_stock->location) && $cur_stock->save();
+				}
+			}
+		}
+		return $return;
+	}
+
+	/**
+	 * Run the product actions associated with the products on this sale.
+	 */
+	public function perform_actions() {
+		global $pines;
+		// Go through each product, calling actions.
+		foreach ($this->products as &$cur_product) {
+			// Call product actions for all products without stock entries.
+			$i = $cur_product['quantity'] - count($cur_product['stock_entities']);
+			if ($i > 0) {
+				$pines->com_sales->call_product_actions(array(
+					'type' => 'sold',
+					'product' => $cur_product['entity'],
+					'sale' => $this,
+					'serial' => $cur_product['serial'],
+					'delivery' => $cur_product['delivery'],
+					'price' => $cur_product['price'],
+					'discount' => $cur_product['discount'],
+					'line_total' => $cur_product['line_total'],
+					'fees' => $cur_product['fees']
+				), $i);
+			}
+			// Call product actions on stock.
+			if (!is_array($cur_product['stock_entities']))
+				continue;
+			foreach ($cur_product['stock_entities'] as &$cur_stock) {
+				$pines->com_sales->call_product_actions(array(
+					'type' => 'sold',
+					'product' => $cur_product['entity'],
+					'stock_entry' => $cur_stock,
+					'sale' => $this,
+					'serial' => $cur_product['serial'],
+					'delivery' => $cur_product['delivery'],
+					'price' => $cur_product['price'],
+					'discount' => $cur_product['discount'],
+					'line_total' => $cur_product['line_total'],
+					'fees' => $cur_product['fees']
+				));
+			}
+		}
 	}
 
 	/**

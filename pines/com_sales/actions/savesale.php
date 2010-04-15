@@ -123,7 +123,7 @@ if ($sale->status != 'paid') {
 			continue;
 		}
 		if ($cur_amount <= 0) {
-			pines_notice("A payment was entered without an amount.");
+			pines_notice('A payment was entered without an amount.');
 			$payment_error = true;
 		}
 		$data_array = array();

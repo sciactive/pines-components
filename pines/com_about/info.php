@@ -18,6 +18,9 @@ return array(
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'short_description' => 'Configurable about dialog',
 	'description' => 'Displays configurable information about Pines and your installation.',
+	'abilities' => array(
+		array('com_about', 'show', 'About Page', 'User can see the about page.')
+	),
 );
 
 ?>

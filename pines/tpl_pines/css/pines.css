@@ -67,19 +67,26 @@ img {
 	right:100%;
 }
 .holygrail .colleft {
-	/* jQuery UI Styling Additions */
-	border: 0 !important;
-	background-image: url(../images/shadow-top.png) !important;
-	background-repeat: repeat-x !important;
-	background-attachment: scroll !important;
-	background-position: left top !important;
-	/* ----- */
 	float:left;
 	width:100%;
 	margin-left:-50%;
 	position:relative;
 	left:400px;		 	/* Left column width + right column width */
 }
+/* jQuery UI Styling Additions */
+.holygrail .colleftcolor {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	border: 0 !important;
+	background-image: url(../images/shadow-top.png) !important;
+	background-repeat: repeat-x !important;
+	background-attachment: scroll !important;
+	background-position: left top !important;
+}
+/* ----- */
 .holygrail .col1wrap {
 	float:left;
 	width:50%;
@@ -106,6 +113,12 @@ img {
 	/* Margin for module content. */
 	margin-top: 12px; /* col1 top margin */
 }
+/* jQuery UI Styling Additions */
+.holygrail .col2 .module_content {
+	border: 0 !important;
+	background: transparent none !important;
+}
+/* ----- */
 .holygrail .col3 {
 	float:left;
 	float:right;			/* This overrides the float:left above */
@@ -213,12 +226,6 @@ body {
 }
 .module .module_content {
 	padding: 0 5px;
-}
-.module .module_content a {
-	text-decoration: underline !important;
-}
-.module .module_content .ui-state-default a {
-	text-decoration: none !important;
 }
 body .ui-widget {
 	font-size: 1em !important;

@@ -114,7 +114,8 @@ if (strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
 	</div>
 	<div class="colmask holygrail">
 		<div class="colmid">
-			<div class="colleft ui-state-default">
+			<div class="colleft">
+				<div class="colleftcolor ui-state-default"></div>
 				<div class="col1wrap">
 					<div class="col1">
 						<div class="content_top_left">
@@ -135,7 +136,7 @@ if (strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
 					</div>
 				</div>
 				<div class="col2">
-					<?php echo $pines->page->render_modules('left'); ?>
+					<?php echo $pines->page->render_modules('left', 'module_left'); ?>
 				</div>
 				<div class="col3">
 					<?php echo $pines->page->render_modules('right', 'module_right'); ?>

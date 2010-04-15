@@ -19,6 +19,10 @@ return array(
 	'services' => array('log_manager'),
 	'short_description' => 'System log manager',
 	'description' => 'Provides a method for components to log their activity.',
+	'abilities' => array(
+		array('view', 'View Log', 'Let the user view the Pines log.'),
+		array('clear', 'Clear Log', 'Let the user clear (delete) the pines log.')
+	),
 );
 
 ?>

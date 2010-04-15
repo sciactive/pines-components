@@ -18,6 +18,10 @@ return array(
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'short_description' => 'Manage newsletters to your users',
 	'description' => 'Create and send newsletters to your users.',
+	'abilities' => array(
+		array('listmail', 'List Mail', 'Let users view the mailbox.'),
+		array('send', 'Send', 'Let users send out mailings.')
+	),
 );
 
 ?>

@@ -18,6 +18,11 @@ return array(
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'short_description' => 'Tools for testing and maintaining your entity manager',
 	'description' => 'Includes the following tools: test, benchmark, export, import.',
+	'abilities' => array(
+		array('test', 'Test/Benchmark', 'User can test and benchmark the entity manager.'),
+		array('export', 'Export', 'User can export all entities.'),
+		array('import', 'Import', 'User can import entities.')
+	),
 );
 
 ?>

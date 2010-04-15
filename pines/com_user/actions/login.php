@@ -23,6 +23,7 @@ $user = user::factory($_REQUEST['username']);
 if ( isset($user->guid) && $user->check_password($_REQUEST['password']) ) {
 	$pines->user_manager->login($user);
 	if ( !empty($_REQUEST['url']) ) {
+		header('HTTP/1.1 303 See Other', true, 303);
 		header('Location: '.urldecode($_REQUEST['url']));
 		exit;
 	}

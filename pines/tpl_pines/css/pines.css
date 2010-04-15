@@ -84,9 +84,7 @@ img {
 	overflow: hidden;
 	z-index: -1;
 	border: 0 !important;
-	background-repeat: repeat-x !important;
-	background-attachment: scroll !important;
-	background-position: left top !important;
+	background-image: none !important;
 }
 /* ----- */
 .holygrail .col1wrap {

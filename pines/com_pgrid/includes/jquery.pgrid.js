@@ -597,7 +597,7 @@
 					var cols = all_rows.children("td.col_"+pgrid.pgrid_sort_col).addClass("ui-pgrid-table-cell-sorted");
 
 					// Is this column only numbers, or is there a string?
-					var is_str = !!cols.contents().text().match(/[^0-9.,¤$€£¥#-]/);
+					var is_str = !cols.contents().text().match(new RegExp("[¤$€£¥#-]?[0-9.,"+pgrid.pgrid_decimal_sep+"]+"));
 
 					var rows = all_rows.get();
 

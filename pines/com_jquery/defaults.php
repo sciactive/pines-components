@@ -16,7 +16,7 @@ return array(
 		'name' => 'theme',
 		'cname' => 'Theme',
 		'description' => 'jQuery UI theme to use.',
-		'value' => 'smoothness',
+		'value' => 'comet',
 		'options' => array(
 			'Comet' => 'comet',
 			'Titan' => 'titan',

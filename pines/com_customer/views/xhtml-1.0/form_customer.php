@@ -313,7 +313,7 @@ $this->note = 'Provide customer profile details in this form.';
 					<input class="pf-field ui-widget-content" type="text" id="company" name="company" size="24" onfocus="this.blur();" value="<?php echo htmlentities($this->entity->company->guid ? "{$this->entity->company->guid}: \"{$this->entity->company->name}\"" : 'No Company Selected'); ?>" />
 					<br />
 					<input class="pf-field ui-widget-content" type="text" id="company_search" name="company_search" size="24" />
-					<button type="button" id="company_search_button"><span class="picon_16x16_actions_system-search" style="padding-left: 16px; background-repeat: no-repeat;">Search</span></button>
+					<button class="pf-field ui-state-default ui-corner-all" type="button" id="company_search_button"><span class="picon_16x16_actions_system-search" style="padding-left: 16px; background-repeat: no-repeat;">Search</span></button>
 				</div>
 			</div>
 			<div id="company_dialog" title="Pick a Company">
@@ -488,7 +488,7 @@ $this->note = 'Provide customer profile details in this form.';
 				<div class="pf-element">
 					<span class="pf-label">City, State</span>
 					<input class="pf-field ui-widget-content" type="text" name="city" size="15" value="<?php echo $this->entity->city; ?>" />
-					<select name="state">
+					<select class="pf-field ui-widget-content" name="state">
 						<option value="">None</option>
 						<?php foreach (array(
 								'AL' => 'Alabama',

@@ -367,7 +367,7 @@ $this->note = 'Provide employee account details in this form.';
 				<div class="pf-element">
 					<span class="pf-label">City, State</span>
 					<input class="pf-field ui-widget-content" type="text" name="city" size="15" value="<?php echo $this->entity->city; ?>" />
-					<select name="state">
+					<select class="pf-field ui-widget-content" name="state">
 						<option value="">None</option>
 						<?php foreach (array(
 								'AL' => 'Alabama',

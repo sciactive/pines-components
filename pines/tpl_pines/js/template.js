@@ -36,7 +36,9 @@ $(function(){
 	$(".ui-widget-content:text, .ui-widget-content:password").addClass("ui-corner-right");
 
 	// Menu and UI buttons hover.
-	hover(".dropdown li, .ui-state-default:input:enabled:not(:text, textarea)");
+	hover(".dropdown li");
+	$(".ui-state-default:button, .ui-state-default:submit").button();
+
 
 	/* Experimental AJAX code.
 	var load_page_ajax = function(url){

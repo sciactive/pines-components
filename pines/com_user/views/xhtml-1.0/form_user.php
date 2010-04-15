@@ -246,7 +246,7 @@ $this->note = 'Provide user details in this form.';
 				<div class="pf-element">
 					<span class="pf-label">City, State</span>
 					<input class="pf-field ui-widget-content" type="text" name="city" size="15" value="<?php echo $this->entity->city; ?>" />
-					<select name="state">
+					<select class="pf-field ui-widget-content" name="state">
 						<option value="">None</option>
 						<?php foreach (array(
 								'AL' => 'Alabama',
@@ -365,7 +365,7 @@ $this->note = 'Provide user details in this form.';
 				}
 				if (!$section_abilities) continue; ?>
 			<div class="abilities_accordian">
-				<h3><a href="#"><?php echo $cur_section; ?></a></h3>
+				<h3><a href="#"><?php echo ($cur_section == 'system') ? $pines->info->name : $pines->info->$cur_section->name; ?> (<?php echo $cur_section; ?>)</a></h3>
 				<div>
 					<div class="pf-element">
 						<?php foreach ($section_abilities as $cur_ability) { ?>

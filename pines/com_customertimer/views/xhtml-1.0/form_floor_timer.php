@@ -409,7 +409,7 @@ $this->title = 'Floor Timer ['.htmlentities($this->entity->name).']';
 				<span class="pf-note">Enter part of a name, company, email, or phone # to search.</span>
 				<div class="pf-group">
 					<input class="pf-field ui-widget-content" type="text" name="customer_search" size="24" />
-					<button type="button" class="search_button"><span class="picon_16x16_actions_system-search" style="padding-left: 16px; background-repeat: no-repeat;">Search</span></button>
+					<button class="pf-field ui-state-default ui-corner-all search_button" type="button"><span class="picon_16x16_actions_system-search" style="padding-left: 16px; background-repeat: no-repeat;">Search</span></button>
 				</div>
 			</div>
 		</div>

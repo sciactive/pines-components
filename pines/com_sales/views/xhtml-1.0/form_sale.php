@@ -806,7 +806,7 @@ $this->note = 'Use this form to edit a sale.';
 			<?php if ($this->entity->status != 'invoiced' && $this->entity->status != 'paid') { ?>
 			<br />
 			<input class="pf-field ui-widget-content" type="text" id="customer_search" name="customer_search" size="24" />
-			<button type="button" id="customer_search_button"><span class="picon_16x16_actions_system-search" style="padding-left: 16px; background-repeat: no-repeat;">Search</span></button>
+			<button class="pf-field ui-state-default ui-corner-all" type="button" id="customer_search_button"><span class="picon_16x16_actions_system-search" style="padding-left: 16px; background-repeat: no-repeat;">Search</span></button>
 			<?php } ?>
 		</div>
 	</div>

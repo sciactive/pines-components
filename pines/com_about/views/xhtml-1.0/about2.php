@@ -11,6 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = "About {$pines->info->name}";
+$this->note = "Version {$pines->info->version}";
 ?>
 <style type="text/css">
 	/* <![CDATA[ */
@@ -28,7 +29,6 @@ $this->title = "About {$pines->info->name}";
 	});
 	// ]]>
 </script>
-<p><strong>Version <?php echo $pines->info->version; ?></strong></p>
 <p>
 <?php echo $pines->info->name; ?> is a PHP application framework, designed to be
 extensible and easy to manage. It is a
@@ -51,9 +51,9 @@ components which use an entity manager (the database abstraction layer) will
 work.
 </p>
 <p id="com_about_buttons">
-	<button type="button" onclick="window.open('http://sciactive.com/');">Visit SciActive</button>
-	<button type="button" onclick="window.open('http://sourceforge.net/projects/pines/');">Visit Project Page</button>
-	<button type="button" onclick="window.open('http://pines.sourceforge.net/pines-docs/');">Visit API Documentation</button>
+	<button type="button" onclick="window.open('http://sciactive.com/');">SciActive</button>
+	<button type="button" onclick="window.open('http://sourceforge.net/projects/pines/');">Project Page</button>
+	<button type="button" onclick="window.open('http://pines.sourceforge.net/pines-docs/');">API Documentation</button>
 	<button type="button" onclick="window.open('http://sourceforge.net/donate/index.php?group_id=264165');">Donate</button>
 </p>
 <br style="clear: both; height: 1px;" />

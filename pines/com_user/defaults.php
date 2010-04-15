@@ -19,6 +19,12 @@ return array(
 		'value' => false,
 	),
 	array(
+		'name' => 'show_cur_user',
+		'cname' => 'Show Current User',
+		'description' => 'Display the name of the current user in the page header.',
+		'value' => true,
+	),
+	array(
 		'name' => 'create_admin',
 		'cname' => 'Create Admin',
 		'description' => 'Allow the creation of an admin user.',

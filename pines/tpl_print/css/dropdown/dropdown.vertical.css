@@ -19,14 +19,14 @@
 @import "dropdown.css";
 
 ul.dropdown-vertical {
- width: auto;
+	width: auto;
 }
 
 ul.dropdown-vertical ul {
- top: 1px;
- left: 99%;
+	top: 1px;
+	left: 99%;
 }
 
 ul.dropdown-vertical li {
- float: none;
+	float: none;
 }

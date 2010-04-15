@@ -19,14 +19,14 @@
 @import "dropdown.vertical.css";
 
 ul.dropdown-vertical-rtl {
- float: right;
+	float: right;
 }
 
 ul.dropdown-vertical-rtl ul {
- left: auto !important;
- right: 99%;
+	left: auto !important;
+	right: 99%;
 }
 
 ul.dropdown-vertical-rtl li {
- text-align: right;
+	text-align: right;
 }

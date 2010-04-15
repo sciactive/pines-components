@@ -49,6 +49,7 @@ ul.dropdown li:hover {
 }
 
 ul.dropdown ul {
+	display: none;
 	visibility: hidden;
 	position: absolute;
 	top: 100%;
@@ -66,7 +67,8 @@ ul.dropdown ul ul {
 	left: 99%;
 }
 
-ul.dropdown li:hover > ul {
+ul.dropdown li:hover > ul, ul.dropdown li.hover > ul {
+	display: block;
 	visibility: visible;
 }
 

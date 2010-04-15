@@ -19,13 +19,13 @@
 @import "dropdown.css";
 
 * html ul.dropdown li {
- height: 1px;
+	height: 1px;
 }
 
 ul.dropdown ul li,
 ul.dropdown-vertical {
- margin-left: -16px;
- mar\gin-left: 0;
+	margin-left: -16px;
+	mar\gin-left: 0;
 }
 
 ul.dropdown ul,
@@ -33,7 +33,7 @@ ul.dropdown li:hover ul ul,
 ul.dropdown li:hover ul ul ul,
 ul.dropdown li:hover ul ul ul ul,
 ul.dropdown li:hover ul ul ul ul ul {
- visibility: hidden;
+	visibility: hidden;
 }
 
 ul.dropdown li:hover ul,
@@ -41,9 +41,9 @@ ul.dropdown ul li:hover ul,
 ul.dropdown ul ul li:hover ul,
 ul.dropdown ul ul ul li:hover ul,
 ul.dropdown ul ul ul ul li:hover ul {
- visibility: visible;
+	visibility: visible;
 }
 
 ul.dropdown ul ul ul ul ul ul {
- visibility: hidden !important;
+	visibility: hidden !important;
 }

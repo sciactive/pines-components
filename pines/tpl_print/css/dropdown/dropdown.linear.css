@@ -19,18 +19,18 @@
 @import "dropdown.css";
 
 ul.dropdown-linear {
- width: 100%;
+	width: 100%;
 }
 
 ul.dropdown-linear ul li {
- float: left;
+	float: left;
 }
 
 ul.dropdown-linear li.hover,
 ul.dropdown-linear li:hover {
- position: static;
+	position: static;
 }
 
 ul.dropdown-linear ul ul {
- display: none !important;
+	display: none !important;
 }

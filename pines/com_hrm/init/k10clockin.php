@@ -11,6 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$pines->com_hrm->provide_clockin();
+if (isset($_SESSION['user']) && gatekeeper('com_hrm/clock'))
+	$pines->com_hrm->provide_clockin();
 
 ?>

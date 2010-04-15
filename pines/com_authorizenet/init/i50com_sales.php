@@ -11,11 +11,17 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
+function com_authorizenet__payment_credit() {
+	global $pines;
+	$args = func_get_args();
+	return call_user_func_array(array($pines->com_authorizenet, 'payment_credit'), $args);
+}
+
 $pines->config->com_sales->processing_types[] = array(
 	'name' => 'com_authorizenet/credit',
 	'cname' => 'Credit Card',
 	'description' => 'Process credit card payment using Authorize.net.',
-	'callback' => array($pines->com_authorizenet, 'payment_credit')
+	'callback' => 'com_authorizenet__payment_credit'
 );
 
 ?>

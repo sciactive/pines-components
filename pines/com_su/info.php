@@ -18,6 +18,9 @@ return array(
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'short_description' => 'Switch to a different user',
 	'description' => 'Allow users to login as a different user quickly, without having to logout first.',
+	'abilities' => array(
+		array('nopassword', 'Switch Without Password', 'User can switch to any other user without providing a password.')
+	),
 );
 
 ?>

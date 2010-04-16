@@ -266,6 +266,9 @@ body .ui-widget {
 .content, .pre_content, .post_content {
 	clear: both;
 }
+input.ui-widget-content, select.ui-widget-content, textarea.ui-widget-content {
+	padding: 0.4em .8em;
+}
 /* ----------- Menus ----------- */
 .col2 ul.dropdown.dropdown-vertical, .col3 ul.dropdown.dropdown-vertical {
 	width: 100%;

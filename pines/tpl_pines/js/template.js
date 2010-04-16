@@ -32,8 +32,9 @@ $(function(){
 		.end().parent().nextAll(".module_content").slideToggle("normal");
 	}));
 
+	// Add disabled element styling.
 	$(".ui-widget-content:input:disabled").addClass("ui-state-disabled");
-	$(".ui-widget-content:text, .ui-widget-content:password").addClass("ui-corner-right");
+	$(".ui-widget-content:input:not(:button, :submit, :reset)").addClass("ui-corner-all");
 
 	// Menu and UI buttons hover.
 	hover(".dropdown li");

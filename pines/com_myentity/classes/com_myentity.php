@@ -264,6 +264,23 @@ class com_myentity extends component implements entity_manager_interface {
 					}
 					break;
 				case 'data':
+//					$tmp_query = sprintf('SELECT GROUP_CONCAT(`guid`) AS `guids` FROM `%scom_myentity_data` WHERE ',
+//						$pines->config->com_mysql->prefix);
+//					$tmp_query_parts = array();
+//					foreach ($option as $cur_name => $cur_value) {
+//						$tmp_query_parts[] = '(`name`=\''.mysql_real_escape_string($cur_name, $pines->com_mysql->link).'\' AND `value`=\''.mysql_real_escape_string(serialize($cur_value), $pines->com_mysql->link).'\')';
+//					}
+//					$tmp_query .= implode(' AND ', $tmp_query_parts).';';
+//					if ( !($result = mysql_query($tmp_query, $pines->com_mysql->link)) ) {
+//						if (function_exists('pines_error'))
+//							pines_error('Query failed: ' . mysql_error());
+//						return null;
+//					}
+//					$row = mysql_fetch_array($result);
+//					mysql_free_result($result);
+//					if (isset($row['guids']))
+//						$cur_query .= "e.`guid` IN ({$row['guids']})";
+//					break;
 				case 'match':
 				case 'gt':
 				case 'gte':
@@ -277,6 +294,23 @@ class com_myentity extends component implements entity_manager_interface {
 					}
 					break;
 				case 'data_i':
+//					$tmp_query = sprintf('SELECT GROUP_CONCAT(`guid`) AS `guids` FROM `%scom_myentity_data` WHERE ',
+//						$pines->config->com_mysql->prefix);
+//					$tmp_query_parts = array();
+//					foreach ($option as $cur_name => $cur_value) {
+//						$tmp_query_parts[] = '(`name`=\''.mysql_real_escape_string($cur_name, $pines->com_mysql->link).'\' AND `value`=\''.mysql_real_escape_string(serialize($cur_value), $pines->com_mysql->link).'\')';
+//					}
+//					$tmp_query .= implode(' OR ', $tmp_query_parts).';';
+//					if ( !($result = mysql_query($tmp_query, $pines->com_mysql->link)) ) {
+//						if (function_exists('pines_error'))
+//							pines_error('Query failed: ' . mysql_error());
+//						return null;
+//					}
+//					$row = mysql_fetch_array($result);
+//					mysql_free_result($result);
+//					if (isset($row['guids']))
+//						$cur_query .= "e.`guid` IN ({$row['guids']})";
+//					break;
 				case 'match_i':
 				case 'gt_i':
 				case 'gte_i':
@@ -345,31 +379,31 @@ class com_myentity extends component implements entity_manager_interface {
 			foreach ($options as $key => $option) {
 				switch ($key) {
 					case 'guid':
-						if (is_array($option)) {
-							$pass = $pass && in_array($guid, $option);
-						} else {
-							$pass = $pass && ($guid == $option);
-						}
-						break;
+//						if (is_array($option)) {
+//							$pass = $pass && in_array($guid, $option);
+//						} else {
+//							$pass = $pass && ($guid == $option);
+//						}
+//						break;
 					case 'tags':
-						if (is_array($option)) {
-							foreach($option as $cur_option) {
-								if (!($pass = $pass && in_array($cur_option, $tags)))
-									break 2;
-							}
-						} else {
-							$pass = $pass && in_array($option, $tags);
-						}
-						break;
+//						if (is_array($option)) {
+//							foreach($option as $cur_option) {
+//								if (!($pass = $pass && in_array($cur_option, $tags)))
+//									break 2;
+//							}
+//						} else {
+//							$pass = $pass && in_array($option, $tags);
+//						}
+//						break;
 					case 'tags_i':
-						$found = false;
-						foreach ($option as $cur_option) {
-							if (in_array($cur_option, $tags)) {
-								$found = true;
-								break;
-							}
-						}
-						$pass = $pass && $found;
+//						$found = false;
+//						foreach ($option as $cur_option) {
+//							if (in_array($cur_option, $tags)) {
+//								$found = true;
+//								break;
+//							}
+//						}
+//						$pass = $pass && $found;
 						break;
 					case 'data':
 						foreach ($option as $cur_key => $cur_option) {

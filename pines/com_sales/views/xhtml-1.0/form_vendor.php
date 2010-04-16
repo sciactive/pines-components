@@ -110,11 +110,11 @@ $this->note = 'Provide vendor details in this form.';
 	</fieldset>
 	<div class="pf-element pf-full-width">
 		<label><span class="pf-label">Terms</span>
-			<span class="pf-field pf-full-width"><textarea style="width: 100%;" rows="3" cols="35" name="terms"><?php echo $this->entity->terms; ?></textarea></span></label>
+			<span class="pf-field pf-full-width"><textarea class="ui-widget-content" style="width: 100%;" rows="3" cols="35" name="terms"><?php echo $this->entity->terms; ?></textarea></span></label>
 	</div>
 	<div class="pf-element pf-full-width">
 		<label><span class="pf-label">Comments</span>
-			<span class="pf-field pf-full-width"><textarea style="width: 100%;" rows="3" cols="35" name="comments"><?php echo $this->entity->comments; ?></textarea></span></label>
+			<span class="pf-field pf-full-width"><textarea class="ui-widget-content" style="width: 100%;" rows="3" cols="35" name="comments"><?php echo $this->entity->comments; ?></textarea></span></label>
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>

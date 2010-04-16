@@ -408,11 +408,17 @@ class com_user extends component implements user_manager_interface {
 
 	public function punt_user($message = null, $url = null) {
 		global $pines;
-		$default = '0';
+		$query_part = array();
+		if (isset($url))
+			$query_part['url'] = $url;
 		if ($pines->request_component == $_SESSION['user']->default_component && $pines->request_action == 'default')
-			$default = '1';
+			$query_part['default'] = '1';
 		pines_notice($message);
-		redirect(pines_url('com_user', 'exit', array('default' => $default, 'url' => urlencode($url))));
+		if ($query_part) {
+			redirect(pines_url('com_user', 'exit', $query_part));
+		} else {
+			redirect(pines_url('com_user', 'exit'));
+		}
 		exit($message);
 	}
 }

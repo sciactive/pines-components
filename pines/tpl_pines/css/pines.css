@@ -266,7 +266,11 @@ body .ui-widget {
 .content, .pre_content, .post_content {
 	clear: both;
 }
-input.ui-widget-content, select.ui-widget-content, textarea.ui-widget-content {
+input.ui-widget-content,
+select.ui-widget-content,
+textarea.ui-widget-content,
+input.ui-state-default,
+button.ui-state-default {
 	padding: 0.4em .8em;
 }
 /* ----------- Pines Form ----------- */

@@ -106,7 +106,7 @@ class com_user extends component implements user_manager_interface {
 	 * This function will check both user and group abilities, if the user is
 	 * marked to inherit the abilities of its group.
 	 */
-	public function gatekeeper($ability = NULL, $user = NULL) {
+	public function gatekeeper($ability = null, $user = null) {
 		if ( is_null($user) ) {
 			// If the user is logged in, their abilities are already set up. We
 			// just need to add them to the user's.
@@ -172,7 +172,7 @@ class com_user extends component implements user_manager_interface {
 	 * @return array The array of groups.
 	 * @todo Check for orphans, they could cause groups to be hidden.
 	 */
-	public function get_group_array($parent = NULL) {
+	public function get_group_array($parent = null) {
 		global $pines;
 		$return = array();
 		if ( is_null($parent) ) {
@@ -199,7 +199,7 @@ class com_user extends component implements user_manager_interface {
 		return $return;
 	}
 
-	public function get_group_descendents($parent = NULL) {
+	public function get_group_descendents($parent = null) {
 		global $pines;
 		$return = array();
 		if ( is_null($parent) ) {
@@ -227,7 +227,7 @@ class com_user extends component implements user_manager_interface {
 	 * @param group $parent The parent group.
 	 * @param bool $top_level Whether to work on the menu's top level.
 	 */
-	public function get_group_menu(&$menu = NULL, $parent = NULL, $top_level = TRUE) {
+	public function get_group_menu(&$menu = null, $parent = null, $top_level = TRUE) {
 		global $pines;
 		if ( is_null($parent) ) {
 			$entities = $pines->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
@@ -236,7 +236,7 @@ class com_user extends component implements user_manager_interface {
 			}
 			$orphans = $menu->orphans();
 			if ( !empty($orphans) ) {
-				$orphan_menu_id = $menu->add('Orphans', NULL);
+				$orphan_menu_id = $menu->add('Orphans', null);
 				foreach ($orphans as $orphan) {
 					$menu->add($orphan['name'], $orphan['data'], $orphan_menu_id, $orphan['data']);
 				}
@@ -244,7 +244,7 @@ class com_user extends component implements user_manager_interface {
 		} else {
 			$entities = $pines->entity_manager->get_entities(array('ref' => array('parent' => $parent), 'tags' => array('com_user', 'group'), 'class' => group));
 			foreach ($entities as $entity) {
-				$new_menu_id = $menu->add("{$entity->name} [{$entity->groupname}]", $entity->guid, ($top_level ? NULL : $entity->parent->guid), $entity->guid);
+				$new_menu_id = $menu->add("{$entity->name} [{$entity->groupname}]", $entity->guid, ($top_level ? null : $entity->parent->guid), $entity->guid);
 				$this->get_group_menu($menu, $entity, FALSE);
 			}
 		}
@@ -270,7 +270,7 @@ class com_user extends component implements user_manager_interface {
 	 * @param string $mark The mark to apply (per depth level) to the mask.
 	 * @return string The rendered tree.
 	 */
-	public function get_group_tree($mask, $group_array, $selected_id = NULL, $selected = ' selected="selected"', $mark = '') {
+	public function get_group_tree($mask, $group_array, $selected_id = null, $selected = ' selected="selected"', $mark = '') {
 		$return = '';
 		if (!is_array($group_array))
 			return $return;

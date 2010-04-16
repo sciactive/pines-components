@@ -11,6 +11,13 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
+/**
+ * Shortcut to $pines->com_authorizenet->payment_credit().
+ *
+ * This prevents the class from being loaded every script run.
+ * 
+ * @return mixed The method's return value.
+ */
 function com_authorizenet__payment_credit() {
 	global $pines;
 	$args = func_get_args();

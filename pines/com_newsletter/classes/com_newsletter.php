@@ -50,7 +50,7 @@ class com_newsletter extends component {
 	 * @param string $close_action The action to route to when closed.
 	 * @return bool True on success, false on failure.
 	 */
-	function edit_mail($mail = NULL, $new_option = '', $new_action = '', $close_option = 'com_newsletter', $close_action = "list") {
+	function edit_mail($mail = null, $new_option = '', $new_action = '', $close_option = 'com_newsletter', $close_action = "list") {
 		global $pines;
 
 		if ( !is_null($mail) ) {

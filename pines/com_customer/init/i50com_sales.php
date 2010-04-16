@@ -18,11 +18,25 @@ if ($pines->config->com_customer->com_sales && !$pines->depend->check('component
 if (!$pines->config->com_customer->com_sales)
 	return;
 
+/**
+ * Shortcut to $pines->com_customer->product_action_add_points().
+ *
+ * This prevents the class from being loaded every script run.
+ *
+ * @return mixed The method's return value.
+ */
 function com_customer__product_action_add_points() {
 	global $pines;
 	$args = func_get_args();
 	return call_user_func_array(array($pines->com_customer, 'product_action_add_points'), $args);
 }
+/**
+ * Shortcut to $pines->com_customer->product_action_add_member_days().
+ *
+ * This prevents the class from being loaded every script run.
+ *
+ * @return mixed The method's return value.
+ */
 function com_customer__product_action_add_member_days() {
 	global $pines;
 	$args = func_get_args();

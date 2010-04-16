@@ -11,11 +11,25 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
+/**
+ * Shortcut to $pines->com_sales->payment_instant().
+ *
+ * This prevents the class from being loaded every script run.
+ *
+ * @return mixed The method's return value.
+ */
 function com_sales__payment_instant() {
 	global $pines;
 	$args = func_get_args();
 	return call_user_func_array(array($pines->com_sales, 'payment_instant'), $args);
 }
+/**
+ * Shortcut to $pines->com_sales->payment_manager().
+ *
+ * This prevents the class from being loaded every script run.
+ *
+ * @return mixed The method's return value.
+ */
 function com_sales__payment_manager() {
 	global $pines;
 	$args = func_get_args();

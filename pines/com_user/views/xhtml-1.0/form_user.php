@@ -25,7 +25,7 @@ $this->note = 'Provide user details in this form.';
 			}
 			return true;
 		});
-		
+
 		// Attributes
 		var attributes = $("#tab_attributes .attributes");
 		var attributes_table = $("#tab_attributes .attributes_table");
@@ -61,11 +61,11 @@ $this->note = 'Provide user details in this form.';
 			bgiframe: true,
 			autoOpen: false,
 			modal: true,
-			width: 600,
+			width: 500,
 			buttons: {
 				"Done": function() {
-					var cur_attribute_name = $("#tab_attributes input[name=cur_attribute_name]").val();
-					var cur_attribute_value = $("#tab_attributes input[name=cur_attribute_value]").val();
+					var cur_attribute_name = attribute_dialog.find("input[name=cur_attribute_name]").val();
+					var cur_attribute_value = attribute_dialog.find("input[name=cur_attribute_value]").val();
 					if (cur_attribute_name == "" || cur_attribute_value == "") {
 						alert("Please provide both a name and a value for this attribute.");
 						return;
@@ -85,8 +85,8 @@ $this->note = 'Provide user details in this form.';
 		});
 
 		function update_attributes() {
-			$("#cur_attribute_name").val("");
-			$("#cur_attribute_value").val("");
+			attribute_dialog.find("input[name=cur_attribute_name]").val("");
+			attribute_dialog.find("input[name=cur_attribute_value]").val("");
 			attributes.val(JSON.stringify(attributes_table.pgrid_get_all_rows().pgrid_export_rows()));
 		}
 
@@ -406,20 +406,25 @@ $this->note = 'Provide user details in this form.';
 							<?php } ?>
 						</tbody>
 					</table>
-					<input type="hidden" name="attributes" size="24" />
+					<input type="hidden" name="attributes" />
 				</div>
 			</div>
-			<div class="attribute_dialog" title="Add an Attribute">
-				<div style="width: 100%">
-					<label>
-						<span>Name</span>
-						<input type="text" name="cur_attribute_name" />
-					</label>
-					<label>
-						<span>Value</span>
-						<input type="text" name="cur_attribute_value" />
-					</label>
+			<div class="attribute_dialog" style="display: none;" title="Add an Attribute">
+				<div class="pf-form">
+					<div class="pf-element">
+						<label>
+							<span class="pf-label">Name</span>
+							<input class="pf-field ui-widget-content" type="text" name="cur_attribute_name" size="24" />
+						</label>
+					</div>
+					<div class="pf-element">
+						<label>
+							<span class="pf-label">Value</span>
+							<input class="pf-field ui-widget-content" type="text" name="cur_attribute_value" size="24" />
+						</label>
+					</div>
 				</div>
+				<br style="clear: both; height: 1px;" />
 			</div>
 			<br class="pf-clearing" />
 		</div>

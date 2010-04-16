@@ -13,147 +13,152 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = (is_null($this->entity->guid)) ? 'Editing New Employee' : 'Editing ['.htmlentities($this->entity->name).']';
 $this->note = 'Provide employee account details in this form.';
 ?>
-<form class="pf-form" method="post" id="employee_details" action="<?php echo htmlentities(pines_url('com_hrm', 'saveemployee')); ?>">
-	<script type="text/javascript">
-		// <![CDATA[
-		$(function(){
-			var addresses = $("#addresses");
-			var addresses_table = $("#addresses_table");
-			var address_dialog = $("#address_dialog");
-			var attributes = $("#attributes");
-			var attributes_table = $("#attributes_table");
-			var attribute_dialog = $("#attribute_dialog");
+<script type="text/javascript">
+	// <![CDATA[
+	$(function(){
+		var addresses = $("#addresses");
+		var addresses_table = $("#addresses_table");
+		var address_dialog = $("#address_dialog");
 
-			addresses_table.pgrid({
-				pgrid_paginate: false,
-				pgrid_toolbar: true,
-				pgrid_toolbar_contents : [
-					{
-						type: 'button',
-						text: 'Add Address',
-						extra_class: 'icon picon_16x16_actions_list-add',
-						selection_optional: true,
-						click: function(){
-							address_dialog.dialog('open');
-						}
-					},
-					{
-						type: 'button',
-						text: 'Remove Address',
-						extra_class: 'icon picon_16x16_actions_list-remove',
-						click: function(e, rows){
-							rows.pgrid_delete();
-							update_address();
-						}
+		addresses_table.pgrid({
+			pgrid_paginate: false,
+			pgrid_toolbar: true,
+			pgrid_toolbar_contents : [
+				{
+					type: 'button',
+					text: 'Add Address',
+					extra_class: 'icon picon_16x16_actions_list-add',
+					selection_optional: true,
+					click: function(){
+						address_dialog.dialog('open');
 					}
-				]
-			});
-
-			attributes_table.pgrid({
-				pgrid_paginate: false,
-				pgrid_toolbar: true,
-				pgrid_toolbar_contents : [
-					{
-						type: 'button',
-						text: 'Add Attribute',
-						extra_class: 'icon picon_16x16_actions_list-add',
-						selection_optional: true,
-						click: function(){
-							attribute_dialog.dialog('open');
-						}
-					},
-					{
-						type: 'button',
-						text: 'Remove Attribute',
-						extra_class: 'icon picon_16x16_actions_list-remove',
-						click: function(e, rows){
-							rows.pgrid_delete();
-							update_attributes();
-						}
-					}
-				]
-			});
-
-			// Address Dialog
-			address_dialog.dialog({
-				bgiframe: true,
-				autoOpen: false,
-				modal: true,
-				width: 600,
-				buttons: {
-					"Done": function() {
-						var cur_address_type = $("#cur_address_type").val();
-						var cur_address_addr1 = $("#cur_address_addr1").val();
-						var cur_address_addr2 = $("#cur_address_addr2").val();
-						var cur_address_city = $("#cur_address_city").val();
-						var cur_address_state = $("#cur_address_state").val();
-						var cur_address_zip = $("#cur_address_zip").val();
-						if (cur_address_type == "" || cur_address_addr1 == "") {
-							alert("Please provide a name and a street address.");
-							return;
-						}
-						var new_address = [{
-							key: null,
-							values: [
-								cur_address_type,
-								cur_address_addr1,
-								cur_address_addr2,
-								cur_address_city,
-								cur_address_state,
-								cur_address_zip
-							]
-						}];
-						addresses_table.pgrid_add(new_address);
-						update_addresses();
-						$(this).dialog('close');
+				},
+				{
+					type: 'button',
+					text: 'Remove Address',
+					extra_class: 'icon picon_16x16_actions_list-remove',
+					click: function(e, rows){
+						rows.pgrid_delete();
+						update_address();
 					}
 				}
-			});
-
-			// Attribute Dialog
-			attribute_dialog.dialog({
-				bgiframe: true,
-				autoOpen: false,
-				modal: true,
-				width: 600,
-				buttons: {
-					"Done": function() {
-						var cur_attribute_name = $("#cur_attribute_name").val();
-						var cur_attribute_value = $("#cur_attribute_value").val();
-						if (cur_attribute_name == "" || cur_attribute_value == "") {
-							alert("Please provide both a name and a value for this attribute.");
-							return;
-						}
-						var new_attribute = [{
-							key: null,
-							values: [
-								cur_attribute_name,
-								cur_attribute_value
-							]
-						}];
-						attributes_table.pgrid_add(new_attribute);
-						update_attributes();
-						$(this).dialog('close');
-					}
-				}
-			});
-
-			function update_addresses() {
-				$("#cur_address_type, #cur_address_addr1, #cur_address_addr2, #cur_address_city, #cur_address_state, #cur_address_zip").val("");
-				addresses.val(JSON.stringify(addresses_table.pgrid_get_all_rows().pgrid_export_rows()));
-			}
-
-			function update_attributes() {
-				$("#cur_attribute_name, #cur_attribute_value").val("");
-				attributes.val(JSON.stringify(attributes_table.pgrid_get_all_rows().pgrid_export_rows()));
-			}
-
-			$("#employee_tabs").tabs();
-			update_addresses();
-			update_attributes();
+			]
 		});
-		// ]]>
-	</script>
+
+		// Address Dialog
+		address_dialog.dialog({
+			bgiframe: true,
+			autoOpen: false,
+			modal: true,
+			width: 600,
+			buttons: {
+				"Done": function() {
+					var cur_address_type = $("#cur_address_type").val();
+					var cur_address_addr1 = $("#cur_address_addr1").val();
+					var cur_address_addr2 = $("#cur_address_addr2").val();
+					var cur_address_city = $("#cur_address_city").val();
+					var cur_address_state = $("#cur_address_state").val();
+					var cur_address_zip = $("#cur_address_zip").val();
+					if (cur_address_type == "" || cur_address_addr1 == "") {
+						alert("Please provide a name and a street address.");
+						return;
+					}
+					var new_address = [{
+						key: null,
+						values: [
+							cur_address_type,
+							cur_address_addr1,
+							cur_address_addr2,
+							cur_address_city,
+							cur_address_state,
+							cur_address_zip
+						]
+					}];
+					addresses_table.pgrid_add(new_address);
+					update_addresses();
+					$(this).dialog('close');
+				}
+			}
+		});
+
+		function update_addresses() {
+			$("#cur_address_type, #cur_address_addr1, #cur_address_addr2, #cur_address_city, #cur_address_state, #cur_address_zip").val("");
+			addresses.val(JSON.stringify(addresses_table.pgrid_get_all_rows().pgrid_export_rows()));
+		}
+
+		update_addresses();
+
+		// Attributes
+		var attributes = $("#tab_attributes .attributes");
+		var attributes_table = $("#tab_attributes .attributes_table");
+		var attribute_dialog = $("#tab_attributes .attribute_dialog");
+
+		attributes_table.pgrid({
+			pgrid_paginate: false,
+			pgrid_toolbar: true,
+			pgrid_toolbar_contents : [
+				{
+					type: 'button',
+					text: 'Add Attribute',
+					extra_class: 'icon picon_16x16_actions_list-add',
+					selection_optional: true,
+					click: function(){
+						attribute_dialog.dialog('open');
+					}
+				},
+				{
+					type: 'button',
+					text: 'Remove Attribute',
+					extra_class: 'icon picon_16x16_actions_list-remove',
+					click: function(e, rows){
+						rows.pgrid_delete();
+						update_attributes();
+					}
+				}
+			]
+		});
+
+		// Attribute Dialog
+		attribute_dialog.dialog({
+			bgiframe: true,
+			autoOpen: false,
+			modal: true,
+			width: 500,
+			buttons: {
+				"Done": function() {
+					var cur_attribute_name = attribute_dialog.find("input[name=cur_attribute_name]").val();
+					var cur_attribute_value = attribute_dialog.find("input[name=cur_attribute_value]").val();
+					if (cur_attribute_name == "" || cur_attribute_value == "") {
+						alert("Please provide both a name and a value for this attribute.");
+						return;
+					}
+					var new_attribute = [{
+						key: null,
+						values: [
+							cur_attribute_name,
+							cur_attribute_value
+						]
+					}];
+					attributes_table.pgrid_add(new_attribute);
+					update_attributes();
+					$(this).dialog('close');
+				}
+			}
+		});
+
+		function update_attributes() {
+			attribute_dialog.find("input[name=cur_attribute_name]").val("");
+			attribute_dialog.find("input[name=cur_attribute_value]").val("");
+			attributes.val(JSON.stringify(attributes_table.pgrid_get_all_rows().pgrid_export_rows()));
+		}
+
+		update_attributes();
+
+		$("#employee_tabs").tabs();
+	});
+	// ]]>
+</script>
+<form class="pf-form" method="post" id="employee_details" action="<?php echo htmlentities(pines_url('com_hrm', 'saveemployee')); ?>">
 	<div id="employee_tabs" style="clear: both;">
 		<ul>
 			<li><a href="#tab_general">General</a></li>
@@ -507,7 +512,7 @@ $this->note = 'Provide employee account details in this form.';
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Attributes</span>
 				<div class="pf-group">
-					<table id="attributes_table">
+					<table class="attributes_table">
 						<thead>
 							<tr>
 								<th>Name</th>
@@ -523,20 +528,25 @@ $this->note = 'Provide employee account details in this form.';
 							<?php } ?>
 						</tbody>
 					</table>
-					<input type="hidden" id="attributes" name="attributes" />
+					<input type="hidden" name="attributes" />
 				</div>
 			</div>
-			<div id="attribute_dialog" title="Add an Attribute">
-				<div style="width: 100%">
-					<label>
-						<span>Name</span>
-						<input type="text" name="cur_attribute_name" id="cur_attribute_name" />
-					</label>
-					<label>
-						<span>Value</span>
-						<input type="text" name="cur_attribute_value" id="cur_attribute_value" />
-					</label>
+			<div class="attribute_dialog" style="display: none;" title="Add an Attribute">
+				<div class="pf-form">
+					<div class="pf-element">
+						<label>
+							<span class="pf-label">Name</span>
+							<input class="pf-field ui-widget-content" type="text" name="cur_attribute_name" size="24" />
+						</label>
+					</div>
+					<div class="pf-element">
+						<label>
+							<span class="pf-label">Value</span>
+							<input class="pf-field ui-widget-content" type="text" name="cur_attribute_value" size="24" />
+						</label>
+					</div>
 				</div>
+				<br style="clear: both; height: 1px;" />
 			</div>
 			<br class="pf-clearing" />
 		</div>

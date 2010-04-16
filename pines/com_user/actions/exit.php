@@ -1,6 +1,6 @@
 <?php
 /**
- * Exit out of the current page and display a notice.
+ * Exit out of the current page.
  *
  * @package Pines
  * @subpackage com_user
@@ -10,9 +10,6 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-
-if (!empty($_REQUEST['message']))
-	pines_notice($_REQUEST['message']);
 
 // Show some info if the user is still logged in.
 if (is_object($_SESSION['user'])) {

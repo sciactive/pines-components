@@ -37,9 +37,9 @@ if (!empty($_REQUEST['pin']) && $pines->config->com_su->allow_pins) {
 }
 if ( isset($user, $user->guid) ) {
 	pines_log("Switching user from {$_SESSION['user']->username} to {$user->username}.", 'notice');
+	pines_notice("Switching user from {$_SESSION['user']->username} to {$user->username}.");
 	if ($pines->user_manager->login($user)) {
-		header('HTTP/1.1 303 See Other', true, 303);
-		header('Location: '.pines_url());
+		redirect(pines_url());
 	} else {
 		pines_error('Could not switch users.');
 		// Load the default component.

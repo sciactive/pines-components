@@ -113,9 +113,6 @@ if (!$component->save_config()) {
 	return;
 }
 
-header('HTTP/1.1 303 See Other', true, 303);
-header('Location: '.pines_url('com_configure', 'list'));
-
-$pines->page->override = true;
+redirect(pines_url('com_configure', 'list'));
 
 ?>

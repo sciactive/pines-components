@@ -15,10 +15,9 @@ if ( !gatekeeper('com_configure/edit') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_configure', 'edit', $_GET));
 
 if ($pines->configurator->enable_component($_REQUEST['component'])) {
-	header('HTTP/1.1 303 See Other', true, 303);
-	header('Location: '.pines_url('com_configure', 'list', array('message' => urlencode("Component {$_REQUEST['component']} successfully enabled."))));
-	$pines->page->override = true;
-	return;
+	pines_notice("Component {$_REQUEST['component']} successfully enabled.");
+	redirect(pines_url('com_configure', 'list', array('message' => urlencode())));
+	exit;
 } else {
 	pines_error('Couldn\'t enable component '.$_REQUEST['component'].'.');
 }

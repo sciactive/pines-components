@@ -26,9 +26,6 @@ defined('P_RUN') or die('Direct access prohibited');
 	<!--[if lt IE 8]>
 	<link href="<?php echo $pines->config->rela_location; ?>system/css/pform-ie-lt-8.css" media="all" rel="stylesheet" type="text/css" />
 	<![endif]-->
-	<!--[if lt IE 7]>
-	<link href="<?php echo $pines->config->rela_location; ?>system/css/pform-ie-lt-7.css" media="all" rel="stylesheet" type="text/css" />
-	<![endif]-->
 
 	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/style.css" media="all" rel="stylesheet" type="text/css" />
 

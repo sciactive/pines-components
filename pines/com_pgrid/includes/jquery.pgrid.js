@@ -1033,7 +1033,7 @@
 							wrapper.addClass(val.extra_class);
 						if (val.label)
 							wrapper.append($("<span>"+val.label+"</span>").addClass("ui-pgrid-toolbar-text-label"));
-						var cur_text = $("<input type=\"text\" />").addClass("ui-state-default ui-corner-all");
+						var cur_text = $("<input type=\"text\" />").addClass("ui-widget ui-widget-content ui-corner-all");
 						if (!val.dont_prevent_default) {
 							cur_text.keydown(function(e){
 								if (e.keyCode == 13)
@@ -1071,7 +1071,7 @@
 					pgrid.footer.append(
 						$("<div />").addClass("ui-pgrid-footer-filter-container").each(function(){
 							$(this).append($("<span>Filter: </span>").append(
-								$("<input />").addClass("ui-state-default ui-corner-all").attr({
+								$("<input />").addClass("ui-widget ui-widget-content ui-corner-all").attr({
 									type: "text",
 									value: pgrid.pgrid_filter,
 									size: "10"
@@ -1120,7 +1120,7 @@
 							var footer_pager = $(this);
 							footer_pager.append("Display ")
 							.append(
-								$("<input />").addClass("ui-state-default ui-corner-all").attr({
+								$("<input />").addClass("ui-widget ui-widget-content ui-corner-all").attr({
 									type: "text",
 									value: pgrid.pgrid_perpage,
 									size: "1"
@@ -1139,7 +1139,7 @@
 							}))
 							.append(" Page ")
 							.append(
-								$("<input />").addClass("ui-state-default ui-corner-all ui-pgrid-page-number").attr({
+								$("<input />").addClass("ui-widget ui-widget-content ui-corner-all ui-pgrid-page-number").attr({
 									type: "text",
 									value: pgrid.pgrid_page,
 									size: "3"

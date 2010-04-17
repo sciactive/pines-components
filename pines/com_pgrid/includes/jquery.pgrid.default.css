@@ -62,14 +62,16 @@
 	margin: 1px;
 }
 .ui-pgrid-toolbar .ui-pgrid-toolbar-button div {
-	padding: 1px;
+	padding: 0 1px;
 	white-space: pre;
 }
 .ui-pgrid-toolbar .ui-pgrid-toolbar-text {
-	cursor: default;
-	padding: 3px;
+	padding: 2px;
 	margin: 1px;
 	white-space: pre;
+}
+.ui-pgrid-toolbar .ui-pgrid-toolbar-text input {
+	padding: 3px;
 }
 .ui-pgrid-toolbar .ui-pgrid-toolbar-spacer {
 	font-size: 0;
@@ -85,6 +87,9 @@
 	display: inline;
 	margin-left: 5px;
 	font-weight: normal;
+}
+.ui-pgrid-footer .ui-pgrid-footer-filter-container input {
+	margin-right: .2em;
 }
 .ui-pgrid-footer button {
 	cursor: pointer;

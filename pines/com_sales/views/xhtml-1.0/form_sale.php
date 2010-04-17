@@ -963,7 +963,9 @@ $this->note = 'Use this form to edit a sale.';
 			<input class="pf-field ui-widget-content ui-state-default ui-corner-all" type="button" value="Edit" onclick="$('#comments_dialog').dialog('open');" /></label>
 	</div>
 	<div id="comments_dialog" title="Comments">
-		<textarea class="pf-field" style="width: 100%; height: 100%;" rows="3" cols="35" id="comments" name="comments"><?php echo $this->entity->comments; ?></textarea>
+		<div class="pf-element pf-full-width">
+			<textarea class="pf-field pf-full-width ui-widget-content" style="width: 96%; height: 100%;" rows="3" cols="35" id="comments" name="comments"><?php echo $this->entity->comments; ?></textarea>
+		</div>
 	</div>
 	<div class="pf-element pf-buttons">
 		<input type="hidden" id="comment_saver" name="comment_saver" value="<?php echo $this->entity->comments; ?>" />

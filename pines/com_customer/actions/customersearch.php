@@ -16,52 +16,74 @@ if ( !gatekeeper('com_customer/listcustomers') )
 
 $pines->page->override = true;
 
-$query = strtolower($_REQUEST['q']);
+$query = $_REQUEST['q'];
 
 if (empty($query)) {
 	$customers = array();
 } else {
 	// TODO: Use 'match_i' instead.
-	$customers = $pines->entity_manager->get_entities(array('tags' => array('com_customer', 'customer'), 'class' => com_customer_customer));
-	if (!is_array($customers))
-		$customers = array();
-}
-
-foreach ($customers as $key => &$cur_customer) {
-	if (
-		(strpos(strtolower($cur_customer->name), $query) !== false) ||
-		(strpos(strtolower($cur_customer->email), $query) !== false) ||
-		(strpos(strtolower("{$cur_customer->company->name}"), $query) !== false) ||
-		(preg_replace('/\D/', '', $query) != '' && strpos($cur_customer->phone_home, preg_replace('/\D/', '', $query)) !== false) ||
-		(preg_replace('/\D/', '', $query) != '' && strpos($cur_customer->phone_work, preg_replace('/\D/', '', $query)) !== false) ||
-		(preg_replace('/\D/', '', $query) != '' && strpos($cur_customer->phone_cell, preg_replace('/\D/', '', $query)) !== false) ||
-		(preg_replace('/\D/', '', $query) != '' && strpos($cur_customer->fax, preg_replace('/\D/', '', $query)) !== false)
-		) {
-		$json_struct = (object) array(
-			'key' => $cur_customer->guid,
-			'values' => array(
-				$cur_customer->name,
-				$cur_customer->email,
-				$cur_customer->company->name ? $cur_customer->company->name : '',
-				$cur_customer->job_title,
-				$cur_customer->address_1,
-				$cur_customer->address_2,
-				$cur_customer->city,
-				$cur_customer->state,
-				$cur_customer->zip,
-				pines_phone_format($cur_customer->phone_home),
-				pines_phone_format($cur_customer->phone_work),
-				pines_phone_format($cur_customer->phone_cell),
-				pines_phone_format($cur_customer->fax)
-			)
+	$num_query = preg_replace('/\D/', '', $query);
+	$r_query = '/'.preg_quote($query).'/i';
+	$r_num_query = '/'.preg_quote($num_query).'/';
+	$params = array(
+		'match_i' => array(
+			'name' => $r_query,
+			'email' => $r_query
+		),
+		'tags' => array('com_customer', 'customer'),
+		'class' => com_customer_customer
+	);
+	if ($num_query != '') {
+		$params['match_i']['phone_home'] = $r_num_query;
+		$params['match_i']['phone_work'] = $r_num_query;
+		$params['match_i']['phone_cell'] = $r_num_query;
+		$params['match_i']['fax'] = $r_num_query;
+	}
+	$customers = (array) $pines->entity_manager->get_entities($params);
+	$companies = $pines->entity_manager->get_entities(array(
+		'match' => array('name' => $r_query),
+		'tags' => array('com_customer', 'company'),
+		'class' => com_customer_company)
+	);
+	if ($companies) {
+		$params = array(
+			'ref' => array(
+				'company' => $companies
+			),
+			'tags' => array('com_customer', 'customer'),
+			'class' => com_customer_customer
 		);
-		$cur_customer = $json_struct;
-	} else {
-		unset($customers[$key]);
+		$comp_customers = (array) $pines->entity_manager->get_entities($params);
+		foreach ($comp_customers as &$cur_customer) {
+			if (!$cur_customer->in_array($customers))
+				$customers[] = $cur_customer;
+		}
 	}
 }
 
-if (empty($customers))
+foreach ($customers as $key => &$cur_customer) {
+	$json_struct = (object) array(
+		'key' => $cur_customer->guid,
+		'values' => array(
+			$cur_customer->name,
+			$cur_customer->email,
+			$cur_customer->company->name ? $cur_customer->company->name : '',
+			$cur_customer->job_title,
+			$cur_customer->address_1,
+			$cur_customer->address_2,
+			$cur_customer->city,
+			$cur_customer->state,
+			$cur_customer->zip,
+			pines_phone_format($cur_customer->phone_home),
+			pines_phone_format($cur_customer->phone_work),
+			pines_phone_format($cur_customer->phone_cell),
+			pines_phone_format($cur_customer->fax)
+		)
+	);
+	$cur_customer = $json_struct;
+}
+
+if (!$customers)
 	$customers = null;
 
 $pines->page->override_doc(json_encode($customers));

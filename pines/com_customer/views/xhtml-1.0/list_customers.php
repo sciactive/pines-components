@@ -24,14 +24,14 @@ $this->title = 'Customers';
 				<?php if (gatekeeper('com_customer/newcustomer')) { ?>
 				{type: 'button', text: 'New', extra_class: 'icon picon_16x16_actions_document-new', selection_optional: true, url: '<?php echo pines_url('com_customer', 'editcustomer'); ?>'},
 				<?php } if (gatekeeper('com_customer/editcustomer')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo pines_url('com_customer', 'editcustomer', array('id' => '#title#')); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo pines_url('com_customer', 'editcustomer', array('id' => '__title__')); ?>'},
 				<?php } if ($pines->config->com_customer->resetpoints && gatekeeper('com_customer/resetpoints')) { ?>
-				{type: 'button', text: 'Reset Points', extra_class: 'icon picon_16x16_actions_edit-clear', multi_select: true, url: '<?php echo pines_url('com_customer', 'resetpoints', array('id' => '#title#')); ?>', delimiter: ','},
+				{type: 'button', text: 'Reset Points', extra_class: 'icon picon_16x16_actions_edit-clear', multi_select: true, url: '<?php echo pines_url('com_customer', 'resetpoints', array('id' => '__title__')); ?>', delimiter: ','},
 				<?php } ?>
-				//{type: 'button', text: 'E-Mail', extra_class: 'icon picon_16x16_actions_mail-message-new', multi_select: true, url: 'mailto:#col_2#', delimiter: ','},
+				//{type: 'button', text: 'E-Mail', extra_class: 'icon picon_16x16_actions_mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
 				<?php if (gatekeeper('com_customer/deletecustomer')) { ?>
-				{type: 'button', text: 'Delete', extra_class: 'icon picon_16x16_actions_edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_customer', 'deletecustomer', array('id' => '#title#')); ?>', delimiter: ','},
+				{type: 'button', text: 'Delete', extra_class: 'icon picon_16x16_actions_edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_customer', 'deletecustomer', array('id' => '__title__')); ?>', delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>
 				{type: 'button', text: 'Select All', extra_class: 'icon picon_16x16_actions_list-add', select_all: true},

@@ -992,10 +992,10 @@
 											cur_cols_text[i+1] += val.delimiter + pgrid_encode_uri($(this).contents().text());
 									});
 								});
-								parsed_url = parsed_url.replace("#title#", cur_title);
+								parsed_url = parsed_url.replace("__title__", cur_title);
 								for (var i in cur_cols_text) {
 									if (isNaN(i)) continue;
-									parsed_url = parsed_url.replace("#col_"+i+"#", cur_cols_text[i]);
+									parsed_url = parsed_url.replace("__col_"+i+"__", cur_cols_text[i]);
 								}
 								if (val.new_window)
 									return window.open(parsed_url);

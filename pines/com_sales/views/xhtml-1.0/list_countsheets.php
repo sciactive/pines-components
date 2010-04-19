@@ -72,9 +72,9 @@ $this->title = 'Countsheets';
 				<?php if (gatekeeper('com_sales/newcountsheet')) { ?>
 				{type: 'button', text: 'New', extra_class: 'icon picon_16x16_actions_document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'editcountsheet'); ?>'},
 				<?php } if (gatekeeper('com_sales/editcountsheet')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo pines_url('com_sales', 'editcountsheet', array('id' => '#title#')); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo pines_url('com_sales', 'editcountsheet', array('id' => '__title__')); ?>'},
 				<?php } if (gatekeeper('com_sales/approvecountsheet')) { ?>
-				{type: 'button', text: 'Review', extra_class: 'icon picon_16x16_stock_generic_stock_mark', url: '<?php echo pines_url('com_sales', 'approvecountsheet', array('id' => '#title#')); ?>'},
+				{type: 'button', text: 'Review', extra_class: 'icon picon_16x16_stock_generic_stock_mark', url: '<?php echo pines_url('com_sales', 'approvecountsheet', array('id' => '__title__')); ?>'},
 				<?php } if (gatekeeper('com_sales/assigncountsheet')) { ?>
 				{type: 'button', text: 'Assign', extra_class: 'icon picon_16x16_emblems_emblem-shared', selection_optional: true, click: function(e, rows){
 					assign_dialog.dialog("open");
@@ -82,7 +82,7 @@ $this->title = 'Countsheets';
 				<?php } ?>
 				{type: 'separator'},
 				<?php if (gatekeeper('com_sales/deletecountsheet')) { ?>
-				{type: 'button', text: 'Delete', extra_class: 'icon picon_16x16_actions_edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_sales', 'deletecountsheet', array('id' => '#title#')); ?>', delimiter: ','},
+				{type: 'button', text: 'Delete', extra_class: 'icon picon_16x16_actions_edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_sales', 'deletecountsheet', array('id' => '__title__')); ?>', delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>
 				{type: 'button', text: 'Select All', extra_class: 'icon picon_16x16_actions_list-add', select_all: true},

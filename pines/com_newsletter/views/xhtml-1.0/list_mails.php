@@ -22,10 +22,10 @@ $this->title = 'Mails';
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				{type: 'button', text: 'New', extra_class: 'icon picon_16x16_actions_document-new', selection_optional: true, url: '<?php echo pines_url('com_newsletter', 'new'); ?>'},
-				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo pines_url('com_newsletter', 'edit', array('mail_id' => '#title#')); ?>'},
-				{type: 'button', text: 'Send', extra_class: 'icon picon_16x16_actions_mail-message-new', url: '<?php echo pines_url('com_newsletter', 'sendprep', array('mail_id' => '#title#')); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo pines_url('com_newsletter', 'edit', array('mail_id' => '__title__')); ?>'},
+				{type: 'button', text: 'Send', extra_class: 'icon picon_16x16_actions_mail-message-new', url: '<?php echo pines_url('com_newsletter', 'sendprep', array('mail_id' => '__title__')); ?>'},
 				{type: 'separator'},
-				{type: 'button', text: 'Delete', extra_class: 'icon picon_16x16_actions_edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_newsletter', 'delete', array('mail_id' => '#title#')); ?>', delimiter: ','},
+				{type: 'button', text: 'Delete', extra_class: 'icon picon_16x16_actions_edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_newsletter', 'delete', array('mail_id' => '__title__')); ?>', delimiter: ','},
 				{type: 'separator'},
 				{type: 'button', text: 'Select All', extra_class: 'icon picon_16x16_actions_list-add', select_all: true},
 				{type: 'button', text: 'Select None', extra_class: 'icon picon_16x16_actions_list-remove', select_none: true},

@@ -24,11 +24,11 @@ $this->title = 'Stock';
 				<?php if (gatekeeper('com_sales/receive')) { ?>
 				{type: 'button', text: 'Receive', extra_class: 'icon picon_16x16_actions_document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'receive'); ?>'},
 				<?php } if (gatekeeper('com_sales/managestock')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo pines_url('com_sales', 'editstock', array('id' => '#title#')); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo pines_url('com_sales', 'editstock', array('id' => '__title__')); ?>'},
 				<?php } if (gatekeeper('com_sales/managestock')) { ?>
-				{type: 'button', text: 'Transfer', extra_class: 'icon picon_16x16_actions_go-next', multi_select: true, url: '<?php echo pines_url('com_sales', 'newtransfer', array('id' => '#title#')); ?>', delimiter: ','},
+				{type: 'button', text: 'Transfer', extra_class: 'icon picon_16x16_actions_go-next', multi_select: true, url: '<?php echo pines_url('com_sales', 'newtransfer', array('id' => '__title__')); ?>', delimiter: ','},
 				<?php } ?>
-				//{type: 'button', text: 'E-Mail', extra_class: 'icon picon_16x16_actions_mail-message-new', multi_select: true, url: 'mailto:#col_2#', delimiter: ','},
+				//{type: 'button', text: 'E-Mail', extra_class: 'icon picon_16x16_actions_mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
 				{type: 'button', text: 'Select All', extra_class: 'icon picon_16x16_actions_list-add', select_all: true},
 				{type: 'button', text: 'Select None', extra_class: 'icon picon_16x16_actions_list-remove', select_none: true},

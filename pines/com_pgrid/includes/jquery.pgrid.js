@@ -597,7 +597,25 @@
 					var cols = all_rows.children("td.col_"+pgrid.pgrid_sort_col).addClass("ui-pgrid-table-cell-sorted");
 
 					// Is this column only numbers, or is there a string?
-					var is_str = !cols.contents().text().match(new RegExp("[¤$€£¥#-]?[0-9.,"+pgrid.pgrid_decimal_sep+"]+"));
+					var is_str = false;
+					// Match only numbers.
+					var num_match = new RegExp("^[¤$€£¥#-]?[0-9.,"+pgrid.pgrid_decimal_sep+"]+¢?$");
+					// Match only string characters.
+					var string_relace = new RegExp("[^0-9"+pgrid.pgrid_decimal_sep+"-]", "g");
+					cols.each(function(){
+						if (is_str)
+							return;
+						if (this.innerText != undefined) {
+							if (!this.innerText.match(num_match))
+								is_str = true;
+						} else if (this.textContent != undefined) {
+							if (!this.textContent.match(num_match))
+								is_str = true;
+						} else {
+							if (!$(this).text().match(num_match))
+								is_str = true;
+						}
+					});
 
 					var rows = all_rows.get();
 
@@ -613,7 +631,7 @@
 						if (!is_str) {
 							// If this column contains only numbers (currency signs and # included), parse it as floats.
 							// Strip non numerical characters except for the decimal separator. Replace that with a period, then parse it.
-							this.sortKey = parseFloat(this.sortKey.replace((new RegExp("[^0-9"+pgrid.pgrid_decimal_sep+"-]", "g")), "").replace(pgrid.pgrid_decimal_sep, "."));
+							this.sortKey = parseFloat(this.sortKey.replace(string_relace, "").replace(pgrid.pgrid_decimal_sep, "."));
 						}
 					});
 					// Sort them by their keys.

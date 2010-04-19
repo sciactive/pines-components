@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = (is_null($this->entity->guid)) ? 'Editing New Customer' : 'Editing ['.htmlentities($this->entity->name).']';
+$this->title = (!isset($this->entity->guid)) ? 'Editing New Customer' : 'Editing ['.htmlentities($this->entity->name).']';
 $this->note = 'Provide customer profile details in this form.';
 ?>
 <script type="text/javascript">
@@ -377,8 +377,8 @@ $this->note = 'Provide customer profile details in this form.';
 			</div>
 			<?php if (in_array('password', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="pf-element">
-				<label><span class="pf-label"><?php if (!is_null($this->entity->password)) echo 'Update '; ?>Password</span>
-					<?php if (is_null($this->entity->password)) {
+				<label><span class="pf-label"><?php if (isset($this->entity->password)) echo 'Update '; ?>Password</span>
+					<?php if (!isset($this->entity->password)) {
 						echo ($pines->config->com_user->empty_pw ? '<span class="pf-note">May be blank.</span>' : '');
 					} else {
 						echo '<span class="pf-note">Leave blank, if not changing.</span>';

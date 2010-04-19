@@ -15,7 +15,7 @@ if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_sales/editmanufacturer') )
 		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listmanufacturers'));
 	$manufacturer = com_sales_manufacturer::factory((int) $_REQUEST['id']);
-	if (is_null($manufacturer->guid)) {
+	if (!isset($manufacturer->guid)) {
 		pines_error('Requested manufacturer id is not accessible.');
 		return;
 	}

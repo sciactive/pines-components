@@ -15,7 +15,7 @@ if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_sales/editproduct') )
 		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listproducts'));
 	$product = com_sales_product::factory((int) $_REQUEST['id']);
-	if (is_null($product->guid)) {
+	if (!isset($product->guid)) {
 		pines_error('Requested product id is not accessible.');
 		return;
 	}
@@ -32,7 +32,7 @@ $product->sku = $_REQUEST['sku'];
 $product->description = $_REQUEST['description'];
 $product->short_description = $_REQUEST['short_description'];
 $product->manufacturer = ($_REQUEST['manufacturer'] == 'null' ? null : com_sales_manufacturer::factory((int) $_REQUEST['manufacturer']));
-if (is_null($product->manufacturer->guid))
+if (!isset($product->manufacturer->guid))
 	$product->manufacturer = null;
 $product->manufacturer_sku = $_REQUEST['manufacturer_sku'];
 
@@ -41,11 +41,11 @@ $product->stock_type = $_REQUEST['stock_type'];
 $product->vendors = (array) json_decode($_REQUEST['vendors']);
 foreach ($product->vendors as &$cur_vendor) {
 	$cur_vendor = array(
-		'entity' => new com_sales_vendor(intval($cur_vendor->key)),
+		'entity' => com_sales_vendor::factory((int) $cur_vendor->key),
 		'sku' => $cur_vendor->values[1],
 		'cost' => $cur_vendor->values[2]
 	);
-	if (is_null($cur_vendor['entity']->guid))
+	if (!isset($cur_vendor['entity']->guid))
 		$cur_vendor['entity'] = null;
 }
 unset($cur_vendor);

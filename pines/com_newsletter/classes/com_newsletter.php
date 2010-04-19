@@ -53,7 +53,7 @@ class com_newsletter extends component {
 	function edit_mail($mail = null, $new_option = '', $new_action = '', $close_option = 'com_newsletter', $close_action = "list") {
 		global $pines;
 
-		if ( !is_null($mail) ) {
+		if ( isset($mail) ) {
 			if ( !$mail->has_tag('com_newsletter', 'mail') ) {
 				pines_error('Invalid mail!');
 				return false;

@@ -17,7 +17,7 @@ if ( !gatekeeper('com_user/deletegroup') )
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_group) {
 	$cur_entity = group::factory((int) $cur_group);
-	if ( is_null($cur_entity->guid) || !$cur_entity->delete() )
+	if ( !isset($cur_entity->guid) || !$cur_entity->delete() )
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_group;
 }
 if (empty($failed_deletes)) {

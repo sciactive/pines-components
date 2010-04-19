@@ -46,7 +46,7 @@ switch ($_REQUEST['do']) {
 		$guid = (isset($_REQUEST['id']) ? intval($_REQUEST['id']) : null);
 		$name = (isset($_REQUEST['name']) ? $_REQUEST['name'] : 'untitled');
 		$entity = $pines->com_sales->get_category($guid);
-		if (is_null($entity)) {
+		if (!isset($entity)) {
 			$pines->page->override_doc(json_encode((object) array(
 				"status" => false
 			)));
@@ -60,7 +60,7 @@ switch ($_REQUEST['do']) {
 	case 'delete':
 		$guid = (isset($_REQUEST['id']) ? intval($_REQUEST['id']) : null);
 		$entity = $pines->com_sales->get_category($guid);
-		if (is_null($entity)) {
+		if (!isset($entity)) {
 			$pines->page->override_doc(json_encode((object) array(
 				"status" => false
 			)));
@@ -73,14 +73,14 @@ switch ($_REQUEST['do']) {
 	case 'move':
 		$guid = (isset($_REQUEST['id']) ? intval($_REQUEST['id']) : null);
 		$parent_id = (isset($_REQUEST['parent']) && $_REQUEST['parent'] != 'null' ? intval($_REQUEST['parent']) : null);
-		$parent = is_null($parent_id) ? null : $pines->com_sales->get_category($parent_id);
+		$parent = !isset($parent_id) ? null : $pines->com_sales->get_category($parent_id);
 		$entity = $pines->com_sales->get_category($guid);
-		if (is_null($entity) || (!is_null($parent_id) && is_null($parent))) {
+		if (!isset($entity) || (isset($parent_id) && !isset($parent))) {
 			$pines->page->override_doc(json_encode((object) array(
 				"status" => false
 			)));
 		} else {
-			$entity->parent = is_null($parent_id) ? null : $parent->guid;
+			$entity->parent = !isset($parent_id) ? null : $parent->guid;
 			$pines->page->override_doc(json_encode((object) array(
 				"status" => $entity->save()
 			)));
@@ -89,15 +89,15 @@ switch ($_REQUEST['do']) {
 	case 'copy':
 		$guid = (isset($_REQUEST['id']) ? intval($_REQUEST['id']) : null);
 		$parent_id = (isset($_REQUEST['parent']) && $_REQUEST['parent'] != 'null' ? intval($_REQUEST['parent']) : null);
-		$parent = is_null($parent_id) ? null : $pines->com_sales->get_category($parent_id);
+		$parent = !isset($parent_id) ? null : $pines->com_sales->get_category($parent_id);
 		$entity = $pines->com_sales->get_category($guid);
-		if (is_null($entity) || (!is_null($parent_id) && is_null($parent))) {
+		if (!isset($entity) || (isset($parent_id) && !isset($parent))) {
 			$pines->page->override_doc(json_encode((object) array(
 				"status" => false
 			)));
 		} else {
 			$entity->guid = null;
-			$entity->parent = is_null($parent_id) ? null : $parent->guid;
+			$entity->parent = !isset($parent_id) ? null : $parent->guid;
 			$pines->page->override_doc(json_encode((object) array(
 				"status" => $entity->save()
 			)));

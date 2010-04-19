@@ -17,7 +17,7 @@ if ( !gatekeeper('com_hrm/deleteemployee') )
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_employee) {
 	$cur_entity = com_hrm_employee::factory((int) $cur_employee);
-	if ( is_null($cur_entity->guid) || !$cur_entity->delete() )
+	if ( !isset($cur_entity->guid) || !$cur_entity->delete() )
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_employee;
 }
 if (empty($failed_deletes)) {

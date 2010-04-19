@@ -72,11 +72,11 @@ class com_mysql extends component {
 		/**
 		 * If something changes the host, it could reveal the user and password.
 		 */
-		if (is_null($host)) {
+		if (!isset($host)) {
 			$host = $pines->config->com_mysql->host;
-			if (is_null($user)) $user = $pines->config->com_mysql->user;
-			if (is_null($password)) $password = $pines->config->com_mysql->password;
-			if (is_null($database)) $database = $pines->config->com_mysql->database;
+			if (!isset($user)) $user = $pines->config->com_mysql->user;
+			if (!isset($password)) $password = $pines->config->com_mysql->password;
+			if (!isset($database)) $database = $pines->config->com_mysql->database;
 		}
 		// Connecting, selecting database
 		if (!$this->connected) {

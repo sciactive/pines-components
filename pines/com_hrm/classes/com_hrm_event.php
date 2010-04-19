@@ -29,7 +29,7 @@ class com_hrm_event extends entity {
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
-			if (is_null($entity))
+			if (!isset($entity))
 				return;
 			$this->guid = $entity->guid;
 			$this->tags = $entity->tags;

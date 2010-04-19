@@ -35,7 +35,7 @@ class user extends able_object implements user_interface {
 			} else {
 				$entity = $pines->entity_manager->get_entity(array('data' => array('username' => $id), 'tags' => $this->tags, 'class' => get_class($this)));
 			}
-			if (is_null($entity))
+			if (!isset($entity))
 				return;
 			$this->guid = $entity->guid;
 			$this->tags = $entity->tags;
@@ -112,7 +112,7 @@ class user extends able_object implements user_interface {
 	public function in_group($group = null) {
 		if (is_numeric($group))
 			$group = group::factory((int) $group);
-		if (is_null($group->guid))
+		if (!isset($group->guid))
 			return false;
 		return ($group->in_array($this->groups) || $group->is($this->group));
 	}
@@ -120,7 +120,7 @@ class user extends able_object implements user_interface {
 	public function is_descendent($group = null) {
 		if (is_numeric($group))
 			$group = group::factory((int) $group);
-		if (is_null($group->guid))
+		if (!isset($group->guid))
 			return false;
 		// Check to see if the user is in a descendent group of the given group.
 		if (isset($this->group) && $this->group->is_descendent($group))

@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Receive Inventory';
-$this->note = 'Only use this form to receive inventory into your <strong>current</strong> location ('.(is_null($_SESSION['user']->group) ? 'No Location' : $_SESSION['user']->group->name).').';
+$this->note = 'Only use this form to receive inventory into your <strong>current</strong> location ('.(!isset($_SESSION['user']->group) ? 'No Location' : $_SESSION['user']->group->name).').';
 ?>
 <form class="pf-form" method="post" id="receive_inventory" action="<?php echo htmlentities(pines_url('com_sales', 'receive')); ?>">
 	<script type="text/javascript">

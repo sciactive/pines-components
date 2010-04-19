@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_sales/receive') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'receive'));
 
-if (is_null($_REQUEST['products'])) {
+if (!isset($_REQUEST['products'])) {
 	$pines->com_sales->print_receive_form();
 	return;
 }
@@ -38,7 +38,7 @@ $module = new module('com_sales', 'show_received', 'content');
 
 foreach ($products as $cur_product) {
 	$cur_product_entity = $pines->com_sales->get_product_by_code($cur_product['product_code']);
-	if (is_null($cur_product_entity)) {
+	if (!isset($cur_product_entity)) {
 		pines_notice("Product with code {$cur_product['product_code']} not found! Skipping...");
 		continue;
 	}
@@ -52,7 +52,7 @@ foreach ($products as $cur_product) {
 		if ($cur_product_entity->serialized)
 			$stock_entity->serial = $cur_product['serial'];
 		$origin = $stock_entity->inventory_origin();
-		if (is_null($origin)) {
+		if (!isset($origin)) {
 			pines_notice("Product [{$cur_product_entity->name}] with code {$cur_product['product_code']} was not found on any PO or transfer! Skipping...");
 			continue;
 		}

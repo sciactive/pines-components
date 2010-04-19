@@ -31,7 +31,7 @@ $test->time_start = $entity_start_time;
 // Creating entity...
 $entity_test = entity::factory();
 $entity_test->add_tag('com_entitytools', 'test');
-$test->tests['create'][0] = (is_null($entity_test->guid));
+$test->tests['create'][0] = (!isset($entity_test->guid));
 $test->tests['create'][1] = microtime(true);
 $test->tests['create'][2] = 'Creating entity...';
 
@@ -44,7 +44,7 @@ This one's email address is nice_hat-wednesday+newyork@im-a-hat.hat.
 This one's phone number is (555) 555-1818.
 This one's zip code is 92064.";
 $entity_test->test_number = 30;
-$test->tests['save'][0] = ($entity_test->save() && !is_null($entity_test->guid));
+$test->tests['save'][0] = ($entity_test->save() && isset($entity_test->guid));
 $test->tests['save'][1] = microtime(true);
 $test->tests['save'][2] = 'Saving entity...';
 $entity_guid = $entity_test->guid;
@@ -487,17 +487,17 @@ $test->tests['ref_wr_a_get'][2] = 'Testing wrong array reference...';
 //unset($entity_result);
 
 // Deleting referenced entities...
-$test->tests['del_ref'][0] = ($entity_test->reference->delete() && is_null($entity_test->reference->guid));
+$test->tests['del_ref'][0] = ($entity_test->reference->delete() && !isset($entity_test->reference->guid));
 $test->tests['del_ref'][1] = microtime(true);
 $test->tests['del_ref'][2] = 'Deleting referenced entities...';
 
 // Deleting entity...
-$test->tests['del'][0] = ($entity_test->delete() && is_null($entity_test->guid));
+$test->tests['del'][0] = ($entity_test->delete() && !isset($entity_test->guid));
 $test->tests['del'][1] = microtime(true);
 $test->tests['del'][2] = 'Deleting entity...';
 
 // Resaving entity...
-$test->tests['resave'][0] = ($entity_test->save() && !is_null($entity_test->guid));
+$test->tests['resave'][0] = ($entity_test->save() && isset($entity_test->guid));
 $test->tests['resave'][1] = microtime(true);
 $test->tests['resave'][2] = 'Resaving entity...';
 

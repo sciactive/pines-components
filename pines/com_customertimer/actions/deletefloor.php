@@ -17,7 +17,7 @@ if ( !gatekeeper('com_customertimer/deletefloor') )
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_floor) {
 	$cur_entity = com_customertimer_floor::factory((int) $cur_floor);
-	if ( is_null($cur_entity->guid) || !$cur_entity->delete() )
+	if ( !isset($cur_entity->guid) || !$cur_entity->delete() )
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_floor;
 }
 if (empty($failed_deletes)) {

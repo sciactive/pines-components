@@ -15,7 +15,7 @@ if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_sales/editcountsheet') )
 		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listcountsheets'));
 	$countsheet = com_sales_countsheet::factory((int) $_REQUEST['id']);
-	if (is_null($countsheet->guid)) {
+	if (!isset($countsheet->guid)) {
 		pines_error('Requested countsheet id is not accessible.');
 		return;
 	}
@@ -29,7 +29,7 @@ if ( isset($_REQUEST['id']) ) {
 	$countsheet = com_sales_countsheet::factory();
 }
 
-if (is_null($countsheet->creator))
+if (!isset($countsheet->creator))
 	$countsheet->creator = $_SESSION['user'];
 $countsheet->entries = (array) json_decode($_REQUEST['entries']);
 foreach ($countsheet->entries as &$cur_entry) {

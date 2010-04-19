@@ -15,7 +15,7 @@ if (!gatekeeper('com_sales/assigncountsheet') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'assigncountsheet', array('location' => $_REQUEST['location'])));
 
 $location = group::factory((int) $_REQUEST['location']);
-if (is_null($location->guid))
+if (!isset($location->guid))
 	$location = null;
 
 if (!isset($location)) {

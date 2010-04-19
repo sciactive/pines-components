@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = (is_null($this->entity->guid)) ? 'Editing New Floor' : 'Editing ['.htmlentities($this->entity->name).']';
+$this->title = (!isset($this->entity->guid)) ? 'Editing New Floor' : 'Editing ['.htmlentities($this->entity->name).']';
 $this->note = 'Provide floor details in this form.';
 ?>
 <style type="text/css">

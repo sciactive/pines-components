@@ -15,7 +15,7 @@ if ( !gatekeeper('com_sales/approvecountsheet') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'approvecountsheet'));
 
 $countsheet = com_sales_countsheet::factory((int) $_REQUEST['id']);
-if (is_null($countsheet->guid)) {
+if (!isset($countsheet->guid)) {
 	pines_error('Requested countsheet id is not accessible.');
 	return;
 }

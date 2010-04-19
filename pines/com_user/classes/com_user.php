@@ -107,11 +107,11 @@ class com_user extends component implements user_manager_interface {
 	 * marked to inherit the abilities of its group.
 	 */
 	public function gatekeeper($ability = null, $user = null) {
-		if ( is_null($user) ) {
+		if ( !isset($user) ) {
 			// If the user is logged in, their abilities are already set up. We
 			// just need to add them to the user's.
 			if ( is_object($_SESSION['user']) ) {
-				if ( is_null($ability) )
+				if ( !isset($ability) )
 					return true;
 				$user = $_SESSION['user'];
 				// Check the cache to see if we've already checked this user.
@@ -175,10 +175,10 @@ class com_user extends component implements user_manager_interface {
 	public function get_group_array($parent = null) {
 		global $pines;
 		$return = array();
-		if ( is_null($parent) ) {
+		if ( !isset($parent) ) {
 			$entities = $pines->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
 			foreach ($entities as $entity) {
-				if ( is_null($entity->parent) ) {
+				if ( !isset($entity->parent) ) {
 					$child_array = $this->get_group_array($entity);
 					$return[$entity->guid]['name'] = $entity->name;
 					$return[$entity->guid]['groupname'] = $entity->groupname;
@@ -202,10 +202,10 @@ class com_user extends component implements user_manager_interface {
 	public function get_group_descendents($parent = null) {
 		global $pines;
 		$return = array();
-		if ( is_null($parent) ) {
+		if ( !isset($parent) ) {
 			$entities = $pines->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
 			foreach ($entities as $entity) {
-				if ( is_null($entity->parent) ) {
+				if ( !isset($entity->parent) ) {
 					$child_array = $this->get_group_descendents($entity);
 					$return = array_merge($return, $child_array);
 				}
@@ -229,7 +229,7 @@ class com_user extends component implements user_manager_interface {
 	 */
 	public function get_group_menu(&$menu = null, $parent = null, $top_level = TRUE) {
 		global $pines;
-		if ( is_null($parent) ) {
+		if ( !isset($parent) ) {
 			$entities = $pines->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
 			foreach ($entities as $entity) {
 				$menu->add("{$entity->name} [{$entity->groupname}]", $entity->guid, $entity->parent->guid, $entity->guid);
@@ -295,7 +295,7 @@ class com_user extends component implements user_manager_interface {
 	// Check the cache to see if we've already queried this name.
 		if (!isset($this->groupname_cache[$id])) {
 			$entity = group::factory($id);
-			if (is_null($entity->guid)) {
+			if (!isset($entity->guid)) {
 				$this->groupname_cache[$id] = null;
 			} else {
 				$this->groupname_cache[$id] = $entity->groupname;
@@ -313,7 +313,7 @@ class com_user extends component implements user_manager_interface {
 	// Check the cache to see if we've already queried this name.
 		if (!isset($this->username_cache[$id])) {
 			$entity = user::factory($id);
-			if (is_null($entity->guid)) {
+			if (!isset($entity->guid)) {
 				$this->username_cache[$id] = null;
 			} else {
 				$this->username_cache[$id] = $entity->username;

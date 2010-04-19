@@ -15,7 +15,7 @@ if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_user/editgroup') )
 		punt_user('You don\'t have necessary permission.', pines_url('com_user', 'listgroups'));
 	$group = group::factory((int) $_REQUEST['id']);
-	if (is_null($group->guid)) {
+	if (!isset($group->guid)) {
 		pines_error('Requested group id is not accessible.');
 		return;
 	}
@@ -98,7 +98,7 @@ if (isset($test->guid) && !$group->is($test)) {
 	pines_notice('There is already a group with that groupname. Please choose a different groupname.');
 	return;
 }
-if (isset($group->parent) && (is_null($group->parent->guid) || $group->is($group->parent))) {
+if (isset($group->parent) && (!isset($group->parent->guid) || $group->is($group->parent))) {
 	$group->print_form();
 	pines_notice('Parent group is not valid.');
 	return;

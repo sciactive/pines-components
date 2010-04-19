@@ -58,7 +58,7 @@ class com_reports extends component {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_reports/report_attendance'];
 
-		if (is_null($employee)) {
+		if (!isset($employee)) {
 			$module->employees = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
 			foreach ($module->employees as $key => &$cur_employee) {
 				if (!$cur_employee->user_account || !($cur_employee->user_account->in_group($location) || $cur_employee->user_account->is_descendent($location)))

@@ -15,7 +15,7 @@ if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_user/edituser') && (!gatekeeper('com_user/self') || ($_REQUEST['id'] != $_SESSION['user_id'])) )
 		punt_user('You don\'t have necessary permission.', pines_url('com_user', 'listusers'));
 	$user = user::factory((int) $_REQUEST['id']);
-	if (is_null($user->guid)) {
+	if (!isset($user->guid)) {
 		pines_error('Requested user id is not accessible.');
 		return;
 	}

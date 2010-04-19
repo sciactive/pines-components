@@ -15,7 +15,7 @@ if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_customertimer/editfloor') )
 		punt_user('You don\'t have necessary permission.', pines_url('com_customertimer', 'listfloors'));
 	$floor = com_customertimer_floor::factory((int) $_REQUEST['id']);
-	if (is_null($floor->guid)) {
+	if (!isset($floor->guid)) {
 		pines_error('Requested floor id is not accessible.');
 		return;
 	}

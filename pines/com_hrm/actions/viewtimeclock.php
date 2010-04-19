@@ -15,7 +15,7 @@ if ( !gatekeeper('com_hrm/manageclock') && !gatekeeper('com_hrm/viewclock') && !
 	punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'viewtimeclock', array('id' => $_REQUEST['id'])));
 
 $employee = com_hrm_employee::factory((int) $_REQUEST['id']);
-if (is_null($employee->guid)) {
+if (!isset($employee->guid)) {
 	pines_error('Requested employee id is not accessible.');
 	return;
 }

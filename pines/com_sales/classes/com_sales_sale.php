@@ -31,7 +31,7 @@ class com_sales_sale extends entity {
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
-			if (is_null($entity))
+			if (!isset($entity))
 				return;
 			$this->guid = $entity->guid;
 			$this->tags = $entity->tags;
@@ -255,7 +255,7 @@ class com_sales_sale extends entity {
 		}
 		if ($this->change > 0.00) {
 			$change_type = $pines->entity_manager->get_entity(array('data' => array('change_type' => true), 'tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));
-			if (is_null($change_type)) {
+			if (!isset($change_type)) {
 				pines_notice('Change is due to be given, but no payment type has been set to give change.');
 				return false;
 			}

@@ -34,7 +34,7 @@ class com_hrm_employee extends entity {
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
-			if (is_null($entity))
+			if (!isset($entity))
 				return;
 			$this->guid = $entity->guid;
 			$this->tags = $entity->tags;
@@ -58,9 +58,9 @@ class com_hrm_employee extends entity {
 		for ($cur_entry = reset($timeclock); current($timeclock); $cur_entry = next($timeclock)) {
 			if ($cur_entry['status'] == 'in') {
 				// Start at the in time, or $start_time if it comes after.
-				$cur_start = (!is_null($time_start) && $cur_entry['time'] < $time_start) ? $time_start : $cur_entry['time'];
+				$cur_start = (isset($time_start) && $cur_entry['time'] < $time_start) ? $time_start : $cur_entry['time'];
 				// Skip in times after the end date.
-				if (!is_null($time_end) && $cur_entry['time'] > $time_end)
+				if (isset($time_end) && $cur_entry['time'] > $time_end)
 					continue;
 				// Find the next out time.
 				do {
@@ -68,12 +68,12 @@ class com_hrm_employee extends entity {
 				} while ($next_entry && $next_entry['status'] != 'out');
 				if ($next_entry) {
 					// If there's an out time, use it, or $time_end.
-					$cur_time = (!is_null($time_end) && $next_entry['time'] > $time_end ? $time_end : $next_entry['time']) - $cur_start;
+					$cur_time = (isset($time_end) && $next_entry['time'] > $time_end ? $time_end : $next_entry['time']) - $cur_start;
 					if ($cur_time > 0)
 						$time += $cur_time;
 				} else {
 					// If there's no out time, use current time, or $time_end.
-					$cur_time = (!is_null($time_end) && time() > $time_end ? $time_end : time()) - $cur_start;
+					$cur_time = (isset($time_end) && time() > $time_end ? $time_end : time()) - $cur_start;
 					if ($cur_time > 0)
 						$time += $cur_time;
 				}

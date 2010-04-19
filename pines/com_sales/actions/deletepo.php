@@ -17,7 +17,7 @@ if ( !gatekeeper('com_sales/deletepo') )
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_po) {
 	$cur_entity = com_sales_po::factory((int) $cur_po);
-	if ( is_null($cur_entity->guid) || !$cur_entity->delete() )
+	if ( !isset($cur_entity->guid) || !$cur_entity->delete() )
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_po;
 }
 if (empty($failed_deletes)) {

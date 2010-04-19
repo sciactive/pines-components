@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = (is_null($this->entity->guid)) ? 'Editing New Purchase Order' : (($this->entity->final) ? 'Viewing' : 'Editing').' PO ['.htmlentities($this->entity->po_number).']';
+$this->title = (!isset($this->entity->guid)) ? 'Editing New Purchase Order' : (($this->entity->final) ? 'Viewing' : 'Editing').' PO ['.htmlentities($this->entity->po_number).']';
 $this->note = 'Provide PO details in this form.';
 $read_only = '';
 if ($this->entity->final)
@@ -307,7 +307,7 @@ if ($this->entity->final)
 					</thead>
 					<tbody>
 						<?php foreach ($this->entity->products as $cur_product) {
-								if (is_null($cur_product['entity']))
+								if (!isset($cur_product['entity']))
 									continue;
 						?>
 						<tr title="<?php echo $cur_product['entity']->guid; ?>">

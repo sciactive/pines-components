@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$this->title = (is_null($this->entity->guid)) ? 'Editing New Mail' : 'Editing ['.htmlentities($this->entity->name).']';
+$this->title = (!isset($this->entity->guid)) ? 'Editing New Mail' : 'Editing ['.htmlentities($this->entity->name).']';
 ?>
 <div class="yui-skin-sam">
 <form class="pf-form" enctype="multipart/form-data" name="editingmail" method="post" action="<?php echo htmlentities(pines_url($this->new_option, $this->new_action)); ?>">

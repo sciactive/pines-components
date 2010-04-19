@@ -15,7 +15,7 @@ if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_customer/editcustomer') )
 		punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'listcustomers'));
 	$customer = com_customer_customer::factory((int) $_REQUEST['id']);
-	if (is_null($customer->guid)) {
+	if (!isset($customer->guid)) {
 		pines_error('Requested customer id is not accessible.');
 		return;
 	}
@@ -37,7 +37,7 @@ $customer->email = $_REQUEST['email'];
 $customer->company = null;
 if (preg_match('/^\d+/', $_REQUEST['company'])) {
 	$customer->company = com_customer_company::factory(intval($_REQUEST['company']));
-	if (is_null($customer->company->guid))
+	if (!isset($customer->company->guid))
 		$customer->company = null;
 }
 $customer->job_title = $_REQUEST['job_title'];

@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = (is_null($this->entity->guid)) ? 'Editing New User' : 'Editing ['.htmlentities($this->entity->username).']';
+$this->title = (!isset($this->entity->guid)) ? 'Editing New User' : 'Editing ['.htmlentities($this->entity->username).']';
 $this->note = 'Provide user details in this form.';
 ?>
 <script type="text/javascript">
@@ -151,7 +151,7 @@ $this->note = 'Provide user details in this form.';
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label"><?php if (isset($this->entity->guid)) echo 'Update '; ?>Password</span>
-					<?php if (is_null($this->entity->guid)) {
+					<?php if (!isset($this->entity->guid)) {
 						echo ($pines->config->com_user->empty_pw ? '<span class="pf-note">May be blank.</span>' : '');
 					} else {
 						echo '<span class="pf-note">Leave blank, if not changing.</span>';

@@ -15,7 +15,7 @@ if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_sales/editsale') )
 		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listsales'));
 	$sale = com_sales_sale::factory((int) $_REQUEST['id']);
-	if (is_null($sale->guid)) {
+	if (!isset($sale->guid)) {
 		pines_error('Requested sale id is not accessible.');
 		return;
 	}
@@ -29,7 +29,7 @@ if ($pines->config->com_sales->com_customer && $sale->status != 'invoiced' && $s
 	$sale->customer = null;
 	if (preg_match('/^\d+/', $_REQUEST['customer'])) {
 		$sale->customer = com_customer_customer::factory(intval($_REQUEST['customer']));
-		if (is_null($sale->customer->guid))
+		if (!isset($sale->customer->guid))
 			$sale->customer = null;
 	}
 }
@@ -53,7 +53,7 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid') {
 			$cur_qty = intval($cur_product->values[4]);
 			$cur_price = floatval($cur_product->values[5]);
 			$cur_discount = $cur_product->values[6];
-			if (is_null($cur_product_entity->guid)) {
+			if (!isset($cur_product_entity->guid)) {
 				pines_error("Product with id [$cur_product->key] and entered SKU [$cur_sku] was not found.");
 				unset($sale->products[$key]);
 				$product_error = true;
@@ -117,7 +117,7 @@ if ($sale->status != 'paid') {
 		$data = $cur_payment->data;
 		if (in_array($cur_status, array('approved', 'declined', 'tendered')))
 			continue;
-		if (is_null($cur_payment_type_entity->guid)) {
+		if (!isset($cur_payment_type_entity->guid)) {
 			pines_error("Payment type with id [$cur_payment->key] was not found.");
 			$payment_error = true;
 			continue;

@@ -57,7 +57,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 $pines->page->override = true;
 
-if (is_null($_REQUEST['code'])) {
+if (!isset($_REQUEST['code'])) {
 	$pines->page->override_doc("\0");
 	return;
 }

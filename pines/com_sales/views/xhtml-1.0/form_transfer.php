@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = (is_null($this->entity->guid)) ? 'Editing New Transfer' : (($this->entity->final) ? 'Viewing ' : 'Editing ').' Transfer ['.htmlentities($this->entity->guid).']';
+$this->title = (!isset($this->entity->guid)) ? 'Editing New Transfer' : (($this->entity->final) ? 'Viewing ' : 'Editing ').' Transfer ['.htmlentities($this->entity->guid).']';
 $this->note = 'Use this form to transfer inventory to another location.';
 $read_only = '';
 if ($this->entity->final)
@@ -190,7 +190,7 @@ if ($this->entity->final)
 					</thead>
 					<tbody>
 						<?php foreach ($this->entity->stock as $cur_stock) {
-								if (is_null($cur_stock->guid))
+								if (!isset($cur_stock->guid))
 									continue;
 								?>
 						<tr title="<?php echo $cur_stock->guid; ?>">

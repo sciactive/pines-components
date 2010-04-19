@@ -19,7 +19,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$this->title = (is_null($this->event->guid)) ? 'New Event' : $this->event->title;
+$this->title = (!isset($this->event->guid)) ? 'New Event' : $this->event->title;
 
 ?>
 <style type="text/css" >

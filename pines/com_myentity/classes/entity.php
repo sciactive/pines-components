@@ -288,7 +288,7 @@ class entity extends p_base implements entity_interface {
 			return false;
 		global $pines;
 		$refresh = $pines->entity_manager->get_entity(array('guid' => $this->guid, 'class' => get_class($this)));
-		if (is_null($refresh))
+		if (!isset($refresh))
 			return 0;
 		$this->tags = $refresh->tags;
 		$this->put_data($refresh->get_data());

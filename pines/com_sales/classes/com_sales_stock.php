@@ -28,7 +28,7 @@ class com_sales_stock extends entity {
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
-			if (is_null($entity))
+			if (!isset($entity))
 				return;
 			$this->guid = $entity->guid;
 			$this->tags = $entity->tags;
@@ -77,7 +77,7 @@ class com_sales_stock extends entity {
 				// If it's not the right product, move on.
 				if ($cur_stock->product->guid != $this->product->guid)
 					continue;
-				if (!is_null($this->serial) || !is_null($cur_stock->serial)) {
+				if (isset($this->serial) || isset($cur_stock->serial)) {
 					// Check the serial with the stock entry's serial.
 					if ($cur_stock->serial != $this->serial)
 						continue;
@@ -110,7 +110,7 @@ class com_sales_stock extends entity {
 				if (is_array($cur_po->received)) {
 					// Count how many of this product has been received.
 					foreach ($cur_po->received as $cur_received_stock_entity) {
-						if (!is_null($cur_received_stock_entity) && $cur_product['entity']->guid == $cur_received_stock_entity->product->guid) {
+						if (isset($cur_received_stock_entity) && $cur_product['entity']->guid == $cur_received_stock_entity->product->guid) {
 							$received++;
 						}
 					}
@@ -143,7 +143,7 @@ class com_sales_stock extends entity {
 	 */
 	function receive(&$on_entity = null, $location = false) {
 		global $pines;
-		if (is_null($on_entity))
+		if (!isset($on_entity))
 			return false;
 
 		// Keep track of the status of the whole process.
@@ -199,7 +199,7 @@ class com_sales_stock extends entity {
 	 */
 	function remove(&$on_entity = null, $status = 'other', $location = null) {
 		global $pines;
-		if (is_null($on_entity))
+		if (!isset($on_entity))
 			return false;
 
 		// Keep track of the status of the whole process.

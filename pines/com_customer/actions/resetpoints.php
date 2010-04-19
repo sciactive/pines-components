@@ -17,7 +17,7 @@ if ( !$pines->config->com_customer->resetpoints && !gatekeeper('com_customer/res
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_customer) {
 	$cur_entity = com_customer_customer::factory((int) $cur_customer);
-	if ( is_null($cur_entity->guid) ) {
+	if ( !isset($cur_entity->guid) ) {
 		$failed_resets .= ($failed_resets ? ', ' : '').$cur_customer;
 		continue;
 	}

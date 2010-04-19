@@ -64,7 +64,7 @@ class com_myentity extends component implements entity_manager_interface {
 	 * @return bool True if the reference is found, false otherwise.
 	 */
 	private function entity_reference_search($value, $entity) {
-		if (!is_array($value) || is_null($entity))
+		if (!is_array($value) || !isset($entity))
 			return false;
 		// Get the GUID, if the passed $entity is an object.
 		if (is_array($entity)) {
@@ -142,7 +142,7 @@ class com_myentity extends component implements entity_manager_interface {
 			$guid = (int) $row['guid'];
 			$tags = explode(',', substr($row['tags'], 1, -1));
 			fwrite($fhandle, "{{$guid}}[".implode(',', $tags)."]\n");
-			if (!is_null($row['dname'])) {
+			if (isset($row['dname'])) {
 				// This do will keep going and adding the data until the
 				// next entity is reached. $row will end on the next entity.
 				do {
@@ -211,7 +211,7 @@ class com_myentity extends component implements entity_manager_interface {
 			$guid = (int) $row['guid'];
 			$tags = explode(',', substr($row['tags'], 1, -1));
 			echo "{{$guid}}[".implode(',', $tags)."]\n";
-			if (!is_null($row['dname'])) {
+			if (isset($row['dname'])) {
 				// This do will keep going and adding the data until the
 				// next entity is reached. $row will end on the next entity.
 				do {
@@ -357,7 +357,7 @@ class com_myentity extends component implements entity_manager_interface {
 			if ($ocount >= $offset)
 				$tags = explode(',', substr($row['tags'], 1, -1));
 			$data = array();
-			if (!is_null($row['dname'])) {
+			if (isset($row['dname'])) {
 				// This do will keep going and adding the data until the
 				// next entity is reached. $row will end on the next entity.
 				do {
@@ -767,7 +767,7 @@ class com_myentity extends component implements entity_manager_interface {
 	 */
 	public function save_entity(&$entity) {
 		global $pines;
-		if ( is_null($entity->guid) ) {
+		if ( !isset($entity->guid) ) {
 			// Save the created date.
 			$entity->p_cdate = microtime(true);
 			// And modified date.

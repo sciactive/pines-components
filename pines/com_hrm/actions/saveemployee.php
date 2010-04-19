@@ -15,7 +15,7 @@ if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_hrm/editemployee') )
 		punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'listemployees'));
 	$employee = com_hrm_employee::factory((int) $_REQUEST['id']);
-	if (is_null($employee->guid)) {
+	if (!isset($employee->guid)) {
 		pines_error('Requested employee id is not accessible.');
 		return;
 	}
@@ -102,7 +102,7 @@ if (gatekeeper('com_hrm/requiressn') && empty($employee->ssn)) {
 	pines_notice('Please provide an SSN.');
 	return;
 }
-if (!is_null($employee->user_account) && is_null($employee->user_account->guid)) {
+if (isset($employee->user_account) && !isset($employee->user_account->guid)) {
 	$employee->print_form();
 	pines_notice('The user account specified is not accessible.');
 	return;

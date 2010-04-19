@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = (is_null($this->entity->guid)) ? 'Editing New Widget' : 'Editing ['.htmlentities($this->entity->name).']';
+$this->title = (!isset($this->entity->guid)) ? 'Editing New Widget' : 'Editing ['.htmlentities($this->entity->name).']';
 $this->note = 'Provide widget details in this form.';
 ?>
 <script type="text/javascript">

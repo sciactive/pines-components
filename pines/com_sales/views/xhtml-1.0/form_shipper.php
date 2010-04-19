@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = (is_null($this->entity->guid)) ? 'Editing New Shipper' : 'Editing ['.htmlentities($this->entity->name).']';
+$this->title = (!isset($this->entity->guid)) ? 'Editing New Shipper' : 'Editing ['.htmlentities($this->entity->name).']';
 $this->note = 'Provide shipper details in this form.';
 ?>
 <form class="pf-form" method="post" id="shipper_details" action="<?php echo htmlentities(pines_url('com_sales', 'saveshipper')); ?>">

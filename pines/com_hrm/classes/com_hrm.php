@@ -153,7 +153,7 @@ class com_hrm extends component {
 			return null;
 		global $pines;
 		$employee = $pines->entity_manager->get_entity(array('ref' => array('user_account' => $_SESSION['user']), 'tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
-		if (is_null($employee))
+		if (!isset($employee))
 			return null;
 		return $employee->print_clockin();
 	}

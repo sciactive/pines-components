@@ -32,7 +32,7 @@ class group extends able_object implements group_interface {
 			} else {
 				$entity = $pines->entity_manager->get_entity(array('data' => array('groupname' => $id), 'tags' => $this->tags, 'class' => get_class($this)));
 			}
-			if (is_null($entity))
+			if (!isset($entity))
 				return;
 			$this->guid = $entity->guid;
 			$this->tags = $entity->tags;
@@ -52,7 +52,7 @@ class group extends able_object implements group_interface {
 	public function is_descendent($group = null) {
 		if (is_numeric($group))
 			$group = group::factory((int) $group);
-		if (is_null($group->guid))
+		if (!isset($group->guid))
 			return false;
 		// Check to see if the group is a descendent of the given group.
 		if (!isset($this->parent))

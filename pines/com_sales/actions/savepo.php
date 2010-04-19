@@ -15,7 +15,7 @@ if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_sales/editpo') )
 		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listpos'));
 	$po = com_sales_po::factory((int) $_REQUEST['id']);
-	if (is_null($po->guid) || $po->final) {
+	if (!isset($po->guid) || $po->final) {
 		pines_error('Requested PO id is not accessible.');
 		return;
 	}
@@ -31,17 +31,17 @@ $po->reference_number = $_REQUEST['reference_number'];
 // Vendor can't be changed after items have been received.
 if (empty($po->received)) {
 	$po->vendor = com_sales_vendor::factory(intval($_REQUEST['vendor']));
-	if (is_null($po->vendor->guid))
+	if (!isset($po->vendor->guid))
 		$po->vendor = null;
 }
 // Destination can't be changed after items have been received.
 if (empty($po->received)) {
 	$po->destination = group::factory(intval($_REQUEST['destination']));
-	if (is_null($po->destination->guid))
+	if (!isset($po->destination->guid))
 		$po->destination = null;
 }
 $po->shipper = com_sales_shipper::factory(intval($_REQUEST['shipper']));
-if (is_null($po->shipper->guid))
+if (!isset($po->shipper->guid))
 	$po->shipper = null;
 $po->eta = strtotime($_REQUEST['eta']);
 
@@ -55,7 +55,7 @@ if (empty($po->received)) {
 			'quantity' => intval($cur_product->values[2]),
 			'cost' => floatval($cur_product->values[3])
 		);
-		if (is_null($cur_product['entity']->guid))
+		if (!isset($cur_product['entity']->guid))
 			$cur_product['entity'] = null;
 	}
 	unset($cur_product);
@@ -72,12 +72,12 @@ if (isset($test) && $test->guid != $_REQUEST['id']) {
 	pines_notice('There is already a PO with that number. Please enter a different number.');
 	return;
 }
-if (is_null($po->vendor)) {
+if (!isset($po->vendor)) {
 	$po->print_form();
 	pines_error('Specified vendor is not valid.');
 	return;
 }
-if (is_null($po->shipper)) {
+if (!isset($po->shipper)) {
 	$po->print_form();
 	pines_error('Specified shipper is not valid.');
 	return;

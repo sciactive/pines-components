@@ -16,7 +16,7 @@ if ( !gatekeeper('com_newsletter/listmail') )
 
 if ( !empty($_REQUEST['mail_id']) ) {
 	$mail = $pines->entity_manager->get_entity(array('guid' => $_REQUEST['mail_id'], 'tags' => array('com_newsletter', 'mail')));
-	if ( is_null($mail) ) {
+	if ( !isset($mail) ) {
 		pines_error('Invalid mail!');
 		return false;
 	}

@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-if (is_null($this->entity->guid)) {
+if (!isset($this->entity->guid)) {
 	$this->title = 'New Sale';
 } elseif ($this->entity->status == 'quoted') {
 	$this->title = 'Quoted Sale ['.htmlentities($this->entity->guid).']';
@@ -870,7 +870,7 @@ $this->note = 'Use this form to edit a sale.';
 					</thead>
 					<tbody>
 						<?php foreach ($this->entity->products as $cur_product) {
-								if (is_null($cur_product['entity']))
+								if (!isset($cur_product['entity']))
 									continue;
 								?>
 						<tr title="<?php echo $cur_product['entity']->guid; ?>">

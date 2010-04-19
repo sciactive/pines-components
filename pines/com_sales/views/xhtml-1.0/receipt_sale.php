@@ -141,7 +141,7 @@ if ($this->entity->status == 'quoted') {
 			<?php } ?>
 		</div>
 	</div>
-<?php if ($pines->config->com_sales->com_customer && !is_null($this->entity->customer)) { ?>
+<?php if ($pines->config->com_sales->com_customer && isset($this->entity->customer)) { ?>
 	<div class="left_side customer">
 		<div class="aligner">
 			<span>Bill To:</span>

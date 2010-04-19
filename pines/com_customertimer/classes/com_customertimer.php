@@ -48,7 +48,7 @@ class com_customertimer extends component {
 		}
 		$id = (int) $id;
 		$customer = com_customer_customer::factory($id);
-		if (is_null($customer->guid)) {
+		if (!isset($customer->guid)) {
 			pines_notice('Customer ID not found.');
 			return false;
 		}

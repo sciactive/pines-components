@@ -17,7 +17,7 @@ if ( !gatekeeper('com_example/deletewidget') )
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_widget) {
 	$cur_entity = com_example_widget::factory((int) $cur_widget);
-	if ( is_null($cur_entity->guid) || !$cur_entity->delete() )
+	if ( !isset($cur_entity->guid) || !$cur_entity->delete() )
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_widget;
 }
 if (empty($failed_deletes)) {

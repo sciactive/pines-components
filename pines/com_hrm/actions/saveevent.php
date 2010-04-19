@@ -33,7 +33,7 @@ if (isset($_REQUEST['employee'])) {
 	}
 	if (isset($_REQUEST['id'])) {
 		$event = com_hrm_event::factory((int) $_REQUEST['id']);
-		if (is_null($event->guid)) {
+		if (!isset($event->guid)) {
 			pines_error('The calendar was altered while editing the event.');
 			$pines->com_hrm->show_calendar();
 			return;

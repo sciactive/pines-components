@@ -15,7 +15,7 @@ if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_sales/edittaxfee') )
 		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listtaxfees'));
 	$tax_fee = com_sales_tax_fee::factory((int) $_REQUEST['id']);
-	if (is_null($tax_fee->guid)) {
+	if (!isset($tax_fee->guid)) {
 		pines_error('Requested tax/fee id is not accessible.');
 		return;
 	}

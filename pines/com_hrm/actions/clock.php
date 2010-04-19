@@ -39,7 +39,7 @@ if ($_REQUEST['id'] == 'self') {
 	$employee = com_hrm_employee::factory((int) $_REQUEST['id']);
 }
 
-if (is_null($employee->guid)) {
+if (!isset($employee->guid)) {
 	$pines->page->override_doc('false');
 	return;
 }

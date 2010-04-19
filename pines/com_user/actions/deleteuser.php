@@ -17,7 +17,7 @@ if ( !gatekeeper('com_user/delete') )
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_user) {
 	$cur_entity = user::factory((int) $cur_user);
-	if ( is_null($cur_entity->guid) || !$cur_entity->delete() )
+	if ( !isset($cur_entity->guid) || !$cur_entity->delete() )
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_user;
 }
 if (empty($failed_deletes)) {

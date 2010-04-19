@@ -17,7 +17,7 @@ if ( !gatekeeper('com_sales/deletecountsheet') )
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_sheet) {
 	$cur_entity = com_sales_countsheet::factory((int) $cur_sheet);
-	if ( is_null($cur_entity->guid) || !$cur_entity->delete() )
+	if ( !isset($cur_entity->guid) || !$cur_entity->delete() )
 		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_sheet;
 }
 if (empty($failed_deletes)) {

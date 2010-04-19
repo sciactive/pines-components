@@ -27,12 +27,12 @@ if (empty($code)) {
 	}
 } else {
 	$product = com_sales_product::factory((int) $code);
-	if (is_null($product->guid) || !$product->enabled) {
+	if (!isset($product->guid) || !$product->enabled) {
 		$product = null;
 	}
 }
 
-if (!is_null($product)) {
+if (isset($product)) {
 	$fees_percent = array();
 	$fees_flat = array();
 	foreach ($product->additional_tax_fees as $cur_tax_fee) {

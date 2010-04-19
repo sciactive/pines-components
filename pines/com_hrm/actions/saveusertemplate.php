@@ -15,7 +15,7 @@ if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_hrm/editusertemplate') )
 		punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'listusertemplates'));
 	$user_template = com_hrm_user_template::factory((int) $_REQUEST['id']);
-	if (is_null($user_template->guid)) {
+	if (!isset($user_template->guid)) {
 		pines_error('Requested user template id is not accessible.');
 		return;
 	}

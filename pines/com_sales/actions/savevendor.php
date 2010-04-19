@@ -15,7 +15,7 @@ if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_sales/editvendor') )
 		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listvendors'));
 	$vendor = com_sales_vendor::factory((int) $_REQUEST['id']);
-	if (is_null($vendor->guid)) {
+	if (!isset($vendor->guid)) {
 		pines_error('Requested vendor id is not accessible.');
 		return;
 	}

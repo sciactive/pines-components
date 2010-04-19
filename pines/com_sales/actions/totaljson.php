@@ -18,7 +18,7 @@ $pines->page->override = true;
 
 // Format the location.
 $location = $_REQUEST['location'];
-if (is_null($location) || $location == 'current') {
+if (!isset($location) || $location == 'current') {
 	$location = 'current';
 } elseif ($location == 'all') {
 	if (!gatekeeper('com_sales/totalothersales')) {

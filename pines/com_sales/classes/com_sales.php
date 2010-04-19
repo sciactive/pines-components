@@ -94,7 +94,7 @@ class com_sales extends component {
 		if (!is_array($category_array))
 			return $struct;
 		foreach ($category_array as $cur_category) {
-			if (is_null($cur_category->parent)) {
+			if (!isset($cur_category->parent)) {
 				$struct[] = array(
 					'attributes' => array(
 						'id' => $cur_category->guid
@@ -197,7 +197,7 @@ class com_sales extends component {
 	function get_product_by_code($code) {
 		global $pines;
 		$entity = $pines->entity_manager->get_entity(array('data' => array('sku' => $code), 'tags' => array('com_sales', 'product'), 'class' => com_sales_product));
-		if (!is_null($entity))
+		if (isset($entity))
 			return $entity;
 		
 		$entities = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'product'), 'class' => com_sales_product));
@@ -526,9 +526,9 @@ class com_sales extends component {
 		global $pines;
 		$entity = new entity('com_sales', 'category');
 		$entity->name = $name;
-		if (!is_null($parent_id)) {
+		if (isset($parent_id)) {
 			$parent = $pines->entity_manager->get_entity(array('guid' => $parent_id, 'tags' => array('com_sales', 'category')));
-			if (!is_null($parent))
+			if (isset($parent))
 				$entity->parent = $parent_id;
 		}
 		$entity->ac = (object) array('user' => 3, 'group' => 3, 'other' => 3);

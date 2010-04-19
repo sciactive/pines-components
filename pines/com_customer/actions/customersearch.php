@@ -21,7 +21,6 @@ $query = $_REQUEST['q'];
 if (empty($query)) {
 	$customers = array();
 } else {
-	// TODO: Use 'match_i' instead.
 	$num_query = preg_replace('/\D/', '', $query);
 	$r_query = '/'.preg_quote($query).'/i';
 	$r_num_query = '/'.preg_quote($num_query).'/';

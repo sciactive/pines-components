@@ -21,42 +21,45 @@ $query = strtolower($_REQUEST['q']);
 if (empty($query)) {
 	$companies = array();
 } else {
-	// TODO: Use 'match_i' instead.
-	$companies = $pines->entity_manager->get_entities(array('tags' => array('com_customer', 'company'), 'class' => com_customer_company));
-	if (!is_array($companies))
-		$companies = array();
+	$num_query = preg_replace('/\D/', '', $query);
+	$r_query = '/'.preg_quote($query).'/i';
+	$r_num_query = '/'.preg_quote($num_query).'/';
+	$params = array(
+		'match_i' => array(
+			'name' => $r_query,
+			'email' => $r_query,
+			'address_international' => $r_query,
+			'city' => $r_query,
+			'state' => $r_query,
+			'website' => $r_query
+		),
+		'tags' => array('com_customer', 'company'),
+		'class' => com_customer_company
+	);
+	if ($num_query != '') {
+		$params['match_i']['phone'] = $r_num_query;
+		$params['match_i']['zip'] = $r_num_query;
+		$params['match_i']['fax'] = $r_num_query;
+	}
+	$companies = (array) $pines->entity_manager->get_entities($params);
 }
 
 foreach ($companies as $key => &$cur_company) {
-	if (
-		(strpos(strtolower($cur_company->name), $query) !== false) ||
-		(strpos(strtolower($cur_company->address_type), $query) !== false) ||
-		(strpos(strtolower($cur_company->city), $query) !== false) ||
-		(strpos(strtolower($cur_company->state), $query) !== false) ||
-		(strpos(strtolower($cur_company->zip), $query) !== false) ||
-		(strpos(strtolower($cur_company->email), $query) !== false) ||
-		(preg_replace('/\D/', '', $query) != '' && strpos($cur_company->phone, preg_replace('/\D/', '', $query)) !== false) ||
-		(preg_replace('/\D/', '', $query) != '' && strpos($cur_company->fax, preg_replace('/\D/', '', $query)) !== false) ||
-		(strpos(strtolower("{$cur_company->website}"), $query) !== false)
-		) {
-		$json_struct = (object) array(
-			'key' => $cur_company->guid,
-			'values' => array(
-				$cur_company->name,
-				$cur_company->address_type == 'us' ? $cur_company->address_1 : $cur_company->address_international,
-				$cur_company->city,
-				$cur_company->state,
-				$cur_company->zip,
-				$cur_company->email,
-				pines_phone_format($cur_company->phone),
-				pines_phone_format($cur_company->fax),
-				$cur_company->website
-			)
-		);
-		$cur_company = $json_struct;
-	} else {
-		unset($companies[$key]);
-	}
+	$json_struct = (object) array(
+		'key' => $cur_company->guid,
+		'values' => array(
+			$cur_company->name,
+			$cur_company->address_type == 'us' ? $cur_company->address_1 : $cur_company->address_international,
+			$cur_company->city,
+			$cur_company->state,
+			$cur_company->zip,
+			$cur_company->email,
+			pines_phone_format($cur_company->phone),
+			pines_phone_format($cur_company->fax),
+			$cur_company->website
+		)
+	);
+	$cur_company = $json_struct;
 }
 
 if (empty($companies))

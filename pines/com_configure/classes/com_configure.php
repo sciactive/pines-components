@@ -23,8 +23,8 @@ class com_configure extends component implements configurator_interface {
 	/**
 	 * An array of config files found on the system.
 	 *
-	 * Each key is the name of the component to which the config file in its
-	 * value belongs.
+	 * Each key is the name of the component to which the config/info files in
+	 * its value belong.
 	 *
 	 * @var array $component_files
 	 */
@@ -108,7 +108,7 @@ class com_configure extends component implements configurator_interface {
 
 		$module->components = array();
 		$module->components[] = configurator_component::factory('system');
-		$module->peruser = false;
+		$module->per_user = false;
 		foreach ($pines->all_components as $cur_component) {
 			$module->components[] = configurator_component::factory($cur_component);
 		}
@@ -118,24 +118,56 @@ class com_configure extends component implements configurator_interface {
 
 	/**
 	 * Creates and attaches a module which lists per user config components.
+	 * @param user|group &$usergroup The user or group which is being configured.
 	 * @return module The module.
-	 * @todo Create a view for per user components.
 	 */
-	public function list_components_peruser() {
+	public function list_components_peruser(&$usergroup = null) {
 		global $pines;
 		$module = new module('com_configure', 'list', 'content');
 
 		$module->components = array();
 		$module->components[] = configurator_component::factory('system');
-		$module->peruser = true;
+		$module->per_user = true;
+		$module->user = $usergroup;
+		$module->groups = $pines->user_manager->get_groups();
+		$module->users = $pines->user_manager->get_users();
 		foreach ($pines->all_components as $cur_component) {
 			$module->components[] = configurator_component::factory($cur_component);
 		}
 		foreach ($module->components as &$cur_component) {
-			$cur_component->set_peruser();
+			$cur_component->set_per_user();
 		}
 
 		return $module;
+	}
+
+	/**
+	 * Load a config array built from users/groups.
+	 * @param array $sys_array The system config array to load.
+	 * @param array $com_array The component config array to load.
+	 */
+	public function load_per_user_array($sys_array, $com_array) {
+		global $pines;
+		if ($sys_array) {
+			$conf = include('system/defaults.php');
+			foreach ($conf as $key => $value) {
+				if (!$value['peruser'] || !isset($sys_array[$value['name']]))
+					continue;
+				$name = $value['name'];
+				$pines->config->$name = $sys_array[$name];
+			}
+		}
+		if ($com_array) {
+			foreach ($com_array as $cur_com => $cur_array) {
+				$conf = include($this->component_files[$key]['defaults']);
+				foreach ($conf as $key => $value) {
+					if (!$value['peruser'] || !isset($cur_array[$value['name']]))
+						continue;
+					$name = $value['name'];
+					$pines->config->$cur_com->$name = $cur_array[$name];
+				}
+			}
+		}
 	}
 }
 

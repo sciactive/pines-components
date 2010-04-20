@@ -14,6 +14,12 @@ $this->title = 'Configure Components';
 ?>
 <style type="text/css">
 	/* <![CDATA[ */
+	.user_picker {
+		padding: 0 2em;
+	}
+	.user_picker > h3 {
+		margin-bottom: .5em !important;
+	}
 	.component_list {
 		padding: 1em 2em;
 	}
@@ -47,24 +53,62 @@ $this->title = 'Configure Components';
 		.find(".buttons").buttonset()
 		.find("input").button();
 	});
+
+	function com_configure__go(url) {
+		var peruser = <?php echo $this->per_user ? 'true' : 'false'; ?>;
+		var params = {};
+		if (peruser) {
+			params["peruser"] = 1;
+			var user = $(".user_picker select[name=user_select]").val();
+			if (user == "null") {
+				alert("Please pick a user first.");
+				return;
+			}
+			params["type"] = user.replace(/\d/g, '');
+			params["id"] = user.replace(/\D/g, '');
+		}
+		pines.get(url, params);
+	}
 	// ]]>
 </script>
+<?php if ($this->per_user) { ?>
+<div class="user_picker">
+	<h3>Per User/Group Configuration</h3>
+	<div>
+		<select class="ui-widget-content" name="user_select">
+			<option value="null">-- Pick a User/Group --</option>
+			<optgroup label="Groups">
+				<?php foreach ($this->groups as $cur_group) { ?>
+				<option value="<?php echo $cur_group->guid; ?>group"<?php echo $cur_group->is($this->user) ? ' selected="selected"' : ''; ?>><?php echo "$cur_group->name [$cur_group->groupname]"; ?></option>
+				<?php } ?>
+			</optgroup>
+			<optgroup label="Users">
+				<?php foreach ($this->users as $cur_user) { ?>
+				<option value="<?php echo $cur_user->guid; ?>user"<?php echo $cur_user->is($this->user) ? ' selected="selected"' : ''; ?>><?php echo "$cur_user->name [$cur_user->username]"; ?></option>
+				<?php } ?>
+			</optgroup>
+		</select>
+	</div>
+</div>
+<?php } ?>
 <div class="component_list">
 	<?php foreach($this->components as $cur_component) {
-		if ($this->peruser && !$cur_component->is_configurable()) continue; ?>
+		if ($this->per_user && !$cur_component->is_configurable()) continue; ?>
 	<h3 class="ui-helper-clearfix<?php echo $cur_component->is_disabled() ? ' ui-priority-secondary' : ''; ?>">
 		<a href="#">
-			<span class="title"><?php echo $cur_component->info->name; ?><?php echo $cur_component->is_disabled() ? ' (Disabled)' : ''; ?></span>
+			<span class="title"><?php echo $cur_component->info->name; ?></span>
+			<span class="status"><?php echo $cur_component->config ? ' (Modified)' : ''; ?></span>
+			<span class="status"><?php echo $cur_component->is_disabled() ? ' (Disabled)' : ''; ?></span>
 			<span class="version"><?php echo $cur_component->name; ?> <?php echo $cur_component->info->version; ?></span>
 		</a>
 	</h3>
 	<div class="component_entry<?php echo $cur_component->is_disabled() ? ' ui-priority-secondary' : ''; ?>">
 		<div class="buttons">
 			<?php if ($cur_component->is_configurable()) { ?>
-			<input type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_configure', 'edit', array('component' => urlencode($cur_component->name), 'peruser' => urlencode($this->peruser)))); ?>');" value="Configure" />
-			<input type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_configure', 'view', array('component' => urlencode($cur_component->name), 'peruser' => urlencode($this->peruser)))); ?>');" value="View Config" />
+			<input type="button" onclick="com_configure__go('<?php echo htmlentities(pines_url('com_configure', 'edit', array('component' => urlencode($cur_component->name)))); ?>');" value="Configure" />
+			<input type="button" onclick="com_configure__go('<?php echo htmlentities(pines_url('com_configure', 'view', array('component' => urlencode($cur_component->name)))); ?>');" value="View Config" />
 			<?php } ?>
-			<?php if (!$this->peruser) { ?>
+			<?php if (!$this->per_user) { ?>
 				<?php if ($cur_component->name != 'system') { if ($cur_component->is_disabled()) { ?>
 				<input type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_configure', 'enable', array('component' => urlencode($cur_component->name)))); ?>');" value="Enable" />
 				<?php } else { ?>

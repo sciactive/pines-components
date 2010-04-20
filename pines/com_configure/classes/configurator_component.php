@@ -63,6 +63,16 @@ class configurator_component extends p_base implements configurator_component_in
 	 * @var string
 	 */
 	protected $info_file;
+	/**
+	 * Whether the component is using per user/group config.
+	 * @var bool
+	 */
+	public $per_user;
+	/**
+	 * "user" or "group".
+	 * @var string
+	 */
+	public $type;
 
 	/**
 	 * Load a component's configuration and info.
@@ -158,29 +168,58 @@ class configurator_component extends p_base implements configurator_component_in
 	}
 
 	/**
-	 * Write the configuration to the config file.
+	 * Write the configuration to the config file or user/group.
 	 * @return bool True on success, false on failure.
 	 */
 	public function save_config() {
-		$file_contents = sprintf(
-			"<?php\ndefined('P_RUN') or die('Direct access prohibited');\nreturn %s;\n?>",
-			var_export($this->config, true)
-		);
-		return file_put_contents($this->config_file, $file_contents);
+		if ($this->per_user) {
+			// Save the config to the user/group in two variables.
+			$this->config_keys = array();
+			foreach ($this->config as $cur_val) {
+				$this->config_keys[$cur_val['name']] = $cur_val['value'];
+			}
+			if ($this->component == 'system') {
+				$this->user->sys_config = $this->config_keys;
+				if (empty($this->config_keys))
+					unset($this->user->sys_config);
+			} else {
+				if (!is_array($this->user->com_config))
+					$this->user->com_config = array();
+				$this->user->com_config[$this->component] = $this->config_keys;
+				if (empty($this->config_keys))
+					unset($this->user->com_config[$this->component]);
+				if (empty($this->user->com_config))
+					unset($this->user->com_config);
+			}
+			return $this->user->save();
+		} else {
+			// Save the config to a system wide config file.
+			if (empty($this->config)) {
+				if (file_exists($this->config_file)) {
+					return unlink($this->config_file);
+				} else {
+					return true;
+				}
+			} else {
+				$file_contents = sprintf("<?php\ndefined('P_RUN') or die('Direct access prohibited');\nreturn %s;\n?>",
+					var_export($this->config, true)
+				);
+				return file_put_contents($this->config_file, $file_contents);
+			}
+		}
 	}
 
 	/**
-	 * Configure this component load only user configurable settings.
+	 * Load only user configurable settings.
 	 *
 	 * The current settings will be updated to reflect the settings of
 	 * $usergroup.
 	 *
-	 * @var user|group $usergroup The user or group which is being configured.
+	 * @param user|group &$usergroup The user or group which is being configured.
 	 */
-	public function set_peruser($usergroup = null) {
-		if (!isset($usergroup) && isset($_SESSION['user']))
-			$usergroup = $_SESSION['user'];
-		$this->peruser = true;
+	public function set_per_user(&$usergroup = null) {
+		$this->per_user = true;
+		// Unset config that are not per user.
 		foreach ($this->defaults as $key => &$cur_entry) {
 			if (!$cur_entry['peruser']) {
 				unset($this->defaults[$key]);
@@ -189,14 +228,34 @@ class configurator_component extends p_base implements configurator_component_in
 					$cur_entry['value'] = $this->config_keys[$cur_entry['name']];
 			}
 		}
+
 		if (!isset($usergroup)) {
 			$this->config = array();
 			$this->config_keys = array();
 			return;
 		}
+
 		// Load the config for the user/group.
-		$this->config = array();
-		$this->config_keys = array();
+		if ($this->component == 'system') {
+			$this->config_keys = (array) $usergroup->sys_config;
+		} else {
+			$this->config_keys = (array) $usergroup->com_config[$this->component];
+		}
+		$this->config = $this->defaults;
+		foreach ($this->config as $key => &$cur_entry) {
+			if (!key_exists($cur_entry['name'], $this->config_keys)) {
+				unset($this->config[$key]);
+			} else {
+				$cur_entry['value'] = $this->config[$key];
+			}
+		}
+
+		// Store the type and object of the user/group.
+		if (is_a($usergroup, 'user') || is_a($usergroup, 'hook_override_user')) {
+			$this->type = 'user';
+		} elseif (is_a($usergroup, 'group') || is_a($usergroup, 'hook_override_group')) {
+			$this->type = 'group';
+		}
 		$this->user = $usergroup;
 	}
 }

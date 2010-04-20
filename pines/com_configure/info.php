@@ -21,8 +21,9 @@ return array(
 	'description' => 'Allows you to edit your system\'s configuration and the configuration of any installed components.',
 	'abilities' => array(
 		array('edit', 'Edit Configuration', 'Let the user change (and see) configuration settings.'),
-		array('peruser', 'Edit Per User Configuration', 'Let the user change (and see) per user/group configuration settings.'),
-		array('view', 'View Configuration', 'Let the user see current configuration settings.')
+		array('editperuser', 'Edit Per User Configuration', 'Let the user change (and see) per user/group configuration settings.'),
+		array('view', 'View Configuration', 'Let the user see current configuration settings.'),
+		array('viewperuser', 'View Per User Configuration', 'Let the user see current per user/group configuration settings.')
 	),
 );
 

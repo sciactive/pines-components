@@ -20,8 +20,18 @@ if (!array_key_exists($_REQUEST['component'], $pines->configurator->component_fi
 }
 
 $component = configurator_component::factory($_REQUEST['component']);
-if ($_REQUEST['peruser'])
-	$component->set_peruser();
+if ($_REQUEST['peruser']) {
+	if ($_REQUEST['type'] == 'group') {
+		$user = group::factory((int) $_REQUEST['id']);
+	} else {
+		$user = user::factory((int) $_REQUEST['id']);
+	}
+	if (!isset($user->guid)) {
+		pines_error('Requested user/group id is not accessible.');
+		return;
+	}
+	$component->set_per_user($user);
+}
 $component->config = array();
 
 foreach ($component->defaults as $cur_var) {
@@ -113,6 +123,14 @@ if (!$component->save_config()) {
 	return;
 }
 
-redirect(pines_url('com_configure', 'list'));
+pines_notice("Config saved for {$component->name}.");
+
+if ($component->per_user) {
+	if ($_SESSION['user'])
+		$_SESSION['user']->refresh();
+	redirect(pines_url('com_configure', 'list', array('peruser' => 1, 'type' => $component->type, 'id' => $component->user->guid)));
+} else {
+	redirect(pines_url('com_configure', 'list'));
+}
 
 ?>

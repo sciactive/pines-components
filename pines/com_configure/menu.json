@@ -17,9 +17,9 @@
 		{
 			"path": "main_menu/system/configurator/perusergroup",
 			"text": "Per User/Group",
-			"href": ["com_configure","listperuser"],
+			"href": ["com_configure","list",{"peruser":1}],
 			"depend": {
-				"ability": "com_configure/peruser",
+				"ability": "com_configure/editperuser|com_configure/viewperuser",
 				"service": "user_manager"
 			}
 		}

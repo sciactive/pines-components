@@ -17,24 +17,28 @@ return array(
 		'cname' => 'Globalize Customers',
 		'description' => 'Ensure that every user can access all customers by setting the "other" access control to read.',
 		'value' => true,
+		'peruser' => true,
 	),
 	array(
 		'name' => 'com_sales',
 		'cname' => 'Sales Integration',
 		'description' => 'Integrate with com_sales.',
 		'value' => true,
+		'peruser' => true,
 	),
 	array(
 		'name' => 'adjustpoints',
 		'cname' => 'Allow Point Adjust',
 		'description' => 'Allow customer\'s points to be adjusted by users with the ability.',
 		'value' => true,
+		'peruser' => true,
 	),
 	array(
 		'name' => 'resetpoints',
 		'cname' => 'Allow Point Reset',
 		'description' => 'Allow customer\'s points to be reset by users with the ability.',
 		'value' => true,
+		'peruser' => true,
 	),
 	array(
 		'name' => 'membervalues',
@@ -44,6 +48,7 @@ return array(
 			30,
 			60
 		),
+		'peruser' => true,
 	),
 	array(
 		'name' => 'pointvalues',
@@ -56,6 +61,7 @@ return array(
 			500,
 			1000
 		),
+		'peruser' => true,
 	),
 	array(
 		'name' => 'guest_point_lookup',
@@ -72,6 +78,7 @@ return array(
 			'199.99:0.07017',
 			'499.99:0.06101'
 		),
+		'peruser' => true,
 	),
 	array(
 		'name' => 'member_point_lookup',
@@ -88,12 +95,14 @@ return array(
 			'199.99:0.05755',
 			'499.99:0.05555'
 		),
+		'peruser' => true,
 	),
 	array(
 		'name' => 'ssn_field',
 		'cname' => 'SSN Field',
 		'description' => 'Allow Pines to store a Social Security Number for customers.',
 		'value' => true,
+		'peruser' => true,
 	),
 	array(
 		'name' => 'shown_fields_customer',
@@ -126,7 +135,8 @@ return array(
 			'Membership' => 'membership',
 			'Address' => 'address',
 			'Attributes' => 'attributes',
-		)
+		),
+		'peruser' => true,
 	),
 	array(
 		'name' => 'required_fields_customer',
@@ -146,7 +156,8 @@ return array(
 			'Password' => 'password',
 			'Description' => 'description',
 			'Address' => 'address'
-		)
+		),
+		'peruser' => true,
 	),
 );
 

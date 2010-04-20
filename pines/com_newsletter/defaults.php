@@ -17,12 +17,14 @@ return array(
 		'cname' => 'Default From',
 		'description' => 'The default "from" email.',
 		'value' => 'Nowhere <nowhere@example.com>',
+		'peruser' => true,
 	),
 	array(
 		'name' => 'default_reply_to',
 		'cname' => 'Default Reply To',
 		'description' => 'The "reply-to" email.',
 		'value' => 'webmaster@example.com',
+		'peruser' => true,
 	),
 );
 

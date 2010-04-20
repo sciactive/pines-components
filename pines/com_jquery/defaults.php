@@ -45,7 +45,8 @@ return array(
 			'Black Tie' => 'black-tie',
 			'Trontastic' => 'trontastic',
 			'Swanky Purse' => 'swanky-purse'
-		)
+		),
+		'peruser' => true,
 	),
 );
 

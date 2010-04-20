@@ -17,12 +17,14 @@ return array(
 		'cname' => 'Protected Actions',
 		'description' => 'These actions will require the user to enter their PIN before access.',
 		'value' => array('com_pinlock/example'),
+		'peruser' => true,
 	),
 	array(
 		'name' => 'allow_switch',
 		'cname' => 'Allow User Switch',
 		'description' => 'Allow switching users based on PIN entries.',
 		'value' => false,
+		'peruser' => true,
 	),
 	array(
 		'name' => 'max_tries',

@@ -17,6 +17,7 @@ return array(
 		'cname' => 'Default Author',
 		'description' => 'The default author of PDFs created by com_pdf.',
 		'value' => 'Pines',
+		'peruser' => true,
 	),
 	array(
 		'name' => 'pdf_path',

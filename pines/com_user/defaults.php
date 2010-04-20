@@ -23,6 +23,7 @@ return array(
 		'cname' => 'Show Current User',
 		'description' => 'Display the name of the current user in the page header.',
 		'value' => true,
+		'peruser' => true,
 	),
 	array(
 		'name' => 'create_admin',
@@ -59,18 +60,21 @@ return array(
 		'cname' => 'Resize Logos',
 		'description' => 'Resize the group logos before saving them.',
 		'value' => false,
+		'peruser' => true,
 	),
 	array(
 		'name' => 'logo_width',
 		'cname' => 'Logo Width',
 		'description' => 'If resizing logos, use this width.',
 		'value' => 200,
+		'peruser' => true,
 	),
 	array(
 		'name' => 'logo_height',
 		'cname' => 'Logo Height',
 		'description' => 'If resizing logos, use this height.',
 		'value' => 75,
+		'peruser' => true,
 	),
 );
 

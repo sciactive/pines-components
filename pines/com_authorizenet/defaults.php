@@ -17,24 +17,28 @@ return array(
 		'cname' => 'API Login',
 		'description' => 'The API login Authorize.Net provided you.',
 		'value' => '',
+		'peruser' => true,
 	),
 	array(
 		'name' => 'tran_key',
 		'cname' => 'Transaction Key',
 		'description' => 'The transaction key Authorize.Net provided you.',
 		'value' => '',
+		'peruser' => true,
 	),
 	array(
 		'name' => 'post_url',
 		'cname' => 'Post URL',
 		'description' => 'The URL Pines will use to communicate with Authorize.Net.',
 		'value' => 'https://secure.authorize.net/gateway/transact.dll',
+		'peruser' => true,
 	),
 	array(
 		'name' => 'test_mode',
 		'cname' => 'Test Mode',
 		'description' => 'Enabling this will prevent payments from actually being processed.',
 		'value' => true,
+		'peruser' => true,
 	),
 );
 

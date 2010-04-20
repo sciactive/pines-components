@@ -22,6 +22,7 @@ return array(
 			'16-19',
 			'19-24'
 		),
+		'peruser' => true,
 	),
 );
 

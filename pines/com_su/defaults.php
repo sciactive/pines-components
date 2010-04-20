@@ -17,6 +17,7 @@ return array(
 		'cname' => 'Allow PIN Based Switching',
 		'description' => 'Allows users to switch using only the PIN of the target user. (This is not advisable for large installations.)',
 		'value' => false,
+		'peruser' => true,
 	),
 );
 

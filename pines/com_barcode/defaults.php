@@ -23,7 +23,8 @@ return array(
 			'Code 128A' => 'C128A',
 			'Code 128B' => 'C128B',
 			'Code 128C' => 'C128C'
-		)
+		),
+		'peruser' => true,
 	),
 	array(
 		'name' => 'output_type',
@@ -34,19 +35,22 @@ return array(
 			'PNG' => 'png',
 			'GIF' => 'gif',
 			'JPG (Does not support transparency.)' => 'jpg'
-		)
+		),
+		'peruser' => true,
 	),
 	array(
 		'name' => 'width',
 		'cname' => 'Default Width',
 		'description' => 'The width of the image the barcoded will be generated in.',
 		'value' => 250,
+		'peruser' => true,
 	),
 	array(
 		'name' => 'height',
 		'cname' => 'Default Height',
 		'description' => 'The height of the actual barcode.',
 		'value' => 50,
+		'peruser' => true,
 	),
 	array(
 		'name' => 'xres',
@@ -57,7 +61,8 @@ return array(
 			1,
 			2,
 			3
-		)
+		),
+		'peruser' => true,
 	),
 	array(
 		'name' => 'font',
@@ -70,19 +75,22 @@ return array(
 			'Medium Bold' => 3,
 			'Large' => 4,
 			'Large Bold' => 5
-		)
+		),
+		'peruser' => true,
 	),
 	array(
 		'name' => 'bgcolor',
 		'cname' => 'Default Background Color',
 		'description' => 'Use comma separated RGB color values, or HTML color codes/names.',
 		'value' => 'white',
+		'peruser' => true,
 	),
 	array(
 		'name' => 'color',
 		'cname' => 'Default Barcode and Text Color',
 		'description' => 'Use comma separated RGB color values, or HTML color codes/names.',
 		'value' => 'black',
+		'peruser' => true,
 	),
 );
 

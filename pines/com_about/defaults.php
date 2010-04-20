@@ -17,13 +17,14 @@ return array(
 		'cname' => 'Description',
 		'description' => 'Description of your installation.',
 		'value' => 'This is the default installation of Pines.',
-		'peruserconfig' => true,
+		'peruser' => true,
 	),
 	array(
 		'name' => 'describe_self',
 		'cname' => 'Describe Pines',
 		'description' => 'Whether to show Pines\' description underneath yours.',
 		'value' => true,
+		'peruser' => true,
 	),
 );
 

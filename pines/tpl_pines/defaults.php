@@ -17,12 +17,14 @@ return array(
 		'cname' => 'Use Header Image',
 		'description' => 'Whether to show a header image (instead of just text) at the top of the page.',
 		'value' => true,
+		'peruser' => true,
 	),
 	array(
 		'name' => 'header_image',
 		'cname' => 'Header Image',
 		'description' => 'The header image to use.',
-		'value' => $pines->config->rela_location.$pines->config->setting_upload.'logos/default_logo.png',
+		'value' => isset($_SESSION['user']->group) ? $_SESSION['user']->group->get_logo(true) : $pines->config->rela_location.$pines->config->setting_upload.'logos/default_logo.png',
+		'peruser' => true,
 	),
 );
 

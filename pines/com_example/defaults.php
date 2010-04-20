@@ -17,6 +17,7 @@ return array(
 		'cname' => 'Globalize Widgets',
 		'description' => 'Ensure that every user can access all widgets by setting the "other" access control to read.',
 		'value' => true,
+		'peruser' => true,
 	),
 );
 

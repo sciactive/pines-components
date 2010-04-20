@@ -23,11 +23,10 @@ if ( !gatekeeper() ) {
 			pines_error('Your default component is set to com_user, but you don\'t have permission to use it.');
 			return;
 		}
-		/**
-		 * If com_user is the default component, the default action is manageusers.
-		 */
+		// If this is the default component.
 		action('com_user', 'listusers');
 	} else {
+		// If the user has another component set to default.
 		action($_SESSION['user']->default_component, 'default');
 	}
 }

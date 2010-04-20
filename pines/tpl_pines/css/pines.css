@@ -7,14 +7,14 @@ ul, ol {
 	margin: 11px 0;
 	padding-left: 40px;
 }
-html, body {
-	height: 100%;
-	font-family: Verdana,Arial,sans-serif;
-	font-size: 9pt;
-}
 /* ----------- Holy Grail CSS ----------- */
 /* General styles */
 body {
+	/* Custom */
+	font-family: Verdana,Arial,sans-serif;
+	font-size: 9pt;
+	background-image: none !important;
+	/* ----- */
 	margin:0;
 	padding:0;
 	border:0 !important;			/* This removes the border around the viewport in old versions of IE */
@@ -38,19 +38,17 @@ img {
 	clear:both;
 	float:left;
 	width:100%;
+	/* Custom */
 	border-top: 0 !important;
 	border-left: 0 !important;
 	border-right: 0 !important;
-	background-position: 0 0 !important;
+	background-position: left top !important;
+	/* ----- */
 }
 /* column container */
 .colmask {
-	/* jQuery UI Styling Additions */
-	border: 0 !important;
-	background-image: url(../images/shadow-top.png) !important;
-	background-repeat: repeat-x !important;
-	background-attachment: scroll !important;
-	background-position: left top !important;
+	/* Custom */
+	background: transparent url(../images/shadow-top.png) repeat-x scroll left top;
 	margin-bottom: -1em;
 	/* ----- */
 	position:relative;		/* This fixes the IE7 overflow hidden bug and stops the layout jumping out of place */
@@ -74,7 +72,7 @@ img {
 	position:relative;
 	left:400px;		 	/* Left column width + right column width */
 }
-/* jQuery UI Styling Additions */
+/* Custom */
 .holygrail .colleftcolor {
 	position: absolute;
 	top: 0;
@@ -96,7 +94,7 @@ img {
 }
 .holygrail .col1 {
 	/* Margin for module content. */
-	margin:15px 205px 0;	 	/* Centre column side padding:
+	margin:12px 205px 0;	 	/* Centre column side padding:
 							Left padding = left column width + centre column left padding width
 							Right padding = right column width + centre column right padding width */
 	position:relative;
@@ -113,7 +111,7 @@ img {
 	/* Margin for module content. */
 	margin-top: 12px; /* col1 top margin */
 }
-/* jQuery UI Styling Additions */
+/* Custom */
 .holygrail .col2 .module_content {
 	border: 0 !important;
 	background: transparent none !important;
@@ -132,6 +130,14 @@ img {
 }
 /* Footer styles */
 #footer {
+	/* Custom */
+	border-left: 0 !important;
+	border-right: 0 !important;
+	border-top-width: 3px !important;
+	border-bottom-width: 3px !important;
+	background-image: none !important;
+	font-weight: normal;
+	/* ----- */
 	clear:both;
 	float:left;
 	width:100%;
@@ -141,21 +147,13 @@ img {
 	margin:0;
 }
 
-/* ----------- Custom Footer ----------- */
-body {
-	background-image: none !important;
-	border: 0 !important;
-}
-#footer {
-	border-left: 0 !important;
-	border-right: 0 !important;
-	border-top-width: 3px !important;
-	border-bottom-width: 3px !important;
-	background-image: none !important;
-	font-weight: normal;
-}
-
 /* ----------- Customized CSS ----------- */
+body .ui-widget {
+	font-size: 1em !important;
+}
+#top, #bottom, .content, .pre_content, .post_content {
+	clear: both;
+}
 #header .pagetitle {
 	margin: 0 25px;
 	float: left;
@@ -174,7 +172,16 @@ body {
 	display: block;
 	font-size: 1.2em;
 }
-.mainmenu {
+#header .module, #footer .module {
+	float: left;
+}
+#header .module.right {
+	float: right;
+}
+#header .module .module_content, #footer .module .module_content {
+	font-weight: normal;
+}
+#header .mainmenu {
 	clear: both;
 	width: 100%;
 	font-size: 1.2em;
@@ -183,15 +190,30 @@ body {
 	border-left: 0 !important;
 	border-right: 0 !important;
 }
-.mainmenu .menuwrap {
+#header .mainmenu .menuwrap {
 	/*text-align: center; /* Align menu text in the center with this. */
-	display: table;
-	/* margin: 0 auto; /* Align the menu in the center with this. */
+	/* display: table;
+	margin: 0 auto; /* Align the menu in the center with this. */
 	margin-left: 35px; /* Comment this out if you center the menu. */
 }
+.holygrail .colleft .col2 {
+	padding-top: 1px;
+}
+.content_top_left, .content_bottom_left {
+	width: 50%;
+	float: left;
+	padding-top: 1px;
+}
+.content_top_right, .content_bottom_right {
+	width: 50%;
+	float: right;
+	padding-top: 1px;
+}
 .module {
-	margin: .4em .4em 1em;
 	padding: .4em;
+}
+.colmask .module {
+	margin-bottom: .8em;
 }
 .module.module_maximized {
 	position: fixed;
@@ -203,65 +225,32 @@ body {
 	z-index: 1000;
 	overflow: auto;
 }
-.module .module_title .module_minimize, .module .module_title .module_maximize {
-	float: right;
-	margin-left: 2px;
-}
 .module .module_title {
-	margin-bottom: 8px;
 	padding: .4em;
+}
+.colmask .module .module_title {
+	margin-bottom: .5em;
 }
 .module .module_title h2 {
 	margin: 0;
 	font-size: 1.3em;
 }
 .module .module_title p {
-	font-weight: normal;
-	font-size: .9em;
 	margin: 0;
+	font-size: .9em;
+	font-weight: normal;
+}
+.module .module_title .module_minimize, .module .module_title .module_maximize {
+	float: right;
+	margin-left: 2px;
 }
 .module .module_content {
-	padding: 0 5px;
-}
-body .ui-widget {
-	font-size: 1em !important;
-}
-#header .module, #footer .module {
-	margin: 0;
-	float: left;
-}
-#header .module.right {
-	float: right;
-}
-#header .module .module_title, #footer .module .module_title {
-	margin-bottom: 0;
-}
-#header .module .module_content, #footer .module .module_content {
-	font-weight: normal;
+	padding: 0 .4em;
 }
 #footer .copyright {
 	clear: both;
 	font-size: .8em;
 	text-align: center;
-}
-#bottom, #top {
-	margin: 0 auto;
-	float: left;
-	clear: both;
-	min-height: 0px;
-}
-.content_top_left, .content_bottom_left {
-	width: 50%;
-	float: left;
-	margin-top: -3px;
-}
-.content_top_right, .content_bottom_right {
-	width: 50%;
-	float: right;
-	margin-top: -3px;
-}
-.content, .pre_content, .post_content {
-	clear: both;
 }
 input.ui-widget-content,
 select.ui-widget-content,

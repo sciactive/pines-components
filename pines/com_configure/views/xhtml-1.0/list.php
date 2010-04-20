@@ -88,6 +88,7 @@ $this->title = 'Configure Components';
 				<?php } ?>
 			</optgroup>
 		</select>
+		<button class="ui-state-default ui-corner-all" type="button" onclick="com_configure__go('<?php echo htmlentities(pines_url('com_configure', 'list')); ?>')">Refresh</button>
 	</div>
 </div>
 <?php } ?>

@@ -135,7 +135,7 @@ class com_configure extends component implements configurator_interface {
 			$module->components[] = configurator_component::factory($cur_component);
 		}
 		foreach ($module->components as &$cur_component) {
-			$cur_component->set_per_user();
+			$cur_component->set_per_user($usergroup);
 		}
 
 		return $module;

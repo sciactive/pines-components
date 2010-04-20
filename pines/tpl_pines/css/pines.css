@@ -157,25 +157,22 @@ body {
 
 /* ----------- Customized CSS ----------- */
 #header .pagetitle {
-	margin: 2px 25px;
+	margin: 0 25px;
 	float: left;
-	max-height: 68px;
+	padding: 0;
 }
-#header .pagetitle h1 {
+#header .pagetitle img {
 	margin: 0;
 	padding: 0;
-	font-size: 2.3em;
-}
-#header .pagetitle a {
-	text-decoration: none;
-	color: inherit;
+	border: none 0;
+	vertical-align: middle;
 }
 #header .pagetitle span {
-	vertical-align: middle;
+	text-decoration: none;
 	margin-right: 50px;
-	padding: 20px 0;
-	line-height: 23px;
+	padding: 10px 0;
 	display: block;
+	font-size: 1.2em;
 }
 .mainmenu {
 	clear: both;

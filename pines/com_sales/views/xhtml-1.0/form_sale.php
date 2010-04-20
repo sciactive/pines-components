@@ -156,13 +156,15 @@ $this->note = 'Use this form to edit a sale.';
 			products_table.pgrid({
 				pgrid_view_height: "160px",
 				pgrid_paginate: false,
-				pgrid_toolbar: false
+				pgrid_toolbar: false,
+				pgrid_resize: false
 			});
 			<?php } else { ?>
 			products_table.pgrid({
 				pgrid_view_height: "160px",
 				pgrid_paginate: false,
 				pgrid_toolbar: true,
+				pgrid_resize: false,
 				pgrid_toolbar_contents : [
 					{
 						type: 'text',

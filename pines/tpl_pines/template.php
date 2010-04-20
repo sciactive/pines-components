@@ -55,9 +55,6 @@ if (strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
 
 	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/pines.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/print.css" media="print" rel="stylesheet" type="text/css" />
-<?php if ($pines->config->tpl_pines->header_image) { ?>
-	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/header-image.css" media="all" rel="stylesheet" type="text/css" />
-<?php } ?>
 
 	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/dropdown/dropdown.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/dropdown/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
@@ -97,9 +94,15 @@ if (strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
 		<?php } ?>
 	</div>
 	<div id="header" class="ui-widget-header">
-		<div class="pagetitle">
-			<h1><a href="<?php echo $pines->config->full_location; ?>"><span><?php echo $pines->config->option_title; ?></span></a></h1>
-		</div>
+		<h1 class="pagetitle">
+			<a href="<?php echo $pines->config->full_location; ?>">
+				<?php if ($pines->config->tpl_pines->use_header_image) { ?>
+				<img src="<?php echo $pines->config->tpl_pines->header_image; ?>" alt="<?php echo $pines->config->option_title; ?>" />
+				<?php } else { ?>
+				<span><?php echo $pines->config->option_title; ?></span>
+				<?php } ?>
+			</a>
+		</h1>
 		<?php echo $pines->page->render_modules('header', 'module_header'); ?>
 		<?php echo $pines->page->render_modules('header_right', 'module_header_right'); ?>
 		<div class="mainmenu ui-widget-content">

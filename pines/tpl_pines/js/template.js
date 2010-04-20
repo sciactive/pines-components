@@ -34,7 +34,7 @@ $(function(){
 
 	// Add disabled element styling.
 	$(".ui-widget-content:input:disabled").addClass("ui-state-disabled");
-	$(".ui-widget-content:input:not(:button, :submit, :reset)").addClass("ui-corner-all");
+	$(".ui-widget-content:input:not(:button, :submit, :reset), .ui-widget-content:file").addClass("ui-corner-all");
 
 	// Menu and UI buttons hover.
 	hover(".dropdown li");

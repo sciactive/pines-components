@@ -37,5 +37,6 @@ if ($employee->save()) {
 	pines_error('Error saving timeclock. Do you have permission?');
 }
 
-$pines->com_hrm->list_timeclocks();
+redirect(pines_url('com_hrm', 'listtimeclocks'));
+
 ?>

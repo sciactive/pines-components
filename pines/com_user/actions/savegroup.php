@@ -198,5 +198,6 @@ if ($group->save()) {
 	pines_error('Error saving group. Do you have permission?');
 }
 
-$pines->user_manager->list_groups();
+redirect(pines_url('com_user', 'listgroups'));
+
 ?>

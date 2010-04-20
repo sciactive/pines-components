@@ -77,5 +77,6 @@ if ($floor->save()) {
 	pines_error('Error saving floor. Do you have permission?');
 }
 
-$pines->com_customertimer->list_floors();
+redirect(pines_url('com_customertimer', 'listfloors'));
+
 ?>

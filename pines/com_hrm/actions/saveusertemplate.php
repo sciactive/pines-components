@@ -62,5 +62,6 @@ if ($user_template->save()) {
 	pines_error('Error saving user template. Do you have permission?');
 }
 
-$pines->com_hrm->list_user_templates();
+redirect(pines_url('com_hrm', 'listusertemplates'));
+
 ?>

@@ -33,5 +33,6 @@ if (!$failed_resets) {
 	pines_error("Could not reset points of customers with given IDs: $failed_resets");
 }
 
-$pines->com_customer->list_customers();
+redirect(pines_url('com_customer', 'listcustomers'));
+
 ?>

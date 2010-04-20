@@ -566,7 +566,7 @@ class com_myentity extends component implements entity_manager_interface {
 			$options = array('guid' => (int) $options);
 		$options['limit'] = 1;
 		$entities = $this->get_entities($options);
-		if (empty($entities))
+		if (!$entities)
 			return null;
 		return $entities[0];
 	}

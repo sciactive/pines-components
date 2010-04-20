@@ -175,11 +175,11 @@ if (!isset($sale->status) || $sale->status == 'quoted') {
 
 if ($sale->save()) {
 	pines_notice('Saved sale ['.$sale->guid.']');
+	redirect(pines_url('com_sales', 'receiptsale', array('id' => $sale->guid)));
 } else {
 	$sale->print_form();
 	pines_error('Error saving sale. Do you have permission?');
 	return;
 }
 
-$sale->print_receipt();
 ?>

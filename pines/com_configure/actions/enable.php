@@ -22,6 +22,6 @@ if ($pines->configurator->enable_component($_REQUEST['component'])) {
 	pines_error('Couldn\'t enable component '.$_REQUEST['component'].'.');
 }
 
-$pines->configurator->list_components();
+redirect(pines_url('com_configure', 'list'));
 
 ?>

@@ -26,5 +26,6 @@ if (empty($failed_deletes)) {
 	pines_error('Could not delete groups with given IDs: '.$failed_deletes);
 }
 
-$pines->user_manager->list_groups();
+redirect(pines_url('com_user', 'listgroups'));
+
 ?>

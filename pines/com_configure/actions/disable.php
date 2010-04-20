@@ -27,6 +27,6 @@ if ($pines->configurator->disable_component($_REQUEST['component'])) {
 	pines_error("Couldn't disable component {$_REQUEST['component']}.");
 }
 
-$pines->configurator->list_components();
+redirect(pines_url('com_configure', 'list'));
 
 ?>

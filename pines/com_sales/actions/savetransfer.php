@@ -75,5 +75,6 @@ if ($transfer->save()) {
 	pines_error('Error saving transfer. Do you have permission?');
 }
 
-$pines->com_sales->list_transfers();
+redirect(pines_url('com_sales', 'listtransfers'));
+
 ?>

@@ -27,5 +27,6 @@ if (empty($failed_deletes)) {
 	pines_notice('Note that transfers cannot be deleted after items have been received on them.');
 }
 
-$pines->com_sales->list_transfers();
+redirect(pines_url('com_sales', 'listtransfers'));
+
 ?>

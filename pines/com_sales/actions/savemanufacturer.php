@@ -56,5 +56,6 @@ if ($manufacturer->save()) {
 	pines_error('Error saving manufacturer. Do you have permission?');
 }
 
-$pines->com_sales->list_manufacturers();
+redirect(pines_url('com_sales', 'listmanufacturers'));
+
 ?>

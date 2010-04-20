@@ -63,5 +63,6 @@ if ($widget->save()) {
 	pines_error('Error saving widget. Do you have permission?');
 }
 
-$pines->com_example->list_widgets();
+redirect(pines_url('com_example', 'listwidgets'));
+
 ?>

@@ -29,5 +29,7 @@ if ($location->save()) {
 } else {
 	pines_error('Error saving countsheet assignment. Do you have permission?');
 }
-$pines->com_sales->list_countsheets();
+
+redirect(pines_url('com_sales', 'listcountsheets'));
+
 ?>

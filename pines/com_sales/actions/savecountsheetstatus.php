@@ -45,5 +45,6 @@ if ($countsheet->save()) {
 	pines_error('Error saving countsheet. Do you have permission?');
 }
 
-$pines->com_sales->list_countsheets();
+redirect(pines_url('com_sales', 'listcountsheets'));
+
 ?>

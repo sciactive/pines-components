@@ -64,5 +64,6 @@ if ($tax_fee->save()) {
 	pines_error('Error saving tax/fee. Do you have permission?');
 }
 
-$pines->com_sales->list_tax_fees();
+redirect(pines_url('com_sales', 'listtaxfees'));
+
 ?>

@@ -26,5 +26,6 @@ if (empty($failed_deletes)) {
 	pines_error('Could not delete tax/fees with given IDs: '.$failed_deletes);
 }
 
-$pines->com_sales->list_tax_fees();
+redirect(pines_url('com_sales', 'listtaxfees'));
+
 ?>

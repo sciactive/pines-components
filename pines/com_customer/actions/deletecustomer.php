@@ -26,5 +26,6 @@ if (empty($failed_deletes)) {
 	pines_error('Could not delete customers with given IDs: '.$failed_deletes);
 }
 
-$pines->com_customer->list_customers();
+redirect(pines_url('com_customer', 'listcustomers'));
+
 ?>

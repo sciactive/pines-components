@@ -85,5 +85,6 @@ if ($countsheet->save()) {
 	return;
 }
 
-$pines->com_sales->list_countsheets();
+redirect(pines_url('com_sales', 'listcountsheets'));
+
 ?>

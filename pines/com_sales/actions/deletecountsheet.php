@@ -27,5 +27,6 @@ if (empty($failed_deletes)) {
 	pines_notice('Note that countsheets cannot be deleted after items have been received on them.');
 }
 
-$pines->com_sales->list_countsheets();
+redirect(pines_url('com_sales', 'listcountsheets'));
+
 ?>

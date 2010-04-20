@@ -124,5 +124,6 @@ if ($product->save()) {
 	pines_error('Error saving product. Do you have permission?');
 }
 
-$pines->com_sales->list_products();
+redirect(pines_url('com_sales', 'listproducts'));
+
 ?>

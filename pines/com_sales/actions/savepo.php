@@ -98,5 +98,6 @@ if ($po->save()) {
 	pines_error('Error saving PO. Do you have permission?');
 }
 
-$pines->com_sales->list_pos();
+redirect(pines_url('com_sales', 'listpos'));
+
 ?>

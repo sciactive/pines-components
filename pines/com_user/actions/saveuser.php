@@ -154,5 +154,6 @@ if ($user->save()) {
 	pines_error('Error saving user. Do you have permission?');
 }
 
-$pines->user_manager->list_users();
+redirect(pines_url('com_user', 'listusers'));
+
 ?>

@@ -26,5 +26,6 @@ if (empty($failed_deletes)) {
 	pines_error('Could not delete user templates with given IDs: '.$failed_deletes);
 }
 
-$pines->com_hrm->list_user_templates();
+redirect(pines_url('com_hrm', 'listusertemplates'));
+
 ?>

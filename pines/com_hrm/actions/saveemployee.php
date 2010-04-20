@@ -144,5 +144,6 @@ if ($employee->save()) {
 	pines_error('Error saving employee. Do you have permission?');
 }
 
-$pines->com_hrm->list_employees();
+redirect(pines_url('com_hrm', 'listemployees'));
+
 ?>

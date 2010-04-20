@@ -46,8 +46,6 @@ defined('P_RUN') or die('Direct access prohibited');
 	<![endif]-->
 
 	<?php echo $pines->page->render_modules('head', 'module_head'); ?>
-
-	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/jquery/jquery.timers-1.1.2.js"></script>
 </head>
 
 <body class="ui-widget-content">

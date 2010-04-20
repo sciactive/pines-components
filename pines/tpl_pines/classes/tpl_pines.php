@@ -56,7 +56,7 @@ class tpl_pines extends template {
 	 * @return string The menu's HTML.
 	 */
 	public function sub_menu($menu) {
-		$return = '<li class="ui-state-default"><a href="'.
+		$return = '<li><a class="ui-state-default" href="'.
 			(isset($menu[0]['href']) ? htmlentities($menu[0]['href']) : '#').
 			(isset($menu[0]['onclick']) ? "\" onclick=\"{$menu[0]['onclick']}\">" : '">').
 			htmlentities($menu[0]['text']).

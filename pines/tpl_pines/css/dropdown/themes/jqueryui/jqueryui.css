@@ -31,6 +31,7 @@
 ul.dropdown li a {
 	display: block;
 	padding: 7px 10px;
+	text-decoration: none;
 }
 
 
@@ -39,7 +40,8 @@ ul.dropdown li a {
 ul.dropdown ul {
 	min-width: 150px;
 	width: auto;
-	margin-top: 1px;
+	margin: 0;
+	padding: 0;
 }
 
 ul.dropdown ul li {

@@ -16,10 +16,10 @@ $(function(){
 	}).end().remove();
 
 	// Main menu corners.
-	$(".mainmenu").find(".dropdown > li:first-child").addClass("ui-corner-left").end()
-	.find(".dropdown > li:last-child").addClass("ui-corner-right").end()
-	.find(".dropdown li ul li:first-child").addClass("ui-corner-tr").end()
-	.find(".dropdown li ul li:last-child").addClass("ui-corner-bottom");
+	$(".mainmenu").find(".dropdown > li:first-child > a").addClass("ui-corner-left").end()
+	.find(".dropdown > li:last-child > a").addClass("ui-corner-right").end()
+	.find(".dropdown ul > li:first-child > a").addClass("ui-corner-tr").end()
+	.find(".dropdown ul > li:last-child > a").addClass("ui-corner-bottom");
 
 	// Maximize modules.
 	hover($(".module .module_maximize").live("click", function(){
@@ -37,7 +37,7 @@ $(function(){
 	$(".ui-widget-content:input:not(:button, :submit, :reset), .ui-widget-content:file").addClass("ui-corner-all");
 
 	// Menu and UI buttons hover.
-	hover(".dropdown li");
+	hover(".dropdown li a");
 	$(".module .ui-state-default:input:not(:not(:button, :submit, :reset))").button();
 
 

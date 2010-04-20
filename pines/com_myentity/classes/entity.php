@@ -100,6 +100,7 @@ class entity extends p_base implements entity_interface {
 	 *
 	 * @param string $name The name of the variable.
 	 * @return bool
+	 * @todo Check that a referenced entity has not been deleted.
 	 */
 	public function __isset($name) {
 		return isset($this->data[$name]);

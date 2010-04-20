@@ -114,6 +114,21 @@
 	margin-top: 3px;
 	font-weight: normal;
 }
+.ui-pgrid-footer .ui-pgrid-footer-resize-container {
+	clear: both;
+	text-align: center;
+	height: 8px;
+	overflow: hidden;
+	position: relative;
+	top: 3px;
+	margin-top: -3px;
+	cursor: s-resize;
+}
+.ui-pgrid-footer .ui-pgrid-footer-resize-container span {
+	margin: 0 auto;
+	position: relative;
+	top: -4px;
+}
 
 /* Grid Itself
 ----------------------------------*/

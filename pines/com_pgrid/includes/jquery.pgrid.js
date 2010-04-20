@@ -285,7 +285,8 @@
 					pgrid_filter: pgrid.pgrid_filter,
 					pgrid_hidden_cols: pgrid.pgrid_hidden_cols.slice(),
 					pgrid_sort_col: pgrid.pgrid_sort_col,
-					pgrid_sort_ord: pgrid.pgrid_sort_ord
+					pgrid_sort_ord: pgrid.pgrid_sort_ord,
+					pgrid_view_height: pgrid.pgrid_table_viewport.height()+"px"
 				};
 			};
 
@@ -303,6 +304,8 @@
 					pgrid.pgrid_sort_col = state.pgrid_sort_col;
 				if (typeof state.pgrid_sort_ord !== undefined)
 					pgrid.pgrid_sort_ord = (state.pgrid_sort_ord != "desc" ? "asc" : "desc");
+				if (typeof state.pgrid_view_height !== undefined)
+					pgrid.pgrid_table_viewport.css("height", state.pgrid_view_height);
 				// Filter need to come first, because pagination ignores disabled records.
 				pgrid.do_filter(pgrid.pgrid_filter);
 				pgrid.do_sort();
@@ -1196,6 +1199,33 @@
 				}
 			}
 
+			// Make a table sizer.
+			if (pgrid.pgrid_footer) {
+				if (pgrid.pgrid_resize) {
+					var orig_y;
+					var orig_height;
+					var resize_table_function = function(e){
+						orig_height += e.pageY - orig_y;
+						orig_y = e.pageY;
+						pgrid.pgrid_table_viewport.css("height", orig_height+"px");
+						return false;
+					};
+					// Make a resize handle.
+					pgrid.footer.append(
+						$("<div />").addClass("ui-pgrid-footer-resize-container")
+						.append($("<span class=\"ui-icon ui-icon-grip-solid-horizontal\"></span>"))
+						.mousedown(function(e){
+							orig_y = e.pageY;
+							orig_height = pgrid.pgrid_table_viewport.height();
+							$("body").delegate("*", "mousemove", resize_table_function);
+						}).mouseup(function(e){
+							$("body").undelegate("*", "mousemove", resize_table_function);
+							pgrid.state_changed();
+						})
+					);
+				}
+			}
+
 			// Put the toolbar into the DOM.
 			if (pgrid.pgrid_toolbar)
 				pgrid.pgrid_widget.append($("<div />").addClass("ui-pgrid-toolbar-container ui-widget-header ui-corner-top").append(pgrid.toolbar));
@@ -1262,6 +1292,8 @@
 		pgrid_row_hover_effect: true,
 		// Height of the box (viewport) containing the grid. (Not including the toolbar and footer.)
 		pgrid_view_height: "410px",
+		// Allow the table to be resized. (Only height.)
+		pgrid_resize: true,
 		// State change. Gets called whenever the user changes the state of the grid. The state from export_state() will be passed.
 		pgrid_state_change: null
 	};

@@ -90,8 +90,8 @@ if ($this->entity->per_user)
 		</div>
 		<div class="pf-group default" style="display: none;">
 			<?php if (is_array($cur_var['value'])) {
-				foreach ($cur_var['value'] as $key => $cur_value) {
-					echo '<div class="pf-field ui-corner-all ui-state-default ui-state-disabled">'.htmlentities(print_r(is_string($key) ? $key : $cur_value, true)).'</div>';
+				foreach ($cur_var['value'] as $key => $cur_default) {
+					echo '<div class="pf-field ui-corner-all ui-state-default ui-state-disabled">'.htmlentities(print_r(is_string($key) ? $key : $cur_default, true)).'</div>';
 				}
 			} else {
 				echo '<div class="pf-field ui-corner-all ui-state-default ui-state-disabled">';

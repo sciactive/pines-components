@@ -223,11 +223,11 @@ class configurator_component extends p_base implements configurator_component_in
 		foreach ($this->defaults as $key => &$cur_entry) {
 			if (!$cur_entry['peruser']) {
 				unset($this->defaults[$key]);
-			} else {
-				if (isset($this->config_keys[$cur_entry['name']]))
-					$cur_entry['value'] = $this->config_keys[$cur_entry['name']];
+			} elseif (key_exists($cur_entry['name'], $this->config_keys)) {
+				$cur_entry['value'] = $this->config_keys[$cur_entry['name']];
 			}
 		}
+		unset($cur_entry);
 
 		if (!isset($usergroup)) {
 			$this->config = array();
@@ -249,6 +249,7 @@ class configurator_component extends p_base implements configurator_component_in
 				$cur_entry['value'] = $this->config[$key];
 			}
 		}
+		unset($cur_entry);
 
 		// Store the type and object of the user/group.
 		if (is_a($usergroup, 'user') || is_a($usergroup, 'hook_override_user')) {

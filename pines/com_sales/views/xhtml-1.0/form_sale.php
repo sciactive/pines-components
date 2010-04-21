@@ -734,12 +734,7 @@ $this->note = 'Use this form to edit a sale.';
 		}
 		<?php } ?>
 
-		<?php if ($pines->config->com_sales->cash_drawer &&
-					(
-						$pines->config->com_sales->cash_drawer_group == 0 ||
-						(isset($_SESSION['user']) && $_SESSION['user']->in_group($pines->config->com_sales->cash_drawer_group))
-					)
-				) { ?>
+		<?php if ($pines->config->com_sales->cash_drawer) { ?>
 		function run_drawer() {
 			var keep_checking = function(status){
 				switch (status) {

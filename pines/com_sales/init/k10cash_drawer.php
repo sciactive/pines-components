@@ -11,12 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ($pines->config->com_sales->cash_drawer &&
-		(
-			$pines->config->com_sales->cash_drawer_group == 0 ||
-			(isset($_SESSION['user']) && $_SESSION['user']->in_group($pines->config->com_sales->cash_drawer_group))
-		)
-	)
+if ($pines->config->com_sales->cash_drawer)
 	$com_sales_cash_drawer = new module('com_sales', 'cash_drawer', 'head');
 
 ?>

@@ -159,7 +159,7 @@ class com_configure extends component implements configurator_interface {
 		}
 		if ($com_array) {
 			foreach ($com_array as $cur_com => $cur_array) {
-				$conf = include($this->component_files[$key]['defaults']);
+				$conf = include($this->component_files[$cur_com]['defaults']);
 				foreach ($conf as $key => $value) {
 					if (!$value['peruser'] || !isset($cur_array[$value['name']]))
 						continue;

@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
-<div class="module <?php echo htmlentities($this->classes); ?> ui-widget-content ui-corner-all ui-clearfix">
+<div class="module ui-widget <?php echo htmlentities($this->classes); ?> ui-widget-content ui-corner-all ui-clearfix">
 	<?php if ($this->show_title && (!empty($this->title) || !empty($this->note))) { ?>
 	<div class="module_title ui-widget-header ui-corner-all">
 		<div class="module_minimize ui-state-default ui-corner-all"><span class="ui-icon ui-icon-triangle-1-n"></span></div>

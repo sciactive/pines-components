@@ -21,6 +21,7 @@ return array(
 			'Comet' => 'comet',
 			'Titan' => 'titan',
 			'Black Hole' => 'black-hole',
+			'Mars' => 'mars',
 			'UI lightness' => 'ui-lightness',
 			'UI darkness' => 'ui-darkness',
 			'Smoothness' => 'smoothness',

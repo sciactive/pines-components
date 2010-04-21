@@ -12,7 +12,7 @@ ul, ol {
 body {
 	/* Custom */
 	font-family: Verdana,Arial,sans-serif;
-	font-size: 9pt;
+	font-size: 10px;
 	background-image: none !important;
 	/* ----- */
 	margin:0;
@@ -148,9 +148,6 @@ img {
 }
 
 /* ----------- Customized CSS ----------- */
-body .ui-widget {
-	font-size: 1em !important;
-}
 #top, #bottom, .content, .pre_content, .post_content {
 	clear: both;
 }
@@ -159,6 +156,9 @@ body .ui-widget {
 	float: left;
 	padding: 0;
 }
+#header .pagetitle a {
+	text-decoration: none;
+}
 #header .pagetitle img {
 	margin: 0;
 	padding: 0;
@@ -166,11 +166,10 @@ body .ui-widget {
 	vertical-align: middle;
 }
 #header .pagetitle span {
-	text-decoration: none;
 	margin-right: 50px;
-	padding: 10px 0;
+	padding: 14px 0;
 	display: block;
-	font-size: 1.2em;
+	font-size: 1.3em;
 }
 #header .module, #footer .module {
 	float: left;

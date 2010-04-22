@@ -207,6 +207,8 @@
 				var element_below = document.elementFromPoint(e.clientX, e.clientY);
 				pnotify.css("display", "block");
 				var jelement_below = $(element_below);
+				var cursor_style = jelement_below.css("cursor");
+				pnotify.css("cursor", cursor_style != "auto" ? cursor_style : "default");
 				// If the element changed, call mouseenter, mouseleave, etc.
 				if (!nonblock_last_elem || nonblock_last_elem.get(0) != element_below) {
 					if (nonblock_last_elem) {
@@ -243,6 +245,7 @@
 				"mouseleave": function(e){
 					if (opts.pnotify_nonblock) e.stopPropagation();
 					nonblock_last_elem = null;
+					pnotify.css("cursor", "auto");
 					if (opts.pnotify_nonblock && animating != "out")
 						pnotify.animate({"opacity": opts.pnotify_opacity}, "fast");
 					if (opts.pnotify_hide && opts.pnotify_mouse_reset) pnotify.pnotify_queue_remove();
@@ -264,17 +267,18 @@
 				"mousedown": function(e){
 					if (opts.pnotify_nonblock) {
 						e.stopPropagation();
+						e.preventDefault();
 						nonblock_pass(e, "onmousedown");
 					}
 				},
 				"mouseup": function(e){
 					if (opts.pnotify_nonblock) {
 						e.stopPropagation();
+						e.preventDefault();
 						nonblock_pass(e, "onmouseup");
 					}
 				},
 				"click": function(e){
-					console.log("clicked -----------");
 					if (opts.pnotify_nonblock) {
 						e.stopPropagation();
 						nonblock_pass(e, "onclick");
@@ -644,20 +648,22 @@
 	var dom_event = function(e, orig_e){
 		var event_object;
 		e = e.toLowerCase();
-		if ($.isFunction(this.dispatchEvent)) {
+		if (document.createEvent && this.dispatchEvent) {
 			// FireFox, Opera, Safari, Chrome
 			e = e.replace(re_on, '');
-			console.log(e);
 			if (e.match(re_mouse_events)) {
+				// This allows the click event to fire on the notice. There is
+				// probably a much better way to do it.
+				$(this).offset();
 				event_object = document.createEvent("MouseEvents");
 				event_object.initMouseEvent(
-					e, orig_e.bubbles, orig_e.cancelable, window, orig_e.detail,
+					e, orig_e.bubbles, orig_e.cancelable, orig_e.view, orig_e.detail,
 					orig_e.screenX, orig_e.screenY, orig_e.clientX, orig_e.clientY,
 					orig_e.ctrlKey, orig_e.altKey, orig_e.shiftKey, orig_e.metaKey, orig_e.button, orig_e.relatedTarget
 				);
 			} else if (e.match(re_ui_events)) {
 				event_object = document.createEvent("UIEvents");
-				event_object.initUIEvent(e, orig_e.bubbles, orig_e.cancelable, window, orig_e.detail);
+				event_object.initUIEvent(e, orig_e.bubbles, orig_e.cancelable, orig_e.view, orig_e.detail);
 			} else if (e.match(re_html_events)) {
 				event_object = document.createEvent("HTMLEvents");
 				event_object.initEvent(e, orig_e.bubbles, orig_e.cancelable);
@@ -678,7 +684,7 @@
 		// Create a non-blocking notice. It lets the user click elements underneath it.
 		pnotify_nonblock: false,
 		// The opacity of the notice (if it's non-blocking) when the mouse is over it.
-		pnotify_nonblock_opacity: .25,
+		pnotify_nonblock_opacity: .20,
 		// Display a pull down menu to redisplay previous notices, and place the notice in the history.
 		pnotify_history: true,
 		// Width of the notice.

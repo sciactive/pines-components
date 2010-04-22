@@ -198,25 +198,83 @@
 					return null;
 			}
 
+			// This keeps track of the last element the mouse was over, so
+			// mouseleave, mouseenter, etc can be called.
+			var nonblock_last_elem;
+			// This is used to pass events through the notice if it is non-blocking.
+			var nonblock_pass = function(e, attr){
+				if (!opts.pnotify_nonblock) return;
+				pnotify.css("display", "none");
+				var element_below = document.elementFromPoint(e.clientX, e.clientY);
+				pnotify.css("display", "block");
+				var jelement_below = $(element_below);
+				// If the element changed, call mouseenter, mouseleave, etc.
+				if (!nonblock_last_elem || nonblock_last_elem.get(0) != element_below) {
+					if (nonblock_last_elem) {
+						dom_event.call(nonblock_last_elem.get(0), "mouseleave");
+						dom_event.call(nonblock_last_elem.get(0), "mouseout");
+					}
+					dom_event.call(element_below, "mouseenter");
+					dom_event.call(element_below, "mouseover");
+				}
+				dom_event.call(element_below, attr);
+				// Remember the latest element the mouse was over.
+				nonblock_last_elem = jelement_below;
+			};
+
 			// Create our widget.
 			// Stop animation, reset the removal timer, and show the close
 			// button when the user mouses over.
 			var pnotify = $("<div />", {
 				"class": "ui-widget ui-helper-clearfix ui-pnotify "+opts.pnotify_addclass,
 				"css": {"display": "none"},
-				"mouseenter": function(){
-					// If it's animating out, animate back in really quick.
-					if (animating == "out" && opts.pnotify_mouse_reset) {
+				"mouseenter": function(e){
+					if (opts.pnotify_nonblock) e.stopPropagation();
+					if (opts.pnotify_mouse_reset && animating == "out") {
+						// If it's animating out, animate back in really quick.
 						pnotify.stop(true);
-						pnotify.css("height", "auto").animate({"width": opts.pnotify_width, "opacity": opts.pnotify_opacity}, "fast");
+						pnotify.css("height", "auto").animate({"width": opts.pnotify_width, "opacity": opts.pnotify_nonblock ? opts.pnotify_nonblock_opacity : opts.pnotify_opacity}, "fast");
+					} else if (opts.pnotify_nonblock && animating != "out") {
+						// If it's non-blocking, animate to the other opacity.
+						pnotify.animate({"opacity": opts.pnotify_nonblock_opacity}, "fast");
 					}
 					if (opts.pnotify_hide && opts.pnotify_mouse_reset) pnotify.pnotify_cancel_remove();
-					if (opts.pnotify_closer) pnotify.closer.show();
+					if (opts.pnotify_closer && !opts.pnotify_nonblock) pnotify.closer.show();
 				},
-				"mouseleave": function(){
+				"mouseleave": function(e){
+					if (opts.pnotify_nonblock) e.stopPropagation();
+					nonblock_last_elem = null;
+					if (opts.pnotify_nonblock && animating != "out")
+						pnotify.animate({"opacity": opts.pnotify_opacity}, "fast");
 					if (opts.pnotify_hide && opts.pnotify_mouse_reset) pnotify.pnotify_queue_remove();
 					pnotify.closer.hide();
 					$.pnotify_position_all();
+				},
+				"mouseover": function(e){
+					e.stopPropagation();
+				},
+				"mouseout": function(e){
+					e.stopPropagation();
+				},
+				"mousemove": function(e){
+					e.stopPropagation();
+					nonblock_pass(e, "onmousemove");
+				},
+				"mousedown": function(e){
+					e.stopPropagation();
+					nonblock_pass(e, "onmousedown");
+				},
+				"mouseup": function(e){
+					e.stopPropagation();
+					nonblock_pass(e, "onmouseup");
+				},
+				"click": function(e){
+					e.stopPropagation();
+					nonblock_pass(e, "onclick");
+				},
+				"dblclick": function(e){
+					e.stopPropagation();
+					nonblock_pass(e, "ondblclick");
 				}
 			});
 			pnotify.opts = opts;
@@ -567,9 +625,52 @@
 		}
 	});
 
+	// Fire a DOM event.
+	var dom_event = function(e, e_init) {
+		var event_object;
+		e = e.toLowerCase();
+		if ($.isFunction(this.dispatchEvent)) {
+			// FireFox, Opera, Safari, Chrome
+			e = e.replace(/^on/, '');
+			console.log(e);
+			if (e.match(/^(dbl)?click$|^mouse(move|down|up|over|out|enter|leave)$|^contextmenu$/)) {
+				var jthis = $(this);
+				var offset = jthis.offset();
+				var x = offset.x + jthis.width() / 2;
+				var y = offset.y + jthis.height() / 2;
+				event_object = document.createEvent("MouseEvents");
+				event_object.initMouseEvent(
+					e, true, true, window,
+					e == 'dblclick' ? 2 : 1,
+					x, y, x, y,
+					false, false, false, false, 0, null
+				);
+			} else if (e.match(/^(focus|blur|select|change|reset)$|^key(press|down|up)$/)) {
+				event_object = document.createEvent("UIEvents");
+				event_object.initUIEvent(e, true, true, window, 0);
+			} else if (e.match(/^(scroll|resize|(un)?load|abort|error)$/)) {
+				event_object = document.createEvent("HTMLEvents");
+				event_object.initEvent(e, true, true);
+			}
+			if (!event_object) return;
+			if ($.isFunction(e_init)) e_init(event_object);
+			this.dispatchEvent(event_object);
+		} else {
+			// Internet Explorer
+			if (!e.match(/^on/)) e = "on"+e;
+			event_object = document.createEventObject();
+			if ($.isFunction(e_init)) e_init(event_object);
+			this.fireEvent(e, event_object);
+		}
+	};
+
 	$.pnotify.defaults = {
 		// Additional classes to be added to the notice. (For custom styling.)
 		pnotify_addclass: "",
+		// Create a non-blocking notice. It lets the user click elements underneath it.
+		pnotify_nonblock: true,
+		// The opacity of the notice (if it's non-blocking) when the mouse is over it.
+		pnotify_nonblock_opacity: .3,
 		// Display a pull down menu to redisplay previous notices, and place the notice in the history.
 		pnotify_history: true,
 		// Width of the notice.

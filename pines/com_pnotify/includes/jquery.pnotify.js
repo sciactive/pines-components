@@ -332,7 +332,7 @@
 					pnotify.text_container.hide("fast");
 				} else if (opts.pnotify_text !== old_opts.pnotify_text) {
 					if (opts.pnotify_insert_brs)
-						opts.pnotify_text = opts.pnotify_text.replace("\n", "<br />");
+						opts.pnotify_text = opts.pnotify_text.replace(/\n/g, "<br />");
 					pnotify.text_container.html(opts.pnotify_text).show(200);
 				}
 				pnotify.pnotify_history = opts.pnotify_history;
@@ -524,7 +524,7 @@
 
 			// Replace new lines with HTML line breaks.
 			if (opts.pnotify_insert_brs && typeof opts.pnotify_text == "string")
-				opts.pnotify_text = opts.pnotify_text.replace("\n", "<br />");
+				opts.pnotify_text = opts.pnotify_text.replace(/\n/g, "<br />");
 			// Add text.
 			pnotify.text_container = $("<div />", {
 				"class": "ui-pnotify-text",

@@ -202,8 +202,7 @@
 			// mouseleave, mouseenter, etc can be called.
 			var nonblock_last_elem;
 			// This is used to pass events through the notice if it is non-blocking.
-			var nonblock_pass = function(e, attr){
-				if (!opts.pnotify_nonblock) return;
+			var nonblock_pass = function(e, e_name){
 				pnotify.css("display", "none");
 				var element_below = document.elementFromPoint(e.clientX, e.clientY);
 				pnotify.css("display", "block");
@@ -211,13 +210,13 @@
 				// If the element changed, call mouseenter, mouseleave, etc.
 				if (!nonblock_last_elem || nonblock_last_elem.get(0) != element_below) {
 					if (nonblock_last_elem) {
-						dom_event.call(nonblock_last_elem.get(0), "mouseleave");
-						dom_event.call(nonblock_last_elem.get(0), "mouseout");
+						dom_event.call(nonblock_last_elem.get(0), "mouseleave", e.originalEvent);
+						dom_event.call(nonblock_last_elem.get(0), "mouseout", e.originalEvent);
 					}
-					dom_event.call(element_below, "mouseenter");
-					dom_event.call(element_below, "mouseover");
+					dom_event.call(element_below, "mouseenter", e.originalEvent);
+					dom_event.call(element_below, "mouseover", e.originalEvent);
 				}
-				dom_event.call(element_below, attr);
+				dom_event.call(element_below, e_name, e.originalEvent);
 				// Remember the latest element the mouse was over.
 				nonblock_last_elem = jelement_below;
 			};
@@ -251,30 +250,41 @@
 					$.pnotify_position_all();
 				},
 				"mouseover": function(e){
-					e.stopPropagation();
+					if (opts.pnotify_nonblock) e.stopPropagation();
 				},
 				"mouseout": function(e){
-					e.stopPropagation();
+					if (opts.pnotify_nonblock) e.stopPropagation();
 				},
 				"mousemove": function(e){
-					e.stopPropagation();
-					nonblock_pass(e, "onmousemove");
+					if (opts.pnotify_nonblock) {
+						e.stopPropagation();
+						nonblock_pass(e, "onmousemove");
+					}
 				},
 				"mousedown": function(e){
-					e.stopPropagation();
-					nonblock_pass(e, "onmousedown");
+					if (opts.pnotify_nonblock) {
+						e.stopPropagation();
+						nonblock_pass(e, "onmousedown");
+					}
 				},
 				"mouseup": function(e){
-					e.stopPropagation();
-					nonblock_pass(e, "onmouseup");
+					if (opts.pnotify_nonblock) {
+						e.stopPropagation();
+						nonblock_pass(e, "onmouseup");
+					}
 				},
 				"click": function(e){
-					e.stopPropagation();
-					nonblock_pass(e, "onclick");
+					console.log("clicked -----------");
+					if (opts.pnotify_nonblock) {
+						e.stopPropagation();
+						nonblock_pass(e, "onclick");
+					}
 				},
 				"dblclick": function(e){
-					e.stopPropagation();
-					nonblock_pass(e, "ondblclick");
+					if (opts.pnotify_nonblock) {
+						e.stopPropagation();
+						nonblock_pass(e, "ondblclick");
+					}
 				}
 			});
 			pnotify.opts = opts;
@@ -625,41 +635,39 @@
 		}
 	});
 
+	// Some useful regexes.
+	var re_on = /^on/;
+	var re_mouse_events = /^(dbl)?click$|^mouse(move|down|up|over|out|enter|leave)$|^contextmenu$/;
+	var re_ui_events = /^(focus|blur|select|change|reset)$|^key(press|down|up)$/;
+	var re_html_events = /^(scroll|resize|(un)?load|abort|error)$/;
 	// Fire a DOM event.
-	var dom_event = function(e, e_init) {
+	var dom_event = function(e, orig_e){
 		var event_object;
 		e = e.toLowerCase();
 		if ($.isFunction(this.dispatchEvent)) {
 			// FireFox, Opera, Safari, Chrome
-			e = e.replace(/^on/, '');
+			e = e.replace(re_on, '');
 			console.log(e);
-			if (e.match(/^(dbl)?click$|^mouse(move|down|up|over|out|enter|leave)$|^contextmenu$/)) {
-				var jthis = $(this);
-				var offset = jthis.offset();
-				var x = offset.x + jthis.width() / 2;
-				var y = offset.y + jthis.height() / 2;
+			if (e.match(re_mouse_events)) {
 				event_object = document.createEvent("MouseEvents");
 				event_object.initMouseEvent(
-					e, true, true, window,
-					e == 'dblclick' ? 2 : 1,
-					x, y, x, y,
-					false, false, false, false, 0, null
+					e, orig_e.bubbles, orig_e.cancelable, window, orig_e.detail,
+					orig_e.screenX, orig_e.screenY, orig_e.clientX, orig_e.clientY,
+					orig_e.ctrlKey, orig_e.altKey, orig_e.shiftKey, orig_e.metaKey, orig_e.button, orig_e.relatedTarget
 				);
-			} else if (e.match(/^(focus|blur|select|change|reset)$|^key(press|down|up)$/)) {
+			} else if (e.match(re_ui_events)) {
 				event_object = document.createEvent("UIEvents");
-				event_object.initUIEvent(e, true, true, window, 0);
-			} else if (e.match(/^(scroll|resize|(un)?load|abort|error)$/)) {
+				event_object.initUIEvent(e, orig_e.bubbles, orig_e.cancelable, window, orig_e.detail);
+			} else if (e.match(re_html_events)) {
 				event_object = document.createEvent("HTMLEvents");
-				event_object.initEvent(e, true, true);
+				event_object.initEvent(e, orig_e.bubbles, orig_e.cancelable);
 			}
 			if (!event_object) return;
-			if ($.isFunction(e_init)) e_init(event_object);
 			this.dispatchEvent(event_object);
 		} else {
 			// Internet Explorer
-			if (!e.match(/^on/)) e = "on"+e;
-			event_object = document.createEventObject();
-			if ($.isFunction(e_init)) e_init(event_object);
+			if (!e.match(re_on)) e = "on"+e;
+			event_object = document.createEventObject(orig_e);
 			this.fireEvent(e, event_object);
 		}
 	};
@@ -668,9 +676,9 @@
 		// Additional classes to be added to the notice. (For custom styling.)
 		pnotify_addclass: "",
 		// Create a non-blocking notice. It lets the user click elements underneath it.
-		pnotify_nonblock: true,
+		pnotify_nonblock: false,
 		// The opacity of the notice (if it's non-blocking) when the mouse is over it.
-		pnotify_nonblock_opacity: .3,
+		pnotify_nonblock_opacity: .25,
 		// Display a pull down menu to redisplay previous notices, and place the notice in the history.
 		pnotify_history: true,
 		// Width of the notice.

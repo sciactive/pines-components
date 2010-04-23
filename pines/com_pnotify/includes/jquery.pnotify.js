@@ -684,7 +684,7 @@
 		// Create a non-blocking notice. It lets the user click elements underneath it.
 		pnotify_nonblock: false,
 		// The opacity of the notice (if it's non-blocking) when the mouse is over it.
-		pnotify_nonblock_opacity: .20,
+		pnotify_nonblock_opacity: .2,
 		// Display a pull down menu to redisplay previous notices, and place the notice in the history.
 		pnotify_history: true,
 		// Width of the notice.

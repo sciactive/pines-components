@@ -362,45 +362,43 @@ if ($this->entity->final)
 		</div>
 	</div>
 	<?php if (!empty($this->entity->received)) { ?>
-		<div class="pf-element">
+		<div class="pf-element pf-full-width">
 			<span class="pf-label">Received Inventory</span>
-			<div class="pf-group">
-				<?php
-				$received = array();
-				foreach ($this->entity->received as $cur_entity) {
-					if (!isset($received[$cur_entity->product->guid]))
-						$received[$cur_entity->product->guid] = array('entity' => $cur_entity->product, 'serials' => array());
-					if (isset($missing_products[$cur_entity->product->guid])) {
-						$missing_products[$cur_entity->product->guid]['quantity']--;
-						if (!$missing_products[$cur_entity->product->guid]['quantity'])
-							unset($missing_products[$cur_entity->product->guid]);
-					}
-					$received[$cur_entity->product->guid]['serials'][] = isset($cur_entity->serial) ? $cur_entity->serial : '';
+			<?php
+			$received = array();
+			foreach ($this->entity->received as $cur_entity) {
+				if (!isset($received[$cur_entity->product->guid]))
+					$received[$cur_entity->product->guid] = array('entity' => $cur_entity->product, 'serials' => array());
+				if (isset($missing_products[$cur_entity->product->guid])) {
+					$missing_products[$cur_entity->product->guid]['quantity']--;
+					if (!$missing_products[$cur_entity->product->guid]['quantity'])
+						unset($missing_products[$cur_entity->product->guid]);
 				}
-				?>
-				<?php foreach ($received as $cur_entry) { ?>
-				<div class="pf-field" style="margin-bottom: 5px;">
-					Product: <?php echo $cur_entry['entity']->name; ?><br />
-					Quantity: <?php echo count($cur_entry['serials']); ?>
-					<?php if ($cur_entry['entity']->serialized) { ?>
-					<br />
-					Serials: <?php echo implode(', ', $cur_entry['serials']); ?>
-					<?php } ?>
-				</div>
+				$received[$cur_entity->product->guid]['serials'][] = isset($cur_entity->serial) ? $cur_entity->serial : '';
+			}
+			?>
+			<?php foreach ($received as $cur_entry) { ?>
+			<div class="pf-field pf-full-width ui-widget-content ui-corner-all" style="margin-bottom: 5px; padding: .5em;">
+				SKU: <?php echo $cur_entry['entity']->sku; ?><br />
+				Product: <?php echo $cur_entry['entity']->name; ?><br />
+				Quantity: <?php echo count($cur_entry['serials']); ?>
+				<?php if ($cur_entry['entity']->serialized) { ?>
+				<br />
+				Serials: <?php echo implode(', ', $cur_entry['serials']); ?>
 				<?php } ?>
 			</div>
+			<?php } ?>
 		</div>
 		<?php if (!empty($missing_products)) { ?>
-		<div class="pf-element">
+		<div class="pf-element pf-full-width">
 			<span class="pf-label">Missing Inventory</span>
-			<div class="pf-group">
-				<?php foreach ($missing_products as $cur_entry) { ?>
-				<div class="pf-field" style="margin-bottom: 5px;">
-					Product: <?php echo $cur_entry['entity']->name; ?><br />
-					Quantity: <?php echo $cur_entry['quantity']; ?>
-				</div>
-				<?php } ?>
+			<?php foreach ($missing_products as $cur_entry) { ?>
+			<div class="pf-field pf-full-width ui-widget-content ui-corner-all" style="margin-bottom: 5px; padding: .5em;">
+				SKU: <?php echo $cur_entry['entity']->sku; ?><br />
+				Product: <?php echo $cur_entry['entity']->name; ?><br />
+				Quantity: <?php echo $cur_entry['quantity']; ?>
 			</div>
+			<?php } ?>
 		</div>
 		<?php } ?>
 	<?php } ?>

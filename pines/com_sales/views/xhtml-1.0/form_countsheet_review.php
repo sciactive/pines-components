@@ -1,6 +1,6 @@
 <?php
 /**
- * Provides a form for the user to edit a countsheet.
+ * Provides a form for the user to review a countsheet.
  *
  * @package Pines
  * @subpackage com_sales
@@ -42,7 +42,10 @@ if (isset($this->entity->guid))
 		<legend>Missing Items</legend>
 		<ul style="list-style-type: circle;">
 			<?php foreach ($this->missing as $cur_entry) { ?>
-			<li><?php echo "{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku})"; ?></li>
+			<li>
+				<?php echo "{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku})"; ?>
+				<?php echo (!$cur_entry->serial) ? ' - <strong>'.$this->missing_count[$cur_entry->product->sku].'</strong>' : ''; ?>
+			</li>
 			<?php } ?>
 		</ul>
 	</fieldset>
@@ -51,7 +54,10 @@ if (isset($this->entity->guid))
 		<legend>Matched Items</legend>
 		<ul style="list-style-type: square;">
 			<?php foreach ($this->matched as $cur_entry) { ?>
-			<li><?php echo "{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku})"; ?></li>
+			<li>
+				<?php echo "{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku})"; ?>
+				<?php echo (!$cur_entry->serial) ? ' - <strong>'.$this->matched_count[$cur_entry->product->sku].'</strong>' : ''; ?>
+			</li>
 			<?php } ?>
 		</ul>
 	</fieldset>

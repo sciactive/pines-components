@@ -128,6 +128,7 @@ class com_sales_countsheet extends entity {
 		$expected_stock = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'stock'), 'class' => com_sales_stock));
 		usort($expected_stock, array($this, 'sort_stock_by_location_serial'));
 		foreach ($expected_stock as $key => $cur_stock_entry) {
+			$entry_exists = false;
 			$in_store = ($cur_stock_entry->location->guid == $this->gid);
 			foreach ($this->entries as $itemkey => $item) {
 				if (!isset($module->potential[$item])) {
@@ -142,7 +143,16 @@ class com_sales_countsheet extends entity {
 					// The item is a serial match; or it is a sku match, and the entry is not serialized.
 					if ($in_store) {
 						// The item is found.
-						$module->matched[] = $cur_stock_entry;
+						foreach ($module->matched as $cur_matched) {
+							if (!isset($cur_matched->serial) && $cur_stock_entry->product->sku == $cur_matched->product->sku) {
+								$module->matched_count[$cur_stock_entry->product->sku]++;
+								$entry_exists = true;
+							}
+						}
+						if (!$entry_exists) {
+							$module->matched[] = $cur_stock_entry;
+							$module->matched_count[$cur_stock_entry->product->sku] = 1;
+						}
 						unset($expected_stock[$key]);
 						unset($this->entries[$itemkey]);
 						// Clear out the 'potential' entry for this item string.
@@ -168,7 +178,16 @@ class com_sales_countsheet extends entity {
 			}
 			if ($in_store && isset($expected_stock[$key])) {
 				// An stock entry at this location is missing on the countsheet.
-				$module->missing[] = $cur_stock_entry;
+				foreach ($module->missing as $cur_missing) {
+					if (!isset($cur_missing->serial) && $cur_stock_entry->product->sku == $cur_missing->product->sku) {
+						$module->missing_count[$cur_stock_entry->product->sku]++;
+						$entry_exists = true;
+					}
+				}
+				if (!$entry_exists) {
+					$module->missing[] = $cur_stock_entry;
+					$module->missing_count[$cur_stock_entry->product->sku] = 1;
+				}
 			}
 		}
 		// See if any of the extraneous items matched any sold items in the inventory.

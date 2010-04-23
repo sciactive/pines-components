@@ -89,8 +89,8 @@ $this->note = 'Only use this form to receive inventory into your <strong>current
 							}];
 						}
 						products_table.pgrid_add(new_product);
-						$("#product_code").val("").focus();
 						product_dialog.dialog('close');
+						$("#product_code").focus().val("");
 					}
 				},
 				close: function(event, ui) {

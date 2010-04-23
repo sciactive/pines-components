@@ -10,9 +10,9 @@ $(function(){
 
 	// Turn notices into Pines Notify notices.
 	$("#top div.notices").find("div.ui-state-error span.text").each(function(){
-		$.pnotify({pnotify_title: "Error", pnotify_text: $(this).html(), pnotify_type: "error", pnotify_hide: false});
+		pines.error($(this).html());
 	}).end().find("div.ui-state-highlight span.text").each(function(){
-		$.pnotify({pnotify_title: "Notice", pnotify_text: $(this).html()});
+		pines.alert($(this).html(), "Notice");
 	}).end().remove();
 
 	// Main menu corners.

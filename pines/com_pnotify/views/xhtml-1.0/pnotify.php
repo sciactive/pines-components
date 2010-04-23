@@ -20,14 +20,15 @@ defined('P_RUN') or die('Direct access prohibited');
 		var _alert;
 		_alert = window.alert;
 		window.alert = function(message) {
-			$.pnotify({pnotify_title: "Alert", pnotify_text: String(message).replace("\n", "<br />")});
+			$.pnotify({pnotify_title: "Alert", pnotify_text: String(message), pnotify_nonblock: true});
 		};
 	}
 	pines.alert = function(message, title, iconstyles, otheroptions){
 		var options = $.extend({}, {
 			pnotify_title: title ? title : "Alert",
-			pnotify_text: String(message).replace("\n", "<br />"),
-			pnotify_notice_icon: iconstyles ? iconstyles : $.pnotify.defaults.pnotify_notice_icon
+			pnotify_text: String(message),
+			pnotify_notice_icon: iconstyles ? iconstyles : $.pnotify.defaults.pnotify_notice_icon,
+			pnotify_nonblock: true
 		}, otheroptions);
 		return $.pnotify(options);
 	};
@@ -35,8 +36,9 @@ defined('P_RUN') or die('Direct access prohibited');
 		var options = $.extend({}, {
 			pnotify_type: "error",
 			pnotify_title: title ? title : "Error",
-			pnotify_text: String(message).replace("\n", "<br />"),
-			pnotify_error_icon: iconstyles ? iconstyles : $.pnotify.defaults.pnotify_error_icon
+			pnotify_text: String(message),
+			pnotify_error_icon: iconstyles ? iconstyles : $.pnotify.defaults.pnotify_error_icon,
+			pnotify_hide: false
 		}, otheroptions);
 		return $.pnotify(options);
 	};

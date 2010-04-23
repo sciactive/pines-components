@@ -23,26 +23,26 @@ html > body .ui-pnotify {
 .ui-pnotify .ui-pnotify-shadow {
 	margin: 0;
 	position: absolute;
-	top: 2px;
-	left: 2px;
-	bottom: -3px;
-	right: -3px;
+	top: .1em;
+	left: .1em;
+	bottom: -.2em;
+	right: -.2em;
 	z-index: -1;
 }
 .ui-pnotify-container {
 	background-position: 0 0;
-	padding: 8px;
+	padding: .8em;
 	height: 100%;
 }
 .ui-pnotify-closer {
 	float: right;
-	margin-left: 2px;
+	margin-left: .2em;
 }
 .ui-pnotify-title {
 	display: block;
 	font-size: 1.2em;
 	font-weight: bold;
-	margin-bottom: 4px;
+	margin-bottom: .4em;
 }
 .ui-pnotify-text {
 	display: block;
@@ -50,7 +50,7 @@ html > body .ui-pnotify {
 .ui-pnotify-icon, .ui-pnotify-icon span {
 	display: block;
 	float: left;
-	margin-right: 2px;
+	margin-right: .2em;
 }
 /* History Pulldown
 ----------------------------------*/

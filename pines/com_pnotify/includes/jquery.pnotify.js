@@ -227,7 +227,7 @@
 			// Stop animation, reset the removal timer, and show the close
 			// button when the user mouses over.
 			var pnotify = $("<div />", {
-				"class": "ui-widget ui-helper-clearfix ui-pnotify "+opts.pnotify_addclass,
+				"class": "ui-pnotify "+opts.pnotify_addclass,
 				"css": {"display": "none"},
 				"mouseenter": function(e){
 					if (opts.pnotify_nonblock) e.stopPropagation();
@@ -293,10 +293,10 @@
 			});
 			pnotify.opts = opts;
 			// Create a drop shadow.
-			if (opts.pnotify_shadow)
-				pnotify.shadow_container = $("<div />", {"class": "ui-widget-shadow ui-pnotify-shadow"}).prependTo(pnotify);
+			if (opts.pnotify_shadow && !$.browser.msie)
+				pnotify.shadow_container = $("<div />", {"class": "ui-widget-shadow ui-corner-all ui-pnotify-shadow"}).prependTo(pnotify);
 			// Create a container for the notice contents.
-			pnotify.container = $("<div />", {"class": "ui-corner-all ui-pnotify-container "+(opts.pnotify_type == "error" ? "ui-state-error" : "ui-state-highlight")})
+			pnotify.container = $("<div />", {"class": "ui-widget ui-widget-content ui-corner-all ui-pnotify-container "+(opts.pnotify_type == "error" ? "ui-state-error" : "ui-state-highlight")})
 			.appendTo(pnotify);
 
 			pnotify.pnotify_version = "1.0.0";
@@ -312,7 +312,7 @@
 				pnotify.opts = opts;
 				// Update the shadow.
 				if (opts.pnotify_shadow != old_opts.pnotify_shadow) {
-					if (opts.pnotify_shadow)
+					if (opts.pnotify_shadow && !$.browser.msie)
 						pnotify.shadow_container = $("<div />", {"class": "ui-widget-shadow ui-pnotify-shadow"}).prependTo(pnotify);
 					else
 						pnotify.children(".ui-pnotify-shadow").remove();

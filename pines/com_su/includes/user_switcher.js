@@ -5,7 +5,13 @@ $(function(){
 		type: "GET",
 		dataType: "html",
 		beforeSend: function(){
-			notice = pines.alert("Loading login page...", "Switch User", "icon picon_16x16_animations_throbber", {pnotify_hide: false, pnotify_history: false});
+			notice = $.pnotify({
+				pnotify_text: "Loading login page...",
+				pnotify_title: "Switch User",
+				pnotify_notice_icon: "icon picon_16x16_animations_throbber",
+				pnotify_hide: false,
+				pnotify_history: false
+			});
 		},
 		error: function(XMLHttpRequest, textStatus){
 			notice.pnotify_remove();
@@ -16,7 +22,6 @@ $(function(){
 				pnotify_title: "Switch User",
 				pnotify_text: data,
 				pnotify_notice_icon: "icon picon_16x16_status_dialog-password",
-				pnotify_hide: false,
 				pnotify_insert_brs: false
 			}).find("input").eq(0).focus();
 		}

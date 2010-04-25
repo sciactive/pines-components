@@ -50,9 +50,8 @@ function com_user__check_permissions_return($array) {
 	$return = array();
 	foreach ($entities as $cur_entity) {
 		// Test for permissions.
-		if ($pines->user_manager->check_permissions($cur_entity, 1)) {
+		if ($pines->user_manager->check_permissions($cur_entity, 1))
 			$return[] = $cur_entity;
-		}
 	}
 	return ($is_array ? array($return) : $return);
 }
@@ -84,9 +83,9 @@ function com_user__check_permissions_save($array) {
  * - The entity is new (doesn't have a GUID.)
  * - The entity is not a user or group.
  *
- * If you want a new entity to have a different UID and/or GID than the current
- * user, you must first save it to the database, then change the UID/GID, then
- * save it again.
+ * If you want a new entity to have a different user and/or group than the
+ * current user, you must first save it to the database, then change the
+ * user/group, then save it again.
  *
  * Default access control is
  * - user = 3
@@ -101,8 +100,8 @@ function com_user__add_access($array) {
 		!isset($array[0]->guid) &&
 		!$array[0]->has_tag('com_user', 'user') &&
 		!$array[0]->has_tag('com_user', 'group') ) {
-		$array[0]->uid = $_SESSION['user']->guid;
-		$array[0]->gid = $_SESSION['user']->group->guid;
+		$array[0]->user = $_SESSION['user'];
+		$array[0]->group = $_SESSION['user']->group;
 		if (!is_object($array[0]->ac))
 			$array[0]->ac = (object) array();
 		if (!isset($array[0]->ac->user))

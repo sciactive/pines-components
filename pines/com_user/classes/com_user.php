@@ -52,7 +52,7 @@ class com_user extends component implements user_manager_interface {
 			if (gatekeeper('system/all'))
 				return true;
 		}
-		if (!isset($entity->uid) && !isset($entity->gid))
+		if (!isset($entity->user->guid) && !isset($entity->group->guid))
 			return true;
 		if ($entity->is($_SESSION['user']))
 			return true;
@@ -66,13 +66,11 @@ class com_user extends component implements user_manager_interface {
 		if (is_object($entity->ac))
 			$ac = $entity->ac;
 
-		if ($entity->uid == $_SESSION['user']->guid)
+		if ($entity->user->is($_SESSION['user']))
 			return ($ac->user >= $type);
-		if ($entity->gid == $_SESSION['user']->group->guid)
-			return ($ac->group >= $type);
-		if (group::factory((int) $entity->gid)->in_array($_SESSION['user']->groups))
-			return ($ac->group >= $type);
-		if (group::factory((int) $entity->gid)->in_array($_SESSION['descendents']))
+		if ($entity->group->is($_SESSION['user']->group) ||
+			$entity->group->in_array($_SESSION['user']->groups) ||
+			$entity->group->in_array($_SESSION['descendents']) )
 			return ($ac->group >= $type);
 		return ($ac->other >= $type);
 	}

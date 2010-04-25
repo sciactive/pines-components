@@ -16,8 +16,11 @@ defined('P_RUN') or die('Direct access prohibited');
 if (!gatekeeper('system/all'))
 	punt_user('You don\'t have necessary permission.');
 
+$module = new module('system', 'null', 'content');
+$module->title = 'Entity Reference Update';
+
 $errors = array();
-$offset = 0;
+$offset = $count = $nochange = 0;
 // Grab all entities, 50 at a time, and replace uids/gids with users/groups.
 do {
 	$entities = $pines->entity_manager->get_entities(array('limit' => 50, 'offset' => $offset));
@@ -38,14 +41,21 @@ do {
 			unset($cur_entity->gid);
 			$changed = true;
 		}
-		if ($changed && !$cur_entity->save())
-			$errors[] = $entity->guid;
+		if ($changed) {
+			if ($cur_entity->save())
+				$count++;
+			else
+				$errors[] = $entity->guid;
+		} else {
+			$nochange++;
+		}
 	}
 	unset($cur_entity);
 	$offset += 50;
 } while (!empty($entities));
 
-foreach ($errors as $cur_error)
-	echo "Could not update Entity #{$cur_error}<br/>";
+$module->content("Updated $count entities. Found $nochange entities that didn't need to be updated.");
+if ($errors)
+	$module->content('<br />Could not updated the entities: '.implode(', ', $errors));
 
 ?>

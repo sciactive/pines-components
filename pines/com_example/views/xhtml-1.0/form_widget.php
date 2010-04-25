@@ -95,13 +95,12 @@ $this->note = 'Provide widget details in this form.';
 		<div id="tab_general">
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
-					<?php if (isset($this->entity->uid)) { ?>
-				<span>Created By: <span class="date"><?php echo $pines->user_manager->get_username($this->entity->uid); ?></span></span>
-				<br />
-					<?php } ?>
-				<span>Created On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_cdate); ?></span></span>
-				<br />
-				<span>Modified On: <span class="date"><?php echo date('Y-m-d', $this->entity->p_mdate); ?></span></span>
+				<?php if (isset($this->entity->user)) { ?>
+				<div>User: <span class="date"><?php echo "{$this->entity->user->name} [{$this->entity->user->username}]"; ?></span></div>
+				<div>Group: <span class="date"><?php echo "{$this->entity->group->name} [{$this->entity->group->groupname}]"; ?></span></div>
+				<?php } ?>
+				<div>Created: <span class="date"><?php echo pines_date_format($this->entity->p_cdate); ?></span></div>
+				<div>Modified: <span class="date"><?php echo pines_date_format($this->entity->p_mdate); ?></span></div>
 			</div>
 			<?php } ?>
 			<div class="pf-element">

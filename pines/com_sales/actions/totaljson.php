@@ -76,9 +76,8 @@ foreach ($tx_array as $key => &$cur_tx) {
 				$invoice_array['count']--;
 				$sale_array['total'] += (float) $cur_tx->ticket->total;
 				$sale_array['count']++;
-				$user = user::factory($cur_tx->uid);
-				$user_array["{$cur_tx->uid}: {$user->name} [{$user->username}]"]['total'] += (float) $cur_tx->ticket->total;
-				$user_array["{$cur_tx->uid}: {$user->name} [{$user->username}]"]['count']++;
+				$user_array["{$cur_tx->user->guid}: {$cur_tx->user->name} [{$cur_tx->user->username}]"]['total'] += (float) $cur_tx->ticket->total;
+				$user_array["{$cur_tx->user->guid}: {$cur_tx->user->name} [{$cur_tx->user->username}]"]['count']++;
 			}
 		} elseif ($cur_tx->has_tag('payment_tx')) {
 			if ($cur_tx->type == 'payment_received') {

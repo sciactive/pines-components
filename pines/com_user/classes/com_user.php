@@ -30,20 +30,6 @@ class com_user extends component implements user_manager_interface {
 	 * @var array $gatekeeper_cache
 	 */
 	private $gatekeeper_cache = array();
-	/**
-	 * Groupname cache.
-	 *
-	 * @access private
-	 * @var array $groupname_cache
-	 */
-	private $groupname_cache = array();
-	/**
-	 * Username cache.
-	 *
-	 * @access private
-	 * @var array $username_cache
-	 */
-	private $username_cache = array();
 
 	public function check_permissions(&$entity, $type = 1) {
 		if (!is_object($_SESSION['user']))
@@ -289,35 +275,9 @@ class com_user extends component implements user_manager_interface {
 		return $return;
 	}
 
-	public function get_groupname($id) {
-	// Check the cache to see if we've already queried this name.
-		if (!isset($this->groupname_cache[$id])) {
-			$entity = group::factory($id);
-			if (!isset($entity->guid)) {
-				$this->groupname_cache[$id] = null;
-			} else {
-				$this->groupname_cache[$id] = $entity->groupname;
-			}
-		}
-		return $this->groupname_cache[$id];
-	}
-
 	public function get_groups() {
 		global $pines;
 		return $pines->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
-	}
-
-	public function get_username($id) {
-	// Check the cache to see if we've already queried this name.
-		if (!isset($this->username_cache[$id])) {
-			$entity = user::factory($id);
-			if (!isset($entity->guid)) {
-				$this->username_cache[$id] = null;
-			} else {
-				$this->username_cache[$id] = $entity->username;
-			}
-		}
-		return $this->username_cache[$id];
 	}
 
 	public function get_users() {

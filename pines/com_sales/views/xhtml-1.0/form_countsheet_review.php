@@ -11,8 +11,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Reviewing Countsheet ['.htmlentities($this->entity->guid).']';
-if (isset($this->entity->guid))
-	$this->note = 'Created by ' . $pines->user_manager->get_username($this->entity->uid) . ' on ' . date('Y-m-d', $this->entity->p_cdate) . ' - Last Modified on ' . date('Y-m-d', $this->entity->p_mdate);
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
@@ -37,6 +35,16 @@ if (isset($this->entity->guid))
 	/* ]]> */
 </style>
 <form class="pf-form" method="post" id="countsheet_details" action="<?php echo pines_url('com_sales', 'savecountsheetstatus'); ?>">
+	<?php if (isset($this->entity->guid)) { ?>
+	<div class="date_info" style="float: right; text-align: right;">
+		<?php if (isset($this->entity->user)) { ?>
+		<div>User: <span class="date"><?php echo "{$this->entity->user->name} [{$this->entity->user->username}]"; ?></span></div>
+		<div>Group: <span class="date"><?php echo "{$this->entity->group->name} [{$this->entity->group->groupname}]"; ?></span></div>
+		<?php } ?>
+		<div>Created: <span class="date"><?php echo pines_date_format($this->entity->p_cdate); ?></span></div>
+		<div>Modified: <span class="date"><?php echo pines_date_format($this->entity->p_mdate); ?></span></div>
+	</div>
+	<?php } ?>
 	<?php if ($this->missing) { ?>
 	<fieldset class="pf-group missing">
 		<legend>Missing Items</legend>

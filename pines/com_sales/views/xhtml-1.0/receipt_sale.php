@@ -80,8 +80,8 @@ if ($this->entity->status == 'quoted') {
 <div id="receipt_sale" class="pf-form pf-form-twocol">
 	<?php
 	// Sales rep and sales group entities.
-	$sales_rep = user::factory((int) $this->entity->uid);
-	$sales_group = $sales_rep->group;
+	$sales_rep = $this->entity->user;
+	$sales_group = $this->entity->group;
 	// Set the location of the group logo image.
 	if (isset($sales_group))
 		$group_logo = $sales_group->get_logo();

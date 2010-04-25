@@ -111,8 +111,7 @@ $this->title = 'Sales';
 			<td><?php echo $sale->guid; ?></td>
 			<td><?php echo date('Y-m-d', $sale->p_cdate); ?></td>
 			<td><?php echo ucwords($sale->status); ?></td>
-			<td><?php $user = user::factory($sale->uid);
-			echo !isset($user->guid) ? '' : "{$user->name} [{$user->username}]"; ?></td>
+			<td><?php echo !isset($sale->user->guid) ? '' : "{$sale->user->name} [{$sale->user->username}]"; ?></td>
 			<?php if ($pines->config->com_sales->com_customer) { ?>
 			<td><?php echo htmlentities($sale->customer->guid ? "{$sale->customer->guid}: \"{$sale->customer->name}\"" : ''); ?></td>
 			<?php } ?>

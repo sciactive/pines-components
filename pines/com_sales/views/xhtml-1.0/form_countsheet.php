@@ -11,8 +11,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'New Countsheet' : (($this->entity->final) ? 'Viewing' : 'Editing').' Countsheet ['.htmlentities($this->entity->guid).']';
-if (isset($this->entity->guid))
-	$this->note = 'Created by ' . $pines->user_manager->get_username($this->entity->uid) . ' on ' . date('Y-m-d', $this->entity->p_cdate) . ' - Last Modified on ' . date('Y-m-d', $this->entity->p_mdate);
 ?>
 <script type="text/javascript">
 	// <![CDATA[
@@ -114,6 +112,16 @@ if (isset($this->entity->guid))
 	// ]]>
 </script>
 <form class="pf-form" method="post" id="countsheet_details" action="<?php echo htmlentities(pines_url('com_sales', 'savecountsheet')); ?>">
+	<?php if (isset($this->entity->guid)) { ?>
+	<div class="date_info" style="float: right; text-align: right;">
+		<?php if (isset($this->entity->user)) { ?>
+		<div>User: <span class="date"><?php echo "{$this->entity->user->name} [{$this->entity->user->username}]"; ?></span></div>
+		<div>Group: <span class="date"><?php echo "{$this->entity->group->name} [{$this->entity->group->groupname}]"; ?></span></div>
+		<?php } ?>
+		<div>Created: <span class="date"><?php echo pines_date_format($this->entity->p_cdate); ?></span></div>
+		<div>Modified: <span class="date"><?php echo pines_date_format($this->entity->p_mdate); ?></span></div>
+	</div>
+	<?php } ?>
 	<?php if (!empty($this->entity->review_comments)) {?>
 	<div class="pf-element pf-heading">
 		<h1>Reviewer Comments</h1>
@@ -147,7 +155,7 @@ if (isset($this->entity->guid))
 		<h1>Comments</h1>
 	</div>
 	<div class="pf-element pf-full-width">
-		<span class="pf-field"><textarea style="width: 98%;" rows="3" cols="35" name="comments"><?php echo $this->entity->comments; ?></textarea></span>
+		<span class="pf-field pf-full-width"><textarea class="ui-widget-content" style="width: 100%;" rows="3" cols="35" name="comments"><?php echo $this->entity->comments; ?></textarea></span>
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>

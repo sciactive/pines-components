@@ -162,7 +162,6 @@ class com_customertimer_customer extends com_customer_customer {
 
 		// Save a transaction.
 		$tx = com_customertimer_tx::factory('com_customertimer', 'transaction', 'account_tx');
-		$tx->user = $_SESSION['user'];
 		$tx->location = $_SESSION['user']->group;
 		$tx->floor = $floor;
 		$tx->customer = $this;

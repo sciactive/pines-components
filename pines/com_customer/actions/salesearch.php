@@ -51,7 +51,7 @@ foreach ($sales as $key => &$cur_sale) {
 				'$'.$cur_sale->total,
 				pines_date_format($cur_sale->p_cdate, null, 'n/j/Y'),
 				$cur_sale->guid,
-				$cur_sale->uid,
+				$cur_sale->user->guid,
 				$cur_sale->payments[0]['entity']->name,
 				$item_dump
 			)

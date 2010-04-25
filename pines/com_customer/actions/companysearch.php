@@ -54,8 +54,8 @@ foreach ($companies as $key => &$cur_company) {
 			$cur_company->state,
 			$cur_company->zip,
 			$cur_company->email,
-			pines_phone_format($cur_company->phone),
-			pines_phone_format($cur_company->fax),
+			format_phone($cur_company->phone),
+			format_phone($cur_company->fax),
 			$cur_company->website
 		)
 	);

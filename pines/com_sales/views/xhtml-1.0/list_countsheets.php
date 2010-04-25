@@ -125,8 +125,8 @@ $this->title = 'Countsheets';
 		<tr title="<?php echo $countsheet->guid; ?>">
 			<td><?php echo $countsheet->guid; ?></td>
 			<td><?php echo $countsheet->creator->name; ?></td>
-			<td><?php echo pines_date_format($countsheet->p_cdate); ?></td>
-			<td><?php echo pines_date_format($countsheet->p_mdate); ?></td>
+			<td><?php echo format_date($countsheet->p_cdate); ?></td>
+			<td><?php echo format_date($countsheet->p_mdate); ?></td>
 			<td><?php echo $countsheet->final ? 'Yes' : 'No'; ?></td>
 			<td><?php switch ($countsheet->status) {
 				case 'approved':

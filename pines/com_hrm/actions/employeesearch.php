@@ -46,7 +46,7 @@ foreach ($employees as $key => &$cur_employee) {
 				$cur_employee->city,
 				$cur_employee->state,
 				$cur_employee->zip,
-				pines_phone_format($cur_employee->phone_cell)
+				format_phone($cur_employee->phone_cell)
 			)
 		);
 		$cur_employee = $json_struct;

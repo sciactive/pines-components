@@ -23,12 +23,12 @@ $days = $total_seconds/(24*60*60);
 $date_array = array();
 $total = array();
 foreach ($this->sales as $cur_sale) {
-	$event_month = pines_date_format($cur_sale->p_cdate, null, 'n');
-	$event_day = pines_date_format($cur_sale->p_cdate, null, 'j');
-	$event_year = pines_date_format($cur_sale->p_cdate, null, 'Y');
+	$event_month = format_date($cur_sale->p_cdate, 'custom', 'n');
+	$event_day = format_date($cur_sale->p_cdate, 'custom', 'j');
+	$event_year = format_date($cur_sale->p_cdate, 'custom', 'Y');
 	// This is used to identify daily sales, divided into timespan totals.
-	$date_str = pines_date_format($cur_sale->p_cdate, null, 'n/j/Y');
-	$sale_time = pines_date_format($cur_sale->p_cdate, null, 'H');
+	$date_str = format_date($cur_sale->p_cdate, 'custom', 'n/j/Y');
+	$sale_time = format_date($cur_sale->p_cdate, 'custom', 'H');
 	if (!$total[$date_str]) {
 		$total[$date_str][0] = $cur_sale->p_cdate;
 		$total[$date_str][1] = mktime(23,59,59,$event_month,$event_day,$event_year);

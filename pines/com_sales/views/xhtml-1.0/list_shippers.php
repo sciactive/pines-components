@@ -82,8 +82,8 @@ $this->title = 'Shippers';
 			<td><?php echo $shipper->city; ?></td>
 			<td><?php echo $shipper->state; ?></td>
 			<td><?php echo $shipper->zip; ?></td>
-			<td><?php echo pines_phone_format($shipper->phone_work); ?></td>
-			<td><?php echo pines_phone_format($shipper->fax); ?></td>
+			<td><?php echo format_phone($shipper->phone_work); ?></td>
+			<td><?php echo format_phone($shipper->fax); ?></td>
 			<td><?php echo $shipper->account_number; ?></td>
 		</tr>
 	<?php } ?>

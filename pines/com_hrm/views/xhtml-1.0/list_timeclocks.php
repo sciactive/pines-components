@@ -103,7 +103,7 @@ $this->title = 'Employee Timeclock';
 			<td><?php echo $employee->guid; ?></td>
 			<td><?php echo $employee->name; ?></td>
 			<td><?php echo empty($employee->timeclock) ? '' : $employee->timeclock[count($employee->timeclock) - 1]['status']; ?></td>
-			<td><?php echo empty($employee->timeclock) ? '' : pines_date_format($employee->timeclock[count($employee->timeclock) - 1]['time'], $employee->get_timezone(true)); ?></td>
+			<td><?php echo empty($employee->timeclock) ? '' : format_date($employee->timeclock[count($employee->timeclock) - 1]['time'], 'full_sort', '', $employee->get_timezone(true)); ?></td>
 			<td><?php echo empty($employee->timeclock) ? '' : round($employee->time_sum(strtotime('Today 12:00 AM')) / (60 * 60), 2).' hours'; ?></td>
 			<td><?php echo empty($employee->timeclock) ? '' : round($employee->time_sum() / (60 * 60), 2).' hours'; ?></td>
 		</tr>

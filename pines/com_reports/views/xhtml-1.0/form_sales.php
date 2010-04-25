@@ -39,13 +39,13 @@ $this->title = 'New Report';
 <form class="pf-form" method="post" id="report_details" action="<?php echo htmlentities(pines_url('com_reports', 'reportsales')); ?>">
 	<div class="pf-element" style="padding-bottom: 0px;">
 		<span class="pf-note">Start</span>
-		<input class="ui-corner-all form_date" type="text" name="start" value="<?php echo ($this->date[0]) ? pines_date_format($this->date[0], null, 'Y-m-d') : pines_date_format(time(), null, 'Y-m-d'); ?>" />
+		<input class="ui-widget-content form_date" type="text" name="start" value="<?php echo ($this->date[0]) ? format_date($this->date[0], 'custom', 'Y-m-d') : format_date(time(), 'custom', 'Y-m-d'); ?>" />
 	</div>
 	<div class="pf-element">
 		<span class="pf-note">End</span>
-		<input class="ui-corner-all form_date" type="text" name="end" value="<?php echo ($this->date[1]) ? pines_date_format($this->date[1], null, 'Y-m-d') : pines_date_format(time(), null, 'Y-m-d'); ?>" />
+		<input class="ui-widget-content form_date" type="text" name="end" value="<?php echo ($this->date[1]) ? format_date($this->date[1], 'custom', 'Y-m-d') : format_date(time(), 'custom', 'Y-m-d'); ?>" />
 	</div>
 	<div class="pf-element">
-		<input type="submit" value="View Report &raquo;" class="ui-corner-all form_input" />
+		<input class="ui-state-default ui-corner-all" type="submit" value="View Report &raquo;" class="ui-corner-all form_input" />
 	</div>
 </form>

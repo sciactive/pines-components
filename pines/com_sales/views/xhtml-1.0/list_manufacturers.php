@@ -81,8 +81,8 @@ $this->title = 'Manufacturers';
 			<td><?php echo $manufacturer->city; ?></td>
 			<td><?php echo $manufacturer->state; ?></td>
 			<td><?php echo $manufacturer->zip; ?></td>
-			<td><?php echo pines_phone_format($manufacturer->phone_work); ?></td>
-			<td><?php echo pines_phone_format($manufacturer->fax); ?></td>
+			<td><?php echo format_phone($manufacturer->phone_work); ?></td>
+			<td><?php echo format_phone($manufacturer->fax); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

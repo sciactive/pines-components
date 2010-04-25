@@ -41,8 +41,8 @@ $this->title = 'Reviewing Countsheet ['.htmlentities($this->entity->guid).']';
 		<div>User: <span class="date"><?php echo "{$this->entity->user->name} [{$this->entity->user->username}]"; ?></span></div>
 		<div>Group: <span class="date"><?php echo "{$this->entity->group->name} [{$this->entity->group->groupname}]"; ?></span></div>
 		<?php } ?>
-		<div>Created: <span class="date"><?php echo pines_date_format($this->entity->p_cdate); ?></span></div>
-		<div>Modified: <span class="date"><?php echo pines_date_format($this->entity->p_mdate); ?></span></div>
+		<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
+		<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
 	</div>
 	<?php } ?>
 	<?php if ($this->missing) { ?>
@@ -97,7 +97,7 @@ $this->title = 'Reviewing Countsheet ['.htmlentities($this->entity->guid).']';
 							}
 							$tx = end($txs);
 							unset($txs);
-							echo "<li>{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku}, Sold on ".pines_date_format($tx->p_cdate)." from: {$tx->old_location->name} [{$tx->old_location->groupname}])</li>";
+							echo "<li>{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku}, Sold on ".format_date($tx->p_cdate, 'full_long')." from: {$tx->old_location->name} [{$tx->old_location->groupname}])</li>";
 							break;
 						case 'sold_pending':
 							$txs = $pines->entity_manager->get_entities(array('ref' => array('stock' => $cur_entry), 'data' => array('type' => 'removed'), 'tags' => array('com_sales', 'transaction', 'stock_tx'), 'class' => com_sales_tx));
@@ -107,7 +107,7 @@ $this->title = 'Reviewing Countsheet ['.htmlentities($this->entity->guid).']';
 							}
 							$tx = end($txs);
 							unset($txs);
-							echo "<li>{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku}, Sold on ".pines_date_format($tx->p_cdate)." and awaiting pickup from: {$cur_entry->location->name} [{$cur_entry->location->groupname}])</li>";
+							echo "<li>{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku}, Sold on ".format_date($tx->p_cdate, 'full_long')." and awaiting pickup from: {$cur_entry->location->name} [{$cur_entry->location->groupname}])</li>";
 							break;
 						default:
 							echo "<li>{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku}, Location: Location: {$cur_entry->location->name} [{$cur_entry->location->groupname}])</li>";

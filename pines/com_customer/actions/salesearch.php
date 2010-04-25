@@ -49,7 +49,7 @@ foreach ($sales as $key => &$cur_sale) {
 				$cur_sale->customer->name,
 				$cur_sale->customer->city,
 				'$'.$cur_sale->total,
-				pines_date_format($cur_sale->p_cdate, null, 'n/j/Y'),
+				format_date($cur_sale->p_cdate, 'date_short'),
 				$cur_sale->guid,
 				$cur_sale->user->guid,
 				$cur_sale->payments[0]['entity']->name,

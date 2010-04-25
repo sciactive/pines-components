@@ -51,7 +51,7 @@ if (!empty($employee->timeclock) && $employee->timeclock[count($employee->timecl
 }
 
 $entry = $employee->timeclock[count($employee->timeclock) - 1];
-$entry['time'] = pines_date_format($entry['time']);
+$entry['time'] = format_date($entry['time']);
 $pines->page->override_doc(json_encode(array($employee->save(), $entry)));
 
 if ($id_array)

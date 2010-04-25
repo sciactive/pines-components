@@ -82,7 +82,7 @@ class com_customer extends component {
 		// Add the days and save the customer.
 		$array['sale']->customer->adjust_membership($days);
 		if ($array['sale']->customer->save()) {
-			pines_notice("Added $days days to {$array['sale']->customer->name}. Their membership now expires on ".pines_date_format($array['sale']->customer->member_exp).'.');
+			pines_notice("Added $days days to {$array['sale']->customer->name}. Their membership now expires on ".format_date($array['sale']->customer->member_exp, 'date_long').'.');
 		} else {
 			pines_error("Error adding $days days to {$array['sale']->customer->name}.");
 		}

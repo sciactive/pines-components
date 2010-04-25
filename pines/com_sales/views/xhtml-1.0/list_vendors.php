@@ -82,8 +82,8 @@ $this->title = 'Vendors';
 			<td><?php echo $vendor->city; ?></td>
 			<td><?php echo $vendor->state; ?></td>
 			<td><?php echo $vendor->zip; ?></td>
-			<td><?php echo pines_phone_format($vendor->phone_work); ?> </td>
-			<td><?php echo pines_phone_format($vendor->fax); ?></td>
+			<td><?php echo format_phone($vendor->phone_work); ?> </td>
+			<td><?php echo format_phone($vendor->fax); ?></td>
 			<td><?php echo $vendor->account_number; ?></td>
 		</tr>
 	<?php } ?>

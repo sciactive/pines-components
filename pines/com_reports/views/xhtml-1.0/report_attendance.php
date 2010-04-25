@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name : $this->location->name).' ('.pines_date_format($this->date[0],null,'Y-m-d').' - '.pines_date_format($this->date[1],null,'Y-m-d').')';
+$this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name : $this->location->name).' ('.format_date($this->date[0], 'date_sort').' - '.format_date($this->date[1], 'date_sort').')';
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
@@ -28,7 +28,7 @@ $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name 
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				<?php if (isset($this->employees)) { ?>
-				{type: 'button', text: 'View', extra_class: 'icon picon_16x16_apps_user-info', double_click: true, url: '<?php echo pines_url('com_reports', 'reportattendance', array('employee' => '__title__', 'start' => pines_date_format($this->date[0], null, 'Y-m-d'), 'end' => pines_date_format($this->date[1], null, 'Y-m-d'), 'location' => $this->location->guid), false); ?>'},
+				{type: 'button', text: 'View', extra_class: 'icon picon_16x16_apps_user-info', double_click: true, url: '<?php echo pines_url('com_reports', 'reportattendance', array('employee' => '__title__', 'start' => format_date($this->date[0], 'date_sort'), 'end' => format_date($this->date[1], 'date_sort'), 'location' => $this->location->guid), false); ?>'},
 				{type: 'separator'},
 				{type: 'button', text: 'Spreadsheet', extra_class: 'icon picon_16x16_mimetypes_x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
 					pines.post("<?php echo pines_url('system', 'csv'); ?>", {
@@ -39,8 +39,8 @@ $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name 
 				<?php } else { ?>
 				{type: 'button', text: '&laquo; All Employees', extra_class: 'icon picon_16x16_apps_system-users', selection_optional: true, click: function(e, rows){
 					pines.post("<?php echo pines_url('com_reports', 'reportattendance'); ?>", {
-						start: "<?php echo pines_date_format($this->date[0], null, 'Y-m-d'); ?>",
-						end: "<?php echo pines_date_format($this->date[1], null, 'Y-m-d'); ?>",
+						start: "<?php echo format_date($this->date[0], 'date_sort'); ?>",
+						end: "<?php echo format_date($this->date[1], 'date_sort'); ?>",
 						location: "<?php echo $this->location->guid; ?>"
 					});
 				}}
@@ -124,7 +124,7 @@ $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name 
 		$clock_count = $date_count = 0;
 		foreach($this->employee->timeclock as $key => $entry) {
 			if ($entry['time'] >= $this->date[0] && $entry['time'] <= $this->date[1]) {
-				if ($dates[$date_count]['date'] == pines_date_format($entry['time'], null, 'Y-m-d')) {
+				if ($dates[$date_count]['date'] == format_date($entry['time'], 'date_sort')) {
 					// The employee clocked out the same day that they clocked in.
 					if ($entry['status'] == 'out') {
 						$clocks[$clock_count]['out'] = $entry['time'];
@@ -137,13 +137,13 @@ $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name 
 				} else {
 					// The employee clocked out at a later date after clocking in.
 					if ($entry['status'] == 'out') {
-						$clocks[$clock_count]['over'] = pines_date_format($entry['time'], null, 'n/j');
+						$clocks[$clock_count]['over'] = format_date($entry['time'], 'custom', 'n/j');
 						$clocks[$clock_count]['out'] = $entry['time'];
 						$dates[$date_count]['total'] += $this->employee->time_sum($clocks[$clock_count]['in'], $entry['time']);
 					} else {
 						$clock_count++;
 						$date_count++;
-						$dates[$date_count]['date'] = pines_date_format($entry['time'], null, 'Y-m-d');
+						$dates[$date_count]['date'] = format_date($entry['time'], 'date_sort');
 						$dates[$date_count]['scheduled'] = 0;
 						$dates[$date_count]['total'] = 0;
 						$clocks[$clock_count]['date'] = $date_count;
@@ -169,10 +169,10 @@ $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name 
 					<td></td>
 					<td></td>
 					<td>Clocked</td>
-					<td><?php echo pines_date_format($cur_clock['in'], null, 'g:i a'); ?></td>
+					<td><?php echo format_date($cur_clock['in'], 'time_short'); ?></td>
 					<td>
 					<?php
-						echo pines_date_format($cur_clock['out'], null, 'g:i a');
+						echo format_date($cur_clock['out'], 'time_short');
 						echo (isset($cur_clock['over']) ? ' ('.$cur_clock['over'].')' : '');
 					?>
 					</td>

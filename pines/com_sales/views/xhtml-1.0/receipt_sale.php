@@ -107,7 +107,7 @@ if ($this->entity->status == 'quoted') {
 			<?php } else { ?>
 			<span><?php echo $sales_group->address_international; ?></span>
 			<?php } ?>
-			<span><?php echo pines_phone_format($sales_group->phone); ?></span>
+			<span><?php echo format_phone($sales_group->phone); ?></span>
 		</div>
 	</div>
 	<?php } ?>
@@ -124,16 +124,16 @@ if ($this->entity->status == 'quoted') {
 			<span><?php echo $doc_id; ?></span>
 			<?php switch($this->entity->status) {
 				case 'invoiced':
-					echo '<span>'.pines_date_format($this->entity->invoice_date, null, 'Y-m-d').'</span>';
-					echo '<span>'.pines_date_format($this->entity->invoice_date, null, 'g:i A T').'</span>';
+					echo '<span>'.format_date($this->entity->invoice_date, 'date_short').'</span>';
+					echo '<span>'.format_date($this->entity->invoice_date, 'time_short').'</span>';
 					break;
 				case 'paid':
-					echo '<span>'.pines_date_format($this->entity->tender_date, null, 'Y-m-d').'</span>';
-					echo '<span>'.pines_date_format($this->entity->tender_date, null, 'g:i A T').'</span>';
+					echo '<span>'.format_date($this->entity->tender_date, 'date_short').'</span>';
+					echo '<span>'.format_date($this->entity->tender_date, 'time_short').'</span>';
 					break;
 				default:
-					echo '<span>'.pines_date_format($this->entity->p_cdate, null, 'Y-m-d').'</span>';
-					echo '<span>'.pines_date_format($this->entity->p_cdate, null, 'g:i A T').'</span>';
+					echo '<span>'.format_date($this->entity->p_cdate, 'date_short').'</span>';
+					echo '<span>'.format_date($this->entity->p_cdate, 'time_short').'</span>';
 					break;
 			} ?>
 			<?php if (isset($sales_rep->guid)) { ?>

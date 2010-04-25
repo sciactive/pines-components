@@ -131,8 +131,8 @@ if ($this->entity->final)
 		<div>User: <span class="date"><?php echo "{$this->entity->user->name} [{$this->entity->user->username}]"; ?></span></div>
 		<div>Group: <span class="date"><?php echo "{$this->entity->group->name} [{$this->entity->group->groupname}]"; ?></span></div>
 		<?php } ?>
-		<div>Created: <span class="date"><?php echo pines_date_format($this->entity->p_cdate); ?></span></div>
-		<div>Modified: <span class="date"><?php echo pines_date_format($this->entity->p_mdate); ?></span></div>
+		<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
+		<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
 	</div>
 	<?php } ?>
 	<div class="pf-element">

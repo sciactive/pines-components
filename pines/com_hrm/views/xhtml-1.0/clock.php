@@ -59,7 +59,7 @@ $entry_count = count($this->entity->timeclock);
 	<div class="pf-element">
 		<span class="pf-label"><?php echo $this->entity->name; ?></span>
 		<span class="pf-note"><span>Status: </span><span class="status"><?php echo empty($this->entity->timeclock) ? 'out' : $this->entity->timeclock[$entry_count - 1]['status']; ?></span></span>
-		<span class="pf-note"><span>Time: </span><span class="time"><?php echo empty($this->entity->timeclock) ? 'No Timeclock Data' : pines_date_format($this->entity->timeclock[$entry_count - 1]['time']); ?></span></span>
+		<span class="pf-note"><span>Time: </span><span class="time"><?php echo empty($this->entity->timeclock) ? 'No Timeclock Data' : format_date($this->entity->timeclock[$entry_count - 1]['time']); ?></span></span>
 	</div>
 	<div class="pf-element pf-full-width">
 		<button class="pf-field ui-state-default ui-corner-all" type="button" style="float: right;"><?php echo $this->entity->timeclock[$entry_count - 1]['status'] == 'in' ? 'Clock Out' : 'Clock In'; ?></button>

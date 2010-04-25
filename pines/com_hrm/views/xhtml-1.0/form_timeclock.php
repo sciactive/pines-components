@@ -81,7 +81,6 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 			format_time(new_entry.find(".time"), new_entry.find(".timestamp").text());
 			clean_up();
 			new_entry.slideDown("normal");
-			//var time_now = "<?php echo pines_date_format(time(), new DateTimeZone(addslashes($this->entity->get_timezone())), 'Y-m-d H:i T'); ?>";
 			$("#new_time").val("now");
 			$("#add_time_dialog").dialog("open");
 		});
@@ -148,7 +147,7 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 	<div class="pf-element pf-full-width entry">
 		<div style="padding: 3px;" class="ui-helper-clearfix ui-widget-content ui-corner-all">
 			<button style="float: right; margin: 3px;" class="ui-state-default ui-corner-all">Delete</button>
-			<span class="pf-label time" style="cursor: pointer;"><?php echo pines_date_format($entry['time'], $this->entity->get_timezone(true)); ?></span>
+			<span class="pf-label time" style="cursor: pointer;"><?php echo format_date($entry['time'], 'full_sort', '', $this->entity->get_timezone(true)); ?></span>
 			<span class="pf-note timestamp"><?php echo $entry['time']; ?></span>
 			<span class="pf-field status"><?php echo $entry['status']; ?></span>
 		</div>

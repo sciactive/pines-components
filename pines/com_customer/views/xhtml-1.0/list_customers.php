@@ -83,10 +83,10 @@ $this->title = 'Customers';
 			<td><?php echo $customer->name; ?></td>
 			<td><?php echo $customer->email; ?></td>
 			<td><?php echo $customer->company->name; ?></td>
-			<td><?php echo pines_phone_format($customer->phone_home); ?></td>
-			<td><?php echo pines_phone_format($customer->phone_work); ?></td>
-			<td><?php echo pines_phone_format($customer->phone_cell); ?></td>
-			<td><?php echo pines_phone_format($customer->fax); ?></td>
+			<td><?php echo format_phone($customer->phone_home); ?></td>
+			<td><?php echo format_phone($customer->phone_work); ?></td>
+			<td><?php echo format_phone($customer->phone_cell); ?></td>
+			<td><?php echo format_phone($customer->fax); ?></td>
 			<td><?php echo ($customer->login_disabled ? 'Yes' : 'No'); ?></td>
 			<td><?php echo ($customer->member ? ($customer->valid_member() ? 'Yes' : 'Expired') : 'No'); ?></td>
 			<td><?php echo $customer->member_exp ? date('Y-m-d', $customer->member_exp) : ''; ?></td>

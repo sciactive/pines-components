@@ -45,7 +45,7 @@ $this->title = "Employee Timeclock for {$this->entity->name}";
 	<tbody>
 	<?php foreach($this->entity->timeclock as $key => $entry) { ?>
 		<tr title="<?php echo $key; ?>" class="<?php echo ($entry['status'] == 'in') ? 'ui-state-active' : 'ui-state-default'; ?>">
-			<td><?php echo pines_date_format($entry['time'], $this->entity->get_timezone(true)); ?></td>
+			<td><?php echo format_date($entry['time'], 'full_sort', '', $this->entity->get_timezone(true)); ?></td>
 			<td><?php echo gmdate('c', $entry['time']); ?></td>
 			<td><?php echo $entry['status']; ?></td>
 		</tr>

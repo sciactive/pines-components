@@ -73,10 +73,10 @@ foreach ($customers as $key => &$cur_customer) {
 			$cur_customer->city,
 			$cur_customer->state,
 			$cur_customer->zip,
-			pines_phone_format($cur_customer->phone_home),
-			pines_phone_format($cur_customer->phone_work),
-			pines_phone_format($cur_customer->phone_cell),
-			pines_phone_format($cur_customer->fax)
+			format_phone($cur_customer->phone_home),
+			format_phone($cur_customer->phone_work),
+			format_phone($cur_customer->phone_cell),
+			format_phone($cur_customer->fax)
 		)
 	);
 	$cur_customer = $json_struct;

@@ -11,4 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
-<link href="<?php echo $pines->config->rela_location; ?>components/com_pgrid/includes/jquery.pgrid.default.icons.css" media="all" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+	// <![CDATA[
+	pines.loadcss("<?php echo $pines->config->rela_location; ?>components/com_pgrid/includes/jquery.pgrid.default.icons.css");
+	// ]]>
+</script>

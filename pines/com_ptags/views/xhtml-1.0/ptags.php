@@ -11,5 +11,9 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
-<link href="<?php echo $pines->config->rela_location; ?>components/com_ptags/includes/jquery.ptags.default.css" media="all" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>components/com_ptags/includes/<?php echo $pines->config->debug_mode ? 'jquery.ptags.js' : 'jquery.ptags.min.js'; ?>"></script>
+<script type="text/javascript">
+	// <![CDATA[
+	pines.loadcss("<?php echo $pines->config->rela_location; ?>components/com_ptags/includes/jquery.ptags.default.css");
+	pines.loadjs("<?php echo $pines->config->rela_location; ?>components/com_ptags/includes/<?php echo $pines->config->debug_mode ? 'jquery.ptags.js' : 'jquery.ptags.min.js'; ?>");
+	// ]]>
+</script>

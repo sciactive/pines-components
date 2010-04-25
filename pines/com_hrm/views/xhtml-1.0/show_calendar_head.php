@@ -19,11 +19,14 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
-<?php // Calendar ?>
-<link rel="stylesheet" type="text/css" href="<?php echo $pines->config->rela_location; ?>components/com_hrm/includes/fullcalendar.css" />
-<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>components/com_hrm/includes/fullcalendar.min.js"></script>
-<?php if (gatekeeper('com_hrm/editcalendar')) { ?>
-<link rel="stylesheet" type="text/css" href="<?php echo $pines->config->rela_location; ?>components/com_hrm/includes/context/css/vscontext.css" />
-<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>components/com_hrm/includes/context/vscontext.jquery.js"></script>
-<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>components/com_hrm/includes/context/menu_action.js"></script>
-<?php } ?>
+<script type="text/javascript">
+	// <![CDATA[
+	pines.loadcss("<?php echo $pines->config->rela_location; ?>components/com_hrm/includes/fullcalendar.css");
+	pines.loadjs("<?php echo $pines->config->rela_location; ?>components/com_hrm/includes/fullcalendar.min.js");
+	<?php if (gatekeeper('com_hrm/editcalendar')) { ?>
+		pines.loadcss("<?php echo $pines->config->rela_location; ?>components/com_hrm/includes/context/css/vscontext.css");
+		pines.loadjs("<?php echo $pines->config->rela_location; ?>components/com_hrm/includes/context/vscontext.jquery.js");
+		pines.loadjs("<?php echo $pines->config->rela_location; ?>components/com_hrm/includes/context/menu_action.js");
+	<?php } ?>
+	// ]]>
+</script>

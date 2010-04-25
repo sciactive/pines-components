@@ -10,8 +10,12 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-//<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-//<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-//<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/<?php echo $pines->config->tpl_pines->theme; /jquery-ui.css" media="all" rel="stylesheet" type="text/css" />
 ?>
-<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>components/com_jquery/includes/<?php echo $pines->config->debug_mode ? 'jquery.js' : 'jquery.min.js'; ?>"></script>
+<script type="text/javascript">
+	// <![CDATA[
+	//pines.loadjs("http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js");
+	//pines.loadjs("http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js");
+	//pines.loadcss("http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/<?php echo $pines->config->tpl_pines->theme;?>/jquery-ui.css");
+	pines.loadjs("<?php echo $pines->config->rela_location; ?>components/com_jquery/includes/<?php echo $pines->config->debug_mode ? 'jquery.js' : 'jquery.min.js'; ?>");
+	// ]]>
+</script>

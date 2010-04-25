@@ -11,11 +11,12 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
-<link href="<?php echo $pines->config->rela_location; ?>components/com_pnotify/includes/jquery.pnotify.default.css" media="all" rel="stylesheet" type="text/css" />
-<link href="<?php echo $pines->config->rela_location; ?>components/com_pnotify/includes/jquery.pnotify.default.icons.css" media="all" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>components/com_pnotify/includes/<?php echo $pines->config->debug_mode ? 'jquery.pnotify.js' : 'jquery.pnotify.min.js'; ?>"></script>
 <script type="text/javascript">
 	// <![CDATA[
+	pines.loadcss("<?php echo $pines->config->rela_location; ?>components/com_pnotify/includes/jquery.pnotify.default.css");
+	pines.loadcss("<?php echo $pines->config->rela_location; ?>components/com_pnotify/includes/jquery.pnotify.default.icons.css");
+	pines.loadjs("<?php echo $pines->config->rela_location; ?>components/com_pnotify/includes/<?php echo $pines->config->debug_mode ? 'jquery.pnotify.js' : 'jquery.pnotify.min.js'; ?>");
+
 	if (!_alert) {
 		var _alert;
 		_alert = window.alert;

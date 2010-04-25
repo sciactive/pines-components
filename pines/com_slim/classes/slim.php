@@ -24,7 +24,7 @@ class slim extends p_base {
 	/**
 	 * Slim file format version.
 	 */
-	const version = '1.0';
+	const slim_version = '1.0';
 	/**
 	 * The files to be written to the archive.
 	 *

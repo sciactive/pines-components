@@ -49,10 +49,10 @@ class com_reports extends component {
 	function report_attendance($start, $end, $location = null, $employee = null) {
 		global $pines;
 		$pines->com_pgrid->load();
+		$pines->com_jstree->load();
 		$date_start = strtotime('00:00', $start);
 		$date_end = strtotime('23:59', $end);
 
-		$jstree = new module('system', 'jstree', 'head');
 		$form = new module('com_reports', 'form_hrm', 'left');
 		$module = new module('com_reports', 'report_attendance', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))

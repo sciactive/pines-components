@@ -86,7 +86,7 @@ class com_sales_product extends entity {
 		$pines->editor->load();
 		$pines->com_pgrid->load();
 		$pines->com_ptags->load();
-		$jstree = new module('system', 'jstree', 'head');
+		$pines->com_jstree->load();
 		$module = new module('com_sales', 'form_product', 'content');
 		$module->entity = $this;
 		$module->manufacturers = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'manufacturer'), 'class' => com_sales_manufacturer));

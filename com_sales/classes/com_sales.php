@@ -270,8 +270,8 @@ class com_sales extends component {
 		global $pines;
 
 		$pines->com_pgrid->load();
-		
-		$jstree = new module('system', 'jstree', 'head');
+		$pines->com_jstree->load();
+
 		$module = new module('com_sales', 'list_countsheets', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_countsheets'];

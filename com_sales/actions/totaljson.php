@@ -98,7 +98,7 @@ if (empty($tx_array)) {
 	$return = null;
 } else {
 	$return = array(
-		'location' => is_int($location) ? $pines->user_manager->get_groupname($location) : $location,
+		'location' => is_int($location) ? group::factory($location)->groupname : $location,
 		'date_start' => date('Y-m-d', $date_start),
 		'date_end' => date('Y-m-d', $date_end),
 		'invoice' => $invoice_array,

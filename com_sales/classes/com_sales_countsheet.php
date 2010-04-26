@@ -1,6 +1,6 @@
 <?php
 /**
- * com_sales_sheet class.
+ * com_sales_countsheet class.
  *
  * @package Pines
  * @subpackage com_sales
@@ -76,9 +76,9 @@ class com_sales_countsheet extends entity {
 	}
 
 	private function sort_stock_by_location_serial($a, $b) {
-		if ($a->location->guid == $this->gid && $b->location->guid != $this->gid)
+		if ($a->location->guid == $this->group->guid && $b->location->guid != $this->group->guid)
 			return -1;
-		if ($a->location->guid != $this->gid && $b->location->guid == $this->gid)
+		if ($a->location->guid != $this->group->guid && $b->location->guid == $this->group->guid)
 			return 1;
 		if (isset($a->serial) && !isset($b->serial))
 			return -1;
@@ -129,7 +129,7 @@ class com_sales_countsheet extends entity {
 		usort($expected_stock, array($this, 'sort_stock_by_location_serial'));
 		foreach ($expected_stock as $key => $cur_stock_entry) {
 			$entry_exists = false;
-			$in_store = ($cur_stock_entry->location->guid == $this->gid);
+			$in_store = ($cur_stock_entry->location->guid == $this->group->guid);
 			foreach ($this->entries as $itemkey => $item) {
 				if (!isset($module->potential[$item])) {
 					$module->potential[$item] = array(
@@ -177,7 +177,7 @@ class com_sales_countsheet extends entity {
 				}
 			}
 			if ($in_store && isset($expected_stock[$key])) {
-				// An stock entry at this location is missing on the countsheet.
+				// A stock entry at this location is missing on the countsheet.
 				foreach ($module->missing as $cur_missing) {
 					if (!isset($cur_missing->serial) && $cur_stock_entry->product->sku == $cur_missing->product->sku) {
 						$module->missing_count[$cur_stock_entry->product->sku]++;

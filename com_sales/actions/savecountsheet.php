@@ -1,6 +1,6 @@
 <?php
 /**
- * Save changes to a countsheeet.
+ * Save changes to a countsheet.
  *
  * @package Pines
  * @subpackage com_sales

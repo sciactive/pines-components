@@ -47,9 +47,10 @@ if (preg_match('/\d{4}-\d{2}-\d{2}/', $_REQUEST['date_end'])) {
 
 // Get all transactions.
 $tx_array = $pines->entity_manager->get_entities(array(
-		'tags' => array('com_sales', 'transaction'),
-		'tags_i' => array('sale_tx', 'payment_tx'),
-		'class' => com_sales_tx));
+	'tags' => array('com_sales', 'transaction'),
+	'tags_i' => array('sale_tx', 'payment_tx'),
+	'class' => com_sales_tx
+));
 if (!is_array($tx_array))
 	$tx_array = array();
 $invoice_array = array('total' => 0.00, 'count' => 0);
@@ -63,8 +64,8 @@ foreach ($tx_array as $key => &$cur_tx) {
 		$cur_tx->p_cdate <= $date_end &&
 		(
 			$location == 'all' ||
-			($location == 'current' && $_SESSION['user']->in_group($cur_tx->gid)) ||
-			$location == $cur_tx->gid
+			($location == 'current' && $_SESSION['user']->in_group($cur_tx->group)) ||
+			$location == $cur_tx->group->guid
 		)
 		) {
 		if ($cur_tx->has_tag('sale_tx')) {

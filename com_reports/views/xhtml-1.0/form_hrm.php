@@ -20,7 +20,7 @@ $this->title = 'New Report';
 		text-align: center;
 	}
 	.form_date {
-		width: 98%;
+		width: 85%;
 		text-align: center;
 	}
 	/* ]]> */

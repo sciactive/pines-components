@@ -20,7 +20,7 @@ $this->title = 'New Report';
 		text-align: center;
 	}
 	.form_date {
-		width: 98%;
+		width: 85%;
 		text-align: center;
 	}
 	/* ]]> */
@@ -46,6 +46,6 @@ $this->title = 'New Report';
 		<input class="ui-widget-content form_date" type="text" name="end" value="<?php echo ($this->date[1]) ? format_date($this->date[1], 'custom', 'Y-m-d') : format_date(time(), 'custom', 'Y-m-d'); ?>" />
 	</div>
 	<div class="pf-element">
-		<input class="ui-state-default ui-corner-all" type="submit" value="View Report &raquo;" class="ui-corner-all form_input" />
+		<input class="ui-corner-all ui-state-default form_input" type="submit" value="View Report &raquo;" />
 	</div>
 </form>

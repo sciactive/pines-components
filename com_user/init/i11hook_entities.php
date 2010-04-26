@@ -76,7 +76,7 @@ function com_user__check_permissions_save($array) {
 }
 
 /**
- * Add the current user's UID, GID, and access control to a new entity.
+ * Add the current user's "user", "group", and access control to a new entity.
  *
  * This occurs right before an entity is saved. It only alters the entity if:
  * - There is a user logged in.

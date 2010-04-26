@@ -51,10 +51,10 @@ class com_user extends component implements user_manager_interface {
 		$ac = (object) array('user' => 3, 'group' => 3, 'other' => 0);
 		if (is_object($entity->ac))
 			$ac = $entity->ac;
-
-		if ($entity->user->is($_SESSION['user']))
+		
+		if (is_callable(array($entity->user, 'is')) && $entity->user->is($_SESSION['user']))
 			return ($ac->user >= $type);
-		if ($entity->group->is($_SESSION['user']->group) ||
+		if (is_callable(array($entity->group, 'is')) && $entity->group->is($_SESSION['user']->group) ||
 			$entity->group->in_array($_SESSION['user']->groups) ||
 			$entity->group->in_array($_SESSION['descendents']) )
 			return ($ac->group >= $type);

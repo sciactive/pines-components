@@ -49,7 +49,7 @@ function edit(){
 		alert('Editing ['+ edit_event +']');
 		// Ensure that the url is set to editcalendar and specify the event id.
 		var cur_location = location.toString().replace(/hrm\/.*/, 'hrm/');
-		window.location = cur_location +'editcalendar/?id='+ edit_event;
+		window.location = cur_location +'&id='+ edit_event;
 	}
 }
 

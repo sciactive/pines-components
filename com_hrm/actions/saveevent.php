@@ -65,5 +65,6 @@ if (isset($_REQUEST['employee'])) {
 	}
 }
 
-$pines->com_hrm->show_calendar();
+redirect(pines_url('com_hrm', 'editcalendar'));
+
 ?>

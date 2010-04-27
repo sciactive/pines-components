@@ -10,7 +10,8 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Reviewing Countsheet ['.htmlentities($this->entity->guid).']';
+$this->title = 'Reviewing Countsheet ['.htmlentities($this->entity->guid).'] at '.$this->entity->group->name;
+$this->note = 'Created by '.$this->entity->user->name.' on '.format_date($this->entity->p_cdate);
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
@@ -35,16 +36,6 @@ $this->title = 'Reviewing Countsheet ['.htmlentities($this->entity->guid).']';
 	/* ]]> */
 </style>
 <form class="pf-form" method="post" id="countsheet_details" action="<?php echo pines_url('com_sales', 'savecountsheetstatus'); ?>">
-	<?php if (isset($this->entity->guid)) { ?>
-	<div class="date_info" style="float: right; text-align: right;">
-		<?php if (isset($this->entity->user)) { ?>
-		<div>User: <span class="date"><?php echo "{$this->entity->user->name} [{$this->entity->user->username}]"; ?></span></div>
-		<div>Group: <span class="date"><?php echo "{$this->entity->group->name} [{$this->entity->group->groupname}]"; ?></span></div>
-		<?php } ?>
-		<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
-		<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
-	</div>
-	<?php } ?>
 	<?php if ($this->missing) { ?>
 	<fieldset class="pf-group missing">
 		<legend>Missing Items</legend>
@@ -110,7 +101,7 @@ $this->title = 'Reviewing Countsheet ['.htmlentities($this->entity->guid).']';
 							echo "<li>{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku}, Sold on ".format_date($tx->p_cdate, 'full_long')." and awaiting pickup from: {$cur_entry->location->name} [{$cur_entry->location->groupname}])</li>";
 							break;
 						default:
-							echo "<li>{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku}, Location: Location: {$cur_entry->location->name} [{$cur_entry->location->groupname}])</li>";
+							echo "<li>{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku}, Location: {$cur_entry->location->name} [{$cur_entry->location->groupname}])</li>";
 							break;
 					}
 				} ?>

@@ -8,13 +8,6 @@ pines(function(){
 		});
 	};
 
-	// Turn notices into Pines Notify notices.
-	$("#top div.notices").find("div.ui-state-error span.text").each(function(){
-		pines.error($(this).html());
-	}).end().find("div.ui-state-highlight span.text").each(function(){
-		pines.alert($(this).html(), "Notice");
-	}).end().remove();
-
 	// Main menu corners.
 	$(".mainmenu").find(".dropdown > li:first-child > a").addClass("ui-corner-left").end()
 	.find(".dropdown > li:last-child > a").addClass("ui-corner-right").end()
@@ -59,12 +52,14 @@ pines(function(){
 				$("body > div#top").html(data.top);
 				$("body > div#header > div:not(.pagetitle, .mainmenu)").remove();
 				$("body > div#header > div.pagetitle").after(data.header).after(data.header_right);
+				$("body > div#pre_content").html(data.pre_content);
 				$("body > div.colmask > div.colmid > div.colleft > div.col1wrap > div.col1")
 				.children("div.user1").html(data.user1).end()
 				.children("div.user2").html(data.user2).end()
 				.children("div.content").html(data.content).end()
 				.children("div.user3").html(data.user3).end()
 				.children("div.user4").html(data.user4);
+				$("body > div#post_content").html(data.post_content);
 				$("body > div.colmask > div.colmid > div.colleft > div.col2").html(data.left);
 				$("body > div.colmask > div.colmid > div.colleft > div.col3").html(data.right);
 				$("body > div#footer").children(":not(p.copyright)").remove().end().prepend(data.footer);

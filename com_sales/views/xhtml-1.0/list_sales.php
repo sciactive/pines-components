@@ -15,7 +15,7 @@ $this->title = 'Sales';
 <script type="text/javascript">
 	// <![CDATA[
 
-	$(function(){
+	pines(function(){
 		var state_xhr;
 		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
 		var cur_defaults = {
@@ -63,7 +63,7 @@ $this->title = 'Sales';
 		<div style="float: left;">
 			<script type="text/javascript">
 				// <![CDATA[
-				$(function(){
+				pines(function(){
 					$("#sale_date_form [name=start_date], #sale_date_form [name=end_date]").datepicker({
 						dateFormat: "yy-mm-dd",
 						changeMonth: true,

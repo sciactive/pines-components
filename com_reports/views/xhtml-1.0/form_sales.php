@@ -27,7 +27,7 @@ $this->title = 'New Report';
 </style>
 <script type='text/javascript'>
 // <![CDATA[
-	$(function(){
+	pines(function(){
 		$("#report_details [name=start], #report_details [name=end]").datepicker({
 			dateFormat: "yy-mm-dd",
 			changeMonth: true,

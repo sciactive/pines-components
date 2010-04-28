@@ -22,7 +22,7 @@ $this->note = "Version {$pines->info->version}";
 </style>
 <script type="text/javascript">
 	// <![CDATA[
-	$(function(){
+	pines(function(){
 		if (!$.fn.buttonset)
 			return;
 		$("#com_about_buttons").buttonset().children("button").button();

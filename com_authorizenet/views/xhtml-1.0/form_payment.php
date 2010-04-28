@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 <form id="authorize_net_form" class="pf-form" method="post" action="">
 	<script type="text/javascript">
 		// <![CDATA[
-		$(function(){
+		pines(function(){
 			var form = $("#authorize_net_form");
 			var card_swipe = form.find("input[name=card_swipe]");
 			var name_first = form.find("input[name=name_first]");

@@ -15,7 +15,7 @@ $this->note = 'Provide employee account details in this form.';
 ?>
 <script type="text/javascript">
 	// <![CDATA[
-	$(function(){
+	pines(function(){
 		var addresses = $("#addresses");
 		var addresses_table = $("#addresses_table");
 		var address_dialog = $("#address_dialog");
@@ -266,7 +266,7 @@ $this->note = 'Provide employee account details in this form.';
 				</div>
 				<script type="text/javascript">
 					// <![CDATA[
-					$(function(){
+					pines(function(){
 						var template = $("#employee_details [name=user_template]");
 						var pgroupselects = $("#employee_details .user_template_group");
 						template.change(function(){
@@ -308,7 +308,7 @@ $this->note = 'Provide employee account details in this form.';
 				</div>
 				<script type="text/javascript">
 					// <![CDATA[
-					$(function(){
+					pines(function(){
 						var password = $("#employee_details [name=user_template_password]");
 						var password2 = $("#employee_details [name=user_template_password2]");
 						$("#employee_details").submit(function(){
@@ -339,7 +339,7 @@ $this->note = 'Provide employee account details in this form.';
 			<div class="pf-element">
 				<script type="text/javascript">
 					// <![CDATA[
-					$(function(){
+					pines(function(){
 						var address_us = $("#address_us");
 						var address_international = $("#address_international");
 						$("#employee_details [name=address_type]").change(function(){

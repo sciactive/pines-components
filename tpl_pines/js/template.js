@@ -1,4 +1,4 @@
-$(function(){
+pines(function(){
 	$.pnotify.defaults.pnotify_opacity = .9;
 	var hover = function(elements){
 		(typeof elements == "string" ? $(elements) : elements).live("mouseenter", function(){

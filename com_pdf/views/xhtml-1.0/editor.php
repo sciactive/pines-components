@@ -19,7 +19,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	var displayelem;
 	var getting_values = false;
 
-	$(function(){
+	pines(function(){
 		$("*:not(html, body, #com_pdf_editor, #com_pdf_editor *)").hide();
 		$("#com_pdf_editor").parents().show();
 		alert("Please note that the preview is approximate and may not exactly resemble what is generated. Remember to test fully.");

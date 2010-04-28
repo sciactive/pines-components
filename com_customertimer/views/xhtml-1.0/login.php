@@ -18,7 +18,7 @@ $this->note = 'Please enter your info, or scan your barcode to login or logout.'
 	// <![CDATA[
 	var id_box;
 	var pw_box;
-	$(function(){
+	pines(function(){
 		id_box = $("#customer_login [name=id]");
 		pw_box = $("#customer_login [name=password]");
 		id_box.change(function(){

@@ -14,7 +14,7 @@ $this->title = 'Countsheets';
 ?>
 <script type="text/javascript">
 	// <![CDATA[
-	$(function(){
+	pines(function(){
 		// Group Tree
 		var location = $("#assign_dialog [name=location]");
 		$("#location_tree").tree({

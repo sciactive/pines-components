@@ -38,7 +38,7 @@ $this->note = 'Provide floor details in this form.';
 <form enctype="multipart/form-data" class="pf-form" method="post" id="floor_details" action="<?php echo htmlentities(pines_url('com_customertimer', 'savefloor')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
-		$(function(){
+		pines(function(){
 			var station_floor = $("#floor_tabs .station_layout .station_floor");
 			var station_input = $("#floor_tabs input[name=stations]");
 

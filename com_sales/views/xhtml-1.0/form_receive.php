@@ -28,7 +28,7 @@ $this->note = 'Only use this form to receive inventory into your <strong>current
 			products.val(JSON.stringify(all_rows));
 		}
 		
-		$(function(){
+		pines(function(){
 			products = $("#products");
 			products_table = $("#products_table");
 			product_dialog = $("#product_dialog");

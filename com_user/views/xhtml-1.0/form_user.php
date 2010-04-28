@@ -15,7 +15,7 @@ $this->note = 'Provide user details in this form.';
 ?>
 <script type="text/javascript">
 	// <![CDATA[
-	$(function(){
+	pines(function(){
 		var password = $("#user_details [name=password]");
 		var password2 = $("#user_details [name=password2]");
 		$("#user_details").submit(function(){
@@ -213,7 +213,7 @@ $this->note = 'Provide user details in this form.';
 			<div class="pf-element">
 				<script type="text/javascript">
 					// <![CDATA[
-					$(function(){
+					pines(function(){
 						var address_us = $("#address_us");
 						var address_international = $("#address_international");
 						$("#user_details [name=address_type]").change(function(){
@@ -322,7 +322,7 @@ $this->note = 'Provide user details in this form.';
 			<input type="hidden" name="abilities" value="true" />
 			<script type="text/javascript">
 				// <![CDATA[
-				$(function(){
+				pines(function(){
 					var sections = $("#user_details .abilities_accordian");
 					sections.accordion({
 						autoHeight: false,

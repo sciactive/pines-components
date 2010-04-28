@@ -16,7 +16,7 @@ $this->title = (!isset($this->entity->guid)) ? 'New Countsheet' : (($this->entit
 	// <![CDATA[
 	var entries, entries_table, entry_counter;
 
-	$(function(){
+	pines(function(){
 		entries = $("#countsheet_details input[name=entries]");
 		entries_table = $("#entries_table");
 		entry_counter = $("#entry_counter").val();

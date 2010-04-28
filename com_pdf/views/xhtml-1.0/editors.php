@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 ?>
 <script type="text/javascript">
 	// <![CDATA[
-	$(function(){
+	pines(function(){
 		var display_editor_window;
 		var current_holder;
 		var pdf_file = "<?php echo $this->entity->pdf_file; ?>";

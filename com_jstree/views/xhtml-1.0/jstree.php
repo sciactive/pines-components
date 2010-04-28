@@ -15,7 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	// <![CDATA[
 	pines.loadjs("<?php echo $pines->config->rela_location; ?>components/com_jstree/includes/jquery.tree.min.js");
 	pines.loadjs("<?php echo $pines->config->rela_location; ?>components/com_jstree/includes/plugins/jquery.tree.contextmenu.js");
-	$(function(){
+	pines(function(){
 		$.tree.defaults.ui.theme_path = "<?php echo $pines->config->rela_location; ?>components/com_jstree/includes/themes/default/style.css";
 	});
 	// ]]>

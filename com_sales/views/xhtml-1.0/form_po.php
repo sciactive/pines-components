@@ -122,7 +122,7 @@ if ($this->entity->final)
 			$("#total").html(total);
 		}
 		
-		$(function(){
+		pines(function(){
 			products = $("#products");
 			products_table = $("#products_table");
 			available_products_table = $("#available_products_table");
@@ -279,7 +279,7 @@ if ($this->entity->final)
 		<?php if (!$this->entity->final) { ?>
 		<script type="text/javascript">
 			// <![CDATA[
-			$(function(){
+			pines(function(){
 				$("#eta").datepicker({
 					dateFormat: "yy-mm-dd"
 				});

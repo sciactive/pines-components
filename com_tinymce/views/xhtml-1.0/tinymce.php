@@ -15,7 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	// <![CDATA[
 	pines.loadjs("<?php echo $pines->config->rela_location; ?>components/com_tinymce/includes/tiny_mce/jquery.tinymce.js");
 
-	$(function(){
+	pines(function(){
 		$('textarea.peditor').tinymce({
 			// Location of TinyMCE script
 			script_url : '<?php echo $pines->config->rela_location; ?>components/com_tinymce/includes/tiny_mce/tiny_mce.js',

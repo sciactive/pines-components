@@ -16,7 +16,7 @@ $this->note = 'Provide product details in this form.';
 <form class="pf-form" method="post" id="product_details" action="<?php echo htmlentities(pines_url('com_sales', 'saveproduct')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
-		$(function(){
+		pines(function(){
 			var vendors = $("#vendors");
 			var vendors_table = $("#vendors_table");
 			var available_vendors_table = $("#available_vendors_table");
@@ -136,7 +136,7 @@ $this->note = 'Provide product details in this form.';
 				<span class="pf-label">Categories</span>
 				<script type="text/javascript">
 					// <![CDATA[
-					$(function(){
+					pines(function(){
 						// Category Tree
 						var input = $("#categories");
 						$("#category_tree").tree({
@@ -387,7 +387,7 @@ $this->note = 'Provide product details in this form.';
 			<div class="pf-element">
 				<script type="text/javascript">
 				// <![CDATA[
-				$(function(){
+				pines(function(){
 					var stock_type = $("#product_details [name=stock_type]");
 					var pricing_method = $("#product_details [name=pricing_method]");
 					var vendors_field = $("#vendors_field");
@@ -488,7 +488,7 @@ $this->note = 'Provide product details in this form.';
 			<div class="pf-element">
 				<script type="text/javascript">
 					// <![CDATA[
-					$(function(){
+					pines(function(){
 						var pricing_method = $("#product_details [name=pricing_method]");
 						var unit_price = $("#product_details [name=unit_price]");
 						var margin = $("#product_details [name=margin]");
@@ -594,7 +594,7 @@ $this->note = 'Provide product details in this form.';
 					<input class="pf-field ui-widget-content" type="text" name="additional_barcodes" size="24" value="<?php echo implode(',', $this->entity->additional_barcodes); ?>" />
 					<script type="text/javascript">
 						// <![CDATA[
-						$(function(){
+						pines(function(){
 							$("#product_details [name=additional_barcodes]").ptags();
 						});
 						// ]]>

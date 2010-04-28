@@ -15,7 +15,7 @@ $this->note = 'Provide group details in this form.';
 ?>
 <script type="text/javascript">
 	// <![CDATA[
-	$(function(){
+	pines(function(){
 		// Attributes
 		var attributes = $("#tab_attributes .attributes");
 		var attributes_table = $("#tab_attributes .attributes_table");
@@ -168,7 +168,7 @@ $this->note = 'Provide group details in this form.';
 			<div class="pf-element">
 				<script type="text/javascript">
 					// <![CDATA[
-					$(function(){
+					pines(function(){
 						var address_us = $("#address_us");
 						var address_international = $("#address_international");
 						$("#group_details [name=address_type]").change(function(){
@@ -277,7 +277,7 @@ $this->note = 'Provide group details in this form.';
 			<input type="hidden" name="abilities" value="true" />
 			<script type="text/javascript">
 				// <![CDATA[
-				$(function(){
+				pines(function(){
 					var sections = $("#group_details .abilities_accordian");
 					sections.accordion({
 						autoHeight: false,

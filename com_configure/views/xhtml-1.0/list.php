@@ -48,7 +48,7 @@ $this->title = 'Configure Components';
 </style>
 <script type="text/javascript">
 	// <![CDATA[
-	$(function(){
+	pines(function(){
 		$(".component_list").accordion({autoHeight: false})
 		.find(".buttons").buttonset()
 		.find("input").button();

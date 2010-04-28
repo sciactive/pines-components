@@ -14,7 +14,7 @@ $this->title = 'Verify Access';
 ?>
 <script type="text/javascript">
 	// <![CDATA[
-	$(function(){
+	pines(function(){
 		$("#com_pinlock__login input[name=pin]").focus();
 	});
 	// ]]>

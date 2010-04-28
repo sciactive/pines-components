@@ -16,7 +16,7 @@ $this->title = 'Sales Totals';
 	<div class="pf-element pf-heading">
 		<script type="text/javascript">
 			// <![CDATA[
-			$(function(){
+			pines(function(){
 				$("#hide_parameters").click(function(){
 					$("#sales_totals").children(".pf-element:not(.pf-heading)").slideToggle();
 				});
@@ -39,7 +39,7 @@ $this->title = 'Sales Totals';
 	<div class="pf-element">
 		<script type="text/javascript">
 			// <![CDATA[
-			$(function(){
+			pines(function(){
 				$("#date_start").datepicker({
 					dateFormat: "yy-mm-dd",
 					changeMonth: true,
@@ -54,7 +54,7 @@ $this->title = 'Sales Totals';
 	<div class="pf-element">
 		<script type="text/javascript">
 			// <![CDATA[
-			$(function(){
+			pines(function(){
 				$("#date_end").datepicker({
 					dateFormat: "yy-mm-dd",
 					changeMonth: true,
@@ -74,7 +74,7 @@ $this->title = 'Sales Totals';
 			var com_sales_date_end;
 			var com_sales_result_totals;
 
-			$(function(){
+			pines(function(){
 				com_sales_location = $("#location");
 				com_sales_date_start = $("#date_start");
 				com_sales_date_end = $("#date_end");

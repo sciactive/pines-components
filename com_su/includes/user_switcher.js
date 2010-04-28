@@ -1,4 +1,4 @@
-$(function(){
+pines(function(){
 	var notice;
 	$.ajax({
 		url: pines.com_su_loginpage_url,

@@ -15,7 +15,7 @@ $this->note = 'Provide package details in this form.';
 ?>
 <script type="text/javascript">
 	// <![CDATA[
-	$(function(){
+	pines(function(){
 		// Attributes
 		var attributes = $("#tab_attributes .attributes");
 		var attributes_table = $("#tab_attributes .attributes_table");

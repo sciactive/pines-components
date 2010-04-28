@@ -23,7 +23,7 @@ foreach($this->groups as $cur_group) {
 <script type="text/javascript">
 	// <![CDATA[
 
-	$(function(){
+	pines(function(){
 		var state_xhr;
 		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
 		var cur_defaults = {

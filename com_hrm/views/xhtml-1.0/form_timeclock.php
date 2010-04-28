@@ -14,7 +14,7 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 ?>
 <script type="text/javascript">
 	// <![CDATA[
-	$(function(){
+	pines(function(){
 		var cur_entry;
 		var new_entry;
 		var timezone = "<?php echo addslashes($this->entity->get_timezone()); ?>";

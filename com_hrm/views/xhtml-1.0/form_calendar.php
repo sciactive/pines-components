@@ -39,7 +39,7 @@ $this->title = (!isset($this->event->guid)) ? 'New Event' : $this->event->title;
 </style>
 <script type='text/javascript'>
 // <![CDATA[
-	$(function(){
+	pines(function(){
 		$("#event_date").datepicker({
 			dateFormat: "m/d/yy",
 			changeMonth: true,
@@ -85,7 +85,7 @@ $this->title = (!isset($this->event->guid)) ? 'New Event' : $this->event->title;
 	?>
 	<script type="text/javascript">
 			// <![CDATA[
-			$(function(){
+			pines(function(){
 				$("#event_date").change(function(){
 					$("#event_enddate").val($(this).val());
 				}).change();
@@ -101,7 +101,7 @@ $this->title = (!isset($this->event->guid)) ? 'New Event' : $this->event->title;
 	<div class="pf-element">
 		<script type="text/javascript">
 			// <![CDATA[
-			$(function(){
+			pines(function(){
 				var timespan = $("#timespan");
 				$("#calendar_details [name=all_day]").change(function(){
 					var all_day = $(this);

@@ -53,7 +53,7 @@ if ($this->entity->final)
 			stock.val(JSON.stringify(all_rows));
 		}
 		
-		$(function(){
+		pines(function(){
 			stock = $("#stock");
 			stock_table = $("#stock_table");
 			available_stock_table = $("#available_stock_table");
@@ -161,7 +161,7 @@ if ($this->entity->final)
 		<?php if (!$this->entity->final) { ?>
 		<script type="text/javascript">
 			// <![CDATA[
-			$(function(){
+			pines(function(){
 				$("#eta").datepicker({
 					dateFormat: "yy-mm-dd"
 				});

@@ -83,7 +83,7 @@ $this->title = 'Floor Timer ['.htmlentities($this->entity->name).']';
 </style>
 <script type="text/javascript">
 	// <![CDATA[
-	$(function(){
+	pines(function(){
 		var station_layout = $(".station_layout");
 		var station_floor = $(".station_layout .station_floor");
 		var floor_id = "<?php echo $this->entity->guid; ?>";

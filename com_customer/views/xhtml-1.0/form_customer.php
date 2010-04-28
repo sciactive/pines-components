@@ -15,7 +15,7 @@ $this->note = 'Provide customer profile details in this form.';
 ?>
 <script type="text/javascript">
 	// <![CDATA[
-	$(function(){
+	pines(function(){
 		<?php if (in_array('address', $pines->config->com_customer->shown_fields_customer)) { ?>
 		var addresses = $("#addresses");
 		var addresses_table = $("#addresses_table");
@@ -205,7 +205,7 @@ $this->note = 'Provide customer profile details in this form.';
 			<div class="pf-element">
 				<script type="text/javascript">
 					// <![CDATA[
-					$(function(){
+					pines(function(){
 						$("#customer_details [name=dob]").datepicker({
 							dateFormat: "yy-mm-dd",
 							changeMonth: true,
@@ -231,7 +231,7 @@ $this->note = 'Provide customer profile details in this form.';
 				var company_table;
 				var company_dialog;
 
-				$(function(){
+				pines(function(){
 					company_box = $("#company");
 					company_search_box = $("#company_search");
 					company_search_button = $("#company_search_button");
@@ -435,7 +435,7 @@ $this->note = 'Provide customer profile details in this form.';
 			<div class="pf-element">
 				<script type="text/javascript">
 					// <![CDATA[
-					$(function(){
+					pines(function(){
 						$("#customer_details [name=member_exp]").datepicker({
 							dateFormat: "yy-mm-dd",
 							changeMonth: true,
@@ -458,7 +458,7 @@ $this->note = 'Provide customer profile details in this form.';
 			<div class="pf-element">
 				<script type="text/javascript">
 					// <![CDATA[
-					$(function(){
+					pines(function(){
 						var address_us = $("#address_us");
 						var address_international = $("#address_international");
 						$("#customer_details [name=address_type]").change(function(){

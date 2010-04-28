@@ -94,7 +94,7 @@ $this->note = 'Use this form to edit a sale.';
 			return floored * sign;
 		}
 
-		$(function(){
+		pines(function(){
 			<?php if ($pines->config->com_sales->com_customer) { ?>
 			customer_box = $("#customer");
 			customer_search_box = $("#customer_search");

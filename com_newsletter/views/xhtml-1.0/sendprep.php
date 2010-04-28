@@ -14,7 +14,7 @@ $this->title = "Sending {$this->mail->name}";
 ?>
 <script type='text/javascript'>
 	// <![CDATA[
-	$(function(){
+	pines(function(){
 		// Category Tree
 		var location = $("#location");
 		$("#location_tree").tree({

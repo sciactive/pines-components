@@ -16,7 +16,7 @@ $entry_count = count($this->entity->timeclock);
 <div class="pf-form" id="timeclock">
 	<script type="text/javascript">
 		// <![CDATA[
-		$(function(){
+		pines(function(){
 			$("#timeclock button").click(function(){
 				var loader;
 				$.ajax({

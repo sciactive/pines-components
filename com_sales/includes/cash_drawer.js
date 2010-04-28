@@ -1,4 +1,4 @@
-$(function(){
+pines(function(){
 	if ($.browser.msie)
 		return;
 	var callbacks = [];

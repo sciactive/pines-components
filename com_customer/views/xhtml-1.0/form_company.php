@@ -31,7 +31,7 @@ $this->note = 'Provide company profile details in this form.';
 	<div class="pf-element">
 				<script type="text/javascript">
 					// <![CDATA[
-					$(function(){
+					pines(function(){
 						var address_us = $("#address_us");
 						var address_international = $("#address_international");
 						$("#company_details [name=address_type]").change(function(){

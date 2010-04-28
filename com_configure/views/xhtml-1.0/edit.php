@@ -28,7 +28,7 @@ if ($this->entity->per_user)
 </style>
 <script type="text/javascript">
 	// <![CDATA[
-	$(function(){
+	pines(function(){
 		$("#configuration_form .do_tags").ptags({ptags_delimiter: ';;'});
 		$("#configuration_form").delegate("input.default_checkbox", "change", function(){
 			var checkbox = $(this);

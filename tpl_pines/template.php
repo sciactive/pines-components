@@ -17,19 +17,18 @@ if (strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
 	$return = array(
 		'notices' => $pines->page->get_notice(),
 		'errors' => $pines->page->get_error(),
-		'main_menu' => $pines->page->main_menu->render(array('<ul class="dropdown dropdown-horizontal">', '</ul>'),
-			array('<li class="ui-state-default">', '</li>'),
-			array('<ul>', '</ul>'),
-			array('<li class="ui-state-default">', '</li>'), '<a href="#DATA#">#NAME#</a>', ''),
+		'main_menu' => $pines->page->render_modules('main_menu', 'module_head'),
 		'head' => $pines->page->render_modules('head', 'module_head'),
 		'top' => $pines->page->render_modules('top', 'module_header'),
 		'header' => $pines->page->render_modules('header', 'module_header'),
 		'header_right' => $pines->page->render_modules('header_right', 'module_header_right'),
+		'pre_content' => $pines->page->render_modules('pre_content', 'module_header'),
 		'user1' => $pines->page->render_modules('user1'),
 		'user2' => $pines->page->render_modules('user2'),
 		'content' => $pines->page->render_modules('content', 'module_content'),
 		'user3' => $pines->page->render_modules('user3'),
 		'user4' => $pines->page->render_modules('user4'),
+		'post_content' => $pines->page->render_modules('post_content', 'module_header'),
 		'left' => $pines->page->render_modules('left'),
 		'right' => $pines->page->render_modules('right', 'module_right'),
 		'footer' => $pines->page->render_modules('footer', 'module_header'),
@@ -61,6 +60,7 @@ if (strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
 	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/dropdown/themes/jqueryui/jqueryui.css" media="all" rel="stylesheet" type="text/css" />
 
 	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>system/js/js.php"></script>
+	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/template.js"></script>
 
 	<!--[if lt IE 7]>
 	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/jquery/jquery.dropdown.js"></script>
@@ -68,7 +68,6 @@ if (strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
 
 	<?php echo $pines->page->render_modules('head', 'module_head'); ?>
 
-	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/template.js"></script>
 </head>
 <body class="ui-widget-content">
 	<div id="top">
@@ -76,21 +75,20 @@ if (strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
 		$error = $pines->page->get_error();
 		$notice = $pines->page->get_notice();
 		if ( $error || $notice ) { ?>
-		<div class="notices">
-			<?php if ( $error ) { ?>
-			<div class="notice ui-state-error ui-corner-all ui-helper-clearfix">
-				<?php foreach ($error as $cur_item) {
-					echo "<p class=\"entry\"><span class=\"ui-icon ui-icon-alert\" style=\"float: left; margin-right: 0.3em;\"></span><span class=\"text\">$cur_item</span></p>\n";
-				} ?>
-			</div>
-			<?php }  if ( $notice ) { ?>
-			<div class="notice ui-state-highlight ui-corner-all ui-helper-clearfix">
-				<?php foreach ($notice as $cur_item) {
-					echo "<p class=\"entry\"><span class=\"ui-icon ui-icon-info\" style=\"float: left; margin-right: 0.3em;\"></span><span class=\"text\">$cur_item</span></p>\n";
-				} ?>
-			</div>
-			<?php } ?>
-		</div>
+		<script type="text/javascript">
+			// <![CDATA[
+			pines(function(){
+				<?php
+				if ( $error ) { foreach ($error as $cur_item) {
+					echo 'pines.error("'.addslashes($cur_item)."\", \"Error\");\n";
+				} }
+				if ( $notice ) { foreach ($notice as $cur_item) {
+					echo 'pines.alert("'.addslashes($cur_item)."\", \"Alert\");\n";
+				} }
+				?>
+			});
+			// ]]>
+		</script>
 		<?php } ?>
 	</div>
 	<div id="header" class="ui-widget-header">
@@ -109,7 +107,7 @@ if (strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
 			<div class="menuwrap"><?php echo $pines->page->render_modules('main_menu', 'module_head'); ?></div>
 		</div>
 	</div>
-	<div class="pre_content">
+	<div id="pre_content">
 		<?php echo $pines->page->render_modules('pre_content', 'module_header'); ?>
 	</div>
 	<div class="colmask holygrail">
@@ -144,7 +142,7 @@ if (strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
 			</div>
 		</div>
 	</div>
-	<div class="post_content">
+	<div id="post_content">
 		<?php echo $pines->page->render_modules('post_content', 'module_header'); ?>
 	</div>
 	<div id="footer" class="ui-widget-header">

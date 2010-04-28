@@ -148,7 +148,7 @@ img {
 }
 
 /* ----------- Customized CSS ----------- */
-#top, #bottom, .content, .pre_content, .post_content {
+#top, #bottom, #content, #pre_content, #post_content {
 	clear: both;
 }
 #header .pagetitle {

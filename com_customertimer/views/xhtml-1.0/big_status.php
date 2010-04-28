@@ -55,7 +55,7 @@ $this->title = 'Customer Timer Status';
 	// <![CDATA[
 	var customer_status;
 
-	$(function(){
+	pines(function(){
 		customer_status = $("#customer_status");
 		update_status();
 	});

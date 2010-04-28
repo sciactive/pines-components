@@ -1022,7 +1022,7 @@
 									return window.open(parsed_url);
 								else {
 									// If Pines is loaded, use its get method instead of setting location.
-									if (typeof pines == "object" && pines.get)
+									if ($.isFunction(pines.get))
 										return pines.get(parsed_url);
 									return (window.location = parsed_url);
 								}

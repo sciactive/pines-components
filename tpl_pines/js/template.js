@@ -1,5 +1,5 @@
 pines(function(){
-	$.pnotify.defaults.pnotify_opacity = .9;
+	// Give hover effects to objects.
 	var hover = function(elements){
 		(typeof elements == "string" ? $(elements) : elements).live("mouseenter", function(){
 			$(this).addClass("ui-state-hover");
@@ -8,31 +8,37 @@ pines(function(){
 		});
 	};
 
-	// Main menu corners.
-	$(".mainmenu").find(".dropdown > li:first-child > a").addClass("ui-corner-left").end()
-	.find(".dropdown > li:last-child > a").addClass("ui-corner-right").end()
-	.find(".dropdown ul > li:first-child > a").addClass("ui-corner-tr").end()
-	.find(".dropdown ul > li:last-child > a").addClass("ui-corner-bottom");
+	// Get the loaded page ready. (Styling, etc.)
+	var page_ready = function(){
+		$.pnotify.defaults.pnotify_opacity = .9;
 
-	// Maximize modules.
-	hover($(".module .module_maximize").live("click", function(){
-		$(this).closest(".module").toggleClass("module_maximized");
-	}));
+		// Main menu corners.
+		$(".mainmenu").find(".dropdown > li:first-child > a").addClass("ui-corner-left").end()
+		.find(".dropdown > li:last-child > a").addClass("ui-corner-right").end()
+		.find(".dropdown ul > li:first-child > a").addClass("ui-corner-tr").end()
+		.find(".dropdown ul > li:last-child > a").addClass("ui-corner-bottom");
 
-	// Shade modules.
-	hover($(".module .module_minimize").live("click", function(){
-		$(this).children("span.ui-icon").toggleClass("ui-icon-triangle-1-n").toggleClass("ui-icon-triangle-1-s")
-		.end().parent().nextAll(".module_content").slideToggle("normal");
-	}));
+		// Maximize modules.
+		hover($(".module .module_maximize").live("click", function(){
+			$(this).closest(".module").toggleClass("module_maximized");
+		}));
 
-	// Add disabled element styling.
-	$(".ui-widget-content:input:disabled").addClass("ui-state-disabled");
-	$(".ui-widget-content:input:not(:button, :submit, :reset), .ui-widget-content:file").addClass("ui-corner-all");
+		// Shade modules.
+		hover($(".module .module_minimize").live("click", function(){
+			$(this).children("span.ui-icon").toggleClass("ui-icon-triangle-1-n").toggleClass("ui-icon-triangle-1-s")
+			.end().parent().nextAll(".module_content").slideToggle("normal");
+		}));
 
-	// Menu and UI buttons hover.
-	hover(".dropdown li a");
-	$(".module .ui-state-default:input:not(:not(:button, :submit, :reset))").button();
+		// Add disabled element styling.
+		$(".ui-widget-content:input:disabled").addClass("ui-state-disabled");
+		$(".ui-widget-content:input:not(:button, :submit, :reset), .ui-widget-content:file").addClass("ui-corner-all");
 
+		// Menu and UI buttons hover.
+		hover(".dropdown li a");
+		$(".module .ui-state-default:input:not(:not(:button, :submit, :reset))").button();
+	};
+	
+	page_ready();
 
 	/* Experimental AJAX code.
 	var load_page_ajax = function(url){
@@ -43,15 +49,14 @@ pines(function(){
 			beforeSend: function(xhr) {
 				xhr.setRequestHeader("Accept", "application/json");
 			},
-			complete: function(xhr, textStatus){
-				alert(xhr.status+": "+textStatus);
+			error: function(xhr, textStatus){
+				pines.error(xhr.status+": "+textStatus);
 			},
 			success: function(data, textStatus){
 				$("body > div#header > div.mainmenu > div.menuwrap").html(data.main_menu);
-				$("head").append(data.head);
 				$("body > div#top").html(data.top);
-				$("body > div#header > div:not(.pagetitle, .mainmenu)").remove();
-				$("body > div#header > div.pagetitle").after(data.header).after(data.header_right);
+				$("body > div#header > div:not(.mainmenu)").remove();
+				$("body > div#header > h1.pagetitle").after(data.header).after(data.header_right);
 				$("body > div#pre_content").html(data.pre_content);
 				$("body > div.colmask > div.colmid > div.colleft > div.col1wrap > div.col1")
 				.children("div.user1").html(data.user1).end()
@@ -64,25 +69,21 @@ pines(function(){
 				$("body > div.colmask > div.colmid > div.colleft > div.col3").html(data.right);
 				$("body > div#footer").children(":not(p.copyright)").remove().end().prepend(data.footer);
 				$("body > div#bottom").html(data.bottom);
+				$("head").append(data.head);
 				$.each(data.errors, function(){
-					$.pnotify({
-						pnotify_title: "Error",
-						pnotify_text: this,
-						pnotify_type: "error",
-						pnotify_hide: false
-					});
+					pines.error(this, "Error");
 				});
-				$.each(data.errors, function(){
-					$.pnotify({
-						pnotify_title: "Notice",
-						pnotify_text: this
-					});
+				$.each(data.notices, function(){
+					pines.alert(this, "Notice");
 				});
+				page_ready();
 			}
 		});
 	};
 	$("body").delegate("a", "click", function(e){
 		var cur_link = $(this);
+		if (cur_link.attr("href").indexOf("#") == 0)
+			return true;
 		load_page_ajax(cur_link.attr("href"));
 		return false;
 	});

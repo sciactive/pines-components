@@ -17,10 +17,7 @@ if (strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
 	$return = array(
 		'notices' => $pines->page->get_notice(),
 		'errors' => $pines->page->get_error(),
-		'main_menu' => $pines->page->main_menu->render(array('<ul class="dropdown dropdown-horizontal">', '</ul>'),
-			array('<li class="ui-state-default">', '</li>'),
-			array('<ul>', '</ul>'),
-			array('<li class="ui-state-default">', '</li>'), '<a href="#DATA#">#NAME#</a>', ''),
+		'main_menu' => $pines->page->render_modules('main_menu', 'module_head'),
 		'head' => $pines->page->render_modules('head', 'module_head'),
 		'top' => $pines->page->render_modules('top', 'module_header'),
 		'header' => $pines->page->render_modules('header', 'module_header'),

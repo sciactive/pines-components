@@ -208,6 +208,9 @@ img {
 	float: right;
 	padding-top: 1px;
 }
+.content {
+	clear: both;
+}
 .module {
 	padding: .4em;
 }

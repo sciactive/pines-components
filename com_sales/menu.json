@@ -37,6 +37,22 @@
 					"ability": "com_sales/totalsales"
 				}
 			},
+			{
+				"path": "main_menu/business/com_sales/sales/cashcounts",
+				"text": "Cash Counts",
+				"href": ["com_sales","listcashcounts"],
+				"depend": {
+					"ability": "com_sales/listcashcounts"
+				}
+			},
+			{
+				"path": "main_menu/business/com_sales/sales/newcashcount",
+				"text": "New Cash Count",
+				"href": ["com_sales","editcashcount"],
+				"depend": {
+					"ability": "com_sales/editcashcount"
+				}
+			},
 		{
 			"path": "main_menu/business/com_sales/inventory",
 			"text": "Inventory",

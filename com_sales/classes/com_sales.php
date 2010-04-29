@@ -264,6 +264,45 @@ class com_sales extends component {
 	}
 
 	/**
+	 * Creates and attaches a module which lists cash counts.
+	 * @param int $start_date The start date of cash counts to show.
+	 * @param int $end_date The end date of cash counts to show.
+	 * @param group $location The location to show cash counts for.
+	 */
+	function list_cashcounts($start_date = null, $end_date = null, $location = null) {
+		global $pines;
+
+		$pines->com_pgrid->load();
+		$pines->com_jstree->load();
+		
+		$form = new module('com_sales', 'list_cashcounts_form', 'left');
+		$module = new module('com_sales', 'list_cashcounts', 'content');
+		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_cashcounts'];
+
+		if (!isset($start_date))
+			$start_date = strtotime('-1 week 00:00');
+		if (!isset($end_date))
+			$end_date = strtotime('23:59');
+		if (!isset($location))
+			$location = $_SESSION['user']->group;
+		$module->counts = $pines->entity_manager->get_entities(array('gte' => array('p_cdate' => (int) $start_date), 'lte' => array('p_cdate' => (int) $end_date), 'ref' => array('group' => $location), 'tags' => array('com_sales', 'cashcount'), 'class' => com_sales_cashcount));
+		$form->start_date = $start_date;
+		$form->end_date = $end_date;
+		$form->location = $location->guid;
+
+		// Remind the user to do a cash count if one is assigned to their location.
+		if ($_SESSION['user']) {
+			$_SESSION['user']->refresh();
+			if ($_SESSION['user']->group->com_sales_task_cashcount)
+				$this->inform('Reminder', '<a href="'.pines_url('com_sales', 'editcashcount').'">Cash Drawer Count &raquo;</a>', 'Please perform a count of the cash in your location\'s drawer. Corporate is awaiting a cash count submission.');
+		}
+
+		if ( empty($module->counts) )
+			pines_notice('No cash counts found.');
+	}
+	
+	/**
 	 * Creates and attaches a module which lists countsheets.
 	 */
 	function list_countsheets() {
@@ -278,10 +317,11 @@ class com_sales extends component {
 
 		$module->countsheets = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'countsheet'), 'class' => com_sales_countsheet));
 
+		// Remind the user to do a countsheet if one is assigned to their location.
 		if ($_SESSION['user']) {
 			$_SESSION['user']->refresh();
 			if ($_SESSION['user']->group->com_sales_task_countsheet)
-				$this->inform('Reminder', 'Inventory Countsheet', 'Please fill out a countsheet for your location when you are not busy. Corporate is awaiting the submission of an inventory count.');
+				$this->inform('Reminder', '<a href="'.pines_url('com_sales', 'editcountsheet').'">Inventory Countsheet &raquo;</a>', 'Please fill out a countsheet for your location when you are not busy. Corporate is awaiting the submission of an inventory count.');
 		}
 	
 		if ( empty($module->countsheets) ) {

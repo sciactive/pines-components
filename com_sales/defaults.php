@@ -35,6 +35,18 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'currency_symbol',
+		'cname' => 'Currency Symbol',
+		'description' => 'The currency symbol to use. (E.g. $, ¥, €, Rp)',
+		'value' => '$',
+	),
+	array(
+		'name' => 'currency_denominations',
+		'cname' => 'Currency Denominations',
+		'description' => 'The currency denominations to use. (E.g. 0.01, 0.05, 0.10, 0.25, 1, 5, 10, 20, 50, 100)',
+		'value' => array('0.01', '0.05', '0.10', '0.25', '1', '5', '10', '20', '50', '100'),
+	),
+	array(
 		'name' => 'dec',
 		'cname' => 'Visible Decimal Places',
 		'description' => 'Decimal numbers, though stored in the database more accurately, will only be displayed to this number of places.',

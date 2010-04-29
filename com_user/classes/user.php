@@ -22,6 +22,7 @@ class user extends able_object implements user_interface {
 		parent::__construct();
 		$this->add_tag('com_user', 'user');
 		// Defaults.
+		$this->enabled = true;
 		$this->abilities = array();
 		$this->groups = array();
 		$this->inherit_abilities = true;

@@ -27,6 +27,7 @@ if ( isset($_REQUEST['id']) ) {
 
 $group->groupname = $_REQUEST['groupname'];
 $group->name = $_REQUEST['name'];
+$group->enabled = ($_REQUEST['enabled'] == 'ON');
 $group->email = $_REQUEST['email'];
 $group->phone = preg_replace('/\D/', '', $_REQUEST['phone']);
 $group->fax = preg_replace('/\D/', '', $_REQUEST['fax']);

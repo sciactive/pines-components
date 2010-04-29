@@ -26,20 +26,26 @@ do {
 	$entities = $pines->entity_manager->get_entities(array('limit' => 50, 'offset' => $offset));
 	// If we have run through all entities, we are done updating.
 	foreach ($entities as &$cur_entity) {
-		if ($cur_entity->has_tag('com_user'))
-			continue;
 		$changed = false;
-		// Replace UIDs
-		if (isset($cur_entity->uid)) {
-			$cur_entity->user = user::factory((int) $cur_entity->uid);
-			unset($cur_entity->uid);
-			$changed = true;
-		}
-		// Replace GIDs
-		if (isset($cur_entity->gid)) {
-			$cur_entity->group = group::factory((int) $cur_entity->gid);
-			unset($cur_entity->gid);
-			$changed = true;
+		if ($cur_entity->has_tag('com_user')) {
+			// Enable users/groups by default.
+			if (!isset($cur_entity->enabled)) {
+				$cur_entity->enabled = true;
+				$changed = true;
+			}
+		} else {
+			// Replace UIDs
+			if (isset($cur_entity->uid)) {
+				$cur_entity->user = user::factory((int) $cur_entity->uid);
+				unset($cur_entity->uid);
+				$changed = true;
+			}
+			// Replace GIDs
+			if (isset($cur_entity->gid)) {
+				$cur_entity->group = group::factory((int) $cur_entity->gid);
+				unset($cur_entity->gid);
+				$changed = true;
+			}
 		}
 		if ($changed) {
 			if ($cur_entity->save())

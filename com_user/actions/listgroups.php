@@ -14,5 +14,5 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_user/listgroups') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_user', 'listgroups'));
 
-$pines->user_manager->list_groups();
+$pines->user_manager->list_groups($_REQUEST['enabled'] != 'false');
 ?>

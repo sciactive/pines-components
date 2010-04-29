@@ -30,6 +30,7 @@ if ( isset($_REQUEST['id']) ) {
 
 $user->username = $_REQUEST['username'];
 $user->name = $_REQUEST['name'];
+$user->enabled = ($_REQUEST['enabled'] == 'ON');
 $user->email = $_REQUEST['email'];
 $user->phone = preg_replace('/\D/', '', $_REQUEST['phone']);
 $user->fax = preg_replace('/\D/', '', $_REQUEST['fax']);

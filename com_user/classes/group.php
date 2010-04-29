@@ -22,6 +22,7 @@ class group extends able_object implements group_interface {
 		parent::__construct();
 		$this->add_tag('com_user', 'group');
 		// Defaults.
+		$this->enabled = true;
 		$this->abilities = array();
 		$this->address_type = 'us';
 		$this->attributes = array();

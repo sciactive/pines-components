@@ -23,7 +23,15 @@
 			}
 		},
 		{
-			"path": "main_menu/system/user_manager/Groups",
+			"path": "main_menu/system/user_manager/disabledusers",
+			"text": "Disabled Users",
+			"href": ["com_user","listusers",{"enabled":"false"}],
+			"depend": {
+				"ability": "com_user/listusers"
+			}
+		},
+		{
+			"path": "main_menu/system/user_manager/groups",
 			"text": "Groups",
 			"href": ["com_user","listgroups"],
 			"depend": {
@@ -36,6 +44,14 @@
 			"href": ["com_user","editgroup"],
 			"depend": {
 				"ability": "com_user/newgroup"
+			}
+		},
+		{
+			"path": "main_menu/system/user_manager/disabledgroups",
+			"text": "Disabled Groups",
+			"href": ["com_user","listgroups",{"enabled":"false"}],
+			"depend": {
+				"ability": "com_user/listgroups"
 			}
 		},
 	{

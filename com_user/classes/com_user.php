@@ -298,8 +298,10 @@ class com_user extends component implements user_manager_interface {
 
 	/**
 	 * Creates and attaches a module which lists groups.
+	 * 
+	 * @param bool $enabled Show enabled groups if true, disabled if false.
 	 */
-	public function list_groups() {
+	public function list_groups($enabled = true) {
 		global $pines;
 
 		$pines->com_pgrid->load();
@@ -308,18 +310,18 @@ class com_user extends component implements user_manager_interface {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_user/list_groups'];
 
-		$module->groups = $pines->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
+		$module->groups = $pines->entity_manager->get_entities(array('data' => array('enabled' => !!$enabled), 'tags' => array('com_user', 'group'), 'class' => group));
 
-		if ( empty($module->groups) ) {
-			//$module->detach();
-			pines_notice('There are no groups.');
-		}
+		if ( empty($module->groups) )
+			pines_notice('There are no'.($enabled ? ' enabled' : ' disabled').' groups.');
 	}
 
 	/**
 	 * Creates and attaches a module which lists users.
+	 * 
+	 * @param bool $enabled Show enabled users if true, disabled if false.
 	 */
-	public function list_users() {
+	public function list_users($enabled = true) {
 		global $pines;
 
 		$pines->com_pgrid->load();
@@ -328,16 +330,14 @@ class com_user extends component implements user_manager_interface {
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_user/list_users'];
 
-		$module->users = $pines->entity_manager->get_entities(array('tags' => array('com_user', 'user'), 'class' => user));
+		$module->users = $pines->entity_manager->get_entities(array('data' => array('enabled' => !!$enabled), 'tags' => array('com_user', 'user'), 'class' => user));
 
-		if ( empty($module->users) ) {
-			//$module->detach();
-			pines_notice('There are no users.');
-		}
+		if ( empty($module->users) )
+			pines_notice('There are no'.($enabled ? ' enabled' : ' disabled').' users.');
 	}
 
 	public function login($user) {
-		if ( isset($user->guid) && $this->gatekeeper('com_user/login', $user) ) {
+		if ( isset($user->guid) && $user->enabled && $this->gatekeeper('com_user/login', $user) ) {
 			// Destroy session data.
 			$this->logout();
 			// Start a new session.

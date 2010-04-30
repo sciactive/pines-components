@@ -26,8 +26,8 @@ class com_packager_package extends entity {
 		parent::__construct();
 		$this->add_tag('com_packager', 'package');
 		// Defaults.
-		$this->enabled = true;
-		$this->attributes = array();
+		$this->type = 'component';
+		$this->attributes = $this->meta = array();
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
@@ -82,6 +82,7 @@ class com_packager_package extends entity {
 		$pines->com_pgrid->load();
 		$module = new module('com_packager', 'form_package', 'content');
 		$module->entity = $this;
+		$module->components = $pines->all_components;
 
 		return $module;
 	}

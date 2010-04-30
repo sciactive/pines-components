@@ -27,9 +27,24 @@ if ( isset($_REQUEST['id']) ) {
 
 // General
 $package->name = $_REQUEST['name'];
-$package->enabled = ($_REQUEST['enabled'] == 'ON');
-$package->description = $_REQUEST['description'];
-$package->short_description = $_REQUEST['short_description'];
+$package->type = $_REQUEST['type'];
+switch ($package->type) {
+	case 'component':
+		$package->component = $_REQUEST['pkg_component'];
+		break;
+	case 'template':
+		$package->component = $_REQUEST['pkg_template'];
+		break;
+	case 'meta':
+		unset($package->component);
+		$package->meta = array('title' => $_REQUEST['meta_title']);
+		break;
+	default:
+		$package->type = 'component';
+		$package->component = $_REQUEST['pkg_component'];
+		pines_notice('Package type must be either component or template.');
+		break;
+}
 
 // Attributes
 $package->attributes = (array) json_decode($_REQUEST['attributes']);
@@ -45,6 +60,16 @@ unset($cur_attribute);
 if (empty($package->name)) {
 	$package->print_form();
 	pines_notice('Please specify a name.');
+	return;
+}
+if ($package->type != 'meta' && empty($package->component)) {
+	$package->print_form();
+	pines_notice('Please specify a component.');
+	return;
+}
+if ($package->type != 'meta' && !in_array($package->component, $pines->all_components)) {
+	$package->print_form();
+	pines_notice('Selected component was not found.');
 	return;
 }
 $test = $pines->entity_manager->get_entity(array('data' => array('name' => $package->name), 'tags' => array('com_packager', 'package'), 'class' => com_packager_package));

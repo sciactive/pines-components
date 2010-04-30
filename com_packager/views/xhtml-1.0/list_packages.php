@@ -23,6 +23,7 @@ $this->title = 'Packages';
 			pgrid_toolbar_contents: [
 				{type: 'button', text: 'New', extra_class: 'icon picon_16x16_actions_document-new', selection_optional: true, url: '<?php echo pines_url('com_packager', 'editpackage'); ?>'},
 				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo pines_url('com_packager', 'editpackage', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Make Package', extra_class: 'icon picon_16x16_mimetypes_package-x-generic', url: '<?php echo pines_url('com_packager', 'makepackage', array('id' => '__title__')); ?>'},
 				//{type: 'button', text: 'E-Mail', extra_class: 'icon picon_16x16_actions_mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
 				{type: 'button', text: 'Delete', extra_class: 'icon picon_16x16_actions_edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_packager', 'deletepackage', array('id' => '__title__')); ?>', delimiter: ','},
@@ -56,14 +57,31 @@ $this->title = 'Packages';
 	<thead>
 		<tr>
 			<th>Name</th>
-			<th>Enabled</th>
+			<th>Type</th>
+			<th>Component</th>
 		</tr>
 	</thead>
 	<tbody>
 	<?php foreach($this->packages as $package) { ?>
 		<tr title="<?php echo $package->guid; ?>">
 			<td><?php echo $package->name; ?></td>
-			<td><?php echo ($package->enabled ? 'Yes' : 'No'); ?></td>
+			<td><?php switch($package->type) {
+				case 'component':
+					echo 'Component Package';
+					break;
+				case 'template':
+					echo 'Template Package';
+					break;
+				case 'meta':
+					echo 'Meta Package';
+					break;
+			} ?></td>
+			<td><?php if ($package->type != 'meta') {
+				$name = $package->component;
+				echo "{$pines->info->$name->name} [{$name}]";
+			} else {
+				echo 'N/A';
+			} ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

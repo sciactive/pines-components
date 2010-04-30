@@ -90,6 +90,7 @@ $this->note = 'Provide package details in this form.';
 	<div id="package_tabs" style="clear: both;">
 		<ul>
 			<li><a href="#tab_general">General</a></li>
+			<li><a href="#tab_images">Images</a></li>
 			<li><a href="#tab_attributes">Attributes</a></li>
 		</ul>
 		<div id="tab_general">
@@ -104,20 +105,92 @@ $this->note = 'Provide package details in this form.';
 			</div>
 			<?php } ?>
 			<div class="pf-element">
-				<label><span class="pf-label">Name</span>
-					<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
+				<label>
+					<span class="pf-label">Name</span>
+					<span class="pf-note">This name is only used in this system. It will not be used when making the package.</span>
+					<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" />
+				</label>
 			</div>
 			<div class="pf-element">
-				<label><span class="pf-label">Enabled</span>
-					<input class="pf-field ui-widget-content" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
+				<script type="text/javascript">
+					// <![CDATA[
+					pines(function(){
+						$("#package_details input[name=type]").change(function(){
+							var class_name = $("#package_details input[name=type]:checked").val();
+							$("#package_details div.package_type").hide();
+							$("#package_details div.package_type."+class_name).show();
+						}).change();
+					});
+					// ]]>
+				</script>
+				<span class="pf-label">Type</span>
+				<div class="pf-group">
+					<label><input class="pf-field ui-state-default" type="radio" name="type" value="component"<?php echo (($this->entity->type == 'component') ? ' checked="checked"' : ''); ?> /> Component</label>
+					<label><input class="pf-field ui-state-default" type="radio" name="type" value="template"<?php echo (($this->entity->type == 'template') ? ' checked="checked"' : ''); ?> /> Template</label>
+					<label><input class="pf-field ui-state-default" type="radio" name="type" value="meta"<?php echo (($this->entity->type == 'meta') ? ' checked="checked"' : ''); ?> /> Meta Package</label>
+				</div>
+			</div>
+			<div class="package_type component">
+				<div class="pf-element pf-heading">
+					<h1>Component Package Options</h1>
+				</div>
+				<div class="pf-element">
+					<label>
+						<span class="pf-label">Component</span>
+						<span class="pf-note">Information will be gathered from the component's info file.</span>
+						<select class="pf-field ui-widget-content" name="pkg_component">
+							<option value="null">-- Choose Component --</option>
+							<?php foreach ($this->components as $cur_component) {
+								if (substr($cur_component, 0, 4) != 'com_')
+									continue;
+								?>
+							<option value="<?php echo $cur_component; ?>"<?php echo (($this->entity->component == $cur_component) ? ' selected="selected"' : ''); ?>><?php echo "{$pines->info->$cur_component->name} [{$cur_component}]"; ?></option>
+							<?php } ?>
+						</select>
+					</label>
+				</div>
+			</div>
+			<div class="package_type template">
+				<div class="pf-element pf-heading">
+					<h1>Template Package Options</h1>
+				</div>
+				<div class="pf-element">
+					<label>
+						<span class="pf-label">Template</span>
+						<span class="pf-note">Information will be gathered from the template's info file.</span>
+						<select class="pf-field ui-widget-content" name="pkg_template">
+							<option value="null">-- Choose Template --</option>
+							<?php foreach ($this->components as $cur_component) {
+								if (substr($cur_component, 0, 4) != 'tpl_')
+									continue;
+								?>
+							<option value="<?php echo $cur_component; ?>"<?php echo (($this->entity->component == $cur_component) ? ' selected="selected"' : ''); ?>><?php echo "{$pines->info->$cur_component->name} [{$cur_component}]"; ?></option>
+							<?php } ?>
+						</select>
+					</label>
+				</div>
+			</div>
+			<div class="package_type meta">
+				<div class="pf-element pf-heading">
+					<h1>Meta Package Options</h1>
+				</div>
+				<div class="pf-element">
+					<label>
+						<span class="pf-label">Title</span>
+						<input class="pf-field ui-widget-content" type="text" name="meta_title" size="24" value="<?php echo $this->entity->meta['title']; ?>" />
+					</label>
+				</div>
+			</div>
+			<br class="pf-clearing" />
+		</div>
+		<div id="tab_images">
+			<div class="pf-element pf-full-width">
+				<span class="pf-label">Icon</span>
+				<span class="pf-field">Nothing here yet...</span>
 			</div>
 			<div class="pf-element pf-full-width">
-				<span class="pf-label">Description</span><br />
-				<textarea rows="3" cols="35" class="peditor" style="width: 100%;" name="description"><?php echo $this->entity->description; ?></textarea>
-			</div>
-			<div class="pf-element pf-full-width">
-				<span class="pf-label">Short Description</span><br />
-				<textarea rows="3" cols="35" class="peditor_simple" style="width: 100%;" name="short_description"><?php echo $this->entity->short_description; ?></textarea>
+				<span class="pf-label">Screenshots</span>
+				<span class="pf-field">Nothing here yet...</span>
 			</div>
 			<br class="pf-clearing" />
 		</div>

@@ -54,7 +54,7 @@ foreach ($this->sales as $cur_sale) {
 <script type='text/javascript'>
 	// <![CDATA[
 	var view_changes = 0;
-	$(document).ready(function() {
+	pines(function() {
 		// Create the calendar object.
 		$('#calendar').fullCalendar({
 			header: {

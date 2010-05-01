@@ -21,7 +21,7 @@ defined('P_RUN') or die('Direct access prohibited');
 ?>
 <script type='text/javascript'>
 // <![CDATA[
-	$(document).ready(function() {
+	pines(function() {
 		// Create the calendar object.
 		$('#calendar').fullCalendar({
 			header: {

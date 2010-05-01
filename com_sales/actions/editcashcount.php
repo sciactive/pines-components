@@ -20,25 +20,38 @@ if (isset($_REQUEST['id'])) {
 }
 
 $entity = com_sales_cashcount::factory((int) $_REQUEST['id']);
+
+$pending_count = false;
 // Ensure that only one cashcount is done at a time per assignment/location.
 if ($_SESSION['user']->group->com_sales_task_cashcount) {
-	if ( isset($entity->group->guid) && $entity->group->guid != $_SESSION['user']->group->guid ) {
+	if ( isset($entity->group->guid) && !$entity->group->is($_SESSION['user']->group) ) {
 		pines_notice('This cash count belongs to a different location.');
 		$pines->com_sales->list_cashcounts();
 		return;
 	}
 	if (!isset($entity->guid) && isset($_SESSION['user']->group)) {
 		// Look for any cashcounts that are waiting to be committed.
-		$existing_sheets = $pines->entity_manager->get_entities(array('ref' => array('group' => $_SESSION['user']->group), 'tags' => array('com_sales', 'cashcount'), 'class' => com_sales_cashcount));
-		foreach ($existing_sheets as $cur_sheet) {
-			if (!$entity->is($cur_sheet) && !$cur_sheet->final) {
+		$existing_counts = $pines->entity_manager->get_entities(array('ref' => array('group' => $_SESSION['user']->group), 'tags' => array('com_sales', 'cashcount'), 'class' => com_sales_cashcount));
+		foreach ($existing_counts as $cur_count) {
+			if ( !$entity->is($cur_count) && !$cur_count->final) {
 				pines_notice('This cash count is already waiting to be committed for your location.');
-				$cur_sheet->print_form();
+				$cur_count->print_form();
 				return;
 			}
+			// Mark that there is a pending, commited cash count, so if there is
+			// no open one, the user is pushed back to the cash count list.
+			if (!in_array($cur_count->status, array('closed', 'flagged')))
+				$pending_count = true;
 		}
 	}
 }
+
+if ($pending_count) {
+	pines_notice('There is a cash count pending for your location, it must be approved or declined.');
+	$pines->com_sales->list_cashcounts();
+	return;
+}
+
 $entity->print_form();
 
 ?>

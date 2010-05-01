@@ -29,9 +29,9 @@ $skim->comments = $_REQUEST['comments'];
 $skim->variance = $total_count = 0;
 // Save the total count of each different denomination.
 foreach ($skim->count as $cur_count) {
-	$total_count++;
 	// The skim variance is what is being taken out of the drawer.
 	$skim->variance += $cur_count * $cashcount->currency[$total_count];
+	$total_count++;
 }
 // The skim total is what is still left in the drawer after skimming.
 $skim->total = $cashcount->total - $skim->variance;

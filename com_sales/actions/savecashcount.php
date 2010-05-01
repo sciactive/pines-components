@@ -37,9 +37,9 @@ $cashcount->comments = $_REQUEST['comments'];
 $cashcount->float = $total_count = 0;
 // Save the total count of each different denomination.
 foreach ($cashcount->count as $cur_count) {
-	$total_count++;
 	// The float is the total amount of money in the drawer to begin with.
 	$cashcount->float += $cur_count * $cashcount->currency[$total_count];
+	$total_count++;
 }
 
 if ($_REQUEST['save'] == 'commit') {

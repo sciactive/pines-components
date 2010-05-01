@@ -41,6 +41,15 @@ $denom_counter = 0;
 		width: 300px;
 		text-align: center;
 	}
+	/* Add and Remove Classes to show recent changes. */
+	#audit_details .added {
+		border: green solid 1px;
+		color: green;
+	}
+	#audit_details .removed {
+		border: red solid 1px;
+		color: red;
+	}
 	/* ]]> */
 </style>
 <script type="text/javascript">
@@ -67,6 +76,7 @@ $denom_counter = 0;
 			//bills/coins for each denomition by its respective value.
 			//ex: 5 x 0.25 for 5 quarters that have been counted
 			total_count += parseInt($(this).val()) * parseFloat(multiply[$(this).attr("name").replace(/.*(\d).*/, "$1")]);
+			$(this).removeClass('added removed');
 		});
 		$("#total_audit").html(cash_symbol+total_count.toFixed(2));
 	}
@@ -76,12 +86,15 @@ $denom_counter = 0;
 			$("#audit_details .entry").each(function() { $(this).val(0); });
 			update_total();
 		}
+		$("#audit_details [name=clear_btn]").blur();
 	}
 
 	function add_amount(type) {
 		var current = parseInt($("#audit_details [name=count["+type+"]]").val());
 		$("#audit_details [name=count["+type+"]]").val(current+1);
 		$("#audit_details [name=count["+type+"]]").change();
+		$("#audit_details [name=count["+type+"]]").addClass('added');
+		$("#audit_details [name=add_btn["+type+"]]").blur();
 	}
 
 	function remove_amount(type) {
@@ -89,7 +102,9 @@ $denom_counter = 0;
 		if (current > 0) {
 			$("#audit_details [name=count["+type+"]]").val(current-1);
 			$("#audit_details [name=count["+type+"]]").change();
+			$("#audit_details [name=count["+type+"]]").addClass('removed');
 		}
+		$("#audit_details [name=remove_btn["+type+"]]").blur();
 	}
 
 	function verify() {
@@ -99,16 +114,16 @@ $denom_counter = 0;
 	// ]]>
 </script>
 <form class="pf-form" method="post" id="audit_details" action="<?php echo htmlentities(pines_url('com_sales', 'savecashcount_audit')); ?>">
-	<?php if (!empty($this->entity->review_comments)) {?>
+	<?php if (!empty($this->entity->cashcount->review_comments)) {?>
 	<div class="pf-element pf-heading">
 		<h1>Reviewer Comments</h1>
 	</div>
 	<div class="pf-element pf-full-width">
-		<div class="pf-field"><?php echo $this->entity->review_comments; ?></div>
+		<div class="pf-field"><?php echo $this->entity->cashcount->review_comments; ?></div>
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-heading">
-		<h1>Cash Drawer Contents<button class="ui-state-default ui-corner-all" type="button" onclick="clear_all()" style="margin-left: 50px;"><span>Clear All</span></button></h1>
+		<h1>Cash Drawer Contents<button class="ui-state-default ui-corner-all" type="button" name="clear_btn" onclick="clear_all()" style="margin-left: 50px;"><span>Clear All</span></button></h1>
 	</div>
 	<div class="pf-group">
 		<div>
@@ -120,8 +135,8 @@ $denom_counter = 0;
 			</script>
 			<div class="pf-element pf-group">
 				<input class="pf-field ui-widget-content entry" type="text" name="count[<?php echo $denom_counter; ?>]" value="<?php echo '0'; ?>" />
-				<button class="pf-field ui-state-default ui-corner-all" type="button" onclick="add_amount('<?php echo $denom_counter; ?>');"><span class="amt_btn picon_16x16_actions_list-add"></span></button>
-				<button class="pf-field ui-state-default ui-corner-all" type="button" onclick="remove_amount('<?php echo $denom_counter; ?>');"><span class="amt_btn picon_16x16_actions_list-remove"></span></button>
+				<button class="pf-field ui-state-default ui-corner-all" type="button" name="add_btn[<?php echo $denom_counter; ?>]" onclick="add_amount('<?php echo $denom_counter; ?>');"><span class="amt_btn picon_16x16_actions_list-add"></span></button>
+				<button class="pf-field ui-state-default ui-corner-all" type="button" name="remove_btn[<?php echo $denom_counter; ?>]" onclick="remove_amount('<?php echo $denom_counter; ?>');"><span class="amt_btn picon_16x16_actions_list-remove"></span></button>
 				<span class="label amount"><?php echo $this->entity->cashcount->currency_symbol . $cur_denom; ?></span>
 			</div>
 			<?php $denom_counter++; } ?>

@@ -30,8 +30,8 @@ $audit->comments = $_REQUEST['comments'];
 $audit->total = $total_count = 0;
 // Save the total count of each different denomination.
 foreach ($audit->count as $cur_count) {
-	$total_count++;
 	$audit->total += $cur_count * $cashcount->currency[$total_count];
+	$total_count++;
 }
 // The difference between the amount counted to what is in the drawer.
 $audit->variance = $audit->total - $cashcount->total;

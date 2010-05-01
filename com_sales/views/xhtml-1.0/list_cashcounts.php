@@ -52,10 +52,12 @@ $this->title = 'Cash Counts';
 			buttons: {
 				"Assign": function(){
 					var assign_to = assign_dialog.find(":input[name=location]").val();
+					var assign_type = assign_dialog.find(":input[name=count_type]").val();
 					if (assign_to == "") {
 						alert("Please select a group");
 					} else {
 						pines.post("<?php echo pines_url('com_sales', 'assigncashcount'); ?>", {
+							count_type: assign_type,
 							location: assign_to
 						});
 						assign_dialog.dialog("close");
@@ -159,7 +161,19 @@ $this->title = 'Cash Counts';
 	<?php } ?>
 	</tbody>
 </table>
-<div id="assign_dialog" title="Assign a Cash Count to" style="display: none;">
+<div id="assign_dialog" title="Assign a Cash Count" style="display: none;">
+	<div class="pf-element">
+		<label>
+			<span class="pf-label">Count Type</span>
+			<select class="ui-widget-content" name="count_type">
+				<option value="cash_count">Cash Count</option>
+				<option value="cash_audit">Cash Audit</option>
+				<option value="cash_skim">Cash Skim</option>
+				<option value="cash_deposit">Cash Deposit</option>
+			</select>
+		</label>
+	</div>
+	<br />
 	<div id="location_tree"></div>
 	<input type="hidden" name="location" />
 </div>

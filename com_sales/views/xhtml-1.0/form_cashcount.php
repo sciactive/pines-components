@@ -42,6 +42,15 @@ $denom_counter = 0;
 		width: 300px;
 		text-align: center;
 	}
+	/* Add and Remove Classes to show recent changes. */
+	#cashcount_details .added {
+		border: green solid 1px;
+		color: green;
+	}
+	#cashcount_details .removed {
+		border: red solid 1px;
+		color: red;
+	}
 	/* ]]> */
 </style>
 <script type="text/javascript">
@@ -68,6 +77,7 @@ $denom_counter = 0;
 			//bills/coins for each denomition by its respective value.
 			//ex: 5 x 0.25 for 5 quarters that have been counted
 			total_count += parseInt($(this).val()) * parseFloat(multiply[$(this).attr("name").replace(/.*(\d).*/, "$1")]);
+			$(this).removeClass('added removed');
 		});
 		$("#total_cashcount").html(cash_symbol+total_count.toFixed(2));
 	}
@@ -77,19 +87,24 @@ $denom_counter = 0;
 			$("#cashcount_details .entry").each(function() { $(this).val(0); });
 			update_total();
 		}
+		$("#cashcount_details [name=clear_btn]").blur();
 	}
 
 	function add_amount(type) {
 		var current = parseInt($("#cashcount_details [name=count["+type+"]]").val());
 		$("#cashcount_details [name=count["+type+"]]").val(current+1);
 		$("#cashcount_details [name=count["+type+"]]").change();
+		$("#cashcount_details [name=count["+type+"]]").addClass('added');
+		$("#cashcount_details [name=add_btn["+type+"]]").blur();
 	}
 	function remove_amount(type) {
 		var current = parseInt($("#cashcount_details [name=count["+type+"]]").val());
 		if (current > 0) {
 			$("#cashcount_details [name=count["+type+"]]").val(current-1);
 			$("#cashcount_details [name=count["+type+"]]").change();
+			$("#cashcount_details [name=count["+type+"]]").addClass('removed');
 		}
+		$("#cashcount_details [name=remove_btn["+type+"]]").blur();
 	}
 	// ]]>
 </script>
@@ -103,7 +118,7 @@ $denom_counter = 0;
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-heading">
-		<h1>Cash Drawer Contents<?php if (!$this->entity->final) { ?><button class="ui-state-default ui-corner-all" type="button" onclick="clear_all()" style="margin-left: 50px;"><span>Clear All</span></button><?php } ?></h1>
+		<h1>Cash Drawer Contents<?php if (!$this->entity->final) { ?><button class="ui-state-default ui-corner-all" type="button" name="clear_btn" onclick="clear_all()" style="margin-left: 50px;"><span>Clear All</span></button><?php } ?></h1>
 	</div>
 	<div class="pf-group">
 		<div>
@@ -116,8 +131,8 @@ $denom_counter = 0;
 			<div class="pf-element pf-group">
 				<input class="pf-field ui-widget-content entry" type="text" name="count[<?php echo $denom_counter; ?>]" value="<?php echo $this->entity->count[$denom_counter] ? $this->entity->count[$denom_counter] : '0'; ?>" <?php echo $this->entity->final ? "readonly='readonly'" : ""; ?>/>
 				<?php if (!$this->entity->final) { ?>
-				<button class="pf-field ui-state-default ui-corner-all" type="button" onclick="add_amount('<?php echo $denom_counter; ?>');"><span class="amt_btn picon_16x16_actions_list-add"></span></button>
-				<button class="pf-field ui-state-default ui-corner-all" type="button" onclick="remove_amount('<?php echo $denom_counter; ?>');"><span class="amt_btn picon_16x16_actions_list-remove"></span></button>
+				<button class="pf-field ui-state-default ui-corner-all" type="button" name="add_btn[<?php echo $denom_counter; ?>]" onclick="add_amount('<?php echo $denom_counter; ?>');"><span class="amt_btn picon_16x16_actions_list-add"></span></button>
+				<button class="pf-field ui-state-default ui-corner-all" type="button" name="remove_btn[<?php echo $denom_counter; ?>]" onclick="remove_amount('<?php echo $denom_counter; ?>');"><span class="amt_btn picon_16x16_actions_list-remove"></span></button>
 				<?php } ?>
 				<span class="amount"><?php echo $this->entity->currency_symbol . $cur_denom; ?></span>
 			</div>
@@ -133,8 +148,8 @@ $denom_counter = 0;
 	<div class="pf-element pf-heading">
 		<h1>Comments</h1>
 	</div>
-	<div class="pf-element">
-		<textarea class="pf-full-width" rows="3" cols="114" name="comments" <?php echo $this->entity->final ? "readonly='readonly'" : ""; ?>><?php echo $this->entity->comments; ?></textarea>
+	<div class="pf-element pf-full-width">
+		<span class="pf-field"><textarea style="width: 98%;" rows="3" cols="35" name="comments" <?php echo $this->entity->final ? "readonly='readonly'" : ""; ?>><?php echo $this->entity->comments; ?></textarea></span>
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>

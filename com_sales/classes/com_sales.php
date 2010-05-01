@@ -296,6 +296,12 @@ class com_sales extends component {
 			$_SESSION['user']->refresh();
 			if ($_SESSION['user']->group->com_sales_task_cashcount)
 				$this->inform('Reminder', '<a href="'.pines_url('com_sales', 'editcashcount').'">Cash Drawer Count &raquo;</a>', 'Please perform a count of the cash in your location\'s drawer. Corporate is awaiting a cash count submission.');
+			if ($_SESSION['user']->group->com_sales_task_cashcount_audit)
+				$this->inform('Reminder', '<a href="'.pines_url('com_sales', 'auditcashcount').'">Cash Drawer Audit &raquo;</a>', 'Please perform an audit of the cash in your location\'s drawer. Corporate is awaiting a cash drawer audit submission.');
+			if ($_SESSION['user']->group->com_sales_task_cashcount_deposit)
+				$this->inform('Reminder', '<a href="'.pines_url('com_sales', 'depositcashcount').'">Cash Drawer Deposit &raquo;</a>', 'Please perform a deposit from the skimmed cash in your location. Corporate is awaiting a cash deposit submission.');
+			if ($_SESSION['user']->group->com_sales_task_cashcount_skim)
+				$this->inform('Reminder', '<a href="'.pines_url('com_sales', 'skimcashcount').'">Cash Drawer Skim &raquo;</a>', 'Please perform a skim from the cash in your location\'s drawer. Corporate is awaiting a cash skim submission.');
 		}
 
 		if ( empty($module->counts) )

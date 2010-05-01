@@ -14,13 +14,23 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_sales/auditcashcount') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'auditcashcount', array('id' => $_REQUEST['id'])));
 
-$cashcount = com_sales_cashcount::factory((int) $_REQUEST['id']);
+// Default to the current cash count that is still open for this location.
+if (!isset($_REQUEST['id'])) {
+	$existing_counts = $pines->entity_manager->get_entities(array('ref' => array('group' => $_SESSION['user']->group), 'tags' => array('com_sales', 'cashcount'), 'class' => com_sales_cashcount));
+	foreach ($existing_counts as $cur_count) {
+		if (!in_array($cur_count->status, array('closed', 'flagged')))
+			$cashcount = $cur_count;
+	}
+} else {
+	$cashcount = com_sales_cashcount::factory((int) $_REQUEST['id']);
+}
+
 if (!isset($cashcount->guid)) {
 	pines_error('Requested cash count id is not accessible.');
 	$pines->com_sales->list_cashcounts();
 	return;
 }
-if ( isset($cashcount->group->guid) && $cashcount->group->guid != $_SESSION['user']->group->guid ) {
+if ( isset($cashcount->group->guid) && !$cashcount->group->is($_SESSION['user']->group) ) {
 	pines_notice('This cash count belongs to a different location.');
 	$pines->com_sales->list_cashcounts();
 	return;
@@ -35,6 +45,7 @@ if ($cashcount->status == 'closed' || $cashcount->status == 'flagged') {
 	$pines->com_sales->list_cashcounts();
 	return;
 }
+
 $audit = com_sales_cashcount_audit::factory();
 $audit->cashcount = $cashcount;
 $audit->print_form();

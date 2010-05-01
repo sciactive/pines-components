@@ -14,6 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 if (!gatekeeper('com_sales/assigncashcount') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'assigncashcount', array('location' => $_REQUEST['location'])));
 
+$type = $_REQUEST['count_type'];
 $location = group::factory((int) $_REQUEST['location']);
 if (!isset($location->guid))
 	$location = null;
@@ -23,9 +24,29 @@ if (!isset($location)) {
 	$pines->com_sales->list_cashcounts();
 	return;
 }
-$location->com_sales_task_cashcount = true;
+
+switch ($type) {
+	case 'cash_audit':
+		$location->com_sales_task_cashcount_audit = true;
+		$success_msg = 'Cash Audit';
+		break;
+	case 'cash_deposit':
+		$location->com_sales_task_cashcount_deposit = true;
+		$success_msg = 'Cash Deposit';
+		break;
+	case 'cash_skim':
+		$location->com_sales_task_cashcount_skim = true;
+		$success_msg = 'Cash Skim';
+		break;
+	case 'cash_count':
+	default:
+		$location->com_sales_task_cashcount = true;
+		$success_msg = 'Cash Count';
+		break;
+}
+
 if ($location->save()) {
-	pines_notice('Cash Count Assigned to ['.$location->name.']');
+	pines_notice($success_msg.' Assigned to ['.$location->name.']');
 } else {
 	pines_error('Error saving cash count assignment. Do you have permission?');
 }

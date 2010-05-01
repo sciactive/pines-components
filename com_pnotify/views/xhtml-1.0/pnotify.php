@@ -24,23 +24,21 @@ defined('P_RUN') or die('Direct access prohibited');
 				$.pnotify({pnotify_title: "Alert", pnotify_text: String(message), pnotify_nonblock: true});
 			};
 		}
-		pines.alert = function(message, title, iconstyles, otheroptions){
-			var options = $.extend({}, {
+		pines.alert = function(message, title){
+			var options = {
 				pnotify_title: title ? title : "Alert",
 				pnotify_text: String(message),
-				pnotify_notice_icon: iconstyles ? iconstyles : $.pnotify.defaults.pnotify_notice_icon,
 				pnotify_nonblock: true
-			}, otheroptions);
+			};
 			return $.pnotify(options);
 		};
-		pines.error = function(message, title, iconstyles, otheroptions){
-			var options = $.extend({}, {
+		pines.error = function(message, title){
+			var options = {
 				pnotify_type: "error",
 				pnotify_title: title ? title : "Error",
 				pnotify_text: String(message),
-				pnotify_error_icon: iconstyles ? iconstyles : $.pnotify.defaults.pnotify_error_icon,
 				pnotify_hide: false
-			}, otheroptions);
+			};
 			return $.pnotify(options);
 		};
 	});

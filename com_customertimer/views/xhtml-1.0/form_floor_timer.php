@@ -144,7 +144,14 @@ $this->title = 'Floor Timer ['.htmlentities($this->entity->name).']';
 						dataType: "json",
 						data: {"q": customer_search.val()},
 						beforeSend: function(){
-							loader = pines.alert('Searching for customers...', 'Customer Search', 'icon picon_16x16_animations_throbber', {pnotify_hide: false, pnotify_history: false});
+                            loader = $.pnotify({
+								pnotify_title: 'Customer Search',
+								pnotify_text: 'Searching for customers...',
+								pnotify_notice_icon: 'icon picon_16x16_animations_throbber',
+								pnotify_nonblock: true,
+								pnotify_hide: false,
+								pnotify_history: false
+							});
 							customer_table.pgrid_get_all_rows().pgrid_delete();
 						},
 						complete: function(){

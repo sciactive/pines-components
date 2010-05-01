@@ -25,7 +25,14 @@ $entry_count = count($this->entity->timeclock);
 					dataType: "json",
 					data: {"id": "self"},
 					beforeSend: function(){
-						loader = pines.alert('Communicating with server...', 'Timeclock', 'icon picon_16x16_animations_throbber', {pnotify_hide: false, pnotify_history: false});
+						loader = $.pnotify({
+							pnotify_title: 'Timeclock',
+							pnotify_text: 'Communicating with server...',
+							pnotify_notice_icon: 'icon picon_16x16_animations_throbber',
+							pnotify_nonblock: true,
+							pnotify_hide: false,
+							pnotify_history: false
+						});
 					},
 					complete: function(){
 						loader.pnotify_remove();

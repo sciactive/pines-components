@@ -89,7 +89,14 @@ $this->title = 'Sales Totals';
 						data: {"location": com_sales_location.val(), "date_start": com_sales_date_start.val(), "date_end": com_sales_date_end.val()},
 						beforeSend: function(){
 							com_sales_result_totals.hide("normal");
-							loader = pines.alert('Retrieving totals from server...', 'Sales Totals', 'icon picon_16x16_animations_throbber', {pnotify_hide: false, pnotify_history: false});
+                            loader = $.pnotify({
+								pnotify_title: 'Sales Totals',
+								pnotify_text: 'Retrieving totals from server...',
+								pnotify_notice_icon: 'icon picon_16x16_animations_throbber',
+								pnotify_nonblock: true,
+								pnotify_hide: false,
+								pnotify_history: false
+							});
 						},
 						complete: function(){
 							loader.pnotify_remove();

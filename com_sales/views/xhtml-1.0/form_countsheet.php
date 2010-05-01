@@ -60,7 +60,14 @@ $this->title = (!isset($this->entity->guid)) ? 'New Countsheet' : (($this->entit
 							dataType: "json",
 							data: {"code": rows.pgrid_get_value(1)},
 							beforeSend: function(){
-								loader = pines.alert('Retrieving product from server...', 'Product Search', 'icon picon_16x16_animations_throbber', {pnotify_hide: false, pnotify_history: false});
+								loader = $.pnotify({
+									pnotify_title: 'Product Search',
+									pnotify_text: 'Retrieving product from server...',
+									pnotify_notice_icon: 'icon picon_16x16_animations_throbber',
+									pnotify_nonblock: true,
+									pnotify_hide: false,
+									pnotify_history: false
+								});
 							},
 							complete: function(){
 								loader.pnotify_remove();

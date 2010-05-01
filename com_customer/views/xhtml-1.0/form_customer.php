@@ -286,7 +286,14 @@ $this->note = 'Provide customer profile details in this form.';
 						dataType: "json",
 						data: {"q": search_string},
 						beforeSend: function(){
-							loader = pines.alert('Searching for companies...', 'Company Search', 'icon picon_16x16_animations_throbber', {pnotify_hide: false, pnotify_history: false});
+							loader = $.pnotify({
+								pnotify_title: 'Company Search',
+								pnotify_text: 'Searching for companies...',
+								pnotify_notice_icon: 'icon picon_16x16_animations_throbber',
+								pnotify_nonblock: true,
+								pnotify_hide: false,
+								pnotify_history: false
+							});
 							company_table.pgrid_get_all_rows().pgrid_delete();
 						},
 						complete: function(){

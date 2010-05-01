@@ -184,7 +184,14 @@ $this->note = 'Use this form to edit a sale.';
 										dataType: "json",
 										data: {"code": code},
 										beforeSend: function(){
-											loader = pines.alert('Retrieving product from server...', 'Product Search', 'icon picon_16x16_animations_throbber', {pnotify_hide: false, pnotify_history: false});
+											loader = $.pnotify({
+												pnotify_title: 'Product Search',
+												pnotify_text: 'Retrieving product from server...',
+												pnotify_notice_icon: 'icon picon_16x16_animations_throbber',
+												pnotify_nonblock: true,
+												pnotify_hide: false,
+												pnotify_history: false
+											});
 										},
 										complete: function(){
 											loader.pnotify_remove();
@@ -349,7 +356,14 @@ $this->note = 'Use this form to edit a sale.';
 			var loader;
 			products_table.pgrid_get_all_rows().each(function(){
 				if (!loader)
-					loader = pines.alert('Retrieving product information from server...', 'Loading Products', 'icon picon_16x16_animations_throbber', {pnotify_hide: false, pnotify_history: false});
+					loader = $.pnotify({
+						pnotify_title: 'Loading Products',
+						pnotify_text: 'Retrieving product information from server...',
+						pnotify_notice_icon: 'icon picon_16x16_animations_throbber',
+						pnotify_nonblock: true,
+						pnotify_hide: false,
+						pnotify_history: false
+					});
 				var cur_row = $(this);
 				var cur_export = cur_row.pgrid_export_rows();
 				var cur_guid = cur_export[0].key;
@@ -712,7 +726,14 @@ $this->note = 'Use this form to edit a sale.';
 				dataType: "json",
 				data: {"q": search_string},
 				beforeSend: function(){
-					loader = pines.alert('Searching for customers...', 'Customer Search', 'icon picon_16x16_animations_throbber', {pnotify_hide: false, pnotify_history: false});
+					loader = $.pnotify({
+						pnotify_title: 'Customer Search',
+						pnotify_text: 'Searching for customers...',
+						pnotify_notice_icon: 'icon picon_16x16_animations_throbber',
+						pnotify_nonblock: true,
+						pnotify_hide: false,
+						pnotify_history: false
+					});
 					customer_table.pgrid_get_all_rows().pgrid_delete();
 				},
 				complete: function(){

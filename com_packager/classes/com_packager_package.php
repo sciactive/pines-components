@@ -73,6 +73,76 @@ class com_packager_package extends entity {
 	}
 
 	/**
+	 * Retrieve the package's filename.
+	 * @return string The filename.
+	 */
+	public function get_filename() {
+		if (!empty($this->filename))
+			return clean_filename($this->filename);
+		switch ($this->type) {
+			case 'component':
+			case 'template':
+				global $pines;
+				$component = $this->component;
+				return clean_filename("{$this->name}-{$pines->info->$component->version}");
+			case 'meta':
+				return clean_filename("{$this->name}-{$this->meta['version']}");
+			default:
+				return 'unknown';
+		}
+	}
+
+	/**
+	 * Write the package to a Slim archive.
+	 *
+	 * @param string $filename The filename to write to.
+	 * @return bool True on success, false on failure.
+	 * @todo Once testing is complete, enable compression of the archive.
+	 */
+	public function package($filename) {
+		global $pines;
+		$arc = new slim;
+		$arc->compression = '';
+		$arc->header_compression = false;
+		switch ($this->type) {
+			case 'component':
+			case 'template':
+				$component = $this->component;
+				$info = $pines->info->$component;
+				// Select only needed info from the info object.
+				$arc->ext = array(
+					'package' => $this->name,
+					'type' => $this->type,
+					'name' => $info->name,
+					'author' => $info->author,
+					'version' => $info->version,
+					'license' => $info->license,
+					'short_description' => $info->short_description,
+					'description' => $info->description
+				);
+				$arc->working_directory = $this->type == 'template' ? 'templates/' : 'components/';
+				$arc->add_directory($component);
+				break;
+			case 'meta':
+				$arc->ext = array(
+					'package' => $this->name,
+					'type' => $this->type,
+					'name' => $this->meta['name'],
+					'author' => $this->meta['author'],
+					'version' => $this->meta['version'],
+					'license' => $this->meta['license'],
+					'short_description' => $this->meta['short_description'],
+					'description' => $this->meta['description']
+				);
+				break;
+			default:
+				return false;
+		}
+
+		return $arc->write($filename);
+	}
+
+	/**
 	 * Print a form to edit the package.
 	 * @return module The form's module.
 	 */

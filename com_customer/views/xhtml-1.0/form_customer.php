@@ -556,8 +556,8 @@ $this->note = 'Provide customer profile details in this form.';
 			</div>
 			<div id="address_international" style="display: none;">
 				<div class="pf-element pf-full-width">
-				<label><span class="pf-label">Address</span>
-					<span class="pf-field pf-full-width"><textarea class="ui-widget-content" style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo $this->entity->address_international; ?></textarea></span></label>
+					<label><span class="pf-label">Address</span>
+						<span class="pf-field pf-full-width"><textarea class="ui-widget-content" style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo $this->entity->address_international; ?></textarea></span></label>
 				</div>
 			</div>
 			<div class="pf-element pf-heading">

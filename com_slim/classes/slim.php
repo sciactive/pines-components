@@ -26,6 +26,20 @@ class slim extends p_base {
 	 */
 	const slim_version = '1.0';
 	/**
+	 * The header data of the archive.
+	 *
+	 * The header array contains information about the archive:
+	 *
+	 * - files - An array of the files, directories, and links in the archive.
+	 * - comp - Type of compression used on the archive.
+	 * - compl - Level of compression used on the archive.
+	 * - ichk - Whether integrity checks are used on the file data.
+	 * - ext - Extra data.
+	 *
+	 * @var array
+	 */
+	private $header = array();
+	/**
 	 * The files to be written to the archive.
 	 *
 	 * @var array
@@ -65,19 +79,13 @@ class slim extends p_base {
 	 */
 	public $stub = 'slim1.0';
 	/**
-	 * The metadata of the archive.
+	 * Extra data to be included in the archive.
 	 *
-	 * The following keys are reserved by the Slim format. Anything written to
-	 * them will be overwritten.
-	 *
-	 * - files - An array of file data.
-	 * - comp - Type of compression.
-	 * - compl - Level of compression.
-	 * - ichk - Integrity checks.
+	 * This can be anything.
 	 *
 	 * @var array
 	 */
-	public $metadata = array();
+	public $ext = array();
 	/**
 	 * The filename of the archive.
 	 *
@@ -297,7 +305,7 @@ class slim extends p_base {
 		if ($dir_contents === false)
 			return false;
 		foreach ($dir_contents as $cur_path) {
-			if ($cur_path == '.' || $cur_path == '..' || ($exclude_vcs && ($cur_path == '.svn' || $cur_path == '.cvs')) || (isset($filter) && !$this->path_filter($rel_path.$cur_path, $filter)))
+			if ($cur_path == '.' || $cur_path == '..' || ($exclude_vcs && ($cur_path == '.hg' || $cur_path == '.hgtags' || $cur_path == '.svn' || $cur_path == '.cvs')) || (isset($filter) && !$this->path_filter($rel_path.$cur_path, $filter)))
 				continue;
 			if (is_file($abs_path.$cur_path)) {
 				$this->files[] = $abs_path.$cur_path;
@@ -341,15 +349,16 @@ class slim extends p_base {
 		} else {
 			$this->filename = $filename;
 		}
-		unset($this->metadata['comp']);
-		unset($this->metadata['compl']);
+		unset($this->header['comp']);
+		unset($this->header['compl']);
 		if (!empty($this->compression)) {
-			$this->metadata['comp'] = (string) $this->compression;
+			$this->header['comp'] = (string) $this->compression;
 			if ($this->compression == 'deflate')
-				$this->metadata['compl'] = (int) $this->compression_level;
+				$this->header['compl'] = (int) $this->compression_level;
 		}
-		$this->metadata['files'] = array();
-		$this->metadata['ichk'] = (bool) $this->file_integrity;
+		$this->header['files'] = array();
+		$this->header['ichk'] = (bool) $this->file_integrity;
+		$this->header['ext'] = (array) $this->ext;
 		$offset = 0.00;
 		foreach ($this->files as $cur_file) {
 			$cur_path = $this->make_path($cur_file, false);
@@ -391,11 +400,11 @@ class slim extends p_base {
 				$new_array['atime'] = $file_info['atime'];
 				$new_array['mtime'] = $file_info['mtime'];
 			}
-			$this->metadata['files'][] = $new_array;
+			$this->header['files'][] = $new_array;
 		}
 		if (!($fhandle = fopen($filename, 'w')))
 			return false;
-		$header = $this->header_compression ? 'D'.gzdeflate(json_encode($this->metadata), $this->header_compression_level) : json_encode($this->metadata);
+		$header = $this->header_compression ? 'D'.gzdeflate(json_encode($this->header), $this->header_compression_level) : json_encode($this->header);
 		$before_stream = "{$this->stub}\nHEADER\n{$header}\nSTREAM\n";
 		$this->stream_offset = strlen($before_stream);
 		fwrite($fhandle, $before_stream);
@@ -439,19 +448,20 @@ class slim extends p_base {
 		} while (!feof($fhandle) && $check != "HEADER\n");
 		if (!($this->stub = substr($this->stub, 0, -1)))
 			return false;
-		$metadata = '';
+		$header = '';
 		do {
-			$metadata .= fgets($fhandle);
-		} while (!feof($fhandle) && substr($metadata, -7) != "STREAM\n");
-		if (substr($metadata, -7) != "STREAM\n" || !($metadata = substr($metadata, 0, -7)))
+			$header .= fgets($fhandle);
+		} while (!feof($fhandle) && substr($header, -7) != "STREAM\n");
+		if (substr($header, -7) != "STREAM\n" || !($header = substr($header, 0, -7)))
 			return false;
-		if (substr($metadata, 0, 1) == 'D')
-			$metadata = gzinflate(substr($metadata, 1));
-		if (!($this->metadata = json_decode($metadata, true)))
+		if (substr($header, 0, 1) == 'D')
+			$header = gzinflate(substr($header, 1));
+		if (!($this->header = json_decode($header, true)))
 			return false;
-		$this->compression = (string) $this->metadata['comp'];
-		$this->compression_level = (int) $this->metadata['compl'];
-		$this->file_integrity = (bool) $this->metadata['ichk'];
+		$this->compression = (string) $this->header['comp'];
+		$this->compression_level = (int) $this->header['compl'];
+		$this->file_integrity = (bool) $this->header['ichk'];
+		$this->ext = (array) $this->header['ext'];
 		$this->stream_offset = ftell($fhandle);
 		return fclose($fhandle);
 	}
@@ -463,7 +473,7 @@ class slim extends p_base {
 	 * @return string The contents of the file.
 	 */
 	public function get_file($filename) {
-		foreach ($this->metadata['files'] as $cur_entry) {
+		foreach ($this->header['files'] as $cur_entry) {
 			if ($cur_entry['path'] != $filename || $cur_entry['type'] != 'file')
 				continue;
 			if (!($fhandle = fopen($this->filename, 'r')))
@@ -493,11 +503,11 @@ class slim extends p_base {
 	public function extract($path = '', $recursive = true, $filter = null) {
 		$return = true;
 		$path_slash = $this->add_slash($path);
-		if (!is_array($this->metadata['files']) || !($fhandle = fopen($this->filename, 'r')))
+		if (!is_array($this->header['files']) || !($fhandle = fopen($this->filename, 'r')))
 			return false;
 		$this->fseek($fhandle, $this->stream_offset);
 		$this->apply_filters($fhandle, 'r');
-		foreach ($this->metadata['files'] as $cur_entry) {
+		foreach ($this->header['files'] as $cur_entry) {
 			if ($path != '') {
 				if ($recursive) {
 					$cur_path_slash = $this->add_slash($cur_entry['path']);

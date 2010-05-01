@@ -106,9 +106,8 @@ $this->note = 'Provide package details in this form.';
 			<?php } ?>
 			<div class="pf-element">
 				<label>
-					<span class="pf-label">Name</span>
-					<span class="pf-note">This name is only used in this system. It will not be used when making the package.</span>
-					<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" />
+					<span class="pf-label">Package Name</span>
+					<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" onkeyup="this.value = this.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');" />
 				</label>
 			</div>
 			<div class="pf-element">
@@ -176,10 +175,53 @@ $this->note = 'Provide package details in this form.';
 				</div>
 				<div class="pf-element">
 					<label>
-						<span class="pf-label">Title</span>
-						<input class="pf-field ui-widget-content" type="text" name="meta_title" size="24" value="<?php echo $this->entity->meta['title']; ?>" />
+						<span class="pf-label">Name</span>
+						<span class="pf-note">Canonical name.</span>
+						<input class="pf-field ui-widget-content" type="text" name="meta_name" size="24" value="<?php echo $this->entity->meta['name']; ?>" />
 					</label>
 				</div>
+				<div class="pf-element">
+					<label>
+						<span class="pf-label">Author</span>
+						<input class="pf-field ui-widget-content" type="text" name="meta_author" size="24" value="<?php echo $this->entity->meta['author']; ?>" />
+					</label>
+				</div>
+				<div class="pf-element">
+					<label>
+						<span class="pf-label">Version</span>
+						<input class="pf-field ui-widget-content" type="text" name="meta_version" size="24" value="<?php echo $this->entity->meta['version']; ?>" />
+					</label>
+				</div>
+				<div class="pf-element">
+					<label>
+						<span class="pf-label">License</span>
+						<span class="pf-note">Provide the URL to an online version. If that's not available, provide the name of the license.</span>
+						<input class="pf-field ui-widget-content" type="text" name="meta_license" size="24" value="<?php echo $this->entity->meta['license']; ?>" />
+					</label>
+				</div>
+				<div class="pf-element">
+					<label>
+						<span class="pf-label">Short Description</span>
+						<span class="pf-note">Please provide a simple description, sentence caps, no period. E.g. "XML parsing library"</span>
+						<input class="pf-field ui-widget-content" type="text" name="meta_short_description" size="24" value="<?php echo $this->entity->meta['short_description']; ?>" />
+					</label>
+				</div>
+				<div class="pf-element pf-full-width">
+					<label>
+						<span class="pf-label">Description</span>
+						<span class="pf-field pf-full-width"><textarea class="ui-widget-content" style="width: 100%;" rows="3" cols="35" name="meta_description"><?php echo $this->entity->meta['description']; ?></textarea></span>
+					</label>
+				</div>
+			</div>
+			<div class="pf-element pf-heading">
+				<h1>Packaging Options</h1>
+			</div>
+			<div class="pf-element">
+				<label>
+					<span class="pf-label">Filename</span>
+					<span class="pf-note">Leave this blank to use the default filename scheme, "name-version".</span>
+					<input class="pf-field ui-widget-content" type="text" name="filename" size="24" value="<?php echo $this->entity->filename; ?>" />
+				</label>
 			</div>
 			<br class="pf-clearing" />
 		</div>

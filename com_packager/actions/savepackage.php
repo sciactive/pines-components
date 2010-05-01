@@ -26,7 +26,7 @@ if ( isset($_REQUEST['id']) ) {
 }
 
 // General
-$package->name = $_REQUEST['name'];
+$package->name = preg_replace('/[^a-z0-9_-]/', '', $_REQUEST['name']);
 $package->type = $_REQUEST['type'];
 switch ($package->type) {
 	case 'component':
@@ -37,7 +37,14 @@ switch ($package->type) {
 		break;
 	case 'meta':
 		unset($package->component);
-		$package->meta = array('title' => $_REQUEST['meta_title']);
+		$package->meta = array(
+			'name' => $_REQUEST['meta_name'],
+			'author' => $_REQUEST['meta_author'],
+			'version' => $_REQUEST['meta_version'],
+			'license' => $_REQUEST['meta_license'],
+			'short_description' => $_REQUEST['meta_short_description'],
+			'description' => $_REQUEST['meta_description']
+		);
 		break;
 	default:
 		$package->type = 'component';
@@ -45,6 +52,7 @@ switch ($package->type) {
 		pines_notice('Package type must be either component or template.');
 		break;
 }
+$package->filename = $_REQUEST['filename'];
 
 // Attributes
 $package->attributes = (array) json_decode($_REQUEST['attributes']);

@@ -56,7 +56,7 @@ $this->title = 'Packages';
 <table id="package_grid">
 	<thead>
 		<tr>
-			<th>Name</th>
+			<th>Package</th>
 			<th>Type</th>
 			<th>Component</th>
 		</tr>

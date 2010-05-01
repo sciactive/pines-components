@@ -27,7 +27,7 @@ class com_sales extends component {
 	 * @return bool True on success, false on failure.
 	 * @todo Finish calling this in all appropriate places.
 	 */
-	function call_payment_process($arguments = array()) {
+	public function call_payment_process($arguments = array()) {
 		global $pines;
 		if (!is_array($arguments))
 			return false;
@@ -53,7 +53,7 @@ class com_sales extends component {
 	 * @return bool True on success, false on failure.
 	 * @todo Finish calling this in all appropriate places.
 	 */
-	function call_product_actions($arguments = array(), $times = 1) {
+	public function call_product_actions($arguments = array(), $times = 1) {
 		global $pines;
 		if (!is_array($arguments))
 			return false;
@@ -89,7 +89,7 @@ class com_sales extends component {
 	 * @param array $category_array The array of categories.
 	 * @return array A structured array.
 	 */
-	function category_json_struct($category_array) {
+	public function category_json_struct($category_array) {
 		$struct = array();
 		if (!is_array($category_array))
 			return $struct;
@@ -141,7 +141,7 @@ class com_sales extends component {
 	 * @param entity $category The category.
 	 * @return bool True on success, false on failure.
 	 */
-	function delete_category_recursive($category) {
+	public function delete_category_recursive($category) {
 		global $pines;
 		$children = $pines->entity_manager->get_entities(array('data' => array('parent' => $category->guid)));
 		if (is_array($children)) {
@@ -163,7 +163,7 @@ class com_sales extends component {
 	 * @param int $id The category's GUID.
 	 * @return entity|null The category if it exists, null if it doesn't.
 	 */
-	function get_category($id) {
+	public function get_category($id) {
 		global $pines;
 		$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => array('com_sales', 'category')));
 		return $entity;
@@ -174,7 +174,7 @@ class com_sales extends component {
 	 *
 	 * @return array The array of entities.
 	 */
-	function get_category_array() {
+	public function get_category_array() {
 		global $pines;
 		$entities = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'category')));
 		if (!is_array($entities)) {
@@ -194,7 +194,7 @@ class com_sales extends component {
 	 * @param int $code The product's code.
 	 * @return entity|null The product if it is found, null if it isn't.
 	 */
-	function get_product_by_code($code) {
+	public function get_product_by_code($code) {
 		global $pines;
 		$entity = $pines->entity_manager->get_entity(array('data' => array('sku' => $code), 'tags' => array('com_sales', 'product'), 'class' => com_sales_product));
 		if (isset($entity))
@@ -218,7 +218,7 @@ class com_sales extends component {
 	 * @param entity $product The product.
 	 * @return array An array of GUIDs.
 	 */
-	function get_product_category_guid_array($product) {
+	public function get_product_category_guid_array($product) {
 		if (!is_object($product))
 			return array();
 		$categories = $this->get_product_category_array($product);
@@ -234,7 +234,7 @@ class com_sales extends component {
 	 * @param entity $product The product.
 	 * @return array An array of GUIDs.
 	 */
-	function get_product_category_array($product) {
+	public function get_product_category_array($product) {
 		if (!is_object($product))
 			return array();
 		$categories = $this->get_category_array();
@@ -252,14 +252,17 @@ class com_sales extends component {
 	 * @param string $title The title or category of the message.
 	 * @param string $header The header title for the message.
 	 * @param string $note The content of the message.
+	 * @param string $link The url to send the user to upon clicking the header.
 	 * @return module The notifcation's module.
 	 */
-	public function inform($title, $header, $note) {
+	public function inform($title, $header, $note, $link = null) {
 		global $pines;
-		$module = new module('com_sales', 'show_note', 'left');
+		$module = new module('com_sales', 'show_note', 'right');
 		$module->title = $title;
 		$module->header = $header;
 		$module->message = $note;
+		if (isset($link))
+			$module->link = $link;
 		return $module;
 	}
 
@@ -269,7 +272,7 @@ class com_sales extends component {
 	 * @param int $end_date The end date of cash counts to show.
 	 * @param group $location The location to show cash counts for.
 	 */
-	function list_cashcounts($start_date = null, $end_date = null, $location = null) {
+	public function list_cashcounts($start_date = null, $end_date = null, $location = null) {
 		global $pines;
 
 		$pines->com_pgrid->load();
@@ -295,13 +298,13 @@ class com_sales extends component {
 		if ($_SESSION['user']) {
 			$_SESSION['user']->refresh();
 			if ($_SESSION['user']->group->com_sales_task_cashcount)
-				$this->inform('Reminder', '<a href="'.pines_url('com_sales', 'editcashcount').'">Cash Drawer Count &raquo;</a>', 'Please perform a count of the cash in your location\'s drawer. Corporate is awaiting a cash count submission.');
+				$this->inform('Assignment', 'Cash Drawer Count', 'Please perform a count of the cash in your location\'s drawer. Corporate is awaiting a cash count submission.', pines_url('com_sales', 'editcashcount'));
 			if ($_SESSION['user']->group->com_sales_task_cashcount_audit)
-				$this->inform('Reminder', '<a href="'.pines_url('com_sales', 'auditcashcount').'">Cash Drawer Audit &raquo;</a>', 'Please perform an audit of the cash in your location\'s drawer. Corporate is awaiting a cash drawer audit submission.');
+				$this->inform('Assignment', 'Cash Drawer Audit', 'Please perform an audit of the cash in your location\'s drawer. Corporate is awaiting a cash drawer audit submission.', pines_url('com_sales', 'auditcashcount'));
 			if ($_SESSION['user']->group->com_sales_task_cashcount_deposit)
-				$this->inform('Reminder', '<a href="'.pines_url('com_sales', 'depositcashcount').'">Cash Drawer Deposit &raquo;</a>', 'Please perform a deposit from the skimmed cash in your location. Corporate is awaiting a cash deposit submission.');
+				$this->inform('Assignment', 'Cash Drawer Deposit', 'Please perform a deposit from the skimmed cash in your location. Corporate is awaiting a cash deposit submission.', pines_url('com_sales', 'depositcashcount'));
 			if ($_SESSION['user']->group->com_sales_task_cashcount_skim)
-				$this->inform('Reminder', '<a href="'.pines_url('com_sales', 'skimcashcount').'">Cash Drawer Skim &raquo;</a>', 'Please perform a skim from the cash in your location\'s drawer. Corporate is awaiting a cash skim submission.');
+				$this->inform('Assignment', 'Cash Drawer Skim', 'Please perform a skim from the cash in your location\'s drawer. Corporate is awaiting a cash skim submission.', pines_url('com_sales', 'skimcashcount'));
 		}
 
 		if ( empty($module->counts) )
@@ -311,7 +314,7 @@ class com_sales extends component {
 	/**
 	 * Creates and attaches a module which lists countsheets.
 	 */
-	function list_countsheets() {
+	public function list_countsheets() {
 		global $pines;
 
 		$pines->com_pgrid->load();
@@ -339,7 +342,7 @@ class com_sales extends component {
 	/**
 	 * Creates and attaches a module which lists manufacturers.
 	 */
-	function list_manufacturers() {
+	public function list_manufacturers() {
 		global $pines;
 
 		$pines->com_pgrid->load();
@@ -359,7 +362,7 @@ class com_sales extends component {
 	/**
 	 * Creates and attaches a module which lists payment types.
 	 */
-	function list_payment_types() {
+	public function list_payment_types() {
 		global $pines;
 
 		$pines->com_pgrid->load();
@@ -379,7 +382,7 @@ class com_sales extends component {
 	/**
 	 * Creates and attaches a module which lists pos.
 	 */
-	function list_pos() {
+	public function list_pos() {
 		global $pines;
 
 		$pines->com_pgrid->load();
@@ -412,7 +415,7 @@ class com_sales extends component {
 	/**
 	 * Creates and attaches a module which lists products.
 	 */
-	function list_products() {
+	public function list_products() {
 		global $pines;
 
 		$pines->com_pgrid->load();
@@ -434,7 +437,7 @@ class com_sales extends component {
 	 * @param int $start_date The start date of sales to show.
 	 * @param int $end_date The end date of sales to show.
 	 */
-	function list_sales($start_date = null, $end_date = null) {
+	public function list_sales($start_date = null, $end_date = null) {
 		global $pines;
 
 		$pines->com_pgrid->load();
@@ -461,7 +464,7 @@ class com_sales extends component {
 	/**
 	 * Creates and attaches a module which lists shippers.
 	 */
-	function list_shippers() {
+	public function list_shippers() {
 		global $pines;
 
 		$pines->com_pgrid->load();
@@ -483,7 +486,7 @@ class com_sales extends component {
 	 *
 	 * @param bool $all Whether to show items that are no longer physically in inventory.
 	 */
-	function list_stock($all = false) {
+	public function list_stock($all = false) {
 		global $pines;
 
 		$pines->com_pgrid->load();
@@ -504,7 +507,7 @@ class com_sales extends component {
 	/**
 	 * Creates and attaches a module which lists taxes/fees.
 	 */
-	function list_tax_fees() {
+	public function list_tax_fees() {
 		global $pines;
 
 		$pines->com_pgrid->load();
@@ -524,7 +527,7 @@ class com_sales extends component {
 	/**
 	 * Creates and attaches a module which lists transfers.
 	 */
-	function list_transfers() {
+	public function list_transfers() {
 		global $pines;
 
 		$pines->com_pgrid->load();
@@ -544,7 +547,7 @@ class com_sales extends component {
 	/**
 	 * Creates and attaches a module which lists vendors.
 	 */
-	function list_vendors() {
+	public function list_vendors() {
 		global $pines;
 
 		$pines->com_pgrid->load();
@@ -568,7 +571,7 @@ class com_sales extends component {
 	 * @param string $name The category's name.
 	 * @return entity|bool The category on success, false on failure.
 	 */
-	function new_category($parent_id = null, $name = 'untitled') {
+	public function new_category($parent_id = null, $name = 'untitled') {
 		global $pines;
 		$entity = new entity('com_sales', 'category');
 		$entity->name = $name;
@@ -590,7 +593,7 @@ class com_sales extends component {
 	 *
 	 * @param array $args The argument array.
 	 */
-	function payment_instant($args) {
+	public function payment_instant($args) {
 		switch ($args['action']) {
 			case 'approve':
 				$args['payment']['status'] = 'approved';
@@ -610,7 +613,7 @@ class com_sales extends component {
 	 *
 	 * @param array $args The argument array.
 	 */
-	function payment_manager($args) {
+	public function payment_manager($args) {
 		global $pines;
 		switch ($args['action']) {
 			case 'request':
@@ -648,7 +651,7 @@ class com_sales extends component {
 	 *
 	 * @return module|null The new module on success, nothing on failure.
 	 */
-	function print_receive_form() {
+	public function print_receive_form() {
 		global $pines;
 		$pines->com_pgrid->load();
 		$module = new module('com_sales', 'form_receive', 'content');
@@ -661,7 +664,7 @@ class com_sales extends component {
 	 *
 	 * @return module|null The new module on success, nothing on failure.
 	 */
-	function print_sales_total() {
+	public function print_sales_total() {
 		global $pines;
 		$module = new module('com_sales', 'total_sales', 'content');
 		$module->locations = $pines->user_manager->get_group_array();
@@ -678,7 +681,7 @@ class com_sales extends component {
 	 * @param bool $string Whether to return a formatted string, instead of a float.
 	 * @return float|string Float if $string is false, formatted string otherwise.
 	 */
-	function round($value, $decimal, $string = false) {
+	public function round($value, $decimal, $string = false) {
 		$rnd = pow(10, $decimal);
 		$mult = $value * $rnd;
 		$value = $this->gaussian_round($mult);
@@ -694,7 +697,7 @@ class com_sales extends component {
 	 * @param float $value The number to round.
 	 * @return float The rounded number.
 	 */
-	function gaussian_round($value) {
+	public function gaussian_round($value) {
 		$absolute = abs($value);
 		$sign     = ($value == 0 ? 0 : ($value < 0 ? -1 : 1));
 		$floored  = floor($absolute);

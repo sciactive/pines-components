@@ -12,7 +12,13 @@ defined('P_RUN') or die('Direct access prohibited');
 ?>
 <div class="pf-form" id="notemodule">
 	<div class="pf-element">
-		<span class="pf-label"><?php echo $this->header; ?></span>
+		<span class="pf-label">
+		<?php
+			if (isset($this->link))
+				$this->header = '<a href="'.htmlentities($this->link).'">'.$this->header.' &raquo;</a>';
+			echo $this->header;
+		?>
+		</span>
 		<span class="pf-note"><?php echo str_replace("\n", "<br />\n", $this->message); ?></span>
 	</div>
 </div>

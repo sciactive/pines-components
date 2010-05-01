@@ -111,7 +111,7 @@ class com_sales_cashcount extends entity {
 			// Look for all sales that resulted in cash being tendered.
 			foreach ($new_sales as $cur_sale) {
 				foreach ($cur_sale->payments as $cur_payment) {
-					if ($cur_payment['type'] == 'Cash' && $cur_payment['status'] == 'tendered')
+					if ($cur_payment['entity']->change_type && $cur_payment['status'] == 'tendered')
 						$this->total += $cur_payment['amount'];
 				}
 			}

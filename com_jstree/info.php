@@ -16,6 +16,7 @@ return array(
 	'author' => 'SciActive (Component), Ivan Bozhanov (JavaScript)',
 	'version' => '1.0.0',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
+	'website' => 'http://www.sciactive.com',
 	'short_description' => 'jsTree jQuery plugin',
 	'description' => 'A JavaScript tree jQuery component. Includes the context menu plugin.',
 );

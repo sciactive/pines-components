@@ -16,6 +16,7 @@ return array(
 	'author' => 'SciActive',
 	'version' => '1.0.0',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
+	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Customer account timer',
 	'description' => 'Allows the use of com_customer\'s membership and point tracking feature to run a service that requires customers to buy time, such as an internet cafe.',
 	'abilities' => array(

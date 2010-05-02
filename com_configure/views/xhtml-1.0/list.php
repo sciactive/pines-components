@@ -122,6 +122,7 @@ $this->title = 'Configure Components';
 		<div class="service">This component provides <?php echo (count($cur_component->info->services) == 1) ? 'a service' : 'services'; ?>: <?php echo implode(', ', $cur_component->info->services); ?></div>
 		<?php } ?>
 		<div class="license">License: <?php echo (substr($cur_component->info->license, 0, 4) == 'http') ? '<a href="'.htmlentities($cur_component->info->license).'" onclick="window.open(this.href); return false;">'.htmlentities($cur_component->info->license).'</a>' : htmlentities($cur_component->info->license); ?></div>
+		<div class="license">Website: <?php echo (substr($cur_component->info->website, 0, 4) == 'http') ? '<a href="'.htmlentities($cur_component->info->website).'" onclick="window.open(this.href); return false;">'.htmlentities($cur_component->info->website).'</a>' : htmlentities($cur_component->info->website); ?></div>
 		<div class="description"><?php echo $cur_component->info->description; ?></div>
 	</div>
 	<?php } ?>

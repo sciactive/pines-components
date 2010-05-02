@@ -16,6 +16,7 @@ return array(
 	'author' => 'SciActive',
 	'version' => '1.0.0',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
+	'website' => 'http://www.sciactive.com',
 	'short_description' => 'PIN based security',
 	'description' => 'Provides a PIN based security measure to both prevent unauthorized use of accounts and securely allow users to switch accounts quickly.',
 );

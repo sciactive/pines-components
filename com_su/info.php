@@ -16,6 +16,7 @@ return array(
 	'author' => 'SciActive',
 	'version' => '1.0.0',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
+	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Switch to a different user',
 	'description' => 'Allow users to login as a different user quickly, without having to logout first.',
 	'abilities' => array(

@@ -16,6 +16,7 @@ return array(
 	'author' => 'SciActive',
 	'version' => '1.0.0',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
+	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Point of Sales system',
 	'description' => 'Manage products, inventory, sales, shipments, etc. Sell merchandise. Integrates with a cash drawer.',
 	'abilities' => array(

@@ -16,8 +16,9 @@ return array(
 	'author' => 'SciActive',
 	'version' => '1.0.0',
 	'license' => 'http://www.gnu.org/licenses/gpl.html',
+	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Financial function library',
-	'description' => 'A library of financial functions with identical names and arguments as those used in Microsoft Excel. Entirely based on work by Enrique Garc�a.',
+	'description' => 'A library of financial functions with identical names and arguments as those used in Microsoft Excel. Entirely based on work by Enrique Garcia.',
 );
 
 ?>

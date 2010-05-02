@@ -16,7 +16,7 @@ if ( empty($_REQUEST['username']) ) {
 	return;
 }
 
-if ( $_REQUEST['login_register'] == 'register' ) {
+if ( $pines->config->com_user->allow_registration && $_REQUEST['login_register'] == 'register' ) {
 	$test = user::factory($_REQUEST['username']);
 	if (isset($test->guid)) {
 		pines_notice('There is already a user with that username. Please choose a different username.');

@@ -23,20 +23,16 @@ $this->note = 'Please enter your credentials to login.';
 			<?php echo ($pines->config->com_user->empty_pw ? '<span class="pf-note">May be blank.</span>' : ''); ?>
 			<input class="pf-field ui-widget-content" type="password" name="password" size="24" /></label>
 	</div>
-	<div class="pf-element" name="pass_reenter" display="none">
-		<label><span class="pf-label">Re-enter</span>
-			<?php echo ($pines->config->com_user->empty_pw ? '<span class="pf-note">May be blank.</span>' : ''); ?>
-			<input class="pf-field ui-widget-content" type="password2" name="password2" size="24" /></label>
-	</div>
 	<?php if ($pines->config->com_user->allow_registration) { ?>
 	<div class="pf-element">
 		<script type="text/javascript">
 			// <![CDATA[
 			pines(function(){
-				var password = $("#user_details [name=password]");
-				var password2 = $("#user_details [name=password2]");
-				$("#user_details").submit(function(){
-					if (password.val() != password2.val()) {
+				var new_account = false;
+				var password = $("#login_form [name=password]");
+				var password2 = $("#login_form [name=password2]");
+				$("#login_form").submit(function(){
+					if (new_account && password.val() != password2.val()) {
 						alert("Your passwords do not match.");
 						return false;
 					}
@@ -47,10 +43,12 @@ $this->note = 'Please enter your credentials to login.';
 				var submit_btn = $("#login_form [name=submit]");
 				$("#login_form [name=login_register]").change(function(){
 					if ($(this).is(":checked") && $(this).val() == "register") {
-						pass_reenter.show();
+						new_account = true;
+						pass_reenter.slideDown();
 						submit_btn.val("Sign Up");
 					} else {
-						pass_reenter.hide();
+						new_account = false;
+						pass_reenter.slideUp();
 						submit_btn.val("Login");
 					}
 				}).change();
@@ -62,6 +60,10 @@ $this->note = 'Please enter your credentials to login.';
 			<label><input class="pf-field ui-widget-content" type="radio" name="login_register" value="login" checked="checked" /> I have an account.</label>
 			<label><input class="pf-field ui-widget-content" type="radio" name="login_register" value="register" /> I'm new.</label>
 		</div>
+	</div>
+	<div class="pf-element" name="pass_reenter" style="display: none;">
+		<label><span class="pf-label">Re-enter Password</span>
+			<input class="pf-field ui-widget-content" type="password" name="password2" size="24" /></label>
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-buttons">

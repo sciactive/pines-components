@@ -19,6 +19,9 @@ return array(
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Configurable about dialog',
 	'description' => 'Displays configurable information about Pines and your installation.',
+	'depend' => array(
+		'pines' => '<2'
+	),
 	'abilities' => array(
 		array('show', 'About Page', 'User can see the about page.')
 	),

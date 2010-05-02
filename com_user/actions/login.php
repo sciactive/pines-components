@@ -15,6 +15,21 @@ if ( empty($_REQUEST['username']) ) {
 	$pines->user_manager->print_login();
 	return;
 }
+
+if ( $_REQUEST['login_register'] == 'register' ) {
+	$test = user::factory($_REQUEST['username']);
+	if (isset($test->guid)) {
+		pines_notice('There is already a user with that username. Please choose a different username.');
+		$pines->user_manager->print_login('content');
+		return;
+	}
+	$user = user::factory();
+	$_SESSION['com_user__tmpusername'] = $_REQUEST['username'];
+	$_SESSION['com_user__tmppassword'] = $_REQUEST['password'];
+	$user->register();
+	return;
+}
+
 if ( gatekeeper() && $_REQUEST['username'] == $_SESSION['user']->username ) {
 	pines_notice('Already logged in!');
 	redirect(pines_url());

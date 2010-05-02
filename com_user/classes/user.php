@@ -84,7 +84,7 @@ class user extends able_object implements user_interface {
 
 		return $module;
 	}
-
+	
 	public function add_group($group) {
 		if ( !$group->in_array($this->groups) ) {
 			$this->groups[] = $group;
@@ -159,6 +159,24 @@ class user extends able_object implements user_interface {
 				return $return_date_time_zone_object ? new DateTimeZone($cur_group->timezone) : $cur_group->timezone;
 		}
 		return $return_date_time_zone_object ? new DateTimeZone($pines->config->timezone) : $pines->config->timezone;
+	}
+
+	public function register() {
+		global $pines;
+		$pines->com_pgrid->load();
+		$module = new module('com_user', 'form_register', 'content');
+		$module->entity = $this;
+		foreach ($pines->components as $cur_component)
+			$module->sections[] = $cur_component;
+
+		return $module;
+	}
+
+	// This will display a notice telling the user to verify their e-mail.
+	public function registered() {
+		global $pines;
+		$notice = new module('com_user', 'note_register', left);
+		return $notice; // $pines->com_user->print_login();
 	}
 }
 

@@ -13,6 +13,36 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
+		'name' => 'create_admin',
+		'cname' => 'Create Admin',
+		'description' => 'Allow the creation of an admin user.',
+		'value' => true,
+	),
+	array(
+		'name' => 'create_admin_secret',
+		'cname' => 'Create Admin Secret',
+		'description' => 'The secret necessary to create an admin user.',
+		'value' => '874jdiv8',
+	),
+	array(
+		'name' => 'allow_registration',
+		'cname' => 'Allow User Registration',
+		'description' => 'Allow users to register.',
+		'value' => true,
+	),
+	array(
+		'name' => 'confirm_email',
+		'cname' => 'Confirm User Email Addresses',
+		'description' => 'Confirm users\' email addresses upon registration before allowing them to login.',
+		'value' => true,
+	),
+	array(
+		'name' => 'email_from_address',
+		'cname' => 'From Address.',
+		'description' => 'The address that emails will be sent from.',
+		'value' => 'webmaster@example.com',
+	),
+	array(
 		'name' => 'empty_pw',
 		'cname' => 'Empty Passwords',
 		'description' => 'Allow users to have empty passwords.',
@@ -24,18 +54,6 @@ return array(
 		'description' => 'Display the name of the current user in the page header.',
 		'value' => true,
 		'peruser' => true,
-	),
-	array(
-		'name' => 'create_admin',
-		'cname' => 'Create Admin',
-		'description' => 'Allow the creation of an admin user.',
-		'value' => true,
-	),
-	array(
-		'name' => 'create_admin_secret',
-		'cname' => 'Create Admin Secret',
-		'description' => 'The secret necessary to create an admin user.',
-		'value' => '874jdiv8',
 	),
 	array (
 		'name' => 'max_username_length',

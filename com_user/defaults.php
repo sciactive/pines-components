@@ -38,9 +38,23 @@ return array(
 	),
 	array(
 		'name' => 'email_from_address',
-		'cname' => 'From Address.',
+		'cname' => 'From Address',
 		'description' => 'The address that emails will be sent from.',
 		'value' => 'webmaster@example.com',
+	),
+	array(
+		'name' => 'reg_fields',
+		'cname' => 'Visible Registration Fields',
+		'description' => 'These fields will be available for the user to fill in when they register.',
+		'value' => array('name', 'email', 'phone', 'fax', 'timezone', 'address'),
+		'options' => array(
+			'Name' => 'name',
+			'Email' => 'email',
+			'Phone Number' => 'phone',
+			'Fax Number' => 'fax',
+			'Timezone' => 'timezone',
+			'Address' => 'address',
+		),
 	),
 	array(
 		'name' => 'empty_pw',

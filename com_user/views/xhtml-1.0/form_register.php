@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Welcome';
+$this->title = "Welcome to {$pines->config->option_title}.";
 $this->note = 'Please fill in your account details.';
 ?>
 <script type="text/javascript">
@@ -24,25 +24,36 @@ $this->note = 'Please fill in your account details.';
 	<div id="user_tabs" style="clear: both;">
 		<ul>
 			<li><a href="#tab_general">General</a></li>
+			<?php if (in_array('address', $pines->config->com_user->reg_fields)) { ?>
 			<li><a href="#tab_location">Location</a></li>
+			<?php } ?>
 		</ul>
 		<div id="tab_general">
+			<?php if (in_array('name', $pines->config->com_user->reg_fields)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Name</span>
 					<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
 			</div>
+			<?php }
+			if (in_array('email', $pines->config->com_user->reg_fields)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Email</span>
 					<input class="pf-field ui-widget-content" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>
 			</div>
+			<?php }
+			if (in_array('phone', $pines->config->com_user->reg_fields)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Phone</span>
 					<input class="pf-field ui-widget-content" type="text" name="phone" size="24" value="<?php echo format_phone($this->entity->phone); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
+			<?php }
+			if (in_array('fax', $pines->config->com_user->reg_fields)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Fax</span>
 					<input class="pf-field ui-widget-content" type="text" name="fax" size="24" value="<?php echo format_phone($this->entity->fax); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
+			<?php }
+			if (in_array('timezone', $pines->config->com_user->reg_fields)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Timezone</span>
 					<span class="pf-note">This overrides the primary group's timezone.</span>
@@ -55,8 +66,10 @@ $this->note = 'Please fill in your account details.';
 						<?php } ?>
 					</select></label>
 			</div>
+			<?php } ?>
 			<br class="pf-clearing" />
 		</div>
+		<?php if (in_array('address', $pines->config->com_user->reg_fields)) { ?>
 		<div id="tab_location">
 			<div class="pf-element">
 				<script type="text/javascript">
@@ -165,6 +178,7 @@ $this->note = 'Please fill in your account details.';
 			</div>
 			<br class="pf-clearing" />
 		</div>
+		<?php } ?>
 	</div>
 
 	<div class="pf-element pf-buttons">

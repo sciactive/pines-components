@@ -17,6 +17,16 @@ if ( empty($_REQUEST['username']) ) {
 }
 
 if ( $pines->config->com_user->allow_registration && $_REQUEST['login_register'] == 'register' ) {
+	if (empty($_REQUEST['username'])) {
+		pines_notice('Username is a required field.');
+		$pines->user_manager->print_login();
+		return;
+	}
+	if (empty($_REQUEST['password']) && !$pines->config->com_user->empty_pw) {
+		pines_notice('Password is a required field.');
+		$pines->user_manager->print_login();
+		return;
+	}
 	$test = user::factory($_REQUEST['username']);
 	if (isset($test->guid)) {
 		pines_notice('There is already a user with that username. Please choose a different username.');

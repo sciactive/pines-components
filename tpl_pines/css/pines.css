@@ -110,6 +110,9 @@ img {
 
 	/* Margin for module content. */
 	margin-top: 12px; /* col1 top margin */
+	/* Custom */
+	margin-bottom: .8em;
+	/* ----- */
 }
 /* Custom */
 .holygrail .col2 .module_content {
@@ -127,6 +130,9 @@ img {
 
 	/* Margin for module content. */
 	margin-top: 12px; /* col1 top margin */
+	/* Custom */
+	margin-bottom: .8em;
+	/* ----- */
 }
 /* Footer styles */
 #footer {

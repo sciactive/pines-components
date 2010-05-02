@@ -11,7 +11,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = "Login to {$pines->config->option_title}";
-$this->note = 'Please enter your credentials to login.';
 ?>
 <form class="pf-form" name="login" id="login_form" method="post" action="<?php echo htmlentities(pines_url()); ?>">
 	<div class="pf-element">
@@ -52,6 +51,11 @@ $this->note = 'Please enter your credentials to login.';
 						submit_btn.val("Login");
 					}
 				}).change();
+				$("#login_form :reset").click(function(){
+					new_account = false;
+					pass_reenter.slideUp();
+					submit_btn.val("Login");
+				});
 			});
 			// ]]>
 		</script>

@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = "Welcome to {$pines->config->option_title}.";
+$this->title = "Welcome to {$pines->config->option_title}";
 $this->note = 'Please fill in your account details.';
 ?>
 <script type="text/javascript">

@@ -21,6 +21,7 @@ return array(
 	'description' => 'A JavaScript notification jQuery component. Supports many features, and fully themeable using jQuery UI.',
 	'depend' => array(
 		'pines' => '<2',
+		'service' => 'icons',
 		'component' => 'com_jquery'
 	),
 );

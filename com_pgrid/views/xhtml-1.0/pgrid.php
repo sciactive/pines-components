@@ -14,6 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 <script type="text/javascript">
 	// <![CDATA[
 	pines.loadcss("<?php echo $pines->config->rela_location; ?>components/com_pgrid/includes/jquery.pgrid.default.css");
+	pines.loadcss("<?php echo $pines->config->rela_location; ?>components/com_pgrid/includes/jquery.pgrid.default.icons.css");
 	pines.loadjs("<?php echo $pines->config->rela_location; ?>components/com_pgrid/includes/<?php echo $pines->config->debug_mode ? 'jquery.pgrid.js' : 'jquery.pgrid.min.js'; ?>");
 	// ]]>
 </script>

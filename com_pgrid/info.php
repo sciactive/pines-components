@@ -21,6 +21,7 @@ return array(
 	'description' => 'A JavaScript data grid jQuery component. Supports many features, and fully themeable using jQuery UI.',
 	'depend' => array(
 		'pines' => '<2',
+		'service' => 'icons',
 		'component' => 'com_jquery'
 	),
 );

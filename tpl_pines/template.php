@@ -83,7 +83,7 @@ if (strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
 					echo 'pines.error("'.addslashes($cur_item)."\", \"Error\");\n";
 				} }
 				if ( $notice ) { foreach ($notice as $cur_item) {
-					echo 'pines.alert("'.addslashes($cur_item)."\", \"Alert\");\n";
+					echo 'pines.notice("'.addslashes($cur_item)."\", \"Notice\");\n";
 				} }
 				?>
 			});

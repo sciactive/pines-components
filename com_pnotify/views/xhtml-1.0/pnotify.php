@@ -17,30 +17,29 @@ defined('P_RUN') or die('Direct access prohibited');
 	pines.loadcss("<?php echo $pines->config->rela_location; ?>components/com_pnotify/includes/jquery.pnotify.default.icons.css");
 	pines.loadjs("<?php echo $pines->config->rela_location; ?>components/com_pnotify/includes/<?php echo $pines->config->debug_mode ? 'jquery.pnotify.js' : 'jquery.pnotify.min.js'; ?>");
 	pines.load(function(){
-		if (!_alert) {
-			var _alert;
-			_alert = window.alert;
+		if (!window._alert) {
+			window._alert = window.alert;
 			window.alert = function(message) {
 				$.pnotify({pnotify_title: "Alert", pnotify_text: String(message), pnotify_nonblock: true});
 			};
+			pines.notice = function(message, title){
+				var options = {
+					pnotify_title: title ? title : "Notice",
+					pnotify_text: String(message),
+					pnotify_nonblock: true
+				};
+				return $.pnotify(options);
+			};
+			pines.error = function(message, title){
+				var options = {
+					pnotify_type: "error",
+					pnotify_title: title ? title : "Error",
+					pnotify_text: String(message),
+					pnotify_hide: false
+				};
+				return $.pnotify(options);
+			};
 		}
-		pines.alert = function(message, title){
-			var options = {
-				pnotify_title: title ? title : "Alert",
-				pnotify_text: String(message),
-				pnotify_nonblock: true
-			};
-			return $.pnotify(options);
-		};
-		pines.error = function(message, title){
-			var options = {
-				pnotify_type: "error",
-				pnotify_title: title ? title : "Error",
-				pnotify_text: String(message),
-				pnotify_hide: false
-			};
-			return $.pnotify(options);
-		};
 	});
 	// ]]>
 </script>

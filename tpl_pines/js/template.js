@@ -74,7 +74,7 @@ pines(function(){
 					pines.error(this, "Error");
 				});
 				$.each(data.notices, function(){
-					pines.alert(this, "Notice");
+					pines.notice(this, "Notice");
 				});
 				page_ready();
 			}

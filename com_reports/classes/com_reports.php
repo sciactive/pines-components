@@ -14,29 +14,10 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * com_reports main class.
  *
- * Provides a CRM.
- *
  * @package Pines
  * @subpackage com_reports
  */
 class com_reports extends component {
-	/**
-	 * Whether to integrate with com_sales.
-	 * 
-	 * @var bool $com_sales
-	 */
-	public $com_sales;
-
-	/**
-	 * Check whether com_sales is installed and we should integrate with it.
-	 *
-	 * Places the result in $this->com_sales.
-	 */
-	function __construct() {
-		global $pines;
-		$this->com_sales = $pines->depend->check('component', 'com_sales');
-	}
-
 	/**
 	 * Creates and attaches a module which reports sales.
 	 *

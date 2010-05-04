@@ -19,6 +19,14 @@ return array(
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Point of Sales system',
 	'description' => 'Manage products, inventory, sales, shipments, etc. Sell merchandise. Integrates with a cash drawer.',
+	'depend' => array(
+		'pines' => '<2',
+		'service' => 'user_manager&entity_manager&editor',
+		'component' => 'com_jquery&com_pgrid&com_pnotify&com_ptags&com_jstree'
+	),
+	'recommend' => array(
+		'component' => 'com_customer'
+	),
 	'abilities' => array(
 		array('manager', 'Manager', 'User is a manager. This lets the user approve payments.'),
 		array('receive', 'Receive Inventory', 'User can receive inventory into their stock.'),

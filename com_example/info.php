@@ -19,6 +19,11 @@ return array(
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'An example component design',
 	'description' => 'This component functions as an example of how to use various features of the Pines framework.',
+	'depend' => array(
+		'pines' => '<2',
+		'service' => 'entity_manager&editor',
+		'component' => 'com_jquery&com_pgrid'
+	),
 	'abilities' => array(
 		array('listwidgets', 'List Widgets', 'User can see widgets.'),
 		array('newwidget', 'Create Widgets', 'User can create new widgets.'),

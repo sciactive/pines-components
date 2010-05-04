@@ -22,6 +22,9 @@ return array(
 	'depend' => array(
 		'pines' => '<2'
 	),
+	'recommend' => array(
+		'component' => 'com_jquery'
+	),
 	'abilities' => array(
 		array('show', 'About Page', 'User can see the about page.')
 	),

@@ -19,6 +19,10 @@ return array(
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Tools for testing and maintaining your entity manager',
 	'description' => 'Includes the following tools: test, benchmark, export, import.',
+	'depend' => array(
+		'pines' => '<2',
+		'service' => 'entity_manager'
+	),
 	'abilities' => array(
 		array('test', 'Test/Benchmark', 'User can test and benchmark the entity manager.'),
 		array('export', 'Export', 'User can export all entities.'),

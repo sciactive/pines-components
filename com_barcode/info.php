@@ -19,6 +19,10 @@ return array(
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Creates various types of barcodes.',
 	'description' => 'Creates and displays barcode images using a variety of formats.',
+	'depend' => array(
+		'pines' => '<2',
+		'function' => 'ImageCreate'
+	),
 );
 
 ?>

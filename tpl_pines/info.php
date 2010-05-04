@@ -20,6 +20,13 @@ return array(
 	'services' => array('template'),
 	'short_description' => 'jQuery UI styled template',
 	'description' => 'A well integrated template, completely styled with jQuery UI.',
+	'depend' => array(
+		'pines' => '<2',
+		'component' => 'com_jquery'
+	),
+	'recommend' => array(
+		'component' => 'com_pnotify'
+	),
 );
 
 ?>

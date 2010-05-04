@@ -97,7 +97,7 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 						dataType: "text",
 						data: {"date": $("#cur_time").val(), "timezone": timezone},
 						error: function(){
-							alert("Couldn't get a timestamp from the server.");
+							pines.error("Couldn't get a timestamp from the server.");
 							$("#date_time_dialog").dialog('close');
 						},
 						success: function(data){
@@ -124,7 +124,7 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 						dataType: "text",
 						data: {"date": $("#new_time").val(), "timezone": timezone},
 						error: function(){
-							alert("Couldn't get a timestamp from the server.");
+							pines.error("Couldn't get a timestamp from the server.");
 							$("#add_time_dialog").dialog('close');
 						},
 						success: function(data){

@@ -19,6 +19,14 @@ return array(
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Customer relationship manager',
 	'description' => 'Manage your customers using accounts. Features include membership and point tracking.',
+	'depend' => array(
+		'pines' => '<2',
+		'service' => 'entity_manager&editor',
+		'component' => 'com_jquery&com_pgrid&com_pnotify'
+	),
+	'recommend' => array(
+		'component' => 'com_sales'
+	),
 	'abilities' => array(
 		array('listcustomers', 'List Customers', 'User can see customers.'),
 		array('newcustomer', 'Create Customers', 'User can create new customers.'),

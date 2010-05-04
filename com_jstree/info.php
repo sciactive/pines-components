@@ -19,6 +19,10 @@ return array(
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'jsTree jQuery plugin',
 	'description' => 'A JavaScript tree jQuery component. Includes the context menu plugin.',
+	'depend' => array(
+		'pines' => '<2',
+		'component' => 'com_jquery'
+	),
 );
 
 ?>

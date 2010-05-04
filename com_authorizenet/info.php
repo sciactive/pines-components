@@ -19,6 +19,10 @@ return array(
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Payment gateway interface',
 	'description' => 'Processes credit transactions through the Authorize.Net payment gateway.',
+	'depend' => array(
+		'pines' => '<2',
+		'component' => 'com_sales&com_jquery'
+	),
 );
 
 ?>

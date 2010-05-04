@@ -19,6 +19,10 @@ return array(
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'PIN based security',
 	'description' => 'Provides a PIN based security measure to both prevent unauthorized use of accounts and securely allow users to switch accounts quickly.',
+	'depend' => array(
+		'pines' => '<2',
+		'service' => 'user_manager'
+	),
 );
 
 ?>

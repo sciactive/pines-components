@@ -19,6 +19,11 @@ return array(
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Generate PDFs from templates',
 	'description' => 'Easily insert information into a PDF template. Also allows users to format their own PDFs.',
+	'depend' => array(
+		'pines' => '<2',
+		'class' => 'Imagick',
+		'component' => 'com_jquery'
+	),
 );
 
 ?>

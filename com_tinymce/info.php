@@ -20,6 +20,10 @@ return array(
 	'services' => array('editor'),
 	'short_description' => 'TinyMCE editor widget',
 	'description' => 'TinyMCE based editor widget.',
+	'depend' => array(
+		'pines' => '<2',
+		'component' => 'com_jquery'
+	),
 );
 
 ?>

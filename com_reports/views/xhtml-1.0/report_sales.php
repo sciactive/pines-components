@@ -2,17 +2,17 @@
 /**
  * Lists all sales for a given timeframe.
  *
+ * Built upon:
+ * 
+ * FullCalendar Created by Adam Shaw
+ * http://arshaw.com/fullcalendar/
+ *
  * @package Pines
  * @subpackage com_reports
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com
  * @link http://sciactive.com/
- *
- * Built upon:
- * 
- * FullCalendar Created by Adam Shaw
- * http://arshaw.com/fullcalendar/
  */
 defined('P_RUN') or die('Direct access prohibited');
 
@@ -53,8 +53,8 @@ foreach ($this->sales as $cur_sale) {
 ?>
 <script type='text/javascript'>
 	// <![CDATA[
-	var view_changes = 0;
 	pines(function() {
+		var view_changes = 0;
 		// Create the calendar object.
 		$('#calendar').fullCalendar({
 			header: {

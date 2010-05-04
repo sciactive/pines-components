@@ -20,6 +20,11 @@ return array(
 	'services' => array('user_manager'),
 	'short_description' => 'Entity based user manager',
 	'description' => 'Manages system users, groups, and abilities. Uses an entity manager as a storage backend.',
+	'depend' => array(
+		'pines' => '<2',
+		'service' => 'entity_manager',
+		'component' => 'com_jquery&com_pgrid&com_pnotify'
+	),
 	'abilities' => array(
 		array('login', 'Login', 'User can login to the system.'),
 		array('self', 'Change Info', 'User can change his own information.'),

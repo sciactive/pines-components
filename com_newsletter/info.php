@@ -19,6 +19,11 @@ return array(
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Manage newsletters to your users',
 	'description' => 'Create and send newsletters to your users.',
+	'depend' => array(
+		'pines' => '<2',
+		'service' => 'entity_manager',
+		'component' => 'com_mailer&com_jquery&com_pgrid&com_jstree'
+	),
 	'abilities' => array(
 		array('listmail', 'List Mail', 'Let users view the mailbox.'),
 		array('send', 'Send', 'Let users send out mailings.')

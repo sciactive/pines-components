@@ -19,6 +19,10 @@ return array(
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Pines Grid jQuery plugin',
 	'description' => 'A JavaScript data grid jQuery component. Supports many features, and fully themeable using jQuery UI.',
+	'depend' => array(
+		'pines' => '<2',
+		'component' => 'com_jquery'
+	),
 );
 
 ?>

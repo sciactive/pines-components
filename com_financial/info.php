@@ -19,6 +19,9 @@ return array(
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Financial function library',
 	'description' => 'A library of financial functions with identical names and arguments as those used in Microsoft Excel. Entirely based on work by Enrique Garcia.',
+	'depend' => array(
+		'pines' => '<2'
+	),
 );
 
 ?>

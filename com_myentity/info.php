@@ -20,6 +20,10 @@ return array(
 	'services' => array('entity_manager'),
 	'short_description' => 'MySQL based entity manager',
 	'description' => 'Provides an object relational mapper, which conforms to the Pines entity manager service standard and uses MySQL as its backend.',
+	'depend' => array(
+		'pines' => '<2',
+		'component' => 'com_mysql'
+	),
 );
 
 ?>

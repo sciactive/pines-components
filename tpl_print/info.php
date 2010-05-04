@@ -20,6 +20,10 @@ return array(
 	'services' => array('template'),
 	'short_description' => 'Simple template suitable for printing',
 	'description' => 'This template only shows the content modules. It\'s suitable for letting the user print the page without any excess information.',
+	'depend' => array(
+		'pines' => '<2',
+		'component' => 'com_jquery'
+	),
 );
 
 ?>

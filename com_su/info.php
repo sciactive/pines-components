@@ -19,6 +19,11 @@ return array(
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Switch to a different user',
 	'description' => 'Allow users to login as a different user quickly, without having to logout first.',
+	'depend' => array(
+		'pines' => '<2',
+		'service' => 'user_manager',
+		'component' => 'com_jquery&com_pnotify'
+	),
 	'abilities' => array(
 		array('nopassword', 'Switch Without Password', 'User can switch to any other user without providing a password.')
 	),

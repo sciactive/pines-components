@@ -11,6 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$pines->com_jquery->load();
+$module = new module('com_jquery', 'jquery', 'head');
+$module = new module('com_jquery', 'jquery-ui', 'head');
 
 ?>

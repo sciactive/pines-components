@@ -20,6 +20,10 @@ return array(
 	'services' => array('configurator'),
 	'short_description' => 'Manages system configuration',
 	'description' => 'Allows you to edit your system\'s configuration and the configuration of any installed components.',
+	'depend' => array(
+		'pines' => '<2',
+		'component' => 'com_jquery'
+	),
 	'abilities' => array(
 		array('edit', 'Edit Configuration', 'Let the user change (and see) configuration settings.'),
 		array('editperuser', 'Edit Per User Configuration', 'Let the user change (and see) per user/group configuration settings.'),

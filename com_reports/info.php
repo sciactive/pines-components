@@ -19,6 +19,10 @@ return array(
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Production and workflow reports',
 	'description' => 'Reports for sales totals, inventory and employee reports.',
+	'depend' => array(
+		'pines' => '<2',
+		'component' => 'com_jquery&com_pgrid&com_jstree&(com_hrm|com_sales)'
+	),
 	'abilities' => array(
 		array('reportsales', 'Report Sales', 'User can see sales reports.'),
 		array('reportattendance', 'Report Attendance', 'User can see attendance reports.')

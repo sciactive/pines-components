@@ -19,6 +19,9 @@ return array(
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Email interface',
 	'description' => 'Provides a more object oriented interface for creating emails in Pines. Supports attachments.',
+	'depend' => array(
+		'pines' => '<2'
+	),
 );
 
 ?>

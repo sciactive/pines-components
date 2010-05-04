@@ -19,6 +19,11 @@ return array(
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Human resource manager',
 	'description' => 'Manage your employees. You can allow your HR manager to securely create employees with restricted priveleges. Includes a timeclock to track your employees\' working hours.',
+	'depend' => array(
+		'pines' => '<2',
+		'service' => 'user_manager&entity_manager&editor',
+		'component' => 'com_jquery&com_pgrid&com_pnotify&com_jstree'
+	),
 	'abilities' => array(
 		array('listusertemplates', 'List User Templates', 'User can see user templates.'),
 		array('newusertemplate', 'Create User Templates', 'User can create new user templates.'),

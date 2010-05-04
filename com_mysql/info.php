@@ -19,6 +19,10 @@ return array(
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'MySQL link manager',
 	'description' => 'Provides an easy way to manage links to one or more databases, and the ability to keep more than one data set in those databases.',
+	'depend' => array(
+		'pines' => '<2',
+		'function' => 'mysql_connect'
+	),
 );
 
 ?>

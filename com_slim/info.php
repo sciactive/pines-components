@@ -19,6 +19,10 @@ return array(
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Slim archiver and extracter',
 	'description' => 'A library for archiving files to and extracting files from the Slim archive format. Slim archives are designed to easily work with PHP programs.',
+	'depend' => array(
+		'pines' => '<2',
+		'function' => 'gzdeflate&gzinflate&stream_filter_append'
+	),
 );
 
 ?>

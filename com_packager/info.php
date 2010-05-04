@@ -19,6 +19,11 @@ return array(
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Pines package creator',
 	'description' => 'Package your components and templates into a Pines repository ready Slim archive. You can use these packages to distribute your component to other Pines users.',
+	'depend' => array(
+		'pines' => '<2',
+		'service' => 'entity_manager',
+		'component' => 'com_slim&com_jquery&com_pgrid'
+	),
 	'abilities' => array(
 		array('listpackages', 'List Packages', 'User can see packages.'),
 		array('newpackage', 'Create Packages', 'User can create new packages.'),

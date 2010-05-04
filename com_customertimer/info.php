@@ -19,6 +19,11 @@ return array(
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Customer account timer',
 	'description' => 'Allows the use of com_customer\'s membership and point tracking feature to run a service that requires customers to buy time, such as an internet cafe.',
+	'depend' => array(
+		'pines' => '<2',
+		'service' => 'entity_manager',
+		'component' => 'com_customer&com_jquery&com_pgrid&com_pnotify'
+	),
 	'abilities' => array(
 		array('listfloors', 'List Floors', 'User can see floors.'),
 		array('newfloor', 'Create Floors', 'User can create new floors.'),

@@ -157,15 +157,20 @@ $this->title = 'Sales Totals';
 			<span class="pf-field">$<span class="total_invoice_total">null</span></span>
 		</div>
 		<div class="pf-element pf-heading">
-			<h1>Sales</h1>
+			<h1>Payments</h1>
 		</div>
-		<div class="pf-element">
-			<span class="pf-label">Count</span>
-			<span class="pf-field"><span class="total_sale_count">null</span></span>
-		</div>
-		<div class="pf-element">
-			<span class="pf-label">Total</span>
-			<span class="pf-field">$<span class="total_sale_total">null</span></span>
+		<div class="total_payments">
+			<div class="pf-element">
+				<span class="pf-label">name</span>
+				<div class="pf-group">
+					<span class="pf-field">Count: </span>
+					<span class="pf-field">1</span><br />
+					<span class="pf-field">Total: </span>
+					<span class="pf-field">1.00</span><br />
+					<span class="pf-field">Change Given: </span>
+					<span class="pf-field">1.00</span>
+				</div>
+			</div>
 		</div>
 		<div class="pf-element pf-heading">
 			<h1>Users</h1>
@@ -181,20 +186,18 @@ $this->title = 'Sales Totals';
 				</div>
 			</div>
 		</div>
-		<div class="pf-element pf-heading">
-			<h1>Payments</h1>
-		</div>
-		<div class="total_payments">
+		<br class="pf-clearing" />
+		<div class="ui-state-highlight ui-corner-all ui-helper-clearfix" style="font-weight: bold; padding-left: 1em; padding-right: 1em;">
+			<div class="pf-element pf-heading">
+				<h1>Sales</h1>
+			</div>
 			<div class="pf-element">
-				<span class="pf-label">name</span>
-				<div class="pf-group">
-					<span class="pf-field">Count: </span>
-					<span class="pf-field">1</span><br />
-					<span class="pf-field">Total: </span>
-					<span class="pf-field">1.00</span><br />
-					<span class="pf-field">Change Given: </span>
-					<span class="pf-field">1.00</span>
-				</div>
+				<span class="pf-label">Count</span>
+				<span class="pf-field"><span class="total_sale_count">null</span></span>
+			</div>
+			<div class="pf-element">
+				<span class="pf-label">Total</span>
+				<span class="pf-field">$<span class="total_sale_total">null</span></span>
 			</div>
 		</div>
 	</div>

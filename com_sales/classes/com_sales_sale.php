@@ -68,7 +68,6 @@ class com_sales_sale extends entity {
 	 */
 	public function print_form() {
 		global $pines;
-		$pines->com_pgrid->load();
 		$module = new module('com_sales', 'form_sale', 'content');
 		$module->entity = $this;
 		$module->tax_fees = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'tax_fee'), 'class' => com_sales_tax_fee));

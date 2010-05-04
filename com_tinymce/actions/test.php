@@ -11,8 +11,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$pines->editor->load();
-
 $module = new module('com_tinymce', 'test', 'content');
 
 ?>

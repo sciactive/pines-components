@@ -35,6 +35,7 @@ class com_ptags extends component {
 	function load() {
 		if (!$this->js_loaded) {
 			$module = new module('com_ptags', 'ptags', 'head');
+			$module->render();
 			$this->js_loaded = true;
 		}
 	}

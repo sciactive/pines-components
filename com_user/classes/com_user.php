@@ -304,8 +304,6 @@ class com_user extends component implements user_manager_interface {
 	public function list_groups($enabled = true) {
 		global $pines;
 
-		$pines->com_pgrid->load();
-
 		$module = new module('com_user', 'list_groups', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_user/list_groups'];
@@ -323,8 +321,6 @@ class com_user extends component implements user_manager_interface {
 	 */
 	public function list_users($enabled = true) {
 		global $pines;
-
-		$pines->com_pgrid->load();
 
 		$module = new module('com_user', 'list_users', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))

@@ -10,8 +10,8 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-
 $this->title = 'New Report';
+$pines->com_jstree->load();
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */

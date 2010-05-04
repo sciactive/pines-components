@@ -141,8 +141,6 @@ class com_customer_customer extends entity {
 	 */
 	public function print_form() {
 		global $pines;
-		$pines->editor->load();
-		$pines->com_pgrid->load();
 		$module = new module('com_customer', 'form_customer', 'content');
 		$module->entity = $this;
 

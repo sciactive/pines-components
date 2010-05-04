@@ -12,6 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Group' : 'Editing ['.htmlentities($this->entity->groupname).']';
 $this->note = 'Provide group details in this form.';
+$pines->com_pgrid->load();
 ?>
 <script type="text/javascript">
 	// <![CDATA[

@@ -20,6 +20,7 @@ if (!isset($this->entity->guid)) {
 	$this->title = 'Paid Sale ['.htmlentities($this->entity->guid).']';
 }
 $this->note = 'Use this form to edit a sale.';
+$pines->com_pgrid->load();
 // TODO: After a sale is invoiced, don't calculate totals, just show what's saved.
 ?>
 <form class="pf-form" method="post" id="sale_details" action="<?php echo htmlentities(pines_url('com_sales', 'savesale')); ?>">

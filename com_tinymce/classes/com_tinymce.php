@@ -30,6 +30,7 @@ class com_tinymce extends component implements editor_interface {
 	public function load() {
 		if (!$this->js_loaded) {
 			$module = new module('com_tinymce', 'tinymce', 'head');
+			$module->render();
 			$this->js_loaded = true;
 		}
 	}

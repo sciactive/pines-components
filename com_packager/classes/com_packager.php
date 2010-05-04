@@ -24,8 +24,6 @@ class com_packager extends component {
 	function list_packages() {
 		global $pines;
 
-		$pines->com_pgrid->load();
-
 		$module = new module('com_packager', 'list_packages', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_packager/list_packages'];

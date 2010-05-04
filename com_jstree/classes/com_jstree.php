@@ -35,6 +35,7 @@ class com_jstree extends component {
 	function load() {
 		if (!$this->js_loaded) {
 			$module = new module('com_jstree', 'jstree', 'head');
+			$module->render();
 			$this->js_loaded = true;
 		}
 	}

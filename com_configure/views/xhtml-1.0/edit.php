@@ -13,6 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = "Editing Configuration for {$this->entity->info->name} {$this->entity->info->version} ({$this->entity->name})";
 if ($this->entity->per_user)
 	$this->note = "For {$this->entity->type} {$this->entity->user->name} [{$this->entity->user->username}{$this->entity->user->groupname}].";
+$pines->com_ptags->load();
 ?>
 <style type="text/css">
 	/* <![CDATA[ */

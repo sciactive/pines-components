@@ -11,6 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Floor Timer ['.htmlentities($this->entity->name).']';
+$pines->com_pgrid->load();
 ?>
 <style type="text/css">
 	/* <![CDATA[ */

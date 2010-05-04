@@ -11,6 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Groups';
+$pines->com_pgrid->load();
 
 // Build an array of parents, so we can include the parent class on their rows.
 $parents = array();

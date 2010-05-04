@@ -12,6 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Purchase Order' : (($this->entity->final) ? 'Viewing' : 'Editing').' PO ['.htmlentities($this->entity->po_number).']';
 $this->note = 'Provide PO details in this form.';
+$pines->com_pgrid->load();
 $read_only = '';
 if ($this->entity->final)
 	$read_only = 'readonly="readonly"';

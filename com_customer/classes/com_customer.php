@@ -26,8 +26,6 @@ class com_customer extends component {
 	function list_companies() {
 		global $pines;
 
-		$pines->com_pgrid->load();
-
 		$module = new module('com_customer', 'list_companies', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_customer/list_companies'];
@@ -45,8 +43,6 @@ class com_customer extends component {
 	 */
 	function list_customers() {
 		global $pines;
-
-		$pines->com_pgrid->load();
 
 		$module = new module('com_customer', 'list_customers', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))

@@ -29,8 +29,6 @@ class com_reports extends component {
 	 */
 	function report_attendance($start, $end, $location = null, $employee = null) {
 		global $pines;
-		$pines->com_pgrid->load();
-		$pines->com_jstree->load();
 		$date_start = strtotime('00:00', $start);
 		$date_end = strtotime('23:59', $end);
 
@@ -62,15 +60,12 @@ class com_reports extends component {
 	 */
 	function report_sales($start, $end) {
 		global $pines;
-		$pines->com_pgrid->load();
 		$date_start = strtotime('00:00', $start);
 		$date_end = strtotime('23:59', $end);
 		
 		$form = new module('com_reports', 'form_sales', 'left');
 		$head = new module('com_hrm', 'show_calendar_head', 'head');
 		$module = new module('com_reports', 'report_sales', 'content');
-		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_reports/report_sales'];
 		$module->sales = $pines->entity_manager->get_entities(array('gte' => array('p_cdate' => $date_start), 'lte' => array('p_cdate' => $date_end), 'tags' => array('com_sales', 'sale'), 'class' => com_sales_sale));
 
 		$module->date[0] = $form->date[0] = $date_start;

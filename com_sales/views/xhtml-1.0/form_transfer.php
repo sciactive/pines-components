@@ -12,6 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Transfer' : (($this->entity->final) ? 'Viewing ' : 'Editing ').' Transfer ['.htmlentities($this->entity->guid).']';
 $this->note = 'Use this form to transfer inventory to another location.';
+$pines->com_pgrid->load();
 $read_only = '';
 if ($this->entity->final)
 	$read_only = 'readonly="readonly"';

@@ -83,10 +83,6 @@ class com_sales_product extends entity {
 	 */
 	public function print_form() {
 		global $pines;
-		$pines->editor->load();
-		$pines->com_pgrid->load();
-		$pines->com_ptags->load();
-		$pines->com_jstree->load();
 		$module = new module('com_sales', 'form_product', 'content');
 		$module->entity = $this;
 		$module->manufacturers = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'manufacturer'), 'class' => com_sales_manufacturer));

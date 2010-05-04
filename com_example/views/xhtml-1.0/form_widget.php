@@ -12,6 +12,8 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Widget' : 'Editing ['.htmlentities($this->entity->name).']';
 $this->note = 'Provide widget details in this form.';
+$pines->editor->load();
+$pines->com_pgrid->load();
 ?>
 <script type="text/javascript">
 	// <![CDATA[

@@ -57,8 +57,6 @@ class com_hrm extends component {
 	function list_employees() {
 		global $pines;
 
-		$pines->com_pgrid->load();
-
 		$module = new module('com_hrm', 'list_employees', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_hrm/list_employees'];
@@ -77,8 +75,6 @@ class com_hrm extends component {
 	function list_timeclocks() {
 		global $pines;
 
-		$pines->com_pgrid->load();
-
 		$module = new module('com_hrm', 'list_timeclocks', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_hrm/list_timeclocks'];
@@ -96,8 +92,6 @@ class com_hrm extends component {
 	 */
 	function list_user_templates() {
 		global $pines;
-
-		$pines->com_pgrid->load();
 
 		$module = new module('com_hrm', 'list_user_templates', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))

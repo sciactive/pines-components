@@ -68,7 +68,6 @@ class com_sales_cashcount_skim extends entity {
 	 */
 	public function print_form() {
 		global $pines;
-		$pines->com_pgrid->load();
 		$module = new module('com_sales', 'form_cashcount_skim', 'content');
 		$module->entity = $this;
 		return $module;

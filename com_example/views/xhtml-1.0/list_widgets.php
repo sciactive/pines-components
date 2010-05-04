@@ -11,6 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Widgets';
+$pines->com_pgrid->load();
 ?>
 <script type="text/javascript">
 	// <![CDATA[

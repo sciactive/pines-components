@@ -11,6 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Standard Editor Test';
+$pines->editor->load();
 ?>
 TinyMCE Test:<br />
 <textarea rows="3" cols="35" class="peditor"></textarea>

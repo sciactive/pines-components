@@ -68,7 +68,6 @@ class com_sales_countsheet extends entity {
 	 */
 	public function print_form() {
 		global $pines;
-		$pines->com_pgrid->load();
 		$module = new module('com_sales', 'form_countsheet', 'content');
 		$module->entity = $this;
 		
@@ -113,7 +112,6 @@ class com_sales_countsheet extends entity {
 	 */
 	public function print_review() {
 		global $pines;
-		$pines->com_pgrid->load();
 		$module = new module('com_sales', 'form_countsheet_review', 'content');
 		$module->entity = $this;
 

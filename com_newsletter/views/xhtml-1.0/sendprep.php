@@ -11,6 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = "Sending {$this->mail->name}";
+$pines->com_jstree->load();
 ?>
 <script type='text/javascript'>
 	// <![CDATA[

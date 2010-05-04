@@ -36,8 +36,8 @@ class com_pgrid extends component {
 		if (!$this->js_loaded) {
 			global $pines;
 			$module = new module('com_pgrid', 'pgrid', 'head');
+			$module->render();
 			$this->js_loaded = true;
-			$pines->icons->load();
 		}
 	}
 }

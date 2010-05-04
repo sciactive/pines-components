@@ -178,8 +178,6 @@ class com_packager_package extends entity {
 	 */
 	public function print_form() {
 		global $pines;
-		$pines->editor->load();
-		$pines->com_pgrid->load();
 		$module = new module('com_packager', 'form_package', 'content');
 		$module->entity = $this;
 		$module->components = $pines->all_components;

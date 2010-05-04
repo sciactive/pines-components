@@ -68,7 +68,6 @@ class user extends able_object implements user_interface {
 
 	public function print_form() {
 		global $pines;
-		$pines->com_pgrid->load();
 		$module = new module('com_user', 'form_user', 'content');
 		$module->entity = $this;
 		$module->display_pin = gatekeeper('com_user/assignpin');
@@ -163,7 +162,6 @@ class user extends able_object implements user_interface {
 
 	public function register() {
 		global $pines;
-		$pines->com_pgrid->load();
 		$module = new module('com_user', 'form_register', 'content');
 		$module->entity = $this;
 		foreach ($pines->components as $cur_component)

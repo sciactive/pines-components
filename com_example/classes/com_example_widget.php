@@ -78,8 +78,6 @@ class com_example_widget extends entity {
 	 */
 	public function print_form() {
 		global $pines;
-		$pines->editor->load();
-		$pines->com_pgrid->load();
 		$module = new module('com_example', 'form_widget', 'content');
 		$module->entity = $this;
 

@@ -148,7 +148,6 @@ class configurator_component extends p_base implements configurator_component_in
 	 */
 	public function print_form() {
 		global $pines;
-		$pines->com_ptags->load();
 		$module = new module('com_configure', 'edit', 'content');
 		$module->entity = $this;
 

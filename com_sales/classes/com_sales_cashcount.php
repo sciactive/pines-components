@@ -78,7 +78,6 @@ class com_sales_cashcount extends entity {
 	 */
 	public function print_form() {
 		global $pines;
-		$pines->com_pgrid->load();
 		$module = new module('com_sales', 'form_cashcount', 'content');
 		$module->entity = $this;
 		return $module;
@@ -90,7 +89,6 @@ class com_sales_cashcount extends entity {
 	 */
 	public function print_review() {
 		global $pines;
-		$pines->com_pgrid->load();
 		$module = new module('com_sales', 'form_cashcount_review', 'content');
 		$module->entity = $this;
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))

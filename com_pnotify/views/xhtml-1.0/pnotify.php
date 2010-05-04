@@ -10,6 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
+$pines->icons->load();
 ?>
 <script type="text/javascript">
 	// <![CDATA[

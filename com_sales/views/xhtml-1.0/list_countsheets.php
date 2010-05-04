@@ -11,6 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Countsheets';
+$pines->com_pgrid->load();
+$pines->com_jstree->load();
 ?>
 <script type="text/javascript">
 	// <![CDATA[

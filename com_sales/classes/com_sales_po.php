@@ -80,7 +80,6 @@ class com_sales_po extends entity {
 	 */
 	public function print_form() {
 		global $pines;
-		$pines->com_pgrid->load();
 		$module = new module('com_sales', 'form_po', 'content');
 		$module->entity = $this;
 		$module->locations = $pines->user_manager->get_group_array();

@@ -95,7 +95,6 @@ class com_customertimer_floor extends entity {
 	 */
 	public function print_timer() {
 		global $pines;
-		$pines->com_pgrid->load();
 		$module = new module('com_customertimer', 'form_floor_timer', 'content');
 		$module->entity = $this;
 

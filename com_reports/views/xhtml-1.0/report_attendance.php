@@ -11,6 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name : $this->location->name).' ('.format_date($this->date[0], 'date_sort').' - '.format_date($this->date[1], 'date_sort').')';
+$pines->com_pgrid->load();
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */

@@ -274,9 +274,6 @@ class com_sales extends component {
 	 */
 	public function list_cashcounts($start_date = null, $end_date = null, $location = null) {
 		global $pines;
-
-		$pines->com_pgrid->load();
-		$pines->com_jstree->load();
 		
 		$form = new module('com_sales', 'list_cashcounts_form', 'left');
 		$module = new module('com_sales', 'list_cashcounts', 'content');
@@ -317,9 +314,6 @@ class com_sales extends component {
 	public function list_countsheets() {
 		global $pines;
 
-		$pines->com_pgrid->load();
-		$pines->com_jstree->load();
-
 		$module = new module('com_sales', 'list_countsheets', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_countsheets'];
@@ -345,8 +339,6 @@ class com_sales extends component {
 	public function list_manufacturers() {
 		global $pines;
 
-		$pines->com_pgrid->load();
-
 		$module = new module('com_sales', 'list_manufacturers', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_manufacturers'];
@@ -365,8 +357,6 @@ class com_sales extends component {
 	public function list_payment_types() {
 		global $pines;
 
-		$pines->com_pgrid->load();
-
 		$module = new module('com_sales', 'list_payment_types', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_payment_types'];
@@ -384,8 +374,6 @@ class com_sales extends component {
 	 */
 	public function list_pos() {
 		global $pines;
-
-		$pines->com_pgrid->load();
 
 		$module = new module('com_sales', 'list_pos', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
@@ -418,8 +406,6 @@ class com_sales extends component {
 	public function list_products() {
 		global $pines;
 
-		$pines->com_pgrid->load();
-
 		$module = new module('com_sales', 'list_products', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_products'];
@@ -439,8 +425,6 @@ class com_sales extends component {
 	 */
 	public function list_sales($start_date = null, $end_date = null) {
 		global $pines;
-
-		$pines->com_pgrid->load();
 
 		$module = new module('com_sales', 'list_sales', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
@@ -467,8 +451,6 @@ class com_sales extends component {
 	public function list_shippers() {
 		global $pines;
 
-		$pines->com_pgrid->load();
-
 		$module = new module('com_sales', 'list_shippers', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_shippers'];
@@ -489,8 +471,6 @@ class com_sales extends component {
 	public function list_stock($all = false) {
 		global $pines;
 
-		$pines->com_pgrid->load();
-
 		$module = new module('com_sales', 'list_stock', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_stock'];
@@ -510,8 +490,6 @@ class com_sales extends component {
 	public function list_tax_fees() {
 		global $pines;
 
-		$pines->com_pgrid->load();
-
 		$module = new module('com_sales', 'list_tax_fees', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_tax_fees'];
@@ -530,8 +508,6 @@ class com_sales extends component {
 	public function list_transfers() {
 		global $pines;
 
-		$pines->com_pgrid->load();
-
 		$module = new module('com_sales', 'list_transfers', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_transfers'];
@@ -549,8 +525,6 @@ class com_sales extends component {
 	 */
 	public function list_vendors() {
 		global $pines;
-
-		$pines->com_pgrid->load();
 
 		$module = new module('com_sales', 'list_vendors', 'content');
 		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
@@ -653,7 +627,6 @@ class com_sales extends component {
 	 */
 	public function print_receive_form() {
 		global $pines;
-		$pines->com_pgrid->load();
 		$module = new module('com_sales', 'form_receive', 'content');
 
 		return $module;

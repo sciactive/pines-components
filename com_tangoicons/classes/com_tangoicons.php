@@ -35,6 +35,7 @@ class com_tangoicons extends component {
 	function load() {
 		if (!$this->css_loaded) {
 			$module = new module('com_tangoicons', 'tangoicons', 'head');
+			$module->render();
 			$this->css_loaded = true;
 		}
 	}

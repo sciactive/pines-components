@@ -12,6 +12,10 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Product' : 'Editing ['.htmlentities($this->entity->name).']';
 $this->note = 'Provide product details in this form.';
+$pines->editor->load();
+$pines->com_pgrid->load();
+$pines->com_ptags->load();
+$pines->com_jstree->load();
 ?>
 <form class="pf-form" method="post" id="product_details" action="<?php echo htmlentities(pines_url('com_sales', 'saveproduct')); ?>">
 	<script type="text/javascript">

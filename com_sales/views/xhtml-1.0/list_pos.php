@@ -11,6 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Purchase Orders';
+$pines->com_pgrid->load();
 $errors = array();
 ?>
 <script type="text/javascript">

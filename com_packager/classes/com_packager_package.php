@@ -145,7 +145,6 @@ class com_packager_package extends entity {
 					'recommend' => $info->recommend,
 					'conflict' => $info->conflict
 				);
-				$arc->working_directory = '.';
 				$arc->add_directory('', true, true, '/^(components\/com_.*|templates\/tpl_.*|media\/.*)$/');
 				$arc->add_directory('media/images');
 				$arc->add_directory('media/logos');

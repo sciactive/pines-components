@@ -167,7 +167,7 @@ class slim extends p_base {
 	 * @return string The new path.
 	 */
 	private function add_slash($path) {
-		if (substr($path, -1) != '/')
+		if ($path != '' && substr($path, -1) != '/')
 			return "{$path}/";
 		return $path;
 	}
@@ -295,13 +295,13 @@ class slim extends p_base {
 	public function add_directory($path, $contents = true, $recursive = true, $filter = null, $exclude_vcs = true) {
 		$rel_path = $this->add_slash($path);
 		$abs_path = $this->add_slash($this->make_path($path));
-		if (!is_dir($abs_path))
+		if ($abs_path != '' && !is_dir($abs_path))
 			return false;
-		if (is_null($filter) || $this->path_filter($rel_path, $filter))
+		if ($abs_path != '' && (is_null($filter) || $this->path_filter($rel_path, $filter)))
 			$this->files[] = $abs_path;
 		if (!$contents)
 			return true;
-		$dir_contents = scandir($abs_path);
+		$dir_contents = scandir($abs_path == '' ? '.' : $abs_path);
 		if ($dir_contents === false)
 			return false;
 		foreach ($dir_contents as $cur_path) {

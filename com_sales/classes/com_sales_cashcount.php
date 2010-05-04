@@ -91,8 +91,6 @@ class com_sales_cashcount extends entity {
 		global $pines;
 		$module = new module('com_sales', 'form_cashcount_review', 'content');
 		$module->entity = $this;
-		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/form_cashcount_review'];
 		return $module;
 	}
 

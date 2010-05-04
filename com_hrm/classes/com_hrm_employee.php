@@ -175,8 +175,6 @@ class com_hrm_employee extends entity {
 
 		$module = new module('com_hrm', 'view_timeclock', 'content');
 		$module->entity = $this;
-		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_hrm/view_timeclock'];
 	}
 
 	/**

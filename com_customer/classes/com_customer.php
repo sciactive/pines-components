@@ -27,8 +27,6 @@ class com_customer extends component {
 		global $pines;
 
 		$module = new module('com_customer', 'list_companies', 'content');
-		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_customer/list_companies'];
 
 		$module->companies = $pines->entity_manager->get_entities(array('tags' => array('com_customer', 'company'), 'class' => com_customer_company));
 
@@ -45,8 +43,6 @@ class com_customer extends component {
 		global $pines;
 
 		$module = new module('com_customer', 'list_customers', 'content');
-		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_customer/list_customers'];
 
 		$module->customers = $pines->entity_manager->get_entities(array('tags' => array('com_customer', 'customer'), 'class' => com_customer_customer));
 

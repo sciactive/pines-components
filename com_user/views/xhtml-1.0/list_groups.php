@@ -12,6 +12,8 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Groups';
 $pines->com_pgrid->load();
+if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_user/list_groups'];
 
 // Build an array of parents, so we can include the parent class on their rows.
 $parents = array();

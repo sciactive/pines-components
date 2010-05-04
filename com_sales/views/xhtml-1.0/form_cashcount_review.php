@@ -14,6 +14,8 @@ $this->title = 'Reviewing Cash Count ['.htmlentities($this->entity->guid).']';
 if (isset($this->entity->guid))
 	$this->note = 'Created by ' . $this->entity->user->name . ' on ' . date('Y-m-d', $this->entity->p_cdate) . ' - Last Modified on ' . date('Y-m-d', $this->entity->p_mdate);
 $pines->com_pgrid->load();
+if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/form_cashcount_review'];
 
 $comment_count = 0;
 $comment_str = '';

@@ -277,8 +277,6 @@ class com_sales extends component {
 		
 		$form = new module('com_sales', 'list_cashcounts_form', 'left');
 		$module = new module('com_sales', 'list_cashcounts', 'content');
-		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_cashcounts'];
 
 		if (!isset($start_date))
 			$start_date = strtotime('-1 week 00:00');
@@ -315,8 +313,6 @@ class com_sales extends component {
 		global $pines;
 
 		$module = new module('com_sales', 'list_countsheets', 'content');
-		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_countsheets'];
 
 		$module->countsheets = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'countsheet'), 'class' => com_sales_countsheet));
 
@@ -340,8 +336,6 @@ class com_sales extends component {
 		global $pines;
 
 		$module = new module('com_sales', 'list_manufacturers', 'content');
-		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_manufacturers'];
 
 		$module->manufacturers = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'manufacturer'), 'class' => com_sales_manufacturer));
 
@@ -358,8 +352,6 @@ class com_sales extends component {
 		global $pines;
 
 		$module = new module('com_sales', 'list_payment_types', 'content');
-		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_payment_types'];
 
 		$module->payment_types = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));
 
@@ -376,8 +368,6 @@ class com_sales extends component {
 		global $pines;
 
 		$module = new module('com_sales', 'list_pos', 'content');
-		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_pos'];
 
 		$module->pos = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'po'), 'class' => com_sales_po));
 
@@ -407,8 +397,6 @@ class com_sales extends component {
 		global $pines;
 
 		$module = new module('com_sales', 'list_products', 'content');
-		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_products'];
 
 		$module->products = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'product'), 'class' => com_sales_product));
 
@@ -427,8 +415,6 @@ class com_sales extends component {
 		global $pines;
 
 		$module = new module('com_sales', 'list_sales', 'content');
-		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_sales'];
 
 		$options = array('tags' => array('com_sales', 'sale'), 'class' => com_sales_sale);
 		if (isset($start_date))
@@ -452,8 +438,6 @@ class com_sales extends component {
 		global $pines;
 
 		$module = new module('com_sales', 'list_shippers', 'content');
-		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_shippers'];
 
 		$module->shippers = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'shipper'), 'class' => com_sales_shipper));
 
@@ -472,8 +456,6 @@ class com_sales extends component {
 		global $pines;
 
 		$module = new module('com_sales', 'list_stock', 'content');
-		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_stock'];
 
 		$module->stock = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'stock'), 'class' => com_sales_stock));
 		$module->all = $all;
@@ -491,8 +473,6 @@ class com_sales extends component {
 		global $pines;
 
 		$module = new module('com_sales', 'list_tax_fees', 'content');
-		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_tax_fees'];
 
 		$module->tax_fees = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'tax_fee'), 'class' => com_sales_tax_fee));
 
@@ -509,8 +489,6 @@ class com_sales extends component {
 		global $pines;
 
 		$module = new module('com_sales', 'list_transfers', 'content');
-		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_transfers'];
 
 		$module->transfers = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'transfer'), 'class' => com_sales_transfer));
 
@@ -527,8 +505,6 @@ class com_sales extends component {
 		global $pines;
 
 		$module = new module('com_sales', 'list_vendors', 'content');
-		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_vendors'];
 
 		$module->vendors = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'vendor'), 'class' => com_sales_vendor));
 

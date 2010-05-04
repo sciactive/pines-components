@@ -12,6 +12,8 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name : $this->location->name).' ('.format_date($this->date[0], 'date_sort').' - '.format_date($this->date[1], 'date_sort').')';
 $pines->com_pgrid->load();
+if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_reports/report_attendance'];
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */

@@ -12,6 +12,8 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Companies';
 $pines->com_pgrid->load();
+if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
+	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_customer/list_companies'];
 ?>
 <script type="text/javascript">
 	// <![CDATA[

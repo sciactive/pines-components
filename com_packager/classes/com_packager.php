@@ -25,8 +25,6 @@ class com_packager extends component {
 		global $pines;
 
 		$module = new module('com_packager', 'list_packages', 'content');
-		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_packager/list_packages'];
 
 		$module->packages = $pines->entity_manager->get_entities(array('tags' => array('com_packager', 'package'), 'class' => com_packager_package));
 

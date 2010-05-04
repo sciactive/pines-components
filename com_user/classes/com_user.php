@@ -305,8 +305,6 @@ class com_user extends component implements user_manager_interface {
 		global $pines;
 
 		$module = new module('com_user', 'list_groups', 'content');
-		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_user/list_groups'];
 
 		$module->groups = $pines->entity_manager->get_entities(array('data' => array('enabled' => !!$enabled), 'tags' => array('com_user', 'group'), 'class' => group));
 
@@ -323,8 +321,6 @@ class com_user extends component implements user_manager_interface {
 		global $pines;
 
 		$module = new module('com_user', 'list_users', 'content');
-		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_user/list_users'];
 
 		$module->users = $pines->entity_manager->get_entities(array('data' => array('enabled' => !!$enabled), 'tags' => array('com_user', 'user'), 'class' => user));
 

@@ -25,8 +25,6 @@ class com_example extends component {
 		global $pines;
 
 		$module = new module('com_example', 'list_widgets', 'content');
-		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_example/list_widgets'];
 
 		$module->widgets = $pines->entity_manager->get_entities(array('tags' => array('com_example', 'widget'), 'class' => com_example_widget));
 

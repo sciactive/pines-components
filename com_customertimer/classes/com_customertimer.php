@@ -28,8 +28,6 @@ class com_customertimer extends component {
 		global $pines;
 
 		$module = new module('com_customertimer', 'list_floors', 'content');
-		if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-			$module->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_customertimer/list_floors'];
 
 		$module->floors = $pines->entity_manager->get_entities(array('tags' => array('com_customertimer', 'floor'), 'class' => com_customertimer_floor));
 

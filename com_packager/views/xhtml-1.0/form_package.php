@@ -126,6 +126,7 @@ $this->note = 'Provide package details in this form.';
 				<div class="pf-group">
 					<label><input class="pf-field ui-state-default" type="radio" name="type" value="component"<?php echo (($this->entity->type == 'component') ? ' checked="checked"' : ''); ?> /> Component</label>
 					<label><input class="pf-field ui-state-default" type="radio" name="type" value="template"<?php echo (($this->entity->type == 'template') ? ' checked="checked"' : ''); ?> /> Template</label>
+					<label><input class="pf-field ui-state-default" type="radio" name="type" value="system"<?php echo (($this->entity->type == 'system') ? ' checked="checked"' : ''); ?> /> System</label>
 					<label><input class="pf-field ui-state-default" type="radio" name="type" value="meta"<?php echo (($this->entity->type == 'meta') ? ' checked="checked"' : ''); ?> /> Meta Package</label>
 				</div>
 			</div>
@@ -167,6 +168,14 @@ $this->note = 'Provide package details in this form.';
 							<?php } ?>
 						</select>
 					</label>
+				</div>
+			</div>
+			<div class="package_type system">
+				<div class="pf-element pf-heading">
+					<h1>System Package Options</h1>
+				</div>
+				<div class="pf-element">
+					<span class="pf-field">No options are available for system packages. Information will be gathered from the system's info file.</span>
 				</div>
 			</div>
 			<div class="package_type meta">

@@ -85,6 +85,9 @@ class com_packager_package extends entity {
 				global $pines;
 				$component = $this->component;
 				return clean_filename("{$this->name}-{$pines->info->$component->version}");
+			case 'system':
+				global $pines;
+				return clean_filename("{$this->name}-{$pines->info->version}");
 			case 'meta':
 				return clean_filename("{$this->name}-{$this->meta['version']}");
 			default:
@@ -118,10 +121,35 @@ class com_packager_package extends entity {
 					'version' => $info->version,
 					'license' => $info->license,
 					'short_description' => $info->short_description,
-					'description' => $info->description
+					'description' => $info->description,
+					'depend' => $info->depend,
+					'recommend' => $info->recommend,
+					'conflict' => $info->conflict
 				);
 				$arc->working_directory = $this->type == 'template' ? 'templates/' : 'components/';
 				$arc->add_directory($component);
+				break;
+			case 'system':
+				$info = $pines->info;
+				// Select only needed info from the info object.
+				$arc->ext = array(
+					'package' => $this->name,
+					'type' => $this->type,
+					'name' => $info->name,
+					'author' => $info->author,
+					'version' => $info->version,
+					'license' => $info->license,
+					'short_description' => $info->short_description,
+					'description' => $info->description,
+					'depend' => $info->depend,
+					'recommend' => $info->recommend,
+					'conflict' => $info->conflict
+				);
+				$arc->working_directory = '.';
+				$arc->add_directory('', true, true, '/^(components\/com_.*|templates\/tpl_.*|media\/.*)$/');
+				$arc->add_directory('media/images');
+				$arc->add_directory('media/logos');
+				$arc->add_file('media/index.html');
 				break;
 			case 'meta':
 				$arc->ext = array(
@@ -132,7 +160,10 @@ class com_packager_package extends entity {
 					'version' => $this->meta['version'],
 					'license' => $this->meta['license'],
 					'short_description' => $this->meta['short_description'],
-					'description' => $this->meta['description']
+					'description' => $this->meta['description'],
+					'depend' => $this->meta['depend'],
+					'recommend' => $this->meta['recommend'],
+					'conflict' => $this->meta['conflict']
 				);
 				break;
 			default:

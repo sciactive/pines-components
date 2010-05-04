@@ -35,6 +35,9 @@ switch ($package->type) {
 	case 'template':
 		$package->component = $_REQUEST['pkg_template'];
 		break;
+	case 'system':
+		unset($package->component);
+		break;
 	case 'meta':
 		unset($package->component);
 		$package->meta = array(
@@ -49,7 +52,7 @@ switch ($package->type) {
 	default:
 		$package->type = 'component';
 		$package->component = $_REQUEST['pkg_component'];
-		pines_notice('Package type must be either component or template.');
+		pines_notice('Package type must be either component, template, system, or meta.');
 		break;
 }
 $package->filename = $_REQUEST['filename'];
@@ -70,12 +73,12 @@ if (empty($package->name)) {
 	pines_notice('Please specify a name.');
 	return;
 }
-if ($package->type != 'meta' && empty($package->component)) {
+if (!in_array($package->type, array('system', 'meta')) && empty($package->component)) {
 	$package->print_form();
 	pines_notice('Please specify a component.');
 	return;
 }
-if ($package->type != 'meta' && !in_array($package->component, $pines->all_components)) {
+if (!in_array($package->type, array('system', 'meta')) && !in_array($package->component, $pines->all_components)) {
 	$package->print_form();
 	pines_notice('Selected component was not found.');
 	return;

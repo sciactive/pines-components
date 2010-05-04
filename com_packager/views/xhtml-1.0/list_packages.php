@@ -72,15 +72,22 @@ $this->title = 'Packages';
 				case 'template':
 					echo 'Template Package';
 					break;
+				case 'system':
+					echo 'System Package';
+					break;
 				case 'meta':
 					echo 'Meta Package';
 					break;
 			} ?></td>
-			<td><?php if ($package->type != 'meta') {
+			<td><?php if (!in_array($package->type, array('system', 'meta'))) {
 				$name = $package->component;
-				echo "{$pines->info->$name->name} [{$name}]";
+				echo "{$pines->info->$name->name} [{$name} {$pines->info->$name->version}]";
 			} else {
-				echo 'N/A';
+				if ($package->type == 'system') {
+					echo "{$pines->info->name} [system {$pines->info->version}]";
+				} else {
+					echo 'N/A';
+				}
 			} ?></td>
 		</tr>
 	<?php } ?>

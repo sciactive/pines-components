@@ -1,4 +1,4 @@
-$(document).ready(function(){
+pines(function(){
 	$("ul.dropdown li").live("mouseenter", function(){
 		$(this).addClass("hover");
 		$('> .dir',this).addClass("open");

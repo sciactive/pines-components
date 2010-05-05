@@ -12,32 +12,31 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-/* Experimental AJAX code.
-if (strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
+// Experimental AJAX code.
+if ($pines->config->tpl_pines->ajax && strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
 	$return = array(
 		'notices' => $pines->page->get_notice(),
 		'errors' => $pines->page->get_error(),
 		'main_menu' => $pines->page->render_modules('main_menu', 'module_head'),
-		'head' => $pines->page->render_modules('head', 'module_head'),
-		'top' => $pines->page->render_modules('top', 'module_header'),
-		'header' => $pines->page->render_modules('header', 'module_header'),
-		'header_right' => $pines->page->render_modules('header_right', 'module_header_right'),
-		'pre_content' => $pines->page->render_modules('pre_content', 'module_header'),
-		'user1' => $pines->page->render_modules('user1'),
-		'user2' => $pines->page->render_modules('user2'),
-		'content' => $pines->page->render_modules('content', 'module_content'),
-		'user3' => $pines->page->render_modules('user3'),
-		'user4' => $pines->page->render_modules('user4'),
-		'post_content' => $pines->page->render_modules('post_content', 'module_header'),
-		'left' => $pines->page->render_modules('left'),
-		'right' => $pines->page->render_modules('right', 'module_right'),
-		'footer' => $pines->page->render_modules('footer', 'module_header'),
-		'bottom' => $pines->page->render_modules('bottom', 'module_header')
+		'pos_head' => $pines->page->render_modules('head', 'module_head'),
+		'pos_top' => $pines->page->render_modules('top', 'module_header'),
+		'pos_header' => $pines->page->render_modules('header', 'module_header'),
+		'pos_header_right' => $pines->page->render_modules('header_right', 'module_header_right'),
+		'pos_pre_content' => $pines->page->render_modules('pre_content', 'module_header'),
+		'pos_content_top_left' => $pines->page->render_modules('content_top_left'),
+		'pos_content_top_right' => $pines->page->render_modules('content_top_right'),
+		'pos_content' => $pines->page->render_modules('content', 'module_content'),
+		'pos_content_bottom_left' => $pines->page->render_modules('content_bottom_left'),
+		'pos_content_bottom_right' => $pines->page->render_modules('content_bottom_right'),
+		'pos_post_content' => $pines->page->render_modules('post_content', 'module_header'),
+		'pos_left' => $pines->page->render_modules('left'),
+		'pos_right' => $pines->page->render_modules('right', 'module_right'),
+		'pos_footer' => $pines->page->render_modules('footer', 'module_header'),
+		'pos_bottom' => $pines->page->render_modules('bottom', 'module_header')
 	);
 	echo json_encode($return);
 	return;
 }
-*/
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -60,6 +59,13 @@ if (strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
 	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/dropdown/themes/jqueryui/jqueryui.css" media="all" rel="stylesheet" type="text/css" />
 
 	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>system/js/js.php"></script>
+	<?php if ($pines->config->tpl_pines->ajax) { ?>
+	<script type="text/javascript">
+		// <![CDATA[
+		pines.tpl_pines_ajax = true;
+		// ]]>
+	</script>
+	<?php } ?>
 	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/template.js"></script>
 
 	<!--[if lt IE 7]>
@@ -67,7 +73,6 @@ if (strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
 	<![endif]-->
 
 	<?php echo $pines->page->render_modules('head', 'module_head'); ?>
-
 </head>
 <body class="ui-widget-content">
 	<div id="top">
@@ -146,7 +151,9 @@ if (strpos($_SERVER["HTTP_ACCEPT"], 'application/json') !== false) {
 		<?php echo $pines->page->render_modules('post_content', 'module_header'); ?>
 	</div>
 	<div id="footer" class="ui-widget-header">
-		<?php echo $pines->page->render_modules('footer', 'module_header'); ?>
+		<div class="modules">
+			<?php echo $pines->page->render_modules('footer', 'module_header'); ?>
+		</div>
 		<p class="copyright">
 			<?php echo $pines->config->option_copyright_notice; ?>
 		</p>

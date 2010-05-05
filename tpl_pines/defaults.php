@@ -26,6 +26,13 @@ return array(
 		'value' => isset($_SESSION['user']->group) ? $_SESSION['user']->group->get_logo(true) : $pines->config->rela_location.$pines->config->setting_upload.'logos/default_logo.png',
 		'peruser' => true,
 	),
+	array(
+		'name' => 'ajax',
+		'cname' => 'Use Ajax',
+		'description' => 'Use the experimental AJAX code to load all pages without refreshing.',
+		'value' => false,
+		'peruser' => true,
+	),
 );
 
 ?>

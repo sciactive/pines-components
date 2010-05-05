@@ -279,21 +279,21 @@ $pines->com_pgrid->load();
 									</tr>
 								</thead>
 								<tbody>
-									<?php if (is_array($this->entity->meta['depend'])) foreach ($this->entity->meta['depend'] as $cur_key => $cur_value) { ?>
+									<?php if (isset($this->entity->meta['depend'])) foreach ($this->entity->meta['depend'] as $cur_key => $cur_value) { ?>
 									<tr>
 										<td>depend</td>
 										<td><?php echo $cur_key; ?></td>
 										<td><?php echo $cur_value; ?></td>
 									</tr>
 									<?php } ?>
-									<?php if (is_array($this->entity->meta['recommend'])) foreach ($this->entity->meta['recommend'] as $cur_key => $cur_value) { ?>
+									<?php if (isset($this->entity->meta['recommend'])) foreach ($this->entity->meta['recommend'] as $cur_key => $cur_value) { ?>
 									<tr>
 										<td>recommend</td>
 										<td><?php echo $cur_key; ?></td>
 										<td><?php echo $cur_value; ?></td>
 									</tr>
 									<?php } ?>
-									<?php if (is_array($this->entity->meta['conflict'])) foreach ($this->entity->meta['conflict'] as $cur_key => $cur_value) { ?>
+									<?php if (isset($this->entity->meta['conflict'])) foreach ($this->entity->meta['conflict'] as $cur_key => $cur_value) { ?>
 									<tr>
 										<td>conflict</td>
 										<td><?php echo $cur_key; ?></td>

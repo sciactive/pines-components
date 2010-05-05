@@ -20,6 +20,7 @@ if (empty($_SESSION['com_user__tmpusername']) || empty($_SESSION['com_user__tmpu
 }
 
 $user = user::factory();
+$user->grant('com_user/login');
 
 $user->username = $_SESSION['com_user__tmpusername'];
 $user->password($_SESSION['com_user__tmppassword']);
@@ -53,25 +54,57 @@ if ($pines->config->com_user->confirm_email) {
 	// The user will be enabled after confirming their e-mail address.
 	$user->enabled = false;
 	$user->secret = uniqid('', true);
-	// Send the verification e-mail.
-	$content = 'Thank you for registering.
-				Please click the link below to activate your account.
-				<a href="'.pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'secret' => $user->secret)).'"></a>';
-	$mail = com_mailer_mail::factory($pines->config->com_user->email_from_address, $user->email, 'Please verify your email address', $content);
-	$mail->send();
 } else {
 	$user->enabled = true;
 }
 
 if ($user->save()) {
-	pines_notice('Registered user ['.$user->username.']');
 	pines_log('Registered user ['.$user->username.']');
 	unset($_SESSION['com_user__tmpusername']);
 	unset($_SESSION['com_user__tmppassword']);
+	if ($pines->config->com_user->confirm_email) {
+		// Send the verification e-mail.
+		$link = '<a href="'.htmlentities(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'secret' => $user->secret), true)).'">'.htmlentities(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'secret' => $user->secret), true)).'</a>';
+		$search = array(
+			'{site_title}',
+			'{site_address}',
+			'{link}',
+			'{username}',
+			'{name}',
+			'{email}',
+			'{phone}',
+			'{fax}',
+			'{timezone}',
+			'{address}'
+		);
+		$replace = array(
+			$pines->config->option_title,
+			$pines->config->full_location,
+			$link,
+			$user->username,
+			$user->name,
+			$user->email,
+			$user->phone,
+			$user->fax,
+			$user->timezone,
+			$user->address_type == 'US' ? "{$user->address_1} {$user->address_2}\n{$user->city}, {$user->state} {$user->zip}" : $user->address_international
+		);
+		$subject = str_replace($search, $replace, $pines->config->com_user->email_subject);
+		$content = str_replace($search, $replace, $pines->config->com_user->email_content);
+		$mail = com_mailer_mail::factory($pines->config->com_user->email_from_address, $user->email, $subject, $content);
+		if ($mail->send()) {
+			$note = new module('com_user', 'note_verify_email', 'content');
+			$note->entity = $user;
+		} else {
+			pines_error('Couldn\'t send registration email.');
+			return;
+		}
+	} else {
+		$pines->user_manager->login($user);
+		$note = new module('com_user', 'note_welcome', 'content');
+	}
 } else {
-	pines_error('Error registering user. Do you have permission?');
+	pines_error('Error registering user.');
 }
-
-$user->registered();
 
 ?>

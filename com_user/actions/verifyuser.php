@@ -13,26 +13,27 @@ defined('P_RUN') or die('Direct access prohibited');
 
 $user = user::factory((int) $_REQUEST['id']);
 
-if (isset($user->guid)) {
+if (!isset($user->guid)) {
 	pines_notice('The specified user id is not available.');
 	$pines->com_user->print_login();
 	return;
 }
 
-if ($_REQUEST['id'] != $user->secret) {
+if ($_REQUEST['secret'] != $user->secret) {
 	pines_notice('The secret code given does not match this user.');
 	$pines->com_user->print_login();
 	return;
 }
+
 $user->enabled = true;
+unset($user->secret);
 
 if ($user->save()) {
-	pines_notice('Validated user ['.$user->username.']');
 	pines_log('Validated user ['.$user->username.']');
+	$pines->user_manager->login($user);
+	$notice = new module('com_user', 'note_welcome', 'content');
 } else {
-	pines_error('Error registering user. Do you have permission?');
+	pines_error('Error saving user.');
 }
-
-$pines->com_user->login($user);
 
 ?>

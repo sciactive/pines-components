@@ -31,18 +31,6 @@ return array(
 		'value' => true,
 	),
 	array(
-		'name' => 'confirm_email',
-		'cname' => 'Confirm User Email Addresses',
-		'description' => 'Confirm users\' email addresses upon registration before allowing them to login.',
-		'value' => true,
-	),
-	array(
-		'name' => 'email_from_address',
-		'cname' => 'From Address',
-		'description' => 'The address that emails will be sent from.',
-		'value' => 'webmaster@example.com',
-	),
-	array(
 		'name' => 'reg_fields',
 		'cname' => 'Visible Registration Fields',
 		'description' => 'These fields will be available for the user to fill in when they register.',
@@ -55,6 +43,36 @@ return array(
 			'Timezone' => 'timezone',
 			'Address' => 'address',
 		),
+	),
+	array(
+		'name' => 'reg_message_welcome',
+		'cname' => 'Registration Welcome Message',
+		'description' => 'This message will be displayed to the user after they register.',
+		'value' => 'You can begin using the system with the menu near the top of the page.',
+	),
+	array(
+		'name' => 'confirm_email',
+		'cname' => 'Confirm User Email Addresses',
+		'description' => 'Confirm users\' email addresses upon registration before allowing them to login.',
+		'value' => true,
+	),
+	array(
+		'name' => 'email_from_address',
+		'cname' => 'From Address',
+		'description' => 'The address that emails will be sent from.',
+		'value' => 'webmaster@example.com',
+	),
+	array(
+		'name' => 'email_subject',
+		'cname' => 'Confirmation Email Subject',
+		'description' => 'The subject of the confirmation email to new users. Available fields: {site_title}, {site_address}, {link}, {username}, {name}, {email}, {phone}, {fax}, {timezone}, {address}.',
+		'value' => 'Welcome to {site_title}. Please confirm your email.',
+	),
+	array(
+		'name' => 'email_content',
+		'cname' => 'Confirmation Email',
+		'description' => 'The content of the confirmation email to new users. Available fields: {site_title}, {site_address}, {link}, {username}, {name}, {email}, {phone}, {fax}, {timezone}, {address}.',
+		'value' => "Welcome {name},<br />\n<br />\nThank you for signing up at {site_address}. Please confirm your email by clicking on the following link to activate your account:<br />\n<br />\n{link}<br />\n<br />\nThank You,<br />\n{site_title}",
 	),
 	array(
 		'name' => 'empty_pw',

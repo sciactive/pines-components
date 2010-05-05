@@ -29,14 +29,14 @@ if ( $pines->config->com_user->allow_registration && $_REQUEST['login_register']
 	}
 	$test = user::factory($_REQUEST['username']);
 	if (isset($test->guid)) {
-		pines_notice('There is already a user with that username. Please choose a different username.');
-		$pines->user_manager->print_login('content');
+		pines_notice('The username you requested is already taken. Please choose a different username.');
+		$pines->user_manager->print_login();
 		return;
 	}
 	$user = user::factory();
 	$_SESSION['com_user__tmpusername'] = $_REQUEST['username'];
 	$_SESSION['com_user__tmppassword'] = $_REQUEST['password'];
-	$user->register();
+	$user->print_register();
 	return;
 }
 

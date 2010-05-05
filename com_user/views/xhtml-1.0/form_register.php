@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = "Welcome to {$pines->config->option_title}";
+$this->title = 'New User Registration';
 $this->note = 'Please fill in your account details.';
 ?>
 <script type="text/javascript">
@@ -20,7 +20,7 @@ $this->note = 'Please fill in your account details.';
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="user_details" action="<?php echo htmlentities(pines_url('com_user', 'saveuser')); ?>">
+<form class="pf-form" method="post" id="user_details" action="<?php echo htmlentities(pines_url('com_user', 'registeruser')); ?>">
 	<div id="user_tabs" style="clear: both;">
 		<ul>
 			<li><a href="#tab_general">General</a></li>

@@ -46,8 +46,25 @@ switch ($package->type) {
 			'version' => $_REQUEST['meta_version'],
 			'license' => $_REQUEST['meta_license'],
 			'short_description' => $_REQUEST['meta_short_description'],
-			'description' => $_REQUEST['meta_description']
+			'description' => $_REQUEST['meta_description'],
+			'depend' => array(),
+			'recommend' => array(),
+			'conflict' => array()
 		);
+		$conditions = json_decode($_REQUEST['meta_conditions']);
+		foreach ($conditions as $cur_condition) {
+			switch ($cur_condition->values[0]) {
+				case 'depend':
+					$package->meta['depend'][$cur_condition->values[1]] = $cur_condition->values[2];
+					break;
+				case 'recommend':
+					$package->meta['recommend'][$cur_condition->values[1]] = $cur_condition->values[2];
+					break;
+				case 'conflict':
+					$package->meta['conflict'][$cur_condition->values[1]] = $cur_condition->values[2];
+					break;
+			}
+		}
 		break;
 	default:
 		$package->type = 'component';

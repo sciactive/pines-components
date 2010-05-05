@@ -27,7 +27,7 @@ class com_packager_package extends entity {
 		$this->add_tag('com_packager', 'package');
 		// Defaults.
 		$this->type = 'component';
-		$this->attributes = $this->meta = array();
+		$this->meta = array();
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));

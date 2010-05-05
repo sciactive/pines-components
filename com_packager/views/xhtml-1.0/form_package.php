@@ -18,71 +18,111 @@ $pines->com_pgrid->load();
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-		// Attributes
-		var attributes = $("#tab_attributes .attributes");
-		var attributes_table = $("#tab_attributes .attributes_table");
-		var attribute_dialog = $("#tab_attributes .attribute_dialog");
+		// Conditions
+		var conditions = $("#package_details [name=meta_conditions]");
+		var conditions_table = $("#package_details .conditions_table");
+		var condition_dialog = $("#package_details .condition_dialog");
+		var cur_condition = null;
 
-		attributes_table.pgrid({
+		conditions_table.pgrid({
 			pgrid_paginate: false,
+			pgrid_view_height: '200px',
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents : [
 				{
 					type: 'button',
-					text: 'Add Attribute',
+					text: 'Add Condition',
 					extra_class: 'icon picon_16x16_actions_list-add',
 					selection_optional: true,
 					click: function(){
-						attribute_dialog.dialog('open');
+						cur_condition = null;
+						condition_dialog.dialog('open');
 					}
 				},
 				{
 					type: 'button',
-					text: 'Remove Attribute',
+					text: 'Edit Condition',
+					extra_class: 'icon picon_16x16_actions_document-open',
+					double_click: true,
+					click: function(e, rows){
+						cur_condition = rows;
+						condition_dialog.find("select[name=cur_condition_class]").val(rows.pgrid_get_value(1));
+						condition_dialog.find("input[name=cur_condition_type]").val(rows.pgrid_get_value(2));
+						condition_dialog.find("input[name=cur_condition_value]").val(rows.pgrid_get_value(3));
+						condition_dialog.dialog('open');
+					}
+				},
+				{
+					type: 'button',
+					text: 'Remove Condition',
 					extra_class: 'icon picon_16x16_actions_list-remove',
 					click: function(e, rows){
 						rows.pgrid_delete();
-						update_attributes();
+						update_conditions();
 					}
 				}
 			]
 		});
 
-		// Attribute Dialog
-		attribute_dialog.dialog({
+		// Condition Dialog
+		condition_dialog.dialog({
 			bgiframe: true,
 			autoOpen: false,
 			modal: true,
 			width: 500,
 			buttons: {
 				"Done": function() {
-					var cur_attribute_name = attribute_dialog.find("input[name=cur_attribute_name]").val();
-					var cur_attribute_value = attribute_dialog.find("input[name=cur_attribute_value]").val();
-					if (cur_attribute_name == "" || cur_attribute_value == "") {
-						alert("Please provide both a name and a value for this attribute.");
+					var cur_condition_class = condition_dialog.find("select[name=cur_condition_class]").val();
+					var cur_condition_type = condition_dialog.find("input[name=cur_condition_type]").val();
+					var cur_condition_value = condition_dialog.find("input[name=cur_condition_value]").val();
+					if (cur_condition_type == "" || cur_condition_value == "") {
+						alert("Please provide both a type and a value for this condition.");
 						return;
 					}
-					var new_attribute = [{
-						key: null,
-						values: [
-							cur_attribute_name,
-							cur_attribute_value
-						]
-					}];
-					attributes_table.pgrid_add(new_attribute);
-					update_attributes();
+					// Is this a duplicate type?
+					var dupe = false;
+					conditions_table.pgrid_get_all_rows().each(function(){
+						if (dupe) return;
+						var check_row = $(this);
+						if (check_row.pgrid_get_value(1) == cur_condition_class && check_row.pgrid_get_value(2) == cur_condition_type) {
+							// If this is the current row being edited, it isn't a duplicate.
+							if (!cur_condition || !cur_condition.is(check_row))
+								dupe = true;
+						}
+					});
+					if (dupe) {
+						pines.notice('There is already a condition of that type for this class.');
+						return;
+					}
+					if (!cur_condition) {
+						var new_condition = [{
+							key: null,
+							values: [
+								cur_condition_class,
+								cur_condition_type,
+								cur_condition_value
+							]
+						}];
+						conditions_table.pgrid_add(new_condition);
+					} else {
+						cur_condition.pgrid_set_value(1, cur_condition_class);
+						cur_condition.pgrid_set_value(2, cur_condition_type);
+						cur_condition.pgrid_set_value(3, cur_condition_value);
+					}
+					update_conditions();
 					$(this).dialog('close');
 				}
 			}
 		});
 
-		function update_attributes() {
-			attribute_dialog.find("input[name=cur_attribute_name]").val("");
-			attribute_dialog.find("input[name=cur_attribute_value]").val("");
-			attributes.val(JSON.stringify(attributes_table.pgrid_get_all_rows().pgrid_export_rows()));
+		function update_conditions() {
+			condition_dialog.find("select[name=cur_condition_class]").val("depend");
+			condition_dialog.find("input[name=cur_condition_type]").val("");
+			condition_dialog.find("input[name=cur_condition_value]").val("");
+			conditions.val(JSON.stringify(conditions_table.pgrid_get_all_rows().pgrid_export_rows()));
 		}
 
-		update_attributes();
+		update_conditions();
 
 		$("#package_tabs").tabs();
 	});
@@ -93,7 +133,6 @@ $pines->com_pgrid->load();
 		<ul>
 			<li><a href="#tab_general">General</a></li>
 			<li><a href="#tab_images">Images</a></li>
-			<li><a href="#tab_attributes">Attributes</a></li>
 		</ul>
 		<div id="tab_general">
 			<?php if (isset($this->entity->guid)) { ?>
@@ -223,6 +262,77 @@ $pines->com_pgrid->load();
 						<span class="pf-field pf-full-width"><textarea class="ui-widget-content" style="width: 100%;" rows="3" cols="35" name="meta_description"><?php echo $this->entity->meta['description']; ?></textarea></span>
 					</label>
 				</div>
+				<div class="pf-element pf-full-width">
+					<span class="pf-label">Conditions</span>
+					<span class="pf-note">There are three classes.</span>
+					<span class="pf-note">Depend: package will only install if all these conditions are met.</span>
+					<span class="pf-note">Recommend: package will recommend that these conditions are met.</span>
+					<span class="pf-note">Conflict: package will not install if any of these conditions are met.</span>
+					<div class="pf-group">
+						<div class="pf-field">
+							<table class="conditions_table">
+								<thead>
+									<tr>
+										<th>Class</th>
+										<th>Type</th>
+										<th>Value</th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php if (is_array($this->entity->meta['depend'])) foreach ($this->entity->meta['depend'] as $cur_key => $cur_value) { ?>
+									<tr>
+										<td>depend</td>
+										<td><?php echo $cur_key; ?></td>
+										<td><?php echo $cur_value; ?></td>
+									</tr>
+									<?php } ?>
+									<?php if (is_array($this->entity->meta['recommend'])) foreach ($this->entity->meta['recommend'] as $cur_key => $cur_value) { ?>
+									<tr>
+										<td>recommend</td>
+										<td><?php echo $cur_key; ?></td>
+										<td><?php echo $cur_value; ?></td>
+									</tr>
+									<?php } ?>
+									<?php if (is_array($this->entity->meta['conflict'])) foreach ($this->entity->meta['conflict'] as $cur_key => $cur_value) { ?>
+									<tr>
+										<td>conflict</td>
+										<td><?php echo $cur_key; ?></td>
+										<td><?php echo $cur_value; ?></td>
+									</tr>
+									<?php } ?>
+								</tbody>
+							</table>
+							<input type="hidden" name="meta_conditions" />
+						</div>
+					</div>
+				</div>
+				<div class="condition_dialog" style="display: none;" title="Add an Condition">
+					<div class="pf-form">
+						<div class="pf-element">
+							<label>
+								<span class="pf-label">Class</span>
+								<select class="pf-field ui-widget-content" name="cur_condition_class">
+									<option value="depend">Depend</option>
+									<option value="recommend">Recommend</option>
+									<option value="conflict">Conflict</option>
+								</select>
+							</label>
+						</div>
+						<div class="pf-element">
+							<label>
+								<span class="pf-label">Type</span>
+								<input class="pf-field ui-widget-content" type="text" name="cur_condition_type" size="24" />
+							</label>
+						</div>
+						<div class="pf-element">
+							<label>
+								<span class="pf-label">Value</span>
+								<input class="pf-field ui-widget-content" type="text" name="cur_condition_value" size="24" />
+							</label>
+						</div>
+					</div>
+					<br style="clear: both; height: 1px;" />
+				</div>
 			</div>
 			<div class="pf-element pf-heading">
 				<h1>Packaging Options</h1>
@@ -244,48 +354,6 @@ $pines->com_pgrid->load();
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Screenshots</span>
 				<span class="pf-field">Nothing here yet...</span>
-			</div>
-			<br class="pf-clearing" />
-		</div>
-		<div id="tab_attributes">
-			<div class="pf-element pf-full-width">
-				<span class="pf-label">Attributes</span>
-				<div class="pf-group">
-					<table class="attributes_table">
-						<thead>
-							<tr>
-								<th>Name</th>
-								<th>Value</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php foreach ($this->entity->attributes as $cur_attribute) { ?>
-							<tr>
-								<td><?php echo $cur_attribute['name']; ?></td>
-								<td><?php echo $cur_attribute['value']; ?></td>
-							</tr>
-							<?php } ?>
-						</tbody>
-					</table>
-					<input type="hidden" name="attributes" />
-				</div>
-			</div>
-			<div class="attribute_dialog" style="display: none;" title="Add an Attribute">
-				<div class="pf-form">
-					<div class="pf-element">
-						<label>
-							<span class="pf-label">Name</span>
-							<input class="pf-field ui-widget-content" type="text" name="cur_attribute_name" size="24" />
-						</label>
-					</div>
-					<div class="pf-element">
-						<label>
-							<span class="pf-label">Value</span>
-							<input class="pf-field ui-widget-content" type="text" name="cur_attribute_value" size="24" />
-						</label>
-					</div>
-				</div>
-				<br style="clear: both; height: 1px;" />
 			</div>
 			<br class="pf-clearing" />
 		</div>

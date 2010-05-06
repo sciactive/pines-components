@@ -19,7 +19,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * @package Pines
  * @subpackage com_tangoicons
  */
-class com_tangoicons extends component {
+class com_tangoicons extends component implements icons_interface {
 	/**
 	 * Whether the Tango CSS has been loaded.
 	 * @access private
@@ -27,12 +27,7 @@ class com_tangoicons extends component {
 	 */
 	private $css_loaded = false;
 
-	/**
-	 * Load the icon set.
-	 *
-	 * This will place the required scripts into the document's head section.
-	 */
-	function load() {
+	public function load() {
 		if (!$this->css_loaded) {
 			$module = new module('com_tangoicons', 'tangoicons', 'head');
 			$module->render();

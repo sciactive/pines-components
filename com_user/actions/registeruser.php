@@ -39,9 +39,9 @@ $user->state = $_REQUEST['state'];
 $user->zip = $_REQUEST['zip'];
 $user->address_international = $_REQUEST['address_international'];
 
-if ($pines->com_user->max_username_length > 0 && strlen($user->username) > $pines->com_user->max_username_length) {
+if ($pines->config->com_user->max_username_length > 0 && strlen($user->username) > $pines->config->com_user->max_username_length) {
 	$user->register();
-	pines_notice("Usernames must not exceed {$pines->com_user->max_username_length} characters.");
+	pines_notice("Usernames must not exceed {$pines->config->com_user->max_username_length} characters.");
 	return;
 }
 if (empty($user->password) && !$pines->config->com_user->empty_pw) {

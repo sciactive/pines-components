@@ -118,9 +118,9 @@ if (empty($user->username)) {
 	pines_notice('Please specify a username.');
 	return;
 }
-if ($pines->com_user->max_username_length > 0 && strlen($user->username) > $pines->com_user->max_username_length) {
+if ($pines->config->com_user->max_username_length > 0 && strlen($user->username) > $pines->config->com_user->max_username_length) {
 	$user->print_form();
-	pines_notice("Usernames must not exceed {$pines->com_user->max_username_length} characters.");
+	pines_notice("Usernames must not exceed {$pines->config->com_user->max_username_length} characters.");
 	return;
 }
 $test = user::factory($_REQUEST['username']);
@@ -142,9 +142,9 @@ if (gatekeeper('com_user/assignpin') && !empty($user->pin)) {
 		return;
 	}
 
-	if ($pines->com_user->min_pin_length > 0 && strlen($user->pin) < $pines->com_user->min_pin_length) {
+	if ($pines->config->com_user->min_pin_length > 0 && strlen($user->pin) < $pines->config->com_user->min_pin_length) {
 		$group->print_form();
-		pines_notice("User PINs must be at least {$pines->com_user->min_pin_length} characters.");
+		pines_notice("User PINs must be at least {$pines->config->com_user->min_pin_length} characters.");
 		return;
 	}
 }

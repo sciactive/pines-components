@@ -80,13 +80,13 @@ class configurator_component extends p_base implements configurator_component_in
 	 */
 	public function __construct($component) {
 		global $pines;
-		if (!key_exists($component, $pines->com_configure->component_files))
+		if (!key_exists($component, $pines->configurator->component_files))
 			return;
 		$this->component = $component;
 		$this->name = $component;
-		$this->defaults_file = $pines->com_configure->component_files[$component]['defaults'];
-		$this->config_file = $pines->com_configure->component_files[$component]['config'];
-		$this->info_file = $pines->com_configure->component_files[$component]['info'];
+		$this->defaults_file = $pines->configurator->component_files[$component]['defaults'];
+		$this->config_file = $pines->configurator->component_files[$component]['config'];
+		$this->info_file = $pines->configurator->component_files[$component]['info'];
 		if (file_exists($this->defaults_file))
 			$this->defaults = include($this->defaults_file);
 		if (file_exists($this->config_file)) {

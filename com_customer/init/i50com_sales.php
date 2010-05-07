@@ -59,6 +59,7 @@ foreach($pines->config->com_customer->pointvalues as $cur_value) {
 		'callback' => 'com_customer__product_action_add_points'
 	);
 }
+unset ($cur_value);
 foreach($pines->config->com_customer->membervalues as $cur_value) {
 	$pines->config->com_sales->product_actions[] = array(
 		'type' => 'sold',
@@ -68,5 +69,6 @@ foreach($pines->config->com_customer->membervalues as $cur_value) {
 		'callback' => 'com_customer__product_action_add_member_days'
 	);
 }
+unset ($cur_value);
 
 ?>

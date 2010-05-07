@@ -11,6 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$com_su__module = new module('com_su', 'load_js', 'head');
+$module = new module('com_su', 'load_js', 'head');
+unset ($module);
 
 ?>

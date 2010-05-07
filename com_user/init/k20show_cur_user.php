@@ -11,7 +11,9 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( isset($_SESSION['user']) && $pines->config->com_user->show_cur_user )
-	$com_user__show_user = new module('com_user', 'show_user', 'header_right');
+if ( isset($_SESSION['user']) && $pines->config->com_user->show_cur_user ) {
+	$module = new module('com_user', 'show_user', 'header_right');
+	unset ($module);
+}
 
 ?>

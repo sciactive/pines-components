@@ -15,13 +15,13 @@ $user = user::factory((int) $_REQUEST['id']);
 
 if (!isset($user->guid)) {
 	pines_notice('The specified user id is not available.');
-	$pines->com_user->print_login();
+	$pines->user_manager->print_login();
 	return;
 }
 
 if ($_REQUEST['secret'] != $user->secret) {
 	pines_notice('The secret code given does not match this user.');
-	$pines->com_user->print_login();
+	$pines->user_manager->print_login();
 	return;
 }
 

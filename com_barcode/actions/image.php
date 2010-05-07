@@ -70,6 +70,8 @@ $style = 0;
 
 //if ($_REQUEST['tmpfile'] == 'ON')
 //	$filename = tempnam('dummy', 'pin');
+// Todo: Find a safer way for creating a file with the barcode generator.
+//$filename = $_REQUEST['filename'];
 $code = strtoupper($_REQUEST['code']);
 $type = strtoupper($_REQUEST['type']);
 $style = (int) $_REQUEST['style'];

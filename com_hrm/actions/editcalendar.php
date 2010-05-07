@@ -14,6 +14,6 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_hrm/viewcalendar') && !gatekeeper('com_hrm/editcalendar') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'editcalendar'));
 
-$pines->com_hrm->show_calendar((int) $_REQUEST['id']);
+$pines->com_hrm->show_calendar((int) $_REQUEST['id'], (int) $_REQUEST['location']);
 
 ?>

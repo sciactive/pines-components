@@ -2,20 +2,20 @@
 /**
  * Lists all calendar events and allows users to manipulate them.
  *
+ * Built upon:
+ *
+ * FullCalendar Created by Adam Shaw
+ * http://arshaw.com/fullcalendar/
+ *
+ * Very Simple Context Menu Plugin by Intekhab A Rizvi
+ * http://intekhabrizvi.wordpress.com/
+ * 
  * @package Pines
  * @subpackage com_hrm
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com
  * @link http://sciactive.com/
- *
- * Built upon:
- * 
- * FullCalendar Created by Adam Shaw
- * http://arshaw.com/fullcalendar/
- * 
- * Very Simple Context Menu Plugin by Intekhab A Rizvi
- * http://intekhabrizvi.wordpress.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
@@ -58,7 +58,7 @@ defined('P_RUN') or die('Direct access prohibited');
 						echo 'id: '. $cur_event->guid .',';
 						echo '_id: '. $cur_event->guid .',';
 					}
-					echo 'title: \''. $cur_event->title .'\',';
+					echo 'title: \''. $cur_event->group->name .'\',';
 					echo 'start: '. $cur_event->start .',';
 					echo 'end: '. $cur_event->end .',';
 					echo 'className: \''. $cur_event->color .'\',';

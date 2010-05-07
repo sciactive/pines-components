@@ -299,117 +299,117 @@ table.fc-header {
 }
 
 /* Custom Event Colors */
+.aqua,
+.fc-agenda .myclass .fc-event-time,
+.aqua a {
+	background-color: aqua;
+	border-color: aqua;
+	color: black;
+}
 .blue,
 .fc-agenda .myclass .fc-event-time,
 .blue a {
 	background-color: blue;
-	border-color: black;
+	border-color: blue;
 	color: white;
 }
 .blueviolet,
 .fc-agenda .myclass .fc-event-time,
 .blueviolet a {
 	background-color: blueviolet;
-	border-color: white;
+	border-color: blueviolet;
 	color: white;
 }
 .brown,
 .fc-agenda .myclass .fc-event-time,
 .brown a {
 	background-color: sienna;
-	border-color: black;
+	border-color: sienna;
 	color: white;
 }
 .cornflowerblue,
 .fc-agenda .myclass .fc-event-time,
 .cornflowerblue a {
 	background-color: cornflowerblue;
-	border-color: black;
+	border-color: cornflowerblue;
+	color: white;
+}
+.darkcyan,
+.fc-agenda .myclass .fc-event-time,
+.darkcyan a {
+	background-color: darkcyan;
+	border-color: darkcyan;
 	color: white;
 }
 .darkorange,
 .fc-agenda .myclass .fc-event-time,
 .darkorange a {
 	background-color: darkorange;
-	border-color: white;
+	border-color: darkorange;
 	color: black;
 }
 .gainsboro,
 .fc-agenda .myclass .fc-event-time,
 .gainsboro a {
 	background-color: gainsboro;
-	border-color: black;
+	border-color: gainsboro;
 	color: black;
 }
 .gold,
 .fc-agenda .myclass .fc-event-time,
 .gold a {
 	background-color: gold;
-	border-color: black;
+	border-color: gold;
+	color: black;
+}
+.gray,
+.fc-agenda .myclass .fc-event-time,
+.gray a {
+	background-color: gray;
+	border-color: gray;
 	color: black;
 }
 .greenyellow,
 .fc-agenda .myclass .fc-event-time,
 .greenyellow a {
 	background-color: greenyellow;
-	border-color: black;
+	border-color: greenyellow;
+	color: black;
+}
+.hotpink,
+.fc-agenda .myclass .fc-event-time,
+.hotpink a {
+	background-color: hotpink;
+	border-color: hotpink;
 	color: black;
 }
 .lightpink,
 .fc-agenda .myclass .fc-event-time,
 .lightpink a {
 	background-color: lightpink;
-	border-color: black;
+	border-color: lightpink;
 	color: black;
 }
 .olive,
 .fc-agenda .myclass .fc-event-time,
 .olive a {
 	background-color: olivedrab;
-	border-color: black;
+	border-color: olivedrab;
 	color: white;
 }
 .red,
 .fc-agenda .myclass .fc-event-time,
 .red a {
 	background-color: red;
-	border-color: black;
+	border-color: red;
 	color: white;
 }
 .vanilla,
 .fc-agenda .myclass .fc-event-time,
 .vanilla a {
 	background-color: cornsilk;
-	border-color: black;
+	border-color: cornsilk;
 	color: black;
-}
-.mint_month,
-.fc-agenda .myclass .fc-event-time,
-.mint_month a {
-	background-color: cornsilk;
-	border-color: black;
-	color: black;
-	text-decoration: none;
-}
-.mint,
-.fc-agenda .myclass .fc-event-time,
-.mint a {
-	background-color: cornsilk;
-	border-color: black;
-	color: black;
-	font-size: 14pt;
-	text-align: center;
-	text-decoration: none;
-}
-.mint_total,
-.fc-agenda .myclass .fc-event-time,
-.mint_total a {
-	background-color: lightgreen;
-	border-color: black;
-	color: black;
-	font-size: 14pt;
-	text-align: center;
-	text-decoration: none;
 }
 /* Horizontal Events
 ------------------------------------------------------------------------*/

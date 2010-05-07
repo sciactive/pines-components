@@ -1,14 +1,7 @@
 <?php
 /**
  * Includes for the calendar.
- *
- * @package Pines
- * @subpackage com_hrm
- * @license http://www.gnu.org/licenses/agpl-3.0.html
- * @author Zak Huber <zak@sciactive.com>
- * @copyright SciActive.com
- * @link http://sciactive.com/
- *
+ * 
  * Built upon:
  *
  * FullCalendar Created by Adam Shaw
@@ -16,6 +9,13 @@
  *
  * Very Simple Context Menu Plugin by Intekhab A Rizvi
  * http://intekhabrizvi.wordpress.com/
+ * 
+ * @package Pines
+ * @subpackage com_hrm
+ * @license http://www.gnu.org/licenses/agpl-3.0.html
+ * @author Zak Huber <zak@sciactive.com>
+ * @copyright SciActive.com
+ * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
 ?>

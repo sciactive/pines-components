@@ -54,6 +54,18 @@ if (isset($_REQUEST['employee'])) {
 	$event->start = mktime($_REQUEST['event_start'],0,0,$event_month,$event_day,$event_year);
 	$event->end = mktime($_REQUEST['event_end'],0,0,$event_endmonth,$event_endday,$event_endyear);
 	$event->all_day = ($_REQUEST['all_day'] == 'allDay') ? true: false;
+
+	($_REQUEST['event_type'] == 'employee') ? $event->type = 'employee' : $event->type = 'location';
+	// This doesn't work yet, because save() overwrites the group reference.
+	if ($event->type == 'location') {
+		$event->group = group::factory((int) $_REQUEST['location']);
+		if (!isset($event->group->guid)) {
+			pines_error('The specified location for this event does not exist.');
+			$pines->com_hrm->show_calendar();
+			return;
+		}
+	}
+
 	if ($pines->config->com_hrm->global_events)
 		$event->ac->other = 1;
 

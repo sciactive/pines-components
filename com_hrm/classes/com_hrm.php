@@ -149,19 +149,31 @@ class com_hrm extends component {
 	/**
 	 * Creates and attaches a module which shows the calendar.
 	 * @param int $id An event GUID.
+	 * @param int $location A location's GUID.
 	 */
-	function show_calendar($id = null) {
+	function show_calendar($id = null, $location = null) {
 		global $pines;
+		
+		if (isset($location))
+			$location = group::factory((int) $location);
+		if (!isset($location) || !isset($location->guid))
+			$location = $_SESSION['user']->group;
+		
 		if (gatekeeper('com_hrm/editcalendar')) {
-			$form = new module('com_hrm', 'form_calendar', 'left');
-			$form->employees = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
+			$form_group = new module('com_hrm', 'form_calendar_groups', 'left');
+			$form_event = new module('com_hrm', 'form_calendar', 'left');
+			$form_event->employees = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'employee'), 'ref' => array('group' => $location), 'class' => com_hrm_employee));
+			$form_group->location = $form_event->location = $location->guid;
+			
 			// If an id is specified, the event info will be displayed for editing.
-			if (isset($id))
-				$form->event = com_hrm_event::factory((int) $id);
+			if (isset($id) && $id >  0) {
+				$form_event->event = com_hrm_event::factory((int) $id);
+				$form_event->location = $form_event->event->group->guid;
+			}
 		}
 		$calendar_head = new module('com_hrm', 'show_calendar_head', 'head');
 		$calendar = new module('com_hrm', 'show_calendar', 'content');
-		$calendar->events = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'event'), 'class' => com_hrm_event));
+		$calendar->events = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'event'), 'ref' => array('group' => $location), 'class' => com_hrm_event));
 	}
 }
 

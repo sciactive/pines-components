@@ -20,8 +20,9 @@ defined('P_RUN') or die('Direct access prohibited');
 	var getting_values = false;
 
 	pines(function(){
-		$("*:not(html, body, #com_pdf_editor, #com_pdf_editor *)").hide();
-		$("#com_pdf_editor").parents().show();
+		$("body *:not(#com_pdf_editor, #com_pdf_editor *)")
+		.not($("#com_pdf_editor").parents())
+		.hide();
 		alert("Please note that the preview is approximate and may not exactly resemble what is generated. Remember to test fully.");
 	});
 

@@ -306,7 +306,7 @@ $pines->com_pgrid->load();
 						</div>
 					</div>
 				</div>
-				<div class="condition_dialog" style="display: none;" title="Add an Condition">
+				<div class="condition_dialog" style="display: none;" title="Add a Condition">
 					<div class="pf-form">
 						<div class="pf-element">
 							<label>

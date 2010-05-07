@@ -10,7 +10,8 @@
 			"path": "main_menu/business/com_reports/sales",
 			"text": "Sales",
 			"depend": {
-				"children": true
+				"children": true,
+				"component": "com_sales"
 			}
 		},
 			{
@@ -32,7 +33,8 @@
 			"path": "main_menu/business/com_reports/hrm",
 			"text": "HRM",
 			"depend": {
-				"children": true
+				"children": true,
+				"component": "com_hrm"
 			}
 		},
 			{

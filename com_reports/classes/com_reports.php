@@ -62,7 +62,7 @@ class com_reports extends component {
 		$date_end = strtotime('23:59', $end);
 		
 		$form = new module('com_reports', 'form_sales', 'left');
-		$head = new module('com_hrm', 'show_calendar_head', 'head');
+		$head = new module('com_reports', 'show_calendar_head', 'head');
 		$module = new module('com_reports', 'report_sales', 'content');
 		$module->sales = $pines->entity_manager->get_entities(array('gte' => array('p_cdate' => $date_start), 'lte' => array('p_cdate' => $date_end), 'tags' => array('com_sales', 'sale'), 'class' => com_sales_sale));
 

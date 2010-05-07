@@ -31,8 +31,8 @@ foreach ($this->sales as $cur_sale) {
 	$sale_time = format_date($cur_sale->p_cdate, 'custom', 'H');
 	if (!$total[$date_str]) {
 		$total[$date_str][0] = $cur_sale->p_cdate;
-		$total[$date_str][1] = mktime(23,59,59,$event_month,$event_day,$event_year);
-		$total[$date_str][2] = mktime(23,59,59,$event_month,$event_day,$event_year);
+		$total[$date_str][1] = mktime(0,1,1,$event_month,$event_day,$event_year);
+		$total[$date_str][2] = mktime(0,1,1,$event_month,$event_day,$event_year);
 		$total[$date_str][3] = 0;
 	}
 	foreach ($pines->config->com_reports->timespans as $timespan) {
@@ -66,6 +66,11 @@ foreach ($this->sales as $cur_sale) {
 				agenda: .5,
 				'': 0.85
 			},
+			timeFormat: {
+				agenda: 'h:mm{ - h:mm}',
+				'': '{htt}'
+				//'': 'h{-htt}'
+			},
 			<?php
 				// Depending on the amount of days being reviewed, show a month, week or day calendar.
 				if ($days == 0 || $days > 8) {
@@ -80,7 +85,7 @@ foreach ($this->sales as $cur_sale) {
 				}
 			?>
 			allDayText: 'Total',
-			firstDay: 1,
+			firstDay: 0,
 			firstHour: 10,
 			theme: true,
 			editable: false,
@@ -95,7 +100,17 @@ foreach ($this->sales as $cur_sale) {
 						echo '{';
 						echo 'id: 0,';
 						echo '_id: 0,';
-						echo 'title: \'$'. $cur_item[3] .'\',';
+						// Set the title spacing between the timespan and total.
+						$expander = '';
+						if ($class == 'mint_month') {
+							// Add extra spacing for timespans with 1 digit instead of 2.
+							(date('g', $cur_item[2]) < 10 ) ? $expander .= '..' : $expander .= '';
+							$decimals = strlen($cur_item[3]);
+							($decimals == 1) ? $decimals-- : $decimals++;
+							for ($i = 0; $i <= 14-$decimals; $i++)
+								$expander .= '.';
+						}
+						echo 'title: \''.$expander.'$'.$cur_item[3].'\',';
 						echo 'start: '. $cur_item[1] .',';
 						echo 'end: '. $cur_item[2] .',';
 						echo 'className: \''.$class.'\',';

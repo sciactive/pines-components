@@ -241,14 +241,21 @@ class configurator_component extends p_base implements configurator_component_in
 			$this->config_keys = (array) $usergroup->com_config[$this->component];
 		}
 		$this->config = $this->defaults;
+		/* This causes PHP (5.3.2) to segfault... ??
 		foreach ($this->config as $key => &$cur_entry) {
 			if (!key_exists($cur_entry['name'], $this->config_keys)) {
 				unset($this->config[$key]);
 			} else {
 				$cur_entry['value'] = $this->config[$key];
 			}
+		}*/
+		foreach ($this->config as $key => $cur_entry) {
+			if (!key_exists($cur_entry['name'], $this->config_keys)) {
+				unset($this->config[$key]);
+			} else {
+				$this->config[$key]['value'] = $this->config[$key];
+			}
 		}
-		unset($cur_entry);
 
 		// Store the type and object of the user/group.
 		if (is_a($usergroup, 'user') || is_a($usergroup, 'hook_override_user')) {

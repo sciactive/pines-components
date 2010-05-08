@@ -30,7 +30,7 @@ $pines->com_pgrid->load();
 				{
 					type: 'button',
 					text: 'Add Attribute',
-					extra_class: 'icon picon_16x16_actions_list-add',
+					extra_class: 'icon picon_16x16_list-add',
 					selection_optional: true,
 					click: function(){
 						attribute_dialog.dialog('open');
@@ -39,7 +39,7 @@ $pines->com_pgrid->load();
 				{
 					type: 'button',
 					text: 'Remove Attribute',
-					extra_class: 'icon picon_16x16_actions_list-remove',
+					extra_class: 'icon picon_16x16_list-remove',
 					click: function(e, rows){
 						rows.pgrid_delete();
 						update_attributes();

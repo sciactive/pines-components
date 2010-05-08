@@ -8,7 +8,7 @@ pines(function(){
 			notice = $.pnotify({
 				pnotify_text: "Loading login page...",
 				pnotify_title: "Switch User",
-				pnotify_notice_icon: "icon picon_16x16_animations_throbber",
+				pnotify_notice_icon: "icon picon_16x16_throbber",
 				pnotify_hide: false,
 				pnotify_history: false
 			});
@@ -21,7 +21,7 @@ pines(function(){
 			notice.pnotify({
 				pnotify_title: "Switch User",
 				pnotify_text: data,
-				pnotify_notice_icon: "icon picon_16x16_status_dialog-password",
+				pnotify_notice_icon: "icon picon_16x16_dialog-password",
 				pnotify_insert_brs: false
 			}).find("input").eq(0).focus();
 		}

@@ -131,8 +131,8 @@ $denom_counter = 0;
 			<div class="pf-element pf-group">
 				<input class="pf-field ui-widget-content entry" type="text" name="count[<?php echo $denom_counter; ?>]" value="<?php echo $this->entity->count[$denom_counter] ? $this->entity->count[$denom_counter] : '0'; ?>" <?php echo $this->entity->final ? "readonly='readonly'" : ""; ?>/>
 				<?php if (!$this->entity->final) { ?>
-				<button class="pf-field ui-state-default ui-corner-all" type="button" name="add_btn[<?php echo $denom_counter; ?>]" onclick="add_amount('<?php echo $denom_counter; ?>');"><span class="amt_btn picon_16x16_actions_list-add"></span></button>
-				<button class="pf-field ui-state-default ui-corner-all" type="button" name="remove_btn[<?php echo $denom_counter; ?>]" onclick="remove_amount('<?php echo $denom_counter; ?>');"><span class="amt_btn picon_16x16_actions_list-remove"></span></button>
+				<button class="pf-field ui-state-default ui-corner-all" type="button" name="add_btn[<?php echo $denom_counter; ?>]" onclick="add_amount('<?php echo $denom_counter; ?>');"><span class="amt_btn picon_16x16_list-add"></span></button>
+				<button class="pf-field ui-state-default ui-corner-all" type="button" name="remove_btn[<?php echo $denom_counter; ?>]" onclick="remove_amount('<?php echo $denom_counter; ?>');"><span class="amt_btn picon_16x16_list-remove"></span></button>
 				<?php } ?>
 				<span class="amount"><?php echo $this->entity->currency_symbol . $cur_denom; ?></span>
 			</div>

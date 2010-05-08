@@ -25,20 +25,20 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				<?php if (gatekeeper('com_sales/newproduct')) { ?>
-				{type: 'button', text: 'New', extra_class: 'icon picon_16x16_actions_document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'editproduct'); ?>'},
+				{type: 'button', text: 'New', extra_class: 'icon picon_16x16_document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'editproduct'); ?>'},
 				<?php } if (gatekeeper('com_sales/editproduct')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo pines_url('com_sales', 'editproduct', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_document-open', double_click: true, url: '<?php echo pines_url('com_sales', 'editproduct', array('id' => '__title__')); ?>'},
 				<?php } ?>
-				//{type: 'button', text: 'E-Mail', extra_class: 'icon picon_16x16_actions_mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
+				//{type: 'button', text: 'E-Mail', extra_class: 'icon picon_16x16_mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
 				<?php if (gatekeeper('com_sales/deleteproduct')) { ?>
-				{type: 'button', text: 'Delete', extra_class: 'icon picon_16x16_actions_edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_sales', 'deleteproduct', array('id' => '__title__')); ?>', delimiter: ','},
+				{type: 'button', text: 'Delete', extra_class: 'icon picon_16x16_edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_sales', 'deleteproduct', array('id' => '__title__')); ?>', delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>
-				{type: 'button', text: 'Select All', extra_class: 'icon picon_16x16_actions_list-add', select_all: true},
-				{type: 'button', text: 'Select None', extra_class: 'icon picon_16x16_actions_list-remove', select_none: true},
+				{type: 'button', text: 'Select All', extra_class: 'icon picon_16x16_list-add', select_all: true},
+				{type: 'button', text: 'Select None', extra_class: 'icon picon_16x16_list-remove', select_none: true},
 				{type: 'separator'},
-				{type: 'button', text: 'Spreadsheet', extra_class: 'icon picon_16x16_mimetypes_x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
+				{type: 'button', text: 'Spreadsheet', extra_class: 'icon picon_16x16_x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
 					pines.post("<?php echo pines_url('system', 'csv'); ?>", {
 						filename: 'products',
 						content: rows

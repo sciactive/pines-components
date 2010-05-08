@@ -247,16 +247,16 @@ $this->note = 'Provide floor details in this form.';
 		<div id="tab_layout">
 			<div class="ui-widget-header ui-corner-all" style="padding: 10px;">
 				<span class="station_layout_buttonset">
-					<button type="button" class="station_layout_save"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_actions_document-save"></span> Save</button>
-					<button type="button" class="station_layout_revert"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_actions_document-revert"></span> Revert</button>
+					<button type="button" class="station_layout_save"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_document-save"></span> Save</button>
+					<button type="button" class="station_layout_revert"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_document-revert"></span> Revert</button>
 				</span>
 				<span class="station_layout_buttonset">
-					<button type="button" class="station_layout_import"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_actions_go-down"></span> Import</button>
-					<button type="button" class="station_layout_export"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_actions_go-up"></span> Export</button>
+					<button type="button" class="station_layout_import"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_go-down"></span> Import</button>
+					<button type="button" class="station_layout_export"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_go-up"></span> Export</button>
 				</span>
 				<span class="station_layout_buttonset">
-					<button type="button" class="station_layout_add"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_actions_list-add"></span> Add</button>
-					<button type="button" class="station_layout_clear"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_actions_edit-clear"></span> Clear</button>
+					<button type="button" class="station_layout_add"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_list-add"></span> Add</button>
+					<button type="button" class="station_layout_clear"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_edit-clear"></span> Clear</button>
 				</span>
 			</div>
 			<br class="pf-clearing" />

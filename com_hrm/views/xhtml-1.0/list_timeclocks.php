@@ -24,11 +24,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
-				{type: 'button', text: 'View', extra_class: 'icon picon_16x16_actions_document-new', double_click: true, url: '<?php echo pines_url('com_hrm', 'viewtimeclock', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'View', extra_class: 'icon picon_16x16_document-new', double_click: true, url: '<?php echo pines_url('com_hrm', 'viewtimeclock', array('id' => '__title__')); ?>'},
 				<?php if (gatekeeper('com_hrm/manageclock')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', url: '<?php echo pines_url('com_hrm', 'edittimeclock', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_document-open', url: '<?php echo pines_url('com_hrm', 'edittimeclock', array('id' => '__title__')); ?>'},
 				<?php } if (gatekeeper('com_hrm/clock') || gatekeeper('com_hrm/manageclock')) { ?>
-				{type: 'button', text: 'Clock In/Out', extra_class: 'icon picon_16x16_stock_generic_stock_timer', multi_select: true, click: function(e, rows){
+				{type: 'button', text: 'Clock In/Out', extra_class: 'icon picon_16x16_stock_timer', multi_select: true, click: function(e, rows){
 					var loader;
 					rows.each(function(){
 						var cur_row = $(this);
@@ -42,7 +42,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 									loader = $.pnotify({
 										pnotify_title: 'Timeclock',
 										pnotify_text: 'Communicating with server...',
-										pnotify_notice_icon: 'icon picon_16x16_animations_throbber',
+										pnotify_notice_icon: 'icon picon_16x16_throbber',
 										pnotify_nonblock: true,
 										pnotify_hide: false,
 										pnotify_history: false
@@ -71,10 +71,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				}},
 				<?php } ?>
 				{type: 'separator'},
-				{type: 'button', text: 'Select All', extra_class: 'icon picon_16x16_actions_list-add', select_all: true},
-				{type: 'button', text: 'Select None', extra_class: 'icon picon_16x16_actions_list-remove', select_none: true},
+				{type: 'button', text: 'Select All', extra_class: 'icon picon_16x16_list-add', select_all: true},
+				{type: 'button', text: 'Select None', extra_class: 'icon picon_16x16_list-remove', select_none: true},
 				{type: 'separator'},
-				{type: 'button', text: 'Spreadsheet', extra_class: 'icon picon_16x16_mimetypes_x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
+				{type: 'button', text: 'Spreadsheet', extra_class: 'icon picon_16x16_x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
 					pines.post("<?php echo pines_url('system', 'csv'); ?>", {
 						filename: 'timeclock',
 						content: rows

@@ -71,7 +71,7 @@ pines(function(){
 				else
 					loader = $.pnotify({
 						pnotify_text: "Loading...",
-						pnotify_notice_icon: "icon picon_16x16_animations_throbber",
+						pnotify_notice_icon: "icon picon_16x16_throbber",
 						pnotify_width: "120px",
 						pnotify_opacity: .6,
 						pnotify_animate_speed: "fast",

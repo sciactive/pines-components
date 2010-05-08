@@ -76,31 +76,31 @@ $pines->com_jstree->load();
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				<?php if (gatekeeper('com_sales/newcashcount')) { ?>
-				{type: 'button', text: 'New', extra_class: 'icon picon_16x16_actions_document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'editcashcount'); ?>'},
+				{type: 'button', text: 'New', extra_class: 'icon picon_16x16_document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'editcashcount'); ?>'},
 				<?php } if (gatekeeper('com_sales/editcashcount')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, url: '<?php echo pines_url('com_sales', 'editcashcount', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_document-open', double_click: true, url: '<?php echo pines_url('com_sales', 'editcashcount', array('id' => '__title__')); ?>'},
 				<?php } if (gatekeeper('com_sales/auditcashcount')) { ?>
-				{type: 'button', text: 'Audit', extra_class: 'icon picon_16x16_apps_logviewer', url: '<?php echo pines_url('com_sales', 'auditcashcount', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Audit', extra_class: 'icon picon_16x16_logviewer', url: '<?php echo pines_url('com_sales', 'auditcashcount', array('id' => '__title__')); ?>'},
 				<?php } if (gatekeeper('com_sales/skimcashcount')) { ?>
-				{type: 'button', text: 'Skim', extra_class: 'icon picon_16x16_emblems_emblem-downloads', url: '<?php echo pines_url('com_sales', 'skimcashcount', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Skim', extra_class: 'icon picon_16x16_emblem-downloads', url: '<?php echo pines_url('com_sales', 'skimcashcount', array('id' => '__title__')); ?>'},
 				<?php } if (gatekeeper('com_sales/depositcashcount')) { ?>
-				{type: 'button', text: 'Deposit', extra_class: 'icon picon_16x16_apps_system-file-manager', url: '<?php echo pines_url('com_sales', 'depositcashcount', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Deposit', extra_class: 'icon picon_16x16_system-file-manager', url: '<?php echo pines_url('com_sales', 'depositcashcount', array('id' => '__title__')); ?>'},
 				<?php }if (gatekeeper('com_sales/approvecashcount')) { ?>
-				{type: 'button', text: 'Review', extra_class: 'icon picon_16x16_stock_generic_stock_mark', url: '<?php echo pines_url('com_sales', 'approvecashcount', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Review', extra_class: 'icon picon_16x16_stock_mark', url: '<?php echo pines_url('com_sales', 'approvecashcount', array('id' => '__title__')); ?>'},
 				<?php } if (gatekeeper('com_sales/assigncashcount')) { ?>
-				{type: 'button', text: 'Assign', extra_class: 'icon picon_16x16_emblems_emblem-shared', selection_optional: true, click: function(e, rows){
+				{type: 'button', text: 'Assign', extra_class: 'icon picon_16x16_emblem-shared', selection_optional: true, click: function(e, rows){
 					assign_dialog.dialog("open");
 				}},
 				<?php } ?>
 				{type: 'separator'},
 				<?php if (gatekeeper('com_sales/deletecashcount')) { ?>
-				{type: 'button', text: 'Delete', extra_class: 'icon picon_16x16_actions_edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_sales', 'deletecashcount', array('id' => '__title__')); ?>', delimiter: ','},
+				{type: 'button', text: 'Delete', extra_class: 'icon picon_16x16_edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_sales', 'deletecashcount', array('id' => '__title__')); ?>', delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>
-				{type: 'button', text: 'Select All', extra_class: 'icon picon_16x16_actions_list-add', select_all: true},
-				{type: 'button', text: 'Select None', extra_class: 'icon picon_16x16_actions_list-remove', select_none: true},
+				{type: 'button', text: 'Select All', extra_class: 'icon picon_16x16_list-add', select_all: true},
+				{type: 'button', text: 'Select None', extra_class: 'icon picon_16x16_list-remove', select_none: true},
 				{type: 'separator'},
-				{type: 'button', text: 'Spreadsheet', extra_class: 'icon picon_16x16_mimetypes_x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
+				{type: 'button', text: 'Spreadsheet', extra_class: 'icon picon_16x16_x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
 					pines.post("<?php echo pines_url('system', 'csv'); ?>", {
 						filename: 'cash_counts',
 						content: rows

@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = "Welcome to {$pines->config->option_title}";
+$this->title = "Welcome to {$pines->config->system_name}";
 $this->note = 'You are now registered and logged in.';
 ?>
 <div>

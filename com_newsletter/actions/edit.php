@@ -37,7 +37,7 @@ if ( $_REQUEST['update'] == 'yes' ) {
 	}
 	if ( !$_FILES['attachment']['error'] ) {
 		$upload_file = stripslashes(basename($_FILES['attachment']['name']));
-		if ( move_uploaded_file($_FILES['attachment']['tmp_name'], $pines->config->setting_upload.'attachments/'.$upload_file) ) {
+		if ( move_uploaded_file($_FILES['attachment']['tmp_name'], $pines->config->upload_location.'attachments/'.$upload_file) ) {
 			array_push($mail->attachments, $upload_file);
 		} else {
 			pines_error("Possible file upload attack! Upload failed! D:\n");

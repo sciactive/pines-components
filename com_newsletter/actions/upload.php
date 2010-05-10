@@ -32,7 +32,7 @@ if (isset($_FILES['image']['tmp_name'])) {
 	// create a new random numeric name to avoid rewriting other images already on the server...
 	$ran = rand ();
 	$ran2 = $ran.'.';
-	$path = $pines->config->setting_upload.'images/'.$ran2.'jpg';
+	$path = $pines->config->upload_location.'images/'.$ran2.'jpg';
 	// copy the image to the server, alert on fail
 	$hout=fopen($path,"w");
 	fwrite($hout,$image);

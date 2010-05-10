@@ -66,7 +66,8 @@ if ($user->save()) {
 		// Send the verification e-mail.
 		$link = '<a href="'.htmlentities(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'secret' => $user->secret), true)).'">'.htmlentities(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'secret' => $user->secret), true)).'</a>';
 		$search = array(
-			'{site_title}',
+			'{page_title}',
+			'{site_name}',
 			'{site_address}',
 			'{link}',
 			'{username}',
@@ -78,7 +79,8 @@ if ($user->save()) {
 			'{address}'
 		);
 		$replace = array(
-			$pines->config->option_title,
+			$pines->config->page_title,
+			$pines->config->system_name,
 			$pines->config->full_location,
 			$link,
 			$user->username,

@@ -58,13 +58,13 @@ if (!empty($image['name'])) {
 		pines_error('Error saving floor.');
 		return;
 	}
-	if (isset($floor->background) && file_exists("{$pines->config->setting_upload}floorplans/{$floor->background}"))
-		unlink("{$pines->config->setting_upload}floorplans/{$floor->background}");
+	if (isset($floor->background) && file_exists("{$pines->config->upload_location}floorplans/{$floor->background}"))
+		unlink("{$pines->config->upload_location}floorplans/{$floor->background}");
 	$floor->background = clean_filename($image['name']);
-	move_uploaded_file($image['tmp_name'], "{$pines->config->setting_upload}floorplans/{$floor->background}");
+	move_uploaded_file($image['tmp_name'], "{$pines->config->upload_location}floorplans/{$floor->background}");
 } else if ($_REQUEST['remove_background'] == 'ON' && isset($floor->background)) {
-	if (file_exists("{$pines->config->setting_upload}floorplans/{$floor->background}"))
-		unlink("{$pines->config->setting_upload}floorplans/{$floor->background}");
+	if (file_exists("{$pines->config->upload_location}floorplans/{$floor->background}"))
+		unlink("{$pines->config->upload_location}floorplans/{$floor->background}");
 	unset($floor->background);
 }
 

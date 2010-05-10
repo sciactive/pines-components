@@ -100,9 +100,9 @@ if ($pines->config->tpl_pines->ajax && strpos($_SERVER["HTTP_ACCEPT"], 'applicat
 		<h1 class="pagetitle">
 			<a href="<?php echo $pines->config->full_location; ?>">
 				<?php if ($pines->config->tpl_pines->use_header_image) { ?>
-				<img src="<?php echo $pines->config->tpl_pines->header_image; ?>" alt="<?php echo $pines->config->option_title; ?>" />
+				<img src="<?php echo $pines->config->tpl_pines->header_image; ?>" alt="<?php echo $pines->config->page_title; ?>" />
 				<?php } else { ?>
-				<span><?php echo $pines->config->option_title; ?></span>
+				<span><?php echo $pines->config->page_title; ?></span>
 				<?php } ?>
 			</a>
 		</h1>
@@ -155,7 +155,7 @@ if ($pines->config->tpl_pines->ajax && strpos($_SERVER["HTTP_ACCEPT"], 'applicat
 			<?php echo $pines->page->render_modules('footer', 'module_header'); ?>
 		</div>
 		<p class="copyright">
-			<?php echo $pines->config->option_copyright_notice; ?>
+			<?php echo $pines->config->copyright_notice; ?>
 		</p>
 	</div>
 	<div id="bottom">

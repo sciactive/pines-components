@@ -90,10 +90,10 @@ class group extends able_object implements group_interface {
 	public function get_logo($rela_location = false) {
 		global $pines;
 		if (isset($this->logo))
-			return ($rela_location ? $pines->config->rela_location : $pines->config->full_location)."{$pines->config->setting_upload}logos/{$this->logo}";
+			return ($rela_location ? $pines->config->rela_location : $pines->config->full_location)."{$pines->config->upload_location}logos/{$this->logo}";
 		if (isset($this->parent))
 			return $this->parent->get_logo($rela_location);
-		return ($rela_location ? $pines->config->rela_location : $pines->config->full_location)."{$pines->config->setting_upload}logos/default_logo.png";
+		return ($rela_location ? $pines->config->rela_location : $pines->config->full_location)."{$pines->config->upload_location}logos/default_logo.png";
 	}
 
 	public function print_form() {

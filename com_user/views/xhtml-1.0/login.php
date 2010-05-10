@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = "Login to {$pines->config->option_title}";
+$this->title = "Login to {$pines->config->system_name}";
 ?>
 <form class="pf-form" name="login" id="login_form" method="post" action="<?php echo htmlentities(pines_url()); ?>">
 	<div class="pf-element">

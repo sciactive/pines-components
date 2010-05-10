@@ -25,7 +25,7 @@ $name = $entity->get_filename();
 $module = new module('com_packager', 'result_package', 'content');
 $module->entity = $entity;
 $module->filename = "{$name}.slm";
-$module->path = "{$pines->config->setting_upload}/packages/{$module->filename}";
+$module->path = "{$pines->config->upload_location}packages/{$module->filename}";
 $module->result = $entity->package($module->path);
 
 ?>

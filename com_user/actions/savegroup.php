@@ -129,8 +129,8 @@ if (!empty($image['name'])) {
 		return;
 	}
 	// Resize and create the image with the Pines logo naming scheme.
-	if (isset($group->logo) && file_exists("{$pines->config->setting_upload}logos/{$group->logo}"))
-		unlink("{$pines->config->setting_upload}logos/{$group->logo}");
+	if (isset($group->logo) && file_exists("{$pines->config->upload_location}logos/{$group->logo}"))
+		unlink("{$pines->config->upload_location}logos/{$group->logo}");
 	switch ($image['type']) {
 		case 'image/jpeg':
 			$group->logo = "{$group->guid}_logo.jpg";
@@ -140,11 +140,11 @@ if (!empty($image['name'])) {
 				$currheight = imagesy($img_raw);
 				$img_resized = imagecreate($pines->config->com_user->logo_width, $pines->config->com_user->logo_height);
 				imagecopyresized($img_resized, $img_raw, 0, 0, 0, 0, $pines->config->com_user->logo_width, $pines->config->com_user->logo_height, $currwidth, $currheight);
-				imagejpeg($img_resized, "{$pines->config->setting_upload}logos/{$group->logo}");
+				imagejpeg($img_resized, "{$pines->config->upload_location}logos/{$group->logo}");
 				imagedestroy($img_raw);
 				imagedestroy($img_resized);
 			} else {
-				move_uploaded_file($image['tmp_name'], "{$pines->config->setting_upload}logos/{$group->logo}");
+				move_uploaded_file($image['tmp_name'], "{$pines->config->upload_location}logos/{$group->logo}");
 			}
 			break;
 		case 'image/png':
@@ -155,11 +155,11 @@ if (!empty($image['name'])) {
 				$currheight = imagesy($img_raw);
 				$img_resized = imagecreate($pines->config->com_user->logo_width, $pines->config->com_user->logo_height);
 				imagecopyresized($img_resized, $img_raw, 0, 0, 0, 0, $pines->config->com_user->logo_width, $pines->config->com_user->logo_height, $currwidth, $currheight);
-				imagepng($img_resized, "{$pines->config->setting_upload}logos/{$group->logo}");
+				imagepng($img_resized, "{$pines->config->upload_location}logos/{$group->logo}");
 				imagedestroy($img_raw);
 				imagedestroy($img_resized);
 			} else {
-				move_uploaded_file($image['tmp_name'], "{$pines->config->setting_upload}logos/{$group->logo}");
+				move_uploaded_file($image['tmp_name'], "{$pines->config->upload_location}logos/{$group->logo}");
 			}
 			break;
 		case 'image/gif':
@@ -178,17 +178,17 @@ if (!empty($image['name'])) {
 					imagecolortransparent( $img_resized, $trans_color );
 				}
 				imagecopyresized($img_resized, $img_raw, 0, 0, 0, 0, $pines->config->com_user->logo_width, $pines->config->com_user->logo_height, $currwidth, $currheight);
-				imagegif($img_resized, "{$pines->config->setting_upload}logos/{$group->logo}");
+				imagegif($img_resized, "{$pines->config->upload_location}logos/{$group->logo}");
 				imagedestroy($img_raw);
 				imagedestroy($img_resized);
 			} else {
-				move_uploaded_file($image['tmp_name'], "{$pines->config->setting_upload}logos/{$group->logo}");
+				move_uploaded_file($image['tmp_name'], "{$pines->config->upload_location}logos/{$group->logo}");
 			}
 			break;
 	}
 } else if ($_REQUEST['remove_logo'] == 'ON' && isset($group->logo)) {
-	if (file_exists("{$pines->config->setting_upload}logos/{$group->logo}"))
-		unlink("{$pines->config->setting_upload}logos/{$group->logo}");
+	if (file_exists("{$pines->config->upload_location}logos/{$group->logo}"))
+		unlink("{$pines->config->upload_location}logos/{$group->logo}");
 	unset($group->logo);
 }
 

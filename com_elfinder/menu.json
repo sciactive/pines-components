@@ -1,0 +1,10 @@
+[
+	{
+		"path": "main_menu/system/com_elfinder",
+		"text": "File Manager",
+		"href": ["com_elfinder","finder"],
+		"depend": {
+			"ability": "com_elfinder/finder"
+		}
+	}
+]

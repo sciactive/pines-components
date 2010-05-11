@@ -136,8 +136,8 @@ return array(
 	array(
 		'name' => 'tmb_dir',
 		'cname' => 'Thumbnail Directory',
-		'description' => 'The directory for image thumbnails. Leave blank to avoid thumbnails generation.',
-		'value' => '.tmb',
+		'description' => 'The directory for image thumbnails. Leave blank to avoid thumbnails generation. Start with a dot (like ".tmb") to hide it.',
+		'value' => '',
 		'peruser' => true,
 	),
 	array(

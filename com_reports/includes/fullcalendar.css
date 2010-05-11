@@ -427,7 +427,7 @@ table.fc-header {
 /* event styles */
 
 .fc-grid .fc-event-time {
-	//font-weight: bold;
+	float: left;
 }
 
 /* right-to-left */

@@ -100,17 +100,7 @@ foreach ($this->sales as $cur_sale) {
 						echo '{';
 						echo 'id: 0,';
 						echo '_id: 0,';
-						// Set the title spacing between the timespan and total.
-						$expander = '';
-						if ($class == 'mint_month') {
-							// Add extra spacing for timespans with 1 digit instead of 2.
-							(date('g', $cur_item[2]) < 10 ) ? $expander .= '..' : $expander .= '';
-							$decimals = strlen($cur_item[3]);
-							($decimals == 1) ? $decimals-- : $decimals++;
-							for ($i = 0; $i <= 14-$decimals; $i++)
-								$expander .= '.';
-						}
-						echo 'title: \''.$expander.'$'.$cur_item[3].'\',';
+						echo 'title: \'$'.$cur_item[3].'\',';
 						echo 'start: '. $cur_item[1] .',';
 						echo 'end: '. $cur_item[2] .',';
 						echo 'className: \''.$class.'\',';

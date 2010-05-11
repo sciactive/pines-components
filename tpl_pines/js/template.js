@@ -24,8 +24,8 @@ pines(function(){
 	// This needs to be called after Ajax page loads.
 	var page_ready = function(){
 		// Main menu corners.
-		$("body > div#header > div.mainmenu").find(".dropdown > li:first-child > a").addClass("ui-corner-left").end()
-		.find(".dropdown > li:last-child > a").addClass("ui-corner-right").end()
+		$("body > div#header > div.mainmenu").find(".dropdown > li:first-child > a").addClass("ui-corner-tl").end()
+		.find(".dropdown > li:last-child > a").addClass("ui-corner-tr").end()
 		.find(".dropdown ul > li:first-child > a").addClass("ui-corner-tr").end()
 		.find(".dropdown ul > li:last-child > a").addClass("ui-corner-bottom");
 

@@ -1,13 +1,13 @@
 [
 	{
-		"path": "main_menu/system/com_packager",
+		"path": "main_menu/accessories/com_packager",
 		"text": "Packager",
 		"depend": {
 			"children": true
 		}
 	},
 		{
-			"path": "main_menu/system/com_packager/packages",
+			"path": "main_menu/accessories/com_packager/packages",
 			"text": "Packages",
 			"href": ["com_packager","listpackages"],
 			"depend": {
@@ -15,7 +15,7 @@
 			}
 		},
 		{
-			"path": "main_menu/system/com_packager/newpackage",
+			"path": "main_menu/accessories/com_packager/newpackage",
 			"text": "New Package",
 			"href": ["com_packager","editpackage"],
 			"depend": {

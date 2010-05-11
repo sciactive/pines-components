@@ -234,7 +234,7 @@ img {
 	overflow: auto;
 }
 .module .module_title {
-	padding: .4em;
+	padding: .2em .4em;
 }
 .colmask .module .module_title {
 	margin-bottom: .5em;

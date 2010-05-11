@@ -1,6 +1,6 @@
 [
 	{
-		"path": "main_menu/system/com_elfinder",
+		"path": "main_menu/accessories/com_elfinder",
 		"text": "File Manager",
 		"href": ["com_elfinder","finder"],
 		"depend": {

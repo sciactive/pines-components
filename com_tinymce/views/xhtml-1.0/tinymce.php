@@ -47,7 +47,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			media_external_list_url : "lists/media_list.js"
 		});
 
-		$('textarea.peditor_simple').tinymce({
+		$('textarea.peditor-simple').tinymce({
 			// Location of TinyMCE script
 			script_url : '<?php echo $pines->config->rela_location; ?>components/com_tinymce/includes/tiny_mce/tiny_mce.js',
 

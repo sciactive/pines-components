@@ -10,8 +10,32 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Standard Editor Test';
+$this->title = 'TinyMCE Standard Editor Test';
 $pines->editor->load();
 ?>
-TinyMCE Test:<br />
-<textarea rows="3" cols="35" class="peditor"></textarea>
+<div class="pf-form">
+	<div class="pf-element">
+		<span class="pf-label">Regular Editor</span>
+		<div class="pf-group">
+			<div class="pf-field"><textarea rows="3" cols="35" class="peditor ui-widget-content"></textarea></div>
+		</div>
+	</div>
+	<div class="pf-element">
+		<span class="pf-label">Simple Editor</span>
+		<div class="pf-group">
+			<div class="pf-field"><textarea rows="3" cols="35" class="peditor-simple ui-widget-content"></textarea></div>
+		</div>
+	</div>
+	<div class="pf-element">
+		<span class="pf-label">Styled Textarea</span>
+		<div class="pf-group">
+			<div class="pf-field"><textarea rows="3" cols="35" class="ui-widget-content"></textarea></div>
+		</div>
+	</div>
+	<div class="pf-element">
+		<span class="pf-label">Textarea</span>
+		<div class="pf-group">
+			<div class="pf-field"><textarea rows="3" cols="35"></textarea></div>
+		</div>
+	</div>
+</div>

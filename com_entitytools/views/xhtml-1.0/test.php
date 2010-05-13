@@ -24,7 +24,7 @@ registered itself as the system's entity manager! Test cannot continue!</p>
 <?php } else { ?>
 <div style="font-family: monospace; font-size: .9em; margin-left: 35px; margin-bottom: 6px; margin-top: 6px;">Test is starting...
 <ol><?php foreach ($this->tests as $cur_test) { ?>
-<li style="white-space: pre;"><?php echo str_pad($cur_test[2], 48, ' '); ?><? echo ($cur_test[0]) ? '<span style="color: green;">[PASS]</span>' : '<span style="color: red;">[FAIL]</span>'; ?> <?php printf('%5.5f', $cur_test[1] - $last_time); ?>s</li>
+<li style="white-space: pre;"><?php echo str_pad($cur_test[2], 48, ' '); ?><?php echo ($cur_test[0]) ? '<span style="color: green;">[PASS]</span>' : '<span style="color: red;">[FAIL]</span>'; ?> <?php printf('%5.5f', $cur_test[1] - $last_time); ?>s</li>
 <?php $last_time = $cur_test[1];
 } ?>
 </ol>

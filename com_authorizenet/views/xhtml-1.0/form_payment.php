@@ -181,12 +181,12 @@ defined('P_RUN') or die('Direct access prohibited');
 						'11' => '11 November',
 						'12' => '12 December'
 					) as $key => $value) { ?>
-				<option value="<?php echo $key; ?>"<? echo $this->card_exp_month == $key ? ' selected="selected"' : ''; ?>><?php echo $value; ?></option>
+				<option value="<?php echo $key; ?>"<?php echo $this->card_exp_month == $key ? ' selected="selected"' : ''; ?>><?php echo $value; ?></option>
 				<?php } ?>
 			</select>
 			<select class="pf-field ui-widget-content" name="card_exp_year">
 				<?php for ($i = 0; $i <= 25; $i++) { ?>
-				<option value="<?php echo date('y', strtotime("+$i years")); ?>"<? echo $this->card_exp_year == date('y', strtotime("+$i years")) ? ' selected="selected"' : ''; ?>><?php echo date('y', strtotime("+$i years")); ?></option>
+				<option value="<?php echo date('y', strtotime("+$i years")); ?>"<?php echo $this->card_exp_year == date('y', strtotime("+$i years")) ? ' selected="selected"' : ''; ?>><?php echo date('y', strtotime("+$i years")); ?></option>
 				<?php } ?>
 			</select>
 			<input class="pf-field ui-widget-content" type="password" name="cid" size="3" value="<?php echo $this->cid; ?>" />

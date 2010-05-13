@@ -58,7 +58,7 @@ defined('P_RUN') or die('Direct access prohibited');
 						echo 'id: '. $cur_event->guid .',';
 						echo '_id: '. $cur_event->guid .',';
 					}
-					echo 'title: \''. $cur_event->group->name .'\',';
+					echo 'title: \''. $cur_event->title .'\',';
 					echo 'start: '. $cur_event->start .',';
 					echo 'end: '. $cur_event->end .',';
 					echo 'className: \''. $cur_event->color .'\',';
@@ -122,8 +122,9 @@ defined('P_RUN') or die('Direct access prohibited');
 	}
 	// Save all of the calendar events by exporting the data to their entities.
 	function save_calendar() {
+		var location = <?php echo $this->location; ?>;
 		var events = $("#calendar").fullCalendar('clientEvents');
-		var events_dump = ''; //new Array();
+		var events_dump = '';
 		//var events_array = new Array();
 		//var event_count = 0;
 		jQuery.each(events, function(i, val) {
@@ -138,12 +139,10 @@ defined('P_RUN') or die('Direct access prohibited');
 			}
 			var event_start = val.start.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d\:]+)\s.*/, '$1');
 			var event_end = val.end.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d\:]+)\s.*/, '$1');
-			events_dump += val.title +'|'+ event_start +'|'+ event_end +'|'+ val.className +'|'+ val.allDay +',';
-			//events_array[2] = val.title;
-			//events_array[3] = event_start;
-			//events_array[4] = event_end;
-			//events_array[5] = val.className;
-			//events_array[6] = val.allDay;
+			events_dump += event_start + '|' + event_end + '|' + val.allDay + ',';
+			//events_array[2] = event_start;
+			//events_array[3] = event_end;
+			//events_array[4] = val.allDay;
 			//events_dump[event_count] = events_array;
 			//event_count++;
 		});
@@ -151,7 +150,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			url: "<?php echo pines_url('com_hrm', 'savecalendar'); ?>",
 			type: "POST",
 			dataType: "html",
-			data: {"events": events_dump},
+			data: {"events": events_dump, "location": location},
 			error: function(XMLHttpRequest, textStatus){
 				pines.error("An error occured while trying to save the calendar.");
 			}

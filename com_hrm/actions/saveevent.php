@@ -41,35 +41,38 @@ if (isset($_REQUEST['employee'])) {
 	} else {
 		$event = com_hrm_event::factory();
 	}
-	$event_details = explode(':', $_REQUEST['employee']);
 	$event->id = 0;
-	$event->employee = $event_details[0];
-	if ($_REQUEST['event_label'] != 'Label') {
-		$event->label = $_REQUEST['event_label'];
-		$event->title = $event->label .' - '. $event->employee;
-	} else {
-		$event->title = $event->employee;
-	}
-	$event->color = $event_details[1];
-	$event->start = mktime($_REQUEST['event_start'],0,0,$event_month,$event_day,$event_year);
-	$event->end = mktime($_REQUEST['event_end'],0,0,$event_endmonth,$event_endday,$event_endyear);
-	$event->all_day = ($_REQUEST['all_day'] == 'allDay') ? true: false;
+	$event->employee = com_hrm_employee::factory((int) $_REQUEST['employee']);
+	$location = $event->employee->group;
+	$event->title = $event->employee->name;
+	$event->color = $event->employee->color;
 
-	($_REQUEST['event_type'] == 'employee') ? $event->type = 'employee' : $event->type = 'location';
-	// This doesn't work yet, because save() overwrites the group reference.
-	if ($event->type == 'location') {
-		$event->group = group::factory((int) $_REQUEST['location']);
-		if (!isset($event->group->guid)) {
+	if (!isset($event->employee->guid)) {
+		$event_details = explode(':', $_REQUEST['employee']);
+		$event->title = $event->employee = $event_details[0];
+		$event->color = $event_details[1];
+		$location = group::factory((int) $_REQUEST['location']);
+		if (!isset($location->guid)) {
 			pines_error('The specified location for this event does not exist.');
 			$pines->com_hrm->show_calendar();
 			return;
 		}
 	}
+	
+	if ($_REQUEST['event_label'] != 'Label') {
+		$event->label = $_REQUEST['event_label'];
+		$event->title = $event->label .' - '. $event->title;
+	}
+	$event->start = mktime($_REQUEST['event_start'],0,0,$event_month,$event_day,$event_year);
+	$event->end = mktime($_REQUEST['event_end'],0,0,$event_endmonth,$event_endday,$event_endyear);
+	$event->all_day = ($_REQUEST['all_day'] == 'allDay') ? true: false;
 
 	if ($pines->config->com_hrm->global_events)
 		$event->ac->other = 1;
 
 	if ($event->save()) {
+		$event->group = $location;
+		$event->save();
 		$action = ( isset($_REQUEST['id']) ) ? 'Saved ' : 'Entered ';
 		pines_notice($action.'['.$event->title.']');
 	} else {
@@ -77,6 +80,6 @@ if (isset($_REQUEST['employee'])) {
 	}
 }
 
-redirect(pines_url('com_hrm', 'editcalendar'));
+redirect(pines_url('com_hrm', 'editcalendar', array('location' => $location->guid)));
 
 ?>

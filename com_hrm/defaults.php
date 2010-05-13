@@ -44,7 +44,7 @@ return array(
 		'name' => 'employee_departments',
 		'cname' => 'Department Names & Colors',
 		'description' => 'These groups will show up in the calendar with their associated colors.',
-		'value' => 'Company Wide:cornflowerblue, Corporate:gold, IT:blueviolet, Sales:olive',
+		'value' => 'Entire Staff:cornflowerblue, Sales:gold, IT:blueviolet, Support:olive',
 		'peruser' => true,
 	),
 );

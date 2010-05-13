@@ -19,10 +19,12 @@ if ( isset($_REQUEST['id']) ) {
 		pines_error('Requested employee id is not accessible.');
 		return;
 	}
+	$new_employee = false;
 } else {
 	if ( !gatekeeper('com_hrm/newemployee') )
 		punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'listemployees'));
 	$employee = com_hrm_employee::factory();
+	$new_employee = true;
 }
 
 // General
@@ -135,10 +137,17 @@ if ($pines->config->com_hrm->allow_attach && $_REQUEST['user_template'] != 'null
 		$employee->user_account = $new_user;
 }
 
+if (!$new_employee && isset($employee->user_account))
+	$employee->group = $employee->user_account->group;
+
 if ($pines->config->com_hrm->global_employees)
 	$employee->ac->other = 1;
 
 if ($employee->save()) {
+	if ($new_employee) {
+		$employee->group = $employee->user_account->group;
+		$employee->save();
+	}
 	pines_notice('Saved employee ['.$employee->name.']');
 } else {
 	pines_error('Error saving employee. Do you have permission?');

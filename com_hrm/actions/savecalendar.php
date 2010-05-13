@@ -18,7 +18,12 @@ if (isset($_REQUEST['events'])) {
 	$events = explode(',', $_REQUEST['events']);
 	$event_list = array();
 	$event_count = 0;
-
+	$location = group::factory((int) $_REQUEST['location']);
+	if (!isset($location->guid)) {
+		pines_error('The specified location of this schedule does not exist.');
+		$pines->com_hrm->show_calendar();
+		return;
+	}
 	/* Array attempt.
 	foreach ($_REQUEST['events'] as $c_event) {
 		$event = com_hrm_event::factory((int) $c_event[0]);
@@ -52,24 +57,15 @@ if (isset($_REQUEST['events'])) {
 			$event_count++;
 			
 			$event->id = $event_details[1];
-			$event->title = $event_details[2];
-			$title_str = explode(' - ', $event->title);
-			if (count($title_str) > 1) {
-				$event->label = $title_str[0];
-				$event->employee = $title_str[1];
-			} else {
-				$event->employee = $event->title;
-			}
-			$event->start = strtotime($event_details[3]);
-			$event->end = strtotime($event_details[4]);
-			$event->color = $event_details[5];
-			$event->all_day = ($event_details[6] == 'true') ? true : false;
+			$event->start = strtotime($event_details[2]);
+			$event->end = strtotime($event_details[3]);
+			$event->all_day = ($event_details[4] == 'true') ? true : false;
 			if ($pines->config->com_hrm->global_events)
 				$event->ac->other = 1;
 			$event->save();
 		}
 	}
-	$existing_events = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'event'), 'class' => com_hrm_event));
+	$existing_events = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'event'), 'ref' => array('group' => $location), 'class' => com_hrm_event));
 	foreach ($existing_events as $cur_event) {
 		if (!in_array($cur_event->guid, $event_list))
 			$cur_event->delete();

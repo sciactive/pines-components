@@ -10,7 +10,7 @@
 	<link href="css/advlink.css" rel="stylesheet" type="text/css" />
 </head>
 <body id="advlink" style="display: none">
-	<form onsubmit="insertAction();return false;" action="#">
+    <form onsubmit="insertAction();return false;" action="#">
 		<div class="tabs">
 			<ul>
 				<li id="general_tab" class="current"><span><a href="javascript:mcTabs.displayTab('general_tab','general_panel');" onmousedown="return false;">{#advlink_dlg.general_tab}</a></span></li>
@@ -96,7 +96,7 @@
 						<tr>
 							<td class="nowrap" id="labelleft"><label>{#advlink_dlg.popup_position}</label>&nbsp;</td>
 							<td class="nowrap">
-								<input type="text" id="popupleft" name="popupleft" value="" onchange="buildOnClick();" /> / 
+								<input type="text" id="popupleft" name="popupleft" value="" onchange="buildOnClick();" /> /                                
 								<input type="text" id="popuptop" name="popuptop" value="" onchange="buildOnClick();" /> (c /c = center)
 							</td>
 						</tr>
@@ -325,14 +325,9 @@
 		</div>
 
 		<div class="mceActionPanel">
-			<div style="float: left">
-				<input type="submit" id="insert" name="insert" value="{#insert}" />
-			</div>
-
-			<div style="float: right">
-				<input type="button" id="cancel" name="cancel" value="{#cancel}" onclick="tinyMCEPopup.close();" />
-			</div>
+			<input type="submit" id="insert" name="insert" value="{#insert}" />
+			<input type="button" id="cancel" name="cancel" value="{#cancel}" onclick="tinyMCEPopup.close();" />
 		</div>
-	</form>
+    </form>
 </body>
 </html>

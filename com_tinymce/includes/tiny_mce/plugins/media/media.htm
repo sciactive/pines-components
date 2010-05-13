@@ -11,7 +11,7 @@
 	<link href="css/media.css" rel="stylesheet" type="text/css" />
 </head>
 <body style="display: none">
-	<form onsubmit="insertMedia();return false;" action="#">
+    <form onsubmit="insertMedia();return false;" action="#">
 		<div class="tabs">
 			<ul>
 				<li id="general_tab" class="current"><span><a href="javascript:mcTabs.displayTab('general_tab','general_panel');generatePreview();" onmousedown="return false;">{#media_dlg.general}</a></span></li>
@@ -809,13 +809,8 @@
 		</div>
 
 		<div class="mceActionPanel">
-			<div style="float: left">
-				<input type="submit" id="insert" name="insert" value="{#insert}" />
-			</div>
-
-			<div style="float: right">
-				<input type="button" id="cancel" name="cancel" value="{#cancel}" onclick="tinyMCEPopup.close();" />
-			</div>
+			<input type="submit" id="insert" name="insert" value="{#insert}" />
+			<input type="button" id="cancel" name="cancel" value="{#cancel}" onclick="tinyMCEPopup.close();" />
 		</div>
 	</form>
 </body>

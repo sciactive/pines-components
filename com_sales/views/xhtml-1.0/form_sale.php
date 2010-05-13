@@ -188,7 +188,7 @@ $pines->com_pgrid->load();
 											loader = $.pnotify({
 												pnotify_title: 'Product Search',
 												pnotify_text: 'Retrieving product from server...',
-												pnotify_notice_icon: 'icon picon_16x16_throbber',
+												pnotify_notice_icon: 'picon picon_16x16_throbber',
 												pnotify_nonblock: true,
 												pnotify_hide: false,
 												pnotify_history: false
@@ -240,7 +240,7 @@ $pines->com_pgrid->load();
 					{
 						type: 'button',
 						text: 'Serial',
-						extra_class: 'icon picon_16x16_stock_id',
+						extra_class: 'picon picon_16x16_view-barcode',
 						double_click: true,
 						click: function(e, rows){
 							var product = rows.data("product");
@@ -259,7 +259,7 @@ $pines->com_pgrid->load();
 					{
 						type: 'button',
 						text: 'Delivery',
-						extra_class: 'icon picon_16x16_emblem-package',
+						extra_class: 'picon picon_16x16_mail-send',
 						multi_select: true,
 						click: function(e, rows){
 							rows.each(function(){
@@ -273,7 +273,7 @@ $pines->com_pgrid->load();
 					{
 						type: 'button',
 						text: 'Qty',
-						extra_class: 'icon picon_16x16_stock_record-number',
+						extra_class: 'picon picon_16x16_document-multiple',
 						double_click: true,
 						click: function(e, rows){
 							var product = rows.data("product");
@@ -296,7 +296,7 @@ $pines->com_pgrid->load();
 					{
 						type: 'button',
 						text: 'Price',
-						extra_class: 'icon picon_16x16_stock_form-currency-field',
+						extra_class: 'picon picon_16x16_office-chart-line',
 						click: function(e, rows){
 							var product = rows.data("product");
 							if (product.pricing_method != "variable") {
@@ -322,7 +322,7 @@ $pines->com_pgrid->load();
 					{
 						type: 'button',
 						text: 'Discount',
-						extra_class: 'icon picon_16x16_go-down',
+						extra_class: 'picon picon_16x16_go-down',
 						click: function(e, rows){
 							var product = rows.data("product");
 							if (!product.discountable) {
@@ -342,7 +342,7 @@ $pines->com_pgrid->load();
 					{
 						type: 'button',
 						text: 'Remove',
-						extra_class: 'icon picon_16x16_edit-delete',
+						extra_class: 'picon picon_16x16_edit-delete',
 						multi_select: true,
 						click: function(e, rows){
 							rows.pgrid_delete();
@@ -360,7 +360,7 @@ $pines->com_pgrid->load();
 					loader = $.pnotify({
 						pnotify_title: 'Loading Products',
 						pnotify_text: 'Retrieving product information from server...',
-						pnotify_notice_icon: 'icon picon_16x16_throbber',
+						pnotify_notice_icon: 'picon picon_16x16_throbber',
 						pnotify_nonblock: true,
 						pnotify_hide: false,
 						pnotify_history: false
@@ -406,7 +406,7 @@ $pines->com_pgrid->load();
 					{
 						type: 'button',
 						text: 'Data',
-						extra_class: 'icon picon_16x16_stock_data-edit-table',
+						extra_class: 'picon picon_16x16_view-form',
 						click: function(e, rows){
 							payments_table.data_form(rows);
 						}
@@ -414,7 +414,7 @@ $pines->com_pgrid->load();
 					{
 						type: 'button',
 						text: 'Remove',
-						extra_class: 'icon picon_16x16_edit-delete',
+						extra_class: 'picon picon_16x16_edit-delete',
 						multi_select: true,
 						click: function(e, rows){
 							rows.each(function(){
@@ -730,7 +730,7 @@ $pines->com_pgrid->load();
 					loader = $.pnotify({
 						pnotify_title: 'Customer Search',
 						pnotify_text: 'Searching for customers...',
-						pnotify_notice_icon: 'icon picon_16x16_throbber',
+						pnotify_notice_icon: 'picon picon_16x16_throbber',
 						pnotify_nonblock: true,
 						pnotify_hide: false,
 						pnotify_history: false
@@ -824,7 +824,7 @@ $pines->com_pgrid->load();
 			<?php if ($this->entity->status != 'invoiced' && $this->entity->status != 'paid') { ?>
 			<br />
 			<input class="pf-field ui-widget-content" type="text" id="customer_search" name="customer_search" size="24" />
-			<button class="pf-field ui-state-default ui-corner-all" type="button" id="customer_search_button"><span class="picon_16x16_system-search" style="padding-left: 16px; background-repeat: no-repeat;">Search</span></button>
+			<button class="pf-field ui-state-default ui-corner-all" type="button" id="customer_search_button"><span class="picon picon_16x16_system-search" style="padding-left: 16px; background-repeat: no-repeat;">Search</span></button>
 			<?php } ?>
 		</div>
 	</div>
@@ -929,7 +929,7 @@ $pines->com_pgrid->load();
 			<div style="text-align: left;">
 				<?php foreach ($this->payment_types as $cur_payment_type) { ?>
 				<button id="payment_<?php echo $cur_payment_type->guid; ?>" class="ui-state-default ui-corner-all payment-button" type="button" style="margin-bottom: 2px;" value="<?php echo htmlentities(json_encode((object) array('guid' => $cur_payment_type->guid, 'name' => $cur_payment_type->name, 'minimum' => $cur_payment_type->minimum, 'maximum' => $cur_payment_type->maximum, 'processing_type' => $cur_payment_type->processing_type))); ?>">
-					<span class="picon_32x32_list-add" style="display: block; padding-top: 32px; min-width: 50px; background-repeat: no-repeat; background-position: top center;"><?php echo $cur_payment_type->name; ?></span>
+					<span class="picon picon_32x32_list-add" style="display: block; padding-top: 32px; min-width: 50px; background-repeat: no-repeat; background-position: top center;"><?php echo $cur_payment_type->name; ?></span>
 				</button>
 				<?php } ?>
 			</div>
@@ -940,7 +940,7 @@ $pines->com_pgrid->load();
 			<div style="float: right;">
 				<?php foreach ($this->payment_types as $cur_payment_type) { ?>
 				<button id="payment_<?php echo $cur_payment_type->guid; ?>" class="pf-field ui-state-default ui-corner-all payment-button" type="button" value="<?php echo htmlentities(json_encode((object) array("guid" => $cur_payment_type->guid, "name" => $cur_payment_type->name, "minimum" => $cur_payment_type->minimum))); ?>">
-					<span class="picon_32x32_list-add" style="display: block; padding-top: 32px; min-width: 32px; background-repeat: no-repeat; background-position: top center;"><?php echo $cur_payment_type->name; ?></span>
+					<span class="picon picon_32x32_list-add" style="display: block; padding-top: 32px; min-width: 32px; background-repeat: no-repeat; background-position: top center;"><?php echo $cur_payment_type->name; ?></span>
 				</button>
 				<?php } ?>
 			</div>

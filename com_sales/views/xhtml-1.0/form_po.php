@@ -137,7 +137,7 @@ if ($this->entity->final)
 					{
 						type: 'button',
 						text: 'Add',
-						extra_class: 'icon picon_16x16_document-new',
+						extra_class: 'picon picon_16x16_document-new',
 						selection_optional: true,
 						click: function(){
 							if (!cur_vendor) {
@@ -150,7 +150,7 @@ if ($this->entity->final)
 					{
 						type: 'button',
 						text: 'Edit',
-						extra_class: 'icon picon_16x16_document-open',
+						extra_class: 'picon picon_16x16_document-edit',
 						double_click: true,
 						click: function(e, rows){
 							var row_data = products_table.pgrid_export_rows(rows);
@@ -164,7 +164,7 @@ if ($this->entity->final)
 					{
 						type: 'button',
 						text: 'Remove',
-						extra_class: 'icon picon_16x16_edit-delete',
+						extra_class: 'picon picon_16x16_edit-delete',
 						click: function(e, rows){
 							rows.pgrid_delete();
 							update_products();

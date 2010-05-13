@@ -232,7 +232,7 @@ $this->note = 'Provide floor details in this form.';
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Current Background</span>
 				<div class="pf-group">
-					<span class="pf-field"><img src="<?php echo $pines->config->rela_location.$this->entity->get_background(); ?>" alt="Floor Background" style="max-width: 100%; width: auto; height: auto;" /></span>
+					<span class="pf-field"><img src="<?php echo $pines->config->rela_location.$this->entity->get_background(); ?>" alt="Floor Background" style="max-width: 100%; width: auto; height: auto; border: 1px dashed black;" /></span>
 					<br />
 					<label><span class="pf-field"><input class="pf-field ui-widget-content" type="checkbox" name="remove_background" value="ON" />Remove this background.</span></label>
 				</div>
@@ -247,16 +247,16 @@ $this->note = 'Provide floor details in this form.';
 		<div id="tab_layout">
 			<div class="ui-widget-header ui-corner-all" style="padding: 10px;">
 				<span class="station_layout_buttonset">
-					<button type="button" class="station_layout_save"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_document-save"></span> Save</button>
-					<button type="button" class="station_layout_revert"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_document-revert"></span> Revert</button>
+					<button type="button" class="station_layout_save"><span style="display: block; width: 32px; height: 32px;" class="picon picon_32x32_document-save"></span> Save</button>
+					<button type="button" class="station_layout_revert"><span style="display: block; width: 32px; height: 32px;" class="picon picon_32x32_document-revert"></span> Revert</button>
 				</span>
 				<span class="station_layout_buttonset">
-					<button type="button" class="station_layout_import"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_go-down"></span> Import</button>
-					<button type="button" class="station_layout_export"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_go-up"></span> Export</button>
+					<button type="button" class="station_layout_import"><span style="display: block; width: 32px; height: 32px;" class="picon picon_32x32_document-import"></span> Import</button>
+					<button type="button" class="station_layout_export"><span style="display: block; width: 32px; height: 32px;" class="picon picon_32x32_document-export"></span> Export</button>
 				</span>
 				<span class="station_layout_buttonset">
-					<button type="button" class="station_layout_add"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_list-add"></span> Add</button>
-					<button type="button" class="station_layout_clear"><span style="display: block; width: 32px; height: 32px;" class="picon_32x32_edit-clear"></span> Clear</button>
+					<button type="button" class="station_layout_add"><span style="display: block; width: 32px; height: 32px;" class="picon picon_32x32_list-add"></span> Add</button>
+					<button type="button" class="station_layout_clear"><span style="display: block; width: 32px; height: 32px;" class="picon picon_32x32_edit-clear"></span> Clear</button>
 				</span>
 			</div>
 			<br class="pf-clearing" />

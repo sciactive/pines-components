@@ -29,7 +29,7 @@ $pines->com_pgrid->load();
 				{
 					type: 'button',
 					text: 'Add Address',
-					extra_class: 'icon picon_16x16_list-add',
+					extra_class: 'picon picon_16x16_list-add',
 					selection_optional: true,
 					click: function(){
 						address_dialog.dialog('open');
@@ -38,7 +38,7 @@ $pines->com_pgrid->load();
 				{
 					type: 'button',
 					text: 'Remove Address',
-					extra_class: 'icon picon_16x16_list-remove',
+					extra_class: 'picon picon_16x16_list-remove',
 					click: function(e, rows){
 						rows.pgrid_delete();
 						update_address();
@@ -92,7 +92,7 @@ $pines->com_pgrid->load();
 
 		<?php } if (in_array('attributes', $pines->config->com_customer->shown_fields_customer)) { ?>
 		// Attributes
-		var attributes = $("#tab_attributes .attributes");
+		var attributes = $("#tab_attributes input[name=attributes]");
 		var attributes_table = $("#tab_attributes .attributes_table");
 		var attribute_dialog = $("#tab_attributes .attribute_dialog");
 
@@ -103,7 +103,7 @@ $pines->com_pgrid->load();
 				{
 					type: 'button',
 					text: 'Add Attribute',
-					extra_class: 'icon picon_16x16_list-add',
+					extra_class: 'picon picon_16x16_list-add',
 					selection_optional: true,
 					click: function(){
 						attribute_dialog.dialog('open');
@@ -112,7 +112,7 @@ $pines->com_pgrid->load();
 				{
 					type: 'button',
 					text: 'Remove Attribute',
-					extra_class: 'icon picon_16x16_list-remove',
+					extra_class: 'picon picon_16x16_list-remove',
 					click: function(e, rows){
 						rows.pgrid_delete();
 						update_attributes();
@@ -291,7 +291,7 @@ $pines->com_pgrid->load();
 							loader = $.pnotify({
 								pnotify_title: 'Company Search',
 								pnotify_text: 'Searching for companies...',
-								pnotify_notice_icon: 'icon picon_16x16_throbber',
+								pnotify_notice_icon: 'picon picon_16x16_throbber',
 								pnotify_nonblock: true,
 								pnotify_hide: false,
 								pnotify_history: false
@@ -324,7 +324,7 @@ $pines->com_pgrid->load();
 					<input class="pf-field ui-widget-content" type="text" id="company" name="company" size="24" onfocus="this.blur();" value="<?php echo htmlentities($this->entity->company->guid ? "{$this->entity->company->guid}: \"{$this->entity->company->name}\"" : 'No Company Selected'); ?>" />
 					<br />
 					<input class="pf-field ui-widget-content" type="text" id="company_search" name="company_search" size="24" />
-					<button class="pf-field ui-state-default ui-corner-all" type="button" id="company_search_button"><span class="picon_16x16_system-search" style="padding-left: 16px; background-repeat: no-repeat;">Search</span></button>
+					<button class="pf-field ui-state-default ui-corner-all" type="button" id="company_search_button"><span class="picon picon_16x16_system-search" style="padding-left: 16px; background-repeat: no-repeat;">Search</span></button>
 				</div>
 			</div>
 			<div id="company_dialog" title="Pick a Company">

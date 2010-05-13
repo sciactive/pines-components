@@ -18,7 +18,7 @@ $pines->com_pgrid->load();
 	// <![CDATA[
 	pines(function(){
 		// Attributes
-		var attributes = $("#tab_attributes .attributes");
+		var attributes = $("#tab_attributes input[name=attributes]");
 		var attributes_table = $("#tab_attributes .attributes_table");
 		var attribute_dialog = $("#tab_attributes .attribute_dialog");
 
@@ -29,7 +29,7 @@ $pines->com_pgrid->load();
 				{
 					type: 'button',
 					text: 'Add Attribute',
-					extra_class: 'icon picon_16x16_list-add',
+					extra_class: 'picon picon_16x16_list-add',
 					selection_optional: true,
 					click: function(){
 						attribute_dialog.dialog('open');
@@ -38,7 +38,7 @@ $pines->com_pgrid->load();
 				{
 					type: 'button',
 					text: 'Remove Attribute',
-					extra_class: 'icon picon_16x16_list-remove',
+					extra_class: 'picon picon_16x16_list-remove',
 					click: function(e, rows){
 						rows.pgrid_delete();
 						update_attributes();

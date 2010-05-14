@@ -31,18 +31,9 @@ if (isset($_REQUEST['events'])) {
 		$event_count++;
 
 		$event->id = $c_event[1];
-		$event->title = $c_event[2];
-		$title_str = explode(' - ', $event->title);
-		if (count($title_str) > 1) {
-			$event->label = $title_str[0];
-			$event->employee = $title_str[1];
-		} else {
-			$event->employee = $event->title;
-		}
-		$event->start = strtotime($c_event[3]);
-		$event->end = strtotime($c_event[4]);
-		$event->color = $c_event[5];
-		$event->all_day = ($c_event[6] == 'true') ? true : false;
+		$event->start = strtotime($c_event[2]);
+		$event->end = strtotime($c_event[3]);
+		$event->all_day = ($c_event[4] == 'true') ? true : false;
 		if ($pines->config->com_hrm->global_events)
 			$event->ac->other = 1;
 		$event->save();

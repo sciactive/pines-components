@@ -62,7 +62,6 @@ defined('P_RUN') or die('Direct access prohibited');
 					echo 'start: '. $cur_event->start .',';
 					echo 'end: '. $cur_event->end .',';
 					echo 'className: \''. $cur_event->color .'\',';
-					//echo 'allDay: '. $cur_event->all_day;
 					echo ($cur_event->all_day) ? 'allDay: true' : 'allDay: false';
 					echo '}';
 					$event_counter++;
@@ -118,7 +117,7 @@ defined('P_RUN') or die('Direct access prohibited');
 				pines.error("An error occured while trying to add events to the calendar.");
 			}
 		});
-		pines.get("<?php echo pines_url('com_hrm', 'editcalendar'); ?>");
+		pines.get("<?php echo pines_url('com_hrm', 'editcalendar', array('location' => $this->location)); ?>");
 	}
 	// Save all of the calendar events by exporting the data to their entities.
 	function save_calendar() {

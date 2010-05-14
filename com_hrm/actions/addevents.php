@@ -37,6 +37,10 @@ if (isset($_REQUEST['events'])) {
 			$dupe_event->ac->other = 1;
 		// Save our new duplicate event.
 		$dupe_event->save();
+		if (!$dupe_event->group->is($event->group)) {
+			$dupe_event->group = $event->group;
+			$dupe_event->save();
+		}
 		$dupe_count++;
 	}
 }

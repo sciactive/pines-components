@@ -24,6 +24,9 @@ return array(
 		'pines' => '<2',
 		'component' => 'com_jquery'
 	),
+	'recommend' => array(
+		'component' => 'com_elfinder'
+	),
 );
 
 ?>

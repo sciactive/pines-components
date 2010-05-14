@@ -10,6 +10,8 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
+if (isset($pines->com_elfinder))
+	$pines->com_elfinder->load();
 ?>
 <script type="text/javascript">
 	// <![CDATA[
@@ -39,6 +41,21 @@ defined('P_RUN') or die('Direct access prohibited');
 
 			// Example content CSS (should be your site CSS)
 			content_css : "<?php echo $pines->config->rela_location.$pines->template->editor_css; ?>",
+			
+			<?php if (isset($pines->com_elfinder)) { ?>
+			// Use elFinder as the file browser.
+			file_browser_callback : function(field_name, url, type, win) {
+				$("<div />").appendTo("body").elfinder({
+					url: "<?php echo addslashes(pines_url("com_elfinder", "connector")); ?>",
+					dialog: {"width": 900, "modal": true, "zIndex": 400000, "title": "Choose "+type},
+					height: <?php echo $pines->config->com_elfinder->default_height; ?>,
+					closeOnEditorCallback: true,
+					editorCallback: function(url) {
+						$("input[name="+field_name+"]", win.document).val(url);
+					}
+				});
+			},
+			<?php } ?>
 
 			// Drop lists for link/image/media/template dialogs
 			template_external_list_url : "lists/template_list.js",

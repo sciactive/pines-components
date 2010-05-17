@@ -79,6 +79,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		$total_group['scheduled'] = $total_group['clocked'] = $time_punch = $total_count = 0;
 		foreach($this->employees as $cur_employee) {
 			$totals[$total_count]['scheduled'] = $totals[$total_count]['clocked'] = 0;
+			$schedule = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'event'), 'ref' => array('employee' => $cur_employee), 'class' => com_hrm_event));
+			foreach ($schedule as $cur_schedule)
+				$totals[$total_count]['scheduled'] += ($cur_schedule->end - $cur_schedule->start);
 			foreach($cur_employee->timeclock as $clock) {
 				if ($clock['time'] >= $this->date[0] && $clock['time'] <= $this->date[1]) {
 					if ($clock['status'] == 'out' && ($time_punch > 0)) {
@@ -89,22 +92,30 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					}
 				}
 			}
+			$scheduled = round($totals[$total_count]['scheduled'] / 3600, 2);
+			$clocked = round($totals[$total_count]['clocked'] / 3600, 2);
+			$variance = round(($totals[$total_count]['clocked'] - $totals[$total_count]['scheduled']) / 3600, 2);
 			?>
 		<tr title="<?php echo $cur_employee->guid; ?>">
 			<td><?php echo $cur_employee->name; ?></td>
-			<td><?php echo round($totals[$total_count]['scheduled'] / 3600, 2); ?></td>
-			<td><?php echo round($totals[$total_count]['clocked'] / 3600, 2); ?> hours</td>
-			<td><?php echo round(($totals[$total_count]['clocked'] - $totals[$total_count]['scheduled']) / 3600, 2); ?> hours</td>
+			<td><?php echo $scheduled ?> hours</td>
+			<td><?php echo $clocked ?> hours</td>
+			<td<?php if ($variance < 0) echo ' style="color: red;"';?>><?php echo $variance ?> hours</td>
 		</tr>
 			<?php
-			$total_group['scheduled'] += 0; $total_group['clocked'] += $totals[$total_count]['clocked']; $total_count++;
+			$total_group['scheduled'] += $totals[$total_count]['scheduled'];
+			$total_group['clocked'] += $totals[$total_count]['clocked'];
+			$total_count++;
 		}
+		$scheduled = round($total_group['scheduled'] / 3600, 2);
+		$clocked = round($total_group['clocked'] / 3600, 2);
+		$variance = round(($total_group['clocked'] - $total_group['scheduled']) / 3600, 2);
 		?>
 		<tr class="ui-state-highlight total">
 			<td>Total</td>
-			<td><?php echo round($total_group['scheduled'] / 3600, 2); ?></td>
-			<td><?php echo round($total_group['clocked'] / 3600, 2); ?> hours</td>
-			<td><?php echo round(($total_group['clocked'] - $total_group['scheduled']) / 3600, 2); ?> hours</td>
+			<td><?php echo $scheduled; ?> hours</td>
+			<td><?php echo $clocked; ?> hours</td>
+			<td<?php if ($variance < 0) echo ' style="color: red;"';?>><?php echo $variance ?> hours</td>
 		</tr>
 	</tbody>
 </table>

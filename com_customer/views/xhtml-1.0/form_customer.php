@@ -379,7 +379,26 @@ $pines->com_pgrid->load();
 				<label><span class="pf-label">Fax</span>
 					<input class="pf-field ui-widget-content" type="text" name="fax" size="24" value="<?php echo format_phone($this->entity->fax); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
+			<?php } if (in_array('referrer', $pines->config->com_customer->shown_fields_customer)) { ?>
+			<div class="pf-element">
+				<label><span class="pf-label">Referrer</span>
+					<span class="pf-note">Where did you hear about us?</span>
+					<select class="pf-field ui-widget-content" name="referrer">
+						<option value="">-- Please Select --</option>
+						<?php foreach ($pines->config->com_customer->referrer_values as $cur_value) { ?>
+						<option value="<?php echo htmlentities($cur_value); ?>"<?php echo ($this->entity->referrer == $cur_value) ? ' selected="selected"' : ''; ?> /><?php echo htmlentities($cur_value); ?></option>
+						<?php } ?>
+					</select></label>
+			</div>
+			<?php } if (in_array('description', $pines->config->com_customer->shown_fields_customer)) { ?>
+			<div class="pf-element pf-full-width">
+				<span class="pf-label">Description</span><br />
+				<textarea rows="3" cols="35" class="pf-field peditor" style="width: 100%;" name="description"><?php echo $this->entity->description; ?></textarea>
+			</div>
 			<?php } ?>
+			<br class="pf-clearing" />
+		</div>
+		<div id="tab_account">
 			<div class="pf-element">
 				<label><span class="pf-label">Login Disabled</span>
 					<input class="pf-field ui-widget-content" type="checkbox" name="login_disabled" size="24" value="ON"<?php echo $this->entity->login_disabled ? ' checked="checked"' : ''; ?> /></label>
@@ -394,16 +413,7 @@ $pines->com_pgrid->load();
 					} ?>
 					<input class="pf-field ui-widget-content" type="text" name="password" size="24" value="<?php echo $this->entity->tmp_password; ?>" /></label>
 			</div>
-			<?php } if (in_array('description', $pines->config->com_customer->shown_fields_customer)) { ?>
-			<div class="pf-element pf-full-width">
-				<span class="pf-label">Description</span><br />
-				<textarea rows="3" cols="35" class="pf-field peditor" style="width: 100%;" name="description"><?php echo $this->entity->description; ?></textarea>
-			</div>
-			<?php } ?>
-			<br class="pf-clearing" />
-		</div>
-		<div id="tab_account">
-			<?php if (in_array('points', $pines->config->com_customer->shown_fields_customer)) { ?>
+			<?php } if (in_array('points', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="pf-element pf-heading">
 				<h1>Points</h1>
 			</div>

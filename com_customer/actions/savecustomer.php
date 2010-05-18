@@ -45,13 +45,14 @@ $customer->phone_cell = preg_replace('/\D/', '', $_REQUEST['phone_cell']);
 $customer->phone_work = preg_replace('/\D/', '', $_REQUEST['phone_work']);
 $customer->phone_home = preg_replace('/\D/', '', $_REQUEST['phone_home']);
 $customer->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
+$customer->referrer = $_REQUEST['referrer'];
+$customer->description = $_REQUEST['description'];
+
+// Account
 $customer->login_disabled = ($_REQUEST['login_disabled'] == 'ON');
 // Temporarily save the password in case the customer doesn't pass all checks.
 if (!empty($_REQUEST['password']))
 	$customer->tmp_password = $_REQUEST['password'];
-$customer->description = $_REQUEST['description'];
-
-// Account
 if ($_REQUEST['member'] == 'ON') {
 	$customer->make_member();
 } else {
@@ -142,14 +143,24 @@ if (in_array('phone', $pines->config->com_customer->required_fields_customer) &&
 	pines_notice('Please specify at least one phone number.');
 	return;
 }
-if (in_array('password', $pines->config->com_customer->required_fields_customer) && empty($customer->tmp_password)) {
+if (in_array('referrer', $pines->config->com_customer->required_fields_customer) && empty($customer->referrer)) {
 	$customer->print_form();
-	pines_notice('Please specify a password.');
+	pines_notice('Please specify a referrer.');
+	return;
+}
+if (!empty($customer->referrer) && !in_array($customer->referrer, $pines->config->com_customer->referrer_values)) {
+	$customer->print_form();
+	pines_notice('Please choose from the available referrers.');
 	return;
 }
 if (in_array('description', $pines->config->com_customer->required_fields_customer) && empty($customer->description)) {
 	$customer->print_form();
 	pines_notice('Please specify a description.');
+	return;
+}
+if (in_array('password', $pines->config->com_customer->required_fields_customer) && empty($customer->tmp_password)) {
+	$customer->print_form();
+	pines_notice('Please specify a password.');
 	return;
 }
 if ( in_array('address', $pines->config->com_customer->required_fields_customer) ) {

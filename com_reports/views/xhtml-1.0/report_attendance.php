@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name : $this->location->name).' ('.format_date($this->date[0], 'date_sort').' - '.format_date($this->date[1], 'date_sort').')';
+$this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name : $this->location->name).' ('.format_date($this->date[0], 'date_short').' - '.format_date($this->date[1], 'date_short').')';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_reports/report_attendance'];
@@ -31,7 +31,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				<?php if (isset($this->employees)) { ?>
-				{type: 'button', text: 'View', extra_class: 'picon picon_16x16_user-identity', double_click: true, url: '<?php echo pines_url('com_reports', 'reportattendance', array('employee' => '__title__', 'start' => format_date($this->date[0], 'date_sort'), 'end' => format_date($this->date[1], 'date_sort'), 'location' => $this->location->guid), false); ?>'},
+				{type: 'button', text: 'View', extra_class: 'picon picon_16x16_user-identity', double_click: true, url: '<?php echo pines_url('com_reports', 'reportattendance', array('employee' => '__title__', 'start' => format_date($this->date[0], 'date_short'), 'end' => format_date($this->date[1], 'date_short'), 'location' => $this->location->guid), false); ?>'},
 				{type: 'separator'},
 				{type: 'button', text: 'Select All', extra_class: 'picon picon_16x16_document-multiple', select_all: true},
 				{type: 'button', text: 'Select None', extra_class: 'picon picon_16x16_document-close', select_none: true},
@@ -44,8 +44,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<?php } else { ?>
 				{type: 'button', text: '&laquo; All Employees', extra_class: 'picon picon_16x16_system-users', selection_optional: true, click: function(e, rows){
 					pines.post("<?php echo pines_url('com_reports', 'reportattendance'); ?>", {
-						start: "<?php echo format_date($this->date[0], 'date_sort'); ?>",
-						end: "<?php echo format_date($this->date[1], 'date_sort'); ?>",
+						start: "<?php echo format_date($this->date[0], 'date_short'); ?>",
+						end: "<?php echo format_date($this->date[1], 'date_short'); ?>",
 						location: "<?php echo $this->location->guid; ?>"
 					});
 				}}
@@ -140,11 +140,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		$clock_count = $date_count = 0;
 		foreach($this->employee->timeclock as $key => $entry) {
 			if ($entry['time'] >= $this->date[0] && $entry['time'] <= $this->date[1]) {
-				if ($dates[$date_count]['date'] == format_date($entry['time'], 'date_sort')) {
+				if ($dates[$date_count]['date'] == format_date($entry['time'], 'date_short')) {
 					// The employee clocked out the same day that they clocked in.
 					if ($entry['status'] == 'out') {
 						$clocks[$clock_count]['out'] = $entry['time'];
-						$dates[$date_count]['total'] += $this->employee->time_sum($clocks[$clock_count]['in'], $entry['time']);
+						$dates[$date_count]['total'] += $clocks[$clock_count]['total'] = $this->employee->time_sum($clocks[$clock_count]['in'], $entry['time']);
 					} else {
 						$clock_count++;
 						$clocks[$clock_count]['date'] = $date_count;
@@ -155,11 +155,13 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					if ($entry['status'] == 'out') {
 						$clocks[$clock_count]['over'] = format_date($entry['time'], 'custom', 'n/j');
 						$clocks[$clock_count]['out'] = $entry['time'];
-						$dates[$date_count]['total'] += $this->employee->time_sum($clocks[$clock_count]['in'], $entry['time']);
+						$dates[$date_count]['total'] += $clocks[$clock_count]['total'] = $this->employee->time_sum($clocks[$clock_count]['in'], $entry['time']);
 					} else {
 						$clock_count++;
 						$date_count++;
-						$dates[$date_count]['date'] = format_date($entry['time'], 'date_sort');
+						$dates[$date_count]['start'] = strtotime('00:00', $entry['time']);
+						$dates[$date_count]['end'] = strtotime('23:59', $entry['time']);
+						$dates[$date_count]['date'] = format_date($entry['time'], 'date_short');
 						$dates[$date_count]['scheduled'] = 0;
 						$dates[$date_count]['total'] = 0;
 						$clocks[$clock_count]['date'] = $date_count;
@@ -170,14 +172,20 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		}
 		$clock_count = 1;
 		foreach ($dates as $cur_date) {
-			?>
-			<tr>
+			$scheduled = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'event'), 'ref' => array('employee' => $this->employee), 'gte' => array('start' => $cur_date['start']), 'lte' => array('end' => $cur_date['end']), 'class' => com_hrm_event));
+			foreach ($scheduled as $cur_schedule) {
+				$cur_date['sched_start'] = $cur_schedule->start;
+				$cur_date['sched_end'] = $cur_schedule->end;
+				$cur_date['scheduled'] += ($cur_schedule->end - $cur_schedule->start);
+			}
+		?>
+			<tr class="total">
 				<td><?php echo $cur_date['date']; ?></td>
 				<td><?php echo $this->location->name; ?></td>
 				<td>Scheduled</td>
-				<td></td>
-				<td></td>
-				<td><?php echo $cur_date['scheduled']; ?></td>
+				<td><?php if (isset($cur_date['sched_start'])) echo format_date($cur_date['sched_start'], 'time_short'); ?></td>
+				<td><?php if (isset($cur_date['sched_end'])) echo format_date($cur_date['sched_end'], 'time_short'); ?></td>
+				<td><?php echo round($cur_date['scheduled'] / 3600, 2).' hours'; ?></td>
 				<td></td>
 			</tr>
 			<?php foreach ($clocks as $cur_clock) { if ($cur_clock['date'] == $clock_count) { ?>
@@ -192,7 +200,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						echo (isset($cur_clock['over']) ? ' ('.$cur_clock['over'].')' : '');
 					?>
 					</td>
-					<td></td>
+					<td><?php echo round($cur_clock['total'] / 3600, 2).' hours'; ?></td>
 					<td></td>
 				</tr>
 			<?php } }

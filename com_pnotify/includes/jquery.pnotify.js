@@ -1,5 +1,5 @@
 /*
- * jQuery Pines Notify (pnotify) Plugin 1.0
+ * jQuery Pines Notify (pnotify) Plugin 1.0.0 Beta 1
  *
  * Copyright (c) 2009 Hunter Perrin
  *
@@ -183,10 +183,10 @@
 				jwindow = $(window);
 
 			var animating;
-			
+
 			// Build main options.
 			var opts;
-			if (typeof options == "string") {
+			if (typeof options != "object") {
 				opts = $.extend({}, $.pnotify.defaults);
 				opts.pnotify_text = options;
 			} else {
@@ -299,7 +299,7 @@
 			pnotify.container = $("<div />", {"class": "ui-widget ui-widget-content ui-corner-all ui-pnotify-container "+(opts.pnotify_type == "error" ? "ui-state-error" : "ui-state-highlight")})
 			.appendTo(pnotify);
 
-			pnotify.pnotify_version = "1.0.0";
+			pnotify.pnotify_version = "1.0.0b1";
 
 			// This function is for updating the notice.
 			pnotify.pnotify = function(options) {
@@ -519,7 +519,7 @@
 				"html": opts.pnotify_title
 			})
 			.appendTo(pnotify.container);
-			if (typeof opts.pnotify_title != "string")
+			if (opts.pnotify_title === false)
 				pnotify.title_container.hide();
 
 			// Replace new lines with HTML line breaks.
@@ -531,7 +531,7 @@
 				"html": opts.pnotify_text
 			})
 			.appendTo(pnotify.container);
-			if (typeof opts.pnotify_text != "string")
+			if (opts.pnotify_text === false)
 				pnotify.text_container.hide();
 
 			// Set width and min height.
@@ -599,13 +599,14 @@
 							"click": function(){
 								// Look up the last history notice, and display it.
 								var i = 1;
-								while (!body_data[body_data.length - i] || !body_data[body_data.length - i].pnotify_history) {
+								while (!body_data[body_data.length - i] || !body_data[body_data.length - i].pnotify_history || body_data[body_data.length - i].is(":visible")) {
 									if (body_data.length - i === 0)
 										return false;
 									i++;
 								}
-								if (body_data[body_data.length - i].pnotify_display)
-									body_data[body_data.length - i].pnotify_display();
+								var n = body_data[body_data.length - i];
+								if (n.pnotify_display)
+									n.pnotify_display();
 								return false;
 							}
 					}))
@@ -679,6 +680,10 @@
 	};
 
 	$.pnotify.defaults = {
+		// The notice's title.
+		pnotify_title: false,
+		// The notice's text.
+		pnotify_text: false,
 		// Additional classes to be added to the notice. (For custom styling.)
 		pnotify_addclass: "",
 		// Create a non-blocking notice. It lets the user click elements underneath it.

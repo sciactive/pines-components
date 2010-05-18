@@ -102,7 +102,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo $cur_employee->name; ?></td>
 			<td><?php echo $scheduled ?> hours</td>
 			<td><?php echo $clocked ?> hours</td>
-			<td<?php if ($variance < 0) echo ' style="color: red;"';?>><?php echo $variance ?> hours</td>
+			<td<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo $variance ?> hours</td>
 		</tr>
 			<?php
 			$total_group['scheduled'] += $totals[$total_count]['scheduled'];
@@ -117,7 +117,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td>Total</td>
 			<td><?php echo $scheduled; ?> hours</td>
 			<td><?php echo $clocked; ?> hours</td>
-			<td<?php if ($variance < 0) echo ' style="color: red;"';?>><?php echo $variance ?> hours</td>
+			<td<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo $variance ?> hours</td>
 		</tr>
 	</tbody>
 </table>
@@ -205,7 +205,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				</tr>
 			<?php } }
 			$total_hours = floor($cur_date['total'] / 3600);
-			$total_mins = round(($cur_date['total'] / 60) - ($total_hours * 60)); ?>
+			$total_mins = round(($cur_date['total'] / 60) - ($total_hours * 60));
+			$variance = round(($cur_date['total'] - $cur_date['scheduled']) / 3600, 2);
+			?>
 			<tr class="ui-state-highlight total">
 				<td></td>
 				<td></td>
@@ -213,7 +215,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<td></td>
 				<td></td>
 				<td><?php echo ($total_hours > 0) ? $total_hours.'hours ' : ''; echo ($total_mins > 0) ? $total_mins.'min' : ''; ?></td>
-				<td><?php echo round(($cur_date['total'] - $cur_date['scheduled']) / 3600, 2); ?> hours</td>
+				<td<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo $variance; ?> hours</td>
 			</tr>
 		<?php $clock_count++; } ?>
 	</tbody>

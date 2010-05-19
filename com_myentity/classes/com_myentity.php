@@ -141,7 +141,11 @@ class com_myentity extends component implements entity_manager_interface {
 		while ($row) {
 			$guid = (int) $row['guid'];
 			$tags = explode(',', substr($row['tags'], 1, -1));
+			$p_cdate = (float) $row['cdate'];
+			$p_mdate = (float) $row['mdate'];
 			fwrite($fhandle, "{{$guid}}[".implode(',', $tags)."]\n");
+			fwrite($fhandle, "\tp_cdate=".json_encode(serialize($p_cdate))."\n");
+			fwrite($fhandle, "\tp_mdate=".json_encode(serialize($p_mdate))."\n");
 			if (isset($row['dname'])) {
 				// This do will keep going and adding the data until the
 				// next entity is reached. $row will end on the next entity.
@@ -210,7 +214,11 @@ class com_myentity extends component implements entity_manager_interface {
 		while ($row) {
 			$guid = (int) $row['guid'];
 			$tags = explode(',', substr($row['tags'], 1, -1));
+			$p_cdate = (float) $row['cdate'];
+			$p_mdate = (float) $row['mdate'];
 			echo "{{$guid}}[".implode(',', $tags)."]\n";
+			echo "\tp_cdate=".json_encode(serialize($p_cdate))."\n";
+			echo "\tp_mdate=".json_encode(serialize($p_mdate))."\n";
 			if (isset($row['dname'])) {
 				// This do will keep going and adding the data until the
 				// next entity is reached. $row will end on the next entity.
@@ -243,10 +251,10 @@ class com_myentity extends component implements entity_manager_interface {
 						foreach ($option as $cur_guid) {
 							if ( $cur_query )
 								$cur_query .= ' OR ';
-							$cur_query .= "e.`guid`=".(int) $cur_guid;
+							$cur_query .= 'e.`guid`='.(int) $cur_guid;
 						}
 					} else {
-						$cur_query = "e.`guid`=".(int) $option;
+						$cur_query = 'e.`guid`='.(int) $option;
 					}
 					break;
 				case 'tags':
@@ -281,11 +289,71 @@ class com_myentity extends component implements entity_manager_interface {
 //					if (isset($row['guids']))
 //						$cur_query .= "e.`guid` IN ({$row['guids']})";
 //					break;
+					if (isset($option['p_cdate'])) {
+						if ( $cur_query )
+							$cur_query .= ' AND ';
+						$cur_query .= 'e.`cdate`='.((float) $option['p_cdate']);
+						unset($option['p_cdate']);
+					}
+					if (isset($option['p_mdate'])) {
+						if ( $cur_query )
+							$cur_query .= ' AND ';
+						$cur_query .= 'e.`mdate`='.((float) $option['p_mdate']);
+						unset($option['p_cdate']);
+					}
 				case 'match':
 				case 'gt':
+					if (isset($option['p_cdate'])) {
+						if ( $cur_query )
+							$cur_query .= ' AND ';
+						$cur_query .= 'e.`cdate`>'.((float) $option['p_cdate']);
+						unset($option['p_cdate']);
+					}
+					if (isset($option['p_mdate'])) {
+						if ( $cur_query )
+							$cur_query .= ' AND ';
+						$cur_query .= 'e.`mdate`>'.((float) $option['p_mdate']);
+						unset($option['p_cdate']);
+					}
 				case 'gte':
+					if (isset($option['p_cdate'])) {
+						if ( $cur_query )
+							$cur_query .= ' AND ';
+						$cur_query .= 'e.`cdate`>='.((float) $option['p_cdate']);
+						unset($option['p_cdate']);
+					}
+					if (isset($option['p_mdate'])) {
+						if ( $cur_query )
+							$cur_query .= ' AND ';
+						$cur_query .= 'e.`mdate`>='.((float) $option['p_mdate']);
+						unset($option['p_cdate']);
+					}
 				case 'lt':
+					if (isset($option['p_cdate'])) {
+						if ( $cur_query )
+							$cur_query .= ' AND ';
+						$cur_query .= 'e.`cdate`<'.((float) $option['p_cdate']);
+						unset($option['p_cdate']);
+					}
+					if (isset($option['p_mdate'])) {
+						if ( $cur_query )
+							$cur_query .= ' AND ';
+						$cur_query .= 'e.`mdate`<'.((float) $option['p_mdate']);
+						unset($option['p_cdate']);
+					}
 				case 'lte':
+					if (isset($option['p_cdate'])) {
+						if ( $cur_query )
+							$cur_query .= ' AND ';
+						$cur_query .= 'e.`cdate`<='.((float) $option['p_cdate']);
+						unset($option['p_cdate']);
+					}
+					if (isset($option['p_mdate'])) {
+						if ( $cur_query )
+							$cur_query .= ' AND ';
+						$cur_query .= 'e.`mdate`<='.((float) $option['p_mdate']);
+						unset($option['p_cdate']);
+					}
 				case 'ref':
 					foreach ($option as $cur_name => $cur_value) {
 						if ( $cur_query )
@@ -311,11 +379,71 @@ class com_myentity extends component implements entity_manager_interface {
 //					if (isset($row['guids']))
 //						$cur_query .= "e.`guid` IN ({$row['guids']})";
 //					break;
+					if (isset($option['p_cdate'])) {
+						if ( $cur_query )
+							$cur_query .= ' OR ';
+						$cur_query .= 'e.`cdate`='.((float) $option['p_cdate']);
+						unset($option['p_cdate']);
+					}
+					if (isset($option['p_mdate'])) {
+						if ( $cur_query )
+							$cur_query .= ' OR ';
+						$cur_query .= 'e.`mdate`='.((float) $option['p_mdate']);
+						unset($option['p_cdate']);
+					}
 				case 'match_i':
 				case 'gt_i':
+					if (isset($option['p_cdate'])) {
+						if ( $cur_query )
+							$cur_query .= ' OR ';
+						$cur_query .= 'e.`cdate`>'.((float) $option['p_cdate']);
+						unset($option['p_cdate']);
+					}
+					if (isset($option['p_mdate'])) {
+						if ( $cur_query )
+							$cur_query .= ' OR ';
+						$cur_query .= 'e.`mdate`>'.((float) $option['p_mdate']);
+						unset($option['p_cdate']);
+					}
 				case 'gte_i':
+					if (isset($option['p_cdate'])) {
+						if ( $cur_query )
+							$cur_query .= ' OR ';
+						$cur_query .= 'e.`cdate`>='.((float) $option['p_cdate']);
+						unset($option['p_cdate']);
+					}
+					if (isset($option['p_mdate'])) {
+						if ( $cur_query )
+							$cur_query .= ' OR ';
+						$cur_query .= 'e.`mdate`>='.((float) $option['p_mdate']);
+						unset($option['p_cdate']);
+					}
 				case 'lt_i':
+					if (isset($option['p_cdate'])) {
+						if ( $cur_query )
+							$cur_query .= ' OR ';
+						$cur_query .= 'e.`cdate`<'.((float) $option['p_cdate']);
+						unset($option['p_cdate']);
+					}
+					if (isset($option['p_mdate'])) {
+						if ( $cur_query )
+							$cur_query .= ' OR ';
+						$cur_query .= 'e.`mdate`<'.((float) $option['p_mdate']);
+						unset($option['p_cdate']);
+					}
 				case 'lte_i':
+					if (isset($option['p_cdate'])) {
+						if ( $cur_query )
+							$cur_query .= ' OR ';
+						$cur_query .= 'e.`cdate`<='.((float) $option['p_cdate']);
+						unset($option['p_cdate']);
+					}
+					if (isset($option['p_mdate'])) {
+						if ( $cur_query )
+							$cur_query .= ' OR ';
+						$cur_query .= 'e.`mdate`<='.((float) $option['p_mdate']);
+						unset($option['p_cdate']);
+					}
 				case 'ref_i':
 					foreach ($option as $cur_name => $cur_value) {
 						if ( $cur_query )
@@ -356,7 +484,7 @@ class com_myentity extends component implements entity_manager_interface {
 			// Don't bother getting the tags unless we're at/past the offset.
 			if ($ocount >= $offset)
 				$tags = explode(',', substr($row['tags'], 1, -1));
-			$data = array();
+			$data = array('p_cdate' => (float) $row['cdate'], 'p_mdate' => (float) $row['mdate']);
 			if (isset($row['dname'])) {
 				// This do will keep going and adding the data until the
 				// next entity is reached. $row will end on the next entity.
@@ -607,10 +735,12 @@ class com_myentity extends component implements entity_manager_interface {
 			if (preg_match('/^\s*{(\d+)}\[([\w,]+)\]\s*$/', $line, $matches)) {
 				// Save the current entity.
 				if ($guid) {
-					$query = sprintf("REPLACE INTO `%scom_myentity_entities` (`guid`, `tags`, `varlist`) VALUES (%u, '%s', '%s');",
+					$query = sprintf("REPLACE INTO `%scom_myentity_entities` (`guid`, `tags`, `cdate`, `mdate`, `varlist`) VALUES (%u, '%s', %F, %F, '%s');",
 						$pines->config->com_mysql->prefix,
 						$guid,
 						mysql_real_escape_string(','.$tags.',', $pines->com_mysql->link),
+						$data['p_cdate'],
+						$data['p_mdate'],
 						mysql_real_escape_string(','.implode(',', array_keys($data)).',', $pines->com_mysql->link));
 					if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 						if (function_exists('pines_error'))
@@ -625,6 +755,7 @@ class com_myentity extends component implements entity_manager_interface {
 							pines_error('Query failed: ' . mysql_error());
 						return false;
 					}
+					unset($data['p_cdate'], $data['p_mdate']);
 					if ($data) {
 						$query = "INSERT INTO `{$pines->config->com_mysql->prefix}com_myentity_data` (`guid`, `name`, `value`) VALUES ";
 						foreach ($data as $name => $value) {
@@ -668,10 +799,12 @@ class com_myentity extends component implements entity_manager_interface {
 		}
 		// Save the last entity.
 		if ($guid) {
-			$query = sprintf("REPLACE INTO `%scom_myentity_entities` (`guid`, `tags`, `varlist`) VALUES (%u, '%s', '%s');",
+			$query = sprintf("REPLACE INTO `%scom_myentity_entities` (`guid`, `tags`, `cdate`, `mdate`, `varlist`) VALUES (%u, '%s', %F, %F, '%s');",
 				$pines->config->com_mysql->prefix,
 				$guid,
 				mysql_real_escape_string(','.$tags.',', $pines->com_mysql->link),
+				$data['p_cdate'],
+				$data['p_mdate'],
 				mysql_real_escape_string(','.implode(',', array_keys($data)).',', $pines->com_mysql->link));
 			if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 				if (function_exists('pines_error'))
@@ -688,6 +821,7 @@ class com_myentity extends component implements entity_manager_interface {
 			}
 			if ($data) {
 				$query = "INSERT INTO `{$pines->config->com_mysql->prefix}com_myentity_data` (`guid`, `name`, `value`) VALUES ";
+				unset($data['p_cdate'], $data['p_mdate']);
 				foreach ($data as $name => $value) {
 					$query .= sprintf("(%u, '%s', '%s'),",
 						$guid,
@@ -773,9 +907,11 @@ class com_myentity extends component implements entity_manager_interface {
 			// And modified date.
 			$entity->p_mdate = microtime(true);
 			$data = $entity->get_data();
-			$query = sprintf("INSERT INTO `%scom_myentity_entities` (`tags`, `varlist`) VALUES ('%s', '%s');",
+			$query = sprintf("INSERT INTO `%scom_myentity_entities` (`tags`, `cdate`, `mdate`, `varlist`) VALUES ('%s', %F, %F, '%s');",
 				$pines->config->com_mysql->prefix,
 				mysql_real_escape_string(','.implode(',', $entity->tags).',', $pines->com_mysql->link),
+				$data['p_cdate'],
+				$data['p_mdate'],
 				mysql_real_escape_string(','.implode(',', array_keys($data)).',', $pines->com_mysql->link));
 			if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 				if (function_exists('pines_error'))
@@ -784,6 +920,7 @@ class com_myentity extends component implements entity_manager_interface {
 			}
 			$new_id = mysql_insert_id();
 			$entity->guid = (int) $new_id;
+			unset($data['p_cdate'], $data['p_mdate']);
 			foreach ($data as $name => $value) {
 				$query = sprintf("INSERT INTO `%scom_myentity_data` (`guid`, `name`, `value`) VALUES (%u, '%s', '%s');",
 					$pines->config->com_mysql->prefix,
@@ -801,9 +938,11 @@ class com_myentity extends component implements entity_manager_interface {
 			// Save the modified date.
 			$entity->p_mdate = microtime(true);
 			$data = $entity->get_data();
-			$query = sprintf("UPDATE `%scom_myentity_entities` SET `tags`='%s', `varlist`='%s' WHERE `guid`=%u;",
+			$query = sprintf("UPDATE `%scom_myentity_entities` SET `tags`='%s', `cdate`=%F, `mdate`=%F, `varlist`='%s' WHERE `guid`=%u;",
 				$pines->config->com_mysql->prefix,
 				mysql_real_escape_string(','.implode(',', $entity->tags).',', $pines->com_mysql->link),
+				$data['p_cdate'],
+				$data['p_mdate'],
 				mysql_real_escape_string(','.implode(',', array_keys($data)).',', $pines->com_mysql->link),
 				intval($entity->guid));
 			if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
@@ -819,6 +958,7 @@ class com_myentity extends component implements entity_manager_interface {
 					pines_error('Query failed: ' . mysql_error());
 				return false;
 			}
+			unset($data['p_cdate'], $data['p_mdate']);
 			foreach ($data as $name => $value) {
 				$query = sprintf("INSERT INTO `%scom_myentity_data` (`guid`, `name`, `value`) VALUES (%u, '%s', '%s');",
 					$pines->config->com_mysql->prefix,

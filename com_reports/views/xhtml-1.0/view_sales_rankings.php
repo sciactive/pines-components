@@ -101,7 +101,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td class="right_justify">$<?php echo $cur_rank['last']; ?></td>
 			<td class="right_justify">$<?php echo $cur_rank['mtd']; ?></td>
 			<td class="right_justify">$<?php echo $cur_rank['goal']; ?></td>
-			<td class="right_justify">$<?php echo $cur_rank['trend']; ?></td>
+			<td class="right_justify">$<?php echo round($cur_rank['trend'], 2); ?></td>
 			<td class="right_justify"><?php echo round($cur_rank['pct'], 2); ?>%</td>
 		</tr>
 		<?php
@@ -122,7 +122,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td class="right_justify">$<?php echo $this->total['last']; ?></td>
 			<td class="right_justify">$<?php echo $this->total['mtd']; ?></td>
 			<td class="right_justify">$<?php echo $this->total['goal']; ?></td>
-			<td class="right_justify">$<?php echo $this->total['trend']; ?></td>
+			<td class="right_justify">$<?php echo round($this->total['trend'], 2); ?></td>
 			<td class="right_justify"><?php echo round($this->total['pct'], 2); ?>%</td>
 		</tr>
 	</tbody>

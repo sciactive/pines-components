@@ -102,7 +102,9 @@ class com_reports_sales_ranking extends entity {
 		$employees = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
 
 		foreach ($employees as $key => $value) {
-			if (!isset($value->user_account) || !$value->user_account->in_group($location))
+			if ( !isset($value->user_account) ||
+				(!$value->user_account->in_group($location) &&
+				!$value->user_account->is_descendent($location)) )
 				unset($employees[$key]);
 		}
 
@@ -166,18 +168,17 @@ class com_reports_sales_ranking extends entity {
 			
 			$module->rankings[$cur_employee->guid]['trend'] = ($module->rankings[$cur_employee->guid]['mtd'] / $days_passed) * $days_in_month;
 
-			// Account for employees potentially having $0 as a goal.
-			if ($module->rankings[$cur_employee->guid]['goal'] > 0) {
-				$module->rankings[$cur_employee->guid]['pct'] = $module->rankings[$cur_employee->guid]['trend'] / $module->rankings[$cur_employee->guid]['goal'] * 100;
+			if ($module->rankings[$cur_employee->guid]['goal'] == 0) {
+				unset($module->rankings[$cur_employee->guid]);
 			} else {
-				$module->rankings[$cur_employee->guid]['pct'] = 100;
+				$module->rankings[$cur_employee->guid]['pct'] = $module->rankings[$cur_employee->guid]['trend'] / $module->rankings[$cur_employee->guid]['goal'] * 100;
+				// Update totals for the entire company location(s).
+				$module->total['current'] += $module->rankings[$cur_employee->guid]['current'];
+				$module->total['last'] += $module->rankings[$cur_employee->guid]['last'];
+				$module->total['mtd'] += $module->rankings[$cur_employee->guid]['mtd'];
+				$module->total['trend'] += $module->rankings[$cur_employee->guid]['trend'];
+				$module->total['goal'] += $module->rankings[$cur_employee->guid]['goal'];
 			}
-			// Update totals for the entire company location(s).
-			$module->total['current'] += $module->rankings[$cur_employee->guid]['current'];
-			$module->total['last'] += $module->rankings[$cur_employee->guid]['last'];
-			$module->total['mtd'] += $module->rankings[$cur_employee->guid]['mtd'];
-			$module->total['trend'] += $module->rankings[$cur_employee->guid]['trend'];
-			$module->total['goal'] += $module->rankings[$cur_employee->guid]['goal'];
 		}
 		// Account for employees potentially having $0 as a goal.
 		if ($module->total['goal'] > 0) {

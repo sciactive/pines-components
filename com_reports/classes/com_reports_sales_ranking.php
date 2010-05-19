@@ -95,7 +95,7 @@ class com_reports_sales_ranking extends entity {
 			$location = $_SESSION['user']->group;
 		
 		$form = new module('com_reports', 'form_sales_rankings', 'left');
-		$module = new module('com_reports', 'rank_sales', 'content');
+		$module = new module('com_reports', 'view_sales_rankings', 'content');
 		$module->entity = $form->entity = $this;
 		$module->location = $form->location = $location;
 		$module->rankings = array();
@@ -107,8 +107,6 @@ class com_reports_sales_ranking extends entity {
 		}
 
 		// Date setup for different weekly and monthly breakdowns.
-		$days_passed = format_date(time(), 'custom', 'j');
-		$day_in_month = format_date(time(), 'custom', 't');
 		if (format_date(time(), 'custom', 'w') == '1') {
 			$current_start = strtotime('00:00', time());
 		} else {
@@ -119,8 +117,17 @@ class com_reports_sales_ranking extends entity {
 		} else {
 			$current_end = strtotime('23:59', strtotime('next Sunday'));
 		}
+		if ($entity->end_date > time()) {
+			$days_passed = (int) format_date(time(), 'custom', 'j');
+			$days_in_month = (int) format_date(time(), 'custom', 't');
+		} else {
+			$days_passed = (int) format_date($entity->end_date, 'custom', 'j');
+			$days_in_month = (int) format_date($entity->end_date, 'custom', 't');
+			$current_start = strtotime('00:00', strtotime('last Monday', $entity->end_date));
+			$current_end = strtotime('23:59', $entity->end_date);
+		}
 		$last_start = strtotime('-1 week', $current_start);
-		$last_end = strtotime('-1 week', $current_end);
+		$last_end = strtotime('+1 week', $last_start);
 		
 		// Calculate the rankings for all of the employees.
 		foreach($employees as $cur_employee) {
@@ -133,25 +140,25 @@ class com_reports_sales_ranking extends entity {
 			$module->rankings[$cur_employee->guid]['goal'] = $this->goals[$cur_employee->guid];
 
 			// Get the employee's sales totals for the current week.
-			$current_week_sales = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'sale'), 'ref' => array('employee' => $cur_employee), 'gte' => array('p_cdate' => $current_start), 'lte' => array('p_cdate' => $curent_end), 'class' => com_sales_sale));
+			$current_week_sales = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'sale'), 'ref' => array('user' => $cur_employee->user_account), 'gte' => array('p_cdate' => $current_start), 'lte' => array('p_cdate' => $curent_end), 'class' => com_sales_sale));
 			foreach ($current_week_sales as $cur_week_sale)
 				$module->rankings[$cur_employee->guid]['current'] += $cur_week_sale->total;
 
 			// Get the employee's sales totals for this sales period.
-			$last_week_sales = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'sale'), 'ref' => array('employee' => $cur_employee), 'gte' => array('p_cdate' => $last_start), 'lte' => array('p_cdate' => $last_end), 'class' => com_sales_sale));
+			$last_week_sales = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'sale'), 'ref' => array('user' => $cur_employee->user_account), 'gte' => array('p_cdate' => $last_start), 'lte' => array('p_cdate' => $last_end), 'class' => com_sales_sale));
 			foreach ($last_week_sales as $last_week_sale)
 				$module->rankings[$cur_employee->guid]['last'] += $last_week_sale->total;
 
 			// Get the employee's sales totals for the entire sales period.
-			$mtd_sales = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'sale'), 'ref' => array('employee' => $cur_employee), 'gte' => array('p_cdate' => $this->start_date), 'lte' => array('p_cdate' => $this->end_date), 'class' => com_sales_sale));
+			$mtd_sales = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'sale'), 'ref' => array('user' => $cur_employee->user_account), 'gte' => array('p_cdate' => $this->start_date), 'lte' => array('p_cdate' => $this->end_date), 'class' => com_sales_sale));
 			foreach ($mtd_sales as $cur_mtd_sale)
 				$module->rankings[$cur_employee->guid]['mtd'] += $cur_mtd_sale->total;
 			
-			$module->rankings[$cur_employee->guid]['trend'] = ($module->rankings[$cur_employee->guid]['mtd']/$days_passed)*$days_in_month;
+			$module->rankings[$cur_employee->guid]['trend'] = ($module->rankings[$cur_employee->guid]['mtd'] / $days_passed) * $days_in_month;
 
 			// Account for employees potentially having $0 as a goal.
 			if ($module->rankings[$cur_employee->guid]['goal'] > 0) {
-				$module->rankings[$cur_employee->guid]['pct'] = $module->rankings[$cur_employee->guid]['trend'] / $module->rankings[$cur_employee->guid]['goal'];
+				$module->rankings[$cur_employee->guid]['pct'] = $module->rankings[$cur_employee->guid]['trend'] / $module->rankings[$cur_employee->guid]['goal'] * 100;
 			} else {
 				$module->rankings[$cur_employee->guid]['pct'] = 100;
 			}

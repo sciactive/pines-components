@@ -21,6 +21,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		font-weight: bold;
 		text-align: center;
 	}
+	#sales_rankings_grid td.right_justify {
+		text-align: right;
+	}
 	#sales_rankings_grid .total td {
 		border-top-width: .2em;
 	}
@@ -47,9 +50,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-		var state_xhr;
-		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
-		var cur_defaults = {
+		$("#sales_rankings_grid").pgrid({
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				{type: 'button', text: 'Select All', extra_class: 'picon picon_16x16_document-multiple', select_all: true},
@@ -63,15 +64,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			],
 			pgrid_sortable: true,
 			pgrid_sort_col: 1,
-			pgrid_sort_ord: 'asc',
-			pgrid_state_change: function(state) {
-				if (typeof state_xhr == "object")
-					state_xhr.abort();
-				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo pines_url('com_pgrid', 'save_state'); ?>", {view: "com_reports/rank_sales", state: cur_state});
-			}
-		};
-		$("#sales_rankings_grid").pgrid(cur_defaults);
+			pgrid_sort_ord: 'asc'
+		});
 	});
 	// ]]>
 </script>
@@ -109,12 +103,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<tr title="<?php echo $cur_rank['employee']->guid; ?>" class="<?php echo $class; ?>">
 			<td><?php echo $cur_rank['rank']; ?></td>
 			<td><?php echo $cur_rank['employee']->name; ?></td>
-			<td><?php echo $cur_rank['current']; ?></td>
-			<td><?php echo $cur_rank['last']; ?></td>
-			<td><?php echo $cur_rank['mtd']; ?></td>
-			<td><?php echo $cur_rank['goal']; ?></td>
-			<td><?php echo $cur_rank['trend']; ?></td>
-			<td><?php echo round($cur_rank['pct'], 2); ?>%</td>
+			<td class="right_justify">$<?php echo $cur_rank['current']; ?></td>
+			<td class="right_justify">$<?php echo $cur_rank['last']; ?></td>
+			<td class="right_justify">$<?php echo $cur_rank['mtd']; ?></td>
+			<td class="right_justify">$<?php echo $cur_rank['goal']; ?></td>
+			<td class="right_justify">$<?php echo $cur_rank['trend']; ?></td>
+			<td class="right_justify"><?php echo round($cur_rank['pct'], 2); ?>%</td>
 		</tr>
 		<?php
 		}
@@ -136,12 +130,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<tr class="total <?php echo $class; ?>">
 			<td class="rank">&nbsp;</td>
 			<td>Total</td>
-			<td><?php echo $total_current; ?></td>
-			<td><?php echo $total_last; ?></td>
-			<td><?php echo $total_mtd; ?></td>
-			<td><?php echo $total_goal; ?></td>
-			<td><?php echo $total_trend; ?></td>
-			<td><?php echo round($total_pct, 2); ?>%</td>
+			<td class="right_justify">$<?php echo $total_current; ?></td>
+			<td class="right_justify">$<?php echo $total_last; ?></td>
+			<td class="right_justify">$<?php echo $total_mtd; ?></td>
+			<td class="right_justify">$<?php echo $total_goal; ?></td>
+			<td class="right_justify">$<?php echo $total_trend; ?></td>
+			<td class="right_justify"><?php echo round($total_pct, 2); ?>%</td>
 		</tr>
 	</tbody>
 </table>

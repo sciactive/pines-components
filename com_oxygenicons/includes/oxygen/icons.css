@@ -9,6 +9,7 @@
 .picon_32x32_go-up-search {background-image: url("32x32/actions/go-up-search.png")}
 .picon_32x32_go-bottom {background-image: url("32x32/actions/go-bottom.png")}
 .picon_32x32_journal-new {background-image: url("32x32/actions/journal-new.png")}
+.picon_32x32_mail-invitation {background-image: url("32x32/actions/mail-invitation.png")}
 .picon_32x32_mail-message-new {background-image: url("32x32/actions/mail-message-new.png")}
 .picon_32x32_view-split-top-bottom {background-image: url("32x32/actions/view-split-top-bottom.png")}
 .picon_32x32_mail-reply-custom-all {background-image: url("32x32/actions/mail-reply-custom-all.png")}
@@ -135,6 +136,7 @@
 .picon_32x32_archive-remove {background-image: url("32x32/actions/archive-remove.png")}
 .picon_32x32_view-history {background-image: url("32x32/actions/view-history.png")}
 .picon_32x32_network-disconnect {background-image: url("32x32/actions/network-disconnect.png")}
+.picon_32x32_view-bank {background-image: url("32x32/actions/view-bank.png")}
 .picon_32x32_view-form-table {background-image: url("32x32/actions/view-form-table.png")}
 .picon_32x32_bookmark-new-list {background-image: url("32x32/actions/bookmark-new-list.png")}
 .picon_32x32_arrow-up-double {background-image: url("32x32/actions/arrow-up-double.png")}
@@ -205,6 +207,7 @@
 .picon_32x32_arrow-right-double {background-image: url("32x32/actions/arrow-right-double.png")}
 .picon_32x32_character-set {background-image: url("32x32/actions/character-set.png")}
 .picon_32x32_system-suspend {background-image: url("32x32/actions/system-suspend.png")}
+.picon_32x32_view-financial-list {background-image: url("32x32/actions/view-financial-list.png")}
 .picon_32x32_view-presentation {background-image: url("32x32/actions/view-presentation.png")}
 .picon_32x32_help-about {background-image: url("32x32/actions/help-about.png")}
 .picon_32x32_flag-green {background-image: url("32x32/actions/flag-green.png")}
@@ -233,6 +236,7 @@
 .picon_32x32_flag-blue {background-image: url("32x32/actions/flag-blue.png")}
 .picon_32x32_archive-extract {background-image: url("32x32/actions/archive-extract.png")}
 .picon_32x32_view-calendar-birthday {background-image: url("32x32/actions/view-calendar-birthday.png")}
+.picon_32x32_view-bank-account {background-image: url("32x32/actions/view-bank-account.png")}
 .picon_32x32_document-open-remote {background-image: url("32x32/actions/document-open-remote.png")}
 .picon_32x32_go-last {background-image: url("32x32/actions/go-last.png")}
 .picon_32x32_im-user-away {background-image: url("32x32/actions/im-user-away.png")}
@@ -679,6 +683,7 @@
 .picon_16x16_edit-select {background-image: url("16x16/actions/edit-select.png")}
 .picon_16x16_go-up-search {background-image: url("16x16/actions/go-up-search.png")}
 .picon_16x16_go-bottom {background-image: url("16x16/actions/go-bottom.png")}
+.picon_16x16_mail-invitation {background-image: url("16x16/actions/mail-invitation.png")}
 .picon_16x16_edit-table-insert-row-under {background-image: url("16x16/actions/edit-table-insert-row-under.png")}
 .picon_16x16_mail-message-new {background-image: url("16x16/actions/mail-message-new.png")}
 .picon_16x16_view-split-top-bottom {background-image: url("16x16/actions/view-split-top-bottom.png")}
@@ -809,6 +814,7 @@
 .picon_16x16_archive-remove {background-image: url("16x16/actions/archive-remove.png")}
 .picon_16x16_view-history {background-image: url("16x16/actions/view-history.png")}
 .picon_16x16_network-disconnect {background-image: url("16x16/actions/network-disconnect.png")}
+.picon_16x16_view-bank {background-image: url("16x16/actions/view-bank.png")}
 .picon_16x16_view-form-table {background-image: url("16x16/actions/view-form-table.png")}
 .picon_16x16_bookmark-new-list {background-image: url("16x16/actions/bookmark-new-list.png")}
 .picon_16x16_arrow-up-double {background-image: url("16x16/actions/arrow-up-double.png")}

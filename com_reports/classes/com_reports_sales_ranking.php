@@ -74,6 +74,11 @@ class com_reports_sales_ranking extends entity {
 		$module->entity = $this;
 		$module->employees = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
 
+		foreach ($module->employees as $key => $value) {
+			if (!isset($value->user_account))
+				unset($module->employees[$key]);
+		}
+
 		return $module;
 	}
 
@@ -94,8 +99,13 @@ class com_reports_sales_ranking extends entity {
 		$module->entity = $form->entity = $this;
 		$module->location = $form->location = $location;
 		$module->rankings = array();
-		$employees = $pines->entity_manager->get_entities(array('ref' => array('group' => $location), 'tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
-		
+		$employees = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
+
+		foreach ($employees as $key => $value) {
+			if (!isset($value->user_account) || !$value->user_account->in_group($location))
+				unset($employees[$key]);
+		}
+
 		// Date setup for different weekly and monthly breakdowns.
 		$days_passed = format_date(time(), 'custom', 'j');
 		$day_in_month = format_date(time(), 'custom', 't');

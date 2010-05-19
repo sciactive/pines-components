@@ -24,7 +24,7 @@ $pines->com_jstree->load();
 		});
 		// Loction Tree
 		var location = $("#salesrank_details [name=location]");
-		$("#salesrank_details [name=location_tree]").tree({
+		$("#salesrank_details .location_tree").tree({
 			rules : {
 				multiple : false
 			},
@@ -38,13 +38,13 @@ $pines->com_jstree->load();
 			selected : ["<?php echo $_SESSION['user']->group->guid; ?>"],
 			callback : {
 				onchange : function(NODE, TREE_OBJ) {
-					location.val(TREE_OBJ.selected.attr("id"));
+					var selected_id = TREE_OBJ.selected.attr("id");
+					location.val(selected_id);
 					<?php foreach ($this->employees as $cur_employee) { ?>
-						if (TREE_OBJ.selected.attr("id") == <?php echo $cur_employee->group->guid; ?>) {
-							$("#salesrank_details [name=goal_<?php echo $cur_employee->guid; ?>]").show();
-						} else {
-							$("#salesrank_details [name=goal_<?php echo $cur_employee->guid; ?>]").hide();
-						}
+					if (selected_id == "<?php echo $cur_employee->user_account->group->guid; ?>")
+						$("#salesrank_details .goal_<?php echo $cur_employee->guid; ?>").show();
+					else
+						$("#salesrank_details .goal_<?php echo $cur_employee->guid; ?>").hide();
 					<?php } ?>
 				},
 				check_move: function() {
@@ -55,7 +55,7 @@ $pines->com_jstree->load();
 		
 		pines.com_reports_update_goals = function () {
 			<?php foreach ($this->employees as $cur_employee) { ?>
-			if (location.val() == "<?php echo $cur_employee->group->guid; ?>")
+			if (location.val() == "<?php echo $cur_employee->user_account->group->guid; ?>")
 				$("#salesrank_details [name=goals[<?php echo $cur_employee->guid; ?>]]").val($("#salesrank_details [name=goals_updater]").val());
 			<?php } ?>
 		}
@@ -69,17 +69,17 @@ $pines->com_jstree->load();
 		<span style="padding-left: 25px; float: right;">End
 		<input class="ui-widget-content" type="text" name="end" value="<?php echo ($this->entity->end_date) ? format_date($this->entity->end_date, 'date_short') : format_date(time(), 'date_short'); ?>" style="text-align: center;" /></span>
 	</div>
-	<div class="pf-element" name="location_tree"></div>
+	<div class="pf-element location_tree"></div>
 	<div class="pf-element pf-heading">
 		<h1>Sales Goals</h1>
 	</div>
-	<div class="pf-element" name="employee_goals">
+	<div class="pf-element">
 		<div class="pf-element pf-group" style="margin-left: 15px;">
 			$<input class="pf-field ui-widget-content" type="text" name="goals_updater" value="<?php echo isset($this->entity->goals[$cur_employee->guid]) ? $this->entity->goals[$cur_employee->guid] : $pines->config->com_reports->default_goal; ?>" size="5" style="color: cornflowerblue;" />
 			<input class="ui-corner-all ui-state-default" type="button" value="Update Entire Group" onclick="pines.com_reports_update_goals();" />
 		</div>
 		<?php foreach ($this->employees as $cur_employee) { ?>
-		<div class="pf-element pf-group" name="goal_<?php echo $cur_employee->guid; ?>" style="margin-left: 15px;">
+		<div class="pf-element pf-group goal_<?php echo $cur_employee->guid; ?>" style="margin-left: 15px;">
 			$<input class="pf-field ui-widget-content" type="text" name="goals[<?php echo $cur_employee->guid; ?>]" value="<?php echo isset($this->entity->goals[$cur_employee->guid]) ? $this->entity->goals[$cur_employee->guid] : $pines->config->com_reports->default_goal; ?>" size="5" />
 			<span><?php echo $cur_employee->name; ?></span>
 		</div>

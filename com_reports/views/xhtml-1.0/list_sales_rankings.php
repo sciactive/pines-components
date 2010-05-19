@@ -27,9 +27,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<?php if (gatekeeper('com_reports/newsalesranking')) { ?>
 				{type: 'button', text: 'New', extra_class: 'picon picon_16x16_document-new', selection_optional: true, url: '<?php echo pines_url('com_reports', 'editsalesranking'); ?>'},
 				<?php }if (gatekeeper('com_reports/viewsalesranking')) { ?>
-				{type: 'button', text: 'View', extra_class: 'picon picon_16x16_document-preview', url: '<?php echo pines_url('com_reports', 'viewsalesranking', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'View', extra_class: 'picon picon_16x16_document-preview', double_click: true, url: '<?php echo pines_url('com_reports', 'viewsalesranking', array('id' => '__title__')); ?>'},
 				<?php } if (gatekeeper('com_reports/editsalesranking')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'picon picon_16x16_document-edit', double_click: true, url: '<?php echo pines_url('com_reports', 'editsalesranking', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'picon picon_16x16_document-edit', url: '<?php echo pines_url('com_reports', 'editsalesranking', array('id' => '__title__')); ?>'},
 				<?php } ?>
 				{type: 'separator'},
 				<?php if (gatekeeper('com_reports/deletesalesranking')) { ?>

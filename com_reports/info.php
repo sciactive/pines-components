@@ -25,7 +25,12 @@ return array(
 	),
 	'abilities' => array(
 		array('reportsales', 'Report Sales', 'User can see sales reports.'),
-		array('reportattendance', 'Report Attendance', 'User can see attendance reports.')
+		array('reportattendance', 'Report Attendance', 'User can see attendance reports.'),
+		array('listsalesrankings', 'List Sales Rankings', 'User can see a list of sales rankings.'),
+		array('viewsalesranking', 'Report Sales Rankings', 'User can see sales rankings.'),
+		array('newsalesranking', 'Create Sales Rankings', 'User can create sales rankings.'),
+		array('editsalesranking', 'Edit Sales Rankings', 'User can edit sales rankings.'),
+		array('deletesalesranking', 'Delete Sales Rankings', 'User can delete sales rankings.')
 	),
 );
 

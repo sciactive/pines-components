@@ -22,6 +22,14 @@
 					"ability": "com_reports/reportsales"
 				}
 			},
+			{
+				"path": "main_menu/business/com_reports/sales/salesrankings",
+				"text": "Sales Rankings",
+				"href": ["com_reports","salesrankings"],
+				"depend": {
+					"ability": "com_reports/listsalesrankings|com_reports/viewsalesranking"
+				}
+			},
 		{
 			"path": "main_menu/business/com_reports/inventory",
 			"text": "Inventory",

@@ -1,6 +1,6 @@
 <?php
 /**
- * Display a form to view sales reports.
+ * Display a form to view sales rankings by location.
  *
  * @package Pines
  * @subpackage com_reports
@@ -10,6 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
+
 $this->title = 'New Report';
 $pines->com_jstree->load();
 ?>
@@ -34,8 +35,8 @@ $pines->com_jstree->load();
 			changeYear: true
 		});
 		// Loction Tree
-		var location = $("#location");
-		$("#location_tree").tree({
+		var location = $("#report_details [name=location]");
+		$("#report_details [name=location_tree]").tree({
 			rules : {
 				multiple : false
 			},
@@ -59,18 +60,11 @@ $pines->com_jstree->load();
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="report_details" action="<?php echo htmlentities(pines_url('com_reports', 'reportattendance')); ?>">
-	<div class="pf-element" style="padding-bottom: 0px;" id="location_tree"></div>
-	<div class="pf-element" style="padding-bottom: 0px;">
-		<span class="pf-note">Start</span>
-		<input class="pf-field ui-widget-content form_date" type="text" name="start" value="<?php echo ($this->date[0]) ? format_date($this->date[0], 'date_sort') : format_date(time(), 'date_sort'); ?>" />
-	</div>
+<form class="pf-form" method="post" id="report_details" action="<?php echo htmlentities(pines_url('com_reports', 'viewsalesranking')); ?>">
+	<div class="pf-element" name="location_tree"></div>
 	<div class="pf-element">
-		<span class="pf-note">End</span>
-		<input class="pf-field ui-widget-content form_date" type="text" name="end" value="<?php echo ($this->date[1]) ? format_date($this->date[1], 'date_sort') : format_date(time(), 'date_sort'); ?>" />
-	</div>
-	<div class="pf-element">
-		<input type="hidden" name="location" id="location" />
-		<input type="submit" value="View Report &raquo;" class="ui-corner-all ui-state-default form_input" />
+		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<input type="hidden" name="location" />
+		<input class="ui-corner-all ui-state-default form_input" type="submit" value="View Report &raquo;" />
 	</div>
 </form>

@@ -69,6 +69,18 @@ class com_reports extends component {
 		$module->date[0] = $form->date[0] = $date_start;
 		$module->date[1] = $form->date[1] = $date_end;
 	}
+
+	/**
+	 * Creates and attaches a module which lists sales rankings.
+	 *
+	 * @return module The sales report module.
+	 */
+	function list_sales_rankings() {
+		global $pines;
+
+		$module = new module('com_reports', 'list_sales_rankings', 'content');
+		$module->rankings = $pines->entity_manager->get_entities(array('tags' => array('com_reports', 'sales_ranking'), 'class' => com_reports_sales_ranking));
+	}
 }
 
 ?>

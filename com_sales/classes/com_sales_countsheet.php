@@ -74,6 +74,14 @@ class com_sales_countsheet extends entity {
 		return $module;
 	}
 
+	/**
+	 * Sort by the location, then serial.
+	 *
+	 * @param mixed $a The first entry.
+	 * @param mixed $b The second entry.
+	 * @return int The sort order.
+	 * @access private
+	 */
 	private function sort_stock_by_location_serial($a, $b) {
 		if ($a->location->guid == $this->group->guid && $b->location->guid != $this->group->guid)
 			return -1;

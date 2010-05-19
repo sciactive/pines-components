@@ -130,14 +130,24 @@ class com_reports_sales_ranking extends entity {
 		$last_end = strtotime('+1 week', $last_start);
 		
 		// Calculate the rankings for all of the employees.
-		foreach($employees as $cur_employee) {
-			$module->rankings[$cur_employee->guid]['employee'] = $cur_employee;
-			$module->rankings[$cur_employee->guid]['current'] = 0;
-			$module->rankings[$cur_employee->guid]['last'] = 0;
-			$module->rankings[$cur_employee->guid]['mtd'] = 0;
-			$module->rankings[$cur_employee->guid]['trend'] = 0;
-			$module->rankings[$cur_employee->guid]['pct'] = 0;
-			$module->rankings[$cur_employee->guid]['goal'] = $this->goals[$cur_employee->guid];
+		$module->total = array(
+			'current' => 0,
+			'last' => 0,
+			'mtd' => 0,
+			'goal' => 0,
+			'trend' => 0,
+			'pct' => 0
+		);
+		foreach ($employees as $cur_employee) {
+			$module->rankings[$cur_employee->guid] = array(
+				'employee' => $cur_employee,
+				'current' => 0,
+				'last' => 0,
+				'mtd' => 0,
+				'trend' => 0,
+				'pct' => 0,
+				'goal' => $this->goals[$cur_employee->guid]
+			);
 
 			// Get the employee's sales totals for the current week.
 			$current_week_sales = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'sale'), 'ref' => array('user' => $cur_employee->user_account), 'gte' => array('p_cdate' => $current_start), 'lte' => array('p_cdate' => $curent_end), 'class' => com_sales_sale));
@@ -162,6 +172,18 @@ class com_reports_sales_ranking extends entity {
 			} else {
 				$module->rankings[$cur_employee->guid]['pct'] = 100;
 			}
+			// Update totals for the entire company location(s).
+			$module->total['current'] += $module->rankings[$cur_employee->guid]['current'];
+			$module->total['last'] += $module->rankings[$cur_employee->guid]['last'];
+			$module->total['mtd'] += $module->rankings[$cur_employee->guid]['mtd'];
+			$module->total['trend'] += $module->rankings[$cur_employee->guid]['trend'];
+			$module->total['goal'] += $module->rankings[$cur_employee->guid]['goal'];
+		}
+		// Account for employees potentially having $0 as a goal.
+		if ($module->total['goal'] > 0) {
+			$module->total['pct'] = $module->total['trend'] / $module->total['goal'] * 100;
+		} else {
+			$module->total['pct'] = 100;
 		}
 		// Sort and rank the employees by their trend percentage.
 		usort($module->rankings, array($this, 'sort_ranks'));

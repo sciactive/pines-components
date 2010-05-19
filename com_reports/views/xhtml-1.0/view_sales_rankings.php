@@ -73,18 +73,17 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<thead>
 		<tr>
 			<th style="width: 5%;">Rank</th>
-			<th style="width: 20%;">Employee</th>
-			<th style="width: 12.5%;">Current</th>
-			<th style="width: 12.5%;">Last</th>
-			<th style="width: 12.5%;">MTD</th>
-			<th style="width: 12.5%;">Goal</th>
-			<th style="width: 12.5%;">Trend</th>
-			<th style="width: 12.5%;">Trend %</th>
+			<th style="width: 35%;">Employee</th>
+			<th style="width: 10%;">Current</th>
+			<th style="width: 10%;">Last</th>
+			<th style="width: 10%;">MTD</th>
+			<th style="width: 10%;">Goal</th>
+			<th style="width: 10%;">Trend</th>
+			<th style="width: 10%;">Trend %</th>
 		</tr>
 	</thead>
 	<tbody>
 		<?php
-		$total_current = $total_last = $total_mtd = $total_goal = $total_trend = $total_pct = 0;
 		foreach($this->rankings as $cur_rank) {
 			// Employees are "in the green", "yellow" or "red".
 			if ($cur_rank['pct'] >= 100) {
@@ -94,11 +93,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			} elseif ($cur_rank['pct'] <= 79) {
 				$class = 'red';
 			}
-			// Update totals for the entire company location(s).
-			$total_goal += $cur_rank['goal'];
-			$total_trend += $cur_rank['trend'];
-			$total_last += $cur_rank['last'];
-			$total_current += $cur_rank['current'];
 		?>
 		<tr title="<?php echo $cur_rank['employee']->guid; ?>" class="<?php echo $class; ?>">
 			<td><?php echo $cur_rank['rank']; ?></td>
@@ -112,30 +106,24 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		</tr>
 		<?php
 		}
-		// Account for employees potentially having $0 as a goal.
-		if ($total_goal > 0) {
-			$total_pct = $total_trend / $total_goal;
-		} else {
-			$total_pct = 100;
-		}
 		// Companies / Locations are "in the green", "yellow" or "red".
-		if ($total_pct >= 100) {
+		if ($this->total['pct'] >= 100) {
 			$class = 'green';
-		} elseif ($total_pct >= 80) {
+		} elseif ($this->total['pct'] >= 80) {
 			$class = 'yellow';
-		} elseif ($total_pct <= 79) {
+		} elseif ($this->total['pct'] <= 79) {
 			$class = 'red';
 		}
 		?>
 		<tr class="total <?php echo $class; ?>">
 			<td class="rank">&nbsp;</td>
 			<td>Total</td>
-			<td class="right_justify">$<?php echo $total_current; ?></td>
-			<td class="right_justify">$<?php echo $total_last; ?></td>
-			<td class="right_justify">$<?php echo $total_mtd; ?></td>
-			<td class="right_justify">$<?php echo $total_goal; ?></td>
-			<td class="right_justify">$<?php echo $total_trend; ?></td>
-			<td class="right_justify"><?php echo round($total_pct, 2); ?>%</td>
+			<td class="right_justify">$<?php echo $this->total['current']; ?></td>
+			<td class="right_justify">$<?php echo $this->total['last']; ?></td>
+			<td class="right_justify">$<?php echo $this->total['mtd']; ?></td>
+			<td class="right_justify">$<?php echo $this->total['goal']; ?></td>
+			<td class="right_justify">$<?php echo $this->total['trend']; ?></td>
+			<td class="right_justify"><?php echo round($this->total['pct'], 2); ?>%</td>
 		</tr>
 	</tbody>
 </table>

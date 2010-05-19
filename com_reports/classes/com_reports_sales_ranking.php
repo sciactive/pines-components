@@ -117,14 +117,14 @@ class com_reports_sales_ranking extends entity {
 		} else {
 			$current_end = strtotime('23:59', strtotime('next Sunday'));
 		}
-		if ($entity->end_date > time()) {
+		if ($this->end_date > time()) {
 			$days_passed = (int) format_date(time(), 'custom', 'j');
 			$days_in_month = (int) format_date(time(), 'custom', 't');
 		} else {
-			$days_passed = (int) format_date($entity->end_date, 'custom', 'j');
-			$days_in_month = (int) format_date($entity->end_date, 'custom', 't');
-			$current_start = strtotime('00:00', strtotime('last Monday', $entity->end_date));
-			$current_end = strtotime('23:59', $entity->end_date);
+			$days_passed = (int) format_date($this->end_date, 'custom', 'j');
+			$days_in_month = (int) format_date($this->end_date, 'custom', 't');
+			$current_start = strtotime('00:00', strtotime('last Monday', $this->end_date));
+			$current_end = strtotime('23:59', $this->end_date);
 		}
 		$last_start = strtotime('-1 week', $current_start);
 		$last_end = strtotime('+1 week', $last_start);

@@ -36,7 +36,7 @@ $pines->com_jstree->load();
 		});
 		// Loction Tree
 		var location = $("#report_details [name=location]");
-		$("#report_details [name=location_tree]").tree({
+		$("#report_details .location_tree").tree({
 			rules : {
 				multiple : false
 			},
@@ -52,7 +52,7 @@ $pines->com_jstree->load();
 				onchange : function(NODE, TREE_OBJ) {
 					location.val(TREE_OBJ.selected.attr("id"));
 				},
-				check_move: function(NODE, REF_NODE, TYPE, TREE_OBJ) {
+				check_move: function() {
 					return false;
 				}
 			}
@@ -61,7 +61,7 @@ $pines->com_jstree->load();
 	// ]]>
 </script>
 <form class="pf-form" method="post" id="report_details" action="<?php echo htmlentities(pines_url('com_reports', 'viewsalesranking')); ?>">
-	<div class="pf-element" name="location_tree"></div>
+	<div class="pf-element location_tree"></div>
 	<div class="pf-element">
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<input type="hidden" name="location" />

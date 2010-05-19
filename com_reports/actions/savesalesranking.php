@@ -29,7 +29,7 @@ $ranking->start_date = strtotime('00:00', strtotime($_REQUEST['start']));
 $ranking->end_date = strtotime('23:59', strtotime($_REQUEST['end']));
 $ranking->goals = array_map('intval', $_REQUEST['goals']);
 
-if ($pines->config->com_sales->global_sales_rankings)
+if ($pines->config->com_reports->global_sales_rankings)
 	$ranking->ac->other = 1;
 
 if ($ranking->save()) {

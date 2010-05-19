@@ -150,7 +150,7 @@ class com_reports_sales_ranking extends entity {
 			);
 
 			// Get the employee's sales totals for the current week.
-			$current_week_sales = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'sale'), 'ref' => array('user' => $cur_employee->user_account), 'gte' => array('p_cdate' => $current_start), 'lte' => array('p_cdate' => $curent_end), 'class' => com_sales_sale));
+			$current_week_sales = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'sale'), 'ref' => array('user' => $cur_employee->user_account), 'gte' => array('p_cdate' => $current_start), 'lte' => array('p_cdate' => $current_end), 'class' => com_sales_sale));
 			foreach ($current_week_sales as $cur_week_sale)
 				$module->rankings[$cur_employee->guid]['current'] += $cur_week_sale->total;
 

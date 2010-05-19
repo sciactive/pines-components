@@ -11,7 +11,10 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_reports/reportattendance') )
+if ( !gatekeeper('com_reports/reportattendance') &&
+	 !gatekeeper('com_reports/viewsalesranking') &&
+	 !gatekeeper('com_reports/newsalesranking') &&
+	 !gatekeeper('com_reports/editsalesranking') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_reports', 'groupjson', $_REQUEST));
 
 $pines->page->override = true;

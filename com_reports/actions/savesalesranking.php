@@ -25,15 +25,19 @@ if ( isset($_REQUEST['id']) ) {
 	$ranking = com_reports_sales_ranking::factory();
 }
 
+$ranking->name = $_REQUEST['ranking_name'];
 $ranking->start_date = strtotime('00:00', strtotime($_REQUEST['start']));
 $ranking->end_date = strtotime('23:59', strtotime($_REQUEST['end']));
 $ranking->goals = array_map('intval', $_REQUEST['goals']);
+$ranking->top_location = group::factory((int) $_REQUEST['top_location']);
+if (!isset($ranking->top_location->guid))
+	$ranking->top_location = $_SESSION['user']->group;
 
 if ($pines->config->com_reports->global_sales_rankings)
 	$ranking->ac->other = 1;
 
 if ($ranking->save()) {
-	pines_notice('Saved Sales Ranking ['.$ranking->guid.']');
+	pines_notice('Saved Sales Ranking ['.$ranking->name.']');
 } else {
 	$ranking->print_form();
 	pines_error('Error saving Sales Ranking. Do you have permission?');

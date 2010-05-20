@@ -32,6 +32,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', text: 'Edit', extra_class: 'picon picon_16x16_document-edit', url: '<?php echo pines_url('com_reports', 'editsalesranking', array('id' => '__title__')); ?>'},
 				<?php } ?>
 				{type: 'separator'},
+				<?php if (gatekeeper('com_reports/newsalesranking')) { ?>
+				{type: 'button', text: 'Duplicate', extra_class: 'picon picon_16x16_tab-duplicate', confirm: true, url: '<?php echo pines_url('com_reports', 'duplicatesalesranking', array('id' => '__title__')); ?>', delimiter: ','},
+				{type: 'separator'},
+				<?php } ?>
 				<?php if (gatekeeper('com_reports/deletesalesranking')) { ?>
 				{type: 'button', text: 'Delete', extra_class: 'picon picon_16x16_edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_reports', 'deletesalesranking', array('id' => '__title__')); ?>', delimiter: ','},
 				{type: 'separator'},
@@ -64,8 +68,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<thead>
 		<tr>
 			<th>ID</th>
+			<th>Name</th>
 			<th>Start</th>
 			<th>End</th>
+			<th>Highest Division</th>
 			<th>Created by</th>
 		</tr>
 	</thead>
@@ -73,8 +79,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<?php foreach($this->rankings as $cur_ranking) { ?>
 		<tr title="<?php echo $cur_ranking->guid; ?>">
 			<td><?php echo $cur_ranking->guid; ?></td>
+			<td><?php echo $cur_ranking->name; ?></td>
 			<td><?php echo format_date($cur_ranking->start_date, 'date_short'); ?></td>
 			<td><?php echo format_date($cur_ranking->end_date, 'date_short'); ?></td>
+			<td><?php echo $cur_ranking->top_location->name; ?></td>
 			<td><?php echo $cur_ranking->user->name; ?></td>
 		</tr>
 	<?php } ?>

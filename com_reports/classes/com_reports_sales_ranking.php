@@ -29,6 +29,7 @@ class com_reports_sales_ranking extends entity {
 		$this->goals = array();
 		$this->start_date = strtotime('first day');
 		$this->end_date = strtotime('last day');
+		$this->top_location = $_SESSION['user']->group;
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
@@ -59,7 +60,7 @@ class com_reports_sales_ranking extends entity {
 	public function delete() {
 		if (!parent::delete())
 			return false;
-		pines_log("Deleted sales ranking [$this->guid].", 'notice');
+		pines_log("Deleted sales ranking [$this->name].", 'notice');
 		return true;
 	}
 
@@ -92,7 +93,7 @@ class com_reports_sales_ranking extends entity {
 		global $pines;
 
 		if (!isset($location->guid))
-			$location = $_SESSION['user']->group;
+			$location = $this->top_location;
 		
 		$form = new module('com_reports', 'form_sales_rankings', 'left');
 		$module = new module('com_reports', 'view_sales_rankings', 'content');

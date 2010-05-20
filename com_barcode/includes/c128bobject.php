@@ -37,7 +37,7 @@ class C128BObject extends BarcodeObject {
 	function __construct($Width, $Height, $Style, $Value) {
 		parent::__construct($Width, $Height, $Style);
 		$this->mValue   = $Value;
-		$this->mChars   = " !\"#$%&'()*+�-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{ }~";
+		$this->mChars   = " !\"#$%&'()*+".chr(180)."-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{ }~";
 		$this->mCharSet = array(
 			'212222',   /*   00 */
 			'222122',   /*   01 */

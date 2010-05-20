@@ -37,7 +37,7 @@ class C128AObject extends BarcodeObject {
 	function __construct($Width, $Height, $Style, $Value) {
 		parent::__construct($Width, $Height, $Style);
 		$this->mValue   = $Value;
-		$this->mChars   = " !\"#$%&'()*+�-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_";
+		$this->mChars   = " !\"#$%&'()*+".chr(180)."-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_";
 		$this->mCharSet = array(
 			'212222',   /*   00 */
 			'222122',   /*   01 */
@@ -269,7 +269,7 @@ class C128AObject extends BarcodeObject {
 
 		if ($this->mStyle & BCS_ALIGN_CENTER) {
 			$sPos = (int) (($this->mWidth - $size ) / 2);
-		} else if ($this->mStyle & BCS_ALIGN_RIGHT) {
+		} elseif ($this->mStyle & BCS_ALIGN_RIGHT) {
 			$sPos = $this->mWidth - ($size + 25);
 		} else {
 			$sPos = 0;

@@ -125,7 +125,7 @@ $yellow_status = $pines->config->com_reports->rank_level_yellow;
 		}
 		?>
 		<tr class="total <?php echo $class; ?>">
-			<td class="rank">&nbsp;</td>
+			<td class="rank"><span style="display: none;">99999999</span></td>
 			<td>Total</td>
 			<td class="right_justify">$<?php echo $this->total['current']; ?></td>
 			<td class="right_justify">$<?php echo $this->total['last']; ?></td>

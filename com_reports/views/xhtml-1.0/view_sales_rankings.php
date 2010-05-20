@@ -16,8 +16,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_reports/rank_sales'];
 
 // Status levels for in the green, yellow and red classifications.
-$green_status = (int) $pines->config->com_reports->rank_level_green;
-$yellow_status = (int) $pines->config->com_reports->rank_level_yellow;
+$green_status = $pines->config->com_reports->rank_level_green;
+$yellow_status = $pines->config->com_reports->rank_level_yellow;
 
 ?>
 <style type="text/css" >

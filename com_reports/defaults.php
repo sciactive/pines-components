@@ -42,14 +42,14 @@ return array(
 		'name' => 'rank_level_green',
 		'cname' => 'Ranking Status',
 		'description' => 'At or above this value means in the Green.',
-		'value' => '100',
+		'value' => 100,
 		'peruser' => true,
 	),
 	array(
 		'name' => 'rank_level_yellow',
 		'cname' => 'Ranking Status',
 		'description' => 'At or above this value means in the Yellow. Below it means in the Red.',
-		'value' => '80',
+		'value' => 80,
 		'peruser' => true,
 	),
 );

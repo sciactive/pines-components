@@ -124,12 +124,21 @@ class com_package extends component {
 					$db['services'][$cur_service][] = $cur_package;
 				}
 			}
-			// Check the dependencies and log any warnings.
+			// Check dependencies and log any warnings.
 			if ($cur_entry['depend']) {
 				foreach ($cur_entry['depend'] as $cur_type => $cur_value) {
 					if (!$pines->depend->check($cur_type, $cur_value)) {
 						pines_notice("The dependency \"{$cur_type}\" of the package \"{$cur_package}\" is not met. The package is probably broken because of this.");
 						pines_log("The dependency \"{$cur_type}\" of the package \"{$cur_package}\" is not met. The package is probably broken because of this.", 'warning');
+					}
+				}
+			}
+			// Check conflicts and log any warnings.
+			if ($cur_entry['conflict']) {
+				foreach ($cur_entry['conflict'] as $cur_type => $cur_value) {
+					if ($pines->depend->check($cur_type, $cur_value)) {
+						pines_notice("The conflict check \"{$cur_type}\" of the package \"{$cur_package}\" is not met. The package is probably broken because of this.");
+						pines_log("The conflict check \"{$cur_type}\" of the package \"{$cur_package}\" is not met. The package is probably broken because of this.", 'warning');
 					}
 				}
 			}

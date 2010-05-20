@@ -102,6 +102,7 @@ class com_package_package extends p_base {
 	 */
 	public function is_ready() {
 		global $pines;
+		// Check if a newer version is installed.
 		if (
 				isset($pines->com_package->db['packages'][$this->name]) &&
 				version_compare(
@@ -111,15 +112,27 @@ class com_package_package extends p_base {
 				)
 			)
 			return false;
+		// Check if any services this component provides are already provided.
 		if ($this->info['type'] == 'component' && isset($this->info['services'])) {
 			foreach ($this->info['services'] as $cur_service) {
+				// If the service is provided, it may just be because this
+				// package is already installed. Check if the component is the
+				// same.
 				if (isset($pines->com_package->db['services'][$cur_service]) && !in_array($this->name, $pines->com_package->db['services'][$cur_service]))
 					return false;
 			}
 		}
+		// Check that all dependencies are met.
 		if (isset($this->info['depend'])) {
 			foreach ($this->info['depend'] as $cur_type => $cur_value) {
 				if (!$pines->depend->check($cur_type, $cur_value))
+					return false;
+			}
+		}
+		// Check that no conflicts exists.
+		if (isset($this->info['conflict'])) {
+			foreach ($this->info['conflict'] as $cur_type => $cur_value) {
+				if ($pines->depend->check($cur_type, $cur_value))
 					return false;
 			}
 		}

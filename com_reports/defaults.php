@@ -39,14 +39,17 @@ return array(
 		'peruser' => true,
 	),
 	array(
-		'name' => 'ranking_statuses',
+		'name' => 'rank_level_green',
 		'cname' => 'Ranking Status',
-		'description' => 'The Trend % of a salesperson will place them in the Green, Yellow and Red.',
-		'value' => array(
-			'100',
-			'80',
-			'0'
-		),
+		'description' => 'At or above this value means in the Green.',
+		'value' => '100',
+		'peruser' => true,
+	),
+	array(
+		'name' => 'rank_level_yellow',
+		'cname' => 'Ranking Status',
+		'description' => 'At or above this value means in the Yellow. Below it means in the Red.',
+		'value' => '80',
 		'peruser' => true,
 	),
 );

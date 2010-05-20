@@ -15,10 +15,9 @@ $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_reports/rank_sales'];
 
-// Status levels for in the green, yellow and red classifcations.
-$green_status = (int) $pines->config->com_reports->ranking_statuses[0];
-$yellow_status = (int) $pines->config->com_reports->ranking_statuses[1];
-$red_status = (int) $pines->config->com_reports->ranking_statuses[2];
+// Status levels for in the green, yellow and red classifications.
+$green_status = (int) $pines->config->com_reports->rank_level_green;
+$yellow_status = (int) $pines->config->com_reports->rank_level_yellow;
 
 ?>
 <style type="text/css" >
@@ -100,7 +99,7 @@ $red_status = (int) $pines->config->com_reports->ranking_statuses[2];
 				$class = 'green';
 			} elseif ($cur_rank['pct'] >= $yellow_status) {
 				$class = 'yellow';
-			} elseif ($cur_rank['pct'] <= $red_status) {
+			} elseif ($cur_rank['pct'] < $yellow_status) {
 				$class = 'red';
 			}
 		?>
@@ -121,7 +120,7 @@ $red_status = (int) $pines->config->com_reports->ranking_statuses[2];
 			$class = 'green';
 		} elseif ($this->total['pct'] >= $yellow_status) {
 			$class = 'yellow';
-		} elseif ($this->total['pct'] <= $red_status) {
+		} elseif ($this->total['pct'] < $yellow_status) {
 			$class = 'red';
 		}
 		?>

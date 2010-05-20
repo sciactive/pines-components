@@ -33,7 +33,7 @@ $pines->com_jstree->load();
 			changeMonth: true,
 			changeYear: true
 		});
-		// Loction Tree
+		// Location Tree
 		var location = $("#location");
 		$("#location_tree").tree({
 			rules : {

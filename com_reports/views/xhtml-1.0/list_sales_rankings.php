@@ -14,7 +14,7 @@ $this->title = 'Sales Rankings';
 
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_sales_rankings'];
+	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_reports/list_sales_rankings'];
 ?>
 <script type="text/javascript">
 	// <![CDATA[
@@ -56,7 +56,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo pines_url('com_pgrid', 'save_state'); ?>", {view: "com_sales/list_sales_rankings", state: cur_state});
+				state_xhr = $.post("<?php echo pines_url('com_pgrid', 'save_state'); ?>", {view: "com_reports/list_sales_rankings", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);

@@ -38,6 +38,17 @@ return array(
 		'value' => '500',
 		'peruser' => true,
 	),
+	array(
+		'name' => 'ranking_statuses',
+		'cname' => 'Ranking Status',
+		'description' => 'The Trend % of a salesperson will place them in the Green, Yellow and Red.',
+		'value' => array(
+			'100',
+			'80',
+			'0'
+		),
+		'peruser' => true,
+	),
 );
 
 ?>

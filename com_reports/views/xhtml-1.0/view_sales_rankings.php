@@ -14,6 +14,12 @@ $this->title = 'Sales Rankings: '.$this->location->name.' ('.format_date($this->
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_reports/rank_sales'];
+
+// Status levels for in the green, yellow and red classifcations.
+$green_status = (int) $pines->config->com_reports->ranking_statuses[0];
+$yellow_status = (int) $pines->config->com_reports->ranking_statuses[1];
+$red_status = (int) $pines->config->com_reports->ranking_statuses[2];
+
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
@@ -90,11 +96,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<?php
 		foreach($this->rankings as $cur_rank) {
 			// Employees are "in the green", "yellow" or "red".
-			if ($cur_rank['pct'] >= 100) {
+			if ($cur_rank['pct'] >= $green_status) {
 				$class = 'green';
-			} elseif ($cur_rank['pct'] >= 80) {
+			} elseif ($cur_rank['pct'] >= $yellow_status) {
 				$class = 'yellow';
-			} elseif ($cur_rank['pct'] <= 79) {
+			} elseif ($cur_rank['pct'] <= $red_status) {
 				$class = 'red';
 			}
 		?>
@@ -111,11 +117,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<?php
 		}
 		// Companies / Locations are "in the green", "yellow" or "red".
-		if ($this->total['pct'] >= 100) {
+		if ($this->total['pct'] >= $green_status) {
 			$class = 'green';
-		} elseif ($this->total['pct'] >= 80) {
+		} elseif ($this->total['pct'] >= $yellow_status) {
 			$class = 'yellow';
-		} elseif ($this->total['pct'] <= 79) {
+		} elseif ($this->total['pct'] <= $red_status) {
 			$class = 'red';
 		}
 		?>

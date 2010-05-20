@@ -127,7 +127,20 @@ pines(function(){
 		load_page_ajax(cur_link.attr("href"));
 		return false;
 	});
-	pines.get = function(url){
+	pines.get = function(url, params){
+		if (params) {
+			url += (url.indexOf("?") == -1) ? "?" : "&";
+			var parray = [];
+			for (var i in params) {
+				if (params.hasOwnProperty(i)) {
+					if (encodeURIComponent)
+						parray.push(encodeURIComponent(i)+"="+encodeURIComponent(params[i]));
+					else
+						parray.push(escape(i)+"="+escape(params[i]));
+				}
+			}
+			url += parray.join("&");
+		}
 		load_page_ajax(url);
 	};
 	// TODO: Handle post through Ajax.

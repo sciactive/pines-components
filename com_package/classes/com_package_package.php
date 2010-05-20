@@ -111,6 +111,12 @@ class com_package_package extends p_base {
 				)
 			)
 			return false;
+		if ($this->info['type'] == 'component' && isset($this->info['services'])) {
+			foreach ($this->info['services'] as $cur_service) {
+				if (isset($pines->com_package->db['services'][$cur_service]) && !in_array($this->package, $pines->com_package->db['services'][$cur_service]))
+					return false;
+			}
+		}
 		if (isset($this->info['depend'])) {
 			foreach ($this->info['depend'] as $cur_type => $cur_value) {
 				if (!$pines->depend->check($cur_type, $cur_value))
@@ -127,12 +133,12 @@ class com_package_package extends p_base {
 	public function is_installable() {
 		if ($this->installed)
 			return false;
-		return (!empty($this->package) && isset($this->slim) && in_array($this->slim->ext['type'], array('component', 'template', 'system', 'meta')));
+		return (!empty($this->package) && isset($this->slim) && in_array($this->info['type'], array('component', 'template', 'system', 'meta')));
 	}
 
 	/**
 	 * Install the package.
-	 * @param bool $force Install the package even if there is a newer version already installed or the dependencies aren't met.
+	 * @param bool $force Install the package even if there is a newer version already installed, services are already provided, or the dependencies aren't met.
 	 * @return bool True on success, false on failure.
 	 */
 	public function install($force = false) {
@@ -142,15 +148,44 @@ class com_package_package extends p_base {
 		if (!$this->is_ready()) {
 			if (!$force)
 				return false;
-			pines_log("Forced package installation requested for package \"{$this->package}\". A newer version is installed or the dependencies aren't met.", 'warning');
+			pines_log("Forced package installation requested for package \"{$this->package}\". A newer version is installed, services are already provided, or the dependencies aren't met.", 'warning');
 		}
 		if (isset($pines->com_package->db['packages'][$this->package])) {
 			pines_log("Replacing existing package \"{$this->package}\" version {$pines->com_package->db['packages'][$this->package]['version']} with new version {$this->info['version']}.", 'notice');
+			// Todo: remove old version.
 		} else {
 			pines_log("Installing new package \"{$this->package}\" version {$this->info['version']}.", 'notice');
 		}
-		// Todo: finish installing.
-		return true;
+		switch ($this->info['type']) {
+			case 'component':
+			case 'template':
+				$this->slim->working_directory = $this->info['type'] == 'template' ? 'templates/' : 'components/';
+				if (!$this->slim->extract())
+					return false;
+				break;
+			case 'system':
+				if (!is_writable("components/com_package/includes/cache/sys_{$this->package}.php"))
+					return false;
+				$sys_files = glob('components/com_package/includes/cache/sys_*.php');
+				if ($sys_files) {
+					foreach ($sys_files as $cur_sys_file) {
+						if (!unlink($cur_sys_file))
+							return false;
+					}
+				}
+				if (!$this->slim->extract())
+					return false;
+				if (!file_put_contents("components/com_package/includes/cache/sys_{$this->package}.php", "<?php\ndefined('P_RUN') or die('Direct access prohibited');\nreturn ".var_export($this->info, true).";\n?>"))
+					return false;
+				break;
+			case 'meta':
+				if (!file_put_contents("components/com_package/includes/cache/met_{$this->package}.php", "<?php\ndefined('P_RUN') or die('Direct access prohibited');\nreturn ".var_export($this->info, true).";\n?>"))
+					return false;
+				break;
+			default:
+				return false;
+		}
+		return $pines->com_package->rebuild_db();
 	}
 }
 

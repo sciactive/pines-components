@@ -15,7 +15,9 @@ defined('P_RUN') or die('Direct access prohibited');
 
 //var_dump($pines->com_package->db);
 
-//$package = com_package_package::factory('media/packages/com_mysql-1.0.0.slm', true);
+//$package = com_package_package::factory('media/packages/com_myentity-1.0.0.slm', true);
+//if (!$package)
+//	return;
 //$result = $package->install();
 
 //$module = new module('system', 'null', 'top');

@@ -15,4 +15,11 @@ defined('P_RUN') or die('Direct access prohibited');
 
 //var_dump($pines->com_package->db);
 
+//$package = com_package_package::factory('media/packages/com_mysql-1.0.0.slm', true);
+//$result = $package->install();
+
+//$module = new module('system', 'null', 'top');
+//$module->content(print_r($result, true));
+//unset($module);
+
 ?>

@@ -146,12 +146,6 @@ $pines->com_pgrid->load();
 			</div>
 			<?php } ?>
 			<div class="pf-element">
-				<label>
-					<span class="pf-label">Package Name</span>
-					<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" onkeyup="this.value = this.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');" />
-				</label>
-			</div>
-			<div class="pf-element">
 				<script type="text/javascript">
 					// <![CDATA[
 					pines(function(){
@@ -216,7 +210,13 @@ $pines->com_pgrid->load();
 					<h1>System Package Options</h1>
 				</div>
 				<div class="pf-element">
-					<span class="pf-field">No options are available for system packages. Information will be gathered from the system's info file.</span>
+					<label>
+						<span class="pf-label">Package Name</span>
+						<input class="pf-field ui-widget-content" type="text" name="system_package_name" size="24" value="<?php echo $this->entity->name; ?>" onkeyup="this.value = this.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');" />
+					</label>
+				</div>
+				<div class="pf-element">
+					<span>No other options are available for system packages. Information will be gathered from the system's info file.</span>
 				</div>
 			</div>
 			<div class="package_type meta">
@@ -225,8 +225,14 @@ $pines->com_pgrid->load();
 				</div>
 				<div class="pf-element">
 					<label>
-						<span class="pf-label">Name</span>
-						<span class="pf-note">Canonical name.</span>
+						<span class="pf-label">Package Name</span>
+						<input class="pf-field ui-widget-content" type="text" name="meta_package_name" size="24" value="<?php echo $this->entity->name; ?>" onkeyup="this.value = this.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');" />
+					</label>
+				</div>
+				<div class="pf-element">
+					<label>
+						<span class="pf-label">Canonical Name</span>
+						<span class="pf-note">The name the user will see.</span>
 						<input class="pf-field ui-widget-content" type="text" name="meta_name" size="24" value="<?php echo $this->entity->meta['name']; ?>" />
 					</label>
 				</div>

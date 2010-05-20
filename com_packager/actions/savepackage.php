@@ -26,19 +26,22 @@ if ( isset($_REQUEST['id']) ) {
 }
 
 // General
-$package->name = preg_replace('/[^a-z0-9_-]/', '', $_REQUEST['name']);
 $package->type = $_REQUEST['type'];
 switch ($package->type) {
 	case 'component':
+		$package->name = preg_replace('/[^a-z0-9_-]/', '', $_REQUEST['pkg_component']);
 		$package->component = $_REQUEST['pkg_component'];
 		break;
 	case 'template':
+		$package->name = preg_replace('/[^a-z0-9_-]/', '', $_REQUEST['pkg_template']);
 		$package->component = $_REQUEST['pkg_template'];
 		break;
 	case 'system':
+		$package->name = preg_replace('/[^a-z0-9_-]/', '', $_REQUEST['system_package_name']);
 		unset($package->component);
 		break;
 	case 'meta':
+		$package->name = preg_replace('/[^a-z0-9_-]/', '', $_REQUEST['meta_package_name']);
 		unset($package->component);
 		$package->meta = array(
 			'name' => $_REQUEST['meta_name'],
@@ -73,17 +76,6 @@ switch ($package->type) {
 		break;
 }
 $package->filename = $_REQUEST['filename'];
-
-// Attributes
-$package->attributes = (array) json_decode($_REQUEST['attributes']);
-foreach ($package->attributes as &$cur_attribute) {
-	$array = array(
-		'name' => $cur_attribute->values[0],
-		'value' => $cur_attribute->values[1]
-	);
-	$cur_attribute = $array;
-}
-unset($cur_attribute);
 
 if (empty($package->name)) {
 	$package->print_form();

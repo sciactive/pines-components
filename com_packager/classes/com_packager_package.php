@@ -100,13 +100,12 @@ class com_packager_package extends entity {
 	 *
 	 * @param string $filename The filename to write to.
 	 * @return bool True on success, false on failure.
-	 * @todo Once testing is complete, enable compression of the archive.
 	 */
 	public function package($filename) {
 		global $pines;
 		$arc = new slim;
-		$arc->compression = '';
-		$arc->header_compression = false;
+		//$arc->compression = '';
+		//$arc->header_compression = false;
 		switch ($this->type) {
 			case 'component':
 			case 'template':

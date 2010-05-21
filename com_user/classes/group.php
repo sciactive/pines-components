@@ -24,6 +24,7 @@ class group extends able_object implements group_interface {
 		// Defaults.
 		$this->enabled = true;
 		$this->abilities = array();
+		$this->conditions = array();
 		$this->address_type = 'us';
 		$this->attributes = array();
 		if ($id > 0 || is_string($id)) {
@@ -101,6 +102,7 @@ class group extends able_object implements group_interface {
 		$module = new module('com_user', 'form_group', 'content');
 		$module->entity = $this;
 		$module->display_abilities = gatekeeper('com_user/abilities');
+		$module->display_conditions = gatekeeper('com_user/conditions');
 		$module->sections = array('system');
 		$module->group_array = $pines->user_manager->get_group_array();
 		foreach ($pines->components as $cur_component) {

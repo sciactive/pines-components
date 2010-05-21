@@ -83,6 +83,114 @@ $pines->com_pgrid->load();
 
 		update_attributes();
 
+		<?php if ( $this->display_conditions && $pines->config->com_user->conditional_groups ) { ?>
+		// Conditions
+		var conditions = $("#group_details [name=conditions]");
+		var conditions_table = $("#group_details .conditions_table");
+		var condition_dialog = $("#group_details .condition_dialog");
+		var cur_condition = null;
+
+		conditions_table.pgrid({
+			pgrid_paginate: false,
+			pgrid_view_height: '200px',
+			pgrid_toolbar: true,
+			pgrid_toolbar_contents : [
+				{
+					type: 'button',
+					text: 'Add Condition',
+					extra_class: 'picon picon_16x16_document-new',
+					selection_optional: true,
+					click: function(){
+						cur_condition = null;
+						condition_dialog.dialog('open');
+					}
+				},
+				{
+					type: 'button',
+					text: 'Edit Condition',
+					extra_class: 'picon picon_16x16_document-edit',
+					double_click: true,
+					click: function(e, rows){
+						cur_condition = rows;
+						condition_dialog.find("input[name=cur_condition_type]").val(rows.pgrid_get_value(2));
+						condition_dialog.find("input[name=cur_condition_value]").val(rows.pgrid_get_value(3));
+						condition_dialog.dialog('open');
+					}
+				},
+				{
+					type: 'button',
+					text: 'Remove Condition',
+					extra_class: 'picon picon_16x16_edit-delete',
+					click: function(e, rows){
+						rows.pgrid_delete();
+						update_conditions();
+					}
+				}
+			]
+		});
+
+		// Condition Dialog
+		condition_dialog.dialog({
+			bgiframe: true,
+			autoOpen: false,
+			modal: true,
+			width: 500,
+			buttons: {
+				"Done": function() {
+					var cur_condition_type = condition_dialog.find("input[name=cur_condition_type]").val();
+					var cur_condition_value = condition_dialog.find("input[name=cur_condition_value]").val();
+					if (cur_condition_type == "" || cur_condition_value == "") {
+						alert("Please provide both a type and a value for this condition.");
+						return;
+					}
+					// Is this a duplicate type?
+					var dupe = false;
+					conditions_table.pgrid_get_all_rows().each(function(){
+						if (dupe) return;
+						var check_row = $(this);
+						if (check_row.pgrid_get_value(1) == cur_condition_type) {
+							// If this is the current row being edited, it isn't a duplicate.
+							if (!cur_condition || !cur_condition.is(check_row))
+								dupe = true;
+						}
+					});
+					if (dupe) {
+						pines.notice('There is already a condition of that type.');
+						return;
+					}
+					if (!cur_condition) {
+						var new_condition = [{
+							key: null,
+							values: [
+								cur_condition_type,
+								cur_condition_value
+							]
+						}];
+						conditions_table.pgrid_add(new_condition);
+					} else {
+						cur_condition.pgrid_set_value(1, cur_condition_type);
+						cur_condition.pgrid_set_value(2, cur_condition_value);
+					}
+					update_conditions();
+					$(this).dialog('close');
+				}
+			}
+		});
+
+		function update_conditions() {
+			condition_dialog.find("input[name=cur_condition_type]").val("");
+			condition_dialog.find("input[name=cur_condition_value]").val("");
+			conditions.val(JSON.stringify(conditions_table.pgrid_get_all_rows().pgrid_export_rows()));
+		}
+
+		update_conditions();
+
+		var types = <?php echo (string) json_encode((array) array_keys($pines->depend->checkers)); ?>;
+		condition_dialog.find("input[name=cur_condition_type]").autocomplete({
+			"source": types
+		});
+		<?php } ?>
+
 		$("#group_tabs").tabs();
 	});
 	// ]]>
@@ -94,6 +202,9 @@ $pines->com_pgrid->load();
 			<li><a href="#tab_logo">Logo</a></li>
 			<li><a href="#tab_location">Location</a></li>
 			<li><a href="#tab_abilities">Abilities</a></li>
+			<?php if ($pines->config->com_user->conditional_groups) { ?>
+			<li><a href="#tab_conditions">Conditions</a></li>
+			<?php } ?>
 			<li><a href="#tab_attributes">Attributes</a></li>
 		</ul>
 		<div id="tab_general">
@@ -279,7 +390,6 @@ $pines->com_pgrid->load();
 		</div>
 		<div id="tab_abilities">
 			<?php if ( $this->display_abilities ) { ?>
-			<input type="hidden" name="abilities" value="true" />
 			<script type="text/javascript">
 				// <![CDATA[
 				pines(function(){
@@ -338,6 +448,66 @@ $pines->com_pgrid->load();
 			<?php } ?>
 			<br class="pf-clearing" />
 		</div>
+		<?php if ($pines->config->com_user->conditional_groups) { ?>
+		<div id="tab_conditions">
+			<?php if ( $this->display_conditions ) { ?>
+			<div class="pf-element pf-full-width">
+				<span class="pf-label">Ability Conditions</span>
+				<span class="pf-note">Users will only inherit abilities from this group only if these conditions are met.</span>
+				<div class="pf-group">
+					<div class="pf-field">
+						<table class="conditions_table">
+							<thead>
+								<tr>
+									<th>Type</th>
+									<th>Value</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php if (isset($this->entity->conditions)) foreach ($this->entity->conditions as $cur_key => $cur_value) { ?>
+								<tr>
+									<td><?php echo $cur_key; ?></td>
+									<td><?php echo $cur_value; ?></td>
+								</tr>
+								<?php } ?>
+							</tbody>
+						</table>
+						<input type="hidden" name="conditions" />
+					</div>
+				</div>
+			</div>
+			<div class="condition_dialog" style="display: none;" title="Add a Condition">
+				<div class="pf-form">
+					<div class="pf-element">
+						<span class="pf-label">Detected Types</span>
+						<span class="pf-note">These types were detected on this system.</span>
+						<div class="pf-group">
+							<div class="pf-field"><em><?php echo implode(', ', array_keys($pines->depend->checkers)); ?></em></div>
+						</div>
+					</div>
+					<div class="pf-element">
+						<label>
+							<span class="pf-label">Type</span>
+							<input class="pf-field ui-widget-content" type="text" name="cur_condition_type" size="24" />
+						</label>
+					</div>
+					<div class="pf-element">
+						<label>
+							<span class="pf-label">Value</span>
+							<input class="pf-field ui-widget-content" type="text" name="cur_condition_value" size="24" />
+						</label>
+					</div>
+				</div>
+				<br style="clear: both; height: 1px;" />
+			</div>
+			<?php } else { ?>
+			<div class="pf-element">
+				<p>You do not have sufficient privileges to edit conditions.</p>
+			</div>
+			<?php } ?>
+			<br class="pf-clearing" />
+		</div>
+		<?php } ?>
 		<div id="tab_attributes">
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Attributes</span>

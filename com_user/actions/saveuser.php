@@ -91,7 +91,7 @@ if ( gatekeeper('com_user/assigngroup') ) {
 		unset($user->group);
 }
 
-if ( $_REQUEST['abilities'] === 'true' && gatekeeper('com_user/abilities') ) {
+if ( gatekeeper('com_user/abilities') ) {
 	$user->inherit_abilities = ($_REQUEST['inherit_abilities'] == 'ON');
 	$sections = array('system');
 	foreach ($pines->components as $cur_component) {

@@ -54,7 +54,7 @@ switch ($package->type) {
 			'recommend' => array(),
 			'conflict' => array()
 		);
-		$conditions = json_decode($_REQUEST['meta_conditions']);
+		$conditions = (array) json_decode($_REQUEST['meta_conditions']);
 		foreach ($conditions as $cur_condition) {
 			switch ($cur_condition->values[0]) {
 				case 'depend':

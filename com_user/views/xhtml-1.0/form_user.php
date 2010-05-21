@@ -324,7 +324,6 @@ $pines->com_pgrid->load();
 		</div>
 		<div id="tab_abilities">
 			<?php if ( $this->display_abilities ) { ?>
-			<input type="hidden" name="abilities" value="true" />
 			<script type="text/javascript">
 				// <![CDATA[
 				pines(function(){

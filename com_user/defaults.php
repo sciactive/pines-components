@@ -81,6 +81,12 @@ return array(
 		'value' => false,
 	),
 	array(
+		'name' => 'conditional_groups',
+		'cname' => 'Conditional Groups',
+		'description' => 'Allow groups to only provide abilities if conditions are met.',
+		'value' => true,
+	),
+	array(
 		'name' => 'show_cur_user',
 		'cname' => 'Show Current User',
 		'description' => 'Display the name of the current user in the page header.',

@@ -41,6 +41,16 @@ $group->state = $_REQUEST['state'];
 $group->zip = $_REQUEST['zip'];
 $group->address_international = $_REQUEST['address_international'];
 
+// Conditions
+if ( gatekeeper('com_user/conditions') ) {
+	$conditions = (array) json_decode($_REQUEST['conditions']);
+	foreach ($conditions as $cur_condition) {
+		if (!isset($cur_condition->values[0], $cur_condition->values[1]))
+			continue;
+		$group->conditions[$cur_condition->values[0]] = $cur_condition->values[1];
+	}
+}
+
 // Attributes
 $group->attributes = (array) json_decode($_REQUEST['attributes']);
 foreach ($group->attributes as &$cur_attribute) {
@@ -62,7 +72,7 @@ if ( $_REQUEST['parent'] == 'none' ) {
 	$group->parent = group::factory((int) $_REQUEST['parent']);
 }
 
-if ( $_REQUEST['abilities'] === 'true' && gatekeeper('com_user/abilities') ) {
+if ( gatekeeper('com_user/abilities') ) {
 	$sections = array('system');
 	foreach ($pines->components as $cur_component) {
 		$sections[] = $cur_component;

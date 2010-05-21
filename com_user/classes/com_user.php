@@ -67,6 +67,7 @@ class com_user extends component implements user_manager_interface {
 			date_default_timezone_set($tmp_user->get_timezone());
 			return;
 		}
+		global $pines;
 		unset($_SESSION['user']);
 		$_SESSION['descendents'] = $this->get_group_descendents($tmp_user->group);
 		foreach ($tmp_user->groups as $cur_group) {
@@ -75,10 +76,36 @@ class com_user extends component implements user_manager_interface {
 		if ($tmp_user->inherit_abilities) {
 			$_SESSION['inherited_abilities'] = $tmp_user->abilities;
 			foreach ($tmp_user->groups as $cur_group) {
+				// Check that any group conditions are met before adding the abilities.
+				if ($cur_group->conditions && $pines->config->com_user->conditional_groups) {
+					$pass = true;
+					foreach ($cur_group->conditions as $cur_type => $cur_value) {
+						if (!$pines->depend->check($cur_type, $cur_value)) {
+							$pass = false;
+							break;
+						}
+					}
+					if (!$pass)
+						continue;
+				}
+				// Any conditions are met, so add this group's abilities.
 				$_SESSION['inherited_abilities'] = array_merge($_SESSION['inherited_abilities'], $cur_group->abilities);
 			}
-			if (isset($tmp_user->group))
-				$_SESSION['inherited_abilities'] = array_merge($_SESSION['inherited_abilities'], $tmp_user->group->abilities);
+			if (isset($tmp_user->group)) {
+				// Check that any group conditions are met before adding the abilities.
+				$pass = true;
+				if ($tmp_user->group->conditions && $pines->config->com_user->conditional_groups) {
+					foreach ($tmp_user->group->conditions as $cur_type => $cur_value) {
+						if (!$pines->depend->check($cur_type, $cur_value)) {
+							$pass = false;
+							break;
+						}
+					}
+				}
+				// If all conditions are met, add this group's abilities.
+				if ($pass)
+					$_SESSION['inherited_abilities'] = array_merge($_SESSION['inherited_abilities'], $tmp_user->group->abilities);
+			}
 		}
 		$_SESSION['user'] = $tmp_user;
 		date_default_timezone_set($tmp_user->get_timezone());
@@ -115,6 +142,8 @@ class com_user extends component implements user_manager_interface {
 				$abilities = $this->gatekeeper_cache[$user->guid];
 			} else {
 				$abilities = $user->abilities;
+				// TODO: Decide if group conditions should be checked if the
+				// user is not logged in.
 				if ($user->inherit_abilities) {
 					foreach ($user->groups as $cur_group) {
 						$abilities = array_merge($abilities, $cur_group->abilities);

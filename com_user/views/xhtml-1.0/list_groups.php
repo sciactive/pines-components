@@ -91,7 +91,7 @@ foreach($this->groups as $cur_group) {
 			<td><?php echo $group->email; ?></td>
 			<td><?php echo $group->timezone; ?></td>
 			<td><?php
-			$user_array = $pines->user_manager->get_users_by_group($group);
+			$user_array = $group->get_users();
 			if (count($user_array) < 15) {
 				$user_list = '';
 				foreach ($user_array as $cur_user) {

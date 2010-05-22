@@ -81,7 +81,7 @@ class com_hrm_user_template extends entity {
 		$module = new module('com_hrm', 'form_user_template', 'content');
 		$module->entity = $this;
 		$module->group_array = $pines->user_manager->get_group_array();
-		$module->default_components = $pines->user_manager->get_default_component_array();
+		$module->default_components = $pines->config->get_default_components();
 
 		return $module;
 	}

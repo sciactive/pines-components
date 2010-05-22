@@ -76,7 +76,7 @@ class user extends able_object implements user_interface {
 		$module->display_default_components = gatekeeper('com_user/default_component');
 		$module->sections = array('system');
 		$module->group_array = $pines->user_manager->get_group_array();
-		$module->default_components = $pines->user_manager->get_default_component_array();
+		$module->default_components = $pines->config->get_default_components();
 		foreach ($pines->components as $cur_component) {
 			$module->sections[] = $cur_component;
 		}

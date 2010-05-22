@@ -15,7 +15,7 @@ $pines->page->override = true;
 
 if (isset($_SESSION['user']->group)) {
 	$my_group = clone $_SESSION['user']->group;
-	$locations = $pines->user_manager->get_group_descendents($my_group);
+	$locations = $my_group->get_descendents();
 	$my_group->parent = null;
 	$locations[] = $my_group;
 } else {

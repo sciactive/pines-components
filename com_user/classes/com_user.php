@@ -23,7 +23,7 @@ class com_user extends component implements user_manager_interface {
 	/**
 	 * Gatekeeper ability cache.
 	 *
-	 * Gatekeeper will cache user's abilities that it calculates, so it can
+	 * Gatekeeper will cache users' abilities that it calculates, so it can
 	 * check faster if that user has been checked before.
 	 *
 	 * @access private
@@ -69,9 +69,9 @@ class com_user extends component implements user_manager_interface {
 		}
 		global $pines;
 		unset($_SESSION['user']);
-		$_SESSION['descendents'] = $this->get_group_descendents($tmp_user->group);
+		$_SESSION['descendents'] = $tmp_user->group->get_descendents();
 		foreach ($tmp_user->groups as $cur_group) {
-			$_SESSION['descendents'] = array_merge($_SESSION['descendents'], $this->get_group_descendents($cur_group));
+			$_SESSION['descendents'] = array_merge($_SESSION['descendents'], $cur_group->get_descendents());
 		}
 		if ($tmp_user->inherit_abilities) {
 			$_SESSION['inherited_abilities'] = $tmp_user->abilities;
@@ -161,16 +161,6 @@ class com_user extends component implements user_manager_interface {
 		return (in_array($ability, $abilities) || in_array('system/all', $abilities));
 	}
 
-	public function get_default_component_array() {
-		global $pines;
-		$return = array();
-		foreach ($pines->components as $cur_component) {
-			if ( file_exists('components/'.$cur_component.'/actions/default.php') )
-				$return[] = $cur_component;
-		}
-		return $return;
-	}
-
 	/**
 	 * Gets an array of groups.
 	 *
@@ -207,27 +197,6 @@ class com_user extends component implements user_manager_interface {
 				$return[$entity->guid]['groupname'] = $entity->groupname;
 				$return[$entity->guid]['email'] = $entity->email;
 				$return[$entity->guid]['children'] = $child_array;
-			}
-		}
-		return $return;
-	}
-
-	public function get_group_descendents($parent = null) {
-		global $pines;
-		$return = array();
-		if ( !isset($parent) ) {
-			$entities = $pines->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
-			foreach ($entities as $entity) {
-				if ( !isset($entity->parent) ) {
-					$child_array = $this->get_group_descendents($entity);
-					$return = array_merge($return, $child_array);
-				}
-			}
-		} else {
-			$entities = $pines->entity_manager->get_entities(array('ref' => array('parent' => $parent), 'tags' => array('com_user', 'group'), 'class' => group));
-			foreach ($entities as $entity) {
-				$child_array = $this->get_group_descendents($entity);
-				$return = array_merge($return, array($entity), $child_array);
 			}
 		}
 		return $return;
@@ -312,17 +281,6 @@ class com_user extends component implements user_manager_interface {
 	public function get_users() {
 		global $pines;
 		return $pines->entity_manager->get_entities(array('tags' => array('com_user', 'user'), 'class' => user));
-	}
-
-	/**
-	 * Gets an array of users in a group.
-	 *
-	 * @param group $group The group.
-	 * @return array An array of users.
-	 */
-	public function get_users_by_group($group) {
-		global $pines;
-		return $pines->entity_manager->get_entities(array('ref_i' => array('group' => $group, 'groups' => $group), 'tags' => array('com_user', 'user'), 'class' => user));
 	}
 
 	/**

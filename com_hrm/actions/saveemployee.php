@@ -128,7 +128,7 @@ if ($pines->config->com_hrm->allow_attach && $_REQUEST['user_template'] != 'null
 	$new_user->default_component = $user_template->default_component;
 	if (isset($user_template->group)) {
 		$group = group::factory((int) $_REQUEST["user_template_group_{$user_template->guid}"]);
-		if ($group->is($user_template->group) || $group->in_array($pines->user_manager->get_group_descendents($user_template->group)))
+		if ($group->is($user_template->group) || $group->is_descendent($user_template->group))
 			$new_user->group = $group;
 	}
 	if (is_array($user_template->groups))

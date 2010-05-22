@@ -66,13 +66,10 @@ class group extends able_object implements group_interface {
 		return false;
 	}
 
-	/**
-	 * @todo Fix this to delete only its children, who will delete their children.
-	 */
 	public function delete() {
 		global $pines;
-		$descendents = $pines->user_manager->get_group_descendents($this);
-		foreach ($descendents as $cur_group) {
+		$entities = $pines->entity_manager->get_entities(array('ref' => array('parent' => $this), 'tags' => array('com_user', 'group'), 'class' => group));
+		foreach ($entities as $cur_group) {
 			if ( !$cur_group->delete() )
 				return false;
 		}
@@ -88,6 +85,17 @@ class group extends able_object implements group_interface {
 		return parent::save();
 	}
 
+	public function get_descendents() {
+		global $pines;
+		$return = array();
+		$entities = $pines->entity_manager->get_entities(array('ref' => array('parent' => $this), 'tags' => array('com_user', 'group'), 'class' => group));
+		foreach ($entities as $entity) {
+			$child_array = $entity->get_descendents();
+			$return = array_merge($return, array($entity), $child_array);
+		}
+		return $return;
+	}
+
 	public function get_logo($rela_location = false) {
 		global $pines;
 		if (isset($this->logo))
@@ -95,6 +103,18 @@ class group extends able_object implements group_interface {
 		if (isset($this->parent))
 			return $this->parent->get_logo($rela_location);
 		return ($rela_location ? $pines->config->rela_location : $pines->config->full_location)."{$pines->config->upload_location}logos/default_logo.png";
+	}
+
+	public function get_users($descendents = false) {
+		global $pines;
+		if ($descendents) {
+			$groups = $this->get_descendents();
+			$groups[] = $this;
+			$return = $pines->entity_manager->get_entities(array('ref_i' => array('group' => $groups, 'groups' => $groups), 'tags' => array('com_user', 'user'), 'class' => user));
+		} else {
+			$return = $pines->entity_manager->get_entities(array('ref_i' => array('group' => $this, 'groups' => $this), 'tags' => array('com_user', 'user'), 'class' => user));
+		}
+		return $return;
 	}
 
 	public function print_form() {

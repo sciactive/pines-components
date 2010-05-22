@@ -39,6 +39,62 @@ class com_jstree extends component {
 			$this->js_loaded = true;
 		}
 	}
+	
+	/**
+	 * Transform an entity array into a JSON-ready structure.
+	 *
+	 * This also works for data objects like groups.
+	 *
+	 * @param array $entity_array The array of entities.
+	 * @param string $data_prop The property to use as the entity's data.
+	 * @return array A structured array.
+	 */
+	public function entity_json_struct($entity_array, $data_prop = 'name') {
+		$struct = array();
+		if (!is_array($entity_array))
+			return $struct;
+		foreach ($entity_array as $cur_entity) {
+			if (!isset($cur_entity->parent)) {
+				$struct[] = array(
+					'attributes' => array(
+						'id' => $cur_entity->guid
+					),
+					'data' => $cur_entity->$data_prop,
+					'children' => $this->entity_json_struct_children($cur_entity->guid, $entity_array, $data_prop)
+				);
+			}
+		}
+		return $struct;
+	}
+
+	/**
+	 * Parse the children of an entity into a JSON-ready structure.
+	 *
+	 * @param int $guid The GUID of the parent.
+	 * @param array $entity_array The array of entities.
+	 * @param string $data_prop The property to use as the entity's data.
+	 * @return array|null A structured array, or null if entity has no children.
+	 * @access private
+	 */
+	protected function entity_json_struct_children($guid, $entity_array, $data_prop = 'name') {
+		$struct = array();
+		if (!is_array($entity_array))
+			return null;
+		foreach ($entity_array as $cur_entity) {
+			if ($cur_entity->parent == $guid || $cur_entity->parent->guid == $guid) {
+				$struct[] = (object) array(
+					'attributes' => (object) array(
+						'id' => $cur_entity->guid
+					),
+					'data' => $cur_entity->$data_prop,
+					'children' => $this->entity_json_struct_children($cur_entity->guid, $entity_array, $data_prop)
+				);
+			}
+		}
+		if (empty($struct))
+			return null;
+		return $struct;
+	}
 }
 
 ?>

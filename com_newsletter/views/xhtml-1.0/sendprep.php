@@ -16,9 +16,9 @@ $pines->com_jstree->load();
 <script type='text/javascript'>
 	// <![CDATA[
 	pines(function(){
-		// Category Tree
-		var location = $("#location");
-		$("#location_tree").tree({
+		// Location Tree
+		var location = $("#mail_details [name=location]");
+		$("#mail_details .location_tree").tree({
 			rules : {
 				multiple : false
 			},
@@ -26,7 +26,7 @@ $pines->com_jstree->load();
 				type : "json",
 				opts : {
 					method : "get",
-					url : "<?php echo pines_url('com_reports', 'groupjson'); ?>"
+					url : "<?php echo pines_url('com_jstree', 'groupjson'); ?>"
 				}
 			},
 			selected : ["<?php echo $_SESSION['user']->group->guid; ?>"],
@@ -34,7 +34,7 @@ $pines->com_jstree->load();
 				onchange : function(NODE, TREE_OBJ) {
 					location.val(TREE_OBJ.selected.attr("id"));
 				},
-				check_move: function(NODE, REF_NODE, TYPE, TREE_OBJ) {
+				check_move: function() {
 					return false;
 				}
 			}
@@ -42,7 +42,7 @@ $pines->com_jstree->load();
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" action="<?php echo htmlentities(pines_url('com_newsletter', 'send')); ?>">
+<form class="pf-form" id="mail_details" method="post" action="<?php echo htmlentities(pines_url('com_newsletter', 'send')); ?>">
 	<div class="pf-element">
 		<label><span class="pf-label">From Address</span>
 		<input class="pf-field ui-widget-content" type="text" name="from" size="24" value="<?php echo htmlentities($pines->config->com_newsletter->default_from); ?>" /></label>
@@ -59,7 +59,7 @@ $pines->com_jstree->load();
 		<span class="pf-label">Select Groups</span>
 		<span class="pf-note">Click group name to select children as well.</span>
 	</div>
-	<div class="pf-element" id="location_tree"></div>
+	<div class="pf-element location_tree"></div>
 	<div class="pf-element pf-heading">
 		<h1>Options</h1>
 	</div>
@@ -70,7 +70,7 @@ $pines->com_jstree->load();
 	</div>
 	<div class="pf-element pf-buttons">
 		<input type="hidden" name="mail_id" value="<?php echo $_REQUEST['mail_id']; ?>" />
-		<input type="hidden" name="location" id="location" />
+		<input type="hidden" name="location" />
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_newsletter', 'list')); ?>');" value="Cancel" />
 	</div>

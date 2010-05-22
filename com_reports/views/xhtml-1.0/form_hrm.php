@@ -43,7 +43,7 @@ $pines->com_jstree->load();
 				type : "json",
 				opts : {
 					method : "get",
-					url : "<?php echo pines_url('com_reports', 'groupjson'); ?>"
+					url : "<?php echo pines_url('com_jstree', 'groupjson'); ?>"
 				}
 			},
 			selected : ["<?php echo $this->location->guid; ?>"],

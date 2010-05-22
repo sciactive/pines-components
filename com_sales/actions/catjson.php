@@ -19,7 +19,7 @@ $pines->page->override = true;
 $categories = $pines->com_sales->get_category_array();
 
 if (!isset($_REQUEST['do'])) {
-	$categories_json_struct = $pines->com_sales->category_json_struct($categories);
+	$categories_json_struct = $pines->com_jstree->entity_json_struct($categories);
 	$pines->page->override_doc(json_encode($categories_json_struct));
 }
 

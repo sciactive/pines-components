@@ -29,7 +29,7 @@ $pines->com_jstree->load();
 				type : "json",
 				opts : {
 					method : "get",
-					url : "<?php echo pines_url('com_sales', 'groupjson'); ?>"
+					url : "<?php echo pines_url('com_jstree', 'groupjson'); ?>"
 				}
 			},
 			callback : {

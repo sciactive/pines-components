@@ -84,58 +84,6 @@ class com_sales extends component {
 	}
 
 	/**
-	 * Transform a category array into a JSON-ready structure.
-	 *
-	 * @param array $category_array The array of categories.
-	 * @return array A structured array.
-	 */
-	public function category_json_struct($category_array) {
-		$struct = array();
-		if (!is_array($category_array))
-			return $struct;
-		foreach ($category_array as $cur_category) {
-			if (!isset($cur_category->parent)) {
-				$struct[] = array(
-					'attributes' => array(
-						'id' => $cur_category->guid
-					),
-					'data' => $cur_category->name,
-					'children' => $this->category_json_struct_children($cur_category->guid, $category_array)
-				);
-			}
-		}
-		return $struct;
-	}
-
-	/**
-	 * Parse the children of a category into a JSON-ready structure.
-	 *
-	 * @param int $guid The GUID of the parent.
-	 * @param array $category_array The array of categories.
-	 * @access private
-	 * @return array|null A structured array, or null if category has no children.
-	 */
-	protected function category_json_struct_children($guid, $category_array) {
-		$struct = array();
-		if (!is_array($category_array))
-			return null;
-		foreach ($category_array as $cur_category) {
-			if ($cur_category->parent == $guid || $cur_category->parent->guid == $guid) {
-				$struct[] = (object) array(
-					'attributes' => (object) array(
-						'id' => $cur_category->guid
-					),
-					'data' => $cur_category->name,
-					'children' => $this->category_json_struct_children($cur_category->guid, $category_array)
-				);
-			}
-		}
-		if (empty($struct))
-			return null;
-		return $struct;
-	}
-
-	/**
 	 * Delete a category recursively.
 	 *
 	 * @param entity $category The category.

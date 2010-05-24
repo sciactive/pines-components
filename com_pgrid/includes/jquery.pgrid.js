@@ -128,18 +128,16 @@
 		if (pgrid.pgrid_select) {
 			if ((pgrid.children("tbody").children("tr.ui-pgrid-table-row-selected").length || keysorrows.length > 1) && !pgrid.pgrid_multi_select)
 				return this;
-			$.each(keysorrows, function(){
-				var cur_row = $(this);
-				cur_row.addClass("ui-pgrid-table-row-selected ui-state-active");
-			});
+			keysorrows.addClass("ui-pgrid-table-row-selected ui-state-active");
+			pgrid.update_selected();
 		}
 		return this;
 	};
-	$.fn.pgrid_deselect_rows = function(rows) {
+	$.fn.pgrid_deselect_rows = function(keysorrows) {
 		var pgrid = null;
-		if (!rows) {
-			rows = this;
-			pgrid = rows.closest("table.ui-pgrid-table").get(0);
+		if (!keysorrows) {
+			keysorrows = this;
+			pgrid = keysorrows.closest("table.ui-pgrid-table").get(0);
 			if (pgrid && pgrid.pines_grid)
 				pgrid = pgrid.pines_grid;
 		} else {
@@ -149,11 +147,14 @@
 		}
 		if (!pgrid)
 			return this;
+		if (!keysorrows.jquery) {
+			if (typeof keysorrows != "object")
+				return this;
+			keysorrows = pgrid.children("tbody").children("tr[title='" + keysorrows.join("'], tr[title='") + "']");
+		}
 		if (pgrid.pgrid_select) {
-			$.each(rows, function(){
-				var cur_row = $(this);
-				cur_row.removeClass("ui-pgrid-table-row-selected").removeClass("ui-state-active");
-			});
+			keysorrows.removeClass("ui-pgrid-table-row-selected").removeClass("ui-state-active");
+			pgrid.update_selected();
 		}
 		return this;
 	};
@@ -224,7 +225,7 @@
 		this.filter("table:not(.ui-pgrid-table)").each(function() {
 			var pgrid = $(this);
 			pgrid.pgrid_version = "1.0.0";
-			
+
 			pgrid.extend(pgrid, opts);
 
 			pgrid.pgrid_pages = null;
@@ -238,7 +239,7 @@
 			pgrid.pgrid_widget = pgrid.parent();
 			// Detach the table from the DOM, so we can work on it locally.
 			pgrid.detach();
-			
+
 			// Add the pgrid class to the container.
 			pgrid.pgrid_widget.addClass("ui-pgrid ui-widget ui-widget-content ui-corner-all");
 			// And the table container.
@@ -743,7 +744,7 @@
 				// Hide children.
 				jq_rows.filter("tr.child").addClass("ui-pgrid-table-row-hidden");
 			};
-			
+
 			pgrid.init_children = function(jq_rows) {
 				if (!jq_rows.length) return;
 				jq_rows.each(function(){
@@ -768,7 +769,7 @@
 					}
 				});
 			};
-			
+
 			// Add some coloring when hovering over rows.
 			if (pgrid.pgrid_row_hover_effect) {
 				// Can't use "hover" because of a bug in Firefox when the mouse moves onto a scrollbar.

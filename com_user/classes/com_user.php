@@ -69,7 +69,8 @@ class com_user extends component implements user_manager_interface {
 		}
 		global $pines;
 		unset($_SESSION['user']);
-		$_SESSION['descendents'] = $tmp_user->group->get_descendents();
+		if (isset($tmp_user->group))
+			$_SESSION['descendents'] = $tmp_user->group->get_descendents();
 		foreach ($tmp_user->groups as $cur_group) {
 			$_SESSION['descendents'] = array_merge($_SESSION['descendents'], $cur_group->get_descendents());
 		}

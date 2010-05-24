@@ -1,0 +1,31 @@
+<?php
+/**
+ * Delete a category.
+ *
+ * @package Pines
+ * @subpackage com_sales
+ * @license http://www.gnu.org/licenses/agpl-3.0.html
+ * @author Hunter Perrin <hunter@sciactive.com>
+ * @copyright SciActive.com
+ * @link http://sciactive.com/
+ */
+defined('P_RUN') or die('Direct access prohibited');
+
+if ( !gatekeeper('com_sales/deletecategory') )
+	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listcategories'));
+
+$list = explode(',', $_REQUEST['id']);
+foreach ($list as $cur_category) {
+	$cur_entity = com_sales_category::factory((int) $cur_category);
+	if ( !isset($cur_entity->guid) || !$cur_entity->delete() )
+		$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_category;
+}
+if (empty($failed_deletes)) {
+	pines_notice('Selected category(s) deleted successfully.');
+} else {
+	pines_error('Could not delete categories with given IDs: '.$failed_deletes."\n\nThey may have already been deleted.");
+}
+
+redirect(pines_url('com_sales', 'listcategories'));
+
+?>

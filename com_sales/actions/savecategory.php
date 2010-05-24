@@ -1,0 +1,88 @@
+<?php
+/**
+ * Save changes to a category.
+ *
+ * @package Pines
+ * @subpackage com_sales
+ * @license http://www.gnu.org/licenses/agpl-3.0.html
+ * @author Hunter Perrin <hunter@sciactive.com>
+ * @copyright SciActive.com
+ * @link http://sciactive.com/
+ */
+defined('P_RUN') or die('Direct access prohibited');
+
+if ( isset($_REQUEST['id']) ) {
+	if ( !gatekeeper('com_sales/editcategory') )
+		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listcategories'));
+	$category = com_sales_category::factory((int) $_REQUEST['id']);
+	if (!isset($category->guid)) {
+		pines_error('Requested category id is not accessible.');
+		return;
+	}
+} else {
+	if ( !gatekeeper('com_sales/newcategory') )
+		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listcategories'));
+	$category = com_sales_category::factory();
+}
+
+$category->name = $_REQUEST['name'];
+
+// Do the check now in case the parent category is saved.
+if (empty($category->name)) {
+	$category->print_form();
+	pines_notice('Please specify a name.');
+	return;
+}
+
+$category->ac->other = 1;
+
+if ((int) $_REQUEST['parent'] == $category->guid) {
+	$category->print_form();
+	pines_notice('Cannot make a category its own parent.');
+	return;
+}
+
+if ((int) $_REQUEST['parent'] != $category->parent->guid) {
+	// The category has a different parent.
+	if (isset($category->parent)) {
+		// Remove the category from its parent.
+		foreach ($category->parent->children as $key => &$cur_child) {
+			if ($category->is($cur_child))
+				unset($category->parent->children[$key]);
+		}
+		unset($cur_child);
+		if ($category->parent->save() && $category->save()) {
+			$category->parent = null;
+		} else {
+			$category->print_form();
+			pines_notice('Could not remove category from its parent.');
+			return;
+		}
+	}
+	if ($_REQUEST['parent'] != 'null') {
+		// Add the category to the parent.
+		$category->parent = com_sales_category::factory((int) $_REQUEST['parent']);
+		if (!isset($category->parent->guid)) {
+			$category->parent = null;
+			$category->print_form();
+			pines_notice('Could not find specified parent.');
+			return;
+		}
+		$category->parent->children[] = $category;
+		if (!$category->parent->save()) {
+			$category->print_form();
+			pines_notice('Could not save category in the specified parent.');
+			return;
+		}
+	}
+}
+
+if ($category->save()) {
+	pines_notice('Saved category ['.$category->name.']');
+} else {
+	pines_error('Error saving category. Do you have permission?');
+}
+
+redirect(pines_url('com_sales', 'listcategories'));
+
+?>

@@ -141,182 +141,13 @@ $pines->com_jstree->load();
 				<script type="text/javascript">
 					// <![CDATA[
 					pines(function(){
-						// Category Tree
+						// Category Grid
 						var input = $("#categories");
-						$("#category_tree").tree({
-							rules : {
-								multiple : true
-							},
-							data : {
-								type : "json",
-								opts : {
-									method : "get",
-									url : "<?php echo pines_url('com_sales', 'catjson'); ?>"
-								}
-							},
-							selected : <?php echo json_encode(array_map('strval', $pines->com_sales->get_product_category_guid_array($this->entity))); ?>,
-							callback : {
-								oncreate : function(NODE, REF_NODE, TYPE, TREE_OBJ, RB) {
-									var parent;
-									var parent_id;
-									if (TYPE == 'after' || TYPE == 'before') {
-										parent = TREE_OBJ.parent(REF_NODE);
-										if (parent === -1) {
-											parent_id = "null";
-										} else {
-											parent_id = parent.attr("id");
-										}
-									} else {
-										parent_id = REF_NODE.id;
-									}
-									$.ajax({
-										type: "POST",
-										url: "<?php echo pines_url('com_sales', 'catjson'); ?>",
-										dataType: "json",
-										data: {
-											"do": "new",
-											"parent": parent_id
-										},
-										success: function(data, textStatus) {
-											if (!data.status) {
-												$.tree.rollback(RB);
-												alert("A problem occurred while trying to create the category.");
-											} else {
-												NODE.id = data.id;
-											}
-										},
-										error: function(XMLHttpRequest, textStatus, errorThrown) {
-											$.tree.rollback(RB);
-											alert("An error occurred trying to reach the server:\n"+XMLHttpRequest.status+": "+textStatus);
-										}
-									});
-								},
-								onrename : function(NODE, TREE_OBJ, RB) {
-									$.ajax({
-										type: "POST",
-										url: "<?php echo pines_url('com_sales', 'catjson'); ?>",
-										dataType: "json",
-										data: {
-											"do": "rename",
-											"id": NODE.id,
-											"name": TREE_OBJ.get_text(NODE)
-										},
-										success: function(data, textStatus) {
-											if (!data.status) {
-												$.tree.rollback(RB);
-												alert("A problem occurred while trying to rename the category.");
-											}
-										},
-										error: function(XMLHttpRequest, textStatus, errorThrown) {
-											$.tree.rollback(RB);
-											alert("An error occurred trying to reach the server:\n"+XMLHttpRequest.status+": "+textStatus);
-										}
-									});
-								},
-								ondelete : function(NODE, TREE_OBJ, RB) {
-									$.ajax({
-										type: "POST",
-										url: "<?php echo pines_url('com_sales', 'catjson'); ?>",
-										dataType: "json",
-										data: {
-											"do": "delete",
-											"id": NODE.id
-										},
-										success: function(data, textStatus) {
-											if (!data.status) {
-												$.tree.rollback(RB);
-												alert("A problem occurred while trying to delete the category.");
-											}
-										},
-										error: function(XMLHttpRequest, textStatus, errorThrown) {
-											$.tree.rollback(RB);
-											alert("An error occurred trying to reach the server:\n"+XMLHttpRequest.status+": "+textStatus);
-										}
-									});
-								},
-								onmove : function(NODE, REF_NODE, TYPE, TREE_OBJ, RB) {
-									var parent;
-									var parent_id;
-									if (TYPE == 'after' || TYPE == 'before') {
-										parent = TREE_OBJ.parent(REF_NODE);
-										if (parent === -1) {
-											parent_id = "null";
-										} else {
-											parent_id = parent.attr("id");
-										}
-									} else {
-										parent_id = REF_NODE.id;
-									}
-									$.ajax({
-										type: "POST",
-										url: "<?php echo pines_url('com_sales', 'catjson'); ?>",
-										dataType: "json",
-										data: {
-											"do": "move",
-											"id": NODE.id,
-											"parent": parent_id
-										},
-										success: function(data, textStatus) {
-											if (!data.status) {
-												$.tree.rollback(RB);
-												alert("A problem occurred while trying to move the category.");
-											}
-										},
-										error: function(XMLHttpRequest, textStatus, errorThrown) {
-											$.tree.rollback(RB);
-											alert("An error occurred trying to reach the server:\n"+XMLHttpRequest.status+": "+textStatus);
-										}
-									});
-								},
-								oncopy : function(NODE, REF_NODE, TYPE, TREE_OBJ, RB) {
-									var parent;
-									var parent_id;
-									if (TYPE == 'after' || TYPE == 'before') {
-										parent = TREE_OBJ.parent(REF_NODE);
-										if (parent === -1) {
-											parent_id = "null";
-										} else {
-											parent_id = parent.attr("id");
-										}
-									} else {
-										parent_id = REF_NODE.id;
-									}
-									$.ajax({
-										type: "POST",
-										url: "<?php echo pines_url('com_sales', 'catjson'); ?>",
-										dataType: "json",
-										data: {
-											"do": "copy",
-											"id": NODE.id,
-											"parent": parent_id
-										},
-										success: function(data, textStatus) {
-											if (!data.status) {
-												$.tree.rollback(RB);
-												alert("A problem occurred while trying to copy the category.");
-											}
-										},
-										error: function(XMLHttpRequest, textStatus, errorThrown) {
-											$.tree.rollback(RB);
-											alert("An error occurred trying to reach the server:\n"+XMLHttpRequest.status+": "+textStatus);
-										}
-									});
-								},
-								oninit : function(TREE_OBJ) {
-									$("#category_tree_new").click(function(){
-										TREE_OBJ.create(false, -1);
-									});
-								},
-								onchange : function(NODE, TREE_OBJ) {
-									input.val("[]");
-									$.each(TREE_OBJ.selected_arr, function(){
-										input.val(JSON.stringify($.merge(JSON.parse(input.val()), [this.attr("id")])));
-									});
-								}
-							},
-							plugins : {
-								contextmenu : {}
-							}
+						$("#category_grid").pgrid({
+							pgrid_sort_col: 1,
+							pgrid_sort_ord: "asc",
+							pgrid_paginate: false,
+							pgrid_view_height: "300px"
 						});
 
 						// Category Dialog
@@ -324,6 +155,7 @@ $pines->com_jstree->load();
 							bgiframe: true,
 							autoOpen: false,
 							modal: true,
+							width: 600,
 							buttons: {
 								'Done': function() {
 									$(this).dialog('close');
@@ -333,19 +165,7 @@ $pines->com_jstree->load();
 
 						$('#category_button').click(function() {
 							$('#category_dialog').dialog('open');
-						}).hover(
-							function(){
-								$(this).addClass("ui-state-hover");
-							},
-							function(){
-								$(this).removeClass("ui-state-hover");
-							}
-						).mousedown(function(){
-							$(this).addClass("ui-state-active");
-						}).mouseup(function(){
-							$(this).removeClass("ui-state-active");
 						});
-
 					});
 					// ]]>
 				</script>
@@ -353,8 +173,22 @@ $pines->com_jstree->load();
 				<input id="categories" type="hidden" name="categories" />
 			</div>
 			<div id="category_dialog" title="Categories">
-				<div id="category_tree" style="border: 1px solid black; float: left; width: 100%;"></div>
-				<p style="clear: left;"><a href="#" id="category_tree_new">New Root Category</a></p>
+				<table id="category_grid">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Products</th>
+						</tr>
+					</thead>
+					<tbody>
+					<?php foreach($this->categories as $category) { ?>
+						<tr title="<?php echo $category->guid; ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? "child {$category->parent->guid} " : ''; ?>">
+							<td><?php echo $category->name; ?></td>
+							<td><?php echo count($category->products); ?></td>
+						</tr>
+					<?php } ?>
+					</tbody>
+				</table>
 			</div>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Description</span><br />

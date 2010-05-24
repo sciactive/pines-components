@@ -1,6 +1,6 @@
 <?php
 /**
- * List shippers.
+ * List countsheets.
  *
  * @package Pines
  * @subpackage com_sales

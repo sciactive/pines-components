@@ -84,54 +84,6 @@ class com_sales extends component {
 	}
 
 	/**
-	 * Delete a category recursively.
-	 *
-	 * @param entity $category The category.
-	 * @return bool True on success, false on failure.
-	 */
-	public function delete_category_recursive($category) {
-		global $pines;
-		$children = $pines->entity_manager->get_entities(array('data' => array('parent' => $category->guid)));
-		if (is_array($children)) {
-			foreach ($children as $cur_child) {
-				if (!$this->delete_category_recursive($cur_child))
-					return false;
-			}
-		}
-		if ($category->has_tag('com_sales', 'category')) {
-			return $category->delete();
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * Gets a category by GUID.
-	 *
-	 * @param int $id The category's GUID.
-	 * @return entity|null The category if it exists, null if it doesn't.
-	 */
-	public function get_category($id) {
-		global $pines;
-		$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => array('com_sales', 'category')));
-		return $entity;
-	}
-
-	/**
-	 * Get an array of category entities.
-	 *
-	 * @return array The array of entities.
-	 */
-	public function get_category_array() {
-		global $pines;
-		$entities = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'category')));
-		if (!is_array($entities)) {
-			$entities = array();
-		}
-		return $entities;
-	}
-
-	/**
 	 * Gets a product by its code.
 	 *
 	 * The first code checked is the product's SKU. If the product is found, it
@@ -158,40 +110,6 @@ class com_sales extends component {
 				return $cur_entity;
 		}
 		return null;
-	}
-
-	/**
-	 * Get an array of categories' GUIDs a product belongs to.
-	 *
-	 * @param entity $product The product.
-	 * @return array An array of GUIDs.
-	 */
-	public function get_product_category_guid_array($product) {
-		if (!is_object($product))
-			return array();
-		$categories = $this->get_product_category_array($product);
-		foreach ($categories as &$cur_cat) {
-			$cur_cat = $cur_cat->guid;
-		}
-		return $categories;
-	}
-
-	/**
-	 * Get an array of categories a product belongs to.
-	 *
-	 * @param entity $product The product.
-	 * @return array An array of GUIDs.
-	 */
-	public function get_product_category_array($product) {
-		if (!is_object($product))
-			return array();
-		$categories = $this->get_category_array();
-		foreach ($categories as $key => $cur_cat) {
-			if (!is_array($cur_cat->products) || !in_array($product->guid, $cur_cat->products)) {
-				unset($categories[$key]);
-			}
-		}
-		return $categories;
 	}
 
 	/**
@@ -222,7 +140,7 @@ class com_sales extends component {
 	 */
 	public function list_cashcounts($start_date = null, $end_date = null, $location = null) {
 		global $pines;
-		
+
 		$form = new module('com_sales', 'list_cashcounts_form', 'left');
 		$module = new module('com_sales', 'list_cashcounts', 'content');
 
@@ -253,6 +171,23 @@ class com_sales extends component {
 		if ( empty($module->counts) )
 			pines_notice('No cash counts found.');
 	}
+
+	/**
+	 * Creates and attaches a module which lists categories.
+	 * @param int $start_date The start date of categories to show.
+	 * @param int $end_date The end date of categories to show.
+	 * @param group $location The location to show categories for.
+	 */
+	public function list_categories() {
+		global $pines;
+
+		$module = new module('com_sales', 'list_categories', 'content');
+
+		$module->categories = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'category'), 'class' => com_sales_category));
+
+		if ( empty($module->categories) )
+			pines_notice('No categories found.');
+	}
 	
 	/**
 	 * Creates and attaches a module which lists countsheets.
@@ -271,10 +206,8 @@ class com_sales extends component {
 				$this->inform('Reminder', '<a href="'.pines_url('com_sales', 'editcountsheet').'">Inventory Countsheet &raquo;</a>', 'Please fill out a countsheet for your location when you are not busy. Corporate is awaiting the submission of an inventory count.');
 		}
 	
-		if ( empty($module->countsheets) ) {
+		if ( empty($module->countsheets) )
 			pines_notice('There are no countsheets.');
-			return;
-		}
 	}
 
 	/**
@@ -287,10 +220,8 @@ class com_sales extends component {
 
 		$module->manufacturers = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'manufacturer'), 'class' => com_sales_manufacturer));
 
-		if ( empty($module->manufacturers) ) {
-			//$module->detach();
+		if ( empty($module->manufacturers) )
 			pines_notice('There are no manufacturers.');
-		}
 	}
 
 	/**
@@ -303,10 +234,8 @@ class com_sales extends component {
 
 		$module->payment_types = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));
 
-		if ( empty($module->payment_types) ) {
-			//$module->detach();
+		if ( empty($module->payment_types) )
 			pines_notice('There are no payment types.');
-		}
 	}
 
 	/**
@@ -320,7 +249,6 @@ class com_sales extends component {
 		$module->pos = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'po'), 'class' => com_sales_po));
 
 		if ( empty($module->pos) ) {
-			//$module->detach();
 			pines_notice('There are no POs.');
 			return;
 		}
@@ -348,10 +276,8 @@ class com_sales extends component {
 
 		$module->products = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'product'), 'class' => com_sales_product));
 
-		if ( empty($module->products) ) {
-			//$module->detach();
+		if ( empty($module->products) )
 			pines_notice('There are no products.');
-		}
 	}
 
 	/**
@@ -373,10 +299,8 @@ class com_sales extends component {
 		$module->start_date = $start_date;
 		$module->end_date = $end_date;
 
-		if ( empty($module->sales) ) {
-			//$module->detach();
+		if ( empty($module->sales) )
 			pines_notice('No sales found.');
-		}
 	}
 
 	/**
@@ -389,10 +313,8 @@ class com_sales extends component {
 
 		$module->shippers = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'shipper'), 'class' => com_sales_shipper));
 
-		if ( empty($module->shippers) ) {
-			//$module->detach();
+		if ( empty($module->shippers) )
 			pines_notice('There are no shippers.');
-		}
 	}
 
 	/**
@@ -408,10 +330,8 @@ class com_sales extends component {
 		$module->stock = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'stock'), 'class' => com_sales_stock));
 		$module->all = $all;
 
-		if ( empty($module->stock) ) {
-			//$module->detach();
+		if ( empty($module->stock) )
 			pines_notice('There is nothing in stock at your location.');
-		}
 	}
 
 	/**
@@ -424,10 +344,8 @@ class com_sales extends component {
 
 		$module->tax_fees = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'tax_fee'), 'class' => com_sales_tax_fee));
 
-		if ( empty($module->tax_fees) ) {
-			//$module->detach();
+		if ( empty($module->tax_fees) )
 			pines_notice('There are no taxes/fees.');
-		}
 	}
 
 	/**
@@ -440,10 +358,8 @@ class com_sales extends component {
 
 		$module->transfers = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'transfer'), 'class' => com_sales_transfer));
 
-		if ( empty($module->transfers) ) {
-			//$module->detach();
+		if ( empty($module->transfers) )
 			pines_notice('There are no transfers.');
-		}
 	}
 
 	/**
@@ -456,34 +372,8 @@ class com_sales extends component {
 
 		$module->vendors = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'vendor'), 'class' => com_sales_vendor));
 
-		if ( empty($module->vendors) ) {
-			//$module->detach();
+		if ( empty($module->vendors) )
 			pines_notice('There are no vendors.');
-		}
-	}
-
-	/**
-	 * Create and save a new category.
-	 *
-	 * @param int $parent_id The category's parent's GUID.
-	 * @param string $name The category's name.
-	 * @return entity|bool The category on success, false on failure.
-	 */
-	public function new_category($parent_id = null, $name = 'untitled') {
-		global $pines;
-		$entity = new entity('com_sales', 'category');
-		$entity->name = $name;
-		if (isset($parent_id)) {
-			$parent = $pines->entity_manager->get_entity(array('guid' => $parent_id, 'tags' => array('com_sales', 'category')));
-			if (isset($parent))
-				$entity->parent = $parent_id;
-		}
-		$entity->ac = (object) array('user' => 3, 'group' => 3, 'other' => 3);
-		if ($entity->save()) {
-			return $entity;
-		} else {
-			return false;
-		}
 	}
 
 	/**

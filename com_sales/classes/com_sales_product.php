@@ -68,6 +68,28 @@ class com_sales_product extends entity {
 	}
 
 	/**
+	 * Get an array of categories' GUIDs this product belongs to.
+	 * @return array An array of GUIDs.
+	 */
+	public function get_categories_guid() {
+		$categories = $this->get_categories($product);
+		foreach ($categories as &$cur_cat) {
+			$cur_cat = $cur_cat->guid;
+		}
+		return $categories;
+	}
+
+	/**
+	 * Get an array of categories this product belongs to.
+	 * @return array An array of categories.
+	 */
+	public function get_categories() {
+		global $pines;
+		$categories = (array) $pines->entity_manager->get_entities(array('ref' => array('products' => $this), 'tags' => array('com_sales', 'category'), 'class' => com_sales_category));
+		return $categories;
+	}
+
+	/**
 	 * Save the product.
 	 * @return bool True on success, false on failure.
 	 */
@@ -85,6 +107,7 @@ class com_sales_product extends entity {
 		global $pines;
 		$module = new module('com_sales', 'form_product', 'content');
 		$module->entity = $this;
+		$module->categories = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'category'), 'class' => com_sales_category));
 		$module->manufacturers = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'manufacturer'), 'class' => com_sales_manufacturer));
 		if (!is_array($module->manufacturers))
 			$module->manufacturers = array();

@@ -132,6 +132,14 @@
 			}
 		},
 			{
+				"path": "main_menu/business/com_sales/setup/categories",
+				"text": "Categories",
+				"href": ["com_sales","listcategories"],
+				"depend": {
+					"ability": "com_sales/listcategories"
+				}
+			},
+			{
 				"path": "main_menu/business/com_sales/setup/products",
 				"text": "Products",
 				"href": ["com_sales","listproducts"],

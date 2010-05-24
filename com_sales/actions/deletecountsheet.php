@@ -24,7 +24,6 @@ if (empty($failed_deletes)) {
 	pines_notice('Selected countsheet(s) deleted successfully.');
 } else {
 	pines_error('Could not delete countsheets with given IDs: '.$failed_deletes);
-	pines_notice('Note that countsheets cannot be deleted after items have been received on them.');
 }
 
 redirect(pines_url('com_sales', 'listcountsheets'));

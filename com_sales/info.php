@@ -61,6 +61,10 @@ return array(
 		array('newproduct', 'Create Products', 'User can create new products.'),
 		array('editproduct', 'Edit Products', 'User can edit current products.'),
 		array('deleteproduct', 'Delete Products', 'User can delete current products.'),
+		array('listcategories', 'List Categories', 'User can see categories. (Not needed to see categories during a sale.)'),
+		array('newcategory', 'Create Categories', 'User can create new categories.'),
+		array('editcategory', 'Edit Categories', 'User can edit current categories.'),
+		array('deletecategory', 'Delete Categories', 'User can delete current categories.'),
 		array('listpos', 'List Purchase Orders', 'User can see POs.'),
 		array('newpo', 'Create Purchase Orders', 'User can create new POs.'),
 		array('editpo', 'Edit Purchase Orders', 'User can edit current POs.'),
@@ -77,9 +81,7 @@ return array(
 		array('deletecountsheet', 'Delete Countsheets', 'User can delete current countsheets.'),
 		array('printcountsheet', 'Print Countsheets', 'User can print countsheets.'),
 		array('approvecountsheet', 'Approve Countsheets', 'User can approve countsheets.'),
-		array('assigncountsheet', 'Assign Countsheets', 'User can assign countsheets.'),
-		array('managecategories', 'Manage Categories', 'User can manage categories.'),
-		array('viewcategories', 'View Categories', 'User can view categories.')
+		array('assigncountsheet', 'Assign Countsheets', 'User can assign countsheets.')
 	),
 );
 

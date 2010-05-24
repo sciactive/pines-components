@@ -28,6 +28,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', text: 'New', extra_class: 'picon picon_16x16_document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'editcategory'); ?>'},
 				<?php } if (gatekeeper('com_sales/editcategory')) { ?>
 				{type: 'button', text: 'Edit', extra_class: 'picon picon_16x16_document-edit', double_click: true, url: '<?php echo pines_url('com_sales', 'editcategory', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Move Up', extra_class: 'picon picon_16x16_arrow-up', url: '<?php echo pines_url('com_sales', 'movecategory', array('id' => '__title__', 'dir' => 'up')); ?>'},
+				{type: 'button', text: 'Move Down', extra_class: 'picon picon_16x16_arrow-down', url: '<?php echo pines_url('com_sales', 'movecategory', array('id' => '__title__', 'dir' => 'down')); ?>'},
 				<?php } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon_16x16_mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
@@ -63,6 +65,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 <table id="category_grid">
 	<thead>
 		<tr>
+			<th>Order</th>
 			<th>Name</th>
 			<th>Products</th>
 		</tr>
@@ -70,6 +73,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->categories as $category) { ?>
 		<tr title="<?php echo $category->guid; ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? "child {$category->parent->guid} " : ''; ?>">
+			<td><?php echo isset($category->parent) ? $category->array_search($category->parent->children) + 1 : '0' ; ?></td>
 			<td><?php echo $category->name; ?></td>
 			<td><?php echo count($category->products); ?></td>
 		</tr>

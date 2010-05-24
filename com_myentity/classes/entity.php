@@ -162,6 +162,16 @@ class entity extends p_base implements entity_interface {
 		}
 	}
 
+	public function array_search($array, $strict = false) {
+		if (!is_array($array))
+			return false;
+		foreach ($array as $key => $cur_entity) {
+			if ($strict ? $this->equals($cur_entity) : $this->is($cur_entity))
+				return $key;
+		}
+		return false;
+	}
+
 	public function clear_cache() {
 		foreach ($this->entity_cache as &$value) {
 			$value = 0;

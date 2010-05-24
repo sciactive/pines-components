@@ -46,11 +46,9 @@ if ((int) $_REQUEST['parent'] != $category->parent->guid) {
 	// The category has a different parent.
 	if (isset($category->parent)) {
 		// Remove the category from its parent.
-		foreach ($category->parent->children as $key => &$cur_child) {
-			if ($category->is($cur_child))
-				unset($category->parent->children[$key]);
-		}
-		unset($cur_child);
+		$key = $category->array_search($category->parent->children);
+		if ($key !== false)
+			unset($category->parent->children[$key]);
 		if ($category->parent->save() && $category->save()) {
 			$category->parent = null;
 		} else {
@@ -60,6 +58,11 @@ if ((int) $_REQUEST['parent'] != $category->parent->guid) {
 		}
 	}
 	if ($_REQUEST['parent'] != 'null') {
+		if (!isset($category->guid) && !$category->save()) {
+			$category->print_form();
+			pines_notice('Could not save category.');
+			return;
+		}
 		// Add the category to the parent.
 		$category->parent = com_sales_category::factory((int) $_REQUEST['parent']);
 		if (!isset($category->parent->guid)) {
@@ -76,6 +79,12 @@ if ((int) $_REQUEST['parent'] != $category->parent->guid) {
 		}
 	}
 }
+
+foreach ($category->children as $key => &$cur_child) {
+	if (!isset($cur_child->guid))
+		unset($category->children[$key]);
+}
+unset($cur_child);
 
 if ($category->save()) {
 	pines_notice('Saved category ['.$category->name.']');

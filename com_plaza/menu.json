@@ -1,0 +1,25 @@
+[
+	{
+		"path": "main_menu/system/com_plaza",
+		"text": "The Plaza",
+		"depend": {
+			"children": true
+		}
+	},
+		{
+			"path": "main_menu/system/com_plaza/getsoftware",
+			"text": "Get Software",
+			"href": ["com_plaza","listpackages"],
+			"depend": {
+				"ability": "com_plaza/listpackages"
+			}
+		},
+		{
+			"path": "main_menu/system/com_plaza/installedsoftware",
+			"text": "Installed Software",
+			"href": ["com_plaza","listpackages"],
+			"depend": {
+				"ability": "com_plaza/listpackages"
+			}
+		}
+]

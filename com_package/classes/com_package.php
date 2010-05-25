@@ -114,6 +114,9 @@ class com_package extends component {
 			pines_log("No info file for the system package could be found in the package cache directory. I will attempt to create one called \"sys_pines.php\". If this is a brand new installation, you can ignore this message.", 'warning');
 			$system = include('system/info.php');
 			file_put_contents('components/com_package/includes/cache/sys_pines.php', "<?php\ndefined('P_RUN') or die('Direct access prohibited');\nreturn ".var_export($system, true).";\n?>");
+			$db['packages']['pines'] = $system;
+			$db['packages']['pines']['type'] = 'system';
+
 		}
 		foreach ($db['packages'] as $cur_package => &$cur_entry) {
 			// We don't care about abilities.
@@ -143,6 +146,7 @@ class com_package extends component {
 				}
 			}
 		}
+		ksort($db);
 		// Write the database to a file.
 		if (file_put_contents('components/com_package/includes/db.php', "<?php\ndefined('P_RUN') or die('Direct access prohibited');\nreturn ".var_export($db, true).";\n?>")) {
 			// Load the new database file.

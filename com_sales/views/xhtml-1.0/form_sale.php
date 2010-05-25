@@ -134,7 +134,7 @@ $pines->com_pgrid->load();
 				bgiframe: true,
 				autoOpen: false,
 				modal: true,
-				width: 600,
+				width: 800,
 				buttons: {
 					"Done": function(){
 						var rows = customer_table.pgrid_get_selected_rows().pgrid_export_rows();
@@ -156,15 +156,13 @@ $pines->com_pgrid->load();
 			products_table.pgrid({
 				pgrid_view_height: "160px",
 				pgrid_paginate: false,
-				pgrid_toolbar: false,
-				pgrid_resize: false
+				pgrid_toolbar: false
 			});
 			<?php } else { ?>
 			products_table.pgrid({
 				pgrid_view_height: "160px",
 				pgrid_paginate: false,
 				pgrid_toolbar: true,
-				pgrid_resize: false,
 				pgrid_toolbar_contents : [
 					{
 						type: 'text',
@@ -324,6 +322,7 @@ $pines->com_pgrid->load();
 							}
 						}
 					},
+					{type: 'separator'},
 					{
 						type: 'button',
 						text: 'Remove',
@@ -931,7 +930,7 @@ $pines->com_pgrid->load();
 			<?php } ?>
 		</div>
 	</div>
-	<div id="customer_dialog" title="Pick a Customer">
+	<div id="customer_dialog" title="Pick a Customer" style="display: none; overflow: hidden;">
 		<table id="customer_table">
 			<thead>
 				<tr>
@@ -970,7 +969,7 @@ $pines->com_pgrid->load();
 		</table>
 		<br class="pf-clearing" />
 	</div>
-	<div id="category_dialog" title="Categories" style="display: none;">
+	<div id="category_dialog" title="Categories" style="display: none; overflow: hidden;">
 		<table id="category_grid">
 			<thead>
 				<tr>
@@ -990,7 +989,7 @@ $pines->com_pgrid->load();
 			</tbody>
 		</table>
 	</div>
-	<div id="category_products_dialog" title="Products" style="display: none;">
+	<div id="category_products_dialog" title="Products" style="display: none; overflow: hidden;">
 		<table id="category_products_grid">
 			<thead>
 				<tr>
@@ -1006,44 +1005,41 @@ $pines->com_pgrid->load();
 	<?php } ?>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Products</span>
-		<div class="pf-group">
-			<div class="pf-field">
-				<table id="products_table">
-					<thead>
-						<tr>
-							<th>SKU</th>
-							<th>Product</th>
-							<th>Serial</th>
-							<th>Delivery</th>
-							<th>Quantity</th>
-							<th>Price</th>
-							<th>Discount</th>
-							<th>Line Total</th>
-							<th>Fees</th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php foreach ($this->entity->products as $cur_product) {
-								if (!isset($cur_product['entity']))
-									continue;
-								?>
-						<tr title="<?php echo $cur_product['entity']->guid; ?>">
-							<td><?php echo $cur_product['entity']->sku; ?></td>
-							<td><?php echo $cur_product['entity']->name; ?></td>
-							<td><?php echo $cur_product['serial']; ?></td>
-							<td><?php echo $cur_product['delivery']; ?></td>
-							<td><?php echo $cur_product['quantity']; ?></td>
-							<td><?php echo $cur_product['price']; ?></td>
-							<td><?php echo $cur_product['discount']; ?></td>
-							<td><?php echo $pines->com_sales->round($cur_product['line_total'], $pines->config->com_sales->dec); ?></td>
-							<td><?php echo $pines->com_sales->round($cur_product['fees'], $pines->config->com_sales->dec); ?></td>
-						</tr>
-						<?php } ?>
-					</tbody>
-				</table>
-			</div>
-			<input type="hidden" id="products" name="products" size="24" />
-		</div>
+		<br class="pf-clearing" />
+		<table id="products_table">
+			<thead>
+				<tr>
+					<th>SKU</th>
+					<th>Product</th>
+					<th>Serial</th>
+					<th>Delivery</th>
+					<th>Quantity</th>
+					<th>Price</th>
+					<th>Discount</th>
+					<th>Line Total</th>
+					<th>Fees</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ($this->entity->products as $cur_product) {
+						if (!isset($cur_product['entity']))
+							continue;
+						?>
+				<tr title="<?php echo $cur_product['entity']->guid; ?>">
+					<td><?php echo $cur_product['entity']->sku; ?></td>
+					<td><?php echo $cur_product['entity']->name; ?></td>
+					<td><?php echo $cur_product['serial']; ?></td>
+					<td><?php echo $cur_product['delivery']; ?></td>
+					<td><?php echo $cur_product['quantity']; ?></td>
+					<td><?php echo $cur_product['price']; ?></td>
+					<td><?php echo $cur_product['discount']; ?></td>
+					<td><?php echo $pines->com_sales->round($cur_product['line_total'], $pines->config->com_sales->dec); ?></td>
+					<td><?php echo $pines->com_sales->round($cur_product['fees'], $pines->config->com_sales->dec); ?></td>
+				</tr>
+				<?php } ?>
+			</tbody>
+		</table>
+		<input type="hidden" id="products" name="products" size="24" />
 	</div>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Ticket Totals</span>
@@ -1065,24 +1061,12 @@ $pines->com_pgrid->load();
 			<div style="text-align: left;">
 				<?php foreach ($this->payment_types as $cur_payment_type) { ?>
 				<button id="payment_<?php echo $cur_payment_type->guid; ?>" class="ui-state-default ui-corner-all payment-button" type="button" style="margin-bottom: 2px;" value="<?php echo htmlentities(json_encode((object) array('guid' => $cur_payment_type->guid, 'name' => $cur_payment_type->name, 'minimum' => $cur_payment_type->minimum, 'maximum' => $cur_payment_type->maximum, 'processing_type' => $cur_payment_type->processing_type))); ?>">
-					<span class="picon picon_32x32_list-add" style="display: block; padding-top: 32px; min-width: 50px; background-repeat: no-repeat; background-position: top center;"><?php echo $cur_payment_type->name; ?></span>
+					<span class="picon picon_32x32_view-bank-account" style="display: block; padding-top: 32px; min-width: 50px; background-repeat: no-repeat; background-position: top center;"><?php echo $cur_payment_type->name; ?></span>
 				</button>
 				<?php } ?>
 			</div>
 		</div>
 		<?php } ?>
-		<?php /*
-		<div class="pf-group">
-			<div style="float: right;">
-				<?php foreach ($this->payment_types as $cur_payment_type) { ?>
-				<button id="payment_<?php echo $cur_payment_type->guid; ?>" class="pf-field ui-state-default ui-corner-all payment-button" type="button" value="<?php echo htmlentities(json_encode((object) array("guid" => $cur_payment_type->guid, "name" => $cur_payment_type->name, "minimum" => $cur_payment_type->minimum))); ?>">
-					<span class="picon picon_32x32_list-add" style="display: block; padding-top: 32px; min-width: 32px; background-repeat: no-repeat; background-position: top center;"><?php echo $cur_payment_type->name; ?></span>
-				</button>
-				<?php } ?>
-			</div>
-			<br style="clear: both;" />
-		</div>
-		 */ ?>
 		<div style="margin-top: 5px;" class="pf-group">
 			<div class="pf-field">
 				<table id="payments_table">

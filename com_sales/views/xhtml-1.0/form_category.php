@@ -41,7 +41,7 @@ $this->note = 'Provide category details in this form.';
 				 * @param string $prefix The prefix to insert before names.
 				 */
 				function com_sales_form_category_children($parent, $entity, $prefix = '->') {
-					foreach($parent->children as $category) {
+					foreach ($parent->children as $category) {
 						if ($category->is($entity))
 							continue;
 						?>
@@ -51,7 +51,7 @@ $this->note = 'Provide category details in this form.';
 							com_sales_form_category_children($category, $entity, "{$prefix}->");
 					}
 				}
-				foreach($this->categories as $category) {
+				foreach ($this->categories as $category) {
 					if ($category->is($this->entity))
 						continue;
 					?>
@@ -62,6 +62,15 @@ $this->note = 'Provide category details in this form.';
 				} ?>
 			</select>
 		</label>
+	</div>
+	<div class="pf-element">
+		<span class="pf-label">Products</span>
+		<span class="pf-note">These products are assigned to this category.</span>
+		<div class="pf-group">
+			<?php foreach ($this->entity->products as $cur_product) { ?>
+			<div class="pf-field"><a href="<?php echo htmlentities(pines_url('com_sales', 'editproduct', array('id' => $cur_product->guid))); ?>"><?php echo "[{$cur_product->guid}] {$cur_product->name}"; ?></a></div>
+			<?php } ?>
+		</div>
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>

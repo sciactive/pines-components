@@ -26,39 +26,35 @@ if (!isset($entity->parent->guid)) {
 	return;
 }
 
-foreach ($entity->parent->children as $key => $cur_child) {
-	if ($entity->is($cur_child)) {
-		switch ($_REQUEST['dir']) {
-			case 'up':
-				var_dump($key);
-				exit;
-				if (!isset($entity->parent->children[$key - 1])) {
-					pines_notice('Category is already first under its parent.');
-					redirect(pines_url('com_sales', 'listcategories'));
-					return;
-				} else {
-					$replace = $entity->parent->children[$key - 1];
-					$entity->parent->children[$key - 1] = $entity->parent->children[$key];
-					$entity->parent->children[$key] = $replace;
-				}
-				break;
-			case 'down':
-			default:
-				if (!isset($entity->parent->children[$key + 1])) {
-					pines_notice('Category is already last under its parent.');
-					redirect(pines_url('com_sales', 'listcategories'));
-					return;
-				} else {
-					$replace = $entity->parent->children[$key + 1];
-					$entity->parent->children[$key + 1] = $entity->parent->children[$key];
-					$entity->parent->children[$key] = $replace;
-				}
-				break;
-		}
-		if (!$entity->parent->save())
-			pines_error('Couldn\'t save new order in parent category. Do you have permission?');
-		break;
+$key = $entity->array_search($entity->parent->children);
+if ($key !== false) {
+	switch ($_REQUEST['dir']) {
+		case 'up':
+			if (!isset($entity->parent->children[$key - 1])) {
+				pines_notice('Category is already first under its parent.');
+				redirect(pines_url('com_sales', 'listcategories'));
+				return;
+			} else {
+				$replace = $entity->parent->children[$key - 1];
+				$entity->parent->children[$key - 1] = $entity->parent->children[$key];
+				$entity->parent->children[$key] = $replace;
+			}
+			break;
+		case 'down':
+		default:
+			if (!isset($entity->parent->children[$key + 1])) {
+				pines_notice('Category is already last under its parent.');
+				redirect(pines_url('com_sales', 'listcategories'));
+				return;
+			} else {
+				$replace = $entity->parent->children[$key + 1];
+				$entity->parent->children[$key + 1] = $entity->parent->children[$key];
+				$entity->parent->children[$key] = $replace;
+			}
+			break;
 	}
+	if (!$entity->parent->save())
+		pines_error('Couldn\'t save new order in parent category. Do you have permission?');
 }
 
 redirect(pines_url('com_sales', 'listcategories'));

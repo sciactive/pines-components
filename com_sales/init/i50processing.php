@@ -16,24 +16,24 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * This prevents the class from being loaded every script run.
  *
+ * @param array &$array The argument array.
  * @return mixed The method's return value.
  */
-function com_sales__payment_instant() {
+function com_sales__payment_instant(&$array) {
 	global $pines;
-	$args = func_get_args();
-	return call_user_func_array(array($pines->com_sales, 'payment_instant'), $args);
+	return call_user_func(array($pines->com_sales, 'payment_instant'), $array);
 }
 /**
  * Shortcut to $pines->com_sales->payment_manager().
  *
  * This prevents the class from being loaded every script run.
  *
+ * @param array &$array The argument array.
  * @return mixed The method's return value.
  */
-function com_sales__payment_manager() {
+function com_sales__payment_manager(&$array) {
 	global $pines;
-	$args = func_get_args();
-	return call_user_func_array(array($pines->com_sales, 'payment_manager'), $args);
+	return call_user_func(array($pines->com_sales, 'payment_manager'), $array);
 }
 
 $pines->config->com_sales->processing_types[] = array(

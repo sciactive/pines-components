@@ -55,9 +55,9 @@ class com_customer extends component {
 	/**
 	 * Add membership days to a customer for a product sale.
 	 *
-	 * @param array $array The details array.
+	 * @param array &$array The details array.
 	 */
-	function product_action_add_member_days($array) {
+	function product_action_add_member_days(&$array) {
 		global $pines;
 		$array['sale']->customer->make_member();
 		$days = 0;
@@ -83,9 +83,9 @@ class com_customer extends component {
 	/**
 	 * Add points to a customer for a product sale.
 	 *
-	 * @param array $array The details array.
+	 * @param array &$array The details array.
 	 */
-	function product_action_add_points($array) {
+	function product_action_add_points(&$array) {
 		global $pines;
 		$type = $array['sale']->customer->valid_member() ? 'member' : 'guest';
 		$points = 0;

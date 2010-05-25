@@ -57,52 +57,52 @@ class com_authorizenet extends component {
 	/**
 	 * Process a payment.
 	 *
-	 * @param array $args The argument array.
+	 * @param array &$array The argument array.
 	 */
-	function payment_credit($args) {
+	function payment_credit(&$array) {
 		global $pines;
-		switch ($args['action']) {
+		switch ($array['action']) {
 			case 'request':
 				$module = new module('com_authorizenet', 'form_payment');
-				if ($args['sale']->customer->guid) {
-					$module->name_first = $args['sale']->customer->name_first;
-					$module->name_last = $args['sale']->customer->name_last;
-					$module->address = $args['sale']->customer->address_1;
-					$module->state = $args['sale']->customer->state;
-					$module->zip = $args['sale']->customer->zip;
+				if ($array['sale']->customer->guid) {
+					$module->name_first = $array['sale']->customer->name_first;
+					$module->name_last = $array['sale']->customer->name_last;
+					$module->address = $array['sale']->customer->address_1;
+					$module->state = $array['sale']->customer->state;
+					$module->zip = $array['sale']->customer->zip;
 				}
 				$pines->page->override_doc($module->render());
 				break;
 			case 'approve':
-				$args['payment']['status'] = 'approved';
-				if ($args['payment']['data']['card_swiped'] == 'ON') {
-					if (empty($args['payment']['data']['name_last']) ||
-						empty($args['payment']['data']['card_number']) ||
-						empty($args['payment']['data']['card_exp_month']) ||
-						empty($args['payment']['data']['card_exp_year']))
-						$args['payment']['status'] = 'info_requested';
+				$array['payment']['status'] = 'approved';
+				if ($array['payment']['data']['card_swiped'] == 'ON') {
+					if (empty($array['payment']['data']['name_last']) ||
+						empty($array['payment']['data']['card_number']) ||
+						empty($array['payment']['data']['card_exp_month']) ||
+						empty($array['payment']['data']['card_exp_year']))
+						$array['payment']['status'] = 'info_requested';
 				} else {
-					if (empty($args['payment']['data']['name_last']) ||
-						empty($args['payment']['data']['card_number']) ||
-						empty($args['payment']['data']['card_exp_month']) ||
-						empty($args['payment']['data']['card_exp_year']) ||
-						empty($args['payment']['data']['cid']))
-						$args['payment']['status'] = 'info_requested';
+					if (empty($array['payment']['data']['name_last']) ||
+						empty($array['payment']['data']['card_number']) ||
+						empty($array['payment']['data']['card_exp_month']) ||
+						empty($array['payment']['data']['card_exp_year']) ||
+						empty($array['payment']['data']['cid']))
+						$array['payment']['status'] = 'info_requested';
 				}
 				break;
 			case 'tender':
-				$firstname = $args['payment']['data']['name_first'];
-				$lastname = $args['payment']['data']['name_last'];
-				$amt = (float) $args['payment']['amount'];
-				$card_num = $args['payment']['data']['card_number'];
-				$exp_date = $args['payment']['data']['card_exp_month'].$args['payment']['data']['card_exp_year'];
+				$firstname = $array['payment']['data']['name_first'];
+				$lastname = $array['payment']['data']['name_last'];
+				$amt = (float) $array['payment']['amount'];
+				$card_num = $array['payment']['data']['card_number'];
+				$exp_date = $array['payment']['data']['card_exp_month'].$array['payment']['data']['card_exp_year'];
 				//$address = $args['payment']['data']['address'];
 				//$state = $args['payment']['data']['state'];
 				//$zip = $args['payment']['data']['zip'];
-				$card_code = $args['payment']['data']['cid'];
+				$card_code = $array['payment']['data']['cid'];
 				// TODO: Find a better name for transactions.
-				$invoice_num = $args['sale']->transaction_id;
-				$transaction_name = $args['sale']->products[0]->entity->name;
+				$invoice_num = $array['sale']->transaction_id;
+				$transaction_name = $array['sale']->products[0]->entity->name;
 
 				$post_values = array(
 					// the API Login ID and Transaction Key must be replaced with valid values
@@ -130,7 +130,7 @@ class com_authorizenet extends component {
 					'x_state'			=> '', //$state,
 					'x_zip'				=> '' //$zip
 				);
-				if ($args['payment']['data']['card_swiped'] != 'ON')
+				if ($array['payment']['data']['card_swiped'] != 'ON')
 					$post_values['x_card_code'] = $card_code;
 				$post_string = "";
 				foreach ($post_values as $key => $value) {
@@ -152,52 +152,52 @@ class com_authorizenet extends component {
 				}
 
 				$response_array = explode($post_values["x_delim_char"],$post_response);
-				$args['payment']['com_authorizenet_credit_info'] = array(
-					'name_first'		=> $args['payment']['data']['name_first'],
-					'name_last'			=> $args['payment']['data']['name_last'],
+				$array['payment']['com_authorizenet_credit_info'] = array(
+					'name_first'		=> $array['payment']['data']['name_first'],
+					'name_last'			=> $array['payment']['data']['name_last'],
 					//'address'			=> $args['payment']['data']['address'],
 					//'state'			=> $args['payment']['data']['state'],
 					//'zip'				=> $args['payment']['data']['zip'],
-					'card_number'		=> substr($args['payment']['data']['card_number'], -4),
-					'card_exp_month'	=> $args['payment']['data']['card_exp_month'],
-					'card_exp_year'		=> $args['payment']['data']['card_exp_year'],
-					'card_swiped'		=> $args['payment']['data']['card_swiped']
+					'card_number'		=> substr($array['payment']['data']['card_number'], -4),
+					'card_exp_month'	=> $array['payment']['data']['card_exp_month'],
+					'card_exp_year'		=> $array['payment']['data']['card_exp_year'],
+					'card_swiped'		=> $array['payment']['data']['card_swiped']
 				);
 				switch ($response_array[0]) {
 					case 1:
-						$args['payment']['status'] = 'tendered';
-						$args['payment']['label'] = $this->card_type($args['payment']['data']['card_number']) . ' ' . substr($args['payment']['data']['card_number'], -4);
-						unset($args['payment']['data']['name_first']);
-						unset($args['payment']['data']['name_last']);
+						$array['payment']['status'] = 'tendered';
+						$array['payment']['label'] = $this->card_type($array['payment']['data']['card_number']) . ' ' . substr($array['payment']['data']['card_number'], -4);
+						unset($array['payment']['data']['name_first']);
+						unset($array['payment']['data']['name_last']);
 						//unset($args['payment']['data']['address']);
 						//unset($args['payment']['data']['state']);
 						//unset($args['payment']['data']['zip']);
-						unset($args['payment']['data']['card_number']);
-						unset($args['payment']['data']['card_exp_month']);
-						unset($args['payment']['data']['card_exp_year']);
-						unset($args['payment']['data']['cid']);
+						unset($array['payment']['data']['card_number']);
+						unset($array['payment']['data']['card_exp_month']);
+						unset($array['payment']['data']['card_exp_year']);
+						unset($array['payment']['data']['cid']);
 						break;
 					case 2:
-						$args['payment']['status'] = 'declined';
-						$args['payment']['label'] = $this->card_type($args['payment']['data']['card_number']) . ' ' . substr($args['payment']['data']['card_number'], -4);
-						unset($args['payment']['data']['name_first']);
-						unset($args['payment']['data']['name_last']);
+						$array['payment']['status'] = 'declined';
+						$array['payment']['label'] = $this->card_type($array['payment']['data']['card_number']) . ' ' . substr($array['payment']['data']['card_number'], -4);
+						unset($array['payment']['data']['name_first']);
+						unset($array['payment']['data']['name_last']);
 						//unset($args['payment']['data']['address']);
 						//unset($args['payment']['data']['state']);
 						//unset($args['payment']['data']['zip']);
-						unset($args['payment']['data']['card_number']);
-						unset($args['payment']['data']['card_exp_month']);
-						unset($args['payment']['data']['card_exp_year']);
-						unset($args['payment']['data']['cid']);
+						unset($array['payment']['data']['card_number']);
+						unset($array['payment']['data']['card_exp_month']);
+						unset($array['payment']['data']['card_exp_year']);
+						unset($array['payment']['data']['cid']);
 						break;
 					case 3:
-						$args['payment']['status'] = 'info_requested';
+						$array['payment']['status'] = 'info_requested';
 						break;
 					case 4:
 						pines_notice('Payment is held for review.');
 						break;
 					default:
-						$args['payment']['status'] = 'pending';
+						$array['payment']['status'] = 'pending';
 						pines_error('Credit processing failed. Please try again, and if the problem persists, please contact an administrator.');
 						break;
 				}

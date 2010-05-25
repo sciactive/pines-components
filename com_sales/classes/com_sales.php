@@ -379,19 +379,19 @@ class com_sales extends component {
 	/**
 	 * Process an instant approval payment.
 	 *
-	 * @param array $args The argument array.
+	 * @param array &$array The argument array.
 	 */
-	public function payment_instant($args) {
-		switch ($args['action']) {
+	public function payment_instant(&$array) {
+		switch ($array['action']) {
 			case 'approve':
-				$args['payment']['status'] = 'approved';
+				$array['payment']['status'] = 'approved';
 				break;
 			case 'tender':
-				$args['payment']['status'] = 'tendered';
-				$args['payment']['label'] = $args['payment']['entity']->name;
+				$array['payment']['status'] = 'tendered';
+				$array['payment']['label'] = $array['payment']['entity']->name;
 				break;
 			case 'change':
-				$args['sale']->change_given = true;
+				$array['sale']->change_given = true;
 				break;
 		}
 	}
@@ -399,37 +399,37 @@ class com_sales extends component {
 	/**
 	 * Process a manager approval payment.
 	 *
-	 * @param array $args The argument array.
+	 * @param array &$array The argument array.
 	 */
-	public function payment_manager($args) {
+	public function payment_manager(&$array) {
 		global $pines;
-		switch ($args['action']) {
+		switch ($array['action']) {
 			case 'request':
 				$module = new module('com_sales', 'payment_form_manager');
 				$pines->page->override_doc($module->render());
 				break;
 			case 'approve':
 				if (gatekeeper('com_sales/manager')) {
-					unset($args['payment']['data']['username']);
-					unset($args['payment']['data']['password']);
-					$args['payment']['status'] = 'approved';
+					unset($array['payment']['data']['username']);
+					unset($array['payment']['data']['password']);
+					$array['payment']['status'] = 'approved';
 				} else {
-					if ($id = $pines->user_manager->authenticate($args['payment']['data']['username'], $args['payment']['data']['password'])) {
+					if ($id = $pines->user_manager->authenticate($array['payment']['data']['username'], $array['payment']['data']['password'])) {
 						$user = user::factory($id);
-						$args['payment']['status'] = gatekeeper('com_sales/manager', $user) ? 'approved' : 'manager_approval_needed';
+						$array['payment']['status'] = gatekeeper('com_sales/manager', $user) ? 'approved' : 'manager_approval_needed';
 					} else {
-						$args['payment']['status'] = 'manager_approval_needed';
+						$array['payment']['status'] = 'manager_approval_needed';
 					}
-					unset($args['payment']['data']['username']);
-					unset($args['payment']['data']['password']);
+					unset($array['payment']['data']['username']);
+					unset($array['payment']['data']['password']);
 				}
 				break;
 			case 'tender':
-				$args['payment']['status'] = 'tendered';
-				$args['payment']['label'] = $args['payment']['entity']->name;
+				$array['payment']['status'] = 'tendered';
+				$array['payment']['label'] = $array['payment']['entity']->name;
 				break;
 			case 'change':
-				$args['sale']->change_given = true;
+				$array['sale']->change_given = true;
 				break;
 		}
 	}

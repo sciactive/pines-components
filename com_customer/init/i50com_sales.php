@@ -23,24 +23,24 @@ if (!$pines->config->com_customer->com_sales)
  *
  * This prevents the class from being loaded every script run.
  *
+ * @param array &$array The details array.
  * @return mixed The method's return value.
  */
-function com_customer__product_action_add_points() {
+function com_customer__product_action_add_points(&$array) {
 	global $pines;
-	$args = func_get_args();
-	return call_user_func_array(array($pines->com_customer, 'product_action_add_points'), $args);
+	return call_user_func(array($pines->com_customer, 'product_action_add_points'), $array);
 }
 /**
  * Shortcut to $pines->com_customer->product_action_add_member_days().
  *
  * This prevents the class from being loaded every script run.
  *
+ * @param array &$array The details array.
  * @return mixed The method's return value.
  */
-function com_customer__product_action_add_member_days() {
+function com_customer__product_action_add_member_days(&$array) {
 	global $pines;
-	$args = func_get_args();
-	return call_user_func_array(array($pines->com_customer, 'product_action_add_member_days'), $args);
+	return call_user_func(array($pines->com_customer, 'product_action_add_member_days'), $array);
 }
 
 $pines->config->com_sales->product_actions[] = array(

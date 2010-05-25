@@ -16,12 +16,12 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * This prevents the class from being loaded every script run.
  * 
+ * @param array &$array The argument array.
  * @return mixed The method's return value.
  */
-function com_authorizenet__payment_credit() {
+function com_authorizenet__payment_credit(&$array) {
 	global $pines;
-	$args = func_get_args();
-	return call_user_func_array(array($pines->com_authorizenet, 'payment_credit'), $args);
+	return call_user_func(array($pines->com_authorizenet, 'payment_credit'), $array);
 }
 
 $pines->config->com_sales->processing_types[] = array(

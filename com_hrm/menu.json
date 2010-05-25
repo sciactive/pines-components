@@ -45,13 +45,5 @@
 			"depend": {
 				"ability": "com_hrm/listusertemplates"
 			}
-		},
-		{
-			"path": "main_menu/business/com_hrm/newusertemplate",
-			"text": "New User Template",
-			"href": ["com_hrm","editusertemplate"],
-			"depend": {
-				"ability": "com_hrm/newusertemplate"
-			}
 		}
 ]

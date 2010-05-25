@@ -25,24 +25,17 @@
 		{
 			"path": "main_menu/business/com_customer/companies",
 			"text": "Companies",
+			"href": ["com_customer","listcompanies"],
 			"depend": {
-				"children": true
+				"ability": "com_customer/listcompanies"
 			}
 		},
-			{
-				"path": "main_menu/business/com_customer/companies/companies",
-				"text": "Companies",
-				"href": ["com_customer","listcompanies"],
-				"depend": {
-					"ability": "com_customer/listcompanies"
-				}
-			},
-			{
-				"path": "main_menu/business/com_customer/companies/editcompany",
-				"text": "New Company",
-				"href": ["com_customer","editcompany"],
-				"depend": {
-					"ability": "com_customer/newcompany"
-				}
+		{
+			"path": "main_menu/business/com_customer/newcompany",
+			"text": "New Company",
+			"href": ["com_customer","editcompany"],
+			"depend": {
+				"ability": "com_customer/newcompany"
 			}
+		}
 ]

@@ -27,6 +27,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'full_root_url',
+		'cname' => 'Full Root URL',
+		'description' => 'The full URL of the root directory for the file manager.',
+		'value' => $pines->config->full_location.$pines->config->upload_location,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'root_alias',
 		'cname' => 'Root Alias',
 		'description' => 'A name to call the root directory.',

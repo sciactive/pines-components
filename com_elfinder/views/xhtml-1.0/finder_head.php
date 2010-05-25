@@ -1,6 +1,6 @@
 <?php
 /**
- * A view to load the TinyMCE editor.
+ * A view to load the elFinder file manager.
  *
  * @package Pines
  * @subpackage com_elfinder

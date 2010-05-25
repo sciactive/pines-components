@@ -105,19 +105,17 @@ if ($product->save()) {
 	// We have to do this here, because new products won't have a GUID until now.
 	$categories = (array) json_decode($_REQUEST['categories']);
 	array_map('intval', $categories);
-	$all_categories = $pines->com_sales->get_category_array();
+	$all_categories = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'category'), 'class' => com_sales_category));
 	foreach($all_categories as $cur_cat) {
-		if (!is_array($cur_cat->products))
-			$cur_cat->products = array();
-
-		if (in_array($cur_cat->guid, $categories) && !in_array($product->guid, $cur_cat->products)) {
-			$cur_cat->products[] = $product->guid;
+		if (in_array($cur_cat->guid, $categories) && !$product->in_array($cur_cat->products)) {
+			$cur_cat->products[] = $product;
 			if (!$cur_cat->save())
-				pines_error('Failed to add product to category: '.$cur_cat->name);
-		} elseif (!in_array($cur_cat->guid, $categories) && in_array($product->guid, $cur_cat->products)) {
-			$cur_cat->products = array_diff($cur_cat->products, array($product->guid));
+				pines_error("Couldn't add product to category {$cur_cat->name}. Do you have permission?");
+		} elseif (!in_array($cur_cat->guid, $categories) && $product->in_array($cur_cat->products)) {
+			$key = $product->array_search($cur_cat->products);
+			unset($cur_cat->products[$key]);
 			if (!$cur_cat->save())
-				pines_error('Failed to remove product from category: '.$cur_cat->name);
+				pines_error("Couldn't remove product from category {$cur_cat->name}. Do you have permission?");
 		}
 	}
 } else {

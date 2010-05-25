@@ -141,30 +141,43 @@ $pines->com_jstree->load();
 				<script type="text/javascript">
 					// <![CDATA[
 					pines(function(){
-						// Category Grid
 						var input = $("#categories");
-						$("#category_grid").pgrid({
+						var selected_rows = JSON.parse("<?php echo addslashes(json_encode($this->entity->get_categories_guid())); ?>");
+						// Category Grid
+						var category_grid = $("#category_grid").pgrid({
+							pgrid_hidden_cols: [1],
 							pgrid_sort_col: 1,
 							pgrid_sort_ord: "asc",
 							pgrid_paginate: false,
 							pgrid_view_height: "300px"
 						});
+						input.val(JSON.stringify(selected_rows));
 
 						// Category Dialog
-						$("#category_dialog").dialog({
+						var category_dialog = $("#category_dialog").dialog({
 							bgiframe: true,
 							autoOpen: false,
 							modal: true,
 							width: 600,
+							open: function() {
+								category_grid.pgrid_get_selected_rows().pgrid_deselect_rows();
+								category_grid.pgrid_select_rows(selected_rows);
+							},
 							buttons: {
 								'Done': function() {
+									var new_selected_rows = category_grid.pgrid_get_selected_rows();
+									selected_rows = [];
+									new_selected_rows.each(function(){
+										selected_rows.push(parseInt($(this).attr("title")));
+									});
+									input.val(JSON.stringify(selected_rows));
 									$(this).dialog('close');
 								}
 							}
 						});
 
 						$('#category_button').click(function() {
-							$('#category_dialog').dialog('open');
+							category_dialog.dialog('open');
 						});
 					});
 					// ]]>
@@ -172,10 +185,11 @@ $pines->com_jstree->load();
 				<button id="category_button" class="pf-field ui-state-default ui-corner-all" type="button">Pick Categories</button>
 				<input id="categories" type="hidden" name="categories" />
 			</div>
-			<div id="category_dialog" title="Categories">
+			<div id="category_dialog" title="Categories" style="display: none;">
 				<table id="category_grid">
 					<thead>
 						<tr>
+							<th>Order</th>
 							<th>Name</th>
 							<th>Products</th>
 						</tr>
@@ -183,6 +197,7 @@ $pines->com_jstree->load();
 					<tbody>
 					<?php foreach($this->categories as $category) { ?>
 						<tr title="<?php echo $category->guid; ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? "child {$category->parent->guid} " : ''; ?>">
+							<td><?php echo isset($category->parent) ? $category->array_search($category->parent->children) + 1 : '0' ; ?></td>
 							<td><?php echo $category->name; ?></td>
 							<td><?php echo count($category->products); ?></td>
 						</tr>

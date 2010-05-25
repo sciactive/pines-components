@@ -205,35 +205,20 @@ $pines->com_pgrid->load();
 												alert("No product was found with the code "+code+".");
 												return;
 											}
-											var serial = "";
-											if (data.serialized) {
-												while (!serial) {
-													serial = prompt("This item is serialized. Please provide the serial:");
-													if (serial == null)
-														return;
-												}
-											}
-											if (data.one_per_ticket) {
-												var cur_products = products_table.pgrid_get_all_rows().pgrid_export_rows();
-												var pass = true;
-												$.each(cur_products, function(){
-													if (parseInt(this.key) == data.guid) {
-														alert("Only one of this product is allowed per ticket.");
-														pass = false;
-													}
-												});
-												if (!pass)
-													return;
-											}
-											products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'in-store', 1, data.unit_price, "", "", ""]}], function(){
-												var cur_row = $(this);
-												cur_row.data("product", data);
-											});
-											update_products();
+											add_product(data);
 										}
 									});
 								}
 							});
+						}
+					},
+					{
+						type: 'button',
+						text: '',
+						extra_class: 'picon picon_16x16_view-list-tree',
+						selection_optional: true,
+						click: function(){
+							category_dialog.dialog("open");
 						}
 					},
 					{type: 'separator'},
@@ -350,6 +335,123 @@ $pines->com_pgrid->load();
 						}
 					}
 				]
+			});
+			var add_product = function(data){
+				var serial = "";
+				if (data.serialized) {
+					while (!serial) {
+						serial = prompt("This item is serialized. Please provide the serial:");
+						if (serial == null)
+							return;
+					}
+				}
+				if (data.one_per_ticket) {
+					var cur_products = products_table.pgrid_get_all_rows().pgrid_export_rows();
+					var pass = true;
+					$.each(cur_products, function(){
+						if (parseInt(this.key) == data.guid) {
+							alert("Only one of this product is allowed per ticket.");
+							pass = false;
+						}
+					});
+					if (!pass)
+						return;
+				}
+				products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'in-store', 1, data.unit_price, "", "", ""]}], function(){
+					var cur_row = $(this);
+					cur_row.data("product", data);
+				});
+				update_products();
+			};
+			// Category Grid
+			var category_grid = $("#category_grid").pgrid({
+				pgrid_hidden_cols: [1],
+				pgrid_sort_col: 1,
+				pgrid_sort_ord: "asc",
+				pgrid_paginate: false,
+				pgrid_view_height: "300px",
+				pgrid_multi_select: false,
+				pgrid_double_click: function(e, row){
+					category_products_grid.pgrid_get_all_rows().pgrid_delete();
+					var loader;
+					$.ajax({
+						url: "<?php echo pines_url('com_sales', 'productcategory'); ?>",
+						type: "POST",
+						dataType: "json",
+						data: {"id": $(row).attr("title")},
+						beforeSend: function(){
+							loader = $.pnotify({
+								pnotify_title: 'Product Search',
+								pnotify_text: 'Retrieving product from server...',
+								pnotify_notice_icon: 'picon picon_16x16_throbber',
+								pnotify_nonblock: true,
+								pnotify_hide: false,
+								pnotify_history: false
+							});
+						},
+						complete: function(){
+							loader.pnotify_remove();
+						},
+						error: function(XMLHttpRequest, textStatus){
+							pines.error("An error occured while trying to lookup the product code:\n"+XMLHttpRequest.status+": "+textStatus);
+						},
+						success: function(data){
+							if (!data || !data[0]) {
+								alert("No products were returned.");
+								return;
+							}
+							$.each(data, function(){
+								var product = this;
+								category_products_grid.pgrid_add([{key: this.guid, values: [this.name, this.sku]}], function(){
+									$(this).data("product", product);
+								});
+							});
+							category_products_dialog.dialog("open");
+						}
+					});
+				}
+			});
+			// Category Dialog
+			var category_dialog = $("#category_dialog").dialog({
+				bgiframe: true,
+				autoOpen: false,
+				modal: true,
+				width: 600,
+				open: function() {
+					category_grid.pgrid_get_selected_rows().pgrid_deselect_rows();
+				}
+			});
+			// Category Products Grid
+			var category_products_grid = $("#category_products_grid").pgrid({
+				pgrid_sort_col: 1,
+				pgrid_sort_ord: "asc",
+				pgrid_view_height: "300px",
+				pgrid_multi_select: false,
+				pgrid_double_click: function(){
+					category_products_dialog.dialog("option", "buttons").Done();
+				}
+			});
+			// Category Products Dialog
+			var category_products_dialog = $("#category_products_dialog").dialog({
+				bgiframe: true,
+				autoOpen: false,
+				modal: true,
+				width: 800,
+				open: function() {
+					category_products_grid.pgrid_get_selected_rows().pgrid_deselect_rows();
+				},
+				buttons: {
+					'Done': function() {
+						var data = category_products_grid.pgrid_get_selected_rows().data("product");
+						if (!data) {
+							alert("Please select a product.");
+							return;
+						}
+						add_product(data);
+						category_products_dialog.dialog('close');
+						category_dialog.dialog('close');
+					}
+				}
 			});
 			<?php } ?>
 
@@ -814,7 +916,8 @@ $pines->com_pgrid->load();
 	</script>
 	<?php if ($pines->config->com_sales->com_customer) { ?>
 	<div class="pf-element">
-		<label for="customer_search"><span class="pf-label">Customer</span>
+		<label for="customer_search">
+			<span class="pf-label">Customer</span>
 			<?php if ($this->entity->status != 'invoiced' && $this->entity->status != 'paid') { ?>
 			<span class="pf-note">Enter part of a name, company, email, or phone # to search.</span>
 			<?php } ?>
@@ -849,23 +952,56 @@ $pines->com_pgrid->load();
 			</thead>
 			<tbody>
 				<tr>
-					<td>----------------------</td>
-					<td>----------------------</td>
-					<td>----------------------</td>
-					<td>----------------------</td>
-					<td>----------------------</td>
-					<td>----------------------</td>
-					<td>----------------------</td>
-					<td>----------------------</td>
-					<td>----------------------</td>
-					<td>----------------------</td>
-					<td>----------------------</td>
-					<td>----------------------</td>
-					<td>----------------------</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
 				</tr>
 			</tbody>
 		</table>
 		<br class="pf-clearing" />
+	</div>
+	<div id="category_dialog" title="Categories" style="display: none;">
+		<table id="category_grid">
+			<thead>
+				<tr>
+					<th>Order</th>
+					<th>Name</th>
+					<th>Products</th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php foreach($this->categories as $category) { ?>
+				<tr title="<?php echo $category->guid; ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? "child {$category->parent->guid} " : ''; ?>">
+					<td><?php echo isset($category->parent) ? $category->array_search($category->parent->children) + 1 : '0' ; ?></td>
+					<td><?php echo $category->name; ?></td>
+					<td><?php echo count($category->products); ?></td>
+				</tr>
+			<?php } ?>
+			</tbody>
+		</table>
+	</div>
+	<div id="category_products_dialog" title="Products" style="display: none;">
+		<table id="category_products_grid">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>SKU</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr><td>-</td><td>-</td></tr>
+			</tbody>
+		</table>
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-full-width">

@@ -327,7 +327,7 @@ $pines->com_pgrid->load();
 					<button class="pf-field ui-state-default ui-corner-all" type="button" id="company_search_button"><span class="picon picon_16x16_system-search" style="padding-left: 16px; background-repeat: no-repeat;">Search</span></button>
 				</div>
 			</div>
-			<div id="company_dialog" title="Pick a Company" style="display: none; overflow: hidden;">
+			<div id="company_dialog" title="Pick a Company" style="display: none;">
 				<table id="company_table">
 					<thead>
 						<tr>

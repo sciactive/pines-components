@@ -930,7 +930,7 @@ $pines->com_pgrid->load();
 			<?php } ?>
 		</div>
 	</div>
-	<div id="customer_dialog" title="Pick a Customer" style="display: none; overflow: hidden;">
+	<div id="customer_dialog" title="Pick a Customer" style="display: none;">
 		<table id="customer_table">
 			<thead>
 				<tr>
@@ -969,7 +969,7 @@ $pines->com_pgrid->load();
 		</table>
 		<br class="pf-clearing" />
 	</div>
-	<div id="category_dialog" title="Categories" style="display: none; overflow: hidden;">
+	<div id="category_dialog" title="Categories" style="display: none;">
 		<table id="category_grid">
 			<thead>
 				<tr>
@@ -988,8 +988,9 @@ $pines->com_pgrid->load();
 			<?php } ?>
 			</tbody>
 		</table>
+		<br class="pf-clearing" />
 	</div>
-	<div id="category_products_dialog" title="Products" style="display: none; overflow: hidden;">
+	<div id="category_products_dialog" title="Products" style="display: none;">
 		<table id="category_products_grid">
 			<thead>
 				<tr>
@@ -1001,6 +1002,7 @@ $pines->com_pgrid->load();
 				<tr><td>-</td><td>-</td></tr>
 			</tbody>
 		</table>
+		<br class="pf-clearing" />
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-full-width">

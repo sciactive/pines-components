@@ -63,6 +63,7 @@ if ($this->entity->final)
 			<?php if (empty($this->entity->received)) { ?>
 			stock_table.pgrid({
 				pgrid_paginate: false,
+				pgrid_view_height: "300px",
 				pgrid_toolbar: true,
 				pgrid_toolbar_contents : [
 					{
@@ -208,7 +209,7 @@ if ($this->entity->final)
 			<input type="hidden" id="stock" name="stock" size="24" />
 		</div>
 	</div>
-	<div id="stock_dialog" title="Add Stock">
+	<div id="stock_dialog" title="Add Stock" style="display: none;">
 		<table id="available_stock_table">
 			<thead>
 				<tr>
@@ -221,9 +222,10 @@ if ($this->entity->final)
 				</tr>
 			</thead>
 			<tbody>
-				<tr><td>-----------</td><td>-----------</td><td>-----------</td><td>-----------</td><td>-----------</td><td>-----------</td></tr>
+				<tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
 			</tbody>
 		</table>
+		<br class="pf-clearing" />
 	</div>
 	<?php if (!empty($this->entity->received)) { ?>
 	<div class="pf-element">

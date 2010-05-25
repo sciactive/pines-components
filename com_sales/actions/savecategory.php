@@ -36,7 +36,7 @@ if (empty($category->name)) {
 
 $category->ac->other = 1;
 
-if ((int) $_REQUEST['parent'] == $category->guid) {
+if ((int) $_REQUEST['parent'] === $category->guid) {
 	$category->print_form();
 	pines_notice('Cannot make a category its own parent.');
 	return;

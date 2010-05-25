@@ -379,7 +379,7 @@ $pines->com_pgrid->load();
 	// ]]>
 </script>
 <div class="station_layout">
-	<img src="<?php echo $pines->config->rela_location.$this->entity->get_background(); ?>" class="station_layout_bg" alt="Station Layout" />
+	<img class="station_layout_bg" src="<?php echo $this->entity->background; ?>" alt="Station Layout" />
 	<div class="station_floor"></div>
 	<br style="clear: both; height: 1px;" />
 </div>

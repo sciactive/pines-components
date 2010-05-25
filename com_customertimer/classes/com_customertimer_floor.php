@@ -63,11 +63,6 @@ class com_customertimer_floor extends entity {
 		return true;
 	}
 
-	public function get_background() {
-		global $pines;
-		return "{$pines->config->upload_location}floorplans/{$this->background}";
-	}
-
 	/**
 	 * Save the floor.
 	 * @return bool True on success, false on failure.

@@ -32,8 +32,10 @@ $group->email = $_REQUEST['email'];
 $group->phone = preg_replace('/\D/', '', $_REQUEST['phone']);
 $group->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
 $group->timezone = $_REQUEST['timezone'];
-$group->default_primary = $_REQUEST['default_primary'] == 'ON';
-$group->default_secondary = $_REQUEST['default_secondary'] == 'ON';
+if (gatekeeper('com_user/defaultgroups')) {
+	$group->default_primary = $_REQUEST['default_primary'] == 'ON';
+	$group->default_secondary = $_REQUEST['default_secondary'] == 'ON';
+}
 // Location
 $group->address_type = $_REQUEST['address_type'];
 $group->address_1 = $_REQUEST['address_1'];
@@ -116,7 +118,7 @@ if (isset($group->parent) && (!isset($group->parent->guid) || $group->is($group-
 	pines_notice('Parent group is not valid.');
 	return;
 }
-if ($group->default_primary) {
+if (gatekeeper('com_user/defaultgroups') && $group->default_primary) {
 	$current_primary = $pines->entity_manager->get_entity(array('data' => array('default_primary' => true), 'tags' => array('com_user', 'group'), 'class' => group));
 	if (isset($current_primary) && !$group->is($current_primary)) {
 		unset($current_primary->default_primary);

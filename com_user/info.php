@@ -39,7 +39,8 @@ return array(
 		array('newgroup', 'Create Groups', 'User can create new groups.'),
 		array('editgroup', 'Edit Groups', 'User can edit other groups.'),
 		array('deletegroup', 'Delete Groups', 'User can delete other groups.'),
-		array('assigngroup', 'Assign Groups', 'User can assign users to groups, possibly granting them more abilities.')
+		array('assigngroup', 'Assign Groups', 'User can assign users to groups, possibly granting them more abilities.'),
+		array('defaultgroups', 'Change Default Groups', 'User can change which groups will be assigned to new users.')
 	),
 );
 

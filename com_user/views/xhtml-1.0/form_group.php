@@ -261,6 +261,7 @@ $pines->com_pgrid->load();
 						<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->entity->parent); ?>
 					</select></label>
 			</div>
+			<?php if ($this->display_default) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">New User Primary Group</span>
 					<span class="pf-note">Default primary group for newly registered users.</span>
@@ -271,6 +272,7 @@ $pines->com_pgrid->load();
 					<span class="pf-note">Default secondary group for newly registered users.</span>
 					<input class="pf-field ui-widget-content" type="checkbox" name="default_secondary" size="24" value="ON"<?php echo $this->entity->default_secondary ? ' checked="checked"' : ''; ?> /></label>
 			</div>
+			<?php } ?>
 			<br class="pf-clearing" />
 		</div>
 		<div id="tab_logo">

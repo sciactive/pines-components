@@ -15,6 +15,14 @@ $this->note = count($this->transactions).' record(s) found.';
 $pines->com_pgrid->load();
 $pines->com_jstree->load();
 ?>
+<style type="text/css" >
+	/* <![CDATA[ */
+	#history_grid a {
+		color: blue;
+		text-decoration:  underline;
+	}
+	/* ]]> */
+</style>
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
@@ -193,10 +201,30 @@ $pines->com_jstree->load();
 		</tr>
 	</thead>
 	<tbody>
-	<?php foreach ($this->transactions as $cur_transaction) { ?>
+	<?php
+	foreach ($this->transactions as $cur_transaction) {
+		$transaction_type = $cur_transaction->entity->tags[1];
+		switch ($transaction_type) {
+			case 'sale':
+				$link = pines_url('com_sales', 'receiptsale', array('id' => $cur_transaction->entity->guid));
+				break;
+			case 'countsheet':
+				$link = pines_url('com_sales', 'editcountsheet', array('id' => $cur_transaction->entity->guid));
+				break;
+			case 'transfer':
+				$link = pines_url('com_sales', 'edittransfer', array('id' => $cur_transaction->entity->guid));
+				break;
+			case 'po':
+				$link = pines_url('com_sales', 'editpo', array('id' => $cur_transaction->entity->guid));
+				break;
+			default:
+				$link = '';
+				break;
+		}
+	?>
 		<tr title="<?php echo $cur_transaction->entity->guid; ?>">
 			<td><?php echo format_date($cur_transaction->entity->p_cdate); ?></td>
-			<td><?php echo $cur_transaction->entity->guid; ?></td>
+			<td><a href="<?php echo $link; ?>" target="_blank"><?php echo $cur_transaction->entity->guid; ?></a></td>
 			<td><?php echo $cur_transaction->product->sku; ?></td>
 			<td><?php echo $cur_transaction->product->name; ?></td>
 			<td><?php echo $cur_transaction->entity->group->name; ?></td>

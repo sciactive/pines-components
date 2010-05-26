@@ -71,7 +71,7 @@ $pines->com_jstree->load();
 					location.val(TREE_OBJ.selected.attr("id"));
 					update_employees(TREE_OBJ.selected.attr("id"));
 				},
-				check_move: function(NODE, REF_NODE, TYPE, TREE_OBJ) {
+				check_move: function() {
 					return false;
 				}
 			}

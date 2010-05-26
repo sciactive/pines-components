@@ -38,6 +38,7 @@ $test->tests['create'][2] = 'Creating entity...';
 // Saving entity...
 $entity_test->name = 'Entity Test '.time();
 $entity_test->test_value = 'test';
+$entity_test->test_array = array('full', 'of', 'values', 500);
 $entity_test->match_test = "Hello, my name is Edward McCheese. It is a pleasure to meet you. As you can see, I have several hats of the most pleasant nature.
 
 This one's email address is nice_hat-wednesday+newyork@im-a-hat.hat.
@@ -196,6 +197,32 @@ foreach ($entity_result as $cur_entity) {
 $test->tests['wr_data'][0] = (!$found_match);
 $test->tests['wr_data'][1] = microtime(true);
 $test->tests['wr_data'][2] = 'Testing wrong data...';
+//unset($entity_result);
+
+// Retrieving entity by array value...
+$entity_result = array();
+$found_match = false;
+$entity_result = $pines->entity_manager->get_entities(array('array' => array('test_array' => 'values')));
+foreach ($entity_result as $cur_entity) {
+	if ($cur_entity->name == $entity_test->name)
+		$found_match = true;
+}
+$test->tests['array'][0] = ($found_match);
+$test->tests['array'][1] = microtime(true);
+$test->tests['array'][2] = 'Retrieving entity by array value...';
+//unset($entity_result);
+
+// Testing wrong array value...
+$entity_result = array();
+$found_match = false;
+$entity_result = $pines->entity_manager->get_entities(array('array' => array('test_array' => 'pickles')));
+foreach ($entity_result as $cur_entity) {
+	if ($cur_entity->name == $entity_test->name)
+		$found_match = true;
+}
+$test->tests['wr_array'][0] = (!$found_match);
+$test->tests['wr_array'][1] = microtime(true);
+$test->tests['wr_array'][2] = 'Testing wrong array value...';
 //unset($entity_result);
 
 // Retrieving entity by regex match...

@@ -301,6 +301,7 @@ class com_myentity extends component implements entity_manager_interface {
 						$cur_query .= 'e.`mdate`='.((float) $option['p_mdate']);
 						unset($option['p_cdate']);
 					}
+				case 'array':
 				case 'match':
 				case 'gt':
 					if (isset($option['p_cdate'])) {
@@ -391,6 +392,7 @@ class com_myentity extends component implements entity_manager_interface {
 						$cur_query .= 'e.`mdate`='.((float) $option['p_mdate']);
 						unset($option['p_cdate']);
 					}
+				case 'array_i':
 				case 'match_i':
 				case 'gt_i':
 					if (isset($option['p_cdate'])) {
@@ -545,6 +547,24 @@ class com_myentity extends component implements entity_manager_interface {
 						$found = false;
 						foreach ($option as $cur_key => $cur_option) {
 							if (key_exists($cur_key, $data) && $data[$cur_key] == $cur_option) {
+								$found = true;
+								break;
+							}
+						}
+						$pass = $pass && $found;
+						break;
+					case 'array':
+						foreach ($option as $cur_key => $cur_option) {
+							if (!is_array($data[$cur_key]) || !in_array($cur_option, $data[$cur_key])) {
+								$pass = false;
+								break 2;
+							}
+						}
+						break;
+					case 'array_i':
+						$found = false;
+						foreach ($option as $cur_key => $cur_option) {
+							if (key_exists($cur_key, $data) && is_array($data[$cur_key]) && in_array($cur_option, $data[$cur_key])) {
 								$found = true;
 								break;
 							}

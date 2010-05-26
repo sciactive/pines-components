@@ -84,6 +84,33 @@ class com_sales extends component {
 	}
 
 	/**
+	 * Print a form to select date timespan.
+	 *
+	 * @param bool $all_time Currently searching all records or a timespan.
+	 * @param string $start The current starting date of the timespan.
+	 * @param string $start The current ending date of the timespan.
+	 * @return module The form's module.
+	 */
+	public function date_select_form($all_time = false, $start, $end) {
+		global $pines;
+		$module = new module('com_sales', 'form_date_selector', 'content');
+		$module->all_time = $all_time;
+		if (!isset($start)) {
+			$module->start_date = time();
+		} else {
+			$module->start_date = $start;
+		}
+		if (!isset($end)) {
+			$module->end_date = time();
+		} else {
+			$module->end_date = $end;
+		}
+		
+		$pines->page->override_doc($module->render());
+		return $module;
+	}
+
+	/**
 	 * Gets a product by its code.
 	 *
 	 * The first code checked is the product's SKU. If the product is found, it
@@ -119,7 +146,7 @@ class com_sales extends component {
 	 * @param string $header The header title for the message.
 	 * @param string $note The content of the message.
 	 * @param string $link The url to send the user to upon clicking the header.
-	 * @return module The notifcation's module.
+	 * @return module The notification's module.
 	 */
 	public function inform($title, $header, $note, $link = null) {
 		global $pines;
@@ -377,6 +404,26 @@ class com_sales extends component {
 	}
 
 	/**
+	 * Print a form to select a location.
+	 *
+	 * @param int $location The currently set location to search in.
+	 * @return module The form's module.
+	 */
+	public function location_select_form($location) {
+		global $pines;
+		
+		$module = new module('com_sales', 'form_location_selector', 'content');
+		if (!isset($location)) {
+			$module->location = $_SESSION['user']->group->guid;
+		} else {
+			$module->location = $location;
+		}
+
+		$pines->page->override_doc($module->render());
+		return $module;
+	}
+	
+	/**
 	 * Process an instant approval payment.
 	 *
 	 * @param array &$array The argument array.
@@ -459,6 +506,115 @@ class com_sales extends component {
 
 		return $module;
 	}
+
+	/**
+	 * Creates and attaches a module which lists a products history.
+	 * @param int $tracking_code The serial number of the product to search for.
+	 * @param int $sku The sku code of the product(s) to search for.
+	 * @param int $location The location to search for products in.
+	 * @param int $start The starting date to search for products within.
+	 * @param int $end The ending date to search for products within.
+	 */
+	public function track_product($tracking_code = null, $sku = null, $location = null, $start = null, $end = null) {
+		global $pines;
+
+		$module = new module('com_sales', 'track_product', 'content');
+		$module->items = array();
+
+		$options = array('tags' => array('com_sales', 'stock'), 'class' => com_sales_stock);
+		if (!empty($tracking_code)) {
+			$module->tracking_code = $countsheet_code = $tracking_code;
+			$options['data'] = array('serial' => $tracking_code);
+		}
+		if (!empty($sku)) {
+			$module->sku = $sku;
+			if (!isset($countsheet_code))
+				$countsheet_code = $sku;
+			$options['ref']['product'] = $pines->com_sales->get_product_by_code($sku);
+		}
+
+		if (isset($location))
+			$module->location = $location->guid;
+		if (!isset($location) || ($module->location != 'all' && !isset($location->guid)))
+			$module->location = 'all';
+		if (isset($module->location) && $module->location != 'all')
+			$options['ref']['group'] = $location;
+		
+		if (isset($start)) {
+			$module->start_date = $start;
+			$options['gte'] = array('p_cdate' => (int) $start);
+		}
+		if (isset($end)) {
+			$module->end_date = $end;
+			$options['lte'] = array('p_cdate' => (int) $end);
+		}
+		if (!isset($module->start_date) || !isset($module->end_date)) {
+			$module->all_time = true;
+			$module->start_date = $module->end_date = time();
+		} else {
+			$module->all_time = false;
+		}
+		$found_stock = $module->transactions = array();
+		if (isset($module->tracking_code) || isset($module->sku))
+			$found_stock = $pines->entity_manager->get_entities($options);
+		foreach ($found_stock as $cur_stock) {
+			// Grab all invoices, countsheets, transfers and purchase orders for
+			// all stock items with the given serial number / sku.
+			$invoices = $pines->entity_manager->get_entities(array('ref' => array('products' => $cur_stock), 'tags' => array('com_sales', 'sale'), 'class' => com_sales_sale));
+			$countsheets = $pines->entity_manager->get_entities(array('array' => array('entries' => $countsheet_code), 'tags' => array('com_sales', 'countsheet'), 'class' => com_sales_countsheet));
+			$transfers = $pines->entity_manager->get_entities(array('ref' => array('stock' => $cur_stock), 'tags' => array('com_sales', 'transfer'), 'class' => com_sales_transfer));
+			$pos = $pines->entity_manager->get_entities(array('ref' => array('received' => $cur_stock), 'tags' => array('com_sales', 'po'), 'class' => com_sales_po));
+			foreach ($invoices as $cur_invoice) {
+				if (isset($module->transactions[$cur_invoice->guid])) {
+					$module->transactions[$cur_invoice->guid]->qty++;
+				} else {
+					$module->transactions[$cur_invoice->guid]->product = $cur_stock->product;
+					$module->transactions[$cur_invoice->guid]->entity = $cur_invoice;
+					$module->transactions[$cur_invoice->guid]->transaction_info = 'Invoiced';
+					$module->transactions[$cur_invoice->guid]->qty = 1;
+					$module->transactions[$cur_invoice->guid]->serial = $cur_stock->serial;
+
+				}
+			}
+			foreach ($countsheets as $cur_sheet) {
+				if (isset($module->transactions[$cur_sheet->guid])) {
+					$module->transactions[$cur_sheet->guid]->qty++;
+				} else {
+					$module->transactions[$cur_sheet->guid]->product = $cur_stock->product;
+					$module->transactions[$cur_sheet->guid]->entity = $cur_sheet;
+					$module->transactions[$cur_sheet->guid]->transaction_info = 'Counted on Countsheet';
+					$module->transactions[$cur_sheet->guid]->qty = 1;
+					$module->transactions[$cur_sheet->guid]->serial = $cur_stock->serial;
+				}
+			}
+			foreach ($transfers as $cur_transfer) {
+				if (isset($module->transactions[$cur_transfer->guid])) {
+					$module->transactions[$cur_transfer->guid]->qty++;
+				} else {
+					$module->transactions[$cur_transfer->guid]->product = $cur_stock->product;
+					$module->transactions[$cur_transfer->guid]->entity = $cur_transfer;
+					$module->transactions[$cur_transfer->guid]->transaction_info = 'Recieved on Transfer';
+					$module->transactions[$cur_transfer->guid]->qty = 1;
+					$module->transactions[$cur_transfer->guid]->serial = $cur_stock->serial;
+				}
+			}
+			foreach ($pos as $cur_po) {
+				if (isset($module->transactions[$cur_po->guid])) {
+					$module->transactions[$cur_po->guid]->qty++;
+				} else {
+					$module->transactions[$cur_po->guid]->product = $cur_stock->product;
+					$module->transactions[$cur_po->guid]->entity = $cur_po;
+					$module->transactions[$cur_po->guid]->transaction_info = 'Recieved on PO';
+					$module->transactions[$cur_po->guid]->qty = 1;
+					$module->transactions[$cur_po->guid]->serial = $cur_stock->serial;
+				}
+			}
+		}
+
+		if (empty($found_stock))
+			pines_notice('There are no items matching your query.');
+	}
+
 
 	/**
 	 * Use gaussian rounding to round a number to a certain decimal point.

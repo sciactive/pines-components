@@ -85,6 +85,14 @@
 				}
 			},
 			{
+				"path": "main_menu/business/com_sales/inventory/trackproduct",
+				"text": "Track Products",
+				"href": ["com_sales","trackproduct"],
+				"depend": {
+					"ability": "com_sales/trackproducts"
+				}
+			},
+			{
 				"path": "main_menu/business/com_sales/inventory/transfers",
 				"text": "Transfers",
 				"href": ["com_sales","listtransfers"],

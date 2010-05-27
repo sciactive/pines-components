@@ -14,7 +14,8 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * An audit of a cash count.
  *
- * @package com_sales
+ * @package Pines
+ * @subpackage com_sales
  */
 class com_sales_cashcount_audit extends entity {
 	/**

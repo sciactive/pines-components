@@ -14,7 +14,8 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * A skim off of a cash count.
  *
- * @package com_sales
+ * @package Pines
+ * @subpackage com_sales
  */
 class com_sales_cashcount_skim extends entity {
 	/**

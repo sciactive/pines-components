@@ -44,6 +44,12 @@ class user extends able_object implements user_interface {
 		}
 	}
 
+	/**
+	 * Create a new instance.
+	 *
+	 * @param int|string $id The ID or username of the user to load, 0 for a new user.
+	 * @return user A user instance.
+	 */
 	public static function factory($id = 0) {
 		global $pines;
 		$class = get_class();

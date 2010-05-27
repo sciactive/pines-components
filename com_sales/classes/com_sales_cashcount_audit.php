@@ -40,6 +40,7 @@ class com_sales_cashcount_audit extends entity {
 
 	/**
 	 * Create a new instance.
+	 * @return com_sales_cashcount_audit The new instance.
 	 */
 	public static function factory() {
 		global $pines;

@@ -102,6 +102,7 @@ class configurator_component extends p_base implements configurator_component_in
 	/**
 	 * Create a new instance.
 	 * @param string $component The component to load.
+	 * @return configurator_component The new instance.
 	 */
 	public static function factory($component) {
 		global $pines;

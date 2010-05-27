@@ -38,6 +38,7 @@ class com_sales_vendor extends entity {
 
 	/**
 	 * Create a new instance.
+	 * @return com_sales_vendor The new instance.
 	 */
 	public static function factory() {
 		global $pines;

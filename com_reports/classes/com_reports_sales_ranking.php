@@ -43,6 +43,7 @@ class com_reports_sales_ranking extends entity {
 
 	/**
 	 * Create a new instance.
+	 * @return com_reports_sales_ranking The new instance.
 	 */
 	public static function factory() {
 		global $pines;

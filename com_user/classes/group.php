@@ -42,6 +42,12 @@ class group extends able_object implements group_interface {
 		}
 	}
 
+	/**
+	 * Create a new instance.
+	 *
+	 * @param int $id The ID of the group to load, 0 for a new group.
+	 * @return group A group instance.
+	 */
 	public static function factory($id = 0) {
 		global $pines;
 		$class = get_class();

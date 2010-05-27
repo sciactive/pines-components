@@ -145,6 +145,7 @@ class com_mailer_mail extends p_base {
 	 * @param string $recipient The recipient's email address.
 	 * @param string $subject The message subject.
 	 * @param string $message The message text.
+	 * @return com_mailer_mail The new instance.
 	 */
 	public static function factory($sender, $recipient, $subject, $message) {
 		global $pines;

@@ -41,6 +41,7 @@ class com_packager_package extends entity {
 
 	/**
 	 * Create a new instance.
+	 * @return com_packager_package The new instance.
 	 */
 	public static function factory() {
 		global $pines;

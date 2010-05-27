@@ -20,6 +20,7 @@ defined('P_RUN') or die('Direct access prohibited');
 class com_customertimer_customer extends com_customer_customer {
 	/**
 	 * Create a new instance.
+	 * @return com_customertimer_customer The new instance.
 	 */
 	public static function factory() {
 		global $pines;

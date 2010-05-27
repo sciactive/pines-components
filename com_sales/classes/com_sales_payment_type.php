@@ -41,6 +41,7 @@ class com_sales_payment_type extends entity {
 
 	/**
 	 * Create a new instance.
+	 * @return com_sales_payment_type The new instance.
 	 */
 	public static function factory() {
 		global $pines;

@@ -40,6 +40,7 @@ class com_customer_company extends entity {
 
 	/**
 	 * Create a new instance.
+	 * @return com_customer_company The new instance.
 	 */
 	public static function factory() {
 		global $pines;

@@ -20,6 +20,7 @@ defined('P_RUN') or die('Direct access prohibited');
 class com_customertimer_tx extends entity {
 	/**
 	 * Create a new instance.
+	 * @return com_customertimer_tx The new instance.
 	 */
 	public static function factory() {
 		global $pines;

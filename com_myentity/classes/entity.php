@@ -54,6 +54,10 @@ class entity extends p_base implements entity_interface {
 			call_user_func_array(array($this, 'add_tag'), $args);
 	}
 
+	/**
+	 * Create a new instance.
+	 * @return entity The new instance.
+	 */
 	public static function factory() {
 		global $pines;
 		$class = get_class();

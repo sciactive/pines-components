@@ -41,6 +41,7 @@ class com_example_widget extends entity {
 
 	/**
 	 * Create a new instance.
+	 * @return com_example_widget The new instance.
 	 */
 	public static function factory() {
 		global $pines;

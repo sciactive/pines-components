@@ -41,6 +41,7 @@ class com_hrm_user_template extends entity {
 
 	/**
 	 * Create a new instance.
+	 * @return com_hrm_user_template The new instance.
 	 */
 	public static function factory() {
 		global $pines;

@@ -143,8 +143,7 @@ class com_user extends component implements user_manager_interface {
 				$abilities = $this->gatekeeper_cache[$user->guid];
 			} else {
 				$abilities = $user->abilities;
-				// TODO: Decide if group conditions should be checked if the
-				// user is not logged in.
+				// TODO: Decide if group conditions should be checked if the user is not logged in.
 				if ($user->inherit_abilities) {
 					foreach ($user->groups as $cur_group) {
 						$abilities = array_merge($abilities, $cur_group->abilities);
@@ -163,7 +162,7 @@ class com_user extends component implements user_manager_interface {
 	}
 
 	/**
-	 * Gets an array of groups.
+	 * Gets a multidimensional array of group info.
 	 *
 	 * If no parent is given, get_group_array() will start with all top level
 	 * groups.
@@ -173,7 +172,7 @@ class com_user extends component implements user_manager_interface {
 	 * array of that group's children.
 	 *
 	 * @param group $parent The group to descend from.
-	 * @return array The array of groups.
+	 * @return array The group structure array.
 	 * @todo Check for orphans, they could cause groups to be hidden.
 	 */
 	public function get_group_array($parent = null) {
@@ -210,7 +209,7 @@ class com_user extends component implements user_manager_interface {
 	 * @param group $parent The parent group.
 	 * @param bool $top_level Whether to work on the menu's top level.
 	 */
-	public function get_group_menu(&$menu = null, $parent = null, $top_level = TRUE) {
+	public function get_group_menu(&$menu = null, $parent = null, $top_level = true) {
 		global $pines;
 		if ( !isset($parent) ) {
 			$entities = $pines->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
@@ -228,7 +227,7 @@ class com_user extends component implements user_manager_interface {
 			$entities = $pines->entity_manager->get_entities(array('ref' => array('parent' => $parent), 'tags' => array('com_user', 'group'), 'class' => group));
 			foreach ($entities as $entity) {
 				$new_menu_id = $menu->add("{$entity->name} [{$entity->groupname}]", $entity->guid, ($top_level ? null : $entity->parent->guid), $entity->guid);
-				$this->get_group_menu($menu, $entity, FALSE);
+				$this->get_group_menu($menu, $entity, false);
 			}
 		}
 	}
@@ -237,11 +236,12 @@ class com_user extends component implements user_manager_interface {
 	 * Gets a tree style hierarchy of groups.
 	 *
 	 * The mask can contain these variables:
-	 * #guid#
-	 * #name#
-	 * #groupname#
-	 * #mark#
-	 * #selected#
+	 *
+	 * - #guid#
+	 * - #name#
+	 * - #groupname#
+	 * - #mark#
+	 * - #selected#
 	 *
 	 * For each depth level, $mark will be appended with "-> ".
 	 *

@@ -1238,7 +1238,7 @@ class elFinder extends p_base {
 	/**
 	 * Check new file name for invalid simbols. Return name if valid
 	 *
-	 * @return string  $n  file name
+	 * @param string  $n  file name
 	 * @return string
 	 **/
 	private function _checkName($n)

@@ -16,17 +16,6 @@ defined('P_RUN') or die('Direct access prohibited');
 	#location_details {
 		padding-left: 25px;
 	}
-	.form_text {
-		width: 155px;
-		text-align: center;
-	}
-	.form_input {
-		width: 170px;
-		text-align: center;
-	}
-	.form_select {
-		width: 170px;
-	}
 	/* ]]> */
 </style>
 <script type='text/javascript'>
@@ -35,6 +24,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 		// Location Tree
 		var location = $("#location_details [name=location]");
+		var location_saver = $("#location_details [name=location_saver]");
 		$("#location_details [name=location_tree]").tree({
 			rules : {
 				multiple : false
@@ -46,7 +36,7 @@ defined('P_RUN') or die('Direct access prohibited');
 					url : "<?php echo pines_url('com_jstree', 'groupjson'); ?>"
 				}
 			},
-			selected : ["<?php echo $this->location; ?>"],
+			selected : ["<?php echo ($this->location == 'all') ? $_SESSION['user']->group->guid : $this->location; ?>"],
 			callback : {
 				onchange : function(NODE, TREE_OBJ) {
 					location.val(TREE_OBJ.selected.attr("id"));
@@ -61,11 +51,11 @@ defined('P_RUN') or die('Direct access prohibited');
 		$("#location_details [name=all_groups]").change(function(){
 			var all_groups = $(this);
 			if (all_groups.is(":checked") && all_groups.val() == "individual") {
-				location_tree.show();
-				location.val('individual');
+				location_tree.removeClass("ui-priority-secondary");
+				location_saver.val('individual');
 			} else if (all_groups.is(":checked") && all_groups.val() == "allGroups") {
-				location_tree.hide();
-				location.val('all');
+				location_tree.addClass("ui-priority-secondary");
+				location_saver.val('all');
 			}
 		}).change();
 	});
@@ -79,5 +69,6 @@ defined('P_RUN') or die('Direct access prohibited');
 	<div class="pf-element" name="location_tree" style="padding-bottom: 5px;"></div>
 	<div class="pf-element">
 			<input type="hidden" name="location" value="<?php echo $this->location; ?>" />
+			<input type="hidden" name="location_saver" value="<?php echo ($this->location == 'all') ? 'all' : 'individual'; ?>" />
 	</div>
 </form>

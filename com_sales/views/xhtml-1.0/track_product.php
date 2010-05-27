@@ -122,7 +122,7 @@ $pines->com_jstree->load();
 					form.dialog({
 						bgiframe: true,
 						autoOpen: true,
-						height: 275,
+						height: 315,
 						modal: true,
 						open: function(){
 							form.append(data);

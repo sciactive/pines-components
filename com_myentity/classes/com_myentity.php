@@ -241,6 +241,47 @@ class com_myentity extends component implements entity_manager_interface {
 		$class = isset($options['class']) ? $options['class'] : entity;
 		$count = $limit = $ocount = $offset = 0;
 
+		/*
+		 * To fix the limitations of this function, we could do something like
+		 * this for arguments:
+		 * 
+			// A male person whose lname is smith.
+			array(
+				'&', // & means all are required
+				'tags' => array('person'),
+				'data' => array(
+					array('gender', 'male'),
+					array('lname', 'smith')
+				)
+			),
+			// Name is bob, steve, chris, christopher, jake, or jacob
+			array(
+				'|', // | means (at least) one is required
+				'data' => array(
+					array('name', 'bob'),
+					array('name', 'steve')
+				),
+				'match' => array(
+					array('name', '/chris(topher)?/'),
+					array('name', '/ja(ke|cob)/')
+				)
+			),
+			// No variable has the value "secretvalue" and they're not less than 16.
+			array(
+				'!&', // !& means all are required to be false
+				'data' => array('*', 'secretvalue'), // asterisk means any variable
+				'lt' => array('age', 16)
+			),
+			// Either they're not 16, or their pay is gte to 8.
+			array(
+				'!|', // !| means (at least) one is required to be false
+				'data' => array('age', 16),
+				'lt' => array('pay', 8)
+			)
+		 *
+		 * And we need options to return a count, or insert a count into a var
+		 * so we can only retrieve X of them, but find out how many there are.
+		 */
 		foreach ($options as $key => $option) {
 			$cur_query = '';
 			// Any options having to do with data only return if the entity has
@@ -698,7 +739,7 @@ class com_myentity extends component implements entity_manager_interface {
 				$entity->guid = $guid;
 				$entity->tags = $tags;
 				$entity->put_data($data);
-				array_push($entities, $entity);
+				$entities[] = $entity;
 				$count++;
 				if ($limit && $count >= $limit)
 					break;

@@ -81,7 +81,7 @@ class entity extends p_base implements entity_interface {
 	public function &__get($name) {
 		global $pines;
 		// Check for an entity first.
-		if (array_key_exists($name, $this->entity_cache)) {
+		if (isset($this->entity_cache[$name])) {
 			if ($this->entity_cache[$name] === 0) {
 				// The entity hasn't been loaded yet, so load it now.
 				$this->entity_cache[$name] = $pines->entity_manager->get_entity(array('class' => $this->data[$name][2]), array('&', 'guid' => $this->data[$name][1]));
@@ -89,7 +89,7 @@ class entity extends p_base implements entity_interface {
 			return $this->entity_cache[$name];
 		}
 		// If it's not an entity, return the regular value.
-		if (is_array($this->data[$name])) {
+		if ((array) $this->data[$name] === $this->data[$name]) {
 			// But, if it's an array, check all the values for entity references, and change them.
 			array_walk($this->data[$name], array($this, 'reference_to_entity'));
 		}
@@ -134,7 +134,7 @@ class entity extends p_base implements entity_interface {
 			// Store the actual value passed.
 			$save_value = $value;
 			// If the variable is an array, look through it and change entities to references.
-			if (is_array($save_value))
+			if ((array) $save_value === $save_value)
 				array_walk_recursive($save_value, array($this, 'entity_to_reference'));
 		}
 		
@@ -156,18 +156,16 @@ class entity extends p_base implements entity_interface {
 	}
 
 	public function add_tag() {
-		if (is_array(func_get_arg(0))) {
-			$tag_array = func_get_arg(0);
-		} else {
-			$tag_array = func_get_args();
-		}
+		$tag_array = func_get_args();
+		if ((array) $tag_array[0] === $tag_array[0])
+			$tag_array = $tag_array[0];
 		foreach ($tag_array as $tag) {
 			$this->tags[] = $tag;
 		}
 	}
 
 	public function array_search($array, $strict = false) {
-		if (!is_array($array))
+		if ((array) $array !== $array)
 			return false;
 		foreach ($array as $key => $cur_entity) {
 			if ($strict ? $this->equals($cur_entity) : $this->is($cur_entity))
@@ -225,20 +223,18 @@ class entity extends p_base implements entity_interface {
 	}
 
 	public function has_tag() {
-		if (is_array(func_get_arg(0))) {
-			$tag_array = func_get_arg(0);
-		} else {
-			$tag_array = func_get_args();
-		}
+		$tag_array = func_get_args();
+		if ((array) $tag_array[0] === $tag_array[0])
+			$tag_array = $tag_array[0];
 		foreach ($tag_array as $tag) {
-			if ( !is_array($this->tags) || !in_array($tag, $this->tags) )
+			if ( (array) $this->tags !== $this->tags || !in_array($tag, $this->tags) )
 				return false;
 		}
 		return true;
 	}
 
 	public function in_array($array, $strict = false) {
-		if (!is_array($array))
+		if ((array) $array !== $array)
 			return false;
 		foreach ($array as $cur_entity) {
 			if ($strict ? $this->equals($cur_entity) : $this->is($cur_entity))
@@ -260,12 +256,12 @@ class entity extends p_base implements entity_interface {
 	}
 
 	public function put_data($data) {
-		if (!is_array($data))
+		if ((array) $data !== $data)
 			$data = array();
 		// Erase the entity cache.
 		$this->entity_cache = array();
 		foreach($data as $name => $value) {
-			if (is_array($value) && $value[0] === 'pines_entity_reference') {
+			if ((array) $value === $value && $value[0] === 'pines_entity_reference') {
 				// Don't load the entity yet, but make the entry in the array,
 				// so we know it is an entity reference. This will speed up
 				// retrieving entities with lots of references, especially
@@ -287,7 +283,7 @@ class entity extends p_base implements entity_interface {
 	 */
 	private function reference_to_entity(&$item, $key) {
 		global $pines;
-		if (is_array($item)) {
+		if ((array) $item === $item) {
 			if ($item[0] === 'pines_entity_reference') {
 				if (!isset($this->entity_cache["reference_guid: {$item[1]}"]))
 					$this->entity_cache["reference_guid: {$item[1]}"] = $pines->entity_manager->get_entity(array('class' => $item[2]), array('guid' => $item[1]));
@@ -299,7 +295,7 @@ class entity extends p_base implements entity_interface {
 	}
 
 	public function refresh() {
-		if (!is_int($this->guid))
+		if ((int) $this->guid !== $this->guid)
 			return false;
 		global $pines;
 		$refresh = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('guid' => $this->guid));
@@ -311,11 +307,9 @@ class entity extends p_base implements entity_interface {
 	}
 
 	public function remove_tag() {
-		if (is_array(func_get_arg(0))) {
-			$tag_array = func_get_arg(0);
-		} else {
-			$tag_array = func_get_args();
-		}
+		$tag_array = func_get_args();
+		if ((array) $tag_array[0] === $tag_array[0])
+			$tag_array = $tag_array[0];
 		foreach ($tag_array as $tag) {
 			// Can't use array_search, because $tag may exist more than once.
 			foreach ($this->tags as $cur_key => $cur_tag) {

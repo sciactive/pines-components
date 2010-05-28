@@ -64,16 +64,16 @@ class com_myentity extends component implements entity_manager_interface {
 	 * @return bool True if the reference is found, false otherwise.
 	 */
 	private function entity_reference_search($value, $entity) {
-		if (!is_array($value) || !isset($entity))
+		if ((array) $value !== $value || !isset($entity))
 			return false;
 		// Get the GUID, if the passed $entity is an object.
-		if (is_array($entity)) {
+		if ((array) $entity === $entity) {
 			foreach($entity as &$cur_entity) {
-				if (is_object($cur_entity))
+				if ((object) $cur_entity === $cur_entity)
 					$cur_entity = $cur_entity->guid;
 			}
 			unset($cur_entity);
-		} elseif (is_object($entity)) {
+		} elseif ((object) $entity === $entity) {
 			$entity = array($entity->guid);
 		} else {
 			$entity = array((int) $entity);
@@ -249,47 +249,6 @@ class com_myentity extends component implements entity_manager_interface {
 		$class = isset($options['class']) ? $options['class'] : entity;
 		$count = $ocount = 0;
 
-		/*
-		 * To fix the limitations of this function, we could do something like
-		 * this for arguments:
-		 * 
-			// A male person whose lname is smith.
-			array(
-				'&', // & means all are required
-				'tags' => array('person'),
-				'data' => array(
-					array('gender', 'male'),
-					array('lname', 'smith')
-				)
-			),
-			// Name is bob, steve, chris, christopher, jake, or jacob
-			array(
-				'|', // | means (at least) one is required
-				'data' => array(
-					array('name', 'bob'),
-					array('name', 'steve')
-				),
-				'match' => array(
-					array('name', '/chris(topher)?/'),
-					array('name', '/ja(ke|cob)/')
-				)
-			),
-			// No variable has the value "secretvalue" and they're not less than 16.
-			array(
-				'!&', // !& means all are required to be false
-				'data' => array('*', 'secretvalue'), // asterisk means any variable
-				'lt' => array('age', 16)
-			),
-			// Either they're not 16, or their pay is gte to 8.
-			array(
-				'!|', // !| means (at least) one is required to be false
-				'data' => array('age', 16),
-				'lt' => array('pay', 8)
-			)
-		 *
-		 * And we need options to return a count, or insert a count into a var
-		 * so we can only retrieve X of them, but find out how many there are.
-		 */
 		$query_parts = array();
 		foreach ($selectors as &$cur_selector) {
 			$cur_selector_query = '';
@@ -301,9 +260,9 @@ class com_myentity extends component implements entity_manager_interface {
 					continue;
 				}
 				$cur_query = '';
-				if (!is_array($value))
+				if ((array) $value !== $value)
 					$value = array(array($value));
-				elseif (!is_array($value[0]))
+				elseif ((array) $value[0] !== $value[0])
 					$value = array($value);
 				// Any options having to do with data only return if the entity has
 				// the specified variables.
@@ -313,14 +272,14 @@ class com_myentity extends component implements entity_manager_interface {
 							foreach ($cur_value as $cur_guid) {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= 'e.`guid`='.(int) $cur_guid;
+								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`guid`='.(int) $cur_guid;
 							}
 							break;
-						case 'tags':
+						case 'tag':
 							foreach ($cur_value as $cur_tag) {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= 'LOCATE(\','.mysql_real_escape_string($cur_tag, $pines->com_mysql->link).',\', e.`tags`)';
+								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'LOCATE(\','.mysql_real_escape_string($cur_tag, $pines->com_mysql->link).',\', e.`tags`)';
 							}
 							break;
 						case 'data':
@@ -328,68 +287,70 @@ class com_myentity extends component implements entity_manager_interface {
 							if ($cur_value[0] == 'p_cdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= 'e.`cdate`='.((float) $value[1]);
+								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`cdate`='.((float) $value[1]);
 								break;
 							} elseif($cur_value[0] == 'p_mdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= 'e.`mdate`='.((float) $value[1]);
+								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`mdate`='.((float) $value[1]);
 								break;
 							}
 						case 'gt':
 							if ($cur_value[0] == 'p_cdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= 'e.`cdate`>'.((float) $value[1]);
+								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`cdate`>'.((float) $value[1]);
 								break;
 							} elseif($cur_value[0] == 'p_mdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= 'e.`mdate`>'.((float) $value[1]);
+								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`mdate`>'.((float) $value[1]);
 								break;
 							}
 						case 'gte':
 							if ($cur_value[0] == 'p_cdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= 'e.`cdate`>='.((float) $value[1]);
+								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`cdate`>='.((float) $value[1]);
 								break;
 							} elseif($cur_value[0] == 'p_mdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= 'e.`mdate`>='.((float) $value[1]);
+								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`mdate`>='.((float) $value[1]);
 								break;
 							}
 						case 'lt':
 							if ($cur_value[0] == 'p_cdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= 'e.`cdate`<'.((float) $value[1]);
+								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`cdate`<'.((float) $value[1]);
 								break;
 							} elseif($cur_value[0] == 'p_mdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= 'e.`mdate`<'.((float) $value[1]);
+								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`mdate`<'.((float) $value[1]);
 								break;
 							}
 						case 'lte':
 							if ($cur_value[0] == 'p_cdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= 'e.`cdate`<='.((float) $value[1]);
+								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`cdate`<='.((float) $value[1]);
 								break;
 							} elseif($cur_value[0] == 'p_mdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= 'e.`mdate`<='.((float) $value[1]);
+								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`mdate`<='.((float) $value[1]);
 								break;
 							}
 						case 'array':
 						case 'match':
 						case 'ref':
-							if ( $cur_query )
-								$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-							$cur_query .= 'LOCATE(\','.mysql_real_escape_string($cur_value[0], $pines->com_mysql->link).',\', e.`varlist`)';
+							if (!$type_is_not) {
+								if ( $cur_query )
+									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
+								$cur_query .= 'LOCATE(\','.mysql_real_escape_string($cur_value[0], $pines->com_mysql->link).',\', e.`varlist`)';
+							}
 							break;
 					}
 				}
@@ -400,19 +361,22 @@ class com_myentity extends component implements entity_manager_interface {
 				}
 			}
 			unset($value);
-			$query_parts[] = $cur_selector_query;
+			if ($cur_selector_query)
+				$query_parts[] = $cur_selector_query;
 		}
 		unset($cur_selector);
 
 		if ($query_parts) {
-			$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_myentity_entities` e LEFT JOIN `%scom_myentity_data` d ON e.`guid`=d.`guid` HAVING %s ORDER BY e.`guid`;",
+			$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_myentity_entities` e LEFT JOIN `%scom_myentity_data` d ON e.`guid`=d.`guid` HAVING %s ORDER BY %s;",
 				$pines->config->com_mysql->prefix,
 				$pines->config->com_mysql->prefix,
-				'('.implode(') AND (', $query_parts).')');
+				'('.implode(') AND (', $query_parts).')',
+				$options['reverse'] ? 'e.`guid` DESC' : 'e.`guid`');
 		} else {
-			$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_myentity_entities` e LEFT JOIN `%scom_myentity_data` d ON e.`guid`=d.`guid` ORDER BY e.`guid`;",
+			$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_myentity_entities` e LEFT JOIN `%scom_myentity_data` d ON e.`guid`=d.`guid` ORDER BY %s;",
 				$pines->config->com_mysql->prefix,
-				$pines->config->com_mysql->prefix);
+				$pines->config->com_mysql->prefix,
+				$options['reverse'] ? 'e.`guid` DESC' : 'e.`guid`');
 		}
 		if ( !($result = mysql_query($query, $pines->com_mysql->link)) ) {
 			if (function_exists('pines_error'))
@@ -461,89 +425,89 @@ class com_myentity extends component implements entity_manager_interface {
 					foreach ($value as $cur_value) {
 						switch ($key) {
 							case 'guid':
-							case 'tags':
+							case 'tag':
 								// These are handled by the query.
 								$pass = true;
 								break;
 							case 'data':
-								if ($type_is_or) {
+								if ($type_is_or xor $type_is_not) {
 									if ($data[$cur_value[0]] == $cur_value[1])
-										$pass = true;
+										$pass = !$type_is_not;
 								} else {
 									if ($data[$cur_value[0]] != $cur_value[1])
-										$pass = false;
+										$pass = $type_is_not;
 								}
 								break;
 							case 'strict':
-								if ($type_is_or) {
+								if ($type_is_or xor $type_is_not) {
 									if ($data[$cur_value[0]] === $cur_value[1])
-										$pass = true;
+										$pass = !$type_is_not;
 								} else {
 									if ($data[$cur_value[0]] !== $cur_value[1])
-										$pass = false;
+										$pass = $type_is_not;
 								}
 								break;
 							case 'array':
-								if ($type_is_or) {
-									if (is_array($data[$cur_value[0]]) && in_array($cur_value[1], $data[$cur_value[0]]))
-										$pass = true;
+								if ($type_is_or xor $type_is_not) {
+									if ((array) $data[$cur_value[0]] === $data[$cur_value[0]] && in_array($cur_value[1], $data[$cur_value[0]]))
+										$pass = !$type_is_not;
 								} else {
-									if (!is_array($data[$cur_value[0]]) || !in_array($cur_value[1], $data[$cur_value[0]]))
-										$pass = false;
+									if ((array) $data[$cur_value[0]] !== $data[$cur_value[0]] || !in_array($cur_value[1], $data[$cur_value[0]]))
+										$pass = $type_is_not;
 								}
 								break;
 							case 'match':
-								if ($type_is_or) {
+								if ($type_is_or xor $type_is_not) {
 									if (isset($data[$cur_value[0]]) && preg_match($cur_value[1], $data[$cur_value[0]]))
-										$pass = true;
+										$pass = !$type_is_not;
 								} else {
 									if (!isset($data[$cur_value[0]]) || !preg_match($cur_value[1], $data[$cur_value[0]]))
-										$pass = false;
+										$pass = $type_is_not;
 								}
 								break;
 							case 'gt':
-								if ($type_is_or) {
+								if ($type_is_or xor $type_is_not) {
 									if ($data[$cur_value[0]] > $cur_value[1])
-										$pass = true;
+										$pass = !$type_is_not;
 								} else {
 									if (!($data[$cur_value[0]] > $cur_value[1]))
-										$pass = false;
+										$pass = $type_is_not;
 								}
 								break;
 							case 'gte':
-								if ($type_is_or) {
+								if ($type_is_or xor $type_is_not) {
 									if ($data[$cur_value[0]] >= $cur_value[1])
-										$pass = true;
+										$pass = !$type_is_not;
 								} else {
 									if (!($data[$cur_value[0]] >= $cur_value[1]))
-										$pass = false;
+										$pass = $type_is_not;
 								}
 								break;
 							case 'lt':
-								if ($type_is_or) {
+								if ($type_is_or xor $type_is_not) {
 									if ($data[$cur_value[0]] < $cur_value[1])
-										$pass = true;
+										$pass = !$type_is_not;
 								} else {
 									if (!($data[$cur_value[0]] < $cur_value[1]))
-										$pass = false;
+										$pass = $type_is_not;
 								}
 								break;
 							case 'lte':
-								if ($type_is_or) {
+								if ($type_is_or xor $type_is_not) {
 									if ($data[$cur_value[0]] <= $cur_value[1])
-										$pass = true;
+										$pass = !$type_is_not;
 								} else {
 									if (!($data[$cur_value[0]] <= $cur_value[1]))
-										$pass = false;
+										$pass = $type_is_not;
 								}
 								break;
 							case 'ref':
-								if ($type_is_or) {
-									if (isset($data[$cur_value[0]]) && is_array($data[$cur_value[0]]) && $this->entity_reference_search($data[$cur_value[0]], $cur_value[1]))
-										$pass = true;
+								if ($type_is_or xor $type_is_not) {
+									if (isset($data[$cur_value[0]]) && (array) $data[$cur_value[0]] === $data[$cur_value[0]] && $this->entity_reference_search($data[$cur_value[0]], $cur_value[1]))
+										$pass = !$type_is_not;
 								} else {
-									if (!isset($data[$cur_value[0]]) || !is_array($data[$cur_value[0]]) || !$this->entity_reference_search($data[$cur_value[0]], $cur_value[1]))
-										$pass = false;
+									if (!isset($data[$cur_value[0]]) || (array) $data[$cur_value[0]] !== $data[$cur_value[0]] || !$this->entity_reference_search($data[$cur_value[0]], $cur_value[1]))
+										$pass = $type_is_not;
 								}
 								break;
 						}
@@ -589,7 +553,7 @@ class com_myentity extends component implements entity_manager_interface {
 		$args = func_get_args();
 		if (!$args)
 			$args = array(array());
-		if (!is_array($args[0]))
+		if ((array) $args[0] !== $args[0])
 			$args = array(array(), array('&', 'guid' => (int) $args[0]));
 		$args[0]['limit'] = 1;
 		$entities = call_user_func_array(array($this, 'get_entities'), $args);

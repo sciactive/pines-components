@@ -51,7 +51,7 @@ $pines->com_jstree->load();
 				onchange : function(NODE, TREE_OBJ) {
 					location.val(TREE_OBJ.selected.attr("id"));
 				},
-				check_move: function(NODE, REF_NODE, TYPE, TREE_OBJ) {
+				check_move: function() {
 					return false;
 				}
 			}

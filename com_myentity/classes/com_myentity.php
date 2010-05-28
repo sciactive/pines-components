@@ -234,12 +234,20 @@ class com_myentity extends component implements entity_manager_interface {
 		return true;
 	}
 
-	public function get_entities($options = array()) {
+	public function get_entities() {
 		global $pines;
+		// Set up options and selectors.
+		$selectors = func_get_args();
+		if (!$selectors) {
+			$options = $selectors = array();
+		} else {
+			$options = $selectors[0];
+			unset($selectors[0]);
+		}
+
 		$entities = array();
-		$query_parts = array();
 		$class = isset($options['class']) ? $options['class'] : entity;
-		$count = $limit = $ocount = $offset = 0;
+		$count = $ocount = 0;
 
 		/*
 		 * To fix the limitations of this function, we could do something like
@@ -282,228 +290,119 @@ class com_myentity extends component implements entity_manager_interface {
 		 * And we need options to return a count, or insert a count into a var
 		 * so we can only retrieve X of them, but find out how many there are.
 		 */
-		foreach ($options as $key => $option) {
-			$cur_query = '';
-			// Any options having to do with data only return if the entity has
-			// the specified variables.
-			switch ($key) {
-				case 'guid':
-					if (is_array($option)) {
-						foreach ($option as $cur_guid) {
+		$query_parts = array();
+		foreach ($selectors as &$cur_selector) {
+			$cur_selector_query = '';
+			foreach ($cur_selector as $key => &$value) {
+				if ($key === 0) {
+					$type = $value;
+					$type_is_not = ($type == '!&' || $type == '!|');
+					$type_is_or = ($type == '|' || $type == '!|');
+					continue;
+				}
+				$cur_query = '';
+				if (!is_array($value))
+					$value = array(array($value));
+				elseif (!is_array($value[0]))
+					$value = array($value);
+				// Any options having to do with data only return if the entity has
+				// the specified variables.
+				foreach ($value as $cur_value) {
+					switch ($key) {
+						case 'guid':
+							foreach ($cur_value as $cur_guid) {
+								if ( $cur_query )
+									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
+								$cur_query .= 'e.`guid`='.(int) $cur_guid;
+							}
+							break;
+						case 'tags':
+							foreach ($cur_value as $cur_tag) {
+								if ( $cur_query )
+									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
+								$cur_query .= 'LOCATE(\','.mysql_real_escape_string($cur_tag, $pines->com_mysql->link).',\', e.`tags`)';
+							}
+							break;
+						case 'data':
+						case 'strict':
+							if ($cur_value[0] == 'p_cdate') {
+								if ( $cur_query )
+									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
+								$cur_query .= 'e.`cdate`='.((float) $value[1]);
+								break;
+							} elseif($cur_value[0] == 'p_mdate') {
+								if ( $cur_query )
+									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
+								$cur_query .= 'e.`mdate`='.((float) $value[1]);
+								break;
+							}
+						case 'gt':
+							if ($cur_value[0] == 'p_cdate') {
+								if ( $cur_query )
+									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
+								$cur_query .= 'e.`cdate`>'.((float) $value[1]);
+								break;
+							} elseif($cur_value[0] == 'p_mdate') {
+								if ( $cur_query )
+									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
+								$cur_query .= 'e.`mdate`>'.((float) $value[1]);
+								break;
+							}
+						case 'gte':
+							if ($cur_value[0] == 'p_cdate') {
+								if ( $cur_query )
+									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
+								$cur_query .= 'e.`cdate`>='.((float) $value[1]);
+								break;
+							} elseif($cur_value[0] == 'p_mdate') {
+								if ( $cur_query )
+									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
+								$cur_query .= 'e.`mdate`>='.((float) $value[1]);
+								break;
+							}
+						case 'lt':
+							if ($cur_value[0] == 'p_cdate') {
+								if ( $cur_query )
+									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
+								$cur_query .= 'e.`cdate`<'.((float) $value[1]);
+								break;
+							} elseif($cur_value[0] == 'p_mdate') {
+								if ( $cur_query )
+									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
+								$cur_query .= 'e.`mdate`<'.((float) $value[1]);
+								break;
+							}
+						case 'lte':
+							if ($cur_value[0] == 'p_cdate') {
+								if ( $cur_query )
+									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
+								$cur_query .= 'e.`cdate`<='.((float) $value[1]);
+								break;
+							} elseif($cur_value[0] == 'p_mdate') {
+								if ( $cur_query )
+									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
+								$cur_query .= 'e.`mdate`<='.((float) $value[1]);
+								break;
+							}
+						case 'array':
+						case 'match':
+						case 'ref':
 							if ( $cur_query )
-								$cur_query .= ' OR ';
-							$cur_query .= 'e.`guid`='.(int) $cur_guid;
-						}
-					} else {
-						$cur_query = 'e.`guid`='.(int) $option;
+								$cur_query .= $type_is_or ? ' OR ' : ' AND ';
+							$cur_query .= 'LOCATE(\','.mysql_real_escape_string($cur_value[0], $pines->com_mysql->link).',\', e.`varlist`)';
+							break;
 					}
-					break;
-				case 'tags':
-					foreach ($option as $cur_tag) {
-						if ( $cur_query )
-							$cur_query .= ' AND ';
-						$cur_query .= 'LOCATE(\','.mysql_real_escape_string($cur_tag, $pines->com_mysql->link).',\', e.`tags`)';
-					}
-					break;
-				case 'tags_i':
-					foreach ($option as $cur_tag) {
-						if ( $cur_query )
-							$cur_query .= ' OR ';
-						$cur_query .= 'LOCATE(\','.mysql_real_escape_string($cur_tag, $pines->com_mysql->link).',\', e.`tags`)';
-					}
-					break;
-				case 'data':
-//					$tmp_query = sprintf('SELECT GROUP_CONCAT(`guid`) AS `guids` FROM `%scom_myentity_data` WHERE ',
-//						$pines->config->com_mysql->prefix);
-//					$tmp_query_parts = array();
-//					foreach ($option as $cur_name => $cur_value) {
-//						$tmp_query_parts[] = '(`name`=\''.mysql_real_escape_string($cur_name, $pines->com_mysql->link).'\' AND `value`=\''.mysql_real_escape_string(serialize($cur_value), $pines->com_mysql->link).'\')';
-//					}
-//					$tmp_query .= implode(' AND ', $tmp_query_parts).';';
-//					if ( !($result = mysql_query($tmp_query, $pines->com_mysql->link)) ) {
-//						if (function_exists('pines_error'))
-//							pines_error('Query failed: ' . mysql_error());
-//						return null;
-//					}
-//					$row = mysql_fetch_array($result);
-//					mysql_free_result($result);
-//					if (isset($row['guids']))
-//						$cur_query .= "e.`guid` IN ({$row['guids']})";
-//					break;
-					if (isset($option['p_cdate'])) {
-						if ( $cur_query )
-							$cur_query .= ' AND ';
-						$cur_query .= 'e.`cdate`='.((float) $option['p_cdate']);
-						unset($option['p_cdate']);
-					}
-					if (isset($option['p_mdate'])) {
-						if ( $cur_query )
-							$cur_query .= ' AND ';
-						$cur_query .= 'e.`mdate`='.((float) $option['p_mdate']);
-						unset($option['p_cdate']);
-					}
-				case 'array':
-				case 'match':
-				case 'gt':
-					if (isset($option['p_cdate'])) {
-						if ( $cur_query )
-							$cur_query .= ' AND ';
-						$cur_query .= 'e.`cdate`>'.((float) $option['p_cdate']);
-						unset($option['p_cdate']);
-					}
-					if (isset($option['p_mdate'])) {
-						if ( $cur_query )
-							$cur_query .= ' AND ';
-						$cur_query .= 'e.`mdate`>'.((float) $option['p_mdate']);
-						unset($option['p_cdate']);
-					}
-				case 'gte':
-					if (isset($option['p_cdate'])) {
-						if ( $cur_query )
-							$cur_query .= ' AND ';
-						$cur_query .= 'e.`cdate`>='.((float) $option['p_cdate']);
-						unset($option['p_cdate']);
-					}
-					if (isset($option['p_mdate'])) {
-						if ( $cur_query )
-							$cur_query .= ' AND ';
-						$cur_query .= 'e.`mdate`>='.((float) $option['p_mdate']);
-						unset($option['p_cdate']);
-					}
-				case 'lt':
-					if (isset($option['p_cdate'])) {
-						if ( $cur_query )
-							$cur_query .= ' AND ';
-						$cur_query .= 'e.`cdate`<'.((float) $option['p_cdate']);
-						unset($option['p_cdate']);
-					}
-					if (isset($option['p_mdate'])) {
-						if ( $cur_query )
-							$cur_query .= ' AND ';
-						$cur_query .= 'e.`mdate`<'.((float) $option['p_mdate']);
-						unset($option['p_cdate']);
-					}
-				case 'lte':
-					if (isset($option['p_cdate'])) {
-						if ( $cur_query )
-							$cur_query .= ' AND ';
-						$cur_query .= 'e.`cdate`<='.((float) $option['p_cdate']);
-						unset($option['p_cdate']);
-					}
-					if (isset($option['p_mdate'])) {
-						if ( $cur_query )
-							$cur_query .= ' AND ';
-						$cur_query .= 'e.`mdate`<='.((float) $option['p_mdate']);
-						unset($option['p_cdate']);
-					}
-				case 'ref':
-					foreach ($option as $cur_name => $cur_value) {
-						if ( $cur_query )
-							$cur_query .= ' AND ';
-						$cur_query .= 'LOCATE(\','.mysql_real_escape_string($cur_name, $pines->com_mysql->link).',\', e.`varlist`)';
-					}
-					break;
-				case 'data_i':
-//					$tmp_query = sprintf('SELECT GROUP_CONCAT(`guid`) AS `guids` FROM `%scom_myentity_data` WHERE ',
-//						$pines->config->com_mysql->prefix);
-//					$tmp_query_parts = array();
-//					foreach ($option as $cur_name => $cur_value) {
-//						$tmp_query_parts[] = '(`name`=\''.mysql_real_escape_string($cur_name, $pines->com_mysql->link).'\' AND `value`=\''.mysql_real_escape_string(serialize($cur_value), $pines->com_mysql->link).'\')';
-//					}
-//					$tmp_query .= implode(' OR ', $tmp_query_parts).';';
-//					if ( !($result = mysql_query($tmp_query, $pines->com_mysql->link)) ) {
-//						if (function_exists('pines_error'))
-//							pines_error('Query failed: ' . mysql_error());
-//						return null;
-//					}
-//					$row = mysql_fetch_array($result);
-//					mysql_free_result($result);
-//					if (isset($row['guids']))
-//						$cur_query .= "e.`guid` IN ({$row['guids']})";
-//					break;
-					if (isset($option['p_cdate'])) {
-						if ( $cur_query )
-							$cur_query .= ' OR ';
-						$cur_query .= 'e.`cdate`='.((float) $option['p_cdate']);
-						unset($option['p_cdate']);
-					}
-					if (isset($option['p_mdate'])) {
-						if ( $cur_query )
-							$cur_query .= ' OR ';
-						$cur_query .= 'e.`mdate`='.((float) $option['p_mdate']);
-						unset($option['p_cdate']);
-					}
-				case 'array_i':
-				case 'match_i':
-				case 'gt_i':
-					if (isset($option['p_cdate'])) {
-						if ( $cur_query )
-							$cur_query .= ' OR ';
-						$cur_query .= 'e.`cdate`>'.((float) $option['p_cdate']);
-						unset($option['p_cdate']);
-					}
-					if (isset($option['p_mdate'])) {
-						if ( $cur_query )
-							$cur_query .= ' OR ';
-						$cur_query .= 'e.`mdate`>'.((float) $option['p_mdate']);
-						unset($option['p_cdate']);
-					}
-				case 'gte_i':
-					if (isset($option['p_cdate'])) {
-						if ( $cur_query )
-							$cur_query .= ' OR ';
-						$cur_query .= 'e.`cdate`>='.((float) $option['p_cdate']);
-						unset($option['p_cdate']);
-					}
-					if (isset($option['p_mdate'])) {
-						if ( $cur_query )
-							$cur_query .= ' OR ';
-						$cur_query .= 'e.`mdate`>='.((float) $option['p_mdate']);
-						unset($option['p_cdate']);
-					}
-				case 'lt_i':
-					if (isset($option['p_cdate'])) {
-						if ( $cur_query )
-							$cur_query .= ' OR ';
-						$cur_query .= 'e.`cdate`<'.((float) $option['p_cdate']);
-						unset($option['p_cdate']);
-					}
-					if (isset($option['p_mdate'])) {
-						if ( $cur_query )
-							$cur_query .= ' OR ';
-						$cur_query .= 'e.`mdate`<'.((float) $option['p_mdate']);
-						unset($option['p_cdate']);
-					}
-				case 'lte_i':
-					if (isset($option['p_cdate'])) {
-						if ( $cur_query )
-							$cur_query .= ' OR ';
-						$cur_query .= 'e.`cdate`<='.((float) $option['p_cdate']);
-						unset($option['p_cdate']);
-					}
-					if (isset($option['p_mdate'])) {
-						if ( $cur_query )
-							$cur_query .= ' OR ';
-						$cur_query .= 'e.`mdate`<='.((float) $option['p_mdate']);
-						unset($option['p_cdate']);
-					}
-				case 'ref_i':
-					foreach ($option as $cur_name => $cur_value) {
-						if ( $cur_query )
-							$cur_query .= ' OR ';
-						$cur_query .= 'LOCATE(\','.mysql_real_escape_string($cur_name, $pines->com_mysql->link).',\', e.`varlist`)';
-					}
-					break;
-				case 'limit':
-					$limit = $option;
-					break;
-				case 'offset':
-					$offset = $option;
-					break;
+				}
+				if ( $cur_query ) {
+					if ($cur_selector_query)
+						$cur_selector_query .= $type_is_or ? ' OR ' : ' AND ';
+					$cur_selector_query .= $cur_query;
+				}
 			}
-			if ( $cur_query )
-				$query_parts[] = $cur_query;
+			unset($value);
+			$query_parts[] = $cur_selector_query;
 		}
+		unset($cur_selector);
 
 		if ($query_parts) {
 			$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_myentity_entities` e LEFT JOIN `%scom_myentity_data` d ON e.`guid`=d.`guid` HAVING %s ORDER BY e.`guid`;",
@@ -525,7 +424,7 @@ class com_myentity extends component implements entity_manager_interface {
 		while ($row) {
 			$guid = (int) $row['guid'];
 			// Don't bother getting the tags unless we're at/past the offset.
-			if ($ocount >= $offset)
+			if ($ocount >= $options['offset'])
 				$tags = explode(',', substr($row['tags'], 1, -1));
 			$data = array('p_cdate' => (float) $row['cdate'], 'p_mdate' => (float) $row['mdate']);
 			if (isset($row['dname'])) {
@@ -533,7 +432,7 @@ class com_myentity extends component implements entity_manager_interface {
 				// next entity is reached. $row will end on the next entity.
 				do {
 					// Only remember this entity's data if we're at/past the offset.
-					if ($ocount >= $offset)
+					if ($ocount >= $options['offset'])
 						$data[$row['dname']] = unserialize($row['dvalue']);
 					$row = mysql_fetch_array($result);
 				} while ((int) $row['guid'] === $guid);
@@ -541,207 +440,142 @@ class com_myentity extends component implements entity_manager_interface {
 				// Make sure that $row is incremented :)
 				$row = mysql_fetch_array($result);
 			}
-			if ($ocount < $offset) {
+			if ($ocount < $options['offset']) {
 				$ocount++;
 				continue;
 			}
 			// Recheck all conditions.
-			$pass = true;
-			foreach ($options as $key => $option) {
-				switch ($key) {
-					case 'guid':
-//						if (is_array($option)) {
-//							$pass = $pass && in_array($guid, $option);
-//						} else {
-//							$pass = $pass && ($guid == $option);
-//						}
-//						break;
-					case 'tags':
-//						if (is_array($option)) {
-//							foreach($option as $cur_option) {
-//								if (!($pass = $pass && in_array($cur_option, $tags)))
-//									break 2;
-//							}
-//						} else {
-//							$pass = $pass && in_array($option, $tags);
-//						}
-//						break;
-					case 'tags_i':
-//						$found = false;
-//						foreach ($option as $cur_option) {
-//							if (in_array($cur_option, $tags)) {
-//								$found = true;
-//								break;
-//							}
-//						}
-//						$pass = $pass && $found;
-						break;
-					case 'data':
-						foreach ($option as $cur_key => $cur_option) {
-							if ($data[$cur_key] != $cur_option) {
-								$pass = false;
-								break 2;
-							}
-						}
-						break;
-					case 'data_i':
-						$found = false;
-						foreach ($option as $cur_key => $cur_option) {
-							if (key_exists($cur_key, $data) && $data[$cur_key] == $cur_option) {
-								$found = true;
+			$pass_all = true;
+			foreach ($selectors as &$cur_selector) {
+				$pass = false;
+				foreach ($cur_selector as $key => &$value) {
+					if ($key === 0) {
+						$type = $value;
+						$type_is_not = ($type == '!&' || $type == '!|');
+						$type_is_or = ($type == '|' || $type == '!|');
+						$pass = !$type_is_or;
+						continue;
+					}
+					// Check if it doesn't pass any for &, check if it
+					// passes any for |.
+					foreach ($value as $cur_value) {
+						switch ($key) {
+							case 'guid':
+							case 'tags':
+								// These are handled by the query.
+								$pass = true;
 								break;
-							}
-						}
-						$pass = $pass && $found;
-						break;
-					case 'array':
-						foreach ($option as $cur_key => $cur_option) {
-							if (!is_array($data[$cur_key]) || !in_array($cur_option, $data[$cur_key])) {
-								$pass = false;
-								break 2;
-							}
-						}
-						break;
-					case 'array_i':
-						$found = false;
-						foreach ($option as $cur_key => $cur_option) {
-							if (key_exists($cur_key, $data) && is_array($data[$cur_key]) && in_array($cur_option, $data[$cur_key])) {
-								$found = true;
-								break;
-							}
-						}
-						$pass = $pass && $found;
-						break;
-					case 'match':
-						foreach ($option as $cur_key => $cur_option) {
-							if (!preg_match($cur_option, $data[$cur_key])) {
-								$pass = false;
-								break 2;
-							}
-						}
-						break;
-					case 'match_i':
-						$found = false;
-						foreach ($option as $cur_key => $cur_option) {
-							if (key_exists($cur_key, $data) && preg_match($cur_option, $data[$cur_key])) {
-								$found = true;
-								break;
-							}
-						}
-						$pass = $pass && $found;
-						break;
-					case 'gt':
-						foreach ($option as $cur_key => $cur_option) {
-							if ($data[$cur_key] <= $cur_option) {
-								$pass = false;
-								break 2;
-							}
-						}
-						break;
-					case 'gt_i':
-						$found = false;
-						foreach ($option as $cur_key => $cur_option) {
-							if (key_exists($cur_key, $data) && $data[$cur_key] > $cur_option) {
-								$found = true;
-								break;
-							}
-						}
-						$pass = $pass && $found;
-						break;
-					case 'gte':
-						foreach ($option as $cur_key => $cur_option) {
-							if ($data[$cur_key] < $cur_option) {
-								$pass = false;
-								break 2;
-							}
-						}
-						break;
-					case 'gte_i':
-						$found = false;
-						foreach ($option as $cur_key => $cur_option) {
-							if (key_exists($cur_key, $data) && $data[$cur_key] >= $cur_option) {
-								$found = true;
-								break;
-							}
-						}
-						$pass = $pass && $found;
-						break;
-					case 'lt':
-						foreach ($option as $cur_key => $cur_option) {
-							if ($data[$cur_key] >= $cur_option) {
-								$pass = false;
-								break 2;
-							}
-						}
-						break;
-					case 'lt_i':
-						$found = false;
-						foreach ($option as $cur_key => $cur_option) {
-							if (key_exists($cur_key, $data) && $data[$cur_key] < $cur_option) {
-								$found = true;
-								break;
-							}
-						}
-						$pass = $pass && $found;
-						break;
-					case 'lte':
-						foreach ($option as $cur_key => $cur_option) {
-							if ($data[$cur_key] > $cur_option) {
-								$pass = false;
-								break 2;
-							}
-						}
-						break;
-					case 'lte_i':
-						$found = false;
-						foreach ($option as $cur_key => $cur_option) {
-							if (key_exists($cur_key, $data) && $data[$cur_key] <= $cur_option) {
-								$found = true;
-								break;
-							}
-						}
-						$pass = $pass && $found;
-						break;
-					case 'ref':
-						foreach ($option as $cur_key => $cur_option) {
-							// If it's an array of values, make sure that each value is met.
-							if (is_array($cur_option)) {
-								foreach ($cur_option as $cur_cur_option) {
-									if (!$this->entity_reference_search($data[$cur_key], $cur_cur_option)) {
+							case 'data':
+								if ($type_is_or) {
+									if ($data[$cur_value[0]] == $cur_value[1])
+										$pass = true;
+								} else {
+									if ($data[$cur_value[0]] != $cur_value[1])
 										$pass = false;
-										break 2;
-									}
 								}
-							} else {
-								if (!$this->entity_reference_search($data[$cur_key], $cur_option)) {
-									$pass = false;
-									break;
-								}
-							}
-						}
-						break;
-					case 'ref_i':
-						$found = false;
-						foreach ($option as $cur_key => $cur_option) {
-							if (key_exists($cur_key, $data) && $this->entity_reference_search($data[$cur_key], $cur_option)) {
-								$found = true;
 								break;
-							}
+							case 'strict':
+								if ($type_is_or) {
+									if ($data[$cur_value[0]] === $cur_value[1])
+										$pass = true;
+								} else {
+									if ($data[$cur_value[0]] !== $cur_value[1])
+										$pass = false;
+								}
+								break;
+							case 'array':
+								if ($type_is_or) {
+									if (is_array($data[$cur_value[0]]) && in_array($cur_value[1], $data[$cur_value[0]]))
+										$pass = true;
+								} else {
+									if (!is_array($data[$cur_value[0]]) || !in_array($cur_value[1], $data[$cur_value[0]]))
+										$pass = false;
+								}
+								break;
+							case 'match':
+								if ($type_is_or) {
+									if (isset($data[$cur_value[0]]) && preg_match($cur_value[1], $data[$cur_value[0]]))
+										$pass = true;
+								} else {
+									if (!isset($data[$cur_value[0]]) || !preg_match($cur_value[1], $data[$cur_value[0]]))
+										$pass = false;
+								}
+								break;
+							case 'gt':
+								if ($type_is_or) {
+									if ($data[$cur_value[0]] > $cur_value[1])
+										$pass = true;
+								} else {
+									if (!($data[$cur_value[0]] > $cur_value[1]))
+										$pass = false;
+								}
+								break;
+							case 'gte':
+								if ($type_is_or) {
+									if ($data[$cur_value[0]] >= $cur_value[1])
+										$pass = true;
+								} else {
+									if (!($data[$cur_value[0]] >= $cur_value[1]))
+										$pass = false;
+								}
+								break;
+							case 'lt':
+								if ($type_is_or) {
+									if ($data[$cur_value[0]] < $cur_value[1])
+										$pass = true;
+								} else {
+									if (!($data[$cur_value[0]] < $cur_value[1]))
+										$pass = false;
+								}
+								break;
+							case 'lte':
+								if ($type_is_or) {
+									if ($data[$cur_value[0]] <= $cur_value[1])
+										$pass = true;
+								} else {
+									if (!($data[$cur_value[0]] <= $cur_value[1]))
+										$pass = false;
+								}
+								break;
+							case 'ref':
+								if ($type_is_or) {
+									if (isset($data[$cur_value[0]]) && is_array($data[$cur_value[0]]) && $this->entity_reference_search($data[$cur_value[0]], $cur_value[1]))
+										$pass = true;
+								} else {
+									if (!isset($data[$cur_value[0]]) || !is_array($data[$cur_value[0]]) || !$this->entity_reference_search($data[$cur_value[0]], $cur_value[1]))
+										$pass = false;
+								}
+								break;
 						}
-						$pass = $pass && $found;
-						break;
+						if ($type_is_or) {
+							if ($pass)
+								break;
+						} else {
+							if (!$pass)
+								break;
+						}
+					}
+					if ($type_is_or) {
+						if ($pass)
+							break;
+					} else {
+						if (!$pass)
+							break;
+					}
 				}
-				if (!$pass)
+				if (!$pass) {
+					$pass_all = false;
 					break;
+				}
 			}
-			if ($pass) {
+			if ($pass_all) {
 				$entity = call_user_func(array($class, 'factory'));
 				$entity->guid = $guid;
 				$entity->tags = $tags;
 				$entity->put_data($data);
 				$entities[] = $entity;
 				$count++;
-				if ($limit && $count >= $limit)
+				if ($options['limit'] && $count >= $options['limit'])
 					break;
 			}
 		}
@@ -750,11 +584,15 @@ class com_myentity extends component implements entity_manager_interface {
 		return $entities;
 	}
 
-	public function get_entity($options) {
-		if (!is_array($options))
-			$options = array('guid' => (int) $options);
-		$options['limit'] = 1;
-		$entities = $this->get_entities($options);
+	public function get_entity() {
+		// Set up options and selectors.
+		$args = func_get_args();
+		if (!$args)
+			$args = array(array());
+		if (!is_array($args[0]))
+			$args = array(array(), array('&', 'guid' => (int) $args[0]));
+		$args[0]['limit'] = 1;
+		$entities = call_user_func_array(array($this, 'get_entities'), $args);
 		if (!$entities)
 			return null;
 		return $entities[0];

@@ -522,15 +522,14 @@ class com_sales extends component {
 		$module->items = array();
 		// Primary options specify the criteria to search the inventory for.
 		$options = array('tags' => array('com_sales', 'stock'), 'class' => com_sales_stock);
+		if (!empty($sku)) {
+			$module->sku = $sku;
+			$countsheet_code = $sku;
+			$options['ref'] = array('product' => $pines->com_sales->get_product_by_code($sku));
+		}
 		if (!empty($tracking_code)) {
 			$module->tracking_code = $countsheet_code = $tracking_code;
 			$options['data'] = array('serial' => $tracking_code);
-		}
-		if (!empty($sku)) {
-			$module->sku = $sku;
-			if (!isset($countsheet_code))
-				$countsheet_code = $sku;
-			$options['ref'] = array('product' => $pines->com_sales->get_product_by_code($sku));
 		}
 		// Secondary options specify the criteria to search the transactions.
 		$secondary_options['ref'] = $secondary_options['gte'] = $secondary_options['lte'] = array();
@@ -562,7 +561,7 @@ class com_sales extends component {
 			// Grab all invoices, countsheets, transfers and purchase orders for
 			// all stock items with the given serial number / sku.
 			$invoices = $pines->entity_manager->get_entities(array('ref' => array_merge(array('products' => $cur_stock), $secondary_options['ref']), 'gte' => $secondary_options['gte'], 'lte' => $secondary_options['lte'], 'tags' => array('com_sales', 'sale'), 'class' => com_sales_sale));
-			$countsheets = $pines->entity_manager->get_entities(array('array' => array('entries' => $countsheet_code, 'ref' => $secondary_options['ref']), 'gte' => $secondary_options['gte'], 'lte' => $secondary_options['lte'], 'tags' => array('com_sales', 'countsheet'), 'class' => com_sales_countsheet));
+			$countsheets = $pines->entity_manager->get_entities(array('array' => array('entries' => $countsheet_code), 'ref' => $secondary_options['ref'], 'gte' => $secondary_options['gte'], 'lte' => $secondary_options['lte'], 'tags' => array('com_sales', 'countsheet'), 'class' => com_sales_countsheet));
 			$transfers = $pines->entity_manager->get_entities(array('ref' => array_merge(array('stock' => $cur_stock), $secondary_options['ref']), 'gte' => $secondary_options['gte'], 'lte' => $secondary_options['lte'], 'tags' => array('com_sales', 'transfer'), 'class' => com_sales_transfer));
 			$pos = $pines->entity_manager->get_entities(array('ref' => array_merge(array('received' => $cur_stock), $secondary_options['ref']), 'gte' => $secondary_options['gte'], 'lte' => $secondary_options['lte'], 'tags' => array('com_sales', 'po'), 'class' => com_sales_po));
 			foreach ($invoices as $cur_invoice) {

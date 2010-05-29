@@ -40,7 +40,7 @@ if (empty($manufacturer->name)) {
 	pines_notice('Please specify a name.');
 	return;
 }
-$test = $pines->entity_manager->get_entity(array('data' => array('name' => $manufacturer->name), 'tags' => array('com_sales', 'manufacturer'), 'class' => com_sales_manufacturer));
+$test = $pines->entity_manager->get_entity(array('class' => com_sales_manufacturer), array('&', 'data' => array('name', $manufacturer->name), 'tag' => array('com_sales', 'manufacturer')));
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$manufacturer->print_form();
 	pines_notice('There is already a manufacturer with that name. Please choose a different name.');

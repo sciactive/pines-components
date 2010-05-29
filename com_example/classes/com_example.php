@@ -26,7 +26,7 @@ class com_example extends component {
 
 		$module = new module('com_example', 'list_widgets', 'content');
 
-		$module->widgets = $pines->entity_manager->get_entities(array('tags' => array('com_example', 'widget'), 'class' => com_example_widget));
+		$module->widgets = $pines->entity_manager->get_entities(array('class' => com_example_widget), array('&', 'tag' => array('com_example', 'widget')));
 
 		if ( empty($module->widgets) ) {
 			//$module->detach();

@@ -36,7 +36,7 @@ class com_reports extends component {
 		$module = new module('com_reports', 'report_attendance', 'content');
 
 		if (!isset($employee)) {
-			$module->employees = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
+			$module->employees = $pines->entity_manager->get_entities(array('class' => com_hrm_employee), array('&', 'tag' => array('com_hrm', 'employee')));
 			foreach ($module->employees as $key => &$cur_employee) {
 				if (!$cur_employee->user_account || !($cur_employee->user_account->in_group($location) || $cur_employee->user_account->is_descendent($location)))
 					unset($module->employees[$key]);
@@ -64,7 +64,14 @@ class com_reports extends component {
 		$form = new module('com_reports', 'form_sales', 'left');
 		$head = new module('com_reports', 'show_calendar_head', 'head');
 		$module = new module('com_reports', 'report_sales', 'content');
-		$module->sales = $pines->entity_manager->get_entities(array('gte' => array('p_cdate' => $date_start), 'lte' => array('p_cdate' => $date_end), 'tags' => array('com_sales', 'sale'), 'class' => com_sales_sale));
+		$module->sales = $pines->entity_manager->get_entities(
+				array('class' => com_sales_sale),
+				array('&',
+					'gte' => array('p_cdate', $date_start),
+					'lte' => array('p_cdate', $date_end),
+					'tag' => array('com_sales', 'sale')
+				)
+			);
 
 		$module->date[0] = $form->date[0] = $date_start;
 		$module->date[1] = $form->date[1] = $date_end;
@@ -79,7 +86,7 @@ class com_reports extends component {
 		global $pines;
 
 		$module = new module('com_reports', 'list_sales_rankings', 'content');
-		$module->rankings = $pines->entity_manager->get_entities(array('tags' => array('com_reports', 'sales_ranking'), 'class' => com_reports_sales_ranking));
+		$module->rankings = $pines->entity_manager->get_entities(array('class' => com_reports_sales_ranking), array('&', 'tag' => array('com_reports', 'sales_ranking')));
 	}
 }
 

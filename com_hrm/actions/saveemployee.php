@@ -109,7 +109,7 @@ if (isset($employee->user_account) && !isset($employee->user_account->guid)) {
 	pines_notice('The user account specified is not accessible.');
 	return;
 }
-$test = $pines->entity_manager->get_entity(array('ref' => array('user_account' => $employee->user_account), 'tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
+$test = $pines->entity_manager->get_entity(array('class' => com_hrm_employee), array('&', 'ref' => array('user_account', $employee->user_account), 'tag' => array('com_hrm', 'employee')));
 if (isset($test) && !$employee->is($test)) {
 	$employee->print_form();
 	pines_notice("The user account specified is already attached to {$test->name}.");

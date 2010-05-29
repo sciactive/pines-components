@@ -38,7 +38,7 @@ if (empty($payment_type->name)) {
 	pines_notice('Please specify a name.');
 	return;
 }
-$test = $pines->entity_manager->get_entity(array('data' => array('name' => $payment_type->name), 'tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));
+$test = $pines->entity_manager->get_entity(array('class' => com_sales_payment_type), array('&', 'data' => array('name', $payment_type->name), 'tag' => array('com_sales', 'payment_type')));
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$payment_type->print_form();
 	pines_notice('There is already a payment type with that name. Please choose a different name.');
@@ -58,7 +58,7 @@ if ($pines->config->com_sales->global_payment_types)
 	$payment_type->ac->other = 1;
 
 if ($payment_type->change_type) {
-	$change_type = $pines->entity_manager->get_entity(array('data' => array('change_type' => true), 'tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));
+	$change_type = $pines->entity_manager->get_entity(array('class' => com_sales_payment_type), array('&', 'data' => array('change_type', true), 'tag' => array('com_sales', 'payment_type')));
 	if (isset($change_type) && $change_type->guid != $_REQUEST['id']) {
 		$change_type->change_type = false;
 		if ($change_type->save()) {

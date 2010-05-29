@@ -42,18 +42,16 @@ if (preg_match('/\d{4}-\d{2}-\d{2}/', $_REQUEST['date_end'])) {
 }
 
 // Build the entity query.
-$options = array(
-	'tags' => array('com_sales', 'transaction'),
-	'tags_i' => array('sale_tx', 'payment_tx'),
-	'gte' => array('p_cdate' => $date_start),
-	'lte' => array('p_cdate' => $date_end),
-	'class' => com_sales_tx
+$selector = array(
+	'tag' => array('com_sales', 'transaction'),
+	'gte' => array('p_cdate', $date_start),
+	'lte' => array('p_cdate', $date_end)
 );
 if (is_int($location))
-	$options['ref'] = array('group' => $location);
+	$selector['ref'] = array('group', $location);
 
 // Get all transactions.
-$tx_array = $pines->entity_manager->get_entities($options);
+$tx_array = $pines->entity_manager->get_entities(array('class' => com_sales_tx), $selector, array('|', 'tag' => array('sale_tx', 'payment_tx')));
 if (!is_array($tx_array))
 	$tx_array = array();
 $invoice_array = array('total' => 0.00, 'count' => 0);

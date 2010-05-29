@@ -119,7 +119,7 @@ if (isset($group->parent) && (!isset($group->parent->guid) || $group->is($group-
 	return;
 }
 if (gatekeeper('com_user/defaultgroups') && $group->default_primary) {
-	$current_primary = $pines->entity_manager->get_entity(array('data' => array('default_primary' => true), 'tags' => array('com_user', 'group'), 'class' => group));
+	$current_primary = $pines->entity_manager->get_entity(array('class' => group), array('&', 'data' => array('default_primary', true), 'tag' => array('com_user', 'group')));
 	if (isset($current_primary) && !$group->is($current_primary)) {
 		unset($current_primary->default_primary);
 		if ($current_primary->save()) {

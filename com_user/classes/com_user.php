@@ -179,7 +179,7 @@ class com_user extends component implements user_manager_interface {
 		global $pines;
 		$return = array();
 		if ( !isset($parent) ) {
-			$entities = $pines->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
+			$entities = $pines->entity_manager->get_entities(array('class' => group), array('&', 'tag' => array('com_user', 'group')));
 			foreach ($entities as $entity) {
 				if ( !isset($entity->parent) ) {
 					$child_array = $this->get_group_array($entity);
@@ -190,7 +190,7 @@ class com_user extends component implements user_manager_interface {
 				}
 			}
 		} else {
-			$entities = $pines->entity_manager->get_entities(array('ref' => array('parent' => $parent), 'tags' => array('com_user', 'group'), 'class' => group));
+			$entities = $pines->entity_manager->get_entities(array('class' => group), array('&', 'ref' => array('parent', $parent), 'tag' => array('com_user', 'group')));
 			foreach ($entities as $entity) {
 				$child_array = $this->get_group_array($entity);
 				$return[$entity->guid]['name'] = $entity->name;
@@ -212,7 +212,7 @@ class com_user extends component implements user_manager_interface {
 	public function get_group_menu(&$menu = null, $parent = null, $top_level = true) {
 		global $pines;
 		if ( !isset($parent) ) {
-			$entities = $pines->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
+			$entities = $pines->entity_manager->get_entities(array('class' => group), array('&', 'tag' => array('com_user', 'group')));
 			foreach ($entities as $entity) {
 				$menu->add("{$entity->name} [{$entity->groupname}]", $entity->guid, $entity->parent->guid, $entity->guid);
 			}
@@ -224,7 +224,7 @@ class com_user extends component implements user_manager_interface {
 				}
 			}
 		} else {
-			$entities = $pines->entity_manager->get_entities(array('ref' => array('parent' => $parent), 'tags' => array('com_user', 'group'), 'class' => group));
+			$entities = $pines->entity_manager->get_entities(array('class' => group), array('&', 'ref' => array('parent', $parent), 'tag' => array('com_user', 'group')));
 			foreach ($entities as $entity) {
 				$new_menu_id = $menu->add("{$entity->name} [{$entity->groupname}]", $entity->guid, ($top_level ? null : $entity->parent->guid), $entity->guid);
 				$this->get_group_menu($menu, $entity, false);
@@ -276,12 +276,12 @@ class com_user extends component implements user_manager_interface {
 
 	public function get_groups() {
 		global $pines;
-		return $pines->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
+		return $pines->entity_manager->get_entities(array('class' => group), array('&', 'tag' => array('com_user', 'group')));
 	}
 
 	public function get_users() {
 		global $pines;
-		return $pines->entity_manager->get_entities(array('tags' => array('com_user', 'user'), 'class' => user));
+		return $pines->entity_manager->get_entities(array('class' => user), array('&', 'tag' => array('com_user', 'user')));
 	}
 
 	/**
@@ -294,7 +294,7 @@ class com_user extends component implements user_manager_interface {
 
 		$module = new module('com_user', 'list_groups', 'content');
 
-		$module->groups = $pines->entity_manager->get_entities(array('data' => array('enabled' => !!$enabled), 'tags' => array('com_user', 'group'), 'class' => group));
+		$module->groups = $pines->entity_manager->get_entities(array('class' => group), array('&', 'data' => array('enabled', !!$enabled), 'tag' => array('com_user', 'group')));
 
 		if ( empty($module->groups) )
 			pines_notice('There are no'.($enabled ? ' enabled' : ' disabled').' groups.');
@@ -310,7 +310,7 @@ class com_user extends component implements user_manager_interface {
 
 		$module = new module('com_user', 'list_users', 'content');
 
-		$module->users = $pines->entity_manager->get_entities(array('data' => array('enabled' => !!$enabled), 'tags' => array('com_user', 'user'), 'class' => user));
+		$module->users = $pines->entity_manager->get_entities(array('class' => user), array('&', 'data' => array('enabled', !!$enabled), 'tag' => array('com_user', 'user')));
 
 		if ( empty($module->users) )
 			pines_notice('There are no'.($enabled ? ' enabled' : ' disabled').' users.');

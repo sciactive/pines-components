@@ -59,7 +59,14 @@ if ($_REQUEST['save'] == 'commit') {
 	$regex = '/'.implode('|', $in_stock).'/';
 	// Check the countsheet for any missing items.
 	// Get all stock entries at the current location.
-	$expected_stock = $pines->entity_manager->get_entities(array('match' => array('status' => $regex), 'ref' => array('location' => $_SESSION['user']->group), 'tags' => array('com_sales', 'stock'), 'class' => com_sales_stock));
+	$expected_stock = $pines->entity_manager->get_entities(
+			array('class' => com_sales_stock),
+			array('&',
+				'match' => array('status', $regex),
+				'ref' => array('location', $_SESSION['user']->group),
+				'tag' => array('com_sales', 'stock')
+			)
+		);
 	foreach ($expected_stock as &$cur_stock_entry) {
 		$found = false;
 		foreach ($countsheet->entries as $cur_item) {

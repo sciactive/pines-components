@@ -31,7 +31,7 @@ function com_hrm__override_ac($array) {
 }
 
 if ($_REQUEST['id'] == 'self') {
-	$employee = $pines->entity_manager->get_entity(array('ref' => array('user_account' => $_SESSION['user']), 'tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
+	$employee = $pines->entity_manager->get_entity(array('class' => com_hrm_employee), array('&', 'ref' => array('user_account', $_SESSION['user']), 'tag' => array('com_hrm', 'employee')));
 	$id_array = $pines->hook->add_callback('$pines->user_manager->check_permissions', -100, 'com_hrm__override_ac');
 } else {
 	if ( !gatekeeper('com_hrm/manageclock') )

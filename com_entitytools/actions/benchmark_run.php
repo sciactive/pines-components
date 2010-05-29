@@ -37,7 +37,7 @@ $benchmark->create[0] = $pass;
 $benchmark->create[1] = microtime(true);
 
 // Retrieving entities...
-$entities = $pines->entity_manager->get_entities(array('limit' => 1000, 'tags' => array('com_entitytools', 'benchmark')));
+$entities = $pines->entity_manager->get_entities(array('limit' => 1000), array('&', 'tag' => array('com_entitytools', 'benchmark')));
 $benchmark->retrieve[0] = count($entities) == 1000;
 $benchmark->retrieve[1] = microtime(true);
 

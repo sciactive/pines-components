@@ -29,12 +29,12 @@ class user extends able_object implements user_interface {
 		$this->default_component = 'com_user';
 		$this->address_type = 'us';
 		$this->attributes = array();
-		if ($id > 0 || is_string($id)) {
+		if ($id > 0 || (string) $id === $id) {
 			global $pines;
-			if (is_int($id)) {
-				$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
+			if ((int) $id === $id) {
+				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
 			} else {
-				$entity = $pines->entity_manager->get_entity(array('data' => array('username' => $id), 'tags' => $this->tags, 'class' => get_class($this)));
+				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'data' => array('username', $id), 'tag' => $this->tags));
 			}
 			if (!isset($entity))
 				return;

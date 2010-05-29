@@ -27,12 +27,12 @@ class group extends able_object implements group_interface {
 		$this->conditions = array();
 		$this->address_type = 'us';
 		$this->attributes = array();
-		if ($id > 0 || is_string($id)) {
+		if ($id > 0 || (string) $id === $id) {
 			global $pines;
-			if (is_int($id)) {
-				$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
+			if ((int) $id === $id) {
+				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
 			} else {
-				$entity = $pines->entity_manager->get_entity(array('data' => array('groupname' => $id), 'tags' => $this->tags, 'class' => get_class($this)));
+				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'data' => array('groupname', $id), 'tag' => $this->tags));
 			}
 			if (!isset($entity))
 				return;
@@ -74,7 +74,13 @@ class group extends able_object implements group_interface {
 
 	public function delete() {
 		global $pines;
-		$entities = $pines->entity_manager->get_entities(array('ref' => array('parent' => $this), 'tags' => array('com_user', 'group'), 'class' => group));
+		$entities = $pines->entity_manager->get_entities(
+				array('class' => group),
+				array('&',
+					'ref' => array('parent', $this),
+					'tag' => array('com_user', 'group')
+				)
+			);
 		foreach ($entities as $cur_group) {
 			if ( !$cur_group->delete() )
 				return false;
@@ -94,7 +100,13 @@ class group extends able_object implements group_interface {
 	public function get_descendents() {
 		global $pines;
 		$return = array();
-		$entities = $pines->entity_manager->get_entities(array('ref' => array('parent' => $this), 'tags' => array('com_user', 'group'), 'class' => group));
+		$entities = $pines->entity_manager->get_entities(
+				array('class' => group),
+				array('&',
+					'ref' => array('parent', $this),
+					'tag' => array('com_user', 'group')
+				)
+			);
 		foreach ($entities as $entity) {
 			$child_array = $entity->get_descendents();
 			$return = array_merge($return, array($entity), $child_array);
@@ -116,9 +128,31 @@ class group extends able_object implements group_interface {
 		if ($descendents) {
 			$groups = $this->get_descendents();
 			$groups[] = $this;
-			$return = $pines->entity_manager->get_entities(array('ref_i' => array('group' => $groups, 'groups' => $groups), 'tags' => array('com_user', 'user'), 'class' => user));
+			$return = $pines->entity_manager->get_entities(
+					array('class' => user),
+					array('|',
+						'ref' => array(
+							array('group', $groups),
+							array('groups', $groups)
+						)
+					),
+					array('&',
+						'tag' => array('com_user', 'user')
+					)
+				);
 		} else {
-			$return = $pines->entity_manager->get_entities(array('ref_i' => array('group' => $this, 'groups' => $this), 'tags' => array('com_user', 'user'), 'class' => user));
+			$return = $pines->entity_manager->get_entities(
+					array('class' => user),
+					array('|',
+						'ref' => array(
+							array('group', $this),
+							array('groups', $this)
+						)
+					),
+					array('&',
+						'tag' => array('com_user', 'user')
+					)
+				);
 		}
 		return $return;
 	}

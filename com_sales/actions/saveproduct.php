@@ -89,7 +89,7 @@ if ($product->stock_type == 'non_stocked' && $product->pricing_method == 'margin
 	pines_notice('Margin pricing is not available for non stocked items.');
 	return;
 }
-$test = $pines->entity_manager->get_entity(array('data' => array('name' => $product->name), 'tags' => array('com_sales', 'product'), 'class' => com_sales_product));
+$test = $pines->entity_manager->get_entity(array('class' => com_sales_product), array('&', 'data' => array('name', $product->name), 'tag' => array('com_sales', 'product')));
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$product->print_form();
 	pines_notice('There is already a product with that name. Please choose a different name.');
@@ -105,7 +105,7 @@ if ($product->save()) {
 	// We have to do this here, because new products won't have a GUID until now.
 	$categories = (array) json_decode($_REQUEST['categories']);
 	array_map('intval', $categories);
-	$all_categories = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'category'), 'class' => com_sales_category));
+	$all_categories = $pines->entity_manager->get_entities(array('class' => com_sales_category), array('&', 'tag' => array('com_sales', 'category')));
 	foreach($all_categories as $cur_cat) {
 		if (in_array($cur_cat->guid, $categories) && !$product->in_array($cur_cat->products)) {
 			$cur_cat->products[] = $product;

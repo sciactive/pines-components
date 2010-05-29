@@ -24,24 +24,28 @@ if (empty($query)) {
 	$num_query = preg_replace('/\D/', '', $query);
 	$r_query = '/'.preg_quote($query).'/i';
 	$r_num_query = '/'.preg_quote($num_query).'/';
-	$params = array(
-		'match_i' => array(
-			'name' => $r_query,
-			'email' => $r_query,
-			'address_international' => $r_query,
-			'city' => $r_query,
-			'state' => $r_query,
-			'website' => $r_query
-		),
-		'tags' => array('com_customer', 'company'),
-		'class' => com_customer_company
+	$selector = array('|',
+		'match' => array(
+			array('name', $r_query),
+			array('email', $r_query),
+			array('address_international', $r_query),
+			array('city', $r_query),
+			array('state', $r_query),
+			array('website', $r_query)
+		)
 	);
 	if ($num_query != '') {
-		$params['match_i']['phone'] = $r_num_query;
-		$params['match_i']['zip'] = $r_num_query;
-		$params['match_i']['fax'] = $r_num_query;
+		$selector['match'][] = array('phone', $r_num_query);
+		$selector['match'][] = array('zip', $r_num_query);
+		$selector['match'][] = array('fax', $r_num_query);
 	}
-	$companies = (array) $pines->entity_manager->get_entities($params);
+	$companies = (array) $pines->entity_manager->get_entities(
+			array('class' => com_customer_company),
+			array('&',
+				'tag' => array('com_customer', 'company')
+			),
+			$selector
+		);
 }
 
 foreach ($companies as $key => &$cur_company) {

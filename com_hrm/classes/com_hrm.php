@@ -46,7 +46,7 @@ class com_hrm extends component {
 	 */
 	function clear_calendar() {
 		global $pines;
-		$calendar_events = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'event'), 'class' => com_hrm_event));
+		$calendar_events = $pines->entity_manager->get_entities(array('class' => com_hrm_event), array('&', 'tag' => array('com_hrm', 'event')));
 		foreach ($calendar_events as $cur_event)
 			$cur_event->delete();
 	}
@@ -59,7 +59,7 @@ class com_hrm extends component {
 
 		$module = new module('com_hrm', 'list_employees', 'content');
 
-		$module->employees = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
+		$module->employees = $pines->entity_manager->get_entities(array('class' => com_hrm_employee), array('&', 'tag' => array('com_hrm', 'employee')));
 
 		if ( empty($module->employees) ) {
 			//$module->detach();
@@ -75,7 +75,7 @@ class com_hrm extends component {
 
 		$module = new module('com_hrm', 'list_timeclocks', 'content');
 
-		$module->employees = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
+		$module->employees = $pines->entity_manager->get_entities(array('class' => com_hrm_employee), array('&', 'tag' => array('com_hrm', 'employee')));
 
 		if ( empty($module->employees) ) {
 			//$module->detach();
@@ -91,7 +91,7 @@ class com_hrm extends component {
 
 		$module = new module('com_hrm', 'list_user_templates', 'content');
 
-		$module->user_templates = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'user_template'), 'class' => com_hrm_user_template));
+		$module->user_templates = $pines->entity_manager->get_entities(array('class' => com_hrm_user_template), array('&', 'tag' => array('com_hrm', 'user_template')));
 
 		if ( empty($module->user_templates) ) {
 			//$module->detach();
@@ -140,7 +140,7 @@ class com_hrm extends component {
 		if (empty($_SESSION['user']) || !gatekeeper('com_hrm/clock'))
 			return null;
 		global $pines;
-		$employee = $pines->entity_manager->get_entity(array('ref' => array('user_account' => $_SESSION['user']), 'tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
+		$employee = $pines->entity_manager->get_entity(array('class' => com_hrm_employee), array('&', 'ref' => array('user_account', $_SESSION['user']), 'tag' => array('com_hrm', 'employee')));
 		if (!isset($employee))
 			return null;
 		return $employee->print_clockin();
@@ -166,12 +166,12 @@ class com_hrm extends component {
 				$location = $form_event->event->group;
 			}
 			// Should work like this, we need to have the employee's group update upon saving it to a user.
-			$form_event->employees = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
+			$form_event->employees = $pines->entity_manager->get_entities(array('class' => com_hrm_employee), array('&', 'tag' => array('com_hrm', 'employee')));
 			$form_group->location = $form_event->location = $location->guid;
 		}
 		$calendar_head = new module('com_hrm', 'show_calendar_head', 'head');
 		$calendar = new module('com_hrm', 'show_calendar', 'content');
-		$calendar->events = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'event'), 'ref' => array('group' => $location), 'class' => com_hrm_event));
+		$calendar->events = $pines->entity_manager->get_entities(array('class' => com_hrm_event), array('&', 'ref' => array('group', $location), 'tag' => array('com_hrm', 'event')));
 		$calendar->location = $location->guid;
 	}
 }

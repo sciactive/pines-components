@@ -28,7 +28,7 @@ class com_customer extends component {
 
 		$module = new module('com_customer', 'list_companies', 'content');
 
-		$module->companies = $pines->entity_manager->get_entities(array('tags' => array('com_customer', 'company'), 'class' => com_customer_company));
+		$module->companies = $pines->entity_manager->get_entities(array('class' => com_customer_company), array('&', 'tag' => array('com_customer', 'company')));
 
 		if ( empty($module->companies) ) {
 			//$module->detach();
@@ -44,7 +44,7 @@ class com_customer extends component {
 
 		$module = new module('com_customer', 'list_customers', 'content');
 
-		$module->customers = $pines->entity_manager->get_entities(array('tags' => array('com_customer', 'customer'), 'class' => com_customer_customer));
+		$module->customers = $pines->entity_manager->get_entities(array('class' => com_customer_customer), array('&', 'tag' => array('com_customer', 'customer')));
 
 		if ( empty($module->customers) ) {
 			//$module->detach();

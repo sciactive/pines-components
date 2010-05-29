@@ -72,7 +72,7 @@ unset($cur_attribute);
 // entity manager after com_user filters the result, and thus will not be
 // assigned.
 if ( gatekeeper('com_user/assigngroup') ) {
-	$sys_groups = $pines->entity_manager->get_entities(array('tags' => array('com_user', 'group'), 'class' => group));
+	$sys_groups = $pines->entity_manager->get_entities(array('class' => group), array('&', 'tag' => array('com_user', 'group')));
 	$group = group::factory((int) $_REQUEST['group']);
 	$groups = $_REQUEST['groups'];
 	if (!is_array($groups))
@@ -135,7 +135,7 @@ if (empty($user->password) && !$pines->config->com_user->empty_pw) {
 	return;
 }
 if (gatekeeper('com_user/assignpin') && !empty($user->pin)) {
-	$test = $pines->entity_manager->get_entity(array('data' => array('pin' => $user->pin), 'tags' => array('com_user', 'user'), 'class' => user));
+	$test = $pines->entity_manager->get_entity(array('class' => user), array('&', 'data' => array('pin', $user->pin), 'tag' => array('com_user', 'user')));
 	if (isset($test) && !$user->is($test)) {
 		$user->print_form();
 		pines_notice('This PIN is already in use.');

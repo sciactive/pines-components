@@ -16,7 +16,13 @@ if ( !gatekeeper('com_sales/depositcashcount') )
 
 // Default to the current cash count that is still open for this location.
 if (!isset($_REQUEST['id'])) {
-	$existing_counts = $pines->entity_manager->get_entities(array('ref' => array('group' => $_SESSION['user']->group), 'tags' => array('com_sales', 'cashcount'), 'class' => com_sales_cashcount));
+	$existing_counts = $pines->entity_manager->get_entities(
+			array('class' => com_sales_cashcount),
+			array('&',
+				'ref' => array('group', $_SESSION['user']->group),
+				'tag' => array('com_sales', 'cashcount')
+			)
+		);
 	foreach ($existing_counts as $cur_count) {
 		if (!in_array($cur_count->status, array('closed', 'flagged')))
 			$cashcount = $cur_count;

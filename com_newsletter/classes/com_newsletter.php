@@ -79,7 +79,7 @@ class com_newsletter extends component {
 		global $pines;
 
 		$module = new module('com_newsletter', 'list_mails', 'content');
-		$module->mails = $pines->entity_manager->get_entities(array('tags' => array('com_newsletter', 'mail')));
+		$module->mails = $pines->entity_manager->get_entities(array(), array('&', 'tag' => array('com_newsletter', 'mail')));
 
 		if ( empty($module->mails) ) {
 			//$module->detach();

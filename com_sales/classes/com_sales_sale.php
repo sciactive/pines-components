@@ -30,7 +30,7 @@ class com_sales_sale extends entity {
 		$this->payments = array();
 		if ($id > 0) {
 			global $pines;
-			$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
+			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
 			if (!isset($entity))
 				return;
 			$this->guid = $entity->guid;
@@ -71,15 +71,15 @@ class com_sales_sale extends entity {
 		global $pines;
 		$module = new module('com_sales', 'form_sale', 'content');
 		$module->entity = $this;
-		$module->categories = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'category'), 'class' => com_sales_category));
-		$module->tax_fees = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'tax_fee'), 'class' => com_sales_tax_fee));
+		$module->categories = $pines->entity_manager->get_entities(array('class' => com_sales_category), array('&', 'tag' => array('com_sales', 'category')));
+		$module->tax_fees = $pines->entity_manager->get_entities(array('class' => com_sales_tax_fee), array('&', 'tag' => array('com_sales', 'tax_fee')));
 		if (!is_array($module->tax_fees))
 			$module->tax_fees = array();
 		foreach ($module->tax_fees as $key => $cur_tax_fee) {
 			if (!$cur_tax_fee->enabled)
 				unset($module->tax_fees[$key]);
 		}
-		$module->payment_types = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));
+		$module->payment_types = $pines->entity_manager->get_entities(array('class' => com_sales_payment_type), array('&', 'tag' => array('com_sales', 'payment_type')));
 		if (!is_array($module->payment_types))
 			$module->payment_types = array();
 		foreach ($module->payment_types as $key => $cur_payment_type) {
@@ -255,7 +255,7 @@ class com_sales_sale extends entity {
 			return false;
 		}
 		if ($this->change > 0.00) {
-			$change_type = $pines->entity_manager->get_entity(array('data' => array('change_type' => true), 'tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));
+			$change_type = $pines->entity_manager->get_entity(array('class' => com_sales_payment_type), array('&', 'data' => array('change_type', true), 'tag' => array('com_sales', 'payment_type')));
 			if (!isset($change_type)) {
 				pines_notice('Change is due to be given, but no payment type has been set to give change.');
 				return false;
@@ -341,7 +341,7 @@ class com_sales_sale extends entity {
 		// Keep track of the whole process.
 		$return = true;
 		// These will be searched through to match products to stock entries.
-		$stock_entries = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'stock'), 'class' => com_sales_stock));
+		$stock_entries = $pines->entity_manager->get_entities(array('class' => com_sales_stock), array('&', 'tag' => array('com_sales', 'stock')));
 		if (!is_array($stock_entries))
 			$stock_entries = array();
 		if ($pines->config->com_sales->com_customer) {
@@ -506,7 +506,7 @@ class com_sales_sale extends entity {
 		if (!is_array($this->products))
 			return false;
 		// We need a list of taxes and fees.
-		$tax_fees = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'tax_fee')));
+		$tax_fees = $pines->entity_manager->get_entities(array('class' => com_sales_tax_fee), array('&', 'tag' => array('com_sales', 'tax_fee')));
 		if (!is_array($tax_fees))
 			$tax_fees = array();
 		foreach ($tax_fees as $key => $cur_tax_fee) {

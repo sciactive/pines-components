@@ -35,7 +35,7 @@ if ($pines->uploader->check($_REQUEST['background']))
 // Station Layout
 $floor->stations = json_decode($_REQUEST['stations'], true);
 
-$test = $pines->entity_manager->get_entity(array('data' => array('name' => $floor->name), 'tags' => array('com_customertimer', 'floor'), 'class' => com_customertimer_floor));
+$test = $pines->entity_manager->get_entity(array('class' => com_customertimer_floor), array('&', 'data' => array('name', $floor->name), 'tag' => array('com_customertimer', 'floor')));
 if (isset($test) && !$floor->is($test)) {
 	$floor->print_form();
 	pines_notice('There is already a floor with that name. Please choose a different name.');

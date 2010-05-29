@@ -81,7 +81,14 @@ $this->note = 'Created by '.$this->entity->user->name.' on '.format_date($this->
 				<?php foreach ($cur_entry['entries'] as $cur_entry) {
 					switch ($cur_entry->status) {
 						case 'sold_at_store':
-							$txs = $pines->entity_manager->get_entities(array('ref' => array('stock' => $cur_entry), 'data' => array('type' => 'removed'), 'tags' => array('com_sales', 'transaction', 'stock_tx'), 'class' => com_sales_tx));
+							$txs = $pines->entity_manager->get_entities(
+									array('class' => com_sales_tx),
+									array('&',
+										'ref' => array('stock', $cur_entry),
+										'data' => array('type', 'removed'),
+										'tag' => array('com_sales', 'transaction', 'stock_tx')
+									)
+								);
 							if (!$txs) {
 								echo "<li>{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku}, Sold at an unknown store)</li>";
 								continue;
@@ -91,7 +98,14 @@ $this->note = 'Created by '.$this->entity->user->name.' on '.format_date($this->
 							echo "<li>{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku}, Sold on ".format_date($tx->p_cdate, 'full_long')." from: {$tx->old_location->name} [{$tx->old_location->groupname}])</li>";
 							break;
 						case 'sold_pending':
-							$txs = $pines->entity_manager->get_entities(array('ref' => array('stock' => $cur_entry), 'data' => array('type' => 'removed'), 'tags' => array('com_sales', 'transaction', 'stock_tx'), 'class' => com_sales_tx));
+							$txs = $pines->entity_manager->get_entities(
+									array('class' => com_sales_tx),
+									array('&',
+										'ref' => array('stock', $cur_entry),
+										'data' => array('type', 'removed'),
+										'tag' => array('com_sales', 'transaction', 'stock_tx')
+									)
+								);
 							if (!$txs) {
 								echo "<li>{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku}, Sold and awaiting pickup at an unkown store)</li>";
 								continue;

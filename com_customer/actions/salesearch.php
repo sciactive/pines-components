@@ -22,9 +22,13 @@ if (empty($query)) {
 	$sales = array();
 } else {
 	// TODO: Use 'match_i' instead.
-	$sales = $pines->entity_manager->get_entities(array('data' => array('status' => 'paid'), 'tags' => array('com_sales', 'sale'), 'class' => com_sales_sale));
-	if (!is_array($sales))
-		$sales = array();
+	$sales = (array) $pines->entity_manager->get_entities(
+			array('class' => com_sales_sale),
+			array('&',
+				'data' => array('status', 'paid'),
+				'tag' => array('com_sales', 'sale')
+			)
+		);
 }
 
 foreach ($sales as $key => &$cur_sale) {

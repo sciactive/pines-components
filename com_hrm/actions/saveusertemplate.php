@@ -46,7 +46,7 @@ if (empty($user_template->name)) {
 	pines_notice('Please specify a name.');
 	return;
 }
-$test = $pines->entity_manager->get_entity(array('data' => array('name' => $user_template->name), 'tags' => array('com_hrm', 'user_template'), 'class' => com_hrm_user_template));
+$test = $pines->entity_manager->get_entity(array('class' => com_hrm_user_template), array('&', 'data' => array('name', $user_template->name), 'tag' => array('com_hrm', 'user_template')));
 if (isset($test) && !$user_template->is($test)) {
 	$user_template->print_form();
 	pines_notice('There is already a user template with that name. Please choose a different name.');

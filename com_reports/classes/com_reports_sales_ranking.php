@@ -32,7 +32,7 @@ class com_reports_sales_ranking extends entity {
 		$this->top_location = $_SESSION['user']->group;
 		if ($id > 0) {
 			global $pines;
-			$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
+			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
 			if (!isset($entity))
 				return;
 			$this->guid = $entity->guid;
@@ -74,7 +74,7 @@ class com_reports_sales_ranking extends entity {
 		
 		$module = new module('com_reports', 'form_sales_ranking', 'content');
 		$module->entity = $this;
-		$module->employees = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
+		$module->employees = $pines->entity_manager->get_entities(array('class' => com_hrm_employee), array('&', 'tag' => array('com_hrm', 'employee')));
 
 		foreach ($module->employees as $key => $value) {
 			if (!isset($value->user_account))
@@ -101,7 +101,7 @@ class com_reports_sales_ranking extends entity {
 		$module->entity = $form->entity = $this;
 		$module->location = $form->location = $location;
 		$module->rankings = array();
-		$employees = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'employee'), 'class' => com_hrm_employee));
+		$employees = $pines->entity_manager->get_entities(array('class' => com_hrm_employee), array('&', 'tag' => array('com_hrm', 'employee')));
 
 		foreach ($employees as $key => $value) {
 			if ( !isset($value->user_account) ||
@@ -154,17 +154,41 @@ class com_reports_sales_ranking extends entity {
 			);
 
 			// Get the employee's sales totals for the current week.
-			$current_week_sales = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'sale'), 'ref' => array('user' => $cur_employee->user_account), 'gte' => array('p_cdate' => $current_start), 'lte' => array('p_cdate' => $current_end), 'class' => com_sales_sale));
+			$current_week_sales = $pines->entity_manager->get_entities(
+					array('class' => com_sales_sale),
+					array('&',
+						'ref' => array('user', $cur_employee->user_account),
+						'gte' => array('p_cdate', $current_start),
+						'lte' => array('p_cdate', $current_end),
+						'tag' => array('com_sales', 'sale')
+					)
+				);
 			foreach ($current_week_sales as $cur_week_sale)
 				$module->rankings[$cur_employee->guid]['current'] += $cur_week_sale->total;
 
 			// Get the employee's sales totals for this sales period.
-			$last_week_sales = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'sale'), 'ref' => array('user' => $cur_employee->user_account), 'gte' => array('p_cdate' => $last_start), 'lte' => array('p_cdate' => $last_end), 'class' => com_sales_sale));
+			$last_week_sales = $pines->entity_manager->get_entities(
+					array('class' => com_sales_sale),
+					array('&',
+						'ref' => array('user', $cur_employee->user_account),
+						'gte' => array('p_cdate', $last_start),
+						'lte' => array('p_cdate', $last_end),
+						'tag' => array('com_sales', 'sale')
+					)
+				);
 			foreach ($last_week_sales as $last_week_sale)
 				$module->rankings[$cur_employee->guid]['last'] += $last_week_sale->total;
 
 			// Get the employee's sales totals for the entire sales period.
-			$mtd_sales = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'sale'), 'ref' => array('user' => $cur_employee->user_account), 'gte' => array('p_cdate' => $this->start_date), 'lte' => array('p_cdate' => $this->end_date), 'class' => com_sales_sale));
+			$mtd_sales = $pines->entity_manager->get_entities(
+					array('class' => com_sales_sale),
+					array('&',
+						'ref' => array('user', $cur_employee->user_account),
+						'gte' => array('p_cdate', $this->start_date),
+						'lte' => array('p_cdate', $this->end_date),
+						'tag' => array('com_sales', 'sale')
+					)
+				);
 			foreach ($mtd_sales as $cur_mtd_sale)
 				$module->rankings[$cur_employee->guid]['mtd'] += $cur_mtd_sale->total;
 			

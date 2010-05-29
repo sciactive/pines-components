@@ -26,7 +26,7 @@ class com_packager extends component {
 
 		$module = new module('com_packager', 'list_packages', 'content');
 
-		$module->packages = $pines->entity_manager->get_entities(array('tags' => array('com_packager', 'package'), 'class' => com_packager_package));
+		$module->packages = $pines->entity_manager->get_entities(array('class' => com_packager_package), array('&', 'tag' => array('com_packager', 'package')));
 
 		if ( empty($module->packages) ) {
 			//$module->detach();

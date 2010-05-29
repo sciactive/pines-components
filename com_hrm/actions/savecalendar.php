@@ -56,7 +56,7 @@ if (isset($_REQUEST['events'])) {
 			$event->save();
 		}
 	}
-	$existing_events = $pines->entity_manager->get_entities(array('tags' => array('com_hrm', 'event'), 'ref' => array('group' => $location), 'class' => com_hrm_event));
+	$existing_events = $pines->entity_manager->get_entities(array('class' => com_hrm_event), array('&', 'ref' => array('group', $location), 'tag' => array('com_hrm', 'event')));
 	foreach ($existing_events as $cur_event) {
 		if (!in_array($cur_event->guid, $event_list))
 			$cur_event->delete();

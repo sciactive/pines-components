@@ -29,7 +29,7 @@ class com_sales_transfer extends entity {
 		$this->stock = array();
 		if ($id > 0) {
 			global $pines;
-			$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
+			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
 			if (!isset($entity))
 				return;
 			$this->guid = $entity->guid;
@@ -84,10 +84,10 @@ class com_sales_transfer extends entity {
 		$module = new module('com_sales', 'form_transfer', 'content');
 		$module->entity = $this;
 		$module->locations = $pines->user_manager->get_group_array();
-		$module->shippers = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'shipper'), 'class' => com_sales_shipper));
+		$module->shippers = $pines->entity_manager->get_entities(array('class' => com_sales_shipper), array('&', 'tag' => array('com_sales', 'shipper')));
 		if (!is_array($module->shippers))
 			$module->shippers = array();
-		$module->stock = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'stock'), 'class' => com_sales_stock));
+		$module->stock = $pines->entity_manager->get_entities(array('class' => com_sales_stock), array('&', 'tag' => array('com_sales', 'stock')));
 		if (!is_array($module->stock))
 			$module->stock = array();
 

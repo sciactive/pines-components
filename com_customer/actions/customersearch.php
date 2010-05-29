@@ -24,35 +24,38 @@ if (empty($query)) {
 	$num_query = preg_replace('/\D/', '', $query);
 	$r_query = '/'.preg_quote($query).'/i';
 	$r_num_query = '/'.preg_quote($num_query).'/';
-	$params = array(
-		'match_i' => array(
-			'name' => $r_query,
-			'email' => $r_query
-		),
-		'tags' => array('com_customer', 'customer'),
-		'class' => com_customer_customer
+	$selector = array('|',
+		'match' => array(
+			array('name', $r_query),
+			array('email', $r_query)
+		)
 	);
 	if ($num_query != '') {
-		$params['match_i']['phone_home'] = $r_num_query;
-		$params['match_i']['phone_work'] = $r_num_query;
-		$params['match_i']['phone_cell'] = $r_num_query;
-		$params['match_i']['fax'] = $r_num_query;
+		$selector['match'][] = array('phone_home', $r_num_query);
+		$selector['match'][] = array('phone_work', $r_num_query);
+		$selector['match'][] = array('phone_cell', $r_num_query);
+		$selector['match'][] = array('fax', $r_num_query);
 	}
-	$customers = (array) $pines->entity_manager->get_entities($params);
-	$companies = $pines->entity_manager->get_entities(array(
-		'match' => array('name' => $r_query),
-		'tags' => array('com_customer', 'company'),
-		'class' => com_customer_company)
-	);
-	if ($companies) {
-		$params = array(
-			'ref' => array(
-				'company' => $companies
-			),
-			'tags' => array('com_customer', 'customer'),
-			'class' => com_customer_customer
+	$customers = (array) $pines->entity_manager->get_entities(
+			array('class' => com_customer_customer),
+			array('&', 'tag' => array('com_customer', 'customer')),
+			$selector
 		);
-		$comp_customers = (array) $pines->entity_manager->get_entities($params);
+	$companies = $pines->entity_manager->get_entities(
+			array('class' => com_customer_company),
+			array('&',
+				'match' => array('name', $r_query),
+				'tag' => array('com_customer', 'company')
+			)
+		);
+	if ($companies) {
+		$comp_customers = (array) $pines->entity_manager->get_entities(
+				array('class' => com_customer_customer),
+				array('&',
+					'ref' => array('company', $companies),
+					'tag' => array('com_customer', 'customer')
+				)
+			);
 		foreach ($comp_customers as &$cur_customer) {
 			if (!$cur_customer->in_array($customers))
 				$customers[] = $cur_customer;

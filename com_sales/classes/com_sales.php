@@ -123,20 +123,11 @@ class com_sales extends component {
 	 */
 	public function get_product_by_code($code) {
 		global $pines;
-		$entity = $pines->entity_manager->get_entity(array('data' => array('sku' => $code), 'tags' => array('com_sales', 'product'), 'class' => com_sales_product));
-		if (isset($entity))
-			return $entity;
-		
-		$entities = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'product'), 'class' => com_sales_product));
-		if (!is_array($entities))
-			return null;
-		foreach($entities as $cur_entity) {
-			if (!is_array($cur_entity->additional_barcodes))
-				continue;
-			if (in_array($code, $cur_entity->additional_barcodes))
-				return $cur_entity;
-		}
-		return null;
+		return $pines->entity_manager->get_entity(
+				array('class' => com_sales_product),
+				array('&', 'tag' => array('com_sales', 'product')),
+				array('|', 'data' => array('sku', $code), 'array' => array('additional_barcodes', $code))
+			);
 	}
 
 	/**
@@ -177,7 +168,15 @@ class com_sales extends component {
 			$end_date = strtotime('23:59');
 		if (!isset($location))
 			$location = $_SESSION['user']->group;
-		$module->counts = $pines->entity_manager->get_entities(array('gte' => array('p_cdate' => (int) $start_date), 'lte' => array('p_cdate' => (int) $end_date), 'ref' => array('group' => $location), 'tags' => array('com_sales', 'cashcount'), 'class' => com_sales_cashcount));
+		$module->counts = $pines->entity_manager->get_entities(
+				array('class' => com_sales_cashcount),
+				array('&',
+					'gte' => array('p_cdate', (int) $start_date),
+					'lte' => array('p_cdate', (int) $end_date),
+					'ref' => array('group', $location),
+					'tag' => array('com_sales', 'cashcount')
+				)
+			);
 		$form->start_date = $start_date;
 		$form->end_date = $end_date;
 		$form->location = $location->guid;
@@ -210,7 +209,7 @@ class com_sales extends component {
 
 		$module = new module('com_sales', 'list_categories', 'content');
 
-		$module->categories = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'category'), 'class' => com_sales_category));
+		$module->categories = $pines->entity_manager->get_entities(array('class' => com_sales_category), array('&', 'tag' => array('com_sales', 'category')));
 
 		if ( empty($module->categories) )
 			pines_notice('No categories found.');
@@ -224,7 +223,7 @@ class com_sales extends component {
 
 		$module = new module('com_sales', 'list_countsheets', 'content');
 
-		$module->countsheets = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'countsheet'), 'class' => com_sales_countsheet));
+		$module->countsheets = $pines->entity_manager->get_entities(array('class' => com_sales_countsheet), array('&', 'tag' => array('com_sales', 'countsheet')));
 
 		// Remind the user to do a countsheet if one is assigned to their location.
 		if ($_SESSION['user']) {
@@ -245,7 +244,7 @@ class com_sales extends component {
 
 		$module = new module('com_sales', 'list_manufacturers', 'content');
 
-		$module->manufacturers = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'manufacturer'), 'class' => com_sales_manufacturer));
+		$module->manufacturers = $pines->entity_manager->get_entities(array('class' => com_sales_manufacturer), array('&', 'tag' => array('com_sales', 'manufacturer')));
 
 		if ( empty($module->manufacturers) )
 			pines_notice('There are no manufacturers.');
@@ -259,7 +258,7 @@ class com_sales extends component {
 
 		$module = new module('com_sales', 'list_payment_types', 'content');
 
-		$module->payment_types = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'payment_type'), 'class' => com_sales_payment_type));
+		$module->payment_types = $pines->entity_manager->get_entities(array('class' => com_sales_payment_type), array('&', 'tag' => array('com_sales', 'payment_type')));
 
 		if ( empty($module->payment_types) )
 			pines_notice('There are no payment types.');
@@ -273,7 +272,7 @@ class com_sales extends component {
 
 		$module = new module('com_sales', 'list_pos', 'content');
 
-		$module->pos = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'po'), 'class' => com_sales_po));
+		$module->pos = $pines->entity_manager->get_entities(array('class' => com_sales_po), array('&', 'tag' => array('com_sales', 'po')));
 
 		if ( empty($module->pos) ) {
 			pines_notice('There are no POs.');
@@ -301,7 +300,7 @@ class com_sales extends component {
 
 		$module = new module('com_sales', 'list_products', 'content');
 
-		$module->products = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'product'), 'class' => com_sales_product));
+		$module->products = $pines->entity_manager->get_entities(array('class' => com_sales_product), array('&', 'tag' => array('com_sales', 'product')));
 
 		if ( empty($module->products) )
 			pines_notice('There are no products.');
@@ -317,12 +316,12 @@ class com_sales extends component {
 
 		$module = new module('com_sales', 'list_sales', 'content');
 
-		$options = array('tags' => array('com_sales', 'sale'), 'class' => com_sales_sale);
+		$selector = array('&', 'tag' => array('com_sales', 'sale'));
 		if (isset($start_date))
-			$options['gte'] = array('p_cdate' => (int) $start_date);
+			$selector['gte'] = array('p_cdate', (int) $start_date);
 		if (isset($end_date))
-			$options['lte'] = array('p_cdate' => (int) $end_date);
-		$module->sales = $pines->entity_manager->get_entities($options);
+			$selector['lte'] = array('p_cdate', (int) $end_date);
+		$module->sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector);
 		$module->start_date = $start_date;
 		$module->end_date = $end_date;
 
@@ -338,7 +337,7 @@ class com_sales extends component {
 
 		$module = new module('com_sales', 'list_shippers', 'content');
 
-		$module->shippers = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'shipper'), 'class' => com_sales_shipper));
+		$module->shippers = $pines->entity_manager->get_entities(array('class' => com_sales_shipper), array('&', 'tag' => array('com_sales', 'shipper')));
 
 		if ( empty($module->shippers) )
 			pines_notice('There are no shippers.');
@@ -354,7 +353,7 @@ class com_sales extends component {
 
 		$module = new module('com_sales', 'list_stock', 'content');
 
-		$module->stock = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'stock'), 'class' => com_sales_stock));
+		$module->stock = $pines->entity_manager->get_entities(array('class' => com_sales_stock), array('&', 'tag' => array('com_sales', 'stock')));
 		$module->all = $all;
 
 		if ( empty($module->stock) )
@@ -369,7 +368,7 @@ class com_sales extends component {
 
 		$module = new module('com_sales', 'list_tax_fees', 'content');
 
-		$module->tax_fees = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'tax_fee'), 'class' => com_sales_tax_fee));
+		$module->tax_fees = $pines->entity_manager->get_entities(array('class' => com_sales_tax_fee), array('&', 'tag' => array('com_sales', 'tax_fee')));
 
 		if ( empty($module->tax_fees) )
 			pines_notice('There are no taxes/fees.');
@@ -383,7 +382,7 @@ class com_sales extends component {
 
 		$module = new module('com_sales', 'list_transfers', 'content');
 
-		$module->transfers = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'transfer'), 'class' => com_sales_transfer));
+		$module->transfers = $pines->entity_manager->get_entities(array('class' => com_sales_transfer), array('&', 'tag' => array('com_sales', 'transfer')));
 
 		if ( empty($module->transfers) )
 			pines_notice('There are no transfers.');
@@ -397,7 +396,7 @@ class com_sales extends component {
 
 		$module = new module('com_sales', 'list_vendors', 'content');
 
-		$module->vendors = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'vendor'), 'class' => com_sales_vendor));
+		$module->vendors = $pines->entity_manager->get_entities(array('class' => com_sales_vendor), array('&', 'tag' => array('com_sales', 'vendor')));
 
 		if ( empty($module->vendors) )
 			pines_notice('There are no vendors.');
@@ -521,15 +520,15 @@ class com_sales extends component {
 		$module = new module('com_sales', 'track_product', 'content');
 		$module->items = array();
 		// Primary options specify the criteria to search the inventory for.
-		$options = array('tags' => array('com_sales', 'stock'), 'class' => com_sales_stock);
+		$selector = array('&', 'tag' => array('com_sales', 'stock'));
 		if (!empty($sku)) {
 			$module->sku = $sku;
 			$countsheet_code = $sku;
-			$options['ref'] = array('product' => $pines->com_sales->get_product_by_code($sku));
+			$selector['ref'] = array('product', $pines->com_sales->get_product_by_code($sku));
 		}
 		if (!empty($tracking_code)) {
 			$module->tracking_code = $countsheet_code = $tracking_code;
-			$options['data'] = array('serial' => $tracking_code);
+			$selector['data'] = array('serial', $tracking_code);
 		}
 		// Secondary options specify the criteria to search the transactions.
 		$secondary_options['ref'] = $secondary_options['gte'] = $secondary_options['lte'] = array();
@@ -538,15 +537,15 @@ class com_sales extends component {
 		if (!isset($location) || ($module->location != 'all' && !isset($location->guid)))
 			$module->location = 'all';
 		if (isset($module->location) && $module->location != 'all')
-			$secondary_options['ref']= array('group' => $location);
+			$secondary_options['ref'][] = array('group', $location);
 
 		if (isset($start)) {
 			$module->start_date = $start;
-			$secondary_options['gte'] = array('p_cdate' => (int) $start);
+			$secondary_options['gte'][] = array('p_cdate', (int) $start);
 		}
 		if (isset($end)) {
 			$module->end_date = $end;
-			$secondary_options['lte'] = array('p_cdate' => (int) $end);
+			$secondary_options['lte'][] = array('p_cdate', (int) $end);
 		}
 		if (!isset($module->start_date) || !isset($module->end_date)) {
 			$module->all_time = true;
@@ -556,14 +555,47 @@ class com_sales extends component {
 		}
 		$found_stock = $module->transactions = array();
 		if (isset($module->tracking_code) || isset($module->sku))
-			$found_stock = $pines->entity_manager->get_entities($options);
+			$found_stock = $pines->entity_manager->get_entities(array('class' => com_sales_stock), $selector);
 		foreach ($found_stock as $cur_stock) {
 			// Grab all invoices, countsheets, transfers and purchase orders for
 			// all stock items with the given serial number / sku.
-			$invoices = $pines->entity_manager->get_entities(array('ref' => array_merge(array('products' => $cur_stock), $secondary_options['ref']), 'gte' => $secondary_options['gte'], 'lte' => $secondary_options['lte'], 'tags' => array('com_sales', 'sale'), 'class' => com_sales_sale));
-			$countsheets = $pines->entity_manager->get_entities(array('array' => array('entries' => $countsheet_code), 'ref' => $secondary_options['ref'], 'gte' => $secondary_options['gte'], 'lte' => $secondary_options['lte'], 'tags' => array('com_sales', 'countsheet'), 'class' => com_sales_countsheet));
-			$transfers = $pines->entity_manager->get_entities(array('ref' => array_merge(array('stock' => $cur_stock), $secondary_options['ref']), 'gte' => $secondary_options['gte'], 'lte' => $secondary_options['lte'], 'tags' => array('com_sales', 'transfer'), 'class' => com_sales_transfer));
-			$pos = $pines->entity_manager->get_entities(array('ref' => array_merge(array('received' => $cur_stock), $secondary_options['ref']), 'gte' => $secondary_options['gte'], 'lte' => $secondary_options['lte'], 'tags' => array('com_sales', 'po'), 'class' => com_sales_po));
+			$invoices = $pines->entity_manager->get_entities(
+					array('class' => com_sales_sale),
+					array('&',
+						'ref' => array_merge(array(array('products', $cur_stock)), $secondary_options['ref']),
+						'gte' => $secondary_options['gte'],
+						'lte' => $secondary_options['lte'],
+						'tag' => array('com_sales', 'sale')
+					)
+				);
+			$countsheets = $pines->entity_manager->get_entities(
+					array('class' => com_sales_countsheet),
+					array('&',
+						'array' => array('entries', $countsheet_code),
+						'ref' => $secondary_options['ref'],
+						'gte' => $secondary_options['gte'],
+						'lte' => $secondary_options['lte'],
+						'tag' => array('com_sales', 'countsheet')
+					)
+				);
+			$transfers = $pines->entity_manager->get_entities(
+					array('class' => com_sales_transfer),
+					array('&',
+						'ref' => array_merge(array(array('stock', $cur_stock)), $secondary_options['ref']),
+						'gte' => $secondary_options['gte'],
+						'lte' => $secondary_options['lte'],
+						'tag' => array('com_sales', 'transfer')
+					)
+				);
+			$pos = $pines->entity_manager->get_entities(
+					array('class' => com_sales_po),
+					array('&',
+						'ref' => array_merge(array(array('received', $cur_stock)), $secondary_options['ref']),
+						'gte' => $secondary_options['gte'],
+						'lte' => $secondary_options['lte'],
+						'tag' => array('com_sales', 'po')
+					)
+				);
 			foreach ($invoices as $cur_invoice) {
 				if (isset($module->transactions[$cur_invoice->guid])) {
 					$module->transactions[$cur_invoice->guid]->qty++;

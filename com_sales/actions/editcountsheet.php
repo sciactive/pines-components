@@ -29,7 +29,13 @@ if ($_SESSION['user']->group->com_sales_task_countsheet) {
 	}
 	if (!isset($entity->guid) && isset($_SESSION['user']->group)) {
 		// Look for any countsheets that are waiting to be committed.
-		$existing_sheets = $pines->entity_manager->get_entities(array('ref' => array('group' => $_SESSION['user']->group), 'tags' => array('com_sales', 'countsheet'), 'class' => com_sales_countsheet));
+		$existing_sheets = $pines->entity_manager->get_entities(
+				array('class' => com_sales_countsheet),
+				array('&',
+					'ref' => array('group', $_SESSION['user']->group),
+					'tag' => array('com_sales', 'countsheet')
+				)
+			);
 		foreach ($existing_sheets as $cur_sheet) {
 			if (!$entity->is($cur_sheet) && !$cur_sheet->final) {
 				pines_notice('This countsheet is already waiting to be committed for your location.');

@@ -31,7 +31,13 @@ if ($_SESSION['user']->group->com_sales_task_cashcount) {
 	}
 	if (!isset($entity->guid) && isset($_SESSION['user']->group)) {
 		// Look for any cashcounts that are waiting to be committed.
-		$existing_counts = $pines->entity_manager->get_entities(array('ref' => array('group' => $_SESSION['user']->group), 'tags' => array('com_sales', 'cashcount'), 'class' => com_sales_cashcount));
+		$existing_counts = $pines->entity_manager->get_entities(
+				array('class' => com_sales_cashcount),
+				array('&',
+					'ref' => array('group', $_SESSION['user']->group),
+					'tag' => array('com_sales', 'cashcount')
+				)
+			);
 		foreach ($existing_counts as $cur_count) {
 			if ( !$entity->is($cur_count) && !$cur_count->final) {
 				pines_notice('This cash count is already waiting to be committed for your location.');

@@ -31,7 +31,7 @@ class com_sales_category extends entity {
 		$this->products = array();
 		if ($id > 0) {
 			global $pines;
-			$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
+			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
 			if (!isset($entity))
 				return;
 			$this->guid = $entity->guid;
@@ -78,7 +78,7 @@ class com_sales_category extends entity {
 		global $pines;
 		$module = new module('com_sales', 'form_category', 'content');
 		$module->entity = $this;
-		$module->categories = $pines->entity_manager->get_entities(array('data' => array('parent' => null), 'tags' => array('com_sales', 'category'), 'class' => com_sales_category));
+		$module->categories = $pines->entity_manager->get_entities(array('class' => com_sales_category), array('&', 'data' => array('parent', null), 'tag' => array('com_sales', 'category')));
 
 		return $module;
 	}

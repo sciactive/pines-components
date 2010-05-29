@@ -27,7 +27,7 @@ class com_sales_stock extends entity {
 		$this->add_tag('com_sales', 'stock');
 		if ($id > 0) {
 			global $pines;
-			$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
+			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
 			if (!isset($entity))
 				return;
 			$this->guid = $entity->guid;
@@ -58,7 +58,7 @@ class com_sales_stock extends entity {
 	function inventory_origin() {
 		global $pines;
 		// Get all the transfers.
-		$entities = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'transfer'), 'class' => com_sales_transfer));
+		$entities = $pines->entity_manager->get_entities(array('class' => com_sales_transfer), array('&', 'tag' => array('com_sales', 'transfer')));
 		if (!is_array($entities))
 			$entities = array();
 		// Iterate through all the transfers.
@@ -89,7 +89,7 @@ class com_sales_stock extends entity {
 		}
 
 		// Get all the POs.
-		$entities = $pines->entity_manager->get_entities(array('tags' => array('com_sales', 'po'), 'class' => com_sales_po));
+		$entities = $pines->entity_manager->get_entities(array('class' => com_sales_po), array('&', 'tag' => array('com_sales', 'po')));
 		if (!is_array($entities)) {
 			$entities = array();
 		}

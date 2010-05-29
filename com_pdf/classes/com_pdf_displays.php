@@ -40,7 +40,7 @@ class com_pdf_displays extends entity {
 		$this->pdf_subject = '';
 		$this->pdf_keywords = '';
 		if ($id > 0) {
-			$entity = $pines->entity_manager->get_entity(array('guid' => $id, 'tags' => $this->tags, 'class' => get_class($this)));
+			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
 			if (!isset($entity))
 				return;
 			$this->guid = $entity->guid;

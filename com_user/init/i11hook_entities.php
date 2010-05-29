@@ -20,9 +20,9 @@ defined('P_RUN') or die('Direct access prohibited');
 function com_user__check_permissions_delete($array) {
 	global $pines;
 	$entity = $array[0];
-	if (is_int($entity))
+	if ((int) $entity === $entity)
 		$entity = $pines->entity_manager->get_entity($array[0]);
-	if (!is_object($entity))
+	if ((object) $entity !== $entity)
 		return false;
 	// Test for permissions.
 	if ($pines->user_manager->check_permissions($entity, 3)) {
@@ -40,7 +40,7 @@ function com_user__check_permissions_delete($array) {
  */
 function com_user__check_permissions_return($array) {
 	global $pines;
-	if (is_array($array[0])) {
+	if ((array) $array[0] === $array[0]) {
 		$is_array = true;
 		$entities = $array[0];
 	} else {
@@ -65,7 +65,7 @@ function com_user__check_permissions_return($array) {
 function com_user__check_permissions_save($array) {
 	global $pines;
 	$entity = $array[0];
-	if (!is_object($entity))
+	if ((object) $entity !== $entity)
 		return false;
 	// Test for permissions.
 	if ($pines->user_manager->check_permissions($entity, 2)) {
@@ -96,13 +96,13 @@ function com_user__check_permissions_save($array) {
  * @return array An array of either an entity or another array of entities.
  */
 function com_user__add_access($array) {
-	if (is_object($_SESSION['user']) &&
+	if ((object) $_SESSION['user'] === $_SESSION['user'] &&
 		!isset($array[0]->guid) &&
 		!$array[0]->has_tag('com_user', 'user') &&
 		!$array[0]->has_tag('com_user', 'group') ) {
 		$array[0]->user = $_SESSION['user'];
 		$array[0]->group = $_SESSION['user']->group;
-		if (!is_object($array[0]->ac))
+		if ((object) $array[0]->ac !== $array[0]->ac)
 			$array[0]->ac = (object) array();
 		if (!isset($array[0]->ac->user))
 			$array[0]->ac->user = 3;

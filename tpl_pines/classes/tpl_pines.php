@@ -40,9 +40,22 @@ class tpl_pines extends template {
 	public function menu($menu) {
 		if (count($menu) == 1)
 			return '';
-		$return = in_array($menu[0]['position'], array('left', 'right', 'content', 'user1', 'user2', 'user3', 'user4')) ? '<ul class="dropdown dropdown-vertical">' : '<ul class="dropdown dropdown-horizontal">';
-		foreach ($menu as $key => $value) {
-			if (is_int($key)) continue;
+		switch ($menu[0]['position']) {
+			case 'left':
+			case 'right':
+			case 'content':
+			case 'user1':
+			case 'user2':
+			case 'user3':
+			case 'user4':
+				$return = '<ul class="dropdown dropdown-vertical">';
+				break;
+			default:
+				$return = '<ul class="dropdown dropdown-horizontal">';
+				break;
+		}
+		foreach ($menu as $key => &$value) {
+			if ((int) $key === $key) continue;
 			$return .= $this->sub_menu($value);
 		}
 		$return .= '</ul>';
@@ -52,24 +65,25 @@ class tpl_pines extends template {
 	/**
 	 * Format a sub menu in HTML.
 	 * 
-	 * @param array $menu The menu.
+	 * @param array &$menu The menu.
 	 * @return string The menu's HTML.
 	 */
-	public function sub_menu($menu) {
+	public function sub_menu(&$menu) {
+		$count = count($menu);
 		$return = '<li><a class="ui-state-default" href="'.
 			(isset($menu[0]['href']) ? htmlentities($menu[0]['href']) : '#').
 			(isset($menu[0]['onclick']) ? "\" onclick=\"{$menu[0]['onclick']}\">" : '">').
 			htmlentities($menu[0]['text']).
-			(count($menu) > 1 ? '<span class="ui-icon ui-icon-triangle-1-se"></span>' : '').'</a>';
+			($count > 1 ? '<span class="ui-icon ui-icon-triangle-1-se"></span>' : '').'</a>';
 		//$return = '<li class="ui-state-default"><a'.
 		//	(count($menu) > 1 ? ' class="dir" href="' : ' href="').
 		//	(isset($menu[0]['href']) ? $menu[0]['href'] : '#').
 		//	(isset($menu[0]['onclick']) ? "\" onclick=\"{$menu[0]['onclick']}\">" : '">').
 		//	htmlentities($menu[0]['text']).'</a>';
-		if (count($menu) > 1) {
+		if ($count > 1) {
 			$return .= '<ul>';
-			foreach ($menu as $key => $value) {
-				if (is_int($key)) continue;
+			foreach ($menu as $key => &$value) {
+				if ((int) $key === $key) continue;
 				$return .= $this->sub_menu($value);
 			}
 			$return .= '</ul>';

@@ -32,12 +32,10 @@ class com_user extends component implements user_manager_interface {
 	private $gatekeeper_cache = array();
 
 	public function check_permissions(&$entity, $type = 1) {
-		if (!is_object($_SESSION['user']))
+		if ((object) $_SESSION['user'] !== $_SESSION['user'])
 			return true;
-		if (function_exists('gatekeeper')) {
-			if (gatekeeper('system/all'))
-				return true;
-		}
+		if (function_exists('gatekeeper') && gatekeeper('system/all'))
+			return true;
 		if (!isset($entity->user->guid) && !isset($entity->group->guid))
 			return true;
 		if ($entity->is($_SESSION['user']))
@@ -48,9 +46,11 @@ class com_user extends component implements user_manager_interface {
 			return true;
 
 		// Load access control, since we need it now...
-		$ac = (object) array('user' => 3, 'group' => 3, 'other' => 0);
-		if (is_object($entity->ac))
+		if ((object) $entity->ac === $entity->ac) {
 			$ac = $entity->ac;
+		} else {
+			$ac = (object) array('user' => 3, 'group' => 3, 'other' => 0);
+		}
 		
 		if (is_callable(array($entity->user, 'is')) && $entity->user->is($_SESSION['user']))
 			return ($ac->user >= $type);
@@ -62,13 +62,25 @@ class com_user extends component implements user_manager_interface {
 	}
 
 	public function fill_session() {
-		$tmp_user = user::factory($_SESSION['user_id']);
-		if (is_object($_SESSION['user']) && $_SESSION['user']->p_mdate == $tmp_user->p_mdate) {
-			date_default_timezone_set($tmp_user->get_timezone());
-			return;
-		}
 		global $pines;
-		unset($_SESSION['user']);
+		if ((object) $_SESSION['user'] === $_SESSION['user']) {
+			$test_mod = $pines->entity_manager->get_entity(
+					array(),
+					array('&',
+						'guid' => array($_SESSION['user']->guid),
+						'gt' => array('p_mdate', $_SESSION['user']->p_mdate)
+					)
+				);
+			if (!isset($test_mod)) {
+				date_default_timezone_set($_SESSION['user_timezone']);
+				return;
+			} else {
+				unset($test_mod, $_SESSION['user']);
+			}
+		}
+		$tmp_user = user::factory($_SESSION['user_id']);
+		$_SESSION['user_timezone'] = $tmp_user->get_timezone();
+		date_default_timezone_set($_SESSION['user_timezone']);
 		if (isset($tmp_user->group))
 			$_SESSION['descendents'] = $tmp_user->group->get_descendents();
 		foreach ($tmp_user->groups as $cur_group) {
@@ -109,7 +121,6 @@ class com_user extends component implements user_manager_interface {
 			}
 		}
 		$_SESSION['user'] = $tmp_user;
-		date_default_timezone_set($tmp_user->get_timezone());
 	}
 
 	/**
@@ -122,13 +133,13 @@ class com_user extends component implements user_manager_interface {
 		if ( !isset($user) ) {
 			// If the user is logged in, their abilities are already set up. We
 			// just need to add them to the user's.
-			if ( is_object($_SESSION['user']) ) {
+			if ( (object) $_SESSION['user'] === $_SESSION['user'] ) {
 				if ( !isset($ability) )
 					return true;
-				$user = $_SESSION['user'];
+				$user =& $_SESSION['user'];
 				// Check the cache to see if we've already checked this user.
 				if (isset($this->gatekeeper_cache[$_SESSION['user_id']])) {
-					$abilities = $this->gatekeeper_cache[$_SESSION['user_id']];
+					$abilities =& $this->gatekeeper_cache[$_SESSION['user_id']];
 				} else {
 					$abilities = $user->abilities;
 					if (isset($_SESSION['inherited_abilities']))
@@ -140,23 +151,22 @@ class com_user extends component implements user_manager_interface {
 			// If the user isn't logged in, their abilities need to be set up.
 			// Check the cache to see if we've already checked this user.
 			if (isset($this->gatekeeper_cache[$user->guid])) {
-				$abilities = $this->gatekeeper_cache[$user->guid];
+				$abilities =& $this->gatekeeper_cache[$user->guid];
 			} else {
 				$abilities = $user->abilities;
 				// TODO: Decide if group conditions should be checked if the user is not logged in.
 				if ($user->inherit_abilities) {
-					foreach ($user->groups as $cur_group) {
+					foreach ($user->groups as &$cur_group) {
 						$abilities = array_merge($abilities, $cur_group->abilities);
 					}
+					unset($cur_group);
 					if (isset($user->group))
 						$abilities = array_merge($abilities, $user->group->abilities);
 				}
 				$this->gatekeeper_cache[$user->guid] = $abilities;
 			}
 		}
-		if ( !isset($user) )
-			return false;
-		if ( !is_array($abilities) )
+		if ( !isset($user) || ((array) $abilities !== $abilities) )
 			return false;
 		return (in_array($ability, $abilities) || in_array('system/all', $abilities));
 	}

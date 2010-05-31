@@ -536,11 +536,11 @@ class com_sales_sale extends entity {
 				$discount_price = $price;
 				if (preg_match('/^\$-?\d+(\.\d+)?$/', $discount)) {
 					// This is an exact discount.
-					$discount = floatval(preg_replace('/[^0-9.-]/', '', $discount));
+					$discount = (float) preg_replace('/[^0-9.-]/', '', $discount);
 					$discount_price = $price - $discount;
 				} elseif (preg_match('/^-?\d+(\.\d+)?%$/', $discount)) {
 					// This is a percentage discount.
-					$discount = floatval(preg_replace('/[^0-9.-]/', '', $discount));
+					$discount = (float) preg_replace('/[^0-9.-]/', '', $discount);
 					$discount_price = $price - ($price * ($discount / 100));
 				}
 				// Check that the discount doesn't lower the item's price below the floor.

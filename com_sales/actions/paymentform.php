@@ -24,7 +24,7 @@ if ( isset($_REQUEST['id']) ) {
 if ($pines->config->com_sales->com_customer && $sale->status != 'invoiced' && $sale->status != 'paid') {
 	$sale->customer = null;
 	if (preg_match('/^\d+/', $_REQUEST['customer'])) {
-		$sale->customer = com_customer_customer::factory(intval($_REQUEST['customer']));
+		$sale->customer = com_customer_customer::factory((int) $_REQUEST['customer']);
 		if (!isset($sale->customer->guid))
 			$sale->customer = null;
 	}

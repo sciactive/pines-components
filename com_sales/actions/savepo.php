@@ -30,17 +30,17 @@ $po->po_number = $_REQUEST['po_number'];
 $po->reference_number = $_REQUEST['reference_number'];
 // Vendor can't be changed after items have been received.
 if (empty($po->received)) {
-	$po->vendor = com_sales_vendor::factory(intval($_REQUEST['vendor']));
+	$po->vendor = com_sales_vendor::factory((int) $_REQUEST['vendor']);
 	if (!isset($po->vendor->guid))
 		$po->vendor = null;
 }
 // Destination can't be changed after items have been received.
 if (empty($po->received)) {
-	$po->destination = group::factory(intval($_REQUEST['destination']));
+	$po->destination = group::factory((int) $_REQUEST['destination']);
 	if (!isset($po->destination->guid))
 		$po->destination = null;
 }
-$po->shipper = com_sales_shipper::factory(intval($_REQUEST['shipper']));
+$po->shipper = com_sales_shipper::factory((int) $_REQUEST['shipper']);
 if (!isset($po->shipper->guid))
 	$po->shipper = null;
 $po->eta = strtotime($_REQUEST['eta']);
@@ -51,9 +51,9 @@ if (empty($po->received)) {
 	$po->products = (array) json_decode($_REQUEST['products']);
 	foreach ($po->products as &$cur_product) {
 		$cur_product = array(
-			'entity' => com_sales_product::factory(intval($cur_product->key)),
-			'quantity' => intval($cur_product->values[2]),
-			'cost' => floatval($cur_product->values[3])
+			'entity' => com_sales_product::factory((int) $cur_product->key),
+			'quantity' => (int) $cur_product->values[2],
+			'cost' => (float) $cur_product->values[3]
 		);
 		if (!isset($cur_product['entity']->guid))
 			$cur_product['entity'] = null;

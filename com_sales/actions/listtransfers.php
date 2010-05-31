@@ -14,5 +14,5 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_sales/managestock') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listtransfers'));
 
-$pines->com_sales->list_transfers();
+$pines->com_sales->list_transfers($_REQUEST['finished'] == 'true');
 ?>

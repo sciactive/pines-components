@@ -20,7 +20,7 @@ if (!isset($_REQUEST['products'])) {
 }
 
 $products_json = (array) json_decode($_REQUEST['products']);
-if (empty($products_json)) {
+if (!$products_json) {
 	pines_notice('Invalid product list!');
 	$pines->com_sales->print_receive_form();
 	return;
@@ -30,7 +30,7 @@ foreach ($products_json as $key => $cur_product) {
 	$products[$key] = array(
 		'product_code' => $cur_product->values[0],
 		'serial' => $cur_product->values[1],
-		'quantity' => intval($cur_product->values[2])
+		'quantity' => (int) $cur_product->values[2]
 	);
 }
 
@@ -47,23 +47,30 @@ foreach ($products as $cur_product) {
 		continue;
 	}
 	for ($i = 0; $i < $cur_product['quantity']; $i++) {
-		$stock_entity = com_sales_stock::factory();
-		$stock_entity->product = $cur_product_entity;
-		if ($cur_product_entity->serialized)
-			$stock_entity->serial = $cur_product['serial'];
-		$origin = $stock_entity->inventory_origin();
+		$origin = $stock = null;
+		$serial = empty($cur_product['serial']) ? null : $cur_product['serial'];
+		// Search for the product on a transfer.
+		$origin = $pines->com_sales->get_origin_transfer($cur_product_entity, $serial, $_SESSION['user']->group);
+		if (isset($origin) && isset($origin[0])) {
+			$stock = $origin[1];
+			$origin = $origin[0];
+		} else {
+			// Search for the product on a PO.
+			$origin = $pines->com_sales->get_origin_po($cur_product_entity, $_SESSION['user']->group);
+			$stock = com_sales_stock::factory();
+			$stock->product = $cur_product_entity;
+			if ($cur_product_entity->serialized)
+				$stock->serial = $serial;
+		}
 		if (!isset($origin)) {
 			pines_notice("Product [{$cur_product_entity->name}] with code {$cur_product['product_code']} was not found on any PO or transfer! Skipping...");
 			continue;
 		}
-		// Replace the stock entry with the one returned by inventory_origin.
-		$stock_entity = $origin[1];
 		
-		$stock_entity->receive($origin[0]);
-		$stock_entity->ac = (object) array('user' => 2, 'group' => 2, 'other' => 2);
-		$stock_entity->save();
+		$stock->receive($origin);
+		$stock->save();
 
-		$module->success[] = array($stock_entity, $origin[0]);
+		$module->success[] = array($stock, $origin);
 	}
 }
 

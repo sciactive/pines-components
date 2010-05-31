@@ -25,6 +25,7 @@ class com_sales_stock extends entity {
 	public function __construct($id = 0) {
 		parent::__construct();
 		$this->add_tag('com_sales', 'stock');
+		$this->ac = (object) array('user' => 2, 'group' => 2, 'other' => 2);
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
@@ -47,86 +48,6 @@ class com_sales_stock extends entity {
 		$entity = new $class($args[0]);
 		$pines->hook->hook_object($entity, $class.'->', false);
 		return $entity;
-	}
-
-	/**
-	 * Find the PO or transfer that corresponds to an incoming product.
-	 *
-	 * @todo Go through each matched transfer/PO and check which one has the earliest ETA.
-	 * @return array|null An array with the PO, and the stock entry, or null if nothing is found.
-	 */
-	function inventory_origin() {
-		global $pines;
-		// Get all the transfers.
-		$entities = $pines->entity_manager->get_entities(array('class' => com_sales_transfer), array('&', 'tag' => array('com_sales', 'transfer')));
-		if (!is_array($entities))
-			$entities = array();
-		// Iterate through all the transfers.
-		foreach ($entities as $cur_transfer) {
-			// If the transfer isn't for our destination, move on.
-			if (!$_SESSION['user']->in_group($cur_transfer->destination))
-				continue;
-			if (!is_array($cur_transfer->stock))
-				continue;
-			// Iterate the transfer's stock, looking for a match.
-			foreach ($cur_transfer->stock as $cur_stock) {
-				if (is_array($cur_transfer->received)) {
-					// If the product is already received, we should ignore it.
-					if ($cur_stock->in_array($cur_transfer->received))
-						continue;
-				}
-				// If it's not the right product, move on.
-				if ($cur_stock->product->guid != $this->product->guid)
-					continue;
-				if (isset($this->serial) || isset($cur_stock->serial)) {
-					// Check the serial with the stock entry's serial.
-					if ($cur_stock->serial != $this->serial)
-						continue;
-				}
-				// If it's a match, return the transfer and the item.
-				return array($cur_transfer, $cur_stock);
-			}
-		}
-
-		// Get all the POs.
-		$entities = $pines->entity_manager->get_entities(array('class' => com_sales_po), array('&', 'tag' => array('com_sales', 'po')));
-		if (!is_array($entities)) {
-			$entities = array();
-		}
-		// Iterate through all the POs.
-		foreach ($entities as $cur_po) {
-			// If the PO isn't for our destination, move on.
-			if (!$_SESSION['user']->in_group($cur_po->destination))
-				continue;
-			// If the PO has no products, move on.
-			if (!is_array($cur_po->products))
-				continue;
-			// Iterate the PO's products, looking for a match.
-			foreach ($cur_po->products as $cur_product) {
-				// If it's not the right product, move on.
-				if ($cur_product['entity']->guid != $this->product->guid)
-					continue;
-				// If the product is already received, we should ignore it.
-				$received = 0;
-				if (is_array($cur_po->received)) {
-					// Count how many of this product has been received.
-					foreach ($cur_po->received as $cur_received_stock_entity) {
-						if (isset($cur_received_stock_entity) && $cur_product['entity']->guid == $cur_received_stock_entity->product->guid) {
-							$received++;
-						}
-					}
-				}
-				// If we haven't received all of them yet, return the PO and the stock entry (this one).
-				if ($received < $cur_product['quantity']) {
-					// Fill in some info for this item.
-					$this->cost = $cur_product['cost'];
-					$this->vendor = $cur_po->vendor;
-					return array($cur_po, $this);
-				}
-			}
-		}
-		// Nothing found, return null.
-		return null;
 	}
 
 	/**
@@ -157,7 +78,7 @@ class com_sales_stock extends entity {
 		$this->status = 'available';
 		if ($this->location)
 			$old_location = $this->location;
-		// TODO: Copy location to GID (optional) to allow easier access control.
+		// TODO: Copy location to group (optional) to allow easier access control.
 		$this->location = ($location ? $location : $_SESSION['user']->group);
 		if ($on_entity->has_tag('po')) {
 			$tx->type = 'received_po';
@@ -169,7 +90,7 @@ class com_sales_stock extends entity {
 		if (!($this->guid))
 			$return = $return && $this->save();
 
-		if (!is_array($on_entity->received))
+		if ((array) $on_entity->received !== $on_entity->received)
 			$on_entity->received = array();
 		$on_entity->received[] = $this;
 		$return = $return && $on_entity->save();

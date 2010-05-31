@@ -131,6 +131,92 @@ class com_sales extends component {
 	}
 
 	/**
+	 * Find the PO that corresponds to an incoming product.
+	 *
+	 * Only use this function if the stock entity is not available.
+	 *
+	 * @todo Go through each matched PO and check which one has the closest ETA.
+	 * @param com_sales_product $product The product to search for.
+	 * @param group $location Look through POs destined for this location.
+	 * @return com_sales_po|null A PO, or null if nothing is found.
+	 */
+	public function get_origin_po($product, $location = null) {
+		global $pines;
+		// Get all the POs.
+		$selector = array('&',
+				'data' => array(
+					array('finished', false),
+					array('final', true)
+				),
+				'ref' => array(
+					array('pending_products', $product)
+				),
+				'tag' => array('com_sales', 'po')
+			);
+		if (isset($location))
+			$selector['ref'][] = array('destination', $location);
+		return $pines->entity_manager->get_entity(
+				array('class' => com_sales_po),
+				$selector
+			);
+	}
+
+	/**
+	 * Find the transfer that corresponds to an incoming product.
+	 *
+	 * Only use this function if the stock entity is not available.
+	 *
+	 * @todo Go through each matched transfer and check which one has the closest ETA.
+	 * @param com_sales_product $product The product to search for.
+	 * @param string $serial The serial to search for.
+	 * @param group $location Look through transfers destined for this location.
+	 * @return array|null An array with the transfer and stock entry, or null if nothing is found.
+	 */
+	public function get_origin_transfer($product, $serial = null, $location = null) {
+		global $pines;
+		// Get all the transfers.
+		$selector = array('&',
+				'data' => array(
+					array('finished', false),
+					array('final', true)
+				),
+				'ref' => array(
+					array('pending_products', $product)
+				),
+				'tag' => array('com_sales', 'transfer')
+			);
+		if (isset($serial))
+			$selector['array'] = array('pending_serials', $serial);
+		if (isset($location))
+			$selector['ref'][] = array('destination', $location);
+		$entities = (array) $pines->entity_manager->get_entities(
+				array('class' => com_sales_transfer),
+				$selector
+			);
+		// Iterate through all the transfers.
+		foreach ($entities as $cur_transfer) {
+			// Iterate the transfer's stock, looking for a match.
+			foreach ($cur_transfer->stock as $cur_stock) {
+				if (isset($serial) || isset($cur_stock->serial)) {
+					// Check the serial with the stock entry's serial.
+					if ($cur_stock->serial != $serial)
+						continue;
+				}
+				// If it's not the right product, move on.
+				if (!$product->is($cur_stock->product))
+					continue;
+				// If it's already received, move on.
+				if ($cur_stock->in_array((array) $cur_transfer->received))
+					continue;
+				// If it's a match, return the transfer and the item.
+				return array($cur_transfer, $cur_stock);
+			}
+		}
+		// Nothing found, return null.
+		return null;
+	}
+
+	/**
 	 * Inform the user of anything important.
 	 *
 	 * @param string $title The title or category of the message.
@@ -266,24 +352,31 @@ class com_sales extends component {
 
 	/**
 	 * Creates and attaches a module which lists pos.
+	 * @param bool $finished Show finished POs instead of pending ones.
 	 */
-	public function list_pos() {
+	public function list_pos($finished = false) {
 		global $pines;
 
 		$module = new module('com_sales', 'list_pos', 'content');
 
-		$module->pos = $pines->entity_manager->get_entities(array('class' => com_sales_po), array('&', 'tag' => array('com_sales', 'po')));
+		$module->pos = $pines->entity_manager->get_entities(
+				array('class' => com_sales_po),
+				array('&',
+					'data' => array('finished', $finished),
+					'tag' => array('com_sales', 'po')
+				)
+			);
 
 		if ( empty($module->pos) ) {
 			pines_notice('There are no POs.');
 			return;
 		}
-		
+
 		// Check the purchase orders to see if any have not been received on time.
 		$errors = array();
 		foreach ($module->pos as $po) {
 			if ($po->eta < time() && empty($po->received))
-				$errors[] = "#<strong>{$po->po_number}</strong> was not received on time.";
+				$errors[] = "#{$po->po_number} was not received on time.";
 		}
 		if (!empty($errors)) {
 			$type = 'Reminder';
@@ -376,13 +469,20 @@ class com_sales extends component {
 
 	/**
 	 * Creates and attaches a module which lists transfers.
+	 * @param bool $finished Show finished POs instead of pending ones.
 	 */
-	public function list_transfers() {
+	public function list_transfers($finished = false) {
 		global $pines;
 
 		$module = new module('com_sales', 'list_transfers', 'content');
 
-		$module->transfers = $pines->entity_manager->get_entities(array('class' => com_sales_transfer), array('&', 'tag' => array('com_sales', 'transfer')));
+		$module->transfers = $pines->entity_manager->get_entities(
+				array('class' => com_sales_transfer),
+				array('&',
+					'data' => array('finished', $finished),
+					'tag' => array('com_sales', 'transfer')
+				)
+			);
 
 		if ( empty($module->transfers) )
 			pines_notice('There are no transfers.');

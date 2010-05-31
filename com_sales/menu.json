@@ -93,17 +93,17 @@
 				}
 			},
 			{
-				"path": "main_menu/business/com_sales/inventory/transfers",
-				"text": "Transfers",
-				"href": ["com_sales","listtransfers"],
-				"depend": {
-					"ability": "com_sales/managestock"
-				}
-			},
-			{
 				"path": "main_menu/business/com_sales/inventory/purchaseorders",
 				"text": "Purchase Orders",
 				"href": ["com_sales","listpos"],
+				"depend": {
+					"ability": "com_sales/listpos"
+				}
+			},
+			{
+				"path": "main_menu/business/com_sales/inventory/completedpurchaseorders",
+				"text": "Completed POs",
+				"href": ["com_sales","listpos",{"finished":true}],
 				"depend": {
 					"ability": "com_sales/listpos"
 				}
@@ -114,6 +114,22 @@
 				"href": ["com_sales","editpo"],
 				"depend": {
 					"ability": "com_sales/newpo"
+				}
+			},
+			{
+				"path": "main_menu/business/com_sales/inventory/transfers",
+				"text": "Transfers",
+				"href": ["com_sales","listtransfers"],
+				"depend": {
+					"ability": "com_sales/managestock"
+				}
+			},
+			{
+				"path": "main_menu/business/com_sales/inventory/completedtransfers",
+				"text": "Completed Transfers",
+				"href": ["com_sales","listtransfers",{"finished":true}],
+				"depend": {
+					"ability": "com_sales/managestock"
 				}
 			},
 			{

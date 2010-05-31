@@ -27,6 +27,7 @@ class com_sales_po extends entity {
 		$this->add_tag('com_sales', 'po');
 		// Defaults.
 		$this->products = array();
+		$this->finished = false;
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
@@ -70,8 +71,27 @@ class com_sales_po extends entity {
 	 * @return bool True on success, false on failure.
 	 */
 	public function save() {
-		if (!isset($this->po_number))
+		if (!isset($this->po_number) || !$this->products)
 			return false;
+		if (!$this->finished) {
+			$this->pending_products = array();
+			$this->pending_serials = array();
+			foreach ($this->products as &$cur_product) {
+				$cur_product['received'] = 0;
+				// Count how many of this product has been received.
+				foreach ((array) $this->received as $cur_received_stock_entity) {
+					if (isset($cur_received_stock_entity) && $cur_product['entity']->is($cur_received_stock_entity->product))
+						$cur_product['received']++;
+				}
+				// If we've received all of them, move on.
+				if ($cur_product['received'] >= $cur_product['quantity'])
+					continue;
+				$this->pending_products[] = $cur_product['entity'];
+			}
+			unset($cur_product);
+			if (empty($this->pending_products))
+				$this->finished = true;
+		}
 		return parent::save();
 	}
 

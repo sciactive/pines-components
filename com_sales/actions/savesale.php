@@ -28,7 +28,7 @@ if ( isset($_REQUEST['id']) ) {
 if ($pines->config->com_sales->com_customer && $sale->status != 'invoiced' && $sale->status != 'paid') {
 	$sale->customer = null;
 	if (preg_match('/^\d+/', $_REQUEST['customer'])) {
-		$sale->customer = com_customer_customer::factory(intval($_REQUEST['customer']));
+		$sale->customer = com_customer_customer::factory((int) $_REQUEST['customer']);
 		if (!isset($sale->customer->guid))
 			$sale->customer = null;
 	}
@@ -44,14 +44,14 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid') {
 		$product_error = true;
 	} else {
 		foreach ($sale->products as $key => &$cur_product) {
-			$cur_product_entity = com_sales_product::factory(intval($cur_product->key));
+			$cur_product_entity = com_sales_product::factory((int) $cur_product->key);
 			$cur_sku = $cur_product_entity->sku;
 			$cur_serial = $cur_product->values[2];
 			$cur_delivery = $cur_product->values[3];
 			if (!in_array($cur_delivery, array('in-store', 'shipped')))
 				$cur_delivery = 'in-store';
-			$cur_qty = intval($cur_product->values[4]);
-			$cur_price = floatval($cur_product->values[5]);
+			$cur_qty = (int) $cur_product->values[4];
+			$cur_price = (float) $cur_product->values[5];
 			$cur_discount = $cur_product->values[6];
 			if (!isset($cur_product_entity->guid)) {
 				pines_error("Product with id [$cur_product->key] and entered SKU [$cur_sku] was not found.");
@@ -112,7 +112,7 @@ if ($sale->status != 'paid') {
 		$cur_payment_type_entity = com_sales_payment_type::factory((int) $cur_payment->key);
 		// Not used, but possibly in the future for logging purposes. (If the type is deleted.)
 		$cur_type = $cur_payment->values[0];
-		$cur_amount = floatval($cur_payment->values[1]);
+		$cur_amount = (float) $cur_payment->values[1];
 		$cur_status = $cur_payment->values[2];
 		$data = $cur_payment->data;
 		if (in_array($cur_status, array('approved', 'declined', 'tendered')))

@@ -42,7 +42,7 @@ $transfer->eta = strtotime($_REQUEST['eta']);
 if (empty($transfer->received)) {
 	$transfer->stock = (array) json_decode($_REQUEST['stock']);
 	foreach ($transfer->stock as $key => &$cur_stock) {
-		$cur_stock = com_sales_stock::factory(intval($cur_stock->key));
+		$cur_stock = com_sales_stock::factory((int) $cur_stock->key);
 		if (!isset($cur_stock->guid))
 			unset($transfer->stock[$key]);
 	}

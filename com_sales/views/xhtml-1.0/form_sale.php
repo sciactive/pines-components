@@ -43,7 +43,7 @@ $pines->com_pgrid->load();
 		var comments, comments_box, products, products_table, product_code, payments, payments_table;
 
 		// Number of decimal places to round to.
-		var dec = <?php echo intval($pines->config->com_sales->dec); ?>;
+		var dec = <?php echo (int) $pines->config->com_sales->dec; ?>;
 <?php
 		$taxes_percent = array();
 		$taxes_flat = array();

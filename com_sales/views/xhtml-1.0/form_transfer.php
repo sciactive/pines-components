@@ -27,12 +27,12 @@ if ($this->entity->final)
 		var available_stock = <?php
 		$all_stock = array();
 		foreach ($this->stock as $stock) {
-			if (in_array($stock->guid, $this->entity->stock))
+			if ($stock->in_array($this->entity->stock))
 				continue;
-			$export_stock = (object) array(
-				'key' => (string) $stock->guid,
-				'classes' => '',
+			$export_stock = array(
+				'key' => $stock->guid,
 				'values' => array(
+					(string) $stock->product->sku,
 					(string) $stock->product->name,
 					(string) $stock->serial,
 					(string) $stock->vendor->name,
@@ -42,7 +42,7 @@ if ($this->entity->final)
 				)
 				
 			);
-			array_push($all_stock, $export_stock);
+			$all_stock[] = $export_stock;
 		}
 		echo json_encode($all_stock);
 		?>;
@@ -60,7 +60,7 @@ if ($this->entity->final)
 			available_stock_table = $("#available_stock_table");
 			stock_dialog = $("#stock_dialog");
 
-			<?php if (empty($this->entity->received)) { ?>
+			<?php if (!$this->entity->final && empty($this->entity->received)) { ?>
 			stock_table.pgrid({
 				pgrid_paginate: false,
 				pgrid_view_height: "300px",
@@ -138,6 +138,12 @@ if ($this->entity->final)
 	</div>
 	<?php } ?>
 	<div class="pf-element">
+		<span class="pf-label">Status</span>
+		<span class="pf-field">
+			<?php echo ($this->entity->final) ? 'Committed' : 'Not Committed'; ?>, <?php echo ($this->entity->finished) ? 'Received' : (empty($this->entity->received) ? 'Not Received' : 'Partially Received'); ?>
+		</span>
+	</div>
+	<div class="pf-element">
 		<label><span class="pf-label">Reference #</span>
 			<input class="pf-field ui-widget-content" type="text" name="reference_number" size="24" value="<?php echo $this->entity->reference_number; ?>" <?php echo $read_only; ?> /></label>
 	</div>
@@ -181,6 +187,7 @@ if ($this->entity->final)
 				<table id="stock_table">
 					<thead>
 						<tr>
+							<th>SKU</th>
 							<th>Product</th>
 							<th>Serial</th>
 							<th>Vendor</th>
@@ -193,8 +200,14 @@ if ($this->entity->final)
 						<?php foreach ($this->entity->stock as $cur_stock) {
 								if (!isset($cur_stock->guid))
 									continue;
+								if (isset($missing_products[$cur_stock->product->guid])) {
+									$missing_products[$cur_stock->product->guid]['quantity']++;
+								} else {
+									$missing_products[$cur_stock->product->guid] = array('entity' => $cur_stock->product, 'quantity' => 1);
+								}
 								?>
 						<tr title="<?php echo $cur_stock->guid; ?>">
+							<td><?php echo $cur_stock->product->sku; ?></td>
 							<td><?php echo $cur_stock->product->name; ?></td>
 							<td><?php echo $cur_stock->serial; ?></td>
 							<td><?php echo $cur_stock->vendor->name; ?></td>
@@ -213,6 +226,7 @@ if ($this->entity->final)
 		<table id="available_stock_table">
 			<thead>
 				<tr>
+					<th>SKU</th>
 					<th>Product</th>
 					<th>Serial</th>
 					<th>Vendor</th>
@@ -228,17 +242,45 @@ if ($this->entity->final)
 		<br class="pf-clearing" />
 	</div>
 	<?php if (!empty($this->entity->received)) { ?>
-	<div class="pf-element">
-		<span class="pf-label">Received Inventory</span>
-		<div class="pf-group">
-			<?php foreach ($this->entity->received as $cur_entity) { ?>
-			<div class="pf-field" style="margin-bottom: 5px;">
-				Product: <?php echo $cur_entity->product->name; ?><br />
-				Serial: <?php echo $cur_entity->serial; ?>
+		<div class="pf-element pf-full-width">
+			<span class="pf-label">Received Inventory</span>
+			<?php
+			$received = array();
+			foreach ($this->entity->received as $cur_entity) {
+				if (!isset($received[$cur_entity->product->guid]))
+					$received[$cur_entity->product->guid] = array('entity' => $cur_entity->product, 'serials' => array());
+				if (isset($missing_products[$cur_entity->product->guid])) {
+					$missing_products[$cur_entity->product->guid]['quantity']--;
+					if (!$missing_products[$cur_entity->product->guid]['quantity'])
+						unset($missing_products[$cur_entity->product->guid]);
+				}
+				$received[$cur_entity->product->guid]['serials'][] = isset($cur_entity->serial) ? $cur_entity->serial : '';
+			}
+			?>
+			<?php foreach ($received as $cur_entry) { ?>
+			<div class="pf-field pf-full-width ui-widget-content ui-corner-all" style="margin-bottom: 5px; padding: .5em;">
+				SKU: <?php echo $cur_entry['entity']->sku; ?><br />
+				Product: <?php echo $cur_entry['entity']->name; ?><br />
+				Quantity: <?php echo count($cur_entry['serials']); ?>
+				<?php if ($cur_entry['entity']->serialized) { ?>
+				<br />
+				Serials: <?php echo implode(', ', $cur_entry['serials']); ?>
+				<?php } ?>
 			</div>
 			<?php } ?>
 		</div>
-	</div>
+		<?php if (!empty($missing_products)) { ?>
+		<div class="pf-element pf-full-width">
+			<span class="pf-label">Missing Inventory</span>
+			<?php foreach ($missing_products as $cur_entry) { ?>
+			<div class="pf-field pf-full-width ui-widget-content ui-corner-all" style="margin-bottom: 5px; padding: .5em;">
+				SKU: <?php echo $cur_entry['entity']->sku; ?><br />
+				Product: <?php echo $cur_entry['entity']->name; ?><br />
+				Quantity: <?php echo $cur_entry['quantity']; ?>
+			</div>
+			<?php } ?>
+		</div>
+		<?php } ?>
 	<?php } ?>
 	<br class="pf-clearing" />
 	<div class="pf-element pf-buttons">

@@ -27,6 +27,7 @@ class com_sales_transfer extends entity {
 		$this->add_tag('com_sales', 'transfer');
 		// Defaults.
 		$this->stock = array();
+		$this->finished = false;
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
@@ -70,8 +71,22 @@ class com_sales_transfer extends entity {
 	 * @return bool True on success, false on failure.
 	 */
 	public function save() {
-		if (!is_array($this->stock))
+		if (!$this->stock)
 			return false;
+		if (!$this->finished) {
+			$this->pending_products = array();
+			$this->pending_serials = array();
+			foreach ($this->stock as $cur_stock) {
+				// If it's already received, move on.
+				if ($cur_stock->in_array((array) $this->received))
+					continue;
+				$this->pending_products[] = $cur_stock->product;
+				if (isset($cur_stock->serial))
+					$this->pending_serials[] = $cur_stock->serial;
+			}
+			if (empty($this->pending_products))
+				$this->finished = true;
+		}
 		return parent::save();
 	}
 

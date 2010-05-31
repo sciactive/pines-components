@@ -14,5 +14,5 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_sales/listpos') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listpos'));
 
-$pines->com_sales->list_pos();
+$pines->com_sales->list_pos($_REQUEST['finished'] == 'true');
 ?>

@@ -52,10 +52,10 @@ unset($cur_vendor);
 
 // Pricing
 $product->pricing_method = $_REQUEST['pricing_method'];
-$product->unit_price = floatval($_REQUEST['unit_price']);
-$product->margin = floatval($_REQUEST['margin']);
-$product->floor = floatval($_REQUEST['floor']);
-$product->ceiling = floatval($_REQUEST['ceiling']);
+$product->unit_price = (float) $_REQUEST['unit_price'];
+$product->margin = (float) $_REQUEST['margin'];
+$product->floor = (float) $_REQUEST['floor'];
+$product->ceiling = (float) $_REQUEST['ceiling'];
 // TODO: Tax exempt by location.
 $product->tax_exempt = ($_REQUEST['tax_exempt'] == 'ON');
 $product->additional_tax_fees = array();
@@ -68,8 +68,8 @@ if (is_array($_REQUEST['additional_tax_fees'])) {
 }
 
 // Attributes
-$product->weight = floatval($_REQUEST['weight']);
-$product->rma_after = floatval($_REQUEST['rma_after']);
+$product->weight = (float) $_REQUEST['weight'];
+$product->rma_after = (float) $_REQUEST['rma_after'];
 $product->serialized = ($_REQUEST['serialized'] == 'ON');
 $product->discountable = ($_REQUEST['discountable'] == 'ON');
 $product->require_customer = ($_REQUEST['require_customer'] == 'ON');

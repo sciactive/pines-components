@@ -26,7 +26,7 @@ if ($this->entity->final)
 		var product_dialog;
 		var cur_vendor = <?php echo ($this->entity->vendor ? $this->entity->vendor->guid : 'null'); ?>;
 		// Number of decimal places to round to.
-		var dec = <?php echo intval($pines->config->com_sales->dec); ?>;
+		var dec = <?php echo (int) $pines->config->com_sales->dec; ?>;
 		var all_products = JSON.parse("<?php
 		$products = array();
 		foreach ($this->products as $cur_product) {
@@ -132,6 +132,7 @@ if ($this->entity->final)
 			<?php if (empty($this->entity->received)) { ?>
 			products_table.pgrid({
 				pgrid_paginate: false,
+				pgrid_height: '300px;',
 				pgrid_toolbar: true,
 				pgrid_toolbar_contents : [
 					{
@@ -237,6 +238,12 @@ if ($this->entity->final)
 	</div>
 	<?php } ?>
 	<div class="pf-element">
+		<span class="pf-label">Status</span>
+		<span class="pf-field">
+			<?php echo ($this->entity->final) ? 'Committed' : 'Not Committed'; ?>, <?php echo ($this->entity->finished) ? 'Received' : (empty($this->entity->received) ? 'Not Received' : 'Partially Received'); ?>
+		</span>
+	</div>
+	<div class="pf-element">
 		<label><span class="pf-label">PO #</span>
 			<input class="pf-field ui-widget-content" type="text" name="po_number" size="24" value="<?php echo $this->entity->po_number; ?>" <?php echo $read_only; ?> /></label>
 	</div>
@@ -251,7 +258,7 @@ if ($this->entity->final)
 			<?php } else { ?>
 				<span class="pf-note">Vendor cannot be changed after items have been received.</span>
 			<?php } ?>
-			<select class="pf-field ui-widget-content" name="vendor" onchange="void select_vendor(Number(this.value));"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?> <?php echo $read_only; ?>>
+			<select class="pf-field ui-widget-content" name="vendor" onchange="select_vendor(Number(this.value));"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?> <?php echo $read_only; ?>>
 				<option value="null">-- None --</option>
 				<?php foreach ($this->vendors as $cur_vendor) { ?>
 				<option value="<?php echo $cur_vendor->guid; ?>"<?php echo $this->entity->vendor->guid == $cur_vendor->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_vendor->name; ?></option>
@@ -319,7 +326,7 @@ if ($this->entity->final)
 							<td><?php echo $cur_product['entity']->name; ?></td>
 							<td><?php echo $cur_product['quantity']; ?></td>
 							<td><?php echo $cur_product['cost']; ?></td>
-							<td><?php echo $pines->com_sales->round(intval($cur_product['quantity']) * floatval($cur_product['cost']), $pines->config->com_sales->dec); ?></td>
+							<td><?php echo $pines->com_sales->round((int) $cur_product['quantity'] * (float) $cur_product['cost'], $pines->config->com_sales->dec); ?></td>
 						</tr>
 						<?php } ?>
 					</tbody>
@@ -410,8 +417,6 @@ if ($this->entity->final)
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" onclick="$('#save').val('save');" />
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Commit" onclick="$('#save').val('commit');" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'listpos')); ?>');" value="Cancel" />
-		<?php } else { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'listpos')); ?>');" value="Close" />
 		<?php } ?>
 	</div>
 </form>

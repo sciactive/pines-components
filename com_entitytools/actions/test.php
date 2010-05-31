@@ -585,7 +585,7 @@ $test->tests['wr_ineq'][2] = 'Testing wrong inequality...';
 $found_match = false;
 $entity_result = $pines->entity_manager->get_entities(
 		array(),
-		array('&', 'gt' => array('p_cdate', time() - 120), 'tag' => array('com_entitytools', 'test'))
+		array('&', 'gt' => array('p_cdate', $entity_test->p_cdate - 120), 'tag' => array('com_entitytools', 'test'))
 	);
 foreach ($entity_result as $cur_entity) {
 	if ($entity_test->is($cur_entity)) {
@@ -601,7 +601,7 @@ $test->tests['time'][2] = 'Retrieving entity by time...';
 $found_match = false;
 $entity_result = $pines->entity_manager->get_entities(
 		array(),
-		array('&', 'gt' => array('p_cdate', time() + 10), 'tag' => array('com_entitytools', 'test'))
+		array('&', 'gte' => array('p_cdate', $entity_test->p_cdate + 1), 'tag' => array('com_entitytools', 'test'))
 	);
 foreach ($entity_result as $cur_entity) {
 	if ($entity_test->is($cur_entity)) {

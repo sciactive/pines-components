@@ -287,60 +287,60 @@ class com_myentity extends component implements entity_manager_interface {
 							if ($cur_value[0] == 'p_cdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`cdate`='.((float) $value[1]);
+								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`cdate`='.((float) $cur_value[1]);
 								break;
 							} elseif($cur_value[0] == 'p_mdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`mdate`='.((float) $value[1]);
+								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`mdate`='.((float) $cur_value[1]);
 								break;
 							}
 						case 'gt':
 							if ($cur_value[0] == 'p_cdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`cdate`>'.((float) $value[1]);
+								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`cdate`>'.((float) $cur_value[1]);
 								break;
 							} elseif($cur_value[0] == 'p_mdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`mdate`>'.((float) $value[1]);
+								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`mdate`>'.((float) $cur_value[1]);
 								break;
 							}
 						case 'gte':
 							if ($cur_value[0] == 'p_cdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`cdate`>='.((float) $value[1]);
+								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`cdate`>='.((float) $cur_value[1]);
 								break;
 							} elseif($cur_value[0] == 'p_mdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`mdate`>='.((float) $value[1]);
+								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`mdate`>='.((float) $cur_value[1]);
 								break;
 							}
 						case 'lt':
 							if ($cur_value[0] == 'p_cdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`cdate`<'.((float) $value[1]);
+								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`cdate`<'.((float) $cur_value[1]);
 								break;
 							} elseif($cur_value[0] == 'p_mdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`mdate`<'.((float) $value[1]);
+								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`mdate`<'.((float) $cur_value[1]);
 								break;
 							}
 						case 'lte':
 							if ($cur_value[0] == 'p_cdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`cdate`<='.((float) $value[1]);
+								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`cdate`<='.((float) $cur_value[1]);
 								break;
 							} elseif($cur_value[0] == 'p_mdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`mdate`<='.((float) $value[1]);
+								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`mdate`<='.((float) $cur_value[1]);
 								break;
 							}
 						case 'array':
@@ -590,12 +590,12 @@ class com_myentity extends component implements entity_manager_interface {
 			$line .= fgets($fhandle, 8192);
 			if (substr($line, -1) != "\n")
 				continue;
-			if (preg_match('/^\s*#/', $line)) {
+			if (preg_match('/^\s*#/S', $line)) {
 				$line = '';
 				continue;
 			}
 			$matches = array();
-			if (preg_match('/^\s*{(\d+)}\[([\w,]+)\]\s*$/', $line, $matches)) {
+			if (preg_match('/^\s*{(\d+)}\[([\w,]+)\]\s*$/S', $line, $matches)) {
 				// Save the current entity.
 				if ($guid) {
 					$query = sprintf("REPLACE INTO `%scom_myentity_entities` (`guid`, `tags`, `cdate`, `mdate`, `varlist`) VALUES (%u, '%s', %F, %F, '%s');",
@@ -641,11 +641,11 @@ class com_myentity extends component implements entity_manager_interface {
 				// Record the new entity's info.
 				$guid = (int) $matches[1];
 				$tags = $matches[2];
-			} elseif (preg_match('/^\s*([\w,]+)\s*=\s*(\S.*\S)\s*$/', $line, $matches)) {
+			} elseif (preg_match('/^\s*([\w,]+)\s*=\s*(\S.*\S)\s*$/S', $line, $matches)) {
 				// Add the variable to the new entity.
 				if ($guid)
 					$data[$matches[1]] = json_decode($matches[2]);
-			} elseif (preg_match('/^\s*<([^>]+)>\[(\d+)\]\s*$/', $line, $matches)) {
+			} elseif (preg_match('/^\s*<([^>]+)>\[(\d+)\]\s*$/S', $line, $matches)) {
 				// Add the UID.
 				$query = sprintf("INSERT INTO `%scom_myentity_uids` (`name`, `cur_uid`) VALUES ('%s', %u) ON DUPLICATE KEY UPDATE `cur_uid`=%u;",
 					$pines->config->com_mysql->prefix,

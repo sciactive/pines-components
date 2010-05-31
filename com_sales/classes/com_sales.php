@@ -119,7 +119,7 @@ class com_sales extends component {
 	 * is returned.
 	 *
 	 * @param int $code The product's code.
-	 * @return entity|null The product if it is found, null if it isn't.
+	 * @return com_sales_product|null The product if it is found, null if it isn't.
 	 */
 	public function get_product_by_code($code) {
 		global $pines;
@@ -608,13 +608,13 @@ class com_sales extends component {
 
 	/**
 	 * Creates and attaches a module which lists a products history.
-	 * @param int $tracking_code The serial number of the product to search for.
-	 * @param int $sku The sku code of the product(s) to search for.
-	 * @param int $location The location to search for products in.
+	 * @param string $serial The serial number of the product to search for.
+	 * @param string $sku The sku code of the product(s) to search for.
+	 * @param group $location The location to search for products in.
 	 * @param int $start The starting date to search for products within.
 	 * @param int $end The ending date to search for products within.
 	 */
-	public function track_product($tracking_code = null, $sku = null, $location = null, $start = null, $end = null) {
+	public function track_product($serial = null, $sku = null, $location = null, $start = null, $end = null) {
 		global $pines;
 
 		$module = new module('com_sales', 'track_product', 'content');
@@ -626,125 +626,102 @@ class com_sales extends component {
 			$countsheet_code = $sku;
 			$selector['ref'] = array('product', $pines->com_sales->get_product_by_code($sku));
 		}
-		if (!empty($tracking_code)) {
-			$module->tracking_code = $countsheet_code = $tracking_code;
-			$selector['data'] = array('serial', $tracking_code);
+		if (!empty($serial)) {
+			$module->serial = $countsheet_code = $serial;
+			$selector['data'] = array('serial', $serial);
 		}
 		// Secondary options specify the criteria to search the transactions.
-		$secondary_options['ref'] = $secondary_options['gte'] = $secondary_options['lte'] = array();
-		if (isset($location))
+		$secondary_options = array('&');
+		if ($location != 'all' && isset($location->guid)) {
 			$module->location = $location->guid;
-		if (!isset($location) || ($module->location != 'all' && !isset($location->guid)))
-			$module->location = 'all';
-		if (isset($module->location) && $module->location != 'all')
 			$secondary_options['ref'][] = array('group', $location);
+		} else {
+			$module->location = 'all';
+		}
 
 		if (isset($start)) {
-			$module->start_date = $start;
+			$module->start_date = (int) $start;
 			$secondary_options['gte'][] = array('p_cdate', (int) $start);
 		}
 		if (isset($end)) {
-			$module->end_date = $end;
+			$module->end_date = (int) $end;
 			$secondary_options['lte'][] = array('p_cdate', (int) $end);
 		}
-		if (!isset($module->start_date) || !isset($module->end_date)) {
+		if (!isset($module->start_date) && !isset($module->end_date)) {
 			$module->all_time = true;
 			$module->start_date = $module->end_date = time();
 		} else {
 			$module->all_time = false;
 		}
-		$found_stock = $module->transactions = array();
-		if (isset($module->tracking_code) || isset($module->sku))
-			$found_stock = $pines->entity_manager->get_entities(array('class' => com_sales_stock), $selector);
-		foreach ($found_stock as $cur_stock) {
+		$module->stock = $module->transactions = array();
+		if (isset($module->serial) || isset($module->sku))
+			$module->stock = $pines->entity_manager->get_entities(array('class' => com_sales_stock), $selector);
+
+		if (empty($module->stock)) {
+			pines_notice('There are no items matching your query.');
+			return;
+		}
+
+		foreach ($module->stock as $cur_stock) {
 			// Grab all invoices, countsheets, transfers and purchase orders for
 			// all stock items with the given serial number / sku.
 			$invoices = $pines->entity_manager->get_entities(
 					array('class' => com_sales_sale),
+					$secondary_options,
 					array('&',
-						'ref' => array_merge(array(array('products', $cur_stock)), $secondary_options['ref']),
-						'gte' => $secondary_options['gte'],
-						'lte' => $secondary_options['lte'],
+						'ref' => array('products', $cur_stock),
 						'tag' => array('com_sales', 'sale')
 					)
 				);
 			$countsheets = $pines->entity_manager->get_entities(
 					array('class' => com_sales_countsheet),
+					$secondary_options,
 					array('&',
 						'array' => array('entries', $countsheet_code),
-						'ref' => $secondary_options['ref'],
-						'gte' => $secondary_options['gte'],
-						'lte' => $secondary_options['lte'],
 						'tag' => array('com_sales', 'countsheet')
 					)
 				);
 			$transfers = $pines->entity_manager->get_entities(
 					array('class' => com_sales_transfer),
+					$secondary_options,
 					array('&',
-						'ref' => array_merge(array(array('stock', $cur_stock)), $secondary_options['ref']),
-						'gte' => $secondary_options['gte'],
-						'lte' => $secondary_options['lte'],
+						'ref' => array('stock', $cur_stock),
 						'tag' => array('com_sales', 'transfer')
 					)
 				);
 			$pos = $pines->entity_manager->get_entities(
 					array('class' => com_sales_po),
+					$secondary_options,
 					array('&',
-						'ref' => array_merge(array(array('received', $cur_stock)), $secondary_options['ref']),
-						'gte' => $secondary_options['gte'],
-						'lte' => $secondary_options['lte'],
+						'ref' => array('received', $cur_stock),
 						'tag' => array('com_sales', 'po')
 					)
 				);
-			foreach ($invoices as $cur_invoice) {
-				if (isset($module->transactions[$cur_invoice->guid])) {
-					$module->transactions[$cur_invoice->guid]->qty++;
+			foreach (array_merge($invoices, $countsheets, $transfers, $pos) as $cur_tx) {
+				if (isset($module->transactions[$cur_tx->guid])) {
+					$module->transactions[$cur_tx->guid]->qty++;
+					if (!in_array($cur_stock->serial, $module->transactions[$cur_tx->guid]->serials))
+						$module->transactions[$cur_tx->guid]->serials[] = $cur_stock->serial;
 				} else {
-					$module->transactions[$cur_invoice->guid]->product = $cur_stock->product;
-					$module->transactions[$cur_invoice->guid]->entity = $cur_invoice;
-					$module->transactions[$cur_invoice->guid]->transaction_info = 'Invoiced';
-					$module->transactions[$cur_invoice->guid]->qty = 1;
-					$module->transactions[$cur_invoice->guid]->serial = $cur_stock->serial;
-
-				}
-			}
-			foreach ($countsheets as $cur_sheet) {
-				if (isset($module->transactions[$cur_sheet->guid])) {
-					$module->transactions[$cur_sheet->guid]->qty++;
-				} else {
-					$module->transactions[$cur_sheet->guid]->product = $cur_stock->product;
-					$module->transactions[$cur_sheet->guid]->entity = $cur_sheet;
-					$module->transactions[$cur_sheet->guid]->transaction_info = 'Counted on Countsheet';
-					$module->transactions[$cur_sheet->guid]->qty = 1;
-					$module->transactions[$cur_sheet->guid]->serial = $cur_stock->serial;
-				}
-			}
-			foreach ($transfers as $cur_transfer) {
-				if (isset($module->transactions[$cur_transfer->guid])) {
-					$module->transactions[$cur_transfer->guid]->qty++;
-				} else {
-					$module->transactions[$cur_transfer->guid]->product = $cur_stock->product;
-					$module->transactions[$cur_transfer->guid]->entity = $cur_transfer;
-					$module->transactions[$cur_transfer->guid]->transaction_info = 'Recieved on Transfer';
-					$module->transactions[$cur_transfer->guid]->qty = 1;
-					$module->transactions[$cur_transfer->guid]->serial = $cur_stock->serial;
-				}
-			}
-			foreach ($pos as $cur_po) {
-				if (isset($module->transactions[$cur_po->guid])) {
-					$module->transactions[$cur_po->guid]->qty++;
-				} else {
-					$module->transactions[$cur_po->guid]->product = $cur_stock->product;
-					$module->transactions[$cur_po->guid]->entity = $cur_po;
-					$module->transactions[$cur_po->guid]->transaction_info = 'Recieved on PO';
-					$module->transactions[$cur_po->guid]->qty = 1;
-					$module->transactions[$cur_po->guid]->serial = $cur_stock->serial;
+					if ($cur_tx->has_tag('sale')) {
+						$tx_info = 'Invoiced';
+					} elseif ($cur_tx->has_tag('countsheet')) {
+						$tx_info = 'Counted on Countsheet';
+					} elseif ($cur_tx->has_tag('transfer')) {
+						$tx_info = 'Received on Transfer';
+					} elseif ($cur_tx->has_tag('po')) {
+						$tx_info = 'Received on PO';
+					}
+					$module->transactions[$cur_tx->guid] = (object) array(
+						'product' => $cur_stock->product,
+						'entity' => $cur_tx,
+						'transaction_info' => $tx_info,
+						'qty' => 1,
+						'serials' => array($cur_stock->serial)
+					);
 				}
 			}
 		}
-
-		if (empty($found_stock))
-			pines_notice('There are no items matching your query.');
 	}
 
 

@@ -10,15 +10,14 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Stock History';
-$this->note = count($this->transactions).' record(s) found.';
+$this->title = 'Stock Tracking';
+$this->note = count($this->transactions).' transaction(s) for '.count($this->stock).' item(s) found.';
 $pines->com_pgrid->load();
 $pines->com_jstree->load();
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
 	#history_grid a {
-		color: blue;
 		text-decoration:  underline;
 	}
 	/* ]]> */
@@ -26,12 +25,11 @@ $pines->com_jstree->load();
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-
 		var submit_url = "<?php echo pines_url('com_sales', 'trackproduct'); ?>";
-		function submit_search() {
+		var submit_search = function() {
 			// Submit the form with all of the fields.
 			pines.post(submit_url, {
-				"tracking_code": tracking_code_box.val(),
+				"serial": serial_box.val(),
 				"sku": sku_box.val(),
 				"location": location,
 				"all_time": all_time,
@@ -41,7 +39,7 @@ $pines->com_jstree->load();
 		}
 
 		var history_grid = $("#history_grid");
-		var tracking_code_box, sku_box;
+		var serial_box, sku_box;
 		// Timespan Defaults
 		var all_time = "<?php echo $this->all_time; ?>";
 		var start_date = "<?php echo $this->start_date; ?>";
@@ -74,23 +72,23 @@ $pines->com_jstree->load();
 				{type: 'separator'},
 				{
 					type: 'text',
-					label: 'Tracking #: ',
+					label: 'Serial #: ',
 					load: function(textbox){
-						// Display the current tracking code being searched.
-						textbox.val("<?php echo $this->tracking_code; ?>");
+						// Display the current serial being searched.
+						textbox.val("<?php echo $this->serial; ?>");
 						textbox.keydown(function(e){
 							if (e.keyCode == 13)
 								submit_search();
 						});
-						tracking_code_box = textbox;
+						serial_box = textbox;
 					}
 				},
 				{type: 'separator'},
-				{type: 'button', text: 'Timespan', extra_class: 'picon picon_16x16_preferences-system-time', selection_optional: true, click: function(){
+				{type: 'button', text: 'Timespan', extra_class: 'picon picon_16x16_view-time-schedule', selection_optional: true, click: function(){
 					history_grid.date_form();
 				}},
 				{type: 'separator'},
-				{type: 'button', text: 'Update &raquo;', extra_class: 'picon picon_16x16_appointment-recurring', selection_optional: true, click: function(){
+				{type: 'button', text: 'Update &raquo;', extra_class: 'picon picon_16x16_view-refresh', selection_optional: true, click: function(){
 					submit_search();
 				}}
 			],
@@ -190,14 +188,14 @@ $pines->com_jstree->load();
 <table id="history_grid">
 	<thead>
 		<tr>
-			<th>Created</th>
-			<th>Transaction #</th>
+			<th>Created Date</th>
 			<th>SKU</th>
-			<th>Description</th>
+			<th>Product</th>
 			<th>Location</th>
+			<th>Transaction #</th>
 			<th>Transaction</th>
 			<th>Qty</th>
-			<th>Tracking #</th>
+			<th>Serials</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -224,19 +222,14 @@ $pines->com_jstree->load();
 	?>
 		<tr title="<?php echo $cur_transaction->entity->guid; ?>">
 			<td><?php echo format_date($cur_transaction->entity->p_cdate); ?></td>
-			<td><a href="<?php echo $link; ?>" target="_blank"><?php echo $cur_transaction->entity->guid; ?></a></td>
 			<td><?php echo $cur_transaction->product->sku; ?></td>
 			<td><?php echo $cur_transaction->product->name; ?></td>
-			<td><?php echo $cur_transaction->entity->group->name; ?></td>
+			<td><?php echo "{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]"; ?></td>
+			<td><a href="<?php echo htmlentities($link); ?>" onclick="window.open(this.href); return false;"><?php echo $cur_transaction->entity->guid; ?></a></td>
 			<td><?php echo $cur_transaction->transaction_info; ?></td>
 			<td><?php echo $cur_transaction->qty; ?></td>
-			<td><?php echo $cur_transaction->serial; ?></td>
+			<td><?php echo implode(', ', $cur_transaction->serials); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>
-</table><br />
-<form class="pf-form" method="post">
-	<div class="pf-element pf-buttons">
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url('com_sales', 'liststock'); ?>');" value="Done" />
-	</div>
-</form>
+</table>

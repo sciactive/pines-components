@@ -103,7 +103,7 @@
 			{
 				"path": "main_menu/business/com_sales/inventory/completedpurchaseorders",
 				"text": "Completed POs",
-				"href": ["com_sales","listpos",{"finished":true}],
+				"href": ["com_sales","listpos",{"finished":"true"}],
 				"depend": {
 					"ability": "com_sales/listpos"
 				}
@@ -127,7 +127,7 @@
 			{
 				"path": "main_menu/business/com_sales/inventory/completedtransfers",
 				"text": "Completed Transfers",
-				"href": ["com_sales","listtransfers",{"finished":true}],
+				"href": ["com_sales","listtransfers",{"finished":"true"}],
 				"depend": {
 					"ability": "com_sales/managestock"
 				}

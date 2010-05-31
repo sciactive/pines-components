@@ -61,6 +61,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 <table id="stock_grid">
 	<thead>
 		<tr>
+			<th>SKU</th>
 			<th>Product</th>
 			<th>Serial</th>
 			<th>Vendor</th>
@@ -76,6 +77,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				continue;
 		} ?>
 		<tr title="<?php echo $stock->guid; ?>">
+			<td><?php echo $stock->product->sku; ?></td>
 			<td><?php echo $stock->product->name; ?></td>
 			<td><?php echo $stock->serial; ?></td>
 			<td><?php echo $stock->vendor->name; ?></td>

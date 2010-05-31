@@ -134,7 +134,7 @@ class com_sales_countsheet extends entity {
 		$module->missing = $module->matched = $module->potential = $module->extra = array();
 		// Grab all stock items for this location's inventory.
 		$expected_stock = $pines->entity_manager->get_entities(array('class' => com_sales_stock), array('&', 'tag' => array('com_sales', 'stock')));
-		usort($expected_stock, array($this, 'sort_stock_by_location_serial'));
+		@usort($expected_stock, array($this, 'sort_stock_by_location_serial'));
 		foreach ($expected_stock as $key => $cur_stock_entry) {
 			$entry_exists = false;
 			$in_store = ($cur_stock_entry->location->guid == $this->group->guid);

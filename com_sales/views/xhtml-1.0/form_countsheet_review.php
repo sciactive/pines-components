@@ -124,7 +124,7 @@ $this->note = 'Created by '.$this->entity->user->name.' on '.format_date($this->
 		<?php } ?>
 	</fieldset>
 	<?php } if ($this->extra) { ?>
-	<fieldset class="pf-group ui-priority-secondary">
+	<fieldset class="pf-group">
 		<legend>Extraneous Items</legend>
 		<ul style="list-style-type: circle;">
 			<?php foreach ($this->extra as $cur_entry) { ?>
@@ -154,7 +154,7 @@ $this->note = 'Created by '.$this->entity->user->name.' on '.format_date($this->
 	<div class="pf-element pf-full-width">
 		<label>
 			<span class="pf-label">Review Comments</span>
-			<span class="pf-field pf-full-width"><textarea style="width: 98%;" rows="3" cols="35" name="review_comments"><?php echo $this->entity->review_comments; ?></textarea></span>
+			<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 98%;" rows="3" cols="35" name="review_comments"><?php echo $this->entity->review_comments; ?></textarea></span>
 		</label>
 	</div>
 	<div class="pf-element pf-buttons">

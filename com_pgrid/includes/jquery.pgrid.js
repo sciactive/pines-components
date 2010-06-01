@@ -373,9 +373,11 @@
 
 			pgrid.hide_children = function(jq_rows) {
 				// For each row, hide its children.
-				jq_rows.filter("tr.parent").each(function() {
+				var parents = jq_rows.filter("tr.parent");
+				if (!parents.length) return;
+				parents.each(function() {
 					var cur_row = $(this);
-					cur_row.siblings("tr."+cur_row.attr("title")).addClass("ui-pgrid-table-row-hidden").filter("tr.parent").each(function(){
+					cur_row.siblings("tr."+cur_row.attr("title")+".ui-pgrid-table-row-visible").removeClass("ui-pgrid-table-row-visible").filter("tr.parent").each(function(){
 						// And its descendants, if it's a parent.
 						pgrid.hide_children($(this));
 					});
@@ -384,11 +386,13 @@
 
 			pgrid.show_children = function(jq_rows) {
 				// For each row, unhide its children. (If it's expanded.)
-				jq_rows.filter("tr.parent.ui-pgrid-table-row-expanded").each(function() {
+				var parents = jq_rows.filter("tr.parent.ui-pgrid-table-row-expanded");
+				if (!parents.length) return;
+				parents.each(function() {
 					var cur_row = $(this);
 					// If this row is expanded, its children should be shown.
-					cur_row.siblings("tr."+cur_row.attr("title")+".ui-pgrid-table-row-hidden").removeClass("ui-pgrid-table-row-hidden").filter("tr.parent.ui-pgrid-table-row-expanded").each(function(){
-						// And its descendants.
+					cur_row.siblings("tr."+cur_row.attr("title")).addClass("ui-pgrid-table-row-visible").filter("tr.parent.ui-pgrid-table-row-expanded").each(function(){
+						// And its descendants, if it's a parent.
 						pgrid.show_children($(this));
 					});
 				});
@@ -424,7 +428,7 @@
 
 			pgrid.paginate = function(loading) {
 				if (pgrid.pgrid_paginate) {
-					var all_rows = pgrid.children("tbody").children("tr:not(.child, .ui-helper-hidden)");
+					var all_rows = pgrid.children("tbody").children("tr:not(.ui-helper-hidden):not(.child)");
 					// Calculate the total number of pages.
 					pgrid.pgrid_pages = Math.ceil(all_rows.length / pgrid.pgrid_perpage);
 
@@ -435,26 +439,51 @@
 					else if ((pgrid.pgrid_page == -1) && (pgrid.pgrid_pages > 0))
 						pgrid.pgrid_page = 0;
 
-					// Select all the rows on the current page.
-					var elempage = all_rows.slice(pgrid.pgrid_page * pgrid.pgrid_perpage, (pgrid.pgrid_page * pgrid.pgrid_perpage) + pgrid.pgrid_perpage);
+					// Hide the previous page's rows.
+					if (pgrid.cur_page_rows)
+						pgrid.cur_page_rows.removeClass("ui-pgrid-table-row-visible");
+					// Select all rows on the current page.
+					var page_start = pgrid.pgrid_page * pgrid.pgrid_perpage;
+					var page_end = (pgrid.pgrid_page * pgrid.pgrid_perpage) + pgrid.pgrid_perpage;
+					pgrid.cur_page_rows = all_rows.slice(page_start, page_end);
 					// Unhide them.
-					elempage.filter(".ui-pgrid-table-row-hidden").removeClass("ui-pgrid-table-row-hidden");
-					elempage.first().prevAll("tr:not(.ui-helper-hidden, .ui-pgrid-table-row-hidden)").addClass("ui-pgrid-table-row-hidden");
-					elempage.last().nextAll("tr:not(.ui-helper-hidden, .ui-pgrid-table-row-hidden)").addClass("ui-pgrid-table-row-hidden");
+					pgrid.cur_page_rows.addClass("ui-pgrid-table-row-visible");
 					// And their children.
-					pgrid.show_children(elempage);
+					pgrid.show_children(pgrid.cur_page_rows);
 					// Update the page number and count in the footer.
-					if (pgrid.pgrid_footer)
-						pgrid.footer.find("input.ui-pgrid-page-number").val(pgrid.pgrid_page+1).end()
-						.find("span.ui-pgrid-page-total").html(pgrid.pgrid_pages);
+					if (pgrid.pgrid_footer) {
+						if (!pgrid.page_number_elem)
+							pgrid.page_number_elem = pgrid.footer.find("input.ui-pgrid-page-number");
+						pgrid.page_number_elem.val(pgrid.pgrid_page+1);
+						if (!pgrid.page_total_elem)
+							pgrid.page_total_elem = pgrid.footer.find("span.ui-pgrid-page-total");
+						pgrid.page_total_elem.html(pgrid.pgrid_pages);
+					}
 				}
 				// The grid's state has probably changed.
 				if (!loading) pgrid.state_changed();
 			};
 
+			pgrid.paginate_queue = function() {
+				if (pgrid.paginate_timout)
+					window.clearTimeout(pgrid.paginate_timout);
+				pgrid.paginate_timout = window.setTimeout(pgrid.paginate, 50);
+			};
+
+			pgrid.animate_filter = function(stop) {
+				if (stop)
+					pgrid.footer_input.stop(true).fadeTo(400, 1);
+				else
+					pgrid.footer_input.fadeTo(1000, .7).fadeTo(1000, .8, pgrid.animate_filter);
+			};
+
 			pgrid.do_filter = function(filter, loading) {
 				// Filter if filtering is allowed, or if this is an initial filter.
 				if (pgrid.pgrid_filtering || loading) {
+					if (pgrid.footer_input) {
+						pgrid.footer_input.addClass("ui-state-highlight");
+						pgrid.animate_filter();
+					}
 					if (pgrid.filter_timer)
 						window.clearInterval(pgrid.filter_timer);
 					if (typeof filter == "string")
@@ -462,78 +491,65 @@
 					if (pgrid.pgrid_filter.length > 0) {
 						var filter_arr = pgrid.pgrid_filter.toLowerCase().split(" ");
 						// Find any rows that might match using a simple DOM search.
-						var filter_rows = pgrid.children("tbody")
-						.children("tr:not(.ui-helper-hidden)").addClass("ui-helper-hidden").end()
-						.children().filter(function(){
-							var cur_text;
-							if (this.innerText != undefined)
-								cur_text = this.innerText.toLowerCase();
-							else if (this.textContent != undefined)
-								cur_text = this.textContent.toLowerCase();
-							else
-								return true;
-							for (var i in filter_arr) {
-								if (cur_text.indexOf(filter_arr[i]) == -1)
-									return false;
-							}
-							return true;
-						}).removeClass("ui-helper-hidden");
-						if (!loading) {
-							// Paginate, since we may have disabled rows.
-							pgrid.paginate();
-						}
-						// If the filter is only 1 letter, the basic search is fine.
-						if (pgrid.pgrid_filter.length > 1) {
-							// Now iterate through the possibel matches and match with the full search.
-							// Using an interval allows the user to use their browser while it's searching.
-							pgrid.filter_timer = window.setInterval(function(){
-								if (!filter_rows || !filter_rows.length) {
+						var cur_index = 0;
+						var rows = pgrid.children("tbody").children();
+						pgrid.filter_timer = window.setInterval(function(){
+							var cur_row, cur_row_dom, cur_text, i;
+							// This loop does 25 rows at a time.
+							do {
+								cur_row = rows.eq(cur_index);
+								if (!cur_row.length) {
 									window.clearInterval(pgrid.filter_timer);
-									pgrid.filter_timer = null;
-									filter_rows = null;
-									// Only do this if we're not loading, to speed up initialization.
-									if (!loading) {
-										// Paginate, since we may have disabled rows.
-										pgrid.paginate();
-										// Update the selected items, and the record counts.
-										pgrid.update_selected();
+									if (pgrid.footer_input) {
+										pgrid.footer_input.removeClass("ui-state-highlight");
+										pgrid.animate_filter(true);
 									}
-									return;
+									break;
 								}
-								var cur_text = "";
-								var row = filter_rows.first();
-								filter_rows = filter_rows.slice(1);
-								// Add spaces between cell values, so they're not falsely matched.
-								// ex: "mest" would match the cells "James" and "Teacher" if they were concatenated.
-								row.children("td.ui-pgrid-table-cell-text").each(function(){
-									if (this.innerText != undefined)
-										cur_text += " "+this.innerText.toLowerCase();
-									else if (this.textContent != undefined)
-										cur_text += " "+this.textContent.toLowerCase();
+								cur_index++;
+								cur_row_dom = cur_row.get();
+								if (cur_row_dom.pgrid_filter_text) {
+									// TODO: Update this when it changes.
+									cur_text = cur_row_dom.pgrid_filter_text;
+								} else {
+									if (cur_row_dom.innerText != undefined)
+										cur_text = cur_row_dom.innerText.toLowerCase();
+									else if (cur_row_dom.textContent != undefined)
+										cur_text = cur_row_dom.textContent.toLowerCase();
 									else
-										cur_text += " "+$(this).text().toLowerCase();
-								});
-								// Go through each search term and if any one doesn't match, hide the row.
-								for (var i in filter_arr) {
+										cur_text = cur_row.text().toLowerCase();
+									cur_row_dom.pgrid_filter_text = cur_text;
+								}
+								var match = true;
+								for (i in filter_arr) {
 									if (cur_text.indexOf(filter_arr[i]) == -1) {
-										if (row.is(":visible")) {
-											row.addClass("ui-helper-hidden");
-											if (!loading) {
-												// Paginate, since we may have disabled rows.
-												pgrid.paginate();
-											}
-										} else
-											row.addClass("ui-helper-hidden");
-										return;
+										match = false;
+										break;
 									}
 								}
-								if (row.hasClass("child"))
-									pgrid.enable_parents(row);
-							}, 0);
-						}
+								if (cur_row.hasClass("ui-helper-hidden")) {
+									if (match) cur_row.removeClass("ui-helper-hidden");
+								} else {
+									if (!match) cur_row.addClass("ui-helper-hidden");
+								}
+								// Enable the row's ancestors.
+								if (match && cur_row.hasClass("child"))
+									pgrid.enable_parents(cur_row);
+							} while (cur_index % 25);
+							if (!loading) {
+								// Paginate, since we may have disabled rows.
+								pgrid.paginate_queue();
+								// Update the selected items, and the record counts.
+								pgrid.update_selected_queue();
+							}
+						}, 1);
 					} else {
 						// If the user enters nothing, all records should be shown.
 						pgrid.children("tbody").children("tr.ui-helper-hidden").removeClass("ui-helper-hidden");
+						if (pgrid.footer_input) {
+							pgrid.footer_input.removeClass("ui-state-highlight");
+							pgrid.animate_filter(true);
+						}
 						// Only do this if we're not loading, to speed up initialization.
 						if (!loading) {
 							// Paginate, since we may have disabled rows.
@@ -670,6 +686,12 @@
 						pgrid.footer.children("div.ui-pgrid-footer-count-container").find("span.ui-pgrid-footer-count-select").html(pgrid.children("tbody").children("tr.ui-pgrid-table-row-selected").length);
 				}
 				pgrid.update_count();
+			};
+
+			pgrid.update_selected_queue = function() {
+				if (pgrid.update_selected_timout)
+					window.clearTimeout(pgrid.update_selected_timout);
+				pgrid.update_selected_timout = window.setTimeout(pgrid.update_selected, 200);
 			};
 
 			pgrid.update_count = function() {
@@ -986,7 +1008,7 @@
 										selected_rows = pgrid.children("thead").children().add(selected_rows);
 									selected_rows.each(function() {
 										// Turn each cell into a CSV cell.
-										$(this).children("td:not(.ui-pgrid-table-expander)").each(function(){
+										$(this).children("th:not(.ui-pgrid-table-expander), td:not(.ui-pgrid-table-expander)").each(function(){
 											var cur_cell = $(this);
 											row_data += "\""+cur_cell.contents().text().replace("\"", "\"\"")+"\"";
 											// Add a comma, if there is another cell.
@@ -1022,12 +1044,12 @@
 									parsed_url = parsed_url.replace("__col_"+i+"__", cur_cols_text[i]);
 								}
 								if (e.button == 1 || (val.target && val.target != "_self")) {
-									if (val.windowFeatures)
-										return window.open(parsed_url, val.target, val.windowFeatures);
+									if (val.window_features)
+										return window.open(parsed_url, val.target, val.window_features);
 									return window.open(parsed_url, val.target);
 								} else {
 									// If Pines is loaded, use its get method instead of setting location.
-									if ($.isFunction(pines.get))
+									if (typeof pines == "object" && pines.get)
 										return pines.get(parsed_url);
 									return (window.location = parsed_url);
 								}
@@ -1097,7 +1119,7 @@
 					pgrid.footer.append(
 						$("<div />").addClass("ui-pgrid-footer-filter-container").each(function(){
 							$(this).append($("<span>Filter: </span>").append(
-								$("<input />").addClass("ui-widget ui-widget-content ui-corner-all").attr({
+								$("<input />").addClass("ui-pgrid-footer-filter-input ui-widget ui-widget-content ui-corner-all").attr({
 									type: "text",
 									value: pgrid.pgrid_filter,
 									size: "10"
@@ -1111,6 +1133,7 @@
 							));
 						})
 					);
+					pgrid.footer_input = pgrid.footer.find("input.ui-pgrid-footer-filter-input");
 				}
 			}
 			// Filter the grid.
@@ -1139,6 +1162,8 @@
 
 			// Paginate the grid.
 			if (pgrid.pgrid_paginate) {
+				// Add the paginated class.
+				pgrid.addClass("ui-pgrid-paginated");
 				// Add pagination controls to the grid's footer.
 				if (pgrid.pgrid_footer) {
 					pgrid.footer.append(

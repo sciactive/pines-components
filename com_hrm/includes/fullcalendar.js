@@ -2614,6 +2614,8 @@ var viewMethods = {
 		var view = this,
 			oldAllDay = event.allDay,
 			eventId = event._id;
+		if (event.allDay == allDay)
+			allDay = null;
 		view.moveEvents(view.eventsByID[eventId], dayDelta, minuteDelta, allDay);
 		view.trigger('eventDrop', e, event, dayDelta, minuteDelta, allDay, function() { // TODO: change docs
 			// TODO: investigate cases where this inverse technique might not work
@@ -2643,7 +2645,7 @@ var viewMethods = {
 
 	moveEvents: function(events, dayDelta, minuteDelta, allDay) {
 		minuteDelta = minuteDelta || 0;
-		for (var e, len=events.length, i=0; i<len; i++) {
+		for (var e, len=events.length, i=0; i<len; i++) {	
 			e = events[i];
 			if (allDay != undefined) {
 				e.allDay = allDay;

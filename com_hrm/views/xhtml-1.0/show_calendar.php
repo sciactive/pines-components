@@ -81,7 +81,6 @@ defined('P_RUN') or die('Direct access prohibited');
 				save_calendar();
 			},
 			eventDragStop: function( event, jsEvent, ui, view ) {
-				// Deselect all events when changing the calendar timespan.
 				var events = $("#calendar").fullCalendar('clientEvents');
 				jQuery.each(events, function(i, val) {
 					val.selected = false;

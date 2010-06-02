@@ -50,18 +50,16 @@ if (empty($query)) {
 
 foreach ($companies as $key => &$cur_company) {
 	$json_struct = (object) array(
-		'key' => $cur_company->guid,
-		'values' => array(
-			$cur_company->name,
-			$cur_company->address_type == 'us' ? $cur_company->address_1 : $cur_company->address_international,
-			$cur_company->city,
-			$cur_company->state,
-			$cur_company->zip,
-			$cur_company->email,
-			format_phone($cur_company->phone),
-			format_phone($cur_company->fax),
-			$cur_company->website
-		)
+		'guid'		=> $cur_company->guid,
+		'name'		=> $cur_company->name,
+		'address'	=> $cur_company->address_type == 'us' ? $cur_company->address_1 : $cur_company->address_international,
+		'city'		=> $cur_company->city,
+		'state'		=> $cur_company->state,
+		'zip'		=> $cur_company->zip,
+		'email'		=> $cur_company->email,
+		'phone'		=> format_phone($cur_company->phone),
+		'fax'		=> format_phone($cur_company->fax),
+		'website'	=> $cur_company->website
 	);
 	$cur_company = $json_struct;
 }

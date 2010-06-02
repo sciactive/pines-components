@@ -310,7 +310,24 @@ $pines->com_pgrid->load();
 								return;
 							}
 							company_dialog.dialog('open');
-							company_table.pgrid_add(data);
+							var struct = [];
+							$.each(data, function(){
+								struct.push({
+									"key": this.guid,
+									"values": [
+										this.name,
+										this.address,
+										this.city,
+										this.state,
+										this.zip,
+										this.email,
+										this.phone,
+										this.fax,
+										this.website
+									]
+								});
+							});
+							company_table.pgrid_add(struct);
 						}
 					});
 				}
@@ -344,15 +361,15 @@ $pines->com_pgrid->load();
 					</thead>
 					<tbody>
 						<tr>
-							<td>----------------------</td>
-							<td>----------------------</td>
-							<td>----------------------</td>
-							<td>----------------------</td>
-							<td>----------------------</td>
-							<td>----------------------</td>
-							<td>----------------------</td>
-							<td>----------------------</td>
-							<td>----------------------</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
 						</tr>
 					</tbody>
 				</table>

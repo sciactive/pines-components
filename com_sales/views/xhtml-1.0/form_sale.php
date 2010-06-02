@@ -850,7 +850,28 @@ $pines->com_pgrid->load();
 						return;
 					}
 					customer_dialog.dialog('open');
-					customer_table.pgrid_add(data);
+					var struct = [];
+					$.each(data, function(){
+						struct.push({
+							"key": this.guid,
+							"values": [
+								this.name,
+								this.email,
+								this.company,
+								this.title,
+								this.address_1,
+								this.address_2,
+								this.city,
+								this.state,
+								this.zip,
+								this.phone_home,
+								this.phone_work,
+								this.phone_cell,
+								this.fax
+							]
+						});
+					});
+					customer_table.pgrid_add(struct);
 				}
 			});
 		}

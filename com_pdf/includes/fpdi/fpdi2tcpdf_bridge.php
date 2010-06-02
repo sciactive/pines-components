@@ -1,8 +1,8 @@
 <?php
 //
-//  FPDI - Version 1.3.1
+//  FPDI - Version 1.3.3
 //
-//    Copyright 2004-2009 Setasign - Jan Slabon
+//    Copyright 2004-2010 Setasign - Jan Slabon
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -50,6 +50,72 @@ class FPDF extends TCPDF {
                 $this->Error('Cannot access protected property '.get_class($this).':$'.$name.' / Undefined property: '.get_class($this).'::$'.$name);
         }
     }
+
+    function _putstream($s)
+	{
+		$this->_out($this->_getstream($s));
+	}
+	
+	function _putresourcedict() {
+		$out = '2 0 obj';
+		$out .= ' << /ProcSet [/PDF /Text /ImageB /ImageC /ImageI]';
+		$out .= ' /Font <<';
+		foreach ($this->fontkeys as $fontkey) {
+			$font = $this->getFontBuffer($fontkey);
+			$out .= ' /F'.$font['i'].' '.$font['n'].' 0 R';
+		}
+		$out .= ' >>';
+		$out .= ' /XObject <<';
+		foreach ($this->imagekeys as $file) {
+			$info = $this->getImageBuffer($file);
+			$out .= ' /I'.$info['i'].' '.$info['n'].' 0 R';
+		}
+		if (count($this->tpls)) {
+            foreach($this->tpls as $tplidx => $tpl) {
+                $out .= sprintf('%s%d %d 0 R', $this->tplprefix, $tplidx, $tpl['n']);
+            }
+        }
+		$out .= ' >>';
+		// visibility
+		$out .= ' /Properties <</OC1 '.$this->n_ocg_print.' 0 R /OC2 '.$this->n_ocg_view.' 0 R>>';
+		// transparency
+		$out .= ' /ExtGState <<';
+		foreach ($this->extgstates as $k => $extgstate) {
+			if (isset($extgstate['name'])) {
+				$out .= ' /'.$extgstate['name'];
+			} else {
+				$out .= ' /GS'.$k;
+			}
+			$out .= ' '.$extgstate['n'].' 0 R';
+		}
+		$out .= ' >>';
+		// gradient patterns
+		if (isset($this->gradients) AND (count($this->gradients) > 0)) {
+			$out .= ' /Pattern <<';
+			foreach ($this->gradients as $id => $grad) {
+				$out .= ' /p'.$id.' '.$grad['pattern'].' 0 R';
+			}
+			$out .= ' >>';
+		}
+		// gradient shadings
+		if (isset($this->gradients) AND (count($this->gradients) > 0)) {
+			$out .= ' /Shading <<';
+			foreach ($this->gradients as $id => $grad) {
+				$out .= ' /Sh'.$id.' '.$grad['id'].' 0 R';
+			}
+			$out .= ' >>';
+		}
+		// spot colors
+		if (isset($this->spot_colors) AND (count($this->spot_colors) > 0)) {
+			$out .= ' /ColorSpace <<';
+			foreach ($this->spot_colors as $color) {
+				$out .= ' /CS'.$color['i'].' '.$color['n'].' 0 R';
+			}
+			$out .= ' >>';
+		}
+		$out .= ' >> endobj';
+		$this->_out($out);
+	}
 
     /**
      * Encryption of imported data by FPDI

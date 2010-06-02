@@ -1,6 +1,6 @@
 <?php
 //============================================================+
-// File name   : ita.php
+// File name   : eng.php
 // Begin       : 2004-03-03
 // Last Update : 2010-02-17
 // 
@@ -39,10 +39,10 @@ $l = Array();
 
 $l['a_meta_charset'] = 'UTF-8';
 $l['a_meta_dir'] = 'ltr';
-$l['a_meta_language'] = 'it';
+$l['a_meta_language'] = 'pt';
 
 // TRANSLATIONS --------------------------------------
-$l['w_page'] = 'pagina';
+$l['w_page'] = 'página';
 
 //============================================================+
 // END OF FILE                                                 

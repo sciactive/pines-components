@@ -81,9 +81,17 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		$total_group['scheduled'] = $total_group['clocked'] = $time_punch = $total_count = 0;
 		foreach($this->employees as $cur_employee) {
 			$totals[$total_count]['scheduled'] = $totals[$total_count]['clocked'] = 0;
-			$schedule = $pines->entity_manager->get_entities(array('class' => com_hrm_event), array('&', 'ref' => array('employee', $cur_employee), 'tag' => array('com_hrm', 'event')));
+			$schedule = $pines->entity_manager->get_entities(
+					array('class' => com_hrm_event),
+					array('&',
+						'ref' => array('employee', $cur_employee),
+						'gte' => array('start', $this->date[0]),
+						'lte' => array('end', $this->date[1]),
+						'tag' => array('com_hrm', 'event')
+					)
+				);
 			foreach ($schedule as $cur_schedule)
-				$totals[$total_count]['scheduled'] += ($cur_schedule->end - $cur_schedule->start);
+				$totals[$total_count]['scheduled'] += $cur_schedule->scheduled;
 			foreach($cur_employee->timeclock as $clock) {
 				if ($clock['time'] >= $this->date[0] && $clock['time'] <= $this->date[1]) {
 					if ($clock['status'] == 'out' && ($time_punch > 0)) {
@@ -184,7 +192,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			foreach ($scheduled as $cur_schedule) {
 				$cur_date['sched_start'] = $cur_schedule->start;
 				$cur_date['sched_end'] = $cur_schedule->end;
-				$cur_date['scheduled'] += ($cur_schedule->end - $cur_schedule->start);
+				$cur_date['scheduled'] += $cur_schedule->scheduled;
 			}
 		?>
 			<tr class="total">

@@ -47,6 +47,13 @@ return array(
 		'value' => 'Entire Staff:cornflowerblue, Sales:gold, IT:blueviolet, Support:olive',
 		'peruser' => true,
 	),
+	array(
+		'name' => 'workday_length',
+		'cname' => 'Default Workday Length',
+		'description' => 'The amount of work hours in a full workday.',
+		'value' => 8,
+		'peruser' => true,
+	),
 );
 
 ?>

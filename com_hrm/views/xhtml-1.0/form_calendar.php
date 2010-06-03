@@ -19,7 +19,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$this->title = (!isset($this->event->guid)) ? 'New Event' : '<span class="ui-state-active ui-corner-all" style="padding: 2px;">'.$this->event->label.'</span>';
+$this->title = (!isset($this->event->guid)) ? 'New Event' : '<em>'.$this->event->label.'</em>';
 
 $pines->com_jstree->load();
 ?>
@@ -88,7 +88,10 @@ $pines->com_jstree->load();
 		}).change();
 
 		$("#event_date").change(function(){
-			$("#event_enddate").val($(this).val());
+			var start_date = new Date($(this).val());
+			var end_date = new Date($("#event_enddate").val());
+			if (start_date > end_date)
+				$("#event_enddate").val($(this).val());
 		}).change();
 	});
 	// This function reloads the employees when switching between locations.
@@ -136,7 +139,7 @@ $pines->com_jstree->load();
 		<span class="pf-note">Start</span><input class="ui-widget-content form_text" type="text" id="event_date" name="event_date" value="<?php echo empty($start_date) ? date('n/j/Y') : $start_date; ?>" />
 	</div>
 	<div class="pf-element" style="padding-bottom: 25px;">
-		<span class="pf-note">End</span><input class="ui-widget-content form_text" type="text" id="event_enddate" name="event_enddate" value="<?php echo $end_date; ?>" />
+		<span class="pf-note">End</span><input class="ui-widget-content form_text" type="text" id="event_enddate" name="event_enddate" value="<?php echo empty($end_date) ? date('n/j/Y') : $end_date; ?>" />
 	</div>
 	<div class="pf-element">
 		<label><input class="pf-field ui-widget-content" type="radio" name="all_day" value="timeSpan" checked="checked" />Timespan</label>

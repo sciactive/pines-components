@@ -51,9 +51,7 @@ if (is_int($location))
 	$selector['ref'] = array('group', $location);
 
 // Get all transactions.
-$tx_array = $pines->entity_manager->get_entities(array('class' => com_sales_tx), $selector, array('|', 'tag' => array('sale_tx', 'payment_tx')));
-if (!is_array($tx_array))
-	$tx_array = array();
+$tx_array = (array) $pines->entity_manager->get_entities(array('class' => com_sales_tx), $selector, array('|', 'tag' => array('sale_tx', 'payment_tx')));
 $invoice_array = array('total' => 0.00, 'count' => 0);
 $sale_array = array('total' => 0.00, 'count' => 0);
 $user_array = array();

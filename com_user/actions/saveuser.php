@@ -74,14 +74,12 @@ unset($cur_attribute);
 if ( gatekeeper('com_user/assigngroup') ) {
 	$sys_groups = $pines->entity_manager->get_entities(array('class' => group), array('&', 'tag' => array('com_user', 'group')));
 	$group = group::factory((int) $_REQUEST['group']);
-	$groups = $_REQUEST['groups'];
-	if (!is_array($groups))
-		$groups = array();
+	$groups = (array) $_REQUEST['groups'];
 	array_walk($groups, 'intval');
 	foreach ($sys_groups as $cur_group) {
 		if ($cur_group->is($group))
 			$user->group = $group;
-		if (is_array($groups) && in_array($cur_group->guid, $groups)) {
+		if (in_array($cur_group->guid, $groups)) {
 			$user->add_group($cur_group);
 		} else {
 			$user->del_group($cur_group);

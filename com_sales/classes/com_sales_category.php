@@ -26,6 +26,7 @@ class com_sales_category extends entity {
 		parent::__construct();
 		$this->add_tag('com_sales', 'category');
 		// Defaults
+		$this->enabled = true;
 		$this->parent = null;
 		$this->children = array();
 		$this->products = array();

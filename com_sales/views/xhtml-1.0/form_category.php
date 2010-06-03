@@ -29,6 +29,10 @@ $this->note = 'Provide category details in this form.';
 			<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
 	</div>
 	<div class="pf-element">
+		<label><span class="pf-label">Enabled</span>
+			<input class="pf-field ui-widget-content" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
+	</div>
+	<div class="pf-element">
 		<label>
 			<span class="pf-label">Parent</span>
 			<select class="pf-field ui-widget-content" name="parent">

@@ -22,14 +22,12 @@ if (empty($code)) {
 	$product = null;
 } elseif(!$_REQUEST['useguid']) {
 	$product = $pines->com_sales->get_product_by_code($code);
-	if (!$product->enabled) {
+	if (!$product->enabled)
 		$product = null;
-	}
 } else {
 	$product = com_sales_product::factory((int) $code);
-	if (!isset($product->guid) || !$product->enabled) {
+	if (!isset($product->guid) || !$product->enabled)
 		$product = null;
-	}
 }
 
 if (isset($product)) {

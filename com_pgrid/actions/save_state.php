@@ -17,7 +17,7 @@ if (!gatekeeper())
 $cur_state = $_REQUEST['state'];
 $cur_view = $_REQUEST['view'];
 if (isset($_SESSION['user'])) {
-	if (!is_array($_SESSION['user']->pgrid_saved_states))
+	if ((array) $_SESSION['user']->pgrid_saved_states !== $_SESSION['user']->pgrid_saved_states)
 		$_SESSION['user']->pgrid_saved_states = array();
 	$_SESSION['user']->pgrid_saved_states[$cur_view] = $cur_state;
 	$_SESSION['user']->save();

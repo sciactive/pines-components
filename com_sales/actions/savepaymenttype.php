@@ -58,7 +58,13 @@ if ($pines->config->com_sales->global_payment_types)
 	$payment_type->ac->other = 1;
 
 if ($payment_type->change_type) {
-	$change_type = $pines->entity_manager->get_entity(array('class' => com_sales_payment_type), array('&', 'data' => array('change_type', true), 'tag' => array('com_sales', 'payment_type')));
+	$change_type = $pines->entity_manager->get_entity(
+			array('class' => com_sales_payment_type),
+			array('&',
+				'data' => array('change_type', true),
+				'tag' => array('com_sales', 'payment_type')
+			)
+		);
 	if (isset($change_type) && $change_type->guid != $_REQUEST['id']) {
 		$change_type->change_type = false;
 		if ($change_type->save()) {

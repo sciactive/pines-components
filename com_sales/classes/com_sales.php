@@ -62,7 +62,7 @@ class com_sales extends component {
 		if (!is_object($arguments['product']))
 			return false;
 		// If the product has no actions associated with it, don't bother going through the actions.
-		if (!is_array($arguments['product']->actions) || empty($arguments['product']->actions))
+		if (!is_array($arguments['product']->actions) || !$arguments['product']->actions)
 			return true;
 		foreach ($pines->config->com_sales->product_actions as $cur_action) {
 			if (is_array($cur_action['type'])) {
@@ -125,8 +125,13 @@ class com_sales extends component {
 		global $pines;
 		return $pines->entity_manager->get_entity(
 				array('class' => com_sales_product),
-				array('&', 'tag' => array('com_sales', 'product')),
-				array('|', 'data' => array('sku', $code), 'array' => array('additional_barcodes', $code))
+				array('|',
+					'data' => array('sku', $code),
+					'array' => array('additional_barcodes', $code)
+				),
+				array('&',
+					'tag' => array('com_sales', 'product')
+				)
 			);
 	}
 

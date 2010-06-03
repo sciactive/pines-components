@@ -50,7 +50,7 @@ class com_hrm_employee extends entity {
 	 * @return int Number of seconds worked.
 	 */
 	public function time_sum($time_start = null, $time_end = null) {
-		if (!is_array($this->timeclock))
+		if ((array) $this->timeclock !== $this->timeclock)
 			return 0;
 		// We need to copy the array because the entity won't keep track of the array pointer.
 		$timeclock = $this->timeclock;

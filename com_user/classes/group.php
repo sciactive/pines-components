@@ -127,33 +127,23 @@ class group extends able_object implements group_interface {
 		global $pines;
 		if ($descendents) {
 			$groups = $this->get_descendents();
-			$groups[] = $this;
-			$return = $pines->entity_manager->get_entities(
-					array('class' => user),
-					array('|',
-						'ref' => array(
-							array('group', $groups),
-							array('groups', $groups)
-						)
-					),
-					array('&',
-						'tag' => array('com_user', 'user')
-					)
-				);
 		} else {
-			$return = $pines->entity_manager->get_entities(
-					array('class' => user),
-					array('|',
-						'ref' => array(
-							array('group', $this),
-							array('groups', $this)
-						)
-					),
-					array('&',
-						'tag' => array('com_user', 'user')
-					)
-				);
+			$groups = array();
 		}
+		$groups[] = $this;
+		$return = $pines->entity_manager->get_entities(
+				array('class' => user),
+				array('|',
+					'ref' => array(
+						array('group', $groups),
+						array('groups', $groups)
+					)
+				),
+				array('&',
+					'data' => array('enabled', true),
+					'tag' => array('com_user', 'user')
+				)
+			);
 		return $return;
 	}
 

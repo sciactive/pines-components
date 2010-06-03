@@ -26,6 +26,7 @@ if ( isset($_REQUEST['id']) ) {
 }
 
 $category->name = $_REQUEST['name'];
+$category->enabled = ($_REQUEST['enabled'] == 'ON');
 
 // Do the check now in case the parent category is saved.
 if (empty($category->name)) {

@@ -39,9 +39,7 @@ foreach ($component->defaults as $cur_var) {
 		continue;
 	if (is_array($cur_var['options'])) {
 		if (is_array($cur_var['value'])) {
-			$rvalue = $_REQUEST['opt_multi_'.$cur_var['name']];
-			if (!is_array($rvalue))
-				$rvalue = array();
+			$rvalue = (array) $_REQUEST['opt_multi_'.$cur_var['name']];
 			foreach ($rvalue as &$cur_rvalue) {
 				$cur_rvalue = unserialize($cur_rvalue);
 			}
@@ -62,27 +60,21 @@ foreach ($component->defaults as $cur_var) {
 		}
 	} elseif (is_array($cur_var['value'])) {
 		if (is_int($cur_var['value'][0])) {
-			$rvalue = explode(';;', $_REQUEST['opt_int_'.$cur_var['name']]);
-			if (!is_array($rvalue))
-				$rvalue = array();
+			$rvalue = (array) explode(';;', $_REQUEST['opt_int_'.$cur_var['name']]);
 			foreach ($rvalue as &$cur_rvalue) {
 				$cur_rvalue = (int) $cur_rvalue;
 			}
 			unset($cur_rvalue);
 			$component->config[] = array('name' => $cur_var['name'], 'value' => $rvalue);
 		} elseif (is_float($cur_var['value'][0])) {
-			$rvalue = explode(';;', $_REQUEST['opt_float_'.$cur_var['name']]);
-			if (!is_array($rvalue))
-				$rvalue = array();
+			$rvalue = (array) explode(';;', $_REQUEST['opt_float_'.$cur_var['name']]);
 			foreach ($rvalue as &$cur_rvalue) {
 				$cur_rvalue = (float) $cur_rvalue;
 			}
 			unset($cur_rvalue);
 			$component->config[] = array('name' => $cur_var['name'], 'value' => $rvalue);
 		} elseif (is_string($cur_var['value'][0])) {
-			$rvalue = explode(';;', $_REQUEST['opt_string_'.$cur_var['name']]);
-			if (!is_array($rvalue))
-				$rvalue = array();
+			$rvalue = (array) explode(';;', $_REQUEST['opt_string_'.$cur_var['name']]);
 			foreach ($rvalue as &$cur_rvalue) {
 				$cur_rvalue = (string) $cur_rvalue;
 			}

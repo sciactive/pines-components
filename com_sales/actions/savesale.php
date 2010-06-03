@@ -59,6 +59,12 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid') {
 				$product_error = true;
 				continue;
 			}
+			if (!$cur_product_entity->enabled) {
+				pines_error("Product with id [$cur_product->key] is not enabled.");
+				unset($sale->products[$key]);
+				$product_error = true;
+				continue;
+			}
 			if ($cur_product_entity->serialized)
 				$cur_qty = 1;
 			if ($cur_product_entity->serialized && empty($cur_serial)) {
@@ -119,6 +125,11 @@ if ($sale->status != 'paid') {
 			continue;
 		if (!isset($cur_payment_type_entity->guid)) {
 			pines_error("Payment type with id [$cur_payment->key] was not found.");
+			$payment_error = true;
+			continue;
+		}
+		if (!$cur_payment_type_entity->enabled) {
+			pines_error("Payment type with id [$cur_payment->key] is not enabled.");
 			$payment_error = true;
 			continue;
 		}

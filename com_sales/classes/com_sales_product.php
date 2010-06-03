@@ -108,20 +108,24 @@ class com_sales_product extends entity {
 		global $pines;
 		$module = new module('com_sales', 'form_product', 'content');
 		$module->entity = $this;
-		$module->categories = $pines->entity_manager->get_entities(array('class' => com_sales_category), array('&', 'tag' => array('com_sales', 'category')));
-		$module->manufacturers = $pines->entity_manager->get_entities(array('class' => com_sales_manufacturer), array('&', 'tag' => array('com_sales', 'manufacturer')));
-		if (!is_array($module->manufacturers))
-			$module->manufacturers = array();
-		$module->vendors = $pines->entity_manager->get_entities(array('class' => com_sales_vendor), array('&', 'tag' => array('com_sales', 'vendor')));
-		if (!is_array($module->vendors))
-			$module->vendors = array();
-		$module->tax_fees = $pines->entity_manager->get_entities(array('class' => com_sales_tax_fee), array('&', 'tag' => array('com_sales', 'tax_fee')));
-		if (!is_array($module->tax_fees))
-			$module->tax_fees = array();
+		$module->categories = (array) $pines->entity_manager->get_entities(
+				array('class' => com_sales_category),
+				array('&',
+					'data' => array('enabled', true),
+					'tag' => array('com_sales', 'category')
+				)
+			);
+		$module->manufacturers = (array) $pines->entity_manager->get_entities(array('class' => com_sales_manufacturer), array('&', 'tag' => array('com_sales', 'manufacturer')));
+		$module->vendors = (array) $pines->entity_manager->get_entities(array('class' => com_sales_vendor), array('&', 'tag' => array('com_sales', 'vendor')));
+		$module->tax_fees = (array) $pines->entity_manager->get_entities(
+				array('class' => com_sales_tax_fee),
+				array('&',
+					'data' => array('enabled', true),
+					'tag' => array('com_sales', 'tax_fee')
+				)
+			);
 		$module->actions = (array) $pines->config->com_sales->product_actions;
-		if (!is_array($module->actions))
-			$module->actions = array();
-
+		
 		return $module;
 	}
 }

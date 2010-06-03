@@ -103,17 +103,17 @@ class com_sales_po extends entity {
 		global $pines;
 		$module = new module('com_sales', 'form_po', 'content');
 		$module->entity = $this;
-		$module->locations = $pines->user_manager->get_group_array();
-		$module->shippers = $pines->entity_manager->get_entities(array('class' => com_sales_shipper), array('&', 'tag' => array('com_sales', 'shipper')));
-		if (!is_array($module->shippers))
-			$module->shippers = array();
-		$module->vendors = $pines->entity_manager->get_entities(array('class' => com_sales_vendor), array('&', 'tag' => array('com_sales', 'vendor')));
-		if (!is_array($module->vendors))
-			$module->vendors = array();
-		$module->products = $pines->entity_manager->get_entities(array('class' => com_sales_product), array('&', 'tag' => array('com_sales', 'product')));
-		if (!is_array($module->products))
-			$module->products = array();
-
+		$module->locations = (array) $pines->user_manager->get_group_array();
+		$module->shippers = (array) $pines->entity_manager->get_entities(array('class' => com_sales_shipper), array('&', 'tag' => array('com_sales', 'shipper')));
+		$module->vendors = (array) $pines->entity_manager->get_entities(array('class' => com_sales_vendor), array('&', 'tag' => array('com_sales', 'vendor')));
+		$module->products = (array) $pines->entity_manager->get_entities(
+				array('class' => com_sales_product),
+				array('&',
+					'data' => array('enabled', true),
+					'tag' => array('com_sales', 'product')
+				)
+			);
+		
 		return $module;
 	}
 }

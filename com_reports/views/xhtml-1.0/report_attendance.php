@@ -197,7 +197,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		?>
 			<tr class="total">
 				<td><?php echo $cur_date['date']; ?></td>
-				<td><?php echo $this->location->name; ?></td>
+				<td><?php echo $this->employee->group->name; ?></td>
 				<td>Scheduled</td>
 				<td><?php if (isset($cur_date['sched_start'])) echo format_date($cur_date['sched_start'], 'time_short'); ?></td>
 				<td><?php if (isset($cur_date['sched_end'])) echo format_date($cur_date['sched_end'], 'time_short'); ?></td>
@@ -212,8 +212,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					<td><?php echo format_date($cur_clock['in'], 'time_short'); ?></td>
 					<td>
 					<?php
-						echo format_date($cur_clock['out'], 'time_short');
-						echo (isset($cur_clock['over']) ? ' ('.$cur_clock['over'].')' : '');
+						if (isset($cur_clock['out'])) {
+							echo format_date($cur_clock['out'], 'time_short');
+							echo (isset($cur_clock['over']) ? ' ('.$cur_clock['over'].')' : '');
+						}
 					?>
 					</td>
 					<td><?php echo round($cur_clock['total'] / 3600, 2).' hours'; ?></td>

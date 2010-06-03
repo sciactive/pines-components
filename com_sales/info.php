@@ -36,6 +36,7 @@ return array(
 		array('listsales', 'List Sales', 'User can see sales.'),
 		array('newsale', 'Create Sales', 'User can create new sales.'),
 		array('editsale', 'Edit Sales', 'User can edit current sales.'),
+		array('returnsale', 'Return Sales', 'User can create return sales and products.'),
 		array('deletesale', 'Delete Sales', 'User can delete current sales.'),
 		array('listmanufacturers', 'List Manufacturers', 'User can see manufacturers.'),
 		array('newmanufacturer', 'Create Manufacturers', 'User can create new manufacturers.'),

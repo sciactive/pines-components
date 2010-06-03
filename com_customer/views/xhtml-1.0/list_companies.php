@@ -55,16 +55,90 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
-		$("#company_grid").pgrid(cur_options);
+		var company_grid = $("#company_grid").pgrid(cur_options);
+		company_grid.pgrid_get_all_rows().pgrid_delete();
+
+		var company_search_box = $("#company_search_box");
+		var company_search_button = $("#company_search_button");
+		company_search_box.keydown(function(e){
+			if (e.keyCode == 13)
+				company_search_button.click();
+		});
+		company_search_button.click(function(search_string){
+			var search_string = company_search_box.val();
+			if (search_string == "") {
+				alert("Please enter a search string.");
+				return;
+			}
+			var loader;
+			$.ajax({
+				url: "<?php echo pines_url("com_customer", "companysearch"); ?>",
+				type: "POST",
+				dataType: "json",
+				data: {"q": search_string},
+				beforeSend: function(){
+					loader = $.pnotify({
+						pnotify_title: 'Search',
+						pnotify_text: 'Searching the database...',
+						pnotify_notice_icon: 'picon picon_16x16_throbber',
+						pnotify_nonblock: true,
+						pnotify_hide: false,
+						pnotify_history: false
+					});
+					company_grid.pgrid_get_all_rows().pgrid_delete();
+				},
+				complete: function(){
+					loader.pnotify_remove();
+				},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured:\n"+XMLHttpRequest.status+": "+textStatus);
+				},
+				success: function(data){
+					if (!data) {
+						alert("No companies were found that matched the query.");
+						return;
+					}
+					var struct = [];
+					$.each(data, function(){
+						struct.push({
+							"key": this.guid,
+							"values": [
+								this.guid,
+								this.name,
+								this.address_type == 'us' ? 'US' : 'Intl',
+								this.address,
+								this.city,
+								this.state,
+								this.zip,
+								this.email,
+								this.phone,
+								this.fax,
+								this.website
+							]
+						});
+					});
+					company_grid.pgrid_add(struct);
+				}
+			});
+		});
 	});
 
 	// ]]>
 </script>
+<div class="pf-form">
+	<div class="pf-element">
+		<label>
+			<span class="pf-label">Search</span>
+			<input class="pf-field ui-widget-content" type="text" id="company_search_box" />
+			<button class="pf-field ui-state-default ui-corner-all" type="button" id="company_search_button">Search</button>
+		</label>
+	</div>
+</div>
 <table id="company_grid">
 	<thead>
 		<tr>
 			<th>ID</th>
-			<th>Company Name</th>
+			<th>Name</th>
 			<th>Address Type</th>
 			<th>Address</th>
 			<th>City</th>
@@ -77,20 +151,18 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		</tr>
 	</thead>
 	<tbody>
-	<?php foreach($this->companies as $company) { ?>
-		<tr title="<?php echo $company->guid; ?>">
-			<td><?php echo $company->guid; ?></td>
-			<td><?php echo $company->name; ?></td>
-			<td><?php echo $company->address_type == 'us' ? 'US' : 'Intl'; ?></td>
-			<td><?php echo $company->address_type == 'us' ? $company->address_1 .' '. $company->address_2 : $company->address_international; ?></td>
-			<td><?php echo $company->city; ?></td>
-			<td><?php echo $company->state; ?></td>
-			<td><?php echo $company->zip; ?></td>
-			<td><?php echo $company->email; ?></td>
-			<td><?php echo format_phone($company->phone); ?></td>
-			<td><?php echo format_phone($company->fax); ?></td>
-			<td><?php echo $company->website; ?></td>
+		<tr>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
 		</tr>
-	<?php } ?>
 	</tbody>
 </table>

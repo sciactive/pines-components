@@ -52,6 +52,7 @@ foreach ($companies as $key => &$cur_company) {
 	$json_struct = (object) array(
 		'guid'		=> $cur_company->guid,
 		'name'		=> $cur_company->name,
+		'address_type'	=> $cur_company->address_type,
 		'address'	=> $cur_company->address_type == 'us' ? $cur_company->address_1 : $cur_company->address_international,
 		'city'		=> $cur_company->city,
 		'state'		=> $cur_company->state,

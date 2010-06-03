@@ -24,28 +24,14 @@ class com_customer extends component {
 	 * Creates and attaches a module which lists companies.
 	 */
 	function list_companies() {
-		global $pines;
-
 		$module = new module('com_customer', 'list_companies', 'content');
-
-		if ( empty($module->companies) ) {
-			//$module->detach();
-			pines_notice('There are no companies.');
-		}
 	}
 	
 	/**
 	 * Creates and attaches a module which lists customers.
 	 */
 	function list_customers() {
-		global $pines;
-
 		$module = new module('com_customer', 'list_customers', 'content');
-
-		if ( empty($module->customers) ) {
-			//$module->detach();
-			pines_notice('There are no customers.');
-		}
 	}
 
 	/**

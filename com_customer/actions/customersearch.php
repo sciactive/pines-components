@@ -82,7 +82,7 @@ foreach ($customers as $key => &$cur_customer) {
 		'login_disabled'=>	$cur_customer->login_disabled,
 		'member'		=>	$cur_customer->member,
 		'valid_member'	=>  $cur_customer->valid_member(),
-		'member_exp'	=>	format_date($cur_customer->member_exp),
+		'member_exp'	=>	$cur_customer->member_exp ? format_date($cur_customer->member_exp) : '',
 		'points'		=>	$cur_customer->points
 	);
 	$cur_customer = $json_struct;

@@ -239,6 +239,12 @@ $pines->com_pgrid->load();
 						<option value="vanilla" <?php echo ($this->entity->color == 'vanilla') ? 'selected="selected"' : ''; ?>>Vanilla</option>
 					</select></label>
 			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Hours in Full Workday</span>
+					<span class="pf-note">When the employee is scheduled "all day", it will be considered this many hours.</span>
+					<span class="pf-note">Leave blank to use the default.</span>
+					<input class="pf-field ui-widget-content" type="text" name="workday_length" size="24" value="<?php echo $this->entity->workday_length; ?>" /></label>
+			</div>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Description</span><br />
 				<textarea rows="3" cols="35" class="pf-field peditor" style="width: 100%;" name="description"><?php echo $this->entity->description; ?></textarea>

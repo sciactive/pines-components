@@ -1,22 +1,22 @@
 /*
- * FullCalendar v1.4.4 Google Calendar Extension
+ * FullCalendar v1.4.6 Google Calendar Extension
  *
  * Copyright (c) 2009 Adam Shaw
  * Dual licensed under the MIT and GPL licenses:
  *   http://www.opensource.org/licenses/mit-license.php
  *   http://www.gnu.org/licenses/gpl.html
  *
- * Date: Wed Feb 3 22:56:20 2010 -0800
+ * Date: Mon May 31 10:18:29 2010 -0700
  *
  */
 
 (function($) {
 
 	$.fullCalendar.gcalFeed = function(feedUrl, options) {
-		
+
 		feedUrl = feedUrl.replace(/\/basic$/, '/full');
 		options = options || {};
-		
+
 		return function(start, end, callback) {
 			var params = {
 				'start-min': $.fullCalendar.formatDate(start, 'u'),
@@ -65,7 +65,7 @@
 				callback(events);
 			});
 		}
-		
+
 	}
 
 })(jQuery);

@@ -65,22 +65,20 @@ if (empty($query)) {
 
 foreach ($customers as $key => &$cur_customer) {
 	$json_struct = (object) array(
-		'key' => $cur_customer->guid,
-		'values' => array(
-			$cur_customer->name,
-			$cur_customer->email,
-			$cur_customer->company->name ? $cur_customer->company->name : '',
-			$cur_customer->job_title,
-			$cur_customer->address_1,
-			$cur_customer->address_2,
-			$cur_customer->city,
-			$cur_customer->state,
-			$cur_customer->zip,
-			format_phone($cur_customer->phone_home),
-			format_phone($cur_customer->phone_work),
-			format_phone($cur_customer->phone_cell),
-			format_phone($cur_customer->fax)
-		)
+		'guid'		=> $cur_customer->guid,
+		'name'		=> $cur_customer->name,
+		'email'		=> $cur_customer->email,
+		'company'	=> $cur_customer->company->name ? $cur_customer->company->name : '',
+		'title'		=>	$cur_customer->job_title,
+		'address_1' => $cur_customer->address_1,
+		'address_2' =>	$cur_customer->address_2,
+		'city'		=>	$cur_customer->city,
+		'state'		=>	$cur_customer->state,
+		'zip'		=>	$cur_customer->zip,
+		'phone_home'=>	format_phone($cur_customer->phone_home),
+		'phone_work'=>	format_phone($cur_customer->phone_work),
+		'phone_cell'=>	format_phone($cur_customer->phone_cell),
+		'fax'		=>	format_phone($cur_customer->fax)
 	);
 	$cur_customer = $json_struct;
 }

@@ -37,17 +37,15 @@ foreach ($employees as $key => &$cur_employee) {
 		(preg_replace('/\D/', '', $query) != '' && strpos($cur_employee->phone_cell, preg_replace('/\D/', '', $query)) !== false)
 		) {
 		$json_struct = (object) array(
-			'key' => $cur_employee->guid,
-			'values' => array(
-				$cur_employee->name_first,
-				$cur_employee->name_last,
-				$cur_employee->job_title,
-				$cur_employee->email,
-				$cur_employee->city,
-				$cur_employee->state,
-				$cur_employee->zip,
-				format_phone($cur_employee->phone_cell)
-			)
+			'guid'		=> $cur_employee->guid,
+			'firstname'	=> $cur_employee->name_first,
+			'lastname'	=> $cur_employee->name_last,
+			'title'		=> $cur_employee->job_title,
+			'email'		=> $cur_employee->email,
+			'city'		=> $cur_employee->city,
+			'state'		=> $cur_employee->state,
+			'zip'		=> $cur_employee->zip,
+			'phone'		=> format_phone($cur_employee->phone_cell)
 		);
 		$cur_employee = $json_struct;
 	} else {

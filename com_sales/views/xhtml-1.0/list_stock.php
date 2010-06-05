@@ -83,7 +83,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo $stock->vendor->name; ?></td>
 			<td><?php echo "{$stock->location->name} [{$stock->location->groupname}]"; ?></td>
 			<td><?php echo $stock->cost; ?></td>
-			<td><?php echo $stock->status; ?></td>
+			<td><?php echo ucwords($stock->status); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

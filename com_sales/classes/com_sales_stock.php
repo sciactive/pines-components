@@ -51,7 +51,7 @@ class com_sales_stock extends entity {
 	}
 
 	/**
-	 * Receive the stock entry on a PO/transfer/etc.
+	 * Receive the stock entry on a PO/transfer/return/etc.
 	 *
 	 * This process creates a transaction entity. It adds itself to the
 	 * receiving entity's "received" var. It updates the location of the stock
@@ -59,13 +59,14 @@ class com_sales_stock extends entity {
 	 *
 	 * If $location is not set, the current user's primary group is used.
 	 *
+	 * @param string $reason The reason for the stock receipt. Such as "received_po".
 	 * @param entity &$on_entity The entity which the product is to be received on.
 	 * @param entity $location The group to use for the new location.
 	 * @return bool True on success, false on failure.
 	 */
-	function receive(&$on_entity = null, $location = false) {
+	function receive($reason = 'other', &$on_entity = null, $location = null) {
 		global $pines;
-		if (!isset($on_entity))
+		if (!in_array($reason, array('received_po', 'received_transfer', 'sale_voided', 'sale_returned', 'other')))
 			return false;
 
 		// Keep track of the status of the whole process.
@@ -80,26 +81,24 @@ class com_sales_stock extends entity {
 			$old_location = $this->location;
 		// TODO: Copy location to group (optional) to allow easier access control.
 		$this->location = ($location ? $location : $_SESSION['user']->group);
-		if ($on_entity->has_tag('po')) {
-			$tx->type = 'received_po';
-		} elseif ($on_entity->has_tag('transfer')) {
-			$tx->type = 'received_transfer';
-		} else {
-			$tx->type = 'received_other';
-		}
+		$tx->type = 'received';
+		$tx->reason = $reason;
 		if (!($this->guid))
 			$return = $return && $this->save();
 
-		if ((array) $on_entity->received !== $on_entity->received)
-			$on_entity->received = array();
-		$on_entity->received[] = $this;
-		$return = $return && $on_entity->save();
+		if (!isset($on_entity)) {
+			if ((array) $on_entity->received !== $on_entity->received)
+				$on_entity->received = array();
+			$on_entity->received[] = $this;
+			$return = $return && $on_entity->save();
+		}
 
 		$tx->old_status = $old_status;
 		$tx->new_status = $this->status;
 		$tx->old_location = $old_location;
 		$tx->new_location = $this->location;
-		$tx->ref = $on_entity;
+		if (isset($on_entity))
+			$tx->ref = $on_entity;
 		$tx->stock = $this;
 		$return = $return && $tx->save();
 		return $return;
@@ -109,19 +108,19 @@ class com_sales_stock extends entity {
 	 * Remove the stock entry from available inventory.
 	 *
 	 * This process creates a transaction entity. It updates the location of the
-	 * stock entry, and sets the status to "other" by default.
+	 * stock entry, and sets the status to "unavailable".
 	 *
 	 * If $location is not set, it becomes null, meaning the stock is no longer
 	 * located within the company.
 	 *
+	 * @param string $reason The reason for the stock removal. Such as "sold_at_store".
 	 * @param entity &$on_entity The entity which the product is to be removed by.
-	 * @param string $status The new status for the stock. Such as "sold_at_store".
 	 * @param entity $location The group to use for the new location.
 	 * @return bool True on success, false on failure.
 	 */
-	function remove(&$on_entity = null, $status = 'other', $location = null) {
+	function remove($reason = 'other', &$on_entity = null, $location = null) {
 		global $pines;
-		if (!isset($on_entity))
+		if (!in_array($reason, array('sold_at_store', 'sold_pending', 'other')))
 			return false;
 
 		// Keep track of the status of the whole process.
@@ -131,12 +130,13 @@ class com_sales_stock extends entity {
 
 		if ($this->status)
 			$old_status = $this->status;
-		$this->status = (string) $status;
+		$this->status = 'unavailable';
 		if ($this->location)
 			$old_location = $this->location;
 		// TODO: Copy location to GID (optional) to allow easier access control.
 		$this->location = $location;
 		$tx->type = 'removed';
+		$tx->reason = $reason;
 
 		// Make sure we have a GUID before saving the tx.
 		if (!($this->guid))
@@ -146,7 +146,8 @@ class com_sales_stock extends entity {
 		$tx->new_status = $this->status;
 		$tx->old_location = $old_location;
 		$tx->new_location = $this->location;
-		$tx->ref = $on_entity;
+		if (isset($on_entity))
+			$tx->ref = $on_entity;
 		$tx->stock = $this;
 		$return = $return && $tx->save();
 		return $return;

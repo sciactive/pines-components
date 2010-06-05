@@ -30,7 +30,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', text: 'Edit', extra_class: 'picon picon_16x16_document-edit', url: '<?php echo pines_url('com_sales', 'editsale', array('id' => '__title__')); ?>'},
 				<?php } ?>
 				{type: 'button', text: 'Receipt', extra_class: 'picon picon_16x16_document-print-preview', double_click: true, url: '<?php echo pines_url('com_sales', 'receiptsale', array('id' => '__title__')); ?>'},
-				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon_16x16_mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
+				<?php if (gatekeeper('com_sales/newreturn')) { ?>
+				{type: 'button', text: 'Return', extra_class: 'picon picon_16x16_edit-undo', url: '<?php echo pines_url('com_sales', 'returnsale', array('id' => '__title__')); ?>'},
+				<?php } if (gatekeeper('com_sales/voidsale')) { ?>
+				{type: 'button', text: 'Void', extra_class: 'picon picon_16x16_edit-delete-shred', confirm: true, url: '<?php echo pines_url('com_sales', 'voidsale', array('id' => '__title__')); ?>'},
+				<?php } ?>
 				{type: 'separator'},
 				<?php if (gatekeeper('com_sales/deletesale')) { ?>
 				{type: 'button', text: 'Delete', extra_class: 'picon picon_16x16_edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_sales', 'deletesale', array('id' => '__title__')); ?>', delimiter: ','},

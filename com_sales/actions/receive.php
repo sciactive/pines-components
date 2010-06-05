@@ -54,6 +54,7 @@ foreach ($products as $cur_product) {
 		if (isset($origin) && isset($origin[0])) {
 			$stock = $origin[1];
 			$origin = $origin[0];
+			$status = 'received_transfer';
 		} else {
 			// Search for the product on a PO.
 			$origin = $pines->com_sales->get_origin_po($cur_product_entity, $_SESSION['user']->group);
@@ -61,13 +62,14 @@ foreach ($products as $cur_product) {
 			$stock->product = $cur_product_entity;
 			if ($cur_product_entity->serialized)
 				$stock->serial = $serial;
+			$status = 'received_po';
 		}
 		if (!isset($origin)) {
 			pines_notice("Product [{$cur_product_entity->name}] with code {$cur_product['product_code']} was not found on any PO or transfer! Skipping...");
 			continue;
 		}
 		
-		$stock->receive($origin);
+		$stock->receive($status, $origin);
 		$stock->save();
 
 		$module->success[] = array($stock, $origin);

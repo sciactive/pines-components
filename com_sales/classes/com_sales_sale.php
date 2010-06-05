@@ -92,40 +92,14 @@ class com_sales_sale extends entity {
 					'tag' => array('com_sales', 'payment_type')
 				)
 			);
+		$module->returns = (array) $pines->entity_manager->get_entities(
+				array('class' => com_sales_return),
+				array('&',
+					'ref' => array('sale', $this),
+					'tag' => array('com_sales', 'return')
+				)
+			);
 
-		return $module;
-	}
-
-	/**
-	 * Print a form to return the sale.
-	 * @return module The form's module.
-	 */
-	public function print_return() {
-		global $pines;
-		$module = new module('com_sales', 'form_return', 'content');
-		$module->entity = $this;
-		$module->categories = (array) $pines->entity_manager->get_entities(
-				array('class' => com_sales_category),
-				array('&',
-					'data' => array('enabled', true),
-					'tag' => array('com_sales', 'category')
-				)
-			);
-		$module->tax_fees = (array) $pines->entity_manager->get_entities(
-				array('class' => com_sales_tax_fee),
-				array('&',
-					'data' => array('enabled', true),
-					'tag' => array('com_sales', 'tax_fee')
-				)
-			);
-		$module->payment_types = (array) $pines->entity_manager->get_entities(
-				array('class' => com_sales_payment_type),
-				array('&',
-					'data' => array('enabled', true),
-					'tag' => array('com_sales', 'payment_type')
-				)
-			);
-		
 		return $module;
 	}
 
@@ -372,7 +346,7 @@ class com_sales_sale extends entity {
 	/**
 	 * Invoice the sale.
 	 *
-	 * This process will remove any sold items from stock. Payment is not
+	 * This process may remove any sold items from stock. Payment is not
 	 * considered.
 	 *
 	 * A sale transaction is created, and the sale's status is changed to
@@ -479,6 +453,9 @@ class com_sales_sale extends entity {
 	 * @return bool True on success, false on any failure.
 	 */
 	public function remove_stock() {
+		if ($this->removed_stock)
+			return false;
+		$this->removed_stock = true;
 		// Keep track of the whole process.
 		$return = true;
 		// Go through each product, marking its stock as sold.
@@ -488,12 +465,13 @@ class com_sales_sale extends entity {
 				continue;
 			foreach ($cur_product['stock_entities'] as &$cur_stock) {
 				if ($cur_product['delivery'] == 'in-store') {
-					$return = $return && $cur_stock->remove($this, 'sold_at_store') && $cur_stock->save();
+					$return = $return && $cur_stock->remove('sold_at_store', $this) && $cur_stock->save();
 				} else {
-					$return = $return && $cur_stock->remove($this, 'sold_pending', $cur_stock->location) && $cur_stock->save();
+					$return = $return && $cur_stock->remove('sold_pending', $this, $cur_stock->location) && $cur_stock->save();
 				}
 			}
 		}
+		unset($cur_product);
 		return $return;
 	}
 
@@ -502,6 +480,9 @@ class com_sales_sale extends entity {
 	 */
 	public function perform_actions() {
 		global $pines;
+		if ($this->performed_actions)
+			return;
+		$this->performed_actions = true;
 		// Go through each product, calling actions.
 		foreach ($this->products as &$cur_product) {
 			// Call product actions for all products without stock entries.
@@ -537,13 +518,15 @@ class com_sales_sale extends entity {
 				));
 			}
 		}
+		unset($cur_product);
 	}
 
 	/**
 	 * Calculate and set the sale's totals.
 	 *
 	 * This process adds "line_total" and "fees" to each product on the sale,
-	 * and adds "subtotal", "item_fees", "taxes", and "total" to the sale itself.
+	 * and adds "subtotal", "item_fees", "taxes", and "total" to the sale
+	 * itself.
 	 *
 	 * @return bool True on success, false on failure.
 	 */
@@ -639,6 +622,103 @@ class com_sales_sale extends entity {
 		$this->taxes = $pines->com_sales->round($taxes, $pines->config->com_sales->dec);
 		$this->total = $pines->com_sales->round($total, $pines->config->com_sales->dec);
 		return true;
+	}
+
+	/**
+	 * Void the sale.
+	 *
+	 * A sale transaction is created, and the sale's status is changed to
+	 * 'voided'.
+	 *
+	 * @return bool True on success, false on failure.
+	 * @todo Void payments.
+	 * @todo Write void parts of product actions.
+	 */
+	public function void() {
+		global $pines;
+		// Keep track of the whole process.
+		$return = true;
+		if ($this->removed_stock) {
+			// Go through each product, returning its stock.
+			foreach ($this->products as &$cur_product) {
+				// Return stock to inventory.
+				if (!is_array($cur_product['stock_entities']))
+					continue;
+				foreach ($cur_product['stock_entities'] as &$cur_stock) {
+					$last_tx = $pines->entity_manager->get_entity(
+							array('reverse' => true, 'class' => com_sales_stock),
+							array('&',
+								'data' => array('type', 'removed'),
+								'ref' => array('ref', $this),
+								'tag' => array('com_sales', 'transaction', 'stock_tx')
+							)
+						);
+					if ($last_tx) {
+						$return = $return && $cur_stock->receive('sold_at_store', $this, $last_tx->old_location) && $cur_stock->save();
+					} else {
+						$return = $return && $cur_stock->receive('sold_at_store', $this) && $cur_stock->save();
+					}
+				}
+			}
+			unset($cur_product);
+		}
+		if ($this->performed_actions) {
+			// Go through each product, calling actions.
+			foreach ($this->products as &$cur_product) {
+				// Call product actions for all products without stock entries.
+				$i = $cur_product['quantity'] - count($cur_product['stock_entities']);
+				if ($i > 0) {
+					$pines->com_sales->call_product_actions(array(
+						'type' => 'voided',
+						'product' => $cur_product['entity'],
+						'sale' => $this,
+						'serial' => $cur_product['serial'],
+						'delivery' => $cur_product['delivery'],
+						'price' => $cur_product['price'],
+						'discount' => $cur_product['discount'],
+						'line_total' => $cur_product['line_total'],
+						'fees' => $cur_product['fees']
+					), $i);
+				}
+				// Call product actions on stock.
+				if (!is_array($cur_product['stock_entities']))
+					continue;
+				foreach ($cur_product['stock_entities'] as &$cur_stock) {
+					$pines->com_sales->call_product_actions(array(
+						'type' => 'voided',
+						'product' => $cur_product['entity'],
+						'stock_entry' => $cur_stock,
+						'sale' => $this,
+						'serial' => $cur_product['serial'],
+						'delivery' => $cur_product['delivery'],
+						'price' => $cur_product['price'],
+						'discount' => $cur_product['discount'],
+						'line_total' => $cur_product['line_total'],
+						'fees' => $cur_product['fees']
+					));
+				}
+			}
+			unset($cur_product);
+		}
+
+		// Complete the transaction.
+		if ($return) {
+			// Make a transaction entry.
+			$tx = com_sales_tx::factory('com_sales', 'transaction', 'sale_tx');
+
+			$this->status = 'voided';
+			$tx->type = 'voided';
+
+			// Make sure we have a GUID before saving the tx.
+			if (!($this->guid))
+				$return = $return && $this->save();
+
+			$tx->ticket = $this;
+			$return = $return && $tx->save();
+		}
+
+		$this->void_date = time();
+		return $return;
 	}
 }
 

@@ -11,10 +11,9 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/trackproducts') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listsales'));
+if ( !gatekeeper() )
+	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'dateselectform'));
 
-$pines->page->override = true;
-$pines->com_sales->date_select_form($_REQUEST['all_time'], $_REQUEST['start_date'], $_REQUEST['end_date']);
+$pines->com_sales->date_select_form($_REQUEST['all_time'] == 'true', empty($_REQUEST['start_date']) ? null : $_REQUEST['start_date'], empty($_REQUEST['end_date']) ? null : $_REQUEST['end_date']);
 
 ?>

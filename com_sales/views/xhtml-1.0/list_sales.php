@@ -12,18 +12,39 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Sales';
 $pines->com_pgrid->load();
+$pines->com_jstree->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/list_sales'];
 ?>
 <script type="text/javascript">
 	// <![CDATA[
-
 	pines(function(){
+		var submit_url = "<?php echo pines_url('com_sales', 'listsales'); ?>";
+		var submit_search = function(){
+			// Submit the form with all of the fields.
+			pines.post(submit_url, {
+				"location": location,
+				"all_time": all_time,
+				"start_date": start_date,
+				"end_date": end_date
+			});
+		};
+		
+		// Timespan Defaults
+		var all_time = <?php echo $this->all_time ? 'true' : 'false'; ?>;
+		var start_date = "<?php echo $this->start_date ? addslashes(format_date($this->start_date, 'custom', 'm/d/Y')) : ''; ?>";
+		var end_date = "<?php echo $this->end_date ? addslashes(format_date($this->end_date, 'custom', 'm/d/Y')) : ''; ?>";
+		// Location Defaults
+		var location = "<?php echo $this->location->guid ? $this->location->guid : 'all'; ?>";
+		
 		var state_xhr;
 		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
+				{type: 'button', text: 'Location', extra_class: 'picon picon_16x16_applications-internet', selection_optional: true, click: function(){sale_grid.location_form();}},
+				{type: 'button', text: 'Timespan', extra_class: 'picon picon_16x16_view-time-schedule', selection_optional: true, click: function(){sale_grid.date_form();}},
+				{type: 'separator'},
 				<?php if (gatekeeper('com_sales/newsale')) { ?>
 				{type: 'button', text: 'New', extra_class: 'picon picon_16x16_document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'editsale'); ?>'},
 				<?php } if (gatekeeper('com_sales/editsale')) { ?>
@@ -56,39 +77,91 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
-		$("#sale_grid").pgrid(cur_options);
-	});
+		var sale_grid = $("#sale_grid").pgrid(cur_options);
 
+		sale_grid.date_form = function(){
+			$.ajax({
+				url: "<?php echo pines_url('com_sales', 'dateselectform'); ?>",
+				type: "POST",
+				dataType: "html",
+				data: {"all_time": all_time, "start_date": start_date, "end_date": end_date},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured while trying to retreive the date form:\n"+XMLHttpRequest.status+": "+textStatus);
+				},
+				success: function(data){
+					if (data == "")
+						return;
+					var form = $("<div title=\"Date Selector\" />");
+					form.dialog({
+						bgiframe: true,
+						autoOpen: true,
+						height: 315,
+						modal: true,
+						open: function(){
+							form.html(data);
+						},
+						close: function(){
+							form.remove();
+						},
+						buttons: {
+							"Update": function(){
+								if (form.find(":input[name=timespan_saver]").val() == "alltime") {
+									all_time = true;
+								} else {
+									all_time = false;
+									start_date = form.find(":input[name=start_date]").val();
+									end_date = form.find(":input[name=end_date]").val();
+								}
+								form.dialog('close');
+								submit_search();
+							}
+						}
+					});
+				}
+			});
+		};
+		sale_grid.location_form = function(){
+			$.ajax({
+				url: "<?php echo pines_url('com_sales', 'locationselectform'); ?>",
+				type: "POST",
+				dataType: "html",
+				data: {"location": location},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured while trying to retreive the location form:\n"+XMLHttpRequest.status+": "+textStatus);
+				},
+				success: function(data){
+					if (data == "")
+						return;
+					var form = $("<div title=\"Location Selector\" />");
+					form.dialog({
+						bgiframe: true,
+						autoOpen: true,
+						height: 250,
+						modal: true,
+						open: function(){
+							form.html(data);
+						},
+						close: function(){
+							form.remove();
+						},
+						buttons: {
+							"Update": function(){
+								if (form.find(":input[name=location_saver]").val() == "all") {
+									location = 'all';
+								} else {
+									location = form.find(":input[name=location]").val();
+								}
+								form.dialog('close');
+								submit_search();
+							}
+						}
+					});
+				}
+			});
+		};
+	});
 	// ]]>
 </script>
-<form id="sale_date_form" action="<?php echo htmlentities(pines_url('com_sales', 'listsales')); ?>" method="post">
-	<div class="ui-helper-clearfix" style="margin-bottom: 5px;">
-		<div style="float: left;">
-			<script type="text/javascript">
-				// <![CDATA[
-				pines(function(){
-					$("#sale_date_form [name=start_date], #sale_date_form [name=end_date]").datepicker({
-						dateFormat: "yy-mm-dd",
-						changeMonth: true,
-						changeYear: true
-					});
-				});
-				// ]]>
-			</script>
-			<label>
-				<span class="pf-label">Start Date</span>
-				<input class="ui-widget-content" type="text" name="start_date" size="24" value="<?php echo $this->start_date ? date('Y-m-d', $this->start_date) : ''; ?>" />
-			</label>
-			<label>
-				<span class="pf-label">End Date</span>
-				<input class="ui-widget-content" type="text" name="end_date" size="24" value="<?php echo $this->end_date ? date('Y-m-d', $this->end_date) : ''; ?>" />
-			</label>
-		</div>
-		<div style="float: right;">
-			<input class="ui-state-default ui-corner-all" type="submit" value="Update" />
-		</div>
-	</div>
-</form>
 <table id="sale_grid">
 	<thead>
 		<tr>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Display a form to search a stock item's history.
+ * Display a form to select a location.
  * 
  * @package Pines
  * @subpackage com_sales
@@ -25,7 +25,8 @@ defined('P_RUN') or die('Direct access prohibited');
 		// Location Tree
 		var location = $("#location_details [name=location]");
 		var location_saver = $("#location_details [name=location_saver]");
-		$("#location_details [name=location_tree]").tree({
+		var location_tree = $("#location_details div.location_tree");
+		location_tree.tree({
 			rules : {
 				multiple : false
 			},
@@ -47,7 +48,6 @@ defined('P_RUN') or die('Direct access prohibited');
 			}
 		});
 
-		var location_tree = $("#location_details [name=location_tree]");
 		$("#location_details [name=all_groups]").change(function(){
 			var all_groups = $(this);
 			if (all_groups.is(":checked") && all_groups.val() == "individual") {
@@ -61,14 +61,14 @@ defined('P_RUN') or die('Direct access prohibited');
 	});
 // ]]>
 </script>
-<form class="pf-form" method="post" id="location_details">
+<form class="pf-form" method="post" id="location_details" action="">
 	<div class="pf-element">
 		<label><input class="pf-field ui-widget-content" type="radio" name="all_groups" value="allGroups" checked="checked" />All Locations</label>
 		<label><input class="pf-field ui-widget-content" type="radio" name="all_groups" value="individual" <?php echo ($this->location != 'all') ? 'checked="checked"' : ''; ?>/>Single Location</label>
 	</div>
-	<div class="pf-element" name="location_tree" style="padding-bottom: 5px;"></div>
+	<div class="pf-element location_tree" style="padding-bottom: 5px;"></div>
 	<div class="pf-element">
-			<input type="hidden" name="location" value="<?php echo $this->location; ?>" />
-			<input type="hidden" name="location_saver" value="<?php echo ($this->location == 'all') ? 'all' : 'individual'; ?>" />
+		<input type="hidden" name="location" value="<?php echo $this->location; ?>" />
+		<input type="hidden" name="location_saver" value="<?php echo ($this->location == 'all') ? 'all' : 'individual'; ?>" />
 	</div>
 </form>

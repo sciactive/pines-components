@@ -91,21 +91,15 @@ class com_sales extends component {
 	 * @param string $start The current ending date of the timespan.
 	 * @return module The form's module.
 	 */
-	public function date_select_form($all_time = false, $start, $end) {
+	public function date_select_form($all_time = false, $start = null, $end = null) {
 		global $pines;
+		$pines->page->override = true;
+
 		$module = new module('com_sales', 'form_date_selector', 'content');
 		$module->all_time = $all_time;
-		if (!isset($start)) {
-			$module->start_date = time();
-		} else {
-			$module->start_date = $start;
-		}
-		if (!isset($end)) {
-			$module->end_date = time();
-		} else {
-			$module->end_date = $end;
-		}
-		
+		$module->start_date = $start;
+		$module->end_date = $end;
+
 		$pines->page->override_doc($module->render());
 		return $module;
 	}
@@ -408,8 +402,9 @@ class com_sales extends component {
 	 * Creates and attaches a module which lists sales.
 	 * @param int $start_date The start date of sales to show.
 	 * @param int $end_date The end date of sales to show.
+	 * @param group $location The location to show sales for.
 	 */
-	public function list_sales($start_date = null, $end_date = null) {
+	public function list_sales($start_date = null, $end_date = null, $location = null) {
 		global $pines;
 
 		$module = new module('com_sales', 'list_sales', 'content');
@@ -419,10 +414,14 @@ class com_sales extends component {
 			$selector['gte'] = array('p_cdate', (int) $start_date);
 		if (isset($end_date))
 			$selector['lte'] = array('p_cdate', (int) $end_date);
+		if (isset($location))
+			$selector['ref'] = array('group', $location);
 		$module->sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector);
 		$module->start_date = $start_date;
 		$module->end_date = $end_date;
-
+		$module->all_time = (!isset($start_date) && !isset($end_date));
+		$module->location = $location;
+		
 		if ( empty($module->sales) )
 			pines_notice('No sales found.');
 	}
@@ -513,9 +512,10 @@ class com_sales extends component {
 	 * @param int $location The currently set location to search in.
 	 * @return module The form's module.
 	 */
-	public function location_select_form($location) {
+	public function location_select_form($location = null) {
 		global $pines;
-		
+		$pines->page->override = true;
+
 		$module = new module('com_sales', 'form_location_selector', 'content');
 		if (!isset($location)) {
 			$module->location = $_SESSION['user']->group->guid;
@@ -615,11 +615,11 @@ class com_sales extends component {
 	 * Creates and attaches a module which lists a products history.
 	 * @param string $serial The serial number of the product to search for.
 	 * @param string $sku The sku code of the product(s) to search for.
+	 * @param int $start_date The starting date to search for products within.
+	 * @param int $end_date The ending date to search for products within.
 	 * @param group $location The location to search for products in.
-	 * @param int $start The starting date to search for products within.
-	 * @param int $end The ending date to search for products within.
 	 */
-	public function track_product($serial = null, $sku = null, $location = null, $start = null, $end = null) {
+	public function track_product($serial = null, $sku = null, $start_date = null, $end_date = null, $location = null) {
 		global $pines;
 
 		$module = new module('com_sales', 'track_product', 'content');
@@ -644,20 +644,13 @@ class com_sales extends component {
 			$module->location = 'all';
 		}
 
-		if (isset($start)) {
-			$module->start_date = (int) $start;
-			$secondary_options['gte'][] = array('p_cdate', (int) $start);
-		}
-		if (isset($end)) {
-			$module->end_date = (int) $end;
-			$secondary_options['lte'][] = array('p_cdate', (int) $end);
-		}
-		if (!isset($module->start_date) && !isset($module->end_date)) {
-			$module->all_time = true;
-			$module->start_date = $module->end_date = time();
-		} else {
-			$module->all_time = false;
-		}
+		if (isset($start_date))
+			$secondary_options['gte'][] = array('p_cdate', (int) $start_date);
+		if (isset($end_date))
+			$secondary_options['lte'][] = array('p_cdate', (int) $end_date);
+		$module->start_date = $start_date;
+		$module->end_date = $end_date;
+		$module->all_time = (!isset($start_date) && !isset($end_date));
 		$module->stock = $module->transactions = array();
 		if (isset($module->serial) || isset($module->sku))
 			$module->stock = $pines->entity_manager->get_entities(array('class' => com_sales_stock), $selector);

@@ -26,7 +26,7 @@ $pines->com_jstree->load();
 	// <![CDATA[
 	pines(function(){
 		var submit_url = "<?php echo pines_url('com_sales', 'trackproduct'); ?>";
-		var submit_search = function() {
+		var submit_search = function(){
 			// Submit the form with all of the fields.
 			pines.post(submit_url, {
 				"serial": serial_box.val(),
@@ -36,61 +36,47 @@ $pines->com_jstree->load();
 				"start_date": start_date,
 				"end_date": end_date
 			});
-		}
+		};
 
 		var history_grid = $("#history_grid");
 		var serial_box, sku_box;
 		// Timespan Defaults
-		var all_time = "<?php echo $this->all_time; ?>";
-		var start_date = "<?php echo $this->start_date; ?>";
-		var end_date = "<?php echo $this->end_date; ?>";
+		var all_time = <?php echo $this->all_time ? 'true' : 'false'; ?>;
+		var start_date = "<?php echo $this->start_date ? addslashes(format_date($this->start_date, 'custom', 'm/d/Y')) : ''; ?>";
+		var end_date = "<?php echo $this->end_date ? addslashes(format_date($this->end_date, 'custom', 'm/d/Y')) : ''; ?>";
 		// Location Defaults
-		var location = "<?php echo $this->location; ?>";
+		var location = "<?php echo $this->location->guid ? $this->location->guid : 'all'; ?>";
 		
 		var state_xhr;
 		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents : [
-				{type: 'button', text: 'Location', extra_class: 'picon picon_16x16_applications-internet', selection_optional: true, click: function(){
-					history_grid.location_form();
+				{type: 'button', text: 'Location', extra_class: 'picon picon_16x16_applications-internet', selection_optional: true, click: function(){history_grid.location_form();}},
+				{type: 'separator'},
+				{type: 'text', label: 'SKU: ', load: function(textbox){
+					// Display the current sku being searched.
+					textbox.val("<?php echo $this->sku; ?>");
+					textbox.keydown(function(e){
+						if (e.keyCode == 13)
+							submit_search();
+					});
+					sku_box = textbox;
 				}},
 				{type: 'separator'},
-				{
-					type: 'text',
-					label: 'SKU: ',
-					load: function(textbox){
-						// Display the current sku being searched.
-						textbox.val("<?php echo $this->sku; ?>");
-						textbox.keydown(function(e){
-							if (e.keyCode == 13)
-								submit_search();
-						});
-						sku_box = textbox;
-					}
-				},
-				{type: 'separator'},
-				{
-					type: 'text',
-					label: 'Serial #: ',
-					load: function(textbox){
-						// Display the current serial being searched.
-						textbox.val("<?php echo $this->serial; ?>");
-						textbox.keydown(function(e){
-							if (e.keyCode == 13)
-								submit_search();
-						});
-						serial_box = textbox;
-					}
-				},
-				{type: 'separator'},
-				{type: 'button', text: 'Timespan', extra_class: 'picon picon_16x16_view-time-schedule', selection_optional: true, click: function(){
-					history_grid.date_form();
+				{type: 'text', label: 'Serial #: ', load: function(textbox){
+					// Display the current serial being searched.
+					textbox.val("<?php echo $this->serial; ?>");
+					textbox.keydown(function(e){
+						if (e.keyCode == 13)
+							submit_search();
+					});
+					serial_box = textbox;
 				}},
 				{type: 'separator'},
-				{type: 'button', text: 'Update &raquo;', extra_class: 'picon picon_16x16_view-refresh', selection_optional: true, click: function(){
-					submit_search();
-				}}
+				{type: 'button', text: 'Timespan', extra_class: 'picon picon_16x16_view-time-schedule', selection_optional: true, click: function(){history_grid.date_form();}},
+				{type: 'separator'},
+				{type: 'button', text: 'Update &raquo;', extra_class: 'picon picon_16x16_view-refresh', selection_optional: true, click: submit_search}
 			],
 			pgrid_sort_col: 1,
 			pgrid_sort_ord: 'asc',
@@ -123,7 +109,7 @@ $pines->com_jstree->load();
 						height: 315,
 						modal: true,
 						open: function(){
-							form.append(data);
+							form.html(data);
 						},
 						close: function(){
 							form.remove();
@@ -163,7 +149,7 @@ $pines->com_jstree->load();
 						height: 250,
 						modal: true,
 						open: function(){
-							form.append(data);
+							form.html(data);
 						},
 						close: function(){
 							form.remove();

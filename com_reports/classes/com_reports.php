@@ -42,7 +42,7 @@ class com_reports extends component {
 					unset($module->employees[$key]);
 			}
 		} else {
-			$module->employee = $employee;
+			$module->employee = $form->employee = $employee;
 		}
 		$module->date[0] = $form->date[0] = $date_start;
 		$module->date[1] = $form->date[1] = $date_end;

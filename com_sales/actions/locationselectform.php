@@ -1,6 +1,6 @@
 <?php
 /**
- * Select a start and end date.
+ * Select a location.
  *
  * @package Pines
  * @subpackage com_sales
@@ -11,10 +11,9 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/trackproducts') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listsales'));
+if ( !gatekeeper() )
+	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'locationselectform'));
 
-$pines->page->override = true;
 $pines->com_sales->location_select_form($_REQUEST['location']);
 
 ?>

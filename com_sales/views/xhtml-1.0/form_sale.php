@@ -13,13 +13,13 @@ defined('P_RUN') or die('Direct access prohibited');
 if (!isset($this->entity->guid)) {
 	$this->title = 'New Sale';
 } elseif ($this->entity->status == 'quoted') {
-	$this->title = 'Quoted Sale ['.htmlentities($this->entity->guid).']';
+	$this->title = 'Quoted Sale ['.htmlentities($this->entity->id).']';
 } elseif ($this->entity->status == 'invoiced') {
-	$this->title = 'Invoiced Sale ['.htmlentities($this->entity->guid).']';
+	$this->title = 'Invoiced Sale ['.htmlentities($this->entity->id).']';
 } elseif ($this->entity->status == 'paid') {
-	$this->title = 'Paid Sale ['.htmlentities($this->entity->guid).']';
+	$this->title = 'Paid Sale ['.htmlentities($this->entity->id).']';
 } elseif ($this->entity->status == 'voided') {
-	$this->title = 'Voided Sale ['.htmlentities($this->entity->guid).']';
+	$this->title = 'Voided Sale ['.htmlentities($this->entity->id).']';
 }
 $this->note = 'Use this form to edit a sale.';
 $pines->com_pgrid->load();

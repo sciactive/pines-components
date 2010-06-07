@@ -240,6 +240,17 @@ class com_sales_sale extends entity {
 	}
 
 	/**
+	 * Save the sale.
+	 * @return bool True on success, false on failure.
+	 */
+	public function save() {
+		global $pines;
+		if (!isset($this->id))
+			$this->id = $pines->entity_manager->new_uid('com_sales_sale');
+		return parent::save();
+	}
+
+	/**
 	 * Complete the sale.
 	 *
 	 * This process creates payment transaction entries for each payment and any

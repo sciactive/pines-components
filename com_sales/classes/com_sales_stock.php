@@ -86,19 +86,17 @@ class com_sales_stock extends entity {
 		if (!($this->guid))
 			$return = $return && $this->save();
 
-		if (!isset($on_entity)) {
-			if ((array) $on_entity->received !== $on_entity->received)
-				$on_entity->received = array();
-			$on_entity->received[] = $this;
-			$return = $return && $on_entity->save();
-		}
-
 		$tx->old_status = $old_status;
 		$tx->new_status = $this->status;
 		$tx->old_location = $old_location;
 		$tx->new_location = $this->location;
-		if (isset($on_entity))
+		if (isset($on_entity)) {
+			if ((array) $on_entity->received !== $on_entity->received)
+				$on_entity->received = array();
+			$on_entity->received[] = $this;
+			$return = $return && $on_entity->save();
 			$tx->ref = $on_entity;
+		}
 		$tx->stock = $this;
 		$return = $return && $tx->save();
 		return $return;

@@ -87,7 +87,7 @@ if ($this->entity->status == 'quoted') {
 		$group_logo = $sales_group->get_logo();
 	// Document id number.
 	// TODO: Change this to an incremental naming scheme.
-	$doc_id = $sales_group->groupname . strtoupper(substr($this->doc_title, 0, 2)) . $this->entity->guid;
+	$doc_id = $sales_group->groupname . strtoupper(substr($this->doc_title, 0, 2)) . $this->entity->id;
 	?>
 	<div class="left_side">
 		<span><img src="<?php echo $group_logo; ?>" alt="<?php echo $pines->page->get_title(); ?>" /></span>

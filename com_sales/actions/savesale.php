@@ -185,7 +185,7 @@ if (!isset($sale->status) || $sale->status == 'quoted') {
 }
 
 if ($sale->save()) {
-	pines_notice('Saved sale ['.$sale->guid.']');
+	pines_notice('Saved sale ['.$sale->id.']');
 	redirect(pines_url('com_sales', 'receiptsale', array('id' => $sale->guid)));
 } else {
 	$sale->print_form();

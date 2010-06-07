@@ -169,7 +169,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 <table id="sale_grid">
 	<thead>
 		<tr>
-			<th>GUID</th>
+			<th>ID</th>
 			<th>Date</th>
 			<th>Status</th>
 			<th>User</th>
@@ -188,7 +188,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->sales as $sale) { ?>
 		<tr title="<?php echo $sale->guid; ?>">
-			<td><?php echo $sale->guid; ?></td>
+			<td><?php echo $sale->id; ?></td>
 			<td><?php echo date('Y-m-d', $sale->p_cdate); ?></td>
 			<td><?php echo ucwords($sale->status); ?></td>
 			<td><?php echo !isset($sale->user->guid) ? '' : "{$sale->user->name} [{$sale->user->username}]"; ?></td>

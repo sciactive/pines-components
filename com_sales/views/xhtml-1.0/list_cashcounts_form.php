@@ -31,7 +31,9 @@ $pines->com_jstree->load();
 		$("#cashcount_dates [name=start_date], #cashcount_dates [name=end_date]").datepicker({
 			dateFormat: "yy-mm-dd",
 			changeMonth: true,
-			changeYear: true
+			changeYear: true,
+			showOtherMonths: true,
+			selectOtherMonths: true
 		});
 		// Location Tree
 		var location = $("#cashcount_dates [name=location]");

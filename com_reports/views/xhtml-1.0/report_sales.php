@@ -27,7 +27,7 @@ foreach ($this->sales as $cur_sale) {
 	$event_day = format_date($cur_sale->p_cdate, 'custom', 'j');
 	$event_year = format_date($cur_sale->p_cdate, 'custom', 'Y');
 	// This is used to identify daily sales, divided into timespan totals.
-	$date_str = format_date($cur_sale->p_cdate, 'custom', 'n/j/Y');
+	$date_str = format_date($cur_sale->p_cdate, 'date_sort');
 	$sale_time = format_date($cur_sale->p_cdate, 'custom', 'H');
 	if (!$total[$date_str]) {
 		$total[$date_str][0] = $cur_sale->p_cdate;

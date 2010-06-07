@@ -31,7 +31,9 @@ $pines->com_jstree->load();
 		$("#report_details [name=start], #report_details [name=end]").datepicker({
 			dateFormat: "yy-mm-dd",
 			changeMonth: true,
-			changeYear: true
+			changeYear: true,
+			showOtherMonths: true,
+			selectOtherMonths: true
 		});
 		// Location Tree
 		var location = $("#location");

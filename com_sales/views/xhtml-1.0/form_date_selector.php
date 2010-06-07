@@ -29,14 +29,18 @@ defined('P_RUN') or die('Direct access prohibited');
 // <![CDATA[
 	pines(function(){
 		$("#start_date").datepicker({
-			dateFormat: "m/d/yy",
+			dateFormat: "yy-mm-dd",
 			changeMonth: true,
-			changeYear: true
+			changeYear: true,
+			showOtherMonths: true,
+			selectOtherMonths: true
 		});
 		$("#end_date").datepicker({
-			dateFormat: "m/d/yy",
+			dateFormat: "yy-mm-dd",
 			changeMonth: true,
-			changeYear: true
+			changeYear: true,
+			showOtherMonths: true,
+			selectOtherMonths: true
 		});
 
 		var timespan = $("#date_details div.timespan");

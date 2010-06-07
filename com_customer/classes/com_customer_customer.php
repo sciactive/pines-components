@@ -62,16 +62,15 @@ class com_customer_customer extends entity {
 	 * If the customer's membership expires in the future, $day_adjust will be
 	 * added to that date. If not, $day_adjust will be added to today's date.
 	 * 
-	 * @param int $day_adjust The number of days to add. Negative values will be ignored.
+	 * @param int $day_adjust The positive or negative number of days to add.
 	 */
 	function adjust_membership($day_adjust) {
 		$day_adjust = (int) $day_adjust;
-		if ($day_adjust <= 0)
-			return;
+		$date_string = ($day_adjust < 0 ? '' : '+')."$day_adjust days 00:00";
 		if (time() < $this->member_exp) {
-			$this->member_exp = strtotime("+$day_adjust days 00:00", $this->member_exp);
+			$this->member_exp = strtotime($date_string, $this->member_exp);
 		} else {
-			$this->member_exp = strtotime("+$day_adjust days 00:00");
+			$this->member_exp = strtotime($date_string);
 		}
 	}
 

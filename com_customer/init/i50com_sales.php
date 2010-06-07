@@ -44,7 +44,7 @@ function com_customer__product_action_add_member_days(&$array) {
 }
 
 $pines->config->com_sales->product_actions[] = array(
-	'type' => 'sold',
+	'type' => array('sold', 'voided'),
 	'name' => 'com_customer/add_points',
 	'cname' => 'Add Points',
 	'description' => 'Add points to the customer\'s profile based on the price and the lookup table in configuration.',
@@ -52,7 +52,7 @@ $pines->config->com_sales->product_actions[] = array(
 );
 foreach($pines->config->com_customer->pointvalues as $cur_value) {
 	$pines->config->com_sales->product_actions[] = array(
-		'type' => 'sold',
+		'type' => array('sold', 'voided'),
 		'name' => "com_customer/add_points_$cur_value",
 		'cname' => "Add $cur_value Points",
 		'description' => "Add $cur_value points to the customer's profile.",
@@ -62,7 +62,7 @@ foreach($pines->config->com_customer->pointvalues as $cur_value) {
 unset ($cur_value);
 foreach($pines->config->com_customer->membervalues as $cur_value) {
 	$pines->config->com_sales->product_actions[] = array(
-		'type' => 'sold',
+		'type' => array('sold', 'voided'),
 		'name' => "com_customer/add_member_days_$cur_value",
 		'cname' => "Add $cur_value Member Days",
 		'description' => "Add $cur_value days of membership to the customer's profile. (Make them a member if they aren't one.)",

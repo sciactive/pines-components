@@ -53,6 +53,9 @@ class com_customer extends component {
 				break;
 			}
 		}
+		// If the sale is being voided, remove days.
+		if ($array['type'] == 'voided')
+			$days *= -1;
 		// Add the days and save the customer.
 		$array['sale']->customer->adjust_membership($days);
 		if ($array['sale']->customer->save()) {
@@ -94,6 +97,9 @@ class com_customer extends component {
 				}
 			}
 		}
+		// If the sale is being voided, remove points.
+		if ($array['type'] == 'voided')
+			$points *= -1;
 		// Add the points and save the customer.
 		$array['sale']->customer->adjust_points($points);
 		if ($array['sale']->customer->save()) {

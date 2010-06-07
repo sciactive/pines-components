@@ -251,6 +251,8 @@ class com_sales_sale extends entity {
 	 */
 	public function complete() {
 		global $pines;
+		if ($this->status == 'paid')
+			return true;
 		if (!is_array($this->payments))
 			return false;
 		// Keep track of the whole process.
@@ -356,6 +358,8 @@ class com_sales_sale extends entity {
 	 */
 	public function invoice() {
 		global $pines;
+		if ($this->status == 'invoiced')
+			return true;
 		if (!is_array($this->products)) {
 			pines_notice('Sale has no products');
 			return false;
@@ -632,10 +636,11 @@ class com_sales_sale extends entity {
 	 *
 	 * @return bool True on success, false on failure.
 	 * @todo Void payments.
-	 * @todo Write void parts of product actions.
 	 */
 	public function void() {
 		global $pines;
+		if ($this->status == 'voided')
+			return true;
 		// Keep track of the whole process.
 		$return = true;
 		if ($this->removed_stock) {

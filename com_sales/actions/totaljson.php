@@ -59,6 +59,9 @@ $payment_array = array();
 
 // Total the sales.
 foreach ($tx_array as $key => &$cur_tx) {
+	// Skip voided sales.
+	if ($cur_tx->ticket->status == 'voided')
+		continue;
 	if ($cur_tx->has_tag('sale_tx')) {
 		if ($cur_tx->type == 'invoiced') {
 			$invoice_array['total'] += (float) $cur_tx->ticket->total;

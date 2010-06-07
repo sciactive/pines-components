@@ -105,19 +105,22 @@ class com_sales_cashcount extends entity {
 		$this->total = $this->float;
 		// Update the total in the drawer for each skim, deposit or sale made.
 		if (isset($this->guid)) {
-			$new_sales = $pines->entity_manager->get_entities(
-					array('class' => com_sales_sale),
+			$new_txs = $pines->entity_manager->get_entities(
+					array('class' => com_sales_tx),
 					array('&',
 						'gte' => array('p_cdate', (int) $this->p_cdate),
 						'ref' => array('group', $this->group),
-						'tag' => array('com_sales', 'sale')
+						'tag' => array('com_sales', 'transaction', 'payment_tx')
 					)
 				);
-			// Look for all sales that resulted in cash being tendered.
-			foreach ($new_sales as $cur_sale) {
-				foreach ($cur_sale->payments as $cur_payment) {
-					if ($cur_payment['entity']->change_type && $cur_payment['status'] == 'tendered')
-						$this->total += $cur_payment['amount'];
+			// Look for all transactions that resulted in cash being tendered.
+			foreach ($new_txs as $cur_tx) {
+				if (!$cur_tx->ref->change_type)
+					continue;
+				if ($cur_tx->type == 'payment_received') {
+					$this->total += $cur_tx->amount;
+				} elseif ($cur_tx->type == 'payment_voided') {
+					$this->total -= $cur_tx->amount;
 				}
 			}
 			foreach ($this->skims as $cur_skim)

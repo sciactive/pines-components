@@ -152,7 +152,7 @@ $denom_counter = 0;
 		<h1>Comments</h1>
 	</div>
 	<div class="pf-element pf-full-width">
-		<span class="pf-field"><textarea style="width: 98%;" rows="3" cols="35" name="comments"><?php echo $this->entity->comments; ?></textarea></span>
+		<div class="pf-full-width"><textarea class="ui-widget-content" style="width: 100%;" rows="3" cols="35" name="comments"><?php echo $this->entity->comments; ?></textarea></div>
 	</div>
 	<div class="pf-element pf-buttons">
 		<input type="hidden" name="id" value="<?php echo $this->entity->cashcount->guid; ?>" />

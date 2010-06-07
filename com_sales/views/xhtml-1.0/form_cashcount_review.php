@@ -190,7 +190,7 @@ $comment_str = '';
 		<h1>Review Comments</h1>
 	</div>
 	<div class="pf-element pf-full-width">
-		<span class="pf-full-width"><textarea style="width: 98%;" rows="3" cols="35" name="review_comments"><?php echo $this->entity->review_comments; ?></textarea></span>
+		<div class="pf-full-width"><textarea class="ui-widget-content" style="width: 100%;" rows="3" cols="35" name="review_comments"><?php echo $this->entity->review_comments; ?></textarea></div>
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>

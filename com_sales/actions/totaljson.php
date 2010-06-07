@@ -42,12 +42,12 @@ if (preg_match('/\d{4}-\d{2}-\d{2}/', $_REQUEST['date_end'])) {
 }
 
 // Build the entity query.
-$selector = array(
+$selector = array('&',
 	'tag' => array('com_sales', 'transaction'),
 	'gte' => array('p_cdate', $date_start),
 	'lte' => array('p_cdate', $date_end)
 );
-if (is_int($location))
+if ($location != 'all')
 	$selector['ref'] = array('group', $location);
 
 // Get all transactions.

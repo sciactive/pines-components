@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_example/deletewidget') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_example', 'listwidgets'));
+	punt_user('You don\'t have necessary permission.', pines_url('com_example', 'widget/list'));
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_widget) {
@@ -26,6 +26,6 @@ if (empty($failed_deletes)) {
 	pines_error('Could not delete widgets with given IDs: '.$failed_deletes);
 }
 
-redirect(pines_url('com_example', 'listwidgets'));
+redirect(pines_url('com_example', 'widget/list'));
 
 ?>

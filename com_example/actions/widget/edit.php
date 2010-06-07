@@ -13,10 +13,10 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if (isset($_REQUEST['id'])) {
 	if ( !gatekeeper('com_example/editwidget') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_example', 'editwidget', array('id' => $_REQUEST['id'])));
+		punt_user('You don\'t have necessary permission.', pines_url('com_example', 'widget/edit', array('id' => $_REQUEST['id'])));
 } else {
 	if ( !gatekeeper('com_example/newwidget') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_example', 'editwidget'));
+		punt_user('You don\'t have necessary permission.', pines_url('com_example', 'widget/edit'));
 }
 
 $entity = com_example_widget::factory((int) $_REQUEST['id']);

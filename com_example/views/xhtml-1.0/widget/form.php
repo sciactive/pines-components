@@ -88,7 +88,7 @@ $pines->com_pgrid->load();
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="widget_details" action="<?php echo htmlentities(pines_url('com_example', 'savewidget')); ?>">
+<form class="pf-form" method="post" id="widget_details" action="<?php echo htmlentities(pines_url('com_example', 'widget/save')); ?>">
 	<div id="widget_tabs" style="clear: both;">
 		<ul>
 			<li><a href="#tab_general">General</a></li>
@@ -172,6 +172,6 @@ $pines->com_pgrid->load();
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_example', 'listwidgets')); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_example', 'widget/list')); ?>');" value="Cancel" />
 	</div>
 </form>

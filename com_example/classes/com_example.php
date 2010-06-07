@@ -24,7 +24,7 @@ class com_example extends component {
 	function list_widgets() {
 		global $pines;
 
-		$module = new module('com_example', 'list_widgets', 'content');
+		$module = new module('com_example', 'widget/list', 'content');
 
 		$module->widgets = $pines->entity_manager->get_entities(array('class' => com_example_widget), array('&', 'tag' => array('com_example', 'widget')));
 
@@ -38,22 +38,22 @@ class com_example extends component {
 	 * Creates and attaches example modules in various positions.
 	 */
 	function print_content() {
-		$module = new module('com_example', 'content_short', 'content_top_left');
-		$module = new module('com_example', 'content_short', 'content_top_right');
-		$module = new module('com_example', 'content_medium', 'pre_content');
-		$module = new module('com_example', 'content_long', 'content');
-		$module = new module('com_example', 'content_medium', 'post_content');
-		$module = new module('com_example', 'content_short', 'content_bottom_left');
-		$module = new module('com_example', 'content_short', 'content_bottom_right');
-		$module = new module('com_example', 'content_short', 'left');
-		$module = new module('com_example', 'content_short', 'right');
-		//$module = new module('com_example', 'content_medium', 'left');
-		$module = new module('com_example', 'content_medium', 'right');
-		$module = new module('com_example', 'content_short', 'top');
-		$module = new module('com_example', 'content_short', 'header');
-		$module = new module('com_example', 'content_short', 'header_right');
-		$module = new module('com_example', 'content_medium', 'footer');
-		$module = new module('com_example', 'content_short', 'bottom');
+		$module = new module('com_example', 'content/short', 'content_top_left');
+		$module = new module('com_example', 'content/short', 'content_top_right');
+		$module = new module('com_example', 'content/medium', 'pre_content');
+		$module = new module('com_example', 'content/long', 'content');
+		$module = new module('com_example', 'content/medium', 'post_content');
+		$module = new module('com_example', 'content/short', 'content_bottom_left');
+		$module = new module('com_example', 'content/short', 'content_bottom_right');
+		$module = new module('com_example', 'content/short', 'left');
+		$module = new module('com_example', 'content/short', 'right');
+		//$module = new module('com_example', 'content/medium', 'left');
+		$module = new module('com_example', 'content/medium', 'right');
+		$module = new module('com_example', 'content/short', 'top');
+		$module = new module('com_example', 'content/short', 'header');
+		$module = new module('com_example', 'content/short', 'header_right');
+		$module = new module('com_example', 'content/medium', 'footer');
+		$module = new module('com_example', 'content/short', 'bottom');
 	}
 }
 

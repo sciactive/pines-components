@@ -9,7 +9,7 @@
 		{
 			"path": "main_menu/other/com_example/widgets",
 			"text": "Widgets",
-			"href": ["com_example","listwidgets"],
+			"href": ["com_example","widget/list"],
 			"depend": {
 				"ability": "com_example/listwidgets"
 			}
@@ -17,7 +17,7 @@
 		{
 			"path": "main_menu/other/com_example/newwidget",
 			"text": "New Widget",
-			"href": ["com_example","editwidget"],
+			"href": ["com_example","widget/edit"],
 			"depend": {
 				"ability": "com_example/newwidget"
 			}

@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_example/editwidget') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_example', 'listwidgets'));
+		punt_user('You don\'t have necessary permission.', pines_url('com_example', 'widget/list'));
 	$widget = com_example_widget::factory((int) $_REQUEST['id']);
 	if (!isset($widget->guid)) {
 		pines_error('Requested widget id is not accessible.');
@@ -21,7 +21,7 @@ if ( isset($_REQUEST['id']) ) {
 	}
 } else {
 	if ( !gatekeeper('com_example/newwidget') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_example', 'listwidgets'));
+		punt_user('You don\'t have necessary permission.', pines_url('com_example', 'widget/list'));
 	$widget = com_example_widget::factory();
 }
 
@@ -63,6 +63,6 @@ if ($widget->save()) {
 	pines_error('Error saving widget. Do you have permission?');
 }
 
-redirect(pines_url('com_example', 'listwidgets'));
+redirect(pines_url('com_example', 'widget/list'));
 
 ?>

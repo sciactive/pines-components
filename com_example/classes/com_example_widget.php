@@ -79,7 +79,7 @@ class com_example_widget extends entity {
 	 */
 	public function print_form() {
 		global $pines;
-		$module = new module('com_example', 'form_widget', 'content');
+		$module = new module('com_example', 'widget/form', 'content');
 		$module->entity = $this;
 
 		return $module;

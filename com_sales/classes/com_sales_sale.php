@@ -180,6 +180,7 @@ class com_sales_sale extends entity {
 	 */
 	public function tender_payments() {
 		global $pines;
+		$this->tendered_payments = true;
 		if (!is_array($this->payments))
 			$this->payments = array();
 		if (!is_numeric($this->total))
@@ -190,10 +191,10 @@ class com_sales_sale extends entity {
 		$change = 0.00;
 		$return = true;
 		foreach ($this->payments as &$cur_payment) {
-			// If its already tendered, skip it.
+			// If it's already tendered, skip it.
 			if (in_array($cur_payment['status'], array('declined', 'tendered')))
 				continue;
-			// If its not approved, sale can't be tendered.
+			// If it's not approved, sale can't be tendered.
 			if ($cur_payment['status'] != 'approved') {
 				$return = false;
 				continue;
@@ -704,6 +705,40 @@ class com_sales_sale extends entity {
 				}
 			}
 			unset($cur_product);
+		}
+		if ($this->tendered_payments) {
+			// Go through each payment, voiding it.
+			foreach ($this->payments as &$cur_payment) {
+				// If it's not tendered, skip it.
+				if ($cur_payment['status'] != 'tendered')
+					continue;
+				// Call the payment processing.
+				$pines->com_sales->call_payment_process(array(
+					'action' => 'void',
+					'name' => $cur_payment['entity']->processing_type,
+					'payment' => &$cur_payment,
+					'sale' => &$this
+				));
+				// If the payment was voided, record it, if not, consider it a
+				// failure.
+				if ($cur_payment['status'] != 'voided') {
+					$return = false;
+				} else {
+					// Make a transaction entry.
+					$tx = com_sales_tx::factory('com_sales', 'transaction', 'payment_tx');
+					$tx->type = 'payment_voided';
+					$tx->amount = (float) $cur_payment['amount'];
+					$tx->ref = $cur_payment['entity'];
+
+					// Make sure we have a GUID before saving the tx.
+					if (!($this->guid))
+						$return = $return && $this->save();
+
+					$tx->ticket = $this;
+					$return = $return && $tx->save();
+				}
+			}
+			unset($cur_payment);
 		}
 
 		// Complete the transaction.

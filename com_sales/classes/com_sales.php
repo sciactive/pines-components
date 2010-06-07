@@ -541,6 +541,9 @@ class com_sales extends component {
 				$array['payment']['status'] = 'tendered';
 				$array['payment']['label'] = $array['payment']['entity']->name;
 				break;
+			case 'void':
+				$array['payment']['status'] = 'voided';
+				break;
 			case 'change':
 				$array['sale']->change_given = true;
 				break;
@@ -578,6 +581,9 @@ class com_sales extends component {
 			case 'tender':
 				$array['payment']['status'] = 'tendered';
 				$array['payment']['label'] = $array['payment']['entity']->name;
+				break;
+			case 'void':
+				$array['payment']['status'] = 'voided';
 				break;
 			case 'change':
 				$array['sale']->change_given = true;

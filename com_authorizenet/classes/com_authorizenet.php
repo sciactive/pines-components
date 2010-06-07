@@ -203,6 +203,10 @@ class com_authorizenet extends component {
 				}
 				pines_notice($response_array[3]);
 				break;
+			case 'void':
+				// TODO: Void the payment, then set this status on success.
+				//$array['payment']['status'] = 'voided';
+				break;
 		}
 	}
 }

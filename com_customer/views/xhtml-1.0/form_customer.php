@@ -211,7 +211,9 @@ $pines->com_pgrid->load();
 						$("#customer_details [name=dob]").datepicker({
 							dateFormat: "yy-mm-dd",
 							changeMonth: true,
-							changeYear: true
+							changeYear: true,
+							showOtherMonths: true,
+							selectOtherMonths: true
 						});
 					});
 					// ]]>
@@ -475,7 +477,9 @@ $pines->com_pgrid->load();
 						$("#customer_details [name=member_exp]").datepicker({
 							dateFormat: "yy-mm-dd",
 							changeMonth: true,
-							changeYear: true
+							changeYear: true,
+							showOtherMonths: true,
+							selectOtherMonths: true
 						});
 					});
 					// ]]>

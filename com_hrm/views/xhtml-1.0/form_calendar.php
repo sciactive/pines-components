@@ -42,14 +42,18 @@ $pines->com_jstree->load();
 // <![CDATA[
 	pines(function(){
 		$("#event_date").datepicker({
-			dateFormat: "m/d/yy",
+			dateFormat: "yy-mm-dd",
 			changeMonth: true,
-			changeYear: true
+			changeYear: true,
+			showOtherMonths: true,
+			selectOtherMonths: true
 		});
 		$("#event_enddate").datepicker({
-			dateFormat: "m/d/yy",
+			dateFormat: "yy-mm-dd",
 			changeMonth: true,
-			changeYear: true
+			changeYear: true,
+			showOtherMonths: true,
+			selectOtherMonths: true
 		});
 
 		// Location Tree
@@ -77,7 +81,7 @@ $pines->com_jstree->load();
 			}
 		});
 
-		var timespan = $("#calendar_details [name=timespan]");
+		var timespan = $("#calendar_details.timespan");
 		$("#calendar_details [name=all_day]").change(function(){
 			var all_day = $(this);
 			if (all_day.is(":checked") && all_day.val() == "timeSpan") {
@@ -129,23 +133,23 @@ $pines->com_jstree->load();
 	</div>
 	<?php
 		if ($this->event->guid) {
-			$start_date = format_date($this->event->start, 'custom', 'n/j/Y');
+			$start_date = format_date($this->event->start, 'date_sort');
 			$start_time = format_date($this->event->start, 'custom', 'H');
-			$end_date = format_date($this->event->end, 'custom', 'n/j/Y');
+			$end_date = format_date($this->event->end, 'date_sort');
 			$end_time = format_date($this->event->end, 'custom', 'H');
 		}
 	?>
 	<div class="pf-element" style="padding-bottom: 0px;">
-		<span class="pf-note">Start</span><input class="ui-widget-content form_text" type="text" id="event_date" name="event_date" value="<?php echo empty($start_date) ? date('n/j/Y') : $start_date; ?>" />
+		<span class="pf-note">Start</span><input class="ui-widget-content form_text" type="text" id="event_date" name="event_date" value="<?php echo empty($start_date) ? format_date(time(), 'date_sort') : $start_date; ?>" />
 	</div>
 	<div class="pf-element" style="padding-bottom: 25px;">
-		<span class="pf-note">End</span><input class="ui-widget-content form_text" type="text" id="event_enddate" name="event_enddate" value="<?php echo empty($end_date) ? date('n/j/Y') : $end_date; ?>" />
+		<span class="pf-note">End</span><input class="ui-widget-content form_text" type="text" id="event_enddate" name="event_enddate" value="<?php echo empty($end_date) ? format_date(time(), 'date_sort') : $end_date; ?>" />
 	</div>
 	<div class="pf-element">
 		<label><input class="pf-field ui-widget-content" type="radio" name="all_day" value="timeSpan" checked="checked" />Timespan</label>
 		<label><input class="pf-field ui-widget-content" type="radio" name="all_day" value="allDay" <?php echo ($this->event->all_day) ? 'checked="checked"' : ''; ?>/>All Day</label>
 	</div>
-	<div name="timespan" style="text-align: center;">
+	<div class="timespan" style="text-align: center;">
 		<div class="pf-element">
 			<select class="ui-widget-content" style="padding: 0;" name="event_start">
 				<option value="24" <?php echo ($start_time == '24') ? 'selected="selected"' : ''; ?>>12:00 AM</option>

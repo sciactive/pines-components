@@ -289,7 +289,9 @@ if ($this->entity->final)
 			// <![CDATA[
 			pines(function(){
 				$("#eta").datepicker({
-					dateFormat: "yy-mm-dd"
+					dateFormat: "yy-mm-dd",
+					showOtherMonths: true,
+					selectOtherMonths: true
 				});
 			});
 			// ]]>

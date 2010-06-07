@@ -20,7 +20,9 @@ $pines->com_jstree->load();
 		$("#salesrank_details [name=start], #salesrank_details [name=end]").datepicker({
 			dateFormat: "yy-mm-dd",
 			changeMonth: true,
-			changeYear: true
+			changeYear: true,
+			showOtherMonths: true,
+			selectOtherMonths: true
 		});
 		// Loction Tree
 		var top_location = $("#salesrank_details [name=top_location]");

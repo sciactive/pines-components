@@ -16,16 +16,16 @@ if ( !gatekeeper('com_sales/listsales') )
 
 if (!empty($_REQUEST['start_date'])) {
 	$start_date = $_REQUEST['start_date'];
-	if (strpos($start_date, '/') === false)
-		$start_date = format_date($start_date, 'custom', 'm/d/Y');
+	if (strpos($start_date, '-') === false)
+		$start_date = format_date($start_date, 'date_sort');
 	$start_date = strtotime($start_date.' 00:00');
 } else {
 	$start_date = strtotime('-1 week');
 }
 if (!empty($_REQUEST['end_date'])) {
 	$end_date = $_REQUEST['end_date'];
-	if (strpos($end_date, '/') === false)
-		$end_date = format_date($end_date, 'custom', 'm/d/Y');
+	if (strpos($end_date, '-') === false)
+		$end_date = format_date($end_date, 'date_sort');
 	$end_date = strtotime($end_date.' 23:59');
 }
 if ($_REQUEST['all_time'] == 'true') {

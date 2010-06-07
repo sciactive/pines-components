@@ -31,7 +31,9 @@ $this->title = 'New Report';
 		$("#report_details [name=start], #report_details [name=end]").datepicker({
 			dateFormat: "yy-mm-dd",
 			changeMonth: true,
-			changeYear: true
+			changeYear: true,
+			showOtherMonths: true,
+			selectOtherMonths: true
 		});
 	});
 // ]]>
@@ -39,11 +41,11 @@ $this->title = 'New Report';
 <form class="pf-form" method="post" id="report_details" action="<?php echo htmlentities(pines_url('com_reports', 'reportsales')); ?>">
 	<div class="pf-element" style="padding-bottom: 0px;">
 		<span class="pf-note">Start</span>
-		<input class="ui-widget-content form_date" type="text" name="start" value="<?php echo ($this->date[0]) ? format_date($this->date[0], 'custom', 'Y-m-d') : format_date(time(), 'custom', 'Y-m-d'); ?>" />
+		<input class="ui-widget-content form_date" type="text" name="start" value="<?php echo ($this->date[0]) ? format_date($this->date[0], 'date_sort') : format_date(time(), 'date_sort'); ?>" />
 	</div>
 	<div class="pf-element">
 		<span class="pf-note">End</span>
-		<input class="ui-widget-content form_date" type="text" name="end" value="<?php echo ($this->date[1]) ? format_date($this->date[1], 'custom', 'Y-m-d') : format_date(time(), 'custom', 'Y-m-d'); ?>" />
+		<input class="ui-widget-content form_date" type="text" name="end" value="<?php echo ($this->date[1]) ? format_date($this->date[1], 'date_sort') : format_date(time(), 'date_sort'); ?>" />
 	</div>
 	<div class="pf-element">
 		<input class="ui-corner-all ui-state-default form_input" type="submit" value="View Report &raquo;" />

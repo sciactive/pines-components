@@ -43,7 +43,9 @@ $this->title = 'Sales Totals';
 				$("#date_start").datepicker({
 					dateFormat: "yy-mm-dd",
 					changeMonth: true,
-					changeYear: true
+					changeYear: true,
+					showOtherMonths: true,
+					selectOtherMonths: true
 				});
 			});
 			// ]]>
@@ -58,7 +60,9 @@ $this->title = 'Sales Totals';
 				$("#date_end").datepicker({
 					dateFormat: "yy-mm-dd",
 					changeMonth: true,
-					changeYear: true
+					changeYear: true,
+					showOtherMonths: true,
+					selectOtherMonths: true
 				});
 			});
 			// ]]>

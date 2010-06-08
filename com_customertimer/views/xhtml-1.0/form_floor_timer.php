@@ -140,7 +140,7 @@ $pines->com_pgrid->load();
 					var customer_table = $(this).closest(".customer_search").find("table.customer_table");
 					var customer_search = $(this).closest(".customer_search").find("input[name=customer_search]");
 					$.ajax({
-						url: "<?php echo pines_url("com_customer", "customersearch"); ?>",
+						url: "<?php echo pines_url('com_customer', 'customer/search'); ?>",
 						type: "POST",
 						dataType: "json",
 						data: {"q": customer_search.val()},
@@ -280,7 +280,7 @@ $pines->com_pgrid->load();
 							$(this).dialog("close");
 						},
 						"Edit Customer": function(){
-							pines.get("<?php echo pines_url('com_customer', 'editcustomer'); ?>", {
+							pines.get("<?php echo pines_url('com_customer', 'customer/edit'); ?>", {
 								"id": station.customer.guid
 							});
 						},

@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_customer/editcompany') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'listcompanies'));
+		punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'company/list'));
 	$company = com_customer_company::factory((int) $_REQUEST['id']);
 	if (!isset($company->guid)) {
 		pines_error('Requested company id is not accessible.');
@@ -21,7 +21,7 @@ if ( isset($_REQUEST['id']) ) {
 	}
 } else {
 	if ( !gatekeeper('com_customer/newcompany') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'listcompanies'));
+		punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'company/list'));
 	$company = com_customer_company::factory();
 }
 
@@ -75,6 +75,6 @@ if ($company->save()) {
 	pines_error('Error saving company. Do you have permission?');
 }
 
-redirect(pines_url('com_customer', 'listcompanies'));
+redirect(pines_url('com_customer', 'company/list'));
 
 ?>

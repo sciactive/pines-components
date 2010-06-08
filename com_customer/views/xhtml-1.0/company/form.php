@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Company' : 'Editing ['.htmlentities($this->entity->name).']';
 $this->note = 'Provide company profile details in this form.';
 ?>
-<form class="pf-form" method="post" id="company_details" action="<?php echo htmlentities(pines_url('com_customer', 'savecompany')); ?>">
+<form class="pf-form" method="post" id="company_details" action="<?php echo htmlentities(pines_url('com_customer', 'company/save')); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 		<?php if (isset($this->entity->user)) { ?>
@@ -155,6 +155,6 @@ $this->note = 'Provide company profile details in this form.';
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_customer', 'listcompanies')); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_customer', 'company/list')); ?>');" value="Cancel" />
 	</div>
 </form>

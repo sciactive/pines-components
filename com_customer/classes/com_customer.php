@@ -24,14 +24,14 @@ class com_customer extends component {
 	 * Creates and attaches a module which lists companies.
 	 */
 	function list_companies() {
-		$module = new module('com_customer', 'list_companies', 'content');
+		$module = new module('com_customer', 'company/list', 'content');
 	}
 	
 	/**
 	 * Creates and attaches a module which lists customers.
 	 */
 	function list_customers() {
-		$module = new module('com_customer', 'list_customers', 'content');
+		$module = new module('com_customer', 'customer/list', 'content');
 	}
 
 	/**

@@ -9,7 +9,7 @@
 		{
 			"path": "main_menu/business/com_customer/customers",
 			"text": "Customers",
-			"href": ["com_customer","listcustomers"],
+			"href": ["com_customer","customer/list"],
 			"depend": {
 				"ability": "com_customer/listcustomers"
 			}
@@ -17,7 +17,7 @@
 		{
 			"path": "main_menu/business/com_customer/newcustomer",
 			"text": "New Customer",
-			"href": ["com_customer","editcustomer"],
+			"href": ["com_customer","customer/edit"],
 			"depend": {
 				"ability": "com_customer/newcustomer"
 			}
@@ -25,7 +25,7 @@
 		{
 			"path": "main_menu/business/com_customer/companies",
 			"text": "Companies",
-			"href": ["com_customer","listcompanies"],
+			"href": ["com_customer","company/list"],
 			"depend": {
 				"ability": "com_customer/listcompanies"
 			}
@@ -33,7 +33,7 @@
 		{
 			"path": "main_menu/business/com_customer/newcompany",
 			"text": "New Company",
-			"href": ["com_customer","editcompany"],
+			"href": ["com_customer","company/edit"],
 			"depend": {
 				"ability": "com_customer/newcompany"
 			}

@@ -11,6 +11,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-action('com_customer', 'listcustomers');
+action('com_customer', 'customer/list');
 
 ?>

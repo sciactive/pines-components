@@ -29,7 +29,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			}
 			var loader;
 			$.ajax({
-				url: "<?php echo pines_url("com_customer", "customersearch"); ?>",
+				url: "<?php echo pines_url('com_customer', 'customer/search'); ?>",
 				type: "POST",
 				dataType: "json",
 				data: {"q": search_string},
@@ -96,16 +96,16 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', text: 'Search', extra_class: 'picon picon-system-search', selection_optional: true, pass_csv_with_headers: true, click: submit_search},
 				{type: 'separator'},
 				<?php if (gatekeeper('com_customer/newcustomer')) { ?>
-				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo pines_url('com_customer', 'editcustomer'); ?>'},
+				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo pines_url('com_customer', 'customer/edit'); ?>'},
 				<?php } if (gatekeeper('com_customer/editcustomer')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo pines_url('com_customer', 'editcustomer', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo pines_url('com_customer', 'customer/edit', array('id' => '__title__')); ?>'},
 				<?php } if ($pines->config->com_customer->resetpoints && gatekeeper('com_customer/resetpoints')) { ?>
-				{type: 'button', text: 'Reset Points', extra_class: 'picon picon-edit-clear', multi_select: true, url: '<?php echo pines_url('com_customer', 'resetpoints', array('id' => '__title__')); ?>', delimiter: ','},
+				{type: 'button', text: 'Reset Points', extra_class: 'picon picon-edit-clear', multi_select: true, url: '<?php echo pines_url('com_customer', 'customer/resetpoints', array('id' => '__title__')); ?>', delimiter: ','},
 				<?php } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
 				<?php if (gatekeeper('com_customer/deletecustomer')) { ?>
-				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_customer', 'deletecustomer', array('id' => '__title__')); ?>', delimiter: ','},
+				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_customer', 'customer/delete', array('id' => '__title__')); ?>', delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>
 				{type: 'button', text: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},

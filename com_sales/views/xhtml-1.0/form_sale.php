@@ -825,7 +825,7 @@ $pines->com_pgrid->load();
 		function customer_search(search_string) {
 			var loader;
 			$.ajax({
-				url: "<?php echo pines_url("com_customer", "customersearch"); ?>",
+				url: "<?php echo pines_url('com_customer', 'customer/search'); ?>",
 				type: "POST",
 				dataType: "json",
 				data: {"q": search_string},

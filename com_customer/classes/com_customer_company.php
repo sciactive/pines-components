@@ -78,7 +78,7 @@ class com_customer_company extends entity {
 	 */
 	public function print_form() {
 		global $pines;
-		$module = new module('com_customer', 'form_company', 'content');
+		$module = new module('com_customer', 'company/form', 'content');
 		$module->entity = $this;
 
 		return $module;

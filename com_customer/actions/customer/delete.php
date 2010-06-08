@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_customer/deletecustomer') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'listcustomers'));
+	punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'customer/list'));
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_customer) {
@@ -26,6 +26,6 @@ if (empty($failed_deletes)) {
 	pines_error('Could not delete customers with given IDs: '.$failed_deletes);
 }
 
-redirect(pines_url('com_customer', 'listcustomers'));
+redirect(pines_url('com_customer', 'customer/list'));
 
 ?>

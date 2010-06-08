@@ -162,7 +162,7 @@ $pines->com_pgrid->load();
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="customer_details" action="<?php echo htmlentities(pines_url('com_customer', 'savecustomer')); ?>">
+<form class="pf-form" method="post" id="customer_details" action="<?php echo htmlentities(pines_url('com_customer', 'customer/save')); ?>">
 	<div id="customer_tabs" style="clear: both;">
 		<ul>
 			<li><a href="#tab_general">General</a></li>
@@ -285,7 +285,7 @@ $pines->com_pgrid->load();
 				function company_search(search_string) {
 					var loader;
 					$.ajax({
-						url: "<?php echo pines_url("com_customer", "companysearch"); ?>",
+						url: "<?php echo pines_url('com_customer', 'company/search'); ?>",
 						type: "POST",
 						dataType: "json",
 						data: {"q": search_string},
@@ -717,6 +717,6 @@ $pines->com_pgrid->load();
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_customer', 'listcustomers')); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_customer', 'customer/list')); ?>');" value="Cancel" />
 	</div>
 </form>

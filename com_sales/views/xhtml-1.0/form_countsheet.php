@@ -40,7 +40,7 @@ $pines->com_pgrid->load();
 								}
 								textbox.val("");
 								entry_counter++;
-								entries_table.pgrid_add([{key: entry_counter, values: [code]}]);
+								entries_table.pgrid_add([{key: entry_counter, values: [code, 1]}]);
 								update_entries();
 							}
 						});
@@ -81,15 +81,11 @@ $pines->com_pgrid->load();
 									alert("No product was found with the SKU ["+rows.pgrid_get_value(1)+"].");
 									return;
 								}
-								var qty = 0;
-								do {
-									qty = prompt("Please enter a quantity:", qty);
-								} while ((parseInt(qty) < 1 || isNaN(parseInt(qty))) && qty != null);
-								qty--;
-								while (qty > 0) {
-									entries_table.pgrid_add([{key: null, values: [rows.pgrid_get_value(1)]}]);
-									qty--;
-								}
+								var qty = prompt("Please enter a quantity:", rows.pgrid_get_value(2));
+								if (qty == null || isNaN(parseInt(qty)))
+									qty = rows.pgrid_get_value(2);
+								// Update the quantity of the item.
+								rows.pgrid_set_value(2, qty);
 								update_entries();
 							}
 						});
@@ -147,12 +143,14 @@ $pines->com_pgrid->load();
 				<thead>
 					<tr>
 						<th>Serial Number / SKU</th>
+						<th>Quantity</th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php foreach ($this->entity->entries as $cur_entry) { ?>
 					<tr>
-						<td><?php echo $cur_entry; ?></td>
+						<td><?php echo $cur_entry->code; ?></td>
+						<td><?php echo $cur_entry->qty; ?></td>
 					</tr>
 					<?php } ?>
 				</tbody>

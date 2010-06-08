@@ -135,10 +135,14 @@ class com_sales_countsheet extends entity {
 		// Grab all stock items for this location's inventory.
 		$expected_stock = $pines->entity_manager->get_entities(array('class' => com_sales_stock), array('&', 'tag' => array('com_sales', 'stock')));
 		@usort($expected_stock, array($this, 'sort_stock_by_location_serial'));
+		foreach ($this->entries as $cur_entry) {
+			for ($i=0; $i<$cur_entry->qty; $i++)
+				$entries[] = $cur_entry->code;
+		}
 		foreach ($expected_stock as $key => $cur_stock_entry) {
 			$entry_exists = false;
 			$in_store = ($cur_stock_entry->location->guid == $this->group->guid);
-			foreach ($this->entries as $itemkey => $item) {
+			foreach ($entries as $itemkey => $item) {
 				if (!isset($module->potential[$item])) {
 					$module->potential[$item] = array(
 						'name' => $item,
@@ -162,7 +166,7 @@ class com_sales_countsheet extends entity {
 							$module->matched_count[$cur_stock_entry->product->sku] = 1;
 						}
 						unset($expected_stock[$key]);
-						unset($this->entries[$itemkey]);
+						unset($entries[$itemkey]);
 						// Clear out the 'potential' entry for this item string.
 						if (!$module->potential[$item]['found'])
 							unset($module->potential[$item]);
@@ -199,7 +203,7 @@ class com_sales_countsheet extends entity {
 			}
 		}
 		// See if any of the extraneous items matched any sold items in the inventory.
-		foreach ($this->entries as $item) {
+		foreach ($entries as $item) {
 			if ($module->potential[$item]['found'] == false) {
 				// There were no potential matches for this search string.
 				$module->extra[] = $item;

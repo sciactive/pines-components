@@ -33,9 +33,13 @@ if (!isset($countsheet->creator))
 	$countsheet->creator = $_SESSION['user'];
 $countsheet->entries = (array) json_decode($_REQUEST['entries']);
 foreach ($countsheet->entries as &$cur_entry) {
-	$cur_entry = $cur_entry->values[0];
+	$cur_entry->code = $cur_entry->values[0];
+	$cur_entry->qty = $cur_entry->values[1];
+	unset($cur_entry->key);
+	unset($cur_entry->classes);
+	unset($cur_entry->values);
 }
-unset($cur_entry);
+
 $countsheet->comments = $_REQUEST['comments'];
 
 if (empty($countsheet->entries)) {

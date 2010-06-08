@@ -64,21 +64,21 @@ class com_user extends component implements user_manager_interface {
 	public function fill_session() {
 		global $pines;
 		if ((object) $_SESSION['user'] === $_SESSION['user']) {
-			$test_mod = $pines->entity_manager->get_entity(
-					array(),
+			$tmp_user = $pines->entity_manager->get_entity(
+					array('class' => user),
 					array('&',
 						'guid' => array($_SESSION['user']->guid),
 						'gt' => array('p_mdate', $_SESSION['user']->p_mdate)
 					)
 				);
-			if (!isset($test_mod)) {
+			if (!isset($tmp_user)) {
 				date_default_timezone_set($_SESSION['user_timezone']);
 				return;
-			} else {
-				unset($test_mod, $_SESSION['user']);
 			}
+			unset($_SESSION['user']);
+		} else {
+			$tmp_user = user::factory($_SESSION['user_id']);
 		}
-		$tmp_user = user::factory($_SESSION['user_id']);
 		$_SESSION['user_timezone'] = $tmp_user->get_timezone();
 		date_default_timezone_set($_SESSION['user_timezone']);
 		if (isset($tmp_user->group))

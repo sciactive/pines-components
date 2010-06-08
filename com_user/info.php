@@ -22,7 +22,7 @@ return array(
 	'description' => 'Manages system users, groups, and abilities. Uses an entity manager as a storage backend.',
 	'depend' => array(
 		'pines' => '<2',
-		'service' => 'entity_manager',
+		'service' => 'entity_manager&uploader',
 		'component' => 'com_jquery&com_pgrid&com_pnotify'
 	),
 	'abilities' => array(

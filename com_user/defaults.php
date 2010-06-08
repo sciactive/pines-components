@@ -111,6 +111,7 @@ return array(
 		'description' => 'The minimum length for user PINs. 0 for no minimum.',
 		'value' => 5,
 	),
+	/*
 	array(
 		'name' => 'resize_logos',
 		'cname' => 'Resize Logos',
@@ -132,6 +133,7 @@ return array(
 		'value' => 75,
 		'peruser' => true,
 	),
+	*/
 );
 
 ?>

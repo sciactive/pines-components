@@ -84,7 +84,7 @@ if ($this->entity->status == 'quoted') {
 	$sales_group = $this->entity->group;
 	// Set the location of the group logo image.
 	if (isset($sales_group))
-		$group_logo = $sales_group->get_logo();
+		$group_logo = $sales_group->get_logo(true);
 	// Document id number.
 	// TODO: Change this to an incremental naming scheme.
 	$doc_id = $sales_group->groupname . strtoupper(substr($this->doc_title, 0, 2)) . $this->entity->id;

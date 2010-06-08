@@ -72,6 +72,7 @@ class com_user extends component implements user_manager_interface {
 					)
 				);
 			if (!isset($tmp_user)) {
+				$_SESSION['user']->clear_cache();
 				date_default_timezone_set($_SESSION['user_timezone']);
 				return;
 			}

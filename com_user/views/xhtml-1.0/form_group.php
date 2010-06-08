@@ -13,6 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Group' : 'Editing ['.htmlentities($this->entity->groupname).']';
 $this->note = 'Provide group details in this form.';
 $pines->com_pgrid->load();
+$pines->uploader->load();
 ?>
 <script type="text/javascript">
 	// <![CDATA[
@@ -195,7 +196,7 @@ $pines->com_pgrid->load();
 	});
 	// ]]>
 </script>
-<form enctype="multipart/form-data" class="pf-form" method="post" id="group_details" action="<?php echo htmlentities(pines_url('com_user', 'savegroup')); ?>">
+<form class="pf-form" method="post" id="group_details" action="<?php echo htmlentities(pines_url('com_user', 'savegroup')); ?>">
 	<div id="group_tabs" style="clear: both;">
 		<ul>
 			<li><a href="#tab_general">General</a></li>
@@ -288,7 +289,7 @@ $pines->com_pgrid->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Change Logo</span>
-					<input class="pf-field ui-widget-content" type="file" name="image" /></label>
+					<input class="pf-field ui-widget-content puploader" type="text" name="image" /></label>
 			</div>
 			<br class="pf-clearing" />
 		</div>

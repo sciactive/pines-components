@@ -114,13 +114,13 @@ class group extends able_object implements group_interface {
 		return $return;
 	}
 
-	public function get_logo($rela_location = false) {
+	public function get_logo($full = false) {
 		global $pines;
 		if (isset($this->logo))
-			return ($rela_location ? $pines->config->rela_location : $pines->config->full_location)."{$pines->config->upload_location}logos/{$this->logo}";
+			return $full ? $pines->uploader->url($pines->uploader->real($this->logo), true) : $this->logo;
 		if (isset($this->parent))
-			return $this->parent->get_logo($rela_location);
-		return ($rela_location ? $pines->config->rela_location : $pines->config->full_location)."{$pines->config->upload_location}logos/default_logo.png";
+			return $this->parent->get_logo($full);
+		return ($full ? $pines->config->full_location : $pines->config->rela_location)."{$pines->config->upload_location}logos/default_logo.png";
 	}
 
 	public function get_users($descendents = false) {

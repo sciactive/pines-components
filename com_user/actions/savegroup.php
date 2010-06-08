@@ -132,91 +132,57 @@ if (gatekeeper('com_user/defaultgroups') && $group->default_primary) {
 	}
 }
 
-// Logo image upload and resizing.
-$image = $_FILES['image'];
-if (!empty($image['name'])) {
-	if ($image['size'] > 205000) {
-		$group->print_form();
-		pines_notice('Images cannot exceed 200KB.');
-		return;
-	}
-	if ($image['error'] > 0) {
-		$group->print_form();
-		pines_error("Image Error: {$image['error']}");
-		return;
-	}
-	if (!in_array($image['type'], array('image/jpeg', 'image/png', 'image/gif'))) {
-		$group->print_form();
-		pines_notice('Acceptable image types are jpg, png, and gif.');
-		return;
-	}
-	if (!isset($group->guid) && !$group->save()) {
-		$group->print_form();
-		pines_error('Error saving group.');
-		return;
-	}
-	// Resize and create the image with the Pines logo naming scheme.
-	if (isset($group->logo) && file_exists("{$pines->config->upload_location}logos/{$group->logo}"))
-		unlink("{$pines->config->upload_location}logos/{$group->logo}");
-	switch ($image['type']) {
-		case 'image/jpeg':
-			$group->logo = "{$group->guid}_logo.jpg";
-			if ($pines->config->com_user->resize_logos) {
-				$img_raw = imagecreatefromjpeg($image['tmp_name']);
-				$currwidth = imagesx($img_raw);
-				$currheight = imagesy($img_raw);
-				$img_resized = imagecreate($pines->config->com_user->logo_width, $pines->config->com_user->logo_height);
-				imagecopyresized($img_resized, $img_raw, 0, 0, 0, 0, $pines->config->com_user->logo_width, $pines->config->com_user->logo_height, $currwidth, $currheight);
-				imagejpeg($img_resized, "{$pines->config->upload_location}logos/{$group->logo}");
-				imagedestroy($img_raw);
-				imagedestroy($img_resized);
-			} else {
-				move_uploaded_file($image['tmp_name'], "{$pines->config->upload_location}logos/{$group->logo}");
-			}
-			break;
-		case 'image/png':
-			$group->logo = "{$group->guid}_logo.png";
-			if ($pines->config->com_user->resize_logos) {
-				$img_raw = imagecreatefrompng($image['tmp_name']);
-				$currwidth = imagesx($img_raw);
-				$currheight = imagesy($img_raw);
-				$img_resized = imagecreate($pines->config->com_user->logo_width, $pines->config->com_user->logo_height);
-				imagecopyresized($img_resized, $img_raw, 0, 0, 0, 0, $pines->config->com_user->logo_width, $pines->config->com_user->logo_height, $currwidth, $currheight);
-				imagepng($img_resized, "{$pines->config->upload_location}logos/{$group->logo}");
-				imagedestroy($img_raw);
-				imagedestroy($img_resized);
-			} else {
-				move_uploaded_file($image['tmp_name'], "{$pines->config->upload_location}logos/{$group->logo}");
-			}
-			break;
-		case 'image/gif':
-			$group->logo = "{$group->guid}_logo.gif";
-			if ($pines->config->com_user->resize_logos) {
-				$img_raw = imagecreatefromgif($image['tmp_name']);
-				$currwidth = imagesx($img_raw);
-				$currheight = imagesy($img_raw);
-				$img_resized = imagecreatetruecolor($pines->config->com_user->logo_width, $pines->config->com_user->logo_height);
-				$blank = imagecolortransparent($img_raw);
-				// If the image has alpha values (transparency) fill our resized image with blank space.
-				if( $blank >= 0 && $blank < imagecolorstotal($img_raw) ) {
-					$trans = imagecolorsforindex($img_raw, $blank);
-					$trans_color = imagecolorallocate($img_resized, $trans['red'], $trans['green'], $trans['blue']);
-					imagefill( $img_resized, 0, 0, $trans_color );
-					imagecolortransparent( $img_resized, $trans_color );
-				}
-				imagecopyresized($img_resized, $img_raw, 0, 0, 0, 0, $pines->config->com_user->logo_width, $pines->config->com_user->logo_height, $currwidth, $currheight);
-				imagegif($img_resized, "{$pines->config->upload_location}logos/{$group->logo}");
-				imagedestroy($img_raw);
-				imagedestroy($img_resized);
-			} else {
-				move_uploaded_file($image['tmp_name'], "{$pines->config->upload_location}logos/{$group->logo}");
-			}
-			break;
-	}
-} else if ($_REQUEST['remove_logo'] == 'ON' && isset($group->logo)) {
-	if (file_exists("{$pines->config->upload_location}logos/{$group->logo}"))
-		unlink("{$pines->config->upload_location}logos/{$group->logo}");
+if ($_REQUEST['remove_logo'] == 'ON' && isset($group->logo))
 	unset($group->logo);
+
+// Logo image upload and resizing.
+if (!empty($_REQUEST['image']) && $pines->uploader->check($_REQUEST['image'])) {
+	$group->logo = $_REQUEST['image'];
+	/* How to resize images without overwriting them?
+	if ($pines->config->com_user->resize_logos) {
+		// if jpeg
+		case 'image/jpeg':
+			$img_raw = imagecreatefromjpeg($group->logo);
+			$currwidth = imagesx($img_raw);
+			$currheight = imagesy($img_raw);
+			$img_resized = imagecreate($pines->config->com_user->logo_width, $pines->config->com_user->logo_height);
+			imagecopyresized($img_resized, $img_raw, 0, 0, 0, 0, $pines->config->com_user->logo_width, $pines->config->com_user->logo_height, $currwidth, $currheight);
+			imagejpeg($img_resized, $group->logo);
+			imagedestroy($img_raw);
+			imagedestroy($img_resized);
+			break;
+		// if png
+		case 'image/png':
+			$img_raw = imagecreatefrompng($group->logo);
+			$currwidth = imagesx($img_raw);
+			$currheight = imagesy($img_raw);
+			$img_resized = imagecreate($pines->config->com_user->logo_width, $pines->config->com_user->logo_height);
+			imagecopyresized($img_resized, $img_raw, 0, 0, 0, 0, $pines->config->com_user->logo_width, $pines->config->com_user->logo_height, $currwidth, $currheight);
+			imagepng($img_resized, $group->logo);
+			imagedestroy($img_raw);
+			imagedestroy($img_resized);
+			break;
+		// if gif
+		case 'image/gif':
+			$img_raw = imagecreatefromgif($group->logo);
+			$currwidth = imagesx($img_raw);
+			$currheight = imagesy($img_raw);
+			$img_resized = imagecreatetruecolor($pines->config->com_user->logo_width, $pines->config->com_user->logo_height);
+			$blank = imagecolortransparent($img_raw);
+			// If the image has alpha values (transparency) fill our resized image with blank space.
+			if( $blank >= 0 && $blank < imagecolorstotal($img_raw) ) {
+				$trans = imagecolorsforindex($img_raw, $blank);
+				$trans_color = imagecolorallocate($img_resized, $trans['red'], $trans['green'], $trans['blue']);
+				imagefill( $img_resized, 0, 0, $trans_color );
+				imagecolortransparent( $img_resized, $trans_color );
+			}
+			imagecopyresized($img_resized, $img_raw, 0, 0, 0, 0, $pines->config->com_user->logo_width, $pines->config->com_user->logo_height, $currwidth, $currheight);
+			imagegif($img_resized, $group->logo);
+			imagedestroy($img_raw);
+			imagedestroy($img_resized);
+			break;
+	}
+	*/
 }
 
 if ($group->save()) {

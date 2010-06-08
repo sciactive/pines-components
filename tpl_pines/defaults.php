@@ -23,7 +23,7 @@ return array(
 		'name' => 'header_image',
 		'cname' => 'Header Image',
 		'description' => 'The header image to use.',
-		'value' => isset($_SESSION['user']->group) ? $_SESSION['user']->group->get_logo(true) : $pines->config->rela_location.$pines->config->upload_location.'logos/default_logo.png',
+		'value' => isset($_SESSION['user']->group) ? $_SESSION['user']->group->get_logo() : $pines->config->rela_location.$pines->config->upload_location.'logos/default_logo.png',
 		'peruser' => true,
 	),
 	array(

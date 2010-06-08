@@ -15,16 +15,20 @@ $pines->com_pgrid->load();
 ?>
 <script type="text/javascript">
 	// <![CDATA[
-	var entries, entries_table, entry_counter;
-
 	pines(function(){
-		entries = $("#countsheet_details input[name=entries]");
-		entries_table = $("#entries_table");
-		entry_counter = $("#entry_counter").val();
-
+		var entries = $("#countsheet_details input[name=entries]");
+		var entries_table = $("#entries_table");
+		var entry_counter = $("#entry_counter").val();
+		<?php if ( $this->entity->final ) { ?>
 		entries_table.pgrid({
 			pgrid_view_height: "360px",
-			<?php if ( !$this->entity->final ) { ?>
+			pgrid_paginate: false
+		});
+		<?php } else { ?>
+		var code_box;
+		entries_table.pgrid({
+			pgrid_view_height: "360px",
+			pgrid_paginate: false,
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents : [
 				{
@@ -39,11 +43,24 @@ $pines->com_pgrid->load();
 									return;
 								}
 								textbox.val("");
-								entry_counter++;
-								entries_table.pgrid_add([{key: entry_counter, values: [code, 1]}]);
+								var item_count = 0;
+								entries_table.pgrid_get_all_rows().each(function(){
+									// Check each entry, increment Qty if it already exists.
+									var cur_row = $(this);
+									if (code == cur_row.pgrid_get_value(1)) {
+										item_count = parseInt(cur_row.pgrid_get_value(2))+1;
+										if (!isNaN(item_count))
+											cur_row.pgrid_set_value(2, item_count);
+									}
+								});
+								if (item_count == 0) {
+									entry_counter++;
+									entries_table.pgrid_add([{key: entry_counter, values: [code, 1]}]);
+								}
 								update_entries();
 							}
 						});
+						code_box = textbox;
 					}
 				},
 				{type: 'separator'},
@@ -102,14 +119,14 @@ $pines->com_pgrid->load();
 						update_entries();
 					}
 				}
-			],
-			<?php } ?>
-			pgrid_paginate: false
+			]
 		});
+		code_box.focus();
+		<?php } ?>
 
-		function update_entries() {
+		var update_entries = function(){
 			entries.val(JSON.stringify(entries_table.pgrid_get_all_rows().pgrid_export_rows()));
-		}
+		};
 
 		update_entries();
 	});
@@ -161,7 +178,7 @@ $pines->com_pgrid->load();
 		<h1>Comments</h1>
 	</div>
 	<div class="pf-element pf-full-width">
-		<span class="pf-field pf-full-width"><textarea class="ui-widget-content" style="width: 100%;" rows="3" cols="35" name="comments"><?php echo $this->entity->comments; ?></textarea></span>
+		<div class="pf-full-width"><textarea class="ui-widget-content" style="width: 100%;" rows="3" cols="35" name="comments"><?php echo $this->entity->comments; ?></textarea></div>
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>

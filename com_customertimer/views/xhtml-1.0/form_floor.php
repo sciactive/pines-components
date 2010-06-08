@@ -58,7 +58,7 @@ $pines->uploader->load();
 				if (station.element)
 					delete station.element;
 			});
-		}
+		};
 
 		// Make buttons for each station.
 		var update_layout = function(){
@@ -107,7 +107,7 @@ $pines->uploader->load();
 					}
 				});
 			});
-		}
+		};
 
 		$("#floor_tabs").tabs();
 		$("#floor_tabs .station_layout_buttonset").buttonset();

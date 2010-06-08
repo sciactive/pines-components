@@ -49,10 +49,10 @@ $pines->uploader->load();
 		var station_floor = $("#floor_tabs .station_layout .station_floor");
 		var station_input = $("#floor_tabs input[name=stations]");
 
-		var stations = JSON.parse("<?php echo addslashes(json_encode($this->entity->stations)); ?>");
+		var stations = JSON.parse("<?php echo addslashes(json_encode($this->entity->stations, JSON_FORCE_OBJECT)); ?>");
 
 		// Remove all the DOM elements.
-		function remove_station_elements() {
+		var remove_station_elements = function(){
 			station_floor.find("div.station").remove();
 			$.each(stations, function(station_id, station){
 				if (station.element)
@@ -61,7 +61,7 @@ $pines->uploader->load();
 		}
 
 		// Make buttons for each station.
-		function update_layout() {
+		var update_layout = function(){
 			remove_station_elements();
 			$.each(stations, function(station_id, station){
 				station.element = $("<div />", {
@@ -258,14 +258,15 @@ $pines->uploader->load();
 					// ]]>
 				</script>
 				<label><span class="pf-label">Background</span>
+					<span class="pf-note">See the Station Layout tab to preview the background.</span>
 					<input class="pf-field ui-widget-content puploader" type="text" name="background" value="<?php echo $this->entity->background; ?>" /></label>
 			</div>
-			<div class="pf-element pf-full-width">
+			<?php /* <div class="pf-element pf-full-width">
 				<span class="pf-label">Background Preview</span>
 				<div class="pf-group">
 					<span class="pf-field"><img class="station_layout_bg" src="<?php echo $this->entity->background; ?>" alt="Floor Background" style="max-width: 100%; width: auto; height: auto; border: 1px dashed black;" /></span>
 				</div>
-			</div>
+			</div> */ ?>
 			<br class="pf-clearing" />
 		</div>
 		<div id="tab_layout">
@@ -290,7 +291,7 @@ $pines->uploader->load();
 				<div class="station_floor"></div>
 				<br class="pf-clearing" />
 			</div>
-			<input type="hidden" name="stations" value="<?php echo htmlentities(json_encode($this->entity->stations)); ?>" />
+			<input type="hidden" name="stations" value="<?php echo htmlentities(json_encode($this->entity->stations, JSON_FORCE_OBJECT)); ?>" />
 			<br class="pf-clearing" />
 		</div>
 	</div>

@@ -42,7 +42,7 @@ $pines->com_pgrid->load();
 					{
 						type: 'button',
 						text: 'Remove',
-						extra_class: 'picon picon_16x16_edit-delete',
+						extra_class: 'picon picon-edit-delete',
 						click: function(e, rows){
 							rows.pgrid_delete();
 							update_products();

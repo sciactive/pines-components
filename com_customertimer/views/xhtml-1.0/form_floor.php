@@ -271,17 +271,17 @@ $pines->uploader->load();
 		<div id="tab_layout">
 			<div class="ui-widget-header ui-corner-all" style="padding: 10px;">
 				<span class="station_layout_buttonset">
-					<button type="button" class="station_layout_save"><span class="picon picon_32x32_document-save"></span> Save</button>
-					<button type="button" class="station_layout_revert"><span class="picon picon_32x32_document-revert"></span> Revert</button>
+					<button type="button" class="station_layout_save"><span class="picon picon-32 picon-document-save"></span> Save</button>
+					<button type="button" class="station_layout_revert"><span class="picon picon-32 picon-document-revert"></span> Revert</button>
 				</span>
 				<span class="station_layout_buttonset">
-					<button type="button" class="station_layout_import"><span class="picon picon_32x32_document-import"></span> Import</button>
-					<button type="button" class="station_layout_export"><span class="picon picon_32x32_document-export"></span> Export</button>
+					<button type="button" class="station_layout_import"><span class="picon picon-32 picon-document-import"></span> Import</button>
+					<button type="button" class="station_layout_export"><span class="picon picon-32 picon-document-export"></span> Export</button>
 				</span>
 				<span class="station_layout_buttonset">
-					<button type="button" class="station_layout_add"><span class="picon picon_32x32_list-add"></span> Add</button>
-					<button type="button" class="station_layout_remove"><span class="picon picon_32x32_list-remove"></span> Remove</button>
-					<button type="button" class="station_layout_clear"><span class="picon picon_32x32_edit-clear"></span> Clear</button>
+					<button type="button" class="station_layout_add"><span class="picon picon-32 picon-list-add"></span> Add</button>
+					<button type="button" class="station_layout_remove"><span class="picon picon-32 picon-list-remove"></span> Remove</button>
+					<button type="button" class="station_layout_clear"><span class="picon picon-32 picon-edit-clear"></span> Clear</button>
 				</span>
 			</div>
 			<br class="pf-clearing" />

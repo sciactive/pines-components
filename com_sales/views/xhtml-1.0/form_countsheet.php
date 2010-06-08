@@ -50,7 +50,7 @@ $pines->com_pgrid->load();
 				{
 					type: 'button',
 					text: 'Quantity',
-					extra_class: 'picon picon_16x16_document-multiple',
+					extra_class: 'picon picon-document-multiple',
 					confirm: false,
 					multi_select: false,
 					click: function(e, rows){
@@ -64,7 +64,7 @@ $pines->com_pgrid->load();
 								loader = $.pnotify({
 									pnotify_title: 'Product Search',
 									pnotify_text: 'Retrieving product from server...',
-									pnotify_notice_icon: 'picon picon_16x16_throbber',
+									pnotify_notice_icon: 'picon picon-throbber',
 									pnotify_nonblock: true,
 									pnotify_hide: false,
 									pnotify_history: false
@@ -94,7 +94,7 @@ $pines->com_pgrid->load();
 				{
 					type: 'button',
 					text: 'Remove',
-					extra_class: 'picon picon_16x16_edit-delete',
+					extra_class: 'picon picon-edit-delete',
 					confirm: true,
 					multi_select: true,
 					click: function(e, rows){

@@ -42,29 +42,29 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
-				{type: 'button', text: 'Location', extra_class: 'picon picon_16x16_applications-internet', selection_optional: true, click: function(){sale_grid.location_form();}},
-				{type: 'button', text: 'Timespan', extra_class: 'picon picon_16x16_view-time-schedule', selection_optional: true, click: function(){sale_grid.date_form();}},
+				{type: 'button', text: 'Location', extra_class: 'picon picon-applications-internet', selection_optional: true, click: function(){sale_grid.location_form();}},
+				{type: 'button', text: 'Timespan', extra_class: 'picon picon-view-time-schedule', selection_optional: true, click: function(){sale_grid.date_form();}},
 				{type: 'separator'},
 				<?php if (gatekeeper('com_sales/newsale')) { ?>
-				{type: 'button', text: 'New', extra_class: 'picon picon_16x16_document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'editsale'); ?>'},
+				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'editsale'); ?>'},
 				<?php } if (gatekeeper('com_sales/editsale')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'picon picon_16x16_document-edit', url: '<?php echo pines_url('com_sales', 'editsale', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', url: '<?php echo pines_url('com_sales', 'editsale', array('id' => '__title__')); ?>'},
 				<?php } ?>
-				{type: 'button', text: 'Receipt', extra_class: 'picon picon_16x16_document-print-preview', double_click: true, url: '<?php echo pines_url('com_sales', 'receiptsale', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Receipt', extra_class: 'picon picon-document-print-preview', double_click: true, url: '<?php echo pines_url('com_sales', 'receiptsale', array('id' => '__title__')); ?>'},
 				<?php if (gatekeeper('com_sales/newreturn')) { ?>
-				{type: 'button', text: 'Return', extra_class: 'picon picon_16x16_edit-undo', url: '<?php echo pines_url('com_sales', 'returnsale', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Return', extra_class: 'picon picon-edit-undo', url: '<?php echo pines_url('com_sales', 'returnsale', array('id' => '__title__')); ?>'},
 				<?php } if (gatekeeper('com_sales/voidsale')) { ?>
-				{type: 'button', text: 'Void', extra_class: 'picon picon_16x16_edit-delete-shred', confirm: true, url: '<?php echo pines_url('com_sales', 'voidsale', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Void', extra_class: 'picon picon-edit-delete-shred', confirm: true, url: '<?php echo pines_url('com_sales', 'voidsale', array('id' => '__title__')); ?>'},
 				<?php } ?>
 				{type: 'separator'},
 				<?php if (gatekeeper('com_sales/deletesale')) { ?>
-				{type: 'button', text: 'Delete', extra_class: 'picon picon_16x16_edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_sales', 'deletesale', array('id' => '__title__')); ?>', delimiter: ','},
+				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_sales', 'deletesale', array('id' => '__title__')); ?>', delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>
-				{type: 'button', text: 'Select All', extra_class: 'picon picon_16x16_document-multiple', select_all: true},
-				{type: 'button', text: 'Select None', extra_class: 'picon picon_16x16_document-close', select_none: true},
+				{type: 'button', text: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
+				{type: 'button', text: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
-				{type: 'button', text: 'Spreadsheet', extra_class: 'picon picon_16x16_x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
+				{type: 'button', text: 'Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
 					pines.post("<?php echo pines_url('system', 'csv'); ?>", {
 						filename: 'sales',
 						content: rows

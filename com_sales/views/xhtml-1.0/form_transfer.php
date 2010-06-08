@@ -69,7 +69,7 @@ if ($this->entity->final)
 					{
 						type: 'button',
 						text: 'Add',
-						extra_class: 'picon picon_16x16_document-new',
+						extra_class: 'picon picon-document-new',
 						selection_optional: true,
 						click: function(){
 							stock_dialog.dialog('open');
@@ -78,7 +78,7 @@ if ($this->entity->final)
 					{
 						type: 'button',
 						text: 'Remove',
-						extra_class: 'picon picon_16x16_edit-delete',
+						extra_class: 'picon picon-edit-delete',
 						click: function(e, rows){
 							available_stock_table.pgrid_add(rows.pgrid_export_rows());
 							rows.pgrid_delete();

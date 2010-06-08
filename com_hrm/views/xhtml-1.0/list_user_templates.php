@@ -25,19 +25,19 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				<?php if (gatekeeper('com_sales/newusertemplate')) { ?>
-				{type: 'button', text: 'New', extra_class: 'picon picon_16x16_list-add-user', selection_optional: true, url: '<?php echo pines_url('com_hrm', 'editusertemplate'); ?>'},
+				{type: 'button', text: 'New', extra_class: 'picon picon-list-add-user', selection_optional: true, url: '<?php echo pines_url('com_hrm', 'editusertemplate'); ?>'},
 				<?php } if (gatekeeper('com_sales/editusertemplate')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'picon picon_16x16_user-properties', double_click: true, url: '<?php echo pines_url('com_hrm', 'editusertemplate', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'picon picon-user-properties', double_click: true, url: '<?php echo pines_url('com_hrm', 'editusertemplate', array('id' => '__title__')); ?>'},
 				<?php } ?>
 				{type: 'separator'},
 				<?php if (gatekeeper('com_sales/deleteusertemplate')) { ?>
-				{type: 'button', text: 'Delete', extra_class: 'picon picon_16x16_list-remove-user', confirm: true, multi_select: true, url: '<?php echo pines_url('com_hrm', 'deleteusertemplate', array('id' => '__title__')); ?>', delimiter: ','},
+				{type: 'button', text: 'Delete', extra_class: 'picon picon-list-remove-user', confirm: true, multi_select: true, url: '<?php echo pines_url('com_hrm', 'deleteusertemplate', array('id' => '__title__')); ?>', delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>
-				{type: 'button', text: 'Select All', extra_class: 'picon picon_16x16_document-multiple', select_all: true},
-				{type: 'button', text: 'Select None', extra_class: 'picon picon_16x16_document-close', select_none: true},
+				{type: 'button', text: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
+				{type: 'button', text: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
-				{type: 'button', text: 'Spreadsheet', extra_class: 'picon picon_16x16_x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
+				{type: 'button', text: 'Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
 					pines.post("<?php echo pines_url('system', 'csv'); ?>", {
 						filename: 'user_templates',
 						content: rows

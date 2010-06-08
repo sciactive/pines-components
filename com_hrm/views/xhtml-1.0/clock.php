@@ -28,7 +28,7 @@ $entry_count = count($this->entity->timeclock);
 						loader = $.pnotify({
 							pnotify_title: 'Timeclock',
 							pnotify_text: 'Communicating with server...',
-							pnotify_notice_icon: 'picon picon_16x16_throbber',
+							pnotify_notice_icon: 'picon picon-throbber',
 							pnotify_nonblock: true,
 							pnotify_hide: false,
 							pnotify_history: false

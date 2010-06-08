@@ -96,7 +96,7 @@ $this->title = 'Sales Totals';
                             loader = $.pnotify({
 								pnotify_title: 'Sales Totals',
 								pnotify_text: 'Retrieving totals from server...',
-								pnotify_notice_icon: 'picon picon_16x16_throbber',
+								pnotify_notice_icon: 'picon picon-throbber',
 								pnotify_nonblock: true,
 								pnotify_hide: false,
 								pnotify_history: false

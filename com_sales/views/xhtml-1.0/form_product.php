@@ -33,7 +33,7 @@ $pines->com_jstree->load();
 					{
 						type: 'button',
 						text: 'Add Vendor',
-						extra_class: 'picon picon_16x16_list-add',
+						extra_class: 'picon picon-list-add',
 						selection_optional: true,
 						click: function(){
 							vendor_dialog.dialog('open');
@@ -42,7 +42,7 @@ $pines->com_jstree->load();
 					{
 						type: 'button',
 						text: 'Remove Vendor',
-						extra_class: 'picon picon_16x16_list-remove',
+						extra_class: 'picon picon-list-remove',
 						click: function(e, rows){
 							rows.pgrid_delete();
 							update_vendors();

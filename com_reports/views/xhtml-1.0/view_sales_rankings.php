@@ -59,12 +59,12 @@ $yellow_status = $pines->config->com_reports->rank_level_yellow;
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				<?php if (gatekeeper('com_reports/listsalesrankings')) { ?>
-				{type: 'button', text: '&laquo; Rankings List', extra_class: 'picon picon_16x16_view-choose', selection_optional: true, url: '<?php echo pines_url('com_reports', 'salesrankings'); ?>'},
+				{type: 'button', text: '&laquo; Rankings List', extra_class: 'picon picon-view-choose', selection_optional: true, url: '<?php echo pines_url('com_reports', 'salesrankings'); ?>'},
 				{type: 'separator'},
 				<?php } ?>
-				{type: 'button', text: 'Select All', extra_class: 'picon picon_16x16_document-multiple', select_all: true},
-				{type: 'button', text: 'Select None', extra_class: 'picon picon_16x16_document-close', select_none: true},
-				{type: 'button', text: 'Spreadsheet', extra_class: 'picon picon_16x16_x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
+				{type: 'button', text: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
+				{type: 'button', text: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
+				{type: 'button', text: 'Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
 					pines.post("<?php echo pines_url('system', 'csv'); ?>", {
 						filename: 'sales_rankings',
 						content: rows

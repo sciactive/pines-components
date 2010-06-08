@@ -32,7 +32,7 @@ $pines->com_pgrid->load();
 				{
 					type: 'button',
 					text: 'Add Condition',
-					extra_class: 'picon picon_16x16_document-new',
+					extra_class: 'picon picon-document-new',
 					selection_optional: true,
 					click: function(){
 						cur_condition = null;
@@ -42,7 +42,7 @@ $pines->com_pgrid->load();
 				{
 					type: 'button',
 					text: 'Edit Condition',
-					extra_class: 'picon picon_16x16_document-edit',
+					extra_class: 'picon picon-document-edit',
 					double_click: true,
 					click: function(e, rows){
 						cur_condition = rows;
@@ -55,7 +55,7 @@ $pines->com_pgrid->load();
 				{
 					type: 'button',
 					text: 'Remove Condition',
-					extra_class: 'picon picon_16x16_edit-delete',
+					extra_class: 'picon picon-edit-delete',
 					click: function(e, rows){
 						rows.pgrid_delete();
 						update_conditions();

@@ -31,18 +31,18 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				<?php if (isset($this->employees)) { ?>
-				{type: 'button', text: 'View', extra_class: 'picon picon_16x16_user-identity', double_click: true, url: '<?php echo pines_url('com_reports', 'reportattendance', array('employee' => '__title__', 'start' => format_date($this->date[0], 'date_short'), 'end' => format_date($this->date[1], 'date_short'), 'location' => $this->location->guid), false); ?>'},
+				{type: 'button', text: 'View', extra_class: 'picon picon-user-identity', double_click: true, url: '<?php echo pines_url('com_reports', 'reportattendance', array('employee' => '__title__', 'start' => format_date($this->date[0], 'date_short'), 'end' => format_date($this->date[1], 'date_short'), 'location' => $this->location->guid), false); ?>'},
 				{type: 'separator'},
-				{type: 'button', text: 'Select All', extra_class: 'picon picon_16x16_document-multiple', select_all: true},
-				{type: 'button', text: 'Select None', extra_class: 'picon picon_16x16_document-close', select_none: true},
-				{type: 'button', text: 'Spreadsheet', extra_class: 'picon picon_16x16_x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
+				{type: 'button', text: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
+				{type: 'button', text: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
+				{type: 'button', text: 'Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
 					pines.post("<?php echo pines_url('system', 'csv'); ?>", {
 						filename: 'time_attendance',
 						content: rows
 					});
 				}}
 				<?php } else { ?>
-				{type: 'button', text: '&laquo; All Employees', extra_class: 'picon picon_16x16_system-users', selection_optional: true, click: function(e, rows){
+				{type: 'button', text: '&laquo; All Employees', extra_class: 'picon picon-system-users', selection_optional: true, click: function(e, rows){
 					pines.post("<?php echo pines_url('com_reports', 'reportattendance'); ?>", {
 						start: "<?php echo format_date($this->date[0], 'date_short'); ?>",
 						end: "<?php echo format_date($this->date[1], 'date_short'); ?>",

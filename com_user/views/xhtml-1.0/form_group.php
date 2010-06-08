@@ -29,7 +29,7 @@ $pines->com_pgrid->load();
 				{
 					type: 'button',
 					text: 'Add Attribute',
-					extra_class: 'picon picon_16x16_list-add',
+					extra_class: 'picon picon-list-add',
 					selection_optional: true,
 					click: function(){
 						attribute_dialog.dialog('open');
@@ -38,7 +38,7 @@ $pines->com_pgrid->load();
 				{
 					type: 'button',
 					text: 'Remove Attribute',
-					extra_class: 'picon picon_16x16_list-remove',
+					extra_class: 'picon picon-list-remove',
 					click: function(e, rows){
 						rows.pgrid_delete();
 						update_attributes();
@@ -98,7 +98,7 @@ $pines->com_pgrid->load();
 				{
 					type: 'button',
 					text: 'Add Condition',
-					extra_class: 'picon picon_16x16_document-new',
+					extra_class: 'picon picon-document-new',
 					selection_optional: true,
 					click: function(){
 						cur_condition = null;
@@ -108,7 +108,7 @@ $pines->com_pgrid->load();
 				{
 					type: 'button',
 					text: 'Edit Condition',
-					extra_class: 'picon picon_16x16_document-edit',
+					extra_class: 'picon picon-document-edit',
 					double_click: true,
 					click: function(e, rows){
 						cur_condition = rows;
@@ -120,7 +120,7 @@ $pines->com_pgrid->load();
 				{
 					type: 'button',
 					text: 'Remove Condition',
-					extra_class: 'picon picon_16x16_edit-delete',
+					extra_class: 'picon picon-edit-delete',
 					click: function(e, rows){
 						rows.pgrid_delete();
 						update_conditions();

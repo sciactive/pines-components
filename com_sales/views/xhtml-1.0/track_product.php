@@ -52,7 +52,7 @@ $pines->com_jstree->load();
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents : [
-				{type: 'button', text: 'Location', extra_class: 'picon picon_16x16_applications-internet', selection_optional: true, click: function(){history_grid.location_form();}},
+				{type: 'button', text: 'Location', extra_class: 'picon picon-applications-internet', selection_optional: true, click: function(){history_grid.location_form();}},
 				{type: 'separator'},
 				{type: 'text', label: 'SKU: ', load: function(textbox){
 					// Display the current sku being searched.
@@ -74,9 +74,9 @@ $pines->com_jstree->load();
 					serial_box = textbox;
 				}},
 				{type: 'separator'},
-				{type: 'button', text: 'Timespan', extra_class: 'picon picon_16x16_view-time-schedule', selection_optional: true, click: function(){history_grid.date_form();}},
+				{type: 'button', text: 'Timespan', extra_class: 'picon picon-view-time-schedule', selection_optional: true, click: function(){history_grid.date_form();}},
 				{type: 'separator'},
-				{type: 'button', text: 'Update &raquo;', extra_class: 'picon picon_16x16_view-refresh', selection_optional: true, click: submit_search}
+				{type: 'button', text: 'Update &raquo;', extra_class: 'picon picon-view-refresh', selection_optional: true, click: submit_search}
 			],
 			pgrid_sort_col: 1,
 			pgrid_sort_ord: 'asc',

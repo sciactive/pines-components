@@ -148,7 +148,7 @@ $pines->com_pgrid->load();
                             loader = $.pnotify({
 								pnotify_title: 'Customer Search',
 								pnotify_text: 'Searching for customers...',
-								pnotify_notice_icon: 'picon picon_16x16_throbber',
+								pnotify_notice_icon: 'picon picon-throbber',
 								pnotify_nonblock: true,
 								pnotify_hide: false,
 								pnotify_history: false
@@ -438,7 +438,7 @@ $pines->com_pgrid->load();
 				<span class="pf-note">Enter part of a name, company, email, or phone # to search.</span>
 				<div class="pf-group">
 					<input class="pf-field ui-widget-content" type="text" name="customer_search" size="24" />
-					<button class="pf-field ui-state-default ui-corner-all search_button" type="button"><span class="picon picon_16x16_system-search" style="padding-left: 16px; background-repeat: no-repeat;">Search</span></button>
+					<button class="pf-field ui-state-default ui-corner-all search_button" type="button"><span class="picon picon-system-search" style="padding-left: 16px; background-repeat: no-repeat;">Search</span></button>
 				</div>
 			</div>
 		</div>

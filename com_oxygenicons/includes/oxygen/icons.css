@@ -200,6 +200,8 @@
 .picon_32x32_application-exit {background-image: url("32x32/actions/application-exit.png")}
 .picon_32x32_media-record {background-image: url("32x32/actions/media-record.png")}
 .picon_32x32_mail-reply-custom {background-image: url("32x32/actions/mail-reply-custom.png")}
+.picon_32x32_view-investment {background-image: url("32x32/actions/view-investment.png")}
+.picon_32x32_view-stock-account {background-image: url("32x32/actions/view-stock-account.png")}
 .picon_32x32_media-skip-forward {background-image: url("32x32/actions/media-skip-forward.png")}
 .picon_32x32_go-jump-today {background-image: url("32x32/actions/go-jump-today.png")}
 .picon_32x32_view-choose {background-image: url("32x32/actions/view-choose.png")}
@@ -296,6 +298,8 @@
 .picon_32x32_office-chart-ring {background-image: url("32x32/actions/office-chart-ring.png")}
 .picon_32x32_view-calendar-list {background-image: url("32x32/actions/view-calendar-list.png")}
 .picon_32x32_zoom-fit-width {background-image: url("32x32/actions/zoom-fit-width.png")}
+.picon_32x32_view-catalog {background-image: url("32x32/actions/view-catalog.png")}
+.picon_32x32_view-currency-list {background-image: url("32x32/actions/view-currency-list.png")}
 .picon_32x32_im-kick-user {background-image: url("32x32/actions/im-kick-user.png")}
 .picon_32x32_view-time-schedule-child-insert {background-image: url("32x32/actions/view-time-schedule-child-insert.png")}
 .picon_32x32_view-certificate-add {background-image: url("32x32/actions/view-certificate-add.png")}
@@ -332,6 +336,7 @@
 .picon_32x32_go-previous-view {background-image: url("32x32/actions/go-previous-view.png")}
 .picon_32x32_view-close {background-image: url("32x32/actions/view-close.png")}
 .picon_32x32_document-sign {background-image: url("32x32/actions/document-sign.png")}
+.picon_32x32_split {background-image: url("32x32/actions/split.png")}
 .picon_32x32_view-barcode {background-image: url("32x32/actions/view-barcode.png")}
 .picon_32x32_archive-insert-directory {background-image: url("32x32/actions/archive-insert-directory.png")}
 .picon_32x32_go-home {background-image: url("32x32/actions/go-home.png")}
@@ -345,6 +350,7 @@
 .picon_32x32_help-hint {background-image: url("32x32/actions/help-hint.png")}
 .picon_32x32_system-log-out {background-image: url("32x32/actions/system-log-out.png")}
 .picon_32x32_flag {background-image: url("32x32/actions/flag.png")}
+.picon_32x32_view-credit-card-account {background-image: url("32x32/actions/view-credit-card-account.png")}
 .picon_32x32_list-add {background-image: url("32x32/actions/list-add.png")}
 .picon_32x32_layer-visible-off {background-image: url("32x32/actions/layer-visible-off.png")}
 .picon_32x32_view-right-close {background-image: url("32x32/actions/view-right-close.png")}
@@ -382,6 +388,7 @@
 .picon_32x32_video-projector {background-image: url("32x32/devices/video-projector.png")}
 .picon_32x32_scanner {background-image: url("32x32/devices/scanner.png")}
 .picon_32x32_media-optical {background-image: url("32x32/devices/media-optical.png")}
+.picon_32x32_printer-laser {background-image: url("32x32/devices/printer-laser.png")}
 .picon_32x32_media-flash-sd-mmc {background-image: url("32x32/devices/media-flash-sd-mmc.png")}
 .picon_32x32_drive-removable-media-usb-pendrive {background-image: url("32x32/devices/drive-removable-media-usb-pendrive.png")}
 .picon_32x32_camera-web {background-image: url("32x32/devices/camera-web.png")}

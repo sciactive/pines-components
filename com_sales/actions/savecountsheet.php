@@ -39,6 +39,7 @@ foreach ($countsheet->entries as &$cur_entry) {
 	unset($cur_entry->classes);
 	unset($cur_entry->values);
 }
+unset($cur_entry);
 
 $countsheet->comments = $_REQUEST['comments'];
 

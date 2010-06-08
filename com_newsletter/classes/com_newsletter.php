@@ -21,26 +21,6 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class com_newsletter extends component {
 	/**
-	 * Delete an attachment from a mailing.
-	 *
-	 * @param entity &$mail The mailing.
-	 * @param string $name The name of the attachment to delete.
-	 * @return bool True on success, false on failure.
-	 */
-	function delete_attachment(&$mail, $name) {
-		global $pines;
-		if ( unlink($pines->config->upload_location . 'attachments/' . clean_filename($name)) ) {
-			if ( in_array($name, $mail->attachments) )
-				unset($mail->attachments[array_search($name, $mail->attachments)]);
-			pines_log("Removed attachment $name from mail $mail->name.", 'notice');
-			return true;
-		} else {
-			pines_error('File removal failed!');
-			return false;
-		}
-	}
-
-	/**
 	 * Provide a form for the user to edit a mailing.
 	 *
 	 * @param entity|null $mail The mailing to edit. If null, a new one is created.
@@ -61,7 +41,6 @@ class com_newsletter extends component {
 		} else {
 			$mail = new entity('com_newsletter', 'mail');
 		}
-		$calendar_head = new module('com_newsletter', 'edit_mail_head', 'head');
 		$module = new module('com_newsletter', 'edit_mail', 'content');
 		$module->entity = $mail;
 		$module->new_option = $new_option;

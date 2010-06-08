@@ -30,17 +30,14 @@ if ( $_REQUEST['update'] == 'yes' ) {
 	$mail->subject = $_REQUEST['subject'];
 	$mail->message = $_REQUEST['data'];
 	foreach ( $mail->attachments as $key => $cur_attachment ) {
-		if ( $_REQUEST["attach_".clean_checkbox($cur_attachment)] != 'on' ) {
-			if ( $pines->com_newsletter->delete_attachment($mail, $cur_attachment) )
-				pines_notice("Attachment $cur_attachment removed.");
-		}
+		if ( $_REQUEST["attach_".clean_checkbox($cur_attachment)] != 'on' )
+			unset($mail->attachments[$key]);
 	}
-	if ( !$_FILES['attachment']['error'] ) {
-		$upload_file = stripslashes(basename($_FILES['attachment']['name']));
-		if ( move_uploaded_file($_FILES['attachment']['tmp_name'], $pines->config->upload_location.'attachments/'.$upload_file) ) {
-			array_push($mail->attachments, $upload_file);
+	if (!empty($_REQUEST['attachment'])) {
+		if (!in_array($_REQUEST['attachment'], $mail->attachments) && $pines->uploader->check($_REQUEST['attachment'])) {
+			$mail->attachments[] = $_REQUEST['attachment'];
 		} else {
-			pines_error("Possible file upload attack! Upload failed! D:\n");
+			pines_error("File attachment failed.\n");
 		}
 	}
 

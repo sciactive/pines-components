@@ -62,9 +62,6 @@ if (isset($location->guid)) {
 	}
 }
 $bcc = implode(', ', $addresses);
-/*foreach ($addresses as $cur_address) {
-	$bcc = $bcc . (strlen($bcc) ? ', ' : '') . $cur_address;
-}*/
 
 $mailer = &new com_mailer_mail(com_newsletter__clean_header($_REQUEST['from']), 'undisclosed-recipients <noone@example.com>', com_newsletter__clean_header($_REQUEST['subject']), $message);
 $mailer->addHeader('Reply-To', com_newsletter__clean_header($_REQUEST['replyto']));
@@ -72,7 +69,7 @@ $mailer->addHeader('Bcc', $bcc);
 
 $attachments = $mail->attachments;
 foreach ( $attachments as $cur_attachment ) {
-	$mailer->addAttachment($pines->config->upload_location . 'attachments/' . $cur_attachment);
+	$mailer->addAttachment($pines->uploader->real($cur_attachment));
 }
 
 if ( $mailer->send() ) {

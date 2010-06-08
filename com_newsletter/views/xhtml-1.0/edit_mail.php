@@ -12,9 +12,10 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Mail' : 'Editing ['.htmlentities($this->entity->name).']';
+$pines->editor->load();
+$pines->uploader->load();
 ?>
-<div class="yui-skin-sam">
-<form class="pf-form" enctype="multipart/form-data" name="editingmail" method="post" action="<?php echo htmlentities(pines_url($this->new_option, $this->new_action)); ?>">
+<form class="pf-form" name="editingmail" method="post" action="<?php echo htmlentities(pines_url($this->new_option, $this->new_action)); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 		<?php if (isset($this->entity->user)) { ?>
@@ -25,10 +26,6 @@ $this->title = (!isset($this->entity->guid)) ? 'Editing New Mail' : 'Editing ['.
 		<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
 	</div>
 	<?php } ?>
-	<div class="pf-element pf-buttons" style="padding-left: 0;">
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Save Mail" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url($this->close_option, $this->close_action)); ?>');" value="Close" /> <small>(Closing will lose any unsaved changes!)</small>
-	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Name</span>
 		<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
@@ -40,8 +37,8 @@ $this->title = (!isset($this->entity->guid)) ? 'Editing New Mail' : 'Editing ['.
 	<div class="pf-element pf-heading">
 		<h1>Message</h1>
 	</div>
-	<div class="pf-element">
-		<textarea rows="3" cols="35" class="pf-field ui-widget-content" name="data" id="data" style="width: 99%;"><?php echo htmlentities($this->entity->message); ?></textarea>
+	<div class="pf-element pf-full-width">
+		<div class="pf-full-width"><textarea rows="3" cols="35" class="ui-widget-content peditor" name="data" id="data" style="width: 100%;"><?php echo htmlentities($this->entity->message); ?></textarea></div>
 	</div>
 	<div class="pf-element pf-heading">
 		<h1>Attachments</h1>
@@ -57,14 +54,13 @@ $this->title = (!isset($this->entity->guid)) ? 'Editing New Mail' : 'Editing ['.
 		} ?>
 	</div>
 	<div class="pf-element">
-		<label><span class="pf-label">Upload</span>
-		<input class="pf-field ui-widget-content" name="attachment" type="file" /></label>
+		<label><span class="pf-label">Add an Attachment</span>
+		<input class="pf-field ui-widget-content puploader" name="attachment" type="input" /></label>
 	</div>
-	<div class="pf-element pf-buttons" style="padding-left: 0;">
+	<div class="pf-element pf-buttons">
 		<input type="hidden" name="update" value="yes" />
 		<input type="hidden" name="mail_id" value="<?php echo $this->entity->guid; ?>" />
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Save Mail" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url($this->close_option, $this->close_action)); ?>');" value="Close" /> <small>(Closing will lose any unsaved changes!)</small>
 	</div>
 </form>
-</div>

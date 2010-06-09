@@ -1,6 +1,6 @@
 <?php
 /**
- * Provides a form for the user to edit a sale.
+ * Provides a form for the user to edit a return.
  *
  * @package Pines
  * @subpackage com_sales
@@ -11,21 +11,18 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 if (!isset($this->entity->guid)) {
-	$this->title = 'New Sale';
+	$this->title = 'New Return';
 } elseif ($this->entity->status == 'quoted') {
-	$this->title = 'Quoted Sale ['.htmlentities($this->entity->id).']';
-} elseif ($this->entity->status == 'invoiced') {
-	$this->title = 'Invoiced Sale ['.htmlentities($this->entity->id).']';
-} elseif ($this->entity->status == 'paid') {
-	$this->title = 'Paid Sale ['.htmlentities($this->entity->id).']';
+	$this->title = 'Quoted Return ['.htmlentities($this->entity->id).']';
+} elseif ($this->entity->status == 'processed') {
+	$this->title = 'Processed Return ['.htmlentities($this->entity->id).']';
 } elseif ($this->entity->status == 'voided') {
-	$this->title = 'Voided Sale ['.htmlentities($this->entity->id).']';
+	$this->title = 'Voided Return ['.htmlentities($this->entity->id).']';
 }
-$this->note = 'Use this form to edit a sale.';
+$this->note = 'Use this form to edit a return.';
 $pines->com_pgrid->load();
-// TODO: After a sale is invoiced, don't calculate totals, just show what's saved.
 ?>
-<form class="pf-form" method="post" id="sale_details" action="<?php echo htmlentities(pines_url('com_sales', 'savesale')); ?>">
+<form class="pf-form" method="post" id="return_details" action="<?php echo htmlentities(pines_url('com_sales', 'return/save')); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 		<?php if (isset($this->entity->user)) { ?>
@@ -113,7 +110,7 @@ $pines->com_pgrid->load();
 			payments_table = $("#payments_table");
 			payments = $("#payments");
 
-			<?php if ($pines->config->com_sales->com_customer && ($this->entity->status != 'invoiced' || $this->entity->status != 'paid' || $this->entity->status != 'voided')) { ?>
+			<?php if ($pines->config->com_sales->com_customer && ($this->entity->status != 'processed' || $this->entity->status != 'voided')) { ?>
 			customer_search_box.keydown(function(eventObject){
 				if (eventObject.keyCode == 13) {
 					customer_search(this.value);
@@ -154,7 +151,7 @@ $pines->com_pgrid->load();
 			});
 			<?php } ?>
 
-			<?php if ($this->entity->status == 'invoiced' || $this->entity->status == 'paid' || $this->entity->status == 'voided') { ?>
+			<?php if ($this->entity->status == 'processed' || $this->entity->status == 'voided') { ?>
 			products_table.pgrid({
 				pgrid_view_height: "160px",
 				pgrid_paginate: false,
@@ -239,20 +236,6 @@ $pines->com_pgrid->load();
 								rows.pgrid_set_value(3, serial);
 								update_products();
 							}
-						}
-					},
-					{
-						type: 'button',
-						text: 'Delivery',
-						extra_class: 'picon picon-mail-send',
-						multi_select: true,
-						click: function(e, rows){
-							rows.each(function(){
-								var delivery = rows.pgrid_get_value(4);
-								delivery = (delivery == 'in-store') ? 'shipped' : 'in-store';
-								rows.pgrid_set_value(4, delivery);
-							});
-							update_products();
 						}
 					},
 					{
@@ -346,19 +329,7 @@ $pines->com_pgrid->load();
 							return;
 					}
 				}
-				if (data.one_per_ticket) {
-					var cur_products = products_table.pgrid_get_all_rows().pgrid_export_rows();
-					var pass = true;
-					$.each(cur_products, function(){
-						if (parseInt(this.key) == data.guid) {
-							alert("Only one of this product is allowed per ticket.");
-							pass = false;
-						}
-					});
-					if (!pass)
-						return;
-				}
-				products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'in-store', 1, data.unit_price, "", "", ""]}], function(){
+				products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 1, data.unit_price, "", "", ""]}], function(){
 					var cur_row = $(this);
 					cur_row.data("product", data);
 				});
@@ -492,7 +463,7 @@ $pines->com_pgrid->load();
 			if (loader)
 				loader.pnotify_remove();
 
-			<?php if ($this->entity->status == 'paid' || $this->entity->status == 'voided') { ?>
+			<?php if ($this->entity->status == 'processed' || $this->entity->status == 'voided') { ?>
 			payments_table.pgrid({
 				pgrid_view_height: "150px",
 				pgrid_paginate: false,
@@ -541,7 +512,7 @@ $pines->com_pgrid->load();
 					url: "<?php echo pines_url('com_sales', 'paymentform'); ?>",
 					type: "POST",
 					dataType: "html",
-					data: {"name": payment_data.processing_type, "id": $("#sale_details [name=id]").val(), "customer": $("#customer").val()},
+					data: {"name": payment_data.processing_type, "id": $("#return_details [name=id]").val(), "customer": $("#customer").val()},
 					error: function(XMLHttpRequest, textStatus){
 						pines.error("An error occured while trying to retreive the data form:\n"+XMLHttpRequest.status+": "+textStatus);
 					},
@@ -821,7 +792,7 @@ $pines->com_pgrid->load();
 			payments.val(JSON.stringify(submit_val));
 		}
 
-		<?php if ($pines->config->com_sales->com_customer && ($this->entity->status != 'invoiced' || $this->entity->status != 'paid' || $this->entity->status != 'voided')) { ?>
+		<?php if ($pines->config->com_sales->com_customer && ($this->entity->status != 'processed' || $this->entity->status != 'voided')) { ?>
 		function customer_search(search_string) {
 			var loader;
 			$.ajax({
@@ -923,7 +894,7 @@ $pines->com_pgrid->load();
 			}
 
 			if (!kicked)
-				$("#sale_details").submit();
+				$("#return_details").submit();
 		}
 		<?php } else { ?>
 		function run_drawer() {
@@ -932,7 +903,7 @@ $pines->com_pgrid->load();
 		<?php } ?>
 
 		function run_submit() {
-			$("#sale_details").submit();
+			$("#return_details").submit();
 		}
 		// ]]>
 	</script>
@@ -940,13 +911,13 @@ $pines->com_pgrid->load();
 	<div class="pf-element">
 		<label for="customer_search">
 			<span class="pf-label">Customer</span>
-			<?php if ($this->entity->status != 'invoiced' && $this->entity->status != 'paid' && $this->entity->status != 'voided') { ?>
+			<?php if ($this->entity->status != 'processed' && $this->entity->status != 'voided') { ?>
 			<span class="pf-note">Enter part of a name, company, email, or phone # to search.</span>
 			<?php } ?>
 		</label>
 		<div class="pf-group">
 			<input class="pf-field ui-widget-content" type="text" id="customer" name="customer" size="24" onfocus="this.blur();" value="<?php echo htmlentities($this->entity->customer->guid ? "{$this->entity->customer->guid}: \"{$this->entity->customer->name}\"" : 'No Customer Selected'); ?>" />
-			<?php if ($this->entity->status != 'invoiced' && $this->entity->status != 'paid' && $this->entity->status != 'voided') { ?>
+			<?php if ($this->entity->status != 'processed' && $this->entity->status != 'voided') { ?>
 			<br />
 			<input class="pf-field ui-widget-content" type="text" id="customer_search" name="customer_search" size="24" />
 			<button class="pf-field ui-state-default ui-corner-all" type="button" id="customer_search_button"><span class="picon picon-system-search" style="padding-left: 16px; background-repeat: no-repeat;">Search</span></button>
@@ -1037,7 +1008,6 @@ $pines->com_pgrid->load();
 					<th>SKU</th>
 					<th>Product</th>
 					<th>Serial</th>
-					<th>Delivery</th>
 					<th>Quantity</th>
 					<th>Price</th>
 					<th>Discount</th>
@@ -1054,7 +1024,6 @@ $pines->com_pgrid->load();
 					<td><?php echo $cur_product['entity']->sku; ?></td>
 					<td><?php echo $cur_product['entity']->name; ?></td>
 					<td><?php echo $cur_product['serial']; ?></td>
-					<td><?php echo $cur_product['delivery']; ?></td>
 					<td><?php echo $cur_product['quantity']; ?></td>
 					<td><?php echo $cur_product['price']; ?></td>
 					<td><?php echo $cur_product['discount']; ?></td>
@@ -1067,7 +1036,7 @@ $pines->com_pgrid->load();
 		<input type="hidden" id="products" name="products" size="24" />
 	</div>
 	<div class="pf-element pf-full-width">
-		<span class="pf-label">Ticket Totals</span>
+		<span class="pf-label">Return Totals</span>
 		<div class="pf-group">
 			<div class="pf-field" style="float: right; font-size: 1.2em; text-align: right;">
 				<span class="pf-label">Subtotal</span><span class="pf-field" id="subtotal">0.00</span><br />
@@ -1080,8 +1049,8 @@ $pines->com_pgrid->load();
 		</div>
 	</div>
 	<div class="pf-element pf-full-width">
-		<span class="pf-label">Payments</span>
-		<?php if ($this->entity->status != 'paid' && $this->entity->status != 'voided') { ?>
+		<span class="pf-label">Payments Returned</span>
+		<?php if ($this->entity->status != 'processed' && $this->entity->status != 'voided') { ?>
 		<div class="pf-note">
 			<div style="text-align: left;">
 				<?php foreach ($this->payment_types as $cur_payment_type) { ?>
@@ -1110,28 +1079,14 @@ $pines->com_pgrid->load();
 		</div>
 	</div>
 	<div class="pf-element pf-full-width">
-		<span class="pf-label">Tendered</span>
+		<span class="pf-label">Returned</span>
 		<div class="pf-group">
 			<div class="pf-field" style="float: right; font-size: 1.2em; text-align: right;">
-				<span class="pf-label">Amount Tendered</span><span class="pf-field" id="amount_tendered">0.00</span><br />
-				<span class="pf-label">Amount Due</span><span style="font-weight: bold;" class="pf-field" id="amount_due">0.00</span><br />
-				<hr /><br />
-				<span class="pf-label">Change</span><span style="font-weight: bold;" class="pf-field" id="change">0.00</span>
+				<span class="pf-label">Amount Returned</span><span class="pf-field" id="amount_tendered">0.00</span><br />
 			</div>
 			<hr class="pf-field" style="clear: both;" />
 		</div>
 	</div>
-	<?php if (!empty($this->returns)) { ?>
-	<div class="pf-element pf-full-width">
-		<span class="pf-label">Associated Returns</span>
-		<div class="pf-group">
-			<?php foreach($this->returns as $cur_return) { ?>
-			<a class="pf-field" href="<?php echo htmlentities(pines_url('com_sales', 'return/edit', array('id' => $cur_return->guid))); ?>">Return #<?php echo $cur_return->guid; ?></a>
-			<?php } ?>
-			<hr class="pf-field" style="clear: both;" />
-		</div>
-	</div>
-	<?php } ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Comments</span>
 			<input class="pf-field ui-widget-content ui-state-default ui-corner-all" type="button" value="Edit" onclick="$('#comments_dialog').dialog('open');" /></label>
@@ -1147,22 +1102,18 @@ $pines->com_pgrid->load();
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 
-		<input type="hidden" id="sale_process_type" name="process" value="quote" />
+		<input type="hidden" id="return_process_type" name="process" value="quote" />
 
-		<?php if ($this->entity->status != 'voided' && $this->entity->status != 'paid') { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Tender" onclick="$('#sale_process_type').val('tender'); run_drawer();" />
+		<?php if ($this->entity->status != 'voided' && $this->entity->status != 'processed') { ?>
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Process" onclick="$('#return_process_type').val('process'); run_drawer();" />
 		<?php } ?>
 
-		<?php if ($this->entity->status != 'voided' && $this->entity->status != 'paid' && $this->entity->status != 'invoiced') { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Invoice" onclick="$('#sale_process_type').val('invoice'); run_submit();" />
-		<?php } ?>
-
-		<?php if ($this->entity->status != 'voided' && $this->entity->status != 'paid' && $this->entity->status != 'invoiced' && $this->entity->status != 'quoted') { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Quote" onclick="$('#sale_process_type').val('quote'); run_submit();" />
+		<?php if ($this->entity->status != 'voided' && $this->entity->status != 'processed' && $this->entity->status != 'quoted') { ?>
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Quote" onclick="$('#return_process_type').val('quote'); run_submit();" />
 		<?php } else { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Save" onclick="$('#sale_process_type').val('save'); run_submit();" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Save" onclick="$('#return_process_type').val('save'); run_submit();" />
 		<?php } ?>
 
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'listsales')); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'return/list')); ?>');" value="Cancel" />
 	</div>
 </form>

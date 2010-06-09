@@ -399,6 +399,34 @@ class com_sales extends component {
 	}
 
 	/**
+	 * Creates and attaches a module which lists returns.
+	 * @param int $start_date The start date of returns to show.
+	 * @param int $end_date The end date of returns to show.
+	 * @param group $location The location to show returns for.
+	 */
+	public function list_returns($start_date = null, $end_date = null, $location = null) {
+		global $pines;
+
+		$module = new module('com_sales', 'return/list', 'content');
+
+		$selector = array('&', 'tag' => array('com_sales', 'return'));
+		if (isset($start_date))
+			$selector['gte'] = array('p_cdate', (int) $start_date);
+		if (isset($end_date))
+			$selector['lte'] = array('p_cdate', (int) $end_date);
+		if (isset($location))
+			$selector['ref'] = array('group', $location);
+		$module->returns = $pines->entity_manager->get_entities(array('class' => com_sales_return), $selector);
+		$module->start_date = $start_date;
+		$module->end_date = $end_date;
+		$module->all_time = (!isset($start_date) && !isset($end_date));
+		$module->location = $location;
+
+		if ( empty($module->returns) )
+			pines_notice('No returns found.');
+	}
+
+	/**
 	 * Creates and attaches a module which lists sales.
 	 * @param int $start_date The start date of sales to show.
 	 * @param int $end_date The end date of sales to show.
@@ -421,7 +449,7 @@ class com_sales extends component {
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
 		$module->location = $location;
-		
+
 		if ( empty($module->sales) )
 			pines_notice('No sales found.');
 	}

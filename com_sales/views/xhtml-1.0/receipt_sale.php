@@ -16,6 +16,8 @@ if ($this->entity->status == 'quoted') {
 	$this->doc_title = 'Invoice';
 } elseif ($this->entity->status == 'paid') {
 	$this->doc_title = 'Receipt';
+} elseif ($this->entity->status == 'voided') {
+	$this->doc_title = 'Sale Void';
 } else {
 	$this->doc_title = 'Sale';
 }
@@ -131,6 +133,10 @@ if ($this->entity->status == 'quoted') {
 					echo '<span>'.format_date($this->entity->tender_date, 'date_short').'</span>';
 					echo '<span>'.format_date($this->entity->tender_date, 'time_short').'</span>';
 					break;
+				case 'voided':
+					echo '<span>'.format_date($this->entity->void_date, 'date_short').'</span>';
+					echo '<span>'.format_date($this->entity->void_date, 'time_short').'</span>';
+					break;
 				default:
 					echo '<span>'.format_date($this->entity->p_cdate, 'date_short').'</span>';
 					echo '<span>'.format_date($this->entity->p_cdate, 'time_short').'</span>';
@@ -189,7 +195,7 @@ if ($this->entity->status == 'quoted') {
 		</table>
 	</div>
 	<div class="pf-element pf-full-width">
-		<?php if ($this->entity->status == 'paid' && is_array($this->entity->payments)) { ?>
+		<?php if (is_array($this->entity->payments) && ($this->entity->status == 'paid' || $this->entity->status == 'voided')) { ?>
 		<div class="left_side">
 			<div>
 				<span><strong>Payments:</strong></span>

@@ -54,6 +54,29 @@
 				}
 			},
 		{
+			"path": "main_menu/business/com_sales/returns",
+			"text": "Returns",
+			"depend": {
+				"children": true
+			}
+		},
+			{
+				"path": "main_menu/business/com_sales/returns/returns",
+				"text": "Returns",
+				"href": ["com_sales","return/list"],
+				"depend": {
+					"ability": "com_sales/listreturns"
+				}
+			},
+			{
+				"path": "main_menu/business/com_sales/returns/newreturn",
+				"text": "New Return",
+				"href": ["com_sales","return/edit"],
+				"depend": {
+					"ability": "com_sales/newreturn"
+				}
+			},
+		{
 			"path": "main_menu/business/com_sales/inventory",
 			"text": "Inventory",
 			"depend": {

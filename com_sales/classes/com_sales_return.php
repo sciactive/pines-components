@@ -76,7 +76,7 @@ class com_sales_return extends entity {
 			}
 
 		}
-		$module = new module('com_sales', 'form_return', 'content');
+		$module = new module('com_sales', 'return/form', 'content');
 		$module->entity = $this;
 		$module->categories = (array) $pines->entity_manager->get_entities(
 				array('class' => com_sales_category),

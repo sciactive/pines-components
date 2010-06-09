@@ -33,6 +33,6 @@ if ( !gatekeeper('com_sales/voidsale') && !$_SESSION['user']->is($entity->user) 
 	}
 }
 
-redirect(pines_url('com_sales', 'listsales'));
+redirect(pines_url('com_sales', 'receiptsale', array('id' => $entity->guid)));
 
 ?>

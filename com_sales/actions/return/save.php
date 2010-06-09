@@ -1,6 +1,6 @@
 <?php
 /**
- * Save changes to a sale.
+ * Save changes to a return.
  *
  * @package Pines
  * @subpackage com_sales
@@ -12,38 +12,38 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
-	if ( !gatekeeper('com_sales/editsale') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listsales'));
-	$sale = com_sales_sale::factory((int) $_REQUEST['id']);
-	if (!isset($sale->guid)) {
-		pines_error('Requested sale id is not accessible.');
+	if ( !gatekeeper('com_sales/editreturn') )
+		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'return/list'));
+	$return = com_sales_return::factory((int) $_REQUEST['id']);
+	if (!isset($return->guid)) {
+		pines_error('Requested return id is not accessible.');
 		return;
 	}
 } else {
-	if ( !gatekeeper('com_sales/newsale') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'listsales'));
-	$sale = com_sales_sale::factory();
+	if ( !gatekeeper('com_sales/newreturn') )
+		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'return/list'));
+	$return = com_sales_return::factory();
 }
 
-if ($pines->config->com_sales->com_customer && $sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != 'voided') {
-	$sale->customer = null;
+if ($pines->config->com_sales->com_customer && $return->status != 'processed' && $return->status != 'voided') {
+	$return->customer = null;
 	if (preg_match('/^\d+/', $_REQUEST['customer'])) {
-		$sale->customer = com_customer_customer::factory((int) $_REQUEST['customer']);
-		if (!isset($sale->customer->guid))
-			$sale->customer = null;
+		$return->customer = com_customer_customer::factory((int) $_REQUEST['customer']);
+		if (!isset($return->customer->guid))
+			$return->customer = null;
 	}
 }
 // Used for product error checking.
 $product_error = false;
 // Used to check products which allow only one per ticket.
 $one_per_ticket_guids = array();
-if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != 'voided') {
-	$sale->products = (array) json_decode($_REQUEST['products']);
-	if (empty($sale->products)) {
+if ($return->status != 'processed' && $return->status != 'voided') {
+	$return->products = (array) json_decode($_REQUEST['products']);
+	if (empty($return->products)) {
 		pines_notice("No products were selected.");
 		$product_error = true;
 	} else {
-		foreach ($sale->products as $key => &$cur_product) {
+		foreach ($return->products as $key => &$cur_product) {
 			$cur_product_entity = com_sales_product::factory((int) $cur_product->key);
 			$cur_sku = $cur_product_entity->sku;
 			$cur_serial = $cur_product->values[2];
@@ -55,13 +55,13 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != '
 			$cur_discount = $cur_product->values[6];
 			if (!isset($cur_product_entity->guid)) {
 				pines_error("Product with id [$cur_product->key] and entered SKU [$cur_sku] was not found.");
-				unset($sale->products[$key]);
+				unset($return->products[$key]);
 				$product_error = true;
 				continue;
 			}
 			if (!$cur_product_entity->enabled) {
 				pines_error("Product with id [$cur_product->key] is not enabled.");
-				unset($sale->products[$key]);
+				unset($return->products[$key]);
 				$product_error = true;
 				continue;
 			}
@@ -83,16 +83,6 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != '
 				pines_notice("Product with SKU [$cur_sku] is not discountable.");
 				$product_error = true;
 			}
-			if ($cur_product_entity->one_per_ticket) {
-				// This causes products with >1 qtys to not be added to $one_per_ticket_guids,
-				// but that's ok, since they're already an erroneous entry.
-				if ($cur_qty > 1 || in_array($cur_product_entity->guid, $one_per_ticket_guids)) {
-					pines_notice("Only one of product with SKU [$cur_sku] is allowed on a ticket.");
-					$product_error = true;
-				} else {
-					$one_per_ticket_guids[] = $cur_product_entity->guid;
-				}
-			}
 			$cur_product = array(
 				'entity' => $cur_product_entity,
 				'sku' => $cur_sku,
@@ -108,10 +98,10 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != '
 }
 // Used for payment error checking.
 $payment_error = false;
-if ($sale->status != 'paid' && $sale->status != 'voided') {
-	foreach ($sale->payments as $key => $cur_payment) {
-		if (!in_array($cur_payment['status'], array('approved', 'declined', 'tendered', 'voided')))
-			unset($sale->payments[$key]);
+if ($return->status != 'processed' && $return->status != 'voided') {
+	foreach ($return->payments as $key => $cur_payment) {
+		if (!in_array($cur_payment['status'], array('approved', 'declined', 'tendered')))
+			unset($return->payments[$key]);
 	}
 	$payments = (array) json_decode($_REQUEST['payments']);
 	foreach ($payments as $cur_payment) {
@@ -121,7 +111,7 @@ if ($sale->status != 'paid' && $sale->status != 'voided') {
 		$cur_amount = (float) $cur_payment->values[1];
 		$cur_status = $cur_payment->values[2];
 		$data = $cur_payment->data;
-		if (in_array($cur_status, array('approved', 'declined', 'tendered', 'voided')))
+		if (in_array($cur_status, array('approved', 'declined', 'tendered')))
 			continue;
 		if (!isset($cur_payment_type_entity->guid)) {
 			pines_error("Payment type with id [$cur_payment->key] was not found.");
@@ -143,7 +133,7 @@ if ($sale->status != 'paid' && $sale->status != 'voided') {
 				$data_array[$cur_data->name] = $cur_data->value;
 			}
 		}
-		$sale->payments[] = array(
+		$return->payments[] = array(
 			'entity' => $cur_payment_type_entity,
 			'type' => $cur_type,
 			'amount' => $cur_amount,
@@ -152,44 +142,36 @@ if ($sale->status != 'paid' && $sale->status != 'voided') {
 		);
 	}
 }
-$sale->comments = $_REQUEST['comment_saver'];
+$return->comments = $_REQUEST['comment_saver'];
 
 if ($product_error || $payment_error) {
-	$sale->print_form();
+	$return->print_form();
 	return;
 }
 
-if ($pines->config->com_sales->global_sales)
-	$sale->ac->other = 1;
+if ($pines->config->com_sales->global_returns)
+	$return->ac->other = 1;
 
-if (($_REQUEST['process'] == 'invoice' || $_REQUEST['process'] == 'tender') && $sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != 'voided') {
-	if (!$sale->invoice()) {
-		$sale->print_form();
-		pines_error('There was an error while invoicing the sale. Please check that all information is correct and resubmit.');
+if ($_REQUEST['process'] == 'process' && $return->status != 'processed' && $return->status != 'voided') {
+	if (!$return->complete()) {
+		$return->save();
+		$return->print_form();
+		pines_error('There was an error while completing the return. Please check that all information is correct and resubmit.');
 		return;
 	}
 }
 
-if ($_REQUEST['process'] == 'tender' && $sale->status != 'paid' && $sale->status != 'voided') {
-	if (!$sale->complete()) {
-		$sale->save();
-		$sale->print_form();
-		pines_error('There was an error while completing the sale. It has been invoiced, but not completed yet. Please check that all information is correct and resubmit.');
-		return;
-	}
+if (!isset($return->status) || $return->status == 'quoted') {
+	$return->status = 'quoted';
+	$return->total();
 }
 
-if (!isset($sale->status) || $sale->status == 'quoted') {
-	$sale->status = 'quoted';
-	$sale->total();
-}
-
-if ($sale->save()) {
-	pines_notice('Saved sale ['.$sale->id.']');
-	redirect(pines_url('com_sales', 'receiptsale', array('id' => $sale->guid)));
+if ($return->save()) {
+	pines_notice('Saved return ['.$return->id.']');
+	redirect(pines_url('com_sales', 'return/receipt', array('id' => $return->guid)));
 } else {
-	$sale->print_form();
-	pines_error('Error saving sale. Do you have permission?');
+	$return->print_form();
+	pines_error('Error saving return. Do you have permission?');
 	return;
 }
 

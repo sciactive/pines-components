@@ -314,7 +314,7 @@ class com_sales extends component {
 		if ($_SESSION['user']) {
 			$_SESSION['user']->refresh();
 			if ($_SESSION['user']->group->com_sales_task_countsheet)
-				$this->inform('Reminder', '<a href="'.pines_url('com_sales', 'countsheet/edit').'">Inventory Countsheet &raquo;</a>', 'Please fill out a countsheet for your location when you are not busy. Corporate is awaiting the submission of an inventory count.');
+				$this->inform('Reminder', 'Inventory Countsheet', 'Please fill out a countsheet for your location when you are not busy. Corporate is awaiting the submission of an inventory count.', pines_url('com_sales', 'countsheet/edit'));
 		}
 	
 		if ( empty($module->countsheets) )

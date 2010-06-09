@@ -14,8 +14,12 @@ defined('P_RUN') or die('Direct access prohibited');
 if (!isset($_SESSION['user']) || empty($_SESSION['user']->pin))
 	return;
 
-if (!in_array("{$pines->request_component}/{$pines->request_action}", $pines->config->com_pinlock->actions))
+$com_pinlock__request_component = empty($pines->request_component) ? $pines->config->default_component : $pines->request_component;
+$com_pinlock__request_action = empty($pines->request_action) ? 'default' : $pines->request_action;
+if (!in_array("{$com_pinlock__request_component}/{$com_pinlock__request_action}", $pines->config->com_pinlock->actions)) {
+	unset($com_pinlock__request_component, $com_pinlock__request_action);
 	return;
+}
 
 if ($_POST['com_pinlock_continue'] == 'true') {
 	$com_pinlock__sessionid = $_POST['sessionid'];
@@ -36,9 +40,13 @@ if ($_POST['com_pinlock_continue'] == 'true') {
 				pines_log("PIN based user switch from {$_SESSION['user']->username} to {$com_pinlock__cur_user->username}.", 'notice');
 				$pines->user_manager->login($com_pinlock__cur_user);
 				pines_notice("Logged in as {$com_pinlock__cur_user->username}.");
-				unset($com_pinlock__sessionid);
-				unset($com_pinlock__cur_user);
-				unset($com_pinlock__users);
+				unset(
+						$com_pinlock__request_component,
+						$com_pinlock__request_action,
+						$com_pinlock__sessionid,
+						$com_pinlock__cur_user,
+						$com_pinlock__users
+					);
 				return;
 			}
 		}
@@ -62,8 +70,8 @@ if ($_POST['com_pinlock_continue'] == 'true') {
 		'get' => serialize($_GET)
 	);
 }
-$pines->com_pinlock->component = $pines->request_component;
-$pines->com_pinlock->action = $pines->request_action;
+$pines->com_pinlock->component = $com_pinlock__request_component;
+$pines->com_pinlock->action = $com_pinlock__request_action;
 $pines->request_component = 'com_pinlock';
 $pines->request_action = 'enterpin';
 

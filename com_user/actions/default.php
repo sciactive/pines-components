@@ -17,18 +17,8 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper() ) {
 	$pines->user_manager->print_login();
 	return;
-} else {
-	if (empty($_SESSION['user']->default_component) || $_SESSION['user']->default_component == 'com_user') {
-		if ( !gatekeeper('com_user/listusers') ) {
-			pines_error('Your default component is set to com_user, but you don\'t have permission to use it.');
-			return;
-		}
-		// If this is the default component.
-		action('com_user', 'listusers');
-	} else {
-		// If the user has another component set to default.
-		action($_SESSION['user']->default_component, 'default');
-	}
 }
+
+action('com_user', 'listusers');
 
 ?>

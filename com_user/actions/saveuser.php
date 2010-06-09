@@ -45,14 +45,6 @@ $user->state = $_REQUEST['state'];
 $user->zip = $_REQUEST['zip'];
 $user->address_international = $_REQUEST['address_international'];
 
-if ( gatekeeper('com_user/default_component') ) {
-	if ( file_exists("components/{$_REQUEST['default_component']}/actions/default.php") ) {
-		$user->default_component = $_REQUEST['default_component'];
-	} else {
-		pines_notice('Selected component does not support a default action.');
-	}
-}
-
 if (gatekeeper('com_user/assignpin'))
 	$user->pin = $_REQUEST['pin'];
 

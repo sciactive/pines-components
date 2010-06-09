@@ -27,7 +27,6 @@ class com_hrm_user_template extends entity {
 		$this->add_tag('com_hrm', 'user_template');
 		// Defaults
 		$this->groups = array();
-		$this->default_component = 'com_hrm';
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
@@ -82,7 +81,6 @@ class com_hrm_user_template extends entity {
 		$module = new module('com_hrm', 'form_user_template', 'content');
 		$module->entity = $this;
 		$module->group_array = $pines->user_manager->get_group_array();
-		$module->default_components = $pines->config->get_default_components();
 
 		return $module;
 	}

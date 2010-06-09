@@ -29,15 +29,6 @@ $this->note = 'Provide user template details in this form.';
 			<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
 	</div>
 	<div class="pf-element">
-		<label><span class="pf-label">Default Component</span>
-			<span class="pf-note">This component will be responsible for the user's home page.</span>
-			<select class="pf-field ui-widget-content" name="default_component">
-					<?php foreach ($this->default_components as $cur_component) { ?>
-				<option value="<?php echo $cur_component; ?>"<?php echo (($this->entity->default_component == $cur_component) ? ' selected="selected"' : ''); ?>><?php echo $cur_component; ?></option>
-					<?php } ?>
-			</select></label>
-	</div>
-	<div class="pf-element">
 		<label><span class="pf-label">Primary Group</span>
 			<span class="pf-note">The primary group when using this template can be set to this group, or any group beneath it.</span>
 			<select class="pf-field ui-widget-content" name="group" size="1">

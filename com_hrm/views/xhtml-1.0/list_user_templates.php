@@ -63,7 +63,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<thead>
 		<tr>
 			<th>Name</th>
-			<th>Default Component</th>
 			<th>Primary Group</th>
 			<th>Groups</th>
 		</tr>
@@ -72,7 +71,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<?php foreach($this->user_templates as $user_template) { ?>
 		<tr title="<?php echo $user_template->guid; ?>">
 			<td><?php echo $user_template->name; ?></td>
-			<td><?php echo $user_template->default_component; ?></td>
 			<td><?php echo $user_template->group->groupname; ?></td>
 			<td><?php
 			if (count($user_template->groups) < 15) {

@@ -172,17 +172,6 @@ $pines->com_pgrid->load();
 					<input class="pf-field ui-widget-content" type="password" name="pin" size="5" value="<?php echo $this->entity->pin; ?>" <?php echo $pines->config->com_user->max_pin_length > 0 ? "maxlength=\"{$pines->config->com_user->max_pin_length}\"" : ''; ?>/></label>
 			</div>
 			<?php } ?>
-			<?php if ( $this->display_default_components ) { ?>
-				<div class="pf-element">
-					<label><span class="pf-label">Default Component</span>
-						<span class="pf-note">This component will be responsible for the user's home page.</span>
-						<select class="pf-field ui-widget-content" name="default_component">
-								<?php foreach ($this->default_components as $cur_component) { ?>
-							<option value="<?php echo $cur_component; ?>"<?php echo (($this->entity->default_component == $cur_component) ? ' selected="selected"' : ''); ?>><?php echo $cur_component; ?></option>
-								<?php } ?>
-						</select></label>
-				</div>
-			<?php } ?>
 			<br class="pf-clearing" />
 		</div>
 		<div id="tab_groups">

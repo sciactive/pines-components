@@ -372,7 +372,10 @@ class com_user extends component implements user_manager_interface {
 		$query_part = array();
 		if (isset($url))
 			$query_part['url'] = $url;
-		if ($pines->request_component == $_SESSION['user']->default_component && $pines->request_action == 'default')
+		if (
+				(empty($pines->request_component) && empty($pines->request_action)) ||
+				($pines->request_component == $pines->config->default_component && $pines->request_action == 'default')
+			)
 			$query_part['default'] = '1';
 		pines_notice($message);
 		if ($query_part) {

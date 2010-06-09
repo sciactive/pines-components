@@ -67,7 +67,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>Real Name</th>
 			<th>Email</th>
 			<th>Timezone</th>
-			<th>Default Component</th>
 			<th>Primary Group</th>
 			<th>Groups</th>
 			<th>Inherit Abilities</th>
@@ -80,7 +79,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo $user->name; ?></td>
 			<td><?php echo $user->email; ?></td>
 			<td><?php echo $user->get_timezone().(empty($user->timezone) ? ' (I)' : ' (A)'); ?></td>
-			<td><?php echo $user->default_component; ?></td>
 			<td><?php echo $user->group->groupname; ?></td>
 			<td><?php
 			if (count($user->groups) < 15) {

@@ -26,7 +26,6 @@ class user extends able_object implements user_interface {
 		$this->abilities = array();
 		$this->groups = array();
 		$this->inherit_abilities = true;
-		$this->default_component = 'com_user';
 		$this->address_type = 'us';
 		$this->attributes = array();
 		if ($id > 0 || (string) $id === $id) {
@@ -79,10 +78,8 @@ class user extends able_object implements user_interface {
 		$module->display_pin = gatekeeper('com_user/assignpin');
 		$module->display_groups = gatekeeper('com_user/assigngroup');
 		$module->display_abilities = gatekeeper('com_user/abilities');
-		$module->display_default_components = gatekeeper('com_user/default_component');
 		$module->sections = array('system');
 		$module->group_array = $pines->user_manager->get_group_array();
-		$module->default_components = $pines->config->get_default_components();
 		foreach ($pines->components as $cur_component) {
 			$module->sections[] = $cur_component;
 		}

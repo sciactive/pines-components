@@ -25,6 +25,6 @@ if (is_object($_SESSION['user'])) {
 }
 
 // Load the user's default component.
-action($pines->config->default_component, 'default');
+action();
 
 ?>

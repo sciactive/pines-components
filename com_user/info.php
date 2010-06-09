@@ -32,7 +32,6 @@ return array(
 		array('newuser', 'Create Users', 'User can create new users.'),
 		array('edituser', 'Edit Users', 'User can edit other users.'),
 		array('deleteuser', 'Delete Users', 'User can delete other users.'),
-		array('default_component', 'Change Default Component', 'User can change users\' default component.'),
 		array('abilities', 'Manage Abilities', 'Let user manage other users\' and his own abilities.'),
 		array('conditions', 'Manage Conditions', 'Let user manage user and group conditions.'),
 		array('listgroups', 'List Groups', 'User can see groups.'),

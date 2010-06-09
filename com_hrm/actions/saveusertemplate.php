@@ -27,7 +27,6 @@ if ( isset($_REQUEST['id']) ) {
 
 // General
 $user_template->name = $pines->com_hrm->title_case($_REQUEST['name']);
-$user_template->default_component = $_REQUEST['default_component'];
 $user_template->group = group::factory((int) $_REQUEST['group']);
 if (!isset($user_template->group->guid))
 	$user_template->group = null;

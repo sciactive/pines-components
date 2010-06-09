@@ -43,7 +43,7 @@ if ( isset($user, $user->guid) ) {
 	} else {
 		pines_error('Could not switch users.');
 		// Load the default component.
-		action($pines->config->default_component, 'default');
+		action();
 	}
 } else {
 	pines_notice('Username and password not correct!');

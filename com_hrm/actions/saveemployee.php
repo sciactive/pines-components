@@ -126,7 +126,6 @@ if ($pines->config->com_hrm->allow_attach && $_REQUEST['user_template'] != 'null
 	$user_template = com_hrm_user_template::factory((int) $_REQUEST['user_template']);
 	$new_user->username = $_REQUEST['user_template_username'];
 	$new_user->password($_REQUEST['user_template_password']);
-	$new_user->default_component = $user_template->default_component;
 	if (isset($user_template->group)) {
 		$group = group::factory((int) $_REQUEST["user_template_group_{$user_template->guid}"]);
 		if ($group->is($user_template->group) || $group->is_descendent($user_template->group))

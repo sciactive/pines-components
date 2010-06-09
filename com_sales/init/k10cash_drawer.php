@@ -11,7 +11,9 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ($pines->config->com_sales->cash_drawer)
+if ($pines->config->com_sales->cash_drawer) {
 	$com_sales_cash_drawer = new module('com_sales', 'cash_drawer', 'head');
+	unset($com_sales_cash_drawer);
+}
 
 ?>

@@ -69,7 +69,7 @@ class com_sales_sale extends entity {
 	 */
 	public function print_form() {
 		global $pines;
-		$module = new module('com_sales', 'form_sale', 'content');
+		$module = new module('com_sales', 'sale/form', 'content');
 		$module->entity = $this;
 		$module->categories = (array) $pines->entity_manager->get_entities(
 				array('class' => com_sales_category),
@@ -108,7 +108,7 @@ class com_sales_sale extends entity {
 	 * @return module The form's module.
 	 */
 	function print_receipt() {
-		$module = new module('com_sales', 'receipt_sale', 'content');
+		$module = new module('com_sales', 'sale/receipt', 'content');
 		$module->entity = $this;
 
 		return $module;
@@ -121,7 +121,7 @@ class com_sales_sale extends entity {
 		global $pines;
 		if (!$this->customer->email)
 			return;
-		$module = new module('com_sales', 'receipt_sale', 'content');
+		$module = new module('com_sales', 'sale/receipt', 'content');
 		$module->entity = $this;
 		$content = "<style type=\"text/css\">/* <![CDATA[ */\n";
 		$content .= file_get_contents('system/css/pform.css');

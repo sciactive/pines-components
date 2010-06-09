@@ -80,7 +80,7 @@ class com_sales_cashcount extends entity {
 	 */
 	public function print_form() {
 		global $pines;
-		$module = new module('com_sales', 'form_cashcount', 'content');
+		$module = new module('com_sales', 'cashcount/form', 'content');
 		$module->entity = $this;
 		return $module;
 	}
@@ -91,7 +91,7 @@ class com_sales_cashcount extends entity {
 	 */
 	public function print_review() {
 		global $pines;
-		$module = new module('com_sales', 'form_cashcount_review', 'content');
+		$module = new module('com_sales', 'cashcount/formreview', 'content');
 		$module->entity = $this;
 		return $module;
 	}

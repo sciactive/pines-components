@@ -77,7 +77,7 @@ class com_sales_category extends entity {
 	 */
 	public function print_form() {
 		global $pines;
-		$module = new module('com_sales', 'form_category', 'content');
+		$module = new module('com_sales', 'category/form', 'content');
 		$module->entity = $this;
 		$module->categories = $pines->entity_manager->get_entities(array('class' => com_sales_category), array('&', 'data' => array('parent', null), 'tag' => array('com_sales', 'category')));
 

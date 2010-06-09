@@ -75,7 +75,7 @@ class com_sales_vendor extends entity {
 	 * @return module The form's module.
 	 */
 	public function print_form() {
-		$module = new module('com_sales', 'form_vendor', 'content');
+		$module = new module('com_sales', 'vendor/form', 'content');
 		$module->entity = $this;
 
 		return $module;

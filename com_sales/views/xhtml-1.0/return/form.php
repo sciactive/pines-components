@@ -177,7 +177,7 @@ $pines->com_pgrid->load();
 									textbox.val("");
 									var loader;
 									$.ajax({
-										url: "<?php echo pines_url('com_sales', 'productsearch'); ?>",
+										url: "<?php echo pines_url('com_sales', 'product/search'); ?>",
 										type: "POST",
 										dataType: "json",
 										data: {"code": code},
@@ -347,7 +347,7 @@ $pines->com_pgrid->load();
 					category_products_grid.pgrid_get_all_rows().pgrid_delete();
 					var loader;
 					$.ajax({
-						url: "<?php echo pines_url('com_sales', 'productcategory'); ?>",
+						url: "<?php echo pines_url('com_sales', 'category/products'); ?>",
 						type: "POST",
 						dataType: "json",
 						data: {"id": $(row).attr("title")},
@@ -443,7 +443,7 @@ $pines->com_pgrid->load();
 				var cur_export = cur_row.pgrid_export_rows();
 				var cur_guid = cur_export[0].key;
 				$.ajax({
-					url: "<?php echo pines_url('com_sales', 'productsearch'); ?>",
+					url: "<?php echo pines_url('com_sales', 'product/search'); ?>",
 					type: "POST",
 					async: false,
 					dataType: "json",
@@ -509,7 +509,7 @@ $pines->com_pgrid->load();
 			payments_table.data_form = function(row){
 				var payment_data = row.data("payment_data");
 				$.ajax({
-					url: "<?php echo pines_url('com_sales', 'paymentform'); ?>",
+					url: "<?php echo pines_url('com_sales', 'forms/payment'); ?>",
 					type: "POST",
 					dataType: "html",
 					data: {"name": payment_data.processing_type, "id": $("#return_details [name=id]").val(), "customer": $("#customer").val()},

@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_sales/newsale') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'editsale'));
+	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'sale/edit'));
 
 $entity = com_sales_sale::factory();
 $entity->customer = com_customer_customer::factory((int) $_REQUEST['customer']);

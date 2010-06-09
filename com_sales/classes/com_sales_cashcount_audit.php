@@ -70,7 +70,7 @@ class com_sales_cashcount_audit extends entity {
 	 */
 	public function print_form() {
 		global $pines;
-		$module = new module('com_sales', 'form_cashcount_audit', 'content');
+		$module = new module('com_sales', 'cashcount/formaudit', 'content');
 		$module->entity = $this;
 		return $module;
 	}

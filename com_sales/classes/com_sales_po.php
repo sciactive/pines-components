@@ -101,7 +101,7 @@ class com_sales_po extends entity {
 	 */
 	public function print_form() {
 		global $pines;
-		$module = new module('com_sales', 'form_po', 'content');
+		$module = new module('com_sales', 'po/form', 'content');
 		$module->entity = $this;
 		$module->locations = (array) $pines->user_manager->get_group_array();
 		$module->shippers = (array) $pines->entity_manager->get_entities(array('class' => com_sales_shipper), array('&', 'tag' => array('com_sales', 'shipper')));

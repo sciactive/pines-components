@@ -79,7 +79,7 @@ class com_sales_payment_type extends entity {
 	 */
 	public function print_form() {
 		global $pines;
-		$module = new module('com_sales', 'form_payment_type', 'content');
+		$module = new module('com_sales', 'paymenttype/form', 'content');
 		$module->entity = $this;
 		$module->processing_types = (array) $pines->config->com_sales->processing_types;
 

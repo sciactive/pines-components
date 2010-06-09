@@ -83,7 +83,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 
 		return_grid.date_form = function(){
 			$.ajax({
-				url: "<?php echo pines_url('com_sales', 'dateselectform'); ?>",
+				url: "<?php echo pines_url('com_sales', 'forms/dateselect'); ?>",
 				type: "POST",
 				dataType: "html",
 				data: {"all_time": all_time, "start_date": start_date, "end_date": end_date},
@@ -124,7 +124,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		};
 		return_grid.location_form = function(){
 			$.ajax({
-				url: "<?php echo pines_url('com_sales', 'locationselectform'); ?>",
+				url: "<?php echo pines_url('com_sales', 'forms/locationselect'); ?>",
 				type: "POST",
 				dataType: "html",
 				data: {"location": location},

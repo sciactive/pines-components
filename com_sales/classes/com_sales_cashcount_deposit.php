@@ -70,7 +70,7 @@ class com_sales_cashcount_deposit extends entity {
 	 */
 	public function print_form() {
 		global $pines;
-		$module = new module('com_sales', 'form_cashcount_deposit', 'content');
+		$module = new module('com_sales', 'cashcount/formdeposit', 'content');
 		$module->entity = $this;
 		return $module;
 	}

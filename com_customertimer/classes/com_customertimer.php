@@ -68,7 +68,7 @@ class com_customertimer extends component {
 		}
 		return $logins->login($customer);
 	}
-	 */
+	*/
 }
 
 ?>

@@ -95,7 +95,7 @@ class com_sales extends component {
 		global $pines;
 		$pines->page->override = true;
 
-		$module = new module('com_sales', 'form_date_selector', 'content');
+		$module = new module('com_sales', 'forms/date_selector', 'content');
 		$module->all_time = $all_time;
 		$module->start_date = $start;
 		$module->end_date = $end;
@@ -244,8 +244,8 @@ class com_sales extends component {
 	public function list_cashcounts($start_date = null, $end_date = null, $location = null) {
 		global $pines;
 
-		$form = new module('com_sales', 'list_cashcounts_form', 'left');
-		$module = new module('com_sales', 'list_cashcounts', 'content');
+		$form = new module('com_sales', 'cashcount/listform', 'left');
+		$module = new module('com_sales', 'cashcount/list', 'content');
 
 		if (!isset($start_date))
 			$start_date = strtotime('-1 week 00:00');
@@ -270,13 +270,13 @@ class com_sales extends component {
 		if ($_SESSION['user']) {
 			$_SESSION['user']->refresh();
 			if ($_SESSION['user']->group->com_sales_task_cashcount)
-				$this->inform('Assignment', 'Cash Drawer Count', 'Please perform a count of the cash in your location\'s drawer. Corporate is awaiting a cash count submission.', pines_url('com_sales', 'editcashcount'));
+				$this->inform('Assignment', 'Cash Drawer Count', 'Please perform a count of the cash in your location\'s drawer. Corporate is awaiting a cash count submission.', pines_url('com_sales', 'cashcount/edit'));
 			if ($_SESSION['user']->group->com_sales_task_cashcount_audit)
-				$this->inform('Assignment', 'Cash Drawer Audit', 'Please perform an audit of the cash in your location\'s drawer. Corporate is awaiting a cash drawer audit submission.', pines_url('com_sales', 'auditcashcount'));
+				$this->inform('Assignment', 'Cash Drawer Audit', 'Please perform an audit of the cash in your location\'s drawer. Corporate is awaiting a cash drawer audit submission.', pines_url('com_sales', 'cashcount/audit'));
 			if ($_SESSION['user']->group->com_sales_task_cashcount_deposit)
-				$this->inform('Assignment', 'Cash Drawer Deposit', 'Please perform a deposit from the skimmed cash in your location. Corporate is awaiting a cash deposit submission.', pines_url('com_sales', 'depositcashcount'));
+				$this->inform('Assignment', 'Cash Drawer Deposit', 'Please perform a deposit from the skimmed cash in your location. Corporate is awaiting a cash deposit submission.', pines_url('com_sales', 'cashcount/deposit'));
 			if ($_SESSION['user']->group->com_sales_task_cashcount_skim)
-				$this->inform('Assignment', 'Cash Drawer Skim', 'Please perform a skim from the cash in your location\'s drawer. Corporate is awaiting a cash skim submission.', pines_url('com_sales', 'skimcashcount'));
+				$this->inform('Assignment', 'Cash Drawer Skim', 'Please perform a skim from the cash in your location\'s drawer. Corporate is awaiting a cash skim submission.', pines_url('com_sales', 'cashcount/skim'));
 		}
 
 		if ( empty($module->counts) )
@@ -292,7 +292,7 @@ class com_sales extends component {
 	public function list_categories() {
 		global $pines;
 
-		$module = new module('com_sales', 'list_categories', 'content');
+		$module = new module('com_sales', 'category/list', 'content');
 
 		$module->categories = $pines->entity_manager->get_entities(array('class' => com_sales_category), array('&', 'tag' => array('com_sales', 'category')));
 
@@ -306,7 +306,7 @@ class com_sales extends component {
 	public function list_countsheets() {
 		global $pines;
 
-		$module = new module('com_sales', 'list_countsheets', 'content');
+		$module = new module('com_sales', 'countsheet/list', 'content');
 
 		$module->countsheets = $pines->entity_manager->get_entities(array('class' => com_sales_countsheet), array('&', 'tag' => array('com_sales', 'countsheet')));
 
@@ -314,7 +314,7 @@ class com_sales extends component {
 		if ($_SESSION['user']) {
 			$_SESSION['user']->refresh();
 			if ($_SESSION['user']->group->com_sales_task_countsheet)
-				$this->inform('Reminder', '<a href="'.pines_url('com_sales', 'editcountsheet').'">Inventory Countsheet &raquo;</a>', 'Please fill out a countsheet for your location when you are not busy. Corporate is awaiting the submission of an inventory count.');
+				$this->inform('Reminder', '<a href="'.pines_url('com_sales', 'countsheet/edit').'">Inventory Countsheet &raquo;</a>', 'Please fill out a countsheet for your location when you are not busy. Corporate is awaiting the submission of an inventory count.');
 		}
 	
 		if ( empty($module->countsheets) )
@@ -327,7 +327,7 @@ class com_sales extends component {
 	public function list_manufacturers() {
 		global $pines;
 
-		$module = new module('com_sales', 'list_manufacturers', 'content');
+		$module = new module('com_sales', 'manufacturer/list', 'content');
 
 		$module->manufacturers = $pines->entity_manager->get_entities(array('class' => com_sales_manufacturer), array('&', 'tag' => array('com_sales', 'manufacturer')));
 
@@ -341,7 +341,7 @@ class com_sales extends component {
 	public function list_payment_types() {
 		global $pines;
 
-		$module = new module('com_sales', 'list_payment_types', 'content');
+		$module = new module('com_sales', 'paymenttype/list', 'content');
 
 		$module->payment_types = $pines->entity_manager->get_entities(array('class' => com_sales_payment_type), array('&', 'tag' => array('com_sales', 'payment_type')));
 
@@ -356,7 +356,7 @@ class com_sales extends component {
 	public function list_pos($finished = false) {
 		global $pines;
 
-		$module = new module('com_sales', 'list_pos', 'content');
+		$module = new module('com_sales', 'po/list', 'content');
 
 		$module->pos = $pines->entity_manager->get_entities(
 				array('class' => com_sales_po),
@@ -390,7 +390,7 @@ class com_sales extends component {
 	public function list_products() {
 		global $pines;
 
-		$module = new module('com_sales', 'list_products', 'content');
+		$module = new module('com_sales', 'product/list', 'content');
 
 		$module->products = $pines->entity_manager->get_entities(array('class' => com_sales_product), array('&', 'tag' => array('com_sales', 'product')));
 
@@ -435,7 +435,7 @@ class com_sales extends component {
 	public function list_sales($start_date = null, $end_date = null, $location = null) {
 		global $pines;
 
-		$module = new module('com_sales', 'list_sales', 'content');
+		$module = new module('com_sales', 'sale/list', 'content');
 
 		$selector = array('&', 'tag' => array('com_sales', 'sale'));
 		if (isset($start_date))
@@ -460,7 +460,7 @@ class com_sales extends component {
 	public function list_shippers() {
 		global $pines;
 
-		$module = new module('com_sales', 'list_shippers', 'content');
+		$module = new module('com_sales', 'shipper/list', 'content');
 
 		$module->shippers = $pines->entity_manager->get_entities(array('class' => com_sales_shipper), array('&', 'tag' => array('com_sales', 'shipper')));
 
@@ -476,7 +476,7 @@ class com_sales extends component {
 	public function list_stock($all = false) {
 		global $pines;
 
-		$module = new module('com_sales', 'list_stock', 'content');
+		$module = new module('com_sales', 'stock/list', 'content');
 
 		$module->stock = $pines->entity_manager->get_entities(array('class' => com_sales_stock), array('&', 'tag' => array('com_sales', 'stock')));
 		$module->all = $all;
@@ -491,7 +491,7 @@ class com_sales extends component {
 	public function list_tax_fees() {
 		global $pines;
 
-		$module = new module('com_sales', 'list_tax_fees', 'content');
+		$module = new module('com_sales', 'taxfee/list', 'content');
 
 		$module->tax_fees = $pines->entity_manager->get_entities(array('class' => com_sales_tax_fee), array('&', 'tag' => array('com_sales', 'tax_fee')));
 
@@ -506,7 +506,7 @@ class com_sales extends component {
 	public function list_transfers($finished = false) {
 		global $pines;
 
-		$module = new module('com_sales', 'list_transfers', 'content');
+		$module = new module('com_sales', 'transfer/list', 'content');
 
 		$module->transfers = $pines->entity_manager->get_entities(
 				array('class' => com_sales_transfer),
@@ -526,7 +526,7 @@ class com_sales extends component {
 	public function list_vendors() {
 		global $pines;
 
-		$module = new module('com_sales', 'list_vendors', 'content');
+		$module = new module('com_sales', 'vendor/list', 'content');
 
 		$module->vendors = $pines->entity_manager->get_entities(array('class' => com_sales_vendor), array('&', 'tag' => array('com_sales', 'vendor')));
 
@@ -544,7 +544,7 @@ class com_sales extends component {
 		global $pines;
 		$pines->page->override = true;
 
-		$module = new module('com_sales', 'form_location_selector', 'content');
+		$module = new module('com_sales', 'forms/location_selector', 'content');
 		if (!isset($location)) {
 			$module->location = $_SESSION['user']->group->guid;
 		} else {
@@ -587,7 +587,7 @@ class com_sales extends component {
 		global $pines;
 		switch ($array['action']) {
 			case 'request':
-				$module = new module('com_sales', 'payment_form_manager');
+				$module = new module('com_sales', 'forms/payment_manager');
 				$pines->page->override_doc($module->render());
 				break;
 			case 'approve':
@@ -626,7 +626,7 @@ class com_sales extends component {
 	 */
 	public function print_receive_form() {
 		global $pines;
-		$module = new module('com_sales', 'form_receive', 'content');
+		$module = new module('com_sales', 'stock/formreceive', 'content');
 
 		return $module;
 	}
@@ -638,7 +638,7 @@ class com_sales extends component {
 	 */
 	public function print_sales_total() {
 		global $pines;
-		$module = new module('com_sales', 'total_sales', 'content');
+		$module = new module('com_sales', 'sale/totals', 'content');
 		$module->locations = $pines->user_manager->get_group_array();
 		$module->show_all = gatekeeper('com_sales/totalothersales');
 
@@ -656,7 +656,7 @@ class com_sales extends component {
 	public function track_product($serial = null, $sku = null, $start_date = null, $end_date = null, $location = null) {
 		global $pines;
 
-		$module = new module('com_sales', 'track_product', 'content');
+		$module = new module('com_sales', 'product/track', 'content');
 		$module->items = array();
 		// Primary options specify the criteria to search the inventory for.
 		$selector = array('&', 'tag' => array('com_sales', 'stock'));

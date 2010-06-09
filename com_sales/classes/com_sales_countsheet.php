@@ -70,7 +70,7 @@ class com_sales_countsheet extends entity {
 	 */
 	public function print_form() {
 		global $pines;
-		$module = new module('com_sales', 'form_countsheet', 'content');
+		$module = new module('com_sales', 'countsheet/form', 'content');
 		$module->entity = $this;
 		
 		return $module;
@@ -122,7 +122,7 @@ class com_sales_countsheet extends entity {
 	 */
 	public function print_review() {
 		global $pines;
-		$module = new module('com_sales', 'form_countsheet_review', 'content');
+		$module = new module('com_sales', 'countsheet/formreview', 'content');
 		$module->entity = $this;
 
 		$sold_status['available'] = 'in stock';

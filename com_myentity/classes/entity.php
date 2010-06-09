@@ -127,6 +127,8 @@ class entity extends p_base implements entity_interface {
 			// Store a reference to the entity (its GUID and the class it was loaded as).
 			// We don't want to manipulate $value itself, because it could be a variable that the program is still using.
 			$save_value = $value->to_reference();
+			$this->data[$name] = $save_value;
+			return $value;
 		} else {
 			// This is not an entity, so if it was one, delete the cached entity.
 			if (isset($this->entity_cache[$name]))
@@ -136,9 +138,8 @@ class entity extends p_base implements entity_interface {
 			// If the variable is an array, look through it and change entities to references.
 			if ((array) $save_value === $save_value)
 				array_walk_recursive($save_value, array($this, 'entity_to_reference'));
+			return ($this->data[$name] = $save_value);
 		}
-		
-		return ($this->data[$name] = $save_value);
 	}
 
 	/**
@@ -175,9 +176,24 @@ class entity extends p_base implements entity_interface {
 	}
 
 	public function clear_cache() {
-		foreach ($this->entity_cache as &$value) {
-			$value = 0;
+		// Convert entities in arrays.
+		foreach ($this->data as &$value) {
+			if ((array) $value === $value)
+				array_walk_recursive($value, array($this, 'entity_to_reference'));
 		}
+		unset($value);
+
+		// Handle individual entities.
+		foreach ($this->entity_cache as $key => &$value) {
+			if (strpos($key, 'reference_guid: ') === 0) {
+				// If it's from an array, remove it.
+				unset($this->entity_cache[$key]);
+			} else {
+				// If it's from a property, set it back to 0.
+				$value = 0;
+			}
+		}
+		unset($value);
 	}
 
 	public function delete() {
@@ -193,7 +209,7 @@ class entity extends p_base implements entity_interface {
 	 * @access private
 	 */
 	private function entity_to_reference(&$item, $key) {
-		if ((is_a($item, 'entity') || is_a($item, 'hook_override')) && isset($item->guid)) {
+		if ((is_a($item, 'entity') || is_a($item, 'hook_override')) && isset($item->guid) && is_callable(array($item, 'to_reference'))) {
 			// This is an entity, so we should put it in the entity cache.
 			if (!isset($this->entity_cache["reference_guid: {$item->guid}"]))
 				$this->entity_cache["reference_guid: {$item->guid}"] = clone $item;

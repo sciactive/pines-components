@@ -201,11 +201,63 @@ class com_authorizenet extends component {
 						pines_error('Credit processing failed. Please try again, and if the problem persists, please contact an administrator.');
 						break;
 				}
+				$array['payment']['com_authorizenet_credit_info']['transaction_id'] = $reponse_array[8];
 				pines_notice($response_array[3]);
 				break;
 			case 'void':
-				// TODO: Void the payment, then set this status on success.
-				//$array['payment']['status'] = 'voided';
+				$post_values = array(
+					// the API Login ID and Transaction Key must be replaced with valid values
+					'x_login'			=> $pines->config->com_authorizenet->apilogin,
+					'x_tran_key'		=> $pines->config->com_authorizenet->tran_key,
+					'x_test_request'	=> ($pines->config->com_authorizenet->test_mode) ? 'TRUE' : 'FALSE',
+
+					'x_version'			=> '3.1',
+					'x_delim_data'		=> 'TRUE',
+					'x_delim_char'		=> '|',
+					'x_relay_response'	=> 'FALSE',
+
+					'x_type'			=> 'VOID',
+					'x_trans_id'		=> $array['payment']['com_authorizenet_credit_info']['transaction_id'],
+				);
+				
+				$post_string = "";
+				foreach ($post_values as $key => $value) {
+					$post_string .= "$key=" . urlencode($value) . "&";
+				}
+				$post_string = rtrim($post_string, "& ");
+
+				$request = curl_init($pines->config->com_authorizenet->post_url);
+				curl_setopt($request, CURLOPT_HEADER, 0);
+				curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
+				curl_setopt($request, CURLOPT_POSTFIELDS, $post_string);
+				curl_setopt($request, CURLOPT_SSL_VERIFYPEER, FALSE);
+				$post_response = curl_exec($request);
+				curl_close($request);
+
+				if ($post_response === false) {
+					pines_error('Credit processing gateway cannot be reached. Please try again, and if the problem persists, please contact an administrator.');
+					break;
+				}
+
+				$response_array = explode($post_values["x_delim_char"],$post_response);
+				switch ($response_array[0]) {
+					case 1:
+						$array['payment']['status'] = 'voided';
+						break;
+					case 2:
+						pines_notice('Payment void was declined.');
+						break;
+					case 3:
+						pines_notice('Payment void required more information.');
+						break;
+					case 4:
+						pines_notice('Payment void is being held for review.');
+						break;
+					default:
+						pines_notice('Void processing failed. Please try again, and if the problem persists, please contact an administrator.');
+						break;
+				}
+				pines_notice($response_array[3]);
 				break;
 		}
 	}

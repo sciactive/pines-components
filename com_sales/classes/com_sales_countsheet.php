@@ -115,7 +115,7 @@ class com_sales_countsheet extends entity {
 	 *    <li>A serialized item matches the search string but is not in current inventory.</li>
 	 *    <li>An item's SKU matches the search string but is not in the current inventory.</li>
 	 *   </ul>
-	 *  <li>Extra - If an item is not in the inventory at all.</li>
+	 *  <li>Invalid - If an item is not in the inventory at all.</li>
 	 * </ul>
 	 * 
 	 * @return module The form's module.
@@ -131,7 +131,7 @@ class com_sales_countsheet extends entity {
 		$sold_status['sold_at_store'] = 'sold';
 
 		$in_stock = array('available', 'unavailable', 'sold_pending');
-		$module->missing = $module->matched = $module->potential = $module->extra = array();
+		$module->missing = $module->matched = $module->potential = $module->invalid = array();
 		// Grab all stock items for this location's inventory.
 		$expected_stock = (array) $pines->entity_manager->get_entities(array('class' => com_sales_stock), array('&', 'tag' => array('com_sales', 'stock')));
 		@usort($expected_stock, array($this, 'sort_stock_by_location_serial'));
@@ -203,11 +203,11 @@ class com_sales_countsheet extends entity {
 				}
 			}
 		}
-		// See if any of the extraneous items matched any sold items in the inventory.
+		// See if any of the invalid items matched any sold items in the inventory.
 		foreach ($entries as $item) {
 			if ($module->potential[$item]['found'] == false) {
 				// There were no potential matches for this search string.
-				$module->extra[] = $item;
+				$module->invalid[] = $item;
 				unset($module->potential[$item]);
 			}
 		}

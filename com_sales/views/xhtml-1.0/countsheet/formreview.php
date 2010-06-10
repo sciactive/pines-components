@@ -123,11 +123,11 @@ $this->note = 'Created by '.$this->entity->user->name.' on '.format_date($this->
 			<?php } ?>
 		<?php } ?>
 	</fieldset>
-	<?php } if ($this->extra) { ?>
+	<?php } if ($this->invalid) { ?>
 	<fieldset class="pf-group">
-		<legend>Extraneous Items</legend>
+		<legend>Invalid Search Strings</legend>
 		<ul style="list-style-type: circle;">
-			<?php foreach ($this->extra as $cur_entry) { ?>
+			<?php foreach ($this->invalid as $cur_entry) { ?>
 			<li>"<?php echo $cur_entry; ?>" has no record in this location's inventory.</li>
 			<?php } ?>
 		</ul>

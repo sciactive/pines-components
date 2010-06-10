@@ -133,7 +133,7 @@ if (gatekeeper('com_user/assignpin') && !empty($user->pin)) {
 	}
 
 	if ($pines->config->com_user->min_pin_length > 0 && strlen($user->pin) < $pines->config->com_user->min_pin_length) {
-		$group->print_form();
+		$user->print_form();
 		pines_notice("User PINs must be at least {$pines->config->com_user->min_pin_length} characters.");
 		return;
 	}

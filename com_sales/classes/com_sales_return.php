@@ -64,6 +64,16 @@ class com_sales_return extends entity {
 	}
 
 	/**
+	 * P
+	 *
+	 * @param com_sales_sale &$sale The sale to attach.
+	 * @return bool True on success, false on failure.
+	 */
+	public function attach_sale(&$sale) {
+		
+	}
+
+	/**
 	 * Print a form to edit the return.
 	 * @return module The form's module.
 	 */

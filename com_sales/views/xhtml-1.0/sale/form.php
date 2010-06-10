@@ -908,21 +908,29 @@ $pines->com_pgrid->load();
 			};
 
 			var kicked = false;
+			var total_cash = 0;
+			var message = "Please close the cash drawer when you are finished.<br />";
 			$.each(payments_table.pgrid_get_all_rows().pgrid_export_rows(), function(){
 				if (this.values[2] != "pending")
 					return;
 				if ($.inArray(parseInt(this.key), drawer_kickers) > -1) {
-					pines.drawer_open(keep_checking);
 					kicked = true;
+					// Remember how much cash.
+					total_cash += parseFloat(this.values[1]);
 				}
 			});
+			if (kicked)
+				message += "<br /><div style=\"float: right; clear: right;\">Amount Received: <strong>$"+round_to_dec(total_cash)+"</strong></div>";
 
-			if (parseFloat($("#change").html()) > 0) {
-				pines.drawer_open(keep_checking);
+			var change = parseFloat($("#change").html());
+			if (change > 0 || kicked) {
 				kicked = true;
+				message += "<br /><div style=\"float: right; clear: right;\">Change Due: <strong>$"+round_to_dec(change)+"</strong></div><br style=\"clear: both;\" />";
 			}
 
-			if (!kicked)
+			if (kicked)
+				pines.drawer_open(keep_checking, message);
+			else
 				$("#sale_details").submit();
 		}
 		<?php } else { ?>

@@ -154,12 +154,14 @@ $pines->com_pgrid->load();
 			<?php if ($this->entity->status == 'processed' || $this->entity->status == 'voided') { ?>
 			products_table.pgrid({
 				pgrid_view_height: "160px",
+				pgrid_hidden_cols: [4],
 				pgrid_paginate: false,
 				pgrid_toolbar: false
 			});
 			<?php } else { ?>
 			products_table.pgrid({
 				pgrid_view_height: "160px",
+				pgrid_hidden_cols: [4],
 				pgrid_paginate: false,
 				pgrid_toolbar: true,
 				pgrid_toolbar_contents : [
@@ -329,7 +331,7 @@ $pines->com_pgrid->load();
 							return;
 					}
 				}
-				products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 1, data.unit_price, "", "", ""]}], function(){
+				products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, "", 1, data.unit_price, "", "", ""]}], function(){
 					var cur_row = $(this);
 					cur_row.data("product", data);
 				});
@@ -852,6 +854,7 @@ $pines->com_pgrid->load();
 
 		<?php if ($pines->config->com_sales->cash_drawer) { ?>
 		function run_drawer() {
+			if (!check_return_total()) return false;
 			var keep_checking = function(status){
 				switch (status) {
 					case "is_open":
@@ -879,31 +882,44 @@ $pines->com_pgrid->load();
 			};
 
 			var kicked = false;
+			var total_cash = 0;
+			var message = "Please close the cash drawer when you are finished.<br />";
 			$.each(payments_table.pgrid_get_all_rows().pgrid_export_rows(), function(){
 				if (this.values[2] != "pending")
 					return;
 				if ($.inArray(parseInt(this.key), drawer_kickers) > -1) {
-					pines.drawer_open(keep_checking);
 					kicked = true;
+					// Remember how much cash.
+					total_cash += parseFloat(this.values[1]);
 				}
 			});
+			if (kicked)
+				message += "<br /><div style=\"float: right; clear: right;\">Change Due: <strong>$"+round_to_dec(total_cash)+"</strong></div><br style=\"clear: both;\" />";
 
-			if (parseFloat($("#change").html()) > 0) {
-				pines.drawer_open(keep_checking);
-				kicked = true;
-			}
-
-			if (!kicked)
+			if (kicked)
+				pines.drawer_open(keep_checking, message);
+			else
 				$("#return_details").submit();
 		}
 		<?php } else { ?>
 		function run_drawer() {
+			if (!check_return_total()) return false;
 			run_submit();
 		}
 		<?php } ?>
 
 		function run_submit() {
+			if (!check_return_total()) return false;
 			$("#return_details").submit();
+		}
+
+		function check_return_total() {
+			if ($("#amount_tendered").html() == $("#total").html())
+				return true;
+			else {
+				alert("The return total is not equal to the amount returned. Please make sure all returned payments are correct.");
+				return false;
+			}
 		}
 		// ]]>
 	</script>
@@ -1008,6 +1024,7 @@ $pines->com_pgrid->load();
 					<th>SKU</th>
 					<th>Product</th>
 					<th>Serial</th>
+					<th>Delivery</th>
 					<th>Quantity</th>
 					<th>Price</th>
 					<th>Discount</th>
@@ -1024,6 +1041,7 @@ $pines->com_pgrid->load();
 					<td><?php echo $cur_product['entity']->sku; ?></td>
 					<td><?php echo $cur_product['entity']->name; ?></td>
 					<td><?php echo $cur_product['serial']; ?></td>
+					<td>NA</td>
 					<td><?php echo $cur_product['quantity']; ?></td>
 					<td><?php echo $cur_product['price']; ?></td>
 					<td><?php echo $cur_product['discount']; ?></td>
@@ -1083,6 +1101,7 @@ $pines->com_pgrid->load();
 		<div class="pf-group">
 			<div class="pf-field" style="float: right; font-size: 1.2em; text-align: right;">
 				<span class="pf-label">Amount Returned</span><span class="pf-field" id="amount_tendered">0.00</span><br />
+				<span class="pf-label">Amount Remaining</span><span class="pf-field" id="amount_due">0.00</span><br />
 			</div>
 			<hr class="pf-field" style="clear: both;" />
 		</div>

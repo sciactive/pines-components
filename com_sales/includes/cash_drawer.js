@@ -3,6 +3,7 @@ pines(function(){
 		return;
 	var callbacks = [];
 	var drawer_opened_properly = false;
+	var drawer_message = null;
 
 	// The modal dialog.
 	var dialog = $("<div title=\"Cash Drawer\" />").append($("<p />", {"class": "dialog_text"})).dialog({
@@ -31,8 +32,10 @@ pines(function(){
 	};
 	window.addEventListener("pines_cash_drawer_error", pines.drawer_error, false);
 	pines.drawer_is_closed = function(event){
-		if (dialog.dialog("isOpen"))
+		if (dialog.dialog("isOpen")) {
 			dialog.dialog("close");
+			drawer_message = null;
+		}
 		drawer_opened_properly = false;
 		var current = callbacks.slice();
 		callbacks = [];
@@ -44,9 +47,11 @@ pines(function(){
 	window.addEventListener("pines_cash_drawer_is_closed", pines.drawer_is_closed, false);
 	pines.drawer_is_open = function(event){
 		if (!dialog.dialog("isOpen")) {
+			if (drawer_message == null)
+				drawer_message = "Close the cash drawer when you are finished in order to continue.";
 			dialog.find("p.dialog_text").html(
 				drawer_opened_properly ?
-					"<span style=\"font-size: 2em;\">Close the cash drawer when you are finished in order to continue.</span>" :
+					"<span style=\"font-size: 2em;\">"+drawer_message+"</span>" :
 					"<span style=\"font-size: 2em; color: red;\">The cash drawer has been opened without authorization. Close the cash drawer immediately. Corporate has been notified and the incident has been logged.</span>"
 			);
 			if (!drawer_opened_properly) {
@@ -96,8 +101,10 @@ pines(function(){
 		evt.initEvent("pines_cash_drawer_check", true, false);
 		window.dispatchEvent(evt);
 	};
-	pines.drawer_open = function(callback){
+	pines.drawer_open = function(callback, message){
 		drawer_opened_properly = true;
+		if (message != undefined)
+			drawer_message = message;
 		if ($.isFunction(callback))
 			$.merge(callbacks, [callback]);
 		var evt = document.createEvent("Events");

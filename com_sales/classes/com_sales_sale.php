@@ -53,87 +53,6 @@ class com_sales_sale extends entity {
 	}
 
 	/**
-	 * Delete the sale.
-	 * @return bool True on success, false on failure.
-	 */
-	public function delete() {
-		if (!parent::delete())
-			return false;
-		pines_log("Deleted sale $this->name.", 'notice');
-		return true;
-	}
-
-	/**
-	 * Print a form to edit the sale.
-	 * @return module The form's module.
-	 */
-	public function print_form() {
-		global $pines;
-		$module = new module('com_sales', 'sale/form', 'content');
-		$module->entity = $this;
-		$module->categories = (array) $pines->entity_manager->get_entities(
-				array('class' => com_sales_category),
-				array('&',
-					'data' => array('enabled', true),
-					'tag' => array('com_sales', 'category')
-				)
-			);
-		$module->tax_fees = (array) $pines->entity_manager->get_entities(
-				array('class' => com_sales_tax_fee),
-				array('&',
-					'data' => array('enabled', true),
-					'tag' => array('com_sales', 'tax_fee')
-				)
-			);
-		$module->payment_types = (array) $pines->entity_manager->get_entities(
-				array('class' => com_sales_payment_type),
-				array('&',
-					'data' => array('enabled', true),
-					'tag' => array('com_sales', 'payment_type')
-				)
-			);
-		$module->returns = (array) $pines->entity_manager->get_entities(
-				array('class' => com_sales_return),
-				array('&',
-					'ref' => array('sale', $this),
-					'tag' => array('com_sales', 'return')
-				)
-			);
-
-		return $module;
-	}
-
-	/**
-	 * Print a receipt of the sale.
-	 * @return module The form's module.
-	 */
-	function print_receipt() {
-		$module = new module('com_sales', 'sale/receipt', 'content');
-		$module->entity = $this;
-
-		return $module;
-	}
-
-	/**
-	 * Email a receipt of the sale to the customer's email.
-	 */
-	function email_receipt() {
-		global $pines;
-		if (!$this->customer->email)
-			return;
-		$module = new module('com_sales', 'sale/receipt', 'content');
-		$module->entity = $this;
-		$content = "<style type=\"text/css\">/* <![CDATA[ */\n";
-		$content .= file_get_contents('system/css/pform.css');
-		$content .= "\n/* ]]> */</style>";
-		$content .= $module->render();
-		$module->detach();
-
-		$mail = com_mailer_mail::factory($pines->config->com_sales->email_from_address, $this->customer->email, 'Receipt for sale from Pines', $content);
-		$mail->send();
-	}
-
-	/**
 	 * Approve each payment.
 	 *
 	 * @return bool True on success, false on failure.
@@ -168,86 +87,6 @@ class com_sales_sale extends entity {
 				$return = false;
 		}
 		return $return;
-	}
-
-	/**
-	 * Process each payment.
-	 *
-	 * This process updates "amount_tendered", "amount_due", and "change" on the
-	 * sale itself.
-	 *
-	 * @return bool True on success, false on failure.
-	 */
-	public function tender_payments() {
-		global $pines;
-		$this->tendered_payments = true;
-		if (!is_array($this->payments))
-			$this->payments = array();
-		if (!is_numeric($this->total))
-			return false;
-		$total = (float) $this->total;
-		$amount_tendered = (float) $this->amount_tendered;
-		$amount_due = 0.00;
-		$change = 0.00;
-		$return = true;
-		foreach ($this->payments as &$cur_payment) {
-			// If it's already tendered, skip it.
-			if (in_array($cur_payment['status'], array('declined', 'tendered')))
-				continue;
-			// If it's not approved, sale can't be tendered.
-			if ($cur_payment['status'] != 'approved') {
-				$return = false;
-				continue;
-			}
-			// Call the payment processing.
-			$pines->com_sales->call_payment_process(array(
-				'action' => 'tender',
-				'name' => $cur_payment['entity']->processing_type,
-				'payment' => &$cur_payment,
-				'sale' => &$this
-			));
-			// If the payment went through, record it, if it didn't and it
-			// wasn't declined, consider it a failure.
-			if ($cur_payment['status'] != 'tendered') {
-				if ($cur_payment['status'] != 'declined')
-					$return = false;
-			} else {
-				// If it was tendered, add to the amount tendered.
-				$amount_tendered += (float) $cur_payment['amount'];
-				// Make a transaction entry.
-				$tx = com_sales_tx::factory('com_sales', 'transaction', 'payment_tx');
-				$tx->type = 'payment_received';
-				$tx->amount = (float) $cur_payment['amount'];
-				$tx->ref = $cur_payment['entity'];
-
-				// Make sure we have a GUID before saving the tx.
-				if (!($this->guid))
-					$return = $return && $this->save();
-
-				$tx->ticket = $this;
-				$return = $return && $tx->save();
-			}
-		}
-		$amount_due = $total - $amount_tendered;
-		if ($amount_due < 0.00) {
-			$change = abs($amount_due);
-			$amount_due = 0.00;
-		}
-		$this->amount_tendered = $amount_tendered;
-		$this->amount_due = $amount_due;
-		$this->change = $change;
-		return $return;
-	}
-
-	/**
-	 * Save the sale.
-	 * @return bool True on success, false on failure.
-	 */
-	public function save() {
-		global $pines;
-		if (!isset($this->id))
-			$this->id = $pines->entity_manager->new_uid('com_sales_sale');
-		return parent::save();
 	}
 
 	/**
@@ -358,6 +197,36 @@ class com_sales_sale extends entity {
 	}
 
 	/**
+	 * Delete the sale.
+	 * @return bool True on success, false on failure.
+	 */
+	public function delete() {
+		if (!parent::delete())
+			return false;
+		pines_log("Deleted sale $this->id.", 'notice');
+		return true;
+	}
+
+	/**
+	 * Email a receipt of the sale to the customer's email.
+	 */
+	function email_receipt() {
+		global $pines;
+		if (!$this->customer->email)
+			return;
+		$module = new module('com_sales', 'sale/receipt', 'content');
+		$module->entity = $this;
+		$content = "<style type=\"text/css\">/* <![CDATA[ */\n";
+		$content .= file_get_contents('system/css/pform.css');
+		$content .= "\n/* ]]> */</style>";
+		$content .= $module->render();
+		$module->detach();
+
+		$mail = com_mailer_mail::factory($pines->config->com_sales->email_from_address, $this->customer->email, 'Receipt for sale from Pines', $content);
+		$mail->send();
+	}
+
+	/**
 	 * Invoice the sale.
 	 *
 	 * This process may remove any sold items from stock. Payment is not
@@ -455,39 +324,12 @@ class com_sales_sale extends entity {
 		// Make sure we have a GUID before saving the tx.
 		if (!($this->guid))
 			$return = $return && $this->save();
-		
+
 		$tx->ticket = $this;
 		$return = $return && $tx->save();
 
 		$this->invoice_date = time();
 
-		return $return;
-	}
-
-	/**
-	 * Remove the inventory on this sale from current stock.
-	 * @return bool True on success, false on any failure.
-	 */
-	public function remove_stock() {
-		if ($this->removed_stock)
-			return false;
-		$this->removed_stock = true;
-		// Keep track of the whole process.
-		$return = true;
-		// Go through each product, marking its stock as sold.
-		foreach ($this->products as &$cur_product) {
-			// Remove stock from inventory.
-			if (!is_array($cur_product['stock_entities']))
-				continue;
-			foreach ($cur_product['stock_entities'] as &$cur_stock) {
-				if ($cur_product['delivery'] == 'in-store') {
-					$return = $return && $cur_stock->remove('sold_at_store', $this) && $cur_stock->save();
-				} else {
-					$return = $return && $cur_stock->remove('sold_pending', $this, $cur_stock->location) && $cur_stock->save();
-				}
-			}
-		}
-		unset($cur_product);
 		return $return;
 	}
 
@@ -535,6 +377,164 @@ class com_sales_sale extends entity {
 			}
 		}
 		unset($cur_product);
+	}
+
+	/**
+	 * Print a form to edit the sale.
+	 * @return module The form's module.
+	 */
+	public function print_form() {
+		global $pines;
+		$module = new module('com_sales', 'sale/form', 'content');
+		$module->entity = $this;
+		$module->categories = (array) $pines->entity_manager->get_entities(
+				array('class' => com_sales_category),
+				array('&',
+					'data' => array('enabled', true),
+					'tag' => array('com_sales', 'category')
+				)
+			);
+		$module->tax_fees = (array) $pines->entity_manager->get_entities(
+				array('class' => com_sales_tax_fee),
+				array('&',
+					'data' => array('enabled', true),
+					'tag' => array('com_sales', 'tax_fee')
+				)
+			);
+		$module->payment_types = (array) $pines->entity_manager->get_entities(
+				array('class' => com_sales_payment_type),
+				array('&',
+					'data' => array('enabled', true),
+					'tag' => array('com_sales', 'payment_type')
+				)
+			);
+		$module->returns = (array) $pines->entity_manager->get_entities(
+				array('class' => com_sales_return),
+				array('&',
+					'ref' => array('sale', $this),
+					'tag' => array('com_sales', 'return')
+				)
+			);
+
+		return $module;
+	}
+
+	/**
+	 * Print a receipt of the sale.
+	 * @return module The form's module.
+	 */
+	function print_receipt() {
+		$module = new module('com_sales', 'sale/receipt', 'content');
+		$module->entity = $this;
+
+		return $module;
+	}
+
+	/**
+	 * Remove the inventory on this sale from current stock.
+	 * @return bool True on success, false on any failure.
+	 */
+	public function remove_stock() {
+		if ($this->removed_stock)
+			return false;
+		$this->removed_stock = true;
+		// Keep track of the whole process.
+		$return = true;
+		// Go through each product, marking its stock as sold.
+		foreach ($this->products as &$cur_product) {
+			// Remove stock from inventory.
+			if (!is_array($cur_product['stock_entities']))
+				continue;
+			foreach ($cur_product['stock_entities'] as &$cur_stock) {
+				if ($cur_product['delivery'] == 'in-store') {
+					$return = $return && $cur_stock->remove('sold_at_store', $this) && $cur_stock->save();
+				} else {
+					$return = $return && $cur_stock->remove('sold_pending', $this, $cur_stock->location) && $cur_stock->save();
+				}
+			}
+		}
+		unset($cur_product);
+		return $return;
+	}
+
+	/**
+	 * Save the sale.
+	 * @return bool True on success, false on failure.
+	 */
+	public function save() {
+		global $pines;
+		if (!isset($this->id))
+			$this->id = $pines->entity_manager->new_uid('com_sales_sale');
+		return parent::save();
+	}
+
+	/**
+	 * Process each payment.
+	 *
+	 * This process updates "amount_tendered", "amount_due", and "change" on the
+	 * sale itself.
+	 *
+	 * @return bool True on success, false on failure.
+	 */
+	public function tender_payments() {
+		global $pines;
+		$this->tendered_payments = true;
+		if (!is_array($this->payments))
+			$this->payments = array();
+		if (!is_numeric($this->total))
+			return false;
+		$total = (float) $this->total;
+		$amount_tendered = (float) $this->amount_tendered;
+		$amount_due = 0.00;
+		$change = 0.00;
+		$return = true;
+		foreach ($this->payments as &$cur_payment) {
+			// If it's already tendered, skip it.
+			if (in_array($cur_payment['status'], array('declined', 'tendered')))
+				continue;
+			// If it's not approved, sale can't be tendered.
+			if ($cur_payment['status'] != 'approved') {
+				$return = false;
+				continue;
+			}
+			// Call the payment processing.
+			$pines->com_sales->call_payment_process(array(
+				'action' => 'tender',
+				'name' => $cur_payment['entity']->processing_type,
+				'payment' => &$cur_payment,
+				'sale' => &$this
+			));
+			// If the payment went through, record it, if it didn't and it
+			// wasn't declined, consider it a failure.
+			if ($cur_payment['status'] != 'tendered') {
+				if ($cur_payment['status'] != 'declined')
+					$return = false;
+			} else {
+				// If it was tendered, add to the amount tendered.
+				$amount_tendered += (float) $cur_payment['amount'];
+				// Make a transaction entry.
+				$tx = com_sales_tx::factory('com_sales', 'transaction', 'payment_tx');
+				$tx->type = 'payment_received';
+				$tx->amount = (float) $cur_payment['amount'];
+				$tx->ref = $cur_payment['entity'];
+
+				// Make sure we have a GUID before saving the tx.
+				if (!($this->guid))
+					$return = $return && $this->save();
+
+				$tx->ticket = $this;
+				$return = $return && $tx->save();
+			}
+		}
+		$amount_due = $total - $amount_tendered;
+		if ($amount_due < 0.00) {
+			$change = abs($amount_due);
+			$amount_due = 0.00;
+		}
+		$this->amount_tendered = $amount_tendered;
+		$this->amount_due = $amount_due;
+		$this->change = $change;
+		return $return;
 	}
 
 	/**

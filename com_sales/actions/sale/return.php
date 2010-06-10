@@ -18,7 +18,7 @@ $sale = com_sales_sale::factory((int) $_REQUEST['id']);
 
 $entity = com_sales_return::factory();
 if (isset($sale->guid))
-	$entity->sale = $sale;
+	$entity->attach_sale($sale);
 $entity->print_form();
 
 ?>

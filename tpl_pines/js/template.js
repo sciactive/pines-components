@@ -18,16 +18,31 @@ pines(function(){
 		.end().parent().nextAll(".module_content").slideToggle("normal");
 	}));
 	// Menu hover.
-	hover(".dropdown li a");
+	hover("ul.dropdown li a");
 
 	// Get the loaded page ready. (Styling, etc.)
 	// This needs to be called after Ajax page loads.
 	var page_ready = function(){
 		// Main menu corners.
-		$("body > div#header > div.mainmenu").find(".dropdown > li:first-child > a").addClass("ui-corner-tl").end()
-		.find(".dropdown > li:last-child > a").addClass("ui-corner-tr").end()
-		.find(".dropdown ul > li:first-child > a").addClass("ui-corner-tr").end()
-		.find(".dropdown ul > li:last-child > a").addClass("ui-corner-bottom");
+		$("body > div#header > div.mainmenu > div.menuwrap")
+		// TODO: Option to enable this.
+		/* .find("ul.dropdown li").bind("mouseenter", function(){
+			var cur_item = $(this);
+			var cur_submenu = cur_item.children("ul");
+			if (cur_submenu.length)
+				cur_submenu.hide().slideDown(200);
+		}).bind("mouseleave", function(){
+			var cur_item = $(this);
+			var cur_submenu = cur_item.children("ul");
+			cur_item.addClass("hover");
+			cur_submenu.slideUp(100, function(){
+				cur_item.removeClass("hover");
+			});
+		}).end() */
+		.find("ul.dropdown > li:first-child > a").addClass("ui-corner-tl").end()
+		.find("ul.dropdown > li:last-child > a").addClass("ui-corner-tr").end()
+		.find("ul.dropdown ul > li:first-child > a").addClass("ui-corner-tr").end()
+		.find("ul.dropdown ul > li:last-child > a").addClass("ui-corner-bottom");
 
 		// Add disabled element styling.
 		$(".ui-widget-content:input:disabled").addClass("ui-state-disabled");

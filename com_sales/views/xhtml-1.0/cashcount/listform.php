@@ -73,6 +73,6 @@ $pines->com_jstree->load();
 	</div>
 	<div class="pf-element">
 		<input type="hidden" name="location" />
-		<input type="submit" value="Update &raquo;" class="ui-corner-all ui-state-default form_input" />
+		<input type="submit" value="Update" class="ui-corner-all ui-state-default form_input" />
 	</div>
 </form>

@@ -48,6 +48,6 @@ $this->title = 'New Report';
 		<input class="ui-widget-content form_date" type="text" name="end" value="<?php echo ($this->date[1]) ? format_date($this->date[1], 'date_sort') : format_date(time(), 'date_sort'); ?>" />
 	</div>
 	<div class="pf-element">
-		<input class="ui-corner-all ui-state-default form_input" type="submit" value="View Report &raquo;" />
+		<input class="ui-corner-all ui-state-default form_input" type="submit" value="View Report" />
 	</div>
 </form>

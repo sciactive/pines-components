@@ -67,6 +67,6 @@ $pines->com_jstree->load();
 	<div class="pf-element">
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<input type="hidden" name="location" />
-		<input class="ui-corner-all ui-state-default form_input" type="submit" value="View Report &raquo;" />
+		<input class="ui-corner-all ui-state-default form_input" type="submit" value="View Report" />
 	</div>
 </form>

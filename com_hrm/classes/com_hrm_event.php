@@ -70,6 +70,25 @@ class com_hrm_event extends entity {
 			return false;
 		return parent::save();
 	}
+
+	/**
+	 * Print a form to edit the event.
+	 * @param group $location The location to create the event for.
+	 */
+	public function print_form($location = null) {
+		global $pines;
+		$pines->page->override = true;
+
+		$module = new module('com_hrm', 'form_new_event', 'content');
+		$module->entity = $this;
+		// Should work like this, we need to have the employee's group update upon saving it to a user.
+		$module->employees = $pines->entity_manager->get_entities(array('class' => com_hrm_employee), array('&', 'tag' => array('com_hrm', 'employee')));
+		$event_location = $this->group->guid;
+		if (empty($event_location))
+			$event_location = $location->guid;
+		$module->location = $event_location;
+		$pines->page->override_doc($module->render());
+	}
 }
 
 ?>

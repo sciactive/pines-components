@@ -18,6 +18,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
+$this->title = 'Company Schedule';
 ?>
 <script type='text/javascript'>
 // <![CDATA[

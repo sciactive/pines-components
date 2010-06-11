@@ -32,7 +32,7 @@ class com_reports extends component {
 		$date_start = strtotime('00:00', $start);
 		$date_end = strtotime('23:59', $end);
 
-		$form = new module('com_reports', 'form_hrm', 'left');
+		$form = new module('com_reports', 'form_hrm', 'right');
 		$module = new module('com_reports', 'report_attendance', 'content');
 
 		if (!isset($employee)) {
@@ -61,7 +61,7 @@ class com_reports extends component {
 		$date_start = strtotime('00:00', $start);
 		$date_end = strtotime('23:59', $end);
 		
-		$form = new module('com_reports', 'form_sales', 'left');
+		$form = new module('com_reports', 'form_sales', 'right');
 		$head = new module('com_reports', 'show_calendar_head', 'head');
 		$module = new module('com_reports', 'report_sales', 'content');
 		$module->sales = $pines->entity_manager->get_entities(

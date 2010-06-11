@@ -88,7 +88,7 @@ class com_sales extends component {
 	 *
 	 * @param bool $all_time Currently searching all records or a timespan.
 	 * @param string $start The current starting date of the timespan.
-	 * @param string $start The current ending date of the timespan.
+	 * @param string $end The current ending date of the timespan.
 	 * @return module The form's module.
 	 */
 	public function date_select_form($all_time = false, $start = null, $end = null) {
@@ -244,7 +244,7 @@ class com_sales extends component {
 	public function list_cashcounts($start_date = null, $end_date = null, $location = null) {
 		global $pines;
 
-		$form = new module('com_sales', 'cashcount/listform', 'left');
+		$form = new module('com_sales', 'cashcount/listform', 'right');
 		$module = new module('com_sales', 'cashcount/list', 'content');
 
 		if (!isset($start_date))

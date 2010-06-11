@@ -100,6 +100,25 @@ class com_hrm extends component {
 	}
 
 	/**
+	 * Print a form to select a company location.
+	 *
+	 * @param int $location The current ending date of the timespan.
+	 * @return module The form's module.
+	 */
+	public function location_select_form($location = null) {
+		global $pines;
+		$pines->page->override = true;
+
+		if (!isset($location))
+			$location = $_SESSION['user']->group->guid;
+		$module = new module('com_hrm', 'form_schedule', 'content');
+		$module->location = $location;
+
+		$pines->page->override_doc($module->render());
+		return $module;
+	}
+
+	/**
 	 * Transform a string to title case.
 	 *
 	 * @param string $string The string to transform.
@@ -158,16 +177,15 @@ class com_hrm extends component {
 			$location = $_SESSION['user']->group;
 		
 		if (gatekeeper('com_hrm/editcalendar')) {
-			$form_group = new module('com_hrm', 'form_calendar_groups', 'left');
-			$form_event = new module('com_hrm', 'form_calendar', 'left');
+			$form = new module('com_hrm', 'form_calendar', 'right');
 			// If an id is specified, the event info will be displayed for editing.
 			if (isset($id) && $id >  0) {
-				$form_event->event = com_hrm_event::factory((int) $id);
-				$location = $form_event->event->group;
+				$form->event = com_hrm_event::factory((int) $id);
+				$location = $form->event->group;
 			}
 			// Should work like this, we need to have the employee's group update upon saving it to a user.
-			$form_event->employees = $pines->entity_manager->get_entities(array('class' => com_hrm_employee), array('&', 'tag' => array('com_hrm', 'employee')));
-			$form_group->location = $form_event->location = $location->guid;
+			$form->employees = $pines->entity_manager->get_entities(array('class' => com_hrm_employee), array('&', 'tag' => array('com_hrm', 'employee')));
+			$form->location = $location->guid;
 		}
 		$calendar_head = new module('com_hrm', 'show_calendar_head', 'head');
 		$calendar = new module('com_hrm', 'show_calendar', 'content');

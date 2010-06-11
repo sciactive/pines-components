@@ -16,12 +16,9 @@ defined('P_RUN') or die('Direct access prohibited');
 	#date_details {
 		padding-left: 25px;
 	}
-	#date_details .form_input {
-		width: 170px;
+	#date_details .form_date {
+		width: 80%;
 		text-align: center;
-	}
-	#date_details .form_select {
-		width: 170px;
 	}
 	/* ]]> */
 </style>
@@ -66,11 +63,11 @@ defined('P_RUN') or die('Direct access prohibited');
 		<label><input class="pf-field ui-widget-content" type="radio" name="all_time" value="timespan" <?php echo !$this->all_time ? 'checked="checked"' : ''; ?>/>Timespan</label>
 	</div>
 	<div class="timespan">
-		<div class="pf-element" style="padding-bottom: 0px;">
-			<span class="pf-note">Start</span><input class="ui-widget-content form_input" type="text" id="start_date" name="start_date" value="<?php echo isset($this->start_date) ? htmlentities($this->start_date) : ''; ?>" />
+		<div class="pf-element">
+			<span class="pf-note">Start</span><input class="ui-widget-content form_date" type="text" id="start_date" name="start_date" value="<?php echo isset($this->start_date) ? htmlentities($this->start_date) : ''; ?>" />
 		</div>
-		<div class="pf-element" style="padding-bottom: 25px;">
-			<span class="pf-note">End</span><input class="ui-widget-content form_input" type="text" id="end_date" name="end_date" value="<?php echo isset($this->end_date) ? htmlentities($this->end_date) : ''; ?>" />
+		<div class="pf-element">
+			<span class="pf-note">End</span><input class="ui-widget-content form_date" type="text" id="end_date" name="end_date" value="<?php echo isset($this->end_date) ? htmlentities($this->end_date) : ''; ?>" />
 		</div>
 		<input type="hidden" name="timespan_saver" value="<?php echo $this->all_time; ?>" />
 	</div>

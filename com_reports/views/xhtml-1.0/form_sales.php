@@ -15,12 +15,8 @@ $this->title = 'New Report';
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
-	.form_input {
-		width: 170px;
-		text-align: center;
-	}
 	.form_date {
-		width: 85%;
+		width: 80%;
 		text-align: center;
 	}
 	/* ]]> */
@@ -48,6 +44,6 @@ $this->title = 'New Report';
 		<input class="ui-widget-content form_date" type="text" name="end" value="<?php echo ($this->date[1]) ? format_date($this->date[1], 'date_sort') : format_date(time(), 'date_sort'); ?>" />
 	</div>
 	<div class="pf-element">
-		<input class="ui-corner-all ui-state-default form_input" type="submit" value="View Report" />
+		<input class="ui-corner-all ui-state-default" type="submit" value="View Report" />
 	</div>
 </form>

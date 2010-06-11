@@ -91,7 +91,7 @@ $pines->com_jstree->load();
 <form class="pf-form" method="post" id="salesrank_details" action="<?php echo htmlentities(pines_url('com_reports', 'savesalesranking')); ?>">
 	<div class="pf-element">
 		<label><span class="pf-label">Ranking Name</span>
-		<input class="pf-field ui-widget-content" type="text" name="ranking_name" value="<?php echo $this->entity->name; ?>" style="text-align: center;" /></label>
+		<input class="pf-field ui-widget-content" type="text" name="ranking_name" value="<?php echo $this->entity->name; ?>" /></label>
 	</div>
 	
 	<div class="pf-element pf-heading">

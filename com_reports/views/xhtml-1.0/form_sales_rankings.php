@@ -16,12 +16,8 @@ $pines->com_jstree->load();
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
-	.form_input {
-		width: 170px;
-		text-align: center;
-	}
-	.form_date {
-		width: 85%;
+	#report_details .form_date {
+		width: 80%;
 		text-align: center;
 	}
 	/* ]]> */
@@ -67,6 +63,6 @@ $pines->com_jstree->load();
 	<div class="pf-element">
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<input type="hidden" name="location" />
-		<input class="ui-corner-all ui-state-default form_input" type="submit" value="View Report" />
+		<input class="ui-corner-all ui-state-default" type="submit" value="View Report" />
 	</div>
 </form>

@@ -61,7 +61,7 @@ img {
 .holygrail .colmid {
 	float:left;
 	width:200%;
-	margin-left:-200px; 	/* Width of right column */
+	margin-left:-190px; 	/* Width of right column */
 	position:relative;
 	right:100%;
 }
@@ -70,7 +70,7 @@ img {
 	width:100%;
 	margin-left:-50%;
 	position:relative;
-	left:400px;		 	/* Left column width + right column width */
+	left:380px;		 	/* Left column width + right column width */
 }
 /* Custom */
 .holygrail .colleftcolor {
@@ -89,12 +89,12 @@ img {
 	float:left;
 	width:50%;
 	position:relative;
-	right:200px;			/* Width of left column */
+	right:190px;			/* Width of left column */
 	padding-bottom:1em; 	/* Centre column bottom padding. Leave it out if it's zero */
 }
 .holygrail .col1 {
 	/* Margin for module content. */
-	margin:12px 205px 0;	 	/* Centre column side padding:
+	margin:12px 195px 0;	 	/* Centre column side padding:
 							Left padding = left column width + centre column left padding width
 							Right padding = right column width + centre column right padding width */
 	position:relative;
@@ -104,7 +104,7 @@ img {
 .holygrail .col2 {
 	float:left;
 	float:right;			/* This overrides the float:left above */
-	width:190px;			/* Width of left column content (left column width minus left and right padding) */
+	width:180px;			/* Width of left column content (left column width minus left and right padding) */
 	position:relative;
 	right:5px;		 	/* Width of the left-hand side padding on the left column */
 
@@ -123,7 +123,7 @@ img {
 .holygrail .col3 {
 	float:left;
 	float:right;			/* This overrides the float:left above */
-	width:190px;			/* Width of right column content (right column width minus left and right padding) */
+	width:180px;			/* Width of right column content (right column width minus left and right padding) */
 	margin-right:15px;  	/* Width of right column right-hand padding + left column left and right padding */
 	position:relative;
 	left:50%;

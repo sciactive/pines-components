@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Schedule Actions';
+$this->title = 'Actions';
 $pines->com_jstree->load();
 ?>
 <script type='text/javascript'>

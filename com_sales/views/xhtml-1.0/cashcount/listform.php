@@ -15,12 +15,8 @@ $pines->com_jstree->load();
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
-	#cashcount_dates .form_input {
-		width: 170px;
-		text-align: center;
-	}
 	#cashcount_dates .form_date {
-		width: 85%;
+		width: 80%;
 		text-align: center;
 	}
 	/* ]]> */
@@ -73,6 +69,6 @@ $pines->com_jstree->load();
 	</div>
 	<div class="pf-element">
 		<input type="hidden" name="location" />
-		<input type="submit" value="Update" class="ui-corner-all ui-state-default form_input" />
+		<input type="submit" value="Update" class="ui-corner-all ui-state-default" />
 	</div>
 </form>

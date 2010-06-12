@@ -51,9 +51,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', url: '<?php echo pines_url('com_sales', 'return/edit', array('id' => '__title__')); ?>'},
 				<?php } ?>
 				{type: 'button', text: 'Receipt', extra_class: 'picon picon-document-print-preview', double_click: true, url: '<?php echo pines_url('com_sales', 'return/receipt', array('id' => '__title__')); ?>'},
-				<?php if (gatekeeper('com_sales/voidreturn')) { ?>
-				{type: 'button', text: 'Void', extra_class: 'picon picon-edit-delete-shred', confirm: true, url: '<?php echo pines_url('com_sales', 'return/void', array('id' => '__title__')); ?>'},
-				<?php } ?>
 				{type: 'separator'},
 				<?php if (gatekeeper('com_sales/deletereturn')) { ?>
 				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_sales', 'return/delete', array('id' => '__title__')); ?>', delimiter: ','},

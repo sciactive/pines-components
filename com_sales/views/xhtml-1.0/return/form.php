@@ -165,6 +165,7 @@ $pines->com_pgrid->load();
 				pgrid_paginate: false,
 				pgrid_toolbar: true,
 				pgrid_toolbar_contents : [
+					<?php if (!isset($this->entity->sale->guid)) { ?>
 					{
 						type: 'text',
 						label: 'Code: ',
@@ -228,8 +229,10 @@ $pines->com_pgrid->load();
 						double_click: true,
 						click: function(e, rows){
 							var product = rows.data("product");
-							if (!product.serialized)
+							if (!product.serialized) {
+								alert("This product isn't serialized.");
 								return;
+							}
 							var serial = rows.pgrid_get_value(3);
 							do {
 								serial = prompt("This item is serialized. Please provide the serial:", serial);
@@ -240,6 +243,7 @@ $pines->com_pgrid->load();
 							}
 						}
 					},
+					<?php } ?>
 					{
 						type: 'button',
 						text: 'Qty',
@@ -247,10 +251,8 @@ $pines->com_pgrid->load();
 						double_click: true,
 						click: function(e, rows){
 							var product = rows.data("product");
-							if (product.serialized)
-								return;
-							if (product.one_per_ticket) {
-								alert("Only one of this product is allowed per ticket.");
+							if (product.serialized) {
+								alert("This product is serialized.");
 								return;
 							}
 							var qty = rows.pgrid_get_value(5);
@@ -527,7 +529,7 @@ $pines->com_pgrid->load();
 							autoOpen: true,
 							modal: true,
 							open: function(){
-								form.append(data);
+								form.html(data+"<br />");
 								form.find("form").submit(function(){
 									form.dialog('option', 'buttons').Done();
 									return false;
@@ -927,13 +929,13 @@ $pines->com_pgrid->load();
 	<div class="pf-element">
 		<label for="customer_search">
 			<span class="pf-label">Customer</span>
-			<?php if ($this->entity->status != 'processed' && $this->entity->status != 'voided') { ?>
+			<?php if ($this->entity->status != 'processed' && $this->entity->status != 'voided' && !isset($this->entity->sale->guid)) { ?>
 			<span class="pf-note">Enter part of a name, company, email, or phone # to search.</span>
 			<?php } ?>
 		</label>
 		<div class="pf-group">
 			<input class="pf-field ui-widget-content" type="text" id="customer" name="customer" size="24" onfocus="this.blur();" value="<?php echo htmlentities($this->entity->customer->guid ? "{$this->entity->customer->guid}: \"{$this->entity->customer->name}\"" : 'No Customer Selected'); ?>" />
-			<?php if ($this->entity->status != 'processed' && $this->entity->status != 'voided') { ?>
+			<?php if ($this->entity->status != 'processed' && $this->entity->status != 'voided' && !isset($this->entity->sale->guid)) { ?>
 			<br />
 			<input class="pf-field ui-widget-content" type="text" id="customer_search" name="customer_search" size="24" />
 			<button class="pf-field ui-state-default ui-corner-all" type="button" id="customer_search_button"><span class="picon picon-system-search" style="padding-left: 16px; background-repeat: no-repeat;">Search</span></button>
@@ -979,6 +981,7 @@ $pines->com_pgrid->load();
 		</table>
 		<br class="pf-clearing" />
 	</div>
+	<?php } ?>
 	<div id="category_dialog" title="Categories" style="display: none;">
 		<table id="category_grid">
 			<thead>
@@ -1014,7 +1017,6 @@ $pines->com_pgrid->load();
 		</table>
 		<br class="pf-clearing" />
 	</div>
-	<?php } ?>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Products</span>
 		<br class="pf-clearing" />
@@ -1115,10 +1117,25 @@ $pines->com_pgrid->load();
 			<textarea class="pf-field pf-full-width ui-widget-content" style="width: 96%; height: 100%;" rows="3" cols="35" id="comments" name="comments"><?php echo $this->entity->comments; ?></textarea>
 		</div>
 	</div>
+	<?php if (isset($this->entity->sale->guid)) { ?>
+	<div class="pf-element">
+		<span class="pf-label">Attached Sale</span>
+		<span class="pf-note">This return is attached to a sale.</span>
+		<span class="pf-field">
+			Sale #<?php echo $this->entity->sale->id; ?>:
+			<a href="<?php echo htmlentities(pines_url('com_sales', 'sale/receipt', array('id' => $this->entity->sale->guid))); ?>" onclick="window.open(this.href); return false;">Receipt</a>
+			<?php if (gatekeeper('com_sales/editsale')) { ?>
+			<a href="<?php echo htmlentities(pines_url('com_sales', 'sale/edit', array('id' => $this->entity->sale->guid))); ?>" onclick="window.open(this.href); return false;">Edit</a>
+			<?php } ?>
+		</span>
+	</div>
+	<?php } ?>
 	<div class="pf-element pf-buttons">
 		<input type="hidden" id="comment_saver" name="comment_saver" value="<?php echo $this->entity->comments; ?>" />
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<?php } elseif ( isset($this->entity->sale->guid) ) { ?>
+		<input type="hidden" name="sale_id" value="<?php echo $this->entity->sale->guid; ?>" />
 		<?php } ?>
 
 		<input type="hidden" id="return_process_type" name="process" value="quote" />

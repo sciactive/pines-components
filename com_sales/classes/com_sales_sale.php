@@ -647,12 +647,23 @@ class com_sales_sale extends entity {
 	 * 'voided'.
 	 *
 	 * @return bool True on success, false on failure.
-	 * @todo Void payments.
 	 */
 	public function void() {
 		global $pines;
 		if ($this->status == 'voided')
 			return true;
+		// Check if this sale is attached to any returns. If so, it cannot be voided.
+		$attached_return = $pines->entity_manager->get_entity(
+				array('class' => com_sales_return),
+				array('&',
+					'ref' => array('sale', $this),
+					'tag' => array('com_sales', 'return')
+				)
+			);
+		if (isset($attached_return)) {
+			pines_notice('This sale cannot be voided, because it is attached to a return.');
+			return false;
+		}
 		// Keep track of the whole process.
 		$return = true;
 		if ($this->removed_stock) {

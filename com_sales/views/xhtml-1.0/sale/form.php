@@ -229,8 +229,10 @@ $pines->com_pgrid->load();
 						double_click: true,
 						click: function(e, rows){
 							var product = rows.data("product");
-							if (!product.serialized)
+							if (!product.serialized) {
+								alert("This product isn't serialized.");
 								return;
+							}
 							var serial = rows.pgrid_get_value(3);
 							do {
 								serial = prompt("This item is serialized. Please provide the serial:", serial);
@@ -262,8 +264,10 @@ $pines->com_pgrid->load();
 						double_click: true,
 						click: function(e, rows){
 							var product = rows.data("product");
-							if (product.serialized)
+							if (product.serialized) {
+								alert("This product is serialized.");
 								return;
+							}
 							if (product.one_per_ticket) {
 								alert("Only one of this product is allowed per ticket.");
 								return;
@@ -554,7 +558,7 @@ $pines->com_pgrid->load();
 							autoOpen: true,
 							modal: true,
 							open: function(){
-								form.append(data);
+								form.html(data+"<br />");
 								form.find("form").submit(function(){
 									form.dialog('option', 'buttons').Done();
 									return false;
@@ -1000,6 +1004,7 @@ $pines->com_pgrid->load();
 		</table>
 		<br class="pf-clearing" />
 	</div>
+	<?php } ?>
 	<div id="category_dialog" title="Categories" style="display: none;">
 		<table id="category_grid">
 			<thead>
@@ -1035,7 +1040,6 @@ $pines->com_pgrid->load();
 		</table>
 		<br class="pf-clearing" />
 	</div>
-	<?php } ?>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Products</span>
 		<br class="pf-clearing" />

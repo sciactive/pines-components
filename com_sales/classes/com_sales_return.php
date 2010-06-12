@@ -56,7 +56,7 @@ class com_sales_return extends entity {
 	 * Attach a sale to the return.
 	 *
 	 * A return can only have one attached sale, but a sale can be attached to
-	 * many returns.
+	 * multiple returns.
 	 *
 	 * @param com_sales_sale &$sale The sale to attach.
 	 * @return bool True on success, false on failure.
@@ -64,11 +64,31 @@ class com_sales_return extends entity {
 	public function attach_sale(&$sale) {
 		if (isset($this->sale) || $sale->status != 'paid')
 			return false;
-		$this->sale = $sale;
-		$this->customer = $sale->customer;
 		$this->products = (array) $sale->products;
+		foreach ($this->products as $key => &$cur_product) {
+			// Remove products that have already been returned.
+			if (is_array($cur_product['stock_entities'])) {
+				foreach ($cur_product['stock_entities'] as $stock_key => &$cur_stock) {
+					// TODO: Update $cur_product['returned_stock_entities'] when return is processed.
+					if ($cur_stock->in_array($cur_product['returned_stock_entities']))
+						unset($cur_product['stock_entities'][$stock_key]);
+				}
+				unset($cur_stock);
+			}
+			// TODO: Update $cur_product['returned_quantity'] when return is processed.
+			$cur_product['quantity'] -= (int) $cur_product['returned_quantity'];
+			if ($cur_product['quantity'] <= 0)
+				unset($this->products[$key]);
+		}
+		unset($cur_product);
+		if (!$this->products) {
+			pines_notice('All products from that sale have been returned already.');
+			return false;
+		}
 		$this->payments = (array) $sale->payments;
 		$payment_total = 0;
+		// TODO: Update $sale->returned_total when return is processed.
+		$sale_total = $sale->total - (float) $sale->returned_total;
 		foreach ($this->payments as $key => &$cur_payment) {
 			// Get rid of non-tendered payments.
 			if ($cur_payment['status'] != 'tendered') {
@@ -87,18 +107,21 @@ class com_sales_return extends entity {
 			}
 			*/
 			// If we have enough returned already, we don't need any more.
-			if ($payment_total >= $sale->total) {
+			if ($payment_total >= $sale_total) {
 				unset($this->payments[$key]);
 				continue;
 			}
 			// Reduce the amount to however much is left to return the sale
 			// total.
-			$cur_payment['amount'] -= ($payment_total + $cur_payment['amount']) - $sale->total;
+			$cur_payment['amount'] -= ($payment_total + $cur_payment['amount']) - $sale_total;
 			$payment_total += $cur_payment['amount'];
 			// Return payments are now pending.
 			$cur_payment['status'] = 'pending';
 		}
 		unset($cur_payment);
+		$this->sale = $sale;
+		$this->customer = $sale->customer;
+		return true;
 	}
 
 	/**

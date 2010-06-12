@@ -11,16 +11,28 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if (!isset($_SESSION['user']))
+if (!isset($_SESSION['user']) || !$pines->config->com_configure->peruser)
 	return;
 
 $sys_config = array();
 $com_config = array();
-if ($_SESSION['user']->groups) {
+if ((array) $_SESSION['user']->groups === $_SESSION['user']->groups) {
 	foreach ($_SESSION['user']->groups as &$cur_group) {
-		if (is_array($cur_group->sys_config))
+		if ($pines->config->com_configure->conditional_groups && (array) $cur_group->conditions === $cur_group->conditions) {
+			// Check that any group conditions are met.
+			$pass = true;
+			foreach ($cur_group->conditions as $cur_type => $cur_value) {
+				if (!$pines->depend->check($cur_type, $cur_value)) {
+					$pass = false;
+					break;
+				}
+			}
+			if (!$pass)
+				continue;
+		}
+		if ((array) $cur_group->sys_config === $cur_group->sys_config)
 			$sys_config = array_merge($sys_config, $cur_group->sys_config);
-		if (is_array($cur_group->com_config)) {
+		if ((array) $cur_group->com_config === $cur_group->com_config) {
 			foreach ($cur_group->com_config as $key => $cur_config) {
 				$com_config[$key] = array_merge((array) $com_config[$key], $cur_config);
 			}
@@ -28,25 +40,41 @@ if ($_SESSION['user']->groups) {
 	}
 	unset($cur_group);
 }
-if (is_array($_SESSION['user']->group->sys_config))
-	$sys_config = array_merge($sys_config, $_SESSION['user']->group->sys_config);
-if (is_array($_SESSION['user']->group->com_config)) {
-	foreach ($_SESSION['user']->group->com_config as $key => $cur_config) {
-		$com_config[$key] = array_merge((array) $com_config[$key], $cur_config);
+if (isset($_SESSION['user']->group)) {
+	$tmp_array = $_SESSION['user']->group->conditions;
+	if ($pines->config->com_configure->conditional_groups && (array) $tmp_array === $tmp_array) {
+		// Check that any group conditions are met.
+		$pass = true;
+		foreach ($tmp_array as $cur_type => $cur_value) {
+			if (!$pines->depend->check($cur_type, $cur_value)) {
+				$pass = false;
+				break;
+			}
+		}
+	} else {
+		$pass = true;
+	}
+	if ($pass) {
+		$tmp_array = $_SESSION['user']->group->sys_config;
+		if ((array) $tmp_array === $tmp_array)
+			$sys_config = array_merge($sys_config, $tmp_array);
+		$tmp_array = $_SESSION['user']->group->com_config;
+		if ((array) $tmp_array === $tmp_array) {
+			foreach ($tmp_array as $key => $cur_config) {
+				$com_config[$key] = array_merge((array) $com_config[$key], $cur_config);
+			}
+		}
 	}
 }
-if (is_array($_SESSION['user']->sys_config))
+if ((array) $_SESSION['user']->sys_config === $_SESSION['user']->sys_config)
 	$sys_config = array_merge($sys_config, $_SESSION['user']->sys_config);
-if (is_array($_SESSION['user']->com_config)) {
+if ((array) $_SESSION['user']->com_config === $_SESSION['user']->com_config) {
 	foreach ($_SESSION['user']->com_config as $key => $cur_config) {
 		$com_config[$key] = array_merge((array) $com_config[$key], $cur_config);
 	}
 }
-unset($key);
-unset($cur_config);
 if ($sys_config || $com_config)
 	$pines->configurator->load_per_user_array($sys_config, $com_config);
-unset($sys_config);
-unset($com_config);
+unset($sys_config, $com_config, $key, $cur_config, $tmp_array, $pass, $cur_type, $cur_value);
 
 ?>

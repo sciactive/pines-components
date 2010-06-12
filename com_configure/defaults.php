@@ -1,6 +1,6 @@
 <?php
 /**
- * com_configure's configuration defaults. (Used for testing.)
+ * com_configure's configuration defaults.
  *
  * @package Pines
  * @subpackage com_configure
@@ -12,6 +12,18 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 return array(
+	array(
+		'name' => 'peruser',
+		'cname' => 'Per User/Group Settings',
+		'description' => 'Allow per user and per group configuration.',
+		'value' => true,
+	),
+	array(
+		'name' => 'conditional_groups',
+		'cname' => 'Obey Conditional Groups',
+		'description' => 'Obey conditions on groups when loading per group configuration. Settings below this one are just for reference.',
+		'value' => true,
+	),
 	array(
 		'name' => 'boolean',
 		'cname' => 'Boolean',

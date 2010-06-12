@@ -56,8 +56,8 @@ $this->title = 'Configure Components';
 
 	function com_configure__go(url) {
 		var peruser = <?php echo $this->per_user ? 'true' : 'false'; ?>;
-		var params = {};
 		if (peruser) {
+			var params = {};
 			params["peruser"] = 1;
 			var user = $(".user_picker select[name=user_select]").val();
 			if (user == "null") {
@@ -66,8 +66,9 @@ $this->title = 'Configure Components';
 			}
 			params["type"] = user.replace(/\d/g, '');
 			params["id"] = user.replace(/\D/g, '');
-		}
-		pines.get(url, params);
+			pines.get(url, params);
+		} else
+			pines.get(url);
 	}
 	// ]]>
 </script>
@@ -90,6 +91,13 @@ $this->title = 'Configure Components';
 		</select>
 		<button class="ui-state-default ui-corner-all" type="button" onclick="com_configure__go('<?php echo htmlentities(pines_url('com_configure', 'list')); ?>')">Refresh</button>
 	</div>
+	<?php if (!$pines->config->com_configure->peruser) { ?>
+	<p>
+		Per user/group configuration is not enabled, so these settings will have
+		no effect. You can enable per user/group configuration
+		<a href="<?php echo htmlentities(pines_url('com_configure', 'edit', array('component' => 'com_configure'))); ?>">here</a>.
+	</p>
+	<?php } ?>
 </div>
 <?php } ?>
 <div class="component_list">

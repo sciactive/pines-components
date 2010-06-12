@@ -112,6 +112,6 @@ $pines->com_ptags->load();
 		<?php } ?>
 		<input type="hidden" name="component" value="<?php echo $this->entity->name; ?>" />
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Save" name="save" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="reset" value="Reset" name="reset" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="reset" value="Reset" name="reset" onclick="window.setTimeout(function(){$('#configuration_form input.default_checkbox').change()}, 1);" />
 	</div>
 </form>

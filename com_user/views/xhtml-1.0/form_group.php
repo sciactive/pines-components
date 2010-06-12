@@ -466,7 +466,7 @@ $pines->uploader->load();
 			<?php if ( $this->display_conditions ) { ?>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Ability Conditions</span>
-				<span class="pf-note">Users will only inherit abilities from this group only if these conditions are met.</span>
+				<span class="pf-note">Users will only inherit abilities from this group if these conditions are met.</span>
 				<div class="pf-group">
 					<div class="pf-field">
 						<table class="conditions_table">

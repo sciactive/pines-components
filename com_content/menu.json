@@ -1,0 +1,41 @@
+[
+	{
+		"path": "main_menu/website/com_content",
+		"text": "Content",
+		"depend": {
+			"children": true
+		}
+	},
+		{
+			"path": "main_menu/website/com_content/categories",
+			"text": "Categories",
+			"href": ["com_content","category/list"],
+			"depend": {
+				"ability": "com_content/listcategories"
+			}
+		},
+		{
+			"path": "main_menu/website/com_content/newcategory",
+			"text": "New Category",
+			"href": ["com_content","category/edit"],
+			"depend": {
+				"ability": "com_content/editcategory"
+			}
+		},
+		{
+			"path": "main_menu/website/com_content/articles",
+			"text": "Articles",
+			"href": ["com_content","article/list"],
+			"depend": {
+				"ability": "com_content/listarticles"
+			}
+		},
+		{
+			"path": "main_menu/website/com_content/newarticle",
+			"text": "New Article",
+			"href": ["com_content","article/edit"],
+			"depend": {
+				"ability": "com_content/editarticle"
+			}
+		}
+]

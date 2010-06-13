@@ -285,9 +285,6 @@ class com_sales extends component {
 
 	/**
 	 * Creates and attaches a module which lists categories.
-	 * @param int $start_date The start date of categories to show.
-	 * @param int $end_date The end date of categories to show.
-	 * @param group $location The location to show categories for.
 	 */
 	public function list_categories() {
 		global $pines;

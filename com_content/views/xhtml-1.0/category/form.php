@@ -1,0 +1,86 @@
+<?php
+/**
+ * Provides a form for the user to edit a category.
+ *
+ * @package Pines
+ * @subpackage com_content
+ * @license http://www.gnu.org/licenses/agpl-3.0.html
+ * @author Hunter Perrin <hunter@sciactive.com>
+ * @copyright SciActive.com
+ * @link http://sciactive.com/
+ */
+defined('P_RUN') or die('Direct access prohibited');
+$this->title = (!isset($this->entity->guid)) ? 'Editing New Category' : 'Editing ['.htmlentities($this->entity->name).']';
+$this->note = 'Provide category details in this form.';
+?>
+<form class="pf-form" method="post" id="category_details" action="<?php echo htmlentities(pines_url('com_content', 'category/save')); ?>">
+	<?php if (isset($this->entity->guid)) { ?>
+	<div class="date_info" style="float: right; text-align: right;">
+		<?php if (isset($this->entity->user)) { ?>
+		<div>User: <span class="date"><?php echo "{$this->entity->user->name} [{$this->entity->user->username}]"; ?></span></div>
+		<div>Group: <span class="date"><?php echo "{$this->entity->group->name} [{$this->entity->group->groupname}]"; ?></span></div>
+		<?php } ?>
+		<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
+		<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
+	</div>
+	<?php } ?>
+	<div class="pf-element">
+		<label><span class="pf-label">Name</span>
+			<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
+	</div>
+	<div class="pf-element">
+		<label><span class="pf-label">Enabled</span>
+			<input class="pf-field ui-widget-content" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
+	</div>
+	<div class="pf-element">
+		<label>
+			<span class="pf-label">Parent</span>
+			<select class="pf-field ui-widget-content" name="parent">
+				<option value="null">-- No Parent --</option>
+				<?php
+				/**
+				 * Print children of a category into the select box.
+				 * @param com_content_category $parent The parent category.
+				 * @param com_content_category|null $entity The current category.
+				 * @param string $prefix The prefix to insert before names.
+				 */
+				function com_content__category_form_children($parent, $entity, $prefix = '->') {
+					foreach ($parent->children as $category) {
+						if ($category->is($entity))
+							continue;
+						?>
+						<option value="<?php echo $category->guid; ?>"<?php echo $category->is($entity->parent) ? ' selected="selected"' : ''; ?>><?php echo htmlentities("{$prefix} {$category->name}"); ?></option>
+						<?php
+						if ($category->children)
+							com_content__category_form_children($category, $entity, "{$prefix}->");
+					}
+				}
+				foreach ($this->categories as $category) {
+					if ($category->is($this->entity))
+						continue;
+					?>
+					<option value="<?php echo $category->guid; ?>"<?php echo $category->is($this->entity->parent) ? ' selected="selected"' : ''; ?>><?php echo htmlentities($category->name); ?></option>
+					<?php
+					if ($category->children)
+						com_content__category_form_children($category, $this->entity);
+				} ?>
+			</select>
+		</label>
+	</div>
+	<div class="pf-element">
+		<span class="pf-label">Articles</span>
+		<span class="pf-note">These articles are assigned to this category.</span>
+		<div class="pf-group">
+			<?php foreach ($this->entity->articles as $cur_article) { ?>
+			<div class="pf-field"><a href="<?php echo htmlentities(pines_url('com_content', 'article/edit', array('id' => $cur_article->guid))); ?>"><?php echo "[{$cur_article->guid}] {$cur_article->name}"; ?></a></div>
+			<?php } ?>
+		</div>
+	</div>
+	<div class="pf-element pf-buttons">
+		<?php if ( isset($this->entity->guid) ) { ?>
+		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<?php } ?>
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_content', 'category/list')); ?>');" value="Cancel" />
+	</div>
+</form>

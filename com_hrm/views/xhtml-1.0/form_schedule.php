@@ -50,7 +50,5 @@ defined('P_RUN') or die('Direct access prohibited');
 </script>
 <form class="pf-form" method="post" id="report_details" action="<?php echo htmlentities(pines_url('com_hrm', 'editcalendar')); ?>">
 	<div class="pf-element location_tree"></div>
-	<div class="pf-element">
-		<input type="hidden" name="location" value="<?php echo $this->location; ?>" />
-	</div>
+	<input type="hidden" name="location" value="<?php echo $this->location; ?>" />
 </form>

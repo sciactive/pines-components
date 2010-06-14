@@ -17,8 +17,12 @@ $i = 1;
 <p>No inventory was received.</p>
 <?php return; } ?>
 
-<?php foreach($this->success as $cur_success) { ?>
 <div class="pf-form">
+	<div class="pf-element">
+		<span class="pf-label">Location</span>
+		<span class="pf-feild"><?php echo "[{$this->location->guid}] {$this->location->name}"; ?></span>
+	</div>
+	<?php foreach($this->success as $cur_success) { ?>
 	<div class="pf-element pf-heading">
 		<h1>Item <?php echo $i; $i++; ?></h1>
 	</div>
@@ -30,10 +34,12 @@ $i = 1;
 		<span class="pf-label">Vendor</span>
 		<span class="pf-field"><?php echo $cur_success[0]->vendor->name; ?></span>
 	</div>
+	<?php if (isset($cur_success[0]->serial)) { ?>
 	<div class="pf-element">
 		<span class="pf-label">Serial</span>
 		<span class="pf-field"><?php echo $cur_success[0]->serial; ?></span>
 	</div>
+	<?php } ?>
 	<div class="pf-element">
 		<span class="pf-label">Received On</span>
 		<?php if ($cur_success[1]->has_tag('po')) { ?>
@@ -42,5 +48,5 @@ $i = 1;
 		<span class="pf-field"><?php echo 'Transfer: '.$cur_success[1]->guid; ?></span>
 		<?php } ?>
 	</div>
+	<?php } ?>
 </div>
-<?php } ?>

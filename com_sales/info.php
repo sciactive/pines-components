@@ -30,6 +30,7 @@ return array(
 	'abilities' => array(
 		array('manager', 'Manager', 'User is a manager. This lets the user approve payments.'),
 		array('receive', 'Receive Inventory', 'User can receive inventory into their stock.'),
+		array('receivelocation', 'Receive Location', 'User can receive inventory into a location below them.'),
 		array('managestock', 'Manage Stock', 'User can transfer and adjust stock.'),
 		array('totalsales', 'Total Sales', 'User can see sales totals.'),
 		array('totalothersales', 'Total Other Sales', 'User can see sales totals of other locations.'),

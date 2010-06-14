@@ -75,7 +75,6 @@ if ($this->entity->final)
 			return floored * sign;
 		}
 
-
 		function select_vendor(vendor_id, loading) {
 			if (cur_vendor == vendor_id && !loading) return;
 			var select_products = [];
@@ -129,7 +128,7 @@ if ($this->entity->final)
 			available_products_table = $("#available_products_table");
 			product_dialog = $("#product_dialog");
 
-			<?php if (empty($this->entity->received)) { ?>
+			<?php if (!$this->entity->final && empty($this->entity->received)) { ?>
 			products_table.pgrid({
 				pgrid_paginate: false,
 				pgrid_height: '300px;',
@@ -253,12 +252,12 @@ if ($this->entity->final)
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Vendor</span>
-			<?php if (empty($this->entity->received)) { ?>
+			<?php if (!$this->entity->final && empty($this->entity->received)) { ?>
 				<span class="pf-note">Changing this will clear selected products!</span>
 			<?php } else { ?>
-				<span class="pf-note">Vendor cannot be changed after items have been received.</span>
+				<span class="pf-note">Vendor can't be changed after PO is committed or received.</span>
 			<?php } ?>
-			<select class="pf-field ui-widget-content" name="vendor" onchange="select_vendor(Number(this.value));"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?> <?php echo $read_only; ?>>
+			<select class="pf-field ui-widget-content" name="vendor" onchange="select_vendor(Number(this.value));"<?php echo (!$this->entity->final && empty($this->entity->received) ? '' : ' disabled="disabled"'); ?> <?php echo $read_only; ?>>
 				<option value="null">-- None --</option>
 				<?php foreach ($this->vendors as $cur_vendor) { ?>
 				<option value="<?php echo $cur_vendor->guid; ?>"<?php echo $this->entity->vendor->guid == $cur_vendor->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_vendor->name; ?></option>
@@ -267,10 +266,10 @@ if ($this->entity->final)
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Destination</span>
-			<?php if (!empty($this->entity->received)) { ?>
-				<span class="pf-note">Destination cannot be changed after items have been received.</span>
+			<?php if ($this->entity->final || !empty($this->entity->received)) { ?>
+				<span class="pf-note">Destination can't be changed after PO is committed or received.</span>
 			<?php } ?>
-			<select class="pf-field ui-widget-content" name="destination"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?> <?php echo $read_only; ?>>
+			<select class="pf-field ui-widget-content" name="destination"<?php echo (!$this->entity->final && empty($this->entity->received) ? '' : ' disabled="disabled"'); ?> <?php echo $read_only; ?>>
 				<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations, $this->entity->destination->guid); ?>
 			</select></label>
 	</div>
@@ -342,7 +341,7 @@ if ($this->entity->final)
 		<span class="pf-note">Due to rounding, this may not be exactly the sum of all line totals.</span>
 		<span class="pf-field">$<span id="total">--</span></span>
 	</div>
-	<div id="product_dialog" title="Add a Product">
+	<div id="product_dialog" title="Add a Product" style="display: none;">
 		<table id="available_products_table">
 			<thead>
 				<tr>
@@ -355,7 +354,7 @@ if ($this->entity->final)
 				</tr>
 			</thead>
 			<tbody>
-				<tr><td>-----------</td><td>-----------</td><td>-----------</td><td>-----------</td><td>-----------</td><td>-----------</td></tr>
+				<tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
 			</tbody>
 		</table>
 		<br class="pf-clearing" />

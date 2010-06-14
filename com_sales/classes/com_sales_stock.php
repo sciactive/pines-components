@@ -61,7 +61,7 @@ class com_sales_stock extends entity {
 	 *
 	 * @param string $reason The reason for the stock receipt. Such as "received_po".
 	 * @param entity &$on_entity The entity which the product is to be received on.
-	 * @param entity $location The group to use for the new location.
+	 * @param group $location The group to use for the new location.
 	 * @return bool True on success, false on failure.
 	 */
 	function receive($reason = 'other', &$on_entity = null, $location = null) {
@@ -113,7 +113,7 @@ class com_sales_stock extends entity {
 	 *
 	 * @param string $reason The reason for the stock removal. Such as "sold_at_store".
 	 * @param entity &$on_entity The entity which the product is to be removed by.
-	 * @param entity $location The group to use for the new location.
+	 * @param group $location The group to use for the new location.
 	 * @return bool True on success, false on failure.
 	 */
 	function remove($reason = 'other', &$on_entity = null, $location = null) {

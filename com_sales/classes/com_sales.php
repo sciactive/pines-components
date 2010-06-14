@@ -624,6 +624,13 @@ class com_sales extends component {
 	public function print_receive_form() {
 		global $pines;
 		$module = new module('com_sales', 'stock/formreceive', 'content');
+		$module->categories = (array) $pines->entity_manager->get_entities(
+				array('class' => com_sales_category),
+				array('&',
+					'data' => array('enabled', true),
+					'tag' => array('com_sales', 'category')
+				)
+			);
 
 		return $module;
 	}

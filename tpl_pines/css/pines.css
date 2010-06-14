@@ -188,18 +188,26 @@ img {
 }
 #header .mainmenu {
 	clear: both;
-	width: 100%;
 	font-size: 1.2em;
 	background: transparent none !important;
-	border-bottom: 0 !important;
-	border-left: 0 !important;
-	border-right: 0 !important;
+	border-bottom: none !important;
+	border-left: none !important;
+	border-right: none !important;
 }
 #header .mainmenu .menuwrap {
 	/*text-align: center; /* Align menu text in the center with this. */
 	/* display: table;
 	margin: 0 auto; /* Align the menu in the center with this. */
 	margin-left: 35px; /* Comment this out if you center the menu. */
+}
+#header .mainmenu .menuwrap ul.dropdown > li > a {
+	background: transparent none !important;
+	border-top: none !important;
+	border-bottom: none !important;
+	border-right-style: none;
+}
+#header .mainmenu .menuwrap ul.dropdown > li:last-child > a {
+	border-right-style: solid;
 }
 .holygrail .colleft .col2 {
 	padding-top: 1px;

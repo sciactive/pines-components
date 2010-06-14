@@ -15,12 +15,12 @@ if (isset($pines->com_elfinder))
 ?>
 <script type="text/javascript">
 	// <![CDATA[
-	pines.loadjs("<?php echo $pines->config->rela_location; ?>components/com_tinymce/includes/tiny_mce/tiny_mce.js");
+	pines.loadjs("<?php echo $pines->config->rela_location; ?>components/com_tinymce/includes/tiny_mce/jquery.tinymce.js");
 
 	pines(function(){
-		tinyMCE.init({
-			mode : 'specific_textareas',
-			editor_selector : 'peditor',
+		$("textarea.peditor").tinymce({
+			// Location of TinyMCE script
+			script_url : '<?php echo $pines->config->rela_location; ?>components/com_tinymce/includes/tiny_mce/tiny_mce.js',
 			// General options
 			theme : "advanced",
 			plugins : "pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,advlist",
@@ -34,11 +34,9 @@ if (isset($pines->com_elfinder))
 			theme_advanced_statusbar_location : "bottom",
 			theme_advanced_resizing : true,
 			theme_advanced_resize_horizontal : false,
-			// Template's editor CSS
-			content_css : "<?php echo $pines->config->rela_location.$pines->template->editor_css; ?>",
 			<?php if (isset($pines->com_elfinder)) { ?>
 			// Use elFinder as the file browser.
-			file_browser_callback : function(field_name, url, type, win) {
+			file_browser_callback : function(field_name, url, type, win){
 				$("<div />").appendTo("body").elfinder({
 					url: "<?php echo addslashes(pines_url("com_elfinder", "connector")); ?>",
 					dialog: {"width": 900, "modal": true, "zIndex": 400000, "title": "Choose "+type},
@@ -48,12 +46,14 @@ if (isset($pines->com_elfinder))
 						$("input[name="+field_name+"]", win.document).val(url);
 					}
 				});
-			}
+			},
 			<?php } ?>
+			// Template's editor CSS
+			content_css : "<?php echo $pines->config->rela_location.$pines->template->editor_css; ?>"
 		});
-		tinyMCE.init({
-			mode : 'specific_textareas',
-			editor_selector : 'peditor-simple',
+		$("textarea.peditor-simple").tinymce({
+			// Location of TinyMCE script
+			script_url : '<?php echo $pines->config->rela_location; ?>components/com_tinymce/includes/tiny_mce/tiny_mce.js',
 			// General options
 			theme : "simple",
 			// Template's editor CSS

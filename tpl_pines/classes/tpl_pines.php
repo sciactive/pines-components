@@ -50,13 +50,15 @@ class tpl_pines extends template {
 			case 'user4':
 				$return = '<ul class="dropdown dropdown-vertical">';
 				break;
+			case 'main_menu':
+				$main_menu = true;
 			default:
 				$return = '<ul class="dropdown dropdown-horizontal">';
 				break;
 		}
 		foreach ($menu as $key => &$value) {
 			if ((int) $key === $key) continue;
-			$return .= $this->sub_menu($value);
+			$return .= $this->sub_menu($value, $main_menu);
 		}
 		$return .= '</ul>';
 		return $return;
@@ -66,11 +68,12 @@ class tpl_pines extends template {
 	 * Format a sub menu in HTML.
 	 * 
 	 * @param array &$menu The menu.
+	 * @param bool $main_menu Whether the menu is the main menu.
 	 * @return string The menu's HTML.
 	 */
-	public function sub_menu(&$menu) {
+	public function sub_menu(&$menu, $main_menu = false) {
 		$count = count($menu);
-		$return = '<li><a class="ui-state-default" href="'.
+		$return = '<li><a class="'.($main_menu ? 'ui-widget-header' : 'ui-state-default').'" href="'.
 			(isset($menu[0]['href']) ? htmlentities($menu[0]['href']) : '#').
 			(isset($menu[0]['onclick']) ? "\" onclick=\"{$menu[0]['onclick']}\">" : '">').
 			htmlentities($menu[0]['text']).
@@ -90,6 +93,12 @@ class tpl_pines extends template {
 		}
 		$return .= '</li>';
 		return $return;
+	}
+
+	public function url($component = null, $action = null, $params = array(), $full_location = false) {
+		if ($_REQUEST['tpl_pines_ajax'] == 1)
+			$params['tpl_pines_ajax'] = 1;
+		return parent::url($component, $action, $params, $full_location);
 	}
 }
 

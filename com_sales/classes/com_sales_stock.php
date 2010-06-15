@@ -107,11 +107,10 @@ class com_sales_stock extends entity {
 		// Keep track of the status of the whole process.
 		$return = true;
 		// Make a transaction entry.
-		$tx = com_sales_tx::factory('com_sales', 'transaction', 'stock_tx');
+		$tx = com_sales_tx::factory('stock_tx');
 
-		if ($this->status)
-			$old_status = $this->status;
-		$this->status = 'available';
+		$old_available = (bool) $this->available;
+		$this->available = true;
 		if ($this->location)
 			$old_location = $this->location;
 		// TODO: Copy location to group (optional) to allow easier access control.
@@ -121,8 +120,8 @@ class com_sales_stock extends entity {
 		if (!($this->guid))
 			$return = $return && $this->save();
 
-		$tx->old_status = $old_status;
-		$tx->new_status = $this->status;
+		$tx->old_available = $old_available;
+		$tx->new_available = $this->available;
 		$tx->old_location = $old_location;
 		$tx->new_location = $this->location;
 		if (isset($on_entity)) {
@@ -159,11 +158,10 @@ class com_sales_stock extends entity {
 		// Keep track of the status of the whole process.
 		$return = true;
 		// Make a transaction entry.
-		$tx = com_sales_tx::factory('com_sales', 'transaction', 'stock_tx');
+		$tx = com_sales_tx::factory('stock_tx');
 
-		if ($this->status)
-			$old_status = $this->status;
-		$this->status = 'unavailable';
+		$old_available = (bool) $this->available;
+		$this->available = false;
 		if ($this->location)
 			$old_location = $this->location;
 		// TODO: Copy location to GID (optional) to allow easier access control.
@@ -175,8 +173,8 @@ class com_sales_stock extends entity {
 		if (!($this->guid))
 			$return = $return && $this->save();
 
-		$tx->old_status = $old_status;
-		$tx->new_status = $this->status;
+		$tx->old_available = $old_available;
+		$tx->new_available = $this->available;
 		$tx->old_location = $old_location;
 		$tx->new_location = $this->location;
 		if (isset($on_entity))

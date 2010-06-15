@@ -44,6 +44,32 @@ do {
 	$offset += 50;
 } while (!empty($entities));
 
+$offset = 0;
+// Grab all sales, 50 at a time, and resave.
+do {
+	$entities = $pines->entity_manager->get_entities(
+			array('limit' => 50, 'offset' => $offset, 'class' => com_sales_stock),
+			array('&',
+				'tag' => array('com_sales', 'stock')
+			)
+		);
+	// If we have run through all entities, we are done updating.
+	foreach ($entities as &$cur_entity) {
+		if (isset($cur_entity->status)) {
+			$cur_entity->available = ($cur_entity->status == 'available');
+			unset($cur_entity->status);
+			if ($cur_entity->save())
+				$count++;
+			else
+				$errors[] = $entity->guid;
+		} else {
+			$nochange++;
+		}
+	}
+	unset($cur_entity);
+	$offset += 50;
+} while (!empty($entities));
+
 $module->content("Updated $count entities. Found $nochange entities that didn't need to be updated.");
 if ($errors)
 	$module->content('<br />Could not update the entities: '.implode(', ', $errors));

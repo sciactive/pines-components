@@ -149,7 +149,7 @@ class com_sales_sale extends entity {
 				return false;
 			} else {
 				// Make a transaction entry.
-				$tx = com_sales_tx::factory('com_sales', 'transaction', 'payment_tx');
+				$tx = com_sales_tx::factory('payment_tx');
 				$tx->type = 'change_given';
 				$tx->amount = (float) $this->change;
 				$tx->ref = $change_type;
@@ -178,7 +178,7 @@ class com_sales_sale extends entity {
 		// Complete the transaction.
 		if ($return) {
 			// Make a transaction entry.
-			$tx = com_sales_tx::factory('com_sales', 'transaction', 'sale_tx');
+			$tx = com_sales_tx::factory('sale_tx');
 
 			$this->status = 'paid';
 			$tx->type = 'paid';
@@ -274,7 +274,7 @@ class com_sales_sale extends entity {
 				for ($i = 0; $i < $cur_product['quantity']; $i++) {
 					$found = false;
 					foreach($stock_entries as $key => $cur_stock) {
-						if (($cur_stock->status != 'available') ||
+						if ((!$cur_stock->available) ||
 							(!$_SESSION['user']->in_group($cur_stock->location)) ||
 							(!$cur_product['entity']->is($cur_stock->product)) ||
 							($cur_product['entity']->serialized && ($cur_product['serial'] != $cur_stock->serial))) {
@@ -316,7 +316,7 @@ class com_sales_sale extends entity {
 		}
 
 		// Make a transaction entry.
-		$tx = com_sales_tx::factory('com_sales', 'transaction', 'sale_tx');
+		$tx = com_sales_tx::factory('sale_tx');
 
 		$this->status = 'invoiced';
 		$tx->type = 'invoiced';
@@ -513,7 +513,7 @@ class com_sales_sale extends entity {
 				// If it was tendered, add to the amount tendered.
 				$amount_tendered += (float) $cur_payment['amount'];
 				// Make a transaction entry.
-				$tx = com_sales_tx::factory('com_sales', 'transaction', 'payment_tx');
+				$tx = com_sales_tx::factory('payment_tx');
 				$tx->type = 'payment_received';
 				$tx->amount = (float) $cur_payment['amount'];
 				$tx->ref = $cur_payment['entity'];
@@ -747,7 +747,7 @@ class com_sales_sale extends entity {
 					$return = false;
 				} else {
 					// Make a transaction entry.
-					$tx = com_sales_tx::factory('com_sales', 'transaction', 'payment_tx');
+					$tx = com_sales_tx::factory('payment_tx');
 					$tx->type = 'payment_voided';
 					$tx->amount = (float) $cur_payment['amount'];
 					$tx->ref = $cur_payment['entity'];
@@ -766,7 +766,7 @@ class com_sales_sale extends entity {
 		// Complete the transaction.
 		if ($return) {
 			// Make a transaction entry.
-			$tx = com_sales_tx::factory('com_sales', 'transaction', 'sale_tx');
+			$tx = com_sales_tx::factory('sale_tx');
 
 			$this->status = 'voided';
 			$tx->type = 'voided';

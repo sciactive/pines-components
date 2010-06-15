@@ -38,7 +38,7 @@ if ($this->entity->final)
 					(string) $stock->vendor->name,
 					(string) "{$stock->location->name} [{$stock->location->groupname}]",
 					(string) $stock->cost,
-					(string) $stock->status
+					$stock->available ? 'Yes' : 'No'
 				)
 				
 			);
@@ -195,7 +195,7 @@ if ($this->entity->final)
 							<th>Vendor</th>
 							<th>Location</th>
 							<th>Cost</th>
-							<th>Status</th>
+							<th>Available</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -215,7 +215,7 @@ if ($this->entity->final)
 							<td><?php echo $cur_stock->vendor->name; ?></td>
 							<td><?php echo "{$cur_stock->location->name} [{$cur_stock->location->groupname}]"; ?></td>
 							<td><?php echo $cur_stock->cost; ?></td>
-							<td><?php echo $cur_stock->status; ?></td>
+							<td><?php echo $cur_stock->available ? 'Yes' : 'No'; ?></td>
 						</tr>
 						<?php } ?>
 					</tbody>
@@ -234,7 +234,7 @@ if ($this->entity->final)
 					<th>Vendor</th>
 					<th>Location</th>
 					<th>Cost</th>
-					<th>Status</th>
+					<th>Available</th>
 				</tr>
 			</thead>
 			<tbody>

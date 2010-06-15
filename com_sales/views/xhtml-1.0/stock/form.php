@@ -10,7 +10,14 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Editing Stock Entry of "'.htmlentities($this->entity->product->name).'"'.(isset($this->entity->location) ? ' at "'.htmlentities($this->entity->location->name).'"' : ' Not in Inventory');
+$this->title = htmlentities("Editing Stock Entry of \"{$this->entity->product->name}\"");
+if (isset($this->entity->serial))
+	$this->title .= htmlentities(" (Serial: {$this->entity->serial})");
+if (isset($this->entity->location)) {
+	$this->title .= htmlentities(" at \"{$this->entity->location->name}\"");
+} else {
+	$this->title .= ' Not in Inventory';
+}
 $this->note = 'Provide stock entry details in this form.';
 ?>
 <form class="pf-form" method="post" id="stock_details" action="<?php echo htmlentities(pines_url('com_sales', 'stock/save')); ?>">
@@ -32,6 +39,10 @@ $this->note = 'Provide stock entry details in this form.';
 		<span class="pf-label">Product Sku</span>
 		<span class="pf-field"><?php echo $this->entity->product->sku; ?></span>
 	</div>
+	<div class="pf-element">
+		<span class="pf-label">Last Transaction</span>
+		<span class="pf-field"><?php echo $this->entity->last_reason(); ?></span>
+	</div>
 	<script type="text/javascript">
 		// <![CDATA[
 		pines(function(){
@@ -49,24 +60,44 @@ $this->note = 'Provide stock entry details in this form.';
 		<div>
 			<div class="pf-element">
 				<label><span class="pf-label">Available</span>
-					<input class="pf-field ui-widget-content" type="checkbox" name="available" size="24" value="ON"<?php echo $this->entity->status == 'available' ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field ui-widget-content" type="checkbox" name="available" size="24" value="ON"<?php echo $this->entity->available ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label>
 					<span class="pf-label">Reason</span>
-					<select class="pf-field ui-widget-content" name="reason_available">
-						<?php if ($this->entity->status == 'available') { ?>
-						<option value="removed_error">Inventory Error</option>
-						<option value="removed_on_hold">Item is on Hold</option>
-						<option value="removed_damaged">Item is Damaged</option>
-						<option value="removed_missing">Item is Missing</option>
-						<option value="removed_promotion">Promotional Giveaway</option>
+					<select class="pf-field ui-widget-content" name="available_reason">
+						<?php if ($this->entity->available) { ?>
+						<option value="unavailable_on_hold">Item is on Hold</option>
+						<option value="unavailable_damaged">Item is Damaged</option>
+						<option value="unavailable_destroyed">Item is Destroyed/Trashed</option>
+						<option value="unavailable_missing">Item is Missing</option>
+						<option value="unavailable_theft">Item is Stolen</option>
+						<option value="unavailable_display">Item is a Display</option>
+						<option value="unavailable_promotion">Promotional Giveaway</option>
+						<option value="unavailable_gift">Gift Giveaway</option>
+						<option value="unavailable_error_sale">Sale Error</option>
+						<option value="unavailable_error_return">Return Error</option>
+						<?php /* <option value="unavailable_error_rma">RMA Error</option> */ ?>
+						<option value="unavailable_error_po">PO Receiving Error</option>
+						<option value="unavailable_error_transfer">Transfer Error</option>
+						<option value="unavailable_error_adjustment">Previous Adjustment Error</option>
+						<option value="unavailable_error">Other Error</option>
 						<?php } else { ?>
-						<option value="restored_error">Inventory Error</option>
-						<option value="restored_not_on_hold">Item is Not on Hold</option>
-						<option value="restored_repaired">Item is Repaired</option>
-						<option value="restored_found">Item is Found</option>
-						<option value="restored_promotion">Returned Promotional Giveaway</option>
+						<option value="available_on_hold">Item is No Longer on Hold</option>
+						<option value="available_damaged">Item is Repaired</option>
+						<option value="available_destroyed">Item is Not Destroyed/Trashed</option>
+						<option value="available_missing">Item is Found</option>
+						<option value="available_theft">Stolen Item is Recovered</option>
+						<option value="available_display">Item is No Longer a Display</option>
+						<option value="available_promotion">Returned Promotional Giveaway</option>
+						<option value="available_gift">Returned Gift Giveaway</option>
+						<option value="available_error_sale">Sale Error</option>
+						<option value="available_error_return">Return Error</option>
+						<?php /* <option value="available_error_rma">RMA Error</option> */ ?>
+						<option value="available_error_po">PO Receiving Error</option>
+						<option value="available_error_transfer">Transfer Error</option>
+						<option value="available_error_adjustment">Previous Adjustment Error</option>
+						<option value="available_error">Other Error</option>
 						<?php } ?>
 					</select>
 				</label>
@@ -82,6 +113,18 @@ $this->note = 'Provide stock entry details in this form.';
 				<label><span class="pf-label">Serial</span>
 					<input class="pf-field ui-widget-content" type="text" name="serial" size="24" value="<?php echo $this->entity->serial; ?>" /></label>
 			</div>
+			<div class="pf-element">
+				<label>
+					<span class="pf-label">Reason</span>
+					<select class="pf-field ui-widget-content" name="serial_reason">
+						<option value="serial_changed_reserialize">Item is Being Reserialized</option>
+						<option value="serial_changed_damaged">Serial Number is Damaged</option>
+						<option value="serial_changed_error_po">PO Receiving Error</option>
+						<option value="serial_changed_error_adjustment">Previous Adjustment Error</option>
+						<option value="serial_changed_error">Other Error</option>
+					</select>
+				</label>
+			</div>
 			<br class="pf-clearing" />
 		</div>
 	</div>
@@ -95,6 +138,31 @@ $this->note = 'Provide stock entry details in this form.';
 					<select class="pf-field ui-widget-content" name="location">
 						<option value="null">-- Not in Inventory --</option>
 						<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations, $this->entity->location->guid); ?>
+					</select>
+				</label>
+			</div>
+			<div class="pf-element">
+				<label>
+					<span class="pf-label">Reason</span>
+					<select class="pf-field ui-widget-content" name="location_reason">
+						<?php if (isset($this->entity->location)) { ?>
+						<option value="location_changed_picked_up">Item is Picked Up</option>
+						<option value="location_changed_trashed">Item is Destroyed/Trashed</option>
+						<option value="location_changed_missing">Item is Missing</option>
+						<option value="location_changed_theft">Item is Stolen</option>
+						<?php } else { ?>
+						<option value="location_changed_not_trashed">Item is Not Destroyed/Trashed</option>
+						<option value="location_changed_found">Item is Found</option>
+						<option value="location_changed_recovered">Stolen Item is Recovered</option>
+						<?php } ?>
+						<option value="location_changed_promotion">Promotional Giveaway</option>
+						<option value="location_changed_gift">Gift Giveaway</option>
+						<option value="location_changed_error_sale">Sale Error</option>
+						<option value="location_changed_error_return">Return Error</option>
+						<option value="location_changed_error_po">PO Receiving Error</option>
+						<option value="location_changed_error_transfer">Transfer Error</option>
+						<option value="location_changed_error_adjustment">Previous Adjustment Error</option>
+						<option value="location_changed_error">Other Error</option>
 					</select>
 				</label>
 			</div>
@@ -115,6 +183,16 @@ $this->note = 'Provide stock entry details in this form.';
 					</select>
 				</label>
 			</div>
+			<div class="pf-element">
+				<label>
+					<span class="pf-label">Reason</span>
+					<select class="pf-field ui-widget-content" name="vendor_reason">
+						<option value="vendor_changed_error_po">PO Receiving Error</option>
+						<option value="vendor_changed_error_adjustment">Previous Adjustment Error</option>
+						<option value="vendor_changed_error">Other Error</option>
+					</select>
+				</label>
+			</div>
 			<br class="pf-clearing" />
 		</div>
 	</div>
@@ -124,6 +202,16 @@ $this->note = 'Provide stock entry details in this form.';
 			<div class="pf-element">
 				<label><span class="pf-label">Cost</span>
 					<span class="pf-field">$<input class="ui-widget-content" style="text-align: right;" type="text" name="cost" size="10" value="<?php echo $this->entity->cost; ?>" /></span></label>
+			</div>
+			<div class="pf-element">
+				<label>
+					<span class="pf-label">Reason</span>
+					<select class="pf-field ui-widget-content" name="cost_reason">
+						<option value="cost_changed_error_po">PO Receiving Error</option>
+						<option value="cost_changed_error_adjustment">Previous Adjustment Error</option>
+						<option value="cost_changed_error">Other Error</option>
+					</select>
+				</label>
 			</div>
 			<br class="pf-clearing" />
 		</div>

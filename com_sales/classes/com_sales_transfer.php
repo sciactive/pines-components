@@ -100,7 +100,7 @@ class com_sales_transfer extends entity {
 		$module->entity = $this;
 		$module->locations = (array) $pines->user_manager->get_group_array();
 		$module->shippers = (array) $pines->entity_manager->get_entities(array('class' => com_sales_shipper), array('&', 'tag' => array('com_sales', 'shipper')));
-		$module->stock = (array) $pines->entity_manager->get_entities(array('class' => com_sales_stock), array('&', 'tag' => array('com_sales', 'stock')));
+		$module->stock = (array) $pines->entity_manager->get_entities(array('class' => com_sales_stock), array('!&', 'data' => array('location', null)), array('&', 'tag' => array('com_sales', 'stock')));
 		
 		return $module;
 	}

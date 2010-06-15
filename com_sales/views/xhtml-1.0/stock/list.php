@@ -10,20 +10,38 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Stock';
+$this->title = ($this->removed ? 'Removed ' : '').'Stock';
+if (isset($this->location))
+	$this->title .= " at {$this->location->name} [{$this->location->groupname}]";
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/stock/list'];
+$pines->com_jstree->load();
 ?>
 <script type="text/javascript">
 	// <![CDATA[
 
 	pines(function(){
+		var submit_url = "<?php echo pines_url('com_sales', 'stock/list'); ?>";
+		var submit_search = function(){
+			// Submit the form with all of the fields.
+			pines.post(submit_url, {
+				"location": location
+			});
+		};
+
+		// Location Defaults
+		var location = "<?php echo $this->location->guid ? $this->location->guid : 'all'; ?>";
+
 		var state_xhr;
 		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
+				<?php if (!$this->removed) { ?>
+				{type: 'button', text: 'Location', extra_class: 'picon picon-applications-internet', selection_optional: true, click: function(){stock_grid.location_form();}},
+				{type: 'separator'},
+				<?php } ?>
 				<?php if (gatekeeper('com_sales/receive')) { ?>
 				{type: 'button', text: 'Receive', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'stock/receive'); ?>'},
 				<?php } if (gatekeeper('com_sales/managestock')) { ?>
@@ -31,7 +49,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<?php } if (gatekeeper('com_sales/managestock')) { ?>
 				{type: 'button', text: 'Transfer', extra_class: 'picon picon-go-jump', multi_select: true, url: '<?php echo pines_url('com_sales', 'transfer/new', array('id' => '__title__')); ?>', delimiter: ','},
 				<?php } ?>
-				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
 				{type: 'button', text: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', text: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
@@ -53,7 +70,47 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
-		$("#stock_grid").pgrid(cur_options);
+		var stock_grid = $("#stock_grid").pgrid(cur_options);
+
+		stock_grid.location_form = function(){
+			$.ajax({
+				url: "<?php echo pines_url('com_sales', 'forms/locationselect'); ?>",
+				type: "POST",
+				dataType: "html",
+				data: {"location": location},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured while trying to retreive the location form:\n"+XMLHttpRequest.status+": "+textStatus);
+				},
+				success: function(data){
+					if (data == "")
+						return;
+					var form = $("<div title=\"Location Selector\" />");
+					form.dialog({
+						bgiframe: true,
+						autoOpen: true,
+						height: 250,
+						modal: true,
+						open: function(){
+							form.html(data);
+						},
+						close: function(){
+							form.remove();
+						},
+						buttons: {
+							"Update": function(){
+								if (form.find(":input[name=location_saver]").val() == "all") {
+									location = 'all';
+								} else {
+									location = form.find(":input[name=location]").val();
+								}
+								form.dialog('close');
+								submit_search();
+							}
+						}
+					});
+				}
+			});
+		};
 	});
 
 	// ]]>
@@ -65,7 +122,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>Product</th>
 			<th>Serial</th>
 			<th>Vendor</th>
+			<?php if (!$this->removed) { ?>
 			<th>Location</th>
+			<?php } ?>
 			<th>Cost</th>
 			<th>Available</th>
 			<th>Last Transaction</th>
@@ -78,9 +137,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo $stock->product->name; ?></td>
 			<td><?php echo $stock->serial; ?></td>
 			<td><?php echo $stock->vendor->name; ?></td>
-			<td><?php echo isset($stock->location) ? "{$stock->location->name} [{$stock->location->groupname}]" : ''; ?></td>
+			<?php if (!$this->removed) { ?>
+			<td><?php echo "{$stock->location->name} [{$stock->location->groupname}]"; ?></td>
+			<?php } ?>
 			<td><?php echo $stock->cost; ?></td>
-			<td><?php echo $stock->status == 'available' ? 'Yes' : 'No'; ?></td>
+			<td><?php echo $stock->available ? 'Yes' : 'No'; ?></td>
 			<td><?php echo $stock->last_reason(); ?></td>
 		</tr>
 	<?php } ?>

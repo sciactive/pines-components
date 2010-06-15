@@ -469,20 +469,31 @@ class com_sales extends component {
 	 * Creates and attaches a module which lists stock.
 	 *
 	 * @param bool $removed Whether to show stock that is no longer physically in inventory.
+	 * @param group $location The location to show stock for.
 	 */
-	public function list_stock($removed = false) {
+	public function list_stock($removed = false, $location = null) {
 		global $pines;
 
 		$module = new module('com_sales', 'stock/list', 'content');
 
+		$selector = array('&', 'tag' => array('com_sales', 'stock'));
+
 		if ($removed) {
-			$module->stock = $pines->entity_manager->get_entities(array('class' => com_sales_stock), array('&', 'data' => array('location', null)), array('&', 'tag' => array('com_sales', 'stock')));
+			$selector2 = array('&', 'data' => array('location', null));
+			$module->removed = true;
 		} else {
-			$module->stock = $pines->entity_manager->get_entities(array('class' => com_sales_stock), array('!&', 'data' => array('location', null)), array('&', 'tag' => array('com_sales', 'stock')));
+			if (isset($location)) {
+				$selector['ref'] = array('location', $location);
+				$module->location = $location;
+			}
+			$selector2 = array('!&', 'data' => array('location', null));
+			$module->removed = false;
 		}
+		
+		$module->stock = $pines->entity_manager->get_entities(array('class' => com_sales_stock), $selector, $selector2);
 
 		if ( empty($module->stock) )
-			pines_notice('There is nothing in stock at your location.');
+			pines_notice('No stock found.');
 	}
 
 	/**

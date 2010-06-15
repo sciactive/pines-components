@@ -38,6 +38,7 @@ class tpl_pines extends template {
 	 * @return string The menu's HTML.
 	 */
 	public function menu($menu) {
+		global $pines;
 		if (count($menu) == 1)
 			return '';
 		switch ($menu[0]['position']) {
@@ -51,14 +52,15 @@ class tpl_pines extends template {
 				$return = '<ul class="dropdown dropdown-vertical">';
 				break;
 			case 'main_menu':
-				$main_menu = true;
+				if (!$pines->config->tpl_pines->buttonized_menu)
+					$header_style = true;
 			default:
 				$return = '<ul class="dropdown dropdown-horizontal">';
 				break;
 		}
 		foreach ($menu as $key => &$value) {
 			if ((int) $key === $key) continue;
-			$return .= $this->sub_menu($value, $main_menu);
+			$return .= $this->sub_menu($value, $header_style);
 		}
 		$return .= '</ul>';
 		return $return;
@@ -68,12 +70,12 @@ class tpl_pines extends template {
 	 * Format a sub menu in HTML.
 	 * 
 	 * @param array &$menu The menu.
-	 * @param bool $main_menu Whether the menu is the main menu.
+	 * @param bool $header_style Whether the menu buttons should use a header style.
 	 * @return string The menu's HTML.
 	 */
-	public function sub_menu(&$menu, $main_menu = false) {
+	public function sub_menu(&$menu, $header_style = false) {
 		$count = count($menu);
-		$return = '<li><a class="'.($main_menu ? 'ui-widget-header' : 'ui-state-default').'" href="'.
+		$return = '<li><a class="'.($header_style ? 'ui-widget-header' : 'ui-state-default').'" href="'.
 			(isset($menu[0]['href']) ? htmlentities($menu[0]['href']) : '#').
 			(isset($menu[0]['onclick']) ? "\" onclick=\"{$menu[0]['onclick']}\">" : '">').
 			htmlentities($menu[0]['text']).

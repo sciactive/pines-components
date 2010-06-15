@@ -27,6 +27,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'buttonized_menu',
+		'cname' => 'Buttonized Menu',
+		'description' => 'Make the main menu look more like buttons.',
+		'value' => false,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'ajax',
 		'cname' => 'Use Ajax',
 		'description' => 'Use the experimental AJAX code to load all pages without refreshing.',

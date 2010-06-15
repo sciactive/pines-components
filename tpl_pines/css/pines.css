@@ -200,13 +200,13 @@ img {
 	margin: 0 auto; /* Align the menu in the center with this. */
 	margin-left: 35px; /* Comment this out if you center the menu. */
 }
-#header .mainmenu .menuwrap ul.dropdown > li > a {
+#header .mainmenu .menuwrap ul.dropdown > li > a.ui-widget-header {
 	background: transparent none !important;
 	border-top: none !important;
 	border-bottom: none !important;
 	border-right-style: none;
 }
-#header .mainmenu .menuwrap ul.dropdown > li:last-child > a {
+#header .mainmenu .menuwrap ul.dropdown > li:last-child > a.ui-widget-header {
 	border-right-style: solid;
 }
 .holygrail .colleft .col2 {

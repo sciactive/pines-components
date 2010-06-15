@@ -18,17 +18,17 @@ pines(function(){
 		.end().parent().nextAll(".module_content").slideToggle("normal");
 	}));
 	// Menu hover.
-	hover("ul.dropdown li ul li a");
+	hover("ul.dropdown li a:not(.ui-widget-header)");
 
 	// Get the loaded page ready. (Styling, etc.)
 	// This needs to be called after Ajax page loads.
 	var page_ready = function(){
 		// Main menu corners.
 		var cur_kept_open = [];
-		var cur_timer;
-		$("#header > div.mainmenu > div.menuwrap")
+		var cur_timer = null;
+		$("#header > div.mainmenu > div.menuwrap > ul.dropdown")
 		// TODO: Option to enable slide down.
-		.find("ul.dropdown li").bind("mouseenter", function(){
+		.find("li").bind("mouseenter", function(){
 			//var cur_item = $(this);
 			//var cur_submenu = cur_item.children("ul");
 			if (cur_timer) {
@@ -59,8 +59,10 @@ pines(function(){
 				cur_item.removeClass("hover");
 			});*/
 		}).end()
-		.find("ul.dropdown ul ul > li:first-child > a").addClass("ui-corner-tr").end()
-		.find("ul.dropdown ul > li:last-child > a").addClass("ui-corner-bottom");
+		.find("> li:first-child > a.ui-state-default").addClass("ui-corner-tl").end()
+		.find("> li:last-child > a.ui-state-default").addClass("ui-corner-tr").end()
+		.find("ul > li:first-child > a").addClass("ui-corner-tr").end()
+		.find("ul > li:last-child > a").addClass("ui-corner-bottom");
 
 		// Add disabled element styling.
 		$(".ui-widget-content:input:disabled").addClass("ui-state-disabled");

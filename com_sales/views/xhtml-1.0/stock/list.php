@@ -67,23 +67,21 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>Vendor</th>
 			<th>Location</th>
 			<th>Cost</th>
-			<th>Status</th>
+			<th>Available</th>
+			<th>Last Transaction</th>
 		</tr>
 	</thead>
 	<tbody>
-	<?php foreach($this->stock as $stock) {
-		if (!$this->all) {
-			if (!in_array($stock->status, array('available', 'unavailable', 'sold_pending')))
-				continue;
-		} ?>
+	<?php foreach($this->stock as $stock) { ?>
 		<tr title="<?php echo $stock->guid; ?>">
 			<td><?php echo $stock->product->sku; ?></td>
 			<td><?php echo $stock->product->name; ?></td>
 			<td><?php echo $stock->serial; ?></td>
 			<td><?php echo $stock->vendor->name; ?></td>
-			<td><?php echo "{$stock->location->name} [{$stock->location->groupname}]"; ?></td>
+			<td><?php echo isset($stock->location) ? "{$stock->location->name} [{$stock->location->groupname}]" : ''; ?></td>
 			<td><?php echo $stock->cost; ?></td>
-			<td><?php echo ucwords($stock->status); ?></td>
+			<td><?php echo $stock->status == 'available' ? 'Yes' : 'No'; ?></td>
+			<td><?php echo $stock->last_reason(); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

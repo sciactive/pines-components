@@ -100,9 +100,9 @@
 				}
 			},
 			{
-				"path": "main_menu/business/com_sales/inventory/allstock",
-				"text": "All Stock",
-				"href": ["com_sales","stock/list",{"all":"true"}],
+				"path": "main_menu/business/com_sales/inventory/removedstock",
+				"text": "Removed Stock",
+				"href": ["com_sales","stock/list",{"removed":"true"}],
 				"depend": {
 					"ability": "com_sales/managestock"
 				}

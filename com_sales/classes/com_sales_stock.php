@@ -25,6 +25,7 @@ class com_sales_stock extends entity {
 	public function __construct($id = 0) {
 		parent::__construct();
 		$this->add_tag('com_sales', 'stock');
+		$this->location = null;
 		$this->ac = (object) array('user' => 2, 'group' => 2, 'other' => 2);
 		if ($id > 0) {
 			global $pines;
@@ -51,6 +52,40 @@ class com_sales_stock extends entity {
 	}
 
 	/**
+	 * Get the reason from the last stock transaction.
+	 * @return string The reason, or "unknown" if no last transaction could be found.
+	 */
+	public function last_reason() {
+		global $pines;
+		$last_tx = $pines->entity_manager->get_entity(
+				array('reverse' => true, 'class' => com_sales_tx),
+				array('&',
+					'ref' => array('stock', $this),
+					'tag' => array('com_sales', 'transaction', 'stock_tx')
+				)
+			);
+		if (isset($last_tx)) {
+			return $last_tx->reason;
+		} else {
+			return 'unknown';
+		}
+	}
+
+	/**
+	 * Print a form to edit the stock entry.
+	 * @return module The form's module.
+	 */
+	public function print_form() {
+		global $pines;
+		$module = new module('com_sales', 'stock/form', 'content');
+		$module->entity = $this;
+		$module->vendors = (array) $pines->entity_manager->get_entities(array('class' => com_sales_vendor), array('&', 'tag' => array('com_sales', 'vendor')));
+		$module->locations = $pines->user_manager->get_group_array();
+
+		return $module;
+	}
+
+	/**
 	 * Receive the stock entry on a PO/transfer/return/etc.
 	 *
 	 * This process creates a transaction entity. It adds itself to the
@@ -64,7 +99,7 @@ class com_sales_stock extends entity {
 	 * @param group $location The group to use for the new location.
 	 * @return bool True on success, false on failure.
 	 */
-	function receive($reason = 'other', &$on_entity = null, $location = null) {
+	public function receive($reason = 'other', &$on_entity = null, $location = null) {
 		global $pines;
 		if (!in_array($reason, array('received_po', 'received_transfer', 'sale_voided', 'sale_returned', 'other')))
 			return false;
@@ -116,7 +151,7 @@ class com_sales_stock extends entity {
 	 * @param group $location The group to use for the new location.
 	 * @return bool True on success, false on failure.
 	 */
-	function remove($reason = 'other', &$on_entity = null, $location = null) {
+	public function remove($reason = 'other', &$on_entity = null, $location = null) {
 		global $pines;
 		if (!in_array($reason, array('sold_at_store', 'sold_pending', 'other')))
 			return false;

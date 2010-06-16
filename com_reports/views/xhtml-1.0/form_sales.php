@@ -63,8 +63,7 @@ $pines->com_jstree->load();
 		var employee = $("#report_details [name=employee]");
 		employee.empty();
 		employee.append("<option value='all' selected='selected'>Entire Location</option>");
-		<?php // Load employees for the current location.
-		foreach ($this->employees as $cur_employee) {
+		<?php foreach ($this->employees as $cur_employee) { // Load employees for the current location.
 			$cur_select = (isset($this->employee->group) && $this->employee->is($cur_employee)) ? 'selected=\"selected\"' : ''; ?>
 			if (group_id == <?php echo $cur_employee->group->guid; ?>) {
 				employee.append("<option value='<?php echo $cur_employee->guid; ?>' <?php echo $cur_select; ?>><?php echo $cur_employee->name; ?></option>");

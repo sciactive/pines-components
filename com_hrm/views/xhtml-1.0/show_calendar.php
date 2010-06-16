@@ -18,7 +18,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Company Schedule';
+$this->title = 'Company Schedule [' . $this->location->name . ']';
 ?>
 <script type='text/javascript'>
 // <![CDATA[
@@ -117,11 +117,11 @@ $this->title = 'Company Schedule';
 				pines.error("An error occured while trying to add events to the calendar.");
 			}
 		});
-		pines.get("<?php echo pines_url('com_hrm', 'editcalendar', array('location' => $this->location)); ?>");
+		pines.get("<?php echo pines_url('com_hrm', 'editcalendar', array('location' => $this->location->guid)); ?>");
 	}
 	// Save all of the calendar events by exporting the data to their entities.
 	function save_calendar() {
-		var location = <?php echo $this->location; ?>;
+		var location = <?php echo $this->location->guid; ?>;
 		var events = $("#calendar").fullCalendar('clientEvents');
 		var events_dump = '';
 		//var events_array = new Array();

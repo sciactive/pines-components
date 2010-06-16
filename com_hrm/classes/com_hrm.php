@@ -190,7 +190,7 @@ class com_hrm extends component {
 		$calendar_head = new module('com_hrm', 'show_calendar_head', 'head');
 		$calendar = new module('com_hrm', 'show_calendar', 'content');
 		$calendar->events = $pines->entity_manager->get_entities(array('class' => com_hrm_event), array('&', 'ref' => array('group', $location), 'tag' => array('com_hrm', 'event')));
-		$calendar->location = $location->guid;
+		$calendar->location = $location;
 	}
 }
 

@@ -58,27 +58,29 @@ if ($_REQUEST['save'] == 'commit') {
 		unset($_SESSION['user']->group->com_sales_task_countsheet);
 		$_SESSION['user']->group->save();
 	}
-	// Get all stock entries at the current location and check for missing items.
-	$expected_stock = $pines->entity_manager->get_entities(
-			array('class' => com_sales_stock),
-			array('&',
-				'ref' => array('location', $_SESSION['user']->group),
-				'tag' => array('com_sales', 'stock')
-			)
-		);
-	foreach ($expected_stock as &$cur_stock_entry) {
-		$found = false;
-		foreach ($countsheet->entries as $cur_item) {
-			if ((isset($cur_stock_entry->serial) && $cur_stock_entry->serial == $cur_item) || $cur_stock_entry->product->sku == $cur_item)
-				$found = true;
+	if ($pines->config->com_sales->decline_countsheets) {
+		// Get all stock entries at the current location and check for missing items.
+		$expected_stock = $pines->entity_manager->get_entities(
+				array('class' => com_sales_stock),
+				array('&',
+					'ref' => array('location', $_SESSION['user']->group),
+					'tag' => array('com_sales', 'stock')
+				)
+			);
+		foreach ($expected_stock as &$cur_stock_entry) {
+			$found = false;
+			foreach ($countsheet->entries as $cur_item) {
+				if ((isset($cur_stock_entry->serial) && $cur_stock_entry->serial == $cur_item) || $cur_stock_entry->product->sku == $cur_item)
+					$found = true;
+			}
+			//Automatically decline the countsheet it is missing an item.
+			if (!$found) {
+				$countsheet->status = 'declined';
+				break;
+			}
 		}
-		//Automatically decline the countsheet if they are missing an item.
-		if (!$found) {
-			$countsheet->status = 'declined';
-			break;
-		}
+		unset($cur_stock_entry);
 	}
-	unset($cur_stock_entry);
 }
 if ($countsheet->save()) {
 	if ($countsheet->final) {

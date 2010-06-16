@@ -103,6 +103,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'global_countsheets',
+		'cname' => 'Globalize Countsheets',
+		'description' => 'Ensure that every user can access all countsheets by setting the "other" access control to read.',
+		'value' => false,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'receipt_note_label',
 		'cname' => 'Receipt Note Label',
 		'description' => 'The receipt note will be appended to all receipts.',
@@ -162,6 +169,13 @@ return array(
 		'name' => 'cash_drawer',
 		'cname' => 'Cash Drawer',
 		'description' => 'Integrate the POS with a cash drawer. (Requires the Pines Cash Drawer Firefox addon.)',
+		'value' => false,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'decline_countsheets',
+		'cname' => 'Decline Countsheets',
+		'description' => 'Automatically decline countsheets if they are missing any inventory when they are committed.',
 		'value' => false,
 		'peruser' => true,
 	),

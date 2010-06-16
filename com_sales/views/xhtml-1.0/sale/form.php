@@ -169,6 +169,7 @@ $pines->com_pgrid->load();
 					{
 						type: 'text',
 						label: 'Code: ',
+						title: 'Enter a Product SKU or Barcode',
 						load: function(textbox){
 							textbox.keydown(function(e){
 								if (e.keyCode == 13) {
@@ -215,6 +216,7 @@ $pines->com_pgrid->load();
 					{
 						type: 'button',
 						text: '',
+						title: 'Select a Product by Category',
 						extra_class: 'picon picon-view-list-tree',
 						selection_optional: true,
 						click: function(){
@@ -377,43 +379,7 @@ $pines->com_pgrid->load();
 				pgrid_view_height: "300px",
 				pgrid_multi_select: false,
 				pgrid_double_click: function(e, row){
-					category_products_grid.pgrid_get_all_rows().pgrid_delete();
-					var loader;
-					$.ajax({
-						url: "<?php echo pines_url('com_sales', 'category/products'); ?>",
-						type: "POST",
-						dataType: "json",
-						data: {"id": $(row).attr("title")},
-						beforeSend: function(){
-							loader = $.pnotify({
-								pnotify_title: 'Product Search',
-								pnotify_text: 'Retrieving product from server...',
-								pnotify_notice_icon: 'picon picon-throbber',
-								pnotify_nonblock: true,
-								pnotify_hide: false,
-								pnotify_history: false
-							});
-						},
-						complete: function(){
-							loader.pnotify_remove();
-						},
-						error: function(XMLHttpRequest, textStatus){
-							pines.error("An error occured while trying to lookup the product code:\n"+XMLHttpRequest.status+": "+textStatus);
-						},
-						success: function(data){
-							if (!data || !data[0]) {
-								alert("No products were returned.");
-								return;
-							}
-							$.each(data, function(){
-								var product = this;
-								category_products_grid.pgrid_add([{key: this.guid, values: [this.name, this.sku]}], function(){
-									$(this).data("product", product);
-								});
-							});
-							category_products_dialog.dialog("open");
-						}
-					});
+					category_dialog.dialog("option", "buttons").Done();
 				}
 			});
 			// Category Dialog
@@ -424,6 +390,52 @@ $pines->com_pgrid->load();
 				width: 600,
 				open: function() {
 					category_grid.pgrid_get_selected_rows().pgrid_deselect_rows();
+				},
+				buttons: {
+					'Done': function() {
+						var row = category_grid.pgrid_get_selected_rows();
+						if (!row) {
+							alert("Please select a category.");
+							return;
+						}
+						category_products_grid.pgrid_get_all_rows().pgrid_delete();
+						var loader;
+						$.ajax({
+							url: "<?php echo pines_url('com_sales', 'category/products'); ?>",
+							type: "POST",
+							dataType: "json",
+							data: {"id": row.attr("title")},
+							beforeSend: function(){
+								loader = $.pnotify({
+									pnotify_title: 'Product Search',
+									pnotify_text: 'Retrieving products from server...',
+									pnotify_notice_icon: 'picon picon-throbber',
+									pnotify_nonblock: true,
+									pnotify_hide: false,
+									pnotify_history: false
+								});
+							},
+							complete: function(){
+								loader.pnotify_remove();
+							},
+							error: function(XMLHttpRequest, textStatus){
+								pines.error("An error occured while trying to lookup the products:\n"+XMLHttpRequest.status+": "+textStatus);
+							},
+							success: function(data){
+								if (!data || !data[0]) {
+									alert("No products were returned.");
+									return;
+								}
+								$.each(data, function(){
+									var product = this;
+									category_products_grid.pgrid_add([{key: this.guid, values: [this.name, this.sku]}], function(){
+										$(this).data("product", product);
+									});
+								});
+								category_products_dialog.dialog("open");
+							}
+						});
+					}
 				}
 			});
 			// Category Products Grid

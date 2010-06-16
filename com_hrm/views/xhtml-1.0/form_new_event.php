@@ -54,7 +54,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 		// Location Tree
 		var location = $("#calendar_details [name=location]");
-		$("#calendar_details [name=location_tree]").tree({
+		$("#calendar_details .location_tree").tree({
 			rules : {
 				multiple : false
 			},
@@ -120,8 +120,8 @@ defined('P_RUN') or die('Direct access prohibited');
 // ]]>
 </script>
 <form class="pf-form" method="post" id="calendar_details" action="<?php echo htmlentities(pines_url('com_hrm', 'saveevent')); ?>">
-	<div class="pf-element" name="location_tree" style="padding-bottom: 5px;"></div>
-	<div class="pf-element" name="employees" style="padding-bottom: 20px;">
+	<div class="pf-element location_tree" style="padding-bottom: 5px;"></div>
+	<div class="pf-element" style="padding-bottom: 20px;">
 		<select class="ui-widget-content form_select" name="employee"></select>
 	</div>
 	<div class="pf-element" style="padding-bottom: 0px;">

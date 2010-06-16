@@ -46,7 +46,7 @@ foreach($this->groups as $cur_group) {
 				{type: 'button', text: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', text: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
-				{type: 'button', text: 'Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
+				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
 					pines.post("<?php echo pines_url('system', 'csv'); ?>", {
 						filename: 'groups',
 						content: rows

@@ -44,9 +44,6 @@
 
 /* Toolbar
 ----------------------------------*/
-.ui-pgrid-toolbar-container {
-	background-position: top;
-}
 .ui-pgrid-toolbar {
 	padding: .2em;
 	margin: 0;

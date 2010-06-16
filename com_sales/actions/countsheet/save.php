@@ -58,16 +58,10 @@ if ($_REQUEST['save'] == 'commit') {
 		unset($_SESSION['user']->group->com_sales_task_countsheet);
 		$_SESSION['user']->group->save();
 	}
-	//Automatically decline the countsheet if they are missing an item.
-	$in_stock = array('available', 'unavailable', 'sold_pending');
-	array_walk($in_stock, 'preg_quote');
-	$regex = '/'.implode('|', $in_stock).'/';
-	// Check the countsheet for any missing items.
-	// Get all stock entries at the current location.
+	// Get all stock entries at the current location and check for missing items.
 	$expected_stock = $pines->entity_manager->get_entities(
 			array('class' => com_sales_stock),
 			array('&',
-				'match' => array('status', $regex),
 				'ref' => array('location', $_SESSION['user']->group),
 				'tag' => array('com_sales', 'stock')
 			)
@@ -78,6 +72,7 @@ if ($_REQUEST['save'] == 'commit') {
 			if ((isset($cur_stock_entry->serial) && $cur_stock_entry->serial == $cur_item) || $cur_stock_entry->product->sku == $cur_item)
 				$found = true;
 		}
+		//Automatically decline the countsheet if they are missing an item.
 		if (!$found) {
 			$countsheet->status = 'declined';
 			break;

@@ -125,12 +125,6 @@ class com_sales_countsheet extends entity {
 		$module = new module('com_sales', 'countsheet/formreview', 'content');
 		$module->entity = $this;
 
-		$sold_status['available'] = 'in stock';
-		$sold_status['unavailable'] = 'not for sale';
-		$sold_status['sold_pending'] = 'sold (pending)';
-		$sold_status['sold_at_store'] = 'sold';
-
-		$in_stock = array('available', 'unavailable', 'sold_pending');
 		$module->missing = $module->matched = $module->potential = $module->invalid = array();
 		// Grab all stock items for this location's inventory.
 		$expected_stock = (array) $pines->entity_manager->get_entities(array('class' => com_sales_stock), array('&', 'tag' => array('com_sales', 'stock')));

@@ -54,27 +54,41 @@ class com_reports extends component {
 	 * 
 	 * @param int $start The start date of the report.
 	 * @param int $end The end date of the report.
+	 * @param group $location The location to report sales for.
+	 * @param employee $employee The employee to report sales for.
 	 * @return module The sales report module.
 	 */
-	function report_sales($start, $end) {
+	function report_sales($start, $end, $location = null, $employee = null) {
 		global $pines;
-		$date_start = strtotime('00:00', $start);
-		$date_end = strtotime('23:59', $end);
-		
+
 		$form = new module('com_reports', 'form_sales', 'right');
 		$head = new module('com_reports', 'show_calendar_head', 'head');
 		$module = new module('com_reports', 'report_sales', 'content');
-		$module->sales = $pines->entity_manager->get_entities(
-				array('class' => com_sales_sale),
-				array('&',
-					'gte' => array('p_cdate', $date_start),
-					'lte' => array('p_cdate', $date_end),
-					'tag' => array('com_sales', 'sale')
-				)
-			);
 
+		$selector = array('&', 'tag' => array('com_sales', 'sale'));
+		// Datespan of the report.
+		$date_start = strtotime('00:00', $start);
+		$date_end = strtotime('23:59', $end);
+		$selector['gte'] = array('p_cdate', $date_start);
+		$selector['lte'] = array('p_cdate', $date_end);
 		$module->date[0] = $form->date[0] = $date_start;
 		$module->date[1] = $form->date[1] = $date_end;
+		// Employee and location of the report.
+		if (isset($employee->user_account)) {
+			$selector['ref'] = array('user', $employee->user_account);
+			$module->employee = $form->employee = $employee;
+			$module->title = 'Sales Report for '.$employee->name;
+		} elseif (isset($location->guid)) {
+			$selector['ref'] = array('group', $location);
+			$module->title = 'Sales Report for '.$location->name;
+		} else {
+			$location = $_SESSION['user']->group;
+			$module->all = true;
+			$module->title = 'Sales Report for All Locations';
+		}
+		$module->location = $form->location = $location->guid;
+		$form->employees = $pines->entity_manager->get_entities(array('class' => com_hrm_employee), array('&', 'tag' => array('com_hrm', 'employee')));
+		$module->sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector);
 	}
 
 	/**

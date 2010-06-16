@@ -17,8 +17,14 @@ if ( !gatekeeper('com_reports/reportsales') )
 if ( isset($_REQUEST['start']) ) {
 	$start = strtotime($_REQUEST['start']);
 	$end = strtotime($_REQUEST['end']);
-	$pines->com_reports->report_sales($start, $end);
 } else {
-	$pines->com_reports->report_sales(strtotime('next monday', time() - 604800), time());
+	$start = strtotime('next monday', time() - 604800);
+	$end = time();
 }
+if ( isset($_REQUEST['location']) ) {
+	$location = group::factory((int) $_REQUEST['location']);
+	$employee = com_hrm_employee::factory((int) $_REQUEST['employee']);
+}
+
+$pines->com_reports->report_sales($start, $end, $location, $employee);
 ?>

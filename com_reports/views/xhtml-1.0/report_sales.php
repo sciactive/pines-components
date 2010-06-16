@@ -136,7 +136,9 @@ foreach ($this->sales as $cur_sale) {
 					alert('Loading Relevant Sales');
 					pines.post("<?php echo pines_url('com_reports', 'reportsales'); ?>", {
 						start: view.start.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1'),
-						end: view.end.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1')
+						end: view.end.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1'),
+						location: "<?php echo $this->all ? 'all' : $this->location; ?>",
+						employee: "<?php echo $this->employee->guid; ?>"
 					});
 				}
 			}

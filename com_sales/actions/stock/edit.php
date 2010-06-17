@@ -17,8 +17,24 @@ if (isset($_REQUEST['id'])) {
 } else {
 	punt_user('No id specified.');
 }
+$list = explode(',', $_REQUEST['id']);
 
-$entity = com_sales_stock::factory((int) $_REQUEST['id']);
-$entity->print_form();
+if (empty($list)) {
+	pines_notice('No inventory specified!');
+	return;
+}
+
+if (count($list) > 1) {
+	$entity = com_sales_stock::factory();
+	$module = $entity->print_form();
+	unset($module->entity);
+	$module->entities = array();
+	foreach ($list as $cur_id) {
+		$module->entities[] = com_sales_stock::factory((int) $cur_id);
+	}
+} else {
+	$entity = com_sales_stock::factory((int) $list[0]);
+	$entity->print_form();
+}
 
 ?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Provide a form to create a new transfer.
+ * Provide a form to create a new transfer with stock.
  *
  * @package Pines
  * @subpackage com_sales
@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_sales/managestock') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'transfer/new', array('id' => $_REQUEST['id'])));
+	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'stock/transfer', array('id' => $_REQUEST['id'])));
 
 $list = explode(',', $_REQUEST['id']);
 

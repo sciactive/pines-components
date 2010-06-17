@@ -45,9 +45,9 @@ $pines->com_jstree->load();
 				<?php if (gatekeeper('com_sales/receive')) { ?>
 				{type: 'button', text: 'Receive', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'stock/receive'); ?>'},
 				<?php } if (gatekeeper('com_sales/managestock')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo pines_url('com_sales', 'stock/edit', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', multi_select: true, double_click: true, url: '<?php echo pines_url('com_sales', 'stock/edit', array('id' => '__title__')); ?>', delimiter: ','},
 				<?php } if (gatekeeper('com_sales/managestock')) { ?>
-				{type: 'button', text: 'Transfer', extra_class: 'picon picon-go-jump', multi_select: true, url: '<?php echo pines_url('com_sales', 'transfer/new', array('id' => '__title__')); ?>', delimiter: ','},
+				{type: 'button', text: 'Transfer', extra_class: 'picon picon-go-jump', multi_select: true, url: '<?php echo pines_url('com_sales', 'stock/transfer', array('id' => '__title__')); ?>', delimiter: ','},
 				<?php } ?>
 				{type: 'separator'},
 				{type: 'button', text: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},

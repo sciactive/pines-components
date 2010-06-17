@@ -26,6 +26,10 @@ defined('P_RUN') or die('Direct access prohibited');
 		var location = $("#location_details [name=location]");
 		var location_saver = $("#location_details [name=location_saver]");
 		var location_tree = $("#location_details div.location_tree");
+		var block_change = function() {
+			if (location_saver.val() != 'individual')
+				return false;
+		};
 		location_tree.tree({
 			rules : {
 				multiple : false
@@ -39,6 +43,10 @@ defined('P_RUN') or die('Direct access prohibited');
 			},
 			selected : ["<?php echo ($this->location == 'all') ? $_SESSION['user']->group->guid : $this->location; ?>"],
 			callback : {
+				// The tree is disabled when searching all locations.
+				beforechange : block_change,
+				beforeclose : block_change,
+				beforeopen : block_change,
 				onchange : function(NODE, TREE_OBJ) {
 					location.val(TREE_OBJ.selected.attr("id"));
 				},

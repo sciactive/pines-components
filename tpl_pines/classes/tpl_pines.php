@@ -98,8 +98,9 @@ class tpl_pines extends template {
 	}
 
 	public function url($component = null, $action = null, $params = array(), $full_location = false) {
-		if ($_REQUEST['tpl_pines_ajax'] == 1)
-			$params['tpl_pines_ajax'] = 1;
+		// Was needed for redirection, but not anymore.
+		//if ($_REQUEST['tpl_pines_ajax'] == 1)
+		//	$params['tpl_pines_ajax'] = 1;
 		return parent::url($component, $action, $params, $full_location);
 	}
 }

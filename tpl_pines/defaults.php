@@ -36,7 +36,7 @@ return array(
 	array(
 		'name' => 'ajax',
 		'cname' => 'Use Ajax',
-		'description' => 'Use the experimental AJAX code to load all pages without refreshing.',
+		'description' => 'Use the experimental AJAX code to load pages without refreshing.',
 		'value' => false,
 		'peruser' => true,
 	),

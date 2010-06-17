@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
-<div class="module ui-widget <?php echo htmlentities($this->classes); ?>">
+<div class="module <?php echo htmlentities($this->classes); ?>">
 	<?php if ($this->show_title && (!empty($this->title) || !empty($this->note))) { ?>
 	<div class="module_title">
 		<?php if (!empty($this->title)) { ?>

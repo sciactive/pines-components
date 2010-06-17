@@ -20,191 +20,58 @@ pines(function(){
 	// Menu hover.
 	hover("ul.dropdown li a:not(.ui-widget-header)");
 
+	// Main menu close delay.
+	var cur_kept_open = [];
+	var cur_timer = null;
+	// TODO: Option to enable slide down.
+	$("#main_menu").delegate("li", "mouseenter", function(){
+		//var cur_item = $(this);
+		//var cur_submenu = cur_item.children("ul");
+		if (cur_timer) {
+			window.clearTimeout(cur_timer);
+			cur_timer = null;
+			if (cur_kept_open.length)
+				cur_kept_open.removeClass("hover");
+			cur_kept_open = [];
+		}
+		/*if (cur_submenu.length)
+			cur_submenu.hide().slideDown(200);*/
+	}).delegate("li", "mouseleave", function(){
+		var cur_item = $(this);
+		//var cur_submenu = cur_item.children("ul");
+		if (cur_kept_open.length)
+			cur_kept_open.removeClass("hover");
+		cur_kept_open = cur_item.parentsUntil("ul.dropdown").andSelf().filter("li").addClass("hover");
+		if (cur_timer)
+			window.clearTimeout(cur_timer);
+		cur_timer = window.setTimeout(function(){
+			if (cur_kept_open.length)
+				cur_kept_open.removeClass("hover");
+			cur_kept_open = [];
+			cur_timer = null;
+		}, 300);
+		/*cur_submenu.slideUp(100, function(){
+			cur_item.removeClass("hover");
+		});*/
+	});
+
 	// Get the loaded page ready. (Styling, etc.)
 	// This needs to be called after Ajax page loads.
-	var page_ready = function(){
+	pines.tpl_pines_page_ready = function(){
 		// Main menu corners.
-		var cur_kept_open = [];
-		var cur_timer = null;
-		$("#header > div.mainmenu > div.menuwrap > ul.dropdown")
-		// TODO: Option to enable slide down.
-		.find("li").bind("mouseenter", function(){
-			//var cur_item = $(this);
-			//var cur_submenu = cur_item.children("ul");
-			if (cur_timer) {
-				window.clearTimeout(cur_timer);
-				cur_timer = null;
-				cur_kept_open.removeClass("hover");
-				cur_kept_open = [];
-			}
-			/*if (cur_submenu.length)
-				cur_submenu.hide().slideDown(200);*/
-		}).bind("mouseleave", function(){
-			var cur_item = $(this);
-			//var cur_submenu = cur_item.children("ul");
-			cur_item.addClass("hover");
-			if (cur_kept_open.length)
-				cur_kept_open = cur_kept_open.add(cur_item);
-			else
-				cur_kept_open = cur_item;
-			if (cur_timer)
-				window.clearTimeout(cur_timer);
-			cur_timer = window.setTimeout(function(){
-				if (cur_kept_open.length)
-					cur_kept_open.removeClass("hover");
-				cur_kept_open = [];
-				cur_timer = null;
-			}, 300);
-			/*cur_submenu.slideUp(100, function(){
-				cur_item.removeClass("hover");
-			});*/
-		}).end()
+		$("#main_menu > ul.dropdown")
 		.find("> li:first-child > a.ui-state-default").addClass("ui-corner-tl").end()
 		.find("> li:last-child > a.ui-state-default").addClass("ui-corner-tr").end()
 		.find("ul > li:first-child > a").addClass("ui-corner-tr").end()
 		.find("ul > li:last-child > a").addClass("ui-corner-bottom");
 
 		// Add disabled element styling.
-		$(".ui-widget-content:input:disabled").addClass("ui-state-disabled");
-		$(".ui-widget-content:input:not(:button, :submit, :reset), .ui-widget-content:file").addClass("ui-corner-all");
+		$(".module .ui-widget-content:input:disabled").addClass("ui-state-disabled");
+		$(".module .ui-widget-content:input:not(:button, :submit, :reset), .module .ui-widget-content:file").addClass("ui-corner-all");
 
 		// UI buttons.
 		$(".module .ui-state-default:input:not(:not(:button, :submit, :reset))").button();
 	};
 	
-	page_ready();
-
-	// Experimental AJAX code.
-	// Quit here if ajax isn't enabled.
-	if (!pines.tpl_pines_ajax) return;
-
-	var loader, j_window = $(window),
-	pos_head = $("head"),
-	main_menu = $("body > div#header > div.mainmenu > div.menuwrap"),
-	pos_top = $("body > div#top"),
-	page_title = $("body > div#header > h1.pagetitle"),
-	pos_pre_content = $("body > div#pre_content"),
-	col1 = $("body > div.colmask > div.colmid > div.colleft > div.col1wrap > div.col1"),
-	pos_content_top_left = col1.children("div.content_top_left"),
-	pos_content_top_right = col1.children("div.content_top_right"),
-	pos_content = col1.children("div.content"),
-	pos_content_bottom_left = col1.children("div.content_bottom_left"),
-	pos_content_bottom_right = col1.children("div.content_bottom_right"),
-	pos_post_content = $("body > div#post_content"),
-	pos_left = $("body > div.colmask > div.colmid > div.colleft > div.col2"),
-	pos_right = $("body > div.colmask > div.colmid > div.colleft > div.col3"),
-	pos_footer = $("body > div#footer > div.modules"),
-	pos_bottom = $("body > div#bottom");
-	var load_page_ajax = function(url, type, data){
-		if (typeof data == "undefined")
-			data = {};
-		$.ajax({
-			"type": type,
-			"url": url,
-			"dataType": "json",
-			"data": data,
-			beforeSend: function(xhr) {
-				if (loader)
-					loader.pnotify_display();
-				else
-					loader = $.pnotify({
-						pnotify_text: "Loading...",
-						pnotify_notice_icon: "picon picon-throbber",
-						pnotify_width: "120px",
-						pnotify_opacity: .6,
-						pnotify_animate_speed: "fast",
-						pnotify_nonblock: true,
-						pnotify_hide: false,
-						pnotify_history: false,
-						pnotify_stack: {"dir1": "down","dir2": "right"}
-					}).css("top", "-.6em");
-				loader.css("left", (j_window.width() / 2) - (loader.width() / 2));
-				xhr.setRequestHeader("Accept", "application/json");
-			},
-			complete: function(){
-				loader.pnotify_remove();
-			},
-			error: function(xhr, textStatus){
-				pines.error("An error occured while communicating with the server:\n\n"+xhr.status+": "+textStatus);
-			},
-			success: function(data){
-				// Pause DOM ready script execution.
-				pines.pause();
-				$("body > div#header > div:not(.mainmenu)").remove();
-				pos_head.append(data.pos_head);
-				main_menu.html(data.main_menu);
-				pos_top.html(data.pos_top);
-				page_title.after(data.pos_header).after(data.pos_header_right);
-				pos_pre_content.html(data.pos_pre_content);
-				pos_content_top_left.html(data.pos_content_top_left);
-				pos_content_top_right.html(data.pos_content_top_right);
-				pos_content.html(data.pos_content);
-				pos_content_bottom_left.html(data.pos_content_bottom_left);
-				pos_content_bottom_right.html(data.pos_content_bottom_right);
-				pos_post_content.html(data.pos_post_content);
-				pos_left.html(data.pos_left);
-				pos_right.html(data.pos_right);
-				pos_footer.html(data.pos_footer);
-				pos_bottom.html(data.pos_bottom);
-				$.each(data.errors, function(){
-					pines.error(this, "Error");
-				});
-				$.each(data.notices, function(){
-					pines.notice(this, "Notice");
-				});
-				page_ready();
-				// Now run DOM ready scripts.
-				pines.play();
-			}
-		});
-	};
-	$("body").delegate("a", "click", function(){
-		var cur_elem = $(this);
-		var target = cur_elem.attr("href");
-		if (target.indexOf("#") == 0 ||
-			target.indexOf("http:") == 0 ||
-			target.indexOf("https:") == 0 ||
-			target.indexOf("ftp:") == 0 ||
-			target.indexOf("mailto:") == 0)
-			return true;
-		load_page_ajax(target, "GET", {tpl_pines_ajax: 1});
-		return false;
-	});
-	$("body").delegate("form", "submit", function(){
-		// TODO: Check for file elements.
-		var cur_elem = $(this);
-		var target = cur_elem.attr("action");
-		if (target.indexOf("#") == 0 ||
-			target.indexOf("http:") == 0 ||
-			target.indexOf("https:") == 0 ||
-			target.indexOf("ftp:") == 0 ||
-			target.indexOf("mailto:") == 0)
-			return true;
-		var data = cur_elem.serialize();
-		if (data != "")
-			data += "&"
-		data += "tpl_pines_ajax=1";
-		console.log(data);
-		load_page_ajax(target, "POST", data);
-		return false;
-	});
-	pines.get = function(url, params){
-		if (params) {
-			params.tpl_pines_ajax = 1;
-		} else
-			params = {tpl_pines_ajax: 1};
-		url += (url.indexOf("?") == -1) ? "?" : "&";
-		var parray = [];
-		for (var i in params) {
-			if (params.hasOwnProperty(i)) {
-				if (encodeURIComponent)
-					parray.push(encodeURIComponent(i)+"="+encodeURIComponent(params[i]));
-				else
-					parray.push(escape(i)+"="+escape(params[i]));
-			}
-		}
-		url += parray.join("&");
-		load_page_ajax(url, "GET", {tpl_pines_ajax: 1});
-	};
-	// TODO: Handle pines.post through Ajax.
+	pines.tpl_pines_page_ready();
 });

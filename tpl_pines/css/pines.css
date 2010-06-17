@@ -3,6 +3,10 @@
 	margin: 0;
 	padding: 0;
 }
+html {
+	font-family: Verdana,Arial,sans-serif;
+	font-size: 10px;
+}
 ul, ol {
 	margin: 11px 0;
 	padding-left: 40px;
@@ -11,8 +15,6 @@ ul, ol {
 /* General styles */
 body {
 	/* Custom */
-	font-family: Verdana,Arial,sans-serif;
-	font-size: 10px;
 	background-image: none !important;
 	/* ----- */
 	margin:0;
@@ -186,43 +188,42 @@ img {
 #header .module .module_content, #footer .module .module_content {
 	font-weight: normal;
 }
-#header .mainmenu {
+#header .menuwrap {
 	clear: both;
-	font-size: 1.2em;
-	background: transparent none !important;
+	background-image: none !important;
 	border-bottom: none !important;
 	border-left: none !important;
 	border-right: none !important;
 }
-#header .mainmenu .menuwrap {
+#main_menu {
 	/*text-align: center; /* Align menu text in the center with this. */
 	/* display: table;
 	margin: 0 auto; /* Align the menu in the center with this. */
 	margin-left: 35px; /* Comment this out if you center the menu. */
 }
-#header .mainmenu .menuwrap ul.dropdown > li > a.ui-widget-header {
+#main_menu ul.dropdown > li > a.ui-widget-header {
 	background: transparent none !important;
 	border-top: none !important;
 	border-bottom: none !important;
 	border-right-style: none;
 }
-#header .mainmenu .menuwrap ul.dropdown > li:last-child > a.ui-widget-header {
+#main_menu ul.dropdown > li:last-child > a.ui-widget-header {
 	border-right-style: solid;
 }
-.holygrail .colleft .col2 {
+#left {
 	padding-top: 1px;
 }
-.content_top_left, .content_bottom_left {
+#content_top_left, #content_bottom_left {
 	width: 50%;
 	float: left;
 	padding-top: 1px;
 }
-.content_top_right, .content_bottom_right {
+#content_top_right, #content_bottom_right {
 	width: 50%;
 	float: right;
 	padding-top: 1px;
 }
-.content {
+#content {
 	clear: both;
 }
 .module {
@@ -278,15 +279,6 @@ input.ui-state-default {
 	padding-right: 1.6em; /* Keep padded inputs from pushing out of their box. */
 }
 /* ----------- Menus ----------- */
-.col2 ul.dropdown.dropdown-vertical, .col3 ul.dropdown.dropdown-vertical {
+#left ul.dropdown.dropdown-vertical, #right ul.dropdown.dropdown-vertical {
 	width: 100%;
-}
-/* ----------- Notices ----------- */
-#top div.notices div.notice {
-	margin: 3px;
-	padding: 4px;
-	margin-bottom: 10px;
-}
-#top div.notices div.notice p {
-	margin: 1px;
 }

@@ -13,7 +13,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 // Experimental AJAX code.
-if ($pines->config->tpl_pines->ajax && $_REQUEST['tpl_pines_ajax'] == 1) {
+if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 || strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)) {
 	$return = array(
 		'notices' => $pines->page->get_notice(),
 		'errors' => $pines->page->get_error(),
@@ -59,14 +59,10 @@ if ($pines->config->tpl_pines->ajax && $_REQUEST['tpl_pines_ajax'] == 1) {
 	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/dropdown/themes/jqueryui/jqueryui.css" media="all" rel="stylesheet" type="text/css" />
 
 	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>system/js/js.php"></script>
-	<?php if ($pines->config->tpl_pines->ajax) { ?>
-	<script type="text/javascript">
-		// <![CDATA[
-		pines.tpl_pines_ajax = true;
-		// ]]>
-	</script>
-	<?php } ?>
 	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/template.js"></script>
+	<?php if ($pines->config->tpl_pines->ajax) { ?>
+	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/ajax.js"></script>
+	<?php } ?>
 
 	<!--[if lt IE 7]>
 	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/jquery/jquery.dropdown.js"></script>
@@ -74,7 +70,7 @@ if ($pines->config->tpl_pines->ajax && $_REQUEST['tpl_pines_ajax'] == 1) {
 
 	<?php echo $pines->page->render_modules('head', 'module_head'); ?>
 </head>
-<body class="ui-widget-content">
+<body class="ui-widget ui-widget-content">
 	<div id="top">
 		<?php echo $pines->page->render_modules('top', 'module_header');
 		$error = $pines->page->get_error();
@@ -108,8 +104,8 @@ if ($pines->config->tpl_pines->ajax && $_REQUEST['tpl_pines_ajax'] == 1) {
 		</h1>
 		<?php echo $pines->page->render_modules('header', 'module_header'); ?>
 		<?php echo $pines->page->render_modules('header_right', 'module_header_right'); ?>
-		<div class="mainmenu ui-widget-content">
-			<div class="menuwrap"><?php echo $pines->page->render_modules('main_menu', 'module_head'); ?></div>
+		<div class="menuwrap ui-widget-content">
+			<div id="main_menu"><?php echo $pines->page->render_modules('main_menu', 'module_head'); ?></div>
 		</div>
 	</div>
 	<div id="pre_content">
@@ -118,30 +114,30 @@ if ($pines->config->tpl_pines->ajax && $_REQUEST['tpl_pines_ajax'] == 1) {
 	<div class="colmask holygrail">
 		<div class="colmid">
 			<div class="colleft">
-				<div class="colleftcolor ui-state-default"></div>
+				<div class="colleftcolor ui-state-default ui-state-disabled"></div>
 				<div class="col1wrap">
 					<div class="col1">
-						<div class="content_top_left">
+						<div id="content_top_left">
 							<?php echo $pines->page->render_modules('content_top_left'); ?>
 						</div>
-						<div class="content_top_right">
+						<div id="content_top_right">
 							<?php echo $pines->page->render_modules('content_top_right'); ?>
 						</div>
-						<div class="content">
+						<div id="content">
 							<?php echo $pines->page->render_modules('content', 'module_content'); ?>
 						</div>
-						<div class="content_bottom_left">
+						<div id="content_bottom_left">
 							<?php echo $pines->page->render_modules('content_bottom_left'); ?>
 						</div>
-						<div class="content_bottom_right">
+						<div id="content_bottom_right">
 							<?php echo $pines->page->render_modules('content_bottom_right'); ?>
 						</div>
 					</div>
 				</div>
-				<div class="col2">
+				<div id="left" class="col2">
 					<?php echo $pines->page->render_modules('left', 'module_left'); ?>
 				</div>
-				<div class="col3">
+				<div id="right" class="col3">
 					<?php echo $pines->page->render_modules('right', 'module_right'); ?>
 				</div>
 			</div>

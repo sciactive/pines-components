@@ -689,8 +689,8 @@ class com_sales extends component {
 		}
 		// Secondary options specify the criteria to search the transactions.
 		$secondary_options = array('&');
-		if ($location != 'all' && isset($location->guid)) {
-			$module->location = $location->guid;
+		if (isset($location->guid)) {
+			$module->location = $location;
 			$secondary_options['ref'][] = array('group', $location);
 		} else {
 			$module->location = 'all';

@@ -11,11 +11,11 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
-<form id="authorize_net_form" class="pf-form" method="post" action="">
+<form id="p_muid_form" class="pf-form" method="post" action="">
 	<script type="text/javascript">
 		// <![CDATA[
 		pines(function(){
-			var form = $("#authorize_net_form");
+			var form = $("#p_muid_form");
 			var card_swipe = form.find("input[name=card_swipe]");
 			var name_first = form.find("input[name=name_first]");
 			var name_last = form.find("input[name=name_last]");
@@ -63,14 +63,14 @@ defined('P_RUN') or die('Direct access prohibited');
 					card_exp_month.val(swipe_card_month);
 					card_exp_year.val(swipe_card_year);
 					card_swipe.val("");
-					$("#authorize_net_form input[name=card_swiped]").val("ON");
+					$("#p_muid_form input[name=card_swiped]").val("ON");
 					form.submit();
 				}
 			});
 		});
 		// ]]>
 	</script>
-	<div id="authorize_net_swipe">
+	<div id="p_muid_authorize_net_swipe">
 		<div class="pf-element">
 			<label><span class="pf-label">Swipe Card</span>
 				<input class="pf-field ui-widget-content" type="password" name="card_swipe" value="" /></label>
@@ -83,7 +83,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			">Enter Manually</button>
 		</div>
 	</div>
-	<div id="authorize_net_manual" style="display: none;">
+	<div id="p_muid_authorize_net_manual" style="display: none;">
 		<div class="pf-element">
 			<label><span class="pf-label">Cardholder First Name</span>
 				<input class="pf-field ui-widget-content" type="text" name="name_first" value="<?php echo $this->name_first; ?>" /></label>

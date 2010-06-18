@@ -19,8 +19,8 @@ $pines->com_jstree->load();
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
-	#history_grid a {
-		text-decoration:  underline;
+	#p_muid_grid a {
+		text-decoration: underline;
 	}
 	/* ]]> */
 </style>
@@ -40,7 +40,6 @@ $pines->com_jstree->load();
 			});
 		};
 
-		var history_grid = $("#history_grid");
 		var serial_box, sku_box;
 		// Timespan Defaults
 		var all_time = <?php echo $this->all_time ? 'true' : 'false'; ?>;
@@ -90,7 +89,7 @@ $pines->com_jstree->load();
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
-		$("#history_grid").pgrid(cur_options);
+		var history_grid = $("#p_muid_grid").pgrid(cur_options);
 
 		history_grid.date_form = function(){
 			$.ajax({
@@ -173,7 +172,7 @@ $pines->com_jstree->load();
 	});
 	// ]]>
 </script>
-<table id="history_grid">
+<table id="p_muid_grid">
 	<thead>
 		<tr>
 			<th>Created Date</th>

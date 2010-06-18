@@ -12,23 +12,23 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Sales Totals';
 ?>
-<div id="sales_totals" class="pf-form">
+<div id="p_muid_totals" class="pf-form">
 	<div class="pf-element pf-heading">
 		<script type="text/javascript">
 			// <![CDATA[
 			pines(function(){
-				$("#hide_parameters").click(function(){
-					$("#sales_totals").children(".pf-element:not(.pf-heading)").slideToggle();
+				$("#p_muid_hide_parameters").click(function(){
+					$("#p_muid_totals").children(".pf-element:not(.pf-heading)").slideToggle();
 				});
 			});
 			// ]]>
 		</script>
-		<button id="hide_parameters" class="ui-state-default ui-corner-all" style="float: right;">Toggle Form</button>
+		<button id="p_muid_hide_parameters" class="ui-state-default ui-corner-all" style="float: right;">Toggle Form</button>
 		<h1>Parameters</h1>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Location</span>
-			<select class="pf-field ui-widget-content" id="location" name="location">
+			<select class="pf-field ui-widget-content" id="p_muid_location" name="location">
 				<option value="current">-- Current --</option>
 				<?php if ($this->show_all) { ?>
 				<option value="all">-- All --</option>
@@ -40,7 +40,7 @@ $this->title = 'Sales Totals';
 		<script type="text/javascript">
 			// <![CDATA[
 			pines(function(){
-				$("#date_start").datepicker({
+				$("#p_muid_date_start").datepicker({
 					dateFormat: "yy-mm-dd",
 					changeMonth: true,
 					changeYear: true,
@@ -51,13 +51,13 @@ $this->title = 'Sales Totals';
 			// ]]>
 		</script>
 		<label><span class="pf-label">Start Date</span>
-			<input class="pf-field ui-widget-content" type="text" id="date_start" name="date_start" size="24" value="<?php echo date('Y-m-d'); ?>" /></label>
+			<input class="pf-field ui-widget-content" type="text" id="p_muid_date_start" name="date_start" size="24" value="<?php echo date('Y-m-d'); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<script type="text/javascript">
 			// <![CDATA[
 			pines(function(){
-				$("#date_end").datepicker({
+				$("#p_muid_date_end").datepicker({
 					dateFormat: "yy-mm-dd",
 					changeMonth: true,
 					changeYear: true,
@@ -68,7 +68,7 @@ $this->title = 'Sales Totals';
 			// ]]>
 		</script>
 		<label><span class="pf-label">End Date</span>
-			<input class="pf-field ui-widget-content" type="text" id="date_end" name="date_end" size="24" value="<?php echo date('Y-m-d'); ?>" /></label>
+			<input class="pf-field ui-widget-content" type="text" id="p_muid_date_end" name="date_end" size="24" value="<?php echo date('Y-m-d'); ?>" /></label>
 	</div>
 	<div class="pf-element pf-buttons">
 		<script type="text/javascript">
@@ -79,12 +79,12 @@ $this->title = 'Sales Totals';
 			var com_sales_result_totals;
 
 			pines(function(){
-				com_sales_location = $("#location");
-				com_sales_date_start = $("#date_start");
-				com_sales_date_end = $("#date_end");
-				com_sales_result_totals = $("#result_totals");
+				com_sales_location = $("#p_muid_location");
+				com_sales_date_start = $("#p_muid_date_start");
+				com_sales_date_end = $("#p_muid_date_end");
+				com_sales_result_totals = $("#p_muid_result_totals");
 
-				$("#retrieve_totals").click(function(){
+				$("#p_muid_retrieve_totals").click(function(){
 					var loader;
 					$.ajax({
 						url: "<?php echo pines_url('com_sales', 'sale/totalsjson'); ?>",
@@ -138,9 +138,9 @@ $this->title = 'Sales Totals';
 			});
 			// ]]>
 		</script>
-		<button id="retrieve_totals" class="pf-button ui-state-default ui-corner-all">Retrieve</button>
+		<button id="p_muid_retrieve_totals" class="pf-button ui-state-default ui-corner-all">Retrieve</button>
 	</div>
-	<div id="result_totals" style="clear: both; display: none;">
+	<div id="p_muid_result_totals" style="clear: both; display: none;">
 		<div class="pf-element">
 			<span class="pf-label">Location</span>
 			<span class="pf-field"><span class="total_location">null</span></span>

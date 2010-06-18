@@ -15,27 +15,27 @@ $this->note = 'Created by '.$this->entity->user->name.' on '.format_date($this->
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
-	#countsheet_details fieldset.missing {
+	#p_muid_form fieldset.missing {
 		border: 1px dotted red;
 		color: red;
 	}
-	#countsheet_details fieldset.missing legend {
+	#p_muid_form fieldset.missing legend {
 		font-weight: bold;
 	}
-	#countsheet_details fieldset.matched {
+	#p_muid_form fieldset.matched {
 		border: 1px dashed green;
 		color: green;
 	}
-	#countsheet_details fieldset.sold {
+	#p_muid_form fieldset.sold {
 		border: 1px dotted chocolate;
 		color: chocolate;
 	}
-	#countsheet_details fieldset.sold div.pf-element.pf-heading {
+	#p_muid_form fieldset.sold div.pf-element.pf-heading {
 		border-bottom: 1px dotted chocolate;
 	}
 	/* ]]> */
 </style>
-<form class="pf-form" method="post" id="countsheet_details" action="<?php echo pines_url('com_sales', 'countsheet/savestatus'); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo pines_url('com_sales', 'countsheet/savestatus'); ?>">
 	<?php if ($this->missing) { ?>
 	<fieldset class="pf-group missing">
 		<legend>Missing Items</legend>

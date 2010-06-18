@@ -55,12 +55,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
-		$("#vendor_grid").pgrid(cur_options);
+		$("#p_muid_grid").pgrid(cur_options);
 	});
 
 	// ]]>
 </script>
-<table id="vendor_grid">
+<table id="p_muid_grid">
 	<thead>
 		<tr>
 			<th>Name</th>

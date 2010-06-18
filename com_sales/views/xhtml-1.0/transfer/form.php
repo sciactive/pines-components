@@ -17,7 +17,7 @@ $read_only = '';
 if ($this->entity->final)
 	$read_only = 'readonly="readonly"';
 ?>
-<form class="pf-form" method="post" id="transfer_details" action="<?php echo htmlentities(pines_url('com_sales', 'transfer/save')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_sales', 'transfer/save')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
 		var stock;
@@ -55,10 +55,10 @@ if ($this->entity->final)
 		}
 		
 		pines(function(){
-			stock = $("#stock");
-			stock_table = $("#stock_table");
-			available_stock_table = $("#available_stock_table");
-			stock_dialog = $("#stock_dialog");
+			stock = $("#p_muid_stock");
+			stock_table = $("#p_muid_stock_table");
+			available_stock_table = $("#p_muid_available_stock_table");
+			stock_dialog = $("#p_muid_stock_dialog");
 
 			<?php if (!$this->entity->final && empty($this->entity->received)) { ?>
 			stock_table.pgrid({
@@ -170,7 +170,7 @@ if ($this->entity->final)
 		<script type="text/javascript">
 			// <![CDATA[
 			pines(function(){
-				$("#eta").datepicker({
+				$("#p_muid_eta").datepicker({
 					dateFormat: "yy-mm-dd",
 					showOtherMonths: true,
 					selectOtherMonths: true
@@ -180,13 +180,13 @@ if ($this->entity->final)
 		</script>
 		<?php } ?>
 		<label><span class="pf-label">ETA</span>
-			<input class="pf-field ui-widget-content" type="text" id="eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? date('Y-m-d', $this->entity->eta) : ''); ?>" <?php echo $read_only; ?> /></label>
+			<input class="pf-field ui-widget-content" type="text" id="p_muid_eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? date('Y-m-d', $this->entity->eta) : ''); ?>" <?php echo $read_only; ?> /></label>
 	</div>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Stock</span>
 		<div class="pf-group">
 			<div class="pf-field">
-				<table id="stock_table">
+				<table id="p_muid_stock_table">
 					<thead>
 						<tr>
 							<th>SKU</th>
@@ -221,11 +221,11 @@ if ($this->entity->final)
 					</tbody>
 				</table>
 			</div>
-			<input type="hidden" id="stock" name="stock" size="24" />
+			<input type="hidden" id="p_muid_stock" name="stock" size="24" />
 		</div>
 	</div>
-	<div id="stock_dialog" title="Add Stock" style="display: none;">
-		<table id="available_stock_table">
+	<div id="p_muid_stock_dialog" title="Add Stock" style="display: none;">
+		<table id="p_muid_available_stock_table">
 			<thead>
 				<tr>
 					<th>SKU</th>
@@ -289,9 +289,9 @@ if ($this->entity->final)
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } if (!$this->entity->final) { ?>
-		<input type="hidden" id="save" name="save" value="" />
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" onclick="$('#save').val('save');" />
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Commit" onclick="$('#save').val('commit');" />
+		<input type="hidden" id="p_muid_save" name="save" value="" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" onclick="$('#p_muid_save').val('save');" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Commit" onclick="$('#p_muid_save').val('commit');" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'transfer/list')); ?>');" value="Cancel" />
 		<?php } ?>
 	</div>

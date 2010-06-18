@@ -16,25 +16,25 @@ $pines->uploader->load();
 ?>
 <style type="text/css">
 	/* <![CDATA[ */
-	#floor_details .station_layout {
+	#p_muid_form .station_layout {
 		position: relative;
 		border: 1px solid;
 	}
-	#floor_details .station_layout .station_layout_bg {
+	#p_muid_form .station_layout .station_layout_bg {
 		float: left;
 		width: 98%;
 		height: auto;
 	}
-	#floor_details .station_layout .station {
+	#p_muid_form .station_layout .station {
 		position: absolute;
 		background-image: none;
 	}
-	#floor_details .station_layout .station .station_id {
+	#p_muid_form .station_layout .station .station_id {
 		display: block;
 		margin: 5px;
 		font: bold large sans-serif;
 	}
-	#floor_details #tab_layout button .picon {
+	#p_muid_tab_layout button .picon {
 		display: block;
 		min-width: 32px;
 		height: 32px;
@@ -46,8 +46,8 @@ $pines->uploader->load();
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-		var station_floor = $("#floor_tabs .station_layout .station_floor");
-		var station_input = $("#floor_tabs input[name=stations]");
+		var station_floor = $("#p_muid_floor_tabs .station_layout .station_floor");
+		var station_input = $("#p_muid_floor_tabs input[name=stations]");
 
 		var stations = JSON.parse("<?php echo addslashes(json_encode($this->entity->stations, JSON_FORCE_OBJECT)); ?>");
 
@@ -109,10 +109,10 @@ $pines->uploader->load();
 			});
 		};
 
-		$("#floor_tabs").tabs();
-		$("#floor_tabs .station_layout_buttonset").buttonset();
+		$("#p_muid_floor_tabs").tabs();
+		$("#p_muid_floor_tabs .station_layout_buttonset").buttonset();
 		// Save the station object to the hidden input.
-		$("#floor_tabs .station_layout_save").button().click(function(){
+		$("#p_muid_floor_tabs .station_layout_save").button().click(function(){
 			var stationobject = $.extend({}, stations);
 			$.each(stationobject, function(){
 				if (this.element)
@@ -122,13 +122,13 @@ $pines->uploader->load();
 			alert("Saved layout.");
 		});
 		// Revert the changes to the station object since the last save.
-		$("#floor_tabs .station_layout_revert").button().click(function(){
+		$("#p_muid_floor_tabs .station_layout_revert").button().click(function(){
 			stations = JSON.parse(station_input.val());
 			alert("Reverted layout.");
 			update_layout();
 		});
 		// Import a station object.
-		$("#floor_tabs .station_layout_import").button().click(function(){
+		$("#p_muid_floor_tabs .station_layout_import").button().click(function(){
 			$("<div />", {
 				"title": "Station Layout Import",
 				"html": $("<textarea />", {
@@ -162,7 +162,7 @@ $pines->uploader->load();
 			});
 		});
 		// Export the station object.
-		$("#floor_tabs .station_layout_export").button().click(function(){
+		$("#p_muid_floor_tabs .station_layout_export").button().click(function(){
 			var stationobject = $.extend({}, stations);
 			$.each(stationobject, function(){
 				if (this.element)
@@ -187,7 +187,7 @@ $pines->uploader->load();
 			});
 		});
 		// Add a new station to the layout.
-		$("#floor_tabs .station_layout_add").button().click(function(){
+		$("#p_muid_floor_tabs .station_layout_add").button().click(function(){
 			var name;
 			do {
 				name = prompt("New Station's Name:");
@@ -198,7 +198,7 @@ $pines->uploader->load();
 			update_layout();
 		});
 		// Remove a station from the layout.
-		$("#floor_tabs .station_layout_remove").button().click(function(){
+		$("#p_muid_floor_tabs .station_layout_remove").button().click(function(){
 			var name;
 			do {
 				name = prompt("Station's Name:");
@@ -209,7 +209,7 @@ $pines->uploader->load();
 			update_layout();
 		});
 		// Delete all the stations in the layout.
-		$("#floor_tabs .station_layout_clear").button().click(function(){
+		$("#p_muid_floor_tabs .station_layout_clear").button().click(function(){
 			remove_station_elements();
 			stations = {};
 		});
@@ -218,13 +218,13 @@ $pines->uploader->load();
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="floor_details" action="<?php echo htmlentities(pines_url('com_customertimer', 'savefloor')); ?>">
-	<div id="floor_tabs" style="clear: both;">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_customertimer', 'savefloor')); ?>">
+	<div id="p_muid_floor_tabs" style="clear: both;">
 		<ul>
-			<li><a href="#tab_general">General</a></li>
-			<li><a href="#tab_layout">Station Layout</a></li>
+			<li><a href="#p_muid_tab_general">General</a></li>
+			<li><a href="#p_muid_tab_layout">Station Layout</a></li>
 		</ul>
-		<div id="tab_general">
+		<div id="p_muid_tab_general">
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
 				<?php if (isset($this->entity->user)) { ?>
@@ -251,8 +251,8 @@ $pines->uploader->load();
 				<script type="text/javascript">
 					// <![CDATA[
 					pines(function(){
-						$("#floor_details input[name=background]").change(function(){
-							$("#floor_details img.station_layout_bg").attr("src", $(this).val());
+						$("#p_muid_form input[name=background]").change(function(){
+							$("#p_muid_form img.station_layout_bg").attr("src", $(this).val());
 						});
 					});
 					// ]]>
@@ -269,7 +269,7 @@ $pines->uploader->load();
 			</div> */ ?>
 			<br class="pf-clearing" />
 		</div>
-		<div id="tab_layout">
+		<div id="p_muid_tab_layout">
 			<div class="ui-widget-header ui-corner-all" style="padding: 10px;">
 				<span class="station_layout_buttonset">
 					<button type="button" class="station_layout_save"><span class="picon picon-32 picon-document-save"></span> Save</button>

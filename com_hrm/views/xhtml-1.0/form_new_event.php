@@ -37,14 +37,14 @@ defined('P_RUN') or die('Direct access prohibited');
 <script type='text/javascript'>
 // <![CDATA[
 	pines(function(){
-		$("#event_date").datepicker({
+		$("#p_muid_start").datepicker({
 			dateFormat: "yy-mm-dd",
 			changeMonth: true,
 			changeYear: true,
 			showOtherMonths: true,
 			selectOtherMonths: true
 		});
-		$("#event_enddate").datepicker({
+		$("#p_muid_end").datepicker({
 			dateFormat: "yy-mm-dd",
 			changeMonth: true,
 			changeYear: true,
@@ -53,8 +53,8 @@ defined('P_RUN') or die('Direct access prohibited');
 		});
 
 		// Location Tree
-		var location = $("#calendar_details [name=location]");
-		$("#calendar_details .location_tree").tree({
+		var location = $("#p_muid_form [name=location]");
+		$("#p_muid_form .location_tree").tree({
 			rules : {
 				multiple : false
 			},
@@ -77,8 +77,8 @@ defined('P_RUN') or die('Direct access prohibited');
 			}
 		});
 
-		var timespan = $("#calendar_details.timespan");
-		$("#calendar_details [name=all_day]").change(function(){
+		var timespan = $("#p_muid_form.timespan");
+		$("#p_muid_form [name=all_day]").change(function(){
 			var all_day = $(this);
 			if (all_day.is(":checked") && all_day.val() == "timeSpan") {
 				timespan.show();
@@ -87,16 +87,16 @@ defined('P_RUN') or die('Direct access prohibited');
 			}
 		}).change();
 
-		$("#event_date").change(function(){
+		$("#p_muid_start").change(function(){
 			var start_date = new Date($(this).val());
-			var end_date = new Date($("#event_enddate").val());
+			var end_date = new Date($("#p_muid_end").val());
 			if (start_date > end_date)
-				$("#event_enddate").val($(this).val());
+				$("#p_muid_end").val($(this).val());
 		}).change();
 	});
 	// This function reloads the employees when switching between locations.
 	function update_employees(group_id) {
-		var employee = $("#calendar_details [name=employee]");
+		var employee = $("#p_muid_form [name=employee]");
 		employee.empty();
 		<?php
 		// Load employee departments.
@@ -119,13 +119,13 @@ defined('P_RUN') or die('Direct access prohibited');
 	}
 // ]]>
 </script>
-<form class="pf-form" method="post" id="calendar_details" action="<?php echo htmlentities(pines_url('com_hrm', 'saveevent')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_hrm', 'saveevent')); ?>">
 	<div class="pf-element location_tree" style="padding-bottom: 5px;"></div>
 	<div class="pf-element" style="padding-bottom: 20px;">
 		<select class="ui-widget-content form_select" name="employee"></select>
 	</div>
 	<div class="pf-element" style="padding-bottom: 0px;">
-		<input class="ui-widget-content form_text" type="text" id="event_label" name="event_label" value="<?php echo (isset($this->entity->label)) ? $this->entity->label : 'Label'; ?>" onfocus="if(this.value==this.defaultValue)this.value=''" onblur="if(this.value=='')this.value=this.defaultValue" />
+		<input class="ui-widget-content form_text" type="text" id="p_muid_event_label" name="event_label" value="<?php echo (isset($this->entity->label)) ? $this->entity->label : 'Label'; ?>" onfocus="if(this.value==this.defaultValue)this.value=''" onblur="if(this.value=='')this.value=this.defaultValue" />
 	</div>
 	<?php
 		if ($this->entity->guid) {
@@ -136,10 +136,10 @@ defined('P_RUN') or die('Direct access prohibited');
 		}
 	?>
 	<div class="pf-element" style="padding-bottom: 0px;">
-		<span class="pf-note">Start</span><input class="ui-widget-content form_text" type="text" id="event_date" name="event_date" value="<?php echo empty($start_date) ? format_date(time(), 'date_sort') : $start_date; ?>" />
+		<span class="pf-note">Start</span><input class="ui-widget-content form_text" type="text" id="p_muid_start" name="event_date" value="<?php echo empty($start_date) ? format_date(time(), 'date_sort') : $start_date; ?>" />
 	</div>
 	<div class="pf-element" style="padding-bottom: 25px;">
-		<span class="pf-note">End</span><input class="ui-widget-content form_text" type="text" id="event_enddate" name="event_enddate" value="<?php echo empty($end_date) ? format_date(time(), 'date_sort') : $end_date; ?>" />
+		<span class="pf-note">End</span><input class="ui-widget-content form_text" type="text" id="p_muid_end" name="event_enddate" value="<?php echo empty($end_date) ? format_date(time(), 'date_sort') : $end_date; ?>" />
 	</div>
 	<div class="pf-element">
 		<label><input class="pf-field ui-widget-content" type="radio" name="all_day" value="timeSpan" checked="checked" />Timespan</label>

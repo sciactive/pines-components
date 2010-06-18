@@ -34,7 +34,6 @@ class com_reports extends component {
 
 		$form = new module('com_reports', 'form_hrm', 'right');
 		$module = new module('com_reports', 'report_attendance', 'content');
-
 		if (!isset($employee)) {
 			$module->employees = $pines->entity_manager->get_entities(array('class' => com_hrm_employee), array('&', 'tag' => array('com_hrm', 'employee')));
 			foreach ($module->employees as $key => &$cur_employee) {

@@ -20,8 +20,8 @@ $pines->com_jstree->load();
 	// <![CDATA[
 	pines(function(){
 		// Group Tree
-		var location = $("#assign_dialog [name=location]");
-		$("#location_tree").tree({
+		var location = $("#p_muid_assign_dialog [name=location]");
+		$("#p_muid_location_tree").tree({
 			rules : {
 				multiple : false
 			},
@@ -42,7 +42,7 @@ $pines->com_jstree->load();
 			}
 		});
 
-		var assign_dialog = $("#assign_dialog");
+		var assign_dialog = $("#p_muid_assign_dialog");
 
 		assign_dialog.find("form").submit(function(){
 			assign_dialog.dialog('option', 'buttons').Done();
@@ -117,11 +117,11 @@ $pines->com_jstree->load();
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
-		$("#cashcount_grid").pgrid(cur_options);
+		$("#p_muid_grid").pgrid(cur_options);
 	});
 	// ]]>
 </script>
-<table id="cashcount_grid">
+<table id="p_muid_grid">
 	<thead>
 		<tr>
 			<th>ID</th>
@@ -165,7 +165,7 @@ $pines->com_jstree->load();
 	<?php } ?>
 	</tbody>
 </table>
-<div id="assign_dialog" title="Assign a Cash Count" style="display: none;">
+<div id="p_muid_assign_dialog" title="Assign a Cash Count" style="display: none;">
 	<div class="pf-element">
 		<label>
 			<span class="pf-label">Count Type</span>
@@ -178,6 +178,6 @@ $pines->com_jstree->load();
 		</label>
 	</div>
 	<br />
-	<div id="location_tree"></div>
+	<div id="p_muid_location_tree"></div>
 	<input type="hidden" name="location" />
 </div>

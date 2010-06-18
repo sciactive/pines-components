@@ -24,62 +24,62 @@ if ($this->entity->status == 'quoted') {
 ?>
 <style type="text/css">
 	/* <![CDATA[ */
-	#receipt_sale .data_col .name {
+	#p_muid_receipt .data_col .name {
 		font-weight: bold;
 	}
-	#receipt_sale .left_side {
+	#p_muid_receipt .left_side {
 		margin-bottom: 10px;
 		float: left;
 		clear: left;
 	}
-	#receipt_sale .right_side {
+	#p_muid_receipt .right_side {
 		margin-bottom: 10px;
 		float: right;
 		clear: right;
 	}
-	#receipt_sale .barcode h1 {
+	#p_muid_receipt .barcode h1 {
 		margin-bottom: 0px;
 		padding-right: 15px;
 		text-align: right;
 	}
-	#receipt_sale .barcode img {
+	#p_muid_receipt .barcode img {
 		margin-top: 0px;
 	}
-	#receipt_sale .right_text {
+	#p_muid_receipt .right_text {
 		text-align: right;
 	}
-	#receipt_sale .left_side div, #receipt_sale .right_side div {
+	#p_muid_receipt .left_side div, #p_muid_receipt .right_side div {
 		float: left;
 	}
-	#receipt_sale .left_side .data_col, #receipt_sale .right_side .data_col {
+	#p_muid_receipt .left_side .data_col, #p_muid_receipt .right_side .data_col {
 		float: left;
 		margin-left: 10px;
 		padding-right: 15px;
 	}
-	#receipt_sale .left_side span, #receipt_sale .right_side span {
+	#p_muid_receipt .left_side span, #p_muid_receipt .right_side span {
 		display: block;
 	}
-	#receipt_sale .location .aligner, #receipt_sale .customer .aligner {
+	#p_muid_receipt .location .aligner, #p_muid_receipt .customer .aligner {
 		width: 55px;
 	}
-	#receipt_sale #item_list {
+	#p_muid_receipt #p_muid_item_list {
 		text-align: left;
 		border-bottom: 1px solid black;
 		border-collapse: collapse;
 	}
-	#receipt_sale #item_list th {
+	#p_muid_receipt #p_muid_item_list th {
 		border-bottom: 1px solid black;
 		padding: 2px;
 	}
-	#receipt_sale #item_list tr td p {
+	#p_muid_receipt #p_muid_item_list tr td p {
 		margin: 0;
 	}
-	#receipt_sale .receipt_note, #receipt_sale .comments {
+	#p_muid_receipt .receipt_note, #p_muid_receipt .comments {
 		font-size: 75%;
 	}
 	/* ]]> */
 </style>
-<div id="receipt_sale" class="pf-form pf-form-twocol">
+<div id="p_muid_receipt" class="pf-form pf-form-twocol">
 	<?php
 	// Sales rep and sales group entities.
 	$sales_rep = $this->entity->user;
@@ -169,7 +169,7 @@ if ($this->entity->status == 'quoted') {
 	</div>
 <?php } ?>
 	<div class="pf-element pf-full-width left_side">
-		<table id="item_list" width="100%">
+		<table id="p_muid_item_list" width="100%">
 			<thead>
 				<tr>
 					<th>SKU</th>

@@ -15,7 +15,7 @@ $pines->com_jstree->load();
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
-	#cashcount_dates .form_date {
+	#p_muid_form .form_date {
 		width: 80%;
 		text-align: center;
 	}
@@ -24,7 +24,7 @@ $pines->com_jstree->load();
 <script type='text/javascript'>
 	// <![CDATA[
 	pines(function(){
-		$("#cashcount_dates [name=start_date], #cashcount_dates [name=end_date]").datepicker({
+		$("#p_muid_form [name=start_date], #p_muid_form [name=end_date]").datepicker({
 			dateFormat: "yy-mm-dd",
 			changeMonth: true,
 			changeYear: true,
@@ -32,8 +32,8 @@ $pines->com_jstree->load();
 			selectOtherMonths: true
 		});
 		// Location Tree
-		var location = $("#cashcount_dates [name=location]");
-		$("#cashcount_dates div.location_tree").tree({
+		var location = $("#p_muid_form [name=location]");
+		$("#p_muid_form div.location_tree").tree({
 			rules : {
 				multiple : false
 			},
@@ -57,7 +57,7 @@ $pines->com_jstree->load();
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="cashcount_dates" action="<?php echo htmlentities(pines_url('com_sales', 'cashcount/list')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_sales', 'cashcount/list')); ?>">
 	<div class="pf-element location_tree" style="padding-bottom: 0px;"></div>
 	<div class="pf-element" style="padding-bottom: 0px;">
 		<span class="pf-note">Start</span>

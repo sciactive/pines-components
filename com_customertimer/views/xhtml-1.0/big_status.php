@@ -14,7 +14,7 @@ $this->title = 'Customer Timer Status';
 ?>
 <style type="text/css">
 	/* <![CDATA[ */
-	#customer_status {
+	#p_muid_customer_status {
 		position: fixed;
 		top: 0;
 		bottom: 0;
@@ -23,7 +23,7 @@ $this->title = 'Customer Timer Status';
 		z-index: 1000;
 		background-color: white;
 	}
-	#customer_status > div {
+	#p_muid_customer_status > div {
 		position: absolute;
 		display: table;
 		top: 0;
@@ -31,21 +31,21 @@ $this->title = 'Customer Timer Status';
 		height: 100%;
 		width: 100%;
 	}
-	#customer_status > div > div {
+	#p_muid_customer_status > div > div {
 		display: table-cell;
 		vertical-align: middle;
 		text-align: center;
 		font-size: 10em;
 	}
-	#customer_status > div.status_ok {
+	#p_muid_customer_status > div.status_ok {
 		background-color: darkgreen;
 		color: green;
 	}
-	#customer_status > div.status_warning {
+	#p_muid_customer_status > div.status_warning {
 		background-color: darkgoldenrod;
 		color: goldenrod;
 	}
-	#customer_status > div.status_critical {
+	#p_muid_customer_status > div.status_critical {
 		background-color: darkred;
 		color: red;
 	}
@@ -56,7 +56,7 @@ $this->title = 'Customer Timer Status';
 	var customer_status;
 
 	pines(function(){
-		customer_status = $("#customer_status");
+		customer_status = $("#p_muid_customer_status");
 		update_status();
 	});
 
@@ -88,4 +88,4 @@ $this->title = 'Customer Timer Status';
 	}
 	// ]]>
 </script>
-<div id="customer_status">Loading, please wait...</div>
+<div id="p_muid_customer_status">Loading, please wait...</div>

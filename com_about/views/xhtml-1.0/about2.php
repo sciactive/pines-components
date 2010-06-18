@@ -15,7 +15,7 @@ $this->note = "Version {$pines->info->version}";
 ?>
 <style type="text/css">
 	/* <![CDATA[ */
-	#com_about_buttons {
+	#p_muid_buttons {
 		float: right;
 	}
 	/* ]]> */
@@ -25,7 +25,7 @@ $this->note = "Version {$pines->info->version}";
 	pines(function(){
 		if (!$.fn.buttonset)
 			return;
-		$("#com_about_buttons").buttonset().children("button").button();
+		$("#p_muid_buttons").buttonset().children("button").button();
 	});
 	// ]]>
 </script>
@@ -50,7 +50,7 @@ admin can choose whatever database system he uses, even flat files, and all the
 components which use an entity manager (the database abstraction layer) will
 work.
 </p>
-<p id="com_about_buttons">
+<p id="p_muid_buttons">
 	<button type="button" onclick="window.open('http://sciactive.com/');">SciActive</button>
 	<button type="button" onclick="window.open('http://sourceforge.net/projects/pines/');">Project Page</button>
 	<button type="button" onclick="window.open('http://pines.sourceforge.net/pines-docs/');">API Documentation</button>

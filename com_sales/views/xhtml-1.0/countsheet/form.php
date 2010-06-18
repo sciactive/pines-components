@@ -16,9 +16,9 @@ $pines->com_pgrid->load();
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-		var entries = $("#countsheet_details input[name=entries]");
-		var entries_table = $("#entries_table");
-		var entry_counter = $("#entry_counter").val();
+		var entries = $("#p_muid_form input[name=entries]");
+		var entries_table = $("#p_muid_entries_table");
+		var entry_counter = $("#p_muid_entry_counter").val();
 		<?php if ( $this->entity->final ) { ?>
 		entries_table.pgrid({
 			pgrid_view_height: "360px",
@@ -132,7 +132,7 @@ $pines->com_pgrid->load();
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="countsheet_details" action="<?php echo htmlentities(pines_url('com_sales', 'countsheet/save')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_sales', 'countsheet/save')); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 		<?php if (isset($this->entity->user)) { ?>
@@ -156,7 +156,7 @@ $pines->com_pgrid->load();
 	</div>
 	<div class="pf-element pf-full-width">
 		<div class="pf-field">
-			<table id="entries_table">
+			<table id="p_muid_entries_table">
 				<thead>
 					<tr>
 						<th>Serial Number / SKU</th>
@@ -185,9 +185,9 @@ $pines->com_pgrid->load();
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } if (!$this->entity->final) { ?>
 		<input type="hidden" name="entries" value="" />
-		<input type="hidden" name="save" value="" />
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" onclick="$('#countsheet_details input[name=save]').val('save');" />
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Commit" onclick="$('#countsheet_details input[name=save]').val('commit');" />
+		<input type="hidden" id="p_muid_save" name="save" value="" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" onclick="$('#p_muid_save').val('save');" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Commit" onclick="$('#p_muid_save').val('commit');" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'countsheet/list')); ?>');" value="Cancel" />
 		<?php } else { ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'countsheet/list')); ?>');" value="&laquo; Close" />

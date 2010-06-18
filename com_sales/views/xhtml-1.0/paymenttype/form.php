@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Payment Type' : 'Editing ['.htmlentities($this->entity->name).']';
 $this->note = 'Provide payment type details in this form.';
 ?>
-<form class="pf-form" method="post" id="payment_type_details" action="<?php echo htmlentities(pines_url('com_sales', 'paymenttype/save')); ?>">
+<form class="pf-form" method="post" action="<?php echo htmlentities(pines_url('com_sales', 'paymenttype/save')); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 		<?php if (isset($this->entity->user)) { ?>

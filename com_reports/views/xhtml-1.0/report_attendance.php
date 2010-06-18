@@ -17,7 +17,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
-	#timeclock_grid tr.total td {
+	#p_muid_grid tr.total td {
 		font-weight: bold;
 	}
 	/* ]]> */
@@ -61,12 +61,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
 		cur_options.pgrid_sort_col = false;
-		$("#timeclock_grid").pgrid(cur_options);
+		$("#p_muid_grid").pgrid(cur_options);
 	});
 	// ]]>
 </script>
 <?php if (isset($this->employees)) { ?>
-<table id="timeclock_grid">
+<table id="p_muid_grid">
 	<thead>
 		<tr>
 			<th>Employee</th>
@@ -129,8 +129,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		</tr>
 	</tbody>
 </table>
-<?php } else if (isset($this->employee)) { ?>
-<table id="timeclock_grid">
+<?php } elseif (isset($this->employee)) { ?>
+<table id="p_muid_grid">
 	<thead>
 		<tr>
 			<th>Local Time</th>

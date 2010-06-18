@@ -17,8 +17,8 @@ $pines->com_jstree->load();
 	// <![CDATA[
 	pines(function(){
 		// Location Tree
-		var location = $("#mail_details [name=location]");
-		$("#mail_details .location_tree").tree({
+		var location = $("#p_muid_form [name=location]");
+		$("#p_muid_form .location_tree").tree({
 			rules : {
 				multiple : false
 			},
@@ -42,7 +42,7 @@ $pines->com_jstree->load();
 	});
 	// ]]>
 </script>
-<form class="pf-form" id="mail_details" method="post" action="<?php echo htmlentities(pines_url('com_newsletter', 'send')); ?>">
+<form class="pf-form" id="p_muid_form" method="post" action="<?php echo htmlentities(pines_url('com_newsletter', 'send')); ?>">
 	<div class="pf-element">
 		<label><span class="pf-label">From Address</span>
 		<input class="pf-field ui-widget-content" type="text" name="from" size="24" value="<?php echo htmlentities($pines->config->com_newsletter->default_from); ?>" /></label>

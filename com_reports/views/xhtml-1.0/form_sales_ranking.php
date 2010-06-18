@@ -17,7 +17,7 @@ $pines->com_jstree->load();
 <script type='text/javascript'>
 	// <![CDATA[
 	pines(function(){
-		$("#salesrank_details [name=start], #salesrank_details [name=end]").datepicker({
+		$("#p_muid_form [name=start], #p_muid_form [name=end]").datepicker({
 			dateFormat: "yy-mm-dd",
 			changeMonth: true,
 			changeYear: true,
@@ -25,8 +25,8 @@ $pines->com_jstree->load();
 			selectOtherMonths: true
 		});
 		// Loction Tree
-		var top_location = $("#salesrank_details [name=top_location]");
-		$("#salesrank_details .location_tree").tree({
+		var top_location = $("#p_muid_form [name=top_location]");
+		$("#p_muid_form .location_tree").tree({
 			rules : {
 				multiple : false
 			},
@@ -49,8 +49,8 @@ $pines->com_jstree->load();
 		});
 		
 		// Loction Tree
-		var location = $("#salesrank_details [name=location]");
-		$("#salesrank_details .goals_tree").tree({
+		var location = $("#p_muid_form [name=location]");
+		$("#p_muid_form .goals_tree").tree({
 			rules : {
 				multiple : false
 			},
@@ -68,9 +68,9 @@ $pines->com_jstree->load();
 					location.val(selected_id);
 					<?php foreach ($this->employees as $cur_employee) { ?>
 					if (selected_id == "<?php echo $cur_employee->user_account->group->guid; ?>")
-						$("#salesrank_details .goal_<?php echo $cur_employee->guid; ?>").show();
+						$("#p_muid_form .goal_<?php echo $cur_employee->guid; ?>").show();
 					else
-						$("#salesrank_details .goal_<?php echo $cur_employee->guid; ?>").hide();
+						$("#p_muid_form .goal_<?php echo $cur_employee->guid; ?>").hide();
 					<?php } ?>
 				},
 				check_move: function() {
@@ -82,13 +82,13 @@ $pines->com_jstree->load();
 		pines.com_reports_update_goals = function () {
 			<?php foreach ($this->employees as $cur_employee) { ?>
 			if (location.val() == "<?php echo $cur_employee->user_account->group->guid; ?>")
-				$("#salesrank_details [name=goals[<?php echo $cur_employee->guid; ?>]]").val($("#salesrank_details [name=goals_updater]").val());
+				$("#p_muid_form [name=goals[<?php echo $cur_employee->guid; ?>]]").val($("#p_muid_form [name=goals_updater]").val());
 			<?php } ?>
 		}
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="salesrank_details" action="<?php echo htmlentities(pines_url('com_reports', 'savesalesranking')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_reports', 'savesalesranking')); ?>">
 	<div class="pf-element">
 		<label><span class="pf-label">Ranking Name</span>
 		<input class="pf-field ui-widget-content" type="text" name="ranking_name" value="<?php echo $this->entity->name; ?>" /></label>

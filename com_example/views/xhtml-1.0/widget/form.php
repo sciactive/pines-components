@@ -19,9 +19,9 @@ $pines->com_pgrid->load();
 	// <![CDATA[
 	pines(function(){
 		// Attributes
-		var attributes = $("#tab_attributes input[name=attributes]");
-		var attributes_table = $("#tab_attributes .attributes_table");
-		var attribute_dialog = $("#tab_attributes .attribute_dialog");
+		var attributes = $("#p_muid_tab_attributes input[name=attributes]");
+		var attributes_table = $("#p_muid_tab_attributes .attributes_table");
+		var attribute_dialog = $("#p_muid_tab_attributes .attribute_dialog");
 
 		attributes_table.pgrid({
 			pgrid_paginate: false,
@@ -84,17 +84,17 @@ $pines->com_pgrid->load();
 
 		update_attributes();
 
-		$("#widget_tabs").tabs();
+		$("#p_muid_widget_tabs").tabs();
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="widget_details" action="<?php echo htmlentities(pines_url('com_example', 'widget/save')); ?>">
-	<div id="widget_tabs" style="clear: both;">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_example', 'widget/save')); ?>">
+	<div id="p_muid_widget_tabs" style="clear: both;">
 		<ul>
-			<li><a href="#tab_general">General</a></li>
-			<li><a href="#tab_attributes">Attributes</a></li>
+			<li><a href="#p_muid_tab_general">General</a></li>
+			<li><a href="#p_muid_tab_attributes">Attributes</a></li>
 		</ul>
-		<div id="tab_general">
+		<div id="p_muid_tab_general">
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
 				<?php if (isset($this->entity->user)) { ?>
@@ -123,7 +123,7 @@ $pines->com_pgrid->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="tab_attributes">
+		<div id="p_muid_tab_attributes">
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Attributes</span>
 				<div class="pf-group">

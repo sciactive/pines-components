@@ -12,13 +12,13 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = "Packaging results for {$this->entity->name}.";
 ?>
-<div class="pf-form" id="package_result">
+<div class="pf-form" id="p_muid_package_result">
 	<?php if ($this->result) { ?>
 	<script type="text/javascript">
 		// <![CDATA[
 		pines(function(){
 			if ($.fn.button)
-				$("#package_result a").button();
+				$("#p_muid_package_result a").button();
 		});
 		// ]]>
 	</script>

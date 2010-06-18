@@ -81,7 +81,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
-		var sale_grid = $("#sale_grid").pgrid(cur_options);
+		var sale_grid = $("#p_muid_grid").pgrid(cur_options);
 
 		sale_grid.date_form = function(){
 			$.ajax({
@@ -166,7 +166,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	});
 	// ]]>
 </script>
-<table id="sale_grid">
+<table id="p_muid_grid">
 	<thead>
 		<tr>
 			<th>ID</th>

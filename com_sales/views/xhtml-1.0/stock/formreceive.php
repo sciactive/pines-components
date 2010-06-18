@@ -16,7 +16,7 @@ if (!gatekeeper('com_sales/receivelocation'))
 $pines->com_pgrid->load();
 $pines->com_jstree->load();
 ?>
-<form class="pf-form" method="post" id="receive_inventory" action="<?php echo htmlentities(pines_url('com_sales', 'stock/receive')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_sales', 'stock/receive')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
 		var products;
@@ -30,10 +30,10 @@ $pines->com_jstree->load();
 		}
 		
 		pines(function(){
-			products = $("#products");
-			products_table = $("#products_table");
-			product_dialog = $("#product_dialog");
-			product_button = $("#add_product");
+			products = $("#p_muid_products");
+			products_table = $("#p_muid_products_table");
+			product_dialog = $("#p_muid_product_dialog");
+			product_button = $("#p_muid_add_product");
 
 			products_table.pgrid({
 				pgrid_paginate: false,
@@ -180,7 +180,7 @@ $pines->com_jstree->load();
 				update_products();
 			};
 			// Category Grid
-			var category_grid = $("#category_grid").pgrid({
+			var category_grid = $("#p_muid_category_grid").pgrid({
 				pgrid_hidden_cols: [1],
 				pgrid_sort_col: 1,
 				pgrid_sort_ord: "asc",
@@ -228,7 +228,7 @@ $pines->com_jstree->load();
 				}
 			});
 			// Category Dialog
-			var category_dialog = $("#category_dialog").dialog({
+			var category_dialog = $("#p_muid_category_dialog").dialog({
 				bgiframe: true,
 				autoOpen: false,
 				modal: true,
@@ -238,7 +238,7 @@ $pines->com_jstree->load();
 				}
 			});
 			// Category Products Grid
-			var category_products_grid = $("#category_products_grid").pgrid({
+			var category_products_grid = $("#p_muid_category_products_grid").pgrid({
 				pgrid_sort_col: 1,
 				pgrid_sort_ord: "asc",
 				pgrid_view_height: "300px",
@@ -248,7 +248,7 @@ $pines->com_jstree->load();
 				}
 			});
 			// Category Products Dialog
-			var category_products_dialog = $("#category_products_dialog").dialog({
+			var category_products_dialog = $("#p_muid_category_products_dialog").dialog({
 				bgiframe: true,
 				autoOpen: false,
 				modal: true,
@@ -280,8 +280,8 @@ $pines->com_jstree->load();
 		// <![CDATA[
 		pines(function(){
 			// Location Tree
-			var location = $("#receive_inventory [name=location]");
-			$("#receive_inventory .location_tree").tree({
+			var location = $("#p_muid_form [name=location]");
+			$("#p_muid_form .location_tree").tree({
 				rules : {
 					multiple : false
 				},
@@ -313,8 +313,8 @@ $pines->com_jstree->load();
 		<input type="hidden" name="location" value="<?php echo (!isset($_SESSION['user']->group) ? '' : $_SESSION['user']->group->guid); ?>" />
 	</div>
 	<?php } ?>
-	<div id="category_dialog" title="Categories" style="display: none;">
-		<table id="category_grid">
+	<div id="p_muid_category_dialog" title="Categories" style="display: none;">
+		<table id="p_muid_category_grid">
 			<thead>
 				<tr>
 					<th>Order</th>
@@ -334,8 +334,8 @@ $pines->com_jstree->load();
 		</table>
 		<br class="pf-clearing" />
 	</div>
-	<div id="category_products_dialog" title="Products" style="display: none;">
-		<table id="category_products_grid">
+	<div id="p_muid_category_products_dialog" title="Products" style="display: none;">
+		<table id="p_muid_category_products_grid">
 			<thead>
 				<tr>
 					<th>Name</th>
@@ -352,7 +352,7 @@ $pines->com_jstree->load();
 		<span class="pf-label">Products</span>
 		<div class="pf-group">
 			<div class="pf-field">
-				<table id="products_table">
+				<table id="p_muid_products_table">
 					<thead>
 						<tr>
 							<th>Product Code</th>
@@ -365,7 +365,7 @@ $pines->com_jstree->load();
 					</tbody>
 				</table>
 			</div>
-			<input type="hidden" id="products" name="products" size="24" />
+			<input type="hidden" id="p_muid_products" name="products" size="24" />
 		</div>
 	</div>
 	<div class="pf-element pf-buttons">

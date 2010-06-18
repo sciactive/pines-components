@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Category' : 'Editing ['.htmlentities($this->entity->name).']';
 $this->note = 'Provide category details in this form.';
 ?>
-<form class="pf-form" method="post" id="category_details" action="<?php echo htmlentities(pines_url('com_content', 'category/save')); ?>">
+<form class="pf-form" method="post" action="<?php echo htmlentities(pines_url('com_content', 'category/save')); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 		<?php if (isset($this->entity->user)) { ?>

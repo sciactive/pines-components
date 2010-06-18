@@ -13,10 +13,10 @@ defined('P_RUN') or die('Direct access prohibited');
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
-	#date_details {
+	#p_muid_form {
 		padding-left: 25px;
 	}
-	#date_details .form_date {
+	#p_muid_form .form_date {
 		width: 80%;
 		text-align: center;
 	}
@@ -25,14 +25,14 @@ defined('P_RUN') or die('Direct access prohibited');
 <script type='text/javascript'>
 // <![CDATA[
 	pines(function(){
-		$("#start_date").datepicker({
+		$("#p_muid_start_date").datepicker({
 			dateFormat: "yy-mm-dd",
 			changeMonth: true,
 			changeYear: true,
 			showOtherMonths: true,
 			selectOtherMonths: true
 		});
-		$("#end_date").datepicker({
+		$("#p_muid_end_date").datepicker({
 			dateFormat: "yy-mm-dd",
 			changeMonth: true,
 			changeYear: true,
@@ -40,34 +40,34 @@ defined('P_RUN') or die('Direct access prohibited');
 			selectOtherMonths: true
 		});
 
-		var timespan = $("#date_details div.timespan");
-		$("#date_details [name=all_time]").change(function(){
+		var timespan = $("#p_muid_form div.timespan");
+		$("#p_muid_form [name=all_time]").change(function(){
 			var all_time = $(this);
 			if (all_time.is(":checked") && all_time.val() == "timespan") {
 				timespan.removeClass("ui-priority-secondary");
-				$("#date_details .form_input").removeAttr("disabled");
-				$("#date_details [name=timespan_saver]").val('timespan');
+				$("#p_muid_form .form_input").removeAttr("disabled");
+				$("#p_muid_form [name=timespan_saver]").val('timespan');
 			} else if (all_time.is(":checked") && all_time.val() == "alltime") {
 				timespan.addClass("ui-priority-secondary");
-				$("#date_details .form_input").attr("disabled", "disabled");
-				$("#date_details [name=timespan_saver]").val('alltime');
+				$("#p_muid_form .form_input").attr("disabled", "disabled");
+				$("#p_muid_form [name=timespan_saver]").val('alltime');
 			}
 		}).change();
 
 	});
 // ]]>
 </script>
-<form class="pf-form" id="date_details" action="">
+<form class="pf-form" id="p_muid_form" action="">
 	<div class="pf-element">
 		<label><input class="pf-field ui-widget-content" type="radio" name="all_time" value="alltime" <?php echo $this->all_time ? 'checked="checked"' : ''; ?>/>Entire History</label>
 		<label><input class="pf-field ui-widget-content" type="radio" name="all_time" value="timespan" <?php echo !$this->all_time ? 'checked="checked"' : ''; ?>/>Timespan</label>
 	</div>
 	<div class="timespan">
 		<div class="pf-element">
-			<span class="pf-note">Start</span><input class="ui-widget-content form_date" type="text" id="start_date" name="start_date" value="<?php echo isset($this->start_date) ? htmlentities($this->start_date) : ''; ?>" />
+			<span class="pf-note">Start</span><input class="ui-widget-content form_date" type="text" id="p_muid_start_date" name="start_date" value="<?php echo isset($this->start_date) ? htmlentities($this->start_date) : ''; ?>" />
 		</div>
 		<div class="pf-element">
-			<span class="pf-note">End</span><input class="ui-widget-content form_date" type="text" id="end_date" name="end_date" value="<?php echo isset($this->end_date) ? htmlentities($this->end_date) : ''; ?>" />
+			<span class="pf-note">End</span><input class="ui-widget-content form_date" type="text" id="p_muid_end_date" name="end_date" value="<?php echo isset($this->end_date) ? htmlentities($this->end_date) : ''; ?>" />
 		</div>
 		<input type="hidden" name="timespan_saver" value="<?php echo $this->all_time; ?>" />
 	</div>

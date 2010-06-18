@@ -18,9 +18,9 @@ $pines->com_pgrid->load();
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-		var addresses = $("#addresses");
-		var addresses_table = $("#addresses_table");
-		var address_dialog = $("#address_dialog");
+		var addresses = $("#p_muid_addresses");
+		var addresses_table = $("#p_muid_addresses_table");
+		var address_dialog = $("#p_muid_address_dialog");
 
 		addresses_table.pgrid({
 			pgrid_paginate: false,
@@ -55,12 +55,12 @@ $pines->com_pgrid->load();
 			width: 600,
 			buttons: {
 				"Done": function() {
-					var cur_address_type = $("#cur_address_type").val();
-					var cur_address_addr1 = $("#cur_address_addr1").val();
-					var cur_address_addr2 = $("#cur_address_addr2").val();
-					var cur_address_city = $("#cur_address_city").val();
-					var cur_address_state = $("#cur_address_state").val();
-					var cur_address_zip = $("#cur_address_zip").val();
+					var cur_address_type = $("#p_muid_cur_address_type").val();
+					var cur_address_addr1 = $("#p_muid_cur_address_addr1").val();
+					var cur_address_addr2 = $("#p_muid_cur_address_addr2").val();
+					var cur_address_city = $("#p_muid_cur_address_city").val();
+					var cur_address_state = $("#p_muid_cur_address_state").val();
+					var cur_address_zip = $("#p_muid_cur_address_zip").val();
 					if (cur_address_type == "" || cur_address_addr1 == "") {
 						alert("Please provide a name and a street address.");
 						return;
@@ -84,16 +84,16 @@ $pines->com_pgrid->load();
 		});
 
 		function update_addresses() {
-			$("#cur_address_type, #cur_address_addr1, #cur_address_addr2, #cur_address_city, #cur_address_state, #cur_address_zip").val("");
+			$("#p_muid_cur_address_type, #p_muid_cur_address_addr1, #p_muid_cur_address_addr2, #p_muid_cur_address_city, #p_muid_cur_address_state, #p_muid_cur_address_zip").val("");
 			addresses.val(JSON.stringify(addresses_table.pgrid_get_all_rows().pgrid_export_rows()));
 		}
 
 		update_addresses();
 
 		// Attributes
-		var attributes = $("#tab_attributes input[name=attributes]");
-		var attributes_table = $("#tab_attributes .attributes_table");
-		var attribute_dialog = $("#tab_attributes .attribute_dialog");
+		var attributes = $("#p_muid_tab_attributes input[name=attributes]");
+		var attributes_table = $("#p_muid_tab_attributes .attributes_table");
+		var attribute_dialog = $("#p_muid_tab_attributes .attribute_dialog");
 
 		attributes_table.pgrid({
 			pgrid_paginate: false,
@@ -156,19 +156,19 @@ $pines->com_pgrid->load();
 
 		update_attributes();
 
-		$("#employee_tabs").tabs();
+		$("#p_muid_employee_tabs").tabs();
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="employee_details" action="<?php echo htmlentities(pines_url('com_hrm', 'saveemployee')); ?>">
-	<div id="employee_tabs" style="clear: both;">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_hrm', 'saveemployee')); ?>">
+	<div id="p_muid_employee_tabs" style="clear: both;">
 		<ul>
-			<li><a href="#tab_general">General</a></li>
-			<li><a href="#tab_user_account">User Account</a></li>
-			<li><a href="#tab_addresses">Addresses</a></li>
-			<li><a href="#tab_attributes">Attributes</a></li>
+			<li><a href="#p_muid_tab_general">General</a></li>
+			<li><a href="#p_muid_tab_user_account">User Account</a></li>
+			<li><a href="#p_muid_tab_addresses">Addresses</a></li>
+			<li><a href="#p_muid_tab_attributes">Attributes</a></li>
 		</ul>
-		<div id="tab_general">
+		<div id="p_muid_tab_general">
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
 				<?php if (isset($this->entity->user)) { ?>
@@ -251,7 +251,7 @@ $pines->com_pgrid->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="tab_user_account">
+		<div id="p_muid_tab_user_account">
 			<div class="pf-element pf-heading">
 				<p>Attach a user to this employee.</p>
 			</div>
@@ -275,12 +275,12 @@ $pines->com_pgrid->load();
 				<script type="text/javascript">
 					// <![CDATA[
 					pines(function(){
-						var template = $("#employee_details [name=user_template]");
-						var pgroupselects = $("#employee_details .user_template_group");
+						var template = $("#p_muid_form [name=user_template]");
+						var pgroupselects = $("#p_muid_form .user_template_group");
 						template.change(function(){
 							pgroupselects.hide();
 							if (this.value != "null")
-								$("#employee_details [name=user_template_group_"+this.value+"]").show();
+								$("#p_muid_form [name=user_template_group_"+this.value+"]").show();
 							return true;
 						});
 						pgroupselects.hide();
@@ -317,9 +317,9 @@ $pines->com_pgrid->load();
 				<script type="text/javascript">
 					// <![CDATA[
 					pines(function(){
-						var password = $("#employee_details [name=user_template_password]");
-						var password2 = $("#employee_details [name=user_template_password2]");
-						$("#employee_details").submit(function(){
+						var password = $("#p_muid_form [name=user_template_password]");
+						var password2 = $("#p_muid_form [name=user_template_password2]");
+						$("#p_muid_form").submit(function(){
 							if (password.val() != password2.val()) {
 								alert("Your passwords do not match.");
 								return false;
@@ -340,7 +340,7 @@ $pines->com_pgrid->load();
 			</fieldset>
 			<br class="pf-clearing" />
 		</div>
-		<div id="tab_addresses">
+		<div id="p_muid_tab_addresses">
 			<div class="pf-element pf-heading">
 				<h1>Main Address</h1>
 			</div>
@@ -348,9 +348,9 @@ $pines->com_pgrid->load();
 				<script type="text/javascript">
 					// <![CDATA[
 					pines(function(){
-						var address_us = $("#address_us");
-						var address_international = $("#address_international");
-						$("#employee_details [name=address_type]").change(function(){
+						var address_us = $("#p_muid_address_us");
+						var address_international = $("#p_muid_address_international");
+						$("#p_muid_form [name=address_type]").change(function(){
 							var address_type = $(this);
 							if (address_type.is(":checked") && address_type.val() == "us") {
 								address_us.show();
@@ -367,7 +367,7 @@ $pines->com_pgrid->load();
 				<label><input class="pf-field ui-widget-content" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
 				<label><input class="pf-field ui-widget-content" type="radio" name="address_type" value="international"<?php echo $this->entity->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
 			</div>
-			<div id="address_us" style="display: none;">
+			<div id="p_muid_address_us" style="display: none;">
 				<div class="pf-element">
 					<label><span class="pf-label">Address 1</span>
 						<input class="pf-field ui-widget-content" type="text" name="address_1" size="24" value="<?php echo $this->entity->address_1; ?>" /></label>
@@ -443,7 +443,7 @@ $pines->com_pgrid->load();
 						<input class="pf-field ui-widget-content" type="text" name="zip" size="24" value="<?php echo $this->entity->zip; ?>" /></label>
 				</div>
 			</div>
-			<div id="address_international" style="display: none;">
+			<div id="p_muid_address_international" style="display: none;">
 				<div class="pf-element pf-full-width">
 				<label><span class="pf-label">Address</span>
 					<span class="pf-field pf-full-width"><textarea class="ui-widget-content" style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo $this->entity->address_international; ?></textarea></span></label>
@@ -455,7 +455,7 @@ $pines->com_pgrid->load();
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Additional Addresses</span>
 				<div class="pf-group">
-					<table id="addresses_table">
+					<table id="p_muid_addresses_table">
 						<thead>
 							<tr>
 								<th>Type</th>
@@ -479,35 +479,35 @@ $pines->com_pgrid->load();
 							<?php } ?>
 						</tbody>
 					</table>
-					<input type="hidden" id="addresses" name="addresses" size="24" />
+					<input type="hidden" id="p_muid_addresses" name="addresses" size="24" />
 				</div>
 			</div>
-			<div id="address_dialog" title="Add an Address">
+			<div id="p_muid_address_dialog" title="Add an Address">
 				<div class="pf-form">
 					<div class="pf-element">
 						<label>
 							<span class="pf-label">Type</span>
-							<input class="pf-field ui-widget-content" type="text" size="24" name="cur_address_type" id="cur_address_type" />
+							<input class="pf-field ui-widget-content" type="text" size="24" name="cur_address_type" id="p_muid_cur_address_type" />
 						</label>
 					</div>
 					<div class="pf-element">
 						<label>
 							<span class="pf-label">Address 1</span>
-							<input class="pf-field ui-widget-content" type="text" size="24" name="cur_address_addr1" id="cur_address_addr1" />
+							<input class="pf-field ui-widget-content" type="text" size="24" name="cur_address_addr1" id="p_muid_cur_address_addr1" />
 						</label>
 					</div>
 					<div class="pf-element">
 						<label>
 							<span class="pf-label">Address 2</span>
-							<input class="pf-field ui-widget-content" type="text" size="24" name="cur_address_addr2" id="cur_address_addr2" />
+							<input class="pf-field ui-widget-content" type="text" size="24" name="cur_address_addr2" id="p_muid_cur_address_addr2" />
 						</label>
 					</div>
 					<div class="pf-element">
 						<label>
 							<span class="pf-label">City, State, Zip</span>
-							<input class="pf-field ui-widget-content" type="text" size="8" name="cur_address_city" id="cur_address_city" />
-							<input class="pf-field ui-widget-content" type="text" size="2" name="cur_address_state" id="cur_address_state" />
-							<input class="pf-field ui-widget-content" type="text" size="5" name="cur_address_zip" id="cur_address_zip" />
+							<input class="pf-field ui-widget-content" type="text" size="8" name="cur_address_city" id="p_muid_cur_address_city" />
+							<input class="pf-field ui-widget-content" type="text" size="2" name="cur_address_state" id="p_muid_cur_address_state" />
+							<input class="pf-field ui-widget-content" type="text" size="5" name="cur_address_zip" id="p_muid_cur_address_zip" />
 						</label>
 					</div>
 				</div>
@@ -515,7 +515,7 @@ $pines->com_pgrid->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="tab_attributes">
+		<div id="p_muid_tab_attributes">
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Attributes</span>
 				<div class="pf-group">

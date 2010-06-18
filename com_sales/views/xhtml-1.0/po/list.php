@@ -56,12 +56,12 @@ $errors = array();
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
-		$("#po_grid").pgrid(cur_options);
+		$("#p_muid_grid").pgrid(cur_options);
 	});
 
 	// ]]>
 </script>
-<table id="po_grid">
+<table id="p_muid_grid">
 	<thead>
 		<tr>
 			<th>PO Number</th>

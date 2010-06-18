@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
-	#location_details {
+	#p_muid_form {
 		padding-left: 25px;
 	}
 	/* ]]> */
@@ -23,9 +23,9 @@ defined('P_RUN') or die('Direct access prohibited');
 	pines(function(){
 
 		// Location Tree
-		var location = $("#location_details [name=location]");
-		var location_saver = $("#location_details [name=location_saver]");
-		var location_tree = $("#location_details div.location_tree");
+		var location = $("#p_muid_form [name=location]");
+		var location_saver = $("#p_muid_form [name=location_saver]");
+		var location_tree = $("#p_muid_form div.location_tree");
 		var block_change = function() {
 			if (location_saver.val() != 'individual')
 				return false;
@@ -56,7 +56,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			}
 		});
 
-		$("#location_details [name=all_groups]").change(function(){
+		$("#p_muid_form [name=all_groups]").change(function(){
 			var all_groups = $(this);
 			if (all_groups.is(":checked") && all_groups.val() == "individual") {
 				location_tree.removeClass("ui-priority-secondary");
@@ -69,7 +69,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	});
 // ]]>
 </script>
-<form class="pf-form" method="post" id="location_details" action="">
+<form class="pf-form" method="post" id="p_muid_form" action="">
 	<div class="pf-element">
 		<label><input class="pf-field ui-widget-content" type="radio" name="all_groups" value="allGroups" checked="checked" />All Locations</label>
 		<label><input class="pf-field ui-widget-content" type="radio" name="all_groups" value="individual" <?php echo ($this->location != 'all') ? 'checked="checked"' : ''; ?>/>Single Location</label>

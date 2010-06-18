@@ -16,19 +16,19 @@ $this->note = 'Please fill in your account details.';
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-		$("#user_tabs").tabs();
+		$("#p_muid_tabs").tabs();
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="user_details" action="<?php echo htmlentities(pines_url('com_user', 'registeruser')); ?>">
-	<div id="user_tabs" style="clear: both;">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_user', 'registeruser')); ?>">
+	<div id="p_muid_tabs" style="clear: both;">
 		<ul>
-			<li><a href="#tab_general">General</a></li>
+			<li><a href="#p_muid_tab_general">General</a></li>
 			<?php if (in_array('address', $pines->config->com_user->reg_fields)) { ?>
-			<li><a href="#tab_location">Location</a></li>
+			<li><a href="#p_muid_tab_location">Location</a></li>
 			<?php } ?>
 		</ul>
-		<div id="tab_general">
+		<div id="p_muid_tab_general">
 			<?php if (in_array('name', $pines->config->com_user->reg_fields)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Name</span>
@@ -70,14 +70,14 @@ $this->note = 'Please fill in your account details.';
 			<br class="pf-clearing" />
 		</div>
 		<?php if (in_array('address', $pines->config->com_user->reg_fields)) { ?>
-		<div id="tab_location">
+		<div id="p_muid_tab_location">
 			<div class="pf-element">
 				<script type="text/javascript">
 					// <![CDATA[
 					pines(function(){
-						var address_us = $("#address_us");
-						var address_international = $("#address_international");
-						$("#user_details [name=address_type]").change(function(){
+						var address_us = $("#p_muid_address_us");
+						var address_international = $("#p_muid_address_international");
+						$("#p_muid_form [name=address_type]").change(function(){
 							var address_type = $(this);
 							if (address_type.is(":checked") && address_type.val() == "us") {
 								address_us.show();
@@ -94,7 +94,7 @@ $this->note = 'Please fill in your account details.';
 				<label><input class="pf-field ui-widget-content" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
 				<label><input class="pf-field ui-widget-content" type="radio" name="address_type" value="international"<?php echo $this->entity->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
 			</div>
-			<div id="address_us" style="display: none;">
+			<div id="p_muid_address_us" style="display: none;">
 				<div class="pf-element">
 					<label><span class="pf-label">Address 1</span>
 						<input class="pf-field ui-widget-content" type="text" name="address_1" size="24" value="<?php echo $this->entity->address_1; ?>" /></label>
@@ -170,7 +170,7 @@ $this->note = 'Please fill in your account details.';
 						<input class="pf-field ui-widget-content" type="text" name="zip" size="24" value="<?php echo $this->entity->zip; ?>" /></label>
 				</div>
 			</div>
-			<div id="address_international" style="display: none;">
+			<div id="p_muid_address_international" style="display: none;">
 				<div class="pf-element pf-full-width">
 					<label><span class="pf-label">Address</span>
 						<span class="pf-field pf-full-width"><textarea class="ui-widget-content" style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo $this->entity->address_international; ?></textarea></span></label>

@@ -38,7 +38,7 @@ $pines->uploader->load();
 		<h1>Message</h1>
 	</div>
 	<div class="pf-element pf-full-width">
-		<div class="pf-full-width"><textarea rows="3" cols="35" class="ui-widget-content peditor" name="data" id="data" style="width: 100%;"><?php echo htmlentities($this->entity->message); ?></textarea></div>
+		<div class="pf-full-width"><textarea rows="3" cols="35" class="ui-widget-content peditor" name="data" style="width: 100%;"><?php echo htmlentities($this->entity->message); ?></textarea></div>
 	</div>
 	<div class="pf-element pf-heading">
 		<h1>Attachments</h1>

@@ -6,7 +6,6 @@ function help(){
 // Duplicate Event(s)
 function copy(){
 	var events = $("#calendar").fullCalendar('clientEvents');
-	var event_id;
 	var copy_events = new Array();
 	var copy_count = 0;
 	// Find the selected event(s).
@@ -94,7 +93,6 @@ function clear(){
 // Unlink Event(s)
 function unlink(){
 	var events = $("#calendar").fullCalendar('clientEvents');
-	var event_id;
 	var unlink_count = 0;
 	// Find the selected event(s).
 	jQuery.each(events, function(i, val) {
@@ -109,6 +107,5 @@ function unlink(){
 	} else {
 		save_calendar();
 		$("#calendar").fullCalendar('refetchEvents');
-		
 	}
 }

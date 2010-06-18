@@ -17,19 +17,19 @@ $denom_counter = 0;
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
-	#skim_details .amount {
+	#p_muid_form .amount {
 		padding-left: 10px;
 		font-weight: bold;
 	}
-	#skim_details .amt_btn {
+	#p_muid_form .amt_btn {
 		display: inline-block;
 		width: 16px;
 		height: 16px;
 	}
-	#skim_details .entry {
+	#p_muid_form .entry {
 		width: 50px;
 	}
-	#skim_details .total {
+	#p_muid_form .total {
 		border: goldenrod dashed 2px;
 		font-weight: bold;
 		font-size: 18pt;
@@ -42,11 +42,11 @@ $denom_counter = 0;
 		text-align: center;
 	}
 	/* Add and Remove Classes to show recent changes. */
-	#skim_details .added {
+	#p_muid_form .added {
 		border: green solid 1px;
 		color: green;
 	}
-	#skim_details .removed {
+	#p_muid_form .removed {
 		border: red solid 1px;
 		color: red;
 	}
@@ -59,7 +59,7 @@ $denom_counter = 0;
 	
 	pines(function(){
 		// Update the cash count as money is counted.
-		$("#skim_details .entry").change(function(){
+		$("#p_muid_form .entry").change(function(){
 			update_total();
 		}).focus(function(){
 			$(this).select();
@@ -70,49 +70,49 @@ $denom_counter = 0;
 
 	function update_total() {
 		var total_count = 0;
-		$("#skim_details .entry").each(function() {
+		$("#p_muid_form .entry").each(function() {
 			//This looks complicated but it simply multiplies the number of
 			//bills/coins for each denomition by its respective value.
 			//ex: 5 x 0.25 for 5 quarters that have been counted
 			total_count += parseInt($(this).val()) * parseFloat(multiply[$(this).attr("name").replace(/.*(\d).*/, "$1")]);
 			$(this).removeClass('added removed');
 		});
-		$("#total_skim").html(cash_symbol+total_count.toFixed(2));
+		$("#p_muid_total_skim").html(cash_symbol+total_count.toFixed(2));
 	}
 
 	function clear_all() {
 		if (confirm("Clear all entered cash counts?")) {
-			$("#skim_details .entry").each(function() { $(this).val(0); });
+			$("#p_muid_form .entry").each(function() { $(this).val(0); });
 			update_total();
 		}
-		$("#skim_details [name=clear_btn]").blur();
+		$("#p_muid_form [name=clear_btn]").blur();
 	}
 
 	function add_amount(type) {
-		var current = parseInt($("#skim_details [name=count["+type+"]]").val());
-		$("#skim_details [name=count["+type+"]]").val(current+1);
-		$("#skim_details [name=count["+type+"]]").change();
-		$("#skim_details [name=count["+type+"]]").addClass('added');
-		$("#skim_details [name=add_btn["+type+"]]").blur();
+		var current = parseInt($("#p_muid_form [name=count["+type+"]]").val());
+		$("#p_muid_form [name=count["+type+"]]").val(current+1);
+		$("#p_muid_form [name=count["+type+"]]").change();
+		$("#p_muid_form [name=count["+type+"]]").addClass('added');
+		$("#p_muid_form [name=add_btn["+type+"]]").blur();
 	}
 
 	function remove_amount(type) {
-		var current = parseInt($("#skim_details [name=count["+type+"]]").val());
+		var current = parseInt($("#p_muid_form [name=count["+type+"]]").val());
 		if (current > 0) {
-			$("#skim_details [name=count["+type+"]]").val(current-1);
-			$("#skim_details [name=count["+type+"]]").change();
-			$("#skim_details [name=count["+type+"]]").addClass('removed');
+			$("#p_muid_form [name=count["+type+"]]").val(current-1);
+			$("#p_muid_form [name=count["+type+"]]").change();
+			$("#p_muid_form [name=count["+type+"]]").addClass('removed');
 		}
-		$("#skim_details [name=remove_btn["+type+"]]").blur();
+		$("#p_muid_form [name=remove_btn["+type+"]]").blur();
 	}
 
 	function verify() {
 		if (confirm("You will not be able to change this information, are you sure?"))
-			$("#skim_details").submit();
+			$("#p_muid_form").submit();
 	}
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="skim_details" action="<?php echo htmlentities(pines_url('com_sales', 'cashcount/saveskim')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_sales', 'cashcount/saveskim')); ?>">
 	<?php if (!empty($this->entity->cashcount->review_comments)) {?>
 	<div class="pf-element pf-heading">
 		<h1>Reviewer Comments</h1>
@@ -143,7 +143,7 @@ $denom_counter = 0;
 		<div>
 			<div class="total ui-corner-all">
 				<span>Skim Total</span><br/>
-				<span id="total_skim"></span>
+				<span id="p_muid_total_skim"></span>
 			</div>
 		</div>
 	</div>

@@ -63,12 +63,12 @@ foreach($this->groups as $cur_group) {
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
-		$("#group_grid").pgrid(cur_options);
+		$("#p_muid_grid").pgrid(cur_options);
 	});
 	
 	// ]]>
 </script>
-<table id="group_grid">
+<table id="p_muid_grid">
 	<thead>
 		<tr>
 			<th>Groupname</th>

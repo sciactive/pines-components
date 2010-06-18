@@ -23,8 +23,8 @@ defined('P_RUN') or die('Direct access prohibited');
 	// <![CDATA[
 	pines(function(){
 		// Location Tree
-		var location = $("#report_details [name=location]");
-		$("#report_details .location_tree").tree({
+		var location = $("#p_muid_form [name=location]");
+		$("#p_muid_form .location_tree").tree({
 			rules : {
 				multiple : false
 			},
@@ -48,7 +48,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="report_details" action="<?php echo htmlentities(pines_url('com_hrm', 'editcalendar')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_hrm', 'editcalendar')); ?>">
 	<div class="pf-element location_tree"></div>
 	<input type="hidden" name="location" value="<?php echo $this->location; ?>" />
 </form>

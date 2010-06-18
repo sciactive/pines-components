@@ -17,14 +17,14 @@ $pines->com_pgrid->load();
 $pines->com_ptags->load();
 $pines->com_jstree->load();
 ?>
-<form class="pf-form" method="post" id="product_details" action="<?php echo htmlentities(pines_url('com_sales', 'product/save')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_sales', 'product/save')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
 		pines(function(){
-			var vendors = $("#vendors");
-			var vendors_table = $("#vendors_table");
-			var available_vendors_table = $("#available_vendors_table");
-			var vendor_dialog = $("#vendor_dialog");
+			var vendors = $("#p_muid_vendors");
+			var vendors_table = $("#p_muid_vendors_table");
+			var available_vendors_table = $("#p_muid_available_vendors_table");
+			var vendor_dialog = $("#p_muid_vendor_dialog");
 
 			vendors_table.pgrid({
 				pgrid_paginate: false,
@@ -66,8 +66,8 @@ $pines->com_jstree->load();
 				width: 600,
 				buttons: {
 					"Done": function() {
-						var cur_vendor_sku = $("#cur_vendor_sku").val();
-						var cur_vendor_cost = $("#cur_vendor_cost").val();
+						var cur_vendor_sku = $("#p_muid_cur_vendor_sku").val();
+						var cur_vendor_cost = $("#p_muid_cur_vendor_cost").val();
 						var cur_vendor = available_vendors_table.pgrid_get_selected_rows().pgrid_export_rows();
 						if (!cur_vendor[0]) {
 							alert("Please select a vendor.");
@@ -94,26 +94,26 @@ $pines->com_jstree->load();
 
 			function update_vendors() {
 				available_vendors_table.pgrid_get_selected_rows().pgrid_deselect_rows();
-				$("#cur_vendor_sku").val("");
-				$("#cur_vendor_cost").val("");
+				$("#p_muid_cur_vendor_sku").val("");
+				$("#p_muid_cur_vendor_cost").val("");
 				vendors.val(JSON.stringify(vendors_table.pgrid_get_all_rows().pgrid_export_rows()));
 			}
 
-			$("#product_tabs").tabs();
+			$("#p_muid_product_tabs").tabs();
 			update_vendors();
 		});
 		// ]]>
 	</script>
-	<div id="product_tabs" style="clear: both;">
+	<div id="p_muid_product_tabs" style="clear: both;">
 		<ul>
-			<li><a href="#tab_general">General</a></li>
-			<li><a href="#tab_images">Images</a></li>
-			<li><a href="#tab_purchasing">Purchasing</a></li>
-			<li><a href="#tab_pricing">Pricing</a></li>
-			<li><a href="#tab_attributes">Attributes</a></li>
-			<li><a href="#tab_accounting">Accounting</a></li>
+			<li><a href="#p_muid_tab_general">General</a></li>
+			<li><a href="#p_muid_tab_images">Images</a></li>
+			<li><a href="#p_muid_tab_purchasing">Purchasing</a></li>
+			<li><a href="#p_muid_tab_pricing">Pricing</a></li>
+			<li><a href="#p_muid_tab_attributes">Attributes</a></li>
+			<li><a href="#p_muid_tab_accounting">Accounting</a></li>
 		</ul>
-		<div id="tab_general">
+		<div id="p_muid_tab_general">
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
 				<?php if (isset($this->entity->user)) { ?>
@@ -141,10 +141,10 @@ $pines->com_jstree->load();
 				<script type="text/javascript">
 					// <![CDATA[
 					pines(function(){
-						var input = $("#categories");
+						var input = $("#p_muid_categories");
 						var selected_rows = JSON.parse("<?php echo addslashes(json_encode($this->entity->get_categories_guid())); ?>");
 						// Category Grid
-						var category_grid = $("#category_grid").pgrid({
+						var category_grid = $("#p_muid_category_grid").pgrid({
 							pgrid_hidden_cols: [1],
 							pgrid_sort_col: 1,
 							pgrid_sort_ord: "asc",
@@ -154,7 +154,7 @@ $pines->com_jstree->load();
 						input.val(JSON.stringify(selected_rows));
 
 						// Category Dialog
-						var category_dialog = $("#category_dialog").dialog({
+						var category_dialog = $("#p_muid_category_dialog").dialog({
 							bgiframe: true,
 							autoOpen: false,
 							modal: true,
@@ -176,17 +176,17 @@ $pines->com_jstree->load();
 							}
 						});
 
-						$('#category_button').click(function() {
+						$('#p_muid_category_button').click(function() {
 							category_dialog.dialog('open');
 						});
 					});
 					// ]]>
 				</script>
-				<button id="category_button" class="pf-field ui-state-default ui-corner-all" type="button">Pick Categories</button>
-				<input id="categories" type="hidden" name="categories" />
+				<button id="p_muid_category_button" class="pf-field ui-state-default ui-corner-all" type="button">Pick Categories</button>
+				<input id="p_muid_categories" type="hidden" name="categories" />
 			</div>
-			<div id="category_dialog" title="Categories" style="display: none;">
-				<table id="category_grid">
+			<div id="p_muid_category_dialog" title="Categories" style="display: none;">
+				<table id="p_muid_category_grid">
 					<thead>
 						<tr>
 							<th>Order</th>
@@ -228,7 +228,7 @@ $pines->com_jstree->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="tab_images">
+		<div id="p_muid_tab_images">
 			<div class="pf-element">
 				<label><span class="pf-label">Upload a New Picture</span>
 					<span class="pf-note">Doesn't work yet.</span>
@@ -236,15 +236,15 @@ $pines->com_jstree->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="tab_purchasing">
+		<div id="p_muid_tab_purchasing">
 			<div class="pf-element">
 				<script type="text/javascript">
 				// <![CDATA[
 				pines(function(){
-					var stock_type = $("#product_details [name=stock_type]");
-					var pricing_method = $("#product_details [name=pricing_method]");
-					var vendors_field = $("#vendors_field");
-					var vendors_hidden = $("#vendors_hidden");
+					var stock_type = $("#p_muid_form [name=stock_type]");
+					var pricing_method = $("#p_muid_form [name=pricing_method]");
+					var vendors_field = $("#p_muid_vendors_field");
+					var vendors_hidden = $("#p_muid_vendors_hidden");
 					stock_type.change(function(){
 						if (stock_type.val() == "non_stocked") {
 							vendors_field.fadeOut(null, function(){
@@ -276,8 +276,8 @@ $pines->com_jstree->load();
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Vendors</span>
 				<div class="pf-group">
-					<div id="vendors_field" class="pf-field">
-						<table id="vendors_table">
+					<div id="p_muid_vendors_field" class="pf-field">
+						<table id="p_muid_vendors_table">
 							<thead>
 								<tr>
 									<th>Vendor</th>
@@ -296,12 +296,12 @@ $pines->com_jstree->load();
 							</tbody>
 						</table>
 					</div>
-					<span id="vendors_hidden" class="pf-field" style="display: none;">Vendors cannot be selected for non stocked items.</span>
-					<input type="hidden" id="vendors" name="vendors" size="24" />
+					<span id="p_muid_vendors_hidden" class="pf-field" style="display: none;">Vendors cannot be selected for non stocked items.</span>
+					<input type="hidden" id="p_muid_vendors" name="vendors" size="24" />
 				</div>
 			</div>
-			<div id="vendor_dialog" title="Add a Vendor">
-				<table id="available_vendors_table">
+			<div id="p_muid_vendor_dialog" title="Add a Vendor">
+				<table id="p_muid_available_vendors_table">
 					<thead>
 						<tr>
 							<th>Name</th>
@@ -327,24 +327,24 @@ $pines->com_jstree->load();
 				<div style="width: 100%">
 					<label>
 						<span>Vendor SKU</span>
-						<input type="text" name="cur_vendor_sku" id="cur_vendor_sku" />
+						<input type="text" name="cur_vendor_sku" id="p_muid_cur_vendor_sku" />
 					</label>
 					<label>
 						<span>Cost</span>
-						<input type="text" name="cur_vendor_cost" id="cur_vendor_cost" />
+						<input type="text" name="cur_vendor_cost" id="p_muid_cur_vendor_cost" />
 					</label>
 				</div>
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="tab_pricing">
+		<div id="p_muid_tab_pricing">
 			<div class="pf-element">
 				<script type="text/javascript">
 					// <![CDATA[
 					pines(function(){
-						var pricing_method = $("#product_details [name=pricing_method]");
-						var unit_price = $("#product_details [name=unit_price]");
-						var margin = $("#product_details [name=margin]");
+						var pricing_method = $("#p_muid_form [name=pricing_method]");
+						var unit_price = $("#p_muid_form [name=unit_price]");
+						var margin = $("#p_muid_form [name=margin]");
 						pricing_method.change(function(){
 							if (pricing_method.val() == "margin") {
 								unit_price.attr('disabled', 'disabled').addClass("ui-state-disabled");
@@ -404,7 +404,7 @@ $pines->com_jstree->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="tab_attributes">
+		<div id="p_muid_tab_attributes">
 			<div class="pf-element">
 				<label><span class="pf-label">Weight</span>
 					<input class="pf-field ui-widget-content" type="text" name="weight" size="10" value="<?php echo $this->entity->weight; ?>" /> lbs.</label>
@@ -448,7 +448,7 @@ $pines->com_jstree->load();
 					<script type="text/javascript">
 						// <![CDATA[
 						pines(function(){
-							$("#product_details [name=additional_barcodes]").ptags();
+							$("#p_muid_form [name=additional_barcodes]").ptags();
 						});
 						// ]]>
 					</script>
@@ -466,7 +466,7 @@ $pines->com_jstree->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="tab_accounting">
+		<div id="p_muid_tab_accounting">
 			<div class="pf-element">
 				<span class="pf-label">Nothing here yet...</span>
 			</div>

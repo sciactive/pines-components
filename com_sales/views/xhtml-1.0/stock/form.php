@@ -20,7 +20,7 @@ if (isset($this->entity->location)) {
 }
 $this->note = 'Provide stock entry details in this form.';
 ?>
-<form class="pf-form" method="post" id="stock_details" action="<?php echo htmlentities(pines_url('com_sales', 'stock/save')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_sales', 'stock/save')); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 		<?php if (isset($this->entity->user)) { ?>
@@ -46,7 +46,7 @@ $this->note = 'Provide stock entry details in this form.';
 	<script type="text/javascript">
 		// <![CDATA[
 		pines(function(){
-			$("#stock_details .option_accordian").accordion({
+			$("#p_muid_form .option_accordian").accordion({
 				autoHeight: false,
 				collapsible: true,
 				active: false

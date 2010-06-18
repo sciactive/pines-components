@@ -116,7 +116,7 @@ $pines->com_pgrid->load();
 
 			station.pick_customer = function (){
 				// A dialog for logging a customer into a station.
-				$("#com_customertimer_dialogs > .customer_search").clone()
+				$("#p_muid_dialogs > .customer_search").clone()
 				.attr("title", "Station "+station_id+": Choose a Customer")
 				.find("table.customer_table")
 				.find("tbody tr").remove().end()
@@ -236,7 +236,7 @@ $pines->com_pgrid->load();
 			station.customer_action = function (){
 				// A dialog for managing a customer in a station.
 				var login_time = new Date(station.customer.login_time * 1000);
-				$("#com_customertimer_dialogs > .customer_action").clone()
+				$("#p_muid_dialogs > .customer_action").clone()
 				.attr("title", "Station "+station_id+": "+station.customer.name)
 				.find(".customer_id .value").html(station.customer.guid).end()
 				.find(".login_time .value").html(login_time.toLocaleString()).end()
@@ -404,7 +404,7 @@ $pines->com_pgrid->load();
 	<div class="station_floor"></div>
 	<br style="clear: both; height: 1px;" />
 </div>
-<div id="com_customertimer_dialogs" style="display: none;">
+<div id="p_muid_dialogs" style="display: none;">
 	<div class="customer_action" title="">
 		<div style="float: left;">
 			<div class="customer_id">Customer ID:</div>

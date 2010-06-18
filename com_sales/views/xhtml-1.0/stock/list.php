@@ -70,7 +70,7 @@ $pines->com_jstree->load();
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
-		var stock_grid = $("#stock_grid").pgrid(cur_options);
+		var stock_grid = $("#p_muid_grid").pgrid(cur_options);
 
 		stock_grid.location_form = function(){
 			$.ajax({
@@ -115,7 +115,7 @@ $pines->com_jstree->load();
 
 	// ]]>
 </script>
-<table id="stock_grid">
+<table id="p_muid_grid">
 	<thead>
 		<tr>
 			<th>SKU</th>

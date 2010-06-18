@@ -16,21 +16,21 @@ $pines->editor->load();
 $pines->com_pgrid->load();
 $pines->com_ptags->load();
 ?>
-<form class="pf-form" method="post" id="article_details" action="<?php echo htmlentities(pines_url('com_content', 'article/save')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_content', 'article/save')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
 		pines(function(){
-			$("#article_tabs").tabs();
+			$("#p_muid_article_tabs").tabs();
 		});
 		// ]]>
 	</script>
-	<div id="article_tabs" style="clear: both;">
+	<div id="p_muid_article_tabs" style="clear: both;">
 		<ul>
-			<li><a href="#tab_general">General</a></li>
-			<li><a href="#tab_images">Images</a></li>
-			<li><a href="#tab_advanced">Advanced</a></li>
+			<li><a href="#p_muid_tab_general">General</a></li>
+			<li><a href="#p_muid_tab_images">Images</a></li>
+			<li><a href="#p_muid_tab_advanced">Advanced</a></li>
 		</ul>
-		<div id="tab_general">
+		<div id="p_muid_tab_general">
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
 				<?php if (isset($this->entity->user)) { ?>
@@ -45,8 +45,8 @@ $pines->com_ptags->load();
 				<script type="text/javascript">
 					// <![CDATA[
 					pines(function(){
-						var alias = $("#article_details [name=alias]");
-						$("#article_details [name=name]").change(function(){
+						var alias = $("#p_muid_form [name=alias]");
+						$("#p_muid_form [name=name]").change(function(){
 							if (alias.val() == "")
 								alias.val($(this).val().replace(/[^\w\d\s-.]/g, '').replace(/\s/g, '-').toLowerCase());
 						}).blur(function(){
@@ -82,10 +82,10 @@ $pines->com_ptags->load();
 				<script type="text/javascript">
 					// <![CDATA[
 					pines(function(){
-						var input = $("#categories");
+						var input = $("#p_muid_categories");
 						var selected_rows = JSON.parse("<?php echo addslashes(json_encode($this->entity->get_categories_guid())); ?>");
 						// Category Grid
-						var category_grid = $("#category_grid").pgrid({
+						var category_grid = $("#p_muid_category_grid").pgrid({
 							pgrid_hidden_cols: [1],
 							pgrid_sort_col: 1,
 							pgrid_sort_ord: "asc",
@@ -95,7 +95,7 @@ $pines->com_ptags->load();
 						input.val(JSON.stringify(selected_rows));
 
 						// Category Dialog
-						var category_dialog = $("#category_dialog").dialog({
+						var category_dialog = $("#p_muid_category_dialog").dialog({
 							bgiframe: true,
 							autoOpen: false,
 							modal: true,
@@ -117,17 +117,17 @@ $pines->com_ptags->load();
 							}
 						});
 
-						$('#category_button').click(function() {
+						$('#p_muid_category_button').click(function() {
 							category_dialog.dialog('open');
 						});
 					});
 					// ]]>
 				</script>
-				<button id="category_button" class="pf-field ui-state-default ui-corner-all" type="button">Pick Categories</button>
-				<input id="categories" type="hidden" name="categories" />
+				<button id="p_muid_category_button" class="pf-field ui-state-default ui-corner-all" type="button">Pick Categories</button>
+				<input id="p_muid_categories" type="hidden" name="categories" />
 			</div>
-			<div id="category_dialog" title="Categories" style="display: none;">
-				<table id="category_grid">
+			<div id="p_muid_category_dialog" title="Categories" style="display: none;">
+				<table id="p_muid_category_grid">
 					<thead>
 						<tr>
 							<th>Order</th>
@@ -153,7 +153,7 @@ $pines->com_ptags->load();
 					<script type="text/javascript">
 						// <![CDATA[
 						pines(function(){
-							$("#article_details [name=content_tags]").ptags();
+							$("#p_muid_form [name=content_tags]").ptags();
 						});
 						// ]]>
 					</script>
@@ -173,7 +173,7 @@ $pines->com_ptags->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="tab_images">
+		<div id="p_muid_tab_images">
 			<div class="pf-element">
 				<label><span class="pf-label">Upload a New Picture</span>
 					<span class="pf-note">Doesn't work yet.</span>
@@ -181,7 +181,7 @@ $pines->com_ptags->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="tab_advanced">
+		<div id="p_muid_tab_advanced">
 			<div class="pf-element">
 				<span class="pf-label">Nothing here yet...</span>
 			</div>

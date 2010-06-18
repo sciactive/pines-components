@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Installed Software';
 ?>
-<div id="packages">
+<div id="p_muid_packages">
 	<?php foreach($this->db['packages'] as $key => $package) { ?>
 	<div class="package">
 		<div class="name">

@@ -13,11 +13,11 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Timeclock';
 $entry_count = count($this->entity->timeclock);
 ?>
-<div class="pf-form" id="timeclock">
+<div class="pf-form" id="p_muid_timeclock">
 	<script type="text/javascript">
 		// <![CDATA[
 		pines(function(){
-			$("#timeclock button").click(function(){
+			$("#p_muid_timeclock button").click(function(){
 				var loader;
 				$.ajax({
 					url: "<?php echo pines_url('com_hrm', 'clock'); ?>",
@@ -49,14 +49,14 @@ $entry_count = count($this->entity->timeclock);
 							pines.error("There was an error saving the change to the database.");
 							return;
 						}
-						$("#timeclock .status").html(data[1].status);
-						$("#timeclock .time").html(data[1].time);
+						$("#p_muid_timeclock .status").html(data[1].status);
+						$("#p_muid_timeclock .time").html(data[1].time);
 						if (data[1].status == "in") {
-							$("#timeclock button").html("Clock Out");
+							$("#p_muid_timeclock button").html("Clock Out");
 						} else {
-							$("#timeclock button").html("Clock In");
+							$("#p_muid_timeclock button").html("Clock In");
 						}
-						$("#timeclock").effect("highlight");
+						$("#p_muid_timeclock").effect("highlight");
 					}
 				});
 			});

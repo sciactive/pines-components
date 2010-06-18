@@ -19,9 +19,9 @@ $pines->com_pgrid->load();
 	// <![CDATA[
 	pines(function(){
 		// Conditions
-		var conditions = $("#package_details [name=meta_conditions]");
-		var conditions_table = $("#package_details .conditions_table");
-		var condition_dialog = $("#package_details .condition_dialog");
+		var conditions = $("#p_muid_form [name=meta_conditions]");
+		var conditions_table = $("#p_muid_form .conditions_table");
+		var condition_dialog = $("#p_muid_form .condition_dialog");
 		var cur_condition = null;
 
 		conditions_table.pgrid({
@@ -124,17 +124,17 @@ $pines->com_pgrid->load();
 
 		update_conditions();
 
-		$("#package_tabs").tabs();
+		$("#p_muid_package_tabs").tabs();
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="package_details" action="<?php echo htmlentities(pines_url('com_packager', 'savepackage')); ?>">
-	<div id="package_tabs" style="clear: both;">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_packager', 'savepackage')); ?>">
+	<div id="p_muid_package_tabs" style="clear: both;">
 		<ul>
-			<li><a href="#tab_general">General</a></li>
-			<li><a href="#tab_images">Images</a></li>
+			<li><a href="#p_muid_tab_general">General</a></li>
+			<li><a href="#p_muid_tab_images">Images</a></li>
 		</ul>
-		<div id="tab_general">
+		<div id="p_muid_tab_general">
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
 				<?php if (isset($this->entity->user)) { ?>
@@ -149,10 +149,10 @@ $pines->com_pgrid->load();
 				<script type="text/javascript">
 					// <![CDATA[
 					pines(function(){
-						$("#package_details input[name=type]").change(function(){
-							var class_name = $("#package_details input[name=type]:checked").val();
-							$("#package_details div.package_type").hide();
-							$("#package_details div.package_type."+class_name).show();
+						$("#p_muid_form input[name=type]").change(function(){
+							var class_name = $("#p_muid_form input[name=type]:checked").val();
+							$("#p_muid_form div.package_type").hide();
+							$("#p_muid_form div.package_type."+class_name).show();
 						}).change();
 					});
 					// ]]>
@@ -352,7 +352,7 @@ $pines->com_pgrid->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="tab_images">
+		<div id="p_muid_tab_images">
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Icon</span>
 				<span class="pf-field">Nothing here yet...</span>

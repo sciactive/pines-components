@@ -22,31 +22,31 @@ $yellow_status = $pines->config->com_reports->rank_level_yellow;
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
-	#sales_rankings_grid td, #sales_rankings_grid th {
+	#p_muid_grid td, #p_muid_grid th {
 		font-weight: bold;
 		text-align: center;
 	}
-	#sales_rankings_grid td.right_justify {
+	#p_muid_grid td.right_justify {
 		text-align: right;
 	}
-	#sales_rankings_grid .total td {
+	#p_muid_grid .total td {
 		border-top-width: .2em;
 	}
-	#sales_rankings_grid .total td.rank, #sales_rankings_grid .total td.ui-pgrid-table-expander {
+	#p_muid_grid .total td.rank, #p_muid_grid .total td.ui-pgrid-table-expander {
 		background-color: gray;
 	}
-	#sales_rankings_grid .total td.ui-pgrid-table-expander {
+	#p_muid_grid .total td.ui-pgrid-table-expander {
 		border-right: none;
 	}
-	#sales_rankings_grid .green td {
+	#p_muid_grid .green td {
 		background-color: green;
 		color: black;
 	}
-	#sales_rankings_grid .yellow td {
+	#p_muid_grid .yellow td {
 		background-color: yellow;
 		color: black;
 	}
-	#sales_rankings_grid .red td {
+	#p_muid_grid .red td {
 		background-color: red;
 		color: black;
 	}
@@ -55,7 +55,7 @@ $yellow_status = $pines->config->com_reports->rank_level_yellow;
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-		$("#sales_rankings_grid").pgrid({
+		$("#p_muid_grid").pgrid({
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				<?php if (gatekeeper('com_reports/listsalesrankings')) { ?>
@@ -78,7 +78,7 @@ $yellow_status = $pines->config->com_reports->rank_level_yellow;
 	});
 	// ]]>
 </script>
-<table id="sales_rankings_grid">
+<table id="p_muid_grid">
 	<thead>
 		<tr>
 			<th style="width: 5%;">Rank</th>

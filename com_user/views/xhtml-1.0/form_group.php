@@ -19,9 +19,9 @@ $pines->uploader->load();
 	// <![CDATA[
 	pines(function(){
 		// Attributes
-		var attributes = $("#tab_attributes input[name=attributes]");
-		var attributes_table = $("#tab_attributes .attributes_table");
-		var attribute_dialog = $("#tab_attributes .attribute_dialog");
+		var attributes = $("#p_muid_tab_attributes input[name=attributes]");
+		var attributes_table = $("#p_muid_tab_attributes .attributes_table");
+		var attribute_dialog = $("#p_muid_tab_attributes .attribute_dialog");
 
 		attributes_table.pgrid({
 			pgrid_paginate: false,
@@ -56,8 +56,8 @@ $pines->uploader->load();
 			width: 500,
 			buttons: {
 				"Done": function() {
-					var cur_attribute_name = attribute_dialog.find("input[name=cur_attribute_name]").val();
-					var cur_attribute_value = attribute_dialog.find("input[name=cur_attribute_value]").val();
+					var cur_attribute_name = $("#p_muid_cur_attribute_name").val();
+					var cur_attribute_value = $("#p_muid_cur_attribute_value").val();
 					if (cur_attribute_name == "" || cur_attribute_value == "") {
 						alert("Please provide both a name and a value for this attribute.");
 						return;
@@ -77,8 +77,8 @@ $pines->uploader->load();
 		});
 
 		function update_attributes() {
-			$("#cur_attribute_name").val("");
-			$("#cur_attribute_value").val("");
+			$("#p_muid_cur_attribute_name").val("");
+			$("#p_muid_cur_attribute_value").val("");
 			attributes.val(JSON.stringify(attributes_table.pgrid_get_all_rows().pgrid_export_rows()));
 		}
 
@@ -86,9 +86,9 @@ $pines->uploader->load();
 
 		<?php if ( $this->display_conditions && $pines->config->com_user->conditional_groups ) { ?>
 		// Conditions
-		var conditions = $("#group_details [name=conditions]");
-		var conditions_table = $("#group_details .conditions_table");
-		var condition_dialog = $("#group_details .condition_dialog");
+		var conditions = $("#p_muid_form [name=conditions]");
+		var conditions_table = $("#p_muid_form .conditions_table");
+		var condition_dialog = $("#p_muid_form .condition_dialog");
 		var cur_condition = null;
 
 		conditions_table.pgrid({
@@ -192,23 +192,23 @@ $pines->uploader->load();
 		});
 		<?php } ?>
 
-		$("#group_tabs").tabs();
+		$("#p_muid_tabs").tabs();
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="group_details" action="<?php echo htmlentities(pines_url('com_user', 'savegroup')); ?>">
-	<div id="group_tabs" style="clear: both;">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_user', 'savegroup')); ?>">
+	<div id="p_muid_tabs" style="clear: both;">
 		<ul>
-			<li><a href="#tab_general">General</a></li>
-			<li><a href="#tab_logo">Logo</a></li>
-			<li><a href="#tab_location">Location</a></li>
-			<li><a href="#tab_abilities">Abilities</a></li>
+			<li><a href="#p_muid_tab_general">General</a></li>
+			<li><a href="#p_muid_tab_logo">Logo</a></li>
+			<li><a href="#p_muid_tab_location">Location</a></li>
+			<li><a href="#p_muid_tab_abilities">Abilities</a></li>
 			<?php if ($pines->config->com_user->conditional_groups) { ?>
-			<li><a href="#tab_conditions">Conditions</a></li>
+			<li><a href="#p_muid_tab_conditions">Conditions</a></li>
 			<?php } ?>
-			<li><a href="#tab_attributes">Attributes</a></li>
+			<li><a href="#p_muid_tab_attributes">Attributes</a></li>
 		</ul>
-		<div id="tab_general">
+		<div id="p_muid_tab_general">
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
 				<?php if (isset($this->entity->user)) { ?>
@@ -276,7 +276,7 @@ $pines->uploader->load();
 			<?php } ?>
 			<br class="pf-clearing" />
 		</div>
-		<div id="tab_logo">
+		<div id="p_muid_tab_logo">
 			<div class="pf-element">
 				<span class="pf-label"><?php echo (isset($this->entity->logo)) ? 'Currently Set Logo' : 'Inherited Logo'; ?></span>
 				<div class="pf-group">
@@ -293,14 +293,14 @@ $pines->uploader->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="tab_location">
+		<div id="p_muid_tab_location">
 			<div class="pf-element">
 				<script type="text/javascript">
 					// <![CDATA[
 					pines(function(){
-						var address_us = $("#address_us");
-						var address_international = $("#address_international");
-						$("#group_details [name=address_type]").change(function(){
+						var address_us = $("#p_muid_address_us");
+						var address_international = $("#p_muid_address_international");
+						$("#p_muid_form [name=address_type]").change(function(){
 							var address_type = $(this);
 							if (address_type.is(":checked") && address_type.val() == "us") {
 								address_us.show();
@@ -317,7 +317,7 @@ $pines->uploader->load();
 				<label><input class="pf-field ui-widget-content" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
 				<label><input class="pf-field ui-widget-content" type="radio" name="address_type" value="international"<?php echo $this->entity->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
 			</div>
-			<div id="address_us" style="display: none;">
+			<div id="p_muid_address_us" style="display: none;">
 				<div class="pf-element">
 					<label><span class="pf-label">Address 1</span>
 						<input class="pf-field ui-widget-content" type="text" name="address_1" size="24" value="<?php echo $this->entity->address_1; ?>" /></label>
@@ -393,7 +393,7 @@ $pines->uploader->load();
 						<input class="pf-field ui-widget-content" type="text" name="zip" size="24" value="<?php echo $this->entity->zip; ?>" /></label>
 				</div>
 			</div>
-			<div id="address_international" style="display: none;">
+			<div id="p_muid_address_international" style="display: none;">
 				<div class="pf-element pf-full-width">
 					<label><span class="pf-label">Address</span>
 						<span class="pf-field pf-full-width"><textarea class="ui-widget-content" style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo $this->entity->address_international; ?></textarea></span></label>
@@ -401,25 +401,25 @@ $pines->uploader->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="tab_abilities">
+		<div id="p_muid_tab_abilities">
 			<?php if ( $this->display_abilities ) { ?>
 			<script type="text/javascript">
 				// <![CDATA[
 				pines(function(){
-					var sections = $("#group_details .abilities_accordian");
+					var sections = $("#p_muid_form .abilities_accordian");
 					sections.accordion({
 						autoHeight: false,
 						collapsible: true,
 						active: false
 					});
-					$("#group_details button.expand_all").button().click(function(){
+					$("#p_muid_form button.expand_all").button().click(function(){
 						sections.each(function(){
 							var section = $(this);
 							if (section.accordion("option", "active") === false)
 								section.accordion("activate", 0);
 						});
 					});
-					$("#group_details button.collapse_all").button().click(function(){
+					$("#p_muid_form button.collapse_all").button().click(function(){
 						sections.accordion("activate", false);
 					});
 				});
@@ -462,7 +462,7 @@ $pines->uploader->load();
 			<br class="pf-clearing" />
 		</div>
 		<?php if ($pines->config->com_user->conditional_groups) { ?>
-		<div id="tab_conditions">
+		<div id="p_muid_tab_conditions">
 			<?php if ( $this->display_conditions ) { ?>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Ability Conditions</span>
@@ -521,7 +521,7 @@ $pines->uploader->load();
 			<br class="pf-clearing" />
 		</div>
 		<?php } ?>
-		<div id="tab_attributes">
+		<div id="p_muid_tab_attributes">
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Attributes</span>
 				<div class="pf-group">
@@ -549,13 +549,13 @@ $pines->uploader->load();
 					<div class="pf-element">
 						<label>
 							<span class="pf-label">Name</span>
-							<input class="pf-field ui-widget-content" type="text" name="cur_attribute_name" size="24" />
+							<input class="pf-field ui-widget-content" type="text" id="p_muid_cur_attribute_name" size="24" />
 						</label>
 					</div>
 					<div class="pf-element">
 						<label>
 							<span class="pf-label">Value</span>
-							<input class="pf-field ui-widget-content" type="text" name="cur_attribute_value" size="24" />
+							<input class="pf-field ui-widget-content" type="text" id="p_muid_cur_attribute_value" size="24" />
 						</label>
 					</div>
 				</div>

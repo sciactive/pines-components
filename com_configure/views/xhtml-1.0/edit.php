@@ -17,10 +17,10 @@ $pines->com_ptags->load();
 ?>
 <style type="text/css">
 	/* <![CDATA[ */
-	#configuration_form .setting .ui-ptags {
+	#p_muid_form .setting .ui-ptags {
 		display: inline-block;
 	}
-	#configuration_form .default .pf-field {
+	#p_muid_form .default .pf-field {
 		display: inline-block;
 		padding: .2em;
 		margin-right: .3em;
@@ -30,8 +30,8 @@ $pines->com_ptags->load();
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-		$("#configuration_form .do_tags").ptags({ptags_delimiter: ';;'});
-		$("#configuration_form").delegate("input.default_checkbox", "change", function(){
+		$("#p_muid_form .do_tags").ptags({ptags_delimiter: ';;'});
+		$("#p_muid_form").delegate("input.default_checkbox", "change", function(){
 			var checkbox = $(this);
 			if (checkbox.attr("checked")) {
 				checkbox.closest("div.pf-element").children("div.default").hide().end().children("div.setting").show();
@@ -42,7 +42,7 @@ $pines->com_ptags->load();
 	});
 	// ]]>
 </script>
-<form id="configuration_form" class="pf-form" action="<?php echo htmlentities(pines_url('com_configure', 'save')); ?>" method="post">
+<form id="p_muid_form" class="pf-form" action="<?php echo htmlentities(pines_url('com_configure', 'save')); ?>" method="post">
 	<div class="pf-element pf-heading">
 		<p>Check a setting to set it manually, or leave it unchecked to use the <?php echo $this->entity->per_user ? 'system configured' : 'default'; ?> setting.</p>
 	</div>
@@ -112,6 +112,6 @@ $pines->com_ptags->load();
 		<?php } ?>
 		<input type="hidden" name="component" value="<?php echo $this->entity->name; ?>" />
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Save" name="save" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="reset" value="Reset" name="reset" onclick="window.setTimeout(function(){$('#configuration_form input.default_checkbox').change()}, 1);" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="reset" value="Reset" name="reset" onclick="window.setTimeout(function(){$('#p_muid_form input.default_checkbox').change()}, 1);" />
 	</div>
 </form>

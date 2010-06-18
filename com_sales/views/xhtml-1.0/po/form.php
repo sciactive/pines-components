@@ -17,7 +17,7 @@ $read_only = '';
 if ($this->entity->final)
 	$read_only = 'readonly="readonly"';
 ?>
-<form class="pf-form" method="post" id="po_details" action="<?php echo htmlentities(pines_url('com_sales', 'po/save')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_sales', 'po/save')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
 		var products;
@@ -108,8 +108,8 @@ if ($this->entity->final)
 			var all_rows = products_table.pgrid_get_all_rows().pgrid_export_rows();
 			var total = 0.00;
 			available_products_table.pgrid_get_selected_rows().pgrid_deselect_rows();
-			$("#cur_product_quantity").val("");
-			$("#cur_product_cost").val("");
+			$("#p_muid_cur_product_quantity").val("");
+			$("#p_muid_cur_product_cost").val("");
 			// Save the data into a hidden form element.
 			products.val(JSON.stringify(all_rows));
 			// Calculate a total based on quantity and cost.
@@ -119,14 +119,14 @@ if ($this->entity->final)
 			});
 			//
 			total = round_to_dec(total);
-			$("#total").html(total);
+			$("#p_muid_total").html(total);
 		}
 		
 		pines(function(){
-			products = $("#products");
-			products_table = $("#products_table");
-			available_products_table = $("#available_products_table");
-			product_dialog = $("#product_dialog");
+			products = $("#p_muid_products");
+			products_table = $("#p_muid_products_table");
+			available_products_table = $("#p_muid_available_products_table");
+			product_dialog = $("#p_muid_product_dialog");
 
 			<?php if (!$this->entity->final && empty($this->entity->received)) { ?>
 			products_table.pgrid({
@@ -155,8 +155,8 @@ if ($this->entity->final)
 						click: function(e, rows){
 							var row_data = products_table.pgrid_export_rows(rows);
 							available_products_table.pgrid_select_rows([row_data[0].key]);
-							$("#cur_product_quantity").val(row_data[0].values[2]);
-							$("#cur_product_cost").val(row_data[0].values[3]);
+							$("#p_muid_cur_product_quantity").val(row_data[0].values[2]);
+							$("#p_muid_cur_product_cost").val(row_data[0].values[3]);
 							product_dialog.dialog('open');
 							rows.pgrid_delete();
 						}
@@ -192,8 +192,8 @@ if ($this->entity->final)
 				width: 600,
 				buttons: {
 					"Done": function() {
-						var cur_product_quantity = parseInt($("#cur_product_quantity").val());
-						var cur_product_cost = parseFloat($("#cur_product_cost").val());
+						var cur_product_quantity = parseInt($("#p_muid_cur_product_quantity").val());
+						var cur_product_cost = parseFloat($("#p_muid_cur_product_cost").val());
 						var cur_product = available_products_table.pgrid_get_selected_rows().pgrid_export_rows();
 						if (!cur_product[0]) {
 							alert("Please select a product.");
@@ -287,7 +287,7 @@ if ($this->entity->final)
 		<script type="text/javascript">
 			// <![CDATA[
 			pines(function(){
-				$("#eta").datepicker({
+				$("#p_muid_eta").datepicker({
 					dateFormat: "yy-mm-dd",
 					showOtherMonths: true,
 					selectOtherMonths: true
@@ -297,13 +297,13 @@ if ($this->entity->final)
 		</script>
 		<?php } ?>
 		<label><span class="pf-label">ETA</span>
-			<input class="pf-field ui-widget-content" type="text" id="eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? date('Y-m-d', $this->entity->eta) : ''); ?>" <?php echo $read_only; ?> /></label>
+			<input class="pf-field ui-widget-content" type="text" id="p_muid_eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? date('Y-m-d', $this->entity->eta) : ''); ?>" <?php echo $read_only; ?> /></label>
 	</div>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Products</span>
 		<div class="pf-group">
 			<div class="pf-field">
-				<table id="products_table">
+				<table id="p_muid_products_table">
 					<thead>
 						<tr>
 							<th>SKU</th>
@@ -333,16 +333,16 @@ if ($this->entity->final)
 					</tbody>
 				</table>
 			</div>
-			<input type="hidden" id="products" name="products" size="24" <?php echo $read_only; ?> />
+			<input type="hidden" id="p_muid_products" name="products" size="24" <?php echo $read_only; ?> />
 		</div>
 	</div>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Total</span>
 		<span class="pf-note">Due to rounding, this may not be exactly the sum of all line totals.</span>
-		<span class="pf-field">$<span id="total">--</span></span>
+		<span class="pf-field">$<span id="p_muid_total">--</span></span>
 	</div>
-	<div id="product_dialog" title="Add a Product" style="display: none;">
-		<table id="available_products_table">
+	<div id="p_muid_product_dialog" title="Add a Product" style="display: none;">
+		<table id="p_muid_available_products_table">
 			<thead>
 				<tr>
 					<th>SKU</th>
@@ -361,11 +361,11 @@ if ($this->entity->final)
 		<div style="width: 100%">
 			<label>
 				<span>Quantity</span>
-				<input type="text" name="cur_product_quantity" id="cur_product_quantity" <?php echo $read_only; ?> />
+				<input type="text" name="cur_product_quantity" id="p_muid_cur_product_quantity" <?php echo $read_only; ?> />
 			</label>
 			<label>
 				<span>Cost</span>
-				<input type="text" name="cur_product_cost" id="cur_product_cost" <?php echo $read_only; ?> />
+				<input type="text" name="cur_product_cost" id="p_muid_cur_product_cost" <?php echo $read_only; ?> />
 			</label>
 		</div>
 	</div>
@@ -414,9 +414,9 @@ if ($this->entity->final)
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" <?php echo $read_only; ?> />
 		<?php } if (!$this->entity->final) { ?>
-		<input type="hidden" id="save" name="save" value="" />
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" onclick="$('#save').val('save');" />
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Commit" onclick="$('#save').val('commit');" />
+		<input type="hidden" id="p_muid_save" name="save" value="" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" onclick="$('#p_muid_save').val('save');" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Commit" onclick="$('#p_muid_save').val('commit');" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'po/list')); ?>');" value="Cancel" />
 		<?php } ?>
 	</div>

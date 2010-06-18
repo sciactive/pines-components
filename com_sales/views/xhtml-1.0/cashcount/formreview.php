@@ -22,7 +22,7 @@ $comment_str = '';
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
-	#cashcount_details .error {
+	#p_muid_form .error {
 		color: red;
 	}
 	/* ]]> */
@@ -47,7 +47,7 @@ $comment_str = '';
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
-		$("#cashcount_grid").pgrid(cur_options);
+		$("#p_muid_grid").pgrid(cur_options);
 	});
 
 	function create_comment(entry_comment) {
@@ -78,8 +78,8 @@ $comment_str = '';
 	}
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="cashcount_details" action="<?php echo pines_url('com_sales', 'cashcount/savestatus'); ?>">
-	<table id="cashcount_grid">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo pines_url('com_sales', 'cashcount/savestatus'); ?>">
+	<table id="p_muid_grid">
 		<thead>
 			<tr>
 				<th>Time</th>

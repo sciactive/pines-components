@@ -16,11 +16,11 @@ $this->title = 'Verify Access';
 	// <![CDATA[
 	pines(function(){
 		if ($)
-			$("#com_pinlock__login input[name=pin]").focus();
+			$("#p_muid_form input[name=pin]").focus();
 	});
 	// ]]>
 </script>
-<form class="pf-form" id="com_pinlock__login" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
+<form class="pf-form" id="p_muid_form" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
 	<div class="pf-element">
 		<label>
 			<span class="pf-label">PIN</span>

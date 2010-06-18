@@ -25,7 +25,7 @@ $pines->com_jstree->load();
 <script type='text/javascript'>
 // <![CDATA[
 	pines(function(){
-		$("#report_details [name=start], #report_details [name=end]").datepicker({
+		$("#p_muid_form [name=start], #p_muid_form [name=end]").datepicker({
 			dateFormat: "yy-mm-dd",
 			changeMonth: true,
 			changeYear: true,
@@ -33,8 +33,8 @@ $pines->com_jstree->load();
 			selectOtherMonths: true
 		});
 		// Location Tree
-		var location = $("#report_details [name=location]");
-		$("#report_details .location_tree").tree({
+		var location = $("#p_muid_form [name=location]");
+		$("#p_muid_form .location_tree").tree({
 			rules : {
 				multiple : false
 			},
@@ -60,7 +60,7 @@ $pines->com_jstree->load();
 	
 	// This function reloads the employees when switching between locations.
 	function update_employees(group_id) {
-		var employee = $("#report_details [name=employee]");
+		var employee = $("#p_muid_form [name=employee]");
 		employee.empty();
 		employee.append("<option value='all' selected='selected'>Entire Location</option>");
 		<?php foreach ($this->employees as $cur_employee) { // Load employees for the current location.
@@ -72,7 +72,7 @@ $pines->com_jstree->load();
 	}
 // ]]>
 </script>
-<form class="pf-form" method="post" id="report_details" action="<?php echo htmlentities(pines_url('com_reports', 'reportsales')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_reports', 'reportsales')); ?>">
 	<div class="pf-element location_tree"></div>
 	<div class="pf-element">
 		<select class="ui-widget-content" style="width: 100%;" name="employee"></select>

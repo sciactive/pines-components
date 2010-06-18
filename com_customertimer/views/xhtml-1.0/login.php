@@ -13,21 +13,21 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Customer Login/Logout';
 $this->note = 'Please enter your info, or scan your barcode to login or logout.';
 ?>
-<form class="pf-form" id="customer_login" name="customer_login" method="post" action="<?php echo htmlentities(pines_url('com_customertimer', 'login')); ?>">
+<form class="pf-form" id="p_muid_form" name="customer_login" method="post" action="<?php echo htmlentities(pines_url('com_customertimer', 'login')); ?>">
 	<script type="text/javascript">
 	// <![CDATA[
 	var id_box;
 	var pw_box;
 	pines(function(){
-		id_box = $("#customer_login [name=id]");
-		pw_box = $("#customer_login [name=password]");
+		id_box = $("#p_muid_form [name=id]");
+		pw_box = $("#p_muid_form [name=password]");
 		id_box.change(function(){
 			if (id_box.val().indexOf("|") > 0) {
 				pw_box.val(id_box.val().replace(/^[^|]*\|/, ""));
 				id_box.val(id_box.val().replace(/\|.*$/, ""));
 			}
 		});
-		$("#customer_login").submit(function(){
+		$("#p_muid_form").submit(function(){
 			id_box.change();
 		});
 		id_box.focus();

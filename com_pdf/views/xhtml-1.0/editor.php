@@ -20,8 +20,8 @@ defined('P_RUN') or die('Direct access prohibited');
 	var getting_values = false;
 
 	pines(function(){
-		$("body *:not(#com_pdf_editor, #com_pdf_editor *)")
-		.not($("#com_pdf_editor").parents())
+		$("body *:not(#p_muid_editor, #p_muid_editor *)")
+		.not($("#p_muid_editor").parents())
 		.hide();
 		alert("Please note that the preview is approximate and may not exactly resemble what is generated. Remember to test fully.");
 	});
@@ -30,20 +30,20 @@ defined('P_RUN') or die('Direct access prohibited');
 		file = window.pdf_file;
 		pages = window.pages;
 		displays = JSON.parse(window.current_json);
-		displayelem = $("#displays");
+		displayelem = $("#p_muid_displays");
 		for (i=1; i<=pages; i++) {
-			$("#page").append("<option value=\""+i+"\">Page "+i+"</option>");
+			$("#p_muid_page").append("<option value=\""+i+"\">Page "+i+"</option>");
 		}
-		$("#drag_me").draggable({
+		$("#p_muid_drag_me").draggable({
 			containment: 'parent',
 			start: function(event, ui) {
-				$("#drag_me").fadeTo("0", .4);
+				$("#p_muid_drag_me").fadeTo("0", .4);
 			},
 			drag: function(event, ui) {
 				getPos();
 			},
 			stop: function(event, ui) {
-				$("#drag_me").fadeTo("0", .8);
+				$("#p_muid_drag_me").fadeTo("0", .8);
 				getPos();
 				set_values();
 			}
@@ -54,14 +54,14 @@ defined('P_RUN') or die('Direct access prohibited');
 			// Doesn't work.
 			//containment: 'parent',
 			start: function(event, ui) {
-				$("#drag_me").fadeTo("0", .4);
+				$("#p_muid_drag_me").fadeTo("0", .4);
 				getPos();
 			},
 			resize: function(event, ui) {
 				getPos();
 			},
 			stop: function(event, ui) {
-				$("#drag_me").fadeTo("0", .8);
+				$("#p_muid_drag_me").fadeTo("0", .8);
 				getPos();
 				set_values();
 			}
@@ -76,22 +76,22 @@ defined('P_RUN') or die('Direct access prohibited');
 	 */
 
 	function getPos() {
-		var elem = $("#drag_me");
+		var elem = $("#p_muid_drag_me");
 		var parent = elem.parent();
 		left = parseFloat(elem.css("left").replace("px", "")) / parent.width();
 		top = parseFloat(elem.css("top").replace("px", "")) / parent.height();
 		width = parseFloat(elem.width()) / parent.width();
 		height = parseFloat(elem.height()) / parent.height();
-		$("#x").val(left);
-		$("#y").val(top);
-		$("#width").val(width);
-		$("#height").val(height);
+		$("#p_muid_x").val(left);
+		$("#p_muid_y").val(top);
+		$("#p_muid_width").val(width);
+		$("#p_muid_height").val(height);
 	}
 
 	function update_preview() {
-		var elem = $("#drag_me");
+		var elem = $("#p_muid_drag_me");
 		var parent = elem.parent();
-		var previewimg = $("#previewimg");
+		var previewimg = $("#p_muid_previewimg");
 		var dindex = displayelem.val();
 
 		previewimg.attr("src", "about:blank");
@@ -128,27 +128,27 @@ defined('P_RUN') or die('Direct access prohibited');
 		var dindex = displayelem.val();
 		displays[dindex] = {};
 
-		displays[dindex].page = parseInt($("#page").val());
-		displays[dindex].left = parseFloat($("#x").val());
-		displays[dindex].top = parseFloat($("#y").val());
-		displays[dindex].width = parseFloat($("#width").val());
-		displays[dindex].height = parseFloat($("#height").val());
-		displays[dindex].overflow = $("#overflow").attr("checked");
-		displays[dindex].bold = $("#bold").attr("checked");
-		displays[dindex].italic = $("#italic").attr("checked");
-		displays[dindex].fontfamily = $("#fontfamily").val();
-		displays[dindex].fontsize = parseFloat($("#fontsize").val());
-		displays[dindex].fontcolor = $("#fontcolor").val();
-		displays[dindex].addspacing = $("#addspacing").attr("checked");
-		displays[dindex].border = $("#border").attr("checked");
-		//displays[dindex].letterspacing = $("#letterspacing").val();
+		displays[dindex].page = parseInt($("#p_muid_page").val());
+		displays[dindex].left = parseFloat($("#p_muid_x").val());
+		displays[dindex].top = parseFloat($("#p_muid_y").val());
+		displays[dindex].width = parseFloat($("#p_muid_width").val());
+		displays[dindex].height = parseFloat($("#p_muid_height").val());
+		displays[dindex].overflow = $("#p_muid_overflow").attr("checked");
+		displays[dindex].bold = $("#p_muid_bold").attr("checked");
+		displays[dindex].italic = $("#p_muid_italic").attr("checked");
+		displays[dindex].fontfamily = $("#p_muid_fontfamily").val();
+		displays[dindex].fontsize = parseFloat($("#p_muid_fontsize").val());
+		displays[dindex].fontcolor = $("#p_muid_fontcolor").val();
+		displays[dindex].addspacing = $("#p_muid_addspacing").attr("checked");
+		displays[dindex].border = $("#p_muid_border").attr("checked");
+		//displays[dindex].letterspacing = $("#p_muid_letterspacing").val();
 		displays[dindex].letterspacing = "normal"; //TCPDF does not support this yet.
-		//displays[dindex].wordspacing = $("#wordspacing").val();
+		//displays[dindex].wordspacing = $("#p_muid_wordspacing").val();
 		displays[dindex].wordspacing = "normal"; //TCPDF does not support this yet.
-		displays[dindex].textalign = $("#textalign").val();
-		displays[dindex].textdecoration = $("#textdecoration").val();
-		displays[dindex].texttransform = $("#texttransform").val();
-		displays[dindex].direction = $("#direction").val();
+		displays[dindex].textalign = $("#p_muid_textalign").val();
+		displays[dindex].textdecoration = $("#p_muid_textdecoration").val();
+		displays[dindex].texttransform = $("#p_muid_texttransform").val();
+		displays[dindex].direction = $("#p_muid_direction").val();
 
 		update_preview();
 	}
@@ -158,25 +158,25 @@ defined('P_RUN') or die('Direct access prohibited');
 		var dindex = displayelem.val();
 
 		if (null !== dindex) {
-			$("#page").val(displays[dindex].page);
-			$("#x").val(displays[dindex].left);
-			$("#y").val(displays[dindex].top);
-			$("#width").val(displays[dindex].width);
-			$("#height").val(displays[dindex].height);
-			$("#overflow").attr("checked", displays[dindex].overflow);
-			$("#bold").attr("checked", displays[dindex].bold);
-			$("#italic").attr("checked", displays[dindex].italic);
-			$("#fontfamily").val(displays[dindex].fontfamily);
-			$("#fontsize").val(displays[dindex].fontsize);
-			$("#fontcolor").val(displays[dindex].fontcolor);
-			$("#addspacing").attr("checked", displays[dindex].addspacing);
-			$("#border").attr("checked", displays[dindex].border);
-			//$("#letterspacing").val(displays[dindex].letterspacing);
-			//$("#wordspacing").val(displays[dindex].wordspacing);
-			$("#textalign").val(displays[dindex].textalign);
-			$("#textdecoration").val(displays[dindex].textdecoration);
-			$("#texttransform").val(displays[dindex].texttransform);
-			$("#direction").val(displays[dindex].direction);
+			$("#p_muid_page").val(displays[dindex].page);
+			$("#p_muid_x").val(displays[dindex].left);
+			$("#p_muid_y").val(displays[dindex].top);
+			$("#p_muid_width").val(displays[dindex].width);
+			$("#p_muid_height").val(displays[dindex].height);
+			$("#p_muid_overflow").attr("checked", displays[dindex].overflow);
+			$("#p_muid_bold").attr("checked", displays[dindex].bold);
+			$("#p_muid_italic").attr("checked", displays[dindex].italic);
+			$("#p_muid_fontfamily").val(displays[dindex].fontfamily);
+			$("#p_muid_fontsize").val(displays[dindex].fontsize);
+			$("#p_muid_fontcolor").val(displays[dindex].fontcolor);
+			$("#p_muid_addspacing").attr("checked", displays[dindex].addspacing);
+			$("#p_muid_border").attr("checked", displays[dindex].border);
+			//$("#p_muid_letterspacing").val(displays[dindex].letterspacing);
+			//$("#p_muid_wordspacing").val(displays[dindex].wordspacing);
+			$("#p_muid_textalign").val(displays[dindex].textalign);
+			$("#p_muid_textdecoration").val(displays[dindex].textdecoration);
+			$("#p_muid_texttransform").val(displays[dindex].texttransform);
+			$("#p_muid_direction").val(displays[dindex].direction);
 		}
 
 		update_preview();
@@ -223,57 +223,57 @@ defined('P_RUN') or die('Direct access prohibited');
 			displayelem.append("<option value=\""+cur_display+"\" "+(cur_display == cur_index ? "selected=\"selected\"" : "")+">Display "+(cur_display+1)+"</option>");
 		}
 		if (displays.length == 0) {
-			$("#form_div, #preview_div").hide();
-			$("#notice_div").show();
+			$("#p_muid_form_div, #p_muid_preview_div").hide();
+			$("#p_muid_notice_div").show();
 		} else {
-			$("#notice_div").hide();
-			$("#form_div, #preview_div").show();
+			$("#p_muid_notice_div").hide();
+			$("#p_muid_form_div, #p_muid_preview_div").show();
 		}
 		get_values();
 	}
 	// ]]>
 </script>
-<div id="com_pdf_editor">
-	<div id="left_div" style="float: left; width: 200px;">
-		<div id="displays_div" style="float: left; clear: left; margin-bottom: 15px;">
+<div id="p_muid_editor">
+	<div id="p_muid_left_div" style="float: left; width: 200px;">
+		<div id="p_muid_displays_div" style="float: left; clear: left; margin-bottom: 15px;">
 			<label>Displays:<br />
-				<select id="displays" onchange="get_values();">
+				<select id="p_muid_displays" onchange="get_values();">
 				</select></label>
 			<input type="button" class="ui-state-default ui-corner-all" value="+" name="display_add" onclick="display_add();" />
 			<input type="button" class="ui-state-default ui-corner-all" value="-" name="display_remove" onclick="display_remove();" />
 		</div>
-		<div id="form_div" style="float: left; clear: left;">
+		<div id="p_muid_form_div" style="float: left; clear: left;">
 			<div style="float: left; clear: left;">
 				<label>Page:<br />
-					<select id="page" name="page" onchange="set_values();">
+					<select id="p_muid_page" name="page" onchange="set_values();">
 					</select></label>
 			</div>
 			<div style="float: left; clear: left;">
 				<label>Left: <small>(% of 1)</small><br />
-					<input type="text" id="x" name="x" value="0" onkeyup="set_values();" onchange="set_values();" /></label>
+					<input type="text" id="p_muid_x" name="x" value="0" onkeyup="set_values();" onchange="set_values();" /></label>
 			</div>
 			<div style="float: left; clear: left;">
 				<label>Top: <small>(% of 1)</small><br />
-					<input type="text" id="y" name="y" value="0" onkeyup="set_values();" onchange="set_values();" /></label>
+					<input type="text" id="p_muid_y" name="y" value="0" onkeyup="set_values();" onchange="set_values();" /></label>
 			</div>
 			<div style="float: left; clear: left;">
 				<label>Width: <small>(% of 1)</small><br />
-					<input type="text" id="width" name="width" value="0.33" onkeyup="set_values();" onchange="set_values();" /></label>
+					<input type="text" id="p_muid_width" name="width" value="0.33" onkeyup="set_values();" onchange="set_values();" /></label>
 			</div>
 			<div style="float: left; clear: left;">
 				<label>Height: <small>(% of 1)</small><br />
-					<input type="text" id="height" name="height" value="0.03" onkeyup="set_values();" onchange="set_values();" /></label>
+					<input type="text" id="p_muid_height" name="height" value="0.03" onkeyup="set_values();" onchange="set_values();" /></label>
 			</div>
 			<div style="float: left; clear: left;">
-				<label>Overflow: <input type="checkbox" id="overflow" name="overflow" value="ON" onchange="set_values();" checked="checked" /></label>
+				<label>Overflow: <input type="checkbox" id="p_muid_overflow" name="overflow" value="ON" onchange="set_values();" checked="checked" /></label>
 			</div>
 			<div style="float: left; clear: left;">
-				<label>Bold: <input type="checkbox" id="bold" name="bold" value="ON" onchange="set_values();" /></label>
-				<label>Italic: <input type="checkbox" id="italic" name="italic" value="ON" onchange="set_values();" /></label>
+				<label>Bold: <input type="checkbox" id="p_muid_bold" name="bold" value="ON" onchange="set_values();" /></label>
+				<label>Italic: <input type="checkbox" id="p_muid_italic" name="italic" value="ON" onchange="set_values();" /></label>
 			</div>
 			<div style="float: left; clear: left;">
 				<label>Font Family:<br />
-					<select id="fontfamily_suggest" name="fontfamily_suggest" size="1" onchange="$('#fontfamily').val(this.value); this.value='--'; set_values();">
+					<select id="p_muid_fontfamily_suggest" name="fontfamily_suggest" size="1" onchange="$('#fontfamily').val(this.value); this.value='--'; set_values();">
 						<option value="--">Installed Fonts</option>
 					<?php
 					$fonts = array();
@@ -292,35 +292,35 @@ defined('P_RUN') or die('Direct access prohibited');
 						<option value="<?php echo $cur_font; ?>"><?php echo $cur_font; ?></option>
 					<?php } ?>
 					</select>
-					<input type="text" id="fontfamily" name="fontfamily" value="Times" onkeyup="set_values();" /></label>
+					<input type="text" id="p_muid_fontfamily" name="fontfamily" value="Times" onkeyup="set_values();" /></label>
 			</div>
 			<div style="float: left; clear: left;">
 				<label>Font Size: <small>(pt)</small><br />
-					<input type="text" id="fontsize" name="fontsize" value="12" onkeyup="set_values();" /></label>
+					<input type="text" id="p_muid_fontsize" name="fontsize" value="12" onkeyup="set_values();" /></label>
 			</div>
 			<div style="float: left; clear: left;">
 				<label>Font Color:<br /><small>(Name or Hex)</small><br />
-					<input type="text" id="fontcolor" name="fontcolor" value="black" onkeyup="set_values();" /></label>
+					<input type="text" id="p_muid_fontcolor" name="fontcolor" value="black" onkeyup="set_values();" /></label>
 			</div>
 			<div style="float: left; clear: left;">
-				<label>Add Spacing: <input type="checkbox" id="addspacing" name="addspacing" value="ON" onchange="set_values();" /></label>
+				<label>Add Spacing: <input type="checkbox" id="p_muid_addspacing" name="addspacing" value="ON" onchange="set_values();" /></label>
 				<br /><small>(For justifying characters.)</small>
 			</div>
 			<div style="float: left; clear: left;">
-				<label>Border: <input type="checkbox" id="border" name="border" value="ON" onchange="set_values();" /></label>
+				<label>Border: <input type="checkbox" id="p_muid_border" name="border" value="ON" onchange="set_values();" /></label>
 				<br /><small>(A simple black border.)</small>
 			</div>
 			<!-- <div style="float: left; clear: left;">
 				<label>Letter Spacing:<br /><small>("normal" or Pixels)</small><br />
-				<input type="text" id="letterspacing" name="letterspacing" value="normal" onkeyup="set_values();" /></label>
+				<input type="text" id="p_muid_letterspacing" name="letterspacing" value="normal" onkeyup="set_values();" /></label>
 			</div>
 			<div style="float: left; clear: left;">
 				<label>Word Spacing:<br /><small>("normal" or Pixels)</small><br />
-				<input type="text" id="wordspacing" name="wordspacing" value="normal" onkeyup="set_values();" /></label>
+				<input type="text" id="p_muid_wordspacing" name="wordspacing" value="normal" onkeyup="set_values();" /></label>
 			</div> -->
 			<div style="float: left; clear: left;">
 				<label>Text Align:<br />
-					<select id="textalign" name="textalign" onchange="set_values(); if (this.value == 'justify') { alert('Even though it can\'t be shown in the preview, single lines will justify.'); }">
+					<select id="p_muid_textalign" name="textalign" onchange="set_values(); if (this.value == 'justify') { alert('Even though it can\'t be shown in the preview, single lines will justify.'); }">
 						<option value="left">Left</option>
 						<option value="center">Center</option>
 						<option value="right">Right</option>
@@ -329,7 +329,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			</div>
 			<div style="float: left; clear: left;">
 				<label>Text Decoration:<br />
-					<select id="textdecoration" name="textdecoration" onchange="set_values();">
+					<select id="p_muid_textdecoration" name="textdecoration" onchange="set_values();">
 						<option value="none">None</option>
 						<option value="line-through">Line-Through</option>
 						<option value="underline">Underline</option>
@@ -337,7 +337,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			</div>
 			<div style="float: left; clear: left;">
 				<label>Text Transform<br />
-					<select id="texttransform" name="texttransform" onchange="set_values();">
+					<select id="p_muid_texttransform" name="texttransform" onchange="set_values();">
 						<option value="none">None</option>
 						<option value="capitalize">Capitalize</option>
 						<option value="uppercase">Uppercase</option>
@@ -346,20 +346,20 @@ defined('P_RUN') or die('Direct access prohibited');
 			</div>
 			<div style="float: left; clear: left;">
 				<label>Direction<br />
-					<select id="direction" name="direction" onchange="set_values();">
+					<select id="p_muid_direction" name="direction" onchange="set_values();">
 						<option value="ltr">Left to Right</option>
 						<option value="rtl">Right to Left</option>
 					</select></label>
 			</div>
 		</div>
 	</div>
-	<div id="preview_div" style="position: absolute; top: 10px; left: 200px; height: auto; width: auto; border: 3px solid black;">
+	<div id="p_muid_preview_div" style="position: absolute; top: 10px; left: 200px; height: auto; width: auto; border: 3px solid black;">
 		<div>
-			<div id="drag_me" style="width: 80px; height: 30px; background-color: #0FF; position: absolute;"><span id="previewtext">This is how the text will look.</span></div>
-			<img id="previewimg" src="" alt="pdf" />
+			<div id="p_muid_drag_me" style="width: 80px; height: 30px; background-color: #0FF; position: absolute;"><span id="p_muid_previewtext">This is how the text will look.</span></div>
+			<img id="p_muid_previewimg" src="" alt="pdf" />
 		</div>
 	</div>
-	<div id="notice_div" style="float: left; margin-left: 20px; border: 1px dotted gray; color: gray;">
+	<div id="p_muid_notice_div" style="float: left; margin-left: 20px; border: 1px dotted gray; color: gray;">
 		There are no displays. You can add a display using the buttons to the left.
 	</div>
 </div>

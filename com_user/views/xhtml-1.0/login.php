@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = "Login to {$pines->config->system_name}";
 ?>
-<form class="pf-form" name="login" id="login_form" method="post" action="<?php echo htmlentities(pines_url()); ?>">
+<form class="pf-form" name="login" id="p_muid_form" method="post" action="<?php echo htmlentities(pines_url()); ?>">
 	<div class="pf-element">
 		<label><span class="pf-label">Username</span>
 			<input class="pf-field ui-widget-content" type="text" name="username" size="24" /></label>
@@ -28,9 +28,9 @@ $this->title = "Login to {$pines->config->system_name}";
 			// <![CDATA[
 			pines(function(){
 				var new_account = false;
-				var password = $("#login_form [name=password]");
-				var password2 = $("#login_form [name=password2]");
-				$("#login_form").submit(function(){
+				var password = $("#p_muid_form [name=password]");
+				var password2 = $("#p_muid_form [name=password2]");
+				$("#p_muid_form").submit(function(){
 					if (new_account && password.val() != password2.val()) {
 						alert("Your passwords do not match.");
 						return false;
@@ -38,9 +38,9 @@ $this->title = "Login to {$pines->config->system_name}";
 					return true;
 				});
 				
-				var pass_reenter = $("#login_form [name=pass_reenter]");
-				var submit_btn = $("#login_form [name=submit]");
-				$("#login_form [name=login_register]").change(function(){
+				var pass_reenter = $("#p_muid_pass_reenter");
+				var submit_btn = $("#p_muid_form [name=submit]");
+				$("#p_muid_form [name=login_register]").change(function(){
 					if ($(this).is(":checked") && $(this).val() == "register") {
 						new_account = true;
 						pass_reenter.slideDown();
@@ -51,7 +51,7 @@ $this->title = "Login to {$pines->config->system_name}";
 						submit_btn.val("Login");
 					}
 				}).change();
-				$("#login_form :reset").click(function(){
+				$("#p_muid_form :reset").click(function(){
 					new_account = false;
 					pass_reenter.slideUp();
 					submit_btn.val("Login");
@@ -65,7 +65,7 @@ $this->title = "Login to {$pines->config->system_name}";
 			<label><input class="pf-field ui-widget-content" type="radio" name="login_register" value="register" /> I'm new.</label>
 		</div>
 	</div>
-	<div class="pf-element" name="pass_reenter" style="display: none;">
+	<div class="pf-element" id="p_muid_pass_reenter" style="display: none;">
 		<label><span class="pf-label">Re-enter Password</span>
 			<input class="pf-field ui-widget-content" type="password" name="password2" size="24" /></label>
 	</div>

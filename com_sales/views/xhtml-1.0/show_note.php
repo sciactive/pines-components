@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
-<div class="pf-form" id="notemodule">
+<div class="pf-form">
 	<div class="pf-element">
 		<span class="pf-label">
 		<?php

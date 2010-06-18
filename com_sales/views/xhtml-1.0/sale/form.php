@@ -25,7 +25,7 @@ $this->note = 'Use this form to edit a sale.';
 $pines->com_pgrid->load();
 // TODO: After a sale is invoiced, don't calculate totals, just show what's saved.
 ?>
-<form class="pf-form" method="post" id="sale_details" action="<?php echo htmlentities(pines_url('com_sales', 'sale/save')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_sales', 'sale/save')); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 		<?php if (isset($this->entity->user)) { ?>
@@ -99,19 +99,19 @@ $pines->com_pgrid->load();
 
 		pines(function(){
 			<?php if ($pines->config->com_sales->com_customer) { ?>
-			customer_box = $("#customer");
-			customer_search_box = $("#customer_search");
-			customer_search_button = $("#customer_search_button");
-			customer_table = $("#customer_table");
-			customer_dialog = $("#customer_dialog");
+			customer_box = $("#p_muid_customer");
+			customer_search_box = $("#p_muid_customer_search");
+			customer_search_button = $("#p_muid_customer_search_button");
+			customer_table = $("#p_muid_customer_table");
+			customer_dialog = $("#p_muid_customer_dialog");
 			<?php } ?>
-			comments = $("#comment_saver");
-			comments_box = $("#comments");
-			products = $("#products");
-			products_table = $("#products_table");
-			product_code = $("#product_code");
-			payments_table = $("#payments_table");
-			payments = $("#payments");
+			comments = $("#p_muid_comment_saver");
+			comments_box = $("#p_muid_comments");
+			products = $("#p_muid_products");
+			products_table = $("#p_muid_products_table");
+			product_code = $("#p_muid_product_code");
+			payments_table = $("#p_muid_payments_table");
+			payments = $("#p_muid_payments");
 
 			<?php if ($pines->config->com_sales->com_customer && ($this->entity->status != 'invoiced' || $this->entity->status != 'paid' || $this->entity->status != 'voided')) { ?>
 			customer_search_box.keydown(function(eventObject){
@@ -371,7 +371,7 @@ $pines->com_pgrid->load();
 				update_products();
 			};
 			// Category Grid
-			var category_grid = $("#category_grid").pgrid({
+			var category_grid = $("#p_muid_category_grid").pgrid({
 				pgrid_hidden_cols: [1],
 				pgrid_sort_col: 1,
 				pgrid_sort_ord: "asc",
@@ -383,7 +383,7 @@ $pines->com_pgrid->load();
 				}
 			});
 			// Category Dialog
-			var category_dialog = $("#category_dialog").dialog({
+			var category_dialog = $("#p_muid_category_dialog").dialog({
 				bgiframe: true,
 				autoOpen: false,
 				modal: true,
@@ -439,7 +439,7 @@ $pines->com_pgrid->load();
 				}
 			});
 			// Category Products Grid
-			var category_products_grid = $("#category_products_grid").pgrid({
+			var category_products_grid = $("#p_muid_category_products_grid").pgrid({
 				pgrid_sort_col: 1,
 				pgrid_sort_ord: "asc",
 				pgrid_view_height: "300px",
@@ -449,7 +449,7 @@ $pines->com_pgrid->load();
 				}
 			});
 			// Category Products Dialog
-			var category_products_dialog = $("#category_products_dialog").dialog({
+			var category_products_dialog = $("#p_muid_category_products_dialog").dialog({
 				bgiframe: true,
 				autoOpen: false,
 				modal: true,
@@ -557,7 +557,7 @@ $pines->com_pgrid->load();
 					url: "<?php echo pines_url('com_sales', 'forms/payment'); ?>",
 					type: "POST",
 					dataType: "html",
-					data: {"name": payment_data.processing_type, "id": $("#sale_details [name=id]").val(), "customer": $("#customer").val()},
+					data: {"name": payment_data.processing_type, "id": $("#p_muid_form [name=id]").val(), "customer": $("#p_muid_customer").val()},
 					error: function(XMLHttpRequest, textStatus){
 						pines.error("An error occured while trying to retreive the data form:\n"+XMLHttpRequest.status+": "+textStatus);
 					},
@@ -611,11 +611,11 @@ $pines->com_pgrid->load();
 						$(this).addClass("ui-state-hover");
 					}, function(){
 						$(this).removeClass("ui-state-hover");
-					}).html($("#amount_due").html()).css({"float": "left", "clear": "both", "min-height": "60px", "width": "100%", "text-align": "center", "margin": "2px"})
+					}).html($("#p_muid_amount_due").html()).css({"float": "left", "clear": "both", "min-height": "60px", "width": "100%", "text-align": "center", "margin": "2px"})
 					.click(function(){
 						payments_table.pgrid_add([{key: payment_type.guid, values: [
 							payment_type.name,
-							round_to_dec($("#amount_due").html()),
+							round_to_dec($("#p_muid_amount_due").html()),
 							"pending"
 						]}], function(){
 							var row = $(this);
@@ -713,7 +713,7 @@ $pines->com_pgrid->load();
 			})();
 			<?php } } ?>
 
-			$("#comments_dialog").dialog({
+			$("#p_muid_comments_dialog").dialog({
 				bgiframe: true,
 				autoOpen: false,
 				modal: true,
@@ -794,10 +794,10 @@ $pines->com_pgrid->load();
 				cur_row.pgrid_set_value(9, round_to_dec(cur_item_fees));
 			});
 			total = subtotal + item_fees + taxes;
-			$("#subtotal").html(round_to_dec(subtotal));
-			$("#item_fees").html(round_to_dec(item_fees));
-			$("#taxes").html(round_to_dec(taxes));
-			$("#total").html(round_to_dec(total));
+			$("#p_muid_subtotal").html(round_to_dec(subtotal));
+			$("#p_muid_item_fees").html(round_to_dec(item_fees));
+			$("#p_muid_taxes").html(round_to_dec(taxes));
+			$("#p_muid_total").html(round_to_dec(total));
 
 			// Update the products input element.
 			products.val(JSON.stringify(rows.pgrid_export_rows()));
@@ -807,7 +807,7 @@ $pines->com_pgrid->load();
 
 		function update_payments() {
 			var rows = payments_table.pgrid_get_all_rows();
-			var total = parseFloat($("#total").html());
+			var total = parseFloat($("#p_muid_total").html());
 			var amount_tendered = 0;
 			var amount_due = 0;
 			var change = 0;
@@ -830,9 +830,9 @@ $pines->com_pgrid->load();
 				change = Math.abs(amount_due);
 				amount_due = 0;
 			}
-			$("#amount_tendered").html(round_to_dec(amount_tendered));
-			$("#amount_due").html(round_to_dec(amount_due));
-			$("#change").html(round_to_dec(change));
+			$("#p_muid_amount_tendered").html(round_to_dec(amount_tendered));
+			$("#p_muid_amount_due").html(round_to_dec(amount_due));
+			$("#p_muid_change").html(round_to_dec(change));
 			
 			payments.val(JSON.stringify(submit_val));
 		}
@@ -938,7 +938,7 @@ $pines->com_pgrid->load();
 			if (kicked)
 				message += "<br /><div style=\"float: right; clear: right;\">Amount Received: <strong>$"+round_to_dec(total_cash)+"</strong></div>";
 
-			var change = parseFloat($("#change").html());
+			var change = parseFloat($("#p_muid_change").html());
 			if (change > 0 || kicked) {
 				kicked = true;
 				message += "<br /><div style=\"float: right; clear: right;\">Change Due: <strong>$"+round_to_dec(change)+"</strong></div><br style=\"clear: both;\" />";
@@ -947,7 +947,7 @@ $pines->com_pgrid->load();
 			if (kicked)
 				pines.drawer_open(keep_checking, message);
 			else
-				$("#sale_details").submit();
+				$("#p_muid_form").submit();
 		}
 		<?php } else { ?>
 		function run_drawer() {
@@ -956,29 +956,29 @@ $pines->com_pgrid->load();
 		<?php } ?>
 
 		function run_submit() {
-			$("#sale_details").submit();
+			$("#p_muid_form").submit();
 		}
 		// ]]>
 	</script>
 	<?php if ($pines->config->com_sales->com_customer) { ?>
 	<div class="pf-element">
-		<label for="customer_search">
+		<label for="p_muid_customer_search">
 			<span class="pf-label">Customer</span>
 			<?php if ($this->entity->status != 'invoiced' && $this->entity->status != 'paid' && $this->entity->status != 'voided') { ?>
 			<span class="pf-note">Enter part of a name, company, email, or phone # to search.</span>
 			<?php } ?>
 		</label>
 		<div class="pf-group">
-			<input class="pf-field ui-widget-content" type="text" id="customer" name="customer" size="24" onfocus="this.blur();" value="<?php echo htmlentities($this->entity->customer->guid ? "{$this->entity->customer->guid}: \"{$this->entity->customer->name}\"" : 'No Customer Selected'); ?>" />
+			<input class="pf-field ui-widget-content" type="text" id="p_muid_customer" name="customer" size="24" onfocus="this.blur();" value="<?php echo htmlentities($this->entity->customer->guid ? "{$this->entity->customer->guid}: \"{$this->entity->customer->name}\"" : 'No Customer Selected'); ?>" />
 			<?php if ($this->entity->status != 'invoiced' && $this->entity->status != 'paid' && $this->entity->status != 'voided') { ?>
 			<br />
-			<input class="pf-field ui-widget-content" type="text" id="customer_search" name="customer_search" size="24" />
-			<button class="pf-field ui-state-default ui-corner-all" type="button" id="customer_search_button"><span class="picon picon-system-search" style="padding-left: 16px; background-repeat: no-repeat;">Search</span></button>
+			<input class="pf-field ui-widget-content" type="text" id="p_muid_customer_search" name="customer_search" size="24" />
+			<button class="pf-field ui-state-default ui-corner-all" type="button" id="p_muid_customer_search_button"><span class="picon picon-system-search" style="padding-left: 16px; background-repeat: no-repeat;">Search</span></button>
 			<?php } ?>
 		</div>
 	</div>
-	<div id="customer_dialog" title="Pick a Customer" style="display: none;">
-		<table id="customer_table">
+	<div id="p_muid_customer_dialog" title="Pick a Customer" style="display: none;">
+		<table id="p_muid_customer_table">
 			<thead>
 				<tr>
 					<th>Name</th>
@@ -1017,8 +1017,8 @@ $pines->com_pgrid->load();
 		<br class="pf-clearing" />
 	</div>
 	<?php } ?>
-	<div id="category_dialog" title="Categories" style="display: none;">
-		<table id="category_grid">
+	<div id="p_muid_category_dialog" title="Categories" style="display: none;">
+		<table id="p_muid_category_grid">
 			<thead>
 				<tr>
 					<th>Order</th>
@@ -1038,8 +1038,8 @@ $pines->com_pgrid->load();
 		</table>
 		<br class="pf-clearing" />
 	</div>
-	<div id="category_products_dialog" title="Products" style="display: none;">
-		<table id="category_products_grid">
+	<div id="p_muid_category_products_dialog" title="Products" style="display: none;">
+		<table id="p_muid_category_products_grid">
 			<thead>
 				<tr>
 					<th>Name</th>
@@ -1055,7 +1055,7 @@ $pines->com_pgrid->load();
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Products</span>
 		<br class="pf-clearing" />
-		<table id="products_table">
+		<table id="p_muid_products_table">
 			<thead>
 				<tr>
 					<th>SKU</th>
@@ -1088,17 +1088,17 @@ $pines->com_pgrid->load();
 				<?php } ?>
 			</tbody>
 		</table>
-		<input type="hidden" id="products" name="products" size="24" />
+		<input type="hidden" id="p_muid_products" name="products" size="24" />
 	</div>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Ticket Totals</span>
 		<div class="pf-group">
 			<div class="pf-field" style="float: right; font-size: 1.2em; text-align: right;">
-				<span class="pf-label">Subtotal</span><span class="pf-field" id="subtotal">0.00</span><br />
-				<span class="pf-label">Item Fees</span><span class="pf-field" id="item_fees">0.00</span><br />
-				<span class="pf-label">Tax</span><span class="pf-field" id="taxes">0.00</span><br />
+				<span class="pf-label">Subtotal</span><span class="pf-field" id="p_muid_subtotal">0.00</span><br />
+				<span class="pf-label">Item Fees</span><span class="pf-field" id="p_muid_item_fees">0.00</span><br />
+				<span class="pf-label">Tax</span><span class="pf-field" id="p_muid_taxes">0.00</span><br />
 				<hr /><br />
-				<span class="pf-label">Total</span><span class="pf-field" id="total">0.00</span>
+				<span class="pf-label">Total</span><span class="pf-field" id="p_muid_total">0.00</span>
 			</div>
 			<hr class="pf-field" style="clear: both;" />
 		</div>
@@ -1109,7 +1109,7 @@ $pines->com_pgrid->load();
 		<div class="pf-note">
 			<div style="text-align: left;">
 				<?php foreach ($this->payment_types as $cur_payment_type) { ?>
-				<button id="payment_<?php echo $cur_payment_type->guid; ?>" class="ui-state-default ui-corner-all payment-button" type="button" style="margin-bottom: 2px;" value="<?php echo htmlentities(json_encode((object) array('guid' => $cur_payment_type->guid, 'name' => $cur_payment_type->name, 'minimum' => $cur_payment_type->minimum, 'maximum' => $cur_payment_type->maximum, 'processing_type' => $cur_payment_type->processing_type))); ?>">
+				<button id="p_muid_payment_<?php echo $cur_payment_type->guid; ?>" class="ui-state-default ui-corner-all payment-button" type="button" style="margin-bottom: 2px;" value="<?php echo htmlentities(json_encode((object) array('guid' => $cur_payment_type->guid, 'name' => $cur_payment_type->name, 'minimum' => $cur_payment_type->minimum, 'maximum' => $cur_payment_type->maximum, 'processing_type' => $cur_payment_type->processing_type))); ?>">
 					<span class="picon picon-32 picon-view-bank-account" style="display: block; padding-top: 32px; min-width: 50px; background-repeat: no-repeat; background-position: top center;"><?php echo $cur_payment_type->name; ?></span>
 				</button>
 				<?php } ?>
@@ -1118,7 +1118,7 @@ $pines->com_pgrid->load();
 		<?php } ?>
 		<div style="margin-top: 5px;" class="pf-group">
 			<div class="pf-field">
-				<table id="payments_table">
+				<table id="p_muid_payments_table">
 					<thead>
 						<tr>
 							<th>Type</th>
@@ -1130,17 +1130,17 @@ $pines->com_pgrid->load();
 					</tbody>
 				</table>
 			</div>
-			<input type="hidden" id="payments" name="payments" size="24" />
+			<input type="hidden" id="p_muid_payments" name="payments" size="24" />
 		</div>
 	</div>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Tendered</span>
 		<div class="pf-group">
 			<div class="pf-field" style="float: right; font-size: 1.2em; text-align: right;">
-				<span class="pf-label">Amount Tendered</span><span class="pf-field" id="amount_tendered">0.00</span><br />
-				<span class="pf-label">Amount Due</span><span style="font-weight: bold;" class="pf-field" id="amount_due">0.00</span><br />
+				<span class="pf-label">Amount Tendered</span><span class="pf-field" id="p_muid_amount_tendered">0.00</span><br />
+				<span class="pf-label">Amount Due</span><span style="font-weight: bold;" class="pf-field" id="p_muid_amount_due">0.00</span><br />
 				<hr /><br />
-				<span class="pf-label">Change</span><span style="font-weight: bold;" class="pf-field" id="change">0.00</span>
+				<span class="pf-label">Change</span><span style="font-weight: bold;" class="pf-field" id="p_muid_change">0.00</span>
 			</div>
 			<hr class="pf-field" style="clear: both;" />
 		</div>
@@ -1158,33 +1158,33 @@ $pines->com_pgrid->load();
 	<?php } ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Comments</span>
-			<input class="pf-field ui-widget-content ui-state-default ui-corner-all" type="button" value="Edit" onclick="$('#comments_dialog').dialog('open');" /></label>
+			<input class="pf-field ui-widget-content ui-state-default ui-corner-all" type="button" value="Edit" onclick="$('#p_muid_comments_dialog').dialog('open');" /></label>
 	</div>
-	<div id="comments_dialog" title="Comments" style="display: none;">
+	<div id="p_muid_comments_dialog" title="Comments" style="display: none;">
 		<div class="pf-element pf-full-width">
-			<textarea class="pf-field pf-full-width ui-widget-content" style="width: 96%; height: 100%;" rows="3" cols="35" id="comments" name="comments"><?php echo $this->entity->comments; ?></textarea>
+			<textarea class="pf-field pf-full-width ui-widget-content" style="width: 96%; height: 100%;" rows="3" cols="35" id="p_muid_comments" name="comments"><?php echo $this->entity->comments; ?></textarea>
 		</div>
 	</div>
 	<div class="pf-element pf-buttons">
-		<input type="hidden" id="comment_saver" name="comment_saver" value="<?php echo $this->entity->comments; ?>" />
+		<input type="hidden" id="p_muid_comment_saver" name="comment_saver" value="<?php echo $this->entity->comments; ?>" />
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 
-		<input type="hidden" id="sale_process_type" name="process" value="quote" />
+		<input type="hidden" id="p_muid_sale_process_type" name="process" value="quote" />
 
 		<?php if ($this->entity->status != 'voided' && $this->entity->status != 'paid') { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Tender" onclick="$('#sale_process_type').val('tender'); run_drawer();" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Tender" onclick="$('#p_muid_sale_process_type').val('tender'); run_drawer();" />
 		<?php } ?>
 
 		<?php if ($this->entity->status != 'voided' && $this->entity->status != 'paid' && $this->entity->status != 'invoiced') { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Invoice" onclick="$('#sale_process_type').val('invoice'); run_submit();" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Invoice" onclick="$('#p_muid_sale_process_type').val('invoice'); run_submit();" />
 		<?php } ?>
 
 		<?php if ($this->entity->status != 'voided' && $this->entity->status != 'paid' && $this->entity->status != 'invoiced' && $this->entity->status != 'quoted') { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Quote" onclick="$('#sale_process_type').val('quote'); run_submit();" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Quote" onclick="$('#p_muid_sale_process_type').val('quote'); run_submit();" />
 		<?php } else { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Save" onclick="$('#sale_process_type').val('save'); run_submit();" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Save" onclick="$('#p_muid_sale_process_type').val('save'); run_submit();" />
 		<?php } ?>
 
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'sale/list')); ?>');" value="Cancel" />

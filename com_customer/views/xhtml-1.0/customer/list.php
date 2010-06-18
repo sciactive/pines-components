@@ -128,13 +128,13 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
-		var customer_grid = $("#customer_grid").pgrid(cur_options);
+		var customer_grid = $("#p_muid_grid").pgrid(cur_options);
 		customer_grid.pgrid_get_all_rows().pgrid_delete();
 	});
 
 	// ]]>
 </script>
-<table id="customer_grid">
+<table id="p_muid_grid">
 	<thead>
 		<tr>
 			<th>ID</th>

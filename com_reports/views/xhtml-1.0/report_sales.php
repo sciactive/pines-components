@@ -56,7 +56,7 @@ foreach ($this->sales as $cur_sale) {
 	pines(function() {
 		var view_changes = 0;
 		// Create the calendar object.
-		$('#calendar').fullCalendar({
+		$('#p_muid_calendar').fullCalendar({
 			header: {
 				left: 'prev,next today',
 				center: 'title',
@@ -144,8 +144,8 @@ foreach ($this->sales as $cur_sale) {
 			}
 		});
 		var current_date = $.fullCalendar.parseDate(<?php echo $this->date[0]; ?>);
-		$('#calendar').fullCalendar('gotoDate', current_date);
+		$('#p_muid_calendar').fullCalendar('gotoDate', current_date);
 	});
 	// ]]>
 </script>
-<div id="calendar"></div>
+<div id="p_muid_calendar"></div>

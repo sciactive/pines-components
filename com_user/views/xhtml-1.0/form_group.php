@@ -113,8 +113,8 @@ $pines->uploader->load();
 					double_click: true,
 					click: function(e, rows){
 						cur_condition = rows;
-						condition_dialog.find("input[name=cur_condition_type]").val(rows.pgrid_get_value(2));
-						condition_dialog.find("input[name=cur_condition_value]").val(rows.pgrid_get_value(3));
+						condition_dialog.find("input[name=cur_condition_type]").val(rows.pgrid_get_value(1));
+						condition_dialog.find("input[name=cur_condition_value]").val(rows.pgrid_get_value(2));
 						condition_dialog.dialog('open');
 					}
 				},
@@ -144,22 +144,18 @@ $pines->uploader->load();
 						alert("Please provide both a type and a value for this condition.");
 						return;
 					}
-					// Is this a duplicate type?
-					var dupe = false;
-					conditions_table.pgrid_get_all_rows().each(function(){
-						if (dupe) return;
-						var check_row = $(this);
-						if (check_row.pgrid_get_value(1) == cur_condition_type) {
-							// If this is the current row being edited, it isn't a duplicate.
-							if (!cur_condition || !cur_condition.is(check_row))
+					if (cur_condition == null) {
+						// Is this a duplicate type?
+						var dupe = false;
+						conditions_table.pgrid_get_all_rows().each(function(){
+							if (dupe) return;
+							if ($(this).pgrid_get_value(1) == cur_condition_type)
 								dupe = true;
+						});
+						if (dupe) {
+							pines.notice('There is already a condition of that type.');
+							return;
 						}
-					});
-					if (dupe) {
-						pines.notice('There is already a condition of that type.');
-						return;
-					}
-					if (!cur_condition) {
 						var new_condition = [{
 							key: null,
 							values: [

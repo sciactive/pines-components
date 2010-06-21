@@ -172,10 +172,10 @@ class com_hrm_employee extends entity {
 	 * @return module The module.
 	 */
 	public function print_timeclock_view() {
-		global $pines;
-
 		$module = new module('com_hrm', 'view_timeclock', 'content');
 		$module->entity = $this;
+
+		return $module;
 	}
 
 	/**
@@ -188,30 +188,6 @@ class com_hrm_employee extends entity {
 
 		return $module;
 	}
-
-	/* public function validate() {
-		return array(
-			'name' => array(
-				'required' => 'Please specify a name.'
-			),
-			'email' => array(
-				'required' => 'Please specify an email.',
-				'email' => 'The email provided is not valid.'
-			),
-			'phone_cell' => array(
-				'one_required' => array('phones', 'Please specify at least one phone number.'),
-				'phone' => 'The phone number provided is not valid.'
-			),
-			'phone_work' => array(
-				'one_required' => array('phones', 'Please specify at least one phone number.'),
-				'phone' => 'The phone number provided is not valid.'
-			),
-			'phone_home' => array(
-				'one_required' => array('phones', 'Please specify at least one phone number.'),
-				'phone' => 'The phone number provided is not valid.'
-			)
-		);
-	} */
 }
 
 ?>

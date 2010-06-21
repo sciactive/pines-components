@@ -16,12 +16,12 @@ defined('P_RUN') or die('Direct access prohibited');
 		// <![CDATA[
 		pines(function(){
 			var form = $("#p_muid_form");
-			var card_swipe = form.find("input[name=card_swipe]");
-			var name_first = form.find("input[name=name_first]");
-			var name_last = form.find("input[name=name_last]");
-			var card_number = form.find("input[name=card_number]");
-			var card_exp_month = form.find("select[name=card_exp_month]");
-			var card_exp_year = form.find("select[name=card_exp_year]");
+			var card_swipe = form.find("#p_muid_card_swipe");
+			var name_first = form.find("#p_muid_name_first");
+			var name_last = form.find("#p_muid_name_last");
+			var card_number = form.find("#p_muid_card_number");
+			var card_exp_month = form.find("#p_muid_card_exp_month");
+			var card_exp_year = form.find("#p_muid_card_exp_year");
 			card_swipe.focus();
 			card_swipe.keydown(function(e){
 				if (e.keyCode == 13) {
@@ -63,110 +63,42 @@ defined('P_RUN') or die('Direct access prohibited');
 					card_exp_month.val(swipe_card_month);
 					card_exp_year.val(swipe_card_year);
 					card_swipe.val("");
-					$("#p_muid_form input[name=card_swiped]").val("ON");
+					$("#p_muid_card_swiped").val("ON");
 					form.submit();
 				}
 			});
 		});
 		// ]]>
 	</script>
-	<div id="p_muid_authorize_net_swipe">
+	<div id="p_muid_swipe_form">
 		<div class="pf-element">
 			<label><span class="pf-label">Swipe Card</span>
-				<input class="pf-field ui-widget-content" type="password" name="card_swipe" value="" /></label>
+				<input class="pf-field ui-widget-content" type="password" id="p_muid_card_swipe" name="card_swipe" value="" /></label>
 		</div>
 		<div class="pf-element">
 			<button class="pf-field ui-state-default ui-corner-all" type="button" onclick="
-				$('#authorize_net_swipe').slideUp('fast');
-				$('#authorize_net_manual').slideDown('fast');
-				$('#authorize_net_form input[name=card_swiped]').val('');
+				$('#p_muid_swipe_form').slideUp('fast');
+				$('#p_muid_manual_form').slideDown('fast');
+				$('#p_muid_card_swiped').val('');
 			">Enter Manually</button>
 		</div>
 	</div>
-	<div id="p_muid_authorize_net_manual" style="display: none;">
+	<div id="p_muid_manual_form" style="display: none;">
 		<div class="pf-element">
 			<label><span class="pf-label">Cardholder First Name</span>
-				<input class="pf-field ui-widget-content" type="text" name="name_first" value="<?php echo $this->name_first; ?>" /></label>
+				<input class="pf-field ui-widget-content" type="text" id="p_muid_name_first" name="name_first" value="<?php echo $this->name_first; ?>" /></label>
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Cardholder Last Name</span>
-				<input class="pf-field ui-widget-content" type="text" name="name_last" value="<?php echo $this->name_last; ?>" /></label>
+				<input class="pf-field ui-widget-content" type="text" id="p_muid_name_last" name="name_last" value="<?php echo $this->name_last; ?>" /></label>
 		</div>
-		<?php /* Address is unnecessary.
-		<div class="pf-element">
-			<label><span class="pf-label">Cardholder Address</span>
-				<input class="pf-field ui-widget-content" type="text" name="address" value="<?php echo $this->address; ?>" /></label>
-		</div>
-		<div class="pf-element">
-			<span class="pf-label">Cardholder State, Zip</span>
-			<select class="pf-field ui-widget-content" name="state">
-				<?php foreach (array(
-						'' => '-- Choose State --',
-						'AL' => 'Alabama',
-						'AK' => 'Alaska',
-						'AZ' => 'Arizona',
-						'AR' => 'Arkansas',
-						'CA' => 'California',
-						'CO' => 'Colorado',
-						'CT' => 'Connecticut',
-						'DE' => 'Delaware',
-						'DC' => 'DC',
-						'FL' => 'Florida',
-						'GA' => 'Georgia',
-						'HI' => 'Hawaii',
-						'ID' => 'Idaho',
-						'IL' => 'Illinois',
-						'IN' => 'Indiana',
-						'IA' => 'Iowa',
-						'KS' => 'Kansas',
-						'KY' => 'Kentucky',
-						'LA' => 'Louisiana',
-						'ME' => 'Maine',
-						'MD' => 'Maryland',
-						'MA' => 'Massachusetts',
-						'MI' => 'Michigan',
-						'MN' => 'Minnesota',
-						'MS' => 'Mississippi',
-						'MO' => 'Missouri',
-						'MT' => 'Montana',
-						'NE' => 'Nebraska',
-						'NV' => 'Nevada',
-						'NH' => 'New Hampshire',
-						'NJ' => 'New Jersey',
-						'NM' => 'New Mexico',
-						'NY' => 'New York',
-						'NC' => 'North Carolina',
-						'ND' => 'North Dakota',
-						'OH' => 'Ohio',
-						'OK' => 'Oklahoma',
-						'OR' => 'Oregon',
-						'PA' => 'Pennsylvania',
-						'RI' => 'Rhode Island',
-						'SC' => 'South Carolina',
-						'SD' => 'South Dakota',
-						'TN' => 'Tennessee',
-						'TX' => 'Texas',
-						'UT' => 'Utah',
-						'VT' => 'Vermont',
-						'VA' => 'Virginia',
-						'WA' => 'Washington',
-						'WV' => 'West Virginia',
-						'WI' => 'Wisconsin',
-						'WY' => 'Wyoming'
-					) as $key => $cur_state) { ?>
-				<option value="<?php echo $key; ?>"<?php echo $this->state == $key ? ' selected="selected"' : ''; ?>><?php echo $cur_state; ?></option>
-				<?php } ?>
-			</select>
-			<input class="pf-field ui-widget-content" type="text" name="zip" size="5" value="<?php echo $this->zip; ?>" />
-		</div>
-		 */ ?>
 		<div class="pf-element">
 			<label><span class="pf-label">Card Number</span>
-				<input class="pf-field ui-widget-content" type="text" name="card_number" value="<?php echo $this->card_number; ?>" /></label>
+				<input class="pf-field ui-widget-content" type="text" id="p_muid_card_number" name="card_number" value="<?php echo $this->card_number; ?>" /></label>
 		</div>
 		<div class="pf-element">
 			<span class="pf-label">Expiration Date, CCV</span>
-			<select class="pf-field ui-widget-content" name="card_exp_month">
+			<select class="pf-field ui-widget-content" id="p_muid_card_exp_month" name="card_exp_month">
 				<?php foreach (array(
 						'01' => '01 January',
 						'02' => '02 February',
@@ -184,7 +116,7 @@ defined('P_RUN') or die('Direct access prohibited');
 				<option value="<?php echo $key; ?>"<?php echo $this->card_exp_month == $key ? ' selected="selected"' : ''; ?>><?php echo $value; ?></option>
 				<?php } ?>
 			</select>
-			<select class="pf-field ui-widget-content" name="card_exp_year">
+			<select class="pf-field ui-widget-content" id="p_muid_card_exp_year" name="card_exp_year">
 				<?php for ($i = 0; $i <= 25; $i++) { ?>
 				<option value="<?php echo date('y', strtotime("+$i years")); ?>"<?php echo $this->card_exp_year == date('y', strtotime("+$i years")) ? ' selected="selected"' : ''; ?>><?php echo date('y', strtotime("+$i years")); ?></option>
 				<?php } ?>
@@ -192,5 +124,5 @@ defined('P_RUN') or die('Direct access prohibited');
 			<input class="pf-field ui-widget-content" type="password" name="cid" size="3" value="<?php echo $this->cid; ?>" />
 		</div>
 	</div>
-	<input type="hidden" name="card_swiped" value="" />
+	<input type="hidden" id="p_muid_card_swiped" name="card_swiped" value="" />
 </form>

@@ -108,7 +108,7 @@ defined('P_RUN') or die('Direct access prohibited');
 				elem.css("font-family", displays[dindex].fontfamily);
 				elem.css("font-size", displays[dindex].fontsize+"pt");
 				elem.css("color", displays[dindex].fontcolor);
-				elem.children("#previewtext").html(displays[dindex].addspacing ? "T h i s &nbsp; i s &nbsp; h o w &nbsp; t h e &nbsp; t e x t &nbsp; w i l l &nbsp; l o o k ." : "This is how the text will look.");
+				$("#p_muid_previewtext").html(displays[dindex].addspacing ? "T h i s &nbsp; i s &nbsp; h o w &nbsp; t h e &nbsp; t e x t &nbsp; w i l l &nbsp; l o o k ." : "This is how the text will look.");
 				elem.css("border", displays[dindex].border ? "1px solid black" : "0");
 				//elem.css("letter-spacing", (displays[dindex].letterspacing == "normal") ? "normal" : (displays[dindex].letterspacing + "px"));
 				//elem.css("word-spacing", (displays[dindex].wordspacing == "normal") ? "normal" : (displays[dindex].wordspacing + "px"));
@@ -273,7 +273,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			</div>
 			<div style="float: left; clear: left;">
 				<label>Font Family:<br />
-					<select id="p_muid_fontfamily_suggest" name="fontfamily_suggest" size="1" onchange="$('#fontfamily').val(this.value); this.value='--'; set_values();">
+					<select id="p_muid_fontfamily_suggest" name="fontfamily_suggest" size="1" onchange="$('#p_muid_fontfamily').val(this.value); this.value='--'; set_values();">
 						<option value="--">Installed Fonts</option>
 					<?php
 					$fonts = array();

@@ -130,7 +130,9 @@ class com_configure extends component implements configurator_interface {
 		$module->per_user = true;
 		$module->user = $usergroup;
 		$module->groups = $pines->user_manager->get_groups();
+		usort($module->groups, array($this, 'sort_groups'));
 		$module->users = $pines->user_manager->get_users();
+		usort($module->users, array($this, 'sort_users'));
 		foreach ($pines->all_components as $cur_component) {
 			$module->components[] = configurator_component::factory($cur_component);
 		}
@@ -168,6 +170,30 @@ class com_configure extends component implements configurator_interface {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Sort groups.
+	 * @param group $a Group.
+	 * @param group $b Group.
+	 * @return bool Group order.
+	 */
+	private function sort_groups($a, $b) {
+		$aname = empty($a->name) ? $a->groupname : $a->name;
+		$bname = empty($b->name) ? $b->groupname : $b->name;
+		return strtolower($aname) > strtolower($bname);
+	}
+
+	/**
+	 * Sort users.
+	 * @param group $a User.
+	 * @param group $b User.
+	 * @return bool User order.
+	 */
+	private function sort_users($a, $b) {
+		$aname = empty($a->name) ? $a->username : $a->name;
+		$bname = empty($b->name) ? $b->username : $b->name;
+		return strtolower($aname) > strtolower($bname);
 	}
 }
 

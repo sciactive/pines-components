@@ -25,7 +25,7 @@ $pines->com_jstree->load();
 <script type='text/javascript'>
 	// <![CDATA[
 	pines(function(){
-		$("#p_muid_form [name=start], #report_details [name=end]").datepicker({
+		$("#p_muid_form [name=start], #p_muid_form [name=end]").datepicker({
 			dateFormat: "yy-mm-dd",
 			changeMonth: true,
 			changeYear: true,

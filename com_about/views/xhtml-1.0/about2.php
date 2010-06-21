@@ -13,13 +13,6 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = "About {$pines->info->name}";
 $this->note = "Version {$pines->info->version}";
 ?>
-<style type="text/css">
-	/* <![CDATA[ */
-	#p_muid_buttons {
-		float: right;
-	}
-	/* ]]> */
-</style>
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
@@ -50,7 +43,7 @@ admin can choose whatever database system he uses, even flat files, and all the
 components which use an entity manager (the database abstraction layer) will
 work.
 </p>
-<p id="p_muid_buttons">
+<p id="p_muid_buttons" style="float: right;">
 	<button type="button" onclick="window.open('http://sciactive.com/');">SciActive</button>
 	<button type="button" onclick="window.open('http://sourceforge.net/projects/pines/');">Project Page</button>
 	<button type="button" onclick="window.open('http://pines.sourceforge.net/pines-docs/');">API Documentation</button>

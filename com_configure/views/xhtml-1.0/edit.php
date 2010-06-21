@@ -30,15 +30,15 @@ $pines->com_ptags->load();
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-		$("#p_muid_form .do_tags").ptags({ptags_delimiter: ';;'});
-		$("#p_muid_form").delegate("input.default_checkbox", "change", function(){
+		$(".p_muid_do_tags", "#p_muid_form").ptags({ptags_delimiter: ';;'});
+		$("#p_muid_form").delegate(".p_muid_default_checkbox", "change", function(){
 			var checkbox = $(this);
 			if (checkbox.attr("checked")) {
 				checkbox.closest("div.pf-element").children("div.default").hide().end().children("div.setting").show();
 			} else {
 				checkbox.closest("div.pf-element").children("div.setting").hide().end().children("div.default").show();
 			}
-		}).find("input.default_checkbox").change();
+		}).find(".p_muid_default_checkbox").change();
 	});
 	// ]]>
 </script>
@@ -55,7 +55,7 @@ $pines->com_ptags->load();
 			$cur_value = $cur_var['value'];
 		} ?>
 	<div class="pf-element pf-full-width">
-		<label><span class="pf-label"><input type="checkbox" class="default_checkbox ui-widget-content" name="manset_<?php echo $cur_var['name']; ?>" value="ON" <?php echo $is_default ? '' : 'checked="checked" '; ?>/> <?php echo $cur_var['cname']; ?></span></label>
+		<label><span class="pf-label"><input type="checkbox" class="p_muid_default_checkbox ui-widget-content" name="manset_<?php echo $cur_var['name']; ?>" value="ON" <?php echo $is_default ? '' : 'checked="checked" '; ?>/> <?php echo $cur_var['cname']; ?></span></label>
 		<span class="pf-note"><?php print_r($cur_var['description']); ?></span>
 		<div class="setting" style="display: none;">
 			<?php if (is_array($cur_var['options'])) { ?>
@@ -68,11 +68,11 @@ $pines->com_ptags->load();
 			<?php } elseif (is_array($cur_var['value'])) { ?>
 				<div class="pf-group">
 					<?php if (is_int($cur_var['value'][0])) { ?>
-					<input class="pf-field ui-widget-content do_tags" type="text" name="opt_int_<?php echo $cur_var['name']; ?>" value="<?php echo implode(';;', $cur_value); ?>" />
+					<input class="pf-field ui-widget-content p_muid_do_tags" type="text" name="opt_int_<?php echo $cur_var['name']; ?>" value="<?php echo implode(';;', $cur_value); ?>" />
 					<?php } elseif (is_float($cur_var['value'][0])) { ?>
-					<input class="pf-field ui-widget-content do_tags" type="text" name="opt_float_<?php echo $cur_var['name']; ?>" value="<?php echo implode(';;', $cur_value); ?>" />
+					<input class="pf-field ui-widget-content p_muid_do_tags" type="text" name="opt_float_<?php echo $cur_var['name']; ?>" value="<?php echo implode(';;', $cur_value); ?>" />
 					<?php } elseif (is_string($cur_var['value'][0])) { ?>
-					<div class="pf-field"><textarea rows="3" cols="35" class="ui-widget-content do_tags" style="width: 100%;" name="opt_string_<?php echo $cur_var['name']; ?>"><?php echo htmlentities(implode(';;', $cur_value), true); ?></textarea></div>
+					<div class="pf-field"><textarea rows="3" cols="35" class="ui-widget-content p_muid_do_tags" style="width: 100%;" name="opt_string_<?php echo $cur_var['name']; ?>"><?php echo htmlentities(implode(';;', $cur_value), true); ?></textarea></div>
 					<?php } ?>
 				</div>
 			<?php } else { ?>

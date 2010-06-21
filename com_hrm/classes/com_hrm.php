@@ -26,17 +26,13 @@ class com_hrm extends component {
 	 * @var bool $com_sales
 	 */
 	var $com_sales;
-	/**
-	 *
-	 */
-	private $user_templates;
 
 	/**
 	 * Check whether com_sales is installed and we should integrate with it.
 	 *
 	 * Places the result in $this->com_sales.
 	 */
-	function __construct() {
+	public function __construct() {
 		global $pines;
 		$this->com_sales = $pines->depend->check('component', 'com_sales');
 	}
@@ -44,7 +40,7 @@ class com_hrm extends component {
 	/**
 	 * Clears all events from the calendar.
 	 */
-	function clear_calendar() {
+	public function clear_calendar() {
 		global $pines;
 		$calendar_events = $pines->entity_manager->get_entities(array('class' => com_hrm_event), array('&', 'tag' => array('com_hrm', 'event')));
 		foreach ($calendar_events as $cur_event)
@@ -52,51 +48,61 @@ class com_hrm extends component {
 	}
 
 	/**
+	 * Get all employees.
+	 *
+	 * @return array An array of employees.
+	 * @todo Optimize this function.
+	 */
+	public function get_employees() {
+		global $pines;
+		$users = $pines->user_manager->get_users();
+		$employees = array();
+		// Filter out users who aren't employees.
+		foreach ($users as $key => &$cur_user) {
+			if ($cur_user->employee)
+				$employees[] = com_hrm_employee::factory($cur_user->guid);
+			unset($users[$key]);
+		}
+		unset($cur_user);
+		return $employees;
+	}
+
+	/**
 	 * Creates and attaches a module which lists employees.
 	 */
-	function list_employees() {
-		global $pines;
+	public function list_employees() {
+		$module = new module('com_hrm', 'employee/list', 'content');
 
-		$module = new module('com_hrm', 'list_employees', 'content');
+		$module->employees = $this->get_employees();
 
-		$module->employees = $pines->entity_manager->get_entities(array('class' => com_hrm_employee), array('&', 'tag' => array('com_hrm', 'employee')));
-
-		if ( empty($module->employees) ) {
-			//$module->detach();
+		if ( empty($module->employees) )
 			pines_notice('There are no employees.');
-		}
 	}
 
 	/**
 	 * Creates and attaches a module which lists employees' timeclocks.
 	 */
-	function list_timeclocks() {
-		global $pines;
+	public function list_timeclocks() {
+		$module = new module('com_hrm', 'employee/timeclock/list', 'content');
 
-		$module = new module('com_hrm', 'list_timeclocks', 'content');
+		$module->employees = $this->get_employees();
 
-		$module->employees = $pines->entity_manager->get_entities(array('class' => com_hrm_employee), array('&', 'tag' => array('com_hrm', 'employee')));
-
-		if ( empty($module->employees) ) {
-			//$module->detach();
+		if ( empty($module->employees) )
 			pines_notice('There are no employees.');
-		}
 	}
 
 	/**
 	 * Creates and attaches a module which lists user templates.
 	 */
-	function list_user_templates() {
+	public function list_user_templates() {
 		global $pines;
 
 		$module = new module('com_hrm', 'list_user_templates', 'content');
 
 		$module->user_templates = $pines->entity_manager->get_entities(array('class' => com_hrm_user_template), array('&', 'tag' => array('com_hrm', 'user_template')));
 
-		if ( empty($module->user_templates) ) {
-			//$module->detach();
+		if ( empty($module->user_templates) )
 			pines_notice('There are no user templates.');
-		}
 	}
 
 	/**
@@ -111,11 +117,51 @@ class com_hrm extends component {
 
 		if (!isset($location))
 			$location = $_SESSION['user']->group->guid;
-		$module = new module('com_hrm', 'form_schedule', 'content');
+		$module = new module('com_hrm', 'form_schedule');
 		$module->location = $location;
 
 		$pines->page->override_doc($module->render());
 		return $module;
+	}
+
+	/**
+	 * Creates and attaches a module which shows the calendar.
+	 * @param int $id An event GUID.
+	 * @param group $location The desired location to view the schedule for.
+	 */
+	public function show_calendar($id = null, $location = null) {
+		global $pines;
+
+		if (!isset($location) || !isset($location->guid))
+			$location = $_SESSION['user']->group;
+
+		if (gatekeeper('com_hrm/editcalendar')) {
+			$form = new module('com_hrm', 'form_calendar', 'right');
+			// If an id is specified, the event info will be displayed for editing.
+			if (isset($id) && $id >  0) {
+				$form->event = com_hrm_event::factory((int) $id);
+				$location = $form->event->group;
+			}
+			// Should work like this, we need to have the employee's group update upon saving it to a user.
+			$form->employees = $pines->entity_manager->get_entities(array('class' => com_hrm_employee), array('&', 'tag' => array('com_hrm', 'employee')));
+			$form->location = $location->guid;
+		}
+		$calendar_head = new module('com_hrm', 'show_calendar_head', 'head');
+		$calendar = new module('com_hrm', 'show_calendar', 'content');
+		$calendar->events = $pines->entity_manager->get_entities(array('class' => com_hrm_event), array('&', 'ref' => array('group', $location), 'tag' => array('com_hrm', 'event')));
+		$calendar->location = $location;
+	}
+
+	/**
+	 * Sort users.
+	 * @param group $a User.
+	 * @param group $b User.
+	 * @return bool User order.
+	 */
+	private function sort_users($a, $b) {
+		$aname = empty($a->name) ? $a->username : $a->name;
+		$bname = empty($b->name) ? $b->username : $b->name;
+		return strtolower($aname) > strtolower($bname);
 	}
 
 	/**
@@ -126,7 +172,7 @@ class com_hrm extends component {
 	 * @param array $exceptions An array of words which should not be changed.
 	 * @return string The transformed string.
 	 */
-	function title_case($string, $delimiters = array(' ', '-', 'O\'', 'Mc'), $exceptions = array('to', 'a', 'the', 'of', 'by', 'and', 'with', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X')) {
+	public function title_case($string, $delimiters = array(' ', '-', 'O\'', 'Mc'), $exceptions = array('to', 'a', 'the', 'of', 'by', 'and', 'with', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X')) {
 		/*
 		* Exceptions in lower case are words you don't want converted
 		* Exceptions all in upper case are any words you don't want converted to title case
@@ -152,45 +198,29 @@ class com_hrm extends component {
 	}
 
 	/**
-	 * Print a form for the current user to clockin, if they're allowed.
-	 * @return module|null The form's module or null.
+	 * Print a form to select users.
+	 *
+	 * @param bool $all Whether to show users who are employees too.
+	 * @return module The form's module.
 	 */
-	function provide_clockin() {
-		if (empty($_SESSION['user']) || !gatekeeper('com_hrm/clock'))
-			return null;
+	public function user_select_form($all = false) {
 		global $pines;
-		$employee = $pines->entity_manager->get_entity(array('class' => com_hrm_employee), array('&', 'ref' => array('user_account', $_SESSION['user']), 'tag' => array('com_hrm', 'employee')));
-		if (!isset($employee))
-			return null;
-		return $employee->print_clockin();
-	}
+		$pines->page->override = true;
 
-	/**
-	 * Creates and attaches a module which shows the calendar.
-	 * @param int $id An event GUID.
-	 * @param group $location The desired location to view the schedule for.
-	 */
-	function show_calendar($id = null, $location = null) {
-		global $pines;
-		
-		if (!isset($location) || !isset($location->guid))
-			$location = $_SESSION['user']->group;
-		
-		if (gatekeeper('com_hrm/editcalendar')) {
-			$form = new module('com_hrm', 'form_calendar', 'right');
-			// If an id is specified, the event info will be displayed for editing.
-			if (isset($id) && $id >  0) {
-				$form->event = com_hrm_event::factory((int) $id);
-				$location = $form->event->group;
+		$module = new module('com_hrm', 'forms/users');
+		$module->users = (array) $pines->user_manager->get_users();
+		if ($all) {
+			// Filter out users who are already employees.
+			foreach ($module->users as $key => &$cur_user) {
+				if ($cur_user->employee)
+					unset($module->users[$key]);
 			}
-			// Should work like this, we need to have the employee's group update upon saving it to a user.
-			$form->employees = $pines->entity_manager->get_entities(array('class' => com_hrm_employee), array('&', 'tag' => array('com_hrm', 'employee')));
-			$form->location = $location->guid;
+			unset($cur_user);
 		}
-		$calendar_head = new module('com_hrm', 'show_calendar_head', 'head');
-		$calendar = new module('com_hrm', 'show_calendar', 'content');
-		$calendar->events = $pines->entity_manager->get_entities(array('class' => com_hrm_event), array('&', 'ref' => array('group', $location), 'tag' => array('com_hrm', 'event')));
-		$calendar->location = $location;
+		usort($module->users, array($this, 'sort_users'));
+
+		$pines->page->override_doc($module->render());
+		return $module;
 	}
 }
 

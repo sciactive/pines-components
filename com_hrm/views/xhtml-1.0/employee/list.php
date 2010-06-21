@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Employees';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_hrm/list_employees'];
+	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_hrm/employee/list'];
 ?>
 <script type="text/javascript">
 	// <![CDATA[
@@ -24,15 +24,45 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
-				<?php if (gatekeeper('com_sales/newemployee')) { ?>
-				{type: 'button', text: 'New', extra_class: 'picon picon-list-add-user', selection_optional: true, url: '<?php echo pines_url('com_hrm', 'editemployee'); ?>'},
+				<?php if (gatekeeper('com_sales/addemployee')) { ?>
+				{type: 'button', text: 'Add User(s)', extra_class: 'picon picon-list-add-user', selection_optional: true, click: function(){
+					$.ajax({
+						url: "<?php echo pines_url('com_hrm', 'forms/userselect'); ?>",
+						type: "POST",
+						dataType: "html",
+						error: function(XMLHttpRequest, textStatus){
+							pines.error("An error occured while trying to retreive the user select form:\n"+XMLHttpRequest.status+": "+textStatus);
+						},
+						success: function(data){
+							if (data == "")
+								return;
+							var form = $("<div title=\"Select User(s)\" />");
+							form.html(data+"<br />");
+							form.dialog({
+								bgiframe: true,
+								autoOpen: true,
+								modal: true,
+								close: function(){
+									form.remove();
+								},
+								buttons: {
+									"Make Employee": function(){
+										form.dialog('close');
+										var users = form.find(":input[name=users]").val();
+										pines.post("<?php echo pines_url('com_hrm', 'employee/add'); ?>", { "id": users });
+									}
+								}
+							});
+						}
+					});
+				}},
 				<?php } if (gatekeeper('com_sales/editemployee')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'picon picon-user-properties', double_click: true, url: '<?php echo pines_url('com_hrm', 'editemployee', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'picon picon-user-properties', double_click: true, url: '<?php echo pines_url('com_hrm', 'employee/edit', array('id' => '__title__')); ?>'},
 				<?php } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
-				<?php if (gatekeeper('com_sales/deleteemployee')) { ?>
-				{type: 'button', text: 'Delete', extra_class: 'picon picon-list-remove-user', confirm: true, multi_select: true, url: '<?php echo pines_url('com_hrm', 'deleteemployee', array('id' => '__title__')); ?>', delimiter: ','},
+				<?php if (gatekeeper('com_sales/removeemployee')) { ?>
+				{type: 'button', text: 'Remove User(s)', extra_class: 'picon picon-list-remove-user', confirm: true, multi_select: true, url: '<?php echo pines_url('com_hrm', 'employee/remove', array('id' => '__title__')); ?>', delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>
 				{type: 'button', text: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
@@ -51,7 +81,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo pines_url('com_pgrid', 'save_state'); ?>", {view: "com_hrm/list_employees", state: cur_state});
+				state_xhr = $.post("<?php echo pines_url('com_pgrid', 'save_state'); ?>", {view: "com_hrm/employee/list", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
@@ -64,38 +94,18 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<thead>
 		<tr>
 			<th>ID</th>
-			<th>Name</th>
-			<th>User</th>
+			<th>Username</th>
+			<th>Real Name</th>
 			<th>Email</th>
-			<th>Job Title</th>
-			<th>Country</th>
-			<th>Address</th>
-			<th>City</th>
-			<th>State</th>
-			<th>Zip</th>
-			<th>Home Phone</th>
-			<th>Work Phone</th>
-			<th>Cell Phone</th>
-			<th>Fax</th>
 		</tr>
 	</thead>
 	<tbody>
 	<?php foreach($this->employees as $employee) { ?>
 		<tr title="<?php echo $employee->guid; ?>">
 			<td><?php echo $employee->guid; ?></td>
+			<td><?php echo $employee->username; ?></td>
 			<td><?php echo $employee->name; ?></td>
-			<td><?php echo isset($employee->user_account) ? $employee->user_account->username : ''; ?></td>
 			<td><?php echo $employee->email; ?></td>
-			<td><?php echo $employee->job_title; ?></td>
-			<td><?php echo $employee->address_type == 'us' ? 'US' : 'Intl'; ?></td>
-			<td><?php echo $employee->address_type == 'us' ? $employee->address_1.' '.$employee->address_2 :  $employee->address_international; ?></td>
-			<td><?php echo $employee->city; ?></td>
-			<td><?php echo $employee->state; ?></td>
-			<td><?php echo $employee->zip; ?></td>
-			<td><?php echo format_phone($employee->phone_home); ?></td>
-			<td><?php echo format_phone($employee->phone_work); ?></td>
-			<td><?php echo format_phone($employee->phone_cell); ?></td>
-			<td><?php echo format_phone($employee->fax); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

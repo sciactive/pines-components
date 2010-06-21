@@ -44,6 +44,19 @@ $user->city = $_REQUEST['city'];
 $user->state = $_REQUEST['state'];
 $user->zip = $_REQUEST['zip'];
 $user->address_international = $_REQUEST['address_international'];
+$user->addresses = (array) json_decode($_REQUEST['addresses']);
+foreach ($user->addresses as &$cur_address) {
+	$array = array(
+		'type' => $cur_address->values[0],
+		'address_1' => $cur_address->values[1],
+		'address_2' => $cur_address->values[2],
+		'city' => $cur_address->values[3],
+		'state' => $cur_address->values[4],
+		'zip' => $cur_address->values[5]
+	);
+	$cur_address = $array;
+}
+unset($cur_address);
 
 if (gatekeeper('com_user/assignpin'))
 	$user->pin = $_REQUEST['pin'];

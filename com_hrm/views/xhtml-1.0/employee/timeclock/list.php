@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Employee Timeclock';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_hrm/list_timeclocks'];
+	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_hrm/employee/timeclock/list'];
 ?>
 <script type="text/javascript">
 	// <![CDATA[
@@ -24,16 +24,16 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
-				{type: 'button', text: 'View', extra_class: 'picon picon-view-time-schedule', double_click: true, url: '<?php echo pines_url('com_hrm', 'viewtimeclock', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'View', extra_class: 'picon picon-view-time-schedule', double_click: true, url: '<?php echo pines_url('com_hrm', 'employee/timeclock/view', array('id' => '__title__')); ?>'},
 				<?php if (gatekeeper('com_hrm/manageclock')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'picon picon-view-time-schedule-edit', url: '<?php echo pines_url('com_hrm', 'edittimeclock', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'picon picon-view-time-schedule-edit', url: '<?php echo pines_url('com_hrm', 'employee/timeclock/edit', array('id' => '__title__')); ?>'},
 				<?php } if (gatekeeper('com_hrm/clock') || gatekeeper('com_hrm/manageclock')) { ?>
 				{type: 'button', text: 'Clock In/Out', extra_class: 'picon picon-chronometer', multi_select: true, click: function(e, rows){
 					var loader;
 					rows.each(function(){
 						var cur_row = $(this);
 						$.ajax({
-							url: "<?php echo pines_url('com_hrm', 'clock'); ?>",
+							url: "<?php echo pines_url('com_hrm', 'employee/timeclock/clock'); ?>",
 							type: "POST",
 							dataType: "json",
 							data: {"id": cur_row.pgrid_export_rows()[0].key},
@@ -87,7 +87,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo pines_url('com_pgrid', 'save_state'); ?>", {view: "com_hrm/list_timeclocks", state: cur_state});
+				state_xhr = $.post("<?php echo pines_url('com_pgrid', 'save_state'); ?>", {view: "com_hrm/employee/timeclock/list", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);

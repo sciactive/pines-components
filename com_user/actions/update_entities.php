@@ -33,6 +33,11 @@ do {
 				$cur_entity->enabled = true;
 				$changed = true;
 			}
+			// Add an addresses array.
+			if ($cur_entity->has_tag('user') && !isset($cur_entity->addresses)) {
+				$cur_entity->addresses = array();
+				$changed = true;
+			}
 		} else {
 			// Replace UIDs
 			if (isset($cur_entity->uid)) {

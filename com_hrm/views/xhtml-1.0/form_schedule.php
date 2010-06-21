@@ -11,14 +11,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
-<style type="text/css" >
-	/* <![CDATA[ */
-	.form_input {
-		width: 170px;
-		text-align: center;
-	}
-	/* ]]> */
-</style>
 <script type='text/javascript'>
 	// <![CDATA[
 	pines(function(){

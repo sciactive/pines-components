@@ -17,7 +17,7 @@
 		{
 			"path": "main_menu/business/com_hrm/timeclock",
 			"text": "Timeclock",
-			"href": ["com_hrm","listtimeclocks"],
+			"href": ["com_hrm","employee/timeclock/list"],
 			"depend": {
 				"ability": "com_hrm/manageclock"
 			}
@@ -25,17 +25,9 @@
 		{
 			"path": "main_menu/business/com_hrm/employees",
 			"text": "Employees",
-			"href": ["com_hrm","listemployees"],
+			"href": ["com_hrm","employee/list"],
 			"depend": {
 				"ability": "com_hrm/listemployees"
-			}
-		},
-		{
-			"path": "main_menu/business/com_hrm/newemployee",
-			"text": "New Employee",
-			"href": ["com_hrm","editemployee"],
-			"depend": {
-				"ability": "com_hrm/newemployee"
 			}
 		},
 		{

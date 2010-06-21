@@ -27,6 +27,7 @@ class user extends able_object implements user_interface {
 		$this->groups = array();
 		$this->inherit_abilities = true;
 		$this->address_type = 'us';
+		$this->addresses = array();
 		$this->attributes = array();
 		if ($id > 0 || (string) $id === $id) {
 			global $pines;

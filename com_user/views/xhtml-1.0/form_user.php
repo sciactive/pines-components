@@ -27,6 +27,79 @@ $pines->com_pgrid->load();
 			return true;
 		});
 
+		// Addresses
+		var addresses = $("#p_muid_addresses");
+		var addresses_table = $("#p_muid_addresses_table");
+		var address_dialog = $("#p_muid_address_dialog");
+
+		addresses_table.pgrid({
+			pgrid_paginate: false,
+			pgrid_toolbar: true,
+			pgrid_toolbar_contents : [
+				{
+					type: 'button',
+					text: 'Add Address',
+					extra_class: 'picon picon-list-add',
+					selection_optional: true,
+					click: function(){
+						address_dialog.dialog('open');
+					}
+				},
+				{
+					type: 'button',
+					text: 'Remove Address',
+					extra_class: 'picon picon-list-remove',
+					click: function(e, rows){
+						rows.pgrid_delete();
+						update_address();
+					}
+				}
+			]
+		});
+
+		// Address Dialog
+		address_dialog.dialog({
+			bgiframe: true,
+			autoOpen: false,
+			modal: true,
+			width: 600,
+			buttons: {
+				"Done": function() {
+					var cur_address_type = $("#p_muid_cur_address_type").val();
+					var cur_address_addr1 = $("#p_muid_cur_address_addr1").val();
+					var cur_address_addr2 = $("#p_muid_cur_address_addr2").val();
+					var cur_address_city = $("#p_muid_cur_address_city").val();
+					var cur_address_state = $("#p_muid_cur_address_state").val();
+					var cur_address_zip = $("#p_muid_cur_address_zip").val();
+					if (cur_address_type == "" || cur_address_addr1 == "") {
+						alert("Please provide a name and a street address.");
+						return;
+					}
+					var new_address = [{
+						key: null,
+						values: [
+							cur_address_type,
+							cur_address_addr1,
+							cur_address_addr2,
+							cur_address_city,
+							cur_address_state,
+							cur_address_zip
+						]
+					}];
+					addresses_table.pgrid_add(new_address);
+					update_addresses();
+					$(this).dialog('close');
+				}
+			}
+		});
+
+		function update_addresses() {
+			$("#p_muid_cur_address_type, #p_muid_cur_address_addr1, #p_muid_cur_address_addr2, #p_muid_cur_address_city, #p_muid_cur_address_state, #p_muid_cur_address_zip").val("");
+			addresses.val(JSON.stringify(addresses_table.pgrid_get_all_rows().pgrid_export_rows()));
+		}
+
+		update_addresses();
+
 		// Attributes
 		var attributes = $("#p_muid_tab_attributes input[name=attributes]");
 		var attributes_table = $("#p_muid_tab_attributes .attributes_table");
@@ -204,6 +277,9 @@ $pines->com_pgrid->load();
 			<br class="pf-clearing" />
 		</div>
 		<div id="p_muid_tab_location">
+			<div class="pf-element pf-heading">
+				<h1>Main Address</h1>
+			</div>
 			<div class="pf-element">
 				<script type="text/javascript">
 					// <![CDATA[
@@ -308,6 +384,70 @@ $pines->com_pgrid->load();
 					<label><span class="pf-label">Address</span>
 						<span class="pf-field pf-full-width"><textarea class="ui-widget-content" style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo $this->entity->address_international; ?></textarea></span></label>
 				</div>
+			</div>
+			<div class="pf-element pf-heading">
+				<h1>Additional Addresses</h1>
+			</div>
+			<div class="pf-element pf-full-width">
+				<span class="pf-label">Additional Addresses</span>
+				<div class="pf-group">
+					<table id="p_muid_addresses_table">
+						<thead>
+							<tr>
+								<th>Type</th>
+								<th>Address 1</th>
+								<th>Address 2</th>
+								<th>City</th>
+								<th>State</th>
+								<th>Zip</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php foreach ($this->entity->addresses as $cur_address) { ?>
+							<tr>
+								<td><?php echo $cur_address['type']; ?></td>
+								<td><?php echo $cur_address['address_1']; ?></td>
+								<td><?php echo $cur_address['address_2']; ?></td>
+								<td><?php echo $cur_address['city']; ?></td>
+								<td><?php echo $cur_address['state']; ?></td>
+								<td><?php echo $cur_address['zip']; ?></td>
+							</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+					<input type="hidden" id="p_muid_addresses" name="addresses" size="24" />
+				</div>
+			</div>
+			<div id="p_muid_address_dialog" title="Add an Address" style="display: none;">
+				<div class="pf-form">
+					<div class="pf-element">
+						<label>
+							<span class="pf-label">Type</span>
+							<input class="pf-field ui-widget-content" type="text" size="24" name="cur_address_type" id="p_muid_cur_address_type" />
+						</label>
+					</div>
+					<div class="pf-element">
+						<label>
+							<span class="pf-label">Address 1</span>
+							<input class="pf-field ui-widget-content" type="text" size="24" name="cur_address_addr1" id="p_muid_cur_address_addr1" />
+						</label>
+					</div>
+					<div class="pf-element">
+						<label>
+							<span class="pf-label">Address 2</span>
+							<input class="pf-field ui-widget-content" type="text" size="24" name="cur_address_addr2" id="p_muid_cur_address_addr2" />
+						</label>
+					</div>
+					<div class="pf-element">
+						<label>
+							<span class="pf-label">City, State, Zip</span>
+							<input class="pf-field ui-widget-content" type="text" size="8" name="cur_address_city" id="p_muid_cur_address_city" />
+							<input class="pf-field ui-widget-content" type="text" size="2" name="cur_address_state" id="p_muid_cur_address_state" />
+							<input class="pf-field ui-widget-content" type="text" size="5" name="cur_address_zip" id="p_muid_cur_address_zip" />
+						</label>
+					</div>
+				</div>
+				<br class="pf-clearing" />
 			</div>
 			<br class="pf-clearing" />
 		</div>

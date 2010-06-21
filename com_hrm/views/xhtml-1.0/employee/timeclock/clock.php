@@ -17,10 +17,10 @@ $entry_count = count($this->entity->timeclock);
 	<script type="text/javascript">
 		// <![CDATA[
 		pines(function(){
-			$("#p_muid_timeclock button").click(function(){
+			$("#p_muid_button").click(function(){
 				var loader;
 				$.ajax({
-					url: "<?php echo pines_url('com_hrm', 'clock'); ?>",
+					url: "<?php echo pines_url('com_hrm', 'employee/timeclock/clock'); ?>",
 					type: "POST",
 					dataType: "json",
 					data: {"id": "self"},
@@ -49,12 +49,12 @@ $entry_count = count($this->entity->timeclock);
 							pines.error("There was an error saving the change to the database.");
 							return;
 						}
-						$("#p_muid_timeclock .status").html(data[1].status);
-						$("#p_muid_timeclock .time").html(data[1].time);
+						$("#p_muid_status").html(data[1].status);
+						$("#p_muid_time").html(data[1].time);
 						if (data[1].status == "in") {
-							$("#p_muid_timeclock button").html("Clock Out");
+							$("#p_muid_button .p_muid_button_text").html("Clock Out");
 						} else {
-							$("#p_muid_timeclock button").html("Clock In");
+							$("#p_muid_button .p_muid_button_text").html("Clock In");
 						}
 						$("#p_muid_timeclock").effect("highlight");
 					}
@@ -65,10 +65,10 @@ $entry_count = count($this->entity->timeclock);
 	</script>
 	<div class="pf-element">
 		<span class="pf-label"><?php echo $this->entity->name; ?></span>
-		<span class="pf-note"><span>Status: </span><span class="status"><?php echo empty($this->entity->timeclock) ? 'out' : $this->entity->timeclock[$entry_count - 1]['status']; ?></span></span>
-		<span class="pf-note"><span>Time: </span><span class="time"><?php echo empty($this->entity->timeclock) ? 'No Timeclock Data' : format_date($this->entity->timeclock[$entry_count - 1]['time']); ?></span></span>
+		<span class="pf-note"><span>Status: </span><span id="p_muid_status"><?php echo empty($this->entity->timeclock) ? 'out' : $this->entity->timeclock[$entry_count - 1]['status']; ?></span></span>
+		<span class="pf-note"><span>Time: </span><span id="p_muid_time"><?php echo empty($this->entity->timeclock) ? 'No Timeclock Data' : format_date($this->entity->timeclock[$entry_count - 1]['time']); ?></span></span>
 	</div>
 	<div class="pf-element pf-full-width">
-		<button class="pf-field ui-state-default ui-corner-all" type="button" style="float: right;"><?php echo $this->entity->timeclock[$entry_count - 1]['status'] == 'in' ? 'Clock Out' : 'Clock In'; ?></button>
+		<button class="pf-field ui-state-default ui-corner-all" id="p_muid_button" type="button" style="float: right;"><span class="p_muid_button_text"><?php echo $this->entity->timeclock[$entry_count - 1]['status'] == 'in' ? 'Clock Out' : 'Clock In'; ?></span></button>
 	</div>
 </div>

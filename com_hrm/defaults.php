@@ -13,13 +13,6 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
-		'name' => 'global_employees',
-		'cname' => 'Globalize Employees',
-		'description' => 'Ensure that every user can access all employees by setting the "other" access control to read.',
-		'value' => true,
-		'peruser' => true,
-	),
-	array(
 		'name' => 'global_user_templates',
 		'cname' => 'Globalize User Templates',
 		'description' => 'Ensure that every user can access all user templates by setting the "other" access control to read.',
@@ -30,13 +23,6 @@ return array(
 		'name' => 'ssn_field',
 		'cname' => 'SSN Field',
 		'description' => 'Allow Pines to store a Social Security Number for employees.',
-		'value' => true,
-		'peruser' => true,
-	),
-	array(
-		'name' => 'allow_attach',
-		'cname' => 'Allow User Attach',
-		'description' => 'Allow users to be attached to employees.',
 		'value' => true,
 		'peruser' => true,
 	),

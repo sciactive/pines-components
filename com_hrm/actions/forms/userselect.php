@@ -1,6 +1,6 @@
 <?php
 /**
- * Load a default action.
+ * Select a user.
  *
  * @package Pines
  * @subpackage com_hrm
@@ -11,6 +11,9 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-action('com_hrm', 'employee/timeclock/list');
+if ( !gatekeeper('com_hrm/listemployees') )
+	punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'forms/userselect'));
+
+$pines->com_hrm->user_select_form($REQUEST['all'] == 'true');
 
 ?>

@@ -21,23 +21,21 @@ class com_example extends component {
 	/**
 	 * Creates and attaches a module which lists widgets.
 	 */
-	function list_widgets() {
+	public function list_widgets() {
 		global $pines;
 
 		$module = new module('com_example', 'widget/list', 'content');
 
 		$module->widgets = $pines->entity_manager->get_entities(array('class' => com_example_widget), array('&', 'tag' => array('com_example', 'widget')));
 
-		if ( empty($module->widgets) ) {
-			//$module->detach();
+		if ( empty($module->widgets) )
 			pines_notice('There are no widgets.');
-		}
 	}
 
 	/**
 	 * Creates and attaches example modules in various positions.
 	 */
-	function print_content() {
+	public function print_content() {
 		$module = new module('com_example', 'content/short', 'content_top_left');
 		$module = new module('com_example', 'content/short', 'content_top_right');
 		$module = new module('com_example', 'content/medium', 'pre_content');

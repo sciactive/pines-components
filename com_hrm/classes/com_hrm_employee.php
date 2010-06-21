@@ -12,34 +12,23 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * A employee.
+ * An employee.
  *
  * @package Pines
  * @subpackage com_hrm
  */
-class com_hrm_employee extends entity {
+class com_hrm_employee extends user {
 	/**
 	 * Load an employee.
 	 * @param int $id The ID of the employee to load, 0 for a new employee.
 	 */
 	public function __construct($id = 0) {
-		parent::__construct();
-		$this->add_tag('com_hrm', 'employee');
 		// Defaults.
-		$this->address_type = 'us';
-		$this->addresses = array();
-		$this->attributes = array();
+		$this->employee = true;
 		$this->timeclock = array();
-		$this->sync_user = true;
-		if ($id > 0) {
-			global $pines;
-			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
-			if (!isset($entity))
-				return;
-			$this->guid = $entity->guid;
-			$this->tags = $entity->tags;
-			$this->put_data($entity->get_data());
-		}
+		$this->employee_attributes = array();
+
+		parent::__construct($id);
 	}
 
 	/**
@@ -83,23 +72,12 @@ class com_hrm_employee extends entity {
 	}
 
 	/**
-	 * Return the employee's timezone.
-	 *
-	 * @param bool $return_date_time_zone_object Whether to return an object of the DateTimeZone class, instead of an identifier string.
-	 * @return string|DateTimeZone The timezone identifier or the DateTimeZone object.
-	 */
-	public function get_timezone($return_date_time_zone_object = false) {
-		global $pines;
-		if (isset($this->user_account->guid))
-			return $this->user_account->get_timezone($return_date_time_zone_object);
-		return $return_date_time_zone_object ? new DateTimeZone($pines->config->timezone) : $pines->config->timezone;
-	}
-
-	/**
 	 * Create a new instance.
+	 *
+	 * @param int|string $id The ID or username of the employee to load, 0 for a new employee.
 	 * @return com_hrm_employee The new instance.
 	 */
-	public static function factory() {
+	public static function factory($id = 0) {
 		global $pines;
 		$class = get_class();
 		$args = func_get_args();
@@ -120,36 +98,12 @@ class com_hrm_employee extends entity {
 	}
 
 	/**
-	 * Save the employee.
-	 * @return bool True on success, false on failure.
-	 */
-	public function save() {
-		if (!isset($this->name))
-			return false;
-		if ($this->sync_user && isset($this->user_account)) {
-			$this->user_account->name = $this->name;
-			$this->user_account->email = $this->email;
-			$this->user_account->phone = $this->phone_work;
-			$this->user_account->fax = $this->fax;
-			$this->user_account->address_type = $this->address_type;
-			$this->user_account->address_1 = $this->address_1;
-			$this->user_account->address_2 = $this->address_2;
-			$this->user_account->city = $this->city;
-			$this->user_account->state = $this->state;
-			$this->user_account->zip = $this->zip;
-			$this->user_account->address_international = $this->address_international;
-			$this->user_account->save();
-		}
-		return parent::save();
-	}
-
-	/**
 	 * Print a form to edit the employee.
 	 * @return module The form's module.
 	 */
 	public function print_form() {
 		global $pines;
-		$module = new module('com_hrm', 'form_employee', 'content');
+		$module = new module('com_hrm', 'employee/form', 'content');
 		$module->entity = $this;
 		$module->user_templates = $pines->entity_manager->get_entities(array('class' => com_hrm_user_template), array('&', 'tag' => array('com_hrm', 'user_template')));
 
@@ -161,7 +115,7 @@ class com_hrm_employee extends entity {
 	 * @return module The form's module.
 	 */
 	public function print_timeclock() {
-		$module = new module('com_hrm', 'form_timeclock', 'content');
+		$module = new module('com_hrm', 'employee/timeclock/form', 'content');
 		$module->entity = $this;
 
 		return $module;
@@ -172,7 +126,7 @@ class com_hrm_employee extends entity {
 	 * @return module The module.
 	 */
 	public function print_timeclock_view() {
-		$module = new module('com_hrm', 'view_timeclock', 'content');
+		$module = new module('com_hrm', 'employee/timeclock/view', 'content');
 		$module->entity = $this;
 
 		return $module;
@@ -183,7 +137,7 @@ class com_hrm_employee extends entity {
 	 * @return module The form's module.
 	 */
 	public function print_clockin() {
-		$module = new module('com_hrm', 'clock', 'right');
+		$module = new module('com_hrm', 'employee/timeclock/clock', 'right');
 		$module->entity = $this;
 
 		return $module;

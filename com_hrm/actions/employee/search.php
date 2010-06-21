@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_hrm/listemployees') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'employeesearch', $_REQUEST));
+	punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'employee/search', $_REQUEST));
 
 $pines->page->override = true;
 
@@ -36,8 +36,7 @@ foreach ($employees as $key => &$cur_employee) {
 		) {
 		$json_struct = (object) array(
 			'guid'		=> $cur_employee->guid,
-			'firstname'	=> $cur_employee->name_first,
-			'lastname'	=> $cur_employee->name_last,
+			'name'	=> $cur_employee->name,
 			'title'		=> $cur_employee->job_title,
 			'email'		=> $cur_employee->email,
 			'city'		=> $cur_employee->city,

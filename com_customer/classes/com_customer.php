@@ -117,7 +117,7 @@ class com_customer extends component {
 	 * @param array $exceptions An array of words which should not be changed.
 	 * @return string The transformed string.
 	 */
-	function title_case($string, $delimiters = array(" ", "-", "O'", "Mc"), $exceptions = array("to", "a", "the", "of", "by", "and", "with", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X")) {
+	public function title_case($string, $delimiters = array(' ', '-', 'O\'', 'Mc'), $exceptions = array('to', 'a', 'the', 'of', 'by', 'and', 'with', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X')) {
 		/*
 		* Exceptions in lower case are words you don't want converted
 		* Exceptions all in upper case are any words you don't want converted to title case
@@ -135,7 +135,7 @@ class com_customer extends component {
 					// convert to uppercase
 					$word = ucfirst($word);
 				}
-				array_push($newwords, $word);
+				$newwords[] = $word;
 			}
 			$string = join($delimiter, $newwords);
 		}

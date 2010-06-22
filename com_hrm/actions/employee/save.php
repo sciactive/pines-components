@@ -20,7 +20,7 @@ if (!isset($employee->guid)) {
 }
 
 // General
-if ($pines->config->com_hrm->ssn_field)
+if ($pines->config->com_hrm->ssn_field && gatekeeper('com_hrm/showssn'))
 	$employee->ssn = preg_replace('/\D/', '', $_REQUEST['ssn']);
 $employee->job_title = $_REQUEST['job_title'];
 $employee->description = $_REQUEST['description'];
@@ -38,7 +38,7 @@ foreach ($employee->employee_attributes as &$cur_attribute) {
 }
 unset($cur_attribute);
 
-if (gatekeeper('com_hrm/requiressn') && empty($employee->ssn)) {
+if ($pines->config->com_hrm->ssn_field_require && empty($employee->ssn)) {
 	$employee->print_form();
 	pines_notice('Please provide an SSN.');
 	return;

@@ -105,7 +105,6 @@ class com_hrm_employee extends user {
 		global $pines;
 		$module = new module('com_hrm', 'employee/form', 'content');
 		$module->entity = $this;
-		$module->user_templates = $pines->entity_manager->get_entities(array('class' => com_hrm_user_template), array('&', 'tag' => array('com_hrm', 'user_template')));
 
 		return $module;
 	}

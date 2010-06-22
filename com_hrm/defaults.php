@@ -13,17 +13,17 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
-		'name' => 'global_user_templates',
-		'cname' => 'Globalize User Templates',
-		'description' => 'Ensure that every user can access all user templates by setting the "other" access control to read.',
-		'value' => true,
-		'peruser' => true,
-	),
-	array(
 		'name' => 'ssn_field',
 		'cname' => 'SSN Field',
 		'description' => 'Allow Pines to store a Social Security Number for employees.',
 		'value' => true,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'ssn_field_require',
+		'cname' => 'Require SSN Field',
+		'description' => 'Require Pines to store a Social Security Number for employees.',
+		'value' => false,
 		'peruser' => true,
 	),
 	array(

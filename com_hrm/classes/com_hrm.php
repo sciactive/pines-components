@@ -92,20 +92,6 @@ class com_hrm extends component {
 	}
 
 	/**
-	 * Creates and attaches a module which lists user templates.
-	 */
-	public function list_user_templates() {
-		global $pines;
-
-		$module = new module('com_hrm', 'list_user_templates', 'content');
-
-		$module->user_templates = $pines->entity_manager->get_entities(array('class' => com_hrm_user_template), array('&', 'tag' => array('com_hrm', 'user_template')));
-
-		if ( empty($module->user_templates) )
-			pines_notice('There are no user templates.');
-	}
-
-	/**
 	 * Print a form to select a company location.
 	 *
 	 * @param int $location The current ending date of the timespan.

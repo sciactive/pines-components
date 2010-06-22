@@ -77,7 +77,7 @@ $this->title = 'Configure Components';
 	<div class="user_picker">
 		<h3>Per User/Group Configuration</h3>
 		<div>
-			<select class="ui-widget-content" id="#p_muid_user_select" name="user_select">
+			<select class="ui-widget-content" id="p_muid_user_select" name="user_select">
 				<option value="null">-- Pick a User/Group --</option>
 				<optgroup label="Groups">
 					<?php foreach ($this->groups as $cur_group) { ?>

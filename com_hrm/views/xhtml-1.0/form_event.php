@@ -21,15 +21,10 @@ defined('P_RUN') or die('Direct access prohibited');
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
-	.form_text {
-		width: 155px;
+	#p_muid_form .form_center {
 		text-align: center;
 	}
-	.form_input {
-		width: 170px;
-		text-align: center;
-	}
-	.form_select {
+	#p_muid_form .form_input {
 		width: 170px;
 	}
 	/* ]]> */
@@ -77,14 +72,13 @@ defined('P_RUN') or die('Direct access prohibited');
 			}
 		});
 
-		var timespan = $("#p_muid_form.timespan");
+		var timespan = $("#p_muid_form .timespan");
 		$("#p_muid_form [name=all_day]").change(function(){
 			var all_day = $(this);
-			if (all_day.is(":checked") && all_day.val() == "timeSpan") {
+			if (all_day.is(":checked") && all_day.val() == "false")
 				timespan.show();
-			} else if (all_day.is(":checked") && all_day.val() == "allDay") {
+			else if (all_day.is(":checked") && all_day.val() == "true")
 				timespan.hide();
-			}
 		}).change();
 
 		$("#p_muid_start").change(function(){
@@ -100,21 +94,21 @@ defined('P_RUN') or die('Direct access prohibited');
 		employee.empty();
 		<?php
 		// Load employee departments.
-		$employee_depts = explode(', ', $pines->config->com_hrm->employee_departments);
-		foreach ($employee_depts as $cur_dept) {
+		foreach ($pines->config->com_hrm->employee_departments as $cur_dept) {
 			$cur_dept_info = explode(':', $cur_dept);
 			$cur_name = $cur_dept_info[0];
 			$cur_color = $cur_dept_info[1];
 			$cur_select = (!isset($this->entity->employee->group) && $this->entity->employee == $cur_name) ? 'selected=\"selected\"' : '';
 		?>
-			employee.append("<option value='<?php echo $cur_name; ?>:<?php echo $cur_color; ?>' <?php echo $cur_select; ?>><?php echo $cur_name; ?></option>");
+			employee.append("<option value=\"<?php echo $cur_name; ?>:<?php echo $cur_color; ?>\" <?php echo $cur_select; ?>><?php echo $cur_name; ?></option>");
 		<?php }
 		// Load employees for this location.
 		foreach ($this->employees as $cur_employee) {
+			if (!isset($cur_employee->group))
+				continue;
 			$cur_select = (isset($this->entity->employee->group) && $this->entity->employee->is($cur_employee)) ? 'selected=\"selected\"' : ''; ?>
-			if (group_id == <?php echo $cur_employee->group->guid; ?>) {
-				employee.append("<option value='<?php echo $cur_employee->guid; ?>' <?php echo $cur_select; ?>><?php echo $cur_employee->name; ?></option>");
-			}
+			if (group_id == <?php echo $cur_employee->group->guid; ?>)
+				employee.append("<option value=\"<?php echo $cur_employee->guid; ?>\" <?php echo $cur_select; ?>><?php echo $cur_employee->name; ?></option>");
 		<?php } ?>
 	}
 // ]]>
@@ -122,10 +116,10 @@ defined('P_RUN') or die('Direct access prohibited');
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_hrm', 'saveevent')); ?>">
 	<div class="pf-element location_tree" style="padding-bottom: 5px;"></div>
 	<div class="pf-element" style="padding-bottom: 20px;">
-		<select class="ui-widget-content form_select" name="employee"></select>
+		<select class="ui-widget-content form_input" name="employee"></select>
 	</div>
 	<div class="pf-element" style="padding-bottom: 0px;">
-		<input class="ui-widget-content form_text" type="text" id="p_muid_event_label" name="event_label" value="<?php echo (isset($this->entity->label)) ? $this->entity->label : 'Label'; ?>" onfocus="if(this.value==this.defaultValue)this.value=''" onblur="if(this.value=='')this.value=this.defaultValue" />
+		<input class="ui-widget-content form_input" type="text" id="p_muid_event_label" name="event_label" value="<?php echo (isset($this->entity->label)) ? $this->entity->label : 'Label'; ?>" onfocus="if(this.value==this.defaultValue)this.value=''" onblur="if(this.value=='')this.value=this.defaultValue" />
 	</div>
 	<?php
 		if ($this->entity->guid) {
@@ -136,14 +130,14 @@ defined('P_RUN') or die('Direct access prohibited');
 		}
 	?>
 	<div class="pf-element" style="padding-bottom: 0px;">
-		<span class="pf-note">Start</span><input class="ui-widget-content form_text" type="text" id="p_muid_start" name="event_date" value="<?php echo empty($start_date) ? format_date(time(), 'date_sort') : $start_date; ?>" />
+		<span class="pf-note">Start</span><input class="ui-widget-content form_input form_center" type="text" id="p_muid_start" name="event_date" value="<?php echo empty($start_date) ? format_date(time(), 'date_sort') : $start_date; ?>" />
 	</div>
 	<div class="pf-element" style="padding-bottom: 25px;">
-		<span class="pf-note">End</span><input class="ui-widget-content form_text" type="text" id="p_muid_end" name="event_enddate" value="<?php echo empty($end_date) ? format_date(time(), 'date_sort') : $end_date; ?>" />
+		<span class="pf-note">End</span><input class="ui-widget-content form_input form_center" type="text" id="p_muid_end" name="event_enddate" value="<?php echo empty($end_date) ? format_date(time(), 'date_sort') : $end_date; ?>" />
 	</div>
 	<div class="pf-element">
-		<label><input class="pf-field ui-widget-content" type="radio" name="all_day" value="timeSpan" checked="checked" />Timespan</label>
-		<label><input class="pf-field ui-widget-content" type="radio" name="all_day" value="allDay" <?php echo ($this->entity->all_day) ? 'checked="checked"' : ''; ?>/>All Day</label>
+		<label><input class="pf-field ui-widget-content" type="radio" name="all_day" value="false" <?php echo (!$this->entity->all_day) ? 'checked="checked" ' : ''; ?>/>Timespan</label>
+		<label><input class="pf-field ui-widget-content" type="radio" name="all_day" value="true" <?php echo ($this->entity->all_day) ? 'checked="checked" ' : ''; ?>/>All Day</label>
 	</div>
 	<div class="timespan" style="text-align: center;">
 		<div class="pf-element">
@@ -201,10 +195,11 @@ defined('P_RUN') or die('Direct access prohibited');
 			</select>
 		</div>
 	</div>
+	
 	<div class="pf-element">
-			<input type="hidden" name="location" value="<?php echo $this->location; ?>" />
-			<?php if (isset($this->entity->guid)) { ?>
-			<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
-			<?php } ?>
+		<input type="hidden" name="location" value="<?php echo $this->location; ?>" />
+		<?php if (isset($this->entity->guid)) { ?>
+		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<?php } ?>
 	</div>
 </form>

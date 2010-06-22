@@ -102,14 +102,14 @@ $pines->com_jstree->load();
 			url: "<?php echo pines_url('com_hrm', 'editevent'); ?>",
 			type: "POST",
 			dataType: "html",
-			data: {id: "<?php echo $this->event->guid; ?>"},
+			data: {id: "<?php echo $this->entity->guid; ?>"},
 			error: function(XMLHttpRequest, textStatus){
 				pines.error("An error occured while trying to retreive the new event form:\n"+XMLHttpRequest.status+": "+textStatus);
 			},
 			success: function(data){
 				if (data == "")
 					return;
-				var form = $("<div title=\"Editing "+"<?php echo $this->event->label; ?>"+"\" />");
+				var form = $("<div title=\"Editing "+"<?php echo $this->entity->label; ?>"+"\" />");
 				form.dialog({
 					bgiframe: true,
 					autoOpen: true,
@@ -131,7 +131,7 @@ $pines->com_jstree->load();
 								event_label: form.find(":input[name=event_label]").val(),
 								event_date: form.find(":input[name=event_date]").val(),
 								event_enddate: form.find(":input[name=event_enddate]").val(),
-								all_day: form.find(":input[name=all_day]").val(),
+								all_day: form.find(":input[name=all_day]:checked").val(),
 								event_start: form.find(":input[name=event_start]").val(),
 								event_end: form.find(":input[name=event_end]").val(),
 								location: form.find(":input[name=location]").val()
@@ -142,7 +142,7 @@ $pines->com_jstree->load();
 			}
 		});
 	}
-	<?php if (isset($this->event)) { ?>
+	<?php if (isset($this->entity)) { ?>
 	// Edit the event if there is one to be edited.
 	edit_event();
 	<?php } ?>

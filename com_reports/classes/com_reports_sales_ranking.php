@@ -74,7 +74,7 @@ class com_reports_sales_ranking extends entity {
 		
 		$module = new module('com_reports', 'form_sales_ranking', 'content');
 		$module->entity = $this;
-		$module->employees = $pines->entity_manager->get_entities(array('class' => com_hrm_employee), array('&', 'tag' => array('com_hrm', 'employee')));
+		$module->employees = $pines->com_hrm->get_employees();
 
 		foreach ($module->employees as $key => $value) {
 			if (!isset($value->user_account))
@@ -101,7 +101,7 @@ class com_reports_sales_ranking extends entity {
 		$module->entity = $form->entity = $this;
 		$module->location = $form->location = $location;
 		$module->rankings = array();
-		$employees = $pines->entity_manager->get_entities(array('class' => com_hrm_employee), array('&', 'tag' => array('com_hrm', 'employee')));
+		$employees = $pines->com_hrm->get_employees();
 
 		foreach ($employees as $key => $value) {
 			if ( !isset($value->user_account) ||

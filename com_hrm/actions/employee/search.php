@@ -21,7 +21,7 @@ $query = strtolower($_REQUEST['q']);
 if (empty($query)) {
 	$employees = array();
 } else {
-	$employees = (array) $pines->entity_manager->get_entities(array('class' => com_hrm_employee), array('&', 'tag' => array('com_hrm', 'employee')));
+	$employees = (array) $pines->com_hrm->get_employees();
 }
 
 foreach ($employees as $key => &$cur_employee) {

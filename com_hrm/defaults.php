@@ -30,7 +30,7 @@ return array(
 		'name' => 'employee_departments',
 		'cname' => 'Department Names & Colors',
 		'description' => 'These groups will show up in the calendar with their associated colors.',
-		'value' => 'Entire Staff:cornflowerblue, Sales:gold, IT:blueviolet, Support:olive',
+		'value' => array('Entire Staff:cornflowerblue', 'Sales:gold', 'IT:blueviolet', 'Support:olive'),
 		'peruser' => true,
 	),
 	array(

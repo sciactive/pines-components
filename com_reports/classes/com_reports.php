@@ -35,7 +35,7 @@ class com_reports extends component {
 		$form = new module('com_reports', 'form_hrm', 'right');
 		$module = new module('com_reports', 'report_attendance', 'content');
 		if (!isset($employee)) {
-			$module->employees = $pines->entity_manager->get_entities(array('class' => com_hrm_employee), array('&', 'tag' => array('com_hrm', 'employee')));
+			$module->employees = $pines->com_hrm->get_employees();
 			foreach ($module->employees as $key => &$cur_employee) {
 				if (!$cur_employee->user_account || !($cur_employee->user_account->in_group($location) || $cur_employee->user_account->is_descendent($location)))
 					unset($module->employees[$key]);
@@ -86,7 +86,7 @@ class com_reports extends component {
 			$module->title = 'Sales Report for All Locations';
 		}
 		$module->location = $form->location = $location->guid;
-		$form->employees = $pines->entity_manager->get_entities(array('class' => com_hrm_employee), array('&', 'tag' => array('com_hrm', 'employee')));
+		$form->employees = $pines->com_hrm->get_employees();
 		$module->sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector);
 	}
 

@@ -139,11 +139,11 @@ class com_hrm extends component {
 			$form = new module('com_hrm', 'form_calendar', 'right');
 			// If an id is specified, the event info will be displayed for editing.
 			if (isset($id) && $id >  0) {
-				$form->event = com_hrm_event::factory((int) $id);
-				$location = $form->event->group;
+				$form->entity = com_hrm_event::factory((int) $id);
+				$location = $form->entity->group;
 			}
 			// Should work like this, we need to have the employee's group update upon saving it to a user.
-			$form->employees = $pines->entity_manager->get_entities(array('class' => com_hrm_employee), array('&', 'tag' => array('com_hrm', 'employee')));
+			$form->employees = $this->get_employees();
 			$form->location = $location->guid;
 		}
 		$calendar_head = new module('com_hrm', 'show_calendar_head', 'head');

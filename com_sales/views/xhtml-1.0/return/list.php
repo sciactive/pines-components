@@ -176,15 +176,14 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>Item Fees</th>
 			<th>Tax</th>
 			<th>Total</th>
-			<th>Tendered</th>
-			<th>Change Given</th>
+			<th>Returned</th>
 		</tr>
 	</thead>
 	<tbody>
 	<?php foreach($this->returns as $return) { ?>
 		<tr title="<?php echo $return->guid; ?>">
 			<td><?php echo $return->id; ?></td>
-			<td><?php echo date('Y-m-d', $return->p_cdate); ?></td>
+			<td><?php echo format_date($return->p_cdate); ?></td>
 			<td><?php echo ucwords($return->status); ?></td>
 			<td><?php echo !isset($return->user->guid) ? '' : "{$return->user->name} [{$return->user->username}]"; ?></td>
 			<?php if ($pines->config->com_sales->com_customer) { ?>
@@ -196,12 +195,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				$number += (int) $cur_product['quantity'];
 			}
 			echo $number; ?></td>
-			<td><?php echo $return->subtotal; ?></td>
-			<td><?php echo $return->item_fees; ?></td>
-			<td><?php echo $return->taxes; ?></td>
-			<td><?php echo $return->total; ?></td>
-			<td><?php echo $return->amount_tendered; ?></td>
-			<td><?php echo $return->change; ?></td>
+			<td><?php echo isset($return->subtotal) ? '$'.number_format($return->subtotal, 2) : ''; ?></td>
+			<td><?php echo isset($return->item_fees) ? '$'.number_format($return->item_fees, 2) : ''; ?></td>
+			<td><?php echo isset($return->taxes) ? '$'.number_format($return->taxes, 2) : ''; ?></td>
+			<td><?php echo isset($return->total) ? '$'.number_format($return->total, 2) : ''; ?></td>
+			<td><?php echo isset($return->amount_tendered) ? '$'.number_format($return->amount_tendered, 2) : ''; ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

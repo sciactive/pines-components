@@ -53,6 +53,43 @@ class com_sales_return extends entity {
 	}
 
 	/**
+	 * Approve each payment.
+	 *
+	 * @return bool True on success, false on failure.
+	 */
+	public function approve_payments() {
+		global $pines;
+		$return = true;
+		// Go through each payment, and process its approval.
+		foreach ($this->payments as &$cur_payment) {
+			// If its already approved or tendered, skip it.
+			if (in_array($cur_payment['status'], array('approved', 'declined', 'tendered')))
+				continue;
+			// Check minimum and maximum values.
+			if ((float) $cur_payment['amount'] < $cur_payment['entity']->minimum) {
+				pines_notice("The payment type [{$cur_payment['entity']->name}] requires a minimum payment of {$cur_payment['entity']->minimum}.");
+				$return = false;
+				continue;
+			}
+			if (isset($cur_payment['entity']->maximum) && (float) $cur_payment['amount'] > $cur_payment['entity']->maximum) {
+				pines_notice("The payment type [{$cur_payment['entity']->name}] requires a maximum payment of {$cur_payment['entity']->maximum}.");
+				$return = false;
+				continue;
+			}
+			// Call the payment processing for approval.
+			$pines->com_sales->call_payment_process(array(
+				'action' => 'approve',
+				'name' => $cur_payment['entity']->processing_type,
+				'payment' => &$cur_payment,
+				'ticket' => &$this
+			));
+			if (!in_array($cur_payment['status'], array('approved', 'declined')))
+				$return = false;
+		}
+		return $return;
+	}
+
+	/**
 	 * Attach a sale to the return.
 	 *
 	 * A return can only have one attached sale, but a sale can be attached to
@@ -64,7 +101,7 @@ class com_sales_return extends entity {
 	public function attach_sale(&$sale) {
 		if (isset($this->sale) || $sale->status != 'paid')
 			return false;
-		if (!$this->sale->save()) {
+		if (!$sale->save()) {
 			// If the sale can't be modified, processing will fail.
 			pines_error('The sale could not be modified. Do you have permission?');
 			return false;
@@ -115,6 +152,122 @@ class com_sales_return extends entity {
 	}
 
 	/**
+	 * Complete the return.
+	 *
+	 * This process receives stock and creates payment transaction entries for
+	 * each payment.
+	 *
+	 * A sale transaction is created, and the return's status is changed to
+	 * 'processed'.
+	 *
+	 * @return bool True on success, false on any failure.
+	 */
+	public function complete() {
+		global $pines;
+		if ($this->status == 'processed' || $this->status == 'voided')
+			return true;
+		if (!is_array($this->products)) {
+			pines_notice('Sale has no products');
+			return false;
+		}
+		if (!is_array($this->payments))
+			return false;
+		if (isset($this->sale) && !$this->sale->save()) {
+			// If the sale can't be modified, processing will fail.
+			pines_error('The sale could not be modified. Do you have permission?');
+			return false;
+		}
+		// Keep track of the whole process.
+		$return = true;
+		// These will be searched through to match products to stock entries.
+		if ($pines->config->com_sales->com_customer && !isset($this->customer)) {
+			foreach ($this->products as &$cur_product) {
+				if (!$cur_product['entity'] || ($cur_product['entity']->require_customer)) {
+					pines_notice('One of the products on this return requires a customer. Please select a customer for this return before processing.');
+					return false;
+				}
+			}
+			unset($cur_product);
+		}
+		// Calculate and save the return's totals.
+		if (!$this->total()) {
+			pines_notice('Couldn\'t total return.');
+			return false;
+		}
+		// Go through each product, and find/create corresponding stock entries.
+		foreach ($this->products as &$cur_product) {
+			if ($cur_product['entity']->stock_type == 'non_stocked') {
+				$cur_product['stock_entities'] = array();
+			} else {
+				if (isset($this->sale)) {
+					$cur_product['stock_entities'] = array_slice($cur_product['stock_entities'], 0, (int) $cur_product['quantity']);
+				} else {
+					for ($i = 0; $i < $cur_product['quantity']; $i++) {
+						$stock = com_sales_stock::factory();
+						$stock->product = $cur_product['entity'];
+						if ($cur_product['entity']->serialized)
+							$stock->serial = $cur_product['serial'];
+						$cur_product['stock_entities'][] = $stock;
+						unset($stock);
+					}
+				}
+			}
+		}
+		unset($cur_product);
+
+		if (!$this->approve_payments()) {
+			pines_notice('The return cannot be completed until all payments have been approved or declined.');
+			return false;
+		}
+		if (!$this->tender_payments()) {
+			pines_notice('All payments have not been tendered. The return was not completed. Please check the status on each payment.');
+			return false;
+		}
+		if (!isset($this->amount_due) || $this->amount_due > 0) {
+			pines_notice('The return cannot be completed while there is still an amount remaining.');
+			return false;
+		}
+
+		// Receive stock.
+		$stock_result = $this->receive_stock();
+		$return = $return && $stock_result;
+		if (!$stock_result)
+			pines_notice('Not all stock could be received into inventory while processing. Please check that all stock was correctly entered.');
+		$this->perform_actions();
+
+		if (isset($this->sale)) {
+			// Go through each product, and mark the sold quantity in the sale.
+			foreach ($this->products as &$cur_product) {
+				if (!isset($this->sale->products[$cur_product['sale_key']]['returned_quantity']))
+					$this->sale->products[$cur_product['sale_key']]['returned_quantity'] = 0;
+				$this->sale->products[$cur_product['sale_key']]['returned_quantity'] += $cur_product['quantity'];
+			}
+			unset($cur_product);
+			$return = $return && $this->sale->save();
+		}
+
+		// Complete the transaction.
+		if ($return) {
+			// Make a transaction entry.
+			$tx = com_sales_tx::factory('sale_tx');
+
+			$this->status = 'processed';
+			$tx->type = 'returned';
+
+			// Make sure we have a GUID before saving the tx.
+			if (!($this->guid))
+				$return = $return && $this->save();
+
+			$tx->ticket = $this;
+			$return = $return && $tx->save();
+		}
+
+		$this->process_date = time();
+
+		return $return;
+	}
+
+	/**
 	 * Delete the return.
 	 * @return bool True on success, false on failure.
 	 */
@@ -135,6 +288,16 @@ class com_sales_return extends entity {
 	public function get_sale_products() {
 		$products = (array) $this->sale->products;
 		foreach ($products as $key => &$cur_product) {
+			// Add the original sale key to all product entries.
+			$cur_product['sale_key'] = $key;
+		}
+		unset($cur_product);
+		foreach ($products as $key => &$cur_product) {
+			$cur_product['quantity'] -= (int) $cur_product['returned_quantity'];
+			if ($cur_product['quantity'] <= 0) {
+				unset($products[$key]);
+				continue;
+			}
 			// Remove products that have already been returned.
 			if (is_array($cur_product['stock_entities'])) {
 				foreach ($cur_product['stock_entities'] as $stock_key => &$cur_stock) {
@@ -144,13 +307,53 @@ class com_sales_return extends entity {
 				}
 				unset($cur_stock);
 			}
-			// TODO: Update $cur_product['returned_quantity'] when return is processed.
-			$cur_product['quantity'] -= (int) $cur_product['returned_quantity'];
-			if ($cur_product['quantity'] <= 0)
-				unset($products[$key]);
 		}
 		unset($cur_product);
 		return $products;
+	}
+
+	/**
+	 * Run the product actions associated with the products on this return.
+	 */
+	public function perform_actions() {
+		global $pines;
+		if ($this->performed_actions)
+			return;
+		$this->performed_actions = true;
+		// Go through each product, calling actions.
+		foreach ($this->products as &$cur_product) {
+			// Call product actions for all products without stock entries.
+			$i = $cur_product['quantity'] - count($cur_product['stock_entities']);
+			if ($i > 0) {
+				$pines->com_sales->call_product_actions(array(
+					'type' => 'returned',
+					'product' => $cur_product['entity'],
+					'ticket' => $this,
+					'serial' => $cur_product['serial'],
+					'price' => $cur_product['price'],
+					'discount' => $cur_product['discount'],
+					'line_total' => $cur_product['line_total'],
+					'fees' => $cur_product['fees']
+				), $i);
+			}
+			// Call product actions on stock.
+			if (!is_array($cur_product['stock_entities']))
+				continue;
+			foreach ($cur_product['stock_entities'] as &$cur_stock) {
+				$pines->com_sales->call_product_actions(array(
+					'type' => 'returned',
+					'product' => $cur_product['entity'],
+					'stock_entry' => $cur_stock,
+					'ticket' => $this,
+					'serial' => $cur_product['serial'],
+					'price' => $cur_product['price'],
+					'discount' => $cur_product['discount'],
+					'line_total' => $cur_product['line_total'],
+					'fees' => $cur_product['fees']
+				));
+			}
+		}
+		unset($cur_product);
 	}
 
 	/**
@@ -188,6 +391,59 @@ class com_sales_return extends entity {
 			);
 
 		return $module;
+	}
+
+	/**
+	 * Print a receipt of the return.
+	 * @return module The form's module.
+	 */
+	function print_receipt() {
+		$module = new module('com_sales', 'sale/receipt', 'content');
+		$module->entity = $this;
+
+		return $module;
+	}
+
+	/**
+	 * Receive the stock on this return into current inventory.
+	 * @return bool True on success, false on any failure.
+	 */
+	public function receive_stock() {
+		if ($this->received_stock)
+			return false;
+		if (isset($this->sale) && !$this->sale->save()) {
+			// If the sale can't be modified, processing will fail.
+			pines_error('The sale could not be modified. Do you have permission?');
+			return false;
+		}
+		$this->received_stock = true;
+		// Keep track of the whole process.
+		$return = true;
+		// Go through each product, marking its stock as returned.
+		foreach ($this->products as &$cur_product) {
+			// Receive stock into inventory.
+			if (!is_array($cur_product['stock_entities']))
+				continue;
+			foreach ($cur_product['stock_entities'] as &$cur_stock) {
+				if (!isset($cur_stock->guid))
+					$cur_stock->save();
+				// Receive the stock into inventory.
+				if (!$cur_stock->receive('sale_returned', $this, null, false)) {
+					$return = false;
+					continue;
+				}
+				if (!$cur_stock->save()) {
+					$return = false;
+					continue;
+				}
+				if (isset($this->sale))
+					$this->sale->products[$cur_product['sale_key']]['returned_stock_entities'][] = $cur_stock;
+			}
+		}
+		unset($cur_product);
+		if (isset($this->sale))
+			$return = $return && $this->sale->save();
+		return $return;
 	}
 
 	/**

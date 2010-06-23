@@ -102,7 +102,7 @@ class com_sales_sale extends entity {
 	 */
 	public function complete() {
 		global $pines;
-		if ($this->status == 'paid')
+		if ($this->status == 'paid' || $this->status == 'voided')
 			return true;
 		if (!is_array($this->payments))
 			return false;
@@ -239,7 +239,7 @@ class com_sales_sale extends entity {
 	 */
 	public function invoice() {
 		global $pines;
-		if ($this->status == 'invoiced')
+		if ($this->status == 'invoiced' || $this->status == 'voided')
 			return true;
 		if (!is_array($this->products)) {
 			pines_notice('Sale has no products');
@@ -249,15 +249,15 @@ class com_sales_sale extends entity {
 		$return = true;
 		// These will be searched through to match products to stock entries.
 		$stock_entries = (array) $pines->entity_manager->get_entities(array('class' => com_sales_stock), array('&', 'tag' => array('com_sales', 'stock')));
-		if ($pines->config->com_sales->com_customer) {
+		if ($pines->config->com_sales->com_customer && !isset($this->customer)) {
 			foreach ($this->products as &$cur_product) {
-				if (!$cur_product['entity'] || ($cur_product['entity']->require_customer && !$this->customer)) {
+				if (!$cur_product['entity'] || ($cur_product['entity']->require_customer)) {
 					pines_notice('One of the products on this sale requires a customer. Please select a customer for this sale before invoicing.');
 					return false;
 				}
 			}
+			unset($cur_product);
 		}
-		unset($cur_product);
 		// Calculate and save the sale's totals.
 		if (!$this->total()) {
 			pines_notice('Couldn\'t total sale.');
@@ -408,13 +408,17 @@ class com_sales_sale extends entity {
 					'tag' => array('com_sales', 'payment_type')
 				)
 			);
-		$module->returns = (array) $pines->entity_manager->get_entities(
-				array('class' => com_sales_return),
-				array('&',
-					'ref' => array('sale', $this),
-					'tag' => array('com_sales', 'return')
-				)
-			);
+		if (isset($this->guid)) {
+			$module->returns = (array) $pines->entity_manager->get_entities(
+					array('class' => com_sales_return),
+					array('&',
+						'ref' => array('sale', $this),
+						'tag' => array('com_sales', 'return')
+					)
+				);
+		} else {
+			$module->returns = array();
+		}
 
 		return $module;
 	}
@@ -431,7 +435,7 @@ class com_sales_sale extends entity {
 	}
 
 	/**
-	 * Remove the inventory on this sale from current stock.
+	 * Remove the stock on this sale from current inventory.
 	 * @return bool True on success, false on any failure.
 	 */
 	public function remove_stock() {

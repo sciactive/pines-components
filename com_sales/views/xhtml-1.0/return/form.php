@@ -167,8 +167,17 @@ $pines->com_pgrid->load();
 				pgrid_toolbar_contents : [
 					<?php if (!isset($this->entity->sale->guid)) { ?>
 					{
+						type: 'button',
+						text: '',
+						title: 'Select a Product by Category',
+						extra_class: 'picon picon-view-list-tree',
+						selection_optional: true,
+						click: function(){
+							category_dialog.dialog("open");
+						}
+					},
+					{
 						type: 'text',
-						label: 'Code: ',
 						title: 'Enter a Product SKU or Barcode',
 						load: function(textbox){
 							textbox.keydown(function(e){
@@ -211,16 +220,6 @@ $pines->com_pgrid->load();
 									});
 								}
 							});
-						}
-					},
-					{
-						type: 'button',
-						text: '',
-						title: 'Select a Product by Category',
-						extra_class: 'picon picon-view-list-tree',
-						selection_optional: true,
-						click: function(){
-							category_dialog.dialog("open");
 						}
 					},
 					{type: 'separator'},
@@ -503,6 +502,29 @@ $pines->com_pgrid->load();
 					},
 					{
 						type: 'button',
+						text: 'Amount',
+						extra_class: 'picon picon-office-chart-line',
+						multi_select: true,
+						double_click: true,
+						click: function(e, rows){
+							// TODO: Minimums, maximums
+							get_amount(function(amount){
+								rows.each(function(){
+									var cur_row = $(this);
+									var cur_status = cur_row.pgrid_get_value(3);
+									if (cur_status == "approved" || cur_status == "declined" || cur_status == "tendered") {
+										alert("Payments cannot be changed if they have been approved, declined, or tendered.");
+										return;
+									}
+									cur_row.pgrid_set_value(2, amount);
+								});
+								update_payments();
+							});
+						}
+					},
+					{type: 'separator'},
+					{
+						type: 'button',
 						text: 'Remove',
 						extra_class: 'picon picon-edit-delete',
 						multi_select: true,
@@ -568,12 +590,28 @@ $pines->com_pgrid->load();
 				});
 			};
 
-			$("button.payment-button").hover(function(){
+			$("button.payment-button", "#p_muid_form").hover(function(){
 				$(this).addClass("ui-state-hover");
 			}, function(){
 				$(this).removeClass("ui-state-hover");
 			}).click(function(){
 				var payment_type = JSON.parse(this.value);
+				// TODO: Minimums, maximums
+				get_amount(function(amount){
+					payments_table.pgrid_add([{key: payment_type.guid, values: [
+						payment_type.name,
+						amount,
+						"pending"
+					]}], function(){
+						var row = $(this);
+						row.data("payment_data", payment_type);
+						payments_table.data_form(row);
+					});
+					update_payments();
+				});
+			});
+
+			function get_amount(callback) {
 				// TODO: Minimums, maximums
 				$("<div title=\"Payment Amount\" />").each(function(){
 					var amount_dialog = $(this);
@@ -584,20 +622,11 @@ $pines->com_pgrid->load();
 						$(this).removeClass("ui-state-hover");
 					}).html($("#p_muid_amount_due").html()).css({"float": "left", "clear": "both", "min-height": "60px", "width": "100%", "text-align": "center", "margin": "2px"})
 					.click(function(){
-						payments_table.pgrid_add([{key: payment_type.guid, values: [
-							payment_type.name,
-							round_to_dec($("#p_muid_amount_due").html()),
-							"pending"
-						]}], function(){
-							var row = $(this);
-							row.data("payment_data", payment_type);
-							payments_table.data_form(row);
-						});
 						amount_dialog.dialog("close");
-						update_payments();
+						callback(round_to_dec($("#p_muid_amount_due").html()));
 					}));
 					// Buttons for common amounts.
-					$.each(["1", "5", "10", "20", "50", "100"], function(){
+					$.each(["1", "5", "10", "20", "50", "60", "80", "100"], function(){
 						var cur_amount = this;
 						amount_dialog.append($("<button />").addClass("ui-state-default ui-corner-all").hover(function(){
 							$(this).addClass("ui-state-hover");
@@ -605,17 +634,8 @@ $pines->com_pgrid->load();
 							$(this).removeClass("ui-state-hover");
 						}).html(String(cur_amount)).css({"float": "left", "min-height": "60px", "min-width": "60px", "text-align": "center", "margin": "2px"})
 						.click(function(){
-							payments_table.pgrid_add([{key: payment_type.guid, values: [
-								payment_type.name,
-								round_to_dec(cur_amount),
-								"pending"
-							]}], function(){
-								var row = $(this);
-								row.data("payment_data", payment_type);
-								payments_table.data_form(row);
-							});
 							amount_dialog.dialog("close");
-							update_payments();
+							callback(round_to_dec(cur_amount));
 						}));
 					});
 					// A button for a custom amount.
@@ -629,26 +649,17 @@ $pines->com_pgrid->load();
 						do {
 							cur_amount = prompt("Amount in dollars:", cur_amount);
 						} while (isNaN(parseInt(cur_amount)) && cur_amount != null);
-						if (cur_amount != null) {
-							payments_table.pgrid_add([{key: payment_type.guid, values: [
-								payment_type.name,
-								round_to_dec(cur_amount),
-								"pending"
-							]}], function(){
-								var row = $(this);
-								row.data("payment_data", payment_type);
-								payments_table.data_form(row);
-							});
-						}
 						amount_dialog.dialog("close");
-						update_payments();
+						if (cur_amount != null)
+							callback(round_to_dec(cur_amount));
 					}));
 				}).dialog({
 					bgiframe: true,
 					autoOpen: true,
-					modal: true
+					modal: true,
+					close: function(){$(this).remove();}
 				});
-			});
+			}
 			<?php } ?>
 
 			
@@ -806,6 +817,11 @@ $pines->com_pgrid->load();
 			$("#p_muid_change").html(round_to_dec(change));
 			
 			payments.val(JSON.stringify(submit_val));
+
+			if (change)
+				$("#p_muid_overpaid").show();
+			else
+				$("#p_muid_overpaid").hide();
 		}
 
 		<?php if ($pines->config->com_sales->com_customer && ($this->entity->status != 'processed' || $this->entity->status != 'voided')) { ?>
@@ -1116,6 +1132,9 @@ $pines->com_pgrid->load();
 			<div class="pf-field" style="float: right; font-size: 1.2em; text-align: right;">
 				<span class="pf-label">Amount Returned</span><span class="pf-field" id="p_muid_amount_tendered">0.00</span><br />
 				<span class="pf-label">Amount Remaining</span><span class="pf-field" id="p_muid_amount_due">0.00</span><br />
+				<div id="p_muid_overpaid" style="display: none; font-weight: bold;">
+					<span class="pf-label">Overpaid</span><span style="font-weight: bold;" class="pf-field ui-state-error ui-corner-all" id="p_muid_change">0.00</span>
+				</div>
 			</div>
 			<hr class="pf-field" style="clear: both;" />
 		</div>

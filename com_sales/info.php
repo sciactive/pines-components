@@ -22,7 +22,7 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'user_manager&entity_manager&editor',
-		'component' => 'com_jquery&com_pgrid&com_pnotify&com_ptags&com_jstree'
+		'component' => 'com_barcode&com_jquery&com_pgrid&com_pnotify&com_ptags&com_jstree'
 	),
 	'recommend' => array(
 		'component' => 'com_customer'

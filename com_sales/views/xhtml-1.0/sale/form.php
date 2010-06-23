@@ -167,8 +167,17 @@ $pines->com_pgrid->load();
 				pgrid_toolbar: true,
 				pgrid_toolbar_contents : [
 					{
+						type: 'button',
+						text: '',
+						title: 'Select a Product by Category',
+						extra_class: 'picon picon-view-list-tree',
+						selection_optional: true,
+						click: function(){
+							category_dialog.dialog("open");
+						}
+					},
+					{
 						type: 'text',
-						label: 'Code: ',
 						title: 'Enter a Product SKU or Barcode',
 						load: function(textbox){
 							textbox.keydown(function(e){
@@ -211,16 +220,6 @@ $pines->com_pgrid->load();
 									});
 								}
 							});
-						}
-					},
-					{
-						type: 'button',
-						text: '',
-						title: 'Select a Product by Category',
-						extra_class: 'picon picon-view-list-tree',
-						selection_optional: true,
-						click: function(){
-							category_dialog.dialog("open");
 						}
 					},
 					{type: 'separator'},
@@ -532,6 +531,29 @@ $pines->com_pgrid->load();
 					},
 					{
 						type: 'button',
+						text: 'Amount',
+						extra_class: 'picon picon-office-chart-line',
+						multi_select: true,
+						double_click: true,
+						click: function(e, rows){
+							// TODO: Minimums, maximums
+							get_amount(function(amount){
+								rows.each(function(){
+									var cur_row = $(this);
+									var cur_status = cur_row.pgrid_get_value(3);
+									if (cur_status == "approved" || cur_status == "declined" || cur_status == "tendered") {
+										alert("Payments cannot be changed if they have been approved, declined, or tendered.");
+										return;
+									}
+									cur_row.pgrid_set_value(2, amount);
+								});
+								update_payments();
+							});
+						}
+					},
+					{type: 'separator'},
+					{
+						type: 'button',
 						text: 'Remove',
 						extra_class: 'picon picon-edit-delete',
 						multi_select: true,
@@ -597,12 +619,28 @@ $pines->com_pgrid->load();
 				});
 			};
 
-			$("button.payment-button").hover(function(){
+			$("button.payment-button", "#p_muid_form").hover(function(){
 				$(this).addClass("ui-state-hover");
 			}, function(){
 				$(this).removeClass("ui-state-hover");
 			}).click(function(){
 				var payment_type = JSON.parse(this.value);
+				// TODO: Minimums, maximums
+				get_amount(function(amount){
+					payments_table.pgrid_add([{key: payment_type.guid, values: [
+						payment_type.name,
+						amount,
+						"pending"
+					]}], function(){
+						var row = $(this);
+						row.data("payment_data", payment_type);
+						payments_table.data_form(row);
+					});
+					update_payments();
+				});
+			});
+
+			function get_amount(callback) {
 				// TODO: Minimums, maximums
 				$("<div title=\"Payment Amount\" />").each(function(){
 					var amount_dialog = $(this);
@@ -613,20 +651,11 @@ $pines->com_pgrid->load();
 						$(this).removeClass("ui-state-hover");
 					}).html($("#p_muid_amount_due").html()).css({"float": "left", "clear": "both", "min-height": "60px", "width": "100%", "text-align": "center", "margin": "2px"})
 					.click(function(){
-						payments_table.pgrid_add([{key: payment_type.guid, values: [
-							payment_type.name,
-							round_to_dec($("#p_muid_amount_due").html()),
-							"pending"
-						]}], function(){
-							var row = $(this);
-							row.data("payment_data", payment_type);
-							payments_table.data_form(row);
-						});
 						amount_dialog.dialog("close");
-						update_payments();
+						callback(round_to_dec($("#p_muid_amount_due").html()));
 					}));
 					// Buttons for common amounts.
-					$.each(["1", "5", "10", "20", "50", "100"], function(){
+					$.each(["1", "5", "10", "20", "50", "60", "80", "100"], function(){
 						var cur_amount = this;
 						amount_dialog.append($("<button />").addClass("ui-state-default ui-corner-all").hover(function(){
 							$(this).addClass("ui-state-hover");
@@ -634,17 +663,8 @@ $pines->com_pgrid->load();
 							$(this).removeClass("ui-state-hover");
 						}).html(String(cur_amount)).css({"float": "left", "min-height": "60px", "min-width": "60px", "text-align": "center", "margin": "2px"})
 						.click(function(){
-							payments_table.pgrid_add([{key: payment_type.guid, values: [
-								payment_type.name,
-								round_to_dec(cur_amount),
-								"pending"
-							]}], function(){
-								var row = $(this);
-								row.data("payment_data", payment_type);
-								payments_table.data_form(row);
-							});
 							amount_dialog.dialog("close");
-							update_payments();
+							callback(round_to_dec(cur_amount));
 						}));
 					});
 					// A button for a custom amount.
@@ -658,26 +678,17 @@ $pines->com_pgrid->load();
 						do {
 							cur_amount = prompt("Amount in dollars:", cur_amount);
 						} while (isNaN(parseInt(cur_amount)) && cur_amount != null);
-						if (cur_amount != null) {
-							payments_table.pgrid_add([{key: payment_type.guid, values: [
-								payment_type.name,
-								round_to_dec(cur_amount),
-								"pending"
-							]}], function(){
-								var row = $(this);
-								row.data("payment_data", payment_type);
-								payments_table.data_form(row);
-							});
-						}
 						amount_dialog.dialog("close");
-						update_payments();
+						if (cur_amount != null)
+							callback(round_to_dec(cur_amount));
 					}));
 				}).dialog({
 					bgiframe: true,
 					autoOpen: true,
-					modal: true
+					modal: true,
+					close: function(){$(this).remove();}
 				});
-			});
+			}
 			<?php } ?>
 
 			
@@ -1145,17 +1156,6 @@ $pines->com_pgrid->load();
 			<hr class="pf-field" style="clear: both;" />
 		</div>
 	</div>
-	<?php if (!empty($this->returns)) { ?>
-	<div class="pf-element pf-full-width">
-		<span class="pf-label">Associated Returns</span>
-		<div class="pf-group">
-			<?php foreach($this->returns as $cur_return) { ?>
-			<a class="pf-field" href="<?php echo htmlentities(pines_url('com_sales', 'return/edit', array('id' => $cur_return->guid))); ?>">Return #<?php echo $cur_return->guid; ?></a>
-			<?php } ?>
-			<hr class="pf-field" style="clear: both;" />
-		</div>
-	</div>
-	<?php } ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Comments</span>
 			<input class="pf-field ui-widget-content ui-state-default ui-corner-all" type="button" value="Edit" onclick="$('#p_muid_comments_dialog').dialog('open');" /></label>
@@ -1165,6 +1165,23 @@ $pines->com_pgrid->load();
 			<textarea class="pf-field pf-full-width ui-widget-content" style="width: 96%; height: 100%;" rows="3" cols="35" id="p_muid_comments" name="comments"><?php echo $this->entity->comments; ?></textarea>
 		</div>
 	</div>
+	<?php if (!empty($this->returns)) { ?>
+	<div class="pf-element">
+		<span class="pf-label">Associated Return(s)</span>
+		<span class="pf-note">This sale has attached returns.</span>
+		<div class="pf-group">
+		<?php foreach($this->returns as $cur_return) { ?>
+		<span class="pf-field">
+			Return #<?php echo $cur_return->id; ?>:
+			<a href="<?php echo htmlentities(pines_url('com_sales', 'return/receipt', array('id' => $cur_return->guid))); ?>" onclick="window.open(this.href); return false;">Receipt</a>
+			<?php if (gatekeeper('com_sales/editreturn')) { ?>
+			<a href="<?php echo htmlentities(pines_url('com_sales', 'return/edit', array('id' => $cur_return->guid))); ?>" onclick="window.open(this.href); return false;">Edit</a>
+			<?php } ?>
+		</span><br />
+		<?php } ?>
+		</div>
+	</div>
+	<?php } ?>
 	<div class="pf-element pf-buttons">
 		<input type="hidden" id="p_muid_comment_saver" name="comment_saver" value="<?php echo $this->entity->comments; ?>" />
 		<?php if ( isset($this->entity->guid) ) { ?>

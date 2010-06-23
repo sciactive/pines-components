@@ -1,6 +1,6 @@
 <?php
 /**
- * Shows a quote, invoice, or receipt for a sale.
+ * Shows a quote, invoice, or receipt for a sale or return.
  *
  * @package Pines
  * @subpackage com_sales
@@ -10,16 +10,26 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-if ($this->entity->status == 'quoted') {
-	$this->doc_title = 'Quote';
-} elseif ($this->entity->status == 'invoiced') {
-	$this->doc_title = 'Invoice';
-} elseif ($this->entity->status == 'paid') {
-	$this->doc_title = 'Receipt';
-} elseif ($this->entity->status == 'voided') {
-	$this->doc_title = 'Sale Void';
-} else {
-	$this->doc_title = 'Sale';
+
+$sale = $this->entity->has_tag('sale');
+
+switch ($this->entity->status) {
+	case 'quoted':
+		$this->doc_title = $sale ? 'Quote' : 'Quoted Return';
+		break;
+	case 'invoiced':
+		$this->doc_title = 'Invoice';
+		break;
+	case 'paid':
+	case 'processed':
+		$this->doc_title = $sale ? 'Receipt' : 'Return Receipt';
+		break;
+	case 'voided':
+		$this->doc_title = $sale ? 'Sale Void' : 'Return Void';
+		break;
+	default:
+		$this->doc_title = $sale ? 'Sale' : 'Return';
+		break;
 }
 ?>
 <style type="text/css">
@@ -51,7 +61,7 @@ if ($this->entity->status == 'quoted') {
 	#p_muid_receipt .left_side div, #p_muid_receipt .right_side div {
 		float: left;
 	}
-	#p_muid_receipt .left_side .data_col, #p_muid_receipt .right_side .data_col {
+	#p_muid_receipt .data_col {
 		float: left;
 		margin-left: 10px;
 		padding-right: 15px;
@@ -59,19 +69,20 @@ if ($this->entity->status == 'quoted') {
 	#p_muid_receipt .left_side span, #p_muid_receipt .right_side span {
 		display: block;
 	}
-	#p_muid_receipt .location .aligner, #p_muid_receipt .customer .aligner {
-		width: 55px;
+	#p_muid_receipt .aligner {
+		text-align: right;
+		width: 65px;
 	}
-	#p_muid_receipt #p_muid_item_list {
+	#p_muid_item_list {
 		text-align: left;
 		border-bottom: 1px solid black;
 		border-collapse: collapse;
 	}
-	#p_muid_receipt #p_muid_item_list th {
+	#p_muid_item_list th {
 		border-bottom: 1px solid black;
 		padding: 2px;
 	}
-	#p_muid_receipt #p_muid_item_list tr td p {
+	#p_muid_item_list tr td p {
 		margin: 0;
 	}
 	#p_muid_receipt .receipt_note, #p_muid_receipt .comments {
@@ -88,11 +99,10 @@ if ($this->entity->status == 'quoted') {
 	if (isset($sales_group))
 		$group_logo = $sales_group->get_logo(true);
 	// Document id number.
-	// TODO: Change this to an incremental naming scheme.
-	$doc_id = $sales_group->groupname . strtoupper(substr($this->doc_title, 0, 2)) . $this->entity->id;
+	$doc_id = strtoupper($sales_group->groupname . substr($this->doc_title, 0, 2)) . ($sale ? '' : 'R') . $this->entity->id;
 	?>
 	<div class="left_side">
-		<span><img src="<?php echo $group_logo; ?>" alt="<?php echo $pines->page->get_title(); ?>" /></span>
+		<span><img src="<?php echo $group_logo; ?>" alt="<?php echo $pines->config->page_title; ?>" /></span>
 	</div>
 	<div class="right_side barcode">
 		<h1><?php echo $this->doc_title; ?></h1>
@@ -114,13 +124,12 @@ if ($this->entity->status == 'quoted') {
 	</div>
 	<?php } ?>
 	<div class="right_side receipt_info">
-		<div class="info_labels right_text">
+		<div class="right_text">
 			<span><?php echo $this->doc_title; ?> #:</span>
 			<span>Date:</span>
 			<span>Time:</span>
-			<?php if (isset($sales_rep->guid)) { ?>
-			<span>Sales Person:</span>
-			<?php } ?>
+			<?php if (!$sale && isset($this->entity->sale)) { ?><span>Sale:</span><?php } ?>
+			<?php if (isset($sales_rep->guid)) { ?><span>Sales Rep:</span><?php } ?>
 		</div>
 		<div class="data_col">
 			<span><?php echo $doc_id; ?></span>
@@ -133,6 +142,10 @@ if ($this->entity->status == 'quoted') {
 					echo '<span>'.format_date($this->entity->tender_date, 'date_short').'</span>';
 					echo '<span>'.format_date($this->entity->tender_date, 'time_short').'</span>';
 					break;
+				case 'processed':
+					echo '<span>'.format_date($this->entity->process_date, 'date_short').'</span>';
+					echo '<span>'.format_date($this->entity->process_date, 'time_short').'</span>';
+					break;
 				case 'voided':
 					echo '<span>'.format_date($this->entity->void_date, 'date_short').'</span>';
 					echo '<span>'.format_date($this->entity->void_date, 'time_short').'</span>';
@@ -142,12 +155,11 @@ if ($this->entity->status == 'quoted') {
 					echo '<span>'.format_date($this->entity->p_cdate, 'time_short').'</span>';
 					break;
 			} ?>
-			<?php if (isset($sales_rep->guid)) { ?>
-				<span><?php echo $sales_rep->name; ?></span>
-			<?php } ?>
+			<?php if (!$sale && isset($this->entity->sale)) { ?><span><?php echo $this->entity->sale->id; ?></span><?php } ?>
+			<?php if (isset($sales_rep->guid)) { ?><span><?php echo $sales_rep->name; ?></span><?php } ?>
 		</div>
 	</div>
-<?php if ($pines->config->com_sales->com_customer && isset($this->entity->customer)) { ?>
+	<?php if ($pines->config->com_sales->com_customer && isset($this->entity->customer)) { ?>
 	<div class="left_side customer">
 		<div class="aligner">
 			<span>Bill To:</span>
@@ -155,9 +167,9 @@ if ($this->entity->status == 'quoted') {
 		<div class="data_col">
 			<span><strong>
 				<?php echo $this->entity->customer->name; ?>
-				<?php if (isset($this->entity->customer->company)) { ?>
-					( <?php echo $this->entity->customer->company->name; ?> )
-				<?php } ?>
+				<?php if (isset($this->entity->customer->company->name)) {
+					echo " ( {$this->entity->customer->company->name} )";
+				} ?>
 			</strong></span>
 			<?php if ($this->entity->customer->address_type == 'us') { if (!empty($this->entity->customer->address_1)) { ?>
 			<span><?php echo $this->entity->customer->address_1.' '.$this->entity->customer->address_2; ?></span>
@@ -167,7 +179,7 @@ if ($this->entity->status == 'quoted') {
 			<?php } ?>
 		</div>
 	</div>
-<?php } ?>
+	<?php } ?>
 	<div class="pf-element pf-full-width left_side">
 		<table id="p_muid_item_list" width="100%">
 			<thead>
@@ -195,19 +207,17 @@ if ($this->entity->status == 'quoted') {
 		</table>
 	</div>
 	<div class="pf-element pf-full-width">
-		<?php if (is_array($this->entity->payments) && ($this->entity->status == 'paid' || $this->entity->status == 'voided')) { ?>
+		<?php if (is_array($this->entity->payments) && ($this->entity->status == 'paid' || $this->entity->status == 'processed' || $this->entity->status == 'voided')) { ?>
 		<div class="left_side">
-			<div>
-				<span><strong>Payments:</strong></span>
-			</div>
+			<div><strong>Payments<?php if (!$sale) echo ' Returned' ?>:</strong></div>
 			<hr style="clear: both;" />
 			<div class="right_text">
 				<?php foreach ($this->entity->payments as $cur_payment) { ?>
 				<span><?php echo $cur_payment['label']; ?>:</span>
 				<?php } ?>
 				<hr style="visibility: hidden;" />
-				<span>Amount Tendered:</span>
-				<span>Change:</span>
+				<span>Amount <?php echo $sale ? 'Tendered' : 'Refunded'; ?>:</span>
+				<?php if ($sale) { ?><span>Change:</span><?php } ?>
 			</div>
 			<div class="data_col right_text">
 				<?php foreach ($this->entity->payments as $cur_payment) { ?>
@@ -215,29 +225,23 @@ if ($this->entity->status == 'quoted') {
 				<?php } ?>
 				<hr />
 				<span>$<?php echo $pines->com_sales->round($this->entity->amount_tendered, $pines->config->com_sales->dec, true); ?></span>
-				<span>$<?php echo $pines->com_sales->round($this->entity->change, $pines->config->com_sales->dec, true); ?></span>
+				<?php if ($sale) { ?><span>$<?php echo $pines->com_sales->round($this->entity->change, $pines->config->com_sales->dec, true); ?></span><?php } ?>
 			</div>
 		</div>
 		<?php } ?>
 		<div class="right_side">
-			<div>
-				<span><strong>Totals:</strong></span>
-			</div>
+			<div><strong>Totals:</strong></div>
 			<hr style="clear: both;" />
 			<div class="right_text">
 				<span>Subtotal:</span>
-				<?php if ($this->entity->item_fees > 0) { ?>
-				<span>Item Fees:</span>
-				<?php } ?>
+				<?php if ($this->entity->item_fees > 0) { ?><span>Item Fees:</span><?php } ?>
 				<span>Tax:</span>
 				<hr style="visibility: hidden;" />
 				<span><strong>Total: </strong></span>
 			</div>
 			<div class="data_col right_text">
 				<span>$<?php echo $pines->com_sales->round($this->entity->subtotal, $pines->config->com_sales->dec, true); ?></span>
-				<?php if ($this->entity->item_fees > 0) { ?>
-				<span>$<?php echo $pines->com_sales->round($this->entity->item_fees, $pines->config->com_sales->dec, true); ?></span>
-				<?php } ?>
+				<?php if ($this->entity->item_fees > 0) { ?><span>$<?php echo $pines->com_sales->round($this->entity->item_fees, $pines->config->com_sales->dec, true); ?></span><?php } ?>
 				<span>$<?php echo $pines->com_sales->round($this->entity->taxes, $pines->config->com_sales->dec, true); ?></span>
 				<hr />
 				<span><strong>$<?php echo $pines->com_sales->round($this->entity->total, $pines->config->com_sales->dec, true); ?></strong></span>
@@ -253,35 +257,31 @@ if ($this->entity->status == 'quoted') {
 		</div>
 	</div>
 	<?php } ?>
+	<?php
+	switch ($this->entity->status) {
+		case 'quoted':
+			$label = $pines->config->com_sales->quote_note_label;
+			$text = $pines->config->com_sales->quote_note_text;
+			break;
+		case 'invoiced':
+			$label = $pines->config->com_sales->invoice_note_label;
+			$text = $pines->config->com_sales->invoice_note_text;
+			break;
+		case 'paid':
+			$label = $pines->config->com_sales->receipt_note_label;
+			$text = $pines->config->com_sales->receipt_note_text;
+			break;
+		case 'processed':
+			$label = $pines->config->com_sales->return_note_label;
+			$text = $pines->config->com_sales->return_note_text;
+			break;
+	}
+	if (!empty($text)) {
+	?>
 	<div class="pf-element pf-full-width">
-		<div class="pf-field">
-			<span class="pf-label"><?php
-				switch ($this->entity->status) {
-					case 'quoted':
-						echo $pines->config->com_sales->quote_note_label;
-						break;
-					case 'invoiced':
-						echo $pines->config->com_sales->invoice_note_label;
-						break;
-					case 'paid':
-						echo $pines->config->com_sales->receipt_note_label;
-						break;
-				}
-			?></span>
-			<br />
-			<div class="pf-field receipt_note"><?php
-				switch ($this->entity->status) {
-					case 'quoted':
-						echo $pines->config->com_sales->quote_note_text;
-						break;
-					case 'invoiced':
-						echo $pines->config->com_sales->invoice_note_text;
-						break;
-					case 'paid':
-						echo $pines->config->com_sales->receipt_note_text;
-						break;
-				}
-			?></div>
-		</div>
+		<span class="pf-label"><?php echo $label; ?></span>
+		<br />
+		<div class="pf-field receipt_note"><?php echo $text; ?></div>
 	</div>
+	<?php } ?>
 </div>

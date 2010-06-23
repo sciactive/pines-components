@@ -89,17 +89,18 @@ class com_sales_stock extends entity {
 	 * Receive the stock entry on a PO/transfer/return/etc.
 	 *
 	 * This process creates a transaction entity. It adds itself to the
-	 * receiving entity's "received" var. It updates the location of the stock
-	 * entry, and sets the status to "available".
+	 * receiving entity's "received" var if $update_received is true. It updates
+	 * the location of the stock entry, and sets the status to "available".
 	 *
 	 * If $location is not set, the current user's primary group is used.
 	 *
 	 * @param string $reason The reason for the stock receipt. Such as "received_po".
 	 * @param entity &$on_entity The entity which the product is to be received on.
 	 * @param group $location The group to use for the new location.
+	 * @param bool $update_received Add this stock entry to $on_entity's received variable.
 	 * @return bool True on success, false on failure.
 	 */
-	public function receive($reason = 'other', &$on_entity = null, $location = null) {
+	public function receive($reason = 'other', &$on_entity = null, $location = null, $update_received = true) {
 		global $pines;
 		if (!in_array($reason, array('received_po', 'received_transfer', 'sale_voided', 'sale_returned', 'other')))
 			return false;
@@ -125,10 +126,12 @@ class com_sales_stock extends entity {
 		$tx->old_location = $old_location;
 		$tx->new_location = $this->location;
 		if (isset($on_entity)) {
-			if ((array) $on_entity->received !== $on_entity->received)
-				$on_entity->received = array();
-			$on_entity->received[] = $this;
-			$return = $return && $on_entity->save();
+			if ($update_received) {
+				if ((array) $on_entity->received !== $on_entity->received)
+					$on_entity->received = array();
+				$on_entity->received[] = $this;
+				$return = $return && $on_entity->save();
+			}
 			$tx->ref = $on_entity;
 		}
 		$tx->stock = $this;

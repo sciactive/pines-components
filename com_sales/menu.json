@@ -92,16 +92,16 @@
 				}
 			},
 			{
-				"path": "main_menu/business/com_sales/inventory/currentstock",
-				"text": "Current Stock",
+				"path": "main_menu/business/com_sales/inventory/currentinventory",
+				"text": "Current Inventory",
 				"href": ["com_sales","stock/list"],
 				"depend": {
 					"ability": "com_sales/managestock"
 				}
 			},
 			{
-				"path": "main_menu/business/com_sales/inventory/removedstock",
-				"text": "Removed Stock",
+				"path": "main_menu/business/com_sales/inventory/removedinventory",
+				"text": "Removed Inventory",
 				"href": ["com_sales","stock/list",{"removed":"true"}],
 				"depend": {
 					"ability": "com_sales/managestock"

@@ -189,7 +189,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<?php foreach($this->sales as $sale) { ?>
 		<tr title="<?php echo $sale->guid; ?>">
 			<td><?php echo $sale->id; ?></td>
-			<td><?php echo date('Y-m-d', $sale->p_cdate); ?></td>
+			<td><?php echo format_date($sale->p_cdate); ?></td>
 			<td><?php echo ucwords($sale->status); ?></td>
 			<td><?php echo !isset($sale->user->guid) ? '' : "{$sale->user->name} [{$sale->user->username}]"; ?></td>
 			<?php if ($pines->config->com_sales->com_customer) { ?>
@@ -201,12 +201,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				$number += (int) $cur_product['quantity'];
 			}
 			echo $number; ?></td>
-			<td><?php echo $sale->subtotal; ?></td>
-			<td><?php echo $sale->item_fees; ?></td>
-			<td><?php echo $sale->taxes; ?></td>
-			<td><?php echo $sale->total; ?></td>
-			<td><?php echo $sale->amount_tendered; ?></td>
-			<td><?php echo $sale->change; ?></td>
+			<td><?php echo isset($sale->subtotal) ? '$'.number_format($sale->subtotal, 2) : ''; ?></td>
+			<td><?php echo isset($sale->item_fees) ? '$'.number_format($sale->item_fees, 2) : ''; ?></td>
+			<td><?php echo isset($sale->taxes) ? '$'.number_format($sale->taxes, 2) : ''; ?></td>
+			<td><?php echo isset($sale->total) ? '$'.number_format($sale->total, 2) : ''; ?></td>
+			<td><?php echo isset($sale->amount_tendered) ? '$'.number_format($sale->amount_tendered, 2) : ''; ?></td>
+			<td><?php echo isset($sale->change) ? '$'.number_format($sale->change, 2) : ''; ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

@@ -140,7 +140,7 @@ $pines->com_jstree->load();
 			<?php if (!$this->removed) { ?>
 			<td><?php echo "{$stock->location->name} [{$stock->location->groupname}]"; ?></td>
 			<?php } ?>
-			<td><?php echo $stock->cost; ?></td>
+			<td><?php echo isset($stock->cost) ? '$'.number_format($stock->cost, 2) : ''; ?></td>
 			<td><?php echo $stock->available ? 'Yes' : 'No'; ?></td>
 			<td><?php echo $stock->last_reason(); ?></td>
 		</tr>

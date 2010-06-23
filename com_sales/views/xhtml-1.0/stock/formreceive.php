@@ -40,8 +40,18 @@ $pines->com_jstree->load();
 				pgrid_toolbar: true,
 				pgrid_toolbar_contents : [
 					{
+						type: 'button',
+						text: '',
+						title: 'Select a Product by Category',
+						extra_class: 'picon picon-view-list-tree',
+						selection_optional: true,
+						click: function(){
+							category_dialog.dialog("open");
+						}
+					},
+					{
 						type: 'text',
-						label: 'Code: ',
+						title: 'Enter a Product SKU or Barcode',
 						load: function(textbox){
 							textbox.keydown(function(e){
 								if (e.keyCode == 13) {
@@ -83,15 +93,6 @@ $pines->com_jstree->load();
 									});
 								}
 							});
-						}
-					},
-					{
-						type: 'button',
-						text: '',
-						extra_class: 'picon picon-view-list-tree',
-						selection_optional: true,
-						click: function(){
-							category_dialog.dialog("open");
 						}
 					},
 					{type: 'separator'},

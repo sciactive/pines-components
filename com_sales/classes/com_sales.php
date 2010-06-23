@@ -33,7 +33,7 @@ class com_sales extends component {
 			return false;
 		if (empty($arguments['action']))
 			return false;
-		if ($arguments['action'] != 'request' && !is_object($arguments['sale']))
+		if ($arguments['action'] != 'request' && !is_object($arguments['ticket']))
 			return false;
 		foreach ($pines->config->com_sales->processing_types as $cur_type) {
 			if ($arguments['name'] != $cur_type['name'])
@@ -577,6 +577,7 @@ class com_sales extends component {
 				$array['payment']['status'] = 'approved';
 				break;
 			case 'tender':
+			case 'return':
 				$array['payment']['status'] = 'tendered';
 				$array['payment']['label'] = $array['payment']['entity']->name;
 				break;
@@ -584,7 +585,7 @@ class com_sales extends component {
 				$array['payment']['status'] = 'voided';
 				break;
 			case 'change':
-				$array['sale']->change_given = true;
+				$array['ticket']->change_given = true;
 				break;
 		}
 	}
@@ -618,6 +619,7 @@ class com_sales extends component {
 				}
 				break;
 			case 'tender':
+			case 'return':
 				$array['payment']['status'] = 'tendered';
 				$array['payment']['label'] = $array['payment']['entity']->name;
 				break;
@@ -625,7 +627,7 @@ class com_sales extends component {
 				$array['payment']['status'] = 'voided';
 				break;
 			case 'change':
-				$array['sale']->change_given = true;
+				$array['ticket']->change_given = true;
 				break;
 		}
 	}

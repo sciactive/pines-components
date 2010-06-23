@@ -64,12 +64,12 @@ class com_authorizenet extends component {
 		switch ($array['action']) {
 			case 'request':
 				$module = new module('com_authorizenet', 'form_payment');
-				if ($array['sale']->customer->guid) {
-					$module->name_first = $array['sale']->customer->name_first;
-					$module->name_last = $array['sale']->customer->name_last;
-					$module->address = $array['sale']->customer->address_1;
-					$module->state = $array['sale']->customer->state;
-					$module->zip = $array['sale']->customer->zip;
+				if ($array['ticket']->customer->guid) {
+					$module->name_first = $array['ticket']->customer->name_first;
+					$module->name_last = $array['ticket']->customer->name_last;
+					$module->address = $array['ticket']->customer->address_1;
+					$module->state = $array['ticket']->customer->state;
+					$module->zip = $array['ticket']->customer->zip;
 				}
 				$pines->page->override_doc($module->render());
 				break;
@@ -101,8 +101,8 @@ class com_authorizenet extends component {
 				//$zip = $args['payment']['data']['zip'];
 				$card_code = $array['payment']['data']['cid'];
 				// TODO: Find a better name for transactions.
-				$invoice_num = $array['sale']->transaction_id;
-				$transaction_name = $array['sale']->products[0]->entity->name;
+				$invoice_num = $array['ticket']->transaction_id;
+				$transaction_name = $array['ticket']->products[0]->entity->name;
 
 				$post_values = array(
 					// the API Login ID and Transaction Key must be replaced with valid values

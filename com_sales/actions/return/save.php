@@ -45,21 +45,19 @@ if ($pines->config->com_sales->com_customer && $return->status != 'processed' &&
 }
 // Used for product error checking.
 $product_error = false;
-// Used to check products which allow only one per ticket.
-$one_per_ticket_guids = array();
 if ($return->status != 'processed' && $return->status != 'voided') {
 	$return->products = (array) json_decode($_REQUEST['products']);
 	if (empty($return->products)) {
-		pines_notice("No products were selected.");
+		pines_notice('No products were selected.');
 		$product_error = true;
 	} else {
+		// Grab the products from the sale, if there is one.
+		if (isset($return->sale))
+			$old_products = (array) $return->get_sale_products();
 		foreach ($return->products as $key => &$cur_product) {
 			$cur_product_entity = com_sales_product::factory((int) $cur_product->key);
 			$cur_sku = $cur_product_entity->sku;
 			$cur_serial = $cur_product->values[2];
-			$cur_delivery = $cur_product->values[3];
-			if (!in_array($cur_delivery, array('in-store', 'shipped')))
-				$cur_delivery = 'in-store';
 			$cur_qty = (int) $cur_product->values[4];
 			$cur_price = (float) $cur_product->values[5];
 			$cur_discount = $cur_product->values[6];
@@ -93,15 +91,37 @@ if ($return->status != 'processed' && $return->status != 'voided') {
 				pines_notice("Product with SKU [$cur_sku] is not discountable.");
 				$product_error = true;
 			}
-			$cur_product = array(
-				'entity' => $cur_product_entity,
-				'sku' => $cur_sku,
-				'serial' => $cur_serial,
-				'delivery' => $cur_delivery,
-				'quantity' => $cur_qty,
-				'price' => $cur_price,
-				'discount' => $cur_discount
-			);
+			if (isset($return->sale)) {
+				// Search through the products from the sale and find the entry that matches.
+				// TODO: Will this cause problems with matching items that have different quantities?
+				// Like widget x 5 + widget x 1. Remove first line, and it may match first line anyway.
+				// Is that a problem? It only happens with unserialized items.
+				$found = false;
+				foreach ($old_products as $old_key => $cur_old_product) {
+					if ($cur_product_entity->is($cur_old_product['entity']) && $cur_sku == $cur_old_product['sku'] && $cur_serial == $cur_old_product['serial'] && $cur_qty <= $cur_old_product['quantity']) {
+						$cur_product = $cur_old_product;
+						$cur_product['quantity'] = $cur_qty;
+						$cur_product['price'] = $cur_price;
+						$cur_product['discount'] = $cur_discount;
+						unset($old_products[$old_key]);
+						$found = true;
+						break;
+					}
+				}
+				if (!$found) {
+					pines_notice("Product with SKU [$cur_sku] was not found on original sale. Has it already been returned?");
+					$product_error = true;
+				}
+			} else {
+				$cur_product = array(
+					'entity' => $cur_product_entity,
+					'sku' => $cur_sku,
+					'serial' => $cur_serial,
+					'quantity' => $cur_qty,
+					'price' => $cur_price,
+					'discount' => $cur_discount
+				);
+			}
 		}
 		unset($cur_product);
 	}

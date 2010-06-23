@@ -557,7 +557,7 @@ $pines->com_pgrid->load();
 					url: "<?php echo pines_url('com_sales', 'forms/payment'); ?>",
 					type: "POST",
 					dataType: "html",
-					data: {"name": payment_data.processing_type, "id": $("#p_muid_form [name=id]").val(), "customer": $("#p_muid_customer").val()},
+					data: {"name": payment_data.processing_type, "id": $("#p_muid_form [name=id]").val(), "customer": $("#p_muid_customer").val(), "type": "sale"},
 					error: function(XMLHttpRequest, textStatus){
 						pines.error("An error occured while trying to retreive the data form:\n"+XMLHttpRequest.status+": "+textStatus);
 					},
@@ -1082,8 +1082,8 @@ $pines->com_pgrid->load();
 					<td><?php echo $cur_product['quantity']; ?></td>
 					<td><?php echo $cur_product['price']; ?></td>
 					<td><?php echo $cur_product['discount']; ?></td>
-					<td><?php echo $pines->com_sales->round($cur_product['line_total'], $pines->config->com_sales->dec); ?></td>
-					<td><?php echo $pines->com_sales->round($cur_product['fees'], $pines->config->com_sales->dec); ?></td>
+					<td><?php echo $cur_product['line_total']; ?></td>
+					<td><?php echo $cur_product['fees']; ?></td>
 				</tr>
 				<?php } ?>
 			</tbody>

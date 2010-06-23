@@ -81,7 +81,7 @@ class com_sales_sale extends entity {
 				'action' => 'approve',
 				'name' => $cur_payment['entity']->processing_type,
 				'payment' => &$cur_payment,
-				'sale' => &$this
+				'ticket' => &$this
 			));
 			if (!in_array($cur_payment['status'], array('approved', 'declined')))
 				$return = false;
@@ -142,7 +142,7 @@ class com_sales_sale extends entity {
 			$pines->com_sales->call_payment_process(array(
 				'action' => 'change',
 				'name' => $change_type->processing_type,
-				'sale' => &$this
+				'ticket' => &$this
 			));
 			if (!$this->change_given) {
 				pines_notice('Change is due, but the payment type designated to give change declined the request.');
@@ -349,7 +349,7 @@ class com_sales_sale extends entity {
 				$pines->com_sales->call_product_actions(array(
 					'type' => 'sold',
 					'product' => $cur_product['entity'],
-					'sale' => $this,
+					'ticket' => $this,
 					'serial' => $cur_product['serial'],
 					'delivery' => $cur_product['delivery'],
 					'price' => $cur_product['price'],
@@ -366,7 +366,7 @@ class com_sales_sale extends entity {
 					'type' => 'sold',
 					'product' => $cur_product['entity'],
 					'stock_entry' => $cur_stock,
-					'sale' => $this,
+					'ticket' => $this,
 					'serial' => $cur_product['serial'],
 					'delivery' => $cur_product['delivery'],
 					'price' => $cur_product['price'],
@@ -478,11 +478,11 @@ class com_sales_sale extends entity {
 	 */
 	public function tender_payments() {
 		global $pines;
-		$this->tendered_payments = true;
 		if (!is_array($this->payments))
 			$this->payments = array();
 		if (!is_numeric($this->total))
 			return false;
+		$this->tendered_payments = true;
 		$total = (float) $this->total;
 		$amount_tendered = (float) $this->amount_tendered;
 		$amount_due = 0.00;
@@ -502,7 +502,7 @@ class com_sales_sale extends entity {
 				'action' => 'tender',
 				'name' => $cur_payment['entity']->processing_type,
 				'payment' => &$cur_payment,
-				'sale' => &$this
+				'ticket' => &$this
 			));
 			// If the payment went through, record it, if it didn't and it
 			// wasn't declined, consider it a failure.
@@ -548,7 +548,7 @@ class com_sales_sale extends entity {
 	 */
 	public function total() {
 		global $pines;
-		if (!is_array($this->products))
+		if (!is_array($this->products) || in_array($this->status, array('invoiced', 'paid', 'voided')))
 			return false;
 		// We need a list of enabled taxes and fees.
 		$tax_fees = (array) $pines->entity_manager->get_entities(
@@ -699,7 +699,7 @@ class com_sales_sale extends entity {
 					$pines->com_sales->call_product_actions(array(
 						'type' => 'voided',
 						'product' => $cur_product['entity'],
-						'sale' => $this,
+						'ticket' => $this,
 						'serial' => $cur_product['serial'],
 						'delivery' => $cur_product['delivery'],
 						'price' => $cur_product['price'],
@@ -716,7 +716,7 @@ class com_sales_sale extends entity {
 						'type' => 'voided',
 						'product' => $cur_product['entity'],
 						'stock_entry' => $cur_stock,
-						'sale' => $this,
+						'ticket' => $this,
 						'serial' => $cur_product['serial'],
 						'delivery' => $cur_product['delivery'],
 						'price' => $cur_product['price'],
@@ -739,7 +739,7 @@ class com_sales_sale extends entity {
 					'action' => 'void',
 					'name' => $cur_payment['entity']->processing_type,
 					'payment' => &$cur_payment,
-					'sale' => &$this
+					'ticket' => &$this
 				));
 				// If the payment was voided, record it, if not, consider it a
 				// failure.

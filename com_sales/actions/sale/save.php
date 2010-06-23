@@ -40,7 +40,7 @@ $one_per_ticket_guids = array();
 if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != 'voided') {
 	$sale->products = (array) json_decode($_REQUEST['products']);
 	if (empty($sale->products)) {
-		pines_notice("No products were selected.");
+		pines_notice('No products were selected.');
 		$product_error = true;
 	} else {
 		foreach ($sale->products as $key => &$cur_product) {

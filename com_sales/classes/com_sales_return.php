@@ -64,25 +64,16 @@ class com_sales_return extends entity {
 	public function attach_sale(&$sale) {
 		if (isset($this->sale) || $sale->status != 'paid')
 			return false;
-		$this->products = (array) $sale->products;
-		foreach ($this->products as $key => &$cur_product) {
-			// Remove products that have already been returned.
-			if (is_array($cur_product['stock_entities'])) {
-				foreach ($cur_product['stock_entities'] as $stock_key => &$cur_stock) {
-					// TODO: Update $cur_product['returned_stock_entities'] when return is processed.
-					if ($cur_stock->in_array($cur_product['returned_stock_entities']))
-						unset($cur_product['stock_entities'][$stock_key]);
-				}
-				unset($cur_stock);
-			}
-			// TODO: Update $cur_product['returned_quantity'] when return is processed.
-			$cur_product['quantity'] -= (int) $cur_product['returned_quantity'];
-			if ($cur_product['quantity'] <= 0)
-				unset($this->products[$key]);
+		if (!$this->sale->save()) {
+			// If the sale can't be modified, processing will fail.
+			pines_error('The sale could not be modified. Do you have permission?');
+			return false;
 		}
-		unset($cur_product);
+		$this->sale = $sale;
+		$this->products = $this->get_sale_products();
 		if (!$this->products) {
 			pines_notice('All products from that sale have been returned already.');
+			unset($this->sale);
 			return false;
 		}
 		$this->payments = (array) $sale->payments;
@@ -119,7 +110,6 @@ class com_sales_return extends entity {
 			$cur_payment['status'] = 'pending';
 		}
 		unset($cur_payment);
-		$this->sale = $sale;
 		$this->customer = $sale->customer;
 		return true;
 	}
@@ -133,6 +123,34 @@ class com_sales_return extends entity {
 			return false;
 		pines_log("Deleted return $this->id.", 'notice');
 		return true;
+	}
+
+	/**
+	 * Get a product array from an attached sale.
+	 *
+	 * Ignores products that have already been returned.
+	 *
+	 * @return array The product array.
+	 */
+	public function get_sale_products() {
+		$products = (array) $this->sale->products;
+		foreach ($products as $key => &$cur_product) {
+			// Remove products that have already been returned.
+			if (is_array($cur_product['stock_entities'])) {
+				foreach ($cur_product['stock_entities'] as $stock_key => &$cur_stock) {
+					// TODO: Update $cur_product['returned_stock_entities'] when return is processed.
+					if ($cur_stock->in_array($cur_product['returned_stock_entities']))
+						unset($cur_product['stock_entities'][$stock_key]);
+				}
+				unset($cur_stock);
+			}
+			// TODO: Update $cur_product['returned_quantity'] when return is processed.
+			$cur_product['quantity'] -= (int) $cur_product['returned_quantity'];
+			if ($cur_product['quantity'] <= 0)
+				unset($products[$key]);
+		}
+		unset($cur_product);
+		return $products;
 	}
 
 	/**
@@ -181,6 +199,184 @@ class com_sales_return extends entity {
 		if (!isset($this->id))
 			$this->id = $pines->entity_manager->new_uid('com_sales_return');
 		return parent::save();
+	}
+
+	/**
+	 * Process each payment.
+	 *
+	 * This process updates "amount_tendered" and "amount_due" on the return
+	 * itself.
+	 *
+	 * @return bool True on success, false on failure.
+	 */
+	public function tender_payments() {
+		global $pines;
+		if (isset($this->sale) && !$this->sale->save()) {
+			// If the sale can't be modified, processing will fail.
+			pines_error('The sale could not be modified. Do you have permission?');
+			return false;
+		}
+		$this->tendered_payments = true;
+		if (!is_array($this->payments))
+			$this->payments = array();
+		if (!is_numeric($this->total))
+			return false;
+		$total = (float) $this->total;
+		$amount_tendered = (float) $this->amount_tendered;
+		$amount_due = 0.00;
+		$return = true;
+		foreach ($this->payments as &$cur_payment) {
+			// If it's already tendered, skip it.
+			if (in_array($cur_payment['status'], array('declined', 'tendered')))
+				continue;
+			// If it's not approved, return can't be tendered.
+			if ($cur_payment['status'] != 'approved') {
+				$return = false;
+				continue;
+			}
+			// Call the payment processing.
+			$pines->com_sales->call_payment_process(array(
+				'action' => 'return',
+				'name' => $cur_payment['entity']->processing_type,
+				'payment' => &$cur_payment,
+				'ticket' => &$this
+			));
+			// If the payment went through, record it, if it didn't and it
+			// wasn't declined, consider it a failure.
+			if ($cur_payment['status'] != 'tendered') {
+				if ($cur_payment['status'] != 'declined')
+					$return = false;
+			} else {
+				// If it was tendered, add to the amount tendered.
+				$amount_tendered += (float) $cur_payment['amount'];
+				// And if there is a sale, add it to the sale's returned value.
+				if (isset($this->sale))
+					$this->sale->returned_total += (float) $cur_payment['amount'];
+				// Make a transaction entry.
+				$tx = com_sales_tx::factory('payment_tx');
+				$tx->type = 'payment_returned';
+				$tx->amount = (float) $cur_payment['amount'];
+				$tx->ref = $cur_payment['entity'];
+
+				// Make sure we have a GUID before saving the tx.
+				if (!($this->guid))
+					$return = $return && $this->save();
+
+				$tx->ticket = $this;
+				$return = $return && $tx->save();
+			}
+		}
+		$amount_due = $total - $amount_tendered;
+		if ($amount_due < 0.00)
+			$amount_due = 0.00;
+		$this->amount_tendered = $amount_tendered;
+		$this->amount_due = $amount_due;
+		if (isset($this->sale))
+			$return = $return && $this->sale->save();
+		return $return;
+	}
+
+	/**
+	 * Calculate and set the return's totals.
+	 *
+	 * This process adds "line_total" and "fees" to each product on the return,
+	 * and adds "subtotal", "item_fees", "taxes", and "total" to the return
+	 * itself.
+	 *
+	 * @return bool True on success, false on failure.
+	 */
+	public function total() {
+		global $pines;
+		if (!is_array($this->products) || in_array($this->status, array('processed', 'voided')))
+			return false;
+		// We need a list of enabled taxes and fees.
+		$tax_fees = (array) $pines->entity_manager->get_entities(
+				array('class' => com_sales_tax_fee),
+				array('&',
+					'data' => array('enabled', true),
+					'tag' => array('com_sales', 'tax_fee')
+				)
+			);
+		foreach ($tax_fees as $key => $cur_tax_fee) {
+			foreach($cur_tax_fee->locations as $cur_location) {
+				// If we're in one of its groups, don't remove it.
+				if ($_SESSION['user']->in_group($cur_location))
+					continue 2;
+			}
+			// We're not in any of its groups, so remove it.
+			unset($tax_fees[$key]);
+		}
+		$subtotal = 0.00;
+		$taxes = 0.00;
+		$item_fees = 0.00;
+		$total = 0.00;
+		// Go through each product, calculating its line total and fees.
+		foreach ($this->products as &$cur_product) {
+			$price = (float) $cur_product['price'];
+			$qty = (int) $cur_product['quantity'];
+			$discount = $cur_product['discount'];
+			if ($cur_product['entity']->discountable && $discount != "") {
+				$discount_price = $price;
+				if (preg_match('/^\$-?\d+(\.\d+)?$/', $discount)) {
+					// This is an exact discount.
+					$discount = (float) preg_replace('/[^0-9.-]/', '', $discount);
+					$discount_price = $price - $discount;
+				} elseif (preg_match('/^-?\d+(\.\d+)?%$/', $discount)) {
+					// This is a percentage discount.
+					$discount = (float) preg_replace('/[^0-9.-]/', '', $discount);
+					$discount_price = $price - ($price * ($discount / 100));
+				}
+				// Check that the discount doesn't lower the item's price below the floor.
+				if ($cur_product['entity']->floor && $pines->com_sales->round($discount_price, $pines->config->com_sales->dec) < $pines->com_sales->round($cur_product['entity']->floor, $pines->config->com_sales->dec)) {
+					pines_notice("The discount on {$cur_product['entity']->name} lowers the product's price below the limit. The discount was removed.");
+					$discount = $cur_product['discount'] = '';
+				} else {
+					$price = $discount_price;
+				}
+			}
+			// Check that the price is above the floor of the product.
+			if ($cur_product['entity']->floor && $price < $cur_product['entity']->floor) {
+				pines_notice("The product {$cur_product['entity']->name} cannot be priced lower than {$cur_product['entity']->floor}.");
+				return false;
+			}
+			// Check that the price is below the ceiling of the product.
+			if ($cur_product['entity']->ceiling && $price > $cur_product['entity']->ceiling) {
+				pines_notice("The product {$cur_product['entity']->name} cannot be priced higher than {$cur_product['entity']->ceiling}.");
+				return false;
+			}
+			$line_total = $price * $qty;
+			if (!$cur_product['entity']->tax_exempt) {
+				// Add location taxes.
+				foreach ($tax_fees as $cur_tax_fee) {
+					if ($cur_tax_fee->type == 'percentage') {
+						$taxes += ($cur_tax_fee->rate / 100) * $line_total;
+					} elseif ($cur_tax_fee->type == 'flat_rate') {
+						$taxes += $cur_tax_fee->rate * $qty;
+					}
+				}
+			}
+			if (is_array($cur_product['entity']->additional_tax_fees)) {
+				// Add item fees.
+				foreach ($cur_product['entity']->additional_tax_fees as $cur_tax_fee) {
+					if ($cur_tax_fee->type == 'percentage') {
+						$cur_item_fees += ($cur_tax_fee->rate / 100) * $line_total;
+					} elseif ($cur_tax_fee->type == 'flat_rate') {
+						$cur_item_fees += $cur_tax_fee->rate * $qty;
+					}
+				}
+			}
+			$item_fees += (float) $cur_item_fees;
+			$subtotal += (float) $line_total;
+			$cur_product['line_total'] = $pines->com_sales->round($line_total, $pines->config->com_sales->dec);
+			$cur_product['fees'] = $pines->com_sales->round($cur_item_fees, $pines->config->com_sales->dec);
+		}
+		// The total can now be calculated.
+		$total = $subtotal + $item_fees + $taxes;
+		$this->subtotal = $pines->com_sales->round($subtotal, $pines->config->com_sales->dec);
+		$this->item_fees = $pines->com_sales->round($item_fees, $pines->config->com_sales->dec);
+		$this->taxes = $pines->com_sales->round($taxes, $pines->config->com_sales->dec);
+		$this->total = $pines->com_sales->round($total, $pines->config->com_sales->dec);
+		return true;
 	}
 }
 

@@ -11,22 +11,34 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( isset($_REQUEST['id']) ) {
-	if ( !gatekeeper('com_sales/editsale') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'sale/list'));
-	$sale = com_sales_sale::factory((int) $_REQUEST['id']);
+if ($_REQUEST['type'] == 'return') {
+	if ( isset($_REQUEST['id']) ) {
+		if ( !gatekeeper('com_sales/editreturn') )
+			punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'sale/list'));
+		$ticket = com_sales_return::factory((int) $_REQUEST['id']);
+	} else {
+		if ( !gatekeeper('com_sales/newreturn') && !gatekeeper('com_sales/newreturnwsale') )
+			punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'sale/list'));
+		$ticket = com_sales_return::factory();
+	}
 } else {
-	if ( !gatekeeper('com_sales/newsale') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'sale/list'));
-	$sale = com_sales_sale::factory();
+	if ( isset($_REQUEST['id']) ) {
+		if ( !gatekeeper('com_sales/editsale') )
+			punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'sale/list'));
+		$ticket = com_sales_sale::factory((int) $_REQUEST['id']);
+	} else {
+		if ( !gatekeeper('com_sales/newsale') )
+			punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'sale/list'));
+		$ticket = com_sales_sale::factory();
+	}
 }
 
-if ($pines->config->com_sales->com_customer && $sale->status != 'invoiced' && $sale->status != 'paid') {
-	$sale->customer = null;
+if ($pines->config->com_sales->com_customer && $ticket->status != 'invoiced' && $ticket->status != 'paid' && $ticket->status != 'processed' && $ticket->status != 'voided') {
+	$ticket->customer = null;
 	if (preg_match('/^\d+/', $_REQUEST['customer'])) {
-		$sale->customer = com_customer_customer::factory((int) $_REQUEST['customer']);
-		if (!isset($sale->customer->guid))
-			$sale->customer = null;
+		$ticket->customer = com_customer_customer::factory((int) $_REQUEST['customer']);
+		if (!isset($ticket->customer->guid))
+			$ticket->customer = null;
 	}
 }
 
@@ -34,7 +46,7 @@ $pines->page->override = true;
 $pines->com_sales->call_payment_process(array(
 	'action' => 'request',
 	'name' => $_REQUEST['name'],
-	'sale' => $sale
+	'ticket' => $ticket
 ));
 
 ?>

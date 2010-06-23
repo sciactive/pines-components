@@ -41,7 +41,7 @@ class com_customer extends component {
 	 */
 	function product_action_add_member_days(&$array) {
 		global $pines;
-		$array['sale']->customer->make_member();
+		$array['ticket']->customer->make_member();
 		$days = 0;
 		// Search through the membership day values.
 		foreach($pines->config->com_customer->membervalues as $cur_value) {
@@ -57,11 +57,11 @@ class com_customer extends component {
 		if ($array['type'] == 'voided')
 			$days *= -1;
 		// Add the days and save the customer.
-		$array['sale']->customer->adjust_membership($days);
-		if ($array['sale']->customer->save()) {
-			pines_notice("Added $days days to {$array['sale']->customer->name}. Their membership now expires on ".format_date($array['sale']->customer->member_exp, 'date_long').'.');
+		$array['ticket']->customer->adjust_membership($days);
+		if ($array['ticket']->customer->save()) {
+			pines_notice("Added $days days to {$array['ticket']->customer->name}. Their membership now expires on ".format_date($array['ticket']->customer->member_exp, 'date_long').'.');
 		} else {
-			pines_error("Error adding $days days to {$array['sale']->customer->name}.");
+			pines_error("Error adding $days days to {$array['ticket']->customer->name}.");
 		}
 	}
 
@@ -72,11 +72,11 @@ class com_customer extends component {
 	 */
 	function product_action_add_points(&$array) {
 		global $pines;
-		$type = $array['sale']->customer->valid_member() ? 'member' : 'guest';
+		$type = $array['ticket']->customer->valid_member() ? 'member' : 'guest';
 		$points = 0;
 		if ($array['name'] == 'com_customer/add_points') {
 			// Search through the right lookup table to find the divisor.
-			$table = $array['sale']->customer->valid_member() ? $pines->config->com_customer->member_point_lookup : $pines->config->com_customer->guest_point_lookup;
+			$table = $array['ticket']->customer->valid_member() ? $pines->config->com_customer->member_point_lookup : $pines->config->com_customer->guest_point_lookup;
 			foreach ($table as $cur_price) {
 				if ((float) preg_replace('/:.*$/', '', $cur_price) <= $array['price'])
 					$high_price = $cur_price;
@@ -101,11 +101,11 @@ class com_customer extends component {
 		if ($array['type'] == 'voided')
 			$points *= -1;
 		// Add the points and save the customer.
-		$array['sale']->customer->adjust_points($points);
-		if ($array['sale']->customer->save()) {
-			pines_notice("Added $points points to $type {$array['sale']->customer->name}.");
+		$array['ticket']->customer->adjust_points($points);
+		if ($array['ticket']->customer->save()) {
+			pines_notice("Added $points points to $type {$array['ticket']->customer->name}.");
 		} else {
-			pines_error("Error adding $points points to $type {$array['sale']->customer->name}.");
+			pines_error("Error adding $points points to $type {$array['ticket']->customer->name}.");
 		}
 	}
 

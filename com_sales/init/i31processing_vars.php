@@ -30,8 +30,8 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * - "action" - The processing which is being requested.
  * - "name" - The name of the type being called.
- * - "payment" - The sale's payment entry. This holds information about the payment.
- * - "sale" - The sale entity.
+ * - "payment" - The sale's/return's payment entry. This holds information about the payment.
+ * - "ticket" - The sale/return entity.
  *
  * "action" will be one of:
  *
@@ -95,7 +95,7 @@ $pines->config->com_sales->processing_types = array();
  * - "name" - The name of the action being called.
  * - "product" - The product entity.
  * - "stock_entry" - The stock entry entity.
- * - "sale" - The sale entity.
+ * - "ticket" - The sale/return entity.
  * - "po" - The PO entity.
  * - "transfer" - The transfer entity.
  *

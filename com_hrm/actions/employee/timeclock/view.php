@@ -21,7 +21,7 @@ if (!isset($employee->guid)) {
 }
 
 if (!gatekeeper('com_hrm/manageclock') && !gatekeeper('com_hrm/viewclock')) {
-	if (!$_SESSION['user']->is($employee->user_account)) {
+	if (!$_SESSION['user']->is($employee)) {
 		pines_notice('You only have the ability to view your own timeclock.');
 		return;
 	}

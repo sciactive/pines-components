@@ -43,7 +43,7 @@ if (isset($_REQUEST['employee'])) {
 		$event->id = 0;
 	}
 
-	$event->employee = user::factory((int) $_REQUEST['employee']);
+	$event->employee = com_hrm_employee::factory((int) $_REQUEST['employee']);
 	$location = $event->employee->group;
 	$event->title = $event->employee->name;
 	$event->color = $event->employee->color;

@@ -37,7 +37,7 @@ class com_reports extends component {
 		if (!isset($employee)) {
 			$module->employees = $pines->com_hrm->get_employees();
 			foreach ($module->employees as $key => &$cur_employee) {
-				if (!$cur_employee->user_account || !($cur_employee->user_account->in_group($location) || $cur_employee->user_account->is_descendent($location)))
+				if (!($cur_employee->in_group($location) || $cur_employee->is_descendent($location)))
 					unset($module->employees[$key]);
 			}
 		} else {
@@ -73,8 +73,8 @@ class com_reports extends component {
 		$module->date[0] = $form->date[0] = $date_start;
 		$module->date[1] = $form->date[1] = $date_end;
 		// Employee and location of the report.
-		if (isset($employee->user_account)) {
-			$selector['ref'] = array('user', $employee->user_account);
+		if (isset($employee->guid)) {
+			$selector['ref'] = array('user', $employee);
 			$module->employee = $form->employee = $employee;
 			$module->title = 'Sales Report for '.$employee->name;
 		} elseif (isset($location->guid)) {

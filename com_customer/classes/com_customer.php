@@ -21,6 +21,13 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class com_customer extends component {
 	/**
+	 * Whether the customer selector JavaScript has been loaded.
+	 * @access private
+	 * @var bool $js_loaded
+	 */
+	private $js_loaded = false;
+
+	/**
 	 * Creates and attaches a module which lists companies.
 	 */
 	function list_companies() {
@@ -32,6 +39,19 @@ class com_customer extends component {
 	 */
 	function list_customers() {
 		$module = new module('com_customer', 'customer/list', 'content');
+	}
+
+	/**
+	 * Load the customer selector.
+	 *
+	 * This will place the required scripts into the document's head section.
+	 */
+	function load_customer_selector() {
+		if (!$this->js_loaded) {
+			$module = new module('com_customer', 'customer/selector', 'head');
+			$module->render();
+			$this->js_loaded = true;
+		}
 	}
 
 	/**

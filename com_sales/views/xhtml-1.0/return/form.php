@@ -21,6 +21,8 @@ if (!isset($this->entity->guid)) {
 }
 $this->note = 'Use this form to edit a return.';
 $pines->com_pgrid->load();
+if ($pines->config->com_sales->com_customer)
+	$pines->com_customer->load_customer_selector();
 ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_sales', 'return/save')); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
@@ -36,7 +38,6 @@ $pines->com_pgrid->load();
 	<script type="text/javascript">
 		// <![CDATA[
 		<?php if ($pines->config->com_sales->com_customer) { ?>
-		var customer_box, customer_search_box, customer_search_button, customer_table, customer_dialog;
 		var require_customer = false;
 		<?php } ?>
 		var comments, comments_box, products, products_table, product_code, payments, payments_table;
@@ -95,13 +96,6 @@ $pines->com_pgrid->load();
 		}
 
 		pines(function(){
-			<?php if ($pines->config->com_sales->com_customer) { ?>
-			customer_box = $("#p_muid_customer");
-			customer_search_box = $("#p_muid_customer_search");
-			customer_search_button = $("#p_muid_customer_search_button");
-			customer_table = $("#p_muid_customer_table");
-			customer_dialog = $("#p_muid_customer_dialog");
-			<?php } ?>
 			comments = $("#p_muid_comment_saver");
 			comments_box = $("#p_muid_comments");
 			products = $("#p_muid_products");
@@ -110,45 +104,8 @@ $pines->com_pgrid->load();
 			payments_table = $("#p_muid_payments_table");
 			payments = $("#p_muid_payments");
 
-			<?php if ($pines->config->com_sales->com_customer && ($this->entity->status != 'processed' || $this->entity->status != 'voided')) { ?>
-			customer_search_box.keydown(function(eventObject){
-				if (eventObject.keyCode == 13) {
-					customer_search(this.value);
-					return false;
-				}
-			});
-			customer_search_button.click(function(){
-				customer_search(customer_search_box.val());
-			});
-
-			customer_table.pgrid({
-				pgrid_paginate: true,
-				pgrid_multi_select: false,
-				pgrid_double_click: function(){
-					customer_dialog.dialog('option', 'buttons').Done();
-				}
-			});
-
-			customer_dialog.dialog({
-				bgiframe: true,
-				autoOpen: false,
-				modal: true,
-				width: 800,
-				buttons: {
-					"Done": function(){
-						var rows = customer_table.pgrid_get_selected_rows().pgrid_export_rows();
-						if (!rows[0]) {
-							alert("Please select a customer.");
-							return;
-						} else {
-							var customer = rows[0];
-						}
-						customer_box.val(customer.key+": \""+customer.values[0]+"\"");
-						customer_search_box.val("");
-						customer_dialog.dialog('close');
-					}
-				}
-			});
+			<?php if ($pines->config->com_sales->com_customer && $this->entity->status != 'processed' && $this->entity->status != 'voided' && !isset($this->entity->sale->guid)) { ?>
+			$("#p_muid_customer").customerselect();
 			<?php } ?>
 
 			<?php if ($this->entity->status == 'processed' || $this->entity->status == 'voided') { ?>
@@ -824,64 +781,6 @@ $pines->com_pgrid->load();
 				$("#p_muid_overpaid").hide();
 		}
 
-		<?php if ($pines->config->com_sales->com_customer && ($this->entity->status != 'processed' || $this->entity->status != 'voided')) { ?>
-		function customer_search(search_string) {
-			var loader;
-			$.ajax({
-				url: "<?php echo pines_url('com_customer', 'customer/search'); ?>",
-				type: "POST",
-				dataType: "json",
-				data: {"q": search_string},
-				beforeSend: function(){
-					loader = $.pnotify({
-						pnotify_title: 'Customer Search',
-						pnotify_text: 'Searching for customers...',
-						pnotify_notice_icon: 'picon picon-throbber',
-						pnotify_nonblock: true,
-						pnotify_hide: false,
-						pnotify_history: false
-					});
-					customer_table.pgrid_get_all_rows().pgrid_delete();
-				},
-				complete: function(){
-					loader.pnotify_remove();
-				},
-				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to find customers:\n"+XMLHttpRequest.status+": "+textStatus);
-				},
-				success: function(data){
-					if (!data) {
-						alert("No customers were found that matched the query.");
-						return;
-					}
-					customer_dialog.dialog('open');
-					var struct = [];
-					$.each(data, function(){
-						struct.push({
-							"key": this.guid,
-							"values": [
-								this.name,
-								this.email,
-								this.company,
-								this.title,
-								this.address_1,
-								this.address_2,
-								this.city,
-								this.state,
-								this.zip,
-								this.phone_home,
-								this.phone_work,
-								this.phone_cell,
-								this.fax
-							]
-						});
-					});
-					customer_table.pgrid_add(struct);
-				}
-			});
-		}
-		<?php } ?>
-
 		<?php if ($pines->config->com_sales->cash_drawer) { ?>
 		function run_drawer() {
 			if (!check_return_total()) return false;
@@ -955,59 +854,13 @@ $pines->com_pgrid->load();
 	</script>
 	<?php if ($pines->config->com_sales->com_customer) { ?>
 	<div class="pf-element">
-		<label for="p_muid_customer_search">
+		<label>
 			<span class="pf-label">Customer</span>
 			<?php if ($this->entity->status != 'processed' && $this->entity->status != 'voided' && !isset($this->entity->sale->guid)) { ?>
 			<span class="pf-note">Enter part of a name, company, email, or phone # to search.</span>
 			<?php } ?>
+			<input class="pf-field ui-widget-content" type="text" id="p_muid_customer" name="customer" size="24" value="<?php echo htmlentities($this->entity->customer->guid ? "{$this->entity->customer->guid}: \"{$this->entity->customer->name}\"" : ''); ?>" <?php if ($this->entity->status == 'processed' || $this->entity->status == 'voided' || isset($this->entity->sale->guid)) echo 'disabled="disabled" '; ?>/>
 		</label>
-		<div class="pf-group">
-			<input class="pf-field ui-widget-content" type="text" id="p_muid_customer" name="customer" size="24" onfocus="this.blur();" value="<?php echo htmlentities($this->entity->customer->guid ? "{$this->entity->customer->guid}: \"{$this->entity->customer->name}\"" : 'No Customer Selected'); ?>" />
-			<?php if ($this->entity->status != 'processed' && $this->entity->status != 'voided' && !isset($this->entity->sale->guid)) { ?>
-			<br />
-			<input class="pf-field ui-widget-content" type="text" id="p_muid_customer_search" name="customer_search" size="24" />
-			<button class="pf-field ui-state-default ui-corner-all" type="button" id="p_muid_customer_search_button"><span class="picon picon-system-search" style="padding-left: 16px; background-repeat: no-repeat;">Search</span></button>
-			<?php } ?>
-		</div>
-	</div>
-	<div id="p_muid_customer_dialog" title="Pick a Customer" style="display: none;">
-		<table id="p_muid_customer_table">
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Email</th>
-					<th>Company</th>
-					<th>Job Title</th>
-					<th>Address 1</th>
-					<th>Address 2</th>
-					<th>City</th>
-					<th>State</th>
-					<th>Zip</th>
-					<th>Home Phone</th>
-					<th>Work Phone</th>
-					<th>Cell Phone</th>
-					<th>Fax</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-				</tr>
-			</tbody>
-		</table>
-		<br class="pf-clearing" />
 	</div>
 	<?php } ?>
 	<div id="p_muid_category_dialog" title="Categories" style="display: none;">

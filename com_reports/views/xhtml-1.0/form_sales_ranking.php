@@ -67,7 +67,7 @@ $pines->com_jstree->load();
 					var selected_id = TREE_OBJ.selected.attr("id");
 					location.val(selected_id);
 					<?php foreach ($this->employees as $cur_employee) { ?>
-					if (selected_id == "<?php echo $cur_employee->user_account->group->guid; ?>")
+					if (selected_id == "<?php echo $cur_employee->group->guid; ?>")
 						$("#p_muid_form .goal_<?php echo $cur_employee->guid; ?>").show();
 					else
 						$("#p_muid_form .goal_<?php echo $cur_employee->guid; ?>").hide();
@@ -81,7 +81,7 @@ $pines->com_jstree->load();
 		
 		pines.com_reports_update_goals = function () {
 			<?php foreach ($this->employees as $cur_employee) { ?>
-			if (location.val() == "<?php echo $cur_employee->user_account->group->guid; ?>")
+			if (location.val() == "<?php echo $cur_employee->group->guid; ?>")
 				$("#p_muid_form [name=goals[<?php echo $cur_employee->guid; ?>]]").val($("#p_muid_form [name=goals_updater]").val());
 			<?php } ?>
 		}

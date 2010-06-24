@@ -76,11 +76,6 @@ class com_reports_sales_ranking extends entity {
 		$module->entity = $this;
 		$module->employees = $pines->com_hrm->get_employees();
 
-		foreach ($module->employees as $key => $value) {
-			if (!isset($value->user_account))
-				unset($module->employees[$key]);
-		}
-
 		return $module;
 	}
 
@@ -104,9 +99,7 @@ class com_reports_sales_ranking extends entity {
 		$employees = $pines->com_hrm->get_employees();
 
 		foreach ($employees as $key => $value) {
-			if ( !isset($value->user_account) ||
-				(!$value->user_account->in_group($location) &&
-				!$value->user_account->is_descendent($location)) )
+			if ( !$value->in_group($location) && !$value->is_descendent($location) )
 				unset($employees[$key]);
 		}
 
@@ -143,6 +136,10 @@ class com_reports_sales_ranking extends entity {
 			'pct' => 0
 		);
 		foreach ($employees as $cur_employee) {
+			// Exclude employees with no sales goals.
+			if ($this->goals[$cur_employee->guid] == 0)
+				continue;
+
 			$module->rankings[$cur_employee->guid] = array(
 				'employee' => $cur_employee,
 				'current' => 0,
@@ -157,7 +154,7 @@ class com_reports_sales_ranking extends entity {
 			$current_week_sales = $pines->entity_manager->get_entities(
 					array('class' => com_sales_sale),
 					array('&',
-						'ref' => array('user', $cur_employee->user_account),
+						'ref' => array('user', $cur_employee),
 						'gte' => array('p_cdate', $current_start),
 						'lte' => array('p_cdate', $current_end),
 						'tag' => array('com_sales', 'sale')
@@ -170,7 +167,7 @@ class com_reports_sales_ranking extends entity {
 			$last_week_sales = $pines->entity_manager->get_entities(
 					array('class' => com_sales_sale),
 					array('&',
-						'ref' => array('user', $cur_employee->user_account),
+						'ref' => array('user', $cur_employee),
 						'gte' => array('p_cdate', $last_start),
 						'lte' => array('p_cdate', $last_end),
 						'tag' => array('com_sales', 'sale')
@@ -183,7 +180,7 @@ class com_reports_sales_ranking extends entity {
 			$mtd_sales = $pines->entity_manager->get_entities(
 					array('class' => com_sales_sale),
 					array('&',
-						'ref' => array('user', $cur_employee->user_account),
+						'ref' => array('user', $cur_employee),
 						'gte' => array('p_cdate', $this->start_date),
 						'lte' => array('p_cdate', $this->end_date),
 						'tag' => array('com_sales', 'sale')

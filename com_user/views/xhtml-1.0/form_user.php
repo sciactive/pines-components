@@ -33,6 +33,7 @@ $pines->com_pgrid->load();
 		var address_dialog = $("#p_muid_address_dialog");
 
 		addresses_table.pgrid({
+			pgrid_view_height: "250px",
 			pgrid_paginate: false,
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents : [
@@ -174,9 +175,13 @@ $pines->com_pgrid->load();
 	<div id="p_muid_tabs" style="clear: both;">
 		<ul>
 			<li><a href="#p_muid_tab_general">General</a></li>
+			<?php if ( $this->display_groups ) { ?>
 			<li><a href="#p_muid_tab_groups">Groups</a></li>
+			<?php } ?>
 			<li><a href="#p_muid_tab_location">Location</a></li>
+			<?php if ( $this->display_abilities ) { ?>
 			<li><a href="#p_muid_tab_abilities">Abilities</a></li>
+			<?php } ?>
 			<li><a href="#p_muid_tab_attributes">Attributes</a></li>
 		</ul>
 		<div id="p_muid_tab_general">
@@ -215,16 +220,19 @@ $pines->com_pgrid->load();
 					<input class="pf-field ui-widget-content" type="text" name="fax" size="24" value="<?php echo format_phone($this->entity->fax); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
 			<div class="pf-element">
-				<label><span class="pf-label">Timezone</span>
+				<label>
+					<span class="pf-label">Timezone</span>
 					<span class="pf-note">This overrides the primary group's timezone.</span>
 					<select class="pf-field ui-widget-content" name="timezone" size="1">
 						<option value="">--Inherit From Group--</option>
-						<?php $tz = DateTimeZone::listIdentifiers();
+						<?php
+						$tz = DateTimeZone::listIdentifiers();
 						sort($tz);
-						foreach ($tz as $cur_tz) { ?>
-						<option value="<?php echo $cur_tz; ?>"<?php echo $this->entity->timezone == $cur_tz ? ' selected="selected"' : ''; ?>><?php echo $cur_tz; ?></option>
-						<?php } ?>
-					</select></label>
+						foreach ($tz as $cur_tz) {
+							?><option value="<?php echo $cur_tz; ?>"<?php echo $this->entity->timezone == $cur_tz ? ' selected="selected"' : ''; ?>><?php echo $cur_tz; ?></option><?php
+						} ?>
+					</select>
+				</label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label"><?php if (isset($this->entity->guid)) echo 'Update '; ?>Password</span>
@@ -247,35 +255,35 @@ $pines->com_pgrid->load();
 			<?php } ?>
 			<br class="pf-clearing" />
 		</div>
+		<?php if ( $this->display_groups ) { ?>
 		<div id="p_muid_tab_groups">
-			<?php if ( $this->display_groups ) { ?>
 				<?php if (empty($this->group_array)) { ?>
 				<div class="pf-element">
 					<span class="pf-label">There are no groups to display.</span>
 				</div>
 				<?php } else { ?>
 				<div class="pf-element">
-					<label><span class="pf-label">Primary Group</span>
+					<label>
+						<span class="pf-label">Primary Group</span>
 						<select class="pf-field ui-widget-content" name="group" size="1">
 							<option value="null">-- No Primary Group --</option>
-									<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->entity->group); ?>
-						</select></label>
+							<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->entity->group); ?>
+						</select>
+					</label>
 				</div>
 				<div class="pf-element">
-					<label><span class="pf-label">Groups</span>
+					<label>
+						<span class="pf-label">Groups</span>
 						<span class="pf-note">Hold Ctrl (Command on Mac) to select multiple groups.</span>
 						<select class="pf-field ui-widget-content" name="groups[]" multiple="multiple" size="6">
-									<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->entity->groups); ?>
-						</select></label>
+							<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->entity->groups); ?>
+						</select>
+					</label>
 				</div>
-				<?php }
-			} else { ?>
-			<div class="pf-element">
-				<p>You do not have sufficient privileges to edit group membership.</p>
-			</div>
-			<?php } ?>
+				<?php } ?>
 			<br class="pf-clearing" />
 		</div>
+		<?php } ?>
 		<div id="p_muid_tab_location">
 			<div class="pf-element pf-heading">
 				<h1>Main Address</h1>
@@ -421,22 +429,16 @@ $pines->com_pgrid->load();
 			<div id="p_muid_address_dialog" title="Add an Address" style="display: none;">
 				<div class="pf-form">
 					<div class="pf-element">
-						<label>
-							<span class="pf-label">Type</span>
-							<input class="pf-field ui-widget-content" type="text" size="24" name="cur_address_type" id="p_muid_cur_address_type" />
-						</label>
+						<label><span class="pf-label">Type</span>
+							<input class="pf-field ui-widget-content" type="text" size="24" name="cur_address_type" id="p_muid_cur_address_type" /></label>
 					</div>
 					<div class="pf-element">
-						<label>
-							<span class="pf-label">Address 1</span>
-							<input class="pf-field ui-widget-content" type="text" size="24" name="cur_address_addr1" id="p_muid_cur_address_addr1" />
-						</label>
+						<label><span class="pf-label">Address 1</span>
+							<input class="pf-field ui-widget-content" type="text" size="24" name="cur_address_addr1" id="p_muid_cur_address_addr1" /></label>
 					</div>
 					<div class="pf-element">
-						<label>
-							<span class="pf-label">Address 2</span>
-							<input class="pf-field ui-widget-content" type="text" size="24" name="cur_address_addr2" id="p_muid_cur_address_addr2" />
-						</label>
+						<label><span class="pf-label">Address 2</span>
+							<input class="pf-field ui-widget-content" type="text" size="24" name="cur_address_addr2" id="p_muid_cur_address_addr2" /></label>
 					</div>
 					<div class="pf-element">
 						<label>
@@ -451,8 +453,8 @@ $pines->com_pgrid->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
+		<?php if ( $this->display_abilities ) { ?>
 		<div id="p_muid_tab_abilities">
-			<?php if ( $this->display_abilities ) { ?>
 			<script type="text/javascript">
 				// <![CDATA[
 				pines(function(){
@@ -511,30 +513,20 @@ $pines->com_pgrid->load();
 				</div>
 			</div>
 			<?php } ?>
-			<?php } else { ?>
-			<div class="pf-element">
-				<p>You do not have sufficient privileges to edit abilities.</p>
-			</div>
-			<?php } ?>
 			<br class="pf-clearing" />
 		</div>
+		<?php } ?>
 		<div id="p_muid_tab_attributes">
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Attributes</span>
 				<div class="pf-group">
 					<table class="attributes_table">
 						<thead>
-							<tr>
-								<th>Name</th>
-								<th>Value</th>
-							</tr>
+							<tr><th>Name</th><th>Value</th></tr>
 						</thead>
 						<tbody>
 							<?php foreach ($this->entity->attributes as $cur_attribute) { ?>
-							<tr>
-								<td><?php echo $cur_attribute['name']; ?></td>
-								<td><?php echo $cur_attribute['value']; ?></td>
-							</tr>
+							<tr><td><?php echo $cur_attribute['name']; ?></td><td><?php echo $cur_attribute['value']; ?></td></tr>
 							<?php } ?>
 						</tbody>
 					</table>
@@ -544,16 +536,12 @@ $pines->com_pgrid->load();
 			<div class="attribute_dialog" style="display: none;" title="Add an Attribute">
 				<div class="pf-form">
 					<div class="pf-element">
-						<label>
-							<span class="pf-label">Name</span>
-							<input class="pf-field ui-widget-content" type="text" id="p_muid_cur_attribute_name" size="24" />
-						</label>
+						<label><span class="pf-label">Name</span>
+							<input class="pf-field ui-widget-content" type="text" id="p_muid_cur_attribute_name" size="24" /></label>
 					</div>
 					<div class="pf-element">
-						<label>
-							<span class="pf-label">Value</span>
-							<input class="pf-field ui-widget-content" type="text" id="p_muid_cur_attribute_value" size="24" />
-						</label>
+						<label><span class="pf-label">Value</span>
+							<input class="pf-field ui-widget-content" type="text" id="p_muid_cur_attribute_value" size="24" /></label>
 					</div>
 				</div>
 				<br style="clear: both; height: 1px;" />

@@ -198,8 +198,10 @@ $pines->uploader->load();
 			<li><a href="#p_muid_tab_general">General</a></li>
 			<li><a href="#p_muid_tab_logo">Logo</a></li>
 			<li><a href="#p_muid_tab_location">Location</a></li>
+			<?php if ( $this->display_abilities ) { ?>
 			<li><a href="#p_muid_tab_abilities">Abilities</a></li>
-			<?php if ($pines->config->com_user->conditional_groups) { ?>
+			<?php } ?>
+			<?php if ($pines->config->com_user->conditional_groups && $this->display_conditions) { ?>
 			<li><a href="#p_muid_tab_conditions">Conditions</a></li>
 			<?php } ?>
 			<li><a href="#p_muid_tab_attributes">Attributes</a></li>
@@ -240,23 +242,28 @@ $pines->uploader->load();
 					<input class="pf-field ui-widget-content" type="text" name="fax" size="24" value="<?php echo format_phone($this->entity->fax); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
 			<div class="pf-element">
-				<label><span class="pf-label">Timezone</span>
+				<label>
+					<span class="pf-label">Timezone</span>
 					<span class="pf-note">Users in this group will inherit this timezone. Primary group has priority over secondary groups.</span>
 					<select class="pf-field ui-widget-content" name="timezone" size="1">
 						<option value="">--System Default--</option>
-						<?php $tz = DateTimeZone::listIdentifiers();
+						<?php
+						$tz = DateTimeZone::listIdentifiers();
 						sort($tz);
-						foreach ($tz as $cur_tz) { ?>
-						<option value="<?php echo $cur_tz; ?>"<?php echo $this->entity->timezone == $cur_tz ? ' selected="selected"' : ''; ?>><?php echo $cur_tz; ?></option>
-						<?php } ?>
-					</select></label>
+						foreach ($tz as $cur_tz) {
+							?><option value="<?php echo $cur_tz; ?>"<?php echo $this->entity->timezone == $cur_tz ? ' selected="selected"' : ''; ?>><?php echo $cur_tz; ?></option><?php
+						} ?>
+					</select>
+				</label>
 			</div>
 			<div class="pf-element">
-				<label><span class="pf-label">Parent</span>
+				<label>
+					<span class="pf-label">Parent</span>
 					<select class="pf-field ui-widget-content" name="parent" size="1">
 						<option value="none">--No Parent--</option>
 						<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->entity->parent); ?>
-					</select></label>
+					</select>
+				</label>
 			</div>
 			<?php if ($this->display_default) { ?>
 			<div class="pf-element">
@@ -397,8 +404,8 @@ $pines->uploader->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
+		<?php if ( $this->display_abilities ) { ?>
 		<div id="p_muid_tab_abilities">
-			<?php if ( $this->display_abilities ) { ?>
 			<script type="text/javascript">
 				// <![CDATA[
 				pines(function(){
@@ -450,16 +457,11 @@ $pines->uploader->load();
 				</div>
 			</div>
 			<?php } ?>
-			<?php } else { ?>
-			<div class="pf-element">
-				<p>You do not have sufficient privileges to edit abilities.</p>
-			</div>
-			<?php } ?>
 			<br class="pf-clearing" />
 		</div>
-		<?php if ($pines->config->com_user->conditional_groups) { ?>
+		<?php } ?>
+		<?php if ($pines->config->com_user->conditional_groups && $this->display_conditions) { ?>
 		<div id="p_muid_tab_conditions">
-			<?php if ( $this->display_conditions ) { ?>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Ability Conditions</span>
 				<span class="pf-note">Users will only inherit abilities from this group if these conditions are met.</span>
@@ -495,25 +497,16 @@ $pines->uploader->load();
 						</div>
 					</div>
 					<div class="pf-element">
-						<label>
-							<span class="pf-label">Type</span>
-							<input class="pf-field ui-widget-content" type="text" name="cur_condition_type" size="24" />
-						</label>
+						<label><span class="pf-label">Type</span>
+							<input class="pf-field ui-widget-content" type="text" name="cur_condition_type" size="24" /></label>
 					</div>
 					<div class="pf-element">
-						<label>
-							<span class="pf-label">Value</span>
-							<input class="pf-field ui-widget-content" type="text" name="cur_condition_value" size="24" />
-						</label>
+						<label><span class="pf-label">Value</span>
+							<input class="pf-field ui-widget-content" type="text" name="cur_condition_value" size="24" /></label>
 					</div>
 				</div>
 				<br style="clear: both; height: 1px;" />
 			</div>
-			<?php } else { ?>
-			<div class="pf-element">
-				<p>You do not have sufficient privileges to edit conditions.</p>
-			</div>
-			<?php } ?>
 			<br class="pf-clearing" />
 		</div>
 		<?php } ?>
@@ -523,17 +516,11 @@ $pines->uploader->load();
 				<div class="pf-group">
 					<table class="attributes_table">
 						<thead>
-							<tr>
-								<th>Name</th>
-								<th>Value</th>
-							</tr>
+							<tr><th>Name</th><th>Value</th></tr>
 						</thead>
 						<tbody>
 							<?php foreach ($this->entity->attributes as $cur_attribute) { ?>
-							<tr>
-								<td><?php echo $cur_attribute['name']; ?></td>
-								<td><?php echo $cur_attribute['value']; ?></td>
-							</tr>
+							<tr><td><?php echo $cur_attribute['name']; ?></td><td><?php echo $cur_attribute['value']; ?></td></tr>
 							<?php } ?>
 						</tbody>
 					</table>
@@ -543,16 +530,12 @@ $pines->uploader->load();
 			<div class="attribute_dialog" style="display: none;" title="Add an Attribute">
 				<div class="pf-form">
 					<div class="pf-element">
-						<label>
-							<span class="pf-label">Name</span>
-							<input class="pf-field ui-widget-content" type="text" id="p_muid_cur_attribute_name" size="24" />
-						</label>
+						<label><span class="pf-label">Name</span>
+							<input class="pf-field ui-widget-content" type="text" id="p_muid_cur_attribute_name" size="24" /></label>
 					</div>
 					<div class="pf-element">
-						<label>
-							<span class="pf-label">Value</span>
-							<input class="pf-field ui-widget-content" type="text" id="p_muid_cur_attribute_value" size="24" />
-						</label>
+						<label><span class="pf-label">Value</span>
+							<input class="pf-field ui-widget-content" type="text" id="p_muid_cur_attribute_value" size="24" /></label>
 					</div>
 				</div>
 				<br style="clear: both; height: 1px;" />

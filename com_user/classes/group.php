@@ -97,6 +97,18 @@ class group extends able_object implements group_interface {
 		return parent::save();
 	}
 
+	public function get_children() {
+		global $pines;
+		$return = (array) $pines->entity_manager->get_entities(
+				array('class' => group),
+				array('&',
+					'ref' => array('parent', $this),
+					'tag' => array('com_user', 'group')
+				)
+			);
+		return $return;
+	}
+
 	public function get_descendents() {
 		global $pines;
 		$return = array();

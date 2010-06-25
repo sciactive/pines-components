@@ -23,9 +23,15 @@ class com_customer extends component {
 	/**
 	 * Whether the customer selector JavaScript has been loaded.
 	 * @access private
-	 * @var bool $js_loaded
+	 * @var bool $js_loaded_cust
 	 */
-	private $js_loaded = false;
+	private $js_loaded_cust = false;
+	/**
+	 * Whether the company selector JavaScript has been loaded.
+	 * @access private
+	 * @var bool $js_loaded_comp
+	 */
+	private $js_loaded_comp = false;
 
 	/**
 	 * Creates and attaches a module which lists companies.
@@ -42,15 +48,28 @@ class com_customer extends component {
 	}
 
 	/**
+	 * Load the company selector.
+	 *
+	 * This will place the required scripts into the document's head section.
+	 */
+	function load_company_select() {
+		if (!$this->js_loaded_comp) {
+			$module = new module('com_customer', 'company/select', 'head');
+			$module->render();
+			$this->js_loaded_comp = true;
+		}
+	}
+
+	/**
 	 * Load the customer selector.
 	 *
 	 * This will place the required scripts into the document's head section.
 	 */
-	function load_customer_selector() {
-		if (!$this->js_loaded) {
-			$module = new module('com_customer', 'customer/selector', 'head');
+	function load_customer_select() {
+		if (!$this->js_loaded_cust) {
+			$module = new module('com_customer', 'customer/select', 'head');
 			$module->render();
-			$this->js_loaded = true;
+			$this->js_loaded_cust = true;
 		}
 	}
 

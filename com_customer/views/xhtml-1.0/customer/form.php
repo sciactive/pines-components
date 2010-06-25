@@ -14,6 +14,7 @@ $this->title = (!isset($this->entity->guid)) ? 'Editing New Customer' : 'Editing
 $this->note = 'Provide customer profile details in this form.';
 $pines->editor->load();
 $pines->com_pgrid->load();
+$pines->com_customer->load_company_select();
 ?>
 <script type="text/javascript">
 	// <![CDATA[
@@ -159,6 +160,8 @@ $pines->com_pgrid->load();
 		<?php } ?>
 
 		$("#p_muid_customer_tabs").tabs();
+
+		$("#p_muid_company").companyselect();
 	});
 	// ]]>
 </script>
@@ -227,155 +230,11 @@ $pines->com_pgrid->load();
 					<input class="pf-field ui-widget-content" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>
 			</div>
 			<?php } if (in_array('company', $pines->config->com_customer->shown_fields_customer)) { ?>
-			<script type="text/javascript">
-				// <![CDATA[
-				var company_box;
-				var company_search_box;
-				var company_search_button;
-				var company_table;
-				var company_dialog;
-
-				pines(function(){
-					company_box = $("#p_muid_company");
-					company_search_box = $("#p_muid_company_search");
-					company_search_button = $("#p_muid_company_search_button");
-					company_table = $("#p_muid_company_table");
-					company_dialog = $("#p_muid_company_dialog");
-
-					company_search_box.keydown(function(eventObject){
-						if (eventObject.keyCode == 13) {
-							company_search(this.value);
-							return false;
-						}
-					});
-					company_search_button.click(function(){
-						company_search(company_search_box.val());
-					});
-
-					company_table.pgrid({
-						pgrid_paginate: true,
-						pgrid_multi_select: false,
-						pgrid_double_click: function(){
-							company_dialog.dialog('option', 'buttons').Done();
-						}
-					});
-
-					company_dialog.dialog({
-						bgiframe: true,
-						autoOpen: false,
-						modal: true,
-						width: 600,
-						buttons: {
-							"Done": function(){
-								var rows = company_table.pgrid_get_selected_rows().pgrid_export_rows();
-								if (!rows[0]) {
-									alert("Please select a company.");
-									return;
-								} else {
-									var company = rows[0];
-								}
-								company_box.val(company.key+": \""+company.values[0]+"\"");
-								company_search_box.val("");
-								company_dialog.dialog('close');
-							}
-						}
-					});
-				});
-
-				function company_search(search_string) {
-					var loader;
-					$.ajax({
-						url: "<?php echo pines_url('com_customer', 'company/search'); ?>",
-						type: "POST",
-						dataType: "json",
-						data: {"q": search_string},
-						beforeSend: function(){
-							loader = $.pnotify({
-								pnotify_title: 'Company Search',
-								pnotify_text: 'Searching for companies...',
-								pnotify_notice_icon: 'picon picon-throbber',
-								pnotify_nonblock: true,
-								pnotify_hide: false,
-								pnotify_history: false
-							});
-							company_table.pgrid_get_all_rows().pgrid_delete();
-						},
-						complete: function(){
-							loader.pnotify_remove();
-						},
-						error: function(XMLHttpRequest, textStatus){
-							pines.error("An error occured while trying to find customers:\n"+XMLHttpRequest.status+": "+textStatus);
-						},
-						success: function(data){
-							if (!data) {
-								alert("No companies were found that matched the query.");
-								return;
-							}
-							company_dialog.dialog('open');
-							var struct = [];
-							$.each(data, function(){
-								struct.push({
-									"key": this.guid,
-									"values": [
-										this.name,
-										this.address,
-										this.city,
-										this.state,
-										this.zip,
-										this.email,
-										this.phone,
-										this.fax,
-										this.website
-									]
-								});
-							});
-							company_table.pgrid_add(struct);
-						}
-					});
-				}
-				// ]]>
-			</script>
 			<div class="pf-element">
-				<label for="p_muid_company_search"><span class="pf-label">Company</span>
+				<label><span class="pf-label">Company</span>
 					<span class="pf-note">Enter part of a company name, email, or phone # to search.</span>
+					<input class="pf-field ui-widget-content" type="text" id="p_muid_company" name="company" size="24" value="<?php echo htmlentities($this->entity->company->guid ? "{$this->entity->company->guid}: \"{$this->entity->company->name}\"" : ''); ?>" />
 				</label>
-				<div class="pf-group">
-					<input class="pf-field ui-widget-content" type="text" id="p_muid_company" name="company" size="24" onfocus="this.blur();" value="<?php echo htmlentities($this->entity->company->guid ? "{$this->entity->company->guid}: \"{$this->entity->company->name}\"" : 'No Company Selected'); ?>" />
-					<br />
-					<input class="pf-field ui-widget-content" type="text" id="p_muid_company_search" name="company_search" size="24" />
-					<button class="pf-field ui-state-default ui-corner-all" type="button" id="p_muid_company_search_button"><span class="picon picon-system-search" style="padding-left: 16px; background-repeat: no-repeat;">Search</span></button>
-				</div>
-			</div>
-			<div id="p_muid_company_dialog" title="Pick a Company" style="display: none;">
-				<table id="p_muid_company_table">
-					<thead>
-						<tr>
-							<th>Name</th>
-							<th>Address</th>
-							<th>City</th>
-							<th>State</th>
-							<th>Zip</th>
-							<th>Email</th>
-							<th>Phone</th>
-							<th>Fax</th>
-							<th>Website</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>-</td>
-							<td>-</td>
-							<td>-</td>
-							<td>-</td>
-							<td>-</td>
-							<td>-</td>
-							<td>-</td>
-							<td>-</td>
-							<td>-</td>
-						</tr>
-					</tbody>
-				</table>
-				<br class="pf-clearing" />
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Job Title</span>

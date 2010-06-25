@@ -22,7 +22,7 @@ if (!isset($this->entity->guid)) {
 $this->note = 'Use this form to edit a return.';
 $pines->com_pgrid->load();
 if ($pines->config->com_sales->com_customer)
-	$pines->com_customer->load_customer_selector();
+	$pines->com_customer->load_customer_select();
 ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_sales', 'return/save')); ?>">
 	<?php if (isset($this->entity->guid)) { ?>

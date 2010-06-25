@@ -24,7 +24,7 @@ if (!isset($this->entity->guid)) {
 $this->note = 'Use this form to edit a sale.';
 $pines->com_pgrid->load();
 if ($pines->config->com_sales->com_customer)
-	$pines->com_customer->load_customer_selector();
+	$pines->com_customer->load_customer_select();
 // TODO: After a sale is invoiced, don't calculate totals, just show what's saved.
 ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_sales', 'sale/save')); ?>">

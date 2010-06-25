@@ -18,25 +18,25 @@ $pines->com_jstree->load();
 	pines(function(){
 		// Location Tree
 		var location = $("#p_muid_form [name=location]");
-		$("#p_muid_form .location_tree").tree({
-			rules : {
-				multiple : false
-			},
-			data : {
-				type : "json",
-				opts : {
-					method : "get",
-					url : "<?php echo pines_url('com_jstree', 'groupjson'); ?>"
+		$("#p_muid_form .location_tree")
+		.bind("before.jstree", function (e, data) {
+			if (data.func == "parse_json" && "args" in data && 0 in data.args && "attr" in data.args[0] && "id" in data.args[0].attr)
+				data.args[0].attr.id = "p_muid_"+data.args[0].attr.id;
+		})
+		.bind("select_node.jstree", function(e, data){
+			location.val(data.inst.get_selected().attr("id").replace("p_muid_", ""));
+		})
+		.jstree({
+			"plugins" : [ "themes", "json_data", "ui" ],
+			"json_data" : {
+				"ajax" : {
+					"dataType" : "json",
+					"url" : "<?php echo pines_url('com_jstree', 'groupjson'); ?>"
 				}
 			},
-			selected : ["<?php echo $_SESSION['user']->group->guid; ?>"],
-			callback : {
-				onchange : function(NODE, TREE_OBJ) {
-					location.val(TREE_OBJ.selected.attr("id"));
-				},
-				check_move: function() {
-					return false;
-				}
+			"ui" : {
+				"select_limit" : 1,
+				"initially_select" : ["p_muid_<?php echo $_SESSION['user']->group->guid; ?>"]
 			}
 		});
 	});

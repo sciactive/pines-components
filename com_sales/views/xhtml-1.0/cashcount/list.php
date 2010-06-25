@@ -21,24 +21,24 @@ $pines->com_jstree->load();
 	pines(function(){
 		// Group Tree
 		var location = $("#p_muid_assign_dialog [name=location]");
-		$("#p_muid_location_tree").tree({
-			rules : {
-				multiple : false
-			},
-			data : {
-				type : "json",
-				opts : {
-					method : "get",
-					url : "<?php echo pines_url('com_jstree', 'groupjson'); ?>"
+		$("#p_muid_location_tree")
+		.bind("before.jstree", function (e, data) {
+			if (data.func == "parse_json" && "args" in data && 0 in data.args && "attr" in data.args[0] && "id" in data.args[0].attr)
+				data.args[0].attr.id = "p_muid_"+data.args[0].attr.id;
+		})
+		.bind("select_node.jstree", function(e, data){
+			location.val(data.inst.get_selected().attr("id").replace("p_muid_", ""));
+		})
+		.jstree({
+			"plugins" : [ "themes", "json_data", "ui" ],
+			"json_data" : {
+				"ajax" : {
+					"dataType" : "json",
+					"url" : "<?php echo pines_url('com_jstree', 'groupjson'); ?>"
 				}
 			},
-			callback : {
-				onchange : function(NODE, TREE_OBJ) {
-					location.val(TREE_OBJ.selected.attr("id"));
-				},
-				check_move: function() {
-					return false;
-				}
+			"ui" : {
+				"select_limit" : 1
 			}
 		});
 

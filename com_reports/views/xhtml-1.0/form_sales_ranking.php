@@ -24,58 +24,58 @@ $pines->com_jstree->load();
 			showOtherMonths: true,
 			selectOtherMonths: true
 		});
-		// Loction Tree
+		// Location Tree
 		var top_location = $("#p_muid_form [name=top_location]");
-		$("#p_muid_form .location_tree").tree({
-			rules : {
-				multiple : false
-			},
-			data : {
-				type : "json",
-				opts : {
-					method : "get",
-					url : "<?php echo pines_url('com_jstree', 'groupjson'); ?>"
+		$("#p_muid_form .location_tree")
+		.bind("before.jstree", function (e, data) {
+			if (data.func == "parse_json" && "args" in data && 0 in data.args && "attr" in data.args[0] && "id" in data.args[0].attr)
+				data.args[0].attr.id = "p_muid_"+data.args[0].attr.id;
+		})
+		.bind("select_node.jstree", function(e, data){
+			top_location.val(data.inst.get_selected().attr("id").replace("p_muid_", ""));
+		})
+		.jstree({
+			"plugins" : [ "themes", "json_data", "ui" ],
+			"json_data" : {
+				"ajax" : {
+					"dataType" : "json",
+					"url" : "<?php echo pines_url('com_jstree', 'groupjson'); ?>"
 				}
 			},
-			selected : ["<?php echo $this->entity->top_location->guid; ?>"],
-			callback : {
-				onchange : function(NODE, TREE_OBJ) {
-					top_location.val(TREE_OBJ.selected.attr("id"));
-				},
-				check_move: function() {
-					return false;
-				}
+			"ui" : {
+				"select_limit" : 1,
+				"initially_select" : ["p_muid_<?php echo $this->entity->top_location->guid; ?>"]
 			}
 		});
 		
-		// Loction Tree
+		// Location Tree
 		var location = $("#p_muid_form [name=location]");
-		$("#p_muid_form .goals_tree").tree({
-			rules : {
-				multiple : false
-			},
-			data : {
-				type : "json",
-				opts : {
-					method : "get",
-					url : "<?php echo pines_url('com_jstree', 'groupjson'); ?>"
+		$("#p_muid_form .goals_tree")
+		.bind("before.jstree", function (e, data) {
+			if (data.func == "parse_json" && "args" in data && 0 in data.args && "attr" in data.args[0] && "id" in data.args[0].attr)
+				data.args[0].attr.id = "p_muid_"+data.args[0].attr.id;
+		})
+		.bind("select_node.jstree", function(e, data){
+			var selected_id = data.inst.get_selected().attr("id").replace("p_muid_", "");
+			location.val(selected_id);
+			<?php foreach ($this->employees as $cur_employee) { ?>
+			if (selected_id == "<?php echo $cur_employee->group->guid; ?>")
+				$("#p_muid_form .goal_<?php echo $cur_employee->guid; ?>").show();
+			else
+				$("#p_muid_form .goal_<?php echo $cur_employee->guid; ?>").hide();
+			<?php } ?>
+		})
+		.jstree({
+			"plugins" : [ "themes", "json_data", "ui" ],
+			"json_data" : {
+				"ajax" : {
+					"dataType" : "json",
+					"url" : "<?php echo pines_url('com_jstree', 'groupjson'); ?>"
 				}
 			},
-			selected : ["<?php echo $this->entity->top_location->guid; ?>"],
-			callback : {
-				onchange : function(NODE, TREE_OBJ) {
-					var selected_id = TREE_OBJ.selected.attr("id");
-					location.val(selected_id);
-					<?php foreach ($this->employees as $cur_employee) { ?>
-					if (selected_id == "<?php echo $cur_employee->group->guid; ?>")
-						$("#p_muid_form .goal_<?php echo $cur_employee->guid; ?>").show();
-					else
-						$("#p_muid_form .goal_<?php echo $cur_employee->guid; ?>").hide();
-					<?php } ?>
-				},
-				check_move: function() {
-					return false;
-				}
+			"ui" : {
+				"select_limit" : 1,
+				"initially_select" : ["p_muid_<?php echo $this->entity->top_location->guid; ?>"]
 			}
 		});
 		
@@ -91,7 +91,7 @@ $pines->com_jstree->load();
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_reports', 'savesalesranking')); ?>">
 	<div class="pf-element">
 		<label><span class="pf-label">Ranking Name</span>
-		<input class="pf-field ui-widget-content" type="text" name="ranking_name" value="<?php echo $this->entity->name; ?>" /></label>
+			<input class="pf-field ui-widget-content" type="text" name="ranking_name" value="<?php echo $this->entity->name; ?>" /></label>
 	</div>
 	
 	<div class="pf-element pf-heading">

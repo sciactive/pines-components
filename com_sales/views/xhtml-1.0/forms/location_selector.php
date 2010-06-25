@@ -30,31 +30,33 @@ defined('P_RUN') or die('Direct access prohibited');
 			if (location_saver.val() != 'individual')
 				return false;
 		};
-		location_tree.tree({
-			rules : {
-				multiple : false
-			},
-			data : {
-				type : "json",
-				opts : {
-					method : "get",
-					url : "<?php echo pines_url('com_jstree', 'groupjson'); ?>"
+		location_tree
+		.bind("before.jstree", function (e, data) {
+			if (data.func == "parse_json" && "args" in data && 0 in data.args && "attr" in data.args[0] && "id" in data.args[0].attr)
+				data.args[0].attr.id = "p_muid_"+data.args[0].attr.id;
+		})
+		.bind("select_node.jstree", function(e, data){
+			location.val(data.inst.get_selected().attr("id").replace("p_muid_", ""));
+		})
+		.jstree({
+			"plugins" : [ "themes", "json_data", "ui" ],
+			"json_data" : {
+				"ajax" : {
+					"dataType" : "json",
+					"url" : "<?php echo pines_url('com_jstree', 'groupjson'); ?>"
 				}
 			},
-			selected : ["<?php echo ($this->location == 'all') ? $_SESSION['user']->group->guid : $this->location; ?>"],
-			callback : {
-				// The tree is disabled when searching all locations.
-				beforechange : block_change,
-				beforeclose : block_change,
-				beforeopen : block_change,
-				onchange : function(NODE, TREE_OBJ) {
-					location.val(TREE_OBJ.selected.attr("id"));
-				},
-				check_move: function() {
-					return false;
-				}
+			"ui" : {
+				"select_limit" : 1,
+				"initially_select" : ["p_muid_<?php echo ($this->location == 'all') ? $_SESSION['user']->group->guid : $this->location; ?>"]
 			}
 		});
+		// TODO: How to recreate these?
+		//	callback : {
+		//		// The tree is disabled when searching all locations.
+		//		beforechange : block_change,
+		//		beforeclose : block_change,
+		//		beforeopen : block_change,
 
 		$("#p_muid_form [name=all_groups]").change(function(){
 			var all_groups = $(this);

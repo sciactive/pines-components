@@ -47,7 +47,7 @@ $this->note = 'Provide tax/fee details in this form.';
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Locations</span>
-		<span class="pf-note">Sales by users in these groups will be applied this tax.</span>
+		<span class="pf-note">This tax will be applied to sales by users in these groups.</span>
 		<span class="pf-note">Hold Ctrl (Command on Mac) to select multiple groups.</span>
 		<select class="pf-field ui-widget-content" name="locations[]" multiple="multiple" size="6">
 			<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations, $this->entity->locations); ?>

@@ -47,21 +47,27 @@ class com_jstree extends component {
 	 *
 	 * @param array $entity_array The array of entities.
 	 * @param string $data_prop The property to use as the entity's data.
+	 * @param string $state The inital state of the nodes. "closed" or "open".
 	 * @return array A structured array.
 	 */
-	public function entity_json_struct($entity_array, $data_prop = 'name') {
+	public function entity_json_struct($entity_array, $data_prop = 'name', $state = 'closed') {
 		$struct = array();
 		if (!is_array($entity_array))
 			return $struct;
 		foreach ($entity_array as $cur_entity) {
 			if (!isset($cur_entity->parent)) {
-				$struct[] = array(
-					'attributes' => array(
-						'id' => $cur_entity->guid
-					),
+				$array = array(
 					'data' => $cur_entity->$data_prop,
-					'children' => $this->entity_json_struct_children($cur_entity->guid, $entity_array, $data_prop)
+					'attr' => array(
+						'id' => "$cur_entity->guid"
+					)
 				);
+				if ($state == 'open')
+					$array['state'] = $state;
+				$children = $this->entity_json_struct_children($cur_entity->guid, $entity_array, $data_prop, $state = 'closed');
+				if (!empty($children))
+					$array['children'] = $children;
+				$struct[] = $array;
 			}
 		}
 		return $struct;
@@ -73,22 +79,28 @@ class com_jstree extends component {
 	 * @param int $guid The GUID of the parent.
 	 * @param array $entity_array The array of entities.
 	 * @param string $data_prop The property to use as the entity's data.
+	 * @param string $state The inital state of the nodes. "closed" or "open".
 	 * @return array|null A structured array, or null if entity has no children.
 	 * @access private
 	 */
-	protected function entity_json_struct_children($guid, $entity_array, $data_prop = 'name') {
+	protected function entity_json_struct_children($guid, $entity_array, $data_prop = 'name', $state = 'closed') {
 		$struct = array();
 		if (!is_array($entity_array))
 			return null;
 		foreach ($entity_array as $cur_entity) {
 			if ($cur_entity->parent == $guid || $cur_entity->parent->guid == $guid) {
-				$struct[] = (object) array(
-					'attributes' => (object) array(
-						'id' => $cur_entity->guid
-					),
+				$array = array(
 					'data' => $cur_entity->$data_prop,
-					'children' => $this->entity_json_struct_children($cur_entity->guid, $entity_array, $data_prop)
+					'attr' => array(
+						'id' => "$cur_entity->guid"
+					)
 				);
+				if ($state == 'open')
+					$array['state'] = $state;
+				$children = $this->entity_json_struct_children($cur_entity->guid, $entity_array, $data_prop, $state = 'closed');
+				if (!empty($children))
+					$array['children'] = $children;
+				$struct[] = $array;
 			}
 		}
 		if (empty($struct))

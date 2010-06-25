@@ -102,7 +102,7 @@ $pines->com_customer->load_customer_select();
 				"Login": function(){
 					// Add the selected customer.
 					var dialog = $(this);
-					var customer = parseInt($("#p_muid_customer").val().replace(/\D/, ""));
+					var customer = parseInt($("#p_muid_customer").val().replace(/\D/g, ""));
 					if (!isNaN(customer) && customer != 0) {
 						$.ajax({
 							url: "<?php echo pines_url('com_customertimer', 'login_json'); ?>",

@@ -13,10 +13,10 @@ defined('P_RUN') or die('Direct access prohibited');
 ?>
 <script type="text/javascript">
 	// <![CDATA[
-	pines.loadjs("<?php echo $pines->config->rela_location; ?>components/com_jstree/includes/jquery.tree.min.js");
-	pines.loadjs("<?php echo $pines->config->rela_location; ?>components/com_jstree/includes/plugins/jquery.tree.contextmenu.js");
+	pines.loadjs("<?php echo $pines->config->rela_location; ?>components/com_jstree/includes/<?php echo $pines->config->debug_mode ? 'jquery.jstree.js' : 'jquery.jstree.min.js'; ?>");
 	pines(function(){
-		$.tree.defaults.ui.theme_path = "<?php echo $pines->config->rela_location; ?>components/com_jstree/includes/themes/default/style.css";
+		$.jstree.defaults.core.animation = 100;
+		$.jstree._themes = "<?php echo $pines->config->rela_location; ?>components/com_jstree/includes/themes/";
 	});
 	// ]]>
 </script>

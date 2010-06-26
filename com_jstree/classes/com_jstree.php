@@ -64,7 +64,7 @@ class com_jstree extends component {
 				);
 				if ($state == 'open')
 					$array['state'] = $state;
-				$children = $this->entity_json_struct_children($cur_entity->guid, $entity_array, $data_prop, $state = 'closed');
+				$children = $this->entity_json_struct_children($cur_entity->guid, $entity_array, $data_prop, $state);
 				if (!empty($children))
 					$array['children'] = $children;
 				$struct[] = $array;
@@ -83,7 +83,7 @@ class com_jstree extends component {
 	 * @return array|null A structured array, or null if entity has no children.
 	 * @access private
 	 */
-	protected function entity_json_struct_children($guid, $entity_array, $data_prop = 'name', $state = 'closed') {
+	protected function entity_json_struct_children($guid, $entity_array, $data_prop, $state) {
 		$struct = array();
 		if (!is_array($entity_array))
 			return null;
@@ -97,7 +97,7 @@ class com_jstree extends component {
 				);
 				if ($state == 'open')
 					$array['state'] = $state;
-				$children = $this->entity_json_struct_children($cur_entity->guid, $entity_array, $data_prop, $state = 'closed');
+				$children = $this->entity_json_struct_children($cur_entity->guid, $entity_array, $data_prop, $state);
 				if (!empty($children))
 					$array['children'] = $children;
 				$struct[] = $array;

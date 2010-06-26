@@ -34,12 +34,17 @@ $pines->com_jstree->load();
 		// Location Tree
 		var location = $("#p_muid_form [name=location]");
 		$("#p_muid_form .location_tree")
-		.bind("before.jstree", function (e, data) {
+		.bind("select_node.jstree", function(e, data){
+			location.val(data.inst.get_selected().attr("id").replace("p_muid_", ""));
+		})
+		.bind("before.jstree", function (e, data){
 			if (data.func == "parse_json" && "args" in data && 0 in data.args && "attr" in data.args[0] && "id" in data.args[0].attr)
 				data.args[0].attr.id = "p_muid_"+data.args[0].attr.id;
 		})
-		.bind("select_node.jstree", function(e, data){
-			location.val(data.inst.get_selected().attr("id").replace("p_muid_", ""));
+		.bind("loaded.jstree", function(e, data){
+			var path = data.inst.get_path("#"+data.inst.get_settings().ui.initially_select, true);
+			if (!path.length) return;
+			data.inst.open_node("#"+path.join(", #"), false, true);
 		})
 		.jstree({
 			"plugins" : [ "themes", "json_data", "ui" ],

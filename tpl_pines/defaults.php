@@ -34,6 +34,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'menu_delay',
+		'cname' => 'Menu Delay',
+		'description' => 'Make menus delay before closing when the mouse leaves them. This makes it easier to navigate menus, but the menus may become slower.',
+		'value' => false,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'ajax',
 		'cname' => 'Use Ajax',
 		'description' => 'Use the experimental AJAX code to load pages without refreshing.',

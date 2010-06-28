@@ -59,6 +59,11 @@ if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 || strp
 	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/dropdown/themes/jqueryui/jqueryui.css" media="all" rel="stylesheet" type="text/css" />
 
 	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>system/js/js.php"></script>
+	<?php if ($pines->config->tpl_pines->menu_delay) { ?>
+	<script type="text/javascript">// <![CDATA[
+		pines.tpl_pines_menu_delay = true;
+	// ]]></script>
+	<?php } ?>
 	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/template.js"></script>
 	<?php if ($pines->config->tpl_pines->ajax) { ?>
 	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/ajax.js"></script>

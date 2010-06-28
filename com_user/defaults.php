@@ -87,6 +87,20 @@ return array(
 		'value' => true,
 	),
 	array(
+		'name' => 'highest_primary',
+		'cname' => 'Highest Assignable Primary Group Parent',
+		'description' => 'The GUID of the group above the highest groups allowed to be assigned as primary groups. Zero means all groups, and -1 means no groups.',
+		'value' => 0,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'highest_secondary',
+		'cname' => 'Highest Assignable Secondary Group Parent',
+		'description' => 'The GUID of the group above the highest groups allowed to be assigned as secondary groups. Zero means all groups, and -1 means no groups.',
+		'value' => 0,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'show_cur_user',
 		'cname' => 'Show Current User',
 		'description' => 'Display the name of the current user in the page header.',

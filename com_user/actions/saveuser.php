@@ -77,19 +77,40 @@ unset($cur_attribute);
 // entity manager after com_user filters the result, and thus will not be
 // assigned.
 if ( gatekeeper('com_user/assigngroup') ) {
-	$sys_groups = $pines->entity_manager->get_entities(array('class' => group), array('&', 'tag' => array('com_user', 'group')));
+	$highest_primary_parent = $pines->config->com_user->highest_primary;
+	$highest_secondary_parent = $pines->config->com_user->highest_secondary;
+	$primary_groups = $secondary_groups = array();
+	if ($highest_primary_parent == 0 || $highest_secondary_parent == 0) {
+		$primary_groups = $secondary_groups = $pines->entity_manager->get_entities(array('class' => group), array('&', 'tag' => array('com_user', 'group')));
+	} else {
+		if ($highest_primary_parent > 0) {
+			$highest_primary_parent = group::factory($highest_primary_parent);
+			if (isset($highest_primary_parent->guid))
+				$primary_groups = $highest_primary_parent->get_descendents();
+		}
+		if ($highest_secondary_parent > 0) {
+			$highest_secondary_parent = group::factory($highest_secondary_parent);
+			if (isset($highest_secondary_parent->guid))
+				$secondary_groups = $highest_secondary_parent->get_descendents();
+		}
+	}
 	$group = group::factory((int) $_REQUEST['group']);
 	$groups = (array) $_REQUEST['groups'];
 	array_walk($groups, 'intval');
-	foreach ($sys_groups as $cur_group) {
-		if ($cur_group->is($group))
+	foreach ($primary_groups as $cur_group) {
+		if ($cur_group->is($group)) {
 			$user->group = $group;
+			break;
+		}
+	}
+	foreach ($secondary_groups as $cur_group) {
 		if (in_array($cur_group->guid, $groups)) {
 			$user->add_group($cur_group);
 		} else {
 			$user->del_group($cur_group);
 		}
 	}
+	// What if the user can't assign the current primary group, so it defaults to null?
 	if ($_REQUEST['group'] == 'null')
 		unset($user->group);
 }

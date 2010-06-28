@@ -45,7 +45,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					});
 				}}
 			],
-			pgrid_sort_col: 1,
+			pgrid_sort_col: 2,
 			pgrid_sort_ord: 'asc',
 			pgrid_state_change: function(state) {
 				if (typeof state_xhr == "object")
@@ -63,6 +63,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 <table id="p_muid_grid">
 	<thead>
 		<tr>
+			<th>GUID</th>
 			<th>Username</th>
 			<th>Real Name</th>
 			<th>Email</th>
@@ -75,6 +76,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->users as $user) { ?>
 		<tr title="<?php echo $user->guid; ?>">
+			<td><?php echo $user->guid; ?></td>
 			<td><?php echo $user->username; ?></td>
 			<td><?php echo $user->name; ?></td>
 			<td><?php echo $user->email; ?></td>

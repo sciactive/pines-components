@@ -257,9 +257,9 @@ $pines->com_pgrid->load();
 		</div>
 		<?php if ( $this->display_groups ) { ?>
 		<div id="p_muid_tab_groups">
-				<?php if (empty($this->group_array)) { ?>
+				<?php if (empty($this->group_array_primary)) { ?>
 				<div class="pf-element">
-					<span class="pf-label">There are no groups to display.</span>
+					<span>There are no primary groups to display.</span>
 				</div>
 				<?php } else { ?>
 				<div class="pf-element">
@@ -267,16 +267,22 @@ $pines->com_pgrid->load();
 						<span class="pf-label">Primary Group</span>
 						<select class="pf-field ui-widget-content" name="group" size="1">
 							<option value="null">-- No Primary Group --</option>
-							<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->entity->group); ?>
+							<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array_primary, $this->entity->group); ?>
 						</select>
 					</label>
 				</div>
+				<?php } ?>
+				<?php if (empty($this->group_array_secondary)) { ?>
+				<div class="pf-element">
+					<span>There are no secondary groups to display.</span>
+				</div>
+				<?php } else { ?>
 				<div class="pf-element">
 					<label>
 						<span class="pf-label">Groups</span>
 						<span class="pf-note">Hold Ctrl (Command on Mac) to select multiple groups.</span>
 						<select class="pf-field ui-widget-content" name="groups[]" multiple="multiple" size="6">
-							<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->entity->groups); ?>
+							<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array_secondary, $this->entity->groups); ?>
 						</select>
 					</label>
 				</div>

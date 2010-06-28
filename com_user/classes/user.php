@@ -80,7 +80,8 @@ class user extends able_object implements user_interface {
 		$module->display_groups = gatekeeper('com_user/assigngroup');
 		$module->display_abilities = gatekeeper('com_user/abilities');
 		$module->sections = array('system');
-		$module->group_array = $pines->user_manager->get_group_array();
+		$module->group_array_primary = $pines->user_manager->get_group_array_primary();
+		$module->group_array_secondary = $pines->user_manager->get_group_array_secondary();
 		foreach ($pines->components as $cur_component) {
 			$module->sections[] = $cur_component;
 		}

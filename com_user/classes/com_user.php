@@ -214,6 +214,46 @@ class com_user extends component implements user_manager_interface {
 	}
 
 	/**
+	 * Gets a multidimensional array of group info.
+	 *
+	 * Starts under the primary group parent set in configuration.
+	 *
+	 * @return array The group structure array.
+	 */
+	public function get_group_array_primary() {
+		global $pines;
+		$highest_parent = $pines->config->com_user->highest_primary;
+		if ($highest_parent == 0)
+			return $this->get_group_array();
+		if ($highest_parent < 0)
+			return array();
+		$highest_parent = group::factory($highest_parent);
+		if (!isset($highest_parent->guid))
+			return array();
+		return $this->get_group_array($highest_parent);
+	}
+
+	/**
+	 * Gets a multidimensional array of group info.
+	 *
+	 * Starts under the secondary group parent set in configuration.
+	 *
+	 * @return array The group structure array.
+	 */
+	public function get_group_array_secondary() {
+		global $pines;
+		$highest_parent = $pines->config->com_user->highest_secondary;
+		if ($highest_parent == 0)
+			return $this->get_group_array();
+		if ($highest_parent < 0)
+			return array();
+		$highest_parent = group::factory($highest_parent);
+		if (!isset($highest_parent->guid))
+			return array();
+		return $this->get_group_array($highest_parent);
+	}
+
+	/**
 	 * Fills a menu with a group hierarchy.
 	 *
 	 * @param menu &$menu The menu to fill.

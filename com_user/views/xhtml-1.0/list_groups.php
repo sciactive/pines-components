@@ -53,7 +53,7 @@ foreach($this->groups as $cur_group) {
 					});
 				}}
 			],
-			pgrid_sort_col: 1,
+			pgrid_sort_col: 2,
 			pgrid_sort_ord: 'asc',
 			pgrid_state_change: function(state) {
 				if (typeof state_xhr == "object")
@@ -71,6 +71,7 @@ foreach($this->groups as $cur_group) {
 <table id="p_muid_grid">
 	<thead>
 		<tr>
+			<th>GUID</th>
 			<th>Groupname</th>
 			<th>Display Name</th>
 			<th>Email</th>
@@ -86,6 +87,7 @@ foreach($this->groups as $cur_group) {
 		if (isset($group->parent))
 			echo "child {$group->parent->guid}";
 		?>">
+			<td><?php echo $group->guid; ?></td>
 			<td><?php echo $group->groupname; ?></td>
 			<td><?php echo $group->name; ?></td>
 			<td><?php echo $group->email; ?></td>

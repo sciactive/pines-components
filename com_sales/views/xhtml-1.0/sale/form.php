@@ -40,69 +40,70 @@ if ($pines->config->com_sales->com_customer)
 	<?php } ?>
 	<script type="text/javascript">
 		// <![CDATA[
-		var comments, comments_box, products, products_table, product_code, payments, payments_table;
-
-		// Number of decimal places to round to.
-		var dec = <?php echo (int) $pines->config->com_sales->dec; ?>;
-<?php
-		$taxes_percent = array();
-		$taxes_flat = array();
-		foreach ($this->tax_fees as $cur_tax_fee) {
-			foreach($cur_tax_fee->locations as $cur_location) {
-				if (!$_SESSION['user']->in_group($cur_location))
-					continue;
-				if ($cur_tax_fee->type == 'percentage') {
-					$taxes_percent[] = array('name' => $cur_tax_fee->name, 'rate' => $cur_tax_fee->rate);
-					break;
-				} elseif ($cur_tax_fee->type == 'flat_rate') {
-					$taxes_flat[] = array('name' => $cur_tax_fee->name, 'rate' => $cur_tax_fee->rate);
-					break;
-				}
-			}
-		}
-		$drawer_kickers = array();
-		foreach ($this->payment_types as $cur_payment_type) {
-			if ($cur_payment_type->kick_drawer)
-				$drawer_kickers[] = $cur_payment_type->guid;
-		}
-?>
-		var taxes_percent = JSON.parse("<?php echo addslashes(json_encode($taxes_percent)) ?>");
-		var taxes_flat = JSON.parse("<?php echo addslashes(json_encode($taxes_flat)) ?>");
-		var drawer_kickers = JSON.parse("<?php echo addslashes(json_encode($drawer_kickers)); ?>");
-		var status = JSON.parse("<?php echo addslashes(json_encode($this->entity->status)); ?>");
-
-		function round_to_dec(value) {
-			var rnd = Math.pow(10, dec);
-			var mult = value * rnd;
-			value = gaussianRound(mult);
-			value /= rnd;
-			value = value.toFixed(dec);
-			return (value);
-		}
-
-		function gaussianRound(x) {
-			var absolute = Math.abs(x);
-			var sign     = x == 0 ? 0 : (x < 0 ? -1 : 1);
-			var floored  = Math.floor(absolute);
-			if (absolute - floored != 0.5) {
-				return Math.round(absolute) * sign;
-			}
-			if (floored % 2 == 1) {
-				// Closest even is up.
-				return Math.ceil(absolute) * sign;
-			}
-			// Closest even is down.
-			return floored * sign;
-		}
 
 		pines(function(){
-			comments = $("#p_muid_comment_saver");
-			comments_box = $("#p_muid_comments");
-			products = $("#p_muid_products");
-			products_table = $("#p_muid_products_table");
-			product_code = $("#p_muid_product_code");
-			payments_table = $("#p_muid_payments_table");
-			payments = $("#p_muid_payments");
+			var comments = $("#p_muid_comment_saver");
+			var comments_box = $("#p_muid_comments");
+			var products = $("#p_muid_products");
+			var products_table = $("#p_muid_products_table");
+			var payments_table = $("#p_muid_payments_table");
+			var payments = $("#p_muid_payments");
+			<?php if ($pines->config->com_sales->com_customer) { ?>
+			var require_customer = false;
+			<?php } ?>
+
+			// Number of decimal places to round to.
+			var dec = <?php echo (int) $pines->config->com_sales->dec; ?>;
+<?php
+			$taxes_percent = array();
+			$taxes_flat = array();
+			foreach ($this->tax_fees as $cur_tax_fee) {
+				foreach($cur_tax_fee->locations as $cur_location) {
+					if (!$_SESSION['user']->in_group($cur_location))
+						continue;
+					if ($cur_tax_fee->type == 'percentage') {
+						$taxes_percent[] = array('name' => $cur_tax_fee->name, 'rate' => $cur_tax_fee->rate);
+						break;
+					} elseif ($cur_tax_fee->type == 'flat_rate') {
+						$taxes_flat[] = array('name' => $cur_tax_fee->name, 'rate' => $cur_tax_fee->rate);
+						break;
+					}
+				}
+			}
+			$drawer_kickers = array();
+			foreach ($this->payment_types as $cur_payment_type) {
+				if ($cur_payment_type->kick_drawer)
+					$drawer_kickers[] = $cur_payment_type->guid;
+			}
+?>
+			var taxes_percent = JSON.parse("<?php echo addslashes(json_encode($taxes_percent)) ?>");
+			var taxes_flat = JSON.parse("<?php echo addslashes(json_encode($taxes_flat)) ?>");
+			var drawer_kickers = JSON.parse("<?php echo addslashes(json_encode($drawer_kickers)); ?>");
+			var status = JSON.parse("<?php echo addslashes(json_encode($this->entity->status)); ?>");
+
+			var round_to_dec = function(value){
+				var rnd = Math.pow(10, dec);
+				var mult = value * rnd;
+				value = gaussianRound(mult);
+				value /= rnd;
+				value = value.toFixed(dec);
+				return (value);
+			};
+
+			var gaussianRound = function(x){
+				var absolute = Math.abs(x);
+				var sign     = x == 0 ? 0 : (x < 0 ? -1 : 1);
+				var floored  = Math.floor(absolute);
+				if (absolute - floored != 0.5) {
+					return Math.round(absolute) * sign;
+				}
+				if (floored % 2 == 1) {
+					// Closest even is up.
+					return Math.ceil(absolute) * sign;
+				}
+				// Closest even is down.
+				return floored * sign;
+			};
 
 			<?php if ($pines->config->com_sales->com_customer && $this->entity->status != 'invoiced' && $this->entity->status != 'paid' && $this->entity->status != 'voided') { ?>
 			$("#p_muid_customer").customerselect();
@@ -594,7 +595,7 @@ if ($pines->config->com_sales->com_customer)
 				});
 			});
 
-			function get_amount(callback) {
+			var get_amount = function(callback){
 				// TODO: Minimums, maximums
 				$("<div title=\"Payment Amount\" />").each(function(){
 					var amount_dialog = $(this);
@@ -642,7 +643,7 @@ if ($pines->config->com_sales->com_customer)
 					modal: true,
 					close: function(){$(this).remove();}
 				});
-			}
+			};
 			<?php } ?>
 
 			
@@ -691,180 +692,180 @@ if ($pines->config->com_sales->com_customer)
 				}
 			});
 
+			var update_products = function(){
+				var rows = products_table.pgrid_get_all_rows();
+				if (!rows)
+					return;
+				var subtotal = 0;
+				var taxes = 0;
+				var item_fees = 0;
+				var total = 0;
+				<?php if ($pines->config->com_sales->com_customer) { ?>
+				require_customer = false;
+				<?php } ?>
+				// Calculate ticket totals.
+				rows.each(function(){
+					var cur_row = $(this);
+					var product = cur_row.data("product");
+					<?php if ($pines->config->com_sales->com_customer) { ?>
+					if (product.require_customer)
+						require_customer = true;
+					<?php } ?>
+					var price = parseFloat(cur_row.pgrid_get_value(6));
+					var qty = parseInt(cur_row.pgrid_get_value(5));
+					var discount = cur_row.pgrid_get_value(7);
+					var cur_item_fees = 0;
+					if (isNaN(price))
+						price = 0;
+					if (isNaN(qty))
+						qty = 1;
+					if (product.discountable && discount != "") {
+						var discount_price;
+						if (discount.match(/^\$-?\d+(\.\d+)?$/)) {
+							discount = parseFloat(discount.replace(/[^0-9.-]/, ''));
+							discount_price = price - discount;
+						} else if (discount.match(/^-?\d+(\.\d+)?%$/)) {
+							discount = parseFloat(discount.replace(/[^0-9.-]/, ''));
+							discount_price = price - (price * (discount / 100));
+						}
+						if (!isNaN(product.floor) && round_to_dec(discount_price) < round_to_dec(product.floor)) {
+							alert("The discount lowers the product's price below the limit. The maximum discount possible for this item ["+product.name+"], is $"+round_to_dec(product.unit_price - product.floor)+" or "+round_to_dec((product.unit_price - product.floor) / product.unit_price * 100)+"%.");
+							cur_row.pgrid_set_value(7, "");
+						} else {
+							price = discount_price;
+						}
+					}
+					var line_total = price * qty;
+					if (!product.tax_exempt) {
+						$.each(taxes_percent, function(){
+							taxes += (this.rate / 100) * line_total;
+						});
+						$.each(taxes_flat, function(){
+							taxes += this.rate * qty;
+						});
+					}
+					$.each(product.fees_percent, function(){
+						cur_item_fees += (this.rate / 100) * line_total;
+					});
+					$.each(product.fees_flat, function(){
+						cur_item_fees += this.rate * qty;
+					});
+					item_fees += cur_item_fees;
+					subtotal += line_total;
+					cur_row.pgrid_set_value(8, round_to_dec(line_total));
+					cur_row.pgrid_set_value(9, round_to_dec(cur_item_fees));
+				});
+				total = subtotal + item_fees + taxes;
+				$("#p_muid_subtotal").html(round_to_dec(subtotal));
+				$("#p_muid_item_fees").html(round_to_dec(item_fees));
+				$("#p_muid_taxes").html(round_to_dec(taxes));
+				$("#p_muid_total").html(round_to_dec(total));
+
+				// Update the products input element.
+				products.val(JSON.stringify(rows.pgrid_export_rows()));
+
+				update_payments();
+			};
+
+			var update_payments = function(){
+				var rows = payments_table.pgrid_get_all_rows();
+				var total = parseFloat($("#p_muid_total").html());
+				var amount_tendered = 0;
+				var amount_due = 0;
+				var change = 0;
+				if (isNaN(total))
+					return;
+				var submit_val = rows.pgrid_export_rows();
+				// Calculate the total payments.
+				rows.each(function(i){
+					var cur_row = $(this);
+					if (cur_row.pgrid_get_value(3) != "declined") {
+						var amount = parseFloat(cur_row.pgrid_get_value(2).replace(/[^0-9.-]/g, ""));
+						if (isNaN(amount))
+							amount = 0;
+						amount_tendered += amount;
+					}
+					submit_val[i].data = cur_row.data("payment_data");
+				});
+				amount_due = total - amount_tendered;
+				if (amount_due < 0) {
+					change = Math.abs(amount_due);
+					amount_due = 0;
+				}
+				$("#p_muid_amount_tendered").html(round_to_dec(amount_tendered));
+				$("#p_muid_amount_due").html(round_to_dec(amount_due));
+				$("#p_muid_change").html(round_to_dec(change));
+
+				payments.val(JSON.stringify(submit_val));
+			};
+
+			<?php if ($pines->config->com_sales->cash_drawer) { ?>
+			pines.com_sales_run_drawer = function(){
+				var keep_checking = function(status){
+					switch (status) {
+						case "is_open":
+							break;
+						case "is_closed":
+							pines.com_sales_run_submit();
+							return;
+							break;
+						case "not_supported":
+							alert("The drawer program does not support the correct return codes.");
+							break;
+						case "error":
+							alert("There was an error with the drawer.");
+							break;
+						case "not_found":
+							alert("The drawer was not found. Make sure it is plugged in.");
+							break;
+						case "misconfigured":
+							alert("The drawer program is misconfigured or not installed.");
+							break;
+					}
+					setTimeout(function(){
+						pines.drawer_check(keep_checking);
+					}, 500);
+				};
+
+				var kicked = false;
+				var total_cash = 0;
+				var message = "Please close the cash drawer when you are finished.<br />";
+				$.each(payments_table.pgrid_get_all_rows().pgrid_export_rows(), function(){
+					if (this.values[2] != "pending")
+						return;
+					if ($.inArray(parseInt(this.key), drawer_kickers) > -1) {
+						kicked = true;
+						// Remember how much cash.
+						total_cash += parseFloat(this.values[1]);
+					}
+				});
+				if (kicked)
+					message += "<br /><div style=\"float: right; clear: right;\">Amount Received: <strong>$"+round_to_dec(total_cash)+"</strong></div>";
+
+				var change = parseFloat($("#p_muid_change").html());
+				if (change > 0 || kicked) {
+					kicked = true;
+					message += "<br /><div style=\"float: right; clear: right;\">Change Due: <strong>$"+round_to_dec(change)+"</strong></div><br style=\"clear: both;\" />";
+				}
+
+				if (kicked)
+					pines.drawer_open(keep_checking, message);
+				else
+					$("#p_muid_form").submit();
+			};
+			<?php } else { ?>
+			pines.com_sales_run_drawer = function(){
+				pines.com_sales_run_submit();
+			};
+			<?php } ?>
+
+			pines.com_sales_run_submit = function(){
+				$("#p_muid_form").submit();
+			};
+
 			// Load any initial products.
 			update_products();
 		});
-
-		function update_products() {
-			var rows = products_table.pgrid_get_all_rows();
-			if (!rows)
-				return;
-			var subtotal = 0;
-			var taxes = 0;
-			var item_fees = 0;
-			var total = 0;
-			<?php if ($pines->config->com_sales->com_customer) { ?>
-			require_customer = false;
-			<?php } ?>
-			// Calculate ticket totals.
-			rows.each(function(){
-				var cur_row = $(this);
-				var product = cur_row.data("product");
-				<?php if ($pines->config->com_sales->com_customer) { ?>
-				if (product.require_customer)
-					require_customer = true;
-				<?php } ?>
-				var price = parseFloat(cur_row.pgrid_get_value(6));
-				var qty = parseInt(cur_row.pgrid_get_value(5));
-				var discount = cur_row.pgrid_get_value(7);
-				var cur_item_fees = 0;
-				if (isNaN(price))
-					price = 0;
-				if (isNaN(qty))
-					qty = 1;
-				if (product.discountable && discount != "") {
-					var discount_price;
-					if (discount.match(/^\$-?\d+(\.\d+)?$/)) {
-						discount = parseFloat(discount.replace(/[^0-9.-]/, ''));
-						discount_price = price - discount;
-					} else if (discount.match(/^-?\d+(\.\d+)?%$/)) {
-						discount = parseFloat(discount.replace(/[^0-9.-]/, ''));
-						discount_price = price - (price * (discount / 100));
-					}
-					if (!isNaN(product.floor) && round_to_dec(discount_price) < round_to_dec(product.floor)) {
-						alert("The discount lowers the product's price below the limit. The maximum discount possible for this item ["+product.name+"], is $"+round_to_dec(product.unit_price - product.floor)+" or "+round_to_dec((product.unit_price - product.floor) / product.unit_price * 100)+"%.");
-						cur_row.pgrid_set_value(7, "");
-					} else {
-						price = discount_price;
-					}
-				}
-				var line_total = price * qty;
-				if (!product.tax_exempt) {
-					$.each(taxes_percent, function(){
-						taxes += (this.rate / 100) * line_total;
-					});
-					$.each(taxes_flat, function(){
-						taxes += this.rate * qty;
-					});
-				}
-				$.each(product.fees_percent, function(){
-					cur_item_fees += (this.rate / 100) * line_total;
-				});
-				$.each(product.fees_flat, function(){
-					cur_item_fees += this.rate * qty;
-				});
-				item_fees += cur_item_fees;
-				subtotal += line_total;
-				cur_row.pgrid_set_value(8, round_to_dec(line_total));
-				cur_row.pgrid_set_value(9, round_to_dec(cur_item_fees));
-			});
-			total = subtotal + item_fees + taxes;
-			$("#p_muid_subtotal").html(round_to_dec(subtotal));
-			$("#p_muid_item_fees").html(round_to_dec(item_fees));
-			$("#p_muid_taxes").html(round_to_dec(taxes));
-			$("#p_muid_total").html(round_to_dec(total));
-
-			// Update the products input element.
-			products.val(JSON.stringify(rows.pgrid_export_rows()));
-
-			update_payments();
-		}
-
-		function update_payments() {
-			var rows = payments_table.pgrid_get_all_rows();
-			var total = parseFloat($("#p_muid_total").html());
-			var amount_tendered = 0;
-			var amount_due = 0;
-			var change = 0;
-			if (isNaN(total))
-				return;
-			var submit_val = rows.pgrid_export_rows();
-			// Calculate the total payments.
-			rows.each(function(i){
-				var cur_row = $(this);
-				if (cur_row.pgrid_get_value(3) != "declined") {
-					var amount = parseFloat(cur_row.pgrid_get_value(2).replace(/[^0-9.-]/g, ""));
-					if (isNaN(amount))
-						amount = 0;
-					amount_tendered += amount;
-				}
-				submit_val[i].data = cur_row.data("payment_data");
-			});
-			amount_due = total - amount_tendered;
-			if (amount_due < 0) {
-				change = Math.abs(amount_due);
-				amount_due = 0;
-			}
-			$("#p_muid_amount_tendered").html(round_to_dec(amount_tendered));
-			$("#p_muid_amount_due").html(round_to_dec(amount_due));
-			$("#p_muid_change").html(round_to_dec(change));
-			
-			payments.val(JSON.stringify(submit_val));
-		}
-
-		<?php if ($pines->config->com_sales->cash_drawer) { ?>
-		function run_drawer() {
-			var keep_checking = function(status){
-				switch (status) {
-					case "is_open":
-						break;
-					case "is_closed":
-						run_submit();
-						return;
-						break;
-					case "not_supported":
-						alert("The drawer program does not support the correct return codes.");
-						break;
-					case "error":
-						alert("There was an error with the drawer.");
-						break;
-					case "not_found":
-						alert("The drawer was not found. Make sure it is plugged in.");
-						break;
-					case "misconfigured":
-						alert("The drawer program is misconfigured or not installed.");
-						break;
-				}
-				setTimeout(function(){
-					pines.drawer_check(keep_checking);
-				}, 500);
-			};
-
-			var kicked = false;
-			var total_cash = 0;
-			var message = "Please close the cash drawer when you are finished.<br />";
-			$.each(payments_table.pgrid_get_all_rows().pgrid_export_rows(), function(){
-				if (this.values[2] != "pending")
-					return;
-				if ($.inArray(parseInt(this.key), drawer_kickers) > -1) {
-					kicked = true;
-					// Remember how much cash.
-					total_cash += parseFloat(this.values[1]);
-				}
-			});
-			if (kicked)
-				message += "<br /><div style=\"float: right; clear: right;\">Amount Received: <strong>$"+round_to_dec(total_cash)+"</strong></div>";
-
-			var change = parseFloat($("#p_muid_change").html());
-			if (change > 0 || kicked) {
-				kicked = true;
-				message += "<br /><div style=\"float: right; clear: right;\">Change Due: <strong>$"+round_to_dec(change)+"</strong></div><br style=\"clear: both;\" />";
-			}
-
-			if (kicked)
-				pines.drawer_open(keep_checking, message);
-			else
-				$("#p_muid_form").submit();
-		}
-		<?php } else { ?>
-		function run_drawer() {
-			run_submit();
-		}
-		<?php } ?>
-
-		function run_submit() {
-			$("#p_muid_form").submit();
-		}
 		// ]]>
 	</script>
 	<?php if ($pines->config->com_sales->com_customer) { ?>
@@ -1041,17 +1042,17 @@ if ($pines->config->com_sales->com_customer)
 		<input type="hidden" id="p_muid_sale_process_type" name="process" value="quote" />
 
 		<?php if ($this->entity->status != 'voided' && $this->entity->status != 'paid') { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Tender" onclick="$('#p_muid_sale_process_type').val('tender'); run_drawer();" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Tender" onclick="$('#p_muid_sale_process_type').val('tender'); pines.com_sales_run_drawer();" />
 		<?php } ?>
 
 		<?php if ($this->entity->status != 'voided' && $this->entity->status != 'paid' && $this->entity->status != 'invoiced') { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Invoice" onclick="$('#p_muid_sale_process_type').val('invoice'); run_submit();" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Invoice" onclick="$('#p_muid_sale_process_type').val('invoice'); pines.com_sales_run_submit();" />
 		<?php } ?>
 
 		<?php if ($this->entity->status != 'voided' && $this->entity->status != 'paid' && $this->entity->status != 'invoiced' && $this->entity->status != 'quoted') { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Quote" onclick="$('#p_muid_sale_process_type').val('quote'); run_submit();" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Quote" onclick="$('#p_muid_sale_process_type').val('quote'); pines.com_sales_run_submit();" />
 		<?php } else { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Save" onclick="$('#p_muid_sale_process_type').val('save'); run_submit();" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Save" onclick="$('#p_muid_sale_process_type').val('save'); pines.com_sales_run_submit();" />
 		<?php } ?>
 
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'sale/list')); ?>');" value="Cancel" />

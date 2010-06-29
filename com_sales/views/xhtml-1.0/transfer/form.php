@@ -20,45 +20,34 @@ if ($this->entity->final)
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_sales', 'transfer/save')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
-		var stock;
-		var stock_table;
-		var available_stock_table;
-		var stock_dialog;
-		var available_stock = <?php
-		$all_stock = array();
-		foreach ($this->stock as $stock) {
-			if ($stock->in_array($this->entity->stock))
-				continue;
-			$export_stock = array(
-				'key' => $stock->guid,
-				'values' => array(
-					(string) $stock->product->sku,
-					(string) $stock->product->name,
-					(string) $stock->serial,
-					(string) $stock->vendor->name,
-					(string) "{$stock->location->name} [{$stock->location->groupname}]",
-					(string) $stock->cost,
-					$stock->available ? 'Yes' : 'No'
-				)
-				
-			);
-			$all_stock[] = $export_stock;
-		}
-		echo json_encode($all_stock);
-		?>;
-
-		function update_stock() {
-			var all_rows = stock_table.pgrid_get_all_rows().pgrid_export_rows();
-			available_stock_table.pgrid_get_selected_rows().pgrid_deselect_rows();
-			// Save the data into a hidden form element.
-			stock.val(JSON.stringify(all_rows));
-		}
 		
 		pines(function(){
-			stock = $("#p_muid_stock");
-			stock_table = $("#p_muid_stock_table");
-			available_stock_table = $("#p_muid_available_stock_table");
-			stock_dialog = $("#p_muid_stock_dialog");
+			var stock = $("#p_muid_stock");
+			var stock_table = $("#p_muid_stock_table");
+			var available_stock_table = $("#p_muid_available_stock_table");
+			var stock_dialog = $("#p_muid_stock_dialog");
+			var available_stock = <?php
+			$all_stock = array();
+			foreach ($this->stock as $stock) {
+				if ($stock->in_array($this->entity->stock))
+					continue;
+				$export_stock = array(
+					'key' => $stock->guid,
+					'values' => array(
+						(string) $stock->product->sku,
+						(string) $stock->product->name,
+						(string) $stock->serial,
+						(string) $stock->vendor->name,
+						(string) "{$stock->location->name} [{$stock->location->groupname}]",
+						(string) $stock->cost,
+						$stock->available ? 'Yes' : 'No'
+					)
+
+				);
+				$all_stock[] = $export_stock;
+			}
+			echo json_encode($all_stock);
+			?>;
 
 			<?php if (!$this->entity->final && empty($this->entity->received)) { ?>
 			stock_table.pgrid({
@@ -106,7 +95,7 @@ if ($this->entity->final)
 				modal: true,
 				width: 600,
 				buttons: {
-					"Done": function() {
+					"Done": function(){
 						var cur_stock_rows = available_stock_table.pgrid_get_selected_rows();
 						var cur_stock = cur_stock_rows.pgrid_export_rows();
 						if (!cur_stock[0]) {
@@ -118,10 +107,17 @@ if ($this->entity->final)
 						$(this).dialog('close');
 					}
 				},
-				close: function(event, ui) {
+				close: function(){
 					update_stock();
 				}
 			});
+
+			var update_stock = function(){
+				var all_rows = stock_table.pgrid_get_all_rows().pgrid_export_rows();
+				available_stock_table.pgrid_get_selected_rows().pgrid_deselect_rows();
+				// Save the data into a hidden form element.
+				stock.val(JSON.stringify(all_rows));
+			};
 			
 			update_stock();
 		});

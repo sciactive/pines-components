@@ -71,7 +71,7 @@ $pines->com_pgrid->load();
 			modal: true,
 			width: 500,
 			buttons: {
-				"Done": function() {
+				"Done": function(){
 					var cur_condition_class = condition_dialog.find("select[name=cur_condition_class]").val();
 					var cur_condition_type = condition_dialog.find("input[name=cur_condition_type]").val();
 					var cur_condition_value = condition_dialog.find("input[name=cur_condition_value]").val();
@@ -109,18 +109,20 @@ $pines->com_pgrid->load();
 						cur_condition.pgrid_set_value(2, cur_condition_type);
 						cur_condition.pgrid_set_value(3, cur_condition_value);
 					}
-					update_conditions();
 					$(this).dialog('close');
 				}
+			},
+			close: function(){
+				update_conditions();
 			}
 		});
 
-		function update_conditions() {
+		var update_conditions = function(){
 			condition_dialog.find("select[name=cur_condition_class]").val("depend");
 			condition_dialog.find("input[name=cur_condition_type]").val("");
 			condition_dialog.find("input[name=cur_condition_value]").val("");
 			conditions.val(JSON.stringify(conditions_table.pgrid_get_all_rows().pgrid_export_rows()));
-		}
+		};
 
 		update_conditions();
 

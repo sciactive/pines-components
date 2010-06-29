@@ -13,6 +13,20 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
+		'name' => 'com_customer',
+		'cname' => 'CRM Integration',
+		'description' => 'Integrate with com_customer.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'com_hrm',
+		'cname' => 'HRM Integration',
+		'description' => 'Integrate with com_hrm.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'remove_stock',
 		'cname' => 'Remove Stock',
 		'description' => 'When (in the sale process) to take stock out of inventory.',
@@ -51,13 +65,6 @@ return array(
 		'cname' => 'Visible Decimal Places',
 		'description' => 'Decimal numbers, though stored in the database more accurately, will only be displayed to this number of places.',
 		'value' => 2,
-		'peruser' => true,
-	),
-	array(
-		'name' => 'com_customer',
-		'cname' => 'CRM Integration',
-		'description' => 'Integrate with com_customer.',
-		'value' => true,
 		'peruser' => true,
 	),
 	array(

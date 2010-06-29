@@ -19,21 +19,10 @@ $pines->com_jstree->load();
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_sales', 'stock/receive')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
-		var products;
-		var products_table;
-		var product_dialog;
-		var product_button;
-
-		function update_products() {
-			var all_rows = products_table.pgrid_get_all_rows().pgrid_export_rows();
-			products.val(JSON.stringify(all_rows));
-		}
 		
 		pines(function(){
-			products = $("#p_muid_products");
-			products_table = $("#p_muid_products_table");
-			product_dialog = $("#p_muid_product_dialog");
-			product_button = $("#p_muid_add_product");
+			var products = $("#p_muid_products");
+			var products_table = $("#p_muid_products_table");
 
 			products_table.pgrid({
 				pgrid_paginate: false,
@@ -270,6 +259,11 @@ $pines->com_jstree->load();
 					}
 				}
 			});
+
+			var update_products = function(){
+				var all_rows = products_table.pgrid_get_all_rows().pgrid_export_rows();
+				products.val(JSON.stringify(all_rows));
+			};
 
 			products_table.pgrid_get_all_rows().pgrid_delete();
 			update_products();

@@ -55,11 +55,11 @@ $denom_counter = 0;
 </style>
 <script type="text/javascript">
 	// <![CDATA[
-	
 	var multiply = new Array();
-	var cash_symbol = "<?php echo $this->entity->currency_symbol; ?>";
-	
+
 	pines(function(){
+		var cash_symbol = "<?php echo $this->entity->currency_symbol; ?>";
+
 		// Update the cash count as money is counted.
 		$("#p_muid_form .entry").change(function(){
 			update_total();
@@ -67,45 +67,45 @@ $denom_counter = 0;
 			$(this).select();
 		});
 
+		var update_total = function(){
+			var total_count = 0;
+			$("#p_muid_form .entry").each(function() {
+				//This looks complicated but it simply multiplies the number of
+				//bills/coins for each denomition by its respective value.
+				//ex: 5 x 0.25 for 5 quarters that have been counted
+				total_count += parseInt($(this).val()) * parseFloat(multiply[$(this).attr("name").replace(/.*(\d).*/, "$1")]);
+				$(this).removeClass('added removed');
+			});
+			$("#p_muid_total_cashcount").html(cash_symbol+total_count.toFixed(2));
+		};
+
+		pines.com_sales_clear_all = function(){
+			if (confirm("Clear all entered cash counts?")) {
+				$("#p_muid_form .entry").each(function() { $(this).val(0); });
+				update_total();
+			}
+			$("#p_muid_form [name=clear_btn]").blur();
+		};
+
+		pines.com_sales_add_amount = function(type){
+			var current = parseInt($("#p_muid_form [name=count["+type+"]]").val());
+			$("#p_muid_form [name=count["+type+"]]").val(current+1);
+			$("#p_muid_form [name=count["+type+"]]").change();
+			$("#p_muid_form [name=count["+type+"]]").addClass('added');
+			$("#p_muid_form [name=add_btn["+type+"]]").blur();
+		};
+		pines.com_sales_remove_amount = function(type){
+			var current = parseInt($("#p_muid_form [name=count["+type+"]]").val());
+			if (current > 0) {
+				$("#p_muid_form [name=count["+type+"]]").val(current-1);
+				$("#p_muid_form [name=count["+type+"]]").change();
+				$("#p_muid_form [name=count["+type+"]]").addClass('removed');
+			}
+			$("#p_muid_form [name=remove_btn["+type+"]]").blur();
+		};
+
 		update_total();
 	});
-
-	function update_total() {
-		var total_count = 0;
-		$("#p_muid_form .entry").each(function() {
-			//This looks complicated but it simply multiplies the number of
-			//bills/coins for each denomition by its respective value.
-			//ex: 5 x 0.25 for 5 quarters that have been counted
-			total_count += parseInt($(this).val()) * parseFloat(multiply[$(this).attr("name").replace(/.*(\d).*/, "$1")]);
-			$(this).removeClass('added removed');
-		});
-		$("#p_muid_total_cashcount").html(cash_symbol+total_count.toFixed(2));
-	}
-
-	function clear_all() {
-		if (confirm("Clear all entered cash counts?")) {
-			$("#p_muid_form .entry").each(function() { $(this).val(0); });
-			update_total();
-		}
-		$("#p_muid_form [name=clear_btn]").blur();
-	}
-
-	function add_amount(type) {
-		var current = parseInt($("#p_muid_form [name=count["+type+"]]").val());
-		$("#p_muid_form [name=count["+type+"]]").val(current+1);
-		$("#p_muid_form [name=count["+type+"]]").change();
-		$("#p_muid_form [name=count["+type+"]]").addClass('added');
-		$("#p_muid_form [name=add_btn["+type+"]]").blur();
-	}
-	function remove_amount(type) {
-		var current = parseInt($("#p_muid_form [name=count["+type+"]]").val());
-		if (current > 0) {
-			$("#p_muid_form [name=count["+type+"]]").val(current-1);
-			$("#p_muid_form [name=count["+type+"]]").change();
-			$("#p_muid_form [name=count["+type+"]]").addClass('removed');
-		}
-		$("#p_muid_form [name=remove_btn["+type+"]]").blur();
-	}
 	// ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_sales', 'cashcount/save')); ?>">
@@ -118,7 +118,7 @@ $denom_counter = 0;
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-heading">
-		<h1>Cash Drawer Contents<?php if (!$this->entity->final) { ?><button class="ui-state-default ui-corner-all" type="button" name="clear_btn" onclick="clear_all()" style="margin-left: 50px;"><span>Clear All</span></button><?php } ?></h1>
+		<h1>Cash Drawer Contents<?php if (!$this->entity->final) { ?><button class="ui-state-default ui-corner-all" type="button" name="clear_btn" onclick="pines.com_sales_clear_all()" style="margin-left: 50px;"><span>Clear All</span></button><?php } ?></h1>
 	</div>
 	<div class="pf-group">
 		<div>
@@ -131,8 +131,8 @@ $denom_counter = 0;
 			<div class="pf-element pf-group">
 				<input class="pf-field ui-widget-content entry" type="text" name="count[<?php echo $denom_counter; ?>]" value="<?php echo $this->entity->count[$denom_counter] ? $this->entity->count[$denom_counter] : '0'; ?>" <?php echo $this->entity->final ? "readonly='readonly'" : ""; ?>/>
 				<?php if (!$this->entity->final) { ?>
-				<button class="pf-field ui-state-default ui-corner-all" type="button" name="add_btn[<?php echo $denom_counter; ?>]" onclick="add_amount('<?php echo $denom_counter; ?>');"><span class="amt_btn picon picon-list-add"></span></button>
-				<button class="pf-field ui-state-default ui-corner-all" type="button" name="remove_btn[<?php echo $denom_counter; ?>]" onclick="remove_amount('<?php echo $denom_counter; ?>');"><span class="amt_btn picon picon-list-remove"></span></button>
+				<button class="pf-field ui-state-default ui-corner-all" type="button" name="add_btn[<?php echo $denom_counter; ?>]" onclick="pines.com_sales_add_amount('<?php echo $denom_counter; ?>');"><span class="amt_btn picon picon-list-add"></span></button>
+				<button class="pf-field ui-state-default ui-corner-all" type="button" name="remove_btn[<?php echo $denom_counter; ?>]" onclick="pines.com_sales_remove_amount('<?php echo $denom_counter; ?>');"><span class="amt_btn picon picon-list-remove"></span></button>
 				<?php } ?>
 				<span class="amount"><?php echo $this->entity->currency_symbol . $cur_denom; ?></span>
 			</div>

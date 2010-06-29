@@ -16,7 +16,7 @@ $pines->com_jstree->load();
 <script type='text/javascript'>
 	// <![CDATA[
 	// Change the branch / division of the company.
-	function select_branch() {
+	pines.com_hrm_select_branch = function(){
 		$.ajax({
 			url: "<?php echo pines_url('com_hrm', 'locationselect'); ?>",
 			type: "POST",
@@ -50,9 +50,9 @@ $pines->com_jstree->load();
 				});
 			}
 		});
-	}
+	};
 	// Create a new event.
-	function new_event() {
+	pines.com_hrm_new_event = function(){
 		$.ajax({
 			url: "<?php echo pines_url('com_hrm', 'editevent'); ?>",
 			type: "POST",
@@ -95,9 +95,9 @@ $pines->com_jstree->load();
 				});
 			}
 		});
-	}
-	// Edit an exisiting event.
-	function edit_event() {
+	};
+	// Edit an existing event.
+	pines.com_hrm_edit_event = function(){
 		$.ajax({
 			url: "<?php echo pines_url('com_hrm', 'editevent'); ?>",
 			type: "POST",
@@ -141,18 +141,18 @@ $pines->com_jstree->load();
 				});
 			}
 		});
-	}
+	};
 	<?php if (isset($this->entity)) { ?>
 	// Edit the event if there is one to be edited.
-	edit_event();
+	pines.com_hrm_edit_event();
 	<?php } ?>
 	// ]]>
 </script>
 <div style="padding: 1em;">
 	<div style="margin-bottom: 1em;">
-		<input style="width: 100%;" class="ui-state-default ui-priority-primary ui-corner-all" type="button" value="Change Branch" onclick="select_branch();" />
+		<input style="width: 100%;" class="ui-state-default ui-priority-primary ui-corner-all" type="button" value="Change Branch" onclick="pines.com_hrm_select_branch();" />
 	</div>
 	<div>
-		<input style="width: 100%;" class="ui-state-default ui-priority-primary ui-corner-all" type="button" value="New Event" onclick="new_event();" />
+		<input style="width: 100%;" class="ui-state-default ui-priority-primary ui-corner-all" type="button" value="New Event" onclick="pines.com_hrm_new_event();" />
 	</div>
 </div>

@@ -20,113 +20,108 @@ if ($this->entity->final)
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_sales', 'po/save')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
-		var products;
-		var products_table;
-		var available_products_table;
-		var product_dialog;
-		var cur_vendor = <?php echo ($this->entity->vendor ? $this->entity->vendor->guid : 'null'); ?>;
-		// Number of decimal places to round to.
-		var dec = <?php echo (int) $pines->config->com_sales->dec; ?>;
-		var all_products = JSON.parse("<?php
-		$products = array();
-		foreach ($this->products as $cur_product) {
-			$cur_vendor_guids = array();
-			foreach($cur_product->vendors as $cur_vendor) {
-				$cur_vendor_guids[] = (object) array(
-					'guid' => $cur_vendor['entity']->guid,
-					'sku' => $cur_vendor['sku']
-				);
-			}
-			$export_product = (object) array(
-				'guid' => $cur_product->guid,
-				'sku' => $cur_product->sku,
-				'name' => $cur_product->name,
-				'manufacturer' => $cur_product->manufacturer->name,
-				'manufacturer_sku' => $cur_product->manufacturer_sku,
-				'unit_price' => $cur_product->unit_price,
-				'vendors' => $cur_vendor_guids
-			);
-			array_push($products, $export_product);
-		}
-		echo addslashes(json_encode($products));
-		?>");
-
-		function round_to_dec(value) {
-			var rnd = Math.pow(10, dec);
-			var mult = value * rnd;
-			value = gaussianRound(mult);
-			value /= rnd;
-			value = value.toFixed(dec);
-			return (value);
-		}
-
-		function gaussianRound(x) {
-			var absolute = Math.abs(x);
-			var sign     = x == 0 ? 0 : (x < 0 ? -1 : 1);
-			var floored  = Math.floor(absolute);
-			if (absolute - floored != 0.5) {
-				return Math.round(absolute) * sign;
-			}
-			if (floored % 2 == 1) {
-				// Closest even is up.
-				return Math.ceil(absolute) * sign;
-			}
-			// Closest even is down.
-			return floored * sign;
-		}
-
-		function select_vendor(vendor_id, loading) {
-			if (cur_vendor == vendor_id && !loading) return;
-			var select_products = [];
-			available_products_table.pgrid_get_all_rows().pgrid_delete();
-			if (!loading)
-				products_table.pgrid_get_all_rows().pgrid_delete();
-			$.each(all_products, function(){
-				var cur_product = this;
-				$.each(cur_product.vendors, function(){
-					if (vendor_id == this.guid) {
-						$.merge(select_products, [{
-								"key": cur_product.guid,
-								values: [
-									cur_product.sku,
-									cur_product.name,
-									cur_product.manufacturer,
-									cur_product.manufacturer_sku,
-									this.sku,
-									cur_product.unit_price
-								]
-							}]);
-					}
-				});
-			});
-			available_products_table.pgrid_add(select_products);
-			cur_vendor = vendor_id;
-			update_products();
-		}
-
-		function update_products() {
-			var all_rows = products_table.pgrid_get_all_rows().pgrid_export_rows();
-			var total = 0.00;
-			available_products_table.pgrid_get_selected_rows().pgrid_deselect_rows();
-			$("#p_muid_cur_product_quantity").val("");
-			$("#p_muid_cur_product_cost").val("");
-			// Save the data into a hidden form element.
-			products.val(JSON.stringify(all_rows));
-			// Calculate a total based on quantity and cost.
-			$.each(all_rows, function(){
-				if (typeof this.values[2] != "undefined" && typeof this.values[3] != "undefined")
-					total += parseInt(this.values[2]) * parseFloat(this.values[3]);
-			});
-			//
-			total = round_to_dec(total);
-			$("#p_muid_total").html(total);
-		}
-		
 		pines(function(){
-			products = $("#p_muid_products");
-			products_table = $("#p_muid_products_table");
-			available_products_table = $("#p_muid_available_products_table");
-			product_dialog = $("#p_muid_product_dialog");
+			var products = $("#p_muid_products");
+			var products_table = $("#p_muid_products_table");
+			var available_products_table = $("#p_muid_available_products_table");
+			var product_dialog = $("#p_muid_product_dialog");
+			var cur_vendor = <?php echo ($this->entity->vendor ? $this->entity->vendor->guid : 'null'); ?>;
+			// Number of decimal places to round to.
+			var dec = <?php echo (int) $pines->config->com_sales->dec; ?>;
+			var all_products = JSON.parse("<?php
+			$products = array();
+			foreach ($this->products as $cur_product) {
+				$cur_vendor_guids = array();
+				foreach($cur_product->vendors as $cur_vendor) {
+					$cur_vendor_guids[] = (object) array(
+						'guid' => $cur_vendor['entity']->guid,
+						'sku' => $cur_vendor['sku']
+					);
+				}
+				$export_product = (object) array(
+					'guid' => $cur_product->guid,
+					'sku' => $cur_product->sku,
+					'name' => $cur_product->name,
+					'manufacturer' => $cur_product->manufacturer->name,
+					'manufacturer_sku' => $cur_product->manufacturer_sku,
+					'unit_price' => $cur_product->unit_price,
+					'vendors' => $cur_vendor_guids
+				);
+				array_push($products, $export_product);
+			}
+			echo addslashes(json_encode($products));
+			?>");
+
+			var round_to_dec = function(value){
+				var rnd = Math.pow(10, dec);
+				var mult = value * rnd;
+				value = gaussianRound(mult);
+				value /= rnd;
+				value = value.toFixed(dec);
+				return (value);
+			};
+
+			var gaussianRound = function(x){
+				var absolute = Math.abs(x);
+				var sign     = x == 0 ? 0 : (x < 0 ? -1 : 1);
+				var floored  = Math.floor(absolute);
+				if (absolute - floored != 0.5) {
+					return Math.round(absolute) * sign;
+				}
+				if (floored % 2 == 1) {
+					// Closest even is up.
+					return Math.ceil(absolute) * sign;
+				}
+				// Closest even is down.
+				return floored * sign;
+			};
+
+			pines.com_sales_select_vendor = function(vendor_id, loading) {
+				if (cur_vendor == vendor_id && !loading) return;
+				var select_products = [];
+				available_products_table.pgrid_get_all_rows().pgrid_delete();
+				if (!loading)
+					products_table.pgrid_get_all_rows().pgrid_delete();
+				$.each(all_products, function(){
+					var cur_product = this;
+					$.each(cur_product.vendors, function(){
+						if (vendor_id == this.guid) {
+							$.merge(select_products, [{
+									"key": cur_product.guid,
+									values: [
+										cur_product.sku,
+										cur_product.name,
+										cur_product.manufacturer,
+										cur_product.manufacturer_sku,
+										this.sku,
+										cur_product.unit_price
+									]
+								}]);
+						}
+					});
+				});
+				available_products_table.pgrid_add(select_products);
+				cur_vendor = vendor_id;
+				update_products();
+			};
+
+			var update_products = function(){
+				var all_rows = products_table.pgrid_get_all_rows().pgrid_export_rows();
+				var total = 0.00;
+				available_products_table.pgrid_get_selected_rows().pgrid_deselect_rows();
+				$("#p_muid_cur_product_quantity").val("");
+				$("#p_muid_cur_product_cost").val("");
+				// Save the data into a hidden form element.
+				products.val(JSON.stringify(all_rows));
+				// Calculate a total based on quantity and cost.
+				$.each(all_rows, function(){
+					if (typeof this.values[2] != "undefined" && typeof this.values[3] != "undefined")
+						total += parseInt(this.values[2]) * parseFloat(this.values[3]);
+				});
+				//
+				total = round_to_dec(total);
+				$("#p_muid_total").html(total);
+			};
 
 			<?php if (!$this->entity->final && empty($this->entity->received)) { ?>
 			products_table.pgrid({
@@ -191,7 +186,7 @@ if ($this->entity->final)
 				modal: true,
 				width: 600,
 				buttons: {
-					"Done": function() {
+					"Done": function(){
 						var cur_product_quantity = parseInt($("#p_muid_cur_product_quantity").val());
 						var cur_product_cost = parseFloat($("#p_muid_cur_product_cost").val());
 						var cur_product = available_products_table.pgrid_get_selected_rows().pgrid_export_rows();
@@ -217,12 +212,12 @@ if ($this->entity->final)
 						$(this).dialog('close');
 					}
 				},
-				close: function(event, ui) {
+				close: function(){
 					update_products();
 				}
 			});
 
-			select_vendor(cur_vendor, true);
+			pines.com_sales_select_vendor(cur_vendor, true);
 		});
 		// ]]>
 	</script>
@@ -257,7 +252,7 @@ if ($this->entity->final)
 			<?php } else { ?>
 				<span class="pf-note">Vendor can't be changed after PO is committed or received.</span>
 			<?php } ?>
-			<select class="pf-field ui-widget-content" name="vendor" onchange="select_vendor(Number(this.value));"<?php echo (!$this->entity->final && empty($this->entity->received) ? '' : ' disabled="disabled"'); ?> <?php echo $read_only; ?>>
+			<select class="pf-field ui-widget-content" name="vendor" onchange="pines.com_sales_select_vendor(Number(this.value));"<?php echo (!$this->entity->final && empty($this->entity->received) ? '' : ' disabled="disabled"'); ?> <?php echo $read_only; ?>>
 				<option value="null">-- None --</option>
 				<?php foreach ($this->vendors as $cur_vendor) { ?>
 				<option value="<?php echo $cur_vendor->guid; ?>"<?php echo $this->entity->vendor->guid == $cur_vendor->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_vendor->name; ?></option>

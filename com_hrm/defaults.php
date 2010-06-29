@@ -13,6 +13,13 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
+		'name' => 'com_sales',
+		'cname' => 'POS Integration',
+		'description' => 'Integrate with com_sales.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'ssn_field',
 		'cname' => 'SSN Field',
 		'description' => 'Allow Pines to store a Social Security Number for employees.',

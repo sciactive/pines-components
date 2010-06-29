@@ -53,39 +53,38 @@ $this->title = 'Customer Timer Status';
 </style>
 <script type="text/javascript">
 	// <![CDATA[
-	var customer_status;
-
 	pines(function(){
-		customer_status = $("#p_muid_customer_status");
+		var customer_status = $("#p_muid_customer_status");
+
+		var update_status = function(){
+			$.ajax({
+				url: "<?php echo pines_url('com_customertimer', 'bigstatus_json'); ?>",
+				type: "GET",
+				dataType: "json",
+				complete: function(){
+					setTimeout(update_status, 30000);
+				},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured while trying to refresh the status:\n"+XMLHttpRequest.status+": "+textStatus);
+				},
+				success: function(data){
+					switch (data) {
+						case "ok":
+							customer_status.html("<div class=\"status_ok\"><div>OK</div></div>");
+							break;
+						case "warning":
+							customer_status.html("<div class=\"status_warning\"><div>Warning</div></div>");
+							break;
+						case "critical":
+							customer_status.html("<div class=\"status_critical\"><div>Critical</div></div>");
+							break;
+					}
+				}
+			});
+		};
+
 		update_status();
 	});
-
-	function update_status() {
-		$.ajax({
-			url: "<?php echo pines_url('com_customertimer', 'bigstatus_json'); ?>",
-			type: "GET",
-			dataType: "json",
-			complete: function(){
-				setTimeout(update_status, 30000);
-			},
-			error: function(XMLHttpRequest, textStatus){
-				pines.error("An error occured while trying to refresh the status:\n"+XMLHttpRequest.status+": "+textStatus);
-			},
-			success: function(data){
-				switch (data) {
-					case "ok":
-						customer_status.html("<div class=\"status_ok\"><div>OK</div></div>");
-						break;
-					case "warning":
-						customer_status.html("<div class=\"status_warning\"><div>Warning</div></div>");
-						break;
-					case "critical":
-						customer_status.html("<div class=\"status_critical\"><div>Critical</div></div>");
-						break;
-				}
-			}
-		});
-	}
 	// ]]>
 </script>
 <div id="p_muid_customer_status">Loading, please wait...</div>

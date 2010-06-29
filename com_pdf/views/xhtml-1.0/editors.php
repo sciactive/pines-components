@@ -20,7 +20,7 @@ defined('P_RUN') or die('Direct access prohibited');
 		var pages = <?php echo $this->entity->pdf_pages; ?>;
 		var display_jsons = JSON.parse("<?php echo addslashes(json_encode($this->entity->displays)); ?>");
 
-		function open_display_editor(holder) {
+		var open_display_editor = function(holder) {
 			current_holder = holder;
 			if (display_editor_window) display_editor_window.close();
 			display_editor_window = window.open("<?php echo pines_url('com_pdf', 'editor'); ?>", "display_editor", "directories=no,location=no,menubar=no,scrollbars=yes,status=yes,toolbar=no");
@@ -33,11 +33,11 @@ defined('P_RUN') or die('Direct access prohibited');
 				};
 				display_editor_window.load_editor();
 			};
-		}
+		};
 
-		function update_json(new_json) {
+		var update_json = function(new_json) {
 			current_holder.val(new_json);
-		}
+		};
 
 		$(".pf-form div.pf-element.display_edit").each(function(){
 			$(this).append($("<div />")

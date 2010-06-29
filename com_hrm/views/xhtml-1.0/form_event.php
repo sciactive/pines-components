@@ -93,30 +93,31 @@ defined('P_RUN') or die('Direct access prohibited');
 			if (start_date > end_date)
 				$("#p_muid_end").val($(this).val());
 		}).change();
+
+		// This function reloads the employees when switching between locations.
+		var update_employees = function(group_id){
+			var employee = $("#p_muid_form [name=employee]");
+			employee.empty();
+			<?php
+			// Load employee departments.
+			foreach ($pines->config->com_hrm->employee_departments as $cur_dept) {
+				$cur_dept_info = explode(':', $cur_dept);
+				$cur_name = $cur_dept_info[0];
+				$cur_color = $cur_dept_info[1];
+				$cur_select = (!isset($this->entity->employee->group) && $this->entity->employee == $cur_name) ? 'selected=\"selected\"' : '';
+			?>
+				employee.append("<option value=\"<?php echo $cur_name; ?>:<?php echo $cur_color; ?>\" <?php echo $cur_select; ?>><?php echo $cur_name; ?></option>");
+			<?php }
+			// Load employees for this location.
+			foreach ($this->employees as $cur_employee) {
+				if (!isset($cur_employee->group))
+					continue;
+				$cur_select = (isset($this->entity->employee->group) && $this->entity->employee->is($cur_employee)) ? 'selected=\"selected\"' : ''; ?>
+				if (group_id == <?php echo $cur_employee->group->guid; ?>)
+					employee.append("<option value=\"<?php echo $cur_employee->guid; ?>\" <?php echo $cur_select; ?>><?php echo $cur_employee->name; ?></option>");
+			<?php } ?>
+		};
 	});
-	// This function reloads the employees when switching between locations.
-	function update_employees(group_id) {
-		var employee = $("#p_muid_form [name=employee]");
-		employee.empty();
-		<?php
-		// Load employee departments.
-		foreach ($pines->config->com_hrm->employee_departments as $cur_dept) {
-			$cur_dept_info = explode(':', $cur_dept);
-			$cur_name = $cur_dept_info[0];
-			$cur_color = $cur_dept_info[1];
-			$cur_select = (!isset($this->entity->employee->group) && $this->entity->employee == $cur_name) ? 'selected=\"selected\"' : '';
-		?>
-			employee.append("<option value=\"<?php echo $cur_name; ?>:<?php echo $cur_color; ?>\" <?php echo $cur_select; ?>><?php echo $cur_name; ?></option>");
-		<?php }
-		// Load employees for this location.
-		foreach ($this->employees as $cur_employee) {
-			if (!isset($cur_employee->group))
-				continue;
-			$cur_select = (isset($this->entity->employee->group) && $this->entity->employee->is($cur_employee)) ? 'selected=\"selected\"' : ''; ?>
-			if (group_id == <?php echo $cur_employee->group->guid; ?>)
-				employee.append("<option value=\"<?php echo $cur_employee->guid; ?>\" <?php echo $cur_select; ?>><?php echo $cur_employee->name; ?></option>");
-		<?php } ?>
-	}
 // ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_hrm', 'saveevent')); ?>">

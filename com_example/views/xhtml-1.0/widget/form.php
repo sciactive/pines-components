@@ -55,7 +55,7 @@ $pines->com_pgrid->load();
 			modal: true,
 			width: 500,
 			buttons: {
-				"Done": function() {
+				"Done": function(){
 					var cur_attribute_name = attribute_dialog.find("input[name=cur_attribute_name]").val();
 					var cur_attribute_value = attribute_dialog.find("input[name=cur_attribute_value]").val();
 					if (cur_attribute_name == "" || cur_attribute_value == "") {
@@ -70,17 +70,19 @@ $pines->com_pgrid->load();
 						]
 					}];
 					attributes_table.pgrid_add(new_attribute);
-					update_attributes();
 					$(this).dialog('close');
 				}
+			},
+			close: function(){
+				update_attributes();
 			}
 		});
 
-		function update_attributes() {
+		var update_attributes = function(){
 			attribute_dialog.find("input[name=cur_attribute_name]").val("");
 			attribute_dialog.find("input[name=cur_attribute_value]").val("");
 			attributes.val(JSON.stringify(attributes_table.pgrid_get_all_rows().pgrid_export_rows()));
-		}
+		};
 
 		update_attributes();
 

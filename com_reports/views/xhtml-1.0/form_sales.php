@@ -23,7 +23,7 @@ $pines->com_jstree->load();
 	/* ]]> */
 </style>
 <script type='text/javascript'>
-// <![CDATA[
+	// <![CDATA[
 	pines(function(){
 		$("#p_muid_form [name=start], #p_muid_form [name=end]").datepicker({
 			dateFormat: "yy-mm-dd",
@@ -62,23 +62,23 @@ $pines->com_jstree->load();
 				"initially_select" : ["p_muid_<?php echo $this->location; ?>"]
 			}
 		});
-	});
 	
-	// This function reloads the employees when switching between locations.
-	function update_employees(group_id) {
-		var employee = $("#p_muid_form [name=employee]");
-		employee.empty();
-		employee.append("<option value='all' selected='selected'>Entire Location</option>");
-		<?php foreach ($this->employees as $cur_employee) { // Load employees for the current location.
-			if (!isset($cur_employee->group))
-				continue;
-			$cur_select = (isset($this->employee->group) && $this->employee->is($cur_employee)) ? 'selected=\"selected\"' : ''; ?>
-			if (group_id == <?php echo $cur_employee->group->guid; ?>) {
-				employee.append("<option value='<?php echo $cur_employee->guid; ?>' <?php echo $cur_select; ?>><?php echo $cur_employee->name; ?></option>");
-			}
-		<?php } ?>
-	}
-// ]]>
+		// This function reloads the employees when switching between locations.
+		var update_employees = function(group_id){
+			var employee = $("#p_muid_form [name=employee]");
+			employee.empty();
+			employee.append("<option value='all' selected='selected'>Entire Location</option>");
+			<?php foreach ($this->employees as $cur_employee) { // Load employees for the current location.
+				if (!isset($cur_employee->group))
+					continue;
+				$cur_select = (isset($this->employee->group) && $this->employee->is($cur_employee)) ? 'selected=\"selected\"' : ''; ?>
+				if (group_id == <?php echo $cur_employee->group->guid; ?>) {
+					employee.append("<option value='<?php echo $cur_employee->guid; ?>' <?php echo $cur_select; ?>><?php echo $cur_employee->name; ?></option>");
+				}
+			<?php } ?>
+		};
+	});
+	// ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_reports', 'reportsales')); ?>">
 	<div class="pf-element location_tree"></div>

@@ -73,16 +73,11 @@ $this->title = 'Sales Totals';
 	<div class="pf-element pf-buttons">
 		<script type="text/javascript">
 			// <![CDATA[
-			var com_sales_location;
-			var com_sales_date_start;
-			var com_sales_date_end;
-			var com_sales_result_totals;
-
 			pines(function(){
-				com_sales_location = $("#p_muid_location");
-				com_sales_date_start = $("#p_muid_date_start");
-				com_sales_date_end = $("#p_muid_date_end");
-				com_sales_result_totals = $("#p_muid_result_totals");
+				var location = $("#p_muid_location");
+				var date_start = $("#p_muid_date_start");
+				var date_end = $("#p_muid_date_end");
+				var result_totals = $("#p_muid_result_totals");
 
 				$("#p_muid_retrieve_totals").click(function(){
 					var loader;
@@ -90,9 +85,9 @@ $this->title = 'Sales Totals';
 						url: "<?php echo pines_url('com_sales', 'sale/totalsjson'); ?>",
 						type: "POST",
 						dataType: "json",
-						data: {"location": com_sales_location.val(), "date_start": com_sales_date_start.val(), "date_end": com_sales_date_end.val()},
+						data: {"location": location.val(), "date_start": date_start.val(), "date_end": date_end.val()},
 						beforeSend: function(){
-							com_sales_result_totals.hide("normal");
+							result_totals.hide("normal");
                             loader = $.pnotify({
 								pnotify_title: 'Sales Totals',
 								pnotify_text: 'Retrieving totals from server...',
@@ -113,25 +108,25 @@ $this->title = 'Sales Totals';
 								alert("No sales data was returned.");
 								return;
 							}
-							com_sales_result_totals.find(".total_location").html(data.location);
-							com_sales_result_totals.find(".total_date").html(data.date_start == data.date_end ? data.date_start : data.date_start+" - "+data.date_end);
-							com_sales_result_totals.find(".total_invoice_count").html(data.invoice.count);
-							com_sales_result_totals.find(".total_invoice_total").html(data.invoice.total);
-							com_sales_result_totals.find(".total_sale_count").html(data.sale.count);
-							com_sales_result_totals.find(".total_sale_total").html(data.sale.total);
-							com_sales_result_totals.find(".total_users").empty().each(function(){
+							result_totals.find(".total_location").html(data.location);
+							result_totals.find(".total_date").html(data.date_start == data.date_end ? data.date_start : data.date_start+" - "+data.date_end);
+							result_totals.find(".total_invoice_count").html(data.invoice.count);
+							result_totals.find(".total_invoice_total").html(data.invoice.total);
+							result_totals.find(".total_sale_count").html(data.sale.count);
+							result_totals.find(".total_sale_total").html(data.sale.total);
+							result_totals.find(".total_users").empty().each(function(){
 								var total_users = $(this);
 								$.each(data.user, function(i, val){
 									total_users.append("<div class=\"pf-element\"><span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><span class=\"pf-field\">Count: </span><span class=\"pf-field\">"+val.count+"</span><br /><span class=\"pf-field\">Total: </span><span class=\"pf-field\">$"+val.total+"</span></div></div>");
 								});
 							});
-							com_sales_result_totals.find(".total_payments").empty().each(function(){
+							result_totals.find(".total_payments").empty().each(function(){
 								var total_payments = $(this);
 								$.each(data.payment, function(i, val){
 									total_payments.append("<div class=\"pf-element\"><span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><span class=\"pf-field\">Count: </span><span class=\"pf-field\">"+val.count+"</span><br /><span class=\"pf-field\">Total: </span><span class=\"pf-field\">$"+val.total+"</span>"+(val.change_given ? "<br /><span class=\"pf-field\">Change Given: </span><span class=\"pf-field\">$"+val.change_given+"</span><br /><span class=\"pf-field\">Net Total: </span><span class=\"pf-field\">$"+val.net_total+"</span>" : "")+"</div></div>");
 								});
 							});
-							com_sales_result_totals.show(400);
+							result_totals.show(400);
 						}
 					});
 				});

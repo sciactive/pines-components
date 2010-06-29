@@ -26,10 +26,10 @@ defined('P_RUN') or die('Direct access prohibited');
 		var location = $("#p_muid_form [name=location]");
 		var location_saver = $("#p_muid_form [name=location_saver]");
 		var location_tree = $("#p_muid_form div.location_tree");
-		var block_change = function() {
-			if (location_saver.val() != 'individual')
-				return false;
-		};
+		//var block_change = function() {
+		//	if (location_saver.val() != 'individual')
+		//		return false;
+		//};
 		location_tree
 		.bind("select_node.jstree", function(e, data){
 			location.val(data.inst.get_selected().attr("id").replace("p_muid_", ""));

@@ -109,7 +109,7 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 			autoOpen: false,
 			modal: true,
 			buttons: {
-				"Done": function() {
+				"Done": function(){
 					$.ajax({
 						url: "<?php echo pines_url('system', 'date_get_timestamp'); ?>",
 						type: "POST",
@@ -136,7 +136,7 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 			autoOpen: false,
 			modal: true,
 			buttons: {
-				"Done": function() {
+				"Done": function(){
 					$.ajax({
 						url: "<?php echo pines_url('system', 'date_get_timestamp'); ?>",
 						type: "POST",

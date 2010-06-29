@@ -16,11 +16,9 @@ $this->note = 'Please enter your info, or scan your barcode to login or logout.'
 <form class="pf-form" id="p_muid_form" name="customer_login" method="post" action="<?php echo htmlentities(pines_url('com_customertimer', 'login')); ?>">
 	<script type="text/javascript">
 	// <![CDATA[
-	var id_box;
-	var pw_box;
 	pines(function(){
-		id_box = $("#p_muid_form [name=id]");
-		pw_box = $("#p_muid_form [name=password]");
+		var id_box = $("#p_muid_form [name=id]");
+		var pw_box = $("#p_muid_form [name=password]");
 		id_box.change(function(){
 			if (id_box.val().indexOf("|") > 0) {
 				pw_box.val(id_box.val().replace(/^[^|]*\|/, ""));

@@ -49,27 +49,27 @@ $this->title = 'Configure Components';
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
+		pines.com_configure_go = function(url){
+			var peruser = <?php echo $this->per_user ? 'true' : 'false'; ?>;
+			if (peruser) {
+				var params = {};
+				params["peruser"] = 1;
+				var user = $("#p_muid_user_select").val();
+				if (user == "null") {
+					alert("Please pick a user first.");
+					return;
+				}
+				params["type"] = user.replace(/\d/g, '');
+				params["id"] = user.replace(/\D/g, '');
+				pines.get(url, params);
+			} else
+				pines.get(url);
+		};
+
 		$(".component_list", "#p_muid_form").accordion({autoHeight: false})
 		.find(".buttons").buttonset()
 		.find("input").button();
 	});
-
-	function com_configure__go(url) {
-		var peruser = <?php echo $this->per_user ? 'true' : 'false'; ?>;
-		if (peruser) {
-			var params = {};
-			params["peruser"] = 1;
-			var user = $("#p_muid_user_select").val();
-			if (user == "null") {
-				alert("Please pick a user first.");
-				return;
-			}
-			params["type"] = user.replace(/\d/g, '');
-			params["id"] = user.replace(/\D/g, '');
-			pines.get(url, params);
-		} else
-			pines.get(url);
-	}
 	// ]]>
 </script>
 <div id="p_muid_form">
@@ -90,7 +90,7 @@ $this->title = 'Configure Components';
 					<?php } ?>
 				</optgroup>
 			</select>
-			<button class="ui-state-default ui-corner-all" type="button" onclick="com_configure__go('<?php echo htmlentities(pines_url('com_configure', 'list')); ?>')">Refresh</button>
+			<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_configure_go('<?php echo htmlentities(pines_url('com_configure', 'list')); ?>')">Refresh</button>
 		</div>
 		<?php if (!$pines->config->com_configure->peruser) { ?>
 		<p>
@@ -115,8 +115,8 @@ $this->title = 'Configure Components';
 		<div class="component_entry<?php echo $cur_component->is_disabled() ? ' ui-priority-secondary' : ''; ?>">
 			<div class="buttons">
 				<?php if ($cur_component->is_configurable()) { ?>
-				<input type="button" onclick="com_configure__go('<?php echo htmlentities(pines_url('com_configure', 'edit', array('component' => urlencode($cur_component->name)))); ?>');" value="Configure" />
-				<input type="button" onclick="com_configure__go('<?php echo htmlentities(pines_url('com_configure', 'view', array('component' => urlencode($cur_component->name)))); ?>');" value="View Config" />
+				<input type="button" onclick="pines.com_configure_go('<?php echo htmlentities(pines_url('com_configure', 'edit', array('component' => urlencode($cur_component->name)))); ?>');" value="Configure" />
+				<input type="button" onclick="pines.com_configure_go('<?php echo htmlentities(pines_url('com_configure', 'view', array('component' => urlencode($cur_component->name)))); ?>');" value="View Config" />
 				<?php } ?>
 				<?php if (!$this->per_user) { ?>
 					<?php if ($cur_component->name != 'system') { if ($cur_component->is_disabled()) { ?>

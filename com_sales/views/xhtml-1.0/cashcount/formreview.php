@@ -48,34 +48,34 @@ $comment_str = '';
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
 		$("#p_muid_grid").pgrid(cur_options);
-	});
 
-	function create_comment(entry_comment) {
-		comments_note.push($.pnotify({
-			pnotify_text: entry_comment,
-			pnotify_hide: false,
-			pnotify_closer: false,
-			pnotify_history: false,
-			pnotify_animate_speed: 100,
-			pnotify_opacity: .9,
-			pnotify_notice_icon: "ui-icon ui-icon-comment",
-			// Setting stack to false causes Pines Notify to ignore this notice when positioning.
-			pnotify_stack: false,
-			pnotify_after_init: function(pnotify){
-				// Remove the notice if the user mouses over it.
-				pnotify.mouseout(function(){
-					pnotify.pnotify_remove();
-				});
-			},
-			pnotify_before_open: function(pnotify){
-				// This prevents the notice from displaying when it's created.
-				pnotify.pnotify({
-					pnotify_before_open: null
-				});
-				return false;
-			}
-		}));
-	}
+		pines.com_sales_create_comment = function(entry_comment){
+			comments_note.push($.pnotify({
+				pnotify_text: entry_comment,
+				pnotify_hide: false,
+				pnotify_closer: false,
+				pnotify_history: false,
+				pnotify_animate_speed: 100,
+				pnotify_opacity: .9,
+				pnotify_notice_icon: "ui-icon ui-icon-comment",
+				// Setting stack to false causes Pines Notify to ignore this notice when positioning.
+				pnotify_stack: false,
+				pnotify_after_init: function(pnotify){
+					// Remove the notice if the user mouses over it.
+					pnotify.mouseout(function(){
+						pnotify.pnotify_remove();
+					});
+				},
+				pnotify_before_open: function(pnotify){
+					// This prevents the notice from displaying when it's created.
+					pnotify.pnotify({
+						pnotify_before_open: null
+					});
+					return false;
+				}
+			}));
+		};
+	});
 	// ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo pines_url('com_sales', 'cashcount/savestatus'); ?>">
@@ -96,7 +96,7 @@ $comment_str = '';
 			<?php if ($this->entity->comments != '') { ?>
 			<script type="text/javascript">
 				// <![CDATA[
-				create_comment("<?php echo $this->entity->comments; ?>");
+				pines.com_sales_create_comment("<?php echo $this->entity->comments; ?>");
 				// ]]>
 			</script>
 			<?php $comment_str = 'onmouseover="comments_note['.$comment_count.'].pnotify_display();" onmousemove="comments_note['.$comment_count.'].css({\'top\': event.clientY+12, \'left\': event.clientX+12});" onmouseout="comments_note['.$comment_count.'].pnotify_remove();"'; $comment_count++; } ?>
@@ -114,7 +114,7 @@ $comment_str = '';
 			<?php if ($cur_audit->comments != '') { ?>
 			<script type="text/javascript">
 				// <![CDATA[
-				create_comment("<?php echo $cur_audit->comments; ?>");
+				pines.com_sales_create_comment("<?php echo $cur_audit->comments; ?>");
 				// ]]>
 			</script>
 			<?php $comment_str = 'onmouseover="comments_note['.$comment_count.'].pnotify_display();" onmousemove="comments_note['.$comment_count.'].css({\'top\': event.clientY+12, \'left\': event.clientX+12});" onmouseout="comments_note['.$comment_count.'].pnotify_remove();" '; $comment_count++; } ?>
@@ -132,7 +132,7 @@ $comment_str = '';
 			<?php if ($cur_skim->comments != '') { ?>
 			<script type="text/javascript">
 				// <![CDATA[
-				create_comment("<?php echo $cur_skim->comments; ?>");
+				pines.com_sales_create_comment("<?php echo $cur_skim->comments; ?>");
 				// ]]>
 			</script>
 			<?php $comment_str = 'onmouseover="comments_note['.$comment_count.'].pnotify_display();" onmousemove="comments_note['.$comment_count.'].css({\'top\': event.clientY+12, \'left\': event.clientX+12});" onmouseout="comments_note['.$comment_count.'].pnotify_remove();" '; $comment_count++; } ?>
@@ -150,7 +150,7 @@ $comment_str = '';
 			<?php if ($cur_deposit->comments != '') { ?>
 			<script type="text/javascript">
 				// <![CDATA[
-				create_comment("<?php echo $cur_deposit->comments; ?>");
+				pines.com_sales_create_comment("<?php echo $cur_deposit->comments; ?>");
 				// ]]>
 			</script>
 			<?php $comment_str = 'onmouseover="comments_note['.$comment_count.'].pnotify_display();" onmousemove="comments_note['.$comment_count.'].css({\'top\': event.clientY+12, \'left\': event.clientX+12});" onmouseout="comments_note['.$comment_count.'].pnotify_remove();" '; $comment_count++; } ?>

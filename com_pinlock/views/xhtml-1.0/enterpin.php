@@ -15,8 +15,7 @@ $this->title = 'Verify Access';
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-		if ($)
-			$("#p_muid_form input[name=pin]").focus();
+		if ($) $("#p_muid_form input[name=pin]").focus();
 	});
 	// ]]>
 </script>

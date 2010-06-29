@@ -65,7 +65,7 @@ $pines->com_jstree->load();
 				modal: true,
 				width: 600,
 				buttons: {
-					"Done": function() {
+					"Done": function(){
 						var cur_vendor_sku = $("#p_muid_cur_vendor_sku").val();
 						var cur_vendor_cost = $("#p_muid_cur_vendor_cost").val();
 						var cur_vendor = available_vendors_table.pgrid_get_selected_rows().pgrid_export_rows();
@@ -86,18 +86,20 @@ $pines->com_jstree->load();
 							]
 						}];
 						vendors_table.pgrid_add(new_vendor);
-						update_vendors();
 						$(this).dialog('close');
 					}
+				},
+				close: function(){
+					update_vendors();
 				}
 			});
 
-			function update_vendors() {
+			var update_vendors = function(){
 				available_vendors_table.pgrid_get_selected_rows().pgrid_deselect_rows();
 				$("#p_muid_cur_vendor_sku").val("");
 				$("#p_muid_cur_vendor_cost").val("");
 				vendors.val(JSON.stringify(vendors_table.pgrid_get_all_rows().pgrid_export_rows()));
-			}
+			};
 
 			$("#p_muid_product_tabs").tabs();
 			update_vendors();
@@ -107,11 +109,13 @@ $pines->com_jstree->load();
 	<div id="p_muid_product_tabs" style="clear: both;">
 		<ul>
 			<li><a href="#p_muid_tab_general">General</a></li>
-			<li><a href="#p_muid_tab_images">Images</a></li>
+			<li style="display: none;"><a href="#p_muid_tab_images">Images</a></li>
 			<li><a href="#p_muid_tab_purchasing">Purchasing</a></li>
 			<li><a href="#p_muid_tab_pricing">Pricing</a></li>
 			<li><a href="#p_muid_tab_attributes">Attributes</a></li>
-			<li><a href="#p_muid_tab_accounting">Accounting</a></li>
+			<?php if ($pines->config->com_sales->com_hrm) { ?>
+			<li><a href="#p_muid_tab_commission">Commission</a></li>
+			<?php } ?>
 		</ul>
 		<div id="p_muid_tab_general">
 			<?php if (isset($this->entity->guid)) { ?>
@@ -228,11 +232,9 @@ $pines->com_jstree->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="p_muid_tab_images">
+		<div id="p_muid_tab_images" style="display: none;">
 			<div class="pf-element">
-				<label><span class="pf-label">Upload a New Picture</span>
-					<span class="pf-note">Doesn't work yet.</span>
-					<input class="pf-field ui-widget-content" type="file" name="image_upload" /></label>
+				<span>Not implemented yet.</span>
 			</div>
 			<br class="pf-clearing" />
 		</div>
@@ -466,12 +468,164 @@ $pines->com_jstree->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="p_muid_tab_accounting">
-			<div class="pf-element">
-				<span class="pf-label">Nothing here yet...</span>
+		<?php if ($pines->config->com_sales->com_hrm) { ?>
+		<script type="text/javascript">
+			// <![CDATA[
+			pines(function(){
+				// Commissions
+				var commissions = $("#p_muid_form [name=commissions]");
+				var commissions_table = $("#p_muid_form .commissions_table");
+				var commission_dialog = $("#p_muid_form .commission_dialog");
+				var cur_commission = null;
+
+				commissions_table.pgrid({
+					pgrid_paginate: false,
+					pgrid_view_height: '200px',
+					pgrid_toolbar: true,
+					pgrid_toolbar_contents : [
+						{
+							type: 'button',
+							text: 'Add Commission',
+							extra_class: 'picon picon-document-new',
+							selection_optional: true,
+							click: function(){
+								cur_commission = null;
+								commission_dialog.dialog('open');
+							}
+						},
+						{
+							type: 'button',
+							text: 'Edit Commission',
+							extra_class: 'picon picon-document-edit',
+							double_click: true,
+							click: function(e, rows){
+								cur_commission = rows;
+								commission_dialog.find("select[name=cur_commission_group]").val(rows.pgrid_get_value(1));
+								commission_dialog.find("select[name=cur_commission_type]").val(rows.pgrid_get_value(2));
+								commission_dialog.find("input[name=cur_commission_amount]").val(rows.pgrid_get_value(3));
+								commission_dialog.dialog('open');
+							}
+						},
+						{
+							type: 'button',
+							text: 'Remove Commission',
+							extra_class: 'picon picon-edit-delete',
+							click: function(e, rows){
+								rows.pgrid_delete();
+								update_commissions();
+							}
+						}
+					]
+				});
+
+				// Commission Dialog
+				commission_dialog.dialog({
+					bgiframe: true,
+					autoOpen: false,
+					modal: true,
+					width: 500,
+					buttons: {
+						"Done": function(){
+							var cur_commission_group = commission_dialog.find("select[name=cur_commission_group]").val();
+							var cur_commission_type = commission_dialog.find("select[name=cur_commission_type]").val();
+							var cur_commission_amount = commission_dialog.find("input[name=cur_commission_amount]").val();
+							if (cur_commission_group == "" || cur_commission_type == "" || cur_commission_amount == "") {
+								alert("Please provide both a type and an amount for this commission.");
+								return;
+							}
+							if (cur_commission == null) {
+								var new_commission = [{
+									key: null,
+									values: [
+										cur_commission_group,
+										cur_commission_type,
+										cur_commission_amount
+									]
+								}];
+								commissions_table.pgrid_add(new_commission);
+							} else {
+								cur_commission.pgrid_set_value(1, cur_commission_group);
+								cur_commission.pgrid_set_value(2, cur_commission_type);
+								cur_commission.pgrid_set_value(3, cur_commission_amount);
+							}
+							$(this).dialog('close');
+						}
+					},
+					close: function(){
+						update_commissions();
+					}
+				});
+
+				var update_commissions = function(){
+					commission_dialog.find("select[name=cur_commission_group]").val("");
+					commission_dialog.find("select[name=cur_commission_type]").val("");
+					commission_dialog.find("input[name=cur_commission_amount]").val("");
+					commissions.val(JSON.stringify(commissions_table.pgrid_get_all_rows().pgrid_export_rows()));
+				};
+
+				update_commissions();
+			});
+			// ]]>
+		</script>
+		<div id="p_muid_tab_commission">
+			<div class="pf-element pf-full-width">
+				<span class="pf-label">Commissions</span>
+				<div class="pf-group">
+					<div class="pf-field">
+						<table class="commissions_table">
+							<thead>
+								<tr>
+									<th>Group</th>
+									<th>Type</th>
+									<th>Amount</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php if (isset($this->entity->commissions)) foreach ($this->entity->commissions as $cur_value) { ?>
+								<tr>
+									<td><?php echo "{$cur_value['group']->guid}: {$cur_value['group']->name}"; ?></td>
+									<td><?php echo $cur_value['type']; ?></td>
+									<td><?php echo $cur_value['amount']; ?></td>
+								</tr>
+								<?php } ?>
+							</tbody>
+						</table>
+						<input type="hidden" name="commissions" />
+					</div>
+				</div>
+			</div>
+			<div class="commission_dialog" style="display: none;" title="Add a Commission">
+				<div class="pf-form">
+					<div class="pf-element">
+						<label>
+							<span class="pf-label">Group</span>
+							<select class="pf-field ui-widget-content" name="cur_commission_group">
+								<?php foreach ($this->groups as $cur_group) {
+								?><option value="<?php echo "{$cur_group->guid}: {$cur_group->name}"; ?>"><?php echo "{$cur_group->name} [{$cur_group->groupname}]"; ?></option><?php
+								} ?>
+							</select>
+						</label>
+					</div>
+					<div class="pf-element">
+						<label>
+							<span class="pf-label">Type</span>
+							<select class="pf-field ui-widget-content" name="cur_commission_type">
+								<option value="spiff">Spiff (Fixed Amount)</option>
+								<option value="percent_gross">% Gross Sale</option>
+							</select>
+						</label>
+					</div>
+					<div class="pf-element">
+						<label><span class="pf-label">Amount</span>
+							<span class="pf-note">$ or %</span>
+							<input class="pf-field ui-widget-content" type="text" name="cur_commission_amount" size="24" onkeyup="this.value=this.value.replace(/[^\d.]/g, '');" /></label>
+					</div>
+				</div>
+				<br style="clear: both; height: 1px;" />
 			</div>
 			<br class="pf-clearing" />
 		</div>
+		<?php } ?>
 	</div>
 	<div class="pf-element pf-buttons">
 		<br />

@@ -125,8 +125,24 @@ class com_sales_product extends entity {
 				)
 			);
 		$module->actions = (array) $pines->config->com_sales->product_actions;
+		if ($pines->config->com_sales->com_hrm) {
+			$module->groups = (array) $pines->user_manager->get_groups();
+			usort($module->groups, array($this, 'sort_groups'));
+		}
 		
 		return $module;
+	}
+
+	/**
+	 * Sort groups.
+	 * @param group $a Group.
+	 * @param group $b Group.
+	 * @return bool Group order.
+	 */
+	private function sort_groups($a, $b) {
+		$aname = empty($a->name) ? $a->groupname : $a->name;
+		$bname = empty($b->name) ? $b->groupname : $b->name;
+		return strtolower($aname) > strtolower($bname);
 	}
 }
 

@@ -65,7 +65,7 @@ $pines->com_pgrid->load();
 			modal: true,
 			width: 600,
 			buttons: {
-				"Done": function() {
+				"Done": function(){
 					var cur_address_type = $("#p_muid_cur_address_type").val();
 					var cur_address_addr1 = $("#p_muid_cur_address_addr1").val();
 					var cur_address_addr2 = $("#p_muid_cur_address_addr2").val();
@@ -88,16 +88,18 @@ $pines->com_pgrid->load();
 						]
 					}];
 					addresses_table.pgrid_add(new_address);
-					update_addresses();
 					$(this).dialog('close');
 				}
+			},
+			close: function(){
+				update_addresses();
 			}
 		});
 
-		function update_addresses() {
+		var update_addresses = function(){
 			$("#p_muid_cur_address_type, #p_muid_cur_address_addr1, #p_muid_cur_address_addr2, #p_muid_cur_address_city, #p_muid_cur_address_state, #p_muid_cur_address_zip").val("");
 			addresses.val(JSON.stringify(addresses_table.pgrid_get_all_rows().pgrid_export_rows()));
-		}
+		};
 
 		update_addresses();
 
@@ -138,7 +140,7 @@ $pines->com_pgrid->load();
 			modal: true,
 			width: 500,
 			buttons: {
-				"Done": function() {
+				"Done": function(){
 					var cur_attribute_name = $("#p_muid_cur_attribute_name").val();
 					var cur_attribute_value = $("#p_muid_cur_attribute_value").val();
 					if (cur_attribute_name == "" || cur_attribute_value == "") {
@@ -153,17 +155,19 @@ $pines->com_pgrid->load();
 						]
 					}];
 					attributes_table.pgrid_add(new_attribute);
-					update_attributes();
 					$(this).dialog('close');
 				}
+			},
+			close: function(){
+				update_attributes();
 			}
 		});
 
-		function update_attributes() {
+		var update_attributes = function(){
 			$("#p_muid_cur_attribute_name").val("");
 			$("#p_muid_cur_attribute_value").val("");
 			attributes.val(JSON.stringify(attributes_table.pgrid_get_all_rows().pgrid_export_rows()));
-		}
+		};
 
 		update_attributes();
 

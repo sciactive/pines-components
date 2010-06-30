@@ -220,13 +220,14 @@ $pines->com_pgrid->load();
 								<th>Amount</th>
 								<th>Ticket</th>
 								<th>Product</th>
+								<th>Note</th>
 							</tr>
 						</thead>
 						<tbody>
 							<?php foreach ($this->entity->commissions as $cur_commission) { ?>
 							<tr>
 								<td><?php echo format_date($cur_commission['date']); ?></td>
-								<td><?php echo isset($cur_commission['amount']) ? '$'.number_format($cur_commission['amount'], 2) : ''; ?></td>
+								<td style="text-align: right;"><?php echo isset($cur_commission['amount']) ? '$'.number_format($cur_commission['amount'], 2) : ''; ?></td>
 								<td><?php
 								if ($cur_commission['ticket']->has_tag('sale')) {
 									echo "Sale: {$cur_commission['ticket']->id}";
@@ -235,6 +236,7 @@ $pines->com_pgrid->load();
 								}
 								?></td>
 								<td><?php echo "{$cur_commission['product']->guid}: {$cur_commission['product']->name}"; ?></td>
+								<td><?php echo $cur_commission['note']; ?></td>
 							</tr>
 							<?php } ?>
 						</tbody>

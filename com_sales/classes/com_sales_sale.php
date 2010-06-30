@@ -830,8 +830,15 @@ class com_sales_sale extends entity {
 			}
 			unset($cur_payment);
 		}
-		if ($this->added_commission) {
-			// TODO: Remove commissions.
+		if ($this->added_commission && is_array($this->user->commissions)) {
+			foreach ($this->user->commissions as &$cur_commission) {
+				if ($this->is($cur_commission['ticket'])) {
+					$cur_commission['note'] = "Sale was voided. Amount: \${$cur_commission['amount']}";
+					$cur_commission['amount'] = 0;
+				}
+			}
+			unset($cur_commission);
+			$this->user->save();
 		}
 
 		// Complete the transaction.

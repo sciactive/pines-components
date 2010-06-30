@@ -49,6 +49,17 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'add_commission',
+		'cname' => 'Add Commission',
+		'description' => 'When (in the sale process) to calculate and add commission to the employee. This requires HRM integration.',
+		'value' => 'tender',
+		'options' => array(
+			'When the sale is invoiced.' => 'invoice',
+			'When the sale is tendered.' => 'tender'
+		),
+		'peruser' => true,
+	),
+	array(
 		'name' => 'currency_symbol',
 		'cname' => 'Currency Symbol',
 		'description' => 'The currency symbol to use. (E.g. $, ¥, €, Rp)',

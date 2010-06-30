@@ -53,6 +53,51 @@ class com_sales_sale extends entity {
 	}
 
 	/**
+	 * Calculate and add commission to the employee.
+	 */
+	public function add_commission() {
+		global $pines;
+		if ($this->added_commission || !$pines->config->com_sales->com_hrm)
+			return;
+		$this->added_commission = true;
+		$user = isset($this->user) ? $this->user : $_SESSION['user'];
+		if (!isset($user))
+			return;
+		$user->refresh();
+		// Go through each product, adding commission.
+		foreach ($this->products as &$cur_product) {
+			// Call product actions for all products without stock entries.
+			if (!$cur_product['entity']->commissions)
+				continue;
+			$cur_product['commission'] = 0;
+			foreach ($cur_product['entity']->commissions as $cur_commission) {
+				if (!$user->in_group($cur_commission['group']))
+					continue;
+				// Calculate commission.
+				switch ($cur_commission['type']) {
+					case 'spiff':
+						$cur_product['commission'] += (float) $cur_commission['amount'];
+						break;
+					case 'percent_price':
+						$cur_product['commission'] += $this->discount_price($cur_product['price'], $cur_product['discount']) * ( ((float) $cur_commission['amount']) / 100 );
+						break;
+				}
+			}
+			if ((array) $user->commissions !== $user->commissions)
+				$user->commissions = array();
+			$user->commissions[] = array(
+				'date' => time(),
+				'amount' => $cur_product['commission'] * $cur_product['quantity'],
+				'ticket' => $this,
+				'product' => $cur_product['entity']
+			);
+		}
+		unset($cur_product);
+		$user->save();
+		$this->save();
+	}
+
+	/**
 	 * Approve each payment.
 	 *
 	 * @return bool True on success, false on failure.
@@ -174,6 +219,10 @@ class com_sales_sale extends entity {
 			// Perform actions.
 			$this->perform_actions();
 		}
+		if ($pines->config->com_sales->add_commission == 'tender') {
+			// Add commission.
+			$this->add_commission();
+		}
 
 		// Complete the transaction.
 		if ($return) {
@@ -205,6 +254,26 @@ class com_sales_sale extends entity {
 			return false;
 		pines_log("Deleted sale $this->id.", 'notice');
 		return true;
+	}
+
+	/**
+	 * Calculate the discount price based on a flat or percent discount.
+	 * @param float $price The original price.
+	 * @param string $discount The discount to give. Flat discount begins with $, percent ends with %.
+	 * @return float The discounted price.
+	 */
+	public function discount_price($price, $discount) {
+		$discount_price = (float) $price;
+		if (preg_match('/^\$-?\d+(\.\d+)?$/', $discount)) {
+			// This is an exact discount.
+			$discount = (float) preg_replace('/[^0-9.-]/', '', $discount);
+			$discount_price = $price - $discount;
+		} elseif (preg_match('/^-?\d+(\.\d+)?%$/', $discount)) {
+			// This is a percentage discount.
+			$discount = (float) preg_replace('/[^0-9.-]/', '', $discount);
+			$discount_price = $price - ($price * ($discount / 100));
+		}
+		return $discount_price;
 	}
 
 	/**
@@ -313,6 +382,10 @@ class com_sales_sale extends entity {
 		if ($pines->config->com_sales->perform_actions == 'invoice') {
 			// Perform actions.
 			$this->perform_actions();
+		}
+		if ($pines->config->com_sales->add_commission == 'invoice') {
+			// Add commission.
+			$this->add_commission();
 		}
 
 		// Make a transaction entry.
@@ -581,16 +654,7 @@ class com_sales_sale extends entity {
 			$qty = (int) $cur_product['quantity'];
 			$discount = $cur_product['discount'];
 			if ($cur_product['entity']->discountable && $discount != "") {
-				$discount_price = $price;
-				if (preg_match('/^\$-?\d+(\.\d+)?$/', $discount)) {
-					// This is an exact discount.
-					$discount = (float) preg_replace('/[^0-9.-]/', '', $discount);
-					$discount_price = $price - $discount;
-				} elseif (preg_match('/^-?\d+(\.\d+)?%$/', $discount)) {
-					// This is a percentage discount.
-					$discount = (float) preg_replace('/[^0-9.-]/', '', $discount);
-					$discount_price = $price - ($price * ($discount / 100));
-				}
+				$discount_price = $this->discount_price($price, $discount);
 				// Check that the discount doesn't lower the item's price below the floor.
 				if ($cur_product['entity']->floor && $pines->com_sales->round($discount_price, $pines->config->com_sales->dec) < $pines->com_sales->round($cur_product['entity']->floor, $pines->config->com_sales->dec)) {
 					pines_notice("The discount on {$cur_product['entity']->name} lowers the product's price below the limit. The discount was removed.");
@@ -765,6 +829,9 @@ class com_sales_sale extends entity {
 				}
 			}
 			unset($cur_payment);
+		}
+		if ($this->added_commission) {
+			// TODO: Remove commissions.
 		}
 
 		// Complete the transaction.

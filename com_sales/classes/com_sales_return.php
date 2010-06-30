@@ -279,6 +279,26 @@ class com_sales_return extends entity {
 	}
 
 	/**
+	 * Calculate the discount price based on a flat or percent discount.
+	 * @param float $price The original price.
+	 * @param string $discount The discount to give. Flat discount begins with $, percent ends with %.
+	 * @return float The discounted price.
+	 */
+	public function discount_price($price, $discount) {
+		$discount_price = (float) $price;
+		if (preg_match('/^\$-?\d+(\.\d+)?$/', $discount)) {
+			// This is an exact discount.
+			$discount = (float) preg_replace('/[^0-9.-]/', '', $discount);
+			$discount_price = $price - $discount;
+		} elseif (preg_match('/^-?\d+(\.\d+)?%$/', $discount)) {
+			// This is a percentage discount.
+			$discount = (float) preg_replace('/[^0-9.-]/', '', $discount);
+			$discount_price = $price - ($price * ($discount / 100));
+		}
+		return $discount_price;
+	}
+
+	/**
 	 * Get a product array from an attached sale.
 	 *
 	 * Ignores products that have already been returned.
@@ -572,16 +592,7 @@ class com_sales_return extends entity {
 			$qty = (int) $cur_product['quantity'];
 			$discount = $cur_product['discount'];
 			if ($cur_product['entity']->discountable && $discount != "") {
-				$discount_price = $price;
-				if (preg_match('/^\$-?\d+(\.\d+)?$/', $discount)) {
-					// This is an exact discount.
-					$discount = (float) preg_replace('/[^0-9.-]/', '', $discount);
-					$discount_price = $price - $discount;
-				} elseif (preg_match('/^-?\d+(\.\d+)?%$/', $discount)) {
-					// This is a percentage discount.
-					$discount = (float) preg_replace('/[^0-9.-]/', '', $discount);
-					$discount_price = $price - ($price * ($discount / 100));
-				}
+				$discount_price = $this->discount_price($price, $discount);
 				// Check that the discount doesn't lower the item's price below the floor.
 				if ($cur_product['entity']->floor && $pines->com_sales->round($discount_price, $pines->config->com_sales->dec) < $pines->com_sales->round($cur_product['entity']->floor, $pines->config->com_sales->dec)) {
 					pines_notice("The discount on {$cur_product['entity']->name} lowers the product's price below the limit. The discount was removed.");

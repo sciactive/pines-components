@@ -611,7 +611,7 @@ $pines->com_jstree->load();
 							<span class="pf-label">Type</span>
 							<select class="pf-field ui-widget-content" name="cur_commission_type">
 								<option value="spiff">Spiff (Fixed Amount)</option>
-								<option value="percent_gross">% Gross Sale</option>
+								<option value="percent_price">% Price (Before Tax)</option>
 							</select>
 						</label>
 					</div>

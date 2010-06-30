@@ -79,6 +79,21 @@ $product->non_refundable = ($_REQUEST['non_refundable'] == 'ON');
 $product->additional_barcodes = explode(',', $_REQUEST['additional_barcodes']);
 $product->actions = (array) $_REQUEST['actions'];
 
+// Commission
+if ($pines->config->com_sales->com_hrm) {
+	$product->commissions = (array) json_decode($_REQUEST['commissions']);
+	foreach ($product->commissions as $key => &$cur_commission) {
+		$cur_commission = array(
+			'group' => group::factory((int) $cur_commission->values[0]),
+			'type' => $cur_commission->values[1],
+			'amount' => (float) $cur_commission->values[2]
+		);
+		if (!isset($cur_commission['group']->guid) || !in_array($cur_commission['type'], array('spiff', 'percent_price')))
+			unset($product->commissions[$key]);
+	}
+	unset($cur_commission);
+}
+
 if (empty($product->name)) {
 	$product->print_form();
 	pines_notice('Please specify a name.');

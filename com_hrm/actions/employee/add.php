@@ -22,6 +22,8 @@ foreach ($list as $cur_employee) {
 		$cur_user->timeclock = array();
 	if ((array) $cur_user->employee_attributes !== $cur_user->employee_attributes)
 		$cur_user->employee_attributes = array();
+	if ((array) $cur_user->commissions !== $cur_user->commissions)
+		$cur_user->commissions = array();
 	if ( !isset($cur_user->guid) || !$cur_user->save() )
 		$failed_adds .= (empty($failed_adds) ? '' : ', ').$cur_employee;
 }

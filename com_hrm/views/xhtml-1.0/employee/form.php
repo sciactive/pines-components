@@ -95,6 +95,9 @@ $pines->com_pgrid->load();
 		<ul>
 			<li><a href="#p_muid_tab_general">General</a></li>
 			<li><a href="#p_muid_tab_attributes">Attributes</a></li>
+			<?php if ($pines->config->com_hrm->com_sales) { ?>
+			<li><a href="#p_muid_tab_commissions">Commissions</a></li>
+			<?php } ?>
 		</ul>
 		<div id="p_muid_tab_general">
 			<?php if (isset($this->entity->guid)) { ?>
@@ -193,6 +196,54 @@ $pines->com_pgrid->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
+		<?php if ($pines->config->com_hrm->com_sales) { ?>
+		<script type="text/javascript">
+			// <![CDATA[
+			pines(function(){
+				// Commissions
+				var commissions_table = $("#p_muid_form .commissions_table");
+
+				commissions_table.pgrid({
+					pgrid_view_height: '200px'
+				});
+			});
+			// ]]>
+		</script>
+		<div id="p_muid_tab_commissions">
+			<div class="pf-element pf-full-width">
+				<span class="pf-label">Commissions</span>
+				<div class="pf-group">
+					<table class="commissions_table">
+						<thead>
+							<tr>
+								<th>Date</th>
+								<th>Amount</th>
+								<th>Ticket</th>
+								<th>Product</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php foreach ($this->entity->commissions as $cur_commission) { ?>
+							<tr>
+								<td><?php echo format_date($cur_commission['date']); ?></td>
+								<td><?php echo isset($cur_commission['amount']) ? '$'.number_format($cur_commission['amount'], 2) : ''; ?></td>
+								<td><?php
+								if ($cur_commission['ticket']->has_tag('sale')) {
+									echo "Sale: {$cur_commission['ticket']->id}";
+								} elseif ($cur_commission['ticket']->has_tag('return')) {
+									echo "Return: {$cur_commission['ticket']->id}";
+								}
+								?></td>
+								<td><?php echo "{$cur_commission['product']->guid}: {$cur_commission['product']->name}"; ?></td>
+							</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<br class="pf-clearing" />
+		</div>
+		<?php } ?>
 	</div>
 	<div class="pf-element pf-buttons">
 		<br />

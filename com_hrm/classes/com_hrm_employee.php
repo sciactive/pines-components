@@ -27,6 +27,7 @@ class com_hrm_employee extends user {
 		$this->employee = true;
 		$this->timeclock = array();
 		$this->employee_attributes = array();
+		$this->commissions = array();
 
 		parent::__construct($id);
 	}

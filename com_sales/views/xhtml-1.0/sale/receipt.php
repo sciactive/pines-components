@@ -193,7 +193,10 @@ switch ($this->entity->status) {
 				</tr>
 			</thead>
 			<tbody>
-				<?php if (is_array($this->entity->products)) { foreach ($this->entity->products as $cur_product) { ?>
+				<?php if (is_array($this->entity->products)) { foreach ($this->entity->products as $cur_product) {
+					if ($cur_product['entity']->hide_on_invoice)
+						continue;
+					?>
 				<tr>
 					<td><?php echo $cur_product['entity']->sku; ?></td>
 					<td><?php echo $cur_product['entity']->name; ?></td>

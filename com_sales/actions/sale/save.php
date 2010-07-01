@@ -48,7 +48,7 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != '
 			$cur_sku = $cur_product_entity->sku;
 			$cur_serial = $cur_product->values[2];
 			$cur_delivery = $cur_product->values[3];
-			if (!in_array($cur_delivery, array('in-store', 'shipped')))
+			if (!in_array($cur_delivery, array('in-store', 'shipped', 'pick-up')))
 				$cur_delivery = 'in-store';
 			$cur_qty = (int) $cur_product->values[4];
 			$cur_price = (float) $cur_product->values[5];
@@ -162,7 +162,7 @@ if ($product_error || $payment_error) {
 if ($pines->config->com_sales->global_sales)
 	$sale->ac->other = 1;
 
-if (($_REQUEST['process'] == 'invoice' || $_REQUEST['process'] == 'tender') && $sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != 'voided') {
+if ($_REQUEST['process'] == 'invoice' && $sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != 'voided') {
 	if (!$sale->invoice()) {
 		$sale->print_form();
 		pines_error('There was an error while invoicing the sale. Please check that all information is correct and resubmit.');
@@ -172,9 +172,8 @@ if (($_REQUEST['process'] == 'invoice' || $_REQUEST['process'] == 'tender') && $
 
 if ($_REQUEST['process'] == 'tender' && $sale->status != 'paid' && $sale->status != 'voided') {
 	if (!$sale->complete()) {
-		$sale->save();
 		$sale->print_form();
-		pines_error('There was an error while completing the sale. It has been invoiced, but not completed yet. Please check that all information is correct and resubmit.');
+		pines_error('There was an error while completing the sale. It has not been completed yet. Please check that all information is correct and resubmit.');
 		return;
 	}
 }

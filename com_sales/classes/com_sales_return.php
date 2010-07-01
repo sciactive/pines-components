@@ -264,7 +264,7 @@ class com_sales_return extends entity {
 
 		$this->process_date = time();
 
-		return $return;
+		return ($return && $this->save());
 	}
 
 	/**
@@ -374,6 +374,7 @@ class com_sales_return extends entity {
 			}
 		}
 		unset($cur_product);
+		$this->save();
 	}
 
 	/**
@@ -463,7 +464,7 @@ class com_sales_return extends entity {
 		unset($cur_product);
 		if (isset($this->sale))
 			$return = $return && $this->sale->save();
-		return $return;
+		return ($return && $this->save());
 	}
 
 	/**
@@ -472,6 +473,8 @@ class com_sales_return extends entity {
 	 */
 	public function save() {
 		global $pines;
+		if (!isset($this->status))
+			$this->status = 'quoted';
 		if (!isset($this->id))
 			$this->id = $pines->entity_manager->new_uid('com_sales_return');
 		return parent::save();
@@ -549,7 +552,7 @@ class com_sales_return extends entity {
 		$this->amount_due = $amount_due;
 		if (isset($this->sale))
 			$return = $return && $this->sale->save();
-		return $return;
+		return ($return && $this->save());
 	}
 
 	/**

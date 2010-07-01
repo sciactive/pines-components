@@ -183,6 +183,7 @@ $this->note = 'Provide stock entry details in this form.';
 					<span class="pf-label">Reason</span>
 					<select class="pf-field ui-widget-content" name="location_reason">
 						<?php if (!isset($this->entity) || isset($this->entity->location)) { ?>
+						<option value="location_changed_shipped">Item is Shipped</option>
 						<option value="location_changed_picked_up">Item is Picked Up</option>
 						<option value="location_changed_trashed">Item is Destroyed/Trashed</option>
 						<option value="location_changed_missing">Item is Missing</option>

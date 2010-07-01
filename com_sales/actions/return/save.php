@@ -184,7 +184,6 @@ if ($pines->config->com_sales->global_returns)
 
 if ($_REQUEST['process'] == 'process' && $return->status != 'processed' && $return->status != 'voided') {
 	if (!$return->complete()) {
-		$return->save();
 		$return->print_form();
 		pines_error('There was an error while completing the return. Please check that all information is correct and resubmit.');
 		return;

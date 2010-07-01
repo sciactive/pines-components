@@ -205,12 +205,9 @@ if ($pines->config->com_sales->com_customer)
 						extra_class: 'picon picon-mail-send',
 						multi_select: true,
 						click: function(e, rows){
-							rows.each(function(){
-								var delivery = rows.pgrid_get_value(4);
-								delivery = (delivery == 'in-store') ? 'shipped' : 'in-store';
-								rows.pgrid_set_value(4, delivery);
-							});
-							update_products();
+							delivery_select.find("input[value="+rows.eq(0).pgrid_get_value(4)+"]").attr("checked", "true");
+							delivery_select.find("input").button("refresh");
+							delivery_dialog.dialog("open");
 						}
 					},
 					{
@@ -324,6 +321,20 @@ if ($pines->config->com_sales->com_customer)
 				});
 				update_products();
 			};
+			// Delivery Dialog
+			var delivery_select = $("#p_muid_delivery_select").buttonset().delegate("input", "click", function() {
+				var rows = products_table.pgrid_get_selected_rows();
+				if (!rows)
+					return;
+				rows.pgrid_set_value(4, $(this).val());
+				update_products();
+				delivery_dialog.dialog('close');
+			});
+			var delivery_dialog = $("#p_muid_delivery_dialog").dialog({
+				bgiframe: true,
+				autoOpen: false,
+				modal: true
+			});
 			// Category Grid
 			var category_grid = $("#p_muid_category_grid").pgrid({
 				pgrid_hidden_cols: [1],
@@ -951,6 +962,13 @@ if ($pines->config->com_sales->com_customer)
 			</tbody>
 		</table>
 		<input type="hidden" id="p_muid_products" name="products" size="24" />
+	</div>
+	<div id="p_muid_delivery_dialog" title="Select Delivery Type" style="display: none;">
+		<div id="p_muid_delivery_select" style="text-align: center; padding: 1em;">
+			<input type="radio" name="delivery_type" id="p_muid_deliv_rad1" value="in-store" /><label for="p_muid_deliv_rad1">In Store</label>
+			<input type="radio" name="delivery_type" id="p_muid_deliv_rad2" value="shipped" /><label for="p_muid_deliv_rad2">Shipped</label>
+			<input type="radio" name="delivery_type" id="p_muid_deliv_rad3" value="pick-up" /><label for="p_muid_deliv_rad3">Pick Up</label>
+		</div>
 	</div>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Ticket Totals</span>

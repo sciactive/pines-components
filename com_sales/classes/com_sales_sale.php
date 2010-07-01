@@ -149,10 +149,38 @@ class com_sales_sale extends entity {
 		global $pines;
 		if ($this->status == 'paid' || $this->status == 'voided')
 			return true;
+		if (!is_array($this->products)) {
+			pines_notice('Sale has no products');
+			return false;
+		}
 		if (!is_array($this->payments))
 			return false;
 		// Keep track of the whole process.
 		$return = true;
+		if ($this->status != 'invoiced') {
+			if ($pines->config->com_sales->com_customer && !isset($this->customer)) {
+				foreach ($this->products as &$cur_product) {
+					if (!$cur_product['entity'] || ($cur_product['entity']->require_customer)) {
+						pines_notice('One of the products on this sale requires a customer. Please select a customer for this sale before invoicing.');
+						return false;
+					}
+				}
+				unset($cur_product);
+			}
+			// Calculate and save the sale's totals.
+			if (!$this->total()) {
+				pines_notice('Couldn\'t total sale.');
+				return false;
+			}
+		}
+		// Check stock before tendering payments.
+		// We need to see if stock is already removed here so we don't look it up again.
+		// The sale can be invoiced and tendered by different users with different remove_stock settings.
+		if (!$this->removed_stock) {
+			// Look up stock.
+			if (!$this->get_stock())
+				return false;
+		}
 		if (!$this->approve_payments()) {
 			pines_notice('The sale cannot be completed until all payments have been approved or declined.');
 			return false;
@@ -208,18 +236,18 @@ class com_sales_sale extends entity {
 			}
 		}
 
-		if ($pines->config->com_sales->remove_stock == 'tender') {
+		if (!$this->removed_stock) {
 			// Remove stock.
 			$stock_result = $this->remove_stock();
 			$return = $return && $stock_result;
 			if (!$stock_result)
 				pines_notice('Not all stock could be removed from inventory while tendering. Please check that all stock was correctly entered.');
 		}
-		if ($pines->config->com_sales->perform_actions == 'tender') {
+		if (!$this->performed_actions) {
 			// Perform actions.
 			$this->perform_actions();
 		}
-		if ($pines->config->com_sales->add_commission == 'tender') {
+		if (!$this->added_commission) {
 			// Add commission.
 			$this->add_commission();
 		}
@@ -242,7 +270,7 @@ class com_sales_sale extends entity {
 
 		$this->tender_date = time();
 
-		return $return;
+		return ($return && $this->save());
 	}
 
 	/**
@@ -296,10 +324,76 @@ class com_sales_sale extends entity {
 	}
 
 	/**
+	 * Look up and attach stock entries for products.
+	 *
+	 * @return bool True on success, false on failure.
+	 */
+	public function get_stock() {
+		global $pines;
+		// Go through each product, and find corresponding stock entries.
+		foreach ($this->products as &$cur_product) {
+			// Find the stock entry.
+			// TODO: Ship to customer from different stock (Warehouse).
+			if ($cur_product['entity']->stock_type == 'non_stocked') {
+				$cur_product['stock_entities'] = array();
+			} else {
+				$stock_entities = array();
+				$guids = array();
+				for ($i = 0; $i < $cur_product['quantity']; $i++) {
+					$selector = array('&',
+							'data' => array(
+								array('available', true)
+							),
+							'ref' => array(
+								array('location', $this->group),
+								array('product', $cur_product['entity'])
+							),
+							'tag' => array('com_sales', 'stock')
+						);
+					if ($cur_product['entity']->serialized)
+						$selector['data'][] = array('serial', $cur_product['serial']);
+					if (!$guids) {
+						$stock_entry = $pines->entity_manager->get_entity(array('class' => com_sales_stock), $selector);
+					} else {
+						$stock_entry = $pines->entity_manager->get_entity(
+								array('class' => com_sales_stock),
+								$selector,
+								array('!&',
+									'guid' => $guids
+								)
+							);
+					}
+					if (isset($stock_entry)) {
+						$stock_entities[] = $stock_entry;
+						$guids[] = $stock_entry->guid;
+					} else {
+						if ($cur_product['entity']->stock_type != 'stock_optional') {
+							// It wasn't found, and its not optional.
+							pines_notice("Product with SKU [{$cur_product['sku']}]".($cur_product['entity']->serialized ? " and serial [{$cur_product['serial']}]" : " and quantity {$cur_product['quantity']}")." is not in local stock.".($cur_product['entity']->serialized ? '' : ' Found '.count($stock_entities).'.'));
+							return false;
+						} else {
+							// It wasn't found, but it's optional, so mark this item as shipped if it's marked in-store.
+							// TODO: For multiple quantity items, mark how many need to be shipped.
+							if ($cur_product['delivery'] == 'in-store')
+								$cur_product['delivery'] = 'shipped';
+						}
+					}
+				}
+				$cur_product['stock_entities'] = $stock_entities;
+			}
+		}
+		unset($cur_product);
+		return true;
+	}
+
+	/**
 	 * Invoice the sale.
 	 *
 	 * This process may remove any sold items from stock. Payment is not
 	 * considered.
+	 *
+	 * It doesn't do anything that complete() doesn't do, and complete() can be
+	 * called without calling invoice().
 	 *
 	 * A sale transaction is created, and the sale's status is changed to
 	 * 'invoiced'.
@@ -316,8 +410,6 @@ class com_sales_sale extends entity {
 		}
 		// Keep track of the whole process.
 		$return = true;
-		// These will be searched through to match products to stock entries.
-		$stock_entries = (array) $pines->entity_manager->get_entities(array('class' => com_sales_stock), array('&', 'tag' => array('com_sales', 'stock')));
 		if ($pines->config->com_sales->com_customer && !isset($this->customer)) {
 			foreach ($this->products as &$cur_product) {
 				if (!$cur_product['entity'] || ($cur_product['entity']->require_customer)) {
@@ -332,47 +424,11 @@ class com_sales_sale extends entity {
 			pines_notice('Couldn\'t total sale.');
 			return false;
 		}
-		// Go through each product, and find corresponding stock entries.
-		foreach ($this->products as &$cur_product) {
-			// Find the stock entry.
-			// TODO: Ship to customer from different stock (Warehouse).
-			if ($cur_product['entity']->stock_type == 'non_stocked') {
-				$cur_product['stock_entities'] = array();
-			} else {
-				$stock_entities = array();
-				for ($i = 0; $i < $cur_product['quantity']; $i++) {
-					$found = false;
-					foreach($stock_entries as $key => $cur_stock) {
-						if ((!$cur_stock->available) ||
-							(!$_SESSION['user']->in_group($cur_stock->location)) ||
-							(!$cur_product['entity']->is($cur_stock->product)) ||
-							($cur_product['entity']->serialized && ($cur_product['serial'] != $cur_stock->serial))) {
-							continue;
-						}
-						// One was found, so save it then take it out of our search stock.
-						$found = true;
-						$stock_entities[] = clone $cur_stock;
-						unset($stock_entries[$key]);
-						break;
-					}
-					if (!$found) {
-						if ($cur_product['entity']->stock_type != 'stock_optional') {
-							// It wasn't found, and its not optional.
-							pines_notice("Product with SKU [{$cur_product['sku']}]".($cur_product['entity']->serialized ? " and serial [{$cur_product['serial']}]" : " and quantity {$cur_product['quantity']}")." is not in local stock.".($cur_product['entity']->serialized ? '' : ' Found '.count($stock_entities).'.'));
-							return false;
-						} else {
-							// It wasn't found, but it's optional, so mark this item as shipped.
-							// TODO: For multiple quantity items, mark how many need to be shipped.
-							$cur_product['delivery'] = 'shipped';
-						}
-					}
-				}
-				$cur_product['stock_entities'] = $stock_entities;
-			}
-		}
-		unset($cur_product);
 
 		if ($pines->config->com_sales->remove_stock == 'invoice') {
+			// Look up stock.
+			if (!$this->get_stock())
+				return false;
 			// Remove stock.
 			$stock_result = $this->remove_stock();
 			$return = $return && $stock_result;
@@ -403,7 +459,7 @@ class com_sales_sale extends entity {
 
 		$this->invoice_date = time();
 
-		return $return;
+		return ($return && $this->save());
 	}
 
 	/**
@@ -450,6 +506,7 @@ class com_sales_sale extends entity {
 			}
 		}
 		unset($cur_product);
+		$this->save();
 	}
 
 	/**
@@ -523,15 +580,17 @@ class com_sales_sale extends entity {
 			if (!is_array($cur_product['stock_entities']))
 				continue;
 			foreach ($cur_product['stock_entities'] as &$cur_stock) {
-				if ($cur_product['delivery'] == 'in-store') {
-					$return = $return && $cur_stock->remove('sold_at_store', $this) && $cur_stock->save();
+				if ($cur_product['delivery'] == 'shipped') {
+					$return = $return && $cur_stock->remove('sold_pending_shipping', $this, $cur_stock->location) && $cur_stock->save();
+				} elseif ($cur_product['delivery'] == 'pick-up') {
+					$return = $return && $cur_stock->remove('sold_pending_pickup', $this, $cur_stock->location) && $cur_stock->save();
 				} else {
-					$return = $return && $cur_stock->remove('sold_pending', $this, $cur_stock->location) && $cur_stock->save();
+					$return = $return && $cur_stock->remove('sold_at_store', $this) && $cur_stock->save();
 				}
 			}
 		}
 		unset($cur_product);
-		return $return;
+		return ($return && $this->save());
 	}
 
 	/**
@@ -540,6 +599,8 @@ class com_sales_sale extends entity {
 	 */
 	public function save() {
 		global $pines;
+		if (!isset($this->status))
+			$this->status = 'quoted';
 		if (!isset($this->id))
 			$this->id = $pines->entity_manager->new_uid('com_sales_sale');
 		return parent::save();
@@ -611,7 +672,7 @@ class com_sales_sale extends entity {
 		$this->amount_tendered = $amount_tendered;
 		$this->amount_due = $amount_due;
 		$this->change = $change;
-		return $return;
+		return ($return && $this->save());
 	}
 
 	/**
@@ -699,6 +760,7 @@ class com_sales_sale extends entity {
 			$cur_product['line_total'] = $pines->com_sales->round($line_total, $pines->config->com_sales->dec);
 			$cur_product['fees'] = $pines->com_sales->round($cur_item_fees, $pines->config->com_sales->dec);
 		}
+		unset($cur_product);
 		// The total can now be calculated.
 		$total = $subtotal + $item_fees + $taxes;
 		$this->subtotal = $pines->com_sales->round($subtotal, $pines->config->com_sales->dec);
@@ -858,7 +920,7 @@ class com_sales_sale extends entity {
 		}
 
 		$this->void_date = time();
-		return $return;
+		return ($return && $this->save());
 	}
 }
 

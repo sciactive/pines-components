@@ -120,6 +120,7 @@ foreach ($entities as $stock) {
 		if (!in_array(
 				$_REQUEST['location_reason'],
 				array(
+					'location_changed_shipped',
 					'location_changed_picked_up',
 					'location_changed_trashed',
 					'location_changed_missing',

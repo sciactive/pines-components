@@ -16,6 +16,6 @@ if ( !gatekeeper('com_hrm/viewcalendar') && !gatekeeper('com_hrm/editcalendar') 
 
 $location = group::factory((int) $_REQUEST['location']);
 
-$pines->com_hrm->show_calendar((int) $_REQUEST['id'], $location);
+$pines->com_hrm->show_calendar((int) $_REQUEST['id'], $location, (int) $_REQUEST['rto_id']);
 
 ?>

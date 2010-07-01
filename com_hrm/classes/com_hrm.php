@@ -111,27 +111,40 @@ class com_hrm extends component {
 	}
 
 	/**
+	 * Creates and attaches a module which lists all pending time off requests.
+	 */
+	public function review_timeoff() {
+		global $pines;
+		$pines->page->override = true;
+		$module = new module('com_hrm', 'timeoff/review', 'content');
+		$module->requests = $pines->entity_manager->get_entities(array('class' => com_hrm_rto), array('&', 'data' => array('status', 'pending'), 'tag' => array('com_hrm', 'rto')));
+		$pines->page->override_doc($module->render());
+	}
+	
+	/**
 	 * Creates and attaches a module which shows the calendar.
 	 * @param int $id An event GUID.
 	 * @param group $location The desired location to view the schedule for.
+	 * @param int $rto A time off request GUID.
 	 */
-	public function show_calendar($id = null, $location = null) {
+	public function show_calendar($id = null, $location = null, $rto = null) {
 		global $pines;
 
 		if (!isset($location) || !isset($location->guid))
 			$location = $_SESSION['user']->group;
 
-		if (gatekeeper('com_hrm/editcalendar')) {
-			$form = new module('com_hrm', 'form_calendar', 'right');
-			// If an id is specified, the event info will be displayed for editing.
-			if (isset($id) && $id >  0) {
-				$form->entity = com_hrm_event::factory((int) $id);
-				$location = $form->entity->group;
-			}
-			// Should work like this, we need to have the employee's group update upon saving it to a user.
-			$form->employees = $this->get_employees();
-			$form->location = $location->guid;
+		$form = new module('com_hrm', 'form_calendar', 'right');
+		// If an id is specified, the event info will be displayed for editing.
+		if (isset($id) && $id >  0) {
+			$form->entity = com_hrm_event::factory((int) $id);
+			$location = $form->entity->group;
 		}
+		// Should work like this, we need to have the employee's group update upon saving it to a user.
+		$form->employees = $this->get_employees();
+		$form->location = $location->guid;
+		if (isset($rto) && $rto >  0)
+			$form->rto = com_hrm_rto::factory((int) $rto);
+
 		$calendar_head = new module('com_hrm', 'show_calendar_head', 'head');
 		$calendar = new module('com_hrm', 'show_calendar', 'content');
 		$calendar->events = $pines->entity_manager->get_entities(array('class' => com_hrm_event), array('&', 'ref' => array('group', $location), 'tag' => array('com_hrm', 'event')));

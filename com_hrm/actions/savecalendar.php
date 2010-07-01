@@ -67,7 +67,8 @@ if (isset($_REQUEST['events'])) {
 	$deleted_events = $pines->entity_manager->get_entities(
 			array('class' => com_hrm_event),
 			array('!&',
-				'guid' => $event_list
+				'guid' => $event_list,
+				'data' => array('time_off', true)
 			),
 			array('&',
 				'ref' => array('group', $location),

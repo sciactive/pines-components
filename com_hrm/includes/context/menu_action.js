@@ -10,7 +10,9 @@ function copy(){
 	var copy_count = 0;
 	// Find the selected event(s).
 	jQuery.each(events, function(i, val) {
-		if (val.selected) {
+		if (val.selected && val.editable == false) {
+			alert(val.title+' cannot be deleted.');
+		} else if (val.selected) {
 			if (val.group)
 				copy_events[copy_count] = val.guid;
 			else
@@ -33,11 +35,14 @@ function edit(){
 	// Find the selected event(s).
 	jQuery.each(events, function(i, val) {
 		if (val.selected) {
-			if (val.group)
+			if (val.editable == false)
+				alert(val.title+' is not editable.');
+			else if (val.group)
 				edit_event = val.guid;
 			else
 				edit_event = val.id;
-			edit_count++;
+			if (typeof edit_event != 'undefined')
+				edit_count++;
 		}
 	});
 	if (edit_count == 0) {
@@ -59,7 +64,9 @@ function del(){
 	var remove_count = 0;
 	// Find the selected event(s).
 	jQuery.each(events, function(i, val) {
-		if (val.selected && val.group) {
+		if (val.selected && val.editable == false) {
+			alert(val.title+' cannot be deleted.');
+		} else if (val.selected && val.group) {
 			if (remove_events[remove_count-1] != val.id &&
 				confirm(val.title + ' is a linked event, deleting it will remove the entire group.')) {
 				remove_events[remove_count] = val.id;

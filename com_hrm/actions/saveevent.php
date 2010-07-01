@@ -38,6 +38,8 @@ if (isset($_REQUEST['employee'])) {
 			$pines->com_hrm->show_calendar();
 			return;
 		}
+		if ($event->time_off)
+			return;
 	} else {
 		$event = com_hrm_event::factory();
 		$event->id = 0;
@@ -64,7 +66,7 @@ if (isset($_REQUEST['employee'])) {
 		$event->label = $_REQUEST['event_label'];
 		$event->title = $event->label .' - '. $event->title;
 	}
-	$event->all_day = ($_REQUEST['all_day'] == 'true');
+	$event->all_day = ($_REQUEST['all_day'] == 'ON');
 	$event->start = mktime($event->all_day ? 0 : $_REQUEST['event_start'],0,0,$event_month,$event_day,$event_year);
 	$event->end = mktime($event->all_day ? 23 : $_REQUEST['event_end'],$event->all_day ? 59 : 0,$event->all_day ? 59 : 0,$event_endmonth,$event_endday,$event_endyear);
 	if ($event->all_day) {

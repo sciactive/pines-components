@@ -1,15 +1,7 @@
 <?php
 /**
- * Display a form to enter calendar events.
+ * Display a form to request time off.
  *
- * Built upon:
- *
- * FullCalendar Created by Adam Shaw
- * http://arshaw.com/fullcalendar/
- *
- * Very Simple Context Menu Plugin by Intekhab A Rizvi
- * http://intekhabrizvi.wordpress.com/
- * 
  * @package Pines
  * @subpackage com_hrm
  * @license http://www.gnu.org/licenses/agpl-3.0.html
@@ -25,7 +17,17 @@ defined('P_RUN') or die('Direct access prohibited');
 		text-align: center;
 	}
 	#p_muid_form .form_input {
-		width: 170px;
+		width: 90%;
+	}
+	#p_muid_requests {
+		width: 100%;
+		float: left;
+		clear: both;
+		margin-top: 20px;
+	}
+	#p_muid_requests .ui-state-highlight, #p_muid_requests .ui-state-error {
+		border: 0;
+		background: transparent none;
 	}
 	/* ]]> */
 </style>
@@ -47,37 +49,6 @@ defined('P_RUN') or die('Direct access prohibited');
 			selectOtherMonths: true
 		});
 
-		// Location Tree
-		var location = $("#p_muid_form [name=location]");
-		$("#p_muid_form .location_tree")
-		.bind("select_node.jstree", function(e, data){
-			var selected = data.inst.get_selected().attr("id").replace("p_muid_", "");
-			location.val(selected);
-			update_employees(selected);
-		})
-		.bind("before.jstree", function (e, data){
-			if (data.func == "parse_json" && "args" in data && 0 in data.args && "attr" in data.args[0] && "id" in data.args[0].attr)
-				data.args[0].attr.id = "p_muid_"+data.args[0].attr.id;
-		})
-		.bind("loaded.jstree", function(e, data){
-			var path = data.inst.get_path("#"+data.inst.get_settings().ui.initially_select, true);
-			if (!path.length) return;
-			data.inst.open_node("#"+path.join(", #"), false, true);
-		})
-		.jstree({
-			"plugins" : [ "themes", "json_data", "ui" ],
-			"json_data" : {
-				"ajax" : {
-					"dataType" : "json",
-					"url" : "<?php echo pines_url('com_jstree', 'groupjson'); ?>"
-				}
-			},
-			"ui" : {
-				"select_limit" : 1,
-				"initially_select" : ["p_muid_<?php echo $this->location; ?>"]
-			}
-		});
-
 		var timespan = $("[name=time_start], [name=time_end]", "#p_muid_form");
 		$("#p_muid_form [name=all_day]").change(function(){
 			if ($(this).is(":checked")) {
@@ -93,42 +64,15 @@ defined('P_RUN') or die('Direct access prohibited');
 			if (start_date > end_date)
 				$("#p_muid_end").val($(this).val());
 		}).change();
-
-		// This function reloads the employees when switching between locations.
-		var update_employees = function(group_id){
-			var employee = $("#p_muid_form [name=employee]");
-			employee.empty();
-			<?php
-			// Load employee departments.
-			foreach ($pines->config->com_hrm->employee_departments as $cur_dept) {
-				$cur_dept_info = explode(':', $cur_dept);
-				$cur_name = $cur_dept_info[0];
-				$cur_color = $cur_dept_info[1];
-				$cur_select = (!isset($this->entity->employee->group) && $this->entity->employee == $cur_name) ? 'selected=\"selected\"' : '';
-			?>
-				employee.append("<option value=\"<?php echo $cur_name; ?>:<?php echo $cur_color; ?>\" <?php echo $cur_select; ?>><?php echo $cur_name; ?></option>");
-			<?php }
-			// Load employees for this location.
-			foreach ($this->employees as $cur_employee) {
-				if (!isset($cur_employee->group))
-					continue;
-				$cur_select = (isset($this->entity->employee->group) && $this->entity->employee->is($cur_employee)) ? 'selected=\"selected\"' : ''; ?>
-				if (group_id == <?php echo $cur_employee->group->guid; ?>)
-					employee.append("<option value=\"<?php echo $cur_employee->guid; ?>\" <?php echo $cur_select; ?>><?php echo $cur_employee->name; ?></option>");
-			<?php } ?>
-		};
 	});
 // ]]>
 </script>
-<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_hrm', 'saveevent')); ?>">
-	<div class="pf-element location_tree" style="padding-bottom: 1em;"></div>
+<form class="pf-form" method="post" id="p_muid_form" action="">
 	<div class="pf-element">
-		<select class="ui-widget-content form_input" name="employee"></select>
-	</div>
-	<div class="pf-element">
-		<input class="ui-widget-content form_input" type="text" id="p_muid_event_label" name="event_label" value="<?php echo (isset($this->entity->label)) ? $this->entity->label : 'Label'; ?>" onfocus="if(this.value==this.defaultValue)this.value=''" onblur="if(this.value=='')this.value=this.defaultValue" />
+		<span class="pf-note">Reason for Time Off</span><input class="ui-widget-content form_input" type="text" id="p_muid_reason" name="reason" value="<?php echo $this->entity->reason; ?>" />
 	</div>
 	<?php
+		echo $this->entity->all_day;
 		if ($this->entity->guid) {
 			$start_date = format_date($this->entity->start, 'date_sort');
 			$start_time = format_date($this->entity->start, 'custom', 'H');
@@ -197,7 +141,20 @@ defined('P_RUN') or die('Direct access prohibited');
 			<option value="23" <?php echo ($end_time == '23') ? 'selected="selected"' : ''; ?>>11:00 PM</option>
 		</select>
 	</div>
-	<input type="hidden" name="location" value="<?php echo $this->location; ?>" />
+	<div id="p_muid_requests" class="ui-widget-content ui-corner-all">
+		<div class="pf-form" style="margin: 0 .5em .5em;">
+			<div class="pf-element pf-heading">
+				<h1><span class="ui-state-highlight">Pending</span>/<span class="ui-state-error">Declined</span> Requests</h1>
+			</div>
+			<?php foreach ($this->requests as $cur_request) {
+			$style = ($cur_request->status == 'declined') ? 'ui-state-error' : 'ui-state-highlight'; ?>
+			<div class="pf-element" style="padding-bottom: 0;">
+				<span class="pf-note" style="width: auto;"><?php echo format_date($cur_request->start, 'date_short'); ?></span><a class="pf-field <?php echo $style; ?>" href="<?php echo htmlentities(pines_url('com_hrm', 'editcalendar', array('rto_id' => $cur_request->guid))); ?>"><?php echo $cur_request->reason; ?></a>
+			</div>
+			<?php } ?>
+		</div>
+	</div>
+	<input type="hidden" name="employee" value="<?php echo $_SESSION['user']->guid; ?>" />
 	<?php if (isset($this->entity->guid)) { ?>
 	<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 	<?php } ?>

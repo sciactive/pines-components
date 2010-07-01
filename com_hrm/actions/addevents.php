@@ -20,6 +20,8 @@ if (isset($_REQUEST['events'])) {
 	foreach ($events as $cur_event) {
 		// The event that will be duplicated.
 		$event = com_hrm_event::factory((int) $cur_event);
+		if ($event->time_off)
+			continue;
 		// Create a new event to be our duplicate.
 		$dupe_event = com_hrm_event::factory();
 		if ($dupe_count == 0)

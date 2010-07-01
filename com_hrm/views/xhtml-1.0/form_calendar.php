@@ -11,10 +11,12 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Actions';
+$pines->com_pgrid->load();
 $pines->com_jstree->load();
 ?>
 <script type='text/javascript'>
 	// <![CDATA[
+	<?php if (gatekeeper('com_sales/editcalendar')) { ?>
 	// Change the branch / division of the company.
 	pines.com_hrm_select_branch = function(){
 		$.ajax({
@@ -32,10 +34,9 @@ $pines->com_jstree->load();
 				form.dialog({
 					bgiframe: true,
 					autoOpen: true,
-					height: 275,
 					modal: true,
 					open: function(){
-						form.html(data);
+						form.html(data+"<br />").dialog("option", "position", "center");
 					},
 					close: function(){
 						form.remove();
@@ -68,10 +69,9 @@ $pines->com_jstree->load();
 				form.dialog({
 					bgiframe: true,
 					autoOpen: true,
-					height: 500,
 					modal: true,
 					open: function(){
-						form.html(data);
+						form.html(data+"<br />").dialog("option", "position", "center");
 					},
 					close: function(){
 						form.remove();
@@ -113,10 +113,9 @@ $pines->com_jstree->load();
 				form.dialog({
 					bgiframe: true,
 					autoOpen: true,
-					height: 500,
 					modal: true,
 					open: function(){
-						form.html(data);
+						form.html(data+"<br />").dialog("option", "position", "center");
 					},
 					close: function(){
 						form.remove();
@@ -142,17 +141,102 @@ $pines->com_jstree->load();
 			}
 		});
 	};
+	// Show and approve the requested time off.
+	pines.com_hrm_time_off = function(){
+		$.ajax({
+			url: "<?php echo pines_url('com_hrm', 'timeoff/review'); ?>",
+			type: "POST",
+			dataType: "html",
+			error: function(XMLHttpRequest, textStatus){
+				pines.error("An error occured while trying to retreive the new event form:\n"+XMLHttpRequest.status+": "+textStatus);
+			},
+			success: function(data){
+				if (data == "")
+					return;
+				var form = $("<div title=\"Pending Requests for Time Off\" />");
+				form.dialog({
+					bgiframe: true,
+					autoOpen: true,
+					modal: true,
+					width: 700,
+					open: function(){
+						form.html(data+"<br />").dialog("option", "position", "center");
+					},
+					close: function(){
+						form.remove();
+					}
+				});
+			}
+		});
+	};
 	<?php if (isset($this->entity)) { ?>
 	// Edit the event if there is one to be edited.
 	pines.com_hrm_edit_event();
+	<?php } } ?>
+
+	// Request time off.
+	pines.com_hrm_time_off_form = function(rto_id){
+		$.ajax({
+			url: "<?php echo pines_url('com_hrm', 'timeoff/request'); ?>",
+			type: "POST",
+			dataType: "html",
+			data: {id: rto_id},
+			error: function(XMLHttpRequest, textStatus){
+				pines.error("An error occured while trying to retreive the new event form:\n"+XMLHttpRequest.status+": "+textStatus);
+			},
+			success: function(data){
+				if (data == "")
+					return;
+				var form = $("<div title=\"Time Off Request for "+"<?php echo $_SESSION['user']->name; ?>"+"\" />");
+				form.dialog({
+					bgiframe: true,
+					autoOpen: true,
+					modal: true,
+					open: function(){
+						form.html(data+"<br />").dialog("option", "position", "center");
+					},
+					close: function(){
+						form.remove();
+					},
+					buttons: {
+						"Submit Request": function(){
+							form.dialog('close');
+							pines.post("<?php echo pines_url('com_hrm', 'timeoff/save'); ?>",
+							{
+								id: form.find(":input[name=id]").val(),
+								employee: form.find(":input[name=employee]").val(),
+								reason: form.find(":input[name=reason]").val(),
+								all_day: form.find(":input[name=all_day]").val(),
+								start: form.find(":input[name=start]").val(),
+								end: form.find(":input[name=end]").val(),
+								time_start: form.find(":input[name=time_start]").val(),
+								time_end: form.find(":input[name=time_end]").val()
+							});
+						}
+					}
+				});
+			}
+		});
+	};
+	<?php if (isset($this->rto)) { ?>
+	// Edit the event if there is one to be edited.
+	pines.com_hrm_time_off_form(<?php echo $this->rto->guid; ?>);
 	<?php } ?>
 	// ]]>
 </script>
 <div style="padding: 1em;">
+	<?php if (gatekeeper('com_sales/editcalendar')) { ?>
 	<div style="margin-bottom: 1em;">
 		<input style="width: 100%;" class="ui-state-default ui-priority-primary ui-corner-all" type="button" value="Change Branch" onclick="pines.com_hrm_select_branch();" />
 	</div>
-	<div>
+	<div style="margin-bottom: 1em;">
 		<input style="width: 100%;" class="ui-state-default ui-priority-primary ui-corner-all" type="button" value="New Event" onclick="pines.com_hrm_new_event();" />
+	</div>
+	<div style="margin-bottom: 1em;">
+		<input style="width: 100%;" class="ui-state-default ui-priority-primary ui-corner-all" type="button" value="RTO" onclick="pines.com_hrm_time_off();" />
+	</div>
+	<?php } ?>
+	<div>
+		<input style="width: 100%;" class="ui-state-default ui-priority-primary ui-corner-all" type="button" value="Request Time Off" onclick="pines.com_hrm_time_off_form();" />
 	</div>
 </div>

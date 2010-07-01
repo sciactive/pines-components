@@ -63,6 +63,7 @@ $this->title = 'Company Schedule [' . $this->location->name . ']';
 					echo 'start: '. $cur_event->start .',';
 					echo 'end: '. $cur_event->end .',';
 					echo 'className: \''. $cur_event->color .'\',';
+					echo ($cur_event->time_off) ? 'editable: false,' : 'editable: true,';
 					echo ($cur_event->all_day) ? 'allDay: true' : 'allDay: false';
 					echo '}';
 					$event_counter++;

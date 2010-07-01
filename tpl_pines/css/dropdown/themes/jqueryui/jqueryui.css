@@ -38,7 +38,7 @@ ul.dropdown li a {
 /* -- level mark -- */
 
 ul.dropdown ul {
-	min-width: 125px;
+	min-width: 10em;
 	width: auto;
 	margin: 0;
 	padding: 0;

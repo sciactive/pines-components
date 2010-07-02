@@ -77,6 +77,7 @@ class com_sales_product extends entity {
 		foreach ($categories as &$cur_cat) {
 			$cur_cat = $cur_cat->guid;
 		}
+		unset($cur_cat);
 		return $categories;
 	}
 

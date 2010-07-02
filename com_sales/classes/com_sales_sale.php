@@ -149,12 +149,10 @@ class com_sales_sale extends entity {
 		global $pines;
 		if ($this->status == 'paid' || $this->status == 'voided')
 			return true;
-		if (!is_array($this->products)) {
+		if (empty($this->products)) {
 			pines_notice('Sale has no products');
 			return false;
 		}
-		if (!is_array($this->payments))
-			return false;
 		// Keep track of the whole process.
 		$return = true;
 		if ($this->status != 'invoiced') {
@@ -172,6 +170,10 @@ class com_sales_sale extends entity {
 				pines_notice('Couldn\'t total sale.');
 				return false;
 			}
+		}
+		if (empty($this->payments) && $this->total > 0) {
+			pines_notice('Sale has no payments');
+			return false;
 		}
 		// Check stock before tendering payments.
 		// We need to see if stock is already removed here so we don't look it up again.
@@ -345,11 +347,15 @@ class com_sales_sale extends entity {
 								array('available', true)
 							),
 							'ref' => array(
-								array('location', $this->group),
 								array('product', $cur_product['entity'])
 							),
 							'tag' => array('com_sales', 'stock')
 						);
+					if (isset($this->group)) {
+						$selector['ref'][] = array('location', $this->group);
+					} elseif (isset($_SESSION['user']->group)) {
+						$selector['ref'][] = array('location', $_SESSION['user']->group);
+					}
 					if ($cur_product['entity']->serialized)
 						$selector['data'][] = array('serial', $cur_product['serial']);
 					if (!$guids) {

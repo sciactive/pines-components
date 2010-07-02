@@ -166,12 +166,10 @@ class com_sales_return extends entity {
 		global $pines;
 		if ($this->status == 'processed' || $this->status == 'voided')
 			return true;
-		if (!is_array($this->products)) {
-			pines_notice('Sale has no products');
+		if (empty($this->products)) {
+			pines_notice('Return has no products');
 			return false;
 		}
-		if (!is_array($this->payments))
-			return false;
 		if (isset($this->sale) && !$this->sale->save()) {
 			// If the sale can't be modified, processing will fail.
 			pines_error('The sale could not be modified. Do you have permission?');
@@ -192,6 +190,10 @@ class com_sales_return extends entity {
 		// Calculate and save the return's totals.
 		if (!$this->total()) {
 			pines_notice('Couldn\'t total return.');
+			return false;
+		}
+		if (empty($this->payments) && $this->total > 0) {
+			pines_notice('Return has no payments');
 			return false;
 		}
 		// Go through each product, and find/create corresponding stock entries.

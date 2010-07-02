@@ -72,6 +72,7 @@ class com_content_article extends entity {
 		foreach ($categories as &$cur_cat) {
 			$cur_cat = $cur_cat->guid;
 		}
+		unset($cur_cat);
 		return $categories;
 	}
 

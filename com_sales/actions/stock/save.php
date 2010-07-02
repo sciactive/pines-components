@@ -13,14 +13,12 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_sales/managestock') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'stock/list'));
-$list = explode(',', $_REQUEST['id']);
+$list = array_map('intval', explode(',', $_REQUEST['id']));
 
 if (empty($list)) {
 	pines_notice('No inventory specified!');
 	return;
 }
-
-array_walk($list, 'intval');
 
 $entities = (array) $pines->entity_manager->get_entities(
 		array('class' => com_sales_stock),

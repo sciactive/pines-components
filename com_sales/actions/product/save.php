@@ -118,10 +118,9 @@ if ($product->save()) {
 	pines_notice('Saved product ['.$product->name.']');
 	// Assign the product to the selected categories.
 	// We have to do this here, because new products won't have a GUID until now.
-	$categories = (array) json_decode($_REQUEST['categories']);
-	array_map('intval', $categories);
-	$all_categories = $pines->entity_manager->get_entities(array('class' => com_sales_category), array('&', 'tag' => array('com_sales', 'category')));
-	foreach($all_categories as $cur_cat) {
+	$categories = array_map('intval', $_REQUEST['categories']);
+	$all_categories = $pines->entity_manager->get_entities(array('class' => com_sales_category), array('&', 'data' => array('enabled', true), 'tag' => array('com_sales', 'category')));
+	foreach($all_categories as &$cur_cat) {
 		if (in_array($cur_cat->guid, $categories) && !$product->in_array($cur_cat->products)) {
 			$cur_cat->products[] = $product;
 			if (!$cur_cat->save())
@@ -133,6 +132,7 @@ if ($product->save()) {
 				pines_error("Couldn't remove product from category {$cur_cat->name}. Do you have permission?");
 		}
 	}
+	unset($cur_cat);
 } else {
 	pines_error('Error saving product. Do you have permission?');
 }

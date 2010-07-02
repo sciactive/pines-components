@@ -95,8 +95,7 @@ if ( gatekeeper('com_user/assigngroup') ) {
 		}
 	}
 	$group = group::factory((int) $_REQUEST['group']);
-	$groups = (array) $_REQUEST['groups'];
-	array_walk($groups, 'intval');
+	$groups = array_map('intval', (array) $_REQUEST['groups']);
 	foreach ($primary_groups as $cur_group) {
 		if ($cur_group->is($group)) {
 			$user->group = $group;

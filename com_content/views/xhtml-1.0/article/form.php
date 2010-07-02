@@ -27,7 +27,7 @@ $pines->com_ptags->load();
 	<div id="p_muid_article_tabs" style="clear: both;">
 		<ul>
 			<li><a href="#p_muid_tab_general">General</a></li>
-			<li><a href="#p_muid_tab_images">Images</a></li>
+			<li><a href="#p_muid_tab_categories">Categories</a></li>
 			<li><a href="#p_muid_tab_advanced">Advanced</a></li>
 		</ul>
 		<div id="p_muid_tab_general">
@@ -77,75 +77,6 @@ $pines->com_ptags->load();
 				<label><span class="pf-label">Enabled</span>
 					<input class="pf-field ui-widget-content" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
-			<div class="pf-element">
-				<span class="pf-label">Categories</span>
-				<script type="text/javascript">
-					// <![CDATA[
-					pines(function(){
-						var input = $("#p_muid_categories");
-						var selected_rows = JSON.parse("<?php echo addslashes(json_encode($this->entity->get_categories_guid())); ?>");
-						// Category Grid
-						var category_grid = $("#p_muid_category_grid").pgrid({
-							pgrid_hidden_cols: [1],
-							pgrid_sort_col: 1,
-							pgrid_sort_ord: "asc",
-							pgrid_paginate: false,
-							pgrid_view_height: "300px"
-						});
-						input.val(JSON.stringify(selected_rows));
-
-						// Category Dialog
-						var category_dialog = $("#p_muid_category_dialog").dialog({
-							bgiframe: true,
-							autoOpen: false,
-							modal: true,
-							width: 600,
-							open: function() {
-								category_grid.pgrid_get_selected_rows().pgrid_deselect_rows();
-								category_grid.pgrid_select_rows(selected_rows);
-							},
-							buttons: {
-								'Done': function() {
-									var new_selected_rows = category_grid.pgrid_get_selected_rows();
-									selected_rows = [];
-									new_selected_rows.each(function(){
-										selected_rows.push(parseInt($(this).attr("title")));
-									});
-									input.val(JSON.stringify(selected_rows));
-									$(this).dialog('close');
-								}
-							}
-						});
-
-						$('#p_muid_category_button').click(function() {
-							category_dialog.dialog('open');
-						});
-					});
-					// ]]>
-				</script>
-				<button id="p_muid_category_button" class="pf-field ui-state-default ui-corner-all" type="button">Pick Categories</button>
-				<input id="p_muid_categories" type="hidden" name="categories" />
-			</div>
-			<div id="p_muid_category_dialog" title="Categories" style="display: none;">
-				<table id="p_muid_category_grid">
-					<thead>
-						<tr>
-							<th>Order</th>
-							<th>Name</th>
-							<th>Articles</th>
-						</tr>
-					</thead>
-					<tbody>
-					<?php foreach($this->categories as $category) { ?>
-						<tr title="<?php echo $category->guid; ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? "child {$category->parent->guid} " : ''; ?>">
-							<td><?php echo isset($category->parent) ? $category->array_search($category->parent->children) + 1 : '0' ; ?></td>
-							<td><?php echo $category->name; ?></td>
-							<td><?php echo count($category->articles); ?></td>
-						</tr>
-					<?php } ?>
-					</tbody>
-				</table>
-			</div>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Tags</span>
 				<div class="pf-group">
@@ -173,11 +104,60 @@ $pines->com_ptags->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="p_muid_tab_images">
-			<div class="pf-element">
-				<label><span class="pf-label">Upload a New Picture</span>
-					<span class="pf-note">Doesn't work yet.</span>
-					<input class="pf-field ui-widget-content" type="file" name="image_upload" /></label>
+		<div id="p_muid_tab_categories">
+			<div class="pf-element pf-full-width">
+				<script type="text/javascript">
+					// <![CDATA[
+					pines(function(){
+						// Category Grid
+						$("#p_muid_category_grid").pgrid({
+							pgrid_toolbar: true,
+							pgrid_toolbar_contents: [
+								{type: 'button', text: 'Expand', title: 'Expand All', extra_class: 'picon picon-arrow-down', selection_optional: true, return_all_rows: true, click: function(e, rows){
+									rows.pgrid_expand_rows();
+								}},
+								{type: 'button', text: 'Collapse', title: 'Collapse All', extra_class: 'picon picon-arrow-right', selection_optional: true, return_all_rows: true, click: function(e, rows){
+									rows.pgrid_collapse_rows();
+								}},
+								{type: 'separator'},
+								{type: 'button', text: 'All', title: 'Check All', extra_class: 'picon picon-checkbox', selection_optional: true, return_all_rows: true, click: function(e, rows){
+									$("input", rows).attr("checked", "true");
+								}},
+								{type: 'button', text: 'None', title: 'Check None', extra_class: 'picon picon-dialog-cancel', selection_optional: true, return_all_rows: true, click: function(e, rows){
+									$("input", rows).removeAttr("checked");
+								}}
+							],
+							pgrid_hidden_cols: [1],
+							pgrid_sort_col: 1,
+							pgrid_sort_ord: "asc",
+							pgrid_paginate: false,
+							pgrid_view_height: "300px"
+						});
+					});
+					// ]]>
+				</script>
+				<table id="p_muid_category_grid">
+					<thead>
+						<tr>
+							<th>Order</th>
+							<th>In</th>
+							<th>Name</th>
+							<th>Articles</th>
+						</tr>
+					</thead>
+					<tbody>
+					<?php
+					$category_guids = $this->entity->get_categories_guid();
+					foreach($this->categories as $cur_category) { ?>
+						<tr title="<?php echo $cur_category->guid; ?>" class="<?php echo $cur_category->children ? 'parent ' : ''; ?><?php echo isset($cur_category->parent) ? "child {$cur_category->parent->guid} " : ''; ?>">
+							<td><?php echo isset($cur_category->parent) ? $cur_category->array_search($cur_category->parent->children) + 1 : '0' ; ?></td>
+							<td><input type="checkbox" name="categories[]" value="<?php echo $cur_category->guid; ?>" <?php echo in_array($cur_category->guid, $category_guids) ? 'checked="checked" ' : ''; ?>/></td>
+							<td><?php echo $cur_category->name; ?></td>
+							<td><?php echo count($cur_category->articles); ?></td>
+						</tr>
+					<?php } ?>
+					</tbody>
+				</table>
 			</div>
 			<br class="pf-clearing" />
 		</div>

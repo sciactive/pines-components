@@ -28,7 +28,7 @@ if ( isset($_REQUEST['id']) ) {
 $ranking->name = $_REQUEST['ranking_name'];
 $ranking->start_date = strtotime('00:00', strtotime($_REQUEST['start']));
 $ranking->end_date = strtotime('23:59', strtotime($_REQUEST['end']));
-$ranking->goals = array_map('intval', $_REQUEST['goals']);
+$ranking->goals = array_map('floatval', $_REQUEST['goals']);
 $ranking->top_location = group::factory((int) $_REQUEST['top_location']);
 if (!isset($ranking->top_location->guid))
 	$ranking->top_location = $_SESSION['user']->group;

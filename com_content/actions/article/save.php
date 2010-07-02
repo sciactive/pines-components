@@ -63,10 +63,9 @@ if ($article->save()) {
 	pines_notice('Saved article ['.$article->name.']');
 	// Assign the article to the selected categories.
 	// We have to do this here, because new articles won't have a GUID until now.
-	$categories = (array) json_decode($_REQUEST['categories']);
-	array_map('intval', $categories);
-	$all_categories = $pines->entity_manager->get_entities(array('class' => com_content_category), array('&', 'tag' => array('com_content', 'category')));
-	foreach($all_categories as $cur_cat) {
+	$categories = array_map('intval', $_REQUEST['categories']);
+	$all_categories = $pines->entity_manager->get_entities(array('class' => com_content_category), array('&', 'data' => array('enabled', true), 'tag' => array('com_content', 'category')));
+	foreach($all_categories as &$cur_cat) {
 		if (in_array($cur_cat->guid, $categories) && !$article->in_array($cur_cat->articles)) {
 			$cur_cat->articles[] = $article;
 			if (!$cur_cat->save())
@@ -78,6 +77,7 @@ if ($article->save()) {
 				pines_error("Couldn't remove article from category {$cur_cat->name}. Do you have permission?");
 		}
 	}
+	unset($cur_cat);
 } else {
 	pines_error('Error saving article. Do you have permission?');
 }

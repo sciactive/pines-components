@@ -45,7 +45,8 @@ $pines->com_pgrid->load();
 						update_attributes();
 					}
 				}
-			]
+			],
+			pgrid_view_height: "300px"
 		});
 
 		// Attribute Dialog
@@ -127,28 +128,25 @@ $pines->com_pgrid->load();
 		</div>
 		<div id="p_muid_tab_attributes">
 			<div class="pf-element pf-full-width">
-				<span class="pf-label">Attributes</span>
-				<div class="pf-group">
-					<table class="attributes_table">
-						<thead>
-							<tr>
-								<th>Name</th>
-								<th>Value</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php foreach ($this->entity->attributes as $cur_attribute) { ?>
-							<tr>
-								<td><?php echo $cur_attribute['name']; ?></td>
-								<td><?php echo $cur_attribute['value']; ?></td>
-							</tr>
-							<?php } ?>
-						</tbody>
-					</table>
-					<input type="hidden" name="attributes" />
-				</div>
+				<table class="attributes_table">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Value</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ($this->entity->attributes as $cur_attribute) { ?>
+						<tr>
+							<td><?php echo $cur_attribute['name']; ?></td>
+							<td><?php echo $cur_attribute['value']; ?></td>
+						</tr>
+						<?php } ?>
+					</tbody>
+				</table>
+				<input type="hidden" name="attributes" />
 			</div>
-			<div class="attribute_dialog" style="display: none;" title="Add an Attribute">
+			<div class="attribute_dialog" title="Add an Attribute" style="display: none;">
 				<div class="pf-form">
 					<div class="pf-element">
 						<label>

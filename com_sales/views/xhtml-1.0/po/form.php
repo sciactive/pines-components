@@ -126,7 +126,6 @@ if ($this->entity->final)
 			<?php if (!$this->entity->final && empty($this->entity->received)) { ?>
 			products_table.pgrid({
 				pgrid_paginate: false,
-				pgrid_height: '300px;',
 				pgrid_toolbar: true,
 				pgrid_toolbar_contents : [
 					{
@@ -165,7 +164,8 @@ if ($this->entity->final)
 							update_products();
 						}
 					}
-				]
+				],
+				pgrid_view_height: "300px"
 			});
 			<?php } else { ?>
 			products_table.pgrid({
@@ -176,7 +176,7 @@ if ($this->entity->final)
 			available_products_table.pgrid({
 				pgrid_multi_select: false,
 				pgrid_paginate: false,
-				pgrid_height: '400px;'
+				pgrid_view_height: "300px"
 			});
 
 			// Product Dialog

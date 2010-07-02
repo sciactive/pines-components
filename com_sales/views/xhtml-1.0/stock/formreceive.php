@@ -138,7 +138,8 @@ $pines->com_jstree->load();
 							update_products();
 						}
 					}
-				]
+				],
+				pgrid_view_height: "300px"
 			});
 			var add_product = function(data){
 				var serial = "";

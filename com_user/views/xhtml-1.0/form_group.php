@@ -45,7 +45,8 @@ $pines->uploader->load();
 						update_attributes();
 					}
 				}
-			]
+			],
+			pgrid_view_height: "300px"
 		});
 
 		// Attribute Dialog
@@ -95,7 +96,6 @@ $pines->uploader->load();
 
 		conditions_table.pgrid({
 			pgrid_paginate: false,
-			pgrid_view_height: '200px',
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents : [
 				{
@@ -129,7 +129,8 @@ $pines->uploader->load();
 						update_conditions();
 					}
 				}
-			]
+			],
+			pgrid_view_height: "300px"
 		});
 
 		// Condition Dialog
@@ -466,30 +467,28 @@ $pines->uploader->load();
 		<?php } ?>
 		<?php if ($pines->config->com_user->conditional_groups && $this->display_conditions) { ?>
 		<div id="p_muid_tab_conditions">
+			<div class="pf-element pf-heading">
+				<h1>Ability Conditions</h1>
+				<p>Users will only inherit abilities from this group if these conditions are met.</p>
+			</div>
 			<div class="pf-element pf-full-width">
-				<span class="pf-label">Ability Conditions</span>
-				<span class="pf-note">Users will only inherit abilities from this group if these conditions are met.</span>
-				<div class="pf-group">
-					<div class="pf-field">
-						<table class="conditions_table">
-							<thead>
-								<tr>
-									<th>Type</th>
-									<th>Value</th>
-								</tr>
-							</thead>
-							<tbody>
-								<?php if (isset($this->entity->conditions)) foreach ($this->entity->conditions as $cur_key => $cur_value) { ?>
-								<tr>
-									<td><?php echo $cur_key; ?></td>
-									<td><?php echo $cur_value; ?></td>
-								</tr>
-								<?php } ?>
-							</tbody>
-						</table>
-						<input type="hidden" name="conditions" />
-					</div>
-				</div>
+				<table class="conditions_table">
+					<thead>
+						<tr>
+							<th>Type</th>
+							<th>Value</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php if (isset($this->entity->conditions)) foreach ($this->entity->conditions as $cur_key => $cur_value) { ?>
+						<tr>
+							<td><?php echo $cur_key; ?></td>
+							<td><?php echo $cur_value; ?></td>
+						</tr>
+						<?php } ?>
+					</tbody>
+				</table>
+				<input type="hidden" name="conditions" />
 			</div>
 			<div class="condition_dialog" style="display: none;" title="Add a Condition">
 				<div class="pf-form">
@@ -516,20 +515,17 @@ $pines->uploader->load();
 		<?php } ?>
 		<div id="p_muid_tab_attributes">
 			<div class="pf-element pf-full-width">
-				<span class="pf-label">Attributes</span>
-				<div class="pf-group">
-					<table class="attributes_table">
-						<thead>
-							<tr><th>Name</th><th>Value</th></tr>
-						</thead>
-						<tbody>
-							<?php foreach ($this->entity->attributes as $cur_attribute) { ?>
-							<tr><td><?php echo $cur_attribute['name']; ?></td><td><?php echo $cur_attribute['value']; ?></td></tr>
-							<?php } ?>
-						</tbody>
-					</table>
-					<input type="hidden" name="attributes" />
-				</div>
+				<table class="attributes_table">
+					<thead>
+						<tr><th>Name</th><th>Value</th></tr>
+					</thead>
+					<tbody>
+						<?php foreach ($this->entity->attributes as $cur_attribute) { ?>
+						<tr><td><?php echo $cur_attribute['name']; ?></td><td><?php echo $cur_attribute['value']; ?></td></tr>
+						<?php } ?>
+					</tbody>
+				</table>
+				<input type="hidden" name="attributes" />
 			</div>
 			<div class="attribute_dialog" style="display: none;" title="Add an Attribute">
 				<div class="pf-form">

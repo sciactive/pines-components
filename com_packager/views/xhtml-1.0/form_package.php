@@ -26,7 +26,6 @@ $pines->com_pgrid->load();
 
 		conditions_table.pgrid({
 			pgrid_paginate: false,
-			pgrid_view_height: '200px',
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents : [
 				{
@@ -61,7 +60,8 @@ $pines->com_pgrid->load();
 						update_conditions();
 					}
 				}
-			]
+			],
+			pgrid_view_height: "200px"
 		});
 
 		// Condition Dialog
@@ -151,20 +151,23 @@ $pines->com_pgrid->load();
 				<script type="text/javascript">
 					// <![CDATA[
 					pines(function(){
-						$("#p_muid_form input[name=type]").change(function(){
+						$("input[name=type]", "#p_muid_type_radio").change(function(){
 							var class_name = $("#p_muid_form input[name=type]:checked").val();
 							$("#p_muid_form div.package_type").hide();
 							$("#p_muid_form div.package_type."+class_name).show();
 						}).change();
+						$("#p_muid_type_radio").buttonset();
 					});
 					// ]]>
 				</script>
 				<span class="pf-label">Type</span>
 				<div class="pf-group">
-					<label><input class="pf-field ui-state-default" type="radio" name="type" value="component"<?php echo (($this->entity->type == 'component') ? ' checked="checked"' : ''); ?> /> Component</label>
-					<label><input class="pf-field ui-state-default" type="radio" name="type" value="template"<?php echo (($this->entity->type == 'template') ? ' checked="checked"' : ''); ?> /> Template</label>
-					<label><input class="pf-field ui-state-default" type="radio" name="type" value="system"<?php echo (($this->entity->type == 'system') ? ' checked="checked"' : ''); ?> /> System</label>
-					<label><input class="pf-field ui-state-default" type="radio" name="type" value="meta"<?php echo (($this->entity->type == 'meta') ? ' checked="checked"' : ''); ?> /> Meta Package</label>
+					<div id="p_muid_type_radio">
+						<input class="pf-field ui-state-default" type="radio" name="type" id="p_muid_radio1" value="component"<?php echo (($this->entity->type == 'component') ? ' checked="checked"' : ''); ?> /><label for="p_muid_radio1">Component</label>
+						<input class="pf-field ui-state-default" type="radio" name="type" id="p_muid_radio2" value="template"<?php echo (($this->entity->type == 'template') ? ' checked="checked"' : ''); ?> /><label for="p_muid_radio2">Template</label>
+						<input class="pf-field ui-state-default" type="radio" name="type" id="p_muid_radio3" value="system"<?php echo (($this->entity->type == 'system') ? ' checked="checked"' : ''); ?> /><label for="p_muid_radio3">System</label>
+						<input class="pf-field ui-state-default" type="radio" name="type" id="p_muid_radio4" value="meta"<?php echo (($this->entity->type == 'meta') ? ' checked="checked"' : ''); ?> /><label for="p_muid_radio4">Meta Package</label>
+					</div>
 				</div>
 			</div>
 			<div class="package_type component">
@@ -214,11 +217,9 @@ $pines->com_pgrid->load();
 				<div class="pf-element">
 					<label>
 						<span class="pf-label">Package Name</span>
+						<span class="pf-note">Information will be gathered from the system's info file.</span>
 						<input class="pf-field ui-widget-content" type="text" name="system_package_name" size="24" value="<?php echo $this->entity->name; ?>" onkeyup="this.value = this.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');" />
 					</label>
-				</div>
-				<div class="pf-element">
-					<span>No other options are available for system packages. Information will be gathered from the system's info file.</span>
 				</div>
 			</div>
 			<div class="package_type meta">

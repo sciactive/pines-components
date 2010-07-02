@@ -266,28 +266,30 @@ $pines->com_ptags->load();
 			</div>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Vendors</span>
-				<div id="p_muid_vendors_field" class="pf-field pf-full-width">
-					<table id="p_muid_vendors_table">
-						<thead>
-							<tr>
-								<th>Vendor</th>
-								<th>Vendor SKU</th>
-								<th>Cost</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php if (is_array($this->entity->vendors)) { foreach ($this->entity->vendors as $cur_vendor) { ?>
-							<tr title="<?php echo $cur_vendor['entity']->guid; ?>">
-								<td><?php echo $cur_vendor['entity']->name; ?></td>
-								<td><?php echo $cur_vendor['sku']; ?></td>
-								<td><?php echo $cur_vendor['cost']; ?></td>
-							</tr>
-							<?php } } ?>
-						</tbody>
-					</table>
+				<div id="p_muid_vendors_field" class="pf-group">
+					<div class="pf-field">
+						<table id="p_muid_vendors_table">
+							<thead>
+								<tr>
+									<th>Vendor</th>
+									<th>Vendor SKU</th>
+									<th>Cost</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php if (is_array($this->entity->vendors)) { foreach ($this->entity->vendors as $cur_vendor) { ?>
+								<tr title="<?php echo $cur_vendor['entity']->guid; ?>">
+									<td><?php echo $cur_vendor['entity']->name; ?></td>
+									<td><?php echo $cur_vendor['sku']; ?></td>
+									<td><?php echo $cur_vendor['cost']; ?></td>
+								</tr>
+								<?php } } ?>
+							</tbody>
+						</table>
+					</div>
+					<input type="hidden" id="p_muid_vendors" name="vendors" size="24" />
 				</div>
 				<span id="p_muid_vendors_hidden" class="pf-field" style="display: none;">Vendors cannot be selected for non stocked items.</span>
-				<input type="hidden" id="p_muid_vendors" name="vendors" size="24" />
 			</div>
 			<div id="p_muid_vendor_dialog" title="Add a Vendor">
 				<table id="p_muid_available_vendors_table">

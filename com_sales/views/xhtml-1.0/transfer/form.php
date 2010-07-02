@@ -52,7 +52,6 @@ if ($this->entity->final)
 			<?php if (!$this->entity->final && empty($this->entity->received)) { ?>
 			stock_table.pgrid({
 				pgrid_paginate: false,
-				pgrid_view_height: "300px",
 				pgrid_toolbar: true,
 				pgrid_toolbar_contents : [
 					{
@@ -74,7 +73,8 @@ if ($this->entity->final)
 							update_stock();
 						}
 					}
-				]
+				],
+				pgrid_view_height: "300px"
 			});
 			<?php } else { ?>
 			stock_table.pgrid({
@@ -84,7 +84,7 @@ if ($this->entity->final)
 			// Needs to be gridified before it's hidden.
 			available_stock_table.pgrid({
 				pgrid_paginate: false,
-				pgrid_height: '400px;'
+				pgrid_view_height: "300px"
 			}).pgrid_get_all_rows().pgrid_delete();
 			available_stock_table.pgrid_add(available_stock);
 

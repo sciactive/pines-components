@@ -45,7 +45,8 @@ $pines->com_pgrid->load();
 						update_attributes();
 					}
 				}
-			]
+			],
+			pgrid_view_height: "300px"
 		});
 
 		// Attribute Dialog
@@ -156,26 +157,23 @@ $pines->com_pgrid->load();
 		</div>
 		<div id="p_muid_tab_attributes">
 			<div class="pf-element pf-full-width">
-				<span class="pf-label">Attributes</span>
-				<div class="pf-group">
-					<table class="attributes_table">
-						<thead>
-							<tr>
-								<th>Name</th>
-								<th>Value</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php foreach ($this->entity->employee_attributes as $cur_attribute) { ?>
-							<tr>
-								<td><?php echo $cur_attribute['name']; ?></td>
-								<td><?php echo $cur_attribute['value']; ?></td>
-							</tr>
-							<?php } ?>
-						</tbody>
-					</table>
-					<input type="hidden" name="attributes" />
-				</div>
+				<table class="attributes_table">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Value</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ($this->entity->employee_attributes as $cur_attribute) { ?>
+						<tr>
+							<td><?php echo $cur_attribute['name']; ?></td>
+							<td><?php echo $cur_attribute['value']; ?></td>
+						</tr>
+						<?php } ?>
+					</tbody>
+				</table>
+				<input type="hidden" name="attributes" />
 			</div>
 			<div class="attribute_dialog" style="display: none;" title="Add an Attribute">
 				<div class="pf-form">
@@ -204,44 +202,41 @@ $pines->com_pgrid->load();
 				var commissions_table = $("#p_muid_form .commissions_table");
 
 				commissions_table.pgrid({
-					pgrid_view_height: '200px'
+					pgrid_view_height: "300px"
 				});
 			});
 			// ]]>
 		</script>
 		<div id="p_muid_tab_commissions">
 			<div class="pf-element pf-full-width">
-				<span class="pf-label">Commissions</span>
-				<div class="pf-group">
-					<table class="commissions_table">
-						<thead>
-							<tr>
-								<th>Date</th>
-								<th>Amount</th>
-								<th>Ticket</th>
-								<th>Product</th>
-								<th>Note</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php foreach ($this->entity->commissions as $cur_commission) { ?>
-							<tr>
-								<td><?php echo format_date($cur_commission['date']); ?></td>
-								<td style="text-align: right;"><?php echo isset($cur_commission['amount']) ? '$'.number_format($cur_commission['amount'], 2) : ''; ?></td>
-								<td><?php
-								if ($cur_commission['ticket']->has_tag('sale')) {
-									echo "Sale: {$cur_commission['ticket']->id}";
-								} elseif ($cur_commission['ticket']->has_tag('return')) {
-									echo "Return: {$cur_commission['ticket']->id}";
-								}
-								?></td>
-								<td><?php echo "{$cur_commission['product']->guid}: {$cur_commission['product']->name}"; ?></td>
-								<td><?php echo $cur_commission['note']; ?></td>
-							</tr>
-							<?php } ?>
-						</tbody>
-					</table>
-				</div>
+				<table class="commissions_table">
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>Amount</th>
+							<th>Ticket</th>
+							<th>Product</th>
+							<th>Note</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ($this->entity->commissions as $cur_commission) { ?>
+						<tr>
+							<td><?php echo format_date($cur_commission['date']); ?></td>
+							<td style="text-align: right;"><?php echo isset($cur_commission['amount']) ? '$'.number_format($cur_commission['amount'], 2) : ''; ?></td>
+							<td><?php
+							if ($cur_commission['ticket']->has_tag('sale')) {
+								echo "Sale: {$cur_commission['ticket']->id}";
+							} elseif ($cur_commission['ticket']->has_tag('return')) {
+								echo "Return: {$cur_commission['ticket']->id}";
+							}
+							?></td>
+							<td><?php echo "{$cur_commission['product']->guid}: {$cur_commission['product']->name}"; ?></td>
+							<td><?php echo $cur_commission['note']; ?></td>
+						</tr>
+						<?php } ?>
+					</tbody>
+				</table>
 			</div>
 			<br class="pf-clearing" />
 		</div>

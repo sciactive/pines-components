@@ -45,7 +45,8 @@ $pines->com_customer->load_company_select();
 						update_address();
 					}
 				}
-			]
+			],
+			pgrid_view_height: "300px"
 		});
 
 		// Address Dialog
@@ -121,7 +122,8 @@ $pines->com_customer->load_company_select();
 						update_attributes();
 					}
 				}
-			]
+			],
+			pgrid_view_height: "300px"
 		});
 
 		// Attribute Dialog
@@ -467,34 +469,31 @@ $pines->com_customer->load_company_select();
 				<h1>Additional Addresses</h1>
 			</div>
 			<div class="pf-element pf-full-width">
-				<span class="pf-label">Additional Addresses</span>
-				<div class="pf-group">
-					<table id="p_muid_addresses_table">
-						<thead>
-							<tr>
-								<th>Type</th>
-								<th>Address 1</th>
-								<th>Address 2</th>
-								<th>City</th>
-								<th>State</th>
-								<th>Zip</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php foreach ($this->entity->addresses as $cur_address) { ?>
-							<tr>
-								<td><?php echo $cur_address['type']; ?></td>
-								<td><?php echo $cur_address['address_1']; ?></td>
-								<td><?php echo $cur_address['address_2']; ?></td>
-								<td><?php echo $cur_address['city']; ?></td>
-								<td><?php echo $cur_address['state']; ?></td>
-								<td><?php echo $cur_address['zip']; ?></td>
-							</tr>
-							<?php } ?>
-						</tbody>
-					</table>
-					<input type="hidden" id="p_muid_addresses" name="addresses" size="24" />
-				</div>
+				<table id="p_muid_addresses_table">
+					<thead>
+						<tr>
+							<th>Type</th>
+							<th>Address 1</th>
+							<th>Address 2</th>
+							<th>City</th>
+							<th>State</th>
+							<th>Zip</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ($this->entity->addresses as $cur_address) { ?>
+						<tr>
+							<td><?php echo $cur_address['type']; ?></td>
+							<td><?php echo $cur_address['address_1']; ?></td>
+							<td><?php echo $cur_address['address_2']; ?></td>
+							<td><?php echo $cur_address['city']; ?></td>
+							<td><?php echo $cur_address['state']; ?></td>
+							<td><?php echo $cur_address['zip']; ?></td>
+						</tr>
+						<?php } ?>
+					</tbody>
+				</table>
+				<input type="hidden" id="p_muid_addresses" name="addresses" size="24" />
 			</div>
 			<div id="p_muid_address_dialog" title="Add an Address">
 				<div class="pf-form">
@@ -532,26 +531,23 @@ $pines->com_customer->load_company_select();
 		<?php } if (in_array('attributes', $pines->config->com_customer->shown_fields_customer)) { ?>
 		<div id="p_muid_tab_attributes">
 			<div class="pf-element pf-full-width">
-				<span class="pf-label">Attributes</span>
-				<div class="pf-group">
-					<table class="attributes_table">
-						<thead>
-							<tr>
-								<th>Name</th>
-								<th>Value</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php foreach ($this->entity->attributes as $cur_attribute) { ?>
-							<tr>
-								<td><?php echo $cur_attribute['name']; ?></td>
-								<td><?php echo $cur_attribute['value']; ?></td>
-							</tr>
-							<?php } ?>
-						</tbody>
-					</table>
-					<input type="hidden" name="attributes" />
-				</div>
+				<table class="attributes_table">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Value</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ($this->entity->attributes as $cur_attribute) { ?>
+						<tr>
+							<td><?php echo $cur_attribute['name']; ?></td>
+							<td><?php echo $cur_attribute['value']; ?></td>
+						</tr>
+						<?php } ?>
+					</tbody>
+				</table>
+				<input type="hidden" name="attributes" />
 			</div>
 			<div class="attribute_dialog" style="display: none;" title="Add an Attribute">
 				<div class="pf-form">

@@ -155,24 +155,22 @@ $pines->com_pgrid->load();
 		<h1>Entries</h1>
 	</div>
 	<div class="pf-element pf-full-width">
-		<div class="pf-field">
-			<table id="p_muid_entries_table">
-				<thead>
-					<tr>
-						<th>Serial Number / SKU</th>
-						<th>Quantity</th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php foreach ($this->entity->entries as $cur_entry) { ?>
-					<tr>
-						<td><?php echo $cur_entry->code; ?></td>
-						<td><?php echo $cur_entry->qty; ?></td>
-					</tr>
-					<?php } ?>
-				</tbody>
-			</table>
-		</div>
+		<table id="p_muid_entries_table">
+			<thead>
+				<tr>
+					<th>Serial Number / SKU</th>
+					<th>Quantity</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ($this->entity->entries as $cur_entry) { ?>
+				<tr>
+					<td><?php echo $cur_entry->code; ?></td>
+					<td><?php echo $cur_entry->qty; ?></td>
+				</tr>
+				<?php } ?>
+			</tbody>
+		</table>
 	</div>
 	<div class="pf-element pf-heading">
 		<h1>Comments</h1>

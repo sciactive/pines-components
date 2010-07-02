@@ -119,7 +119,7 @@ class com_sales_cashcount extends entity {
 					continue;
 				if ($cur_tx->type == 'payment_received') {
 					$this->total += $cur_tx->amount;
-				} elseif ($cur_tx->type == 'payment_voided') {
+				} elseif ($cur_tx->type == 'change_given' || $cur_tx->type == 'payment_voided' || $cur_tx->type == 'payment_returned') {
 					$this->total -= $cur_tx->amount;
 				}
 			}

@@ -650,11 +650,8 @@ class com_sales_sale extends entity {
 			));
 			// If the payment went through, record it, if it didn't and it
 			// wasn't declined, consider it a failure.
-			if ($cur_payment['status'] != 'tendered') {
-				if ($cur_payment['status'] != 'declined')
-					$return = false;
-			} else {
-				// If it was tendered, add to the amount tendered.
+			if ($cur_payment['status'] == 'tendered') {
+				// Add to the amount tendered.
 				$amount_tendered += (float) $cur_payment['amount'];
 				// Make a transaction entry.
 				$tx = com_sales_tx::factory('payment_tx');
@@ -668,6 +665,9 @@ class com_sales_sale extends entity {
 
 				$tx->ticket = $this;
 				$return = $return && $tx->save();
+			} else {
+				if ($cur_payment['status'] != 'declined')
+					$return = false;
 			}
 		}
 		$amount_due = $total - $amount_tendered;

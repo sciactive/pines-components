@@ -54,8 +54,14 @@ if ($location != 'all')
 $tx_array = (array) $pines->entity_manager->get_entities(array('class' => com_sales_tx), $selector, array('|', 'tag' => array('sale_tx', 'payment_tx')));
 $invoice_array = array('total' => 0.00, 'count' => 0);
 $sale_array = array('total' => 0.00, 'count' => 0);
-$user_array = array();
+$sale_array_user = array();
+$return_array = array('total' => 0.00, 'count' => 0);
+$return_array_user = array();
 $payment_array = array();
+$return_payment_array = array();
+$total_array = array('total' => 0.00);
+$total_array_user = array();
+$total_payment_array = array();
 
 // Total the sales.
 foreach ($tx_array as $key => &$cur_tx) {
@@ -63,25 +69,50 @@ foreach ($tx_array as $key => &$cur_tx) {
 	if ($cur_tx->ticket->status == 'voided')
 		continue;
 	if ($cur_tx->has_tag('sale_tx')) {
-		if ($cur_tx->type == 'invoiced') {
-			$invoice_array['total'] += (float) $cur_tx->ticket->total;
-			$invoice_array['count']++;
-		} elseif ($cur_tx->type == 'paid') {
-			$invoice_array['total'] -= (float) $cur_tx->ticket->total;
-			$invoice_array['count']--;
-			$sale_array['total'] += (float) $cur_tx->ticket->total;
-			$sale_array['count']++;
-			$user_array["{$cur_tx->user->name} [{$cur_tx->user->username}]"]['total'] += (float) $cur_tx->ticket->total;
-			$user_array["{$cur_tx->user->name} [{$cur_tx->user->username}]"]['count']++;
+		switch ($cur_tx->type) {
+			case 'invoiced':
+				// Check if the sale is still invoiced.
+				if ($cur_tx->ticket->status == 'invoiced') {
+					$invoice_array['total'] += (float) $cur_tx->ticket->total;
+					$invoice_array['count']++;
+				}
+				break;
+			case 'paid':
+				$total_array['total'] += (float) $cur_tx->ticket->total;
+				$sale_array['total'] += (float) $cur_tx->ticket->total;
+				$sale_array['count']++;
+				$total_array_user["{$cur_tx->user->name} [{$cur_tx->user->username}]"]['total'] += (float) $cur_tx->ticket->total;
+				$sale_array_user["{$cur_tx->user->name} [{$cur_tx->user->username}]"]['total'] += (float) $cur_tx->ticket->total;
+				$sale_array_user["{$cur_tx->user->name} [{$cur_tx->user->username}]"]['count']++;
+				break;
+			case 'returned':
+				$total_array['total'] -= (float) $cur_tx->ticket->total;
+				$return_array['total'] += (float) $cur_tx->ticket->total;
+				$return_array['count']++;
+				$total_array_user["{$cur_tx->user->name} [{$cur_tx->user->username}]"]['total'] -= (float) $cur_tx->ticket->total;
+				$return_array_user["{$cur_tx->user->name} [{$cur_tx->user->username}]"]['total'] += (float) $cur_tx->ticket->total;
+				$return_array_user["{$cur_tx->user->name} [{$cur_tx->user->username}]"]['count']++;
+				break;
 		}
 	} elseif ($cur_tx->has_tag('payment_tx')) {
-		if ($cur_tx->type == 'payment_received') {
-			$payment_array[$cur_tx->ref->name]['total'] += (float) $cur_tx->amount;
-			$payment_array[$cur_tx->ref->name]['net_total'] += (float) $cur_tx->amount;
-			$payment_array[$cur_tx->ref->name]['count']++;
-		} elseif ($cur_tx->type == 'change_given') {
-			$payment_array[$cur_tx->ref->name]['change_given'] += (float) $cur_tx->amount;
-			$payment_array[$cur_tx->ref->name]['net_total'] -= (float) $cur_tx->amount;
+		switch ($cur_tx->type) {
+			case 'payment_received':
+				$total_payment_array[$cur_tx->ref->name]['total'] += (float) $cur_tx->amount;
+				$payment_array[$cur_tx->ref->name]['total'] += (float) $cur_tx->amount;
+				$payment_array[$cur_tx->ref->name]['net_total'] += (float) $cur_tx->amount;
+				$payment_array[$cur_tx->ref->name]['count']++;
+				break;
+			case 'change_given':
+				$total_payment_array[$cur_tx->ref->name]['total'] -= (float) $cur_tx->amount;
+				$payment_array[$cur_tx->ref->name]['change_given'] += (float) $cur_tx->amount;
+				$payment_array[$cur_tx->ref->name]['net_total'] -= (float) $cur_tx->amount;
+				break;
+			case 'payment_returned':
+				$total_payment_array[$cur_tx->ref->name]['total'] -= (float) $cur_tx->amount;
+				$return_payment_array[$cur_tx->ref->name]['total'] += (float) $cur_tx->amount;
+				$return_payment_array[$cur_tx->ref->name]['net_total'] += (float) $cur_tx->amount;
+				$return_payment_array[$cur_tx->ref->name]['count']++;
+				break;
 		}
 	}
 }
@@ -97,10 +128,16 @@ if (empty($tx_array)) {
 		'location' => $location,
 		'date_start' => date('Y-m-d', $date_start),
 		'date_end' => date('Y-m-d', $date_end),
-		'invoice' => $invoice_array,
-		'sale' => $sale_array,
-		'user' => $user_array,
-		'payment' => $payment_array
+		'invoices' => $invoice_array,
+		'sales' => $sale_array,
+		'sales_user' => $sale_array_user,
+		'returns' => $return_array,
+		'returns_user' => $return_array_user,
+		'payments' => $payment_array,
+		'returns_payments' => $return_payment_array,
+		'totals' => $total_array,
+		'totals_user' => $total_array_user,
+		'totals_payments' => $total_payment_array
 	);
 }
 

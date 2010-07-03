@@ -308,21 +308,28 @@ class com_sales_sale extends entity {
 
 	/**
 	 * Email a receipt of the sale to the customer's email.
+	 *
+	 * @return bool True on success, false on failure.
 	 */
 	function email_receipt() {
 		global $pines;
-		if (!$this->customer->email)
-			return;
-		$module = new module('com_sales', 'sale/receipt', 'content');
+		if (empty($this->customer->email))
+			return false;
+		$module = new module('com_sales', 'sale/receipt');
 		$module->entity = $this;
+		// TODO: Allow more customization for email subject/content.
+		$subject = 'Receipt for ' . $this->customer->name;
 		$content = "<style type=\"text/css\">/* <![CDATA[ */\n";
 		$content .= file_get_contents('system/css/pform.css');
 		$content .= "\n/* ]]> */</style>";
 		$content .= $module->render();
-		$module->detach();
 
-		$mail = com_mailer_mail::factory($pines->config->com_sales->email_from_address, $this->customer->email, 'Receipt for sale from Pines', $content);
-		$mail->send();
+		$mail = com_mailer_mail::factory($pines->config->com_sales->email_from_address, $this->customer->email, $subject, $content);
+		if ($mail->send()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -564,8 +571,13 @@ class com_sales_sale extends entity {
 	 * @return module The form's module.
 	 */
 	function print_receipt() {
+		global $pines;
+
 		$module = new module('com_sales', 'sale/receipt', 'content');
 		$module->entity = $this;
+
+		if (isset($this->customer->email))
+			$pines->com_sales->inform('Email Receipt', 'Send a Copy', 'Send a copy of this receipt to the customer\'s e-mail address.', pines_url('com_sales', 'sale/sendreceipt', array('id' => $this->guid)));
 
 		return $module;
 	}
@@ -650,8 +662,11 @@ class com_sales_sale extends entity {
 			));
 			// If the payment went through, record it, if it didn't and it
 			// wasn't declined, consider it a failure.
-			if ($cur_payment['status'] == 'tendered') {
-				// Add to the amount tendered.
+			if ($cur_payment['status'] != 'tendered') {
+				if ($cur_payment['status'] != 'declined')
+					$return = false;
+			} else {
+				// If it was tendered, add to the amount tendered.
 				$amount_tendered += (float) $cur_payment['amount'];
 				// Make a transaction entry.
 				$tx = com_sales_tx::factory('payment_tx');
@@ -665,9 +680,6 @@ class com_sales_sale extends entity {
 
 				$tx->ticket = $this;
 				$return = $return && $tx->save();
-			} else {
-				if ($cur_payment['status'] != 'declined')
-					$return = false;
 			}
 		}
 		$amount_due = $total - $amount_tendered;

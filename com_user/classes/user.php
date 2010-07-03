@@ -80,8 +80,32 @@ class user extends able_object implements user_interface {
 		$module->display_groups = gatekeeper('com_user/assigngroup');
 		$module->display_abilities = gatekeeper('com_user/abilities');
 		$module->sections = array('system');
-		$module->group_array_primary = $pines->user_manager->get_group_array_primary();
-		$module->group_array_secondary = $pines->user_manager->get_group_array_secondary();
+		$highest_parent = $pines->config->com_user->highest_primary;
+		if ($highest_parent == 0) {
+			$module->group_array_primary = $pines->user_manager->get_groups();
+		} elseif ($highest_parent < 0) {
+			$module->group_array_primary = array();
+		} else {
+			$highest_parent = group::factory($highest_parent);
+			if (!isset($highest_parent->guid)) {
+				$module->group_array_primary = array();
+			} else {
+				$module->group_array_primary = $highest_parent->get_descendents();
+			}
+		}
+		$highest_parent = $pines->config->com_user->highest_secondary;
+		if ($highest_parent == 0) {
+			$module->group_array_secondary = $pines->user_manager->get_groups();
+		} elseif ($highest_parent < 0) {
+			$module->group_array_secondary = array();
+		} else {
+			$highest_parent = group::factory($highest_parent);
+			if (!isset($highest_parent->guid)) {
+				$module->group_array_secondary = array();
+			} else {
+				$module->group_array_secondary = $highest_parent->get_descendents();
+			}
+		}
 		foreach ($pines->components as $cur_component) {
 			$module->sections[] = $cur_component;
 		}

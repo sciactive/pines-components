@@ -25,33 +25,47 @@ $this->note = 'Provide tax/fee details in this form.';
 	</div>
 	<?php } ?>
 	<div class="pf-element">
-		<label><span class="pf-label">Name</span>
-		<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
+		<label>
+			<span class="pf-label">Name</span>
+			<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" />
+		</label>
 	</div>
 	<div class="pf-element">
-		<label><span class="pf-label">Enabled</span>
-		<input class="pf-field ui-widget-content" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
+		<label>
+			<span class="pf-label">Enabled</span>
+			<input class="pf-field ui-widget-content" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> />
+		</label>
 	</div>
 	<div class="pf-element">
-		<label><span class="pf-label">Type</span>
-		<span class="pf-note">This determines how the rate is applied to the price of items.</span>
-		<select class="pf-field ui-widget-content" name="type">
-			<option value="percentage"<?php echo $this->entity->type == 'percentage' ? ' selected="selected"' : ''; ?>>Percentage</option>
-			<option value="flat_rate"<?php echo $this->entity->type == 'flat_rate' ? ' selected="selected"' : ''; ?>>Flat Rate</option>
-		</select></label>
+		<label>
+			<span class="pf-label">Type</span>
+			<span class="pf-note">This determines how the rate is applied to the price of items.</span>
+			<select class="pf-field ui-widget-content" name="type">
+				<option value="percentage"<?php echo $this->entity->type == 'percentage' ? ' selected="selected"' : ''; ?>>Percentage</option>
+				<option value="flat_rate"<?php echo $this->entity->type == 'flat_rate' ? ' selected="selected"' : ''; ?>>Flat Rate</option>
+			</select>
+		</label>
 	</div>
 	<div class="pf-element">
-		<label><span class="pf-label">Rate</span>
-		<span class="pf-note">Enter a percentage (5 for 5%) or a flat rate in dollars (5 for $5).</span>
-		<input class="pf-field ui-widget-content" type="text" name="rate" size="24" value="<?php echo $this->entity->rate; ?>" /></label>
+		<label>
+			<span class="pf-label">Rate</span>
+			<span class="pf-note">Enter a percentage (5 for 5%) or a flat rate in dollars (5 for $5).</span>
+			<input class="pf-field ui-widget-content" type="text" name="rate" size="24" value="<?php echo $this->entity->rate; ?>" />
+		</label>
 	</div>
 	<div class="pf-element">
-		<label><span class="pf-label">Locations</span>
-		<span class="pf-note">This tax will be applied to sales by users in these groups.</span>
-		<span class="pf-note">Hold Ctrl (Command on Mac) to select multiple groups.</span>
-		<select class="pf-field ui-widget-content" name="locations[]" multiple="multiple" size="6">
-			<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations, $this->entity->locations); ?>
-		</select></label>
+		<label>
+			<span class="pf-label">Locations</span>
+			<span class="pf-note">This tax will be applied to sales by users in these groups.</span>
+			<span class="pf-note">Hold Ctrl (Command on Mac) to select multiple groups.</span>
+			<select class="pf-field ui-widget-content" name="locations[]" multiple="multiple" size="6">
+				<?php
+				$pines->user_manager->group_sort($this->locations, 'name');
+				foreach ($this->locations as $cur_group) {
+					?><option value="<?php echo $cur_group->guid; ?>"<?php echo $cur_group->in_array($this->entity->locations) ? ' selected="selected"' : ''; ?>><?php echo str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"; ?></option><?php
+				} ?>
+			</select>
+		</label>
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>

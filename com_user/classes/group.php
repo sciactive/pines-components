@@ -126,6 +126,16 @@ class group extends able_object implements group_interface {
 		return $return;
 	}
 
+	public function get_level() {
+		$group = $this;
+		$level = 0;
+		while (isset($group->parent)) {
+			$level++;
+			$group = $group->parent;
+		}
+		return $level;
+	}
+
 	public function get_logo($full = false) {
 		global $pines;
 		if (isset($this->logo))
@@ -167,7 +177,7 @@ class group extends able_object implements group_interface {
 		$module->display_abilities = gatekeeper('com_user/abilities');
 		$module->display_conditions = gatekeeper('com_user/conditions');
 		$module->sections = array('system');
-		$module->group_array = $pines->user_manager->get_group_array();
+		$module->group_array = $pines->user_manager->get_groups();
 		foreach ($pines->components as $cur_component) {
 			$module->sections[] = $cur_component;
 		}

@@ -27,9 +27,16 @@ class com_user extends component implements user_manager_interface {
 	 * check faster if that user has been checked before.
 	 *
 	 * @access private
-	 * @var array $gatekeeper_cache
+	 * @var array
 	 */
 	private $gatekeeper_cache = array();
+	/**
+	 * Group property to sort by.
+	 *
+	 * @access private
+	 * @var array
+	 */
+	private $sort_property;
 
 	public function check_permissions(&$entity, $type = 1) {
 		if ((object) $_SESSION['user'] !== $_SESSION['user'])
@@ -172,159 +179,6 @@ class com_user extends component implements user_manager_interface {
 		return (in_array($ability, $abilities) || in_array('system/all', $abilities));
 	}
 
-	/**
-	 * Gets a multidimensional array of group info.
-	 *
-	 * If no parent is given, get_group_array() will start with all top level
-	 * groups.
-	 *
-	 * get_group_array() returns a multidimensional hierarchical array. In each
-	 * element is 'name', 'groupname', 'email', and 'children'. 'children' is an
-	 * array of that group's children.
-	 *
-	 * @param group $parent The group to descend from.
-	 * @return array The group structure array.
-	 * @todo Check for orphans, they could cause groups to be hidden.
-	 */
-	public function get_group_array($parent = null) {
-		global $pines;
-		$return = array();
-		if ( !isset($parent) ) {
-			$entities = $pines->entity_manager->get_entities(array('class' => group), array('&', 'tag' => array('com_user', 'group')));
-			foreach ($entities as $entity) {
-				if ( !isset($entity->parent) ) {
-					$child_array = $this->get_group_array($entity);
-					$return[$entity->guid]['name'] = $entity->name;
-					$return[$entity->guid]['groupname'] = $entity->groupname;
-					$return[$entity->guid]['email'] = $entity->email;
-					$return[$entity->guid]['children'] = $child_array;
-				}
-			}
-		} else {
-			$entities = $pines->entity_manager->get_entities(array('class' => group), array('&', 'ref' => array('parent', $parent), 'tag' => array('com_user', 'group')));
-			foreach ($entities as $entity) {
-				$child_array = $this->get_group_array($entity);
-				$return[$entity->guid]['name'] = $entity->name;
-				$return[$entity->guid]['groupname'] = $entity->groupname;
-				$return[$entity->guid]['email'] = $entity->email;
-				$return[$entity->guid]['children'] = $child_array;
-			}
-		}
-		return $return;
-	}
-
-	/**
-	 * Gets a multidimensional array of group info.
-	 *
-	 * Starts under the primary group parent set in configuration.
-	 *
-	 * @return array The group structure array.
-	 */
-	public function get_group_array_primary() {
-		global $pines;
-		$highest_parent = $pines->config->com_user->highest_primary;
-		if ($highest_parent == 0)
-			return $this->get_group_array();
-		if ($highest_parent < 0)
-			return array();
-		$highest_parent = group::factory($highest_parent);
-		if (!isset($highest_parent->guid))
-			return array();
-		return $this->get_group_array($highest_parent);
-	}
-
-	/**
-	 * Gets a multidimensional array of group info.
-	 *
-	 * Starts under the secondary group parent set in configuration.
-	 *
-	 * @return array The group structure array.
-	 */
-	public function get_group_array_secondary() {
-		global $pines;
-		$highest_parent = $pines->config->com_user->highest_secondary;
-		if ($highest_parent == 0)
-			return $this->get_group_array();
-		if ($highest_parent < 0)
-			return array();
-		$highest_parent = group::factory($highest_parent);
-		if (!isset($highest_parent->guid))
-			return array();
-		return $this->get_group_array($highest_parent);
-	}
-
-	/**
-	 * Fills a menu with a group hierarchy.
-	 *
-	 * @param menu &$menu The menu to fill.
-	 * @param group $parent The parent group.
-	 * @param bool $top_level Whether to work on the menu's top level.
-	 */
-	public function get_group_menu(&$menu = null, $parent = null, $top_level = true) {
-		global $pines;
-		if ( !isset($parent) ) {
-			$entities = $pines->entity_manager->get_entities(array('class' => group), array('&', 'tag' => array('com_user', 'group')));
-			foreach ($entities as $entity) {
-				$menu->add("{$entity->name} [{$entity->groupname}]", $entity->guid, $entity->parent->guid, $entity->guid);
-			}
-			$orphans = $menu->orphans();
-			if ( !empty($orphans) ) {
-				$orphan_menu_id = $menu->add('Orphans', null);
-				foreach ($orphans as $orphan) {
-					$menu->add($orphan['name'], $orphan['data'], $orphan_menu_id, $orphan['data']);
-				}
-			}
-		} else {
-			$entities = $pines->entity_manager->get_entities(array('class' => group), array('&', 'ref' => array('parent', $parent), 'tag' => array('com_user', 'group')));
-			foreach ($entities as $entity) {
-				$new_menu_id = $menu->add("{$entity->name} [{$entity->groupname}]", $entity->guid, ($top_level ? null : $entity->parent->guid), $entity->guid);
-				$this->get_group_menu($menu, $entity, false);
-			}
-		}
-	}
-
-	/**
-	 * Gets a tree style hierarchy of groups.
-	 *
-	 * The mask can contain these variables:
-	 *
-	 * - #guid#
-	 * - #name#
-	 * - #groupname#
-	 * - #mark#
-	 * - #selected#
-	 *
-	 * For each depth level, $mark will be appended with "-> ".
-	 *
-	 * @param string $mask The line mask to fill with data.
-	 * @param array $group_array An array of groups to work with.
-	 * @see com_user::get_group_array()
-	 * @param int|group|array $selected_id The ID/entity or array of IDs/entities on which to apply $selected to the mask.
-	 * @param string $selected The selection text to apply to the mask on selected items.
-	 * @param string $mark The mark to apply (per depth level) to the mask.
-	 * @return string The rendered tree.
-	 */
-	public function get_group_tree($mask, $group_array, $selected_id = null, $selected = ' selected="selected"', $mark = '') {
-		$return = '';
-		if (!is_array($group_array))
-			return $return;
-		foreach ($group_array as $key => $group) {
-			$parsed = str_replace('#guid#', $key, $mask);
-			$parsed = str_replace('#name#', $group['name'], $parsed);
-			$parsed = str_replace('#groupname#', $group['groupname'], $parsed);
-			$parsed = str_replace('#mark#', $mark, $parsed);
-			if ( $key == $selected_id || $key == $selected_id->guid || (is_array($selected_id) && in_array($key, $selected_id)) || (is_array($selected_id) && group::factory($key)->in_array($selected_id)) ) {
-				$parsed = str_replace('#selected#', $selected, $parsed);
-			} else {
-				$parsed = str_replace('#selected#', '', $parsed);
-			}
-			$return .= $parsed."\n";
-			if ( !empty($group['children']) )
-				$return .= $this->get_group_tree($mask, $group['children'], $selected_id, $selected, $mark.'-> ');
-		}
-		return $return;
-	}
-
 	public function get_groups() {
 		global $pines;
 		return $pines->entity_manager->get_entities(
@@ -345,6 +199,84 @@ class com_user extends component implements user_manager_interface {
 					'tag' => array('com_user', 'user')
 				)
 			);
+	}
+
+	public function group_sort(&$array, $property = null, $reverse = false) {
+		$new_array = array();
+		// Count the children.
+		$child_counter = array();
+		// First sort by the requested property.
+		if (isset($property)) {
+			$this->sort_property = $property;
+			@usort($array, array($this, 'group_sort_property'));
+		}
+		if ($reverse)
+			$array = array_reverse($array);
+		// Now sort by children.
+		while ($array) {
+			// Look for groups ready to go in order.
+			$changed = false;
+			foreach ($array as $key => &$cur_group) {
+				// Must break after adding one, so any following children don't go in the wrong order.
+				if (!isset($cur_group->parent) || !$cur_group->parent->in_array(array_merge($new_array, $array))) {
+					// If they have no parent (or their parent isn't in the array), they go on the end.
+					$new_array[] = $cur_group;
+					unset($array[$key]);
+					$changed = true;
+					break;
+				} else {
+					// Else find the parent.
+					$pkey = $cur_group->parent->array_search($new_array);
+					if ($pkey !== false) {
+						// And insert after the parent.
+						// This makes groups go to the end of the child list.
+						$cur_ancestor = $cur_group->parent;
+						while (isset($cur_ancestor)) {
+							$child_counter[$cur_ancestor->guid]++;
+							$cur_ancestor = $cur_ancestor->parent;
+						}
+						// Where to place the group.
+						$new_key = $pkey + $child_counter[$cur_group->parent->guid];
+						if (isset($new_array[$new_key])) {
+							// If it already exists, we have to splice it in.
+							array_splice($new_array, $new_key, 0, array($cur_group));
+							$new_array = array_values($new_array);
+						} else {
+							// Else just add it.
+							$new_array[$new_key] = $cur_group;
+						}
+						unset($array[$key]);
+						$changed = true;
+						break;
+					}
+				}
+			}
+			unset($cur_group);
+			if (!$changed) {
+				// If there are any unexpected errors and the array isn't changed, just stick the rest on the end.
+				$groups_left = array_splice($array, 0);
+				$new_array = array_merge($new_array, $groups_left);
+			}
+		}
+		// Now push the new array out.
+		$array = $new_array;
+	}
+
+	/**
+	 * Determine the sort order between two groups.
+	 * 
+	 * @param group $a Group A.
+	 * @param group $b Group B.
+	 * @return int Sort order.
+	 * @access private
+	 */
+	private function group_sort_property($a, $b) {
+		$property = $this->sort_property;
+		if ($a->$property > $b->$property)
+			return 1;
+		if ($a->$property < $b->$property)
+			return -1;
+		return 0;
 	}
 
 	/**

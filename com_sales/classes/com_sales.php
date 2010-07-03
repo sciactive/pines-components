@@ -659,7 +659,7 @@ class com_sales extends component {
 	public function print_sales_total() {
 		global $pines;
 		$module = new module('com_sales', 'sale/totals', 'content');
-		$module->locations = $pines->user_manager->get_group_array();
+		$module->locations = $pines->user_manager->get_groups();
 		$module->show_all = gatekeeper('com_sales/totalothersales');
 
 		return $module;

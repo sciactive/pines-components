@@ -260,13 +260,19 @@ if ($this->entity->final)
 			</select></label>
 	</div>
 	<div class="pf-element">
-		<label><span class="pf-label">Destination</span>
+		<label>
+			<span class="pf-label">Destination</span>
 			<?php if ($this->entity->final || !empty($this->entity->received)) { ?>
-				<span class="pf-note">Destination can't be changed after PO is committed or received.</span>
+			<span class="pf-note">Destination can't be changed after PO is committed or received.</span>
 			<?php } ?>
 			<select class="pf-field ui-widget-content" name="destination"<?php echo (!$this->entity->final && empty($this->entity->received) ? '' : ' disabled="disabled"'); ?> <?php echo $read_only; ?>>
-				<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations, $this->entity->destination->guid); ?>
-			</select></label>
+				<?php
+				$pines->user_manager->group_sort($this->locations, 'name');
+				foreach ($this->locations as $cur_group) {
+					?><option value="<?php echo $cur_group->guid; ?>"<?php echo $cur_group->is($this->entity->destination) ? ' selected="selected"' : ''; ?>><?php echo str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"; ?></option><?php
+				} ?>
+			</select>
+		</label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Shipper</span>

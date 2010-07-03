@@ -272,7 +272,11 @@ $pines->com_pgrid->load();
 						<span class="pf-label">Primary Group</span>
 						<select class="pf-field ui-widget-content" name="group" size="1">
 							<option value="null">-- No Primary Group --</option>
-							<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array_primary, $this->entity->group); ?>
+							<?php
+							$pines->user_manager->group_sort($this->group_array_primary, 'name');
+							foreach ($this->group_array_primary as $cur_group) {
+								?><option value="<?php echo $cur_group->guid; ?>"<?php echo $cur_group->is($this->entity->group) ? ' selected="selected"' : ''; ?>><?php echo str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"; ?></option><?php
+							} ?>
 						</select>
 					</label>
 				</div>
@@ -282,14 +286,59 @@ $pines->com_pgrid->load();
 					<span>There are no secondary groups to display.</span>
 				</div>
 				<?php } else { ?>
-				<div class="pf-element">
-					<label>
-						<span class="pf-label">Groups</span>
-						<span class="pf-note">Hold Ctrl (Command on Mac) to select multiple groups.</span>
-						<select class="pf-field ui-widget-content" name="groups[]" multiple="multiple" size="6">
-							<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array_secondary, $this->entity->groups); ?>
-						</select>
-					</label>
+				<div class="pf-element pf-full-width">
+					<script type="text/javascript">
+						// <![CDATA[
+						pines(function(){
+							// Group Grid
+							$("#p_muid_group_grid").pgrid({
+								pgrid_toolbar: true,
+								pgrid_toolbar_contents: [
+									{type: 'button', text: 'Expand', title: 'Expand All', extra_class: 'picon picon-arrow-down', selection_optional: true, return_all_rows: true, click: function(e, rows){
+										rows.pgrid_expand_rows();
+									}},
+									{type: 'button', text: 'Collapse', title: 'Collapse All', extra_class: 'picon picon-arrow-right', selection_optional: true, return_all_rows: true, click: function(e, rows){
+										rows.pgrid_collapse_rows();
+									}},
+									{type: 'separator'},
+									{type: 'button', text: 'All', title: 'Check All', extra_class: 'picon picon-checkbox', selection_optional: true, return_all_rows: true, click: function(e, rows){
+										$("input", rows).attr("checked", "true");
+									}},
+									{type: 'button', text: 'None', title: 'Check None', extra_class: 'picon picon-dialog-cancel', selection_optional: true, return_all_rows: true, click: function(e, rows){
+										$("input", rows).removeAttr("checked");
+									}}
+								],
+								pgrid_sort_col: 2,
+								pgrid_sort_ord: "asc",
+								pgrid_paginate: false,
+								pgrid_view_height: "300px"
+							});
+						});
+						// ]]>
+					</script>
+					<span class="pf-label">Groups</span>
+					<div class="pf-group">
+						<div class="pf-field">
+							<table id="p_muid_group_grid">
+								<thead>
+									<tr>
+										<th>In</th>
+										<th>Name</th>
+										<th>Groupname</th>
+									</tr>
+								</thead>
+								<tbody>
+								<?php foreach($this->group_array_secondary as $cur_group) { ?>
+									<tr title="<?php echo $cur_group->guid; ?>" class="<?php echo $cur_group->get_children() ? 'parent ' : ''; ?><?php echo (isset($cur_group->parent) && $cur_group->parent->in_array($this->group_array_secondary)) ? "child {$cur_group->parent->guid} " : ''; ?>">
+										<td><input type="checkbox" name="groups[]" value="<?php echo $cur_group->guid; ?>" <?php echo $cur_group->in_array($this->entity->groups) ? 'checked="checked" ' : ''; ?>/></td>
+										<td><?php echo $cur_group->name; ?></td>
+										<td><?php echo $cur_group->groupname; ?></td>
+									</tr>
+								<?php } ?>
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
 				<?php } ?>
 			<br class="pf-clearing" />

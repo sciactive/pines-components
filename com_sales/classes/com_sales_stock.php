@@ -80,7 +80,7 @@ class com_sales_stock extends entity {
 		$module = new module('com_sales', 'stock/form', 'content');
 		$module->entity = $this;
 		$module->vendors = (array) $pines->entity_manager->get_entities(array('class' => com_sales_vendor), array('&', 'tag' => array('com_sales', 'vendor')));
-		$module->locations = $pines->user_manager->get_group_array();
+		$module->locations = $pines->user_manager->get_groups();
 
 		return $module;
 	}

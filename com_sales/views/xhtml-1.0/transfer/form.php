@@ -144,13 +144,19 @@ if ($this->entity->final)
 			<input class="pf-field ui-widget-content" type="text" name="reference_number" size="24" value="<?php echo $this->entity->reference_number; ?>" <?php echo $read_only; ?> /></label>
 	</div>
 	<div class="pf-element">
-		<label><span class="pf-label">Destination</span>
+		<label>
+			<span class="pf-label">Destination</span>
 			<?php if (!empty($this->entity->received)) { ?>
-				<span class="pf-note">Destination cannot be changed after items have been received.</span>
+			<span class="pf-note">Destination cannot be changed after items have been received.</span>
 			<?php } ?>
 			<select class="pf-field ui-widget-content" name="destination"<?php echo (empty($this->entity->received) ? '' : ' disabled="disabled"'); ?> <?php echo $read_only; ?>>
-				<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations, $this->entity->destination->guid); ?>
-			</select></label>
+				<?php
+				$pines->user_manager->group_sort($this->locations, 'name');
+				foreach ($this->locations as $cur_group) {
+					?><option value="<?php echo $cur_group->guid; ?>"<?php echo $cur_group->is($this->entity->destination) ? ' selected="selected"' : ''; ?>><?php echo str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"; ?></option><?php
+				} ?>
+			</select>
+		</label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Shipper</span>

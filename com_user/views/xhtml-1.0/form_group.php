@@ -266,7 +266,11 @@ $pines->uploader->load();
 					<span class="pf-label">Parent</span>
 					<select class="pf-field ui-widget-content" name="parent" size="1">
 						<option value="none">--No Parent--</option>
-						<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->group_array, $this->entity->parent); ?>
+						<?php
+						$pines->user_manager->group_sort($this->group_array, 'name');
+						foreach ($this->group_array as $cur_group) {
+							?><option value="<?php echo $cur_group->guid; ?>"<?php echo $cur_group->is($this->entity->parent) ? ' selected="selected"' : ''; ?>><?php echo str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"; ?></option><?php
+						} ?>
 					</select>
 				</label>
 			</div>

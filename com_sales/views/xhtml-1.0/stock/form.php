@@ -174,7 +174,11 @@ $this->note = 'Provide stock entry details in this form.';
 					<span class="pf-label">Location</span>
 					<select class="pf-field ui-widget-content" name="location">
 						<option value="null">-- Not in Inventory --</option>
-						<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations, $this->entity->location->guid); ?>
+						<?php
+						$pines->user_manager->group_sort($this->locations, 'name');
+						foreach ($this->locations as $cur_group) {
+							?><option value="<?php echo $cur_group->guid; ?>"<?php echo $cur_group->is($this->entity->location) ? ' selected="selected"' : ''; ?>><?php echo str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"; ?></option><?php
+						} ?>
 					</select>
 				</label>
 			</div>

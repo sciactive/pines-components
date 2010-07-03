@@ -81,7 +81,7 @@ class com_sales_tax_fee extends entity {
 		global $pines;
 		$module = new module('com_sales', 'taxfee/form', 'content');
 		$module->entity = $this;
-		$module->locations = $pines->user_manager->get_group_array();
+		$module->locations = $pines->user_manager->get_groups();
 
 		return $module;
 	}

@@ -32,7 +32,11 @@ $this->title = 'Sales Total Report';
 				<option value="current">-- Current --</option>
 				<?php if ($this->show_all) { ?>
 				<option value="all">-- All --</option>
-				<?php echo $pines->user_manager->get_group_tree('<option value="#guid#"#selected#>#mark##name# [#groupname#]</option>', $this->locations); ?>
+				<?php
+				$pines->user_manager->group_sort($this->locations, 'name');
+				foreach ($this->locations as $cur_group) {
+					?><option value="<?php echo $cur_group->guid; ?>"><?php echo str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"; ?></option><?php
+				} ?>
 				<?php } ?>
 			</select></label>
 	</div>

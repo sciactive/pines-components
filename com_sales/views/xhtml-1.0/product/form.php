@@ -469,7 +469,6 @@ $pines->com_ptags->load();
 
 				commissions_table.pgrid({
 					pgrid_paginate: false,
-					pgrid_view_height: '200px',
 					pgrid_toolbar: true,
 					pgrid_toolbar_contents : [
 						{
@@ -504,7 +503,8 @@ $pines->com_ptags->load();
 								update_commissions();
 							}
 						}
-					]
+					],
+					pgrid_view_height: "300px"
 				});
 
 				// Commission Dialog

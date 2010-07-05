@@ -23,6 +23,8 @@ $this->note = 'Use this form to edit a return.';
 $pines->com_pgrid->load();
 if ($pines->config->com_sales->com_customer)
 	$pines->com_customer->load_customer_select();
+if ($pines->config->com_sales->autocomplete_product)
+	$pines->com_sales->load_product_select();
 ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_sales', 'return/save')); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
@@ -135,45 +137,49 @@ if ($pines->config->com_sales->com_customer)
 						type: 'text',
 						title: 'Enter a Product SKU or Barcode',
 						load: function(textbox){
-							textbox.keydown(function(e){
-								if (e.keyCode == 13) {
-									var code = textbox.val();
-									if (code == "") {
-										alert("Please enter a product code.");
-										return;
-									}
-									textbox.val("");
-									var loader;
-									$.ajax({
-										url: "<?php echo pines_url('com_sales', 'product/search'); ?>",
-										type: "POST",
-										dataType: "json",
-										data: {"code": code},
-										beforeSend: function(){
-											loader = $.pnotify({
-												pnotify_title: 'Product Search',
-												pnotify_text: 'Retrieving product from server...',
-												pnotify_notice_icon: 'picon picon-throbber',
-												pnotify_nonblock: true,
-												pnotify_hide: false,
-												pnotify_history: false
-											});
-										},
-										complete: function(){
-											loader.pnotify_remove();
-										},
-										error: function(XMLHttpRequest, textStatus){
-											pines.error("An error occured while trying to lookup the product code:\n"+XMLHttpRequest.status+": "+textStatus);
-										},
-										success: function(data){
-											if (!data) {
-												alert("No product was found with the code "+code+".");
-												return;
-											}
-											add_product(data);
-										}
-									});
+							var select = function(code){
+								if (code == "") {
+									alert("Please enter a product code.");
+									return;
 								}
+								textbox.val("");
+								var loader;
+								$.ajax({
+									url: "<?php echo pines_url('com_sales', 'product/search'); ?>",
+									type: "POST",
+									dataType: "json",
+									data: {"code": code},
+									beforeSend: function(){
+										loader = $.pnotify({
+											pnotify_title: 'Product Search',
+											pnotify_text: 'Retrieving product from server...',
+											pnotify_notice_icon: 'picon picon-throbber',
+											pnotify_nonblock: true,
+											pnotify_hide: false,
+											pnotify_history: false
+										});
+									},
+									complete: function(){
+										loader.pnotify_remove();
+									},
+									error: function(XMLHttpRequest, textStatus){
+										pines.error("An error occured while trying to lookup the product code:\n"+XMLHttpRequest.status+": "+textStatus);
+									},
+									success: function(data){
+										if (!data) {
+											alert("No product was found with the code "+code+".");
+											return;
+										}
+										add_product(data);
+									}
+								});
+							};
+							<?php if ($pines->config->com_sales->autocomplete_product) { ?>
+							textbox.productselect({select: function(event, ui){select(ui.item.value); return false;}});
+							<?php } ?>
+							textbox.keydown(function(e){
+								if (e.keyCode == 13)
+									select(textbox.val());
 							});
 						}
 					},

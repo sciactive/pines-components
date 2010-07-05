@@ -21,6 +21,13 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class com_sales extends component {
 	/**
+	 * Whether the product selector JavaScript has been loaded.
+	 * @access private
+	 * @var bool $js_loaded_product
+	 */
+	private $js_loaded_product = false;
+
+	/**
 	 * Calls the first payment process which matches the given arguments.
 	 *
 	 * @param array $arguments The arguments to pass to appropriate callbacks.
@@ -545,6 +552,19 @@ class com_sales extends component {
 			pines_notice('There are no vendors.');
 	}
 
+	/**
+	 * Load the product selector.
+	 *
+	 * This will place the required scripts into the document's head section.
+	 */
+	function load_product_select() {
+		if (!$this->js_loaded_product) {
+			$module = new module('com_sales', 'product/select', 'head');
+			$module->render();
+			$this->js_loaded_product = true;
+		}
+	}
+	
 	/**
 	 * Print a form to select a location.
 	 *

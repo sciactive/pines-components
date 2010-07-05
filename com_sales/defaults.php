@@ -60,6 +60,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'autocomplete_product',
+		'cname' => 'Autocomplete Product',
+		'description' => 'Use a product autocomplete selector on sales and returns.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'currency_symbol',
 		'cname' => 'Currency Symbol',
 		'description' => 'The currency symbol to use. (E.g. $, ¥, €, Rp)',

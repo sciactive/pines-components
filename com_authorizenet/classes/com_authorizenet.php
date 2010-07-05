@@ -211,7 +211,7 @@ class com_authorizenet extends component {
 						pines_error('Credit processing failed. Please try again, and if the problem persists, please contact an administrator.');
 						break;
 				}
-				$array['payment']['com_authorizenet_credit_info']['transaction_id'] = $reponse_array[8];
+				$array['payment']['com_authorizenet_credit_info']['transaction_id'] = $response_array[6];
 				pines_notice($response_array[3]);
 				break;
 			case 'void':

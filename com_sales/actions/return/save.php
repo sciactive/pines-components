@@ -35,7 +35,7 @@ if ( isset($_REQUEST['id']) ) {
 	$return = com_sales_return::factory();
 }
 
-if ($pines->config->com_sales->com_customer && $return->status != 'processed' && $return->status != 'voided' && !isset($this->entity->sale->guid)) {
+if ($pines->config->com_sales->com_customer && $return->status != 'processed' && $return->status != 'voided' && !isset($return->sale->guid)) {
 	$return->customer = null;
 	if (preg_match('/^\d+/', $_REQUEST['customer'])) {
 		$return->customer = com_customer_customer::factory((int) $_REQUEST['customer']);

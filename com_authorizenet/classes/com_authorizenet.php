@@ -76,11 +76,21 @@ class com_authorizenet extends component {
 			case 'approve':
 				$array['payment']['status'] = 'approved';
 				if ($array['payment']['data']['card_swiped'] == 'ON') {
-					if (empty($array['payment']['data']['name_last']) ||
-						empty($array['payment']['data']['card_number']) ||
-						empty($array['payment']['data']['card_exp_month']) ||
-						empty($array['payment']['data']['card_exp_year']))
-						$array['payment']['status'] = 'info_requested';
+					if ($array['ticket']->has_tag('return')) {
+						if (empty($array['payment']['data']['name_last']) ||
+							(
+								empty($array['payment']['data']['card_number'])
+								&&
+								empty($array['payment']['com_authorizenet_credit_info']['card_last_four'])
+							))
+							$array['payment']['status'] = 'info_requested';
+					} else {
+						if (empty($array['payment']['data']['name_last']) ||
+							empty($array['payment']['data']['card_number']) ||
+							empty($array['payment']['data']['card_exp_month']) ||
+							empty($array['payment']['data']['card_exp_year']))
+							$array['payment']['status'] = 'info_requested';
+					}
 				} else {
 					if (empty($array['payment']['data']['name_last']) ||
 						empty($array['payment']['data']['card_number']) ||
@@ -100,9 +110,8 @@ class com_authorizenet extends component {
 				//$state = $args['payment']['data']['state'];
 				//$zip = $args['payment']['data']['zip'];
 				$card_code = $array['payment']['data']['cid'];
-				// TODO: Find a better name for transactions.
-				$invoice_num = $array['ticket']->transaction_id;
-				$transaction_name = $array['ticket']->products[0]->entity->name;
+				$invoice_num = $array['ticket']->id;
+				$transaction_name = $pines->config->com_authorizenet->trans_name;
 
 				$post_values = array(
 					// the API Login ID and Transaction Key must be replaced with valid values
@@ -132,7 +141,7 @@ class com_authorizenet extends component {
 				);
 				if ($array['payment']['data']['card_swiped'] != 'ON')
 					$post_values['x_card_code'] = $card_code;
-				$post_string = "";
+				$post_string = '';
 				foreach ($post_values as $key => $value) {
 					$post_string .= "$key=" . urlencode($value) . "&";
 				}
@@ -166,6 +175,7 @@ class com_authorizenet extends component {
 				switch ($response_array[0]) {
 					case 1:
 						$array['payment']['status'] = 'tendered';
+						$array['payment']['com_authorizenet_credit_info']['card_last_four'] = substr($array['payment']['data']['card_number'], -4);
 						$array['payment']['label'] = $this->card_type($array['payment']['data']['card_number']) . ' ' . substr($array['payment']['data']['card_number'], -4);
 						unset($array['payment']['data']['name_first']);
 						unset($array['payment']['data']['name_last']);
@@ -220,7 +230,7 @@ class com_authorizenet extends component {
 					'x_trans_id'		=> $array['payment']['com_authorizenet_credit_info']['transaction_id']
 				);
 				
-				$post_string = "";
+				$post_string = '';
 				foreach ($post_values as $key => $value) {
 					$post_string .= "$key=" . urlencode($value) . "&";
 				}
@@ -260,10 +270,18 @@ class com_authorizenet extends component {
 				pines_notice($response_array[3]);
 				break;
 			case 'return':
-				$transaction_id = $array['payment']['com_authorizenet_credit_info']['transaction_id'];
-				$transaction_name = 'RETURN: '.$array['ticket']->products[0]->entity->name;
+				$firstname = $array['payment']['data']['name_first'];
+				$lastname = $array['payment']['data']['name_last'];
 				$amt = (float) $array['payment']['amount'];
-				$card_num = $array['payment']['data']['card_number'];
+				$card_num = isset($array['payment']['com_authorizenet_credit_info']['card_last_four']) ? $array['payment']['com_authorizenet_credit_info']['card_last_four'] : $array['payment']['data']['card_number'];
+				$exp_date = $array['payment']['data']['card_exp_month'].$array['payment']['data']['card_exp_year'];
+				//$address = $args['payment']['data']['address'];
+				//$state = $args['payment']['data']['state'];
+				//$zip = $args['payment']['data']['zip'];
+				$card_code = $array['payment']['data']['cid'];
+				$invoice_num = $array['ticket']->id;
+				$transaction_id = $array['payment']['com_authorizenet_credit_info']['transaction_id'];
+				$transaction_name = 'RETURN: '.$pines->config->com_authorizenet->trans_name;
 
 				$post_values = array(
 					// The API Login ID and Transaction Key must be replaced with valid values
@@ -275,14 +293,23 @@ class com_authorizenet extends component {
 					'x_delim_data'		=> 'TRUE',
 					'x_delim_char'		=> '|',
 					'x_relay_response'	=> 'FALSE',
+
 					'x_type'			=> 'CREDIT',
+					'x_card_num'		=> $card_num,
+					'x_exp_date'		=> $exp_date,
+
 					'x_trans_id'		=> $transaction_id,
 					'x_description'		=> $transaction_name,
 					'x_amount'			=> $amt,
-					'x_card_num'		=> $card_num
+
+					'x_first_name'		=> $firstname,
+					'x_last_name'		=> $lastname,
+					'x_address'			=> '', //$address,
+					'x_state'			=> '', //$state,
+					'x_zip'				=> '' //$zip
 				);
 
-				$post_string = "";
+				$post_string = '';
 				foreach ($post_values as $key => $value) {
 					$post_string .= "$key=" . urlencode($value) . "&";
 				}

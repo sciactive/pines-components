@@ -13,6 +13,13 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
+		'name' => 'trans_name',
+		'cname' => 'Transaction Name',
+		'description' => 'The name that will appear on customers\' records.',
+		'value' => $pines->config->page_title,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'apilogin',
 		'cname' => 'API Login',
 		'description' => 'The API login Authorize.Net provided you.',

@@ -77,12 +77,11 @@ class com_authorizenet extends component {
 				$array['payment']['status'] = 'approved';
 				if ($array['payment']['data']['card_swiped'] == 'ON') {
 					if ($array['ticket']->has_tag('return')) {
-						if (empty($array['payment']['data']['name_last']) ||
-							(
-								empty($array['payment']['data']['card_number'])
+						if (
+								(empty($array['payment']['data']['name_last']) || empty($array['payment']['data']['card_number']))
 								&&
-								empty($array['payment']['com_authorizenet_credit_info']['card_last_four'])
-							))
+								(empty($array['payment']['com_authorizenet_credit_info']['name_last']) || empty($array['payment']['com_authorizenet_credit_info']['card_number']))
+							)
 							$array['payment']['status'] = 'info_requested';
 					} else {
 						if (empty($array['payment']['data']['name_last']) ||
@@ -143,9 +142,9 @@ class com_authorizenet extends component {
 					$post_values['x_card_code'] = $card_code;
 				$post_string = '';
 				foreach ($post_values as $key => $value) {
-					$post_string .= "$key=" . urlencode($value) . "&";
+					$post_string .= "$key=" . urlencode($value) . '&';
 				}
-				$post_string = rtrim($post_string, "& ");
+				$post_string = rtrim($post_string, '& ');
 
 				$request = curl_init($pines->config->com_authorizenet->post_url);
 				curl_setopt($request, CURLOPT_HEADER, 0);
@@ -160,7 +159,7 @@ class com_authorizenet extends component {
 					break;
 				}
 
-				$response_array = explode($post_values["x_delim_char"],$post_response);
+				$response_array = explode($post_values['x_delim_char'],$post_response);
 				$array['payment']['com_authorizenet_credit_info'] = array(
 					'name_first'		=> $array['payment']['data']['name_first'],
 					'name_last'			=> $array['payment']['data']['name_last'],
@@ -175,7 +174,6 @@ class com_authorizenet extends component {
 				switch ($response_array[0]) {
 					case 1:
 						$array['payment']['status'] = 'tendered';
-						$array['payment']['com_authorizenet_credit_info']['card_last_four'] = substr($array['payment']['data']['card_number'], -4);
 						$array['payment']['label'] = $this->card_type($array['payment']['data']['card_number']) . ' ' . substr($array['payment']['data']['card_number'], -4);
 						unset($array['payment']['data']['name_first']);
 						unset($array['payment']['data']['name_last']);
@@ -232,9 +230,9 @@ class com_authorizenet extends component {
 				
 				$post_string = '';
 				foreach ($post_values as $key => $value) {
-					$post_string .= "$key=" . urlencode($value) . "&";
+					$post_string .= "$key=" . urlencode($value) . '&';
 				}
-				$post_string = rtrim($post_string, "& ");
+				$post_string = rtrim($post_string, '& ');
 
 				$request = curl_init($pines->config->com_authorizenet->post_url);
 				curl_setopt($request, CURLOPT_HEADER, 0);
@@ -249,7 +247,7 @@ class com_authorizenet extends component {
 					break;
 				}
 
-				$response_array = explode($post_values["x_delim_char"],$post_response);
+				$response_array = explode($post_values['x_delim_char'],$post_response);
 				switch ($response_array[0]) {
 					case 1:
 						$array['payment']['status'] = 'voided';
@@ -270,16 +268,8 @@ class com_authorizenet extends component {
 				pines_notice($response_array[3]);
 				break;
 			case 'return':
-				$firstname = $array['payment']['data']['name_first'];
-				$lastname = $array['payment']['data']['name_last'];
 				$amt = (float) $array['payment']['amount'];
-				$card_num = isset($array['payment']['com_authorizenet_credit_info']['card_last_four']) ? $array['payment']['com_authorizenet_credit_info']['card_last_four'] : $array['payment']['data']['card_number'];
-				$exp_date = $array['payment']['data']['card_exp_month'].$array['payment']['data']['card_exp_year'];
-				//$address = $args['payment']['data']['address'];
-				//$state = $args['payment']['data']['state'];
-				//$zip = $args['payment']['data']['zip'];
-				$card_code = $array['payment']['data']['cid'];
-				$invoice_num = $array['ticket']->id;
+				$card_num = isset($array['payment']['com_authorizenet_credit_info']['card_number']) ? $array['payment']['com_authorizenet_credit_info']['card_number'] : $array['payment']['data']['card_number'];
 				$transaction_id = $array['payment']['com_authorizenet_credit_info']['transaction_id'];
 				$transaction_name = 'RETURN: '.$pines->config->com_authorizenet->trans_name;
 
@@ -296,24 +286,16 @@ class com_authorizenet extends component {
 
 					'x_type'			=> 'CREDIT',
 					'x_card_num'		=> $card_num,
-					'x_exp_date'		=> $exp_date,
-
 					'x_trans_id'		=> $transaction_id,
 					'x_description'		=> $transaction_name,
-					'x_amount'			=> $amt,
-
-					'x_first_name'		=> $firstname,
-					'x_last_name'		=> $lastname,
-					'x_address'			=> '', //$address,
-					'x_state'			=> '', //$state,
-					'x_zip'				=> '' //$zip
+					'x_amount'			=> $amt
 				);
 
 				$post_string = '';
 				foreach ($post_values as $key => $value) {
-					$post_string .= "$key=" . urlencode($value) . "&";
+					$post_string .= "$key=" . urlencode($value) . '&';
 				}
-				$post_string = rtrim($post_string, "& ");
+				$post_string = rtrim($post_string, '& ');
 
 				$request = curl_init($pines->config->com_authorizenet->post_url);
 				curl_setopt($request, CURLOPT_HEADER, 0);
@@ -328,7 +310,7 @@ class com_authorizenet extends component {
 					break;
 				}
 
-				$response_array = explode($post_values["x_delim_char"],$post_response);
+				$response_array = explode($post_values['x_delim_char'],$post_response);
 				switch ($response_array[0]) {
 					case 1:
 						$array['payment']['status'] = 'tendered';

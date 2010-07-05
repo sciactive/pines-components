@@ -109,10 +109,14 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != '
 // Used for payment error checking.
 $payment_error = false;
 if ($sale->status != 'paid' && $sale->status != 'voided') {
-	foreach ($sale->payments as $key => $cur_payment) {
-		if (!in_array($cur_payment['status'], array('approved', 'declined', 'tendered', 'voided')))
+	$orig_payments = array();
+	foreach ($sale->payments as $key => &$cur_payment) {
+		if (!in_array($cur_payment['status'], array('approved', 'declined', 'tendered', 'voided'))) {
+			$orig_payments[$key] = $cur_payment;
 			unset($sale->payments[$key]);
+		}
 	}
+	unset($cur_payment);
 	$payments = (array) json_decode($_REQUEST['payments']);
 	foreach ($payments as $cur_payment) {
 		$cur_payment_type_entity = com_sales_payment_type::factory((int) $cur_payment->key);
@@ -121,6 +125,7 @@ if ($sale->status != 'paid' && $sale->status != 'voided') {
 		$cur_amount = (float) $cur_payment->values[1];
 		$cur_status = $cur_payment->values[2];
 		$data = $cur_payment->data;
+		$orig_key = $cur_payment->orig_key;
 		if (in_array($cur_status, array('approved', 'declined', 'tendered', 'voided')))
 			continue;
 		if (!isset($cur_payment_type_entity->guid)) {
@@ -143,13 +148,23 @@ if ($sale->status != 'paid' && $sale->status != 'voided') {
 				$data_array[$cur_data->name] = $cur_data->value;
 			}
 		}
-		$sale->payments[] = array(
-			'entity' => $cur_payment_type_entity,
-			'type' => $cur_type,
-			'amount' => $cur_amount,
-			'status' => $cur_status,
-			'data' => $data_array
-		);
+		if (isset($orig_key) && isset($orig_payments[$orig_key])) {
+			$orig_payments[$orig_key]['entity'] = $cur_payment_type_entity;
+			$orig_payments[$orig_key]['type'] = $cur_type;
+			$orig_payments[$orig_key]['amount'] = $cur_amount;
+			$orig_payments[$orig_key]['status'] = $cur_status;
+			$orig_payments[$orig_key]['data'] = $data_array;
+			$sale->payments[] = $orig_payments[$orig_key];
+			unset($orig_payments[$orig_key]);
+		} else {
+			$sale->payments[] = array(
+				'entity' => $cur_payment_type_entity,
+				'type' => $cur_type,
+				'amount' => $cur_amount,
+				'status' => $cur_status,
+				'data' => $data_array
+			);
+		}
 	}
 }
 $sale->comments = $_REQUEST['comment_saver'];

@@ -667,7 +667,7 @@ if ($pines->config->com_sales->autocomplete_product)
 			<?php } ?>
 
 			
-			<?php if (!empty($this->entity->payments)) { foreach ($this->entity->payments as $cur_payment) { ?>
+			<?php if (!empty($this->entity->payments)) { foreach ($this->entity->payments as $key => $cur_payment) { ?>
 			(function(){
 				var table_entry = JSON.parse("<?php
 				$object = (object) array(
@@ -679,7 +679,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					)
 				);
 				echo addslashes(json_encode($object)); ?>");
-				
+
 				<?php if (!empty($cur_payment['data'])) { ?>
 					var data = JSON.parse("<?php
 					$data = array();
@@ -691,10 +691,12 @@ if ($pines->config->com_sales->autocomplete_product)
 						'data' => $data
 					))); ?>");
 					payments_table.pgrid_add([table_entry], function(){
-						$(this).data("payment_data", data);
+						$(this).data("orig_key", <?php echo (int) $key; ?>).data("payment_data", data);
 					});
 				<?php } else { ?>
-					payments_table.pgrid_add([table_entry]);
+					payments_table.pgrid_add([table_entry], function(){
+						$(this).data("orig_key", <?php echo (int) $key; ?>);
+					});
 				<?php } ?>
 			})();
 			<?php } } ?>
@@ -806,6 +808,7 @@ if ($pines->config->com_sales->autocomplete_product)
 						amount_tendered += amount;
 					}
 					submit_val[i].data = cur_row.data("payment_data");
+					submit_val[i].orig_key = cur_row.data("orig_key");
 				});
 				amount_due = total - amount_tendered;
 				if (amount_due < 0) {

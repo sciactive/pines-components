@@ -580,7 +580,10 @@ if ($pines->config->com_sales->autocomplete_product)
 							},
 							buttons: {
 								"Done": function(){
+									var olddata = row.data("payment_data");
 									var newdata = {processing_type: payment_data.processing_type, data: form.find("form :input").serializeArray()};
+									if (olddata && olddata.data)
+										newdata.data = $.extend({}, olddata.data, newdata.data);
 									row.data("payment_data", newdata);
 									update_payments();
 									form.dialog('close');

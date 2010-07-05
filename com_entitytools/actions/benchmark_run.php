@@ -31,7 +31,7 @@ for ($i=0; $i<1000; $i++) {
 	$entity->null = null;
 	$entity->array = array('string', 0, 1.5, null);
 	$entity->object = (object) array('string' => 'string', 'int' => 0, 'float' => 1.5, 'null' => null);
-	$pass = $pass && $entity->save();
+	$pass = $entity->save() && $pass;
 }
 $benchmark->create[0] = $pass;
 $benchmark->create[1] = microtime(true);

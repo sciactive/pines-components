@@ -28,8 +28,10 @@ if ( !gatekeeper('com_sales/voidsale') && !$_SESSION['user']->is($entity->user) 
 } else {
 	if ($entity->void() && $entity->save()) {
 		pines_notice('The sale has been voided.');
-	} else {
+	} elseif ($entity->save()) {
 		pines_notice('The sale could not be voided.');
+	} else {
+		pines_notice('The sale could not be edited. Do you have permission?');
 	}
 }
 

@@ -119,7 +119,7 @@ class com_sales_stock extends entity {
 		$tx->type = 'received';
 		$tx->reason = $reason;
 		if (!($this->guid))
-			$return = $return && $this->save();
+			$return = $this->save() && $return;
 
 		$tx->old_available = $old_available;
 		$tx->new_available = $this->available;
@@ -130,12 +130,12 @@ class com_sales_stock extends entity {
 				if ((array) $on_entity->received !== $on_entity->received)
 					$on_entity->received = array();
 				$on_entity->received[] = $this;
-				$return = $return && $on_entity->save();
+				$return = $on_entity->save() && $return;
 			}
 			$tx->ref = $on_entity;
 		}
 		$tx->stock = $this;
-		$return = $return && $tx->save();
+		$return = $tx->save() && $return;
 		return $return;
 	}
 
@@ -174,7 +174,7 @@ class com_sales_stock extends entity {
 
 		// Make sure we have a GUID before saving the tx.
 		if (!($this->guid))
-			$return = $return && $this->save();
+			$return = $this->save() && $return;
 
 		$tx->old_available = $old_available;
 		$tx->new_available = $this->available;
@@ -183,7 +183,7 @@ class com_sales_stock extends entity {
 		if (isset($on_entity))
 			$tx->ref = $on_entity;
 		$tx->stock = $this;
-		$return = $return && $tx->save();
+		$return = $tx->save() && $return;
 		return $return;
 	}
 }

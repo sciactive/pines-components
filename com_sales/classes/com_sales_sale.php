@@ -231,10 +231,10 @@ class com_sales_sale extends entity {
 
 				// Make sure we have a GUID before saving the tx.
 				if (!($this->guid))
-					$return = $return && $this->save();
+					$return = $this->save() && $return;
 
 				$tx->ticket = $this;
-				$return = $return && $tx->save();
+				$return = $tx->save() && $return;
 			}
 		}
 
@@ -264,15 +264,15 @@ class com_sales_sale extends entity {
 
 			// Make sure we have a GUID before saving the tx.
 			if (!($this->guid))
-				$return = $return && $this->save();
+				$return = $this->save() && $return;
 
 			$tx->ticket = $this;
-			$return = $return && $tx->save();
+			$return = $tx->save() && $return;
 		}
 
 		$this->tender_date = time();
 
-		return ($return && $this->save());
+		return ($this->save() && $return);
 	}
 
 	/**
@@ -465,14 +465,14 @@ class com_sales_sale extends entity {
 
 		// Make sure we have a GUID before saving the tx.
 		if (!($this->guid))
-			$return = $return && $this->save();
+			$return = $this->save() && $return;
 
 		$tx->ticket = $this;
-		$return = $return && $tx->save();
+		$return = $tx->save() && $return;
 
 		$this->invoice_date = time();
 
-		return ($return && $this->save());
+		return ($this->save() && $return);
 	}
 
 	/**
@@ -599,16 +599,16 @@ class com_sales_sale extends entity {
 				continue;
 			foreach ($cur_product['stock_entities'] as &$cur_stock) {
 				if ($cur_product['delivery'] == 'shipped') {
-					$return = $return && $cur_stock->remove('sold_pending_shipping', $this, $cur_stock->location) && $cur_stock->save();
+					$return = $cur_stock->remove('sold_pending_shipping', $this, $cur_stock->location) && $cur_stock->save() && $return;
 				} elseif ($cur_product['delivery'] == 'pick-up') {
-					$return = $return && $cur_stock->remove('sold_pending_pickup', $this, $cur_stock->location) && $cur_stock->save();
+					$return = $cur_stock->remove('sold_pending_pickup', $this, $cur_stock->location) && $cur_stock->save() && $return;
 				} else {
-					$return = $return && $cur_stock->remove('sold_at_store', $this) && $cur_stock->save();
+					$return = $cur_stock->remove('sold_at_store', $this) && $cur_stock->save() && $return;
 				}
 			}
 		}
 		unset($cur_product);
-		return ($return && $this->save());
+		return ($this->save() && $return);
 	}
 
 	/**
@@ -676,10 +676,10 @@ class com_sales_sale extends entity {
 
 				// Make sure we have a GUID before saving the tx.
 				if (!($this->guid))
-					$return = $return && $this->save();
+					$return = $this->save() && $return;
 
 				$tx->ticket = $this;
-				$return = $return && $tx->save();
+				$return = $tx->save() && $return;
 			}
 		}
 		$amount_due = $total - $amount_tendered;
@@ -690,7 +690,7 @@ class com_sales_sale extends entity {
 		$this->amount_tendered = $amount_tendered;
 		$this->amount_due = $amount_due;
 		$this->change = $change;
-		return ($return && $this->save());
+		return ($this->save() && $return);
 	}
 
 	/**
@@ -830,9 +830,9 @@ class com_sales_sale extends entity {
 							)
 						);
 					if ($last_tx) {
-						$return = $return && $cur_stock->receive('sold_at_store', $this, $last_tx->old_location) && $cur_stock->save();
+						$return = $cur_stock->receive('sold_at_store', $this, $last_tx->old_location) && $cur_stock->save() && $return;
 					} else {
-						$return = $return && $cur_stock->receive('sold_at_store', $this) && $cur_stock->save();
+						$return = $cur_stock->receive('sold_at_store', $this) && $cur_stock->save() && $return;
 					}
 				}
 			}
@@ -902,10 +902,10 @@ class com_sales_sale extends entity {
 
 					// Make sure we have a GUID before saving the tx.
 					if (!($this->guid))
-						$return = $return && $this->save();
+						$return = $this->save() && $return;
 
 					$tx->ticket = $this;
-					$return = $return && $tx->save();
+					$return = $tx->save() && $return;
 				}
 			}
 			unset($cur_payment);
@@ -931,14 +931,14 @@ class com_sales_sale extends entity {
 
 			// Make sure we have a GUID before saving the tx.
 			if (!($this->guid))
-				$return = $return && $this->save();
+				$return = $this->save() && $return;
 
 			$tx->ticket = $this;
-			$return = $return && $tx->save();
+			$return = $tx->save() && $return;
 		}
 
 		$this->void_date = time();
-		return ($return && $this->save());
+		return ($this->save() && $return);
 	}
 }
 

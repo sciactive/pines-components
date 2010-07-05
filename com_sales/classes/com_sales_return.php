@@ -245,7 +245,7 @@ class com_sales_return extends entity {
 				$this->sale->products[$cur_product['sale_key']]['returned_quantity'] += $cur_product['quantity'];
 			}
 			unset($cur_product);
-			$return = $return && $this->sale->save();
+			$return = $this->sale->save() && $return;
 		}
 
 		// Complete the transaction.
@@ -258,15 +258,15 @@ class com_sales_return extends entity {
 
 			// Make sure we have a GUID before saving the tx.
 			if (!($this->guid))
-				$return = $return && $this->save();
+				$return = $this->save() && $return;
 
 			$tx->ticket = $this;
-			$return = $return && $tx->save();
+			$return = $tx->save() && $return;
 		}
 
 		$this->process_date = time();
 
-		return ($return && $this->save());
+		return ($this->save() && $return);
 	}
 
 	/**
@@ -465,8 +465,8 @@ class com_sales_return extends entity {
 		}
 		unset($cur_product);
 		if (isset($this->sale))
-			$return = $return && $this->sale->save();
-		return ($return && $this->save());
+			$return = $this->sale->save() && $return;
+		return ($this->save() && $return);
 	}
 
 	/**
@@ -538,10 +538,10 @@ class com_sales_return extends entity {
 
 				// Make sure we have a GUID before saving the tx.
 				if (!($this->guid))
-					$return = $return && $this->save();
+					$return = $this->save() && $return;
 
 				$tx->ticket = $this;
-				$return = $return && $tx->save();
+				$return = $tx->save() && $return;
 			} else {
 				if ($cur_payment['status'] != 'declined')
 					$return = false;
@@ -553,8 +553,8 @@ class com_sales_return extends entity {
 		$this->amount_tendered = $amount_tendered;
 		$this->amount_due = $amount_due;
 		if (isset($this->sale))
-			$return = $return && $this->sale->save();
-		return ($return && $this->save());
+			$return = $this->sale->save() && $return;
+		return ($this->save() && $return);
 	}
 
 	/**

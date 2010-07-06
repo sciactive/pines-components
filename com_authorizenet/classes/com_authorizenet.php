@@ -270,6 +270,7 @@ class com_authorizenet extends component {
 			case 'return':
 				$amt = $pines->com_sales->round((float) $array['payment']['amount'], true);
 				$card_num = isset($array['payment']['com_authorizenet_credit_info']['card_number']) ? $array['payment']['com_authorizenet_credit_info']['card_number'] : $array['payment']['data']['card_number'];
+				$exp_date = isset($array['payment']['com_authorizenet_credit_info']['card_exp_month']) ? $array['payment']['com_authorizenet_credit_info']['card_exp_month'].$array['payment']['com_authorizenet_credit_info']['card_exp_year'] : $array['payment']['data']['card_exp_month'].$array['payment']['data']['card_exp_year'];
 				$transaction_id = $array['payment']['com_authorizenet_credit_info']['transaction_id'];
 				$transaction_name = 'RETURN: '.$pines->config->com_authorizenet->trans_name;
 
@@ -286,6 +287,7 @@ class com_authorizenet extends component {
 
 					'x_type'			=> 'CREDIT',
 					'x_card_num'		=> $card_num,
+					'x_exp_date'		=> $exp_date,
 					'x_trans_id'		=> $transaction_id,
 					'x_description'		=> $transaction_name,
 					'x_amount'			=> $amt

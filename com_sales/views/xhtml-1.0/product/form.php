@@ -432,6 +432,11 @@ $pines->com_ptags->load();
 				<label><span class="pf-label">Non-Refundable</span>
 					<input class="pf-field ui-widget-content" type="checkbox" name="non_refundable" size="24" value="ON"<?php echo $this->entity->non_refundable ? ' checked="checked"' : ''; ?> /></label>
 			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Hide from Autocomplete</span>
+					<span class="pf-note">Exclude this product from autocomplete searches.</span>
+					<input class="pf-field ui-widget-content" type="checkbox" name="autocomplete_hide" size="24" value="ON"<?php echo $this->entity->autocomplete_hide ? ' checked="checked"' : ''; ?> /></label>
+			</div>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Additional Barcodes</span>
 				<div class="pf-group">

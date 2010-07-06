@@ -28,6 +28,7 @@ if ( isset($_REQUEST['id']) ) {
 // General
 $product->name = $_REQUEST['name'];
 $product->enabled = ($_REQUEST['enabled'] == 'ON');
+$product->autocomplete_hide = ($_REQUEST['autocomplete_hide'] == 'ON');
 $product->sku = $_REQUEST['sku'];
 $product->description = $_REQUEST['description'];
 $product->short_description = $_REQUEST['short_description'];
@@ -118,7 +119,9 @@ if ($product->save()) {
 	pines_notice('Saved product ['.$product->name.']');
 	// Assign the product to the selected categories.
 	// We have to do this here, because new products won't have a GUID until now.
-	$categories = array_map('intval', $_REQUEST['categories']);
+	$categories = array();
+	if (is_array($_REQUEST['categories']))
+		$categories = array_map('intval', $_REQUEST['categories']);
 	$all_categories = $pines->entity_manager->get_entities(array('class' => com_sales_category), array('&', 'data' => array('enabled', true), 'tag' => array('com_sales', 'category')));
 	foreach($all_categories as &$cur_cat) {
 		if (in_array($cur_cat->guid, $categories) && !$product->in_array($cur_cat->products)) {

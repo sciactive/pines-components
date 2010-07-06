@@ -599,7 +599,7 @@ class com_sales_return extends entity {
 			if ($cur_product['entity']->discountable && $discount != "") {
 				$discount_price = $this->discount_price($price, $discount);
 				// Check that the discount doesn't lower the item's price below the floor.
-				if ($cur_product['entity']->floor && $pines->com_sales->round($discount_price, $pines->config->com_sales->dec) < $pines->com_sales->round($cur_product['entity']->floor, $pines->config->com_sales->dec)) {
+				if ($cur_product['entity']->floor && $pines->com_sales->round($discount_price) < $pines->com_sales->round($cur_product['entity']->floor)) {
 					pines_notice("The discount on {$cur_product['entity']->name} lowers the product's price below the limit. The discount was removed.");
 					$discount = $cur_product['discount'] = '';
 				} else {
@@ -639,15 +639,15 @@ class com_sales_return extends entity {
 			}
 			$item_fees += (float) $cur_item_fees;
 			$subtotal += (float) $line_total;
-			$cur_product['line_total'] = $pines->com_sales->round($line_total, $pines->config->com_sales->dec);
-			$cur_product['fees'] = $pines->com_sales->round($cur_item_fees, $pines->config->com_sales->dec);
+			$cur_product['line_total'] = $pines->com_sales->round($line_total);
+			$cur_product['fees'] = $pines->com_sales->round($cur_item_fees);
 		}
 		// The total can now be calculated.
 		$total = $subtotal + $item_fees + $taxes;
-		$this->subtotal = $pines->com_sales->round($subtotal, $pines->config->com_sales->dec);
-		$this->item_fees = $pines->com_sales->round($item_fees, $pines->config->com_sales->dec);
-		$this->taxes = $pines->com_sales->round($taxes, $pines->config->com_sales->dec);
-		$this->total = $pines->com_sales->round($total, $pines->config->com_sales->dec);
+		$this->subtotal = $pines->com_sales->round($subtotal);
+		$this->item_fees = $pines->com_sales->round($item_fees);
+		$this->taxes = $pines->com_sales->round($taxes);
+		$this->total = $pines->com_sales->round($total);
 		return true;
 	}
 }

@@ -202,8 +202,8 @@ switch ($this->entity->status) {
 					<td><?php echo $cur_product['entity']->name; ?></td>
 					<td><?php echo $cur_product['entity']->short_description; ?></td>
 					<td class="right_text"><?php echo $cur_product['quantity']; ?></td>
-					<td class="right_text">$<?php echo $pines->com_sales->round($cur_product['price'], $pines->config->com_sales->dec, true); ?><?php echo empty($cur_product['discount']) ? '' : " - {$cur_product['discount']}"; ?></td>
-					<td class="right_text">$<?php echo $pines->com_sales->round($cur_product['line_total'], $pines->config->com_sales->dec, true); ?></td>
+					<td class="right_text">$<?php echo $pines->com_sales->round($cur_product['price'], true); ?><?php echo empty($cur_product['discount']) ? '' : " - {$cur_product['discount']}"; ?></td>
+					<td class="right_text">$<?php echo $pines->com_sales->round($cur_product['line_total'], true); ?></td>
 				</tr>
 				<?php } } ?>
 			</tbody>
@@ -224,11 +224,11 @@ switch ($this->entity->status) {
 			</div>
 			<div class="data_col right_text">
 				<?php foreach ($this->entity->payments as $cur_payment) { ?>
-				<span>$<?php echo $pines->com_sales->round($cur_payment['amount'], $pines->config->com_sales->dec, true); ?></span>
+				<span>$<?php echo $pines->com_sales->round($cur_payment['amount'], true); ?></span>
 				<?php } ?>
 				<hr />
-				<span>$<?php echo $pines->com_sales->round($this->entity->amount_tendered, $pines->config->com_sales->dec, true); ?></span>
-				<?php if ($sale) { ?><span>$<?php echo $pines->com_sales->round($this->entity->change, $pines->config->com_sales->dec, true); ?></span><?php } ?>
+				<span>$<?php echo $pines->com_sales->round($this->entity->amount_tendered, true); ?></span>
+				<?php if ($sale) { ?><span>$<?php echo $pines->com_sales->round($this->entity->change, true); ?></span><?php } ?>
 			</div>
 		</div>
 		<?php } ?>
@@ -243,11 +243,11 @@ switch ($this->entity->status) {
 				<span><strong>Total: </strong></span>
 			</div>
 			<div class="data_col right_text">
-				<span>$<?php echo $pines->com_sales->round($this->entity->subtotal, $pines->config->com_sales->dec, true); ?></span>
-				<?php if ($this->entity->item_fees > 0) { ?><span>$<?php echo $pines->com_sales->round($this->entity->item_fees, $pines->config->com_sales->dec, true); ?></span><?php } ?>
-				<span>$<?php echo $pines->com_sales->round($this->entity->taxes, $pines->config->com_sales->dec, true); ?></span>
+				<span>$<?php echo $pines->com_sales->round($this->entity->subtotal, true); ?></span>
+				<?php if ($this->entity->item_fees > 0) { ?><span>$<?php echo $pines->com_sales->round($this->entity->item_fees, true); ?></span><?php } ?>
+				<span>$<?php echo $pines->com_sales->round($this->entity->taxes, true); ?></span>
 				<hr />
-				<span><strong>$<?php echo $pines->com_sales->round($this->entity->total, $pines->config->com_sales->dec, true); ?></strong></span>
+				<span><strong>$<?php echo $pines->com_sales->round($this->entity->total, true); ?></strong></span>
 			</div>
 		</div>
 	</div>

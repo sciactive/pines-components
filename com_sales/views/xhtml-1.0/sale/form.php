@@ -674,7 +674,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					'key' => $cur_payment['entity']->guid,
 					'values' => array(
 						$cur_payment['entity']->name,
-						$pines->com_sales->round($cur_payment['amount'], $pines->config->com_sales->dec, true),
+						$pines->com_sales->round($cur_payment['amount'], true),
 						$cur_payment['status']
 					)
 				);

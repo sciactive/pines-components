@@ -328,7 +328,7 @@ if ($this->entity->final)
 							<td><?php echo $cur_product['entity']->name; ?></td>
 							<td><?php echo $cur_product['quantity']; ?></td>
 							<td><?php echo $cur_product['cost']; ?></td>
-							<td><?php echo $pines->com_sales->round((int) $cur_product['quantity'] * (float) $cur_product['cost'], $pines->config->com_sales->dec); ?></td>
+							<td><?php echo $pines->com_sales->round((int) $cur_product['quantity'] * (float) $cur_product['cost']); ?></td>
 						</tr>
 						<?php } ?>
 					</tbody>

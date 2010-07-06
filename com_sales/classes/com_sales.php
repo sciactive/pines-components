@@ -801,11 +801,15 @@ class com_sales extends component {
 	 * Use gaussian rounding to round a number to a certain decimal point.
 	 *
 	 * @param float $value The number to round.
-	 * @param int $decimal The number of decimal points.
 	 * @param bool $string Whether to return a formatted string, instead of a float.
+	 * @param int $decimal The number of decimal points. Defaults to value from config.
 	 * @return float|string Float if $string is false, formatted string otherwise.
 	 */
-	public function round($value, $decimal, $string = false) {
+	public function round($value, $string = false, $decimal = null) {
+		if (!isset($decimal)) {
+			global $pines;
+			$decimal = $pines->config->com_sales->dec;
+		}
 		$rnd = pow(10, $decimal);
 		$mult = $value * $rnd;
 		$value = $this->gaussian_round($mult);

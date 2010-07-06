@@ -124,13 +124,19 @@ class com_sales extends component {
 	 */
 	public function get_product_by_code($code) {
 		global $pines;
+		$product = $pines->entity_manager->get_entity(
+				array('class' => com_sales_product),
+				array('&',
+					'data' => array('sku', $code),
+					'tag' => array('com_sales', 'product')
+				)
+			);
+		if (isset($product))
+			return $product;
 		return $pines->entity_manager->get_entity(
 				array('class' => com_sales_product),
-				array('|',
-					'data' => array('sku', $code),
-					'array' => array('additional_barcodes', $code)
-				),
 				array('&',
+					'array' => array('additional_barcodes', $code),
 					'tag' => array('com_sales', 'product')
 				)
 			);

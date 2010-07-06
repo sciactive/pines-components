@@ -11,7 +11,9 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Reviewing Countsheet ['.htmlentities($this->entity->guid).'] at '.$this->entity->group->name;
-$this->note = 'Created by '.$this->entity->user->name.' on '.format_date($this->entity->p_cdate);
+$this->note = 'Created by '.$this->entity->user->name.' on '.format_date($this->entity->p_cdate, 'full_long').'.';
+if (isset($this->entity->run_count_date))
+	$this->note .= ' Run on '.format_date($this->entity->run_count_date, 'full_long').'.';
 $pines->com_pgrid->load();
 ?>
 <script type="text/javascript">
@@ -34,7 +36,7 @@ $pines->com_pgrid->load();
 	// ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo pines_url('com_sales', 'countsheet/savestatus'); ?>">
-	<?php if ($this->missing) { ?>
+	<?php if ($this->entity->missing) { ?>
 	<div class="pf-element pf-heading">
 		<h1 style="color: red;">Missing Items</h1>
 	</div>
@@ -45,22 +47,26 @@ $pines->com_pgrid->load();
 					<th style="width: 40%;">Name</th>
 					<th style="width: 10%;">Qty</th>
 					<th style="width: 25%;">SKU</th>
-					<th style="width: 25%;">Serial</th>
+					<th style="width: 25%;">Serials</th>
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach ($this->missing as $cur_entry) { ?>
+				<?php foreach ($this->entity->missing as $cur_entry) {
+					if ($missing_counted[$cur_entry->product->guid])
+						continue;
+					$missing_counted[$cur_entry->product->guid] = true;
+					?>
 				<tr class="ui-state-error">
 					<td><?php echo $cur_entry->product->name; ?></td>
-					<td><?php echo $this->missing_count[$cur_entry->product->sku]; ?></td>
+					<td><?php echo $this->entity->missing_count[$cur_entry->product->guid]; ?></td>
 					<td><?php echo $cur_entry->product->sku; ?></td>
-					<td><?php echo $cur_entry->serial; ?></td>
+					<td><?php echo implode(', ', $this->entity->missing_serials[$cur_entry->product->guid]); ?></td>
 				</tr>
 				<?php } ?>
 			</tbody>
 		</table>
 	</div>
-	<?php } if ($this->matched) { ?>
+	<?php } if ($this->entity->matched) { ?>
 	<div class="pf-element pf-heading">
 		<h1 style="color: green;">Matched Items</h1>
 	</div>
@@ -71,24 +77,29 @@ $pines->com_pgrid->load();
 					<th style="width: 40%;">Name</th>
 					<th style="width: 10%;">Qty</th>
 					<th style="width: 25%;">SKU</th>
-					<th style="width: 25%;">Serial</th>
+					<th style="width: 25%;">Serials</th>
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach ($this->matched as $cur_entry) { ?>
+				<?php foreach ($this->entity->matched as $cur_entry) {
+					if ($matched_counted[$cur_entry->product->guid])
+						continue;
+					$matched_counted[$cur_entry->product->guid] = true;
+					?>
 				<tr>
 					<td><?php echo $cur_entry->product->name; ?></td>
-					<td><?php echo $this->matched_count[$cur_entry->product->sku]; ?></td>
+					<td><?php echo $this->entity->matched_count[$cur_entry->product->guid]; ?></td>
 					<td><?php echo $cur_entry->product->sku; ?></td>
-					<td><?php echo $cur_entry->serial; ?></td>
+					<td><?php echo implode(', ', $this->entity->matched_serials[$cur_entry->product->guid]); ?></td>
 				</tr>
 				<?php } ?>
 			</tbody>
 		</table>
 	</div>
-	<?php } if ($this->potential) { ?>
+	<?php } if ($this->entity->potential) { ?>
 	<div class="pf-element pf-heading">
 		<h1 style="color: blue;">Potential Matches</h1>
+		<p>A non-exhaustive list of entries the user may have meant.</p>
 	</div>
 	<div class="pf-element pf-full-width">
 		<table id="p_muid_potential_table">
@@ -105,8 +116,8 @@ $pines->com_pgrid->load();
 			</thead>
 			<tbody>
 				<?php
-				foreach ($this->potential as $cur_match) {
-					?><tr class="parent expandme collapseme ui-priority-primary" title="<?php echo $cur_match['name']; ?>"><td><?php echo $cur_match['name']; ?></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><?php
+				foreach ($this->entity->potential as $cur_match) {
+					?><tr class="parent expandme collapseme ui-priority-primary" title="<?php echo $cur_match['name']; ?>"><td><?php echo $cur_match['count'] > 1 ? "{$cur_match['name']} x {$cur_match['count']}" : "{$cur_match['name']}"; ?></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><?php
 					if ($cur_match['closest']) {
 						?><tr class="parent expandme ui-priority-primary child <?php echo $cur_match['name']; ?>" title="<?php echo $cur_match['name']; ?>_same"><td>Same Location</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><?php
 						foreach ($cur_match['closest'] as $cur_closest) {
@@ -139,23 +150,22 @@ $pines->com_pgrid->load();
 			</tbody>
 		</table>
 	</div>
-	<?php } if ($this->invalid) { ?>
+	<?php } if ($this->entity->invalid) { ?>
 	<div class="pf-element pf-heading">
-		<h1 style="color: gray;">Invalid/Unknown Search Strings</h1>
+		<h1 style="color: gray;">Invalid/Unknown Entries</h1>
+		<p>No matches could be found for these entries.</p>
 	</div>
 	<div class="pf-element pf-full-width">
 		<table id="p_muid_invalid_table">
 			<thead>
 				<tr>
-					<th style="width: 10%;">Entry</th>
-					<th style="width: 90%;">Status</th>
+					<th style="width: 100%;">Entry</th>
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach ($this->invalid as $cur_entry) { ?>
+				<?php foreach ($this->entity->invalid as $cur_entry) { ?>
 				<tr>
 					<td><?php echo $cur_entry; ?></td>
-					<td>No record in this location's inventory</td>
 				</tr>
 				<?php } ?>
 			</tbody>

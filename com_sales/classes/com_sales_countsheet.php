@@ -28,7 +28,14 @@ class com_sales_countsheet extends entity {
 		// Defaults
 		$this->status = 'pending';
 		$this->entries = array();
-		$this->products = array();
+		$this->matched = array();
+		$this->matched_count = array();
+		$this->matched_serials = array();
+		$this->missing = array();
+		$this->missing_count = array();
+		$this->missing_serials = array();
+		$this->potential = array();
+		$this->invalid = array();
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
@@ -98,6 +105,22 @@ class com_sales_countsheet extends entity {
 
 	/**
 	 * Print a form to review the countsheet.
+	 * 
+	 * @return module The form's module.
+	 */
+	public function print_review() {
+		global $pines;
+
+		$this->run_count();
+
+		$module = new module('com_sales', 'countsheet/formreview', 'content');
+		$module->entity = $this;
+
+		return $module;
+	}
+
+	/**
+	 * Count inventory for the countsheet.
 	 *
 	 * This function searches through all items in the inventory of the
 	 * countsheet's location. It compares the countsheet entries to each item
@@ -117,103 +140,163 @@ class com_sales_countsheet extends entity {
 	 *   </ul>
 	 *  <li>Invalid - If an item is not in the inventory at all.</li>
 	 * </ul>
-	 * 
-	 * @return module The form's module.
 	 */
-	public function print_review() {
+	public function run_count() {
 		global $pines;
-		$module = new module('com_sales', 'countsheet/formreview', 'content');
-		$module->entity = $this;
-
-		$module->missing = $module->matched = $module->potential = $module->invalid = array();
-		// Grab all stock items for this location's inventory.
-		$expected_stock = (array) $pines->entity_manager->get_entities(
-				array('class' => com_sales_stock),
-				array('!&',
-					'data' => array('location', null)
-				),
-				array('&',
-					'tag' => array('com_sales', 'stock')
-				)
-			);
-		@usort($expected_stock, array($this, 'sort_stock_by_location_serial'));
+		// Committed countsheets can't be run again.
+		if ($this->final)
+			return;
+		// Set the run date.
+		$this->run_count_date = time();
+		$not_selector = array('!&',
+			'guid' => array(),
+			'data' => array('location', null)
+		);
+		$and_selector = array('&',
+			'tag' => array('com_sales', 'stock')
+		);
+		// Reset arrays.
+		$this->matched = array();
+		$this->matched_count = array();
+		$this->matched_serials = array();
+		$this->missing = array();
+		$this->missing_count = array();
+		$this->missing_serials = array();
+		$this->potential = array();
+		$this->invalid = array();
 		$entries = array();
 		foreach ($this->entries as $cur_entry) {
 			for ($i=0; $i<$cur_entry->qty; $i++)
 				$entries[] = $cur_entry->code;
 		}
-		foreach ($expected_stock as $key => $cur_stock_entry) {
-			$entry_exists = false;
-			$in_store = ($cur_stock_entry->location->guid == $this->group->guid);
-			foreach ($entries as $itemkey => $item) {
-				if (!isset($module->potential[$item])) {
-					$module->potential[$item] = array(
-						'name' => $item,
-						'found' => false,
-						'closest' => array(),
-						'entries' => array()
-					);
-				}
-				if ($cur_stock_entry->serial == $item || ($cur_stock_entry->product->sku == $item && !isset($cur_stock_entry->serial))) {
-					// The item is a serial match; or it is a sku match, and the entry is not serialized.
-					if ($in_store) {
-						// The item is found.
-						foreach ($module->matched as $cur_matched) {
-							if (!isset($cur_matched->serial) && $cur_stock_entry->product->sku == $cur_matched->product->sku) {
-								$module->matched_count[$cur_stock_entry->product->sku]++;
-								$entry_exists = true;
-							}
-						}
-						if (!$entry_exists) {
-							$module->matched[] = $cur_stock_entry;
-							$module->matched_count[$cur_stock_entry->product->sku] = 1;
-						}
-						unset($expected_stock[$key]);
-						unset($entries[$itemkey]);
-						// Clear out the 'potential' entry for this item string.
-						if (!$module->potential[$item]['found'])
-							unset($module->potential[$item]);
-						break;
-					} elseif (!$cur_stock_entry->in_array($module->potential[$item]['entries'])) {
-						// The item is not in the location but matches the search string.
-						$module->potential[$item]['found'] = true;
-						$module->potential[$item]['entries'][] = $cur_stock_entry;
-					}
-				} elseif ($cur_stock_entry->product->sku == $item && isset($cur_stock_entry->serial)) {
-					// A serialized item has a SKU matching the search string.
-					$module->potential[$item]['found'] = true;
-					if ($in_store) {
-						if (!$cur_stock_entry->in_array($module->potential[$item]['closest']))
-							$module->potential[$item]['closest'][] = $cur_stock_entry;
-					} else {
-						if (!$cur_stock_entry->in_array($module->potential[$item]['entries']))
-							$module->potential[$item]['entries'][] = $cur_stock_entry;
-					}
-				}
-			}
-			if ($in_store && isset($expected_stock[$key])) {
-				// A stock entry at this location is missing on the countsheet.
-				foreach ($module->missing as $cur_missing) {
-					if (!isset($cur_missing->serial) && $cur_stock_entry->product->sku == $cur_missing->product->sku) {
-						$module->missing_count[$cur_stock_entry->product->sku]++;
-						$entry_exists = true;
-					}
-				}
-				if (!$entry_exists) {
-					$module->missing[] = $cur_stock_entry;
-					$module->missing_count[$cur_stock_entry->product->sku] = 1;
-				}
+		// Find entries based on location and serial.
+		foreach ($entries as $key => $cur_code) {
+			$stock = $pines->entity_manager->get_entity(
+					array('class' => com_sales_stock),
+					array('&',
+						'ref' => array('location', $this->group),
+						'data' => array('serial', $cur_code)
+					),
+					$not_selector,
+					$and_selector
+				);
+			if (isset($stock)) {
+				// If the product isn't serialized, something's wrong, don't save it.
+				if (!$stock->product->serialized)
+					continue;
+				$this->matched[] = $stock;
+				$this->matched_count[$stock->product->guid]++;
+				$this->matched_serials[$stock->product->guid][] = $stock->serial;
+				$not_selector['guid'][] = $stock->guid;
+				unset($entries[$key]);
 			}
 		}
-		// See if any of the invalid items matched any sold items in the inventory.
-		foreach ($entries as $item) {
-			if ($module->potential[$item]['found'] == false) {
-				// There were no potential matches for this search string.
-				$module->invalid[] = $item;
-				unset($module->potential[$item]);
+		// Find entries based on location and SKU/barcode.
+		foreach ($entries as $key => $cur_code) {
+			$product = $pines->com_sales->get_product_by_code($cur_code);
+			if (!isset($product))
+				continue;
+			$stock = $pines->entity_manager->get_entity(
+					array('class' => com_sales_stock),
+					array('&',
+						'ref' => array(array('location', $this->group), array('product', $product))
+					),
+					$not_selector,
+					$and_selector
+				);
+			if (isset($stock)) {
+				// If the product is serialized, the entry is incorrect.
+				if ($stock->product->serialized) {
+					if (!$stock->in_array($this->potential[$cur_code]['closest'])) {
+						$this->potential[$cur_code]['name'] = $cur_code;
+						// Closest, since it's in this location.
+						$this->potential[$cur_code]['closest'][] = $stock;
+					}
+					$this->potential[$cur_code]['count']++;
+				} else {
+					$this->matched[] = $stock;
+					$this->matched_count[$stock->product->guid]++;
+					$this->matched_serials[$stock->product->guid] = array();
+					$not_selector['guid'][] = $stock->guid;
+				}
+				unset($entries[$key]);
 			}
 		}
-		return $module;
+		// Find entries based on serial.
+		foreach ($entries as $key => $cur_code) {
+			$stocks = (array) $pines->entity_manager->get_entities(
+					array('class' => com_sales_stock, 'limit' => 5),
+					array('!&',
+						'ref' => array('location', $this->group)
+					),
+					array('&',
+						'data' => array('serial', $cur_code)
+					),
+					$not_selector,
+					$and_selector
+				);
+			if ($stocks) {
+				foreach ($stocks as $stock) {
+					// If the product isn't serialized, something's wrong, don't save it.
+					if (!$stock->product->serialized)
+						continue;
+					if (!$stock->in_array($this->potential[$cur_code]['entries'])) {
+						$this->potential[$cur_code]['name'] = $cur_code;
+						// Entries, since it's in another location.
+						$this->potential[$cur_code]['entries'][] = $stock;
+					}
+				}
+				$this->potential[$cur_code]['count']++;
+				unset($entries[$key]);
+			}
+		}
+		// Find entries based on SKU/barcode.
+		foreach ($entries as $key => $cur_code) {
+			$product = $pines->com_sales->get_product_by_code($cur_code);
+			if (!isset($product))
+				continue;
+			$stocks = (array) $pines->entity_manager->get_entities(
+					array('class' => com_sales_stock, 'limit' => 5),
+					array('!&',
+						'ref' => array('location', $this->group)
+					),
+					array('&',
+						'ref' => array('product', $product)
+					),
+					$not_selector,
+					$and_selector
+				);
+			if ($stocks) {
+				foreach ($stocks as $stock) {
+					if (!$stock->in_array($this->potential[$cur_code]['entries'])) {
+						$this->potential[$cur_code]['name'] = $cur_code;
+						// Entries, since it's in another location.
+						$this->potential[$cur_code]['entries'][] = $stock;
+					}
+				}
+				$this->potential[$cur_code]['count']++;
+				unset($entries[$key]);
+			}
+		}
+		// All the rest are invalid.
+		$this->invalid = $entries;
+		// Find entries that should be counted, but weren't found.
+		$this->missing = (array) $pines->entity_manager->get_entities(
+				array('class' => com_sales_stock),
+				array('&',
+					'ref' => array('location', $this->group)
+				),
+				$not_selector,
+				$and_selector
+			);
+		foreach ($this->missing as $stock) {
+			$this->missing_count[$stock->product->guid]++;
+			if ($stock->product->serialized) {
+				$this->missing_serials[$stock->product->guid][] = $stock->serial;
+			} else {
+				$this->missing_serials[$stock->product->guid] = array();
+			}
+		}
 	}
 }
 

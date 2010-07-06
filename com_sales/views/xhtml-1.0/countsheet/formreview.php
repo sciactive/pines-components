@@ -12,126 +12,155 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Reviewing Countsheet ['.htmlentities($this->entity->guid).'] at '.$this->entity->group->name;
 $this->note = 'Created by '.$this->entity->user->name.' on '.format_date($this->entity->p_cdate);
+$pines->com_pgrid->load();
 ?>
-<style type="text/css" >
-	/* <![CDATA[ */
-	#p_muid_form fieldset.missing {
-		border: 1px dotted red;
-		color: red;
-	}
-	#p_muid_form fieldset.missing legend {
-		font-weight: bold;
-	}
-	#p_muid_form fieldset.matched {
-		border: 1px dashed green;
-		color: green;
-	}
-	#p_muid_form fieldset.sold {
-		border: 1px dotted chocolate;
-		color: chocolate;
-	}
-	#p_muid_form fieldset.sold div.pf-element.pf-heading {
-		border-bottom: 1px dotted chocolate;
-	}
-	/* ]]> */
-</style>
+<script type="text/javascript">
+	// <![CDATA[
+	pines(function(){
+		var options = {
+			pgrid_view_height: "auto",
+			pgrid_paginate: false,
+			pgrid_select: false,
+			pgrid_multi_select: false,
+			pgrid_resize: false
+		};
+		$("#p_muid_missing_table, #p_muid_matched_table, #p_muid_potential_table, #p_muid_invalid_table")
+		.find("tr.ui-priority-primary").bind("mouseover", function(e){
+			e.stopImmediatePropagation();
+		}).end()
+		.pgrid(options)
+		.find("tr.expandme").pgrid_expand_rows().filter("tr.collapseme").pgrid_collapse_rows();
+	});
+	// ]]>
+</script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo pines_url('com_sales', 'countsheet/savestatus'); ?>">
 	<?php if ($this->missing) { ?>
-	<fieldset class="pf-group missing">
-		<legend>Missing Items</legend>
-		<ul style="list-style-type: circle;">
-			<?php foreach ($this->missing as $cur_entry) { ?>
-			<li>
-				<?php echo "{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku})"; ?>
-				<?php echo (!$cur_entry->serial) ? ' - <strong>'.$this->missing_count[$cur_entry->product->sku].'</strong>' : ''; ?>
-			</li>
-			<?php } ?>
-		</ul>
-	</fieldset>
-	<?php } if ($this->matched) { ?>
-	<fieldset class="pf-group matched">
-		<legend>Matched Items</legend>
-		<ul style="list-style-type: square;">
-			<?php foreach ($this->matched as $cur_entry) { ?>
-			<li>
-				<?php echo "{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku})"; ?>
-				<?php echo (!$cur_entry->serial) ? ' - <strong>'.$this->matched_count[$cur_entry->product->sku].'</strong>' : ''; ?>
-			</li>
-			<?php } ?>
-		</ul>
-	</fieldset>
-	<?php } if ($this->potential) { ?>
-	<fieldset class="pf-group sold">
-		<legend>Potential Matches</legend>
-		<?php foreach ($this->potential as $cur_entry) { ?>
-			<?php if ($cur_entry['closest']) { ?>
-			<div class="pf-element pf-heading">
-				<p>Items Matching "<strong><?php echo $cur_entry['name']; ?></strong>" in Location</p>
-			</div>
-			<ul style="list-style-type: disc;">
-				<?php foreach ($cur_entry['closest'] as $cur_closest) { ?>
-				<li><?php echo "{$cur_closest->product->name} (".(isset($cur_closest->serial) ? "Serial: {$cur_closest->serial}, " : '')."SKU: {$cur_closest->product->sku})"; ?></li>
+	<div class="pf-element pf-heading">
+		<h1 style="color: red;">Missing Items</h1>
+	</div>
+	<div class="pf-element pf-full-width">
+		<table id="p_muid_missing_table">
+			<thead>
+				<tr>
+					<th style="width: 40%;">Name</th>
+					<th style="width: 10%;">Qty</th>
+					<th style="width: 25%;">SKU</th>
+					<th style="width: 25%;">Serial</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ($this->missing as $cur_entry) { ?>
+				<tr class="ui-state-error">
+					<td><?php echo $cur_entry->product->name; ?></td>
+					<td><?php echo $this->missing_count[$cur_entry->product->sku]; ?></td>
+					<td><?php echo $cur_entry->product->sku; ?></td>
+					<td><?php echo $cur_entry->serial; ?></td>
+				</tr>
 				<?php } ?>
-			</ul>
-			<?php } if ($cur_entry['entries']) { ?>
-			<div class="pf-element pf-heading">
-				<p>Items Matching "<strong><?php echo $cur_entry['name']; ?></strong>" Not in Location</p>
-			</div>
-			<ul style="list-style-type: disc;">
-				<?php foreach ($cur_entry['entries'] as $cur_entry) {
-					switch ($cur_entry->status) {
-						case 'sold_at_store':
-							$txs = $pines->entity_manager->get_entities(
-									array('class' => com_sales_tx),
-									array('&',
-										'ref' => array('stock', $cur_entry),
-										'data' => array('type', 'removed'),
-										'tag' => array('com_sales', 'transaction', 'stock_tx')
-									)
-								);
-							if (!$txs) {
-								echo "<li>{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku}, Sold at an unknown store)</li>";
-								continue;
-							}
-							$tx = end($txs);
-							unset($txs);
-							echo "<li>{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku}, Sold on ".format_date($tx->p_cdate, 'full_long')." from: {$tx->old_location->name} [{$tx->old_location->groupname}])</li>";
-							break;
-						case 'sold_pending':
-							$txs = $pines->entity_manager->get_entities(
-									array('class' => com_sales_tx),
-									array('&',
-										'ref' => array('stock', $cur_entry),
-										'data' => array('type', 'removed'),
-										'tag' => array('com_sales', 'transaction', 'stock_tx')
-									)
-								);
-							if (!$txs) {
-								echo "<li>{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku}, Sold and awaiting pickup at an unkown store)</li>";
-								continue;
-							}
-							$tx = end($txs);
-							unset($txs);
-							echo "<li>{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku}, Sold on ".format_date($tx->p_cdate, 'full_long')." and awaiting pickup from: {$cur_entry->location->name} [{$cur_entry->location->groupname}])</li>";
-							break;
-						default:
-							echo "<li>{$cur_entry->product->name} (".(isset($cur_entry->serial) ? "Serial: {$cur_entry->serial}, " : '')."SKU: {$cur_entry->product->sku}, Location: {$cur_entry->location->name} [{$cur_entry->location->groupname}])</li>";
-							break;
+			</tbody>
+		</table>
+	</div>
+	<?php } if ($this->matched) { ?>
+	<div class="pf-element pf-heading">
+		<h1 style="color: green;">Matched Items</h1>
+	</div>
+	<div class="pf-element pf-full-width">
+		<table id="p_muid_matched_table">
+			<thead>
+				<tr>
+					<th style="width: 40%;">Name</th>
+					<th style="width: 10%;">Qty</th>
+					<th style="width: 25%;">SKU</th>
+					<th style="width: 25%;">Serial</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ($this->matched as $cur_entry) { ?>
+				<tr>
+					<td><?php echo $cur_entry->product->name; ?></td>
+					<td><?php echo $this->matched_count[$cur_entry->product->sku]; ?></td>
+					<td><?php echo $cur_entry->product->sku; ?></td>
+					<td><?php echo $cur_entry->serial; ?></td>
+				</tr>
+				<?php } ?>
+			</tbody>
+		</table>
+	</div>
+	<?php } if ($this->potential) { ?>
+	<div class="pf-element pf-heading">
+		<h1 style="color: blue;">Potential Matches</h1>
+	</div>
+	<div class="pf-element pf-full-width">
+		<table id="p_muid_potential_table">
+			<thead>
+				<tr>
+					<th style="width: 10%;">Entry</th>
+					<th style="width: 15%;">Potential Match</th>
+					<th style="width: 15%;">SKU</th>
+					<th style="width: 15%;">Serial</th>
+					<th style="width: 15%;">Available</th>
+					<th style="width: 15%;">Last Transaction</th>
+					<th style="width: 15%;">Location</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php
+				foreach ($this->potential as $cur_match) {
+					?><tr class="parent expandme collapseme ui-priority-primary" title="<?php echo $cur_match['name']; ?>"><td><?php echo $cur_match['name']; ?></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><?php
+					if ($cur_match['closest']) {
+						?><tr class="parent expandme ui-priority-primary child <?php echo $cur_match['name']; ?>" title="<?php echo $cur_match['name']; ?>_same"><td>Same Location</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><?php
+						foreach ($cur_match['closest'] as $cur_closest) {
+							?><tr class="child <?php echo $cur_match['name']; ?>_same">
+								<td></td>
+								<td><?php echo $cur_closest->product->name; ?></td>
+								<td><?php echo $cur_closest->product->sku; ?></td>
+								<td><?php echo $cur_closest->serial; ?></td>
+								<td><?php echo $cur_closest->available ? 'Yes' : 'No'; ?></td>
+								<td><?php echo $cur_closest->last_reason(); ?></td>
+								<td><?php echo $cur_closest->location->name; ?></td>
+							</tr><?php
+						}
+					}
+					if ($cur_match['entries']) {
+						?><tr class="parent expandme ui-priority-primary child <?php echo $cur_match['name']; ?>" title="<?php echo $cur_match['name']; ?>_else"><td>Other Location</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><?php
+						foreach ($cur_match['entries'] as $cur_entry) {
+							?><tr class="child <?php echo $cur_match['name']; ?>_else">
+								<td></td>
+								<td><?php echo $cur_entry->product->name; ?></td>
+								<td><?php echo $cur_entry->product->sku; ?></td>
+								<td><?php echo $cur_entry->serial; ?></td>
+								<td><?php echo $cur_entry->available ? 'Yes' : 'No'; ?></td>
+								<td><?php echo $cur_entry->last_reason(); ?></td>
+								<td><?php echo $cur_entry->location->name; ?></td>
+							</tr><?php
+						}
 					}
 				} ?>
-			</ul>
-			<?php } ?>
-		<?php } ?>
-	</fieldset>
+			</tbody>
+		</table>
+	</div>
 	<?php } if ($this->invalid) { ?>
-	<fieldset class="pf-group">
-		<legend>Invalid Search Strings</legend>
-		<ul style="list-style-type: circle;">
-			<?php foreach ($this->invalid as $cur_entry) { ?>
-			<li>"<?php echo $cur_entry; ?>" has no record in this location's inventory.</li>
-			<?php } ?>
-		</ul>
-	</fieldset>
+	<div class="pf-element pf-heading">
+		<h1 style="color: gray;">Invalid/Unknown Search Strings</h1>
+	</div>
+	<div class="pf-element pf-full-width">
+		<table id="p_muid_invalid_table">
+			<thead>
+				<tr>
+					<th style="width: 10%;">Entry</th>
+					<th style="width: 90%;">Status</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ($this->invalid as $cur_entry) { ?>
+				<tr>
+					<td><?php echo $cur_entry; ?></td>
+					<td>No record in this location's inventory</td>
+				</tr>
+				<?php } ?>
+			</tbody>
+		</table>
+	</div>
 	<?php } if (!empty($this->entity->comments)) {?>
 	<div class="pf-element">
 		<span class="pf-label">Comments</span>

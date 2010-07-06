@@ -322,7 +322,11 @@ class com_authorizenet extends component {
 						$array['payment']['status'] = 'declined';
 						break;
 					case 3:
-						pines_notice('Payment refund required more information.');
+						if ($response_array[2] == 54) {
+							pines_notice('Payment appears to be unsettled. Refund cannot be processed until the payment has been settled. Please try again tomorrow.');
+						} else {
+							pines_notice('Payment refund required more information.');
+						}
 						break;
 					case 4:
 						pines_notice('Payment refund is being held for review.');

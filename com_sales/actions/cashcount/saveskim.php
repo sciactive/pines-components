@@ -23,18 +23,16 @@ if (!isset($cashcount->guid)) {
 $cashcount->update_total();
 
 $skim = com_sales_cashcount_skim::factory();
-$skim->creator = $_SESSION['user'];
-$skim->count = $_REQUEST['count'];
+// Amount in the drawer.
+$skim->till_total = $cashcount->total;
 $skim->comments = $_REQUEST['comments'];
-$skim->variance = $total_count = 0;
+$skim->total = 0;
 // Save the total count of each different denomination.
-foreach ($skim->count as $cur_count) {
-	// The skim variance is what is being taken out of the drawer.
-	$skim->variance += $cur_count * $cashcount->currency[$total_count];
-	$total_count++;
+foreach ($cashcount->currency as $cur_currency) {
+	// The float is the total amount of money in the drawer to begin with.
+	$skim->count[$cur_currency] = (int) $_REQUEST["count_$cur_currency"];
+	$skim->total += ((float) $cur_currency) * $skim->count[$cur_currency];
 }
-// The skim total is what is still left in the drawer after skimming.
-$skim->total = $cashcount->total - $skim->variance;
 
 if ($pines->config->com_sales->global_cashcounts)
 	$skim->ac->other = 1;

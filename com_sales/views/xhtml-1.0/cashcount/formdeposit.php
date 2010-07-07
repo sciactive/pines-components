@@ -10,16 +10,16 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Deposit from Cash Count ['.htmlentities($this->entity->cashcount->guid).'] at '.$this->entity->cashcount->group->name;
-$this->note = 'The deposit money count must match the total money count of all previous skims';
-
-$denom_counter = 0;
+$this->title = 'Deposit from Cash Count ['.$this->entity->cashcount->guid.'] at '.$this->entity->cashcount->group->name;
+$this->note = 'Count the cash as you put it into the drawer.';
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
 	#p_muid_form .amount {
-		padding-left: 10px;
 		font-weight: bold;
+		display: inline-block;
+		width: 3em;
+		text-align: right;
 	}
 	#p_muid_form .amt_btn {
 		display: inline-block;
@@ -27,18 +27,17 @@ $denom_counter = 0;
 		height: 16px;
 	}
 	#p_muid_form .entry {
-		width: 50px;
+		width: 2em;
+		text-align: right;
 	}
 	#p_muid_form .total {
-		border: yellowgreen dashed 2px;
+		border-width: .2em;
 		font-weight: bold;
-		font-size: 18pt;
+		font-size: 2em;
 		position: absolute;
-		left: 50%;
-		top: 25%;
-		padding-top: 40px;
-		padding-bottom: 50px;
-		width: 300px;
+		right: 0;
+		top: 0;
+		padding: 50px;
 		text-align: center;
 	}
 	/* Add and Remove Classes to show recent changes. */
@@ -54,8 +53,6 @@ $denom_counter = 0;
 </style>
 <script type="text/javascript">
 	// <![CDATA[
-	var multiply = new Array();
-
 	pines(function(){
 		var cash_symbol = "<?php echo $this->entity->cashcount->currency_symbol; ?>";
 
@@ -72,37 +69,37 @@ $denom_counter = 0;
 				//This looks complicated but it simply multiplies the number of
 				//bills/coins for each denomition by its respective value.
 				//ex: 5 x 0.25 for 5 quarters that have been counted
-				total_count += parseInt($(this).val()) * parseFloat(multiply[$(this).attr("name").replace(/.*(\d).*/, "$1")]);
-				$(this).removeClass('added removed');
+				var cur_entry = $(this);
+				var subtotal = parseInt(cur_entry.val()) * parseFloat(cur_entry.attr("name").replace(/[^\d.]/g, ""));
+				if (isNaN(subtotal))
+					cur_entry.val('0');
+				else
+					total_count += subtotal;
+				cur_entry.removeClass("added removed");
 			});
 			$("#p_muid_total_deposit").html(cash_symbol+total_count.toFixed(2));
 		};
 
-		pines.com_sales_clear_all = function(){
+		$("button.clear_btn", "#p_muid_form").click(function(){
 			if (confirm("Clear all entered cash counts?")) {
 				$("#p_muid_form .entry").each(function() { $(this).val(0); });
 				update_total();
 			}
 			$("#p_muid_form [name=clear_btn]").blur();
-		};
+		});
 
-		pines.com_sales_add_amount = function(type){
-			var current = parseInt($("#p_muid_form [name=count["+type+"]]").val());
-			$("#p_muid_form [name=count["+type+"]]").val(current+1);
-			$("#p_muid_form [name=count["+type+"]]").change();
-			$("#p_muid_form [name=count["+type+"]]").addClass('added');
-			$("#p_muid_form [name=add_btn["+type+"]]").blur();
-		};
-
-		pines.com_sales_remove_amount = function(type){
-			var current = parseInt($("#p_muid_form [name=count["+type+"]]").val());
-			if (current > 0) {
-				$("#p_muid_form [name=count["+type+"]]").val(current-1);
-				$("#p_muid_form [name=count["+type+"]]").change();
-				$("#p_muid_form [name=count["+type+"]]").addClass('removed');
-			}
-			$("#p_muid_form [name=remove_btn["+type+"]]").blur();
-		};
+		$("button.add_btn", "#p_muid_form").click(function(){
+			var cur_button = $(this);
+			var cur_input = cur_button.siblings("input.entry");
+			cur_input.val(parseInt(cur_input.val()) + 1).change().addClass('added');
+			cur_button.blur();
+		});
+		$("button.remove_btn", "#p_muid_form").click(function(){
+			var cur_button = $(this);
+			var cur_input = cur_button.siblings("input.entry");
+			cur_input.val(parseInt(cur_input.val()) - 1).change().addClass('removed');
+			cur_button.blur();
+		});
 
 		pines.com_sales_verify = function(){
 			if (confirm("You will not be able to change this information, are you sure?"))
@@ -123,29 +120,21 @@ $denom_counter = 0;
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-heading">
-		<h1>Skimmed cash being <strong>Deposited</strong><button class="ui-state-default ui-corner-all" type="button" name="clear_btn" onclick="pines.com_sales_clear_all()" style="margin-left: 50px;"><span>Clear All</span></button></h1>
+		<button class="ui-state-default ui-corner-all clear_btn" type="button" style="display: block; float: right;">Clear All</button>
+		<h1>Cash being <strong>Deposited</strong> into Drawer</h1>
 	</div>
-	<div class="pf-group">
-		<div>
-			<?php foreach ($this->entity->cashcount->currency as $cur_denom) { ?>
-			<script type="text/javascript">
-				// <![CDATA[
-				multiply.push(<?php echo $cur_denom; ?>);
-				// ]]>
-			</script>
-			<div class="pf-element pf-group">
-				<input class="pf-field ui-widget-content entry" type="text" name="count[<?php echo $denom_counter; ?>]" value="<?php echo '0'; ?>" />
-				<button class="pf-field ui-state-default ui-corner-all" type="button" name="add_btn[<?php echo $denom_counter; ?>]" onclick="pines.com_sales_add_amount('<?php echo $denom_counter; ?>');"><span class="amt_btn picon picon-list-add"></span></button>
-				<button class="pf-field ui-state-default ui-corner-all" type="button" name="remove_btn[<?php echo $denom_counter; ?>]" onclick="pines.com_sales_remove_amount('<?php echo $denom_counter; ?>');"><span class="amt_btn picon picon-list-remove"></span></button>
-				<span class="label amount"><?php echo $this->entity->cashcount->currency_symbol . $cur_denom; ?></span>
-			</div>
-			<?php $denom_counter++; } ?>
+	<div class="pf-element pf-full-width" style="position: relative;">
+		<?php foreach ($this->entity->cashcount->currency as $cur_denom) { ?>
+		<div class="pf-element">
+			<input class="pf-field ui-widget-content entry" type="text" name="count_<?php echo $cur_denom; ?>" value="0" />
+			x <span class="amount"><?php echo $this->entity->cashcount->currency_symbol . $cur_denom; ?></span>
+			<button class="pf-field ui-state-default ui-corner-all add_btn" type="button"><span class="amt_btn picon picon-list-add"></span></button>
+			<button class="pf-field ui-state-default ui-corner-all remove_btn" type="button"><span class="amt_btn picon picon-list-remove"></span></button>
 		</div>
-		<div>
-			<div class="total ui-corner-all">
-				<span>Deposit Total</span><br/>
-				<span id="p_muid_total_deposit"></span>
-			</div>
+		<?php } ?>
+		<div class="ui-state-highlight ui-corner-all total">
+			<div>Deposit Total</div>
+			<div id="p_muid_total_deposit"></div>
 		</div>
 	</div>
 	<div class="pf-element pf-heading">

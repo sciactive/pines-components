@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Reviewing Cash Count ['.htmlentities($this->entity->guid).']';
+$this->title = 'Reviewing Cash Count ['.$this->entity->guid.']';
 if (isset($this->entity->guid))
 	$this->note = 'Created by ' . $this->entity->user->name . ' on ' . date('Y-m-d', $this->entity->p_cdate) . ' - Last Modified on ' . date('Y-m-d', $this->entity->p_mdate);
 $pines->com_pgrid->load();
@@ -89,6 +89,7 @@ $comment_str = '';
 					<th><?php echo $this->entity->currency_symbol . $cur_denom; ?></th>
 				<?php } ?>
 				<th>Total in Till</th>
+				<th>Transaction Total</th>
 				<th>Variance</th>
 			</tr>
 		</thead>
@@ -108,7 +109,8 @@ $comment_str = '';
 				<td><?php echo $cur_float_count; ?></td>
 				<?php } ?>
 				<td>$<?php echo $this->entity->float; ?></td>
-				<td>0</td>
+				<td>$<?php echo $this->entity->float; ?></td>
+				<td>$0</td>
 			</tr>
 			<?php foreach ($this->entity->audits as $cur_audit) { $comment_str = ''; ?>
 			<?php if ($cur_audit->comments != '') { ?>
@@ -125,8 +127,9 @@ $comment_str = '';
 				<?php foreach ($cur_audit->count as $cur_audit_count) { ?>
 				<td><?php echo $cur_audit_count; ?></td>
 				<?php } ?>
+				<td>$<?php echo $cur_audit->till_total; ?></td>
 				<td>$<?php echo $cur_audit->total; ?></td>
-				<td><?php echo $cur_audit->variance; ?></td>
+				<td>$<?php echo $cur_audit->till_total - $cur_audit->total; ?></td>
 			</tr>
 			<?php } foreach ($this->entity->skims as $cur_skim) { $comment_str = ''; ?>
 			<?php if ($cur_skim->comments != '') { ?>
@@ -143,8 +146,9 @@ $comment_str = '';
 				<?php foreach ($cur_skim->count as $cur_skim_count) { ?>
 				<td><?php echo $cur_skim_count; ?></td>
 				<?php } ?>
+				<td>$<?php echo $cur_skim->till_total; ?></td>
 				<td>$<?php echo $cur_skim->total; ?></td>
-				<td><?php echo $cur_skim->variance; ?></td>
+				<td>$<?php echo -1 * $cur_skim->total; ?></td>
 			</tr>
 			<?php } foreach ($this->entity->deposits as $cur_deposit) { $comment_str = ''; ?>
 			<?php if ($cur_deposit->comments != '') { ?>
@@ -161,8 +165,9 @@ $comment_str = '';
 				<?php foreach ($cur_deposit->count as $cur_deposit_count) { ?>
 				<td><?php echo $cur_deposit_count; ?></td>
 				<?php } ?>
+				<td>$<?php echo $cur_deposit->till_total; ?></td>
 				<td>$<?php echo $cur_deposit->total; ?></td>
-				<td><?php echo $cur_deposit->variance; ?></td>
+				<td>$<?php echo $cur_deposit->total; ?></td>
 			</tr>
 			<?php } ?>
 		</tbody>

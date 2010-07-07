@@ -97,7 +97,7 @@ class com_sales_cashcount extends entity {
 	}
 
 	/**
-	 * Update the Cash Count total to include new sales, and skims.
+	 * Update the Cash Count total to include new sales, skims, and deposits.
 	 * @return bool True on success, false on failure.
 	 */
 	public function update_total() {
@@ -105,7 +105,7 @@ class com_sales_cashcount extends entity {
 		$this->total = $this->float;
 		// Update the total in the drawer for each skim, deposit or sale made.
 		if (isset($this->guid)) {
-			$new_txs = $pines->entity_manager->get_entities(
+			$new_txs = (array) $pines->entity_manager->get_entities(
 					array('class' => com_sales_tx),
 					array('&',
 						'gte' => array('p_cdate', (int) $this->p_cdate),
@@ -123,10 +123,15 @@ class com_sales_cashcount extends entity {
 					$this->total -= $cur_tx->amount;
 				}
 			}
-			foreach ($this->skims as $cur_skim)
-				$this->total -= $cur_skim->variance;
+			// Subtract all the skims.
+			foreach ($this->skims as $cur_skim) {
+				$this->total -= $cur_skim->total;
+			}
+			// And add all the deposits.
+			foreach ($this->deposits as $cur_deposit) {
+				$this->total += $cur_deposit->total;
+			}
 		}
-		
 	}
 
 	/**

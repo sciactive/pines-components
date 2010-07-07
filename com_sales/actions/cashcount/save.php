@@ -29,17 +29,13 @@ if ( isset($_REQUEST['id']) ) {
 	$cashcount = com_sales_cashcount::factory();
 }
 
-if (!isset($cashcount->creator))
-	$cashcount->creator = $_SESSION['user'];
-
-$cashcount->count = $_REQUEST['count'];
 $cashcount->comments = $_REQUEST['comments'];
-$cashcount->float = $total_count = 0;
+$cashcount->float = 0;
 // Save the total count of each different denomination.
-foreach ($cashcount->count as $cur_count) {
+foreach ($cashcount->currency as $cur_currency) {
 	// The float is the total amount of money in the drawer to begin with.
-	$cashcount->float += $cur_count * $cashcount->currency[$total_count];
-	$total_count++;
+	$cashcount->count[$cur_currency] = (int) $_REQUEST["count_$cur_currency"];
+	$cashcount->float += ((float) $cur_currency) * $cashcount->count[$cur_currency];
 }
 
 if ($_REQUEST['save'] == 'commit') {

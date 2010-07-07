@@ -22,39 +22,15 @@ if (!isset($cashcount->guid)) {
 }
 $cashcount->update_total();
 
-$total_count = 0;
-$expected_count = array();
-$actual_count = array();
-// Total up the skims to find out the expected deposit amount.
-foreach ($cashcount->skims as $cur_skim) {
-	if ($cur_skim->status == 'pending') {
-		foreach ($cur_skim->count as $cur_skim_count)
-			$expected_count[] += $cur_skim_count;
-	}
-}
-
 $deposit = com_sales_cashcount_deposit::factory();
-$deposit->creator = $_SESSION['user'];
-$deposit->count = $_REQUEST['count'];
+// Amount in the drawer.
+$deposit->till_total = $cashcount->total;
 $deposit->comments = $_REQUEST['comments'];
-$deposit->variance = $total_count = 0;
-// Total the actual count of each different denomination.
-foreach ($deposit->count as $cur_count) {
-	$deposit->variance += $cur_count * $cashcount->currency[$total_count];
-	$actual_count[] = $cur_count;
-	$total_count++;
-}
-$deposit->total = $cashcount->total;
-// If no skimmed cash is waiting and no cash was counted, the deposit is fine.
-if (count($expected_count) == 0 && max($actual_count) == 0)
-	$expected_count = $actual_count;
-
-// Validate that the actual deposit amount matches the expected deposit amount.
-if ($actual_count != $expected_count) {
-	pines_error('This deposit does not match up with all previous skims from the cash drawer.');
-	$deposit->status = 'flagged';
-} else {
-	$deposit->status = 'validated';
+$deposit->total = 0;
+// Save the total count of each different denomination.
+foreach ($cashcount->currency as $cur_currency) {
+	$deposit->count[$cur_currency] = (int) $_REQUEST["count_$cur_currency"];
+	$deposit->total += ((float) $cur_currency) * $deposit->count[$cur_currency];
 }
 
 if ($pines->config->com_sales->global_cashcounts)
@@ -68,17 +44,10 @@ if ($deposit->save()) {
 		pines_error('Error saving Cash Count. Do you have permission?');
 		return;
 	}
-	if ($deposit->status == 'validated') {
-		// Mark all of the skims as deposited.
-		foreach ($cashcount->skims as $cur_skim) {
-			$cur_skim->status = 'deposited';
-			$cur_skim->save();
-		}
-		pines_notice('Completed Deposit ['.$deposit->guid.']');
-		if (isset($_SESSION['user']->group->com_sales_task_cashcount_deposit)) {
-			unset($_SESSION['user']->group->com_sales_task_cashcount_deposit);
-			$_SESSION['user']->group->save();
-		}
+	pines_notice('Completed Deposit ['.$deposit->guid.']');
+	if (isset($_SESSION['user']->group->com_sales_task_cashcount_deposit)) {
+		unset($_SESSION['user']->group->com_sales_task_cashcount_deposit);
+		$_SESSION['user']->group->save();
 	}
 } else {
 	$deposit->cashcount = $cashcount;

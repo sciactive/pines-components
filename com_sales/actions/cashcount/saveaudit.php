@@ -24,17 +24,15 @@ if (!isset($cashcount->guid)) {
 $cashcount->update_total();
 
 $audit = com_sales_cashcount_audit::factory();
-$audit->creator = $_SESSION['user'];
-$audit->count = $_REQUEST['count'];
+// Amount in the drawer.
+$audit->till_total = $cashcount->total;
 $audit->comments = $_REQUEST['comments'];
-$audit->total = $total_count = 0;
+$audit->total = 0;
 // Save the total count of each different denomination.
-foreach ($audit->count as $cur_count) {
-	$audit->total += $cur_count * $cashcount->currency[$total_count];
-	$total_count++;
+foreach ($cashcount->currency as $cur_currency) {
+	$audit->count[$cur_currency] = (int) $_REQUEST["count_$cur_currency"];
+	$audit->total += ((float) $cur_currency) * $audit->count[$cur_currency];
 }
-// The difference between the amount counted to what is in the drawer.
-$audit->variance = $audit->total - $cashcount->total;
 
 if ($pines->config->com_sales->global_cashcounts)
 	$audit->ac->other = 1;

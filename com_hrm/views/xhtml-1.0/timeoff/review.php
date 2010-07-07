@@ -36,8 +36,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				}},
 				{type: 'button', text: 'Decline', extra_class: 'picon picon-dialog-error', confirm: true, multi_select: true, url: '<?php echo pines_url('com_hrm', 'timeoff/classify', array('id' => '__title__', 'status' => 'declined')); ?>', delimiter: ','},
 				{type: 'separator'},
-				{type: 'button', text: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
-				{type: 'button', text: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
+				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
+				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
 					pines.post("<?php echo pines_url('system', 'csv'); ?>", {

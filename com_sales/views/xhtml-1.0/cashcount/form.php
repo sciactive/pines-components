@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = (!isset($this->entity->guid)) ? 'New Cash Count' : (($this->entity->final) ? 'Viewing' : 'Editing').' Float for Cash Count ['.htmlentities($this->entity->guid).']';
+$this->title = (!isset($this->entity->guid)) ? 'Cash-In' : (($this->entity->final) ? 'Viewing' : 'Editing').' Float for Cash-In ['.htmlentities($this->entity->guid).']';
 if (isset($this->entity->guid))
 	$this->note = 'Created by ' . $this->entity->user->name . ' on ' . date('Y-m-d', $this->entity->p_cdate) . ' - Last Modified on ' . date('Y-m-d', $this->entity->p_mdate);
 ?>

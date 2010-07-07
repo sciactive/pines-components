@@ -20,7 +20,7 @@ if ( isset($_REQUEST['id']) ) {
 		return;
 	}
 	if ($cashcount->final) {
-		pines_notice('This cash count has already been committed.');
+		pines_notice('This cash count has already been cashed-in.');
 		return;
 	}
 } else {
@@ -52,7 +52,7 @@ if ($pines->config->com_sales->global_cashcounts)
 
 if ($cashcount->save()) {
 	if ($cashcount->final) {
-		pines_notice('Committed Cash Count ['.$cashcount->guid.']');
+		pines_notice('Cash Count Cashed-In with $'.$cashcount->float);
 	} else {
 		pines_notice('Saved Cash Count ['.$cashcount->guid.']');
 	}

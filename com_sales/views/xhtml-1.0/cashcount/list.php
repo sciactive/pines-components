@@ -81,7 +81,7 @@ $pines->com_jstree->load();
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				<?php if (gatekeeper('com_sales/newcashcount')) { ?>
-				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'cashcount/edit'); ?>'},
+				{type: 'button', text: 'Cash-In', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'cashcount/edit'); ?>'},
 				<?php } if (gatekeeper('com_sales/editcashcount')) { ?>
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo pines_url('com_sales', 'cashcount/edit', array('id' => '__title__')); ?>'},
 				<?php } if (gatekeeper('com_sales/skimcashcount')) { ?>

@@ -83,6 +83,7 @@ $pines->com_jstree->load();
 				<?php if (gatekeeper('com_sales/newcashcount')) { ?>
 				{type: 'button', text: 'Cash-In', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'cashcount/edit'); ?>'},
 				<?php } if (gatekeeper('com_sales/editcashcount')) { ?>
+				{type: 'button', text: 'Cash-Out', extra_class: 'picon picon-view-bank', selection_optional: true, url: '<?php echo pines_url('com_sales', 'cashcount/cashout', array('id' => '__title__')); ?>'},
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo pines_url('com_sales', 'cashcount/edit', array('id' => '__title__')); ?>'},
 				<?php } if (gatekeeper('com_sales/skimcashcount')) { ?>
 				{type: 'button', text: 'Skim', extra_class: 'picon picon-list-remove', url: '<?php echo pines_url('com_sales', 'cashcount/skim', array('id' => '__title__')); ?>'},

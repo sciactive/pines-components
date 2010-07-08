@@ -73,6 +73,16 @@ class com_sales_cashcount extends entity {
 		return true;
 	}
 
+	/**
+	 * Print a form to cash out a cashcount.
+	 * @return module The form's module.
+	 */
+	public function cash_out() {
+		global $pines;
+		$module = new module('com_sales', 'cashcount/formcashout', 'content');
+		$module->entity = $this;
+		return $module;
+	}
 
 	/**
 	 * Print a form to edit the cash count.

@@ -103,7 +103,7 @@ $comment_str = '';
 			<?php $comment_str = 'onmouseover="comments_note['.$comment_count.'].pnotify_display();" onmousemove="comments_note['.$comment_count.'].css({\'top\': event.clientY+12, \'left\': event.clientX+12});" onmouseout="comments_note['.$comment_count.'].pnotify_remove();"'; $comment_count++; } ?>
 			<tr <?php echo $comment_str; ?>>
 				<td><?php echo format_date($this->entity->p_cdate); ?></td>
-				<td>Float</td>
+				<td>Cash-In</td>
 				<td><?php echo $this->entity->user->name; ?></td>
 				<?php foreach ($this->entity->count as $cur_float_count) { ?>
 				<td><?php echo $cur_float_count; ?></td>
@@ -168,6 +168,26 @@ $comment_str = '';
 				<td>$<?php echo $cur_deposit->till_total; ?></td>
 				<td>$<?php echo $cur_deposit->total; ?></td>
 				<td>$<?php echo $cur_deposit->total; ?></td>
+			</tr>
+			<?php } ?>
+			<?php if (isset($this->total_out)) {
+			if ($this->entity->comments != '') { ?>
+			<script type="text/javascript">
+				// <![CDATA[
+				pines.com_sales_create_comment("<?php echo $this->entity->comments; ?>");
+				// ]]>
+			</script>
+			<?php $comment_str = 'onmouseover="comments_note['.$comment_count.'].pnotify_display();" onmousemove="comments_note['.$comment_count.'].css({\'top\': event.clientY+12, \'left\': event.clientX+12});" onmouseout="comments_note['.$comment_count.'].pnotify_remove();"'; $comment_count++; } ?>
+			<tr>
+				<td><?php echo format_date($this->entity->p_mdate); ?></td>
+				<td>Cash-Out</td>
+				<td><?php echo $this->entity->user->name; ?></td>
+				<?php foreach ($this->entity->count_out as $cur_out_count) { ?>
+				<td><?php echo $cur_out_count; ?></td>
+				<?php } ?>
+				<td>$<?php echo $this->entity->total_out; ?></td>
+				<td>$<?php echo $this->entity->total_out; ?></td>
+				<td>$<?php echo $this->entity->total_out-$this->entity->total; ?></td>
 			</tr>
 			<?php } ?>
 		</tbody>

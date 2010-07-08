@@ -74,6 +74,9 @@ $pines->com_jstree->load();
 	</div>
 	<div class="pf-element">
 		<input type="hidden" name="location" />
+		<?php if ($this->old) { ?>
+		<input type="hidden" name="old" value="true" />
+		<?php } ?>
 		<input type="submit" value="Update" class="ui-corner-all ui-state-default" />
 	</div>
 </form>

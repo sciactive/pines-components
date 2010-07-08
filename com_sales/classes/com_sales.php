@@ -261,10 +261,10 @@ class com_sales extends component {
 		$form = new module('com_sales', 'cashcount/listform', 'right');
 		$module = new module('com_sales', 'cashcount/list', 'content');
 
-		//if (!isset($start_date))
-		//	$start_date = strtotime('-1 week 00:00');
-		//if (!isset($end_date))
-		//	$end_date = strtotime('23:59');
+		if (!isset($start_date))
+			$start_date = strtotime('-1 week 00:00');
+		if (!isset($end_date))
+			$end_date = strtotime('23:59');
 		if (!isset($location))
 			$location = $_SESSION['user']->group;
 		$selector = array('|',
@@ -279,8 +279,8 @@ class com_sales extends component {
 				array('class' => com_sales_cashcount),
 				$selector,
 				array('&',
-					//'gte' => array('p_cdate', (int) $start_date),
-					//'lte' => array('p_cdate', (int) $end_date),
+					'gte' => array('p_cdate', (int) $start_date),
+					'lte' => array('p_cdate', (int) $end_date),
 					'ref' => array('group', $location),
 					'tag' => array('com_sales', 'cashcount')
 				)
@@ -288,6 +288,7 @@ class com_sales extends component {
 		$form->start_date = $start_date;
 		$form->end_date = $end_date;
 		$form->location = $location->guid;
+		$form->old = $old;
 
 		// Remind the user to do a cash count if one is assigned to their location.
 		if ($_SESSION['user']) {

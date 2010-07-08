@@ -24,6 +24,8 @@ if ($cashcount->cashed_out) {
 }
 
 $cashcount->cashed_out = true;
+$cashcount->cashed_out_date = time();
+$cashcount->cashed_out_user = $_SESSION['user'];
 $cashcount->comments = $_REQUEST['comments'];
 $cashcount->total_out = 0;
 // Save the total count of each different denomination.
@@ -37,7 +39,7 @@ if ($pines->config->com_sales->global_cashcounts)
 	$cashcount->ac->other = 1;
 
 if ($cashcount->save()) {
-	pines_notice('Cash Count Cashed-Out with $'.$cashcount->total_out);
+	pines_notice('Cash Count ['.$cashcount->guid.'] Cashed-Out with $'.$cashcount->total_out.'.');
 } else {
 	$cashcount->cash_out();
 	pines_error('Error saving Cash Count. Do you have permission?');

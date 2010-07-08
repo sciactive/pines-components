@@ -253,24 +253,34 @@ class com_sales extends component {
 	 * @param int $start_date The start date of cash counts to show.
 	 * @param int $end_date The end date of cash counts to show.
 	 * @param group $location The location to show cash counts for.
+	 * @param bool $old Whether to show old cash counts instead.
 	 */
-	public function list_cashcounts($start_date = null, $end_date = null, $location = null) {
+	public function list_cashcounts($start_date = null, $end_date = null, $location = null, $old = false) {
 		global $pines;
 
 		$form = new module('com_sales', 'cashcount/listform', 'right');
 		$module = new module('com_sales', 'cashcount/list', 'content');
 
-		if (!isset($start_date))
-			$start_date = strtotime('-1 week 00:00');
-		if (!isset($end_date))
-			$end_date = strtotime('23:59');
+		//if (!isset($start_date))
+		//	$start_date = strtotime('-1 week 00:00');
+		//if (!isset($end_date))
+		//	$end_date = strtotime('23:59');
 		if (!isset($location))
 			$location = $_SESSION['user']->group;
+		$selector = array('|',
+			'data' => array(
+				array('status', 'info_requested'),
+				array('status', 'pending')
+			)
+		);
+		if ($old)
+			$selector[0] = '!&';
 		$module->counts = $pines->entity_manager->get_entities(
 				array('class' => com_sales_cashcount),
+				$selector,
 				array('&',
-					'gte' => array('p_cdate', (int) $start_date),
-					'lte' => array('p_cdate', (int) $end_date),
+					//'gte' => array('p_cdate', (int) $start_date),
+					//'lte' => array('p_cdate', (int) $end_date),
 					'ref' => array('group', $location),
 					'tag' => array('com_sales', 'cashcount')
 				)

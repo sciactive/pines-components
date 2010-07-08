@@ -55,6 +55,17 @@ class com_sales_cashcount extends entity {
 	}
 
 	/**
+	 * Print a form to cash out a cashcount.
+	 * @return module The form's module.
+	 */
+	public function cash_out() {
+		global $pines;
+		$module = new module('com_sales', 'cashcount/formcashout', 'content');
+		$module->entity = $this;
+		return $module;
+	}
+
+	/**
 	 * Delete the cash count.
 	 * @return bool True on success, false on failure.
 	 */
@@ -71,17 +82,6 @@ class com_sales_cashcount extends entity {
 			return false;
 		pines_log("Deleted Cash Count {$this->guid}.", 'notice');
 		return true;
-	}
-
-	/**
-	 * Print a form to cash out a cashcount.
-	 * @return module The form's module.
-	 */
-	public function cash_out() {
-		global $pines;
-		$module = new module('com_sales', 'cashcount/formcashout', 'content');
-		$module->entity = $this;
-		return $module;
 	}
 
 	/**
@@ -104,6 +104,15 @@ class com_sales_cashcount extends entity {
 		$module = new module('com_sales', 'cashcount/formreview', 'content');
 		$module->entity = $this;
 		return $module;
+	}
+
+	/**
+	 * Save the Cash Count.
+	 * @return bool True on success, false on failure.
+	 */
+	public function save() {
+		$this->update_total();
+		return parent::save();
 	}
 
 	/**
@@ -142,15 +151,6 @@ class com_sales_cashcount extends entity {
 				$this->total += $cur_deposit->total;
 			}
 		}
-	}
-
-	/**
-	 * Save the Cash Count.
-	 * @return bool True on success, false on failure.
-	 */
-	public function save() {
-		$this->update_total();
-		return parent::save();
 	}
 }
 

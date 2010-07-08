@@ -38,6 +38,14 @@
 				}
 			},
 			{
+				"path": "main_menu/business/com_sales/sales/newcashcount",
+				"text": "Cash-In",
+				"href": ["com_sales","cashcount/edit"],
+				"depend": {
+					"ability": "com_sales/editcashcount"
+				}
+			},
+			{
 				"path": "main_menu/business/com_sales/sales/cashcounts",
 				"text": "Cash Counts",
 				"href": ["com_sales","cashcount/list"],
@@ -46,11 +54,11 @@
 				}
 			},
 			{
-				"path": "main_menu/business/com_sales/sales/newcashcount",
-				"text": "Cash-In",
-				"href": ["com_sales","cashcount/edit"],
+				"path": "main_menu/business/com_sales/sales/oldcashcounts",
+				"text": "Old Cash Counts",
+				"href": ["com_sales","cashcount/list",{"old":"true"}],
 				"depend": {
-					"ability": "com_sales/editcashcount"
+					"ability": "com_sales/listcashcounts"
 				}
 			},
 		{

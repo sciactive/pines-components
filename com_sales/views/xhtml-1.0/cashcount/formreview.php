@@ -170,7 +170,7 @@ $comment_str = '';
 				<td>$<?php echo $cur_deposit->total; ?></td>
 			</tr>
 			<?php } ?>
-			<?php if (isset($this->total_out)) {
+			<?php if ($this->entity->cashed_out) {
 			if ($this->entity->comments != '') { ?>
 			<script type="text/javascript">
 				// <![CDATA[
@@ -179,13 +179,13 @@ $comment_str = '';
 			</script>
 			<?php $comment_str = 'onmouseover="comments_note['.$comment_count.'].pnotify_display();" onmousemove="comments_note['.$comment_count.'].css({\'top\': event.clientY+12, \'left\': event.clientX+12});" onmouseout="comments_note['.$comment_count.'].pnotify_remove();"'; $comment_count++; } ?>
 			<tr>
-				<td><?php echo format_date($this->entity->p_mdate); ?></td>
+				<td><?php echo format_date($this->entity->cashed_out_date); ?></td>
 				<td>Cash-Out</td>
-				<td><?php echo $this->entity->user->name; ?></td>
+				<td><?php echo $this->entity->cashed_out_user->name; ?></td>
 				<?php foreach ($this->entity->count_out as $cur_out_count) { ?>
 				<td><?php echo $cur_out_count; ?></td>
 				<?php } ?>
-				<td>$<?php echo $this->entity->total_out; ?></td>
+				<td>$<?php echo $this->entity->total; ?></td>
 				<td>$<?php echo $this->entity->total_out; ?></td>
 				<td>$<?php echo $this->entity->total_out-$this->entity->total; ?></td>
 			</tr>
@@ -205,7 +205,7 @@ $comment_str = '';
 			<span class="pf-label">Update Status</span>
 			<select class="pf-field ui-widget-content" name="status" size="1">
 				<option value="closed" <?php echo ($this->entity->status == 'closed') ? 'selected="selected"' : ''; ?>>Closed (Approved)</option>
-				<option value="flagged" <?php echo ($this->entity->status == 'flagged') ? 'selected="selected"' : ''; ?>>Flagged (declined)</option>
+				<option value="flagged" <?php echo ($this->entity->status == 'flagged') ? 'selected="selected"' : ''; ?>>Flagged (Declined)</option>
 				<option value="info_requested" <?php echo ($this->entity->status == 'info_requested') ? 'selected="selected"' : ''; ?>>Info Requested</option>
 				<option value="pending" <?php echo ($this->entity->status == 'pending') ? 'selected="selected"' : ''; ?>>Pending</option>
 			</select>

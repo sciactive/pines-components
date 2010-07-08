@@ -1,6 +1,6 @@
 <?php
 /**
- * Provides a form for the user to cash out a cash count.
+ * Provides a form for the user to cash-out a cash count.
  *
  * @package Pines
  * @subpackage com_sales
@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Cash-Out ['.htmlentities($this->entity->guid).']';
+$this->title = 'Cash-Out of Cash Count ['.htmlentities($this->entity->guid).']';
 if (isset($this->entity->guid))
 	$this->note = 'Created by ' . $this->entity->user->name . ' on ' . date('Y-m-d', $this->entity->p_cdate) . ' - Last Modified on ' . date('Y-m-d', $this->entity->p_mdate);
 ?>
@@ -137,26 +137,42 @@ if (isset($this->entity->guid))
 	<div class="pf-element pf-heading">
 		<h1>Cash Drawer has been Cashed-Out</h1>
 	</div>
+	<?php
+	$variance = $this->entity->total_out - $this->entity->float;
+	$class = ($this->entity->total == $this->entity->total_out) ? 'ui-state-highlight' : 'ui-state-error';
+	?>
+	<div class="pf-element">
+		<span class="pf-label">Expected Count</span>
+		<span class="pf-field">$<?php echo $this->entity->total; ?></span>
+	</div>
+	<div class="pf-element">
+		<span class="pf-label">- Actual Count</span>
+		<span class="pf-field">$<?php echo $this->entity->total_out; ?></span>
+		<hr />
+	</div>
+	<div class="pf-element <?php echo $class; ?> ui-corner-all" style="padding: .2em .5em;">
+		<span class="pf-label">Error</span>
+		<span class="pf-field">$<?php echo $this->entity->total - $this->entity->total_out; ?></span>
+	</div>
+	<div class="pf-element pf-heading">
+		<h1>Totals</h1>
+	</div>
 	<div class="pf-element pf-full-width" style="position: relative; padding-bottom: 75px;">
 		<div class="pf-element">
-			<label><span class="pf-label">Float:</span>
-				$<?php echo $this->entity->float; ?></label>
+			<span class="pf-label">Actual Count</span>
+			<span class="pf-field">$<?php echo $this->entity->total_out; ?></span>
 		</div>
 		<div class="pf-element">
-			<label><span class="pf-label">Expected Total:</span>
-				$<?php echo $this->entity->total; ?></label>
+			<span class="pf-label">- Float</span>
+			<span class="pf-field">$<?php echo $this->entity->float; ?></span>
+			<hr />
 		</div>
-		<?php
-		$variance = $this->entity->total_out - $this->entity->float;
-		$class[0] = ($this->entity->total == $this->entity->total_out) ? 'ui-state-highlight' : 'ui-state-error';
-		$class[1] = ($variance >= 0) ? 'ui-state-highlight' : 'ui-state-error';
-		?>
-		<div class="pf-element <?php echo $class[0]; ?> ui-state-highlight ui-corner-all">
-			<label><span class="pf-label">Counted Total:</span>
-				$<?php echo $this->entity->total_out; ?></label>
+		<div class="pf-element ui-state-highlight ui-corner-all" style="padding: .2em .5em;">
+			<span class="pf-label">Total Received Cash</span>
+			<span class="pf-field">$<?php echo $variance; ?></span>
 		</div>
-		<div class="<?php echo $class[1]; ?> ui-corner-all total">
-			<div>Amount Above Float</div>
+		<div class="ui-state-highlight ui-corner-all total">
+			<div>Cash Received</div>
 			<div>$<?php echo $variance; ?></div>
 		</div>
 	</div>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Provide a form to do an audit on a cash count.
+ * Provide a form to cash out a cash count.
  *
  * @package Pines
  * @subpackage com_sales

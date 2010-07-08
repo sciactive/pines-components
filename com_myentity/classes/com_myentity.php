@@ -598,13 +598,13 @@ class com_myentity extends component implements entity_manager_interface {
 			if (preg_match('/^\s*{(\d+)}\[([\w,]+)\]\s*$/S', $line, $matches)) {
 				// Save the current entity.
 				if ($guid) {
-					$query = sprintf("REPLACE INTO `%scom_myentity_entities` (`guid`, `tags`, `cdate`, `mdate`, `varlist`) VALUES (%u, '%s', %F, %F, '%s');",
+					$query = sprintf("REPLACE INTO `%scom_myentity_entities` (`guid`, `tags`, `varlist`, `cdate`, `mdate`) VALUES (%u, '%s', '%s', %F, %F);",
 						$pines->config->com_mysql->prefix,
 						$guid,
 						mysql_real_escape_string(','.$tags.',', $pines->com_mysql->link),
-						$data['p_cdate'],
-						$data['p_mdate'],
-						mysql_real_escape_string(','.implode(',', array_keys($data)).',', $pines->com_mysql->link));
+						mysql_real_escape_string(','.implode(',', array_keys($data)).',', $pines->com_mysql->link),
+						unserialize($data['p_cdate']),
+						unserialize($data['p_mdate']));
 					if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 						if (function_exists('pines_error'))
 							pines_error('Query failed: ' . mysql_error());
@@ -662,13 +662,13 @@ class com_myentity extends component implements entity_manager_interface {
 		}
 		// Save the last entity.
 		if ($guid) {
-			$query = sprintf("REPLACE INTO `%scom_myentity_entities` (`guid`, `tags`, `cdate`, `mdate`, `varlist`) VALUES (%u, '%s', %F, %F, '%s');",
+			$query = sprintf("REPLACE INTO `%scom_myentity_entities` (`guid`, `tags`, `varlist`, `cdate`, `mdate`) VALUES (%u, '%s', '%s', %F, %F);",
 				$pines->config->com_mysql->prefix,
 				$guid,
 				mysql_real_escape_string(','.$tags.',', $pines->com_mysql->link),
-				$data['p_cdate'],
-				$data['p_mdate'],
-				mysql_real_escape_string(','.implode(',', array_keys($data)).',', $pines->com_mysql->link));
+				mysql_real_escape_string(','.implode(',', array_keys($data)).',', $pines->com_mysql->link),
+				unserialize($data['p_cdate']),
+				unserialize($data['p_mdate']));
 			if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 				if (function_exists('pines_error'))
 					pines_error('Query failed: ' . mysql_error());
@@ -770,12 +770,12 @@ class com_myentity extends component implements entity_manager_interface {
 			// And modified date.
 			$entity->p_mdate = microtime(true);
 			$data = $entity->get_data();
-			$query = sprintf("INSERT INTO `%scom_myentity_entities` (`tags`, `cdate`, `mdate`, `varlist`) VALUES ('%s', %F, %F, '%s');",
+			$query = sprintf("INSERT INTO `%scom_myentity_entities` (`tags`, `varlist`, `cdate`, `mdate`) VALUES ('%s', '%s', %F, %F);",
 				$pines->config->com_mysql->prefix,
 				mysql_real_escape_string(','.implode(',', $entity->tags).',', $pines->com_mysql->link),
+				mysql_real_escape_string(','.implode(',', array_keys($data)).',', $pines->com_mysql->link),
 				$data['p_cdate'],
-				$data['p_mdate'],
-				mysql_real_escape_string(','.implode(',', array_keys($data)).',', $pines->com_mysql->link));
+				$data['p_mdate']);
 			if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 				if (function_exists('pines_error'))
 					pines_error('Query failed: ' . mysql_error());
@@ -801,12 +801,12 @@ class com_myentity extends component implements entity_manager_interface {
 			// Save the modified date.
 			$entity->p_mdate = microtime(true);
 			$data = $entity->get_data();
-			$query = sprintf("UPDATE `%scom_myentity_entities` SET `tags`='%s', `cdate`=%F, `mdate`=%F, `varlist`='%s' WHERE `guid`=%u;",
+			$query = sprintf("UPDATE `%scom_myentity_entities` SET `tags`='%s', `varlist`='%s', `cdate`=%F, `mdate`=%F WHERE `guid`=%u;",
 				$pines->config->com_mysql->prefix,
 				mysql_real_escape_string(','.implode(',', $entity->tags).',', $pines->com_mysql->link),
+				mysql_real_escape_string(','.implode(',', array_keys($data)).',', $pines->com_mysql->link),
 				$data['p_cdate'],
 				$data['p_mdate'],
-				mysql_real_escape_string(','.implode(',', array_keys($data)).',', $pines->com_mysql->link),
 				intval($entity->guid));
 			if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 				if (function_exists('pines_error'))

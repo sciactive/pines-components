@@ -64,7 +64,7 @@ class com_reports extends component {
 		$head = new module('com_reports', 'show_calendar_head', 'head');
 		$module = new module('com_reports', 'report_sales', 'content');
 
-		$selector = array('&', 'tag' => array('com_sales', 'sale'));
+		$selector = array('&', 'tag' => array('com_sales', 'transaction'));
 		// Datespan of the report.
 		$date_start = strtotime('00:00', $start);
 		$date_end = strtotime('23:59', $end);
@@ -87,7 +87,7 @@ class com_reports extends component {
 		}
 		$module->location = $form->location = $location->guid;
 		$form->employees = $pines->com_hrm->get_employees();
-		$module->sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector);
+		$module->transactions = $pines->entity_manager->get_entities(array('class' => com_sales_tx), $selector);
 	}
 
 	/**

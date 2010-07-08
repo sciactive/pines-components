@@ -15,14 +15,8 @@ return array(
 	array(
 		'name' => 'create_admin',
 		'cname' => 'Create Admin',
-		'description' => 'Allow the creation of an admin user.',
+		'description' => 'Allow the creation of an admin user. When a user is created, if there are no other users in the system, he will be granted all abilities.',
 		'value' => true,
-	),
-	array(
-		'name' => 'create_admin_secret',
-		'cname' => 'Create Admin Secret',
-		'description' => 'The secret necessary to create an admin user.',
-		'value' => '874jdiv8',
 	),
 	array(
 		'name' => 'allow_registration',
@@ -54,7 +48,7 @@ return array(
 		'name' => 'confirm_email',
 		'cname' => 'Confirm User Email Addresses',
 		'description' => 'Confirm users\' email addresses upon registration before allowing them to login.',
-		'value' => true,
+		'value' => false,
 	),
 	array(
 		'name' => 'email_from_address',

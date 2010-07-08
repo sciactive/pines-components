@@ -63,6 +63,14 @@ if ($pines->config->com_user->confirm_email) {
 	$user->enabled = true;
 }
 
+// If create_admin is true and there are no other users, grant "system/all".
+if ($pines->config->com_user->create_admin) {
+	$other_users = $pines->entity_manager->get_entities(array('class' => user, 'limit' => 1), array('&', 'tag' => array('com_user', 'user')));
+	// Make sure it's not just null, cause that means an error.
+	if ($other_users === array())
+		$user->grant('system/all');
+}
+
 if ($user->save()) {
 	pines_log('Registered user ['.$user->username.']');
 	unset($_SESSION['com_user__tmpusername']);

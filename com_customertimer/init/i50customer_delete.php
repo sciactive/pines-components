@@ -17,18 +17,15 @@ defined('P_RUN') or die('Direct access prohibited');
  * @param array &$arguments Arguments.
  * @param string $name Hook name.
  * @param object &$object The customer being deleted.
- * @todo Fix this to work with the new floor system.
  */
 function com_customertimer__check_delete(&$arguments, $name, &$object) {
-	/*
 	if (!is_object($object))
 		return;
-	$logins = com_customertimer_login_tracker::factory();
-	if ($logins->logged_in($object)) {
+	$customer = com_customertimer_customer::factory($object->guid);
+	if ($customer->com_customertimer_is_logged_in()) {
 		pines_notice("{$object->guid}: {$object->name} is currently logged in to the customer timer and cannot be deleted until logged out.");
 		$arguments = false;
 	}
-	 */
 }
 
 $pines->hook->add_callback('com_customer_customer->delete', -10, 'com_customertimer__check_delete');

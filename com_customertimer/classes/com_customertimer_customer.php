@@ -73,21 +73,32 @@ class com_customertimer_customer extends com_customer_customer {
 	/**
 	 * Check if a customer is logged into a given location.
 	 *
-	 * @param com_customertimer_floor &$floor The floor to check.
-	 * @param string|null $station The station on the floor, or null to check all stations.
+	 * @param com_customertimer_floor|null &$floor The floor to check, or null to check all floors.
+	 * @param string|null $station The station on the floor, or null to check all stations. Requires a floor.
 	 * @return bool
 	 */
-	public function com_customertimer_is_logged_in(&$floor, $station = null) {
-		// If a station is requested, check that the customer is in that station.
-		if (isset($station))
-			return (isset($floor->active_stations[$station]) && $this->is($floor->active_stations[$station]['customer']));
-		// If no station is requested, look through each one.
-		foreach ($floor->active_stations as $cur_station) {
-			if (!isset($station) && $this->is($cur_station['customer']))
-				return true;
+	public function com_customertimer_is_logged_in(&$floor = null, $station = null) {
+		if (isset($floor)) {
+			// If a station is requested, check that the customer is in that station.
+			if (isset($station))
+				return (isset($floor->active_stations[$station]) && $this->is($floor->active_stations[$station]['customer']));
+			// If no station is requested, look through each one.
+			foreach ($floor->active_stations as $cur_station) {
+				if (!isset($station) && $this->is($cur_station['customer']))
+					return true;
+			}
+			// The customer is not logged in on this floor.
+			return false;
+		} else {
+			global $pines;
+			$get_floor = $pines->entity_manager->get_entity(
+					array('class' => com_customertimer_floor, 'skip_ac' => true),
+					array('&',
+						'ref' => array('active_stations', $this)
+					)
+				);
+			return (isset($get_floor));
 		}
-		// The customer is not logged in on this floor.
-		return false;
 	}
 
 	/**

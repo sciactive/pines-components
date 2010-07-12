@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 
-if ( !gatekeeper('com_sales/auditcashcount') )
+if ( !gatekeeper('com_sales/depositcashcount') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'cashcount/list'));
 
 $cashcount = com_sales_cashcount::factory((int) $_REQUEST['id']);

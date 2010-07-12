@@ -43,7 +43,7 @@ if (empty($tax_fee->name)) {
 	pines_notice('Please specify a name.');
 	return;
 }
-$test = $pines->entity_manager->get_entity(array('class' => com_sales_tax_fee), array('&', 'data' => array('name', $tax_fee->name), 'tag' => array('com_sales', 'tax_fee')));
+$test = $pines->entity_manager->get_entity(array('class' => com_sales_tax_fee, 'skip_ac' => true), array('&', 'data' => array('name', $tax_fee->name), 'tag' => array('com_sales', 'tax_fee')));
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$tax_fee->print_form();
 	pines_notice('There is already a tax/fee with that name. Please choose a different name.');

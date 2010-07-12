@@ -38,7 +38,7 @@ if (empty($payment_type->name)) {
 	pines_notice('Please specify a name.');
 	return;
 }
-$test = $pines->entity_manager->get_entity(array('class' => com_sales_payment_type), array('&', 'data' => array('name', $payment_type->name), 'tag' => array('com_sales', 'payment_type')));
+$test = $pines->entity_manager->get_entity(array('class' => com_sales_payment_type, 'skip_ac' => true), array('&', 'data' => array('name', $payment_type->name), 'tag' => array('com_sales', 'payment_type')));
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$payment_type->print_form();
 	pines_notice('There is already a payment type with that name. Please choose a different name.');

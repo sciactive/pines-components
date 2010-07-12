@@ -80,14 +80,18 @@ if ( gatekeeper('com_user/assigngroup') ) {
 	$highest_primary_parent = $pines->config->com_user->highest_primary;
 	$highest_secondary_parent = $pines->config->com_user->highest_secondary;
 	$primary_groups = $secondary_groups = array();
-	if ($highest_primary_parent == 0 || $highest_secondary_parent == 0) {
-		$primary_groups = $secondary_groups = $pines->entity_manager->get_entities(array('class' => group), array('&', 'tag' => array('com_user', 'group')));
+	if ($highest_primary_parent == 0) {
+		$primary_groups = $pines->entity_manager->get_entities(array('class' => group), array('&', 'tag' => array('com_user', 'group')));
 	} else {
 		if ($highest_primary_parent > 0) {
 			$highest_primary_parent = group::factory($highest_primary_parent);
 			if (isset($highest_primary_parent->guid))
 				$primary_groups = $highest_primary_parent->get_descendents();
 		}
+	}
+	if ($highest_secondary_parent == 0) {
+		$secondary_groups = $pines->entity_manager->get_entities(array('class' => group), array('&', 'tag' => array('com_user', 'group')));
+	} else {
 		if ($highest_secondary_parent > 0) {
 			$highest_secondary_parent = group::factory($highest_secondary_parent);
 			if (isset($highest_secondary_parent->guid))

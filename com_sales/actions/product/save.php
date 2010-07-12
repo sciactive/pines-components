@@ -105,7 +105,7 @@ if ($product->stock_type == 'non_stocked' && $product->pricing_method == 'margin
 	pines_notice('Margin pricing is not available for non stocked items.');
 	return;
 }
-$test = $pines->entity_manager->get_entity(array('class' => com_sales_product), array('&', 'data' => array('name', $product->name), 'tag' => array('com_sales', 'product')));
+$test = $pines->entity_manager->get_entity(array('class' => com_sales_product, 'skip_ac' => true), array('&', 'data' => array('name', $product->name), 'tag' => array('com_sales', 'product')));
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$product->print_form();
 	pines_notice('There is already a product with that name. Please choose a different name.');

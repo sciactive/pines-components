@@ -802,7 +802,7 @@ class com_sales_sale extends entity {
 			return true;
 		// Check if this sale is attached to any returns. If so, it cannot be voided.
 		$attached_return = $pines->entity_manager->get_entity(
-				array('class' => com_sales_return),
+				array('class' => com_sales_return, 'skip_ac' => true),
 				array('&',
 					'ref' => array('sale', $this),
 					'tag' => array('com_sales', 'return')

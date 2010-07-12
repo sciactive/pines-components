@@ -49,7 +49,7 @@ if (empty($article->alias)) {
 	return;
 }
 // If others can't access articles, this could fail...
-$test = $pines->entity_manager->get_entity(array('class' => com_content_article), array('&', 'data' => array('alias', $article->alias), 'tag' => array('com_content', 'article')));
+$test = $pines->entity_manager->get_entity(array('class' => com_content_article, 'skip_ac' => true), array('&', 'data' => array('alias', $article->alias), 'tag' => array('com_content', 'article')));
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$article->print_form();
 	pines_notice('There is already an article with that alias. Please choose a different alias.');

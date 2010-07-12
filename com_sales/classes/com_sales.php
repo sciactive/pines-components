@@ -755,7 +755,7 @@ class com_sales extends component {
 			// Grab all invoices, countsheets, transfers and purchase orders for
 			// all stock items with the given serial number / sku.
 			$invoices = $pines->entity_manager->get_entities(
-					array('class' => com_sales_sale),
+					array('class' => com_sales_sale, 'skip_ac' => true),
 					$secondary_options,
 					array('&',
 						'ref' => array('products', $cur_stock),
@@ -763,7 +763,7 @@ class com_sales extends component {
 					)
 				);
 			$countsheets = $pines->entity_manager->get_entities(
-					array('class' => com_sales_countsheet),
+					array('class' => com_sales_countsheet, 'skip_ac' => true),
 					$secondary_options,
 					array('&',
 						'array' => array('entries', $countsheet_code),
@@ -771,7 +771,7 @@ class com_sales extends component {
 					)
 				);
 			$transfers = $pines->entity_manager->get_entities(
-					array('class' => com_sales_transfer),
+					array('class' => com_sales_transfer, 'skip_ac' => true),
 					$secondary_options,
 					array('&',
 						'ref' => array('stock', $cur_stock),
@@ -779,7 +779,7 @@ class com_sales extends component {
 					)
 				);
 			$pos = $pines->entity_manager->get_entities(
-					array('class' => com_sales_po),
+					array('class' => com_sales_po, 'skip_ac' => true),
 					$secondary_options,
 					array('&',
 						'ref' => array('received', $cur_stock),

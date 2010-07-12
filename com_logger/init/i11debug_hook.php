@@ -16,15 +16,20 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * @param array $return The return values for the hook.
  * @param string $hook The hook that was called.
- * @return array The return values for the hook.
  */
 function com_logger__hook_log($return, $hook) {
 	global $pines;
-	if (!in_array($hook, array('$pines->log_manager->log', '$pines->log_manager->hook', '$pines->log_manager->write')))
+	if (!in_array($hook, array('$pines->log_manager->log', '$pines->log_manager->write')))
 		$pines->log_manager->log('(microtime='.microtime(true).') '.$hook, 'debug');
-	return $return;
 }
 
-if ($pines->config->com_logger->level == 'debug') $pines->log_manager->hook();
+/*
+ * Set up a callback for all hooks to log system activity.
+ *
+ * This is done when log level is set to 'debug' in order to help diagnose
+ * problems with a component.
+ */
+if ($pines->config->com_logger->level == 'debug')
+	$pines->hook->add_callback('all', -1, 'com_logger__hook_log');
 
 ?>

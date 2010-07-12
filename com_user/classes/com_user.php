@@ -43,13 +43,9 @@ class com_user extends component implements user_manager_interface {
 			return true;
 		if (function_exists('gatekeeper') && gatekeeper('system/all'))
 			return true;
-		if (!isset($entity->user->guid) && !isset($entity->group->guid))
-			return true;
-		if ($entity->is($_SESSION['user']))
-			return true;
-		if ($entity->is($_SESSION['user']->group))
-			return true;
 		if ($entity->has_tag('com_user', 'user') || $entity->has_tag('com_user', 'group'))
+			return true;
+		if (!isset($entity->user->guid) && !isset($entity->group->guid))
 			return true;
 
 		// Load access control, since we need it now...

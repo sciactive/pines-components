@@ -12,67 +12,81 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
+ * Check for the skip access control option.
+ *
+ * @param array &$array An array of either an entity or another array of entities.
+ * @param mixed $name Unused.
+ * @param mixed &$object Unused.
+ * @param mixed &$function Unused.
+ * @param array &$data The callback data array.
+ */
+function com_user__get_entities(&$array, $name, &$object, &$function, &$data) {
+	if ($array[0]['skip_ac'])
+		$data['com_user_skip_ac'] = true;
+}
+
+/**
  * Filter entities being deleted for user permissions.
  *
- * @param array $array An array of an entity or guid.
- * @return array|bool An array of an entity or guid, or false on failure.
+ * @param array &$array An array of an entity or guid.
  */
-function com_user__check_permissions_delete($array) {
+function com_user__check_permissions_delete(&$array) {
 	global $pines;
 	$entity = $array[0];
 	if ((int) $entity === $entity)
 		$entity = $pines->entity_manager->get_entity($array[0]);
-	if ((object) $entity !== $entity)
-		return false;
-	// Test for permissions.
-	if ($pines->user_manager->check_permissions($entity, 3)) {
-		return $array;
-	} else {
-		return false;
+	if ((object) $entity !== $entity) {
+		$array = false;
+		return;
 	}
+	// Test for permissions.
+	if (!$pines->user_manager->check_permissions($entity, 3))
+		$array = false;
 }
 
 /**
  * Filter entities being returned for user permissions.
  *
- * @param array $array An array of either an entity or another array of entities.
- * @return array An array of either an entity or another array of entities.
+ * @param array &$array An array of either an entity or another array of entities.
+ * @param mixed $name Unused.
+ * @param mixed &$object Unused.
+ * @param mixed &$function Unused.
+ * @param array &$data The callback data array.
  */
-function com_user__check_permissions_return($array) {
+function com_user__check_permissions_return(&$array, $name, &$object, &$function, &$data) {
 	global $pines;
+	if ($data['com_user_skip_ac'])
+		return;
 	if ((array) $array[0] === $array[0]) {
 		$is_array = true;
-		$entities = $array[0];
+		$entities = &$array[0];
 	} else {
 		$is_array = false;
-		$entities = $array;
+		$entities = &$array;
 	}
-	$return = array();
-	foreach ($entities as $cur_entity) {
+	foreach ($entities as $key => &$cur_entity) {
 		// Test for permissions.
-		if ($pines->user_manager->check_permissions($cur_entity, 1))
-			$return[] = $cur_entity;
+		if (!$pines->user_manager->check_permissions($cur_entity, 1))
+			unset($entities[$key]);
 	}
-	return ($is_array ? array($return) : $return);
+	unset($cur_entity);
 }
 
 /**
  * Filter entities being saved for user permissions.
  *
- * @param array $array An array of an entity.
- * @return array|bool An array of an entity or false on failure.
+ * @param array &$array An array of an entity.
  */
-function com_user__check_permissions_save($array) {
+function com_user__check_permissions_save(&$array) {
 	global $pines;
 	$entity = $array[0];
-	if ((object) $entity !== $entity)
-		return false;
-	// Test for permissions.
-	if ($pines->user_manager->check_permissions($entity, 2)) {
-		return $array;
-	} else {
-		return false;
+	if ((object) $entity !== $entity) {
+		$array = false;
+		return;
 	}
+	// Test for permissions.
+	if (!$pines->user_manager->check_permissions($entity, 2))
+		$array = false;
 }
 
 /**
@@ -92,10 +106,9 @@ function com_user__check_permissions_save($array) {
  * - group = 3
  * - other = 0
  *
- * @param array $array An array of either an entity or another array of entities.
- * @return array An array of either an entity or another array of entities.
+ * @param array &$array An array of either an entity or another array of entities.
  */
-function com_user__add_access($array) {
+function com_user__add_access(&$array) {
 	if ((object) $_SESSION['user'] === $_SESSION['user'] &&
 		!isset($array[0]->guid) &&
 		!$array[0]->has_tag('com_user', 'user') &&
@@ -111,10 +124,10 @@ function com_user__add_access($array) {
 		if (!isset($array[0]->ac->other))
 			$array[0]->ac->other = 0;
 	}
-	return $array;
 }
 
 foreach (array('$pines->entity_manager->get_entity', '$pines->entity_manager->get_entities') as $cur_hook) {
+	$pines->hook->add_callback($cur_hook, -10, 'com_user__get_entities');
 	$pines->hook->add_callback($cur_hook, 10, 'com_user__check_permissions_return');
 }
 unset ($cur_hook);

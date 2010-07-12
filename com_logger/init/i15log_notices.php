@@ -15,12 +15,11 @@ if ($pines->config->com_logger->log_errors) {
 	/**
 	 * Log a displayed error.
 	 *
-	 * @param string $args The error text.
+	 * @param string &$args The error text.
 	 */
-	function com_logger__log_error($args) {
+	function com_logger__log_error(&$args) {
 		global $pines;
 		$pines->log_manager->log($args[0], 'error');
-		return $args;
 	}
 	$pines->hook->add_callback('$pines->page->error', -100, 'com_logger__log_error');
 }
@@ -29,12 +28,11 @@ if ($pines->config->com_logger->log_notices) {
 	/**
 	 * Log a displayed notice.
 	 *
-	 * @param string $args The notice text.
+	 * @param string &$args The notice text.
 	 */
-	function com_logger__log_notice($args) {
+	function com_logger__log_notice(&$args) {
 		global $pines;
 		$pines->log_manager->log($args[0], 'notice');
-		return $args;
 	}
 	$pines->hook->add_callback('$pines->page->notice', -100, 'com_logger__log_notice');
 }

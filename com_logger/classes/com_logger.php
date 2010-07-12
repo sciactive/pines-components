@@ -47,17 +47,6 @@ class com_logger extends component implements log_manager_interface {
 		if (strlen($this->tmp_log)) $this->write($this->tmp_log);
 	}
 
-	/**
-	 * Set up a callback for all hooks to log system activity.
-	 *
-	 * This function is called when log level is set to 'debug' in order to help
-	 * diagnose problems with a component.
-	 */
-	public function hook() {
-		global $pines;
-		$pines->hook->add_callback('all', -1, 'com_logger__hook_log');
-	}
-
 	public function log($message, $level = 'info') {
 		global $pines;
 		$date = date('c');

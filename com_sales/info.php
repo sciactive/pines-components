@@ -65,6 +65,7 @@ return array(
 		array('newpaymenttype', 'Create Payment Types', 'User can create new payment types.'),
 		array('editpaymenttype', 'Edit Payment Types', 'User can edit current payment types.'),
 		array('deletepaymenttype', 'Delete Payment Types', 'User can delete current payment types.'),
+		array('searchproducts', 'Search Products', 'User can search products. Needed for making sales, receiving inventory, etc.'),
 		array('listproducts', 'List Products', 'User can see products.'),
 		array('newproduct', 'Create Products', 'User can create new products.'),
 		array('editproduct', 'Edit Products', 'User can edit current products.'),

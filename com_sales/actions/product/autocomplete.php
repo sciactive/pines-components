@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/listproducts') )
+if ( !gatekeeper('com_sales/searchproducts') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'product/autocomplete', $_REQUEST));
 
 $pines->page->override = true;

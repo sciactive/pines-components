@@ -64,7 +64,8 @@ class com_reports extends component {
 		$head = new module('com_reports', 'show_calendar_head', 'head');
 		$module = new module('com_reports', 'report_sales', 'content');
 
-		$selector = array('&', 'tag' => array('com_sales', 'transaction'));
+		$selector = array('&',
+			'tag' => array('com_sales', 'transaction', 'sale_tx'));
 		// Datespan of the report.
 		$date_start = strtotime('00:00', $start);
 		$date_end = strtotime('23:59', $end);

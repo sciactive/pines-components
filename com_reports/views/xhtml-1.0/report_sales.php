@@ -45,6 +45,9 @@ foreach ($this->transactions as $cur_tx) {
 			$date_array[$date_str][$timespan][3] = 0;
 		}
 		if ( ($sale_time >= $span[0]) && ($sale_time < $span[1]) ) {
+			// Skip voided sales.
+			if ($cur_tx->ticket->status == 'voided')
+				continue;
 			switch ($cur_tx->type) {
 				case 'paid':
 					$date_array[$date_str][$timespan][3] += (float) $cur_tx->ticket->total;

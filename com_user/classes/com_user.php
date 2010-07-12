@@ -39,6 +39,8 @@ class com_user extends component implements user_manager_interface {
 	private $sort_property;
 
 	public function check_permissions(&$entity, $type = 1) {
+		if ((object) $entity !== $entity)
+			return false;
 		if ((object) $_SESSION['user'] !== $_SESSION['user'])
 			return true;
 		if (function_exists('gatekeeper') && gatekeeper('system/all'))
@@ -57,9 +59,7 @@ class com_user extends component implements user_manager_interface {
 		
 		if (is_callable(array($entity->user, 'is')) && $entity->user->is($_SESSION['user']))
 			return ($ac->user >= $type);
-		if (is_callable(array($entity->group, 'is')) && $entity->group->is($_SESSION['user']->group) ||
-			$entity->group->in_array($_SESSION['user']->groups) ||
-			$entity->group->in_array($_SESSION['descendents']) )
+		if (is_callable(array($entity->group, 'is')) && ($entity->group->is($_SESSION['user']->group) || $entity->group->in_array($_SESSION['user']->groups) || $entity->group->in_array($_SESSION['descendents'])) )
 			return ($ac->group >= $type);
 		return ($ac->other >= $type);
 	}

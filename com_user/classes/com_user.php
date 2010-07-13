@@ -311,8 +311,6 @@ class com_user extends component implements user_manager_interface {
 		if ( isset($user->guid) && $user->enabled && $this->gatekeeper('com_user/login', $user) ) {
 			// Destroy session data.
 			$this->logout();
-			// Start a new session.
-			session_start();
 			$_SESSION['user_id'] = $user->guid;
 			$this->fill_session();
 			return true;
@@ -328,6 +326,8 @@ class com_user extends component implements user_manager_interface {
 		$this->gatekeeper_cache = array();
 		@session_unset();
 		@session_destroy();
+		// Start a new session.
+		@session_start();
 	}
 
 	public function print_login($position = 'content') {

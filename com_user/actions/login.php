@@ -41,7 +41,7 @@ if ( $pines->config->com_user->allow_registration && $_REQUEST['login_register']
 }
 
 if ( gatekeeper() && $_REQUEST['username'] == $_SESSION['user']->username ) {
-	pines_notice('Already logged in!');
+	pines_notice('You are already logged in.');
 	redirect(pines_url());
 	return;
 }
@@ -55,7 +55,7 @@ if ( isset($user->guid) && $user->check_password($_REQUEST['password']) ) {
 	// Load the default component.
 	redirect(pines_url());
 } else {
-	pines_notice('Incorrect username/password!');
+	pines_notice('Incorrect username/password.');
 	$pines->user_manager->print_login();
 }
 

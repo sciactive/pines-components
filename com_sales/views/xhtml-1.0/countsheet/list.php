@@ -12,18 +12,36 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Countsheets';
 $pines->com_pgrid->load();
+$pines->com_jstree->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/countsheet/list'];
-$pines->com_jstree->load();
 ?>
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
+		var submit_url = "<?php echo pines_url('com_sales', 'countsheet/list'); ?>";
+		var submit_search = function(){
+			// Submit the form with all of the fields.
+			pines.post(submit_url, {
+				"location": location,
+				"all_time": all_time,
+				"start_date": start_date,
+				"end_date": end_date
+			});
+		};
+
+		// Timespan Defaults
+		var all_time = <?php echo $this->all_time ? 'true' : 'false'; ?>;
+		var start_date = "<?php echo $this->start_date ? addslashes(format_date($this->start_date, 'date_sort')) : ''; ?>";
+		var end_date = "<?php echo $this->end_date ? addslashes(format_date($this->end_date, 'date_sort')) : ''; ?>";
+		// Location Defaults
+		var location = "<?php echo $this->location->guid ? $this->location->guid : 'all'; ?>";
+
 		// Group Tree
-		var location = $("#p_muid_assign_dialog [name=location]");
+		var assign_location = $("#p_muid_assign_dialog [name=location]");
 		$("#p_muid_location_tree")
 		.bind("select_node.jstree", function(e, data){
-			location.val(data.inst.get_selected().attr("id").replace("p_muid_", ""));
+			assign_location.val(data.inst.get_selected().attr("id").replace("p_muid_", ""));
 		})
 		.bind("before.jstree", function (e, data){
 			if (data.func == "parse_json" && "args" in data && 0 in data.args && "attr" in data.args[0] && "id" in data.args[0].attr)
@@ -78,6 +96,9 @@ $pines->com_jstree->load();
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
+				{type: 'button', text: 'Location', extra_class: 'picon picon-applications-internet', selection_optional: true, click: function(){countsheet_grid.location_form();}},
+				{type: 'button', text: 'Timespan', extra_class: 'picon picon-view-time-schedule', selection_optional: true, click: function(){countsheet_grid.date_form();}},
+				{type: 'separator'},
 				<?php if (gatekeeper('com_sales/newcountsheet')) { ?>
 				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'countsheet/edit'); ?>'},
 				<?php } if (gatekeeper('com_sales/editcountsheet')) { ?>
@@ -114,7 +135,88 @@ $pines->com_jstree->load();
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
-		$("#p_muid_grid").pgrid(cur_options);
+		var countsheet_grid = $("#p_muid_grid").pgrid(cur_options);
+
+		countsheet_grid.date_form = function(){
+			$.ajax({
+				url: "<?php echo pines_url('com_sales', 'forms/dateselect'); ?>",
+				type: "POST",
+				dataType: "html",
+				data: {"all_time": all_time, "start_date": start_date, "end_date": end_date},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured while trying to retreive the date form:\n"+XMLHttpRequest.status+": "+textStatus);
+				},
+				success: function(data){
+					if (data == "")
+						return;
+					var form = $("<div title=\"Date Selector\" />");
+					form.dialog({
+						bgiframe: true,
+						autoOpen: true,
+						height: 315,
+						modal: true,
+						open: function(){
+							form.html(data);
+						},
+						close: function(){
+							form.remove();
+						},
+						buttons: {
+							"Update": function(){
+								if (form.find(":input[name=timespan_saver]").val() == "alltime") {
+									all_time = true;
+								} else {
+									all_time = false;
+									start_date = form.find(":input[name=start_date]").val();
+									end_date = form.find(":input[name=end_date]").val();
+								}
+								form.dialog('close');
+								submit_search();
+							}
+						}
+					});
+				}
+			});
+		};
+		countsheet_grid.location_form = function(){
+			$.ajax({
+				url: "<?php echo pines_url('com_sales', 'forms/locationselect'); ?>",
+				type: "POST",
+				dataType: "html",
+				data: {"location": location},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured while trying to retreive the location form:\n"+XMLHttpRequest.status+": "+textStatus);
+				},
+				success: function(data){
+					if (data == "")
+						return;
+					var form = $("<div title=\"Location Selector\" />");
+					form.dialog({
+						bgiframe: true,
+						autoOpen: true,
+						height: 250,
+						modal: true,
+						open: function(){
+							form.html(data);
+						},
+						close: function(){
+							form.remove();
+						},
+						buttons: {
+							"Update": function(){
+								if (form.find(":input[name=location_saver]").val() == "all") {
+									location = 'all';
+								} else {
+									location = form.find(":input[name=location]").val();
+								}
+								form.dialog('close');
+								submit_search();
+							}
+						}
+					});
+				}
+			});
+		};
 	});
 	// ]]>
 </script>

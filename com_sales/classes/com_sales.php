@@ -323,13 +323,27 @@ class com_sales extends component {
 	
 	/**
 	 * Creates and attaches a module which lists countsheets.
+	 * @param int $start_date The start date of countsheets to show.
+	 * @param int $end_date The end date of countsheets to show.
+	 * @param group $location The location to show countsheets for.
 	 */
-	public function list_countsheets() {
+	public function list_countsheets($start_date = null, $end_date = null, $location = null) {
 		global $pines;
 
 		$module = new module('com_sales', 'countsheet/list', 'content');
 
-		$module->countsheets = $pines->entity_manager->get_entities(array('class' => com_sales_countsheet), array('&', 'tag' => array('com_sales', 'countsheet')));
+		$selector = array('&', 'tag' => array('com_sales', 'countsheet'));
+		if (isset($start_date))
+			$selector['gte'] = array('p_cdate', (int) $start_date);
+		if (isset($end_date))
+			$selector['lte'] = array('p_cdate', (int) $end_date);
+		if (isset($location))
+			$selector['ref'] = array('group', $location);
+		$module->countsheets = $pines->entity_manager->get_entities(array('class' => com_sales_countsheet), $selector);
+		$module->start_date = $start_date;
+		$module->end_date = $end_date;
+		$module->all_time = (!isset($start_date) && !isset($end_date));
+		$module->location = $location;
 
 		// Remind the user to do a countsheet if one is assigned to their location.
 		if ($_SESSION['user']) {

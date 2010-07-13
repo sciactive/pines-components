@@ -171,8 +171,7 @@ $pines->com_jstree->load();
 	<?php if (isset($this->entity)) { ?>
 	// Edit the event if there is one to be edited.
 	pines.com_hrm_edit_event();
-	<?php } } ?>
-
+	<?php } } if (gatekeeper('com_hrm/clock')) { ?>
 	// Request time off.
 	pines.com_hrm_time_off_form = function(rto_id){
 		$.ajax({
@@ -220,7 +219,7 @@ $pines->com_jstree->load();
 	<?php if (isset($this->rto)) { ?>
 	// Edit the event if there is one to be edited.
 	pines.com_hrm_time_off_form(<?php echo $this->rto->guid; ?>);
-	<?php } ?>
+	<?php } } ?>
 	// ]]>
 </script>
 <div style="padding: 1em;">
@@ -234,8 +233,9 @@ $pines->com_jstree->load();
 	<div style="margin-bottom: 1em;">
 		<input style="width: 100%;" class="ui-state-default ui-priority-primary ui-corner-all" type="button" value="RTO" onclick="pines.com_hrm_time_off();" />
 	</div>
-	<?php } ?>
+	<?php } if (gatekeeper('com_hrm/clock')) { ?>
 	<div>
 		<input style="width: 100%;" class="ui-state-default ui-priority-primary ui-corner-all" type="button" value="Request Time Off" onclick="pines.com_hrm_time_off_form();" />
 	</div>
+	<?php } ?>
 </div>

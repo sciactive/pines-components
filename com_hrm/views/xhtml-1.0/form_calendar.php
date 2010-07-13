@@ -16,7 +16,7 @@ $pines->com_jstree->load();
 ?>
 <script type='text/javascript'>
 	// <![CDATA[
-	<?php if (gatekeeper('com_sales/editcalendar')) { ?>
+	<?php if (gatekeeper('com_hrm/editcalendar')) { ?>
 	// Change the branch / division of the company.
 	pines.com_hrm_select_branch = function(){
 		$.ajax({
@@ -225,7 +225,7 @@ $pines->com_jstree->load();
 	// ]]>
 </script>
 <div style="padding: 1em;">
-	<?php if (gatekeeper('com_sales/editcalendar')) { ?>
+	<?php if (gatekeeper('com_hrm/editcalendar')) { ?>
 	<div style="margin-bottom: 1em;">
 		<input style="width: 100%;" class="ui-state-default ui-priority-primary ui-corner-all" type="button" value="Change Branch" onclick="pines.com_hrm_select_branch();" />
 	</div>

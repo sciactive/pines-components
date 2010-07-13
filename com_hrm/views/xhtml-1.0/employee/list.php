@@ -24,7 +24,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
-				<?php if (gatekeeper('com_sales/addemployee')) { ?>
+				<?php if (gatekeeper('com_hrm/addemployee')) { ?>
 				{type: 'button', text: 'Add User(s)', extra_class: 'picon picon-list-add-user', selection_optional: true, click: function(){
 					$.ajax({
 						url: "<?php echo pines_url('com_hrm', 'forms/userselect'); ?>",
@@ -56,12 +56,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						}
 					});
 				}},
-				<?php } if (gatekeeper('com_sales/editemployee')) { ?>
+				<?php } if (gatekeeper('com_hrm/editemployee')) { ?>
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-user-properties', double_click: true, url: '<?php echo pines_url('com_hrm', 'employee/edit', array('id' => '__title__')); ?>'},
 				<?php } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
-				<?php if (gatekeeper('com_sales/removeemployee')) { ?>
+				<?php if (gatekeeper('com_hrm/removeemployee')) { ?>
 				{type: 'button', text: 'Remove User(s)', extra_class: 'picon picon-list-remove-user', confirm: true, multi_select: true, url: '<?php echo pines_url('com_hrm', 'employee/remove', array('id' => '__title__')); ?>', delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>

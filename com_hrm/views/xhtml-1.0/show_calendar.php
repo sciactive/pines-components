@@ -41,8 +41,7 @@ $this->title = 'Company Schedule [' . $this->location->name . ']';
 			<?php } else { ?>
 			editable: false,
 			<?php } ?>
-			events: [
-				<?php
+			events: [<?php
 				// Read in all existing events.
 				$event_counter = 0;
 				foreach ($this->events as $cur_event) {
@@ -51,24 +50,23 @@ $this->title = 'Company Schedule [' . $this->location->name . ']';
 					echo '{';
 					if ($cur_event->id != 0) {
 						echo 'group: true,';
-						echo 'id: '. $cur_event->id .',';
-						echo '_id: '. $cur_event->id .',';
-						echo 'guid: '. $cur_event->guid .',';
+						echo 'id: '. $cur_event->id .', ';
+						echo '_id: '. $cur_event->id .', ';
+						echo 'guid: '. $cur_event->guid .', ';
 					} else {
 						echo 'group: false,';
-						echo 'id: '. $cur_event->guid .',';
-						echo '_id: '. $cur_event->guid .',';
+						echo 'id: '. $cur_event->guid .', ';
+						echo '_id: '. $cur_event->guid .', ';
 					}
-					echo 'title: \''. $cur_event->title .'\',';
-					echo 'start: '. $cur_event->start .',';
-					echo 'end: '. $cur_event->end .',';
+					echo 'title: \''. addslashes($cur_event->title) .'\', ';
+					echo 'start: '. $cur_event->start .', ';
+					echo 'end: '. $cur_event->end .', ';
 					echo 'className: \''. $cur_event->color .'\',';
 					echo ($cur_event->time_off) ? 'editable: false,' : 'editable: true,';
 					echo ($cur_event->all_day) ? 'allDay: true' : 'allDay: false';
 					echo '}';
 					$event_counter++;
-				} ?>
-			],
+				} ?>],
 			eventClick: function(calEvent,jsEvent,view) {
 				if (calEvent.selected == true) {
 					calEvent.selected = false;

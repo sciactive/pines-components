@@ -79,15 +79,14 @@ $pines->com_jstree->load();
 					buttons: {
 						"Add Event": function(){
 							form.dialog('close');
-							pines.post("<?php echo pines_url('com_hrm', 'saveevent'); ?>",
-							{
+							pines.post("<?php echo pines_url('com_hrm', 'saveevent'); ?>", {
 								employee: form.find(":input[name=employee]").val(),
 								event_label: form.find(":input[name=event_label]").val(),
-								event_date: form.find(":input[name=event_date]").val(),
-								event_enddate: form.find(":input[name=event_enddate]").val(),
+								event_date: form.find(":input[name=start]").val(),
+								event_enddate: form.find(":input[name=end]").val(),
 								all_day: form.find(":input[name=all_day]").val(),
-								event_start: form.find(":input[name=event_start]").val(),
-								event_end: form.find(":input[name=event_end]").val(),
+								event_start: form.find(":input[name=time_start]").val(),
+								event_end: form.find(":input[name=time_end]").val(),
 								location: form.find(":input[name=location]").val()
 							});
 						}

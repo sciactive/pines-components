@@ -24,7 +24,7 @@ class com_plaza extends component {
 	function list_packages() {
 		global $pines;
 
-		$module = new module('com_plaza', 'list_packages', 'content');
+		$module = new module('com_plaza', 'package/list', 'content');
 
 		$module->db = $pines->com_package->db;
 	}

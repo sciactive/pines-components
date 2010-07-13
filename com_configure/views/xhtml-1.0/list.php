@@ -41,7 +41,7 @@ $this->title = 'Configure Components';
 	#p_muid_form .component_list .short_description {
 		font-size: 1.1em;
 	}
-	#p_muid_form .component_list .license, .component_list .description, .component_list .service {
+	#p_muid_form .component_list .license, #p_muid_form .component_list .description, #p_muid_form .component_list .service {
 		margin-top: .5em;
 	}
 	/* ]]> */

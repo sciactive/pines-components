@@ -1,6 +1,6 @@
 <?php
 /**
- * List packages.
+ * Return a JSON object of package info.
  *
  * @package Pines
  * @subpackage com_plaza
@@ -12,7 +12,11 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_plaza/listpackages') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_plaza', 'listpackages'));
+	punt_user('You don\'t have necessary permission.', pines_url('com_plaza', 'package/list'));
 
-$pines->com_plaza->list_packages();
+$pines->page->override = true;
+$package = $pines->com_package->db['packages'][$_REQUEST['name']];
+if (isset($package))
+	$pines->page->override_doc(json_encode($package));
+
 ?>

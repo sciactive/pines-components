@@ -29,9 +29,9 @@ $audit->till_total = $cashcount->total;
 $audit->comments = $_REQUEST['comments'];
 $audit->total = 0;
 // Save the total count of each different denomination.
-foreach ($cashcount->currency as $cur_currency) {
-	$audit->count[$cur_currency] = (int) $_REQUEST["count_$cur_currency"];
-	$audit->total += ((float) $cur_currency) * $audit->count[$cur_currency];
+foreach ($cashcount->currency as $key => $cur_currency) {
+	$audit->count[$key] = (int) $_REQUEST["count_$key"];
+	$audit->total += ((float) $cur_currency) * $audit->count[$key];
 }
 
 if ($pines->config->com_sales->global_cashcounts)

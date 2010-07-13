@@ -70,7 +70,7 @@ $this->note = 'Count the cash as you take it out of the drawer.';
 				//bills/coins for each denomition by its respective value.
 				//ex: 5 x 0.25 for 5 quarters that have been counted
 				var cur_entry = $(this);
-				var subtotal = parseInt(cur_entry.val()) * parseFloat(cur_entry.attr("name").replace(/[^\d.]/g, ""));
+				var subtotal = parseInt(cur_entry.val()) * parseFloat(cur_entry.attr("title"));
 				if (isNaN(subtotal))
 					cur_entry.val('0');
 				else
@@ -124,9 +124,9 @@ $this->note = 'Count the cash as you take it out of the drawer.';
 		<h1>Cash being <strong>Removed</strong> from Drawer</h1>
 	</div>
 	<div class="pf-element pf-full-width" style="position: relative;">
-		<?php foreach ($this->entity->cashcount->currency as $cur_denom) { ?>
+		<?php foreach ($this->entity->cashcount->currency as $key => $cur_denom) { ?>
 		<div class="pf-element">
-			<input class="pf-field ui-widget-content entry" type="text" name="count_<?php echo $cur_denom; ?>" value="0" />
+			<input class="pf-field ui-widget-content entry" type="text" name="count_<?php echo $key; ?>" title="<?php echo $cur_denom; ?>" value="0" />
 			x <span class="amount"><?php echo $this->entity->cashcount->currency_symbol . $cur_denom; ?></span>
 			<button class="pf-field ui-state-default ui-corner-all add_btn" type="button"><span class="amt_btn picon picon-list-add"></span></button>
 			<button class="pf-field ui-state-default ui-corner-all remove_btn" type="button"><span class="amt_btn picon picon-list-remove"></span></button>

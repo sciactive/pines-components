@@ -32,10 +32,10 @@ if ( isset($_REQUEST['id']) ) {
 $cashcount->comments = $_REQUEST['comments'];
 $cashcount->float = 0;
 // Save the total count of each different denomination.
-foreach ($cashcount->currency as $cur_currency) {
+foreach ($cashcount->currency as $key => $cur_currency) {
 	// The float is the total amount of money in the drawer to begin with.
-	$cashcount->count[$cur_currency] = (int) $_REQUEST["count_$cur_currency"];
-	$cashcount->float += ((float) $cur_currency) * $cashcount->count[$cur_currency];
+	$cashcount->count[$key] = (int) $_REQUEST["count_$key"];
+	$cashcount->float += ((float) $cur_currency) * $cashcount->count[$key];
 }
 
 if ($_REQUEST['save'] == 'commit') {
@@ -52,7 +52,7 @@ if ($pines->config->com_sales->global_cashcounts)
 
 if ($cashcount->save()) {
 	if ($cashcount->final) {
-		pines_notice('Cash Count Cashed-In with $'.$cashcount->float);
+		pines_notice('Cash Count ['.$cashcount->guid.'] Cashed-In with $'.$cashcount->float);
 	} else {
 		pines_notice('Saved Cash Count ['.$cashcount->guid.']');
 	}

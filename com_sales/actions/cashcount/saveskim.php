@@ -28,10 +28,10 @@ $skim->till_total = $cashcount->total;
 $skim->comments = $_REQUEST['comments'];
 $skim->total = 0;
 // Save the total count of each different denomination.
-foreach ($cashcount->currency as $cur_currency) {
+foreach ($cashcount->currency as $key => $cur_currency) {
 	// The float is the total amount of money in the drawer to begin with.
-	$skim->count[$cur_currency] = (int) $_REQUEST["count_$cur_currency"];
-	$skim->total += ((float) $cur_currency) * $skim->count[$cur_currency];
+	$skim->count[$key] = (int) $_REQUEST["count_$key"];
+	$skim->total += ((float) $cur_currency) * $skim->count[$key];
 }
 
 if ($pines->config->com_sales->global_cashcounts)

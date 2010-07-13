@@ -29,10 +29,10 @@ $cashcount->cashed_out_user = $_SESSION['user'];
 $cashcount->comments = $_REQUEST['comments'];
 $cashcount->total_out = 0;
 // Save the total count of each different denomination.
-foreach ($cashcount->currency as $cur_currency) {
+foreach ($cashcount->currency as $key => $cur_currency) {
 	// The float is the total amount of money in the drawer to begin with.
-	$cashcount->count_out[$cur_currency] = (int) $_REQUEST["count_$cur_currency"];
-	$cashcount->total_out += ((float) $cur_currency) * $cashcount->count_out[$cur_currency];
+	$cashcount->count_out[$key] = (int) $_REQUEST["count_$key"];
+	$cashcount->total_out += ((float) $cur_currency) * $cashcount->count_out[$key];
 }
 
 if ($pines->config->com_sales->global_cashcounts)
@@ -46,6 +46,6 @@ if ($cashcount->save()) {
 	return;
 }
 
-redirect(pines_url('com_sales', 'cashcount/cashout'));
+redirect(pines_url('com_sales', 'cashcount/list'));
 
 ?>

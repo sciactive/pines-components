@@ -16,22 +16,12 @@ if (isset($this->entity->guid))
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/cashcount/formreview'];
-
-$comment_count = 0;
-$comment_str = '';
 ?>
-<style type="text/css" >
-	/* <![CDATA[ */
-	#p_muid_form .error {
-		color: red;
-	}
-	/* ]]> */
-</style>
 <script type="text/javascript">
 	// <![CDATA[
-	
-	var comments_note = new Array();
-	
+
+	var p_muid_notice;
+
 	pines(function(){
 		var state_xhr;
 		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
@@ -49,31 +39,44 @@ $comment_str = '';
 		var cur_options = $.extend(cur_defaults, cur_state);
 		$("#p_muid_grid").pgrid(cur_options);
 
-		pines.com_sales_create_comment = function(entry_comment){
-			comments_note.push($.pnotify({
-				pnotify_text: entry_comment,
-				pnotify_hide: false,
-				pnotify_closer: false,
-				pnotify_history: false,
-				pnotify_animate_speed: 100,
-				pnotify_opacity: .9,
-				pnotify_notice_icon: "ui-icon ui-icon-comment",
-				// Setting stack to false causes Pines Notify to ignore this notice when positioning.
-				pnotify_stack: false,
-				pnotify_after_init: function(pnotify){
-					// Remove the notice if the user mouses over it.
-					pnotify.mouseout(function(){
-						pnotify.pnotify_remove();
-					});
-				},
-				pnotify_before_open: function(pnotify){
-					// This prevents the notice from displaying when it's created.
-					pnotify.pnotify({
-						pnotify_before_open: null
-					});
-					return false;
-				}
-			}));
+		p_muid_notice = $.pnotify({
+			pnotify_text: "",
+			pnotify_hide: false,
+			pnotify_closer: false,
+			pnotify_history: false,
+			pnotify_animate_speed: 100,
+			pnotify_notice_icon: "ui-icon ui-icon-comment",
+			// Setting stack to false causes Pines Notify to ignore this notice when positioning.
+			pnotify_stack: false,
+			pnotify_after_init: function(pnotify){
+				// Remove the notice if the user mouses over it.
+				pnotify.mouseout(function(){
+					pnotify.pnotify_remove();
+				});
+			},
+			pnotify_before_open: function(pnotify){
+				// This prevents the notice from displaying when it's created.
+				pnotify.pnotify({
+					pnotify_before_open: null
+				});
+				return false;
+			}
+		});
+		$("tbody", "#p_muid_grid").mouseenter(function(){
+			p_muid_notice.pnotify_display();
+		}).mouseleave(function(){
+			p_muid_notice.pnotify_remove();
+		}).mousemove(function(e){
+			p_muid_notice.css({"top": e.clientY+12, "left": e.clientX+12});
+		});
+		p_muid_notice.com_sales_update = function(comments){
+			if (comments == "") {
+				p_muid_notice.pnotify_remove();
+			} else {
+				p_muid_notice.pnotify({pnotify_text: comments});
+				if (!p_muid_notice.is(":visible"))
+					p_muid_notice.pnotify_display();
+			}
 		};
 	});
 	// ]]>
@@ -94,14 +97,7 @@ $comment_str = '';
 			</tr>
 		</thead>
 		<tbody>
-			<?php if ($this->entity->comments != '') { ?>
-			<script type="text/javascript">
-				// <![CDATA[
-				pines.com_sales_create_comment("<?php echo $this->entity->comments; ?>");
-				// ]]>
-			</script>
-			<?php $comment_str = 'onmouseover="comments_note['.$comment_count.'].pnotify_display();" onmousemove="comments_note['.$comment_count.'].css({\'top\': event.clientY+12, \'left\': event.clientX+12});" onmouseout="comments_note['.$comment_count.'].pnotify_remove();"'; $comment_count++; } ?>
-			<tr <?php echo $comment_str; ?>>
+			<tr onmouseover="p_muid_notice.com_sales_update('<?php echo addslashes($this->entity->comments); ?>');">
 				<td><?php echo format_date($this->entity->p_cdate); ?></td>
 				<td>Cash-In</td>
 				<td><?php echo $this->entity->user->name; ?></td>
@@ -112,15 +108,8 @@ $comment_str = '';
 				<td>$<?php echo $this->entity->float; ?></td>
 				<td>$0</td>
 			</tr>
-			<?php foreach ($this->entity->audits as $cur_audit) { $comment_str = ''; ?>
-			<?php if ($cur_audit->comments != '') { ?>
-			<script type="text/javascript">
-				// <![CDATA[
-				pines.com_sales_create_comment("<?php echo $cur_audit->comments; ?>");
-				// ]]>
-			</script>
-			<?php $comment_str = 'onmouseover="comments_note['.$comment_count.'].pnotify_display();" onmousemove="comments_note['.$comment_count.'].css({\'top\': event.clientY+12, \'left\': event.clientX+12});" onmouseout="comments_note['.$comment_count.'].pnotify_remove();" '; $comment_count++; } ?>
-			<tr <?php echo $comment_str; ?>title="<?php echo $cur_audit->guid; ?>"  <?php echo ($cur_audit->variance != 0) ? 'style="color: red;"' : ''; ?>>
+			<?php foreach ($this->entity->audits as $cur_audit) { ?>
+			<tr onmouseover="p_muid_notice.com_sales_update('<?php echo addslashes($cur_audit->comments); ?>');" <?php echo (($cur_audit->till_total - $cur_audit->total) != 0) ? 'class="ui-state-error"' : ''; ?>>
 				<td><?php echo format_date($cur_audit->p_cdate); ?></td>
 				<td>Audit</td>
 				<td><?php echo $cur_audit->user->name; ?></td>
@@ -131,15 +120,8 @@ $comment_str = '';
 				<td>$<?php echo $cur_audit->total; ?></td>
 				<td>$<?php echo $cur_audit->till_total - $cur_audit->total; ?></td>
 			</tr>
-			<?php } foreach ($this->entity->skims as $cur_skim) { $comment_str = ''; ?>
-			<?php if ($cur_skim->comments != '') { ?>
-			<script type="text/javascript">
-				// <![CDATA[
-				pines.com_sales_create_comment("<?php echo $cur_skim->comments; ?>");
-				// ]]>
-			</script>
-			<?php $comment_str = 'onmouseover="comments_note['.$comment_count.'].pnotify_display();" onmousemove="comments_note['.$comment_count.'].css({\'top\': event.clientY+12, \'left\': event.clientX+12});" onmouseout="comments_note['.$comment_count.'].pnotify_remove();" '; $comment_count++; } ?>
-			<tr <?php echo $comment_str; ?>title="<?php echo $cur_skim->guid; ?>">
+			<?php } foreach ($this->entity->skims as $cur_skim) { ?>
+			<tr onmouseover="p_muid_notice.com_sales_update('<?php echo addslashes($cur_skim->comments); ?>');">
 				<td><?php echo format_date($cur_skim->p_cdate); ?></td>
 				<td>Skim</td>
 				<td><?php echo $cur_skim->user->name; ?></td>
@@ -150,15 +132,8 @@ $comment_str = '';
 				<td>$<?php echo $cur_skim->total; ?></td>
 				<td>$<?php echo -1 * $cur_skim->total; ?></td>
 			</tr>
-			<?php } foreach ($this->entity->deposits as $cur_deposit) { $comment_str = ''; ?>
-			<?php if ($cur_deposit->comments != '') { ?>
-			<script type="text/javascript">
-				// <![CDATA[
-				pines.com_sales_create_comment("<?php echo $cur_deposit->comments; ?>");
-				// ]]>
-			</script>
-			<?php $comment_str = 'onmouseover="comments_note['.$comment_count.'].pnotify_display();" onmousemove="comments_note['.$comment_count.'].css({\'top\': event.clientY+12, \'left\': event.clientX+12});" onmouseout="comments_note['.$comment_count.'].pnotify_remove();" '; $comment_count++; } ?>
-			<tr <?php echo $comment_str; ?>title="<?php echo $cur_deposit->guid; ?>" <?php echo ($cur_deposit->status == 'flagged') ? 'style="color: red;"' : ''; ?>>
+			<?php } foreach ($this->entity->deposits as $cur_deposit) { ?>
+			<tr onmouseover="p_muid_notice.com_sales_update('<?php echo addslashes($cur_deposit->comments); ?>');" <?php echo ($cur_deposit->status == 'flagged') ? 'class="ui-state-error"' : ''; ?>>
 				<td><?php echo format_date($cur_deposit->p_cdate); ?></td>
 				<td>Deposit</td>
 				<td><?php echo $cur_deposit->user->name; ?></td>
@@ -170,15 +145,8 @@ $comment_str = '';
 				<td>$<?php echo $cur_deposit->total; ?></td>
 			</tr>
 			<?php } ?>
-			<?php if ($this->entity->cashed_out) {
-			if ($this->entity->comments != '') { ?>
-			<script type="text/javascript">
-				// <![CDATA[
-				pines.com_sales_create_comment("<?php echo $this->entity->comments; ?>");
-				// ]]>
-			</script>
-			<?php $comment_str = 'onmouseover="comments_note['.$comment_count.'].pnotify_display();" onmousemove="comments_note['.$comment_count.'].css({\'top\': event.clientY+12, \'left\': event.clientX+12});" onmouseout="comments_note['.$comment_count.'].pnotify_remove();"'; $comment_count++; } ?>
-			<tr>
+			<?php if ($this->entity->cashed_out) { ?>
+			<tr onmouseover="p_muid_notice.com_sales_update('<?php echo addslashes($this->entity->comments); ?>');">
 				<td><?php echo format_date($this->entity->cashed_out_date); ?></td>
 				<td>Cash-Out</td>
 				<td><?php echo $this->entity->cashed_out_user->name; ?></td>
@@ -188,6 +156,18 @@ $comment_str = '';
 				<td>$<?php echo $this->entity->total; ?></td>
 				<td>$<?php echo $this->entity->total_out; ?></td>
 				<td>$<?php echo $this->entity->total_out-$this->entity->total; ?></td>
+			</tr>
+			<?php } else { ?>
+			<tr onmouseover="p_muid_notice.com_sales_update('<?php echo addslashes($this->entity->comments); ?>');">
+				<td><?php echo format_date(time()); ?></td>
+				<td>Current</td>
+				<td></td>
+				<?php foreach ($this->entity->count as $cur_count) { ?>
+				<td></td>
+				<?php } ?>
+				<td>$<?php echo $this->entity->total; ?></td>
+				<td>$0</td>
+				<td>$0</td>
 			</tr>
 			<?php } ?>
 		</tbody>

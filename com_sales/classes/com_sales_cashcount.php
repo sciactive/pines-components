@@ -28,9 +28,8 @@ class com_sales_cashcount extends entity {
 		$this->add_tag('com_sales', 'cashcount');
 		// Defaults
 		$this->status = 'pending';
-		$this->audits = $this->deposits = $this->skims = $this->count = array();
+		$this->audits = $this->deposits = $this->skims = $this->count = $this->count_out = array();
 		$this->currency_symbol = $pines->config->com_sales->currency_symbol;
-		$this->currency = $pines->config->com_sales->currency_denominations;
 		if ($id > 0) {
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
 			if (!isset($entity))
@@ -38,6 +37,12 @@ class com_sales_cashcount extends entity {
 			$this->guid = $entity->guid;
 			$this->tags = $entity->tags;
 			$this->put_data($entity->get_data());
+		} else {
+			// Create a currency array.
+			foreach ($pines->config->com_sales->currency_denominations as $cur_currency) {
+				$key = str_replace('.', '_', $cur_currency);
+				$this->currency[$key] = $cur_currency;
+			}
 		}
 	}
 
@@ -101,6 +106,7 @@ class com_sales_cashcount extends entity {
 	 */
 	public function print_review() {
 		global $pines;
+		$this->update_total();
 		$module = new module('com_sales', 'cashcount/formreview', 'content');
 		$module->entity = $this;
 		return $module;

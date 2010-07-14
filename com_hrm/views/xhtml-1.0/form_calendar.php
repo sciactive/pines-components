@@ -204,7 +204,7 @@ $pines->com_jstree->load();
 								id: form.find(":input[name=id]").val(),
 								employee: form.find(":input[name=employee]").val(),
 								reason: form.find(":input[name=reason]").val(),
-								all_day: form.find(":input[name=all_day]").val(),
+								all_day: form.find(":input[name=all_day]").attr('checked'),
 								start: form.find(":input[name=start]").val(),
 								end: form.find(":input[name=end]").val(),
 								time_start: form.find(":input[name=time_start]").val(),

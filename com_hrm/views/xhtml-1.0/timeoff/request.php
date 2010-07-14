@@ -72,7 +72,6 @@ defined('P_RUN') or die('Direct access prohibited');
 		<span class="pf-note">Reason for Time Off</span><input class="ui-widget-content form_input" type="text" id="p_muid_reason" name="reason" value="<?php echo $this->entity->reason; ?>" />
 	</div>
 	<?php
-		echo $this->entity->all_day;
 		if ($this->entity->guid) {
 			$start_date = format_date($this->entity->start, 'date_sort');
 			$start_time = format_date($this->entity->start, 'custom', 'H');

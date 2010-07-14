@@ -49,7 +49,7 @@ if (isset($_REQUEST['employee'])) {
 		return;
 	}
 	$rto->reason = $_REQUEST['reason'];
-	$rto->all_day = ($_REQUEST['all_day'] == 'ON');
+	$rto->all_day = ($_REQUEST['all_day'] == 'true');
 	$rto->start = mktime($rto->all_day ? 0 : $_REQUEST['time_start'],0,0,$rto_month,$rto_day,$rto_year);
 	$rto->end = mktime($rto->all_day ? 23 : $_REQUEST['time_end'],$rto->all_day ? 59 : 0,$rto->all_day ? 59 : 0,$rto_endmonth,$rto_endday,$rto_endyear);
 	$rto->status = 'pending';

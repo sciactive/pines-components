@@ -11,6 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Cash Counts';
+if ($this->old)
+	$this->title = 'Prior Cash Counts';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/cashcount/list'];
@@ -82,16 +84,16 @@ $pines->com_jstree->load();
 			pgrid_toolbar_contents: [
 				<?php if (gatekeeper('com_sales/newcashcount')) { ?>
 				{type: 'button', text: 'Cash-In', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'cashcount/edit'); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo pines_url('com_sales', 'cashcount/edit', array('id' => '__title__')); ?>'},
 				<?php } if (gatekeeper('com_sales/editcashcount')) { ?>
 				{type: 'button', text: 'Cash-Out', extra_class: 'picon picon-view-bank', selection_optional: true, url: '<?php echo pines_url('com_sales', 'cashcount/cashout', array('id' => '__title__')); ?>'},
-				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo pines_url('com_sales', 'cashcount/edit', array('id' => '__title__')); ?>'},
 				<?php } if (gatekeeper('com_sales/skimcashcount')) { ?>
 				{type: 'button', text: 'Skim', extra_class: 'picon picon-list-remove', url: '<?php echo pines_url('com_sales', 'cashcount/skim', array('id' => '__title__')); ?>'},
 				<?php } if (gatekeeper('com_sales/depositcashcount')) { ?>
 				{type: 'button', text: 'Deposit', extra_class: 'picon picon-list-add', url: '<?php echo pines_url('com_sales', 'cashcount/deposit', array('id' => '__title__')); ?>'},
 				<?php } if (gatekeeper('com_sales/auditcashcount')) { ?>
 				{type: 'button', text: 'Audit', extra_class: 'picon picon-document-edit-verify', url: '<?php echo pines_url('com_sales', 'cashcount/audit', array('id' => '__title__')); ?>'},
-				<?php }if (gatekeeper('com_sales/approvecashcount')) { ?>
+				<?php } if (gatekeeper('com_sales/approvecashcount')) { ?>
 				{type: 'button', text: 'Review', extra_class: 'picon picon-checkbox', url: '<?php echo pines_url('com_sales', 'cashcount/approve', array('id' => '__title__')); ?>'},
 				<?php } if (gatekeeper('com_sales/assigncashcount')) { ?>
 				{type: 'button', text: 'Assign', extra_class: 'picon picon-view-task-add', selection_optional: true, click: function(e, rows){
@@ -133,7 +135,7 @@ $pines->com_jstree->load();
 			<th>ID</th>
 			<th>Location</th>
 			<th>Created</th>
-			<th>Committed</th>
+			<th>Cashed-In</th>
 			<th>Cashed-Out</th>
 			<th>Audits</th>
 			<th>Skims</th>
@@ -147,7 +149,7 @@ $pines->com_jstree->load();
 			<td><?php echo $cur_count->guid; ?></td>
 			<td><?php echo $cur_count->group->name; ?></td>
 			<td><?php echo format_date($cur_count->p_cdate); ?></td>
-			<td><?php echo ($cur_count->final) ? 'Yes' : 'No'; ?></td>
+			<td><?php echo $cur_count->final ? 'Yes' : 'No'; ?></td>
 			<td><?php echo $cur_count->cashed_out ? 'Yes' : 'No'; ?></td>
 			<td style="text-align: right;"><?php echo count($cur_count->audits); ?></td>
 			<td style="text-align: right;"><?php echo count($cur_count->skims); ?></td>

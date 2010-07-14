@@ -288,7 +288,7 @@ class com_sales extends component {
 		$form->start_date = $start_date;
 		$form->end_date = $end_date;
 		$form->location = $location->guid;
-		$form->old = $old;
+		$form->old = $module->old = $old;
 
 		// Remind the user to do a cash count if one is assigned to their location.
 		if ($_SESSION['user']) {

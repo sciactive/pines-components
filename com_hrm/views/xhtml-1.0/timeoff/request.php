@@ -83,9 +83,9 @@ defined('P_RUN') or die('Direct access prohibited');
 		<label><input class="pf-field ui-widget-content" type="checkbox" name="all_day" value="ON" <?php echo ($this->entity->all_day) ? 'checked="checked" ' : ''; ?>/>All Day</label>
 	</div>
 	<div class="pf-element pf-full-width">
-		<span class="pf-note">Start</span><input class="ui-widget-content form_center" type="text" id="p_muid_start" name="start" value="<?php echo empty($start_date) ? format_date(time(), 'date_sort') : $start_date; ?>" />
+		<span class="pf-note">Start</span><input class="ui-widget-content form_center" type="text" size="12" id="p_muid_start" name="start" value="<?php echo empty($start_date) ? format_date(time(), 'date_sort') : $start_date; ?>" />
 		<select class="ui-widget-content" name="time_start">
-			<option value="24" <?php echo ($start_time == '24') ? 'selected="selected"' : ''; ?>>12:00 AM</option>
+			<option value="0" <?php echo ($start_time == '0') ? 'selected="selected"' : ''; ?>>12:00 AM</option>
 			<option value="1" <?php echo ($start_time == '1') ? 'selected="selected"' : ''; ?>>1:00 AM</option>
 			<option value="2" <?php echo ($start_time == '2') ? 'selected="selected"' : ''; ?>>2:00 AM</option>
 			<option value="3" <?php echo ($start_time == '3') ? 'selected="selected"' : ''; ?>>3:00 AM</option>
@@ -112,9 +112,9 @@ defined('P_RUN') or die('Direct access prohibited');
 		</select>
 	</div>
 	<div class="pf-element">
-		<span class="pf-note">End</span><input class="ui-widget-content form_center" type="text" id="p_muid_end" name="end" value="<?php echo empty($end_date) ? format_date(time(), 'date_sort') : $end_date; ?>" />
+		<span class="pf-note">End</span><input class="ui-widget-content form_center" type="text" size="12" id="p_muid_end" name="end" value="<?php echo empty($end_date) ? format_date(time(), 'date_sort') : $end_date; ?>" />
 		<select class="ui-widget-content" name="time_end">
-			<option value="24" <?php echo ($end_time == '24') ? 'selected="selected"' : ''; ?>>12:00 AM</option>
+			<option value="0" <?php echo ($end_time == '0') ? 'selected="selected"' : ''; ?>>12:00 AM</option>
 			<option value="1" <?php echo ($end_time == '1') ? 'selected="selected"' : ''; ?>>1:00 AM</option>
 			<option value="2" <?php echo ($end_time == '2') ? 'selected="selected"' : ''; ?>>2:00 AM</option>
 			<option value="3" <?php echo ($end_time == '3') ? 'selected="selected"' : ''; ?>>3:00 AM</option>

@@ -82,11 +82,11 @@ $pines->com_jstree->load();
 							pines.post("<?php echo pines_url('com_hrm', 'saveevent'); ?>", {
 								employee: form.find(":input[name=employee]").val(),
 								event_label: form.find(":input[name=event_label]").val(),
-								event_date: form.find(":input[name=start]").val(),
-								event_enddate: form.find(":input[name=end]").val(),
-								all_day: form.find(":input[name=all_day]").val(),
-								event_start: form.find(":input[name=time_start]").val(),
-								event_end: form.find(":input[name=time_end]").val(),
+								all_day: !!form.find(":input[name=all_day]").attr('checked'),
+								start: form.find(":input[name=start]").val(),
+								end: form.find(":input[name=end]").val(),
+								time_start: form.find(":input[name=time_start]").val(),
+								time_end: form.find(":input[name=time_end]").val(),
 								location: form.find(":input[name=location]").val()
 							});
 						}
@@ -127,11 +127,11 @@ $pines->com_jstree->load();
 								id: form.find(":input[name=id]").val(),
 								employee: form.find(":input[name=employee]").val(),
 								event_label: form.find(":input[name=event_label]").val(),
-								event_date: form.find(":input[name=event_date]").val(),
-								event_enddate: form.find(":input[name=event_enddate]").val(),
-								all_day: form.find(":input[name=all_day]:checked").val(),
-								event_start: form.find(":input[name=event_start]").val(),
-								event_end: form.find(":input[name=event_end]").val(),
+								all_day: !!form.find(":input[name=all_day]").attr('checked'),
+								start: form.find(":input[name=start]").val(),
+								end: form.find(":input[name=end]").val(),
+								time_start: form.find(":input[name=time_start]").val(),
+								time_end: form.find(":input[name=time_end]").val(),
 								location: form.find(":input[name=location]").val()
 							});
 						}
@@ -204,7 +204,7 @@ $pines->com_jstree->load();
 								id: form.find(":input[name=id]").val(),
 								employee: form.find(":input[name=employee]").val(),
 								reason: form.find(":input[name=reason]").val(),
-								all_day: form.find(":input[name=all_day]").attr('checked'),
+								all_day: !!form.find(":input[name=all_day]").attr('checked'),
 								start: form.find(":input[name=start]").val(),
 								end: form.find(":input[name=end]").val(),
 								time_start: form.find(":input[name=time_start]").val(),

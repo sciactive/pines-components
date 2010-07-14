@@ -15,13 +15,13 @@ if ( !gatekeeper('com_hrm/editcalendar') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'editcalendar'));
 
 if (isset($_REQUEST['employee'])) {	
-	if ($_REQUEST['event_date'] != 'Date') {
-		$event_month = date('n', strtotime($_REQUEST['event_date']));
-		$event_day = date('j', strtotime($_REQUEST['event_date']));
-		$event_year = date('Y', strtotime($_REQUEST['event_date']));
-		$event_endmonth = date('n', strtotime($_REQUEST['event_enddate']));
-		$event_endday = date('j', strtotime($_REQUEST['event_enddate']));
-		$event_endyear = date('Y', strtotime($_REQUEST['event_enddate']));
+	if (isset($_REQUEST['start'])) {
+		$event_month = date('n', strtotime($_REQUEST['start']));
+		$event_day = date('j', strtotime($_REQUEST['start']));
+		$event_year = date('Y', strtotime($_REQUEST['start']));
+		$event_endmonth = date('n', strtotime($_REQUEST['end']));
+		$event_endday = date('j', strtotime($_REQUEST['end']));
+		$event_endyear = date('Y', strtotime($_REQUEST['end']));
 	} else {
 		// Default to the current date.
 		$event_month = date('n');
@@ -66,9 +66,9 @@ if (isset($_REQUEST['employee'])) {
 		$event->label = $_REQUEST['event_label'];
 		$event->title = $event->label .' - '. $event->title;
 	}
-	$event->all_day = ($_REQUEST['all_day'] == 'ON');
-	$event->start = mktime($event->all_day ? 0 : $_REQUEST['event_start'],0,0,$event_month,$event_day,$event_year);
-	$event->end = mktime($event->all_day ? 23 : $_REQUEST['event_end'],$event->all_day ? 59 : 0,$event->all_day ? 59 : 0,$event_endmonth,$event_endday,$event_endyear);
+	$event->all_day = ($_REQUEST['all_day'] == 'true');
+	$event->start = mktime($event->all_day ? 0 : $_REQUEST['time_start'],0,0,$event_month,$event_day,$event_year);
+	$event->end = mktime($event->all_day ? 23 : $_REQUEST['time_end'],$event->all_day ? 59 : 0,$event->all_day ? 59 : 0,$event_endmonth,$event_endday,$event_endyear);
 	if ($event->all_day) {
 		$days = ceil(($event->end - $event->start) / 86400);
 		$event->scheduled = isset($event->employee->workday_length) ? $event->employee->workday_length : $pines->config->com_hrm->workday_length;

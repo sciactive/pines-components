@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Sales Rankings: '.$this->location->name.' ('.format_date($this->entity->start_date, 'date_short').' - '.format_date($this->entity->end_date, 'date_short').')';
+$this->title = 'Sales Rankings: '.$this->location->name.' ('.format_date($this->entity->start_date, 'date_sort').' - '.format_date($this->entity->end_date, 'date_sort').')';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_reports/rank_sales'];

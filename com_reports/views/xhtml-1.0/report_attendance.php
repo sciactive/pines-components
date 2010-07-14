@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name : $this->location->name).' ('.format_date($this->date[0], 'date_short').' - '.format_date($this->date[1], 'date_short').')';
+$this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name : $this->location->name).' ('.format_date($this->date[0], 'date_sort').' - '.format_date($this->date[1], 'date_sort').')';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_reports/report_attendance'];
@@ -31,7 +31,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				<?php if (isset($this->employees)) { ?>
-				{type: 'button', text: 'View', extra_class: 'picon picon-user-identity', double_click: true, url: '<?php echo pines_url('com_reports', 'reportattendance', array('employee' => '__title__', 'start' => format_date($this->date[0], 'date_short'), 'end' => format_date($this->date[1], 'date_short'), 'location' => $this->location->guid), false); ?>'},
+				{type: 'button', text: 'View', extra_class: 'picon picon-user-identity', double_click: true, url: '<?php echo pines_url('com_reports', 'reportattendance', array('employee' => '__title__', 'start' => format_date($this->date[0], 'date_sort'), 'end' => format_date($this->date[1], 'date_sort'), 'location' => $this->location->guid), false); ?>'},
 				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
@@ -44,8 +44,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<?php } else { ?>
 				{type: 'button', text: '&laquo; All Employees', extra_class: 'picon picon-system-users', selection_optional: true, click: function(e, rows){
 					pines.post("<?php echo pines_url('com_reports', 'reportattendance'); ?>", {
-						start: "<?php echo format_date($this->date[0], 'date_short'); ?>",
-						end: "<?php echo format_date($this->date[1], 'date_short'); ?>",
+						start: "<?php echo format_date($this->date[0], 'date_sort'); ?>",
+						end: "<?php echo format_date($this->date[1], 'date_sort'); ?>",
 						location: "<?php echo $this->location->guid; ?>"
 					});
 				}}
@@ -148,7 +148,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		$clock_count = $date_count = 0;
 		foreach($this->employee->timeclock as $key => $entry) {
 			if ($entry['time'] >= $this->date[0] && $entry['time'] <= $this->date[1]) {
-				if ($dates[$date_count]['date'] == format_date($entry['time'], 'date_short')) {
+				if ($dates[$date_count]['date'] == format_date($entry['time'], 'date_sort')) {
 					// The employee clocked out the same day that they clocked in.
 					if ($entry['status'] == 'out') {
 						$clocks[$clock_count]['out'] = $entry['time'];
@@ -169,7 +169,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						$date_count++;
 						$dates[$date_count]['start'] = strtotime('00:00', $entry['time']);
 						$dates[$date_count]['end'] = strtotime('23:59', $entry['time']);
-						$dates[$date_count]['date'] = format_date($entry['time'], 'date_short');
+						$dates[$date_count]['date'] = format_date($entry['time'], 'date_sort');
 						$dates[$date_count]['scheduled'] = 0;
 						$dates[$date_count]['total'] = 0;
 						$clocks[$clock_count]['date'] = $date_count;

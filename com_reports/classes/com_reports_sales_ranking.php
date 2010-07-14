@@ -154,40 +154,49 @@ class com_reports_sales_ranking extends entity {
 			$current_week_sales = $pines->entity_manager->get_entities(
 					array('class' => com_sales_sale),
 					array('&',
+						'data' => array('status', 'paid'),
 						'ref' => array('user', $cur_employee),
-						'gte' => array('p_cdate', $current_start),
-						'lte' => array('p_cdate', $current_end),
+						'gte' => array('tender_date', $current_start),
+						'lte' => array('tender_date', $current_end),
 						'tag' => array('com_sales', 'sale')
 					)
 				);
-			foreach ($current_week_sales as $cur_week_sale)
-				$module->rankings[$cur_employee->guid]['current'] += $cur_week_sale->total;
+			foreach ($current_week_sales as &$cur_week_sale) {
+				$module->rankings[$cur_employee->guid]['current'] += ($cur_week_sale->total - $cur_week_sale->returned_total);
+			}
+			unset($cur_week_sale, $current_week_sales);
 
 			// Get the employee's sales totals for this sales period.
 			$last_week_sales = $pines->entity_manager->get_entities(
 					array('class' => com_sales_sale),
 					array('&',
+						'data' => array('status', 'paid'),
 						'ref' => array('user', $cur_employee),
-						'gte' => array('p_cdate', $last_start),
-						'lte' => array('p_cdate', $last_end),
+						'gte' => array('tender_date', $last_start),
+						'lte' => array('tender_date', $last_end),
 						'tag' => array('com_sales', 'sale')
 					)
 				);
-			foreach ($last_week_sales as $last_week_sale)
-				$module->rankings[$cur_employee->guid]['last'] += $last_week_sale->total;
+			foreach ($last_week_sales as &$last_week_sale) {
+				$module->rankings[$cur_employee->guid]['last'] += ($last_week_sale->total - $last_week_sale->returned_total);
+			}
+			unset($last_week_sale, $last_week_sales);
 
 			// Get the employee's sales totals for the entire sales period.
 			$mtd_sales = $pines->entity_manager->get_entities(
 					array('class' => com_sales_sale),
 					array('&',
+						'data' => array('status', 'paid'),
 						'ref' => array('user', $cur_employee),
-						'gte' => array('p_cdate', $this->start_date),
-						'lte' => array('p_cdate', $this->end_date),
+						'gte' => array('tender_date', $this->start_date),
+						'lte' => array('tender_date', $this->end_date),
 						'tag' => array('com_sales', 'sale')
 					)
 				);
-			foreach ($mtd_sales as $cur_mtd_sale)
-				$module->rankings[$cur_employee->guid]['mtd'] += $cur_mtd_sale->total;
+			foreach ($mtd_sales as &$cur_mtd_sale) {
+				$module->rankings[$cur_employee->guid]['mtd'] += ($cur_mtd_sale->total - $cur_mtd_sale->returned_total);
+			}
+			unset($cur_mtd_sale, $mtd_sales);
 			
 			$module->rankings[$cur_employee->guid]['trend'] = ($module->rankings[$cur_employee->guid]['mtd'] / $days_passed) * $days_in_month;
 

@@ -59,9 +59,23 @@ class com_sales_category extends entity {
 	 * @return bool True on success, false on failure.
 	 */
 	public function delete() {
+		if (isset($this->parent)) {
+			$key = $this->array_search($this->parent->children);
+			if ($key === false) {
+				pines_log("Failed to find category in parent {$this->parent->name}.", 'error');
+				return false;
+			}
+			unset($this->parent->children[$key]);
+			if (!$this->parent->save()) {
+				pines_log("Failed to remove category from parent {$this->parent->name}.", 'error');
+				return false;
+			}
+			unset ($this->parent);
+		}
 		foreach ($this->children as $cur_child) {
 			if (!$cur_child->delete()) {
 				pines_log("Failed to delete child category {$cur_child->name}.", 'error');
+				$this->save();
 				return false;
 			}
 		}

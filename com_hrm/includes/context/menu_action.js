@@ -11,7 +11,7 @@ function copy(){
 	// Find the selected event(s).
 	jQuery.each(events, function(i, val) {
 		if (val.selected && val.editable == false) {
-			alert(val.title+' cannot be deleted.');
+			alert(val.title+' cannot be copied.');
 		} else if (val.selected) {
 			if (val.group)
 				copy_events[copy_count] = val.guid;
@@ -28,7 +28,7 @@ function copy(){
 }
 
 // Edit Event
-function edit(){
+function edit(edit_url){
     var events = $("#calendar").fullCalendar('clientEvents');
 	var edit_event;
 	var edit_count = 0;
@@ -51,9 +51,7 @@ function edit(){
 		alert('You may only edit one event at a time.');
 	} else {
 		alert('Editing ['+ edit_event +']');
-		// Ensure that the url is set to editcalendar and specify the event id.
-		var cur_location = location.toString().replace(/hrm\/.*/, 'hrm/');
-		window.location = cur_location +'&id='+ edit_event;
+		pines.post(edit_url, { id: edit_event });
 	}
 }
 

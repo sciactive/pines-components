@@ -162,7 +162,7 @@ $this->title = 'Company Schedule [' . $this->location->name . ']';
 		<ul>
 			<li class="copy"><a href="javascript:copy();" id="menu_1">Duplicate</a></li>
 			<li class="unlink"><a href="javascript:unlink();" id="menu_2">Unlink</a></li>
-			<li class="edit"><a href="javascript:edit();" id="menu_3">Edit</a></li>
+			<li class="edit"><a href="javascript:edit('<?php echo pines_url('com_hrm', 'editcalendar'); ?>');" id="menu_3">Edit</a></li>
 			<li class="delete seprator"><a href="javascript:del();" id="menu_4">Delete</a></li>
 			<li class="clear seprator"><a href="javascript:clear();" id="menu_5">Clear_All</a></li>
 			<li class="help"><a href="javascript:help();" id="menu_6">Help</a></li>

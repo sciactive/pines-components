@@ -48,6 +48,9 @@ if (isset($_REQUEST['events'])) {
 			$event = com_hrm_event::factory((int) $event_details[0]);
 			$event_list[] = (int) $event_details[0];
 			
+			if (isset($event->employee->guid) && !$event->time_off)
+				$event->color = $event->employee->color;
+
 			$event->id = $event_details[1];
 			$event->start = strtotime($event_details[2]);
 			$event->end = strtotime($event_details[3]);

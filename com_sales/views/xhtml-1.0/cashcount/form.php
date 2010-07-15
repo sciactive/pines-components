@@ -55,7 +55,7 @@ if (isset($this->entity->guid))
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-		var cash_symbol = "<?php echo $this->entity->currency_symbol; ?>";
+		var cash_symbol = "<?php echo addslashes($this->entity->currency_symbol); ?>";
 
 		// Update the cash count as money is counted.
 		$("#p_muid_form .entry").change(function(){
@@ -112,7 +112,7 @@ if (isset($this->entity->guid))
 		<h1>Reviewer Comments</h1>
 	</div>
 	<div class="pf-element pf-full-width">
-		<div class="pf-field"><?php echo $this->entity->review_comments; ?></div>
+		<div class="pf-field"><?php echo htmlentities($this->entity->review_comments); ?></div>
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-heading">
@@ -122,8 +122,8 @@ if (isset($this->entity->guid))
 	<div class="pf-element pf-full-width" style="position: relative;">
 		<?php foreach ($this->entity->currency as $key => $cur_denom) { ?>
 		<div class="pf-element">
-			<input class="pf-field ui-widget-content entry" type="text" name="count_<?php echo $key; ?>" title="<?php echo $cur_denom; ?>" value="<?php echo (int) $this->entity->count[$key]; ?>" <?php echo $this->entity->final ? 'readonly="readonly"' : ''; ?>/>
-			x <span class="amount"><?php echo $this->entity->currency_symbol . $cur_denom; ?></span>
+			<input class="pf-field ui-widget-content entry" type="text" name="count_<?php echo htmlentities($key); ?>" title="<?php echo htmlentities($cur_denom); ?>" value="<?php echo (int) $this->entity->count[$key]; ?>" <?php echo $this->entity->final ? 'readonly="readonly"' : ''; ?>/>
+			x <span class="amount"><?php echo htmlentities($this->entity->currency_symbol . $cur_denom); ?></span>
 			<?php if (!$this->entity->final) { ?>
 			<button class="pf-field ui-state-default ui-corner-all add_btn" type="button"><span class="amt_btn picon picon-list-add"></span></button>
 			<button class="pf-field ui-state-default ui-corner-all remove_btn" type="button"><span class="amt_btn picon picon-list-remove"></span></button>

@@ -51,12 +51,12 @@ $pines->com_jstree->load();
 			"json_data" : {
 				"ajax" : {
 					"dataType" : "json",
-					"url" : "<?php echo pines_url('com_jstree', 'groupjson'); ?>"
+					"url" : "<?php echo addslashes(pines_url('com_jstree', 'groupjson')); ?>"
 				}
 			},
 			"ui" : {
 				"select_limit" : 1,
-				"initially_select" : ["p_muid_<?php echo $this->location->guid; ?>"]
+				"initially_select" : ["p_muid_<?php echo (int) $this->location->guid; ?>"]
 			}
 		});
 	});

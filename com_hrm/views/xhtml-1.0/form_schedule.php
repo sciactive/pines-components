@@ -34,12 +34,12 @@ defined('P_RUN') or die('Direct access prohibited');
 			"json_data" : {
 				"ajax" : {
 					"dataType" : "json",
-					"url" : "<?php echo pines_url('com_jstree', 'groupjson'); ?>"
+					"url" : "<?php echo addslashes(pines_url('com_jstree', 'groupjson')); ?>"
 				}
 			},
 			"ui" : {
 				"select_limit" : 1,
-				"initially_select" : ["p_muid_<?php echo $this->location; ?>"]
+				"initially_select" : ["p_muid_<?php echo (int) $this->location; ?>"]
 			}
 		});
 	});
@@ -47,5 +47,5 @@ defined('P_RUN') or die('Direct access prohibited');
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_hrm', 'editcalendar')); ?>">
 	<div class="pf-element location_tree"></div>
-	<input type="hidden" name="location" value="<?php echo $this->location; ?>" />
+	<input type="hidden" name="location" value="<?php echo htmlentities($this->location); ?>" />
 </form>

@@ -52,7 +52,7 @@ if ($pines->config->com_sales->autocomplete_product)
 								textbox.val("");
 								var loader;
 								$.ajax({
-									url: "<?php echo pines_url('com_sales', 'product/search'); ?>",
+									url: "<?php echo addslashes(pines_url('com_sales', 'product/search')); ?>",
 									type: "POST",
 									dataType: "json",
 									data: {"code": code},
@@ -188,7 +188,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					category_products_grid.pgrid_get_all_rows().pgrid_delete();
 					var loader;
 					$.ajax({
-						url: "<?php echo pines_url('com_sales', 'category/products'); ?>",
+						url: "<?php echo addslashes(pines_url('com_sales', 'category/products')); ?>",
 						type: "POST",
 						dataType: "json",
 						data: {"id": $(row).attr("title")},
@@ -301,12 +301,12 @@ if ($pines->config->com_sales->autocomplete_product)
 				"json_data" : {
 					"ajax" : {
 						"dataType" : "json",
-						"url" : "<?php echo pines_url('com_jstree', 'groupjson'); ?>"
+						"url" : "<?php echo addslashes(pines_url('com_jstree', 'groupjson')); ?>"
 					}
 				},
 				"ui" : {
 					"select_limit" : 1,
-					"initially_select" : ["p_muid_<?php echo (!isset($_SESSION['user']->group) ? '' : $_SESSION['user']->group->guid); ?>"]
+					"initially_select" : ["p_muid_<?php echo (!isset($_SESSION['user']->group) ? '' : (int) $_SESSION['user']->group->guid); ?>"]
 				}
 			});
 		});
@@ -333,7 +333,7 @@ if ($pines->config->com_sales->autocomplete_product)
 			<?php foreach($this->categories as $category) { ?>
 				<tr title="<?php echo $category->guid; ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? "child {$category->parent->guid} " : ''; ?>">
 					<td><?php echo isset($category->parent) ? $category->array_search($category->parent->children) + 1 : '0' ; ?></td>
-					<td><?php echo $category->name; ?></td>
+					<td><?php echo htmlentities($category->name); ?></td>
 					<td><?php echo count($category->products); ?></td>
 				</tr>
 			<?php } ?>

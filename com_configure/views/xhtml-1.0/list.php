@@ -81,12 +81,12 @@ $this->title = 'Configure Components';
 				<option value="null">-- Pick a User/Group --</option>
 				<optgroup label="Groups">
 					<?php foreach ($this->groups as $cur_group) { ?>
-					<option value="<?php echo $cur_group->guid; ?>group"<?php echo $cur_group->is($this->user) ? ' selected="selected"' : ''; ?>><?php echo "$cur_group->name [$cur_group->groupname]"; ?></option>
+					<option value="<?php echo $cur_group->guid; ?>group"<?php echo $cur_group->is($this->user) ? ' selected="selected"' : ''; ?>><?php echo htmlentities("$cur_group->name [$cur_group->groupname]"); ?></option>
 					<?php } ?>
 				</optgroup>
 				<optgroup label="Users">
 					<?php foreach ($this->users as $cur_user) { ?>
-					<option value="<?php echo $cur_user->guid; ?>user"<?php echo $cur_user->is($this->user) ? ' selected="selected"' : ''; ?>><?php echo "$cur_user->name [$cur_user->username]"; ?></option>
+					<option value="<?php echo $cur_user->guid; ?>user"<?php echo $cur_user->is($this->user) ? ' selected="selected"' : ''; ?>><?php echo htmlentities("$cur_user->name [$cur_user->username]"); ?></option>
 					<?php } ?>
 				</optgroup>
 			</select>
@@ -106,10 +106,10 @@ $this->title = 'Configure Components';
 			if ($this->per_user && !$cur_component->is_configurable()) continue; ?>
 		<h3 class="ui-helper-clearfix<?php echo $cur_component->is_disabled() ? ' ui-priority-secondary' : ''; ?>">
 			<a href="#">
-				<span class="title"><?php echo $cur_component->info->name; ?></span>
+				<span class="title"><?php echo htmlentities($cur_component->info->name); ?></span>
 				<span class="status"><?php echo $cur_component->config ? ' (Modified)' : ''; ?></span>
 				<span class="status"><?php echo $cur_component->is_disabled() ? ' (Disabled)' : ''; ?></span>
-				<span class="version"><?php echo $cur_component->name; ?> <?php echo $cur_component->info->version; ?></span>
+				<span class="version"><?php echo htmlentities($cur_component->name); ?> <?php echo htmlentities($cur_component->info->version); ?></span>
 			</a>
 		</h3>
 		<div class="component_entry<?php echo $cur_component->is_disabled() ? ' ui-priority-secondary' : ''; ?>">
@@ -126,13 +126,13 @@ $this->title = 'Configure Components';
 					<?php } } ?>
 				<?php } ?>
 			</div>
-			<div class="short_description"><?php echo $cur_component->info->short_description; ?></div>
+			<div class="short_description"><?php echo htmlentities($cur_component->info->short_description); ?></div>
 			<?php if (is_array($cur_component->info->services)) { ?>
-			<div class="service">This component provides <?php echo (count($cur_component->info->services) == 1) ? 'a service' : 'services'; ?>: <?php echo implode(', ', $cur_component->info->services); ?></div>
+			<div class="service">This component provides <?php echo (count($cur_component->info->services) == 1) ? 'a service' : 'services'; ?>: <?php echo htmlentities(implode(', ', $cur_component->info->services)); ?></div>
 			<?php } ?>
 			<div class="license">License: <?php echo (substr($cur_component->info->license, 0, 4) == 'http') ? '<a href="'.htmlentities($cur_component->info->license).'" onclick="window.open(this.href); return false;">'.htmlentities($cur_component->info->license).'</a>' : htmlentities($cur_component->info->license); ?></div>
 			<div class="license">Website: <?php echo (substr($cur_component->info->website, 0, 4) == 'http') ? '<a href="'.htmlentities($cur_component->info->website).'" onclick="window.open(this.href); return false;">'.htmlentities($cur_component->info->website).'</a>' : htmlentities($cur_component->info->website); ?></div>
-			<div class="description"><?php echo $cur_component->info->description; ?></div>
+			<div class="description"><?php echo htmlentities($cur_component->info->description); ?></div>
 		</div>
 		<?php } ?>
 	</div>

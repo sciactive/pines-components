@@ -104,7 +104,7 @@ $pines->com_customer->load_customer_select();
 					var customer = parseInt($("#p_muid_customer").val().replace(/\D.*/, ""));
 					if (!isNaN(customer) && customer != 0) {
 						$.ajax({
-							url: "<?php echo pines_url('com_customertimer', 'login_json'); ?>",
+							url: "<?php echo addslashes(pines_url('com_customertimer', 'login_json')); ?>",
 							type: "POST",
 							data: {"id": customer, "floor": floor_id, "station": sel_station.id},
 							dataType: "json",
@@ -135,7 +135,7 @@ $pines->com_customer->load_customer_select();
 			"buttons": {
 				"Logout": function(){
 					$.ajax({
-						url: "<?php echo pines_url('com_customertimer', 'logout_json'); ?>",
+						url: "<?php echo addslashes(pines_url('com_customertimer', 'logout_json')); ?>",
 						type: "POST",
 						data: {"id": sel_station.customer.guid, "floor": floor_id, "station": sel_station.id},
 						dataType: "json",
@@ -154,12 +154,12 @@ $pines->com_customer->load_customer_select();
 					$(this).dialog("close");
 				},
 				"Edit Customer": function(){
-					pines.get("<?php echo pines_url('com_customer', 'customer/edit'); ?>", {
+					pines.get("<?php echo addslashes(pines_url('com_customer', 'customer/edit')); ?>", {
 						"id": sel_station.customer.guid
 					});
 				},
 				"Purchase Minutes": function(){
-					pines.post("<?php echo pines_url('com_customertimer', 'newsale'); ?>", {
+					pines.post("<?php echo addslashes(pines_url('com_customertimer', 'newsale')); ?>", {
 						"customer": sel_station.customer.guid
 					});
 				}
@@ -311,7 +311,7 @@ $pines->com_customer->load_customer_select();
 			updating = true;
 			// Grab the status for all customers.
 			$.ajax({
-				url: "<?php echo pines_url('com_customertimer', 'status_json'); ?>",
+				url: "<?php echo addslashes(pines_url('com_customertimer', 'status_json')); ?>",
 				type: "GET",
 				data: {"floor": floor_id},
 				dataType: "json",
@@ -366,7 +366,7 @@ $pines->com_customer->load_customer_select();
 	// ]]>
 </script>
 <div id="p_muid_station_layout">
-	<img id="p_muid_layout_bg" src="<?php echo $this->entity->background; ?>" alt="Station Layout" />
+	<img id="p_muid_layout_bg" src="<?php echo htmlentities($this->entity->background); ?>" alt="Station Layout" />
 	<div id="p_muid_station_floor"></div>
 	<br style="clear: both; height: 1px;" />
 </div>

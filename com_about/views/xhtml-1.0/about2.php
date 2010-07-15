@@ -23,8 +23,8 @@ $this->note = "Version {$pines->info->version}";
 	// ]]>
 </script>
 <p>
-<?php echo $pines->info->name; ?> is a PHP application framework, designed to be
-extensible and easy to manage. It is a
+<?php echo htmlentities($pines->info->name); ?> is a PHP application framework,
+designed to be extensible and easy to manage. It is a
 <a href="http://sciactive.com/" onclick="window.open(this.href); return false;">
 SciActive</a> project written by Hunter Perrin. It allows rapid development,
 highly customizable implementation, easy maintenance, and extreme flexibility.
@@ -36,12 +36,12 @@ in and only give them permissions they have been allowed.
 <p>
 The admin can add features using components, and change the look and feel using
 templates. The system will have a package manager, which will automatically
-install any required components. <?php echo $pines->info->name; ?> is designed
-to allow maximum flexibility for the developer, and provide enough tools and
-available libraries to make development of even very complex systems easy. The
-admin can choose whatever database system he uses, even flat files, and all the
-components which use an entity manager (the database abstraction layer) will
-work.
+install any required components. <?php echo htmlentities($pines->info->name); ?>
+is designed to allow maximum flexibility for the developer, and provide enough
+tools and available libraries to make development of even very complex systems
+easy. The admin can choose whatever database system he uses, even flat files,
+and all the components which use an entity manager (the database abstraction
+layer) will work.
 </p>
 <p id="p_muid_buttons" style="float: right;">
 	<button type="button" onclick="window.open('http://sciactive.com/');">SciActive</button>

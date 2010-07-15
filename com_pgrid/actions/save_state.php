@@ -19,6 +19,8 @@ $cur_view = $_REQUEST['view'];
 if (isset($_SESSION['user'])) {
 	if ((array) $_SESSION['user']->pgrid_saved_states !== $_SESSION['user']->pgrid_saved_states)
 		$_SESSION['user']->pgrid_saved_states = array();
+	// Re-encode the state, for extra protection.
+	$cur_state = json_encode(json_decode($cur_state));
 	$_SESSION['user']->pgrid_saved_states[$cur_view] = $cur_state;
 	$_SESSION['user']->save();
 }

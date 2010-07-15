@@ -102,22 +102,22 @@ switch ($this->entity->status) {
 	$doc_id = strtoupper($sales_group->groupname . substr($this->doc_title, 0, 2)) . ($sale ? '' : 'R') . $this->entity->id;
 	?>
 	<div class="left_side">
-		<span><img src="<?php echo $group_logo; ?>" alt="<?php echo $pines->config->page_title; ?>" /></span>
+		<span><img src="<?php echo htmlentities($group_logo); ?>" alt="<?php echo htmlentities($pines->config->page_title); ?>" /></span>
 	</div>
 	<div class="right_side barcode">
-		<h1><?php echo $this->doc_title; ?></h1>
+		<h1><?php echo htmlentities($this->doc_title); ?></h1>
 		<img src="<?php echo htmlentities(pines_url('com_barcode', 'image', array('code' => $doc_id, 'width' => '250'))); ?>" alt="Barcode" />
 	</div>
 	<?php if (isset($sales_rep->guid)) { ?>
 	<div class="left_side location">
 		<div class="aligner">Location:</div>
 		<div class="data_col">
-			<span class="name"><?php echo $sales_group->name; ?></span>
+			<span class="name"><?php echo htmlentities($sales_group->name); ?></span>
 			<?php if ($sales_group->address_type == 'us') { ?>
-			<span><?php echo "{$sales_group->address_1}\n{$sales_group->address_2}"; ?></span>
-			<span><?php echo $sales_group->city; ?>, <?php echo $sales_group->state; ?> <?php echo $sales_group->zip; ?></span>
+			<span><?php echo htmlentities("{$sales_group->address_1}\n{$sales_group->address_2}"); ?></span>
+			<span><?php echo htmlentities($sales_group->city); ?>, <?php echo htmlentities($sales_group->state); ?> <?php echo htmlentities($sales_group->zip); ?></span>
 			<?php } else { ?>
-			<span><?php echo $sales_group->address_international; ?></span>
+			<span><?php echo htmlentities($sales_group->address_international); ?></span>
 			<?php } ?>
 			<span><?php echo format_phone($sales_group->phone); ?></span>
 		</div>
@@ -125,14 +125,14 @@ switch ($this->entity->status) {
 	<?php } ?>
 	<div class="right_side receipt_info">
 		<div class="right_text">
-			<span><?php echo $this->doc_title; ?> #:</span>
+			<span><?php echo htmlentities($this->doc_title); ?> #:</span>
 			<span>Date:</span>
 			<span>Time:</span>
 			<?php if (!$sale && isset($this->entity->sale)) { ?><span>Sale:</span><?php } ?>
 			<?php if (isset($sales_rep->guid)) { ?><span>Sales Rep:</span><?php } ?>
 		</div>
 		<div class="data_col">
-			<span><?php echo $doc_id; ?></span>
+			<span><?php echo htmlentities($doc_id); ?></span>
 			<?php switch($this->entity->status) {
 				case 'invoiced':
 					echo '<span>'.format_date($this->entity->invoice_date, 'date_short').'</span>';
@@ -155,8 +155,8 @@ switch ($this->entity->status) {
 					echo '<span>'.format_date($this->entity->p_cdate, 'time_short').'</span>';
 					break;
 			} ?>
-			<?php if (!$sale && isset($this->entity->sale)) { ?><span><?php echo $this->entity->sale->id; ?></span><?php } ?>
-			<?php if (isset($sales_rep->guid)) { ?><span><?php echo $sales_rep->name; ?></span><?php } ?>
+			<?php if (!$sale && isset($this->entity->sale)) { ?><span><?php echo htmlentities($this->entity->sale->id); ?></span><?php } ?>
+			<?php if (isset($sales_rep->guid)) { ?><span><?php echo htmlentities($sales_rep->name); ?></span><?php } ?>
 		</div>
 	</div>
 	<?php if ($pines->config->com_sales->com_customer && isset($this->entity->customer)) { ?>
@@ -166,16 +166,16 @@ switch ($this->entity->status) {
 		</div>
 		<div class="data_col">
 			<span><strong>
-				<?php echo $this->entity->customer->name; ?>
+				<?php echo htmlentities($this->entity->customer->name); ?>
 				<?php if (isset($this->entity->customer->company->name)) {
-					echo " ( {$this->entity->customer->company->name} )";
+					echo htmlentities(" ( {$this->entity->customer->company->name} )");
 				} ?>
 			</strong></span>
 			<?php if ($this->entity->customer->address_type == 'us') { if (!empty($this->entity->customer->address_1)) { ?>
-			<span><?php echo $this->entity->customer->address_1.' '.$this->entity->customer->address_2; ?></span>
-			<span><?php echo $this->entity->customer->city; ?>, <?php echo $this->entity->customer->state; ?> <?php echo $this->entity->customer->zip; ?></span>
+			<span><?php echo htmlentities($this->entity->customer->address_1.' '.$this->entity->customer->address_2); ?></span>
+			<span><?php echo htmlentities($this->entity->customer->city); ?>, <?php echo htmlentities($this->entity->customer->state); ?> <?php echo htmlentities($this->entity->customer->zip); ?></span>
 			<?php } } else {?>
-			<span><?php echo $this->entity->customer->address_international; ?></span>
+			<span><?php echo htmlentities($this->entity->customer->address_international); ?></span>
 			<?php } ?>
 		</div>
 	</div>
@@ -198,11 +198,11 @@ switch ($this->entity->status) {
 						continue;
 					?>
 				<tr>
-					<td><?php echo $cur_product['entity']->sku; ?></td>
-					<td><?php echo $cur_product['entity']->name; ?></td>
+					<td><?php echo htmlentities($cur_product['entity']->sku); ?></td>
+					<td><?php echo htmlentities($cur_product['entity']->name); ?></td>
 					<td><?php echo $cur_product['entity']->short_description; ?></td>
-					<td class="right_text"><?php echo $cur_product['quantity']; ?></td>
-					<td class="right_text">$<?php echo $pines->com_sales->round($cur_product['price'], true); ?><?php echo empty($cur_product['discount']) ? '' : " - {$cur_product['discount']}"; ?></td>
+					<td class="right_text"><?php echo htmlentities($cur_product['quantity']); ?></td>
+					<td class="right_text">$<?php echo $pines->com_sales->round($cur_product['price'], true); ?><?php echo empty($cur_product['discount']) ? '' : htmlentities(" - {$cur_product['discount']}"); ?></td>
 					<td class="right_text">$<?php echo $pines->com_sales->round($cur_product['line_total'], true); ?></td>
 				</tr>
 				<?php } } ?>
@@ -216,7 +216,7 @@ switch ($this->entity->status) {
 			<hr style="clear: both;" />
 			<div class="right_text">
 				<?php foreach ($this->entity->payments as $cur_payment) { ?>
-				<span><?php echo $cur_payment['label']; ?>:</span>
+				<span><?php echo htmlentities($cur_payment['label']); ?>:</span>
 				<?php } ?>
 				<hr style="visibility: hidden;" />
 				<span>Amount <?php echo $sale ? 'Tendered' : 'Refunded'; ?>:</span>
@@ -256,7 +256,7 @@ switch ($this->entity->status) {
 		<div class="pf-field">
 			<span class="pf-label">Comments:</span>
 			<br />
-			<span class="pf-field comments"><?php echo $this->entity->comments; ?></span>
+			<span class="pf-field comments"><?php echo htmlentities($this->entity->comments); ?></span>
 		</div>
 	</div>
 	<?php } ?>
@@ -282,9 +282,9 @@ switch ($this->entity->status) {
 	if (!empty($text)) {
 	?>
 	<div class="pf-element pf-full-width">
-		<span class="pf-label"><?php echo $label; ?></span>
+		<span class="pf-label"><?php echo htmlentities($label); ?></span>
 		<br />
-		<div class="pf-field receipt_note"><?php echo $text; ?></div>
+		<div class="pf-field receipt_note"><?php echo htmlentities($text); ?></div>
 	</div>
 	<?php } ?>
 </div>

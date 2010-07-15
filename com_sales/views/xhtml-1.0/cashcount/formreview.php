@@ -33,7 +33,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo pines_url('com_pgrid', 'save_state'); ?>", {view: "com_sales/cashcount/formreview", state: cur_state});
+				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_sales/cashcount/formreview", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
@@ -81,7 +81,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="p_muid_form" action="<?php echo pines_url('com_sales', 'cashcount/savestatus'); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_sales', 'cashcount/savestatus')); ?>">
 	<table id="p_muid_grid">
 		<thead>
 			<tr>
@@ -89,7 +89,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<th>Type</th>
 				<th>User</th>
 				<?php foreach ($this->entity->currency as $cur_denom) { ?>
-					<th><?php echo $this->entity->currency_symbol . $cur_denom; ?></th>
+					<th><?php echo htmlentities($this->entity->currency_symbol . $cur_denom); ?></th>
 				<?php } ?>
 				<th>Total in Till</th>
 				<th>Transaction Total</th>
@@ -97,75 +97,75 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			</tr>
 		</thead>
 		<tbody>
-			<tr onmouseover="p_muid_notice.com_sales_update('<?php echo addslashes($this->entity->comments); ?>');">
+			<tr onmouseover="p_muid_notice.com_sales_update('<?php echo htmlentities(addslashes($this->entity->comments)); ?>');">
 				<td><?php echo format_date($this->entity->p_cdate); ?></td>
 				<td>Cash-In</td>
-				<td><?php echo $this->entity->user->name; ?></td>
+				<td><?php echo htmlentities($this->entity->user->name); ?></td>
 				<?php foreach ($this->entity->count as $cur_float_count) { ?>
-				<td><?php echo $cur_float_count; ?></td>
+				<td><?php echo htmlentities($cur_float_count); ?></td>
 				<?php } ?>
-				<td>$<?php echo $this->entity->float; ?></td>
-				<td>$<?php echo $this->entity->float; ?></td>
+				<td>$<?php echo htmlentities($this->entity->float); ?></td>
+				<td>$<?php echo htmlentities($this->entity->float); ?></td>
 				<td>$0</td>
 			</tr>
 			<?php foreach ($this->entity->audits as $cur_audit) { ?>
-			<tr onmouseover="p_muid_notice.com_sales_update('<?php echo addslashes($cur_audit->comments); ?>');" <?php echo (($cur_audit->till_total - $cur_audit->total) != 0) ? 'class="ui-state-error"' : ''; ?>>
+			<tr onmouseover="p_muid_notice.com_sales_update('<?php echo htmlentities(addslashes($cur_audit->comments)); ?>');" <?php echo (($cur_audit->till_total - $cur_audit->total) != 0) ? 'class="ui-state-error"' : ''; ?>>
 				<td><?php echo format_date($cur_audit->p_cdate); ?></td>
 				<td>Audit</td>
-				<td><?php echo $cur_audit->user->name; ?></td>
+				<td><?php echo htmlentities($cur_audit->user->name); ?></td>
 				<?php foreach ($cur_audit->count as $cur_audit_count) { ?>
-				<td><?php echo $cur_audit_count; ?></td>
+				<td><?php echo htmlentities($cur_audit_count); ?></td>
 				<?php } ?>
-				<td>$<?php echo $cur_audit->till_total; ?></td>
-				<td>$<?php echo $cur_audit->total; ?></td>
-				<td>$<?php echo $cur_audit->till_total - $cur_audit->total; ?></td>
+				<td>$<?php echo htmlentities($cur_audit->till_total); ?></td>
+				<td>$<?php echo htmlentities($cur_audit->total); ?></td>
+				<td>$<?php echo htmlentities($cur_audit->till_total - $cur_audit->total); ?></td>
 			</tr>
 			<?php } foreach ($this->entity->skims as $cur_skim) { ?>
-			<tr onmouseover="p_muid_notice.com_sales_update('<?php echo addslashes($cur_skim->comments); ?>');">
+			<tr onmouseover="p_muid_notice.com_sales_update('<?php echo htmlentities(addslashes($cur_skim->comments)); ?>');">
 				<td><?php echo format_date($cur_skim->p_cdate); ?></td>
 				<td>Skim</td>
-				<td><?php echo $cur_skim->user->name; ?></td>
+				<td><?php echo htmlentities($cur_skim->user->name); ?></td>
 				<?php foreach ($cur_skim->count as $cur_skim_count) { ?>
-				<td><?php echo $cur_skim_count; ?></td>
+				<td><?php echo htmlentities($cur_skim_count); ?></td>
 				<?php } ?>
-				<td>$<?php echo $cur_skim->till_total; ?></td>
-				<td>$<?php echo $cur_skim->total; ?></td>
-				<td>$<?php echo -1 * $cur_skim->total; ?></td>
+				<td>$<?php echo htmlentities($cur_skim->till_total); ?></td>
+				<td>$<?php echo htmlentities($cur_skim->total); ?></td>
+				<td>$<?php echo htmlentities(-1 * $cur_skim->total); ?></td>
 			</tr>
 			<?php } foreach ($this->entity->deposits as $cur_deposit) { ?>
-			<tr onmouseover="p_muid_notice.com_sales_update('<?php echo addslashes($cur_deposit->comments); ?>');" <?php echo ($cur_deposit->status == 'flagged') ? 'class="ui-state-error"' : ''; ?>>
+			<tr onmouseover="p_muid_notice.com_sales_update('<?php echo htmlentities(addslashes($cur_deposit->comments)); ?>');" <?php echo ($cur_deposit->status == 'flagged') ? 'class="ui-state-error"' : ''; ?>>
 				<td><?php echo format_date($cur_deposit->p_cdate); ?></td>
 				<td>Deposit</td>
-				<td><?php echo $cur_deposit->user->name; ?></td>
+				<td><?php echo htmlentities($cur_deposit->user->name); ?></td>
 				<?php foreach ($cur_deposit->count as $cur_deposit_count) { ?>
-				<td><?php echo $cur_deposit_count; ?></td>
+				<td><?php echo htmlentities($cur_deposit_count); ?></td>
 				<?php } ?>
-				<td>$<?php echo $cur_deposit->till_total; ?></td>
-				<td>$<?php echo $cur_deposit->total; ?></td>
-				<td>$<?php echo $cur_deposit->total; ?></td>
+				<td>$<?php echo htmlentities($cur_deposit->till_total); ?></td>
+				<td>$<?php echo htmlentities($cur_deposit->total); ?></td>
+				<td>$<?php echo htmlentities($cur_deposit->total); ?></td>
 			</tr>
 			<?php } ?>
 			<?php if ($this->entity->cashed_out) { ?>
-			<tr onmouseover="p_muid_notice.com_sales_update('<?php echo addslashes($this->entity->comments); ?>');">
+			<tr onmouseover="p_muid_notice.com_sales_update('<?php echo htmlentities(addslashes($this->entity->comments)); ?>');">
 				<td><?php echo format_date($this->entity->cashed_out_date); ?></td>
 				<td>Cash-Out</td>
-				<td><?php echo $this->entity->cashed_out_user->name; ?></td>
+				<td><?php echo htmlentities($this->entity->cashed_out_user->name); ?></td>
 				<?php foreach ($this->entity->count_out as $cur_out_count) { ?>
-				<td><?php echo $cur_out_count; ?></td>
+				<td><?php echo htmlentities($cur_out_count); ?></td>
 				<?php } ?>
-				<td>$<?php echo $this->entity->total; ?></td>
-				<td>$<?php echo $this->entity->total_out; ?></td>
-				<td>$<?php echo $this->entity->total_out-$this->entity->total; ?></td>
+				<td>$<?php echo htmlentities($this->entity->total); ?></td>
+				<td>$<?php echo htmlentities($this->entity->total_out); ?></td>
+				<td>$<?php echo htmlentities($this->entity->total_out - $this->entity->total); ?></td>
 			</tr>
 			<?php } else { ?>
-			<tr onmouseover="p_muid_notice.com_sales_update('<?php echo addslashes($this->entity->comments); ?>');">
+			<tr onmouseover="p_muid_notice.com_sales_update('<?php echo htmlentities(addslashes($this->entity->comments)); ?>');">
 				<td><?php echo format_date(time()); ?></td>
 				<td>Current</td>
 				<td></td>
 				<?php foreach ($this->entity->count as $cur_count) { ?>
 				<td></td>
 				<?php } ?>
-				<td>$<?php echo $this->entity->total; ?></td>
+				<td>$<?php echo htmlentities($this->entity->total); ?></td>
 				<td>$0</td>
 				<td>$0</td>
 			</tr>
@@ -176,7 +176,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<div class="pf-element">
 		<span class="pf-label">Comments</span>
 		<div class="pf-group">
-			<div class="pf-field"><?php echo $this->entity->comments; ?></div>
+			<div class="pf-field"><?php echo htmlentities($this->entity->comments); ?></div>
 		</div>
 	</div>
 	<?php } ?>
@@ -202,6 +202,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 		<input name="approve" class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo pines_url('com_sales', 'cashcount/list'); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'cashcount/list')); ?>');" value="Cancel" />
 	</div>
 </form>

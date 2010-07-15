@@ -69,6 +69,6 @@ defined('P_RUN') or die('Direct access prohibited');
 		<div class="pf-element">
 			<span class="pf-note">End</span><input class="ui-widget-content form_date" type="text" id="p_muid_end_date" name="end_date" value="<?php echo isset($this->end_date) ? htmlentities($this->end_date) : ''; ?>" />
 		</div>
-		<input type="hidden" name="timespan_saver" value="<?php echo $this->all_time; ?>" />
+		<input type="hidden" name="timespan_saver" value="<?php echo htmlentities($this->all_time); ?>" />
 	</div>
 </form>

@@ -109,22 +109,22 @@ $pines->com_pgrid->load();
 			<?php } ?>
 			<div class="pf-element">
 				<span class="pf-label">Name</span>
-				<span class="pf-field"><?php echo $this->entity->name; ?></span>
+				<span class="pf-field"><?php echo htmlentities($this->entity->name); ?></span>
 			</div>
 			<div class="pf-element">
 				<span class="pf-label">Username</span>
-				<span class="pf-field"><?php echo $this->entity->username; ?></span>
+				<span class="pf-field"><?php echo htmlentities($this->entity->username); ?></span>
 			</div>
 			<?php if ($pines->config->com_hrm->ssn_field && gatekeeper('com_hrm/showssn')) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">SSN</span>
 					<span class="pf-note">Without dashes.</span>
-					<input class="pf-field ui-widget-content" type="text" name="ssn" size="24" value="<?php echo $this->entity->ssn; ?>" /></label>
+					<input class="pf-field ui-widget-content" type="text" name="ssn" size="24" value="<?php echo htmlentities($this->entity->ssn); ?>" /></label>
 			</div>
 			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Job Title</span>
-					<input class="pf-field ui-widget-content" type="text" name="job_title" size="24" value="<?php echo $this->entity->job_title; ?>" /></label>
+					<input class="pf-field ui-widget-content" type="text" name="job_title" size="24" value="<?php echo htmlentities($this->entity->job_title); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Schedule Color</span>
@@ -147,7 +147,7 @@ $pines->com_pgrid->load();
 				<label><span class="pf-label">Hours in Full Workday</span>
 					<span class="pf-note">When the employee is scheduled "all day", it will be considered this many hours.</span>
 					<span class="pf-note">Leave blank to use the default.</span>
-					<input class="pf-field ui-widget-content" type="text" name="workday_length" size="24" value="<?php echo $this->entity->workday_length; ?>" /></label>
+					<input class="pf-field ui-widget-content" type="text" name="workday_length" size="24" value="<?php echo htmlentities($this->entity->workday_length); ?>" /></label>
 			</div>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Description</span><br />
@@ -167,8 +167,8 @@ $pines->com_pgrid->load();
 					<tbody>
 						<?php foreach ($this->entity->employee_attributes as $cur_attribute) { ?>
 						<tr>
-							<td><?php echo $cur_attribute['name']; ?></td>
-							<td><?php echo $cur_attribute['value']; ?></td>
+							<td><?php echo htmlentities($cur_attribute['name']); ?></td>
+							<td><?php echo htmlentities($cur_attribute['value']); ?></td>
 						</tr>
 						<?php } ?>
 					</tbody>
@@ -226,13 +226,13 @@ $pines->com_pgrid->load();
 							<td style="text-align: right;"><?php echo isset($cur_commission['amount']) ? '$'.number_format($cur_commission['amount'], 2) : ''; ?></td>
 							<td><?php
 							if ($cur_commission['ticket']->has_tag('sale')) {
-								echo "Sale: {$cur_commission['ticket']->id}";
+								echo htmlentities("Sale: {$cur_commission['ticket']->id}");
 							} elseif ($cur_commission['ticket']->has_tag('return')) {
-								echo "Return: {$cur_commission['ticket']->id}";
+								echo htmlentities("Return: {$cur_commission['ticket']->id}");
 							}
 							?></td>
-							<td><?php echo "{$cur_commission['product']->guid}: {$cur_commission['product']->name}"; ?></td>
-							<td><?php echo $cur_commission['note']; ?></td>
+							<td><?php echo htmlentities("{$cur_commission['product']->guid}: {$cur_commission['product']->name}"); ?></td>
+							<td><?php echo htmlentities($cur_commission['note']); ?></td>
 						</tr>
 						<?php } ?>
 					</tbody>

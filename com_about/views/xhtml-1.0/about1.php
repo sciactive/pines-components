@@ -12,4 +12,4 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = "About {$pines->config->system_name}";
 ?>
-<p><?php echo $pines->config->com_about->description; ?></p>
+<p><?php echo htmlentities($pines->config->com_about->description, ENT_COMPAT, '', false); ?></p>

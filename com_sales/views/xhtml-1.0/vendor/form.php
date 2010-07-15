@@ -17,8 +17,8 @@ $this->note = 'Provide vendor details in this form.';
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 		<?php if (isset($this->entity->user)) { ?>
-		<div>User: <span class="date"><?php echo "{$this->entity->user->name} [{$this->entity->user->username}]"; ?></span></div>
-		<div>Group: <span class="date"><?php echo "{$this->entity->group->name} [{$this->entity->group->groupname}]"; ?></span></div>
+		<div>User: <span class="date"><?php echo htmlentities("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
+		<div>Group: <span class="date"><?php echo htmlentities("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
 		<?php } ?>
 		<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
 		<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
@@ -26,28 +26,28 @@ $this->note = 'Provide vendor details in this form.';
 	<?php } ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Name</span>
-			<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
+			<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Email</span>
-			<input class="pf-field ui-widget-content" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>
+			<input class="pf-field ui-widget-content" type="text" name="email" size="24" value="<?php echo htmlentities($this->entity->email); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Address 1</span>
-			<input class="pf-field ui-widget-content" type="text" name="address_1" size="24" value="<?php echo $this->entity->address_1; ?>" /></label>
+			<input class="pf-field ui-widget-content" type="text" name="address_1" size="24" value="<?php echo htmlentities($this->entity->address_1); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Address 2</span>
-			<input class="pf-field ui-widget-content" type="text" name="address_2" size="24" value="<?php echo $this->entity->address_2; ?>" /></label>
+			<input class="pf-field ui-widget-content" type="text" name="address_2" size="24" value="<?php echo htmlentities($this->entity->address_2); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">City, State</span>
-		<input class="pf-field ui-widget-content" type="text" name="city" size="15" value="<?php echo $this->entity->city; ?>" />
-		<input class="pf-field ui-widget-content" type="text" name="state" size="2" value="<?php echo $this->entity->state; ?>" />
+		<input class="pf-field ui-widget-content" type="text" name="city" size="15" value="<?php echo htmlentities($this->entity->city); ?>" />
+		<input class="pf-field ui-widget-content" type="text" name="state" size="2" value="<?php echo htmlentities($this->entity->state); ?>" />
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Zip</span>
-			<input class="pf-field ui-widget-content" type="text" name="zip" size="24" value="<?php echo $this->entity->zip; ?>" /></label>
+			<input class="pf-field ui-widget-content" type="text" name="zip" size="24" value="<?php echo htmlentities($this->entity->zip); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Corporate Phone</span>
@@ -59,30 +59,30 @@ $this->note = 'Provide vendor details in this form.';
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Account #</span>
-			<input class="pf-field ui-widget-content" type="text" name="account_number" size="24" value="<?php echo $this->entity->account_number; ?>" /></label>
+			<input class="pf-field ui-widget-content" type="text" name="account_number" size="24" value="<?php echo htmlentities($this->entity->account_number); ?>" /></label>
 	</div>
 	<br />
 	<fieldset class="pf-group">
 		<legend>Client Details</legend>
 		<div class="pf-element">
 			<label><span class="pf-label">Username</span>
-				<input class="pf-field ui-widget-content" type="text" name="client_username" size="24" value="<?php echo $this->entity->client_username; ?>" /></label>
+				<input class="pf-field ui-widget-content" type="text" name="client_username" size="24" value="<?php echo htmlentities($this->entity->client_username); ?>" /></label>
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Password</span>
-				<input class="pf-field ui-widget-content" type="text" name="client_password" size="24" value="<?php echo $this->entity->client_password; ?>" /></label>
+				<input class="pf-field ui-widget-content" type="text" name="client_password" size="24" value="<?php echo htmlentities($this->entity->client_password); ?>" /></label>
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Rep Name</span>
-				<input class="pf-field ui-widget-content" type="text" name="client_rep_name" size="24" value="<?php echo $this->entity->client_rep_name; ?>" /></label>
+				<input class="pf-field ui-widget-content" type="text" name="client_rep_name" size="24" value="<?php echo htmlentities($this->entity->client_rep_name); ?>" /></label>
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Email</span>
-				<input class="pf-field ui-widget-content" type="text" name="client_email" size="24" value="<?php echo $this->entity->client_email; ?>" /></label>
+				<input class="pf-field ui-widget-content" type="text" name="client_email" size="24" value="<?php echo htmlentities($this->entity->client_email); ?>" /></label>
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Web Address</span>
-				<input class="pf-field ui-widget-content" type="text" name="client_web_address" size="24" value="<?php echo $this->entity->client_web_address; ?>" /></label>
+				<input class="pf-field ui-widget-content" type="text" name="client_web_address" size="24" value="<?php echo htmlentities($this->entity->client_web_address); ?>" /></label>
 		</div>
 		<br />
 	</fieldset>
@@ -91,19 +91,19 @@ $this->note = 'Provide vendor details in this form.';
 		<legend>Online Ordering</legend>
 		<div class="pf-element">
 			<label><span class="pf-label">Web Address</span>
-				<input class="pf-field ui-widget-content" type="text" name="online_web_address" size="24" value="<?php echo $this->entity->online_web_address; ?>" /></label>
+				<input class="pf-field ui-widget-content" type="text" name="online_web_address" size="24" value="<?php echo htmlentities($this->entity->online_web_address); ?>" /></label>
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Customer ID</span>
-				<input class="pf-field ui-widget-content" type="text" name="online_customer_id" size="24" value="<?php echo $this->entity->online_customer_id; ?>" /></label>
+				<input class="pf-field ui-widget-content" type="text" name="online_customer_id" size="24" value="<?php echo htmlentities($this->entity->online_customer_id); ?>" /></label>
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Username</span>
-				<input class="pf-field ui-widget-content" type="text" name="online_username" size="24" value="<?php echo $this->entity->online_username; ?>" /></label>
+				<input class="pf-field ui-widget-content" type="text" name="online_username" size="24" value="<?php echo htmlentities($this->entity->online_username); ?>" /></label>
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Password</span>
-				<input class="pf-field ui-widget-content" type="text" name="online_password" size="24" value="<?php echo $this->entity->online_password; ?>" /></label>
+				<input class="pf-field ui-widget-content" type="text" name="online_password" size="24" value="<?php echo htmlentities($this->entity->online_password); ?>" /></label>
 		</div>
 		<br />
 	</fieldset>

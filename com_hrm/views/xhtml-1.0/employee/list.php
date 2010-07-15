@@ -27,7 +27,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<?php if (gatekeeper('com_hrm/addemployee')) { ?>
 				{type: 'button', text: 'Add User(s)', extra_class: 'picon picon-list-add-user', selection_optional: true, click: function(){
 					$.ajax({
-						url: "<?php echo pines_url('com_hrm', 'forms/userselect'); ?>",
+						url: "<?php echo addslashes(pines_url('com_hrm', 'forms/userselect')); ?>",
 						type: "POST",
 						dataType: "html",
 						error: function(XMLHttpRequest, textStatus){
@@ -49,7 +49,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 									"Make Employee": function(){
 										form.dialog('close');
 										var users = form.find(":input[name=users]").val();
-										pines.post("<?php echo pines_url('com_hrm', 'employee/add'); ?>", { "id": users });
+										pines.post("<?php echo addslashes(pines_url('com_hrm', 'employee/add')); ?>", { "id": users });
 									}
 								}
 							});
@@ -57,19 +57,19 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					});
 				}},
 				<?php } if (gatekeeper('com_hrm/editemployee')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'picon picon-user-properties', double_click: true, url: '<?php echo pines_url('com_hrm', 'employee/edit', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'picon picon-user-properties', double_click: true, url: '<?php echo addslashes(pines_url('com_hrm', 'employee/edit', array('id' => '__title__'))); ?>'},
 				<?php } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
 				<?php if (gatekeeper('com_hrm/removeemployee')) { ?>
-				{type: 'button', text: 'Remove User(s)', extra_class: 'picon picon-list-remove-user', confirm: true, multi_select: true, url: '<?php echo pines_url('com_hrm', 'employee/remove', array('id' => '__title__')); ?>', delimiter: ','},
+				{type: 'button', text: 'Remove User(s)', extra_class: 'picon picon-list-remove-user', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_hrm', 'employee/remove', array('id' => '__title__'))); ?>', delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo pines_url('system', 'csv'); ?>", {
+					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
 						filename: 'employees',
 						content: rows
 					});
@@ -81,7 +81,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo pines_url('com_pgrid', 'save_state'); ?>", {view: "com_hrm/employee/list", state: cur_state});
+				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_hrm/employee/list", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
@@ -103,9 +103,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<?php foreach($this->employees as $employee) { ?>
 		<tr title="<?php echo $employee->guid; ?>">
 			<td><?php echo $employee->guid; ?></td>
-			<td><?php echo $employee->username; ?></td>
-			<td><?php echo $employee->name; ?></td>
-			<td><?php echo $employee->email; ?></td>
+			<td><?php echo htmlentities($employee->username); ?></td>
+			<td><?php echo htmlentities($employee->name); ?></td>
+			<td><?php echo htmlentities($employee->email); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

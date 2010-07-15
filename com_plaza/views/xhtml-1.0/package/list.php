@@ -42,7 +42,7 @@ $pines->com_pgrid->load();
 			var cur_row = $(this);
 			var name = cur_row.pgrid_get_value(2);
 			$.ajax({
-				url: "<?php echo pines_url('com_plaza', 'package/infojson'); ?>",
+				url: "<?php echo addslashes(pines_url('com_plaza', 'package/infojson')); ?>",
 				type: "GET",
 				dataType: "json",
 				data: {"name": name},

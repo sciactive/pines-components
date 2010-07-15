@@ -33,8 +33,8 @@ if ($pines->config->com_sales->autocomplete_product)
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 		<?php if (isset($this->entity->user)) { ?>
-		<div>User: <span class="date"><?php echo "{$this->entity->user->name} [{$this->entity->user->username}]"; ?></span></div>
-		<div>Group: <span class="date"><?php echo "{$this->entity->group->name} [{$this->entity->group->groupname}]"; ?></span></div>
+		<div>User: <span class="date"><?php echo htmlentities("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
+		<div>Group: <span class="date"><?php echo htmlentities("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
 		<?php } ?>
 		<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
 		<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
@@ -145,7 +145,7 @@ if ($pines->config->com_sales->autocomplete_product)
 								textbox.val("");
 								var loader;
 								$.ajax({
-									url: "<?php echo pines_url('com_sales', 'product/search'); ?>",
+									url: "<?php echo addslashes(pines_url('com_sales', 'product/search')); ?>",
 									type: "POST",
 									dataType: "json",
 									data: {"code": code},
@@ -372,7 +372,7 @@ if ($pines->config->com_sales->autocomplete_product)
 						category_products_grid.pgrid_get_all_rows().pgrid_delete();
 						var loader;
 						$.ajax({
-							url: "<?php echo pines_url('com_sales', 'category/products'); ?>",
+							url: "<?php echo addslashes(pines_url('com_sales', 'category/products')); ?>",
 							type: "POST",
 							dataType: "json",
 							data: {"id": row.attr("title")},
@@ -459,7 +459,7 @@ if ($pines->config->com_sales->autocomplete_product)
 				var cur_export = cur_row.pgrid_export_rows();
 				var cur_guid = cur_export[0].key;
 				$.ajax({
-					url: "<?php echo pines_url('com_sales', 'product/search'); ?>",
+					url: "<?php echo addslashes(pines_url('com_sales', 'product/search')); ?>",
 					type: "POST",
 					async: false,
 					dataType: "json",
@@ -548,7 +548,7 @@ if ($pines->config->com_sales->autocomplete_product)
 			payments_table.data_form = function(row){
 				var payment_data = row.data("payment_data");
 				$.ajax({
-					url: "<?php echo pines_url('com_sales', 'forms/payment'); ?>",
+					url: "<?php echo addslashes(pines_url('com_sales', 'forms/payment')); ?>",
 					type: "POST",
 					dataType: "html",
 					data: {"name": payment_data.processing_type, "id": $("#p_muid_form [name=id]").val(), "customer": $("#p_muid_customer").val(), "type": "sale"},
@@ -898,7 +898,7 @@ if ($pines->config->com_sales->autocomplete_product)
 			<?php if ($this->entity->status != 'invoiced' && $this->entity->status != 'paid' && $this->entity->status != 'voided') { ?>
 			<span class="pf-note">Enter part of a name, company, email, or phone # to search.</span>
 			<?php } ?>
-			<input class="pf-field ui-widget-content" type="text" id="p_muid_customer" name="customer" size="24" value="<?php echo htmlentities($this->entity->customer->guid ? "{$this->entity->customer->guid}: \"{$this->entity->customer->name}\"" : ''); ?>" <?php if ($this->entity->status == 'invoiced' || $this->entity->status == 'paid' || $this->entity->status == 'voided') echo 'disabled="disabled" '; ?>/>
+			<input class="pf-field ui-widget-content" type="text" id="p_muid_customer" name="customer" size="24" value="<?php echo $this->entity->customer->guid ? htmlentities("{$this->entity->customer->guid}: \"{$this->entity->customer->name}\"") : ''; ?>" <?php if ($this->entity->status == 'invoiced' || $this->entity->status == 'paid' || $this->entity->status == 'voided') echo 'disabled="disabled" '; ?>/>
 		</label>
 	</div>
 	<?php } ?>
@@ -915,7 +915,7 @@ if ($pines->config->com_sales->autocomplete_product)
 			<?php foreach($this->categories as $category) { ?>
 				<tr title="<?php echo $category->guid; ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? "child {$category->parent->guid} " : ''; ?>">
 					<td><?php echo isset($category->parent) ? $category->array_search($category->parent->children) + 1 : '0' ; ?></td>
-					<td><?php echo $category->name; ?></td>
+					<td><?php echo htmlentities($category->name); ?></td>
 					<td><?php echo count($category->products); ?></td>
 				</tr>
 			<?php } ?>
@@ -960,15 +960,15 @@ if ($pines->config->com_sales->autocomplete_product)
 							continue;
 						?>
 				<tr title="<?php echo $cur_product['entity']->guid; ?>">
-					<td><?php echo $cur_product['entity']->sku; ?></td>
-					<td><?php echo $cur_product['entity']->name; ?></td>
-					<td><?php echo $cur_product['serial']; ?></td>
-					<td><?php echo $cur_product['delivery']; ?></td>
-					<td><?php echo $cur_product['quantity']; ?></td>
-					<td><?php echo $cur_product['price']; ?></td>
-					<td><?php echo $cur_product['discount']; ?></td>
-					<td><?php echo $cur_product['line_total']; ?></td>
-					<td><?php echo $cur_product['fees']; ?></td>
+					<td><?php echo htmlentities($cur_product['entity']->sku); ?></td>
+					<td><?php echo htmlentities($cur_product['entity']->name); ?></td>
+					<td><?php echo htmlentities($cur_product['serial']); ?></td>
+					<td><?php echo htmlentities($cur_product['delivery']); ?></td>
+					<td><?php echo htmlentities($cur_product['quantity']); ?></td>
+					<td><?php echo htmlentities($cur_product['price']); ?></td>
+					<td><?php echo htmlentities($cur_product['discount']); ?></td>
+					<td><?php echo htmlentities($cur_product['line_total']); ?></td>
+					<td><?php echo htmlentities($cur_product['fees']); ?></td>
 				</tr>
 				<?php } ?>
 			</tbody>
@@ -1002,7 +1002,7 @@ if ($pines->config->com_sales->autocomplete_product)
 			<div style="text-align: left;">
 				<?php foreach ($this->payment_types as $cur_payment_type) { ?>
 				<button id="p_muid_payment_<?php echo $cur_payment_type->guid; ?>" class="ui-state-default ui-corner-all payment-button" type="button" style="margin-bottom: 2px;" value="<?php echo htmlentities(json_encode((object) array('guid' => $cur_payment_type->guid, 'name' => $cur_payment_type->name, 'minimum' => $cur_payment_type->minimum, 'maximum' => $cur_payment_type->maximum, 'processing_type' => $cur_payment_type->processing_type))); ?>">
-					<span class="picon picon-32 picon-view-bank-account" style="display: block; padding-top: 32px; min-width: 50px; background-repeat: no-repeat; background-position: top center;"><?php echo $cur_payment_type->name; ?></span>
+					<span class="picon picon-32 picon-view-bank-account" style="display: block; padding-top: 32px; min-width: 50px; background-repeat: no-repeat; background-position: top center;"><?php echo htmlentities($cur_payment_type->name); ?></span>
 				</button>
 				<?php } ?>
 			</div>
@@ -1053,7 +1053,7 @@ if ($pines->config->com_sales->autocomplete_product)
 		<div class="pf-group">
 		<?php foreach($this->returns as $cur_return) { ?>
 		<span class="pf-field">
-			Return #<?php echo $cur_return->id; ?>:
+			Return #<?php echo htmlentities($cur_return->id); ?>:
 			<a href="<?php echo htmlentities(pines_url('com_sales', 'return/receipt', array('id' => $cur_return->guid))); ?>" onclick="window.open(this.href); return false;">Receipt</a>
 			<?php if (gatekeeper('com_sales/editreturn')) { ?>
 			<a href="<?php echo htmlentities(pines_url('com_sales', 'return/edit', array('id' => $cur_return->guid))); ?>" onclick="window.open(this.href); return false;">Edit</a>
@@ -1064,7 +1064,7 @@ if ($pines->config->com_sales->autocomplete_product)
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-buttons">
-		<input type="hidden" id="p_muid_comment_saver" name="comment_saver" value="<?php echo $this->entity->comments; ?>" />
+		<input type="hidden" id="p_muid_comment_saver" name="comment_saver" value="<?php echo htmlentities($this->entity->comments); ?>" />
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>

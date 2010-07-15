@@ -27,7 +27,7 @@ $pines->com_jstree->load();
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-		var submit_url = "<?php echo pines_url('com_sales', 'product/track'); ?>";
+		var submit_url = "<?php echo addslashes(pines_url('com_sales', 'product/track')); ?>";
 		var submit_search = function(){
 			// Submit the form with all of the fields.
 			pines.post(submit_url, {
@@ -57,7 +57,7 @@ $pines->com_jstree->load();
 				{type: 'separator'},
 				{type: 'text', label: 'SKU: ', load: function(textbox){
 					// Display the current sku being searched.
-					textbox.val("<?php echo $this->sku; ?>");
+					textbox.val("<?php echo htmlentities($this->sku); ?>");
 					textbox.keydown(function(e){
 						if (e.keyCode == 13)
 							submit_search();
@@ -67,7 +67,7 @@ $pines->com_jstree->load();
 				{type: 'separator'},
 				{type: 'text', label: 'Serial #: ', load: function(textbox){
 					// Display the current serial being searched.
-					textbox.val("<?php echo $this->serial; ?>");
+					textbox.val("<?php echo htmlentities($this->serial); ?>");
 					textbox.keydown(function(e){
 						if (e.keyCode == 13)
 							submit_search();
@@ -85,7 +85,7 @@ $pines->com_jstree->load();
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo pines_url('com_pgrid', 'save_state'); ?>", {view: "com_sales/product/track", state: cur_state});
+				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_sales/product/track", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
@@ -93,7 +93,7 @@ $pines->com_jstree->load();
 
 		history_grid.date_form = function(){
 			$.ajax({
-				url: "<?php echo pines_url('com_sales', 'forms/dateselect'); ?>",
+				url: "<?php echo addslashes(pines_url('com_sales', 'forms/dateselect')); ?>",
 				type: "POST",
 				dataType: "html",
 				data: {"all_time": all_time, "start_date": start_date, "end_date": end_date},
@@ -133,7 +133,7 @@ $pines->com_jstree->load();
 		};
 		history_grid.location_form = function(){
 			$.ajax({
-				url: "<?php echo pines_url('com_sales', 'forms/locationselect'); ?>",
+				url: "<?php echo addslashes(pines_url('com_sales', 'forms/locationselect')); ?>",
 				type: "POST",
 				dataType: "html",
 				data: {"location": location},
@@ -209,13 +209,13 @@ $pines->com_jstree->load();
 	?>
 		<tr title="<?php echo $cur_transaction->entity->guid; ?>">
 			<td><?php echo format_date($cur_transaction->entity->p_cdate); ?></td>
-			<td><?php echo $cur_transaction->product->sku; ?></td>
-			<td><?php echo $cur_transaction->product->name; ?></td>
-			<td><?php echo "{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]"; ?></td>
+			<td><?php echo htmlentities($cur_transaction->product->sku); ?></td>
+			<td><?php echo htmlentities($cur_transaction->product->name); ?></td>
+			<td><?php echo htmlentities("{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]"); ?></td>
 			<td><a href="<?php echo htmlentities($link); ?>" onclick="window.open(this.href); return false;"><?php echo $cur_transaction->entity->guid; ?></a></td>
-			<td><?php echo $cur_transaction->transaction_info; ?></td>
-			<td><?php echo $cur_transaction->qty; ?></td>
-			<td><?php echo implode(', ', $cur_transaction->serials); ?></td>
+			<td><?php echo htmlentities($cur_transaction->transaction_info); ?></td>
+			<td><?php echo htmlentities($cur_transaction->qty); ?></td>
+			<td><?php echo htmlentities(implode(', ', $cur_transaction->serials)); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

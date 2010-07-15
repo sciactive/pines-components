@@ -61,7 +61,7 @@ $this->title = 'Company Schedule [' . $this->location->name . ']';
 					echo 'title: \''. addslashes($cur_event->title) .'\', ';
 					echo 'start: '. $cur_event->start .', ';
 					echo 'end: '. $cur_event->end .', ';
-					echo 'className: \''. $cur_event->color .'\',';
+					echo 'className: \''. addslashes($cur_event->color) .'\',';
 					echo ($cur_event->time_off) ? 'editable: false,' : 'editable: true,';
 					echo ($cur_event->all_day) ? 'allDay: true' : 'allDay: false';
 					echo '}';
@@ -108,7 +108,7 @@ $this->title = 'Company Schedule [' . $this->location->name . ']';
 	// Add new events to the calendar, mostly for duplicating events.
 	function add_events(events) {
 		$.ajax({
-			url: "<?php echo pines_url('com_hrm', 'addevents'); ?>",
+			url: "<?php echo addslashes(pines_url('com_hrm', 'addevents')); ?>",
 			type: "POST",
 			dataType: "html",
 			data: {"events": events},
@@ -116,7 +116,7 @@ $this->title = 'Company Schedule [' . $this->location->name . ']';
 				pines.error("An error occured while trying to add events to the calendar.");
 			}
 		});
-		pines.get("<?php echo pines_url('com_hrm', 'editcalendar', array('location' => $this->location->guid)); ?>");
+		pines.get("<?php echo addslashes(pines_url('com_hrm', 'editcalendar', array('location' => $this->location->guid))); ?>");
 	}
 	// Save all of the calendar events by exporting the data to their entities.
 	function save_calendar() {
@@ -145,7 +145,7 @@ $this->title = 'Company Schedule [' . $this->location->name . ']';
 			//event_count++;
 		});
 		$.ajax({
-			url: "<?php echo pines_url('com_hrm', 'savecalendar'); ?>",
+			url: "<?php echo addslashes(pines_url('com_hrm', 'savecalendar')); ?>",
 			type: "POST",
 			dataType: "html",
 			data: {"events": events_dump, "location": location},

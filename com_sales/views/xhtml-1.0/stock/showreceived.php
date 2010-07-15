@@ -20,7 +20,7 @@ $i = 1;
 <div class="pf-form">
 	<div class="pf-element">
 		<span class="pf-label">Location</span>
-		<span class="pf-feild"><?php echo "[{$this->location->guid}] {$this->location->name}"; ?></span>
+		<span class="pf-feild"><?php echo htmlentities("[{$this->location->guid}] {$this->location->name}"); ?></span>
 	</div>
 	<?php foreach($this->success as $cur_success) { ?>
 	<div class="pf-element pf-heading">
@@ -28,24 +28,24 @@ $i = 1;
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Product</span>
-		<span class="pf-field"><?php echo $cur_success[0]->product->name; ?></span>
+		<span class="pf-field"><?php echo htmlentities($cur_success[0]->product->name); ?></span>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Vendor</span>
-		<span class="pf-field"><?php echo $cur_success[0]->vendor->name; ?></span>
+		<span class="pf-field"><?php echo htmlentities($cur_success[0]->vendor->name); ?></span>
 	</div>
 	<?php if (isset($cur_success[0]->serial)) { ?>
 	<div class="pf-element">
 		<span class="pf-label">Serial</span>
-		<span class="pf-field"><?php echo $cur_success[0]->serial; ?></span>
+		<span class="pf-field"><?php echo htmlentities($cur_success[0]->serial); ?></span>
 	</div>
 	<?php } ?>
 	<div class="pf-element">
 		<span class="pf-label">Received On</span>
 		<?php if ($cur_success[1]->has_tag('po')) { ?>
-		<span class="pf-field"><?php echo 'PO: '.$cur_success[1]->po_number; ?></span>
+		<span class="pf-field"><?php echo htmlentities('PO: '.$cur_success[1]->po_number); ?></span>
 		<?php } elseif($cur_success[1]->has_tag('transfer')) { ?>
-		<span class="pf-field"><?php echo 'Transfer: '.$cur_success[1]->guid; ?></span>
+		<span class="pf-field"><?php echo htmlentities('Transfer: '.$cur_success[1]->guid); ?></span>
 		<?php } ?>
 	</div>
 	<?php } ?>

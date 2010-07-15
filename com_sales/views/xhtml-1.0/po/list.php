@@ -26,21 +26,21 @@ $errors = array();
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				<?php if (gatekeeper('com_sales/newpo')) { ?>
-				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'po/edit'); ?>'},
+				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'po/edit')); ?>'},
 				<?php } if (gatekeeper('com_sales/editpo')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo pines_url('com_sales', 'po/edit', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo addslashes(pines_url('com_sales', 'po/edit', array('id' => '__title__'))); ?>'},
 				<?php } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
 				<?php if (gatekeeper('com_sales/deletepo')) { ?>
-				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_sales', 'po/delete', array('id' => '__title__')); ?>', delimiter: ','},
+				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_sales', 'po/delete', array('id' => '__title__'))); ?>', delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo pines_url('system', 'csv'); ?>", {
+					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
 						filename: 'pos',
 						content: rows
 					});
@@ -52,7 +52,7 @@ $errors = array();
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo pines_url('com_pgrid', 'save_state'); ?>", {view: "com_sales/po/list", state: cur_state});
+				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_sales/po/list", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
@@ -75,12 +75,12 @@ $errors = array();
 	<tbody>
 	<?php foreach($this->pos as $po) { ?>
 		<tr title="<?php echo $po->guid; ?>">
-			<td><?php echo $po->po_number; ?></td>
-			<td><?php echo $po->reference_number; ?></td>
-			<td><?php echo $po->vendor->name; ?></td>
-			<td><?php echo "{$po->destination->name} [{$po->destination->groupname}]"; ?></td>
-			<td><?php echo $po->shipper->name; ?></td>
-			<td><?php echo ($po->eta ? date('Y-m-d', $po->eta) : 'None'); ?></td>
+			<td><?php echo htmlentities($po->po_number); ?></td>
+			<td><?php echo htmlentities($po->reference_number); ?></td>
+			<td><?php echo htmlentities($po->vendor->name); ?></td>
+			<td><?php echo htmlentities("{$po->destination->name} [{$po->destination->groupname}]"); ?></td>
+			<td><?php echo htmlentities($po->shipper->name); ?></td>
+			<td><?php echo ($po->eta ? format_date($po->eta, 'date_sort') : ''); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

@@ -42,35 +42,35 @@ if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 || strp
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-	<title><?php echo $pines->page->get_title(); ?></title>
+	<title><?php echo htmlentities($pines->page->get_title()); ?></title>
 	<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
-	<link rel="icon" type="image/vnd.microsoft.icon" href="<?php echo $pines->config->rela_location; ?>favicon.ico" />
+	<link rel="icon" type="image/vnd.microsoft.icon" href="<?php echo htmlentities($pines->config->rela_location); ?>favicon.ico" />
 
-	<link href="<?php echo $pines->config->rela_location; ?>system/css/pform.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="<?php echo htmlentities($pines->config->rela_location); ?>system/css/pform.css" media="all" rel="stylesheet" type="text/css" />
 	<!--[if lt IE 8]>
-	<link href="<?php echo $pines->config->rela_location; ?>system/css/pform-ie-lt-8.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="<?php echo htmlentities($pines->config->rela_location); ?>system/css/pform-ie-lt-8.css" media="all" rel="stylesheet" type="text/css" />
 	<![endif]-->
 
-	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/pines.css" media="all" rel="stylesheet" type="text/css" />
-	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/print.css" media="print" rel="stylesheet" type="text/css" />
+	<link href="<?php echo htmlentities($pines->config->rela_location); ?>templates/<?php echo htmlentities($pines->current_template); ?>/css/pines.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="<?php echo htmlentities($pines->config->rela_location); ?>templates/<?php echo htmlentities($pines->current_template); ?>/css/print.css" media="print" rel="stylesheet" type="text/css" />
 
-	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/dropdown/dropdown.css" media="all" rel="stylesheet" type="text/css" />
-	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/dropdown/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
-	<link href="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/css/dropdown/themes/jqueryui/jqueryui.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="<?php echo htmlentities($pines->config->rela_location); ?>templates/<?php echo htmlentities($pines->current_template); ?>/css/dropdown/dropdown.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="<?php echo htmlentities($pines->config->rela_location); ?>templates/<?php echo htmlentities($pines->current_template); ?>/css/dropdown/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="<?php echo htmlentities($pines->config->rela_location); ?>templates/<?php echo htmlentities($pines->current_template); ?>/css/dropdown/themes/jqueryui/jqueryui.css" media="all" rel="stylesheet" type="text/css" />
 
-	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>system/js/js.php"></script>
+	<script type="text/javascript" src="<?php echo htmlentities($pines->config->rela_location); ?>system/js/js.php"></script>
 	<?php if ($pines->config->tpl_pines->menu_delay) { ?>
 	<script type="text/javascript">// <![CDATA[
 		pines.tpl_pines_menu_delay = true;
 	// ]]></script>
 	<?php } ?>
-	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/template.js"></script>
+	<script type="text/javascript" src="<?php echo htmlentities($pines->config->rela_location); ?>templates/<?php echo htmlentities($pines->current_template); ?>/js/template.js"></script>
 	<?php if ($pines->config->tpl_pines->ajax) { ?>
-	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/ajax.js"></script>
+	<script type="text/javascript" src="<?php echo htmlentities($pines->config->rela_location); ?>templates/<?php echo htmlentities($pines->current_template); ?>/js/ajax.js"></script>
 	<?php } ?>
 
 	<!--[if lt IE 7]>
-	<script type="text/javascript" src="<?php echo $pines->config->rela_location; ?>templates/<?php echo $pines->current_template; ?>/js/jquery/jquery.dropdown.js"></script>
+	<script type="text/javascript" src="<?php echo htmlentities($pines->config->rela_location); ?>templates/<?php echo htmlentities($pines->current_template); ?>/js/jquery/jquery.dropdown.js"></script>
 	<![endif]-->
 
 	<?php echo $pines->page->render_modules('head', 'module_head'); ?>
@@ -86,10 +86,10 @@ if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 || strp
 			pines(function(){
 				<?php
 				if ( $error ) { foreach ($error as $cur_item) {
-					echo 'pines.error("'.addslashes($cur_item)."\", \"Error\");\n";
+					echo 'pines.error("'.addslashes(htmlentities($cur_item))."\", \"Error\");\n";
 				} }
 				if ( $notice ) { foreach ($notice as $cur_item) {
-					echo 'pines.notice("'.addslashes($cur_item)."\", \"Notice\");\n";
+					echo 'pines.notice("'.addslashes(htmlentities($cur_item))."\", \"Notice\");\n";
 				} }
 				?>
 			});
@@ -99,11 +99,11 @@ if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 || strp
 	</div>
 	<div id="header" class="ui-widget-header">
 		<h1 class="pagetitle">
-			<a href="<?php echo $pines->config->full_location; ?>">
+			<a href="<?php echo htmlentities($pines->config->full_location); ?>">
 				<?php if ($pines->config->tpl_pines->use_header_image) { ?>
-				<img src="<?php echo $pines->config->tpl_pines->header_image; ?>" alt="<?php echo $pines->config->page_title; ?>" />
+				<img src="<?php echo htmlentities($pines->config->tpl_pines->header_image); ?>" alt="<?php echo htmlentities($pines->config->page_title); ?>" />
 				<?php } else { ?>
-				<span><?php echo $pines->config->page_title; ?></span>
+				<span><?php echo htmlentities($pines->config->page_title); ?></span>
 				<?php } ?>
 			</a>
 		</h1>
@@ -156,7 +156,7 @@ if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 || strp
 			<?php echo $pines->page->render_modules('footer', 'module_header'); ?>
 		</div>
 		<p class="copyright">
-			<?php echo $pines->config->copyright_notice; ?>
+			<?php echo htmlentities($pines->config->copyright_notice, ENT_COMPAT, '', false); ?>
 		</p>
 	</div>
 	<div id="bottom">

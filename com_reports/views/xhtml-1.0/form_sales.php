@@ -54,12 +54,12 @@ $pines->com_jstree->load();
 			"json_data" : {
 				"ajax" : {
 					"dataType" : "json",
-					"url" : "<?php echo pines_url('com_jstree', 'groupjson'); ?>"
+					"url" : "<?php echo addslashes(pines_url('com_jstree', 'groupjson')); ?>"
 				}
 			},
 			"ui" : {
 				"select_limit" : 1,
-				"initially_select" : ["p_muid_<?php echo $this->location; ?>"]
+				"initially_select" : ["p_muid_<?php echo (int) $this->location; ?>"]
 			}
 		});
 	
@@ -73,7 +73,7 @@ $pines->com_jstree->load();
 					continue;
 				$cur_select = (isset($this->employee->group) && $this->employee->is($cur_employee)) ? 'selected=\"selected\"' : ''; ?>
 				if (group_id == <?php echo $cur_employee->group->guid; ?>) {
-					employee.append("<option value='<?php echo $cur_employee->guid; ?>' <?php echo $cur_select; ?>><?php echo $cur_employee->name; ?></option>");
+					employee.append("<option value='<?php echo $cur_employee->guid; ?>' <?php echo $cur_select; ?>><?php echo htmlentities($cur_employee->name); ?></option>");
 				}
 			<?php } ?>
 		};
@@ -94,7 +94,7 @@ $pines->com_jstree->load();
 		<input class="ui-widget-content form_date" type="text" name="end" value="<?php echo ($this->date[1]) ? format_date($this->date[1], 'date_sort') : format_date(time(), 'date_sort'); ?>" />
 	</div>
 	<div class="pf-element">
-		<input type="hidden" name="location" value="<?php echo $this->location; ?>" />
+		<input type="hidden" name="location" value="<?php echo htmlentities($this->location); ?>" />
 		<input class="ui-corner-all ui-state-default" type="submit" value="View Report" />
 	</div>
 </form>

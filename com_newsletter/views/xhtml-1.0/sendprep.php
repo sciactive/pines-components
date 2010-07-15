@@ -36,12 +36,12 @@ $pines->com_jstree->load();
 			"json_data" : {
 				"ajax" : {
 					"dataType" : "json",
-					"url" : "<?php echo pines_url('com_jstree', 'groupjson'); ?>"
+					"url" : "<?php echo addslashes(pines_url('com_jstree', 'groupjson')); ?>"
 				}
 			},
 			"ui" : {
 				"select_limit" : 1,
-				"initially_select" : ["p_muid_<?php echo $_SESSION['user']->group->guid; ?>"]
+				"initially_select" : ["p_muid_<?php echo (int) $_SESSION['user']->group->guid; ?>"]
 			}
 		});
 	});
@@ -74,7 +74,7 @@ $pines->com_jstree->load();
 		<input class="pf-field ui-widget-content" type="checkbox" name="include_permalink" checked /></label>
 	</div>
 	<div class="pf-element pf-buttons">
-		<input type="hidden" name="mail_id" value="<?php echo $_REQUEST['mail_id']; ?>" />
+		<input type="hidden" name="mail_id" value="<?php echo htmlentities($_REQUEST['mail_id']); ?>" />
 		<input type="hidden" name="location" />
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_newsletter', 'list')); ?>');" value="Cancel" />

@@ -51,12 +51,12 @@ $pines->com_jstree->load();
 			"json_data" : {
 				"ajax" : {
 					"dataType" : "json",
-					"url" : "<?php echo pines_url('com_jstree', 'groupjson'); ?>"
+					"url" : "<?php echo addslashes(pines_url('com_jstree', 'groupjson')); ?>"
 				}
 			},
 			"ui" : {
 				"select_limit" : 1,
-				"initially_select" : ["p_muid_<?php echo $this->location; ?>"]
+				"initially_select" : ["p_muid_<?php echo (int) $this->location; ?>"]
 			}
 		});
 	});
@@ -66,11 +66,11 @@ $pines->com_jstree->load();
 	<div class="pf-element location_tree" style="padding-bottom: 0px;"></div>
 	<div class="pf-element" style="padding-bottom: 0px;">
 		<span class="pf-note">Start</span>
-		<input class="pf-field ui-corner-all ui-widget-content form_date" type="text" name="start_date" value="<?php echo ($this->start_date) ? format_date($this->start_date, null, 'Y-m-d') : format_date(time(), null, 'Y-m-d'); ?>" />
+		<input class="pf-field ui-corner-all ui-widget-content form_date" type="text" name="start_date" value="<?php echo ($this->start_date) ? format_date($this->start_date, 'date_sort') : format_date(time(), 'date_sort'); ?>" />
 	</div>
 	<div class="pf-element">
 		<span class="pf-note">End</span>
-		<input class="pf-field ui-corner-all ui-widget-content form_date" type="text" name="end_date" value="<?php echo ($this->end_date) ? format_date($this->end_date, null, 'Y-m-d') : format_date(time(), null, 'Y-m-d'); ?>" />
+		<input class="pf-field ui-corner-all ui-widget-content form_date" type="text" name="end_date" value="<?php echo ($this->end_date) ? format_date($this->end_date, 'date_sort') : format_date(time(), 'date_sort'); ?>" />
 	</div>
 	<div class="pf-element">
 		<input type="hidden" name="location" />

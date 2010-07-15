@@ -15,16 +15,16 @@ $this->title = 'PDF Display Editor Testing'
 <form class="pf-form" method="post" action="<?php echo htmlentities(pines_url('com_pdf', 'testprint')); ?>">
 	<div class="pf-element display_edit" id="p_muid_name">
 		<label><span class="pf-label">Name</span>
-			<input class="pf-field ui-widget-content" type="text" name="name" value="<?php echo $entity->name; ?>" /></label>
+			<input class="pf-field ui-widget-content" type="text" name="name" value="<?php echo htmlentities($entity->name); ?>" /></label>
 	</div>
 	<div class="pf-element" id="p_muid_age">
 		<label><span class="pf-label">Age</span>
 			<span class="pf-note">Not displayed.</span>
-			<input class="pf-field ui-widget-content" type="text" name="age" value="<?php echo $entity->age; ?>" /></label>
+			<input class="pf-field ui-widget-content" type="text" name="age" value="<?php echo htmlentities($entity->age); ?>" /></label>
 	</div>
 	<div class="pf-element display_edit" id="p_muid_phone">
 		<label><span class="pf-label">Phone</span>
-			<input class="pf-field ui-widget-content" type="text" name="phone" value="<?php echo $entity->phone; ?>" /></label>
+			<input class="pf-field ui-widget-content" type="text" name="phone" value="<?php echo htmlentities($entity->phone); ?>" /></label>
 	</div>
 	<div class="pf-element display_edit" id="p_muid_favfood"><span class="pf-label">What's your favorite food?</span>
 		<span class="pf-note">This will be your lunch.</span>

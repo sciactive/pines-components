@@ -69,12 +69,12 @@ defined('P_RUN') or die('Direct access prohibited');
 			"json_data" : {
 				"ajax" : {
 					"dataType" : "json",
-					"url" : "<?php echo pines_url('com_jstree', 'groupjson'); ?>"
+					"url" : "<?php echo addslashes(pines_url('com_jstree', 'groupjson')); ?>"
 				}
 			},
 			"ui" : {
 				"select_limit" : 1,
-				"initially_select" : ["p_muid_<?php echo $this->location; ?>"]
+				"initially_select" : ["p_muid_<?php echo (int) $this->location; ?>"]
 			}
 		});
 
@@ -106,7 +106,7 @@ defined('P_RUN') or die('Direct access prohibited');
 				$cur_color = $cur_dept_info[1];
 				$cur_select = (!isset($this->entity->employee->group) && $this->entity->employee == $cur_name) ? 'selected=\"selected\"' : '';
 			?>
-				employee.append("<option value=\"<?php echo $cur_name; ?>:<?php echo $cur_color; ?>\" <?php echo $cur_select; ?>><?php echo $cur_name; ?></option>");
+				employee.append("<option value=\"<?php echo htmlentities($cur_name); ?>:<?php echo htmlentities($cur_color); ?>\" <?php echo $cur_select; ?>><?php echo htmlentities($cur_name); ?></option>");
 			<?php }
 			// Load employees for this location.
 			foreach ($this->employees as $cur_employee) {
@@ -114,7 +114,7 @@ defined('P_RUN') or die('Direct access prohibited');
 					continue;
 				$cur_select = (isset($this->entity->employee->group) && $this->entity->employee->is($cur_employee)) ? 'selected=\"selected\"' : ''; ?>
 				if (group_id == <?php echo $cur_employee->group->guid; ?>)
-					employee.append("<option value=\"<?php echo $cur_employee->guid; ?>\" <?php echo $cur_select; ?>><?php echo $cur_employee->name; ?></option>");
+					employee.append("<option value=\"<?php echo $cur_employee->guid; ?>\" <?php echo $cur_select; ?>><?php echo htmlentities($cur_employee->name); ?></option>");
 			<?php } ?>
 		};
 	});
@@ -126,7 +126,7 @@ defined('P_RUN') or die('Direct access prohibited');
 		<select class="ui-widget-content form_input" name="employee"></select>
 	</div>
 	<div class="pf-element">
-		<input class="ui-widget-content form_input" type="text" id="p_muid_event_label" name="event_label" value="<?php echo (isset($this->entity->label)) ? $this->entity->label : 'Label'; ?>" onfocus="if(this.value==this.defaultValue)this.value=''" onblur="if(this.value=='')this.value=this.defaultValue" />
+		<input class="ui-widget-content form_input" type="text" id="p_muid_event_label" name="event_label" value="<?php echo (isset($this->entity->label)) ? htmlentities($this->entity->label) : 'Label'; ?>" onfocus="if(this.value==this.defaultValue)this.value=''" onblur="if(this.value=='')this.value=this.defaultValue" />
 	</div>
 	<?php
 		if ($this->entity->guid) {
@@ -140,7 +140,7 @@ defined('P_RUN') or die('Direct access prohibited');
 		<label><input class="pf-field ui-widget-content" type="checkbox" name="all_day" value="ON" <?php echo ($this->entity->all_day) ? 'checked="checked" ' : ''; ?>/>All Day</label>
 	</div>
 	<div class="pf-element pf-full-width">
-		<span class="pf-note">Start</span><input class="ui-widget-content form_center" type="text" size="12" id="p_muid_start" name="start" value="<?php echo empty($start_date) ? format_date(time(), 'date_sort') : $start_date; ?>" />
+		<span class="pf-note">Start</span><input class="ui-widget-content form_center" type="text" size="12" id="p_muid_start" name="start" value="<?php echo empty($start_date) ? format_date(time(), 'date_sort') : htmlentities($start_date); ?>" />
 		<select class="ui-widget-content" name="time_start">
 			<option value="0" <?php echo ($start_time == '0') ? 'selected="selected"' : ''; ?>>12:00 AM</option>
 			<option value="1" <?php echo ($start_time == '1') ? 'selected="selected"' : ''; ?>>1:00 AM</option>
@@ -169,7 +169,7 @@ defined('P_RUN') or die('Direct access prohibited');
 		</select>
 	</div>
 	<div class="pf-element">
-		<span class="pf-note">End</span><input class="ui-widget-content form_center" type="text" size="12" id="p_muid_end" name="end" value="<?php echo empty($end_date) ? format_date(time(), 'date_sort') : $end_date; ?>" />
+		<span class="pf-note">End</span><input class="ui-widget-content form_center" type="text" size="12" id="p_muid_end" name="end" value="<?php echo empty($end_date) ? format_date(time(), 'date_sort') : htmlentities($end_date); ?>" />
 		<select class="ui-widget-content" name="time_end">
 			<option value="0" <?php echo ($end_time == '0') ? 'selected="selected"' : ''; ?>>12:00 AM</option>
 			<option value="1" <?php echo ($end_time == '1') ? 'selected="selected"' : ''; ?>>1:00 AM</option>
@@ -197,7 +197,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			<option value="23" <?php echo ($end_time == '23') ? 'selected="selected"' : ''; ?>>11:00 PM</option>
 		</select>
 	</div>
-	<input type="hidden" name="location" value="<?php echo $this->location; ?>" />
+	<input type="hidden" name="location" value="<?php echo htmlentities($this->location); ?>" />
 	<?php if (isset($this->entity->guid)) { ?>
 	<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 	<?php } ?>

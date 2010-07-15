@@ -73,7 +73,7 @@ $pines->com_pgrid->load();
 					click: function(e, rows){
 						var loader;
 						$.ajax({
-							url: "<?php echo pines_url('com_sales', 'product/search'); ?>",
+							url: "<?php echo addslashes(pines_url('com_sales', 'product/search')); ?>",
 							type: "POST",
 							dataType: "json",
 							data: {"code": rows.pgrid_get_value(1)},
@@ -136,8 +136,8 @@ $pines->com_pgrid->load();
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 		<?php if (isset($this->entity->user)) { ?>
-		<div>User: <span class="date"><?php echo "{$this->entity->user->name} [{$this->entity->user->username}]"; ?></span></div>
-		<div>Group: <span class="date"><?php echo "{$this->entity->group->name} [{$this->entity->group->groupname}]"; ?></span></div>
+		<div>User: <span class="date"><?php echo htmlentities("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
+		<div>Group: <span class="date"><?php echo htmlentities("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
 		<?php } ?>
 		<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
 		<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
@@ -148,7 +148,7 @@ $pines->com_pgrid->load();
 		<h1>Reviewer Comments</h1>
 	</div>
 	<div class="pf-element pf-full-width">
-		<div class="pf-field"><?php echo $this->entity->review_comments; ?></div>
+		<div class="pf-field"><?php echo htmlentities($this->entity->review_comments); ?></div>
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-heading">
@@ -165,8 +165,8 @@ $pines->com_pgrid->load();
 			<tbody>
 				<?php foreach ($this->entity->entries as $cur_entry) { ?>
 				<tr>
-					<td><?php echo $cur_entry->code; ?></td>
-					<td><?php echo $cur_entry->qty; ?></td>
+					<td><?php echo htmlentities($cur_entry->code); ?></td>
+					<td><?php echo htmlentities($cur_entry->qty); ?></td>
 				</tr>
 				<?php } ?>
 			</tbody>

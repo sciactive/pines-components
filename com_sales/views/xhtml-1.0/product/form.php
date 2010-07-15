@@ -122,8 +122,8 @@ $pines->com_ptags->load();
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
 				<?php if (isset($this->entity->user)) { ?>
-				<div>User: <span class="date"><?php echo "{$this->entity->user->name} [{$this->entity->user->username}]"; ?></span></div>
-				<div>Group: <span class="date"><?php echo "{$this->entity->group->name} [{$this->entity->group->groupname}]"; ?></span></div>
+				<div>User: <span class="date"><?php echo htmlentities("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
+				<div>Group: <span class="date"><?php echo htmlentities("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
 				<?php } ?>
 				<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
 				<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
@@ -131,7 +131,7 @@ $pines->com_ptags->load();
 			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Name</span>
-					<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
+					<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>
@@ -139,7 +139,7 @@ $pines->com_ptags->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Product SKU</span>
-					<input class="pf-field ui-widget-content" type="text" name="sku" size="24" value="<?php echo $this->entity->sku; ?>" /></label>
+					<input class="pf-field ui-widget-content" type="text" name="sku" size="24" value="<?php echo htmlentities($this->entity->sku); ?>" /></label>
 			</div>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Description</span><br />
@@ -154,13 +154,13 @@ $pines->com_ptags->load();
 					<select class="pf-field ui-widget-content" name="manufacturer">
 						<option value="null">-- None --</option>
 						<?php foreach ($this->manufacturers as $cur_manufacturer) { ?>
-						<option value="<?php echo $cur_manufacturer->guid; ?>"<?php echo $this->entity->manufacturer->guid == $cur_manufacturer->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_manufacturer->name; ?></option>
+						<option value="<?php echo $cur_manufacturer->guid; ?>"<?php echo $this->entity->manufacturer->guid == $cur_manufacturer->guid ? ' selected="selected"' : ''; ?>><?php echo htmlentities($cur_manufacturer->name); ?></option>
 						<?php } ?>
 					</select></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Manufacturer SKU</span>
-					<input class="pf-field ui-widget-content" type="text" name="manufacturer_sku" size="24" value="<?php echo $this->entity->manufacturer_sku; ?>" /></label>
+					<input class="pf-field ui-widget-content" type="text" name="manufacturer_sku" size="24" value="<?php echo htmlentities($this->entity->manufacturer_sku); ?>" /></label>
 			</div>
 			<br class="pf-clearing" />
 		</div>
@@ -212,7 +212,7 @@ $pines->com_ptags->load();
 						<tr title="<?php echo $cur_category->guid; ?>" class="<?php echo $cur_category->children ? 'parent ' : ''; ?><?php echo isset($cur_category->parent) ? "child {$cur_category->parent->guid} " : ''; ?>">
 							<td><?php echo isset($cur_category->parent) ? $cur_category->array_search($cur_category->parent->children) + 1 : '0' ; ?></td>
 							<td><input type="checkbox" name="categories[]" value="<?php echo $cur_category->guid; ?>" <?php echo in_array($cur_category->guid, $category_guids) ? 'checked="checked" ' : ''; ?>/></td>
-							<td><?php echo $cur_category->name; ?></td>
+							<td><?php echo htmlentities($cur_category->name); ?></td>
 							<td><?php echo count($cur_category->products); ?></td>
 						</tr>
 					<?php } ?>
@@ -260,7 +260,7 @@ $pines->com_ptags->load();
 					<span class="pf-note">Regular stock items cannot be sold without available stock. Stock optional items can be sold without available stock. Non stocked items do not use inventory tracking.</span>
 					<select class="pf-field ui-widget-content" name="stock_type">
 						<?php foreach (array('regular_stock' => 'Regular Stock', 'stock_optional' => 'Stock Optional', 'non_stocked' => 'Non Stocked') as $cur_stock_key => $cur_stock_type) { ?>
-						<option value="<?php echo $cur_stock_key; ?>"<?php echo $this->entity->stock_type == $cur_stock_key ? ' selected="selected"' : ''; ?>><?php echo $cur_stock_type; ?></option>
+						<option value="<?php echo htmlentities($cur_stock_key); ?>"<?php echo $this->entity->stock_type == $cur_stock_key ? ' selected="selected"' : ''; ?>><?php echo htmlentities($cur_stock_type); ?></option>
 						<?php } ?>
 					</select></label>
 			</div>
@@ -279,9 +279,9 @@ $pines->com_ptags->load();
 							<tbody>
 								<?php if (is_array($this->entity->vendors)) { foreach ($this->entity->vendors as $cur_vendor) { ?>
 								<tr title="<?php echo $cur_vendor['entity']->guid; ?>">
-									<td><?php echo $cur_vendor['entity']->name; ?></td>
-									<td><?php echo $cur_vendor['sku']; ?></td>
-									<td><?php echo $cur_vendor['cost']; ?></td>
+									<td><?php echo htmlentities($cur_vendor['entity']->name); ?></td>
+									<td><?php echo htmlentities($cur_vendor['sku']); ?></td>
+									<td><?php echo htmlentities($cur_vendor['cost']); ?></td>
 								</tr>
 								<?php } } ?>
 							</tbody>
@@ -305,11 +305,11 @@ $pines->com_ptags->load();
 					<tbody>
 						<?php foreach ($this->vendors as $cur_vendor) { ?>
 						<tr title="<?php echo $cur_vendor->guid; ?>">
-							<td><?php echo $cur_vendor->name; ?></td>
-							<td><?php echo $cur_vendor->email; ?></td>
+							<td><?php echo htmlentities($cur_vendor->name); ?></td>
+							<td><?php echo htmlentities($cur_vendor->email); ?></td>
 							<td><?php echo format_phone($cur_vendor->phone_work); ?></td>
 							<td><?php echo format_phone($cur_vendor->fax); ?></td>
-							<td><?php echo $cur_vendor->account_number; ?></td>
+							<td><?php echo htmlentities($cur_vendor->account_number); ?></td>
 						</tr>
 						<?php } ?>
 					</tbody>
@@ -360,21 +360,21 @@ $pines->com_ptags->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Unit Price</span>
-					<input class="pf-field ui-widget-content" type="text" name="unit_price" size="24" value="<?php echo $this->entity->unit_price; ?>" /></label>
+					<input class="pf-field ui-widget-content" type="text" name="unit_price" size="24" value="<?php echo htmlentities($this->entity->unit_price); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Margin</span>
-					<input class="pf-field ui-widget-content" type="text" name="margin" size="24" value="<?php echo $this->entity->margin; ?>" /></label>
+					<input class="pf-field ui-widget-content" type="text" name="margin" size="24" value="<?php echo htmlentities($this->entity->margin); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Floor</span>
 					<span class="pf-note">The lowest price allowed.</span>
-					<input class="pf-field ui-widget-content" type="text" name="floor" size="24" value="<?php echo $this->entity->floor; ?>" /></label>
+					<input class="pf-field ui-widget-content" type="text" name="floor" size="24" value="<?php echo htmlentities($this->entity->floor); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Ceiling</span>
 					<span class="pf-note">The highest price allowed.</span>
-					<input class="pf-field ui-widget-content" type="text" name="ceiling" size="24" value="<?php echo $this->entity->ceiling; ?>" /></label>
+					<input class="pf-field ui-widget-content" type="text" name="ceiling" size="24" value="<?php echo htmlentities($this->entity->ceiling); ?>" /></label>
 			</div>
 			<div class="pf-element pf-heading">
 				<h1>Taxes/Fees</h1>
@@ -389,7 +389,7 @@ $pines->com_ptags->load();
 					<span class="pf-note">Hold Ctrl (Command on Mac) to select multiple.</span>
 					<select class="pf-field ui-widget-content" name="additional_tax_fees[]" size="6" multiple="multiple">
 						<?php foreach ($this->tax_fees as $cur_tax_fee) { ?>
-						<option value="<?php echo $cur_tax_fee->guid; ?>"<?php echo ($cur_tax_fee->in_array($this->entity->additional_tax_fees)) ? ' selected="selected"' : ''; ?>><?php echo $cur_tax_fee->name; ?></option>
+						<option value="<?php echo $cur_tax_fee->guid; ?>"<?php echo ($cur_tax_fee->in_array($this->entity->additional_tax_fees)) ? ' selected="selected"' : ''; ?>><?php echo htmlentities($cur_tax_fee->name); ?></option>
 						<?php } ?>
 					</select></label>
 			</div>
@@ -398,11 +398,11 @@ $pines->com_ptags->load();
 		<div id="p_muid_tab_attributes">
 			<div class="pf-element">
 				<label><span class="pf-label">Weight</span>
-					<input class="pf-field ui-widget-content" type="text" name="weight" size="10" value="<?php echo $this->entity->weight; ?>" /> lbs.</label>
+					<input class="pf-field ui-widget-content" type="text" name="weight" size="10" value="<?php echo htmlentities($this->entity->weight); ?>" /> lbs.</label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">RMA Available After</span>
-					<input class="pf-field ui-widget-content" type="text" name="rma_after" size="10" value="<?php echo $this->entity->rma_after; ?>" /> days.</label>
+					<input class="pf-field ui-widget-content" type="text" name="rma_after" size="10" value="<?php echo htmlentities($this->entity->rma_after); ?>" /> days.</label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Serialized</span>
@@ -440,7 +440,7 @@ $pines->com_ptags->load();
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Additional Barcodes</span>
 				<div class="pf-group">
-					<input class="pf-field ui-widget-content" type="text" name="additional_barcodes" size="24" value="<?php echo implode(',', $this->entity->additional_barcodes); ?>" />
+					<input class="pf-field ui-widget-content" type="text" name="additional_barcodes" size="24" value="<?php echo htmlentities(implode(',', $this->entity->additional_barcodes)); ?>" />
 					<script type="text/javascript">
 						// <![CDATA[
 						pines(function(){
@@ -456,7 +456,7 @@ $pines->com_ptags->load();
 					<span class="pf-note">Hold Ctrl (Command on Mac) to select multiple.</span>
 					<select class="pf-field ui-widget-content" name="actions[]" size="6" multiple="multiple">
 						<?php foreach ($this->actions as $cur_action) { ?>
-						<option value="<?php echo $cur_action['name']; ?>" title="<?php echo $cur_action['description']; ?>"<?php echo in_array($cur_action['name'], $this->entity->actions) ? ' selected="selected"' : ''; ?>><?php echo $cur_action['cname']; ?></option>
+						<option value="<?php echo htmlentities($cur_action['name']); ?>" title="<?php echo htmlentities($cur_action['description']); ?>"<?php echo in_array($cur_action['name'], $this->entity->actions) ? ' selected="selected"' : ''; ?>><?php echo htmlentities($cur_action['cname']); ?></option>
 						<?php } ?>
 					</select></label>
 			</div>
@@ -574,9 +574,9 @@ $pines->com_ptags->load();
 					<tbody>
 						<?php if (isset($this->entity->commissions)) foreach ($this->entity->commissions as $cur_value) { ?>
 						<tr>
-							<td><?php echo "{$cur_value['group']->guid}: {$cur_value['group']->name}"; ?></td>
-							<td><?php echo $cur_value['type']; ?></td>
-							<td><?php echo $cur_value['amount']; ?></td>
+							<td><?php echo htmlentities("{$cur_value['group']->guid}: {$cur_value['group']->name}"); ?></td>
+							<td><?php echo htmlentities($cur_value['type']); ?></td>
+							<td><?php echo htmlentities($cur_value['amount']); ?></td>
 						</tr>
 						<?php } ?>
 					</tbody>
@@ -590,7 +590,7 @@ $pines->com_ptags->load();
 							<span class="pf-label">Group</span>
 							<select class="pf-field ui-widget-content" name="cur_commission_group">
 								<?php foreach ($this->groups as $cur_group) {
-								?><option value="<?php echo "{$cur_group->guid}: {$cur_group->name}"; ?>"><?php echo "{$cur_group->name} [{$cur_group->groupname}]"; ?></option><?php
+								?><option value="<?php echo htmlentities("{$cur_group->guid}: {$cur_group->name}"); ?>"><?php echo htmlentities("{$cur_group->name} [{$cur_group->groupname}]"); ?></option><?php
 								} ?>
 							</select>
 						</label>

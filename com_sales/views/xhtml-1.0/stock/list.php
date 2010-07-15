@@ -22,7 +22,7 @@ $pines->com_jstree->load();
 	// <![CDATA[
 
 	pines(function(){
-		var submit_url = "<?php echo pines_url('com_sales', 'stock/list'); ?>";
+		var submit_url = "<?php echo addslashes(pines_url('com_sales', 'stock/list')); ?>";
 		var submit_search = function(){
 			// Submit the form with all of the fields.
 			pines.post(submit_url, {
@@ -43,18 +43,18 @@ $pines->com_jstree->load();
 				{type: 'separator'},
 				<?php } ?>
 				<?php if (gatekeeper('com_sales/receive')) { ?>
-				{type: 'button', text: 'Receive', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'stock/receive'); ?>'},
+				{type: 'button', text: 'Receive', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'stock/receive')); ?>'},
 				<?php } if (gatekeeper('com_sales/managestock')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', multi_select: true, double_click: true, url: '<?php echo pines_url('com_sales', 'stock/edit', array('id' => '__title__')); ?>', delimiter: ','},
+				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', multi_select: true, double_click: true, url: '<?php echo addslashes(pines_url('com_sales', 'stock/edit', array('id' => '__title__'))); ?>', delimiter: ','},
 				<?php } if (gatekeeper('com_sales/managestock')) { ?>
-				{type: 'button', text: 'Transfer', extra_class: 'picon picon-go-jump', multi_select: true, url: '<?php echo pines_url('com_sales', 'stock/transfer', array('id' => '__title__')); ?>', delimiter: ','},
+				{type: 'button', text: 'Transfer', extra_class: 'picon picon-go-jump', multi_select: true, url: '<?php echo addslashes(pines_url('com_sales', 'stock/transfer', array('id' => '__title__'))); ?>', delimiter: ','},
 				<?php } ?>
 				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo pines_url('system', 'csv'); ?>", {
+					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
 						filename: 'stock',
 						content: rows
 					});
@@ -66,7 +66,7 @@ $pines->com_jstree->load();
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo pines_url('com_pgrid', 'save_state'); ?>", {view: "com_sales/stock/list", state: cur_state});
+				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_sales/stock/list", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
@@ -74,7 +74,7 @@ $pines->com_jstree->load();
 
 		stock_grid.location_form = function(){
 			$.ajax({
-				url: "<?php echo pines_url('com_sales', 'forms/locationselect'); ?>",
+				url: "<?php echo addslashes(pines_url('com_sales', 'forms/locationselect')); ?>",
 				type: "POST",
 				dataType: "html",
 				data: {"location": location},
@@ -133,16 +133,16 @@ $pines->com_jstree->load();
 	<tbody>
 	<?php foreach($this->stock as $stock) { ?>
 		<tr title="<?php echo $stock->guid; ?>">
-			<td><?php echo $stock->product->sku; ?></td>
-			<td><?php echo $stock->product->name; ?></td>
-			<td><?php echo $stock->serial; ?></td>
-			<td><?php echo $stock->vendor->name; ?></td>
+			<td><?php echo htmlentities($stock->product->sku); ?></td>
+			<td><?php echo htmlentities($stock->product->name); ?></td>
+			<td><?php echo htmlentities($stock->serial); ?></td>
+			<td><?php echo htmlentities($stock->vendor->name); ?></td>
 			<?php if (!$this->removed) { ?>
-			<td><?php echo "{$stock->location->name} [{$stock->location->groupname}]"; ?></td>
+			<td><?php echo htmlentities("{$stock->location->name} [{$stock->location->groupname}]"); ?></td>
 			<?php } ?>
 			<td><?php echo isset($stock->cost) ? '$'.number_format($stock->cost, 2) : ''; ?></td>
 			<td><?php echo $stock->available ? 'Yes' : 'No'; ?></td>
-			<td><?php echo $stock->last_reason(); ?></td>
+			<td><?php echo htmlentities($stock->last_reason()); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

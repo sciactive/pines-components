@@ -19,7 +19,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-		var submit_url = "<?php echo pines_url('com_sales', 'sale/list'); ?>";
+		var submit_url = "<?php echo addslashes(pines_url('com_sales', 'sale/list')); ?>";
 		var submit_search = function(){
 			// Submit the form with all of the fields.
 			pines.post(submit_url, {
@@ -46,26 +46,26 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', text: 'Timespan', extra_class: 'picon picon-view-time-schedule', selection_optional: true, click: function(){sale_grid.date_form();}},
 				{type: 'separator'},
 				<?php if (gatekeeper('com_sales/newsale')) { ?>
-				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'sale/edit'); ?>'},
+				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'sale/edit')); ?>'},
 				<?php } if (gatekeeper('com_sales/editsale')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', url: '<?php echo pines_url('com_sales', 'sale/edit', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', url: '<?php echo addslashes(pines_url('com_sales', 'sale/edit', array('id' => '__title__'))); ?>'},
 				<?php } ?>
-				{type: 'button', text: 'Receipt', extra_class: 'picon picon-document-print-preview', double_click: true, url: '<?php echo pines_url('com_sales', 'sale/receipt', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Receipt', extra_class: 'picon picon-document-print-preview', double_click: true, url: '<?php echo addslashes(pines_url('com_sales', 'sale/receipt', array('id' => '__title__'))); ?>'},
 				<?php if (gatekeeper('com_sales/newreturnwsale')) { ?>
-				{type: 'button', text: 'Return', extra_class: 'picon picon-edit-undo', url: '<?php echo pines_url('com_sales', 'sale/return', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Return', extra_class: 'picon picon-edit-undo', url: '<?php echo addslashes(pines_url('com_sales', 'sale/return', array('id' => '__title__'))); ?>'},
 				<?php } if (gatekeeper('com_sales/voidsale')) { ?>
-				{type: 'button', text: 'Void', extra_class: 'picon picon-edit-delete-shred', confirm: true, url: '<?php echo pines_url('com_sales', 'sale/void', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Void', extra_class: 'picon picon-edit-delete-shred', confirm: true, url: '<?php echo addslashes(pines_url('com_sales', 'sale/void', array('id' => '__title__'))); ?>'},
 				<?php } ?>
 				{type: 'separator'},
 				<?php if (gatekeeper('com_sales/deletesale')) { ?>
-				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_sales', 'sale/delete', array('id' => '__title__')); ?>', delimiter: ','},
+				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_sales', 'sale/delete', array('id' => '__title__'))); ?>', delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo pines_url('system', 'csv'); ?>", {
+					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
 						filename: 'sales',
 						content: rows
 					});
@@ -77,7 +77,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo pines_url('com_pgrid', 'save_state'); ?>", {view: "com_sales/sale/list", state: cur_state});
+				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_sales/sale/list", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
@@ -85,7 +85,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 
 		sale_grid.date_form = function(){
 			$.ajax({
-				url: "<?php echo pines_url('com_sales', 'forms/dateselect'); ?>",
+				url: "<?php echo addslashes(pines_url('com_sales', 'forms/dateselect')); ?>",
 				type: "POST",
 				dataType: "html",
 				data: {"all_time": all_time, "start_date": start_date, "end_date": end_date},
@@ -126,7 +126,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		};
 		sale_grid.location_form = function(){
 			$.ajax({
-				url: "<?php echo pines_url('com_sales', 'forms/locationselect'); ?>",
+				url: "<?php echo addslashes(pines_url('com_sales', 'forms/locationselect')); ?>",
 				type: "POST",
 				dataType: "html",
 				data: {"location": location},
@@ -188,12 +188,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->sales as $sale) { ?>
 		<tr title="<?php echo $sale->guid; ?>">
-			<td><?php echo $sale->id; ?></td>
+			<td><?php echo htmlentities($sale->id); ?></td>
 			<td><?php echo format_date($sale->p_cdate); ?></td>
-			<td><?php echo ucwords($sale->status); ?></td>
-			<td><?php echo !isset($sale->user->guid) ? '' : "{$sale->user->name} [{$sale->user->username}]"; ?></td>
+			<td><?php echo htmlentities(ucwords($sale->status)); ?></td>
+			<td><?php echo isset($sale->user->guid) ? htmlentities("{$sale->user->name} [{$sale->user->username}]") : ''; ?></td>
 			<?php if ($pines->config->com_sales->com_customer) { ?>
-			<td><?php echo htmlentities($sale->customer->guid ? "{$sale->customer->guid}: \"{$sale->customer->name}\"" : ''); ?></td>
+			<td><?php echo $sale->customer->guid ? htmlentities("{$sale->customer->guid}: \"{$sale->customer->name}\"") : ''; ?></td>
 			<?php } ?>
 			<td><?php
 			$number = 0;

@@ -224,8 +224,8 @@ if ($this->entity->final)
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 		<?php if (isset($this->entity->user)) { ?>
-		<div>User: <span class="date"><?php echo "{$this->entity->user->name} [{$this->entity->user->username}]"; ?></span></div>
-		<div>Group: <span class="date"><?php echo "{$this->entity->group->name} [{$this->entity->group->groupname}]"; ?></span></div>
+		<div>User: <span class="date"><?php echo htmlentities("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
+		<div>Group: <span class="date"><?php echo htmlentities("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
 		<?php } ?>
 		<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
 		<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
@@ -239,11 +239,11 @@ if ($this->entity->final)
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">PO #</span>
-			<input class="pf-field ui-widget-content" type="text" name="po_number" size="24" value="<?php echo $this->entity->po_number; ?>" <?php echo $read_only; ?> /></label>
+			<input class="pf-field ui-widget-content" type="text" name="po_number" size="24" value="<?php echo htmlentities($this->entity->po_number); ?>" <?php echo $read_only; ?> /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Reference #</span>
-			<input class="pf-field ui-widget-content" type="text" name="reference_number" size="24" value="<?php echo $this->entity->reference_number; ?>" <?php echo $read_only; ?> /></label>
+			<input class="pf-field ui-widget-content" type="text" name="reference_number" size="24" value="<?php echo htmlentities($this->entity->reference_number); ?>" <?php echo $read_only; ?> /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Vendor</span>
@@ -255,7 +255,7 @@ if ($this->entity->final)
 			<select class="pf-field ui-widget-content" name="vendor" onchange="pines.com_sales_select_vendor(Number(this.value));"<?php echo (!$this->entity->final && empty($this->entity->received) ? '' : ' disabled="disabled"'); ?> <?php echo $read_only; ?>>
 				<option value="null">-- None --</option>
 				<?php foreach ($this->vendors as $cur_vendor) { ?>
-				<option value="<?php echo $cur_vendor->guid; ?>"<?php echo $this->entity->vendor->guid == $cur_vendor->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_vendor->name; ?></option>
+				<option value="<?php echo $cur_vendor->guid; ?>"<?php echo $this->entity->vendor->guid == $cur_vendor->guid ? ' selected="selected"' : ''; ?>><?php echo htmlentities($cur_vendor->name); ?></option>
 				<?php } ?>
 			</select></label>
 	</div>
@@ -269,7 +269,7 @@ if ($this->entity->final)
 				<?php
 				$pines->user_manager->group_sort($this->locations, 'name');
 				foreach ($this->locations as $cur_group) {
-					?><option value="<?php echo $cur_group->guid; ?>"<?php echo $cur_group->is($this->entity->destination) ? ' selected="selected"' : ''; ?>><?php echo str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"; ?></option><?php
+					?><option value="<?php echo $cur_group->guid; ?>"<?php echo $cur_group->is($this->entity->destination) ? ' selected="selected"' : ''; ?>><?php echo htmlentities(str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"); ?></option><?php
 				} ?>
 			</select>
 		</label>
@@ -279,7 +279,7 @@ if ($this->entity->final)
 			<select class="pf-field ui-widget-content" name="shipper" <?php echo $read_only; ?>>
 				<option value="null">-- None --</option>
 				<?php foreach ($this->shippers as $cur_shipper) { ?>
-				<option value="<?php echo $cur_shipper->guid; ?>"<?php echo $this->entity->shipper->guid == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_shipper->name; ?></option>
+				<option value="<?php echo $cur_shipper->guid; ?>"<?php echo $this->entity->shipper->guid == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo htmlentities($cur_shipper->name); ?></option>
 				<?php } ?>
 			</select></label>
 	</div>
@@ -298,7 +298,7 @@ if ($this->entity->final)
 		</script>
 		<?php } ?>
 		<label><span class="pf-label">ETA</span>
-			<input class="pf-field ui-widget-content" type="text" id="p_muid_eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? date('Y-m-d', $this->entity->eta) : ''); ?>" <?php echo $read_only; ?> /></label>
+			<input class="pf-field ui-widget-content" type="text" id="p_muid_eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? format_date($this->entity->eta, 'date_sort') : ''); ?>" <?php echo $read_only; ?> /></label>
 	</div>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Products</span>
@@ -324,10 +324,10 @@ if ($this->entity->final)
 								$missing_products[$cur_product['entity']->guid] = array('entity' => $cur_product['entity'], 'quantity' => $cur_product['quantity']);
 						?>
 						<tr title="<?php echo $cur_product['entity']->guid; ?>">
-							<td><?php echo $cur_product['entity']->sku; ?></td>
-							<td><?php echo $cur_product['entity']->name; ?></td>
-							<td><?php echo $cur_product['quantity']; ?></td>
-							<td><?php echo $cur_product['cost']; ?></td>
+							<td><?php echo htmlentities($cur_product['entity']->sku); ?></td>
+							<td><?php echo htmlentities($cur_product['entity']->name); ?></td>
+							<td><?php echo htmlentities($cur_product['quantity']); ?></td>
+							<td><?php echo htmlentities($cur_product['cost']); ?></td>
 							<td><?php echo $pines->com_sales->round((int) $cur_product['quantity'] * (float) $cur_product['cost']); ?></td>
 						</tr>
 						<?php } ?>
@@ -388,12 +388,12 @@ if ($this->entity->final)
 			?>
 			<?php foreach ($received as $cur_entry) { ?>
 			<div class="pf-field pf-full-width ui-widget-content ui-corner-all" style="margin-bottom: 5px; padding: .5em;">
-				SKU: <?php echo $cur_entry['entity']->sku; ?><br />
-				Product: <?php echo $cur_entry['entity']->name; ?><br />
+				SKU: <?php echo htmlentities($cur_entry['entity']->sku); ?><br />
+				Product: <?php echo htmlentities($cur_entry['entity']->name); ?><br />
 				Quantity: <?php echo count($cur_entry['serials']); ?>
 				<?php if ($cur_entry['entity']->serialized) { ?>
 				<br />
-				Serials: <?php echo implode(', ', $cur_entry['serials']); ?>
+				Serials: <?php echo htmlentities(implode(', ', $cur_entry['serials'])); ?>
 				<?php } ?>
 			</div>
 			<?php } ?>
@@ -403,9 +403,9 @@ if ($this->entity->final)
 			<span class="pf-label">Missing Inventory</span>
 			<?php foreach ($missing_products as $cur_entry) { ?>
 			<div class="pf-field pf-full-width ui-widget-content ui-corner-all" style="margin-bottom: 5px; padding: .5em;">
-				SKU: <?php echo $cur_entry['entity']->sku; ?><br />
-				Product: <?php echo $cur_entry['entity']->name; ?><br />
-				Quantity: <?php echo $cur_entry['quantity']; ?>
+				SKU: <?php echo htmlentities($cur_entry['entity']->sku); ?><br />
+				Product: <?php echo htmlentities($cur_entry['entity']->name); ?><br />
+				Quantity: <?php echo htmlentities($cur_entry['quantity']); ?>
 			</div>
 			<?php } ?>
 		</div>
@@ -413,7 +413,7 @@ if ($this->entity->final)
 	<?php } ?>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" <?php echo $read_only; ?> />
+		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } if (!$this->entity->final) { ?>
 		<input type="hidden" id="p_muid_save" name="save" value="" />
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" onclick="$('#p_muid_save').val('save');" />

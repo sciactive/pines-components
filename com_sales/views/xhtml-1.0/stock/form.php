@@ -28,8 +28,8 @@ $this->note = 'Provide stock entry details in this form.';
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 		<?php if (isset($this->entity->user)) { ?>
-		<div>User: <span class="date"><?php echo "{$this->entity->user->name} [{$this->entity->user->username}]"; ?></span></div>
-		<div>Group: <span class="date"><?php echo "{$this->entity->group->name} [{$this->entity->group->groupname}]"; ?></span></div>
+		<div>User: <span class="date"><?php echo htmlentities("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
+		<div>Group: <span class="date"><?php echo htmlentities("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
 		<?php } ?>
 		<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
 		<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
@@ -38,33 +38,33 @@ $this->note = 'Provide stock entry details in this form.';
 	<div class="pf-element">
 		<span class="pf-label">Product</span>
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<span class="pf-field"><?php echo $this->entity->product->name; ?></span>
+		<span class="pf-field"><?php echo htmlentities($this->entity->product->name); ?></span>
 		<?php } elseif ( is_array($this->entities) ) {
 			$names = array();
 			foreach ($this->entities as $cur_entity) {
 				$names[] = $cur_entity->product->name;
 			}
 			?>
-		<span class="pf-field"><?php echo implode(', ', $names); ?></span>
+		<span class="pf-field"><?php echo htmlentities(implode(', ', $names)); ?></span>
 		<?php } ?>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Product Sku</span>
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<span class="pf-field"><?php echo $this->entity->product->sku; ?></span>
+		<span class="pf-field"><?php echo htmlentities($this->entity->product->sku); ?></span>
 		<?php } elseif ( is_array($this->entities) ) {
 			$skus = array();
 			foreach ($this->entities as $cur_entity) {
 				$skus[] = $cur_entity->product->sku;
 			}
 			?>
-		<span class="pf-field"><?php echo implode(', ', $skus); ?></span>
+		<span class="pf-field"><?php echo htmlentities(implode(', ', $skus)); ?></span>
 		<?php } ?>
 	</div>
 	<?php if ( isset($this->entity->guid) ) { ?>
 	<div class="pf-element">
 		<span class="pf-label">Last Transaction</span>
-		<span class="pf-field"><?php echo isset($this->entity) ? $this->entity->last_reason() : ''; ?></span>
+		<span class="pf-field"><?php echo isset($this->entity) ? htmlentities($this->entity->last_reason()) : ''; ?></span>
 	</div>
 	<?php } ?>
 	<script type="text/javascript">
@@ -147,7 +147,7 @@ $this->note = 'Provide stock entry details in this form.';
 			<input class="p_muid_change_this" type="hidden" name="serial_change" value="" />
 			<div class="pf-element">
 				<label><span class="pf-label">Serial</span>
-					<input class="pf-field ui-widget-content" type="text" name="serial" size="24" value="<?php echo $this->entity->serial; ?>" /></label>
+					<input class="pf-field ui-widget-content" type="text" name="serial" size="24" value="<?php echo htmlentities($this->entity->serial); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label>
@@ -177,7 +177,7 @@ $this->note = 'Provide stock entry details in this form.';
 						<?php
 						$pines->user_manager->group_sort($this->locations, 'name');
 						foreach ($this->locations as $cur_group) {
-							?><option value="<?php echo $cur_group->guid; ?>"<?php echo $cur_group->is($this->entity->location) ? ' selected="selected"' : ''; ?>><?php echo str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"; ?></option><?php
+							?><option value="<?php echo $cur_group->guid; ?>"<?php echo $cur_group->is($this->entity->location) ? ' selected="selected"' : ''; ?>><?php echo htmlentities(str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"); ?></option><?php
 						} ?>
 					</select>
 				</label>
@@ -221,7 +221,7 @@ $this->note = 'Provide stock entry details in this form.';
 					<select class="pf-field ui-widget-content" name="vendor">
 						<option value="null">-- None --</option>
 						<?php foreach ($this->vendors as $cur_vendor) { ?>
-						<option value="<?php echo $cur_vendor->guid; ?>"<?php echo $this->entity->vendor->guid == $cur_vendor->guid ? ' selected="selected"' : ''; ?>><?php echo $cur_vendor->name; ?></option>
+						<option value="<?php echo $cur_vendor->guid; ?>"<?php echo $this->entity->vendor->guid == $cur_vendor->guid ? ' selected="selected"' : ''; ?>><?php echo htmlentities($cur_vendor->name); ?></option>
 						<?php } ?>
 					</select>
 				</label>
@@ -245,7 +245,7 @@ $this->note = 'Provide stock entry details in this form.';
 			<input class="p_muid_change_this" type="hidden" name="cost_change" value="" />
 			<div class="pf-element">
 				<label><span class="pf-label">Cost</span>
-					<span class="pf-field">$<input class="ui-widget-content" style="text-align: right;" type="text" name="cost" size="10" value="<?php echo $this->entity->cost; ?>" /></span></label>
+					<span class="pf-field">$<input class="ui-widget-content" style="text-align: right;" type="text" name="cost" size="10" value="<?php echo htmlentities($this->entity->cost); ?>" /></span></label>
 			</div>
 			<div class="pf-element">
 				<label>

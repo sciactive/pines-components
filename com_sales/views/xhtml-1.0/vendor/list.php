@@ -25,21 +25,21 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				<?php if (gatekeeper('com_sales/newvendor')) { ?>
-				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'vendor/edit'); ?>'},
+				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'vendor/edit')); ?>'},
 				<?php } if (gatekeeper('com_sales/editvendor')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo pines_url('com_sales', 'vendor/edit', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo addslashes(pines_url('com_sales', 'vendor/edit', array('id' => '__title__'))); ?>'},
 				<?php } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
 				<?php if (gatekeeper('com_sales/deletevendor')) { ?>
-				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_sales', 'vendor/delete', array('id' => '__title__')); ?>', delimiter: ','},
+				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_sales', 'vendor/delete', array('id' => '__title__'))); ?>', delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo pines_url('system', 'csv'); ?>", {
+					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
 						filename: 'vendors',
 						content: rows
 					});
@@ -51,7 +51,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo pines_url('com_pgrid', 'save_state'); ?>", {view: "com_sales/vendor/list", state: cur_state});
+				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_sales/vendor/list", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
@@ -78,16 +78,16 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->vendors as $vendor) { ?>
 		<tr title="<?php echo $vendor->guid; ?>">
-			<td><?php echo $vendor->name; ?></td>
-			<td><?php echo $vendor->email; ?></td>
-			<td><?php echo $vendor->address_1; ?></td>
-			<td><?php echo $vendor->address_2; ?></td>
-			<td><?php echo $vendor->city; ?></td>
-			<td><?php echo $vendor->state; ?></td>
-			<td><?php echo $vendor->zip; ?></td>
+			<td><?php echo htmlentities($vendor->name); ?></td>
+			<td><?php echo htmlentities($vendor->email); ?></td>
+			<td><?php echo htmlentities($vendor->address_1); ?></td>
+			<td><?php echo htmlentities($vendor->address_2); ?></td>
+			<td><?php echo htmlentities($vendor->city); ?></td>
+			<td><?php echo htmlentities($vendor->state); ?></td>
+			<td><?php echo htmlentities($vendor->zip); ?></td>
 			<td><?php echo format_phone($vendor->phone_work); ?> </td>
 			<td><?php echo format_phone($vendor->fax); ?></td>
-			<td><?php echo $vendor->account_number; ?></td>
+			<td><?php echo htmlentities($vendor->account_number); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

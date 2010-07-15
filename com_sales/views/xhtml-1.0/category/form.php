@@ -17,8 +17,8 @@ $this->note = 'Provide category details in this form.';
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 		<?php if (isset($this->entity->user)) { ?>
-		<div>User: <span class="date"><?php echo "{$this->entity->user->name} [{$this->entity->user->username}]"; ?></span></div>
-		<div>Group: <span class="date"><?php echo "{$this->entity->group->name} [{$this->entity->group->groupname}]"; ?></span></div>
+		<div>User: <span class="date"><?php echo htmlentities("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
+		<div>Group: <span class="date"><?php echo htmlentities("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
 		<?php } ?>
 		<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
 		<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
@@ -26,7 +26,7 @@ $this->note = 'Provide category details in this form.';
 	<?php } ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Name</span>
-			<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
+			<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Enabled</span>
@@ -72,7 +72,7 @@ $this->note = 'Provide category details in this form.';
 		<span class="pf-note">These products are assigned to this category.</span>
 		<div class="pf-group">
 			<?php foreach ($this->entity->products as $cur_product) { ?>
-			<div class="pf-field"><a href="<?php echo htmlentities(pines_url('com_sales', 'product/edit', array('id' => $cur_product->guid))); ?>"><?php echo "[{$cur_product->guid}] {$cur_product->name}"; ?></a></div>
+			<div class="pf-field"><a href="<?php echo htmlentities(pines_url('com_sales', 'product/edit', array('id' => $cur_product->guid))); ?>"><?php echo htmlentities("[{$cur_product->guid}] {$cur_product->name}"); ?></a></div>
 			<?php } ?>
 		</div>
 	</div>

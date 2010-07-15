@@ -54,7 +54,7 @@ $this->note = 'Count the cash as you put it into the drawer.';
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-		var cash_symbol = "<?php echo $this->entity->cashcount->currency_symbol; ?>";
+		var cash_symbol = "<?php echo addslashes($this->entity->cashcount->currency_symbol); ?>";
 
 		// Update the cash count as money is counted.
 		$("#p_muid_form .entry").change(function(){
@@ -116,7 +116,7 @@ $this->note = 'Count the cash as you put it into the drawer.';
 		<h1>Reviewer Comments</h1>
 	</div>
 	<div class="pf-element pf-full-width">
-		<div class="pf-field"><?php echo $this->entity->cashcount->review_comments; ?></div>
+		<div class="pf-field"><?php echo htmlentities($this->entity->cashcount->review_comments); ?></div>
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-heading">
@@ -126,8 +126,8 @@ $this->note = 'Count the cash as you put it into the drawer.';
 	<div class="pf-element pf-full-width" style="position: relative;">
 		<?php foreach ($this->entity->cashcount->currency as $key => $cur_denom) { ?>
 		<div class="pf-element">
-			<input class="pf-field ui-widget-content entry" type="text" name="count_<?php echo $key; ?>" title="<?php echo $cur_denom; ?>" value="0" />
-			x <span class="amount"><?php echo $this->entity->cashcount->currency_symbol . $cur_denom; ?></span>
+			<input class="pf-field ui-widget-content entry" type="text" name="count_<?php echo htmlentities($key); ?>" title="<?php echo htmlentities($cur_denom); ?>" value="0" />
+			x <span class="amount"><?php echo htmlentities($this->entity->cashcount->currency_symbol . $cur_denom); ?></span>
 			<button class="pf-field ui-state-default ui-corner-all add_btn" type="button"><span class="amt_btn picon picon-list-add"></span></button>
 			<button class="pf-field ui-state-default ui-corner-all remove_btn" type="button"><span class="amt_btn picon picon-list-remove"></span></button>
 		</div>

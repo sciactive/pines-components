@@ -14,5 +14,5 @@ $this->title = "Welcome to {$pines->config->system_name}";
 $this->note = 'You are now registered and logged in.';
 ?>
 <div>
-	<?php echo $pines->config->com_user->reg_message_welcome; ?>
+	<?php echo htmlentities($pines->config->com_user->reg_message_welcome); ?>
 </div>

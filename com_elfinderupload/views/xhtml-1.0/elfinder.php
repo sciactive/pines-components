@@ -26,7 +26,7 @@ defined('P_RUN') or die('Direct access prohibited');
 					dialog: {"width": 900, "modal": true, "zIndex": 400000, "title": "Choose File", "close": function(){
 						finder_open = false;
 					}},
-					height: <?php echo $pines->config->com_elfinder->default_height; ?>,
+					height: <?php echo (int) $pines->config->com_elfinder->default_height; ?>,
 					closeOnEditorCallback: true,
 					editorCallback: function(url) {
 						pfile.val(url).change();

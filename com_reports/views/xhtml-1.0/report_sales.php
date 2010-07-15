@@ -112,10 +112,10 @@ foreach ($this->transactions as $cur_tx) {
 						echo '{';
 						echo 'id: 0,';
 						echo '_id: 0,';
-						echo 'title: \'$'.$cur_item[3].'\',';
-						echo 'start: '. $cur_item[1] .',';
-						echo 'end: '. $cur_item[2] .',';
-						echo 'className: \''.$class.'\',';
+						echo 'title: \'$'.addslashes($cur_item[3]).'\',';
+						echo 'start: '. addslashes($cur_item[1]) .',';
+						echo 'end: '. addslashes($cur_item[2]) .',';
+						echo 'className: \''.addslashes($class).'\',';
 						echo 'allDay: false,';
 						echo '}';
 						$event_counter++;
@@ -128,9 +128,9 @@ foreach ($this->transactions as $cur_tx) {
 					echo '{';
 					echo 'id: 0,';
 					echo '_id: 0,';
-					echo 'title: \'$'. $cur_total[3] .'\',';
-					echo 'start: '. $cur_total[1] .',';
-					echo 'end: '. $cur_total[2] .',';
+					echo 'title: \'$'. addslashes($cur_total[3]) .'\',';
+					echo 'start: '. addslashes($cur_total[1]) .',';
+					echo 'end: '. addslashes($cur_total[2]) .',';
 					echo 'className: \'mint_total\',';
 					echo 'allDay: true,';
 					echo '}';
@@ -146,16 +146,16 @@ foreach ($this->transactions as $cur_tx) {
 					view_changes++;
 				} else {
 					alert('Loading Relevant Sales');
-					pines.post("<?php echo pines_url('com_reports', 'reportsales'); ?>", {
+					pines.post("<?php echo addslashes(pines_url('com_reports', 'reportsales')); ?>", {
 						start: view.start.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1'),
 						end: view.end.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1'),
-						location: "<?php echo $this->all ? 'all' : $this->location; ?>",
+						location: "<?php echo $this->all ? 'all' : addslashes($this->location); ?>",
 						employee: "<?php echo $this->employee->guid; ?>"
 					});
 				}
 			}
 		});
-		var current_date = $.fullCalendar.parseDate(<?php echo $this->date[0]; ?>);
+		var current_date = $.fullCalendar.parseDate(<?php echo (int) $this->date[0]; ?>);
 		$('#p_muid_calendar').fullCalendar('gotoDate', current_date);
 	});
 	// ]]>

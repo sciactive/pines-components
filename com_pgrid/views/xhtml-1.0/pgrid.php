@@ -14,8 +14,8 @@ $pines->icons->load();
 ?>
 <script type="text/javascript">
 	// <![CDATA[
-	pines.loadcss("<?php echo $pines->config->rela_location; ?>components/com_pgrid/includes/jquery.pgrid.<?php echo $pines->config->com_pgrid->styling; ?>.css");
-	pines.loadcss("<?php echo $pines->config->rela_location; ?>components/com_pgrid/includes/jquery.pgrid.<?php echo $pines->config->com_pgrid->styling; ?>.icons.css");
-	pines.loadjs("<?php echo $pines->config->rela_location; ?>components/com_pgrid/includes/<?php echo $pines->config->debug_mode ? 'jquery.pgrid.js' : 'jquery.pgrid.min.js'; ?>");
+	pines.loadcss("<?php echo htmlentities($pines->config->rela_location); ?>components/com_pgrid/includes/jquery.pgrid.<?php echo htmlentities($pines->config->com_pgrid->styling); ?>.css");
+	pines.loadcss("<?php echo htmlentities($pines->config->rela_location); ?>components/com_pgrid/includes/jquery.pgrid.<?php echo htmlentities($pines->config->com_pgrid->styling); ?>.icons.css");
+	pines.loadjs("<?php echo htmlentities($pines->config->rela_location); ?>components/com_pgrid/includes/<?php echo $pines->config->debug_mode ? 'jquery.pgrid.js' : 'jquery.pgrid.min.js'; ?>");
 	// ]]>
 </script>

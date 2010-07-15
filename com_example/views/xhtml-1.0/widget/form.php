@@ -101,8 +101,8 @@ $pines->com_pgrid->load();
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
 				<?php if (isset($this->entity->user)) { ?>
-				<div>User: <span class="date"><?php echo "{$this->entity->user->name} [{$this->entity->user->username}]"; ?></span></div>
-				<div>Group: <span class="date"><?php echo "{$this->entity->group->name} [{$this->entity->group->groupname}]"; ?></span></div>
+				<div>User: <span class="date"><?php echo htmlentities("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
+				<div>Group: <span class="date"><?php echo htmlentities("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
 				<?php } ?>
 				<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
 				<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
@@ -110,7 +110,7 @@ $pines->com_pgrid->load();
 			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Name</span>
-					<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
+					<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>
@@ -138,8 +138,8 @@ $pines->com_pgrid->load();
 					<tbody>
 						<?php foreach ($this->entity->attributes as $cur_attribute) { ?>
 						<tr>
-							<td><?php echo $cur_attribute['name']; ?></td>
-							<td><?php echo $cur_attribute['value']; ?></td>
+							<td><?php echo htmlentities($cur_attribute['name']); ?></td>
+							<td><?php echo htmlentities($cur_attribute['value']); ?></td>
 						</tr>
 						<?php } ?>
 					</tbody>

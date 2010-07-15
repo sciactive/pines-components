@@ -17,8 +17,8 @@ $this->note = 'Provide payment type details in this form.';
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 		<?php if (isset($this->entity->user)) { ?>
-		<div>User: <span class="date"><?php echo "{$this->entity->user->name} [{$this->entity->user->username}]"; ?></span></div>
-		<div>Group: <span class="date"><?php echo "{$this->entity->group->name} [{$this->entity->group->groupname}]"; ?></span></div>
+		<div>User: <span class="date"><?php echo htmlentities("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
+		<div>Group: <span class="date"><?php echo htmlentities("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
 		<?php } ?>
 		<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
 		<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
@@ -26,7 +26,7 @@ $this->note = 'Provide payment type details in this form.';
 	<?php } ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Name</span>
-			<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
+			<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Enabled</span>
@@ -45,19 +45,19 @@ $this->note = 'Provide payment type details in this form.';
 	<div class="pf-element">
 		<label><span class="pf-label">Minimum Charge</span>
 			<span class="pf-note">The minimum charge in dollars that this payment type will accept.</span>
-			<input class="pf-field ui-widget-content" type="text" name="minimum" size="24" value="<?php echo $this->entity->minimum; ?>" /></label>
+			<input class="pf-field ui-widget-content" type="text" name="minimum" size="24" value="<?php echo htmlentities($this->entity->minimum); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Maximum Charge</span>
 			<span class="pf-note">The maximum charge in dollars that this payment type will accept.</span>
-			<input class="pf-field ui-widget-content" type="text" name="maximum" size="24" value="<?php echo $this->entity->maximum; ?>" /></label>
+			<input class="pf-field ui-widget-content" type="text" name="maximum" size="24" value="<?php echo htmlentities($this->entity->maximum); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Processing Type</span>
 			<span class="pf-note">This will determine how the payment is approved and processed.</span>
 			<select class="pf-field ui-widget-content" name="processing_type" size="6">
 				<?php foreach ($this->processing_types as $cur_type) { ?>
-				<option value="<?php echo $cur_type['name']; ?>" title="<?php echo $cur_type['description']; ?>"<?php echo $this->entity->processing_type == $cur_type['name'] ? ' selected="selected"' : ''; ?>><?php echo $cur_type['cname']; ?></option>
+				<option value="<?php echo htmlentities($cur_type['name']); ?>" title="<?php echo htmlentities($cur_type['description']); ?>"<?php echo $this->entity->processing_type == $cur_type['name'] ? ' selected="selected"' : ''; ?>><?php echo htmlentities($cur_type['cname']); ?></option>
 				<?php } ?>
 			</select></label>
 	</div>

@@ -33,21 +33,21 @@ foreach($this->groups as $cur_group) {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				<?php if (gatekeeper('com_sales/newgroup')) { ?>
-				{type: 'button', text: 'New', extra_class: 'picon picon-user-group-new', selection_optional: true, url: '<?php echo pines_url('com_user', 'editgroup'); ?>'},
+				{type: 'button', text: 'New', extra_class: 'picon picon-user-group-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_user', 'editgroup')); ?>'},
 				<?php } if (gatekeeper('com_sales/editgroup')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'picon picon-user-group-properties', double_click: true, url: '<?php echo pines_url('com_user', 'editgroup', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'picon picon-user-group-properties', double_click: true, url: '<?php echo addslashes(pines_url('com_user', 'editgroup', array('id' => '__title__'))); ?>'},
 				<?php } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
 				<?php if (gatekeeper('com_sales/deletegroup')) { ?>
-				{type: 'button', text: 'Delete', extra_class: 'picon picon-user-group-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_user', 'deletegroup', array('id' => '__title__')); ?>', delimiter: ','},
+				{type: 'button', text: 'Delete', extra_class: 'picon picon-user-group-delete', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_user', 'deletegroup', array('id' => '__title__'))); ?>', delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo pines_url('system', 'csv'); ?>", {
+					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
 						filename: 'groups',
 						content: rows
 					});
@@ -59,7 +59,7 @@ foreach($this->groups as $cur_group) {
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo pines_url('com_pgrid', 'save_state'); ?>", {view: "com_user/list_groups", state: cur_state});
+				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_user/list_groups", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
@@ -88,10 +88,10 @@ foreach($this->groups as $cur_group) {
 			echo "child {$group->parent->guid}";
 		?>">
 			<td><?php echo $group->guid; ?></td>
-			<td><?php echo $group->groupname; ?></td>
-			<td><?php echo $group->name; ?></td>
-			<td><?php echo $group->email; ?></td>
-			<td><?php echo $group->timezone; ?></td>
+			<td><?php echo htmlentities($group->groupname); ?></td>
+			<td><?php echo htmlentities($group->name); ?></td>
+			<td><?php echo htmlentities($group->email); ?></td>
+			<td><?php echo htmlentities($group->timezone); ?></td>
 			<td><?php
 			$user_array = $group->get_users();
 			if (count($user_array) < 15) {
@@ -99,7 +99,7 @@ foreach($this->groups as $cur_group) {
 				foreach ($user_array as $cur_user) {
 					$user_list .= (empty($user_list) ? '' : ', ').$cur_user->username;
 				}
-				echo $user_list;
+				echo htmlentities($user_list);
 			} else {
 				echo count($user_array).' users';
 			}

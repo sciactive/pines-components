@@ -25,17 +25,17 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
-				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo pines_url('com_newsletter', 'new'); ?>'},
-				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo pines_url('com_newsletter', 'edit', array('mail_id' => '__title__')); ?>'},
-				{type: 'button', text: 'Send', extra_class: 'picon picon-mail-message', url: '<?php echo pines_url('com_newsletter', 'sendprep', array('mail_id' => '__title__')); ?>'},
+				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_newsletter', 'new')); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo addslashes(pines_url('com_newsletter', 'edit', array('mail_id' => '__title__'))); ?>'},
+				{type: 'button', text: 'Send', extra_class: 'picon picon-mail-message', url: '<?php echo addslashes(pines_url('com_newsletter', 'sendprep', array('mail_id' => '__title__'))); ?>'},
 				{type: 'separator'},
-				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_newsletter', 'delete', array('mail_id' => '__title__')); ?>', delimiter: ','},
+				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_newsletter', 'delete', array('mail_id' => '__title__'))); ?>', delimiter: ','},
 				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo pines_url('system', 'csv'); ?>", {
+					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
 						filename: 'mails',
 						content: rows
 					});
@@ -47,7 +47,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo pines_url('com_pgrid', 'save_state'); ?>", {view: "com_newsletter/list_mails", state: cur_state});
+				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_newsletter/list_mails", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
@@ -67,9 +67,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->mails as $mail) { ?>
 		<tr title="<?php echo $mail->guid; ?>">
-			<td><?php echo $mail->name; ?></td>
-			<td><?php echo $mail->subject; ?></td>
-			<td><?php echo (is_array($mail->attachments) ? implode(', ', $mail->attachments) : ''); ?></td>
+			<td><?php echo htmlentities($mail->name); ?></td>
+			<td><?php echo htmlentities($mail->subject); ?></td>
+			<td><?php echo (is_array($mail->attachments) ? htmlentities(implode(', ', $mail->attachments)) : ''); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

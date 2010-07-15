@@ -25,21 +25,21 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				<?php if (gatekeeper('com_sales/newuser')) { ?>
-				{type: 'button', text: 'New', extra_class: 'picon picon-list-add-user', selection_optional: true, url: '<?php echo pines_url('com_user', 'edituser'); ?>'},
+				{type: 'button', text: 'New', extra_class: 'picon picon-list-add-user', selection_optional: true, url: '<?php echo addslashes(pines_url('com_user', 'edituser')); ?>'},
 				<?php } if (gatekeeper('com_sales/edituser')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'picon picon-user-properties', double_click: true, url: '<?php echo pines_url('com_user', 'edituser', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'picon picon-user-properties', double_click: true, url: '<?php echo addslashes(pines_url('com_user', 'edituser', array('id' => '__title__'))); ?>'},
 				<?php } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
 				<?php if (gatekeeper('com_sales/deleteuser')) { ?>
-				{type: 'button', text: 'Delete', extra_class: 'picon picon-list-remove-user', confirm: true, multi_select: true, url: '<?php echo pines_url('com_user', 'deleteuser', array('id' => '__title__')); ?>', delimiter: ','},
+				{type: 'button', text: 'Delete', extra_class: 'picon picon-list-remove-user', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_user', 'deleteuser', array('id' => '__title__'))); ?>', delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo pines_url('system', 'csv'); ?>", {
+					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
 						filename: 'users',
 						content: rows
 					});
@@ -51,7 +51,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo pines_url('com_pgrid', 'save_state'); ?>", {view: "com_user/list_users", state: cur_state});
+				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_user/list_users", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
@@ -77,18 +77,18 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<?php foreach($this->users as $user) { ?>
 		<tr title="<?php echo $user->guid; ?>">
 			<td><?php echo $user->guid; ?></td>
-			<td><?php echo $user->username; ?></td>
-			<td><?php echo $user->name; ?></td>
-			<td><?php echo $user->email; ?></td>
-			<td><?php echo $user->get_timezone().(empty($user->timezone) ? ' (I)' : ' (A)'); ?></td>
-			<td><?php echo $user->group->groupname; ?></td>
+			<td><?php echo htmlentities($user->username); ?></td>
+			<td><?php echo htmlentities($user->name); ?></td>
+			<td><?php echo htmlentities($user->email); ?></td>
+			<td><?php echo htmlentities($user->get_timezone()).(empty($user->timezone) ? ' (I)' : ' (A)'); ?></td>
+			<td><?php echo htmlentities($user->group->groupname); ?></td>
 			<td><?php
 			if (count($user->groups) < 15) {
 				$group_list = '';
 				foreach ($user->groups as $cur_group) {
 					$group_list .= (empty($group_list) ? '' : ', ').$cur_group->groupname;
 				}
-				echo $group_list;
+				echo htmlentities($group_list);
 			} else {
 				echo count($user->groups).' groups';
 			}

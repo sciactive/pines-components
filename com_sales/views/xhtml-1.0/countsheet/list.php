@@ -19,7 +19,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-		var submit_url = "<?php echo pines_url('com_sales', 'countsheet/list'); ?>";
+		var submit_url = "<?php echo addslashes(pines_url('com_sales', 'countsheet/list')); ?>";
 		var submit_search = function(){
 			// Submit the form with all of the fields.
 			pines.post(submit_url, {
@@ -57,7 +57,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			"json_data" : {
 				"ajax" : {
 					"dataType" : "json",
-					"url" : "<?php echo pines_url('com_jstree', 'groupjson'); ?>"
+					"url" : "<?php echo addslashes(pines_url('com_jstree', 'groupjson')); ?>"
 				}
 			},
 			"ui" : {
@@ -82,7 +82,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					if (assign_to == "") {
 						alert("Please select a group");
 					} else {
-						pines.post("<?php echo pines_url('com_sales', 'countsheet/assign'); ?>", {
+						pines.post("<?php echo addslashes(pines_url('com_sales', 'countsheet/assign')); ?>", {
 							location: assign_to
 						});
 						assign_dialog.dialog("close");
@@ -100,11 +100,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', text: 'Timespan', extra_class: 'picon picon-view-time-schedule', selection_optional: true, click: function(){countsheet_grid.date_form();}},
 				{type: 'separator'},
 				<?php if (gatekeeper('com_sales/newcountsheet')) { ?>
-				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo pines_url('com_sales', 'countsheet/edit'); ?>'},
+				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'countsheet/edit')); ?>'},
 				<?php } if (gatekeeper('com_sales/editcountsheet')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo pines_url('com_sales', 'countsheet/edit', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo addslashes(pines_url('com_sales', 'countsheet/edit', array('id' => '__title__'))); ?>'},
 				<?php } if (gatekeeper('com_sales/approvecountsheet')) { ?>
-				{type: 'button', text: 'Review', extra_class: 'picon picon-checkbox', url: '<?php echo pines_url('com_sales', 'countsheet/approve', array('id' => '__title__')); ?>'},
+				{type: 'button', text: 'Review', extra_class: 'picon picon-checkbox', url: '<?php echo addslashes(pines_url('com_sales', 'countsheet/approve', array('id' => '__title__'))); ?>'},
 				<?php } if (gatekeeper('com_sales/assigncountsheet')) { ?>
 				{type: 'button', text: 'Assign', extra_class: 'picon picon-view-task-add', selection_optional: true, click: function(e, rows){
 					assign_dialog.dialog("open");
@@ -112,14 +112,14 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<?php } ?>
 				{type: 'separator'},
 				<?php if (gatekeeper('com_sales/deletecountsheet')) { ?>
-				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo pines_url('com_sales', 'countsheet/delete', array('id' => '__title__')); ?>', delimiter: ','},
+				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_sales', 'countsheet/delete', array('id' => '__title__'))); ?>', delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo pines_url('system', 'csv'); ?>", {
+					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
 						filename: 'countsheets',
 						content: rows
 					});
@@ -131,7 +131,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo pines_url('com_pgrid', 'save_state'); ?>", {view: "com_sales/countsheet/list", state: cur_state});
+				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_sales/countsheet/list", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
@@ -139,7 +139,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 
 		countsheet_grid.date_form = function(){
 			$.ajax({
-				url: "<?php echo pines_url('com_sales', 'forms/dateselect'); ?>",
+				url: "<?php echo addslashes(pines_url('com_sales', 'forms/dateselect')); ?>",
 				type: "POST",
 				dataType: "html",
 				data: {"all_time": all_time, "start_date": start_date, "end_date": end_date},
@@ -180,7 +180,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		};
 		countsheet_grid.location_form = function(){
 			$.ajax({
-				url: "<?php echo pines_url('com_sales', 'forms/locationselect'); ?>",
+				url: "<?php echo addslashes(pines_url('com_sales', 'forms/locationselect')); ?>",
 				type: "POST",
 				dataType: "html",
 				data: {"location": location},
@@ -235,7 +235,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<?php foreach($this->countsheets as $countsheet) { ?>
 		<tr title="<?php echo $countsheet->guid; ?>">
 			<td><?php echo $countsheet->guid; ?></td>
-			<td><?php echo $countsheet->user->name; ?></td>
+			<td><?php echo htmlentities($countsheet->user->name); ?></td>
 			<td><?php echo format_date($countsheet->p_cdate); ?></td>
 			<td><?php echo format_date($countsheet->p_mdate); ?></td>
 			<td><?php echo $countsheet->final ? 'Yes' : 'No'; ?></td>

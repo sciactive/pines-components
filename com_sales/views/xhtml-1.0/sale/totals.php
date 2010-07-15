@@ -35,7 +35,7 @@ $this->title = 'Sales Total Report';
 				<?php
 				$pines->user_manager->group_sort($this->locations, 'name');
 				foreach ($this->locations as $cur_group) {
-					?><option value="<?php echo $cur_group->guid; ?>"><?php echo str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"; ?></option><?php
+					?><option value="<?php echo $cur_group->guid; ?>"><?php echo htmlentities(str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"); ?></option><?php
 				} ?>
 				<?php } ?>
 			</select></label>
@@ -55,7 +55,7 @@ $this->title = 'Sales Total Report';
 			// ]]>
 		</script>
 		<label><span class="pf-label">Start Date</span>
-			<input class="pf-field ui-widget-content" type="text" id="p_muid_date_start" name="date_start" size="24" value="<?php echo date('Y-m-d'); ?>" /></label>
+			<input class="pf-field ui-widget-content" type="text" id="p_muid_date_start" name="date_start" size="24" value="<?php echo format_date(time(), 'date_sort'); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<script type="text/javascript">
@@ -72,7 +72,7 @@ $this->title = 'Sales Total Report';
 			// ]]>
 		</script>
 		<label><span class="pf-label">End Date</span>
-			<input class="pf-field ui-widget-content" type="text" id="p_muid_date_end" name="date_end" size="24" value="<?php echo date('Y-m-d'); ?>" /></label>
+			<input class="pf-field ui-widget-content" type="text" id="p_muid_date_end" name="date_end" size="24" value="<?php echo format_date(time(), 'date_sort'); ?>" /></label>
 	</div>
 	<div class="pf-element pf-buttons">
 		<script type="text/javascript">
@@ -86,7 +86,7 @@ $this->title = 'Sales Total Report';
 				$("#p_muid_retrieve_totals").click(function(){
 					var loader;
 					$.ajax({
-						url: "<?php echo pines_url('com_sales', 'sale/totalsjson'); ?>",
+						url: "<?php echo addslashes(pines_url('com_sales', 'sale/totalsjson')); ?>",
 						type: "POST",
 						dataType: "json",
 						data: {"location": location.val(), "date_start": date_start.val(), "date_end": date_end.val()},

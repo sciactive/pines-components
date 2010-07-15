@@ -17,8 +17,8 @@ if ($this->entity->per_user)
 <form class="pf-form" action="" method="post">
 	<?php foreach ($this->entity->get_full_config_array() as $cur_var) { ?>
 	<div class="pf-element pf-full-width">
-		<span class="pf-label"><?php echo $cur_var['cname']; ?></span>
-		<span class="pf-note"><?php echo $cur_var['description']; ?></span>
+		<span class="pf-label"><?php echo htmlentities($cur_var['cname']); ?></span>
+		<span class="pf-note"><?php echo htmlentities($cur_var['description']); ?></span>
 		<div class="pf-group">
 			<div class="pf-field">
 				<?php if (is_array($cur_var['value'])) {

@@ -30,7 +30,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo pines_url('com_pgrid', 'save_state'); ?>", {view: "com_hrm/employee/timeclock/view", state: cur_state});
+				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_hrm/employee/timeclock/view", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
@@ -49,10 +49,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->entity->timeclock as $key => $entry) { ?>
-		<tr title="<?php echo $key; ?>" class="<?php echo ($entry['status'] == 'in') ? 'ui-state-active' : 'ui-state-highlight'; ?>">
+		<tr title="<?php echo htmlentities($key); ?>" class="<?php echo ($entry['status'] == 'in') ? 'ui-state-active' : 'ui-state-highlight'; ?>">
 			<td><?php echo gmdate('c', $entry['time']); ?></td>
 			<td><?php echo format_date($entry['time'], 'full_long', '', $this->entity->get_timezone(true)); ?></td>
-			<td><?php echo $entry['status']; ?></td>
+			<td><?php echo htmlentities($entry['status']); ?></td>
 			<td><?php if (isset($last_time)) {
 				$seconds = $entry['time'] - $last_time;
 				$days = floor($seconds / 86400);
@@ -74,7 +74,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if ($seconds > 0) {
 					$string .= "{$seconds}s";
 				}
-				echo trim($string);
+				echo htmlentities(trim($string));
 			} ?></td>
 		</tr>
 	<?php $last_time = $entry['time']; } ?>

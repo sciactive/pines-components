@@ -43,7 +43,7 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 		var format_time = function(elem, timestamp) {
 			elem.html("Formatting...");
 			$.ajax({
-				url: "<?php echo pines_url('system', 'date_format'); ?>",
+				url: "<?php echo addslashes(pines_url('system', 'date_format')); ?>",
 				type: "POST",
 				dataType: "text",
 				data: {"timestamp": timestamp, "timezone": timezone, "type": "full_med"},
@@ -111,7 +111,7 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 			buttons: {
 				"Done": function(){
 					$.ajax({
-						url: "<?php echo pines_url('system', 'date_get_timestamp'); ?>",
+						url: "<?php echo addslashes(pines_url('system', 'date_get_timestamp')); ?>",
 						type: "POST",
 						dataType: "text",
 						data: {"date": $("#p_muid_cur_time").val(), "timezone": timezone},
@@ -138,7 +138,7 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 			buttons: {
 				"Done": function(){
 					$.ajax({
-						url: "<?php echo pines_url('system', 'date_get_timestamp'); ?>",
+						url: "<?php echo addslashes(pines_url('system', 'date_get_timestamp')); ?>",
 						type: "POST",
 						dataType: "text",
 						data: {"date": $("#p_muid_new_time").val(), "timezone": timezone},
@@ -168,8 +168,8 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 		<div class="ui-helper-clearfix ui-widget-content ui-corner-all">
 			<button class="ui-state-default ui-corner-all">Delete</button>
 			<span class="pf-label time"><?php echo format_date($entry['time'], 'full_med', '', $this->entity->get_timezone(true)); ?></span>
-			<span class="pf-note">Timestamp: <span class="timestamp"><?php echo $entry['time']; ?></span></span>
-			<span class="pf-field status"><?php echo $entry['status']; ?></span>
+			<span class="pf-note">Timestamp: <span class="timestamp"><?php echo htmlentities($entry['time']); ?></span></span>
+			<span class="pf-field status"><?php echo htmlentities($entry['status']); ?></span>
 		</div>
 	</div>
 	<?php } ?>

@@ -96,7 +96,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 		previewimg.attr("src", "about:blank");
 		if (null !== dindex) {
-			previewimg.attr("src", "<?php echo pines_url('com_pdf', 'image', array('file' => '#file#', 'page' => '#page#')) ; ?>".replace("#file#", file).replace("#page#", displays[dindex].page)).load(function(){
+			previewimg.attr("src", "<?php echo addslashes(pines_url('com_pdf', 'image', array('file' => '#file#', 'page' => '#page#'))); ?>".replace("#file#", file).replace("#page#", displays[dindex].page)).load(function(){
 				elem.css("left", (displays[dindex].left * parent.width())+"px");
 				elem.css("top", (displays[dindex].top * parent.height())+"px");
 
@@ -289,7 +289,7 @@ defined('P_RUN') or die('Direct access prohibited');
 					}
 					foreach ($fonts as $cur_font) {
 					?>
-						<option value="<?php echo $cur_font; ?>"><?php echo $cur_font; ?></option>
+						<option value="<?php echo htmlentities($cur_font); ?>"><?php echo htmlentities($cur_font); ?></option>
 					<?php } ?>
 					</select>
 					<input type="text" id="p_muid_fontfamily" name="fontfamily" value="Times" onkeyup="set_values();" /></label>

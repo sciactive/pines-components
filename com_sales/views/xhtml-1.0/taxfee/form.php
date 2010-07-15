@@ -17,8 +17,8 @@ $this->note = 'Provide tax/fee details in this form.';
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 		<?php if (isset($this->entity->user)) { ?>
-		<div>User: <span class="date"><?php echo "{$this->entity->user->name} [{$this->entity->user->username}]"; ?></span></div>
-		<div>Group: <span class="date"><?php echo "{$this->entity->group->name} [{$this->entity->group->groupname}]"; ?></span></div>
+		<div>User: <span class="date"><?php echo htmlentities("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
+		<div>Group: <span class="date"><?php echo htmlentities("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
 		<?php } ?>
 		<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
 		<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
@@ -27,7 +27,7 @@ $this->note = 'Provide tax/fee details in this form.';
 	<div class="pf-element">
 		<label>
 			<span class="pf-label">Name</span>
-			<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" />
+			<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" />
 		</label>
 	</div>
 	<div class="pf-element">
@@ -50,7 +50,7 @@ $this->note = 'Provide tax/fee details in this form.';
 		<label>
 			<span class="pf-label">Rate</span>
 			<span class="pf-note">Enter a percentage (5 for 5%) or a flat rate in dollars (5 for $5).</span>
-			<input class="pf-field ui-widget-content" type="text" name="rate" size="24" value="<?php echo $this->entity->rate; ?>" />
+			<input class="pf-field ui-widget-content" type="text" name="rate" size="24" value="<?php echo htmlentities($this->entity->rate); ?>" />
 		</label>
 	</div>
 	<div class="pf-element">
@@ -62,7 +62,7 @@ $this->note = 'Provide tax/fee details in this form.';
 				<?php
 				$pines->user_manager->group_sort($this->locations, 'name');
 				foreach ($this->locations as $cur_group) {
-					?><option value="<?php echo $cur_group->guid; ?>"<?php echo $cur_group->in_array($this->entity->locations) ? ' selected="selected"' : ''; ?>><?php echo str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"; ?></option><?php
+					?><option value="<?php echo $cur_group->guid; ?>"<?php echo $cur_group->in_array($this->entity->locations) ? ' selected="selected"' : ''; ?>><?php echo htmlentities(str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"); ?></option><?php
 				} ?>
 			</select>
 		</label>

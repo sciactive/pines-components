@@ -20,10 +20,10 @@ $pines->com_jstree->load();
 	// Change the branch / division of the company.
 	pines.com_hrm_select_branch = function(){
 		$.ajax({
-			url: "<?php echo pines_url('com_hrm', 'locationselect'); ?>",
+			url: "<?php echo addslashes(pines_url('com_hrm', 'locationselect')); ?>",
 			type: "POST",
 			dataType: "html",
-			data: {"location": "<?php echo $this->location; ?>"},
+			data: {"location": "<?php echo addslashes($this->location); ?>"},
 			error: function(XMLHttpRequest, textStatus){
 				pines.error("An error occured while trying to retreive the company schedule form:\n"+XMLHttpRequest.status+": "+textStatus);
 			},
@@ -45,7 +45,7 @@ $pines->com_jstree->load();
 						"Update Schedule": function(){
 							form.dialog('close');
 							var schedule_location = form.find(":input[name=location]").val();
-							pines.post("<?php echo pines_url('com_hrm', 'editcalendar'); ?>", { "location": schedule_location });
+							pines.post("<?php echo addslashes(pines_url('com_hrm', 'editcalendar')); ?>", { "location": schedule_location });
 						}
 					}
 				});
@@ -55,10 +55,10 @@ $pines->com_jstree->load();
 	// Create a new event.
 	pines.com_hrm_new_event = function(){
 		$.ajax({
-			url: "<?php echo pines_url('com_hrm', 'editevent'); ?>",
+			url: "<?php echo addslashes(pines_url('com_hrm', 'editevent')); ?>",
 			type: "POST",
 			dataType: "html",
-			data: {"location": "<?php echo $this->location; ?>"},
+			data: {"location": "<?php echo addslashes($this->location); ?>"},
 			error: function(XMLHttpRequest, textStatus){
 				pines.error("An error occured while trying to retreive the new event form:\n"+XMLHttpRequest.status+": "+textStatus);
 			},
@@ -79,7 +79,7 @@ $pines->com_jstree->load();
 					buttons: {
 						"Add Event": function(){
 							form.dialog('close');
-							pines.post("<?php echo pines_url('com_hrm', 'saveevent'); ?>", {
+							pines.post("<?php echo addslashes(pines_url('com_hrm', 'saveevent')); ?>", {
 								employee: form.find(":input[name=employee]").val(),
 								event_label: form.find(":input[name=event_label]").val(),
 								all_day: !!form.find(":input[name=all_day]").attr('checked'),
@@ -98,7 +98,7 @@ $pines->com_jstree->load();
 	// Edit an existing event.
 	pines.com_hrm_edit_event = function(){
 		$.ajax({
-			url: "<?php echo pines_url('com_hrm', 'editevent'); ?>",
+			url: "<?php echo addslashes(pines_url('com_hrm', 'editevent')); ?>",
 			type: "POST",
 			dataType: "html",
 			data: {id: "<?php echo $this->entity->guid; ?>"},
@@ -108,7 +108,7 @@ $pines->com_jstree->load();
 			success: function(data){
 				if (data == "")
 					return;
-				var form = $("<div title=\"Editing "+"<?php echo $this->entity->label; ?>"+"\" />");
+				var form = $("<div title=\"Editing "+"<?php echo htmlentities($this->entity->label); ?>"+"\" />");
 				form.dialog({
 					bgiframe: true,
 					autoOpen: true,
@@ -122,7 +122,7 @@ $pines->com_jstree->load();
 					buttons: {
 						"Save Event": function(){
 							form.dialog('close');
-							pines.post("<?php echo pines_url('com_hrm', 'saveevent'); ?>",
+							pines.post("<?php echo addslashes(pines_url('com_hrm', 'saveevent')); ?>",
 							{
 								id: form.find(":input[name=id]").val(),
 								employee: form.find(":input[name=employee]").val(),
@@ -143,7 +143,7 @@ $pines->com_jstree->load();
 	// Show and approve the requested time off.
 	pines.com_hrm_time_off = function(){
 		$.ajax({
-			url: "<?php echo pines_url('com_hrm', 'timeoff/review'); ?>",
+			url: "<?php echo addslashes(pines_url('com_hrm', 'timeoff/review')); ?>",
 			type: "POST",
 			dataType: "html",
 			error: function(XMLHttpRequest, textStatus){
@@ -175,7 +175,7 @@ $pines->com_jstree->load();
 	// Request time off.
 	pines.com_hrm_time_off_form = function(rto_id){
 		$.ajax({
-			url: "<?php echo pines_url('com_hrm', 'timeoff/request'); ?>",
+			url: "<?php echo addslashes(pines_url('com_hrm', 'timeoff/request')); ?>",
 			type: "POST",
 			dataType: "html",
 			data: {id: rto_id},
@@ -185,7 +185,7 @@ $pines->com_jstree->load();
 			success: function(data){
 				if (data == "")
 					return;
-				var form = $("<div title=\"Time Off Request for "+"<?php echo $_SESSION['user']->name; ?>"+"\" />");
+				var form = $("<div title=\"Time Off Request for "+"<?php echo htmlentities($_SESSION['user']->name); ?>"+"\" />");
 				form.dialog({
 					bgiframe: true,
 					autoOpen: true,
@@ -199,7 +199,7 @@ $pines->com_jstree->load();
 					buttons: {
 						"Submit Request": function(){
 							form.dialog('close');
-							pines.post("<?php echo pines_url('com_hrm', 'timeoff/save'); ?>",
+							pines.post("<?php echo addslashes(pines_url('com_hrm', 'timeoff/save')); ?>",
 							{
 								id: form.find(":input[name=id]").val(),
 								employee: form.find(":input[name=employee]").val(),

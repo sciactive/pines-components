@@ -31,22 +31,22 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				<?php if (isset($this->employees)) { ?>
-				{type: 'button', text: 'View', extra_class: 'picon picon-user-identity', double_click: true, url: '<?php echo pines_url('com_reports', 'reportattendance', array('employee' => '__title__', 'start' => format_date($this->date[0], 'date_sort'), 'end' => format_date($this->date[1], 'date_sort'), 'location' => $this->location->guid), false); ?>'},
+				{type: 'button', text: 'View', extra_class: 'picon picon-user-identity', double_click: true, url: '<?php echo addslashes(pines_url('com_reports', 'reportattendance', array('employee' => '__title__', 'start' => format_date($this->date[0], 'date_sort'), 'end' => format_date($this->date[1], 'date_sort'), 'location' => $this->location->guid), false)); ?>'},
 				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo pines_url('system', 'csv'); ?>", {
+					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
 						filename: 'time_attendance',
 						content: rows
 					});
 				}}
 				<?php } else { ?>
 				{type: 'button', text: '&laquo; All Employees', extra_class: 'picon picon-system-users', selection_optional: true, click: function(e, rows){
-					pines.post("<?php echo pines_url('com_reports', 'reportattendance'); ?>", {
-						start: "<?php echo format_date($this->date[0], 'date_sort'); ?>",
-						end: "<?php echo format_date($this->date[1], 'date_sort'); ?>",
-						location: "<?php echo $this->location->guid; ?>"
+					pines.post("<?php echo addslashes(pines_url('com_reports', 'reportattendance')); ?>", {
+						start: "<?php echo addslashes(format_date($this->date[0], 'date_sort')); ?>",
+						end: "<?php echo addslashes(format_date($this->date[1], 'date_sort')); ?>",
+						location: "<?php echo addslashes($this->location->guid); ?>"
 					});
 				}}
 				<?php } ?>
@@ -56,7 +56,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo pines_url('com_pgrid', 'save_state'); ?>", {view: "com_reports/report_attendance", state: cur_state});
+				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_reports/report_attendance", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
@@ -107,10 +107,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$variance = round(($totals[$total_count]['clocked'] - $totals[$total_count]['scheduled']) / 3600, 2);
 			?>
 		<tr title="<?php echo $cur_employee->guid; ?>">
-			<td><?php echo $cur_employee->name; ?></td>
-			<td><?php echo $scheduled ?> hours</td>
-			<td><?php echo $clocked ?> hours</td>
-			<td><span<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo $variance ?> hours</span></td>
+			<td><?php echo htmlentities($cur_employee->name); ?></td>
+			<td><?php echo htmlentities($scheduled); ?> hours</td>
+			<td><?php echo htmlentities($clocked); ?> hours</td>
+			<td><span<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo htmlentities($variance); ?> hours</span></td>
 		</tr>
 			<?php
 			$total_group['scheduled'] += $totals[$total_count]['scheduled'];
@@ -123,9 +123,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		?>
 		<tr class="ui-state-highlight total">
 			<td>Total</td>
-			<td><?php echo $scheduled; ?> hours</td>
-			<td><?php echo $clocked; ?> hours</td>
-			<td><span<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo $variance ?> hours</span></td>
+			<td><?php echo htmlentities($scheduled); ?> hours</td>
+			<td><?php echo htmlentities($clocked); ?> hours</td>
+			<td><span<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo htmlentities($variance); ?> hours</span></td>
 		</tr>
 	</tbody>
 </table>
@@ -196,8 +196,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			}
 		?>
 			<tr class="total">
-				<td><?php echo $cur_date['date']; ?></td>
-				<td><?php echo $this->employee->group->name; ?></td>
+				<td><?php echo htmlentities($cur_date['date']); ?></td>
+				<td><?php echo htmlentities($this->employee->group->name); ?></td>
 				<td>Scheduled</td>
 				<td><?php if (isset($cur_date['sched_start'])) echo format_date($cur_date['sched_start'], 'time_short'); ?></td>
 				<td><?php if (isset($cur_date['sched_end'])) echo format_date($cur_date['sched_end'], 'time_short'); ?></td>
@@ -214,7 +214,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					<?php
 						if (isset($cur_clock['out'])) {
 							echo format_date($cur_clock['out'], 'time_short');
-							echo (isset($cur_clock['over']) ? ' ('.$cur_clock['over'].')' : '');
+							echo (isset($cur_clock['over']) ? htmlentities(' ('.$cur_clock['over'].')') : '');
 						}
 					?>
 					</td>
@@ -232,8 +232,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<td>Total</td>
 				<td></td>
 				<td></td>
-				<td><?php echo ($total_hours > 0) ? $total_hours.'hours ' : ''; echo ($total_mins > 0) ? $total_mins.'min' : ''; ?></td>
-				<td><span<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo $variance; ?> hours</span></td>
+				<td><?php echo ($total_hours > 0) ? htmlentities($total_hours).'hours ' : ''; echo ($total_mins > 0) ? htmlentities($total_mins).'min' : ''; ?></td>
+				<td><span<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo htmlentities($variance); ?> hours</span></td>
 			</tr>
 		<?php $clock_count++; } ?>
 	</tbody>

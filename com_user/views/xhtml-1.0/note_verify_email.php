@@ -14,7 +14,7 @@ $this->title = 'New User Registration';
 $this->note = 'The next step is to verify the email address you entered.';
 ?>
 <div>
-	An email has been sent to <?php echo $this->entity->email; ?> with a
+	An email has been sent to <?php echo htmlentities($this->entity->email); ?> with a
 	verification link. Please click the link to verify your email address and
 	log in.
 </div>

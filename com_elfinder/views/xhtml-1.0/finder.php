@@ -19,7 +19,7 @@ $pines->com_elfinder->load();
 		$(".com_elfinder_finder").elfinder({
 			url: "<?php echo addslashes(pines_url('com_elfinder', 'connector')); ?>",
 			docked: false,
-			height: <?php echo $pines->config->com_elfinder->default_height; ?>
+			height: <?php echo addslashes($pines->config->com_elfinder->default_height); ?>
 		});
 	});
 	// ]]>

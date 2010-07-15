@@ -19,8 +19,8 @@ $pines->uploader->load();
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 		<?php if (isset($this->entity->user)) { ?>
-		<div>User: <span class="date"><?php echo "{$this->entity->user->name} [{$this->entity->user->username}]"; ?></span></div>
-		<div>Group: <span class="date"><?php echo "{$this->entity->group->name} [{$this->entity->group->groupname}]"; ?></span></div>
+		<div>User: <span class="date"><?php echo htmlentities("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
+		<div>Group: <span class="date"><?php echo htmlentities("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
 		<?php } ?>
 		<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
 		<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
@@ -38,7 +38,7 @@ $pines->uploader->load();
 		<h1>Message</h1>
 	</div>
 	<div class="pf-element pf-full-width">
-		<div class="pf-full-width"><textarea rows="3" cols="35" class="ui-widget-content peditor" name="data" style="width: 100%;"><?php echo htmlentities($this->entity->message); ?></textarea></div>
+		<div class="pf-full-width"><textarea rows="3" cols="35" class="ui-widget-content peditor" name="data" style="width: 100%;"><?php echo $this->entity->message; ?></textarea></div>
 	</div>
 	<div class="pf-element pf-heading">
 		<h1>Attachments</h1>

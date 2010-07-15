@@ -34,8 +34,8 @@ $pines->com_ptags->load();
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
 				<?php if (isset($this->entity->user)) { ?>
-				<div>User: <span class="date"><?php echo "{$this->entity->user->name} [{$this->entity->user->username}]"; ?></span></div>
-				<div>Group: <span class="date"><?php echo "{$this->entity->group->name} [{$this->entity->group->groupname}]"; ?></span></div>
+				<div>User: <span class="date"><?php echo htmlentities("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
+				<div>Group: <span class="date"><?php echo htmlentities("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
 				<?php } ?>
 				<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
 				<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
@@ -61,7 +61,7 @@ $pines->com_ptags->load();
 				<label>
 					<span class="pf-label">Name</span>
 					<div class="pf-group pf-full-width">
-						<input class="pf-field ui-widget-content" style="width: 100%;" type="text" name="name" value="<?php echo $this->entity->name; ?>" />
+						<input class="pf-field ui-widget-content" style="width: 100%;" type="text" name="name" value="<?php echo htmlentities($this->entity->name); ?>" />
 					</div>
 				</label>
 			</div>
@@ -69,7 +69,7 @@ $pines->com_ptags->load();
 				<label>
 					<span class="pf-label">Alias</span>
 					<div class="pf-group pf-full-width">
-						<input class="pf-field ui-widget-content" style="width: 100%;" type="text" name="alias" value="<?php echo $this->entity->alias; ?>" onkeyup="this.value=this.value.replace(/[^\w\d-.]/g, '_');" />
+						<input class="pf-field ui-widget-content" style="width: 100%;" type="text" name="alias" value="<?php echo htmlentities($this->entity->alias); ?>" onkeyup="this.value=this.value.replace(/[^\w\d-.]/g, '_');" />
 					</div>
 				</label>
 			</div>
@@ -80,7 +80,7 @@ $pines->com_ptags->load();
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Tags</span>
 				<div class="pf-group">
-					<input class="pf-field ui-widget-content" type="text" name="content_tags" size="24" value="<?php echo implode(',', $this->entity->content_tags); ?>" />
+					<input class="pf-field ui-widget-content" type="text" name="content_tags" size="24" value="<?php echo htmlentities(implode(',', $this->entity->content_tags)); ?>" />
 					<script type="text/javascript">
 						// <![CDATA[
 						pines(function(){
@@ -152,7 +152,7 @@ $pines->com_ptags->load();
 						<tr title="<?php echo $cur_category->guid; ?>" class="<?php echo $cur_category->children ? 'parent ' : ''; ?><?php echo isset($cur_category->parent) ? "child {$cur_category->parent->guid} " : ''; ?>">
 							<td><?php echo isset($cur_category->parent) ? $cur_category->array_search($cur_category->parent->children) + 1 : '0' ; ?></td>
 							<td><input type="checkbox" name="categories[]" value="<?php echo $cur_category->guid; ?>" <?php echo in_array($cur_category->guid, $category_guids) ? 'checked="checked" ' : ''; ?>/></td>
-							<td><?php echo $cur_category->name; ?></td>
+							<td><?php echo htmlentities($cur_category->name); ?></td>
 							<td><?php echo count($cur_category->articles); ?></td>
 						</tr>
 					<?php } ?>

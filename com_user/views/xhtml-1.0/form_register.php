@@ -32,13 +32,13 @@ $this->note = 'Please fill in your account details.';
 			<?php if (in_array('name', $pines->config->com_user->reg_fields)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Name</span>
-					<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
+					<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
 			</div>
 			<?php }
 			if (in_array('email', $pines->config->com_user->reg_fields)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Email</span>
-					<input class="pf-field ui-widget-content" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>
+					<input class="pf-field ui-widget-content" type="text" name="email" size="24" value="<?php echo htmlentities($this->entity->email); ?>" /></label>
 			</div>
 			<?php }
 			if (in_array('phone', $pines->config->com_user->reg_fields)) { ?>
@@ -62,7 +62,7 @@ $this->note = 'Please fill in your account details.';
 						<?php $tz = DateTimeZone::listIdentifiers();
 						sort($tz);
 						foreach ($tz as $cur_tz) { ?>
-						<option value="<?php echo $cur_tz; ?>"<?php echo $this->entity->timezone == $cur_tz ? ' selected="selected"' : ''; ?>><?php echo $cur_tz; ?></option>
+						<option value="<?php echo htmlentities($cur_tz); ?>"<?php echo $this->entity->timezone == $cur_tz ? ' selected="selected"' : ''; ?>><?php echo htmlentities($cur_tz); ?></option>
 						<?php } ?>
 					</select></label>
 			</div>
@@ -97,15 +97,15 @@ $this->note = 'Please fill in your account details.';
 			<div id="p_muid_address_us" style="display: none;">
 				<div class="pf-element">
 					<label><span class="pf-label">Address 1</span>
-						<input class="pf-field ui-widget-content" type="text" name="address_1" size="24" value="<?php echo $this->entity->address_1; ?>" /></label>
+						<input class="pf-field ui-widget-content" type="text" name="address_1" size="24" value="<?php echo htmlentities($this->entity->address_1); ?>" /></label>
 				</div>
 				<div class="pf-element">
 					<label><span class="pf-label">Address 2</span>
-						<input class="pf-field ui-widget-content" type="text" name="address_2" size="24" value="<?php echo $this->entity->address_2; ?>" /></label>
+						<input class="pf-field ui-widget-content" type="text" name="address_2" size="24" value="<?php echo htmlentities($this->entity->address_2); ?>" /></label>
 				</div>
 				<div class="pf-element">
 					<span class="pf-label">City, State</span>
-					<input class="pf-field ui-widget-content" type="text" name="city" size="15" value="<?php echo $this->entity->city; ?>" />
+					<input class="pf-field ui-widget-content" type="text" name="city" size="15" value="<?php echo htmlentities($this->entity->city); ?>" />
 					<select class="pf-field ui-widget-content" name="state">
 						<option value="">None</option>
 						<?php foreach (array(
@@ -167,7 +167,7 @@ $this->note = 'Please fill in your account details.';
 				</div>
 				<div class="pf-element">
 					<label><span class="pf-label">Zip</span>
-						<input class="pf-field ui-widget-content" type="text" name="zip" size="24" value="<?php echo $this->entity->zip; ?>" /></label>
+						<input class="pf-field ui-widget-content" type="text" name="zip" size="24" value="<?php echo htmlentities($this->entity->zip); ?>" /></label>
 				</div>
 			</div>
 			<div id="p_muid_address_international" style="display: none;">

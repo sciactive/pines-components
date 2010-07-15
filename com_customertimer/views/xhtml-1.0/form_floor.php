@@ -228,8 +228,8 @@ $pines->uploader->load();
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
 				<?php if (isset($this->entity->user)) { ?>
-				<div>User: <span class="date"><?php echo "{$this->entity->user->name} [{$this->entity->user->username}]"; ?></span></div>
-				<div>Group: <span class="date"><?php echo "{$this->entity->group->name} [{$this->entity->group->groupname}]"; ?></span></div>
+				<div>User: <span class="date"><?php echo htmlentities("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
+				<div>Group: <span class="date"><?php echo htmlentities("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
 				<?php } ?>
 				<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
 				<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
@@ -237,7 +237,7 @@ $pines->uploader->load();
 			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Name</span>
-					<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo $this->entity->name; ?>" /></label>
+					<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>
@@ -264,7 +264,7 @@ $pines->uploader->load();
 			<?php /* <div class="pf-element pf-full-width">
 				<span class="pf-label">Background Preview</span>
 				<div class="pf-group">
-					<span class="pf-field"><img class="station_layout_bg" src="<?php echo $this->entity->background; ?>" alt="Floor Background" style="max-width: 100%; width: auto; height: auto; border: 1px dashed black;" /></span>
+					<span class="pf-field"><img class="station_layout_bg" src="<?php echo htmlentities($this->entity->background); ?>" alt="Floor Background" style="max-width: 100%; width: auto; height: auto; border: 1px dashed black;" /></span>
 				</div>
 			</div> */ ?>
 			<br class="pf-clearing" />
@@ -287,7 +287,7 @@ $pines->uploader->load();
 			</div>
 			<br class="pf-clearing" />
 			<div class="station_layout">
-				<img class="station_layout_bg" src="<?php echo $this->entity->background; ?>" alt="Floor Background" />
+				<img class="station_layout_bg" src="<?php echo htmlentities($this->entity->background); ?>" alt="Floor Background" />
 				<div class="station_floor"></div>
 				<br class="pf-clearing" />
 			</div>

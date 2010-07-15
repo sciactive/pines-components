@@ -186,8 +186,8 @@ $pines->com_customer->load_company_select();
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
 				<?php if (isset($this->entity->user)) { ?>
-				<div>User: <span class="date"><?php echo "{$this->entity->user->name} [{$this->entity->user->username}]"; ?></span></div>
-				<div>Group: <span class="date"><?php echo "{$this->entity->group->name} [{$this->entity->group->groupname}]"; ?></span></div>
+				<div>User: <span class="date"><?php echo htmlentities("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
+				<div>Group: <span class="date"><?php echo htmlentities("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
 				<?php } ?>
 				<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
 				<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
@@ -196,21 +196,21 @@ $pines->com_customer->load_company_select();
 			<?php if (in_array('name', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">First Name</span>
-					<input class="pf-field ui-widget-content" type="text" name="name_first" size="24" value="<?php echo $this->entity->name_first; ?>" /></label>
+					<input class="pf-field ui-widget-content" type="text" name="name_first" size="24" value="<?php echo htmlentities($this->entity->name_first); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Middle Name</span>
-					<input class="pf-field ui-widget-content" type="text" name="name_middle" size="24" value="<?php echo $this->entity->name_middle; ?>" /></label>
+					<input class="pf-field ui-widget-content" type="text" name="name_middle" size="24" value="<?php echo htmlentities($this->entity->name_middle); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Last Name</span>
-					<input class="pf-field ui-widget-content" type="text" name="name_last" size="24" value="<?php echo $this->entity->name_last; ?>" /></label>
+					<input class="pf-field ui-widget-content" type="text" name="name_last" size="24" value="<?php echo htmlentities($this->entity->name_last); ?>" /></label>
 			</div>
 			<?php } if (in_array('ssn', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">SSN</span>
 					<span class="pf-note">Without dashes.</span>
-					<input class="pf-field ui-widget-content" type="text" name="ssn" size="24" value="<?php echo $this->entity->ssn; ?>" /></label>
+					<input class="pf-field ui-widget-content" type="text" name="ssn" size="24" value="<?php echo htmlentities($this->entity->ssn); ?>" /></label>
 			</div>
 			<?php } if (in_array('dob', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="pf-element">
@@ -228,23 +228,23 @@ $pines->com_customer->load_company_select();
 					// ]]>
 				</script>
 				<label><span class="pf-label">Date of Birth</span>
-					<input class="pf-field ui-widget-content" type="text" name="dob" size="24" value="<?php echo $this->entity->dob ? date('Y-m-d', $this->entity->dob) : ''; ?>" /></label>
+					<input class="pf-field ui-widget-content" type="text" name="dob" size="24" value="<?php echo $this->entity->dob ? format_date($this->entity->dob, 'date_sort') : ''; ?>" /></label>
 			</div>
 			<?php } if (in_array('email', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Email</span>
-					<input class="pf-field ui-widget-content" type="text" name="email" size="24" value="<?php echo $this->entity->email; ?>" /></label>
+					<input class="pf-field ui-widget-content" type="text" name="email" size="24" value="<?php echo htmlentities($this->entity->email); ?>" /></label>
 			</div>
 			<?php } if (in_array('company', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Company</span>
 					<span class="pf-note">Enter part of a company name, email, or phone # to search.</span>
-					<input class="pf-field ui-widget-content" type="text" id="p_muid_company" name="company" size="24" value="<?php echo htmlentities($this->entity->company->guid ? "{$this->entity->company->guid}: \"{$this->entity->company->name}\"" : ''); ?>" />
+					<input class="pf-field ui-widget-content" type="text" id="p_muid_company" name="company" size="24" value="<?php echo $this->entity->company->guid ? htmlentities("{$this->entity->company->guid}: \"{$this->entity->company->name}\"") : ''; ?>" />
 				</label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Job Title</span>
-					<input class="pf-field ui-widget-content" type="text" name="job_title" size="24" value="<?php echo $this->entity->job_title; ?>" /></label>
+					<input class="pf-field ui-widget-content" type="text" name="job_title" size="24" value="<?php echo htmlentities($this->entity->job_title); ?>" /></label>
 			</div>
 			<?php } if (in_array('phone', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="pf-element">
@@ -295,7 +295,7 @@ $pines->com_customer->load_company_select();
 					} else {
 						echo '<span class="pf-note">Leave blank, if not changing.</span>';
 					} ?>
-					<input class="pf-field ui-widget-content" type="text" name="password" size="24" value="<?php echo $this->entity->tmp_password; ?>" /></label>
+					<input class="pf-field ui-widget-content" type="text" name="password" size="24" value="<?php echo htmlentities($this->entity->tmp_password); ?>" /></label>
 			</div>
 			<?php } if (in_array('points', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="pf-element pf-heading">
@@ -303,17 +303,17 @@ $pines->com_customer->load_company_select();
 			</div>
 			<div class="pf-element">
 				<span class="pf-label">Current Points</span>
-				<span class="pf-field"><?php echo $this->entity->points; ?></span>
+				<span class="pf-field"><?php echo htmlentities($this->entity->points); ?></span>
 			</div>
 			<div class="pf-element">
 				<span class="pf-label">Peak Points</span>
 				<span class="pf-note">The highest amount of points the customer has ever had.</span>
-				<span class="pf-field"><?php echo $this->entity->peak_points; ?></span>
+				<span class="pf-field"><?php echo htmlentities($this->entity->peak_points); ?></span>
 			</div>
 			<div class="pf-element">
 				<span class="pf-label">Total Points in All Time</span>
 				<span class="pf-note">The total amount of points the customer has ever had.</span>
-				<span class="pf-field"><?php echo $this->entity->total_points; ?></span>
+				<span class="pf-field"><?php echo htmlentities($this->entity->total_points); ?></span>
 			</div>
 			<?php if ($pines->config->com_customer->adjustpoints && gatekeeper('com_customer/adjustpoints')) { ?>
 			<div class="pf-element">
@@ -350,7 +350,7 @@ $pines->com_customer->load_company_select();
 					// ]]>
 				</script>
 				<label><span class="pf-label">Membership Expiration</span>
-					<input class="pf-field ui-widget-content" type="text" name="member_exp" size="24" value="<?php echo $this->entity->member_exp ? date('Y-m-d', $this->entity->member_exp) : ''; ?>" /></label>
+					<input class="pf-field ui-widget-content" type="text" name="member_exp" size="24" value="<?php echo $this->entity->member_exp ? format_date($this->entity->member_exp, 'date_sort') : ''; ?>" /></label>
 			</div>
 			<?php } ?>
 			<br class="pf-clearing" />
@@ -386,15 +386,15 @@ $pines->com_customer->load_company_select();
 			<div id="p_muid_address_us" style="display: none;">
 				<div class="pf-element">
 					<label><span class="pf-label">Address 1</span>
-						<input class="pf-field ui-widget-content" type="text" name="address_1" size="24" value="<?php echo $this->entity->address_1; ?>" /></label>
+						<input class="pf-field ui-widget-content" type="text" name="address_1" size="24" value="<?php echo htmlentities($this->entity->address_1); ?>" /></label>
 				</div>
 				<div class="pf-element">
 					<label><span class="pf-label">Address 2</span>
-						<input class="pf-field ui-widget-content" type="text" name="address_2" size="24" value="<?php echo $this->entity->address_2; ?>" /></label>
+						<input class="pf-field ui-widget-content" type="text" name="address_2" size="24" value="<?php echo htmlentities($this->entity->address_2); ?>" /></label>
 				</div>
 				<div class="pf-element">
 					<span class="pf-label">City, State</span>
-					<input class="pf-field ui-widget-content" type="text" name="city" size="15" value="<?php echo $this->entity->city; ?>" />
+					<input class="pf-field ui-widget-content" type="text" name="city" size="15" value="<?php echo htmlentities($this->entity->city); ?>" />
 					<select class="pf-field ui-widget-content" name="state">
 						<option value="">None</option>
 						<?php foreach (array(
@@ -456,7 +456,7 @@ $pines->com_customer->load_company_select();
 				</div>
 				<div class="pf-element">
 					<label><span class="pf-label">Zip</span>
-						<input class="pf-field ui-widget-content" type="text" name="zip" size="24" value="<?php echo $this->entity->zip; ?>" /></label>
+						<input class="pf-field ui-widget-content" type="text" name="zip" size="24" value="<?php echo htmlentities($this->entity->zip); ?>" /></label>
 				</div>
 			</div>
 			<div id="p_muid_address_international" style="display: none;">
@@ -483,12 +483,12 @@ $pines->com_customer->load_company_select();
 					<tbody>
 						<?php foreach ($this->entity->addresses as $cur_address) { ?>
 						<tr>
-							<td><?php echo $cur_address['type']; ?></td>
-							<td><?php echo $cur_address['address_1']; ?></td>
-							<td><?php echo $cur_address['address_2']; ?></td>
-							<td><?php echo $cur_address['city']; ?></td>
-							<td><?php echo $cur_address['state']; ?></td>
-							<td><?php echo $cur_address['zip']; ?></td>
+							<td><?php echo htmlentities($cur_address['type']); ?></td>
+							<td><?php echo htmlentities($cur_address['address_1']); ?></td>
+							<td><?php echo htmlentities($cur_address['address_2']); ?></td>
+							<td><?php echo htmlentities($cur_address['city']); ?></td>
+							<td><?php echo htmlentities($cur_address['state']); ?></td>
+							<td><?php echo htmlentities($cur_address['zip']); ?></td>
 						</tr>
 						<?php } ?>
 					</tbody>
@@ -541,8 +541,8 @@ $pines->com_customer->load_company_select();
 					<tbody>
 						<?php foreach ($this->entity->attributes as $cur_attribute) { ?>
 						<tr>
-							<td><?php echo $cur_attribute['name']; ?></td>
-							<td><?php echo $cur_attribute['value']; ?></td>
+							<td><?php echo htmlentities($cur_attribute['name']); ?></td>
+							<td><?php echo htmlentities($cur_attribute['value']); ?></td>
 						</tr>
 						<?php } ?>
 					</tbody>

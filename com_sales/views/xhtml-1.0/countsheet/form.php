@@ -99,7 +99,9 @@ $pines->com_pgrid->load();
 									return;
 								}
 								var qty = prompt("Please enter a quantity:", rows.pgrid_get_value(2));
-								if (qty == null || isNaN(parseInt(qty)))
+								while ((isNaN(parseInt(qty)) || parseInt(qty) != qty) && qty != null)
+									qty = prompt("Please enter a quantity:", rows.pgrid_get_value(2));
+								if (qty == null)
 									qty = rows.pgrid_get_value(2);
 								// Update the quantity of the item.
 								rows.pgrid_set_value(2, qty);

@@ -110,7 +110,7 @@ $pines->com_jstree->load();
 	<div class="pf-element">
 		<div style="float: left;">
 			<span class="pf-label">Start Date
-			<input class="ui-widget-content" type="text" name="start" value="<?php echo ($this->entity->start_date) ? format_date($this->entity->start_date, 'date_sort') : format_date(time(), 'date_sort'); ?>" style="text-align: center;" /></span><br/>
+			<input class="ui-widget-content" type="text" name="start" value="<?php echo ($this->entity->start_date) ? format_date($this->entity->start_date, 'date_sort') : format_date(time(), 'date_sort'); ?>" style="text-align: center;" /></span><br />
 			<span class="pf-label">End Date
 			<input class="ui-widget-content" type="text" name="end" value="<?php echo ($this->entity->end_date) ? format_date($this->entity->end_date, 'date_sort') : format_date(time(), 'date_sort'); ?>" style="text-align: center;" /></span>
 		</div>

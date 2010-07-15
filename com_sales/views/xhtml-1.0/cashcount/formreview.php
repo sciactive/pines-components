@@ -171,7 +171,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			</tr>
 			<?php } ?>
 		</tbody>
-	</table><br/>
+	</table><br />
 	<?php if (!empty($this->entity->comments)) { ?>
 	<div class="pf-element">
 		<span class="pf-label">Comments</span>

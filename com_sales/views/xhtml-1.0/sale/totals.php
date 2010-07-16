@@ -171,7 +171,7 @@ $pines->com_jstree->load();
 		<span class="pf-label">Location</span>
 		<div class="pf-group">
 			<span class="pf-field"><input class="ui-widget-content" type="checkbox" name="all_locations" size="24" value="ON" checked="checked" /> All Locations</span>
-			<div class="pf-field location_tree ui-widget-content ui-corner-all" style="height: 100px; width: 200px; overflow: auto;"></div>
+			<div class="pf-field location_tree ui-widget-content ui-corner-all" style="height: 180px; width: 200px; overflow: auto;"></div>
 		</div>
 		<input type="hidden" name="location" />
 	</div>

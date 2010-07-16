@@ -201,7 +201,7 @@ $pines->com_jstree->load();
 			<div class="pf-element">
 				<span class="pf-label">Location</span>
 				<div class="pf-group">
-					<div class="pf-field location_tree ui-widget-content ui-corner-all" style="height: 100px; width: 200px; overflow: auto;"></div>
+					<div class="pf-field location_tree ui-widget-content ui-corner-all" style="height: 180px; width: 200px; overflow: auto;"></div>
 				</div>
 				<input type="hidden" name="location" />
 			</div>

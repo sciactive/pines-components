@@ -317,7 +317,7 @@ $pines->com_pgrid->load();
 					<span class="pf-label">Primary Group</span>
 					<div class="pf-group">
 						<span class="pf-field"><input class="ui-widget-content" type="checkbox" name="no_primary_group" size="24" value="ON"<?php echo !isset($this->entity->group) ? ' checked="checked"' : ''; ?> /> No Primary Group</span>
-						<div class="pf-field location_tree ui-widget-content ui-corner-all" style="height: 100px; width: 200px; overflow: auto;"></div>
+						<div class="pf-field location_tree ui-widget-content ui-corner-all" style="height: 180px; width: 200px; overflow: auto;"></div>
 					</div>
 					<input type="hidden" name="group" />
 				</div>

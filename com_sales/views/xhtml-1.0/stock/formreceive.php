@@ -315,7 +315,7 @@ if ($pines->config->com_sales->autocomplete_product)
 	<div class="pf-element">
 		<span class="pf-label">Location</span>
 		<div class="pf-group">
-			<div class="pf-field location_tree ui-widget-content ui-corner-all" style="height: 100px; width: 200px; overflow: auto;"></div>
+			<div class="pf-field location_tree ui-widget-content ui-corner-all" style="height: 180px; width: 200px; overflow: auto;"></div>
 		</div>
 		<input type="hidden" name="location" value="<?php echo (!isset($_SESSION['user']->group) ? '' : $_SESSION['user']->group->guid); ?>" />
 	</div>

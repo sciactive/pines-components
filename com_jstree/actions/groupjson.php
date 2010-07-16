@@ -22,6 +22,8 @@ if (isset($_SESSION['user']->group)) {
 	$locations = $pines->user_manager->get_groups();
 }
 
+$pines->user_manager->group_sort($locations, 'name');
+
 $groups_json_struct = $pines->com_jstree->entity_json_struct($locations);
 $pines->page->override_doc(json_encode($groups_json_struct));
 

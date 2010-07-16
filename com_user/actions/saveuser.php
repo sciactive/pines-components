@@ -183,6 +183,10 @@ if ($user->save()) {
 	pines_error('Error saving user. Do you have permission?');
 }
 
-redirect(pines_url('com_user', 'listusers'));
+if ($user->enabled) {
+	redirect(pines_url('com_user', 'listusers'));
+} else {
+	redirect(pines_url('com_user', 'listusers', array('enabled' => 'false')));
+}
 
 ?>

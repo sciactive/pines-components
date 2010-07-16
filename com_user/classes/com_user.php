@@ -285,6 +285,7 @@ class com_user extends component implements user_manager_interface {
 
 		$module = new module('com_user', 'list_groups', 'content');
 
+		$module->enabled = $enabled;
 		$module->groups = $pines->entity_manager->get_entities(array('class' => group), array('&', 'data' => array('enabled', !!$enabled), 'tag' => array('com_user', 'group')));
 
 		if ( empty($module->groups) )
@@ -301,6 +302,7 @@ class com_user extends component implements user_manager_interface {
 
 		$module = new module('com_user', 'list_users', 'content');
 
+		$module->enabled = $enabled;
 		$module->users = $pines->entity_manager->get_entities(array('class' => user), array('&', 'data' => array('enabled', !!$enabled), 'tag' => array('com_user', 'user')));
 
 		if ( empty($module->users) )

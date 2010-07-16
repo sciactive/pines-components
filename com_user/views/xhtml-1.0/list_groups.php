@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Groups';
+$this->title = $this->enabled ? 'Groups' : 'Disabled Groups';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_user/list_groups'];
@@ -84,7 +84,7 @@ foreach($this->groups as $cur_group) {
 		<tr title="<?php echo $group->guid; ?>" class="<?php
 		if (in_array($group->guid, $parents))
 			echo "parent ";
-		if (isset($group->parent))
+		if (isset($group->parent) && $group->parent->in_array($this->groups))
 			echo "child {$group->parent->guid}";
 		?>">
 			<td><?php echo $group->guid; ?></td>

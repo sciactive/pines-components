@@ -102,6 +102,7 @@ class group extends able_object implements group_interface {
 		$return = (array) $pines->entity_manager->get_entities(
 				array('class' => group),
 				array('&',
+					'data' => array('enabled', true),
 					'ref' => array('parent', $this),
 					'tag' => array('com_user', 'group')
 				)
@@ -115,6 +116,7 @@ class group extends able_object implements group_interface {
 		$entities = $pines->entity_manager->get_entities(
 				array('class' => group),
 				array('&',
+					'data' => array('enabled', true),
 					'ref' => array('parent', $this),
 					'tag' => array('com_user', 'group')
 				)
@@ -129,7 +131,7 @@ class group extends able_object implements group_interface {
 	public function get_level() {
 		$group = $this;
 		$level = 0;
-		while (isset($group->parent)) {
+		while (isset($group->parent) && $group->parent->enabled) {
 			$level++;
 			$group = $group->parent;
 		}
@@ -140,7 +142,7 @@ class group extends able_object implements group_interface {
 		global $pines;
 		if (isset($this->logo))
 			return $full ? $pines->uploader->url($pines->uploader->real($this->logo), true) : $this->logo;
-		if (isset($this->parent))
+		if (isset($this->parent) && $this->parent->enabled)
 			return $this->parent->get_logo($full);
 		return ($full ? $pines->config->full_location : $pines->config->rela_location)."{$pines->config->upload_location}logos/default_logo.png";
 	}

@@ -66,15 +66,14 @@ foreach ($group->attributes as &$cur_attribute) {
 }
 unset($cur_attribute);
 
-/**
- * @todo Check if the selected parent is a descendant of this group.
- */
-// Clean the requested parent. Make sure it's both valid and not the same group.
 //if ( $_REQUEST['no_parent'] == 'ON' ) {
 if ( $_REQUEST['parent'] == 'none' ) {
 	unset($group->parent);
 } else {
-	$group->parent = group::factory((int) $_REQUEST['parent']);
+	$parent = group::factory((int) $_REQUEST['parent']);
+	// Check if the selected parent is a descendent of this group.
+	if (!$group->is($parent) && !$parent->is_descendent($group))
+		$group->parent = $parent;
 }
 
 if ( gatekeeper('com_user/abilities') ) {
@@ -114,7 +113,7 @@ if (isset($test->guid) && !$group->is($test)) {
 	pines_notice('There is already a group with that groupname. Please choose a different groupname.');
 	return;
 }
-if (isset($group->parent) && (!isset($group->parent->guid) || $group->is($group->parent))) {
+if (isset($group->parent) && !isset($group->parent->guid)) {
 	$group->print_form();
 	pines_notice('Parent group is not valid.');
 	return;
@@ -193,6 +192,10 @@ if ($group->save()) {
 	pines_error('Error saving group. Do you have permission?');
 }
 
-redirect(pines_url('com_user', 'listgroups'));
+if ($group->enabled) {
+	redirect(pines_url('com_user', 'listgroups'));
+} else {
+	redirect(pines_url('com_user', 'listgroups', array('enabled' => 'false')));
+}
 
 ?>

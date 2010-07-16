@@ -23,8 +23,9 @@ if (is_array($this->entities)) {
 	}
 }
 $this->note = 'Provide stock entry details in this form.';
+$pines->com_jstree->load();
 ?>
-<form class="pf-form" method="post" action="<?php echo htmlentities(pines_url('com_sales', 'stock/save')); ?>">
+<form class="pf-form" id="p_muid_form" method="post" action="<?php echo htmlentities(pines_url('com_sales', 'stock/save')); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 		<?php if (isset($this->entity->user)) { ?>
@@ -83,6 +84,34 @@ $this->note = 'Provide stock entry details in this form.';
 						ui.oldContent.find(".p_muid_change_this").val("");
 						ui.oldHeader.addClass("ui-priority-secondary");
 					}
+				}
+			});
+			// Location Tree
+			var location = $("#p_muid_form [name=location]");
+			$("#p_muid_form .location_tree")
+			.bind("select_node.jstree", function(e, data){
+				location.val(data.inst.get_selected().attr("id").replace("p_muid_", ""));
+			})
+			.bind("before.jstree", function (e, data){
+				if (data.func == "parse_json" && "args" in data && 0 in data.args && "attr" in data.args[0] && "id" in data.args[0].attr)
+					data.args[0].attr.id = "p_muid_"+data.args[0].attr.id;
+			})
+			.bind("loaded.jstree", function(e, data){
+				var path = data.inst.get_path("#"+data.inst.get_settings().ui.initially_select, true);
+				if (!path.length) return;
+				data.inst.open_node("#"+path.join(", #"), false, true);
+			})
+			.jstree({
+				"plugins" : [ "themes", "json_data", "ui" ],
+				"json_data" : {
+					"ajax" : {
+						"dataType" : "json",
+						"url" : "<?php echo addslashes(pines_url('com_jstree', 'groupjson')); ?>"
+					}
+				},
+				"ui" : {
+					"select_limit" : 1,
+					"initially_select" : ["p_muid_<?php echo (int) $this->entity->location->guid; ?>"]
 				}
 			});
 		});
@@ -170,17 +199,11 @@ $this->note = 'Provide stock entry details in this form.';
 		<div>
 			<input class="p_muid_change_this" type="hidden" name="location_change" value="" />
 			<div class="pf-element">
-				<label>
-					<span class="pf-label">Location</span>
-					<select class="pf-field ui-widget-content" name="location">
-						<option value="null">-- Not in Inventory --</option>
-						<?php
-						$pines->user_manager->group_sort($this->locations, 'name');
-						foreach ($this->locations as $cur_group) {
-							?><option value="<?php echo $cur_group->guid; ?>"<?php echo $cur_group->is($this->entity->location) ? ' selected="selected"' : ''; ?>><?php echo htmlentities(str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"); ?></option><?php
-						} ?>
-					</select>
-				</label>
+				<span class="pf-label">Location</span>
+				<div class="pf-group">
+					<div class="pf-field location_tree ui-widget-content ui-corner-all" style="height: 100px; width: 200px; overflow: auto;"></div>
+				</div>
+				<input type="hidden" name="location" />
 			</div>
 			<div class="pf-element">
 				<label>

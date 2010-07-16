@@ -13,6 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Purchase Order' : (($this->entity->final) ? 'Viewing' : 'Editing').' PO ['.htmlentities($this->entity->po_number).']';
 $this->note = 'Provide PO details in this form.';
 $pines->com_pgrid->load();
+$pines->com_jstree->load();
 $read_only = '';
 if ($this->entity->final)
 	$read_only = 'readonly="readonly"';
@@ -217,6 +218,35 @@ if ($this->entity->final)
 				}
 			});
 
+			// Location Tree
+			var location = $("#p_muid_form [name=destination]");
+			$("#p_muid_form .location_tree")
+			.bind("select_node.jstree", function(e, data){
+				location.val(data.inst.get_selected().attr("id").replace("p_muid_", ""));
+			})
+			.bind("before.jstree", function (e, data){
+				if (data.func == "parse_json" && "args" in data && 0 in data.args && "attr" in data.args[0] && "id" in data.args[0].attr)
+					data.args[0].attr.id = "p_muid_"+data.args[0].attr.id;
+			})
+			.bind("loaded.jstree", function(e, data){
+				var path = data.inst.get_path("#"+data.inst.get_settings().ui.initially_select, true);
+				if (!path.length) return;
+				data.inst.open_node("#"+path.join(", #"), false, true);
+			})
+			.jstree({
+				"plugins" : [ "themes", "json_data", "ui" ],
+				"json_data" : {
+					"ajax" : {
+						"dataType" : "json",
+						"url" : "<?php echo addslashes(pines_url('com_jstree', 'groupjson')); ?>"
+					}
+				},
+				"ui" : {
+					"select_limit" : 1,
+					"initially_select" : ["p_muid_<?php echo (int) $this->entity->destination->guid; ?>"]
+				}
+			});
+
 			pines.com_sales_select_vendor(cur_vendor, true);
 		});
 		// ]]>
@@ -260,19 +290,11 @@ if ($this->entity->final)
 			</select></label>
 	</div>
 	<div class="pf-element">
-		<label>
-			<span class="pf-label">Destination</span>
-			<?php if ($this->entity->final || !empty($this->entity->received)) { ?>
-			<span class="pf-note">Destination can't be changed after PO is committed or received.</span>
-			<?php } ?>
-			<select class="pf-field ui-widget-content" name="destination"<?php echo (!$this->entity->final && empty($this->entity->received) ? '' : ' disabled="disabled"'); ?> <?php echo $read_only; ?>>
-				<?php
-				$pines->user_manager->group_sort($this->locations, 'name');
-				foreach ($this->locations as $cur_group) {
-					?><option value="<?php echo $cur_group->guid; ?>"<?php echo $cur_group->is($this->entity->destination) ? ' selected="selected"' : ''; ?>><?php echo htmlentities(str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"); ?></option><?php
-				} ?>
-			</select>
-		</label>
+		<span class="pf-label">Location</span>
+		<div class="pf-group">
+			<div class="pf-field location_tree ui-widget-content ui-corner-all" style="height: 100px; width: 200px; overflow: auto;"></div>
+		</div>
+		<input type="hidden" name="destination" />
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Shipper</span>

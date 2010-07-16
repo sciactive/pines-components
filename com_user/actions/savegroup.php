@@ -70,6 +70,7 @@ unset($cur_attribute);
  * @todo Check if the selected parent is a descendant of this group.
  */
 // Clean the requested parent. Make sure it's both valid and not the same group.
+//if ( $_REQUEST['no_parent'] == 'ON' ) {
 if ( $_REQUEST['parent'] == 'none' ) {
 	unset($group->parent);
 } else {

@@ -114,6 +114,7 @@ if ( gatekeeper('com_user/assigngroup') ) {
 		}
 	}
 	// What if the user can't assign the current primary group, so it defaults to null?
+	//if ($_REQUEST['group'] == 'null' || $_REQUEST['no_primary_group'] == 'ON' )
 	if ($_REQUEST['group'] == 'null')
 		unset($user->group);
 }

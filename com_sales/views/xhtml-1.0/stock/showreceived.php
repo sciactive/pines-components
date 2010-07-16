@@ -20,7 +20,7 @@ $i = 1;
 <div class="pf-form">
 	<div class="pf-element">
 		<span class="pf-label">Location</span>
-		<span class="pf-feild"><?php echo htmlentities("[{$this->location->guid}] {$this->location->name}"); ?></span>
+		<span class="pf-field"><?php echo htmlentities("[{$this->location->guid}] {$this->location->name}"); ?></span>
 	</div>
 	<?php foreach($this->success as $cur_success) { ?>
 	<div class="pf-element pf-heading">

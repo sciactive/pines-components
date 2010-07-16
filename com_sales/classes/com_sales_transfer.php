@@ -28,6 +28,7 @@ class com_sales_transfer extends entity {
 		// Defaults.
 		$this->stock = array();
 		$this->finished = false;
+		$this->destination = $_SESSION['user']->group;
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));

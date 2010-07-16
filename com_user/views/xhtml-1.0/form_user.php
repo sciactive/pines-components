@@ -13,6 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'Editing New User' : 'Editing ['.htmlentities($this->entity->username).']';
 $this->note = 'Provide user details in this form.';
 $pines->com_pgrid->load();
+//$pines->com_jstree->load();
 ?>
 <script type="text/javascript">
 	// <![CDATA[
@@ -172,6 +173,37 @@ $pines->com_pgrid->load();
 
 		update_attributes();
 
+		<?php /*
+		// Group Tree
+		var location = $("#p_muid_form [name=group]");
+		$("#p_muid_form .location_tree")
+		.bind("select_node.jstree", function(e, data){
+			location.val(data.inst.get_selected().attr("id").replace("p_muid_", ""));
+		})
+		.bind("before.jstree", function (e, data){
+			if (data.func == "parse_json" && "args" in data && 0 in data.args && "attr" in data.args[0] && "id" in data.args[0].attr)
+				data.args[0].attr.id = "p_muid_"+data.args[0].attr.id;
+		})
+		.bind("loaded.jstree", function(e, data){
+			var path = data.inst.get_path("#"+data.inst.get_settings().ui.initially_select, true);
+			if (!path.length) return;
+			data.inst.open_node("#"+path.join(", #"), false, true);
+		})
+		.jstree({
+			"plugins" : [ "themes", "json_data", "ui" ],
+			"json_data" : {
+				"ajax" : {
+					"dataType" : "json",
+					"url" : "<?php echo addslashes(pines_url('com_jstree', 'groupjson')); ?>"
+				}
+			},
+			"ui" : {
+				"select_limit" : 1,
+				"initially_select" : ["p_muid_<?php echo (int) $this->entity->group->guid; ?>"]
+			}
+		});
+		*/ ?>
+
 		$("#p_muid_tabs").tabs();
 	});
 	// ]]>
@@ -280,6 +312,16 @@ $pines->com_pgrid->load();
 						</select>
 					</label>
 				</div>
+				<?php /*
+				<div class="pf-element">
+					<span class="pf-label">Primary Group</span>
+					<div class="pf-group">
+						<span class="pf-field"><input class="ui-widget-content" type="checkbox" name="no_primary_group" size="24" value="ON"<?php echo !isset($this->entity->group) ? ' checked="checked"' : ''; ?> /> No Primary Group</span>
+						<div class="pf-field location_tree ui-widget-content ui-corner-all" style="height: 100px; width: 200px; overflow: auto;"></div>
+					</div>
+					<input type="hidden" name="group" />
+				</div>
+				 */ ?>
 				<?php } ?>
 				<?php if (empty($this->group_array_secondary)) { ?>
 				<div class="pf-element">

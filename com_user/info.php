@@ -23,7 +23,7 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'entity_manager&uploader',
-		'component' => 'com_jquery&com_pgrid&com_pnotify'
+		'component' => 'com_jquery&com_pgrid&com_pnotify' //&com_jstree
 	),
 	'abilities' => array(
 		array('login', 'Login', 'User can login to the system.'),

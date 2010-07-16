@@ -17,6 +17,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	pines(function(){
 		$.jstree.defaults.core.animation = 100;
 		$.jstree._themes = "<?php echo htmlentities($pines->config->rela_location); ?>components/com_jstree/includes/themes/";
+		$.jstree.defaults.themes.theme = "apple";
 	});
 	// ]]>
 </script>

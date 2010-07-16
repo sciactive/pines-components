@@ -110,7 +110,7 @@ if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 || strp
 		<?php echo $pines->page->render_modules('header', 'module_header'); ?>
 		<?php echo $pines->page->render_modules('header_right', 'module_header_right'); ?>
 		<div class="menuwrap ui-widget-content">
-			<div id="main_menu"><?php echo $pines->page->render_modules('main_menu', 'module_head'); ?></div>
+			<div id="main_menu"<?php echo $pines->config->tpl_pines->center_menu ? ' class="centered"' : ''; ?>><?php echo $pines->page->render_modules('main_menu', 'module_head'); ?></div>
 		</div>
 	</div>
 	<div id="pre_content">

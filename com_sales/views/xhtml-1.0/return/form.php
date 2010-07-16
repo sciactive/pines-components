@@ -1004,7 +1004,7 @@ if ($pines->config->com_sales->autocomplete_product)
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Comments</span>
-			<input class="pf-field ui-widget-content ui-state-default ui-corner-all" type="button" value="Edit" onclick="$('#p_muid_comments_dialog').dialog('open');" /></label>
+			<input class="pf-field ui-state-default ui-corner-all" type="button" value="Edit" onclick="$('#p_muid_comments_dialog').dialog('open');" /></label>
 	</div>
 	<div id="p_muid_comments_dialog" title="Comments" style="display: none;">
 		<div class="pf-element pf-full-width">

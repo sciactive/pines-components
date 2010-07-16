@@ -189,16 +189,17 @@ img {
 }
 #header .menuwrap {
 	clear: both;
-	background-image: none !important;
+	background: none !important;
 	border-bottom: none !important;
 	border-left: none !important;
 	border-right: none !important;
 }
 #main_menu {
-	/*text-align: center; /* Align menu text in the center with this. */
-	/* display: table;
-	margin: 0 auto; /* Align the menu in the center with this. */
-	margin-left: 35px; /* Comment this out if you center the menu. */
+	margin-left: 35px;
+}
+#main_menu.centered {
+	display: table;
+	margin: 0 auto;
 }
 #main_menu ul.dropdown > li > a.ui-widget-header {
 	background: transparent none !important;
@@ -208,6 +209,11 @@ img {
 }
 #main_menu ul.dropdown > li:last-child > a.ui-widget-header {
 	border-right-style: solid;
+}
+ul.dropdown > li ul {
+	box-shadow: 0 .4em 1em -.4em #333;
+	-moz-box-shadow: 0 .4em 1em -.4em #333;
+	-webkit-box-shadow: 0 .4em 1em -.4em #333;
 }
 #left {
 	padding-top: 1px;
@@ -267,11 +273,17 @@ img {
 	clear: both;
 	text-align: center;
 }
-input.ui-widget-content,
-select.ui-widget-content,
-textarea.ui-widget-content,
+/* ----------- Styled Inputs ----------- */
 input.ui-state-default {
 	padding: 0.4em .8em;
+}
+input.ui-widget-content,
+select.ui-widget-content,
+textarea.ui-widget-content {
+	padding: 0.4em .8em;
+	box-shadow: inset 0 0 .4em #CCC;
+	-moz-box-shadow: inset 0 0 .4em #CCC;
+	-webkit-box-shadow: inset 0 0 .4em #CCC;
 }
 /* ----------- Pines Form ----------- */
 .pf-form div.pf-element.pf-full-width .pf-full-width {

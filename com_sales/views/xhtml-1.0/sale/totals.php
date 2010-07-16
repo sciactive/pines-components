@@ -28,6 +28,7 @@ $pines->com_jstree->load();
 			$("#p_muid_hide_parameters").click(function(){
 				$("#p_muid_form > .pf-element:not(.pf-heading)").slideToggle();
 			});
+			<?php if (gatekeeper('com_sales/totalothersales')) { ?>
 			// Location Tree
 			var tree_location = $("#p_muid_form [name=location]");
 			$("#p_muid_form .location_tree")
@@ -56,13 +57,16 @@ $pines->com_jstree->load();
 					"initially_select" : ["p_muid_"]
 				}
 			});
+			<?php } ?>
 
 			$("#p_muid_retrieve_totals").click(function(){
 				var loader;
 
+				<?php if (gatekeeper('com_sales/totalothersales')) { ?>
 				location = tree_location.val();
 				if ($("#p_muid_form [name=all_locations]").attr('checked') || location == '')
 					location = 'all';
+				<?php } ?>
 
 				$.ajax({
 					url: "<?php echo addslashes(pines_url('com_sales', 'sale/totalsjson')); ?>",
@@ -167,6 +171,7 @@ $pines->com_jstree->load();
 		// ]]>
 	</script>
 	<button id="p_muid_hide_parameters" class="ui-state-default ui-corner-all" style="float: right;">Toggle Form</button>
+	<?php if (gatekeeper('com_sales/totalothersales')) { // TODO: Show all groups in the tree. ?>
 	<div class="pf-element">
 		<span class="pf-label">Location</span>
 		<div class="pf-group">
@@ -175,6 +180,7 @@ $pines->com_jstree->load();
 		</div>
 		<input type="hidden" name="location" />
 	</div>
+	<?php } ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Start Date</span>
 			<input class="pf-field ui-widget-content" type="text" id="p_muid_date_start" name="date_start" size="24" value="<?php echo format_date(time(), 'date_sort'); ?>" /></label>

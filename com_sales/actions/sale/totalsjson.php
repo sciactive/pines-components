@@ -18,15 +18,14 @@ $pines->page->override = true;
 
 // Format the location.
 $location = $_REQUEST['location'];
-if (!isset($location) || $location == 'current') {
+if (!isset($location)) {
 	$location = $_SESSION['user']->group->guid;
 } else {
 	if (!gatekeeper('com_sales/totalothersales')) {
-		$pines->page->override_doc('false');
-		return;
+		$location = $_SESSION['user']->group->guid;
+	} elseif ($location != 'all') {
+			$location = (int) $_REQUEST['location'];
 	}
-	if ($location != 'all')
-		$location = (int) $_REQUEST['location'];
 }
 
 // Format the date.

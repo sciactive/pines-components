@@ -30,13 +30,6 @@ class com_user extends component implements user_manager_interface {
 	 * @var array
 	 */
 	private $gatekeeper_cache = array();
-	/**
-	 * Group property to sort by.
-	 *
-	 * @access private
-	 * @var array
-	 */
-	private $sort_property;
 
 	public function check_permissions(&$entity, $type = 1) {
 		if ((object) $entity !== $entity)
@@ -197,82 +190,9 @@ class com_user extends component implements user_manager_interface {
 			);
 	}
 
-	public function group_sort(&$array, $property = null, $reverse = false) {
-		$new_array = array();
-		// Count the children.
-		$child_counter = array();
-		// First sort by the requested property.
-		if (isset($property)) {
-			$this->sort_property = $property;
-			@usort($array, array($this, 'group_sort_property'));
-		}
-		if ($reverse)
-			$array = array_reverse($array);
-		// Now sort by children.
-		while ($array) {
-			// Look for groups ready to go in order.
-			$changed = false;
-			foreach ($array as $key => &$cur_group) {
-				// Must break after adding one, so any following children don't go in the wrong order.
-				if (!isset($cur_group->parent) || !$cur_group->parent->in_array(array_merge($new_array, $array))) {
-					// If they have no parent (or their parent isn't in the array), they go on the end.
-					$new_array[] = $cur_group;
-					unset($array[$key]);
-					$changed = true;
-					break;
-				} else {
-					// Else find the parent.
-					$pkey = $cur_group->parent->array_search($new_array);
-					if ($pkey !== false) {
-						// And insert after the parent.
-						// This makes groups go to the end of the child list.
-						$cur_ancestor = $cur_group->parent;
-						while (isset($cur_ancestor)) {
-							$child_counter[$cur_ancestor->guid]++;
-							$cur_ancestor = $cur_ancestor->parent;
-						}
-						// Where to place the group.
-						$new_key = $pkey + $child_counter[$cur_group->parent->guid];
-						if (isset($new_array[$new_key])) {
-							// If it already exists, we have to splice it in.
-							array_splice($new_array, $new_key, 0, array($cur_group));
-							$new_array = array_values($new_array);
-						} else {
-							// Else just add it.
-							$new_array[$new_key] = $cur_group;
-						}
-						unset($array[$key]);
-						$changed = true;
-						break;
-					}
-				}
-			}
-			unset($cur_group);
-			if (!$changed) {
-				// If there are any unexpected errors and the array isn't changed, just stick the rest on the end.
-				$groups_left = array_splice($array, 0);
-				$new_array = array_merge($new_array, $groups_left);
-			}
-		}
-		// Now push the new array out.
-		$array = $new_array;
-	}
-
-	/**
-	 * Determine the sort order between two groups.
-	 * 
-	 * @param group $a Group A.
-	 * @param group $b Group B.
-	 * @return int Sort order.
-	 * @access private
-	 */
-	private function group_sort_property($a, $b) {
-		$property = $this->sort_property;
-		if ($a->$property > $b->$property)
-			return 1;
-		if ($a->$property < $b->$property)
-			return -1;
-		return 0;
+	public function group_sort(&$array, $property = null, $case_sensitive = false, $reverse = false) {
+		global $pines;
+		$pines->entity_manager->sort($array, $property, 'parent', $case_sensitive, $reverse);
 	}
 
 	/**

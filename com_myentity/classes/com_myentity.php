@@ -20,6 +20,19 @@ defined('P_RUN') or die('Direct access prohibited');
  * @subpackage com_myentity
  */
 class com_myentity extends component implements entity_manager_interface {
+	/**
+	 * Sort case sensitively.
+	 * @access private
+	 * @var bool
+	 */
+	private $sort_case_sensitive;
+	/**
+	 * Property to sort by.
+	 * @access private
+	 * @var string
+	 */
+	private $sort_property;
+
 	public function delete_entity(&$entity) {
 		$return = $this->delete_entity_by_id($entity->guid);
 		if ( $return )
@@ -853,6 +866,96 @@ class com_myentity extends component implements entity_manager_interface {
 			return false;
 		}
 		return true;
+	}
+
+	public function sort(&$array, $property = null, $parent_property = null, $case_sensitive = false, $reverse = false) {
+		// First sort by the requested property.
+		if (isset($property)) {
+			$this->sort_property = $property;
+			$this->sort_case_sensitive = $case_sensitive;
+			@usort($array, array($this, 'sort_property'));
+		}
+		if ($reverse)
+			$array = array_reverse($array);
+		if (!isset($parent_property))
+			return;
+		// Now sort by children.
+		$new_array = array();
+		// Count the children.
+		$child_counter = array();
+		while ($array) {
+			// Look for entities ready to go in order.
+			$changed = false;
+			foreach ($array as $key => &$cur_entity) {
+				// Must break after adding one, so any following children don't go in the wrong order.
+				if (!isset($cur_entity->$parent_property) || !$cur_entity->$parent_property->in_array(array_merge($new_array, $array))) {
+					// If they have no parent (or their parent isn't in the array), they go on the end.
+					$new_array[] = $cur_entity;
+					unset($array[$key]);
+					$changed = true;
+					break;
+				} else {
+					// Else find the parent.
+					$pkey = $cur_entity->$parent_property->array_search($new_array);
+					if ($pkey !== false) {
+						// And insert after the parent.
+						// This makes entities go to the end of the child list.
+						$cur_ancestor = $cur_entity->$parent_property;
+						while (isset($cur_ancestor)) {
+							$child_counter[$cur_ancestor->guid]++;
+							$cur_ancestor = $cur_ancestor->$parent_property;
+						}
+						// Where to place the entity.
+						$new_key = $pkey + $child_counter[$cur_entity->$parent_property->guid];
+						if (isset($new_array[$new_key])) {
+							// If it already exists, we have to splice it in.
+							array_splice($new_array, $new_key, 0, array($cur_entity));
+							$new_array = array_values($new_array);
+						} else {
+							// Else just add it.
+							$new_array[$new_key] = $cur_entity;
+						}
+						unset($array[$key]);
+						$changed = true;
+						break;
+					}
+				}
+			}
+			unset($cur_entity);
+			if (!$changed) {
+				// If there are any unexpected errors and the array isn't changed, just stick the rest on the end.
+				$entities_left = array_splice($array, 0);
+				$new_array = array_merge($new_array, $entities_left);
+			}
+		}
+		// Now push the new array out.
+		$array = $new_array;
+	}
+
+	/**
+	 * Determine the sort order between two entities.
+	 *
+	 * @param entity $a Entity A.
+	 * @param entity $b Entity B.
+	 * @return int Sort order.
+	 * @access private
+	 */
+	private function sort_property($a, $b) {
+		$property = $this->sort_property;
+		if (!$this->sort_case_sensitive && is_string($a->$property) && is_string($b->$property)) {
+			$aprop = strtoupper($a->$property);
+			$bprop = strtoupper($b->$property);
+			if ($aprop > $bprop)
+				return 1;
+			if ($aprop < $bprop)
+				return -1;
+		} else {
+			if ($a->$property > $b->$property)
+				return 1;
+			if ($a->$property < $b->$property)
+				return -1;
+		}
+		return 0;
 	}
 }
 

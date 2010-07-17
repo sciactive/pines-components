@@ -284,7 +284,9 @@ if ($this->entity->final)
 			<?php } ?>
 			<select class="pf-field ui-widget-content" name="vendor" onchange="pines.com_sales_select_vendor(Number(this.value));"<?php echo (!$this->entity->final && empty($this->entity->received) ? '' : ' disabled="disabled"'); ?> <?php echo $read_only; ?>>
 				<option value="null">-- None --</option>
-				<?php foreach ($this->vendors as $cur_vendor) { ?>
+				<?php
+				$pines->entity_manager->sort($this->vendors, 'name');
+				foreach ($this->vendors as $cur_vendor) { ?>
 				<option value="<?php echo $cur_vendor->guid; ?>"<?php echo $this->entity->vendor->guid == $cur_vendor->guid ? ' selected="selected"' : ''; ?>><?php echo htmlentities($cur_vendor->name); ?></option>
 				<?php } ?>
 			</select></label>

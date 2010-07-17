@@ -243,7 +243,9 @@ $pines->com_jstree->load();
 					<span class="pf-label">Vendor</span>
 					<select class="pf-field ui-widget-content" name="vendor">
 						<option value="null">-- None --</option>
-						<?php foreach ($this->vendors as $cur_vendor) { ?>
+						<?php
+						$pines->entity_manager->sort($this->vendors, 'name');
+						foreach ($this->vendors as $cur_vendor) { ?>
 						<option value="<?php echo $cur_vendor->guid; ?>"<?php echo $this->entity->vendor->guid == $cur_vendor->guid ? ' selected="selected"' : ''; ?>><?php echo htmlentities($cur_vendor->name); ?></option>
 						<?php } ?>
 					</select>

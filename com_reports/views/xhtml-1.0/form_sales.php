@@ -59,7 +59,7 @@ $pines->com_jstree->load();
 			},
 			"ui" : {
 				"select_limit" : 1,
-				"initially_select" : ["p_muid_<?php echo (int) $this->location; ?>"]
+				"initially_select" : ["<?php echo (int) $this->location; ?>"]
 			}
 		});
 	

@@ -13,9 +13,20 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
+		'name' => 'fancy_style',
+		'cname' => 'Fancy Styling',
+		'description' => 'Use fancier styling.',
+		'value' => array('font', 'shadows'),
+		'options' => array(
+			'Fancy fonts.' => 'font',
+			'Drop shadows.' => 'shadows'
+		),
+		'peruser' => true,
+	),
+	array(
 		'name' => 'use_header_image',
 		'cname' => 'Use Header Image',
-		'description' => 'Whether to show a header image (instead of just text) at the top of the page.',
+		'description' => 'Show a header image (instead of just text) at the top of the page.',
 		'value' => true,
 		'peruser' => true,
 	),

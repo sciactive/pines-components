@@ -24,7 +24,7 @@ if (!isset($location)) {
 	if (!gatekeeper('com_sales/totalothersales')) {
 		$location = $_SESSION['user']->group->guid;
 	} elseif ($location != 'all') {
-			$location = (int) $_REQUEST['location'];
+		$location = (int) $_REQUEST['location'];
 	}
 }
 

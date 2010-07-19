@@ -40,7 +40,7 @@ if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 || strp
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"<?php echo in_array('font', $pines->config->tpl_pines->fancy_style) ? ' id="fancy_font"' : ''; ?>>
 <head>
 	<title><?php echo htmlentities($pines->page->get_title()); ?></title>
 	<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
@@ -75,7 +75,7 @@ if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 || strp
 
 	<?php echo $pines->page->render_modules('head', 'module_head'); ?>
 </head>
-<body class="ui-widget ui-widget-content">
+<body class="ui-widget ui-widget-content<?php echo in_array('shadows', $pines->config->tpl_pines->fancy_style) ? ' shadows' : ''; ?>">
 	<div id="top">
 		<?php echo $pines->page->render_modules('top', 'module_header');
 		$error = $pines->page->get_error();

@@ -2,56 +2,19 @@
 /* Print styles */
 html, body {height: auto !important;}
 body {background: #fff !important;}
-#header {display: none !important;}
-.colmask {
+#top, #header, #pre_content, #post_content, #footer, #bottom
+#left_color, #left, #right {display: none !important;}
+input, select, textarea {font-size:  100%;}
+body, #column_container, #content_container {
 	position: static !important;
 	float: none !important;
 	width: 100% !important;
 	height: auto !important;
 	padding: 0 !important;
 	margin: 0 !important;
+	border: 0 none !important;
 	overflow: visible !important;
 }
-.colmask input, .colmask select, .colmask textarea {font-size:  100%;}
-.holygrail .colmid {
-	position: static !important;
-	float: none !important;
-	width: 100% !important;
-	height: auto !important;
-	padding: 0 !important;
-	margin: 0 !important;
-	overflow: visible !important;
-}
-.holygrail .colleft {
-	position: static !important;
-	float: none !important;
-	width: 100% !important;
-	height: auto !important;
-	padding: 0 !important;
-	margin: 0 !important;
-	overflow: visible !important;
-}
-.holygrail .col1wrap {
-	position: static !important;
-	float: none !important;
-	width: 100% !important;
-	height: auto !important;
-	padding: 0 !important;
-	margin: 0 !important;
-	overflow: visible !important;
-}
-.holygrail .col1 {
-	position: static !important;
-	float: none !important;
-	width: 100% !important;
-	height: auto !important;
-	padding: 0 !important;
-	margin: 0 !important;
-	overflow: visible !important;
-}
-.holygrail .col2 {display: none !important;}
-.holygrail .col3 {display: none !important;}
-#footer {display: none !important;}
 /* Titlebar Icons */
 .module_maximize, .module_minimize {display: none !important;}
 /* Pines Notify */

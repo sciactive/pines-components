@@ -76,8 +76,9 @@ if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 || strp
 	<?php echo $pines->page->render_modules('head', 'module_head'); ?>
 </head>
 <body class="ui-widget ui-widget-content<?php echo in_array('shadows', $pines->config->tpl_pines->fancy_style) ? ' shadows' : ''; ?>">
-	<div id="top">
-		<?php echo $pines->page->render_modules('top', 'module_header');
+<div class="ez-mr">
+	<div id="top" class="ez-box"><?php
+		echo $pines->page->render_modules('top', 'module_header');
 		$error = $pines->page->get_error();
 		$notice = $pines->page->get_notice();
 		if ( $error || $notice ) { ?>
@@ -95,10 +96,11 @@ if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 || strp
 			});
 			// ]]>
 		</script>
-		<?php } ?>
-	</div>
-	<div id="header" class="ui-widget-header">
-		<h1 class="pagetitle">
+		<?php
+		}
+	?></div>
+	<div id="header" class="ez-box ui-widget-header">
+		<h1 id="page_title">
 			<a href="<?php echo htmlentities($pines->config->full_location); ?>">
 				<?php if ($pines->config->tpl_pines->use_header_image) { ?>
 				<img src="<?php echo htmlentities($pines->config->tpl_pines->header_image); ?>" alt="<?php echo htmlentities($pines->config->page_title); ?>" />
@@ -113,54 +115,29 @@ if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 || strp
 			<div id="main_menu"<?php echo $pines->config->tpl_pines->center_menu ? ' class="centered"' : ''; ?>><?php echo $pines->page->render_modules('main_menu', 'module_head'); ?></div>
 		</div>
 	</div>
-	<div id="pre_content">
-		<?php echo $pines->page->render_modules('pre_content', 'module_header'); ?>
-	</div>
-	<div class="colmask holygrail">
-		<div class="colmid">
-			<div class="colleft">
-				<div class="colleftcolor ui-state-default ui-state-disabled"></div>
-				<div class="col1wrap">
-					<div class="col1">
-						<div id="content_top_left">
-							<?php echo $pines->page->render_modules('content_top_left'); ?>
-						</div>
-						<div id="content_top_right">
-							<?php echo $pines->page->render_modules('content_top_right'); ?>
-						</div>
-						<div id="content">
-							<?php echo $pines->page->render_modules('content', 'module_content'); ?>
-						</div>
-						<div id="content_bottom_left">
-							<?php echo $pines->page->render_modules('content_bottom_left'); ?>
-						</div>
-						<div id="content_bottom_right">
-							<?php echo $pines->page->render_modules('content_bottom_right'); ?>
-						</div>
-					</div>
-				</div>
-				<div id="left" class="col2">
-					<?php echo $pines->page->render_modules('left', 'module_left'); ?>
-				</div>
-				<div id="right" class="col3">
-					<?php echo $pines->page->render_modules('right', 'module_right'); ?>
-				</div>
+	<div id="pre_content" class="ez-box"><?php echo $pines->page->render_modules('pre_content', 'module_header'); ?></div>
+	<div id="column_container" class="ez-wr">
+		<div id="left_color" class="ui-state-default ui-state-disabled"></div>
+		<div id="left" class="ez-fl ez-negmr"><?php echo $pines->page->render_modules('left', 'module_left'); ?>&nbsp;</div>
+		<div id="right" class="ez-fr ez-negml"><?php echo $pines->page->render_modules('right', 'module_right'); ?>&nbsp;</div>
+		<div id="content_container" class="ez-last ez-oh">
+			<div class="ez-wr">
+				<div id="content_top_left" class="ez-fl ez-negmr ez-50"><?php echo $pines->page->render_modules('content_top_left'); ?></div>
+				<div id="content_top_right" class="ez-last ez-oh"><?php echo $pines->page->render_modules('content_top_right'); ?></div>
+			</div>
+			<div id="content" class="ez-box"><?php echo $pines->page->render_modules('content', 'module_content'); ?></div>
+			<div class="ez-wr">
+				<div id="content_bottom_left" class="ez-fl ez-negmr ez-50"><?php echo $pines->page->render_modules('content_bottom_left'); ?></div>
+				<div id="content_bottom_right" class="ez-last ez-oh"><?php echo $pines->page->render_modules('content_bottom_right'); ?></div>
 			</div>
 		</div>
 	</div>
-	<div id="post_content">
-		<?php echo $pines->page->render_modules('post_content', 'module_header'); ?>
+	<div id="post_content" class="ez-box"><?php echo $pines->page->render_modules('post_content', 'module_header'); ?></div>
+	<div id="footer" class="ez-box ui-widget-header">
+		<div class="modules"><?php echo $pines->page->render_modules('footer', 'module_header'); ?></div>
+		<p id="copyright"><?php echo htmlentities($pines->config->copyright_notice, ENT_COMPAT, '', false); ?></p>
 	</div>
-	<div id="footer" class="ui-widget-header">
-		<div class="modules">
-			<?php echo $pines->page->render_modules('footer', 'module_header'); ?>
-		</div>
-		<p class="copyright">
-			<?php echo htmlentities($pines->config->copyright_notice, ENT_COMPAT, '', false); ?>
-		</p>
-	</div>
-	<div id="bottom">
-		<?php echo $pines->page->render_modules('bottom', 'module_header'); ?>
-	</div>
+	<div id="bottom" class="ez-box"><?php echo $pines->page->render_modules('bottom', 'module_header'); ?></div>
+</div>
 </body>
 </html>

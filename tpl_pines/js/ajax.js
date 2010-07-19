@@ -4,7 +4,7 @@ pines(function(){
 	pos_head = $("head"),
 	main_menu = $("#main_menu"),
 	pos_top = $("#top"),
-	page_title = $("#header > h1.pagetitle"),
+	page_title = $("#page_title"),
 	pos_pre_content = $("#pre_content"),
 	pos_content_top_left = $("#content_top_left"),
 	pos_content_top_right = $("#content_top_right"),
@@ -74,8 +74,8 @@ pines(function(){
 				pos_content_bottom_left.html(data.pos_content_bottom_left);
 				pos_content_bottom_right.html(data.pos_content_bottom_right);
 				pos_post_content.html(data.pos_post_content);
-				pos_left.html(data.pos_left);
-				pos_right.html(data.pos_right);
+				pos_left.html(data.pos_left+"&nbsp;");
+				pos_right.html(data.pos_right+"&nbsp;");
 				pos_footer.html(data.pos_footer);
 				pos_bottom.html(data.pos_bottom);
 				$.each(data.errors, function(){

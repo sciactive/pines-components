@@ -182,7 +182,7 @@ textarea.ui-widget-content {
 	font-size: 11px;
 }
 #fancy_font, #fancy_font .ui-widget {
-	font-family: Baskerville,"Goudy Old Style",Palatino,"Book Antiqua","URW Chancery L",Gentium,serif;
+	font-family: "Goudy Old Style","Palatino Linotype",Palatino,Sylfaen,serif;
 }
 body.shadows ul.dropdown > li ul {
 	box-shadow: 0 .4em 1em -.4em #333;

@@ -568,18 +568,146 @@ class com_sales_sale extends entity {
 
 	/**
 	 * Print a receipt of the sale.
-	 * @return module The form's module.
+	 * @return module The receipt's module.
 	 */
 	function print_receipt() {
 		global $pines;
 
 		$module = new module('com_sales', 'sale/receipt', 'content');
 		$module->entity = $this;
-
-		if (isset($this->customer->email))
-			$pines->com_sales->inform('Email Receipt', 'Send a Copy', 'Send a copy of this receipt to the customer\'s e-mail address.', pines_url('com_sales', 'sale/sendreceipt', array('id' => $this->guid)));
+		$actions = new module('com_sales', 'sale/receiptactions', 'right');
+		$actions->entity = $this;
 
 		return $module;
+	}
+
+	private function receipt_format_barcode($text) {
+		// Barcode height.
+		$barcode = chr(hexdec('1D')).'h'.chr(50);
+		// Text below barcode.
+		$barcode .= chr(hexdec('1D')).'H'.chr(2);
+		// First barcode font.
+		$barcode .= chr(hexdec('1D')).'f'.chr(0);
+		// Medium width.
+		$barcode .= chr(hexdec('1D')).'w'.chr(2);
+		// Code39 Barcode
+		$barcode .= chr(hexdec('1D')).'k'.chr(69);
+		// The barcode data.
+		$barcode .= chr(strlen("$text")).$text;
+		return $barcode;
+	}
+
+	private function receipt_format_center($text, $width) {
+		$text_width = strlen($text);
+		if ($text_width >= $width -1)
+			return $text;
+		$pad_front = floor(($width - $text_width) / 2);
+		$pad_back = $width - $text_width - $pad_front;
+		return str_repeat(' ', $pad_front).$text.str_repeat(' ', $pad_back);
+	}
+
+	public function receipt_text($width) {
+		global $pines;
+		$lines = array();
+		// Gather all the receipt data.
+		switch ($this->status) {
+			case 'quoted':
+				$lines = $pines->config->com_sales->quote_receipt_header;
+				$name = 'Quote';
+				$date = $this->p_cdate;
+				break;
+			case 'invoiced':
+				$lines = $pines->config->com_sales->invoice_receipt_header;
+				$name = 'Invoice';
+				$date = $this->invoice_date;
+				break;
+			case 'voided':
+				$lines = $pines->config->com_sales->void_receipt_header;
+				$name = 'Sale';
+				$date = $this->tender_date;
+				break;
+			case 'paid':
+			default:
+				$lines = $pines->config->com_sales->receipt_header;
+				$name = 'Sale';
+				$date = $this->tender_date;
+				break;
+		}
+		$lines = explode("\n", $lines);
+		if ($pines->config->com_sales->center_receipt_headers) {
+			foreach ($lines as &$cur_line) {
+				$cur_line = $this->receipt_format_center($cur_line, $width);
+			}
+			unset($cur_line);
+		}
+		$lines[] = '';
+		$lines[] = 'Printed '.format_date(time(), 'full_short');
+		if (isset($this->user))
+			$lines[] = 'Rep: '.$this->user->name;
+		if (isset($this->group))
+			$lines[] = 'Location: '.$this->group->name;
+		if (isset($this->customer))
+			$lines[] = 'Customer: '.$this->customer->name;
+		$lines[] = '';
+		$line = $name.' #'.$this->id;
+		$date_string = format_date($date, 'full_short');
+		$line .= str_repeat(' ', ($width - strlen($line) - strlen($date_string))).$date_string;
+		$lines[] = $line;
+		$lines[] = '     * - Non Taxable Items';
+		$lines[] = '';
+		$total_items = 0;
+		foreach ($this->products as $cur_product) {
+			$line = sprintf('% -12s', $cur_product['entity']->sku).' x '.sprintf('%4d', $cur_product['quantity']).' @$'.$pines->com_sales->round($cur_product['price'], true);
+			$line_total = '$'.$pines->com_sales->round($cur_product['line_total'], true);
+			$line .= str_repeat(' ', ($width - strlen($line) - strlen($line_total))).$line_total;
+			$line2 = "   {$cur_product['entity']->name}";
+			if ($cur_product['entity']->tax_exempt)
+				$line2 .= '*';
+			if ($cur_product['discount'])
+				$line2 .= ' -$'.$pines->com_sales->round($cur_product['discount'], true);
+			if ($cur_product['fees'])
+				$line2 .= ' +$'.$pines->com_sales->round($cur_product['fees'], true);
+			$lines[] = $line;
+			$lines[] = $line2;
+			if (!empty($cur_product['serial']))
+				$lines[] = "   Serial: {$cur_product['serial']}";
+			$total_items += $cur_product['quantity'];
+		}
+		$lines[] = '';
+		$lines[] = "Total Items: $total_items";
+		$lines[] = sprintf('%'.($width - 10).'s', 'Subtotal:').sprintf('%10s', '$'.$pines->com_sales->round($this->subtotal, true));
+		if (!empty($this->item_fees))
+			$lines[] = sprintf('%'.($width - 10).'s', 'Item Fees:').sprintf('%10s', '$'.$pines->com_sales->round($this->item_fees, true));
+		$lines[] = sprintf('%'.($width - 10).'s', 'Tax:').sprintf('%10s', '$'.$pines->com_sales->round($this->taxes, true));
+		$lines[] = sprintf('%'.($width - 10).'s', 'Total:').sprintf('%10s', '$'.$pines->com_sales->round($this->total, true));
+		if ($this->status != 'invoiced' && $this->status != 'quoted') {
+			$lines[] = '';
+			$lines[] = sprintf('%'.($width - 10).'s', 'Amount Tendered:').sprintf('%10s', '$'.$pines->com_sales->round($this->amount_tendered, true));
+			$lines[] = sprintf('%'.($width - 10).'s', 'Change:').sprintf('%10s', '$'.$pines->com_sales->round($this->change, true));
+			$lines[] = '';
+			$lines[] = 'Payment Via:';
+			foreach ($this->payments as $cur_payment) {
+				$lines[] = sprintf('%'.($width - 10).'s', $cur_payment['label'].':').sprintf('%10s', '$'.$pines->com_sales->round($cur_payment['amount'], true));
+			}
+		}
+		$lines[] = '';
+		// Barcode
+		$lines[] = $this->receipt_format_barcode($this->id);
+
+		// -- Make the code. --
+		// Select standard mode.
+		$text = chr(hexdec('1B')).'S';
+		// Select the font.
+		$text .= chr(hexdec('1B')).'M'.chr(0);
+		// Concatenate the receipt data.
+		$text .= implode("\n", $lines);
+		// Feed the paper more.
+		$text .= chr(hexdec('1B')).'d'.chr(6);
+		// Cut the paper.
+		$text .= chr(hexdec('1B')).'m';
+		// Buzz
+		$text .= chr(hexdec('1B')).chr(hexdec('1E'));
+		return $text;
 	}
 
 	/**

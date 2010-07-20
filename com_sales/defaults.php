@@ -86,6 +86,20 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'center_receipt_headers',
+		'cname' => 'Center Receipt Headers',
+		'description' => 'Center headers for the receipt printer versions of receipts.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'quote_receipt_header',
+		'cname' => 'Quote Receipt Header',
+		'description' => 'This header will appear on the receipt printer version of the receipt.',
+		'value' => "PINES\n123 Street\nCity, ST 00000\nwww.example.com\n\nQuote",
+		'peruser' => true,
+	),
+	array(
 		'name' => 'quote_note_label',
 		'cname' => 'Quote Note Label',
 		'description' => 'The quote note will be appended to all quotes.',
@@ -97,6 +111,13 @@ return array(
 		'cname' => 'Quote Note Text',
 		'description' => 'The quote note will be appended to all quotes.',
 		'value' => 'You (Buyer) have 14 (fourteen) calendar days from the date on your Sales Invoice to Return the item(s) purchased. All returns will be subject to a 15% restocking fee made payable at the time of return. All restocking fees must be in the form of credit card or money order. All returns must be in original condition including item purchased, packaging, accessories, software, cords or other items. We reserve the right to request identification and to deny any return.',
+		'peruser' => true,
+	),
+	array(
+		'name' => 'invoice_receipt_header',
+		'cname' => 'Invoice Receipt Header',
+		'description' => 'This header will appear on the receipt printer version of the receipt.',
+		'value' => "PINES\n123 Street\nCity, ST 00000\nwww.example.com\n\nInvoice",
 		'peruser' => true,
 	),
 	array(
@@ -114,6 +135,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'receipt_header',
+		'cname' => 'Receipt Receipt Header',
+		'description' => 'This header will appear on the receipt printer version of the receipt.',
+		'value' => "PINES\n123 Street\nCity, ST 00000\nwww.example.com\n\nSale Receipt",
+		'peruser' => true,
+	),
+	array(
 		'name' => 'receipt_note_label',
 		'cname' => 'Receipt Note Label',
 		'description' => 'The receipt note will be appended to all receipts.',
@@ -128,6 +156,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'return_receipt_header',
+		'cname' => 'Return Receipt Header',
+		'description' => 'This header will appear on the receipt printer version of the receipt.',
+		'value' => "PINES\n123 Street\nCity, ST 00000\nwww.example.com\n\nReturn Receipt",
+		'peruser' => true,
+	),
+	array(
 		'name' => 'return_note_label',
 		'cname' => 'Receipt Note Label',
 		'description' => 'The receipt note will be appended to all return receipts.',
@@ -139,6 +174,13 @@ return array(
 		'cname' => 'Receipt Note Text',
 		'description' => 'The receipt note will be appended to all return receipts.',
 		'value' => '',
+		'peruser' => true,
+	),
+	array(
+		'name' => 'void_receipt_header',
+		'cname' => 'Void Receipt Header',
+		'description' => 'This header will appear on the receipt printer version of the receipt.',
+		'value' => "PINES\n123 Street\nCity, ST 00000\nwww.example.com\n\nVoid Sale",
 		'peruser' => true,
 	),
 	array(

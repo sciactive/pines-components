@@ -53,7 +53,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			},
 			"ui" : {
 				"select_limit" : 1,
-				"initially_select" : ["p_muid_<?php echo ($this->location == 'all') ? (int) $_SESSION['user']->group->guid : (int) $this->location; ?>"]
+				"initially_select" : ["<?php echo ($this->location == 'all') ? (int) $_SESSION['user']->group->guid : (int) $this->location; ?>"]
 			}
 		});
 		// TODO: How to recreate these?

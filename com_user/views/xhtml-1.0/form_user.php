@@ -199,7 +199,7 @@ $pines->com_pgrid->load();
 			},
 			"ui" : {
 				"select_limit" : 1,
-				"initially_select" : ["p_muid_<?php echo (int) $this->entity->group->guid; ?>"]
+				"initially_select" : ["<?php echo (int) $this->entity->group->guid; ?>"]
 			}
 		});
 		*/ ?>

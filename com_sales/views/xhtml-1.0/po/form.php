@@ -243,7 +243,7 @@ if ($this->entity->final)
 				},
 				"ui" : {
 					"select_limit" : 1,
-					"initially_select" : ["p_muid_<?php echo (int) $this->entity->destination->guid; ?>"]
+					"initially_select" : ["<?php echo (int) $this->entity->destination->guid; ?>"]
 				}
 			});
 

@@ -306,7 +306,7 @@ if ($pines->config->com_sales->autocomplete_product)
 				},
 				"ui" : {
 					"select_limit" : 1,
-					"initially_select" : ["p_muid_<?php echo (!isset($_SESSION['user']->group) ? '' : (int) $_SESSION['user']->group->guid); ?>"]
+					"initially_select" : ["<?php echo (!isset($_SESSION['user']->group) ? '' : (int) $_SESSION['user']->group->guid); ?>"]
 				}
 			});
 		});

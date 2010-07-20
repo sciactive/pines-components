@@ -220,7 +220,7 @@ $pines->uploader->load();
 			},
 			"ui" : {
 				"select_limit" : 1,
-				"initially_select" : ["p_muid_<?php echo (int) $this->entity->parent->guid; ?>"]
+				"initially_select" : ["<?php echo (int) $this->entity->parent->guid; ?>"]
 			}
 		});
 		*/ ?>

@@ -54,7 +54,7 @@ $pines->com_jstree->load();
 				},
 				"ui" : {
 					"select_limit" : 1,
-					"initially_select" : ["p_muid_"]
+					"initially_select" : ["<?php echo $_SESSION['user']->group->guid; ?>"]
 				}
 			});
 			<?php } ?>
@@ -167,6 +167,14 @@ $pines->com_jstree->load();
 				showOtherMonths: true,
 				selectOtherMonths: true
 			});
+			var location_tree = $("#p_muid_form .location_tree");
+			$("#p_muid_form [name=all_locations]").change(function(){
+				if ($(this).is(":checked")) {
+					location_tree.addClass("ui-state-disabled").attr("disabled", "disabled");
+				} else {
+					location_tree.removeClass("ui-state-disabled").removeAttr("disabled");
+				}
+			}).change();
 		});
 		// ]]>
 	</script>

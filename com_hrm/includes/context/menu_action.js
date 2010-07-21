@@ -56,9 +56,10 @@ function edit(edit_url){
 }
 
 // Delete Event(s)
-function del(){
+function del(delete_url){
 	var events = $("#calendar").fullCalendar('clientEvents');
 	var remove_events = new Array();
+	var event_guids = new Array();
 	var remove_count = 0;
 	// Find the selected event(s).
 	jQuery.each(events, function(i, val) {
@@ -67,10 +68,12 @@ function del(){
 		} else if (val.selected && val.group) {
 			if (remove_events[remove_count-1] != val.id &&
 				confirm(val.title + ' is a linked event, deleting it will remove the entire group.')) {
+				event_guids[remove_count] = val.guid;
 				remove_events[remove_count] = val.id;
 				remove_count++;
 			}
 		} else if (val.selected && !val.group) {
+			event_guids[remove_count] = val.id;
 			remove_events[remove_count] = val.id;
 			remove_count++;
 		}
@@ -78,11 +81,26 @@ function del(){
 	if (remove_count == 0) {
 		alert('Please select at least one event to delete.');
 	} else {
-		jQuery.each(remove_events, function(r, remove_event) {
-			$("#calendar").fullCalendar('removeEvents', remove_event);
+		$.ajax({
+			url: delete_url,
+			type: "POST",
+			dataType: "json",
+			data: {"events": event_guids},
+			error: function(){
+				pines.error("An error occured while trying to delete events from the calendar.");
+			},
+			success: function(data) {
+				jQuery.each(remove_events, function(r, remove_event) {
+					if (data && data.indexOf(remove_event) != -1)
+						return;
+					$("#calendar").fullCalendar('removeEvents', remove_event);
+				});
+				if (data)
+					pines.error('Some events could not be deleted.');
+				else
+					alert('Deleted Event(s).');
+			}
 		});
-		save_calendar();
-		alert('Deleted Event(s).');
 	}
 }
 

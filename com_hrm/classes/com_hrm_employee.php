@@ -142,6 +142,17 @@ class com_hrm_employee extends user {
 
 		return $module;
 	}
+
+	/**
+	 * Print a form to edit the work schedule for this employee.
+	 */
+	public function schedule_form() {
+		global $pines;
+		$pines->page->override = true;
+		$module = new module('com_hrm', 'form_schedule', 'content');
+		$module->entity = $this;
+		$pines->page->override_doc($module->render());
+	}
 }
 
 ?>

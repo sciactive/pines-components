@@ -16,9 +16,9 @@
     jQuery.fn.vscontext = function(options){
         var defaults = {
             menuBlock: null,
-            offsetX : -215,
+            offsetX : -15,
             offsetY : -125,
-            speed : 'slow'
+            speed : 'fast'
         };
         var options = $.extend(defaults, options);
         var menu_item = '.' + options.menuBlock;

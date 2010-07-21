@@ -16,12 +16,14 @@ if ( !gatekeeper('com_hrm/editcalendar') )
 
 if (isset($_REQUEST['employee'])) {	
 	if (isset($_REQUEST['start'])) {
-		$event_month = date('n', strtotime($_REQUEST['start']));
-		$event_day = date('j', strtotime($_REQUEST['start']));
-		$event_year = date('Y', strtotime($_REQUEST['start']));
-		$event_endmonth = date('n', strtotime($_REQUEST['end']));
-		$event_endday = date('j', strtotime($_REQUEST['end']));
-		$event_endyear = date('Y', strtotime($_REQUEST['end']));
+		$start_time = strtotime($_REQUEST['start']);
+		$end_time = strtotime($_REQUEST['end']);
+		$event_month = date('n', $start_time);
+		$event_day = date('j', $start_time);
+		$event_year = date('Y', $start_time);
+		$event_endmonth = date('n', $end_time);
+		$event_endday = date('j', $end_time);
+		$event_endyear = date('Y', $end_time);
 	} else {
 		// Default to the current date.
 		$event_month = date('n');
@@ -42,7 +44,6 @@ if (isset($_REQUEST['employee'])) {
 			return;
 	} else {
 		$event = com_hrm_event::factory();
-		$event->id = 0;
 	}
 
 	$event->employee = com_hrm_employee::factory((int) $_REQUEST['employee']);
@@ -69,6 +70,10 @@ if (isset($_REQUEST['employee'])) {
 	$event->all_day = ($_REQUEST['all_day'] == 'true');
 	$event->start = mktime($event->all_day ? 0 : $_REQUEST['time_start'],0,0,$event_month,$event_day,$event_year);
 	$event->end = mktime($event->all_day ? 23 : $_REQUEST['time_end'],$event->all_day ? 59 : 0,$event->all_day ? 59 : 0,$event_endmonth,$event_endday,$event_endyear);
+	// If the start and end dates are the same, push the end date ahead one day.
+	if ($event->start == $event->end)
+		$event->end = strtotime('+1 day', $event->end);
+
 	if ($event->all_day) {
 		$days = ceil(($event->end - $event->start) / 86400);
 		$event->scheduled = isset($event->employee->workday_length) ? $event->employee->workday_length : $pines->config->com_hrm->workday_length;

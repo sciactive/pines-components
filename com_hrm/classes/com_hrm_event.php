@@ -25,7 +25,7 @@ class com_hrm_event extends entity {
 	public function __construct($id = 0) {
 		parent::__construct();
 		$this->add_tag('com_hrm', 'event');
-		
+
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
@@ -68,6 +68,8 @@ class com_hrm_event extends entity {
 	public function save() {
 		if (!isset($this->title))
 			return false;
+		if (!isset($this->id))
+			$this->id = 0;
 		return parent::save();
 	}
 

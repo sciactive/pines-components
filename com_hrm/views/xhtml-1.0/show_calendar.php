@@ -18,7 +18,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Company Schedule [' . $this->location->name . ']';
+$this->title = 'Company Schedule [' . (isset($this->employee) ? $this->employee->name  : $this->location->name) . ']';
 ?>
 <script type='text/javascript'>
 // <![CDATA[
@@ -62,7 +62,7 @@ $this->title = 'Company Schedule [' . $this->location->name . ']';
 					echo 'start: '. $cur_event->start .', ';
 					echo 'end: '. $cur_event->end .', ';
 					echo 'className: \''. addslashes($cur_event->color) .'\',';
-					echo ($cur_event->time_off) ? 'editable: false,' : 'editable: true,';
+					echo ($cur_event->time_off || !gatekeeper('com_hrm/editcalendar')) ? 'editable: false,' : 'editable: true,';
 					echo ($cur_event->all_day) ? 'allDay: true' : 'allDay: false';
 					echo '}';
 					$event_counter++;
@@ -78,6 +78,7 @@ $this->title = 'Company Schedule [' . $this->location->name . ']';
 			},
 			eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
 				event.selected = false;
+				$("#calendar").fullCalendar('refetchEvents');
 				save_calendar();
 			},
 			eventDragStop: function( event, jsEvent, ui, view ) {
@@ -112,15 +113,16 @@ $this->title = 'Company Schedule [' . $this->location->name . ']';
 			type: "POST",
 			dataType: "html",
 			data: {"events": events},
-			error: function(XMLHttpRequest, textStatus){
+			error: function(){
 				pines.error("An error occured while trying to add events to the calendar.");
+			},
+			success: function(){
+				pines.get("<?php echo addslashes(pines_url('com_hrm', 'editcalendar', array('location' => $this->location->guid))); ?>");
 			}
 		});
-		pines.get("<?php echo addslashes(pines_url('com_hrm', 'editcalendar', array('location' => $this->location->guid))); ?>");
 	}
 	// Save all of the calendar events by exporting the data to their entities.
 	function save_calendar() {
-		var location = <?php echo $this->location->guid; ?>;
 		var events = $("#calendar").fullCalendar('clientEvents');
 		var events_dump = '';
 		//var events_array = new Array();
@@ -135,8 +137,8 @@ $this->title = 'Company Schedule [' . $this->location->name . ']';
 				//events_array[0] = val.id.toString();
 				//events_array[1] = '0';
 			}
-			var event_start = val.start.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d\:]+)\s.*/, '$1');
-			var event_end = val.end.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d\:]+)\s.*/, '$1');
+			var event_start = val.start.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d\:]+)\s.*/, '$1').replace(',', '');
+			var event_end = val.end.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d\:]+)\s.*/, '$1').replace(',', '');
 			events_dump += event_start + '|' + event_end + '|' + val.allDay + ',';
 			//events_array[2] = event_start;
 			//events_array[3] = event_end;
@@ -148,7 +150,7 @@ $this->title = 'Company Schedule [' . $this->location->name . ']';
 			url: "<?php echo addslashes(pines_url('com_hrm', 'savecalendar')); ?>",
 			type: "POST",
 			dataType: "html",
-			data: {"events": events_dump, "location": location},
+			data: {"events": events_dump},
 			error: function(XMLHttpRequest, textStatus){
 				pines.error("An error occured while trying to save the calendar.");
 			}
@@ -162,8 +164,8 @@ $this->title = 'Company Schedule [' . $this->location->name . ']';
 		<ul>
 			<li class="copy"><a href="javascript:copy();" id="menu_1">Duplicate</a></li>
 			<li class="unlink"><a href="javascript:unlink();" id="menu_2">Unlink</a></li>
-			<li class="edit"><a href="javascript:edit('<?php echo pines_url('com_hrm', 'editcalendar'); ?>');" id="menu_3">Edit</a></li>
-			<li class="delete seprator"><a href="javascript:del();" id="menu_4">Delete</a></li>
+			<li class="edit"><a href="javascript:edit('<?php echo pines_url('com_hrm', 'editcalendar', array('location' => $this->location->guid, 'employee' => $this->employee->guid)); ?>');" id="menu_3">Edit</a></li>
+			<li class="delete seprator"><a href="javascript:del('<?php echo pines_url('com_hrm', 'deleteevents'); ?>');" id="menu_4">Delete</a></li>
 			<li class="clear seprator"><a href="javascript:clear();" id="menu_5">Clear_All</a></li>
 			<li class="help"><a href="javascript:help();" id="menu_6">Help</a></li>
 		</ul>

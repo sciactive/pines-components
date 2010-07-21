@@ -103,7 +103,7 @@ class com_hrm extends component {
 
 		if (!isset($location))
 			$location = $_SESSION['user']->group->guid;
-		$module = new module('com_hrm', 'form_schedule');
+		$module = new module('com_hrm', 'form_location');
 		$module->location = $location;
 
 		$pines->page->override_doc($module->render());
@@ -125,30 +125,40 @@ class com_hrm extends component {
 	 * Creates and attaches a module which shows the calendar.
 	 * @param int $id An event GUID.
 	 * @param group $location The desired location to view the schedule for.
+	 * @param com_hrm_employee $employee The desired employee to view the schedule for.
 	 * @param int $rto A time off request GUID.
 	 */
-	public function show_calendar($id = null, $location = null, $rto = null) {
+	public function show_calendar($id = null, $location = null, $employee = null, $rto = null) {
 		global $pines;
 
 		if (!isset($location) || !isset($location->guid))
 			$location = $_SESSION['user']->group;
 
+		$calendar_head = new module('com_hrm', 'show_calendar_head', 'head');
+		$calendar = new module('com_hrm', 'show_calendar', 'content');
 		$form = new module('com_hrm', 'form_calendar', 'right');
 		// If an id is specified, the event info will be displayed for editing.
 		if (isset($id) && $id >  0) {
 			$form->entity = com_hrm_event::factory((int) $id);
 			$location = $form->entity->group;
 		}
-		// Should work like this, we need to have the employee's group update upon saving it to a user.
-		$form->employees = $this->get_employees();
-		$form->location = $location->guid;
+
+		$selector = array('&', 'tag' => array('com_hrm', 'event'));
+		$selector['ref'][] = array('group', $location);
+		if (isset($employee->guid)) {
+			unset($selector['ref']);
+			$selector['ref'][] = array('employee', $employee);
+			$form->employee = $calendar->employee = $employee;
+			$location = $employee->group;
+		}
 		if (isset($rto) && $rto >  0)
 			$form->rto = com_hrm_rto::factory((int) $rto);
 
-		$calendar_head = new module('com_hrm', 'show_calendar_head', 'head');
-		$calendar = new module('com_hrm', 'show_calendar', 'content');
-		$calendar->events = $pines->entity_manager->get_entities(array('class' => com_hrm_event), array('&', 'ref' => array('group', $location), 'tag' => array('com_hrm', 'event')));
+		// Should work like this, we need to have the employee's group update upon saving it to a user.
+		$form->employees = $this->get_employees();
+		$form->location = $location->guid;
 		$calendar->location = $location;
+		$calendar->events = $pines->entity_manager->get_entities(array('class' => com_hrm_event), $selector);
 	}
 
 	/**

@@ -74,7 +74,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			},
 			"ui" : {
 				"select_limit" : 1,
-				"initially_select" : ["p_muid_<?php echo (int) $this->location; ?>"]
+				"initially_select" : ["<?php echo (int) $this->location; ?>"]
 			}
 		});
 
@@ -121,7 +121,7 @@ defined('P_RUN') or die('Direct access prohibited');
 // ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_hrm', 'saveevent')); ?>">
-	<div class="pf-element location_tree" style="padding-bottom: 1em;"></div>
+	<div class="pf-element location_tree" style="padding-bottom: 1em; width: 90%;"></div>
 	<div class="pf-element">
 		<select class="ui-widget-content form_input" name="employee"></select>
 	</div>

@@ -18,6 +18,10 @@ $pines->page->override = true;
 
 if ($_REQUEST['id'] == 'self') {
 	$employee = com_hrm_employee::factory($_SESSION['user']->guid);
+	if ($pines->config->com_hrm->timeclock_verify_pin && !empty($_SESSION['user']->pin) && $_REQUEST['pin'] != $_SESSION['user']->pin) {
+		$pines->page->override_doc(json_encode('pin'));
+		return;
+	}
 } else {
 	if ( !gatekeeper('com_hrm/manageclock') )
 		punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'employee/timeclock/clock', $_REQUEST));

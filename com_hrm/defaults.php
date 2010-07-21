@@ -47,6 +47,13 @@ return array(
 		'value' => 8,
 		'peruser' => true,
 	),
+	array(
+		'name' => 'timeclock_verify_pin',
+		'cname' => 'Verify PIN for Clocking In/Out',
+		'description' => 'Verify the user\'s PIN when they clock in or out.',
+		'value' => true,
+		'peruser' => true,
+	),
 );
 
 ?>

@@ -17,13 +17,13 @@ $entry_count = count($this->entity->timeclock);
 	<script type="text/javascript">
 		// <![CDATA[
 		pines(function(){
-			$("#p_muid_button").click(function(){
+			var do_clock = function(pin){
 				var loader;
 				$.ajax({
 					url: "<?php echo addslashes(pines_url('com_hrm', 'employee/timeclock/clock')); ?>",
 					type: "POST",
 					dataType: "json",
-					data: {"id": "self"},
+					data: {"id": "self", "pin": pin},
 					beforeSend: function(){
 						loader = $.pnotify({
 							pnotify_title: 'Timeclock',
@@ -45,6 +45,10 @@ $entry_count = count($this->entity->timeclock);
 							alert("No data was returned.");
 							return;
 						}
+						if (data == "pin") {
+							alert("Invalid PIN.");
+							return;
+						}
 						if (!data[0]) {
 							pines.error("There was an error saving the change to the database.");
 							return;
@@ -59,6 +63,36 @@ $entry_count = count($this->entity->timeclock);
 						$("#p_muid_timeclock").effect("highlight");
 					}
 				});
+			};
+
+			$("#p_muid_button").click(function(){
+				<?php if ($pines->config->com_hrm->timeclock_verify_pin && !empty($_SESSION['user']->pin)) { ?>
+				var dialog = $("<div />", {
+					"title": "Please Verify Your PIN",
+					"html": '<div class="pf-form"><div class="pf-element"><label><span class="pf-label">PIN</span><input type="password" class="pf-field ui-widget-content" /></label></div></div><br />'
+				}).dialog({
+					modal: true,
+					open: function(){
+						$(this).find("input[type=password]").focus().keypress(function(e){
+							if (e.keyCode == 13)
+								dialog.dialog("option", "buttons").Done();
+						});
+					},
+					buttons: {
+						"Done": function(){
+							var pin = dialog.find("input[type=password]").val();
+							if (pin == "") {
+								alert("Please enter a PIN.");
+								return;
+							}
+							do_clock(pin);
+							dialog.dialog("close").remove();
+						}
+					}
+				});
+				<?php } else { ?>
+				do_clock();
+				<?php } ?>
 			});
 		});
 		// ]]>

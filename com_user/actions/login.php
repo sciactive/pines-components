@@ -46,11 +46,10 @@ if ( gatekeeper() && $_REQUEST['username'] == $_SESSION['user']->username ) {
 	return;
 }
 $user = user::factory($_REQUEST['username']);
-if ( isset($user->guid) && $user->check_password($_REQUEST['password']) ) {
-	$pines->user_manager->login($user);
+if ( isset($user->guid) && $user->check_password($_REQUEST['password']) && $pines->user_manager->login($user) ) {
 	if ( !empty($_REQUEST['url']) ) {
 		redirect(urldecode($_REQUEST['url']));
-		exit;
+		return;
 	}
 	// Load the default component.
 	redirect(pines_url());

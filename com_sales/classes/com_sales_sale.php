@@ -582,18 +582,34 @@ class com_sales_sale extends entity {
 	}
 
 	private function receipt_format_barcode($text) {
+		global $pines;
 		// Barcode height.
 		$barcode = chr(hexdec('1D')).'h'.chr(50);
 		// Text below barcode.
 		$barcode .= chr(hexdec('1D')).'H'.chr(2);
 		// First barcode font.
 		$barcode .= chr(hexdec('1D')).'f'.chr(0);
-		// Medium width.
-		$barcode .= chr(hexdec('1D')).'w'.chr(2);
-		// Code39 Barcode
-		$barcode .= chr(hexdec('1D')).'k'.chr(69);
-		// The barcode data.
-		$barcode .= chr(strlen("$text")).$text;
+		// Width.
+		$barcode .= chr(hexdec('1D')).'w'.chr(2 * (int) $pines->config->com_barcode->xres);
+		// Barcode type and data.
+		switch ($pines->config->com_barcode->type) {
+			case 'I25':
+				$barcode .= chr(hexdec('1D')).'k'.chr(70).chr(strlen("$text")).$text;
+				break;
+			case 'C39':
+			default:
+				$barcode .= chr(hexdec('1D')).'k'.chr(69).chr(strlen("$text")).$text;
+				break;
+			case 'C128A':
+				$barcode .= chr(hexdec('1D')).'k'.chr(73).chr(strlen("$text")).$text;
+				break;
+			case 'C128B':
+				$barcode .= chr(hexdec('1D')).'k'.chr(73).chr(strlen("$text")).chr(hexdec('7B')).chr(hexdec('42')).$text;
+				break;
+			case 'C128C':
+				$barcode .= chr(hexdec('1D')).'k'.chr(73).chr(strlen("$text")).chr(hexdec('7B')).chr(hexdec('43')).$text;
+				break;
+		}
 		return $barcode;
 	}
 
@@ -606,7 +622,7 @@ class com_sales_sale extends entity {
 		return str_repeat(' ', $pad_front).$text.str_repeat(' ', $pad_back);
 	}
 
-	public function receipt_text($width) {
+	public function receipt_text($width, $width2) {
 		global $pines;
 		$lines = array();
 		// Gather all the receipt data.
@@ -692,22 +708,52 @@ class com_sales_sale extends entity {
 		}
 		$lines[] = '';
 		// Barcode
-		$lines[] = $this->receipt_format_barcode($this->id);
+		$lines[] = $this->receipt_format_barcode("SA{$this->id}");
 
 		// -- Make the code. --
 		// Select standard mode.
-		$text = chr(hexdec('1B')).'S';
+		$data = chr(hexdec('1B')).'S';
 		// Select the font.
-		$text .= chr(hexdec('1B')).'M'.chr(0);
+		$data .= chr(hexdec('1B')).'M'.chr(0);
 		// Concatenate the receipt data.
-		$text .= implode("\n", $lines);
+		$data .= implode("\n", $lines);
+		// Print the receipt label.
+		switch ($this->status) {
+			case 'quoted':
+				$label = $pines->config->com_sales->quote_note_label;
+				$text = $pines->config->com_sales->quote_note_text;
+				break;
+			case 'invoiced':
+				$label = $pines->config->com_sales->invoice_note_label;
+				$text = $pines->config->com_sales->invoice_note_text;
+				break;
+			case 'paid':
+				$label = $pines->config->com_sales->receipt_note_label;
+				$text = $pines->config->com_sales->receipt_note_text;
+				break;
+			case 'processed':
+				$label = $pines->config->com_sales->return_note_label;
+				$text = $pines->config->com_sales->return_note_text;
+				break;
+		}
+		if (!empty($text)) {
+			$data .= "\n\n";
+			// Select the font.
+			$data .= chr(hexdec('1B')).'M'.chr(1);
+			$data .= "$label\n";
+			// Select the font.
+			$data .= chr(hexdec('1B')).'M'.chr(2);
+			$data .= wordwrap($text, $width2, "\n", true);
+			// Reset the font.
+			$data .= chr(hexdec('1B')).'M'.chr(0);
+		}
 		// Feed the paper more.
-		$text .= chr(hexdec('1B')).'d'.chr(6);
+		$data .= chr(hexdec('1B')).'d'.chr(6);
 		// Cut the paper.
-		$text .= chr(hexdec('1B')).'m';
+		$data .= chr(hexdec('1B')).'m';
 		// Buzz
-		$text .= chr(hexdec('1B')).chr(hexdec('1E'));
-		return $text;
+		$data .= chr(hexdec('1B')).chr(hexdec('1E'));
+		return $data;
 	}
 
 	/**

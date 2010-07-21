@@ -20,6 +20,6 @@ header('Content-Type: text/plain');
 header('Content-Disposition: attachment; filename="receipt"');
 header('Content-Transfer-Encoding: binary');
 $pines->page->override = true;
-$pines->page->override_doc($entity->receipt_text(48));
+$pines->page->override_doc($entity->receipt_text(48, 72));
 
 ?>

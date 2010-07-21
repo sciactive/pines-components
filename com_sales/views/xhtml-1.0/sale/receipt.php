@@ -99,14 +99,14 @@ switch ($this->entity->status) {
 	if (isset($sales_group))
 		$group_logo = $sales_group->get_logo(true);
 	// Document id number.
-	$doc_id = strtoupper($sales_group->groupname . substr($this->doc_title, 0, 2)) . ($sale ? '' : 'R') . $this->entity->id;
+	$doc_id = ($sale ? 'SA' : 'RE') . $this->entity->id;
 	?>
 	<div class="left_side">
 		<span><img src="<?php echo htmlentities($group_logo); ?>" alt="<?php echo htmlentities($pines->config->page_title); ?>" /></span>
 	</div>
 	<div class="right_side barcode">
 		<h1><?php echo htmlentities($this->doc_title); ?></h1>
-		<img src="<?php echo htmlentities(pines_url('com_barcode', 'image', array('code' => $doc_id, 'width' => '250'))); ?>" alt="Barcode" />
+		<img src="<?php echo htmlentities(pines_url('com_barcode', 'image', array('code' => $doc_id, 'height' => '60', 'width' => '300', 'style' => '850'))); ?>" alt="Barcode" />
 	</div>
 	<?php if (isset($sales_rep->guid)) { ?>
 	<div class="left_side location">
@@ -125,14 +125,14 @@ switch ($this->entity->status) {
 	<?php } ?>
 	<div class="right_side receipt_info">
 		<div class="right_text">
-			<span><?php echo htmlentities($this->doc_title); ?> #:</span>
+			<span><?php echo $sale ? 'Sale' : 'Return'; ?> #:</span>
 			<span>Date:</span>
 			<span>Time:</span>
 			<?php if (!$sale && isset($this->entity->sale)) { ?><span>Sale:</span><?php } ?>
 			<?php if (isset($sales_rep->guid)) { ?><span>Sales Rep:</span><?php } ?>
 		</div>
 		<div class="data_col">
-			<span><?php echo htmlentities($doc_id); ?></span>
+			<span><?php echo htmlentities($this->entity->id); ?></span>
 			<?php switch($this->entity->status) {
 				case 'invoiced':
 					echo '<span>'.format_date($this->entity->invoice_date, 'date_short').'</span>';

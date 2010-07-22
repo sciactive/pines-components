@@ -1,6 +1,6 @@
 <?php
 /**
- * Provide a receipt of a sale.
+ * Provide a receipt file of a sale.
  *
  * @package Pines
  * @subpackage com_sales

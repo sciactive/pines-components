@@ -583,6 +583,13 @@ class com_sales_sale extends entity {
 		return $module;
 	}
 
+	/**
+	 * Format a barcode for the receipt printer.
+	 *
+	 * @param string $text The barcode text.
+	 * @return string The formatted barcode code.
+	 * @access private
+	 */
 	private function receipt_format_barcode($text) {
 		global $pines;
 		// Barcode height.
@@ -615,6 +622,14 @@ class com_sales_sale extends entity {
 		return $barcode;
 	}
 
+	/**
+	 * Center text in a fixed width for the receipt printer.
+	 *
+	 * @param string $text Text to center.
+	 * @param int $width Width in number of characters.
+	 * @return string The centered text.
+	 * @access private
+	 */
 	private function receipt_format_center($text, $width) {
 		$text_width = strlen($text);
 		if ($text_width >= $width -1)
@@ -624,6 +639,13 @@ class com_sales_sale extends entity {
 		return str_repeat(' ', $pad_front).$text.str_repeat(' ', $pad_back);
 	}
 
+	/**
+	 * Generate receipt code for the receipt printer from the sale.
+	 *
+	 * @param int $width Width in number of characters for font 1.
+	 * @param int $width2 Width in number of characters for font 2.
+	 * @return string The receipt code.
+	 */
 	public function receipt_text($width, $width2) {
 		global $pines;
 		$lines = array();

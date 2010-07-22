@@ -16,8 +16,10 @@ if ( !gatekeeper('com_sales/editsale') && !gatekeeper('com_sales/newsale') )
 
 $entity = com_sales_sale::factory((int) $_REQUEST['id']);
 
-header('Content-Type: text/plain');
-header('Content-Disposition: attachment; filename="receipt"');
+header('Content-Type: application/x-pines-receipt');
+// This makes it impossible to automatically open the file in Firefox because of
+// RFC 2183 -- See bug 331259.
+//header('Content-Disposition: attachment; filename="receipt"');
 header('Content-Transfer-Encoding: binary');
 $pines->page->override = true;
 $pines->page->override_doc($entity->receipt_text(48, 72));

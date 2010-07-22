@@ -198,6 +198,20 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'receipt_printer',
+		'cname' => 'Receipt Printer',
+		'description' => 'Integrate the POS with a receipt printer. (Requires specific settings and a special script.)',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'auto_receipt_printer',
+		'cname' => 'Auto Print Receipt',
+		'description' => 'Print the receipt to a receipt printer automatically when the receipt is shown after quoting/invoicing/completing a sale/return.',
+		'value' => false,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'cash_drawer',
 		'cname' => 'Cash Drawer',
 		'description' => 'Integrate the POS with a cash drawer. (Requires the Pines Cash Drawer Firefox addon.)',

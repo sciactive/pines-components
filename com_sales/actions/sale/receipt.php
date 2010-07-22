@@ -15,6 +15,6 @@ if ( !gatekeeper('com_sales/editsale') && !gatekeeper('com_sales/newsale') )
 	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'sale/receipt', array('id' => $_REQUEST['id'])));
 
 $entity = com_sales_sale::factory((int) $_REQUEST['id']);
-$entity->print_receipt();
+$entity->print_receipt($_REQUEST['autoprint'] == 'ok');
 
 ?>

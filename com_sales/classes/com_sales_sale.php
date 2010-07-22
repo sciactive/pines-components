@@ -568,15 +568,17 @@ class com_sales_sale extends entity {
 
 	/**
 	 * Print a receipt of the sale.
+	 * @param bool $auto_print_ok Auto printing the receipt is ok.
 	 * @return module The receipt's module.
 	 */
-	function print_receipt() {
+	function print_receipt($auto_print_ok = false) {
 		global $pines;
 
 		$module = new module('com_sales', 'sale/receipt', 'content');
 		$module->entity = $this;
 		$actions = new module('com_sales', 'sale/receiptactions', 'right');
 		$actions->entity = $this;
+		$actions->auto_print_ok = $auto_print_ok;
 
 		return $module;
 	}

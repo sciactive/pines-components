@@ -27,6 +27,7 @@
 			"path": "main_menu/system/com_entitytools/export",
 			"text": "Export",
 			"href": ["com_entitytools","export"],
+			"target": "_blank",
 			"depend": {
 				"ability": "com_entitytools/export"
 			}

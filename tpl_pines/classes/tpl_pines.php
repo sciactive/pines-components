@@ -75,9 +75,12 @@ class tpl_pines extends template {
 	 */
 	public function sub_menu(&$menu, $header_style = false) {
 		$count = count($menu);
+		// TODO: Remove target attribute. It's not XHTML 1.0 Strict.
 		$return = '<li><a class="'.($header_style ? 'ui-widget-header' : 'ui-state-default').'" href="'.
-			(isset($menu[0]['href']) ? htmlentities($menu[0]['href']) : '#').
-			(isset($menu[0]['onclick']) ? "\" onclick=\"{$menu[0]['onclick']}\">" : '">').
+			(isset($menu[0]['href']) ? htmlentities($menu[0]['href']) : '#').'"'.
+			(isset($menu[0]['onclick']) ? " onclick=\"{$menu[0]['onclick']}\"" : '').
+			(isset($menu[0]['target']) ? " target=\"{$menu[0]['target']}\"" : '')
+			.'>'.
 			htmlentities($menu[0]['text']).
 			($count > 1 ? '<span class="ui-icon ui-icon-triangle-1-se"></span>' : '').'</a>';
 		//$return = '<li class="ui-state-default"><a'.
@@ -98,9 +101,9 @@ class tpl_pines extends template {
 	}
 
 	public function url($component = null, $action = null, $params = array(), $full_location = false) {
-		// Was needed for redirection, but not anymore.
-		//if ($_REQUEST['tpl_pines_ajax'] == 1)
-		//	$params['tpl_pines_ajax'] = 1;
+		// Was needed for redirection, but not anymore. ?? Or is it??
+		if ($_REQUEST['tpl_pines_ajax'] == 1)
+			$params['tpl_pines_ajax'] = 1;
 		return parent::url($component, $action, $params, $full_location);
 	}
 }

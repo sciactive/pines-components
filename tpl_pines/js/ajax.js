@@ -1,6 +1,6 @@
 // Experimental AJAX code.
 pines(function(){
-	var current_hash, loader, j_window = $(window),
+	var current_hash, changing_hash = false, loader, j_window = $(window),
 	pos_head = $("head"),
 	main_menu = $("#main_menu"),
 	pos_top = $("#top"),
@@ -20,9 +20,11 @@ pines(function(){
 		if (typeof data == "undefined") {
 			data = {tpl_pines_ajax: 1};
 		} else if (typeof data == "string") {
+			if (data.indexOf("tpl_pines_ajax=1") == -1) {
 			if (data != "")
 				data += "&"
 			data += "tpl_pines_ajax=1";
+			}
 		} else {
 			data.tpl_pines_ajax = 1;
 		}
@@ -56,9 +58,11 @@ pines(function(){
 				pines.error("An error occured while communicating with the server:\n\n"+xhr.status+": "+textStatus);
 			},
 			success: function(data){
-				if (window.location != url)
-					window.location.hash = current_hash = "#!"+url.slice(pines.rela_location.length);
-				else
+				if (window.location != url) {
+					current_hash = "#!"+url.slice(pines.rela_location.length);
+					changing_hash = true;
+					window.location.hash = current_hash;
+				} else
 					current_hash = "";
 				// Pause DOM ready script execution.
 				pines.pause();
@@ -90,22 +94,30 @@ pines(function(){
 			}
 		});
 	};
-	$("body").delegate("a", "click", function(){
+	$("body").delegate("a", "click", function(e){
 		var cur_elem = $(this);
-		var target = cur_elem.attr("href");
-		if (target.indexOf(pines.rela_location) != 0)
+		var target = cur_elem.attr("target");
+		if (typeof target != "undefined" && target != "" && target != "_self")
 			return true;
-		load_page_ajax(target, "GET");
+		var url = cur_elem.attr("href");
+		if (typeof url == "undefined")
+			return true;
+		if (url == "#")
+		return false;
+		if (url.indexOf(pines.rela_location) != 0)
+			return true;
+		e.preventDefault();
+		load_page_ajax(url, "GET");
 		return false;
 	});
 	$("body").delegate("form", "submit", function(){
 		// TODO: Check for file elements.
 		var cur_elem = $(this);
-		var target = cur_elem.attr("action");
-		if (target.indexOf(pines.rela_location) != 0)
+		var url = cur_elem.attr("action");
+		if (url.indexOf(pines.rela_location) != 0)
 			return true;
 		var data = cur_elem.serialize();
-		load_page_ajax(target, "POST", data);
+		load_page_ajax(url, "POST", data);
 		return false;
 	});
 	pines.get = function(url, params){
@@ -139,8 +151,12 @@ pines(function(){
 	// When the hash changes (like the back button) load the new page.
 	var hashchange = function(){
 		// Check that the hash hasn't been loaded.
-		if (window.location.hash == current_hash)
+		if (window.location.hash == current_hash || changing_hash) {
+			// This accounts for URL encoding being changed in the hash.
+			current_hash = window.location.hash;
+			changing_hash = false;
 			return;
+		}
 		// Load the new hash.
 		if (typeof window.location.hash == "string" && window.location.hash != "") {
 			if (window.location.hash.indexOf("!") == 1)

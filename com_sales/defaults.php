@@ -136,7 +136,7 @@ return array(
 	),
 	array(
 		'name' => 'receipt_header',
-		'cname' => 'Receipt Receipt Header',
+		'cname' => 'Sale Receipt Header',
 		'description' => 'This header will appear on the receipt printer version of the receipt.',
 		'value' => "PINES\n123 Street\nCity, ST 00000\nwww.example.com\n\nSale Receipt",
 		'peruser' => true,
@@ -144,14 +144,14 @@ return array(
 	array(
 		'name' => 'receipt_note_label',
 		'cname' => 'Receipt Note Label',
-		'description' => 'The receipt note will be appended to all receipts.',
+		'description' => 'The receipt note will be appended to all sale receipts.',
 		'value' => 'Return Policy:',
 		'peruser' => true,
 	),
 	array(
 		'name' => 'receipt_note_text',
 		'cname' => 'Receipt Note Text',
-		'description' => 'The receipt note will be appended to all receipts.',
+		'description' => 'The receipt note will be appended to all sale receipts.',
 		'value' => 'You (Buyer) have 14 (fourteen) calendar days from the date on your Sales Invoice to Return the item(s) purchased. All returns will be subject to a 15% restocking fee made payable at the time of return. All restocking fees must be in the form of credit card or money order. All returns must be in original condition including item purchased, packaging, accessories, software, cords or other items. We reserve the right to request identification and to deny any return.',
 		'peruser' => true,
 	),
@@ -164,14 +164,14 @@ return array(
 	),
 	array(
 		'name' => 'return_note_label',
-		'cname' => 'Receipt Note Label',
+		'cname' => 'Return Note Label',
 		'description' => 'The receipt note will be appended to all return receipts.',
 		'value' => '',
 		'peruser' => true,
 	),
 	array(
 		'name' => 'return_note_text',
-		'cname' => 'Receipt Note Text',
+		'cname' => 'Return Note Text',
 		'description' => 'The receipt note will be appended to all return receipts.',
 		'value' => '',
 		'peruser' => true,

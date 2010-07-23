@@ -26,7 +26,6 @@ defined('P_RUN') or die('Direct access prohibited');
 	<?php if (gatekeeper('com_hrm/editcalendar')) { ?>
 		pines.loadcss("<?php echo htmlentities($pines->config->rela_location); ?>components/com_hrm/includes/context/css/vscontext.css");
 		pines.loadjs("<?php echo htmlentities($pines->config->rela_location); ?>components/com_hrm/includes/context/vscontext.jquery.js");
-		pines.loadjs("<?php echo htmlentities($pines->config->rela_location); ?>components/com_hrm/includes/context/menu_action.js");
 	<?php } ?>
 	// ]]>
 </script>

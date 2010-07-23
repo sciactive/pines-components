@@ -93,7 +93,10 @@ if (isset($_REQUEST['employee'])) {
 	} else {
 		pines_error('Error saving event. Do you have permission?');
 	}
+	// Go back to the employee's calendar.
+	$employee = ($_REQUEST['employee_view'] == 'true') ? $event->employee : null;
+} else {
+	$employee = null;
 }
-
-redirect(pines_url('com_hrm', 'editcalendar', array('location' => $location->guid)));
+redirect(pines_url('com_hrm', 'editcalendar', array('location' => $location->guid, 'employee' => $employee->guid)));
 ?>

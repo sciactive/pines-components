@@ -27,7 +27,7 @@ if (isset($_REQUEST['events'])) {
 		$dupe_event = com_hrm_event::factory();
 		// Duplicate the data for the new event.
 		if ($count > 1)
-			$dupe_event->id = $dupe_id;
+			$dupe_event->event_id = $dupe_id;
 		$dupe_event->title = $event->title;
 		$dupe_event->label = $event->label;
 		$dupe_event->employee = $event->employee;

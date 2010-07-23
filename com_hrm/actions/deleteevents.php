@@ -20,7 +20,7 @@ $list = array_map('intval', (array) $_REQUEST['events']);
 $failed_removes = array();
 foreach ($list as $cur_id) {
 	$cur_entity = com_hrm_event::factory((int) $cur_id);
-	$group = $cur_entity->id;
+	$group = $cur_entity->event_id;
 	if ( !isset($cur_entity->guid) || !$cur_entity->delete() ) {
 		$failed_removes[] = $cur_id;
 	} elseif ($group != 0) {
@@ -30,7 +30,7 @@ foreach ($list as $cur_id) {
 					'guid' => $list
 				),
 				array('&',
-					'data' => array('id', $group),
+					'data' => array('event_id', $group),
 					'tag' => array('com_hrm', 'event')
 				)
 			);

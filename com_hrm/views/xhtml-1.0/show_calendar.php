@@ -21,7 +21,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Company Schedule [' . (isset($this->employee) ? $this->employee->name  : $this->location->name) . ']';
 ?>
 <script type='text/javascript'>
-// <![CDATA[
+	// <![CDATA[
 	pines(function() {
 		// Create the calendar object.
 		$('#calendar').fullCalendar({
@@ -48,10 +48,10 @@ $this->title = 'Company Schedule [' . (isset($this->employee) ? $this->employee-
 					if ($event_counter > 0)
 						echo ',';
 					echo '{';
-					if ($cur_event->id != 0) {
+					if ($cur_event->event_id != 0) {
 						echo 'group: true,';
-						echo 'id: '. $cur_event->id .', ';
-						echo '_id: '. $cur_event->id .', ';
+						echo 'id: '. $cur_event->event_id .', ';
+						echo '_id: '. $cur_event->event_id .', ';
 						echo 'guid: '. $cur_event->guid .', ';
 					} else {
 						echo 'group: false,';
@@ -79,7 +79,7 @@ $this->title = 'Company Schedule [' . (isset($this->employee) ? $this->employee-
 			eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
 				event.selected = false;
 				$("#calendar").fullCalendar('refetchEvents');
-				save_calendar();
+				pines.com_hrm_save_calendar();
 			},
 			eventDragStop: function( event, jsEvent, ui, view ) {
 				var events = $("#calendar").fullCalendar('clientEvents');
@@ -90,7 +90,7 @@ $this->title = 'Company Schedule [' . (isset($this->employee) ? $this->employee-
 			},
 			eventResize: function(event,dayDelta,minuteDelta,revertFunc,jsEvent,ui,view) {
 				event.selected = false;
-				save_calendar();
+				pines.com_hrm_save_calendar();
 			},
 			viewDisplay: function(view) {
 				// Deselect all events when changing the calendar timespan.
@@ -107,7 +107,7 @@ $this->title = 'Company Schedule [' . (isset($this->employee) ? $this->employee-
 		<?php } ?>
 	});
 	// Add new events to the calendar, mostly for duplicating events.
-	function add_events(events) {
+	pines.com_hrm_add_events = function(events) {
 		$.ajax({
 			url: "<?php echo addslashes(pines_url('com_hrm', 'addevents')); ?>",
 			type: "POST",
@@ -117,12 +117,13 @@ $this->title = 'Company Schedule [' . (isset($this->employee) ? $this->employee-
 				pines.error("An error occured while trying to add events to the calendar.");
 			},
 			success: function(){
-				pines.get("<?php echo addslashes(pines_url('com_hrm', 'editcalendar', array('location' => $this->location->guid))); ?>");
+				pines.get("<?php echo addslashes(pines_url('com_hrm', 'editcalendar', array('location' => $this->location->guid, 'employee' => $this->employee->guid))); ?>");
 			}
 		});
-	}
+	};
+
 	// Save all of the calendar events by exporting the data to their entities.
-	function save_calendar() {
+	pines.com_hrm_save_calendar = function() {
 		var events = $("#calendar").fullCalendar('clientEvents');
 		var events_dump = '';
 		//var events_array = new Array();
@@ -155,19 +156,180 @@ $this->title = 'Company Schedule [' . (isset($this->employee) ? $this->employee-
 				pines.error("An error occured while trying to save the calendar.");
 			}
 		});
-	}
-// ]]>
+	};
+
+	// Help
+	pines.com_hrm_calendar_help = function(){
+		alert('Click on an event to select/deselect it.');
+	};
+
+	// Duplicate Event(s)
+	pines.com_hrm_copy_event = function() {
+		var events = $("#calendar").fullCalendar('clientEvents');
+		var copy_events = new Array();
+		var copy_count = 0;
+		// Find the selected event(s).
+		$.each(events, function(i, val) {
+			if (val.selected && val.editable == false) {
+				alert(val.title+' cannot be copied.');
+			} else if (val.selected) {
+				if (val.group)
+					copy_events[copy_count] = val.guid;
+				else
+					copy_events[copy_count] = val.id;
+				copy_count++;
+			}
+		});
+		if (copy_count == 0) {
+			alert('Please select at least one event to duplicate.');
+		} else {
+			pines.com_hrm_add_events(copy_events);
+		}
+	};
+
+	// Edit Event
+	pines.com_hrm_edit_event = function() {
+		var events = $("#calendar").fullCalendar('clientEvents');
+		var edit_event;
+		var edit_count = 0;
+		// Find the selected event(s).
+		$.each(events, function(i, val) {
+			if (val.selected) {
+				if (val.editable == false)
+					alert(val.title+' is not editable.');
+				else if (val.group)
+					edit_event = val.guid;
+				else
+					edit_event = val.id;
+				if (typeof edit_event != 'undefined')
+					edit_count++;
+			}
+		});
+		if (edit_count == 0) {
+			alert('Please select an event to edit.');
+		} else if (edit_count > 1) {
+			alert('You may only edit one event at a time.');
+		} else {
+			alert('Editing ['+ edit_event +']');
+			var edit_url = '<?php echo pines_url('com_hrm', 'editcalendar', array('location' => $this->location->guid, 'employee' => $this->employee->guid)); ?>';
+			pines.post(edit_url, { id: edit_event });
+		}
+	};
+
+	// Delete Event(s)
+	pines.com_hrm_delete_events = function() {
+		var events = $("#calendar").fullCalendar('clientEvents');
+		var remove_events = new Array();
+		var event_guids = new Array();
+		var remove_count = 0;
+		// Find the selected event(s).
+		$.each(events, function(i, val) {
+			if (val.selected && val.editable == false) {
+				alert(val.title+' cannot be deleted.');
+			} else if (val.selected && val.group) {
+				if (remove_events[remove_count-1] != val.id &&
+					confirm(val.title + ' is a linked event, deleting it will remove the entire group.')) {
+					event_guids.push(val.guid);
+					remove_events.push(val.id);
+					remove_count++;
+				}
+			} else if (val.selected && !val.group) {
+				event_guids.push(val.id);
+				remove_events.push(val.id);
+				remove_count++;
+			}
+		});
+		if (remove_count == 0) {
+			alert('Please select at least one event to delete.');
+		} else {
+			$.ajax({
+				url: "<?php echo addslashes(pines_url('com_hrm', 'deleteevents')); ?>",
+				type: "POST",
+				dataType: "json",
+				data: {"events": event_guids},
+				error: function(){
+					pines.error("An error occured while trying to delete events from the calendar.");
+				},
+				success: function(data) {
+					$.each(remove_events, function(r, remove_event) {
+						if (data && data.indexOf(remove_event) != -1)
+							return;
+						$("#calendar").fullCalendar('removeEvents', remove_event);
+					});
+					if (data)
+						pines.error('Some events could not be deleted.');
+					else
+						alert('Deleted Event(s).');
+				}
+			});
+		}
+	};
+
+	// Clear Calendar
+	pines.com_hrm_clear_calendar = function() {
+		if (confirm('Clear the entire calendar? This will remove all events for this location/employee.')) {
+
+			var events = $("#calendar").fullCalendar('clientEvents');
+			var event_guids = new Array();
+			// Find the selected event(s).
+			$.each(events, function(i, val) {
+				if (val.group)
+					event_guids.push(val.guid);
+				else if (!val.group)
+					event_guids.push(val.id);
+			});
+
+			$.ajax({
+				url: "<?php echo addslashes(pines_url('com_hrm', 'deleteevents')); ?>",
+				type: "POST",
+				dataType: "json",
+				data: {"events": event_guids},
+				error: function(){
+					pines.error("An error occured while trying to delete events from the calendar.");
+				},
+				success: function(data) {
+					$("#calendar").fullCalendar('removeEvents');
+					if (data)
+						pines.error('Some events could not be deleted.');
+					else
+						alert('Cleared the calendar.');
+				}
+			});
+			pines.com_hrm_save_calendar();
+		}
+	};
+
+	// Unlink Event(s)
+	pines.com_hrm_unlink_events = function() {
+		var events = $("#calendar").fullCalendar('clientEvents');
+		var unlink_count = 0;
+		// Find the selected event(s).
+		$.each(events, function(i, val) {
+			if (val.selected == true && val.group) {
+				val.group = false;
+				val.id = val.guid;
+				unlink_count++;
+			}
+		});
+		if (unlink_count == 0) {
+			alert('Please select at least one bound event to unlink.');
+		} else {
+			pines.com_hrm_save_calendar();
+			$("#calendar").fullCalendar('refetchEvents');
+		}
+	};
+	// ]]>
 </script>
 <div id="calendar">
 	<?php if (gatekeeper('com_hrm/editcalendar')) { ?>
 	<div class="vs-context-menu">
 		<ul>
-			<li class="copy"><a href="javascript:copy();" id="menu_1">Duplicate</a></li>
-			<li class="unlink"><a href="javascript:unlink();" id="menu_2">Unlink</a></li>
-			<li class="edit"><a href="javascript:edit('<?php echo pines_url('com_hrm', 'editcalendar', array('location' => $this->location->guid, 'employee' => $this->employee->guid)); ?>');" id="menu_3">Edit</a></li>
-			<li class="delete seprator"><a href="javascript:del('<?php echo pines_url('com_hrm', 'deleteevents'); ?>');" id="menu_4">Delete</a></li>
-			<li class="clear seprator"><a href="javascript:clear();" id="menu_5">Clear_All</a></li>
-			<li class="help"><a href="javascript:help();" id="menu_6">Help</a></li>
+			<li class="copy"><a onclick="pines.com_hrm_copy_event();" id="menu_1">Duplicate</a></li>
+			<li class="unlink"><a onclick="pines.com_hrm_unlink_events();" id="menu_2">Unlink</a></li>
+			<li class="edit"><a onclick="pines.com_hrm_edit_event();" id="menu_3">Edit</a></li>
+			<li class="delete seprator"><a onclick="pines.com_hrm_delete_events();" id="menu_4">Delete</a></li>
+			<li class="clear seprator"><a onclick="pines.com_hrm_clear_calendar();" id="menu_5">Clear_All</a></li>
+			<li class="help"><a onclick="pines.com_hrm_calendar_help();" id="menu_6">Help</a></li>
 		</ul>
 	</div>
 	<?php } ?>

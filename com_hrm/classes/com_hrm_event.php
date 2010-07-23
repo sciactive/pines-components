@@ -68,8 +68,8 @@ class com_hrm_event extends entity {
 	public function save() {
 		if (!isset($this->title))
 			return false;
-		if (!isset($this->id))
-			$this->id = 0;
+		if (!isset($this->event_id))
+			$this->event_id = 0;
 		return parent::save();
 	}
 

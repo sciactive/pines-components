@@ -27,7 +27,7 @@ if (isset($_REQUEST['events'])) {
 			if (isset($event->employee->guid) && !$event->time_off)
 				$event->color = $event->employee->color;
 
-			$event->id = $event_details[1];
+			$event->event_id = $event_details[1];
 			$event->start = strtotime($event_details[2]);
 			$event->end = strtotime($event_details[3]);
 			$event->all_day = ($event_details[4] == 'true') ? true : false;

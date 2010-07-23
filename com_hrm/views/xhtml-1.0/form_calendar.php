@@ -22,6 +22,12 @@ $pines->com_ptags->load();
 		width: 16px;
 		height: 16px;
 	}
+	#p_muid_actions button {
+		padding: 0.2em;
+	}
+	#p_muid_actions button .ui-button-text {
+		padding: 0;
+	}
 	/* ]]> */
 </style>
 <script type='text/javascript'>
@@ -151,7 +157,8 @@ $pines->com_ptags->load();
 								end: form.find(":input[name=end]").val(),
 								time_start: form.find(":input[name=time_start]").val(),
 								time_end: form.find(":input[name=time_end]").val(),
-								location: form.find(":input[name=location]").val()
+								location: form.find(":input[name=location]").val(),
+								employee_view: <?php echo isset($this->employee) ? 'true' : 'false'; ?>
 							});
 						}
 					}
@@ -286,12 +293,10 @@ $pines->com_ptags->load();
 	// ]]>
 </script>
 <?php if (gatekeeper('com_hrm/editcalendar')) { ?>
-<div style="margin-bottom: 1em; text-align: center;">
+<div style="margin-bottom: 1em; text-align: center;" id="p_muid_actions">
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_select_location();" title="Select Location"><span class="p_muid_btn picon picon-applications-internet"></span></button>
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_new_event();" title="New Event"><span class="p_muid_btn picon picon-resource-calendar-insert"></span></button>
-</div>
-<div style="margin-bottom: 1em; text-align: center;">
-	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_new_schedule();" title="New Schedule"><span class="p_muid_btn picon picon-list-resource-add"></span></button>
+	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_new_schedule();" title="New Schedule" <?php echo !isset($this->employee) ? 'disabled="disabled"' : '';?>><span class="p_muid_btn picon picon-list-resource-add"></span></button>
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_time_off();" title="Requested Time Off"><span class="p_muid_btn picon picon-view-calendar-upcoming-events"></span></button>
 </div>
 <div style="margin-bottom: 1em;">
@@ -310,6 +315,6 @@ $pines->com_ptags->load();
 </div>
 <?php } if (gatekeeper('com_hrm/clock')) { ?>
 <div style="text-align: center; font-size: .9em;">
-	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_time_off_form();">Request Time Off</button>
+	<button class="ui-state-default ui-corner-all" type="button" style="width: 100%;" onclick="pines.com_hrm_time_off_form();">Request Time Off</button>
 </div>
 <?php } ?>

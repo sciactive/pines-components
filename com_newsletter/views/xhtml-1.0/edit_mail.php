@@ -28,17 +28,17 @@ $pines->uploader->load();
 	<?php } ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Name</span>
-		<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
+		<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Subject</span>
-		<input class="pf-field ui-widget-content" type="text" name="subject" size="24" value="<?php echo htmlentities($this->entity->subject); ?>" /></label>
+		<input class="pf-field ui-widget-content ui-corner-all" type="text" name="subject" size="24" value="<?php echo htmlentities($this->entity->subject); ?>" /></label>
 	</div>
 	<div class="pf-element pf-heading">
 		<h1>Message</h1>
 	</div>
 	<div class="pf-element pf-full-width">
-		<div class="pf-full-width"><textarea rows="3" cols="35" class="ui-widget-content peditor" name="data" style="width: 100%;"><?php echo $this->entity->message; ?></textarea></div>
+		<div class="pf-full-width"><textarea rows="3" cols="35" class="ui-widget-content ui-corner-all peditor" name="data" style="width: 100%;"><?php echo $this->entity->message; ?></textarea></div>
 	</div>
 	<div class="pf-element pf-heading">
 		<h1>Attachments</h1>
@@ -48,14 +48,14 @@ $pines->uploader->load();
 		<?php if ( !empty($this->entity->attachments) ) {
 			echo '<div class="pf-group">';
 			foreach ($this->entity->attachments as $cur_attachment) { ?>
-		<label><input class="pf-field ui-widget-content" type="checkbox" name="attach_<?php echo clean_checkbox($cur_attachment); ?>" checked="checked" /><?php echo htmlentities($cur_attachment); ?></label><br />
+		<label><input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="attach_<?php echo clean_checkbox($cur_attachment); ?>" checked="checked" /><?php echo htmlentities($cur_attachment); ?></label><br />
 		<?php }
 		echo '</div>';
 		} ?>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Add an Attachment</span>
-		<input class="pf-field ui-widget-content puploader" name="attachment" type="input" /></label>
+		<input class="pf-field ui-widget-content ui-corner-all puploader" name="attachment" type="input" /></label>
 	</div>
 	<div class="pf-element pf-buttons">
 		<input type="hidden" name="update" value="yes" />

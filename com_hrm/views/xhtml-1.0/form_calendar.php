@@ -300,7 +300,7 @@ $pines->com_ptags->load();
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_time_off();" title="Requested Time Off"><span class="p_muid_btn picon picon-view-calendar-upcoming-events"></span></button>
 </div>
 <div style="margin-bottom: 1em;">
-	<select class="ui-widget-content" id="p_muid_employee" name="employee" style="width: 100%;">
+	<select class="ui-widget-content ui-corner-all" id="p_muid_employee" name="employee" style="width: 100%;">
 		<option value="all">Entire Staff</option>
 		<?php
 		// Load employees for this location.

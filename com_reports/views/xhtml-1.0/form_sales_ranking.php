@@ -101,7 +101,7 @@ $pines->com_jstree->load();
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_reports', 'savesalesranking')); ?>">
 	<div class="pf-element">
 		<label><span class="pf-label">Ranking Name</span>
-			<input class="pf-field ui-widget-content" type="text" name="ranking_name" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="ranking_name" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
 	</div>
 	
 	<div class="pf-element pf-heading">
@@ -110,9 +110,9 @@ $pines->com_jstree->load();
 	<div class="pf-element">
 		<div style="float: left;">
 			<span class="pf-label">Start Date
-			<input class="ui-widget-content" type="text" name="start" value="<?php echo ($this->entity->start_date) ? format_date($this->entity->start_date, 'date_sort') : format_date(time(), 'date_sort'); ?>" style="text-align: center;" /></span><br />
+			<input class="ui-widget-content ui-corner-all" type="text" name="start" value="<?php echo ($this->entity->start_date) ? format_date($this->entity->start_date, 'date_sort') : format_date(time(), 'date_sort'); ?>" style="text-align: center;" /></span><br />
 			<span class="pf-label">End Date
-			<input class="ui-widget-content" type="text" name="end" value="<?php echo ($this->entity->end_date) ? format_date($this->entity->end_date, 'date_sort') : format_date(time(), 'date_sort'); ?>" style="text-align: center;" /></span>
+			<input class="ui-widget-content ui-corner-all" type="text" name="end" value="<?php echo ($this->entity->end_date) ? format_date($this->entity->end_date, 'date_sort') : format_date(time(), 'date_sort'); ?>" style="text-align: center;" /></span>
 		</div>
 		<div class="location_tree" style="padding: 15px 0 0 50px; float: right;"></div>
 	</div>
@@ -122,12 +122,12 @@ $pines->com_jstree->load();
 	<div class="pf-element goals_tree"></div>
 	<div class="pf-element">
 		<div class="pf-element pf-group" style="margin-left: 15px;">
-			$<input class="pf-field ui-widget-content" type="text" name="goals_updater" value="<?php echo isset($this->entity->goals[$cur_employee->guid]) ? htmlentities($this->entity->goals[$cur_employee->guid]) : htmlentities($pines->config->com_reports->default_goal); ?>" size="5" style="color: cornflowerblue;" />
+			$<input class="pf-field ui-widget-content ui-corner-all" type="text" name="goals_updater" value="<?php echo isset($this->entity->goals[$cur_employee->guid]) ? htmlentities($this->entity->goals[$cur_employee->guid]) : htmlentities($pines->config->com_reports->default_goal); ?>" size="5" style="color: cornflowerblue;" />
 			<input class="ui-corner-all ui-state-default" type="button" value="Update Entire Group" onclick="pines.com_reports_update_goals();" />
 		</div>
 		<?php foreach ($this->employees as $cur_employee) { ?>
 		<div class="pf-element pf-group goal_<?php echo $cur_employee->guid; ?>" style="margin-left: 15px;">
-			$<input class="pf-field ui-widget-content" type="text" name="goals[<?php echo $cur_employee->guid; ?>]" value="<?php echo isset($this->entity->goals[$cur_employee->guid]) ? htmlentities($this->entity->goals[$cur_employee->guid]) : htmlentities($pines->config->com_reports->default_goal); ?>" size="5" />
+			$<input class="pf-field ui-widget-content ui-corner-all" type="text" name="goals[<?php echo $cur_employee->guid; ?>]" value="<?php echo isset($this->entity->goals[$cur_employee->guid]) ? htmlentities($this->entity->goals[$cur_employee->guid]) : htmlentities($pines->config->com_reports->default_goal); ?>" size="5" />
 			<span><?php echo htmlentities($cur_employee->name); ?></span>
 		</div>
 		<?php } ?>

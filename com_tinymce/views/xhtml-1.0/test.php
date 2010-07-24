@@ -17,19 +17,19 @@ $pines->editor->load();
 	<div class="pf-element">
 		<span class="pf-label">Regular Editor</span>
 		<div class="pf-group">
-			<div class="pf-field"><textarea rows="3" cols="35" class="peditor ui-widget-content"></textarea></div>
+			<div class="pf-field"><textarea rows="3" cols="35" class="peditor ui-widget-content ui-corner-all"></textarea></div>
 		</div>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Simple Editor</span>
 		<div class="pf-group">
-			<div class="pf-field"><textarea rows="3" cols="35" class="peditor-simple ui-widget-content"></textarea></div>
+			<div class="pf-field"><textarea rows="3" cols="35" class="peditor-simple ui-widget-content ui-corner-all"></textarea></div>
 		</div>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Styled Textarea</span>
 		<div class="pf-group">
-			<div class="pf-field"><textarea rows="3" cols="35" class="ui-widget-content"></textarea></div>
+			<div class="pf-field"><textarea rows="3" cols="35" class="ui-widget-content ui-corner-all"></textarea></div>
 		</div>
 	</div>
 	<div class="pf-element">

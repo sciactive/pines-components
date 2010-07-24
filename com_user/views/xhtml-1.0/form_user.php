@@ -234,33 +234,33 @@ $pines->com_pgrid->load();
 			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Username</span>
-					<input class="pf-field ui-widget-content" type="text" name="username" size="24" value="<?php echo htmlentities($this->entity->username); ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="username" size="24" value="<?php echo htmlentities($this->entity->username); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Name</span>
-					<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>
-					<input class="pf-field ui-widget-content" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Email</span>
-					<input class="pf-field ui-widget-content" type="text" name="email" size="24" value="<?php echo htmlentities($this->entity->email); ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="email" size="24" value="<?php echo htmlentities($this->entity->email); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Phone</span>
-					<input class="pf-field ui-widget-content" type="text" name="phone" size="24" value="<?php echo format_phone($this->entity->phone); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="phone" size="24" value="<?php echo format_phone($this->entity->phone); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Fax</span>
-					<input class="pf-field ui-widget-content" type="text" name="fax" size="24" value="<?php echo format_phone($this->entity->fax); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="fax" size="24" value="<?php echo format_phone($this->entity->fax); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
 			<div class="pf-element">
 				<label>
 					<span class="pf-label">Timezone</span>
 					<span class="pf-note">This overrides the primary group's timezone.</span>
-					<select class="pf-field ui-widget-content" name="timezone" size="1">
+					<select class="pf-field ui-widget-content ui-corner-all" name="timezone" size="1">
 						<option value="">--Inherit From Group--</option>
 						<?php
 						$tz = DateTimeZone::listIdentifiers();
@@ -278,16 +278,16 @@ $pines->com_pgrid->load();
 					} else {
 						echo '<span class="pf-note">Leave blank, if not changing.</span>';
 					} ?>
-					<input class="pf-field ui-widget-content" type="password" name="password" size="24" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="password" name="password" size="24" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Repeat Password</span>
-					<input class="pf-field ui-widget-content" type="password" name="password2" size="24" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="password" name="password2" size="24" /></label>
 			</div>
 			<?php if ( $this->display_pin ) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">PIN code</span>
-					<input class="pf-field ui-widget-content" type="password" name="pin" size="5" value="<?php echo htmlentities($this->entity->pin); ?>" <?php echo $pines->config->com_user->max_pin_length > 0 ? "maxlength=\"{$pines->config->com_user->max_pin_length}\"" : ''; ?>/></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="password" name="pin" size="5" value="<?php echo htmlentities($this->entity->pin); ?>" <?php echo $pines->config->com_user->max_pin_length > 0 ? "maxlength=\"{$pines->config->com_user->max_pin_length}\"" : ''; ?>/></label>
 			</div>
 			<?php } ?>
 			<br class="pf-clearing" />
@@ -302,7 +302,7 @@ $pines->com_pgrid->load();
 				<div class="pf-element">
 					<label>
 						<span class="pf-label">Primary Group</span>
-						<select class="pf-field ui-widget-content" name="group" size="1">
+						<select class="pf-field ui-widget-content ui-corner-all" name="group" size="1">
 							<option value="null">-- No Primary Group --</option>
 							<?php
 							$pines->user_manager->group_sort($this->group_array_primary, 'name');
@@ -316,7 +316,7 @@ $pines->com_pgrid->load();
 				<div class="pf-element">
 					<span class="pf-label">Primary Group</span>
 					<div class="pf-group">
-						<span class="pf-field"><input class="ui-widget-content" type="checkbox" name="no_primary_group" size="24" value="ON"<?php echo !isset($this->entity->group) ? ' checked="checked"' : ''; ?> /> No Primary Group</span>
+						<span class="pf-field"><input class="ui-widget-content ui-corner-all" type="checkbox" name="no_primary_group" size="24" value="ON"<?php echo !isset($this->entity->group) ? ' checked="checked"' : ''; ?> /> No Primary Group</span>
 						<div class="pf-field location_tree ui-widget-content ui-corner-all" style="height: 180px; width: 200px; overflow: auto;"></div>
 					</div>
 					<input type="hidden" name="group" />
@@ -410,22 +410,22 @@ $pines->com_pgrid->load();
 					// ]]>
 				</script>
 				<span class="pf-label">Address Type</span>
-				<label><input class="pf-field ui-widget-content" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
-				<label><input class="pf-field ui-widget-content" type="radio" name="address_type" value="international"<?php echo $this->entity->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
+				<label><input class="pf-field ui-widget-content ui-corner-all" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
+				<label><input class="pf-field ui-widget-content ui-corner-all" type="radio" name="address_type" value="international"<?php echo $this->entity->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
 			</div>
 			<div id="p_muid_address_us" style="display: none;">
 				<div class="pf-element">
 					<label><span class="pf-label">Address 1</span>
-						<input class="pf-field ui-widget-content" type="text" name="address_1" size="24" value="<?php echo htmlentities($this->entity->address_1); ?>" /></label>
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="address_1" size="24" value="<?php echo htmlentities($this->entity->address_1); ?>" /></label>
 				</div>
 				<div class="pf-element">
 					<label><span class="pf-label">Address 2</span>
-						<input class="pf-field ui-widget-content" type="text" name="address_2" size="24" value="<?php echo htmlentities($this->entity->address_2); ?>" /></label>
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="address_2" size="24" value="<?php echo htmlentities($this->entity->address_2); ?>" /></label>
 				</div>
 				<div class="pf-element">
 					<span class="pf-label">City, State</span>
-					<input class="pf-field ui-widget-content" type="text" name="city" size="15" value="<?php echo htmlentities($this->entity->city); ?>" />
-					<select class="pf-field ui-widget-content" name="state">
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="city" size="15" value="<?php echo htmlentities($this->entity->city); ?>" />
+					<select class="pf-field ui-widget-content ui-corner-all" name="state">
 						<option value="">None</option>
 						<?php foreach (array(
 								'AL' => 'Alabama',
@@ -486,13 +486,13 @@ $pines->com_pgrid->load();
 				</div>
 				<div class="pf-element">
 					<label><span class="pf-label">Zip</span>
-						<input class="pf-field ui-widget-content" type="text" name="zip" size="24" value="<?php echo htmlentities($this->entity->zip); ?>" /></label>
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="zip" size="24" value="<?php echo htmlentities($this->entity->zip); ?>" /></label>
 				</div>
 			</div>
 			<div id="p_muid_address_international" style="display: none;">
 				<div class="pf-element pf-full-width">
 					<label><span class="pf-label">Address</span>
-						<span class="pf-field pf-full-width"><textarea class="ui-widget-content" style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo $this->entity->address_international; ?></textarea></span></label>
+						<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo $this->entity->address_international; ?></textarea></span></label>
 				</div>
 			</div>
 			<div class="pf-element pf-heading">
@@ -529,22 +529,22 @@ $pines->com_pgrid->load();
 				<div class="pf-form">
 					<div class="pf-element">
 						<label><span class="pf-label">Type</span>
-							<input class="pf-field ui-widget-content" type="text" size="24" name="cur_address_type" id="p_muid_cur_address_type" /></label>
+							<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="cur_address_type" id="p_muid_cur_address_type" /></label>
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Address 1</span>
-							<input class="pf-field ui-widget-content" type="text" size="24" name="cur_address_addr1" id="p_muid_cur_address_addr1" /></label>
+							<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="cur_address_addr1" id="p_muid_cur_address_addr1" /></label>
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Address 2</span>
-							<input class="pf-field ui-widget-content" type="text" size="24" name="cur_address_addr2" id="p_muid_cur_address_addr2" /></label>
+							<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="cur_address_addr2" id="p_muid_cur_address_addr2" /></label>
 					</div>
 					<div class="pf-element">
 						<label>
 							<span class="pf-label">City, State, Zip</span>
-							<input class="pf-field ui-widget-content" type="text" size="8" name="cur_address_city" id="p_muid_cur_address_city" />
-							<input class="pf-field ui-widget-content" type="text" size="2" name="cur_address_state" id="p_muid_cur_address_state" />
-							<input class="pf-field ui-widget-content" type="text" size="5" name="cur_address_zip" id="p_muid_cur_address_zip" />
+							<input class="pf-field ui-widget-content ui-corner-all" type="text" size="8" name="cur_address_city" id="p_muid_cur_address_city" />
+							<input class="pf-field ui-widget-content ui-corner-all" type="text" size="2" name="cur_address_state" id="p_muid_cur_address_state" />
+							<input class="pf-field ui-widget-content ui-corner-all" type="text" size="5" name="cur_address_zip" id="p_muid_cur_address_zip" />
 						</label>
 					</div>
 				</div>
@@ -579,7 +579,7 @@ $pines->com_pgrid->load();
 			<div class="pf-element">
 				<span class="pf-label">Inherit</span>
 				<label>
-					<input class="pf-field ui-widget-content" type="checkbox" name="inherit_abilities" value="ON" <?php echo ($this->entity->inherit_abilities ? 'checked="checked" ' : ''); ?>/>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="inherit_abilities" value="ON" <?php echo ($this->entity->inherit_abilities ? 'checked="checked" ' : ''); ?>/>
 					&nbsp;Inherit additional abilities from groups.
 				</label>
 			</div>
@@ -603,7 +603,7 @@ $pines->com_pgrid->load();
 					<div class="pf-element">
 						<?php foreach ($section_abilities as $cur_ability) { ?>
 						<label>
-							<input class="ui-widget-content" type="checkbox" name="<?php echo htmlentities($cur_section); ?>[]" value="<?php echo htmlentities($cur_ability[0]); ?>" <?php echo (array_search("{$cur_section}/{$cur_ability[0]}", $this->entity->abilities) !== false) ? 'checked="checked" ' : ''; ?>/>
+							<input class="ui-widget-content ui-corner-all" type="checkbox" name="<?php echo htmlentities($cur_section); ?>[]" value="<?php echo htmlentities($cur_ability[0]); ?>" <?php echo (array_search("{$cur_section}/{$cur_ability[0]}", $this->entity->abilities) !== false) ? 'checked="checked" ' : ''; ?>/>
 							<?php echo htmlentities($cur_ability[1]); ?>&nbsp;<small><?php echo htmlentities($cur_ability[2]); ?></small>
 						</label>
 						<br class="pf-clearing" />
@@ -633,11 +633,11 @@ $pines->com_pgrid->load();
 				<div class="pf-form">
 					<div class="pf-element">
 						<label><span class="pf-label">Name</span>
-							<input class="pf-field ui-widget-content" type="text" id="p_muid_cur_attribute_name" size="24" /></label>
+							<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_cur_attribute_name" size="24" /></label>
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Value</span>
-							<input class="pf-field ui-widget-content" type="text" id="p_muid_cur_attribute_value" size="24" /></label>
+							<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_cur_attribute_value" size="24" /></label>
 					</div>
 				</div>
 				<br style="clear: both; height: 1px;" />

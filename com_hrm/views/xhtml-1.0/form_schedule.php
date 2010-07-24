@@ -50,7 +50,7 @@ defined('P_RUN') or die('Direct access prohibited');
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_hrm', 'saveschedule')); ?>">
 	<div class="pf-element">
-		<label><input class="pf-field ui-widget-content" type="checkbox" name="all_day" value="ON" />All Day</label>
+		<label><input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="all_day" value="ON" />All Day</label>
 	</div>
 	<div class="pf-element">
 		<select class="ui-widget-content ui-corner-all" name="time_start">

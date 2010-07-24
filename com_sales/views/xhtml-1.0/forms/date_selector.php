@@ -59,15 +59,15 @@ defined('P_RUN') or die('Direct access prohibited');
 </script>
 <form class="pf-form" id="p_muid_form" action="">
 	<div class="pf-element">
-		<label><input class="pf-field ui-widget-content" type="radio" name="all_time" value="alltime" <?php echo $this->all_time ? 'checked="checked"' : ''; ?>/>Entire History</label>
-		<label><input class="pf-field ui-widget-content" type="radio" name="all_time" value="timespan" <?php echo !$this->all_time ? 'checked="checked"' : ''; ?>/>Timespan</label>
+		<label><input class="pf-field ui-widget-content ui-corner-all" type="radio" name="all_time" value="alltime" <?php echo $this->all_time ? 'checked="checked"' : ''; ?>/>Entire History</label>
+		<label><input class="pf-field ui-widget-content ui-corner-all" type="radio" name="all_time" value="timespan" <?php echo !$this->all_time ? 'checked="checked"' : ''; ?>/>Timespan</label>
 	</div>
 	<div class="timespan">
 		<div class="pf-element">
-			<span class="pf-note">Start</span><input class="ui-widget-content form_date" type="text" id="p_muid_start_date" name="start_date" value="<?php echo isset($this->start_date) ? htmlentities($this->start_date) : ''; ?>" />
+			<span class="pf-note">Start</span><input class="ui-widget-content ui-corner-all form_date" type="text" id="p_muid_start_date" name="start_date" value="<?php echo isset($this->start_date) ? htmlentities($this->start_date) : ''; ?>" />
 		</div>
 		<div class="pf-element">
-			<span class="pf-note">End</span><input class="ui-widget-content form_date" type="text" id="p_muid_end_date" name="end_date" value="<?php echo isset($this->end_date) ? htmlentities($this->end_date) : ''; ?>" />
+			<span class="pf-note">End</span><input class="ui-widget-content ui-corner-all form_date" type="text" id="p_muid_end_date" name="end_date" value="<?php echo isset($this->end_date) ? htmlentities($this->end_date) : ''; ?>" />
 		</div>
 		<input type="hidden" name="timespan_saver" value="<?php echo htmlentities($this->all_time); ?>" />
 	</div>

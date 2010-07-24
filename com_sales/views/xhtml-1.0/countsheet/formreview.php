@@ -182,7 +182,7 @@ $pines->com_pgrid->load();
 	<div class="pf-element">
 		<label>
 			<span class="pf-label">Update Status</span>
-			<select class="pf-field ui-widget-content" name="status" size="1">
+			<select class="pf-field ui-widget-content ui-corner-all" name="status" size="1">
 				<option value="approved" <?php echo ($this->entity->status == 'approved') ? 'selected="selected"' : ''; ?>>Approved</option>
 				<option value="declined" <?php echo ($this->entity->status == 'declined') ? 'selected="selected"' : ''; ?>>Declined</option>
 				<option value="info_requested" <?php echo ($this->entity->status == 'info_requested') ? 'selected="selected"' : ''; ?>>Info Requested</option>

@@ -24,7 +24,7 @@ $this->title = 'Verify Access';
 		<label>
 			<span class="pf-label">PIN</span>
 			<span class="pf-note">Please enter your PIN to continue.</span>
-			<input class="pf-field ui-widget-content" type="password" name="pin" size="24" />
+			<input class="pf-field ui-widget-content ui-corner-all" type="password" name="pin" size="24" />
 		</label>
 	</div>
 	<div class="pf-element pf-buttons">

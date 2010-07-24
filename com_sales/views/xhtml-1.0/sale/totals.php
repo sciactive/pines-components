@@ -183,7 +183,7 @@ $pines->com_jstree->load();
 	<div class="pf-element">
 		<span class="pf-label">Location</span>
 		<div class="pf-group">
-			<span class="pf-field"><input class="ui-widget-content" type="checkbox" name="all_locations" size="24" value="ON" checked="checked" /> All Locations</span>
+			<span class="pf-field"><input class="ui-widget-content ui-corner-all" type="checkbox" name="all_locations" size="24" value="ON" checked="checked" /> All Locations</span>
 			<div class="pf-field location_tree ui-widget-content ui-corner-all" style="height: 180px; width: 200px; overflow: auto;"></div>
 		</div>
 		<input type="hidden" name="location" />
@@ -191,11 +191,11 @@ $pines->com_jstree->load();
 	<?php } ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Start Date</span>
-			<input class="pf-field ui-widget-content" type="text" id="p_muid_date_start" name="date_start" size="24" value="<?php echo format_date(time(), 'date_sort'); ?>" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_date_start" name="date_start" size="24" value="<?php echo format_date(time(), 'date_sort'); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">End Date</span>
-			<input class="pf-field ui-widget-content" type="text" id="p_muid_date_end" name="date_end" size="24" value="<?php echo format_date(time(), 'date_sort'); ?>" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_date_end" name="date_end" size="24" value="<?php echo format_date(time(), 'date_sort'); ?>" /></label>
 	</div>
 	<div class="pf-element pf-buttons">
 		<button id="p_muid_retrieve_totals" class="pf-button ui-state-default ui-corner-all">Retrieve</button>

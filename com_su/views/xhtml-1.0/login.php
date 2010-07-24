@@ -33,7 +33,7 @@ $this->title = "Switch User";
 	<?php if ($this->pin_login) { ?>
 	<div class="pf-element">
 		<label><span class="pf-label">PIN</span>
-			<input class="pf-field ui-widget-content" type="password" name="pin" size="15" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="password" name="pin" size="15" /></label>
 	</div>
 	<div class="pf-element pf-full-width">
 		<div class="pf-group"><strong class="pf-field">OR</strong></div>
@@ -41,12 +41,12 @@ $this->title = "Switch User";
 	<?php } ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Username</span>
-			<input class="pf-field ui-widget-content" type="text" name="username" size="15" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="username" size="15" /></label>
 	</div>
 	<?php if (!$this->hide_password) { ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Password</span>
-			<input class="pf-field ui-widget-content" type="password" name="password" size="15" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="password" name="password" size="15" /></label>
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-buttons pf-centered">

@@ -237,15 +237,15 @@ $pines->uploader->load();
 			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Name</span>
-					<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>
-					<input class="pf-field ui-widget-content" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<span class="pf-label">Description</span>
-				<textarea class="pf-field ui-widget-content" rows="3" cols="35" name="description"><?php echo $this->entity->description; ?></textarea>
+				<textarea class="pf-field ui-widget-content ui-corner-all" rows="3" cols="35" name="description"><?php echo $this->entity->description; ?></textarea>
 			</div>
 			<div class="pf-element">
 				<script type="text/javascript">
@@ -259,7 +259,7 @@ $pines->uploader->load();
 				</script>
 				<label><span class="pf-label">Background</span>
 					<span class="pf-note">See the Station Layout tab to preview the background.</span>
-					<input class="pf-field ui-widget-content puploader" type="text" name="background" value="<?php echo $this->entity->background; ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all puploader" type="text" name="background" value="<?php echo $this->entity->background; ?>" /></label>
 			</div>
 			<?php /* <div class="pf-element pf-full-width">
 				<span class="pf-label">Background Preview</span>

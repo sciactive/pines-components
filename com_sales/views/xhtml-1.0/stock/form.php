@@ -124,12 +124,12 @@ $pines->com_jstree->load();
 			<input class="p_muid_change_this" type="hidden" name="available_change" value="" />
 			<div class="pf-element">
 				<label><span class="pf-label">Available</span>
-					<input class="pf-field ui-widget-content" type="checkbox" name="available" size="24" value="ON"<?php echo $this->entity->available ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="available" size="24" value="ON"<?php echo $this->entity->available ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label>
 					<span class="pf-label">Reason</span>
-					<select class="pf-field ui-widget-content" name="available_reason">
+					<select class="pf-field ui-widget-content ui-corner-all" name="available_reason">
 						<?php if (!isset($this->entity) || $this->entity->available) { ?>
 						<option value="unavailable_on_hold">Item is on Hold</option>
 						<option value="unavailable_damaged">Item is Damaged</option>
@@ -176,12 +176,12 @@ $pines->com_jstree->load();
 			<input class="p_muid_change_this" type="hidden" name="serial_change" value="" />
 			<div class="pf-element">
 				<label><span class="pf-label">Serial</span>
-					<input class="pf-field ui-widget-content" type="text" name="serial" size="24" value="<?php echo htmlentities($this->entity->serial); ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="serial" size="24" value="<?php echo htmlentities($this->entity->serial); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label>
 					<span class="pf-label">Reason</span>
-					<select class="pf-field ui-widget-content" name="serial_reason">
+					<select class="pf-field ui-widget-content ui-corner-all" name="serial_reason">
 						<option value="serial_changed_reserialize">Item is Being Reserialized</option>
 						<option value="serial_changed_damaged">Serial Number is Damaged</option>
 						<option value="serial_changed_error_po">PO Receiving Error</option>
@@ -208,7 +208,7 @@ $pines->com_jstree->load();
 			<div class="pf-element">
 				<label>
 					<span class="pf-label">Reason</span>
-					<select class="pf-field ui-widget-content" name="location_reason">
+					<select class="pf-field ui-widget-content ui-corner-all" name="location_reason">
 						<?php if (!isset($this->entity) || isset($this->entity->location)) { ?>
 						<option value="location_changed_shipped">Item is Shipped</option>
 						<option value="location_changed_picked_up">Item is Picked Up</option>
@@ -241,7 +241,7 @@ $pines->com_jstree->load();
 			<div class="pf-element">
 				<label>
 					<span class="pf-label">Vendor</span>
-					<select class="pf-field ui-widget-content" name="vendor">
+					<select class="pf-field ui-widget-content ui-corner-all" name="vendor">
 						<option value="null">-- None --</option>
 						<?php
 						$pines->entity_manager->sort($this->vendors, 'name');
@@ -254,7 +254,7 @@ $pines->com_jstree->load();
 			<div class="pf-element">
 				<label>
 					<span class="pf-label">Reason</span>
-					<select class="pf-field ui-widget-content" name="vendor_reason">
+					<select class="pf-field ui-widget-content ui-corner-all" name="vendor_reason">
 						<option value="vendor_changed_error_po">PO Receiving Error</option>
 						<option value="vendor_changed_error_adjustment">Previous Adjustment Error</option>
 						<option value="vendor_changed_error">Other Error</option>
@@ -270,12 +270,12 @@ $pines->com_jstree->load();
 			<input class="p_muid_change_this" type="hidden" name="cost_change" value="" />
 			<div class="pf-element">
 				<label><span class="pf-label">Cost</span>
-					<span class="pf-field">$<input class="ui-widget-content" style="text-align: right;" type="text" name="cost" size="10" value="<?php echo htmlentities($this->entity->cost); ?>" /></span></label>
+					<span class="pf-field">$<input class="ui-widget-content ui-corner-all" style="text-align: right;" type="text" name="cost" size="10" value="<?php echo htmlentities($this->entity->cost); ?>" /></span></label>
 			</div>
 			<div class="pf-element">
 				<label>
 					<span class="pf-label">Reason</span>
-					<select class="pf-field ui-widget-content" name="cost_reason">
+					<select class="pf-field ui-widget-content ui-corner-all" name="cost_reason">
 						<option value="cost_changed_error_po">PO Receiving Error</option>
 						<option value="cost_changed_error_adjustment">Previous Adjustment Error</option>
 						<option value="cost_changed_error">Other Error</option>

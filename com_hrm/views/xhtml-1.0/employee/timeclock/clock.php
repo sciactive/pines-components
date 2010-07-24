@@ -69,7 +69,7 @@ $entry_count = count($this->entity->timeclock);
 				<?php if ($pines->config->com_hrm->timeclock_verify_pin && !empty($_SESSION['user']->pin)) { ?>
 				var dialog = $("<div />", {
 					"title": "Please Verify Your PIN",
-					"html": '<div class="pf-form"><div class="pf-element"><label><span class="pf-label">PIN</span><input type="password" class="pf-field ui-widget-content" /></label></div></div><br />'
+					"html": '<div class="pf-form"><div class="pf-element"><label><span class="pf-label">PIN</span><input type="password" class="pf-field ui-widget-content ui-corner-all" /></label></div></div><br />'
 				}).dialog({
 					modal: true,
 					open: function(){

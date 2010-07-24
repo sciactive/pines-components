@@ -66,17 +66,17 @@ $pines->com_jstree->load();
 	<div class="pf-element location_tree" style="padding-bottom: 0px;"></div>
 	<div class="pf-element" style="padding-bottom: 0px;">
 		<span class="pf-note">Start</span>
-		<input class="pf-field ui-corner-all ui-widget-content form_date" type="text" name="start_date" value="<?php echo ($this->start_date) ? format_date($this->start_date, 'date_sort') : format_date(time(), 'date_sort'); ?>" />
+		<input class="pf-field ui-widget-content ui-corner-all form_date" type="text" name="start_date" value="<?php echo ($this->start_date) ? format_date($this->start_date, 'date_sort') : format_date(time(), 'date_sort'); ?>" />
 	</div>
 	<div class="pf-element">
 		<span class="pf-note">End</span>
-		<input class="pf-field ui-corner-all ui-widget-content form_date" type="text" name="end_date" value="<?php echo ($this->end_date) ? format_date($this->end_date, 'date_sort') : format_date(time(), 'date_sort'); ?>" />
+		<input class="pf-field ui-widget-content ui-corner-all form_date" type="text" name="end_date" value="<?php echo ($this->end_date) ? format_date($this->end_date, 'date_sort') : format_date(time(), 'date_sort'); ?>" />
 	</div>
 	<div class="pf-element">
 		<input type="hidden" name="location" />
 		<?php if ($this->old) { ?>
 		<input type="hidden" name="old" value="true" />
 		<?php } ?>
-		<input type="submit" value="Update" class="ui-corner-all ui-state-default" />
+		<input type="submit" value="Update" class="ui-state-default ui-corner-all" />
 	</div>
 </form>

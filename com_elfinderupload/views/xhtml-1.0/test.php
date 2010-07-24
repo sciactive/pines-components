@@ -20,7 +20,7 @@ $pines->uploader->load();
 	<div class="pf-element">
 		<label>
 			<span class="pf-label">File</span>
-			<input class="pf-field ui-widget-content puploader" type="text" name="file" />
+			<input class="pf-field ui-widget-content ui-corner-all puploader" type="text" name="file" />
 		</label>
 	</div>
 	<div class="pf-element pf-buttons">

@@ -122,7 +122,7 @@ if (isset($this->entity->guid))
 	<div class="pf-element pf-full-width" style="position: relative;">
 		<?php foreach ($this->entity->currency as $key => $cur_denom) { ?>
 		<div class="pf-element">
-			<input class="pf-field ui-widget-content entry" type="text" name="count_<?php echo htmlentities($key); ?>" title="<?php echo htmlentities($cur_denom); ?>" value="0" <?php echo $this->entity->final ? 'readonly="readonly"' : ''; ?> />
+			<input class="pf-field ui-widget-content ui-corner-all entry" type="text" name="count_<?php echo htmlentities($key); ?>" title="<?php echo htmlentities($cur_denom); ?>" value="0" <?php echo $this->entity->final ? 'readonly="readonly"' : ''; ?> />
 			x <span class="amount"><?php echo htmlentities($this->entity->currency_symbol . $cur_denom); ?></span>
 			<button class="pf-field ui-state-default ui-corner-all add_btn" type="button"><span class="amt_btn picon picon-list-add"></span></button>
 			<button class="pf-field ui-state-default ui-corner-all remove_btn" type="button"><span class="amt_btn picon picon-list-remove"></span></button>
@@ -181,7 +181,7 @@ if (isset($this->entity->guid))
 		<h1>Comments</h1>
 	</div>
 	<div class="pf-element pf-full-width">
-		<div class="pf-full-width"><textarea class="ui-widget-content" style="width: 100%;" rows="3" cols="35" name="comments" <?php echo $this->entity->cashed_out ? 'readonly="readonly"' : ''; ?>><?php echo $this->entity->comments; ?></textarea></div>
+		<div class="pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="comments" <?php echo $this->entity->cashed_out ? 'readonly="readonly"' : ''; ?>><?php echo $this->entity->comments; ?></textarea></div>
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>

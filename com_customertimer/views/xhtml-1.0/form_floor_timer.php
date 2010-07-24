@@ -402,7 +402,7 @@ $pines->com_customer->load_customer_select();
 			<span class="pf-label">Customer</span>
 			<span class="pf-note">Enter part of a name, company, email, or phone # to search.</span>
 			<div class="pf-group">
-				<input class="pf-field ui-widget-content" type="text" id="p_muid_customer" name="customer" size="24" />
+				<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_customer" name="customer" size="24" />
 			</div>
 		</div>
 	</div>

@@ -269,11 +269,11 @@ if ($this->entity->final)
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">PO #</span>
-			<input class="pf-field ui-widget-content" type="text" name="po_number" size="24" value="<?php echo htmlentities($this->entity->po_number); ?>" <?php echo $read_only; ?> /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="po_number" size="24" value="<?php echo htmlentities($this->entity->po_number); ?>" <?php echo $read_only; ?> /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Reference #</span>
-			<input class="pf-field ui-widget-content" type="text" name="reference_number" size="24" value="<?php echo htmlentities($this->entity->reference_number); ?>" <?php echo $read_only; ?> /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="reference_number" size="24" value="<?php echo htmlentities($this->entity->reference_number); ?>" <?php echo $read_only; ?> /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Vendor</span>
@@ -282,7 +282,7 @@ if ($this->entity->final)
 			<?php } else { ?>
 				<span class="pf-note">Vendor can't be changed after PO is committed or received.</span>
 			<?php } ?>
-			<select class="pf-field ui-widget-content" name="vendor" onchange="pines.com_sales_select_vendor(Number(this.value));"<?php echo (!$this->entity->final && empty($this->entity->received) ? '' : ' disabled="disabled"'); ?> <?php echo $read_only; ?>>
+			<select class="pf-field ui-widget-content ui-corner-all" name="vendor" onchange="pines.com_sales_select_vendor(Number(this.value));"<?php echo (!$this->entity->final && empty($this->entity->received) ? '' : ' disabled="disabled"'); ?> <?php echo $read_only; ?>>
 				<option value="null">-- None --</option>
 				<?php
 				$pines->entity_manager->sort($this->vendors, 'name');
@@ -300,7 +300,7 @@ if ($this->entity->final)
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Shipper</span>
-			<select class="pf-field ui-widget-content" name="shipper" <?php echo $read_only; ?>>
+			<select class="pf-field ui-widget-content ui-corner-all" name="shipper" <?php echo $read_only; ?>>
 				<option value="null">-- None --</option>
 				<?php foreach ($this->shippers as $cur_shipper) { ?>
 				<option value="<?php echo $cur_shipper->guid; ?>"<?php echo $this->entity->shipper->guid == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo htmlentities($cur_shipper->name); ?></option>
@@ -322,7 +322,7 @@ if ($this->entity->final)
 		</script>
 		<?php } ?>
 		<label><span class="pf-label">ETA</span>
-			<input class="pf-field ui-widget-content" type="text" id="p_muid_eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? format_date($this->entity->eta, 'date_sort') : ''); ?>" <?php echo $read_only; ?> /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_eta" name="eta" size="24" value="<?php echo ($this->entity->eta ? format_date($this->entity->eta, 'date_sort') : ''); ?>" <?php echo $read_only; ?> /></label>
 	</div>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Products</span>

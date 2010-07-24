@@ -21,7 +21,7 @@ $this->title = 'Entity Manager Import';
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Upload File</span>
-			<input class="pf-field ui-widget-content" type="file" name="entity_import" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="file" name="entity_import" /></label>
 	</div>
 	<div class="pf-element pf-buttons">
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />

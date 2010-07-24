@@ -27,20 +27,20 @@ $this->note = 'Provide tax/fee details in this form.';
 	<div class="pf-element">
 		<label>
 			<span class="pf-label">Name</span>
-			<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" />
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" />
 		</label>
 	</div>
 	<div class="pf-element">
 		<label>
 			<span class="pf-label">Enabled</span>
-			<input class="pf-field ui-widget-content" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> />
+			<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> />
 		</label>
 	</div>
 	<div class="pf-element">
 		<label>
 			<span class="pf-label">Type</span>
 			<span class="pf-note">This determines how the rate is applied to the price of items.</span>
-			<select class="pf-field ui-widget-content" name="type">
+			<select class="pf-field ui-widget-content ui-corner-all" name="type">
 				<option value="percentage"<?php echo $this->entity->type == 'percentage' ? ' selected="selected"' : ''; ?>>Percentage</option>
 				<option value="flat_rate"<?php echo $this->entity->type == 'flat_rate' ? ' selected="selected"' : ''; ?>>Flat Rate</option>
 			</select>
@@ -50,7 +50,7 @@ $this->note = 'Provide tax/fee details in this form.';
 		<label>
 			<span class="pf-label">Rate</span>
 			<span class="pf-note">Enter a percentage (5 for 5%) or a flat rate in dollars (5 for $5).</span>
-			<input class="pf-field ui-widget-content" type="text" name="rate" size="24" value="<?php echo htmlentities($this->entity->rate); ?>" />
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="rate" size="24" value="<?php echo htmlentities($this->entity->rate); ?>" />
 		</label>
 	</div>
 	<div class="pf-element">
@@ -58,7 +58,7 @@ $this->note = 'Provide tax/fee details in this form.';
 			<span class="pf-label">Locations</span>
 			<span class="pf-note">This tax will be applied to sales by users in these groups.</span>
 			<span class="pf-note">Hold Ctrl (Command on Mac) to select multiple groups.</span>
-			<select class="pf-field ui-widget-content" name="locations[]" multiple="multiple" size="6">
+			<select class="pf-field ui-widget-content ui-corner-all" name="locations[]" multiple="multiple" size="6">
 				<?php
 				$pines->user_manager->group_sort($this->locations, 'name');
 				foreach ($this->locations as $cur_group) {

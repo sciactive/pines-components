@@ -50,15 +50,15 @@ $pines->com_jstree->load();
 <form class="pf-form" id="p_muid_form" method="post" action="<?php echo htmlentities(pines_url('com_newsletter', 'send')); ?>">
 	<div class="pf-element">
 		<label><span class="pf-label">From Address</span>
-		<input class="pf-field ui-widget-content" type="text" name="from" size="24" value="<?php echo htmlentities($pines->config->com_newsletter->default_from); ?>" /></label>
+		<input class="pf-field ui-widget-content ui-corner-all" type="text" name="from" size="24" value="<?php echo htmlentities($pines->config->com_newsletter->default_from); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Reply to Address</span>
-		<input class="pf-field ui-widget-content" type="text" name="replyto" size="24" value="<?php echo htmlentities($pines->config->com_newsletter->default_reply_to); ?>" /></label>
+		<input class="pf-field ui-widget-content ui-corner-all" type="text" name="replyto" size="24" value="<?php echo htmlentities($pines->config->com_newsletter->default_reply_to); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Subject</span>
-		<input class="pf-field ui-widget-content" type="text" name="subject" size="24" value="<?php echo htmlentities($this->mail->subject); ?>" /></label>
+		<input class="pf-field ui-widget-content ui-corner-all" type="text" name="subject" size="24" value="<?php echo htmlentities($this->mail->subject); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Select Groups</span>
@@ -71,7 +71,7 @@ $pines->com_jstree->load();
 	<div class="pf-element">
 		<label><span class="pf-label">Include a link to the mail's web address.</span>
 		<span class="pf-note">For online viewing.</span>
-		<input class="pf-field ui-widget-content" type="checkbox" name="include_permalink" checked /></label>
+		<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="include_permalink" checked /></label>
 	</div>
 	<div class="pf-element pf-buttons">
 		<input type="hidden" name="mail_id" value="<?php echo htmlentities($_REQUEST['mail_id']); ?>" />

@@ -18,11 +18,11 @@ defined('P_RUN') or die('Direct access prohibited');
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Username</span>
-			<input class="pf-field ui-widget-content" type="text" name="username" size="24" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="username" size="24" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Password</span>
-			<input class="pf-field ui-widget-content" type="password" name="password" size="24" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="password" name="password" size="24" /></label>
 	</div>
 </form>
 <?php } ?>

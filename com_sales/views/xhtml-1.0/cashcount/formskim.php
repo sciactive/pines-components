@@ -126,7 +126,7 @@ $this->note = 'Count the cash as you take it out of the drawer.';
 	<div class="pf-element pf-full-width" style="position: relative;">
 		<?php foreach ($this->entity->cashcount->currency as $key => $cur_denom) { ?>
 		<div class="pf-element">
-			<input class="pf-field ui-widget-content entry" type="text" name="count_<?php echo htmlentities($key); ?>" title="<?php echo htmlentities($cur_denom); ?>" value="0" />
+			<input class="pf-field ui-widget-content ui-corner-all entry" type="text" name="count_<?php echo htmlentities($key); ?>" title="<?php echo htmlentities($cur_denom); ?>" value="0" />
 			x <span class="amount"><?php echo htmlentities($this->entity->cashcount->currency_symbol . $cur_denom); ?></span>
 			<button class="pf-field ui-state-default ui-corner-all add_btn" type="button"><span class="amt_btn picon picon-list-add"></span></button>
 			<button class="pf-field ui-state-default ui-corner-all remove_btn" type="button"><span class="amt_btn picon picon-list-remove"></span></button>
@@ -141,7 +141,7 @@ $this->note = 'Count the cash as you take it out of the drawer.';
 		<h1>Comments</h1>
 	</div>
 	<div class="pf-element pf-full-width">
-		<div class="pf-full-width"><textarea class="ui-widget-content" style="width: 100%;" rows="3" cols="35" name="comments"><?php echo $this->entity->comments; ?></textarea></div>
+		<div class="pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="comments"><?php echo $this->entity->comments; ?></textarea></div>
 	</div>
 	<div class="pf-element pf-buttons">
 		<input type="hidden" name="id" value="<?php echo $this->entity->cashcount->guid; ?>" />

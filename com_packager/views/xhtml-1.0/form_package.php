@@ -178,7 +178,7 @@ $pines->com_pgrid->load();
 					<label>
 						<span class="pf-label">Component</span>
 						<span class="pf-note">Information will be gathered from the component's info file.</span>
-						<select class="pf-field ui-widget-content" name="pkg_component">
+						<select class="pf-field ui-widget-content ui-corner-all" name="pkg_component">
 							<option value="null">-- Choose Component --</option>
 							<?php foreach ($this->components as $cur_component) {
 								if (substr($cur_component, 0, 4) != 'com_')
@@ -198,7 +198,7 @@ $pines->com_pgrid->load();
 					<label>
 						<span class="pf-label">Template</span>
 						<span class="pf-note">Information will be gathered from the template's info file.</span>
-						<select class="pf-field ui-widget-content" name="pkg_template">
+						<select class="pf-field ui-widget-content ui-corner-all" name="pkg_template">
 							<option value="null">-- Choose Template --</option>
 							<?php foreach ($this->components as $cur_component) {
 								if (substr($cur_component, 0, 4) != 'tpl_')
@@ -218,7 +218,7 @@ $pines->com_pgrid->load();
 					<label>
 						<span class="pf-label">Package Name</span>
 						<span class="pf-note">Information will be gathered from the system's info file.</span>
-						<input class="pf-field ui-widget-content" type="text" name="system_package_name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" onkeyup="this.value = this.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');" />
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="system_package_name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" onkeyup="this.value = this.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');" />
 					</label>
 				</div>
 			</div>
@@ -229,46 +229,46 @@ $pines->com_pgrid->load();
 				<div class="pf-element">
 					<label>
 						<span class="pf-label">Package Name</span>
-						<input class="pf-field ui-widget-content" type="text" name="meta_package_name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" onkeyup="this.value = this.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');" />
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_package_name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" onkeyup="this.value = this.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');" />
 					</label>
 				</div>
 				<div class="pf-element">
 					<label>
 						<span class="pf-label">Canonical Name</span>
 						<span class="pf-note">The name the user will see.</span>
-						<input class="pf-field ui-widget-content" type="text" name="meta_name" size="24" value="<?php echo htmlentities($this->entity->meta['name']); ?>" />
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_name" size="24" value="<?php echo htmlentities($this->entity->meta['name']); ?>" />
 					</label>
 				</div>
 				<div class="pf-element">
 					<label>
 						<span class="pf-label">Author</span>
-						<input class="pf-field ui-widget-content" type="text" name="meta_author" size="24" value="<?php echo htmlentities($this->entity->meta['author']); ?>" />
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_author" size="24" value="<?php echo htmlentities($this->entity->meta['author']); ?>" />
 					</label>
 				</div>
 				<div class="pf-element">
 					<label>
 						<span class="pf-label">Version</span>
-						<input class="pf-field ui-widget-content" type="text" name="meta_version" size="24" value="<?php echo htmlentities($this->entity->meta['version']); ?>" />
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_version" size="24" value="<?php echo htmlentities($this->entity->meta['version']); ?>" />
 					</label>
 				</div>
 				<div class="pf-element">
 					<label>
 						<span class="pf-label">License</span>
 						<span class="pf-note">Provide the URL to an online version. If that's not available, provide the name of the license.</span>
-						<input class="pf-field ui-widget-content" type="text" name="meta_license" size="24" value="<?php echo htmlentities($this->entity->meta['license']); ?>" />
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_license" size="24" value="<?php echo htmlentities($this->entity->meta['license']); ?>" />
 					</label>
 				</div>
 				<div class="pf-element">
 					<label>
 						<span class="pf-label">Short Description</span>
 						<span class="pf-note">Please provide a simple description, sentence caps, no period. E.g. "XML parsing library"</span>
-						<input class="pf-field ui-widget-content" type="text" name="meta_short_description" size="24" value="<?php echo htmlentities($this->entity->meta['short_description']); ?>" />
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_short_description" size="24" value="<?php echo htmlentities($this->entity->meta['short_description']); ?>" />
 					</label>
 				</div>
 				<div class="pf-element pf-full-width">
 					<label>
 						<span class="pf-label">Description</span>
-						<span class="pf-field pf-full-width"><textarea class="ui-widget-content" style="width: 100%;" rows="3" cols="35" name="meta_description"><?php echo $this->entity->meta['description']; ?></textarea></span>
+						<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="meta_description"><?php echo $this->entity->meta['description']; ?></textarea></span>
 					</label>
 				</div>
 				<div class="pf-element pf-full-width">
@@ -320,7 +320,7 @@ $pines->com_pgrid->load();
 						<div class="pf-element">
 							<label>
 								<span class="pf-label">Class</span>
-								<select class="pf-field ui-widget-content" name="cur_condition_class">
+								<select class="pf-field ui-widget-content ui-corner-all" name="cur_condition_class">
 									<option value="depend">Depend</option>
 									<option value="recommend">Recommend</option>
 									<option value="conflict">Conflict</option>
@@ -330,13 +330,13 @@ $pines->com_pgrid->load();
 						<div class="pf-element">
 							<label>
 								<span class="pf-label">Type</span>
-								<input class="pf-field ui-widget-content" type="text" name="cur_condition_type" size="24" />
+								<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_condition_type" size="24" />
 							</label>
 						</div>
 						<div class="pf-element">
 							<label>
 								<span class="pf-label">Value</span>
-								<input class="pf-field ui-widget-content" type="text" name="cur_condition_value" size="24" />
+								<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_condition_value" size="24" />
 							</label>
 						</div>
 					</div>
@@ -350,7 +350,7 @@ $pines->com_pgrid->load();
 				<label>
 					<span class="pf-label">Filename</span>
 					<span class="pf-note">Leave this blank to use the default filename scheme, "name-version".</span>
-					<input class="pf-field ui-widget-content" type="text" name="filename" size="24" value="<?php echo htmlentities($this->entity->filename); ?>" />
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="filename" size="24" value="<?php echo htmlentities($this->entity->filename); ?>" />
 				</label>
 			</div>
 			<br class="pf-clearing" />

@@ -78,8 +78,8 @@ defined('P_RUN') or die('Direct access prohibited');
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="">
 	<div class="pf-element">
-		<label><input class="pf-field ui-widget-content" type="radio" name="all_groups" value="allGroups" checked="checked" />All Locations</label>
-		<label><input class="pf-field ui-widget-content" type="radio" name="all_groups" value="individual" <?php echo ($this->location != 'all') ? 'checked="checked"' : ''; ?>/>Single Location</label>
+		<label><input class="pf-field ui-widget-content ui-corner-all" type="radio" name="all_groups" value="allGroups" checked="checked" />All Locations</label>
+		<label><input class="pf-field ui-widget-content ui-corner-all" type="radio" name="all_groups" value="individual" <?php echo ($this->location != 'all') ? 'checked="checked"' : ''; ?>/>Single Location</label>
 	</div>
 	<div class="pf-element location_tree" style="padding-bottom: 5px;"></div>
 	<div class="pf-element">

@@ -30,18 +30,17 @@ pines(function(){
 		});
 
 		// Main menu corners.
-		$("#main_menu > ul.dropdown")
+		$("> ul.dropdown", "#main_menu")
 		.find("> li:first-child > a.ui-state-default").addClass("ui-corner-tl").end()
 		.find("> li:last-child > a.ui-state-default").addClass("ui-corner-tr").end()
 		.find("ul > li:first-child > a").addClass("ui-corner-tr").end()
 		.find("ul > li:last-child > a").addClass("ui-corner-bottom");
 
+		var modules = $("div.module");
 		// Add disabled element styling.
-		$(".module .ui-widget-content:input:disabled").addClass("ui-state-disabled");
-		$(".module .ui-widget-content:input:not(:button, :submit, :reset), .module .ui-widget-content:file").addClass("ui-corner-all");
-
+		$(".ui-widget-content:input:disabled", modules).addClass("ui-state-disabled");
 		// UI buttons.
-		$(".module .ui-state-default:input:not(:not(:button, :submit, :reset))").button();
+		$(".ui-state-default:input:not(:not(:button, :submit, :reset))", modules).button();
 	};
 	
 	pines.tpl_pines_page_ready();

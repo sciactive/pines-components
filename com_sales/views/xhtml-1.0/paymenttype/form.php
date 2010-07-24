@@ -26,36 +26,36 @@ $this->note = 'Provide payment type details in this form.';
 	<?php } ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Name</span>
-			<input class="pf-field ui-widget-content" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Enabled</span>
-			<input class="pf-field ui-widget-content" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Kick Drawer</span>
 			<span class="pf-note">If set, when this payment type is used, the cash drawer will be kicked open.</span>
-			<input class="pf-field ui-widget-content" type="checkbox" name="kick_drawer" size="24" value="ON"<?php echo $this->entity->kick_drawer ? ' checked="checked"' : ''; ?> /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="kick_drawer" size="24" value="ON"<?php echo $this->entity->kick_drawer ? ' checked="checked"' : ''; ?> /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Change Type</span>
 			<span class="pf-note">If set, change will be given from this payment type. Usually "Cash" is the change type.</span>
-			<input class="pf-field ui-widget-content" type="checkbox" name="change_type" size="24" value="ON"<?php echo $this->entity->change_type ? ' checked="checked"' : ''; ?> /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="change_type" size="24" value="ON"<?php echo $this->entity->change_type ? ' checked="checked"' : ''; ?> /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Minimum Charge</span>
 			<span class="pf-note">The minimum charge in dollars that this payment type will accept.</span>
-			<input class="pf-field ui-widget-content" type="text" name="minimum" size="24" value="<?php echo htmlentities($this->entity->minimum); ?>" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="minimum" size="24" value="<?php echo htmlentities($this->entity->minimum); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Maximum Charge</span>
 			<span class="pf-note">The maximum charge in dollars that this payment type will accept.</span>
-			<input class="pf-field ui-widget-content" type="text" name="maximum" size="24" value="<?php echo htmlentities($this->entity->maximum); ?>" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="maximum" size="24" value="<?php echo htmlentities($this->entity->maximum); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Processing Type</span>
 			<span class="pf-note">This will determine how the payment is approved and processed.</span>
-			<select class="pf-field ui-widget-content" name="processing_type" size="6">
+			<select class="pf-field ui-widget-content ui-corner-all" name="processing_type" size="6">
 				<?php foreach ($this->processing_types as $cur_type) { ?>
 				<option value="<?php echo htmlentities($cur_type['name']); ?>" title="<?php echo htmlentities($cur_type['description']); ?>"<?php echo $this->entity->processing_type == $cur_type['name'] ? ' selected="selected"' : ''; ?>><?php echo htmlentities($cur_type['cname']); ?></option>
 				<?php } ?>

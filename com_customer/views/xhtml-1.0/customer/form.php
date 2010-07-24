@@ -196,21 +196,21 @@ $pines->com_customer->load_company_select();
 			<?php if (in_array('name', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">First Name</span>
-					<input class="pf-field ui-widget-content" type="text" name="name_first" size="24" value="<?php echo htmlentities($this->entity->name_first); ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name_first" size="24" value="<?php echo htmlentities($this->entity->name_first); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Middle Name</span>
-					<input class="pf-field ui-widget-content" type="text" name="name_middle" size="24" value="<?php echo htmlentities($this->entity->name_middle); ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name_middle" size="24" value="<?php echo htmlentities($this->entity->name_middle); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Last Name</span>
-					<input class="pf-field ui-widget-content" type="text" name="name_last" size="24" value="<?php echo htmlentities($this->entity->name_last); ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name_last" size="24" value="<?php echo htmlentities($this->entity->name_last); ?>" /></label>
 			</div>
 			<?php } if (in_array('ssn', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">SSN</span>
 					<span class="pf-note">Without dashes.</span>
-					<input class="pf-field ui-widget-content" type="text" name="ssn" size="24" value="<?php echo htmlentities($this->entity->ssn); ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="ssn" size="24" value="<?php echo htmlentities($this->entity->ssn); ?>" /></label>
 			</div>
 			<?php } if (in_array('dob', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="pf-element">
@@ -228,46 +228,46 @@ $pines->com_customer->load_company_select();
 					// ]]>
 				</script>
 				<label><span class="pf-label">Date of Birth</span>
-					<input class="pf-field ui-widget-content" type="text" name="dob" size="24" value="<?php echo $this->entity->dob ? format_date($this->entity->dob, 'date_sort') : ''; ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="dob" size="24" value="<?php echo $this->entity->dob ? format_date($this->entity->dob, 'date_sort') : ''; ?>" /></label>
 			</div>
 			<?php } if (in_array('email', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Email</span>
-					<input class="pf-field ui-widget-content" type="text" name="email" size="24" value="<?php echo htmlentities($this->entity->email); ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="email" size="24" value="<?php echo htmlentities($this->entity->email); ?>" /></label>
 			</div>
 			<?php } if (in_array('company', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Company</span>
 					<span class="pf-note">Enter part of a company name, email, or phone # to search.</span>
-					<input class="pf-field ui-widget-content" type="text" id="p_muid_company" name="company" size="24" value="<?php echo $this->entity->company->guid ? htmlentities("{$this->entity->company->guid}: \"{$this->entity->company->name}\"") : ''; ?>" />
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_company" name="company" size="24" value="<?php echo $this->entity->company->guid ? htmlentities("{$this->entity->company->guid}: \"{$this->entity->company->name}\"") : ''; ?>" />
 				</label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Job Title</span>
-					<input class="pf-field ui-widget-content" type="text" name="job_title" size="24" value="<?php echo htmlentities($this->entity->job_title); ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="job_title" size="24" value="<?php echo htmlentities($this->entity->job_title); ?>" /></label>
 			</div>
 			<?php } if (in_array('phone', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Cell Phone</span>
-					<input class="pf-field ui-widget-content" type="text" name="phone_cell" size="24" value="<?php echo format_phone($this->entity->phone_cell); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="phone_cell" size="24" value="<?php echo format_phone($this->entity->phone_cell); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Work Phone</span>
-					<input class="pf-field ui-widget-content" type="text" name="phone_work" size="24" value="<?php echo format_phone($this->entity->phone_work); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="phone_work" size="24" value="<?php echo format_phone($this->entity->phone_work); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Home Phone</span>
-					<input class="pf-field ui-widget-content" type="text" name="phone_home" size="24" value="<?php echo format_phone($this->entity->phone_home); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="phone_home" size="24" value="<?php echo format_phone($this->entity->phone_home); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Fax</span>
-					<input class="pf-field ui-widget-content" type="text" name="fax" size="24" value="<?php echo format_phone($this->entity->fax); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="fax" size="24" value="<?php echo format_phone($this->entity->fax); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
 			<?php } if (in_array('referrer', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Referrer</span>
 					<span class="pf-note">Where did you hear about us?</span>
-					<select class="pf-field ui-widget-content" name="referrer">
+					<select class="pf-field ui-widget-content ui-corner-all" name="referrer">
 						<option value="">-- Please Select --</option>
 						<?php foreach ($pines->config->com_customer->referrer_values as $cur_value) { ?>
 						<option value="<?php echo htmlentities($cur_value); ?>"<?php echo ($this->entity->referrer == $cur_value) ? ' selected="selected"' : ''; ?> /><?php echo htmlentities($cur_value); ?></option>
@@ -285,7 +285,7 @@ $pines->com_customer->load_company_select();
 		<div id="p_muid_tab_account">
 			<div class="pf-element">
 				<label><span class="pf-label">Login Disabled</span>
-					<input class="pf-field ui-widget-content" type="checkbox" name="login_disabled" size="24" value="ON"<?php echo $this->entity->login_disabled ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="login_disabled" size="24" value="ON"<?php echo $this->entity->login_disabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<?php if (in_array('password', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="pf-element">
@@ -295,7 +295,7 @@ $pines->com_customer->load_company_select();
 					} else {
 						echo '<span class="pf-note">Leave blank, if not changing.</span>';
 					} ?>
-					<input class="pf-field ui-widget-content" type="text" name="password" size="24" value="<?php echo htmlentities($this->entity->tmp_password); ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="password" size="24" value="<?php echo htmlentities($this->entity->tmp_password); ?>" /></label>
 			</div>
 			<?php } if (in_array('points', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="pf-element pf-heading">
@@ -319,7 +319,7 @@ $pines->com_customer->load_company_select();
 			<div class="pf-element">
 				<label><span class="pf-label">Adjust Points</span>
 					<span class="pf-note">Use a negative value to subtract points.</span>
-					<input class="pf-field ui-widget-content" type="text" name="adjust_points" size="24" value="0" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="adjust_points" size="24" value="0" /></label>
 			</div>
 			<?php } } if (in_array('membership', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="pf-element pf-heading">
@@ -327,7 +327,7 @@ $pines->com_customer->load_company_select();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Member</span>
-					<input class="pf-field ui-widget-content" type="checkbox" name="member" size="24" value="ON"<?php echo $this->entity->member ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="member" size="24" value="ON"<?php echo $this->entity->member ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<?php if ($this->entity->member) { ?>
 			<div class="pf-element">
@@ -350,7 +350,7 @@ $pines->com_customer->load_company_select();
 					// ]]>
 				</script>
 				<label><span class="pf-label">Membership Expiration</span>
-					<input class="pf-field ui-widget-content" type="text" name="member_exp" size="24" value="<?php echo $this->entity->member_exp ? format_date($this->entity->member_exp, 'date_sort') : ''; ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="member_exp" size="24" value="<?php echo $this->entity->member_exp ? format_date($this->entity->member_exp, 'date_sort') : ''; ?>" /></label>
 			</div>
 			<?php } ?>
 			<br class="pf-clearing" />
@@ -380,22 +380,22 @@ $pines->com_customer->load_company_select();
 					// ]]>
 				</script>
 				<span class="pf-label">Address Type</span>
-				<label><input class="pf-field ui-widget-content" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
-				<label><input class="pf-field ui-widget-content" type="radio" name="address_type" value="international"<?php echo $this->entity->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
+				<label><input class="pf-field ui-widget-content ui-corner-all" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
+				<label><input class="pf-field ui-widget-content ui-corner-all" type="radio" name="address_type" value="international"<?php echo $this->entity->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
 			</div>
 			<div id="p_muid_address_us" style="display: none;">
 				<div class="pf-element">
 					<label><span class="pf-label">Address 1</span>
-						<input class="pf-field ui-widget-content" type="text" name="address_1" size="24" value="<?php echo htmlentities($this->entity->address_1); ?>" /></label>
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="address_1" size="24" value="<?php echo htmlentities($this->entity->address_1); ?>" /></label>
 				</div>
 				<div class="pf-element">
 					<label><span class="pf-label">Address 2</span>
-						<input class="pf-field ui-widget-content" type="text" name="address_2" size="24" value="<?php echo htmlentities($this->entity->address_2); ?>" /></label>
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="address_2" size="24" value="<?php echo htmlentities($this->entity->address_2); ?>" /></label>
 				</div>
 				<div class="pf-element">
 					<span class="pf-label">City, State</span>
-					<input class="pf-field ui-widget-content" type="text" name="city" size="15" value="<?php echo htmlentities($this->entity->city); ?>" />
-					<select class="pf-field ui-widget-content" name="state">
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="city" size="15" value="<?php echo htmlentities($this->entity->city); ?>" />
+					<select class="pf-field ui-widget-content ui-corner-all" name="state">
 						<option value="">None</option>
 						<?php foreach (array(
 								'AL' => 'Alabama',
@@ -456,13 +456,13 @@ $pines->com_customer->load_company_select();
 				</div>
 				<div class="pf-element">
 					<label><span class="pf-label">Zip</span>
-						<input class="pf-field ui-widget-content" type="text" name="zip" size="24" value="<?php echo htmlentities($this->entity->zip); ?>" /></label>
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="zip" size="24" value="<?php echo htmlentities($this->entity->zip); ?>" /></label>
 				</div>
 			</div>
 			<div id="p_muid_address_international" style="display: none;">
 				<div class="pf-element pf-full-width">
 					<label><span class="pf-label">Address</span>
-						<span class="pf-field pf-full-width"><textarea class="ui-widget-content" style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo $this->entity->address_international; ?></textarea></span></label>
+						<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo $this->entity->address_international; ?></textarea></span></label>
 				</div>
 			</div>
 			<div class="pf-element pf-heading">
@@ -500,27 +500,27 @@ $pines->com_customer->load_company_select();
 					<div class="pf-element">
 						<label>
 							<span class="pf-label">Type</span>
-							<input class="pf-field ui-widget-content" type="text" size="24" name="cur_address_type" id="p_muid_cur_address_type" />
+							<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="cur_address_type" id="p_muid_cur_address_type" />
 						</label>
 					</div>
 					<div class="pf-element">
 						<label>
 							<span class="pf-label">Address 1</span>
-							<input class="pf-field ui-widget-content" type="text" size="24" name="cur_address_addr1" id="p_muid_cur_address_addr1" />
+							<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="cur_address_addr1" id="p_muid_cur_address_addr1" />
 						</label>
 					</div>
 					<div class="pf-element">
 						<label>
 							<span class="pf-label">Address 2</span>
-							<input class="pf-field ui-widget-content" type="text" size="24" name="cur_address_addr2" id="p_muid_cur_address_addr2" />
+							<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="cur_address_addr2" id="p_muid_cur_address_addr2" />
 						</label>
 					</div>
 					<div class="pf-element">
 						<label>
 							<span class="pf-label">City, State, Zip</span>
-							<input class="pf-field ui-widget-content" type="text" size="8" name="cur_address_city" id="p_muid_cur_address_city" />
-							<input class="pf-field ui-widget-content" type="text" size="2" name="cur_address_state" id="p_muid_cur_address_state" />
-							<input class="pf-field ui-widget-content" type="text" size="5" name="cur_address_zip" id="p_muid_cur_address_zip" />
+							<input class="pf-field ui-widget-content ui-corner-all" type="text" size="8" name="cur_address_city" id="p_muid_cur_address_city" />
+							<input class="pf-field ui-widget-content ui-corner-all" type="text" size="2" name="cur_address_state" id="p_muid_cur_address_state" />
+							<input class="pf-field ui-widget-content ui-corner-all" type="text" size="5" name="cur_address_zip" id="p_muid_cur_address_zip" />
 						</label>
 					</div>
 				</div>
@@ -554,13 +554,13 @@ $pines->com_customer->load_company_select();
 					<div class="pf-element">
 						<label>
 							<span class="pf-label">Name</span>
-							<input class="pf-field ui-widget-content" type="text" name="cur_attribute_name" size="24" />
+							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_attribute_name" size="24" />
 						</label>
 					</div>
 					<div class="pf-element">
 						<label>
 							<span class="pf-label">Value</span>
-							<input class="pf-field ui-widget-content" type="text" name="cur_attribute_value" size="24" />
+							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_attribute_value" size="24" />
 						</label>
 					</div>
 				</div>

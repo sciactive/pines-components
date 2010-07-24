@@ -61,7 +61,7 @@ $pines->com_ptags->load();
 				<label>
 					<span class="pf-label">Name</span>
 					<div class="pf-group pf-full-width">
-						<input class="pf-field ui-widget-content" style="width: 100%;" type="text" name="name" value="<?php echo htmlentities($this->entity->name); ?>" />
+						<input class="pf-field ui-widget-content ui-corner-all" style="width: 100%;" type="text" name="name" value="<?php echo htmlentities($this->entity->name); ?>" />
 					</div>
 				</label>
 			</div>
@@ -69,18 +69,18 @@ $pines->com_ptags->load();
 				<label>
 					<span class="pf-label">Alias</span>
 					<div class="pf-group pf-full-width">
-						<input class="pf-field ui-widget-content" style="width: 100%;" type="text" name="alias" value="<?php echo htmlentities($this->entity->alias); ?>" onkeyup="this.value=this.value.replace(/[^\w\d-.]/g, '_');" />
+						<input class="pf-field ui-widget-content ui-corner-all" style="width: 100%;" type="text" name="alias" value="<?php echo htmlentities($this->entity->alias); ?>" onkeyup="this.value=this.value.replace(/[^\w\d-.]/g, '_');" />
 					</div>
 				</label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>
-					<input class="pf-field ui-widget-content" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Tags</span>
 				<div class="pf-group">
-					<input class="pf-field ui-widget-content" type="text" name="content_tags" size="24" value="<?php echo htmlentities(implode(',', $this->entity->content_tags)); ?>" />
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="content_tags" size="24" value="<?php echo htmlentities(implode(',', $this->entity->content_tags)); ?>" />
 					<script type="text/javascript">
 						// <![CDATA[
 						pines(function(){

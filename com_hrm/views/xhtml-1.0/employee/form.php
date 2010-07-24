@@ -119,16 +119,16 @@ $pines->com_pgrid->load();
 			<div class="pf-element">
 				<label><span class="pf-label">SSN</span>
 					<span class="pf-note">Without dashes.</span>
-					<input class="pf-field ui-widget-content" type="text" name="ssn" size="24" value="<?php echo htmlentities($this->entity->ssn); ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="ssn" size="24" value="<?php echo htmlentities($this->entity->ssn); ?>" /></label>
 			</div>
 			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Job Title</span>
-					<input class="pf-field ui-widget-content" type="text" name="job_title" size="24" value="<?php echo htmlentities($this->entity->job_title); ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="job_title" size="24" value="<?php echo htmlentities($this->entity->job_title); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Schedule Color</span>
-					<select class="pf-field ui-widget-content" name="color">
+					<select class="pf-field ui-widget-content ui-corner-all" name="color">
 						<option value="blue" <?php echo ($this->entity->color == 'blue') ? 'selected="selected"' : ''; ?>>Blue</option>
 						<option value="blueviolet" <?php echo ($this->entity->color == 'blueviolet') ? 'selected="selected"' : ''; ?>>Blue Violet</option>
 						<option value="brown" <?php echo ($this->entity->color == 'brown') ? 'selected="selected"' : ''; ?>>Brown</option>
@@ -147,7 +147,7 @@ $pines->com_pgrid->load();
 				<label><span class="pf-label">Hours in Full Workday</span>
 					<span class="pf-note">When the employee is scheduled "all day", it will be considered this many hours.</span>
 					<span class="pf-note">Leave blank to use the default.</span>
-					<input class="pf-field ui-widget-content" type="text" name="workday_length" size="24" value="<?php echo htmlentities($this->entity->workday_length); ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="workday_length" size="24" value="<?php echo htmlentities($this->entity->workday_length); ?>" /></label>
 			</div>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Description</span><br />
@@ -180,13 +180,13 @@ $pines->com_pgrid->load();
 					<div class="pf-element">
 						<label>
 							<span class="pf-label">Name</span>
-							<input class="pf-field ui-widget-content" type="text" name="cur_attribute_name" size="24" />
+							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_attribute_name" size="24" />
 						</label>
 					</div>
 					<div class="pf-element">
 						<label>
 							<span class="pf-label">Value</span>
-							<input class="pf-field ui-widget-content" type="text" name="cur_attribute_value" size="24" />
+							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_attribute_value" size="24" />
 						</label>
 					</div>
 				</div>

@@ -123,7 +123,7 @@ $this->title = 'Company Schedule [' . (isset($this->employee) ? $this->employee-
 	};
 
 	// Save all of the calendar events by exporting the data to their entities.
-	pines.com_hrm_save_calendar = function() {
+	pines.com_hrm_save_calendar = function(refresh) {
 		var events = $("#calendar").fullCalendar('clientEvents');
 		var events_dump = '';
 		//var events_array = new Array();
@@ -152,8 +152,12 @@ $this->title = 'Company Schedule [' . (isset($this->employee) ? $this->employee-
 			type: "POST",
 			dataType: "html",
 			data: {"events": events_dump},
-			error: function(XMLHttpRequest, textStatus){
+			error: function(){
 				pines.error("An error occured while trying to save the calendar.");
+			},
+			success: function(){
+				if (refresh)
+					pines.get('<?php echo pines_url('com_hrm', 'editcalendar', array('location' => $this->location->guid, 'employee' => $this->employee->guid)); ?>');
 			}
 		});
 	};
@@ -311,12 +315,10 @@ $this->title = 'Company Schedule [' . (isset($this->employee) ? $this->employee-
 				unlink_count++;
 			}
 		});
-		if (unlink_count == 0) {
+		if (unlink_count == 0)
 			alert('Please select at least one bound event to unlink.');
-		} else {
-			pines.com_hrm_save_calendar();
-			$("#calendar").fullCalendar('refetchEvents');
-		}
+		else
+			pines.com_hrm_save_calendar(true);
 	};
 	// ]]>
 </script>

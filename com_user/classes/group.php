@@ -38,7 +38,7 @@ class group extends able_object implements group_interface {
 				return;
 			$this->guid = $entity->guid;
 			$this->tags = $entity->tags;
-			$this->put_data($entity->get_data());
+			$this->put_data($entity->get_data(), $entity->get_sdata());
 		}
 	}
 

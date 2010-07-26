@@ -40,7 +40,7 @@ class user extends able_object implements user_interface {
 				return;
 			$this->guid = $entity->guid;
 			$this->tags = $entity->tags;
-			$this->put_data($entity->get_data());
+			$this->put_data($entity->get_data(), $entity->get_sdata());
 		}
 	}
 

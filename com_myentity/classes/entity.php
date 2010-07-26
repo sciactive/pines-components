@@ -38,6 +38,13 @@ class entity extends p_base implements entity_interface {
 	 */
 	protected $data = array();
 	/**
+	 * Same as $data, but hasn't been unserialized.
+	 *
+	 * @var array
+	 * @access protected
+	 */
+	protected $sdata = array();
+	/**
 	 * The array used to store referenced entities.
 	 *
 	 * This technique allows your code to see another entity as a variable,
@@ -80,11 +87,16 @@ class entity extends p_base implements entity_interface {
 	 */
 	public function &__get($name) {
 		global $pines;
+		// Unserialize.
+		if (isset($this->sdata[$name])) {
+			$this->data[$name] = unserialize($this->sdata[$name]);
+			unset($this->sdata[$name]);
+		}
 		// Check for an entity first.
 		if (isset($this->entity_cache[$name])) {
 			if ($this->entity_cache[$name] === 0) {
 				// The entity hasn't been loaded yet, so load it now.
-				$this->entity_cache[$name] = $pines->entity_manager->get_entity(array('class' => $this->data[$name][2]), array('&', 'guid' => $this->data[$name][1]));
+				$this->entity_cache[$name] = $pines->entity_manager->get_entity(array('class' => $this->data[$name][2], 'cache' => true), array('&', 'guid' => $this->data[$name][1]));
 			}
 			return $this->entity_cache[$name];
 		}
@@ -107,6 +119,11 @@ class entity extends p_base implements entity_interface {
 	 * @todo Check that a referenced entity has not been deleted.
 	 */
 	public function __isset($name) {
+		// Unserialize.
+		if (isset($this->sdata[$name])) {
+			$this->data[$name] = unserialize($this->sdata[$name]);
+			unset($this->sdata[$name]);
+		}
 		return isset($this->data[$name]);
 	}
 
@@ -121,6 +138,9 @@ class entity extends p_base implements entity_interface {
 	 * @return mixed The value of the variable.
 	 */
 	public function __set($name, $value) {
+		// Delete any serialized value.
+		if (isset($this->sdata[$name]))
+			unset($this->sdata[$name]);
 		if ((is_a($value, 'entity') || is_a($value, 'hook_override')) && isset($value->guid)) {
 			// This is an entity, so we don't want to store it in our data array.
 			$this->entity_cache[$name] = $value;
@@ -154,6 +174,7 @@ class entity extends p_base implements entity_interface {
 		if (isset($this->entity_cache[$name]))
 			unset($this->entity_cache[$name]);
 		unset($this->data[$name]);
+		unset($this->sdata[$name]);
 	}
 
 	public function add_tag() {
@@ -204,7 +225,7 @@ class entity extends p_base implements entity_interface {
 	/**
 	 * Check if an item is an entity, and if it is, convert it to a reference.
 	 *
-	 * @param mixed $item The item to check.
+	 * @param mixed &$item The item to check.
 	 * @param mixed $key Unused.
 	 * @access private
 	 */
@@ -236,6 +257,10 @@ class entity extends p_base implements entity_interface {
 		// First, walk though the data and convert any entities to references.
 		array_walk_recursive($this->data, array($this, 'entity_to_reference'));
 		return $this->data;
+	}
+
+	public function get_sdata() {
+		return $this->sdata;
 	}
 
 	public function has_tag() {
@@ -271,12 +296,12 @@ class entity extends p_base implements entity_interface {
 		}
 	}
 
-	public function put_data($data) {
+	public function put_data($data, $sdata = array()) {
 		if ((array) $data !== $data)
 			$data = array();
 		// Erase the entity cache.
 		$this->entity_cache = array();
-		foreach($data as $name => $value) {
+		foreach ($data as $name => $value) {
 			if ((array) $value === $value && $value[0] === 'pines_entity_reference') {
 				// Don't load the entity yet, but make the entry in the array,
 				// so we know it is an entity reference. This will speed up
@@ -285,7 +310,17 @@ class entity extends p_base implements entity_interface {
 				$this->entity_cache[$name] = 0;
 			}
 		}
-		return ($this->data = $data);
+		foreach ($sdata as $name => $value) {
+			if (strpos($value, 'a:3:{i:0;s:22:"pines_entity_reference";') === 0) {
+				// Don't load the entity yet, but make the entry in the array,
+				// so we know it is an entity reference. This will speed up
+				// retrieving entities with lots of references, especially
+				// recursive references.
+				$this->entity_cache[$name] = 0;
+			}
+		}
+		$this->data = $data;
+		$this->sdata = $sdata;
 	}
 
 	/**
@@ -293,7 +328,7 @@ class entity extends p_base implements entity_interface {
 	 *
 	 * This function will recurse into deeper arrays.
 	 *
-	 * @param mixed $item The item to check.
+	 * @param mixed &$item The item to check.
 	 * @param mixed $key Unused.
 	 * @access private
 	 */
@@ -302,7 +337,7 @@ class entity extends p_base implements entity_interface {
 		if ((array) $item === $item) {
 			if ($item[0] === 'pines_entity_reference') {
 				if (!isset($this->entity_cache["reference_guid: {$item[1]}"]))
-					$this->entity_cache["reference_guid: {$item[1]}"] = $pines->entity_manager->get_entity(array('class' => $item[2]), array('guid' => $item[1]));
+					$this->entity_cache["reference_guid: {$item[1]}"] = $pines->entity_manager->get_entity(array('class' => $item[2], 'cache' => true), array('guid' => $item[1]));
 				$item = $this->entity_cache["reference_guid: {$item[1]}"];
 			} else {
 				array_walk($item, array($this, 'reference_to_entity'));
@@ -319,6 +354,7 @@ class entity extends p_base implements entity_interface {
 			return 0;
 		$this->tags = $refresh->tags;
 		$this->put_data($refresh->get_data());
+		$this->put_sdata($entity->get_sdata());
 		return true;
 	}
 

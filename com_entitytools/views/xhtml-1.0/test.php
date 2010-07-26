@@ -11,6 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Entity Manager Tester';
+$total_time = $this->time_end - $this->time_start;
 $last_time = $this->time_start;
 ?>
 <p>This entity manager tester will test the current entity manager for required
@@ -24,10 +25,10 @@ registered itself as the system's entity manager! Test cannot continue!</p>
 <?php } else { ?>
 <div style="font-family: monospace; font-size: .9em; margin-left: 35px; margin-bottom: 6px; margin-top: 6px;">Test is starting...
 <ol><?php foreach ($this->tests as $cur_test) { ?>
-<li style="white-space: pre;"><?php echo str_pad($cur_test[2], 52, ' '); ?><?php echo ($cur_test[0]) ? '<span style="color: green;">[PASS]</span>' : '<span style="color: red;">[FAIL]</span>'; ?> <?php printf('%5.5f', $cur_test[1] - $last_time); ?>s</li>
+<li style="white-space: pre;"><?php echo str_pad($cur_test[2], 52, ' '); ?><?php echo ($cur_test[0]) ? '<span style="color: green;">[PASS]</span>' : '<span style="color: red;">[FAIL]</span>'; ?> <?php printf('%5.5f', $cur_test[1] - $last_time); ?>s <?php printf('%05.2f', ($cur_test[1] - $last_time) / $total_time * 100); ?>%</li>
 <?php $last_time = $cur_test[1];
 } ?>
 </ol>
-The test is now complete. Test time was <?php echo $this->time_end - $this->time_start; ?>s.
+The test is now complete. Test time was <?php echo $total_time; ?>s.
 </div>
 <?php } ?>

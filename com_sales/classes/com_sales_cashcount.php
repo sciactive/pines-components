@@ -36,7 +36,7 @@ class com_sales_cashcount extends entity {
 				return;
 			$this->guid = $entity->guid;
 			$this->tags = $entity->tags;
-			$this->put_data($entity->get_data());
+			$this->put_data($entity->get_data(), $entity->get_sdata());
 		} else {
 			// Create a currency array.
 			foreach ($pines->config->com_sales->currency_denominations as $cur_currency) {

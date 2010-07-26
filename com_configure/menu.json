@@ -1,13 +1,13 @@
 [
 	{
-		"path": "main_menu/system/configurator",
+		"path": "main_menu/system/configuration",
 		"text": "Configuration",
 		"depend": {
 			"children": true
 		}
 	},
 		{
-			"path": "main_menu/system/configurator/components",
+			"path": "main_menu/system/configuration/components",
 			"text": "Components",
 			"href": ["com_configure","list"],
 			"depend": {
@@ -15,7 +15,7 @@
 			}
 		},
 		{
-			"path": "main_menu/system/configurator/perusergroup",
+			"path": "main_menu/system/configuration/perusergroup",
 			"text": "Per User/Group",
 			"href": ["com_configure","list",{"peruser":1}],
 			"depend": {

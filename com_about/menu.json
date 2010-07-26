@@ -1,6 +1,6 @@
 [
 	{
-		"path": "main_menu/system/com_about",
+		"path": "main_menu/system/about",
 		"text": "About",
 		"href": ["com_about"],
 		"depend": {

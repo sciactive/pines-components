@@ -1,13 +1,13 @@
 [
 	{
-		"path": "main_menu/business/com_newsletter",
+		"path": "main_menu/business/newsletter",
 		"text": "Newsletter",
 		"depend": {
 			"children": true
 		}
 	},
 		{
-			"path": "main_menu/business/com_newsletter/mails",
+			"path": "main_menu/business/newsletter/mails",
 			"text": "Mails",
 			"href": ["com_newsletter","list"],
 			"depend": {
@@ -15,7 +15,7 @@
 			}
 		},
 		{
-			"path": "main_menu/business/com_newsletter/newmail",
+			"path": "main_menu/business/newsletter/newmail",
 			"text": "New Mail",
 			"href": ["com_newsletter","new"],
 			"depend": {

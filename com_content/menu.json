@@ -1,13 +1,13 @@
 [
 	{
-		"path": "main_menu/website/com_content",
+		"path": "main_menu/website/content",
 		"text": "Content",
 		"depend": {
 			"children": true
 		}
 	},
 		{
-			"path": "main_menu/website/com_content/categories",
+			"path": "main_menu/website/content/categories",
 			"text": "Categories",
 			"href": ["com_content","category/list"],
 			"depend": {
@@ -15,7 +15,7 @@
 			}
 		},
 		{
-			"path": "main_menu/website/com_content/newcategory",
+			"path": "main_menu/website/content/newcategory",
 			"text": "New Category",
 			"href": ["com_content","category/edit"],
 			"depend": {
@@ -23,7 +23,7 @@
 			}
 		},
 		{
-			"path": "main_menu/website/com_content/articles",
+			"path": "main_menu/website/content/articles",
 			"text": "Articles",
 			"href": ["com_content","article/list"],
 			"depend": {
@@ -31,7 +31,7 @@
 			}
 		},
 		{
-			"path": "main_menu/website/com_content/newarticle",
+			"path": "main_menu/website/content/newarticle",
 			"text": "New Article",
 			"href": ["com_content","article/edit"],
 			"depend": {

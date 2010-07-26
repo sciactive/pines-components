@@ -1,13 +1,13 @@
 [
 	{
-		"path": "main_menu/business/com_hrm",
+		"path": "main_menu/business/hrm",
 		"text": "HRM",
 		"depend": {
 			"children": true
 		}
 	},
 		{
-			"path": "main_menu/business/com_hrm/calendar",
+			"path": "main_menu/business/hrm/calendar",
 			"text": "Calendar",
 			"href": ["com_hrm","editcalendar"],
 			"depend": {
@@ -15,7 +15,7 @@
 			}
 		},
 		{
-			"path": "main_menu/business/com_hrm/timeclock",
+			"path": "main_menu/business/hrm/timeclock",
 			"text": "Timeclock",
 			"href": ["com_hrm","employee/timeclock/list"],
 			"depend": {
@@ -23,7 +23,7 @@
 			}
 		},
 		{
-			"path": "main_menu/business/com_hrm/employees",
+			"path": "main_menu/business/hrm/employees",
 			"text": "Employees",
 			"href": ["com_hrm","employee/list"],
 			"depend": {

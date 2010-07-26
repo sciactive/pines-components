@@ -1,13 +1,13 @@
 [
 	{
-		"path": "main_menu/business/com_customer/com_customertimer",
+		"path": "main_menu/business/crm/customer_timer",
 		"text": "Customer Timer",
 		"depend": {
 			"children": true
 		}
 	},
 		{
-			"path": "main_menu/business/com_customer/com_customertimer/floors",
+			"path": "main_menu/business/crm/customer_timer/floors",
 			"text": "Floors",
 			"href": ["com_customertimer","listfloors"],
 			"depend": {
@@ -15,7 +15,7 @@
 			}
 		},
 		{
-			"path": "main_menu/business/com_customer/com_customertimer/newfloor",
+			"path": "main_menu/business/crm/customer_timer/newfloor",
 			"text": "New Floor",
 			"href": ["com_customertimer","editfloor"],
 			"depend": {

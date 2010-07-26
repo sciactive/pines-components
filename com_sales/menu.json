@@ -1,13 +1,13 @@
 [
 	{
-		"path": "main_menu/business/com_sales",
+		"path": "main_menu/business/0_pos",
 		"text": "POS",
 		"depend": {
 			"children": true
 		}
 	},
 		{
-			"path": "main_menu/business/com_sales/newsale",
+			"path": "main_menu/business/0_pos/newsale",
 			"text": "New Sale",
 			"href": ["com_sales","sale/edit"],
 			"depend": {
@@ -15,14 +15,14 @@
 			}
 		},
 		{
-			"path": "main_menu/business/com_sales/sales",
+			"path": "main_menu/business/0_pos/sales",
 			"text": "Sales",
 			"depend": {
 				"children": true
 			}
 		},
 			{
-				"path": "main_menu/business/com_sales/sales/sales",
+				"path": "main_menu/business/0_pos/sales/sales",
 				"text": "Sales",
 				"href": ["com_sales","sale/list"],
 				"depend": {
@@ -30,7 +30,7 @@
 				}
 			},
 			{
-				"path": "main_menu/business/com_sales/sales/salestotals",
+				"path": "main_menu/business/0_pos/sales/salestotals",
 				"text": "Sales Totals",
 				"href": ["com_sales","sale/totals"],
 				"depend": {
@@ -38,7 +38,7 @@
 				}
 			},
 			{
-				"path": "main_menu/business/com_sales/sales/newcashcount",
+				"path": "main_menu/business/0_pos/sales/newcashcount",
 				"text": "Cash-In",
 				"href": ["com_sales","cashcount/edit"],
 				"depend": {
@@ -46,7 +46,7 @@
 				}
 			},
 			{
-				"path": "main_menu/business/com_sales/sales/cashcounts",
+				"path": "main_menu/business/0_pos/sales/cashcounts",
 				"text": "Cash Counts",
 				"href": ["com_sales","cashcount/list"],
 				"depend": {
@@ -54,7 +54,7 @@
 				}
 			},
 			{
-				"path": "main_menu/business/com_sales/sales/oldcashcounts",
+				"path": "main_menu/business/0_pos/sales/oldcashcounts",
 				"text": "Old Cash Counts",
 				"href": ["com_sales","cashcount/list",{"old":"true"}],
 				"depend": {
@@ -62,14 +62,14 @@
 				}
 			},
 		{
-			"path": "main_menu/business/com_sales/returns",
+			"path": "main_menu/business/0_pos/returns",
 			"text": "Returns",
 			"depend": {
 				"children": true
 			}
 		},
 			{
-				"path": "main_menu/business/com_sales/returns/returns",
+				"path": "main_menu/business/0_pos/returns/returns",
 				"text": "Returns",
 				"href": ["com_sales","return/list"],
 				"depend": {
@@ -77,7 +77,7 @@
 				}
 			},
 			{
-				"path": "main_menu/business/com_sales/returns/newreturn",
+				"path": "main_menu/business/0_pos/returns/newreturn",
 				"text": "New Return",
 				"href": ["com_sales","return/edit"],
 				"depend": {
@@ -85,14 +85,14 @@
 				}
 			},
 		{
-			"path": "main_menu/business/com_sales/inventory",
+			"path": "main_menu/business/0_pos/inventory",
 			"text": "Inventory",
 			"depend": {
 				"children": true
 			}
 		},
 			{
-				"path": "main_menu/business/com_sales/inventory/receive",
+				"path": "main_menu/business/0_pos/inventory/receive",
 				"text": "Receive",
 				"href": ["com_sales","stock/receive"],
 				"depend": {
@@ -100,71 +100,7 @@
 				}
 			},
 			{
-				"path": "main_menu/business/com_sales/inventory/currentinventory",
-				"text": "Current Inventory",
-				"href": ["com_sales","stock/list"],
-				"depend": {
-					"ability": "com_sales/managestock"
-				}
-			},
-			{
-				"path": "main_menu/business/com_sales/inventory/removedinventory",
-				"text": "Removed Inventory",
-				"href": ["com_sales","stock/list",{"removed":"true"}],
-				"depend": {
-					"ability": "com_sales/managestock"
-				}
-			},
-			{
-				"path": "main_menu/business/com_sales/inventory/trackproduct",
-				"text": "Track Products",
-				"href": ["com_sales","product/track"],
-				"depend": {
-					"ability": "com_sales/trackproducts"
-				}
-			},
-			{
-				"path": "main_menu/business/com_sales/inventory/purchaseorders",
-				"text": "Purchase Orders",
-				"href": ["com_sales","po/list"],
-				"depend": {
-					"ability": "com_sales/listpos"
-				}
-			},
-			{
-				"path": "main_menu/business/com_sales/inventory/completedpurchaseorders",
-				"text": "Completed POs",
-				"href": ["com_sales","po/list",{"finished":"true"}],
-				"depend": {
-					"ability": "com_sales/listpos"
-				}
-			},
-			{
-				"path": "main_menu/business/com_sales/inventory/newpo",
-				"text": "New PO",
-				"href": ["com_sales","po/edit"],
-				"depend": {
-					"ability": "com_sales/newpo"
-				}
-			},
-			{
-				"path": "main_menu/business/com_sales/inventory/transfers",
-				"text": "Transfers",
-				"href": ["com_sales","transfer/list"],
-				"depend": {
-					"ability": "com_sales/managestock"
-				}
-			},
-			{
-				"path": "main_menu/business/com_sales/inventory/completedtransfers",
-				"text": "Completed Transfers",
-				"href": ["com_sales","transfer/list",{"finished":"true"}],
-				"depend": {
-					"ability": "com_sales/managestock"
-				}
-			},
-			{
-				"path": "main_menu/business/com_sales/inventory/countsheets",
+				"path": "main_menu/business/0_pos/inventory/countsheets",
 				"text": "Countsheets",
 				"href": ["com_sales","countsheet/list"],
 				"depend": {
@@ -172,22 +108,93 @@
 				}
 			},
 			{
-				"path": "main_menu/business/com_sales/inventory/newcountsheet",
+				"path": "main_menu/business/0_pos/inventory/newcountsheet",
 				"text": "New Countsheet",
 				"href": ["com_sales","countsheet/edit"],
 				"depend": {
 					"ability": "com_sales/newcountsheet"
 				}
 			},
+			{
+				"path": "main_menu/business/0_pos/inventory/currentinventory",
+				"text": "Current Inventory",
+				"href": ["com_sales","stock/list"],
+				"depend": {
+					"ability": "com_sales/managestock"
+				}
+			},
+			{
+				"path": "main_menu/business/0_pos/inventory/removedinventory",
+				"text": "Removed Inventory",
+				"href": ["com_sales","stock/list",{"removed":"true"}],
+				"depend": {
+					"ability": "com_sales/managestock"
+				}
+			},
+			{
+				"path": "main_menu/business/0_pos/inventory/trackproduct",
+				"text": "Track Products",
+				"href": ["com_sales","product/track"],
+				"depend": {
+					"ability": "com_sales/trackproducts"
+				}
+			},
+			{
+				"path": "main_menu/business/0_pos/inventory/transfers",
+				"text": "Transfers",
+				"href": ["com_sales","transfer/list"],
+				"depend": {
+					"ability": "com_sales/managestock"
+				}
+			},
+			{
+				"path": "main_menu/business/0_pos/inventory/completedtransfers",
+				"text": "Completed Transfers",
+				"href": ["com_sales","transfer/list",{"finished":"true"}],
+				"depend": {
+					"ability": "com_sales/managestock"
+				}
+			},
 		{
-			"path": "main_menu/business/com_sales/setup",
+			"path": "main_menu/business/0_pos/ordering",
+			"text": "Ordering",
+			"depend": {
+				"children": true
+			}
+		},
+			{
+				"path": "main_menu/business/0_pos/ordering/purchaseorders",
+				"text": "Purchase Orders",
+				"href": ["com_sales","po/list"],
+				"depend": {
+					"ability": "com_sales/listpos"
+				}
+			},
+			{
+				"path": "main_menu/business/0_pos/ordering/completedpurchaseorders",
+				"text": "Completed POs",
+				"href": ["com_sales","po/list",{"finished":"true"}],
+				"depend": {
+					"ability": "com_sales/listpos"
+				}
+			},
+			{
+				"path": "main_menu/business/0_pos/ordering/newpo",
+				"text": "New PO",
+				"href": ["com_sales","po/edit"],
+				"depend": {
+					"ability": "com_sales/newpo"
+				}
+			},
+		{
+			"path": "main_menu/business/0_pos/setup",
 			"text": "Setup",
 			"depend": {
 				"children": true
 			}
 		},
 			{
-				"path": "main_menu/business/com_sales/setup/categories",
+				"path": "main_menu/business/0_pos/setup/categories",
 				"text": "Categories",
 				"href": ["com_sales","category/list"],
 				"depend": {
@@ -195,7 +202,7 @@
 				}
 			},
 			{
-				"path": "main_menu/business/com_sales/setup/products",
+				"path": "main_menu/business/0_pos/setup/products",
 				"text": "Products",
 				"href": ["com_sales","product/list"],
 				"depend": {
@@ -203,7 +210,7 @@
 				}
 			},
 			{
-				"path": "main_menu/business/com_sales/setup/manufacturers",
+				"path": "main_menu/business/0_pos/setup/manufacturers",
 				"text": "Manufacturers",
 				"href": ["com_sales","manufacturer/list"],
 				"depend": {
@@ -211,7 +218,7 @@
 				}
 			},
 			{
-				"path": "main_menu/business/com_sales/setup/vendors",
+				"path": "main_menu/business/0_pos/setup/vendors",
 				"text": "Vendors",
 				"href": ["com_sales","vendor/list"],
 				"depend": {
@@ -219,7 +226,7 @@
 				}
 			},
 			{
-				"path": "main_menu/business/com_sales/setup/shippers",
+				"path": "main_menu/business/0_pos/setup/shippers",
 				"text": "Shippers",
 				"href": ["com_sales","shipper/list"],
 				"depend": {
@@ -227,7 +234,7 @@
 				}
 			},
 			{
-				"path": "main_menu/business/com_sales/setup/paymenttypes",
+				"path": "main_menu/business/0_pos/setup/paymenttypes",
 				"text": "Payment Types",
 				"href": ["com_sales","paymenttype/list"],
 				"depend": {
@@ -235,7 +242,7 @@
 				}
 			},
 			{
-				"path": "main_menu/business/com_sales/setup/taxesfees",
+				"path": "main_menu/business/0_pos/setup/taxesfees",
 				"text": "Taxes/Fees",
 				"href": ["com_sales","taxfee/list"],
 				"depend": {

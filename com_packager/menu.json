@@ -1,6 +1,6 @@
 [
 	{
-		"path": "main_menu/accessories/com_packager",
+		"path": "main_menu/accessories/packager",
 		"text": "Packager",
 		"href": ["com_packager","listpackages"],
 		"depend": {

@@ -1,13 +1,13 @@
 [
 	{
-		"path": "main_menu/other/com_example",
+		"path": "main_menu/other/example",
 		"text": "Example",
 		"depend": {
 			"children": true
 		}
 	},
 		{
-			"path": "main_menu/other/com_example/widgets",
+			"path": "main_menu/other/example/widgets",
 			"text": "Widgets",
 			"href": ["com_example","widget/list"],
 			"depend": {
@@ -15,7 +15,7 @@
 			}
 		},
 		{
-			"path": "main_menu/other/com_example/newwidget",
+			"path": "main_menu/other/example/newwidget",
 			"text": "New Widget",
 			"href": ["com_example","widget/edit"],
 			"depend": {
@@ -23,7 +23,7 @@
 			}
 		},
 		{
-			"path": "main_menu/other/com_example/examplecontent",
+			"path": "main_menu/other/example/examplecontent",
 			"text": "Example Content",
 			"href": ["com_example","content"],
 			"depend": {

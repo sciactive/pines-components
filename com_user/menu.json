@@ -55,7 +55,7 @@
 			}
 		},
 	{
-	"path": "main_menu/account/myaccount",
+		"path": "main_menu/account/myaccount",
 		"text": "My Account",
 		"href": ["com_user","editself"],
 		"depend": {

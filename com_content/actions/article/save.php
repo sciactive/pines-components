@@ -32,11 +32,24 @@ $article->enabled = ($_REQUEST['enabled'] == 'ON');
 $article->content_tags = explode(',', $_REQUEST['content_tags']);
 $article->intro = $_REQUEST['intro'];
 $article->content = $_REQUEST['content'];
+// TODO: Use an HTML filter here.
 foreach ($pines->config->com_content->banned_tags as $cur_tag) {
 	$article->name = str_replace("<{$cur_tag}", '', $article->name);
 	$article->intro = str_replace("<{$cur_tag}", '', $article->intro);
 	$article->content = str_replace("<{$cur_tag}", '', $article->content);
 }
+
+// Advanced
+if (!empty($_REQUEST['p_cdate']))
+	$article->p_cdate = strtotime($_REQUEST['p_cdate']);
+if (!empty($_REQUEST['p_mdate']))
+	$article->p_mdate = strtotime($_REQUEST['p_mdate']);
+$article->publish_begin = strtotime($_REQUEST['publish_begin']);
+if (!empty($_REQUEST['publish_end']))
+	$article->publish_end = strtotime($_REQUEST['publish_end']);
+else
+	$article->publish_end = null;
+$article->show_intro = ($_REQUEST['show_intro'] == 'ON');
 
 if (empty($article->name)) {
 	$article->print_form();
@@ -48,7 +61,7 @@ if (empty($article->alias)) {
 	pines_notice('Please specify an alias.');
 	return;
 }
-// If others can't access articles, this could fail...
+
 $test = $pines->entity_manager->get_entity(array('class' => com_content_article, 'skip_ac' => true), array('&', 'data' => array('alias', $article->alias), 'tag' => array('com_content', 'article')));
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$article->print_form();

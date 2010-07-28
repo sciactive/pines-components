@@ -21,7 +21,7 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class com_myentity extends component implements entity_manager_interface {
 	/**
-	 * A cache to make entity reference retrieval faster.
+	 * A cache to make entity retrieval faster.
 	 * @access private
 	 * @var array
 	 */
@@ -281,18 +281,23 @@ class com_myentity extends component implements entity_manager_interface {
 		$count = $ocount = 0;
 
 		// Check if the requested entity is cached.
-		if ($options['cache'] && $options['limit'] == 1 && is_int($selectors[1]['guid'])) {
-			// Only safe to use the cache option with no other selectors than a GUID.
+		/*
+		if (is_int($selectors[1]['guid'])) {
+			// Only safe to use the cache option with no other selectors than a GUID and tags.
 			if (
-					$selectors == array(
-						1 => array('&', 'guid' => $selectors[1]['guid'])
+					count($selectors) == 1 &&
+					$selectors[1][0] == '&' &&
+					(
+						(count($selectors[1]) == 2) ||
+						(count($selectors[1]) == 3 && isset($selectors[1]['tag']))
 					)
 				) {
 				$entity = $this->pull_cache($selectors[1]['guid'], $class);
-				if (isset($entity))
+				if (isset($entity) && (!isset($selectors[1]['tag']) || $entity->has_tag($selectors[1]['tag'])))
 					return array($entity);
 			}
 		}
+		*/
 
 		$query_parts = array();
 		foreach ($selectors as &$cur_selector) {
@@ -587,10 +592,14 @@ class com_myentity extends component implements entity_manager_interface {
 			}
 			unset($cur_selector);
 			if ($pass_all) {
+				//$entity = $this->pull_cache($guid, $class);
+				//if (!isset($entity) || $data['p_mdate'] > $entity->p_mdate) {
 				$entity = call_user_func(array($class, 'factory'));
 				$entity->guid = $guid;
 				$entity->tags = explode(',', substr($tags, 1, -1));
 				$entity->put_data($data, $sdata);
+				//$this->push_cache($entity);
+				//}
 				$entities[] = $entity;
 				$count++;
 				if ($options['limit'] && $count >= $options['limit'])
@@ -599,14 +608,6 @@ class com_myentity extends component implements entity_manager_interface {
 		}
 
 		mysql_free_result($result);
-
-		// Add cache copies of these entities.
-		if ($options['cache']) {
-			foreach ($entities as &$cur_entity) {
-				$this->push_cache($cur_entity);
-			}
-			unset($cur_entity);
-		}
 
 		return $entities;
 	}
@@ -809,7 +810,7 @@ class com_myentity extends component implements entity_manager_interface {
 	}
 
 	/**
-	 * Pull a copy of an entity from the cache.
+	 * Pull an entity from the cache.
 	 *
 	 * @param int $guid The entity's GUID.
 	 * @param string $class The entity's class.
@@ -817,15 +818,13 @@ class com_myentity extends component implements entity_manager_interface {
 	 * @access private
 	 */
 	private function pull_cache($guid, $class) {
-		if (isset($this->entity_cache[$guid][$class])) {
-			$copy = clone $this->entity_cache[$guid][$class];
-			return $copy;
-		}
+		if (isset($this->entity_cache[$guid][$class]))
+			return (clone $this->entity_cache[$guid][$class]);
 		return null;
 	}
 
 	/**
-	 * Push a copy of an entity onto the cache.
+	 * Push an entity onto the cache.
 	 *
 	 * @param entity &$entity The entity to push onto the cache.
 	 * @access private
@@ -835,11 +834,10 @@ class com_myentity extends component implements entity_manager_interface {
 		// Replace hook override in the class name.
 		if (strpos($class, 'hook_override_') === 0)
 			$class = substr($class, 14);
-		$copy = clone $entity;
 		if ((array) $this->entity_cache[$entity->guid] === $this->entity_cache[$entity->guid]) {
-			$this->entity_cache[$entity->guid][$class] = $copy;
+			$this->entity_cache[$entity->guid][$class] = clone $entity;
 		} else {
-			$this->entity_cache[$entity->guid] = array($class => $copy);
+			$this->entity_cache[$entity->guid] = array($class => (clone $entity));
 		}
 	}
 
@@ -876,8 +874,8 @@ class com_myentity extends component implements entity_manager_interface {
 				$pines->config->com_mysql->prefix,
 				mysql_real_escape_string(','.implode(',', $entity->tags).',', $pines->com_mysql->link),
 				mysql_real_escape_string(','.implode(',', $varlist).',', $pines->com_mysql->link),
-				$data['p_cdate'],
-				$data['p_mdate']);
+				(float) $data['p_cdate'],
+				(float) $data['p_mdate']);
 			if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 				if (function_exists('pines_error'))
 					pines_error('Query failed: ' . mysql_error());
@@ -910,17 +908,16 @@ class com_myentity extends component implements entity_manager_interface {
 					return false;
 				}
 			}
-			return true;
 		} else {
 			// Removed any cached versions of this entity.
-			$this->clean_cache($entity->guid);
+			//$this->clean_cache($entity->guid);
 			$query = sprintf("UPDATE `%scom_myentity_entities` SET `tags`='%s', `varlist`='%s', `cdate`=%F, `mdate`=%F WHERE `guid`=%u;",
 				$pines->config->com_mysql->prefix,
 				mysql_real_escape_string(','.implode(',', $entity->tags).',', $pines->com_mysql->link),
 				mysql_real_escape_string(','.implode(',', $varlist).',', $pines->com_mysql->link),
-				$data['p_cdate'],
-				$data['p_mdate'],
-				intval($entity->guid));
+				(float) $data['p_cdate'],
+				(float) $data['p_mdate'],
+				(int) $entity->guid);
 			if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 				if (function_exists('pines_error'))
 					pines_error('Query failed: ' . mysql_error());
@@ -928,7 +925,7 @@ class com_myentity extends component implements entity_manager_interface {
 			}
 			$query = sprintf("DELETE FROM `%scom_myentity_data` WHERE `guid`=%u;",
 				$pines->config->com_mysql->prefix,
-				intval($entity->guid));
+				(int) $entity->guid);
 			if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 				if (function_exists('pines_error'))
 					pines_error('Query failed: ' . mysql_error());
@@ -938,7 +935,7 @@ class com_myentity extends component implements entity_manager_interface {
 			foreach ($data as $name => $value) {
 				$query = sprintf("INSERT INTO `%scom_myentity_data` (`guid`, `name`, `value`) VALUES (%u, '%s', '%s');",
 					$pines->config->com_mysql->prefix,
-					intval($entity->guid),
+					(int) $entity->guid,
 					mysql_real_escape_string($name, $pines->com_mysql->link),
 					mysql_real_escape_string(serialize($value), $pines->com_mysql->link));
 				if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
@@ -950,7 +947,7 @@ class com_myentity extends component implements entity_manager_interface {
 			foreach ($sdata as $name => $value) {
 				$query = sprintf("INSERT INTO `%scom_myentity_data` (`guid`, `name`, `value`) VALUES (%u, '%s', '%s');",
 					$pines->config->com_mysql->prefix,
-					intval($entity->guid),
+					(int) $entity->guid,
 					mysql_real_escape_string($name, $pines->com_mysql->link),
 					mysql_real_escape_string($value, $pines->com_mysql->link));
 				if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
@@ -959,8 +956,10 @@ class com_myentity extends component implements entity_manager_interface {
 					return false;
 				}
 			}
-			return true;
 		}
+		// Cache the entity.
+		//$this->push_cache($entity);
+		return true;
 	}
 
 	public function set_uid($name, $value) {

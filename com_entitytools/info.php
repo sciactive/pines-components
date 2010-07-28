@@ -21,7 +21,8 @@ return array(
 	'description' => 'Includes the following tools: test, benchmark, export, import.',
 	'depend' => array(
 		'pines' => '<2',
-		'service' => 'entity_manager'
+		'service' => 'entity_manager',
+		'component' => 'com_jquery'
 	),
 	'abilities' => array(
 		array('test', 'Test/Benchmark', 'User can test and benchmark the entity manager.'),

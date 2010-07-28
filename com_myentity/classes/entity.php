@@ -96,7 +96,7 @@ class entity extends p_base implements entity_interface {
 		if (isset($this->entity_cache[$name])) {
 			if ($this->entity_cache[$name] === 0) {
 				// The entity hasn't been loaded yet, so load it now.
-				$this->entity_cache[$name] = $pines->entity_manager->get_entity(array('class' => $this->data[$name][2], 'cache' => true), array('&', 'guid' => $this->data[$name][1]));
+				$this->entity_cache[$name] = $pines->entity_manager->get_entity(array('class' => $this->data[$name][2]), array('&', 'guid' => $this->data[$name][1]));
 			}
 			return $this->entity_cache[$name];
 		}
@@ -337,7 +337,7 @@ class entity extends p_base implements entity_interface {
 		if ((array) $item === $item) {
 			if ($item[0] === 'pines_entity_reference') {
 				if (!isset($this->entity_cache["reference_guid: {$item[1]}"]))
-					$this->entity_cache["reference_guid: {$item[1]}"] = $pines->entity_manager->get_entity(array('class' => $item[2], 'cache' => true), array('guid' => $item[1]));
+					$this->entity_cache["reference_guid: {$item[1]}"] = $pines->entity_manager->get_entity(array('class' => $item[2]), array('guid' => $item[1]));
 				$item = $this->entity_cache["reference_guid: {$item[1]}"];
 			} else {
 				array_walk($item, array($this, 'reference_to_entity'));

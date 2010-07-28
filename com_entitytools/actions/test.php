@@ -2,6 +2,9 @@
 /**
  * Test an entity manager for compliance with Pines' entity management standard.
  *
+ * Add a fourth entry to a test's array to show more detail if it fails. (This
+ * entry is var_dump()ed in a dialog.)
+ *
  * @package Pines
  * @subpackage com_entitytools
  * @license http://www.gnu.org/licenses/agpl-3.0.html
@@ -54,6 +57,7 @@ $entity_test->save();
 //$test->tests['save'][0] = ($entity_test->save() && isset($entity_test->guid));
 //$test->tests['save'][1] = microtime(true);
 //$test->tests['save'][2] = 'Saving entity...';
+//$test->tests['save'][3] = $entity_test;
 $entity_guid = $entity_test->guid;
 
 $entity_reference_test = new entity('com_entitytools', 'test');

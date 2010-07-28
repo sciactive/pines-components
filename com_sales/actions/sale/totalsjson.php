@@ -63,54 +63,58 @@ $total_array_user = array();
 $total_payment_array = array();
 
 // Total the sales.
-foreach ($tx_array as $key => &$cur_tx) {
+foreach ($tx_array as $key => $cur_tx) {
 	// Skip voided sales.
 	if ($cur_tx->ticket->status == 'voided')
 		continue;
 	if ($cur_tx->has_tag('sale_tx')) {
+		$total = (float) $cur_tx->ticket->total;
+		$name = "{$cur_tx->user->name} [{$cur_tx->user->username}]";
 		switch ($cur_tx->type) {
 			case 'invoiced':
 				// Check if the sale is still invoiced.
 				if ($cur_tx->ticket->status == 'invoiced') {
-					$invoice_array['total'] += (float) $cur_tx->ticket->total;
+					$invoice_array['total'] += $total;
 					$invoice_array['count']++;
 				}
 				break;
 			case 'paid':
-				$total_array['total'] += (float) $cur_tx->ticket->total;
-				$sale_array['total'] += (float) $cur_tx->ticket->total;
+				$total_array['total'] += $total;
+				$sale_array['total'] += $total;
 				$sale_array['count']++;
-				$total_array_user["{$cur_tx->user->name} [{$cur_tx->user->username}]"]['total'] += (float) $cur_tx->ticket->total;
-				$sale_array_user["{$cur_tx->user->name} [{$cur_tx->user->username}]"]['total'] += (float) $cur_tx->ticket->total;
-				$sale_array_user["{$cur_tx->user->name} [{$cur_tx->user->username}]"]['count']++;
+				$total_array_user[$name]['total'] += $total;
+				$sale_array_user[$name]['total'] += $total;
+				$sale_array_user[$name]['count']++;
 				break;
 			case 'returned':
-				$total_array['total'] -= (float) $cur_tx->ticket->total;
-				$return_array['total'] += (float) $cur_tx->ticket->total;
+				$total_array['total'] -= $total;
+				$return_array['total'] += $total;
 				$return_array['count']++;
-				$total_array_user["{$cur_tx->user->name} [{$cur_tx->user->username}]"]['total'] -= (float) $cur_tx->ticket->total;
-				$return_array_user["{$cur_tx->user->name} [{$cur_tx->user->username}]"]['total'] += (float) $cur_tx->ticket->total;
-				$return_array_user["{$cur_tx->user->name} [{$cur_tx->user->username}]"]['count']++;
+				$total_array_user[$name]['total'] -= $total;
+				$return_array_user[$name]['total'] += $total;
+				$return_array_user[$name]['count']++;
 				break;
 		}
-	} elseif ($cur_tx->has_tag('payment_tx')) {
+	} else {
+		$amount = (float) $cur_tx->amount;
+		$name = $cur_tx->ref->name;
 		switch ($cur_tx->type) {
 			case 'payment_received':
-				$total_payment_array[$cur_tx->ref->name]['total'] += (float) $cur_tx->amount;
-				$payment_array[$cur_tx->ref->name]['total'] += (float) $cur_tx->amount;
-				$payment_array[$cur_tx->ref->name]['net_total'] += (float) $cur_tx->amount;
-				$payment_array[$cur_tx->ref->name]['count']++;
+				$total_payment_array[$name]['total'] += $amount;
+				$payment_array[$name]['total'] += $amount;
+				$payment_array[$name]['net_total'] += $amount;
+				$payment_array[$name]['count']++;
 				break;
 			case 'change_given':
-				$total_payment_array[$cur_tx->ref->name]['total'] -= (float) $cur_tx->amount;
-				$payment_array[$cur_tx->ref->name]['change_given'] += (float) $cur_tx->amount;
-				$payment_array[$cur_tx->ref->name]['net_total'] -= (float) $cur_tx->amount;
+				$total_payment_array[$name]['total'] -= $amount;
+				$payment_array[$name]['change_given'] += $amount;
+				$payment_array[$name]['net_total'] -= $amount;
 				break;
 			case 'payment_returned':
-				$total_payment_array[$cur_tx->ref->name]['total'] -= (float) $cur_tx->amount;
-				$return_payment_array[$cur_tx->ref->name]['total'] += (float) $cur_tx->amount;
-				$return_payment_array[$cur_tx->ref->name]['net_total'] += (float) $cur_tx->amount;
-				$return_payment_array[$cur_tx->ref->name]['count']++;
+				$total_payment_array[$name]['total'] -= $amount;
+				$return_payment_array[$name]['total'] += $amount;
+				$return_payment_array[$name]['net_total'] += $amount;
+				$return_payment_array[$name]['count']++;
 				break;
 		}
 	}

@@ -27,12 +27,14 @@ class com_sales_product extends entity {
 		$this->add_tag('com_sales', 'product');
 		// Defaults.
 		$this->enabled = true;
+		$this->images = array();
 		$this->additional_tax_fees = array();
 		$this->serialized = true;
 		$this->discountable = true;
 		$this->require_customer = true;
 		$this->additional_barcodes = array();
 		$this->actions = array();
+		$this->show_in_storefront = true;
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));

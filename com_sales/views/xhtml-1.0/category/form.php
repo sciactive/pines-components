@@ -32,6 +32,22 @@ $this->note = 'Provide category details in this form.';
 		<label><span class="pf-label">Enabled</span>
 			<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 	</div>
+	<?php if ($pines->config->com_sales->com_storefront) { ?>
+	<div class="pf-element">
+		<label><span class="pf-label">Show Menu</span>
+			<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="show_menu" size="24" value="ON"<?php echo $this->entity->show_menu ? ' checked="checked"' : ''; ?> /></label>
+	</div>
+	<div class="pf-element">
+		<label>
+			<span class="pf-label">Menu Position</span>
+			<select class="pf-field ui-widget-content ui-corner-all" name="menu_position">
+				<?php foreach ($pines->info->template->positions as $cur_position) {
+					?><option value="<?php echo htmlentities($cur_position); ?>"<?php echo ($this->entity->menu_position == $cur_position) ? ' selected="selected"' : ''; ?>><?php echo htmlentities($cur_position); ?></option><?php
+				} ?>
+			</select>
+		</label>
+	</div>
+	<?php } ?>
 	<div class="pf-element">
 		<label>
 			<span class="pf-label">Parent</span>

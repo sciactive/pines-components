@@ -37,6 +37,17 @@ if (!isset($product->manufacturer->guid))
 	$product->manufacturer = null;
 $product->manufacturer_sku = $_REQUEST['manufacturer_sku'];
 
+// Images
+$product->images = (array) json_decode($_REQUEST['images']);
+foreach ($product->images as $key => $cur_image) {
+	if (!$pines->uploader->check($cur_image))
+		unset($product->images[$key]);
+}
+$product->images = array_values($product->images);
+$product->thumbnail = $_REQUEST['thumbnail'];
+if (!$pines->uploader->check($product->thumbnail))
+	$product->thumbnail = null;
+
 // Purchasing
 $product->stock_type = $_REQUEST['stock_type'];
 $product->vendors = (array) json_decode($_REQUEST['vendors']);
@@ -93,6 +104,12 @@ if ($pines->config->com_sales->com_hrm) {
 			unset($product->commissions[$key]);
 	}
 	unset($cur_commission);
+}
+
+// Storefront
+if ($pines->config->com_sales->com_storefront) {
+	$product->show_in_storefront = ($_REQUEST['show_in_storefront'] == 'ON');
+	$product->featured = ($_REQUEST['featured'] == 'ON');
 }
 
 if (empty($product->name)) {

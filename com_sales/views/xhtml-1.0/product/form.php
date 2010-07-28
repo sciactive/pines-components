@@ -13,9 +13,9 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Product' : 'Editing ['.htmlentities($this->entity->name).']';
 $this->note = 'Provide product details in this form.';
 $pines->editor->load();
+$pines->uploader->load();
 $pines->com_pgrid->load();
 $pines->com_ptags->load();
-$pines->uploader->load();
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
@@ -26,12 +26,20 @@ $pines->uploader->load();
 	}
 	#p_muid_sortable li {
 		margin: 0.1em;
-		padding: 0.1em;
+		padding: 5px;
 		float: left;
-		width: 150px;
-		height: 100px;
-		font-size: 4em;
+		width: 120px;
+		height: 120px;
 		text-align: center;
+		line-height: 110px;
+	}
+	#p_muid_sortable img {
+		width: 110px;
+		height: auto;
+		max-height: 110px;
+		vertical-align: middle;
+		margin: 0;
+		padding: 0;
 	}
 	/* ]]> */
 </style>
@@ -121,8 +129,6 @@ $pines->uploader->load();
 			};
 
 			$("#p_muid_product_tabs").tabs();
-			$("#p_muid_sortable").sortable();
-			$("#p_muid_sortable").disableSelection();
 			update_vendors();
 		});
 		// ]]>
@@ -137,6 +143,9 @@ $pines->uploader->load();
 			<li><a href="#p_muid_tab_attributes">Attributes</a></li>
 			<?php if ($pines->config->com_sales->com_hrm) { ?>
 			<li><a href="#p_muid_tab_commission">Commission</a></li>
+			<?php } ?>
+			<?php if ($pines->config->com_sales->com_storefront) { ?>
+			<li><a href="#p_muid_tab_storefront">Storefront</a></li>
 			<?php } ?>
 		</ul>
 		<div id="p_muid_tab_general">
@@ -162,14 +171,6 @@ $pines->uploader->load();
 				<label><span class="pf-label">Product SKU</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="sku" size="24" value="<?php echo htmlentities($this->entity->sku); ?>" /></label>
 			</div>
-			<div class="pf-element pf-full-width">
-				<span class="pf-label">Description</span><br />
-				<textarea rows="3" cols="35" class="peditor" style="width: 100%;" name="description"><?php echo $this->entity->description; ?></textarea>
-			</div>
-			<div class="pf-element pf-full-width">
-				<span class="pf-label">Short Description</span><br />
-				<textarea rows="3" cols="35" class="peditor-simple" style="width: 100%;" name="short_description"><?php echo $this->entity->short_description; ?></textarea>
-			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Manufacturer</span>
 					<select class="pf-field ui-widget-content ui-corner-all" name="manufacturer">
@@ -182,6 +183,14 @@ $pines->uploader->load();
 			<div class="pf-element">
 				<label><span class="pf-label">Manufacturer SKU</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="manufacturer_sku" size="24" value="<?php echo htmlentities($this->entity->manufacturer_sku); ?>" /></label>
+			</div>
+			<div class="pf-element pf-full-width">
+				<span class="pf-label">Short Description</span><br />
+				<textarea rows="3" cols="35" class="peditor-simple" style="width: 100%;" name="short_description"><?php echo $this->entity->short_description; ?></textarea>
+			</div>
+			<div class="pf-element pf-full-width">
+				<span class="pf-label">Description</span><br />
+				<textarea rows="9" cols="35" class="peditor" style="width: 100%; height: 400px;" name="description"><?php echo $this->entity->description; ?></textarea>
 			</div>
 			<br class="pf-clearing" />
 		</div>
@@ -243,18 +252,62 @@ $pines->uploader->load();
 			<br class="pf-clearing" />
 		</div>
 		<div id="p_muid_tab_images">
+			<script type="text/javascript">
+				// <![CDATA[
+				pines(function(){
+					var update_images = function(){
+						var images = [];
+						$("img", "#p_muid_sortable").each(function(){
+							images.push($(this).attr("src"));
+						});
+						$("input[name=images]", "#p_muid_tab_images").val(JSON.stringify(images));
+					};
+					update_images();
+
+					$("#p_muid_image_upload").change(function(){
+						var image = $(this).val();
+						$("<li class=\"ui-state-default ui-corner-all\"><img alt=\""+image+"\" src=\""+image+"\" /></li>").appendTo($("#p_muid_sortable"));
+						$(this).val("");
+						update_images();
+					});
+					$("#p_muid_sortable").sortable({
+						placeholder: 'ui-state-highlight',
+						update: function(){update_images();}
+					});
+					//$("#p_muid_sortable").disableSelection();
+
+					$("#p_muid_thumbnail").change(function(){
+						$("#p_muid_thumbnail_preview").attr("src", $(this).val());
+					});
+				});
+				// ]]>
+			</script>
 			<div class="pf-element">
-				<label><span class="pf-label">Image Folder</span>
-					<input class="pf-field ui-widget-content ui-corner-all puploader" type="text" name="image_dir" value="<?php echo $this->entity->image_dir; ?>" /></label>
+				<label><span class="pf-label">Add an Image</span>
+					<input class="pf-field ui-widget-content ui-corner-all puploader" id="p_muid_image_upload" type="text" value="" /></label>
 			</div>
 			<div class="pf-element">
-				<ul id="p_muid_sortable">
-					<?php $images = glob('..'.$this->entity->image_dir.'*');
-					foreach ($images as $cur_image) { ?>
-					<li class="ui-state-default ui-corner-all"><img width="145" height="95" src="<?php echo $cur_image; ?>"></li>
-					<?php } ?>
-				</ul>
+				<span class="pf-label">Images</span>
+				<span class="pf-note">The first image will be the default image.</span>
+				<div class="pf-group">
+					<ul id="p_muid_sortable" class="pf-field">
+						<?php foreach ($this->entity->images as $cur_image) { ?>
+						<li class="ui-state-default ui-corner-all"><img alt="<?php echo htmlentities($cur_image); ?>" src="<?php echo htmlentities($cur_image); ?>" /></li>
+						<?php } ?>
+					</ul>
+				</div>
 			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Thumbnail</span>
+					<input class="pf-field ui-widget-content ui-corner-all puploader" id="p_muid_thumbnail" type="text" name="thumbnail" value="<?php echo htmlentities($this->entity->thumbnail); ?>" /></label>
+			</div>
+			<div class="pf-element">
+				<span class="pf-label">Thumbnail Preview</span>
+				<div class="pf-group">
+					<img class="pf-field" alt="Thumbnail Preview" id="p_muid_thumbnail_preview" src="<?php echo htmlentities($this->entity->thumbnail); ?>" />
+				</div>
+			</div>
+			<input type="hidden" name="images" />
 			<br class="pf-clearing" />
 		</div>
 		<div id="p_muid_tab_purchasing">
@@ -641,6 +694,25 @@ $pines->uploader->load();
 					</div>
 				</div>
 				<br style="clear: both; height: 1px;" />
+			</div>
+			<br class="pf-clearing" />
+		</div>
+		<?php } ?>
+		<?php if ($pines->config->com_sales->com_storefront) { ?>
+		<script type="text/javascript">
+			// <![CDATA[
+			pines(function(){
+			});
+			// ]]>
+		</script>
+		<div id="p_muid_tab_storefront">
+			<div class="pf-element">
+				<label><span class="pf-label">Show in Storefront</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="show_in_storefront" size="24" value="ON"<?php echo $this->entity->show_in_storefront ? ' checked="checked"' : ''; ?> /></label>
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Featured Item</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="featured" size="24" value="ON"<?php echo $this->entity->featured ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<br class="pf-clearing" />
 		</div>

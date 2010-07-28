@@ -18,6 +18,22 @@ return array(
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'services' => array('template'),
+	'positions' => array(
+		'top',
+		'header',
+		'header_right',
+		'pre_content',
+		'left',
+		'content_top_left',
+		'content_top_right',
+		'content',
+		'content_bottom_left',
+		'content_bottom_right',
+		'right',
+		'post_content',
+		'footer',
+		'bottom'
+	),
 	'short_description' => 'jQuery UI styled template',
 	'description' => 'A well integrated template, completely styled with jQuery UI.',
 	'depend' => array(

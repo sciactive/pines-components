@@ -27,6 +27,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'com_storefront',
+		'cname' => 'Storefront Integration',
+		'description' => 'Integrate with com_storefront.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'remove_stock',
 		'cname' => 'Remove Stock',
 		'description' => 'When (in the sale process) to take stock out of inventory.',

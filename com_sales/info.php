@@ -21,7 +21,7 @@ return array(
 	'description' => 'Manage products, inventory, sales, shipments, etc. Sell merchandise. Integrates with a cash drawer.',
 	'depend' => array(
 		'pines' => '<2',
-		'service' => 'user_manager&entity_manager&editor',
+		'service' => 'user_manager&entity_manager&editor&uploader',
 		'component' => 'com_barcode&com_jquery&com_pgrid&com_pnotify&com_ptags&com_jstree'
 	),
 	'recommend' => array(

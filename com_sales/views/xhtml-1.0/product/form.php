@@ -15,7 +15,26 @@ $this->note = 'Provide product details in this form.';
 $pines->editor->load();
 $pines->com_pgrid->load();
 $pines->com_ptags->load();
+$pines->uploader->load();
 ?>
+<style type="text/css" >
+	/* <![CDATA[ */
+	#p_muid_sortable {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+	}
+	#p_muid_sortable li {
+		margin: 0.1em;
+		padding: 0.1em;
+		float: left;
+		width: 150px;
+		height: 100px;
+		font-size: 4em;
+		text-align: center;
+	}
+	/* ]]> */
+</style>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_sales', 'product/save')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
@@ -102,6 +121,8 @@ $pines->com_ptags->load();
 			};
 
 			$("#p_muid_product_tabs").tabs();
+			$("#p_muid_sortable").sortable();
+			$("#p_muid_sortable").disableSelection();
 			update_vendors();
 		});
 		// ]]>
@@ -110,7 +131,7 @@ $pines->com_ptags->load();
 		<ul>
 			<li><a href="#p_muid_tab_general">General</a></li>
 			<li><a href="#p_muid_tab_categories">Categories</a></li>
-			<li style="display: none;"><a href="#p_muid_tab_images">Images</a></li>
+			<li><a href="#p_muid_tab_images">Images</a></li>
 			<li><a href="#p_muid_tab_purchasing">Purchasing</a></li>
 			<li><a href="#p_muid_tab_pricing">Pricing</a></li>
 			<li><a href="#p_muid_tab_attributes">Attributes</a></li>
@@ -221,9 +242,18 @@ $pines->com_ptags->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<div id="p_muid_tab_images" style="display: none;">
+		<div id="p_muid_tab_images">
 			<div class="pf-element">
-				<span>Not implemented yet.</span>
+				<label><span class="pf-label">Image Folder</span>
+					<input class="pf-field ui-widget-content ui-corner-all puploader" type="text" name="image_dir" value="<?php echo $this->entity->image_dir; ?>" /></label>
+			</div>
+			<div class="pf-element">
+				<ul id="p_muid_sortable">
+					<?php $images = glob('..'.$this->entity->image_dir.'*');
+					foreach ($images as $cur_image) { ?>
+					<li class="ui-state-default ui-corner-all"><img width="145" height="95" src="<?php echo $cur_image; ?>"></li>
+					<?php } ?>
+				</ul>
 			</div>
 			<br class="pf-clearing" />
 		</div>

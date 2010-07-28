@@ -353,8 +353,7 @@ class entity extends p_base implements entity_interface {
 		if (!isset($refresh))
 			return 0;
 		$this->tags = $refresh->tags;
-		$this->put_data($refresh->get_data());
-		$this->put_sdata($entity->get_sdata());
+		$this->put_data($refresh->get_data(), $entity->get_sdata());
 		return true;
 	}
 

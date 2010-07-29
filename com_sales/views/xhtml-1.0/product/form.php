@@ -273,6 +273,14 @@ $pines->com_ptags->load();
 					$("#p_muid_sortable").sortable({
 						placeholder: 'ui-state-highlight',
 						update: function(){update_images();}
+					}).draggable();
+					$("#p_muid_image_trash").droppable({
+						drop: function(e, ui){
+							ui.draggable.hide("explode", {}, 500, function(){
+								ui.draggable.remove();
+								update_images();
+							});
+						}
 					});
 					//$("#p_muid_sortable").disableSelection();
 
@@ -289,6 +297,12 @@ $pines->com_ptags->load();
 			<div class="pf-element">
 				<span class="pf-label">Images</span>
 				<span class="pf-note">The first image will be the default image.</span>
+				<div class="pf-note">
+					Drag image here to remove:
+					<div class="ui-widget-content ui-corner-all" id="p_muid_image_trash" style="width: 32px; height: 32px; padding: 44px;">
+						<div class="picon-32 picon-user-trash" style="width: 32px; height: 32px;"></div>
+					</div>
+				</div>
 				<div class="pf-group">
 					<ul id="p_muid_sortable" class="pf-field">
 						<?php foreach ($this->entity->images as $cur_image) { ?>

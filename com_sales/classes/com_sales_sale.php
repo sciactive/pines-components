@@ -230,7 +230,7 @@ class com_sales_sale extends entity {
 				$tx->ref = $change_type;
 
 				// Make sure we have a GUID before saving the tx.
-				if (!($this->guid))
+				if (!isset($this->guid))
 					$return = $this->save() && $return;
 
 				$tx->ticket = $this;
@@ -263,7 +263,7 @@ class com_sales_sale extends entity {
 			$tx->type = 'paid';
 
 			// Make sure we have a GUID before saving the tx.
-			if (!($this->guid))
+			if (!isset($this->guid))
 				$return = $this->save() && $return;
 
 			$tx->ticket = $this;
@@ -464,7 +464,7 @@ class com_sales_sale extends entity {
 		$tx->type = 'invoiced';
 
 		// Make sure we have a GUID before saving the tx.
-		if (!($this->guid))
+		if (!isset($this->guid))
 			$return = $this->save() && $return;
 
 		$tx->ticket = $this;
@@ -873,7 +873,7 @@ class com_sales_sale extends entity {
 				$tx->ref = $cur_payment['entity'];
 
 				// Make sure we have a GUID before saving the tx.
-				if (!($this->guid))
+				if (!isset($this->guid))
 					$return = $this->save() && $return;
 
 				$tx->ticket = $this;
@@ -1099,7 +1099,7 @@ class com_sales_sale extends entity {
 					$tx->ref = $cur_payment['entity'];
 
 					// Make sure we have a GUID before saving the tx.
-					if (!($this->guid))
+					if (!isset($this->guid))
 						$return = $this->save() && $return;
 
 					$tx->ticket = $this;
@@ -1128,7 +1128,7 @@ class com_sales_sale extends entity {
 			$tx->type = 'voided';
 
 			// Make sure we have a GUID before saving the tx.
-			if (!($this->guid))
+			if (!isset($this->guid))
 				$return = $this->save() && $return;
 
 			$tx->ticket = $this;

@@ -862,14 +862,15 @@ class com_myentity extends component implements entity_manager_interface {
 	 */
 	public function save_entity(&$entity) {
 		global $pines;
+		// Save the created date.
+		if ( !isset($entity->guid) )
+			$entity->p_cdate = microtime(true);
 		// Save the modified date.
 		$entity->p_mdate = microtime(true);
 		$data = $entity->get_data();
 		$sdata = $entity->get_sdata();
 		$varlist = array_merge(array_keys($data), array_keys($sdata));
 		if ( !isset($entity->guid) ) {
-			// Save the created date.
-			$entity->p_cdate = microtime(true);
 			$query = sprintf("INSERT INTO `%scom_myentity_entities` (`tags`, `varlist`, `cdate`, `mdate`) VALUES ('%s', '%s', %F, %F);",
 				$pines->config->com_mysql->prefix,
 				mysql_real_escape_string(','.implode(',', $entity->tags).',', $pines->com_mysql->link),

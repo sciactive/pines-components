@@ -118,7 +118,7 @@ class com_sales_stock extends entity {
 		$this->location = ($location ? $location : $_SESSION['user']->group);
 		$tx->type = 'received';
 		$tx->reason = $reason;
-		if (!($this->guid))
+		if (!isset($this->guid))
 			$return = $this->save() && $return;
 
 		$tx->old_available = $old_available;
@@ -173,7 +173,7 @@ class com_sales_stock extends entity {
 		$tx->reason = $reason;
 
 		// Make sure we have a GUID before saving the tx.
-		if (!($this->guid))
+		if (!isset($this->guid))
 			$return = $this->save() && $return;
 
 		$tx->old_available = $old_available;

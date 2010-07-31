@@ -346,7 +346,7 @@ class entity extends p_base implements entity_interface {
 	}
 
 	public function refresh() {
-		if ((int) $this->guid !== $this->guid)
+		if (!isset($this->guid))
 			return false;
 		global $pines;
 		$refresh = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('guid' => $this->guid));

@@ -32,6 +32,11 @@ if ($user->save()) {
 	pines_log('Validated user ['.$user->username.']');
 	$pines->user_manager->login($user);
 	$notice = new module('com_user', 'note_welcome', 'content');
+	if ( !empty($_REQUEST['url']) ) {
+		pines_notice('Thank you. Your account has been verified.');
+		redirect(urldecode($_REQUEST['url']));
+		return;
+	}
 } else {
 	pines_error('Error saving user.');
 }

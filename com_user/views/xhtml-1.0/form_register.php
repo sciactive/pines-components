@@ -183,6 +183,9 @@ $this->note = 'Please fill in your account details.';
 
 	<div class="pf-element pf-buttons">
 		<br />
+		<?php if ( isset($this->url) ) { ?>
+		<input type="hidden" name="url" value="<?php echo htmlentities($this->url); ?>" />
+		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url()); ?>');" value="Cancel" />
 	</div>

@@ -59,14 +59,14 @@ return array(
 	array(
 		'name' => 'email_subject',
 		'cname' => 'Confirmation Email Subject',
-		'description' => 'The subject of the confirmation email to new users. Available fields: {site_title}, {site_address}, {link}, {username}, {name}, {email}, {phone}, {fax}, {timezone}, {address}.',
-		'value' => 'Welcome to {site_title}. Please confirm your email.',
+		'description' => 'The subject of the confirmation email to new users. Available fields: {page_title}, {site_name}, {site_address}, {link}, {username}, {name}, {email}, {phone}, {fax}, {timezone}, {address}.',
+		'value' => 'Welcome to {site_name}. Please confirm your email.',
 	),
 	array(
 		'name' => 'email_content',
 		'cname' => 'Confirmation Email',
-		'description' => 'The content of the confirmation email to new users. Available fields: {site_title}, {site_address}, {link}, {username}, {name}, {email}, {phone}, {fax}, {timezone}, {address}.',
-		'value' => "Welcome {name},<br />\n<br />\nThank you for signing up at {site_address}. Please confirm your email by clicking on the following link to activate your account:<br />\n<br />\n{link}<br />\n<br />\nThank You,<br />\n{site_title}",
+		'description' => 'The content of the confirmation email to new users. Available fields: {page_title}, {site_name}, {site_address}, {link}, {username}, {name}, {email}, {phone}, {fax}, {timezone}, {address}.',
+		'value' => "Welcome {name},<br />\n<br />\nThank you for signing up at {site_address}. Please confirm your email by clicking on the following link to activate your account:<br />\n<br />\n{link}<br />\n<br />\nThank You,<br />\n{site_name}",
 	),
 	array(
 		'name' => 'empty_pw',

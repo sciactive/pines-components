@@ -19,24 +19,26 @@ if ( empty($_REQUEST['username']) ) {
 if ( $pines->config->com_user->allow_registration && $_REQUEST['login_register'] == 'register' ) {
 	if (empty($_REQUEST['username'])) {
 		pines_notice('Username is a required field.');
-		$pines->user_manager->print_login();
+		$pines->user_manager->print_login('content', $_REQUEST['url']);
 		return;
 	}
 	if (empty($_REQUEST['password']) && !$pines->config->com_user->empty_pw) {
 		pines_notice('Password is a required field.');
-		$pines->user_manager->print_login();
+		$pines->user_manager->print_login('content', $_REQUEST['url']);
 		return;
 	}
 	$test = user::factory($_REQUEST['username']);
 	if (isset($test->guid)) {
 		pines_notice('The username you requested is already taken. Please choose a different username.');
-		$pines->user_manager->print_login();
+		$pines->user_manager->print_login('content', $_REQUEST['url']);
 		return;
 	}
 	$user = user::factory();
 	$_SESSION['com_user__tmpusername'] = $_REQUEST['username'];
 	$_SESSION['com_user__tmppassword'] = $_REQUEST['password'];
-	$user->print_register();
+	$reg_module = $user->print_register();
+	if ( !empty($_REQUEST['url']) )
+		$reg_module->url = $_REQUEST['url'];
 	return;
 }
 

@@ -73,8 +73,8 @@ $this->title = "Login to {$pines->config->system_name}";
 	<div class="pf-element pf-buttons">
 		<input type="hidden" name="option" value="com_user" />
 		<input type="hidden" name="action" value="login" />
-		<?php if ( isset($_REQUEST['url']) ) { ?>
-		<input type="hidden" name="url" value="<?php echo htmlentities($_REQUEST['url']); ?>" />
+		<?php if ( isset($this->url) ) { ?>
+		<input type="hidden" name="url" value="<?php echo htmlentities($this->url); ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Login" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="reset" name="reset" value="Reset" />

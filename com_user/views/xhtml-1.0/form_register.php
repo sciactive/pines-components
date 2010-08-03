@@ -29,15 +29,16 @@ $this->note = 'Please fill in your account details.';
 			<?php } ?>
 		</ul>
 		<div id="p_muid_tab_general">
+			<div style="float: right;">* Required Field</div>
 			<?php if (in_array('name', $pines->config->com_user->reg_fields)) { ?>
 			<div class="pf-element">
-				<label><span class="pf-label">Name</span>
+				<label><span class="pf-label">Name *</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
 			</div>
 			<?php }
 			if (in_array('email', $pines->config->com_user->reg_fields)) { ?>
 			<div class="pf-element">
-				<label><span class="pf-label">Email</span>
+				<label><span class="pf-label">Email *</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="email" size="24" value="<?php echo htmlentities($this->entity->email); ?>" /></label>
 			</div>
 			<?php }

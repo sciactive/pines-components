@@ -41,7 +41,7 @@ class com_sales extends component {
 			return false;
 		if (empty($arguments['action']))
 			return false;
-		if ($arguments['action'] != 'request' && $arguments['action'] != 'request_user' && !is_object($arguments['ticket']))
+		if ($arguments['action'] != 'request' && $arguments['action'] != 'request_cust' && !is_object($arguments['ticket']))
 			return false;
 		foreach ($pines->config->com_sales->processing_types as $cur_type) {
 			if ($arguments['name'] != $cur_type['name'])

@@ -32,6 +32,14 @@ $this->note = 'Provide payment type details in this form.';
 		<label><span class="pf-label">Enabled</span>
 			<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 	</div>
+	<?php if ($pines->config->com_sales->com_storefront) { ?>
+	<div class="pf-element">
+		<label><span class="pf-label">Enabled in Storefront</span>
+			<span class="pf-note">Check to make this a web storefront payment type.</span>
+			<span class="pf-note">Uncheck "Enabled" to <em>only</em> show this in the web storefront.</span>
+			<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="storefront" size="24" value="ON"<?php echo $this->entity->storefront ? ' checked="checked"' : ''; ?> /></label>
+	</div>
+	<?php } ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Kick Drawer</span>
 			<span class="pf-note">If set, when this payment type is used, the cash drawer will be kicked open.</span>

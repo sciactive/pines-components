@@ -65,6 +65,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<tr>
 			<th>Name</th>
 			<th>Enabled</th>
+			<?php if ($pines->config->com_sales->com_storefront) { ?>
+			<th>Storefront</th>
+			<?php } ?>
 			<th>Kick Drawer</th>
 			<th>Change Type</th>
 			<th>Minimum</th>
@@ -77,6 +80,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<tr title="<?php echo $payment_type->guid; ?>">
 			<td><?php echo htmlentities($payment_type->name); ?></td>
 			<td><?php echo $payment_type->enabled ? 'Yes' : 'No'; ?></td>
+			<?php if ($pines->config->com_sales->com_storefront) { ?>
+			<td><?php echo $payment_type->storefront ? 'Yes' : 'No'; ?></td>
+			<?php } ?>
 			<td><?php echo $payment_type->kick_drawer ? 'Yes' : 'No'; ?></td>
 			<td><?php echo $payment_type->change_type ? 'Yes' : 'No'; ?></td>
 			<td><?php echo htmlentities($payment_type->minimum); ?></td>

@@ -64,11 +64,20 @@ class com_authorizenet extends component {
 		global $pines;
 		switch ($array['action']) {
 			case 'request':
-			case 'request_cust':
 				$module = new module('com_authorizenet', 'form_payment');
 				if ($array['ticket']->customer->guid) {
 					$module->name_first = $array['ticket']->customer->name_first;
 					$module->name_last = $array['ticket']->customer->name_last;
+					$module->address = $array['ticket']->customer->address_1;
+					$module->state = $array['ticket']->customer->state;
+					$module->zip = $array['ticket']->customer->zip;
+				}
+				return $module;
+				break;
+			case 'request_cust':
+				$module = new module('com_authorizenet', 'form_payment_cust');
+				if ($array['ticket']->customer->guid) {
+					$module->name_first = $array['ticket']->customer->name;
 					$module->address = $array['ticket']->customer->address_1;
 					$module->state = $array['ticket']->customer->state;
 					$module->zip = $array['ticket']->customer->zip;

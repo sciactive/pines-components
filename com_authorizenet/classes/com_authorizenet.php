@@ -58,11 +58,13 @@ class com_authorizenet extends component {
 	 * Process a payment.
 	 *
 	 * @param array &$array The argument array.
+	 * @return module|null If action is "request", a form module is returned.
 	 */
 	function payment_credit(&$array) {
 		global $pines;
 		switch ($array['action']) {
 			case 'request':
+			case 'request_cust':
 				$module = new module('com_authorizenet', 'form_payment');
 				if ($array['ticket']->customer->guid) {
 					$module->name_first = $array['ticket']->customer->name_first;
@@ -71,7 +73,7 @@ class com_authorizenet extends component {
 					$module->state = $array['ticket']->customer->state;
 					$module->zip = $array['ticket']->customer->zip;
 				}
-				$pines->page->override_doc($module->render());
+				return $module;
 				break;
 			case 'approve':
 				$array['payment']['status'] = 'approved';

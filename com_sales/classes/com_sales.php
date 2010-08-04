@@ -31,23 +31,24 @@ class com_sales extends component {
 	 * Calls the first payment process which matches the given arguments.
 	 *
 	 * @param array $arguments The arguments to pass to appropriate callbacks.
+	 * @param mixed &$result If the process returns anything, this variable will be set to the return value.
 	 * @return bool True on success, false on failure.
 	 * @todo Finish calling this in all appropriate places.
 	 */
-	public function call_payment_process($arguments = array()) {
+	public function call_payment_process($arguments = array(), &$result = null) {
 		global $pines;
 		if (!is_array($arguments))
 			return false;
 		if (empty($arguments['action']))
 			return false;
-		if ($arguments['action'] != 'request' && !is_object($arguments['ticket']))
+		if ($arguments['action'] != 'request' && $arguments['action'] != 'request_user' && !is_object($arguments['ticket']))
 			return false;
 		foreach ($pines->config->com_sales->processing_types as $cur_type) {
 			if ($arguments['name'] != $cur_type['name'])
 				continue;
 			if (!is_callable($cur_type['callback']))
 				continue;
-			call_user_func_array($cur_type['callback'], array($arguments));
+			$result = call_user_func_array($cur_type['callback'], array($arguments));
 			return true;
 		}
 	}

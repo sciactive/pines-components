@@ -11,17 +11,17 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 ?>
-<form id="p_muid_form" class="pf-form" method="post" action="">
+<div class="pf-form">
 	<script type="text/javascript">
 		// <![CDATA[
 		pines(function(){
-			var form = $("#p_muid_form");
-			var card_swipe = form.find("#p_muid_card_swipe");
-			var name_first = form.find("#p_muid_name_first");
-			var name_last = form.find("#p_muid_name_last");
-			var card_number = form.find("#p_muid_card_number");
-			var card_exp_month = form.find("#p_muid_card_exp_month");
-			var card_exp_year = form.find("#p_muid_card_exp_year");
+			var form = $("#p_muid_swipe_form").closest("form");
+			var card_swipe = $("#p_muid_card_swipe");
+			var name_first = $("#p_muid_name_first");
+			var name_last = $("#p_muid_name_last");
+			var card_number = $("#p_muid_card_number");
+			var card_exp_month = $("#p_muid_card_exp_month");
+			var card_exp_year = $("#p_muid_card_exp_year");
 			card_swipe.focus();
 			card_swipe.keydown(function(e){
 				if (e.keyCode == 13) {
@@ -125,4 +125,4 @@ defined('P_RUN') or die('Direct access prohibited');
 		</div>
 	</div>
 	<input type="hidden" id="p_muid_card_swiped" name="card_swiped" value="" />
-</form>
+</div>

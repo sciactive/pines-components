@@ -46,11 +46,17 @@ defined('P_RUN') or die('Direct access prohibited');
  * - "return" - The payment is being returned and the funds need to be returned.
  *
  * If "action" is "request", the callback can provide a form to collect
- * information from the user by calling $pines->page->override_doc() with
- * the HTML of the form. It is recommended to use a module to provide the
- * form's HTML. Use $module->render() to get the HTML from the module. The
- * form's inputs will be parsed into an array and saved as "data" in the payment
- * entry. If you don't need any information from the user, simply do nothing.
+ * information from the user. It is expected to return a module, which will be
+ * placed in the $result argument. The module should not be attached to a
+ * position. The form element should not be included. Only include the inputs of
+ * the form. The form's inputs will be parsed into an array and saved as a
+ * property called "data" in the payment entry. If you don't need any
+ * information from the user, simply do nothing.
+ *
+ * If "action" is "request_cust", it is the same as "request", except that the
+ * form is meant to be shown to a customer in the web storefront, not an
+ * employee. This might differ, for example, if a credit card form includes a
+ * "slide card" option for employees, but not customers.
  *
  * If "action" is "approve", the callback needs to set "status" in the payment
  * array to "approved", "declined", "info_requested", or

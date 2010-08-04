@@ -564,7 +564,7 @@ if ($pines->config->com_sales->autocomplete_product)
 							autoOpen: true,
 							modal: true,
 							open: function(){
-								form.html(data+"<br />");
+								form.html('<form method="post" action="">'+data+"</form><br />");
 								form.find("form").submit(function(){
 									form.dialog('option', 'buttons').Done();
 									return false;

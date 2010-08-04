@@ -47,6 +47,9 @@ $pines->com_sales->call_payment_process(array(
 	'action' => 'request',
 	'name' => $_REQUEST['name'],
 	'ticket' => $ticket
-));
+), $module);
+
+if (isset($module))
+	$pines->page->override_doc($module->render());
 
 ?>

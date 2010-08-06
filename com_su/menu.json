@@ -2,7 +2,7 @@
 	{
 		"path": "main_menu/account/switch_user",
 		"text": "Switch User",
-		"href": "#",
+		"href": "javascript:void(0);",
 		"onclick": "com_su_load_switcher(); return false;",
 		"depend": {
 			"ability": true

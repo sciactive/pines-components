@@ -77,7 +77,7 @@ class tpl_pines extends template {
 		$count = count($menu);
 		// TODO: Remove target attribute. It's not XHTML 1.0 Strict.
 		$return = '<li><a class="'.($header_style ? 'ui-widget-header' : 'ui-state-default').'" href="'.
-			(isset($menu[0]['href']) ? htmlentities($menu[0]['href']) : '#').'"'.
+			(isset($menu[0]['href']) ? htmlentities($menu[0]['href']) : 'javascript:void(0);').'"'.
 			(isset($menu[0]['onclick']) ? " onclick=\"{$menu[0]['onclick']}\"" : '').
 			(isset($menu[0]['target']) ? " target=\"{$menu[0]['target']}\"" : '')
 			.'>'.

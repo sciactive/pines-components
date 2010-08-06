@@ -28,7 +28,7 @@ have bugs.</p>
 <div style="font-family: monospace; font-size: .9em; margin-left: 35px; margin-bottom: 6px; margin-top: 6px;">Test is starting...
 	<ol>
 	<?php foreach ($this->tests as $key => $cur_test) { ?>
-		<li style="white-space: pre;"><?php echo str_pad($cur_test[2], 52, ' '); ?><?php echo ($cur_test[0]) ? '<span style="color: green;">[PASS]</span>' : '<span style="color: red;">[<a id="p_muid_'.$key.'" href="#">FAIL</a>]</span>'; ?> <?php printf('%5.5f', $cur_test[1] - $last_time); ?>s <?php printf('%05.2f', ($cur_test[1] - $last_time) / $total_time * 100); ?>%</li>
+		<li style="white-space: pre;"><?php echo str_pad($cur_test[2], 52, ' '); ?><?php echo ($cur_test[0]) ? '<span style="color: green;">[PASS]</span>' : '<span style="color: red;">[<a id="p_muid_'.$key.'" href="javascript:void(0);">FAIL</a>]</span>'; ?> <?php printf('%5.5f', $cur_test[1] - $last_time); ?>s <?php printf('%05.2f', ($cur_test[1] - $last_time) / $total_time * 100); ?>%</li>
 	<?php
 	if (!$cur_test[0] && isset($cur_test[3])) {
 		?>

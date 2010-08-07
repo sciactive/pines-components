@@ -31,6 +31,7 @@ class com_sales_category extends entity {
 		$this->children = array();
 		$this->products = array();
 		$this->menu_position = 'left';
+		$this->specs = array();
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
@@ -84,6 +85,26 @@ class com_sales_category extends entity {
 			return false;
 		pines_log("Deleted category {$this->guid}.", 'notice');
 		return true;
+	}
+
+	/**
+	 * Get all specs from ancestors.
+	 * @return array Array of specs.
+	 */
+	public function get_specs_ancestors() {
+		$specs = array();
+		if (isset($this->parent))
+			$specs = $this->parent->get_specs_all();
+		return $specs;
+	}
+
+	/**
+	 * Get all specs from the category and ancestors.
+	 * @return array Array of specs.
+	 */
+	public function get_specs_all() {
+		$specs = $this->get_specs_ancestors();
+		return array_merge($specs, $this->specs);
 	}
 
 	/**

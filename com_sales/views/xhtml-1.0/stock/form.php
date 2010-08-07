@@ -119,7 +119,7 @@ $pines->com_jstree->load();
 	</script>
 	<br class="pf-clearing" />
 	<div class="p_muid_option_accordian">
-		<h3 class="ui-priority-secondary"><a href="#">Change Availability</a></h3>
+		<h3 class="ui-priority-secondary"><a href="javascript:void(0);">Change Availability</a></h3>
 		<div>
 			<input class="p_muid_change_this" type="hidden" name="available_change" value="" />
 			<div class="pf-element">
@@ -171,7 +171,7 @@ $pines->com_jstree->load();
 	</div>
 	<?php if (isset($this->entity) && $this->entity->product->serialized) { ?>
 	<div class="p_muid_option_accordian">
-		<h3 class="ui-priority-secondary"><a href="#">Change Serial</a></h3>
+		<h3 class="ui-priority-secondary"><a href="javascript:void(0);">Change Serial</a></h3>
 		<div>
 			<input class="p_muid_change_this" type="hidden" name="serial_change" value="" />
 			<div class="pf-element">
@@ -195,7 +195,7 @@ $pines->com_jstree->load();
 	</div>
 	<?php } ?>
 	<div class="p_muid_option_accordian">
-		<h3 class="ui-priority-secondary"><a href="#">Change Location</a></h3>
+		<h3 class="ui-priority-secondary"><a href="javascript:void(0);">Change Location</a></h3>
 		<div>
 			<input class="p_muid_change_this" type="hidden" name="location_change" value="" />
 			<div class="pf-element">
@@ -235,7 +235,7 @@ $pines->com_jstree->load();
 		</div>
 	</div>
 	<div class="p_muid_option_accordian">
-		<h3 class="ui-priority-secondary"><a href="#">Change Vendor</a></h3>
+		<h3 class="ui-priority-secondary"><a href="javascript:void(0);">Change Vendor</a></h3>
 		<div>
 			<input class="p_muid_change_this" type="hidden" name="vendor_change" value="" />
 			<div class="pf-element">
@@ -265,7 +265,7 @@ $pines->com_jstree->load();
 		</div>
 	</div>
 	<div class="p_muid_option_accordian">
-		<h3 class="ui-priority-secondary"><a href="#">Change Cost</a></h3>
+		<h3 class="ui-priority-secondary"><a href="javascript:void(0);">Change Cost</a></h3>
 		<div>
 			<input class="p_muid_change_this" type="hidden" name="cost_change" value="" />
 			<div class="pf-element">

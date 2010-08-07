@@ -141,6 +141,9 @@ $pines->com_ptags->load();
 			<li><a href="#p_muid_tab_purchasing">Purchasing</a></li>
 			<li><a href="#p_muid_tab_pricing">Pricing</a></li>
 			<li><a href="#p_muid_tab_attributes">Attributes</a></li>
+			<?php if ($pines->config->com_sales->com_storefront) { ?>
+			<li><a href="#p_muid_tab_specs">Specs</a></li>
+			<?php } ?>
 			<?php if ($pines->config->com_sales->com_hrm) { ?>
 			<li><a href="#p_muid_tab_commission">Commission</a></li>
 			<?php } ?>
@@ -236,16 +239,16 @@ $pines->com_ptags->load();
 						</tr>
 					</thead>
 					<tbody>
-					<?php
-					$category_guids = $this->entity->get_categories_guid();
-					foreach($this->categories as $cur_category) { ?>
+						<?php
+						$category_guids = $this->entity->get_categories_guid();
+						foreach($this->categories as $cur_category) { ?>
 						<tr title="<?php echo $cur_category->guid; ?>" class="<?php echo $cur_category->children ? 'parent ' : ''; ?><?php echo isset($cur_category->parent) ? "child {$cur_category->parent->guid} " : ''; ?>">
 							<td><?php echo isset($cur_category->parent) ? $cur_category->array_search($cur_category->parent->children) + 1 : '0' ; ?></td>
 							<td><input type="checkbox" name="categories[]" value="<?php echo $cur_category->guid; ?>" <?php echo in_array($cur_category->guid, $category_guids) ? 'checked="checked" ' : ''; ?>/></td>
 							<td><?php echo htmlentities($cur_category->name); ?></td>
 							<td><?php echo count($cur_category->products); ?></td>
 						</tr>
-					<?php } ?>
+						<?php } ?>
 					</tbody>
 				</table>
 			</div>
@@ -559,6 +562,47 @@ $pines->com_ptags->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
+		<?php if ($pines->config->com_sales->com_storefront) { ?>
+		<script type="text/javascript">
+			// <![CDATA[
+			pines(function(){
+				var category_grid = $("#p_muid_category_grid");
+				var show_specs = function(){
+					$("> div.spec", "#p_muid_tab_specs").hide();
+					category_grid.find(":checkbox:checked").each(function(){
+						var guid = $(this).val();
+						var cur_spec;
+						do {
+							cur_spec = $("#p_muid_specs_"+guid).show();
+							guid = cur_spec.children("div.parent").text();
+						} while (cur_spec.length);
+					});
+				};
+				category_grid.delegate(":checkbox", "change", function(){
+					show_specs();
+				});
+				show_specs();
+			});
+			// ]]>
+		</script>
+		<div id="p_muid_tab_specs">
+			<div class="pf-element pf-heading">
+				<h1>Category Specs</h1>
+			</div>
+			<?php foreach($this->categories as $cur_category) { ?>
+			<div class="pf-element spec" id="p_muid_specs_<?php echo $cur_category->guid; ?>"<?php echo in_array($cur_category->guid, $category_guids) ? '' : ' style="display: none;"'; ?>>
+				<?php if (isset($cur_category->parent)) { ?>
+				<div class="parent" style="display: none;"><?php echo $cur_category->parent->guid; ?></div>
+				<?php } ?>
+				<?php if (!empty($cur_category->specs)) { ?>
+				<h2><?php echo htmlentities($cur_category->name); ?></h2>
+				<p>Spec options go here.</p>
+				<?php } ?>
+			</div>
+			<?php } ?>
+			<br class="pf-clearing" />
+		</div>
+		<?php } ?>
 		<?php if ($pines->config->com_sales->com_hrm) { ?>
 		<script type="text/javascript">
 			// <![CDATA[
@@ -713,12 +757,6 @@ $pines->com_ptags->load();
 		</div>
 		<?php } ?>
 		<?php if ($pines->config->com_sales->com_storefront) { ?>
-		<script type="text/javascript">
-			// <![CDATA[
-			pines(function(){
-			});
-			// ]]>
-		</script>
 		<div id="p_muid_tab_storefront">
 			<div class="pf-element">
 				<label><span class="pf-label">Show in Storefront</span>

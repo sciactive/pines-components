@@ -30,6 +30,38 @@ $category->enabled = ($_REQUEST['enabled'] == 'ON');
 if ($pines->config->com_sales->com_storefront) {
 	$category->show_menu = ($_REQUEST['show_menu'] == 'ON');
 	$category->menu_position = $_REQUEST['menu_position'];
+	$category->specs = array();
+	$specs = (array) json_decode($_REQUEST['specs']);
+	foreach ($specs as $cur_spec) {
+		if (empty($cur_spec->values[1]))
+			continue;
+		switch ($cur_spec->values[2]) {
+			case 'string':
+				$restricted = ($cur_spec->values[3] == 'Yes');
+				$options = explode(';;', $cur_spec->values[4]);
+				break;
+			case 'float':
+				$restricted = ($cur_spec->values[3] == 'Yes');
+				$options = explode(';;', $cur_spec->values[4]);
+				array_walk($options, 'floatval');
+				break;
+			case 'bool':
+				$restricted = null;
+				$options = array();
+				break;
+			default:
+				continue 2;
+				break;
+		}
+		$category->specs[] = array(
+			'order' => $cur_spec->values[0],
+			'name' => $cur_spec->values[1],
+			'type' => $cur_spec->values[2],
+			'restricted' => $restricted,
+			'options' => $options,
+			'category' => $category
+		);
+	}
 }
 
 // Do the check now in case the parent category is saved.

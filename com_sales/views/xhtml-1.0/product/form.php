@@ -791,7 +791,7 @@ $pines->com_ptags->load();
 					</div>
 					<?php foreach ($cur_category->specs as $key => $cur_spec) { ?>
 					<div class="pf-element">
-						<span class="pf-label"><?php echo htmlentities($cur_spec['name']); ?></span>
+						<span class="pf-label<?php echo $cur_spec['type'] == 'heading' ? ' ui-priority-primary': ''; ?>"><?php echo htmlentities($cur_spec['name']); ?></span>
 						<?php
 						switch ($cur_spec['type']) {
 							case 'bool':
@@ -820,6 +820,8 @@ $pines->com_ptags->load();
 										</span><?php
 									}
 								}
+								break;
+							default:
 								break;
 						}
 						?>

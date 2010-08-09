@@ -52,6 +52,10 @@ if ($pines->config->com_sales->com_storefront) {
 				$restricted = null;
 				$options = array();
 				break;
+			case 'heading':
+				$restricted = null;
+				$options = array();
+				break;
 			default:
 				continue 2;
 				break;
@@ -65,6 +69,7 @@ if ($pines->config->com_sales->com_storefront) {
 			'category' => $category
 		);
 	}
+	$pines->com_sales->sort_specs($category->specs);
 }
 
 // Do the check now in case the parent category is saved.

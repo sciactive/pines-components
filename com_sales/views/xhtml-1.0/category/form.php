@@ -187,12 +187,12 @@ if ($pines->config->com_sales->com_storefront) {
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Enabled</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 	</div>
 	<?php if ($pines->config->com_sales->com_storefront) { ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Show Menu</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="show_menu" size="24" value="ON"<?php echo $this->entity->show_menu ? ' checked="checked"' : ''; ?> /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="show_menu" value="ON"<?php echo $this->entity->show_menu ? ' checked="checked"' : ''; ?> /></label>
 	</div>
 	<div class="pf-element">
 		<label>
@@ -257,8 +257,8 @@ if ($pines->config->com_sales->com_storefront) {
 						</tr>
 					</thead>
 					<tbody>
-						<?php if (isset($this->entity->specs)) foreach ($this->entity->specs as $cur_value) { ?>
-						<tr>
+						<?php if (isset($this->entity->specs)) foreach ($this->entity->specs as $key => $cur_value) { ?>
+						<tr title="<?php echo htmlentities($key); ?>">
 							<td><?php echo htmlentities($cur_value['order']); ?></td>
 							<td><?php echo htmlentities($cur_value['name']); ?></td>
 							<td><?php echo htmlentities($cur_value['type']); ?></td>
@@ -266,8 +266,8 @@ if ($pines->config->com_sales->com_storefront) {
 							<td><?php echo $cur_value['type'] == 'bool' ? '' : htmlentities(implode(';;', $cur_value['options'])); ?></td>
 						</tr>
 						<?php } ?>
-						<?php $anc_specs = isset($this->entity) ? $this->entity->get_specs_ancestors() : array(); foreach ($anc_specs as $cur_value) { ?>
-						<tr class="ui-state-disabled" title="Spec Inherited from <?php echo htmlentities($cur_value['category']->name); ?>">
+						<?php $anc_specs = isset($this->entity) ? $this->entity->get_specs_ancestors() : array(); foreach ($anc_specs as $key => $cur_value) { ?>
+						<tr class="ui-state-disabled" title="<?php echo htmlentities($key); ?> (Inherited from <?php echo htmlentities($cur_value['category']->name); ?>)">
 							<td><?php echo htmlentities($cur_value['order']); ?></td>
 							<td><?php echo htmlentities($cur_value['name']); ?></td>
 							<td><?php echo htmlentities($cur_value['type']); ?></td>

@@ -285,7 +285,7 @@ $pines->com_customer->load_company_select();
 		<div id="p_muid_tab_account">
 			<div class="pf-element">
 				<label><span class="pf-label">Login Disabled</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="login_disabled" size="24" value="ON"<?php echo $this->entity->login_disabled ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="login_disabled" value="ON"<?php echo $this->entity->login_disabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<?php if (in_array('password', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="pf-element">
@@ -327,7 +327,7 @@ $pines->com_customer->load_company_select();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Member</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="member" size="24" value="ON"<?php echo $this->entity->member ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="member" value="ON"<?php echo $this->entity->member ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<?php if ($this->entity->member) { ?>
 			<div class="pf-element">

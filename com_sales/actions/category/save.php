@@ -35,14 +35,17 @@ if ($pines->config->com_sales->com_storefront) {
 	foreach ($specs as $cur_spec) {
 		if (empty($cur_spec->values[1]))
 			continue;
+		$key = $cur_spec->key;
+		if (empty($key) || $key == 'null')
+			$key = uniqid('spec_');
 		switch ($cur_spec->values[2]) {
 			case 'string':
 				$restricted = ($cur_spec->values[3] == 'Yes');
-				$options = explode(';;', $cur_spec->values[4]);
+				$options = empty($cur_spec->values[4]) ? array() : explode(';;', $cur_spec->values[4]);
 				break;
 			case 'float':
 				$restricted = ($cur_spec->values[3] == 'Yes');
-				$options = explode(';;', $cur_spec->values[4]);
+				$options = empty($cur_spec->values[4]) ? array() : explode(';;', $cur_spec->values[4]);
 				array_walk($options, 'floatval');
 				break;
 			case 'bool':
@@ -53,7 +56,7 @@ if ($pines->config->com_sales->com_storefront) {
 				continue 2;
 				break;
 		}
-		$category->specs[] = array(
+		$category->specs[$key] = array(
 			'order' => $cur_spec->values[0],
 			'name' => $cur_spec->values[1],
 			'type' => $cur_spec->values[2],

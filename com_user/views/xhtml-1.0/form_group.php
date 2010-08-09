@@ -264,7 +264,7 @@ $pines->uploader->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Email</span>
@@ -310,7 +310,7 @@ $pines->uploader->load();
 			<div class="pf-element">
 				<span class="pf-label">Parent</span>
 				<div class="pf-group">
-					<span class="pf-field"><input class="ui-widget-content ui-corner-all" type="checkbox" name="no_parent" size="24" value="ON"<?php echo !isset($this->entity->parent) ? ' checked="checked"' : ''; ?> /> No Parent</span>
+					<span class="pf-field"><input class="ui-widget-content ui-corner-all" type="checkbox" name="no_parent" value="ON"<?php echo !isset($this->entity->parent) ? ' checked="checked"' : ''; ?> /> No Parent</span>
 					<div class="pf-field location_tree ui-widget-content ui-corner-all" style="height: 180px; width: 200px; overflow: auto;"></div>
 				</div>
 				<input type="hidden" name="parent" />
@@ -320,12 +320,12 @@ $pines->uploader->load();
 			<div class="pf-element">
 				<label><span class="pf-label">New User Primary Group</span>
 					<span class="pf-note">Default primary group for newly registered users.</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="default_primary" size="24" value="ON"<?php echo $this->entity->default_primary ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="default_primary" value="ON"<?php echo $this->entity->default_primary ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">New User Secondary Group</span>
 					<span class="pf-note">Default secondary group for newly registered users.</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="default_secondary" size="24" value="ON"<?php echo $this->entity->default_secondary ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="default_secondary" value="ON"<?php echo $this->entity->default_secondary ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<?php } ?>
 			<br class="pf-clearing" />

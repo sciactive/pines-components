@@ -104,7 +104,7 @@ class com_sales_category extends entity {
 	 */
 	public function get_specs_all() {
 		$specs = $this->get_specs_ancestors();
-		return array_merge($specs, $this->specs);
+		return array_merge($specs, (array) $this->specs);
 	}
 
 	/**

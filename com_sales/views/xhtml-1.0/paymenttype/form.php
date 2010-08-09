@@ -30,25 +30,25 @@ $this->note = 'Provide payment type details in this form.';
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Enabled</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 	</div>
 	<?php if ($pines->config->com_sales->com_storefront) { ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Enabled in Storefront</span>
 			<span class="pf-note">Check to make this a web storefront payment type.</span>
 			<span class="pf-note">Uncheck "Enabled" to <em>only</em> show this in the web storefront.</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="storefront" size="24" value="ON"<?php echo $this->entity->storefront ? ' checked="checked"' : ''; ?> /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="storefront" value="ON"<?php echo $this->entity->storefront ? ' checked="checked"' : ''; ?> /></label>
 	</div>
 	<?php } ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Kick Drawer</span>
 			<span class="pf-note">If set, when this payment type is used, the cash drawer will be kicked open.</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="kick_drawer" size="24" value="ON"<?php echo $this->entity->kick_drawer ? ' checked="checked"' : ''; ?> /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="kick_drawer" value="ON"<?php echo $this->entity->kick_drawer ? ' checked="checked"' : ''; ?> /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Change Type</span>
 			<span class="pf-note">If set, change will be given from this payment type. Usually "Cash" is the change type.</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="change_type" size="24" value="ON"<?php echo $this->entity->change_type ? ' checked="checked"' : ''; ?> /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="change_type" value="ON"<?php echo $this->entity->change_type ? ' checked="checked"' : ''; ?> /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Minimum Charge</span>

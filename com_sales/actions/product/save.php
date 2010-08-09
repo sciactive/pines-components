@@ -110,6 +110,46 @@ if ($pines->config->com_sales->com_hrm) {
 if ($pines->config->com_sales->com_storefront) {
 	$product->show_in_storefront = ($_REQUEST['show_in_storefront'] == 'ON');
 	$product->featured = ($_REQUEST['featured'] == 'ON');
+	// Build a list of categories.
+	$categories = array();
+	if (is_array($_REQUEST['categories']))
+		$categories = array_map('intval', $_REQUEST['categories']);
+	$categories = (array) $pines->entity_manager->get_entities(
+			array('class' => com_sales_category),
+			array('|',
+				'guid' => $categories
+			),
+			array('&',
+				'data' => array('enabled', true),
+				'tag' => array('com_sales', 'category')
+			)
+		);
+	// Build a list of specs.
+	$specs = array();
+	foreach ($categories as &$cur_category) {
+		$specs = array_merge($specs, $cur_category->get_specs_all());
+	}
+	unset($categories, $cur_category);
+	// Save specs.
+	$product->specs = array();
+	foreach ($specs as $key => $cur_spec) {
+		switch ($cur_spec['type']) {
+			case 'bool':
+				$product->specs[$key] = ($_REQUEST[$key] == 'ON');
+				break;
+			case 'string':
+				$product->specs[$key] = (string) $_REQUEST[$key];
+				if ($cur_spec['restricted'] && !in_array($product->specs[$key], $cur_spec['options']))
+					unset($product->specs[$key]);
+				break;
+			case 'float':
+				$product->specs[$key] = (float) $_REQUEST[$key];
+				if ($cur_spec['restricted'] && !in_array($product->specs[$key], $cur_spec['options']))
+					unset($product->specs[$key]);
+				break;
+		}
+	}
+	unset($specs);
 }
 
 if (empty($product->name)) {

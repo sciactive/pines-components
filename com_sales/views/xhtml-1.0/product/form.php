@@ -141,9 +141,6 @@ $pines->com_ptags->load();
 			<li><a href="#p_muid_tab_purchasing">Purchasing</a></li>
 			<li><a href="#p_muid_tab_pricing">Pricing</a></li>
 			<li><a href="#p_muid_tab_attributes">Attributes</a></li>
-			<?php if ($pines->config->com_sales->com_storefront) { ?>
-			<li><a href="#p_muid_tab_specs">Specs</a></li>
-			<?php } ?>
 			<?php if ($pines->config->com_sales->com_hrm) { ?>
 			<li><a href="#p_muid_tab_commission">Commission</a></li>
 			<?php } ?>
@@ -168,7 +165,7 @@ $pines->com_ptags->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Product SKU</span>
@@ -481,7 +478,7 @@ $pines->com_ptags->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Tax Exempt</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="tax_exempt" size="24" value="ON"<?php echo $this->entity->tax_exempt ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="tax_exempt" value="ON"<?php echo $this->entity->tax_exempt ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Additional Fees</span>
@@ -506,36 +503,36 @@ $pines->com_ptags->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Serialized</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="serialized" size="24" value="ON"<?php echo $this->entity->serialized ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="serialized" value="ON"<?php echo $this->entity->serialized ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Discountable</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="discountable" size="24" value="ON"<?php echo $this->entity->discountable ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="discountable" value="ON"<?php echo $this->entity->discountable ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<?php if ($pines->config->com_sales->com_customer) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Require Customer</span>
 					<span class="pf-note">This means a customer must be selected when selling this item.</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="require_customer" size="24" value="ON"<?php echo $this->entity->require_customer ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="require_customer" value="ON"<?php echo $this->entity->require_customer ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">One Per Ticket</span>
 					<span class="pf-note">Only allow one of this item on a sales ticket.</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="one_per_ticket" size="24" value="ON"<?php echo $this->entity->one_per_ticket ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="one_per_ticket" value="ON"<?php echo $this->entity->one_per_ticket ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Hide on Invoice</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="hide_on_invoice" size="24" value="ON"<?php echo $this->entity->hide_on_invoice ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="hide_on_invoice" value="ON"<?php echo $this->entity->hide_on_invoice ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Non-Refundable</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="non_refundable" size="24" value="ON"<?php echo $this->entity->non_refundable ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="non_refundable" value="ON"<?php echo $this->entity->non_refundable ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Hide from Autocomplete</span>
 					<span class="pf-note">Exclude this product from autocomplete searches.</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="autocomplete_hide" size="24" value="ON"<?php echo $this->entity->autocomplete_hide ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="autocomplete_hide" value="ON"<?php echo $this->entity->autocomplete_hide ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Additional Barcodes</span>
@@ -562,47 +559,6 @@ $pines->com_ptags->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<?php if ($pines->config->com_sales->com_storefront) { ?>
-		<script type="text/javascript">
-			// <![CDATA[
-			pines(function(){
-				var category_grid = $("#p_muid_category_grid");
-				var show_specs = function(){
-					$("> div.spec", "#p_muid_tab_specs").hide();
-					category_grid.find(":checkbox:checked").each(function(){
-						var guid = $(this).val();
-						var cur_spec;
-						do {
-							cur_spec = $("#p_muid_specs_"+guid).show();
-							guid = cur_spec.children("div.parent").text();
-						} while (cur_spec.length);
-					});
-				};
-				category_grid.delegate(":checkbox", "change", function(){
-					show_specs();
-				});
-				show_specs();
-			});
-			// ]]>
-		</script>
-		<div id="p_muid_tab_specs">
-			<div class="pf-element pf-heading">
-				<h1>Category Specs</h1>
-			</div>
-			<?php foreach($this->categories as $cur_category) { ?>
-			<div class="pf-element spec" id="p_muid_specs_<?php echo $cur_category->guid; ?>"<?php echo in_array($cur_category->guid, $category_guids) ? '' : ' style="display: none;"'; ?>>
-				<?php if (isset($cur_category->parent)) { ?>
-				<div class="parent" style="display: none;"><?php echo $cur_category->parent->guid; ?></div>
-				<?php } ?>
-				<?php if (!empty($cur_category->specs)) { ?>
-				<h2><?php echo htmlentities($cur_category->name); ?></h2>
-				<p>Spec options go here.</p>
-				<?php } ?>
-			</div>
-			<?php } ?>
-			<br class="pf-clearing" />
-		</div>
-		<?php } ?>
 		<?php if ($pines->config->com_sales->com_hrm) { ?>
 		<script type="text/javascript">
 			// <![CDATA[
@@ -757,15 +713,121 @@ $pines->com_ptags->load();
 		</div>
 		<?php } ?>
 		<?php if ($pines->config->com_sales->com_storefront) { ?>
+		<style type="text/css" >
+			/* <![CDATA[ */
+			#p_muid_tab_storefront .combobox {
+				position: relative;
+			}
+			#p_muid_tab_storefront .combobox input {
+				padding-right: 32px;
+			}
+			#p_muid_tab_storefront .combobox a {
+				display: block;
+				position: absolute;
+				right: 8px;
+				top: 50%;
+				margin-top: -8px;
+			}
+			/* ]]> */
+		</style>
+		<script type="text/javascript">
+			// <![CDATA[
+			pines(function(){
+				var category_grid = $("#p_muid_category_grid");
+				var show_specs = function(){
+					$("> div.spec", "#p_muid_tab_specs").hide();
+					category_grid.find(":checkbox:checked").each(function(){
+						var guid = $(this).val();
+						var cur_spec;
+						do {
+							cur_spec = $("#p_muid_specs_"+guid).show();
+							guid = cur_spec.children("div.parent").text();
+						} while (cur_spec.length);
+					});
+				};
+				category_grid.delegate(":checkbox", "change", function(){
+					show_specs();
+				});
+				show_specs();
+
+				$(".combobox", "#p_muid_tab_storefront").each(function(){
+					var box = $(this);
+					var autobox = box.children("input").autocomplete({
+						minLength: 0,
+						source: $.map(box.children("select").children(), function(elem){
+							return $(elem).attr("value");
+						})
+					});
+					box.children("a").hover(function(){
+						$(this).addClass("ui-icon-circle-triangle-s").removeClass("ui-icon-triangle-1-s");
+					}, function(){
+						$(this).addClass("ui-icon-triangle-1-s").removeClass("ui-icon-circle-triangle-s");
+					}).click(function(){
+						autobox.focus().autocomplete("search", "");
+					});
+				});
+			});
+			// ]]>
+		</script>
 		<div id="p_muid_tab_storefront">
 			<div class="pf-element">
 				<label><span class="pf-label">Show in Storefront</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="show_in_storefront" size="24" value="ON"<?php echo $this->entity->show_in_storefront ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="show_in_storefront" value="ON"<?php echo $this->entity->show_in_storefront ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Featured Item</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="featured" size="24" value="ON"<?php echo $this->entity->featured ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="featured" value="ON"<?php echo $this->entity->featured ? ' checked="checked"' : ''; ?> /></label>
 			</div>
+			<fieldset class="pf-group">
+				<legend>Category Specs</legend>
+				<?php foreach($this->categories as $cur_category) { ?>
+				<div class="spec" id="p_muid_specs_<?php echo $cur_category->guid; ?>"<?php echo in_array($cur_category->guid, $category_guids) ? '' : ' style="display: none;"'; ?>>
+					<?php if (isset($cur_category->parent)) { ?>
+					<div class="parent" style="display: none;"><?php echo $cur_category->parent->guid; ?></div>
+					<?php } ?>
+					<?php if (!empty($cur_category->specs)) { ?>
+					<div class="pf-element pf-heading">
+						<h1><?php echo htmlentities($cur_category->name); ?></h1>
+					</div>
+					<?php foreach ($cur_category->specs as $key => $cur_spec) { ?>
+					<div class="pf-element">
+						<span class="pf-label"><?php echo htmlentities($cur_spec['name']); ?></span>
+						<?php
+						switch ($cur_spec['type']) {
+							case 'bool':
+								?><input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="<?php echo htmlentities($key); ?>" value="ON"<?php echo $this->entity->specs[$key] ? ' checked="checked"' : ''; ?> /><?php
+								break;
+							case 'string':
+							case 'float':
+								if (empty($cur_spec['options'])) {
+									?><input class="pf-field ui-widget-content ui-corner-all" type="text" name="<?php echo htmlentities($key); ?>" size="24" value="<?php echo htmlentities($this->entity->specs[$key]); ?>" /><?php
+								} else {
+									if ($cur_spec['restricted']) {
+										?><select class="pf-field ui-widget-content ui-corner-all" name="<?php echo htmlentities($key); ?>">
+											<?php foreach ($cur_spec['options'] as $cur_option) {
+												?><option value="<?php echo htmlentities($cur_option); ?>"<?php echo $this->entity->specs[$key] == $cur_option ? ' selected="selected"' : ''; ?>><?php echo htmlentities($cur_option); ?></option><?php
+											} ?>
+										</select><?php
+									} else {
+										?><span class="combobox">
+											<input class="pf-field ui-widget-content ui-corner-all" type="text" name="<?php echo htmlentities($key); ?>" size="24" value="<?php echo htmlentities($this->entity->specs[$key]); ?>" />
+											<a href="javascript:void(0);" class="ui-icon ui-icon-triangle-1-s"></a>
+											<select style="display: none;">
+												<?php foreach ($cur_spec['options'] as $cur_option) {
+													?><option value="<?php echo htmlentities($cur_option); ?>"><?php echo htmlentities($cur_option); ?></option><?php
+												} ?>
+											</select>
+										</span><?php
+									}
+								}
+								break;
+						}
+						?>
+					</div>
+					<?php } } ?>
+				</div>
+				<?php } ?>
+			</fieldset>
 			<br class="pf-clearing" />
 		</div>
 		<?php } ?>

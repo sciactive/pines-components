@@ -242,7 +242,7 @@ $pines->com_pgrid->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="enabled" size="24" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Email</span>
@@ -316,7 +316,7 @@ $pines->com_pgrid->load();
 				<div class="pf-element">
 					<span class="pf-label">Primary Group</span>
 					<div class="pf-group">
-						<span class="pf-field"><input class="ui-widget-content ui-corner-all" type="checkbox" name="no_primary_group" size="24" value="ON"<?php echo !isset($this->entity->group) ? ' checked="checked"' : ''; ?> /> No Primary Group</span>
+						<span class="pf-field"><input class="ui-widget-content ui-corner-all" type="checkbox" name="no_primary_group" value="ON"<?php echo !isset($this->entity->group) ? ' checked="checked"' : ''; ?> /> No Primary Group</span>
 						<div class="pf-field location_tree ui-widget-content ui-corner-all" style="height: 180px; width: 200px; overflow: auto;"></div>
 					</div>
 					<input type="hidden" name="group" />

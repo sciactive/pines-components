@@ -718,6 +718,30 @@ class com_sales extends component {
 	}
 
 	/**
+	 * Sort an array of specs.
+	 *
+	 * @param array &$array The array to sort.
+	 * @return bool True on success, false on failure.
+	 */
+	public function sort_specs(&$array) {
+		return uasort($array, array($this, 'sort_spec'));
+	}
+
+	/**
+	 * Compare spec items for sorting.
+	 *
+	 * @param array $a Item a.
+	 * @param array $b Item b.
+	 * @return int Order.
+	 * @access private
+	 */
+	private function sort_spec($a, $b) {
+		$ac = isset($a['order']) ? $a['order'] : $a['name'];
+		$bc = isset($b['order']) ? $b['order'] : $b['name'];
+		return strnatcmp($ac, $bc);
+	}
+
+	/**
 	 * Creates and attaches a module which lists a products history.
 	 * @param string $serial The serial number of the product to search for.
 	 * @param string $sku The sku code of the product(s) to search for.

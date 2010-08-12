@@ -147,6 +147,8 @@ if ($pines->config->com_sales->com_storefront) {
 				if ($cur_spec['restricted'] && !in_array($product->specs[$key], $cur_spec['options']))
 					unset($product->specs[$key]);
 				break;
+			default:
+				break;
 		}
 	}
 	unset($specs);

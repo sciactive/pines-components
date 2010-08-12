@@ -40,15 +40,23 @@ if ($pines->config->com_sales->com_storefront) {
 			$key = uniqid('spec_');
 		switch ($cur_spec->values[2]) {
 			case 'string':
-				$restricted = ($cur_spec->values[3] == 'Yes');
-				$options = empty($cur_spec->values[4]) ? array() : explode(';;', $cur_spec->values[4]);
+				$show_filter = ($cur_spec->values[3] == 'Yes');
+				$restricted = ($cur_spec->values[4] == 'Yes');
+				$options = empty($cur_spec->values[5]) ? array() : explode(';;', $cur_spec->values[5]);
 				break;
 			case 'float':
-				$restricted = ($cur_spec->values[3] == 'Yes');
-				$options = empty($cur_spec->values[4]) ? array() : explode(';;', $cur_spec->values[4]);
+				$show_filter = ($cur_spec->values[3] == 'Yes');
+				$restricted = ($cur_spec->values[4] == 'Yes');
+				$options = empty($cur_spec->values[5]) ? array() : explode(';;', $cur_spec->values[5]);
 				array_walk($options, 'floatval');
 				break;
 			case 'bool':
+				$show_filter = ($cur_spec->values[3] == 'Yes');
+				$restricted = null;
+				$options = array();
+				break;
+			case 'heading':
+				$show_filter = null;
 				$restricted = null;
 				$options = array();
 				break;
@@ -60,11 +68,13 @@ if ($pines->config->com_sales->com_storefront) {
 			'order' => $cur_spec->values[0],
 			'name' => $cur_spec->values[1],
 			'type' => $cur_spec->values[2],
+			'show_filter' => $show_filter,
 			'restricted' => $restricted,
 			'options' => $options,
 			'category' => $category
 		);
 	}
+	$pines->com_sales->sort_specs($category->specs);
 }
 
 // Do the check now in case the parent category is saved.

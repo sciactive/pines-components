@@ -90,8 +90,9 @@ if ($pines->config->com_sales->com_storefront) {
 						spec_dialog.find("input[name=cur_spec_order]").val(rows.pgrid_get_value(1));
 						spec_dialog.find("input[name=cur_spec_name]").val(rows.pgrid_get_value(2));
 						spec_dialog.find("select[name=cur_spec_type]").val(rows.pgrid_get_value(3)).change();
-						spec_dialog.find("input[name=cur_spec_restricted]").attr("checked", rows.pgrid_get_value(4) == "Yes");
-						spec_dialog.find("input[name=cur_spec_options]").val(rows.pgrid_get_value(5));
+						spec_dialog.find("input[name=cur_spec_show_filter]").attr("checked", rows.pgrid_get_value(4) == "Yes");
+						spec_dialog.find("input[name=cur_spec_restricted]").attr("checked", rows.pgrid_get_value(5) == "Yes");
+						spec_dialog.find("input[name=cur_spec_options]").val(rows.pgrid_get_value(6));
 						spec_dialog.dialog('open');
 					}
 				},
@@ -123,6 +124,7 @@ if ($pines->config->com_sales->com_storefront) {
 					var cur_spec_order = spec_dialog.find("input[name=cur_spec_order]").val();
 					var cur_spec_name = spec_dialog.find("input[name=cur_spec_name]").val();
 					var cur_spec_type = spec_dialog.find("select[name=cur_spec_type]").val();
+					var cur_spec_show_filter = !!spec_dialog.find("input[name=cur_spec_show_filter]").attr("checked");
 					var cur_spec_restricted = !!spec_dialog.find("input[name=cur_spec_restricted]").attr("checked");
 					var cur_spec_options = spec_dialog.find("input[name=cur_spec_options]").val();
 					if (cur_spec_name == "" || cur_spec_type == "") {
@@ -136,8 +138,9 @@ if ($pines->config->com_sales->com_storefront) {
 								cur_spec_order,
 								cur_spec_name,
 								cur_spec_type,
-								cur_spec_type == "bool" ? '' : (cur_spec_restricted ? 'Yes' : 'No'),
-								cur_spec_type == "bool" ? '' : cur_spec_options
+								(cur_spec_type == "heading") ? '' : (cur_spec_show_filter ? 'Yes' : 'No'),
+								(cur_spec_type == "bool" || cur_spec_type == "heading") ? '' : (cur_spec_restricted ? 'Yes' : 'No'),
+								(cur_spec_type == "bool" || cur_spec_type == "heading") ? '' : cur_spec_options
 							]
 						}];
 						specs_table.pgrid_add(new_spec);
@@ -145,8 +148,9 @@ if ($pines->config->com_sales->com_storefront) {
 						cur_spec.pgrid_set_value(1, cur_spec_order);
 						cur_spec.pgrid_set_value(2, cur_spec_name);
 						cur_spec.pgrid_set_value(3, cur_spec_type);
-						cur_spec.pgrid_set_value(4, cur_spec_type == "bool" ? '' : (cur_spec_restricted ? 'Yes' : 'No'));
-						cur_spec.pgrid_set_value(5, cur_spec_type == "bool" ? '' : cur_spec_options);
+						cur_spec.pgrid_set_value(4, (cur_spec_type == "heading") ? '' : (cur_spec_show_filter ? 'Yes' : 'No'));
+						cur_spec.pgrid_set_value(5, (cur_spec_type == "bool" || cur_spec_type == "heading") ? '' : (cur_spec_restricted ? 'Yes' : 'No'));
+						cur_spec.pgrid_set_value(6, (cur_spec_type == "bool" || cur_spec_type == "heading") ? '' : cur_spec_options);
 					}
 					$(this).dialog('close');
 				}
@@ -160,6 +164,7 @@ if ($pines->config->com_sales->com_storefront) {
 			spec_dialog.find("input[name=cur_spec_order]").val("");
 			spec_dialog.find("input[name=cur_spec_name]").val("");
 			spec_dialog.find("select[name=cur_spec_type]").val("").change();
+			spec_dialog.find("input[name=cur_spec_show_filter]").attr("checked", false);
 			spec_dialog.find("input[name=cur_spec_restricted]").attr("checked", false);
 			spec_dialog.find("input[name=cur_spec_options]").val("");
 			specs.val(JSON.stringify(specs_table.pgrid_get_all_rows().filter(":not(.ui-state-disabled)").pgrid_export_rows()));
@@ -252,6 +257,7 @@ if ($pines->config->com_sales->com_storefront) {
 							<th>Order</th>
 							<th>Name</th>
 							<th>Type</th>
+							<th>Show Filter</th>
 							<th>Restricted</th>
 							<th>Options</th>
 						</tr>
@@ -262,8 +268,9 @@ if ($pines->config->com_sales->com_storefront) {
 							<td><?php echo htmlentities($cur_value['order']); ?></td>
 							<td><?php echo htmlentities($cur_value['name']); ?></td>
 							<td><?php echo htmlentities($cur_value['type']); ?></td>
-							<td><?php echo $cur_value['type'] == 'bool' ? '' : ($cur_value['restricted'] ? 'Yes' : 'No'); ?></td>
-							<td><?php echo $cur_value['type'] == 'bool' ? '' : htmlentities(implode(';;', $cur_value['options'])); ?></td>
+							<td><?php echo ($cur_value['type'] == 'heading') ? '' : ($cur_value['show_filter'] ? 'Yes' : 'No'); ?></td>
+							<td><?php echo ($cur_value['type'] == 'bool' || $cur_value['type'] == 'heading') ? '' : ($cur_value['restricted'] ? 'Yes' : 'No'); ?></td>
+							<td><?php echo ($cur_value['type'] == 'bool' || $cur_value['type'] == 'heading') ? '' : htmlentities(implode(';;', $cur_value['options'])); ?></td>
 						</tr>
 						<?php } ?>
 						<?php $anc_specs = isset($this->entity) ? $this->entity->get_specs_ancestors() : array(); foreach ($anc_specs as $key => $cur_value) { ?>
@@ -271,8 +278,9 @@ if ($pines->config->com_sales->com_storefront) {
 							<td><?php echo htmlentities($cur_value['order']); ?></td>
 							<td><?php echo htmlentities($cur_value['name']); ?></td>
 							<td><?php echo htmlentities($cur_value['type']); ?></td>
-							<td><?php echo $cur_value['type'] == 'bool' ? '' : ($cur_value['restricted'] ? 'Yes' : 'No'); ?></td>
-							<td><?php echo $cur_value['type'] == 'bool' ? '' : htmlentities(implode(';;', $cur_value['options'])); ?></td>
+							<td><?php echo ($cur_value['type'] == 'heading') ? '' : ($cur_value['show_filter'] ? 'Yes' : 'No'); ?></td>
+							<td><?php echo ($cur_value['type'] == 'bool' || $cur_value['type'] == 'heading') ? '' : ($cur_value['restricted'] ? 'Yes' : 'No'); ?></td>
+							<td><?php echo ($cur_value['type'] == 'bool' || $cur_value['type'] == 'heading') ? '' : htmlentities(implode(';;', $cur_value['options'])); ?></td>
 						</tr>
 						<?php } ?>
 					</tbody>
@@ -316,9 +324,16 @@ if ($pines->config->com_sales->com_storefront) {
 						<option value="string">String (Text)</option>
 						<option value="float">Number</option>
 						<option value="bool">Boolean (Yes/No)</option>
+						<option value="heading">Heading (For Separation)</option>
 					</select></label>
 			</div>
 			<div id="p_muid_spec_forms">
+				<div class="string float bool">
+					<div class="pf-element">
+						<span class="pf-label">Show Filter</span>
+						<label><input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="cur_spec_show_filter" /> Show filtering options in the category browser in storefront.</label>
+					</div>
+				</div>
 				<div class="string float">
 					<div class="pf-element">
 						<span class="pf-label">Restricted</span>
@@ -333,8 +348,8 @@ if ($pines->config->com_sales->com_storefront) {
 						</div>
 					</div>
 				</div>
-				<div class="bool">
-					<div class="pf-element">There are no options for boolean</div>
+				<div class="heading">
+					<div class="pf-element">Headings will show up in the product page in the storefront.</div>
 				</div>
 			</div>
 		</div>

@@ -82,7 +82,7 @@ body {
 	padding: 14px 0;
 	display: block;
 }
-#header .module, #footer .module {
+#header .module {
 	float: left;
 }
 #header .module.right {

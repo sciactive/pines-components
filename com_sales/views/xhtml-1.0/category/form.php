@@ -171,6 +171,10 @@ if ($pines->config->com_sales->com_storefront) {
 		};
 
 		update_specs();
+
+		$("#p_muid_menu_position").autocomplete({
+			source: <?php echo json_encode($pines->info->template->positions); ?>
+		});
 	});
 	// ]]>
 </script>
@@ -200,14 +204,8 @@ if ($pines->config->com_sales->com_storefront) {
 			<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="show_menu" value="ON"<?php echo $this->entity->show_menu ? ' checked="checked"' : ''; ?> /></label>
 	</div>
 	<div class="pf-element">
-		<label>
-			<span class="pf-label">Menu Position</span>
-			<select class="pf-field ui-widget-content ui-corner-all" name="menu_position">
-				<?php foreach ($pines->info->template->positions as $cur_position) {
-					?><option value="<?php echo htmlentities($cur_position); ?>"<?php echo ($this->entity->menu_position == $cur_position) ? ' selected="selected"' : ''; ?>><?php echo htmlentities($cur_position); ?></option><?php
-				} ?>
-			</select>
-		</label>
+		<label><span class="pf-label">Menu Position</span>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_menu_position" name="menu_position" size="24" value="<?php echo htmlentities($this->entity->menu_position); ?>" /></label>
 	</div>
 	<?php } ?>
 	<div class="pf-element">

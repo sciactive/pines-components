@@ -13,6 +13,12 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
+		'name' => 'print_login',
+		'cname' => 'Print Login',
+		'description' => 'Print a login page in this position, if the user is not logged in. Set to "null" to not print a login page.',
+		'value' => 'null',
+	),
+	array(
 		'name' => 'create_admin',
 		'cname' => 'Create Admin',
 		'description' => 'Allow the creation of an admin user. When a user is created, if there are no other users in the system, he will be granted all abilities.',

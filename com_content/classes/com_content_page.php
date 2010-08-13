@@ -1,6 +1,6 @@
 <?php
 /**
- * com_content_article class.
+ * com_content_page class.
  *
  * @package Pines
  * @subpackage com_content
@@ -12,22 +12,23 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * An article.
+ * An page.
  *
  * @package Pines
  * @subpackage com_content
  */
-class com_content_article extends entity {
+class com_content_page extends entity {
 	/**
-	 * Load an article.
-	 * @param int $id The ID of the article to load, 0 for a new article.
+	 * Load an page.
+	 * @param int $id The ID of the page to load, 0 for a new page.
 	 */
 	public function __construct($id = 0) {
 		parent::__construct();
-		$this->add_tag('com_content', 'article');
+		$this->add_tag('com_content', 'page');
 		// Defaults.
 		$this->enabled = true;
 		$this->content_tags = array();
+		$this->show_title = true;
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
@@ -41,7 +42,7 @@ class com_content_article extends entity {
 
 	/**
 	 * Create a new instance.
-	 * @return com_content_article The new instance.
+	 * @return com_content_page The new instance.
 	 */
 	public static function factory() {
 		global $pines;
@@ -53,22 +54,22 @@ class com_content_article extends entity {
 	}
 
 	/**
-	 * Delete the article.
+	 * Delete the page.
 	 * @return bool True on success, false on failure.
 	 */
 	public function delete() {
 		if (!parent::delete())
 			return false;
-		pines_log("Deleted article $this->name.", 'notice');
+		pines_log("Deleted page $this->name.", 'notice');
 		return true;
 	}
 
 	/**
-	 * Get an array of categories' GUIDs this article belongs to.
+	 * Get an array of categories' GUIDs this page belongs to.
 	 * @return array An array of GUIDs.
 	 */
 	public function get_categories_guid() {
-		$categories = $this->get_categories($article);
+		$categories = $this->get_categories($page);
 		foreach ($categories as &$cur_cat) {
 			$cur_cat = $cur_cat->guid;
 		}
@@ -77,17 +78,17 @@ class com_content_article extends entity {
 	}
 
 	/**
-	 * Get an array of categories this article belongs to.
+	 * Get an array of categories this page belongs to.
 	 * @return array An array of categories.
 	 */
 	public function get_categories() {
 		global $pines;
-		$categories = (array) $pines->entity_manager->get_entities(array('class' => com_content_category), array('&', 'ref' => array('articles', $this), 'tag' => array('com_content', 'category')));
+		$categories = (array) $pines->entity_manager->get_entities(array('class' => com_content_category), array('&', 'ref' => array('pages', $this), 'tag' => array('com_content', 'category')));
 		return $categories;
 	}
 
 	/**
-	 * Save the article.
+	 * Save the page.
 	 * @return bool True on success, false on failure.
 	 */
 	public function save() {
@@ -97,12 +98,12 @@ class com_content_article extends entity {
 	}
 
 	/**
-	 * Print a form to edit the article.
+	 * Print a form to edit the page.
 	 * @return module The form's module.
 	 */
 	public function print_form() {
 		global $pines;
-		$module = new module('com_content', 'article/form', 'content');
+		$module = new module('com_content', 'page/form', 'content');
 		$module->entity = $this;
 		$module->categories = (array) $pines->entity_manager->get_entities(
 				array('class' => com_content_category),
@@ -111,7 +112,19 @@ class com_content_article extends entity {
 					'tag' => array('com_content', 'category')
 				)
 			);
-		
+
+		return $module;
+	}
+
+	/**
+	 * Print the page content.
+	 * @return module The page's module.
+	 */
+	public function print_page() {
+		global $pines;
+		$module = new module('com_content', 'page/page', 'content');
+		$module->entity = $this;
+
 		return $module;
 	}
 }

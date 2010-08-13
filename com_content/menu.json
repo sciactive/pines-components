@@ -23,19 +23,19 @@
 			}
 		},
 		{
-			"path": "main_menu/website/content/articles",
-			"text": "Articles",
-			"href": ["com_content","article/list"],
+			"path": "main_menu/website/content/pages",
+			"text": "Pages",
+			"href": ["com_content","page/list"],
 			"depend": {
-				"ability": "com_content/listarticles"
+				"ability": "com_content/listpages"
 			}
 		},
 		{
-			"path": "main_menu/website/content/newarticle",
-			"text": "New Article",
-			"href": ["com_content","article/edit"],
+			"path": "main_menu/website/content/newpage",
+			"text": "New Page",
+			"href": ["com_content","page/edit"],
 			"depend": {
-				"ability": "com_content/editarticle"
+				"ability": "com_content/editpage"
 			}
 		}
 ]

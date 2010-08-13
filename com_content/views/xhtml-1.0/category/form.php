@@ -68,11 +68,11 @@ $this->note = 'Provide category details in this form.';
 		</label>
 	</div>
 	<div class="pf-element">
-		<span class="pf-label">Articles</span>
-		<span class="pf-note">These articles are assigned to this category.</span>
+		<span class="pf-label">Pages</span>
+		<span class="pf-note">These pages are assigned to this category.</span>
 		<div class="pf-group">
-			<?php foreach ($this->entity->articles as $cur_article) { ?>
-			<div class="pf-field"><a href="<?php echo htmlentities(pines_url('com_content', 'article/edit', array('id' => $cur_article->guid))); ?>"><?php echo htmlentities("[{$cur_article->guid}] {$cur_article->name}"); ?></a></div>
+			<?php foreach ($this->entity->pages as $cur_page) { ?>
+			<div class="pf-field"><a href="<?php echo htmlentities(pines_url('com_content', 'page/edit', array('id' => $cur_page->guid))); ?>"><?php echo htmlentities("[{$cur_page->guid}] {$cur_page->name}"); ?></a></div>
 			<?php } ?>
 		</div>
 	</div>

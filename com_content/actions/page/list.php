@@ -1,6 +1,6 @@
 <?php
 /**
- * List articles.
+ * List pages.
  *
  * @package Pines
  * @subpackage com_content
@@ -11,8 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_content/listarticles') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_content', 'article/list'));
+if ( !gatekeeper('com_content/listpages') )
+	punt_user('You don\'t have necessary permission.', pines_url('com_content', 'page/list'));
 
-$pines->com_content->list_articles();
+$pines->com_content->list_pages();
 ?>

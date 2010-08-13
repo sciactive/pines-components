@@ -1,6 +1,6 @@
 <?php
 /**
- * Get articles in a category, returning JSON.
+ * Get pages in a category, returning JSON.
  *
  * @package Pines
  * @subpackage com_content
@@ -23,13 +23,13 @@ if (!isset($category->guid)) {
 }
 
 $return = array();
-foreach ($category->articles as $article) {
-	if (!$article->enabled)
+foreach ($category->pages as $page) {
+	if (!$page->enabled)
 		continue;
 	
 	$json_struct = (object) array(
-		'guid' => $article->guid,
-		'name' => $article->name
+		'guid' => $page->guid,
+		'name' => $page->name
 	);
 
 	$return[] = $json_struct;

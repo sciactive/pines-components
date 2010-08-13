@@ -1,6 +1,6 @@
 <?php
 /**
- * Lists articles and provides functions to manipulate them.
+ * Lists pages and provides functions to manipulate them.
  *
  * @package Pines
  * @subpackage com_content
@@ -10,10 +10,10 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Articles';
+$this->title = 'Pages';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_content/article/list'];
+	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_content/page/list'];
 ?>
 <script type="text/javascript">
 	// <![CDATA[
@@ -24,15 +24,15 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
-				<?php if (gatekeeper('com_content/newarticle')) { ?>
-				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_content', 'article/edit')); ?>'},
-				<?php } if (gatekeeper('com_content/editarticle')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo addslashes(pines_url('com_content', 'article/edit', array('id' => '__title__'))); ?>'},
+				<?php if (gatekeeper('com_content/newpage')) { ?>
+				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_content', 'page/edit')); ?>'},
+				<?php } if (gatekeeper('com_content/editpage')) { ?>
+				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo addslashes(pines_url('com_content', 'page/edit', array('id' => '__title__'))); ?>'},
 				<?php } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
-				<?php if (gatekeeper('com_content/deletearticle')) { ?>
-				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_content', 'article/delete', array('id' => '__title__'))); ?>', delimiter: ','},
+				<?php if (gatekeeper('com_content/deletepage')) { ?>
+				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_content', 'page/delete', array('id' => '__title__'))); ?>', delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
@@ -40,7 +40,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
 					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
-						filename: 'articles',
+						filename: 'pages',
 						content: rows
 					});
 				}}
@@ -51,7 +51,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_content/article/list", state: cur_state});
+				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_content/page/list", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
@@ -69,11 +69,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		</tr>
 	</thead>
 	<tbody>
-	<?php foreach($this->articles as $article) { ?>
-		<tr title="<?php echo $article->guid; ?>">
-			<td><?php echo htmlentities($article->name); ?></td>
-			<td><?php echo ($article->enabled ? 'Yes' : 'No'); ?></td>
-			<td><?php echo htmlentities(implode(', ', $article->content_tags)); ?></td>
+	<?php foreach($this->pages as $page) { ?>
+		<tr title="<?php echo $page->guid; ?>">
+			<td><?php echo htmlentities($page->name); ?></td>
+			<td><?php echo ($page->enabled ? 'Yes' : 'No'); ?></td>
+			<td><?php echo htmlentities(implode(', ', $page->content_tags)); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

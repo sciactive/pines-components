@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Article Categories';
+$this->title = 'Page Categories';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_content/category/list'];
@@ -68,7 +68,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>Order</th>
 			<th>Name</th>
 			<th>Enabled</th>
-			<th>Articles</th>
+			<th>Pages</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -77,7 +77,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo isset($category->parent) ? $category->array_search($category->parent->children) + 1 : '0' ; ?></td>
 			<td><?php echo htmlentities($category->name); ?></td>
 			<td><?php echo ($category->enabled ? 'Yes' : 'No'); ?></td>
-			<td><?php echo count($category->articles); ?></td>
+			<td><?php echo count($category->pages); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Provides a form for the user to edit an article.
+ * Provides a form for the user to edit an page.
  *
  * @package Pines
  * @subpackage com_content
@@ -10,21 +10,21 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = (!isset($this->entity->guid)) ? 'Editing New Article' : 'Editing ['.htmlentities($this->entity->name).']';
-$this->note = 'Provide article details in this form.';
+$this->title = (!isset($this->entity->guid)) ? 'Editing New Page' : 'Editing ['.htmlentities($this->entity->name).']';
+$this->note = 'Provide page details in this form.';
 $pines->editor->load();
 $pines->com_pgrid->load();
 $pines->com_ptags->load();
 ?>
-<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_content', 'article/save')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_content', 'page/save')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
 		pines(function(){
-			$("#p_muid_article_tabs").tabs();
+			$("#p_muid_page_tabs").tabs();
 		});
 		// ]]>
 	</script>
-	<div id="p_muid_article_tabs" style="clear: both;">
+	<div id="p_muid_page_tabs" style="clear: both;">
 		<ul>
 			<li><a href="#p_muid_tab_general">General</a></li>
 			<li><a href="#p_muid_tab_categories">Categories</a></li>
@@ -72,6 +72,11 @@ $pines->com_ptags->load();
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Show on Front Page</span>
+					<span class="pf-note">Use this to show the full content.</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="show_front_page" value="ON"<?php echo $this->entity->show_front_page ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Tags</span>
@@ -138,7 +143,7 @@ $pines->com_ptags->load();
 							<th>Order</th>
 							<th>In</th>
 							<th>Name</th>
-							<th>Articles</th>
+							<th>Pages</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -149,7 +154,7 @@ $pines->com_ptags->load();
 							<td><?php echo isset($cur_category->parent) ? $cur_category->array_search($cur_category->parent->children) + 1 : '0' ; ?></td>
 							<td><input type="checkbox" name="categories[]" value="<?php echo $cur_category->guid; ?>" <?php echo in_array($cur_category->guid, $category_guids) ? 'checked="checked" ' : ''; ?>/></td>
 							<td><?php echo htmlentities($cur_category->name); ?></td>
-							<td><?php echo count($cur_category->articles); ?></td>
+							<td><?php echo count($cur_category->pages); ?></td>
 						</tr>
 					<?php } ?>
 					</tbody>
@@ -182,7 +187,11 @@ $pines->com_ptags->load();
 				<h1>Options</h1>
 			</div>
 			<div class="pf-element">
-				<label><span class="pf-label">Show Intro on Article Page</span>
+				<label><span class="pf-label">Show Title</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="show_title" value="ON"<?php echo $this->entity->show_title ? ' checked="checked"' : ''; ?> /></label>
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Show Intro on Page</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="show_intro" value="ON"<?php echo $this->entity->show_intro ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<br class="pf-clearing" />
@@ -194,6 +203,6 @@ $pines->com_ptags->load();
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_content', 'article/list')); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_content', 'page/list')); ?>');" value="Cancel" />
 	</div>
 </form>

@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * com_content main class.
  *
- * Manage content articles.
+ * Manage content pages.
  *
  * @package Pines
  * @subpackage com_content
@@ -35,17 +35,17 @@ class com_content extends component {
 	}
 
 	/**
-	 * Creates and attaches a module which lists articles.
+	 * Creates and attaches a module which lists pages.
 	 */
-	public function list_articles() {
+	public function list_pages() {
 		global $pines;
 
-		$module = new module('com_content', 'article/list', 'content');
+		$module = new module('com_content', 'page/list', 'content');
 
-		$module->articles = $pines->entity_manager->get_entities(array('class' => com_content_article), array('&', 'tag' => array('com_content', 'article')));
+		$module->pages = $pines->entity_manager->get_entities(array('class' => com_content_page), array('&', 'tag' => array('com_content', 'page')));
 
-		if ( empty($module->articles) )
-			pines_notice('There are no articles.');
+		if ( empty($module->pages) )
+			pines_notice('There are no pages.');
 	}
 }
 

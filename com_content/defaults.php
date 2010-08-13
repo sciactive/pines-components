@@ -15,14 +15,14 @@ return array(
 	array(
 		'name' => 'banned_tags',
 		'cname' => 'Banned Tags',
-		'description' => 'These tags will not be allowed in articles.',
+		'description' => 'These tags will not be allowed in pages.',
 		'value' => array('script', 'style'),
 		'peruser' => true,
 	),
 	array(
-		'name' => 'ac_article_group',
-		'cname' => 'Article Group Access',
-		'description' => 'The level of access the user\'s primary group has to their articles. This will be applied when saving articles.',
+		'name' => 'ac_page_group',
+		'cname' => 'Page Group Access',
+		'description' => 'The level of access the user\'s primary group has to their pages. This will be applied when saving pages.',
 		'value' => 2,
 		'options' => array(
 			'None' => 0,
@@ -33,9 +33,9 @@ return array(
 		'peruser' => true,
 	),
 	array(
-		'name' => 'ac_article_other',
-		'cname' => 'Article Other Access',
-		'description' => 'The level of access other users have to articles. This will be applied when saving articles.',
+		'name' => 'ac_page_other',
+		'cname' => 'Page Other Access',
+		'description' => 'The level of access other users have to pages. This will be applied when saving pages.',
 		'value' => 0,
 		'options' => array(
 			'None' => 0,

@@ -15,12 +15,12 @@ $this->title = "Login to {$pines->config->system_name}";
 <form class="pf-form" name="login" id="p_muid_form" method="post" action="<?php echo htmlentities(pines_url()); ?>">
 	<div class="pf-element">
 		<label><span class="pf-label">Username</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="username" size="24" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="username" size="<?php echo ($this->position == 'content') ? '24' : '10'; ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Password</span>
 			<?php echo ($pines->config->com_user->empty_pw ? '<span class="pf-note">May be blank.</span>' : ''); ?>
-			<input class="pf-field ui-widget-content ui-corner-all" type="password" name="password" size="24" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="password" name="password" size="<?php echo ($this->position == 'content') ? '24' : '10'; ?>" /></label>
 	</div>
 	<?php if ($pines->config->com_user->allow_registration) { ?>
 	<div class="pf-element">
@@ -60,17 +60,16 @@ $this->title = "Login to {$pines->config->system_name}";
 			// ]]>
 		</script>
 		<span class="pf-label">Register</span>
-		<div class="pf-group">
-			<label><input class="pf-field ui-widget-content ui-corner-all" type="radio" name="login_register" value="login" checked="checked" /> I have an account.</label>
-			<label><input class="pf-field ui-widget-content ui-corner-all" type="radio" name="login_register" value="register" /> I'm new.</label>
-		</div>
+		<label><input class="pf-field ui-widget-content ui-corner-all" type="radio" name="login_register" value="login" checked="checked" /> I have an account.</label>
+		<?php echo ($this->position == 'content') ? '' : '<br />'; ?>
+		<label><input class="pf-field ui-widget-content ui-corner-all" type="radio" name="login_register" value="register" /> I'm new.</label>
 	</div>
 	<div class="pf-element" id="p_muid_pass_reenter" style="display: none;">
 		<label><span class="pf-label">Re-enter Password</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="password" name="password2" size="24" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="password" name="password2" size="<?php echo ($this->position == 'content') ? '24' : '10'; ?>" /></label>
 	</div>
 	<?php } ?>
-	<div class="pf-element pf-buttons">
+	<div class="pf-element<?php echo ($this->position == 'content') ? ' pf-buttons' : ''; ?>">
 		<input type="hidden" name="option" value="com_user" />
 		<input type="hidden" name="action" value="login" />
 		<?php if ( isset($this->url) ) { ?>

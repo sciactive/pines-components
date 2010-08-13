@@ -17,6 +17,8 @@ $pines->icons->load();
 	pines.loadcss("<?php echo htmlentities($pines->config->rela_location); ?>components/com_pnotify/includes/jquery.pnotify.default.css");
 	pines.loadcss("<?php echo htmlentities($pines->config->rela_location); ?>components/com_pnotify/includes/jquery.pnotify.default.icons.css");
 	pines.loadjs("<?php echo htmlentities($pines->config->rela_location); ?>components/com_pnotify/includes/<?php echo $pines->config->debug_mode ? 'jquery.pnotify.js' : 'jquery.pnotify.min.js'; ?>");
+	pines.pnotify_notice_defaults = {pnotify_nonblock: true};
+	pines.pnotify_error_defaults = {pnotify_type: "error", pnotify_hide: false};
 	pines.load(function(){
 		if (!window._alert) {
 			window._alert = window.alert;
@@ -24,20 +26,11 @@ $pines->icons->load();
 				$.pnotify({pnotify_title: "Alert", pnotify_text: String(message), pnotify_nonblock: true});
 			};
 			pines.notice = function(message, title){
-				var options = {
-					pnotify_title: title ? title : "Notice",
-					pnotify_text: String(message),
-					pnotify_nonblock: true
-				};
+				var options = $.extend({pnotify_title: title ? title : "Notice", pnotify_text: String(message)}, pines.pnotify_notice_defaults);
 				return $.pnotify(options);
 			};
 			pines.error = function(message, title){
-				var options = {
-					pnotify_type: "error",
-					pnotify_title: title ? title : "Error",
-					pnotify_text: String(message),
-					pnotify_hide: false
-				};
+				var options = $.extend({pnotify_title: title ? title : "Error", pnotify_text: String(message)}, pines.pnotify_notice_defaults);
 				return $.pnotify(options);
 			};
 		}

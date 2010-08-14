@@ -107,7 +107,7 @@ $this->title = 'Configure Components';
 			<select class="ui-widget-content ui-corner-all" id="p_muid_user_select" name="user_select">
 				<option value="null">-- Pick a Condition --</option>
 				<?php foreach ($this->conditions as $cur_condition) { ?>
-				<option value="<?php echo $cur_condition->guid; ?>"<?php echo $cur_condition->is($this->user) ? ' selected="selected"' : ''; ?>><?php echo htmlentities("$cur_condition->name"); ?></option>
+				<option value="<?php echo $cur_condition->guid; ?>"<?php echo $cur_condition->is($this->user) ? ' selected="selected"' : ''; ?>><?php echo htmlentities($cur_condition->name); ?></option>
 				<?php } ?>
 			</select>
 			<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_configure_go('<?php echo htmlentities(pines_url('com_configure', 'list')); ?>')">Refresh</button>

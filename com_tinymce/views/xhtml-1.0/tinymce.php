@@ -47,6 +47,7 @@ if (isset($pines->com_elfinder))
 					}
 				});
 			},
+			relative_urls: false,
 			<?php } ?>
 			// Template's editor CSS
 			content_css : "<?php echo htmlentities($pines->config->rela_location . $pines->template->editor_css); ?>"

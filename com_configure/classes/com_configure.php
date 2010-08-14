@@ -118,26 +118,32 @@ class com_configure extends component implements configurator_interface {
 
 	/**
 	 * Creates and attaches a module which lists per user config components.
-	 * @param user|group &$usergroup The user or group which is being configured.
+	 * @param user|group|com_configure_condition &$condition_obj The user, group, or conditional object which is being configured.
 	 * @return module The module.
 	 */
-	public function list_components_peruser(&$usergroup = null) {
+	public function list_components_peruser(&$condition_obj = null) {
 		global $pines;
 		$module = new module('com_configure', 'list', 'content');
 
 		$module->components = array();
 		$module->components[] = configurator_component::factory('system');
-		$module->per_user = true;
-		$module->user = $usergroup;
-		$module->groups = $pines->user_manager->get_groups();
-		usort($module->groups, array($this, 'sort_groups'));
-		$module->users = $pines->user_manager->get_users();
-		usort($module->users, array($this, 'sort_users'));
+		$module->user = $condition_obj;
+		if ($condition_obj->is_com_configure_condition) {
+			$module->per_condition = true;
+			$module->conditions = $pines->entity_manager->get_entities(array('class' => com_configure_condition), array('&', 'tag' => array('com_configure', 'condition')));
+			$pines->entity_manager->sort($module->conditions, 'name');
+		} else {
+			$module->per_user = true;
+			$module->groups = $pines->user_manager->get_groups();
+			usort($module->groups, array($this, 'sort_groups'));
+			$module->users = $pines->user_manager->get_users();
+			usort($module->users, array($this, 'sort_users'));
+		}
 		foreach ($pines->all_components as $cur_component) {
 			$module->components[] = configurator_component::factory($cur_component);
 		}
 		foreach ($module->components as &$cur_component) {
-			$cur_component->set_per_user($usergroup);
+			$cur_component->set_per_user($condition_obj);
 		}
 
 		return $module;

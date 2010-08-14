@@ -50,13 +50,13 @@ $this->title = 'Configure Components';
 	// <![CDATA[
 	pines(function(){
 		pines.com_configure_go = function(url){
-			var peruser = <?php echo $this->per_user ? 'true' : 'false'; ?>;
+			var peruser = <?php echo $this->per_user || $this->per_condition ? 'true' : 'false'; ?>;
 			if (peruser) {
 				var params = {};
-				params["peruser"] = 1;
+				params["<?php echo $this->per_user ? 'peruser' : 'percondition'; ?>"] = 1;
 				var user = $("#p_muid_user_select").val();
 				if (user == "null") {
-					alert("Please pick a user first.");
+					alert("Please pick a <?php echo $this->per_user ? 'user' : 'condition'; ?> first.");
 					return;
 				}
 				params["type"] = user.replace(/\d/g, '');
@@ -100,10 +100,34 @@ $this->title = 'Configure Components';
 		</p>
 		<?php } ?>
 	</div>
+	<?php } elseif ($this->per_condition) { ?>
+	<div class="user_picker">
+		<h3>Per Condition Configuration</h3>
+		<div>
+			<select class="ui-widget-content ui-corner-all" id="p_muid_user_select" name="user_select">
+				<option value="null">-- Pick a Condition --</option>
+				<?php foreach ($this->conditions as $cur_condition) { ?>
+				<option value="<?php echo $cur_condition->guid; ?>"<?php echo $cur_condition->is($this->user) ? ' selected="selected"' : ''; ?>><?php echo htmlentities("$cur_condition->name"); ?></option>
+				<?php } ?>
+			</select>
+			<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_configure_go('<?php echo htmlentities(pines_url('com_configure', 'list')); ?>')">Refresh</button>
+			&nbsp;&nbsp;&nbsp;
+			<button class="ui-state-default ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_configure', 'condition/edit')); ?>')">New</button>
+			<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_configure_go('<?php echo htmlentities(pines_url('com_configure', 'condition/edit')); ?>')">Edit</button>
+			<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_configure_go('<?php echo htmlentities(pines_url('com_configure', 'condition/delete')); ?>')">Delete</button>
+		</div>
+		<?php if (!$pines->config->com_configure->percondition) { ?>
+		<p>
+			Per condition configuration is not enabled, so these settings will have
+			no effect. You can enable per condition configuration
+			<a href="<?php echo htmlentities(pines_url('com_configure', 'edit', array('component' => 'com_configure'))); ?>">here</a>.
+		</p>
+		<?php } ?>
+	</div>
 	<?php } ?>
 	<div class="component_list">
 		<?php foreach($this->components as $cur_component) {
-			if ($this->per_user && !$cur_component->is_configurable()) continue; ?>
+			if (($this->per_user || $this->per_condition) && !$cur_component->is_configurable()) continue; ?>
 		<h3 class="ui-helper-clearfix<?php echo $cur_component->is_disabled() ? ' ui-priority-secondary' : ''; ?>">
 			<a href="#">
 				<span class="title"><?php echo htmlentities($cur_component->info->name); ?></span>
@@ -118,7 +142,7 @@ $this->title = 'Configure Components';
 				<input type="button" onclick="pines.com_configure_go('<?php echo htmlentities(pines_url('com_configure', 'edit', array('component' => urlencode($cur_component->name)))); ?>');" value="Configure" />
 				<input type="button" onclick="pines.com_configure_go('<?php echo htmlentities(pines_url('com_configure', 'view', array('component' => urlencode($cur_component->name)))); ?>');" value="View Config" />
 				<?php } ?>
-				<?php if (!$this->per_user) { ?>
+				<?php if (!$this->per_user && !$this->per_condition) { ?>
 					<?php if ($cur_component->name != 'system') { if ($cur_component->is_disabled()) { ?>
 					<input type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_configure', 'enable', array('component' => urlencode($cur_component->name)))); ?>');" value="Enable" />
 					<?php } else { ?>

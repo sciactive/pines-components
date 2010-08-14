@@ -36,6 +36,13 @@ if ($_REQUEST['peruser']) {
 		return;
 	}
 	$component->set_per_user($user);
+} elseif ($_REQUEST['percondition']) {
+	$user = com_configure_condition::factory((int) $_REQUEST['id']);
+	if (!isset($user->guid)) {
+		pines_error('Requested condition id is not accessible.');
+		return;
+	}
+	$component->set_per_user($user);
 }
 $component->print_view();
 

@@ -13,6 +13,12 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
+		'name' => 'percondition',
+		'cname' => 'Per Condition Settings',
+		'description' => 'Allow per condition configuration.',
+		'value' => true,
+	),
+	array(
 		'name' => 'peruser',
 		'cname' => 'Per User/Group Settings',
 		'description' => 'Allow per user and per group configuration.',

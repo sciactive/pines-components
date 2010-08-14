@@ -48,6 +48,7 @@ $group->address_international = $_REQUEST['address_international'];
 // Conditions
 if ( gatekeeper('com_user/conditions') ) {
 	$conditions = (array) json_decode($_REQUEST['conditions']);
+	$group->conditions = array();
 	foreach ($conditions as $cur_condition) {
 		if (!isset($cur_condition->values[0], $cur_condition->values[1]))
 			continue;

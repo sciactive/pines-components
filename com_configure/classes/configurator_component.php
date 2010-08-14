@@ -64,7 +64,7 @@ class configurator_component extends p_base implements configurator_component_in
 	 */
 	protected $info_file;
 	/**
-	 * Whether the component is using per user/group config.
+	 * Whether the component is using per user/group/condition config.
 	 * @var bool
 	 */
 	public $per_user;
@@ -168,12 +168,12 @@ class configurator_component extends p_base implements configurator_component_in
 	}
 
 	/**
-	 * Write the configuration to the config file or user/group.
+	 * Write the configuration to the config file or user/group/condition.
 	 * @return bool True on success, false on failure.
 	 */
 	public function save_config() {
 		if ($this->per_user) {
-			// Save the config to the user/group in two variables.
+			// Save the config to the user/group/condition in two variables.
 			$this->config_keys = array();
 			foreach ($this->config as $cur_val) {
 				$this->config_keys[$cur_val['name']] = $cur_val['value'];
@@ -213,11 +213,11 @@ class configurator_component extends p_base implements configurator_component_in
 	 * Load only user configurable settings.
 	 *
 	 * The current settings will be updated to reflect the settings of
-	 * $usergroup.
+	 * $condition_obj.
 	 *
-	 * @param user|group &$usergroup The user or group which is being configured.
+	 * @param user|group|com_configure_condition &$condition_obj The user, group, or conditional object which is being configured.
 	 */
-	public function set_per_user(&$usergroup = null) {
+	public function set_per_user(&$condition_obj = null) {
 		$this->per_user = true;
 		// Unset config that are not per user.
 		foreach ($this->defaults as $key => &$cur_entry) {
@@ -229,7 +229,7 @@ class configurator_component extends p_base implements configurator_component_in
 		}
 		unset($cur_entry);
 
-		if (!isset($usergroup)) {
+		if (!isset($condition_obj)) {
 			$this->config = array();
 			$this->config_keys = array();
 			return;
@@ -237,9 +237,9 @@ class configurator_component extends p_base implements configurator_component_in
 
 		// Load the config for the user/group.
 		if ($this->component == 'system') {
-			$this->config_keys = (array) $usergroup->sys_config;
+			$this->config_keys = (array) $condition_obj->sys_config;
 		} else {
-			$this->config_keys = (array) $usergroup->com_config[$this->component];
+			$this->config_keys = (array) $condition_obj->com_config[$this->component];
 		}
 		$this->config = $this->defaults;
 		/* This causes PHP (5.3.2) to segfault... ??
@@ -259,12 +259,14 @@ class configurator_component extends p_base implements configurator_component_in
 		}
 
 		// Store the type and object of the user/group.
-		if (is_a($usergroup, 'user') || is_a($usergroup, 'hook_override_user')) {
+		if (is_a($condition_obj, 'user') || is_a($condition_obj, 'hook_override_user')) {
 			$this->type = 'user';
-		} elseif (is_a($usergroup, 'group') || is_a($usergroup, 'hook_override_group')) {
+		} elseif (is_a($condition_obj, 'group') || is_a($condition_obj, 'hook_override_group')) {
 			$this->type = 'group';
+		} elseif ($condition_obj->is_com_configure_condition) {
+			$this->type = 'condition';
 		}
-		$this->user = $usergroup;
+		$this->user = $condition_obj;
 	}
 }
 

@@ -11,8 +11,13 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = "Viewing Configuration for {$this->entity->info->name} {$this->entity->info->version} ({$this->entity->name})";
-if ($this->entity->per_user)
-	$this->note = "For {$this->entity->type} {$this->entity->user->name} [{$this->entity->user->username}{$this->entity->user->groupname}].";
+if ($this->entity->per_user) {
+	if ($this->entity->user->is_com_configure_condition) {
+		$this->note = "For conditional configuration {$this->entity->user->name}.";
+	} else {
+		$this->note = "For {$this->entity->type} {$this->entity->user->name} [{$this->entity->user->username}{$this->entity->user->groupname}].";
+	}
+}
 ?>
 <form class="pf-form" action="" method="post">
 	<?php foreach ($this->entity->get_full_config_array() as $cur_var) { ?>

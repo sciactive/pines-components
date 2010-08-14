@@ -31,6 +31,9 @@ if ($_REQUEST['peruser']) {
 			$user = null;
 	}
 	$pines->configurator->list_components_peruser($user);
+} elseif ($_REQUEST['percondition']) {
+	$condition = com_configure_condition::factory((int) $_REQUEST['id']);
+	$pines->configurator->list_components_peruser($condition);
 } else {
 	$pines->configurator->list_components();
 }

@@ -11,8 +11,13 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = "Editing Configuration for {$this->entity->info->name} {$this->entity->info->version} ({$this->entity->name})";
-if ($this->entity->per_user)
-	$this->note = "For {$this->entity->type} {$this->entity->user->name} [{$this->entity->user->username}{$this->entity->user->groupname}].";
+if ($this->entity->per_user) {
+	if ($this->entity->user->is_com_configure_condition) {
+		$this->note = "For conditional configuration {$this->entity->user->name}.";
+	} else {
+		$this->note = "For {$this->entity->type} {$this->entity->user->name} [{$this->entity->user->username}{$this->entity->user->groupname}].";
+	}
+}
 $pines->com_ptags->load();
 ?>
 <style type="text/css">
@@ -106,7 +111,7 @@ $pines->com_ptags->load();
 	<?php } ?>
 	<div class="pf-element pf-buttons">
 		<?php if ($this->entity->per_user) { ?>
-		<input type="hidden" name="peruser" value="1" />
+		<input type="hidden" name="<?php echo $this->entity->user->is_com_configure_condition ? 'percondition' : 'peruser'; ?>" value="1" />
 		<input type="hidden" name="type" value="<?php echo htmlentities($this->entity->type); ?>" />
 		<input type="hidden" name="id" value="<?php echo $this->entity->user->guid; ?>" />
 		<?php } ?>

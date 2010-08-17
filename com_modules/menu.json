@@ -1,0 +1,25 @@
+[
+	{
+		"path": "main_menu/website/modules",
+		"text": "Modules",
+		"depend": {
+			"children": true
+		}
+	},
+		{
+			"path": "main_menu/website/modules/modules",
+			"text": "Modules",
+			"href": ["com_modules","module/list"],
+			"depend": {
+				"ability": "com_modules/listmodules"
+			}
+		},
+		{
+			"path": "main_menu/website/modules/newmodule",
+			"text": "New Module",
+			"href": ["com_modules","module/edit"],
+			"depend": {
+				"ability": "com_modules/newmodule"
+			}
+		}
+]

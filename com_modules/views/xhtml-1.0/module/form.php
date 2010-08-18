@@ -302,6 +302,10 @@ $pines->com_pgrid->load();
 					</select>
 				</span>
 			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Order</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="order" size="10" value="<?php echo htmlentities($this->entity->order); ?>" /></label>
+			</div>
 			<div class="pf-element pf-heading">
 				<h1>Module Type</h1>
 			</div>

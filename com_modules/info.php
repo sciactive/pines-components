@@ -1,6 +1,6 @@
 <?php
 /**
- * com_modules's information.
+ * com_modules' information.
  *
  * @package Pines
  * @subpackage com_modules

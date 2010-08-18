@@ -55,6 +55,26 @@ class com_modules_module extends entity {
 	}
 
 	/**
+	 * Check the module's conditions.
+	 *
+	 * @return bool True if conditions are met, false otherwise.
+	 */
+	public function check_conditions() {
+		global $pines;
+		if (!$this->conditions)
+			return true;
+		// Check that all conditions are met.
+		$pass = true;
+		foreach ($this->conditions as $cur_type => $cur_value) {
+			if (!$pines->depend->check($cur_type, $cur_value)) {
+				$pass = false;
+				break;
+			}
+		}
+		return $pass;
+	}
+
+	/**
 	 * Delete the module.
 	 * @return bool True on success, false on failure.
 	 */
@@ -84,6 +104,42 @@ class com_modules_module extends entity {
 		$module = new module('com_modules', 'module/form', 'content');
 		$module->entity = $this;
 		$module->modules = $pines->com_modules->module_types();
+
+		return $module;
+	}
+
+	/**
+	 * Print the module.
+	 * @return module The printed module.
+	 */
+	public function print_module() {
+		list ($component, $modname) = explode('/', $this->type, 2);
+		$view = include("components/$component/modules.php");
+		$view = $view[$modname]['view'];
+		$module = new module($component, $view, $this->position, $this->order);
+		$module->title = $this->name;
+		$module->show_title = $this->show_title;
+		foreach ($this->options as $cur_option) {
+			switch ($cur_option['name']) {
+				case 'muid':
+				case 'title':
+				case 'note':
+				case 'classes':
+				case 'content':
+				case 'component':
+				case 'view':
+				case 'position':
+				case 'order':
+				case 'show_title':
+				case 'is_rendered':
+				case 'data_container':
+					break;
+				default:
+					$name = $cur_option['name'];
+					$module->$name = $cur_option['value'];
+					break;
+			}
+		}
 
 		return $module;
 	}

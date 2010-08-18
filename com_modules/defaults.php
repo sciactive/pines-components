@@ -1,6 +1,6 @@
 <?php
 /**
- * com_modules's configuration defaults.
+ * com_modules' configuration defaults.
  *
  * @package Pines
  * @subpackage com_modules
@@ -12,6 +12,13 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 return array(
+	array(
+		'name' => 'show_modules',
+		'cname' => 'Show Modules',
+		'description' => 'Whether to show configured modules. If false, none of the modules will be shown.',
+		'value' => true,
+		'peruser' => true,
+	),
 	array(
 		'name' => 'global_modules',
 		'cname' => 'Globalize Modules',

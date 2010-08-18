@@ -28,7 +28,9 @@ if ( isset($_REQUEST['id']) ) {
 // General
 $module->name = $_REQUEST['name'];
 $module->enabled = ($_REQUEST['enabled'] == 'ON');
+$module->show_title = ($_REQUEST['show_title'] == 'ON');
 $module->position = $_REQUEST['position'];
+$module->order = (int) $_REQUEST['order'];
 $module->type = $_REQUEST['type'];
 
 // Options
@@ -54,6 +56,18 @@ foreach ($conditions as $cur_condition) {
 if (empty($module->name)) {
 	$module->print_form();
 	pines_notice('Please specify a name.');
+	return;
+}
+list ($component, $modname) = explode('/', $module->type, 2);
+if ($component != clean_filename($component)) {
+	$module->print_form();
+	pines_notice('Invalid module type.');
+	return;
+}
+$modules = include("components/$component/modules.php");
+if (empty($modules[$modname])) {
+	$module->print_form();
+	pines_notice('Module type not found.');
 	return;
 }
 

@@ -12,7 +12,8 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 $this->entity = com_example_widget::factory((int) $this->id);
+$this->title = $this->entity->name;
 ?>
 <div>
-	<?php echo htmlentities($this->entity->name); ?>
+	<?php echo $this->entity->description; ?>
 </div>

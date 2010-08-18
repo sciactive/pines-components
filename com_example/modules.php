@@ -1,6 +1,6 @@
 <?php
 /**
- * com_example modules.
+ * com_example's modules.
  *
  * @package Pines
  * @subpackage com_example

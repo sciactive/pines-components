@@ -62,6 +62,7 @@ $module_types = $pines->com_modules->module_types();
 		<tr>
 			<th>Name</th>
 			<th>Position</th>
+			<th>Order</th>
 			<th>Enabled</th>
 			<th>Module Type</th>
 		</tr>
@@ -73,6 +74,7 @@ $module_types = $pines->com_modules->module_types();
 		<tr title="<?php echo $module->guid; ?>">
 			<td><?php echo htmlentities($module->name); ?></td>
 			<td><?php echo htmlentities($module->position); ?></td>
+			<td><?php echo htmlentities($module->order); ?></td>
 			<td><?php echo ($module->enabled ? 'Yes' : 'No'); ?></td>
 			<td><?php echo htmlentities("{$pines->info->$component->name} - {$module_types[$component][$name]['cname']}"); ?></td>
 		</tr>

@@ -1,6 +1,6 @@
 [
 	{
-		"path": "main_menu/account/switch_user",
+		"path": "main_menu/~account/switch_user",
 		"text": "Switch User",
 		"href": "javascript:void(0);",
 		"onclick": "com_su_load_switcher(); return false;",

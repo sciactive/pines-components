@@ -13,10 +13,10 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
-		'name' => 'banned_tags',
-		'cname' => 'Banned Tags',
-		'description' => 'These tags will not be allowed in pages.',
-		'value' => array('script', 'style'),
+		'name' => 'show_page_menus',
+		'cname' => 'Show Page Menus',
+		'description' => 'Show pages configured in the menu.',
+		'value' => true,
 		'peruser' => true,
 	),
 	array(

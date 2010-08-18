@@ -20,6 +20,10 @@ $pines->com_ptags->load();
 	<script type="text/javascript">
 		// <![CDATA[
 		pines(function(){
+			$("#p_muid_menu_position").autocomplete({
+				source: <?php echo json_encode($pines->info->template->positions); ?>
+			});
+
 			$("#p_muid_page_tabs").tabs();
 		});
 		// ]]>
@@ -193,6 +197,14 @@ $pines->com_ptags->load();
 			<div class="pf-element">
 				<label><span class="pf-label">Show Intro on Page</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="show_intro" value="ON"<?php echo $this->entity->show_intro ? ' checked="checked"' : ''; ?> /></label>
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Show Menu</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="show_menu" value="ON"<?php echo $this->entity->show_menu ? ' checked="checked"' : ''; ?> /></label>
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Menu Position</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_menu_position" name="menu_position" size="24" value="<?php echo htmlentities($this->entity->menu_position); ?>" /></label>
 			</div>
 			<br class="pf-clearing" />
 		</div>

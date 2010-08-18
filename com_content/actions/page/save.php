@@ -31,14 +31,9 @@ $page->alias = preg_replace('/[^\w\d-.]/', '', $_REQUEST['alias']);
 $page->enabled = ($_REQUEST['enabled'] == 'ON');
 $page->show_front_page = ($_REQUEST['show_front_page'] == 'ON');
 $page->content_tags = explode(',', $_REQUEST['content_tags']);
+// TODO: Use an HTML filter here.
 $page->intro = $_REQUEST['intro'];
 $page->content = $_REQUEST['content'];
-// TODO: Use an HTML filter here.
-foreach ($pines->config->com_content->banned_tags as $cur_tag) {
-	$page->name = str_replace("<{$cur_tag}", '', $page->name);
-	$page->intro = str_replace("<{$cur_tag}", '', $page->intro);
-	$page->content = str_replace("<{$cur_tag}", '', $page->content);
-}
 
 // Advanced
 if (!empty($_REQUEST['p_cdate']))
@@ -52,6 +47,8 @@ else
 	$page->publish_end = null;
 $page->show_intro = ($_REQUEST['show_intro'] == 'ON');
 $page->show_title = ($_REQUEST['show_title'] == 'ON');
+$page->show_menu = ($_REQUEST['show_menu'] == 'ON');
+$page->menu_position = $_REQUEST['menu_position'];
 
 if (empty($page->name)) {
 	$page->print_form();

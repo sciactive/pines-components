@@ -64,6 +64,9 @@ if ($component != clean_filename($component)) {
 	pines_notice('Invalid module type.');
 	return;
 }
+/**
+ * Retreive module list.
+ */
 $modules = include("components/$component/modules.php");
 if (empty($modules[$modname])) {
 	$module->print_form();

@@ -1,6 +1,6 @@
 <?php
 /**
- * Provides a form for the user to edit an page.
+ * Displays page content.
  *
  * @package Pines
  * @subpackage com_content
@@ -10,6 +10,10 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
+
+if (!isset($this->entity))
+	$this->entity = com_content_page::factory((int) $this->id);
+
 if ($this->entity->show_title)
 	$this->title = htmlentities($this->entity->name);
 ?>

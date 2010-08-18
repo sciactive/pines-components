@@ -16,7 +16,7 @@ $pines->entity_manager->sort($widgets, 'name');
 <div class="pf-form">
 	<div class="pf-element">
 		<label><span class="pf-label">Widget</span>
-			<select class="pf-field" name="id">
+			<select class="pf-field ui-widget-content ui-corner-all" name="id">
 				<?php foreach ($widgets as $cur_widget) { ?>
 				<option value="<?php echo $cur_widget->guid; ?>"><?php echo htmlentities($cur_widget->name); ?></option>
 				<?php } ?>

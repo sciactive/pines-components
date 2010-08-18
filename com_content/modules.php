@@ -1,9 +1,9 @@
 <?php
 /**
- * com_example's modules.
+ * com_content's modules.
  *
  * @package Pines
- * @subpackage com_example
+ * @subpackage com_content
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -12,14 +12,10 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 return array(
-	'example' => array(
-		'cname' => 'Example Module',
-		'view' => 'modules/example',
-	),
-	'example2' => array(
-		'cname' => 'Widget Module',
-		'view' => 'modules/widget',
-		'form' => 'modules/widget_form',
+	'page' => array(
+		'cname' => 'Page Content',
+		'view' => 'page/page',
+		'form' => 'modules/page_form',
 	),
 );
 

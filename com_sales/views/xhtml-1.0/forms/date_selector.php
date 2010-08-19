@@ -59,8 +59,8 @@ defined('P_RUN') or die('Direct access prohibited');
 </script>
 <form class="pf-form" id="p_muid_form" action="">
 	<div class="pf-element">
-		<label><input class="pf-field ui-widget-content ui-corner-all" type="radio" name="all_time" value="alltime" <?php echo $this->all_time ? 'checked="checked"' : ''; ?>/>Entire History</label>
-		<label><input class="pf-field ui-widget-content ui-corner-all" type="radio" name="all_time" value="timespan" <?php echo !$this->all_time ? 'checked="checked"' : ''; ?>/>Timespan</label>
+		<label><input class="pf-field" type="radio" name="all_time" value="alltime" <?php echo $this->all_time ? 'checked="checked"' : ''; ?>/>Entire History</label>
+		<label><input class="pf-field" type="radio" name="all_time" value="timespan" <?php echo !$this->all_time ? 'checked="checked"' : ''; ?>/>Timespan</label>
 	</div>
 	<div class="timespan">
 		<div class="pf-element">

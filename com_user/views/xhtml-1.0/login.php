@@ -28,8 +28,8 @@ $this->title = "Login to {$pines->config->system_name}";
 			// <![CDATA[
 			pines(function(){
 				var new_account = false;
-				var password = $("#p_muid_form [name=password]");
-				var password2 = $("#p_muid_form [name=password2]");
+				var password = $("[name=password]", "#p_muid_form");
+				var password2 = $("[name=password2]", "#p_muid_form");
 				$("#p_muid_form").submit(function(){
 					if (new_account && password.val() != password2.val()) {
 						alert("Your passwords do not match.");
@@ -39,19 +39,23 @@ $this->title = "Login to {$pines->config->system_name}";
 				});
 				
 				var pass_reenter = $("#p_muid_pass_reenter");
-				var submit_btn = $("#p_muid_form [name=submit]");
-				$("#p_muid_form [name=login_register]").change(function(){
-					if ($(this).is(":checked") && $(this).val() == "register") {
-						new_account = true;
-						pass_reenter.slideDown();
-						submit_btn.val("Sign Up");
+				var submit_btn = $("[name=submit]", "#p_muid_form");
+				$("[name=login_register]", "#p_muid_form").change(function(){
+					if ($(this).val() == "register") {
+						if ($(this).is(":checked")) {
+							new_account = true;
+							pass_reenter.slideDown();
+							submit_btn.val("Sign Up");
+						}
 					} else {
-						new_account = false;
-						pass_reenter.slideUp();
-						submit_btn.val("Login");
+						if ($(this).is(":checked")) {
+							new_account = false;
+							pass_reenter.slideUp();
+							submit_btn.val("Login");
+						}
 					}
 				}).change();
-				$("#p_muid_form :reset").click(function(){
+				$(":reset", "#p_muid_form").click(function(){
 					new_account = false;
 					pass_reenter.slideUp();
 					submit_btn.val("Login");
@@ -60,9 +64,9 @@ $this->title = "Login to {$pines->config->system_name}";
 			// ]]>
 		</script>
 		<span class="pf-label">Register</span>
-		<label><input class="pf-field ui-widget-content ui-corner-all" type="radio" name="login_register" value="login" checked="checked" /> I have an account.</label>
+		<label><input class="pf-field" type="radio" name="login_register" value="login" checked="checked" /> I have an account.</label>
 		<?php echo ($this->position == 'content') ? '' : '<br />'; ?>
-		<label><input class="pf-field ui-widget-content ui-corner-all" type="radio" name="login_register" value="register" /> I'm new.</label>
+		<label><input class="pf-field" type="radio" name="login_register" value="register" /> I'm new.</label>
 	</div>
 	<div class="pf-element" id="p_muid_pass_reenter" style="display: none;">
 		<label><span class="pf-label">Re-enter Password</span>

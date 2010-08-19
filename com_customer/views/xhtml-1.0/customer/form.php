@@ -285,7 +285,7 @@ $pines->com_customer->load_company_select();
 		<div id="p_muid_tab_account">
 			<div class="pf-element">
 				<label><span class="pf-label">Login Disabled</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="login_disabled" value="ON"<?php echo $this->entity->login_disabled ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field" type="checkbox" name="login_disabled" value="ON"<?php echo $this->entity->login_disabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<?php if (in_array('password', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="pf-element">
@@ -327,7 +327,7 @@ $pines->com_customer->load_company_select();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Member</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="member" value="ON"<?php echo $this->entity->member ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field" type="checkbox" name="member" value="ON"<?php echo $this->entity->member ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<?php if ($this->entity->member) { ?>
 			<div class="pf-element">
@@ -380,8 +380,8 @@ $pines->com_customer->load_company_select();
 					// ]]>
 				</script>
 				<span class="pf-label">Address Type</span>
-				<label><input class="pf-field ui-widget-content ui-corner-all" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
-				<label><input class="pf-field ui-widget-content ui-corner-all" type="radio" name="address_type" value="international"<?php echo $this->entity->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
+				<label><input class="pf-field" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
+				<label><input class="pf-field" type="radio" name="address_type" value="international"<?php echo $this->entity->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
 			</div>
 			<div id="p_muid_address_us" style="display: none;">
 				<div class="pf-element">

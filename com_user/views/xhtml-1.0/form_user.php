@@ -242,7 +242,7 @@ $pines->com_pgrid->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Email</span>
@@ -316,7 +316,7 @@ $pines->com_pgrid->load();
 				<div class="pf-element">
 					<span class="pf-label">Primary Group</span>
 					<div class="pf-group">
-						<span class="pf-field"><input class="ui-widget-content ui-corner-all" type="checkbox" name="no_primary_group" value="ON"<?php echo !isset($this->entity->group) ? ' checked="checked"' : ''; ?> /> No Primary Group</span>
+						<span class="pf-field"><input type="checkbox" name="no_primary_group" value="ON"<?php echo !isset($this->entity->group) ? ' checked="checked"' : ''; ?> /> No Primary Group</span>
 						<div class="pf-field location_tree ui-widget-content ui-corner-all" style="height: 180px; width: 200px; overflow: auto;"></div>
 					</div>
 					<input type="hidden" name="group" />
@@ -410,8 +410,8 @@ $pines->com_pgrid->load();
 					// ]]>
 				</script>
 				<span class="pf-label">Address Type</span>
-				<label><input class="pf-field ui-widget-content ui-corner-all" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
-				<label><input class="pf-field ui-widget-content ui-corner-all" type="radio" name="address_type" value="international"<?php echo $this->entity->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
+				<label><input class="pf-field" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
+				<label><input class="pf-field" type="radio" name="address_type" value="international"<?php echo $this->entity->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
 			</div>
 			<div id="p_muid_address_us" style="display: none;">
 				<div class="pf-element">
@@ -579,7 +579,7 @@ $pines->com_pgrid->load();
 			<div class="pf-element">
 				<span class="pf-label">Inherit</span>
 				<label>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="inherit_abilities" value="ON" <?php echo ($this->entity->inherit_abilities ? 'checked="checked" ' : ''); ?>/>
+					<input class="pf-field" type="checkbox" name="inherit_abilities" value="ON" <?php echo ($this->entity->inherit_abilities ? 'checked="checked" ' : ''); ?>/>
 					&nbsp;Inherit additional abilities from groups.
 				</label>
 			</div>
@@ -603,7 +603,7 @@ $pines->com_pgrid->load();
 					<div class="pf-element">
 						<?php foreach ($section_abilities as $cur_ability) { ?>
 						<label>
-							<input class="ui-widget-content ui-corner-all" type="checkbox" name="<?php echo htmlentities($cur_section); ?>[]" value="<?php echo htmlentities($cur_ability[0]); ?>" <?php echo (array_search("{$cur_section}/{$cur_ability[0]}", $this->entity->abilities) !== false) ? 'checked="checked" ' : ''; ?>/>
+							<input type="checkbox" name="<?php echo htmlentities($cur_section); ?>[]" value="<?php echo htmlentities($cur_ability[0]); ?>" <?php echo (array_search("{$cur_section}/{$cur_ability[0]}", $this->entity->abilities) !== false) ? 'checked="checked" ' : ''; ?>/>
 							<?php echo htmlentities($cur_ability[1]); ?>&nbsp;<small><?php echo htmlentities($cur_ability[2]); ?></small>
 						</label>
 						<br class="pf-clearing" />

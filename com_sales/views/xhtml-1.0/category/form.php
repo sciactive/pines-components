@@ -196,12 +196,12 @@ if ($pines->config->com_sales->com_storefront) {
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Enabled</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
+			<input class="pf-field" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 	</div>
 	<?php if ($pines->config->com_sales->com_storefront) { ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Show Menu</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="show_menu" value="ON"<?php echo $this->entity->show_menu ? ' checked="checked"' : ''; ?> /></label>
+			<input class="pf-field" type="checkbox" name="show_menu" value="ON"<?php echo $this->entity->show_menu ? ' checked="checked"' : ''; ?> /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Menu Position</span>
@@ -329,13 +329,13 @@ if ($pines->config->com_sales->com_storefront) {
 				<div class="string float bool">
 					<div class="pf-element">
 						<span class="pf-label">Show Filter</span>
-						<label><input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="cur_spec_show_filter" /> Show filtering options in the category browser in storefront.</label>
+						<label><input class="pf-field" type="checkbox" name="cur_spec_show_filter" /> Show filtering options in the category browser in storefront.</label>
 					</div>
 				</div>
 				<div class="string float">
 					<div class="pf-element">
 						<span class="pf-label">Restricted</span>
-						<label><input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="cur_spec_restricted" /> Only allow these options.</label>
+						<label><input class="pf-field" type="checkbox" name="cur_spec_restricted" /> Only allow these options.</label>
 					</div>
 					<div class="pf-element">
 						<span class="pf-label">Options</span>

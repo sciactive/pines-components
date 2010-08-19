@@ -92,8 +92,8 @@ $this->note = 'Please fill in your account details.';
 					// ]]>
 				</script>
 				<span class="pf-label">Address Type</span>
-				<label><input class="pf-field ui-widget-content ui-corner-all" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
-				<label><input class="pf-field ui-widget-content ui-corner-all" type="radio" name="address_type" value="international"<?php echo $this->entity->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
+				<label><input class="pf-field" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
+				<label><input class="pf-field" type="radio" name="address_type" value="international"<?php echo $this->entity->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
 			</div>
 			<div id="p_muid_address_us" style="display: none;">
 				<div class="pf-element">

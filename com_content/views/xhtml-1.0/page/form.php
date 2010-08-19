@@ -75,12 +75,12 @@ $pines->com_ptags->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Show on Front Page</span>
 					<span class="pf-note">Use this to show the full content.</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="show_front_page" value="ON"<?php echo $this->entity->show_front_page ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field" type="checkbox" name="show_front_page" value="ON"<?php echo $this->entity->show_front_page ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Tags</span>
@@ -192,15 +192,15 @@ $pines->com_ptags->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Show Title</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="show_title" value="ON"<?php echo $this->entity->show_title ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field" type="checkbox" name="show_title" value="ON"<?php echo $this->entity->show_title ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Show Intro on Page</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="show_intro" value="ON"<?php echo $this->entity->show_intro ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field" type="checkbox" name="show_intro" value="ON"<?php echo $this->entity->show_intro ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Show Menu</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="show_menu" value="ON"<?php echo $this->entity->show_menu ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field" type="checkbox" name="show_menu" value="ON"<?php echo $this->entity->show_menu ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Menu Position</span>

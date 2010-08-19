@@ -264,7 +264,7 @@ $pines->uploader->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Email</span>
@@ -310,7 +310,7 @@ $pines->uploader->load();
 			<div class="pf-element">
 				<span class="pf-label">Parent</span>
 				<div class="pf-group">
-					<span class="pf-field"><input class="ui-widget-content ui-corner-all" type="checkbox" name="no_parent" value="ON"<?php echo !isset($this->entity->parent) ? ' checked="checked"' : ''; ?> /> No Parent</span>
+					<span class="pf-field"><input type="checkbox" name="no_parent" value="ON"<?php echo !isset($this->entity->parent) ? ' checked="checked"' : ''; ?> /> No Parent</span>
 					<div class="pf-field location_tree ui-widget-content ui-corner-all" style="height: 180px; width: 200px; overflow: auto;"></div>
 				</div>
 				<input type="hidden" name="parent" />
@@ -320,12 +320,12 @@ $pines->uploader->load();
 			<div class="pf-element">
 				<label><span class="pf-label">New User Primary Group</span>
 					<span class="pf-note">Default primary group for newly registered users.</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="default_primary" value="ON"<?php echo $this->entity->default_primary ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field" type="checkbox" name="default_primary" value="ON"<?php echo $this->entity->default_primary ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">New User Secondary Group</span>
 					<span class="pf-note">Default secondary group for newly registered users.</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="default_secondary" value="ON"<?php echo $this->entity->default_secondary ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field" type="checkbox" name="default_secondary" value="ON"<?php echo $this->entity->default_secondary ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<?php } ?>
 			<br class="pf-clearing" />
@@ -337,7 +337,7 @@ $pines->uploader->load();
 					<span class="pf-field"><img src="<?php echo htmlentities($this->entity->get_logo()); ?>" alt="Group Logo" /></span>
 					<?php if (isset($this->entity->logo)) { ?>
 					<br />
-					<label><span class="pf-field"><input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="remove_logo" value="ON" />Remove this logo.</span></label>
+					<label><span class="pf-field"><input class="pf-field" type="checkbox" name="remove_logo" value="ON" />Remove this logo.</span></label>
 					<?php } ?>
 				</div>
 			</div>
@@ -368,8 +368,8 @@ $pines->uploader->load();
 					// ]]>
 				</script>
 				<span class="pf-label">Address Type</span>
-				<label><input class="pf-field ui-widget-content ui-corner-all" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
-				<label><input class="pf-field ui-widget-content ui-corner-all" type="radio" name="address_type" value="international"<?php echo $this->entity->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
+				<label><input class="pf-field" type="radio" name="address_type" value="us"<?php echo ($this->entity->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
+				<label><input class="pf-field" type="radio" name="address_type" value="international"<?php echo $this->entity->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
 			</div>
 			<div id="p_muid_address_us" style="display: none;">
 				<div class="pf-element">
@@ -499,7 +499,7 @@ $pines->uploader->load();
 					<div class="pf-element">
 						<?php foreach ($section_abilities as $cur_ability) { ?>
 						<label>
-							<input class="ui-widget-content ui-corner-all" type="checkbox" name="<?php echo htmlentities($cur_section); ?>[]" value="<?php echo htmlentities($cur_ability[0]); ?>" <?php echo (array_search("{$cur_section}/{$cur_ability[0]}", $this->entity->abilities) !== false) ? 'checked="checked" ' : ''; ?>/>
+							<input type="checkbox" name="<?php echo htmlentities($cur_section); ?>[]" value="<?php echo htmlentities($cur_ability[0]); ?>" <?php echo (array_search("{$cur_section}/{$cur_ability[0]}", $this->entity->abilities) !== false) ? 'checked="checked" ' : ''; ?>/>
 							<?php echo htmlentities($cur_ability[1]); ?>&nbsp;<small><?php echo htmlentities($cur_ability[2]); ?></small>
 						</label>
 						<br class="pf-clearing" />

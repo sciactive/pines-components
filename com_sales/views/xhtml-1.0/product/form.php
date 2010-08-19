@@ -165,7 +165,7 @@ $pines->com_ptags->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Product SKU</span>
@@ -478,7 +478,7 @@ $pines->com_ptags->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Tax Exempt</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="tax_exempt" value="ON"<?php echo $this->entity->tax_exempt ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field" type="checkbox" name="tax_exempt" value="ON"<?php echo $this->entity->tax_exempt ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Additional Fees</span>
@@ -503,36 +503,36 @@ $pines->com_ptags->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Serialized</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="serialized" value="ON"<?php echo $this->entity->serialized ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field" type="checkbox" name="serialized" value="ON"<?php echo $this->entity->serialized ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Discountable</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="discountable" value="ON"<?php echo $this->entity->discountable ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field" type="checkbox" name="discountable" value="ON"<?php echo $this->entity->discountable ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<?php if ($pines->config->com_sales->com_customer) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Require Customer</span>
 					<span class="pf-note">This means a customer must be selected when selling this item.</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="require_customer" value="ON"<?php echo $this->entity->require_customer ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field" type="checkbox" name="require_customer" value="ON"<?php echo $this->entity->require_customer ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">One Per Ticket</span>
 					<span class="pf-note">Only allow one of this item on a sales ticket.</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="one_per_ticket" value="ON"<?php echo $this->entity->one_per_ticket ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field" type="checkbox" name="one_per_ticket" value="ON"<?php echo $this->entity->one_per_ticket ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Hide on Invoice</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="hide_on_invoice" value="ON"<?php echo $this->entity->hide_on_invoice ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field" type="checkbox" name="hide_on_invoice" value="ON"<?php echo $this->entity->hide_on_invoice ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Non-Refundable</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="non_refundable" value="ON"<?php echo $this->entity->non_refundable ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field" type="checkbox" name="non_refundable" value="ON"<?php echo $this->entity->non_refundable ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Hide from Autocomplete</span>
 					<span class="pf-note">Exclude this product from autocomplete searches.</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="autocomplete_hide" value="ON"<?php echo $this->entity->autocomplete_hide ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field" type="checkbox" name="autocomplete_hide" value="ON"<?php echo $this->entity->autocomplete_hide ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Additional Barcodes</span>
@@ -772,11 +772,11 @@ $pines->com_ptags->load();
 		<div id="p_muid_tab_storefront">
 			<div class="pf-element">
 				<label><span class="pf-label">Show in Storefront</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="show_in_storefront" value="ON"<?php echo $this->entity->show_in_storefront ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field" type="checkbox" name="show_in_storefront" value="ON"<?php echo $this->entity->show_in_storefront ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Featured Item</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="featured" value="ON"<?php echo $this->entity->featured ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field" type="checkbox" name="featured" value="ON"<?php echo $this->entity->featured ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<fieldset class="pf-group">
 				<legend>Category Specs</legend>
@@ -795,7 +795,7 @@ $pines->com_ptags->load();
 						<?php
 						switch ($cur_spec['type']) {
 							case 'bool':
-								?><input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="<?php echo htmlentities($key); ?>" value="ON"<?php echo $this->entity->specs[$key] ? ' checked="checked"' : ''; ?> /><?php
+								?><input class="pf-field" type="checkbox" name="<?php echo htmlentities($key); ?>" value="ON"<?php echo $this->entity->specs[$key] ? ' checked="checked"' : ''; ?> /><?php
 								break;
 							case 'string':
 							case 'float':

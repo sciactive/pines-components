@@ -124,7 +124,7 @@ $pines->com_jstree->load();
 			<input class="p_muid_change_this" type="hidden" name="available_change" value="" />
 			<div class="pf-element">
 				<label><span class="pf-label">Available</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="available" value="ON"<?php echo $this->entity->available ? ' checked="checked"' : ''; ?> /></label>
+					<input class="pf-field" type="checkbox" name="available" value="ON"<?php echo $this->entity->available ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
 				<label>

@@ -137,7 +137,7 @@ defined('P_RUN') or die('Direct access prohibited');
 		}
 	?>
 	<div class="pf-element">
-		<label><input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="all_day" value="ON" <?php echo ($this->entity->all_day) ? 'checked="checked" ' : ''; ?>/>All Day</label>
+		<label><input class="pf-field" type="checkbox" name="all_day" value="ON" <?php echo ($this->entity->all_day) ? 'checked="checked" ' : ''; ?>/>All Day</label>
 	</div>
 	<div class="pf-element pf-full-width">
 		<span class="pf-note">Start</span><input class="ui-widget-content ui-corner-all form_center" type="text" size="12" id="p_muid_start" name="start" value="<?php echo empty($start_date) ? format_date(time(), 'date_sort') : htmlentities($start_date); ?>" />

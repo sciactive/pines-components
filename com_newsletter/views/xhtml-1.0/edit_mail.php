@@ -48,7 +48,7 @@ $pines->uploader->load();
 		<?php if ( !empty($this->entity->attachments) ) {
 			echo '<div class="pf-group">';
 			foreach ($this->entity->attachments as $cur_attachment) { ?>
-		<label><input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="attach_<?php echo clean_checkbox($cur_attachment); ?>" checked="checked" /><?php echo htmlentities($cur_attachment); ?></label><br />
+		<label><input class="pf-field" type="checkbox" name="attach_<?php echo clean_checkbox($cur_attachment); ?>" checked="checked" /><?php echo htmlentities($cur_attachment); ?></label><br />
 		<?php }
 		echo '</div>';
 		} ?>

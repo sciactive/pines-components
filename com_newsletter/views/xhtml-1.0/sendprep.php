@@ -71,7 +71,7 @@ $pines->com_jstree->load();
 	<div class="pf-element">
 		<label><span class="pf-label">Include a link to the mail's web address.</span>
 		<span class="pf-note">For online viewing.</span>
-		<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="include_permalink" checked /></label>
+		<input class="pf-field" type="checkbox" name="include_permalink" checked /></label>
 	</div>
 	<div class="pf-element pf-buttons">
 		<input type="hidden" name="mail_id" value="<?php echo htmlentities($_REQUEST['mail_id']); ?>" />

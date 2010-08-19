@@ -100,6 +100,7 @@ if (empty($this->title))
 			pnotify_notice_icon: '',
 			pnotify_width: 'auto',
 			pnotify_hide: false,
+			pnotify_history: false,
 			pnotify_insert_brs: false,
 			pnotify_before_open: function(pnotify){
 				// This prevents the notice from displaying when it's created.

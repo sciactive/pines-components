@@ -253,7 +253,7 @@ class com_user extends component implements user_manager_interface {
 	}
 
 	public function print_login($position = 'content', $url = null) {
-		$module = new module('com_user', 'login', $position);
+		$module = new module('com_user', 'modules/login', $position);
 		$module->url = $url;
 		if (isset($_REQUEST['url']))
 			$module->url = $_REQUEST['url'];

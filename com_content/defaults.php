@@ -13,6 +13,13 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
+		'name' => 'show_cat_menus',
+		'cname' => 'Show Category Menus',
+		'description' => 'Show categories configured in the menu.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'show_page_menus',
 		'cname' => 'Show Page Menus',
 		'description' => 'Show pages configured in the menu.',

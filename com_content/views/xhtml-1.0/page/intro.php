@@ -1,6 +1,6 @@
 <?php
 /**
- * Displays page content.
+ * Displays page intro.
  *
  * @package Pines
  * @subpackage com_content
@@ -15,11 +15,8 @@ if (!isset($this->entity))
 	$this->entity = com_content_page::factory((int) $this->id);
 
 if ($this->entity->show_title)
-	$this->title = htmlentities($this->entity->name);
+	$this->title = '<a href="'.htmlentities(pines_url('com_content', 'page', array('a' => $this->entity->alias))).'">'.htmlentities($this->entity->name).'</a>';
 
-if ($this->entity->show_intro)
-	echo $this->entity->intro;
-
-echo $this->entity->content;
+echo $this->entity->intro;
 
 ?>

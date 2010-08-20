@@ -98,6 +98,18 @@ class com_content_page extends entity {
 	}
 
 	/**
+	 * Print the page intro.
+	 * @return module The form's module.
+	 */
+	public function print_intro() {
+		global $pines;
+		$module = new module('com_content', 'page/intro', 'content');
+		$module->entity = $this;
+
+		return $module;
+	}
+
+	/**
 	 * Print a form to edit the page.
 	 * @return module The form's module.
 	 */

@@ -30,6 +30,7 @@ class com_content_category extends entity {
 		$this->parent = null;
 		$this->children = array();
 		$this->pages = array();
+		$this->menu_position = 'left';
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));

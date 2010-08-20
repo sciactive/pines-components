@@ -13,6 +13,15 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Category' : 'Editing ['.htmlentities($this->entity->name).']';
 $this->note = 'Provide category details in this form.';
 ?>
+<script type="text/javascript">
+	// <![CDATA[
+	pines(function(){
+		$("#p_muid_menu_position").autocomplete({
+			source: <?php echo json_encode($pines->info->template->positions); ?>
+		});
+	});
+	// ]]>
+</script>
 <form class="pf-form" method="post" action="<?php echo htmlentities(pines_url('com_content', 'category/save')); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
@@ -31,6 +40,14 @@ $this->note = 'Provide category details in this form.';
 	<div class="pf-element">
 		<label><span class="pf-label">Enabled</span>
 			<input class="pf-field" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
+	</div>
+	<div class="pf-element">
+		<label><span class="pf-label">Show Menu</span>
+			<input class="pf-field" type="checkbox" name="show_menu" value="ON"<?php echo $this->entity->show_menu ? ' checked="checked"' : ''; ?> /></label>
+	</div>
+	<div class="pf-element">
+		<label><span class="pf-label">Menu Position</span>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_menu_position" name="menu_position" size="24" value="<?php echo htmlentities($this->entity->menu_position); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label>
@@ -71,9 +88,11 @@ $this->note = 'Provide category details in this form.';
 		<span class="pf-label">Pages</span>
 		<span class="pf-note">These pages are assigned to this category.</span>
 		<div class="pf-group">
-			<?php foreach ($this->entity->pages as $cur_page) { ?>
-			<div class="pf-field"><a href="<?php echo htmlentities(pines_url('com_content', 'page/edit', array('id' => $cur_page->guid))); ?>"><?php echo htmlentities("[{$cur_page->guid}] {$cur_page->name}"); ?></a></div>
-			<?php } ?>
+			<div class="pf-field ui-widget-content ui-corner-all" style="padding: 1em; min-width: 300px; max-height: 200px; overflow: auto;">
+				<?php foreach ($this->entity->pages as $cur_page) { ?>
+				<a href="<?php echo htmlentities(pines_url('com_content', 'page/edit', array('id' => $cur_page->guid))); ?>"><?php echo htmlentities($cur_page->name); ?></a><br />
+				<?php } ?>
+			</div>
 		</div>
 	</div>
 	<div class="pf-element pf-buttons">

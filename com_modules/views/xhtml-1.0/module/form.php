@@ -191,8 +191,8 @@ $pines->com_pgrid->load();
 				"Done": function(){
 					var cur_condition_type = condition_dialog.find("input[name=cur_condition_type]").val();
 					var cur_condition_value = condition_dialog.find("input[name=cur_condition_value]").val();
-					if (cur_condition_type == "" || cur_condition_value == "") {
-						alert("Please provide both a type and a value for this condition.");
+					if (cur_condition_type == "") {
+						alert("Please provide a type for this condition.");
 						return;
 					}
 					if (cur_condition == null) {

@@ -5,7 +5,7 @@
 		"href": "javascript:void(0);",
 		"onclick": "com_su_load_switcher(); return false;",
 		"depend": {
-			"ability": true
+			"ability": ""
 		}
 	}
 ]

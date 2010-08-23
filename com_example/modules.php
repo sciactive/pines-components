@@ -21,6 +21,10 @@ return array(
 		'view' => 'modules/widget',
 		'form' => 'modules/widget_form',
 	),
+	'iexample' => array(
+		'cname' => 'Example Inline Module',
+		'view' => 'modules/iexample',
+	),
 );
 
 ?>

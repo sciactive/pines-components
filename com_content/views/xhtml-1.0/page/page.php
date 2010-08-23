@@ -18,8 +18,8 @@ if ($this->entity->show_title)
 	$this->title = htmlentities($this->entity->name);
 
 if ($this->entity->show_intro)
-	echo $this->entity->intro;
+	echo format_content($this->entity->intro);
 
-echo $this->entity->content;
+echo format_content($this->entity->content);
 
 ?>

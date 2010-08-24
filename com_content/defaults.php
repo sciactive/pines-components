@@ -52,6 +52,13 @@ return array(
 		),
 		'peruser' => true,
 	),
+	array(
+		'name' => 'wrap_pages',
+		'cname' => 'Wrap Pages',
+		'description' => 'Wrap pages in a relative positioned div, so absolute positioned content will appear correctly.',
+		'value' => true,
+		'peruser' => true,
+	),
 );
 
 ?>

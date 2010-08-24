@@ -17,9 +17,18 @@ if (!isset($this->entity))
 if ($this->entity->show_title)
 	$this->title = htmlentities($this->entity->name);
 
-if ($this->entity->show_intro)
+if ($this->entity->show_intro) {
+	if ($pines->config->com_content->wrap_pages)
+		echo '<div style="position: relative;">';
 	echo format_content($this->entity->intro);
+	if ($pines->config->com_content->wrap_pages)
+		echo '</div>';
+}
 
+if ($pines->config->com_content->wrap_pages)
+	echo '<div style="position: relative;">';
 echo format_content($this->entity->content);
+if ($pines->config->com_content->wrap_pages)
+	echo '</div>';
 
 ?>

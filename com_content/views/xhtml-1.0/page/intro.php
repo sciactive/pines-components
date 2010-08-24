@@ -17,6 +17,10 @@ if (!isset($this->entity))
 if ($this->entity->show_title)
 	$this->title = '<a href="'.htmlentities(pines_url('com_content', 'page', array('a' => $this->entity->alias))).'">'.htmlentities($this->entity->name).'</a>';
 
-echo $this->entity->intro;
+if ($pines->config->com_content->wrap_pages)
+	echo '<div style="position: relative;">';
+echo format_content($this->entity->intro);
+if ($pines->config->com_content->wrap_pages)
+	echo '</div>';
 
 ?>

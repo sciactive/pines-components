@@ -110,10 +110,12 @@ class com_modules_module extends entity {
 
 	/**
 	 * Print the module.
-	 * @return module The printed module.
+	 * @return module|null The printed module, or null on failure.
 	 */
 	public function print_module() {
 		list ($component, $modname) = explode('/', $this->type, 2);
+		if (!file_exists("components/$component/modules.php"))
+			return null;
 		$view = include("components/$component/modules.php");
 		$view = $view[$modname]['view'];
 		$module = new module($component, $view, $this->position, $this->order);

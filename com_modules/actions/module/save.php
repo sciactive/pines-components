@@ -64,6 +64,12 @@ if ($component != clean_filename($component)) {
 	pines_notice('Invalid module type.');
 	return;
 }
+
+if (!file_exists("components/$component/modules.php")) {
+	$module->print_form();
+	pines_notice('Module type not found.');
+	return;
+}
 /**
  * Retreive module list.
  */

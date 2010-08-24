@@ -97,7 +97,14 @@ $pines->com_pgrid->load();
 										if (cur_data.length) {
 											cur_data.each(function(){
 												var cur_row = $(this);
-												form.find(":input[name="+cur_row.pgrid_get_value(1)+"]").val(cur_row.pgrid_get_value(2));
+												var name = cur_row.pgrid_get_value(1);
+												var value = cur_row.pgrid_get_value(2);
+												form.find(":input:not(:radio, :checkbox)[name="+name+"]").val(value);
+												form.find(":input:radio[name="+name+"][value="+value+"]").attr("checked", "checked");
+												if (value == "")
+													form.find(":input:checkbox[name="+name+"]").removeAttr("checked");
+												else
+													form.find(":input:checkbox[name="+name+"][value="+value+"]").attr("checked", "checked");
 											});
 										}
 									},
@@ -109,10 +116,15 @@ $pines->com_pgrid->load();
 											options_table.pgrid_get_all_rows().pgrid_delete();
 											form.find(":input").each(function(){
 												var cur_input = $(this);
+												if (cur_input.is(":radio:not(:checked)"))
+													return;
+												var cur_value = cur_input.val();
+												if (cur_input.is(":checkbox:not(:checked)"))
+													cur_value = "";
 												options_table.pgrid_add([{
 													values: [
 														cur_input.attr("name"),
-														cur_input.val()
+														cur_value
 													]
 												}]);
 											});

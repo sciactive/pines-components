@@ -110,6 +110,9 @@ if ($pines->config->com_sales->com_hrm) {
 if ($pines->config->com_sales->com_storefront) {
 	$product->show_in_storefront = ($_REQUEST['show_in_storefront'] == 'ON');
 	$product->featured = ($_REQUEST['featured'] == 'ON');
+	$product->featured_image = $_REQUEST['featured_image'];
+	if (!$pines->uploader->check($product->featured_image))
+		$product->featured_image = null;
 	// Build a list of categories.
 	$categories = array();
 	if (is_array($_REQUEST['categories']))

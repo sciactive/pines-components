@@ -766,6 +766,10 @@ $pines->com_ptags->load();
 						autobox.focus().autocomplete("search", "");
 					});
 				});
+
+				$("#p_muid_featured_image").change(function(){
+					$("#p_muid_featured_image_preview").attr("src", $(this).val());
+				});
 			});
 			// ]]>
 		</script>
@@ -777,6 +781,16 @@ $pines->com_ptags->load();
 			<div class="pf-element">
 				<label><span class="pf-label">Featured Item</span>
 					<input class="pf-field" type="checkbox" name="featured" value="ON"<?php echo $this->entity->featured ? ' checked="checked"' : ''; ?> /></label>
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Featured Image</span>
+					<input class="pf-field ui-widget-content ui-corner-all puploader" id="p_muid_featured_image" type="text" name="featured_image" value="<?php echo htmlentities($this->entity->featured_image); ?>" /></label>
+			</div>
+			<div class="pf-element">
+				<span class="pf-label">Featured Image Preview</span>
+				<div class="pf-group">
+					<img class="pf-field" alt="Featured Image Preview" id="p_muid_featured_image_preview" src="<?php echo htmlentities($this->entity->featured_image); ?>" />
+				</div>
 			</div>
 			<fieldset class="pf-group">
 				<legend>Category Specs</legend>

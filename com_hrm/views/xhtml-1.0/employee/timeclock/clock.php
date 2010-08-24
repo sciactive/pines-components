@@ -10,7 +10,15 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Timeclock';
+if (empty($this->title))
+	$this->title = 'Timeclock';
+
+if (!isset($this->entity))
+	$this->entity = $_SESSION['user'];
+
+if (!$this->entity->employee)
+	$this->detach();
+
 $entry_count = count($this->entity->timeclock);
 ?>
 <div class="pf-form" id="p_muid_timeclock">

@@ -1,6 +1,6 @@
 <?php
 /**
- * Load the clockin module.
+ * com_hrm's modules.
  *
  * @package Pines
  * @subpackage com_hrm
@@ -11,10 +11,11 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if (isset($_SESSION['user']) && $_SESSION['user']->employee && gatekeeper('com_hrm/clock')) {
-	$employee = com_hrm_employee::factory($_SESSION['user']->guid);
-	$employee->print_clockin();
-	unset($employee);
-}
+return array(
+	'clockin' => array(
+		'cname' => 'Employee Clockin (Ability: com_hrm/clock)',
+		'view' => 'employee/timeclock/clock',
+	),
+);
 
 ?>

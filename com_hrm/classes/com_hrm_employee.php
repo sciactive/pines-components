@@ -133,7 +133,7 @@ class com_hrm_employee extends user {
 	}
 
 	/**
-	 * Print a form for the employee to clockin.
+	 * Print a form for the employee to clock in.
 	 * @return module The form's module.
 	 */
 	public function print_clockin() {

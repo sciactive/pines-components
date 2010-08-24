@@ -24,6 +24,9 @@ return array(
 		'service' => 'user_manager&entity_manager&editor',
 		'component' => 'com_jquery&com_pgrid&com_pnotify&com_jstree&com_ptags'
 	),
+	'recommend' => array(
+		'component' => 'com_modules'
+	),
 	'abilities' => array(
 		array('listemployees', 'List Employees', 'User can see employees.'),
 		array('addemployee', 'Add Employees', 'User can add new employees.'),

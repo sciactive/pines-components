@@ -104,12 +104,12 @@ $yellow_status = $pines->config->com_reports->rank_level_yellow;
 			}
 		?>
 		<tr title="<?php echo $cur_rank['employee']->guid; ?>" class="<?php echo $class; ?>">
-			<td><?php echo htmlentities($cur_rank['rank']); ?></td>
-			<td><?php echo htmlentities($cur_rank['employee']->name); ?></td>
-			<td class="right_justify">$<?php echo htmlentities($cur_rank['current']); ?></td>
-			<td class="right_justify">$<?php echo htmlentities($cur_rank['last']); ?></td>
-			<td class="right_justify">$<?php echo htmlentities($cur_rank['mtd']); ?></td>
-			<td class="right_justify">$<?php echo htmlentities($cur_rank['goal']); ?></td>
+			<td><?php echo htmlspecialchars($cur_rank['rank']); ?></td>
+			<td><?php echo htmlspecialchars($cur_rank['employee']->name); ?></td>
+			<td class="right_justify">$<?php echo htmlspecialchars($cur_rank['current']); ?></td>
+			<td class="right_justify">$<?php echo htmlspecialchars($cur_rank['last']); ?></td>
+			<td class="right_justify">$<?php echo htmlspecialchars($cur_rank['mtd']); ?></td>
+			<td class="right_justify">$<?php echo htmlspecialchars($cur_rank['goal']); ?></td>
 			<td class="right_justify">$<?php echo round($cur_rank['trend'], 2); ?></td>
 			<td class="right_justify"><?php echo round($cur_rank['pct'], 2); ?>%</td>
 		</tr>
@@ -127,10 +127,10 @@ $yellow_status = $pines->config->com_reports->rank_level_yellow;
 		<tr class="total <?php echo $class; ?>">
 			<td class="rank"><span style="display: none;">99999999</span></td>
 			<td>Total</td>
-			<td class="right_justify">$<?php echo htmlentities($this->total['current']); ?></td>
-			<td class="right_justify">$<?php echo htmlentities($this->total['last']); ?></td>
-			<td class="right_justify">$<?php echo htmlentities($this->total['mtd']); ?></td>
-			<td class="right_justify">$<?php echo htmlentities($this->total['goal']); ?></td>
+			<td class="right_justify">$<?php echo htmlspecialchars($this->total['current']); ?></td>
+			<td class="right_justify">$<?php echo htmlspecialchars($this->total['last']); ?></td>
+			<td class="right_justify">$<?php echo htmlspecialchars($this->total['mtd']); ?></td>
+			<td class="right_justify">$<?php echo htmlspecialchars($this->total['goal']); ?></td>
 			<td class="right_justify">$<?php echo round($this->total['trend'], 2); ?></td>
 			<td class="right_justify"><?php echo round($this->total['pct'], 2); ?>%</td>
 		</tr>

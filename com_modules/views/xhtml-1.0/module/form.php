@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = (!isset($this->entity->guid)) ? 'Editing New Module' : 'Editing ['.htmlentities($this->entity->name).']';
+$this->title = (!isset($this->entity->guid)) ? 'Editing New Module' : 'Editing ['.htmlspecialchars($this->entity->name).']';
 $this->note = 'Provide module details in this form.';
 $pines->editor->load();
 $pines->com_pgrid->load();
@@ -272,7 +272,7 @@ $pines->com_pgrid->load();
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_modules', 'module/save')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_modules', 'module/save')); ?>">
 	<div id="p_muid_module_tabs" style="clear: both;">
 		<ul>
 			<li><a href="#p_muid_tab_general">General</a></li>
@@ -283,8 +283,8 @@ $pines->com_pgrid->load();
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
 				<?php if (isset($this->entity->user)) { ?>
-				<div>User: <span class="date"><?php echo htmlentities("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
-				<div>Group: <span class="date"><?php echo htmlentities("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
+				<div>User: <span class="date"><?php echo htmlspecialchars("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
+				<div>Group: <span class="date"><?php echo htmlspecialchars("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
 				<?php } ?>
 				<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
 				<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
@@ -292,7 +292,7 @@ $pines->com_pgrid->load();
 			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Name/Title</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>
@@ -305,18 +305,18 @@ $pines->com_pgrid->load();
 			<div class="pf-element">
 				<span class="pf-label">Position</span>
 				<span class="combobox">
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="position" size="24" value="<?php echo htmlentities($this->entity->position); ?>" />
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="position" size="24" value="<?php echo htmlspecialchars($this->entity->position); ?>" />
 					<a href="javascript:void(0);" class="ui-icon ui-icon-triangle-1-s"></a>
 					<select style="display: none;">
 						<?php foreach ($pines->info->template->positions as $cur_position) {
-							?><option value="<?php echo htmlentities($cur_position); ?>"><?php echo htmlentities($cur_position); ?></option><?php
+							?><option value="<?php echo htmlspecialchars($cur_position); ?>"><?php echo htmlspecialchars($cur_position); ?></option><?php
 						} ?>
 					</select>
 				</span>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Order</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="order" size="10" value="<?php echo htmlentities($this->entity->order); ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="order" size="10" value="<?php echo htmlspecialchars($this->entity->order); ?>" /></label>
 			</div>
 			<div class="pf-element pf-heading">
 				<h1>Module Type</h1>
@@ -324,9 +324,9 @@ $pines->com_pgrid->load();
 			<br class="pf-clearing" />
 			<?php foreach ($this->modules as $cur_component => $cur_modules) { ?>
 			<div class="pf-element component_modules">
-				<strong class="pf-label"><?php echo htmlentities($pines->info->$cur_component->name); ?></strong>
+				<strong class="pf-label"><?php echo htmlspecialchars($pines->info->$cur_component->name); ?></strong>
 				<?php foreach ($cur_modules as $cur_modname => $cur_module) { ?>
-				<br /><label><input class="pf-field" type="radio" name="type" value="<?php echo htmlentities("$cur_component/$cur_modname"); ?>"<?php echo ($this->entity->type == "$cur_component/$cur_modname") ? ' checked="checked"': ''; ?> /> <span class="form"><?php echo htmlentities($cur_module['form']); ?></span><?php echo htmlentities($cur_module['cname']); ?></label>
+				<br /><label><input class="pf-field" type="radio" name="type" value="<?php echo htmlspecialchars("$cur_component/$cur_modname"); ?>"<?php echo ($this->entity->type == "$cur_component/$cur_modname") ? ' checked="checked"': ''; ?> /> <span class="form"><?php echo htmlspecialchars($cur_module['form']); ?></span><?php echo htmlspecialchars($cur_module['cname']); ?></label>
 				<?php } ?>
 			</div>
 			<?php } ?>
@@ -348,8 +348,8 @@ $pines->com_pgrid->load();
 					<tbody>
 						<?php foreach ($this->entity->options as $cur_option) { ?>
 						<tr>
-							<td><?php echo htmlentities($cur_option['name']); ?></td>
-							<td><?php echo htmlentities($cur_option['value']); ?></td>
+							<td><?php echo htmlspecialchars($cur_option['name']); ?></td>
+							<td><?php echo htmlspecialchars($cur_option['value']); ?></td>
 						</tr>
 						<?php } ?>
 					</tbody>
@@ -391,8 +391,8 @@ $pines->com_pgrid->load();
 					<tbody>
 						<?php if (isset($this->entity->conditions)) foreach ($this->entity->conditions as $cur_key => $cur_value) { ?>
 						<tr>
-							<td><?php echo htmlentities($cur_key); ?></td>
-							<td><?php echo htmlentities($cur_value); ?></td>
+							<td><?php echo htmlspecialchars($cur_key); ?></td>
+							<td><?php echo htmlspecialchars($cur_value); ?></td>
 						</tr>
 						<?php } ?>
 					</tbody>
@@ -405,7 +405,7 @@ $pines->com_pgrid->load();
 						<span class="pf-label">Detected Types</span>
 						<span class="pf-note">These types were detected on this system.</span>
 						<div class="pf-group">
-							<div class="pf-field"><em><?php echo htmlentities(implode(', ', array_keys($pines->depend->checkers))); ?></em></div>
+							<div class="pf-field"><em><?php echo htmlspecialchars(implode(', ', array_keys($pines->depend->checkers))); ?></em></div>
 						</div>
 					</div>
 					<div class="pf-element">
@@ -428,6 +428,6 @@ $pines->com_pgrid->load();
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_modules', 'module/list')); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_modules', 'module/list')); ?>');" value="Cancel" />
 	</div>
 </form>

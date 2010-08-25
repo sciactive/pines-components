@@ -289,7 +289,7 @@ defined('P_RUN') or die('Direct access prohibited');
 					}
 					foreach ($fonts as $cur_font) {
 					?>
-						<option value="<?php echo htmlentities($cur_font); ?>"><?php echo htmlentities($cur_font); ?></option>
+						<option value="<?php echo htmlspecialchars($cur_font); ?>"><?php echo htmlspecialchars($cur_font); ?></option>
 					<?php } ?>
 					</select>
 					<input type="text" id="p_muid_fontfamily" name="fontfamily" value="Times" onkeyup="set_values();" /></label>

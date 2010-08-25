@@ -15,7 +15,7 @@ if (!isset($this->entity))
 	$this->entity = com_content_page::factory((int) $this->id);
 
 if ($this->entity->show_title)
-	$this->title = '<a href="'.htmlentities(pines_url('com_content', 'page', array('a' => $this->entity->alias))).'">'.htmlentities($this->entity->name).'</a>';
+	$this->title = '<a href="'.htmlspecialchars(pines_url('com_content', 'page', array('a' => $this->entity->alias))).'">'.htmlspecialchars($this->entity->name).'</a>';
 
 if ($pines->config->com_content->wrap_pages)
 	echo '<div style="position: relative;">';

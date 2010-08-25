@@ -47,18 +47,18 @@ $pines->com_jstree->load();
 	});
 	// ]]>
 </script>
-<form class="pf-form" id="p_muid_form" method="post" action="<?php echo htmlentities(pines_url('com_newsletter', 'send')); ?>">
+<form class="pf-form" id="p_muid_form" method="post" action="<?php echo htmlspecialchars(pines_url('com_newsletter', 'send')); ?>">
 	<div class="pf-element">
 		<label><span class="pf-label">From Address</span>
-		<input class="pf-field ui-widget-content ui-corner-all" type="text" name="from" size="24" value="<?php echo htmlentities($pines->config->com_newsletter->default_from); ?>" /></label>
+		<input class="pf-field ui-widget-content ui-corner-all" type="text" name="from" size="24" value="<?php echo htmlspecialchars($pines->config->com_newsletter->default_from); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Reply to Address</span>
-		<input class="pf-field ui-widget-content ui-corner-all" type="text" name="replyto" size="24" value="<?php echo htmlentities($pines->config->com_newsletter->default_reply_to); ?>" /></label>
+		<input class="pf-field ui-widget-content ui-corner-all" type="text" name="replyto" size="24" value="<?php echo htmlspecialchars($pines->config->com_newsletter->default_reply_to); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Subject</span>
-		<input class="pf-field ui-widget-content ui-corner-all" type="text" name="subject" size="24" value="<?php echo htmlentities($this->mail->subject); ?>" /></label>
+		<input class="pf-field ui-widget-content ui-corner-all" type="text" name="subject" size="24" value="<?php echo htmlspecialchars($this->mail->subject); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Select Groups</span>
@@ -74,9 +74,9 @@ $pines->com_jstree->load();
 		<input class="pf-field" type="checkbox" name="include_permalink" checked /></label>
 	</div>
 	<div class="pf-element pf-buttons">
-		<input type="hidden" name="mail_id" value="<?php echo htmlentities($_REQUEST['mail_id']); ?>" />
+		<input type="hidden" name="mail_id" value="<?php echo htmlspecialchars($_REQUEST['mail_id']); ?>" />
 		<input type="hidden" name="location" />
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_newsletter', 'list')); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_newsletter', 'list')); ?>');" value="Cancel" />
 	</div>
 </form>

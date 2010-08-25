@@ -168,8 +168,8 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 		<div class="ui-helper-clearfix ui-widget-content ui-corner-all">
 			<button class="ui-state-default ui-corner-all">Delete</button>
 			<span class="pf-label time"><?php echo format_date($entry['time'], 'full_med', '', $this->entity->get_timezone(true)); ?></span>
-			<span class="pf-note">Timestamp: <span class="timestamp"><?php echo htmlentities($entry['time']); ?></span></span>
-			<span class="pf-field status"><?php echo htmlentities($entry['status']); ?></span>
+			<span class="pf-note">Timestamp: <span class="timestamp"><?php echo htmlspecialchars($entry['time']); ?></span></span>
+			<span class="pf-field status"><?php echo htmlspecialchars($entry['status']); ?></span>
 		</div>
 	</div>
 	<?php } ?>
@@ -182,12 +182,12 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 		</div>
 	</div>
 	<button class="add-button ui-state-default ui-corner-all">Add</button>
-	<form method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_hrm', 'employee/timeclock/save')); ?>">
+	<form method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_hrm', 'employee/timeclock/save')); ?>">
 		<input type="hidden" name="clock" value="" />
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<div class="pf-element pf-buttons">
 			<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-			<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_hrm', 'employee/timeclock/list')); ?>');" value="Cancel" />
+			<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_hrm', 'employee/timeclock/list')); ?>');" value="Cancel" />
 		</div>
 	</form>
 </div>

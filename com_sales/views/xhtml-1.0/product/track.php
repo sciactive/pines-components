@@ -57,7 +57,7 @@ $pines->com_jstree->load();
 				{type: 'separator'},
 				{type: 'text', label: 'SKU: ', load: function(textbox){
 					// Display the current sku being searched.
-					textbox.val("<?php echo htmlentities($this->sku); ?>");
+					textbox.val("<?php echo htmlspecialchars($this->sku); ?>");
 					textbox.keydown(function(e){
 						if (e.keyCode == 13)
 							submit_search();
@@ -67,7 +67,7 @@ $pines->com_jstree->load();
 				{type: 'separator'},
 				{type: 'text', label: 'Serial #: ', load: function(textbox){
 					// Display the current serial being searched.
-					textbox.val("<?php echo htmlentities($this->serial); ?>");
+					textbox.val("<?php echo htmlspecialchars($this->serial); ?>");
 					textbox.keydown(function(e){
 						if (e.keyCode == 13)
 							submit_search();
@@ -209,13 +209,13 @@ $pines->com_jstree->load();
 	?>
 		<tr title="<?php echo $cur_transaction->entity->guid; ?>">
 			<td><?php echo format_date($cur_transaction->entity->p_cdate); ?></td>
-			<td><?php echo htmlentities($cur_transaction->product->sku); ?></td>
-			<td><?php echo htmlentities($cur_transaction->product->name); ?></td>
-			<td><?php echo htmlentities("{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]"); ?></td>
-			<td><a href="<?php echo htmlentities($link); ?>" onclick="window.open(this.href); return false;"><?php echo $cur_transaction->entity->guid; ?></a></td>
-			<td><?php echo htmlentities($cur_transaction->transaction_info); ?></td>
-			<td><?php echo htmlentities($cur_transaction->qty); ?></td>
-			<td><?php echo htmlentities(implode(', ', $cur_transaction->serials)); ?></td>
+			<td><?php echo htmlspecialchars($cur_transaction->product->sku); ?></td>
+			<td><?php echo htmlspecialchars($cur_transaction->product->name); ?></td>
+			<td><?php echo htmlspecialchars("{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]"); ?></td>
+			<td><a href="<?php echo htmlspecialchars($link); ?>" onclick="window.open(this.href); return false;"><?php echo $cur_transaction->entity->guid; ?></a></td>
+			<td><?php echo htmlspecialchars($cur_transaction->transaction_info); ?></td>
+			<td><?php echo htmlspecialchars($cur_transaction->qty); ?></td>
+			<td><?php echo htmlspecialchars(implode(', ', $cur_transaction->serials)); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

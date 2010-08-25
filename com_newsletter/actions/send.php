@@ -46,7 +46,7 @@ if ( !isset($mail) ) {
 $message = $mail->message;
 if ( $_REQUEST['include_permalink'] == 'on' ) {
 	$mail_id = $_REQUEST['mail_id'];
-	$message = "<div style=\"text-align: center; font-size: smaller;\">Having trouble reading this message? <a href=\"".htmlentities(pines_url('com_newsletter', 'webview', array('mail_id' => $mail_id), true))."\" target=\"_blank\">Click here</a> to view this message in your browser.</div>" . $message;
+	$message = "<div style=\"text-align: center; font-size: smaller;\">Having trouble reading this message? <a href=\"".htmlspecialchars(pines_url('com_newsletter', 'webview', array('mail_id' => $mail_id), true))."\" target=\"_blank\">Click here</a> to view this message in your browser.</div>" . $message;
 }
 
 $location = group::factory((int) $_REQUEST['location']);

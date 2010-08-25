@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = (!isset($this->entity->guid)) ? 'Editing New Package' : 'Editing ['.htmlentities($this->entity->name).']';
+$this->title = (!isset($this->entity->guid)) ? 'Editing New Package' : 'Editing ['.htmlspecialchars($this->entity->name).']';
 $this->note = 'Provide package details in this form.';
 $pines->editor->load();
 $pines->com_pgrid->load();
@@ -130,7 +130,7 @@ $pines->com_pgrid->load();
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_packager', 'savepackage')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_packager', 'savepackage')); ?>">
 	<div id="p_muid_package_tabs" style="clear: both;">
 		<ul>
 			<li><a href="#p_muid_tab_general">General</a></li>
@@ -140,8 +140,8 @@ $pines->com_pgrid->load();
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
 				<?php if (isset($this->entity->user)) { ?>
-				<div>User: <span class="date"><?php echo htmlentities("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
-				<div>Group: <span class="date"><?php echo htmlentities("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
+				<div>User: <span class="date"><?php echo htmlspecialchars("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
+				<div>Group: <span class="date"><?php echo htmlspecialchars("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
 				<?php } ?>
 				<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
 				<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
@@ -184,7 +184,7 @@ $pines->com_pgrid->load();
 								if (substr($cur_component, 0, 4) != 'com_')
 									continue;
 								?>
-							<option value="<?php echo htmlentities($cur_component); ?>"<?php echo (($this->entity->component == $cur_component) ? ' selected="selected"' : ''); ?>><?php echo htmlentities("{$pines->info->$cur_component->name} [{$cur_component}]"); ?></option>
+							<option value="<?php echo htmlspecialchars($cur_component); ?>"<?php echo (($this->entity->component == $cur_component) ? ' selected="selected"' : ''); ?>><?php echo htmlspecialchars("{$pines->info->$cur_component->name} [{$cur_component}]"); ?></option>
 							<?php } ?>
 						</select>
 					</label>
@@ -218,7 +218,7 @@ $pines->com_pgrid->load();
 					<label>
 						<span class="pf-label">Package Name</span>
 						<span class="pf-note">Information will be gathered from the system's info file.</span>
-						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="system_package_name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" onkeyup="this.value = this.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');" />
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="system_package_name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" onkeyup="this.value = this.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');" />
 					</label>
 				</div>
 			</div>
@@ -229,40 +229,40 @@ $pines->com_pgrid->load();
 				<div class="pf-element">
 					<label>
 						<span class="pf-label">Package Name</span>
-						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_package_name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" onkeyup="this.value = this.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');" />
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_package_name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" onkeyup="this.value = this.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');" />
 					</label>
 				</div>
 				<div class="pf-element">
 					<label>
 						<span class="pf-label">Canonical Name</span>
 						<span class="pf-note">The name the user will see.</span>
-						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_name" size="24" value="<?php echo htmlentities($this->entity->meta['name']); ?>" />
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_name" size="24" value="<?php echo htmlspecialchars($this->entity->meta['name']); ?>" />
 					</label>
 				</div>
 				<div class="pf-element">
 					<label>
 						<span class="pf-label">Author</span>
-						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_author" size="24" value="<?php echo htmlentities($this->entity->meta['author']); ?>" />
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_author" size="24" value="<?php echo htmlspecialchars($this->entity->meta['author']); ?>" />
 					</label>
 				</div>
 				<div class="pf-element">
 					<label>
 						<span class="pf-label">Version</span>
-						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_version" size="24" value="<?php echo htmlentities($this->entity->meta['version']); ?>" />
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_version" size="24" value="<?php echo htmlspecialchars($this->entity->meta['version']); ?>" />
 					</label>
 				</div>
 				<div class="pf-element">
 					<label>
 						<span class="pf-label">License</span>
 						<span class="pf-note">Provide the URL to an online version. If that's not available, provide the name of the license.</span>
-						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_license" size="24" value="<?php echo htmlentities($this->entity->meta['license']); ?>" />
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_license" size="24" value="<?php echo htmlspecialchars($this->entity->meta['license']); ?>" />
 					</label>
 				</div>
 				<div class="pf-element">
 					<label>
 						<span class="pf-label">Short Description</span>
 						<span class="pf-note">Please provide a simple description, sentence caps, no period. E.g. "XML parsing library"</span>
-						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_short_description" size="24" value="<?php echo htmlentities($this->entity->meta['short_description']); ?>" />
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_short_description" size="24" value="<?php echo htmlspecialchars($this->entity->meta['short_description']); ?>" />
 					</label>
 				</div>
 				<div class="pf-element pf-full-width">
@@ -291,22 +291,22 @@ $pines->com_pgrid->load();
 									<?php if (isset($this->entity->meta['depend'])) foreach ($this->entity->meta['depend'] as $cur_key => $cur_value) { ?>
 									<tr>
 										<td>depend</td>
-										<td><?php echo htmlentities($cur_key); ?></td>
-										<td><?php echo htmlentities($cur_value); ?></td>
+										<td><?php echo htmlspecialchars($cur_key); ?></td>
+										<td><?php echo htmlspecialchars($cur_value); ?></td>
 									</tr>
 									<?php } ?>
 									<?php if (isset($this->entity->meta['recommend'])) foreach ($this->entity->meta['recommend'] as $cur_key => $cur_value) { ?>
 									<tr>
 										<td>recommend</td>
-										<td><?php echo htmlentities($cur_key); ?></td>
-										<td><?php echo htmlentities($cur_value); ?></td>
+										<td><?php echo htmlspecialchars($cur_key); ?></td>
+										<td><?php echo htmlspecialchars($cur_value); ?></td>
 									</tr>
 									<?php } ?>
 									<?php if (isset($this->entity->meta['conflict'])) foreach ($this->entity->meta['conflict'] as $cur_key => $cur_value) { ?>
 									<tr>
 										<td>conflict</td>
-										<td><?php echo htmlentities($cur_key); ?></td>
-										<td><?php echo htmlentities($cur_value); ?></td>
+										<td><?php echo htmlspecialchars($cur_key); ?></td>
+										<td><?php echo htmlspecialchars($cur_value); ?></td>
 									</tr>
 									<?php } ?>
 								</tbody>
@@ -350,7 +350,7 @@ $pines->com_pgrid->load();
 				<label>
 					<span class="pf-label">Filename</span>
 					<span class="pf-note">Leave this blank to use the default filename scheme, "name-version".</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="filename" size="24" value="<?php echo htmlentities($this->entity->filename); ?>" />
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="filename" size="24" value="<?php echo htmlspecialchars($this->entity->filename); ?>" />
 				</label>
 			</div>
 			<br class="pf-clearing" />
@@ -373,6 +373,6 @@ $pines->com_pgrid->load();
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_packager', 'listpackages')); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_packager', 'listpackages')); ?>');" value="Cancel" />
 	</div>
 </form>

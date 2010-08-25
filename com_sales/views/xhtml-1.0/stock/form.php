@@ -13,11 +13,11 @@ defined('P_RUN') or die('Direct access prohibited');
 if (is_array($this->entities)) {
 	$this->title = 'Editing Multiple Stock Entries';
 } else {
-	$this->title = htmlentities("Editing Stock Entry of \"{$this->entity->product->name}\"");
+	$this->title = htmlspecialchars("Editing Stock Entry of \"{$this->entity->product->name}\"");
 	if (isset($this->entity->serial))
-		$this->title .= htmlentities(" (Serial: {$this->entity->serial})");
+		$this->title .= htmlspecialchars(" (Serial: {$this->entity->serial})");
 	if (isset($this->entity->location)) {
-		$this->title .= htmlentities(" at \"{$this->entity->location->name}\"");
+		$this->title .= htmlspecialchars(" at \"{$this->entity->location->name}\"");
 	} else {
 		$this->title .= ' Not in Inventory';
 	}
@@ -25,12 +25,12 @@ if (is_array($this->entities)) {
 $this->note = 'Provide stock entry details in this form.';
 $pines->com_jstree->load();
 ?>
-<form class="pf-form" id="p_muid_form" method="post" action="<?php echo htmlentities(pines_url('com_sales', 'stock/save')); ?>">
+<form class="pf-form" id="p_muid_form" method="post" action="<?php echo htmlspecialchars(pines_url('com_sales', 'stock/save')); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 		<?php if (isset($this->entity->user)) { ?>
-		<div>User: <span class="date"><?php echo htmlentities("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
-		<div>Group: <span class="date"><?php echo htmlentities("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
+		<div>User: <span class="date"><?php echo htmlspecialchars("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
+		<div>Group: <span class="date"><?php echo htmlspecialchars("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
 		<?php } ?>
 		<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
 		<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
@@ -39,33 +39,33 @@ $pines->com_jstree->load();
 	<div class="pf-element">
 		<span class="pf-label">Product</span>
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<span class="pf-field"><?php echo htmlentities($this->entity->product->name); ?></span>
+		<span class="pf-field"><?php echo htmlspecialchars($this->entity->product->name); ?></span>
 		<?php } elseif ( is_array($this->entities) ) {
 			$names = array();
 			foreach ($this->entities as $cur_entity) {
 				$names[] = $cur_entity->product->name;
 			}
 			?>
-		<span class="pf-field"><?php echo htmlentities(implode(', ', $names)); ?></span>
+		<span class="pf-field"><?php echo htmlspecialchars(implode(', ', $names)); ?></span>
 		<?php } ?>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Product Sku</span>
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<span class="pf-field"><?php echo htmlentities($this->entity->product->sku); ?></span>
+		<span class="pf-field"><?php echo htmlspecialchars($this->entity->product->sku); ?></span>
 		<?php } elseif ( is_array($this->entities) ) {
 			$skus = array();
 			foreach ($this->entities as $cur_entity) {
 				$skus[] = $cur_entity->product->sku;
 			}
 			?>
-		<span class="pf-field"><?php echo htmlentities(implode(', ', $skus)); ?></span>
+		<span class="pf-field"><?php echo htmlspecialchars(implode(', ', $skus)); ?></span>
 		<?php } ?>
 	</div>
 	<?php if ( isset($this->entity->guid) ) { ?>
 	<div class="pf-element">
 		<span class="pf-label">Last Transaction</span>
-		<span class="pf-field"><?php echo isset($this->entity) ? htmlentities($this->entity->last_reason()) : ''; ?></span>
+		<span class="pf-field"><?php echo isset($this->entity) ? htmlspecialchars($this->entity->last_reason()) : ''; ?></span>
 	</div>
 	<?php } ?>
 	<script type="text/javascript">
@@ -176,7 +176,7 @@ $pines->com_jstree->load();
 			<input class="p_muid_change_this" type="hidden" name="serial_change" value="" />
 			<div class="pf-element">
 				<label><span class="pf-label">Serial</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="serial" size="24" value="<?php echo htmlentities($this->entity->serial); ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="serial" size="24" value="<?php echo htmlspecialchars($this->entity->serial); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label>
@@ -246,7 +246,7 @@ $pines->com_jstree->load();
 						<?php
 						$pines->entity_manager->sort($this->vendors, 'name');
 						foreach ($this->vendors as $cur_vendor) { ?>
-						<option value="<?php echo $cur_vendor->guid; ?>"<?php echo $this->entity->vendor->guid == $cur_vendor->guid ? ' selected="selected"' : ''; ?>><?php echo htmlentities($cur_vendor->name); ?></option>
+						<option value="<?php echo $cur_vendor->guid; ?>"<?php echo $this->entity->vendor->guid == $cur_vendor->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_vendor->name); ?></option>
 						<?php } ?>
 					</select>
 				</label>
@@ -270,7 +270,7 @@ $pines->com_jstree->load();
 			<input class="p_muid_change_this" type="hidden" name="cost_change" value="" />
 			<div class="pf-element">
 				<label><span class="pf-label">Cost</span>
-					<span class="pf-field">$<input class="ui-widget-content ui-corner-all" style="text-align: right;" type="text" name="cost" size="10" value="<?php echo htmlentities($this->entity->cost); ?>" /></span></label>
+					<span class="pf-field">$<input class="ui-widget-content ui-corner-all" style="text-align: right;" type="text" name="cost" size="10" value="<?php echo htmlspecialchars($this->entity->cost); ?>" /></span></label>
 			</div>
 			<div class="pf-element">
 				<label>
@@ -298,6 +298,6 @@ $pines->com_jstree->load();
 		<input type="hidden" name="id" value="<?php echo implode(',', $guids); ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'stock/list')); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'stock/list')); ?>');" value="Cancel" />
 	</div>
 </form>

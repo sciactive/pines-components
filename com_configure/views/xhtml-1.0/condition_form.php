@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = (!isset($this->entity->guid)) ? 'Editing New Conditional Configuration' : 'Editing ['.htmlentities($this->entity->name).']';
+$this->title = (!isset($this->entity->guid)) ? 'Editing New Conditional Configuration' : 'Editing ['.htmlspecialchars($this->entity->name).']';
 $this->note = 'Provide condition details in this form.';
 $pines->com_pgrid->load();
 ?>
@@ -122,10 +122,10 @@ $pines->com_pgrid->load();
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_configure', 'condition/save')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_configure', 'condition/save')); ?>">
 	<div class="pf-element">
 		<label><span class="pf-label">Name</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
 	</div>
 	<div class="pf-element pf-heading">
 		<h1>Conditional Configuration</h1>
@@ -142,8 +142,8 @@ $pines->com_pgrid->load();
 			<tbody>
 				<?php if (isset($this->entity->conditions)) foreach ($this->entity->conditions as $cur_key => $cur_value) { ?>
 				<tr>
-					<td><?php echo htmlentities($cur_key); ?></td>
-					<td><?php echo htmlentities($cur_value); ?></td>
+					<td><?php echo htmlspecialchars($cur_key); ?></td>
+					<td><?php echo htmlspecialchars($cur_value); ?></td>
 				</tr>
 				<?php } ?>
 			</tbody>
@@ -156,7 +156,7 @@ $pines->com_pgrid->load();
 				<span class="pf-label">Detected Types</span>
 				<span class="pf-note">These types were detected on this system.</span>
 				<div class="pf-group">
-					<div class="pf-field"><em><?php echo htmlentities(implode(', ', array_keys($pines->depend->checkers))); ?></em></div>
+					<div class="pf-field"><em><?php echo htmlspecialchars(implode(', ', array_keys($pines->depend->checkers))); ?></em></div>
 				</div>
 			</div>
 			<div class="pf-element">
@@ -175,6 +175,6 @@ $pines->com_pgrid->load();
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_configure', 'list', array('percondition' => '1'))); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_configure', 'list', array('percondition' => '1'))); ?>');" value="Cancel" />
 	</div>
 </form>

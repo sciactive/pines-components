@@ -88,10 +88,10 @@ foreach($this->groups as $cur_group) {
 			echo "child {$group->parent->guid}";
 		?>">
 			<td><?php echo $group->guid; ?></td>
-			<td><?php echo htmlentities($group->groupname); ?></td>
-			<td><?php echo htmlentities($group->name); ?></td>
-			<td><?php echo htmlentities($group->email); ?></td>
-			<td><?php echo htmlentities($group->timezone); ?></td>
+			<td><?php echo htmlspecialchars($group->groupname); ?></td>
+			<td><?php echo htmlspecialchars($group->name); ?></td>
+			<td><?php echo htmlspecialchars($group->email); ?></td>
+			<td><?php echo htmlspecialchars($group->timezone); ?></td>
 			<td><?php
 			$user_array = $group->get_users();
 			if (count($user_array) < 15) {
@@ -99,7 +99,7 @@ foreach($this->groups as $cur_group) {
 				foreach ($user_array as $cur_user) {
 					$user_list .= (empty($user_list) ? '' : ', ').$cur_user->username;
 				}
-				echo htmlentities($user_list);
+				echo htmlspecialchars($user_list);
 			} else {
 				echo count($user_array).' users';
 			}

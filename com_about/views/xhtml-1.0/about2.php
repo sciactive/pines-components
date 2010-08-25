@@ -23,7 +23,7 @@ $this->note = "Version {$pines->info->version}";
 	// ]]>
 </script>
 <p>
-<?php echo htmlentities($pines->info->name); ?> is a PHP application framework,
+<?php echo htmlspecialchars($pines->info->name); ?> is a PHP application framework,
 designed to be extensible and easy to manage. It is a
 <a href="http://sciactive.com/" onclick="window.open(this.href); return false;">
 SciActive</a> project written by Hunter Perrin. It allows rapid development,
@@ -36,7 +36,7 @@ in and only give them permissions they have been allowed.
 <p>
 The admin can add features using components, and change the look and feel using
 templates. The system will have a package manager, which will automatically
-install any required components. <?php echo htmlentities($pines->info->name); ?>
+install any required components. <?php echo htmlspecialchars($pines->info->name); ?>
 is designed to allow maximum flexibility for the developer, and provide enough
 tools and available libraries to make development of even very complex systems
 easy. The admin can choose whatever database system he uses, even flat files,

@@ -133,16 +133,16 @@ $pines->com_jstree->load();
 	<tbody>
 	<?php foreach($this->stock as $stock) { ?>
 		<tr title="<?php echo $stock->guid; ?>">
-			<td><?php echo htmlentities($stock->product->sku); ?></td>
-			<td><?php echo htmlentities($stock->product->name); ?></td>
-			<td><?php echo htmlentities($stock->serial); ?></td>
-			<td><?php echo htmlentities($stock->vendor->name); ?></td>
+			<td><?php echo htmlspecialchars($stock->product->sku); ?></td>
+			<td><?php echo htmlspecialchars($stock->product->name); ?></td>
+			<td><?php echo htmlspecialchars($stock->serial); ?></td>
+			<td><?php echo htmlspecialchars($stock->vendor->name); ?></td>
 			<?php if (!$this->removed) { ?>
-			<td><?php echo htmlentities("{$stock->location->name} [{$stock->location->groupname}]"); ?></td>
+			<td><?php echo htmlspecialchars("{$stock->location->name} [{$stock->location->groupname}]"); ?></td>
 			<?php } ?>
 			<td><?php echo isset($stock->cost) ? '$'.number_format($stock->cost, 2) : ''; ?></td>
 			<td><?php echo $stock->available ? 'Yes' : 'No'; ?></td>
-			<td><?php echo htmlentities($stock->last_reason()); ?></td>
+			<td><?php echo htmlspecialchars($stock->last_reason()); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

@@ -15,7 +15,7 @@ if (!isset($this->entity))
 	$this->entity = com_content_page::factory((int) $this->id);
 
 if ($this->entity->show_title)
-	$this->title = htmlentities($this->entity->name);
+	$this->title = htmlspecialchars($this->entity->name);
 
 if ($this->entity->show_intro) {
 	if ($pines->config->com_content->wrap_pages)

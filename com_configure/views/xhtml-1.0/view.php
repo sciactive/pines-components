@@ -22,20 +22,20 @@ if ($this->entity->per_user) {
 <form class="pf-form" action="" method="post">
 	<?php foreach ($this->entity->get_full_config_array() as $cur_var) { ?>
 	<div class="pf-element pf-full-width">
-		<span class="pf-label"><?php echo htmlentities($cur_var['cname']); ?></span>
-		<span class="pf-note"><?php echo htmlentities($cur_var['description']); ?></span>
+		<span class="pf-label"><?php echo htmlspecialchars($cur_var['cname']); ?></span>
+		<span class="pf-note"><?php echo htmlspecialchars($cur_var['description']); ?></span>
 		<div class="pf-group">
 			<div class="pf-field">
 				<?php if (is_array($cur_var['value'])) {
 					echo '<ul>';
 					foreach ($cur_var['value'] as $cur_value) {
-						echo '<li>'.htmlentities(print_r($cur_value, true)).'</li>';
+						echo '<li>'.htmlspecialchars(print_r($cur_value, true)).'</li>';
 					}
 					echo '</ul>';
 				} else {
 					if (is_bool($cur_var['value']))
 						$cur_var['value'] = ($cur_var['value']) ? 'Yes' : 'No';
-					echo htmlentities(print_r($cur_var['value'], true));
+					echo htmlspecialchars(print_r($cur_var['value'], true));
 				} ?>
 			</div>
 		</div>

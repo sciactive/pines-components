@@ -107,10 +107,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$variance = round(($totals[$total_count]['clocked'] - $totals[$total_count]['scheduled']) / 3600, 2);
 			?>
 		<tr title="<?php echo $cur_employee->guid; ?>">
-			<td><?php echo htmlentities($cur_employee->name); ?></td>
-			<td><?php echo htmlentities($scheduled); ?> hours</td>
-			<td><?php echo htmlentities($clocked); ?> hours</td>
-			<td><span<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo htmlentities($variance); ?> hours</span></td>
+			<td><?php echo htmlspecialchars($cur_employee->name); ?></td>
+			<td><?php echo htmlspecialchars($scheduled); ?> hours</td>
+			<td><?php echo htmlspecialchars($clocked); ?> hours</td>
+			<td><span<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo htmlspecialchars($variance); ?> hours</span></td>
 		</tr>
 			<?php
 			$total_group['scheduled'] += $totals[$total_count]['scheduled'];
@@ -123,9 +123,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		?>
 		<tr class="ui-state-highlight total">
 			<td>Total</td>
-			<td><?php echo htmlentities($scheduled); ?> hours</td>
-			<td><?php echo htmlentities($clocked); ?> hours</td>
-			<td><span<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo htmlentities($variance); ?> hours</span></td>
+			<td><?php echo htmlspecialchars($scheduled); ?> hours</td>
+			<td><?php echo htmlspecialchars($clocked); ?> hours</td>
+			<td><span<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo htmlspecialchars($variance); ?> hours</span></td>
 		</tr>
 	</tbody>
 </table>
@@ -196,8 +196,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			}
 		?>
 			<tr class="total">
-				<td><?php echo htmlentities($cur_date['date']); ?></td>
-				<td><?php echo htmlentities($this->employee->group->name); ?></td>
+				<td><?php echo htmlspecialchars($cur_date['date']); ?></td>
+				<td><?php echo htmlspecialchars($this->employee->group->name); ?></td>
 				<td>Scheduled</td>
 				<td><?php if (isset($cur_date['sched_start'])) echo format_date($cur_date['sched_start'], 'time_short'); ?></td>
 				<td><?php if (isset($cur_date['sched_end'])) echo format_date($cur_date['sched_end'], 'time_short'); ?></td>
@@ -214,7 +214,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					<?php
 						if (isset($cur_clock['out'])) {
 							echo format_date($cur_clock['out'], 'time_short');
-							echo (isset($cur_clock['over']) ? htmlentities(' ('.$cur_clock['over'].')') : '');
+							echo (isset($cur_clock['over']) ? htmlspecialchars(' ('.$cur_clock['over'].')') : '');
 						}
 					?>
 					</td>
@@ -232,8 +232,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<td>Total</td>
 				<td></td>
 				<td></td>
-				<td><?php echo ($total_hours > 0) ? htmlentities($total_hours).'hours ' : ''; echo ($total_mins > 0) ? htmlentities($total_mins).'min' : ''; ?></td>
-				<td><span<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo htmlentities($variance); ?> hours</span></td>
+				<td><?php echo ($total_hours > 0) ? htmlspecialchars($total_hours).'hours ' : ''; echo ($total_mins > 0) ? htmlspecialchars($total_mins).'min' : ''; ?></td>
+				<td><span<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo htmlspecialchars($variance); ?> hours</span></td>
 			</tr>
 		<?php $clock_count++; } ?>
 	</tbody>

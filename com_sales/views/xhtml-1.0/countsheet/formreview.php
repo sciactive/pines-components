@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Reviewing Countsheet ['.htmlentities($this->entity->guid).'] at '.$this->entity->group->name;
+$this->title = 'Reviewing Countsheet ['.htmlspecialchars($this->entity->guid).'] at '.$this->entity->group->name;
 $this->note = 'Created by '.$this->entity->user->name.' on '.format_date($this->entity->p_cdate, 'full_long').'.';
 if (isset($this->entity->run_count_date))
 	$this->note .= ' Run on '.format_date($this->entity->run_count_date, 'full_long').'.';
@@ -57,10 +57,10 @@ $pines->com_pgrid->load();
 					$missing_counted[$cur_entry->product->guid] = true;
 					?>
 				<tr class="ui-state-error">
-					<td><?php echo htmlentities($cur_entry->product->name); ?></td>
-					<td><?php echo htmlentities($this->entity->missing_count[$cur_entry->product->guid]); ?></td>
-					<td><?php echo htmlentities($cur_entry->product->sku); ?></td>
-					<td><?php echo htmlentities(implode(', ', $this->entity->missing_serials[$cur_entry->product->guid])); ?></td>
+					<td><?php echo htmlspecialchars($cur_entry->product->name); ?></td>
+					<td><?php echo htmlspecialchars($this->entity->missing_count[$cur_entry->product->guid]); ?></td>
+					<td><?php echo htmlspecialchars($cur_entry->product->sku); ?></td>
+					<td><?php echo htmlspecialchars(implode(', ', $this->entity->missing_serials[$cur_entry->product->guid])); ?></td>
 				</tr>
 				<?php } ?>
 			</tbody>
@@ -87,10 +87,10 @@ $pines->com_pgrid->load();
 					$matched_counted[$cur_entry->product->guid] = true;
 					?>
 				<tr>
-					<td><?php echo htmlentities($cur_entry->product->name); ?></td>
-					<td><?php echo htmlentities($this->entity->matched_count[$cur_entry->product->guid]); ?></td>
-					<td><?php echo htmlentities($cur_entry->product->sku); ?></td>
-					<td><?php echo htmlentities(implode(', ', $this->entity->matched_serials[$cur_entry->product->guid])); ?></td>
+					<td><?php echo htmlspecialchars($cur_entry->product->name); ?></td>
+					<td><?php echo htmlspecialchars($this->entity->matched_count[$cur_entry->product->guid]); ?></td>
+					<td><?php echo htmlspecialchars($cur_entry->product->sku); ?></td>
+					<td><?php echo htmlspecialchars(implode(', ', $this->entity->matched_serials[$cur_entry->product->guid])); ?></td>
 				</tr>
 				<?php } ?>
 			</tbody>
@@ -117,32 +117,32 @@ $pines->com_pgrid->load();
 			<tbody>
 				<?php
 				foreach ($this->entity->potential as $cur_match) {
-					?><tr class="parent expandme collapseme ui-priority-primary" title="<?php echo htmlentities($cur_match['name']); ?>"><td><?php echo $cur_match['count'] > 1 ? htmlentities("{$cur_match['name']} x {$cur_match['count']}") : htmlentities("{$cur_match['name']}"); ?></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><?php
+					?><tr class="parent expandme collapseme ui-priority-primary" title="<?php echo htmlspecialchars($cur_match['name']); ?>"><td><?php echo $cur_match['count'] > 1 ? htmlspecialchars("{$cur_match['name']} x {$cur_match['count']}") : htmlspecialchars("{$cur_match['name']}"); ?></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><?php
 					if ($cur_match['closest']) {
-						?><tr class="parent expandme ui-priority-primary child <?php echo htmlentities($cur_match['name']); ?>" title="<?php echo htmlentities($cur_match['name']); ?>_same"><td>Same Location</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><?php
+						?><tr class="parent expandme ui-priority-primary child <?php echo htmlspecialchars($cur_match['name']); ?>" title="<?php echo htmlspecialchars($cur_match['name']); ?>_same"><td>Same Location</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><?php
 						foreach ($cur_match['closest'] as $cur_closest) {
-							?><tr class="child <?php echo htmlentities($cur_match['name']); ?>_same">
+							?><tr class="child <?php echo htmlspecialchars($cur_match['name']); ?>_same">
 								<td></td>
-								<td><?php echo htmlentities($cur_closest->product->name); ?></td>
-								<td><?php echo htmlentities($cur_closest->product->sku); ?></td>
-								<td><?php echo htmlentities($cur_closest->serial); ?></td>
+								<td><?php echo htmlspecialchars($cur_closest->product->name); ?></td>
+								<td><?php echo htmlspecialchars($cur_closest->product->sku); ?></td>
+								<td><?php echo htmlspecialchars($cur_closest->serial); ?></td>
 								<td><?php echo $cur_closest->available ? 'Yes' : 'No'; ?></td>
-								<td><?php echo htmlentities($cur_closest->last_reason()); ?></td>
-								<td><?php echo htmlentities($cur_closest->location->name); ?></td>
+								<td><?php echo htmlspecialchars($cur_closest->last_reason()); ?></td>
+								<td><?php echo htmlspecialchars($cur_closest->location->name); ?></td>
 							</tr><?php
 						}
 					}
 					if ($cur_match['entries']) {
-						?><tr class="parent expandme ui-priority-primary child <?php echo htmlentities($cur_match['name']); ?>" title="<?php echo htmlentities($cur_match['name']); ?>_else"><td>Other Location</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><?php
+						?><tr class="parent expandme ui-priority-primary child <?php echo htmlspecialchars($cur_match['name']); ?>" title="<?php echo htmlspecialchars($cur_match['name']); ?>_else"><td>Other Location</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><?php
 						foreach ($cur_match['entries'] as $cur_entry) {
-							?><tr class="child <?php echo htmlentities($cur_match['name']); ?>_else">
+							?><tr class="child <?php echo htmlspecialchars($cur_match['name']); ?>_else">
 								<td></td>
-								<td><?php echo htmlentities($cur_entry->product->name); ?></td>
-								<td><?php echo htmlentities($cur_entry->product->sku); ?></td>
-								<td><?php echo htmlentities($cur_entry->serial); ?></td>
+								<td><?php echo htmlspecialchars($cur_entry->product->name); ?></td>
+								<td><?php echo htmlspecialchars($cur_entry->product->sku); ?></td>
+								<td><?php echo htmlspecialchars($cur_entry->serial); ?></td>
 								<td><?php echo $cur_entry->available ? 'Yes' : 'No'; ?></td>
-								<td><?php echo htmlentities($cur_entry->last_reason()); ?></td>
-								<td><?php echo htmlentities($cur_entry->location->name); ?></td>
+								<td><?php echo htmlspecialchars($cur_entry->last_reason()); ?></td>
+								<td><?php echo htmlspecialchars($cur_entry->location->name); ?></td>
 							</tr><?php
 						}
 					}
@@ -165,7 +165,7 @@ $pines->com_pgrid->load();
 			<tbody>
 				<?php foreach ($this->entity->invalid as $cur_entry) { ?>
 				<tr>
-					<td><?php echo htmlentities($cur_entry); ?></td>
+					<td><?php echo htmlspecialchars($cur_entry); ?></td>
 				</tr>
 				<?php } ?>
 			</tbody>
@@ -175,7 +175,7 @@ $pines->com_pgrid->load();
 	<div class="pf-element">
 		<span class="pf-label">Comments</span>
 		<div class="pf-group">
-			<div class="pf-field"><?php echo htmlentities($this->entity->comments); ?></div>
+			<div class="pf-field"><?php echo htmlspecialchars($this->entity->comments); ?></div>
 		</div>
 	</div>
 	<?php } ?>
@@ -201,6 +201,6 @@ $pines->com_pgrid->load();
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 		<input name="approve" class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'countsheet/list')); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'countsheet/list')); ?>');" value="Cancel" />
 	</div>
 </form>

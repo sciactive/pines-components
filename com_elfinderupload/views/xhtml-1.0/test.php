@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'elFinder Uploader';
 $pines->uploader->load();
 ?>
-<form class="pf-form" method="post" action="<?php echo htmlentities(pines_url('com_elfinderupload', 'result')); ?>">
+<form class="pf-form" method="post" action="<?php echo htmlspecialchars(pines_url('com_elfinderupload', 'result')); ?>">
 	<div class="pf-heading">
 		<h1>File Uploading Test</h1>
 	</div>

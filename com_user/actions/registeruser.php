@@ -77,7 +77,7 @@ if ($user->save()) {
 	unset($_SESSION['com_user__tmppassword']);
 	if ($pines->config->com_user->confirm_email) {
 		// Send the verification e-mail.
-		$link = '<a href="'.htmlentities(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'secret' => $user->secret, 'url' => $_REQUEST['url']), true)).'">'.htmlentities(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'secret' => $user->secret, 'url' => $_REQUEST['url']), true)).'</a>';
+		$link = '<a href="'.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'secret' => $user->secret, 'url' => $_REQUEST['url']), true)).'">'.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'secret' => $user->secret, 'url' => $_REQUEST['url']), true)).'</a>';
 		$search = array(
 			'{page_title}',
 			'{site_name}',

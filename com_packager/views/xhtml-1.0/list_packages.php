@@ -67,7 +67,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->packages as $package) { ?>
 		<tr title="<?php echo $package->guid; ?>">
-			<td><?php echo htmlentities($package->name); ?></td>
+			<td><?php echo htmlspecialchars($package->name); ?></td>
 			<td><?php switch($package->type) {
 				case 'component':
 					echo 'Component Package';
@@ -84,10 +84,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			} ?></td>
 			<td><?php if (!in_array($package->type, array('system', 'meta'))) {
 				$name = $package->component;
-				echo htmlentities("{$pines->info->$name->name} [{$name} {$pines->info->$name->version}]");
+				echo htmlspecialchars("{$pines->info->$name->name} [{$name} {$pines->info->$name->version}]");
 			} else {
 				if ($package->type == 'system') {
-					echo htmlentities("{$pines->info->name} [system {$pines->info->version}]");
+					echo htmlspecialchars("{$pines->info->name} [system {$pines->info->version}]");
 				} else {
 					echo 'N/A';
 				}

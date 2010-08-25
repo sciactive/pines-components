@@ -98,11 +98,11 @@ $pines->com_pgrid->load();
 		<tbody>
 			<?php foreach ($this->db['packages'] as $key => $package) { ?>
 			<tr>
-				<td><?php echo htmlentities($package['name']); ?></td>
-				<td><?php echo htmlentities($key); ?></td>
-				<td><?php echo htmlentities($package['author']); ?></td>
-				<td><?php echo htmlentities($package['version']); ?></td>
-				<td><?php echo htmlentities($package['type']); ?></td>
+				<td><?php echo htmlspecialchars($package['name']); ?></td>
+				<td><?php echo htmlspecialchars($key); ?></td>
+				<td><?php echo htmlspecialchars($package['author']); ?></td>
+				<td><?php echo htmlspecialchars($package['version']); ?></td>
+				<td><?php echo htmlspecialchars($package['type']); ?></td>
 			</tr>
 			<?php } ?>
 		</tbody>

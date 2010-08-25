@@ -63,7 +63,7 @@ $pines->com_jstree->load();
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_reports', 'viewsalesranking')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_reports', 'viewsalesranking')); ?>">
 	<div class="pf-element location_tree"></div>
 	<div class="pf-element">
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />

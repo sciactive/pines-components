@@ -15,7 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	// <![CDATA[
 	function com_su_load_switcher() {
 		pines.com_su_loginpage_url = "<?php echo addslashes(pines_url('com_su', 'loginpage')); ?>";
-		pines.loadjs("<?php echo htmlentities($pines->config->rela_location); ?>components/com_su/includes/user_switcher.js", true);
+		pines.loadjs("<?php echo htmlspecialchars($pines->config->rela_location); ?>components/com_su/includes/user_switcher.js", true);
 	}
 	// ]]>
 </script>

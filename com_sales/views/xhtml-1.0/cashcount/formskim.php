@@ -110,13 +110,13 @@ $this->note = 'Count the cash as you take it out of the drawer.';
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_sales', 'cashcount/saveskim')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'cashcount/saveskim')); ?>">
 	<?php if (!empty($this->entity->cashcount->review_comments)) {?>
 	<div class="pf-element pf-heading">
 		<h1>Reviewer Comments</h1>
 	</div>
 	<div class="pf-element pf-full-width">
-		<div class="pf-field"><?php echo htmlentities($this->entity->cashcount->review_comments); ?></div>
+		<div class="pf-field"><?php echo htmlspecialchars($this->entity->cashcount->review_comments); ?></div>
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-heading">
@@ -126,8 +126,8 @@ $this->note = 'Count the cash as you take it out of the drawer.';
 	<div class="pf-element pf-full-width" style="position: relative;">
 		<?php foreach ($this->entity->cashcount->currency as $key => $cur_denom) { ?>
 		<div class="pf-element">
-			<input class="pf-field ui-widget-content ui-corner-all entry" type="text" name="count_<?php echo htmlentities($key); ?>" title="<?php echo htmlentities($cur_denom); ?>" value="0" />
-			x <span class="amount"><?php echo htmlentities($this->entity->cashcount->currency_symbol . $cur_denom); ?></span>
+			<input class="pf-field ui-widget-content ui-corner-all entry" type="text" name="count_<?php echo htmlspecialchars($key); ?>" title="<?php echo htmlspecialchars($cur_denom); ?>" value="0" />
+			x <span class="amount"><?php echo htmlspecialchars($this->entity->cashcount->currency_symbol . $cur_denom); ?></span>
 			<button class="pf-field ui-state-default ui-corner-all add_btn" type="button"><span class="amt_btn picon picon-list-add"></span></button>
 			<button class="pf-field ui-state-default ui-corner-all remove_btn" type="button"><span class="amt_btn picon picon-list-remove"></span></button>
 		</div>
@@ -146,6 +146,6 @@ $this->note = 'Count the cash as you take it out of the drawer.';
 	<div class="pf-element pf-buttons">
 		<input type="hidden" name="id" value="<?php echo $this->entity->cashcount->guid; ?>" />
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all submit_button" type="button" value="Finish Skim" onclick="pines.com_sales_verify();" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'cashcount/list')); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'cashcount/list')); ?>');" value="Cancel" />
 	</div>
 </form>

@@ -84,14 +84,14 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->products as $product) { ?>
 		<tr title="<?php echo $product->guid; ?>">
-			<td><?php echo htmlentities($product->sku); ?></td>
-			<td><?php echo htmlentities($product->name); ?></td>
+			<td><?php echo htmlspecialchars($product->sku); ?></td>
+			<td><?php echo htmlspecialchars($product->name); ?></td>
 			<td><?php echo ($product->enabled ? 'Yes' : 'No'); ?></td>
-			<td><?php echo htmlentities($product->manufacturer->name); ?></td>
-			<td><?php echo htmlentities($product->manufacturer_sku); ?></td>
-			<td><?php echo htmlentities($product->pricing_method); ?></td>
-			<td>$<?php echo htmlentities($product->unit_price); ?></td>
-			<td><?php echo htmlentities($product->margin); ?>%</td>
+			<td><?php echo htmlspecialchars($product->manufacturer->name); ?></td>
+			<td><?php echo htmlspecialchars($product->manufacturer_sku); ?></td>
+			<td><?php echo htmlspecialchars($product->pricing_method); ?></td>
+			<td>$<?php echo htmlspecialchars($product->unit_price); ?></td>
+			<td><?php echo htmlspecialchars($product->margin); ?>%</td>
 			<td><?php echo ($product->tax_exempt ? 'Yes' : 'No'); ?></td>
 			<td><?php echo ($product->serialized ? 'Yes' : 'No'); ?></td>
 			<td><?php echo ($product->discountable ? 'Yes' : 'No'); ?></td>
@@ -99,7 +99,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo ($product->require_customer ? 'Yes' : 'No'); ?></td>
 			<?php } ?>
 			<td><?php echo ($product->non_refundable ? 'Yes' : 'No'); ?></td>
-			<td><?php echo htmlentities(implode(', ', $product->additional_barcodes)); ?></td>
+			<td><?php echo htmlspecialchars(implode(', ', $product->additional_barcodes)); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

@@ -77,18 +77,18 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<?php foreach($this->users as $user) { ?>
 		<tr title="<?php echo $user->guid; ?>">
 			<td><?php echo $user->guid; ?></td>
-			<td><?php echo htmlentities($user->username); ?></td>
-			<td><?php echo htmlentities($user->name); ?></td>
-			<td><?php echo htmlentities($user->email); ?></td>
-			<td><?php echo htmlentities($user->get_timezone()).(empty($user->timezone) ? ' (I)' : ' (A)'); ?></td>
-			<td><?php echo htmlentities($user->group->groupname); ?></td>
+			<td><?php echo htmlspecialchars($user->username); ?></td>
+			<td><?php echo htmlspecialchars($user->name); ?></td>
+			<td><?php echo htmlspecialchars($user->email); ?></td>
+			<td><?php echo htmlspecialchars($user->get_timezone()).(empty($user->timezone) ? ' (I)' : ' (A)'); ?></td>
+			<td><?php echo htmlspecialchars($user->group->groupname); ?></td>
 			<td><?php
 			if (count($user->groups) < 15) {
 				$group_list = '';
 				foreach ($user->groups as $cur_group) {
 					$group_list .= (empty($group_list) ? '' : ', ').$cur_group->groupname;
 				}
-				echo htmlentities($group_list);
+				echo htmlspecialchars($group_list);
 			} else {
 				echo count($user->groups).' groups';
 			}

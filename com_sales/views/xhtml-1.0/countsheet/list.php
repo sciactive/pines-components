@@ -235,7 +235,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<?php foreach($this->countsheets as $countsheet) { ?>
 		<tr title="<?php echo $countsheet->guid; ?>">
 			<td><?php echo $countsheet->guid; ?></td>
-			<td><?php echo htmlentities($countsheet->user->name); ?></td>
+			<td><?php echo htmlspecialchars($countsheet->user->name); ?></td>
 			<td><?php echo format_date($countsheet->p_cdate); ?></td>
 			<td><?php echo format_date($countsheet->p_mdate); ?></td>
 			<td><?php echo $countsheet->final ? 'Yes' : 'No'; ?></td>

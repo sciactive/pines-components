@@ -83,7 +83,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	</div>
 	<div class="pf-element location_tree" style="padding-bottom: 5px;"></div>
 	<div class="pf-element">
-		<input type="hidden" name="location" value="<?php echo htmlentities($this->location); ?>" />
+		<input type="hidden" name="location" value="<?php echo htmlspecialchars($this->location); ?>" />
 		<input type="hidden" name="location_saver" value="<?php echo ($this->location == 'all') ? 'all' : 'individual'; ?>" />
 	</div>
 </form>

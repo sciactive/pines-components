@@ -13,6 +13,6 @@ defined('P_RUN') or die('Direct access prohibited');
 ?>
 <script type="text/javascript">
 	// <![CDATA[
-	pines.loadjs("<?php echo htmlentities($pines->config->rela_location); ?>components/com_jquery/includes/<?php echo $pines->config->debug_mode ? 'jquery.js' : 'jquery.min.js'; ?>");
+	pines.loadjs("<?php echo htmlspecialchars($pines->config->rela_location); ?>components/com_jquery/includes/<?php echo $pines->config->debug_mode ? 'jquery.js' : 'jquery.min.js'; ?>");
 	// ]]>
 </script>

@@ -182,12 +182,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->returns as $return) { ?>
 		<tr title="<?php echo $return->guid; ?>">
-			<td><?php echo htmlentities($return->id); ?></td>
+			<td><?php echo htmlspecialchars($return->id); ?></td>
 			<td><?php echo format_date($return->p_cdate); ?></td>
-			<td><?php echo htmlentities(ucwords($return->status)); ?></td>
-			<td><?php echo isset($return->user->guid) ? htmlentities("{$return->user->name} [{$return->user->username}]") : ''; ?></td>
+			<td><?php echo htmlspecialchars(ucwords($return->status)); ?></td>
+			<td><?php echo isset($return->user->guid) ? htmlspecialchars("{$return->user->name} [{$return->user->username}]") : ''; ?></td>
 			<?php if ($pines->config->com_sales->com_customer) { ?>
-			<td><?php echo $return->customer->guid ? htmlentities("{$return->customer->guid}: \"{$return->customer->name}\"") : ''; ?></td>
+			<td><?php echo $return->customer->guid ? htmlspecialchars("{$return->customer->guid}: \"{$return->customer->name}\"") : ''; ?></td>
 			<?php } ?>
 			<td><?php
 			$number = 0;

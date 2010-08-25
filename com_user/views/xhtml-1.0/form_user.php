@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = (!isset($this->entity->guid)) ? 'Editing New User' : 'Editing ['.htmlentities($this->entity->username).']';
+$this->title = (!isset($this->entity->guid)) ? 'Editing New User' : 'Editing ['.htmlspecialchars($this->entity->username).']';
 $this->note = 'Provide user details in this form.';
 $pines->com_pgrid->load();
 //$pines->com_jstree->load();
@@ -208,7 +208,7 @@ $pines->com_pgrid->load();
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_user', 'saveuser')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_user', 'saveuser')); ?>">
 	<div id="p_muid_tabs" style="clear: both;">
 		<ul>
 			<li><a href="#p_muid_tab_general">General</a></li>
@@ -225,8 +225,8 @@ $pines->com_pgrid->load();
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
 				<?php if (isset($this->entity->user)) { ?>
-				<div>User: <span class="date"><?php echo htmlentities("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
-				<div>Group: <span class="date"><?php echo htmlentities("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
+				<div>User: <span class="date"><?php echo htmlspecialchars("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
+				<div>Group: <span class="date"><?php echo htmlspecialchars("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
 				<?php } ?>
 				<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
 				<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
@@ -234,11 +234,11 @@ $pines->com_pgrid->load();
 			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Username</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="username" size="24" value="<?php echo htmlentities($this->entity->username); ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="username" size="24" value="<?php echo htmlspecialchars($this->entity->username); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Name</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>
@@ -246,7 +246,7 @@ $pines->com_pgrid->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Email</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="email" size="24" value="<?php echo htmlentities($this->entity->email); ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="email" size="24" value="<?php echo htmlspecialchars($this->entity->email); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Phone</span>
@@ -266,7 +266,7 @@ $pines->com_pgrid->load();
 						$tz = DateTimeZone::listIdentifiers();
 						sort($tz);
 						foreach ($tz as $cur_tz) {
-							?><option value="<?php echo htmlentities($cur_tz); ?>"<?php echo $this->entity->timezone == $cur_tz ? ' selected="selected"' : ''; ?>><?php echo htmlentities($cur_tz); ?></option><?php
+							?><option value="<?php echo htmlspecialchars($cur_tz); ?>"<?php echo $this->entity->timezone == $cur_tz ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_tz); ?></option><?php
 						} ?>
 					</select>
 				</label>
@@ -287,7 +287,7 @@ $pines->com_pgrid->load();
 			<?php if ( $this->display_pin ) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">PIN code</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="password" name="pin" size="5" value="<?php echo htmlentities($this->entity->pin); ?>" <?php echo $pines->config->com_user->max_pin_length > 0 ? "maxlength=\"{$pines->config->com_user->max_pin_length}\"" : ''; ?>/></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="password" name="pin" size="5" value="<?php echo htmlspecialchars($this->entity->pin); ?>" <?php echo $pines->config->com_user->max_pin_length > 0 ? "maxlength=\"{$pines->config->com_user->max_pin_length}\"" : ''; ?>/></label>
 			</div>
 			<?php } ?>
 			<br class="pf-clearing" />
@@ -307,7 +307,7 @@ $pines->com_pgrid->load();
 							<?php
 							$pines->user_manager->group_sort($this->group_array_primary, 'name');
 							foreach ($this->group_array_primary as $cur_group) {
-								?><option value="<?php echo $cur_group->guid; ?>"<?php echo $cur_group->is($this->entity->group) ? ' selected="selected"' : ''; ?>><?php echo htmlentities(str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"); ?></option><?php
+								?><option value="<?php echo $cur_group->guid; ?>"<?php echo $cur_group->is($this->entity->group) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars(str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"); ?></option><?php
 							} ?>
 						</select>
 					</label>
@@ -373,8 +373,8 @@ $pines->com_pgrid->load();
 								<?php foreach($this->group_array_secondary as $cur_group) { ?>
 									<tr title="<?php echo $cur_group->guid; ?>" class="<?php echo $cur_group->get_children() ? 'parent ' : ''; ?><?php echo (isset($cur_group->parent) && $cur_group->parent->in_array($this->group_array_secondary)) ? "child {$cur_group->parent->guid} " : ''; ?>">
 										<td><input type="checkbox" name="groups[]" value="<?php echo $cur_group->guid; ?>" <?php echo $cur_group->in_array($this->entity->groups) ? 'checked="checked" ' : ''; ?>/></td>
-										<td><?php echo htmlentities($cur_group->name); ?></td>
-										<td><?php echo htmlentities($cur_group->groupname); ?></td>
+										<td><?php echo htmlspecialchars($cur_group->name); ?></td>
+										<td><?php echo htmlspecialchars($cur_group->groupname); ?></td>
 									</tr>
 								<?php } ?>
 								</tbody>
@@ -416,15 +416,15 @@ $pines->com_pgrid->load();
 			<div id="p_muid_address_us" style="display: none;">
 				<div class="pf-element">
 					<label><span class="pf-label">Address 1</span>
-						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="address_1" size="24" value="<?php echo htmlentities($this->entity->address_1); ?>" /></label>
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="address_1" size="24" value="<?php echo htmlspecialchars($this->entity->address_1); ?>" /></label>
 				</div>
 				<div class="pf-element">
 					<label><span class="pf-label">Address 2</span>
-						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="address_2" size="24" value="<?php echo htmlentities($this->entity->address_2); ?>" /></label>
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="address_2" size="24" value="<?php echo htmlspecialchars($this->entity->address_2); ?>" /></label>
 				</div>
 				<div class="pf-element">
 					<span class="pf-label">City, State</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="city" size="15" value="<?php echo htmlentities($this->entity->city); ?>" />
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="city" size="15" value="<?php echo htmlspecialchars($this->entity->city); ?>" />
 					<select class="pf-field ui-widget-content ui-corner-all" name="state">
 						<option value="">None</option>
 						<?php foreach (array(
@@ -486,7 +486,7 @@ $pines->com_pgrid->load();
 				</div>
 				<div class="pf-element">
 					<label><span class="pf-label">Zip</span>
-						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="zip" size="24" value="<?php echo htmlentities($this->entity->zip); ?>" /></label>
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="zip" size="24" value="<?php echo htmlspecialchars($this->entity->zip); ?>" /></label>
 				</div>
 			</div>
 			<div id="p_muid_address_international" style="display: none;">
@@ -513,12 +513,12 @@ $pines->com_pgrid->load();
 					<tbody>
 						<?php foreach ($this->entity->addresses as $cur_address) { ?>
 						<tr>
-							<td><?php echo htmlentities($cur_address['type']); ?></td>
-							<td><?php echo htmlentities($cur_address['address_1']); ?></td>
-							<td><?php echo htmlentities($cur_address['address_2']); ?></td>
-							<td><?php echo htmlentities($cur_address['city']); ?></td>
-							<td><?php echo htmlentities($cur_address['state']); ?></td>
-							<td><?php echo htmlentities($cur_address['zip']); ?></td>
+							<td><?php echo htmlspecialchars($cur_address['type']); ?></td>
+							<td><?php echo htmlspecialchars($cur_address['address_1']); ?></td>
+							<td><?php echo htmlspecialchars($cur_address['address_2']); ?></td>
+							<td><?php echo htmlspecialchars($cur_address['city']); ?></td>
+							<td><?php echo htmlspecialchars($cur_address['state']); ?></td>
+							<td><?php echo htmlspecialchars($cur_address['zip']); ?></td>
 						</tr>
 						<?php } ?>
 					</tbody>
@@ -598,13 +598,13 @@ $pines->com_pgrid->load();
 				}
 				if (!$section_abilities) continue; ?>
 			<div class="abilities_accordian">
-				<h3><a href="#"><?php echo ($cur_section == 'system') ? htmlentities($pines->info->name) : htmlentities($pines->info->$cur_section->name); ?> (<?php echo htmlentities($cur_section); ?>)</a></h3>
+				<h3><a href="#"><?php echo ($cur_section == 'system') ? htmlspecialchars($pines->info->name) : htmlspecialchars($pines->info->$cur_section->name); ?> (<?php echo htmlspecialchars($cur_section); ?>)</a></h3>
 				<div>
 					<div class="pf-element">
 						<?php foreach ($section_abilities as $cur_ability) { ?>
 						<label>
-							<input type="checkbox" name="<?php echo htmlentities($cur_section); ?>[]" value="<?php echo htmlentities($cur_ability[0]); ?>" <?php echo (array_search("{$cur_section}/{$cur_ability[0]}", $this->entity->abilities) !== false) ? 'checked="checked" ' : ''; ?>/>
-							<?php echo htmlentities($cur_ability[1]); ?>&nbsp;<small><?php echo htmlentities($cur_ability[2]); ?></small>
+							<input type="checkbox" name="<?php echo htmlspecialchars($cur_section); ?>[]" value="<?php echo htmlspecialchars($cur_ability[0]); ?>" <?php echo (array_search("{$cur_section}/{$cur_ability[0]}", $this->entity->abilities) !== false) ? 'checked="checked" ' : ''; ?>/>
+							<?php echo htmlspecialchars($cur_ability[1]); ?>&nbsp;<small><?php echo htmlspecialchars($cur_ability[2]); ?></small>
 						</label>
 						<br class="pf-clearing" />
 						<?php } ?>
@@ -623,7 +623,7 @@ $pines->com_pgrid->load();
 					</thead>
 					<tbody>
 						<?php foreach ($this->entity->attributes as $cur_attribute) { ?>
-						<tr><td><?php echo htmlentities($cur_attribute['name']); ?></td><td><?php echo htmlentities($cur_attribute['value']); ?></td></tr>
+						<tr><td><?php echo htmlspecialchars($cur_attribute['name']); ?></td><td><?php echo htmlspecialchars($cur_attribute['value']); ?></td></tr>
 						<?php } ?>
 					</tbody>
 				</table>
@@ -652,6 +652,6 @@ $pines->com_pgrid->load();
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_user', 'listusers')); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_user', 'listusers')); ?>');" value="Cancel" />
 	</div>
 </form>

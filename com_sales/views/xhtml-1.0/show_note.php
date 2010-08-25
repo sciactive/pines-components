@@ -16,10 +16,10 @@ defined('P_RUN') or die('Direct access prohibited');
 		<span class="pf-label">
 		<?php
 			if (isset($this->link))
-				$this->header = '<a href="'.htmlentities($this->link).'">'.htmlentities($this->header).' &raquo;</a>';
+				$this->header = '<a href="'.htmlspecialchars($this->link).'">'.htmlspecialchars($this->header).' &raquo;</a>';
 			echo $this->header;
 		?>
 		</span>
-		<span class="pf-note"><?php echo str_replace("\n", "<br />", htmlentities($this->message)); ?></span>
+		<span class="pf-note"><?php echo str_replace("\n", "<br />", htmlspecialchars($this->message)); ?></span>
 	</div>
 </div>

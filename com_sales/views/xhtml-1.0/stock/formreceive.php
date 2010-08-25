@@ -18,7 +18,7 @@ $pines->com_jstree->load();
 if ($pines->config->com_sales->autocomplete_product)
 	$pines->com_sales->load_product_select();
 ?>
-<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_sales', 'stock/receive')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'stock/receive')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
 		
@@ -333,7 +333,7 @@ if ($pines->config->com_sales->autocomplete_product)
 			<?php foreach($this->categories as $category) { ?>
 				<tr title="<?php echo $category->guid; ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? "child {$category->parent->guid} " : ''; ?>">
 					<td><?php echo isset($category->parent) ? $category->array_search($category->parent->children) + 1 : '0' ; ?></td>
-					<td><?php echo htmlentities($category->name); ?></td>
+					<td><?php echo htmlspecialchars($category->name); ?></td>
 					<td><?php echo count($category->products); ?></td>
 				</tr>
 			<?php } ?>
@@ -377,6 +377,6 @@ if ($pines->config->com_sales->autocomplete_product)
 	</div>
 	<div class="pf-element pf-buttons">
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url()); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url()); ?>');" value="Cancel" />
 	</div>
 </form>

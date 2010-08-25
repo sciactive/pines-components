@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Customer Login/Logout';
 $this->note = 'Please enter your info, or scan your barcode to login or logout.';
 ?>
-<form class="pf-form" id="p_muid_form" name="customer_login" method="post" action="<?php echo htmlentities(pines_url('com_customertimer', 'login')); ?>">
+<form class="pf-form" id="p_muid_form" name="customer_login" method="post" action="<?php echo htmlspecialchars(pines_url('com_customertimer', 'login')); ?>">
 	<script type="text/javascript">
 	// <![CDATA[
 	pines(function(){

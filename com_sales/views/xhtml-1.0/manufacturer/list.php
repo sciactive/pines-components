@@ -77,13 +77,13 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->manufacturers as $manufacturer) { ?>
 		<tr title="<?php echo $manufacturer->guid; ?>">
-			<td><?php echo htmlentities($manufacturer->name); ?></td>
-			<td><?php echo htmlentities($manufacturer->email); ?></td>
-			<td><?php echo htmlentities($manufacturer->address_1); ?></td>
-			<td><?php echo htmlentities($manufacturer->address_2); ?></td>
-			<td><?php echo htmlentities($manufacturer->city); ?></td>
-			<td><?php echo htmlentities($manufacturer->state); ?></td>
-			<td><?php echo htmlentities($manufacturer->zip); ?></td>
+			<td><?php echo htmlspecialchars($manufacturer->name); ?></td>
+			<td><?php echo htmlspecialchars($manufacturer->email); ?></td>
+			<td><?php echo htmlspecialchars($manufacturer->address_1); ?></td>
+			<td><?php echo htmlspecialchars($manufacturer->address_2); ?></td>
+			<td><?php echo htmlspecialchars($manufacturer->city); ?></td>
+			<td><?php echo htmlspecialchars($manufacturer->state); ?></td>
+			<td><?php echo htmlspecialchars($manufacturer->zip); ?></td>
 			<td><?php echo format_phone($manufacturer->phone_work); ?></td>
 			<td><?php echo format_phone($manufacturer->fax); ?></td>
 		</tr>

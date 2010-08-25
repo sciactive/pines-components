@@ -78,16 +78,16 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->payment_types as $payment_type) { ?>
 		<tr title="<?php echo $payment_type->guid; ?>">
-			<td><?php echo htmlentities($payment_type->name); ?></td>
+			<td><?php echo htmlspecialchars($payment_type->name); ?></td>
 			<td><?php echo $payment_type->enabled ? 'Yes' : 'No'; ?></td>
 			<?php if ($pines->config->com_sales->com_storefront) { ?>
 			<td><?php echo $payment_type->storefront ? 'Yes' : 'No'; ?></td>
 			<?php } ?>
 			<td><?php echo $payment_type->kick_drawer ? 'Yes' : 'No'; ?></td>
 			<td><?php echo $payment_type->change_type ? 'Yes' : 'No'; ?></td>
-			<td><?php echo htmlentities($payment_type->minimum); ?></td>
-			<td><?php echo htmlentities($payment_type->maximum); ?></td>
-			<td><?php echo htmlentities($payment_type->processing_type); ?></td>
+			<td><?php echo htmlspecialchars($payment_type->minimum); ?></td>
+			<td><?php echo htmlspecialchars($payment_type->maximum); ?></td>
+			<td><?php echo htmlspecialchars($payment_type->processing_type); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

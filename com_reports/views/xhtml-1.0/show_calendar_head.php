@@ -19,7 +19,7 @@ defined('P_RUN') or die('Direct access prohibited');
 ?>
 <script type="text/javascript">
 	// <![CDATA[
-	pines.loadcss("<?php echo htmlentities($pines->config->rela_location); ?>components/com_reports/includes/fullcalendar.css");
-	pines.loadjs("<?php echo htmlentities($pines->config->rela_location); ?>components/com_reports/includes/fullcalendar.min.js");
+	pines.loadcss("<?php echo htmlspecialchars($pines->config->rela_location); ?>components/com_reports/includes/fullcalendar.css");
+	pines.loadjs("<?php echo htmlspecialchars($pines->config->rela_location); ?>components/com_reports/includes/fullcalendar.min.js");
 	// ]]>
 </script>

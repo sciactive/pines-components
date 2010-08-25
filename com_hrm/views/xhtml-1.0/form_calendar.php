@@ -133,7 +133,7 @@ $pines->com_ptags->load();
 			success: function(data){
 				if (data == "")
 					return;
-				var form = $("<div title=\"Editing "+"<?php echo htmlentities($this->entity->label); ?>"+"\" />");
+				var form = $("<div title=\"Editing "+"<?php echo htmlspecialchars($this->entity->label); ?>"+"\" />");
 				form.dialog({
 					bgiframe: true,
 					autoOpen: true,
@@ -255,7 +255,7 @@ $pines->com_ptags->load();
 			success: function(data){
 				if (data == "")
 					return;
-				var form = $("<div title=\"Time Off Request for "+"<?php echo htmlentities($_SESSION['user']->name); ?>"+"\" />");
+				var form = $("<div title=\"Time Off Request for "+"<?php echo htmlspecialchars($_SESSION['user']->name); ?>"+"\" />");
 				form.dialog({
 					bgiframe: true,
 					autoOpen: true,
@@ -309,7 +309,7 @@ $pines->com_ptags->load();
 				continue;
 			$cur_select = (isset($this->employee->group) && $this->employee->is($cur_employee)) ? 'selected="selected"' : '';
 			if ($this->location == $cur_employee->group->guid)
-				echo '<option value="'.$cur_employee->guid.'" '.$cur_select.'>'.htmlentities($cur_employee->name).'</option>';
+				echo '<option value="'.$cur_employee->guid.'" '.$cur_select.'>'.htmlspecialchars($cur_employee->name).'</option>';
 		} ?>
 	</select>
 </div>

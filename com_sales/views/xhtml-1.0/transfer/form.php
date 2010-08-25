@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = (!isset($this->entity->guid)) ? 'Editing New Transfer' : (($this->entity->final) ? 'Viewing ' : 'Editing ').' Transfer ['.htmlentities($this->entity->guid).']';
+$this->title = (!isset($this->entity->guid)) ? 'Editing New Transfer' : (($this->entity->final) ? 'Viewing ' : 'Editing ').' Transfer ['.htmlspecialchars($this->entity->guid).']';
 $this->note = 'Use this form to transfer inventory to another location.';
 $pines->com_pgrid->load();
 $pines->com_jstree->load();
@@ -18,7 +18,7 @@ $read_only = '';
 if ($this->entity->final)
 	$read_only = 'readonly="readonly"';
 ?>
-<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_sales', 'transfer/save')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'transfer/save')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
 		
@@ -156,8 +156,8 @@ if ($this->entity->final)
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 		<?php if (isset($this->entity->user)) { ?>
-		<div>User: <span class="date"><?php echo htmlentities("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
-		<div>Group: <span class="date"><?php echo htmlentities("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
+		<div>User: <span class="date"><?php echo htmlspecialchars("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
+		<div>Group: <span class="date"><?php echo htmlspecialchars("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
 		<?php } ?>
 		<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
 		<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
@@ -171,7 +171,7 @@ if ($this->entity->final)
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Reference #</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="reference_number" size="24" value="<?php echo htmlentities($this->entity->reference_number); ?>" <?php echo $read_only; ?> /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="reference_number" size="24" value="<?php echo htmlspecialchars($this->entity->reference_number); ?>" <?php echo $read_only; ?> /></label>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Location</span>
@@ -185,7 +185,7 @@ if ($this->entity->final)
 			<select class="pf-field ui-widget-content ui-corner-all" name="shipper" <?php echo $read_only; ?>>
 				<option value="null">-- None --</option>
 				<?php foreach ($this->shippers as $cur_shipper) { ?>
-				<option value="<?php echo $cur_shipper->guid; ?>"<?php echo $this->entity->shipper->guid == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo htmlentities($cur_shipper->name); ?></option>
+				<option value="<?php echo $cur_shipper->guid; ?>"<?php echo $this->entity->shipper->guid == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_shipper->name); ?></option>
 				<?php } ?>
 			</select></label>
 	</div>
@@ -233,12 +233,12 @@ if ($this->entity->final)
 								}
 								?>
 						<tr title="<?php echo $cur_stock->guid; ?>">
-							<td><?php echo htmlentities($cur_stock->product->sku); ?></td>
-							<td><?php echo htmlentities($cur_stock->product->name); ?></td>
-							<td><?php echo htmlentities($cur_stock->serial); ?></td>
-							<td><?php echo htmlentities($cur_stock->vendor->name); ?></td>
-							<td><?php echo htmlentities("{$cur_stock->location->name} [{$cur_stock->location->groupname}]"); ?></td>
-							<td><?php echo htmlentities($cur_stock->cost); ?></td>
+							<td><?php echo htmlspecialchars($cur_stock->product->sku); ?></td>
+							<td><?php echo htmlspecialchars($cur_stock->product->name); ?></td>
+							<td><?php echo htmlspecialchars($cur_stock->serial); ?></td>
+							<td><?php echo htmlspecialchars($cur_stock->vendor->name); ?></td>
+							<td><?php echo htmlspecialchars("{$cur_stock->location->name} [{$cur_stock->location->groupname}]"); ?></td>
+							<td><?php echo htmlspecialchars($cur_stock->cost); ?></td>
 							<td><?php echo $cur_stock->available ? 'Yes' : 'No'; ?></td>
 						</tr>
 						<?php } ?>
@@ -285,12 +285,12 @@ if ($this->entity->final)
 			?>
 			<?php foreach ($received as $cur_entry) { ?>
 			<div class="pf-field pf-full-width ui-widget-content ui-corner-all" style="margin-bottom: 5px; padding: .5em;">
-				SKU: <?php echo htmlentities($cur_entry['entity']->sku); ?><br />
-				Product: <?php echo htmlentities($cur_entry['entity']->name); ?><br />
+				SKU: <?php echo htmlspecialchars($cur_entry['entity']->sku); ?><br />
+				Product: <?php echo htmlspecialchars($cur_entry['entity']->name); ?><br />
 				Quantity: <?php echo count($cur_entry['serials']); ?>
 				<?php if ($cur_entry['entity']->serialized) { ?>
 				<br />
-				Serials: <?php echo htmlentities(implode(', ', $cur_entry['serials'])); ?>
+				Serials: <?php echo htmlspecialchars(implode(', ', $cur_entry['serials'])); ?>
 				<?php } ?>
 			</div>
 			<?php } ?>
@@ -300,9 +300,9 @@ if ($this->entity->final)
 			<span class="pf-label">Missing Inventory</span>
 			<?php foreach ($missing_products as $cur_entry) { ?>
 			<div class="pf-field pf-full-width ui-widget-content ui-corner-all" style="margin-bottom: 5px; padding: .5em;">
-				SKU: <?php echo htmlentities($cur_entry['entity']->sku); ?><br />
-				Product: <?php echo htmlentities($cur_entry['entity']->name); ?><br />
-				Quantity: <?php echo htmlentities($cur_entry['quantity']); ?>
+				SKU: <?php echo htmlspecialchars($cur_entry['entity']->sku); ?><br />
+				Product: <?php echo htmlspecialchars($cur_entry['entity']->name); ?><br />
+				Quantity: <?php echo htmlspecialchars($cur_entry['quantity']); ?>
 			</div>
 			<?php } ?>
 		</div>
@@ -316,7 +316,7 @@ if ($this->entity->final)
 		<input type="hidden" id="p_muid_save" name="save" value="" />
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" onclick="$('#p_muid_save').val('save');" />
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Commit" onclick="$('#p_muid_save').val('commit');" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'transfer/list')); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'transfer/list')); ?>');" value="Cancel" />
 		<?php } ?>
 	</div>
 </form>

@@ -73,9 +73,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<?php foreach($this->transfers as $transfer) { ?>
 		<tr title="<?php echo $transfer->guid; ?>">
 			<td><?php echo $transfer->guid; ?></td>
-			<td><?php echo htmlentities($transfer->reference_number); ?></td>
-			<td><?php echo htmlentities("{$transfer->destination->name} [{$transfer->destination->groupname}]"); ?></td>
-			<td><?php echo htmlentities($transfer->shipper->name); ?></td>
+			<td><?php echo htmlspecialchars($transfer->reference_number); ?></td>
+			<td><?php echo htmlspecialchars("{$transfer->destination->name} [{$transfer->destination->groupname}]"); ?></td>
+			<td><?php echo htmlspecialchars($transfer->shipper->name); ?></td>
 			<td><?php echo ($transfer->eta ? date('Y-m-d', $transfer->eta) : 'None'); ?></td>
 		</tr>
 	<?php } ?>

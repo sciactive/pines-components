@@ -106,8 +106,8 @@ $entry_count = count($this->entity->timeclock);
 		// ]]>
 	</script>
 	<div class="pf-element">
-		<span class="pf-label"><?php echo htmlentities($this->entity->name); ?></span>
-		<span class="pf-note"><span>Status: </span><span id="p_muid_status"><?php echo empty($this->entity->timeclock) ? 'out' : htmlentities($this->entity->timeclock[$entry_count - 1]['status']); ?></span></span>
+		<span class="pf-label"><?php echo htmlspecialchars($this->entity->name); ?></span>
+		<span class="pf-note"><span>Status: </span><span id="p_muid_status"><?php echo empty($this->entity->timeclock) ? 'out' : htmlspecialchars($this->entity->timeclock[$entry_count - 1]['status']); ?></span></span>
 		<span class="pf-note"><span>Time: </span><span id="p_muid_time"><?php echo empty($this->entity->timeclock) ? 'No Timeclock Data' : format_date($this->entity->timeclock[$entry_count - 1]['time']); ?></span></span>
 	</div>
 	<div class="pf-element pf-full-width">

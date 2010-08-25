@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Cash-Out of Cash Count ['.htmlentities($this->entity->guid).']';
+$this->title = 'Cash-Out of Cash Count ['.htmlspecialchars($this->entity->guid).']';
 if (isset($this->entity->guid))
 	$this->note = 'Created by ' . $this->entity->user->name . ' on ' . date('Y-m-d', $this->entity->p_cdate) . ' - Last Modified on ' . date('Y-m-d', $this->entity->p_mdate);
 ?>
@@ -106,13 +106,13 @@ if (isset($this->entity->guid))
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_sales', 'cashcount/savecashout')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'cashcount/savecashout')); ?>">
 	<?php if (!empty($this->entity->review_comments)) {?>
 	<div class="pf-element pf-heading">
 		<h1>Reviewer Comments</h1>
 	</div>
 	<div class="pf-element pf-full-width">
-		<div class="pf-field"><?php echo htmlentities($this->entity->review_comments); ?></div>
+		<div class="pf-field"><?php echo htmlspecialchars($this->entity->review_comments); ?></div>
 	</div>
 	<?php } if (!$this->entity->cashed_out) { ?>
 	<div class="pf-element pf-heading">
@@ -122,8 +122,8 @@ if (isset($this->entity->guid))
 	<div class="pf-element pf-full-width" style="position: relative;">
 		<?php foreach ($this->entity->currency as $key => $cur_denom) { ?>
 		<div class="pf-element">
-			<input class="pf-field ui-widget-content ui-corner-all entry" type="text" name="count_<?php echo htmlentities($key); ?>" title="<?php echo htmlentities($cur_denom); ?>" value="0" <?php echo $this->entity->final ? 'readonly="readonly"' : ''; ?> />
-			x <span class="amount"><?php echo htmlentities($this->entity->currency_symbol . $cur_denom); ?></span>
+			<input class="pf-field ui-widget-content ui-corner-all entry" type="text" name="count_<?php echo htmlspecialchars($key); ?>" title="<?php echo htmlspecialchars($cur_denom); ?>" value="0" <?php echo $this->entity->final ? 'readonly="readonly"' : ''; ?> />
+			x <span class="amount"><?php echo htmlspecialchars($this->entity->currency_symbol . $cur_denom); ?></span>
 			<button class="pf-field ui-state-default ui-corner-all add_btn" type="button"><span class="amt_btn picon picon-list-add"></span></button>
 			<button class="pf-field ui-state-default ui-corner-all remove_btn" type="button"><span class="amt_btn picon picon-list-remove"></span></button>
 		</div>
@@ -143,16 +143,16 @@ if (isset($this->entity->guid))
 	?>
 	<div class="pf-element">
 		<span class="pf-label">Expected Count</span>
-		<span class="pf-field">$<?php echo htmlentities($this->entity->total); ?></span>
+		<span class="pf-field">$<?php echo htmlspecialchars($this->entity->total); ?></span>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">- Actual Count</span>
-		<span class="pf-field">$<?php echo htmlentities($this->entity->total_out); ?></span>
+		<span class="pf-field">$<?php echo htmlspecialchars($this->entity->total_out); ?></span>
 		<hr />
 	</div>
 	<div class="pf-element <?php echo $class; ?> ui-corner-all" style="padding: .2em .5em;">
 		<span class="pf-label">Error</span>
-		<span class="pf-field">$<?php echo htmlentities($this->entity->total - $this->entity->total_out); ?></span>
+		<span class="pf-field">$<?php echo htmlspecialchars($this->entity->total - $this->entity->total_out); ?></span>
 	</div>
 	<div class="pf-element pf-heading">
 		<h1>Totals</h1>
@@ -160,20 +160,20 @@ if (isset($this->entity->guid))
 	<div class="pf-element pf-full-width" style="position: relative; padding-bottom: 75px;">
 		<div class="pf-element">
 			<span class="pf-label">Actual Count</span>
-			<span class="pf-field">$<?php echo htmlentities($this->entity->total_out); ?></span>
+			<span class="pf-field">$<?php echo htmlspecialchars($this->entity->total_out); ?></span>
 		</div>
 		<div class="pf-element">
 			<span class="pf-label">- Float</span>
-			<span class="pf-field">$<?php echo htmlentities($this->entity->float); ?></span>
+			<span class="pf-field">$<?php echo htmlspecialchars($this->entity->float); ?></span>
 			<hr />
 		</div>
 		<div class="pf-element ui-state-highlight ui-corner-all" style="padding: .2em .5em;">
 			<span class="pf-label">Total Received Cash</span>
-			<span class="pf-field">$<?php echo htmlentities($variance); ?></span>
+			<span class="pf-field">$<?php echo htmlspecialchars($variance); ?></span>
 		</div>
 		<div class="ui-state-highlight ui-corner-all total">
 			<div>Cash Received</div>
-			<div>$<?php echo htmlentities($variance); ?></div>
+			<div>$<?php echo htmlspecialchars($variance); ?></div>
 		</div>
 	</div>
 	<?php } ?>
@@ -189,9 +189,9 @@ if (isset($this->entity->guid))
 		<?php } if (!$this->entity->cashed_out) { ?>
 		<input type="hidden" id="p_muid_save" name="save" value="" />
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Cash Out" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'cashcount/list')); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'cashcount/list')); ?>');" value="Cancel" />
 		<?php } else { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'cashcount/list')); ?>');" value="&laquo; Close" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'cashcount/list')); ?>');" value="&laquo; Close" />
 		<?php } ?>
 	</div>
 </form>

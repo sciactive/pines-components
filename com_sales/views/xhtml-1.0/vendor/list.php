@@ -78,16 +78,16 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->vendors as $vendor) { ?>
 		<tr title="<?php echo $vendor->guid; ?>">
-			<td><?php echo htmlentities($vendor->name); ?></td>
-			<td><?php echo htmlentities($vendor->email); ?></td>
-			<td><?php echo htmlentities($vendor->address_1); ?></td>
-			<td><?php echo htmlentities($vendor->address_2); ?></td>
-			<td><?php echo htmlentities($vendor->city); ?></td>
-			<td><?php echo htmlentities($vendor->state); ?></td>
-			<td><?php echo htmlentities($vendor->zip); ?></td>
+			<td><?php echo htmlspecialchars($vendor->name); ?></td>
+			<td><?php echo htmlspecialchars($vendor->email); ?></td>
+			<td><?php echo htmlspecialchars($vendor->address_1); ?></td>
+			<td><?php echo htmlspecialchars($vendor->address_2); ?></td>
+			<td><?php echo htmlspecialchars($vendor->city); ?></td>
+			<td><?php echo htmlspecialchars($vendor->state); ?></td>
+			<td><?php echo htmlspecialchars($vendor->zip); ?></td>
 			<td><?php echo format_phone($vendor->phone_work); ?> </td>
 			<td><?php echo format_phone($vendor->fax); ?></td>
-			<td><?php echo htmlentities($vendor->account_number); ?></td>
+			<td><?php echo htmlspecialchars($vendor->account_number); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

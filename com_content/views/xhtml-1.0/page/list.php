@@ -71,9 +71,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->pages as $page) { ?>
 		<tr title="<?php echo $page->guid; ?>">
-			<td><?php echo htmlentities($page->name); ?></td>
+			<td><?php echo htmlspecialchars($page->name); ?></td>
 			<td><?php echo ($page->enabled ? 'Yes' : 'No'); ?></td>
-			<td><?php echo htmlentities(implode(', ', $page->content_tags)); ?></td>
+			<td><?php echo htmlspecialchars(implode(', ', $page->content_tags)); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

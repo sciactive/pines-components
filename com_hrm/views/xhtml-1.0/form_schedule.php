@@ -48,7 +48,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	});
 // ]]>
 </script>
-<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_hrm', 'saveschedule')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_hrm', 'saveschedule')); ?>">
 	<div class="pf-element">
 		<label><input class="pf-field" type="checkbox" name="all_day" value="ON" />All Day</label>
 	</div>

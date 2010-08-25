@@ -18,7 +18,7 @@ $this->title = 'elFinder Uploader';
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">File</span>
-		<span class="pf-field"><?php echo htmlentities($this->file); ?></span>
+		<span class="pf-field"><?php echo htmlspecialchars($this->file); ?></span>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Check Passed</span>
@@ -28,16 +28,16 @@ $this->title = 'elFinder Uploader';
 	<div class="pf-element">
 		<span class="pf-label">Real Path</span>
 		<span class="pf-note">This path can be used in code to manipulate the file.</span>
-		<span class="pf-field"><?php $real = $pines->uploader->real($this->file); echo htmlentities($real); ?></span>
+		<span class="pf-field"><?php $real = $pines->uploader->real($this->file); echo htmlspecialchars($real); ?></span>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Relative URL</span>
 		<span class="pf-note">This path can be used for browser access to the file.</span>
-		<span class="pf-field"><?php $url = $pines->uploader->url($real); echo htmlentities($url); ?></span>
+		<span class="pf-field"><?php $url = $pines->uploader->url($real); echo htmlspecialchars($url); ?></span>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Full URL</span>
 		<span class="pf-note">This path can be used for access to the file in email, another server, etc.</span>
-		<span class="pf-field"><?php $furl = $pines->uploader->url($real, true); echo htmlentities($furl); ?></span>
+		<span class="pf-field"><?php $furl = $pines->uploader->url($real, true); echo htmlspecialchars($furl); ?></span>
 	</div>
 </div>

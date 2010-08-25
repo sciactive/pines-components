@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 ?>
 <script type="text/javascript">
 	// <![CDATA[
-	pines.loadcss("<?php echo htmlentities($pines->config->rela_location); ?>components/com_nivoslider/includes/nivo-slider.css");
-	pines.loadjs("<?php echo htmlentities($pines->config->rela_location); ?>components/com_nivoslider/includes/<?php echo $pines->config->debug_mode ? 'jquery.nivo.slider.js' : 'jquery.nivo.slider.pack.js'; ?>");
+	pines.loadcss("<?php echo htmlspecialchars($pines->config->rela_location); ?>components/com_nivoslider/includes/nivo-slider.css");
+	pines.loadjs("<?php echo htmlspecialchars($pines->config->rela_location); ?>components/com_nivoslider/includes/<?php echo $pines->config->debug_mode ? 'jquery.nivo.slider.js' : 'jquery.nivo.slider.pack.js'; ?>");
 	// ]]>
 </script>

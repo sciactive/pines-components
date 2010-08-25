@@ -14,7 +14,7 @@ if (empty($this->title))
 	$this->title = "Login to {$pines->config->system_name}";
 ?>
 <div id="p_muid_form"<?php echo ($this->style == 'compact') ? ' style="display: none;"' : ''; ?>>
-	<form class="pf-form" name="login" method="post" action="<?php echo htmlentities(pines_url()); ?>">
+	<form class="pf-form" name="login" method="post" action="<?php echo htmlspecialchars(pines_url()); ?>">
 		<div class="pf-element">
 			<label><span class="pf-label">Username</span>
 				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="username" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
@@ -81,7 +81,7 @@ if (empty($this->title))
 			<input type="hidden" name="option" value="com_user" />
 			<input type="hidden" name="action" value="login" />
 			<?php if ( isset($this->url) ) { ?>
-			<input type="hidden" name="url" value="<?php echo htmlentities($this->url); ?>" />
+			<input type="hidden" name="url" value="<?php echo htmlspecialchars($this->url); ?>" />
 			<?php } ?>
 			<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Login" />
 			<?php if ($this->style != 'small') { ?>
@@ -116,5 +116,5 @@ if (empty($this->title))
 	});
 	// ]]>
 </script>
-<a href="javascript:void(0);" id="p_muid_compact_link"><?php echo htmlentities($this->compact_text); ?></a>
+<a href="javascript:void(0);" id="p_muid_compact_link"><?php echo htmlspecialchars($this->compact_text); ?></a>
 <?php } ?>

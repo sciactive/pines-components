@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = (!isset($this->entity->guid)) ? 'Editing New Category' : 'Editing ['.htmlentities($this->entity->name).']';
+$this->title = (!isset($this->entity->guid)) ? 'Editing New Category' : 'Editing ['.htmlspecialchars($this->entity->name).']';
 $this->note = 'Provide category details in this form.';
 if ($pines->config->com_sales->com_storefront) {
 	$pines->com_pgrid->load();
@@ -179,12 +179,12 @@ if ($pines->config->com_sales->com_storefront) {
 	// ]]>
 </script>
 <?php } ?>
-<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_sales', 'category/save')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'category/save')); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
 		<?php if (isset($this->entity->user)) { ?>
-		<div>User: <span class="date"><?php echo htmlentities("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
-		<div>Group: <span class="date"><?php echo htmlentities("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
+		<div>User: <span class="date"><?php echo htmlspecialchars("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
+		<div>Group: <span class="date"><?php echo htmlspecialchars("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
 		<?php } ?>
 		<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
 		<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
@@ -192,7 +192,7 @@ if ($pines->config->com_sales->com_storefront) {
 	<?php } ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Name</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlentities($this->entity->name); ?>" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Enabled</span>
@@ -205,7 +205,7 @@ if ($pines->config->com_sales->com_storefront) {
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Menu Position</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_menu_position" name="menu_position" size="24" value="<?php echo htmlentities($this->entity->menu_position); ?>" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_menu_position" name="menu_position" size="24" value="<?php echo htmlspecialchars($this->entity->menu_position); ?>" /></label>
 	</div>
 	<?php } ?>
 	<div class="pf-element">
@@ -225,7 +225,7 @@ if ($pines->config->com_sales->com_storefront) {
 						if ($category->is($entity))
 							continue;
 						?>
-						<option value="<?php echo $category->guid; ?>"<?php echo $category->is($entity->parent) ? ' selected="selected"' : ''; ?>><?php echo htmlentities("{$prefix} {$category->name}"); ?></option>
+						<option value="<?php echo $category->guid; ?>"<?php echo $category->is($entity->parent) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars("{$prefix} {$category->name}"); ?></option>
 						<?php
 						if ($category->children)
 							com_sales__category_form_children($category, $entity, "{$prefix}->");
@@ -235,7 +235,7 @@ if ($pines->config->com_sales->com_storefront) {
 					if ($category->is($this->entity))
 						continue;
 					?>
-					<option value="<?php echo $category->guid; ?>"<?php echo $category->is($this->entity->parent) ? ' selected="selected"' : ''; ?>><?php echo htmlentities($category->name); ?></option>
+					<option value="<?php echo $category->guid; ?>"<?php echo $category->is($this->entity->parent) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($category->name); ?></option>
 					<?php
 					if ($category->children)
 						com_sales__category_form_children($category, $this->entity);
@@ -262,23 +262,23 @@ if ($pines->config->com_sales->com_storefront) {
 					</thead>
 					<tbody>
 						<?php if (isset($this->entity->specs)) foreach ($this->entity->specs as $key => $cur_value) { ?>
-						<tr title="<?php echo htmlentities($key); ?>">
-							<td><?php echo htmlentities($cur_value['order']); ?></td>
-							<td><?php echo htmlentities($cur_value['name']); ?></td>
-							<td><?php echo htmlentities($cur_value['type']); ?></td>
+						<tr title="<?php echo htmlspecialchars($key); ?>">
+							<td><?php echo htmlspecialchars($cur_value['order']); ?></td>
+							<td><?php echo htmlspecialchars($cur_value['name']); ?></td>
+							<td><?php echo htmlspecialchars($cur_value['type']); ?></td>
 							<td><?php echo ($cur_value['type'] == 'heading') ? '' : ($cur_value['show_filter'] ? 'Yes' : 'No'); ?></td>
 							<td><?php echo ($cur_value['type'] == 'bool' || $cur_value['type'] == 'heading') ? '' : ($cur_value['restricted'] ? 'Yes' : 'No'); ?></td>
-							<td><?php echo ($cur_value['type'] == 'bool' || $cur_value['type'] == 'heading') ? '' : htmlentities(implode(';;', $cur_value['options'])); ?></td>
+							<td><?php echo ($cur_value['type'] == 'bool' || $cur_value['type'] == 'heading') ? '' : htmlspecialchars(implode(';;', $cur_value['options'])); ?></td>
 						</tr>
 						<?php } ?>
 						<?php $anc_specs = isset($this->entity) ? $this->entity->get_specs_ancestors() : array(); foreach ($anc_specs as $key => $cur_value) { ?>
-						<tr class="ui-state-disabled" title="<?php echo htmlentities($key); ?> (Inherited from <?php echo htmlentities($cur_value['category']->name); ?>)">
-							<td><?php echo htmlentities($cur_value['order']); ?></td>
-							<td><?php echo htmlentities($cur_value['name']); ?></td>
-							<td><?php echo htmlentities($cur_value['type']); ?></td>
+						<tr class="ui-state-disabled" title="<?php echo htmlspecialchars($key); ?> (Inherited from <?php echo htmlspecialchars($cur_value['category']->name); ?>)">
+							<td><?php echo htmlspecialchars($cur_value['order']); ?></td>
+							<td><?php echo htmlspecialchars($cur_value['name']); ?></td>
+							<td><?php echo htmlspecialchars($cur_value['type']); ?></td>
 							<td><?php echo ($cur_value['type'] == 'heading') ? '' : ($cur_value['show_filter'] ? 'Yes' : 'No'); ?></td>
 							<td><?php echo ($cur_value['type'] == 'bool' || $cur_value['type'] == 'heading') ? '' : ($cur_value['restricted'] ? 'Yes' : 'No'); ?></td>
-							<td><?php echo ($cur_value['type'] == 'bool' || $cur_value['type'] == 'heading') ? '' : htmlentities(implode(';;', $cur_value['options'])); ?></td>
+							<td><?php echo ($cur_value['type'] == 'bool' || $cur_value['type'] == 'heading') ? '' : htmlspecialchars(implode(';;', $cur_value['options'])); ?></td>
 						</tr>
 						<?php } ?>
 					</tbody>
@@ -360,7 +360,7 @@ if ($pines->config->com_sales->com_storefront) {
 		<div class="pf-group">
 			<div class="pf-field ui-widget-content ui-corner-all" style="padding: 1em; min-width: 300px; max-height: 200px; overflow: auto;">
 				<?php foreach ($this->entity->products as $cur_product) { ?>
-				<a href="<?php echo htmlentities(pines_url('com_sales', 'product/edit', array('id' => $cur_product->guid))); ?>"><?php echo htmlentities("{$cur_product->sku} : {$cur_product->name}"); ?></a><br />
+				<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'product/edit', array('id' => $cur_product->guid))); ?>"><?php echo htmlspecialchars("{$cur_product->sku} : {$cur_product->name}"); ?></a><br />
 				<?php } ?>
 			</div>
 		</div>
@@ -370,6 +370,6 @@ if ($pines->config->com_sales->com_storefront) {
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlentities(pines_url('com_sales', 'category/list')); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'category/list')); ?>');" value="Cancel" />
 	</div>
 </form>

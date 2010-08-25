@@ -73,14 +73,14 @@ $pines->com_jstree->load();
 					continue;
 				$cur_select = (isset($this->employee->group) && $this->employee->is($cur_employee)) ? 'selected=\"selected\"' : ''; ?>
 				if (group_id == <?php echo $cur_employee->group->guid; ?>) {
-					employee.append("<option value='<?php echo $cur_employee->guid; ?>' <?php echo $cur_select; ?>><?php echo htmlentities($cur_employee->name); ?></option>");
+					employee.append("<option value='<?php echo $cur_employee->guid; ?>' <?php echo $cur_select; ?>><?php echo htmlspecialchars($cur_employee->name); ?></option>");
 				}
 			<?php } ?>
 		};
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlentities(pines_url('com_reports', 'reportsales')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_reports', 'reportsales')); ?>">
 	<div class="pf-element location_tree"></div>
 	<div class="pf-element">
 		<select class="ui-widget-content ui-corner-all" style="width: 100%;" name="employee"></select>
@@ -94,7 +94,7 @@ $pines->com_jstree->load();
 		<input class="ui-widget-content ui-corner-all form_date" type="text" name="end" value="<?php echo ($this->date[1]) ? format_date($this->date[1], 'date_sort') : format_date(time(), 'date_sort'); ?>" />
 	</div>
 	<div class="pf-element">
-		<input type="hidden" name="location" value="<?php echo htmlentities($this->location); ?>" />
+		<input type="hidden" name="location" value="<?php echo htmlspecialchars($this->location); ?>" />
 		<input class="ui-corner-all ui-state-default" type="submit" value="View Report" />
 	</div>
 </form>

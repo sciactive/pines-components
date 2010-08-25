@@ -69,7 +69,7 @@ defined('P_RUN') or die('Direct access prohibited');
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="">
 	<div class="pf-element">
-		<span class="pf-note">Reason for Time Off</span><input class="ui-widget-content ui-corner-all form_input" type="text" id="p_muid_reason" name="reason" value="<?php echo htmlentities($this->entity->reason); ?>" />
+		<span class="pf-note">Reason for Time Off</span><input class="ui-widget-content ui-corner-all form_input" type="text" id="p_muid_reason" name="reason" value="<?php echo htmlspecialchars($this->entity->reason); ?>" />
 	</div>
 	<?php
 		if ($this->entity->guid) {
@@ -83,7 +83,7 @@ defined('P_RUN') or die('Direct access prohibited');
 		<label><input class="pf-field" type="checkbox" name="all_day" value="ON" <?php echo ($this->entity->all_day) ? 'checked="checked" ' : ''; ?>/>All Day</label>
 	</div>
 	<div class="pf-element pf-full-width">
-		<span class="pf-note">Start</span><input class="ui-widget-content ui-corner-all form_center" type="text" size="12" id="p_muid_start" name="start" value="<?php echo empty($start_date) ? format_date(time(), 'date_sort') : htmlentities($start_date); ?>" />
+		<span class="pf-note">Start</span><input class="ui-widget-content ui-corner-all form_center" type="text" size="12" id="p_muid_start" name="start" value="<?php echo empty($start_date) ? format_date(time(), 'date_sort') : htmlspecialchars($start_date); ?>" />
 		<select class="ui-widget-content ui-corner-all" name="time_start">
 			<option value="0" <?php echo ($start_time == '0') ? 'selected="selected"' : ''; ?>>12:00 AM</option>
 			<option value="1" <?php echo ($start_time == '1') ? 'selected="selected"' : ''; ?>>1:00 AM</option>
@@ -112,7 +112,7 @@ defined('P_RUN') or die('Direct access prohibited');
 		</select>
 	</div>
 	<div class="pf-element">
-		<span class="pf-note">End</span><input class="ui-widget-content ui-corner-all form_center" type="text" size="12" id="p_muid_end" name="end" value="<?php echo empty($end_date) ? format_date(time(), 'date_sort') : htmlentities($end_date); ?>" />
+		<span class="pf-note">End</span><input class="ui-widget-content ui-corner-all form_center" type="text" size="12" id="p_muid_end" name="end" value="<?php echo empty($end_date) ? format_date(time(), 'date_sort') : htmlspecialchars($end_date); ?>" />
 		<select class="ui-widget-content ui-corner-all" name="time_end">
 			<option value="0" <?php echo ($end_time == '0') ? 'selected="selected"' : ''; ?>>12:00 AM</option>
 			<option value="1" <?php echo ($end_time == '1') ? 'selected="selected"' : ''; ?>>1:00 AM</option>
@@ -148,7 +148,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			<?php foreach ($this->requests as $cur_request) {
 			$style = ($cur_request->status == 'declined') ? 'ui-state-error' : 'ui-state-highlight'; ?>
 			<div class="pf-element" style="padding-bottom: 0;">
-				<span class="pf-note" style="width: auto;"><?php echo format_date($cur_request->start, 'date_short'); ?></span><a class="pf-field <?php echo $style; ?>" href="<?php echo htmlentities(pines_url('com_hrm', 'editcalendar', array('rto_id' => $cur_request->guid))); ?>"><?php echo htmlentities($cur_request->reason); ?></a>
+				<span class="pf-note" style="width: auto;"><?php echo format_date($cur_request->start, 'date_short'); ?></span><a class="pf-field <?php echo $style; ?>" href="<?php echo htmlspecialchars(pines_url('com_hrm', 'editcalendar', array('rto_id' => $cur_request->guid))); ?>"><?php echo htmlspecialchars($cur_request->reason); ?></a>
 			</div>
 			<?php } ?>
 		</div>

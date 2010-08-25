@@ -73,9 +73,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->floors as $floor) { ?>
 		<tr title="<?php echo $floor->guid; ?>">
-			<td><?php echo htmlentities($floor->name); ?></td>
+			<td><?php echo htmlspecialchars($floor->name); ?></td>
 			<td><?php echo ($floor->enabled ? 'Yes' : 'No'); ?></td>
-			<td><?php echo htmlentities($floor->description); ?></td>
+			<td><?php echo htmlspecialchars($floor->description); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

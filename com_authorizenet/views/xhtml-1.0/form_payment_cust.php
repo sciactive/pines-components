@@ -14,11 +14,11 @@ defined('P_RUN') or die('Direct access prohibited');
 <div class="pf-form">
 	<div class="pf-element">
 		<label><span class="pf-label">Name on Card</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_name_first" name="name_first" value="<?php echo htmlentities($this->name_first); ?>" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_name_first" name="name_first" value="<?php echo htmlspecialchars($this->name_first); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Card Number</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_card_number" name="card_number" value="<?php echo htmlentities($this->card_number); ?>" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_card_number" name="card_number" value="<?php echo htmlspecialchars($this->card_number); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">Expiration Date, CCV</span>
@@ -45,6 +45,6 @@ defined('P_RUN') or die('Direct access prohibited');
 			<option value="<?php echo date('y', strtotime("+$i years")); ?>"<?php echo $this->card_exp_year == date('y', strtotime("+$i years")) ? ' selected="selected"' : ''; ?>><?php echo date('y', strtotime("+$i years")); ?></option>
 			<?php } ?>
 		</select>
-		<input class="pf-field ui-widget-content ui-corner-all" type="password" name="cid" size="3" value="<?php echo htmlentities($this->cid); ?>" />
+		<input class="pf-field ui-widget-content ui-corner-all" type="password" name="cid" size="3" value="<?php echo htmlspecialchars($this->cid); ?>" />
 	</div>
 </div>

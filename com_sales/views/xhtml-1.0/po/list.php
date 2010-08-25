@@ -75,11 +75,11 @@ $errors = array();
 	<tbody>
 	<?php foreach($this->pos as $po) { ?>
 		<tr title="<?php echo $po->guid; ?>">
-			<td><?php echo htmlentities($po->po_number); ?></td>
-			<td><?php echo htmlentities($po->reference_number); ?></td>
-			<td><?php echo htmlentities($po->vendor->name); ?></td>
-			<td><?php echo htmlentities("{$po->destination->name} [{$po->destination->groupname}]"); ?></td>
-			<td><?php echo htmlentities($po->shipper->name); ?></td>
+			<td><?php echo htmlspecialchars($po->po_number); ?></td>
+			<td><?php echo htmlspecialchars($po->reference_number); ?></td>
+			<td><?php echo htmlspecialchars($po->vendor->name); ?></td>
+			<td><?php echo htmlspecialchars("{$po->destination->name} [{$po->destination->groupname}]"); ?></td>
+			<td><?php echo htmlspecialchars($po->shipper->name); ?></td>
 			<td><?php echo ($po->eta ? format_date($po->eta, 'date_sort') : ''); ?></td>
 		</tr>
 	<?php } ?>

@@ -64,11 +64,11 @@ defined('P_RUN') or die('Direct access prohibited');
 	</div>
 	<div class="timespan">
 		<div class="pf-element">
-			<span class="pf-note">Start</span><input class="ui-widget-content ui-corner-all form_date" type="text" id="p_muid_start_date" name="start_date" value="<?php echo isset($this->start_date) ? htmlentities($this->start_date) : ''; ?>" />
+			<span class="pf-note">Start</span><input class="ui-widget-content ui-corner-all form_date" type="text" id="p_muid_start_date" name="start_date" value="<?php echo isset($this->start_date) ? htmlspecialchars($this->start_date) : ''; ?>" />
 		</div>
 		<div class="pf-element">
-			<span class="pf-note">End</span><input class="ui-widget-content ui-corner-all form_date" type="text" id="p_muid_end_date" name="end_date" value="<?php echo isset($this->end_date) ? htmlentities($this->end_date) : ''; ?>" />
+			<span class="pf-note">End</span><input class="ui-widget-content ui-corner-all form_date" type="text" id="p_muid_end_date" name="end_date" value="<?php echo isset($this->end_date) ? htmlspecialchars($this->end_date) : ''; ?>" />
 		</div>
-		<input type="hidden" name="timespan_saver" value="<?php echo htmlentities($this->all_time); ?>" />
+		<input type="hidden" name="timespan_saver" value="<?php echo htmlspecialchars($this->all_time); ?>" />
 	</div>
 </form>

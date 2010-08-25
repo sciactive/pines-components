@@ -54,7 +54,7 @@ class com_imodules extends component {
 	 * @param string &$content The content to parse.
 	 */
 	public function parse_imodules(&$content) {
-		$pattern = '/\[([^\/\]][^\]]*?) ?([^\]]*?)\](.*?)\[\/\1\]|\[([^\/\]][^\]]*?) ([^\]]*?)\/\]/sS';
+		$pattern = '/\[([^\/\]][^\]]*?)(\]| [^\]]*?\])(.*?)\[\/\1\]|\[([^\/\]][^\]]*?) ([^\]]*?)\/\]/sS';
 		$matches = array();
 		$offset = 0;
 		preg_match($pattern, $content, $matches, PREG_OFFSET_CAPTURE);

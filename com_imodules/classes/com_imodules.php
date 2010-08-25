@@ -30,10 +30,22 @@ class com_imodules extends component {
 	 * [com_component/type attribute="value" second="second value"]inline content[/com_component/type]
 	 * </pre>
 	 *
-	 * And without attributes or inline content:
+	 * Without attributes:
 	 *
 	 * <pre>
-	 * [com_component/type][/com_component/type]
+	 * [com_component/type]inline content[/com_component/type]
+	 * </pre>
+	 *
+	 * Without inline content:
+	 *
+	 * <pre>
+	 * [com_component/type attribute="value" second="second value" /]
+	 * </pre>
+	 *
+	 * Without attributes or inline content:
+	 *
+	 * <pre>
+	 * [com_component/type /]
 	 * </pre>
 	 *
 	 * The attributes will be set as properties on the module. The inline
@@ -42,20 +54,21 @@ class com_imodules extends component {
 	 * @param string &$content The content to parse.
 	 */
 	public function parse_imodules(&$content) {
-		$pattern = '/\[([^\/\]][^\]]*?) ?(.*?)\](.*)\[\/\1\]/sS';
+		$pattern = '/\[([^\/\]][^\]]*?) ?([^\]]*?)\](.*?)\[\/\1\]|\[([^\/\]][^\]]*?) ([^\]]*?)\/\]/sS';
 		$matches = array();
 		$offset = 0;
 		preg_match($pattern, $content, $matches, PREG_OFFSET_CAPTURE);
 		while ($matches) {
 			// Read the imodule entry.
-			$type = clean_filename($matches[1][0]);
-			$attrs = $matches[2][0];
+			$short = empty($matches[1][0]) ? true : false;
+			$type = clean_filename($short ? $matches[4][0] : $matches[1][0]);
+			$attrs = ($short ? $matches[5][0] : $matches[2][0]);
 			$attr_matches = array();
 			if (preg_match_all('/(\w+)="(.*?)"/', $attrs, $attr_matches))
 				$attrs = array_combine($attr_matches[1], $attr_matches[2]);
 			else
 				$attrs = array();
-			$icontent = $matches[3][0];
+			$icontent = ($short ? '' : $matches[3][0]);
 
 			// Determine the module.
 			list ($component, $modname) = explode('/', $type, 2);

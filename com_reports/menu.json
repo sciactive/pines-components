@@ -52,5 +52,13 @@
 				"depend": {
 					"ability": "com_reports/reportattendance"
 				}
+			},
+			{
+				"path": "main_menu/business/reports/hrm/warboard",
+				"text": "Warboard",
+				"href": ["com_reports","warboard"],
+				"depend": {
+					"ability": "com_reports/warboard"
+				}
 			}
 ]

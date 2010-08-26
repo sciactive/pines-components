@@ -52,6 +52,13 @@ return array(
 		'value' => 80,
 		'peruser' => true,
 	),
+	array(
+		'name' => 'warboard_states',
+		'cname' => 'Warboard States',
+		'description' => 'Show the state for each location in the company warboard.',
+		'value' => true,
+		'peruser' => true,
+	),
 );
 
 ?>

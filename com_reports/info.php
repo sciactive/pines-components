@@ -30,7 +30,9 @@ return array(
 		array('viewsalesranking', 'Report Sales Rankings', 'User can see sales rankings.'),
 		array('newsalesranking', 'Create Sales Rankings', 'User can create sales rankings.'),
 		array('editsalesranking', 'Edit Sales Rankings', 'User can edit sales rankings.'),
-		array('deletesalesranking', 'Delete Sales Rankings', 'User can delete sales rankings.')
+		array('deletesalesranking', 'Delete Sales Rankings', 'User can delete sales rankings.'),
+		array('warboard', 'View Warboard', 'User can view the company warboard.'),
+		array('editwarboard', 'Edit Warboard', 'User can edit the company warboard.')
 	),
 );
 

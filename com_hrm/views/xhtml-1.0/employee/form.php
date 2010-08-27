@@ -18,6 +18,14 @@ $pines->com_pgrid->load();
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
+		$("#p_muid_form [name=hire_date]").datepicker({
+			dateFormat: "yy-mm-dd",
+			changeMonth: true,
+			changeYear: true,
+			showOtherMonths: true,
+			selectOtherMonths: true
+		});
+
 		// Attributes
 		var attributes = $("#p_muid_tab_attributes input[name=attributes]");
 		var attributes_table = $("#p_muid_tab_attributes .attributes_table");
@@ -123,8 +131,12 @@ $pines->com_pgrid->load();
 			</div>
 			<?php } ?>
 			<div class="pf-element">
+				<label><span class="pf-label">Hire Date</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="hire_date" value="<?php echo empty($this->entity->hire_date) ? '' : format_date($this->entity->hire_date, 'date_sort'); ?>" /></label>
+			</div>
+			<div class="pf-element">
 				<label><span class="pf-label">Job Title</span>
-					<select class="ui-widget-content ui-corner-all form_input" name="job_title">
+					<select class="pf-field ui-widget-content ui-corner-all" name="job_title">
 						<?php foreach ($pines->config->com_hrm->employee_departments as $cur_dept) { $cur_dept = explode(':', $cur_dept); ?>
 						<option value="<?php echo htmlspecialchars($cur_dept[0]); ?>" <?php echo ($this->entity->job_title == $cur_dept[0]) ? 'selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_dept[0]); ?></option>
 						<?php } ?>
@@ -146,6 +158,10 @@ $pines->com_pgrid->load();
 						<option value="red" <?php echo ($this->entity->color == 'red') ? 'selected="selected"' : ''; ?>>Red</option>
 						<option value="vanilla" <?php echo ($this->entity->color == 'vanilla') ? 'selected="selected"' : ''; ?>>Vanilla</option>
 					</select></label>
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Phone Extension</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="phone_ext" size="5" value="<?php echo htmlspecialchars($this->entity->phone_ext); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Hours in Full Workday</span>

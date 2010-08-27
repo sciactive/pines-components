@@ -1,6 +1,6 @@
 <?php
 /**
- * Show the company warboard.
+ * Provide a form to edit the company warboard.
  *
  * @package Pines
  * @subpackage com_reports
@@ -11,8 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_reports/warboard') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_reports', 'warboard'));
+if ( !gatekeeper('com_reports/editwarboard'))
+	punt_user('You don\'t have necessary permission.', pines_url('com_reports', 'editwarboard'));
 
 $warboard = $pines->entity_manager->get_entity(array('class' => com_reports_warboard), array('&', 'tag' => array('com_reports', 'warboard')));
 
@@ -21,6 +21,6 @@ if (!isset($warboard->guid)) {
 	$warboard->save();
 }
 
-$warboard->show();
+$warboard->print_form();
 
 ?>

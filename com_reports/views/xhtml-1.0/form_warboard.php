@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$this->title = 'Edit the Warboard';
+$this->title = 'Edit the Company Warboard';
 $pines->com_pgrid->load();
 ?>
 <style type="text/css" >
@@ -55,8 +55,8 @@ $pines->com_pgrid->load();
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Employee Positions</span>
 		<span class="pf-note">Show all employees with these Job Titles</span>
-		<?php foreach ($this->job_titles as $cur_title) { ?>
-		<input type="checkbox" name="titles[]" value="<?php echo htmlspecialchars($cur_title); ?>" <?php echo in_array($cur_title, $this->entity->positions) ? 'checked="checked" ' : ''; ?>/> <?php echo htmlspecialchars($cur_title); ?>&nbsp;&nbsp;
+		<?php foreach ($pines->config->com_hrm->employee_departments as $cur_dept) { $cur_dept = explode(':', $cur_dept); ?>
+		<input type="checkbox" name="titles[]" value="<?php echo htmlspecialchars($cur_dept[0]); ?>" <?php echo in_array($cur_dept[0], $this->entity->positions) ? 'checked="checked" ' : ''; ?>/> <?php echo htmlspecialchars($cur_dept[0]); ?>&nbsp;&nbsp;
 		<?php } ?>
 	</div>
 	<div class="pf-element">

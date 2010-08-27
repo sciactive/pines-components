@@ -38,8 +38,7 @@ foreach ($importants as $cur_important) {
 	if (isset($important->guid))
 		$warboard->important[] = $important;
 }
-if (count($warboard->important) > 2)
-	$warboard->important = array($warboard->important[0], $warboard->important[1]);
+$warboard->important = array_slice($warboard->important, 0, 2);
 
 $warboard->hq = group::factory((int) $_REQUEST['hq']);
 if (!isset($warboard->hq->guid))

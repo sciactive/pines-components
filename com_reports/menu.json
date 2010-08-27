@@ -60,5 +60,13 @@
 				"depend": {
 					"ability": "com_reports/warboard"
 				}
+			},
+			{
+				"path": "main_menu/business/reports/hrm/editwarboard",
+				"text": "Edit Warboard",
+				"href": ["com_reports","editwarboard"],
+				"depend": {
+					"ability": "com_reports/editwarboard"
+				}
 			}
 ]

@@ -19,8 +19,8 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class com_reports_warboard extends entity {
 	/**
-	 * Load a sales ranking.
-	 * @param int $id The ID of the ranking to load, 0 for a new ranking.
+	 * Load a warboard.
+	 * @param int $id The ID of the warboard to load, 0 for a new warboard.
 	 */
 	public function __construct($id = 0) {
 		parent::__construct();
@@ -44,7 +44,7 @@ class com_reports_warboard extends entity {
 
 	/**
 	 * Create a new instance.
-	 * @return com_reports_sales_ranking The new instance.
+	 * @return com_reports_warboard The new instance.
 	 */
 	public static function factory() {
 		global $pines;
@@ -56,7 +56,7 @@ class com_reports_warboard extends entity {
 	}
 
 	/**
-	 * Delete the sales ranking.
+	 * Delete the warboard.
 	 * @return bool True on success, false on failure.
 	 */
 	public function delete() {
@@ -67,25 +67,29 @@ class com_reports_warboard extends entity {
 	}
 
 	/**
-	 * Print a form to edit the sales ranking.
+	 * Print a form to edit the warboard.
 	 * @return module The form's module.
 	 */
-	public function show() {
+	public function print_form() {
 		global $pines;
 
+		$form = new module('com_reports', 'form_warboard', 'content');
+		$form->entity = $this;
+		$form->groups = $pines->com_user->get_groups();
+		$employees = $pines->com_hrm->get_employees();
+		$form->job_titles = array();
+		foreach ($employees as $cur_employee) {
+			if ($cur_employee->job_title != '' && !in_array($cur_employee->job_title, $form->job_titles))
+				$form->job_titles[] = $cur_employee->job_title;
+		}
+	}
+
+	/**
+	 * Show the company warboard.
+	 */
+	public function show() {
 		$module = new module('com_reports', 'warboard', 'content');
 		$module->entity = $this;
-		if (gatekeeper('com_reports/editwarboard')) {
-			$form = new module('com_reports', 'form_warboard', 'content');
-			$form->entity = $this;
-			$form->groups = $pines->com_user->get_groups();
-			$employees = $pines->com_hrm->get_employees();
-			$form->job_titles = array();
-			foreach ($employees as $cur_employee) {
-				if ($cur_employee->job_title != '' && !in_array($cur_employee->job_title, $form->job_titles))
-					$form->job_titles[] = $cur_employee->job_title;
-			}
-		}
 	}
 }
 

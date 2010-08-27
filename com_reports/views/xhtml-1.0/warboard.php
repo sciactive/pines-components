@@ -11,46 +11,46 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = htmlspecialchars($this->entity->company_name).' Warboard';
-$this->note = format_date(time(), 'custom', 'n/j/Y');
+$this->note = format_date(time(), 'date_short');
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
-	.warboard_table {
+	#p_muid_warboard_table {
 		width: 100%;
 		text-align: center;
 		font-size: 8pt;
 	}
-	.warboard_table td {
+	#p_muid_warboard_table td {
 		width: 33%;
 		vertical-align: text-top;
 	}
-	.warboard_table .location, .important, .hq {
+	#p_muid_warboard_table .location, .important, .hq {
 		width: 100%;
 		border-spacing: 0;
 		border-collapse: collapse;
 	}
-	.warboard_table .location td, .important td, .hq td {
+	#p_muid_warboard_table .location td, .important td, .hq td {
 		border: solid 1px;
 	}
-	.warboard_table .location .label {
+	#p_muid_warboard_table .location .label {
 		background-color: beige;
 		color: black;
 	}
-	.warboard_table .location .heading {
+	#p_muid_warboard_table .location .heading {
 		background-color: gainsboro;
 		color: #2B2B2B;
 	}
-	.warboard_table .important .label {
+	#p_muid_warboard_table .important .label {
 		background-color: lightsteelblue;
 		color: black;
 	}
-	.warboard_table .hq .label {
+	#p_muid_warboard_table .hq .label {
 		background-color: palegreen;
 		color: black;
 	}
 	/* ]]> */
 </style>
-<table class="warboard_table">
+<table id="p_muid_warboard_table">
 	<tr>
 	<?php
 	$count = 1;
@@ -78,20 +78,7 @@ $this->note = format_date(time(), 'custom', 'n/j/Y');
 			<tr>
 				<td colspan="3"><?php echo isset($cur_location->parent->groupname) ? htmlspecialchars($cur_location->parent->groupname) : '-'; ?></td>
 			</tr>
-			<?php foreach ($this->entity->positions as $cur_title) {
-				$empty = true;
-				switch (substr($cur_title, strlen($cur_title)-1, 1)) {
-					case 'y':
-						$plural = 'ies';
-						break;
-					case 's':
-						$plural = 'es';
-						break;
-					default:
-						$plural = 's';
-						break;
-				}
-			?>
+			<?php foreach ($this->entity->positions as $cur_title) { $empty = true; ?>
 			<tr class="heading <?php echo strtolower(preg_replace('/ /', '_', $cur_location->guid.$cur_title)); ?>">
 				<td colspan="3"><?php echo htmlspecialchars($cur_title).$plural; ?></td>
 			</tr>
@@ -103,7 +90,7 @@ $this->note = format_date(time(), 'custom', 'n/j/Y');
 					$empty = false;
 			?>
 			<tr>
-				<td><?php echo format_date($cur_employee->p_cdate, 'custom', 'n/j/Y'); ?></td>
+				<td><?php echo format_date($cur_employee->p_cdate, 'date_short'); ?></td>
 				<td><?php echo htmlspecialchars($cur_employee->name); ?></td>
 				<td><?php echo format_phone($cur_employee->phone); ?></td>
 			</tr>

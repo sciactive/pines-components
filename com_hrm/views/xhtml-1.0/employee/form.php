@@ -124,7 +124,11 @@ $pines->com_pgrid->load();
 			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Job Title</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="job_title" size="24" value="<?php echo htmlspecialchars($this->entity->job_title); ?>" /></label>
+					<select class="ui-widget-content ui-corner-all form_input" name="job_title">
+						<?php foreach ($pines->config->com_hrm->employee_departments as $cur_dept) { $cur_dept = explode(':', $cur_dept); ?>
+						<option value="<?php echo htmlspecialchars($cur_dept[0]); ?>" <?php echo ($this->entity->job_title == $cur_dept[0]) ? 'selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_dept[0]); ?></option>
+						<?php } ?>
+					</select></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Schedule Color</span>

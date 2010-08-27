@@ -55,57 +55,56 @@ $this->note = format_date(time(), 'date_short');
 	<?php
 	$count = 1;
 	foreach ($this->entity->locations as $cur_location) {
-		$employees = $cur_location->get_users();
-		if ($count/4 == floor($count/4)) { ?>
+		$employees = $cur_location->get_users(); ?>
+			<td>
+			<table class="location">
+				<tr class="label">
+					<td colspan="2">
+						<strong><?php
+						echo htmlspecialchars($cur_location->name);
+						if ($pines->config->com_reports->warboard_states)
+							echo ', ' . htmlspecialchars($cur_location->state);
+						?></strong>
+					</td>
+					<td><?php echo format_phone($cur_location->phone); ?></td>
+				</tr>
+				<tr class="heading">
+					<td colspan="3">District</td>
+				</tr>
+				<tr>
+					<td colspan="3"><?php echo isset($cur_location->parent->name) ? htmlspecialchars($cur_location->parent->name) : '-'; ?></td>
+				</tr>
+				<?php foreach ($this->entity->positions as $cur_title) { $empty = true; ?>
+				<tr class="heading <?php echo strtolower(preg_replace('/ /', '_', $cur_location->guid.$cur_title)); ?>">
+					<td colspan="3"><?php echo htmlspecialchars($cur_title).$plural; ?></td>
+				</tr>
+				<?php
+				foreach ($employees as $key => &$cur_employee) {
+					if (!$cur_employee->employee) {
+						unset($cur_employee);
+					} elseif ($cur_employee->job_title == $cur_title) {
+						$empty = false;
+				?>
+				<tr>
+					<td><?php echo format_date($cur_employee->p_cdate, 'date_short'); ?></td>
+					<td><?php echo htmlspecialchars($cur_employee->name); ?></td>
+					<td><?php echo format_phone($cur_employee->phone); ?></td>
+				</tr>
+				<?php } } if ($empty) { ?>
+				<script type="text/javascript">
+					// <![CDATA[
+					pines(function(){
+						$(".<?php echo strtolower(preg_replace('/ /', '_', $cur_location->guid.$cur_title)); ?>").hide();
+					});
+					// ]]>
+				</script>
+				<?php } } ?>
+			</table>
+			</td>
+		<?php if ($count/3 == floor($count/3)) { ?>
 		</tr>
 		<tr>
-		<?php } ?>
-		<td>
-		<table class="location">
-			<tr class="label">
-				<td colspan="2">
-					<strong><?php
-					echo htmlspecialchars($cur_location->name);
-					if ($pines->config->com_reports->warboard_states)
-						echo ', ' . htmlspecialchars($cur_location->state);
-					?></strong>
-				</td>
-				<td><?php echo format_phone($cur_location->phone); ?></td>
-			</tr>
-			<tr class="heading">
-				<td colspan="3">District</td>
-			</tr>
-			<tr>
-				<td colspan="3"><?php echo isset($cur_location->parent->groupname) ? htmlspecialchars($cur_location->parent->groupname) : '-'; ?></td>
-			</tr>
-			<?php foreach ($this->entity->positions as $cur_title) { $empty = true; ?>
-			<tr class="heading <?php echo strtolower(preg_replace('/ /', '_', $cur_location->guid.$cur_title)); ?>">
-				<td colspan="3"><?php echo htmlspecialchars($cur_title).$plural; ?></td>
-			</tr>
-			<?php
-			foreach ($employees as $key => &$cur_employee) {
-				if (!$cur_employee->employee) {
-					unset($cur_employee);
-				} elseif ($cur_employee->job_title == $cur_title) {
-					$empty = false;
-			?>
-			<tr>
-				<td><?php echo format_date($cur_employee->p_cdate, 'date_short'); ?></td>
-				<td><?php echo htmlspecialchars($cur_employee->name); ?></td>
-				<td><?php echo format_phone($cur_employee->phone); ?></td>
-			</tr>
-			<?php } } if ($empty) { ?>
-			<script type="text/javascript">
-				// <![CDATA[
-				pines(function(){
-					$(".<?php echo strtolower(preg_replace('/ /', '_', $cur_location->guid.$cur_title)); ?>").hide();
-				});
-				// ]]>
-			</script>
-			<?php } } ?>
-		</table>
-		</td>
-		<?php
+		<?php }
 		$count++;
 	}
 	?>
@@ -117,7 +116,7 @@ $this->note = format_date(time(), 'date_short');
 		<td>
 			<table class="hq">
 				<tr>
-					<td class="label"><strong><?php echo htmlspecialchars($this->entity->company_name); ?></strong></td>
+					<td class="label"><strong><?php echo htmlspecialchars($this->entity->hq->name); ?></strong></td>
 				</tr>
 				<tr>
 					<td><?php echo format_phone($this->entity->hq->phone); ?></td>

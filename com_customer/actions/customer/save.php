@@ -108,7 +108,7 @@ if (empty($customer->ssn)) {
 		return;
 	}
 } else {
-	if (!preg_match('/\d{9}/', $customer->ssn)) {
+	if (!preg_match('/^\d{9}$/', $customer->ssn)) {
 		$customer->print_form();
 		pines_notice('The SSN must be a 9 digit number.');
 		return;

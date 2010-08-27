@@ -13,6 +13,15 @@ defined('P_RUN') or die('Direct access prohibited');
 if (empty($this->title))
 	$this->title = "Login to {$pines->config->system_name}";
 ?>
+<?php if ($this->style != 'compact' && $this->style != 'small') { ?>
+<script type="text/javascript">
+	// <![CDATA[
+	pines(function(){
+		$("input[name=username]", "#p_muid_form").focus();
+	});
+	// ]]>
+</script>
+<?php } ?>
 <div id="p_muid_form"<?php echo ($this->style == 'compact') ? ' style="display: none;"' : ''; ?>>
 	<form class="pf-form" name="login" method="post" action="<?php echo htmlspecialchars(pines_url()); ?>">
 		<div class="pf-element">

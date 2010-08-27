@@ -12,6 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Manufacturer' : 'Editing ['.htmlspecialchars($this->entity->name).']';
 $this->note = 'Provide manufacturer details in this form.';
+$pines->uploader->load();
 ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'manufacturer/save')); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
@@ -56,6 +57,19 @@ $this->note = 'Provide manufacturer details in this form.';
 	<div class="pf-element">
 		<label><span class="pf-label">Fax</span>
 		<input class="pf-field ui-widget-content ui-corner-all" type="text" name="fax" size="24" value="<?php echo format_phone($this->entity->fax); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+	</div>
+	<?php if (isset($this->entity->logo)) { ?>
+	<div class="pf-element">
+		<span class="pf-label">Company Logo</span>
+		<div class="pf-group">
+			<span class="pf-field"><img src="<?php echo htmlspecialchars($this->entity->get_logo()); ?>" alt="Group Logo" /></span><br />
+			<label><span class="pf-field"><input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="remove_logo" value="ON" />Remove this logo.</span></label>
+		</div>
+	</div>
+	<?php } ?>
+	<div class="pf-element">
+		<label><span class="pf-label"><?php echo isset($this->entity->logo) ? 'Change Logo' : 'Company Logo'; ?></span>
+			<input class="pf-field ui-widget-content ui-corner-all puploader" type="text" name="logo" /></label>
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>

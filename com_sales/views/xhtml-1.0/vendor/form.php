@@ -12,6 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Vendor' : 'Editing ['.htmlspecialchars($this->entity->name).']';
 $this->note = 'Provide vendor details in this form.';
+$pines->uploader->load();
 ?>
 <form class="pf-form" method="post" action="<?php echo htmlspecialchars(pines_url('com_sales', 'vendor/save')); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
@@ -60,6 +61,19 @@ $this->note = 'Provide vendor details in this form.';
 	<div class="pf-element">
 		<label><span class="pf-label">Account #</span>
 			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="account_number" size="24" value="<?php echo htmlspecialchars($this->entity->account_number); ?>" /></label>
+	</div>
+	<?php if (isset($this->entity->logo)) { ?>
+	<div class="pf-element">
+		<span class="pf-label">Company Logo</span>
+		<div class="pf-group">
+			<span class="pf-field"><img src="<?php echo htmlspecialchars($this->entity->get_logo()); ?>" alt="Group Logo" /></span><br />
+			<label><span class="pf-field"><input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="remove_logo" value="ON" />Remove this logo.</span></label>
+		</div>
+	</div>
+	<?php } ?>
+	<div class="pf-element">
+		<label><span class="pf-label"><?php echo isset($this->entity->logo) ? 'Change Logo' : 'Company Logo'; ?></span>
+			<input class="pf-field ui-widget-content ui-corner-all puploader" type="text" name="logo" /></label>
 	</div>
 	<br />
 	<fieldset class="pf-group">

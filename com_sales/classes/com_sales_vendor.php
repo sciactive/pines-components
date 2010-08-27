@@ -71,6 +71,17 @@ class com_sales_vendor extends entity {
 	}
 
 	/**
+	 * Get the location of the company logo.
+	 * @return string The location of the company logo.
+	 */
+	public function get_logo($full = false) {
+		global $pines;
+		if (isset($this->logo))
+			return $full ? $pines->uploader->url($pines->uploader->real($this->logo), true) : $this->logo;
+		return '';
+	}
+
+	/**
 	 * Print a form to edit the vendor.
 	 * @return module The form's module.
 	 */

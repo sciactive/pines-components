@@ -35,6 +35,13 @@ $manufacturer->zip = $_REQUEST['zip'];
 $manufacturer->phone_work = preg_replace('/\D/', '', $_REQUEST['phone_work']);
 $manufacturer->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
 
+if ($_REQUEST['remove_logo'] == 'ON' && isset($manufacturer->logo))
+	unset($manufacturer->logo);
+
+// Logo image.
+if (!empty($_REQUEST['logo']) && $pines->uploader->check($_REQUEST['logo']))
+	$manufacturer->logo = $_REQUEST['logo'];
+
 if (empty($manufacturer->name)) {
 	$manufacturer->print_form();
 	pines_notice('Please specify a name.');

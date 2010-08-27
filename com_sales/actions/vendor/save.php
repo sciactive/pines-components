@@ -47,6 +47,13 @@ $vendor->online_password = $_REQUEST['online_password'];
 $vendor->terms = $_REQUEST['terms'];
 $vendor->comments = $_REQUEST['comments'];
 
+if ($_REQUEST['remove_logo'] == 'ON' && isset($vendor->logo))
+	unset($vendor->logo);
+
+// Logo image.
+if (!empty($_REQUEST['logo']) && $pines->uploader->check($_REQUEST['logo']))
+	$vendor->logo = $_REQUEST['logo'];
+
 if (empty($vendor->name)) {
 	$vendor->print_form();
 	pines_notice('Please specify a name.');

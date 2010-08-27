@@ -15,6 +15,8 @@ if (!gatekeeper('com_sales/receivelocation'))
 	$this->note = 'Only use this form to receive inventory into your <strong>current</strong> location ('.(!isset($_SESSION['user']->group) ? 'No Location' : $_SESSION['user']->group->name).').';
 $pines->com_pgrid->load();
 $pines->com_jstree->load();
+if ($pines->config->com_sales->autocomplete_product)
+	$pines->com_sales->load_product_select();
 ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'stock/receive')); ?>">
 	<script type="text/javascript">
@@ -105,7 +107,6 @@ $pines->com_jstree->load();
 											for (var i = 0; i < this.quantity; i++)
 												pines.com_sales_add_product(this);
 										});
-										
 									}
 								});
 							});
@@ -125,7 +126,67 @@ $pines->com_jstree->load();
 				pgrid_toolbar_contents : [
 					{
 						type: 'button',
-						text: 'Serial',
+						title: 'Select a Product by Category',
+						extra_class: 'picon picon-view-list-tree',
+						selection_optional: true,
+						click: function(){
+							category_dialog.dialog("open");
+						}
+					},
+					{
+						type: 'text',
+						title: 'Enter a Product SKU or Barcode',
+						load: function(textbox){
+							var select = function(code){
+								if (code == "") {
+									alert("Please enter a product code.");
+									return;
+								}
+								textbox.val("");
+								var loader;
+								$.ajax({
+									url: "<?php echo addslashes(pines_url('com_sales', 'product/search')); ?>",
+									type: "POST",
+									dataType: "json",
+									data: {"code": code},
+									beforeSend: function(){
+										loader = $.pnotify({
+											pnotify_title: 'Product Search',
+											pnotify_text: 'Retrieving product from server...',
+											pnotify_notice_icon: 'picon picon-throbber',
+											pnotify_nonblock: true,
+											pnotify_hide: false,
+											pnotify_history: false
+										});
+									},
+									complete: function(){
+										loader.pnotify_remove();
+									},
+									error: function(XMLHttpRequest, textStatus){
+										pines.error("An error occured while trying to lookup the product code:\n"+XMLHttpRequest.status+": "+textStatus);
+									},
+									success: function(data){
+										if (!data) {
+											alert("No product was found with the code "+code+".");
+											return;
+										}
+										pines.com_sales_add_product(data);
+									}
+								});
+							};
+							<?php if ($pines->config->com_sales->autocomplete_product) { ?>
+							textbox.productselect({select: function(event, ui){select(ui.item.value); return false;}});
+							<?php } ?>
+							textbox.keydown(function(e){
+								if (e.keyCode == 13)
+									select(textbox.val());
+							});
+						}
+					},
+					{type: 'separator'},
+					{
+						type: 'button',
+						title: 'Serial',
 						extra_class: 'picon picon-view-barcode',
 						double_click: true,
 						click: function(e, rows){
@@ -146,18 +207,128 @@ $pines->com_jstree->load();
 					},
 					{
 						type: 'button',
-						text: 'Remove',
+						title: 'Quantity',
+						extra_class: 'picon picon-document-multiple',
+						double_click: true,
+						click: function(e, rows){
+							var product = rows.data("product");
+							if (product.serialized) {
+								alert("This product is serialized.");
+								return;
+							}
+							var qty = rows.pgrid_get_value(3);
+							do {
+								qty = prompt("Please enter a quantity:", qty);
+							} while ((parseInt(qty) < 1 || isNaN(parseInt(qty))) && qty != null);
+							if (qty != null) {
+								rows.pgrid_set_value(3, parseInt(qty));
+								pines.com_sales_update_products();
+							}
+						}
+					},
+					{type: 'separator'},
+					{
+						type: 'button',
+						title: 'Remove',
 						extra_class: 'picon picon-edit-delete',
 						multi_select: true,
 						click: function(e, rows){
 							rows.pgrid_delete();
 							pines.com_sales_update_products();
 						}
-					},
-					{type: 'separator'},
-					{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
-					{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true}
+					}
 				]
+			});
+
+			// Category Grid
+			var category_grid = $("#p_muid_category_grid").pgrid({
+				pgrid_hidden_cols: [1],
+				pgrid_sort_col: 1,
+				pgrid_sort_ord: "asc",
+				pgrid_paginate: false,
+				pgrid_view_height: "300px",
+				pgrid_multi_select: false,
+				pgrid_double_click: function(e, row){
+					category_products_grid.pgrid_get_all_rows().pgrid_delete();
+					var loader;
+					$.ajax({
+						url: "<?php echo addslashes(pines_url('com_sales', 'category/products')); ?>",
+						type: "POST",
+						dataType: "json",
+						data: {"id": $(row).attr("title")},
+						beforeSend: function(){
+							loader = $.pnotify({
+								pnotify_title: 'Product Search',
+								pnotify_text: 'Retrieving product from server...',
+								pnotify_notice_icon: 'picon picon-throbber',
+								pnotify_nonblock: true,
+								pnotify_hide: false,
+								pnotify_history: false
+							});
+						},
+						complete: function(){
+							loader.pnotify_remove();
+						},
+						error: function(XMLHttpRequest, textStatus){
+							pines.error("An error occured while trying to lookup the product code:\n"+XMLHttpRequest.status+": "+textStatus);
+						},
+						success: function(data){
+							if (!data || !data[0]) {
+								alert("No products were returned.");
+								return;
+							}
+							$.each(data, function(){
+								var product = this;
+								category_products_grid.pgrid_add([{key: this.guid, values: [this.name, this.sku]}], function(){
+									$(this).data("product", product);
+								});
+							});
+							category_products_dialog.dialog("open");
+						}
+					});
+				}
+			});
+			// Category Dialog
+			var category_dialog = $("#p_muid_category_dialog").dialog({
+				bgiframe: true,
+				autoOpen: false,
+				modal: true,
+				width: 600,
+				open: function() {
+					category_grid.pgrid_get_selected_rows().pgrid_deselect_rows();
+				}
+			});
+			// Category Products Grid
+			var category_products_grid = $("#p_muid_category_products_grid").pgrid({
+				pgrid_sort_col: 1,
+				pgrid_sort_ord: "asc",
+				pgrid_view_height: "300px",
+				pgrid_multi_select: false,
+				pgrid_double_click: function(){
+					category_products_dialog.dialog("option", "buttons").Done();
+				}
+			});
+			// Category Products Dialog
+			var category_products_dialog = $("#p_muid_category_products_dialog").dialog({
+				bgiframe: true,
+				autoOpen: false,
+				modal: true,
+				width: 800,
+				open: function() {
+					category_products_grid.pgrid_get_selected_rows().pgrid_deselect_rows();
+				},
+				buttons: {
+					'Done': function() {
+						var data = category_products_grid.pgrid_get_selected_rows().data("product");
+						if (!data) {
+							alert("Please select a product.");
+							return;
+						}
+						pines.com_sales_add_product(data);
+						category_products_dialog.dialog('close');
+						category_dialog.dialog('close');
+					}
+				}
 			});
 
 			products_table.pgrid_get_all_rows().pgrid_delete();
@@ -208,6 +379,41 @@ $pines->com_jstree->load();
 		<input type="hidden" name="location" value="<?php echo (!isset($_SESSION['user']->group) ? '' : $_SESSION['user']->group->guid); ?>" />
 	</div>
 	<?php } ?>
+	<div id="p_muid_category_dialog" title="Categories" style="display: none;">
+		<table id="p_muid_category_grid">
+			<thead>
+				<tr>
+					<th>Order</th>
+					<th>Name</th>
+					<th>Products</th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php foreach($this->categories as $category) { ?>
+				<tr title="<?php echo $category->guid; ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? "child {$category->parent->guid} " : ''; ?>">
+					<td><?php echo isset($category->parent) ? $category->array_search($category->parent->children) + 1 : '0' ; ?></td>
+					<td><?php echo htmlspecialchars($category->name); ?></td>
+					<td><?php echo count($category->products); ?></td>
+				</tr>
+			<?php } ?>
+			</tbody>
+		</table>
+		<br class="pf-clearing" />
+	</div>
+	<div id="p_muid_category_products_dialog" title="Products" style="display: none;">
+		<table id="p_muid_category_products_grid">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>SKU</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr><td>-</td><td>-</td></tr>
+			</tbody>
+		</table>
+		<br class="pf-clearing" />
+	</div>
 	<div style="width: 49%; float: right;">
 		<div class="pf-element pf-heading">
 			<h1>Products to be Received</h1>

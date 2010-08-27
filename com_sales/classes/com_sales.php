@@ -701,6 +701,13 @@ class com_sales extends component {
 				array('class' => com_sales_po, 'skip_ac' => true),
 				$selector
 			);
+		$module->categories = (array) $pines->entity_manager->get_entities(
+				array('class' => com_sales_category),
+				array('&',
+					'data' => array('enabled', true),
+					'tag' => array('com_sales', 'category')
+				)
+			);
 
 		return $module;
 	}

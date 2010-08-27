@@ -21,6 +21,7 @@ return array(
 	'description' => 'A JavaScript image slider jQuery component.',
 	'depend' => array(
 		'pines' => '<2',
+		'service' => 'uploader',
 		'component' => 'com_jquery'
 	),
 );

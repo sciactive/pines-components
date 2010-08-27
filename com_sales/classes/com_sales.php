@@ -691,13 +691,15 @@ class com_sales extends component {
 	 */
 	public function print_receive_form() {
 		global $pines;
+
+		$selector = array('&', 'data' => array(array('final', true), array('finished', false)), 'tag' => array('com_sales', 'po'));
+		if (!gatekeeper('com_sales/receivelocation'))
+			$selector['ref'] = array('destination', $_SESSION['user']->group);
+
 		$module = new module('com_sales', 'stock/formreceive', 'content');
-		$module->categories = (array) $pines->entity_manager->get_entities(
-				array('class' => com_sales_category),
-				array('&',
-					'data' => array('enabled', true),
-					'tag' => array('com_sales', 'category')
-				)
+		$module->pos = (array) $pines->entity_manager->get_entities(
+				array('class' => com_sales_po, 'skip_ac' => true),
+				$selector
 			);
 
 		return $module;

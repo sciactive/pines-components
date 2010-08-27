@@ -75,7 +75,7 @@ if ($page->save()) {
 	pines_notice('Saved page ['.$page->name.']');
 	// Assign the page to the selected categories.
 	// We have to do this here, because new pages won't have a GUID until now.
-	$categories = array_map('intval', $_REQUEST['categories']);
+	$categories = array_map('intval', (array) $_REQUEST['categories']);
 	$all_categories = $pines->entity_manager->get_entities(array('class' => com_content_category), array('&', 'data' => array('enabled', true), 'tag' => array('com_content', 'category')));
 	foreach($all_categories as &$cur_cat) {
 		if (in_array($cur_cat->guid, $categories) && !$page->in_array($cur_cat->pages)) {

@@ -200,7 +200,25 @@ $pines->com_jstree->load();
 			<input class="p_muid_change_this" type="hidden" name="location_change" value="" />
 			<div class="pf-element">
 				<span class="pf-label">Location</span>
-				<div class="pf-group">
+				<script type="text/javascript">
+					// <![CDATA[
+					pines(function(){
+						$("#p_muid_location_null").change(function(){
+							if ($(this).is(":checked"))
+								$("#p_muid_location").slideUp();
+							else
+								$("#p_muid_location").slideDown();
+						}).each(function(){
+							// Slide up doesn't work on load, because it's hidden.
+							if ($(this).is(":checked"))
+								$("#p_muid_location").hide();
+						});
+					});
+					// ]]>
+				</script>
+				<label><input class="pf-field" type="checkbox" id="p_muid_location_null" name="location_null" value="ON"<?php echo !isset($this->entity->location) ? ' checked="checked"' : ''; ?> /> Not in inventory. (Sold, trashed, etc.)</label>
+				<br />
+				<div id="p_muid_location" class="pf-group">
 					<div class="pf-field location_tree ui-widget-content ui-corner-all" style="height: 180px; width: 200px; overflow: auto;"></div>
 				</div>
 				<input type="hidden" name="location" />

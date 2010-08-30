@@ -31,7 +31,7 @@ $entities = (array) $pines->entity_manager->get_entities(
 	);
 $available = ($_REQUEST['available'] == 'ON');
 $serial = ($_REQUEST['serial'] == '') ? null : $_REQUEST['serial'];
-$location = ($_REQUEST['location'] == 'null') ? null : group::factory((int) $_REQUEST['location']);
+$location = ($_REQUEST['location_null'] == 'ON') ? null : group::factory((int) $_REQUEST['location']);
 $vendor = ($_REQUEST['vendor'] == 'null') ? null : com_sales_vendor::factory((int) $_REQUEST['vendor']);
 $cost = ($_REQUEST['cost'] == '') ? null : (float) $_REQUEST['cost'];
 $count = count($entities);

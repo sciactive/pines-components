@@ -4,7 +4,7 @@
  * Example styles for jQuery.popeye
  *
  * Copyright (C) 2010 Christoph Schuessler (schreib@herr-schuessler.de)
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -17,7 +17,7 @@
     width:          100%;
     display:        block;
     overflow:       hidden;
-    
+
 }
 .ppy-imglist li {
     padding:        10px;
@@ -64,11 +64,11 @@
 
 .ppy1 .ppy-outer {
     padding:        10px;
-    border:         1px solid #e1f1a1;
+    border:         1px solid #E3E3E3;
     border-radius:          0 10px 10px 10px;
     -moz-border-radius:     0 10px 10px 10px;
     -webkit-border-radius:  0 10px 10px 10px;
-    background:     #eff9c7;
+    background:     #F0F0F0;
 }
 
 .ppy1 .ppy-stage {
@@ -81,7 +81,7 @@
 
 .ppy1 .ppy-outer:hover,
 .ppy1.ppy-expanded .ppy-outer {
-    border:         1px solid #d5e68e;
+    border:         1px solid #E3E3E3;
     box-shadow:         0 0 7px #ccc;
     -moz-box-shadow:    0 0 7px #ccc;
     -webkit-box-shadow: 0 0 7px #ccc;
@@ -92,8 +92,8 @@
     padding:        10px;
     font-size:      0.9em;
     line-height:    1.3em;
-    color:          #809f21;
-    background:     #eeffa8;
+    color:          #9C9C9C;
+    background:     #D4D4D4;
     border-radius:          10px;
     -moz-border-radius:     10px;
     -webkit-border-radius:  10px;
@@ -104,47 +104,47 @@
 }
 
 .ppy1 .ppy-caption a {
-    color:          #66bde9;
+    color:          #E8E8E8;
 }
 .ppy1 .ppy-caption a:hover {
     text-decoration:underline;
 }
 
 .ppy1 .ppy-counter {
-    border-bottom:  1px solid #d5e68e;
-    color:          #b8cf5a;
+    border-bottom:  1px solid #E3E3E3;
+    color:          #CCCCCC;
     padding:        0 0 2px 0;
     margin:         0 0 5px 0;
     font-size:      0.9em;
 }
 
 .ppy1 .ppy-stagewrap {
-    background:     #0c3b3d;
+    background:     #333333;
     border-radius:          0 5px 5px 5px;
     -moz-border-radius:     0 5px 5px 5px;
     -webkit-border-radius:  0 5px 5px 5px;
 }
 
 .ppy1 .ppy-loading {
-    background:     #0c3b3d url(images/loading1.gif) no-repeat center !important;
+    background:     #333333 url(images/loading1.gif) no-repeat center !important;
 }
 
 .ppy1 .ppy-nav {
-    background:     #0c3b3d;
+    background:     #333333;
     background:     -moz-linear-gradient(
         center bottom,
-        rgb(12,59,61) 0%,
-        rgb(58,131,133) 100%
+        rgb(33,33,33) 0%,
+        rgb(133,133,133) 100%
     );
     width:          104px;
     height:         32px;
     padding:        5px;
     position:       absolute;
     top:            0;
-    left:           0;  
+    left:           0;
     border-radius:          0 0 5px 5px;
     -moz-border-radius:     0 0 5px 5px;
-    -webkit-border-radius:  0 0 5px 5px;   
+    -webkit-border-radius:  0 0 5px 5px;
 }
 
 .ppy1 .ppy-nav a {
@@ -157,7 +157,7 @@
     border-radius:          5px;
     -moz-border-radius:     5px;
     -khtml-border-radius:   5px;
-    -webkit-border-radius:  5px; 
+    -webkit-border-radius:  5px;
 }
 
 .ppy1 .ppy-prev {
@@ -181,7 +181,7 @@
 }
 
 .ppy1 .ppy-nav a:hover {
-    background-color:   #a1c436;
+    background-color:   #BFBFBF;
     cursor:         pointer;
 }
 
@@ -195,15 +195,15 @@
 
 .ppy2 .ppy-outer {
     padding:        0 46px 0 0;
-    
+
 }
 .ppy2 .ppy-stagewrap {
     padding:        7px;
     border-radius:          5px 0 5px 5px;
     -moz-border-radius:     5px 0 5px 5px;
     -webkit-border-radius:  5px 0 5px 5px;
-    background:     #c1eaff;
-    background:     rgba(193,234,255,0.7);
+    background:     #E0E0E0;
+    background:     rgba(133,133,133,0.7);
 }
 
 .ppy2 .ppy-stage {
@@ -228,7 +228,7 @@
     border-radius:          5px 0 0 0;
     -moz-border-radius:     5px 0 0 0;
     -khtml-border-radius:   5px 0 0 0;
-    -webkit-border-radius:  5px 0 0 0; 
+    -webkit-border-radius:  5px 0 0 0;
 }
 
 .ppy2 .ppy-loading {
@@ -241,20 +241,20 @@
     border-radius:          0 5px 5px 0;
     -moz-border-radius:     0 5px 5px 0;
     -webkit-border-radius:  0 5px 5px 0;
-    background:     #76c6ee;
+    background:     #EBEBEB;
     background:     -webkit-gradient(
         linear,
         left top,
         right bottom,
-        color-stop(0, rgb(118,198,238)),
-        color-stop(1, rgb(45,158,214))
+        color-stop(0, rgb(133,133,133)),
+        color-stop(1, rgb(33,33,33))
     );
     background:     -moz-linear-gradient(
         left top,
-        rgb(118,198,238) 0%,
-        rgb(45,158,214) 100%
+        rgb(133,133,133) 0%,
+        rgb(33,33,33) 100%
     );
-    border-left:    1px solid #6ab1d5;
+    border-left:    1px solid #D4D4D4;
     width:          45px;
     position:       absolute;
     top:            4px;
@@ -294,7 +294,7 @@
 }
 
 .ppy2 .ppy-nav a:hover {
-    background-color:   #378eba;
+    background-color:   #B8B8B8;
     cursor:         pointer;
     opacity:        0.8;
 }
@@ -394,7 +394,7 @@
     border-radius:          5px;
     -moz-border-radius:     5px;
     -khtml-border-radius:   5px;
-    -webkit-border-radius:  5px; 
+    -webkit-border-radius:  5px;
 }
 
 .ppy3 .ppy-prev {

@@ -54,7 +54,12 @@ class com_modules extends component {
 			$modules = include("$folder/$cur_component/modules.php");
 			if (!$modules || (array) $modules !== $modules)
 				continue;
-			$return[$cur_component] = $modules;
+			foreach ($modules as $key => $cur_module) {
+				if (isset($cur_module['type']) && $cur_module['type'] != 'module')
+					unset($modules[$key]);
+			}
+			if ($modules)
+				$return[$cur_component] = $modules;
 		}
 		return $return;
 	}

@@ -62,6 +62,27 @@ class com_imodules extends component {
 			// Read the imodule entry.
 			$short = empty($matches[1][0]) ? false : true;
 			$type = clean_filename($short ? $matches[1][0] : $matches[3][0]);
+
+			// Determine the module.
+			list ($component, $modname) = explode('/', $type, 2);
+			$component = clean_filename($component);
+			if (!file_exists("components/$component/modules.php")) {
+				// If the module doesn't exist, skip it.
+				$offset = $matches[0][1] + strlen($matches[0][0]);
+				preg_match($pattern, $content, $matches, PREG_OFFSET_CAPTURE, $offset);
+				continue;
+			}
+			$include = include("components/$component/modules.php");
+			$view = $include[$modname]['view'];
+			if (!isset($view) || (isset($include[$modname]['type']) && $include[$modname]['type'] != 'imodule')) {
+				// If the module doesn't exist or isn't an imodule, skip it.
+				$offset = $matches[0][1] + strlen($matches[0][0]);
+				preg_match($pattern, $content, $matches, PREG_OFFSET_CAPTURE, $offset);
+				continue;
+			}
+			unset($include);
+
+			// Read the attributes.
 			$attrs = ($short ? $matches[2][0] : $matches[4][0]);
 			$attr_matches = array();
 			if (preg_match_all('/(\w+)="(.*?)"/', $attrs, $attr_matches))
@@ -69,23 +90,6 @@ class com_imodules extends component {
 			else
 				$attrs = array();
 			$icontent = ($short ? '' : $matches[5][0]);
-
-			// Determine the module.
-			list ($component, $modname) = explode('/', $type, 2);
-			if (!file_exists("components/$component/modules.php")) {
-				// If the module doesn't exist, skip it.
-				$offset = $matches[0][1] + strlen($matches[0][0]);
-				preg_match($pattern, $content, $matches, PREG_OFFSET_CAPTURE, $offset);
-				continue;
-			}
-			$view = include("components/$component/modules.php");
-			$view = $view[$modname]['view'];
-			if (!isset($view)) {
-				// If the module doesn't exist, skip it.
-				$offset = $matches[0][1] + strlen($matches[0][0]);
-				preg_match($pattern, $content, $matches, PREG_OFFSET_CAPTURE, $offset);
-				continue;
-			}
 
 			// Build a module.
 			$module = new module($component, $view);

@@ -114,10 +114,14 @@ class com_modules_module extends entity {
 	 */
 	public function print_module() {
 		list ($component, $modname) = explode('/', $this->type, 2);
+		$component = clean_filename($component);
 		if (!file_exists("components/$component/modules.php"))
 			return null;
-		$view = include("components/$component/modules.php");
-		$view = $view[$modname]['view'];
+		$include = include("components/$component/modules.php");
+		$view = $include[$modname]['view'];
+		if (!isset($view) || (isset($include[$modname]['type']) && $include[$modname]['type'] != 'module'))
+			return null;
+		unset($include);
 		$module = new module($component, $view, $this->position, $this->order);
 		$module->title = $this->name;
 		$module->show_title = $this->show_title;

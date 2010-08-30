@@ -15,6 +15,7 @@ return array(
 	'slider' => array(
 		'cname' => 'Inline Slider',
 		'view' => 'modules/slider',
+		'type' => 'imodule',
 	),
 );
 

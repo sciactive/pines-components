@@ -62,6 +62,14 @@
 				}
 			},
 			{
+				"path": "main_menu/business/reports/hrm/fullwarboard",
+				"text": "Full Warboard",
+				"href": ["com_reports","warboard",{"template":"tpl_print"}],
+				"depend": {
+					"ability": "com_reports/warboard"
+				}
+			},
+			{
 				"path": "main_menu/business/reports/hrm/editwarboard",
 				"text": "Edit Warboard",
 				"href": ["com_reports","editwarboard"],

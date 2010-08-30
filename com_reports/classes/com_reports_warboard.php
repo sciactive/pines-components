@@ -27,6 +27,7 @@ class com_reports_warboard extends entity {
 		$this->add_tag('com_reports', 'warboard');
 		// Defaults.
 		$this->company_name = 'Company Name';
+		$this->columns = 5;
 		$this->positions = array();
 		$this->locations = array();
 		$this->important = array();
@@ -88,8 +89,13 @@ class com_reports_warboard extends entity {
 	 * Show the company warboard.
 	 */
 	public function show() {
+		global $pines;
+
+		$head = new module('com_reports', 'warboard_head', 'head');
 		$module = new module('com_reports', 'warboard', 'content');
 		$module->entity = $this;
+		$pines->entity_manager->sort($this->locations, 'name', 'parent');
+		$pines->entity_manager->sort($this->important, 'name');
 	}
 }
 

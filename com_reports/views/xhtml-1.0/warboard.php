@@ -21,7 +21,7 @@ $this->note = format_date(time(), 'date_short');
 		font-size: 8pt;
 	}
 	#p_muid_warboard_table td {
-		width: 33%;
+		width: <?php echo 100/$this->entity->columns; ?>%;
 		vertical-align: text-top;
 	}
 	#p_muid_warboard_table .location, .important, .hq {
@@ -48,16 +48,23 @@ $this->note = format_date(time(), 'date_short');
 		background-color: palegreen;
 		color: black;
 	}
+	#p_muid_warboard_table .empty {
+		background-color: #F1F1F1;
+	}
 	/* ]]> */
 </style>
 <table id="p_muid_warboard_table">
 	<tr>
 	<?php
 	$count = 1;
+	$location_rows = $important_rows = 0;
 	foreach ($this->entity->locations as $cur_location) {
-		$employees = $cur_location->get_users(); ?>
+		$location_count[$cur_location->guid] = 0;
+		$employees = $cur_location->get_users();
+		$pines->entity_manager->sort($employees, 'hire_date');
+	?>
 			<td>
-			<table class="location">
+			<table class="location" id="location_<?php echo $cur_location->guid; ?>">
 				<tr class="label">
 					<td colspan="2">
 						<strong><?php
@@ -74,7 +81,11 @@ $this->note = format_date(time(), 'date_short');
 				<tr>
 					<td colspan="3"><?php echo isset($cur_location->parent->name) ? htmlspecialchars($cur_location->parent->name) : '-'; ?></td>
 				</tr>
-				<?php foreach ($this->entity->positions as $cur_title) { $empty = true; ?>
+				<?php
+				foreach ($this->entity->positions as $cur_title) {
+					$location_count[$cur_location->guid]++;
+					$empty = true;
+				?>
 				<tr class="heading <?php echo strtolower(preg_replace('/ /', '_', $cur_location->guid.$cur_title)); ?>">
 					<td colspan="3"><?php echo htmlspecialchars($cur_title).$plural; ?></td>
 				</tr>
@@ -83,14 +94,18 @@ $this->note = format_date(time(), 'date_short');
 					if (!$cur_employee->employee) {
 						unset($cur_employee);
 					} elseif ($cur_employee->job_title == $cur_title) {
+						$location_count[$cur_location->guid]++;
 						$empty = false;
 				?>
 				<tr>
-					<td><?php echo format_date($cur_employee->p_cdate, 'date_short'); ?></td>
-					<td><?php echo htmlspecialchars($cur_employee->name); ?></td>
-					<td><?php echo format_phone($cur_employee->phone); ?></td>
+					<td style="width: 20%;"><?php echo format_date($cur_employee->hire_date, 'custom', 'n/j/y'); ?></td>
+					<td style="width: 50%;"><?php echo htmlspecialchars($cur_employee->name); ?></td>
+					<td style="width: 30%;"><?php echo format_phone($cur_employee->phone); ?></td>
 				</tr>
-				<?php } } if ($empty) { ?>
+				<?php }
+				}
+				if ($empty) {
+					$location_count[$cur_location->guid]--; ?>
 				<script type="text/javascript">
 					// <![CDATA[
 					pines(function(){
@@ -98,10 +113,13 @@ $this->note = format_date(time(), 'date_short');
 					});
 					// ]]>
 				</script>
-				<?php } } ?>
+				<?php }
+				}
+				if ($location_count[$cur_location->guid] > $location_rows) $location_rows = $location_count[$cur_location->guid];
+				?>
 			</table>
 			</td>
-		<?php if ($count/3 == floor($count/3)) { ?>
+		<?php if ($count/$this->entity->columns == floor($count/$this->entity->columns)) { ?>
 		</tr>
 		<tr>
 		<?php }
@@ -110,7 +128,7 @@ $this->note = format_date(time(), 'date_short');
 	?>
 	</tr>
 	<tr>
-		<td colspan="3"><strong>Important Numbers</strong></td>
+		<td colspan="<?php echo $this->entity->columns; ?>"><strong>Important Numbers</strong></td>
 	</tr>
 	<tr>
 		<td>
@@ -134,27 +152,55 @@ $this->note = format_date(time(), 'date_short');
 		</td>
 		<?php
 		foreach ($this->entity->important as $cur_important) {
+			$imortant_count[$cur_important->guid] = 0;
 			$employees = $cur_important->get_users();
+			$pines->entity_manager->sort($employees, 'hire_date');
 		?>
-		<td>
-		<table class="important">
+		<td colspan="<?php echo floor(($this->entity->columns - 1)/count($this->entity->important)); ?>">
+		<table class="important" id="important_<?php echo $cur_important->guid; ?>">
 			<tr>
-				<td colspan="3" class="label"><strong><?php echo htmlspecialchars($cur_important->name); ?></strong></td>
+				<td colspan="4" class="label"><strong><?php echo htmlspecialchars($cur_important->name); ?></strong></td>
 			</tr>
 			<?php
 			foreach ($employees as $key => &$cur_employee) {
 				if (!$cur_employee->employee) {
 					unset($cur_employee);
 				} else {
+					$important_count[$cur_important->guid]++;
 			?>
 			<tr>
 				<td><?php echo htmlspecialchars($cur_employee->name); ?></td>
 				<td><?php echo htmlspecialchars($cur_employee->job_title); ?></td>
 				<td><?php echo format_phone($cur_employee->phone); ?></td>
+				<td><?php echo !empty($cur_employee->phone_ext) ? 'ext '.$cur_employee->phone_ext : ''; ?></td>
 			</tr>
 			<?php } } ?>
 		</table>
 		</td>
-		<?php } ?>
+		<?php if ($important_count[$cur_important->guid] > $important_rows) $important_rows = $important_count[$cur_important->guid]; } ?>
 	</tr>
 </table>
+<?php
+foreach ($this->entity->locations as $cur_location) {
+	$add_rows = $location_rows - $location_count[$cur_location->guid];
+	for ($i=0; $i < $add_rows; $i++) { ?>
+<script type="text/javascript">
+	// <![CDATA[
+	pines(function(){
+		$("#location_<?php echo $cur_location->guid; ?>").append('<tr class="empty"><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>');
+	});
+	// ]]>
+</script>
+<?php } } ?>
+<?php
+foreach ($this->entity->important as $cur_important) {
+	$add_rows = $important_rows - $important_count[$cur_important->guid];
+	for ($i=0; $i < $add_rows; $i++) { ?>
+<script type="text/javascript">
+	// <![CDATA[
+	pines(function(){
+		$("#important_<?php echo $cur_important->guid; ?>").append('<tr class="empty"><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>');
+	});
+	// ]]>
+</script>
+<?php } } ?>

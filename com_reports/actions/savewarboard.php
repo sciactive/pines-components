@@ -22,6 +22,7 @@ if (!isset($warboard->guid)) {
 
 $warboard->company_name = $_REQUEST['company_name'];
 $warboard->positions = !empty($_REQUEST['titles']) ? $_REQUEST['titles'] : array();
+$warboard->columns = (int) $_REQUEST['columns'];
 $warboard->locations = array();
 $warboard->important = array();
 
@@ -38,7 +39,7 @@ foreach ($importants as $cur_important) {
 	if (isset($important->guid))
 		$warboard->important[] = $important;
 }
-$warboard->important = array_slice($warboard->important, 0, 2);
+$warboard->important = array_slice($warboard->important, 0, $warboard->columns-1);
 
 $warboard->hq = group::factory((int) $_REQUEST['hq']);
 if (!isset($warboard->hq->guid))
@@ -51,7 +52,7 @@ $warboard->ac = (object) array(
 );
 
 if ($warboard->save()) {
-	pines_notice('Saved Warboard ['.$warboard->title.']');
+	pines_notice('Saved Warboard');
 } else {
 	$warboard->print_form();
 	pines_error('Error saving Warboard. Do you have permission?');

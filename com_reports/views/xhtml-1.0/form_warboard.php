@@ -36,8 +36,7 @@ $pines->com_pgrid->load();
 		// Location Grid
 		$("#p_muid_group_grid").pgrid({
 			pgrid_sort_col: 5,
-			pgrid_sort_ord: "desc",
-			pgrid_sortable: false,
+			pgrid_sort_ord: "asc",
 			pgrid_paginate: false,
 			pgrid_view_height: "auto",
 			pgrid_toolbar: false
@@ -60,7 +59,20 @@ $pines->com_pgrid->load();
 		<?php } ?>
 	</div>
 	<div class="pf-element">
-		
+		<span class="pf-label">Columns</span>
+		<span class="pf-note">The number of columns in each row.</span>
+		<select class="ui-widget-content ui-corner-all" name="columns">
+			<option value="1" <?php echo ($this->entity->columns == 1) ? 'selected="selected"' : ''; ?>>1</option>
+			<option value="2" <?php echo ($this->entity->columns == 2) ? 'selected="selected"' : ''; ?>>2</option>
+			<option value="3" <?php echo ($this->entity->columns == 3) ? 'selected="selected"' : ''; ?>>3</option>
+			<option value="4" <?php echo ($this->entity->columns == 4) ? 'selected="selected"' : ''; ?>>4</option>
+			<option value="5" <?php echo ($this->entity->columns == 5) ? 'selected="selected"' : ''; ?>>5</option>
+			<option value="6" <?php echo ($this->entity->columns == 6) ? 'selected="selected"' : ''; ?>>6</option>
+			<option value="7" <?php echo ($this->entity->columns == 7) ? 'selected="selected"' : ''; ?>>7</option>
+			<option value="8" <?php echo ($this->entity->columns == 8) ? 'selected="selected"' : ''; ?>>8</option>
+			<option value="9" <?php echo ($this->entity->columns == 9) ? 'selected="selected"' : ''; ?>>9</option>
+			<option value="10" <?php echo ($this->entity->columns == 10) ? 'selected="selected"' : ''; ?>>10</option>
+		</select>
 	</div>
 	<div class="pf-element pf-full-width">
 		<div class="pf-field">
@@ -68,8 +80,8 @@ $pines->com_pgrid->load();
 				<thead>
 					<tr>
 						<th class="location_label">Locations</th>
-						<th class="important_label" title="Select 2">Important</th>
-						<th class="hq_label" title="Select 1">Headquarters</th>
+						<th class="important_label">Important</th>
+						<th class="hq_label">Headquarters</th>
 						<th>Location</th>
 						<th>Parent</th>
 					</tr>
@@ -91,5 +103,6 @@ $pines->com_pgrid->load();
 	<div class="pf-element">
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<input class="ui-corner-all ui-state-default" type="submit" value="Save" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_reports', 'warboard')); ?>');" value="Cancel" />
 	</div>
 </form>

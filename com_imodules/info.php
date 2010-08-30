@@ -18,7 +18,7 @@ return array(
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'An inline module parsing system',
-	'description' => 'A inline module system, which allows you to place modules directly in content.',
+	'description' => 'An inline module system, which allows you to place modules directly in content.',
 	'depend' => array(
 		'pines' => '<2'
 	),

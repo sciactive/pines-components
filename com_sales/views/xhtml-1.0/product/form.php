@@ -266,7 +266,7 @@ $pines->com_ptags->load();
 
 					$("#p_muid_image_upload").change(function(){
 						var image = $(this).val();
-						$("<li class=\"ui-state-default ui-corner-all\"><img alt=\""+image+"\" src=\""+image+"\" /></li>").appendTo($("#p_muid_sortable"));
+						$("<li class=\"ui-state-default ui-corner-all\"><img alt=\""+image.replace(/.*\//, '')+"\" src=\""+image+"\" /></li>").appendTo($("#p_muid_sortable"));
 						$(this).val("");
 						update_images();
 					});
@@ -305,10 +305,11 @@ $pines->com_ptags->load();
 				</div>
 				<div class="pf-group">
 					<ul id="p_muid_sortable" class="pf-field">
-						<?php foreach ($this->entity->images as $cur_image) { ?>
-						<li class="ui-state-default ui-corner-all"><img alt="<?php echo htmlspecialchars($cur_image); ?>" src="<?php echo htmlspecialchars($cur_image); ?>" /></li>
-						<?php } ?>
+						<?php if ($this->entity->images) { foreach ($this->entity->images as $cur_image) { ?>
+						<li class="ui-state-default ui-corner-all"><img alt="<?php echo htmlspecialchars(basename($cur_image)); ?>" src="<?php echo htmlspecialchars($cur_image); ?>" /></li>
+						<?php } } ?>
 					</ul>
+					<br class="pf-clearing" />
 				</div>
 			</div>
 			<div class="pf-element">

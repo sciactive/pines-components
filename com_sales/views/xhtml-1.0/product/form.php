@@ -29,9 +29,9 @@ $pines->com_ptags->load();
 		padding: 5px;
 		float: left;
 		width: 120px;
-		height: 120px;
+		min-height: 120px;
 		text-align: center;
-		line-height: 110px;
+		background-image: none;
 	}
 	#p_muid_sortable img {
 		width: 110px;
@@ -39,6 +39,11 @@ $pines->com_ptags->load();
 		max-height: 110px;
 		vertical-align: middle;
 		margin: 0;
+		padding: 0;
+	}
+	#p_muid_sortable p, #p_muid_sortable textarea {
+		text-align: left;
+		margin: .4em 0 0;
 		padding: 0;
 	}
 	/* ]]> */
@@ -257,8 +262,12 @@ $pines->com_ptags->load();
 				pines(function(){
 					var update_images = function(){
 						var images = [];
-						$("img", "#p_muid_sortable").each(function(){
-							images.push($(this).attr("src"));
+						$("li", "#p_muid_sortable").each(function(){
+							var cur_entry = $(this);
+							images.push({
+								"file": cur_entry.find("img").attr("src"),
+								"alt": cur_entry.find("p").html()
+							});
 						});
 						$("input[name=images]", "#p_muid_tab_images").val(JSON.stringify(images));
 					};
@@ -266,14 +275,29 @@ $pines->com_ptags->load();
 
 					$("#p_muid_image_upload").change(function(){
 						var image = $(this).val();
-						$("<li class=\"ui-state-default ui-corner-all\"><img alt=\""+image.replace(/.*\//, '')+"\" src=\""+image+"\" /></li>").appendTo($("#p_muid_sortable"));
+						$("<li class=\"ui-state-default ui-corner-all\"><img alt=\""+image.replace(/.*\//, '')+"\" src=\""+image+"\" /><p>Click to edit description...</p></li>").appendTo($("#p_muid_sortable"));
 						$(this).val("");
 						update_images();
 					});
-					$("#p_muid_sortable").sortable({
+					$("#p_muid_sortable")
+					.delegate("li p", "click", function(){
+						var cur_alt = $(this);
+						var desc = cur_alt.text();
+						$("<textarea cols=\"4\" rows=\"3\" style=\"width: 100%\" class=\"ui-widget-content ui-corner-all\">"+desc+"</textarea>")
+						.blur(function(){
+							cur_alt.insertAfter(this).html($(this).remove().val());
+							update_images();
+						})
+						.insertAfter(cur_alt)
+						.focus()
+						.select();
+						cur_alt.detach();
+					})
+					.sortable({
 						placeholder: 'ui-state-highlight',
 						update: function(){update_images();}
-					}).draggable();
+					})
+					.draggable();
 					$("#p_muid_image_trash").droppable({
 						drop: function(e, ui){
 							ui.draggable.hide("explode", {}, 500, function(){
@@ -306,7 +330,10 @@ $pines->com_ptags->load();
 				<div class="pf-group">
 					<ul id="p_muid_sortable" class="pf-field">
 						<?php if ($this->entity->images) { foreach ($this->entity->images as $cur_image) { ?>
-						<li class="ui-state-default ui-corner-all"><img alt="<?php echo htmlspecialchars(basename($cur_image)); ?>" src="<?php echo htmlspecialchars($cur_image); ?>" /></li>
+						<li class="ui-state-default ui-corner-all">
+							<img alt="<?php echo htmlspecialchars(basename($cur_image['file'])); ?>" src="<?php echo htmlspecialchars($cur_image['file']); ?>" />
+							<p><?php echo htmlspecialchars(basename($cur_image['alt'])); ?></p>
+						</li>
 						<?php } } ?>
 					</ul>
 					<br class="pf-clearing" />

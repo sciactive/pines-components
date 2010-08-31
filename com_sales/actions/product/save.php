@@ -38,9 +38,9 @@ if (!isset($product->manufacturer->guid))
 $product->manufacturer_sku = $_REQUEST['manufacturer_sku'];
 
 // Images
-$product->images = (array) json_decode($_REQUEST['images']);
+$product->images = (array) json_decode($_REQUEST['images'], true);
 foreach ($product->images as $key => $cur_image) {
-	if (!$pines->uploader->check($cur_image))
+	if (!$pines->uploader->check($cur_image['file']))
 		unset($product->images[$key]);
 }
 $product->images = array_values($product->images);

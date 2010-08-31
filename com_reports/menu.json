@@ -65,6 +65,7 @@
 				"path": "main_menu/business/reports/hrm/fullwarboard",
 				"text": "Full Warboard",
 				"href": ["com_reports","warboard",{"template":"tpl_print"}],
+				"target": "_blank",
 				"depend": {
 					"ability": "com_reports/warboard"
 				}

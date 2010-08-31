@@ -94,7 +94,19 @@ class com_reports_warboard extends entity {
 		$head = new module('com_reports', 'warboard_head', 'head');
 		$module = new module('com_reports', 'warboard', 'content');
 		$module->entity = $this;
-		$pines->entity_manager->sort($this->locations, 'name', 'parent');
+		/*
+		//$pines->com_user->group_sort($this->locations, 'name');
+		foreach ($this->locations as $cur_l) {
+			echo "{$cur_l->parent->name} : {$cur_l->name}<br />";
+		}
+		echo "<br /><br /><br />";
+		*/
+		$pines->entity_manager->sort($this->locations, 'name', 'parent', false, false);
+		/*
+		foreach ($this->locations as $cur_l) {
+			echo "{$cur_l->parent->name} : {$cur_l->name}<br />";
+		}
+		*/
 		$pines->entity_manager->sort($this->important, 'name');
 	}
 }

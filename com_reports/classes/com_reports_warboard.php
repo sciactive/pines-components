@@ -101,7 +101,7 @@ class com_reports_warboard extends entity {
 		}
 		echo "<br /><br /><br />";
 		*/
-		$pines->entity_manager->sort($this->locations, 'name', 'parent', false, false);
+		$pines->entity_manager->psort($this->locations, 'name', 'parent');
 		/*
 		foreach ($this->locations as $cur_l) {
 			echo "{$cur_l->parent->name} : {$cur_l->name}<br />";

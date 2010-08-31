@@ -192,7 +192,7 @@ class com_user extends component implements user_manager_interface {
 
 	public function group_sort(&$array, $property = null, $case_sensitive = false, $reverse = false) {
 		global $pines;
-		$pines->entity_manager->sort($array, $property, 'parent', $case_sensitive, $reverse);
+		$pines->entity_manager->hsort($array, $property, 'parent', $case_sensitive, $reverse);
 	}
 
 	/**

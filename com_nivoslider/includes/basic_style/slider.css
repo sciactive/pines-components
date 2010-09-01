@@ -38,14 +38,14 @@
 
 .nivo_basic_style .nivo-directionNav a {
 	display:block;
-	width:32px;
-	height:34px;
+	width:41px;
+	height:44px;
 	background:url(arrows.png) no-repeat;
 	text-indent:-9999px;
 	border:0;
 }
 .nivo_basic_style a.nivo-nextNav {
-	background-position:-32px 0;
+	background-position:-41px 0;
 	right:10px;
 }
 .nivo_basic_style a.nivo-prevNav {

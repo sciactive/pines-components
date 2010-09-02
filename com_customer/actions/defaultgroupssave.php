@@ -44,7 +44,7 @@ foreach ($cur_groups as $cur_group) {
 	$cur_group->default_customer_secondary = false;
 	$cur_group->save();
 }
-foreach ($_REQUEST['groups'] as $cur_group_guid) {
+foreach ((array) $_REQUEST['groups'] as $cur_group_guid) {
 	$cur_group = group::factory((int) $cur_group_guid);
 	if (isset($cur_group->guid)) {
 		$cur_group->default_customer_secondary = true;

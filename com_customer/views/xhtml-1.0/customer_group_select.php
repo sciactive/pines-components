@@ -47,6 +47,8 @@ $pines->com_pgrid->load();
 		<span class="pf-label">Default Groups</span>
 		<span class="pf-note">New customers created through the CRM will be placed in these groups. Newly registering customers will use the user manager's defaults.</span>
 		<div class="pf-group pf-full-width">
+			<label><input type="radio" class="pf-field" name="group" value="0" /> No default primary group.</label>
+			<br />
 			<div class="pf-field">
 				<table id="p_muid_group_grid">
 					<thead>

@@ -37,6 +37,10 @@ do {
 				$cur_entity->enabled = false;
 				$changed = true;
 			}
+			if (!isset($cur_entity->abilities)) {
+				$cur_entity->abilities = array();
+				$changed = true;
+			}
 			if (!isset($cur_entity->inherit_abilities)) {
 				$cur_entity->inherit_abilities = true;
 				$changed = true;
@@ -64,8 +68,10 @@ do {
 							'tag' => array('com_user', 'group')
 						)
 					);
-				if (isset($group->guid))
+				if (isset($group->guid)) {
 					$cur_entity->group = $group;
+					$changed = true;
+				}
 				$groups = $pines->entity_manager->get_entities(
 						array('class' => group),
 						array('&',
@@ -73,9 +79,10 @@ do {
 							'tag' => array('com_user', 'group')
 						)
 					);
-				if ($groups)
+				if ($groups) {
 					$cur_entity->groups = $groups;
-				$changed = true;
+					$changed = true;
+				}
 			}
 		}
 		if ($cur_entity->has_tag('com_user')) {

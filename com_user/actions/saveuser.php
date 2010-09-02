@@ -29,7 +29,6 @@ if ( isset($_REQUEST['id']) ) {
 }
 
 $user->username = $_REQUEST['username'];
-$user->name = $_REQUEST['name'];
 $user->name_first = $_REQUEST['name_first'];
 $user->name_middle = $_REQUEST['name_middle'];
 $user->name_last = $_REQUEST['name_last'];

@@ -58,9 +58,8 @@ do {
 				$cur_entity->password = md5($cur_entity->password.$cur_entity->salt);
 				$changed = true;
 			}
-			if (empty($cur_entity->group) || empty($cur_entity->groups)) {
-				// Load default groups.
-				global $pines;
+			if (empty($cur_entity->group)) {
+				// Load default group.
 				$group = $pines->entity_manager->get_entity(
 						array('class' => group),
 						array('&',
@@ -72,6 +71,9 @@ do {
 					$cur_entity->group = $group;
 					$changed = true;
 				}
+			}
+			if (empty($cur_entity->groups)) {
+				// Load default groups.
 				$groups = $pines->entity_manager->get_entities(
 						array('class' => group),
 						array('&',

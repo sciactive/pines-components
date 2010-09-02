@@ -149,6 +149,32 @@ class com_customer extends component {
 	}
 
 	/**
+	 * Make new users customers as well.
+	 *
+	 * @param array &$arguments Arguments.
+	 * @param string $name Hook name.
+	 * @param object &$object The user being saved.
+	 */
+	function save_user(&$arguments, $name, &$object) {
+		if ($object->has_tag('com_customer', 'customer'))
+			return;
+		global $pines;
+		if (
+				$pines->config->com_customer->new_users ||
+				(
+						$pines->config->com_customer->reg_users &&
+						$pines->depend->check('option', 'com_user') &&
+						$pines->depend->check('action', 'registeruser')
+				)
+			) {
+			$object->add_tag('com_customer', 'customer');
+			$object->points = 0;
+			$object->peak_points = 0;
+			$object->total_points = 0;
+		}
+	}
+
+	/**
 	 * Transform a string to title case.
 	 *
 	 * @param string $string The string to transform.

@@ -237,8 +237,16 @@ $pines->com_pgrid->load();
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="username" size="24" value="<?php echo htmlspecialchars($this->entity->username); ?>" /></label>
 			</div>
 			<div class="pf-element">
-				<label><span class="pf-label">Name</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
+				<label><span class="pf-label">First Name</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name_first" size="24" value="<?php echo htmlspecialchars($this->entity->name_first); ?>" /></label>
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Middle Name</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name_middle" size="24" value="<?php echo htmlspecialchars($this->entity->name_middle); ?>" /></label>
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Last Name</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name_last" size="24" value="<?php echo htmlspecialchars($this->entity->name_last); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>

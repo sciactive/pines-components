@@ -30,6 +30,10 @@ if ( isset($_REQUEST['id']) ) {
 
 $user->username = $_REQUEST['username'];
 $user->name = $_REQUEST['name'];
+$user->name_first = $_REQUEST['name_first'];
+$user->name_middle = $_REQUEST['name_middle'];
+$user->name_last = $_REQUEST['name_last'];
+$user->name = $user->name_first.(!empty($user->name_middle) ? ' '.$user->name_middle : '').(!empty($user->name_last) ? ' '.$user->name_last : '');
 $user->enabled = ($_REQUEST['enabled'] == 'ON');
 $user->email = $_REQUEST['email'];
 $user->phone = preg_replace('/\D/', '', $_REQUEST['phone']);

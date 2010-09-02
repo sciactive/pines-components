@@ -27,6 +27,7 @@ if (empty($query)) {
 	$selector = array('|',
 		'match' => array(
 			array('name', $r_query),
+			array('username', $r_query),
 			array('email', $r_query)
 		)
 	);
@@ -66,6 +67,7 @@ if (empty($query)) {
 foreach ($customers as $key => &$cur_customer) {
 	$json_struct = (object) array(
 		'guid'			=> $cur_customer->guid,
+		'username'		=> $cur_customer->username,
 		'name'			=> $cur_customer->name,
 		'email'			=> $cur_customer->email,
 		'company'		=> $cur_customer->company->name ? $cur_customer->company->name : '',

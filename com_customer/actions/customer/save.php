@@ -19,10 +19,13 @@ if ( isset($_REQUEST['id']) ) {
 		pines_error('Requested customer id is not accessible.');
 		return;
 	}
+	if ( !empty($_REQUEST['password']) )
+		$customer->password($_REQUEST['password']);
 } else {
 	if ( !gatekeeper('com_customer/newcustomer') )
 		punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'customer/list'));
 	$customer = com_customer_customer::factory();
+	$customer->password($_REQUEST['password']);
 }
 
 // General
@@ -45,14 +48,15 @@ $customer->phone_cell = preg_replace('/\D/', '', $_REQUEST['phone_cell']);
 $customer->phone_work = preg_replace('/\D/', '', $_REQUEST['phone_work']);
 $customer->phone_home = preg_replace('/\D/', '', $_REQUEST['phone_home']);
 $customer->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
+$customer->timezone = $_REQUEST['timezone'];
 $customer->referrer = $_REQUEST['referrer'];
 $customer->description = $_REQUEST['description'];
 
 // Account
-$customer->login_disabled = ($_REQUEST['login_disabled'] == 'ON');
-// Temporarily save the password in case the customer doesn't pass all checks.
-if (!empty($_REQUEST['password']))
-	$customer->tmp_password = $_REQUEST['password'];
+$customer->username = $_REQUEST['username'];
+if (empty($_REQUEST['username']))
+	$customer->username = uniqid('user');
+$customer->enabled = ($_REQUEST['enabled'] == 'ON');
 if ($_REQUEST['member'] == 'ON') {
 	$customer->make_member();
 } else {
@@ -183,11 +187,29 @@ if ( in_array('address', $pines->config->com_customer->required_fields_customer)
 				break;
 	}
 }
-// If the customer data passes all validation, use the temp password.
-if (!empty($customer->tmp_password)) {
-	$customer->password = $customer->tmp_password;
-	unset($customer->tmp_password);
+
+if (empty($customer->username)) {
+	$customer->print_form();
+	pines_notice('Please specify a username.');
+	return;
 }
+if ($pines->config->com_user->max_username_length > 0 && strlen($customer->username) > $pines->config->com_user->max_username_length) {
+	$customer->print_form();
+	pines_notice("Usernames must not exceed {$pines->config->com_user->max_username_length} characters.");
+	return;
+}
+$test = user::factory($_REQUEST['username']);
+if (isset($test->guid) && !$customer->is($test)) {
+	$customer->print_form();
+	pines_notice('There is already a user with that username. Please choose a different username.');
+	return;
+}
+if (empty($customer->password) && !$pines->config->com_user->empty_pw) {
+	$customer->print_form();
+	pines_notice('Please specify a password.');
+	return;
+}
+
 if ($pines->config->com_customer->global_customers)
 	$customer->ac->other = 1;
 

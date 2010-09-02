@@ -263,6 +263,21 @@ $pines->com_customer->load_company_select();
 				<label><span class="pf-label">Fax</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="fax" size="24" value="<?php echo format_phone($this->entity->fax); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
+			<div class="pf-element">
+				<label>
+					<span class="pf-label">Timezone</span>
+					<span class="pf-note">This overrides the primary group's timezone.</span>
+					<select class="pf-field ui-widget-content ui-corner-all" name="timezone" size="1">
+						<option value="">--Inherit From Group--</option>
+						<?php
+						$tz = DateTimeZone::listIdentifiers();
+						sort($tz);
+						foreach ($tz as $cur_tz) {
+							?><option value="<?php echo htmlspecialchars($cur_tz); ?>"<?php echo $this->entity->timezone == $cur_tz ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_tz); ?></option><?php
+						} ?>
+					</select>
+				</label>
+			</div>
 			<?php } if (in_array('referrer', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Referrer</span>
@@ -284,8 +299,12 @@ $pines->com_customer->load_company_select();
 		</div>
 		<div id="p_muid_tab_account">
 			<div class="pf-element">
-				<label><span class="pf-label">Login Disabled</span>
-					<input class="pf-field" type="checkbox" name="login_disabled" value="ON"<?php echo $this->entity->login_disabled ? ' checked="checked"' : ''; ?> /></label>
+				<label><span class="pf-label">Username</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="username" size="24" value="<?php echo htmlspecialchars($this->entity->username); ?>" /></label>
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Login Enabled</span>
+					<input class="pf-field" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<?php if (in_array('password', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="pf-element">
@@ -295,7 +314,7 @@ $pines->com_customer->load_company_select();
 					} else {
 						echo '<span class="pf-note">Leave blank, if not changing.</span>';
 					} ?>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="password" size="24" value="<?php echo htmlspecialchars($this->entity->tmp_password); ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="password" size="24" /></label>
 			</div>
 			<?php } if (in_array('points', $pines->config->com_customer->shown_fields_customer)) { ?>
 			<div class="pf-element pf-heading">

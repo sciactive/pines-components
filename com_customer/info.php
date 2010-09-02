@@ -22,12 +22,13 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'entity_manager&editor',
-		'component' => 'com_jquery&com_pgrid&com_pnotify'
+		'component' => 'com_user&com_jquery&com_pgrid&com_pnotify'
 	),
 	'recommend' => array(
 		'component' => 'com_sales'
 	),
 	'abilities' => array(
+		array('defaultgroups', 'Edit Default Groups', 'User can set default customer groups.'),
 		array('listcustomers', 'List Customers', 'User can see customers.'),
 		array('newcustomer', 'Create Customers', 'User can create new customers.'),
 		array('editcustomer', 'Edit Customers', 'User can edit current customers.'),

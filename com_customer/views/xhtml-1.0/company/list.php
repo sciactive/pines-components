@@ -11,6 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Companies';
+$this->note = 'Begin by searching for a company.';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_customer/company/list'];
@@ -92,7 +93,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					});
 					company_search_box = textbox;
 				}},
-				{type: 'button', text: 'Search', extra_class: 'picon picon-system-search', selection_optional: true, pass_csv_with_headers: true, click: submit_search},
+				{type: 'button', extra_class: 'picon picon-system-search', selection_optional: true, pass_csv_with_headers: true, click: submit_search},
 				{type: 'separator'},
 				<?php if (gatekeeper('com_customer/newcompany')) { ?>
 				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_customer', 'company/edit')); ?>'},

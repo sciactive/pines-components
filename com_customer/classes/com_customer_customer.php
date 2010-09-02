@@ -17,37 +17,68 @@ defined('P_RUN') or die('Direct access prohibited');
  * @package Pines
  * @subpackage com_customer
  */
-class com_customer_customer extends entity {
+class com_customer_customer extends user {
 	/**
 	 * Load a customer.
-	 * @param int $id The ID of the customer to load, 0 for a new customer.
+	 * @param int|string $id The ID or username of the customer to load, 0 for a new customer.
 	 */
 	public function __construct($id = 0) {
 		parent::__construct();
-		$this->add_tag('com_customer', 'customer');
+		$this->add_tag('com_user', 'user', 'com_customer', 'customer');
 		// Defaults.
+		$this->abilities = array();
+		$this->groups = array();
+		$this->inherit_abilities = true;
 		$this->points = 0;
 		$this->peak_points = 0;
 		$this->total_points = 0;
 		$this->address_type = 'us';
 		$this->addresses = array();
 		$this->attributes = array();
-		if ($id > 0) {
+		$this->enabled = false;
+		if ($id > 0 || (string) $id === $id) {
 			global $pines;
-			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
-			if (!isset($entity))
+			if ((int) $id === $id) {
+				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
+			} else {
+				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'data' => array('username', $id), 'tag' => $this->tags));
+			}
+			if (isset($entity)) {
+				$this->guid = $entity->guid;
+				$this->tags = $entity->tags;
+				$this->put_data($entity->get_data(), $entity->get_sdata());
 				return;
-			$this->guid = $entity->guid;
-			$this->tags = $entity->tags;
-			$this->put_data($entity->get_data(), $entity->get_sdata());
+			}
 		}
+		// Load default groups.
+		global $pines;
+		$group = $pines->entity_manager->get_entity(
+				array('class' => group),
+				array('&',
+					'data' => array('default_customer_primary', true),
+					'tag' => array('com_user', 'group')
+				)
+			);
+		if (isset($group->guid))
+			$this->group = $group;
+		$groups = $pines->entity_manager->get_entities(
+				array('class' => group),
+				array('&',
+					'data' => array('default_customer_secondary', true),
+					'tag' => array('com_user', 'group')
+				)
+			);
+		if ($groups)
+			$this->groups = $groups;
 	}
 
 	/**
 	 * Create a new instance.
+	 *
+	 * @param int|string $id The ID or username of the customer to load, 0 for a new customer.
 	 * @return com_customer_customer The new instance.
 	 */
-	public static function factory() {
+	public static function factory($id = 0) {
 		global $pines;
 		$class = get_class();
 		$args = func_get_args();
@@ -64,7 +95,7 @@ class com_customer_customer extends entity {
 	 * 
 	 * @param int $day_adjust The positive or negative number of days to add.
 	 */
-	function adjust_membership($day_adjust) {
+	public function adjust_membership($day_adjust) {
 		$day_adjust = (int) $day_adjust;
 		$date_string = ($day_adjust < 0 ? '' : '+')."$day_adjust days 00:00";
 		if (time() < $this->member_exp) {
@@ -79,7 +110,7 @@ class com_customer_customer extends entity {
 	 *
 	 * @param int $point_adjust The positive or negative point value to add.
 	 */
-	function adjust_points($point_adjust) {
+	public function adjust_points($point_adjust) {
 		$point_adjust = (int) $point_adjust;
 		// Check that there is a point value.
 		if (!is_int($this->points))
@@ -151,7 +182,7 @@ class com_customer_customer extends entity {
 	 * Check whether a customer is a valid member (not expired).
 	 * @return bool
 	 */
-	function valid_member() {
+	public function valid_member() {
 		if (!$this->member)
 			return false;
 		return (time() < $this->member_exp);

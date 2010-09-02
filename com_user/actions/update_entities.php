@@ -27,6 +27,57 @@ do {
 	// If we have run through all entities, we are done updating.
 	foreach ($entities as &$cur_entity) {
 		$changed = false;
+		if ($cur_entity->has_tag('com_customer', 'customer')) {
+			if (!$cur_entity->has_tag('com_user', 'user')) {
+				$cur_entity->add_tag('com_user', 'user');
+				$changed = true;
+			}
+			// Disable customers by default.
+			if (!isset($cur_entity->enabled)) {
+				$cur_entity->enabled = false;
+				$changed = true;
+			}
+			if (!isset($cur_entity->inherit_abilities)) {
+				$cur_entity->inherit_abilities = true;
+				$changed = true;
+			}
+			if (!isset($cur_entity->username)) {
+				$cur_entity->username = "user{$cur_entity->guid}";
+				$changed = true;
+			}
+			if (!isset($cur_entity->timezone)) {
+				$cur_entity->timezone = '';
+				$changed = true;
+			}
+			if (!isset($cur_entity->salt)) {
+				$cur_entity->salt = md5(rand());
+				$cur_entity->password = md5($cur_entity->password.$cur_entity->salt);
+				$changed = true;
+			}
+			if (empty($cur_entity->group) || empty($cur_entity->groups)) {
+				// Load default groups.
+				global $pines;
+				$group = $pines->entity_manager->get_entity(
+						array('class' => group),
+						array('&',
+							'data' => array('default_customer_primary', true),
+							'tag' => array('com_user', 'group')
+						)
+					);
+				if (isset($group->guid))
+					$cur_entity->group = $group;
+				$groups = $pines->entity_manager->get_entities(
+						array('class' => group),
+						array('&',
+							'data' => array('default_customer_secondary', true),
+							'tag' => array('com_user', 'group')
+						)
+					);
+				if ($groups)
+					$cur_entity->groups = $groups;
+				$changed = true;
+			}
+		}
 		if ($cur_entity->has_tag('com_user')) {
 			// Enable users/groups by default.
 			if (!isset($cur_entity->enabled)) {
@@ -36,6 +87,21 @@ do {
 			// Add an addresses array.
 			if ($cur_entity->has_tag('user') && !isset($cur_entity->addresses)) {
 				$cur_entity->addresses = array();
+				$changed = true;
+			}
+			// Break apart names.
+			if ($cur_entity->has_tag('user') && !isset($cur_entity->name_first)) {
+				$cur_entity->name_first = preg_replace('/^(\w+) ?.*/', '$1', $cur_entity->name);
+				if (preg_match('/^\w+ (\w+) \w+$/', $cur_entity->name))
+					$cur_entity->name_middle = preg_replace('/^\w+ (\w+) \w+$/', '$1', $cur_entity->name);
+				else
+					$cur_entity->name_middle = '';
+				if (preg_match('/.* (\w+)$/', $cur_entity->name))
+					$cur_entity->name_last = preg_replace('/.* (\w+)$/', '$1', $cur_entity->name);
+				else
+					$cur_entity->name_last = '';
+				$cur_entity->name = $cur_entity->name_first.(!empty($cur_entity->name_middle) ? ' '.$cur_entity->name_middle : '').(!empty($cur_entity->name_last) ? ' '.$cur_entity->name_last : '');
+
 				$changed = true;
 			}
 		} else {

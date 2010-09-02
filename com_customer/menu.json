@@ -37,5 +37,13 @@
 			"depend": {
 				"ability": "com_customer/newcompany"
 			}
+		},
+		{
+			"path": "main_menu/business/crm/defaultgroups",
+			"text": "Default Groups",
+			"href": ["com_customer","defaultgroups"],
+			"depend": {
+				"ability": "com_customer/defaultgroups"
+			}
 		}
 ]

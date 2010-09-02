@@ -27,6 +27,27 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'new_users',
+		'cname' => 'Add New Users',
+		'description' => 'Make all new users customers as well.',
+		'value' => false,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'reg_users',
+		'cname' => 'Add Newly Registered Users',
+		'description' => 'Make new users who are registering themselves customers as well.',
+		'value' => false,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'hide_customers',
+		'cname' => 'Hide Customers in Users',
+		'description' => 'Hide customers when viewing user list in the user manager.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'adjustpoints',
 		'cname' => 'Allow Point Adjust',
 		'description' => 'Allow customer\'s points to be adjusted by users with the ability.',

@@ -11,6 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Customers';
+$this->note = 'Begin by searching for a customer.';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_customer/customer/list'];
@@ -61,6 +62,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 							"key": this.guid,
 							"values": [
 								this.guid,
+								this.username,
 								this.name,
 								this.email,
 								this.company,
@@ -93,18 +95,19 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					});
 					customer_search_box = textbox;
 				}},
-				{type: 'button', text: 'Search', extra_class: 'picon picon-system-search', selection_optional: true, pass_csv_with_headers: true, click: submit_search},
+				{type: 'button', extra_class: 'picon picon-system-search', selection_optional: true, pass_csv_with_headers: true, click: submit_search},
 				{type: 'separator'},
 				<?php if (gatekeeper('com_customer/newcustomer')) { ?>
 				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_customer', 'customer/edit')); ?>'},
 				<?php } if (gatekeeper('com_customer/editcustomer')) { ?>
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo addslashes(pines_url('com_customer', 'customer/edit', array('id' => '__title__'))); ?>'},
-				<?php } if ($pines->config->com_customer->resetpoints && gatekeeper('com_customer/resetpoints')) { ?>
-				{type: 'button', text: 'Reset Points', extra_class: 'picon picon-edit-clear', multi_select: true, url: '<?php echo addslashes(pines_url('com_customer', 'customer/resetpoints', array('id' => '__title__'))); ?>', delimiter: ','},
+				{type: 'button', text: 'Edit User', title: 'Edit as a user.', extra_class: 'picon picon-user-properties', url: '<?php echo addslashes(pines_url('com_user', 'edituser', array('id' => '__title__'))); ?>'},
 				<?php } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
-				<?php if (gatekeeper('com_customer/deletecustomer')) { ?>
+				<?php if ($pines->config->com_customer->resetpoints && gatekeeper('com_customer/resetpoints')) { ?>
+				{type: 'button', text: 'Reset Points', extra_class: 'picon picon-edit-clear', multi_select: true, url: '<?php echo addslashes(pines_url('com_customer', 'customer/resetpoints', array('id' => '__title__'))); ?>', delimiter: ','},
+				<?php } if (gatekeeper('com_customer/deletecustomer')) { ?>
 				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_customer', 'customer/delete', array('id' => '__title__'))); ?>', delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>
@@ -138,6 +141,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<thead>
 		<tr>
 			<th>ID</th>
+			<th>Username</th>
 			<th>Name</th>
 			<th>Email</th>
 			<th>Company</th>
@@ -153,6 +157,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 		<tr>
+			<td>-</td>
 			<td>-</td>
 			<td>-</td>
 			<td>-</td>

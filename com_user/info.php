@@ -33,6 +33,7 @@ return array(
 		array('edituser', 'Edit Users', 'User can edit other users.'),
 		array('deleteuser', 'Delete Users', 'User can delete other users.'),
 		array('abilities', 'Manage Abilities', 'Let user manage other users\' and his own abilities.'),
+		array('assignpin', 'Assign PIN', 'User can assign PIN codes for users.'),
 		array('conditions', 'Manage Conditions', 'Let user manage user and group conditions.'),
 		array('listgroups', 'List Groups', 'User can see groups.'),
 		array('newgroup', 'Create Groups', 'User can create new groups.'),

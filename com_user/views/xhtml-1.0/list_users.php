@@ -24,14 +24,14 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
-				<?php if (gatekeeper('com_sales/newuser')) { ?>
+				<?php if (gatekeeper('com_user/newuser')) { ?>
 				{type: 'button', text: 'New', extra_class: 'picon picon-list-add-user', selection_optional: true, url: '<?php echo addslashes(pines_url('com_user', 'edituser')); ?>'},
-				<?php } if (gatekeeper('com_sales/edituser')) { ?>
+				<?php } if (gatekeeper('com_user/edituser')) { ?>
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-user-properties', double_click: true, url: '<?php echo addslashes(pines_url('com_user', 'edituser', array('id' => '__title__'))); ?>'},
 				<?php } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
-				<?php if (gatekeeper('com_sales/deleteuser')) { ?>
+				<?php if (gatekeeper('com_user/deleteuser')) { ?>
 				{type: 'button', text: 'Delete', extra_class: 'picon picon-list-remove-user', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_user', 'deleteuser', array('id' => '__title__'))); ?>', delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>

@@ -32,14 +32,14 @@ foreach($this->groups as $cur_group) {
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
-				<?php if (gatekeeper('com_sales/newgroup')) { ?>
+				<?php if (gatekeeper('com_user/newgroup')) { ?>
 				{type: 'button', text: 'New', extra_class: 'picon picon-user-group-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_user', 'editgroup')); ?>'},
-				<?php } if (gatekeeper('com_sales/editgroup')) { ?>
+				<?php } if (gatekeeper('com_user/editgroup')) { ?>
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-user-group-properties', double_click: true, url: '<?php echo addslashes(pines_url('com_user', 'editgroup', array('id' => '__title__'))); ?>'},
 				<?php } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
-				<?php if (gatekeeper('com_sales/deletegroup')) { ?>
+				<?php if (gatekeeper('com_user/deletegroup')) { ?>
 				{type: 'button', text: 'Delete', extra_class: 'picon picon-user-group-delete', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_user', 'deletegroup', array('id' => '__title__'))); ?>', delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>

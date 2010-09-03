@@ -423,13 +423,13 @@ class com_myentity extends component implements entity_manager_interface {
 		unset($cur_selector);
 
 		if ($query_parts) {
-			$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_myentity_entities` e LEFT JOIN `%scom_myentity_data` d ON e.`guid`=d.`guid` HAVING %s ORDER BY %s;",
+			$query = sprintf("SELECT e.`guid`, e.`tags`, e.`cdate`, e.`mdate`, d.`name`, d.`value`, e.`varlist` FROM `%scom_myentity_entities` e LEFT JOIN `%scom_myentity_data` d ON e.`guid`=d.`guid` HAVING %s ORDER BY %s;",
 				$pines->config->com_mysql->prefix,
 				$pines->config->com_mysql->prefix,
 				'('.implode(') AND (', $query_parts).')',
 				$options['reverse'] ? 'e.`guid` DESC' : 'e.`guid`');
 		} else {
-			$query = sprintf("SELECT e.*, d.`name` AS `dname`, d.`value` AS `dvalue` FROM `%scom_myentity_entities` e LEFT JOIN `%scom_myentity_data` d ON e.`guid`=d.`guid` ORDER BY %s;",
+			$query = sprintf("SELECT e.`guid`, e.`tags`, e.`cdate`, e.`mdate`, d.`name`, d.`value` FROM `%scom_myentity_entities` e LEFT JOIN `%scom_myentity_data` d ON e.`guid`=d.`guid` ORDER BY %s;",
 				$pines->config->com_mysql->prefix,
 				$pines->config->com_mysql->prefix,
 				$options['reverse'] ? 'e.`guid` DESC' : 'e.`guid`');
@@ -440,27 +440,27 @@ class com_myentity extends component implements entity_manager_interface {
 			return null;
 		}
 
-		$row = mysql_fetch_array($result);
+		$row = mysql_fetch_row($result);
 		while ($row) {
-			$guid = (int) $row['guid'];
+			$guid = (int) $row[0];
 			// Don't bother getting the tags unless we're at/past the offset.
 			if ($ocount >= $options['offset'])
-				$tags = $row['tags'];
-			$data = array('p_cdate' => (float) $row['cdate'], 'p_mdate' => (float) $row['mdate']);
+				$tags = $row[1];
+			$data = array('p_cdate' => (float) $row[2], 'p_mdate' => (float) $row[3]);
 			// Serialized data.
 			$sdata = array();
-			if (isset($row['dname'])) {
+			if (isset($row[4])) {
 				// This do will keep going and adding the data until the
 				// next entity is reached. $row will end on the next entity.
 				do {
 					// Only remember this entity's data if we're at/past the offset.
 					if ($ocount >= $options['offset'])
-						$sdata[$row['dname']] = $row['dvalue'];
-					$row = mysql_fetch_array($result);
-				} while ((int) $row['guid'] === $guid);
+						$sdata[$row[4]] = $row[5];
+					$row = mysql_fetch_row($result);
+				} while ((int) $row[0] === $guid);
 			} else {
 				// Make sure that $row is incremented :)
-				$row = mysql_fetch_array($result);
+				$row = mysql_fetch_row($result);
 			}
 			if ($ocount < $options['offset']) {
 				$ocount++;
@@ -633,7 +633,7 @@ class com_myentity extends component implements entity_manager_interface {
 			if ($pass_all) {
 				//$entity = $this->pull_cache($guid, $class);
 				//if (!isset($entity) || $data['p_mdate'] > $entity->p_mdate) {
-				$entity = call_user_func(array($class, 'factory'));
+				$entity = $class::factory();
 				$entity->guid = $guid;
 				$entity->tags = explode(',', substr($tags, 1, -1));
 				$entity->put_data($data, $sdata);

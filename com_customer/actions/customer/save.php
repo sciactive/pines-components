@@ -56,7 +56,11 @@ $customer->description = $_REQUEST['description'];
 $customer->username = $_REQUEST['username'];
 if (empty($_REQUEST['username']))
 	$customer->username = uniqid('user');
-$customer->enabled = ($_REQUEST['enabled'] == 'ON');
+if ($_REQUEST['enabled'] == 'ON') {
+	$customer->add_tag('enabled');
+} else {
+	$customer->remove_tag('enabled');
+}
 if ($_REQUEST['member'] == 'ON') {
 	$customer->make_member();
 } else {

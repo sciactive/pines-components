@@ -173,8 +173,7 @@ class com_user extends component implements user_manager_interface {
 		return $pines->entity_manager->get_entities(
 				array('class' => group),
 				array('&',
-					'data' => array('enabled', true),
-					'tag' => array('com_user', 'group')
+					'tag' => array('com_user', 'group', 'enabled')
 				)
 			);
 	}
@@ -184,8 +183,7 @@ class com_user extends component implements user_manager_interface {
 		return $pines->entity_manager->get_entities(
 				array('class' => user),
 				array('&',
-					'tag' => array('com_user', 'user'),
-					'data' => array('enabled', true)
+					'tag' => array('com_user', 'user', 'enabled')
 				)
 			);
 	}
@@ -206,7 +204,10 @@ class com_user extends component implements user_manager_interface {
 		$module = new module('com_user', 'list_groups', 'content');
 
 		$module->enabled = $enabled;
-		$module->groups = $pines->entity_manager->get_entities(array('class' => group), array('&', 'tag' => array('com_user', 'group'), 'data' => array('enabled', !!$enabled)));
+		if ($enabled)
+			$module->groups = $pines->entity_manager->get_entities(array('class' => group), array('&', 'tag' => array('com_user', 'group', 'enabled')));
+		else
+			$module->groups = $pines->entity_manager->get_entities(array('class' => group), array('&', 'tag' => array('com_user', 'group')), array('!&', 'tag' => 'enabled'));
 
 		if ( empty($module->groups) )
 			pines_notice('There are no'.($enabled ? ' enabled' : ' disabled').' groups.');
@@ -223,14 +224,17 @@ class com_user extends component implements user_manager_interface {
 		$module = new module('com_user', 'list_users', 'content');
 
 		$module->enabled = $enabled;
-		$module->users = $pines->entity_manager->get_entities(array('class' => user), array('&', 'tag' => array('com_user', 'user'), 'data' => array('enabled', !!$enabled)));
+		if ($enabled)
+			$module->users = $pines->entity_manager->get_entities(array('class' => user), array('&', 'tag' => array('com_user', 'user', 'enabled')));
+		else
+			$module->users = $pines->entity_manager->get_entities(array('class' => user), array('&', 'tag' => array('com_user', 'user')), array('!&', 'tag' => 'enabled'));
 
 		if ( empty($module->users) )
 			pines_notice('There are no'.($enabled ? ' enabled' : ' disabled').' users.');
 	}
 
 	public function login($user) {
-		if ( isset($user->guid) && $user->enabled && $this->gatekeeper('com_user/login', $user) ) {
+		if ( isset($user->guid) && $user->has_tag('enabled') && $this->gatekeeper('com_user/login', $user) ) {
 			// Destroy session data.
 			$this->logout();
 			$_SESSION['user_id'] = $user->guid;

@@ -20,9 +20,8 @@ defined('P_RUN') or die('Direct access prohibited');
 class user extends able_object implements user_interface {
 	public function __construct($id = 0) {
 		parent::__construct();
-		$this->add_tag('com_user', 'user');
+		$this->add_tag('com_user', 'user', 'enabled');
 		// Defaults.
-		$this->enabled = true;
 		$this->abilities = array();
 		$this->groups = array();
 		$this->inherit_abilities = true;

@@ -96,8 +96,7 @@ foreach($this->groups as $cur_group) {
 			$user_array = $pines->entity_manager->get_entities(
 					array('class' => user, 'limit' => 51),
 					array('&',
-						'tag' => array('com_user', 'user'),
-						'data' => array('enabled', true)
+						'tag' => array('com_user', 'user', 'enabled')
 					),
 					array('|',
 						'ref' => array(

@@ -25,7 +25,7 @@ if ($_REQUEST['secret'] != $user->secret) {
 	return;
 }
 
-$user->enabled = true;
+$user->add_tag('enabled');
 unset($user->secret);
 
 if ($user->save()) {

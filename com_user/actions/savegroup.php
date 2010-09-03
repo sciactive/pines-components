@@ -27,7 +27,10 @@ if ( isset($_REQUEST['id']) ) {
 
 $group->groupname = $_REQUEST['groupname'];
 $group->name = $_REQUEST['name'];
-$group->enabled = ($_REQUEST['enabled'] == 'ON');
+if ($_REQUEST['enabled'] == 'ON')
+	$group->add_tag('enabled');
+else
+	$group->remove_tag('enabled');
 $group->email = $_REQUEST['email'];
 $group->phone = preg_replace('/\D/', '', $_REQUEST['phone']);
 $group->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
@@ -193,7 +196,7 @@ if ($group->save()) {
 	pines_error('Error saving group. Do you have permission?');
 }
 
-if ($group->enabled) {
+if ($group->has_tag('enabled')) {
 	redirect(pines_url('com_user', 'listgroups'));
 } else {
 	redirect(pines_url('com_user', 'listgroups', array('enabled' => 'false')));

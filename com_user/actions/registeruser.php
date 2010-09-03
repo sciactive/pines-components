@@ -60,10 +60,10 @@ $user->groups = (array) $pines->entity_manager->get_entities(array('class' => gr
 
 if ($pines->config->com_user->confirm_email) {
 	// The user will be enabled after confirming their e-mail address.
-	$user->enabled = false;
+	$user->remove_tag('enabled');
 	$user->secret = uniqid('', true);
 } else {
-	$user->enabled = true;
+	$user->add_tag('enabled');
 }
 
 // If create_admin is true and there are no other users, grant "system/all".

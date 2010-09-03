@@ -33,7 +33,10 @@ $user->name_first = $_REQUEST['name_first'];
 $user->name_middle = $_REQUEST['name_middle'];
 $user->name_last = $_REQUEST['name_last'];
 $user->name = $user->name_first.(!empty($user->name_middle) ? ' '.$user->name_middle : '').(!empty($user->name_last) ? ' '.$user->name_last : '');
-$user->enabled = ($_REQUEST['enabled'] == 'ON');
+if ($_REQUEST['enabled'] == 'ON')
+	$user->add_tag('enabled');
+else
+	$user->remove_tag('enabled');
 $user->email = $_REQUEST['email'];
 $user->phone = preg_replace('/\D/', '', $_REQUEST['phone']);
 $user->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
@@ -186,7 +189,7 @@ if ($user->save()) {
 	pines_error('Error saving user. Do you have permission?');
 }
 
-if ($user->enabled) {
+if ($user->has_tag('enabled')) {
 	redirect(pines_url('com_user', 'listusers'));
 } else {
 	redirect(pines_url('com_user', 'listusers', array('enabled' => 'false')));

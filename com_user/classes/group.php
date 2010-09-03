@@ -20,9 +20,8 @@ defined('P_RUN') or die('Direct access prohibited');
 class group extends able_object implements group_interface {
 	public function __construct($id = 0) {
 		parent::__construct();
-		$this->add_tag('com_user', 'group');
+		$this->add_tag('com_user', 'group', 'enabled');
 		// Defaults.
-		$this->enabled = true;
 		$this->abilities = array();
 		$this->conditions = array();
 		$this->address_type = 'us';
@@ -102,8 +101,7 @@ class group extends able_object implements group_interface {
 		$return = (array) $pines->entity_manager->get_entities(
 				array('class' => group),
 				array('&',
-					'tag' => array('com_user', 'group'),
-					'data' => array('enabled', true),
+					'tag' => array('com_user', 'group', 'enabled'),
 					'ref' => array('parent', $this)
 				)
 			);
@@ -116,8 +114,7 @@ class group extends able_object implements group_interface {
 		$entities = $pines->entity_manager->get_entities(
 				array('class' => group),
 				array('&',
-					'tag' => array('com_user', 'group'),
-					'data' => array('enabled', true),
+					'tag' => array('com_user', 'group', 'enabled'),
 					'ref' => array('parent', $this)
 				)
 			);
@@ -131,7 +128,7 @@ class group extends able_object implements group_interface {
 	public function get_level() {
 		$group = $this;
 		$level = 0;
-		while (isset($group->parent) && $group->parent->enabled) {
+		while (isset($group->parent) && $group->parent->has_tag('enabled')) {
 			$level++;
 			$group = $group->parent;
 		}
@@ -142,7 +139,7 @@ class group extends able_object implements group_interface {
 		global $pines;
 		if (isset($this->logo))
 			return $full ? $pines->uploader->url($pines->uploader->real($this->logo), true) : $this->logo;
-		if (isset($this->parent) && $this->parent->enabled)
+		if (isset($this->parent) && $this->parent->has_tag('enabled'))
 			return $this->parent->get_logo($full);
 		return ($full ? $pines->config->full_location : $pines->config->rela_location)."{$pines->config->upload_location}logos/default_logo.png";
 	}
@@ -158,8 +155,7 @@ class group extends able_object implements group_interface {
 		$return = $pines->entity_manager->get_entities(
 				array('class' => user),
 				array('&',
-					'tag' => array('com_user', 'user'),
-					'data' => array('enabled', true)
+					'tag' => array('com_user', 'user', 'enabled')
 				),
 				array('|',
 					'ref' => array(

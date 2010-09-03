@@ -25,6 +25,7 @@ class com_customer_customer extends user {
 	public function __construct($id = 0) {
 		parent::__construct();
 		$this->add_tag('com_user', 'user', 'com_customer', 'customer');
+		$this->remove_tag('enabled');
 		// Defaults.
 		$this->abilities = array();
 		$this->groups = array();
@@ -35,7 +36,6 @@ class com_customer_customer extends user {
 		$this->address_type = 'us';
 		$this->addresses = array();
 		$this->attributes = array();
-		$this->enabled = false;
 		if ($id > 0 || (string) $id === $id) {
 			global $pines;
 			if ((int) $id === $id) {

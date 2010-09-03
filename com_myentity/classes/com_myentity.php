@@ -475,120 +475,153 @@ class com_myentity extends component implements entity_manager_interface {
 						$type = $value;
 						$type_is_not = ($type == '!&' || $type == '!|');
 						$type_is_or = ($type == '|' || $type == '!|');
+						$type_xor = $type_is_or xor $type_is_not;
 						$pass = !$type_is_or;
 						continue;
 					}
 					// Check if it doesn't pass any for &, check if it
 					// passes any for |.
 					foreach ($value as $cur_value) {
-						// Unserialize the data for this variable.
-						if (isset($sdata[$cur_value[0]])) {
-							$data[$cur_value[0]] = unserialize($sdata[$cur_value[0]]);
-							unset($sdata[$cur_value[0]]);
-						}
-						switch ($key) {
-							case 'guid':
-							case 'tag':
-								// These are handled by the query.
-								$pass = true;
-								break;
-							case 'data':
-								if ($type_is_or xor $type_is_not) {
-									if ($data[$cur_value[0]] == $cur_value[1])
+						if ($key === 'ref' && isset($sdata[$cur_value[0]])) {
+							// If possible, do a quick entity reference check
+							// instead of unserializing all the data.
+							if ((array) $cur_value[1] === $cur_value[1]) {
+								foreach ($cur_value[1] as $cur_entity) {
+									if ((object) $cur_entity === $cur_entity) {
+										if ($type_xor) {
+											if (strpos($sdata[$cur_value[0]], "a:3:{i:0;s:22:\"pines_entity_reference\";i:1;i:{$cur_entity->guid};") !== false)
+												$pass = !$type_is_not;
+										} else {
+											if (strpos($sdata[$cur_value[0]], "a:3:{i:0;s:22:\"pines_entity_reference\";i:1;i:{$cur_entity->guid};") === false)
+												$pass = $type_is_not;
+										}
+										if (!($type_is_or xor $pass))
+											break;
+									} else {
+										if ($type_xor) {
+											if (strpos($sdata[$cur_value[0]], "a:3:{i:0;s:22:\"pines_entity_reference\";i:1;i:{$cur_entity};") !== false)
+												$pass = !$type_is_not;
+										} else {
+											if (strpos($sdata[$cur_value[0]], "a:3:{i:0;s:22:\"pines_entity_reference\";i:1;i:{$cur_entity};") === false)
+												$pass = $type_is_not;
+										}
+										if (!($type_is_or xor $pass))
+											break;
+									}
+								}
+							} elseif ((object) $cur_value[1] === $cur_value[1]) {
+								if ($type_xor) {
+									if (strpos($sdata[$cur_value[0]], "a:3:{i:0;s:22:\"pines_entity_reference\";i:1;i:{$cur_value[1]->guid};") !== false)
 										$pass = !$type_is_not;
 								} else {
-									if ($data[$cur_value[0]] != $cur_value[1])
+									if (strpos($sdata[$cur_value[0]], "a:3:{i:0;s:22:\"pines_entity_reference\";i:1;i:{$cur_value[1]->guid};") === false)
 										$pass = $type_is_not;
 								}
-								break;
-							case 'strict':
-								if ($type_is_or xor $type_is_not) {
-									if ($data[$cur_value[0]] === $cur_value[1])
+							} else {
+								if ($type_xor) {
+									if (strpos($sdata[$cur_value[0]], "a:3:{i:0;s:22:\"pines_entity_reference\";i:1;i:{$cur_value[1]};") !== false)
 										$pass = !$type_is_not;
 								} else {
-									if ($data[$cur_value[0]] !== $cur_value[1])
+									if (strpos($sdata[$cur_value[0]], "a:3:{i:0;s:22:\"pines_entity_reference\";i:1;i:{$cur_value[1]};") === false)
 										$pass = $type_is_not;
 								}
-								break;
-							case 'array':
-								if ($type_is_or xor $type_is_not) {
-									if ((array) $data[$cur_value[0]] === $data[$cur_value[0]] && in_array($cur_value[1], $data[$cur_value[0]]))
-										$pass = !$type_is_not;
-								} else {
-									if ((array) $data[$cur_value[0]] !== $data[$cur_value[0]] || !in_array($cur_value[1], $data[$cur_value[0]]))
-										$pass = $type_is_not;
-								}
-								break;
-							case 'match':
-								if ($type_is_or xor $type_is_not) {
-									if (isset($data[$cur_value[0]]) && preg_match($cur_value[1], $data[$cur_value[0]]))
-										$pass = !$type_is_not;
-								} else {
-									if (!isset($data[$cur_value[0]]) || !preg_match($cur_value[1], $data[$cur_value[0]]))
-										$pass = $type_is_not;
-								}
-								break;
-							case 'gt':
-								if ($type_is_or xor $type_is_not) {
-									if ($data[$cur_value[0]] > $cur_value[1])
-										$pass = !$type_is_not;
-								} else {
-									if (!($data[$cur_value[0]] > $cur_value[1]))
-										$pass = $type_is_not;
-								}
-								break;
-							case 'gte':
-								if ($type_is_or xor $type_is_not) {
-									if ($data[$cur_value[0]] >= $cur_value[1])
-										$pass = !$type_is_not;
-								} else {
-									if (!($data[$cur_value[0]] >= $cur_value[1]))
-										$pass = $type_is_not;
-								}
-								break;
-							case 'lt':
-								if ($type_is_or xor $type_is_not) {
-									if ($data[$cur_value[0]] < $cur_value[1])
-										$pass = !$type_is_not;
-								} else {
-									if (!($data[$cur_value[0]] < $cur_value[1]))
-										$pass = $type_is_not;
-								}
-								break;
-							case 'lte':
-								if ($type_is_or xor $type_is_not) {
-									if ($data[$cur_value[0]] <= $cur_value[1])
-										$pass = !$type_is_not;
-								} else {
-									if (!($data[$cur_value[0]] <= $cur_value[1]))
-										$pass = $type_is_not;
-								}
-								break;
-							case 'ref':
-								if ($type_is_or xor $type_is_not) {
-									if (isset($data[$cur_value[0]]) && (array) $data[$cur_value[0]] === $data[$cur_value[0]] && $this->entity_reference_search($data[$cur_value[0]], $cur_value[1]))
-										$pass = !$type_is_not;
-								} else {
-									if (!isset($data[$cur_value[0]]) || (array) $data[$cur_value[0]] !== $data[$cur_value[0]] || !$this->entity_reference_search($data[$cur_value[0]], $cur_value[1]))
-										$pass = $type_is_not;
-								}
-								break;
-						}
-						if ($type_is_or) {
-							if ($pass)
-								break;
+							}
 						} else {
-							if (!$pass)
-								break;
+							// Unserialize the data for this variable.
+							if (isset($sdata[$cur_value[0]])) {
+								$data[$cur_value[0]] = unserialize($sdata[$cur_value[0]]);
+								unset($sdata[$cur_value[0]]);
+							}
+							switch ($key) {
+								case 'guid':
+								case 'tag':
+									// These are handled by the query.
+									$pass = true;
+									break;
+								case 'data':
+									if ($type_xor) {
+										$pass = ($data[$cur_value[0]] == $cur_value[1]) xor $type_is_not;
+									} else {
+										$pass = !(($data[$cur_value[0]] != $cur_value[1]) xor $type_is_not);
+									}
+									break;
+								case 'strict':
+									if ($type_xor) {
+										$pass = ($data[$cur_value[0]] === $cur_value[1]) xor $type_is_not;
+									} else {
+										$pass = !(($data[$cur_value[0]] !== $cur_value[1]) xor $type_is_not);
+									}
+									break;
+								case 'array':
+									if ($type_xor) {
+										if ((array) $data[$cur_value[0]] === $data[$cur_value[0]] && in_array($cur_value[1], $data[$cur_value[0]]))
+											$pass = !$type_is_not;
+									} else {
+										if ((array) $data[$cur_value[0]] !== $data[$cur_value[0]] || !in_array($cur_value[1], $data[$cur_value[0]]))
+											$pass = $type_is_not;
+									}
+									break;
+								case 'match':
+									if ($type_xor) {
+										if (isset($data[$cur_value[0]]) && preg_match($cur_value[1], $data[$cur_value[0]]))
+											$pass = !$type_is_not;
+									} else {
+										if (!isset($data[$cur_value[0]]) || !preg_match($cur_value[1], $data[$cur_value[0]]))
+											$pass = $type_is_not;
+									}
+									break;
+								case 'gt':
+									if ($type_xor) {
+										if ($data[$cur_value[0]] > $cur_value[1])
+											$pass = !$type_is_not;
+									} else {
+										if (!($data[$cur_value[0]] > $cur_value[1]))
+											$pass = $type_is_not;
+									}
+									break;
+								case 'gte':
+									if ($type_xor) {
+										if ($data[$cur_value[0]] >= $cur_value[1])
+											$pass = !$type_is_not;
+									} else {
+										if (!($data[$cur_value[0]] >= $cur_value[1]))
+											$pass = $type_is_not;
+									}
+									break;
+								case 'lt':
+									if ($type_xor) {
+										if ($data[$cur_value[0]] < $cur_value[1])
+											$pass = !$type_is_not;
+									} else {
+										if (!($data[$cur_value[0]] < $cur_value[1]))
+											$pass = $type_is_not;
+									}
+									break;
+								case 'lte':
+									if ($type_xor) {
+										if ($data[$cur_value[0]] <= $cur_value[1])
+											$pass = !$type_is_not;
+									} else {
+										if (!($data[$cur_value[0]] <= $cur_value[1]))
+											$pass = $type_is_not;
+									}
+									break;
+								case 'ref':
+									if ($type_xor) {
+										if (isset($data[$cur_value[0]]) && (array) $data[$cur_value[0]] === $data[$cur_value[0]] && $this->entity_reference_search($data[$cur_value[0]], $cur_value[1]))
+											$pass = !$type_is_not;
+									} else {
+										if (!isset($data[$cur_value[0]]) || (array) $data[$cur_value[0]] !== $data[$cur_value[0]] || !$this->entity_reference_search($data[$cur_value[0]], $cur_value[1]))
+											$pass = $type_is_not;
+									}
+									break;
+							}
 						}
-					}
-					if ($type_is_or) {
-						if ($pass)
-							break;
-					} else {
-						if (!$pass)
+						if (!($type_is_or xor $pass))
 							break;
 					}
+					if (!($type_is_or xor $pass))
+						break;
 				}
 				unset($value);
 				if (!$pass) {

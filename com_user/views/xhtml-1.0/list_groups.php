@@ -93,13 +93,28 @@ foreach($this->groups as $cur_group) {
 			<td><?php echo htmlspecialchars($group->email); ?></td>
 			<td><?php echo htmlspecialchars($group->timezone); ?></td>
 			<td><?php
-			$user_array = $group->get_users();
-			if (count($user_array) < 15) {
+			$user_array = $pines->entity_manager->get_entities(
+					array('class' => user, 'limit' => 51),
+					array('|',
+						'ref' => array(
+							array('group', $group),
+							array('groups', $group)
+						)
+					),
+					array('&',
+						'data' => array('enabled', true),
+						'tag' => array('com_user', 'user')
+					)
+				);
+			$count = count($user_array);
+			if ($count < 15) {
 				$user_list = '';
 				foreach ($user_array as $cur_user) {
 					$user_list .= (empty($user_list) ? '' : ', ').$cur_user->username;
 				}
 				echo htmlspecialchars($user_list);
+			} elseif ($count === 51) {
+				echo 'Over 50 users';
 			} else {
 				echo count($user_array).' users';
 			}

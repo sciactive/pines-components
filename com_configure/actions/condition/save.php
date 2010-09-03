@@ -46,7 +46,7 @@ if (empty($condition->conditions)) {
 	pines_notice('Please specify conditions.');
 	return;
 }
-$test = $pines->entity_manager->get_entity(array('class' => com_configure_condition, 'skip_ac' => true), array('&', 'data' => array('name', $condition->name), 'tag' => array('com_configure', 'condition')));
+$test = $pines->entity_manager->get_entity(array('class' => com_configure_condition, 'skip_ac' => true), array('&', 'tag' => array('com_configure', 'condition'), 'data' => array('name', $condition->name)));
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$condition->print_form();
 	pines_notice('There is already a condition with that name. Please choose a different name.');

@@ -154,11 +154,11 @@ class com_reports_sales_ranking extends entity {
 			$current_week_sales = $pines->entity_manager->get_entities(
 					array('class' => com_sales_sale),
 					array('&',
+						'tag' => array('com_sales', 'sale'),
 						'data' => array('status', 'paid'),
-						'ref' => array('user', $cur_employee),
 						'gte' => array('tender_date', $current_start),
 						'lte' => array('tender_date', $current_end),
-						'tag' => array('com_sales', 'sale')
+						'ref' => array('user', $cur_employee)
 					)
 				);
 			foreach ($current_week_sales as &$cur_week_sale) {
@@ -170,11 +170,11 @@ class com_reports_sales_ranking extends entity {
 			$last_week_sales = $pines->entity_manager->get_entities(
 					array('class' => com_sales_sale),
 					array('&',
+						'tag' => array('com_sales', 'sale'),
 						'data' => array('status', 'paid'),
-						'ref' => array('user', $cur_employee),
 						'gte' => array('tender_date', $last_start),
 						'lte' => array('tender_date', $last_end),
-						'tag' => array('com_sales', 'sale')
+						'ref' => array('user', $cur_employee)
 					)
 				);
 			foreach ($last_week_sales as &$last_week_sale) {
@@ -186,11 +186,11 @@ class com_reports_sales_ranking extends entity {
 			$mtd_sales = $pines->entity_manager->get_entities(
 					array('class' => com_sales_sale),
 					array('&',
+						'tag' => array('com_sales', 'sale'),
 						'data' => array('status', 'paid'),
-						'ref' => array('user', $cur_employee),
 						'gte' => array('tender_date', $this->start_date),
 						'lte' => array('tender_date', $this->end_date),
-						'tag' => array('com_sales', 'sale')
+						'ref' => array('user', $cur_employee)
 					)
 				);
 			foreach ($mtd_sales as &$cur_mtd_sale) {

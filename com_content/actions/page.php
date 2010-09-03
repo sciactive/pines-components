@@ -17,8 +17,8 @@ if (isset($_REQUEST['id'])) {
 	$entity = $pines->entity_manager->get_entity(
 			array('class' => com_content_page),
 			array('&',
-				'data' => array('alias', $_REQUEST['a']),
-				'tag' => array('com_content', 'page')
+				'tag' => array('com_content', 'page'),
+				'data' => array('alias', $_REQUEST['a'])
 			)
 		);
 }

@@ -184,8 +184,8 @@ class com_user extends component implements user_manager_interface {
 		return $pines->entity_manager->get_entities(
 				array('class' => user),
 				array('&',
-					'data' => array('enabled', true),
-					'tag' => array('com_user', 'user')
+					'tag' => array('com_user', 'user'),
+					'data' => array('enabled', true)
 				)
 			);
 	}
@@ -206,7 +206,7 @@ class com_user extends component implements user_manager_interface {
 		$module = new module('com_user', 'list_groups', 'content');
 
 		$module->enabled = $enabled;
-		$module->groups = $pines->entity_manager->get_entities(array('class' => group), array('&', 'data' => array('enabled', !!$enabled), 'tag' => array('com_user', 'group')));
+		$module->groups = $pines->entity_manager->get_entities(array('class' => group), array('&', 'tag' => array('com_user', 'group'), 'data' => array('enabled', !!$enabled)));
 
 		if ( empty($module->groups) )
 			pines_notice('There are no'.($enabled ? ' enabled' : ' disabled').' groups.');
@@ -223,7 +223,7 @@ class com_user extends component implements user_manager_interface {
 		$module = new module('com_user', 'list_users', 'content');
 
 		$module->enabled = $enabled;
-		$module->users = $pines->entity_manager->get_entities(array('class' => user), array('&', 'data' => array('enabled', !!$enabled), 'tag' => array('com_user', 'user')));
+		$module->users = $pines->entity_manager->get_entities(array('class' => user), array('&', 'tag' => array('com_user', 'user'), 'data' => array('enabled', !!$enabled)));
 
 		if ( empty($module->users) )
 			pines_notice('There are no'.($enabled ? ' enabled' : ' disabled').' users.');

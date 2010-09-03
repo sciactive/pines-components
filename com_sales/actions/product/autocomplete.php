@@ -36,8 +36,8 @@ if (empty($query)) {
 	}
 	$products = (array) $pines->entity_manager->get_entities(
 			array('class' => com_sales_product),
-			array('!&', 'data' => array('autocomplete_hide', true)),
 			array('&', 'tag' => array('com_sales', 'product')),
+			array('!&', 'data' => array('autocomplete_hide', true)),
 			$selector
 		);
 }

@@ -133,9 +133,9 @@ class com_sales_cashcount extends entity {
 			$new_txs = (array) $pines->entity_manager->get_entities(
 					array('class' => com_sales_tx),
 					array('&',
+						'tag' => array('com_sales', 'transaction', 'payment_tx'),
 						'gte' => array('p_cdate', (int) $this->p_cdate),
-						'ref' => array('group', $this->group),
-						'tag' => array('com_sales', 'transaction', 'payment_tx')
+						'ref' => array('group', $this->group)
 					)
 				);
 			// Look for all transactions that resulted in cash being tendered.

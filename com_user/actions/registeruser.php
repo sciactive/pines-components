@@ -53,10 +53,10 @@ if (empty($user->password) && !$pines->config->com_user->empty_pw) {
 	return;
 }
 
-$user->group = $pines->entity_manager->get_entity(array('class' => group), array('&', 'data' => array('default_primary', true), 'tag' => array('com_user', 'group')));
+$user->group = $pines->entity_manager->get_entity(array('class' => group), array('&', 'tag' => array('com_user', 'group'), 'data' => array('default_primary', true)));
 if (!isset($user->group->guid))
 	unset($user->group);
-$user->groups = (array) $pines->entity_manager->get_entities(array('class' => group), array('&', 'data' => array('default_secondary', true), 'tag' => array('com_user', 'group')));
+$user->groups = (array) $pines->entity_manager->get_entities(array('class' => group), array('&', 'tag' => array('com_user', 'group'), 'data' => array('default_secondary', true)));
 
 if ($pines->config->com_user->confirm_email) {
 	// The user will be enabled after confirming their e-mail address.

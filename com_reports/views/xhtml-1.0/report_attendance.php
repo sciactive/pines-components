@@ -84,10 +84,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$schedule = $pines->entity_manager->get_entities(
 					array('class' => com_hrm_event),
 					array('&',
-						'ref' => array('employee', $cur_employee),
+						'tag' => array('com_hrm', 'event'),
 						'gte' => array('start', $this->date[0]),
 						'lte' => array('end', $this->date[1]),
-						'tag' => array('com_hrm', 'event')
+						'ref' => array('employee', $cur_employee)
 					)
 				);
 			foreach ($schedule as $cur_schedule)
@@ -183,10 +183,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$scheduled = $pines->entity_manager->get_entities(
 					array('class' => com_hrm_event),
 					array('&',
-						'ref' => array('employee', $this->employee),
+						'tag' => array('com_hrm', 'event'),
 						'gte' => array('start', $cur_date['start']),
 						'lte' => array('end', $cur_date['end']),
-						'tag' => array('com_hrm', 'event')
+						'ref' => array('employee', $this->employee)
 					)
 				);
 			foreach ($scheduled as $cur_schedule) {

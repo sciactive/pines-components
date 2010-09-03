@@ -110,8 +110,8 @@ class com_sales_po extends entity {
 		$module->products = (array) $pines->entity_manager->get_entities(
 				array('class' => com_sales_product),
 				array('&',
-					'data' => array('enabled', true),
-					'tag' => array('com_sales', 'product')
+					'tag' => array('com_sales', 'product'),
+					'data' => array('enabled', true)
 				)
 			);
 		

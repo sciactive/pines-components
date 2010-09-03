@@ -104,7 +104,7 @@ class com_hrm_rto extends entity {
 		$module->entity = $this;
 		$module->requests = array();
 		// Load all pending time off requests so they can be edited if needed.
-		$module->requests = $pines->entity_manager->get_entities(array('class' => com_hrm_rto), array('&', 'ref' => array('user', $_SESSION['user']), 'tag' => array('com_hrm', 'rto')), array('!&', 'data' => array('status', 'approved')));
+		$module->requests = $pines->entity_manager->get_entities(array('class' => com_hrm_rto), array('!&', 'data' => array('status', 'approved')), array('&', 'tag' => array('com_hrm', 'rto'), 'ref' => array('user', $_SESSION['user'])));
 		$pines->page->override_doc($module->render());
 	}
 }

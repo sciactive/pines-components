@@ -32,7 +32,7 @@ class group extends able_object implements group_interface {
 			if ((int) $id === $id) {
 				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
 			} else {
-				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'data' => array('groupname', $id), 'tag' => $this->tags));
+				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'tag' => $this->tags, 'data' => array('groupname', $id)));
 			}
 			if (!isset($entity))
 				return;
@@ -77,8 +77,8 @@ class group extends able_object implements group_interface {
 		$entities = $pines->entity_manager->get_entities(
 				array('class' => group),
 				array('&',
-					'ref' => array('parent', $this),
-					'tag' => array('com_user', 'group')
+					'tag' => array('com_user', 'group'),
+					'ref' => array('parent', $this)
 				)
 			);
 		foreach ($entities as $cur_group) {
@@ -102,9 +102,9 @@ class group extends able_object implements group_interface {
 		$return = (array) $pines->entity_manager->get_entities(
 				array('class' => group),
 				array('&',
+					'tag' => array('com_user', 'group'),
 					'data' => array('enabled', true),
-					'ref' => array('parent', $this),
-					'tag' => array('com_user', 'group')
+					'ref' => array('parent', $this)
 				)
 			);
 		return $return;
@@ -116,9 +116,9 @@ class group extends able_object implements group_interface {
 		$entities = $pines->entity_manager->get_entities(
 				array('class' => group),
 				array('&',
+					'tag' => array('com_user', 'group'),
 					'data' => array('enabled', true),
-					'ref' => array('parent', $this),
-					'tag' => array('com_user', 'group')
+					'ref' => array('parent', $this)
 				)
 			);
 		foreach ($entities as $entity) {
@@ -157,15 +157,15 @@ class group extends able_object implements group_interface {
 		$groups[] = $this;
 		$return = $pines->entity_manager->get_entities(
 				array('class' => user),
+				array('&',
+					'tag' => array('com_user', 'user'),
+					'data' => array('enabled', true)
+				),
 				array('|',
 					'ref' => array(
 						array('group', $groups),
 						array('groups', $groups)
 					)
-				),
-				array('&',
-					'data' => array('enabled', true),
-					'tag' => array('com_user', 'user')
 				)
 			);
 		return $return;

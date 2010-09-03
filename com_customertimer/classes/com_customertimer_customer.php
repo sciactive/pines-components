@@ -96,6 +96,7 @@ class com_customertimer_customer extends com_customer_customer {
 			$get_floor = $pines->entity_manager->get_entity(
 					array('class' => com_customertimer_floor, 'skip_ac' => true),
 					array('&',
+						'tag' => array('com_customertimer', 'floor'),
 						'ref' => array('active_stations', $this)
 					)
 				);

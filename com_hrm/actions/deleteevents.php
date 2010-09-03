@@ -26,12 +26,12 @@ foreach ($list as $cur_id) {
 	} elseif ($group != 0) {
 		$events = $pines->entity_manager->get_entities(
 				array('class' => com_hrm_event),
+				array('&',
+					'tag' => array('com_hrm', 'event'),
+					'data' => array('event_id', $group)
+				),
 				array('!&',
 					'guid' => $list
-				),
-				array('&',
-					'data' => array('event_id', $group),
-					'tag' => array('com_hrm', 'event')
 				)
 			);
 		foreach ($events as $cur_event) {

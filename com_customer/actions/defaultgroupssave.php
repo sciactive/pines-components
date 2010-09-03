@@ -18,8 +18,8 @@ if ( !gatekeeper('com_customer/defaultgroups') )
 $cur_group = $pines->entity_manager->get_entity(
 		array('class' => group),
 		array('&',
-			'data' => array('default_customer_primary', true),
-			'tag' => array('com_user', 'group')
+			'tag' => array('com_user', 'group'),
+			'data' => array('default_customer_primary', true)
 		)
 	);
 if (isset($cur_group->guid)) {
@@ -36,8 +36,8 @@ if (isset($group->guid)) {
 $cur_groups = $pines->entity_manager->get_entities(
 		array('class' => group),
 		array('&',
-			'data' => array('default_customer_secondary', true),
-			'tag' => array('com_user', 'group')
+			'tag' => array('com_user', 'group'),
+			'data' => array('default_customer_secondary', true)
 		)
 	);
 foreach ($cur_groups as $cur_group) {

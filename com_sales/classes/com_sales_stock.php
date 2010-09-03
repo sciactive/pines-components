@@ -60,8 +60,8 @@ class com_sales_stock extends entity {
 		$last_tx = $pines->entity_manager->get_entity(
 				array('reverse' => true, 'class' => com_sales_tx),
 				array('&',
-					'ref' => array('stock', $this),
-					'tag' => array('com_sales', 'transaction', 'stock_tx')
+					'tag' => array('com_sales', 'transaction', 'stock_tx'),
+					'ref' => array('stock', $this)
 				)
 			);
 		if (isset($last_tx)) {

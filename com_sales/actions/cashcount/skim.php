@@ -19,8 +19,8 @@ if (!isset($_REQUEST['id'])) {
 	$existing_counts = $pines->entity_manager->get_entities(
 			array('class' => com_sales_cashcount),
 			array('&',
-				'ref' => array('group', $_SESSION['user']->group),
-				'tag' => array('com_sales', 'cashcount')
+				'tag' => array('com_sales', 'cashcount'),
+				'ref' => array('group', $_SESSION['user']->group)
 			)
 		);
 	foreach ($existing_counts as $cur_count) {

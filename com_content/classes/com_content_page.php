@@ -83,7 +83,7 @@ class com_content_page extends entity {
 	 */
 	public function get_categories() {
 		global $pines;
-		$categories = (array) $pines->entity_manager->get_entities(array('class' => com_content_category), array('&', 'ref' => array('pages', $this), 'tag' => array('com_content', 'category')));
+		$categories = (array) $pines->entity_manager->get_entities(array('class' => com_content_category), array('&', 'tag' => array('com_content', 'category'), 'ref' => array('pages', $this)));
 		return $categories;
 	}
 
@@ -120,8 +120,8 @@ class com_content_page extends entity {
 		$module->categories = (array) $pines->entity_manager->get_entities(
 				array('class' => com_content_category),
 				array('&',
-					'data' => array('enabled', true),
-					'tag' => array('com_content', 'category')
+					'tag' => array('com_content', 'category'),
+					'data' => array('enabled', true)
 				)
 			);
 

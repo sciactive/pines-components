@@ -199,11 +199,11 @@ class com_sales_sale extends entity {
 			$change_type = $pines->entity_manager->get_entity(
 					array('class' => com_sales_payment_type),
 					array('&',
+						'tag' => array('com_sales', 'payment_type'),
 						'data' => array(
 							array('change_type', true),
 							array('enabled', true)
-						),
-						'tag' => array('com_sales', 'payment_type')
+						)
 					)
 				);
 			if (!isset($change_type)) {
@@ -350,13 +350,13 @@ class com_sales_sale extends entity {
 				$guids = array();
 				for ($i = 0; $i < $cur_product['quantity']; $i++) {
 					$selector = array('&',
+							'tag' => array('com_sales', 'stock'),
 							'data' => array(
 								array('available', true)
 							),
 							'ref' => array(
 								array('product', $cur_product['entity'])
-							),
-							'tag' => array('com_sales', 'stock')
+							)
 						);
 					if (isset($this->group)) {
 						$selector['ref'][] = array('location', $this->group);
@@ -370,10 +370,10 @@ class com_sales_sale extends entity {
 					} else {
 						$stock_entry = $pines->entity_manager->get_entity(
 								array('class' => com_sales_stock),
-								$selector,
 								array('!&',
 									'guid' => $guids
-								)
+								),
+								$selector
 							);
 					}
 					if (isset($stock_entry)) {
@@ -533,30 +533,30 @@ class com_sales_sale extends entity {
 		$module->categories = (array) $pines->entity_manager->get_entities(
 				array('class' => com_sales_category),
 				array('&',
-					'data' => array('enabled', true),
-					'tag' => array('com_sales', 'category')
+					'tag' => array('com_sales', 'category'),
+					'data' => array('enabled', true)
 				)
 			);
 		$module->tax_fees = (array) $pines->entity_manager->get_entities(
 				array('class' => com_sales_tax_fee),
 				array('&',
-					'data' => array('enabled', true),
-					'tag' => array('com_sales', 'tax_fee')
+					'tag' => array('com_sales', 'tax_fee'),
+					'data' => array('enabled', true)
 				)
 			);
 		$module->payment_types = (array) $pines->entity_manager->get_entities(
 				array('class' => com_sales_payment_type),
 				array('&',
-					'data' => array('enabled', true),
-					'tag' => array('com_sales', 'payment_type')
+					'tag' => array('com_sales', 'payment_type'),
+					'data' => array('enabled', true)
 				)
 			);
 		if (isset($this->guid)) {
 			$module->returns = (array) $pines->entity_manager->get_entities(
 					array('class' => com_sales_return),
 					array('&',
-						'ref' => array('sale', $this),
-						'tag' => array('com_sales', 'return')
+						'tag' => array('com_sales', 'return'),
+						'ref' => array('sale', $this)
 					)
 				);
 		} else {
@@ -908,8 +908,8 @@ class com_sales_sale extends entity {
 		$tax_fees = (array) $pines->entity_manager->get_entities(
 				array('class' => com_sales_tax_fee),
 				array('&',
-					'data' => array('enabled', true),
-					'tag' => array('com_sales', 'tax_fee')
+					'tag' => array('com_sales', 'tax_fee'),
+					'data' => array('enabled', true)
 				)
 			);
 		foreach ($tax_fees as $key => $cur_tax_fee) {
@@ -1002,8 +1002,8 @@ class com_sales_sale extends entity {
 		$attached_return = $pines->entity_manager->get_entity(
 				array('class' => com_sales_return, 'skip_ac' => true),
 				array('&',
-					'ref' => array('sale', $this),
-					'tag' => array('com_sales', 'return')
+					'tag' => array('com_sales', 'return'),
+					'ref' => array('sale', $this)
 				)
 			);
 		if (isset($attached_return)) {
@@ -1022,9 +1022,9 @@ class com_sales_sale extends entity {
 					$last_tx = $pines->entity_manager->get_entity(
 							array('reverse' => true, 'class' => com_sales_stock),
 							array('&',
+								'tag' => array('com_sales', 'transaction', 'stock_tx'),
 								'data' => array('type', 'removed'),
-								'ref' => array('ref', $this),
-								'tag' => array('com_sales', 'transaction', 'stock_tx')
+								'ref' => array('ref', $this)
 							)
 						);
 					if ($last_tx) {

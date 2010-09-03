@@ -17,8 +17,8 @@ if (!$pines->config->com_modules->show_modules)
 $modules = (array) $pines->entity_manager->get_entities(
 		array('class' => com_modules_module),
 		array('&',
-			'data' => array('enabled', true),
-			'tag' => array('com_modules', 'module')
+			'tag' => array('com_modules', 'module'),
+			'data' => array('enabled', true)
 		)
 	);
 $pines->entity_manager->sort($modules, 'order');

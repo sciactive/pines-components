@@ -34,7 +34,7 @@ class user extends able_object implements user_interface {
 			if ((int) $id === $id) {
 				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
 			} else {
-				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'data' => array('username', $id), 'tag' => $this->tags));
+				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'tag' => $this->tags, 'data' => array('username', $id)));
 			}
 			if (!isset($entity))
 				return;

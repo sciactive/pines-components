@@ -119,12 +119,12 @@ if ($pines->config->com_sales->com_storefront) {
 		$categories = array_map('intval', $_REQUEST['categories']);
 	$categories = (array) $pines->entity_manager->get_entities(
 			array('class' => com_sales_category),
+			array('&',
+				'tag' => array('com_sales', 'category'),
+				'data' => array('enabled', true)
+			),
 			array('|',
 				'guid' => $categories
-			),
-			array('&',
-				'data' => array('enabled', true),
-				'tag' => array('com_sales', 'category')
 			)
 		);
 	// Build a list of specs.
@@ -167,7 +167,7 @@ if ($product->stock_type == 'non_stocked' && $product->pricing_method == 'margin
 	pines_notice('Margin pricing is not available for non stocked items.');
 	return;
 }
-$test = $pines->entity_manager->get_entity(array('class' => com_sales_product, 'skip_ac' => true), array('&', 'data' => array('name', $product->name), 'tag' => array('com_sales', 'product')));
+$test = $pines->entity_manager->get_entity(array('class' => com_sales_product, 'skip_ac' => true), array('&', 'tag' => array('com_sales', 'product'), 'data' => array('name', $product->name)));
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$product->print_form();
 	pines_notice('There is already a product with that name. Please choose a different name.');
@@ -184,7 +184,7 @@ if ($product->save()) {
 	$categories = array();
 	if (is_array($_REQUEST['categories']))
 		$categories = array_map('intval', $_REQUEST['categories']);
-	$all_categories = $pines->entity_manager->get_entities(array('class' => com_sales_category), array('&', 'data' => array('enabled', true), 'tag' => array('com_sales', 'category')));
+	$all_categories = $pines->entity_manager->get_entities(array('class' => com_sales_category), array('&', 'tag' => array('com_sales', 'category'), 'data' => array('enabled', true)));
 	foreach($all_categories as &$cur_cat) {
 		if (in_array($cur_cat->guid, $categories) && !$product->in_array($cur_cat->products)) {
 			$cur_cat->products[] = $product;

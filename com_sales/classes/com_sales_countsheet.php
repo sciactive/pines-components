@@ -173,12 +173,12 @@ class com_sales_countsheet extends entity {
 		foreach ($entries as $key => $cur_code) {
 			$stock = $pines->entity_manager->get_entity(
 					array('class' => com_sales_stock),
+					$and_selector,
+					$not_selector,
 					array('&',
 						'ref' => array('location', $this->group),
 						'data' => array('serial', $cur_code)
-					),
-					$not_selector,
-					$and_selector
+					)
 				);
 			if (isset($stock)) {
 				// If the product isn't serialized, something's wrong, don't save it.
@@ -198,11 +198,11 @@ class com_sales_countsheet extends entity {
 				continue;
 			$stock = $pines->entity_manager->get_entity(
 					array('class' => com_sales_stock),
+					$and_selector,
+					$not_selector,
 					array('&',
 						'ref' => array(array('location', $this->group), array('product', $product))
-					),
-					$not_selector,
-					$and_selector
+					)
 				);
 			if (isset($stock)) {
 				// If the product is serialized, the entry is incorrect.
@@ -226,14 +226,14 @@ class com_sales_countsheet extends entity {
 		foreach ($entries as $key => $cur_code) {
 			$stocks = (array) $pines->entity_manager->get_entities(
 					array('class' => com_sales_stock, 'limit' => 5),
-					array('!&',
-						'ref' => array('location', $this->group)
-					),
+					$and_selector,
+					$not_selector,
 					array('&',
 						'data' => array('serial', $cur_code)
 					),
-					$not_selector,
-					$and_selector
+					array('!&',
+						'ref' => array('location', $this->group)
+					)
 				);
 			if ($stocks) {
 				foreach ($stocks as $stock) {
@@ -257,14 +257,14 @@ class com_sales_countsheet extends entity {
 				continue;
 			$stocks = (array) $pines->entity_manager->get_entities(
 					array('class' => com_sales_stock, 'limit' => 5),
-					array('!&',
-						'ref' => array('location', $this->group)
-					),
+					$and_selector,
+					$not_selector,
 					array('&',
 						'ref' => array('product', $product)
 					),
-					$not_selector,
-					$and_selector
+					array('!&',
+						'ref' => array('location', $this->group)
+					)
 				);
 			if ($stocks) {
 				foreach ($stocks as $stock) {
@@ -283,11 +283,11 @@ class com_sales_countsheet extends entity {
 		// Find entries that should be counted, but weren't found.
 		$this->missing = (array) $pines->entity_manager->get_entities(
 				array('class' => com_sales_stock),
+				$and_selector,
+				$not_selector,
 				array('&',
 					'ref' => array('location', $this->group)
-				),
-				$not_selector,
-				$and_selector
+				)
 			);
 		foreach ($this->missing as $stock) {
 			$this->missing_count[$stock->product->guid]++;

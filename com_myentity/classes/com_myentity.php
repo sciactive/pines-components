@@ -934,7 +934,7 @@ class com_myentity extends component implements entity_manager_interface {
 	}
 
 	/**
-	 * @todo Use one big insert query.
+	 * @todo Check that the big insert query doesn't fail.
 	 */
 	public function save_entity(&$entity) {
 		global $pines;
@@ -961,29 +961,26 @@ class com_myentity extends component implements entity_manager_interface {
 			$new_id = mysql_insert_id();
 			$entity->guid = (int) $new_id;
 			unset($data['p_cdate'], $data['p_mdate']);
+			$values = array();
 			foreach ($data as $name => $value) {
-				$query = sprintf("INSERT INTO `%scom_myentity_data` (`guid`, `name`, `value`) VALUES (%u, '%s', '%s');",
-					$pines->config->com_mysql->prefix,
+				$values[] = sprintf('(%u, \'%s\', \'%s\')',
 					(int) $new_id,
 					mysql_real_escape_string($name, $pines->com_mysql->link),
 					mysql_real_escape_string(serialize($value), $pines->com_mysql->link));
-				if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
-					if (function_exists('pines_error'))
-						pines_error('Query failed: ' . mysql_error());
-					return false;
-				}
 			}
 			foreach ($sdata as $name => $value) {
-				$query = sprintf("INSERT INTO `%scom_myentity_data` (`guid`, `name`, `value`) VALUES (%u, '%s', '%s');",
-					$pines->config->com_mysql->prefix,
+				$values[] = sprintf('(%u, \'%s\', \'%s\')',
 					(int) $new_id,
 					mysql_real_escape_string($name, $pines->com_mysql->link),
 					mysql_real_escape_string($value, $pines->com_mysql->link));
-				if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
-					if (function_exists('pines_error'))
-						pines_error('Query failed: ' . mysql_error());
-					return false;
-				}
+			}
+			$query = sprintf("INSERT INTO `%scom_myentity_data` (`guid`, `name`, `value`) VALUES %s;",
+				$pines->config->com_mysql->prefix,
+				implode(',', $values));
+			if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
+				if (function_exists('pines_error'))
+					pines_error('Query failed: ' . mysql_error());
+				return false;
 			}
 		} else {
 			// Removed any cached versions of this entity.
@@ -1009,29 +1006,26 @@ class com_myentity extends component implements entity_manager_interface {
 				return false;
 			}
 			unset($data['p_cdate'], $data['p_mdate']);
+			$values = array();
 			foreach ($data as $name => $value) {
-				$query = sprintf("INSERT INTO `%scom_myentity_data` (`guid`, `name`, `value`) VALUES (%u, '%s', '%s');",
-					$pines->config->com_mysql->prefix,
+				$values[] = sprintf('(%u, \'%s\', \'%s\')',
 					(int) $entity->guid,
 					mysql_real_escape_string($name, $pines->com_mysql->link),
 					mysql_real_escape_string(serialize($value), $pines->com_mysql->link));
-				if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
-					if (function_exists('pines_error'))
-						pines_error('Query failed: ' . mysql_error());
-					return false;
-				}
 			}
 			foreach ($sdata as $name => $value) {
-				$query = sprintf("INSERT INTO `%scom_myentity_data` (`guid`, `name`, `value`) VALUES (%u, '%s', '%s');",
-					$pines->config->com_mysql->prefix,
+				$values[] = sprintf('(%u, \'%s\', \'%s\')',
 					(int) $entity->guid,
 					mysql_real_escape_string($name, $pines->com_mysql->link),
 					mysql_real_escape_string($value, $pines->com_mysql->link));
-				if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
-					if (function_exists('pines_error'))
-						pines_error('Query failed: ' . mysql_error());
-					return false;
-				}
+			}
+			$query = sprintf("INSERT INTO `%scom_myentity_data` (`guid`, `name`, `value`) VALUES %s;",
+				$pines->config->com_mysql->prefix,
+				implode(',', $values));
+			if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
+				if (function_exists('pines_error'))
+					pines_error('Query failed: ' . mysql_error());
+				return false;
 			}
 		}
 		// Cache the entity.

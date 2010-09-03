@@ -166,7 +166,7 @@ if (empty($user->password) && !$pines->config->com_user->empty_pw) {
 	return;
 }
 if (gatekeeper('com_user/assignpin') && !empty($user->pin)) {
-	$test = $pines->entity_manager->get_entity(array('class' => user), array('&', 'data' => array('pin', $user->pin), 'tag' => array('com_user', 'user')));
+	$test = $pines->entity_manager->get_entity(array('class' => user), array('&', 'tag' => array('com_user', 'user'), 'data' => array('pin', $user->pin)));
 	if (isset($test) && !$user->is($test)) {
 		$user->print_form();
 		pines_notice('This PIN is already in use.');

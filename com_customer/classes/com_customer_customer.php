@@ -41,7 +41,7 @@ class com_customer_customer extends user {
 			if ((int) $id === $id) {
 				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
 			} else {
-				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'data' => array('username', $id), 'tag' => $this->tags));
+				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'tag' => $this->tags, 'data' => array('username', $id)));
 			}
 			if (isset($entity)) {
 				$this->guid = $entity->guid;
@@ -55,8 +55,8 @@ class com_customer_customer extends user {
 		$group = $pines->entity_manager->get_entity(
 				array('class' => group),
 				array('&',
-					'data' => array('default_customer_primary', true),
-					'tag' => array('com_user', 'group')
+					'tag' => array('com_user', 'group'),
+					'data' => array('default_customer_primary', true)
 				)
 			);
 		if (isset($group->guid))
@@ -64,8 +64,8 @@ class com_customer_customer extends user {
 		$groups = $pines->entity_manager->get_entities(
 				array('class' => group),
 				array('&',
-					'data' => array('default_customer_secondary', true),
-					'tag' => array('com_user', 'group')
+					'tag' => array('com_user', 'group'),
+					'data' => array('default_customer_secondary', true)
 				)
 			);
 		if ($groups)

@@ -95,15 +95,15 @@ foreach($this->groups as $cur_group) {
 			<td><?php
 			$user_array = $pines->entity_manager->get_entities(
 					array('class' => user, 'limit' => 51),
+					array('&',
+						'tag' => array('com_user', 'user'),
+						'data' => array('enabled', true)
+					),
 					array('|',
 						'ref' => array(
 							array('group', $group),
 							array('groups', $group)
 						)
-					),
-					array('&',
-						'data' => array('enabled', true),
-						'tag' => array('com_user', 'user')
 					)
 				);
 			$count = count($user_array);

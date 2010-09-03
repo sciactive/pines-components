@@ -128,8 +128,8 @@ class com_sales extends component {
 		$product = $pines->entity_manager->get_entity(
 				array('class' => com_sales_product),
 				array('&',
-					'data' => array('sku', $code),
-					'tag' => array('com_sales', 'product')
+					'tag' => array('com_sales', 'product'),
+					'data' => array('sku', $code)
 				)
 			);
 		if (isset($product))
@@ -137,8 +137,8 @@ class com_sales extends component {
 		return $pines->entity_manager->get_entity(
 				array('class' => com_sales_product),
 				array('&',
-					'array' => array('additional_barcodes', $code),
-					'tag' => array('com_sales', 'product')
+					'tag' => array('com_sales', 'product'),
+					'array' => array('additional_barcodes', $code)
 				)
 			);
 	}
@@ -157,14 +157,14 @@ class com_sales extends component {
 		global $pines;
 		// Get all the POs.
 		$selector = array('&',
+				'tag' => array('com_sales', 'po'),
 				'data' => array(
 					array('finished', false),
 					array('final', true)
 				),
 				'ref' => array(
 					array('pending_products', $product)
-				),
-				'tag' => array('com_sales', 'po')
+				)
 			);
 		if (isset($location))
 			$selector['ref'][] = array('destination', $location);
@@ -189,14 +189,14 @@ class com_sales extends component {
 		global $pines;
 		// Get all the transfers.
 		$selector = array('&',
+				'tag' => array('com_sales', 'transfer'),
 				'data' => array(
 					array('finished', false),
 					array('final', true)
 				),
 				'ref' => array(
 					array('pending_products', $product)
-				),
-				'tag' => array('com_sales', 'transfer')
+				)
 			);
 		if (isset($serial))
 			$selector['array'] = array('pending_serials', $serial);
@@ -280,10 +280,10 @@ class com_sales extends component {
 				array('class' => com_sales_cashcount),
 				$selector,
 				array('&',
+					'tag' => array('com_sales', 'cashcount'),
 					'gte' => array('p_cdate', (int) $start_date),
 					'lte' => array('p_cdate', (int) $end_date),
-					'ref' => array('group', $location),
-					'tag' => array('com_sales', 'cashcount')
+					'ref' => array('group', $location)
 				)
 			);
 		$form->start_date = $start_date;
@@ -397,8 +397,8 @@ class com_sales extends component {
 		$module->pos = $pines->entity_manager->get_entities(
 				array('class' => com_sales_po),
 				array('&',
-					'data' => array('finished', $finished),
-					'tag' => array('com_sales', 'po')
+					'tag' => array('com_sales', 'po'),
+					'data' => array('finished', $finished)
 				)
 			);
 
@@ -561,8 +561,8 @@ class com_sales extends component {
 		$module->transfers = $pines->entity_manager->get_entities(
 				array('class' => com_sales_transfer),
 				array('&',
-					'data' => array('finished', $finished),
-					'tag' => array('com_sales', 'transfer')
+					'tag' => array('com_sales', 'transfer'),
+					'data' => array('finished', $finished)
 				)
 			);
 
@@ -692,7 +692,7 @@ class com_sales extends component {
 	public function print_receive_form() {
 		global $pines;
 
-		$selector = array('&', 'data' => array(array('final', true), array('finished', false)), 'tag' => array('com_sales', 'po'));
+		$selector = array('&', 'tag' => array('com_sales', 'po'), 'data' => array(array('final', true), array('finished', false)));
 		if (!gatekeeper('com_sales/receivelocation'))
 			$selector['ref'] = array('destination', $_SESSION['user']->group);
 
@@ -704,8 +704,8 @@ class com_sales extends component {
 		$module->categories = (array) $pines->entity_manager->get_entities(
 				array('class' => com_sales_category),
 				array('&',
-					'data' => array('enabled', true),
-					'tag' => array('com_sales', 'category')
+					'tag' => array('com_sales', 'category'),
+					'data' => array('enabled', true)
 				)
 			);
 
@@ -806,32 +806,32 @@ class com_sales extends component {
 					array('class' => com_sales_sale, 'skip_ac' => true),
 					$secondary_options,
 					array('&',
-						'ref' => array('products', $cur_stock),
-						'tag' => array('com_sales', 'sale')
+						'tag' => array('com_sales', 'sale'),
+						'ref' => array('products', $cur_stock)
 					)
 				);
 			$countsheets = $pines->entity_manager->get_entities(
 					array('class' => com_sales_countsheet, 'skip_ac' => true),
 					$secondary_options,
 					array('&',
-						'array' => array('entries', $countsheet_code),
-						'tag' => array('com_sales', 'countsheet')
+						'tag' => array('com_sales', 'countsheet'),
+						'array' => array('entries', $countsheet_code)
 					)
 				);
 			$transfers = $pines->entity_manager->get_entities(
 					array('class' => com_sales_transfer, 'skip_ac' => true),
 					$secondary_options,
 					array('&',
-						'ref' => array('stock', $cur_stock),
-						'tag' => array('com_sales', 'transfer')
+						'tag' => array('com_sales', 'transfer'),
+						'ref' => array('stock', $cur_stock)
 					)
 				);
 			$pos = $pines->entity_manager->get_entities(
 					array('class' => com_sales_po, 'skip_ac' => true),
 					$secondary_options,
 					array('&',
-						'ref' => array('received', $cur_stock),
-						'tag' => array('com_sales', 'po')
+						'tag' => array('com_sales', 'po'),
+						'ref' => array('received', $cur_stock)
 					)
 				);
 			foreach (array_merge($invoices, $countsheets, $transfers, $pos) as $cur_tx) {

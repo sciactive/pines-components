@@ -32,8 +32,8 @@ if ($_SESSION['user']->group->com_sales_task_countsheet) {
 		$existing_sheets = $pines->entity_manager->get_entities(
 				array('class' => com_sales_countsheet),
 				array('&',
-					'ref' => array('group', $_SESSION['user']->group),
-					'tag' => array('com_sales', 'countsheet')
+					'tag' => array('com_sales', 'countsheet'),
+					'ref' => array('group', $_SESSION['user']->group)
 				)
 			);
 		foreach ($existing_sheets as $cur_sheet) {

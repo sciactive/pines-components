@@ -15,8 +15,8 @@ if ($pines->config->com_content->show_page_menus) {
 	$pages = (array) $pines->entity_manager->get_entities(
 			array('class' => com_content_page),
 			array('&',
-				'data' => array('show_menu', true),
-				'tag' => array('com_content', 'page')
+				'tag' => array('com_content', 'page'),
+				'data' => array('show_menu', true)
 			)
 		);
 
@@ -49,8 +49,8 @@ if ($pines->config->com_content->show_cat_menus) {
 	$categories = (array) $pines->entity_manager->get_entities(
 			array('class' => com_content_category),
 			array('&',
-				'data' => array('show_menu', true),
-				'tag' => array('com_content', 'category')
+				'tag' => array('com_content', 'category'),
+				'data' => array('show_menu', true)
 			)
 		);
 

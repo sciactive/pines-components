@@ -117,7 +117,7 @@ class com_hrm extends component {
 		global $pines;
 		$pines->page->override = true;
 		$module = new module('com_hrm', 'timeoff/review', 'content');
-		$module->requests = $pines->entity_manager->get_entities(array('class' => com_hrm_rto), array('&', 'data' => array('status', 'pending'), 'tag' => array('com_hrm', 'rto')));
+		$module->requests = $pines->entity_manager->get_entities(array('class' => com_hrm_rto), array('&', 'tag' => array('com_hrm', 'rto'), 'data' => array('status', 'pending')));
 		$pines->page->override_doc($module->render());
 	}
 	

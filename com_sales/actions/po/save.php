@@ -66,7 +66,7 @@ if (empty($po->po_number)) {
 	pines_notice('Please specify a PO number.');
 	return;
 }
-$test = $pines->entity_manager->get_entity(array('class' => com_sales_po, 'skip_ac' => true), array('&', 'data' => array('po_number', $po->po_number), 'tag' => array('com_sales', 'po')));
+$test = $pines->entity_manager->get_entity(array('class' => com_sales_po, 'skip_ac' => true), array('&', 'tag' => array('com_sales', 'po'), 'data' => array('po_number', $po->po_number)));
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$po->print_form();
 	pines_notice('There is already a PO with that number. Please enter a different number.');

@@ -13,17 +13,17 @@ defined('P_RUN') or die('Direct access prohibited');
 
 $pages = $pines->entity_manager->get_entities(
 		array('class' => com_content_page),
-		array('|',
-			'data' => array('publish_end', null),
-			'gt' => array('publish_end', time())
-		),
 		array('&',
+			'tag' => array('com_content', 'page'),
 			'data' => array(
 				array('enabled', true),
 				array('show_front_page', true)
 			),
-			'lte' => array('publish_begin', time()),
-			'tag' => array('com_content', 'page')
+			'lte' => array('publish_begin', time())
+		),
+		array('|',
+			'data' => array('publish_end', null),
+			'gt' => array('publish_end', time())
 		)
 	);
 

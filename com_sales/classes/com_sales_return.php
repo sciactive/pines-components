@@ -394,22 +394,22 @@ class com_sales_return extends entity {
 		$module->categories = (array) $pines->entity_manager->get_entities(
 				array('class' => com_sales_category),
 				array('&',
-					'data' => array('enabled', true),
-					'tag' => array('com_sales', 'category')
+					'tag' => array('com_sales', 'category'),
+					'data' => array('enabled', true)
 				)
 			);
 		$module->tax_fees = (array) $pines->entity_manager->get_entities(
 				array('class' => com_sales_tax_fee),
 				array('&',
-					'data' => array('enabled', true),
-					'tag' => array('com_sales', 'tax_fee')
+					'tag' => array('com_sales', 'tax_fee'),
+					'data' => array('enabled', true)
 				)
 			);
 		$module->payment_types = (array) $pines->entity_manager->get_entities(
 				array('class' => com_sales_payment_type),
 				array('&',
-					'data' => array('enabled', true),
-					'tag' => array('com_sales', 'payment_type')
+					'tag' => array('com_sales', 'payment_type'),
+					'data' => array('enabled', true)
 				)
 			);
 
@@ -574,8 +574,8 @@ class com_sales_return extends entity {
 		$tax_fees = (array) $pines->entity_manager->get_entities(
 				array('class' => com_sales_tax_fee),
 				array('&',
-					'data' => array('enabled', true),
-					'tag' => array('com_sales', 'tax_fee')
+					'tag' => array('com_sales', 'tax_fee'),
+					'data' => array('enabled', true)
 				)
 			);
 		foreach ($tax_fees as $key => $cur_tax_fee) {

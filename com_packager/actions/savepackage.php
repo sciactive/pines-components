@@ -92,7 +92,7 @@ if (!in_array($package->type, array('system', 'meta')) && !in_array($package->co
 	pines_notice('Selected component was not found.');
 	return;
 }
-$test = $pines->entity_manager->get_entity(array('class' => com_packager_package, 'skip_ac' => true), array('&', 'data' => array('name', $package->name), 'tag' => array('com_packager', 'package')));
+$test = $pines->entity_manager->get_entity(array('class' => com_packager_package, 'skip_ac' => true), array('&', 'tag' => array('com_packager', 'package'), 'data' => array('name', $package->name)));
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$package->print_form();
 	pines_notice('There is already a package with that name. Please choose a different name.');

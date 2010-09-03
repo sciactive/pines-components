@@ -80,7 +80,7 @@ class com_content_category extends entity {
 		global $pines;
 		$module = new module('com_content', 'category/form', 'content');
 		$module->entity = $this;
-		$module->categories = $pines->entity_manager->get_entities(array('class' => com_content_category), array('&', 'data' => array('parent', null), 'tag' => array('com_content', 'category')));
+		$module->categories = $pines->entity_manager->get_entities(array('class' => com_content_category), array('&', 'tag' => array('com_content', 'category'), 'data' => array('parent', null)));
 
 		return $module;
 	}

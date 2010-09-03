@@ -45,16 +45,16 @@ if (empty($query)) {
 	$companies = $pines->entity_manager->get_entities(
 			array('class' => com_customer_company),
 			array('&',
-				'match' => array('name', $r_query),
-				'tag' => array('com_customer', 'company')
+				'tag' => array('com_customer', 'company'),
+				'match' => array('name', $r_query)
 			)
 		);
 	if ($companies) {
 		$comp_customers = (array) $pines->entity_manager->get_entities(
 				array('class' => com_customer_customer),
 				array('&',
-					'ref' => array('company', $companies),
-					'tag' => array('com_customer', 'customer')
+					'tag' => array('com_customer', 'customer'),
+					'ref' => array('company', $companies)
 				)
 			);
 		foreach ($comp_customers as &$cur_customer) {

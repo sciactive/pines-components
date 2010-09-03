@@ -22,11 +22,11 @@ if (empty($list)) {
 
 $entities = (array) $pines->entity_manager->get_entities(
 		array('class' => com_sales_stock),
-		array('|',
-			'guid' => $list
-		),
 		array('&',
 			'tag' => array('com_sales', 'stock')
+		),
+		array('|',
+			'guid' => $list
 		)
 	);
 $available = ($_REQUEST['available'] == 'ON');

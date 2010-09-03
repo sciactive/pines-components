@@ -61,7 +61,7 @@ if (empty($page->alias)) {
 	return;
 }
 
-$test = $pines->entity_manager->get_entity(array('class' => com_content_page, 'skip_ac' => true), array('&', 'data' => array('alias', $page->alias), 'tag' => array('com_content', 'page')));
+$test = $pines->entity_manager->get_entity(array('class' => com_content_page, 'skip_ac' => true), array('&', 'tag' => array('com_content', 'page'), 'data' => array('alias', $page->alias)));
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$page->print_form();
 	pines_notice('There is already an page with that alias. Please choose a different alias.');
@@ -76,7 +76,7 @@ if ($page->save()) {
 	// Assign the page to the selected categories.
 	// We have to do this here, because new pages won't have a GUID until now.
 	$categories = array_map('intval', (array) $_REQUEST['categories']);
-	$all_categories = $pines->entity_manager->get_entities(array('class' => com_content_category), array('&', 'data' => array('enabled', true), 'tag' => array('com_content', 'category')));
+	$all_categories = $pines->entity_manager->get_entities(array('class' => com_content_category), array('&', 'tag' => array('com_content', 'category'), 'data' => array('enabled', true)));
 	foreach($all_categories as &$cur_cat) {
 		if (in_array($cur_cat->guid, $categories) && !$page->in_array($cur_cat->pages)) {
 			$cur_cat->pages[] = $page;

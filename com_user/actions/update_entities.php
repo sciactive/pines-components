@@ -40,7 +40,7 @@ $errors = array();
 $offset = $count = $nochange = 0;
 // Grab all entities, 50 at a time, and replace uids/gids with users/groups.
 do {
-	$entities = $pines->entity_manager->get_entities(array('limit' => 50, 'offset' => $offset));
+	$entities = $pines->entity_manager->get_entities(array('limit' => 200, 'offset' => $offset));
 	// If we have run through all entities, we are done updating.
 	foreach ($entities as &$cur_entity) {
 		$changed = false;
@@ -75,7 +75,7 @@ do {
 				$cur_entity->password = md5($cur_entity->password.$cur_entity->salt);
 				$changed = true;
 			}
-			if (empty($cur_entity->group)) {
+			if (isset($group->guid) && !$group->is($cur_entity->group)) {
 				if (isset($group->guid)) {
 					$cur_entity->group = $group;
 					$changed = true;

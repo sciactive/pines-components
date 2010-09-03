@@ -19,6 +19,23 @@ if (!gatekeeper('system/all'))
 $module = new module('system', 'null', 'content');
 $module->title = 'Entity Reference Update';
 
+// Load default group.
+$group = $pines->entity_manager->get_entity(
+		array('class' => group),
+		array('&',
+			'data' => array('default_customer_primary', true),
+			'tag' => array('com_user', 'group')
+		)
+	);
+// Load default groups.
+$groups = $pines->entity_manager->get_entities(
+		array('class' => group),
+		array('&',
+			'data' => array('default_customer_secondary', true),
+			'tag' => array('com_user', 'group')
+		)
+	);
+
 $errors = array();
 $offset = $count = $nochange = 0;
 // Grab all entities, 50 at a time, and replace uids/gids with users/groups.
@@ -59,28 +76,12 @@ do {
 				$changed = true;
 			}
 			if (empty($cur_entity->group)) {
-				// Load default group.
-				$group = $pines->entity_manager->get_entity(
-						array('class' => group),
-						array('&',
-							'data' => array('default_customer_primary', true),
-							'tag' => array('com_user', 'group')
-						)
-					);
 				if (isset($group->guid)) {
 					$cur_entity->group = $group;
 					$changed = true;
 				}
 			}
 			if (empty($cur_entity->groups)) {
-				// Load default groups.
-				$groups = $pines->entity_manager->get_entities(
-						array('class' => group),
-						array('&',
-							'data' => array('default_customer_secondary', true),
-							'tag' => array('com_user', 'group')
-						)
-					);
 				if ($groups) {
 					$cur_entity->groups = $groups;
 					$changed = true;

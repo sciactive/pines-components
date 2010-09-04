@@ -152,13 +152,13 @@ class com_myentity extends component implements entity_manager_interface {
 				pines_error('Query failed: ' . mysql_error());
 			return false;
 		}
-		$row = mysql_fetch_array($result);
+		$row = mysql_fetch_assoc($result);
 		while ($row) {
 			$row['name'];
 			$row['cur_uid'];
 			fwrite($fhandle, "<{$row['name']}>[{$row['cur_uid']}]\n");
 			// Make sure that $row is incremented :)
-			$row = mysql_fetch_array($result);
+			$row = mysql_fetch_assoc($result);
 		}
 
 		fwrite($fhandle, "#\n");
@@ -174,7 +174,7 @@ class com_myentity extends component implements entity_manager_interface {
 				pines_error('Query failed: ' . mysql_error());
 			return false;
 		}
-		$row = mysql_fetch_array($result);
+		$row = mysql_fetch_assoc($result);
 		while ($row) {
 			$guid = (int) $row['guid'];
 			$tags = explode(',', substr($row['tags'], 1, -1));
@@ -188,11 +188,11 @@ class com_myentity extends component implements entity_manager_interface {
 				// next entity is reached. $row will end on the next entity.
 				do {
 					fwrite($fhandle, "\t{$row['dname']}=".json_encode($row['dvalue'])."\n");
-					$row = mysql_fetch_array($result);
+					$row = mysql_fetch_assoc($result);
 				} while ((int) $row['guid'] === $guid);
 			} else {
 				// Make sure that $row is incremented :)
-				$row = mysql_fetch_array($result);
+				$row = mysql_fetch_assoc($result);
 			}
 		}
 		return fclose($fhandle);
@@ -225,13 +225,13 @@ class com_myentity extends component implements entity_manager_interface {
 				pines_error('Query failed: ' . mysql_error());
 			return false;
 		}
-		$row = mysql_fetch_array($result);
+		$row = mysql_fetch_assoc($result);
 		while ($row) {
 			$row['name'];
 			$row['cur_uid'];
 			echo "<{$row['name']}>[{$row['cur_uid']}]\n";
 			// Make sure that $row is incremented :)
-			$row = mysql_fetch_array($result);
+			$row = mysql_fetch_assoc($result);
 		}
 
 		echo "#\n";
@@ -247,7 +247,7 @@ class com_myentity extends component implements entity_manager_interface {
 				pines_error('Query failed: ' . mysql_error());
 			return false;
 		}
-		$row = mysql_fetch_array($result);
+		$row = mysql_fetch_assoc($result);
 		while ($row) {
 			$guid = (int) $row['guid'];
 			$tags = explode(',', substr($row['tags'], 1, -1));
@@ -261,11 +261,11 @@ class com_myentity extends component implements entity_manager_interface {
 				// next entity is reached. $row will end on the next entity.
 				do {
 					echo "\t{$row['dname']}=".json_encode($row['dvalue'])."\n";
-					$row = mysql_fetch_array($result);
+					$row = mysql_fetch_assoc($result);
 				} while ((int) $row['guid'] === $guid);
 			} else {
 				// Make sure that $row is incremented :)
-				$row = mysql_fetch_array($result);
+				$row = mysql_fetch_assoc($result);
 			}
 		}
 		return true;

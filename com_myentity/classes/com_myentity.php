@@ -633,7 +633,7 @@ class com_myentity extends component implements entity_manager_interface {
 			if ($pass_all) {
 				//$entity = $this->pull_cache($guid, $class);
 				//if (!isset($entity) || $data['p_mdate'] > $entity->p_mdate) {
-				$entity = $class::factory();
+				$entity = call_user_func(array($class, 'factory'));
 				$entity->guid = $guid;
 				$entity->tags = explode(',', substr($tags, 1, -1));
 				$entity->put_data($data, $sdata);

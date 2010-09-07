@@ -195,6 +195,10 @@ $pines->com_ptags->load();
 					<input class="pf-field" type="checkbox" name="show_title" value="ON"<?php echo $this->entity->show_title ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
+				<label><span class="pf-label">Show Author Info</span>
+					<input class="pf-field" type="checkbox" name="show_author_info" value="ON"<?php echo $this->entity->show_author_info ? ' checked="checked"' : ''; ?> /></label>
+			</div>
+			<div class="pf-element">
 				<label><span class="pf-label">Show Intro on Page</span>
 					<input class="pf-field" type="checkbox" name="show_intro" value="ON"<?php echo $this->entity->show_intro ? ' checked="checked"' : ''; ?> /></label>
 			</div>

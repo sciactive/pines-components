@@ -17,6 +17,9 @@ if (!isset($this->entity))
 if ($this->entity->show_title)
 	$this->title = htmlspecialchars($this->entity->name);
 
+if ($this->entity->show_author_info)
+	$this->note = htmlspecialchars('Posted by '.$this->entity->user->name.' on '.format_date($this->entity->p_cdate, 'date_short'));
+
 if ($this->entity->show_intro) {
 	if ($pines->config->com_content->wrap_pages)
 		echo '<div style="position: relative;">';

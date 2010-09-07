@@ -45,6 +45,7 @@ if (!empty($_REQUEST['publish_end']))
 	$page->publish_end = strtotime($_REQUEST['publish_end']);
 else
 	$page->publish_end = null;
+$page->show_author_info = ($_REQUEST['show_author_info'] == 'ON');
 $page->show_intro = ($_REQUEST['show_intro'] == 'ON');
 $page->show_title = ($_REQUEST['show_title'] == 'ON');
 $page->show_menu = ($_REQUEST['show_menu'] == 'ON');

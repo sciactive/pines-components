@@ -13,22 +13,24 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
-		'name' => 'print_login',
-		'cname' => 'Print Login',
-		'description' => 'Print a login page in this position, if the user is not logged in. Set to "null" to not print a login page.',
-		'value' => 'null',
-	),
-	array(
 		'name' => 'create_admin',
 		'cname' => 'Create Admin',
 		'description' => 'Allow the creation of an admin user. When a user is created, if there are no other users in the system, he will be granted all abilities.',
 		'value' => true,
 	),
 	array(
+		'name' => 'print_login',
+		'cname' => 'Print Login',
+		'description' => 'Print a login page in this position, if the user is not logged in. Set to "null" to not print a login page.',
+		'value' => 'null',
+		'peruser' => true,
+	),
+	array(
 		'name' => 'allow_registration',
 		'cname' => 'Allow User Registration',
 		'description' => 'Allow users to register.',
 		'value' => true,
+		'peruser' => true,
 	),
 	array(
 		'name' => 'reg_fields',
@@ -43,36 +45,42 @@ return array(
 			'Timezone' => 'timezone',
 			'Address' => 'address',
 		),
+		'peruser' => true,
 	),
 	array(
 		'name' => 'reg_message_welcome',
 		'cname' => 'Registration Welcome Message',
 		'description' => 'This message will be displayed to the user after they register.',
 		'value' => 'You can begin using the system with the menu near the top of the page.',
+		'peruser' => true,
 	),
 	array(
 		'name' => 'confirm_email',
 		'cname' => 'Confirm User Email Addresses',
 		'description' => 'Confirm users\' email addresses upon registration before allowing them to login.',
 		'value' => false,
+		'peruser' => true,
 	),
 	array(
 		'name' => 'email_from_address',
 		'cname' => 'From Address',
 		'description' => 'The address that emails will be sent from.',
 		'value' => 'webmaster@example.com',
+		'peruser' => true,
 	),
 	array(
 		'name' => 'email_subject',
 		'cname' => 'Confirmation Email Subject',
 		'description' => 'The subject of the confirmation email to new users. Available fields: {page_title}, {site_name}, {site_address}, {link}, {username}, {name}, {email}, {phone}, {fax}, {timezone}, {address}.',
 		'value' => 'Welcome to {site_name}. Please confirm your email.',
+		'peruser' => true,
 	),
 	array(
 		'name' => 'email_content',
 		'cname' => 'Confirmation Email',
 		'description' => 'The content of the confirmation email to new users. Available fields: {page_title}, {site_name}, {site_address}, {link}, {username}, {name}, {email}, {phone}, {fax}, {timezone}, {address}.',
 		'value' => "Welcome {name},<br />\n<br />\nThank you for signing up at {site_address}. Please confirm your email by clicking on the following link to activate your account:<br />\n<br />\n{link}<br />\n<br />\nThank You,<br />\n{site_name}",
+		'peruser' => true,
 	),
 	array(
 		'name' => 'empty_pw',

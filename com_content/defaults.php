@@ -43,7 +43,7 @@ return array(
 		'name' => 'ac_page_other',
 		'cname' => 'Page Other Access',
 		'description' => 'The level of access other users have to pages. This will be applied when saving pages.',
-		'value' => 0,
+		'value' => 1,
 		'options' => array(
 			'None' => 0,
 			'Read Only' => 1,

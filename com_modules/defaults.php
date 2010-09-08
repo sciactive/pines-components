@@ -13,16 +13,16 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
-		'name' => 'show_modules',
-		'cname' => 'Show Modules',
-		'description' => 'Whether to show configured modules. If false, none of the modules will be shown.',
+		'name' => 'global_modules',
+		'cname' => 'Globalize Modules',
+		'description' => 'Ensure that every user can access all modules by setting the "other" access control to read.',
 		'value' => true,
 		'peruser' => true,
 	),
 	array(
-		'name' => 'global_modules',
-		'cname' => 'Globalize Modules',
-		'description' => 'Ensure that every user can access all modules by setting the "other" access control to read.',
+		'name' => 'show_modules',
+		'cname' => 'Show Modules',
+		'description' => 'Whether to show configured modules. If false, none of the modules will be shown.',
 		'value' => true,
 		'peruser' => true,
 	),

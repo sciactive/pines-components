@@ -215,7 +215,7 @@ $pines->com_pgrid->load();
 			<?php if ( $this->display_groups ) { ?>
 			<li><a href="#p_muid_tab_groups">Groups</a></li>
 			<?php } ?>
-			<li><a href="#p_muid_tab_location">Location</a></li>
+			<li><a href="#p_muid_tab_location">Address</a></li>
 			<?php if ( $this->display_abilities ) { ?>
 			<li><a href="#p_muid_tab_abilities">Abilities</a></li>
 			<?php } ?>
@@ -224,18 +224,16 @@ $pines->com_pgrid->load();
 		<div id="p_muid_tab_general">
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
-				<?php if (isset($this->entity->user)) { ?>
-				<div>User: <span class="date"><?php echo htmlspecialchars("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
-				<div>Group: <span class="date"><?php echo htmlspecialchars("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
-				<?php } ?>
 				<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
 				<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
 			</div>
 			<?php } ?>
+			<?php if ($this->display_username) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Username</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="username" size="24" value="<?php echo htmlspecialchars($this->entity->username); ?>" /></label>
 			</div>
+			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">First Name</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name_first" size="24" value="<?php echo htmlspecialchars($this->entity->name_first); ?>" /></label>
@@ -248,10 +246,12 @@ $pines->com_pgrid->load();
 				<label><span class="pf-label">Last Name</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name_last" size="24" value="<?php echo htmlspecialchars($this->entity->name_last); ?>" /></label>
 			</div>
+			<?php if ($this->display_enable) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>
 					<input class="pf-field" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->has_tag('enabled') ? ' checked="checked"' : ''; ?> /></label>
 			</div>
+			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Email</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="email" size="24" value="<?php echo htmlspecialchars($this->entity->email); ?>" /></label>
@@ -660,6 +660,10 @@ $pines->com_pgrid->load();
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
+		<?php if (gatekeeper('com_user/listusers')) { ?>
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_user', 'listusers')); ?>');" value="Cancel" />
+		<?php } else { ?>
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url()); ?>');" value="Cancel" />
+		<?php } ?>
 	</div>
 </form>

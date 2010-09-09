@@ -25,12 +25,15 @@ if ( isset($_REQUEST['id']) ) {
 	$group = group::factory();
 }
 
-$group->groupname = $_REQUEST['groupname'];
+if (gatekeeper('com_user/usernames'))
+	$group->groupname = $_REQUEST['groupname'];
 $group->name = $_REQUEST['name'];
-if ($_REQUEST['enabled'] == 'ON')
-	$group->add_tag('enabled');
-else
-	$group->remove_tag('enabled');
+if (gatekeeper('com_user/enabling')) {
+	if ($_REQUEST['enabled'] == 'ON')
+		$group->add_tag('enabled');
+	else
+		$group->remove_tag('enabled');
+}
 $group->email = $_REQUEST['email'];
 $group->phone = preg_replace('/\D/', '', $_REQUEST['phone']);
 $group->fax = preg_replace('/\D/', '', $_REQUEST['fax']);

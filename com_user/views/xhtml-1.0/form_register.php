@@ -25,7 +25,7 @@ $this->note = 'Please fill in your account details.';
 		<ul>
 			<li><a href="#p_muid_tab_general">General</a></li>
 			<?php if (in_array('address', $pines->config->com_user->reg_fields)) { ?>
-			<li><a href="#p_muid_tab_location">Location</a></li>
+			<li><a href="#p_muid_tab_location">Address</a></li>
 			<?php } ?>
 		</ul>
 		<div id="p_muid_tab_general">

@@ -234,7 +234,7 @@ $pines->uploader->load();
 		<ul>
 			<li><a href="#p_muid_tab_general">General</a></li>
 			<li><a href="#p_muid_tab_logo">Logo</a></li>
-			<li><a href="#p_muid_tab_location">Location</a></li>
+			<li><a href="#p_muid_tab_location">Address</a></li>
 			<?php if ( $this->display_abilities ) { ?>
 			<li><a href="#p_muid_tab_abilities">Abilities</a></li>
 			<?php } ?>
@@ -246,26 +246,26 @@ $pines->uploader->load();
 		<div id="p_muid_tab_general">
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
-				<?php if (isset($this->entity->user)) { ?>
-				<div>User: <span class="date"><?php echo htmlspecialchars("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
-				<div>Group: <span class="date"><?php echo htmlspecialchars("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
-				<?php } ?>
 				<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
 				<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
 			</div>
 			<?php } ?>
+			<?php if ($this->display_username) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Group Name</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="groupname" size="24" value="<?php echo htmlspecialchars($this->entity->groupname); ?>" /></label>
 			</div>
+			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Display Name</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
 			</div>
+			<?php if ($this->display_enable) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>
 					<input class="pf-field" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->has_tag('enabled') ? ' checked="checked"' : ''; ?> /></label>
 			</div>
+			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Email</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="email" size="24" value="<?php echo htmlspecialchars($this->entity->email); ?>" /></label>

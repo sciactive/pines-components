@@ -171,6 +171,8 @@ class group extends able_object implements group_interface {
 		global $pines;
 		$module = new module('com_user', 'form_group', 'content');
 		$module->entity = $this;
+		$module->display_username = gatekeeper('com_user/usernames');
+		$module->display_enable = gatekeeper('com_user/enabling');
 		$module->display_default = gatekeeper('com_user/defaultgroups');
 		$module->display_abilities = gatekeeper('com_user/abilities');
 		$module->display_conditions = gatekeeper('com_user/conditions');

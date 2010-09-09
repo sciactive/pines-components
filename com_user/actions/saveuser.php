@@ -28,15 +28,18 @@ if ( isset($_REQUEST['id']) ) {
 	$user->password($_REQUEST['password']);
 }
 
-$user->username = $_REQUEST['username'];
+if (gatekeeper('com_user/usernames'))
+	$user->username = $_REQUEST['username'];
 $user->name_first = $_REQUEST['name_first'];
 $user->name_middle = $_REQUEST['name_middle'];
 $user->name_last = $_REQUEST['name_last'];
 $user->name = $user->name_first.(!empty($user->name_middle) ? ' '.$user->name_middle : '').(!empty($user->name_last) ? ' '.$user->name_last : '');
-if ($_REQUEST['enabled'] == 'ON')
-	$user->add_tag('enabled');
-else
-	$user->remove_tag('enabled');
+if (gatekeeper('com_user/enabling')) {
+	if ($_REQUEST['enabled'] == 'ON')
+		$user->add_tag('enabled');
+	else
+		$user->remove_tag('enabled');
+}
 $user->email = $_REQUEST['email'];
 $user->phone = preg_replace('/\D/', '', $_REQUEST['phone']);
 $user->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
@@ -189,10 +192,14 @@ if ($user->save()) {
 	pines_error('Error saving user. Do you have permission?');
 }
 
-if ($user->has_tag('enabled')) {
-	redirect(pines_url('com_user', 'listusers'));
+if (gatekeeper('com_user/listusers')) {
+	if ($user->has_tag('enabled')) {
+		redirect(pines_url('com_user', 'listusers'));
+	} else {
+		redirect(pines_url('com_user', 'listusers', array('enabled' => 'false')));
+	}
 } else {
-	redirect(pines_url('com_user', 'listusers', array('enabled' => 'false')));
+	redirect(pines_url());
 }
 
 ?>

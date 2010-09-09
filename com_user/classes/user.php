@@ -75,6 +75,8 @@ class user extends able_object implements user_interface {
 		global $pines;
 		$module = new module('com_user', 'form_user', 'content');
 		$module->entity = $this;
+		$module->display_username = gatekeeper('com_user/usernames');
+		$module->display_enable = gatekeeper('com_user/enabling');
 		$module->display_pin = gatekeeper('com_user/assignpin');
 		$module->display_groups = gatekeeper('com_user/assigngroup');
 		$module->display_abilities = gatekeeper('com_user/abilities');

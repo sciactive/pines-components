@@ -106,8 +106,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
 				<?php if ($pines->config->com_customer->resetpoints && gatekeeper('com_customer/resetpoints')) { ?>
-				{type: 'button', text: 'Reset Points', extra_class: 'picon picon-edit-clear', multi_select: true, url: '<?php echo addslashes(pines_url('com_customer', 'customer/resetpoints', array('id' => '__title__'))); ?>', delimiter: ','},
+				{type: 'button', text: 'Points', title: 'Reset the customer\'s points.', extra_class: 'picon picon-edit-clear', multi_select: true, url: '<?php echo addslashes(pines_url('com_customer', 'customer/resetpoints', array('id' => '__title__'))); ?>', delimiter: ','},
 				<?php } if (gatekeeper('com_customer/deletecustomer')) { ?>
+				{type: 'button', title: 'Remove as customer.', extra_class: 'picon picon-list-remove', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_customer', 'customer/remove', array('id' => '__title__'))); ?>', delimiter: ','},
 				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_customer', 'customer/delete', array('id' => '__title__'))); ?>', delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>

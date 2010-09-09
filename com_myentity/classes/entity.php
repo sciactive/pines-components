@@ -184,6 +184,7 @@ class entity extends p_base implements entity_interface {
 		foreach ($tag_array as $tag) {
 			$this->tags[] = $tag;
 		}
+		$this->tags = array_keys(array_flip($this->tags));
 	}
 
 	public function array_search($array, $strict = false) {

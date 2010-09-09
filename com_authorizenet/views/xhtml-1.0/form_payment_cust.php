@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 <div class="pf-form">
 	<div class="pf-element">
 		<label><span class="pf-label">Name on Card</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_name_first" name="name_first" value="<?php echo htmlspecialchars($this->name_first); ?>" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_name_last" name="name_last" value="<?php echo htmlspecialchars($this->name_last); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Card Number</span>

@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_sales/listcountsheets') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'countsheet/list'));
+	punt_user(null, pines_url('com_sales', 'countsheet/list'));
 
 if (!empty($_REQUEST['start_date'])) {
 	$start_date = $_REQUEST['start_date'];

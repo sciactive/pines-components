@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_reports/warboard') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_reports', 'warboard'));
+	punt_user(null, pines_url('com_reports', 'warboard'));
 
 $warboard = $pines->entity_manager->get_entity(array('class' => com_reports_warboard), array('&', 'tag' => array('com_reports', 'warboard')));
 

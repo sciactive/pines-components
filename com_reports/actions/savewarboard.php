@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_reports/editwarboard') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_reports', 'warboard'));
+	punt_user(null, pines_url('com_reports', 'warboard'));
 
 $warboard = com_reports_warboard::factory((int) $_REQUEST['id']);
 if (!isset($warboard->guid)) {

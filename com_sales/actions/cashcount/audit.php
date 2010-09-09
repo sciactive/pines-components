@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_sales/auditcashcount') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'cashcount/audit', array('id' => $_REQUEST['id'])));
+	punt_user(null, pines_url('com_sales', 'cashcount/audit', array('id' => $_REQUEST['id'])));
 
 // Default to the current cash count that is still open for this location.
 if (!isset($_REQUEST['id'])) {

@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_sales/editreturn') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'return/list'));
+		punt_user(null, pines_url('com_sales', 'return/list'));
 	$return = com_sales_return::factory((int) $_REQUEST['id']);
 	if (!isset($return->guid)) {
 		pines_error('Requested return id is not accessible.');
@@ -21,7 +21,7 @@ if ( isset($_REQUEST['id']) ) {
 	}
 } elseif ( isset($_REQUEST['sale_id']) ) {
 	if ( !gatekeeper('com_sales/newreturnwsale') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'return/list'));
+		punt_user(null, pines_url('com_sales', 'return/list'));
 	$sale = com_sales_sale::factory((int) $_REQUEST['sale_id']);
 	if (!isset($sale->guid)) {
 		pines_error('Requested sale id is not accessible.');
@@ -31,7 +31,7 @@ if ( isset($_REQUEST['id']) ) {
 	$return->attach_sale($sale);
 } else {
 	if ( !gatekeeper('com_sales/newreturn') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'return/list'));
+		punt_user(null, pines_url('com_sales', 'return/list'));
 	$return = com_sales_return::factory();
 }
 

@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_sales/editpaymenttype') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'paymenttype/list'));
+		punt_user(null, pines_url('com_sales', 'paymenttype/list'));
 	$payment_type = com_sales_payment_type::factory((int) $_REQUEST['id']);
 	if (!isset($payment_type->guid)) {
 		pines_error('Requested payment type id is not accessible.');
@@ -21,7 +21,7 @@ if ( isset($_REQUEST['id']) ) {
 	}
 } else {
 	if ( !gatekeeper('com_sales/newpaymenttype') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'paymenttype/list'));
+		punt_user(null, pines_url('com_sales', 'paymenttype/list'));
 	$payment_type = com_sales_payment_type::factory();
 }
 

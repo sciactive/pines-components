@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_reports/deletesalesranking') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_reports', 'deletesalesranking', array('id' => $_REQUEST['id'])));
+	punt_user(null, pines_url('com_reports', 'deletesalesranking', array('id' => $_REQUEST['id'])));
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_ranking) {

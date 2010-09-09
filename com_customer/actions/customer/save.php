@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_customer/editcustomer') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'customer/list'));
+		punt_user(null, pines_url('com_customer', 'customer/list'));
 	$customer = com_customer_customer::factory((int) $_REQUEST['id']);
 	if (!isset($customer->guid)) {
 		pines_error('Requested customer id is not accessible.');
@@ -23,7 +23,7 @@ if ( isset($_REQUEST['id']) ) {
 		$customer->password($_REQUEST['password']);
 } else {
 	if ( !gatekeeper('com_customer/newcustomer') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'customer/list'));
+		punt_user(null, pines_url('com_customer', 'customer/list'));
 	$customer = com_customer_customer::factory();
 	$customer->password($_REQUEST['password']);
 }

@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_customer/defaultgroups') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'defaultgroups'));
+	punt_user(null, pines_url('com_customer', 'defaultgroups'));
 
 // Save the default primary group.
 $cur_group = $pines->entity_manager->get_entity(

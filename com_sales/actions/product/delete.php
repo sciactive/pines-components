@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_sales/deleteproduct') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'product/list'));
+	punt_user(null, pines_url('com_sales', 'product/list'));
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_product) {

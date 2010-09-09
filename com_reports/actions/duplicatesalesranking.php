@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_reports/newsalesranking') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_reports', 'editsalesranking'));
+	punt_user(null, pines_url('com_reports', 'editsalesranking'));
 
 $entity = com_reports_sales_ranking::factory((int) $_REQUEST['id']);
 if (!isset($entity->guid)) {

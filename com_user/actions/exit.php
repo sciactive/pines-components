@@ -22,9 +22,13 @@ if (is_object($_SESSION['user'])) {
 		$module = new module('com_user', 'punted', 'right');
 		$module->url = urldecode($_REQUEST['url']);
 	}
+
+	// Load the user's default component.
+	action();
+	return;
 }
 
-// Load the user's default component.
-action();
+// If the user isn't logged in, let them.
+$pines->user_manager->print_login();
 
 ?>

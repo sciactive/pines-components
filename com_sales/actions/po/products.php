@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_sales/listpos') || !gatekeeper('com_sales/receive'))
-	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'po/products', $_REQUEST));
+	punt_user(null, pines_url('com_sales', 'po/products', $_REQUEST));
 
 $pines->page->override = true;
 

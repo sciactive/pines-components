@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_about/show') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_about'));
+	punt_user(null, pines_url('com_about'));
 
 $mod1 = new module('com_about', 'about1', 'content');
 if ( $pines->config->com_about->describe_system )

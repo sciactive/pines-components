@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_hrm/clock') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'timeoff/save'));
+	punt_user(null, pines_url('com_hrm', 'timeoff/save'));
 
 if (isset($_REQUEST['employee'])) {	
 	if ($_REQUEST['start'] != 'Date') {

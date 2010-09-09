@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_configure/edit') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_configure', 'list', array('percondition' => '1')));
+		punt_user(null, pines_url('com_configure', 'list', array('percondition' => '1')));
 	$condition = com_configure_condition::factory((int) $_REQUEST['id']);
 	if (!isset($condition->guid)) {
 		pines_error('Requested condition id is not accessible.');
@@ -21,7 +21,7 @@ if ( isset($_REQUEST['id']) ) {
 	}
 } else {
 	if ( !gatekeeper('com_configure/edit') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_configure', 'list', array('percondition' => '1')));
+		punt_user(null, pines_url('com_configure', 'list', array('percondition' => '1')));
 	$condition = com_configure_condition::factory();
 }
 

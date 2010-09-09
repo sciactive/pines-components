@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_user/editgroup') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_user', 'listgroups'));
+		punt_user(null, pines_url('com_user', 'listgroups'));
 	$group = group::factory((int) $_REQUEST['id']);
 	if (!isset($group->guid)) {
 		pines_error('Requested group id is not accessible.');
@@ -21,7 +21,7 @@ if ( isset($_REQUEST['id']) ) {
 	}
 } else {
 	if ( !gatekeeper('com_user/newgroup') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_user', 'listgroups'));
+		punt_user(null, pines_url('com_user', 'listgroups'));
 	$group = group::factory();
 }
 

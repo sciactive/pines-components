@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_customer/deletecompany') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'company/list'));
+	punt_user(null, pines_url('com_customer', 'company/list'));
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_company) {

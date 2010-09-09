@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_sales/totalsales') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'sale/totalsjson', $_REQUEST));
+	punt_user(null, pines_url('com_sales', 'sale/totalsjson', $_REQUEST));
 
 $pines->page->override = true;
 

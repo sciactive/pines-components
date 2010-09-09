@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_packager/editpackage') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_packager', 'listpackages'));
+		punt_user(null, pines_url('com_packager', 'listpackages'));
 	$package = com_packager_package::factory((int) $_REQUEST['id']);
 	if (!isset($package->guid)) {
 		pines_error('Requested package id is not accessible.');
@@ -21,7 +21,7 @@ if ( isset($_REQUEST['id']) ) {
 	}
 } else {
 	if ( !gatekeeper('com_packager/newpackage') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_packager', 'listpackages'));
+		punt_user(null, pines_url('com_packager', 'listpackages'));
 	$package = com_packager_package::factory();
 }
 

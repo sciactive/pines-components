@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_sales/approvecountsheet') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'countsheet/approve'));
+	punt_user(null, pines_url('com_sales', 'countsheet/approve'));
 
 $countsheet = com_sales_countsheet::factory((int) $_REQUEST['id']);
 if (!isset($countsheet->guid)) {

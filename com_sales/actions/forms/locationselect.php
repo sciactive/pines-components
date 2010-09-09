@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper() )
-	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'forms/locationselect'));
+	punt_user(null, pines_url('com_sales', 'forms/locationselect'));
 
 $pines->com_sales->location_select_form($_REQUEST['location']);
 

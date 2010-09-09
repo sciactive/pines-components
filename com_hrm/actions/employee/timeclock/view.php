@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_hrm/manageclock') && !gatekeeper('com_hrm/viewclock') && !gatekeeper('com_hrm/viewownclock') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'employee/timeclock/view', array('id' => $_REQUEST['id'])));
+	punt_user(null, pines_url('com_hrm', 'employee/timeclock/view', array('id' => $_REQUEST['id'])));
 
 $employee = com_hrm_employee::factory((int) $_REQUEST['id']);
 if (!isset($employee->guid)) {

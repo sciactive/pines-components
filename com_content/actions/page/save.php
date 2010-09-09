@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_content/editpage') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_content', 'page/list'));
+		punt_user(null, pines_url('com_content', 'page/list'));
 	$page = com_content_page::factory((int) $_REQUEST['id']);
 	if (!isset($page->guid)) {
 		pines_error('Requested page id is not accessible.');
@@ -21,7 +21,7 @@ if ( isset($_REQUEST['id']) ) {
 	}
 } else {
 	if ( !gatekeeper('com_content/newpage') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_content', 'page/list'));
+		punt_user(null, pines_url('com_content', 'page/list'));
 	$page = com_content_page::factory();
 }
 

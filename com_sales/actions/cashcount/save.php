@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_sales/editcashcount') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'cashcount/list'));
+		punt_user(null, pines_url('com_sales', 'cashcount/list'));
 	$cashcount = com_sales_cashcount::factory((int) $_REQUEST['id']);
 	if (!isset($cashcount->guid)) {
 		pines_error('Requested cash count id is not accessible.');
@@ -25,7 +25,7 @@ if ( isset($_REQUEST['id']) ) {
 	}
 } else {
 	if ( !gatekeeper('com_sales/newcashcount') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'cashcount/list'));
+		punt_user(null, pines_url('com_sales', 'cashcount/list'));
 	$cashcount = com_sales_cashcount::factory();
 }
 

@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_modules/editmodule') && !gatekeeper('com_modules/newmodule') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_modules', 'module/edit', array('id' => $_REQUEST['id'])));
+	punt_user(null, pines_url('com_modules', 'module/edit', array('id' => $_REQUEST['id'])));
 
 $pines->page->override = true;
 

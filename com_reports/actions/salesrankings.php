@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_reports/listsalesrankings') ) {
 	if ( !gatekeeper('com_reports/viewsalesranking') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_reports', 'salesrankings'));
+		punt_user(null, pines_url('com_reports', 'salesrankings'));
 	$current_rankings = $pines->entity_manager->get_entities(array('class' => com_reports_sales_ranking), array('&', 'tag' => array('com_reports', 'sales_ranking')));
 	$current_rankings = end($current_rankings);
 	if (isset($current_rankings->guid)) {

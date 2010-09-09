@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_customer/defaultgroups') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'defaultgroups'));
+	punt_user(null, pines_url('com_customer', 'defaultgroups'));
 
 $module = new module('com_customer', 'customer_group_select', 'content');
 $module->groups = $pines->user_manager->get_groups();

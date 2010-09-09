@@ -14,21 +14,21 @@ defined('P_RUN') or die('Direct access prohibited');
 if ($_REQUEST['type'] == 'return') {
 	if ( isset($_REQUEST['id']) ) {
 		if ( !gatekeeper('com_sales/editreturn') )
-			punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'sale/list'));
+			punt_user(null, pines_url('com_sales', 'sale/list'));
 		$ticket = com_sales_return::factory((int) $_REQUEST['id']);
 	} else {
 		if ( !gatekeeper('com_sales/newreturn') && !gatekeeper('com_sales/newreturnwsale') )
-			punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'sale/list'));
+			punt_user(null, pines_url('com_sales', 'sale/list'));
 		$ticket = com_sales_return::factory();
 	}
 } else {
 	if ( isset($_REQUEST['id']) ) {
 		if ( !gatekeeper('com_sales/editsale') )
-			punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'sale/list'));
+			punt_user(null, pines_url('com_sales', 'sale/list'));
 		$ticket = com_sales_sale::factory((int) $_REQUEST['id']);
 	} else {
 		if ( !gatekeeper('com_sales/newsale') )
-			punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'sale/list'));
+			punt_user(null, pines_url('com_sales', 'sale/list'));
 		$ticket = com_sales_sale::factory();
 	}
 }

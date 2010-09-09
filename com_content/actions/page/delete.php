@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_content/deletepage') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_content', 'page/list'));
+	punt_user(null, pines_url('com_content', 'page/list'));
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_page) {

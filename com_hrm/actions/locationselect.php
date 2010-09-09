@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper() )
-	punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'locationselect'));
+	punt_user(null, pines_url('com_hrm', 'locationselect'));
 
 $pines->com_hrm->location_select_form($_REQUEST['location']);
 

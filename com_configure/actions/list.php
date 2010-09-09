@@ -13,10 +13,10 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ($_REQUEST['peruser']) {
 	if ( !gatekeeper('com_configure/editperuser') && !gatekeeper('com_configure/viewperuser') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_configure', 'list', $_GET));
+		punt_user(null, pines_url('com_configure', 'list', $_GET));
 } else {
 	if ( !gatekeeper('com_configure/edit') && !gatekeeper('com_configure/view') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_configure', 'list', $_GET));
+		punt_user(null, pines_url('com_configure', 'list', $_GET));
 }
 
 if ($_REQUEST['peruser']) {

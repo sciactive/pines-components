@@ -13,10 +13,10 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if (isset($_REQUEST['id'])) {
 	if ( !gatekeeper('com_sales/editcashcount') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'cashcount/edit', array('id' => $_REQUEST['id'])));
+		punt_user(null, pines_url('com_sales', 'cashcount/edit', array('id' => $_REQUEST['id'])));
 } else {
 	if ( !gatekeeper('com_sales/newcashcount') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'cashcount/edit'));
+		punt_user(null, pines_url('com_sales', 'cashcount/edit'));
 }
 
 $entity = com_sales_cashcount::factory((int) $_REQUEST['id']);

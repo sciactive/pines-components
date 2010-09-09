@@ -14,7 +14,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('system/all') )
-	punt_user('You don\'t have necessary permission.');
+	punt_user();
 
 $module = new module('system', 'null', 'content');
 $module->title = 'Sale Entity ID Update';

@@ -13,10 +13,10 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if (isset($_REQUEST['id'])) {
 	if ( !gatekeeper('com_content/editcategory') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_content', 'category/edit', array('id' => $_REQUEST['id'])));
+		punt_user(null, pines_url('com_content', 'category/edit', array('id' => $_REQUEST['id'])));
 } else {
 	if ( !gatekeeper('com_content/newcategory') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_content', 'category/edit'));
+		punt_user(null, pines_url('com_content', 'category/edit'));
 }
 
 $entity = com_content_category::factory((int) $_REQUEST['id']);

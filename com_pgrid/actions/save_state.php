@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if (!gatekeeper())
-	punt_user('You don\'t have necessary permission.');
+	punt_user();
 
 $cur_state = $_REQUEST['state'];
 $cur_view = $_REQUEST['view'];

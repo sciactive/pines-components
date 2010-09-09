@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_configure/edit') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_configure', 'default'));
+	punt_user(null, pines_url('com_configure', 'default'));
 
 $component = configurator_component::factory('system');
 $component->print_form();

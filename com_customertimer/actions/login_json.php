@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_customertimer/login') ||  !gatekeeper('com_customertimer/loginpwless') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_customertimer', 'status'));
+	punt_user(null, pines_url('com_customertimer', 'status'));
 
 $pines->page->override = true;
 

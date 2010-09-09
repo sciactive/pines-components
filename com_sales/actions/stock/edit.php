@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if (isset($_REQUEST['id'])) {
 	if ( !gatekeeper('com_sales/managestock') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'stock/edit', array('id' => $_REQUEST['id'])));
+		punt_user(null, pines_url('com_sales', 'stock/edit', array('id' => $_REQUEST['id'])));
 } else {
 	punt_user('No id specified.');
 }

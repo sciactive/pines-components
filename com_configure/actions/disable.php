@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_configure/edit') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_configure', 'edit', array('component' => $_REQUEST['component'])));
+	punt_user(null, pines_url('com_configure', 'edit', array('component' => $_REQUEST['component'])));
 
 if ($pines->configurator->disable_component($_REQUEST['component'])) {
 	if ($_REQUEST['component'] == 'com_configure') {

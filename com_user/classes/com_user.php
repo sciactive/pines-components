@@ -274,7 +274,10 @@ class com_user extends component implements user_manager_interface {
 				($pines->request_component == $pines->config->default_component && $pines->request_action == 'default')
 			)
 			$query_part['default'] = '1';
-		pines_notice($message);
+		if (!isset($message))
+			$message = isset($_SESSION['user']) ? 'You don\'t have necessary permission.' : 'Please log in first.';
+		if (!empty($message))
+			pines_notice($message);
 		if ($query_part) {
 			redirect(pines_url('com_user', 'exit', $query_part));
 		} else {

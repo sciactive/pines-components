@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_modules/editmodule') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_modules', 'module/list'));
+		punt_user(null, pines_url('com_modules', 'module/list'));
 	$module = com_modules_module::factory((int) $_REQUEST['id']);
 	if (!isset($module->guid)) {
 		pines_error('Requested module id is not accessible.');
@@ -21,7 +21,7 @@ if ( isset($_REQUEST['id']) ) {
 	}
 } else {
 	if ( !gatekeeper('com_modules/newmodule') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_modules', 'module/list'));
+		punt_user(null, pines_url('com_modules', 'module/list'));
 	$module = com_modules_module::factory();
 }
 

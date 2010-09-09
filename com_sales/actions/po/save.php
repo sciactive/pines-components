@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_sales/editpo') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'po/list'));
+		punt_user(null, pines_url('com_sales', 'po/list'));
 	$po = com_sales_po::factory((int) $_REQUEST['id']);
 	if (!isset($po->guid) || $po->final) {
 		pines_error('Requested PO id is not accessible.');
@@ -21,7 +21,7 @@ if ( isset($_REQUEST['id']) ) {
 	}
 } else {
 	if ( !gatekeeper('com_sales/newpo') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'po/list'));
+		punt_user(null, pines_url('com_sales', 'po/list'));
 	$po = com_sales_po::factory();
 }
 

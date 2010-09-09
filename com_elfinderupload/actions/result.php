@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_elfinder/finder') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_elfinderupload', 'test'));
+	punt_user(null, pines_url('com_elfinderupload', 'test'));
 
 $module = new module('com_elfinderupload', 'result', 'content');
 $module->file = $_REQUEST['file'];

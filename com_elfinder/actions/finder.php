@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_elfinder/finder') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_elfinder', 'finder'));
+	punt_user(null, pines_url('com_elfinder', 'finder'));
 
 $module = new module('com_elfinder', 'finder', 'content');
 

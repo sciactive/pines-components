@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_hrm/editemployee') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'employee/edit', array('id' => $_REQUEST['id'])));
+	punt_user(null, pines_url('com_hrm', 'employee/edit', array('id' => $_REQUEST['id'])));
 
 $entity = com_hrm_employee::factory((int) $_REQUEST['id']);
 $entity->print_form();

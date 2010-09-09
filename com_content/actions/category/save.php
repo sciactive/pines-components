@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_content/editcategory') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_content', 'category/list'));
+		punt_user(null, pines_url('com_content', 'category/list'));
 	$category = com_content_category::factory((int) $_REQUEST['id']);
 	if (!isset($category->guid)) {
 		pines_error('Requested category id is not accessible.');
@@ -21,7 +21,7 @@ if ( isset($_REQUEST['id']) ) {
 	}
 } else {
 	if ( !gatekeeper('com_content/newcategory') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_content', 'category/list'));
+		punt_user(null, pines_url('com_content', 'category/list'));
 	$category = com_content_category::factory();
 }
 

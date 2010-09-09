@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_modules/deletemodule') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_modules', 'module/list'));
+	punt_user(null, pines_url('com_modules', 'module/list'));
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_module) {

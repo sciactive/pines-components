@@ -13,10 +13,10 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if (isset($_REQUEST['id'])) {
 	if ( !gatekeeper('com_customertimer/editfloor') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_customertimer', 'editfloor', array('id' => $_REQUEST['id'])));
+		punt_user(null, pines_url('com_customertimer', 'editfloor', array('id' => $_REQUEST['id'])));
 } else {
 	if ( !gatekeeper('com_customertimer/newfloor') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_customertimer', 'editfloor'));
+		punt_user(null, pines_url('com_customertimer', 'editfloor'));
 }
 
 $entity = com_customertimer_floor::factory((int) $_REQUEST['id']);

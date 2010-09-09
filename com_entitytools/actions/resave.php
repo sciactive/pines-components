@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_entitytools/test') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_entitytools', 'resave'));
+	punt_user(null, pines_url('com_entitytools', 'resave'));
 
 $module = new module('system', 'null', 'content');
 $module->title = 'Entity Resave';

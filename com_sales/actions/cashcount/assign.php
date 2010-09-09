@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if (!gatekeeper('com_sales/assigncashcount') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'cashcount/assign', array('location' => $_REQUEST['location'])));
+	punt_user(null, pines_url('com_sales', 'cashcount/assign', array('location' => $_REQUEST['location'])));
 
 $type = $_REQUEST['count_type'];
 $location = group::factory((int) $_REQUEST['location']);

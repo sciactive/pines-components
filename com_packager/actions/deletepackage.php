@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_packager/deletepackage') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_packager', 'listpackages'));
+	punt_user(null, pines_url('com_packager', 'listpackages'));
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_package) {

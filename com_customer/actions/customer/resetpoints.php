@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !$pines->config->com_customer->resetpoints && !gatekeeper('com_customer/resetpoints') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'customer/list'));
+	punt_user(null, pines_url('com_customer', 'customer/list'));
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_customer) {

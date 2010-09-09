@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_sales/editsale') && !gatekeeper('com_sales/newsale') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'sale/sendreceipt', $_REQUEST));
+	punt_user(null, pines_url('com_sales', 'sale/sendreceipt', $_REQUEST));
 
 $sale = com_sales_sale::factory((int) $_REQUEST['id']);
 if (isset($sale->guid)) {

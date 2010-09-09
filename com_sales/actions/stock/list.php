@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_sales/managestock') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'stock/list'));
+	punt_user(null, pines_url('com_sales', 'stock/list'));
 
 if (empty($_REQUEST['location'])) {
 	$location = $_SESSION['user']->group;

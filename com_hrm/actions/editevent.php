@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper() )
-	punt_user('You don\'t have necessary permission.', pines_url('com_hrm', 'editevent'));
+	punt_user(null, pines_url('com_hrm', 'editevent'));
 
 $event = com_hrm_event::factory((int)$_REQUEST['id']);
 if (!isset($event->guid))

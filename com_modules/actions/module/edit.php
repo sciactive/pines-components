@@ -13,10 +13,10 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if (isset($_REQUEST['id'])) {
 	if ( !gatekeeper('com_modules/editmodule') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_modules', 'module/edit', array('id' => $_REQUEST['id'])));
+		punt_user(null, pines_url('com_modules', 'module/edit', array('id' => $_REQUEST['id'])));
 } else {
 	if ( !gatekeeper('com_modules/newmodule') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_modules', 'module/edit'));
+		punt_user(null, pines_url('com_modules', 'module/edit'));
 }
 
 $entity = com_modules_module::factory((int) $_REQUEST['id']);

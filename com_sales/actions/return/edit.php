@@ -13,10 +13,10 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if (isset($_REQUEST['id'])) {
 	if ( !gatekeeper('com_sales/editreturn') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'return/edit', array('id' => $_REQUEST['id'])));
+		punt_user(null, pines_url('com_sales', 'return/edit', array('id' => $_REQUEST['id'])));
 } else {
 	if ( !gatekeeper('com_sales/newreturn') )
-		punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'return/edit'));
+		punt_user(null, pines_url('com_sales', 'return/edit'));
 }
 
 $entity = com_sales_return::factory((int) $_REQUEST['id']);

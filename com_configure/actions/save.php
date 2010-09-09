@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_configure/edit') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_configure', 'edit', $_GET));
+	punt_user(null, pines_url('com_configure', 'edit', $_GET));
 
 if (!array_key_exists($_REQUEST['component'], $pines->configurator->component_files)) {
 	pines_error('Given component either does not exist, or has no configuration file!');

@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if (!gatekeeper('com_sales/assigncountsheet') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'countsheet/assign', array('location' => $_REQUEST['location'])));
+	punt_user(null, pines_url('com_sales', 'countsheet/assign', array('location' => $_REQUEST['location'])));
 
 $location = group::factory((int) $_REQUEST['location']);
 if (!isset($location->guid))

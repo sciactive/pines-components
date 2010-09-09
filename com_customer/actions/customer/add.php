@@ -16,7 +16,7 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 
 if ( !gatekeeper('com_customer/editcustomer') || !gatekeeper('com_user/edituser') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_customer', 'customer/list'));
+	punt_user(null, pines_url('com_customer', 'customer/list'));
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_user) {

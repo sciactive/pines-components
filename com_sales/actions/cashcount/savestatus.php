@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_sales/approvecashcount') )
-	punt_user('You don\'t have necessary permission.', pines_url('com_sales', 'cashcount/approve'));
+	punt_user(null, pines_url('com_sales', 'cashcount/approve'));
 
 $cashcount = com_sales_cashcount::factory((int) $_REQUEST['id']);
 if (!isset($cashcount->guid)) {

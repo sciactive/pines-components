@@ -45,6 +45,7 @@ $entity_test->add_tag('com_entitytools', 'test');
 
 // Saving entity...
 $entity_test->name = 'Entity Test '.time();
+$entity_test->test_null = null;
 $entity_test->test_value = 'test';
 $entity_test->test_array = array('full', 'of', 'values', 500);
 $entity_test->test_match = "Hello, my name is Edward McCheese. It is a pleasure to meet you. As you can see, I have several hats of the most pleasant nature.
@@ -246,6 +247,56 @@ foreach ($entity_result as $cur_entity) {
 $test->tests['wr_exc_mx_tags'][0] = !$found_match;
 $test->tests['wr_exc_mx_tags'][1] = microtime(true);
 $test->tests['wr_exc_mx_tags'][2] = 'Testing wrong exclusive mixed tags...';
+
+// Retrieving entity by isset...
+$found_match = false;
+$entity_result = $pines->entity_manager->get_entities(
+		array(),
+		array('&', 'isset' => array('test_value'))
+	);
+foreach ($entity_result as $cur_entity) {
+	if ($entity_test->is($cur_entity)) {
+		$found_match = true;
+		break;
+	}
+}
+$test->tests['isset'][0] = $found_match;
+$test->tests['isset'][1] = microtime(true);
+$test->tests['isset'][2] = 'Retrieving entity by isset...';
+
+// Retrieving entity by !isset...
+$found_match = false;
+$entity_result = $pines->entity_manager->get_entities(
+		array(),
+		array('!&', 'isset' => array('test_null')),
+		array('&', 'tag' => array('com_entitytools', 'test'))
+	);
+foreach ($entity_result as $cur_entity) {
+	if ($entity_test->is($cur_entity)) {
+		$found_match = true;
+		break;
+	}
+}
+$test->tests['isset_n'][0] = $found_match;
+$test->tests['isset_n'][1] = microtime(true);
+$test->tests['isset_n'][2] = 'Retrieving entity by !isset...';
+
+// Retrieving entity by !isset on unset var...
+$found_match = false;
+$entity_result = $pines->entity_manager->get_entities(
+		array(),
+		array('!&', 'isset' => array('pickles')),
+		array('&', 'tag' => array('com_entitytools', 'test'))
+	);
+foreach ($entity_result as $cur_entity) {
+	if ($entity_test->is($cur_entity)) {
+		$found_match = true;
+		break;
+	}
+}
+$test->tests['isset_n'][0] = $found_match;
+$test->tests['isset_n'][1] = microtime(true);
+$test->tests['isset_n'][2] = 'Retrieving entity by !isset on unset var...';
 
 // Retrieving entity by strict...
 $found_match = false;

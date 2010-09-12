@@ -95,6 +95,18 @@ if ($pines->config->com_content->show_cat_menus) {
 			);
 			com_content__category_menu($cur_category, $cur_category->menu_position);
 		}
+
+		if ($cur_category->show_pages_in_menu) {
+			foreach ($cur_category->pages as $cur_page) {
+				// It's part of another menu.
+				$pines->menu->menu_arrays[] = array(
+					'path' => $cur_category->menu_position.'/page_'.$cur_page->guid,
+					'text' => $cur_page->name,
+					'href' => array('com_content', 'page', array('a' => $cur_page->alias))
+				);
+				com_content__category_menu($cur_page, $cur_category->menu_position);
+			}
+		}
 	}
 
 	unset($categories, $cur_category, $module);

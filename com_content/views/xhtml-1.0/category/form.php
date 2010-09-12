@@ -50,6 +50,10 @@ $this->note = 'Provide category details in this form.';
 			<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_menu_position" name="menu_position" size="24" value="<?php echo htmlspecialchars($this->entity->menu_position); ?>" /></label>
 	</div>
 	<div class="pf-element">
+		<label><span class="pf-label">Show Pages in Menu</span>
+			<input class="pf-field" type="checkbox" name="show_pages_in_menu" value="ON"<?php echo $this->entity->show_pages_in_menu ? ' checked="checked"' : ''; ?> /></label>
+	</div
+	<div class="pf-element">
 		<label>
 			<span class="pf-label">Parent</span>
 			<select class="pf-field ui-widget-content ui-corner-all" name="parent">

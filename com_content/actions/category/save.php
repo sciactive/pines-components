@@ -29,6 +29,7 @@ $category->name = $_REQUEST['name'];
 $category->enabled = ($_REQUEST['enabled'] == 'ON');
 $category->show_menu = ($_REQUEST['show_menu'] == 'ON');
 $category->menu_position = $_REQUEST['menu_position'];
+$category->show_pages_in_menu = ($_REQUEST['show_pages_in_menu'] == 'ON');
 
 // Do the check now in case the parent category is saved.
 if (empty($category->name)) {

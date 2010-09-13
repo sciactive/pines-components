@@ -116,6 +116,22 @@
 				}
 			},
 			{
+				"path": "main_menu/business/0_pos/inventory/pendingshipments",
+				"text": "Pending Shipments",
+				"href": ["com_sales","stock/shipments"],
+				"depend": {
+					"ability": "com_sales/managestock"
+				}
+			},
+			{
+				"path": "main_menu/business/0_pos/inventory/completeshipments",
+				"text": "Complete Shipments",
+				"href": ["com_sales","stock/shipments",{"removed":"true"}],
+				"depend": {
+					"ability": "com_sales/managestock"
+				}
+			},
+			{
 				"path": "main_menu/business/0_pos/inventory/currentinventory",
 				"text": "Current Inventory",
 				"href": ["com_sales","stock/list"],

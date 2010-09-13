@@ -169,16 +169,31 @@ if ($sale->status != 'paid' && $sale->status != 'voided') {
 		}
 	}
 }
-$sale->shipping_address = (object) array(
-	'name' => $_REQUEST['shipping_name'],
-	'address_type' => $_REQUEST['shipping_address_type'] == 'international' ? 'international' : 'us',
-	'address_1' => $_REQUEST['shipping_address_1'],
-	'address_2' => $_REQUEST['shipping_address_2'],
-	'city' => $_REQUEST['shipping_city'],
-	'state' => $_REQUEST['shipping_state'],
-	'zip' => $_REQUEST['shipping_zip'],
-	'address_international' => $_REQUEST['shipping_address_international']
-);
+if ($pines->config->com_sales->com_customer && $_REQUEST['shipping_use_customer'] == 'ON') {
+	$sale->shipping_use_customer = true;
+	$sale->shipping_address = (object) array(
+		'name' => $sale->customer->name,
+		'address_type' => $sale->customer->address_type,
+		'address_1' => $sale->customer->address_1,
+		'address_2' => $sale->customer->address_2,
+		'city' => $sale->customer->city,
+		'state' => $sale->customer->state,
+		'zip' => $sale->customer->zip,
+		'address_international' => $sale->customer->address_international
+	);
+} else {
+	$sale->shipping_use_customer = false;
+	$sale->shipping_address = (object) array(
+		'name' => $_REQUEST['shipping_name'],
+		'address_type' => $_REQUEST['shipping_address_type'] == 'international' ? 'international' : 'us',
+		'address_1' => $_REQUEST['shipping_address_1'],
+		'address_2' => $_REQUEST['shipping_address_2'],
+		'city' => $_REQUEST['shipping_city'],
+		'state' => $_REQUEST['shipping_state'],
+		'zip' => $_REQUEST['shipping_zip'],
+		'address_international' => $_REQUEST['shipping_address_international']
+	);
+}
 $sale->comments = $_REQUEST['comments'];
 
 if ($product_error || $payment_error) {

@@ -491,6 +491,32 @@ class com_sales extends component {
 	}
 
 	/**
+	 * Creates and attaches a module which lists shipments.
+	 *
+	 * @param bool $removed Whether to show shipments that have been sent.
+	 * @param group $location The location to show shipments for.
+	 */
+	public function list_shipments($removed = false, $location = null) {
+		global $pines;
+
+		$module = new module('com_sales', 'stock/shipments', 'content');
+
+		$selector = array('&', 'tag' => array('com_sales', $removed ? 'shipping_shipped' : 'shipping_pending'));
+
+		if ($removed) {
+			$module->removed = true;
+		} else {
+			if (isset($location)) {
+				$selector['ref'] = array('group', $location);
+				$module->location = $location;
+			}
+			$module->removed = false;
+		}
+
+		$module->sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), array('&', 'tag' => 'sale'), $selector);
+	}
+
+	/**
 	 * Creates and attaches a module which lists shippers.
 	 */
 	public function list_shippers() {
@@ -518,17 +544,17 @@ class com_sales extends component {
 		$selector = array('&', 'tag' => array('com_sales', 'stock'));
 
 		if ($removed) {
-			$selector2 = array('&', 'data' => array('location', null));
+			$selector2 = array('!&', 'isset' => 'location');
 			$module->removed = true;
 		} else {
 			if (isset($location)) {
 				$selector['ref'] = array('location', $location);
 				$module->location = $location;
 			}
-			$selector2 = array('!&', 'data' => array('location', null));
+			$selector2 = array('&', 'isset' => 'location');
 			$module->removed = false;
 		}
-		
+
 		$module->stock = $pines->entity_manager->get_entities(array('class' => com_sales_stock), $selector, $selector2);
 
 		if ( empty($module->stock) )

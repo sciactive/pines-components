@@ -26,6 +26,7 @@ class com_sales_sale extends entity {
 		parent::__construct();
 		$this->add_tag('com_sales', 'sale');
 		// Defaults.
+		$this->shipping_use_customer = true;
 		$this->products = array();
 		$this->payments = array();
 		if ($id > 0) {

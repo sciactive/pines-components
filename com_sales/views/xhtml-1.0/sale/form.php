@@ -1064,6 +1064,12 @@ if ($pines->config->com_sales->autocomplete_product)
 	</div>
 	<div id="p_muid_shipping_dialog" title="Shipping Address" style="display: none;">
 		<div class="pf-form">
+			<?php if ($pines->config->com_sales->com_customer) { ?>
+			<div class="pf-element">
+				<label><span class="pf-label">Use Customer Info</span>
+					<input class="pf-field" type="checkbox" name="shipping_use_customer" value="ON"<?php echo $this->entity->shipping_use_customer ? ' checked="checked"' : ''; ?> /></label>
+			</div>
+			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Name</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="shipping_name" size="24" value="<?php echo htmlspecialchars($this->entity->shipping_address->name); ?>" /></label>

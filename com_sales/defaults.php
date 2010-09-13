@@ -56,6 +56,17 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'ready_to_ship',
+		'cname' => 'Ready to Ship',
+		'description' => 'When (in the sale process) to add the sale to pending shipments.',
+		'value' => 'tender',
+		'options' => array(
+			'When the sale is invoiced.' => 'invoice',
+			'When the sale is tendered.' => 'tender'
+		),
+		'peruser' => true,
+	),
+	array(
 		'name' => 'add_commission',
 		'cname' => 'Add Commission',
 		'description' => 'When (in the sale process) to calculate and add commission to the employee. This requires HRM integration.',

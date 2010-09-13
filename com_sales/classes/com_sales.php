@@ -512,8 +512,13 @@ class com_sales extends component {
 			}
 			$module->removed = false;
 		}
+		if ($pines->config->com_sales->ready_to_ship == 'invoice') {
+			$selector2 = array('|', 'data' => array(array('status', 'invoiced'), array('status', 'paid')));
+		} else {
+			$selector2 = array('&', 'data' => array('status', 'paid'));
+		}
 
-		$module->sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), array('&', 'tag' => 'sale'), $selector);
+		$module->sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), array('&', 'tag' => 'sale'), $selector, $selector2);
 	}
 
 	/**

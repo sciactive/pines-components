@@ -199,7 +199,7 @@ switch ($this->entity->status) {
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-full-width left_side">
-		<table id="p_muid_item_list" width="100%">
+		<table id="p_muid_item_list" style="width: 100%; margin: 0;">
 			<thead>
 				<tr>
 					<th>SKU</th>

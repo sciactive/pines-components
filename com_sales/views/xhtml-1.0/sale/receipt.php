@@ -159,7 +159,7 @@ switch ($this->entity->status) {
 			<?php if (isset($sales_rep->guid)) { ?><span><?php echo htmlspecialchars($sales_rep->name); ?></span><?php } ?>
 		</div>
 	</div>
-	<?php if (isset($this->entity->shipping_address)) { ?>
+	<?php if (isset($this->entity->shipping_address) && ($this->entity->has_tag('shipping_pending') || $this->entity->has_tag('shipping_shipped'))) { ?>
 	<div class="left_side customer">
 		<div class="aligner">
 			<span>Ship To:</span>

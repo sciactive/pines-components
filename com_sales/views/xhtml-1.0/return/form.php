@@ -41,8 +41,6 @@ if ($pines->config->com_sales->autocomplete_product)
 		// <![CDATA[
 
 		pines(function(){
-			var comments = $("#p_muid_comment_saver");
-			var comments_box = $("#p_muid_comments");
 			var products = $("#p_muid_products");
 			var products_table = $("#p_muid_products_table");
 			var payments_table = $("#p_muid_payments_table");
@@ -531,7 +529,12 @@ if ($pines->config->com_sales->autocomplete_product)
 								});
 								if (payment_data.data) {
 									$.each(payment_data.data, function(i, val){
-										form.find(":input[name="+val.name+"]").val(val.value);
+										form.find(":input:not(:radio, :checkbox)[name="+val.name+"]").val(val.value);
+										form.find(":input:radio[name="+val.name+"][value="+val.value+"]").attr("checked", "checked");
+										if (val.value == "")
+											form.find(":input:checkbox[name="+val.name+"]").removeAttr("checked");
+										else
+											form.find(":input:checkbox[name="+val.name+"][value="+val.value+"]").attr("checked", "checked");
 									});
 								}
 							},
@@ -672,6 +675,10 @@ if ($pines->config->com_sales->autocomplete_product)
 						$(this).dialog('close');
 					}
 				}
+			});
+			// Put the dialogs back in the form.
+			$("#p_muid_form").submit(function(){
+				$(this).append($("#p_muid_comments_dialog").hide());
 			});
 
 			var update_products = function(){
@@ -1002,9 +1009,12 @@ if ($pines->config->com_sales->autocomplete_product)
 			<hr class="pf-field" style="clear: both;" />
 		</div>
 	</div>
-	<div class="pf-element">
-		<label><span class="pf-label">Comments</span>
-			<input class="pf-field ui-state-default ui-corner-all" type="button" value="Edit" onclick="$('#p_muid_comments_dialog').dialog('open');" /></label>
+	<div class="pf-element pf-full-width">
+		<span class="pf-label">Return Information</span>
+		<div class="pf-group">
+			<input class="pf-field ui-state-default ui-corner-all" type="button" value="Edit Comments" onclick="$('#p_muid_comments_dialog').dialog('open');" />
+			<hr class="pf-field" style="clear: both; margin-top: 15px;" />
+		</div>
 	</div>
 	<div id="p_muid_comments_dialog" title="Comments" style="display: none;">
 		<div class="pf-element pf-full-width">
@@ -1025,7 +1035,6 @@ if ($pines->config->com_sales->autocomplete_product)
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-buttons">
-		<input type="hidden" id="p_muid_comment_saver" name="comment_saver" value="<?php echo htmlspecialchars($this->entity->comments); ?>" />
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } elseif ( isset($this->entity->sale->guid) ) { ?>

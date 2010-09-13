@@ -311,7 +311,7 @@ class com_sales_sale extends entity {
 	 *
 	 * @return bool True on success, false on failure.
 	 */
-	function email_receipt() {
+	public function email_receipt() {
 		global $pines;
 		if (empty($this->customer->email))
 			return false;
@@ -571,7 +571,7 @@ class com_sales_sale extends entity {
 	 * @param bool $auto_print_ok Auto printing the receipt is ok.
 	 * @return module The receipt's module.
 	 */
-	function print_receipt($auto_print_ok = false) {
+	public function print_receipt($auto_print_ok = false) {
 		global $pines;
 
 		$module = new module('com_sales', 'sale/receipt', 'content');

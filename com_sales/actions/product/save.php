@@ -30,8 +30,9 @@ $product->name = $_REQUEST['name'];
 $product->enabled = ($_REQUEST['enabled'] == 'ON');
 $product->autocomplete_hide = ($_REQUEST['autocomplete_hide'] == 'ON');
 $product->sku = $_REQUEST['sku'];
-$product->description = $_REQUEST['description'];
+$product->receipt_description = $_REQUEST['receipt_description'];
 $product->short_description = $_REQUEST['short_description'];
+$product->description = $_REQUEST['description'];
 $product->manufacturer = ($_REQUEST['manufacturer'] == 'null' ? null : com_sales_manufacturer::factory((int) $_REQUEST['manufacturer']));
 if (!isset($product->manufacturer->guid))
 	$product->manufacturer = null;

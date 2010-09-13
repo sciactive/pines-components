@@ -53,6 +53,8 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != '
 			$cur_qty = (int) $cur_product->values[4];
 			$cur_price = (float) $cur_product->values[5];
 			$cur_discount = $cur_product->values[6];
+			if ($cur_delivery == 'shipped' && !$sale->has_tag('shipping_shipped'))
+				$sale->add_tag('shipping_pending');
 			if (!isset($cur_product_entity->guid)) {
 				pines_error("Product with id [$cur_product->key] and entered SKU [$cur_sku] was not found.");
 				unset($sale->products[$key]);
@@ -167,7 +169,17 @@ if ($sale->status != 'paid' && $sale->status != 'voided') {
 		}
 	}
 }
-$sale->comments = $_REQUEST['comment_saver'];
+$sale->shipping_address = (object) array(
+	'name' => $_REQUEST['shipping_name'],
+	'address_type' => $_REQUEST['shipping_address_type'] == 'international' ? 'international' : 'us',
+	'address_1' => $_REQUEST['shipping_address_1'],
+	'address_2' => $_REQUEST['shipping_address_2'],
+	'city' => $_REQUEST['shipping_city'],
+	'state' => $_REQUEST['shipping_state'],
+	'zip' => $_REQUEST['shipping_zip'],
+	'address_international' => $_REQUEST['shipping_address_international']
+);
+$sale->comments = $_REQUEST['comments'];
 
 if ($product_error || $payment_error) {
 	$sale->print_form();

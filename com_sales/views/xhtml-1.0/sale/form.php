@@ -44,8 +44,6 @@ if ($pines->config->com_sales->autocomplete_product)
 		// <![CDATA[
 
 		pines(function(){
-			var comments = $("#p_muid_comment_saver");
-			var comments_box = $("#p_muid_comments");
 			var products = $("#p_muid_products");
 			var products_table = $("#p_muid_products_table");
 			var payments_table = $("#p_muid_payments_table");
@@ -571,7 +569,12 @@ if ($pines->config->com_sales->autocomplete_product)
 								});
 								if (payment_data.data) {
 									$.each(payment_data.data, function(i, val){
-										form.find(":input[name="+val.name+"]").val(val.value);
+										form.find(":input:not(:radio, :checkbox)[name="+val.name+"]").val(val.value);
+										form.find(":input:radio[name="+val.name+"][value="+val.value+"]").attr("checked", "checked");
+										if (val.value == "")
+											form.find(":input:checkbox[name="+val.name+"]").removeAttr("checked");
+										else
+											form.find(":input:checkbox[name="+val.name+"][value="+val.value+"]").attr("checked", "checked");
 									});
 								}
 							},
@@ -708,10 +711,24 @@ if ($pines->config->com_sales->autocomplete_product)
 				width: 600,
 				buttons: {
 					"Done": function(){
-						comments.val(comments_box.val());
 						$(this).dialog('close');
 					}
 				}
+			});
+			$("#p_muid_shipping_dialog").dialog({
+				bgiframe: true,
+				autoOpen: false,
+				modal: true,
+				width: 600,
+				buttons: {
+					"Done": function(){
+						$(this).dialog('close');
+					}
+				}
+			});
+			// Put the dialogs back in the form.
+			$("#p_muid_form").submit(function(){
+				$(this).append($("#p_muid_comments_dialog").hide()).append($("#p_muid_shipping_dialog").hide());
 			});
 
 			var update_products = function(){
@@ -1037,9 +1054,127 @@ if ($pines->config->com_sales->autocomplete_product)
 			<hr class="pf-field" style="clear: both;" />
 		</div>
 	</div>
-	<div class="pf-element">
-		<label><span class="pf-label">Comments</span>
-			<input class="pf-field ui-state-default ui-corner-all" type="button" value="Edit" onclick="$('#p_muid_comments_dialog').dialog('open');" /></label>
+	<div class="pf-element pf-full-width">
+		<span class="pf-label">Sale Information</span>
+		<div class="pf-group">
+			<input class="pf-field ui-state-default ui-corner-all" type="button" value="Edit Shipping Address" onclick="$('#p_muid_shipping_dialog').dialog('open');" />
+			<input class="pf-field ui-state-default ui-corner-all" type="button" value="Edit Comments" onclick="$('#p_muid_comments_dialog').dialog('open');" />
+			<hr class="pf-field" style="clear: both; margin-top: 15px;" />
+		</div>
+	</div>
+	<div id="p_muid_shipping_dialog" title="Shipping Address" style="display: none;">
+		<div class="pf-form">
+			<div class="pf-element">
+				<label><span class="pf-label">Name</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="shipping_name" size="24" value="<?php echo htmlspecialchars($this->entity->shipping_address->name); ?>" /></label>
+			</div>
+			<div class="pf-element">
+				<script type="text/javascript">
+					// <![CDATA[
+					pines(function(){
+						var address_us = $("#p_muid_address_us");
+						var address_international = $("#p_muid_address_international");
+						$("#p_muid_shipping_dialog [name=shipping_address_type]").change(function(){
+							var address_type = $(this);
+							if (address_type.is(":checked") && address_type.val() == "us") {
+								address_us.show();
+								address_international.hide();
+							} else if (address_type.is(":checked") && address_type.val() == "international") {
+								address_international.show();
+								address_us.hide();
+							}
+						}).change();
+					});
+					// ]]>
+				</script>
+				<span class="pf-label">Address Type</span>
+				<label><input class="pf-field" type="radio" name="shipping_address_type" value="us"<?php echo (!isset($this->entity->shipping_address->address_type) || $this->entity->shipping_address->address_type == 'us') ? ' checked="checked"' : ''; ?> /> US</label>
+				<label><input class="pf-field" type="radio" name="shipping_address_type" value="international"<?php echo $this->entity->shipping_address->address_type == 'international' ? ' checked="checked"' : ''; ?> /> International</label>
+			</div>
+			<div id="p_muid_address_us" style="display: none;">
+				<div class="pf-element">
+					<label><span class="pf-label">Address 1</span>
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="shipping_address_1" size="24" value="<?php echo htmlspecialchars($this->entity->shipping_address->address_1); ?>" /></label>
+				</div>
+				<div class="pf-element">
+					<label><span class="pf-label">Address 2</span>
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="shipping_address_2" size="24" value="<?php echo htmlspecialchars($this->entity->shipping_address->address_2); ?>" /></label>
+				</div>
+				<div class="pf-element">
+					<span class="pf-label">City, State</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="shipping_city" size="15" value="<?php echo htmlspecialchars($this->entity->shipping_address->city); ?>" />
+					<select class="pf-field ui-widget-content ui-corner-all" name="shipping_state">
+						<option value="">None</option>
+						<?php foreach (array(
+								'AL' => 'Alabama',
+								'AK' => 'Alaska',
+								'AZ' => 'Arizona',
+								'AR' => 'Arkansas',
+								'CA' => 'California',
+								'CO' => 'Colorado',
+								'CT' => 'Connecticut',
+								'DE' => 'Delaware',
+								'DC' => 'DC',
+								'FL' => 'Florida',
+								'GA' => 'Georgia',
+								'HI' => 'Hawaii',
+								'ID' => 'Idaho',
+								'IL' => 'Illinois',
+								'IN' => 'Indiana',
+								'IA' => 'Iowa',
+								'KS' => 'Kansas',
+								'KY' => 'Kentucky',
+								'LA' => 'Louisiana',
+								'ME' => 'Maine',
+								'MD' => 'Maryland',
+								'MA' => 'Massachusetts',
+								'MI' => 'Michigan',
+								'MN' => 'Minnesota',
+								'MS' => 'Mississippi',
+								'MO' => 'Missouri',
+								'MT' => 'Montana',
+								'NE' => 'Nebraska',
+								'NV' => 'Nevada',
+								'NH' => 'New Hampshire',
+								'NJ' => 'New Jersey',
+								'NM' => 'New Mexico',
+								'NY' => 'New York',
+								'NC' => 'North Carolina',
+								'ND' => 'North Dakota',
+								'OH' => 'Ohio',
+								'OK' => 'Oklahoma',
+								'OR' => 'Oregon',
+								'PA' => 'Pennsylvania',
+								'RI' => 'Rhode Island',
+								'SC' => 'South Carolina',
+								'SD' => 'South Dakota',
+								'TN' => 'Tennessee',
+								'TX' => 'Texas',
+								'UT' => 'Utah',
+								'VT' => 'Vermont',
+								'VA' => 'Virginia',
+								'WA' => 'Washington',
+								'WV' => 'West Virginia',
+								'WI' => 'Wisconsin',
+								'WY' => 'Wyoming'
+							) as $key => $cur_state) {
+						?><option value="<?php echo $key; ?>"<?php echo $this->entity->shipping_address->state == $key ? ' selected="selected"' : ''; ?>><?php echo $cur_state; ?></option><?php
+						} ?>
+					</select>
+				</div>
+				<div class="pf-element">
+					<label><span class="pf-label">Zip</span>
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="shipping_zip" size="24" value="<?php echo htmlspecialchars($this->entity->shipping_address->zip); ?>" /></label>
+				</div>
+			</div>
+			<div id="p_muid_address_international" style="display: none;">
+				<div class="pf-element pf-full-width">
+					<label><span class="pf-label">Address</span>
+						<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="shipping_address_international"><?php echo $this->entity->shipping_address->address_international; ?></textarea></span></label>
+				</div>
+			</div>
+		</div>
+		<br />
 	</div>
 	<div id="p_muid_comments_dialog" title="Comments" style="display: none;">
 		<div class="pf-element pf-full-width">
@@ -1064,7 +1199,6 @@ if ($pines->config->com_sales->autocomplete_product)
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-buttons">
-		<input type="hidden" id="p_muid_comment_saver" name="comment_saver" value="<?php echo htmlspecialchars($this->entity->comments); ?>" />
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>

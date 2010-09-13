@@ -187,7 +187,7 @@ if ($return->status != 'processed' && $return->status != 'voided') {
 		}
 	}
 }
-$return->comments = $_REQUEST['comment_saver'];
+$return->comments = $_REQUEST['comments'];
 
 if ($product_error || $payment_error) {
 	$return->print_form();

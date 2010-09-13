@@ -190,6 +190,11 @@ $pines->com_ptags->load();
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="manufacturer_sku" size="24" value="<?php echo htmlspecialchars($this->entity->manufacturer_sku); ?>" /></label>
 			</div>
 			<div class="pf-element pf-full-width">
+				<label><span class="pf-label">Receipt Description</span>
+					<span class="pf-note">A short description to be shown on receipts.</span>
+					<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="receipt_description"><?php echo $this->entity->receipt_description; ?></textarea></span></label>
+			</div>
+			<div class="pf-element pf-full-width">
 				<span class="pf-label">Short Description</span><br />
 				<textarea rows="3" cols="35" class="peditor-simple" style="width: 100%;" name="short_description"><?php echo $this->entity->short_description; ?></textarea>
 			</div>

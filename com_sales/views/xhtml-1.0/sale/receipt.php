@@ -93,7 +93,7 @@ switch ($this->entity->status) {
 <div id="p_muid_receipt" class="pf-form pf-form-twocol">
 	<?php
 	// Sales rep and sales group entities.
-	$sales_rep = $this->entity->user;
+	$sales_rep = (isset($this->entity->user) && !$this->entity->user->is($this->entity->customer)) ? $this->entity->user : null;
 	$sales_group = $this->entity->group;
 	// Set the location of the group logo image.
 	if (isset($sales_group))
@@ -159,6 +159,24 @@ switch ($this->entity->status) {
 			<?php if (isset($sales_rep->guid)) { ?><span><?php echo htmlspecialchars($sales_rep->name); ?></span><?php } ?>
 		</div>
 	</div>
+	<?php if (isset($this->entity->shipping_address)) { ?>
+	<div class="left_side customer">
+		<div class="aligner">
+			<span>Ship To:</span>
+		</div>
+		<div class="data_col">
+			<span><strong>
+				<?php echo htmlspecialchars($this->entity->shipping_address->name); ?>
+			</strong></span>
+			<?php if ($this->entity->shipping_address->address_type == 'us') { if (!empty($this->entity->shipping_address->address_1)) { ?>
+			<span><?php echo htmlspecialchars($this->entity->shipping_address->address_1.' '.$this->entity->shipping_address->address_2); ?></span>
+			<span><?php echo htmlspecialchars($this->entity->shipping_address->city); ?>, <?php echo htmlspecialchars($this->entity->shipping_address->state); ?> <?php echo htmlspecialchars($this->entity->shipping_address->zip); ?></span>
+			<?php } } else {?>
+			<span><?php echo htmlspecialchars($this->entity->shipping_address->address_international); ?></span>
+			<?php } ?>
+		</div>
+	</div>
+	<?php } ?>
 	<?php if ($pines->config->com_sales->com_customer && isset($this->entity->customer)) { ?>
 	<div class="left_side customer">
 		<div class="aligner">
@@ -200,7 +218,7 @@ switch ($this->entity->status) {
 				<tr>
 					<td><?php echo htmlspecialchars($cur_product['entity']->sku); ?></td>
 					<td><?php echo htmlspecialchars($cur_product['entity']->name); ?></td>
-					<td><?php echo $cur_product['entity']->short_description; ?></td>
+					<td><?php echo !empty($cur_product['entity']->receipt_description) ? $cur_product['entity']->receipt_description : $cur_product['entity']->short_description; ?></td>
 					<td class="right_text"><?php echo htmlspecialchars($cur_product['quantity']); ?></td>
 					<td class="right_text">$<?php echo $pines->com_sales->round($cur_product['price'], true); ?><?php echo empty($cur_product['discount']) ? '' : htmlspecialchars(" - {$cur_product['discount']}"); ?></td>
 					<td class="right_text">$<?php echo $pines->com_sales->round($cur_product['line_total'], true); ?></td>

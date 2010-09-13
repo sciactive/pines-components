@@ -23,7 +23,7 @@ $this->note = 'Provide shipment details in this form.';
 				<?php echo htmlspecialchars($this->entity->shipping_address->address_1.' '.$this->entity->shipping_address->address_2); ?><br />
 				<?php echo htmlspecialchars($this->entity->shipping_address->city); ?>, <?php echo htmlspecialchars($this->entity->shipping_address->state); ?> <?php echo htmlspecialchars($this->entity->shipping_address->zip); ?>
 				<?php } } else { ?>
-				<?php echo htmlspecialchars($this->entity->shipping_address->address_international); ?>
+				<?php echo str_replace("\n", '<br />', htmlspecialchars($this->entity->shipping_address->address_international)); ?>
 				<?php } ?>
 			</div>
 		</div>

@@ -29,7 +29,7 @@ $this->title = "Switch User";
 	}
 	/* ]]> */
 </style>
-<form class="pf-form com_su_login_form" name="login" method="post" action="<?php echo htmlspecialchars(pines_url()); ?>">
+<form class="pf-form com_su_login_form" method="post" action="<?php echo htmlspecialchars(pines_url()); ?>">
 	<?php if ($this->pin_login) { ?>
 	<div class="pf-element">
 		<label><span class="pf-label">PIN</span>

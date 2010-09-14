@@ -23,7 +23,7 @@ if (empty($this->title))
 </script>
 <?php } ?>
 <div id="p_muid_form"<?php echo ($this->style == 'compact') ? ' style="display: none;"' : ''; ?>>
-	<form class="pf-form" name="login" method="post" action="<?php echo htmlspecialchars(pines_url()); ?>">
+	<form class="pf-form" method="post" action="<?php echo htmlspecialchars(pines_url()); ?>">
 		<div class="pf-element">
 			<label><span class="pf-label">Username</span>
 				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="username" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>

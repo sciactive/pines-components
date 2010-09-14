@@ -202,6 +202,16 @@ if ($pines->config->com_user->max_username_length > 0 && strlen($customer->usern
 	pines_notice("Usernames must not exceed {$pines->config->com_user->max_username_length} characters.");
 	return;
 }
+if (array_diff(str_split($customer->username), str_split($pines->config->com_user->valid_chars))) {
+	$customer->print_form();
+	pines_notice($pines->config->com_user->valid_chars_notice);
+	return;
+}
+if (!preg_match($pines->config->com_user->valid_regex, $customer->username)) {
+	$customer->print_form();
+	pines_notice($pines->config->com_user->valid_regex_notice);
+	return;
+}
 $test = user::factory($_REQUEST['username']);
 if (isset($test->guid) && !$customer->is($test)) {
 	$customer->print_form();

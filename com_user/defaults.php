@@ -115,6 +115,32 @@ return array(
 		'value' => true,
 		'peruser' => true,
 	),
+	array(
+		'name' => 'valid_chars',
+		'cname' => 'Valid Characters',
+		'description' => 'Only these characters can be used when creating usernames and groupnames.',
+		'value' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-.',
+	),
+	array(
+		'name' => 'valid_chars_notice',
+		'cname' => 'Valid Characters Notice',
+		'description' => 'When a user enters an invalid name, this message will be displayed.',
+		'value' => 'Usernames and groupnames can only contain letters, numbers, underscore, dash, and period.',
+		'peruser' => true,
+	),
+	array(
+		'name' => 'valid_regex',
+		'cname' => 'Valid Regex',
+		'description' => 'Usernames and groupnames must match this regular expression. By default, this ensures that the name begins and ends with an alphanumeric. (To allow anything, use "/.*/")',
+		'value' => '/^[a-zA-Z0-9].*[a-zA-Z0-9]$/',
+	),
+	array(
+		'name' => 'valid_regex_notice',
+		'cname' => 'Valid Regex Notice',
+		'description' => 'When a user enters a name that doesn\'t match the regex, this message will be displayed.',
+		'value' => 'Usernames and groupnames must begin and end with a letter or number.',
+		'peruser' => true,
+	),
 	array (
 		'name' => 'max_username_length',
 		'cname' => 'Username Max Length',

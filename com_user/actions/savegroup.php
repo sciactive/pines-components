@@ -120,6 +120,16 @@ if (isset($test->guid) && !$group->is($test)) {
 	pines_notice('There is already a group with that groupname. Please choose a different groupname.');
 	return;
 }
+if (array_diff(str_split($group->groupname), str_split($pines->config->com_user->valid_chars))) {
+	$group->print_form();
+	pines_notice($pines->config->com_user->valid_chars_notice);
+	return;
+}
+if (!preg_match($pines->config->com_user->valid_regex, $group->groupname)) {
+	$group->print_form();
+	pines_notice($pines->config->com_user->valid_regex_notice);
+	return;
+}
 if (isset($group->parent) && !isset($group->parent->guid)) {
 	$group->print_form();
 	pines_notice('Parent group is not valid.');

@@ -166,6 +166,16 @@ if (isset($test->guid) && !$user->is($test)) {
 	pines_notice('There is already a user with that username. Please choose a different username.');
 	return;
 }
+if (array_diff(str_split($user->username), str_split($pines->config->com_user->valid_chars))) {
+	$user->print_form();
+	pines_notice($pines->config->com_user->valid_chars_notice);
+	return;
+}
+if (!preg_match($pines->config->com_user->valid_regex, $user->username)) {
+	$user->print_form();
+	pines_notice($pines->config->com_user->valid_regex_notice);
+	return;
+}
 if (empty($user->password) && !$pines->config->com_user->empty_pw) {
 	$user->print_form();
 	pines_notice('Please specify a password.');

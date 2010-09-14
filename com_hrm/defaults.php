@@ -54,6 +54,23 @@ return array(
 		'value' => true,
 		'peruser' => true,
 	),
+	array(
+		'name' => 'termination_reasons',
+		'cname' => 'Termination Reasons',
+		'description' => 'Uses this format: reason_name:Reason Description.',
+		'value' => array(
+			'attitude:Poor Attitude',
+			'layoff:Laid Off',
+			'misconduct:Misconduct',
+			'performace:Poor Performance',
+			'tardiness:Tardiness',
+			'theft:Theft/Stealing',
+			'subordinance:Subordinance',
+			'quit:Quit',
+			'other:Other',
+		),
+		'peruser' => true,
+	),
 );
 
 ?>

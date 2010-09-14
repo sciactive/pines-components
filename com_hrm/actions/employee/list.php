@@ -14,5 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_hrm/listemployees') )
 	punt_user(null, pines_url('com_hrm', 'employee/list'));
 
-$pines->com_hrm->list_employees();
+$employed = ($_REQUEST['employed'] == 'false') ? false : true;
+$pines->com_hrm->list_employees($employed);
+
 ?>

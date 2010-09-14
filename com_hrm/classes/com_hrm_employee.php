@@ -28,7 +28,8 @@ class com_hrm_employee extends user {
 		$this->timeclock = array();
 		$this->employee_attributes = array();
 		$this->commissions = array();
-
+		$this->hire_date = time();
+		$this->employment_history = array();
 		parent::__construct($id);
 	}
 
@@ -106,6 +107,21 @@ class com_hrm_employee extends user {
 		global $pines;
 		$module = new module('com_hrm', 'employee/form', 'content');
 		$module->entity = $this;
+
+		return $module;
+	}
+
+	/**
+	 * View the employment history for this employee.
+	 * @return module The form's module.
+	 */
+	public function print_history() {
+		global $pines;
+		$module = new module('com_hrm', 'employee/history', 'content');
+		$module->entity = $this;
+		$module->issues = $pines->entity_manager->get_entities(array('class' => com_hrm_issue), array('&', 'tag' => array('com_hrm', 'issue'), 'ref' => array('employee', $this)));
+		$module->sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), array('&', 'tag' => array('com_sales', 'sale'), 'ref' => array('user', $this)));
+		$module->returns = $pines->entity_manager->get_entities(array('class' => com_sales_return), array('&', 'tag' => array('com_sales', 'return'), 'ref' => array('user', $this)));
 
 		return $module;
 	}

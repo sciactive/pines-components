@@ -50,16 +50,17 @@ class com_hrm extends component {
 	/**
 	 * Get all employees.
 	 *
+	 * @param bool $employed Get currently employed or past employees.
 	 * @return array An array of employees.
 	 * @todo Optimize this function.
 	 */
-	public function get_employees() {
+	public function get_employees($employed = true) {
 		global $pines;
 		$users = $pines->user_manager->get_users();
 		$employees = array();
 		// Filter out users who aren't employees.
 		foreach ($users as $key => &$cur_user) {
-			if ($cur_user->employee)
+			if ($cur_user->employee && ($employed xor $cur_user->terminated))
 				$employees[] = com_hrm_employee::factory($cur_user->guid);
 			unset($users[$key]);
 		}
@@ -68,15 +69,42 @@ class com_hrm extends component {
 	}
 
 	/**
-	 * Creates and attaches a module which lists employees.
+	 * Get all issue types.
+	 *
+	 * @return array An array of issue types.
 	 */
-	public function list_employees() {
-		$module = new module('com_hrm', 'employee/list', 'content');
+	public function get_issue_types() {
+		global $pines;
+		return $pines->entity_manager->get_entities(array('class' => com_hrm_issue_type), array('&', 'tag' => array('com_hrm', 'issue_type')));
+	}
 
-		$module->employees = $this->get_employees();
+	/**
+	 * Creates and attaches a module which lists employees.
+	 * 
+	 * @param bool $employed List currently employed or past employees.
+	 * @return module The list module.
+	 */
+	public function list_employees($employed = true) {
+		$module = new module('com_hrm', 'employee/list', 'content');
+		
+		$module->employees = $this->get_employees($employed);
+		$module->employed = $employed;
 
 		if ( empty($module->employees) )
-			pines_notice('There are no employees.');
+			pines_notice('There are no matching employees.');
+	}
+
+	/**
+	 * Creates and attaches a module which lists issue types.
+	 */
+	public function list_issue_types() {
+		global $pines;
+
+		$module = new module('com_hrm', 'issue/list', 'content');
+		$module->types = $pines->entity_manager->get_entities(array('class' => com_hrm_issue_type), array('&', 'tag' => array('com_hrm', 'issue_type')));
+
+		if ( empty($module->types) )
+			pines_notice('There are no issue types.');
 	}
 
 	/**

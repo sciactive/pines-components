@@ -18,6 +18,9 @@ $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_employee) {
 	$cur_user = user::factory((int) $cur_employee);
 	$cur_user->employee = true;
+	$cur_user->hire_date = time();
+	$cur_user->employment_history[] = array($cur_user->hire_date, 'Hired');
+
 	if ((array) $cur_user->timeclock !== $cur_user->timeclock)
 		$cur_user->timeclock = array();
 	if ((array) $cur_user->employee_attributes !== $cur_user->employee_attributes)

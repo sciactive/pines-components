@@ -29,5 +29,13 @@
 			"depend": {
 				"ability": "com_hrm/listemployees"
 			}
+		},
+		{
+			"path": "main_menu/business/hrm/pastemployees",
+			"text": "Past Employees",
+			"href": ["com_hrm","employee/list",{"employed":"false"}],
+			"depend": {
+				"ability": "com_hrm/listemployees"
+			}
 		}
 ]

@@ -24,22 +24,25 @@ $offset = $count = $nochange = 0;
 // Grab entities, 50 at a time.
 do {
 	$entities = $pines->entity_manager->get_entities(
-		array('limit' => 50, 'offset' => $offset),
+		array('limit' => 50, 'offset' => $offset, 'class' => user),
 		array('&',
-			'tag' => array('com_hrm', 'employee')
+			'tag' => array('com_user', 'user'),
+			'data' => array('employee', true)
 		)
 	);
 	// If we have run through all entities, we are done updating.
 	foreach ($entities as &$cur_entity) {
 		$changed = false;
-		if (isset($cur_entity->user_account)) {
-			$cur_entity->user_account->employee = true;
-			$cur_entity->user_account->timeclock = $cur_entity->timeclock;
-			$cur_entity->user_account->employee_attributes = $cur_entity->attributes;
+		if (!isset($cur_entity->employment_history)) {
+			$cur_entity->employment_history = array();
+			$changed = true;
+		}
+		if (!isset($cur_entity->hire_date)) {
+			$cur_entity->hire_date = time();
 			$changed = true;
 		}
 		if ($changed) {
-			if ($cur_entity->user_account->save() && $cur_entity->delete())
+			if ($cur_entity->save())
 				$count++;
 			else
 				$errors[] = $entity->guid;
@@ -51,7 +54,7 @@ do {
 	$offset += 50;
 } while (!empty($entities));
 
-$module->content("Updated $count entities. Found $nochange entities that don't have a user account, so couldn't be updated.");
+$module->content("Updated $count entities. Found $nochange entities that didn't need updating.");
 if ($errors)
 	$module->content('<br />Could not update the entities: '.implode(', ', $errors));
 

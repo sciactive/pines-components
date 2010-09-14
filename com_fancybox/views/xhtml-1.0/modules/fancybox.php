@@ -98,7 +98,6 @@ background:none repeat scroll 0 0 white;
 border:1px solid #BBBBBB;
 margin:7px 14px 7px 0;
 padding:5px;
-width:160px;
 }
 /* ]]> */</style>
 <?php } ?>

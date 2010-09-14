@@ -49,6 +49,50 @@ class com_reports extends component {
 	}
 
 	/**
+	 * Creates and attaches a module which reports employee issues.
+	 *
+	 * @param int $start The start date of the report.
+	 * @param int $end The end date of the report.
+	 * @param group $location The group to report on.
+	 * @param com_hrm_employee $employee The employee to report on.
+	 * @return module The attendance report module.
+	 */
+	function report_issues($start, $end, $location = null, $employee = null) {
+		global $pines;
+
+		$form = new module('com_reports', 'form_issues', 'right');
+		$module = new module('com_reports', 'report_issues', 'content');
+
+		$selector = array('&',
+			'tag' => array('com_hrm', 'issue'));
+		// Datespan of the report.
+		$date_start = strtotime('00:00', $start);
+		$date_end = strtotime('23:59', $end);
+		$selector['gte'] = array('p_cdate', $date_start);
+		$selector['lte'] = array('p_cdate', $date_end);
+		$module->date[0] = $form->date[0] = $date_start;
+		$module->date[1] = $form->date[1] = $date_end;
+		// Employee and location of the report.
+		if (isset($employee->guid)) {
+			$selector['ref'] = array('user', $employee);
+			$module->employee = $form->employee = $employee;
+			$module->title = 'Issues with '.$employee->name;
+		} elseif (isset($location->guid)) {
+			$selector['ref'] = array('group', $location);
+			$module->title = 'Issues in '.$location->name;
+		} else {
+			$location = $_SESSION['user']->group;
+			$module->all = true;
+			$module->title = 'Issues in All Locations';
+		}
+		$module->location = $form->location = $location;
+		$form->employees = $pines->com_hrm->get_employees();
+		$module->issues = $pines->entity_manager->get_entities(array('class' => com_hrm_issue), $selector);
+
+		return $module;
+	}
+
+	/**
 	 * Creates and attaches a module which reports sales.
 	 * 
 	 * @param int $start The start date of the report.

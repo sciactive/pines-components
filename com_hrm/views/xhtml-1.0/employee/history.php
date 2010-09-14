@@ -19,10 +19,10 @@ $pines->com_pgrid->load();
 		padding-right: 35px;
 		font-size: 0.8em;
 	}
-	#p_muid_issue_actions button {
+	.p_muid_issue_actions button {
 		padding: 0;
 	}
-	#p_muid_issue_actions button .ui-button-text {
+	.p_muid_issue_actions button .ui-button-text {
 		padding: 0;
 	}
 	.p_muid_btn {
@@ -98,7 +98,6 @@ $pines->com_pgrid->load();
 		});
 		p_muid_notice.com_hrm_issue_update = function(comments){
 			if (comments == "<ul><li></li></ul>") {
-				p_muid_notice.pnotify();
 				p_muid_notice.pnotify_remove();
 			} else {
 				p_muid_notice.pnotify({pnotify_text: comments});
@@ -156,7 +155,7 @@ $pines->com_pgrid->load();
 	<div class="pf-element pf-heading">
 		<h1>Issues/Transgressions</h1>
 	</div>
-	<div class="pf-element pf-full-width" id="p_muid_history">
+	<div class="pf-element pf-full-width">
 		<table id="p_muid_issues">
 			<thead>
 				<tr>
@@ -171,15 +170,14 @@ $pines->com_pgrid->load();
 			</thead>
 			<tbody>
 				<?php foreach ($this->issues as $cur_issue) { ?>
-				<tr onmouseover="p_muid_notice.com_hrm_issue_update('<ul><li><?php echo htmlspecialchars(implode($cur_issue->comments, '</li><li>')); ?></li></ul>');">
+				<tr onmouseover="p_muid_notice.com_hrm_issue_update('&lt;ul&gt;&lt;li&gt;<?php echo htmlspecialchars(implode($cur_issue->comments, '</li><li>')); ?>&lt;/li&gt;&lt;/ul&gt;');">
 					<td><?php echo format_date($cur_issue->date, 'date_short'); ?></td>
 					<td><?php echo htmlspecialchars($cur_issue->issue_type->name); ?></td>
 					<td>x<?php echo htmlspecialchars($cur_issue->quantity); ?></td>
 					<td>$<?php echo round($cur_issue->issue_type->penalty*$cur_issue->quantity, 2); ?></td>
 					<td><?php echo htmlspecialchars($cur_issue->user->name); ?></td>
 					<td><?php echo htmlspecialchars($cur_issue->status); ?></td>
-					<td>
-					<div id="p_muid_issue_actions">
+					<td><div class="p_muid_issue_actions">
 						<?php if (gatekeeper('com_hrm/resolveissue')) {
 							if ($cur_issue->status != 'resolved') { ?>
 							<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_process_issue('<?php echo $cur_issue->guid; ?>', 'resolved');" title="Resolve"><span class="p_muid_btn picon picon-flag-yellow"></span></button>
@@ -188,8 +186,7 @@ $pines->com_pgrid->load();
 							<?php } ?>
 							<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_process_issue('<?php echo $cur_issue->guid; ?>', 'delete');" title="Remove"><span class="p_muid_btn picon picon-edit-delete"></span></button>
 						<?php } ?>
-					</div>
-					</td>
+						</div></td>
 				</tr>
 				<?php } ?>
 			</tbody>

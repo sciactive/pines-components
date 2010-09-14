@@ -54,6 +54,14 @@
 				}
 			},
 			{
+				"path": "main_menu/business/reports/hrm/issues",
+				"text": "Employee Issues",
+				"href": ["com_reports","reportissues"],
+				"depend": {
+					"ability": "com_reports/reportissues"
+				}
+			},
+			{
 				"path": "main_menu/business/reports/hrm/warboard",
 				"text": "Warboard",
 				"href": ["com_reports","warboard"],

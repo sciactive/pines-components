@@ -21,6 +21,7 @@ return array(
 	'description' => 'Reports for sales totals, inventory and employee reports.',
 	'depend' => array(
 		'pines' => '<2',
+		'service' => 'icons',
 		'component' => 'com_jquery&com_pgrid&com_jstree&(com_hrm|com_sales)'
 	),
 	'abilities' => array(

@@ -1,6 +1,6 @@
 <?php
 /**
- * A view to load Nivo Slider.
+ * A view to load Popeye.
  *
  * @package Pines
  * @subpackage com_popeye

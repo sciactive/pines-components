@@ -96,7 +96,7 @@ if ($this->include_basic_style == 'true') { ?>
 #p_muid_fancybox img {
 background:none repeat scroll 0 0 white;
 border:1px solid #BBBBBB;
-margin:0 7px 0 0;
+margin:0 7px 7px 0;
 padding:5px;
 }
 /* ]]> */</style>

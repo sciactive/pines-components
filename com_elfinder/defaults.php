@@ -23,7 +23,7 @@ return array(
 		'name' => 'root_url',
 		'cname' => 'Root URL',
 		'description' => 'The URL of the root directory for the file manager.',
-		'value' => $pines->config->rela_location.$pines->config->upload_location,
+		'value' => $pines->config->location.$pines->config->upload_location,
 		'peruser' => true,
 	),
 	array(

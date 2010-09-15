@@ -13,10 +13,10 @@ defined('P_RUN') or die('Direct access prohibited');
 ?>
 <script type="text/javascript">
 	// <![CDATA[
-	pines.loadjs("<?php echo htmlspecialchars($pines->config->rela_location); ?>components/com_jstree/includes/<?php echo $pines->config->debug_mode ? 'jquery.jstree.js' : 'jquery.jstree.min.js'; ?>");
+	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_jstree/includes/<?php echo $pines->config->debug_mode ? 'jquery.jstree.js' : 'jquery.jstree.min.js'; ?>");
 	pines(function(){
 		$.jstree.defaults.core.animation = 100;
-		$.jstree._themes = "<?php echo htmlspecialchars($pines->config->rela_location); ?>components/com_jstree/includes/themes/";
+		$.jstree._themes = "<?php echo htmlspecialchars($pines->config->location); ?>components/com_jstree/includes/themes/";
 		$.jstree.defaults.themes.theme = "apple";
 	});
 	// ]]>

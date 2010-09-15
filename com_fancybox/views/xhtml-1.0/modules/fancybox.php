@@ -18,7 +18,7 @@ if (!$pines->uploader->check($this->file)) {
 $pines->com_fancybox->load();
 
 $images = trim(file_get_contents($pines->uploader->real($this->file)));
-$dir = ($this->absolute_path == 'true') ? $pines->config->rela_location : rtrim(dirname($this->file), '/') . '/';
+$dir = ($this->absolute_path == 'true') ? $pines->config->location : rtrim(dirname($this->file), '/') . '/';
 $images = explode("\n", $images);
 
 $options = (object) array();

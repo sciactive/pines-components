@@ -29,7 +29,7 @@ $this->title = "Packaging results for {$this->entity->name}.";
 	<div class="pf-element">
 		<span class="pf-label">Package Files</span>
 		<span class="pf-note">You can download your package files now.</span>
-		<span class="pf-field"><a href="<?php echo htmlspecialchars("{$pines->config->rela_location}{$this->path}"); ?>"><?php echo htmlspecialchars($this->filename); ?></a></span>
+		<span class="pf-field"><a href="<?php echo htmlspecialchars("{$pines->config->location}{$this->path}"); ?>"><?php echo htmlspecialchars($this->filename); ?></a></span>
 	</div>
 	<?php } else { ?>
 	<div class="pf-heading">

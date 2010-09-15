@@ -141,7 +141,7 @@ class group extends able_object implements group_interface {
 			return $full ? $pines->uploader->url($pines->uploader->real($this->logo), true) : $this->logo;
 		if (isset($this->parent) && $this->parent->has_tag('enabled'))
 			return $this->parent->get_logo($full);
-		return ($full ? $pines->config->full_location : $pines->config->rela_location)."{$pines->config->upload_location}logos/default_logo.png";
+		return ($full ? $pines->config->full_location : $pines->config->location)."{$pines->config->upload_location}logos/default_logo.png";
 	}
 
 	public function get_users($descendents = false) {

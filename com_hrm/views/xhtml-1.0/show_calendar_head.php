@@ -21,11 +21,11 @@ defined('P_RUN') or die('Direct access prohibited');
 ?>
 <script type="text/javascript">
 	// <![CDATA[
-	pines.loadcss("<?php echo htmlspecialchars($pines->config->rela_location); ?>components/com_hrm/includes/fullcalendar.css");
-	pines.loadjs("<?php echo htmlspecialchars($pines->config->rela_location); ?>components/com_hrm/includes/<?php echo $pines->config->debug_mode ? 'fullcalendar.js' : 'fullcalendar.min.js'; ?>");
+	pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_hrm/includes/fullcalendar.css");
+	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_hrm/includes/<?php echo $pines->config->debug_mode ? 'fullcalendar.js' : 'fullcalendar.min.js'; ?>");
 	<?php if (gatekeeper('com_hrm/editcalendar')) { ?>
-		pines.loadcss("<?php echo htmlspecialchars($pines->config->rela_location); ?>components/com_hrm/includes/context/css/vscontext.css");
-		pines.loadjs("<?php echo htmlspecialchars($pines->config->rela_location); ?>components/com_hrm/includes/context/vscontext.jquery.js");
+		pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_hrm/includes/context/css/vscontext.css");
+		pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_hrm/includes/context/vscontext.jquery.js");
 	<?php } ?>
 	// ]]>
 </script>

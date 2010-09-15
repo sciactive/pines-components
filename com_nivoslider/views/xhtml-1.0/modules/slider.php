@@ -18,7 +18,7 @@ if (!$pines->uploader->check($this->file)) {
 $pines->com_nivoslider->load();
 
 $images = trim(file_get_contents($pines->uploader->real($this->file)));
-$dir = ($this->absolute_path == 'true') ? $pines->config->rela_location : rtrim(dirname($this->file), '/') . '/';
+$dir = ($this->absolute_path == 'true') ? $pines->config->location : rtrim(dirname($this->file), '/') . '/';
 $images = explode("\n", $images);
 
 $options = (object) array();
@@ -60,7 +60,7 @@ if (isset($this->captionOpacity))
 <script type="text/javascript">
 	// <![CDATA[
 	<?php if ($this->include_basic_style == 'true') { ?>
-	pines.loadcss("<?php echo htmlspecialchars($pines->config->rela_location); ?>components/com_nivoslider/includes/basic_style/slider.css");
+	pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_nivoslider/includes/basic_style/slider.css");
 	<?php } ?>
 	pines(function(){
 		$('#p_muid_slider').nivoSlider(<?php echo json_encode($options); ?>);

@@ -30,6 +30,9 @@ $category->enabled = ($_REQUEST['enabled'] == 'ON');
 if ($pines->config->com_sales->com_storefront) {
 	$category->show_menu = ($_REQUEST['show_menu'] == 'ON');
 	$category->menu_position = $_REQUEST['menu_position'];
+	$category->show_children = ($_REQUEST['show_children'] == 'ON');
+	$category->show_description = ($_REQUEST['show_description'] == 'ON');
+	$category->description = $_REQUEST['description'];
 	$category->specs = array();
 	$specs = (array) json_decode($_REQUEST['specs']);
 	foreach ($specs as $cur_spec) {

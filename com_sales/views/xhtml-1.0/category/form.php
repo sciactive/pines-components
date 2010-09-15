@@ -15,6 +15,7 @@ $this->note = 'Provide category details in this form.';
 if ($pines->config->com_sales->com_storefront) {
 	$pines->com_pgrid->load();
 	$pines->com_ptags->load();
+	$pines->editor->load();
 }
 ?>
 <?php if ($pines->config->com_sales->com_storefront) { ?>
@@ -198,16 +199,6 @@ if ($pines->config->com_sales->com_storefront) {
 		<label><span class="pf-label">Enabled</span>
 			<input class="pf-field" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 	</div>
-	<?php if ($pines->config->com_sales->com_storefront) { ?>
-	<div class="pf-element">
-		<label><span class="pf-label">Show Menu</span>
-			<input class="pf-field" type="checkbox" name="show_menu" value="ON"<?php echo $this->entity->show_menu ? ' checked="checked"' : ''; ?> /></label>
-	</div>
-	<div class="pf-element">
-		<label><span class="pf-label">Menu Position</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_menu_position" name="menu_position" size="24" value="<?php echo htmlspecialchars($this->entity->menu_position); ?>" /></label>
-	</div>
-	<?php } ?>
 	<div class="pf-element">
 		<label>
 			<span class="pf-label">Parent</span>
@@ -244,6 +235,30 @@ if ($pines->config->com_sales->com_storefront) {
 		</label>
 	</div>
 	<?php if ($pines->config->com_sales->com_storefront) { ?>
+	<div class="pf-element">
+		<label><span class="pf-label">Show Menu</span>
+			<input class="pf-field" type="checkbox" name="show_menu" value="ON"<?php echo $this->entity->show_menu ? ' checked="checked"' : ''; ?> /></label>
+	</div>
+	<div class="pf-element">
+		<label><span class="pf-label">Menu Position</span>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_menu_position" name="menu_position" size="24" value="<?php echo htmlspecialchars($this->entity->menu_position); ?>" /></label>
+	</div>
+	<div class="pf-element">
+		<label><span class="pf-label">Show Child Categories</span>
+			<span class="pf-note">Show child categories when browsing this category.</span>
+			<input class="pf-field" type="checkbox" name="show_children" value="ON"<?php echo $this->entity->show_children ? ' checked="checked"' : ''; ?> /></label>
+	</div>
+	<div class="pf-element">
+		<label><span class="pf-label">Show Description</span>
+			<span class="pf-note">Show description when browsing this category.</span>
+			<input class="pf-field" type="checkbox" name="show_description" value="ON"<?php echo $this->entity->show_description ? ' checked="checked"' : ''; ?> /></label>
+	</div>
+	<div class="pf-element pf-full-width">
+		<span class="pf-label">Description</span>
+		<div class="pf-group">
+			<div class="pf-field"><textarea rows="3" cols="35" class="peditor ui-widget-content ui-corner-all" name="description"><?php echo $this->entity->description; ?></textarea></div>
+		</div>
+	</div>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Common Specs</span>
 		<span class="pf-note">These specs will be available for filtering in the storefront.</span>

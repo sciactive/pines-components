@@ -51,7 +51,10 @@ if ($pines->config->com_sales->com_storefront) {
 				$show_filter = ($cur_spec->values[3] == 'Yes');
 				$restricted = ($cur_spec->values[4] == 'Yes');
 				$options = empty($cur_spec->values[5]) ? array() : explode(';;', $cur_spec->values[5]);
-				array_walk($options, 'floatval');
+				foreach ($options as &$cur_option) {
+					$cur_option = (float) $cur_option;
+				}
+				unset($cur_option);
 				break;
 			case 'bool':
 				$show_filter = ($cur_spec->values[3] == 'Yes');

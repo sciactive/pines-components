@@ -59,6 +59,13 @@ return array(
 		'value' => true,
 		'peruser' => true,
 	),
+	array(
+		'name' => 'replace_static',
+		'cname' => 'Replace Paths',
+		'description' => 'Replace paths to the upload URL (like image sources) with static path. This applies to all components that print formatted content. It only applies when a static path is set.',
+		'value' => true,
+		'peruser' => true,
+	),
 );
 
 ?>

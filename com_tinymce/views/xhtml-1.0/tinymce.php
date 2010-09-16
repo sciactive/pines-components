@@ -20,7 +20,7 @@ if (isset($pines->com_elfinder))
 	pines(function(){
 		$("textarea.peditor").tinymce({
 			// Location of TinyMCE script
-			script_url : '<?php echo htmlspecialchars($pines->config->location); ?>components/com_tinymce/includes/tiny_mce/tiny_mce.js',
+			script_url : '<?php echo htmlspecialchars($pines->config->rela_location); ?>components/com_tinymce/includes/tiny_mce/tiny_mce.js',
 			// General options
 			theme : "advanced",
 			plugins : "pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,advlist",
@@ -54,7 +54,7 @@ if (isset($pines->com_elfinder))
 		});
 		$("textarea.peditor-simple").tinymce({
 			// Location of TinyMCE script
-			script_url : '<?php echo htmlspecialchars($pines->config->location); ?>components/com_tinymce/includes/tiny_mce/tiny_mce.js',
+			script_url : '<?php echo htmlspecialchars($pines->config->rela_location); ?>components/com_tinymce/includes/tiny_mce/tiny_mce.js',
 			// General options
 			theme : "simple",
 			// Template's editor CSS

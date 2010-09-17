@@ -70,7 +70,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 								this.phone_work,
 								this.phone_cell,
 								this.fax,
-								this.login_disabled ? "Yes" : "No",
+								this.enabled ? "Yes" : "No",
 								this.member ? (this.valid_member ? "Yes" : "Expired") : "No",
 								this.member_exp,
 								this.points
@@ -150,7 +150,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>Work Phone</th>
 			<th>Cell Phone</th>
 			<th>Fax</th>
-			<th>Login Disabled</th>
+			<th>Login Enabled</th>
 			<th>Member</th>
 			<th>Expiration</th>
 			<th>Points</th>

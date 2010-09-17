@@ -73,13 +73,13 @@ if (isset($this->captionOpacity))
 		if (empty($cur_image))
 			continue;
 		$image_html = '';
-		$parts = explode(';', $cur_image);
+		$parts = explode(';', $cur_image, 4);
 		$image_html .= '<img alt="" src="'.htmlspecialchars($dir.$parts[0]);
 		if (!empty($parts[1]))
 			$image_html .= '" title="'.htmlspecialchars($parts[1]);
 		$image_html .= '" />';
-		if (!empty($parts[2]))
-			$image_html = '<a href="'.htmlspecialchars($parts[2]).'">'.$image_html.'</a>';
+		if (!empty($parts[2]) || !empty($parts[3]))
+			$image_html = '<a'.(empty($parts[2]) ? '' : ' href="'.htmlspecialchars($parts[2]).'"').(empty($parts[3]) ? '' : ' onclick="'.htmlspecialchars($parts[3]).'"').'>'.$image_html.'</a>';
 		echo $image_html;
 	}
 	?>

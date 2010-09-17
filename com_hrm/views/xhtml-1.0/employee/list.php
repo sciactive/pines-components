@@ -19,10 +19,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	// <![CDATA[
 
 	pines(function(){
+		<?php if (gatekeeper('com_hrm/fileissue')) { ?>
 		var issue_id;
 		var issue_dialog = $("#p_muid_issue_dialog");
-		var terminate_id;
-		var terminate_dialog = $("#p_muid_terminate_dialog");
 
 		$("[name=effective_date]").datepicker({
 			dateFormat: "yy-mm-dd",
@@ -53,6 +52,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				}
 			}
 		});
+		<?php } if ($this->employed) { ?>
+		var terminate_id;
+		var terminate_dialog = $("#p_muid_terminate_dialog");
 
 		terminate_dialog.find("form").submit(function(){
 			terminate_dialog.dialog('option', 'buttons').Done();
@@ -75,7 +77,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				}
 			}
 		});
-		<?php if (!$this->employed) { ?>
+
+		<?php } else { ?>
 		var rehire_id;
 		var rehire_dialog = $("#p_muid_rehire_dialog");
 
@@ -100,6 +103,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			}
 		});
 		<?php } ?>
+
 		var state_xhr;
 		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
 		var cur_defaults = {
@@ -156,9 +160,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<?php } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
-				<?php if (gatekeeper('com_hrm/viewhistory')) { ?>
 				{type: 'button', text: 'History', extra_class: 'picon picon-folder-html', url: '<?php echo addslashes(pines_url('com_hrm', 'employee/history', array('id' => '__title__'))); ?>'},
-				<?php } if (gatekeeper('com_hrm/fileissue')) { ?>
+				<?php if (gatekeeper('com_hrm/fileissue')) { ?>
 				{type: 'button', text: 'File Issue', extra_class: 'picon picon-im-ban-user', multi_select: true, click: function(e, rows){
 					issue_id = "";
 					$.each(rows.pgrid_export_rows(), function(){
@@ -235,6 +238,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<?php } ?>
 	</tbody>
 </table>
+<?php if (gatekeeper('com_hrm/fileissue')) { ?>
 <div id="p_muid_issue_dialog" title="File Employee Issue" style="display: none;">
 	<form class="pf-form" method="post" action="">
 		<div class="pf-element pf-heading dialog_title"></div>
@@ -269,6 +273,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</form>
 	<br />
 </div>
+<?php } if ($this->employed) { ?>
 <div id="p_muid_terminate_dialog" title="Terminate Employee" style="display: none;">
 	<form class="pf-form" method="post" action="">
 		<div class="pf-element pf-heading dialog_title"></div>
@@ -290,7 +295,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</form>
 	<br />
 </div>
-<?php if (!$this->employed) { ?>
+<?php } else { ?>
 <div id="p_muid_rehire_dialog" title="Rehire Employee" style="display: none;">
 	<form class="pf-form" method="post" action="">
 		<div class="pf-element pf-heading dialog_title"></div>

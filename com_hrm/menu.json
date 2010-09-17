@@ -37,5 +37,10 @@
 			"depend": {
 				"ability": "com_hrm/listemployees"
 			}
+		},
+		{
+			"path": "main_menu/business/hrm/workhistory",
+			"text": "Work History",
+			"href": ["com_hrm","employee/history"]
 		}
 ]

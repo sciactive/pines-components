@@ -32,12 +32,12 @@ $pines->com_pgrid->load();
 	}
 	/* ]]> */
 </style>
-<?php if (!empty($this->sales)) { ?>
 <script type="text/javascript">
 	// <![CDATA[
 	var p_muid_notice;
 
 	pines(function(){
+		<?php if (!empty($this->sales)) { ?>
 		var cur_defaults = {
 			pgrid_sort_col: 1,
 			pgrid_sort_ord: 'asc',
@@ -56,7 +56,7 @@ $pines->com_pgrid->load();
 			]
 		};
 		$("#p_muid_grid, #p_muid_grid2").pgrid(cur_defaults);
-
+		<?php } ?>
 		$("#p_muid_issues").pgrid({
 			pgrid_sort_col: 1,
 			pgrid_sort_ord: 'asc',
@@ -138,7 +138,6 @@ $pines->com_pgrid->load();
 	});
 	// ]]>
 </script>
-<?php } ?>
 <div class="pf-form">
 	<div class="pf-element pf-heading">
 		<h1>Employment History</h1>
@@ -165,7 +164,9 @@ $pines->com_pgrid->load();
 					<th>Penalty</th>
 					<th>Filed by</th>
 					<th>Status</th>
+					<?php if (gatekeeper('com_hrm/resolveissue')) { ?>
 					<th>Actions</th>
+					<?php } ?>
 				</tr>
 			</thead>
 			<tbody>
@@ -177,16 +178,16 @@ $pines->com_pgrid->load();
 					<td>$<?php echo round($cur_issue->issue_type->penalty*$cur_issue->quantity, 2); ?></td>
 					<td><?php echo htmlspecialchars($cur_issue->user->name); ?></td>
 					<td><?php echo htmlspecialchars($cur_issue->status); ?></td>
+					<?php if (gatekeeper('com_hrm/resolveissue')) { ?>
 					<td><div class="p_muid_issue_actions">
-						<?php if (gatekeeper('com_hrm/resolveissue')) {
-							if ($cur_issue->status != 'resolved') { ?>
-							<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_process_issue('<?php echo $cur_issue->guid; ?>', 'resolved');" title="Resolve"><span class="p_muid_btn picon picon-flag-yellow"></span></button>
-							<?php } else { ?>
-							<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_process_issue('<?php echo $cur_issue->guid; ?>', 'unresolved');" title="Reissue"><span class="p_muid_btn picon picon-flag-red"></span></button>
-							<?php } ?>
-							<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_process_issue('<?php echo $cur_issue->guid; ?>', 'delete');" title="Remove"><span class="p_muid_btn picon picon-edit-delete"></span></button>
+						<?php if ($cur_issue->status != 'resolved') { ?>
+						<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_process_issue('<?php echo $cur_issue->guid; ?>', 'resolved');" title="Resolve"><span class="p_muid_btn picon picon-flag-yellow"></span></button>
+						<?php } else { ?>
+						<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_process_issue('<?php echo $cur_issue->guid; ?>', 'unresolved');" title="Reissue"><span class="p_muid_btn picon picon-flag-red"></span></button>
 						<?php } ?>
-						</div></td>
+						<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_process_issue('<?php echo $cur_issue->guid; ?>', 'delete');" title="Remove"><span class="p_muid_btn picon picon-edit-delete"></span></button>
+					</div></td>
+					<?php } ?>
 				</tr>
 				<?php } ?>
 			</tbody>
@@ -256,6 +257,7 @@ $pines->com_pgrid->load();
 			</tbody>
 		</table>
 	</div>
-	<?php } ?>
+	<?php } if (gatekeeper('com_hrm/listemployees')) { ?>
 	<input class="pf-button ui-state-default ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_hrm', 'employee/list', array('employed' => isset($this->entity->terminated) ? 'false' : 'true'))); ?>');" value="&laquo; Employees" />
+	<?php } ?>
 </div>

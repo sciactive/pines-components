@@ -38,6 +38,7 @@ return array(
 		array('deleteissuetype', 'Delete Issue Types', 'User can delete employee issue types.'),
 		array('fileissue', 'File Issues', 'User can file employee issues.'),
 		array('resolveissue', 'Resolve Issues', 'User can resolve employee issues.'),
+		array('viewownhistory', 'View Own History', 'User can view their own history.'),
 		array('clock', 'Clock In/Out', 'User can use the employee timeclock to clock in. (If they are an employee.)'),
 		array('viewownclock', 'View Own Timeclock', 'User can view their own timeclock.'),
 		array('viewclock', 'View Timeclock', 'User can view the employee timeclock (including times).'),

@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 if (gatekeeper('com_hrm/listemployees') && !empty($_REQUEST['id'])) {
 	$entity = com_hrm_employee::factory((int) $_REQUEST['id']);
 	$entity->print_history();
-} elseif ($_SESSION['user']->employee) {
+} elseif (gatekeeper('com_hrm/viewownhistory') && $_SESSION['user']->employee) {
 	$entity = com_hrm_employee::factory((int) $_SESSION['user']->guid);
 	$entity->print_history();
 } else {

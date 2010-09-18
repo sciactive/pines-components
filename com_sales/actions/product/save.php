@@ -40,7 +40,9 @@ $product->manufacturer_sku = $_REQUEST['manufacturer_sku'];
 
 // Images
 $product->images = (array) json_decode($_REQUEST['images'], true);
-foreach ($product->images as $key => $cur_image) {
+foreach ($product->images as $key => &$cur_image) {
+	if ($cur_image['alt'] == 'Click to edit description...')
+		$cur_image['alt'] = '';
 	if (!$pines->uploader->check($cur_image['file']))
 		unset($product->images[$key]);
 }

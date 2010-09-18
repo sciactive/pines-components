@@ -337,7 +337,7 @@ $pines->com_ptags->load();
 						<?php if ($this->entity->images) { foreach ($this->entity->images as $cur_image) { ?>
 						<li class="ui-state-default ui-corner-all">
 							<img alt="<?php echo htmlspecialchars(basename($cur_image['file'])); ?>" src="<?php echo htmlspecialchars($cur_image['file']); ?>" />
-							<p><?php echo htmlspecialchars(basename($cur_image['alt'])); ?></p>
+							<p><?php echo empty($cur_image['alt']) ? 'Click to edit description...' : htmlspecialchars(basename($cur_image['alt'])); ?></p>
 						</li>
 						<?php } } ?>
 					</ul>

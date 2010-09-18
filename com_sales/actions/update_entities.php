@@ -1,13 +1,13 @@
 <?php
 /**
- * Update sale entities.
+ * Update product image descriptions.
  *
  * This is only a temporary file. It will be removed shortly.
  *
  * @package Pines
  * @subpackage com_sales
  * @license http://www.gnu.org/licenses/agpl-3.0.html
- * @author Hunter Perrin <hunter@sciactive.com>
+ * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com
  * @link http://sciactive.com/
  */
@@ -17,51 +17,33 @@ if ( !gatekeeper('system/all') )
 	punt_user();
 
 $module = new module('system', 'null', 'content');
-$module->title = 'Sale Entity ID Update';
+$module->title = 'Product Image Description Update';
 
 $errors = array();
 $offset = $count = $nochange = 0;
-// Grab all sales, 50 at a time, and resave.
+// Grab all products, 50 at a time, and resave.
 do {
 	$entities = $pines->entity_manager->get_entities(
-			array('limit' => 50, 'offset' => $offset, 'class' => com_sales_sale),
+			array('limit' => 50, 'offset' => $offset, 'class' => com_sales_product),
 			array('&',
-				'tag' => array('com_sales', 'sale')
+				'tag' => array('com_sales', 'product'),
+				'data' => array('images', true)
 			)
 		);
-	// If we have run through all entities, we are done updating.
-	foreach ($entities as &$cur_entity) {
-		if (!isset($cur_entity->id)) {
-			if ($cur_entity->save())
-				$count++;
-			else
-				$errors[] = $entity->guid;
-		} else {
-			$nochange++;
-		}
-	}
-	unset($cur_entity);
-	$offset += 50;
-} while (!empty($entities));
 
-$offset = 0;
-// Grab all sales, 50 at a time, and resave.
-do {
-	$entities = $pines->entity_manager->get_entities(
-			array('limit' => 50, 'offset' => $offset, 'class' => com_sales_stock),
-			array('&',
-				'tag' => array('com_sales', 'stock')
-			)
-		);
-	// If we have run through all entities, we are done updating.
 	foreach ($entities as &$cur_entity) {
-		if (isset($cur_entity->status)) {
-			$cur_entity->available = ($cur_entity->status == 'available');
-			unset($cur_entity->status);
+		$changed = false;
+		foreach ($cur_entity->images as &$cur_image) {
+			if ($cur_image['alt'] == 'Click to edit description...') {
+				$cur_image['alt'] = '';
+				$changed = true;
+			}
+		}
+		if ($changed) {
 			if ($cur_entity->save())
 				$count++;
 			else
-				$errors[] = $entity->guid;
+				$errors[] = $cur_entity->guid;
 		} else {
 			$nochange++;
 		}

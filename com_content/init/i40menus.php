@@ -67,6 +67,8 @@ if ($pines->config->com_content->show_cat_menus) {
 		if (!$category->children)
 			return;
 		foreach ($category->children as $cur_category) {
+			if (!$cur_category->enabled)
+				continue;
 			$pines->menu->menu_arrays[] = array(
 				'path' => "{$path}/cat_{$cur_category->guid}",
 				'text' => $cur_category->name,
@@ -89,6 +91,8 @@ if ($pines->config->com_content->show_cat_menus) {
 	}
 
 	foreach ($categories as $cur_category) {
+		if (!$cur_category->enabled)
+			continue;
 		if (strpos($cur_category->menu_position, '/') === false) {
 			// It's a new top level menu.
 			$menu_position = "com_content_cat_{$cur_category->guid}";

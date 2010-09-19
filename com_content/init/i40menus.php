@@ -72,6 +72,17 @@ if ($pines->config->com_content->show_cat_menus) {
 				'text' => $cur_category->name,
 				'href' => array('com_content', 'category/browse', array('id' => $cur_category->guid))
 			);
+
+			if ($cur_category->show_pages_in_menu) {
+				foreach ($cur_category->pages as $cur_page) {
+					// It's part of another menu.
+					$pines->menu->menu_arrays[] = array(
+						'path' => "{$path}/cat_{$cur_category->guid}/page_{$cur_page->guid}",
+						'text' => $cur_page->name,
+						'href' => array('com_content', 'page', array('a' => $cur_page->alias))
+					);
+				}
+			}
 			if ($cur_category->children)
 				com_content__category_menu($cur_category, "{$path}/cat_{$cur_category->guid}");
 		}
@@ -80,31 +91,32 @@ if ($pines->config->com_content->show_cat_menus) {
 	foreach ($categories as $cur_category) {
 		if (strpos($cur_category->menu_position, '/') === false) {
 			// It's a new top level menu.
+			$menu_position = "com_content_cat_{$cur_category->guid}";
 			$pines->menu->menu_arrays[] = array(
-				'path' => "com_content_cat_{$cur_category->guid}",
+				'path' => $menu_position,
 				'text' => $cur_category->name,
 				'position' => $cur_category->menu_position
 			);
-			com_content__category_menu($cur_category, "com_content_cat_{$cur_category->guid}");
 		} else {
 			// It's part of another menu.
+			$menu_position = $cur_category->menu_position;
 			$pines->menu->menu_arrays[] = array(
-				'path' => $cur_category->menu_position,
+				'path' => $menu_position,
 				'text' => $cur_category->name,
 				'href' => array('com_content', 'category/browse', array('id' => $cur_category->guid))
 			);
-			com_content__category_menu($cur_category, $cur_category->menu_position);
 		}
+		if ($cur_category->children)
+			com_content__category_menu($cur_category, $menu_position);
 
 		if ($cur_category->show_pages_in_menu) {
 			foreach ($cur_category->pages as $cur_page) {
 				// It's part of another menu.
 				$pines->menu->menu_arrays[] = array(
-					'path' => $cur_category->menu_position.'/page_'.$cur_page->guid,
+					'path' => "{$menu_position}/page_{$cur_page->guid}",
 					'text' => $cur_page->name,
 					'href' => array('com_content', 'page', array('a' => $cur_page->alias))
 				);
-				com_content__category_menu($cur_page, $cur_category->menu_position);
 			}
 		}
 	}

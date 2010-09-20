@@ -13,10 +13,11 @@ defined('P_RUN') or die('Direct access prohibited');
 
 $category = com_content_category::factory((int) $_REQUEST['id']);
 
-if (!isset($category->guid)) {
-	pines_notice('Requested category id could not be loaded.');
-	return;
-}
+if (!isset($category->guid) || !$category->enabled)
+	return 'error_404';
+
+// Page title.
+$pines->page->title_pre("$category->name - ");
 
 foreach ($category->pages as $cur_page) {
 	if (!isset($cur_page))

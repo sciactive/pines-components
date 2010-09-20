@@ -22,6 +22,13 @@ if (isset($_REQUEST['id'])) {
 			)
 		);
 }
+
+if (!isset($entity->guid) || !$entity->enabled)
+	return 'error_404';
+
+// Page title.
+$pines->page->title_pre("$entity->name - ");
+
 $entity->print_page();
 
 ?>

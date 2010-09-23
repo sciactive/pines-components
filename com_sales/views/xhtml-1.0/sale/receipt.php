@@ -238,7 +238,7 @@ switch ($this->entity->status) {
 				<?php } ?>
 				<hr style="visibility: hidden;" />
 				<span>Amount <?php echo $sale ? 'Tendered' : 'Refunded'; ?>:</span>
-				<?php if ($sale) { ?><span>Change:</span><?php } ?>
+				<?php if ($sale && $this->entity->change) { ?><span>Change:</span><?php } ?>
 			</div>
 			<div class="data_col right_text">
 				<?php foreach ($this->entity->payments as $cur_payment) { ?>
@@ -246,7 +246,7 @@ switch ($this->entity->status) {
 				<?php } ?>
 				<hr />
 				<span>$<?php echo $pines->com_sales->round($this->entity->amount_tendered, true); ?></span>
-				<?php if ($sale) { ?><span>$<?php echo $pines->com_sales->round($this->entity->change, true); ?></span><?php } ?>
+				<?php if ($sale && $this->entity->change) { ?><span>$<?php echo $pines->com_sales->round($this->entity->change, true); ?></span><?php } ?>
 			</div>
 		</div>
 		<?php } ?>

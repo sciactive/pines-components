@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_hrm/editissuetypes') )
 	punt_user(null, pines_url('com_hrm', 'issue/list'));
 
-if ( isset($_REQUEST['id']) ) {
+if (isset($_REQUEST['id']) && (int) $_REQUEST['id'] != 0) {
 	$issue_type = com_hrm_issue_type::factory((int) $_REQUEST['id']);
 	if (!isset($issue_type->guid)) {
 		pines_error('Requested issue type id is not accessible.');
@@ -24,8 +24,8 @@ if ( isset($_REQUEST['id']) ) {
 	$issue_type = com_hrm_issue_type::factory();
 }
 $issue_type->name = $_REQUEST['name'];
-//$issue_type->description = $_REQUEST['description'];
 $issue_type->penalty = $_REQUEST['penalty'];
+$issue_type->description = $_REQUEST['description'];
 
 if (empty($issue_type->name)) {
 	pines_notice('Please provide a name for this issue type.');

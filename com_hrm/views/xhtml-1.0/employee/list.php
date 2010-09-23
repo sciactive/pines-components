@@ -161,8 +161,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
 				{type: 'button', text: 'History', extra_class: 'picon picon-folder-html', url: '<?php echo addslashes(pines_url('com_hrm', 'employee/history', array('id' => '__title__'))); ?>'},
-				<?php if (gatekeeper('com_hrm/fileissue')) { ?>
-				{type: 'button', text: 'File Issue', extra_class: 'picon picon-im-ban-user', multi_select: true, click: function(e, rows){
+				<?php if (gatekeeper('com_hrm/fileissue')) {
+				//mail-meeting-request-reply
+				//im-ban-user
+				//view-form-action
+				?>
+				{type: 'button', text: 'File Issue', extra_class: 'picon picon-task-attention', multi_select: true, click: function(e, rows){
 					issue_id = "";
 					$.each(rows.pgrid_export_rows(), function(){
 						if (issue_id != "")
@@ -190,7 +194,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					terminate_dialog.dialog("open");
 				}},
 				<?php } if (gatekeeper('com_hrm/editissuetypes')) { ?>
-				{type: 'button', text: 'Issue Types', extra_class: 'picon picon-user-properties', selection_optional: true, url: '<?php echo addslashes(pines_url('com_hrm', 'issue/list')); ?>'},
+				{type: 'button', text: 'Issue Types', extra_class: 'picon picon-story-editor', selection_optional: true, url: '<?php echo addslashes(pines_url('com_hrm', 'issue/list')); ?>'},
 				<?php } ?>
 				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
@@ -254,7 +258,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Occurred on</span>
-				<input class="ui-widget-content ui-corner-all" type="text" size="16" name="effective_date" value="<?php echo format_date(time(), 'date_sort'); ?>" /></label>
+				<input class="ui-widget-content ui-corner-all" type="text" size="24" name="effective_date" value="<?php echo format_date(time(), 'date_sort'); ?>" /></label>
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label"># of Occurrences</span>

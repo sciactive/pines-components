@@ -106,7 +106,7 @@ switch ($this->entity->status) {
 	</div>
 	<div class="right_side barcode">
 		<h1><?php echo htmlspecialchars($this->doc_title); ?></h1>
-		<img src="<?php echo htmlspecialchars(pines_url('com_barcode', 'image', array('code' => $doc_id, 'height' => '60', 'width' => '300', 'style' => '850'))); ?>" alt="Barcode" />
+		<img src="<?php echo htmlspecialchars(pines_url('com_barcode', 'image', array('code' => $doc_id, 'height' => '60', 'width' => '300', 'style' => '850'), true)); ?>" alt="Barcode" />
 	</div>
 	<?php if (isset($sales_rep->guid)) { ?>
 	<div class="left_side location">

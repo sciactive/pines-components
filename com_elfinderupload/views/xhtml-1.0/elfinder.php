@@ -35,12 +35,7 @@ defined('P_RUN') or die('Direct access prohibited');
 				});
 			};
 			pfile.click(show_finder).focus(function(){pfile.blur()});
-			$("<button />", {
-				"class": "ui-state-default ui-corner-all",
-				"type": "button",
-				"css": {"margin-left": ".5em"},
-				"html": "Browse"
-			})
+			$("<button class=\"ui-state-default ui-corner-all\" type=\"button\" style=\"margin-left: .5em\">Browse</button>")
 			.button()
 			.click(show_finder)
 			.insertAfter(pfile);

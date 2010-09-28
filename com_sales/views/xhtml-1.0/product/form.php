@@ -289,7 +289,7 @@ $pines->com_ptags->load();
 						if (last_image == "")
 							return;
 						var last_file = last_image.replace(/.*\//, "");
-						var last_number = parseInt(last_image.replace(/.*(\d+).*/, "$1"));
+						var last_number = parseInt(last_image.match(/\d+/));
 						if (isNaN(last_number)) {
 							alert("Couldn't detect file pattern. Please name them as sequential numbers, like 1.jpg, 2.jpg, etc.");
 							return;
@@ -303,7 +303,7 @@ $pines->com_ptags->load();
 							error: function(){
 								alert("No more files found.");
 							},
-							success: function(data, textStatus, xhr){
+							success: function(){
 								add_image(new_image);
 								auto_add();
 							}

@@ -265,6 +265,8 @@ $pines->com_ptags->load();
 			<script type="text/javascript">
 				// <![CDATA[
 				pines(function(){
+					var last_image = "";
+
 					var update_images = function(){
 						var images = [];
 						$("li", "#p_muid_sortable").each(function(){
@@ -277,12 +279,43 @@ $pines->com_ptags->load();
 						$("input[name=images]", "#p_muid_tab_images").val(JSON.stringify(images));
 					};
 					update_images();
+					
+					var add_image = function(image){
+						last_image = image;
+						$("<li class=\"ui-state-default ui-corner-all\"><img alt=\""+image.replace(/.*\//, '')+"\" src=\""+image+"\" /><p>Click to edit description...</p></li>").appendTo($("#p_muid_sortable"));
+						update_images();
+					};
+					var auto_add = function(){
+						if (last_image == "")
+							return;
+						var last_file = last_image.replace(/.*\//, "");
+						var last_number = parseInt(last_image.replace(/.*(\d+).*/, "$1"));
+						if (isNaN(last_number)) {
+							alert("Couldn't detect file pattern. Please name them as sequential numbers, like 1.jpg, 2.jpg, etc.");
+							return;
+						}
+						var new_number = last_number + 1;
+						var new_file = last_file.replace(/\d+/, new_number);
+						var new_image = last_image.replace(last_file, new_file);
+						$.ajax({
+							type: "GET",
+							url: new_image,
+							error: function(){
+								alert("No more files found.");
+							},
+							success: function(data, textStatus, xhr){
+								add_image(new_image);
+								auto_add();
+							}
+						});
+					};
 
 					$("#p_muid_image_upload").change(function(){
-						var image = $(this).val();
-						$("<li class=\"ui-state-default ui-corner-all\"><img alt=\""+image.replace(/.*\//, '')+"\" src=\""+image+"\" /><p>Click to edit description...</p></li>").appendTo($("#p_muid_sortable"));
+						add_image($(this).val());
 						$(this).val("");
-						update_images();
+					});
+					$("#p_muid_auto_add").click(function(){
+						auto_add();
 					});
 					$("#p_muid_sortable")
 					.delegate("li p", "click", function(){
@@ -320,8 +353,9 @@ $pines->com_ptags->load();
 				// ]]>
 			</script>
 			<div class="pf-element">
-				<label><span class="pf-label">Add an Image</span>
-					<input class="pf-field ui-widget-content ui-corner-all puploader" id="p_muid_image_upload" type="text" value="" /></label>
+				<span class="pf-label">Add an Image</span>
+				<input class="pf-field ui-widget-content ui-corner-all puploader" id="p_muid_image_upload" type="text" value="" />
+				<button class="ui-state-default ui-corner-all" type="button" id="p_muid_auto_add">Auto Add Last Directory</button>
 			</div>
 			<div class="pf-element">
 				<span class="pf-label">Images</span>
@@ -345,8 +379,8 @@ $pines->com_ptags->load();
 				</div>
 			</div>
 			<div class="pf-element">
-				<label><span class="pf-label">Thumbnail</span>
-					<input class="pf-field ui-widget-content ui-corner-all puploader" id="p_muid_thumbnail" type="text" name="thumbnail" value="<?php echo htmlspecialchars($this->entity->thumbnail); ?>" /></label>
+				<span class="pf-label">Thumbnail</span>
+				<input class="pf-field ui-widget-content ui-corner-all puploader" id="p_muid_thumbnail" type="text" name="thumbnail" value="<?php echo htmlspecialchars($this->entity->thumbnail); ?>" />
 			</div>
 			<div class="pf-element">
 				<span class="pf-label">Thumbnail Preview</span>

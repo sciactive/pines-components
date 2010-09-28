@@ -289,7 +289,7 @@ $pines->com_ptags->load();
 						if (last_image == "")
 							return;
 						var last_file = last_image.replace(/.*\//, "");
-						var last_number = parseInt(last_image.match(/\d+/));
+						var last_number = parseInt(last_file.match(/\d+/));
 						if (isNaN(last_number)) {
 							alert("Couldn't detect file pattern. Please name them as sequential numbers, like 1.jpg, 2.jpg, etc.");
 							return;
@@ -297,6 +297,10 @@ $pines->com_ptags->load();
 						var new_number = last_number + 1;
 						var new_file = last_file.replace(/\d+/, new_number);
 						var new_image = last_image.replace(last_file, new_file);
+						if (last_image == new_image) {
+							alert("Couldn't detect file pattern. Please name them as sequential numbers, like 1.jpg, 2.jpg, etc.");
+							return;
+						}
 						$.ajax({
 							type: "GET",
 							url: new_image,

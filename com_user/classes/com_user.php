@@ -257,7 +257,24 @@ class com_user extends component implements user_manager_interface {
 	}
 
 	public function print_login($position = 'content', $url = null) {
+		global $pines;
 		$module = new module('com_user', 'modules/login', $position);
+		if ($pines->config->com_user->sawasc) {
+			if ($pines->config->com_user->pw_method == 'salt') {
+				pines_notice('SAWASC is not compatible with the Salt password storage method.');
+			} else {
+				$module->sawasc = true;
+				// Check that a challenge block was created within 10 minutes.
+				if (!isset($_SESSION['sawasc']['ServerCB']) || $_SESSION['sawasc']['timestamp'] < time() - 600) {
+					// If not, generate one.
+					$_SESSION['sawasc'] = array(
+						'ServerCB' => uniqid('', true),
+						'timestamp' => time(),
+						'algo' => $pines->config->com_user->sawasc_hash
+					);
+				}
+			}
+		}
 		$module->url = $url;
 		if (isset($_REQUEST['url']))
 			$module->url = $_REQUEST['url'];

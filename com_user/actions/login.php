@@ -47,17 +47,47 @@ if ( gatekeeper() && $_REQUEST['username'] == $_SESSION['user']->username ) {
 	redirect(pines_url());
 	return;
 }
+// Check that a challenge block was created within 10 minutes.
+if (($pines->config->com_user->sawasc && $pines->config->com_user->pw_method != 'salt') && (!isset($_SESSION['sawasc']['ServerCB']) || $_SESSION['sawasc']['timestamp'] < time() - 600)) {
+	pines_notice('Your login request session has expired, please try again.');
+	$pines->user_manager->print_login();
+	return;
+}
 $user = user::factory($_REQUEST['username']);
-if ( isset($user->guid) && $user->check_password($_REQUEST['password']) && $pines->user_manager->login($user) ) {
-	if ( !empty($_REQUEST['url']) ) {
-		redirect(urldecode($_REQUEST['url']));
-		return;
-	}
-	// Load the default component.
-	redirect(pines_url());
-} else {
+if (!isset($user->guid)) {
 	pines_notice('Incorrect username/password.');
 	$pines->user_manager->print_login();
+	return;
 }
+if ($pines->config->com_user->sawasc && $pines->config->com_user->pw_method != 'salt') {
+	if (!$user->check_sawasc($_REQUEST['ClientHash'], $_SESSION['sawasc']['ServerCB'], $_SESSION['sawasc']['algo'])) {
+		unset($_SESSION['sawasc']);
+		pines_notice('Incorrect username/password.');
+		$pines->user_manager->print_login();
+		return;
+	}
+	unset($_SESSION['sawasc']);
+} else {
+	if (!$user->check_password($_REQUEST['password'])) {
+		pines_notice('Incorrect username/password.');
+		$pines->user_manager->print_login();
+		return;
+	}
+}
+
+// Authentication was successful, attempt to login.
+if (!$pines->user_manager->login($user)) {
+	pines_notice('Incorrect username/password.');
+	$pines->user_manager->print_login();
+	return;
+}
+
+// Login was successful.
+if ( !empty($_REQUEST['url']) ) {
+	redirect(urldecode($_REQUEST['url']));
+	return;
+}
+// Load the default component.
+redirect(pines_url());
 
 ?>

@@ -13,11 +13,32 @@ defined('P_RUN') or die('Direct access prohibited');
 if (empty($this->title))
 	$this->title = "Login to {$pines->config->system_name}";
 ?>
-<?php if ($this->style != 'compact' && $this->style != 'small') { ?>
+<?php if ($this->sawasc || ($this->style != 'compact' && $this->style != 'small')) { ?>
 <script type="text/javascript">
 	// <![CDATA[
+	<?php if ($this->sawasc) { ?>
+	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_user/includes/hash.js");
+	<?php } ?>
 	pines(function(){
+		<?php if ($this->style != 'compact' && $this->style != 'small') { ?>
 		$("input[name=username]", "#p_muid_form").focus();
+		<?php } if ($this->sawasc) { ?>
+		$("#p_muid_form").submit(function(){
+			// SAWASC code
+			if ($("input[name=login_register][value=register]:checked", "#p_muid_form").length)
+				return true;
+			var password_box = $("input[name=password]", "#p_muid_form");
+			var password = password_box.val();
+			var ClientComb = "<?php echo addslashes($_SESSION['sawasc']['ServerCB']); ?>" + md5(password+'7d5bc9dc81c200444e53d1d10ecc420a');
+			<?php if ($_SESSION['sawasc']['algo'] == 'whirlpool') { ?>
+			var ClientHash = Whirlpool(ClientComb).toLowerCase();
+			<?php } else { ?>
+			var ClientHash = md5(ClientComb);
+			<?php } ?>
+			$("input[name=ClientHash]", "#p_muid_form").val(ClientHash);
+			password_box.val("");
+		});
+		<?php } ?>
 	});
 	// ]]>
 </script>
@@ -89,7 +110,9 @@ if (empty($this->title))
 		<div class="pf-element<?php echo ($this->style == 'small') ? '' : ' pf-buttons'; ?>">
 			<input type="hidden" name="option" value="com_user" />
 			<input type="hidden" name="action" value="login" />
-			<?php if ( isset($this->url) ) { ?>
+			<?php if ($this->sawasc) { ?>
+			<input type="hidden" name="ClientHash" value="" />
+			<?php } if ( isset($this->url) ) { ?>
 			<input type="hidden" name="url" value="<?php echo htmlspecialchars($this->url); ?>" />
 			<?php } ?>
 			<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Login" />

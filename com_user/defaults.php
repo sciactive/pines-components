@@ -100,6 +100,22 @@ return array(
 		),
 	),
 	array(
+		'name' => 'sawasc',
+		'cname' => 'Enable SAWASC',
+		'description' => 'SAWASC secures user authentication. If you do not host your site using SSL/TLS, you should enable this. However, it is not compatible with the "Salt" password storage method. See http://sawasc.sciactive.com/ for more information.',
+		'value' => false,
+	),
+	array(
+		'name' => 'sawasc_hash',
+		'cname' => 'SAWASC Hash Function',
+		'description' => 'Hash function to use during SAWASC authentication. If you don\'t know what this means, just leave it as the default.',
+		'value' => 'whirlpool',
+		'options' => array(
+			'md5',
+			'whirlpool',
+		),
+	),
+	array(
 		'name' => 'conditional_groups',
 		'cname' => 'Conditional Groups',
 		'description' => 'Allow groups to only provide abilities if conditions are met.',

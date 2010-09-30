@@ -150,8 +150,6 @@ class user extends able_object implements user_interface {
 			$pass = ($this->password == md5($password.$this->salt));
 			$cur_type = 'salt';
 		}
-		echo $cur_type;
-		exit;
 		if ($pass && $cur_type != $pines->config->com_user->pw_method) {
 			switch ($pines->config->com_user->pw_method) {
 				case 'plain':

@@ -57,7 +57,7 @@ if (!preg_match($pines->config->com_user->valid_regex, $user->username)) {
 	pines_notice($pines->config->com_user->valid_regex_notice);
 	return;
 }
-if (empty($user->password) && !$pines->config->com_user->empty_pw) {
+if (empty($user->password) && !$pines->config->com_user->pw_empty) {
 	$user->register();
 	pines_notice('Please specify a password.');
 	return;

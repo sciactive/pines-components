@@ -23,7 +23,7 @@ if ($this->entity->per_user) {
 	<?php foreach ($this->entity->get_full_config_array() as $cur_var) { ?>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label"><?php echo htmlspecialchars($cur_var['cname']); ?></span>
-		<span class="pf-note"><?php echo htmlspecialchars($cur_var['description']); ?></span>
+		<span class="pf-note"><?php echo str_replace("\n", '<br />', htmlspecialchars($cur_var['description'])); ?></span>
 		<div class="pf-group">
 			<div class="pf-field">
 				<?php if (is_array($cur_var['value'])) {

@@ -61,7 +61,7 @@ $pines->com_ptags->load();
 		} ?>
 	<div class="pf-element pf-full-width">
 		<label><span class="pf-label"><input class="p_muid_default_checkbox" type="checkbox" name="manset_<?php echo htmlspecialchars($cur_var['name']); ?>" value="ON" <?php echo $is_default ? '' : 'checked="checked" '; ?>/> <?php echo htmlspecialchars($cur_var['cname']); ?></span></label>
-		<span class="pf-note"><?php print_r($cur_var['description']); ?></span>
+		<span class="pf-note"><?php echo str_replace("\n", '<br />', htmlspecialchars($cur_var['description'])); ?></span>
 		<div class="setting" style="display: none;">
 			<?php if (is_array($cur_var['options'])) { ?>
 				<?php foreach($cur_var['options'] as $key => $cur_option) {

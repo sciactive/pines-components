@@ -218,7 +218,7 @@ if (isset($test->guid) && !$customer->is($test)) {
 	pines_notice('There is already a user with that username. Please choose a different username.');
 	return;
 }
-if (empty($customer->password) && !$pines->config->com_user->empty_pw) {
+if (empty($customer->password) && !$pines->config->com_user->pw_empty) {
 	$customer->print_form();
 	pines_notice('Please specify a password.');
 	return;

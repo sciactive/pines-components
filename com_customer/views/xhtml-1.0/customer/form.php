@@ -310,7 +310,7 @@ $pines->com_customer->load_company_select();
 			<div class="pf-element">
 				<label><span class="pf-label"><?php if (isset($this->entity->password)) echo 'Update '; ?>Password</span>
 					<?php if (!isset($this->entity->password)) {
-						echo ($pines->config->com_user->empty_pw ? '<span class="pf-note">May be blank.</span>' : '');
+						echo ($pines->config->com_user->pw_empty ? '<span class="pf-note">May be blank.</span>' : '');
 					} else {
 						echo '<span class="pf-note">Leave blank, if not changing.</span>';
 					} ?>

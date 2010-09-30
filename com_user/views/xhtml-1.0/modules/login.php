@@ -30,7 +30,7 @@ if (empty($this->title))
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Password</span>
-				<?php echo ($pines->config->com_user->empty_pw ? '<span class="pf-note">May be blank.</span>' : ''); ?>
+				<?php echo ($pines->config->com_user->pw_empty ? '<span class="pf-note">May be blank.</span>' : ''); ?>
 				<input class="pf-field ui-widget-content ui-corner-all" type="password" name="password" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
 		</div>
 		<?php if ($pines->config->com_user->allow_registration) { ?>

@@ -22,7 +22,7 @@ if ( $pines->config->com_user->allow_registration && $_REQUEST['login_register']
 		$pines->user_manager->print_login('content', $_REQUEST['url']);
 		return;
 	}
-	if (empty($_REQUEST['password']) && !$pines->config->com_user->empty_pw) {
+	if (empty($_REQUEST['password']) && !$pines->config->com_user->pw_empty) {
 		pines_notice('Password is a required field.');
 		$pines->user_manager->print_login('content', $_REQUEST['url']);
 		return;

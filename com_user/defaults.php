@@ -83,10 +83,21 @@ return array(
 		'peruser' => true,
 	),
 	array(
-		'name' => 'empty_pw',
+		'name' => 'pw_empty',
 		'cname' => 'Empty Passwords',
 		'description' => 'Allow users to have empty passwords.',
 		'value' => false,
+	),
+	array(
+		'name' => 'pw_method',
+		'cname' => 'Password Storage Method',
+		'description' => "Method used to store passwords. Salt is more secure if the database is compromised, but can't be used with SAWASC.\n\nPlain: store the password in plaintext.\nDigest: store the password's digest using a simple salt.\nSalt: store the password's digest using a complex, unique salt.",
+		'value' => 'digest',
+		'options' => array(
+			'Plain' => 'plain',
+			'Digest' => 'digest',
+			'Salt' => 'salt'
+		),
 	),
 	array(
 		'name' => 'conditional_groups',

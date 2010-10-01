@@ -55,6 +55,45 @@ class com_myentity extends component implements entity_manager_interface {
 		unset($this->entity_cache[$guid]);
 	}
 
+	/**
+	 * Create entity tables in the database.
+	 *
+	 * @return bool True on success, false on failure.
+	 */
+	private function create_tables() {
+		global $pines;
+		if ( !(mysql_query('SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";', $pines->com_mysql->link)) ) {
+			if (function_exists('pines_error'))
+				pines_error('Query failed: ' . mysql_error());
+			return false;
+		}
+		// Create the entity table.
+		$query = sprintf("CREATE TABLE IF NOT EXISTS `%scom_myentity_entities` (`guid` bigint(20) unsigned NOT NULL AUTO_INCREMENT, `tags` text, `varlist` text, `cdate` decimal(18,6) NOT NULL, `mdate` decimal(18,6) NOT NULL, PRIMARY KEY (`guid`), KEY `id_tags` (`tags`(1000)), KEY `id_varlist` (`varlist`(1000))) DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",
+			$pines->config->com_mysql->prefix);
+		if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
+			if (function_exists('pines_error'))
+				pines_error('Query failed: ' . mysql_error());
+			return false;
+		}
+		// Create the data table.
+		$query = sprintf("CREATE TABLE IF NOT EXISTS `%scom_myentity_data` (`guid` bigint(20) unsigned NOT NULL, `name` text NOT NULL, `value` longtext NOT NULL, PRIMARY KEY (`guid`,`name`(330))) DEFAULT CHARSET=utf8;",
+			$pines->config->com_mysql->prefix);
+		if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
+			if (function_exists('pines_error'))
+				pines_error('Query failed: ' . mysql_error());
+			return false;
+		}
+		// Create the UID table.
+		$query = sprintf("CREATE TABLE IF NOT EXISTS `%scom_myentity_uids` (`name` text NOT NULL, `cur_uid` bigint(20) unsigned NOT NULL, PRIMARY KEY (`name`(100))) DEFAULT CHARSET=utf8;",
+			$pines->config->com_mysql->prefix);
+		if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
+			if (function_exists('pines_error'))
+				pines_error('Query failed: ' . mysql_error());
+			return false;
+		}
+		return true;
+	}
+
 	public function delete_entity(&$entity) {
 		$return = $this->delete_entity_by_id($entity->guid);
 		if ( $return )
@@ -445,10 +484,19 @@ class com_myentity extends component implements entity_manager_interface {
 				$pines->config->com_mysql->prefix,
 				$options['reverse'] ? 'e.`guid` DESC' : 'e.`guid`');
 		}
-		if ( !($result = mysql_query($query, $pines->com_mysql->link)) ) {
-			if (function_exists('pines_error'))
-				pines_error('Query failed: ' . mysql_error());
-			return null;
+		if ( !($result = @mysql_query($query, $pines->com_mysql->link)) ) {
+			// If the tables don't exist yet, create them.
+			if (mysql_errno() == 1146 && $this->create_tables()) {
+				if ( !($result = @mysql_query($query, $pines->com_mysql->link)) ) {
+					if (function_exists('pines_error'))
+						pines_error('Query failed: ' . mysql_error());
+					return null;
+				}
+			} else {
+				if (function_exists('pines_error'))
+					pines_error('Query failed: ' . mysql_error());
+				return null;
+			}
 		}
 
 		$row = mysql_fetch_row($result);

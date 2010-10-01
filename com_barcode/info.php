@@ -21,7 +21,7 @@ return array(
 	'description' => 'Creates and displays barcode images using a variety of formats.',
 	'depend' => array(
 		'pines' => '<2',
-		'function' => 'ImageCreate'
+		'function' => 'imagecreate'
 	),
 );
 

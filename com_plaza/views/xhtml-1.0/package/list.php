@@ -35,7 +35,11 @@ $pines->com_pgrid->load();
 		var info_dialog = $("#p_muid_info").dialog({
 			modal: true,
 			autoOpen: false,
-			width: "600px"
+			width: "600px",
+			buttons: {
+				"Reinstall": function(){},
+				"Remove": function(){}
+			}
 		});
 
 		package_grid.delegate("tbody tr", "click", function(){
@@ -60,6 +64,7 @@ $pines->com_pgrid->load();
 		});
 
 		var load_info = function(data, name) {
+			info_dialog.find(".package").text(name);
 			info_dialog.find(".name").text(data.name);
 			info_dialog.find(".author").text(data.author);
 			info_dialog.find(".version .text").text(data.version);
@@ -110,7 +115,7 @@ $pines->com_pgrid->load();
 	<div id="p_muid_info" style="display: none;">
 		<div class="pf-form">
 			<div class="pf-element pf-heading">
-				<h1><span class="name"></span></h1>
+				<h1><span class="name"></span><span class="package" style="float: right;"></span></h1>
 				<p>
 					<span>By <span class="author"></span></span>
 					<span class="version">Version <span class="text"></span></span>

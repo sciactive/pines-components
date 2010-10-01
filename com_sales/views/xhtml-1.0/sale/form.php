@@ -1162,7 +1162,10 @@ if ($pines->config->com_sales->autocomplete_product)
 								'WA' => 'Washington',
 								'WV' => 'West Virginia',
 								'WI' => 'Wisconsin',
-								'WY' => 'Wyoming'
+								'WY' => 'Wyoming',
+								'AA' => 'Armed Forces (AA)',
+								'AE' => 'Armed Forces (AE)',
+								'AP' => 'Armed Forces (AP)'
 							) as $key => $cur_state) {
 						?><option value="<?php echo $key; ?>"<?php echo $this->entity->shipping_address->state == $key ? ' selected="selected"' : ''; ?>><?php echo $cur_state; ?></option><?php
 						} ?>

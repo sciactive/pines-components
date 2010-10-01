@@ -273,6 +273,8 @@ class com_myentity extends component implements entity_manager_interface {
 
 	public function get_entities() {
 		global $pines;
+		if (!$pines->com_mysql->connected)
+			return null;
 		// Set up options and selectors.
 		$selectors = func_get_args();
 		if (!$selectors) {

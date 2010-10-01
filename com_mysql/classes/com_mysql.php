@@ -69,9 +69,10 @@ class com_mysql extends component {
 	 */
 	function connect($host = null, $user = null, $password = null, $database = null) {
 		global $pines;
-		/**
-		 * If something changes the host, it could reveal the user and password.
-		 */
+		// If we're setting up the DB, don't try to connect.
+		if ($pines->request_component == 'com_mysql' && $pines->request_action == 'setup')
+			return false;
+		// If something changes the host, it could reveal the user and password.
 		if (!isset($host)) {
 			$host = $pines->config->com_mysql->host;
 			if (!isset($user)) $user = $pines->config->com_mysql->user;
@@ -80,18 +81,28 @@ class com_mysql extends component {
 		}
 		// Connecting, selecting database
 		if (!$this->connected) {
-			if ( $this->link = mysql_connect($host, $user, $password) ) {
-				if ( mysql_select_db($database, $this->link) ) {
+			if ( $this->link = @mysql_connect($host, $user, $password) ) {
+				if ( @mysql_select_db($database, $this->link) ) {
 					$this->connected = true;
 				} else {
 					$this->connected = false;
-					if (function_exists('pines_error'))
-						pines_error('Could not select database: ' . mysql_error());
+					if (!isset($_SESSION['user']) && $host == 'localhost' && $user == 'pines' && $password == 'password' && $database == 'pines') {
+						if ($pines->request_component != 'com_mysql')
+							redirect(pines_url('com_mysql', 'setup'));
+					} else {
+						if (function_exists('pines_error'))
+							pines_error('Could not select database: ' . mysql_error());
+					}
 				}
 			} else {
 				$this->connected = false;
-				if (function_exists('pines_error'))
-					pines_error('Could not connect: ' . mysql_error());
+				if (!isset($_SESSION['user']) && $host == 'localhost' && $user == 'pines' && $password == 'password' && $database == 'pines') {
+					if ($pines->request_component != 'com_mysql')
+						redirect(pines_url('com_mysql', 'setup'));
+				} else {
+					if (function_exists('pines_error'))
+						pines_error('Could not connect: ' . mysql_error());
+				}
 			}
 		}
 		return $this->connected;

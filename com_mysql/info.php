@@ -21,6 +21,7 @@ return array(
 	'description' => 'Provides an easy way to manage links to one or more databases, and the ability to keep more than one data set in those databases.',
 	'depend' => array(
 		'pines' => '<2',
+		'service' => 'configurator',
 		'function' => 'mysql_connect'
 	),
 );

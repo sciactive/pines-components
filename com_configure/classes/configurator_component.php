@@ -209,6 +209,17 @@ class configurator_component extends p_base implements configurator_component_in
 		}
 	}
 
+	public function set_config($config_keys) {
+		$this->config_keys = $config_keys;
+		$this->config = array();
+		foreach ($config_keys as $key => $value) {
+			$this->config[] = array(
+				'name' => $key,
+				'value' => $value
+			);
+		}
+	}
+
 	/**
 	 * Load only user configurable settings.
 	 *

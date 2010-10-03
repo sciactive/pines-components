@@ -193,6 +193,8 @@ class com_package_package extends p_base {
 					return false;
 				break;
 			case 'meta':
+				if ($this->slim->get_current_files() && !$this->slim->extract())
+					return false;
 				if (!file_put_contents("components/com_package/includes/cache/met_{$this->name}.php", "<?php\ndefined('P_RUN') or die('Direct access prohibited');\nreturn ".var_export($this->info, true).";\n?>"))
 					return false;
 				break;

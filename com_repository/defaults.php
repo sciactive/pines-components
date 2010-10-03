@@ -15,7 +15,7 @@ return array(
 	array(
 		'name' => 'repository_path',
 		'cname' => 'Repository Path',
-		'description' => 'The relative path of the directory containing the repository. End this path with a slash!',
+		'description' => 'The relative path of the directory containing the repository. Does not have to be web accessible. End this path with a slash!',
 		'value' => $pines->config->upload_location.'repository/',
 	),
 );

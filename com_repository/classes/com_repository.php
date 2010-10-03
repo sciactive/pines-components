@@ -94,9 +94,10 @@ class com_repository extends component {
 	 * Get the index of packages.
 	 *
 	 * @param user $user Only get this user's index.
-	 * @return array The index.
+	 * @param bool $decode Decode the JSON before returning it.
+	 * @return array|string The index.
 	 */
-	public function get_index($user = null) {
+	public function get_index($user = null, $decode = true) {
 		global $pines;
 		$file = $pines->config->com_repository->repository_path;
 		if (isset($user))
@@ -104,7 +105,11 @@ class com_repository extends component {
 		$file .= 'index.json';
 		if (!file_exists($file))
 			return array();
-		return (array) json_decode(file_get_contents($file), true);
+		if ($decode) {
+			return (array) json_decode(file_get_contents($file), true);
+		} else {
+			return file_get_contents($file);
+		}
 	}
 }
 

@@ -19,6 +19,12 @@ return array(
 		'value' => true,
 		'peruser' => true,
 	),
+	array(
+		'name' => 'package_path',
+		'cname' => 'Package Maker Path',
+		'description' => 'The relative path of the directory where packages should be made. End this path with a slash!',
+		'value' => $pines->config->upload_location.'packages/',
+	),
 );
 
 ?>

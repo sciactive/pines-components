@@ -22,12 +22,13 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'entity_manager&uploader',
-		'component' => 'com_slim&com_jquery&com_pgrid'
+		'component' => 'com_slim&com_jquery&com_pgrid&com_ptags'
 	),
 	'abilities' => array(
 		array('listpackages', 'List Packages', 'User can see packages.'),
 		array('newpackage', 'Create Packages', 'User can create new packages.'),
 		array('editpackage', 'Edit Packages', 'User can edit current packages.'),
+		array('makepackage', 'Make Packages', 'User can make packages.'),
 		array('deletepackage', 'Delete Packages', 'User can delete current packages.')
 	),
 );

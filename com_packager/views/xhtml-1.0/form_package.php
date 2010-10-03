@@ -15,6 +15,7 @@ $this->note = 'Provide package details in this form.';
 $pines->editor->load();
 $pines->uploader->load();
 $pines->com_pgrid->load();
+$pines->com_ptags->load();
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
@@ -43,6 +44,15 @@ $pines->com_pgrid->load();
 	#p_muid_sortable p, #p_muid_sortable textarea {
 		text-align: left;
 		margin: .4em 0 0;
+		padding: 0;
+	}
+	#p_muid_form .ui-ptags-tag {
+		float: left;
+		width: 100%;
+		text-align: left;
+	}
+	#p_muid_form .ui-ptags-tag-container {
+		margin: 0;
 		padding: 0;
 	}
 	/* ]]> */
@@ -255,6 +265,40 @@ $pines->com_pgrid->load();
 				</div>
 			</div>
 			<div class="package_type meta">
+				<script type="text/javascript">
+					// <![CDATA[
+					pines(function(){
+						pines.com_packager_add_file = function(message){
+							$("#p_muid_form [name=additional_files]").ptags_add(message);
+							$("#p_muid_additional").val("");
+						};
+
+						$( "#p_muid_additional").autocomplete({
+							source: function(request, response){
+								$.ajax({
+									type: "POST",
+									url: "<?php echo addslashes(pines_url('com_packager', 'glob')); ?>",
+									dataType: "json",
+									data: {"q": request.term},
+									success: function(data){
+										response(data);
+									}
+								});
+							},
+							minLength: 0
+						});
+
+						$("#p_muid_additional").keydown(function(e){
+							if (e.keyCode == '13') {
+								e.preventDefault();
+								pines.com_packager_add_file($(this).val());
+							}
+						});
+
+						$("#p_muid_form [name=additional_files]").ptags({ptags_input_box: false, ptags_editable: false});
+					});
+					// ]]>
+				</script>
 				<div class="pf-element pf-heading">
 					<h1>Meta Package Options</h1>
 				</div>
@@ -344,6 +388,19 @@ $pines->com_pgrid->load();
 								</tbody>
 							</table>
 							<input type="hidden" name="meta_conditions" />
+						</div>
+					</div>
+				</div>
+				<div class="pf-element pf-full-width">
+					<span class="pf-label">Search: </span>
+					<input class="pf-field ui-widget-content ui-corner-all" id="p_muid_additional" type="text" size="24" />
+					<button class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" onclick="pines.com_packager_add_file($('#p_muid_additional').val());">Add</button>
+				</div>
+				<div class="pf-element">
+					<span class="pf-label">Additional Files/Folders</span>
+					<div class="pf-group">
+						<div class="pf-field">
+							<input type="hidden" class="pf-field ui-widget-content ui-corner-all" name="additional_files" value="<?php echo htmlspecialchars(implode(',', $this->entity->additional_files)); ?>" />
 						</div>
 					</div>
 				</div>

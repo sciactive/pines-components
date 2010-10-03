@@ -68,6 +68,11 @@ switch ($package->type) {
 					break;
 			}
 		}
+		$package->additional_files = explode(',', $_REQUEST['additional_files']);
+		foreach ($package->additional_files as &$cur_file) {
+			$cur_file = clean_filename($cur_file);
+		}
+		unset($cur_file);
 		break;
 	default:
 		$package->type = 'component';

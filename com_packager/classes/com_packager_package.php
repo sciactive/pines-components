@@ -28,6 +28,7 @@ class com_packager_package extends entity {
 		// Defaults.
 		$this->type = 'component';
 		$this->meta = array();
+		$this->additional_files = array();
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
@@ -164,6 +165,15 @@ class com_packager_package extends entity {
 					'recommend' => $this->meta['recommend'],
 					'conflict' => $this->meta['conflict']
 				);
+				foreach ($this->additional_files as $cur_file) {
+					if (!file_exists($cur_file))
+						continue;
+					if (is_dir($cur_file)) {
+						$arc->add_directory($cur_file);
+					} else {
+						$arc->add_file($cur_file);
+					}
+				}
 				break;
 			default:
 				return false;

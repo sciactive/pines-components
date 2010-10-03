@@ -24,13 +24,19 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
+				<?php if (gatekeeper('com_packager/newpackage')) { ?>
 				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_packager', 'editpackage')); ?>'},
+				<?php } if (gatekeeper('com_packager/editpackage')) { ?>
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo addslashes(pines_url('com_packager', 'editpackage', array('id' => '__title__'))); ?>'},
+				<?php } if (gatekeeper('com_packager/makepackage')) { ?>
 				{type: 'button', text: 'Make Package', extra_class: 'picon picon-package-x-generic', url: '<?php echo addslashes(pines_url('com_packager', 'makepackage', array('id' => '__title__'))); ?>'},
+				<?php } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
+				<?php if (gatekeeper('com_packager/deletepackage')) { ?>
 				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_packager', 'deletepackage', array('id' => '__title__'))); ?>', delimiter: ','},
 				{type: 'separator'},
+				<?php } ?>
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},

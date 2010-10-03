@@ -25,10 +25,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
+				<?php if (gatekeeper('com_newsletter/send')) { ?>
 				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_newsletter', 'new')); ?>'},
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo addslashes(pines_url('com_newsletter', 'edit', array('mail_id' => '__title__'))); ?>'},
 				{type: 'button', text: 'Send', extra_class: 'picon picon-mail-message', url: '<?php echo addslashes(pines_url('com_newsletter', 'sendprep', array('mail_id' => '__title__'))); ?>'},
 				{type: 'separator'},
+				<?php } ?>
 				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_newsletter', 'delete', array('mail_id' => '__title__'))); ?>', delimiter: ','},
 				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},

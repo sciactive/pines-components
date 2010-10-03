@@ -1,0 +1,18 @@
+[
+	{
+		"path": "main_menu/accessories/repository",
+		"text": "Repository",
+		"href": ["com_repository","listpackages",{"all":"true"}],
+		"depend": {
+			"ability": "com_repository/listallpackages"
+		}
+	},
+	{
+		"path": "main_menu/accessories/mypackages",
+		"text": "My Packages",
+		"href": ["com_repository","listpackages"],
+		"depend": {
+			"ability": "com_repository/listpackages"
+		}
+	}
+]

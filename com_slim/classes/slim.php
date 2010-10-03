@@ -467,6 +467,15 @@ class slim extends p_base {
 	}
 
 	/**
+	 * Get an array of information about files in the archive.
+	 *
+	 * @return array File information.
+	 */
+	public function get_current_files() {
+		return $this->header['files'];
+	}
+
+	/**
 	 * Return a file's content from the archive.
 	 *
 	 * @param string $filename The filename of the file to return.

@@ -11,9 +11,21 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Packages';
+if (isset($this->user))
+	$this->title .= ' from Publisher '.htmlspecialchars($this->user->username);
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_repository/list_packages'];
+
+if (isset($this->user)) {
+	$packages = $this->index;
+} else {
+	$packages = array();
+	foreach ($this->index as $cur_index) {
+		$packages = array_merge($packages, array_values($cur_index));
+	}
+}
+
 ?>
 <script type="text/javascript">
 	// <![CDATA[
@@ -25,11 +37,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				<?php if (gatekeeper('com_repository/makeallindices')) { ?>
-				{type: 'button', text: 'Refresh Repository Index', extra_class: 'picon picon-view-refresh', selection_optional: true, url: '<?php echo addslashes(pines_url('com_repository', 'uploadpackage', array('all' => 'true'))); ?>'},
+				{type: 'button', text: 'Refresh Repository', extra_class: 'picon picon-view-refresh', selection_optional: true, url: '<?php echo addslashes(pines_url('com_repository', 'makeindices', array('all' => 'true'))); ?>'},
 				<?php } if (gatekeeper('com_repository/makeindices')) { ?>
-				{type: 'button', text: 'Refresh My Index', extra_class: 'picon picon-view-refresh', selection_optional: true, url: '<?php echo addslashes(pines_url('com_repository', 'uploadpackage')); ?>'},
+				{type: 'button', text: 'Refresh My Index', extra_class: 'picon picon-view-refresh', selection_optional: true, url: '<?php echo addslashes(pines_url('com_repository', 'makeindices')); ?>'},
 				<?php } if (gatekeeper('com_repository/newpackage')) { ?>
-				{type: 'button', text: 'Upload New Package', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_repository', 'uploadpackage')); ?>'},
+				{type: 'button', text: 'Upload Package', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_repository', 'uploadpackage')); ?>'},
 				<?php } if (gatekeeper('com_repository/deletepackage')) { ?>
 				{type: 'separator'},
 				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_repository', 'deletepackage', array('id' => '__title__'))); ?>', delimiter: ','},
@@ -64,15 +76,26 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<thead>
 		<tr>
 			<th>Package</th>
+			<?php if (!isset($this->user)) { ?>
+			<th>Publisher</th>
+			<?php } ?>
+			<th>Name</th>
+			<th>Author</th>
+			<th>Version</th>
 			<th>Type</th>
-			<th>Component</th>
 		</tr>
 	</thead>
 	<tbody>
-	<?php foreach($this->packages as $package) { ?>
-		<tr title="<?php echo $package->guid; ?>">
-			<td><?php echo htmlspecialchars($package->name); ?></td>
-			<td><?php switch($package->type) {
+	<?php foreach($packages as $package) { ?>
+		<tr title="<?php echo $package['package']; ?>">
+			<td><?php echo htmlspecialchars($package['package']); ?></td>
+			<?php if (!isset($this->user)) { ?>
+			<td><?php echo htmlspecialchars($package['publisher']); ?></td>
+			<?php } ?>
+			<td><?php echo htmlspecialchars($package['name']); ?></td>
+			<td><?php echo htmlspecialchars($package['author']); ?></td>
+			<td><?php echo htmlspecialchars($package['version']); ?></td>
+			<td><?php switch($package['type']) {
 				case 'component':
 					echo 'Component Package';
 					break;
@@ -85,16 +108,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				case 'meta':
 					echo 'Meta Package';
 					break;
-			} ?></td>
-			<td><?php if (!in_array($package->type, array('system', 'meta'))) {
-				$name = $package->component;
-				echo htmlspecialchars("{$pines->info->$name->name} [{$name} {$pines->info->$name->version}]");
-			} else {
-				if ($package->type == 'system') {
-					echo htmlspecialchars("{$pines->info->name} [system {$pines->info->version}]");
-				} else {
-					echo 'N/A';
-				}
 			} ?></td>
 		</tr>
 	<?php } ?>

@@ -391,16 +391,18 @@ $pines->com_ptags->load();
 						</div>
 					</div>
 				</div>
-				<div class="pf-element pf-full-width">
+				<div class="pf-element pf-heading">
+					<p>Additional Files/Folders</p>
+				</div>
+				<div class="pf-element">
 					<span class="pf-label">Search: </span>
 					<input class="pf-field ui-widget-content ui-corner-all" id="p_muid_additional" type="text" size="24" />
 					<button class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" onclick="pines.com_packager_add_file($('#p_muid_additional').val());">Add</button>
 				</div>
 				<div class="pf-element">
-					<span class="pf-label">Additional Files/Folders</span>
 					<div class="pf-group">
 						<div class="pf-field">
-							<input type="hidden" class="pf-field ui-widget-content ui-corner-all" name="additional_files" value="<?php echo htmlspecialchars(implode(',', $this->entity->additional_files)); ?>" />
+							<input type="hidden" class="pf-field ui-widget-content ui-corner-all" name="additional_files" value="<?php echo htmlspecialchars(implode(',', (array) $this->entity->additional_files)); ?>" />
 						</div>
 					</div>
 				</div>

@@ -26,10 +26,11 @@ class com_repository extends component {
 	public function list_packages($user = null) {
 		$module = new module('com_repository', 'list_packages', 'content');
 
-		$module->packages = $this->get_index($user);
+		$module->index = $this->get_index($user);
+		$module->user = $user;
 
-		if ( empty($module->packages) )
-			pines_notice('There are no packages.');
+		if ( empty($module->index) )
+			pines_notice('No indexed packages found.');
 	}
 
 	/**
@@ -42,9 +43,51 @@ class com_repository extends component {
 		if (isset($user)) {
 			$guids = array($user->guid);
 		} else {
-			$guids = array_filter(glob($pines->config->com_repository->repository_path), 'is_numeric');
+			$guids = array_filter(array_map('basename', glob($pines->config->com_repository->repository_path.'*')), 'is_numeric');
 		}
-		var_dump($guids);
+		$slim = new slim;
+		if (!isset($user))
+			$main_index = array();
+		foreach ($guids as $cur_guid) {
+			// Build an index for the current directory.
+			$tmp_user = user::factory((int) $cur_guid);
+			if (!isset($tmp_user->guid))
+				continue;
+			$dir = $pines->config->com_repository->repository_path.$cur_guid.'/';
+			$index = array();
+			$packages = glob($dir.'*.slm');
+			foreach ($packages as $cur_package) {
+				if (!$slim->read($cur_package))
+					continue;
+				if (isset($index[$slim->ext['package']]) && version_compare($slim->ext['version'], $index[$slim->ext['package']]['version']) == -1)
+					continue;
+				$index[$slim->ext['package']] = array(
+					'publisher' => $tmp_user->username,
+					'package' => $slim->ext['package'],
+					'type' => $slim->ext['type'],
+					'name' => $slim->ext['name'],
+					'author' => $slim->ext['author'],
+					'version' => $slim->ext['version'],
+					'license' => $slim->ext['license'],
+					'short_description' => $slim->ext['short_description'],
+					'description' => $slim->ext['description'],
+					'depend' => $slim->ext['depend'],
+					'recommend' => $slim->ext['recommend'],
+					'conflict' => $slim->ext['conflict']
+				);
+			}
+			if (!file_put_contents($dir.'index.tmp', json_encode($index)))
+				continue;
+			if (rename($dir.'index.tmp', $dir.'index.json') && !isset($user))
+				$main_index[$tmp_user->username] = $index;
+			unset($tmp_user);
+		}
+		if (!isset($user)) {
+			$dir = $pines->config->com_repository->repository_path;
+			if (!file_put_contents($dir.'index.tmp', json_encode($main_index)))
+				return;
+			rename($dir.'index.tmp', $dir.'index.json');
+		}
 	}
 
 	/**
@@ -61,7 +104,7 @@ class com_repository extends component {
 		$file .= 'index.json';
 		if (!file_exists($file))
 			return array();
-		return (array) json_decode(file_get_contents($file));
+		return (array) json_decode(file_get_contents($file), true);
 	}
 }
 

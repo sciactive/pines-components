@@ -44,7 +44,11 @@ class com_elfinderupload extends component implements uploader_interface {
 		if (empty($url))
 			return false;
 		global $pines;
-		$root_url = $pines->config->com_elfinder->root_url;
+		if (gatekeeper('com_elfinder/finder')) {
+			$root_url = $pines->config->com_elfinder->root_url;
+		} else {
+			$root_url = $pines->config->com_elfinder->own_root_url . $_SESSION['user']->guid . '/';
+		}
 		if (strpos($url, '..') !== false)
 			return false;
 		return (substr($url, 0, strlen($root_url)) == $root_url);
@@ -54,8 +58,13 @@ class com_elfinderupload extends component implements uploader_interface {
 		if (empty($url))
 			return '';
 		global $pines;
-		$root = $pines->config->com_elfinder->root;
-		$root_url = $pines->config->com_elfinder->root_url;
+		if (gatekeeper('com_elfinder/finder')) {
+			$root = $pines->config->com_elfinder->root;
+			$root_url = $pines->config->com_elfinder->root_url;
+		} else {
+			$root = $pines->config->com_elfinder->own_root . $_SESSION['user']->guid . '/';
+			$root_url = $pines->config->com_elfinder->own_root_url . $_SESSION['user']->guid . '/';
+		}
 		return ($root . substr($url, strlen($root_url)));
 	}
 
@@ -63,11 +72,20 @@ class com_elfinderupload extends component implements uploader_interface {
 		if (empty($real))
 			return '';
 		global $pines;
-		$root = $pines->config->com_elfinder->root;
-		if ($full) {
-			$root_url = $pines->config->com_elfinder->full_root_url;
+		if (gatekeeper('com_elfinder/finder')) {
+			$root = $pines->config->com_elfinder->root;
+			if ($full) {
+				$root_url = $pines->config->com_elfinder->full_root_url;
+			} else {
+				$root_url = $pines->config->com_elfinder->root_url;
+			}
 		} else {
-			$root_url = $pines->config->com_elfinder->root_url;
+			$root = $pines->config->com_elfinder->own_root . $_SESSION['user']->guid . '/';
+			if ($full) {
+				$root_url = $pines->config->com_elfinder->own_full_root_url . $_SESSION['user']->guid . '/';
+			} else {
+				$root_url = $pines->config->com_elfinder->own_root_url . $_SESSION['user']->guid . '/';
+			}
 		}
 		return ($root_url . substr($real, strlen($root)));
 	}

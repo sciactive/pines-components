@@ -4,7 +4,7 @@
 		"text": "File Manager",
 		"href": ["com_elfinder","finder"],
 		"depend": {
-			"ability": "com_elfinder/finder"
+			"ability": "com_elfinder/finder|com_elfinder/finderself"
 		}
 	}
 ]

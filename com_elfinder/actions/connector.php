@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_elfinder/finder') )
+if ( !gatekeeper('com_elfinder/finder') && !gatekeeper('com_elfinder/finderself') )
 	punt_user(null, pines_url('com_elfinder', 'finder'));
 
 $opts = array(
@@ -37,6 +37,14 @@ $opts = array(
 		'rm'     => $pines->config->com_elfinder->default_rm
 	),
 );
+
+if (!gatekeeper('com_elfinder/finder')) {
+	$opts['root'] = $pines->config->com_elfinder->own_root . $_SESSION['user']->guid . '/';
+	$opts['URL'] = $pines->config->com_elfinder->own_root_url . $_SESSION['user']->guid . '/';
+	$opts['rootAlias'] = $pines->config->com_elfinder->own_root_alias;
+	if (!file_exists($opts['root']))
+		mkdir($opts['root']);
+}
 
 if ($pines->config->com_elfinder->upload_check) {
 	$opts['uploadAllow'] = $pines->config->com_elfinder->upload_allow;

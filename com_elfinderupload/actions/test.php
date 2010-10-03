@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_elfinder/finder') )
+if ( !gatekeeper('com_elfinder/finder') && !gatekeeper('com_elfinder/finderself') )
 	punt_user(null, pines_url('com_elfinderupload', 'test'));
 
 $module = new module('com_elfinderupload', 'test', 'content');

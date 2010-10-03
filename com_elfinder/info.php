@@ -24,7 +24,8 @@ return array(
 		'component' => 'com_jquery'
 	),
 	'abilities' => array(
-		array('finder', 'Use elFinder', 'User can manage files with elFinder.'),
+		array('finder', 'Use elFinder for All Files', 'User can manage all files with elFinder.'),
+		array('finderself', 'Use elFinder for Own Files', 'User can manage files in their own folder with elFinder. Their folder is created under user root as their GUID.'),
 	),
 );
 

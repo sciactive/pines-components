@@ -77,6 +77,20 @@ switch ($package->type) {
 }
 $package->filename = $_REQUEST['filename'];
 
+// Images
+$package->screenshots = (array) json_decode($_REQUEST['screenshots'], true);
+foreach ($package->screenshots as $key => &$cur_screen) {
+	if ($cur_screen['alt'] == 'Click to edit description...')
+		$cur_screen['alt'] = '';
+	if (!$pines->uploader->check($cur_screen['file']))
+		unset($package->screenshots[$key]);
+}
+unset($cur_screen);
+$package->screenshots = array_values($package->screenshots);
+$package->icon = $_REQUEST['icon'];
+if (!$pines->uploader->check($package->icon))
+	$package->icon = null;
+
 if (empty($package->name)) {
 	$package->print_form();
 	pines_notice('Please specify a name.');
@@ -97,6 +111,15 @@ if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$package->print_form();
 	pines_notice('There is already a package with that name. Please choose a different name.');
 	return;
+}
+foreach ($package->screenshots as $cur_screen) {
+	// Check the size of the images.
+	$filesize = (float) filesize($pines->uploader->real($cur_screen['file'])) / 1024;
+	if ($filesize > 800) {
+		$package->print_form();
+		pines_notice(basename($cur_screen['file']).' is '.number_format($filesize).'KB. The maximum screenshot size is 800KB.');
+		return;
+	}
 }
 
 if ($pines->config->com_packager->global_packages)

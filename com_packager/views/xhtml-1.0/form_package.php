@@ -13,8 +13,40 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Package' : 'Editing ['.htmlspecialchars($this->entity->name).']';
 $this->note = 'Provide package details in this form.';
 $pines->editor->load();
+$pines->uploader->load();
 $pines->com_pgrid->load();
 ?>
+<style type="text/css" >
+	/* <![CDATA[ */
+	#p_muid_sortable {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+	}
+	#p_muid_sortable li {
+		margin: 0.1em;
+		padding: 5px;
+		float: left;
+		width: 120px;
+		min-height: 120px;
+		text-align: center;
+		background-image: none;
+	}
+	#p_muid_sortable img {
+		width: 110px;
+		height: auto;
+		max-height: 110px;
+		vertical-align: middle;
+		margin: 0;
+		padding: 0;
+	}
+	#p_muid_sortable p, #p_muid_sortable textarea {
+		text-align: left;
+		margin: .4em 0 0;
+		padding: 0;
+	}
+	/* ]]> */
+</style>
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
@@ -356,14 +388,112 @@ $pines->com_pgrid->load();
 			<br class="pf-clearing" />
 		</div>
 		<div id="p_muid_tab_images">
-			<div class="pf-element pf-full-width">
-				<span class="pf-label">Icon</span>
-				<span class="pf-field">Nothing here yet...</span>
+			<script type="text/javascript">
+				// <![CDATA[
+				pines(function(){
+					var update_images = function(){
+						var images = [];
+						$("li", "#p_muid_sortable").each(function(){
+							var cur_entry = $(this);
+							images.push({
+								"file": cur_entry.find("img").attr("src"),
+								"alt": cur_entry.find("p").html()
+							});
+						});
+						$("input[name=screenshots]", "#p_muid_tab_images").val(JSON.stringify(images));
+					};
+					update_images();
+
+					var add_image = function(image){
+						$("<li class=\"ui-state-default ui-corner-all\"><img alt=\""+image.replace(/.*\//, '')+"\" src=\""+image+"\" /><p>Click to edit description...</p></li>").appendTo($("#p_muid_sortable"));
+						update_images();
+					};
+
+					$("#p_muid_screen_upload").change(function(){
+						add_image($(this).val());
+						$(this).val("");
+					});
+					$("#p_muid_sortable")
+					.delegate("li p", "click", function(){
+						var cur_alt = $(this);
+						var desc = cur_alt.text();
+						$("<textarea cols=\"4\" rows=\"3\" style=\"width: 100%\" class=\"ui-widget-content ui-corner-all\">"+desc+"</textarea>")
+						.blur(function(){
+							cur_alt.insertAfter(this).html($(this).remove().val());
+							update_images();
+						})
+						.insertAfter(cur_alt)
+						.focus()
+						.select();
+						cur_alt.detach();
+					})
+					.sortable({
+						placeholder: 'ui-state-highlight',
+						update: function(){update_images();}
+					})
+					.draggable();
+					$("#p_muid_image_trash").droppable({
+						drop: function(e, ui){
+							ui.draggable.hide("explode", {}, 500, function(){
+								ui.draggable.remove();
+								update_images();
+							});
+						}
+					});
+					//$("#p_muid_sortable").disableSelection();
+
+					var icon_img = $("#p_muid_icon_preview");
+					icon_img.bind("load", function(){
+						if (!icon_img.is(":visible"))
+							return;
+						// Check icon dimensions.
+						if (icon_img.width() != 32 || icon_img.height() != 32) {
+							alert('Please select a 32x32 icon.');
+							icon_img.attr('src', '');
+							$("#p_muid_icon").val('');
+						}
+					});
+
+					$("#p_muid_icon").change(function(){
+						$("#p_muid_icon_preview").attr("src", $(this).val());
+					});
+				});
+				// ]]>
+			</script>
+			<div class="pf-element pf-heading">
+				<h1>Icon</h1>
 			</div>
 			<div class="pf-element pf-full-width">
-				<span class="pf-label">Screenshots</span>
-				<span class="pf-field">Nothing here yet...</span>
+				<span class="pf-label"><img class="pf-field" alt="Icon Preview" id="p_muid_icon_preview" src="<?php echo htmlspecialchars($this->entity->icon); ?>" /></span>
+				<input class="pf-field ui-widget-content ui-corner-all puploader" id="p_muid_icon" type="text" name="icon" value="<?php echo htmlspecialchars($this->entity->icon); ?>" />
 			</div>
+			<div class="pf-element pf-heading">
+				<h1>Screenshots</h1>
+			</div>
+			<div class="pf-element">
+				<span class="pf-label">Add a Screenshot</span>
+				<input class="pf-field ui-widget-content ui-corner-all puploader" id="p_muid_screen_upload" type="text" value="" />
+			</div>
+			<div class="pf-element pf-full-width">
+				<div class="pf-note">
+					Drag image here to remove:
+					<div class="ui-widget-content ui-corner-all" id="p_muid_image_trash" style="width: 32px; height: 32px; padding: 44px;">
+						<div class="picon-32 picon-user-trash" style="width: 32px; height: 32px;"></div>
+					</div>
+				</div>
+				<div class="pf-group">
+					<ul id="p_muid_sortable" class="pf-field">
+						<?php if ($this->entity->screenshots) { foreach ($this->entity->screenshots as $cur_screen) { ?>
+						<li class="ui-state-default ui-corner-all">
+							<img alt="<?php echo htmlspecialchars(basename($cur_screen['file'])); ?>" src="<?php echo htmlspecialchars($cur_screen['file']); ?>" />
+							<p><?php echo empty($cur_screen['alt']) ? 'Click to edit description...' : htmlspecialchars(basename($cur_screen['alt'])); ?></p>
+						</li>
+						<?php } } ?>
+					</ul>
+					<br class="pf-clearing" />
+				</div>
+			</div>
+			<input type="hidden" name="screenshots" />
 			<br class="pf-clearing" />
 		</div>
 	</div>

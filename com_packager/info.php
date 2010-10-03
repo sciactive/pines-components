@@ -21,7 +21,7 @@ return array(
 	'description' => 'Package your components and templates into a Pines repository ready Slim archive. You can use these packages to distribute your component to other Pines users.',
 	'depend' => array(
 		'pines' => '<2',
-		'service' => 'entity_manager',
+		'service' => 'entity_manager&uploader',
 		'component' => 'com_slim&com_jquery&com_pgrid'
 	),
 	'abilities' => array(

@@ -1,6 +1,6 @@
 <?php
 /**
- * Lists packages.
+ * Lists packages from repositories.
  *
  * @package Pines
  * @subpackage com_plaza
@@ -10,10 +10,10 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Installed Software';
+$this->title = 'Available Software';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_plaza/package/list'];
+	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_plaza/package/repository'];
 ?>
 <style type="text/css">
 	/* <![CDATA[ */
@@ -38,6 +38,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
+				<?php if (gatekeeper('com_plaza/makeallindices')) { ?>
+				{type: 'button', text: 'Reload', extra_class: 'picon picon-view-refresh', selection_optional: true, url: '<?php echo addslashes(pines_url('com_plaza', 'reload')); ?>'},
+				{type: 'separator'},
+				<?php } ?>
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
@@ -54,7 +58,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_plaza/package/list", state: cur_state});
+				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_plaza/package/repository", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
@@ -64,19 +68,19 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			autoOpen: false,
 			width: "600px",
 			buttons: {
-				"Reinstall": function(){},
-				"Remove": function(){}
+				"Install": function(){}
 			}
 		});
 
 		package_grid.delegate("tbody tr", "click", function(){
 			var cur_row = $(this);
 			var name = cur_row.pgrid_get_value(2);
+			var publisher = cur_row.pgrid_get_value(3);
 			$.ajax({
 				url: "<?php echo addslashes(pines_url('com_plaza', 'package/infojson')); ?>",
 				type: "GET",
 				dataType: "json",
-				data: {"name": name, "local": "true"},
+				data: {"name": name, "local": "false", "publisher": publisher},
 				error: function(XMLHttpRequest, textStatus){
 					pines.error("An error occured while trying to retrieve info:\n"+XMLHttpRequest.status+": "+textStatus);
 				},
@@ -122,17 +126,21 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<tr>
 				<th>Name</th>
 				<th>Package</th>
+				<th>Publisher</th>
 				<th>Author</th>
-				<th>Version</th>
+				<th>Installed Version</th>
+				<th>Latest Version</th>
 				<th>Type</th>
 			</tr>
 		</thead>
 		<tbody>
-			<?php foreach ($this->db['packages'] as $key => $package) { ?>
+			<?php foreach ($this->index['packages'] as $key => $package) { ?>
 			<tr>
 				<td><?php echo htmlspecialchars($package['name']); ?></td>
-				<td><?php echo htmlspecialchars($key); ?></td>
+				<td><?php echo htmlspecialchars($package['package']); ?></td>
+				<td><?php echo htmlspecialchars($package['publisher']); ?></td>
 				<td><?php echo htmlspecialchars($package['author']); ?></td>
+				<td><?php echo htmlspecialchars($this->db['packages'][$key]['version']); ?></td>
 				<td><?php echo htmlspecialchars($package['version']); ?></td>
 				<td><?php switch($package['type']) {
 					case 'component':

@@ -24,7 +24,8 @@ return array(
 		'component' => 'com_jquery&com_pgrid&com_package'
 	),
 	'abilities' => array(
-		array('listpackages', 'List Packages', 'User can see packages.')
+		array('listpackages', 'List Packages', 'User can see packages.'),
+		array('editpackages', 'Edit Packages', 'User can install/upgrade/remove packages.')
 	),
 );
 

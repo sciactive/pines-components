@@ -336,6 +336,13 @@ $pines->com_ptags->load();
 				</div>
 				<div class="pf-element">
 					<label>
+						<span class="pf-label">Website</span>
+						<span class="pf-note">Provide the URL.</span>
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_website" size="24" value="<?php echo htmlspecialchars($this->entity->meta['website']); ?>" />
+					</label>
+				</div>
+				<div class="pf-element">
+					<label>
 						<span class="pf-label">Short Description</span>
 						<span class="pf-note">Please provide a simple description, sentence caps, no period. E.g. "XML parsing library"</span>
 						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_short_description" size="24" value="<?php echo htmlspecialchars($this->entity->meta['short_description']); ?>" />

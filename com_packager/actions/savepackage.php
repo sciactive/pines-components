@@ -48,6 +48,7 @@ switch ($package->type) {
 			'author' => $_REQUEST['meta_author'],
 			'version' => $_REQUEST['meta_version'],
 			'license' => $_REQUEST['meta_license'],
+			'website' => $_REQUEST['meta_website'],
 			'short_description' => $_REQUEST['meta_short_description'],
 			'description' => $_REQUEST['meta_description'],
 			'depend' => array(),

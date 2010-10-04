@@ -122,6 +122,8 @@ class com_packager_package extends entity {
 					'author' => $info->author,
 					'version' => $info->version,
 					'license' => $info->license,
+					'website' => $info->website,
+					'services' => $info->services,
 					'short_description' => $info->short_description,
 					'description' => $info->description,
 					'depend' => $info->depend,
@@ -141,6 +143,8 @@ class com_packager_package extends entity {
 					'author' => $info->author,
 					'version' => $info->version,
 					'license' => $info->license,
+					'website' => $info->website,
+					'services' => $info->services,
 					'short_description' => $info->short_description,
 					'description' => $info->description,
 					'depend' => $info->depend,
@@ -160,13 +164,14 @@ class com_packager_package extends entity {
 					'author' => $this->meta['author'],
 					'version' => $this->meta['version'],
 					'license' => $this->meta['license'],
+					'website' => $info->meta['website'],
 					'short_description' => $this->meta['short_description'],
 					'description' => $this->meta['description'],
 					'depend' => $this->meta['depend'],
 					'recommend' => $this->meta['recommend'],
 					'conflict' => $this->meta['conflict']
 				);
-				foreach ($this->additional_files as $cur_file) {
+				foreach ((array) $this->additional_files as $cur_file) {
 					if (!file_exists($cur_file))
 						continue;
 					if (is_dir($cur_file)) {

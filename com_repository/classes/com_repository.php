@@ -69,6 +69,8 @@ class com_repository extends component {
 					'author' => $slim->ext['author'],
 					'version' => $slim->ext['version'],
 					'license' => $slim->ext['license'],
+					'website' => $slim->ext['website'],
+					'services' => $slim->ext['services'],
 					'short_description' => $slim->ext['short_description'],
 					'description' => $slim->ext['description'],
 					'depend' => $slim->ext['depend'],
@@ -104,7 +106,7 @@ class com_repository extends component {
 			$file .= $user->guid . '/';
 		$file .= 'index.json';
 		if (!file_exists($file))
-			return array();
+			return ($decode ? array() : '[]');
 		if ($decode) {
 			return (array) json_decode(file_get_contents($file), true);
 		} else {

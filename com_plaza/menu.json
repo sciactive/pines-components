@@ -9,7 +9,7 @@
 		{
 			"path": "main_menu/system/the_plaza/getsoftware",
 			"text": "Get Software",
-			"href": ["com_plaza","package/list"],
+			"href": ["com_plaza","package/repository"],
 			"depend": {
 				"ability": "com_plaza/listpackages"
 			}

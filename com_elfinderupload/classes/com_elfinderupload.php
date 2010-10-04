@@ -44,7 +44,7 @@ class com_elfinderupload extends component implements uploader_interface {
 		if (empty($url))
 			return false;
 		global $pines;
-		if (gatekeeper('com_elfinder/finder')) {
+		if (!isset($_SESSION['user']) || gatekeeper('com_elfinder/finder')) {
 			$root_url = $pines->config->com_elfinder->root_url;
 		} else {
 			$root_url = $pines->config->com_elfinder->own_root_url . $_SESSION['user']->guid . '/';
@@ -58,7 +58,7 @@ class com_elfinderupload extends component implements uploader_interface {
 		if (empty($url))
 			return '';
 		global $pines;
-		if (gatekeeper('com_elfinder/finder')) {
+		if (!isset($_SESSION['user']) || gatekeeper('com_elfinder/finder')) {
 			$root = $pines->config->com_elfinder->root;
 			$root_url = $pines->config->com_elfinder->root_url;
 		} else {
@@ -72,7 +72,7 @@ class com_elfinderupload extends component implements uploader_interface {
 		if (empty($real))
 			return '';
 		global $pines;
-		if (gatekeeper('com_elfinder/finder')) {
+		if (!isset($_SESSION['user']) || gatekeeper('com_elfinder/finder')) {
 			$root = $pines->config->com_elfinder->root;
 			if ($full) {
 				$root_url = $pines->config->com_elfinder->full_root_url;

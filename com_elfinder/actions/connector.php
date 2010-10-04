@@ -39,8 +39,8 @@ $opts = array(
 );
 
 if (!gatekeeper('com_elfinder/finder')) {
-	$opts['root'] = $pines->config->com_elfinder->own_root . $_SESSION['user']->guid . '/';
-	$opts['URL'] = $pines->config->com_elfinder->own_root_url . $_SESSION['user']->guid . '/';
+	$opts['root'] .= $pines->config->com_elfinder->own_root . $_SESSION['user']->guid . '/';
+	$opts['URL'] .= $pines->config->com_elfinder->own_root . $_SESSION['user']->guid . '/';
 	$opts['rootAlias'] = $pines->config->com_elfinder->own_root_alias;
 	if (!file_exists($opts['root']))
 		mkdir($opts['root']);

@@ -20,24 +20,10 @@ return array(
 		'peruser' => true,
 	),
 	array(
-		'name' => 'own_root',
-		'cname' => 'Own Root Path',
-		'description' => 'The path of the user root directory for the file manager. End this path with a slash!',
-		'value' => $pines->config->upload_location.'users/',
-		'peruser' => true,
-	),
-	array(
 		'name' => 'root_url',
 		'cname' => 'Root URL',
 		'description' => 'The URL of the root directory for the file manager. End this path with a slash!',
 		'value' => $pines->config->rela_location.$pines->config->upload_location,
-		'peruser' => true,
-	),
-	array(
-		'name' => 'own_root_url',
-		'cname' => 'Own Root URL',
-		'description' => 'The URL of the user root directory for the file manager. End this path with a slash!',
-		'value' => $pines->config->rela_location.$pines->config->upload_location.'users/',
 		'peruser' => true,
 	),
 	array(
@@ -48,10 +34,10 @@ return array(
 		'peruser' => true,
 	),
 	array(
-		'name' => 'own_full_root_url',
-		'cname' => 'Own Full Root URL',
-		'description' => 'The full URL of the user root directory for the file manager. End this path with a slash!',
-		'value' => $pines->config->full_location.$pines->config->upload_location.'users/',
+		'name' => 'own_root',
+		'cname' => 'Own Root Path',
+		'description' => 'The path of the user root directory (relative to the root path) for the file manager. End this path with a slash!',
+		'value' => 'users/',
 		'peruser' => true,
 	),
 	array(

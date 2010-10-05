@@ -107,6 +107,7 @@ class com_packager_package extends entity {
 		global $pines;
 		$arc = new slim;
 		$arc->file_integrity = true;
+		$arc->preserve_mode = true;
 		//$arc->compression = '';
 		//$arc->header_compression = false;
 		switch ($this->type) {

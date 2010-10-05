@@ -65,9 +65,9 @@ class com_package extends component {
 	 * @access private
 	 */
 	private function load_db() {
-		if (!file_exists('components/com_package/includes/db.php'))
+		if (!file_exists('components/com_package/includes/cache/db.php'))
 			$this->rebuild_db();
-		$this->_db = (array) include('components/com_package/includes/db.php');
+		$this->_db = (array) include('components/com_package/includes/cache/db.php');
 	}
 
 	/**
@@ -82,6 +82,7 @@ class com_package extends component {
 		// Add the component packages.
 		foreach ($pines->components as $cur_component) {
 			$db['packages'][$cur_component] = (array) $pines->info->$cur_component;
+			$db['packages'][$cur_component]['package'] = $cur_component;
 			$db['packages'][$cur_component]['type'] = substr($cur_component, 0, 4) == 'tpl_' ? 'template' : 'component';
 		}
 		// Scan the cache for system and metapackage info.
@@ -91,21 +92,21 @@ class com_package extends component {
 		foreach ($cache_files as $cur_cache) {
 			switch (substr($cur_cache, 0, 4)) {
 				case 'sys_':
+					// It's a system info file.
 					if ($found_system)
 						pines_log("Multiple system info files were found in the package cache directory. Please remove the incorrect system info files.", 'warning');
 					$found_system = true;
 					$name = substr($cur_cache, 4, -4);
 					$db['packages'][$name] = (array) include("components/com_package/includes/cache/{$cur_cache}");
+					$db['packages'][$name]['package'] = $name;
 					$db['packages'][$name]['type'] = 'system';
 					break;
 				case 'met_':
+					// It's a metapackage info file.
 					$name = substr($cur_cache, 4, -4);
 					$db['packages'][$name] = (array) include("components/com_package/includes/cache/{$cur_cache}");
+					$db['packages'][$name]['package'] = $name;
 					$db['packages'][$name]['type'] = 'meta';
-					break;
-				default;
-					// This file is unknown. Make a warning.
-					pines_log("There is an unknown file (\"{$cur_cache}\") in the package cache directory. Please remove it if it is unimportant.", 'warning');
 					break;
 			}
 		}
@@ -113,10 +114,10 @@ class com_package extends component {
 			// No system package info was found, so let's make one named "pines".
 			pines_log("No info file for the system package could be found in the package cache directory. I will attempt to create one called \"sys_pines.php\". If this is a brand new installation, you can ignore this message.", 'warning');
 			$system = include('system/info.php');
+			$system['package'] = 'pines';
+			$system['type'] = 'system';
 			file_put_contents('components/com_package/includes/cache/sys_pines.php', "<?php\ndefined('P_RUN') or die('Direct access prohibited');\nreturn ".var_export($system, true).";\n?>");
 			$db['packages']['pines'] = $system;
-			$db['packages']['pines']['type'] = 'system';
-
 		}
 		foreach ($db['packages'] as $cur_package => &$cur_entry) {
 			// We don't care about abilities.
@@ -148,11 +149,11 @@ class com_package extends component {
 		}
 		ksort($db);
 		// Write the database to a file.
-		if (file_put_contents('components/com_package/includes/db.php', "<?php\ndefined('P_RUN') or die('Direct access prohibited');\nreturn ".var_export($db, true).";\n?>")) {
+		if (file_put_contents('components/com_package/includes/cache/db.php', "<?php\ndefined('P_RUN') or die('Direct access prohibited');\nreturn ".var_export($db, true).";\n?>")) {
 			// Load the new database file.
 			$this->load_db();
 		} else {
-			pines_log("The package database could not be written.", 'error');
+			pines_log('The package database could not be written.', 'error');
 		}
 	}
 }

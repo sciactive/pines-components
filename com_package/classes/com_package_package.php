@@ -89,6 +89,37 @@ class com_package_package extends p_base {
 	}
 
 	/**
+	 * Scan a directory recursively. Excludes '.' and '..'.
+	 *
+	 * @param string $directory The directory to scan.
+	 * @return array An array of filenames.
+	 */
+	private function dir_find($directory) {
+		$directory = rtrim($directory, '/').'/';
+		if (!is_dir($directory))
+			return false;
+		if (!is_readable($directory))
+			return false;
+		if (!($dh = opendir($directory)))
+			return false;
+		$files = array();
+		while ($cur_file = readdir($dh)) {
+			if ($cur_file == '.' || $cur_file == '..')
+				continue;
+			if (is_dir($directory.$cur_file)) {
+				$cur_file = rtrim($cur_file, '/').'/';
+				$contents = $this->dir_find($directory.$cur_file);
+				if ($contents === false)
+					return false;
+				$files = array_merge($files, $contents);
+			}
+			$files[] = $directory.$cur_file;
+		}
+		closedir($dh);
+		return $files;
+	}
+
+	/**
 	 * Check whether the package is installed.
 	 * @return bool True or false.
 	 */
@@ -193,7 +224,11 @@ class com_package_package extends p_base {
 					return false;
 				break;
 			case 'meta':
-				if ($this->slim->get_current_files() && !$this->slim->extract())
+				$this->info['files'] = array();
+				foreach ((array) $this->slim->get_current_files() as $cur_file) {
+					$this->info['files'][] = $cur_file['path'];
+				}
+				if ($this->info['files'] && !$this->slim->extract())
 					return false;
 				if (!file_put_contents("components/com_package/includes/cache/met_{$this->name}.php", "<?php\ndefined('P_RUN') or die('Direct access prohibited');\nreturn ".var_export($this->info, true).";\n?>"))
 					return false;
@@ -204,6 +239,106 @@ class com_package_package extends p_base {
 		pines_log("Successfully installed new package \"{$this->name}\" version {$this->info['version']}. Rebuilding package database.", 'notice');
 		$pines->com_package->rebuild_db();
 		return true;
+	}
+
+	/**
+	 * Remove the package.
+	 * @param bool $force Try to force removal of the package.
+	 * @param bool $for_upgrade Don't remove configuration and cache, and don't rebuild the database.
+	 * @return bool True on success, false on failure.
+	 */
+	public function remove($force = false, $for_upgrade = false) {
+		global $pines;
+		if (!$this->installed)
+			return false;
+		if (!$for_upgrade)
+			pines_log("Removing package \"{$this->name}\" version {$this->info['version']}.", 'notice');
+		$return = true;
+		switch ($this->info['type']) {
+			case 'component':
+			case 'template':
+				$dir = $this->info['type'] == 'template' ? 'templates/' : 'components/';
+				$dir .= $this->name.'/';
+				$files = $this->dir_find($dir);
+				$files[] = $dir;
+				foreach ($files as $cur_file) {
+					if (!file_exists($cur_file))
+						continue;
+					if (
+							$for_upgrade &&
+							(
+								in_array($cur_file, array(
+									"{$dir}",
+									"{$dir}index.html",
+									"{$dir}config.php",
+									"{$dir}includes/",
+									"{$dir}includes/index.html",
+									"{$dir}includes/cache/",
+								)) ||
+								(strpos($cur_file, "{$dir}includes/cache/") === 0)
+							)
+						)
+						continue;
+					if (is_file($cur_file)) {
+						$return = $return && unlink($cur_file);
+					} elseif (is_dir($cur_file)) {
+						$return = $return && rmdir($cur_file);
+					}
+				}
+				break;
+			case 'system':
+				if (!is_writable("components/com_package/includes/cache/sys_{$this->name}.php"))
+					return false;
+				// Remove system stuff.
+				break;
+			case 'meta':
+				$files = $this->info['files'];
+				usort($files, array($this, 'sort_files'));
+				foreach ($files as $cur_file) {
+					if (!file_exists($cur_file))
+						continue;
+					if (is_file($cur_file)) {
+						$return = $return && unlink($cur_file);
+					} elseif (is_dir($cur_file)) {
+						// If the user put files in this dir, then rmdir will fail, but it's not an error.
+						$still_files = array_diff((array) scandir($cur_file), array('.', '..'));
+						if ($still_files) {
+							pines_log("Directory {$cur_file} is not empty, so it is not being removed.", 'notice');
+						} else {
+							$return = $return && rmdir($cur_file);
+						}
+					}
+				}
+				if ($return && !unlink("components/com_package/includes/cache/met_{$this->name}.php"))
+					$return = false;
+				break;
+			default:
+				return false;
+		}
+		if (!$for_upgrade) {
+			if ($return) {
+				pines_log("Successfully removed package \"{$this->name}\" version {$this->info['version']}. Rebuilding package database.", 'notice');
+			} else {
+				pines_log("Error removing package \"{$this->name}\" version {$this->info['version']}. Check that all files were removed correctly. Rebuilding package database.", 'error');
+			}
+			$pines->com_package->rebuild_db();
+		}
+		return $return;
+	}
+
+	/**
+	 * Sort files first.
+	 *
+	 * @param string $a First filename.
+	 * @param string $b Second filename.
+	 *
+	 */
+	private function sort_files($a, $b) {
+		if (is_file($a) && is_dir($b))
+			return -1;
+		if (is_dir($a) && is_file($b))
+			return 1;
+		return 0;
 	}
 }
 

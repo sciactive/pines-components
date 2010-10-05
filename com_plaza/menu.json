@@ -1,13 +1,13 @@
 [
 	{
-		"path": "main_menu/system/the_plaza",
-		"text": "The Plaza",
+		"path": "main_menu/system/pinesplaza",
+		"text": "Pines Plaza",
 		"depend": {
 			"children": true
 		}
 	},
 		{
-			"path": "main_menu/system/the_plaza/getsoftware",
+			"path": "main_menu/system/pinesplaza/getsoftware",
 			"text": "Get Software",
 			"href": ["com_plaza","package/repository"],
 			"depend": {
@@ -15,7 +15,7 @@
 			}
 		},
 		{
-			"path": "main_menu/system/the_plaza/installedsoftware",
+			"path": "main_menu/system/pinesplaza/installedsoftware",
 			"text": "Installed Software",
 			"href": ["com_plaza","package/list"],
 			"depend": {

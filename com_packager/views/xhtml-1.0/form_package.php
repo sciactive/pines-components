@@ -128,7 +128,7 @@ $pines->com_ptags->load();
 						var check_row = $(this);
 						if (check_row.pgrid_get_value(1) == cur_condition_class && check_row.pgrid_get_value(2) == cur_condition_type) {
 							// If this is the current row being edited, it isn't a duplicate.
-							if (!cur_condition || !cur_condition.is(check_row))
+							if (!cur_condition || !cur_condition.filter(this).length)
 								dupe = true;
 						}
 					});

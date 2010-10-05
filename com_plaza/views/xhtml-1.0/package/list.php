@@ -38,6 +38,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
+				{type: 'button', text: 'Get Software', extra_class: 'picon picon-view-refresh', selection_optional: true, url: '<?php echo addslashes(pines_url('com_plaza', 'package/repository')); ?>'},
+				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
@@ -95,11 +97,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			info_dialog.find(".name").text(data.name);
 			info_dialog.find(".author").text(data.author);
 			info_dialog.find(".version .text").text(data.version);
-			if (data.license.indexOf("http://") == 0)
+			if (data.license != null && data.license.indexOf("http://") == 0)
 				info_dialog.find(".license .pf-field").html("<a href=\""+data.license+"\" onclick=\"window.open(this.href); return false;\">"+data.license+"</a>");
 			else
 				info_dialog.find(".license .pf-field").text(data.license);
-			if (data.website.indexOf("http://") == 0)
+			if (data.website != null && data.website.indexOf("http://") == 0)
 				info_dialog.find(".website .pf-field").html("<a href=\""+data.website+"\" onclick=\"window.open(this.href); return false;\">"+data.website+"</a>");
 			else
 				info_dialog.find(".website .pf-field").text(data.website);

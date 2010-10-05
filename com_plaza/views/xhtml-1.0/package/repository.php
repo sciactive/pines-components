@@ -38,10 +38,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
-				<?php if (gatekeeper('com_plaza/makeallindices')) { ?>
 				{type: 'button', text: 'Reload', extra_class: 'picon picon-view-refresh', selection_optional: true, url: '<?php echo addslashes(pines_url('com_plaza', 'reload')); ?>'},
 				{type: 'separator'},
-				<?php } ?>
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
@@ -71,11 +69,21 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				"Install": function(){}
 			}
 		});
+		var info_dialog_installed = $("#p_muid_info").dialog({
+			modal: true,
+			autoOpen: false,
+			width: "600px",
+			buttons: {
+				"Reinstall": function(){},
+				"Remove": function(){}
+			}
+		});
 
 		package_grid.delegate("tbody tr", "click", function(){
 			var cur_row = $(this);
 			var name = cur_row.pgrid_get_value(2);
 			var publisher = cur_row.pgrid_get_value(3);
+			var installed = (cur_row.pgrid_get_value(5) != "");
 			$.ajax({
 				url: "<?php echo addslashes(pines_url('com_plaza', 'package/infojson')); ?>",
 				type: "GET",
@@ -89,21 +97,21 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						pines.error("The server returned an unexpected value.");
 						return;
 					}
-					load_info(data, name);
+					load_info(data, name, (installed ? info_dialog_installed : info_dialog));
 				}
 			});
 		});
 
-		var load_info = function(data, name) {
+		var load_info = function(data, name, info_dialog) {
 			info_dialog.find(".package").text(name);
 			info_dialog.find(".name").text(data.name);
 			info_dialog.find(".author").text(data.author);
 			info_dialog.find(".version .text").text(data.version);
-			if (data.license.indexOf("http://") == 0)
+			if (data.license != null && data.license.indexOf("http://") == 0)
 				info_dialog.find(".license .pf-field").html("<a href=\""+data.license+"\" onclick=\"window.open(this.href); return false;\">"+data.license+"</a>");
 			else
 				info_dialog.find(".license .pf-field").text(data.license);
-			if (data.website.indexOf("http://") == 0)
+			if (data.website != null && data.website.indexOf("http://") == 0)
 				info_dialog.find(".website .pf-field").html("<a href=\""+data.website+"\" onclick=\"window.open(this.href); return false;\">"+data.website+"</a>");
 			else
 				info_dialog.find(".website .pf-field").text(data.website);

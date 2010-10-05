@@ -104,6 +104,7 @@ switch ($do) {
 		}
 		break;
 	case 'reinstall':
+		$return = $pines->com_plaza->package_reinstall($package);
 		break;
 }
 

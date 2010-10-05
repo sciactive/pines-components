@@ -707,7 +707,10 @@ class com_plaza extends component {
 	}
 
 	public function package_reinstall($package) {
-		// TODO: Reinstall.
+		$pack = com_package_package::factory($package['package']);
+		if (!isset($pack) || !$pack->is_installed())
+			return false;
+		return $this->package_install($package);
 	}
 
 	public function package_remove($package) {

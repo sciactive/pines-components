@@ -196,7 +196,11 @@ class com_package_package extends p_base {
 		}
 		if (isset($pines->com_package->db['packages'][$this->name])) {
 			pines_log("Replacing existing package \"{$this->name}\" version {$pines->com_package->db['packages'][$this->name]['version']} with new version {$this->info['version']}.", 'notice');
-			// Todo: remove old version.
+			$old_package = com_package_package::factory($this->name);
+			if (!isset($old_package) || !$old_package->is_installed() || !$old_package->remove(false, true)) {
+				pines_log("Could not remove \"{$old_package->name}\" version {$old_package->info['version']} for replacement.", 'error');
+				return false;
+			}
 		} else {
 			pines_log("Installing new package \"{$this->name}\" version {$this->info['version']}.", 'notice');
 		}

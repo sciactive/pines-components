@@ -70,7 +70,38 @@ switch ($do) {
 	case 'upgrade':
 		break;
 	case 'remove':
-		$return = $pines->com_plaza->package_remove($package);
+		do {
+			$passed = true;
+			$old_changes = $changes;
+			if ($changes['install']) {
+				foreach ($changes['install'] as $key => $cur_package_name) {
+					$cur_package = $index['packages'][$cur_package_name];
+					if (!$pines->com_plaza->package_install($cur_package)) {
+						$passed = false;
+					} else {
+						unset($changes['install'][$key]);
+					}
+				}
+			}
+			if ($changes['remove']) {
+				foreach ($changes['remove'] as $key => $cur_package_name) {
+					$cur_package = $pines->com_package->db['packages'][$cur_package_name];
+					if (!$pines->com_plaza->package_remove($cur_package)) {
+						$passed = false;
+					} else {
+						unset($changes['remove'][$key]);
+					}
+				}
+			}
+			// Check that we're not just looping.
+			if ($changes === $old_changes)
+				break;
+		} while (!$passed);
+		if ($passed) {
+			$return = $pines->com_plaza->package_remove($package);
+		} else {
+			$return = false;
+		}
 		break;
 	case 'reinstall':
 		break;

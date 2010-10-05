@@ -687,7 +687,22 @@ class com_plaza extends component {
 	public function package_install($package) {
 		if (!$this->package_download($package))
 			return false;
-		// TODO: Install the package.
+		$file = "components/com_plaza/includes/cache/packages/{$package['package']}-{$package['version']}.slm";
+		if (!file_exists($file))
+			return false;
+		// Load the package.
+		$pack = com_package_package::factory($file, true);
+		if (!isset($pack))
+			return false;
+		// Make sure it's installable.
+		if (!$pack->is_installable())
+			return false;
+		// Check its dependencies, etc.
+		if (!$pack->is_ready())
+			return false;
+		// Install it.
+		if (!$pack->install())
+			return false;
 		return true;
 	}
 
@@ -696,7 +711,18 @@ class com_plaza extends component {
 	}
 
 	public function package_remove($package) {
-		// TODO: Remove.
+		// Check that it won't disrupt other packages.
+		$changes = $this->calculate_changes($package, 'remove');
+		if (!$changes['possible'] || $changes['install'] || $changes['remove'] || $changes['service'])
+			return false;
+		// Load the package.
+		$pack = com_package_package::factory($package['package']);
+		if (!isset($pack))
+			return false;
+		// Remove it.
+		if (!$pack->remove())
+			return false;
+		return true;
 	}
 
 	public function package_upgrade($package) {

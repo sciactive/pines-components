@@ -61,6 +61,17 @@ class com_package extends component {
 	}
 
 	/**
+	 * Get the current system package.
+	 * @return com_package_package The system package.
+	 */
+	public function get_system() {
+		foreach ($this->db['packages'] as $cur_name => $cur_package) {
+			if ($cur_package['type'] == 'system')
+				return com_package_package::factory($cur_name);
+		}
+	}
+
+	/**
 	 * Load the package database.
 	 * @access private
 	 */

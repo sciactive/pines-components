@@ -181,7 +181,7 @@ class com_package_package extends p_base {
 	}
 
 	/**
-	 * Install the package.
+	 * Install/upgrade the package.
 	 * @param bool $force Install the package even if there is a newer version already installed, services are already provided, or the dependencies aren't met.
 	 * @return bool True on success, false on failure.
 	 */
@@ -194,15 +194,25 @@ class com_package_package extends p_base {
 				return false;
 			pines_log("Forced package installation requested for package \"{$this->name}\". A newer version is installed, services are already provided, or the dependencies aren't met.", 'warning');
 		}
-		if (isset($pines->com_package->db['packages'][$this->name])) {
-			pines_log("Replacing existing package \"{$this->name}\" version {$pines->com_package->db['packages'][$this->name]['version']} with new version {$this->info['version']}.", 'notice');
-			$old_package = com_package_package::factory($this->name);
+		if ($this->info['type'] == 'system') {
+			// Should this require $force?
+			pines_log("Replacing existing system \"{$pines->info->name}\" version {$pines->info->version} with new system \"{$this->name}\" {$this->info['version']}.", 'notice');
+			$old_package = $pines->com_package->get_system();
 			if (!isset($old_package) || !$old_package->is_installed() || !$old_package->remove(false, true)) {
 				pines_log("Could not remove \"{$old_package->name}\" version {$old_package->info['version']} for replacement.", 'error');
 				return false;
 			}
 		} else {
-			pines_log("Installing new package \"{$this->name}\" version {$this->info['version']}.", 'notice');
+			if (isset($pines->com_package->db['packages'][$this->name])) {
+				pines_log("Replacing existing package \"{$this->name}\" version {$pines->com_package->db['packages'][$this->name]['version']} with new version {$this->info['version']}.", 'notice');
+				$old_package = com_package_package::factory($this->name);
+				if (!isset($old_package) || !$old_package->is_installed() || !$old_package->remove(false, true)) {
+					pines_log("Could not remove \"{$old_package->name}\" version {$old_package->info['version']} for replacement.", 'error');
+					return false;
+				}
+			} else {
+				pines_log("Installing new package \"{$this->name}\" version {$this->info['version']}.", 'notice');
+			}
 		}
 		switch ($this->info['type']) {
 			case 'component':
@@ -277,7 +287,7 @@ class com_package_package extends p_base {
 									"{$dir}config.php",
 									"{$dir}includes/",
 									"{$dir}includes/index.html",
-									"{$dir}includes/cache/",
+									"{$dir}includes/cache/"
 								)) ||
 								(strpos($cur_file, "{$dir}includes/cache/") === 0)
 							)
@@ -293,7 +303,31 @@ class com_package_package extends p_base {
 			case 'system':
 				if (!is_writable("components/com_package/includes/cache/sys_{$this->name}.php"))
 					return false;
-				// Remove system stuff.
+				// Remove system files.
+				$files = $this->dir_find('system/');
+				$files[] = 'system/';
+				$files[] = P_INDEX;
+				$files[] = 'INSTALL';
+				$files[] = 'LICENSE';
+				$files[] = 'README';
+				foreach ($files as $cur_file) {
+					if (!file_exists($cur_file))
+						continue;
+					if (
+							$for_upgrade &&
+							in_array($cur_file, array(
+								"system/",
+								"system/index.html",
+								"system/config.php"
+							))
+						)
+						continue;
+					if (is_file($cur_file)) {
+						$return = $return && unlink($cur_file);
+					} elseif (is_dir($cur_file)) {
+						$return = $return && rmdir($cur_file);
+					}
+				}
 				break;
 			case 'meta':
 				$files = $this->info['files'];

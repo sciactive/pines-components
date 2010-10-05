@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	'name' => 'Bamboo Template',
-	'author' => 'Template - SciActive, Design - Free CSS Templates',
+	'author' => 'SciActive (Template), Free CSS Templates (Design)',
 	'version' => '1.0.0',
 	'license' => 'http://creativecommons.org/licenses/by/2.5/',
 	'website' => 'http://www.freecsstemplates.org',

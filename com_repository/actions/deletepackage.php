@@ -11,18 +11,32 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_repository/deletepackage') )
+if ( !gatekeeper('com_repository/deletepackage') && !gatekeeper('com_repository/deleteallpackage') )
 	punt_user(null, pines_url('com_repository', 'listpackages'));
 
-$list = explode(',', $_REQUEST['id']);
-foreach ($list as $cur_package) {
-	// Delete package.
-	$failed_deletes .= (empty($failed_deletes) ? '' : ', ').$cur_package;
-}
-if (empty($failed_deletes)) {
-	pines_notice('Selected package(s) deleted successfully.');
+$publisher = $_REQUEST['pub'];
+$package = $_REQUEST['p'];
+$version = $_REQUEST['v'];
+
+if (empty($publisher) || empty($package) || empty($version))
+	return;
+
+$user = user::factory($publisher);
+if (!isset($user->guid))
+	return;
+if (!gatekeeper('com_repository/deleteallpackage') && !$user->is($_SESSION['user']))
+	return;
+
+$file = clean_filename("{$pines->config->com_repository->repository_path}{$user->guid}/{$package}-{$version}.slm");
+
+if (!file_exists($file)) {
+	pines_notice('Package not found. It may have already been removed. Please refresh your index.');
 } else {
-	pines_error('Could not delete packages with given IDs: '.$failed_deletes);
+	if (unlink($file)) {
+		pines_notice('Selected package deleted successfully. Now you should refresh your index to see the change.');
+	} else {
+		pines_error('Could not delete package.');
+	}
 }
 
 redirect(pines_url('com_repository', 'listpackages'));

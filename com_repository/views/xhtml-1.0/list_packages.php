@@ -42,9 +42,9 @@ if (isset($this->user)) {
 				{type: 'button', text: 'Refresh My Index', extra_class: 'picon picon-view-refresh', selection_optional: true, url: '<?php echo addslashes(pines_url('com_repository', 'makeindices')); ?>'},
 				<?php } if (gatekeeper('com_repository/newpackage')) { ?>
 				{type: 'button', text: 'Upload Package', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_repository', 'uploadpackage')); ?>'},
-				<?php } if (gatekeeper('com_repository/deletepackage')) { ?>
+				<?php } if (gatekeeper('com_repository/deletepackage') || gatekeeper('com_repository/deleteallpackage')) { ?>
 				{type: 'separator'},
-				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_repository', 'deletepackage', array('id' => '__title__'))); ?>', delimiter: ','},
+				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, url: '<?php echo addslashes(pines_url('com_repository', 'deletepackage', array('pub' => '__col_2__', 'p' => '__title__', 'v' => '__col_5__'))); ?>', delimiter: ','},
 				<?php } ?>
 				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
@@ -76,9 +76,7 @@ if (isset($this->user)) {
 	<thead>
 		<tr>
 			<th>Package</th>
-			<?php if (!isset($this->user)) { ?>
 			<th>Publisher</th>
-			<?php } ?>
 			<th>Name</th>
 			<th>Author</th>
 			<th>Version</th>
@@ -87,11 +85,9 @@ if (isset($this->user)) {
 	</thead>
 	<tbody>
 	<?php foreach($packages as $package) { ?>
-		<tr title="<?php echo $package['package']; ?>">
+		<tr title="<?php echo htmlspecialchars($package['package']); ?>">
 			<td><?php echo htmlspecialchars($package['package']); ?></td>
-			<?php if (!isset($this->user)) { ?>
 			<td><?php echo htmlspecialchars($package['publisher']); ?></td>
-			<?php } ?>
 			<td><?php echo htmlspecialchars($package['name']); ?></td>
 			<td><?php echo htmlspecialchars($package['author']); ?></td>
 			<td><?php echo htmlspecialchars($package['version']); ?></td>

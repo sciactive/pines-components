@@ -27,7 +27,8 @@ return array(
 		array('listallpackages', 'List All Packages', 'User can see all packages.'),
 		array('listpackages', 'List Packages', 'User can see their own packages.'),
 		array('newpackage', 'Create Packages', 'User can upload new packages.'),
-		array('deletepackage', 'Delete Packages', 'User can delete current packages.'),
+		array('deleteallpackage', 'Delete All Packages', 'User can delete any current packages.'),
+		array('deletepackage', 'Delete Packages', 'User can delete their own current packages.'),
 		array('makeallindices', 'Make All Indices', 'User can (re)generate all indices.'),
 		array('makeindices', 'Make Own Index', 'User can (re)generate their own index.')
 	),

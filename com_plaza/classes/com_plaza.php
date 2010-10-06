@@ -638,11 +638,15 @@ class com_plaza extends component {
 			// Figure out which repository it's in.
 			foreach ($pines->config->com_plaza->repositories as $cur_repository) {
 				$index = $this->get_index($cur_repository, $package['publisher']);
-				if (isset($index[$package['package']])) {
+				if (isset($index[$package['package']]) && $index[$package['package']]['version'] == $package['version']) {
+					if (!isset($package['publisher']))
+						$package['publisher'] = $index[$package['package']]['publisher'];
 					$repository = $cur_repository;
 					break;
 				}
 			}
+			if (!isset($repository))
+				return false;
 			// Download it.
 			$cur_url = $cur_repository . (strpos($cur_repository, '?') === false ? '?' : '&') . 'option=com_repository&action=getpackage&pub='.urlencode($package['publisher']).'&p='.urlencode($package['package']).'&v='.urlencode($package['version']);
 			switch ($this->fetch) {

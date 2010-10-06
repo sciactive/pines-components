@@ -638,9 +638,9 @@ class com_plaza extends component {
 			// Figure out which repository it's in.
 			foreach ($pines->config->com_plaza->repositories as $cur_repository) {
 				$index = $this->get_index($cur_repository, $package['publisher']);
-				if (isset($index[$package['package']]) && $index[$package['package']]['version'] == $package['version']) {
+				if (isset($index['packages'][$package['package']]) && $index['packages'][$package['package']]['version'] == $package['version']) {
 					if (!isset($package['publisher']))
-						$package['publisher'] = $index[$package['package']]['publisher'];
+						$package['publisher'] = $index['packages'][$package['package']]['publisher'];
 					$repository = $cur_repository;
 					break;
 				}
@@ -648,7 +648,7 @@ class com_plaza extends component {
 			if (!isset($repository))
 				return false;
 			// Download it.
-			$cur_url = $cur_repository . (strpos($cur_repository, '?') === false ? '?' : '&') . 'option=com_repository&action=getpackage&pub='.urlencode($package['publisher']).'&p='.urlencode($package['package']).'&v='.urlencode($package['version']);
+			$cur_url = $repository . (strpos($repository, '?') === false ? '?' : '&') . 'option=com_repository&action=getpackage&pub='.urlencode($package['publisher']).'&p='.urlencode($package['package']).'&v='.urlencode($package['version']);
 			switch ($this->fetch) {
 				case 'pecl':
 					$hr = new HttpRequest($cur_url, HTTP_METH_GET, array('redirect' => 2));

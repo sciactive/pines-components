@@ -631,6 +631,12 @@ class com_plaza extends component {
 		}
 	}
 
+	/**
+	 * Download a package from the repository.
+	 *
+	 * @param array $package The package array.
+	 * @return bool True on success, false on failure.
+	 */
 	public function package_download($package) {
 		global $pines;
 		$file = "components/com_plaza/includes/cache/packages/{$package['package']}-{$package['version']}.slm";
@@ -688,6 +694,12 @@ class com_plaza extends component {
 		return true;
 	}
 
+	/**
+	 * Install a package.
+	 *
+	 * @param array $package The package array.
+	 * @return bool True on success, false on failure.
+	 */
 	public function package_install($package) {
 		if (!$this->package_download($package))
 			return false;
@@ -710,6 +722,12 @@ class com_plaza extends component {
 		return true;
 	}
 
+	/**
+	 * Reinstall a package.
+	 *
+	 * @param array $package The package array.
+	 * @return bool True on success, false on failure.
+	 */
 	public function package_reinstall($package) {
 		$pack = com_package_package::factory($package['package']);
 		if (!isset($pack) || !$pack->is_installed())
@@ -717,6 +735,12 @@ class com_plaza extends component {
 		return $this->package_install($package);
 	}
 
+	/**
+	 * Remove a package.
+	 *
+	 * @param array $package The package array.
+	 * @return bool True on success, false on failure.
+	 */
 	public function package_remove($package) {
 		// Check that it won't disrupt other packages.
 		$changes = $this->calculate_changes($package, 'remove');
@@ -732,8 +756,17 @@ class com_plaza extends component {
 		return true;
 	}
 
+	/**
+	 * Upgrade a package.
+	 *
+	 * @param array $package The package array.
+	 * @return bool True on success, false on failure.
+	 */
 	public function package_upgrade($package) {
-		// TODO: Upgrade.
+		$pack = com_package_package::factory($package['package']);
+		if (!isset($pack) || !$pack->is_installed())
+			return false;
+		return $this->package_install($package);
 	}
 
 	/**

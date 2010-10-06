@@ -34,6 +34,7 @@ if ($do != 'reinstall') {
 
 switch ($do) {
 	case 'install':
+	case 'upgrade':
 		do {
 			$passed = true;
 			$old_changes = $changes;
@@ -61,13 +62,13 @@ switch ($do) {
 			if ($changes === $old_changes)
 				break;
 		} while (!$passed);
-		if ($passed) {
+		if ($passed && $do == 'install') {
 			$return = $pines->com_plaza->package_install($package);
+		} elseif ($passed) {
+			$return = $pines->com_plaza->package_upgrade($package);
 		} else {
 			$return = false;
 		}
-		break;
-	case 'upgrade':
 		break;
 	case 'remove':
 		do {

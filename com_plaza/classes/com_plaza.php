@@ -185,7 +185,7 @@ class com_plaza extends component {
 		if ($clear_local_first) {
 			// Set up local objects, so we can change things.
 			$this->add_package = $this->add_service = $this->rem_package = array();
-			$this->pines_components = $pines->components;
+			$this->pines_components = $pines->all_components;
 			$this->pines_info = clone $pines->info;
 			$this->pines_services = $pines->services;
 			$this->pines_com_package_db = $pines->com_package->db;
@@ -296,24 +296,25 @@ class com_plaza extends component {
 				// Check other packages if they depend on something we removed or conflict with something new.
 				do {
 					$changed = false;
-					foreach ($this->pines_components as $cur_component) {
-						if ($cur_component == $package['package'] || in_array($cur_component, $this->add_package))
+					foreach ($this->pines_com_package_db['packages'] as $cur_package) {
+						// If the package is in the add list (we just added it), skip it.
+						if (in_array($cur_package['package'], $this->add_package))
 							continue;
-						if (isset($this->pines_info->$cur_component->depend)) {
-							foreach ($this->pines_info->$cur_component->depend as $cur_type => $cur_value) {
+						if (isset($cur_package['depend'])) {
+							foreach ($cur_package['depend'] as $cur_type => $cur_value) {
 								if (!$pines->depend->check($cur_type, $cur_value)) {
-									$this->rem_package[] = $cur_component;
-									$this->calculate_remove($cur_component);
+									$this->rem_package[] = $cur_package['package'];
+									$this->calculate_remove($cur_package['package']);
 									$changed = true;
 									break 2;
 								}
 							}
 						}
-						if (isset($this->pines_info->$cur_component->conflict)) {
-							foreach ($this->pines_info->$cur_component->conflict as $cur_type => $cur_value) {
+						if (isset($cur_package['conflict'])) {
+							foreach ($cur_package['conflict'] as $cur_type => $cur_value) {
 								if ($pines->depend->check($cur_type, $cur_value)) {
-									$this->rem_package[] = $cur_component;
-									$this->calculate_remove($cur_component);
+									$this->rem_package[] = $cur_package['package'];
+									$this->calculate_remove($cur_package['package']);
 									$changed = true;
 									break 2;
 								}
@@ -327,22 +328,22 @@ class com_plaza extends component {
 				// Check other packages if they depend on something we removed.
 				do {
 					$changed = false;
-					foreach ($this->pines_components as $cur_component) {
-						if (isset($this->pines_info->$cur_component->depend)) {
-							foreach ($this->pines_info->$cur_component->depend as $cur_type => $cur_value) {
+					foreach ($this->pines_com_package_db['packages'] as $cur_package) {
+						if (isset($cur_package['depend'])) {
+							foreach ($cur_package['depend'] as $cur_type => $cur_value) {
 								if (!$pines->depend->check($cur_type, $cur_value)) {
-									$this->rem_package[] = $cur_component;
-									$this->calculate_remove($cur_component);
+									$this->rem_package[] = $cur_package['package'];
+									$this->calculate_remove($cur_package['package']);
 									$changed = true;
 									break 2;
 								}
 							}
 						}
-						if (isset($this->pines_info->$cur_component->conflict)) {
-							foreach ($this->pines_info->$cur_component->conflict as $cur_type => $cur_value) {
+						if (isset($cur_package['conflict'])) {
+							foreach ($cur_package['conflict'] as $cur_type => $cur_value) {
 								if ($pines->depend->check($cur_type, $cur_value)) {
-									$this->rem_package[] = $cur_component;
-									$this->calculate_remove($cur_component);
+									$this->rem_package[] = $cur_package['package'];
+									$this->calculate_remove($cur_package['package']);
 									$changed = true;
 									break 2;
 								}

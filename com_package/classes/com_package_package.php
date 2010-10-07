@@ -280,6 +280,10 @@ class com_package_package extends p_base {
 				} else {
 					return false;
 				}
+				if (in_array('user_manager', (array) $this->info['services'])) {
+					// If we are removing the user manager, we need to log the user out.
+					$pines->user_manager->logout();
+				}
 				$files = $this->dir_find($dir);
 				$files[] = $dir;
 				foreach ($files as $cur_file) {

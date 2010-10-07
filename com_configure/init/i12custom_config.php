@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $sys_config = array();
 $com_config = array();
 
-if ($pines->config->com_configure->percondition) {
+if (isset($pines->entity_manager) && $pines->config->com_configure->percondition) {
 	$conditions = (array) $pines->entity_manager->get_entities(array('class' => com_configure_condition), array('&', 'tag' => array('com_configure', 'condition')));
 	foreach ($conditions as &$cur_condition) {
 		// Check that all conditions are met.

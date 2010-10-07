@@ -66,7 +66,33 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			autoOpen: false,
 			width: "600px",
 			buttons: {
-				"Reinstall": function(){},
+				"Reinstall": function(){
+					var name = $(".package", this).text();
+					if (!confirm("Are you sure you want to reinstall the package '"+name+"'?"))
+						return;
+					info_dialog.dialog("disable");
+					pines.com_plaza.ajax_show();
+					$.ajax({
+						url: "<?php echo addslashes(pines_url('com_plaza', 'package/do')); ?>",
+						type: "POST",
+						dataType: "json",
+						data: {"name": name, "local": "true", "do": "reinstall"},
+						complete: function(){
+							pines.com_plaza.ajax_hide();
+							info_dialog.dialog("enable");
+						},
+						error: function(XMLHttpRequest, textStatus){
+							pines.error("An error occured while trying to perform action:\n"+XMLHttpRequest.status+": "+textStatus);
+						},
+						success: function(data){
+							info_dialog.dialog("close");
+							if (data)
+								pines.notice("Successfully reinstalled the package '"+name+"'.");
+							else
+								pines.notice("The package '"+name+"' could not be reinstalled. Is the same version still in the repository?");
+						}
+					});
+				},
 				"Remove": function(){}
 			}
 		});

@@ -610,6 +610,7 @@ class com_plaza extends component {
 	public function list_packages() {
 		global $pines;
 
+		$head = new module('com_plaza', 'package/head', 'head');
 		$module = new module('com_plaza', 'package/list', 'content');
 
 		$module->db = $pines->com_package->db;
@@ -621,6 +622,7 @@ class com_plaza extends component {
 	public function list_repository() {
 		global $pines;
 
+		$head = new module('com_plaza', 'package/head', 'head');
 		$module = new module('com_plaza', 'package/repository', 'content');
 
 		$module->db = $pines->com_package->db;

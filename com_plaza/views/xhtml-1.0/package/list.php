@@ -195,7 +195,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			info_dialog.find(".short_description").text(data.short_description);
 			info_dialog.find(".description").text(data.description);
 			var depend = "None";
-			if (data.depend != null && data.depend != {}) {
+			if (data.depend != null && data.depend != [] && !$.isEmptyObject(data.depend)) {
 				depend = "";
 				$.each(data.depend, function(i, value){
 					depend += "<span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><div class=\"pf-field\">"+value+"</div></div>";
@@ -203,7 +203,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			}
 			info_dialog.find(".depend").hide().html(depend);
 			var conflict = "None";
-			if (data.conflict != null && data.conflict != {}) {
+			if (data.conflict != null && data.conflict != [] && !$.isEmptyObject(data.conflict)) {
 				conflict = "";
 				$.each(data.conflict, function(i, value){
 					conflict += "<span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><div class=\"pf-field\">"+value+"</div></div>";
@@ -211,7 +211,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			}
 			info_dialog.find(".conflict").hide().html(conflict);
 			var recommend = "None";
-			if (data.recommend != null && data.recommend != {}) {
+			if (data.recommend != null && data.recommend != [] && !$.isEmptyObject(data.recommend)) {
 				recommend = "";
 				$.each(data.recommend, function(i, value){
 					recommend += "<span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><div class=\"pf-field\">"+value+"</div></div>";
@@ -283,17 +283,17 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			</div>
 			<div class="pf-element description"></div>
 			<div class="pf-element">
-				<a class="pf-label" href="javascript:void(0);" onclick="$(this).nextAll('div').slideToggle();">See Dependencies</a>
+				<a class="pf-label" href="javascript:void(0);" onclick="$(this).nextAll('div').slideToggle();">See What This Package Depends On</a>
 				<br />
 				<div class="depend" style="display: none; padding-left: 10px;"></div>
 			</div>
 			<div class="pf-element">
-				<a class="pf-label" href="javascript:void(0);" onclick="$(this).nextAll('div').slideToggle();">See Conflicts</a>
+				<a class="pf-label" href="javascript:void(0);" onclick="$(this).nextAll('div').slideToggle();">See What This Package Conflicts With</a>
 				<br />
 				<div class="conflict" style="display: none; padding-left: 10px;"></div>
 			</div>
 			<div class="pf-element">
-				<a class="pf-label" href="javascript:void(0);" onclick="$(this).nextAll('div').slideToggle();">See Recommendations</a>
+				<a class="pf-label" href="javascript:void(0);" onclick="$(this).nextAll('div').slideToggle();">See What This Package Recommends</a>
 				<br />
 				<div class="recommend" style="display: none; padding-left: 10px;"></div>
 			</div>

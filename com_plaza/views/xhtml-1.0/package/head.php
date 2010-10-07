@@ -42,9 +42,9 @@ defined('P_RUN') or die('Direct access prohibited');
 			if (changes.install.length || changes.remove.length) {
 				dialog = $("<div title=\"Confirm Required Package Changes\"></div>").append("<p>"+message.changes+"</p>");
 				if (changes.install.length)
-					dialog.append("<div><h3>Install Packages</h3><ul><li>"+changes.install.join("</li><li>")+"</li></ul></div>");
+					dialog.append("<div><h3>Install the Packages</h3><ul><li>"+changes.install.join("</li><li>")+"</li></ul></div>");
 				if (changes.remove.length)
-					dialog.append("<div><h3>Remove Packages</h3><ul><li>"+changes.remove.join("</li><li>")+"</li></ul></div>");
+					dialog.append("<div><h3>Remove the Packages</h3><ul><li>"+changes.remove.join("</li><li>")+"</li></ul></div>");
 				dialog.append("<p>Are you sure you want to make these changes?</p>");
 			} else {
 				dialog = $("<div title=\"Confirm Package Change\"></div>").append("<p>"+message.nochanges+"</p>");
@@ -53,15 +53,15 @@ defined('P_RUN') or die('Direct access prohibited');
 				modal: true,
 				width: 500,
 				buttons: {
-					"No, Cancel Changes": function(){
-						dialog.dialog("close");
-						if (cancel)
-							cancel.call();
-					},
 					"Yes, Make Changes": function(){
 						dialog.dialog("close");
 						if (callback)
 							callback.call();
+					},
+					"No, Cancel Changes": function(){
+						dialog.dialog("close");
+						if (cancel)
+							cancel.call();
 					}
 				}
 			});

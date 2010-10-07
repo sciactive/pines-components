@@ -63,22 +63,210 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
 		var package_grid = $("#p_muid_grid").pgrid(cur_options);
+		var buttons_new = {
+			"Install": function(){
+				var name = $(".package", this).text();
+				pines.com_plaza.ajax_show();
+				$.ajax({
+					url: "<?php echo addslashes(pines_url('com_plaza', 'package/changes')); ?>",
+					type: "POST",
+					dataType: "json",
+					data: {"name": name, "do": "install"},
+					complete: function(){
+						pines.com_plaza.ajax_hide();
+						info_dialog.dialog("enable");
+					},
+					error: function(XMLHttpRequest, textStatus){
+						pines.error("An error occured while trying to calculate changes:\n"+XMLHttpRequest.status+": "+textStatus);
+					},
+					success: function(data){
+						if (!data) {
+							alert("Could not determine required changes.");
+							return;
+						}
+						if (!data.possible) {
+							alert("It is not possible to install this package. Check its dependencies to see if there are any PHP extenstions you need to install to provide any required functions or classes.");
+							return;
+						}
+						pines.com_plaza.confirm_changes({
+							"changes": "The following changes are required to install the package '"+name+"'.",
+							"nochanges": "Are you sure you want to install the package '"+name+"'?"
+						}, data, function(){
+							info_dialog.dialog("disable");
+							pines.com_plaza.ajax_show();
+							$.ajax({
+								url: "<?php echo addslashes(pines_url('com_plaza', 'package/do')); ?>",
+								type: "POST",
+								dataType: "json",
+								data: {"name": name, "do": "install"},
+								complete: function(){
+									pines.com_plaza.ajax_hide();
+									info_dialog.dialog("enable");
+								},
+								error: function(XMLHttpRequest, textStatus){
+									pines.error("An error occured while trying to perform action:\n"+XMLHttpRequest.status+": "+textStatus);
+								},
+								success: function(data){
+									info_dialog.dialog("close");
+									if (data) {
+										pines.notice("Successfully installed the package '"+name+"'.");
+										location.reload(true);
+									} else
+										pines.notice("The package '"+name+"' could not be installed.");
+								}
+							});
+						});
+					}
+				});
+			}
+		};
+		var buttons_installed = {
+			"Reinstall": function(){
+				var name = $(".package", this).text();
+				if (!confirm("Are you sure you want to reinstall the package '"+name+"'?"))
+					return;
+				info_dialog.dialog("disable");
+				pines.com_plaza.ajax_show();
+				$.ajax({
+					url: "<?php echo addslashes(pines_url('com_plaza', 'package/do')); ?>",
+					type: "POST",
+					dataType: "json",
+					data: {"name": name, "local": "true", "do": "reinstall"},
+					complete: function(){
+						pines.com_plaza.ajax_hide();
+						info_dialog.dialog("enable");
+					},
+					error: function(XMLHttpRequest, textStatus){
+						pines.error("An error occured while trying to perform action:\n"+XMLHttpRequest.status+": "+textStatus);
+					},
+					success: function(data){
+						info_dialog.dialog("close");
+						if (data) {
+							pines.notice("Successfully reinstalled the package '"+name+"'.");
+							location.reload(true);
+						} else
+							pines.notice("The package '"+name+"' could not be reinstalled. Is the same version still in the repository?");
+					}
+				});
+			},
+			"Remove": function(){
+				var name = $(".package", this).text();
+				pines.com_plaza.ajax_show();
+				$.ajax({
+					url: "<?php echo addslashes(pines_url('com_plaza', 'package/changes')); ?>",
+					type: "POST",
+					dataType: "json",
+					data: {"name": name, "local": "true", "do": "remove"},
+					complete: function(){
+						pines.com_plaza.ajax_hide();
+						info_dialog.dialog("enable");
+					},
+					error: function(XMLHttpRequest, textStatus){
+						pines.error("An error occured while trying to calculate changes:\n"+XMLHttpRequest.status+": "+textStatus);
+					},
+					success: function(data){
+						if (!data) {
+							alert("Could not determine required changes.");
+							return;
+						}
+						if (!data.possible) {
+							alert("It is not possible to remove this package.");
+							return;
+						}
+						pines.com_plaza.confirm_changes({
+							"changes": "The following changes are required to remove the package '"+name+"'.",
+							"nochanges": "Are you sure you want to remove the package '"+name+"'?"
+						}, data, function(){
+							info_dialog.dialog("disable");
+							pines.com_plaza.ajax_show();
+							$.ajax({
+								url: "<?php echo addslashes(pines_url('com_plaza', 'package/do')); ?>",
+								type: "POST",
+								dataType: "json",
+								data: {"name": name, "local": "true", "do": "remove"},
+								complete: function(){
+									pines.com_plaza.ajax_hide();
+									info_dialog.dialog("enable");
+								},
+								error: function(XMLHttpRequest, textStatus){
+									pines.error("An error occured while trying to perform action:\n"+XMLHttpRequest.status+": "+textStatus);
+								},
+								success: function(data){
+									info_dialog.dialog("close");
+									if (data) {
+										pines.notice("Successfully removed the package '"+name+"'.");
+										location.reload(true);
+									} else
+										pines.notice("The package '"+name+"' could not be removed.");
+								}
+							});
+						});
+					}
+				});
+			}
+		};
+		var buttons_upgradable = {
+			"Upgrade": function(){
+				var name = $(".package", this).text();
+				pines.com_plaza.ajax_show();
+				$.ajax({
+					url: "<?php echo addslashes(pines_url('com_plaza', 'package/changes')); ?>",
+					type: "POST",
+					dataType: "json",
+					data: {"name": name, "do": "upgrade"},
+					complete: function(){
+						pines.com_plaza.ajax_hide();
+						info_dialog.dialog("enable");
+					},
+					error: function(XMLHttpRequest, textStatus){
+						pines.error("An error occured while trying to calculate changes:\n"+XMLHttpRequest.status+": "+textStatus);
+					},
+					success: function(data){
+						if (!data) {
+							alert("Could not determine required changes.");
+							return;
+						}
+						if (!data.possible) {
+							alert("It is not possible to upgrade this package. Check its dependencies to see if there are any PHP extenstions you need to install to provide any required functions or classes.");
+							return;
+						}
+						pines.com_plaza.confirm_changes({
+							"changes": "The following changes are required to upgrade the package '"+name+"'.",
+							"nochanges": "Are you sure you want to upgrade the package '"+name+"'?"
+						}, data, function(){
+							info_dialog.dialog("disable");
+							pines.com_plaza.ajax_show();
+							$.ajax({
+								url: "<?php echo addslashes(pines_url('com_plaza', 'package/do')); ?>",
+								type: "POST",
+								dataType: "json",
+								data: {"name": name, "do": "upgrade"},
+								complete: function(){
+									pines.com_plaza.ajax_hide();
+									info_dialog.dialog("enable");
+								},
+								error: function(XMLHttpRequest, textStatus){
+									pines.error("An error occured while trying to perform action:\n"+XMLHttpRequest.status+": "+textStatus);
+								},
+								success: function(data){
+									info_dialog.dialog("close");
+									if (data) {
+										pines.notice("Successfully upgraded the package '"+name+"'.");
+										location.reload(true);
+									} else
+										pines.notice("The package '"+name+"' could not be upgraded.");
+								}
+							});
+						});
+					}
+				});
+			},
+			"Remove": buttons_installed.Remove
+		};
 		var info_dialog = $("#p_muid_info").dialog({
 			modal: true,
 			autoOpen: false,
-			width: "600px",
-			buttons: {
-				"Install": function(){}
-			}
-		});
-		var info_dialog_installed = $("#p_muid_info").dialog({
-			modal: true,
-			autoOpen: false,
-			width: "600px",
-			buttons: {
-				"Reinstall": function(){},
-				"Remove": function(){}
-			}
+			width: "600px"
 		});
 
 		package_grid.delegate("tbody tr", "click", function(){
@@ -86,9 +274,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			var name = cur_row.pgrid_get_value(2);
 			var publisher = cur_row.pgrid_get_value(3);
 			var installed = (cur_row.pgrid_get_value(5) != "");
+			var upgradable = (cur_row.pgrid_get_value(7) == "Yes");
 			$.ajax({
 				url: "<?php echo addslashes(pines_url('com_plaza', 'package/infojson')); ?>",
-				type: "GET",
+				type: "POST",
 				dataType: "json",
 				data: {"name": name, "local": "false", "publisher": publisher},
 				error: function(XMLHttpRequest, textStatus){
@@ -99,12 +288,13 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						pines.error("The server returned an unexpected value.");
 						return;
 					}
-					load_info(data, name, (installed ? info_dialog_installed : info_dialog));
+					load_info(data, name, (installed ? (upgradable ? buttons_upgradable : buttons_installed) : buttons_new));
 				}
 			});
 		});
 
-		var load_info = function(data, name, info_dialog) {
+		var load_info = function(data, name, buttons) {
+			info_dialog.dialog("option", "buttons", buttons);
 			info_dialog.find(".package").text(name);
 			info_dialog.find(".name").text(data.name);
 			info_dialog.find(".author").text(data.author);
@@ -126,7 +316,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			info_dialog.find(".short_description").text(data.short_description);
 			info_dialog.find(".description").text(data.description);
 			var depend = "None";
-			if (data.depend) {
+			if (data.depend != null && data.depend != {}) {
 				depend = "";
 				$.each(data.depend, function(i, value){
 					depend += "<span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><div class=\"pf-field\">"+value+"</div></div>";
@@ -134,7 +324,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			}
 			info_dialog.find(".depend").hide().html(depend);
 			var conflict = "None";
-			if (data.conflict) {
+			if (data.conflict != null && data.conflict != {}) {
 				conflict = "";
 				$.each(data.conflict, function(i, value){
 					conflict += "<span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><div class=\"pf-field\">"+value+"</div></div>";
@@ -142,14 +332,14 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			}
 			info_dialog.find(".conflict").hide().html(conflict);
 			var recommend = "None";
-			if (data.recommend) {
+			if (data.recommend != null && data.recommend != {}) {
 				recommend = "";
 				$.each(data.recommend, function(i, value){
 					recommend += "<span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><div class=\"pf-field\">"+value+"</div></div>";
 				});
 			}
 			info_dialog.find(".recommend").hide().html(recommend);
-			info_dialog.dialog("option", "title", "Package Info for "+name).dialog("open");
+			info_dialog.dialog("option", "title", "Package Info for '"+name+"'").dialog("open");
 		}
 	});
 	// ]]>
@@ -164,6 +354,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<th>Author</th>
 				<th>Installed Version</th>
 				<th>Latest Version</th>
+				<th>Upgrade Available</th>
 				<th>Type</th>
 			</tr>
 		</thead>
@@ -179,6 +370,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<td><?php echo htmlspecialchars($package['author']); ?></td>
 				<td><?php echo htmlspecialchars($this->db['packages'][$key]['version']); ?></td>
 				<td><?php echo htmlspecialchars($package['version']); ?></td>
+				<td><?php echo isset($this->db['packages'][$key]['version']) ? (version_compare($package['version'], $this->db['packages'][$key]['version']) ? 'Yes' : 'No') : ''; ?></td>
 				<td><?php switch($package['type']) {
 					case 'component':
 						echo 'Component Package';

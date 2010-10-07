@@ -157,7 +157,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			var name = cur_row.pgrid_get_value(2);
 			$.ajax({
 				url: "<?php echo addslashes(pines_url('com_plaza', 'package/infojson')); ?>",
-				type: "GET",
+				type: "POST",
 				dataType: "json",
 				data: {"name": name, "local": "true"},
 				error: function(XMLHttpRequest, textStatus){
@@ -195,7 +195,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			info_dialog.find(".short_description").text(data.short_description);
 			info_dialog.find(".description").text(data.description);
 			var depend = "None";
-			if (data.depend) {
+			if (data.depend != null && data.depend != {}) {
 				depend = "";
 				$.each(data.depend, function(i, value){
 					depend += "<span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><div class=\"pf-field\">"+value+"</div></div>";
@@ -203,7 +203,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			}
 			info_dialog.find(".depend").hide().html(depend);
 			var conflict = "None";
-			if (data.conflict) {
+			if (data.conflict != null && data.conflict != {}) {
 				conflict = "";
 				$.each(data.conflict, function(i, value){
 					conflict += "<span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><div class=\"pf-field\">"+value+"</div></div>";
@@ -211,14 +211,14 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			}
 			info_dialog.find(".conflict").hide().html(conflict);
 			var recommend = "None";
-			if (data.recommend) {
+			if (data.recommend != null && data.recommend != {}) {
 				recommend = "";
 				$.each(data.recommend, function(i, value){
 					recommend += "<span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><div class=\"pf-field\">"+value+"</div></div>";
 				});
 			}
 			info_dialog.find(".recommend").hide().html(recommend);
-			info_dialog.dialog("option", "title", "Package Info for "+name).dialog("open");
+			info_dialog.dialog("option", "title", "Package Info for '"+name+"'").dialog("open");
 		}
 	});
 	// ]]>

@@ -78,12 +78,6 @@ class com_plaza extends component {
 	 * @var array
 	 */
 	private $rem_package = array();
-	/**
-	 * The list of services to remove.
-	 * @access private
-	 * @var array
-	 */
-	private $rem_service = array();
 
 	/**
 	 * Local copy of components array.
@@ -285,7 +279,6 @@ class com_plaza extends component {
 											break;
 										case 'service':
 											$this->calculate_remove_service($this->last_service);
-											$this->rem_service[] = $this->last_service;
 											break;
 										default:
 											$possible = false;
@@ -363,6 +356,11 @@ class com_plaza extends component {
 		// Restore the default checkers.
 		$pines->depend->checkers = $old_checkers;
 		
+		// Filter duplicates.
+		$this->add_package = array_unique($this->add_package);
+		$this->add_service = array_unique($this->add_service);
+		$this->rem_package = array_unique($this->rem_package);
+
 		return array('possible' => $possible, 'install' => $this->add_package, 'remove' => $this->rem_package, 'service' => $this->add_service);
 	}
 
@@ -427,6 +425,11 @@ class com_plaza extends component {
 			if (array_intersect((array) $return['install'], (array) $return['remove']))
 				$return['possible'] = false;
 		}
+
+		// Filter duplicates.
+		$return['install'] = array_unique($return['install']);
+		$return['remove'] = array_unique($return['remove']);
+		$return['service'] = array_unique($return['service']);
 
 		return $return;
 	}
@@ -618,12 +621,15 @@ class com_plaza extends component {
 
 	/**
 	 * Creates and attaches a module which lists repository packages.
+	 *
+	 * @param string $service Only list packages that provide this service.
 	 */
-	public function list_repository() {
+	public function list_repository($service = null) {
 		global $pines;
 
 		$head = new module('com_plaza', 'package/head', 'head');
 		$module = new module('com_plaza', 'package/repository', 'content');
+		$module->service = $service;
 
 		$module->db = $pines->com_package->db;
 		$module->index = $this->get_index();

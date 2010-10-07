@@ -14,5 +14,5 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_plaza/listpackages') )
 	punt_user(null, pines_url('com_plaza', 'package/repository'));
 
-$pines->com_plaza->list_repository();
+$pines->com_plaza->list_repository($_REQUEST['service']);
 ?>

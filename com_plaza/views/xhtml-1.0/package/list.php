@@ -86,14 +86,69 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						},
 						success: function(data){
 							info_dialog.dialog("close");
-							if (data)
+							if (data) {
 								pines.notice("Successfully reinstalled the package '"+name+"'.");
-							else
+								location.reload(true);
+							} else
 								pines.notice("The package '"+name+"' could not be reinstalled. Is the same version still in the repository?");
 						}
 					});
 				},
-				"Remove": function(){}
+				"Remove": function(){
+					var name = $(".package", this).text();
+					pines.com_plaza.ajax_show();
+					$.ajax({
+						url: "<?php echo addslashes(pines_url('com_plaza', 'package/changes')); ?>",
+						type: "POST",
+						dataType: "json",
+						data: {"name": name, "local": "true", "do": "remove"},
+						complete: function(){
+							pines.com_plaza.ajax_hide();
+							info_dialog.dialog("enable");
+						},
+						error: function(XMLHttpRequest, textStatus){
+							pines.error("An error occured while trying to calculate changes:\n"+XMLHttpRequest.status+": "+textStatus);
+						},
+						success: function(data){
+							if (!data) {
+								alert("Could not determine required changes.");
+								return;
+							}
+							if (!data.possible) {
+								alert("It is not possible to remove this package.");
+								return;
+							}
+							pines.com_plaza.confirm_changes({
+								"changes": "The following changes are required to remove the package '"+name+"'.",
+								"nochanges": "Are you sure you want to remove the package '"+name+"'?"
+							}, data, function(){
+								info_dialog.dialog("disable");
+								pines.com_plaza.ajax_show();
+								$.ajax({
+									url: "<?php echo addslashes(pines_url('com_plaza', 'package/do')); ?>",
+									type: "POST",
+									dataType: "json",
+									data: {"name": name, "local": "true", "do": "remove"},
+									complete: function(){
+										pines.com_plaza.ajax_hide();
+										info_dialog.dialog("enable");
+									},
+									error: function(XMLHttpRequest, textStatus){
+										pines.error("An error occured while trying to perform action:\n"+XMLHttpRequest.status+": "+textStatus);
+									},
+									success: function(data){
+										info_dialog.dialog("close");
+										if (data) {
+											pines.notice("Successfully removed the package '"+name+"'.");
+											location.reload(true);
+										} else
+											pines.notice("The package '"+name+"' could not be removed.");
+									}
+								});
+							});
+						}
+					});
+				}
 			}
 		});
 
@@ -139,6 +194,30 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			}
 			info_dialog.find(".short_description").text(data.short_description);
 			info_dialog.find(".description").text(data.description);
+			var depend = "None";
+			if (data.depend) {
+				depend = "";
+				$.each(data.depend, function(i, value){
+					depend += "<span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><div class=\"pf-field\">"+value+"</div></div>";
+				});
+			}
+			info_dialog.find(".depend").hide().html(depend);
+			var conflict = "None";
+			if (data.conflict) {
+				conflict = "";
+				$.each(data.conflict, function(i, value){
+					conflict += "<span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><div class=\"pf-field\">"+value+"</div></div>";
+				});
+			}
+			info_dialog.find(".conflict").hide().html(conflict);
+			var recommend = "None";
+			if (data.recommend) {
+				recommend = "";
+				$.each(data.recommend, function(i, value){
+					recommend += "<span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><div class=\"pf-field\">"+value+"</div></div>";
+				});
+			}
+			info_dialog.find(".recommend").hide().html(recommend);
 			info_dialog.dialog("option", "title", "Package Info for "+name).dialog("open");
 		}
 	});
@@ -203,6 +282,21 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<span class="pf-field"></span>
 			</div>
 			<div class="pf-element description"></div>
+			<div class="pf-element">
+				<a class="pf-label" href="javascript:void(0);" onclick="$(this).nextAll('div').slideToggle();">See Dependencies</a>
+				<br />
+				<div class="depend" style="display: none; padding-left: 10px;"></div>
+			</div>
+			<div class="pf-element">
+				<a class="pf-label" href="javascript:void(0);" onclick="$(this).nextAll('div').slideToggle();">See Conflicts</a>
+				<br />
+				<div class="conflict" style="display: none; padding-left: 10px;"></div>
+			</div>
+			<div class="pf-element">
+				<a class="pf-label" href="javascript:void(0);" onclick="$(this).nextAll('div').slideToggle();">See Recommendations</a>
+				<br />
+				<div class="recommend" style="display: none; padding-left: 10px;"></div>
+			</div>
 		</div>
 		<br />
 	</div>

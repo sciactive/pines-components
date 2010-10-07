@@ -11,6 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Available Software';
+if (isset($this->service))
+	$this->title .= ' that Provides Service \''.htmlspecialchars($this->service).'\'';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_plaza/package/repository'];
@@ -123,6 +125,30 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			}
 			info_dialog.find(".short_description").text(data.short_description);
 			info_dialog.find(".description").text(data.description);
+			var depend = "None";
+			if (data.depend) {
+				depend = "";
+				$.each(data.depend, function(i, value){
+					depend += "<span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><div class=\"pf-field\">"+value+"</div></div>";
+				});
+			}
+			info_dialog.find(".depend").hide().html(depend);
+			var conflict = "None";
+			if (data.conflict) {
+				conflict = "";
+				$.each(data.conflict, function(i, value){
+					conflict += "<span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><div class=\"pf-field\">"+value+"</div></div>";
+				});
+			}
+			info_dialog.find(".conflict").hide().html(conflict);
+			var recommend = "None";
+			if (data.recommend) {
+				recommend = "";
+				$.each(data.recommend, function(i, value){
+					recommend += "<span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><div class=\"pf-field\">"+value+"</div></div>";
+				});
+			}
+			info_dialog.find(".recommend").hide().html(recommend);
 			info_dialog.dialog("option", "title", "Package Info for "+name).dialog("open");
 		}
 	});
@@ -142,7 +168,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			</tr>
 		</thead>
 		<tbody>
-			<?php foreach ($this->index['packages'] as $key => $package) { ?>
+			<?php foreach ($this->index['packages'] as $key => $package) {
+				if (isset($this->service) && !in_array($this->service, (array) $package['services']))
+					continue;
+				?>
 			<tr>
 				<td><?php echo htmlspecialchars($package['name']); ?></td>
 				<td><?php echo htmlspecialchars($package['package']); ?></td>
@@ -191,6 +220,21 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<span class="pf-field"></span>
 			</div>
 			<div class="pf-element description"></div>
+			<div class="pf-element">
+				<a class="pf-label" href="javascript:void(0);" onclick="$(this).nextAll('div').slideToggle();">See Dependencies</a>
+				<br />
+				<div class="depend" style="display: none; padding-left: 10px;"></div>
+			</div>
+			<div class="pf-element">
+				<a class="pf-label" href="javascript:void(0);" onclick="$(this).nextAll('div').slideToggle();">See Conflicts</a>
+				<br />
+				<div class="conflict" style="display: none; padding-left: 10px;"></div>
+			</div>
+			<div class="pf-element">
+				<a class="pf-label" href="javascript:void(0);" onclick="$(this).nextAll('div').slideToggle();">See Recommendations</a>
+				<br />
+				<div class="recommend" style="display: none; padding-left: 10px;"></div>
+			</div>
 		</div>
 		<br />
 	</div>

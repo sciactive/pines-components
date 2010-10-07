@@ -221,6 +221,7 @@ class com_package_package extends p_base {
 				if (!$this->slim->extract())
 					return false;
 				$pines->components[] = $this->name;
+				$pines->all_components[] = $this->name;
 				break;
 			case 'system':
 				if (!is_writable("components/com_package/includes/cache/sys_{$this->name}.php"))
@@ -272,7 +273,13 @@ class com_package_package extends p_base {
 			case 'component':
 			case 'template':
 				$dir = $this->info['type'] == 'template' ? 'templates/' : 'components/';
-				$dir .= $this->name.'/';
+				if (is_dir($dir.$this->name)) {
+					$dir .= $this->name.'/';
+				} elseif (is_dir($dir.'.'.$this->name)) {
+					$dir .= '.'.$this->name.'/';
+				} else {
+					return false;
+				}
 				$files = $this->dir_find($dir);
 				$files[] = $dir;
 				foreach ($files as $cur_file) {
@@ -298,6 +305,10 @@ class com_package_package extends p_base {
 					} elseif (is_dir($cur_file)) {
 						$return = $return && rmdir($cur_file);
 					}
+				}
+				if ($return) {
+					$pines->components = array_diff($pines->components, array($this->name));
+					$pines->all_components = array_diff($pines->all_components, array($this->name));
 				}
 				break;
 			case 'system':

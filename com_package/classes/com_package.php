@@ -91,8 +91,13 @@ class com_package extends component {
 			'packages' => array()
 		);
 		// Add the component packages.
-		foreach ($pines->components as $cur_component) {
-			$db['packages'][$cur_component] = (array) $pines->info->$cur_component;
+		foreach ($pines->all_components as $cur_component) {
+			if (substr($cur_component, 0, 4) === 'com_') {
+				$dir = is_dir("components/{$cur_component}/") ? "components/{$cur_component}/" : "components/.{$cur_component}/";
+			} else {
+				$dir = is_dir("templates/{$cur_component}/") ? "templates/{$cur_component}/" : "templates/.{$cur_component}/";
+			}
+			$db['packages'][$cur_component] = (array) include $dir.'info.php';
 			$db['packages'][$cur_component]['package'] = $cur_component;
 			$db['packages'][$cur_component]['type'] = substr($cur_component, 0, 4) == 'tpl_' ? 'template' : 'component';
 		}

@@ -56,12 +56,12 @@ defined('P_RUN') or die('Direct access prohibited');
 					"No, Cancel Changes": function(){
 						dialog.dialog("close");
 						if (cancel)
-							cancel.run();
+							cancel.call();
 					},
 					"Yes, Make Changes": function(){
 						dialog.dialog("close");
 						if (callback)
-							callback.run();
+							callback.call();
 					}
 				}
 			});

@@ -184,7 +184,7 @@ class com_plaza extends component {
 
 		if ($clear_local_first) {
 			// Set up local objects, so we can change things.
-			$this->add_package = $this->add_service = $this->rem_package = $this->rem_service = array();
+			$this->add_package = $this->add_service = $this->rem_package = array();
 			$this->pines_components = $pines->components;
 			$this->pines_info = clone $pines->info;
 			$this->pines_services = $pines->services;
@@ -198,8 +198,8 @@ class com_plaza extends component {
 
 		switch ($do) {
 			case 'install':
-				// Check if it's installed.
-				if (isset($this->pines_com_package_db['packages'][$package['package']]))
+				// Check if it's installed. It could just be in the add list though.
+				if (!in_array($package['package'], $this->add_package) && isset($this->pines_com_package_db['packages'][$package['package']]))
 					$possible = false;
 			case 'upgrade':
 				if ($possible) {
@@ -380,6 +380,9 @@ class com_plaza extends component {
 		// Calculate immediate changes.
 		$return = $this->calculate_changes($package, $do);
 
+		// Get an index of available packages.
+		$index = $this->get_index();
+
 		// Calculate all the changes required to do it all.
 		$checked = array(
 			'install' => array(),
@@ -401,8 +404,10 @@ class com_plaza extends component {
 									$cur_package = $pines->com_package->db['packages'][$cur_package_name];
 									break;
 							}
-							if (!isset($cur_package))
-								continue;
+							if (!isset($cur_package)) {
+								$return['possible'] = false;
+								break 2;
+							}
 							// Calculate its changes, in the same environment.
 							$more = $this->calculate_changes($cur_package, $cur_do, false);
 							// Is it still possible?

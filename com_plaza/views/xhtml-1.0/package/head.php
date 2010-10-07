@@ -27,7 +27,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			var dialog;
 			if (changes.service.length) {
 				$("<div title=\"Package Change Requires a Service\"></div>").append("<p>In order to complete the requested action, the following services need to be installed.</p>")
-				.append("<ul><li>"+changes.install.join("</li><li>")+"</li></ul></div>")
+				.append("<ul><li>"+changes.service.join("</li><li>")+"</li></ul></div>")
 				.append("<p>Click on a service to see the available packages that provide it.</p>")
 				.find("li").each(function(){
 					var service = $(this);

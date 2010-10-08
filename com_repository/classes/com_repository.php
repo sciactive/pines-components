@@ -19,80 +19,6 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class com_repository extends component {
 	/**
-	 * Creates and attaches a module which lists packages.
-	 *
-	 * @param user $user Only list packages for this user.
-	 */
-	public function list_packages($user = null) {
-		$module = new module('com_repository', 'list_packages', 'content');
-
-		$module->index = $this->get_index($user);
-		$module->user = $user;
-
-		if ( empty($module->index) )
-			pines_notice('No indexed packages found.');
-	}
-
-	/**
-	 * Generate repository indices.
-	 *
-	 * @param user $user Only generate indices for this user.
-	 */
-	public function make_indices($user = null) {
-		global $pines;
-		if (isset($user)) {
-			$guids = array($user->guid);
-		} else {
-			$guids = array_filter(array_map('basename', glob($pines->config->com_repository->repository_path.'*')), 'is_numeric');
-		}
-		$slim = new slim;
-		if (!isset($user))
-			$main_index = array();
-		foreach ($guids as $cur_guid) {
-			// Build an index for the current directory.
-			$tmp_user = user::factory((int) $cur_guid);
-			if (!isset($tmp_user->guid))
-				continue;
-			$dir = $pines->config->com_repository->repository_path.$cur_guid.'/';
-			$index = array();
-			$packages = glob($dir.'*.slm');
-			foreach ($packages as $cur_package) {
-				if (!$slim->read($cur_package))
-					continue;
-				if (isset($index[$slim->ext['package']]) && version_compare($slim->ext['version'], $index[$slim->ext['package']]['version']) == -1)
-					continue;
-				$index[$slim->ext['package']] = array(
-					'publisher' => $tmp_user->username,
-					'package' => $slim->ext['package'],
-					'type' => $slim->ext['type'],
-					'name' => $slim->ext['name'],
-					'author' => $slim->ext['author'],
-					'version' => $slim->ext['version'],
-					'license' => $slim->ext['license'],
-					'website' => $slim->ext['website'],
-					'services' => $slim->ext['services'],
-					'short_description' => $slim->ext['short_description'],
-					'description' => $slim->ext['description'],
-					'depend' => $slim->ext['depend'],
-					'recommend' => $slim->ext['recommend'],
-					'conflict' => $slim->ext['conflict']
-				);
-			}
-			if (!file_put_contents($dir.'index.tmp', json_encode($index)))
-				continue;
-			if (rename($dir.'index.tmp', $dir.'index.json') && !isset($user))
-				$main_index[$tmp_user->username] = $index;
-			unset($tmp_user);
-		}
-		if (!isset($user)) {
-			$dir = $pines->config->com_repository->repository_path;
-			if (!file_put_contents($dir.'index.tmp', json_encode($main_index)))
-				return;
-			rename($dir.'index.tmp', $dir.'index.json');
-		}
-	}
-
-	/**
 	 * Get the index of packages.
 	 *
 	 * @param user $user Only get this user's index.
@@ -112,6 +38,83 @@ class com_repository extends component {
 		} else {
 			return file_get_contents($file);
 		}
+	}
+
+	/**
+	 * Creates and attaches a module which lists packages.
+	 *
+	 * @param user $user Only list packages for this user.
+	 */
+	public function list_packages($user = null) {
+		$module = new module('com_repository', 'list_packages', 'content');
+
+		$module->index = $this->get_index($user);
+		$module->user = $user;
+
+		if ( empty($module->index) )
+			pines_notice('No indexed packages found.');
+	}
+
+	/**
+	 * Generate repository index for a publisher.
+	 *
+	 * @param user $user Generate the index for this user.
+	 */
+	public function make_index($user) {
+		global $pines;
+		$guids = array($user->guid);
+		$slim = new slim;
+		if (!isset($user->guid))
+			return;
+		// Build an index for the directory.
+		$dir = $pines->config->com_repository->repository_path.$user->guid.'/';
+		$index = array();
+		$packages = glob($dir.'*.slm');
+		foreach ($packages as $cur_package) {
+			if (!$slim->read($cur_package))
+				continue;
+			if (isset($index[$slim->ext['package']]) && version_compare($slim->ext['version'], $index[$slim->ext['package']]['version']) == -1)
+				continue;
+			$index[$slim->ext['package']] = array(
+				'publisher' => $user->username,
+				'package' => $slim->ext['package'],
+				'type' => $slim->ext['type'],
+				'name' => $slim->ext['name'],
+				'author' => $slim->ext['author'],
+				'version' => $slim->ext['version'],
+				'license' => $slim->ext['license'],
+				'website' => $slim->ext['website'],
+				'services' => $slim->ext['services'],
+				'short_description' => $slim->ext['short_description'],
+				'description' => $slim->ext['description'],
+				'depend' => $slim->ext['depend'],
+				'recommend' => $slim->ext['recommend'],
+				'conflict' => $slim->ext['conflict'],
+				'md5' => md5_file($cur_package)
+			);
+		}
+		if (!file_put_contents($dir.'index.tmp', json_encode($index)))
+			continue;
+		rename($dir.'index.tmp', $dir.'index.json');
+	}
+
+	/**
+	 * Compile user indices into a main repository index.
+	 */
+	public function make_index_main() {
+		global $pines;
+		$dir = $pines->config->com_repository->repository_path;
+		$index_files = glob($dir.'*/index.json');
+		$index = array();
+		foreach ($index_files as $cur_index_file) {
+			$cur_index = json_decode(file_get_contents($cur_index_file), true);
+			if ((array) $cur_index !== $cur_index)
+				continue;
+			$index = array_merge($index, $cur_index);
+		}
+		if (!file_put_contents($dir.'index.tmp', json_encode($index)))
+			return;
+		rename($dir.'index.tmp', $dir.'index.json');
 	}
 }
 

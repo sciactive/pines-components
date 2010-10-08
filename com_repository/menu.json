@@ -2,11 +2,26 @@
 	{
 		"path": "main_menu/accessories/repository",
 		"text": "Repository",
-		"href": ["com_repository","listpackages",{"all":"true"}],
 		"depend": {
-			"ability": "com_repository/listallpackages"
+			"children": true
 		}
 	},
+		{
+			"path": "main_menu/accessories/repository/packages",
+			"text": "Packages",
+			"href": ["com_repository","listpackages",{"all":"true"}],
+			"depend": {
+				"ability": "com_repository/listallpackages"
+			}
+		},
+		{
+			"path": "main_menu/accessories/repository/refreshindex",
+			"text": "Refresh Index",
+			"href": ["com_repository","makeindices",{"all":"true"}],
+			"depend": {
+				"ability": "com_repository/makeallindices"
+			}
+		},
 	{
 		"path": "main_menu/accessories/mypackages",
 		"text": "My Packages",

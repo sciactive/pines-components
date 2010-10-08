@@ -585,24 +585,24 @@ class com_plaza extends component {
 			}
 		}
 
-		// Build the index of package.
-		$index = array();
+		// Build the index of packages.
+		$packages = array();
 		foreach ($files as $cur_file) {
 			if (!file_exists($cur_file))
 				continue;
 			$cur_index = (array) json_decode(file_get_contents($cur_file), true);
 			if (isset($publisher)) {
-				$index = array_merge((array) $cur_index[$publisher], $index);
-			} else {
-				foreach ($cur_index as $cur_pub_index) {
-					$index = array_merge((array) $cur_pub_index, $index);
+				foreach ($cur_index as $key => $cur_package) {
+					if ($cur_package['publisher'] != $publisher)
+						unset($cur_index[$key]);
 				}
 			}
+			$packages = array_merge($packages, $cur_index);
 		}
 
 		// Build the list of services.
 		$services = array();
-		foreach ($index as $cur_package) {
+		foreach ($packages as $cur_package) {
 			if (!isset($cur_package['services']))
 				continue;
 			foreach ($cur_package['services'] as $cur_service) {
@@ -610,7 +610,7 @@ class com_plaza extends component {
 			}
 		}
 
-		return array('packages' => $index, 'services' => $services);
+		return array('packages' => $packages, 'services' => $services);
 	}
 
 	/**
@@ -661,6 +661,8 @@ class com_plaza extends component {
 				if (isset($index['packages'][$package['package']]) && $index['packages'][$package['package']]['version'] == $package['version']) {
 					if (!isset($package['publisher']))
 						$package['publisher'] = $index['packages'][$package['package']]['publisher'];
+					if (!isset($package['md5']))
+						$package['md5'] = $index['packages'][$package['package']]['md5'];
 					$repository = $cur_repository;
 					break;
 				}
@@ -698,6 +700,10 @@ class com_plaza extends component {
 					fclose($fW);
 					break;
 			}
+		}
+		if ($package['md5'] !== md5_file($file)) {
+			pines_log("File hash check of package {$package['package']} failed.");
+			return false;
 		}
 		$slim = new slim;
 		if (!$slim->read($file)) {
@@ -787,7 +793,7 @@ class com_plaza extends component {
 	 * Reload the package indices from the repositories.
 	 *
 	 * @return bool True on success, false on failure.
-	 * @todo Remove old indicies after the repository is removed.
+	 * @todo Remove old indices after the repository is removed.
 	 */
 	public function reload_packages() {
 		global $pines;
@@ -822,7 +828,7 @@ class com_plaza extends component {
 				$return = false;
 				continue;
 			}
-			$index = (array) json_decode($output);
+			$index = (array) json_decode($output, true);
 			if (empty($index)) {
 				$return = false;
 				continue;

@@ -17,7 +17,7 @@ if ( !gatekeeper('com_plaza/listpackages') )
 if ($pines->com_plaza->reload_packages()) {
 	pines_notice('Package list reloaded successfully.');
 } else {
-	pines_error('Error reloading package list. Not all indicies could be fetched.');
+	pines_error('Error reloading package list. Not all indices could be fetched.');
 }
 
 redirect(pines_url('com_plaza', 'package/repository'));

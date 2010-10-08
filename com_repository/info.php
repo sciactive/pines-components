@@ -21,6 +21,7 @@ return array(
 	'description' => 'Host a Pines repository of Slim packages. You can use the repository to distribute your components to other Pines users.',
 	'depend' => array(
 		'pines' => '<2',
+		'service' => 'user_manager',
 		'component' => 'com_slim&com_jquery&com_pgrid'
 	),
 	'abilities' => array(

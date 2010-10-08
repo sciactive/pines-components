@@ -17,15 +17,6 @@ $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_repository/list_packages'];
 
-if (isset($this->user)) {
-	$packages = $this->index;
-} else {
-	$packages = array();
-	foreach ($this->index as $cur_index) {
-		$packages = array_merge($packages, array_values($cur_index));
-	}
-}
-
 ?>
 <script type="text/javascript">
 	// <![CDATA[
@@ -81,10 +72,11 @@ if (isset($this->user)) {
 			<th>Author</th>
 			<th>Version</th>
 			<th>Type</th>
+			<th>MD5 Hash</th>
 		</tr>
 	</thead>
 	<tbody>
-	<?php foreach($packages as $package) { ?>
+	<?php foreach($this->index as $package) { ?>
 		<tr title="<?php echo htmlspecialchars($package['package']); ?>">
 			<td><?php echo htmlspecialchars($package['package']); ?></td>
 			<td><?php echo htmlspecialchars($package['publisher']); ?></td>
@@ -105,6 +97,7 @@ if (isset($this->user)) {
 					echo 'Meta Package';
 					break;
 			} ?></td>
+			<td><?php echo htmlspecialchars($package['md5']); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

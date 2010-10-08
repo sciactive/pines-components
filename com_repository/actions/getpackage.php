@@ -25,11 +25,14 @@ if (!isset($user->guid))
 	return 'error_404';
 
 $file = clean_filename("{$pines->config->com_repository->repository_path}{$user->guid}/{$package}-{$version}.slm");
-if (!file_exists($file))
+$sigfile = clean_filename("{$pines->config->com_repository->repository_path}{$user->guid}/{$package}-{$version}.sig");
+if (!file_exists($file) || !file_exists($sigfile))
 	return 'error_404';
 
 header('Content-Type: application/octet-stream');
 header('Content-Disposition: attachment; filename='."{$package}-{$version}.slm");
+// Provide the signature, so authenticity can be verified.
+header('X-Pines-Slim-Signature: '.base64_encode(file_get_contents($sigfile)));
 
 $pines->page->override_doc(file_get_contents($file));
 

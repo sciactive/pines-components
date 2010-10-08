@@ -15,11 +15,35 @@
 			}
 		},
 		{
+			"path": "main_menu/accessories/repository/signpackages",
+			"text": "Sign Packages",
+			"href": ["com_repository","signpackage"],
+			"depend": {
+				"ability": "com_repository/signpackage"
+			}
+		},
+		{
 			"path": "main_menu/accessories/repository/refreshindex",
 			"text": "Refresh Index",
 			"href": ["com_repository","makeindices",{"all":"true"}],
 			"depend": {
 				"ability": "com_repository/makeallindices"
+			}
+		},
+		{
+			"path": "main_menu/accessories/repository/generatecertificate",
+			"text": "Generate Certificate",
+			"href": ["com_repository","gencert"],
+			"depend": {
+				"ability": "com_repository/gencert"
+			}
+		},
+		{
+			"path": "main_menu/accessories/repository/viewcertificate",
+			"text": "View Certificate",
+			"href": ["com_repository","viewcert"],
+			"depend": {
+				"ability": "com_repository/gencert"
 			}
 		},
 	{

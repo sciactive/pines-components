@@ -22,7 +22,8 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'user_manager',
-		'component' => 'com_slim&com_jquery&com_pgrid'
+		'component' => 'com_slim&com_jquery&com_pgrid',
+		'function' => 'openssl_pkey_new'
 	),
 	'abilities' => array(
 		array('listallpackages', 'List All Packages', 'User can see all packages.'),
@@ -30,8 +31,10 @@ return array(
 		array('newpackage', 'Create Packages', 'User can upload new packages.'),
 		array('deleteallpackage', 'Delete All Packages', 'User can delete any current packages.'),
 		array('deletepackage', 'Delete Packages', 'User can delete their own current packages.'),
+		array('signpackage', 'Sign Packages', 'User can sign packages.'),
 		array('makeallindices', 'Make All Indices', 'User can (re)generate all indices.'),
-		array('makeindices', 'Make Own Index', 'User can (re)generate their own index.')
+		array('makeindices', 'Make Own Index', 'User can (re)generate their own index.'),
+		array('gencert', 'Generate Certificate', 'Generate a repository certificate.')
 	),
 );
 

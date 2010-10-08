@@ -1,6 +1,6 @@
 <?php
 /**
- * Confirms that the user really wants to run a benchmark.
+ * Provides a form to upload a package.
  *
  * @package Pines
  * @subpackage com_repository
@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Entity Manager Import';
+$this->title = 'Upload a Package';
 
 // Find the max upload size.
 $upload_max = trim(ini_get('upload_max_filesize'));

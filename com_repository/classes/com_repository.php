@@ -116,6 +116,49 @@ class com_repository extends component {
 			return;
 		rename($dir.'index.tmp', $dir.'index.json');
 	}
+
+	/**
+	 * Sign all packages.
+	 *
+	 * @param string $key_password The password to retrieve the private key with.
+	 * @return int 0 on success, 1 if the key file doesn't exist, 2 if the key can't be retrieved, 3 if errors occur while signing packages.
+	 */
+	public function sign_packages($key_password = '') {
+		global $pines;
+		$dir = $pines->config->com_repository->repository_path;
+
+		// Get the key.
+		$key_file = "{$dir}private/cert.key";
+		if (!file_exists($key_file))
+			return 1;
+
+		$private_key = openssl_pkey_get_private(file_get_contents($key_file), $key_password);
+		if (!$private_key)
+			return 2;
+
+		// Go through packages, signing them.
+		$return = 0;
+		$package_files = glob($dir.'*/*.slm');
+		foreach ($package_files as $cur_package_file) {
+			$cur_sig_file = substr($cur_package_file, 0, -3) . 'sig';
+			if (file_exists($cur_sig_file))
+				continue;
+			$data = file_get_contents($cur_package_file);
+			if (!$data) {
+				$return = 3;
+				continue;
+			}
+			if (!openssl_sign($data, $signature, $private_key)) {
+				$return = 3;
+				continue;
+			}
+			if (!file_put_contents($cur_sig_file, $signature)) {
+				$return = 3;
+				continue;
+			}
+		}
+		return $return;
+	}
 }
 
 ?>

@@ -568,6 +568,20 @@ class com_plaza extends component {
 	}
 
 	/**
+	 * Clear the package and index caches.
+	 *
+	 * @return bool True on success, false on failure.
+	 */
+	public function clear_cache() {
+		$files = array_merge(glob('components/com_plaza/includes/cache/indices/*.index'), glob('components/com_plaza/includes/cache/packages/*.slm'));
+		$return = true;
+		foreach ($files as $cur_file) {
+			$return = $return && unlink($cur_file);
+		}
+		return $return;
+	}
+
+	/**
 	 * Get an index of packages.
 	 *
 	 * @param string $repository Only retrieve from this repository.

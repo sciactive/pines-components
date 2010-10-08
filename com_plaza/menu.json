@@ -21,5 +21,13 @@
 			"depend": {
 				"ability": "com_plaza/listpackages"
 			}
+		},
+		{
+			"path": "main_menu/system/pinesplaza/clearcache",
+			"text": "Clear Cache",
+			"href": ["com_plaza","clearcache"],
+			"depend": {
+				"ability": "com_plaza/editpackages"
+			}
 		}
 ]

@@ -26,10 +26,22 @@ $do = $_REQUEST['do'];
 if (!isset($package) || !in_array($do, array('install', 'upgrade', 'remove', 'reinstall')))
 	return;
 
+// Download the package.
+if (($do == 'install' || $do == 'reinstall') && !$pines->com_plaza->package_download($package))
+	return;
+
 if ($do != 'reinstall') {
 	$changes = $pines->com_plaza->calculate_changes_full($package, $do);
 	if (!$changes['possible'] || $changes['service'])
 		return;
+	// Download all required packages.
+	if ($changes['install']) {
+		foreach ($changes['install'] as $key => $cur_package_name) {
+			$cur_package = $index['packages'][$cur_package_name];
+			if (!$pines->com_plaza->package_download($cur_package))
+				return;
+		}
+	}
 }
 
 switch ($do) {

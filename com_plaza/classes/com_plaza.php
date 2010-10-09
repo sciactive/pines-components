@@ -782,8 +782,6 @@ class com_plaza extends component {
 	 * @return bool True on success, false on failure.
 	 */
 	public function package_install($package) {
-		if (!$this->package_download($package))
-			return false;
 		$file = "components/com_plaza/includes/cache/packages/{$package['package']}-{$package['version']}.slm";
 		if (!file_exists($file))
 			return false;

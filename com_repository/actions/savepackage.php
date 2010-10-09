@@ -74,6 +74,12 @@ if (in_array($package->ext['type'], array('component', 'template'))) {
 // Move package into repository.
 $dir = $pines->config->com_repository->repository_path.$_SESSION['user']->guid.'/';
 $filename = $dir.clean_filename("{$package->ext['package']}-{$package->ext['version']}.slm");
+$sig_filename = $dir.clean_filename("{$package->ext['package']}-{$package->ext['version']}.sig");
+if (file_exists($sig_filename) && !unlink($sig_filename)) {
+	pines_error('Old signature file couldn\'t be removed.');
+	redirect(pines_url('com_repository', 'listpackages'));
+	return;
+}
 
 if (!file_exists($dir) && !mkdir($dir)) {
 	pines_error('Error creating user directory.');

@@ -363,7 +363,7 @@ class com_plaza extends component {
 		$this->add_service = array_unique($this->add_service);
 		$this->rem_package = array_unique($this->rem_package);
 
-		return array('possible' => $possible, 'install' => $this->add_package, 'remove' => $this->rem_package, 'service' => $this->add_service);
+		return array('possible' => $possible, 'install' => array_values($this->add_package), 'remove' => array_values($this->rem_package), 'service' => array_values($this->add_service));
 	}
 
 	/**
@@ -434,9 +434,9 @@ class com_plaza extends component {
 		}
 
 		// Filter duplicates.
-		$return['install'] = array_unique($return['install']);
-		$return['remove'] = array_unique($return['remove']);
-		$return['service'] = array_unique($return['service']);
+		$return['install'] = array_values(array_unique($return['install']));
+		$return['remove'] = array_values(array_unique($return['remove']));
+		$return['service'] = array_values(array_unique($return['service']));
 
 		return $return;
 	}

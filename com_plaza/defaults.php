@@ -13,12 +13,6 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
-		'name' => 'repositories',
-		'cname' => 'Repositories',
-		'description' => 'The repositories to get software. In order of precedence. (Packages from the first repository will override packages with the same name from others.)',
-		'value' => array($pines->config->full_location),
-	),
-	array(
 		'name' => 'fetch_method',
 		'cname' => 'URL Fetching Method',
 		'description' => 'The method Pines Plaza will use to fetch files from the internet.',

@@ -103,6 +103,7 @@ class com_plaza extends component {
 	 * @var array
 	 */
 	private $pines_com_package_db;
+
 	/**
 	 * The method of fetching files from the repositories.
 	 *
@@ -594,8 +595,8 @@ class com_plaza extends component {
 			$files = array('components/com_plaza/includes/cache/indices/'.md5($repository).'.index');
 		} else {
 			$files = array();
-			foreach ($pines->config->com_plaza->repositories as $cur_repository) {
-				$files[] = 'components/com_plaza/includes/cache/indices/'.md5($cur_repository).'.index';
+			foreach (com_plaza__get_repositories() as $cur_repository) {
+				$files[] = 'components/com_plaza/includes/cache/indices/'.md5($cur_repository['url']).'.index';
 			}
 		}
 
@@ -667,24 +668,25 @@ class com_plaza extends component {
 	 */
 	public function package_download($package) {
 		global $pines;
-		$file = "components/com_plaza/includes/cache/packages/{$package['package']}-{$package['version']}.slm";
-		if (!file_exists($file)) {
-			// Figure out which repository it's in.
-			foreach ($pines->config->com_plaza->repositories as $cur_repository) {
-				$index = $this->get_index($cur_repository, $package['publisher']);
-				if (isset($index['packages'][$package['package']]) && $index['packages'][$package['package']]['version'] == $package['version']) {
-					if (!isset($package['publisher']))
-						$package['publisher'] = $index['packages'][$package['package']]['publisher'];
-					if (!isset($package['md5']))
-						$package['md5'] = $index['packages'][$package['package']]['md5'];
-					$repository = $cur_repository;
-					break;
-				}
+		// Figure out which repository it's in.
+		foreach (com_plaza__get_repositories() as $cur_repository) {
+			$index = $this->get_index($cur_repository['url'], $package['publisher']);
+			if (isset($index['packages'][$package['package']]) && $index['packages'][$package['package']]['version'] == $package['version']) {
+				if (!isset($package['publisher']))
+					$package['publisher'] = $index['packages'][$package['package']]['publisher'];
+				if (!isset($package['md5']))
+					$package['md5'] = $index['packages'][$package['package']]['md5'];
+				$repository = $cur_repository;
+				break;
 			}
-			if (!isset($repository))
-				return false;
+		}
+		if (!isset($repository))
+			return false;
+		$file = "components/com_plaza/includes/cache/packages/{$package['package']}-{$package['version']}.slm";
+		$sig_file = "components/com_plaza/includes/cache/packages/{$package['package']}-{$package['version']}.sig";
+		if (!file_exists($file) || !file_exists($sig_file)) {
 			// Download it.
-			$cur_url = $repository . (strpos($repository, '?') === false ? '?' : '&') . 'option=com_repository&action=getpackage&pub='.urlencode($package['publisher']).'&p='.urlencode($package['package']).'&v='.urlencode($package['version']);
+			$cur_url = $repository['url'] . (strpos($repository['url'], '?') === false ? '?' : '&') . 'option=com_repository&action=getpackage&pub='.urlencode($package['publisher']).'&p='.urlencode($package['package']).'&v='.urlencode($package['version']);
 			switch ($this->fetch) {
 				case 'pecl':
 					$hr = new HttpRequest($cur_url, HTTP_METH_GET, array('redirect' => 2));
@@ -694,35 +696,80 @@ class com_plaza extends component {
 						$return = false;
 						continue;
 					}
-					file_put_contents($file, $hr->getResponseBody());
+					$data = $hr->getResponseBody();
+					$sig = $hr->getResponseHeader('X-Pines-Slim-Signature');
 					break;
 				case 'curl':
-					// Get the index.
 					$ch = curl_init();
 					curl_setopt($ch, CURLOPT_URL, $cur_url);
+					curl_setopt($ch, CURLOPT_HEADER, 1);
 					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-					file_put_contents($file, curl_exec($ch));
+					list($headers, $data) = explode("\r\n\r\n", curl_exec($ch), 2);
+					foreach (explode("\r\n", $headers) as $cur_header) {
+						list($name, $value) = explode(': ', $cur_header, 2);
+						if ($name == 'X-Pines-Slim-Signature') {
+							$sig = $value;
+							break;
+						}
+					}
+					file_put_contents($file, $data);
 					curl_close($ch);
 					break;
 				case 'fopen':
-					$fw = fopen($file, 'w');
-					$fr = fopen($cur_url, 'r');
-					if (!$fr || !$fw)
-						return false;
-					stream_copy_to_stream($fr, $fw);
-					fclose($fr);
-					fclose($fW);
+					$data = file_get_contents($cur_url);
+					foreach ($http_response_header as $cur_header) {
+						list($name, $value) = explode(': ', $cur_header, 2);
+						if ($name == 'X-Pines-Slim-Signature') {
+							$sig = $value;
+							break;
+						}
+					}
 					break;
 			}
+			$sig = base64_decode($sig);
+			file_put_contents($file, $data);
+			file_put_contents($sig_file, $sig);
+		} else {
+			$data = file_get_contents($file);
+			$sig = file_get_contents($sig_file);
 		}
 		if ($package['md5'] !== md5_file($file)) {
-			pines_log("File hash check of package {$package['package']} failed.");
+			pines_log("File hash check of package {$package['package']} failed. It most likely was corrupted during download. Package and signature file will be deleted. Please download again.", 'error');
+			unlink($file);
+			unlink($sig_file);
 			return false;
 		}
+		// Open the repository's cert.
+		$cert_r = openssl_x509_read(file_get_contents($repository['cert']));
+		if (!$cert_r) {
+			pines_log("Cert for package {$package['package']} could not be read.", 'error');
+			return false;
+		}
+		// Check that it is from a trusted authority.
+		if (!openssl_x509_checkpurpose($cert_r, X509_PURPOSE_ANY, glob('components/com_plaza/includes/cache/certs/authorities/*.pem'))) {
+			pines_log("Cert for package {$package['package']} could not be verified with an authority.", 'error');
+			return false;
+		}
+		// Get its public key.
+		$public_key = openssl_pkey_get_public($cert_r);
+		if (!$public_key) {
+			pines_log("Could not retrieve public key from cert for package {$package['package']}.", 'error');
+			return false;
+		}
+		// Verify its signature.
+		if (!openssl_verify($data, $sig, $public_key)) {
+			pines_log("Signature of package {$package['package']} could not be verified. It may have been tampered with or corrupted. Package and signature file will be deleted. Please download again.", 'error');
+			unlink($file);
+			unlink($sig_file);
+			return false;
+		}
+		// Verify the package.
 		$slim = new slim;
 		if (!$slim->read($file)) {
 			unset($slim);
+			pines_log("Package {$package['package']} is malformed. Package and signature file will be deleted. Please download again.", 'error');
 			unlink($file);
+			unlink($sig_file);
 			return false;
 		}
 		return true;
@@ -812,9 +859,9 @@ class com_plaza extends component {
 	public function reload_packages() {
 		global $pines;
 		$return = true;
-		foreach ($pines->config->com_plaza->repositories as $cur_repository) {
-			$cache_file = 'components/com_plaza/includes/cache/indices/'.md5($cur_repository);
-			$cur_url = $cur_repository . (strpos($cur_repository, '?') === false ? '?' : '&') . 'option=com_repository&action=getindex';
+		foreach (com_plaza__get_repositories() as $cur_repository) {
+			$cache_file = 'components/com_plaza/includes/cache/indices/'.md5($cur_repository['url']);
+			$cur_url = $cur_repository['url'] . (strpos($cur_repository['url'], '?') === false ? '?' : '&') . 'option=com_repository&action=getindex';
 			switch ($this->fetch) {
 				case 'pecl':
 					$hr = new HttpRequest($cur_url, HTTP_METH_GET, array('redirect' => 2));

@@ -45,7 +45,7 @@ openssl_pkey_export($privkey, $pkeyout, $_REQUEST['password']);
 
 // Show any errors that occurred here
 while (($e = openssl_error_string()) !== false) {
-    pines_log("OpenSSL Error: $e", 'error');
+    pines_log("OpenSSL Error: $e");
 }
 
 if (empty($csrout) || empty($certout) || empty($pkeyout)) {

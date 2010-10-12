@@ -14,8 +14,70 @@ $this->title = 'Repository Certificate';
 $this->note = 'All new packages are signed against this certificate.';
 ?>
 <div class="pf-form">
+	<script type="text/javascript">
+		// <![CDATA[
+		pines(function(){
+			$.ajax({
+				type: "GET",
+				url: "<?php echo addslashes("{$pines->config->location}{$pines->config->com_repository->repository_path}private/cert.key"); ?>",
+				complete: function(){
+					$("#p_muid_key_loading").hide();
+				},
+				error: function(xhr){
+					switch (xhr.status) {
+						case 403:
+						case 404:
+							$("#p_muid_key_good").show();
+							break;
+						default:
+							$("#p_muid_key_unsure").show();
+							break;
+					}
+				},
+				success: function(){
+					$("#p_muid_key_unsafe").show();
+				}
+			});
+		});
+		// ]]>
+	</script>
 	<div class="pf-element pf-heading">
-		<p>The certificate text below is what you can supply to your users to allow them access to your repository. Check the details below and make sure that "CN" under "subject" is the correct address of your repository.</p>
+		<h1>Private Key Check</h1>
+	</div>
+	<div id="p_muid_key_loading">
+		Checking that your private key is not readable to everyone...
+	</div>
+	<div id="p_muid_key_good" style="display: none;">
+		Your private key has been verified as not readable. Remember to keep
+		your key secure. If anyone gets ahold of it, they can use it to sign
+		packages and pretend to be your repository.
+	</div>
+	<div id="p_muid_key_unsure" style="display: none;">
+		Your private key could not be verified as not readable. Please manually
+		check the address at
+		<?php echo htmlspecialchars("{$pines->config->location}{$pines->config->com_repository->repository_path}private/cert.key"); ?>.
+		If it is readable, you should block access to it by setting
+		"AllowOverride" to "All" in your Apache configuration. (Or something
+		similar if you're not using Apache.) After the key is verified to not be
+		readable, you should regenerate your certificate in case it was
+		compromised in transit during the check.
+	</div>
+	<div id="p_muid_key_unsafe" style="display: none;">
+		<div style="float: left; height: 16px; width: 16px; margin: .5em;" class="ui-icon ui-icon-alert">&nbsp;</div>
+		Your private key is readable at the address,
+		<?php echo htmlspecialchars("{$pines->config->location}{$pines->config->com_repository->repository_path}private/cert.key"); ?>.
+		This is a serious security risk. This private key is used to sign
+		packages and should never be accessible to anyone but yourself. You
+		should block access to it by setting "AllowOverride" to "All" in your
+		Apache configuration. (Or something similar if you're not using Apache.)
+		After the key is verified to not be readable, you should regenerate your
+		certificate in case it was compromised in transit during the check.
+	</div>
+	<div class="pf-element pf-heading">
+		<h1>Certificate</h1>
+	</div>
+	<div class="pf-element">
+		The certificate text below is what you can supply to your users to allow them access to your repository. Check the details below and make sure that "CN" under "subject" is the correct address of your repository.
 	</div>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Certificate</span>

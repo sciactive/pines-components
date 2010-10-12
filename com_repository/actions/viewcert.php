@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_repository/gencert') )
 	punt_user(null, pines_url('com_repository', 'viewcert'));
 
-$cert = "{$pines->config->com_repository->repository_path}/private/cert.pem";
+$cert = "{$pines->config->com_repository->repository_path}private/cert.pem";
 if (!file_exists($cert)) {
 	pines_notice('Repository certificate has not been generated yet.');
 	redirect(pines_url('com_repository', 'gencert'));

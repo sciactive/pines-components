@@ -55,7 +55,7 @@ if (empty($csrout) || empty($certout) || empty($pkeyout)) {
 }
 
 // Make sure private dir exists.
-$dir = "{$pines->config->com_repository->repository_path}/private/";
+$dir = "{$pines->config->com_repository->repository_path}private/";
 if (!file_exists($dir) && !mkdir($dir, 0700)) {
 	pines_error('Could not create private path in repository.');
 	action('com_repository', 'gencert');
@@ -63,6 +63,19 @@ if (!file_exists($dir) && !mkdir($dir, 0700)) {
 }
 if (!chmod($dir, 0700)) {
 	pines_error('Could not set mode on private path.');
+	action('com_repository', 'gencert');
+	return;
+}
+
+$htaccess = <<<EOF
+# Block this folder from prying eyes.
+order allow,deny
+deny from all
+EOF;
+
+// Write htaccess file.
+if (!file_put_contents("{$dir}.htaccess", $htaccess)) {
+	pines_error('Could not write htaccess file.');
 	action('com_repository', 'gencert');
 	return;
 }

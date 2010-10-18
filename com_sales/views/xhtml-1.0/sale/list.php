@@ -53,7 +53,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', text: 'Receipt', extra_class: 'picon picon-document-print-preview', double_click: true, url: '<?php echo addslashes(pines_url('com_sales', 'sale/receipt', array('id' => '__title__'))); ?>'},
 				<?php if (gatekeeper('com_sales/newreturnwsale')) { ?>
 				{type: 'button', text: 'Return', extra_class: 'picon picon-edit-undo', url: '<?php echo addslashes(pines_url('com_sales', 'sale/return', array('id' => '__title__'))); ?>'},
-				<?php } if (gatekeeper('com_sales/voidsale')) { ?>
+				<?php } if (gatekeeper('com_sales/voidsale') || gatekeeper('com_sales/voidownsale')) { ?>
 				{type: 'button', text: 'Void', extra_class: 'picon picon-edit-delete-shred', confirm: true, url: '<?php echo addslashes(pines_url('com_sales', 'sale/void', array('id' => '__title__'))); ?>'},
 				<?php } ?>
 				{type: 'separator'},

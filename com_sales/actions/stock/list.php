@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/managestock') )
+if ( !gatekeeper('com_sales/managestock') && !gatekeeper('com_sales/seestock'))
 	punt_user(null, pines_url('com_sales', 'stock/list'));
 
 if (empty($_REQUEST['location'])) {

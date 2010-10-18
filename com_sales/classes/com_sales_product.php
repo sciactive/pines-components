@@ -119,6 +119,7 @@ class com_sales_product extends entity {
 				)
 			);
 		$module->manufacturers = (array) $pines->entity_manager->get_entities(array('class' => com_sales_manufacturer), array('&', 'tag' => array('com_sales', 'manufacturer')));
+		$pines->entity_manager->sort($module->manufacturers, 'name');
 		$module->vendors = (array) $pines->entity_manager->get_entities(array('class' => com_sales_vendor), array('&', 'tag' => array('com_sales', 'vendor')));
 		$module->tax_fees = (array) $pines->entity_manager->get_entities(
 				array('class' => com_sales_tax_fee),

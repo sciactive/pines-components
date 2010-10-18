@@ -62,9 +62,10 @@ if (empty($po->received)) {
 }
 
 if (empty($po->po_number)) {
-	$po->print_form();
-	pines_notice('Please specify a PO number.');
-	return;
+	$po->po_number = 'PO';
+	if (isset($po->destination))
+		$po->po_number .= strtoupper($po->destination->name);
+	$po->po_number .= '-'.$pines->entity_manager->new_uid('com_sales_po');
 }
 $test = $pines->entity_manager->get_entity(array('class' => com_sales_po, 'skip_ac' => true), array('&', 'tag' => array('com_sales', 'po'), 'data' => array('po_number', $po->po_number)));
 if (isset($test) && $test->guid != $_REQUEST['id']) {
@@ -90,9 +91,9 @@ if ($_REQUEST['save'] == 'commit')
 
 if ($po->save()) {
 	if ($po->final) {
-		pines_notice('Committed PO ['.$po->guid.']');
+		pines_notice('Committed PO ['.$po->po_number.']');
 	} else {
-		pines_notice('Saved PO ['.$po->guid.']');
+		pines_notice('Saved PO ['.$po->po_number.']');
 	}
 } else {
 	pines_error('Error saving PO. Do you have permission?');

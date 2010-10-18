@@ -269,6 +269,7 @@ if ($this->entity->final)
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">PO #</span>
+			<span class="pf-note">If left blank, one will be auto-generated.</span>
 			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="po_number" size="24" value="<?php echo htmlspecialchars($this->entity->po_number); ?>" <?php echo $read_only; ?> /></label>
 	</div>
 	<div class="pf-element">

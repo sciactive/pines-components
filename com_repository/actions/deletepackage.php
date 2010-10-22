@@ -28,11 +28,12 @@ if (!gatekeeper('com_repository/deleteallpackage') && !$user->is($_SESSION['user
 	return;
 
 $file = clean_filename("{$pines->config->com_repository->repository_path}{$user->guid}/{$package}-{$version}.slm");
+$sigfile = clean_filename("{$pines->config->com_repository->repository_path}{$user->guid}/{$package}-{$version}.sig");
 
 if (!file_exists($file)) {
 	pines_notice('Package not found. It may have already been removed. Please refresh your index.');
 } else {
-	if (unlink($file)) {
+	if (unlink($file) && (!file_exists($sigfile) || unlink($sigfile))) {
 		pines_notice('Selected package deleted successfully. Now you should refresh your index to see the change.');
 	} else {
 		pines_error('Could not delete package.');

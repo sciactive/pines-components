@@ -41,7 +41,11 @@ $sscert = openssl_csr_sign($csr, null, $privkey, (int) $_REQUEST['days']);
 // Export private key, CSR, and cert.
 openssl_csr_export($csr, $csrout);
 openssl_x509_export($sscert, $certout);
-openssl_pkey_export($privkey, $pkeyout, $_REQUEST['password']);
+if (empty($_REQUEST['password'])) {
+	openssl_pkey_export($privkey, $pkeyout);
+} else {
+	openssl_pkey_export($privkey, $pkeyout, $_REQUEST['password']);
+}
 
 // Show any errors that occurred here
 while (($e = openssl_error_string()) !== false) {

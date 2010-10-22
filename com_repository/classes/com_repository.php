@@ -123,7 +123,7 @@ class com_repository extends component {
 	 * @param string $key_password The password to retrieve the private key with.
 	 * @return int 0 on success, 1 if the key file doesn't exist, 2 if the key can't be retrieved, 3 if errors occur while signing packages.
 	 */
-	public function sign_packages($key_password = '') {
+	public function sign_packages($key_password = null) {
 		global $pines;
 		$dir = $pines->config->com_repository->repository_path;
 
@@ -132,7 +132,11 @@ class com_repository extends component {
 		if (!file_exists($key_file))
 			return 1;
 
-		$private_key = openssl_pkey_get_private(file_get_contents($key_file), $key_password);
+		if (isset($key_password)) {
+			$private_key = openssl_pkey_get_private(file_get_contents($key_file), $key_password);
+		} else {
+			$private_key = openssl_pkey_get_private(file_get_contents($key_file));
+		}
 		if (!$private_key)
 			return 2;
 

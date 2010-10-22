@@ -671,7 +671,6 @@ if ($pines->config->com_sales->autocomplete_product)
 				width: 600,
 				buttons: {
 					"Done": function(){
-						comments.val(comments_box.val());
 						$(this).dialog('close');
 					}
 				}

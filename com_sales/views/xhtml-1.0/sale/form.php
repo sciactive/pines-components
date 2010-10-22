@@ -1218,7 +1218,7 @@ if ($pines->config->com_sales->autocomplete_product)
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Tender" onclick="$('#p_muid_sale_process_type').val('tender'); pines.com_sales_run_drawer();" />
 		<?php } ?>
 
-		<?php if ($this->entity->status != 'voided' && $this->entity->status != 'paid' && $this->entity->status != 'invoiced') { ?>
+		<?php if ( $pines->config->com_sales->allow_invoicing && ($this->entity->status != 'voided' && $this->entity->status != 'paid' && $this->entity->status != 'invoiced') ) { ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Invoice" onclick="$('#p_muid_sale_process_type').val('invoice'); pines.com_sales_run_submit();" />
 		<?php } ?>
 

@@ -132,6 +132,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'allow_invoicing',
+		'cname' => 'Allow Invoicing',
+		'description' => 'Sales may be invoiced instead of being immediately tendered.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'invoice_receipt_header',
 		'cname' => 'Invoice Receipt Header',
 		'description' => 'This header will appear on the receipt printer version of the receipt.',

@@ -204,7 +204,7 @@ if ($product_error || $payment_error) {
 if ($pines->config->com_sales->global_sales)
 	$sale->ac->other = 1;
 
-if ($_REQUEST['process'] == 'invoice' && $sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != 'voided') {
+if ($_REQUEST['process'] == 'invoice' && $sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != 'voided' && $pines->config->com_sales->allow_invoicing) {
 	if (!$sale->invoice()) {
 		$sale->print_form();
 		pines_error('There was an error while invoicing the sale. Please check that all information is correct and resubmit.');

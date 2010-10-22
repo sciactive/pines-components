@@ -340,7 +340,11 @@ class com_sales extends component {
 			$selector['lte'] = array('p_cdate', (int) $end_date);
 		if (isset($location))
 			$selector['ref'] = array('group', $location);
-		$module->countsheets = $pines->entity_manager->get_entities(array('class' => com_sales_countsheet), $selector);
+		if (!gatekeeper('com_sales/approvecountsheet'))
+			$approved_selector = array('!&', 'data' => array('status', 'approved'));
+		else
+			$approved_selector = array('&');
+		$module->countsheets = $pines->entity_manager->get_entities(array('class' => com_sales_countsheet), $selector, $approved_selector);
 		$module->start_date = $start_date;
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));

@@ -100,6 +100,7 @@ $pines->com_ptags->load();
 					"Done": function(){
 						var cur_vendor_sku = $("#p_muid_cur_vendor_sku").val();
 						var cur_vendor_cost = $("#p_muid_cur_vendor_cost").val();
+						var cur_vendor_link = $("#p_muid_cur_vendor_link").val();
 						var cur_vendor = available_vendors_table.pgrid_get_selected_rows().pgrid_export_rows();
 						if (!cur_vendor[0]) {
 							alert("Please select a vendor.");
@@ -114,7 +115,8 @@ $pines->com_ptags->load();
 							values: [
 								cur_vendor[0].values[0],
 								cur_vendor_sku,
-								cur_vendor_cost
+								cur_vendor_cost,
+								'<a href="'+cur_vendor_link+'" onclick="window.open(this.href); return false;">'+cur_vendor_link+'</a>'
 							]
 						}];
 						vendors_table.pgrid_add(new_vendor);
@@ -130,6 +132,7 @@ $pines->com_ptags->load();
 				available_vendors_table.pgrid_get_selected_rows().pgrid_deselect_rows();
 				$("#p_muid_cur_vendor_sku").val("");
 				$("#p_muid_cur_vendor_cost").val("");
+				$("#p_muid_cur_vendor_link").val("");
 				vendors.val(JSON.stringify(vendors_table.pgrid_get_all_rows().pgrid_export_rows()));
 			};
 
@@ -442,6 +445,7 @@ $pines->com_ptags->load();
 									<th>Vendor</th>
 									<th>Vendor SKU</th>
 									<th>Cost</th>
+									<th>Link</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -450,6 +454,7 @@ $pines->com_ptags->load();
 									<td><?php echo htmlspecialchars($cur_vendor['entity']->name); ?></td>
 									<td><?php echo htmlspecialchars($cur_vendor['sku']); ?></td>
 									<td><?php echo htmlspecialchars($cur_vendor['cost']); ?></td>
+									<td><a href="<?php echo htmlspecialchars($cur_vendor['link']); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_vendor['link']); ?></a></td>
 								</tr>
 								<?php } } ?>
 							</tbody>
@@ -460,39 +465,44 @@ $pines->com_ptags->load();
 				<span id="p_muid_vendors_hidden" class="pf-field" style="display: none;">Vendors cannot be selected for non stocked items.</span>
 			</div>
 			<div id="p_muid_vendor_dialog" title="Add a Vendor">
-				<table id="p_muid_available_vendors_table">
-					<thead>
-						<tr>
-							<th>Name</th>
-							<th>Email</th>
-							<th>Corporate Phone</th>
-							<th>Fax</th>
-							<th>Account #</th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php foreach ($this->vendors as $cur_vendor) { ?>
-						<tr title="<?php echo $cur_vendor->guid; ?>">
-							<td><?php echo htmlspecialchars($cur_vendor->name); ?></td>
-							<td><?php echo htmlspecialchars($cur_vendor->email); ?></td>
-							<td><?php echo format_phone($cur_vendor->phone_work); ?></td>
-							<td><?php echo format_phone($cur_vendor->fax); ?></td>
-							<td><?php echo htmlspecialchars($cur_vendor->account_number); ?></td>
-						</tr>
-						<?php } ?>
-					</tbody>
-				</table>
-				<br class="pf-clearing" />
-				<div style="width: 100%">
-					<label>
-						<span>Vendor SKU</span>
-						<input type="text" name="cur_vendor_sku" id="p_muid_cur_vendor_sku" />
-					</label>
-					<label>
-						<span>Cost</span>
-						<input type="text" name="cur_vendor_cost" id="p_muid_cur_vendor_cost" />
-					</label>
+				<div class="pf-form">
+					<table id="p_muid_available_vendors_table">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Email</th>
+								<th>Corporate Phone</th>
+								<th>Fax</th>
+								<th>Account #</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php foreach ($this->vendors as $cur_vendor) { ?>
+							<tr title="<?php echo $cur_vendor->guid; ?>">
+								<td><?php echo htmlspecialchars($cur_vendor->name); ?></td>
+								<td><?php echo htmlspecialchars($cur_vendor->email); ?></td>
+								<td><?php echo format_phone($cur_vendor->phone_work); ?></td>
+								<td><?php echo format_phone($cur_vendor->fax); ?></td>
+								<td><?php echo htmlspecialchars($cur_vendor->account_number); ?></td>
+							</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+					<br class="pf-clearing" />
+					<div class="pf-element">
+						<label><span class="pf-label">Vendor SKU</span>
+							<input type="text" class="pf-field ui-widget-content ui-corner-all" name="cur_vendor_sku" size="15" id="p_muid_cur_vendor_sku" /></label>
+					</div>
+					<div class="pf-element">
+						<label><span class="pf-label">Cost</span>
+							<input type="text" class="pf-field ui-widget-content ui-corner-all" name="cur_vendor_cost" size="8" id="p_muid_cur_vendor_cost" /></label>
+					</div>
+					<div class="pf-element">
+						<label><span class="pf-label">Link</span>
+							<input type="text" class="pf-field ui-widget-content ui-corner-all" name="cur_vendor_link" size="20" id="p_muid_cur_vendor_link" /></label>
+					</div>
 				</div>
+				<br />
 			</div>
 			<br class="pf-clearing" />
 		</div>

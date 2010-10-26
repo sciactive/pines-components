@@ -58,7 +58,8 @@ foreach ($product->vendors as &$cur_vendor) {
 	$cur_vendor = array(
 		'entity' => com_sales_vendor::factory((int) $cur_vendor->key),
 		'sku' => $cur_vendor->values[1],
-		'cost' => $cur_vendor->values[2]
+		'cost' => $cur_vendor->values[2],
+		'link' => $cur_vendor->values[3]
 	);
 	if (!isset($cur_vendor['entity']->guid))
 		$cur_vendor['entity'] = null;

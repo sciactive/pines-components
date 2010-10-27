@@ -19,8 +19,10 @@ if (!isset($this->entity)) {
 	$this->entity = $user->timeclock;
 }
 
-if (!isset($this->entity->user->guid) || !isset($this->entity))
+if (!isset($this->entity->user->guid) || !isset($this->entity)) {
 	$this->detach();
+	return;
+}
 ?>
 <div class="pf-form" id="p_muid_timeclock">
 	<script type="text/javascript">

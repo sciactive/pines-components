@@ -20,18 +20,19 @@ if (!isset($employee->guid)) {
 	return;
 }
 
-$employee->timeclock = array();
+$employee->timeclock->timeclock = array();
 
 $clock = (array) json_decode($_REQUEST['clock']);
 
 foreach($clock as $cur_entry) {
-	$employee->timeclock[] = array(
-		'time' => (int) $cur_entry->time,
-		'status' => ($cur_entry->status == 'out' ? 'out' : 'in')
+	$employee->timeclock->timeclock[] = array(
+		'in' => (int) $cur_entry->in,
+		'out' => (int) $cur_entry->out,
+		'comments' => $cur_entry->comments
 	);
 }
 
-if ($employee->save()) {
+if ($employee->timeclock->save()) {
 	pines_notice("Saved timeclock for {$employee->name}.");
 } else {
 	pines_error('Error saving timeclock. Do you have permission?');

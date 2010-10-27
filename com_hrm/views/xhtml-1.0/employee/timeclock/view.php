@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = "Employee Timeclock for {$this->entity->name}";
+$this->title = "Employee Timeclock for {$this->entity->user->name}";
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_hrm/employee/timeclock/view'];
@@ -41,20 +41,19 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 <table id="p_muid_grid">
 	<thead>
 		<tr>
-			<th>UTC ISO Time</th>
-			<th>Formatted Time</th>
-			<th>Status</th>
-			<th>Time Difference</th>
+			<th>Time In</th>
+			<th>Time Out</th>
+			<th>Time</th>
+			<th>Comments</th>
 		</tr>
 	</thead>
 	<tbody>
-	<?php foreach($this->entity->timeclock as $key => $entry) { ?>
-		<tr title="<?php echo htmlspecialchars($key); ?>" class="<?php echo ($entry['status'] == 'in') ? 'ui-state-active' : 'ui-state-highlight'; ?>">
-			<td><?php echo gmdate('c', $entry['time']); ?></td>
-			<td><?php echo format_date($entry['time'], 'full_long', '', $this->entity->get_timezone(true)); ?></td>
-			<td><?php echo htmlspecialchars($entry['status']); ?></td>
-			<td><?php if (isset($last_time)) {
-				$seconds = $entry['time'] - $last_time;
+		<?php foreach($this->entity->timeclock as $key => $entry) { ?>
+		<tr title="<?php echo htmlspecialchars($key); ?>">
+			<td><?php echo format_date($entry['in'], 'full_sort', '', $this->entity->user->get_timezone(true)); ?></td>
+			<td><?php echo format_date($entry['out'], 'full_sort', '', $this->entity->user->get_timezone(true)); ?></td>
+			<td><?php
+				$seconds = $entry['out'] - $entry['in'];
 				$days = floor($seconds / 86400);
 				$seconds %= 86400;
 				$hours = floor($seconds / 3600);
@@ -65,18 +64,33 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if ($days > 0) {
 					$string .= "{$days}d ";
 				}
-				if ($hours > 0) {
-					$string .= "{$hours}h ";
-				}
-				if ($minutes > 0) {
-					$string .= "{$minutes}m ";
-				}
-				if ($seconds > 0) {
-					$string .= "{$seconds}s";
-				}
-				echo htmlspecialchars(trim($string));
-			} ?></td>
+				$string .= sprintf('%d', $hours).':'.sprintf('%02d', $minutes).':'.sprintf('%02d', $seconds);
+				echo htmlspecialchars($string);
+			?></td>
+			<td><?php echo htmlspecialchars($entry['comments']); ?></td>
 		</tr>
-	<?php $last_time = $entry['time']; } ?>
+		<?php } ?>
+		<?php if ($this->entity->clocked_in_time()) { ?>
+		<tr title="<?php echo htmlspecialchars($key); ?>">
+			<td><?php echo format_date($this->entity->clocked_in_time(), 'full_sort', '', $this->entity->user->get_timezone(true)); ?></td>
+			<td></td>
+			<td><?php
+				$seconds = time() - $this->entity->clocked_in_time();
+				$days = floor($seconds / 86400);
+				$seconds %= 86400;
+				$hours = floor($seconds / 3600);
+				$seconds %= 3600;
+				$minutes = floor($seconds / 60);
+				$seconds %= 60;
+				$string = '';
+				if ($days > 0) {
+					$string .= "{$days}d ";
+				}
+				$string .= sprintf('%d', $hours).':'.sprintf('%02d', $minutes).':'.sprintf('%02d', $seconds);
+				echo htmlspecialchars($string);
+			?></td>
+			<td><strong>Currently clocked in.</strong></td>
+		</tr>
+		<?php } ?>
 	</tbody>
 </table>

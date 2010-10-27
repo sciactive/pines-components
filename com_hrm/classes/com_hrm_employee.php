@@ -25,52 +25,14 @@ class com_hrm_employee extends user {
 	public function __construct($id = 0) {
 		// Defaults.
 		$this->employee = true;
-		$this->timeclock = array();
 		$this->employee_attributes = array();
 		$this->commissions = array();
 		$this->hire_date = time();
 		$this->employment_history = array();
+		$this->timeclock = com_hrm_timeclock::factory();
+		$this->timeclock->user = $this;
+		$this->timeclock->group = $this->group;
 		parent::__construct($id);
-	}
-
-	/**
-	 * Calculate the time the employee has worked between two given times.
-	 *
-	 * @param int $time_start Unix time stamp of start time.
-	 * @param int $time_end Unix time stamp of end time.
-	 * @return int Number of seconds worked.
-	 */
-	public function time_sum($time_start = null, $time_end = null) {
-		if ((array) $this->timeclock !== $this->timeclock)
-			return 0;
-		// We need to copy the array because the entity won't keep track of the array pointer.
-		$timeclock = $this->timeclock;
-		$time = 0;
-		for ($cur_entry = reset($timeclock); current($timeclock); $cur_entry = next($timeclock)) {
-			if ($cur_entry['status'] == 'in') {
-				// Start at the in time, or $start_time if it comes after.
-				$cur_start = (isset($time_start) && $cur_entry['time'] < $time_start) ? $time_start : $cur_entry['time'];
-				// Skip in times after the end date.
-				if (isset($time_end) && $cur_entry['time'] > $time_end)
-					continue;
-				// Find the next out time.
-				do {
-					$next_entry = next($timeclock);
-				} while ($next_entry && $next_entry['status'] != 'out');
-				if ($next_entry) {
-					// If there's an out time, use it, or $time_end.
-					$cur_time = (isset($time_end) && $next_entry['time'] > $time_end ? $time_end : $next_entry['time']) - $cur_start;
-					if ($cur_time > 0)
-						$time += $cur_time;
-				} else {
-					// If there's no out time, use current time, or $time_end.
-					$cur_time = (isset($time_end) && time() > $time_end ? $time_end : time()) - $cur_start;
-					if ($cur_time > 0)
-						$time += $cur_time;
-				}
-			}
-		}
-		return $time;
 	}
 
 	/**
@@ -85,6 +47,29 @@ class com_hrm_employee extends user {
 		$args = func_get_args();
 		$entity = new $class($args[0]);
 		$pines->hook->hook_object($entity, $class.'->', false);
+		if (is_array($entity->timeclock) || empty($entity->timeclock)) {
+			// Convert old style timeclocks to new ones.
+			// If we can't save the entity, don't bother.
+			if (!$entity->save())
+				return $entity;
+			$old_tc = $entity->timeclock;
+			$entity->timeclock = com_hrm_timeclock::factory();
+			$entity->timeclock->user = $entity;
+			$entity->timeclock->group = $entity->group;
+			foreach ($old_tc as $cur_entry) {
+				if ($cur_entry['status'] == 'in') {
+					$time_in = $cur_entry['time'];
+				} elseif ($cur_entry['status'] == 'out' && isset($time_in)) {
+					$entity->timeclock->add($time_in, $cur_entry['time']);
+					unset($time_in);
+				}
+			}
+			if (isset($time_in))
+				$entity->timeclock->time_in = $time_in;
+			// Save the new timeclock.
+			if (!$entity->timeclock->save() || !$entity->save())
+				$entity->timeclock = $old_tc;
+		}
 		return $entity;
 	}
 
@@ -122,39 +107,6 @@ class com_hrm_employee extends user {
 		$module->issues = $pines->entity_manager->get_entities(array('class' => com_hrm_issue, 'skip_ac' => true), array('&', 'tag' => array('com_hrm', 'issue'), 'ref' => array('employee', $this)));
 		$module->sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale, 'skip_ac' => true), array('&', 'tag' => array('com_sales', 'sale'), 'ref' => array('user', $this)));
 		$module->returns = $pines->entity_manager->get_entities(array('class' => com_sales_return, 'skip_ac' => true), array('&', 'tag' => array('com_sales', 'return'), 'ref' => array('user', $this)));
-
-		return $module;
-	}
-
-	/**
-	 * Print a form to edit the employee's timeclock.
-	 * @return module The form's module.
-	 */
-	public function print_timeclock() {
-		$module = new module('com_hrm', 'employee/timeclock/form', 'content');
-		$module->entity = $this;
-
-		return $module;
-	}
-
-	/**
-	 * Print a module to see the employee's timeclock.
-	 * @return module The module.
-	 */
-	public function print_timeclock_view() {
-		$module = new module('com_hrm', 'employee/timeclock/view', 'content');
-		$module->entity = $this;
-
-		return $module;
-	}
-
-	/**
-	 * Print a form for the employee to clock in.
-	 * @return module The form's module.
-	 */
-	public function print_clockin() {
-		$module = new module('com_hrm', 'employee/timeclock/clock', 'right');
-		$module->entity = $this;
 
 		return $module;
 	}

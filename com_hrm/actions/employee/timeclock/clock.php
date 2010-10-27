@@ -33,14 +33,18 @@ if (!isset($employee->guid)) {
 	return;
 }
 
-if (!empty($employee->timeclock) && $employee->timeclock[count($employee->timeclock) - 1]['status'] == 'in') {
-	$employee->timeclock[] = array('status' => 'out', 'time' => time());
+if ($employee->timeclock->clocked_in_time()) {
+	$employee->timeclock->clock_out($_REQUEST['comment']);
 } else {
-	$employee->timeclock[] = array('status' => 'in', 'time' => time());
+	$employee->timeclock->clock_in();
 }
 
-$entry = $employee->timeclock[count($employee->timeclock) - 1];
-$entry['time'] = format_date($entry['time']);
-$pines->page->override_doc(json_encode(array($employee->save(), $entry)));
+if (!$employee->timeclock->save()) {
+	$pines->page->override_doc('false');
+	return;
+}
+
+
+$pines->page->override_doc(json_encode($employee->timeclock->clocked_in_time()));
 
 ?>

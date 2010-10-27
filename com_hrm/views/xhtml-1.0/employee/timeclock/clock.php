@@ -13,13 +13,14 @@ defined('P_RUN') or die('Direct access prohibited');
 if (empty($this->title))
 	$this->title = 'Timeclock';
 
-if (!isset($this->entity))
-	$this->entity = $_SESSION['user'];
+if (!isset($this->entity)) {
+	$_SESSION['user']->refresh();
+	$user = com_hrm_employee::factory($_SESSION['user']->guid);
+	$this->entity = $user->timeclock;
+}
 
-if (!$this->entity->employee)
+if (!isset($this->entity->user->guid) || !isset($this->entity))
 	$this->detach();
-
-$entry_count = count($this->entity->timeclock);
 ?>
 <div class="pf-form" id="p_muid_timeclock">
 	<script type="text/javascript">
@@ -31,7 +32,7 @@ $entry_count = count($this->entity->timeclock);
 					url: "<?php echo addslashes(pines_url('com_hrm', 'employee/timeclock/clock')); ?>",
 					type: "POST",
 					dataType: "json",
-					data: {"id": "self", "pin": pin},
+					data: {"id": "self", "pin": pin, "comments": $("#p_muid_comments").val()},
 					beforeSend: function(){
 						loader = $.pnotify({
 							pnotify_title: 'Timeclock',
@@ -49,24 +50,26 @@ $entry_count = count($this->entity->timeclock);
 						pines.error("An error occured while communicating with the server:\n"+XMLHttpRequest.status+": "+textStatus);
 					},
 					success: function(data){
-						if (!data) {
+						if (data === undefined) {
 							alert("No data was returned.");
 							return;
 						}
-						if (data == "pin") {
+						if (data === "pin") {
 							alert("Invalid PIN.");
 							return;
 						}
-						if (!data[0]) {
+						if (data === false) {
 							pines.error("There was an error saving the change to the database.");
 							return;
 						}
-						$("#p_muid_status").html(data[1].status);
-						$("#p_muid_time").html(data[1].time);
-						if (data[1].status == "in") {
-							$("#p_muid_button .p_muid_button_text").html("Clock Out");
+						if (data) {
+							$("#p_muid_status").html("Clocked in.");
+							$("#p_muid_comments").slideDown();
+							$(".p_muid_button_text", "#p_muid_button").html("Clock Out");
 						} else {
-							$("#p_muid_button .p_muid_button_text").html("Clock In");
+							$("#p_muid_status").html("Clocked out.");
+							$("#p_muid_comments").slideUp();
+							$(".p_muid_button_text", "#p_muid_button").html("Clock In");
 						}
 						$("#p_muid_timeclock").effect("highlight");
 					}
@@ -106,11 +109,14 @@ $entry_count = count($this->entity->timeclock);
 		// ]]>
 	</script>
 	<div class="pf-element">
-		<span class="pf-label"><?php echo htmlspecialchars($this->entity->name); ?></span>
-		<span class="pf-note"><span>Status: </span><span id="p_muid_status"><?php echo empty($this->entity->timeclock) ? 'out' : htmlspecialchars($this->entity->timeclock[$entry_count - 1]['status']); ?></span></span>
-		<span class="pf-note"><span>Time: </span><span id="p_muid_time"><?php echo empty($this->entity->timeclock) ? 'No Timeclock Data' : format_date($this->entity->timeclock[$entry_count - 1]['time']); ?></span></span>
+		<span class="pf-label"><?php echo htmlspecialchars($this->entity->user->name); ?></span>
+		<span class="pf-note"><span>Status: </span><span id="p_muid_status"><?php echo $this->entity->clocked_in_time() ? 'Clocked in since '.format_date($this->entity->clocked_in_time(), 'full_short').'.' : 'Clocked out.'; ?></span></span>
+	</div>
+	<div class="pf-element" id="p_muid_comments" style="display: <?php echo $this->entity->clocked_in_time() ? 'block' : 'none'; ?>;">
+		<label><span class="pf-label">Comments</span>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="comments" size="7" /></label>
 	</div>
 	<div class="pf-element pf-full-width">
-		<button class="pf-field ui-state-default ui-corner-all" id="p_muid_button" type="button" style="float: right;"><span class="p_muid_button_text"><?php echo $this->entity->timeclock[$entry_count - 1]['status'] == 'in' ? 'Clock Out' : 'Clock In'; ?></span></button>
+		<button class="pf-field ui-state-default ui-corner-all" id="p_muid_button" type="button" style="float: right;"><span class="p_muid_button_text"><?php echo $this->entity->clocked_in_time() ? 'Clock Out' : 'Clock In'; ?></span></button>
 	</div>
 </div>

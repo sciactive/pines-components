@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = "Edit Timeclock for {$this->entity->name}";
+$this->title = "Edit Timeclock for {$this->entity->user->name}";
 ?>
 <style type="text/css">
 	/* <![CDATA[ */
@@ -36,7 +36,7 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 	pines(function(){
 		var cur_entry;
 		var new_entry;
-		var timezone = "<?php echo addslashes($this->entity->get_timezone()); ?>";
+		var timezone = "<?php echo addslashes($this->entity->user->get_timezone()); ?>";
 		var date_time_dialog = $("#p_muid_date_time_dialog");
 		var add_time_dialog = $("#p_muid_add_time_dialog");
 
@@ -59,12 +59,26 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 		var clean_up = function() {
 			// Sort by timestamp.
 			$("#p_muid_timeclock_edit").prepend($("div.entry", "#p_muid_timeclock_edit").get().sort(function(a, b){
-				return $(".timestamp", a).text() - $(".timestamp", b).text();
+				return $(".timestamp_in", a).text() - $(".timestamp_in", b).text();
 			}));
-			// Make sure statuses are sequential.
-			$(".entry:even .status", "#p_muid_timeclock_edit").html("in");
-			$(".entry:odd .status", "#p_muid_timeclock_edit").html("out");
-			save_to_form();
+			// Check that times don't overlap.
+			var error = false;
+			$("div.entry", "#p_muid_timeclock_edit").each(function(){
+				var entry = $(this);
+				entry.find(".error").hide();
+				if (!entry.next().length)
+					return;
+				if (parseInt($(".timestamp_out", entry).text()) > parseInt($(".timestamp_in", entry.next()).text())) {
+					entry.find(".error").show();
+					error = true;
+				}
+			});
+			if (error)
+				$("#p_muid_submit").addClass("ui-state-disabled").attr("disabled", "disabled");
+			else {
+				$("#p_muid_submit").removeClass("ui-state-disabled").removeAttr("disabled");
+				save_to_form();
+			}
 		};
 
 		var save_to_form = function() {
@@ -72,8 +86,9 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 			var entries = [];
 			$("div.entry", "#p_muid_timeclock_edit").each(function(){
 				entries[entries.length] = {
-					"time": parseInt($(".timestamp", this).text()),
-					"status": $(".status", this).text()
+					"in": parseInt($(".timestamp_in", this).text()),
+					"out": parseInt($(".timestamp_out", this).text()),
+					"comments": $(".comments", this).text()
 				};
 			});
 			$("input[name=clock]", "#p_muid_form").val(JSON.stringify(entries));
@@ -85,7 +100,9 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 			$(this).closest("div").removeClass("ui-state-hover");
 		}).delegate(".time", "click", function(){
 			cur_entry = $(this).closest(".pf-element");
-			$("#p_muid_cur_time").val($(this).text());
+			$("#p_muid_cur_time_in").val($(this).children(".time_in").text());
+			$("#p_muid_cur_time_out").val($(this).children(".time_out").text());
+			$("#p_muid_cur_comments").val($(".comments", cur_entry).text());
 			date_time_dialog.dialog("open");
 		}).delegate("div.entry button", "click", function(){
 			$(this).closest(".pf-element").animate({height: 0, opacity: 0}, "normal", function(){
@@ -96,11 +113,12 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 
 		$("#p_muid_timeclock_edit button.add-button").click(function(){
 			new_entry = $("#p_muid_timeclock_entry_template").clone(true).removeAttr("id").addClass("entry").insertBefore(this);
-			new_entry.find(".timestamp").html(Math.floor(new Date().getTime() / 1000));
-			format_time(new_entry.find(".time"), new_entry.find(".timestamp").text());
+			new_entry.find(".timestamp_in, .timestamp_out").html(Math.floor(new Date().getTime() / 1000));
+			format_time(new_entry.find(".time_in, .time_out"), new_entry.find(".timestamp_in").text());
 			clean_up();
 			new_entry.slideDown("normal");
-			$("#p_muid_new_time").val("now");
+			$("#p_muid_new_time_in").val("now");
+			$("#p_muid_new_time_out").val("now");
 			add_time_dialog.dialog("open");
 		});
 
@@ -114,17 +132,32 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 						url: "<?php echo addslashes(pines_url('system', 'date_get_timestamp')); ?>",
 						type: "POST",
 						dataType: "text",
-						data: {"date": $("#p_muid_cur_time").val(), "timezone": timezone},
+						data: {"date": $("#p_muid_cur_time_in").val(), "timezone": timezone},
 						error: function(){
 							pines.error("Couldn't get a timestamp from the server.");
 							date_time_dialog.dialog('close');
 						},
-						success: function(data){
-							date_time_dialog.dialog('close');
-							cur_entry.find(".timestamp").html(data);
-							format_time(cur_entry.find(".time"), data);
-							cur_entry.children("div").addClass("ui-state-highlight");
-							clean_up();
+						success: function(data_in){
+							$.ajax({
+								url: "<?php echo addslashes(pines_url('system', 'date_get_timestamp')); ?>",
+								type: "POST",
+								dataType: "text",
+								data: {"date": $("#p_muid_cur_time_out").val(), "timezone": timezone},
+								error: function(){
+									pines.error("Couldn't get a timestamp from the server.");
+									date_time_dialog.dialog('close');
+								},
+								success: function(data_out){
+									date_time_dialog.dialog('close');
+									cur_entry.find(".comments").html($("#p_muid_cur_comments").val());
+									cur_entry.find(".timestamp_in").html(data_in);
+									cur_entry.find(".timestamp_out").html(data_out);
+									format_time(cur_entry.find(".time_in"), data_in);
+									format_time(cur_entry.find(".time_out"), data_out);
+									cur_entry.children("div").addClass("ui-state-highlight");
+									clean_up();
+								}
+							});
 						}
 					});
 				}
@@ -141,17 +174,32 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 						url: "<?php echo addslashes(pines_url('system', 'date_get_timestamp')); ?>",
 						type: "POST",
 						dataType: "text",
-						data: {"date": $("#p_muid_new_time").val(), "timezone": timezone},
+						data: {"date": $("#p_muid_new_time_in").val(), "timezone": timezone},
 						error: function(){
 							pines.error("Couldn't get a timestamp from the server.");
 							add_time_dialog.dialog('close');
 						},
-						success: function(data){
-							add_time_dialog.dialog('close');
-							new_entry.find(".timestamp").html(data);
-							format_time(new_entry.find(".time"), data);
-							new_entry.children("div").addClass("ui-state-highlight");
-							clean_up();
+						success: function(data_in){
+							$.ajax({
+								url: "<?php echo addslashes(pines_url('system', 'date_get_timestamp')); ?>",
+								type: "POST",
+								dataType: "text",
+								data: {"date": $("#p_muid_new_time_out").val(), "timezone": timezone},
+								error: function(){
+									pines.error("Couldn't get a timestamp from the server.");
+									add_time_dialog.dialog('close');
+								},
+								success: function(data_out){
+									add_time_dialog.dialog('close');
+									new_entry.find(".comments").html($("#p_muid_new_comments").val());
+									new_entry.find(".timestamp_in").html(data_in);
+									new_entry.find(".timestamp_out").html(data_out);
+									format_time(new_entry.find(".time_in"), data_in);
+									format_time(new_entry.find(".time_out"), data_out);
+									new_entry.children("div").addClass("ui-state-highlight");
+									clean_up();
+								}
+							});
 						}
 					});
 				}
@@ -167,33 +215,39 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 	<div class="pf-element pf-full-width entry">
 		<div class="ui-helper-clearfix ui-widget-content ui-corner-all">
 			<button class="ui-state-default ui-corner-all">Delete</button>
-			<span class="pf-label time"><?php echo format_date($entry['time'], 'full_med', '', $this->entity->get_timezone(true)); ?></span>
-			<span class="pf-note">Timestamp: <span class="timestamp"><?php echo htmlspecialchars($entry['time']); ?></span></span>
-			<span class="pf-field status"><?php echo htmlspecialchars($entry['status']); ?></span>
+			<span class="pf-label time" style="width: auto;"><span class="time_in"><?php echo format_date($entry['in'], 'full_med', '', $this->entity->user->get_timezone(true)); ?></span> - <span class="time_out"><?php echo format_date($entry['out'], 'full_med', '', $this->entity->user->get_timezone(true)); ?></span></span>
+			<span class="pf-label comments" style="width: auto; clear: left;"><?php echo htmlspecialchars($entry['comments']); ?></span>
+			<span class="pf-note">Timestamps: <span class="timestamp_in"><?php echo htmlspecialchars($entry['in']); ?></span> - <span class="timestamp_out"><?php echo htmlspecialchars($entry['out']); ?></span></span><br class="pf-clearing" />
+			<span class="pf-label ui-state-error ui-corner-all error" style="width: auto; display: none;">Overlaps with the next entry!</span>
 		</div>
 	</div>
 	<?php } ?>
 	<div id="p_muid_timeclock_entry_template" class="pf-element pf-full-width" style="display: none;">
 		<div class="ui-helper-clearfix ui-widget-content ui-corner-all">
 			<button class="ui-state-default ui-corner-all">Delete</button>
-			<span class="pf-label time"></span>
-			<span class="pf-note">Timestamp: <span class="timestamp"></span></span>
-			<span class="pf-field status"></span>
+			<span class="pf-label time" style="width: auto;"><span class="time_in"></span> - <span class="time_out"></span></span>
+			<span class="pf-label comments" style="width: auto; clear: left;"></span>
+			<span class="pf-note">Timestamp: <span class="timestamp_in"></span> - <span class="timestamp_out"></span></span><br class="pf-clearing" />
+			<span class="pf-label ui-state-error ui-corner-all error" style="width: auto; display: none;">Overlaps with the next entry!</span>
 		</div>
 	</div>
 	<button class="add-button ui-state-default ui-corner-all">Add</button>
 	<form method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_hrm', 'employee/timeclock/save')); ?>">
 		<input type="hidden" name="clock" value="" />
-		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo $this->entity->user->guid; ?>" />
 		<div class="pf-element pf-buttons">
-			<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
+			<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" id="p_muid_submit" type="submit" value="Submit" />
 			<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_hrm', 'employee/timeclock/list')); ?>');" value="Cancel" />
 		</div>
 	</form>
 </div>
-<div id="p_muid_date_time_dialog" title="Adjust Time" style="display: none;">
-	<span>Time:</span><br />
-	<input id="p_muid_cur_time" type="text" size="24" /><br />
+<div id="p_muid_date_time_dialog" title="Adjust Entry" style="display: none;">
+	<span>Time In:</span><br />
+	<input class="ui-widget-content ui-corner-all" id="p_muid_cur_time_in" type="text" size="24" /><br />
+	<span>Time Out:</span><br />
+	<input class="ui-widget-content ui-corner-all" id="p_muid_cur_time_out" type="text" size="24" /><br />
+	<span>Comments:</span><br />
+	<input class="ui-widget-content ui-corner-all" id="p_muid_cur_comments" type="text" size="24" /><br />
 	<small>Relative times are calculated from now, so "-1 day" means this time, yesterday.</small><br />
 	<br /><span>Examples:</span><br />
 	<small>now</small><br />
@@ -204,9 +258,13 @@ $this->title = "Edit Timeclock for {$this->entity->name}";
 	<small>next Thursday</small><br />
 	<small>last Monday 4pm</small>
 </div>
-<div id="p_muid_add_time_dialog" title="Add a New Time" style="display: none;">
-	<span>Time:</span><br />
-	<input id="p_muid_new_time" type="text" size="24" /><br />
+<div id="p_muid_add_time_dialog" title="Add a New Entry" style="display: none;">
+	<span>Time In:</span><br />
+	<input class="ui-widget-content ui-corner-all" id="p_muid_new_time_in" type="text" size="24" /><br />
+	<span>Time Out:</span><br />
+	<input class="ui-widget-content ui-corner-all" id="p_muid_new_time_out" type="text" size="24" /><br />
+	<span>Comments:</span><br />
+	<input class="ui-widget-content ui-corner-all" id="p_muid_new_comments" type="text" size="24" /><br />
 	<small>Relative times are calculated from now, so "-1 day" means 24 hours ago.</small><br />
 	<br /><span>Examples:</span><br />
 	<small>2 hours ago</small><br />

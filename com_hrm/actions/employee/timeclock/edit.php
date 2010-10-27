@@ -20,9 +20,9 @@ if (!isset($employee->guid)) {
 	return;
 }
 
-if ( empty($employee->timeclock) )
+if ( empty($employee->timeclock->timeclock) )
 	pines_notice("No timeclock data is stored for employee [{$employee->name}].");
 
-$employee->print_timeclock();
+$employee->timeclock->print_timeclock();
 
 ?>

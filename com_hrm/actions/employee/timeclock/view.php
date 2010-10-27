@@ -27,9 +27,9 @@ if (!gatekeeper('com_hrm/manageclock') && !gatekeeper('com_hrm/viewclock')) {
 	}
 }
 
-if ( empty($employee->timeclock) )
+if ( empty($employee->timeclock->timeclock) )
 	pines_notice("No timeclock data is stored for employee [{$employee->name}].");
 
-$employee->print_timeclock_view();
+$employee->timeclock->print_timeclock_view();
 
 ?>

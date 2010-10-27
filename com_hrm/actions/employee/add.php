@@ -21,8 +21,11 @@ foreach ($list as $cur_employee) {
 	$cur_user->hire_date = time();
 	$cur_user->employment_history[] = array($cur_user->hire_date, 'Hired');
 
-	if ((array) $cur_user->timeclock !== $cur_user->timeclock)
-		$cur_user->timeclock = array();
+	if (!isset($cur_user->timeclock->guid)) {
+		$cur_user->timeclock = com_hrm_timeclock::factory();
+		$cur_user->timeclock->user = $cur_user;
+		$cur_user->timeclock->group = $cur_user->group;
+	}
 	if ((array) $cur_user->employee_attributes !== $cur_user->employee_attributes)
 		$cur_user->employee_attributes = array();
 	if ((array) $cur_user->commissions !== $cur_user->commissions)

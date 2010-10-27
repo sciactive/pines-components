@@ -55,16 +55,16 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 								pines.error("An error occured while communicating with the server:\n"+XMLHttpRequest.status+": "+textStatus);
 							},
 							success: function(data){
-								if (!data) {
+								if (data === undefined) {
 									alert("No data was returned.");
 									return;
 								}
-								if (!data[0]) {
+								if (data === false) {
 									pines.error("There was an error saving the change to the database.");
 									return;
 								}
-								cur_row.pgrid_set_value(3, data[1].status);
-								cur_row.pgrid_set_value(4, data[1].time);
+								cur_row.pgrid_set_value(3, data ? 'In' : 'Out');
+								//cur_row.pgrid_set_value(4, data[1].time);
 							}
 						});
 					});
@@ -102,7 +102,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>ID</th>
 			<th>Name</th>
 			<th>Status</th>
-			<th>Time</th>
+			<th>Time In</th>
 			<th>Time Today</th>
 			<th>Time Sum</th>
 		</tr>
@@ -112,10 +112,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<tr title="<?php echo $employee->guid; ?>">
 			<td><?php echo $employee->guid; ?></td>
 			<td><?php echo htmlspecialchars($employee->name); ?></td>
-			<td><?php echo empty($employee->timeclock) ? '' : htmlspecialchars($employee->timeclock[count($employee->timeclock) - 1]['status']); ?></td>
-			<td><?php echo empty($employee->timeclock) ? '' : format_date($employee->timeclock[count($employee->timeclock) - 1]['time'], 'full_sort', '', $employee->get_timezone(true)); ?></td>
-			<td><?php echo empty($employee->timeclock) ? '' : round($employee->time_sum(strtotime('Today 12:00 AM')) / (60 * 60), 2).' hours'; ?></td>
-			<td><?php echo empty($employee->timeclock) ? '' : round($employee->time_sum() / (60 * 60), 2).' hours'; ?></td>
+			<td><?php echo $employee->timeclock->clocked_in_time() ? 'In' : 'Out'; ?></td>
+			<td><?php echo $employee->timeclock->clocked_in_time() ? format_date($employee->timeclock->clocked_in_time(), 'full_sort', '', $employee->get_timezone(true)) : ''; ?></td>
+			<td><?php echo round($employee->timeclock->sum(strtotime('Today 12:00 AM'), time()) / (60 * 60), 2).' hours'; ?></td>
+			<td><?php echo round($employee->timeclock->sum() / (60 * 60), 2).' hours'; ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

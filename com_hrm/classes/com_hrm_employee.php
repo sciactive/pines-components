@@ -74,6 +74,11 @@ class com_hrm_employee extends user {
 			$entity->timeclock->ac = (object) array('user' => 3, 'group' => 3, 'other' => 2);
 			$entity->timeclock->save();
 		}
+		if (!$entity->is($entity->timeclock->user)) {
+			$entity->timeclock->user = $entity;
+			$entity->timeclock->group = $entity->group;
+			$entity->timeclock->save();
+		}
 		return $entity;
 	}
 

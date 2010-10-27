@@ -27,6 +27,7 @@ class com_hrm_timeclock extends entity {
 		$this->add_tag('com_hrm', 'timeclock');
 		// Defaults.
 		$this->timeclock = array();
+		$this->ac = (object) array('user' => 3, 'group' => 3, 'other' => 2);
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));

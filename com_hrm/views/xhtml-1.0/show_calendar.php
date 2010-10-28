@@ -34,6 +34,7 @@ $this->title = 'Company Schedule [' . (isset($this->employee) ? $this->employee-
 				agenda: .5,
 				'': 0.85
 			},
+			firstDay: 1,
 			firstHour: 8,
 			theme: true,
 			<?php if (gatekeeper('com_hrm/editcalendar')) { ?>

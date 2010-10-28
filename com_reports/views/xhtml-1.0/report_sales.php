@@ -97,7 +97,7 @@ foreach ($this->transactions as $cur_tx) {
 				}
 			?>
 			allDayText: 'Total',
-			firstDay: 0,
+			firstDay: 1,
 			firstHour: 10,
 			theme: true,
 			editable: false,

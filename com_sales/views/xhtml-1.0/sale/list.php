@@ -35,7 +35,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var start_date = "<?php echo $this->start_date ? addslashes(format_date($this->start_date, 'date_sort')) : ''; ?>";
 		var end_date = "<?php echo $this->end_date ? addslashes(format_date($this->end_date, 'date_sort')) : ''; ?>";
 		// Location Defaults
-		var location = "<?php echo $this->location->guid ? $this->location->guid : 'all'; ?>";
+		var location = "<?php echo $this->location->guid; ?>";
 		
 		var state_xhr;
 		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
@@ -150,11 +150,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						},
 						buttons: {
 							"Update": function(){
-								if (form.find(":input[name=location_saver]").val() == "all") {
-									location = 'all';
-								} else {
-									location = form.find(":input[name=location]").val();
-								}
+								location = form.find(":input[name=location]").val();
 								form.dialog('close');
 								submit_search();
 							}

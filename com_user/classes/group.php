@@ -108,7 +108,7 @@ class group extends able_object implements group_interface {
 		return $return;
 	}
 
-	public function get_descendents() {
+	public function get_descendents($and_self = false) {
 		global $pines;
 		$return = array();
 		$entities = $pines->entity_manager->get_entities(
@@ -119,9 +119,14 @@ class group extends able_object implements group_interface {
 				)
 			);
 		foreach ($entities as $entity) {
-			$child_array = $entity->get_descendents();
-			$return = array_merge($return, array($entity), $child_array);
+			$child_array = $entity->get_descendents(true);
+			$return = array_merge($return, $child_array);
 		}
+		$hooked = $this;
+		$class = get_class();
+		$pines->hook->hook_object($hooked, $class.'->', false);
+		if ($and_self)
+			$return[] = $hooked;
 		return $return;
 	}
 

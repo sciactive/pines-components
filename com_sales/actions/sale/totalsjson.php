@@ -17,16 +17,9 @@ if ( !gatekeeper('com_sales/totalsales') )
 $pines->page->override = true;
 
 // Format the location.
-$location = $_REQUEST['location'];
-if (!isset($location)) {
-	$location = $_SESSION['user']->group->guid;
-} else {
-	if (!gatekeeper('com_sales/totalothersales')) {
-		$location = $_SESSION['user']->group->guid;
-	} elseif ($location != 'all') {
-		$location = (int) $_REQUEST['location'];
-	}
-}
+$location = group::factory((int) $_REQUEST['location']);
+if (!isset($location->guid))
+	$location = $_SESSION['user']->group;
 
 // Format the date.
 if (preg_match('/\d{4}-\d{2}-\d{2}/', $_REQUEST['date_start'])) {
@@ -46,11 +39,10 @@ $selector = array('&',
 	'gte' => array('p_cdate', $date_start),
 	'lte' => array('p_cdate', $date_end)
 );
-if ($location != 'all')
-	$selector['ref'] = array('group', $location);
+$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
 
 // Get all transactions.
-$tx_array = (array) $pines->entity_manager->get_entities(array('class' => com_sales_tx, 'skip_ac' => true), $selector, array('|', 'tag' => array('sale_tx', 'payment_tx')));
+$tx_array = (array) $pines->entity_manager->get_entities(array('class' => com_sales_tx, 'skip_ac' => true),  array('|', 'tag' => array('sale_tx', 'payment_tx')), $selector, $or);
 $invoice_array = array('total' => 0.00, 'count' => 0);
 $sale_array = array('total' => 0.00, 'count' => 0);
 $sale_array_user = array();

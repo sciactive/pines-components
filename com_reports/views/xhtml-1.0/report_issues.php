@@ -129,6 +129,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<thead>
 			<tr>
 				<th>Date</th>
+				<th>Location</th>
 				<th>Employee</th>
 				<th>Issue</th>
 				<th>Quantity</th>
@@ -142,9 +143,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<?php foreach ($this->issues as $cur_issue) { ?>
 			<tr onmouseover="p_muid_notice.com_reports_issue_update('&lt;ul&gt;&lt;li&gt;<?php echo htmlspecialchars(implode($cur_issue->comments, '</li><li>')); ?>&lt;/li&gt;&lt;/ul&gt;');">
 				<td><?php echo format_date($cur_issue->date, 'date_sort'); ?></td>
+				<td><?php echo htmlspecialchars($cur_issue->location->name); ?></td>
 				<td><?php echo htmlspecialchars($cur_issue->employee->name); ?></td>
 				<td><?php echo htmlspecialchars($cur_issue->issue_type->name); ?></td>
-				<td>x<?php echo htmlspecialchars($cur_issue->quantity); ?></td>
+				<td><?php echo htmlspecialchars($cur_issue->quantity); ?></td>
 				<td>$<?php echo round($cur_issue->issue_type->penalty*$cur_issue->quantity, 2); ?></td>
 				<td><?php echo htmlspecialchars($cur_issue->user->name); ?></td>
 				<td><?php echo htmlspecialchars($cur_issue->status); ?></td>

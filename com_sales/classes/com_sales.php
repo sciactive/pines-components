@@ -266,7 +266,7 @@ class com_sales extends component {
 			$start_date = strtotime('-1 week 00:00');
 		if (!isset($end_date))
 			$end_date = strtotime('23:59');
-		if (!isset($location))
+		if (!isset($location->guid))
 			$location = $_SESSION['user']->group;
 		$selector = array('|',
 			'data' => array(
@@ -276,14 +276,15 @@ class com_sales extends component {
 		);
 		if ($old)
 			$selector[0] = '!&';
+		$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
 		$module->counts = $pines->entity_manager->get_entities(
 				array('class' => com_sales_cashcount),
 				$selector,
+				$or,
 				array('&',
 					'tag' => array('com_sales', 'cashcount'),
 					'gte' => array('p_cdate', (int) $start_date),
-					'lte' => array('p_cdate', (int) $end_date),
-					'ref' => array('group', $location)
+					'lte' => array('p_cdate', (int) $end_date)
 				)
 			);
 		$form->start_date = $start_date;
@@ -338,13 +339,14 @@ class com_sales extends component {
 			$selector['gte'] = array('p_cdate', (int) $start_date);
 		if (isset($end_date))
 			$selector['lte'] = array('p_cdate', (int) $end_date);
-		if (isset($location))
-			$selector['ref'] = array('group', $location);
+		if (!isset($location->guid))
+			$location = $_SESSION['user']->group;
 		if (!gatekeeper('com_sales/approvecountsheet'))
 			$approved_selector = array('!&', 'data' => array('status', 'approved'));
 		else
 			$approved_selector = array('&');
-		$module->countsheets = $pines->entity_manager->get_entities(array('class' => com_sales_countsheet), $selector, $approved_selector);
+		$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		$module->countsheets = $pines->entity_manager->get_entities(array('class' => com_sales_countsheet), $selector, $approved_selector, $or);
 		$module->start_date = $start_date;
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
@@ -454,9 +456,10 @@ class com_sales extends component {
 			$selector['gte'] = array('p_cdate', (int) $start_date);
 		if (isset($end_date))
 			$selector['lte'] = array('p_cdate', (int) $end_date);
-		if (isset($location))
-			$selector['ref'] = array('group', $location);
-		$module->returns = $pines->entity_manager->get_entities(array('class' => com_sales_return), $selector);
+		if (!isset($location))
+			$location = $_SESSION['user']->group;
+		$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		$module->returns = $pines->entity_manager->get_entities(array('class' => com_sales_return), $selector, $or);
 		$module->start_date = $start_date;
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
@@ -482,9 +485,10 @@ class com_sales extends component {
 			$selector['gte'] = array('p_cdate', (int) $start_date);
 		if (isset($end_date))
 			$selector['lte'] = array('p_cdate', (int) $end_date);
-		if (isset($location))
-			$selector['ref'] = array('group', $location);
-		$module->sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector);
+		if (!isset($location))
+			$location = $_SESSION['user']->group;
+		$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		$module->sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
 		$module->start_date = $start_date;
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
@@ -505,24 +509,23 @@ class com_sales extends component {
 
 		$module = new module('com_sales', 'stock/shipments', 'content');
 
-		$selector = array('&', 'tag' => array('com_sales', $removed ? 'shipping_shipped' : 'shipping_pending'));
-
 		if ($removed) {
 			$module->removed = true;
+			$or = array();
 		} else {
-			if (isset($location)) {
-				$selector['ref'] = array('group', $location);
-				$module->location = $location;
-			}
+			if (!isset($location))
+				$location = $_SESSION['user']->group;
+			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+			$module->location = $location;
 			$module->removed = false;
 		}
 		if ($pines->config->com_sales->ready_to_ship == 'invoice') {
-			$selector2 = array('|', 'data' => array(array('status', 'invoiced'), array('status', 'paid')));
+			$selector = array('|', 'data' => array(array('status', 'invoiced'), array('status', 'paid')));
 		} else {
-			$selector2 = array('&', 'data' => array('status', 'paid'));
+			$selector = array('&', 'data' => array('status', 'paid'));
 		}
 
-		$module->sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), array('&', 'tag' => 'sale'), $selector, $selector2);
+		$module->sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), array('&', 'tag' => array('com_sales', 'sale', $removed ? 'shipping_shipped' : 'shipping_pending')), $selector, $or);
 	}
 
 	/**
@@ -550,21 +553,20 @@ class com_sales extends component {
 
 		$module = new module('com_sales', 'stock/list', 'content');
 
-		$selector = array('&', 'tag' => array('com_sales', 'stock'));
-
 		if ($removed) {
-			$selector2 = array('!&', 'isset' => 'location');
+			$selector = array('!&', 'isset' => 'location');
+			$or = array('|');
 			$module->removed = true;
 		} else {
-			if (isset($location)) {
-				$selector['ref'] = array('location', $location);
-				$module->location = $location;
-			}
-			$selector2 = array('&', 'isset' => 'location');
+			if (!isset($location))
+				$location = $_SESSION['user']->group;
+			$or = array('|', 'ref' => array('location', $location->get_descendents(true)));
+			$module->location = $location;
+			$selector = array('&', 'isset' => 'location');
 			$module->removed = false;
 		}
 
-		$module->stock = $pines->entity_manager->get_entities(array('class' => com_sales_stock), $selector, $selector2);
+		$module->stock = $pines->entity_manager->get_entities(array('class' => com_sales_stock), array('&', 'tag' => array('com_sales', 'stock')), $selector, $or);
 
 		if ( empty($module->stock) )
 			pines_notice('No stock found.');
@@ -811,12 +813,10 @@ class com_sales extends component {
 		}
 		// Secondary options specify the criteria to search the transactions.
 		$secondary_options = array('&');
-		if (isset($location->guid)) {
-			$module->location = $location;
-			$secondary_options['ref'][] = array('group', $location);
-		} else {
-			$module->location = 'all';
-		}
+		if (!isset($location->guid))
+			$location = $_SESSION['user']->group;
+		$module->location = $location;
+		$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
 
 		if (isset($start_date))
 			$secondary_options['gte'][] = array('p_cdate', (int) $start_date);
@@ -840,6 +840,7 @@ class com_sales extends component {
 			$invoices = $pines->entity_manager->get_entities(
 					array('class' => com_sales_sale, 'skip_ac' => true),
 					$secondary_options,
+					$or,
 					array('&',
 						'tag' => array('com_sales', 'sale'),
 						'ref' => array('products', $cur_stock)
@@ -848,6 +849,7 @@ class com_sales extends component {
 			$countsheets = $pines->entity_manager->get_entities(
 					array('class' => com_sales_countsheet, 'skip_ac' => true),
 					$secondary_options,
+					$or,
 					array('&',
 						'tag' => array('com_sales', 'countsheet'),
 						'array' => array('entries', $countsheet_code)
@@ -856,6 +858,7 @@ class com_sales extends component {
 			$transfers = $pines->entity_manager->get_entities(
 					array('class' => com_sales_transfer, 'skip_ac' => true),
 					$secondary_options,
+					$or,
 					array('&',
 						'tag' => array('com_sales', 'transfer'),
 						'ref' => array('stock', $cur_stock)
@@ -864,6 +867,7 @@ class com_sales extends component {
 			$pos = $pines->entity_manager->get_entities(
 					array('class' => com_sales_po, 'skip_ac' => true),
 					$secondary_options,
+					$or,
 					array('&',
 						'tag' => array('com_sales', 'po'),
 						'ref' => array('received', $cur_stock)

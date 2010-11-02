@@ -53,37 +53,15 @@ defined('P_RUN') or die('Direct access prohibited');
 			},
 			"ui" : {
 				"select_limit" : 1,
-				"initially_select" : ["<?php echo ($this->location == 'all') ? (int) $_SESSION['user']->group->guid : (int) $this->location; ?>"]
+				"initially_select" : ["<?php echo (int) $this->location; ?>"]
 			}
 		});
-		// TODO: How to recreate these?
-		//	callback : {
-		//		// The tree is disabled when searching all locations.
-		//		beforechange : block_change,
-		//		beforeclose : block_change,
-		//		beforeopen : block_change,
-
-		$("#p_muid_form [name=all_groups]").change(function(){
-			var all_groups = $(this);
-			if (all_groups.is(":checked") && all_groups.val() == "individual") {
-				location_tree.removeClass("ui-priority-secondary");
-				location_saver.val('individual');
-			} else if (all_groups.is(":checked") && all_groups.val() == "allGroups") {
-				location_tree.addClass("ui-priority-secondary");
-				location_saver.val('all');
-			}
-		}).change();
 	});
 // ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="">
-	<div class="pf-element">
-		<label><input class="pf-field" type="radio" name="all_groups" value="allGroups" checked="checked" />All Locations</label>
-		<label><input class="pf-field" type="radio" name="all_groups" value="individual" <?php echo ($this->location != 'all') ? 'checked="checked"' : ''; ?>/>Single Location</label>
-	</div>
 	<div class="pf-element location_tree" style="padding-bottom: 5px;"></div>
 	<div class="pf-element">
 		<input type="hidden" name="location" value="<?php echo htmlspecialchars($this->location); ?>" />
-		<input type="hidden" name="location_saver" value="<?php echo ($this->location == 'all') ? 'all' : 'individual'; ?>" />
 	</div>
 </form>

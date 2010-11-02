@@ -65,6 +65,7 @@ class com_reports extends component {
 
 		$selector = array('&',
 			'tag' => array('com_hrm', 'issue'));
+		$or = array();
 		// Datespan of the report.
 		$date_start = strtotime('00:00', $start);
 		$date_end = strtotime('23:59', $end);
@@ -74,11 +75,11 @@ class com_reports extends component {
 		$module->date[1] = $form->date[1] = $date_end;
 		// Employee and location of the report.
 		if (isset($employee->guid)) {
-			$selector['ref'] = array('user', $employee);
+			$selector['ref'] = array('employee', $employee);
 			$module->employee = $form->employee = $employee;
 			$module->title = 'Issues with '.$employee->name;
 		} elseif (isset($location->guid)) {
-			$selector['ref'] = array('group', $location);
+			$or = array('|', 'ref' => array('location', $location->get_descendents(true)));
 			$module->title = 'Issues in '.$location->name;
 		} else {
 			$location = $_SESSION['user']->group;
@@ -87,7 +88,7 @@ class com_reports extends component {
 		}
 		$module->location = $form->location = $location;
 		$form->employees = $pines->com_hrm->get_employees();
-		$module->issues = $pines->entity_manager->get_entities(array('class' => com_hrm_issue), $selector);
+		$module->issues = $pines->entity_manager->get_entities(array('class' => com_hrm_issue), $selector, $or);
 
 		return $module;
 	}
@@ -110,6 +111,7 @@ class com_reports extends component {
 
 		$selector = array('&',
 			'tag' => array('com_sales', 'transaction', 'sale_tx'));
+		$or = array();
 		// Datespan of the report.
 		$date_start = strtotime('00:00', $start);
 		$date_end = strtotime('23:59', $end);
@@ -123,16 +125,16 @@ class com_reports extends component {
 			$module->employee = $form->employee = $employee;
 			$module->title = 'Sales Report for '.$employee->name;
 		} elseif (isset($location->guid)) {
-			$selector['ref'] = array('group', $location);
 			$module->title = 'Sales Report for '.$location->name;
 		} else {
 			$location = $_SESSION['user']->group;
 			$module->all = true;
 			$module->title = 'Sales Report for All Locations';
 		}
+		$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
 		$module->location = $form->location = $location->guid;
 		$form->employees = $pines->com_hrm->get_employees();
-		$module->transactions = $pines->entity_manager->get_entities(array('class' => com_sales_tx), $selector);
+		$module->transactions = $pines->entity_manager->get_entities(array('class' => com_sales_tx), $selector, $or);
 	}
 
 	/**

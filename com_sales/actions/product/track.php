@@ -32,8 +32,9 @@ if ($_REQUEST['all_time'] == 'true') {
 	$start_date = null;
 	$end_date = null;
 }
-if (!empty($_REQUEST['location']) && $_REQUEST['location'] != 'all')
+if (!empty($_REQUEST['location']))
 	$location = group::factory((int) $_REQUEST['location']);
+
 $pines->com_sales->track_product($_REQUEST['serial'], $_REQUEST['sku'], $start_date, $end_date, $location);
 
 ?>

@@ -20,7 +20,7 @@ $pines->com_jstree->load();
 	<script type="text/javascript">
 		// <![CDATA[
 		pines(function(){
-			var location = 'all';
+			var location = '<?php echo $_SESSION['user']->group->guid; ?>';
 			var date_start = $("#p_muid_date_start");
 			var date_end = $("#p_muid_date_end");
 			var result_totals = $("#p_muid_result_totals");
@@ -65,7 +65,7 @@ $pines->com_jstree->load();
 				<?php if (gatekeeper('com_sales/totalothersales')) { ?>
 				location = tree_location.val();
 				if ($("#p_muid_form [name=all_locations]").attr('checked') || location == '')
-					location = 'all';
+					location = '<?php echo $_SESSION['user']->group->guid; ?>';
 				<?php } ?>
 
 				$.ajax({
@@ -168,13 +168,6 @@ $pines->com_jstree->load();
 				selectOtherMonths: true
 			});
 			var location_tree = $("#p_muid_form .location_tree");
-			$("#p_muid_form [name=all_locations]").change(function(){
-				if ($(this).is(":checked")) {
-					location_tree.addClass("ui-state-disabled").attr("disabled", "disabled");
-				} else {
-					location_tree.removeClass("ui-state-disabled").removeAttr("disabled");
-				}
-			}).change();
 		});
 		// ]]>
 	</script>
@@ -183,7 +176,6 @@ $pines->com_jstree->load();
 	<div class="pf-element">
 		<span class="pf-label">Location</span>
 		<div class="pf-group">
-			<span class="pf-field"><input type="checkbox" name="all_locations" value="ON" checked="checked" /> All Locations</span>
 			<div class="pf-field location_tree ui-widget-content ui-corner-all" style="height: 180px; width: 200px; overflow: auto;"></div>
 		</div>
 		<input type="hidden" name="location" />

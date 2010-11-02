@@ -14,11 +14,8 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_sales/managestock') && !gatekeeper('com_sales/seestock'))
 	punt_user(null, pines_url('com_sales', 'stock/list'));
 
-if (empty($_REQUEST['location'])) {
-	$location = $_SESSION['user']->group;
-} elseif ($_REQUEST['location'] != 'all') {
+if (!empty($_REQUEST['location']))
 	$location = group::factory((int) $_REQUEST['location']);
-}
 
 $pines->com_sales->list_stock($_REQUEST['removed'] == 'true', $location);
 ?>

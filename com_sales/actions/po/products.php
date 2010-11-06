@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/listpos') || !gatekeeper('com_sales/receive'))
+if ( !gatekeeper('com_sales/listpos') && !gatekeeper('com_sales/receive'))
 	punt_user(null, pines_url('com_sales', 'po/products', $_REQUEST));
 
 $pines->page->override = true;

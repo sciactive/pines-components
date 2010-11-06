@@ -1030,9 +1030,9 @@ class com_sales_sale extends entity {
 							)
 						);
 					if ($last_tx) {
-						$return = $cur_stock->receive('sold_at_store', $this, $last_tx->old_location) && $cur_stock->save() && $return;
+						$return = $cur_stock->receive('sale_voided', $this, $last_tx->old_location) && $cur_stock->save() && $return;
 					} else {
-						$return = $cur_stock->receive('sold_at_store', $this) && $cur_stock->save() && $return;
+						$return = $cur_stock->receive('sale_voided', $this) && $cur_stock->save() && $return;
 					}
 				}
 			}

@@ -952,6 +952,7 @@ class com_sales_sale extends entity {
 				return false;
 			}
 			$line_total = $price * $qty;
+			$cur_item_fees = 0;
 			if (!$cur_product['entity']->tax_exempt) {
 				// Add location taxes.
 				foreach ($tax_fees as $cur_tax_fee) {

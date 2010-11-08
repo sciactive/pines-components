@@ -1020,7 +1020,11 @@ class com_sales_sale extends entity {
 				// Return stock to inventory.
 				if (!is_array($cur_product['stock_entities']))
 					continue;
-				foreach ($cur_product['stock_entities'] as &$cur_stock) {
+				// Copy the stock array so we can manipulate it by reference.
+				$stock_entities = $cur_product['stock_entities'];
+				foreach ($stock_entities as &$cur_stock) {
+					if (empty($cur_stock))
+						continue;
 					$last_tx = $pines->entity_manager->get_entity(
 							array('reverse' => true, 'class' => com_sales_stock),
 							array('&',
@@ -1030,11 +1034,15 @@ class com_sales_sale extends entity {
 							)
 						);
 					if ($last_tx) {
-						$return = $cur_stock->receive('sale_voided', $this, $last_tx->old_location) && $cur_stock->save() && $return;
+						$return = $cur_stock->receive('sale_voided', $this, $last_tx->old_location) && $return;
+						$return = $cur_stock->save() && $return;
 					} else {
-						$return = $cur_stock->receive('sale_voided', $this) && $cur_stock->save() && $return;
+						$return = $cur_stock->receive('sale_voided', $this) && $return;
+						$return = $cur_stock->save() && $return;
 					}
 				}
+				unset($cur_stock);
+				$cur_product['stock_entities'] = $stock_entities;
 			}
 			unset($cur_product);
 		}

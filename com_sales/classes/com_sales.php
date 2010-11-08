@@ -416,7 +416,8 @@ class com_sales extends component {
 		// Check the purchase orders to see if any have not been received on time.
 		$errors = array();
 		foreach ($module->pos as $po) {
-			if ($po->eta < time() && empty($po->received))
+			// strtotime gives 12:00am versus time() which is to the second.
+			if ($po->eta < strtotime('today 12:00am') && empty($po->received))
 				$errors[] = "#{$po->po_number} was not received on time.";
 		}
 		if (!empty($errors)) {
@@ -730,14 +731,20 @@ class com_sales extends component {
 		global $pines;
 
 		$selector = array('&', 'tag' => array('com_sales', 'po'), 'data' => array(array('final', true), array('finished', false)));
-		if (!gatekeeper('com_sales/receivelocation'))
-			$selector['ref'] = array('destination', $_SESSION['user']->group);
-
+		
 		$module = new module('com_sales', 'stock/formreceive', 'content');
-		$module->pos = (array) $pines->entity_manager->get_entities(
-				array('class' => com_sales_po, 'skip_ac' => true),
-				$selector
-			);
+		if (!gatekeeper('com_sales/receivelocation')) {
+			$module->pos = (array) $pines->entity_manager->get_entities(
+					array('class' => com_sales_po, 'skip_ac' => true),
+					$selector
+				);
+		} else {
+			$module->pos = (array) $pines->entity_manager->get_entities(
+					array('class' => com_sales_po, 'skip_ac' => true),
+					$selector,
+					array('|', 'ref' => array('destination', $_SESSION['user']->group->get_descendents(true)))
+				);
+		}
 		$module->categories = (array) $pines->entity_manager->get_entities(
 				array('class' => com_sales_category),
 				array('&',

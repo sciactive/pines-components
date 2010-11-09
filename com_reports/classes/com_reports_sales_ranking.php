@@ -150,38 +150,6 @@ class com_reports_sales_ranking extends entity {
 				'goal' => $this->goals[$cur_employee->guid]
 			);
 
-			// Get the employee's sales totals for the current week.
-			$current_week_sales = $pines->entity_manager->get_entities(
-					array('class' => com_sales_sale),
-					array('&',
-						'tag' => array('com_sales', 'sale'),
-						'data' => array('status', 'paid'),
-						'gte' => array('tender_date', $current_start),
-						'lte' => array('tender_date', $current_end),
-						'ref' => array('user', $cur_employee)
-					)
-				);
-			foreach ($current_week_sales as &$cur_week_sale) {
-				$module->rankings[$cur_employee->guid]['current'] += ($cur_week_sale->total - $cur_week_sale->returned_total);
-			}
-			unset($cur_week_sale, $current_week_sales);
-
-			// Get the employee's sales totals for this sales period.
-			$last_week_sales = $pines->entity_manager->get_entities(
-					array('class' => com_sales_sale),
-					array('&',
-						'tag' => array('com_sales', 'sale'),
-						'data' => array('status', 'paid'),
-						'gte' => array('tender_date', $last_start),
-						'lte' => array('tender_date', $last_end),
-						'ref' => array('user', $cur_employee)
-					)
-				);
-			foreach ($last_week_sales as &$last_week_sale) {
-				$module->rankings[$cur_employee->guid]['last'] += ($last_week_sale->total - $last_week_sale->returned_total);
-			}
-			unset($last_week_sale, $last_week_sales);
-
 			// Get the employee's sales totals for the entire sales period.
 			$mtd_sales = $pines->entity_manager->get_entities(
 					array('class' => com_sales_sale),
@@ -194,6 +162,10 @@ class com_reports_sales_ranking extends entity {
 					)
 				);
 			foreach ($mtd_sales as &$cur_mtd_sale) {
+				if ($cur_mtd_sale->tender_date >= $current_start && $cur_mtd_sale->tender_date <= $current_end)
+						$module->rankings[$cur_employee->guid]['current'] += ($cur_mtd_sale->total - $cur_mtd_sale->returned_total);
+				elseif ($cur_mtd_sale->tender_date >= $last_start && $cur_mtd_sale->tender_date <= $last_end)
+						$module->rankings[$cur_employee->guid]['last'] += ($cur_mtd_sale->total - $cur_mtd_sale->returned_total);
 				$module->rankings[$cur_employee->guid]['mtd'] += ($cur_mtd_sale->total - $cur_mtd_sale->returned_total);
 			}
 			unset($cur_mtd_sale, $mtd_sales);

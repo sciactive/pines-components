@@ -10,6 +10,10 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
+
+if ($this->date[1] > time())
+	$this->date[1] = time();
+
 $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name : $this->location->name).' ('.format_date($this->date[0], 'date_sort').' - '.format_date($this->date[1], 'date_sort').')';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
@@ -92,25 +96,17 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				);
 			foreach ($schedule as $cur_schedule)
 				$totals[$total_count]['scheduled'] += $cur_schedule->scheduled;
-			foreach($cur_employee->timeclock as $clock) {
-				if ($clock['time'] >= $this->date[0] && $clock['time'] <= $this->date[1]) {
-					if ($clock['status'] == 'out' && ($time_punch > 0)) {
-						$totals[$total_count]['clocked'] += ($clock['time'] - $time_punch);
-						$time_punch = 0;
-					} else if ($clock['status'] == 'in') {
-						$time_punch = $clock['time'];
-					}
-				}
-			}
+			$totals[$total_count]['clocked'] = $cur_employee->timeclock->sum($this->date[0], $this->date[1]);
+
 			$scheduled = round($totals[$total_count]['scheduled'] / 3600, 2);
 			$clocked = round($totals[$total_count]['clocked'] / 3600, 2);
 			$variance = round(($totals[$total_count]['clocked'] - $totals[$total_count]['scheduled']) / 3600, 2);
 			?>
 		<tr title="<?php echo $cur_employee->guid; ?>">
 			<td><?php echo htmlspecialchars($cur_employee->name); ?></td>
-			<td><?php echo htmlspecialchars($scheduled); ?> hours</td>
-			<td><?php echo htmlspecialchars($clocked); ?> hours</td>
-			<td><span<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo htmlspecialchars($variance); ?> hours</span></td>
+			<td><?php echo $scheduled; ?> hours</td>
+			<td><?php echo $clocked; ?> hours</td>
+			<td><span<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo $variance; ?> hours</span></td>
 		</tr>
 			<?php
 			$total_group['scheduled'] += $totals[$total_count]['scheduled'];
@@ -123,9 +119,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		?>
 		<tr class="ui-state-highlight total">
 			<td>Total</td>
-			<td><?php echo htmlspecialchars($scheduled); ?> hours</td>
-			<td><?php echo htmlspecialchars($clocked); ?> hours</td>
-			<td><span<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo htmlspecialchars($variance); ?> hours</span></td>
+			<td><?php echo $scheduled; ?> hours</td>
+			<td><?php echo $clocked; ?> hours</td>
+			<td><span<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo $variance; ?> hours</span></td>
 		</tr>
 	</tbody>
 </table>
@@ -146,36 +142,20 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<?php
 		$clocks = $dates = array();
 		$clock_count = $date_count = 0;
-		foreach($this->employee->timeclock as $key => $entry) {
-			if ($entry['time'] >= $this->date[0] && $entry['time'] <= $this->date[1]) {
-				if ($dates[$date_count]['date'] == format_date($entry['time'], 'date_sort')) {
-					// The employee clocked out the same day that they clocked in.
-					if ($entry['status'] == 'out') {
-						$clocks[$clock_count]['out'] = $entry['time'];
-						$dates[$date_count]['total'] += $clocks[$clock_count]['total'] = $this->employee->time_sum($clocks[$clock_count]['in'], $entry['time']);
-					} else {
-						$clock_count++;
-						$clocks[$clock_count]['date'] = $date_count;
-						$clocks[$clock_count]['in'] = $entry['time'];
-					}
-				} else {
-					// The employee clocked out at a later date after clocking in.
-					if ($entry['status'] == 'out') {
-						$clocks[$clock_count]['over'] = format_date($entry['time'], 'custom', 'n/j');
-						$clocks[$clock_count]['out'] = $entry['time'];
-						$dates[$date_count]['total'] += $clocks[$clock_count]['total'] = $this->employee->time_sum($clocks[$clock_count]['in'], $entry['time']);
-					} else {
-						$clock_count++;
-						$date_count++;
-						$dates[$date_count]['start'] = strtotime('00:00', $entry['time']);
-						$dates[$date_count]['end'] = strtotime('23:59', $entry['time']);
-						$dates[$date_count]['date'] = format_date($entry['time'], 'date_sort');
-						$dates[$date_count]['scheduled'] = 0;
-						$dates[$date_count]['total'] = 0;
-						$clocks[$clock_count]['date'] = $date_count;
-						$clocks[$clock_count]['in'] = $entry['time'];
-					}
+		foreach($this->employee->timeclock->timeclock as $key => $entry) {
+			if ($entry['in'] >= $this->date[0] && ($entry['out'] <= $this->date[1] || !isset($entry['out']))) {
+				if ($dates[$date_count]['date'] != format_date($entry['in'], 'date_sort')) {
+					$date_count++;
+					$dates[$date_count]['start'] = strtotime('00:00', $entry['in']);
+					$dates[$date_count]['end'] = strtotime('23:59', $entry['out']);
+					$dates[$date_count]['date'] = format_date($entry['in'], 'date_sort');
+					$dates[$date_count]['scheduled'] = 0;
+					$dates[$date_count]['total'] = 0;
 				}
+				$clock_count++;
+				$clocks[$clock_count] = $entry;
+				$clocks[$clock_count]['date'] = $date_count;
+				$dates[$date_count]['total'] += $clocks[$clock_count]['total'] = $this->employee->timeclock->sum($entry['in'], isset($entry['out']) ? $entry['out'] : time());
 			}
 		}
 		$clock_count = 1;
@@ -204,24 +184,20 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<td><?php echo round($cur_date['scheduled'] / 3600, 2).' hours'; ?></td>
 				<td></td>
 			</tr>
-			<?php foreach ($clocks as $cur_clock) { if ($cur_clock['date'] == $clock_count) { ?>
+			<?php
+			foreach ($clocks as $cur_clock) {
+				if ($cur_clock['date'] == $clock_count) { ?>
 				<tr>
 					<td></td>
 					<td></td>
 					<td>Clocked</td>
 					<td><?php echo format_date($cur_clock['in'], 'time_short'); ?></td>
-					<td>
-					<?php
-						if (isset($cur_clock['out'])) {
-							echo format_date($cur_clock['out'], 'time_short');
-							echo (isset($cur_clock['over']) ? htmlspecialchars(' ('.$cur_clock['over'].')') : '');
-						}
-					?>
-					</td>
+					<td><?php echo format_date($cur_clock['out'], 'time_short'); ?></td>
 					<td><?php echo round($cur_clock['total'] / 3600, 2).' hours'; ?></td>
 					<td></td>
 				</tr>
-			<?php } }
+			<?php }
+			}
 			$total_hours = floor($cur_date['total'] / 3600);
 			$total_mins = round(($cur_date['total'] / 60) - ($total_hours * 60));
 			$variance = round(($cur_date['total'] - $cur_date['scheduled']) / 3600, 2);
@@ -232,8 +208,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<td>Total</td>
 				<td></td>
 				<td></td>
-				<td><?php echo ($total_hours > 0) ? htmlspecialchars($total_hours).'hours ' : ''; echo ($total_mins > 0) ? htmlspecialchars($total_mins).'min' : ''; ?></td>
-				<td><span<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo htmlspecialchars($variance); ?> hours</span></td>
+				<td><?php echo ($total_hours > 0) ? $total_hours.'hours ' : ''; echo ($total_mins > 0) ? $total_mins.'min' : ''; ?></td>
+				<td><span<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo $variance; ?> hours</span></td>
 			</tr>
 		<?php $clock_count++; } ?>
 	</tbody>

@@ -71,6 +71,7 @@ return array(
 		array('newproduct', 'Create Products', 'User can create new products.'),
 		array('editproduct', 'Edit Products', 'User can edit current products.'),
 		array('deleteproduct', 'Delete Products', 'User can delete current products.'),
+		array('trackproducts', 'Track Products', 'User can track product history.'),
 		array('listcategories', 'List Categories', 'User can see categories. (Not needed to see categories during a sale.)'),
 		array('newcategory', 'Create Categories', 'User can create new categories.'),
 		array('editcategory', 'Edit Categories', 'User can edit current categories.'),

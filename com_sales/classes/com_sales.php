@@ -554,22 +554,27 @@ class com_sales extends component {
 
 		$module = new module('com_sales', 'stock/list', 'content');
 
+		$show_empty = false;
 		if ($removed) {
 			$selector = array('!&', 'isset' => 'location');
 			$or = array('|');
 			$module->removed = true;
 		} else {
-			if (!isset($location))
-				$location = $_SESSION['user']->group;
-			$or = array('|', 'ref' => array('location', $location->get_descendents(true)));
-			$module->location = $location;
-			$selector = array('&', 'isset' => 'location');
 			$module->removed = false;
+			if (!isset($location)) {
+				$show_empty = true;
+				$module->location = $_SESSION['user']->group;
+				$module->stock = array();
+			} else {
+				$or = array('|', 'ref' => array('location', $location->get_descendents(true)));
+				$selector = array('&', 'isset' => 'location');
+				$module->location = $location;
+			}
 		}
+		if (!$show_empty)
+			$module->stock = $pines->entity_manager->get_entities(array('class' => com_sales_stock), array('&', 'tag' => array('com_sales', 'stock')), $selector, $or);
 
-		$module->stock = $pines->entity_manager->get_entities(array('class' => com_sales_stock), array('&', 'tag' => array('com_sales', 'stock')), $selector, $or);
-
-		if ( empty($module->stock) )
+		if ( empty($module->stock) && !$show_empty )
 			pines_notice('No stock found.');
 	}
 

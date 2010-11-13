@@ -60,7 +60,7 @@ foreach ($tx_array as $key => $cur_tx) {
 	if ($cur_tx->ticket->status == 'voided')
 		continue;
 	if ($cur_tx->has_tag('sale_tx')) {
-		$total = (float) $cur_tx->ticket->total;
+		$total = (float) $cur_tx->ticket->subtotal;
 		$name = "{$cur_tx->user->name} [{$cur_tx->user->username}]";
 		switch ($cur_tx->type) {
 			case 'invoiced':

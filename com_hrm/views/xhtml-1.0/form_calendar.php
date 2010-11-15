@@ -32,12 +32,11 @@ $pines->com_ptags->load();
 </style>
 <script type='text/javascript'>
 	// <![CDATA[
-	<?php if (gatekeeper('com_hrm/editcalendar')) { ?>
 	pines(function(){
 		var change_counter = 0;
 		$("#p_muid_employee").change(function(){
 			if (change_counter > 0)
-				pines.post("<?php echo addslashes(pines_url('com_hrm', 'editcalendar')); ?>", { "location": '<?php echo addslashes($this->location); ?>', "employee": $(this).val() });
+				pines.post("<?php echo addslashes(pines_url('com_hrm', 'editcalendar')); ?>", { "location": '<?php echo addslashes($this->location->guid); ?>', "employee": $(this).val() });
 			change_counter++;
 		}).change();
 	});
@@ -48,7 +47,7 @@ $pines->com_ptags->load();
 			url: "<?php echo addslashes(pines_url('com_hrm', 'locationselect')); ?>",
 			type: "POST",
 			dataType: "html",
-			data: {"location": "<?php echo addslashes($this->location); ?>"},
+			data: {"location": "<?php echo addslashes($this->location->guid); ?>"},
 			error: function(XMLHttpRequest, textStatus){
 				pines.error("An error occured while trying to retreive the company schedule form:\n"+XMLHttpRequest.status+": "+textStatus);
 			},
@@ -77,13 +76,15 @@ $pines->com_ptags->load();
 			}
 		});
 	};
+
+	<?php if (gatekeeper('com_hrm/editcalendar')) { ?>
 	// Create a new event.
 	pines.com_hrm_new_event = function(){
 		$.ajax({
 			url: "<?php echo addslashes(pines_url('com_hrm', 'editevent')); ?>",
 			type: "POST",
 			dataType: "html",
-			data: {"location": "<?php echo addslashes($this->location); ?>"},
+			data: {"location": "<?php echo addslashes($this->location->guid); ?>"},
 			error: function(XMLHttpRequest, textStatus){
 				pines.error("An error occured while trying to retreive the new event form:\n"+XMLHttpRequest.status+": "+textStatus);
 			},
@@ -107,6 +108,7 @@ $pines->com_ptags->load();
 							pines.post("<?php echo addslashes(pines_url('com_hrm', 'saveevent')); ?>", {
 								employee: form.find(":input[name=employee]").val(),
 								event_label: form.find(":input[name=event_label]").val(),
+								private_event: !!form.find(":input[name=private]").attr('checked'),
 								all_day: !!form.find(":input[name=all_day]").attr('checked'),
 								start: form.find(":input[name=start]").val(),
 								end: form.find(":input[name=end]").val(),
@@ -156,6 +158,7 @@ $pines->com_ptags->load();
 								id: form.find(":input[name=id]").val(),
 								employee: form.find(":input[name=employee]").val(),
 								event_label: form.find(":input[name=event_label]").val(),
+								private_event: !!form.find(":input[name=private]").attr('checked'),
 								all_day: !!form.find(":input[name=all_day]").attr('checked'),
 								start: form.find(":input[name=start]").val(),
 								end: form.find(":input[name=end]").val(),
@@ -315,21 +318,22 @@ $pines->com_ptags->load();
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_new_schedule();" title="New Schedule" <?php echo !isset($this->employee) ? 'disabled="disabled"' : '';?>><span class="p_muid_btn picon picon-list-resource-add"></span></button>
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_time_off();" title="Requested Time Off"><span class="p_muid_btn picon picon-view-calendar-upcoming-events"></span></button>
 </div>
+<?php } ?>
 <div style="margin-bottom: 1em;">
 	<select class="ui-widget-content ui-corner-all" id="p_muid_employee" name="employee" style="width: 100%;">
-		<option value="all">Entire Staff</option>
+		<option value="all"><?php echo $this->location->name; ?></option>
 		<?php
 		// Load employees for this location.
 		foreach ($this->employees as $cur_employee) {
 			if (!isset($cur_employee->group))
 				continue;
 			$cur_select = (isset($this->employee->group) && $this->employee->is($cur_employee)) ? 'selected="selected"' : '';
-			if ($this->location == $cur_employee->group->guid)
+			if ($this->location->guid == $cur_employee->group->guid)
 				echo '<option value="'.$cur_employee->guid.'" '.$cur_select.'>'.htmlspecialchars($cur_employee->name).'</option>';
 		} ?>
 	</select>
 </div>
-<?php } if (gatekeeper('com_hrm/clock')) { ?>
+<?php if (gatekeeper('com_hrm/clock')) { ?>
 <div style="text-align: center; font-size: .9em;">
 	<button class="ui-state-default ui-corner-all" type="button" style="width: 100%;" onclick="pines.com_hrm_time_off_form();">Request Time Off</button>
 </div>

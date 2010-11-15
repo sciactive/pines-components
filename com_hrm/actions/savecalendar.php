@@ -38,8 +38,7 @@ if (isset($_REQUEST['events'])) {
 			} else {
 				$event->scheduled = $event->end - $event->start;
 			}
-			if ($pines->config->com_hrm->global_events)
-				$event->ac->other = 1;
+			$event->ac->other = 1;
 			$event->save();
 		}
 	}

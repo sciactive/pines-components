@@ -52,8 +52,7 @@ if (isset($_REQUEST['employee'])) {
 			$event->scheduled = $event->end - $event->start;
 		}
 
-		if ($pines->config->com_hrm->global_events)
-			$event->ac->other = 1;
+		$event->ac->other = 1;
 
 		if (!$event->save()) {
 			$failed_saves .= (empty($failed_saves) ? '' : ', ').$cur_date;

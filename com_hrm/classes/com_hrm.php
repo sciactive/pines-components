@@ -172,7 +172,7 @@ class com_hrm extends component {
 		}
 
 		$selector = array('&', 'tag' => array('com_hrm', 'event'));
-		$selector['ref'][] = array('group', $location);
+		$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
 		if (isset($employee->guid)) {
 			unset($selector['ref']);
 			$selector['ref'][] = array('employee', $employee);
@@ -184,9 +184,27 @@ class com_hrm extends component {
 
 		// Should work like this, we need to have the employee's group update upon saving it to a user.
 		$form->employees = $this->get_employees();
-		$form->location = $location->guid;
-		$calendar->location = $location;
-		$calendar->events = $pines->entity_manager->get_entities(array('class' => com_hrm_event), $selector);
+		$calendar->location = $form->location = $location;
+		$calendar->events = $pines->entity_manager->get_entities(array('class' => com_hrm_event), $selector, $or);
+
+		$ancestors = $pines->com_user->get_groups();
+		foreach ($ancestors as $key => &$cur_parent) {
+			if (!$location->is_descendent($cur_parent)) {
+				unset($ancestors[$key]);
+			}
+		}
+		if (!empty($ancestors)) {
+			$calendar->events = array_merge($calendar->events,
+				$pines->entity_manager->get_entities(
+					array('class' => com_hrm_event),
+					array('&',
+						'tag' => array('com_hrm', 'event'),
+						'data' => array('private', false)),
+					array('!&', 'isset' => array('employee')),
+					array('|', 'ref' => array('group', $ancestors))
+				)
+			);
+		}
 	}
 
 	/**

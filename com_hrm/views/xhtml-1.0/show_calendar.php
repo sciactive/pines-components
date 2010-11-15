@@ -46,6 +46,13 @@ $this->title = 'Company Schedule [' . (isset($this->employee) ? $this->employee-
 				// Read in all existing events.
 				$event_counter = 0;
 				foreach ($this->events as $cur_event) {
+					if (!gatekeeper('com_hrm/managecalendar') && $cur_event->private) {
+						if (!isset($cur_event->employee->guid) && !$cur_event->group->is($this->location))
+							continue;
+						if (isset($cur_event->employee->guid) && !$cur_event->employee->is($_SESSION['user']))
+							continue;
+					}
+
 					if ($event_counter > 0)
 						echo ',';
 					echo '{';

@@ -104,7 +104,7 @@ defined('P_RUN') or die('Direct access prohibited');
 				$cur_dept_info = explode(':', $cur_dept);
 				$cur_name = $cur_dept_info[0];
 				$cur_color = $cur_dept_info[1];
-				$cur_select = (!isset($this->entity->employee->group) && $this->entity->employee == $cur_name) ? 'selected=\"selected\"' : '';
+				$cur_select = (!isset($this->entity->employee->group) && $this->entity->district == $cur_name) ? 'selected=\"selected\"' : '';
 			?>
 				employee.append("<option value=\"<?php echo htmlspecialchars($cur_name); ?>:<?php echo htmlspecialchars($cur_color); ?>\" <?php echo $cur_select; ?>><?php echo htmlspecialchars($cur_name); ?></option>");
 			<?php }
@@ -140,6 +140,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	?>
 	<div class="pf-element">
 		<label><input class="pf-field" type="checkbox" name="all_day" value="ON" <?php echo ($this->entity->all_day) ? 'checked="checked" ' : ''; ?>/>All Day</label>
+		<label><input class="pf-field" type="checkbox" name="private" value="ON" <?php echo ($this->entity->private) ? 'checked="checked" ' : ''; ?>/>Private</label>
 	</div>
 	<div class="pf-element pf-full-width">
 		<span class="pf-note">Start</span>

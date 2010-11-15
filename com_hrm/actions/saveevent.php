@@ -52,21 +52,23 @@ if (isset($_REQUEST['employee'])) {
 	$event->color = $event->employee->color;
 
 	if (!isset($event->employee->guid)) {
-		$event_details = explode(':', $_REQUEST['employee']);
-		$event->title = $event->employee = $event_details[0];
-		$event->color = $event_details[1];
+		unset($event->employee);
 		$location = group::factory((int) $_REQUEST['location']);
 		if (!isset($location->guid)) {
 			pines_error('The specified location for this event does not exist.');
 			$pines->com_hrm->show_calendar();
 			return;
 		}
+		$event_details = explode(':', $_REQUEST['employee']);
+		$event->title = $event->district = ($event_details[0] == 'District') ? $location->name : $event_details[0];
+		$event->color = $event_details[1];
 	}
-	
+
 	if ($_REQUEST['event_label'] != 'Label') {
 		$event->label = $_REQUEST['event_label'];
 		$event->title = $event->label .' - '. $event->title;
 	}
+	$event->private = ($_REQUEST['private_event'] == 'true');
 	$event->all_day = ($_REQUEST['all_day'] == 'true');
 	$start_hour = ($_REQUEST['time_start_ampm'] == 'am') ? $_REQUEST['time_start_hour'] : $_REQUEST['time_start_hour'] + 12;
 	$end_hour = ($_REQUEST['time_end_ampm'] == 'am') ? $_REQUEST['time_end_hour'] : $_REQUEST['time_end_hour'] + 12;
@@ -83,9 +85,8 @@ if (isset($_REQUEST['employee'])) {
 	} else {
 		$event->scheduled = $event->end - $event->start;
 	}
-	
-	if ($pines->config->com_hrm->global_events)
-		$event->ac->other = 1;
+
+	$event->ac->other = 1;
 
 	if ($event->save()) {
 		$event->group = $location;

@@ -34,9 +34,9 @@ if (isset($_REQUEST['events'])) {
 		$dupe_event->start = $event->start;
 		$dupe_event->end = $event->end;
 		$dupe_event->color = $event->color;
+		$dupe_event->private = $event->private;
 		$dupe_event->all_day = $event->all_day;
-		if ($pines->config->com_hrm->global_events)
-			$dupe_event->ac->other = 1;
+		$dupe_event->ac->other = 1;
 		// Save our new duplicate event.
 		$dupe_event->save();
 		if (!$dupe_event->group->is($event->group)) {

@@ -110,8 +110,12 @@ $pines->com_ptags->load();
 								all_day: !!form.find(":input[name=all_day]").attr('checked'),
 								start: form.find(":input[name=start]").val(),
 								end: form.find(":input[name=end]").val(),
-								time_start: form.find(":input[name=time_start]").val(),
-								time_end: form.find(":input[name=time_end]").val(),
+								time_start_hour: form.find(":input[name=time_start_hour]").val(),
+								time_start_minute: form.find(":input[name=time_start_minute]").val(),
+								time_start_ampm: form.find(":input[name=time_start_ampm]").val(),
+								time_end_hour: form.find(":input[name=time_end_hour]").val(),
+								time_end_minute: form.find(":input[name=time_end_minute]").val(),
+								time_end_ampm: form.find(":input[name=time_end_ampm]").val(),
 								location: form.find(":input[name=location]").val()
 							});
 						}
@@ -155,8 +159,12 @@ $pines->com_ptags->load();
 								all_day: !!form.find(":input[name=all_day]").attr('checked'),
 								start: form.find(":input[name=start]").val(),
 								end: form.find(":input[name=end]").val(),
-								time_start: form.find(":input[name=time_start]").val(),
-								time_end: form.find(":input[name=time_end]").val(),
+								time_start_hour: form.find(":input[name=time_start_hour]").val(),
+								time_start_minute: form.find(":input[name=time_start_minute]").val(),
+								time_start_ampm: form.find(":input[name=time_start_ampm]").val(),
+								time_end_hour: form.find(":input[name=time_end_hour]").val(),
+								time_end_minute: form.find(":input[name=time_end_minute]").val(),
+								time_end_ampm: form.find(":input[name=time_end_ampm]").val(),
 								location: form.find(":input[name=location]").val(),
 								employee_view: <?php echo isset($this->employee) ? 'true' : 'false'; ?>
 							});
@@ -197,8 +205,12 @@ $pines->com_ptags->load();
 							pines.post("<?php echo addslashes(pines_url('com_hrm', 'saveschedule')); ?>", {
 								employee: form.find(":input[name=employee]").val(),
 								all_day: !!form.find(":input[name=all_day]").attr('checked'),
-								time_start: form.find(":input[name=time_start]").val(),
-								time_end: form.find(":input[name=time_end]").val(),
+								time_start_hour: form.find(":input[name=time_start_hour]").val(),
+								time_start_minute: form.find(":input[name=time_start_minute]").val(),
+								time_start_ampm: form.find(":input[name=time_start_ampm]").val(),
+								time_end_hour: form.find(":input[name=time_end_hour]").val(),
+								time_end_minute: form.find(":input[name=time_end_minute]").val(),
+								time_end_ampm: form.find(":input[name=time_end_ampm]").val(),
 								dates: form.find(":input[name=dates]").val()
 							});
 						}
@@ -277,8 +289,12 @@ $pines->com_ptags->load();
 								all_day: !!form.find(":input[name=all_day]").attr('checked'),
 								start: form.find(":input[name=start]").val(),
 								end: form.find(":input[name=end]").val(),
-								time_start: form.find(":input[name=time_start]").val(),
-								time_end: form.find(":input[name=time_end]").val()
+								time_start_hour: form.find(":input[name=time_start_hour]").val(),
+								time_start_minute: form.find(":input[name=time_start_minute]").val(),
+								time_start_ampm: form.find(":input[name=time_start_ampm]").val(),
+								time_end_hour: form.find(":input[name=time_end_hour]").val(),
+								time_end_minute: form.find(":input[name=time_end_minute]").val(),
+								time_end_ampm: form.find(":input[name=time_end_ampm]").val(),
 							});
 						}
 					}

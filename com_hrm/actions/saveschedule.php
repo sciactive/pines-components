@@ -39,8 +39,10 @@ if (isset($_REQUEST['employee'])) {
 		$event_month = date('n', strtotime($cur_date));
 		$event_day = date('j', strtotime($cur_date));
 		$event_year = date('Y', strtotime($cur_date));
-		$event->start = mktime($event->all_day ? 0 : $_REQUEST['time_start'],0,0,$event_month,$event_day,$event_year);
-		$event->end = mktime($event->all_day ? 23 : $_REQUEST['time_end'],$event->all_day ? 59 : 0,$event->all_day ? 59 : 0,$event_month,$event_day,$event_year);
+		$start_hour = ($_REQUEST['time_start_ampm'] == 'am') ? $_REQUEST['time_start_hour'] : $_REQUEST['time_start_hour'] + 12;
+		$end_hour = ($_REQUEST['time_end_ampm'] == 'am') ? $_REQUEST['time_end_hour'] : $_REQUEST['time_end_hour'] + 12;
+		$event->start = mktime($event->all_day ? 0 : $start_hour,$_REQUEST['time_start_minute'],0,$event_month,$event_day,$event_year);
+		$event->end = mktime($event->all_day ? 23 : $end_hour,$event->all_day ? 59 : $_REQUEST['time_end_minute'],$event->all_day ? 59 : 0,$event_month,$event_day,$event_year);
 
 		if ($event->all_day) {
 			$days = ceil(($event->end - $event->start) / 86400);

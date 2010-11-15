@@ -68,8 +68,10 @@ if (isset($_REQUEST['employee'])) {
 		$event->title = $event->label .' - '. $event->title;
 	}
 	$event->all_day = ($_REQUEST['all_day'] == 'true');
-	$event->start = mktime($event->all_day ? 0 : $_REQUEST['time_start'],0,0,$event_month,$event_day,$event_year);
-	$event->end = mktime($event->all_day ? 23 : $_REQUEST['time_end'],$event->all_day ? 59 : 0,$event->all_day ? 59 : 0,$event_endmonth,$event_endday,$event_endyear);
+	$start_hour = ($_REQUEST['time_start_ampm'] == 'am') ? $_REQUEST['time_start_hour'] : $_REQUEST['time_start_hour'] + 12;
+	$end_hour = ($_REQUEST['time_end_ampm'] == 'am') ? $_REQUEST['time_end_hour'] : $_REQUEST['time_end_hour'] + 12;
+	$event->start = mktime($event->all_day ? 0 : $start_hour,$_REQUEST['time_start_minute'],0,$event_month,$event_day,$event_year);
+	$event->end = mktime($event->all_day ? 23 : $end_hour,$event->all_day ? 59 : $_REQUEST['time_end_minute'],$event->all_day ? 59 : 0,$event_month,$event_day,$event_year);
 	// If the start and end dates are the same, push the end date ahead one day.
 	if ($event->start == $event->end)
 		$event->end = strtotime('+1 day', $event->end);

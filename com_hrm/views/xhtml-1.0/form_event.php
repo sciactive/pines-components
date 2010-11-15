@@ -78,7 +78,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			}
 		});
 
-		var timespan = $("[name=time_start], [name=time_end]", "#p_muid_form");
+		var timespan = $("[name=time_start_hour], [name=time_start_minute], [name=time_start_ampm], [name=time_end_hour], [name=time_end_minute], [name=time_end_ampm],", "#p_muid_form");
 		$("#p_muid_form [name=all_day]").change(function(){
 			if ($(this).is(":checked")) {
 				timespan.addClass("ui-state-disabled").attr("disabled", "disabled");
@@ -131,70 +131,74 @@ defined('P_RUN') or die('Direct access prohibited');
 	<?php
 		if ($this->entity->guid) {
 			$start_date = format_date($this->entity->start, 'date_sort');
-			$start_time = format_date($this->entity->start, 'custom', 'H');
+			$start_hour = format_date($this->entity->start, 'custom', 'H');
+			$start_minute = format_date($this->entity->start, 'custom', 'i');
 			$end_date = format_date($this->entity->end, 'date_sort');
-			$end_time = format_date($this->entity->end, 'custom', 'H');
+			$end_hour = format_date($this->entity->end, 'custom', 'H');
+			$end_minute = format_date($this->entity->end, 'custom', 'i');
 		}
 	?>
 	<div class="pf-element">
 		<label><input class="pf-field" type="checkbox" name="all_day" value="ON" <?php echo ($this->entity->all_day) ? 'checked="checked" ' : ''; ?>/>All Day</label>
 	</div>
 	<div class="pf-element pf-full-width">
-		<span class="pf-note">Start</span><input class="ui-widget-content ui-corner-all form_center" type="text" size="12" id="p_muid_start" name="start" value="<?php echo empty($start_date) ? format_date(time(), 'date_sort') : htmlspecialchars($start_date); ?>" />
-		<select class="ui-widget-content ui-corner-all" name="time_start">
-			<option value="0" <?php echo ($start_time == '0') ? 'selected="selected"' : ''; ?>>12:00 AM</option>
-			<option value="1" <?php echo ($start_time == '1') ? 'selected="selected"' : ''; ?>>1:00 AM</option>
-			<option value="2" <?php echo ($start_time == '2') ? 'selected="selected"' : ''; ?>>2:00 AM</option>
-			<option value="3" <?php echo ($start_time == '3') ? 'selected="selected"' : ''; ?>>3:00 AM</option>
-			<option value="4" <?php echo ($start_time == '4') ? 'selected="selected"' : ''; ?>>4:00 AM</option>
-			<option value="5" <?php echo ($start_time == '5') ? 'selected="selected"' : ''; ?>>5:00 AM</option>
-			<option value="6" <?php echo ($start_time == '6') ? 'selected="selected"' : ''; ?>>6:00 AM</option>
-			<option value="7" <?php echo ($start_time == '7') ? 'selected="selected"' : ''; ?>>7:00 AM</option>
-			<option value="8" <?php echo ($start_time == '8') ? 'selected="selected"' : ''; ?>>8:00 AM</option>
-			<option value="9" <?php echo ($start_time == '9' || empty($start_time)) ? 'selected="selected"' : ''; ?>>9:00 AM</option>
-			<option value="10" <?php echo ($start_time == '10') ? 'selected="selected"' : ''; ?>>10:00 AM</option>
-			<option value="11" <?php echo ($start_time == '11') ? 'selected="selected"' : ''; ?>>11:00 AM</option>
-			<option value="12" <?php echo ($start_time == '12') ? 'selected="selected"' : ''; ?>>12:00 PM</option>
-			<option value="13" <?php echo ($start_time == '13') ? 'selected="selected"' : ''; ?>>1:00 PM</option>
-			<option value="14" <?php echo ($start_time == '14') ? 'selected="selected"' : ''; ?>>2:00 PM</option>
-			<option value="15" <?php echo ($start_time == '15') ? 'selected="selected"' : ''; ?>>3:00 PM</option>
-			<option value="16" <?php echo ($start_time == '16') ? 'selected="selected"' : ''; ?>>4:00 PM</option>
-			<option value="17" <?php echo ($start_time == '17') ? 'selected="selected"' : ''; ?>>5:00 PM</option>
-			<option value="18" <?php echo ($start_time == '18') ? 'selected="selected"' : ''; ?>>6:00 PM</option>
-			<option value="19" <?php echo ($start_time == '19') ? 'selected="selected"' : ''; ?>>7:00 PM</option>
-			<option value="20" <?php echo ($start_time == '20') ? 'selected="selected"' : ''; ?>>8:00 PM</option>
-			<option value="21" <?php echo ($start_time == '21') ? 'selected="selected"' : ''; ?>>9:00 PM</option>
-			<option value="22" <?php echo ($start_time == '22') ? 'selected="selected"' : ''; ?>>10:00 PM</option>
-			<option value="23" <?php echo ($start_time == '23') ? 'selected="selected"' : ''; ?>>11:00 PM</option>
+		<span class="pf-note">Start</span>
+		<input class="ui-widget-content ui-corner-all form_center" type="text" size="24" id="p_muid_start" name="start" value="<?php echo empty($start_date) ? format_date(time(), 'date_sort') : htmlspecialchars($start_date); ?>" />
+	</div>
+	<div class="pf-element pf-full-width">
+		<select class="ui-widget-content ui-corner-all" name="time_start_hour">
+			<option value="1" <?php echo ($start_hour == '1' || $start_hour == '13') ? 'selected="selected"' : ''; ?>>1</option>
+			<option value="2" <?php echo ($start_hour == '2' || $start_hour == '14') ? 'selected="selected"' : ''; ?>>2</option>
+			<option value="3" <?php echo ($start_hour == '3' || $start_hour == '15') ? 'selected="selected"' : ''; ?>>3</option>
+			<option value="4" <?php echo ($start_hour == '4' || $start_hour == '16') ? 'selected="selected"' : ''; ?>>4</option>
+			<option value="5" <?php echo ($start_hour == '5' || $start_hour == '17') ? 'selected="selected"' : ''; ?>>5</option>
+			<option value="6" <?php echo ($start_hour == '6' || $start_hour == '18') ? 'selected="selected"' : ''; ?>>6</option>
+			<option value="7" <?php echo ($start_hour == '7' || $start_hour == '19') ? 'selected="selected"' : ''; ?>>7</option>
+			<option value="8" <?php echo ($start_hour == '8' || $start_hour == '20') ? 'selected="selected"' : ''; ?>>8</option>
+			<option value="9" <?php echo ($start_hour == '9' || $start_hour == '21' || empty($start_hour)) ? 'selected="selected"' : ''; ?>>9</option>
+			<option value="10" <?php echo ($start_hour == '10' || $start_hour == '22') ? 'selected="selected"' : ''; ?>>10</option>
+			<option value="11" <?php echo ($start_hour == '11' || $start_hour == '23') ? 'selected="selected"' : ''; ?>>11</option>
+			<option value="0" <?php echo ($start_hour == '0' || $start_hour == '12') ? 'selected="selected"' : ''; ?>>12</option>
+		</select> :
+		<select class="ui-widget-content ui-corner-all" name="time_start_minute">
+			<option value="0" <?php echo ($start_minute == '0'  || empty($start_minute)) ? 'selected="selected"' : ''; ?>>00</option>
+			<option value="15" <?php echo ($start_minute == '15') ? 'selected="selected"' : ''; ?>>15</option>
+			<option value="30" <?php echo ($start_minute == '30') ? 'selected="selected"' : ''; ?>>30</option>
+			<option value="45" <?php echo ($start_minute == '45') ? 'selected="selected"' : ''; ?>>45</option>
+		</select>
+		<select class="ui-widget-content ui-corner-all" name="time_start_ampm">
+			<option value="am" selected="selected">AM</option>
+			<option value="pm" <?php echo ($start_hour >= 12) ? 'selected="selected"' : ''; ?>>PM</option>
 		</select>
 	</div>
 	<div class="pf-element">
-		<span class="pf-note">End</span><input class="ui-widget-content ui-corner-all form_center" type="text" size="12" id="p_muid_end" name="end" value="<?php echo empty($end_date) ? format_date(time(), 'date_sort') : htmlspecialchars($end_date); ?>" />
-		<select class="ui-widget-content ui-corner-all" name="time_end">
-			<option value="0" <?php echo ($end_time == '0') ? 'selected="selected"' : ''; ?>>12:00 AM</option>
-			<option value="1" <?php echo ($end_time == '1') ? 'selected="selected"' : ''; ?>>1:00 AM</option>
-			<option value="2" <?php echo ($end_time == '2') ? 'selected="selected"' : ''; ?>>2:00 AM</option>
-			<option value="3" <?php echo ($end_time == '3') ? 'selected="selected"' : ''; ?>>3:00 AM</option>
-			<option value="4" <?php echo ($end_time == '4') ? 'selected="selected"' : ''; ?>>4:00 AM</option>
-			<option value="5" <?php echo ($end_time == '5') ? 'selected="selected"' : ''; ?>>5:00 AM</option>
-			<option value="6" <?php echo ($end_time == '6') ? 'selected="selected"' : ''; ?>>6:00 AM</option>
-			<option value="7" <?php echo ($end_time == '7') ? 'selected="selected"' : ''; ?>>7:00 AM</option>
-			<option value="8" <?php echo ($end_time == '8') ? 'selected="selected"' : ''; ?>>8:00 AM</option>
-			<option value="9" <?php echo ($end_time == '9') ? 'selected="selected"' : ''; ?>>9:00 AM</option>
-			<option value="10" <?php echo ($end_time == '10') ? 'selected="selected"' : ''; ?>>10:00 AM</option>
-			<option value="11" <?php echo ($end_time == '11') ? 'selected="selected"' : ''; ?>>11:00 AM</option>
-			<option value="12" <?php echo ($end_time == '12') ? 'selected="selected"' : ''; ?>>12:00 PM</option>
-			<option value="13" <?php echo ($end_time == '13') ? 'selected="selected"' : ''; ?>>1:00 PM</option>
-			<option value="14" <?php echo ($end_time == '14') ? 'selected="selected"' : ''; ?>>2:00 PM</option>
-			<option value="15" <?php echo ($end_time == '15') ? 'selected="selected"' : ''; ?>>3:00 PM</option>
-			<option value="16" <?php echo ($end_time == '16') ? 'selected="selected"' : ''; ?>>4:00 PM</option>
-			<option value="17" <?php echo ($end_time == '17' || empty($end_time)) ? 'selected="selected"' : ''; ?>>5:00 PM</option>
-			<option value="18" <?php echo ($end_time == '18') ? 'selected="selected"' : ''; ?>>6:00 PM</option>
-			<option value="19" <?php echo ($end_time == '19') ? 'selected="selected"' : ''; ?>>7:00 PM</option>
-			<option value="20" <?php echo ($end_time == '20') ? 'selected="selected"' : ''; ?>>8:00 PM</option>
-			<option value="21" <?php echo ($end_time == '21') ? 'selected="selected"' : ''; ?>>9:00 PM</option>
-			<option value="22" <?php echo ($end_time == '22') ? 'selected="selected"' : ''; ?>>10:00 PM</option>
-			<option value="23" <?php echo ($end_time == '23') ? 'selected="selected"' : ''; ?>>11:00 PM</option>
+		<span class="pf-note">End</span>
+		<input class="ui-widget-content ui-corner-all form_center" type="text" size="24" id="p_muid_end" name="end" value="<?php echo empty($end_date) ? format_date(time(), 'date_sort') : htmlspecialchars($end_date); ?>" />
+	</div>
+	<div class="pf-element pf-full-width">
+		<select class="ui-widget-content ui-corner-all" name="time_end_hour">
+			<option value="1" <?php echo ($end_hour == '1' || $end_hour == '13') ? 'selected="selected"' : ''; ?>>1</option>
+			<option value="2" <?php echo ($end_hour == '2' || $end_hour == '14') ? 'selected="selected"' : ''; ?>>2</option>
+			<option value="3" <?php echo ($end_hour == '3' || $end_hour == '15') ? 'selected="selected"' : ''; ?>>3</option>
+			<option value="4" <?php echo ($end_hour == '4' || $end_hour == '16') ? 'selected="selected"' : ''; ?>>4</option>
+			<option value="5" <?php echo ($end_hour == '5' || $end_hour == '17' || empty($end_hour)) ? 'selected="selected"' : ''; ?>>5</option>
+			<option value="6" <?php echo ($end_hour == '6' || $end_hour == '18') ? 'selected="selected"' : ''; ?>>6</option>
+			<option value="7" <?php echo ($end_hour == '7' || $end_hour == '19') ? 'selected="selected"' : ''; ?>>7</option>
+			<option value="8" <?php echo ($end_hour == '8' || $end_hour == '20') ? 'selected="selected"' : ''; ?>>8</option>
+			<option value="9" <?php echo ($end_hour == '9' || $end_hour == '21') ? 'selected="selected"' : ''; ?>>9</option>
+			<option value="10" <?php echo ($end_hour == '10' || $end_hour == '22') ? 'selected="selected"' : ''; ?>>10</option>
+			<option value="11" <?php echo ($end_hour == '11' || $end_hour == '23') ? 'selected="selected"' : ''; ?>>11</option>
+			<option value="0" <?php echo ($end_hour == '0' || $end_hour == '12') ? 'selected="selected"' : ''; ?>>12</option>
+		</select> :
+		<select class="ui-widget-content ui-corner-all" name="time_end_minute">
+			<option value="0" <?php echo ($end_minute == '0' || empty($end_minute)) ? 'selected="selected"' : ''; ?>>00</option>
+			<option value="15" <?php echo ($end_minute == '15') ? 'selected="selected"' : ''; ?>>15</option>
+			<option value="30" <?php echo ($end_minute == '30') ? 'selected="selected"' : ''; ?>>30</option>
+			<option value="45" <?php echo ($end_minute == '45') ? 'selected="selected"' : ''; ?>>45</option>
+		</select>
+		<select class="ui-widget-content ui-corner-all" name="time_end_ampm">
+			<option value="am" selected="selected">AM</option>
+			<option value="pm" <?php echo ($end_hour >= 12 || empty($end_hour)) ? 'selected="selected"' : ''; ?>>PM</option>
 		</select>
 	</div>
 	<input type="hidden" name="location" value="<?php echo htmlspecialchars($this->location); ?>" />

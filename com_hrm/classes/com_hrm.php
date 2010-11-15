@@ -159,8 +159,11 @@ class com_hrm extends component {
 	public function show_calendar($id = null, $location = null, $employee = null, $rto = null) {
 		global $pines;
 
-		if (!isset($location) || !isset($location->guid))
+		if (!isset($location) || !isset($location->guid)) {
 			$location = $_SESSION['user']->group;
+			if (!isset($employee->guid))
+				$employee = $_SESSION['user'];
+		}
 
 		$calendar_head = new module('com_hrm', 'show_calendar_head', 'head');
 		$calendar = new module('com_hrm', 'show_calendar', 'content');

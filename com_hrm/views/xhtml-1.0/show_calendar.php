@@ -34,6 +34,7 @@ $this->title = 'Company Schedule [' . (isset($this->employee) ? $this->employee-
 				agenda: .5,
 				'': 0.85
 			},
+			defaultView: 'agendaWeek',
 			firstDay: 1,
 			firstHour: 8,
 			theme: true,

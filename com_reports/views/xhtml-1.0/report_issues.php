@@ -10,7 +10,10 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
+
+$this->title = 'Employee Issues ['.$this->location->name.']';
 $pines->icons->load();
+$pines->com_jstree->load();
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_reports/report_issues'];
@@ -35,11 +38,31 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	var p_muid_notice;
 
 	pines(function(){
+		pines.search_issues = function(){
+			// Submit the form with all of the fields.
+			pines.post("<?php echo addslashes(pines_url('com_reports', 'reportissues')); ?>", {
+				"location": location,
+				"all_time": all_time,
+				"start_date": start_date,
+				"end_date": end_date
+			});
+		};
+
+		// Timespan Defaults
+		var all_time = <?php echo $this->all_time ? 'true' : 'false'; ?>;
+		var start_date = "<?php echo $this->start_date ? addslashes(format_date($this->start_date, 'date_sort')) : ''; ?>";
+		var end_date = "<?php echo $this->end_date ? addslashes(format_date($this->end_date, 'date_sort')) : ''; ?>";
+		// Location Defaults
+		var location = "<?php echo $this->location->guid; ?>";
+
 		var state_xhr;
 		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
+				{type: 'button', text: 'Location', extra_class: 'picon picon-applications-internet', selection_optional: true, click: function(){issues_grid.location_form();}},
+				{type: 'button', text: 'Timespan', extra_class: 'picon picon-view-time-schedule', selection_optional: true, click: function(){issues_grid.date_form();}},
+				{type: 'separator'},
 				<?php if (gatekeeper('com_hrm/listemployees')) { ?>
 				{type: 'button', text: 'History', extra_class: 'picon picon-folder-html', url: '<?php echo addslashes(pines_url('com_hrm', 'employee/history', array('id' => '__title__'))); ?>'},
 				<?php } ?>
@@ -63,7 +86,84 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
 		cur_options.pgrid_sort_col = false;
-		$("#p_muid_grid").pgrid(cur_options);
+		var issues_grid = $("#p_muid_grid").pgrid(cur_options);
+
+		issues_grid.date_form = function(){
+			$.ajax({
+				url: "<?php echo addslashes(pines_url('com_reports', 'dateselect')); ?>",
+				type: "POST",
+				dataType: "html",
+				data: {"all_time": all_time, "start_date": start_date, "end_date": end_date},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured while trying to retreive the date form:\n"+XMLHttpRequest.status+": "+textStatus);
+				},
+				success: function(data){
+					if (data == "")
+						return;
+					var form = $("<div title=\"Date Selector\" />");
+					form.dialog({
+						bgiframe: true,
+						autoOpen: true,
+						height: 315,
+						modal: true,
+						open: function(){
+							form.html(data);
+						},
+						close: function(){
+							form.remove();
+						},
+						buttons: {
+							"Done": function(){
+								if (form.find(":input[name=timespan_saver]").val() == "alltime") {
+									all_time = true;
+								} else {
+									all_time = false;
+									start_date = form.find(":input[name=start_date]").val();
+									end_date = form.find(":input[name=end_date]").val();
+								}
+								form.dialog('close');
+								pines.search_issues();
+							}
+						}
+					});
+				}
+			});
+		};
+		issues_grid.location_form = function(){
+			$.ajax({
+				url: "<?php echo addslashes(pines_url('com_reports', 'locationselect')); ?>",
+				type: "POST",
+				dataType: "html",
+				data: {"location": location},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured while trying to retreive the location form:\n"+XMLHttpRequest.status+": "+textStatus);
+				},
+				success: function(data){
+					if (data == "")
+						return;
+					var form = $("<div title=\"Location Selector\" />");
+					form.dialog({
+						bgiframe: true,
+						autoOpen: true,
+						height: 250,
+						modal: true,
+						open: function(){
+							form.html(data);
+						},
+						close: function(){
+							form.remove();
+						},
+						buttons: {
+							"Done": function(){
+								location = form.find(":input[name=location]").val();
+								form.dialog('close');
+								pines.search_issues();
+							}
+						}
+					});
+				}
+			});
+		};
 
 		p_muid_notice = $.pnotify({
 			pnotify_text: "",

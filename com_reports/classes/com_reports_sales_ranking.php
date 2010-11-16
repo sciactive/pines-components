@@ -90,11 +90,10 @@ class com_reports_sales_ranking extends entity {
 
 		if (!isset($location->guid))
 			$location = $this->top_location;
-		
-		$form = new module('com_reports', 'form_sales_rankings', 'right');
+
 		$module = new module('com_reports', 'view_sales_rankings', 'content');
-		$module->entity = $form->entity = $this;
-		$module->location = $form->location = $location;
+		$module->entity = $this;
+		$module->location = $location;
 		$module->rankings = array();
 		$employees = $pines->com_hrm->get_employees();
 

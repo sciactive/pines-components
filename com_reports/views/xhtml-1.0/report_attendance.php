@@ -11,10 +11,11 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ($this->date[1] > time())
-	$this->date[1] = time();
+$this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name : $this->location->name);
+if (!$this->all_time)
+	$this->note = format_date($this->start_date, 'date_short').' - '.format_date($this->end_date, 'date_short');
 
-$this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name : $this->location->name).' ('.format_date($this->date[0], 'date_sort').' - '.format_date($this->date[1], 'date_sort').')';
+$pines->com_jstree->load();
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_reports/report_attendance'];
@@ -29,14 +30,42 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
+		pines.search_attendance = function(){
+			// Submit the form with all of the fields.
+			pines.post("<?php echo addslashes(pines_url('com_reports', 'reportattendance')); ?>", {
+				"employee": employee,
+				"location": location,
+				"all_time": all_time,
+				"start_date": start_date,
+				"end_date": end_date
+			});
+		};
+
+		var employee = "<?php echo isset($this->employee) ? $this->employee->guid : ''; ?>";
+		// Timespan Defaults
+		var all_time = <?php echo $this->all_time ? 'true' : 'false'; ?>;
+		var start_date = "<?php echo $this->start_date ? addslashes(format_date($this->start_date, 'date_sort')) : ''; ?>";
+		var end_date = "<?php echo $this->end_date ? addslashes(format_date($this->end_date, 'date_sort')) : ''; ?>";
+		// Location Defaults
+		var location = "<?php echo $this->location->guid; ?>";
+
 		var state_xhr;
 		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
-				<?php if (isset($this->employees)) { ?>
-				{type: 'button', text: 'View', extra_class: 'picon picon-user-identity', double_click: true, url: '<?php echo addslashes(pines_url('com_reports', 'reportattendance', array('employee' => '__title__', 'start' => format_date($this->date[0], 'date_sort'), 'end' => format_date($this->date[1], 'date_sort'), 'location' => $this->location->guid), false)); ?>'},
+				{type: 'button', text: 'Location', extra_class: 'picon picon-applications-internet', selection_optional: true, click: function(){attendance_grid.location_form();}},
+				{type: 'button', text: 'Timespan', extra_class: 'picon picon-view-time-schedule', selection_optional: true, click: function(){attendance_grid.date_form();}},
 				{type: 'separator'},
+				<?php if (isset($this->employees)) { ?>
+				{type: 'button', text: 'View', extra_class: 'picon picon-user-identity', double_click: true, url: '<?php echo addslashes(pines_url('com_reports', 'reportattendance', array('employee' => '__title__', 'start_date' => format_date($this->start_date, 'date_sort'), 'end_date' => format_date($this->end_date, 'date_sort'), 'all_time' => ($this->all_time ? 'true' : 'false'), 'location' => $this->location->guid), false)); ?>'},
+				{type: 'separator'},
+				<?php } else { ?>
+				{type: 'button', text: '&laquo; All Employees', extra_class: 'picon picon-system-users', selection_optional: true, click: function(){
+					employee = '';
+					pines.search_attendance();
+				}},
+				<?php } ?>
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
@@ -45,15 +74,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						content: rows
 					});
 				}}
-				<?php } else { ?>
-				{type: 'button', text: '&laquo; All Employees', extra_class: 'picon picon-system-users', selection_optional: true, click: function(e, rows){
-					pines.post("<?php echo addslashes(pines_url('com_reports', 'reportattendance')); ?>", {
-						start: "<?php echo addslashes(format_date($this->date[0], 'date_sort')); ?>",
-						end: "<?php echo addslashes(format_date($this->date[1], 'date_sort')); ?>",
-						location: "<?php echo addslashes($this->location->guid); ?>"
-					});
-				}}
-				<?php } ?>
 			],
 			pgrid_sortable: false,
 			pgrid_state_change: function(state) {
@@ -65,7 +85,85 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
 		cur_options.pgrid_sort_col = false;
-		$("#p_muid_grid").pgrid(cur_options);
+		var attendance_grid = $("#p_muid_grid").pgrid(cur_options);
+
+		attendance_grid.date_form = function(){
+			$.ajax({
+				url: "<?php echo addslashes(pines_url('com_reports', 'dateselect')); ?>",
+				type: "POST",
+				dataType: "html",
+				data: {"all_time": all_time, "start_date": start_date, "end_date": end_date},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured while trying to retreive the date form:\n"+XMLHttpRequest.status+": "+textStatus);
+				},
+				success: function(data){
+					if (data == "")
+						return;
+					var form = $("<div title=\"Date Selector\" />");
+					form.dialog({
+						bgiframe: true,
+						autoOpen: true,
+						height: 315,
+						modal: true,
+						open: function(){
+							form.html(data);
+						},
+						close: function(){
+							form.remove();
+						},
+						buttons: {
+							"Done": function(){
+								if (form.find(":input[name=timespan_saver]").val() == "alltime") {
+									all_time = true;
+								} else {
+									all_time = false;
+									start_date = form.find(":input[name=start_date]").val();
+									end_date = form.find(":input[name=end_date]").val();
+								}
+								form.dialog('close');
+								pines.search_attendance();
+							}
+						}
+					});
+				}
+			});
+		};
+		attendance_grid.location_form = function(){
+			$.ajax({
+				url: "<?php echo addslashes(pines_url('com_reports', 'locationselect')); ?>",
+				type: "POST",
+				dataType: "html",
+				data: {"location": location},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured while trying to retreive the location form:\n"+XMLHttpRequest.status+": "+textStatus);
+				},
+				success: function(data){
+					if (data == "")
+						return;
+					var form = $("<div title=\"Location Selector\" />");
+					form.dialog({
+						bgiframe: true,
+						autoOpen: true,
+						height: 250,
+						modal: true,
+						open: function(){
+							form.html(data);
+						},
+						close: function(){
+							form.remove();
+						},
+						buttons: {
+							"Done": function(){
+								location = form.find(":input[name=location]").val();
+								form.dialog('close');
+								employee = '';
+								pines.search_attendance();
+							}
+						}
+					});
+				}
+			});
+		};
 	});
 	// ]]>
 </script>
@@ -89,14 +187,14 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					array('class' => com_hrm_event),
 					array('&',
 						'tag' => array('com_hrm', 'event'),
-						'gte' => array('start', $this->date[0]),
-						'lte' => array('end', $this->date[1]),
+						'gte' => array('start', $this->start_date),
+						'lte' => array('end', $this->end_date),
 						'ref' => array('employee', $cur_employee)
 					)
 				);
 			foreach ($schedule as $cur_schedule)
 				$totals[$total_count]['scheduled'] += $cur_schedule->scheduled;
-			$totals[$total_count]['clocked'] = $cur_employee->timeclock->sum($this->date[0], $this->date[1]);
+			$totals[$total_count]['clocked'] = $cur_employee->timeclock->sum($this->start_date, $this->end_date);
 
 			$scheduled = round($totals[$total_count]['scheduled'] / 3600, 2);
 			$clocked = round($totals[$total_count]['clocked'] / 3600, 2);
@@ -143,7 +241,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		$clocks = $dates = array();
 		$clock_count = $date_count = 0;
 		foreach($this->employee->timeclock->timeclock as $key => $entry) {
-			if ($entry['in'] >= $this->date[0] && ($entry['out'] <= $this->date[1] || !isset($entry['out']))) {
+			if ( $this->all_time ||
+				($entry['in'] >= $this->start_date &&
+				($entry['out'] <= $this->end_date || !isset($entry['out']))) ) {
 				if ($dates[$date_count]['date'] != format_date($entry['in'], 'date_sort')) {
 					$date_count++;
 					$dates[$date_count]['start'] = strtotime('00:00', $entry['in']);

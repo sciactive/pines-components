@@ -11,6 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Sales Rankings: '.$this->location->name.' ('.format_date($this->entity->start_date, 'date_sort').' - '.format_date($this->entity->end_date, 'date_sort').')';
+$pines->com_jstree->load();
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_reports/rank_sales'];
@@ -55,13 +56,25 @@ $yellow_status = $pines->config->com_reports->rank_level_yellow;
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-		$("#p_muid_grid").pgrid({
+		pines.search_rankings = function(){
+			// Submit the form with all of the fields.
+			pines.post("<?php echo addslashes(pines_url('com_reports', 'viewsalesranking')); ?>", {
+				"id": "<?php echo $this->entity->guid; ?>",
+				"location": location
+			});
+		};
+
+		// Location Defaults
+		var location = "<?php echo $this->location->guid; ?>";
+
+		var rankings_grid = $("#p_muid_grid").pgrid({
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				<?php if (gatekeeper('com_reports/listsalesrankings')) { ?>
 				{type: 'button', text: '&laquo; Rankings List', extra_class: 'picon picon-view-choose', selection_optional: true, url: '<?php echo addslashes(pines_url('com_reports', 'salesrankings')); ?>'},
 				{type: 'separator'},
 				<?php } ?>
+				{type: 'button', text: 'Location', extra_class: 'picon picon-applications-internet', selection_optional: true, click: function(){rankings_grid.location_form();}},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
@@ -75,6 +88,83 @@ $yellow_status = $pines->config->com_reports->rank_level_yellow;
 			pgrid_sort_col: 1,
 			pgrid_sort_ord: 'asc'
 		});
+
+		rankings_grid.date_form = function(){
+			$.ajax({
+				url: "<?php echo addslashes(pines_url('com_reports', 'dateselect')); ?>",
+				type: "POST",
+				dataType: "html",
+				data: {"all_time": all_time, "start_date": start_date, "end_date": end_date},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured while trying to retreive the date form:\n"+XMLHttpRequest.status+": "+textStatus);
+				},
+				success: function(data){
+					if (data == "")
+						return;
+					var form = $("<div title=\"Date Selector\" />");
+					form.dialog({
+						bgiframe: true,
+						autoOpen: true,
+						height: 315,
+						modal: true,
+						open: function(){
+							form.html(data);
+						},
+						close: function(){
+							form.remove();
+						},
+						buttons: {
+							"Done": function(){
+								if (form.find(":input[name=timespan_saver]").val() == "alltime") {
+									all_time = true;
+								} else {
+									all_time = false;
+									start_date = form.find(":input[name=start_date]").val();
+									end_date = form.find(":input[name=end_date]").val();
+								}
+								form.dialog('close');
+								pines.search_rankings();
+							}
+						}
+					});
+				}
+			});
+		};
+		rankings_grid.location_form = function(){
+			$.ajax({
+				url: "<?php echo addslashes(pines_url('com_reports', 'locationselect')); ?>",
+				type: "POST",
+				dataType: "html",
+				data: {"location": location},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured while trying to retreive the location form:\n"+XMLHttpRequest.status+": "+textStatus);
+				},
+				success: function(data){
+					if (data == "")
+						return;
+					var form = $("<div title=\"Location Selector\" />");
+					form.dialog({
+						bgiframe: true,
+						autoOpen: true,
+						height: 250,
+						modal: true,
+						open: function(){
+							form.html(data);
+						},
+						close: function(){
+							form.remove();
+						},
+						buttons: {
+							"Done": function(){
+								location = form.find(":input[name=location]").val();
+								form.dialog('close');
+								pines.search_rankings();
+							}
+						}
+					});
+				}
+			});
+		};
 	});
 	// ]]>
 </script>

@@ -13,16 +13,29 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_reports/reportproducts') )
 	punt_user(null, pines_url('com_reports', 'reportproducts'));
-	
-if ( isset($_REQUEST['start']) ) {
-	$start = strtotime($_REQUEST['start']);
-	$end = strtotime($_REQUEST['end']);
+
+if (!empty($_REQUEST['start_date'])) {
+	$start_date = $_REQUEST['start_date'];
+	if (strpos($start_date, '-') === false)
+		$start_date = format_date($start_date, 'date_sort');
+	$start_date = strtotime($start_date.' 00:00');
 } else {
-	$start = strtotime('next monday', time() - 604800);
-	$end = time();
+	$start_date = strtotime('-1 week');
 }
-if ( isset($_REQUEST['location']) )
+if (!empty($_REQUEST['end_date'])) {
+	$end_date = $_REQUEST['end_date'];
+	if (strpos($end_date, '-') === false)
+		$end_date = format_date($end_date, 'date_sort');
+	$end_date = strtotime($end_date.' 23:59');
+} else {
+	$end_date = strtotime('now');
+}
+if ($_REQUEST['all_time'] == 'true') {
+	$start_date = null;
+	$end_date = null;
+}
+if (!empty($_REQUEST['location']))
 	$location = group::factory((int) $_REQUEST['location']);
 
-$pines->com_reports->report_product_details($start, $end, $location);
+$pines->com_reports->report_product_details($start_date, $end_date, $location);
 ?>

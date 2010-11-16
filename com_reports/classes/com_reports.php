@@ -94,6 +94,39 @@ class com_reports extends component {
 	}
 
 	/**
+	 * Creates and attaches a module which reports product details.
+	 *
+	 * @param int $start The start date of the report.
+	 * @param int $end The end date of the report.
+	 * @param group $location The location to report sales for.
+	 * @return module The product details report module.
+	 */
+	function report_product_details($start, $end, $location = null) {
+		global $pines;
+
+		$form = new module('com_reports', 'form_product_details', 'right');
+		$module = new module('com_reports', 'report_product_details', 'content');
+
+		$selector = array('&', 'tag' => array('com_sales', 'sale'));
+		// Datespan of the report.
+		$date_start = strtotime('00:00', $start);
+		$date_end = strtotime('23:59', $end);
+		$selector['gte'] = array('p_cdate', $date_start);
+		$selector['lte'] = array('p_cdate', $date_end);
+		$module->date[0] = $form->date[0] = $date_start;
+		$module->date[1] = $form->date[1] = $date_end;
+		// Location of the report.
+		if (!isset($location->guid))
+			$location = $_SESSION['user']->group;
+
+		$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		$module->location = $form->location = $location;
+		$transactions = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
+		$selector['tag'] = array('com_sales', 'return');
+		$module->transactions = array_merge($transactions, $pines->entity_manager->get_entities(array('class' => com_sales_return), $selector, $or));
+	}
+
+	/**
 	 * Creates and attaches a module which reports sales.
 	 * 
 	 * @param int $start The start date of the report.

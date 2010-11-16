@@ -85,6 +85,9 @@ class com_reports extends component {
 		global $pines;
 
 		$module = new module('com_reports', 'report_attendance', 'content');
+		// Location of the report.
+		if (!isset($location->guid))
+			$location = $_SESSION['user']->group;
 		if (!isset($employee)) {
 			$module->employees = $pines->com_hrm->get_employees();
 			foreach ($module->employees as $key => &$cur_employee) {
@@ -97,9 +100,6 @@ class com_reports extends component {
 		$module->start_date = $start_date;
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
-		// Location of the report.
-		if (!isset($location->guid))
-			$location = $_SESSION['user']->group;
 		$module->location = $location;
 	}
 

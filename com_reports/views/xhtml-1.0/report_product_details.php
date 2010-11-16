@@ -43,7 +43,18 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 
 	pines(function(){
 		var cur_defaults = {
-			pgrid_toolbar: false,
+			pgrid_toolbar: true,
+			pgrid_toolbar_contents: [
+				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
+				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
+				{type: 'separator'},
+				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
+					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+						filename: 'product_details',
+						content: rows
+					});
+				}}
+			],
 			pgrid_sortable: true,
 			pgrid_sort_col: 2,
 			pgrid_sort_ord: "desc"

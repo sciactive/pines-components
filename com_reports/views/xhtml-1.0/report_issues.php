@@ -38,7 +38,21 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var state_xhr;
 		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
 		var cur_defaults = {
-			pgrid_toolbar: false,
+			pgrid_toolbar: true,
+			pgrid_toolbar_contents: [
+				<?php if (gatekeeper('com_hrm/listemployees')) { ?>
+				{type: 'button', text: 'History', extra_class: 'picon picon-folder-html', url: '<?php echo addslashes(pines_url('com_hrm', 'employee/history', array('id' => '__title__'))); ?>'},
+				<?php } ?>
+				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
+				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
+				{type: 'separator'},
+				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
+					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+						filename: 'employee_issues',
+						content: rows
+					});
+				}}
+			],
 			pgrid_sortable: true,
 			pgrid_state_change: function(state) {
 				if (typeof state_xhr == "object")
@@ -141,7 +155,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		</thead>
 		<tbody>
 			<?php foreach ($this->issues as $cur_issue) { ?>
-			<tr onmouseover="p_muid_notice.com_reports_issue_update('&lt;ul&gt;&lt;li&gt;<?php echo htmlspecialchars(implode($cur_issue->comments, '</li><li>')); ?>&lt;/li&gt;&lt;/ul&gt;');">
+			<tr title="<?php echo $cur_issue->employee->guid; ?>" onmouseover="p_muid_notice.com_reports_issue_update('&lt;ul&gt;&lt;li&gt;<?php echo htmlspecialchars(implode($cur_issue->comments, '</li><li>')); ?>&lt;/li&gt;&lt;/ul&gt;');">
 				<td><?php echo format_date($cur_issue->date, 'date_sort'); ?></td>
 				<td><?php echo htmlspecialchars($cur_issue->location->name); ?></td>
 				<td><?php echo htmlspecialchars($cur_issue->employee->name); ?></td>

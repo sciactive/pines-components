@@ -45,7 +45,7 @@ return array(
 		array('manageclock', 'Manage Timeclock', 'User can manage and edit the employee timeclock.'),
 		array('editcalendar', 'Edit Calendar', 'User can edit the group calendar.'),
 		array('viewcalendar', 'View Calendar', 'User can view the group calendar.'),
-		array('managecalendar', 'Manage Calendar', 'User can view private events for employees on the calendar.'),
+		array('managecalendar', 'Manage Calendar', 'User can view private events and schedules for other employee.'),
 		array('managerto', 'Review Time Off', 'User can review and approve requests for time off.')
 	),
 );

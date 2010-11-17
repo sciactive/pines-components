@@ -318,7 +318,7 @@ $pines->com_ptags->load();
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_new_schedule();" title="New Schedule" <?php echo !isset($this->employee) ? 'disabled="disabled"' : '';?>><span class="p_muid_btn picon picon-list-resource-add"></span></button>
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_time_off();" title="Requested Time Off"><span class="p_muid_btn picon picon-view-calendar-upcoming-events"></span></button>
 </div>
-<?php } ?>
+<?php } if (gatekeeper('com_hrm/editcalendar') || gatekeeper('com_hrm/managecalendar')) { ?>
 <div style="margin-bottom: 1em;">
 	<select class="ui-widget-content ui-corner-all" id="p_muid_employee" name="employee" style="width: 100%;">
 		<option value="all"><?php echo $this->location->name; ?></option>
@@ -333,7 +333,7 @@ $pines->com_ptags->load();
 		} ?>
 	</select>
 </div>
-<?php if (gatekeeper('com_hrm/clock')) { ?>
+<?php } if (gatekeeper('com_hrm/clock')) { ?>
 <div style="text-align: center; font-size: .9em;">
 	<button class="ui-state-default ui-corner-all" type="button" style="width: 100%;" onclick="pines.com_hrm_time_off_form();">Request Time Off</button>
 </div>

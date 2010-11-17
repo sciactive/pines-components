@@ -204,7 +204,7 @@ switch ($this->entity->status) {
 				<tr>
 					<th>SKU</th>
 					<th>Item</th>
-					<th>Description</th>
+					<th>Serial</th>
 					<th class="right_text">Qty</th>
 					<th class="right_text">Price</th>
 					<th class="right_text">Total</th>
@@ -218,7 +218,7 @@ switch ($this->entity->status) {
 				<tr>
 					<td><?php echo htmlspecialchars($cur_product['entity']->sku); ?></td>
 					<td><?php echo htmlspecialchars($cur_product['entity']->name); ?></td>
-					<td><?php echo !empty($cur_product['entity']->receipt_description) ? $cur_product['entity']->receipt_description : $cur_product['entity']->short_description; ?></td>
+					<td><?php echo htmlspecialchars($cur_product['serial']); ?></td>
 					<td class="right_text"><?php echo htmlspecialchars($cur_product['quantity']); ?></td>
 					<td class="right_text">$<?php echo $pines->com_sales->round($cur_product['price'], true); ?><?php echo empty($cur_product['discount']) ? '' : htmlspecialchars(" - {$cur_product['discount']}"); ?></td>
 					<td class="right_text">$<?php echo $pines->com_sales->round($cur_product['line_total'], true); ?></td>

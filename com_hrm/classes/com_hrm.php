@@ -176,11 +176,13 @@ class com_hrm extends component {
 
 		$selector = array('&', 'tag' => array('com_hrm', 'event'));
 		$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		$ancestors = array();
 		if (isset($employee->guid)) {
 			unset($selector['ref']);
 			$selector['ref'][] = array('employee', $employee);
 			$form->employee = $calendar->employee = $employee;
 			$location = $employee->group;
+			$ancestors = $location->get_descendents(true);
 		}
 		if (isset($rto) && $rto >  0)
 			$form->rto = com_hrm_rto::factory((int) $rto);
@@ -189,12 +191,10 @@ class com_hrm extends component {
 		$form->employees = $this->get_employees();
 		$calendar->location = $form->location = $location;
 		$calendar->events = $pines->entity_manager->get_entities(array('class' => com_hrm_event), $selector, $or);
-
-		$ancestors = $pines->com_user->get_groups();
-		foreach ($ancestors as $key => &$cur_parent) {
-			if (!$location->is_descendent($cur_parent)) {
-				unset($ancestors[$key]);
-			}
+		// Retrieve all events
+		while (isset($location->parent->guid)) {
+			$ancestors[] = $location->parent;
+			$location = $location->parent;
 		}
 		if (!empty($ancestors)) {
 			$calendar->events = array_merge($calendar->events,

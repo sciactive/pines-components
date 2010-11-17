@@ -30,6 +30,7 @@ if (isset($_REQUEST['employee'])) {
 	$dates = explode(',', $_REQUEST['dates']);
 	$all_day = ($_REQUEST['all_day'] == 'true');
 	$location = $employee->group;
+	date_default_timezone_set($employee->get_timezone());
 	foreach ($dates as $cur_date) {
 		$event = com_hrm_event::factory();
 		$event->all_day = $all_day;

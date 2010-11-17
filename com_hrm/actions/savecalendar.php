@@ -19,6 +19,7 @@ $pines->page->override = true;
 if (isset($_REQUEST['events'])) {
 	$events = explode(',', $_REQUEST['events']);
 
+	date_default_timezone_set($_SESSION['user']->get_timezone());
 	foreach ($events as $cur_event) {
 		if (!empty($cur_event)) {
 			$event_details = explode('|', $cur_event);
@@ -28,7 +29,6 @@ if (isset($_REQUEST['events'])) {
 				$event->color = $event->employee->color;
 
 			$event->event_id = $event_details[1];
-			date_default_timezone_set($_SESSION['user']->get_timezone());
 			$event->start = strtotime($event_details[2]);
 			$event->end = strtotime($event_details[3]);
 			$event->all_day = ($event_details[4] == 'true') ? true : false;

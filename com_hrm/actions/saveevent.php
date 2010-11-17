@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_hrm/editcalendar') )
 	punt_user(null, pines_url('com_hrm', 'editcalendar'));
 
-if (isset($_REQUEST['employee'])) {	
+if (isset($_REQUEST['employee'])) {
 	if (isset($_REQUEST['start'])) {
 		$start_time = strtotime($_REQUEST['start']);
 		$end_time = strtotime($_REQUEST['end']);
@@ -72,11 +72,13 @@ if (isset($_REQUEST['employee'])) {
 	$event->all_day = ($_REQUEST['all_day'] == 'true');
 	$start_hour = ($_REQUEST['time_start_ampm'] == 'am') ? $_REQUEST['time_start_hour'] : $_REQUEST['time_start_hour'] + 12;
 	$end_hour = ($_REQUEST['time_end_ampm'] == 'am') ? $_REQUEST['time_end_hour'] : $_REQUEST['time_end_hour'] + 12;
+	// Change the timezone to enter the event with the user's timezone.
+	date_default_timezone_set($_SESSION['user']->get_timezone());
 	$event->start = mktime($event->all_day ? 0 : $start_hour,$_REQUEST['time_start_minute'],0,$event_month,$event_day,$event_year);
 	$event->end = mktime($event->all_day ? 23 : $end_hour,$event->all_day ? 59 : $_REQUEST['time_end_minute'],$event->all_day ? 59 : 0,$event_month,$event_day,$event_year);
 	// If the start and end dates are the same, push the end date ahead one day.
-	if ($event->start == $event->end)
-		$event->end = strtotime('+1 day', $event->end);
+	if ($event->start >= $event->end)
+		$event->end = strtotime('+1 day', $event->start);
 
 	if ($event->all_day) {
 		$days = ceil(($event->end - $event->start) / 86400);

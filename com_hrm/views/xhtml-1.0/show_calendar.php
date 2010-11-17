@@ -19,6 +19,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Company Schedule [' . (isset($this->employee) ? $this->employee->name  : $this->location->name) . ']';
+$timezone = $_SESSION['user']->get_timezone();
 ?>
 <script type='text/javascript'>
 	// <![CDATA[
@@ -38,6 +39,7 @@ $this->title = 'Company Schedule [' . (isset($this->employee) ? $this->employee-
 			firstDay: 1,
 			firstHour: 8,
 			theme: true,
+			ignoreTimezone: false,
 			<?php if (gatekeeper('com_hrm/editcalendar')) { ?>
 			editable: true,
 			<?php } else { ?>
@@ -68,8 +70,8 @@ $this->title = 'Company Schedule [' . (isset($this->employee) ? $this->employee-
 						echo '_id: '. $cur_event->guid .', ';
 					}
 					echo 'title: \''. addslashes($cur_event->title) .'\', ';
-					echo 'start: '. $cur_event->start .', ';
-					echo 'end: '. $cur_event->end .', ';
+					echo 'start: \''. format_date($cur_event->start, 'custom', 'Y-m-d H:i', $timezone) .'\', ';
+					echo 'end: \''. format_date($cur_event->end, 'custom', 'Y-m-d H:i', $timezone) .'\', ';
 					echo 'className: \''. addslashes($cur_event->color) .'\',';
 					echo ($cur_event->time_off || !gatekeeper('com_hrm/editcalendar')) ? 'editable: false,' : 'editable: true,';
 					echo ($cur_event->all_day) ? 'allDay: true' : 'allDay: false';

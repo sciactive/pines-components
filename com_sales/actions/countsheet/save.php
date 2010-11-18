@@ -72,6 +72,8 @@ if ($countsheet->save()) {
 		pines_notice('Committed countsheet ['.$countsheet->guid.']');
 	} else {
 		pines_notice('Saved countsheet ['.$countsheet->guid.']');
+		$countsheet->print_form();
+		return;
 	}
 } else {
 	$countsheet->print_form();

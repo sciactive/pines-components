@@ -16,6 +16,20 @@ $pines->com_pgrid->load();
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
+		var options = {
+			pgrid_view_height: "auto",
+			pgrid_paginate: false,
+			pgrid_select: false,
+			pgrid_multi_select: false,
+			pgrid_resize: false
+		};
+		$("#p_muid_missing_table, #p_muid_matched_table, #p_muid_potential_table, #p_muid_invalid_table")
+		.find("tr.ui-priority-primary").bind("mouseover", function(e){
+			e.stopImmediatePropagation();
+		}).end()
+		.pgrid(options)
+		.find("tr.expandme").pgrid_expand_rows().filter("tr.collapseme").pgrid_collapse_rows();
+
 		var entries = $("#p_muid_form input[name=entries]");
 		var entries_table = $("#p_muid_entries_table");
 		var entry_counter = $("#p_muid_entry_counter").val();
@@ -144,8 +158,57 @@ $pines->com_pgrid->load();
 		<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
 		<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
 	</div>
-	<?php } ?>
-	<?php if (!empty($this->entity->review_comments)) {?>
+	<?php } if ($this->entity->missing) { ?>
+	<div class="pf-element pf-heading">
+		<h1 style="color: red;">Uncounted Items</h1>
+	</div>
+	<div class="pf-element pf-full-width">
+		<table id="p_muid_missing_table">
+			<thead>
+				<tr>
+					<th style="width: 40%;">Name</th>
+					<th style="width: 10%;">Qty</th>
+					<th style="width: 25%;">SKU</th>
+					<th style="width: 25%;">Serials</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ($this->entity->missing as $cur_entry) {
+					if ($missing_counted[$cur_entry->product->guid])
+						continue;
+					$missing_counted[$cur_entry->product->guid] = true;
+					?>
+				<tr class="ui-state-error">
+					<td><?php echo htmlspecialchars($cur_entry->product->name); ?></td>
+					<td><?php echo htmlspecialchars($this->entity->missing_count[$cur_entry->product->guid]); ?></td>
+					<td><?php echo htmlspecialchars($cur_entry->product->sku); ?></td>
+					<td><?php echo $cur_entry->product->serialized ? '?????' : 'No Serial'; ?></td>
+				</tr>
+				<?php } ?>
+			</tbody>
+		</table>
+	</div>
+	<?php } if ($this->entity->invalid) { ?>
+	<div class="pf-element pf-heading">
+		<h1>Invalid/Unknown Entries</h1>
+	</div>
+	<div class="pf-element pf-full-width">
+		<table id="p_muid_invalid_table">
+			<thead>
+				<tr>
+					<th style="width: 100%;">Entry</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ($this->entity->invalid as $cur_entry) { ?>
+				<tr>
+					<td><?php echo htmlspecialchars($cur_entry); ?></td>
+				</tr>
+				<?php } ?>
+			</tbody>
+		</table>
+	</div>
+	<?php } if (!empty($this->entity->review_comments)) {?>
 	<div class="pf-element pf-heading">
 		<h1>Reviewer Comments</h1>
 	</div>

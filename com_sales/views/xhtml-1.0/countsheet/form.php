@@ -21,7 +21,8 @@ $pines->com_pgrid->load();
 			pgrid_paginate: false,
 			pgrid_select: false,
 			pgrid_multi_select: false,
-			pgrid_resize: false
+			pgrid_resize: false,
+			pgrid_footer: false
 		};
 		$("#p_muid_missing_table, #p_muid_matched_table, #p_muid_potential_table, #p_muid_invalid_table")
 		.find("tr.ui-priority-primary").bind("mouseover", function(e){

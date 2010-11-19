@@ -102,7 +102,7 @@ class com_sales_stock extends entity {
 	 */
 	public function receive($reason = 'other', &$on_entity = null, $location = null, $update_received = true) {
 		global $pines;
-		if (!in_array($reason, array('received_po', 'received_transfer', 'sale_voided', 'sale_returned', 'other')))
+		if (!in_array($reason, array('received_po', 'received_transfer', 'sale_voided', 'sale_returned', 'sale_swapped', 'other')))
 			return false;
 
 		// Keep track of the status of the whole process.
@@ -155,7 +155,7 @@ class com_sales_stock extends entity {
 	 */
 	public function remove($reason = 'other', &$on_entity = null, $location = null) {
 		global $pines;
-		if (!in_array($reason, array('sold_at_store', 'sold_pending_shipping', 'sold_pending_pickup', 'other')))
+		if (!in_array($reason, array('sold_at_store', 'sold_pending_shipping', 'sold_pending_pickup', 'sold_swapped', 'other')))
 			return false;
 
 		// Keep track of the status of the whole process.

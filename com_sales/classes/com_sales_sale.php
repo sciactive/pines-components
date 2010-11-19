@@ -824,6 +824,129 @@ class com_sales_sale extends entity {
 	}
 
 	/**
+	 * Swap an item in the sale.
+	 * @param string $sku The SKU number of the old item.
+	 * @param string $old_serial The serial number of the old item.
+	 * @param string $new_serial The serial number of the new item.
+	 * @return bool True on success, false on failure.
+	 */
+	public function swap($sku = null, $old_serial = null, $new_serial = null) {
+		global $pines;
+		// Make sure this sale has not been voided.
+		if ($this->status == 'voided') {
+			pines_notice('This sale was voided, items cannot be swapped.');
+			return false;
+		}
+		// Make sure this sale is not attached to any returns.
+		$attached_return = $pines->entity_manager->get_entity(
+			array('class' => com_sales_return, 'skip_ac' => true),
+			array('&', 'tag' => array('com_sales', 'return'), 'ref' => array('sale', $this))
+		);
+		if (isset($attached_return)) {
+			pines_notice('This item cannot be swapped, because it is attached to a return.');
+			return false;
+		}
+
+		// Return the old stock item to inventory.
+		foreach ($this->products as &$cur_product) {
+			if ($cur_product['serial'] == $old_serial && $cur_product['sku'] == $sku) {
+				if ($cur_product['entity']->serialized && empty($new_serial)) {
+					pines_notice("This product requires a serial.");
+					return false;
+				}
+				if (!is_array($cur_product['stock_entities'])) {
+					pines_notice('This item cannot be swapped, because it was not found.');
+					return false;
+				}
+				// See if the new item is in stock.
+				$selector = array('&',
+					'tag' => array('com_sales', 'stock'),
+					'data' => array(
+						array('available', true),
+						array('serial', $new_serial)
+					),
+					'ref' => array(
+						array('product', $cur_product['entity']),
+						array('location', $this->group)
+					)
+				);
+				$new_stock = $pines->entity_manager->get_entity(array('class' => com_sales_stock), $selector);
+				if (isset($new_stock)) {
+					// Remove the item from inventory.
+					$new_product = array(
+						'entity' => $cur_product['entity'],
+						'sku' => $sku,
+						'serial' => $new_serial,
+						'delivery' => 'in-store',
+						'quantity' => 1,
+						'price' => $cur_product['price'],
+						'discount' => $cur_product['discount'],
+						'stock_entities' => array($new_stock)
+					);
+					if (!$new_stock->remove('sold_swapped', $this) || !$new_stock->save()) {
+						pines_notice('Unable to remove item ['.$new_serial.'] from inventory');
+						return false;
+					}
+				} else {
+					pines_notice("Product with SKU [{$cur_product['sku']}]".($cur_product['entity']->serialized ? " and serial [$new_serial]" : " and quantity {$cur_product['quantity']}")." is not in local stock.");
+					return false;
+				}
+				// Return the old item back into inventory.
+				$stock_entities = $cur_product['stock_entities'];
+				foreach ($stock_entities as &$old_stock) {
+					if (empty($old_stock))
+						continue;
+					$last_tx = $pines->entity_manager->get_entity(
+							array('reverse' => true, 'class' => com_sales_stock),
+							array('&',
+								'tag' => array('com_sales', 'transaction', 'stock_tx'),
+								'data' => array('type', 'removed'),
+								'ref' => array('ref', $this)
+							)
+						);
+					if ($last_tx) {
+						if (!$old_stock->receive('sale_swapped', $this, $last_tx->old_location)) {
+							pines_notice('Could not recieve item ['.$cur_product['serial'].'] back into inventory.');
+							return false;
+						}
+					} else {
+						if (!$old_stock->receive('sale_swapped', $this)) {
+							pines_notice('Could not recieve item ['.$cur_product['serial'].'] back into inventory.');
+							return false;
+						}
+					}
+					if (!$old_stock->save()) {
+						pines_notice('Could not save item ['.$cur_product['serial'].']');
+						return false;
+					}
+				}
+				unset($old_stock);
+				$cur_product = $new_product;
+				if (!$this->save()) {
+					pines_notice('Could not save the sale after swapping.');
+					return false;
+				}
+				return true;
+			}
+		}
+		unset($cur_product);
+	}
+
+	/**
+	 * Print a form to swap items.
+	 */
+	public function swap_form() {
+		global $pines;
+		$pines->page->override = true;
+
+		$module = new module('com_sales', 'forms/swap', 'content');
+		$module->entity = $this;
+
+		$pines->page->override_doc($module->render());
+		return $module;
+	}
+
+	/**
 	 * Process each payment.
 	 *
 	 * This process updates "amount_tendered", "amount_due", and "change" on the

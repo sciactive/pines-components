@@ -40,6 +40,7 @@ return array(
 		array('editsale', 'Edit Sales', 'User can edit current sales.'),
 		array('voidownsale', 'Void Own Sales', 'User can void their own sales, returning any stock to inventory.'),
 		array('voidsale', 'Void Sales', 'User can void any sales, returning any stock to inventory.'),
+		array('swapsale', 'Swap Items', 'User can swap items for sales.'),
 		array('deletesale', 'Delete Sales', 'User can delete current sales.'),
 		array('listreturns', 'List Returns', 'User can see returns.'),
 		array('newreturn', 'Create Returns', 'User can create new returns, without an attached sale.'),

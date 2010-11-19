@@ -53,6 +53,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', text: 'Receipt', extra_class: 'picon picon-document-print-preview', double_click: true, url: '<?php echo addslashes(pines_url('com_sales', 'sale/receipt', array('id' => '__title__'))); ?>'},
 				<?php if (gatekeeper('com_sales/newreturnwsale')) { ?>
 				{type: 'button', text: 'Return', extra_class: 'picon picon-edit-undo', url: '<?php echo addslashes(pines_url('com_sales', 'sale/return', array('id' => '__title__'))); ?>'},
+				<?php } if (gatekeeper('com_sales/swap')) { ?>
+				{type: 'button', text: 'Swap', extra_class: 'picon picon-document-swap', click: function(e, row){
+					sale_grid.swap_form($(row).attr("title"));
+				}},
 				<?php } if (gatekeeper('com_sales/voidsale') || gatekeeper('com_sales/voidownsale')) { ?>
 				{type: 'button', text: 'Void', extra_class: 'picon picon-edit-delete-shred', confirm: true, url: '<?php echo addslashes(pines_url('com_sales', 'sale/void', array('id' => '__title__'))); ?>'},
 				<?php } ?>
@@ -153,6 +157,54 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 								location = form.find(":input[name=location]").val();
 								form.dialog('close');
 								submit_search();
+							}
+						}
+					});
+				}
+			});
+		};
+		sale_grid.swap_form = function(sale_id){
+			$.ajax({
+				url: "<?php echo addslashes(pines_url('com_sales', 'forms/swap')); ?>",
+				type: "POST",
+				dataType: "html",
+				data: {"id": sale_id},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured while trying to retreive the swap form:\n"+XMLHttpRequest.status+": "+textStatus);
+				},
+				success: function(data){
+					if (data == "")
+						return;
+					var form = $("<div title=\"Swap Item [Sale: "+sale_id+"]\" />");
+					form.dialog({
+						bgiframe: true,
+						autoOpen: true,
+						height: 400,
+						width: 425,
+						modal: true,
+						open: function(){
+							form.html(data);
+						},
+						close: function(){
+							form.remove();
+						},
+						buttons: {
+							"Swap Items": function(){
+								var swap_item = form.find(":input[name=swap_item]:checked").val();
+								var new_serial = form.find(":input[name=new_serial]").val();
+								if (swap_item == "") {
+									alert('Please specify the item you want to swap.');
+								} else if (new_serial == "") {
+									alert('Please specify the new item serial number.');
+								} else {
+									form.dialog('close');
+									// Submit the swap request.
+									pines.post("<?php echo addslashes(pines_url('com_sales', 'sale/swap')); ?>", {
+										"id": sale_id,
+										"swap_item": swap_item,
+										"new_serial": new_serial.trim()
+									});
+								}
 							}
 						}
 					});

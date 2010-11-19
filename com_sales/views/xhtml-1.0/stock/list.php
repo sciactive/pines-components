@@ -10,14 +10,18 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = ($this->removed ? 'Removed ' : '').'Stock';
-if (!empty($this->stock)) {
-	$this->title .= " at {$this->location->name} [{$this->location->groupname}]";
-	$this->note = "Stock for all locations below {$this->location->name} is also included.";
+if ($this->removed) {
+	$this->title = 'Removed Stock';
 } else {
-	$this->title .= ' [No Location]';
-	$this->note = 'This list is empty by default. Please select a location to view the inventory.';
+	if (!empty($this->stock)) {
+		$this->title = "Stock at {$this->location->name} [{$this->location->groupname}]";
+		$this->note = "Stock for all locations below {$this->location->name} is also included.";
+	} else {
+		$this->title = 'Stock [No Location]';
+		$this->note = 'This list is empty by default. Please select a location to view the inventory.';
+	}
 }
+
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/stock/list'];

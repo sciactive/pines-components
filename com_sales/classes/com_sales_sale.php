@@ -873,16 +873,10 @@ class com_sales_sale extends entity {
 				$new_stock = $pines->entity_manager->get_entity(array('class' => com_sales_stock), $selector);
 				if (isset($new_stock)) {
 					// Remove the item from inventory.
-					$new_product = array(
-						'entity' => $cur_product['entity'],
-						'sku' => $sku,
-						'serial' => $new_serial,
-						'delivery' => 'in-store',
-						'quantity' => 1,
-						'price' => $cur_product['price'],
-						'discount' => $cur_product['discount'],
-						'stock_entities' => array($new_stock)
-					);
+					$new_product = $cur_product;
+					$new_product['serial'] = $new_serial;
+					$new_product['delivery'] = 'in-store';
+					$new_product['stock_entities'] = $new_stock;
 					if (!$new_stock->remove('sold_swapped', $this) || !$new_stock->save()) {
 						pines_notice('Unable to remove item ['.$new_serial.'] from inventory');
 						return false;

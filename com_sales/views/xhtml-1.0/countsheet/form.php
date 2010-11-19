@@ -24,12 +24,10 @@ $pines->com_pgrid->load();
 			pgrid_resize: false,
 			pgrid_footer: false
 		};
-		$("#p_muid_missing_table, #p_muid_matched_table, #p_muid_potential_table, #p_muid_invalid_table")
+		$("#p_muid_missing_table, #p_muid_invalid_table")
 		.find("tr.ui-priority-primary").bind("mouseover", function(e){
 			e.stopImmediatePropagation();
-		}).end()
-		.pgrid(options)
-		.find("tr.expandme").pgrid_expand_rows().filter("tr.collapseme").pgrid_collapse_rows();
+		}).end().pgrid(options);
 
 		var entries = $("#p_muid_form input[name=entries]");
 		var entries_table = $("#p_muid_entries_table");

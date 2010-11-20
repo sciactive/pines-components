@@ -744,6 +744,7 @@ class com_sales extends component {
 		
 		$module = new module('com_sales', 'stock/formreceive', 'content');
 		if (!gatekeeper('com_sales/receivelocation')) {
+			$selector['ref'] = array('destination', $_SESSION['user']->group);
 			$module->pos = (array) $pines->entity_manager->get_entities(
 					array('class' => com_sales_po, 'skip_ac' => true),
 					$selector

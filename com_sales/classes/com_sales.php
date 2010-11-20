@@ -863,6 +863,25 @@ class com_sales extends component {
 						'ref' => array('products', $cur_stock)
 					)
 				);
+			$returns = $pines->entity_manager->get_entities(
+					array('class' => com_sales_sale, 'skip_ac' => true),
+					$secondary_options,
+					$or,
+					array('&',
+						'tag' => array('com_sales', 'return'),
+						'ref' => array('products', $cur_stock)
+					)
+				);
+			$swaps = $pines->entity_manager->get_entities(
+					array('class' => com_sales_tx, 'skip_ac' => true),
+					$secondary_options,
+					$or,
+					array('&',
+						'tag' => array('com_sales', 'sale_tx'),
+						'data' => array('type', 'swap'),
+						'ref' => array('item', $cur_stock)
+					)
+				);
 			$countsheets = $pines->entity_manager->get_entities(
 					array('class' => com_sales_countsheet, 'skip_ac' => true),
 					$secondary_options,
@@ -890,23 +909,35 @@ class com_sales extends component {
 						'ref' => array('received', $cur_stock)
 					)
 				);
-			foreach (array_merge($invoices, $countsheets, $transfers, $pos) as $cur_tx) {
+			foreach (array_merge($invoices, $returns, $swaps, $countsheets, $transfers, $pos) as $cur_tx) {
 				if (isset($module->transactions[$cur_tx->guid])) {
 					$module->transactions[$cur_tx->guid]->qty++;
 					if (!in_array($cur_stock->serial, $module->transactions[$cur_tx->guid]->serials))
 						$module->transactions[$cur_tx->guid]->serials[] = $cur_stock->serial;
 				} else {
+					$cur_type = '';
 					if ($cur_tx->has_tag('sale')) {
 						$tx_info = 'Invoiced';
+						$cur_type = 'sale';
+					} elseif ($cur_tx->has_tag('return')) {
+						$tx_info = 'Returned';
+						$cur_type = 'return';
+					} elseif ($cur_tx->has_tag('swap')) {
+						$tx_info = ucwords($cur_tx->status);
+						$cur_type = 'swap';
 					} elseif ($cur_tx->has_tag('countsheet')) {
 						$tx_info = 'Counted on Countsheet';
+						$cur_type = 'countsheet';
 					} elseif ($cur_tx->has_tag('transfer')) {
 						$tx_info = 'Received on Transfer';
+						$cur_type = 'transfer';
 					} elseif ($cur_tx->has_tag('po')) {
 						$tx_info = 'Received on PO';
+						$cur_type = 'po';
 					}
 					$module->transactions[$cur_tx->guid] = (object) array(
 						'product' => $cur_stock->product,
+						'type' => $cur_type,
 						'entity' => $cur_tx,
 						'transaction_info' => $tx_info,
 						'qty' => 1,

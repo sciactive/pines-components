@@ -184,10 +184,15 @@ $pines->com_jstree->load();
 	<tbody>
 	<?php
 	foreach ($this->transactions as $cur_transaction) {
-		$transaction_type = $cur_transaction->entity->tags[1];
-		switch ($transaction_type) {
+		switch ($cur_transaction->type) {
 			case 'sale':
 				$link = pines_url('com_sales', 'sale/receipt', array('id' => $cur_transaction->entity->guid));
+				break;
+			case 'return':
+				$link = pines_url('com_sales', 'return/receipt', array('id' => $cur_transaction->entity->guid));
+				break;
+			case 'swap':
+				$link = pines_url('com_sales', 'sale/receipt', array('id' => $cur_transaction->entity->ticket->guid));
 				break;
 			case 'countsheet':
 				$link = pines_url('com_sales', 'countsheet/edit', array('id' => $cur_transaction->entity->guid));

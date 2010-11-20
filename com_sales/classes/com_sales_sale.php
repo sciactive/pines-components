@@ -876,11 +876,19 @@ class com_sales_sale extends entity {
 					$new_product = $cur_product;
 					$new_product['serial'] = $new_serial;
 					$new_product['delivery'] = 'in-store';
-					$new_product['stock_entities'] = $new_stock;
+					$new_product['stock_entities'] = array($new_stock);
 					if (!$new_stock->remove('sold_swapped', $this) || !$new_stock->save()) {
 						pines_notice('Unable to remove item ['.$new_serial.'] from inventory');
 						return false;
 					}
+					// Make a transaction entry.
+					$tx = com_sales_tx::factory('sale_tx');
+					$tx->status = 'swapped in';
+					$tx->add_tag('swap');
+					$tx->type = 'swap';
+					$tx->ticket = $this;
+					$tx->item = $new_stock;
+					$tx->save();
 				} else {
 					pines_notice("Product with SKU [{$cur_product['sku']}]".($cur_product['entity']->serialized ? " and serial [$new_serial]" : " and quantity {$cur_product['quantity']}")." is not in local stock.");
 					return false;
@@ -913,6 +921,14 @@ class com_sales_sale extends entity {
 						pines_notice('Could not save item ['.$cur_product['serial'].']');
 						return false;
 					}
+					// Make a transaction entry.
+					$tx = com_sales_tx::factory('sale_tx');
+					$tx->status = 'swapped out';
+					$tx->add_tag('swap');
+					$tx->type = 'swap';
+					$tx->ticket = $this;
+					$tx->item = $old_stock;
+					$tx->save();
 				}
 				unset($old_stock);
 				$cur_product = $new_product;

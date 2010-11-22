@@ -14,6 +14,10 @@ if (empty($this->title))
 	$this->title = 'Timeclock';
 
 if (!isset($this->entity)) {
+	if (!isset($_SESSION['user'])) {
+		$this->detach();
+		return;
+	}
 	$_SESSION['user']->refresh();
 	$user = com_hrm_employee::factory($_SESSION['user']->guid);
 	$this->entity = $user->timeclock;

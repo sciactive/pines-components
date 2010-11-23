@@ -265,6 +265,7 @@ if ($pines->config->com_sales->autocomplete_product)
 							}
 						}
 					},
+					<?php if (gatekeeper('com_sales/discountstock')) { ?>
 					{
 						type: 'button',
 						text: 'Discount',
@@ -285,6 +286,7 @@ if ($pines->config->com_sales->autocomplete_product)
 							}
 						}
 					},
+					<?php } ?>
 					{type: 'separator'},
 					{
 						type: 'button',

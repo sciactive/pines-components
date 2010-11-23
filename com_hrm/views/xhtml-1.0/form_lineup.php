@@ -49,8 +49,11 @@ defined('P_RUN') or die('Direct access prohibited');
 	</div>
 	<div class="pf-element pf-full-width">
 		<select class="ui-widget-content ui-corner-all form_select" name="shift">
-			<?php foreach ($pines->config->com_hrm->lineup_shifts as $cur_shift) { ?>
-			<option value="<?php echo $cur_shift[0]; ?>"><?php echo $cur_shift[1]; ?></option>
+			<?php foreach ($pines->config->com_hrm->lineup_shifts as $cur_shift) {
+				$shift = explode('-', $cur_shift);
+				$shift_start = format_date(strtotime($shift[0]), 'time_short');
+				$shift_end = format_date(strtotime($shift[1]), 'time_short'); ?>
+				<option value="<?php echo $cur_shift; ?>"><?php echo $shift_start.' - '.$shift_end; ?></option>
 			<?php } ?>
 		</select>
 	</div>

@@ -52,11 +52,11 @@ return array(
 		'cname' => 'Quick Schedule Shifts',
 		'description' => 'The shift times for creating company schedule lineups. (24 time format)',
 		'value' => array(
-			array('8:00-16:0', '8:00am - 4:00pm'),
-			array('9:00-17:00', '9:00am - 5:00pm'),
-			array('10:00-14:00', '10:00am - 2:00pm'),
-			array('14:00-17:00', '2:00pm - 5:00pm'),
-			array('17:00-21:00', '5:00am - 9:00pm')
+			'8:00-16:00',
+			'9:00-17:00',
+			'10:00-14:00',
+			'14:00-17:00',
+			'17:00-21:00'
 		),
 		'peruser' => true,
 	),

@@ -79,6 +79,25 @@ class com_hrm extends component {
 	}
 
 	/**
+	 * Print a form to create a work lineup for a location.
+	 * @param group $location The current location.
+	 * @return module The form's module.
+	 */
+	public function lineup_form($location = null) {
+		global $pines;
+		$pines->page->override = true;
+
+		if (!isset($location->guid))
+			$location = $_SESSION['user']->group;
+
+		$module = new module('com_hrm', 'form_lineup', 'content');
+		$module->location = $location;
+		$module->employees = $this->get_employees();
+
+		$pines->page->override_doc($module->render());
+	}
+
+	/**
 	 * Creates and attaches a module which lists employees.
 	 * 
 	 * @param bool $employed List currently employed or past employees.
@@ -122,7 +141,7 @@ class com_hrm extends component {
 	/**
 	 * Print a form to select a company location.
 	 *
-	 * @param int $location The current ending date of the timespan.
+	 * @param int $location The current location.
 	 * @return module The form's module.
 	 */
 	public function location_select_form($location = null) {

@@ -600,19 +600,40 @@ class com_sales extends component {
 	/**
 	 * Creates and attaches a module which lists transfers.
 	 * @param bool $finished Show finished POs instead of pending ones.
+	 * @param bool $just_pending_shipment Only show transfers waiting to be shipped. (At the user's current location, or below.)
 	 */
-	public function list_transfers($finished = false) {
+	public function list_transfers($finished = false, $just_pending_shipment = false) {
 		global $pines;
 
 		$module = new module('com_sales', 'transfer/list', 'content');
 
-		$module->transfers = $pines->entity_manager->get_entities(
-				array('class' => com_sales_transfer),
-				array('&',
-					'tag' => array('com_sales', 'transfer'),
-					'data' => array('finished', $finished)
-				)
-			);
+		if ($just_pending_shipment) {
+			if (isset($_SESSION['user']->group)) {
+				$module->transfers = $pines->entity_manager->get_entities(
+						array('class' => com_sales_transfer),
+						array('&',
+							'tag' => array('com_sales', 'transfer'),
+							'data' => array('finished', $finished)
+						),
+						array('!&',
+							'data' => array('shipped' => true)
+						),
+						array('|',
+							'ref' => array('origin', (array) $_SESSION['user']->group->get_descendents(true))
+						)
+					);
+			} else {
+				$module->transfers = array();
+			}
+		} else {
+			$module->transfers = $pines->entity_manager->get_entities(
+					array('class' => com_sales_transfer),
+					array('&',
+						'tag' => array('com_sales', 'transfer'),
+						'data' => array('finished', $finished)
+					)
+				);
+		}
 
 		if ( empty($module->transfers) )
 			pines_notice('There are no transfers.');

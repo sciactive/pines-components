@@ -27,8 +27,11 @@ class com_sales_transfer extends entity {
 		$this->add_tag('com_sales', 'transfer');
 		// Defaults.
 		$this->stock = array();
+		$this->products = array();
+		$this->shipped = false;
 		$this->finished = false;
-		$this->destination = $_SESSION['user']->group;
+		$this->origin = $_SESSION['user']->group;
+		$this->destination = null;
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
@@ -72,9 +75,9 @@ class com_sales_transfer extends entity {
 	 * @return bool True on success, false on failure.
 	 */
 	public function save() {
-		if (!$this->stock)
+		if (!$this->products)
 			return false;
-		if (!$this->finished) {
+		if ($this->shipped && !$this->finished) {
 			$this->pending_products = array();
 			$this->pending_serials = array();
 			foreach ($this->stock as $cur_stock) {
@@ -92,6 +95,21 @@ class com_sales_transfer extends entity {
 	}
 
 	/**
+	 * Ship the transfer, removing stock entries from inventory.
+	 * @return bool True on success, false on failure.
+	 */
+	public function ship() {
+		$return = true;
+		foreach ($this->stock as $cur_stock) {
+			if (!$cur_stock->remove('transfer_shipped', $this) || !$cur_stock->save())
+				$return = false;
+		}
+		$this->shipped = true;
+		$this->shipped_date = time();
+		return $return;
+	}
+
+	/**
 	 * Print a form to edit the transfer.
 	 * @return module The form's module.
 	 */
@@ -99,10 +117,37 @@ class com_sales_transfer extends entity {
 		global $pines;
 		$module = new module('com_sales', 'transfer/form', 'content');
 		$module->entity = $this;
+		$module->categories = (array) $pines->entity_manager->get_entities(
+				array('class' => com_sales_category),
+				array('&',
+					'tag' => array('com_sales', 'category'),
+					'data' => array('enabled', true)
+				)
+			);
 		$module->locations = (array) $pines->user_manager->get_groups();
 		$module->shippers = (array) $pines->entity_manager->get_entities(array('class' => com_sales_shipper), array('&', 'tag' => array('com_sales', 'shipper')));
-		$module->stock = (array) $pines->entity_manager->get_entities(array('class' => com_sales_stock), array('&', 'tag' => array('com_sales', 'stock')), array('!&', 'data' => array('location', null)));
+		$module->stock = (array) $pines->entity_manager->get_entities(
+				array('class' => com_sales_stock),
+				array('&',
+					'tag' => array('com_sales', 'stock')
+				),
+				array('!&',
+					'data' => array('location', null)
+				)
+			);
 		
+		return $module;
+	}
+
+	/**
+	 * Print a form to ship the transfer.
+	 * @return module The form's module.
+	 */
+	public function print_ship() {
+		global $pines;
+		$module = new module('com_sales', 'transfer/ship', 'content');
+		$module->entity = $this;
+
 		return $module;
 	}
 }

@@ -27,6 +27,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<?php if (gatekeeper('com_sales/managestock')) { ?>
 				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'transfer/edit')); ?>'},
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo addslashes(pines_url('com_sales', 'transfer/edit', array('id' => '__title__'))); ?>'},
+				<?php } if (gatekeeper('com_sales/shipstock')) { ?>
+				{type: 'button', text: 'Ship', extra_class: 'picon picon-mail-send', url: '<?php echo addslashes(pines_url('com_sales', 'transfer/ship', array('id' => '__title__'))); ?>'},
 				<?php } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},

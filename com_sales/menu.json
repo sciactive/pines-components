@@ -156,6 +156,14 @@
 				}
 			},
 			{
+				"path": "main_menu/business/0_pos/inventory/pendingtransfers",
+				"text": "Pending Transfers",
+				"href": ["com_sales","transfer/list"],
+				"depend": {
+					"ability": "!com_sales/managestock&com_sales/shipstock"
+				}
+			},
+			{
 				"path": "main_menu/business/0_pos/inventory/transfers",
 				"text": "Transfers",
 				"href": ["com_sales","transfer/list"],

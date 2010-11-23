@@ -16,7 +16,7 @@ if ( !gatekeeper('com_sales/managestock') )
 
 if ( isset($_REQUEST['id']) ) {
 	$transfer = com_sales_transfer::factory((int) $_REQUEST['id']);
-	if (!isset($transfer->guid) || $transfer->final) {
+	if (!isset($transfer->guid)) {
 		pines_error('Requested transfer id is not accessible.');
 		return;
 	}
@@ -25,38 +25,40 @@ if ( isset($_REQUEST['id']) ) {
 }
 
 // General
-$transfer->reference_number = $_REQUEST['reference_number'];
-// Destination can't be changed after items have been received.
-if (empty($transfer->received)) {
+// Certain items can't be changed after it's shipped.
+if (!$transfer->final) {
+	$transfer->reference_number = $_REQUEST['reference_number'];
+	$transfer->origin = group::factory((int) $_REQUEST['origin']);
+	if (!isset($transfer->origin->guid))
+		$transfer->origin = null;
 	$transfer->destination = group::factory((int) $_REQUEST['destination']);
 	if (!isset($transfer->destination->guid))
 		$transfer->destination = null;
+	$transfer->products = (array) json_decode($_REQUEST['products']);
+	foreach ($transfer->products as $key => &$cur_product) {
+		$cur_product = com_sales_product::factory((int) $cur_product->values[0]);
+		if (!isset($cur_product->guid))
+			unset($transfer->product[$key]);
+	}
+	unset($cur_product);
 }
-$transfer->shipper = com_sales_shipper::factory((int) $_REQUEST['shipper']);
-if (!isset($transfer->shipper->guid))
-	$transfer->shipper = null;
 $transfer->eta = strtotime($_REQUEST['eta']);
 
-// Stock
-// Stock can't be changed after items have been received.
-if (empty($transfer->received)) {
-	$transfer->stock = (array) json_decode($_REQUEST['stock']);
-	foreach ($transfer->stock as $key => &$cur_stock) {
-		$cur_stock = com_sales_stock::factory((int) $cur_stock->key);
-		if (!isset($cur_stock->guid))
-			unset($transfer->stock[$key]);
-	}
-	unset($cur_stock);
+if (!$transfer->shipped) {
+	$transfer->shipper = com_sales_shipper::factory((int) $_REQUEST['shipper']);
+	if (!isset($transfer->shipper->guid))
+		$transfer->shipper = null;
+	// Can't change serials.
 }
 
+if (!isset($transfer->origin)) {
+	$transfer->print_form();
+	pines_error('Specified origin is not valid.');
+	return;
+}
 if (!isset($transfer->destination)) {
 	$transfer->print_form();
 	pines_error('Specified destination is not valid.');
-	return;
-}
-if (!isset($transfer->shipper)) {
-	$transfer->print_form();
-	pines_error('Specified shipper is not valid.');
 	return;
 }
 

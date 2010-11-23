@@ -32,6 +32,7 @@ return array(
 		array('receive', 'Receive Inventory', 'User can receive inventory into their stock.'),
 		array('receivelocation', 'Receive Location', 'User can receive inventory into a location below them.'),
 		array('seestock', 'See Stock', 'User can see stock.'),
+		array('shipstock', 'Ship Stock', 'User can ship stock on an existing transfer.'),
 		array('managestock', 'Manage Stock', 'User can transfer, ship, and adjust stock.'),
 		array('totalsales', 'Total Sales', 'User can see sales totals.'),
 		array('totalothersales', 'Total Other Sales', 'User can see sales totals of other locations.'),

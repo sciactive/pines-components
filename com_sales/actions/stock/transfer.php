@@ -22,12 +22,21 @@ if (empty($list)) {
 }
 
 $entity = com_sales_transfer::factory();
-$entity->stock = array();
+$entity->origin = null;
 if (is_array($list)) {
 	foreach ($list as $cur_stock_guid) {
-		$cur_stock = com_sales_stock::factory($cur_stock_guid);
-		if (isset($cur_stock->guid))
-			$entity->stock[] = $cur_stock;
+		$cur_stock = com_sales_stock::factory((int) $cur_stock_guid);
+		if (isset($cur_stock->guid)) {
+			$entity->products[] = $cur_stock->product;
+			if (!isset($entity->origin)) {
+				// Set the transfer origin.
+				$entity->origin = $cur_stock->location;
+			} elseif (!$entity->origin->is($cur_stock->location)) {
+				// Two origins is not allowed.
+				pines_notice('All inventory on a transfer must be from the same location.');
+				return;
+			}
+		}
 	}
 }
 $entity->print_form();

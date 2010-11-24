@@ -29,12 +29,12 @@ return array(
 	),
 	'abilities' => array(
 		array('manager', 'Manager', 'User is a manager. This lets the user approve payments.'),
+		array('discountstock', 'Discount Stock', 'User can give discounts on (discountable) products.'),
 		array('receive', 'Receive Inventory', 'User can receive inventory into their stock.'),
 		array('receivelocation', 'Receive Location', 'User can receive inventory into a location below them.'),
 		array('seestock', 'See Stock', 'User can see stock.'),
 		array('shipstock', 'Ship Stock', 'User can ship stock on an existing transfer.'),
 		array('managestock', 'Manage Stock', 'User can transfer, ship, and adjust stock.'),
-		array('discountstock', 'Discount Stock', 'User can give discounts on stock items.'),
 		array('totalsales', 'Total Sales', 'User can see sales totals.'),
 		array('totalothersales', 'Total Other Sales', 'User can see sales totals of other locations.'),
 		array('listsales', 'List Sales', 'User can see sales.'),

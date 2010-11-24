@@ -85,6 +85,10 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != '
 				pines_notice("Product with SKU [$cur_sku] is not discountable.");
 				$product_error = true;
 			}
+			if (!gatekeeper('com_sales/discountstock') && !empty($cur_discount)) {
+				pines_notice('You don\'t have permission to discount items.');
+				$product_error = true;
+			}
 			if ($cur_product_entity->one_per_ticket) {
 				// This causes products with >1 qtys to not be added to $one_per_ticket_guids,
 				// but that's ok, since they're already an erroneous entry.

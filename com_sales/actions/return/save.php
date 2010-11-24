@@ -91,6 +91,10 @@ if ($return->status != 'processed' && $return->status != 'voided') {
 				pines_notice("Product with SKU [$cur_sku] is not discountable.");
 				$product_error = true;
 			}
+			if (!gatekeeper('com_sales/discountstock') && !empty($cur_discount)) {
+				pines_notice('You don\'t have permission to discount items.');
+				$product_error = true;
+			}
 			if (isset($return->sale)) {
 				// Search through the products from the sale and find the entry that matches.
 				// TODO: Will this cause problems with matching items that have different quantities?

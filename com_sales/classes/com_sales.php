@@ -761,20 +761,32 @@ class com_sales extends component {
 	public function print_receive_form() {
 		global $pines;
 
-		$selector = array('&', 'tag' => array('com_sales', 'po'), 'data' => array(array('final', true), array('finished', false)));
+		$selector_po = array('&', 'tag' => array('com_sales', 'po'), 'data' => array(array('final', true), array('finished', false)));
+		$selector_transfer = array('&', 'tag' => array('com_sales', 'transfer'), 'data' => array(array('final', true), array('finished', false)));
 		
 		$module = new module('com_sales', 'stock/formreceive', 'content');
 		if (!gatekeeper('com_sales/receivelocation')) {
-			$selector['ref'] = array('destination', $_SESSION['user']->group);
+			$selector_po['ref'] = array('destination', $_SESSION['user']->group);
+			$selector_transfer['ref'] = array('destination', $_SESSION['user']->group);
 			$module->pos = (array) $pines->entity_manager->get_entities(
 					array('class' => com_sales_po, 'skip_ac' => true),
-					$selector
+					$selector_po
+				);
+			$module->transfers = (array) $pines->entity_manager->get_entities(
+					array('class' => com_sales_transfer, 'skip_ac' => true),
+					$selector_transfer
 				);
 		} else {
+			$groups = $_SESSION['user']->group->get_descendents(true);
 			$module->pos = (array) $pines->entity_manager->get_entities(
 					array('class' => com_sales_po, 'skip_ac' => true),
-					$selector,
-					array('|', 'ref' => array('destination', $_SESSION['user']->group->get_descendents(true)))
+					$selector_po,
+					array('|', 'ref' => array('destination', $groups))
+				);
+			$module->transfers = (array) $pines->entity_manager->get_entities(
+					array('class' => com_sales_transfer, 'skip_ac' => true),
+					$selector_transfer,
+					array('|', 'ref' => array('destination', $groups))
 				);
 		}
 		$module->categories = (array) $pines->entity_manager->get_entities(

@@ -60,31 +60,36 @@ if ($pines->config->com_sales->autocomplete_product)
 				products.val(JSON.stringify(all_rows));
 			};
 
-			$("#p_muid_po_table").pgrid({
+			$("#p_muid_shipment_table").pgrid({
 				pgrid_paginate: false,
 				pgrid_view_height: '350px',
 				pgrid_filtering: false,
-				pgrid_sort_col: 2,
+				pgrid_sort_col: 3,
 				pgrid_toolbar: true,
 				pgrid_toolbar_contents : [
 					{
 						type: 'button',
 						text: 'Receive',
-						title: 'Receive the selected Purchase Orders',
+						title: 'Receive the selected Shipments',
 						extra_class: 'picon picon-mail-receive',
 						double_click: true,
 						multi_select: true,
 						click: function(e, rows){
 							$.each(rows, function(){
 								var loader;
+								var url;
+								if ($(this).pgrid_get_value(1) == "PO")
+									url = "<?php echo addslashes(pines_url('com_sales', 'po/products')); ?>";
+								else
+									url = "<?php echo addslashes(pines_url('com_sales', 'transfer/products')); ?>";
 								$.ajax({
-									url: "<?php echo addslashes(pines_url('com_sales', 'po/products')); ?>",
+									url: url,
 									type: "POST",
 									dataType: "json",
 									data: {"id": this.title},
 									beforeSend: function(){
 										loader = $.pnotify({
-											pnotify_title: 'PO Search',
+											pnotify_title: 'Shipment Search',
 											pnotify_text: 'Retrieving products...',
 											pnotify_notice_icon: 'picon picon-throbber',
 											pnotify_nonblock: true,
@@ -96,11 +101,11 @@ if ($pines->config->com_sales->autocomplete_product)
 										loader.pnotify_remove();
 									},
 									error: function(XMLHttpRequest, textStatus){
-										pines.error("An error occured while trying to lookup the purchase order:\n"+XMLHttpRequest.status+": "+textStatus);
+										pines.error("An error occured while trying to lookup the shipment:\n"+XMLHttpRequest.status+": "+textStatus);
 									},
 									success: function(data){
 										if (!data) {
-											alert("No purchase order was found for "+$(this).pgrid_get_value(1)+".");
+											alert("No shipment was found for "+$(this).pgrid_get_value(1)+".");
 											return;
 										}
 										$.each(data, function(){
@@ -438,30 +443,43 @@ if ($pines->config->com_sales->autocomplete_product)
 	</div>
 	<div style="width: 49%; float: left;">
 		<div class="pf-element pf-heading">
-			<h1>Pending Purchase Orders</h1>
+			<h1>Pending Shipments</h1>
 		</div>
 		<div class="pf-element pf-full-width">
 			<div class="pf-field">
-				<table id="p_muid_po_table">
+				<table id="p_muid_shipment_table">
 					<thead>
 						<tr>
-							<th>PO Number</th>
+							<th>Type</th>
+							<th>Number</th>
 							<th>ETA</th>
 							<th>Reference Number</th>
 							<th>Destination</th>
-							<th>Vendor</th>
+							<th>Origin/Vendor</th>
 							<th>Shipper</th>
 						</tr>
 					</thead>
 					<tbody>
-					<?php foreach($this->pos as $po) { ?>
-						<tr title="<?php echo $po->guid; ?>">
-							<td><?php echo htmlspecialchars($po->po_number); ?></td>
-							<td><?php echo ($po->eta ? format_date($po->eta, 'date_sort') : ''); ?></td>
-							<td><?php echo htmlspecialchars($po->reference_number); ?></td>
-							<td><?php echo htmlspecialchars("{$po->destination->name} [{$po->destination->groupname}]"); ?></td>
-							<td><?php echo htmlspecialchars($po->vendor->name); ?></td>
-							<td><?php echo htmlspecialchars($po->shipper->name); ?></td>
+					<?php foreach($this->pos as $cur_shipment) { ?>
+						<tr title="<?php echo $cur_shipment->guid; ?>">
+							<td>PO</td>
+							<td><?php echo htmlspecialchars($cur_shipment->po_number); ?></td>
+							<td><?php echo ($cur_shipment->eta ? format_date($cur_shipment->eta, 'date_sort') : ''); ?></td>
+							<td><?php echo htmlspecialchars($cur_shipment->reference_number); ?></td>
+							<td><?php echo htmlspecialchars("{$cur_shipment->destination->name} [{$cur_shipment->destination->groupname}]"); ?></td>
+							<td><?php echo htmlspecialchars($cur_shipment->vendor->name); ?></td>
+							<td><?php echo htmlspecialchars($cur_shipment->shipper->name); ?></td>
+						</tr>
+					<?php } ?>
+					<?php foreach($this->transfers as $cur_shipment) { ?>
+						<tr title="<?php echo $cur_shipment->guid; ?>">
+							<td>Transfer</td>
+							<td><?php echo htmlspecialchars($cur_shipment->guid); ?></td>
+							<td><?php echo ($cur_shipment->eta ? format_date($cur_shipment->eta, 'date_sort') : ''); ?></td>
+							<td><?php echo htmlspecialchars($cur_shipment->reference_number); ?></td>
+							<td><?php echo htmlspecialchars("{$cur_shipment->destination->name} [{$cur_shipment->destination->groupname}]"); ?></td>
+							<td><?php echo htmlspecialchars($cur_shipment->origin->name); ?></td>
+							<td><?php echo htmlspecialchars($cur_shipment->shipper->name); ?></td>
 						</tr>
 					<?php } ?>
 					</tbody>

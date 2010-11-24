@@ -29,9 +29,9 @@ if ($transfer->shipped) {
 }
 
 $serials = array();
+$guids = array();
 foreach ($transfer->products as $cur_product) {
 	// Look up the stock entry using the given serials.
-	$guids = array();
 	$selector = array('&',
 			'tag' => array('com_sales', 'stock'),
 			'ref' => array(
@@ -41,7 +41,7 @@ foreach ($transfer->products as $cur_product) {
 		);
 	if ($cur_product->serialized) {
 		if (!isset($serials[$cur_product->guid]))
-			$serials[$cur_product->guid] = array_map('trim', explode("\n", $_REQUEST['serials_'.$cur_product->guid]));
+			$serials[$cur_product->guid] = array_map('trim', explode("\n", trim($_REQUEST['serials_'.$cur_product->guid])));
 		$selector['data'] = array('serial', array_pop($serials[$cur_product->guid]));
 	}
 	$stock = null;

@@ -48,6 +48,19 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'lineup_shifts',
+		'cname' => 'Quick Schedule Shifts',
+		'description' => 'The shift times for creating company schedule lineups. (24 time format)',
+		'value' => array(
+			'8:00-16:00',
+			'9:00-17:00',
+			'10:00-14:00',
+			'14:00-17:00',
+			'17:00-21:00'
+		),
+		'peruser' => true,
+	),
+	array(
 		'name' => 'timeclock_verify_pin',
 		'cname' => 'Verify PIN for Clocking In/Out',
 		'description' => 'Verify the user\'s PIN when they clock in or out.',

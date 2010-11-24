@@ -34,6 +34,7 @@ return array(
 		array('seestock', 'See Stock', 'User can see stock.'),
 		array('shipstock', 'Ship Stock', 'User can ship stock on an existing transfer.'),
 		array('managestock', 'Manage Stock', 'User can transfer, ship, and adjust stock.'),
+		array('discountstock', 'Discount Stock', 'User can give discounts on stock items.'),
 		array('totalsales', 'Total Sales', 'User can see sales totals.'),
 		array('totalothersales', 'Total Other Sales', 'User can see sales totals of other locations.'),
 		array('listsales', 'List Sales', 'User can see sales.'),

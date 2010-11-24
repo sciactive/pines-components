@@ -177,6 +177,43 @@ $pines->com_ptags->load();
 			}
 		});
 	};
+	// Create a quick work schedule for an entire location.
+	pines.com_hrm_quick_schedule = function(){
+		$.ajax({
+			url: "<?php echo addslashes(pines_url('com_hrm', 'editlineup')); ?>",
+			type: "POST",
+			dataType: "html",
+			data: {"location": "<?php echo addslashes($this->location->guid); ?>"},
+			error: function(XMLHttpRequest, textStatus){
+				pines.error("An error occured while trying to retrieve the quick schedule form:\n"+XMLHttpRequest.status+": "+textStatus);
+			},
+			success: function(data){
+				if (data == "")
+					return;
+				var form = $("<div title=\"Quick schedule for <?php echo $this->location->name; ?>\" />");
+				form.dialog({
+					bgiframe: true,
+					autoOpen: true,
+					modal: true,
+					open: function(){
+						form.html(data+"<br />").dialog("option", "position", "center");
+					},
+					close: function(){
+						form.remove();
+					},
+					buttons: {
+						"Add to Schedule": function(){
+							form.dialog('close');
+							pines.post("<?php echo addslashes(pines_url('com_hrm', 'savelineup')); ?>", {
+								location: form.find(":input[name=location]").val(),
+								shifts: form.find(":input[name=shifts]").val()
+							});
+						}
+					}
+				});
+			}
+		});
+	};
 	// Create an employee work schedule.
 	pines.com_hrm_new_schedule = function(){
 		<?php if (isset($this->employee)) { ?>
@@ -315,7 +352,8 @@ $pines->com_ptags->load();
 <div style="margin-bottom: 1em; text-align: center;" id="p_muid_actions">
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_select_location();" title="Select Location"><span class="p_muid_btn picon picon-applications-internet"></span></button>
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_new_event();" title="New Event"><span class="p_muid_btn picon picon-resource-calendar-insert"></span></button>
-	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_new_schedule();" title="New Schedule" <?php echo !isset($this->employee) ? 'disabled="disabled"' : '';?>><span class="p_muid_btn picon picon-list-resource-add"></span></button>
+	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_quick_schedule();" title="Quick Schedule"><span class="p_muid_btn picon picon-view-calendar-workweek"></span></button>
+	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_new_schedule();" title="Personal Schedule" <?php echo !isset($this->employee) ? 'disabled="disabled"' : '';?>><span class="p_muid_btn picon picon-list-resource-add"></span></button>
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_hrm_time_off();" title="Requested Time Off"><span class="p_muid_btn picon picon-view-calendar-upcoming-events"></span></button>
 </div>
 <?php } if (gatekeeper('com_hrm/editcalendar') || gatekeeper('com_hrm/managecalendar')) { ?>

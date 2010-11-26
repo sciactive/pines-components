@@ -762,7 +762,7 @@ class com_sales extends component {
 		global $pines;
 
 		$selector_po = array('&', 'tag' => array('com_sales', 'po'), 'data' => array(array('final', true), array('finished', false)));
-		$selector_transfer = array('&', 'tag' => array('com_sales', 'transfer'), 'data' => array(array('final', true), array('finished', false)));
+		$selector_transfer = array('&', 'tag' => array('com_sales', 'transfer'), 'data' => array(array('final', true), array('finished', false), array('shipped', true)));
 		
 		$module = new module('com_sales', 'stock/formreceive', 'content');
 		if (!gatekeeper('com_sales/receivelocation')) {

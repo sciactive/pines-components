@@ -115,6 +115,12 @@ foreach ($this->entity->products as $cur_product) {
 			</div>
 		</div>
 	</div>
+	<div class="pf-element pf-heading">
+		<h1>Comments</h1>
+	</div>
+	<div class="pf-element pf-full-width">
+		<?php echo htmlspecialchars($this->entity->comments); ?>
+	</div>
 	<div class="pf-element pf-buttons">
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<input type="hidden" id="p_muid_save" name="save" value="" />

@@ -43,6 +43,7 @@ if (!$transfer->final) {
 	unset($cur_product);
 }
 $transfer->eta = strtotime($_REQUEST['eta']);
+$transfer->comments = $_REQUEST['comments'];
 
 if (!$transfer->shipped) {
 	$transfer->shipper = com_sales_shipper::factory((int) $_REQUEST['shipper']);

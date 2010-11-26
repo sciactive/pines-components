@@ -471,6 +471,12 @@ if ($this->entity->final)
 		</div>
 		<?php } ?>
 	<?php } ?>
+	<div class="pf-element pf-heading">
+		<h1>Comments</h1>
+	</div>
+	<div class="pf-element pf-full-width">
+		<div class="pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="comments"><?php echo htmlspecialchars($this->entity->comments); ?></textarea></div>
+	</div>
 	<br class="pf-clearing" />
 	<div class="pf-element pf-buttons">
 		<input type="hidden" id="p_muid_save" name="save" value="" />
@@ -482,6 +488,7 @@ if ($this->entity->final)
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'transfer/list')); ?>');" value="Cancel" />
 		<?php } else { ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" onclick="$('#p_muid_save').val('save');" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'transfer/list')); ?>');" value="Cancel" />
 		<?php } ?>
 	</div>
 </form>

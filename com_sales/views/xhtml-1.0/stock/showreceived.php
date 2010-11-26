@@ -11,6 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Received Inventory';
+$comments = array();
 $i = 1;
 ?>
 <?php if (empty($this->success)) { ?>
@@ -22,7 +23,17 @@ $i = 1;
 		<span class="pf-label">Location</span>
 		<span class="pf-field"><?php echo htmlspecialchars("[{$this->location->guid}] {$this->location->name}"); ?></span>
 	</div>
-	<?php foreach($this->success as $cur_success) { ?>
+	<?php foreach($this->success as $cur_success) {
+		if ($cur_success[1]->has_tag('po')) {
+			$success_id = $cur_success[1]->po_number;
+			$success_name = 'PO: '.$success_id;
+		} else if ($cur_success[1]->has_tag('transfer')) {
+			$success_id = $cur_success[1]->guid;
+			$success_name = 'Transfer: '.$success_id;
+		}
+		if (!empty($cur_success[1]->comments) && !in_array($cur_success[1]->comments, $comments))
+			$comments[] = array($success_name, $cur_success[1]->comments);
+	?>
 	<div class="pf-element pf-heading">
 		<h1>Item <?php echo $i; $i++; ?></h1>
 	</div>
@@ -42,11 +53,17 @@ $i = 1;
 	<?php } ?>
 	<div class="pf-element">
 		<span class="pf-label">Received On</span>
-		<?php if ($cur_success[1]->has_tag('po')) { ?>
-		<span class="pf-field"><?php echo htmlspecialchars('PO: '.$cur_success[1]->po_number); ?></span>
-		<?php } elseif($cur_success[1]->has_tag('transfer')) { ?>
-		<span class="pf-field"><?php echo htmlspecialchars('Transfer: '.$cur_success[1]->guid); ?></span>
-		<?php } ?>
+		<span class="pf-field"><?php echo htmlspecialchars($success_name); ?></span>
 	</div>
 	<?php } ?>
+	<div class="pf-element pf-heading">
+		<h1>Comments</h1>
+	</div>
+	<div class="pf-element pf-full-width">
+		<ul>
+			<?php foreach($comments as $cur_comment) {
+				echo '<li>'.htmlspecialchars($cur_comment[0].' - '.$cur_comment[1]).'</li>';
+			} ?>
+		</ul>
+	</div>
 </div>

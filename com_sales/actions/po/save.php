@@ -28,6 +28,7 @@ if ( isset($_REQUEST['id']) ) {
 // General
 $po->po_number = $_REQUEST['po_number'];
 $po->reference_number = $_REQUEST['reference_number'];
+$po->comments = $_REQUEST['comments'];
 // Vendor can't be changed after items have been received.
 if (empty($po->received)) {
 	$po->vendor = com_sales_vendor::factory((int) $_REQUEST['vendor']);

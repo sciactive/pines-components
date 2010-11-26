@@ -436,6 +436,12 @@ if ($this->entity->final)
 		</div>
 		<?php } ?>
 	<?php } ?>
+	<div class="pf-element pf-heading">
+		<h1>Comments</h1>
+	</div>
+	<div class="pf-element pf-full-width">
+		<div class="pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="comments" <?php echo $this->entity->final ? 'readonly="readonly"' : ''; ?>><?php echo htmlspecialchars($this->entity->comments); ?></textarea></div>
+	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />

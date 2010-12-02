@@ -23,6 +23,17 @@ return array(
 		),
 		'peruser' => true,
 	),
+	array(
+		'name' => 'toolbar_target',
+		'cname' => 'Default Toolbar Target',
+		'description' => 'The default target for toolbar button links.',
+		'value' => '_self',
+		'options' => array(
+			'Same Window' => '_self',
+			'New Window' => '_blank'
+		),
+		'peruser' => true,
+	),
 );
 
 ?>

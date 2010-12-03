@@ -149,7 +149,7 @@
 			},
 			{
 				"path": "main_menu/business/0_pos/inventory/trackproduct",
-				"text": "Track Products",
+				"text": "Product Tracking",
 				"href": ["com_sales","product/track"],
 				"depend": {
 					"ability": "com_sales/trackproducts"

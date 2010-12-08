@@ -255,9 +255,26 @@ class entity extends p_base implements entity_interface {
 	}
 
 	public function get_data() {
-		// First, walk though the data and convert any entities to references.
-		array_walk_recursive($this->data, array($this, 'entity_to_reference'));
-		return $this->data;
+		// Convert any entities to references.
+		return array_map(array($this, 'get_data_reference'), $this->data);
+	}
+
+	/**
+	 * Convert entities to references and return the result.
+	 *
+	 * @param mixed $item The item to convert.
+	 * @return mixed The resulting item.
+	 */
+	private function get_data_reference($item) {
+		if ((is_a($item, 'entity') || is_a($item, 'hook_override')) && isset($item->guid) && is_callable(array($item, 'to_reference'))) {
+			// Convert entities to references.
+			return $item->to_reference();
+		} elseif ((array) $item === $item) {
+			// Recurse into lower arrays.
+			return array_map(array($this, 'get_data_reference'), $item);
+		}
+		// Not an entity or array, just return it.
+		return $item;
 	}
 
 	public function get_sdata() {

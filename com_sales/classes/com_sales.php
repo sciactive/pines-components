@@ -997,6 +997,9 @@ class com_sales extends component {
 		}
 	}
 
+	/**
+	 * List warehouse sales that need to be fulfilled.
+	 */
 	public function warehouse_fulfill() {
 		global $pines;
 

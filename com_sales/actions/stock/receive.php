@@ -28,8 +28,8 @@ if (!$products_json) {
 $products = array();
 foreach ($products_json as $key => $cur_product) {
 	$products[$key] = array(
-		'product_code' => $cur_product->values[0],
-		'serial' => $cur_product->values[1],
+		'product_code' => trim($cur_product->values[0]),
+		'serial' => trim($cur_product->values[1]),
 		'quantity' => (int) $cur_product->values[2]
 	);
 }

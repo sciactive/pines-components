@@ -200,6 +200,19 @@ return array(
 		),
 		'peruser' => true,
 	),
+	array(
+		'name' => 'interaction_types',
+		'cname' => 'Interaction Types',
+		'description' => 'These are the types of customer interaction.',
+		'value' => array(
+			'Greet',
+			'In-Person',
+			'Phone Call',
+			'Email',
+			'Other',
+		),
+		'peruser' => true,
+	),
 );
 
 ?>

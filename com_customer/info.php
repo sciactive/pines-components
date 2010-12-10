@@ -33,6 +33,8 @@ return array(
 		array('newcustomer', 'Create Customers', 'User can create new customers.'),
 		array('editcustomer', 'Edit Customers', 'User can edit current customers.'),
 		array('deletecustomer', 'Delete Customers', 'User can delete current customers.'),
+		array('addinteraction', 'Add Interaction', 'User can add an interaction to the customer\'s history.'),
+		array('viewhistory', 'View History', 'User can view customers\' histories.'),
 		array('listcompanies', 'List Companies', 'User can see companies.'),
 		array('newcompany', 'Create Companies', 'User can create new companies.'),
 		array('editcompany', 'Edit Companies', 'User can edit current companies.'),

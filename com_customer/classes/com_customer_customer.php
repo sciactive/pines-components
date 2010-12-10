@@ -143,6 +143,43 @@ class com_customer_customer extends user {
 	}
 
 	/**
+	 * Print a report of the customer's history.
+	 * @return module The report's module.
+	 */
+	public function print_history() {
+		global $pines;
+		$module = new module('com_customer', 'customer/history', 'content');
+		$module->entity = $this;
+		$module->com_sales = $pines->depend->check('component', 'com_sales');
+
+		$module->interactions = $pines->entity_manager->get_entities(
+				array('class' => com_customer_interaction),
+				array('&',
+					'ref' => array('customer', $this),
+					'tag' => array('com_customer', 'interaction')
+				)
+			);
+		if ($module->com_sales) {
+			$module->sales = $pines->entity_manager->get_entities(
+					array('class' => com_sales_sale),
+					array('&',
+						'ref' => array('customer', $this),
+						'tag' => array('com_sales', 'sale')
+					)
+				);
+			$module->returns = $pines->entity_manager->get_entities(
+					array('class' => com_sales_return),
+					array('&',
+						'ref' => array('customer', $this),
+						'tag' => array('com_sales', 'return')
+					)
+				);
+		}
+
+		return $module;
+	}
+
+	/**
 	 * Make the customer a member.
 	 *
 	 * If the customer is already a member, make_member() does nothing. It not,

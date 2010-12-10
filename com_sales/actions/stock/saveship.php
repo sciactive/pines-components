@@ -23,6 +23,10 @@ switch (strtolower($_REQUEST['type'])) {
 			pines_error('Requested sale id is not accessible.');
 			return;
 		}
+		if ($entity->warehouse_items && !$entity->warehouse_complete) {
+			pines_notice('Requested sale has unfulfilled warehouse items.');
+			return;
+		}
 		break;
 }
 
@@ -30,10 +34,27 @@ $entity->shipper = com_sales_shipper::factory((int) $_REQUEST['shipper']);
 if (!isset($entity->shipper->guid))
 	$entity->shipper = null;
 $entity->eta = strtotime($_REQUEST['eta']);
-$entity->tracking_numbers = array_diff(array_map('trim', (array) explode("\n", $_REQUEST['tracking_numbers'])), array(''));
+$entity->tracking_numbers = array_diff(array_map('trim', (array) explode("\n", trim($_REQUEST['tracking_numbers']))), array(''));
 if ($_REQUEST['shipped'] == 'ON') {
 	$entity->remove_tag('shipping_pending');
 	$entity->add_tag('shipping_shipped');
+	// Remove the stock from inventory.
+	if ($entity->has_tag('sale')) {
+		// Keep track of the whole process.
+		$no_errors = true;
+		// Go through each product, marking its stock as shipped.
+		foreach ($entity->products as &$cur_product) {
+			if ($cur_product['delivery'] != 'shipped' || !is_array($cur_product['stock_entities']))
+				continue;
+			// Remove stock from inventory.
+			foreach ($cur_product['stock_entities'] as &$cur_stock) {
+				$no_errors = $cur_stock->remove('sale_shipped', $entity) && $cur_stock->save() && $no_errors;
+			}
+		}
+		unset($cur_product);
+		if (!$no_errors)
+			pines_notice('Errors occured while removing stock from inventory. Please check that all stock was removed correctly.');
+	}
 } else {
 	$entity->add_tag('shipping_pending');
 	$entity->remove_tag('shipping_shipped');

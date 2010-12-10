@@ -66,16 +66,42 @@ $this->note = 'Provide shipment details in this form.';
 	<?php switch ($this->type) {
 		case 'sale':
 		default: 
-			?><div class="pf-element">
-				<span class="pf-label">Sale</span>
-				<span class="pf-field">
-					#<?php echo $this->entity->id; ?>:
+			?>
+			<div class="pf-element pf-heading">
+				<h1>Sale #<?php echo $this->entity->id; ?> Packing List</h1>
+				<p>
 					<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/receipt', array('id' => $this->entity->guid))); ?>" onclick="window.open(this.href); return false;">Receipt</a>
 					<?php if (gatekeeper('com_sales/editsale')) { ?>
 					<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/edit', array('id' => $this->entity->guid))); ?>" onclick="window.open(this.href); return false;">Edit</a>
 					<?php } ?>
-				</span>
-			</div><?php
+				</p>
+			</div>
+			<?php foreach ($this->entity->products as $cur_product) {
+				if ($cur_product['delivery'] != 'shipped')
+					continue;
+				?>
+				<div class="pf-element">
+					<span class="pf-label"><?php echo htmlspecialchars($cur_product['entity']->name); ?> [SKU: <?php echo htmlspecialchars($cur_product['entity']->sku); ?>]</span>
+					<span class="pf-note">x <?php echo htmlspecialchars($cur_product['quantity']); ?></span>
+					<div class="pf-group">
+						<div class="pf-field">
+							<?php if (!empty($cur_product['entity']->receipt_description)) { ?>
+							<div><?php echo htmlspecialchars($cur_product['entity']->receipt_description); ?></div>
+							<?php } ?>
+							<div style="font-size: .9em;">Itemized Breakdown:</div>
+							<?php $i = 1; foreach ($cur_product['stock_entities'] as $cur_stock) { ?>
+							<div class="ui-widget-content ui-corner-all" style="float: left; font-size: .8em; padding: .4em; margin: 0 .4em .4em 0;">
+								<div class="ui-widget-content ui-corner-all" style="font-weight: bold; float: right;">#<?php echo $i; ?></div>
+								<div>Shipped From: <?php echo htmlspecialchars($cur_stock->location->name); ?></div>
+								<?php if ($cur_product['entity']->serialized) { ?>
+								<div>Serial Number: <?php echo htmlspecialchars($cur_stock->serial); ?></div>
+								<?php } ?>
+							</div>
+							<?php $i++; } ?>
+						</div>
+					</div>
+				</div>
+			<?php }
 			break;
 	} ?>
 	<div class="pf-element pf-buttons">

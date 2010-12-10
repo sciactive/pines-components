@@ -343,8 +343,9 @@ class com_sales_sale extends entity {
 		// Go through each product, and find corresponding stock entries.
 		foreach ($this->products as &$cur_product) {
 			// Find the stock entry.
-			// TODO: Ship to customer from different stock (Warehouse).
-			if ($cur_product['entity']->stock_type == 'non_stocked') {
+			if ($cur_product['delivery'] == 'warehouse' || $cur_product['entity']->stock_type == 'non_stocked') {
+				// Warehouse and non stocked products don't need stock entries.
+				// Warehouse stock is added later.
 				$cur_product['stock_entities'] = array();
 			} else {
 				$stock_entities = array();
@@ -381,16 +382,9 @@ class com_sales_sale extends entity {
 						$stock_entities[] = $stock_entry;
 						$guids[] = $stock_entry->guid;
 					} else {
-						if ($cur_product['entity']->stock_type != 'stock_optional') {
-							// It wasn't found, and its not optional.
-							pines_notice("Product with SKU [{$cur_product['sku']}]".($cur_product['entity']->serialized ? " and serial [{$cur_product['serial']}]" : " and quantity {$cur_product['quantity']}")." is not in local stock.".($cur_product['entity']->serialized ? '' : ' Found '.count($stock_entities).'.'));
-							return false;
-						} else {
-							// It wasn't found, but it's optional, so mark this item as shipped if it's marked in-store.
-							// TODO: For multiple quantity items, mark how many need to be shipped.
-							if ($cur_product['delivery'] == 'in-store')
-								$cur_product['delivery'] = 'shipped';
-						}
+						// It wasn't found.
+						pines_notice("Product with SKU [{$cur_product['sku']}]".($cur_product['entity']->serialized ? " and serial [{$cur_product['serial']}]" : " and quantity {$cur_product['quantity']}")." is not in local stock.".($cur_product['entity']->serialized ? '' : ' Found '.count($stock_entities).'.'));
+						return false;
 					}
 				}
 				$cur_product['stock_entities'] = $stock_entities;
@@ -518,6 +512,7 @@ class com_sales_sale extends entity {
 					'fees' => $cur_product['fees']
 				));
 			}
+			unset($cur_stock);
 		}
 		unset($cur_product);
 		$this->save();
@@ -580,6 +575,32 @@ class com_sales_sale extends entity {
 		$actions = new module('com_sales', 'sale/receiptactions', 'right');
 		$actions->entity = $this;
 		$actions->auto_print_ok = $auto_print_ok;
+
+		return $module;
+	}
+
+	/**
+	 * Print a form to fulfill the sale's warehouse items.
+	 * @return module The form's module.
+	 */
+	public function print_warehouse() {
+		global $pines;
+
+		// Make sure this is a warehouse sale.
+		$warehouse_found = false;
+		foreach ($this->products as $cur_product) {
+			if ($cur_product['delivery'] == 'warehouse') {
+				$warehouse_found = true;
+				break;
+			}
+		}
+		if (!$warehouse_found) {
+			pines_notice('This sale has no warehouse items.');
+			return;
+		}
+
+		$module = new module('com_sales', 'warehouse/fulfill_form', 'content');
+		$module->entity = $this;
 
 		return $module;
 	}
@@ -825,17 +846,24 @@ class com_sales_sale extends entity {
 
 	/**
 	 * Swap an item in the sale.
-	 * @param string $sku The SKU number of the old item.
+	 * @param string $sku The SKU of the old item.
 	 * @param string $old_serial The serial number of the old item.
 	 * @param string $new_serial The serial number of the new item.
 	 * @return bool True on success, false on failure.
+	 * @todo: Review this and make sure it works with warehouse sales.
 	 */
-	public function swap($sku = null, $old_serial = null, $new_serial = null) {
+	public function swap($sku, $old_serial = null, $new_serial = null) {
 		global $pines;
-		// Make sure this sale has not been voided.
-		if ($this->status == 'voided') {
-			pines_notice('This sale was voided, items cannot be swapped.');
-			return false;
+		// Make sure this sale has been invoiced or tendered.
+		if ($this->status != 'invoiced' && $this->status != 'paid') {
+			// Make sure this sale has not been voided.
+			if ($this->status == 'voided') {
+				pines_notice('This sale was voided, items cannot be swapped.');
+				return false;
+			} else {
+				pines_notice('This sale isn\'t invoiced, items cannot be swapped.');
+				return false;
+			}
 		}
 		// Make sure this sale is not attached to any returns.
 		$attached_return = $pines->entity_manager->get_entity(
@@ -883,9 +911,8 @@ class com_sales_sale extends entity {
 					}
 					// Make a transaction entry.
 					$tx = com_sales_tx::factory('sale_tx');
-					$tx->status = 'swapped in';
 					$tx->add_tag('swap');
-					$tx->type = 'swap';
+					$tx->type = 'swap_in';
 					$tx->ticket = $this;
 					$tx->item = $new_stock;
 					$tx->save();
@@ -923,9 +950,8 @@ class com_sales_sale extends entity {
 					}
 					// Make a transaction entry.
 					$tx = com_sales_tx::factory('sale_tx');
-					$tx->status = 'swapped out';
 					$tx->add_tag('swap');
-					$tx->type = 'swap';
+					$tx->type = 'swap_out';
 					$tx->ticket = $this;
 					$tx->item = $old_stock;
 					$tx->save();

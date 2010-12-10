@@ -78,6 +78,12 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'warehouse_group',
+		'cname' => 'Warehouse Group',
+		'description' => 'The groupname of the group which acts as the warehouse. Warehouse inventory is shipped from here.',
+		'value' => 'corporate',
+	),
+	array(
 		'name' => 'autocomplete_product',
 		'cname' => 'Autocomplete Product',
 		'description' => 'Use a product autocomplete selector on sales and returns.',

@@ -135,6 +135,7 @@ if ($pines->config->com_sales->autocomplete_product)
 						type: 'text',
 						title: 'Enter a Product SKU or Barcode',
 						load: function(textbox){
+							textbox.attr("id", "p_muid_product_code_box");
 							var select = function(code){
 								if (code == "") {
 									alert("Please enter a product code.");
@@ -193,14 +194,29 @@ if ($pines->config->com_sales->autocomplete_product)
 								alert("This product isn't serialized.");
 								return;
 							}
-							var serial = rows.pgrid_get_value(3);
-							do {
-								serial = prompt("This item is serialized. Please provide the serial:", serial);
-							} while (!serial && serial != null);
-							if (serial != null) {
-								rows.pgrid_set_value(3, serial);
-								update_products();
+							if (rows.pgrid_get_value(4) == "warehouse") {
+								alert("This product is set to warehouse delivery. Warehouse items don't need serials until delivery.");
+								return;
 							}
+							var serial = rows.pgrid_get_value(3);
+							serial_box.val(serial);
+							var buttons = {
+								"Done": function(){
+									serial = serial_box.val();
+									if (serial == "") {
+										alert("Please provide a serial number.");
+										return;
+									}
+									rows.pgrid_set_value(3, serial);
+									update_products();
+									serial_dialog.dialog("close");
+								}
+							};
+							$("#p_muid_serial_dialog_warehouse").hide();
+							serial_dialog
+							.dialog("option", "title", "Provide Serial for "+product.name)
+							.dialog("option", "buttons", buttons)
+							.dialog("open");
 						}
 					},
 					{
@@ -209,6 +225,16 @@ if ($pines->config->com_sales->autocomplete_product)
 						extra_class: 'picon picon-mail-send',
 						multi_select: true,
 						click: function(e, rows){
+							var any_non_stocked = false;
+							rows.each(function(){
+								var product = $(this).data("product");
+								if (product.stock_type == "non_stocked")
+									any_non_stocked = true;
+							});
+							if (any_non_stocked) {
+								alert("Delivery options are not available for non stocked items. Please deselect any non stocked items.");
+								return;
+							}
 							delivery_select.find("input[value="+rows.eq(0).pgrid_get_value(4)+"]").attr("checked", "true");
 							delivery_select.find("input").button("refresh");
 							delivery_dialog.dialog("open");
@@ -301,14 +327,6 @@ if ($pines->config->com_sales->autocomplete_product)
 				]
 			});
 			var add_product = function(data){
-				var serial = "";
-				if (data.serialized) {
-					while (!serial) {
-						serial = prompt("This item is serialized. Please provide the serial:");
-						if (serial == null)
-							return;
-					}
-				}
 				if (data.one_per_ticket) {
 					var cur_products = products_table.pgrid_get_all_rows().pgrid_export_rows();
 					var pass = true;
@@ -321,6 +339,43 @@ if ($pines->config->com_sales->autocomplete_product)
 					if (!pass)
 						return;
 				}
+				var serial = "";
+				if (data.serialized) {
+					var buttons = {
+						"Done": function(){
+							serial = serial_box.val();
+							if (serial == "") {
+								alert("Please provide a serial number.");
+								return;
+							}
+							products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'in-store', 1, data.unit_price, "", "", ""]}], function(){
+								var cur_row = $(this);
+								cur_row.data("product", data);
+							});
+							update_products();
+							serial_dialog.dialog("close");
+						},
+						"Warehouse Item": function(){
+							products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'warehouse', 1, data.unit_price, "", "", ""]}], function(){
+								var cur_row = $(this);
+								cur_row.data("product", data);
+							});
+							update_products();
+							serial_dialog.dialog("close");
+						}
+					};
+					if (data.stock_type == "stock_optional") {
+						$("#p_muid_serial_dialog_warehouse").show();
+					} else {
+						buttons = {"Done": buttons.Done};
+						$("#p_muid_serial_dialog_warehouse").hide();
+					}
+					serial_dialog.dialog("option", "title", "Provide Serial for "+data.name)
+					.dialog("option", "buttons", buttons)
+					.dialog("open");
+					serial_box.val("");
+					return;
+				}
 				products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'in-store', 1, data.unit_price, "", "", ""]}], function(){
 					var cur_row = $(this);
 					cur_row.data("product", data);
@@ -328,18 +383,69 @@ if ($pines->config->com_sales->autocomplete_product)
 				update_products();
 			};
 			// Delivery Dialog
-			var delivery_select = $("#p_muid_delivery_select").buttonset().delegate("input", "click", function() {
+			var delivery_select = $("#p_muid_delivery_select").children("div").buttonset().end()
+			.delegate("input", "click", function() {
 				var rows = products_table.pgrid_get_selected_rows();
 				if (!rows)
 					return;
-				rows.pgrid_set_value(4, $(this).val());
+				var delivery = $(this).val();
+				if (delivery == "warehouse") {
+					rows.each(function(){
+						var cur_row = $(this);
+						var product = cur_row.data("product");
+						if (product.stock_type != "stock_optional") {
+							alert("Warehouse sales are only allowed on stock optional items, and the item, "+product.name+", is not stock optional.");
+							return;
+						}
+						cur_row.pgrid_set_value(3, "");
+						cur_row.pgrid_set_value(4, delivery);
+					});
+				} else {
+					rows.each(function(){
+						var cur_row = $(this);
+						var product = cur_row.data("product");
+						if (product.serialized && cur_row.pgrid_get_value(3) == "") {
+							var serial = "";
+							while (!serial) {
+								serial = prompt("The item, "+product.name+", is serialized. Please provide the serial:");
+								if (serial == null)
+									return;
+							}
+						}
+						cur_row.pgrid_set_value(3, serial);
+						cur_row.pgrid_set_value(4, delivery);
+					});
+				}
 				update_products();
 				delivery_dialog.dialog('close');
 			});
 			var delivery_dialog = $("#p_muid_delivery_dialog").dialog({
 				bgiframe: true,
 				autoOpen: false,
-				modal: true
+				width: 450,
+				modal: true,
+				close: function(){
+					$("#p_muid_product_code_box").focus();
+				}
+			});
+			var serial_dialog = $("#p_muid_serial_dialog").dialog({
+				bgiframe: true,
+				autoOpen: false,
+				width: 450,
+				modal: true,
+				close: function(){
+					$("#p_muid_product_code_box").focus();
+					serial_box.val("");
+				},
+				open: function(){
+					serial_box.focus().select();
+				}
+			});
+			var serial_box = $("#p_muid_serial_number").keypress(function(e){
+				if (e.keyCode == 13) {
+					serial_dialog.dialog("option", "buttons").Done();
+					return false;
+				}
 			});
 			// Category Grid
 			var category_grid = $("#p_muid_category_grid").pgrid({
@@ -995,11 +1101,30 @@ if ($pines->config->com_sales->autocomplete_product)
 		<input type="hidden" id="p_muid_products" name="products" size="24" />
 	</div>
 	<div id="p_muid_delivery_dialog" title="Select Delivery Type" style="display: none;">
-		<div id="p_muid_delivery_select" style="text-align: center; padding: 1em;">
-			<input type="radio" name="delivery_type" id="p_muid_deliv_rad1" value="in-store" /><label for="p_muid_deliv_rad1">In Store</label>
-			<input type="radio" name="delivery_type" id="p_muid_deliv_rad2" value="shipped" /><label for="p_muid_deliv_rad2">Shipped</label>
-			<input type="radio" name="delivery_type" id="p_muid_deliv_rad3" value="pick-up" /><label for="p_muid_deliv_rad3">Pick Up</label>
+		<div id="p_muid_delivery_select">
+			The item is being taken from current inventory:
+			<div style="padding: 1em;">
+				<input type="radio" name="delivery_type" id="p_muid_deliv_rad1" value="in-store" /><label for="p_muid_deliv_rad1" title="The customer is receiving the item right now.">In Store</label>
+				<input type="radio" name="delivery_type" id="p_muid_deliv_rad2" value="shipped" /><label for="p_muid_deliv_rad2" title="The item is being shipped to the customer.">Ship to Customer</label>
+				<input type="radio" name="delivery_type" id="p_muid_deliv_rad3" value="pick-up" /><label for="p_muid_deliv_rad3" title="The customer will pick up the item later.">Pick Up</label>
+			</div>
+			The item needs to be ordered:
+			<div style="padding: 1em;">
+				<input type="radio" name="delivery_type" id="p_muid_deliv_rad4" value="warehouse" /><label for="p_muid_deliv_rad4" title="The item should be ordered.">Warehouse</label>
+			</div>
 		</div>
+	</div>
+	<div id="p_muid_serial_dialog" title="Provide Serial" style="display: none;">
+		<div class="pf-form">
+			<div class="pf-element">
+				<label><span class="pf-label">Serial Number</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_serial_number" name="serial_number" size="24" value="" /></label>
+			</div>
+			<div class="pf-element" id="p_muid_serial_dialog_warehouse">
+				<strong>Or</strong> you can make this item a warehouse item.
+			</div>
+		</div>
+		<br />
 	</div>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Ticket Totals</span>

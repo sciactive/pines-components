@@ -37,6 +37,8 @@ if ($pines->config->com_sales->com_customer && $sale->status != 'invoiced' && $s
 $product_error = false;
 // Used to check products which allow only one per ticket.
 $one_per_ticket_guids = array();
+$sale->warehouse_items = false;
+$sale->warehouse_complete = false;
 if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != 'voided') {
 	$sale->products = (array) json_decode($_REQUEST['products']);
 	if (empty($sale->products)) {
@@ -48,7 +50,7 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != '
 			$cur_sku = $cur_product_entity->sku;
 			$cur_serial = $cur_product->values[2];
 			$cur_delivery = $cur_product->values[3];
-			if (!in_array($cur_delivery, array('in-store', 'shipped', 'pick-up')))
+			if (!in_array($cur_delivery, array('in-store', 'shipped', 'pick-up', 'warehouse')))
 				$cur_delivery = 'in-store';
 			$cur_qty = (int) $cur_product->values[4];
 			$cur_price = (float) $cur_product->values[5];
@@ -69,8 +71,12 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != '
 			}
 			if ($cur_product_entity->serialized)
 				$cur_qty = 1;
-			if ($cur_product_entity->serialized && empty($cur_serial)) {
+			if ($cur_product_entity->serialized && empty($cur_serial) && $cur_delivery != 'warehouse') {
 				pines_notice("Product with SKU [$cur_sku] requires a serial.");
+				$product_error = true;
+			}
+			if ($cur_product_entity->stock_type != 'stock_optional' && $cur_delivery == 'warehouse') {
+				pines_notice("Product with SKU [$cur_sku] is not stock optional, so it cannot be sold from warehouse.");
 				$product_error = true;
 			}
 			if ($cur_qty < 1) {
@@ -99,6 +105,8 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != '
 					$one_per_ticket_guids[] = $cur_product_entity->guid;
 				}
 			}
+			if ($cur_delivery == 'warehouse')
+				$sale->warehouse_items = true;
 			$cur_product = array(
 				'entity' => $cur_product_entity,
 				'sku' => $cur_sku,
@@ -111,6 +119,9 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != '
 		}
 		unset($cur_product);
 	}
+	// Warehouse sales aren't shipped until warehouse items are fulfilled.
+	if ($sale->warehouse_items)
+		$sale->remove_tag('shipping_pending');
 }
 // Used for payment error checking.
 $payment_error = false;

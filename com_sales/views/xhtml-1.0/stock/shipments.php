@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = ($this->removed ? 'Completed ' : 'Pending ').'Shipments';
 if (isset($this->location))
-	$this->title .= " at {$this->location->name} [{$this->location->groupname}]";
+	$this->title .= " at and below {$this->location->name} [{$this->location->groupname}]";
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/stock/shipments'];

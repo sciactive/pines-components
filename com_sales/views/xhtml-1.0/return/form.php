@@ -135,6 +135,7 @@ if ($pines->config->com_sales->autocomplete_product)
 						type: 'text',
 						title: 'Enter a Product SKU or Barcode',
 						load: function(textbox){
+							textbox.attr("id", "p_muid_product_code_box");
 							var select = function(code){
 								if (code == "") {
 									alert("Please enter a product code.");
@@ -194,13 +195,23 @@ if ($pines->config->com_sales->autocomplete_product)
 								return;
 							}
 							var serial = rows.pgrid_get_value(3);
-							do {
-								serial = prompt("This item is serialized. Please provide the serial:", serial);
-							} while (!serial && serial != null);
-							if (serial != null) {
-								rows.pgrid_set_value(3, serial);
-								update_products();
-							}
+							serial_box.val(serial);
+							var buttons = {
+								"Done": function(){
+									serial = serial_box.val();
+									if (serial == "") {
+										alert("Please provide a serial number.");
+										return;
+									}
+									rows.pgrid_set_value(3, serial);
+									update_products();
+									serial_dialog.dialog("close");
+								}
+							};
+							serial_dialog
+							.dialog("option", "title", "Provide Serial for "+product.name)
+							.dialog("option", "buttons", buttons)
+							.dialog("open");
 						}
 					},
 					<?php } ?>
@@ -289,11 +300,26 @@ if ($pines->config->com_sales->autocomplete_product)
 			var add_product = function(data){
 				var serial = "";
 				if (data.serialized) {
-					while (!serial) {
-						serial = prompt("This item is serialized. Please provide the serial:");
-						if (serial == null)
-							return;
-					}
+					var buttons = {
+						"Done": function(){
+							serial = serial_box.val();
+							if (serial == "") {
+								alert("Please provide a serial number.");
+								return;
+							}
+							products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, '', 1, data.unit_price, "", "", ""]}], function(){
+								var cur_row = $(this);
+								cur_row.data("product", data);
+							});
+							update_products();
+							serial_dialog.dialog("close");
+						}
+					};
+					serial_dialog.dialog("option", "title", "Provide Serial for "+data.name)
+					.dialog("option", "buttons", buttons)
+					.dialog("open");
+					serial_box.val("");
+					return;
 				}
 				products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, "", 1, data.unit_price, "", "", ""]}], function(){
 					var cur_row = $(this);
@@ -301,6 +327,25 @@ if ($pines->config->com_sales->autocomplete_product)
 				});
 				update_products();
 			};
+			var serial_dialog = $("#p_muid_serial_dialog").dialog({
+				bgiframe: true,
+				autoOpen: false,
+				width: 450,
+				modal: true,
+				close: function(){
+					$("#p_muid_product_code_box").focus();
+					serial_box.val("");
+				},
+				open: function(){
+					serial_box.focus().select();
+				}
+			});
+			var serial_box = $("#p_muid_serial_number").keypress(function(e){
+				if (e.keyCode == 13) {
+					serial_dialog.dialog("option", "buttons").Done();
+					return false;
+				}
+			});
 			// Category Grid
 			var category_grid = $("#p_muid_category_grid").pgrid({
 				pgrid_hidden_cols: [1],
@@ -953,6 +998,15 @@ if ($pines->config->com_sales->autocomplete_product)
 			</tbody>
 		</table>
 		<input type="hidden" id="p_muid_products" name="products" size="24" />
+	</div>
+	<div id="p_muid_serial_dialog" title="Provide Serial" style="display: none;">
+		<div class="pf-form">
+			<div class="pf-element">
+				<label><span class="pf-label">Serial Number</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_serial_number" name="serial_number" size="24" value="" /></label>
+			</div>
+		</div>
+		<br />
 	</div>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Return Totals</span>

@@ -34,7 +34,11 @@ if ($_REQUEST['all_time'] == 'true') {
 }
 if (!empty($_REQUEST['location']))
 	$location = group::factory((int) $_REQUEST['location']);
-
-$pines->com_sales->track_product($_REQUEST['serial'], $_REQUEST['sku'], $start_date, $end_date, $location);
+if (!empty($_REQUEST['types'])) {
+	foreach (explode(',', $_REQUEST['types']) as $cur_type) {
+		$types[$cur_type] = true;
+	}
+}
+$pines->com_sales->track_product($_REQUEST['serial'], $_REQUEST['sku'], $start_date, $end_date, $location, $types);
 
 ?>

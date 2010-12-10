@@ -861,11 +861,23 @@ class com_sales extends component {
 	 * @param int $end_date The ending date to search for products within.
 	 * @param group $location The location to search for products in.
 	 */
-	public function track_product($serial = null, $sku = null, $start_date = null, $end_date = null, $location = null) {
+	public function track_product($serial = null, $sku = null, $start_date = null, $end_date = null, $location = null, $types = null) {
 		global $pines;
 
 		$module = new module('com_sales', 'product/track', 'content');
 		$module->items = array();
+		if (isset($types)) {
+			$module->types = $types;
+		} else {
+			$module->types = array(
+				'invoice' => true,
+				'return' => true,
+				'swap' => true,
+				'transfer' => true,
+				'po' => true,
+				'countsheet' => true
+			);
+		}
 		// Primary options specify the criteria to search the inventory for.
 		$selector = array('&', 'tag' => array('com_sales', 'stock'));
 		if (!empty($sku)) {
@@ -901,9 +913,10 @@ class com_sales extends component {
 		}
 
 		foreach ($module->stock as $cur_stock) {
-			// Grab all invoices, countsheets, transfers and purchase orders for
-			// all stock items with the given serial number / sku.
-			$invoices = $pines->entity_manager->get_entities(
+			// Grab all of the requested transactions for any stock items matching the given product code.
+			$invoices = $returns = $swaps = $transfers = $pos = $countsheets = array();
+			if ($module->types['invoice']) {
+				$invoices = $pines->entity_manager->get_entities(
 					array('class' => com_sales_sale, 'skip_ac' => true),
 					$secondary_options,
 					$or,
@@ -912,7 +925,9 @@ class com_sales extends component {
 						'ref' => array('products', $cur_stock)
 					)
 				);
-			$returns = $pines->entity_manager->get_entities(
+			}
+			if ($module->types['return']) {
+				$returns = $pines->entity_manager->get_entities(
 					array('class' => com_sales_sale, 'skip_ac' => true),
 					$secondary_options,
 					$or,
@@ -921,7 +936,9 @@ class com_sales extends component {
 						'ref' => array('products', $cur_stock)
 					)
 				);
-			$swaps = $pines->entity_manager->get_entities(
+			}
+			if ($module->types['swap']) {
+				$swaps = $pines->entity_manager->get_entities(
 					array('class' => com_sales_tx, 'skip_ac' => true),
 					$secondary_options,
 					$or,
@@ -931,16 +948,9 @@ class com_sales extends component {
 						'ref' => array('item', $cur_stock)
 					)
 				);
-			$countsheets = $pines->entity_manager->get_entities(
-					array('class' => com_sales_countsheet, 'skip_ac' => true),
-					$secondary_options,
-					$or,
-					array('&',
-						'tag' => array('com_sales', 'countsheet'),
-						'array' => array('entries', $countsheet_code)
-					)
-				);
-			$transfers = $pines->entity_manager->get_entities(
+			}
+			if ($module->types['transfer']) {
+				$transfers = $pines->entity_manager->get_entities(
 					array('class' => com_sales_transfer, 'skip_ac' => true),
 					$secondary_options,
 					$or,
@@ -949,7 +959,9 @@ class com_sales extends component {
 						'ref' => array('stock', $cur_stock)
 					)
 				);
-			$pos = $pines->entity_manager->get_entities(
+			}
+			if ($module->types['po']) {
+				$pos = $pines->entity_manager->get_entities(
 					array('class' => com_sales_po, 'skip_ac' => true),
 					$secondary_options,
 					$or,
@@ -958,7 +970,17 @@ class com_sales extends component {
 						'ref' => array('received', $cur_stock)
 					)
 				);
-			foreach (array_merge($invoices, $returns, $swaps, $countsheets, $transfers, $pos) as $cur_tx) {
+			}
+			if ($module->types['countsheet']) {
+				$or['array'] = array('entries', $countsheet_code);
+				$countsheets = $pines->entity_manager->get_entities(
+					array('class' => com_sales_countsheet, 'skip_ac' => true),
+					$secondary_options,
+					$or,
+					array('&', 'tag' => array('com_sales', 'countsheet'))
+				);
+			}
+			foreach (array_merge($invoices, $returns, $swaps, $transfers, $pos, $countsheets) as $cur_tx) {
 				if (isset($module->transactions[$cur_tx->guid])) {
 					$module->transactions[$cur_tx->guid]->qty++;
 					if (!in_array($cur_stock->serial, $module->transactions[$cur_tx->guid]->serials))
@@ -974,15 +996,15 @@ class com_sales extends component {
 					} elseif ($cur_tx->has_tag('swap')) {
 						$tx_info = ucwords($cur_tx->status);
 						$cur_type = 'swap';
-					} elseif ($cur_tx->has_tag('countsheet')) {
-						$tx_info = 'Counted on Countsheet';
-						$cur_type = 'countsheet';
 					} elseif ($cur_tx->has_tag('transfer')) {
 						$tx_info = 'Received on Transfer';
 						$cur_type = 'transfer';
 					} elseif ($cur_tx->has_tag('po')) {
 						$tx_info = 'Received on PO';
 						$cur_type = 'po';
+					} elseif ($cur_tx->has_tag('countsheet')) {
+						$tx_info = 'Counted on Countsheet';
+						$cur_type = 'countsheet';
 					}
 					$module->transactions[$cur_tx->guid] = (object) array(
 						'product' => $cur_stock->product,
@@ -1031,7 +1053,7 @@ class com_sales extends component {
 	 */
 	public function warehouse_pending() {
 		global $pines;
-		
+
 		// Warehouse group.
 		$warehouse = group::factory($pines->config->com_sales->warehouse_group);
 		if (!isset($warehouse->guid)) {
@@ -1046,7 +1068,7 @@ class com_sales extends component {
 		$module->in_pos = 0;
 		// How many items were found on incoming transfers.
 		$module->in_transfers = 0;
-		
+
 		// Get sales with warehouse items.
 		$sales = (array) $pines->entity_manager->get_entities(
 				array('class' => com_sales_sale),
@@ -1198,7 +1220,7 @@ class com_sales extends component {
 			);
 		}
 		unset($products, $products_unique);
-		
+
 		// Find items in current inventory.
 		foreach ($module->products as &$cur_product) {
 			$stock = (array) $pines->entity_manager->get_entities(

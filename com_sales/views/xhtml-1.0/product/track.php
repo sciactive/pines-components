@@ -29,10 +29,23 @@ $pines->com_jstree->load();
 	pines(function(){
 		var submit_url = "<?php echo addslashes(pines_url('com_sales', 'product/track')); ?>";
 		var submit_search = function(){
+			if ($("#p_muid_types_dialog [name=types_invoice]").attr('checked'))
+				types.push('invoice');
+			if ($("#p_muid_types_dialog [name=types_return]").attr('checked'))
+				types.push('return');
+			if ($("#p_muid_types_dialog [name=types_swap]").attr('checked'))
+				types.push('swap');
+			if ($("#p_muid_types_dialog [name=types_transfer]").attr('checked'))
+				types.push('transfer');
+			if ($("#p_muid_types_dialog [name=types_po]").attr('checked'))
+				types.push('po');
+			if ($("#p_muid_types_dialog [name=types_countsheet]").attr('checked'))
+				types.push('countsheet');
 			// Submit the form with all of the fields.
 			pines.post(submit_url, {
 				"serial": serial_box.val(),
 				"sku": sku_box.val(),
+				"types": types,
 				"location": location,
 				"all_time": all_time,
 				"start_date": start_date,
@@ -41,6 +54,7 @@ $pines->com_jstree->load();
 		};
 
 		var serial_box, sku_box;
+		var types = new Array();
 		// Timespan Defaults
 		var all_time = <?php echo $this->all_time ? 'true' : 'false'; ?>;
 		var start_date = "<?php echo $this->start_date ? addslashes(format_date($this->start_date, 'date_sort')) : ''; ?>";
@@ -53,7 +67,9 @@ $pines->com_jstree->load();
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents : [
-				{type: 'button', text: 'Location', extra_class: 'picon picon-applications-internet', selection_optional: true, click: function(){history_grid.location_form();}},
+				{type: 'button', title: 'Location', extra_class: 'picon picon-applications-internet', selection_optional: true, click: function(){history_grid.location_form();}},
+				{type: 'button', title: 'Timespan', extra_class: 'picon picon-view-time-schedule', selection_optional: true, click: function(){history_grid.date_form();}},
+				{type: 'button', title: 'Transactions', extra_class: 'picon picon-view-choose', selection_optional: true, click: function(){history_grid.types_form();}},
 				{type: 'separator'},
 				{type: 'text', label: 'SKU: ', load: function(textbox){
 					// Display the current sku being searched.
@@ -75,9 +91,7 @@ $pines->com_jstree->load();
 					serial_box = textbox;
 				}},
 				{type: 'separator'},
-				{type: 'button', text: 'Timespan', extra_class: 'picon picon-view-time-schedule', selection_optional: true, click: function(){history_grid.date_form();}},
-				{type: 'separator'},
-				{type: 'button', text: 'Update &raquo;', extra_class: 'picon picon-view-refresh', selection_optional: true, click: submit_search}
+				{type: 'button', title: 'Update', extra_class: 'picon picon-view-refresh', selection_optional: true, click: submit_search}
 			],
 			pgrid_sort_col: 1,
 			pgrid_sort_ord: 'asc',
@@ -165,6 +179,20 @@ $pines->com_jstree->load();
 				}
 			});
 		};
+		history_grid.types_form = function(row){
+			var types_dialog = $("#p_muid_types_dialog").dialog({
+				bgiframe: true,
+				autoOpen: false,
+				modal: true,
+				width: 250,
+				buttons: {
+					'Done': function() {
+						types_dialog.dialog('close');
+					}
+				}
+			});
+			types_dialog.dialog('open');
+		};
 	});
 	// ]]>
 </script>
@@ -195,7 +223,7 @@ $pines->com_jstree->load();
 				$link = pines_url('com_sales', 'sale/receipt', array('id' => $cur_transaction->entity->ticket->guid));
 				break;
 			case 'countsheet':
-				$link = pines_url('com_sales', 'countsheet/edit', array('id' => $cur_transaction->entity->guid));
+				$link = pines_url('com_sales', 'countsheet/approve', array('id' => $cur_transaction->entity->guid));
 				break;
 			case 'transfer':
 				$link = pines_url('com_sales', 'transfer/edit', array('id' => $cur_transaction->entity->guid));
@@ -221,3 +249,29 @@ $pines->com_jstree->load();
 	<?php } ?>
 	</tbody>
 </table>
+<div id="p_muid_types_dialog" title="Transaction Types" style="display: none;" class="pf-form">
+	<div class="pf-element pf-full-width">
+		<span class="pf-label">Invoices</span>
+		<input class="pf-field" type="checkbox" name="types_invoice" value="ON"<?php echo $this->types['invoice'] ? ' checked="checked"' : ''; ?> />
+	</div>
+	<div class="pf-element pf-full-width">
+		<span class="pf-label">Returns</span>
+		<input class="pf-field" type="checkbox" name="types_return" value="ON"<?php echo $this->types['return'] ? ' checked="checked"' : ''; ?> />
+	</div>
+	<div class="pf-element pf-full-width">
+		<span class="pf-label">Swaps</span>
+		<input class="pf-field" type="checkbox" name="types_swap" value="ON"<?php echo $this->types['swap'] ? ' checked="checked"' : ''; ?> />
+	</div>
+	<div class="pf-element pf-full-width">
+		<span class="pf-label">Transfers</span>
+		<input class="pf-field" type="checkbox" name="types_transfer" value="ON"<?php echo $this->types['transfer'] ? ' checked="checked"' : ''; ?> />
+	</div>
+	<div class="pf-element pf-full-width">
+		<span class="pf-label">POs</span>
+		<input class="pf-field" type="checkbox" name="types_po" value="ON"<?php echo $this->types['po'] ? ' checked="checked"' : ''; ?> />
+	</div>
+	<div class="pf-element pf-full-width">
+		<span class="pf-label">Countsheets</span>
+		<input class="pf-field" type="checkbox" name="types_countsheet" value="ON"<?php echo $this->types['countsheet'] ? ' checked="checked"' : ''; ?> />
+	</div>
+</div>

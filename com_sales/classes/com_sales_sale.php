@@ -850,7 +850,7 @@ class com_sales_sale extends entity {
 	 * @param string $old_serial The serial number of the old item.
 	 * @param string $new_serial The serial number of the new item.
 	 * @return bool True on success, false on failure.
-	 * @todo: Review this and make sure it works with warehouse sales.
+	 * @todo Review this and make sure it works with warehouse sales.
 	 */
 	public function swap($sku, $old_serial = null, $new_serial = null) {
 		global $pines;

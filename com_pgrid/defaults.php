@@ -30,7 +30,8 @@ return array(
 		'value' => '_self',
 		'options' => array(
 			'Same Window' => '_self',
-			'New Window' => '_blank'
+			'New Window' => '_blank',
+			'Reuse New Window' => 'popup'
 		),
 		'peruser' => true,
 	),

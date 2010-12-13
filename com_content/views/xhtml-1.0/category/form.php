@@ -52,7 +52,11 @@ $this->note = 'Provide category details in this form.';
 	<div class="pf-element">
 		<label><span class="pf-label">Show Pages in Menu</span>
 			<input class="pf-field" type="checkbox" name="show_pages_in_menu" value="ON"<?php echo $this->entity->show_pages_in_menu ? ' checked="checked"' : ''; ?> /></label>
-	</div
+	</div>
+	<div class="pf-element">
+		<label><span class="pf-label">Show Breadcrumbs</span>
+			<input class="pf-field" type="checkbox" name="show_breadcrumbs" value="ON"<?php echo $this->entity->show_breadcrumbs ? ' checked="checked"' : ''; ?> /></label>
+	</div>
 	<div class="pf-element">
 		<label>
 			<span class="pf-label">Parent</span>

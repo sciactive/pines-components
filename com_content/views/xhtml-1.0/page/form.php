@@ -210,6 +210,10 @@ $pines->com_ptags->load();
 				<label><span class="pf-label">Menu Position</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_menu_position" name="menu_position" size="24" value="<?php echo htmlspecialchars($this->entity->menu_position); ?>" /></label>
 			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Show Breadcrumbs</span>
+					<input class="pf-field" type="checkbox" name="show_breadcrumbs" value="ON"<?php echo $this->entity->show_breadcrumbs ? ' checked="checked"' : ''; ?> /></label>
+			</div>
 			<br class="pf-clearing" />
 		</div>
 	</div>

@@ -50,6 +50,7 @@ $page->show_intro = ($_REQUEST['show_intro'] == 'ON');
 $page->show_title = ($_REQUEST['show_title'] == 'ON');
 $page->show_menu = ($_REQUEST['show_menu'] == 'ON');
 $page->menu_position = $_REQUEST['menu_position'];
+$page->show_breadcrumbs = ($_REQUEST['show_breadcrumbs'] == 'ON');
 
 if (empty($page->name)) {
 	$page->print_form();

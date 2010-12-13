@@ -29,6 +29,7 @@ class com_content_page extends entity {
 		$this->enabled = true;
 		$this->content_tags = array();
 		$this->show_title = true;
+		$this->show_breadcrumbs = true;
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));

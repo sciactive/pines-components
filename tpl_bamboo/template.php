@@ -94,6 +94,10 @@ Released   : 20090820
 			<div id="page">
 				<div id="page-bgtop">
 					<div id="page-bgbtm">
+						<div id="breadcrumbs">
+							<?php echo $pines->page->render_modules('breadcrumbs', 'module_head'); ?>
+							<div style="clear: both;">&nbsp;</div>
+						</div>
 						<div id="content">
 							<?php echo $pines->page->render_modules('content', 'module_content'); ?>
 							<div style="clear: both;">&nbsp;</div>

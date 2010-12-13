@@ -19,6 +19,9 @@ if (!isset($category->guid) || !$category->enabled)
 // Page title.
 $pines->page->title_pre("$category->name - ");
 
+$module = new module('com_content', 'breadcrumb', 'breadcrumbs');
+$module->entity = $category;
+
 foreach ($category->pages as $cur_page) {
 	if (!isset($cur_page))
 		continue;

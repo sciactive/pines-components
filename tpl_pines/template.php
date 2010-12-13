@@ -121,6 +121,7 @@ if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 || strp
 		<div id="left" class="ez-fl ez-negmr"><?php echo $pines->page->render_modules('left', 'module_left'); ?>&nbsp;</div>
 		<div id="right" class="ez-fr ez-negml"><?php echo $pines->page->render_modules('right', 'module_right'); ?>&nbsp;</div>
 		<div id="content_container" class="ez-last ez-oh">
+			<div id="breadcrumbs" class="ez-box"><?php echo $pines->page->render_modules('breadcrumbs', 'module_header'); ?></div>
 			<div class="ez-wr">
 				<div id="content_top_left" class="ez-fl ez-negmr ez-50"><?php echo $pines->page->render_modules('content_top_left'); ?></div>
 				<div id="content_top_right" class="ez-last ez-oh"><?php echo $pines->page->render_modules('content_top_right'); ?></div>

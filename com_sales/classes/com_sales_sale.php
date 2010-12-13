@@ -1132,18 +1132,18 @@ class com_sales_sale extends entity {
 					}
 				}
 			}
-			$item_fees += (float) $cur_item_fees;
-			$subtotal += (float) $line_total;
-			$cur_product['line_total'] = $pines->com_sales->round($line_total);
-			$cur_product['fees'] = $pines->com_sales->round($cur_item_fees);
+			$cur_product['line_total'] = (float) $pines->com_sales->round($line_total);
+			$cur_product['fees'] = (float) $pines->com_sales->round($cur_item_fees);
+			$item_fees += $cur_product['fees'];
+			$subtotal += $cur_product['line_total'];
 		}
 		unset($cur_product);
+		$this->subtotal = (float) $pines->com_sales->round($subtotal);
+		$this->item_fees = (float) $pines->com_sales->round($item_fees);
+		$this->taxes = (float) $pines->com_sales->round($taxes);
 		// The total can now be calculated.
-		$total = $subtotal + $item_fees + $taxes;
-		$this->subtotal = $pines->com_sales->round($subtotal);
-		$this->item_fees = $pines->com_sales->round($item_fees);
-		$this->taxes = $pines->com_sales->round($taxes);
-		$this->total = $pines->com_sales->round($total);
+		$total = $this->subtotal + $this->item_fees + $this->taxes;
+		$this->total = (float) $pines->com_sales->round($total);
 		return true;
 	}
 

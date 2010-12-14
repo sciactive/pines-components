@@ -39,6 +39,8 @@ if (!empty($_REQUEST['types'])) {
 		$types[$cur_type] = true;
 	}
 }
-$pines->com_sales->track_product($_REQUEST['serial'], $_REQUEST['sku'], $start_date, $end_date, $location, $types);
 
+$descendents = ($_REQUEST['descendents'] == 'true');
+
+$pines->com_sales->track_product($_REQUEST['serial'], $_REQUEST['sku'], $start_date, $end_date, $location, $descendents, $types);
 ?>

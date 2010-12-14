@@ -35,5 +35,7 @@ if ($_REQUEST['all_time'] == 'true') {
 if (!empty($_REQUEST['location']))
 	$location = group::factory((int) $_REQUEST['location']);
 
-$pines->com_sales->list_sales($start_date, $end_date, $location);
+$descendents = ($_REQUEST['descendents'] == 'true');
+
+$pines->com_sales->list_sales($start_date, $end_date, $location, $descendents);
 ?>

@@ -12,7 +12,8 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = ($this->removed ? 'Completed ' : 'Pending ').'Shipments';
 if (isset($this->location))
-	$this->title .= " at and below {$this->location->name} [{$this->location->groupname}]";
+	$this->title .= " at {$this->location->name} [{$this->location->groupname}]";
+$this->note = $this->descendents ? 'Including Descendent Locations' : '';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/stock/shipments'];
@@ -26,12 +27,14 @@ $pines->com_jstree->load();
 		var submit_search = function(){
 			// Submit the form with all of the fields.
 			pines.post(submit_url, {
-				"location": location
+				"location": location,
+				"descendents": descendents
 			});
 		};
 
 		// Location Defaults
 		var location = "<?php echo $this->location->guid; ?>";
+		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
 
 		var state_xhr;
 		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
@@ -39,7 +42,7 @@ $pines->com_jstree->load();
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				<?php if (!$this->removed) { ?>
-				{type: 'button', text: 'Location', extra_class: 'picon picon-applications-internet', selection_optional: true, click: function(){shipments_grid.location_form();}},
+				{type: 'button', title: 'Location', extra_class: 'picon picon-applications-internet', selection_optional: true, click: function(){shipments_grid.location_form();}},
 				{type: 'separator'},
 				<?php } if (gatekeeper('com_sales/managestock')) { ?>
 				{type: 'button', text: 'Edit/Ship', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo addslashes(pines_url('com_sales', 'stock/ship', array('type' => '__col_1__', 'id' => '__title__'))); ?>'},
@@ -72,7 +75,7 @@ $pines->com_jstree->load();
 				url: "<?php echo addslashes(pines_url('com_sales', 'forms/locationselect')); ?>",
 				type: "POST",
 				dataType: "html",
-				data: {"location": location},
+				data: {"location": location, "descendents": descendents},
 				error: function(XMLHttpRequest, textStatus){
 					pines.error("An error occured while trying to retreive the location form:\n"+XMLHttpRequest.status+": "+textStatus);
 				},
@@ -94,6 +97,10 @@ $pines->com_jstree->load();
 						buttons: {
 							"Update": function(){
 								location = form.find(":input[name=location]").val();
+								if (form.find(":input[name=descendents]").attr('checked'))
+									descendents = true;
+								else
+									descendents = false;
 								form.dialog('close');
 								submit_search();
 							}

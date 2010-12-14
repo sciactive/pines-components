@@ -254,9 +254,10 @@ class com_sales extends component {
 	 * @param int $start_date The start date of cash counts to show.
 	 * @param int $end_date The end date of cash counts to show.
 	 * @param group $location The location to show cash counts for.
+	 * @param bool $descendents Whether to show descendent locations.
 	 * @param bool $old Whether to show old cash counts instead.
 	 */
-	public function list_cashcounts($start_date = null, $end_date = null, $location = null, $old = false) {
+	public function list_cashcounts($start_date = null, $end_date = null, $location = null, $descendents = false, $old = false) {
 		global $pines;
 
 		$form = new module('com_sales', 'cashcount/listform', 'right');
@@ -276,7 +277,10 @@ class com_sales extends component {
 		);
 		if ($old)
 			$selector[0] = '!&';
-		$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		if ($descendents)
+			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		else
+			$or = array('|', 'ref' => array('group', $location));
 		$module->counts = $pines->entity_manager->get_entities(
 				array('class' => com_sales_cashcount),
 				$selector,
@@ -290,6 +294,7 @@ class com_sales extends component {
 		$form->start_date = $start_date;
 		$form->end_date = $end_date;
 		$form->location = $location->guid;
+		$form->descendents = $descendents;
 		$form->old = $module->old = $old;
 
 		// Remind the user to do a cash count if one is assigned to their location.
@@ -328,8 +333,9 @@ class com_sales extends component {
 	 * @param int $start_date The start date of countsheets to show.
 	 * @param int $end_date The end date of countsheets to show.
 	 * @param group $location The location to show countsheets for.
+	 * @param bool $descendents Whether to show descendent locations.
 	 */
-	public function list_countsheets($start_date = null, $end_date = null, $location = null) {
+	public function list_countsheets($start_date = null, $end_date = null, $location = null, $descendents = false) {
 		global $pines;
 
 		$module = new module('com_sales', 'countsheet/list', 'content');
@@ -345,12 +351,16 @@ class com_sales extends component {
 			$approved_selector = array('!&', 'data' => array('status', 'approved'));
 		else
 			$approved_selector = array('&');
-		$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		if ($descendents)
+			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		else
+			$or = array('|', 'ref' => array('group', $location));
 		$module->countsheets = $pines->entity_manager->get_entities(array('class' => com_sales_countsheet), $selector, $approved_selector, $or);
 		$module->start_date = $start_date;
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
 		$module->location = $location;
+		$module->descendents = $descendents;
 
 		// Remind the user to do a countsheet if one is assigned to their location.
 		if ($_SESSION['user']) {
@@ -446,8 +456,9 @@ class com_sales extends component {
 	 * @param int $start_date The start date of returns to show.
 	 * @param int $end_date The end date of returns to show.
 	 * @param group $location The location to show returns for.
+	 * @param bool $descendents Whether to show descendent locations.
 	 */
-	public function list_returns($start_date = null, $end_date = null, $location = null) {
+	public function list_returns($start_date = null, $end_date = null, $location = null, $descendents = false) {
 		global $pines;
 
 		$module = new module('com_sales', 'return/list', 'content');
@@ -459,12 +470,16 @@ class com_sales extends component {
 			$selector['lte'] = array('p_cdate', (int) $end_date);
 		if (!isset($location))
 			$location = $_SESSION['user']->group;
-		$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		if ($descendents)
+			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		else
+			$or = array('|', 'ref' => array('group', $location));
 		$module->returns = $pines->entity_manager->get_entities(array('class' => com_sales_return), $selector, $or);
 		$module->start_date = $start_date;
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
 		$module->location = $location;
+		$module->descendents = $descendents;
 
 		if ( empty($module->returns) )
 			pines_notice('No returns found.');
@@ -475,8 +490,9 @@ class com_sales extends component {
 	 * @param int $start_date The start date of sales to show.
 	 * @param int $end_date The end date of sales to show.
 	 * @param group $location The location to show sales for.
+	 * @param bool $descendents Whether to show descendent locations.
 	 */
-	public function list_sales($start_date = null, $end_date = null, $location = null) {
+	public function list_sales($start_date = null, $end_date = null, $location = null, $descendents = false) {
 		global $pines;
 
 		$module = new module('com_sales', 'sale/list', 'content');
@@ -488,12 +504,16 @@ class com_sales extends component {
 			$selector['lte'] = array('p_cdate', (int) $end_date);
 		if (!isset($location))
 			$location = $_SESSION['user']->group;
-		$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		if ($descendents)
+			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		else
+			$or = array('|', 'ref' => array('group', $location));
 		$module->sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
 		$module->start_date = $start_date;
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
 		$module->location = $location;
+		$module->descendents = $descendents;
 
 		if ( empty($module->sales) )
 			pines_notice('No sales found.');
@@ -504,8 +524,9 @@ class com_sales extends component {
 	 *
 	 * @param bool $removed Whether to show shipments that have been sent.
 	 * @param group $location The location to show shipments for.
+	 * @param bool $descendents Whether to show descendent locations.
 	 */
-	public function list_shipments($removed = false, $location = null) {
+	public function list_shipments($removed = false, $location = null, $descendents = false) {
 		global $pines;
 
 		$module = new module('com_sales', 'stock/shipments', 'content');
@@ -517,8 +538,12 @@ class com_sales extends component {
 		} else {
 			if (!isset($location))
 				$location = $_SESSION['user']->group;
-			$selector2 = array('|', 'ref' => array('group', $location->get_descendents(true)));
+			if ($descendents)
+				$selector2 = array('|', 'ref' => array('group', $location->get_descendents(true)));
+			else
+				$selector2 = array('|', 'ref' => array('group', $location));
 			$module->location = $location;
+			$module->descendents = $descendents;
 			$module->removed = false;
 		}
 		if ($pines->config->com_sales->ready_to_ship == 'invoice') {
@@ -563,8 +588,9 @@ class com_sales extends component {
 	 *
 	 * @param bool $removed Whether to show stock that is no longer physically in inventory.
 	 * @param group $location The location to show stock for.
+	 * @param bool $descendents Whether to show descendent locations.
 	 */
-	public function list_stock($removed = false, $location = null) {
+	public function list_stock($removed = false, $location = null, $descendents = false) {
 		global $pines;
 
 		$module = new module('com_sales', 'stock/list', 'content');
@@ -580,6 +606,10 @@ class com_sales extends component {
 				);
 		} else {
 			$module->removed = false;
+			if ($descendents)
+				$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+			else
+				$or = array('|', 'ref' => array('group', $location));
 			if (!isset($location)) {
 				$show_empty = true;
 				$module->location = $_SESSION['user']->group;
@@ -589,9 +619,10 @@ class com_sales extends component {
 				$module->stock = $pines->entity_manager->get_entities(
 					array('class' => com_sales_stock),
 					array('&', 'tag' => array('com_sales', 'stock'), array('isset' => 'location')),
-					array('|', 'ref' => array('location', $location->get_descendents(true)))
+					$or
 				);
 			}
+			$module->descendents = $descendents;
 		}
 
 		if ( empty($module->stock) && !$show_empty )
@@ -685,9 +716,10 @@ class com_sales extends component {
 	 * Print a form to select a location.
 	 *
 	 * @param int $location The currently set location to search in.
+	 * @param bool $descendents Whether to show descendent locations.
 	 * @return module The form's module.
 	 */
-	public function location_select_form($location = null) {
+	public function location_select_form($location = null, $descendents = false) {
 		global $pines;
 		$pines->page->override = true;
 
@@ -697,6 +729,7 @@ class com_sales extends component {
 		} else {
 			$module->location = $location;
 		}
+		$module->descendents = $descendents;
 
 		$pines->page->override_doc($module->render());
 		return $module;
@@ -860,8 +893,9 @@ class com_sales extends component {
 	 * @param int $start_date The starting date to search for products within.
 	 * @param int $end_date The ending date to search for products within.
 	 * @param group $location The location to search for products in.
+	 * @param bool $descendents Whether to show descendent locations.
 	 */
-	public function track_product($serial = null, $sku = null, $start_date = null, $end_date = null, $location = null, $types = null) {
+	public function track_product($serial = null, $sku = null, $start_date = null, $end_date = null, $location = null, $descendents = false, $types = null) {
 		global $pines;
 
 		$module = new module('com_sales', 'product/track', 'content');
@@ -893,8 +927,10 @@ class com_sales extends component {
 		$secondary_options = array('&');
 		if (!isset($location->guid))
 			$location = $_SESSION['user']->group;
-		$module->location = $location;
-		$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		if ($descendents)
+			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		else
+			$or = array('|', 'ref' => array('group', $location));
 
 		if (isset($start_date))
 			$secondary_options['gte'][] = array('p_cdate', (int) $start_date);
@@ -903,6 +939,8 @@ class com_sales extends component {
 		$module->start_date = $start_date;
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
+		$module->location = $location;
+		$module->descendents = $descendents;
 		$module->stock = $module->transactions = array();
 		if (isset($module->serial) || isset($module->sku))
 			$module->stock = $pines->entity_manager->get_entities(array('class' => com_sales_stock), $selector);
@@ -949,6 +987,16 @@ class com_sales extends component {
 					)
 				);
 			}
+			if ($module->types['countsheet']) {
+				$or['array'] = array('entries', $countsheet_code);
+				$countsheets = $pines->entity_manager->get_entities(
+					array('class' => com_sales_countsheet, 'skip_ac' => true),
+					$secondary_options,
+					$or,
+					array('&', 'tag' => array('com_sales', 'countsheet'))
+				);
+			}
+			$or['ref'][0] = 'destination';
 			if ($module->types['transfer']) {
 				$transfers = $pines->entity_manager->get_entities(
 					array('class' => com_sales_transfer, 'skip_ac' => true),
@@ -969,15 +1017,6 @@ class com_sales extends component {
 						'tag' => array('com_sales', 'po'),
 						'ref' => array('received', $cur_stock)
 					)
-				);
-			}
-			if ($module->types['countsheet']) {
-				$or['array'] = array('entries', $countsheet_code);
-				$countsheets = $pines->entity_manager->get_entities(
-					array('class' => com_sales_countsheet, 'skip_ac' => true),
-					$secondary_options,
-					$or,
-					array('&', 'tag' => array('com_sales', 'countsheet'))
 				);
 			}
 			foreach (array_merge($invoices, $returns, $swaps, $transfers, $pos, $countsheets) as $cur_tx) {

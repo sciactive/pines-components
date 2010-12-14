@@ -45,6 +45,7 @@ foreach ($category->products as $product) {
 		'guid' => $product->guid,
 		'name' => $product->name,
 		'sku' => $product->sku,
+		'stock_type' => $product->stock_type,
 		'pricing_method' => $product->pricing_method,
 		'unit_price' => $product->unit_price,
 		'margin' => $product->margin,

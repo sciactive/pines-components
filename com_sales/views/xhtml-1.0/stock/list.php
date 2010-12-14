@@ -15,7 +15,8 @@ if ($this->removed) {
 } else {
 	if (!empty($this->stock)) {
 		$this->title = "Stock at {$this->location->name} [{$this->location->groupname}]";
-		$this->note = "Stock for all locations below {$this->location->name} is also included.";
+		if ($this->descendents)
+			$this->note = "Stock for all locations below {$this->location->name} is also included.";
 	} else {
 		$this->title = 'Stock [No Location]';
 		$this->note = 'This list is empty by default. Please select a location to view the inventory.';

@@ -607,9 +607,9 @@ class com_sales extends component {
 		} else {
 			$module->removed = false;
 			if ($descendents)
-				$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+				$or = array('|', 'ref' => array('location', $location->get_descendents(true)));
 			else
-				$or = array('|', 'ref' => array('group', $location));
+				$or = array('|', 'ref' => array('location', $location));
 			if (!isset($location)) {
 				$show_empty = true;
 				$module->location = $_SESSION['user']->group;

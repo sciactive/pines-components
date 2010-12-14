@@ -37,5 +37,5 @@ if (!empty($_REQUEST['location']))
 
 $descendents = ($_REQUEST['descendents'] == 'true');
 
-$pines->com_sales->list_returns($start_date, $end_date, $location, $descendent);
+$pines->com_sales->list_returns($start_date, $end_date, $location, $descendents);
 ?>

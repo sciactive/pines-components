@@ -135,26 +135,25 @@ $pines->com_pgrid->load();
 			});
 		};
 		<?php } ?>
+		$("#p_muid_div").accordion({autoHeight: false});
 	});
 	// ]]>
 </script>
-<div class="pf-form">
-	<div class="pf-element pf-heading">
-		<h1>Employment History</h1>
-	</div>
-	<div class="pf-element pf-full-width" id="p_muid_history">
-		<?php foreach ($this->entity->employment_history as $cur_history) { ?>
-		<div>
-			<span class="date"><?php echo format_date($cur_history[0], 'date_long'); ?></span>
-			<span><?php echo htmlspecialchars($cur_history[1]); ?></span>
+<div class="pf-form" id="p_muid_div">
+	<?php if (!empty($this->entity->employment_history)) { ?>
+	<div>
+		<h3 class="ui-helper-clearfix"><a href="#">Employment History</a></h3>
+		<div id="p_muid_history">
+			<?php foreach ($this->entity->employment_history as $cur_history) { ?>
+			<div>
+				<span class="date"><?php echo format_date($cur_history[0], 'date_long'); ?></span>
+				<span><?php echo htmlspecialchars($cur_history[1]); ?></span>
+			</div>
+			<?php } ?>
 		</div>
-		<?php } ?>
-	</div>
-	<?php if (!empty($this->issues)) { ?>
-	<div class="pf-element pf-heading">
-		<h1>Issues/Transgressions</h1>
-	</div>
-	<div class="pf-element pf-full-width">
+	<?php } if (!empty($this->issues)) { ?>
+	<h3 class="ui-helper-clearfix"><a href="#">Issues/Transgressions</a></h3>
+	<div>
 		<table id="p_muid_issues">
 			<thead>
 				<tr>
@@ -194,10 +193,8 @@ $pines->com_pgrid->load();
 		</table>
 	</div>
 	<?php } if (!empty($this->sales)) { ?>
-	<div class="pf-element pf-heading">
-		<h1>Sales History</h1>
-	</div>
-	<div class="pf-element pf-full-width">
+	<h3 class="ui-helper-clearfix"><a href="#">Sales History</a></h3>
+	<div>
 		<table id="p_muid_grid">
 			<thead>
 				<tr>
@@ -226,10 +223,8 @@ $pines->com_pgrid->load();
 		</table>
 	</div>
 	<?php } if (!empty($this->returns)) { ?>
-	<div class="pf-element pf-heading">
-		<h1>Return History</h1>
-	</div>
-	<div class="pf-element pf-full-width">
+	<h3 class="ui-helper-clearfix"><a href="#">Return History</a></h3>
+	<div>
 		<table id="p_muid_grid2">
 			<thead>
 				<tr>
@@ -257,7 +252,9 @@ $pines->com_pgrid->load();
 			</tbody>
 		</table>
 	</div>
-	<?php } if (gatekeeper('com_hrm/listemployees')) { ?>
-	<input class="pf-button ui-state-default ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_hrm', 'employee/list', array('employed' => isset($this->entity->terminated) ? 'false' : 'true'))); ?>');" value="&laquo; Employees" />
 	<?php } ?>
+	<br class="pf-clearing" />
 </div>
+<?php if (gatekeeper('com_hrm/listemployees')) { ?>
+<input class="pf-button ui-state-default ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_hrm', 'employee/list', array('employed' => isset($this->entity->terminated) ? 'false' : 'true'))); ?>');" value="&laquo; Employees" />
+<?php } ?>

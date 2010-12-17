@@ -81,7 +81,10 @@ $pines->com_jstree->load();
 	// ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_reports', 'reportsales')); ?>">
-	<div class="pf-element location_tree"></div>
+	<div class="pf-element">
+		<label><input type="checkbox" name="descendents" value="ON" <?php echo $this->descendents ? 'checked="checked"' : ''; ?> /> Include Descendents</label>
+		<div class="pf-element location_tree"></div>
+	</div>
 	<div class="pf-element">
 		<select class="ui-widget-content ui-corner-all" style="width: 100%;" name="employee"></select>
 	</div>

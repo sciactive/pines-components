@@ -83,9 +83,10 @@ class com_reports_sales_ranking extends entity {
 	 * Creates and attaches a module which reports sales rankings.
 	 * 
 	 * @param group $location The location to list the rankings for.
+	 * @param bool $descendents Whether to show descendent locations.
 	 * @return module The sales ranking report module.
 	 */
-	function rank($location = null) {
+	function rank($location = null, $descendents = false) {
 		global $pines;
 
 		if (!isset($location->guid))
@@ -94,11 +95,12 @@ class com_reports_sales_ranking extends entity {
 		$module = new module('com_reports', 'view_sales_rankings', 'content');
 		$module->entity = $this;
 		$module->location = $location;
+		$module->descendents = $descendents;
 		$module->rankings = array();
 		$employees = $pines->com_hrm->get_employees();
 
 		foreach ($employees as $key => $value) {
-			if ( !$value->in_group($location) && !$value->is_descendent($location) )
+			if ( !$value->in_group($location) && (!$descendents || !$value->is_descendent($location)) )
 				unset($employees[$key]);
 		}
 

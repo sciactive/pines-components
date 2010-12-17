@@ -60,12 +60,14 @@ $yellow_status = $pines->config->com_reports->rank_level_yellow;
 			// Submit the form with all of the fields.
 			pines.post("<?php echo addslashes(pines_url('com_reports', 'viewsalesranking')); ?>", {
 				"id": "<?php echo $this->entity->guid; ?>",
-				"location": location
+				"location": location,
+				"descendents": descendents
 			});
 		};
 
 		// Location Defaults
 		var location = "<?php echo $this->location->guid; ?>";
+		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
 
 		var rankings_grid = $("#p_muid_grid").pgrid({
 			pgrid_toolbar: true,
@@ -74,7 +76,7 @@ $yellow_status = $pines->config->com_reports->rank_level_yellow;
 				{type: 'button', text: '&laquo; Rankings List', extra_class: 'picon picon-view-choose', selection_optional: true, url: '<?php echo addslashes(pines_url('com_reports', 'salesrankings')); ?>'},
 				{type: 'separator'},
 				<?php } ?>
-				{type: 'button', text: 'Location', extra_class: 'picon picon-applications-internet', selection_optional: true, click: function(){rankings_grid.location_form();}},
+				{type: 'button', title: 'Location', extra_class: 'picon picon-applications-internet', selection_optional: true, click: function(){rankings_grid.location_form();}},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
@@ -135,7 +137,7 @@ $yellow_status = $pines->config->com_reports->rank_level_yellow;
 				url: "<?php echo addslashes(pines_url('com_reports', 'locationselect')); ?>",
 				type: "POST",
 				dataType: "html",
-				data: {"location": location},
+				data: {"location": location, "descendents": descendents},
 				error: function(XMLHttpRequest, textStatus){
 					pines.error("An error occured while trying to retreive the location form:\n"+XMLHttpRequest.status+": "+textStatus);
 				},
@@ -157,6 +159,10 @@ $yellow_status = $pines->config->com_reports->rank_level_yellow;
 						buttons: {
 							"Done": function(){
 								location = form.find(":input[name=location]").val();
+								if (form.find(":input[name=descendents]").attr('checked'))
+									descendents = true;
+								else
+									descendents = false;
 								form.dialog('close');
 								pines.search_rankings();
 							}

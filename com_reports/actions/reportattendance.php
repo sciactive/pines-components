@@ -37,7 +37,8 @@ if ($_REQUEST['all_time'] == 'true') {
 
 $employee = empty($_REQUEST['employee']) ? null : com_hrm_employee::factory((int) $_REQUEST['employee']);
 $location = empty($_REQUEST['location']) ? null : group::factory((int) $_REQUEST['location']);
+$descendents = ($_REQUEST['descendents'] == 'true');
 
-$pines->com_reports->report_attendance($start_date, $end_date, $location, $employee);
+$pines->com_reports->report_attendance($start_date, $end_date, $location, $employee, $descendents);
 
 ?>

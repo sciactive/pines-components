@@ -22,6 +22,8 @@ if (!isset($entity->guid)) {
 }
 
 $location = group::factory((int) $_REQUEST['location']);
-$entity->rank($location);
+$descendents = ($_REQUEST['descendents'] == 'true');
+
+$entity->rank($location, $descendents);
 
 ?>

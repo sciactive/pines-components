@@ -42,6 +42,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			// Submit the form with all of the fields.
 			pines.post("<?php echo addslashes(pines_url('com_reports', 'reportissues')); ?>", {
 				"location": location,
+				"descendents": descendents,
 				"all_time": all_time,
 				"start_date": start_date,
 				"end_date": end_date
@@ -54,14 +55,15 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var end_date = "<?php echo $this->end_date ? addslashes(format_date($this->end_date, 'date_sort')) : ''; ?>";
 		// Location Defaults
 		var location = "<?php echo $this->location->guid; ?>";
+		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
 
 		var state_xhr;
 		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
-				{type: 'button', text: 'Location', extra_class: 'picon picon-applications-internet', selection_optional: true, click: function(){issues_grid.location_form();}},
-				{type: 'button', text: 'Timespan', extra_class: 'picon picon-view-time-schedule', selection_optional: true, click: function(){issues_grid.date_form();}},
+				{type: 'button', title: 'Location', extra_class: 'picon picon-applications-internet', selection_optional: true, click: function(){issues_grid.location_form();}},
+				{type: 'button', title: 'Timespan', extra_class: 'picon picon-view-time-schedule', selection_optional: true, click: function(){issues_grid.date_form();}},
 				{type: 'separator'},
 				<?php if (gatekeeper('com_hrm/listemployees')) { ?>
 				{type: 'button', text: 'History', extra_class: 'picon picon-folder-html', url: '<?php echo addslashes(pines_url('com_hrm', 'employee/history', array('id' => '__title__'))); ?>'},
@@ -134,7 +136,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				url: "<?php echo addslashes(pines_url('com_reports', 'locationselect')); ?>",
 				type: "POST",
 				dataType: "html",
-				data: {"location": location},
+				data: {"location": location, "descendents": descendents},
 				error: function(XMLHttpRequest, textStatus){
 					pines.error("An error occured while trying to retreive the location form:\n"+XMLHttpRequest.status+": "+textStatus);
 				},
@@ -156,6 +158,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						buttons: {
 							"Done": function(){
 								location = form.find(":input[name=location]").val();
+								if (form.find(":input[name=descendents]").attr('checked'))
+									descendents = true;
+								else
+									descendents = false;
 								form.dialog('close');
 								pines.search_issues();
 							}

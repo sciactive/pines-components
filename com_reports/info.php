@@ -25,9 +25,11 @@ return array(
 		'component' => 'com_jquery&com_pgrid&com_jstree&(com_hrm|com_sales)'
 	),
 	'abilities' => array(
-		array('reportsales', 'Report Sales', 'User can see sales reports.'),
 		array('reportattendance', 'Report Attendance', 'User can see attendance reports.'),
+		array('reportissues', 'Report Attendance', 'User can see employee issuereports.'),
+		array('reportmifi', 'Report Attendance', 'User can see MiFi reports.'),
 		array('reportproducts', 'Report Products', 'User can see product detail reports.'),
+		array('reportsales', 'Report Sales', 'User can see sales reports.'),
 		array('listsalesrankings', 'List Sales Rankings', 'User can see a list of sales rankings.'),
 		array('viewsalesranking', 'Report Sales Rankings', 'User can see sales rankings.'),
 		array('newsalesranking', 'Create Sales Rankings', 'User can create sales rankings.'),

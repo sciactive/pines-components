@@ -93,5 +93,14 @@
 				"depend": {
 					"ability": "com_reports/editwarboard"
 				}
+			},
+		{
+			"path": "main_menu/business/reports/mifi",
+			"text": "MiFi",
+			"href": ["com_reports","reportmifi"],
+			"depend": {
+				"component": "com_mifi",
+				"ability": "com_reports/reportmifi"
 			}
+		}
 ]

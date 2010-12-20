@@ -21,6 +21,12 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class com_hrm extends component {
 	/**
+	 * Whether the employee selector JavaScript has been loaded.
+	 * @access private
+	 * @var bool $js_loaded_employee
+	 */
+	private $js_loaded_employee = false;
+	/**
 	 * Whether to integrate with com_sales.
 	 *
 	 * @var bool $com_sales
@@ -136,6 +142,19 @@ class com_hrm extends component {
 
 		if ( empty($module->employees) )
 			pines_notice('There are no employees.');
+	}
+
+	/**
+	 * Load the employee selector.
+	 *
+	 * This will place the required scripts into the document's head section.
+	 */
+	function load_employee_select() {
+		if (!$this->js_loaded_cust) {
+			$module = new module('com_hrm', 'employee/select', 'head');
+			$module->render();
+			$this->js_loaded_employee = true;
+		}
 	}
 
 	/**

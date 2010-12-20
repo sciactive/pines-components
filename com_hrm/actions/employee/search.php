@@ -32,20 +32,26 @@ foreach ($employees as $key => &$cur_employee) {
 		(preg_replace('/\D/', '', $query) != '' && strpos($cur_employee->phone, preg_replace('/\D/', '', $query)) !== false)
 		) {
 		$json_struct = (object) array(
-			'guid'		=> $cur_employee->guid,
-			'name'		=> $cur_employee->name,
-			'title'		=> $cur_employee->job_title,
-			'email'		=> $cur_employee->email,
-			'city'		=> $cur_employee->city,
-			'state'		=> $cur_employee->state,
-			'zip'		=> $cur_employee->zip,
-			'phone'		=> format_phone($cur_employee->phone)
+			'guid'			=> $cur_employee->guid,
+			'username'		=> $cur_employee->username,
+			'name'			=> $cur_employee->name,
+			'title'			=> $cur_employee->job_title,
+			'email'			=> $cur_employee->email,
+			'city'			=> $cur_employee->city,
+			'state'			=> $cur_employee->state,
+			'zip'			=> $cur_employee->zip,
+			'phone'			=> format_phone($cur_employee->phone),
+			'location_name'	=> $cur_employee->group->name
 		);
 		$cur_employee = $json_struct;
 	} else {
 		unset($employees[$key]);
 	}
 }
+unset($cur_employee);
+
+// If employees were removed, the array needs to be re-indexed.
+$employees = array_values($employees);
 
 if (empty($employees))
 	$employees = null;

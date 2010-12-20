@@ -26,8 +26,8 @@ return array(
 	),
 	'abilities' => array(
 		array('reportattendance', 'Report Attendance', 'User can see attendance reports.'),
-		array('reportissues', 'Report Attendance', 'User can see employee issuereports.'),
-		array('reportmifi', 'Report Attendance', 'User can see MiFi reports.'),
+		array('reportissues', 'Report Issues', 'User can see employee issue reports.'),
+		array('reportmifi', 'Report MiFi', 'User can see MiFi reports.'),
 		array('reportproducts', 'Report Products', 'User can see product detail reports.'),
 		array('reportsales', 'Report Sales', 'User can see sales reports.'),
 		array('listsalesrankings', 'List Sales Rankings', 'User can see a list of sales rankings.'),

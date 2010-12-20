@@ -149,7 +149,10 @@
 .picon-32.picon-edit-delete {background-image:url("32/actions/edit-delete.png")}
 .picon-32.picon-edit-delete-shred {background-image:url("32/actions/edit-delete-shred.png")}
 .picon-32.picon-edit-find {background-image:url("32/actions/edit-find.png")}
+.picon-32.picon-edit-find-mail {background-image:url("32/actions/edit-find-mail.png")}
+.picon-32.picon-edit-find-project {background-image:url("32/actions/edit-find-project.png")}
 .picon-32.picon-edit-find-replace {background-image:url("32/actions/edit-find-replace.png")}
+.picon-32.picon-edit-find-user {background-image:url("32/actions/edit-find-user.png")}
 .picon-32.picon-edit-paste {background-image:url("32/actions/edit-paste.png")}
 .picon-32.picon-edit-redo {background-image:url("32/actions/edit-redo.png")}
 .picon-32.picon-edit-rename {background-image:url("32/actions/edit-rename.png")}
@@ -291,7 +294,7 @@
 .picon-32.picon-mail-folder-outbox {background-image:url("32/places/mail-folder-outbox.png")}
 .picon-32.picon-mail-folder-sent {background-image:url("32/places/mail-folder-sent.png")}
 .picon-32.picon-mail-forward {background-image:url("32/actions/mail-forward.png")}
-.picon-32.picon-mail-forwarded {background-image:url("32/status/mail-forwarded.png")}
+.picon-32.picon-mail-forwarded {background-image:url("32/actions/mail-forwarded.png")}
 .picon-32.picon-mail-invitation {background-image:url("32/actions/mail-invitation.png")}
 .picon-32.picon-mail-mark-important {background-image:url("32/actions/mail-mark-important.png")}
 .picon-32.picon-mail-mark-junk {background-image:url("32/actions/mail-mark-junk.png")}
@@ -874,7 +877,10 @@
 .picon-edit-delete {background-image:url("16/actions/edit-delete.png")}
 .picon-edit-delete-shred {background-image:url("16/actions/edit-delete-shred.png")}
 .picon-edit-find {background-image:url("16/actions/edit-find.png")}
+.picon-edit-find-mail {background-image:url("16/actions/edit-find-mail.png")}
+.picon-edit-find-project {background-image:url("16/actions/edit-find-project.png")}
 .picon-edit-find-replace {background-image:url("16/actions/edit-find-replace.png")}
+.picon-edit-find-user {background-image:url("16/actions/edit-find-user.png")}
 .picon-edit-link {background-image:url("16/actions/edit-link.png")}
 .picon-edit-paste {background-image:url("16/actions/edit-paste.png")}
 .picon-edit-redo {background-image:url("16/actions/edit-redo.png")}
@@ -886,6 +892,7 @@
 .picon-edit-table-insert-column-left {background-image:url("16/actions/edit-table-insert-column-left.png")}
 .picon-edit-table-insert-column-right {background-image:url("16/actions/edit-table-insert-column-right.png")}
 .picon-edit-table-insert-row-above {background-image:url("16/actions/edit-table-insert-row-above.png")}
+.picon-edit-table-insert-row-below {background-image:url("16/actions/edit-table-insert-row-below.png")}
 .picon-edit-table-insert-row-under {background-image:url("16/actions/edit-table-insert-row-under.png")}
 .picon-edit-text-frame-update {background-image:url("16/actions/edit-text-frame-update.png")}
 .picon-edit-undo {background-image:url("16/actions/edit-undo.png")}
@@ -1018,7 +1025,7 @@
 .picon-mail-folder-outbox {background-image:url("16/places/mail-folder-outbox.png")}
 .picon-mail-folder-sent {background-image:url("16/places/mail-folder-sent.png")}
 .picon-mail-forward {background-image:url("16/actions/mail-forward.png")}
-.picon-mail-forwarded {background-image:url("16/status/mail-forwarded.png")}
+.picon-mail-forwarded {background-image:url("16/actions/mail-forwarded.png")}
 .picon-mail-invitation {background-image:url("16/actions/mail-invitation.png")}
 .picon-mail-mark-important {background-image:url("16/actions/mail-mark-important.png")}
 .picon-mail-mark-junk {background-image:url("16/actions/mail-mark-junk.png")}

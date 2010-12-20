@@ -16,6 +16,8 @@ if ($pines->config->com_sales->com_customer && !$pines->depend->check('component
 
 if ($pines->config->com_sales->com_hrm && !$pines->depend->check('component', 'com_hrm'))
 	$pines->config->com_sales->com_hrm = false;
+if ($pines->config->com_sales->per_item_salesperson && !$pines->config->com_sales->com_hrm)
+	$pines->config->com_sales->per_item_salesperson = false;
 
 if ($pines->config->com_sales->com_storefront && !$pines->depend->check('component', 'com_storefront'))
 	$pines->config->com_sales->com_storefront = false;

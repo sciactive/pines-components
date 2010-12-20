@@ -61,18 +61,15 @@ class com_sales_sale extends entity {
 		if ($this->added_commission || !$pines->config->com_sales->com_hrm)
 			return;
 		$this->added_commission = true;
-		$user = isset($this->user) ? $this->user : $_SESSION['user'];
-		if (!isset($user))
-			return;
-		$user->refresh();
 		// Go through each product, adding commission.
 		foreach ($this->products as &$cur_product) {
-			// Call product actions for all products without stock entries.
+			if (!isset($cur_product['salesperson']))
+				continue;
 			if (!$cur_product['entity']->commissions)
 				continue;
 			$cur_product['commission'] = 0;
 			foreach ($cur_product['entity']->commissions as $cur_commission) {
-				if (!$user->in_group($cur_commission['group']))
+				if (!$cur_product['salesperson']->in_group($cur_commission['group']))
 					continue;
 				// Calculate commission.
 				switch ($cur_commission['type']) {
@@ -84,17 +81,20 @@ class com_sales_sale extends entity {
 						break;
 				}
 			}
-			if ((array) $user->commissions !== $user->commissions)
-				$user->commissions = array();
-			$user->commissions[] = array(
+			if ($cur_product['commission'] == 0)
+				continue;
+			// Add the commission to the user.
+			if ((array) $cur_product['salesperson']->commissions !== $cur_product['salesperson']->commissions)
+				$cur_product['salesperson']->commissions = array();
+			$cur_product['salesperson']->commissions[] = array(
 				'date' => time(),
 				'amount' => $cur_product['commission'] * $cur_product['quantity'],
 				'ticket' => $this,
 				'product' => $cur_product['entity']
 			);
+			$cur_product['salesperson']->save();
 		}
 		unset($cur_product);
-		$user->save();
 		$this->save();
 	}
 
@@ -492,7 +492,8 @@ class com_sales_sale extends entity {
 					'price' => $cur_product['price'],
 					'discount' => $cur_product['discount'],
 					'line_total' => $cur_product['line_total'],
-					'fees' => $cur_product['fees']
+					'fees' => $cur_product['fees'],
+					'salesperson' => $cur_product['salesperson']
 				), $i);
 			}
 			// Call product actions on stock.
@@ -509,7 +510,8 @@ class com_sales_sale extends entity {
 					'price' => $cur_product['price'],
 					'discount' => $cur_product['discount'],
 					'line_total' => $cur_product['line_total'],
-					'fees' => $cur_product['fees']
+					'fees' => $cur_product['fees'],
+					'salesperson' => $cur_product['salesperson']
 				));
 			}
 			unset($cur_stock);
@@ -1220,7 +1222,8 @@ class com_sales_sale extends entity {
 						'price' => $cur_product['price'],
 						'discount' => $cur_product['discount'],
 						'line_total' => $cur_product['line_total'],
-						'fees' => $cur_product['fees']
+						'fees' => $cur_product['fees'],
+						'salesperson' => $cur_product['salesperson']
 					), $i);
 				}
 				// Call product actions on stock.
@@ -1237,7 +1240,8 @@ class com_sales_sale extends entity {
 						'price' => $cur_product['price'],
 						'discount' => $cur_product['discount'],
 						'line_total' => $cur_product['line_total'],
-						'fees' => $cur_product['fees']
+						'fees' => $cur_product['fees'],
+						'salesperson' => $cur_product['salesperson']
 					));
 				}
 			}
@@ -1277,15 +1281,24 @@ class com_sales_sale extends entity {
 			}
 			unset($cur_payment);
 		}
-		if ($this->added_commission && is_array($this->user->commissions)) {
-			foreach ($this->user->commissions as &$cur_commission) {
-				if ($this->is($cur_commission['ticket'])) {
-					$cur_commission['note'] = "Sale was voided. Amount: \${$cur_commission['amount']}";
-					$cur_commission['amount'] = 0;
-				}
+		if ($this->added_commission) {
+			$users = array();
+			foreach ($this->products as $cur_product) {
+				if (!isset($cur_product['salesperson']))
+					continue;
+				if (!$cur_product['salesperson']->in_array($users) && is_array($cur_product['salesperson']->commissions))
+					$users[] = $cur_product['salesperson'];
 			}
-			unset($cur_commission);
-			$this->user->save();
+			foreach ($users as $cur_user) {
+				foreach ($cur_user->commissions as &$cur_commission) {
+					if ($this->is($cur_commission['ticket'])) {
+						$cur_commission['note'] = "Sale was voided. Amount: \${$cur_commission['amount']}";
+						$cur_commission['amount'] = 0;
+					}
+				}
+				unset($cur_commission);
+				$cur_user->save();
+			}
 		}
 
 		// Complete the transaction.

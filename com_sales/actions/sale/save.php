@@ -55,6 +55,12 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != '
 			$cur_qty = (int) $cur_product->values[4];
 			$cur_price = (float) $cur_product->values[5];
 			$cur_discount = $cur_product->values[6];
+			$cur_salesperson = null;
+			if ($pines->config->com_sales->per_item_salesperson)
+				$cur_salesperson = user::factory(intval($cur_product->values[9]));
+			// Default to the sale's user.
+			if (!isset($cur_salesperson->guid))
+				$cur_salesperson = $sale->user->guid ? $sale->user : $_SESSION['user'];
 			if ($cur_delivery == 'shipped' && !$sale->has_tag('shipping_shipped'))
 				$sale->add_tag('shipping_pending');
 			if (!isset($cur_product_entity->guid)) {
@@ -114,7 +120,8 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != '
 				'delivery' => $cur_delivery,
 				'quantity' => $cur_qty,
 				'price' => $cur_price,
-				'discount' => $cur_discount
+				'discount' => $cur_discount,
+				'salesperson' => $cur_salesperson
 			);
 		}
 		unset($cur_product);

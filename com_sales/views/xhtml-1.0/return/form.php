@@ -785,15 +785,18 @@ if ($pines->config->com_sales->autocomplete_product)
 					$.each(product.fees_flat, function(){
 						cur_item_fees += this.rate * qty;
 					});
-					item_fees += cur_item_fees;
-					subtotal += line_total;
+					item_fees += round_to_dec(cur_item_fees);
+					subtotal += round_to_dec(line_total);
 					cur_row.pgrid_set_value(8, round_to_dec(line_total));
 					cur_row.pgrid_set_value(9, round_to_dec(cur_item_fees));
 				});
+				subtotal = round_to_dec(subtotal);
+				$("#p_muid_subtotal").html(subtotal);
+				item_fees = round_to_dec(item_fees);
+				$("#p_muid_item_fees").html(item_fees);
+				taxes = round_to_dec(taxes);
+				$("#p_muid_taxes").html(taxes);
 				total = subtotal + item_fees + taxes;
-				$("#p_muid_subtotal").html(round_to_dec(subtotal));
-				$("#p_muid_item_fees").html(round_to_dec(item_fees));
-				$("#p_muid_taxes").html(round_to_dec(taxes));
 				$("#p_muid_total").html(round_to_dec(total));
 
 				// Update the products input element.

@@ -963,14 +963,12 @@ class com_sales extends component {
 				);
 			}
 			if ($module->types['return']) {
+				$or['ref'] = array('products', $cur_stock);
 				$returns = $pines->entity_manager->get_entities(
 					array('class' => com_sales_sale, 'skip_ac' => true),
 					$secondary_options,
 					$or,
-					array('&',
-						'tag' => array('com_sales', 'return'),
-						'ref' => array('products', $cur_stock)
-					)
+					array('&', 'tag' => array('com_sales', 'return'))
 				);
 			}
 			if ($module->types['swap']) {

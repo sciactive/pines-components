@@ -58,7 +58,7 @@ $yellow_status = $pines->config->com_reports->rank_level_yellow;
 	pines(function(){
 		pines.search_rankings = function(){
 			// Submit the form with all of the fields.
-			pines.post("<?php echo addslashes(pines_url('com_reports', 'viewsalesranking')); ?>", {
+			pines.get("<?php echo addslashes(pines_url('com_reports', 'viewsalesranking')); ?>", {
 				"id": "<?php echo $this->entity->guid; ?>",
 				"location": location,
 				"descendents": descendents

@@ -42,7 +42,7 @@ $pines->com_jstree->load();
 			if ($("#p_muid_types_dialog [name=types_countsheet]").attr('checked'))
 				types.push('countsheet');
 			// Submit the form with all of the fields.
-			pines.post(submit_url, {
+			pines.get(submit_url, {
 				"serial": serial_box.val(),
 				"sku": sku_box.val(),
 				"types": types,

@@ -26,7 +26,7 @@ $pines->com_jstree->load();
 		var submit_url = "<?php echo addslashes(pines_url('com_sales', 'stock/shipments')); ?>";
 		var submit_search = function(){
 			// Submit the form with all of the fields.
-			pines.post(submit_url, {
+			pines.get(submit_url, {
 				"location": location,
 				"descendents": descendents
 			});

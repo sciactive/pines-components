@@ -78,7 +78,7 @@ $pay_grades = array(
 	pines(function(){
 		var search_mifi = function(){
 			// Submit the form with all of the fields.
-			pines.post("<?php echo addslashes(pines_url('com_reports', 'reportmifi')); ?>", {
+			pines.get("<?php echo addslashes(pines_url('com_reports', 'reportmifi')); ?>", {
 				"location": location,
 				"descendents": descendents,
 				"all_time": all_time,

@@ -22,7 +22,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var submit_url = "<?php echo addslashes(pines_url('com_sales', 'sale/list')); ?>";
 		var submit_search = function(){
 			// Submit the form with all of the fields.
-			pines.post(submit_url, {
+			pines.get(submit_url, {
 				"location": location,
 				"descendents": descendents,
 				"all_time": all_time,

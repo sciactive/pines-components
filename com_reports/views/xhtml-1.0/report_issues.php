@@ -40,7 +40,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	pines(function(){
 		pines.search_issues = function(){
 			// Submit the form with all of the fields.
-			pines.post("<?php echo addslashes(pines_url('com_reports', 'reportissues')); ?>", {
+			pines.get("<?php echo addslashes(pines_url('com_reports', 'reportissues')); ?>", {
 				"location": location,
 				"descendents": descendents,
 				"all_time": all_time,

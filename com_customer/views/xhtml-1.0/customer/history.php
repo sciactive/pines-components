@@ -30,15 +30,14 @@ $pines->com_pgrid->load();
 			pgrid_sort_col: 2,
 			pgrid_sort_ord: 'desc'
 		});
+		$("#p_muid_history").accordion({autoHeight: false});
 	});
 	// ]]>
 </script>
-<div class="pf-form">
-	<div class="pf-element pf-heading">
-		<h1>Customer Interaction</h1>
-	</div>
-	<div class="pf-element pf-full-width">
-		<?php if (!empty($this->interactions)) { ?>
+<div class="pf-form" id="p_muid_history">
+	<?php if (!empty($this->interactions)) { ?>
+	<h3 class="ui-helper-clearfix"><a href="#">Customer Interaction</a></h3>
+	<div>
 		<table id="p_muid_interactions">
 			<thead>
 				<tr>
@@ -61,16 +60,11 @@ $pines->com_pgrid->load();
 				<?php } ?>
 			</tbody>
 		</table>
-		<?php } else { ?>
-		No customer interactions were documented for <?php echo htmlspecialchars($this->entity->name); ?>
-		<?php } ?>
 	</div>
-	<?php if ($this->com_sales) { ?>
-		<div class="pf-element pf-heading">
-			<h1>Purchases</h1>
-		</div>
-		<div class="pf-element pf-full-width">
-			<?php if (!empty($this->sales)) { ?>
+	<?php } if ($this->com_sales) { ?>
+		<?php if (!empty($this->sales)) { ?>
+		<h3 class="ui-helper-clearfix"><a href="#">Purchases</a></h3>
+		<div>
 			<table id="p_muid_sales">
 				<thead>
 					<tr>
@@ -106,15 +100,10 @@ $pines->com_pgrid->load();
 					<?php } ?>
 				</tbody>
 			</table>
-			<?php } else {
-				echo htmlspecialchars($this->entity->name).' has not made any purchases from '.$pines->config->system_name;
-			} ?>
 		</div>
-		<div class="pf-element pf-heading">
-			<h1>Returns</h1>
-		</div>
-		<div class="pf-element pf-full-width">
-			<?php if (!empty($this->returns)) { ?>
+		<?php } if (!empty($this->returns)) { ?>
+		<h3 class="ui-helper-clearfix"><a href="#">Returns</a></h3>
+		<div>
 			<table id="p_muid_returns">
 				<thead>
 					<tr>
@@ -140,12 +129,9 @@ $pines->com_pgrid->load();
 					<?php } ?>
 				</tbody>
 			</table>
-			<?php } else {
-				echo htmlspecialchars($this->entity->name).' has not returned any items to '.$pines->config->system_name;
-			} ?>
 		</div>
-	<?php } ?>
-	<div class="pf-element pf-buttons">
-		<button class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_customer', 'customer/list')); ?>');">Close</button>
-	</div>
+		<?php }
+	} ?>
+	<br class="pf-clearing" />
 </div>
+<button class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_customer', 'customer/list')); ?>');">Close</button>

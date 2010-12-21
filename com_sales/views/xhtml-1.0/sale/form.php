@@ -83,12 +83,13 @@ if ($pines->config->com_sales->autocomplete_product)
 			var drawer_kickers = JSON.parse("<?php echo addslashes(json_encode($drawer_kickers)); ?>");
 			var status = JSON.parse("<?php echo addslashes(json_encode($this->entity->status)); ?>");
 
-			var round_to_dec = function(value){
+			var round_to_dec = function(value, as_string){
 				var rnd = Math.pow(10, dec);
 				var mult = value * rnd;
 				value = gaussianRound(mult);
 				value /= rnd;
-				value = value.toFixed(dec);
+				if (as_string)
+					value = value.toFixed(dec);
 				return (value);
 			};
 
@@ -787,7 +788,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					}).html($("#p_muid_amount_due").html()).css({"float": "left", "clear": "both", "min-height": "60px", "width": "100%", "text-align": "center", "margin": "2px"})
 					.click(function(){
 						amount_dialog.dialog("close");
-						callback(round_to_dec($("#p_muid_amount_due").html()));
+						callback(round_to_dec($("#p_muid_amount_due").html(), true));
 					}));
 					// Buttons for common amounts.
 					$.each(["1", "5", "10", "20", "50", "60", "80", "100"], function(){
@@ -799,7 +800,7 @@ if ($pines->config->com_sales->autocomplete_product)
 						}).html(String(cur_amount)).css({"float": "left", "min-height": "60px", "min-width": "60px", "text-align": "center", "margin": "2px"})
 						.click(function(){
 							amount_dialog.dialog("close");
-							callback(round_to_dec(cur_amount));
+							callback(round_to_dec(cur_amount, true));
 						}));
 					});
 					// A button for a custom amount.
@@ -815,7 +816,7 @@ if ($pines->config->com_sales->autocomplete_product)
 						} while (isNaN(parseInt(cur_amount)) && cur_amount != null);
 						amount_dialog.dialog("close");
 						if (cur_amount != null)
-							callback(round_to_dec(cur_amount));
+							callback(round_to_dec(cur_amount, true));
 					}));
 				}).dialog({
 					bgiframe: true,
@@ -925,7 +926,7 @@ if ($pines->config->com_sales->autocomplete_product)
 							discount_price = price - (price * (discount / 100));
 						}
 						if (!isNaN(product.floor) && round_to_dec(discount_price) < round_to_dec(product.floor)) {
-							alert("The discount lowers the product's price below the limit. The maximum discount possible for this item ["+product.name+"], is $"+round_to_dec(product.unit_price - product.floor)+" or "+round_to_dec((product.unit_price - product.floor) / product.unit_price * 100)+"%.");
+							alert("The discount lowers the product's price below the limit. The maximum discount possible for this item ["+product.name+"], is $"+round_to_dec(product.unit_price - product.floor, true)+" or "+round_to_dec((product.unit_price - product.floor) / product.unit_price * 100, true)+"%.");
 							cur_row.pgrid_set_value(7, "");
 						} else {
 							price = discount_price;
@@ -948,17 +949,14 @@ if ($pines->config->com_sales->autocomplete_product)
 					});
 					item_fees += round_to_dec(cur_item_fees);
 					subtotal += round_to_dec(line_total);
-					cur_row.pgrid_set_value(8, round_to_dec(line_total));
-					cur_row.pgrid_set_value(9, round_to_dec(cur_item_fees));
+					cur_row.pgrid_set_value(8, round_to_dec(line_total, true));
+					cur_row.pgrid_set_value(9, round_to_dec(cur_item_fees, true));
 				});
-				subtotal = round_to_dec(subtotal);
-				$("#p_muid_subtotal").html(subtotal);
-				item_fees = round_to_dec(item_fees);
-				$("#p_muid_item_fees").html(item_fees);
-				taxes = round_to_dec(taxes);
-				$("#p_muid_taxes").html(taxes);
-				total = subtotal + item_fees + taxes;
-				$("#p_muid_total").html(round_to_dec(total));
+				$("#p_muid_subtotal").html(round_to_dec(subtotal, true));
+				$("#p_muid_item_fees").html(round_to_dec(item_fees, true));
+				$("#p_muid_taxes").html(round_to_dec(taxes, true));
+				total = round_to_dec(subtotal) + round_to_dec(item_fees) + round_to_dec(taxes);
+				$("#p_muid_total").html(round_to_dec(total, true));
 
 				// Update the products input element.
 				products.val(JSON.stringify(rows.pgrid_export_rows()));
@@ -992,9 +990,9 @@ if ($pines->config->com_sales->autocomplete_product)
 					change = Math.abs(amount_due);
 					amount_due = 0;
 				}
-				$("#p_muid_amount_tendered").html(round_to_dec(amount_tendered));
-				$("#p_muid_amount_due").html(round_to_dec(amount_due));
-				$("#p_muid_change").html(round_to_dec(change));
+				$("#p_muid_amount_tendered").html(round_to_dec(amount_tendered, true));
+				$("#p_muid_amount_due").html(round_to_dec(amount_due, true));
+				$("#p_muid_change").html(round_to_dec(change, true));
 
 				payments.val(JSON.stringify(submit_val));
 			};
@@ -1040,12 +1038,12 @@ if ($pines->config->com_sales->autocomplete_product)
 					}
 				});
 				if (kicked)
-					message += "<br /><div style=\"float: right; clear: right;\">Amount Received: <strong>$"+round_to_dec(total_cash)+"</strong></div>";
+					message += "<br /><div style=\"float: right; clear: right;\">Amount Received: <strong>$"+round_to_dec(total_cash, true)+"</strong></div>";
 
 				var change = parseFloat($("#p_muid_change").html());
 				if (change > 0 || kicked) {
 					kicked = true;
-					message += "<br /><div style=\"float: right; clear: right;\">Change Due: <strong>$"+round_to_dec(change)+"</strong></div><br style=\"clear: both;\" />";
+					message += "<br /><div style=\"float: right; clear: right;\">Change Due: <strong>$"+round_to_dec(change, true)+"</strong></div><br style=\"clear: both;\" />";
 				}
 
 				if (kicked)

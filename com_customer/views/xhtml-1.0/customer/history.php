@@ -30,105 +30,111 @@ $pines->com_pgrid->load();
 			pgrid_sort_col: 2,
 			pgrid_sort_ord: 'desc'
 		});
-		$("#p_muid_history").accordion({autoHeight: false});
+		$("#p_muid_acc_interaction, #p_muid_acc_sale, #p_muid_acc_return").accordion({autoHeight: false, collapsible: true});
 	});
 	// ]]>
 </script>
-<div class="pf-form" id="p_muid_history">
+<div class="pf-form">
 	<?php if (!empty($this->interactions)) { ?>
-	<h3 class="ui-helper-clearfix"><a href="#">Customer Interaction</a></h3>
-	<div>
-		<table id="p_muid_interactions">
-			<thead>
-				<tr>
-					<th>ID</th>
-					<th>Date</th>
-					<th>Employee</th>
-					<th>Interaction</th>
-					<th>Comments</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php foreach ($this->interactions as $cur_interaction) { ?>
-				<tr title="<?php echo $cur_interaction->guid; ?>">
-					<td><?php echo $cur_interaction->guid; ?></td>
-					<td><?php echo format_date($cur_interaction->action_date, 'full_sort'); ?></td>
-					<td><?php echo htmlspecialchars($cur_interaction->user->name); ?></td>
-					<td><?php echo htmlspecialchars($cur_interaction->type); ?></td>
-					<td><?php echo htmlspecialchars($cur_interaction->comments); ?></td>
-				</tr>
-				<?php } ?>
-			</tbody>
-		</table>
-	</div>
-	<?php } if ($this->com_sales) { ?>
-		<?php if (!empty($this->sales)) { ?>
-		<h3 class="ui-helper-clearfix"><a href="#">Purchases</a></h3>
+	<div id="p_muid_acc_interaction">
+		<h3 class="ui-helper-clearfix"><a href="#">Customer Interaction</a></h3>
 		<div>
-			<table id="p_muid_sales">
+			<table id="p_muid_interactions">
 				<thead>
 					<tr>
 						<th>ID</th>
 						<th>Date</th>
-						<th>Item(s)</th>
-						<th>Price</th>
-						<th>Status</th>
-						<th>Location</th>
+						<th>Employee</th>
+						<th>Interaction</th>
+						<th>Comments</th>
 					</tr>
 				</thead>
 				<tbody>
-					<?php foreach ($this->sales as $cur_sale) {
-					$item_count = count($cur_sale->products); ?>
-					<tr title="<?php echo $cur_sale->guid; ?>">
-						<td><a href="<?php echo pines_url('com_sales', 'sale/receipt', array('id' => $cur_sale->guid)); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_sale->id); ?></a></td>
-						<td><?php echo format_date($cur_sale->p_cdate); ?></td>
-						<td><a href="<?php echo pines_url('com_sales', 'sale/receipt', array('id' => $cur_sale->guid)); ?>" onclick="window.open(this.href); return false;"><?php echo ($item_count == 1) ? htmlspecialchars($cur_sale->products[0]['entity']->name . ' x ' . $cur_sale->products[0]['quantity']) : $item_count.' products'; ?></a></td>
-						<td>$<?php echo htmlspecialchars($cur_sale->total); ?></td>
-						<td><?php switch ($cur_sale->status) {
-							case 'invoiced':
-								echo 'Invoiced';
-								break;
-							case 'paid':
-								echo 'Paid';
-								break;
-							default:
-								echo 'Unrecognized';
-								break;
-						} ?></td>
-						<td><?php echo htmlspecialchars($cur_sale->group->name); ?></td>
+					<?php foreach ($this->interactions as $cur_interaction) { ?>
+					<tr title="<?php echo $cur_interaction->guid; ?>">
+						<td><?php echo $cur_interaction->guid; ?></td>
+						<td><?php echo format_date($cur_interaction->action_date, 'full_sort'); ?></td>
+						<td><?php echo htmlspecialchars($cur_interaction->user->name); ?></td>
+						<td><?php echo htmlspecialchars($cur_interaction->type); ?></td>
+						<td><?php echo htmlspecialchars($cur_interaction->comments); ?></td>
 					</tr>
 					<?php } ?>
 				</tbody>
 			</table>
 		</div>
+	</div>
+	<?php } if ($this->com_sales) { ?>
+		<?php if (!empty($this->sales)) { ?>
+		<div id="p_muid_acc_sale">
+			<h3 class="ui-helper-clearfix"><a href="#">Purchases</a></h3>
+			<div>
+				<table id="p_muid_sales">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Date</th>
+							<th>Item(s)</th>
+							<th>Price</th>
+							<th>Status</th>
+							<th>Location</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ($this->sales as $cur_sale) {
+						$item_count = count($cur_sale->products); ?>
+						<tr title="<?php echo $cur_sale->guid; ?>">
+							<td><a href="<?php echo pines_url('com_sales', 'sale/receipt', array('id' => $cur_sale->guid)); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_sale->id); ?></a></td>
+							<td><?php echo format_date($cur_sale->p_cdate); ?></td>
+							<td><a href="<?php echo pines_url('com_sales', 'sale/receipt', array('id' => $cur_sale->guid)); ?>" onclick="window.open(this.href); return false;"><?php echo ($item_count == 1) ? htmlspecialchars($cur_sale->products[0]['entity']->name . ' x ' . $cur_sale->products[0]['quantity']) : $item_count.' products'; ?></a></td>
+							<td>$<?php echo htmlspecialchars($cur_sale->total); ?></td>
+							<td><?php switch ($cur_sale->status) {
+								case 'invoiced':
+									echo 'Invoiced';
+									break;
+								case 'paid':
+									echo 'Paid';
+									break;
+								default:
+									echo 'Unrecognized';
+									break;
+							} ?></td>
+							<td><?php echo htmlspecialchars($cur_sale->group->name); ?></td>
+						</tr>
+						<?php } ?>
+					</tbody>
+				</table>
+			</div>
+		</div>
 		<?php } if (!empty($this->returns)) { ?>
-		<h3 class="ui-helper-clearfix"><a href="#">Returns</a></h3>
-		<div>
-			<table id="p_muid_returns">
-				<thead>
-					<tr>
-						<th>ID</th>
-						<th>Date</th>
-						<th>Item(s)</th>
-						<th>Total</th>
-						<th>Status</th>
-						<th>Location</th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php foreach ($this->returns as $cur_return) {
-					$item_count = count($cur_return->products); ?>
-					<tr title="<?php echo $cur_return->guid; ?>">
-						<td><a href="<?php echo pines_url('com_sales', 'return/receipt', array('id' => $cur_return->guid)); ?>" target="receipt"><?php echo htmlspecialchars($cur_return->id); ?></a></td>
-						<td><?php echo format_date($cur_return->p_cdate); ?></td>
-						<td><a href="<?php echo pines_url('com_sales', 'return/receipt', array('id' => $cur_return->guid)); ?>" target="receipt"><?php echo ($item_count == 1) ? htmlspecialchars($cur_return->products[0]['entity']->name) : $item_count.' items'; ?></a></td>
-						<td>$<?php echo htmlspecialchars($cur_return->total); ?></td>
-						<td><?php echo htmlspecialchars(ucwords($cur_return->status)); ?></td>
-						<td><?php echo htmlspecialchars($cur_return->group->name); ?></td>
-					</tr>
-					<?php } ?>
-				</tbody>
-			</table>
+		<div id="p_muid_acc_return">
+			<h3 class="ui-helper-clearfix"><a href="#">Returns</a></h3>
+			<div>
+				<table id="p_muid_returns">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Date</th>
+							<th>Item(s)</th>
+							<th>Total</th>
+							<th>Status</th>
+							<th>Location</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ($this->returns as $cur_return) {
+						$item_count = count($cur_return->products); ?>
+						<tr title="<?php echo $cur_return->guid; ?>">
+							<td><a href="<?php echo pines_url('com_sales', 'return/receipt', array('id' => $cur_return->guid)); ?>" target="receipt"><?php echo htmlspecialchars($cur_return->id); ?></a></td>
+							<td><?php echo format_date($cur_return->p_cdate); ?></td>
+							<td><a href="<?php echo pines_url('com_sales', 'return/receipt', array('id' => $cur_return->guid)); ?>" target="receipt"><?php echo ($item_count == 1) ? htmlspecialchars($cur_return->products[0]['entity']->name) : $item_count.' items'; ?></a></td>
+							<td>$<?php echo htmlspecialchars($cur_return->total); ?></td>
+							<td><?php echo htmlspecialchars(ucwords($cur_return->status)); ?></td>
+							<td><?php echo htmlspecialchars($cur_return->group->name); ?></td>
+						</tr>
+						<?php } ?>
+					</tbody>
+				</table>
+			</div>
 		</div>
 		<?php }
 	} ?>

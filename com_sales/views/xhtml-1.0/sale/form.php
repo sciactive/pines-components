@@ -353,7 +353,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					if (!pass)
 						return;
 				}
-				data.salesperson = '<?php echo $_SESSION['user']->guid.': '.$_SESSION['user']->name;?>';
+				data.salesperson = "<?php echo addslashes($_SESSION['user']->guid.': '.$_SESSION['user']->name);?>";
 				var serial = "";
 				if (data.serialized) {
 					var buttons = {
@@ -576,7 +576,14 @@ if ($pines->config->com_sales->autocomplete_product)
 			var salesperson_form = function(row){
 				salesperson_dialog.dialog("option", "buttons", {
 					'Done': function(){
-						row.pgrid_set_value(10, $("#p_muid_salesperson").val());
+						var salesperson = $("#p_muid_salesperson").val();
+						if (salesperson == "") {
+							salesperson = "<?php echo addslashes($_SESSION['user']->guid.': '.$_SESSION['user']->name);?>";
+						} else if (!salesperson.match(/^\d+: .+$/)) {
+							alert("Please select a salesperson using the dropdown menu.");
+							return;
+						}
+						row.pgrid_set_value(10, salesperson);
 						row.pgrid_deselect_rows();
 						salesperson_dialog.dialog('close');
 						update_products();

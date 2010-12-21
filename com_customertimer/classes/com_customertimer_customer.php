@@ -68,6 +68,9 @@ class com_customertimer_customer extends com_customer_customer {
 
 		// Check how many points the customer has left in their account.
 		$points_remain = $this->points - ($points + $other_points);
+		// If negatives aren't allowed, change it to 0.
+		if ($points_remain < 0 && !$pines->config->com_customer->negpoints)
+			$points_remain = 0;
 
 		return array('minutes' => $minutes, 'points' => $points, 'other_minutes' => $other_minutes, 'other_points' => $other_points, 'points_remain' => $points_remain);
 	}

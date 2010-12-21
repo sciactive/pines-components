@@ -48,6 +48,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'negpoints',
+		'cname' => 'Allow Negative Points',
+		'description' => 'Allow customer\'s points to drop below zero.',
+		'value' => false,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'adjustpoints',
 		'cname' => 'Allow Point Adjust',
 		'description' => 'Allow customer\'s points to be adjusted by users with the ability.',

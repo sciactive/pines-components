@@ -111,6 +111,7 @@ class com_customer_customer extends user {
 	 * @param int $point_adjust The positive or negative point value to add.
 	 */
 	public function adjust_points($point_adjust) {
+		global $pines;
 		$point_adjust = (int) $point_adjust;
 		// Check that there is a point value.
 		if (!is_int($this->points))
@@ -129,6 +130,9 @@ class com_customer_customer extends user {
 			if ($this->points > $this->peak_points)
 				$this->peak_points = $this->points;
 		}
+		// Did their points go negative?
+		if ($this->points < 0 && !$pines->config->com_customer->negpoints)
+			$this->points = 0;
 	}
 
 	/**

@@ -954,14 +954,12 @@ class com_sales extends component {
 			// Grab all of the requested transactions for any stock items matching the given product code.
 			$invoices = $returns = $swaps = $transfers = $pos = $countsheets = array();
 			if ($module->types['invoice']) {
+				$or['ref'] = array('products', $cur_stock);
 				$invoices = $pines->entity_manager->get_entities(
 					array('class' => com_sales_sale, 'skip_ac' => true),
 					$secondary_options,
 					$or,
-					array('&',
-						'tag' => array('com_sales', 'sale'),
-						'ref' => array('products', $cur_stock)
-					)
+					array('&', 'tag' => array('com_sales', 'sale'))
 				);
 			}
 			if ($module->types['return']) {

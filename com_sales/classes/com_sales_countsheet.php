@@ -143,6 +143,8 @@ class com_sales_countsheet extends entity {
 	 *    <li>A serialized item matches the search string but is not in current inventory.</li>
 	 *    <li>An item's SKU matches the search string but is not in the current inventory.</li>
 	 *   </ul>
+	 *  <li>Duplicate - If an item is a duplicate of a matched item.</li>
+	 *  <li>History - If an item was in the system at one point in time.</li>
 	 *  <li>Invalid - If an item is not in the inventory at all.</li>
 	 * </ul>
 	 */
@@ -164,6 +166,10 @@ class com_sales_countsheet extends entity {
 		$this->matched = array();
 		$this->matched_count = array();
 		$this->matched_serials = array();
+		$this->duplicate = array();
+		$this->duplicate_count = array();
+		$this->duplicate_serials = array();
+		$this->history = array();
 		$this->missing = array();
 		$this->missing_count = array();
 		$this->missing_serials = array();
@@ -282,6 +288,42 @@ class com_sales_countsheet extends entity {
 				$this->potential[$cur_code]['count']++;
 				unset($entries[$key]);
 			}
+		}
+		// Check for duplicates.
+		foreach ($entries as $key => $cur_code) {
+			$found = false;
+			foreach ($this->matched as $cur_matched) {
+				if ( $cur_matched->product->serialized &&
+					(in_array($cur_code, $this->matched_serials[$cur_matched->product->guid])) ) {
+					$this->duplicate[] = $cur_matched;
+					$this->duplicate_count[$cur_matched->product->guid]++;
+					$this->duplicate_serials[$cur_matched->product->guid][] = $cur_matched->serial;
+					$found = true;
+				} elseif ( !$cur_matched->product->serialized &&
+					($cur_code == $cur_matched->product->sku) ) {
+					$this->duplicate[] = $cur_matched;
+					$this->duplicate_count[$cur_matched->product->guid]++;
+					$this->duplicate_serials[$cur_matched->product->guid] = array();
+					$found = true;
+				}
+			}
+			if (!$found) {
+				$stock_history = (array) $pines->entity_manager->get_entities(
+					array('class' => com_sales_stock, 'limit' => 5),
+					array('&',
+						'data' => array('serial', $cur_code)
+					),
+					array('!&',
+						'isset' => array('location')
+					)
+				);
+				foreach ($stock_history as $cur_history) {
+					$this->history[] = $cur_history;
+					$found = true;
+				}
+			}
+			if ($found)
+				unset($entries[$key]);
 		}
 		// All the rest are invalid.
 		$this->invalid = $entries;

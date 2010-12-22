@@ -76,7 +76,7 @@ class com_myentity extends component implements entity_manager_interface {
 			return false;
 		}
 		// Create the data table.
-		$query = sprintf("CREATE TABLE IF NOT EXISTS `%scom_myentity_data` (`guid` bigint(20) unsigned NOT NULL, `name` text NOT NULL, `value` longtext NOT NULL, PRIMARY KEY (`guid`,`name`(330))) DEFAULT CHARSET=utf8;",
+		$query = sprintf("CREATE TABLE IF NOT EXISTS `%scom_myentity_data` (`guid` bigint(20) unsigned NOT NULL, `name` text NOT NULL, `value` longtext NOT NULL, PRIMARY KEY (`guid`,`name`(255))) DEFAULT CHARSET=utf8;",
 			$pines->config->com_mysql->prefix);
 		if ( !(mysql_query($query, $pines->com_mysql->link)) ) {
 			if (function_exists('pines_error'))

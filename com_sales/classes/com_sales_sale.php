@@ -54,7 +54,7 @@ class com_sales_sale extends entity {
 	}
 
 	/**
-	 * Calculate and add commission to the employee.
+	 * Calculate and add commission to the employee(s).
 	 */
 	public function add_commission() {
 		global $pines;

@@ -61,6 +61,12 @@ if ($return->status != 'processed' && $return->status != 'voided') {
 			$cur_qty = (int) $cur_product->values[4];
 			$cur_price = (float) $cur_product->values[5];
 			$cur_discount = $cur_product->values[6];
+			$cur_salesperson = null;
+			if ($pines->config->com_sales->per_item_salesperson)
+				$cur_salesperson = user::factory(intval($cur_product->values[9]));
+			// Default to the return's user.
+			if (!isset($cur_salesperson->guid))
+				$cur_salesperson = $return->user->guid ? $return->user : $_SESSION['user'];
 			if (!isset($cur_product_entity->guid)) {
 				pines_error("Product with id [$cur_product->key] and entered SKU [$cur_sku] was not found.");
 				unset($return->products[$key]);
@@ -107,6 +113,7 @@ if ($return->status != 'processed' && $return->status != 'voided') {
 						$cur_product['quantity'] = $cur_qty;
 						$cur_product['price'] = $cur_price;
 						$cur_product['discount'] = $cur_discount;
+						$cur_product['salesperson'] = $cur_salesperson;
 						unset($old_products[$old_key]);
 						$found = true;
 						break;
@@ -123,7 +130,8 @@ if ($return->status != 'processed' && $return->status != 'voided') {
 					'serial' => $cur_serial,
 					'quantity' => $cur_qty,
 					'price' => $cur_price,
-					'discount' => $cur_discount
+					'discount' => $cur_discount,
+					'salesperson' => $cur_salesperson
 				);
 			}
 		}

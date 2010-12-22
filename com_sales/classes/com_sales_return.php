@@ -53,6 +53,51 @@ class com_sales_return extends entity {
 	}
 
 	/**
+	 * Add negative commission to the employee(s).
+	 */
+	public function add_commission() {
+		global $pines;
+		if ($this->added_commission || !$pines->config->com_sales->com_hrm)
+			return;
+		$this->added_commission = true;
+		// Go through each product, adding commission.
+		foreach ($this->products as &$cur_product) {
+			if (!isset($cur_product['salesperson']))
+				continue;
+			if (!$cur_product['entity']->commissions)
+				continue;
+			$cur_product['commission'] = 0;
+			foreach ($cur_product['entity']->commissions as $cur_commission) {
+				if (!$cur_product['salesperson']->in_group($cur_commission['group']))
+					continue;
+				// Calculate commission.
+				switch ($cur_commission['type']) {
+					case 'spiff':
+						$cur_product['commission'] += (float) $cur_commission['amount'];
+						break;
+					case 'percent_price':
+						$cur_product['commission'] += $this->discount_price($cur_product['price'], $cur_product['discount']) * ( ((float) $cur_commission['amount']) / 100 );
+						break;
+				}
+			}
+			if ($cur_product['commission'] == 0)
+				continue;
+			// Add the negative commission to the user.
+			if ((array) $cur_product['salesperson']->commissions !== $cur_product['salesperson']->commissions)
+				$cur_product['salesperson']->commissions = array();
+			$cur_product['salesperson']->commissions[] = array(
+				'date' => time(),
+				'amount' => ($cur_product['commission'] * $cur_product['quantity']) * -1,
+				'ticket' => $this,
+				'product' => $cur_product['entity']
+			);
+			$cur_product['salesperson']->save();
+		}
+		unset($cur_product);
+		$this->save();
+	}
+
+	/**
 	 * Approve each payment.
 	 *
 	 * @return bool True on success, false on failure.
@@ -236,6 +281,10 @@ class com_sales_return extends entity {
 		if (!$stock_result)
 			pines_notice('Not all stock could be received into inventory while processing. Please check that all stock was correctly entered.');
 		$this->perform_actions();
+		if (!$this->added_commission) {
+			// Add commission.
+			$this->add_commission();
+		}
 
 		if (isset($this->sale)) {
 			// Go through each product, and mark the sold quantity in the sale.

@@ -23,6 +23,8 @@ $this->note = 'Use this form to edit a return.';
 $pines->com_pgrid->load();
 if ($pines->config->com_sales->com_customer)
 	$pines->com_customer->load_customer_select();
+if ($pines->config->com_sales->per_item_salesperson)
+	$pines->com_hrm->load_employee_select();
 if ($pines->config->com_sales->autocomplete_product)
 	$pines->com_sales->load_product_select();
 ?>
@@ -105,6 +107,8 @@ if ($pines->config->com_sales->autocomplete_product)
 
 			<?php if ($pines->config->com_sales->com_customer && $this->entity->status != 'processed' && $this->entity->status != 'voided' && !isset($this->entity->sale->guid)) { ?>
 			$("#p_muid_customer").customerselect();
+			<?php } if ($pines->config->com_sales->per_item_salesperson) { ?>
+			$("#p_muid_salesperson").employeeselect();
 			<?php } ?>
 
 			<?php if ($this->entity->status == 'processed' || $this->entity->status == 'voided') { ?>
@@ -284,6 +288,16 @@ if ($pines->config->com_sales->autocomplete_product)
 							}
 						}
 					},
+					<?php } if ($pines->config->com_sales->per_item_salesperson) { ?>
+					{
+						type: 'button',
+						title: 'Salesperson',
+						extra_class: 'picon picon-edit-find-user',
+						multi_select: false,
+						click: function(e, rows){
+							salesperson_form(rows);
+						}
+					},
 					<?php } ?>
 					{type: 'separator'},
 					{
@@ -300,6 +314,7 @@ if ($pines->config->com_sales->autocomplete_product)
 			});
 			var add_product = function(data){
 				var serial = "";
+				data.salesperson = "<?php echo addslashes($_SESSION['user']->guid.': '.$_SESSION['user']->name);?>";
 				if (data.serialized) {
 					var buttons = {
 						"Done": function(){
@@ -308,7 +323,7 @@ if ($pines->config->com_sales->autocomplete_product)
 								alert("Please provide a serial number.");
 								return;
 							}
-							products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, '', 1, data.unit_price, "", "", ""]}], function(){
+							products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, '', 1, data.unit_price, "", "", "", data.salesperson]}], function(){
 								var cur_row = $(this);
 								cur_row.data("product", data);
 							});
@@ -322,7 +337,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					serial_box.val("");
 					return;
 				}
-				products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, "", 1, data.unit_price, "", "", ""]}], function(){
+				products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, "", 1, data.unit_price, "", "", "", data.salesperson]}], function(){
 					var cur_row = $(this);
 					cur_row.data("product", data);
 				});
@@ -447,6 +462,40 @@ if ($pines->config->com_sales->autocomplete_product)
 					}
 				}
 			});
+			<?php if ($pines->config->com_sales->per_item_salesperson) { ?>
+			// Salesperson Form
+			var salesperson_dialog = $("#p_muid_salesperson_dialog").dialog({
+				bgiframe: true,
+				autoOpen: false,
+				modal: true,
+				width: 450,
+				open: function() {
+					$("#p_muid_salesperson").val("");
+				}
+			});
+			var salesperson_form = function(row){
+				salesperson_dialog.dialog("option", "buttons", {
+					'Done': function(){
+						var salesperson = $("#p_muid_salesperson").val();
+						if (salesperson == "") {
+							salesperson = "<?php echo addslashes($_SESSION['user']->guid.': '.$_SESSION['user']->name);?>";
+						} else if (!salesperson.match(/^\d+: .+$/)) {
+							alert("Please select a salesperson using the dropdown menu.");
+							return;
+						}
+						row.pgrid_set_value(10, salesperson);
+						row.pgrid_deselect_rows();
+						salesperson_dialog.dialog('close');
+						update_products();
+					}
+				});
+				salesperson_dialog.dialog('open');
+			};
+			<?php }
+			} ?>
+
+			<?php if (!$pines->config->com_sales->per_item_salesperson) { ?>
+			products_table.pgrid_import_state({pgrid_hidden_cols: [4, 10]});
 			<?php } ?>
 
 			// Load the data for any existing products.
@@ -977,6 +1026,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					<th>Discount</th>
 					<th>Line Total</th>
 					<th>Fees</th>
+					<th>Salesperson</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -994,6 +1044,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					<td><?php echo htmlspecialchars($cur_product['discount']); ?></td>
 					<td><?php echo htmlspecialchars($cur_product['line_total']); ?></td>
 					<td><?php echo htmlspecialchars($cur_product['fees']); ?></td>
+					<td><?php echo htmlspecialchars($cur_product['salesperson']->guid.': '.$cur_product['salesperson']->name); ?></td>
 				</tr>
 				<?php } ?>
 			</tbody>
@@ -1009,6 +1060,20 @@ if ($pines->config->com_sales->autocomplete_product)
 		</div>
 		<br />
 	</div>
+	<?php if ($pines->config->com_sales->per_item_salesperson) { ?>
+	<div id="p_muid_salesperson_dialog" title="Select Salesperson" style="display: none;">
+		<div class="pf-form">
+			<div class="pf-element">
+				<label>
+					<span class="pf-label">Employee</span>
+					<span class="pf-note">Enter part of a name, title, email, or phone # to search.</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_salesperson" name="item_salesperson" size="24" value="" />
+				</label>
+			</div>
+		</div>
+		<br />
+	</div>
+	<?php } ?>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Return Totals</span>
 		<div class="pf-group">

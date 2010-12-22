@@ -222,7 +222,19 @@ $pines->com_pgrid->load();
 				var commissions_table = $("#p_muid_form .commissions_table");
 
 				commissions_table.pgrid({
-					pgrid_view_height: "300px"
+					pgrid_view_height: "300px",
+					pgrid_toolbar: true,
+					pgrid_toolbar_contents: [
+						{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
+						{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
+						{type: 'separator'},
+						{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
+							pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+								filename: "commissions-<?php echo addslashes($this->entity->username); ?>",
+								content: rows
+							});
+						}}
+					]
 				});
 			});
 			// ]]>
@@ -233,7 +245,7 @@ $pines->com_pgrid->load();
 					<thead>
 						<tr>
 							<th>Date</th>
-							<th>Amount</th>
+							<th>Amount ($)</th>
 							<th>Ticket</th>
 							<th>Product</th>
 							<th>Note</th>
@@ -243,9 +255,11 @@ $pines->com_pgrid->load();
 						<?php foreach ($this->entity->commissions as $cur_commission) { ?>
 						<tr>
 							<td><?php echo format_date($cur_commission['date']); ?></td>
-							<td style="text-align: right;"><?php echo isset($cur_commission['amount']) ? '$'.number_format($cur_commission['amount'], 2) : ''; ?></td>
+							<td style="text-align: right;"><?php echo isset($cur_commission['amount']) ? number_format($cur_commission['amount'], 2) : ''; ?></td>
 							<td><?php
-							if ($cur_commission['ticket']->has_tag('sale')) {
+							if (!isset($cur_commission['ticket']->guid)) {
+								echo "Ticket not found.";
+							} elseif ($cur_commission['ticket']->has_tag('sale')) {
 								echo htmlspecialchars("Sale: {$cur_commission['ticket']->id}");
 							} elseif ($cur_commission['ticket']->has_tag('return')) {
 								echo htmlspecialchars("Return: {$cur_commission['ticket']->id}");

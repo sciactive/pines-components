@@ -557,7 +557,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					url: "<?php echo addslashes(pines_url('com_sales', 'forms/payment')); ?>",
 					type: "POST",
 					dataType: "html",
-					data: {"name": payment_data.processing_type, "id": $("#p_muid_form [name=id]").val(), "customer": $("#p_muid_customer").val(), "type": "return"},
+					data: {"name": payment_data.processing_type, "id": $("#p_muid_form [name=id]").val(), "customer": $("#p_muid_customer").val(), "type": "return", "sale_id": $("#p_muid_form [name=sale_id]").val()},
 					error: function(XMLHttpRequest, textStatus){
 						pines.error("An error occured while trying to retreive the data form:\n"+XMLHttpRequest.status+": "+textStatus);
 					},

@@ -20,6 +20,11 @@ if ($_REQUEST['type'] == 'return') {
 		if ( !gatekeeper('com_sales/newreturn') && !gatekeeper('com_sales/newreturnwsale') )
 			punt_user(null, pines_url('com_sales', 'sale/list'));
 		$ticket = com_sales_return::factory();
+		if ( isset($_REQUEST['sale_id']) ) {
+			$sale = com_sales_sale::factory((int) $_REQUEST['sale_id']);
+			if (isset($sale->guid))
+				$ticket->attach_sale($sale);
+		}
 	}
 } else {
 	if ( isset($_REQUEST['id']) ) {

@@ -82,6 +82,10 @@ if (is_array($_REQUEST['additional_tax_fees'])) {
 			$product->additional_tax_fees[] = $cur_tax_fee;
 	}
 }
+$product->restocking_fee = $_REQUEST['restocking_fee'];
+if (!in_array($product->restocking_fee, array('', 'percentage', 'flat_rate')))
+	$product->restocking_fee = '';
+$product->restocking_fee_rate = (float) $_REQUEST['restocking_fee_rate'];
 
 // Attributes
 $product->weight = (float) $_REQUEST['weight'];

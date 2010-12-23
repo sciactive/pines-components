@@ -571,6 +571,36 @@ $pines->com_ptags->load();
 						<?php } ?>
 					</select></label>
 			</div>
+			<div class="pf-element pf-heading">
+				<h1>Restocking/Return Fee</h1>
+			</div>
+			<div class="pf-element">
+				<script type="text/javascript">
+					// <![CDATA[
+					pines(function(){
+						var restocking_fee = $("#p_muid_form [name=restocking_fee]");
+						var restocking_fee_rate = $("#p_muid_form [name=restocking_fee_rate]");
+						restocking_fee.change(function(){
+							if (restocking_fee.val() == "")
+								restocking_fee_rate.attr('disabled', 'disabled').addClass("ui-state-disabled");
+							else
+								restocking_fee_rate.removeAttr('disabled').removeClass("ui-state-disabled");
+						}).change();
+					});
+					// ]]>
+				</script>
+				<label><span class="pf-label">Type</span>
+					<select class="pf-field ui-widget-content ui-corner-all" name="restocking_fee">
+						<option value="" title="No return fee is charged."<?php echo $this->entity->restocking_fee == '' ? ' selected="selected"' : ''; ?>>-- None --</option>
+						<option value="percentage" title="A return fee calculated from the product's price is charged."<?php echo $this->entity->restocking_fee == 'percentage' ? ' selected="selected"' : ''; ?>>Percentage</option>
+						<option value="flat_rate" title="A specified return fee is charged."<?php echo $this->entity->restocking_fee == 'flat_rate' ? ' selected="selected"' : ''; ?>>Flat Rate</option>
+					</select></label>
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Rate</span>
+					<span class="pf-note">For flat rate, enter a dollar amount. For percentage, enter a percent value.</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="restocking_fee_rate" size="24" value="<?php echo htmlspecialchars($this->entity->restocking_fee_rate); ?>" /></label>
+			</div>
 			<br class="pf-clearing" />
 		</div>
 		<div id="p_muid_tab_attributes">

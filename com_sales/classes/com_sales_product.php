@@ -29,6 +29,7 @@ class com_sales_product extends entity {
 		$this->enabled = true;
 		$this->images = array();
 		$this->additional_tax_fees = array();
+		$this->restocking_fee = '';
 		$this->serialized = true;
 		$this->discountable = true;
 		$this->require_customer = true;

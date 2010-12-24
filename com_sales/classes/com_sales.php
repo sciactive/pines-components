@@ -928,9 +928,9 @@ class com_sales extends component {
 		if (!isset($location->guid))
 			$location = $_SESSION['user']->group;
 		if ($descendents)
-			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+			$group = array('group', $location->get_descendents(true));
 		else
-			$or = array('|', 'ref' => array('group', $location));
+			$group = array('group', $location);
 
 		if (isset($start_date))
 			$secondary_options['gte'][] = array('p_cdate', (int) $start_date);
@@ -953,8 +953,8 @@ class com_sales extends component {
 		foreach ($module->stock as $cur_stock) {
 			// Grab all of the requested transactions for any stock items matching the given product code.
 			$invoices = $returns = $swaps = $transfers = $pos = $countsheets = array();
+			$or['ref'] = array(array('products', $cur_stock), $group);
 			if ($module->types['invoice']) {
-				$or['ref'] = array('products', $cur_stock);
 				$invoices = $pines->entity_manager->get_entities(
 					array('class' => com_sales_sale, 'skip_ac' => true),
 					$secondary_options,
@@ -963,7 +963,6 @@ class com_sales extends component {
 				);
 			}
 			if ($module->types['return']) {
-				$or['ref'] = array('products', $cur_stock);
 				$returns = $pines->entity_manager->get_entities(
 					array('class' => com_sales_sale, 'skip_ac' => true),
 					$secondary_options,
@@ -971,6 +970,7 @@ class com_sales extends component {
 					array('&', 'tag' => array('com_sales', 'return'))
 				);
 			}
+			$or['ref'] = $group;
 			if ($module->types['swap']) {
 				$swaps = $pines->entity_manager->get_entities(
 					array('class' => com_sales_tx, 'skip_ac' => true),
@@ -984,6 +984,7 @@ class com_sales extends component {
 				);
 			}
 			if ($module->types['countsheet']) {
+				// It is now entries['code'] and entries['quantity']
 				$or['array'] = array('entries', $countsheet_code);
 				$countsheets = $pines->entity_manager->get_entities(
 					array('class' => com_sales_countsheet, 'skip_ac' => true),
@@ -991,6 +992,7 @@ class com_sales extends component {
 					$or,
 					array('&', 'tag' => array('com_sales', 'countsheet'))
 				);
+				unset($or['array']);
 			}
 			$or['ref'][0] = 'destination';
 			if ($module->types['transfer']) {

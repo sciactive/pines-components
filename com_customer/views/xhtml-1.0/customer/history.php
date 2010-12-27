@@ -74,7 +74,9 @@ $pines->com_pgrid->load();
 							<th>ID</th>
 							<th>Date</th>
 							<th>Item(s)</th>
-							<th>Price</th>
+							<th>Subtotal</th>
+							<th>Tax</th>
+							<th>Total</th>
 							<th>Status</th>
 							<th>Location</th>
 						</tr>
@@ -86,7 +88,9 @@ $pines->com_pgrid->load();
 							<td><a href="<?php echo pines_url('com_sales', 'sale/receipt', array('id' => $cur_sale->guid)); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_sale->id); ?></a></td>
 							<td><?php echo format_date($cur_sale->p_cdate); ?></td>
 							<td><a href="<?php echo pines_url('com_sales', 'sale/receipt', array('id' => $cur_sale->guid)); ?>" onclick="window.open(this.href); return false;"><?php echo ($item_count == 1) ? htmlspecialchars($cur_sale->products[0]['entity']->name . ' x ' . $cur_sale->products[0]['quantity']) : $item_count.' products'; ?></a></td>
-							<td>$<?php echo htmlspecialchars($cur_sale->total); ?></td>
+							<td>$<?php echo number_format($cur_sale->subtotal, 2); ?></td>
+							<td>$<?php echo number_format($cur_sale->taxes, 2); ?></td>
+							<td>$<?php echo number_format($cur_sale->total, 2); ?></td>
 							<td><?php switch ($cur_sale->status) {
 								case 'invoiced':
 									echo 'Invoiced';
@@ -115,6 +119,8 @@ $pines->com_pgrid->load();
 							<th>ID</th>
 							<th>Date</th>
 							<th>Item(s)</th>
+							<th>Subtotal</th>
+							<th>Tax</th>
 							<th>Total</th>
 							<th>Status</th>
 							<th>Location</th>
@@ -127,7 +133,9 @@ $pines->com_pgrid->load();
 							<td><a href="<?php echo pines_url('com_sales', 'return/receipt', array('id' => $cur_return->guid)); ?>" target="receipt"><?php echo htmlspecialchars($cur_return->id); ?></a></td>
 							<td><?php echo format_date($cur_return->p_cdate); ?></td>
 							<td><a href="<?php echo pines_url('com_sales', 'return/receipt', array('id' => $cur_return->guid)); ?>" target="receipt"><?php echo ($item_count == 1) ? htmlspecialchars($cur_return->products[0]['entity']->name) : $item_count.' items'; ?></a></td>
-							<td>$<?php echo htmlspecialchars($cur_return->total); ?></td>
+							<td>$<?php echo number_format($cur_return->subtotal, 2); ?></td>
+							<td>$<?php echo number_format($cur_return->taxes, 2); ?></td>
+							<td>$<?php echo number_format($cur_return->total, 2); ?></td>
 							<td><?php echo htmlspecialchars(ucwords($cur_return->status)); ?></td>
 							<td><?php echo htmlspecialchars($cur_return->group->name); ?></td>
 						</tr>

@@ -245,16 +245,17 @@ $pay_grades = array(
 				$contract_link = pines_url('com_mifi', 'viewoffer', array('id' => $contract->guid));
 				$faxsheet = $pines->entity_manager->get_entity(array('class' => com_faxsheet_sheet), array('&', 'tag' => array('com_faxsheet', 'faxsheet'), 'ref' => array('customer', $cur_sale->customer)));
 				$sheet_link = pines_url('com_faxsheet', 'editsst', array('id' => $faxsheet->guid));
+				$return_status = ($cur_sale->returned_total > 0) ? ' (Returned)' : '';
 			?>
 			<tr title="<?php echo $cur_sale->guid; ?>">
 				<td><?php echo htmlspecialchars($cur_sale->id); ?></td>
 				<td><?php echo format_date($cur_sale->p_cdate, 'date_sort'); ?></td>
 				<td><?php echo htmlspecialchars($cur_sale->group->name); ?></td>
-				<td><?php echo htmlspecialchars(ucwords($cur_sale->status)); ?></td>
+				<td><?php echo htmlspecialchars(ucwords($cur_sale->status).$return_status); ?></td>
 				<td><?php echo htmlspecialchars($cur_sale->user->name); ?></td>
 				<td><?php echo htmlspecialchars($cur_sale->customer->name); ?></td>
 				<td>$<?php echo htmlspecialchars($cur_sale->subtotal); ?></td>
-				<td>$<?php echo htmlspecialchars($cur_sale->item_fees); ?></td>
+				<td>$<?php echo htmlspecialchars($cur_sale->taxes); ?></td>
 				<td>$<?php echo htmlspecialchars($cur_sale->total); ?></td>
 				<td><?php echo isset($contract->guid) ? '<a href="'.htmlspecialchars($contract_link).'" onclick="window.open(this.href); return false;">'.htmlspecialchars($contract->app_id).'</a>' : 'No'; ?></td>
 				<td><?php echo isset($contract->guid) ? $pay_grades[$contract->militaryPayGrade] : 'NA'; ?></td>

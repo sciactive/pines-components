@@ -222,30 +222,44 @@ $pines->com_jstree->load();
 			case 'sale':
 				$link = pines_url('com_sales', 'sale/receipt', array('id' => $cur_transaction->entity->guid));
 				$groupname = htmlspecialchars("{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]");
+				$quantity = count($cur_transaction->entity->products);
+				$serials = '';
 				break;
 			case 'return':
 				$link = pines_url('com_sales', 'return/receipt', array('id' => $cur_transaction->entity->guid));
 				$groupname = htmlspecialchars("{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]");
+				$quantity = count($cur_transaction->entity->products);
+				$serials = '';
 				break;
 			case 'swap':
 				$link = pines_url('com_sales', 'sale/receipt', array('id' => $cur_transaction->entity->ticket->guid));
 				$groupname = htmlspecialchars("{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]");
+				$quantity = $cur_transaction->qty;
+				$serials = implode(', ', $cur_transaction->serials);
 				break;
 			case 'countsheet':
 				$link = pines_url('com_sales', 'countsheet/approve', array('id' => $cur_transaction->entity->guid));
 				$groupname = htmlspecialchars("{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]");
+				$quantity = count($cur_transaction->entity->products);
+				$serials = '';
 				break;
 			case 'transfer':
 				$link = pines_url('com_sales', 'transfer/edit', array('id' => $cur_transaction->entity->guid));
 				$groupname = htmlspecialchars("{$cur_transaction->entity->destination->name} [{$cur_transaction->entity->destination->groupname}]");
+				$quantity = $cur_transaction->qty;
+				$serials = implode(', ', $cur_transaction->serials);
 				break;
 			case 'po':
 				$link = pines_url('com_sales', 'po/edit', array('id' => $cur_transaction->entity->guid));
 				$groupname = htmlspecialchars("{$cur_transaction->entity->destination->name} [{$cur_transaction->entity->destination->groupname}]");
+				$quantity = $cur_transaction->qty;
+				$serials = implode(', ', $cur_transaction->serials);
 				break;
 			default:
 				$link = '';
 				$groupname = htmlspecialchars("{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]");
+				$quantity = '';
+				$serials = '';
 				break;
 		}
 	?>
@@ -256,8 +270,8 @@ $pines->com_jstree->load();
 			<td><?php echo $groupname; ?></td>
 			<td><a href="<?php echo $link; ?>" onclick="window.open(this.href); return false;"><?php echo $cur_transaction->entity->guid; ?></a></td>
 			<td><?php echo htmlspecialchars($cur_transaction->transaction_info); ?></td>
-			<td><?php echo htmlspecialchars($cur_transaction->qty); ?></td>
-			<td><?php echo htmlspecialchars(implode(', ', $cur_transaction->serials)); ?></td>
+			<td><?php echo htmlspecialchars($quantity); ?></td>
+			<td><?php echo htmlspecialchars($serials); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

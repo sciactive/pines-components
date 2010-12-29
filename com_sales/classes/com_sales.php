@@ -915,8 +915,7 @@ class com_sales extends component {
 		// Primary options specify the criteria to search the inventory for.
 		$selector = array('&', 'tag' => array('com_sales', 'stock'));
 		if (!empty($sku)) {
-			$module->sku = $sku;
-			$countsheet_code = $sku;
+			$module->sku = $countsheet_code = $sku;
 			$selector['ref'] = array('product', $pines->com_sales->get_product_by_code($sku));
 		}
 		if (!empty($serial)) {
@@ -928,14 +927,14 @@ class com_sales extends component {
 		if (!isset($location->guid))
 			$location = $_SESSION['user']->group;
 		if ($descendents)
-			$group = array('group', $location->get_descendents(true));
+			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
 		else
-			$group = array('group', $location);
+			$or = array('|', 'ref' => array('group', $location));
 
 		if (isset($start_date))
-			$secondary_options['gte'][] = array('p_cdate', (int) $start_date);
+			$secondary_options['gte'] = array('p_cdate', (int) $start_date);
 		if (isset($end_date))
-			$secondary_options['lte'][] = array('p_cdate', (int) $end_date);
+			$secondary_options['lte'] = array('p_cdate', (int) $end_date);
 		$module->start_date = $start_date;
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
@@ -953,24 +952,24 @@ class com_sales extends component {
 		foreach ($module->stock as $cur_stock) {
 			// Grab all of the requested transactions for any stock items matching the given product code.
 			$invoices = $returns = $swaps = $transfers = $pos = $countsheets = array();
-			$or['ref'] = array(array('products', $cur_stock), $group);
 			if ($module->types['invoice']) {
 				$invoices = $pines->entity_manager->get_entities(
 					array('class' => com_sales_sale, 'skip_ac' => true),
 					$secondary_options,
 					$or,
+					array('|', 'ref' => array('products', $cur_stock)),
 					array('&', 'tag' => array('com_sales', 'sale'))
 				);
 			}
 			if ($module->types['return']) {
 				$returns = $pines->entity_manager->get_entities(
-					array('class' => com_sales_sale, 'skip_ac' => true),
+					array('class' => com_sales_return, 'skip_ac' => true),
 					$secondary_options,
 					$or,
+					array('|', 'ref' => array('products', $cur_stock)),
 					array('&', 'tag' => array('com_sales', 'return'))
 				);
 			}
-			$or['ref'] = $group;
 			if ($module->types['swap']) {
 				$swaps = $pines->entity_manager->get_entities(
 					array('class' => com_sales_tx, 'skip_ac' => true),

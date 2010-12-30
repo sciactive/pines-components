@@ -1077,6 +1077,12 @@ class com_sales extends component {
 						array('warehouse_items', true),
 						array('warehouse_complete', false)
 					)
+				),
+				array('|',
+					'data' => array(
+						array('status', 'invoiced'),
+						array('status', 'paid')
+					)
 				)
 			);
 
@@ -1114,6 +1120,12 @@ class com_sales extends component {
 						array('warehouse_items', true),
 						array('warehouse_complete', false)
 					)
+				),
+				array('|',
+					'data' => array(
+						array('status', 'invoiced'),
+						array('status', 'paid')
+					)
 				)
 			);
 
@@ -1123,6 +1135,8 @@ class com_sales extends component {
 		$products_sales = array();
 		foreach ($sales as $cur_sale) {
 			foreach ($cur_sale->products as $cur_product) {
+				if (!isset($cur_product['entity']->guid))
+					continue;
 				if ($cur_product['delivery'] == 'warehouse') {
 					$count = $cur_product['quantity'] - count($cur_product['stock_entities']);
 					if ($count <= 0)

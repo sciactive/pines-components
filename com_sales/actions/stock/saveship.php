@@ -36,32 +36,58 @@ if (!isset($entity->shipper->guid))
 $entity->eta = strtotime($_REQUEST['eta']);
 $entity->tracking_numbers = array_diff(array_map('trim', (array) explode("\n", trim($_REQUEST['tracking_numbers']))), array(''));
 if ($_REQUEST['shipped'] == 'ON') {
-	$entity->remove_tag('shipping_pending');
-	$entity->add_tag('shipping_shipped');
 	// Remove the stock from inventory.
 	if ($entity->has_tag('sale')) {
 		// Keep track of the whole process.
 		$no_errors = true;
-		// Go through each product, marking its stock as shipped.
-		foreach ($entity->products as &$cur_product) {
-			if ($cur_product['delivery'] != 'shipped' || !is_array($cur_product['stock_entities']))
+		$packing_list = (array) json_decode($_REQUEST['packing_list'], true);
+		// Go through each product on the packing list, marking its stock as shipped.
+		foreach ($packing_list as $key => $stock_keys) {
+			$key = (int) $key;
+			if (!isset($entity->products[$key]) || $entity->products[$key]['delivery'] != 'shipped' || !is_array($entity->products[$key]['stock_entities'])) {
+				$no_errors = false;
 				continue;
-			// Remove stock from inventory.
-			foreach ($cur_product['stock_entities'] as &$cur_stock) {
-				$no_errors = $cur_stock->remove('sale_shipped', $entity) && $cur_stock->save() && $no_errors;
+			}
+			if (!is_array($entity->products[$key]['shipped_entities']))
+				$entity->products[$key]['shipped_entities'] = array();
+			foreach ($stock_keys as $cur_stock_key) {
+				$cur_stock_key = (int) $cur_stock_key;
+				if (!isset($entity->products[$key]['stock_entities'][$cur_stock_key]) || $entity->products[$key]['stock_entities'][$cur_stock_key]->in_array($entity->products[$key]['shipped_entities'])) {
+					$no_errors = false;
+					continue;
+				}
+				// Remove inventory and save stock entity.
+				if ($entity->products[$key]['stock_entities'][$cur_stock_key]->remove('sale_shipped', $entity) && $entity->products[$key]['stock_entities'][$cur_stock_key]->save()) {
+					$entity->products[$key]['shipped_entities'][] = $entity->products[$key]['stock_entities'][$cur_stock_key];
+				} else {
+					$no_errors = false;
+				}
 			}
 		}
-		unset($cur_product);
 		if (!$no_errors)
 			pines_notice('Errors occured while removing stock from inventory. Please check that all stock was removed correctly.');
 	}
-} else {
-	$entity->add_tag('shipping_pending');
-	$entity->remove_tag('shipping_shipped');
+}
+
+// Check all products are shipped.
+$all_shipped = true;
+foreach ($entity->products as $cur_product) {
+	if ($cur_product['delivery'] != 'shipped')
+		continue;
+	// If shipped entities is less than stock entities, there are still products to ship.
+	if (count((array) $cur_product['shipped_entities']) < count($cur_product['stock_entities'])) {
+		$all_shipped = false;
+		break;
+	}
+}
+if ($all_shipped) {
+	// All shipped, so mark the sale.
+	$entity->remove_tag('shipping_pending');
+	$entity->add_tag('shipping_shipped');
 }
 
 if ($entity->save()) {
-	pines_notice('Saved shipment ['.$entity->guid.']');
+	pines_notice('Saved shipment ['.$entity->id.']');
 } else {
 	pines_error('Error saving shipment. Do you have permission?');
 }

@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Fulfulling Sale ['.htmlspecialchars($this->entity->id).']';
+$this->title = 'Fulfilling Sale ['.htmlspecialchars($this->entity->id).']';
 $this->note = 'Provide stock selection in this form.';
 $pines->uploader->load();
 $pines->com_jstree->load();

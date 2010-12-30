@@ -111,27 +111,26 @@ foreach ($stock_entries as $cur_entry) {
 
 // Convert fulfilled warehouse products to shipped.
 $sale->warehouse_complete = true;
-foreach ($sale->products as $key => &$cur_product) {
+foreach ($sale->products as &$cur_product) {
 	if ($cur_product['delivery'] != 'warehouse')
 		continue;
 	if ($cur_product['quantity'] <= count($cur_product['stock_entities'])) {
 		$cur_product['delivery'] = 'shipped';
 		$cur_product['was_warehouse'] = true;
+		// There are shippable items now.
+		$sale->add_tag('shipping_pending');
 	} else {
 		$sale->warehouse_complete = false;
 	}
 }
 unset($cur_product);
 
-if ($sale->warehouse_complete)
-	$sale->add_tag('shipping_pending');
-
 if ($sale->save()) {
 	if ($sale->warehouse_complete) {
-		pines_notice('Fulfilled sale ['.$sale->id.']. It can now be shipped.');
+		pines_notice('Fulfilled sale ['.$sale->id.']. It can now be completely shipped.');
 		redirect(pines_url('com_sales', 'stock/shipments'));
 	} else {
-		pines_notice('Partially fulfilled sale ['.$sale->id.'].');
+		pines_notice('Partially fulfilled sale ['.$sale->id.']. Fulfilled items can now be shipped.');
 		redirect(pines_url('com_sales', 'warehouse/fulfill'));
 	}
 } else {

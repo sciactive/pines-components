@@ -126,9 +126,6 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != '
 		}
 		unset($cur_product);
 	}
-	// Warehouse sales aren't shipped until warehouse items are fulfilled.
-	if ($sale->warehouse_items)
-		$sale->remove_tag('shipping_pending');
 }
 // Used for payment error checking.
 $payment_error = false;

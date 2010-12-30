@@ -23,8 +23,8 @@ switch (strtolower($_REQUEST['type'])) {
 			pines_error('Requested sale id is not accessible.');
 			return;
 		}
-		if ($entity->warehouse_items && !$entity->warehouse_complete) {
-			pines_notice('Requested sale has unfulfilled warehouse items.');
+		if ($entity->status != 'invoiced' && $entity->status != 'paid') {
+			pines_error('Requested sale has not been invoiced.');
 			return;
 		}
 		break;
@@ -70,20 +70,22 @@ if ($_REQUEST['shipped'] == 'ON') {
 }
 
 // Check all products are shipped.
-$all_shipped = true;
-foreach ($entity->products as $cur_product) {
-	if ($cur_product['delivery'] != 'shipped')
-		continue;
-	// If shipped entities is less than stock entities, there are still products to ship.
-	if (count((array) $cur_product['shipped_entities']) < count($cur_product['stock_entities'])) {
-		$all_shipped = false;
-		break;
+if (!$entity->warehouse_items || $entity->warehouse_complete) {
+	$all_shipped = true;
+	foreach ($entity->products as $cur_product) {
+		if ($cur_product['delivery'] != 'shipped')
+			continue;
+		// If shipped entities is less than stock entities, there are still products to ship.
+		if (count((array) $cur_product['shipped_entities']) < count($cur_product['stock_entities'])) {
+			$all_shipped = false;
+			break;
+		}
 	}
-}
-if ($all_shipped) {
-	// All shipped, so mark the sale.
-	$entity->remove_tag('shipping_pending');
-	$entity->add_tag('shipping_shipped');
+	if ($all_shipped) {
+		// All shipped, so mark the sale.
+		$entity->remove_tag('shipping_pending');
+		$entity->add_tag('shipping_shipped');
+	}
 }
 
 if ($entity->save()) {

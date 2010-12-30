@@ -137,6 +137,9 @@ $this->note = 'Provide shipment details in this form.';
 			?>
 	<div class="pf-element pf-heading">
 		<h1>Sale #<?php echo htmlspecialchars($this->entity->id); ?> Packing List</h1>
+		<?php if (!$this->entity->warehouse_complete) { ?>
+		<p>There are still unfulfilled warehouse items on this sale. <a href="<?php echo htmlspecialchars(pines_url('com_sales', 'warehouse/fulfill', array('id' => $this->entity->guid))); ?>" onclick="window.open(this.href); return false;">Fulfill them.</a></p>
+		<?php } ?>
 		<p>
 			<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/receipt', array('id' => $this->entity->guid))); ?>" onclick="window.open(this.href); return false;">Receipt</a>
 			<?php if (gatekeeper('com_sales/editsale')) { ?>

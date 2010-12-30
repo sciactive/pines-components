@@ -75,6 +75,129 @@ class com_reports extends component {
 	}
 
 	/**
+	 * Creates and attaches a module which summarizes employee totals.
+	 *
+	 * @param int $start_date The start date of the report.
+	 * @param int $end_date The end date of the report.
+	 * @param group $location The group to report on.
+	 * @param bool $descendents Whether to show descendent locations.
+	 * @return module The employee summary module.
+	 */
+	function employee_summary($start_date = null, $end_date = null, $location = null, $descendents = false) {
+		global $pines;
+
+		$module = new module('com_reports', 'employee_summary', 'content');
+
+		$selector = array('&');
+		// Datespan of the report.
+		if (isset($start_date))
+			$selector['gte'] = array('p_cdate', (int) $start_date);
+		if (isset($end_date))
+			$selector['lte'] = array('p_cdate', (int) $end_date);
+		$module->start_date = $start_date;
+		$module->end_date = $end_date;
+		$module->all_time = (!isset($start_date) && !isset($end_date));
+		// Location of the report.
+		if (!isset($location->guid))
+			$location = $_SESSION['user']->group;
+		if ($descendents)
+			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		else
+			$or = array('|', 'ref' => array('group', $location));
+		$module->location = $location;
+		$module->descendents = $descendents;
+		$selector['tag'] = array('com_sales', 'sale');
+		$sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
+		$selector['tag'] = array('com_sales', 'return');
+		$returns = $pines->entity_manager->get_entities(array('class' => com_sales_return), $selector, $or);
+		$module->invoices = array_merge($sales, $returns);
+
+		return $module;
+	}
+
+	/**
+	 * Creates and attaches a module which summarizes all sales, returns and voids.
+	 *
+	 * @param int $start_date The start date of the report.
+	 * @param int $end_date The end date of the report.
+	 * @param group $location The group to report on.
+	 * @param bool $descendents Whether to show descendent locations.
+	 * @return module the invoice summary module.
+	 */
+	function invoice_summary($start_date = null, $end_date = null, $location = null, $descendents = false) {
+		global $pines;
+
+		$module = new module('com_reports', 'invoice_summary', 'content');
+
+		$selector = array('&');
+		// Datespan of the report.
+		if (isset($start_date))
+			$selector['gte'] = array('p_cdate', (int) $start_date);
+		if (isset($end_date))
+			$selector['lte'] = array('p_cdate', (int) $end_date);
+		$module->start_date = $start_date;
+		$module->end_date = $end_date;
+		$module->all_time = (!isset($start_date) && !isset($end_date));
+		// Location of the report.
+		if (!isset($location->guid))
+			$location = $_SESSION['user']->group;
+		if ($descendents)
+			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		else
+			$or = array('|', 'ref' => array('group', $location));
+		$module->location = $location;
+		$module->descendents = $descendents;
+		$selector['tag'] = array('com_sales', 'sale');
+		$sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
+		$selector['tag'] = array('com_sales', 'return');
+		$returns = $pines->entity_manager->get_entities(array('class' => com_sales_return), $selector, $or);
+		$module->invoices = array_merge($sales, $returns);
+
+		return $module;
+	}
+
+	/**
+	 * Creates and attaches a module which summarizes locational totals.
+	 *
+	 * @param int $start_date The start date of the report.
+	 * @param int $end_date The end date of the report.
+	 * @param group $location The group to report on.
+	 * @param bool $descendents Whether to show descendent locations.
+	 * @return module The location summary module.
+	 */
+	function location_summary($start_date = null, $end_date = null, $location = null, $descendents = false) {
+		global $pines;
+
+		$module = new module('com_reports', 'location_summary', 'content');
+
+		$selector = array('&');
+		// Datespan of the report.
+		if (isset($start_date))
+			$selector['gte'] = array('p_cdate', (int) $start_date);
+		if (isset($end_date))
+			$selector['lte'] = array('p_cdate', (int) $end_date);
+		$module->start_date = $start_date;
+		$module->end_date = $end_date;
+		$module->all_time = (!isset($start_date) && !isset($end_date));
+		// Location of the report.
+		if (!isset($location->guid))
+			$location = $_SESSION['user']->group;
+		if ($descendents)
+			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		else
+			$or = array('|', 'ref' => array('group', $location));
+		$module->location = $location;
+		$module->descendents = $descendents;
+		$selector['tag'] = array('com_sales', 'sale');
+		$sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
+		$selector['tag'] = array('com_sales', 'return');
+		$returns = $pines->entity_manager->get_entities(array('class' => com_sales_return), $selector, $or);
+		$module->invoices = array_merge($sales, $returns);
+
+		return $module;
+	}
+
+	/**
 	 * Creates and attaches a module which reports sales.
 	 *
 	 * @param int $start_date The start date of the report.

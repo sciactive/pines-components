@@ -15,6 +15,30 @@
 			}
 		},
 			{
+				"path": "main_menu/business/reports/sales/salesinvoices",
+				"text": "Invoice Summary",
+				"href": ["com_reports","invoicesummary"],
+				"depend": {
+					"ability": "com_reports/summarizeinvoices"
+				}
+			},
+			{
+				"path": "main_menu/business/reports/sales/salesemployees",
+				"text": "Employee Summary",
+				"href": ["com_reports","employeesummary"],
+				"depend": {
+					"ability": "com_reports/summarizeemployees"
+				}
+			},
+			{
+				"path": "main_menu/business/reports/sales/saleslocations",
+				"text": "Location Summary",
+				"href": ["com_reports","locationsummary"],
+				"depend": {
+					"ability": "com_reports/summarizelocations"
+				}
+			},
+			{
 				"path": "main_menu/business/reports/sales/salestotals",
 				"text": "Sales Totals",
 				"href": ["com_reports","reportsales"],

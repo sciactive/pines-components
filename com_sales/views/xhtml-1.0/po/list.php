@@ -29,6 +29,9 @@ $errors = array();
 				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'po/edit')); ?>'},
 				<?php } if (gatekeeper('com_sales/editpo')) { ?>
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo addslashes(pines_url('com_sales', 'po/edit', array('id' => '__title__'))); ?>'},
+				<?php } if (gatekeeper('com_sales/completepo')) { ?>
+				{type: 'separator'},
+				{type: 'button', text: 'Complete', title: 'Mark it complete even with missing items.', extra_class: 'picon picon-checkbox', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_sales', 'po/complete', array('id' => '__title__'))); ?>', delimiter: ','},
 				<?php } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},

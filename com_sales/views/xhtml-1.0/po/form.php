@@ -36,7 +36,8 @@ if ($this->entity->final)
 				foreach($cur_product->vendors as $cur_vendor) {
 					$cur_vendor_guids[] = (object) array(
 						'guid' => $cur_vendor['entity']->guid,
-						'sku' => $cur_vendor['sku']
+						'sku' => $cur_vendor['sku'],
+						'cost' => $cur_vendor['cost']
 					);
 				}
 				$export_product = (object) array(
@@ -95,6 +96,7 @@ if ($this->entity->final)
 										cur_product.manufacturer,
 										cur_product.manufacturer_sku,
 										this.sku,
+										this.cost,
 										cur_product.unit_price
 									]
 								}]);
@@ -376,24 +378,26 @@ if ($this->entity->final)
 					<th>Manufacturer</th>
 					<th>Manufacturer SKU</th>
 					<th>Vendor SKU</th>
+					<th>Vendor Cost</th>
 					<th>Unit Price</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+				<tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
 			</tbody>
 		</table>
 		<br class="pf-clearing" />
-		<div style="width: 100%">
-			<label>
-				<span>Quantity</span>
-				<input type="text" name="cur_product_quantity" id="p_muid_cur_product_quantity" <?php echo $read_only; ?> />
-			</label>
-			<label>
-				<span>Cost</span>
-				<input type="text" name="cur_product_cost" id="p_muid_cur_product_cost" <?php echo $read_only; ?> />
-			</label>
+		<div class="pf-form">
+			<div class="pf-element">
+				<label><span class="pf-label">Quantity</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_product_quantity" size="24" id="p_muid_cur_product_quantity" <?php echo $read_only; ?> /></label>
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Cost</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_product_cost" size="24" id="p_muid_cur_product_cost" <?php echo $read_only; ?> /></label>
+			</div>
 		</div>
+		<br />
 	</div>
 	<?php if (!empty($this->entity->received)) { ?>
 		<div class="pf-element pf-full-width">

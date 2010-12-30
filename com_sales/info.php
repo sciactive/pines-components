@@ -84,6 +84,7 @@ return array(
 		array('newpo', 'Create Purchase Orders', 'User can create new POs.'),
 		array('editpo', 'Edit Purchase Orders', 'User can edit current POs.'),
 		array('deletepo', 'Delete Purchase Orders', 'User can delete current POs.'),
+		array('completepo', 'Complete Purchase Orders', 'User can mark partially received POs as complete.'),
 		array('listcashcounts', 'List Cash Counts', 'User can see cash counts.'),
 		array('newcashcount', 'Cash-In', 'User can create new cash counts.'),
 		array('editcashcount', 'Cash-Out', 'User can close out cash counts.'),

@@ -32,7 +32,7 @@ foreach($clock as $cur_entry) {
 	);
 }
 
-if ($employee->timeclock->save()) {
+if ($employee->timeclock->save() && $employee->save()) {
 	pines_notice("Saved timeclock for {$employee->name}.");
 } else {
 	pines_error('Error saving timeclock. Do you have permission?');

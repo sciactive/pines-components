@@ -39,7 +39,7 @@ if ($employee->timeclock->clocked_in_time()) {
 	$employee->timeclock->clock_in();
 }
 
-if (!$employee->timeclock->save()) {
+if (!$employee->timeclock->save() || !$employee->save()) {
 	$pines->page->override_doc('false');
 	return;
 }

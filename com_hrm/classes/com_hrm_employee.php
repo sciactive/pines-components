@@ -52,7 +52,7 @@ class com_hrm_employee extends user {
 			// If we can't save the entity, don't bother.
 			if (!$entity->save())
 				return $entity;
-			$old_tc = $entity->timeclock;
+			$old_tc = (array) $entity->timeclock;
 			$entity->timeclock = com_hrm_timeclock::factory();
 			$entity->timeclock->user = $entity;
 			$entity->timeclock->group = $entity->group;
@@ -70,14 +70,16 @@ class com_hrm_employee extends user {
 			if (!$entity->timeclock->save() || !$entity->save())
 				$entity->timeclock = $old_tc;
 		}
-		if ($entity->timeclock->ac != (object) array('user' => 3, 'group' => 3, 'other' => 2)) {
-			$entity->timeclock->ac = (object) array('user' => 3, 'group' => 3, 'other' => 2);
-			$entity->timeclock->save();
-		}
-		if (!$entity->is($entity->timeclock->user)) {
-			$entity->timeclock->user = $entity;
-			$entity->timeclock->group = $entity->group;
-			$entity->timeclock->save();
+		if (is_object($entity->timeclock)) {
+			if ($entity->timeclock->ac != (object) array('user' => 3, 'group' => 3, 'other' => 2)) {
+				$entity->timeclock->ac = (object) array('user' => 3, 'group' => 3, 'other' => 2);
+				$entity->timeclock->save();
+			}
+			if (!$entity->is($entity->timeclock->user)) {
+				$entity->timeclock->user = $entity;
+				$entity->timeclock->group = $entity->group;
+				$entity->timeclock->save();
+			}
 		}
 		return $entity;
 	}

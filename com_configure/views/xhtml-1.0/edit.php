@@ -35,7 +35,7 @@ $pines->com_ptags->load();
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-		$(".p_muid_do_tags", "#p_muid_form").ptags({ptags_delimiter: ';;'});
+		$(".p_muid_do_tags", "#p_muid_form").ptags({ptags_delimiter: ';;', ptags_sortable: true});
 		$("#p_muid_form").delegate(".p_muid_default_checkbox", "change", function(){
 			var checkbox = $(this);
 			if (checkbox.attr("checked")) {
@@ -71,7 +71,7 @@ $pines->com_ptags->load();
 				</div>
 				<?php } ?>
 			<?php } elseif (is_array($cur_var['value'])) { ?>
-				<div class="pf-group">
+				<div class="pf-group pf-full-width">
 					<?php if (is_int($cur_var['value'][0])) { ?>
 					<input class="pf-field ui-widget-content ui-corner-all p_muid_do_tags" type="text" name="opt_int_<?php echo htmlspecialchars($cur_var['name']); ?>" value="<?php echo htmlspecialchars(implode(';;', $cur_value)); ?>" />
 					<?php } elseif (is_float($cur_var['value'][0])) { ?>

@@ -402,6 +402,20 @@ class com_sales extends component {
 	}
 
 	/**
+	 * Creates and attaches a module which lists return checklists.
+	 */
+	public function list_return_checklists() {
+		global $pines;
+
+		$module = new module('com_sales', 'returnchecklist/list', 'content');
+
+		$module->return_checklists = $pines->entity_manager->get_entities(array('class' => com_sales_return_checklist), array('&', 'tag' => array('com_sales', 'return_checklist')));
+
+		if ( empty($module->return_checklists) )
+			pines_notice('There are no return checklists.');
+	}
+
+	/**
 	 * Creates and attaches a module which lists pos.
 	 * @param bool $finished Show finished POs instead of pending ones.
 	 */

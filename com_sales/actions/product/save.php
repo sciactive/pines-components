@@ -82,10 +82,14 @@ if (is_array($_REQUEST['additional_tax_fees'])) {
 			$product->additional_tax_fees[] = $cur_tax_fee;
 	}
 }
-$product->restocking_fee = $_REQUEST['restocking_fee'];
-if (!in_array($product->restocking_fee, array('', 'percentage', 'flat_rate')))
-	$product->restocking_fee = '';
-$product->restocking_fee_rate = (float) $_REQUEST['restocking_fee_rate'];
+$product->return_checklists = array();
+if (is_array($_REQUEST['return_checklists'])) {
+	foreach ($_REQUEST['return_checklists'] as $cur_return_checklist_guid) {
+		$cur_return_checklist = com_sales_return_checklist::factory((int) $cur_return_checklist_guid);
+		if (isset($cur_return_checklist->guid))
+			$product->return_checklists[] = $cur_return_checklist;
+	}
+}
 
 // Attributes
 $product->weight = (float) $_REQUEST['weight'];

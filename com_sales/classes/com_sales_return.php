@@ -111,13 +111,19 @@ class com_sales_return extends entity {
 			if (in_array($cur_payment['status'], array('approved', 'declined', 'tendered')))
 				continue;
 			// Check minimum and maximum values.
-			if ((float) $cur_payment['amount'] < $cur_payment['entity']->minimum) {
+			if ((float) $cur_payment['amount'] < $cur_payment['entity']->minimum && !$cur_payment['entity']->allow_return) {
 				pines_notice("The payment type [{$cur_payment['entity']->name}] requires a minimum payment of {$cur_payment['entity']->minimum}.");
 				$return = false;
 				continue;
 			}
 			if (isset($cur_payment['entity']->maximum) && (float) $cur_payment['amount'] > $cur_payment['entity']->maximum) {
 				pines_notice("The payment type [{$cur_payment['entity']->name}] requires a maximum payment of {$cur_payment['entity']->maximum}.");
+				$return = false;
+				continue;
+			}
+			// Check if return fee payment is allowed.
+			if ((float) $cur_payment['amount'] < 0 && !$cur_payment['entity']->allow_return) {
+				pines_notice("The payment type [{$cur_payment['entity']->name}] cannot be charged on a return. (It can't have a negative amount.)");
 				$return = false;
 				continue;
 			}
@@ -640,11 +646,33 @@ class com_sales_return extends entity {
 		$taxes = 0.00;
 		$item_fees = 0.00;
 		$total = 0.00;
+		$return_fees = 0.00;
 		// Go through each product, calculating its line total and fees.
 		foreach ($this->products as &$cur_product) {
 			$price = (float) $cur_product['price'];
 			$qty = (int) $cur_product['quantity'];
 			$discount = $cur_product['discount'];
+			$cur_return_fee = 0.00;
+			// Return fee needs to be calculated before discount.
+			foreach ($cur_product['entity']->return_checklists as $cur_checklist) {
+				if (!$cur_checklist->enabled)
+					continue;
+				foreach ($cur_checklist->conditions as $cur_condition) {
+					// Check if this should be added.
+					if ($cur_condition['always'] || $cur_product['return_checklists']["G{$cur_checklist->guid}"]["C{$cur_condition['condition']}"]) {
+						// Calculate return fee.
+						switch ($cur_condition['type']) {
+							case 'flat_rate':
+							default:
+								$cur_return_fee += (float) $pines->com_sales->round($cur_condition['amount'] * $qty);
+								break;
+							case 'percentage':
+								$cur_return_fee += (float) $pines->com_sales->round($pines->com_sales->round($price * ($cur_condition['amount'] / 100)) * $qty);
+								break;
+						}
+					}
+				}
+			}
 			if ($cur_product['entity']->discountable && $discount != "") {
 				$discount_price = $this->discount_price($price, $discount);
 				// Check that the discount doesn't lower the item's price below the floor.
@@ -666,7 +694,7 @@ class com_sales_return extends entity {
 				return false;
 			}
 			$line_total = $price * $qty;
-			$cur_item_fees = 0;
+			$cur_item_fees = 0.00;
 			if (!$cur_product['entity']->tax_exempt) {
 				// Add location taxes.
 				foreach ($tax_fees as $cur_tax_fee) {
@@ -689,15 +717,18 @@ class com_sales_return extends entity {
 			}
 			$cur_product['line_total'] = (float) $pines->com_sales->round($line_total);
 			$cur_product['fees'] = (float) $pines->com_sales->round($cur_item_fees);
+			$cur_product['return_fee'] = (float) $pines->com_sales->round($cur_return_fee);
 			$item_fees += $cur_product['fees'];
 			$subtotal += $cur_product['line_total'];
+			$return_fees += $cur_product['return_fee'];
 		}
 		unset($cur_product);
 		$this->subtotal = (float) $pines->com_sales->round($subtotal);
 		$this->item_fees = (float) $pines->com_sales->round($item_fees);
 		$this->taxes = (float) $pines->com_sales->round($taxes);
+		$this->return_fees = (float) $pines->com_sales->round($return_fees);
 		// The total can now be calculated.
-		$total = $this->subtotal + $this->item_fees + $this->taxes;
+		$total = $this->subtotal + $this->item_fees + $this->taxes - $this->return_fees;
 		$this->total = (float) $pines->com_sales->round($total);
 		return true;
 	}

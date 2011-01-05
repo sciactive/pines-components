@@ -207,6 +207,9 @@ switch ($this->entity->status) {
 					<th>Serial</th>
 					<th class="right_text">Qty</th>
 					<th class="right_text">Price</th>
+					<?php if (!$sale) { ?>
+					<th class="right_text">Return Fee</th>
+					<?php } ?>
 					<th class="right_text">Total</th>
 				</tr>
 			</thead>
@@ -221,7 +224,10 @@ switch ($this->entity->status) {
 					<td><?php echo htmlspecialchars($cur_product['serial']); ?></td>
 					<td class="right_text"><?php echo htmlspecialchars($cur_product['quantity']); ?></td>
 					<td class="right_text">$<?php echo $pines->com_sales->round($cur_product['price'], true); ?><?php echo empty($cur_product['discount']) ? '' : htmlspecialchars(" - {$cur_product['discount']}"); ?></td>
-					<td class="right_text">$<?php echo $pines->com_sales->round($cur_product['line_total'], true); ?></td>
+					<?php if (!$sale) { ?>
+					<td class="right_text">$<?php echo $pines->com_sales->round($cur_product['return_fee'], true); ?></td>
+					<?php } ?>
+					<td class="right_text">$<?php echo $pines->com_sales->round($cur_product['line_total'] - $cur_product['return_fee'], true); ?></td>
 				</tr>
 				<?php } } ?>
 			</tbody>
@@ -257,6 +263,7 @@ switch ($this->entity->status) {
 				<span>Subtotal:</span>
 				<?php if ($this->entity->item_fees > 0) { ?><span>Item Fees:</span><?php } ?>
 				<span>Tax:</span>
+				<?php if ($this->entity->return_fees > 0) { ?><span>Return Fees:</span><?php } ?>
 				<hr style="visibility: hidden;" />
 				<span><strong>Total: </strong></span>
 			</div>
@@ -264,6 +271,7 @@ switch ($this->entity->status) {
 				<span>$<?php echo $pines->com_sales->round($this->entity->subtotal, true); ?></span>
 				<?php if ($this->entity->item_fees > 0) { ?><span>$<?php echo $pines->com_sales->round($this->entity->item_fees, true); ?></span><?php } ?>
 				<span>$<?php echo $pines->com_sales->round($this->entity->taxes, true); ?></span>
+				<?php if ($this->entity->return_fees > 0) { ?><span>($<?php echo $pines->com_sales->round($this->entity->return_fees, true); ?>)</span><?php } ?>
 				<hr />
 				<span><strong>$<?php echo $pines->com_sales->round($this->entity->total, true); ?></strong></span>
 			</div>

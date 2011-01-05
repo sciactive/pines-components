@@ -57,7 +57,7 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != '
 			$cur_discount = $cur_product->values[6];
 			$cur_salesperson = null;
 			if ($pines->config->com_sales->per_item_salesperson)
-				$cur_salesperson = user::factory(intval($cur_product->values[9]));
+				$cur_salesperson = user::factory(intval($cur_product->values[10]));
 			// Default to the sale's user.
 			if (!isset($cur_salesperson->guid))
 				$cur_salesperson = $sale->user->guid ? $sale->user : $_SESSION['user'];

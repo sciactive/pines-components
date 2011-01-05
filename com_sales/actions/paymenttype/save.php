@@ -33,6 +33,7 @@ $payment_type->kick_drawer = ($_REQUEST['kick_drawer'] == 'ON');
 $payment_type->change_type = ($_REQUEST['change_type'] == 'ON');
 $payment_type->minimum = (float) $_REQUEST['minimum'];
 $payment_type->maximum = (float) $_REQUEST['maximum'];
+$payment_type->allow_return = ($_REQUEST['allow_return'] == 'ON');
 $payment_type->processing_type = $_REQUEST['processing_type'];
 
 if (empty($payment_type->name)) {

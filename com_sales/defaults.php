@@ -320,6 +320,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'global_return_checklists',
+		'cname' => 'Globalize Return Checklists',
+		'description' => 'Ensure that every user can access all return checklists by setting the "other" access control to read.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'global_tax_fees',
 		'cname' => 'Globalize Taxes/Fees',
 		'description' => 'Ensure that every user can access all taxes and fees by setting the "other" access control to read.',

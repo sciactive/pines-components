@@ -117,12 +117,14 @@ if ($pines->config->com_sales->autocomplete_product)
 			<?php if ($this->entity->status == 'invoiced' || $this->entity->status == 'paid' || $this->entity->status == 'voided') { ?>
 			products_table.pgrid({
 				pgrid_view_height: "160px",
+				pgrid_hidden_cols: [10],
 				pgrid_paginate: false,
 				pgrid_toolbar: false
 			});
 			<?php } else { ?>
 			products_table.pgrid({
 				pgrid_view_height: "160px",
+				pgrid_hidden_cols: [10],
 				pgrid_paginate: false,
 				pgrid_toolbar: true,
 				pgrid_toolbar_contents : [
@@ -364,7 +366,7 @@ if ($pines->config->com_sales->autocomplete_product)
 								alert("Please provide a serial number.");
 								return;
 							}
-							products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'in-store', 1, data.unit_price, "", "", "", data.salesperson]}], function(){
+							products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'in-store', 1, data.unit_price, "", "", "", "", data.salesperson]}], function(){
 								var cur_row = $(this);
 								cur_row.data("product", data);
 							});
@@ -372,7 +374,7 @@ if ($pines->config->com_sales->autocomplete_product)
 							serial_dialog.dialog("close");
 						},
 						"Warehouse Item": function(){
-							products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'warehouse', 1, data.unit_price, "", "", "", data.salesperson]}], function(){
+							products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'warehouse', 1, data.unit_price, "", "", "", "", data.salesperson]}], function(){
 								var cur_row = $(this);
 								cur_row.data("product", data);
 							});
@@ -596,7 +598,7 @@ if ($pines->config->com_sales->autocomplete_product)
 			} ?>
 
 			<?php if (!$pines->config->com_sales->per_item_salesperson) { ?>
-			products_table.pgrid_import_state({pgrid_hidden_cols: [10]});
+			products_table.pgrid_import_state({pgrid_hidden_cols: [10, 11]});
 			<?php } ?>
 
 			// Load the data for any existing products.
@@ -900,7 +902,6 @@ if ($pines->config->com_sales->autocomplete_product)
 				<?php if ($pines->config->com_sales->com_customer) { ?>
 				require_customer = false;
 				<?php } ?>
-				// Calculate ticket totals.
 				rows.each(function(){
 					var cur_row = $(this);
 					var product = cur_row.data("product");
@@ -908,6 +909,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					if (product.require_customer)
 						require_customer = true;
 					<?php } ?>
+					// Calculate ticket totals.
 					var price = parseFloat(cur_row.pgrid_get_value(6));
 					var qty = parseInt(cur_row.pgrid_get_value(5));
 					var discount = cur_row.pgrid_get_value(7);
@@ -1127,6 +1129,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					<th>Discount</th>
 					<th>Line Total</th>
 					<th>Fees</th>
+					<th>Unused</th>
 					<th>Salesperson</th>
 				</tr>
 			</thead>
@@ -1145,6 +1148,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					<td><?php echo htmlspecialchars($cur_product['discount']); ?></td>
 					<td><?php echo htmlspecialchars($cur_product['line_total']); ?></td>
 					<td><?php echo htmlspecialchars($cur_product['fees']); ?></td>
+					<td>NA</td>
 					<td><?php echo htmlspecialchars($cur_product['salesperson']->guid.': '.$cur_product['salesperson']->name); ?></td>
 				</tr>
 				<?php } ?>

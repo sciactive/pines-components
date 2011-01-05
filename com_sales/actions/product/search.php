@@ -54,6 +54,7 @@ if (isset($product)) {
 		'floor' => $product->floor,
 		'ceiling' => $product->ceiling,
 		'tax_exempt' => $product->tax_exempt,
+		'return_checklists' => array(),
 		'serialized' => $product->serialized,
 		'discountable' => $product->discountable,
 		'require_customer' => $product->require_customer,
@@ -62,6 +63,12 @@ if (isset($product)) {
 		'fees_percent' => $fees_percent,
 		'fees_flat' => $fees_flat
 	);
+
+	foreach ((array) $product->return_checklists as $cur_return_checklist) {
+		if (!$cur_return_checklist->enabled)
+			continue;
+		$json_struct->return_checklists[] = array('guid' => $cur_return_checklist->guid, 'label' => $cur_return_checklist->label, 'conditions' => (array) $cur_return_checklist->conditions);
+	}
 
 	$product = $json_struct;
 }

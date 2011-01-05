@@ -61,9 +61,15 @@ if ($return->status != 'processed' && $return->status != 'voided') {
 			$cur_qty = (int) $cur_product->values[4];
 			$cur_price = (float) $cur_product->values[5];
 			$cur_discount = $cur_product->values[6];
+			$cur_return_checklists = (array) $cur_product->return_checklists;
+			// Convert to arrays.
+			foreach ($cur_return_checklists as &$cur_checklist) {
+				$cur_checklist = (array) $cur_checklist;
+			}
+			unset($cur_checklist);
 			$cur_salesperson = null;
 			if ($pines->config->com_sales->per_item_salesperson)
-				$cur_salesperson = user::factory(intval($cur_product->values[9]));
+				$cur_salesperson = user::factory(intval($cur_product->values[10]));
 			// Default to the return's user.
 			if (!isset($cur_salesperson->guid))
 				$cur_salesperson = $return->user->guid ? $return->user : $_SESSION['user'];
@@ -113,6 +119,7 @@ if ($return->status != 'processed' && $return->status != 'voided') {
 						$cur_product['quantity'] = $cur_qty;
 						$cur_product['price'] = $cur_price;
 						$cur_product['discount'] = $cur_discount;
+						$cur_product['return_checklists'] = $cur_return_checklists;
 						$cur_product['salesperson'] = $cur_salesperson;
 						unset($old_products[$old_key]);
 						$found = true;
@@ -131,6 +138,7 @@ if ($return->status != 'processed' && $return->status != 'voided') {
 					'quantity' => $cur_qty,
 					'price' => $cur_price,
 					'discount' => $cur_discount,
+					'return_checklists' => $cur_return_checklists,
 					'salesperson' => $cur_salesperson
 				);
 			}
@@ -170,8 +178,8 @@ if ($return->status != 'processed' && $return->status != 'voided') {
 			$payment_error = true;
 			continue;
 		}
-		if ($cur_amount <= 0) {
-			pines_notice('A payment was entered without an amount.');
+		if ($cur_amount <= 0 && !$cur_payment_type_entity->allow_return) {
+			pines_notice("The payment type [{$cur_payment_type_entity->name}] must have a positive amount.");
 			$payment_error = true;
 		}
 		$data_array = array();

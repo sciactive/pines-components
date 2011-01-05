@@ -1,6 +1,6 @@
 <?php
 /**
- * com_sales_payment_type class.
+ * com_sales_return_checklist class.
  *
  * @package Pines
  * @subpackage com_sales
@@ -12,22 +12,21 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * A payment type.
+ * A return checklist.
  *
  * @package Pines
  * @subpackage com_sales
  */
-class com_sales_payment_type extends entity {
+class com_sales_return_checklist extends entity {
 	/**
-	 * Load a payment type.
-	 * @param int $id The ID of the payment type to load, 0 for a new payment type.
+	 * Load a return checklist.
+	 * @param int $id The ID of the return checklist to load, 0 for a new return checklist.
 	 */
 	public function __construct($id = 0) {
 		parent::__construct();
-		$this->add_tag('com_sales', 'payment_type');
+		$this->add_tag('com_sales', 'return_checklist');
 		// Defaults.
 		$this->enabled = true;
-		$this->processing_type = 'com_sales/instant';
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
@@ -41,7 +40,7 @@ class com_sales_payment_type extends entity {
 
 	/**
 	 * Create a new instance.
-	 * @return com_sales_payment_type The new instance.
+	 * @return com_sales_return_checklist The new instance.
 	 */
 	public static function factory() {
 		global $pines;
@@ -53,18 +52,18 @@ class com_sales_payment_type extends entity {
 	}
 
 	/**
-	 * Delete the payment type.
+	 * Delete the return checklist.
 	 * @return bool True on success, false on failure.
 	 */
 	public function delete() {
 		if (!parent::delete())
 			return false;
-		pines_log("Deleted payment type $this->name.", 'notice');
+		pines_log("Deleted return checklist $this->name.", 'notice');
 		return true;
 	}
 
 	/**
-	 * Save the payment type.
+	 * Save the return checklist.
 	 * @return bool True on success, false on failure.
 	 */
 	public function save() {
@@ -74,14 +73,13 @@ class com_sales_payment_type extends entity {
 	}
 
 	/**
-	 * Print a form to edit the payment type.
+	 * Print a form to edit the return checklist.
 	 * @return module The form's module.
 	 */
 	public function print_form() {
 		global $pines;
-		$module = new module('com_sales', 'paymenttype/form', 'content');
+		$module = new module('com_sales', 'returnchecklist/form', 'content');
 		$module->entity = $this;
-		$module->processing_types = (array) $pines->config->com_sales->processing_types;
 
 		return $module;
 	}

@@ -299,6 +299,15 @@ if ($pines->config->com_sales->autocomplete_product)
 						}
 					},
 					<?php } ?>
+					{
+						type: 'button',
+						title: 'Return Checklist',
+						extra_class: 'picon picon-checkbox',
+						multi_select: false,
+						click: function(e, rows){
+							checklist_form(rows);
+						}
+					},
 					{type: 'separator'},
 					{
 						type: 'button',
@@ -323,7 +332,7 @@ if ($pines->config->com_sales->autocomplete_product)
 								alert("Please provide a serial number.");
 								return;
 							}
-							products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, '', 1, data.unit_price, "", "", "", data.salesperson]}], function(){
+							products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, '', 1, data.unit_price, "", "", "", "", data.salesperson]}], function(){
 								var cur_row = $(this);
 								cur_row.data("product", data);
 							});
@@ -337,7 +346,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					serial_box.val("");
 					return;
 				}
-				products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, "", 1, data.unit_price, "", "", "", data.salesperson]}], function(){
+				products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, "", 1, data.unit_price, "", "", "", "", data.salesperson]}], function(){
 					var cur_row = $(this);
 					cur_row.data("product", data);
 				});
@@ -462,6 +471,74 @@ if ($pines->config->com_sales->autocomplete_product)
 					}
 				}
 			});
+			// Checklist Form
+			var checklist_dialog = $("#p_muid_checklist_dialog").dialog({
+				bgiframe: true,
+				autoOpen: false,
+				modal: true,
+				width: 450,
+				open: function() {
+					$("#p_muid_checklist").val("");
+				}
+			});
+			var checklist_form = function(row){
+				var checklist_form = $("#p_muid_checklist_form");
+				checklist_form.html("");
+				var product = row.data("product");
+				var checklists = row.data("return_checklists");
+				if (!checklists)
+					checklists = {};
+				var qty = parseInt(row.pgrid_get_value(5));
+				var price = parseFloat(row.pgrid_get_value(6));
+				if (!product.return_checklists || !product.return_checklists.length) {
+					alert("This product has no return checklists.");
+					return;
+				}
+				$.each(product.return_checklists, function(i, cur_checklist){
+					checklist_form.append('<div class="pf-element pf-heading"><h1>'+cur_checklist.label+'</h1></div>');
+					$.each(cur_checklist.conditions, function(i, cur_condition){
+						var cur_element = $('<div class="pf-element pf-full-width condition"><span class="pf-label">'+cur_condition.condition+'</span></div>');
+						// Make checkboxes.
+						if (cur_condition.always)
+							cur_element.append('<span class="pf-field">Always Charged</span>')
+						else
+							cur_element.append('<input class="pf-field" type="checkbox" name="'+cur_condition.condition+'" value="ON"'+((checklists["G"+cur_checklist.guid] && checklists["G"+cur_checklist.guid]["C"+cur_condition.condition]) ? ' checked="checked"' : '')+' />')
+						var amount;
+						// Calculate return fee.
+						switch (cur_condition.type) {
+							case "flat_rate":
+							default:
+								amount = "$"+cur_condition.amount+" x "+qty+" ($"+round_to_dec(cur_condition.amount * qty, true)+")";
+								break;
+							case "percentage":
+								amount = cur_condition.amount+"% ($"+round_to_dec(round_to_dec(price * (cur_condition.amount / 100)) * qty, true)+")";
+								break;
+						}
+						cur_element.append('<div style="float: right;">'+amount+'</div>').data("guid", cur_checklist.guid).appendTo(checklist_form);
+					});
+				});
+				checklist_dialog.dialog("option", "buttons", {
+					'Done': function(){
+						checklists = {};
+						checklist_form.children(".condition").each(function(){
+							var cur_condition = $(this);
+							var guid = cur_condition.data("guid")
+							var checkbox = cur_condition.find("input[type=checkbox]");
+							var condition = checkbox.attr("name");
+							if (!checkbox.length)
+								return;
+							// Key needs to have a string value.
+							if (!checklists["G"+guid])
+								checklists["G"+guid] = {};
+							checklists["G"+guid]["C"+condition] = checkbox.is(":checked");
+						});
+						row.data("return_checklists", checklists);
+						checklist_dialog.dialog('close');
+						update_products();
+					}
+				});
+				checklist_dialog.dialog('open');
+			};
 			<?php if ($pines->config->com_sales->per_item_salesperson) { ?>
 			// Salesperson Form
 			var salesperson_dialog = $("#p_muid_salesperson_dialog").dialog({
@@ -483,7 +560,7 @@ if ($pines->config->com_sales->autocomplete_product)
 							alert("Please select a salesperson using the dropdown menu.");
 							return;
 						}
-						row.pgrid_set_value(10, salesperson);
+						row.pgrid_set_value(11, salesperson);
 						row.pgrid_deselect_rows();
 						salesperson_dialog.dialog('close');
 						update_products();
@@ -495,7 +572,7 @@ if ($pines->config->com_sales->autocomplete_product)
 			} ?>
 
 			<?php if (!$pines->config->com_sales->per_item_salesperson) { ?>
-			products_table.pgrid_import_state({pgrid_hidden_cols: [4, 10]});
+			products_table.pgrid_import_state({pgrid_hidden_cols: [4, 11]});
 			<?php } ?>
 
 			// Load the data for any existing products.
@@ -785,25 +862,49 @@ if ($pines->config->com_sales->autocomplete_product)
 				var taxes = 0;
 				var item_fees = 0;
 				var total = 0;
+				var row_export = [];
+				var return_fees = 0;
 				<?php if ($pines->config->com_sales->com_customer) { ?>
 				require_customer = false;
 				<?php } ?>
-				// Calculate ticket totals.
 				rows.each(function(){
 					var cur_row = $(this);
 					var product = cur_row.data("product");
+					var checklists = cur_row.data("return_checklists");
+					if (!checklists)
+						checklists = {};
 					<?php if ($pines->config->com_sales->com_customer) { ?>
 					if (product.require_customer)
 						require_customer = true;
 					<?php } ?>
+					// Calculate ticket totals.
 					var price = parseFloat(cur_row.pgrid_get_value(6));
 					var qty = parseInt(cur_row.pgrid_get_value(5));
 					var discount = cur_row.pgrid_get_value(7);
 					var cur_item_fees = 0;
+					var cur_return_fee = 0;
 					if (isNaN(price))
 						price = 0;
 					if (isNaN(qty))
 						qty = 1;
+					// Return fee needs to be calculated before discount.
+					$.each(product.return_checklists, function(i, cur_checklist){
+						$.each(cur_checklist.conditions, function(i, cur_condition){
+							// Check if this should be added.
+							if (cur_condition.always || (checklists["G"+cur_checklist.guid] && checklists["G"+cur_checklist.guid]["C"+cur_condition.condition])) {
+								// Calculate return fee.
+								switch (cur_condition.type) {
+									case "flat_rate":
+									default:
+										cur_return_fee += round_to_dec(cur_condition.amount * qty);
+										break;
+									case "percentage":
+										cur_return_fee += round_to_dec(round_to_dec(price * (cur_condition.amount / 100)) * qty);
+										break;
+								}
+							}
+						});
+					});
 					if (product.discountable && discount != "") {
 						var discount_price;
 						if (discount.match(/^\$-?\d+(\.\d+)?$/)) {
@@ -837,17 +938,23 @@ if ($pines->config->com_sales->autocomplete_product)
 					});
 					item_fees += round_to_dec(cur_item_fees);
 					subtotal += round_to_dec(line_total);
+					return_fees += round_to_dec(cur_return_fee);
 					cur_row.pgrid_set_value(8, round_to_dec(line_total, true));
 					cur_row.pgrid_set_value(9, round_to_dec(cur_item_fees, true));
+					cur_row.pgrid_set_value(10, round_to_dec(cur_return_fee, true));
+					var cur_row_export = cur_row.pgrid_export_rows()[0];
+					cur_row_export.return_checklists = checklists;
+					row_export.push(cur_row_export);
 				});
 				$("#p_muid_subtotal").html(round_to_dec(subtotal, true));
 				$("#p_muid_item_fees").html(round_to_dec(item_fees, true));
+				$("#p_muid_return_fees").html(round_to_dec(return_fees, true));
 				$("#p_muid_taxes").html(round_to_dec(taxes, true));
-				total = round_to_dec(subtotal) + round_to_dec(item_fees) + round_to_dec(taxes);
+				total = round_to_dec(subtotal) + round_to_dec(item_fees) + round_to_dec(taxes) - round_to_dec(return_fees);
 				$("#p_muid_total").html(round_to_dec(total, true));
 
 				// Update the products input element.
-				products.val(JSON.stringify(rows.pgrid_export_rows()));
+				products.val(JSON.stringify(row_export));
 
 				update_payments();
 			};
@@ -884,7 +991,7 @@ if ($pines->config->com_sales->autocomplete_product)
 
 				payments.val(JSON.stringify(submit_val));
 
-				if (change)
+				if (round_to_dec(change))
 					$("#p_muid_overpaid").show();
 				else
 					$("#p_muid_overpaid").hide();
@@ -1020,12 +1127,13 @@ if ($pines->config->com_sales->autocomplete_product)
 					<th>SKU</th>
 					<th>Product</th>
 					<th>Serial</th>
-					<th>Delivery</th>
+					<th>Unused</th>
 					<th>Quantity</th>
 					<th>Price</th>
 					<th>Discount</th>
 					<th>Line Total</th>
 					<th>Fees</th>
+					<th>Return Fee</th>
 					<th>Salesperson</th>
 				</tr>
 			</thead>
@@ -1033,17 +1141,25 @@ if ($pines->config->com_sales->autocomplete_product)
 				<?php foreach ($this->entity->products as $cur_product) {
 						if (!isset($cur_product['entity']))
 							continue;
+						$cur_id = uniqid();
 						?>
-				<tr title="<?php echo $cur_product['entity']->guid; ?>">
+				<tr id="p_muid_tr_<?php echo $cur_id; ?>" title="<?php echo $cur_product['entity']->guid; ?>">
 					<td><?php echo htmlspecialchars($cur_product['entity']->sku); ?></td>
 					<td><?php echo htmlspecialchars($cur_product['entity']->name); ?></td>
 					<td><?php echo htmlspecialchars($cur_product['serial']); ?></td>
-					<td>NA</td>
+					<td>NA<script type="text/javascript">
+						// <![CDATA[
+						pines(function(){
+							$("#p_muid_tr_<?php echo $cur_id; ?>").data("return_checklists", JSON.parse("<?php echo addslashes(json_encode((array) $cur_product['return_checklists'])); ?>"));
+						});
+						// ]]>
+					</script></td>
 					<td><?php echo htmlspecialchars($cur_product['quantity']); ?></td>
 					<td><?php echo htmlspecialchars($cur_product['price']); ?></td>
 					<td><?php echo htmlspecialchars($cur_product['discount']); ?></td>
 					<td><?php echo htmlspecialchars($cur_product['line_total']); ?></td>
 					<td><?php echo htmlspecialchars($cur_product['fees']); ?></td>
+					<td><?php echo htmlspecialchars($cur_product['return_fee']); ?></td>
 					<td><?php echo htmlspecialchars($cur_product['salesperson']->guid.': '.$cur_product['salesperson']->name); ?></td>
 				</tr>
 				<?php } ?>
@@ -1057,6 +1173,11 @@ if ($pines->config->com_sales->autocomplete_product)
 				<label><span class="pf-label">Serial Number</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_serial_number" name="serial_number" size="24" value="" /></label>
 			</div>
+		</div>
+		<br />
+	</div>
+	<div id="p_muid_checklist_dialog" title="Return Checklist" style="display: none;">
+		<div class="pf-form" id="p_muid_checklist_form">
 		</div>
 		<br />
 	</div>
@@ -1081,6 +1202,7 @@ if ($pines->config->com_sales->autocomplete_product)
 				<span class="pf-label">Subtotal</span><span class="pf-field" id="p_muid_subtotal">0.00</span><br />
 				<span class="pf-label">Item Fees</span><span class="pf-field" id="p_muid_item_fees">0.00</span><br />
 				<span class="pf-label">Tax</span><span class="pf-field" id="p_muid_taxes">0.00</span><br />
+				<span class="pf-label">Return Fees</span><span class="pf-field">(<span id="p_muid_return_fees">0.00</span>)</span><br />
 				<hr /><br />
 				<span class="pf-label">Total</span><span class="pf-field" id="p_muid_total">0.00</span>
 			</div>

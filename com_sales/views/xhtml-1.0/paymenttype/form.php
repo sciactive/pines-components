@@ -61,6 +61,11 @@ $this->note = 'Provide payment type details in this form.';
 			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="maximum" size="24" value="<?php echo htmlspecialchars($this->entity->maximum); ?>" /></label>
 	</div>
 	<div class="pf-element">
+		<label><span class="pf-label">Allow Return Payment</span>
+			<span class="pf-note">If set, a negative payment on a return can be used to charge a return fee.</span>
+			<input class="pf-field" type="checkbox" name="allow_return" value="ON"<?php echo $this->entity->allow_return ? ' checked="checked"' : ''; ?> /></label>
+	</div>
+	<div class="pf-element">
 		<label><span class="pf-label">Processing Type</span>
 			<span class="pf-note">This will determine how the payment is approved and processed.</span>
 			<select class="pf-field ui-widget-content ui-corner-all" name="processing_type" size="6">

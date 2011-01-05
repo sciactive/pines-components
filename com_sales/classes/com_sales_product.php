@@ -29,7 +29,7 @@ class com_sales_product extends entity {
 		$this->enabled = true;
 		$this->images = array();
 		$this->additional_tax_fees = array();
-		$this->restocking_fee = '';
+		$this->return_checklists = array();
 		$this->serialized = true;
 		$this->discountable = true;
 		$this->require_customer = true;
@@ -126,6 +126,13 @@ class com_sales_product extends entity {
 				array('class' => com_sales_tax_fee),
 				array('&',
 					'tag' => array('com_sales', 'tax_fee'),
+					'data' => array('enabled', true)
+				)
+			);
+		$module->return_checklists = (array) $pines->entity_manager->get_entities(
+				array('class' => com_sales_return_checklist),
+				array('&',
+					'tag' => array('com_sales', 'return_checklist'),
 					'data' => array('enabled', true)
 				)
 			);

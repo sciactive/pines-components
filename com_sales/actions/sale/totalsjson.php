@@ -43,14 +43,14 @@ $or = array('|', 'ref' => array('group', $location->get_descendents(true)));
 
 // Get all transactions.
 $tx_array = (array) $pines->entity_manager->get_entities(array('class' => com_sales_tx, 'skip_ac' => true),  array('|', 'tag' => array('sale_tx', 'payment_tx')), $selector, $or);
-$invoice_array = array('total' => 0.00, 'count' => 0);
-$sale_array = array('total' => 0.00, 'count' => 0);
+$invoice_array = array('subtotal' => 0.00, 'total' => 0.00, 'count' => 0);
+$sale_array = array('subtotal' => 0.00, 'total' => 0.00, 'count' => 0);
 $sale_array_user = array();
-$return_array = array('total' => 0.00, 'count' => 0);
+$return_array = array('subtotal' => 0.00, 'total' => 0.00, 'count' => 0);
 $return_array_user = array();
 $payment_array = array();
 $return_payment_array = array();
-$total_array = array('total' => 0.00);
+$total_array = array('subtotal' => 0.00, 'total' => 0.00);
 $total_array_user = array();
 $total_payment_array = array();
 
@@ -60,29 +60,39 @@ foreach ($tx_array as $key => $cur_tx) {
 	if ($cur_tx->ticket->status == 'voided')
 		continue;
 	if ($cur_tx->has_tag('sale_tx')) {
-		$total = (float) $cur_tx->ticket->subtotal;
+		$subtotal = (float) $cur_tx->ticket->subtotal;
+		$total = (float) $cur_tx->ticket->total;
 		$name = "{$cur_tx->user->name} [{$cur_tx->user->username}]";
 		switch ($cur_tx->type) {
 			case 'invoiced':
 				// Check if the sale is still invoiced.
 				if ($cur_tx->ticket->status == 'invoiced') {
+					$invoice_array['subtotal'] += $subtotal;
 					$invoice_array['total'] += $total;
 					$invoice_array['count']++;
 				}
 				break;
 			case 'paid':
+				$total_array['subtotal'] += $subtotal;
 				$total_array['total'] += $total;
+				$sale_array['subtotal'] += $subtotal;
 				$sale_array['total'] += $total;
 				$sale_array['count']++;
+				$total_array_user[$name]['subtotal'] += $subtotal;
 				$total_array_user[$name]['total'] += $total;
+				$sale_array_user[$name]['subtotal'] += $subtotal;
 				$sale_array_user[$name]['total'] += $total;
 				$sale_array_user[$name]['count']++;
 				break;
 			case 'returned':
+				$total_array['subtotal'] -= $subtotal;
 				$total_array['total'] -= $total;
+				$return_array['subtotal'] += $subtotal;
 				$return_array['total'] += $total;
 				$return_array['count']++;
+				$total_array_user[$name]['subtotal'] -= $subtotal;
 				$total_array_user[$name]['total'] -= $total;
+				$return_array_user[$name]['subtotal'] += $subtotal;
 				$return_array_user[$name]['total'] += $total;
 				$return_array_user[$name]['count']++;
 				break;
@@ -115,14 +125,10 @@ foreach ($tx_array as $key => $cur_tx) {
 if (empty($tx_array)) {
 	$return = null;
 } else {
-	if (is_int($location)) {
-		$location = group::factory($location);
-		$location = "{$location->name} [{$location->groupname}]";
-	}
 	$return = array(
-		'location' => $location,
-		'date_start' => date('Y-m-d', $date_start),
-		'date_end' => date('Y-m-d', $date_end),
+		'location' => "{$location->name} [{$location->groupname}]",
+		'date_start' => format_date($date_start, 'date_long'),
+		'date_end' => format_date($date_end, 'date_long'),
 		'invoices' => $invoice_array,
 		'sales' => $sale_array,
 		'sales_user' => $sale_array_user,

@@ -100,15 +100,17 @@ $pines->com_jstree->load();
 
 						// Invoices
 						$("#p_muid_total_invoice_count").html(data.invoices.count);
+						$("#p_muid_total_invoice_subtotal").html(data.invoices.subtotal);
 						$("#p_muid_total_invoice_total").html(data.invoices.total);
 
 						// Sales
 						$("#p_muid_total_sale_count").html(data.sales.count);
+						$("#p_muid_total_sale_subtotal").html(data.sales.subtotal);
 						$("#p_muid_total_sale_total").html(data.sales.total);
 						$("#p_muid_total_sale_users").empty().each(function(){
 							var total_users = $(this);
 							$.each(data.sales_user, function(i, val){
-								total_users.append("<div class=\"pf-element\"><span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><span class=\"pf-field\">Count: </span><span class=\"pf-field\">"+val.count+"</span><br /><span class=\"pf-field\">Total: </span><span class=\"pf-field\">$"+val.total+"</span></div></div>");
+								total_users.append("<div class=\"pf-element\"><span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><span class=\"pf-field\">Count: </span><span class=\"pf-field\">"+val.count+"</span><br /><span class=\"pf-field\">Subtotal: </span><span class=\"pf-field\">$"+val.subtotal+"</span><br /><span class=\"pf-field\">Total: </span><span class=\"pf-field\">$"+val.total+"</span></div></div>");
 							});
 						});
 						$("#p_muid_total_sales_payments").empty().each(function(){
@@ -120,11 +122,12 @@ $pines->com_jstree->load();
 
 						// Returns
 						$("#p_muid_total_return_count").html(data.returns.count);
+						$("#p_muid_total_return_subtotal").html(data.returns.subtotal);
 						$("#p_muid_total_return_total").html(data.returns.total);
 						$("#p_muid_total_return_users").empty().each(function(){
 							var total_users = $(this);
 							$.each(data.returns_user, function(i, val){
-								total_users.append("<div class=\"pf-element\"><span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><span class=\"pf-field\">Count: </span><span class=\"pf-field\">"+val.count+"</span><br /><span class=\"pf-field\">Total: </span><span class=\"pf-field\">$"+val.total+"</span></div></div>");
+								total_users.append("<div class=\"pf-element\"><span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><span class=\"pf-field\">Count: </span><span class=\"pf-field\">"+val.count+"</span><br /><span class=\"pf-field\">Subtotal: </span><span class=\"pf-field\">$"+val.subtotal+"</span><br /><span class=\"pf-field\">Total: </span><span class=\"pf-field\">$"+val.total+"</span></div></div>");
 							});
 						});
 						$("#p_muid_total_return_payments").empty().each(function(){
@@ -135,11 +138,12 @@ $pines->com_jstree->load();
 						});
 
 						// Totals
+						$("#p_muid_total_subtotal").html(data.totals.subtotal);
 						$("#p_muid_total_total").html(data.totals.total);
 						$("#p_muid_total_users").empty().each(function(){
 							var total_users = $(this);
 							$.each(data.totals_user, function(i, val){
-								total_users.append("<div class=\"pf-element\"><span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><span class=\"pf-field\">$"+val.total+"</span></div></div>");
+								total_users.append("<div class=\"pf-element\"><span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><span class=\"pf-field\">Subtotal: </span><span class=\"pf-field\">$"+val.subtotal+"</span><br /><span class=\"pf-field\">Total: </span><span class=\"pf-field\">$"+val.total+"</span></div></div>");
 							});
 						});
 						$("#p_muid_total_payments").empty().each(function(){
@@ -209,6 +213,10 @@ $pines->com_jstree->load();
 			<span class="pf-field"><span id="p_muid_total_invoice_count">null</span></span>
 		</div>
 		<div class="pf-element">
+			<span class="pf-label">Subtotal</span>
+			<span class="pf-field">$<span id="p_muid_total_invoice_subtotal">null</span></span>
+		</div>
+		<div class="pf-element">
 			<span class="pf-label">Total</span>
 			<span class="pf-field">$<span id="p_muid_total_invoice_total">null</span></span>
 		</div>
@@ -218,6 +226,10 @@ $pines->com_jstree->load();
 			<div class="pf-element">
 				<span class="pf-label">Count</span>
 				<span class="pf-field"><span id="p_muid_total_sale_count">null</span></span>
+			</div>
+			<div class="pf-element">
+				<span class="pf-label">Subtotal</span>
+				<span class="pf-field">$<span id="p_muid_total_sale_subtotal">null</span></span>
 			</div>
 			<div class="pf-element">
 				<span class="pf-label">Total</span>
@@ -261,6 +273,10 @@ $pines->com_jstree->load();
 				<span class="pf-field"><span id="p_muid_total_return_count">null</span></span>
 			</div>
 			<div class="pf-element">
+				<span class="pf-label">Subtotal</span>
+				<span class="pf-field">$<span id="p_muid_total_return_subtotal">null</span></span>
+			</div>
+			<div class="pf-element">
 				<span class="pf-label">Total</span>
 				<span class="pf-field">$<span id="p_muid_total_return_total">null</span></span>
 			</div>
@@ -299,6 +315,10 @@ $pines->com_jstree->load();
 		<div class="ui-state-highlight ui-corner-all ui-helper-clearfix" style="font-weight: bold; padding-left: 1em; padding-right: 1em;">
 			<div class="pf-element pf-heading">
 				<h1>Totals</h1>
+			</div>
+			<div class="pf-element">
+				<span class="pf-label">Subtotal</span>
+				<span class="pf-field">$<span id="p_muid_total_subtotal">null</span></span>
 			</div>
 			<div class="pf-element">
 				<span class="pf-label">Total</span>

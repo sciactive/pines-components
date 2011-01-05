@@ -676,7 +676,7 @@ class com_sales extends component {
 							'data' => array('finished', $finished)
 						),
 						array('!&',
-							'data' => array('shipped' => true)
+							'data' => array('shipped', true)
 						),
 						array('|',
 							'ref' => array('origin', (array) $_SESSION['user']->group->get_descendents(true))

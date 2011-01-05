@@ -66,6 +66,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<tr>
 			<th>Transfer ID</th>
 			<th>Reference Number</th>
+			<th>Origin</th>
 			<th>Destination</th>
 			<th>Shipper</th>
 			<th>ETA</th>
@@ -76,6 +77,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<tr title="<?php echo $transfer->guid; ?>">
 			<td><?php echo $transfer->guid; ?></td>
 			<td><?php echo htmlspecialchars($transfer->reference_number); ?></td>
+			<td><?php echo htmlspecialchars("{$transfer->origin->name} [{$transfer->origin->groupname}]"); ?></td>
 			<td><?php echo htmlspecialchars("{$transfer->destination->name} [{$transfer->destination->groupname}]"); ?></td>
 			<td><?php echo htmlspecialchars($transfer->shipper->name); ?></td>
 			<td><?php echo ($transfer->eta ? date('Y-m-d', $transfer->eta) : 'None'); ?></td>

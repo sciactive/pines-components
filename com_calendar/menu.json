@@ -1,0 +1,10 @@
+[
+	{
+		"path": "main_menu/accessories/calendar",
+		"text": "Calendar",
+		"href": ["com_calendar","editcalendar"],
+		"depend": {
+			"ability": "com_calendar/editcalendar|com_calendar/viewcalendar"
+		}
+	}
+]

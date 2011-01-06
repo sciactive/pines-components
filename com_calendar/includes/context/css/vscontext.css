@@ -1,0 +1,50 @@
+.vs-context-menu{
+	display:none;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	position: absolute;
+	background: #EEEEEE;
+	border: 1px solid #DDDDDD;
+	width: auto;
+	-moz-border-radius-topleft: 5px;
+	-moz-border-radius-topright: 5px;
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	font-size: 13px;
+	z-index: 10;
+}
+
+.vs-context-menu ul{
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.vs-context-menu li{
+	margin: 0px;
+	padding: 3px;
+}
+
+.vs-context-menu ul a{
+	display: block;
+	padding: 1px 5px;
+	padding-left: 28px;
+	text-decoration: none;
+	color: #000;
+	background-repeat: no-repeat;
+}
+
+.vs-context-menu ul li a:hover, .vs-context-menu ul li a:focus {
+	color: #FFFFFF;
+	background-color: #D0D0D0;
+}
+
+.seprator{
+	border-bottom: 1px solid  #DDDDDD;
+}
+
+.vs-context-menu li.copy A { background-image: url(icons/copy.png); }
+.vs-context-menu li.clear A { background-image: url(icons/clear.png); }
+.vs-context-menu li.delete A { background-image: url(icons/delete.png); }
+.vs-context-menu li.edit A { background-image: url(icons/edit.png); }
+.vs-context-menu li.help A { background-image: url(icons/help.png); }
+.vs-context-menu li.unlink A { background-image: url(icons/cut.png); }

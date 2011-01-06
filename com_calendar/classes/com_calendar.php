@@ -1,0 +1,150 @@
+<?php
+/**
+ * com_calendar class.
+ *
+ * @package Pines
+ * @subpackage com_calendar
+ * @license http://www.gnu.org/licenses/agpl-3.0.html
+ * @author Zak Huber <zak@sciactive.com>
+ * @copyright SciActive.com
+ * @link http://sciactive.com/
+ */
+defined('P_RUN') or die('Direct access prohibited');
+
+/**
+ * com_calendar main class.
+ *
+ * Provides a company calendar.
+ *
+ * @package Pines
+ * @subpackage com_calendar
+ */
+class com_calendar extends component {
+	/**
+	 * Whether to integrate with com_customer.
+	 *
+	 * @var bool $com_customer
+	 */
+	var $com_customer;
+
+	/**
+	 * Check whether com_customer is installed and we should integrate with it.
+	 *
+	 * Places the result in $this->com_customer.
+	 */
+	public function __construct() {
+		global $pines;
+		$this->com_customer = $pines->depend->check('component', 'com_customer');
+	}
+
+	/**
+	 * Clears all events from the calendar.
+	 */
+	public function clear_calendar() {
+		global $pines;
+		$calendar_events = $pines->entity_manager->get_entities(array('class' => com_calendar_event), array('&', 'tag' => array('com_calendar', 'event')));
+		foreach ($calendar_events as $cur_event)
+			$cur_event->delete();
+	}
+
+	/**
+	 * Print a form to create a work lineup for a location.
+	 * @param group $location The current location.
+	 * @return module The form's module.
+	 */
+	public function lineup_form($location = null) {
+		global $pines;
+		$pines->page->override = true;
+
+		if (!isset($location->guid))
+			$location = $_SESSION['user']->group;
+
+		$module = new module('com_calendar', 'form_lineup', 'content');
+		$module->location = $location;
+		$module->employees = $pines->com_hrm->get_employees();
+
+		$pines->page->override_doc($module->render());
+	}
+
+	/**
+	 * Print a form to select a company location.
+	 *
+	 * @param int $location The current location.
+	 * @return module The form's module.
+	 */
+	public function location_select_form($location = null) {
+		global $pines;
+		$pines->page->override = true;
+
+		if (!isset($location))
+			$location = $_SESSION['user']->group->guid;
+		$module = new module('com_calendar', 'form_location');
+		$module->location = $location;
+
+		$pines->page->override_doc($module->render());
+		return $module;
+	}
+
+	/**
+	 * Creates and attaches a module which shows the calendar.
+	 * @param int $id An event GUID.
+	 * @param group $location The desired location to view the schedule for.
+	 * @param com_hrm_employee $employee The desired employee to view the schedule for.
+	 * @param int $rto A time off request GUID.
+	 */
+	public function show_calendar($id = null, $location = null, $employee = null, $rto = null) {
+		global $pines;
+
+		if (!isset($location) || !isset($location->guid)) {
+			$location = $_SESSION['user']->group;
+			if (!isset($employee->guid))
+				$employee = $_SESSION['user'];
+		}
+
+		$calendar_head = new module('com_calendar', 'show_calendar_head', 'head');
+		$calendar = new module('com_calendar', 'show_calendar', 'content');
+		$form = new module('com_calendar', 'form_calendar', 'right');
+		// If an id is specified, the event info will be displayed for editing.
+		if (isset($id) && $id >  0) {
+			$form->entity = com_calendar_event::factory((int) $id);
+			$location = $form->entity->group;
+		}
+
+		$selector = array('&', 'tag' => array('com_calendar', 'event'));
+		$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		$ancestors = array();
+		if (isset($employee->guid)) {
+			unset($selector['ref']);
+			$selector['ref'][] = array('employee', $employee);
+			$form->employee = $calendar->employee = $employee;
+			$location = $employee->group;
+			$ancestors = $location->get_descendents(true);
+		}
+		if (isset($rto) && $rto >  0)
+			$form->rto = com_calendar_rto::factory((int) $rto);
+
+		// Should work like this, we need to have the employee's group update upon saving it to a user.
+		$form->employees = $pines->com_hrm->get_employees();
+		$calendar->location = $form->location = $location;
+		$calendar->events = $pines->entity_manager->get_entities(array('class' => com_calendar_event), $selector, $or);
+		// Retrieve all events
+		while (isset($location->parent->guid)) {
+			$ancestors[] = $location->parent;
+			$location = $location->parent;
+		}
+		if (!empty($ancestors)) {
+			$calendar->events = array_merge($calendar->events,
+				$pines->entity_manager->get_entities(
+					array('class' => com_calendar_event),
+					array('&',
+						'tag' => array('com_calendar', 'event'),
+						'data' => array('private', false)),
+					array('!&', 'isset' => array('employee')),
+					array('|', 'ref' => array('group', $ancestors))
+				)
+			);
+		}
+	}
+}
+
+?>

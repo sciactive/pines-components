@@ -13,9 +13,9 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
-		'name' => 'global_customers',
-		'cname' => 'Globalize Customers',
-		'description' => 'Ensure that every user can access all customers by setting the "other" access control to read.',
+		'name' => 'com_calendar',
+		'cname' => 'Calendar Integration',
+		'description' => 'Integrate with com_calendar.',
 		'value' => true,
 		'peruser' => true,
 	),
@@ -218,6 +218,13 @@ return array(
 			'Email',
 			'Other',
 		),
+		'peruser' => true,
+	),
+	array(
+		'name' => 'global_customers',
+		'cname' => 'Globalize Customers',
+		'description' => 'Ensure that every user can access all customers by setting the "other" access control to read.',
+		'value' => true,
 		'peruser' => true,
 	),
 );

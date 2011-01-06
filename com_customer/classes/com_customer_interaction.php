@@ -26,6 +26,8 @@ class com_customer_interaction extends entity {
 		parent::__construct();
 		$this->add_tag('com_customer', 'interaction');
 		// Defaults.
+		$this->status = 'open';
+		$this->review_comments = array();
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));

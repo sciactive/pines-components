@@ -88,20 +88,23 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			bgiframe: true,
 			autoOpen: false,
 			modal: true,
+			width: 402,
 			buttons: {
 				"Log Interaction": function(){
 					var loader;
 					$.ajax({
-						url: "<?php echo addslashes(pines_url('com_customer', 'customer/addinteraction')); ?>",
+						url: "<?php echo addslashes(pines_url('com_customer', 'interaction/add')); ?>",
 						type: "POST",
 						dataType: "json",
 						data: {
-							id: customer_id,
+							customer: customer_id,
+							employee: <?php echo $_SESSION['user']->guid; ?>,
 							date: $("#p_muid_interaction_dialog [name=interaction_date]").val(),
-							time_ampm: $("#p_muid_interaction_dialog [name=time_ampm]").val(),
-							time_hour: $("#p_muid_interaction_dialog [name=time_hour]").val(),
-							time_minute: $("#p_muid_interaction_dialog [name=time_minute]").val(),
+							time_ampm: $("#p_muid_interaction_dialog [name=interaction_ampm]").val(),
+							time_hour: $("#p_muid_interaction_dialog [name=interaction_hour]").val(),
+							time_minute: $("#p_muid_interaction_dialog [name=interaction_minute]").val(),
 							type: $("#p_muid_interaction_dialog [name=interaction_type]").val(),
+							status: $("#p_muid_interaction_dialog [name=interaction_status]").val(),
 							comments: $("#p_muid_interaction_dialog [name=interaction_comments]").val()
 						},
 						beforeSend: function(){
@@ -154,7 +157,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<?php } if (gatekeeper('com_customer/editcustomer')) { ?>
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo addslashes(pines_url('com_customer', 'customer/edit', array('id' => '__title__'))); ?>'},
 				{type: 'button', text: 'Edit as User', extra_class: 'picon picon-user-properties', url: '<?php echo addslashes(pines_url('com_user', 'edituser', array('id' => '__title__'))); ?>'},
-				<?php } if (gatekeeper('com_customer/addinteraction')) { ?>
+				<?php } if (gatekeeper('com_customer/newinteraction')) { ?>
 				{type: 'button', title: 'Add New Interaction', extra_class: 'picon picon-meeting-participant-optional', click: function(e, row){
 					customer_id = row.attr('title');
 					interaction_dialog.dialog("open");
@@ -255,15 +258,16 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				</select></label>
 		</div>
 		<div class="pf-element">
-			<label><span class="pf-label">Occurred on</span>
-				<input class="ui-widget-content ui-corner-all" type="text" size="24" name="interaction_date" value="<?php echo format_date(time(), 'date_sort'); ?>" /></label>
+			<label><span class="pf-label">Date</span>
+				<input class="ui-widget-content ui-corner-all" type="text" size="22" name="interaction_date" value="<?php echo format_date(time(), 'date_sort'); ?>" /></label>
 		</div>
 		<div class="pf-element pf-full-width">
 			<?php
 			$time_hour = format_date(time(), 'custom', 'H');
 			$time_minute = format_date(time(), 'custom', 'i');
 			?>
-			<select class="ui-widget-content ui-corner-all" name="time_hour">
+			<span class="pf-label">Time</span>
+			<select class="ui-widget-content ui-corner-all" name="interaction_hour">
 				<option value="1" <?php echo ($time_hour == '1' || $time_hour == '13') ? 'selected="selected"' : ''; ?>>1</option>
 				<option value="2" <?php echo ($time_hour == '2' || $time_hour == '14') ? 'selected="selected"' : ''; ?>>2</option>
 				<option value="3" <?php echo ($time_hour == '3' || $time_hour == '15') ? 'selected="selected"' : ''; ?>>3</option>
@@ -277,19 +281,28 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<option value="11" <?php echo ($time_hour == '11' || $time_hour == '23') ? 'selected="selected"' : ''; ?>>11</option>
 				<option value="0" <?php echo ($time_hour == '0' || $time_hour == '12') ? 'selected="selected"' : ''; ?>>12</option>
 			</select> :
-			<select class="ui-widget-content ui-corner-all" name="time_minute">
+			<select class="ui-widget-content ui-corner-all" name="interaction_minute">
 				<option value="0" <?php echo ($time_minute >= '0' && $time_minute < '15') ? 'selected="selected"' : ''; ?>>00</option>
 				<option value="15" <?php echo ($time_minute >= '15' && $time_minute < '30') ? 'selected="selected"' : ''; ?>>15</option>
 				<option value="30" <?php echo ($time_minute >= '30' && $time_minute < '45') ? 'selected="selected"' : ''; ?>>30</option>
 				<option value="45" <?php echo ($time_minute >= '45' && $time_minute < '60') ? 'selected="selected"' : ''; ?>>45</option>
 			</select>
-			<select class="ui-widget-content ui-corner-all" name="time_ampm">
+			<select class="ui-widget-content ui-corner-all" name="interaction_ampm">
 				<option value="am" selected="selected">AM</option>
 				<option value="pm" <?php echo ($time_hour >= 12) ? 'selected="selected"' : ''; ?>>PM</option>
 			</select>
 		</div>
+		<div class="pf-element">
+			<label>
+				<span class="pf-label">Status</span>
+				<select class="ui-widget-content ui-corner-all" name="interaction_status">
+					<option value="open">Open</option>
+					<option value="closed">Closed</option>
+				</select>
+			</label>
+		</div>
 		<div class="pf-element pf-full-width">
-			<textarea class="ui-widget-content ui-corner-all" rows="3" cols="25" name="interaction_comments"></textarea>
+			<textarea class="ui-widget-content ui-corner-all" rows="3" cols="40" name="interaction_comments"></textarea>
 		</div>
 	</form>
 	<br />

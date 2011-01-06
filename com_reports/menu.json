@@ -27,6 +27,7 @@
 				"text": "Employee Summary",
 				"href": ["com_reports","employeesummary"],
 				"depend": {
+					"component": "com_hrm",
 					"ability": "com_reports/summarizeemployees"
 				}
 			},
@@ -82,6 +83,7 @@
 				"text": "Time & Attendance",
 				"href": ["com_reports","reportattendance"],
 				"depend": {
+					"component": "com_calendar",
 					"ability": "com_reports/reportattendance"
 				}
 			},

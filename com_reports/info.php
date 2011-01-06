@@ -22,7 +22,7 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'icons',
-		'component' => 'com_jquery&com_pgrid&com_jstree&(com_hrm|com_sales)'
+		'component' => 'com_jquery&com_pgrid&com_jstree&(com_hrm|com_sales|com_mifi)'
 	),
 	'abilities' => array(
 		array('reportattendance', 'Report Attendance', 'User can see attendance reports.'),

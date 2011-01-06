@@ -190,9 +190,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		foreach($this->employees as $cur_employee) {
 			$totals[$total_count]['scheduled'] = $totals[$total_count]['clocked'] = 0;
 			$schedule = $pines->entity_manager->get_entities(
-					array('class' => com_hrm_event),
+					array('class' => com_calendar_event),
 					array('&',
-						'tag' => array('com_hrm', 'event'),
+						'tag' => array('com_calendar', 'event'),
 						'gte' => array('start', $this->start_date),
 						'lte' => array('end', $this->end_date),
 						'ref' => array('employee', $cur_employee)
@@ -267,9 +267,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		$clock_count = 1;
 		foreach ($dates as $cur_date) {
 			$scheduled = $pines->entity_manager->get_entities(
-					array('class' => com_hrm_event),
+					array('class' => com_calendar_event),
 					array('&',
-						'tag' => array('com_hrm', 'event'),
+						'tag' => array('com_calendar', 'event'),
 						'gte' => array('start', $cur_date['start']),
 						'lte' => array('end', $cur_date['end']),
 						'ref' => array('employee', $this->employee)

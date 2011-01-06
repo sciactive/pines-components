@@ -33,7 +33,7 @@ $pines->com_pgrid->load();
 		.pgrid(options)
 		.find("tr.expandme").pgrid_expand_rows().filter("tr.collapseme").pgrid_collapse_rows();
 
-		$("#p_muid_acc_missing, #p_muid_acc_matched, #p_muid_acc_potentional, #p_muid_acc_duplicate, #p_muid_acc_history, #p_muid_acc_invalid").accordion({autoHeight: false, collapsible: true});
+		$("#p_muid_acc_missing, #p_muid_acc_matched, #p_muid_acc_potential, #p_muid_acc_duplicate, #p_muid_acc_history, #p_muid_acc_invalid").accordion({autoHeight: false, collapsible: true});
 	});
 	// ]]>
 </script>

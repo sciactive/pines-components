@@ -27,6 +27,7 @@ class com_hrm_rto extends entity {
 		$this->add_tag('com_hrm', 'rto');
 		// Defaults.
 		$this->status = 'pending';
+		$this->all_day = true;
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
@@ -58,17 +59,21 @@ class com_hrm_rto extends entity {
 	 */
 	public function conflicting() {
 		global $pines;
-		$selector = array('&', 'ref' => array('employee', $this->employee), 'tag' => array('com_hrm', 'event'));
-		$selector1 = array('&', 'gte' => array('start', $this->start), 'lte' => array('start', $this->end));
-		$selector2 = array('&', 'gte' => array('end', $this->start), 'lte' => array('end', $this->end));
-		$selector3 = array('&', 'gte' => array('end', $this->end), 'lte' => array('start', $this->start));
 
-		$conflicts = array_merge(
-			$pines->entity_manager->get_entities(array('limit' => 1, 'class' => com_hrm_event), $selector, $selector1),
-			$pines->entity_manager->get_entities(array('limit' => 1, 'class' => com_hrm_event), $selector, $selector2),
-			$pines->entity_manager->get_entities(array('limit' => 1, 'class' => com_hrm_event), $selector, $selector3)
-		);
+		if ($pines->config->com_hrm->com_calendar) {
+			$selector = array('&', 'ref' => array('employee', $this->employee), 'tag' => array('com_calendar', 'event'));
+			$selector1 = array('&', 'gte' => array('start', $this->start), 'lte' => array('start', $this->end));
+			$selector2 = array('&', 'gte' => array('end', $this->start), 'lte' => array('end', $this->end));
+			$selector3 = array('&', 'gte' => array('end', $this->end), 'lte' => array('start', $this->start));
 
+			$conflicts = array_merge(
+				$pines->entity_manager->get_entities(array('limit' => 1, 'class' => com_calendar_event), $selector, $selector1),
+				$pines->entity_manager->get_entities(array('limit' => 1, 'class' => com_calendar_event), $selector, $selector2),
+				$pines->entity_manager->get_entities(array('limit' => 1, 'class' => com_calendar_event), $selector, $selector3)
+			);
+		} else {
+			$conflicts = array();
+		}
 		return (!empty($conflicts));
 	}
 

@@ -80,7 +80,7 @@ defined('P_RUN') or die('Direct access prohibited');
 		}
 	?>
 	<div class="pf-element">
-		<label><input class="pf-field" type="checkbox" name="all_day" value="ON" <?php echo ($this->entity->all_day) ? 'checked="checked" ' : ''; ?>/>All Day</label>
+		<label><input class="pf-field" type="checkbox" name="all_day" value="ON" <?php echo $this->entity->all_day ? 'checked="checked" ' : ''; ?>/>All Day</label>
 	</div>
 	<div class="pf-element pf-full-width">
 		<span class="pf-note">Start</span><input class="ui-widget-content ui-corner-all form_center" type="text" size="12" id="p_muid_start" name="start" value="<?php echo empty($start_date) ? format_date(time(), 'date_sort') : htmlspecialchars($start_date); ?>" />
@@ -148,7 +148,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			<?php foreach ($this->requests as $cur_request) {
 			$style = ($cur_request->status == 'declined') ? 'ui-state-error' : 'ui-state-highlight'; ?>
 			<div class="pf-element" style="padding-bottom: 0;">
-				<span class="pf-note" style="width: auto;"><?php echo format_date($cur_request->start, 'date_short'); ?></span><a class="pf-field <?php echo $style; ?>" href="<?php echo htmlspecialchars(pines_url('com_hrm', 'editcalendar', array('rto_id' => $cur_request->guid))); ?>"><?php echo htmlspecialchars($cur_request->reason); ?></a>
+				<span class="pf-note" style="width: auto;"><?php echo format_date($cur_request->start, 'date_short'); ?></span><a class="pf-field <?php echo $style; ?>" onclick="pines.com_hrm_time_off_form(<?php echo $cur_request->guid; ?>); return false;" href="#"><?php echo htmlspecialchars($cur_request->reason); ?></a>
 			</div>
 			<?php } ?>
 		</div>

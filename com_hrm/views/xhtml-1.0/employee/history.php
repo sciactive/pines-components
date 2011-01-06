@@ -15,10 +15,6 @@ $pines->com_pgrid->load();
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
-	#p_muid_history .date {
-		padding-right: 35px;
-		font-size: 0.8em;
-	}
 	.p_muid_issue_actions button {
 		padding: 0;
 	}
@@ -55,9 +51,9 @@ $pines->com_pgrid->load();
 				}}
 			]
 		};
-		$("#p_muid_grid, #p_muid_grid2").pgrid(cur_defaults);
+		$("#p_muid_sales, #p_muid_returns").pgrid(cur_defaults);
 		<?php } ?>
-		$("#p_muid_issues").pgrid({
+		$("#p_muid_history, #p_muid_issues").pgrid({
 			pgrid_sort_col: 1,
 			pgrid_sort_ord: 'asc',
 			pgrid_toolbar: false,
@@ -141,16 +137,25 @@ $pines->com_pgrid->load();
 </script>
 <div class="pf-form" id="p_muid_div">
 	<?php if (!empty($this->entity->employment_history)) { ?>
+	<h3 class="ui-helper-clearfix"><a href="#">Employment History</a></h3>
 	<div>
-		<h3 class="ui-helper-clearfix"><a href="#">Employment History</a></h3>
-		<div id="p_muid_history">
-			<?php foreach ($this->entity->employment_history as $cur_history) { ?>
-			<div>
-				<span class="date"><?php echo format_date($cur_history[0], 'date_long'); ?></span>
-				<span><?php echo htmlspecialchars($cur_history[1]); ?></span>
-			</div>
-			<?php } ?>
-		</div>
+		<table id="p_muid_history">
+			<thead>
+				<tr>
+					<th>Date</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ($this->entity->employment_history as $cur_history) { ?>
+				<tr>
+					<td><?php echo format_date($cur_history[0], 'date_long'); ?></td>
+					<td><?php echo htmlspecialchars($cur_history[1]); ?></td>
+				</tr>
+				<?php } ?>
+			</tbody>
+		</table>
+	</div>
 	<?php } if (!empty($this->issues)) { ?>
 	<h3 class="ui-helper-clearfix"><a href="#">Issues/Transgressions</a></h3>
 	<div>
@@ -195,7 +200,7 @@ $pines->com_pgrid->load();
 	<?php } if (!empty($this->sales)) { ?>
 	<h3 class="ui-helper-clearfix"><a href="#">Sales History</a></h3>
 	<div>
-		<table id="p_muid_grid">
+		<table id="p_muid_sales">
 			<thead>
 				<tr>
 					<th>ID</th>
@@ -225,7 +230,7 @@ $pines->com_pgrid->load();
 	<?php } if (!empty($this->returns)) { ?>
 	<h3 class="ui-helper-clearfix"><a href="#">Return History</a></h3>
 	<div>
-		<table id="p_muid_grid2">
+		<table id="p_muid_returns">
 			<thead>
 				<tr>
 					<th>ID</th>

@@ -7,14 +7,6 @@
 		}
 	},
 		{
-			"path": "main_menu/business/hrm/calendar",
-			"text": "Calendar",
-			"href": ["com_hrm","editcalendar"],
-			"depend": {
-				"ability": "com_hrm/editcalendar|com_hrm/viewcalendar"
-			}
-		},
-		{
 			"path": "main_menu/business/hrm/timeclock",
 			"text": "Timeclock",
 			"href": ["com_hrm","employee/timeclock/list"],

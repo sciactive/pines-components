@@ -14,4 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 if ($pines->config->com_hrm->com_sales && !$pines->depend->check('component', 'com_sales'))
 	$pines->config->com_hrm->com_sales = false;
 
+if ($pines->config->com_hrm->com_calendar && !$pines->depend->check('component', 'com_calendar'))
+	$pines->config->com_hrm->com_calendar = false;
+
 ?>

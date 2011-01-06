@@ -13,6 +13,13 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
+		'name' => 'com_calendar',
+		'cname' => 'Calendar Integration',
+		'description' => 'Integrate with com_calendar.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'com_sales',
 		'cname' => 'POS Integration',
 		'description' => 'Integrate with com_sales.',
@@ -38,26 +45,6 @@ return array(
 		'cname' => 'Department Names & Colors',
 		'description' => 'These groups will show up in the calendar with their associated colors.',
 		'value' => array('District:cornflowerblue', 'Managers:gainsboro', 'Sales Reps:gold', 'IT:blueviolet', 'Sales Support:olive'),
-		'peruser' => true,
-	),
-	array(
-		'name' => 'workday_length',
-		'cname' => 'Default Workday Length',
-		'description' => 'The amount of work hours in a full workday.',
-		'value' => 8,
-		'peruser' => true,
-	),
-	array(
-		'name' => 'lineup_shifts',
-		'cname' => 'Quick Schedule Shifts',
-		'description' => 'The shift times for creating company schedule lineups. (24 time format)',
-		'value' => array(
-			'8:00-16:00',
-			'9:00-17:00',
-			'10:00-14:00',
-			'14:00-17:00',
-			'17:00-21:00'
-		),
 		'peruser' => true,
 	),
 	array(

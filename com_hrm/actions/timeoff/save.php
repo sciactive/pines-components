@@ -14,6 +14,8 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_hrm/clock') )
 	punt_user(null, pines_url('com_hrm', 'timeoff/save'));
 
+$pines->page->override = true;
+
 if (isset($_REQUEST['employee'])) {	
 	if ($_REQUEST['start'] != 'Date') {
 		$rto_month = date('n', strtotime($_REQUEST['start']));
@@ -31,11 +33,10 @@ if (isset($_REQUEST['employee'])) {
 		$rto_endday = date('j');
 		$rto_endyear = date('Y');
 	}
-	if ($_REQUEST['id'] != 'undefined') {
+	if (!empty($_REQUEST['id'])) {
 		$rto = com_hrm_rto::factory((int) $_REQUEST['id']);
 		if (!isset($rto->guid)) {
-			pines_error('Requested request id is not accessible.');
-			$pines->com_hrm->show_calendar();
+			$pines->page->override_doc('false');
 			return;
 		}
 	} else {
@@ -44,8 +45,7 @@ if (isset($_REQUEST['employee'])) {
 
 	$rto->employee = com_hrm_employee::factory((int) $_REQUEST['employee']);
 	if (!isset($rto->employee->guid)) {
-		pines_error('Requested employee id is not accessible.');
-		$pines->com_hrm->show_calendar();
+		$pines->page->override_doc('false');
 		return;
 	}
 	$rto->reason = $_REQUEST['reason'];
@@ -58,12 +58,10 @@ if (isset($_REQUEST['employee'])) {
 		$rto->ac->other = 1;
 
 	if ($rto->save()) {
-		$action = ( isset($_REQUEST['id']) ) ? 'Saved ' : 'Entered ';
-		pines_notice($action.'['.$rto->guid.']');
+		$pines->page->override_doc('true');
 	} else {
-		pines_error('Error saving time off request. Do you have permission?');
+		$pines->page->override_doc('false');
 	}
 }
 
-redirect(pines_url('com_hrm', 'editcalendar'));
 ?>

@@ -21,8 +21,8 @@ foreach ($list as $cur_request) {
 
 	if ( !isset($cur_entity->guid) || !$cur_entity->save() ) {
 		$failed_updates .= (empty($failed_updates) ? '' : ', ').$cur_requests;
-	} elseif ($_REQUEST['status'] == 'approved') {
-		$new_event = com_hrm_event::factory();
+	} elseif ($_REQUEST['status'] == 'approved' && $pines->config->com_hrm->com_calendar) {
+		$new_event = com_calendar_event::factory();
 		$new_event->time_off = true;
 		$new_event->employee = $cur_entity->employee;
 		$new_event->title = '(OFF) - '.$cur_entity->employee->name;
@@ -39,6 +39,6 @@ if (empty($failed_updates)) {
 	pines_error('Could not update requests with given IDs: '.$failed_updates);
 }
 
-redirect(pines_url('com_hrm', 'editcalendar'));
+redirect(pines_url('com_hrm', 'employee/list'));
 
 ?>

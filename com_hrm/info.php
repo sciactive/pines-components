@@ -22,10 +22,10 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'user_manager&entity_manager&editor',
-		'component' => 'com_jquery&com_pgrid&com_pnotify&com_jstree&com_ptags'
+		'component' => 'com_jquery&com_pgrid&com_pnotify'
 	),
 	'recommend' => array(
-		'component' => 'com_modules'
+		'component' => 'com_modules&com_calendar'
 	),
 	'abilities' => array(
 		array('listemployees', 'List Employees', 'User can see employees.'),
@@ -43,9 +43,6 @@ return array(
 		array('viewownclock', 'View Own Timeclock', 'User can view their own timeclock.'),
 		array('viewclock', 'View Timeclock', 'User can view the employee timeclock (including times).'),
 		array('manageclock', 'Manage Timeclock', 'User can manage and edit the employee timeclock.'),
-		array('editcalendar', 'Edit Calendar', 'User can edit the group calendar.'),
-		array('viewcalendar', 'View Calendar', 'User can view the group calendar.'),
-		array('managecalendar', 'Manage Calendar', 'User can view private events and schedules for other employee.'),
 		array('managerto', 'Review Time Off', 'User can review and approve requests for time off.')
 	),
 );

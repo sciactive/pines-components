@@ -195,6 +195,35 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				}},
 				<?php } if (gatekeeper('com_hrm/editissuetypes')) { ?>
 				{type: 'button', text: 'Issue Types', extra_class: 'picon picon-story-editor', selection_optional: true, url: '<?php echo addslashes(pines_url('com_hrm', 'issue/list')); ?>'},
+				<?php } if (gatekeeper('com_hrm/managerto')) { ?>
+				{type: 'button', title: 'Time Off Requests', extra_class: 'picon picon-view-calendar-upcoming-events', selection_optional: true, click: function(e){
+					// Show and approve the requested time off.
+					$.ajax({
+						url: "<?php echo addslashes(pines_url('com_hrm', 'timeoff/review')); ?>",
+						type: "POST",
+						dataType: "html",
+						error: function(XMLHttpRequest, textStatus){
+							pines.error("An error occured while trying to retreive the time off form:\n"+XMLHttpRequest.status+": "+textStatus);
+						},
+						success: function(data){
+							if (data == "")
+								return;
+							var form = $("<div title=\"Pending Requests for Time Off\" />");
+							form.dialog({
+								bgiframe: true,
+								autoOpen: true,
+								modal: true,
+								width: 700,
+								open: function(){
+									form.html(data+"<br />").dialog("option", "position", "center");
+								},
+								close: function(){
+									form.remove();
+								}
+							});
+						}
+					});
+				}},
 				<?php } ?>
 				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},

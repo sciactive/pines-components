@@ -73,11 +73,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->requests as $cur_request) {
-		$date_format = $cur_request->all_day ? 'n/j/y' : 'n/j/y g:ia'; ?>
+		$date_format = $cur_request->all_day ? 'date_sort' : 'full_sort'; ?>
 		<tr title="<?php echo $cur_request->guid; ?>">
 			<td><?php echo htmlspecialchars($cur_request->employee->name); ?></td>
-			<td><?php echo format_date($cur_request->start, 'custom', $date_format); ?></td>
-			<td><?php echo format_date($cur_request->end, 'custom', $date_format); ?></td>
+			<td><?php echo format_date($cur_request->start, $date_format); ?></td>
+			<td><?php echo format_date($cur_request->end, $date_format); ?></td>
 			<td><?php echo $cur_request->conflicting() ? 'Yes' : 'No'; ?></td>
 			<td><?php echo htmlspecialchars($cur_request->reason); ?></td>
 		</tr>

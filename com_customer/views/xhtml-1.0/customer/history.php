@@ -221,7 +221,6 @@ $pines->com_pgrid->load();
 	// ]]>
 </script>
 <div class="pf-form">
-	<?php if (!empty($this->interactions)) { ?>
 	<div id="p_muid_acc_interaction">
 		<h3 class="ui-helper-clearfix"><a href="#">Customer Interaction</a></h3>
 		<div>
@@ -251,7 +250,7 @@ $pines->com_pgrid->load();
 			</table>
 		</div>
 	</div>
-	<?php } if ($this->com_sales) { ?>
+	<?php if ($this->com_sales) { ?>
 		<?php if (!empty($this->sales)) { ?>
 		<div id="p_muid_acc_sale">
 			<h3 class="ui-helper-clearfix"><a href="#">Purchases</a></h3>

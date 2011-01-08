@@ -142,9 +142,11 @@ $pines->com_pgrid->load();
 						<?php } ?>
 					</select></label>
 			</div>
+			<?php if ($pines->config->com_hrm->com_calendar) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Schedule Color</span>
 					<select class="pf-field ui-widget-content ui-corner-all" name="color">
+						<option value="aqua" <?php echo ($this->entity->color == 'aqua') ? 'selected="selected"' : ''; ?>>Aqua</option>
 						<option value="blue" <?php echo ($this->entity->color == 'blue') ? 'selected="selected"' : ''; ?>>Blue</option>
 						<option value="blueviolet" <?php echo ($this->entity->color == 'blueviolet') ? 'selected="selected"' : ''; ?>>Blue Violet</option>
 						<option value="brown" <?php echo ($this->entity->color == 'brown') ? 'selected="selected"' : ''; ?>>Brown</option>
@@ -155,10 +157,15 @@ $pines->com_pgrid->load();
 						<option value="greenyellow" <?php echo ($this->entity->color == 'greenyellow') ? 'selected="selected"' : ''; ?>>Green Yellow</option>
 						<option value="lightpink" <?php echo ($this->entity->color == 'lightpink') ? 'selected="selected"' : ''; ?>>Light Pink</option>
 						<option value="olive" <?php echo ($this->entity->color == 'olive') ? 'selected="selected"' : ''; ?>>Olive</option>
+						<option value="orchid" <?php echo ($this->entity->color == 'orchid') ? 'selected="selected"' : ''; ?>>Orchid</option>
+						<option value="peru" <?php echo ($this->entity->color == 'peru') ? 'selected="selected"' : ''; ?>>Peru</option>
+						<option value="purple" <?php echo ($this->entity->color == 'purple') ? 'selected="selected"' : ''; ?>>Purple</option>
 						<option value="red" <?php echo ($this->entity->color == 'red') ? 'selected="selected"' : ''; ?>>Red</option>
 						<option value="vanilla" <?php echo ($this->entity->color == 'vanilla') ? 'selected="selected"' : ''; ?>>Vanilla</option>
+						<option value="white" <?php echo ($this->entity->color == 'white') ? 'selected="selected"' : ''; ?>>White</option>
 					</select></label>
 			</div>
+			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Phone Extension</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="phone_ext" size="5" value="<?php echo htmlspecialchars($this->entity->phone_ext); ?>" /></label>

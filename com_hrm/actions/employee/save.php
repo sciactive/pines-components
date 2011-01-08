@@ -25,7 +25,8 @@ if ($pines->config->com_hrm->ssn_field && gatekeeper('com_hrm/showssn'))
 $employee->hire_date = strtotime($_REQUEST['hire_date']);
 $employee->job_title = $_REQUEST['job_title'];
 $employee->description = $_REQUEST['description'];
-$employee->color = $_REQUEST['color'];
+if ($pines->config->com_hrm->com_calendar)
+	$employee->color = $_REQUEST['color'];
 $employee->phone_ext = preg_replace('/\D/', '', $_REQUEST['phone_ext']);
 $employee->workday_length = $_REQUEST['workday_length'] != '' ?  (int) $_REQUEST['workday_length'] : null;
 

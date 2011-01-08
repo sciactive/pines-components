@@ -400,6 +400,27 @@ table.fc-header {
 	border-color: olivedrab;
 	color: white;
 	}
+.orchid,
+.fc-agenda .myclass .fc-event-time,
+.orchid a {
+	background-color: mediumorchid;
+	border-color: mediumorchid;
+	color: black;
+	}
+.peru,
+.fc-agenda .myclass .fc-event-time,
+.peru a {
+	background-color: peru;
+	border-color: peru;
+	color: black;
+	}
+.purple,
+.fc-agenda .myclass .fc-event-time,
+.purple a {
+	background-color: mediumpurple;
+	border-color: mediumpurple;
+	color: black;
+	}
 .red,
 .fc-agenda .myclass .fc-event-time,
 .red a {
@@ -412,6 +433,13 @@ table.fc-header {
 .vanilla a {
 	background-color: cornsilk;
 	border-color: cornsilk;
+	color: black;
+	}
+.white,
+.fc-agenda .myclass .fc-event-time,
+.white a {
+	background-color: whitesmoke;
+	border-color: whitesmoke;
 	color: black;
 	}
 

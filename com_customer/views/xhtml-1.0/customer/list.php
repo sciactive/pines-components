@@ -98,7 +98,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						dataType: "json",
 						data: {
 							customer: customer_id,
-							employee: <?php echo $_SESSION['user']->guid; ?>,
+							employee: $("#p_muid_interaction_dialog [name=employee]").val(),
 							date: $("#p_muid_interaction_dialog [name=interaction_date]").val(),
 							time_ampm: $("#p_muid_interaction_dialog [name=interaction_ampm]").val(),
 							time_hour: $("#p_muid_interaction_dialog [name=interaction_hour]").val(),
@@ -164,9 +164,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				}},
 				<?php } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
-				<?php if (gatekeeper('com_customer/viewhistory')) { ?>
-				{type: 'button', title: 'History', extra_class: 'picon picon-documentinfo', url: '<?php echo addslashes(pines_url('com_customer', 'customer/history', array('id' => '__title__'))); ?>'},
-				<?php } ?>
 				{type: 'separator'},
 				<?php if ($pines->config->com_customer->resetpoints && gatekeeper('com_customer/resetpoints')) { ?>
 				{type: 'button', title: 'Reset the Customer\'s Points', extra_class: 'picon picon-edit-clear', multi_select: true, url: '<?php echo addslashes(pines_url('com_customer', 'customer/resetpoints', array('id' => '__title__'))); ?>', delimiter: ','},
@@ -247,6 +244,23 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 </table>
 <div id="p_muid_interaction_dialog" title="Log Customer Interaction" style="display: none;">
 	<form class="pf-form" method="post" action="">
+		<?php if (gatekeeper('com_customer/manageinteractions') && $pines->config->com_customer->com_calendar) { ?>
+		<div class="pf-element pf-full-width">
+			<label><span class="pf-label">Employee</span>
+				<select class="ui-widget-content ui-corner-all" name="employee">
+				<?php foreach ($pines->com_hrm->get_employees() as $cur_employee) {
+					$selected = $_SESSION['user']->is($cur_employee) ? ' selected="selected"' : '';
+					echo '<option value="'.$cur_employee->guid.'"'.$selected.'>'.htmlspecialchars($cur_employee->name).'</option>"';
+				} ?>
+			</select></label>
+		</div>
+		<?php } else { ?>
+		<div class="pf-element pf-full-width">
+			<label><span class="pf-label">Employee</span>
+				<?php echo htmlspecialchars($_SESSION['user']->name); ?></label>
+		</div>
+		<input type="hidden" name="employee" value="<?php echo $_SESSION['user']->guid; ?>" />
+		<?php } ?>
 		<div class="pf-element">
 			<label><span class="pf-label">Interaction Type</span>
 				<select class="ui-widget-content ui-corner-all" name="interaction_type">

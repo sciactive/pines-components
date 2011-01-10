@@ -13,13 +13,13 @@ defined('P_RUN') or die('Direct access prohibited');
 
 $interaction = com_customer_interaction::factory((int) $_REQUEST['id']);
 
-if ( !gatekeeper('com_customer/editinteraction') &&
-	(!gatekeeper('com_customer/manageinteractions') && !$interaction->user->is($_SESSION['user'])) )
+if (!gatekeeper('com_customer/editinteraction'))
 	punt_user(null, pines_url('com_customer', 'interaction/process', array('id' => $_REQUEST['id'])));
 
 $pines->page->override = true;
 
-if (!isset($interaction->guid) || $interaction->status == 'closed') {
+if ((!gatekeeper('com_customer/manageinteractions') && !$interaction->user->is($_SESSION['user'])) ||
+	!isset($interaction->guid) || $interaction->status == 'closed') {
 	$pines->page->override_doc('false');
 	return;
 }

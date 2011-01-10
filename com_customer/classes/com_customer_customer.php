@@ -215,8 +215,82 @@ class com_customer_customer extends user {
 		global $pines;
 		$module = new module('com_customer', 'customer/form', 'content');
 		$module->entity = $this;
+		$module->com_sales = $pines->depend->check('component', 'com_sales');
+		$module->interactions = $pines->entity_manager->get_entities(
+				array('class' => com_customer_interaction),
+				array('&',
+					'ref' => array('customer', $this),
+					'tag' => array('com_customer', 'interaction')
+				)
+			);
+		if ($module->com_sales) {
+			$module->sales = $pines->entity_manager->get_entities(
+					array('class' => com_sales_sale),
+					array('&',
+						'ref' => array('customer', $this),
+						'tag' => array('com_sales', 'sale')
+					)
+				);
+			$module->returns = $pines->entity_manager->get_entities(
+					array('class' => com_sales_return),
+					array('&',
+						'ref' => array('customer', $this),
+						'tag' => array('com_sales', 'return')
+					)
+				);
+		}
 
 		return $module;
+	}
+
+	/**
+	 * Schedule follow-up interactions for a customer.
+	 * @param user $employee The employee expected to follow-up.
+	 * @return bool Whether or not the follow-ups were scheduled.
+	 */
+	public function schedule_follow_up($employee = null) {
+		global $pines;
+
+		if (!isset($employee->guid))
+			return false;
+		foreach ($pines->config->com_customer->follow_ups as $cur_follow_up) {
+			$interaction = com_customer_interaction::factory();
+			$interaction->customer = $this;
+			$interaction->employee = $employee;
+			// Change the timezone to enter the event with the user's timezone.
+			date_default_timezone_set($employee->get_timezone());
+			$interaction->action_date = strtotime('+'.$cur_follow_up);
+			$interaction->type = 'Follow-Up';
+			$interaction->status = 'open';
+			$interaction->comments = 'Follow-up with this customer to ensure that they are happy.';
+
+			if ($pines->config->com_customer->com_calendar) {
+				// Create the interaction calendar event.
+				$event = com_calendar_event::factory();
+				$event->employee = $employee;
+				$event->appointment = true;
+				$event->label = $interaction->type;
+				$event->title = $event->label .' - '. $application->customer->name;
+				$event->private = true;
+				$event->all_day = false;
+				$event->start = $interaction->action_date;
+				$event->end = strtotime('+1 hour', $interaction->action_date);
+				$event->color = 'greenyellow';
+				$event->ac->other = 1;
+				if ($event->save()) {
+					$event->group = $employee->group;
+					$event->save();
+				} else {
+					return false;
+				}
+				$interaction->event = $event;
+			}
+
+			$interaction->ac->other = 1;
+			if (!$interaction->save())
+				return false;
+		}
+		return true;
 	}
 
 	/**

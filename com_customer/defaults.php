@@ -221,6 +221,17 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'follow_ups',
+		'cname' => 'Follow-Up Schedule',
+		'description' => 'These are the time intervals customer follow-up after a sale.',
+		'value' => array(
+			'3 days',
+			'5 days',
+			'7 days',
+		),
+		'peruser' => true,
+	),
+	array(
 		'name' => 'global_customers',
 		'cname' => 'Globalize Customers',
 		'description' => 'Ensure that every user can access all customers by setting the "other" access control to read.',

@@ -22,6 +22,9 @@ $employee = com_hrm_employee::factory((int) $_REQUEST['employee']);
 if (!isset($employee->guid))
 	$employee = null;
 
-$pines->com_calendar->show_calendar((int) $_REQUEST['id'], $location, $employee, (int) $_REQUEST['rto_id']);
+$descendents = ($_REQUEST['descendents'] == 'true');
+var_dump($_REQUEST);
+//exit;
+$pines->com_calendar->show_calendar((int) $_REQUEST['id'], $location, $employee, $descendents, (int) $_REQUEST['rto_id']);
 
 ?>

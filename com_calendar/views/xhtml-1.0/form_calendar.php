@@ -43,11 +43,12 @@ $pines->com_ptags->load();
 
 	// Change the location / division within the company.
 	pines.com_calendar_select_location = function(){
+		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
 		$.ajax({
 			url: "<?php echo addslashes(pines_url('com_calendar', 'locationselect')); ?>",
 			type: "POST",
 			dataType: "html",
-			data: {"location": "<?php echo addslashes($this->location->guid); ?>"},
+			data: {"location": "<?php echo addslashes($this->location->guid); ?>", "descendents": descendents},
 			error: function(XMLHttpRequest, textStatus){
 				pines.error("An error occured while trying to retreive the company schedule form:\n"+XMLHttpRequest.status+": "+textStatus);
 			},
@@ -69,7 +70,11 @@ $pines->com_ptags->load();
 						"View Schedule": function(){
 							form.dialog('close');
 							var schedule_location = form.find(":input[name=location]").val();
-							pines.post("<?php echo addslashes(pines_url('com_calendar', 'editcalendar')); ?>", { "location": schedule_location });
+							var descendents = form.find(":input[name=descendents]").attr('checked');
+							pines.post("<?php echo addslashes(pines_url('com_calendar', 'editcalendar')); ?>", {
+								"location": schedule_location,
+								"descendents": descendents
+							});
 						}
 					}
 				});

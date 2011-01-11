@@ -70,9 +70,10 @@ class com_calendar extends component {
 	 * Print a form to select a company location.
 	 *
 	 * @param int $location The current location.
+	 * @param bool $descendents Whether to show descendent locations.
 	 * @return module The form's module.
 	 */
-	public function location_select_form($location = null) {
+	public function location_select_form($location = null, $descendents = false) {
 		global $pines;
 		$pines->page->override = true;
 
@@ -80,6 +81,7 @@ class com_calendar extends component {
 			$location = $_SESSION['user']->group->guid;
 		$module = new module('com_calendar', 'form_location');
 		$module->location = $location;
+		$module->descendents = $descendents;
 
 		$pines->page->override_doc($module->render());
 		return $module;
@@ -89,10 +91,11 @@ class com_calendar extends component {
 	 * Creates and attaches a module which shows the calendar.
 	 * @param int $id An event GUID.
 	 * @param group $location The desired location to view the schedule for.
+	 * @param bool $descendents Whether to show descendent locations.
 	 * @param com_hrm_employee $employee The desired employee to view the schedule for.
 	 * @param int $rto A time off request GUID.
 	 */
-	public function show_calendar($id = null, $location = null, $employee = null, $rto = null) {
+	public function show_calendar($id = null, $location = null, $employee = null, $descendents = false, $rto = null) {
 		global $pines;
 
 		if (!isset($location) || !isset($location->guid)) {
@@ -111,7 +114,10 @@ class com_calendar extends component {
 		}
 
 		$selector = array('&', 'tag' => array('com_calendar', 'event'));
-		$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		if ($descendents)
+			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		else
+			$or = array('|', 'ref' => array('group', $location));
 		$ancestors = array();
 		if (isset($employee->guid)) {
 			unset($selector['ref']);
@@ -126,6 +132,7 @@ class com_calendar extends component {
 		// Should work like this, we need to have the employee's group update upon saving it to a user.
 		$form->employees = $pines->com_hrm->get_employees();
 		$calendar->location = $form->location = $location;
+		$form->descendents = $descendents;
 		$calendar->events = $pines->entity_manager->get_entities(array('class' => com_calendar_event), $selector, $or);
 		// Retrieve all events
 		while (isset($location->parent->guid)) {

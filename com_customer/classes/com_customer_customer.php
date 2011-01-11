@@ -270,7 +270,7 @@ class com_customer_customer extends user {
 				$event->employee = $employee;
 				$event->appointment = true;
 				$event->label = $interaction->type;
-				$event->title = $event->label .' - '. $application->customer->name;
+				$event->title = $event->label .' - '. $this->name;
 				$event->private = true;
 				$event->all_day = false;
 				$event->start = $interaction->action_date;

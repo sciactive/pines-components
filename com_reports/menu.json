@@ -88,6 +88,15 @@
 				}
 			},
 			{
+				"path": "main_menu/business/reports/hrm/payroll",
+				"text": "Payroll",
+				"href": ["com_reports","reportpayroll"],
+				"depend": {
+					"component": "com_calendar",
+					"ability": "com_reports/reportpayroll"
+				}
+			},
+			{
 				"path": "main_menu/business/reports/hrm/issues",
 				"text": "Employee Issues",
 				"href": ["com_reports","reportissues"],

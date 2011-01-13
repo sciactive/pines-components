@@ -254,15 +254,16 @@ class com_customer_customer extends user {
 		if (!isset($employee->guid))
 			return false;
 		foreach ($pines->config->com_customer->follow_ups as $cur_follow_up) {
+			$cur_follow_up = explode(':', $cur_follow_up);
 			$interaction = com_customer_interaction::factory();
 			$interaction->customer = $this;
 			$interaction->employee = $employee;
 			// Change the timezone to enter the event with the user's timezone.
 			date_default_timezone_set($employee->get_timezone());
-			$interaction->action_date = strtotime('+'.$cur_follow_up);
+			$interaction->action_date = strtotime('+'.$cur_follow_up[1]);
 			$interaction->type = 'Follow-Up';
 			$interaction->status = 'open';
-			$interaction->comments = 'Follow-up with this customer to ensure that they are happy.';
+			$interaction->comments = 'Follow-up with this customer to ensure that they are happy. ('.$employee->name.')';
 
 			if ($pines->config->com_customer->com_calendar) {
 				// Create the interaction calendar event.
@@ -270,25 +271,26 @@ class com_customer_customer extends user {
 				$event->employee = $employee;
 				$event->appointment = true;
 				$event->label = $interaction->type;
-				$event->title = $event->label .' - '. $this->name;
+				$event->title = $cur_follow_up[0].' '.$this->name;
 				$event->private = true;
-				$event->all_day = false;
+				$event->all_day = true;
 				$event->start = $interaction->action_date;
 				$event->end = strtotime('+1 hour', $interaction->action_date);
 				$event->color = 'greenyellow';
+				$event->information = $interaction->comments;
 				$event->ac->other = 1;
-				if ($event->save()) {
-					$event->group = $employee->group;
-					$event->save();
-				} else {
+				if (!$event->save())
 					return false;
-				}
+
 				$interaction->event = $event;
 			}
 
 			$interaction->ac->other = 1;
 			if (!$interaction->save())
 				return false;
+			$event->appointment = $interaction;
+			$event->group = $employee->group;
+			$event->save();
 		}
 		return true;
 	}

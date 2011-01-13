@@ -53,7 +53,11 @@ if ($pines->config->com_customer->com_calendar) {
 	$location = $employee->group;
 	$event->appointment = true;
 	$event->label = $interaction->type;
-	$event->title = $event->label .' - '. $customer->name;
+	foreach ($pines->config->com_customer->interaction_types as $cur_type) {
+		if (strpos($cur_type, $interaction->type))
+			$symbol = explode(':', $cur_type);
+	}
+	$event->title = $symbol[0] .' '. $customer->name;
 	$event->private = true;
 	$event->all_day = false;
 	$event->start = $interaction->action_date;
@@ -70,19 +74,24 @@ if ($pines->config->com_customer->com_calendar) {
 			$event->color = 'blue';
 			break;
 	}
+	$event->information = '('.$interaction->employee->name.') '.$interaction->comments;
 	$event->ac->other = 1;
-	if ($event->save()) {
-		$event->group = $location;
-		$event->save();
-	} else {
+	if (!$event->save()) {
 		$pines->page->override_doc('false');
+		return;
 	}
+
 	$interaction->event = $event;
 }
 
 $interaction->ac->other = 1;
 
 if ($interaction->save()) {
+	if ($pines->config->com_customer->com_calendar) {
+		$event->appointment = $interaction;
+		$event->group = $location;
+		$event->save();
+	}
 	$pines->page->override_doc('true');
 } else {
 	$pines->page->override_doc('false');

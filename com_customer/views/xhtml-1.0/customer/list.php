@@ -264,11 +264,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<div class="pf-element">
 			<label><span class="pf-label">Interaction Type</span>
 				<select class="ui-widget-content ui-corner-all" name="interaction_type">
-					<?php
-						foreach ($pines->config->com_customer->interaction_types as $cur_type) {
-							echo '<option value="'.$cur_type.'">'.$cur_type.'</option>';
-						}
-					?>
+					<?php foreach ($pines->config->com_customer->interaction_types as $cur_type) {
+						$cur_type = explode(':', $cur_type);
+						echo '<option value="'.htmlspecialchars($cur_type[1]).'">'.htmlspecialchars($cur_type[1]).'</option>';
+					} ?>
 				</select></label>
 		</div>
 		<div class="pf-element">

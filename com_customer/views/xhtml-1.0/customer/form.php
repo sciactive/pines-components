@@ -488,7 +488,7 @@ $pines->com_customer->load_company_select();
 					<select class="pf-field ui-widget-content ui-corner-all" name="referrer">
 						<option value="">-- Please Select --</option>
 						<?php foreach ($pines->config->com_customer->referrer_values as $cur_value) { ?>
-						<option value="<?php echo htmlspecialchars($cur_value); ?>"<?php echo ($this->entity->referrer == $cur_value) ? ' selected="selected"' : ''; ?> /><?php echo htmlspecialchars($cur_value); ?></option>
+						<option value="<?php echo htmlspecialchars($cur_value); ?>"<?php echo ($this->entity->referrer == $cur_value) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_value); ?></option>
 						<?php } ?>
 					</select></label>
 			</div>
@@ -909,7 +909,7 @@ $pines->com_customer->load_company_select();
 			} ?>
 			<br class="pf-clearing" />
 			<div id="p_muid_new_interaction" title="Log Customer Interaction" style="display: none;">
-				<form class="pf-form" method="post" action="">
+				<div class="pf-form">
 					<?php if (gatekeeper('com_customer/manageinteractions') && $pines->config->com_customer->com_calendar) { ?>
 					<div class="pf-element">
 						<label><span class="pf-label">Employee</span>
@@ -931,7 +931,8 @@ $pines->com_customer->load_company_select();
 						<label><span class="pf-label">Interaction Type</span>
 							<select class="ui-widget-content ui-corner-all" name="interaction_type">
 								<?php foreach ($pines->config->com_customer->interaction_types as $cur_type) {
-									echo '<option value="'.htmlspecialchars($cur_type).'">'.htmlspecialchars($cur_type).'</option>';
+									$cur_type = explode(':', $cur_type);
+									echo '<option value="'.htmlspecialchars($cur_type[1]).'">'.htmlspecialchars($cur_type[1]).'</option>';
 								} ?>
 							</select></label>
 					</div>
@@ -982,11 +983,11 @@ $pines->com_customer->load_company_select();
 					<div class="pf-element pf-full-width">
 						<textarea class="ui-widget-content ui-corner-all" rows="3" cols="40" name="interaction_comments"></textarea>
 					</div>
-				</form>
+				</div>
 				<br class="pf-clearing" />
 			</div>
 			<div id="p_muid_interaction_dialog" title="Process Customer Interaction" style="display: none;">
-				<form class="pf-form" method="post" action="">
+				<div class="pf-form">
 					<div class="pf-element">
 						<span class="pf-label">Customer</span>
 						<span class="pf-field" id="p_muid_interaction_customer"></span>
@@ -1026,7 +1027,7 @@ $pines->com_customer->load_company_select();
 							</select>
 						</label>
 					</div>
-				</form>
+				</div>
 				<br class="pf-clearing" />
 			</div>
 		</div>

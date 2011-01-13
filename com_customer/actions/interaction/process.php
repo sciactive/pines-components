@@ -25,7 +25,8 @@ if ((!gatekeeper('com_customer/manageinteractions') && !$interaction->user->is($
 }
 
 $interaction->status = $_REQUEST['status'];
-$interaction->review_comments[] = $_SESSION['user']->name.': '.$_REQUEST['review_comments'];
+if (!empty($_REQUEST['review_comments']))
+	$interaction->review_comments[] = $new_comments = $_SESSION['user']->name.': '.$_REQUEST['review_comments'];
 if ($pines->config->com_customer->com_calendar) {
 	switch ($interaction->status) {
 		case 'open':
@@ -38,6 +39,8 @@ if ($pines->config->com_customer->com_calendar) {
 			$interaction->event->color = 'blue';
 			break;
 	}
+	if (!empty($new_comments))
+		$interaction->event->information .= "\n".$new_comments;
 	$interaction->event->save();
 }
 if ($interaction->save()) {

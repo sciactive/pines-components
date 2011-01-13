@@ -40,7 +40,7 @@ if (isset($_REQUEST['employee'])) {
 			$pines->com_calendar->show_calendar();
 			return;
 		}
-		if ($event->appointment && !gatekeeper('com_calendar/editappointments')) {
+		if (isset($event->appointment) && !gatekeeper('com_calendar/editappointments')) {
 			pines_error('You cannot edit appointments.');
 			$pines->com_calendar->show_calendar();
 			return;

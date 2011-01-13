@@ -18,7 +18,7 @@ $event = com_calendar_event::factory((int)$_REQUEST['id']);
 if (!isset($event->guid))
 	$event = com_calendar_event::factory();
 
-if ($event->appointment && !gatekeeper('com_calendar/editappointments')) {
+if (isset($event->appointment) && !gatekeeper('com_calendar/editappointments')) {
 	pines_error('You cannot edit appointments.');
 	$pines->com_calendar->show_calendar();
 	return;

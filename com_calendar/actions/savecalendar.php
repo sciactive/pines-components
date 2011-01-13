@@ -24,15 +24,15 @@ if (isset($_REQUEST['events'])) {
 		if (!empty($cur_event)) {
 			$event_details = explode('|', $cur_event);
 			$event = com_calendar_event::factory((int) $event_details[0]);
-			
-			if (isset($event->employee->guid) && !$event->time_off && !$event->appointment)
+
+			if (isset($event->employee->guid) && !$event->time_off && !isset($event->appointment))
 				$event->color = $event->employee->color;
 
 			$event->event_id = $event_details[1];
 			$event->start = strtotime($event_details[2]);
 			$event->end = strtotime($event_details[3]);
 			$event->all_day = ($event_details[4] == 'true') ? true : false;
-			if (!$event->appointment) {
+			if (!isset($event->appointment)) {
 				if ($event->all_day) {
 					$days = ceil(($event->end - $event->start) / 86400);
 					$event->scheduled = isset($event->employee->workday_length) ? $event->employee->workday_length : $pines->config->com_calendar->workday_length;
@@ -41,16 +41,9 @@ if (isset($_REQUEST['events'])) {
 					$event->scheduled = $event->end - $event->start;
 				}
 			} else {
-				$appointment = $pines->entity_manager->get_entity(
-					array('class' => com_customer_interaction),
-					array('&',
-						'tag' => array('com_customer', 'interaction'),
-						'ref' => array('event', $event)
-					)
-				);
-				if (isset($appointment->guid)) {
-					$appointment->action_date = $event->start;
-					$appointment->save();
+				if (isset($event->appointment->guid)) {
+					$event->appointment->action_date = $event->start;
+					$event->appointment->save();
 				}
 			}
 			$event->ac->other = 1;

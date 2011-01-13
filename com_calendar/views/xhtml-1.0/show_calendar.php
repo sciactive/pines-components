@@ -21,9 +21,46 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Company Schedule [' . (isset($this->employee) ? $this->employee->name  : $this->location->name) . ']';
 $timezone = $_SESSION['user']->get_timezone();
 ?>
+<style type="text/css" >
+	/* <![CDATA[ */
+	#p_muid_form .helper {
+		background-position: left;
+		background-repeat: no-repeat;
+		padding-left: 16px;
+		display: none;
+	}
+	/* ]]> */
+</style>
 <script type='text/javascript'>
 	// <![CDATA[
-	pines(function() {
+	pines(function(){
+		var help = $.pnotify({
+			pnotify_title: "Information",
+			pnotify_text: "",
+			pnotify_hide: false,
+			pnotify_closer: false,
+			pnotify_history: false,
+			pnotify_animation: "none",
+			pnotify_animate_speed: 0,
+			pnotify_opacity: 1,
+			pnotify_notice_icon: "",
+			// Setting stack to false causes Pines Notify to ignore this notice when positioning.
+			pnotify_stack: false,
+			pnotify_after_init: function(pnotify){
+				// Remove the notice if the user mouses over it.
+				pnotify.mouseout(function(){
+					pnotify.pnotify_remove();
+				});
+			},
+			pnotify_before_open: function(pnotify){
+				// This prevents the notice from displaying when it's created.
+				pnotify.pnotify({
+					pnotify_before_open: null
+				});
+				return false;
+			}
+		});
+
 		// Create the calendar object.
 		$('#calendar').fullCalendar({
 			header: {
@@ -68,23 +105,24 @@ $timezone = $_SESSION['user']->get_timezone();
 					echo 'start: \''. format_date($cur_event->start, 'custom', 'Y-m-d H:i', $timezone) .'\', ';
 					echo 'end: \''. format_date($cur_event->end, 'custom', 'Y-m-d H:i', $timezone) .'\', ';
 					echo 'className: \''. addslashes($cur_event->color) .'\',';
-					if (($cur_event->appointment && !gatekeeper('com_calendar/editappointments')) ||
+					if ((isset($cur_event->appointment) && !gatekeeper('com_calendar/editappointments')) ||
 						!gatekeeper('com_calendar/editcalendar') ||
 						$cur_event->time_off) {
 						echo 'editable: false,';
 					} else {
 						echo 'editable: true,';
 					}
-					echo ($cur_event->all_day) ? 'allDay: true' : 'allDay: false';
+					echo ($cur_event->all_day) ? 'allDay: true,' : 'allDay: false,';
+					echo (!empty($cur_event->information)) ? 'info: \''.json_encode($cur_event->information).'\'' : 'info: \'\'';
 					echo '}';
 					$event_counter++;
 				} ?>],
-			eventClick: function(calEvent,jsEvent,view) {
-				if (calEvent.selected == true) {
-					calEvent.selected = false;
+			eventClick: function(event,jsEvent,view) {
+				if (event.selected == true) {
+					event.selected = false;
 					$(this).removeClass('ui-state-disabled');
-				} else if (calEvent.editable == true) {
-					calEvent.selected = true;
+				} else if (event.editable == true) {
+					event.selected = true;
 					$(this).addClass('ui-state-disabled');
 				}
 			},
@@ -93,7 +131,7 @@ $timezone = $_SESSION['user']->get_timezone();
 				$("#calendar").fullCalendar('refetchEvents');
 				pines.com_calendar_save_calendar();
 			},
-			eventDragStop: function( event, jsEvent, ui, view ) {
+			eventDragStop: function(event, jsEvent, ui, view) {
 				var events = $("#calendar").fullCalendar('clientEvents');
 				jQuery.each(events, function(i, val) {
 					val.selected = false;
@@ -103,6 +141,13 @@ $timezone = $_SESSION['user']->get_timezone();
 			eventResize: function(event,dayDelta,minuteDelta,revertFunc,jsEvent,ui,view) {
 				event.selected = false;
 				pines.com_calendar_save_calendar();
+			},
+			eventMouseover: function(event,jsEvent,view) {
+				help.pnotify({ pnotify_title: event.title, pnotify_text: event.info });
+				help.pnotify_display();
+			},
+			eventMouseout: function(event,jsEvent,view) {
+				help.pnotify_remove(); help.pnotify({ pnotify_text: "" });
 			},
 			viewDisplay: function(view) {
 				// Deselect all events when changing the calendar timespan.

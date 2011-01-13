@@ -35,7 +35,7 @@ foreach ($list as $cur_id) {
 				)
 			);
 		foreach ($events as $cur_event) {
-			if ($cur_event->appointment && !gatekeeper('com_calendar/editappointments'))
+			if (isset($cur_event->appointment) && !gatekeeper('com_calendar/editappointments'))
 				continue;
 			if ( !isset($cur_event->guid) || !$cur_event->delete() )
 				$failed_removes[] = $cur_id;

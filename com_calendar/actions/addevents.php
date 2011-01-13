@@ -21,7 +21,7 @@ if (isset($_REQUEST['events'])) {
 	foreach ((array) $_REQUEST['events'] as $cur_event) {
 		// The event that will be duplicated.
 		$event = com_calendar_event::factory((int) $cur_event);
-		if (!isset($event->guid) || $event->time_off)
+		if (!isset($event->guid) || $event->time_off || isset($event->appointment))
 			continue;
 		// Create a new event to be our duplicate.
 		$dupe_event = com_calendar_event::factory();

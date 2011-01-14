@@ -29,9 +29,9 @@ class group extends able_object implements group_interface {
 		if ($id > 0 || (string) $id === $id) {
 			global $pines;
 			if ((int) $id === $id) {
-				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
+				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => array('com_user', 'group')));
 			} else {
-				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'tag' => $this->tags, 'data' => array('groupname', $id)));
+				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'tag' => array('com_user', 'group'), 'data' => array('groupname', $id)));
 			}
 			if (!isset($entity))
 				return;

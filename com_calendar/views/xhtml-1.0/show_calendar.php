@@ -384,11 +384,15 @@ $timezone = $_SESSION['user']->get_timezone();
 <div id="calendar">
 	<div class="vs-context-menu">
 		<ul>
+			<?php if (gatekeeper('com_calendar/managecalendar')) { ?>
 			<li class="copy"><a onclick="pines.com_calendar_copy_event();" id="menu_1">Duplicate</a></li>
 			<li class="unlink"><a onclick="pines.com_calendar_unlink_events();" id="menu_2">Unlink</a></li>
+			<?php } ?>
 			<li class="edit"><a onclick="pines.com_calendar_edit_item();" id="menu_3">Edit</a></li>
+			<?php if (gatekeeper('system/all')) { ?>
 			<li class="delete seprator"><a onclick="pines.com_calendar_delete_events();" id="menu_4">Delete</a></li>
 			<li class="clear seprator"><a onclick="pines.com_calendar_clear_calendar();" id="menu_5">Clear_All</a></li>
+			<?php } ?>
 			<li class="help"><a onclick="pines.com_calendar_calendar_help();" id="menu_6">Help</a></li>
 		</ul>
 	</div>

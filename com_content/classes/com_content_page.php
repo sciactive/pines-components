@@ -28,8 +28,10 @@ class com_content_page extends entity {
 		// Defaults.
 		$this->enabled = true;
 		$this->content_tags = array();
+		$this->conditions = array();
 		$this->show_title = true;
 		$this->show_breadcrumbs = true;
+		$this->publish_end = null;
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
@@ -103,6 +105,8 @@ class com_content_page extends entity {
 	 * @return module The form's module.
 	 */
 	public function print_intro() {
+		if (!$this->ready())
+			return null;
 		global $pines;
 		$module = new module('com_content', 'page/intro', 'content');
 		$module->entity = $this;
@@ -134,11 +138,43 @@ class com_content_page extends entity {
 	 * @return module The page's module.
 	 */
 	public function print_page() {
+		if (!$this->ready())
+			return null;
 		global $pines;
 		$module = new module('com_content', 'page/page', 'content');
 		$module->entity = $this;
 
 		return $module;
+	}
+
+	/**
+	 * Determine if this page is ready to print.
+	 *
+	 * This function will check the publish date against today's date. It will
+	 * then check the conditions of the page. If the page is disabled, the date
+	 * is outside the publish date range, or any of the conditions aren't met,
+	 * it will return false.
+	 *
+	 * @return bool True if the page is ready, false otherwise.
+	 */
+	public function ready() {
+		if (!$this->enabled)
+			return false;
+		// Check the publish date.
+		$time = time();
+		if ($this->publish_begin > $time)
+			return false;
+		if (isset($this->publish_end) && $this->publish_end <= $time)
+			return false;
+		if (!$this->conditions)
+			return true;
+		global $pines;
+		// Check that all conditions are met.
+		foreach ($this->conditions as $cur_type => $cur_value) {
+			if (!$pines->depend->check($cur_type, $cur_value))
+				return false;
+		}
+		return true;
 	}
 }
 

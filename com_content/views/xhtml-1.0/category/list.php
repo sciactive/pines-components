@@ -28,6 +28,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_content', 'category/edit')); ?>'},
 				<?php } if (gatekeeper('com_content/editcategory')) { ?>
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo addslashes(pines_url('com_content', 'category/edit', array('id' => '__title__'))); ?>'},
+				{type: 'button', text: 'Pages', extra_class: 'picon picon-document-multiple', url: '<?php echo addslashes(pines_url('com_content', 'page/list', array('category' => '__title__'))); ?>'},
+				{type: 'separator'},
 				{type: 'button', text: 'Move Up', extra_class: 'picon picon-arrow-up', url: '<?php echo addslashes(pines_url('com_content', 'category/move', array('id' => '__title__', 'dir' => 'up'))); ?>'},
 				{type: 'button', text: 'Move Down', extra_class: 'picon picon-arrow-down', url: '<?php echo addslashes(pines_url('com_content', 'category/move', array('id' => '__title__', 'dir' => 'down'))); ?>'},
 				<?php } ?>
@@ -37,6 +39,13 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_content', 'category/delete', array('id' => '__title__'))); ?>', delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>
+				{type: 'button', title: 'Expand All', extra_class: 'picon picon-arrow-down', selection_optional: true, return_all_rows: true, click: function(e, rows){
+					rows.pgrid_expand_rows();
+				}},
+				{type: 'button', title: 'Collapse All', extra_class: 'picon picon-arrow-right', selection_optional: true, return_all_rows: true, click: function(e, rows){
+					rows.pgrid_collapse_rows();
+				}},
+				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
@@ -67,8 +76,13 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<tr>
 			<th>Order</th>
 			<th>Name</th>
+			<th>Alias</th>
 			<th>Enabled</th>
 			<th>Pages</th>
+			<th>Show Menu</th>
+			<th>Menu Position</th>
+			<th>Created</th>
+			<th>Modified</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -76,8 +90,13 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<tr title="<?php echo $category->guid; ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? "child {$category->parent->guid} " : ''; ?>">
 			<td><?php echo isset($category->parent) ? $category->array_search($category->parent->children) + 1 : '0' ; ?></td>
 			<td><?php echo htmlspecialchars($category->name); ?></td>
+			<td><?php echo htmlspecialchars($category->alias); ?></td>
 			<td><?php echo ($category->enabled ? 'Yes' : 'No'); ?></td>
 			<td><?php echo count($category->pages); ?></td>
+			<td><?php echo ($category->show_menu ? 'Yes' : 'No'); ?></td>
+			<td><?php echo $category->show_menu ? htmlspecialchars($category->menu_position) : ''; ?></td>
+			<td><?php echo format_date($category->p_cdate); ?></td>
+			<td><?php echo format_date($category->p_mdate); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

@@ -35,6 +35,15 @@ $page->content_tags = explode(',', $_REQUEST['content_tags']);
 $page->intro = $_REQUEST['intro'];
 $page->content = $_REQUEST['content'];
 
+// Conditions
+$conditions = (array) json_decode($_REQUEST['conditions']);
+$page->conditions = array();
+foreach ($conditions as $cur_condition) {
+	if (!isset($cur_condition->values[0], $cur_condition->values[1]))
+		continue;
+	$page->conditions[$cur_condition->values[0]] = $cur_condition->values[1];
+}
+
 // Advanced
 if (!empty($_REQUEST['p_cdate']))
 	$page->p_cdate = strtotime($_REQUEST['p_cdate']);

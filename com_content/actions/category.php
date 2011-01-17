@@ -1,6 +1,6 @@
 <?php
 /**
- * Show a page.
+ * Show a category's pages.
  *
  * @package Pines
  * @subpackage com_content
@@ -12,12 +12,12 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if (isset($_REQUEST['id'])) {
-	$entity = com_content_page::factory((int) $_REQUEST['id']);
+	$entity = com_content_category::factory((int) $_REQUEST['id']);
 } else {
 	$entity = $pines->entity_manager->get_entity(
-			array('class' => com_content_page),
+			array('class' => com_content_category),
 			array('&',
-				'tag' => array('com_content', 'page'),
+				'tag' => array('com_content', 'category'),
 				'data' => array('alias', $_REQUEST['a'])
 			)
 		);
@@ -34,6 +34,6 @@ if ($entity->show_breadcrumbs) {
 	$module->entity = $entity;
 }
 
-$entity->print_page();
+$entity->print_category();
 
 ?>

@@ -14,5 +14,11 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_content/listpages') )
 	punt_user(null, pines_url('com_content', 'page/list'));
 
-$pines->com_content->list_pages();
+if (isset($_REQUEST['category'])) {
+	$category = com_content_category::factory((int) $_REQUEST['category']);
+	if (!isset($category->guid))
+		$category = null;
+}
+
+$pines->com_content->list_pages($category);
 ?>

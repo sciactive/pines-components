@@ -36,16 +36,23 @@ class com_content extends component {
 
 	/**
 	 * Creates and attaches a module which lists pages.
+	 *
+	 * @param com_content_category $category The category to list pages from. If null, all pages will be listed.
 	 */
-	public function list_pages() {
+	public function list_pages($category = null) {
 		global $pines;
 
 		$module = new module('com_content', 'page/list', 'content');
 
-		$module->pages = $pines->entity_manager->get_entities(array('class' => com_content_page), array('&', 'tag' => array('com_content', 'page')));
+		if (isset($category)) {
+			$module->pages = $category->pages;
+			$module->category = $category;
+		} else {
+			$module->pages = $pines->entity_manager->get_entities(array('class' => com_content_page), array('&', 'tag' => array('com_content', 'page')));
+		}
 
 		if ( empty($module->pages) )
-			pines_notice('There are no pages.');
+			pines_notice('No pages found.');
 	}
 }
 

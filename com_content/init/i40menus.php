@@ -27,6 +27,8 @@ if ($pines->config->com_content->show_page_menus) {
 		return;
 
 	foreach ($pages as $cur_page) {
+		if (!$cur_page->ready())
+			continue;
 		// Show the page in the menu.
 		if (strpos($cur_page->menu_position, '/') === false) {
 			// It's a new top level menu.
@@ -73,16 +75,18 @@ if ($pines->config->com_content->show_cat_menus) {
 		if (!$category->children)
 			return;
 		foreach ($category->children as $cur_category) {
-			if (!$cur_category->enabled)
+			if (!$cur_category->ready())
 				continue;
 			$pines->menu->menu_arrays[] = array(
 				'path' => "{$path}/cat_{$cur_category->guid}",
 				'text' => $cur_category->name,
-				'href' => array('com_content', 'category/browse', array('id' => $cur_category->guid))
+				'href' => array('com_content', 'category', array('a' => $cur_category->alias))
 			);
 
 			if ($cur_category->show_pages_in_menu) {
 				foreach ($cur_category->pages as $cur_page) {
+					if (!$cur_page->ready())
+						continue;
 					// It's part of another menu.
 					$pines->menu->menu_arrays[] = array(
 						'path' => "{$path}/cat_{$cur_category->guid}/page_{$cur_page->guid}",
@@ -97,7 +101,7 @@ if ($pines->config->com_content->show_cat_menus) {
 	}
 
 	foreach ($categories as $cur_category) {
-		if (!$cur_category->enabled)
+		if (!$cur_category->ready())
 			continue;
 		if (strpos($cur_category->menu_position, '/') === false) {
 			// It's a new top level menu.
@@ -113,7 +117,7 @@ if ($pines->config->com_content->show_cat_menus) {
 			$pines->menu->menu_arrays[] = array(
 				'path' => $menu_position,
 				'text' => $cur_category->name,
-				'href' => array('com_content', 'category/browse', array('id' => $cur_category->guid))
+				'href' => array('com_content', 'category', array('a' => $cur_category->alias))
 			);
 		}
 		if ($cur_category->children)
@@ -121,6 +125,8 @@ if ($pines->config->com_content->show_cat_menus) {
 
 		if ($cur_category->show_pages_in_menu) {
 			foreach ($cur_category->pages as $cur_page) {
+				if (!$cur_page->ready())
+					continue;
 				// It's part of another menu.
 				$pines->menu->menu_arrays[] = array(
 					'path' => "{$menu_position}/page_{$cur_page->guid}",

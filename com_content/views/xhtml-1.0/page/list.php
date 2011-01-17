@@ -11,6 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Pages';
+if (isset($this->category))
+	$this->title .= htmlspecialchars(" in {$this->category->name} [{$this->category->alias}]");
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_content/page/list'];
@@ -64,7 +66,13 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<thead>
 		<tr>
 			<th>Name</th>
+			<th>Alias</th>
 			<th>Enabled</th>
+			<th>Front Page</th>
+			<th>Created</th>
+			<th>Modified</th>
+			<th>Publish Date</th>
+			<th>Publish End</th>
 			<th>Tags</th>
 		</tr>
 	</thead>
@@ -72,7 +80,13 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<?php foreach($this->pages as $page) { ?>
 		<tr title="<?php echo $page->guid; ?>">
 			<td><?php echo htmlspecialchars($page->name); ?></td>
+			<td><?php echo htmlspecialchars($page->alias); ?></td>
 			<td><?php echo ($page->enabled ? 'Yes' : 'No'); ?></td>
+			<td><?php echo ($page->show_front_page ? 'Yes' : 'No'); ?></td>
+			<td><?php echo format_date($page->p_cdate); ?></td>
+			<td><?php echo format_date($page->p_mdate); ?></td>
+			<td><?php echo format_date($page->publish_begin); ?></td>
+			<td><?php echo isset($page->publish_end) ? format_date($page->publish_end) : ''; ?></td>
 			<td><?php echo htmlspecialchars(implode(', ', $page->content_tags)); ?></td>
 		</tr>
 	<?php } ?>

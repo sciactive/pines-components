@@ -25,17 +25,46 @@ if ( isset($_REQUEST['id']) ) {
 	$category = com_content_category::factory();
 }
 
+// General
 $category->name = $_REQUEST['name'];
+$category->alias = preg_replace('/[^\w\d-.]/', '', $_REQUEST['alias']);
 $category->enabled = ($_REQUEST['enabled'] == 'ON');
+$category->show_title = ($_REQUEST['show_title'] == 'ON');
 $category->show_menu = ($_REQUEST['show_menu'] == 'ON');
 $category->menu_position = $_REQUEST['menu_position'];
 $category->show_pages_in_menu = ($_REQUEST['show_pages_in_menu'] == 'ON');
 $category->show_breadcrumbs = ($_REQUEST['show_breadcrumbs'] == 'ON');
+$category->pages = array();
+$pages = (array) json_decode($_REQUEST['pages']);
+foreach ($pages as $cur_page_guid) {
+	$cur_page = com_content_page::factory((int) $cur_page_guid);
+	if (!isset($cur_page->guid)) {
+		pines_notice("Invalid page id [{$cur_page_guid}].");
+		continue;
+	}
+	$category->pages[] = $cur_page;
+}
+
+// Conditions
+$conditions = (array) json_decode($_REQUEST['conditions']);
+$category->conditions = array();
+foreach ($conditions as $cur_condition) {
+	if (!isset($cur_condition->values[0], $cur_condition->values[1]))
+		continue;
+	$category->conditions[$cur_condition->values[0]] = $cur_condition->values[1];
+}
 
 // Do the check now in case the parent category is saved.
 if (empty($category->name)) {
 	$category->print_form();
 	pines_notice('Please specify a name.');
+	return;
+}
+
+$test = $pines->entity_manager->get_entity(array('class' => com_content_category, 'skip_ac' => true), array('&', 'tag' => array('com_content', 'category'), 'data' => array('alias', $category->alias)));
+if (isset($test) && $test->guid != $_REQUEST['id']) {
+	$category->print_form();
+	pines_notice('There is already an category with that alias. Please choose a different alias.');
 	return;
 }
 

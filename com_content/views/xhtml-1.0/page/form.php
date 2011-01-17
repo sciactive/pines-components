@@ -24,6 +24,110 @@ $pines->com_ptags->load();
 				source: <?php echo json_encode($pines->info->template->positions); ?>
 			});
 
+
+			// Conditions
+			var conditions = $("#p_muid_form [name=conditions]");
+			var conditions_table = $("#p_muid_form .conditions_table");
+			var condition_dialog = $("#p_muid_form .condition_dialog");
+			var cur_condition = null;
+
+			conditions_table.pgrid({
+				pgrid_paginate: false,
+				pgrid_toolbar: true,
+				pgrid_toolbar_contents : [
+					{
+						type: 'button',
+						text: 'Add Condition',
+						extra_class: 'picon picon-document-new',
+						selection_optional: true,
+						click: function(){
+							cur_condition = null;
+							condition_dialog.dialog('open');
+						}
+					},
+					{
+						type: 'button',
+						text: 'Edit Condition',
+						extra_class: 'picon picon-document-edit',
+						double_click: true,
+						click: function(e, rows){
+							cur_condition = rows;
+							condition_dialog.find("input[name=cur_condition_type]").val(rows.pgrid_get_value(1));
+							condition_dialog.find("input[name=cur_condition_value]").val(rows.pgrid_get_value(2));
+							condition_dialog.dialog('open');
+						}
+					},
+					{
+						type: 'button',
+						text: 'Remove Condition',
+						extra_class: 'picon picon-edit-delete',
+						click: function(e, rows){
+							rows.pgrid_delete();
+							update_conditions();
+						}
+					}
+				],
+				pgrid_view_height: "300px"
+			});
+
+			// Condition Dialog
+			condition_dialog.dialog({
+				bgiframe: true,
+				autoOpen: false,
+				modal: true,
+				width: 500,
+				buttons: {
+					"Done": function(){
+						var cur_condition_type = condition_dialog.find("input[name=cur_condition_type]").val();
+						var cur_condition_value = condition_dialog.find("input[name=cur_condition_value]").val();
+						if (cur_condition_type == "") {
+							alert("Please provide a type for this condition.");
+							return;
+						}
+						if (cur_condition == null) {
+							// Is this a duplicate type?
+							var dupe = false;
+							conditions_table.pgrid_get_all_rows().each(function(){
+								if (dupe) return;
+								if ($(this).pgrid_get_value(1) == cur_condition_type)
+									dupe = true;
+							});
+							if (dupe) {
+								pines.notice('There is already a condition of that type.');
+								return;
+							}
+							var new_condition = [{
+								key: null,
+								values: [
+									cur_condition_type,
+									cur_condition_value
+								]
+							}];
+							conditions_table.pgrid_add(new_condition);
+						} else {
+							cur_condition.pgrid_set_value(1, cur_condition_type);
+							cur_condition.pgrid_set_value(2, cur_condition_value);
+						}
+						$(this).dialog('close');
+					}
+				},
+				close: function(){
+					update_conditions();
+				}
+			});
+
+			var update_conditions = function(){
+				condition_dialog.find("input[name=cur_condition_type]").val("");
+				condition_dialog.find("input[name=cur_condition_value]").val("");
+				conditions.val(JSON.stringify(conditions_table.pgrid_get_all_rows().pgrid_export_rows()));
+			};
+
+			update_conditions();
+
+			condition_dialog.find("input[name=cur_condition_type]").autocomplete({
+				"source": <?php echo (string) json_encode((array) array_keys($pines->depend->checkers)); ?>
+			});
+
 			$("#p_muid_page_tabs").tabs();
 		});
 		// ]]>
@@ -32,15 +136,10 @@ $pines->com_ptags->load();
 		<ul>
 			<li><a href="#p_muid_tab_general">General</a></li>
 			<li><a href="#p_muid_tab_categories">Categories</a></li>
+			<li><a href="#p_muid_tab_conditions">Conditions</a></li>
 			<li><a href="#p_muid_tab_advanced">Advanced</a></li>
 		</ul>
 		<div id="p_muid_tab_general">
-			<?php if (isset($this->entity->guid)) { ?>
-			<div class="date_info" style="float: right; text-align: right;">
-				<div>User: <span class="date"><?php echo htmlspecialchars("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
-				<div>Group: <span class="date"><?php echo htmlspecialchars("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
-			</div>
-			<?php } ?>
 			<div class="pf-element pf-full-width">
 				<script type="text/javascript">
 					// <![CDATA[
@@ -73,6 +172,16 @@ $pines->com_ptags->load();
 					</div>
 				</label>
 			</div>
+			<?php if (isset($this->entity->guid)) { ?>
+			<div class="date_info" style="float: right; text-align: right;">
+				<?php if (isset($this->entity->user)) { ?>
+				<div>User: <span class="date"><?php echo htmlspecialchars("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
+				<div>Group: <span class="date"><?php echo htmlspecialchars("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
+				<?php } ?>
+				<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
+				<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
+			</div>
+			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>
 					<input class="pf-field" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
@@ -163,6 +272,52 @@ $pines->com_ptags->load();
 					<?php } ?>
 					</tbody>
 				</table>
+			</div>
+			<br class="pf-clearing" />
+		</div>
+		<div id="p_muid_tab_conditions">
+			<div class="pf-element pf-heading">
+				<h1>Page Conditions</h1>
+				<p>Users will only see this page if these conditions are met.</p>
+			</div>
+			<div class="pf-element pf-full-width">
+				<table class="conditions_table">
+					<thead>
+						<tr>
+							<th>Type</th>
+							<th>Value</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php if (isset($this->entity->conditions)) foreach ($this->entity->conditions as $cur_key => $cur_value) { ?>
+						<tr>
+							<td><?php echo htmlspecialchars($cur_key); ?></td>
+							<td><?php echo htmlspecialchars($cur_value); ?></td>
+						</tr>
+						<?php } ?>
+					</tbody>
+				</table>
+				<input type="hidden" name="conditions" />
+			</div>
+			<div class="condition_dialog" style="display: none;" title="Add a Condition">
+				<div class="pf-form">
+					<div class="pf-element">
+						<span class="pf-label">Detected Types</span>
+						<span class="pf-note">These types were detected on this system.</span>
+						<div class="pf-group">
+							<div class="pf-field"><em><?php echo htmlspecialchars(implode(', ', array_keys($pines->depend->checkers))); ?></em></div>
+						</div>
+					</div>
+					<div class="pf-element">
+						<label><span class="pf-label">Type</span>
+							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_condition_type" size="24" /></label>
+					</div>
+					<div class="pf-element">
+						<label><span class="pf-label">Value</span>
+							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_condition_value" size="24" /></label>
+					</div>
+				</div>
+				<br style="clear: both; height: 1px;" />
 			</div>
 			<br class="pf-clearing" />
 		</div>

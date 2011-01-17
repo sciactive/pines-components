@@ -11,6 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
+$time = time();
 $pages = $pines->entity_manager->get_entities(
 		array('class' => com_content_page),
 		array('&',
@@ -19,11 +20,11 @@ $pages = $pines->entity_manager->get_entities(
 				array('enabled', true),
 				array('show_front_page', true)
 			),
-			'lte' => array('publish_begin', time())
+			'lte' => array('publish_begin', $time)
 		),
 		array('|',
 			'data' => array('publish_end', null),
-			'gt' => array('publish_end', time())
+			'gt' => array('publish_end', $time)
 		)
 	);
 

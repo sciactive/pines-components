@@ -17,6 +17,11 @@ return array(
 		'view' => 'page/page',
 		'form' => 'modules/page_form',
 	),
+	'category' => array(
+		'cname' => 'Category Listing',
+		'view' => 'category/category',
+		'form' => 'modules/category_form',
+	),
 );
 
 ?>

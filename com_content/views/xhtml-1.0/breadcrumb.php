@@ -23,6 +23,8 @@ if ($this->entity->has_tag('page')) {
 			)
 		);
 	foreach ($categories as $cur_entity) {
+		if (!$cur_entity->ready())
+			continue;
 		if ($cur_entity->show_menu)
 			break;
 		$cur_parent = $cur_entity->parent;
@@ -37,7 +39,7 @@ if ($this->entity->has_tag('page')) {
 }
 
 while (isset($cur_entity)) {
-	$bc = '<a href="'.htmlspecialchars(pines_url('com_content', 'category/browse', array('id' => $cur_entity->guid))).'" class="breadcrumb_item">'.htmlspecialchars($cur_entity->name).'</a> <span class="breadcrumb_sep">&gt;</span> ' . $bc;
+	$bc = '<a href="'.htmlspecialchars(pines_url('com_content', 'category', array('a' => $cur_entity->alias))).'" class="breadcrumb_item">'.htmlspecialchars($cur_entity->name).'</a> <span class="breadcrumb_sep">&gt;</span> ' . $bc;
 	if ($cur_entity->show_menu)
 		unset($cur_entity);
 	else

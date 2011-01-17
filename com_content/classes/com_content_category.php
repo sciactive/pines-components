@@ -32,6 +32,7 @@ class com_content_category extends entity {
 		$this->pages = array();
 		$this->menu_position = 'left';
 		$this->show_breadcrumbs = true;
+		$this->conditions = array();
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
@@ -74,6 +75,20 @@ class com_content_category extends entity {
 	}
 
 	/**
+	 * Print the category browser.
+	 * @return module The category's module.
+	 */
+	public function print_category() {
+		if (!$this->ready())
+			return null;
+		global $pines;
+		$module = new module('com_content', 'category/category', 'content');
+		$module->entity = $this;
+
+		return $module;
+	}
+
+	/**
 	 * Print a form to edit the category.
 	 * @return module The form's module.
 	 */
@@ -84,6 +99,28 @@ class com_content_category extends entity {
 		$module->categories = $pines->entity_manager->get_entities(array('class' => com_content_category), array('&', 'tag' => array('com_content', 'category'), 'data' => array('parent', null)));
 
 		return $module;
+	}
+
+	/**
+	 * Determine if this category is ready to print.
+	 *
+	 * This function will check the conditions of the category. If the category
+	 * is disabled or any of the conditions aren't met, it will return false.
+	 *
+	 * @return bool True if the category is ready, false otherwise.
+	 */
+	public function ready() {
+		if (!$this->enabled)
+			return false;
+		if (!$this->conditions)
+			return true;
+		global $pines;
+		// Check that all conditions are met.
+		foreach ($this->conditions as $cur_type => $cur_value) {
+			if (!$pines->depend->check($cur_type, $cur_value))
+				return false;
+		}
+		return true;
 	}
 }
 

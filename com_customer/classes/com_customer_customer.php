@@ -263,7 +263,7 @@ class com_customer_customer extends user {
 			$interaction->action_date = strtotime('+'.$cur_follow_up[1]);
 			$interaction->type = 'Follow-Up';
 			$interaction->status = 'open';
-			$interaction->comments = 'Follow-up with this customer to ensure that they are happy. ('.$employee->name.')';
+			$interaction->comments = 'Follow-up with this customer to ensure that they are happy.';
 
 			if ($pines->config->com_customer->com_calendar) {
 				// Create the interaction calendar event.
@@ -278,14 +278,15 @@ class com_customer_customer extends user {
 				$event->end = strtotime('+1 hour', $interaction->action_date);
 				$event->color = 'greenyellow';
 				$event->information = $interaction->comments;
-				$event->ac->other = 1;
+				$event->information = $employee->name." (".ucwords($interaction->status).") \n".$interaction->comments;
+				$event->ac->other = 2;
 				if (!$event->save())
 					return false;
 
 				$interaction->event = $event;
 			}
 
-			$interaction->ac->other = 1;
+			$interaction->ac->other = 2;
 			if (!$interaction->save())
 				return false;
 			$event->appointment = $interaction;

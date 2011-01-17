@@ -24,6 +24,6 @@ if (!isset($employee->guid))
 
 $descendents = ($_REQUEST['descendents'] == 'true');
 
-$pines->com_calendar->show_calendar((int) $_REQUEST['id'], $location, $employee, $descendents, (int) $_REQUEST['rto_id']);
+$pines->com_calendar->show_calendar($location, $employee, $descendents);
 
 ?>

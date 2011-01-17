@@ -112,8 +112,9 @@ $timezone = $_SESSION['user']->get_timezone();
 					} else {
 						echo 'editable: true,';
 					}
+					echo (isset($cur_event->appointment->guid)) ? 'appointment: '.$cur_event->appointment->guid.',' : 'appointment: \'\',';
 					echo ($cur_event->all_day) ? 'allDay: true,' : 'allDay: false,';
-					echo (!empty($cur_event->information)) ? 'info: \''.json_encode($cur_event->information).'\'' : 'info: \'\'';
+					echo (!empty($cur_event->information)) ? 'info: '.json_encode($cur_event->information) : 'info: \'\'';
 					echo '}';
 					$event_counter++;
 				} ?>],
@@ -121,7 +122,7 @@ $timezone = $_SESSION['user']->get_timezone();
 				if (event.selected == true) {
 					event.selected = false;
 					$(this).removeClass('ui-state-disabled');
-				} else if (event.editable == true) {
+				} else {
 					event.selected = true;
 					$(this).addClass('ui-state-disabled');
 				}
@@ -158,10 +159,8 @@ $timezone = $_SESSION['user']->get_timezone();
 				$("#calendar").fullCalendar('refetchEvents');
 			}
 		});
-		<?php if (gatekeeper('com_calendar/editcalendar')) { ?>
-			// Right-Click Menu.
-			$('#calendar').vscontext({menuBlock: 'vs-context-menu'});
-		<?php } ?>
+		// Right-Click Menu.
+		$('#calendar').vscontext({menuBlock: 'vs-context-menu'});
 	});
 	// Add new events to the calendar, mostly for duplicating events.
 	pines.com_calendar_add_events = function(events) {
@@ -249,14 +248,16 @@ $timezone = $_SESSION['user']->get_timezone();
 	};
 
 	// Edit Event
-	pines.com_calendar_edit_event = function() {
+	pines.com_calendar_edit_item = function() {
 		var events = $("#calendar").fullCalendar('clientEvents');
 		var edit_event;
+		var appointment;
 		var edit_count = 0;
 		// Find the selected event(s).
 		$.each(events, function(i, val) {
 			if (val.selected) {
-				if (val.editable == false)
+				appointment = val.appointment;
+				if (val.editable == false && appointment == '')
 					alert(val.title+' is not editable.');
 				else if (val.group)
 					edit_event = val.guid;
@@ -271,9 +272,10 @@ $timezone = $_SESSION['user']->get_timezone();
 		} else if (edit_count > 1) {
 			alert('You may only edit one event at a time.');
 		} else {
-			alert('Editing ['+ edit_event +']');
-			var edit_url = '<?php echo pines_url('com_calendar', 'editcalendar', array('location' => $this->location->guid, 'employee' => $this->employee->guid)); ?>';
-			pines.post(edit_url, { id: edit_event });
+			if (appointment != '')
+				pines.com_calendar_edit_appointment(appointment);
+			else
+				pines.com_calendar_edit_event(edit_event);
 		}
 	};
 
@@ -380,16 +382,14 @@ $timezone = $_SESSION['user']->get_timezone();
 	// ]]>
 </script>
 <div id="calendar">
-	<?php if (gatekeeper('com_calendar/editcalendar')) { ?>
 	<div class="vs-context-menu">
 		<ul>
 			<li class="copy"><a onclick="pines.com_calendar_copy_event();" id="menu_1">Duplicate</a></li>
 			<li class="unlink"><a onclick="pines.com_calendar_unlink_events();" id="menu_2">Unlink</a></li>
-			<li class="edit"><a onclick="pines.com_calendar_edit_event();" id="menu_3">Edit</a></li>
+			<li class="edit"><a onclick="pines.com_calendar_edit_item();" id="menu_3">Edit</a></li>
 			<li class="delete seprator"><a onclick="pines.com_calendar_delete_events();" id="menu_4">Delete</a></li>
 			<li class="clear seprator"><a onclick="pines.com_calendar_clear_calendar();" id="menu_5">Clear_All</a></li>
 			<li class="help"><a onclick="pines.com_calendar_calendar_help();" id="menu_6">Help</a></li>
 		</ul>
 	</div>
-	<?php } ?>
 </div>

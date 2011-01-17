@@ -75,7 +75,7 @@ if ($pines->config->com_customer->com_calendar) {
 			break;
 	}
 	$event->information = '('.$interaction->employee->name.') '.$interaction->comments;
-	$event->ac->other = 1;
+	$event->ac->other = 2;
 	if (!$event->save()) {
 		$pines->page->override_doc('false');
 		return;
@@ -84,7 +84,7 @@ if ($pines->config->com_customer->com_calendar) {
 	$interaction->event = $event;
 }
 
-$interaction->ac->other = 1;
+$interaction->ac->other = 2;
 
 if ($interaction->save()) {
 	if ($pines->config->com_customer->com_calendar) {

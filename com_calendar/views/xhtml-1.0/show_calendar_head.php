@@ -23,9 +23,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	// <![CDATA[
 	pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_calendar/includes/fullcalendar.css");
 	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_calendar/includes/<?php echo $pines->config->debug_mode ? 'fullcalendar.js' : 'fullcalendar.min.js'; ?>");
-	<?php if (gatekeeper('com_calendar/editcalendar')) { ?>
 	pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_calendar/includes/context/css/vscontext.css");
 	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_calendar/includes/context/vscontext.jquery.js");
-	<?php } ?>
 	// ]]>
 </script>

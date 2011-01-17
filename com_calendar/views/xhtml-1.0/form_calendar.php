@@ -28,6 +28,12 @@ $pines->com_ptags->load();
 	#p_muid_actions button .ui-button-text {
 		padding: 0;
 	}
+	#p_muid_interaction_dialog ul {
+		font-size: 0.8em;
+		list-style-type: disc;
+		margin: 0;
+		padding: 0;
+	}
 	/* ]]> */
 </style>
 <script type='text/javascript'>
@@ -132,19 +138,19 @@ $pines->com_ptags->load();
 		});
 	};
 	// Edit an existing event.
-	pines.com_calendar_edit_event = function(){
+	pines.com_calendar_edit_event = function(event_id){
 		$.ajax({
 			url: "<?php echo addslashes(pines_url('com_calendar', 'editevent')); ?>",
 			type: "POST",
 			dataType: "html",
-			data: {id: "<?php echo $this->entity->guid; ?>"},
+			data: {id: event_id},
 			error: function(XMLHttpRequest, textStatus){
-				pines.error("An error occured while trying to retreive the new event form:\n"+XMLHttpRequest.status+": "+textStatus);
+				pines.error("An error occured while trying to retreive the event form:\n"+XMLHttpRequest.status+": "+textStatus);
 			},
 			success: function(data){
 				if (data == "")
 					return;
-				var form = $("<div title=\"Editing "+"<?php echo htmlspecialchars($this->entity->label); ?>"+"\" />");
+				var form = $("<div title=\"Editing Event ["+event_id+"]\" />");
 				form.dialog({
 					bgiframe: true,
 					autoOpen: true,
@@ -228,7 +234,7 @@ $pines->com_ptags->load();
 			dataType: "html",
 			data: {"employee": "<?php echo addslashes($this->employee->guid); ?>"},
 			error: function(XMLHttpRequest, textStatus){
-				pines.error("An error occured while trying to retreive the new event form:\n"+XMLHttpRequest.status+": "+textStatus);
+				pines.error("An error occured while trying to retreive the schedule form:\n"+XMLHttpRequest.status+": "+textStatus);
 			},
 			success: function(data){
 				if (data == "")
@@ -267,11 +273,87 @@ $pines->com_ptags->load();
 		alert('An employee must be selected in order to create a work schedule.');
 		<?php } ?>
 	};
-	<?php if (isset($this->entity)) { ?>
-	// Edit the event if there is one to be edited.
-	pines.com_calendar_edit_event();
-	<?php }
-	} ?>
+	<?php } ?>
+	// Edit an appointment.
+	pines.com_calendar_edit_appointment = function(appointment_id){
+		var interaction_dialog = $("#p_muid_interaction_dialog");
+
+		// Interaction Dialog
+		interaction_dialog.dialog({
+			bgiframe: true,
+			autoOpen: false,
+			modal: true,
+			width: 400,
+			buttons: {
+				"Update": function(){
+					var loader;
+					$.ajax({
+						url: "<?php echo addslashes(pines_url('com_customer', 'interaction/process')); ?>",
+						type: "POST",
+						dataType: "json",
+						data: {
+							id: $("#p_muid_interaction_dialog [name=id]").val(),
+							status: $("#p_muid_interaction_dialog [name=status]").val(),
+							review_comments: $("#p_muid_interaction_dialog [name=review_comments]").val()
+						},
+						beforeSend: function(){
+							loader = $.pnotify({
+								pnotify_title: 'Updating',
+								pnotify_text: 'Processing customer interaction...',
+								pnotify_notice_icon: 'picon picon-throbber',
+								pnotify_nonblock: true,
+								pnotify_hide: false,
+								pnotify_history: false
+							});
+						},
+						complete: function(){
+							loader.pnotify_remove();
+						},
+						error: function(XMLHttpRequest, textStatus){
+							pines.error("An error occured:\n"+XMLHttpRequest.status+": "+textStatus);
+						},
+						success: function(data){
+							if (!data) {
+								alert("Could not update the interaction. Do you have permission?");
+								return;
+							} else if (data == 'closed') {
+								alert("This interaction is already closed.");
+								return;
+							}
+							alert("Successfully updated the interaction.");
+							$("#p_muid_interaction_dialog [name=review_comments]").val('');
+							interaction_dialog.dialog("close");
+						}
+					});
+				}
+			}
+		});
+		$.ajax({
+			url: "<?php echo addslashes(pines_url('com_customer', 'interaction/info')); ?>",
+			type: "POST",
+			dataType: "json",
+			data: {id: appointment_id},
+			error: function(XMLHttpRequest, textStatus){
+				pines.error("An error occured:\n"+XMLHttpRequest.status+": "+textStatus);
+			},
+			success: function(data){
+				if (!data) {
+					alert("No appointment was found matching the selected item.");
+					return;
+				}
+				$("#p_muid_interaction_dialog [name=id]").val(appointment_id);
+				$("#p_muid_interaction_customer").empty().append(data.customer);
+				$("#p_muid_interaction_type").empty().append(data.type);
+				$("#p_muid_interaction_employee").empty().append(data.employee);
+				$("#p_muid_interaction_date").empty().append(data.date);
+				$("#p_muid_interaction_comments").empty().append(data.comments);
+				$("#p_muid_interaction_notes").empty().append((data.review_comments.length > 0) ? "<li>"+data.review_comments.join("</li><li>")+"</li>" : "");
+				$("#p_muid_interaction_dialog [name=status]").val(data.status);
+
+				interaction_dialog.dialog('open');
+			}
+		});
+	};
 	// ]]>
 </script>
 <?php if (gatekeeper('com_calendar/editcalendar')) { ?>
@@ -297,3 +379,48 @@ $pines->com_ptags->load();
 	</select>
 </div>
 <?php } ?>
+<div id="p_muid_interaction_dialog" title="Process Customer Interaction" style="display: none;">
+	<div class="pf-form">
+		<div class="pf-element">
+			<span class="pf-label">Customer</span>
+			<span class="pf-field" id="p_muid_interaction_customer"></span>
+		</div>
+		<div class="pf-element">
+			<span class="pf-label">Employee</span>
+			<span class="pf-field" id="p_muid_interaction_employee"></span>
+		</div>
+		<div class="pf-element">
+			<span class="pf-label">Interaction Type</span>
+			<span class="pf-field" id="p_muid_interaction_type"></span>
+		</div>
+		<div class="pf-element">
+			<span class="pf-label">Date</span>
+			<span class="pf-field" id="p_muid_interaction_date"></span>
+		</div>
+		<div class="pf-element pf-full-width">
+			<span class="pf-label">Comments</span>
+			<span class="pf-field pf-full-width" id="p_muid_interaction_comments"></span>
+		</div>
+		<div class="pf-element pf-full-width">
+			<span class="pf-label">Review Comments</span>
+			<span class="pf-field pf-full-width">
+				<ul id="p_muid_interaction_notes"></ul>
+			</span>
+		</div>
+		<div class="pf-element pf-full-width">
+			<textarea class="ui-widget-content ui-corner-all" rows="3" cols="40" name="review_comments"></textarea>
+		</div>
+		<div class="pf-element">
+			<label>
+				<span class="pf-label">Status</span>
+				<select class="ui-widget-content ui-corner-all" name="status">
+					<option value="open">Open</option>
+					<option value="closed">Closed</option>
+					<option value="canceled">Canceled</option>
+				</select>
+			</label>
+		</div>
+		<input type="hidden" name="id" value="" />
+	</div>
+	<br class="pf-clearing" />
+</div>

@@ -224,6 +224,7 @@ $pines->com_customer->load_company_select();
 							$("#p_muid_interaction_date").empty().append(data.date);
 							$("#p_muid_interaction_comments").empty().append(data.comments);
 							$("#p_muid_interaction_notes").empty().append((data.review_comments.length > 0) ? "<li>"+data.review_comments.join("</li><li>")+"</li>" : "");
+							$("#p_muid_interaction_dialog [name=status]").val(data.status);
 
 							interaction_dialog.dialog('open');
 						}
@@ -347,6 +348,9 @@ $pines->com_customer->load_company_select();
 						success: function(data){
 							if (!data) {
 								alert("Could not update the interaction. Do you have permission?");
+								return;
+							} else if (data == 'closed') {
+								alert("This interaction is already closed.");
 								return;
 							}
 							alert("Successfully updated the interaction.");

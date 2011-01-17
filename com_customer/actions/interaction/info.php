@@ -26,7 +26,7 @@ $json_struct = (object) array(
 	'employee'			=> (string) $interaction->employee->name,
 	'type'				=> (string) $interaction->type,
 	'date'				=> format_date($interaction->action_date, 'full_sort'),
-	'status'			=> ucwords($interaction->status),
+	'status'			=> (string) $interaction->status,
 	'comments'			=> (string) $interaction->comments,
 	'review_comments'	=> (array) $interaction->review_comments
 );

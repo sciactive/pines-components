@@ -89,13 +89,11 @@ class com_calendar extends component {
 
 	/**
 	 * Creates and attaches a module which shows the calendar.
-	 * @param int $id An event GUID.
 	 * @param group $location The desired location to view the schedule for.
 	 * @param bool $descendents Whether to show descendent locations.
 	 * @param com_hrm_employee $employee The desired employee to view the schedule for.
-	 * @param int $rto A time off request GUID.
 	 */
-	public function show_calendar($id = null, $location = null, $employee = null, $descendents = false, $rto = null) {
+	public function show_calendar($location = null, $employee = null, $descendents = false) {
 		global $pines;
 
 		if (!isset($location) || !isset($location->guid)) {
@@ -107,11 +105,6 @@ class com_calendar extends component {
 		$calendar_head = new module('com_calendar', 'show_calendar_head', 'head');
 		$calendar = new module('com_calendar', 'show_calendar', 'content');
 		$form = new module('com_calendar', 'form_calendar', 'right');
-		// If an id is specified, the event info will be displayed for editing.
-		if (isset($id) && $id >  0) {
-			$form->entity = com_calendar_event::factory((int) $id);
-			$location = $form->entity->group;
-		}
 
 		$selector = array('&', 'tag' => array('com_calendar', 'event'));
 		if ($descendents)
@@ -126,8 +119,6 @@ class com_calendar extends component {
 			$location = $employee->group;
 			$ancestors = $location->get_descendents(true);
 		}
-		if (isset($rto) && $rto >  0)
-			$form->rto = com_calendar_rto::factory((int) $rto);
 
 		// Should work like this, we need to have the employee's group update upon saving it to a user.
 		$form->employees = $pines->com_hrm->get_employees();

@@ -253,7 +253,7 @@ $pay_grades = array(
 				<td><?php echo htmlspecialchars($cur_sale->group->name); ?></td>
 				<td><?php echo htmlspecialchars(ucwords($cur_sale->status).$return_status); ?></td>
 				<td><?php echo htmlspecialchars($cur_sale->user->name); ?></td>
-				<td><?php echo htmlspecialchars($cur_sale->customer->name); ?></td>
+				<td><a href="<?php echo pines_url('com_customer', 'customer/edit', array('id' => $cur_sale->customer->guid)); ?>"><?php echo htmlspecialchars($cur_sale->customer->name); ?></a></td>
 				<td>$<?php echo htmlspecialchars($cur_sale->subtotal); ?></td>
 				<td>$<?php echo htmlspecialchars($cur_sale->taxes); ?></td>
 				<td>$<?php echo htmlspecialchars($cur_sale->total); ?></td>

@@ -62,6 +62,15 @@ class com_content_category extends entity {
 	 * @return bool True on success, false on failure.
 	 */
 	public function delete() {
+		if (isset($this->parent)) {
+			$i = $this->array_search($this->parent->children);
+			unset($this->parent->children[$i]);
+			if (!$this->parent->save()) {
+				pines_log("Couldn't remove category from parent {$this->parent->name}.", 'error');
+				return false;
+			}
+			unset($this->parent);
+		}
 		foreach ($this->children as $cur_child) {
 			if (!$cur_child->delete()) {
 				pines_log("Failed to delete child category {$cur_child->name}.", 'error');
@@ -70,7 +79,7 @@ class com_content_category extends entity {
 		}
 		if (!parent::delete())
 			return false;
-		pines_log("Deleted category {$this->guid}.", 'notice');
+		pines_log("Deleted category {$this->name} [{$this->alias}].", 'notice');
 		return true;
 	}
 

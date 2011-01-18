@@ -75,7 +75,7 @@ if ($pines->config->com_content->show_cat_menus) {
 		if (!$category->children)
 			return;
 		foreach ($category->children as $cur_category) {
-			if (!$cur_category->ready())
+			if (!isset($cur_category) || !$cur_category->ready())
 				continue;
 			$pines->menu->menu_arrays[] = array(
 				'path' => "{$path}/cat_{$cur_category->guid}",
@@ -85,7 +85,7 @@ if ($pines->config->com_content->show_cat_menus) {
 
 			if ($cur_category->show_pages_in_menu) {
 				foreach ($cur_category->pages as $cur_page) {
-					if (!$cur_page->ready())
+					if (!isset($cur_page) || !$cur_page->ready())
 						continue;
 					// It's part of another menu.
 					$pines->menu->menu_arrays[] = array(
@@ -125,7 +125,7 @@ if ($pines->config->com_content->show_cat_menus) {
 
 		if ($cur_category->show_pages_in_menu) {
 			foreach ($cur_category->pages as $cur_page) {
-				if (!$cur_page->ready())
+				if (!isset($cur_page) || !$cur_page->ready())
 					continue;
 				// It's part of another menu.
 				$pines->menu->menu_arrays[] = array(

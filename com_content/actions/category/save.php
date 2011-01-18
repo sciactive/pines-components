@@ -54,6 +54,12 @@ foreach ($conditions as $cur_condition) {
 	$category->conditions[$cur_condition->values[0]] = $cur_condition->values[1];
 }
 
+// Run through children and make sure there are no null entries.
+foreach ($category->children as $key => $cur_child) {
+	if (!isset($cur_child))
+		unset($category->children[$key]);
+}
+
 // Do the check now in case the parent category is saved.
 if (empty($category->name)) {
 	$category->print_form();

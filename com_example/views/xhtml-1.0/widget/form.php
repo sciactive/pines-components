@@ -15,83 +15,83 @@ $this->note = 'Provide widget details in this form.';
 $pines->editor->load();
 $pines->com_pgrid->load();
 ?>
-<script type="text/javascript">
-	// <![CDATA[
-	pines(function(){
-		// Attributes
-		var attributes = $("#p_muid_tab_attributes input[name=attributes]");
-		var attributes_table = $("#p_muid_tab_attributes .attributes_table");
-		var attribute_dialog = $("#p_muid_tab_attributes .attribute_dialog");
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_example', 'widget/save')); ?>">
+	<script type="text/javascript">
+		// <![CDATA[
+		pines(function(){
+			// Attributes
+			var attributes = $("#p_muid_tab_attributes input[name=attributes]");
+			var attributes_table = $("#p_muid_tab_attributes .attributes_table");
+			var attribute_dialog = $("#p_muid_tab_attributes .attribute_dialog");
 
-		attributes_table.pgrid({
-			pgrid_paginate: false,
-			pgrid_toolbar: true,
-			pgrid_toolbar_contents : [
-				{
-					type: 'button',
-					text: 'Add Attribute',
-					extra_class: 'picon picon-list-add',
-					selection_optional: true,
-					click: function(){
-						attribute_dialog.dialog('open');
+			attributes_table.pgrid({
+				pgrid_paginate: false,
+				pgrid_toolbar: true,
+				pgrid_toolbar_contents : [
+					{
+						type: 'button',
+						text: 'Add Attribute',
+						extra_class: 'picon picon-list-add',
+						selection_optional: true,
+						click: function(){
+							attribute_dialog.dialog('open');
+						}
+					},
+					{
+						type: 'button',
+						text: 'Remove Attribute',
+						extra_class: 'picon picon-list-remove',
+						click: function(e, rows){
+							rows.pgrid_delete();
+							update_attributes();
+						}
+					}
+				],
+				pgrid_view_height: "300px"
+			});
+
+			// Attribute Dialog
+			attribute_dialog.dialog({
+				bgiframe: true,
+				autoOpen: false,
+				modal: true,
+				width: 500,
+				buttons: {
+					"Done": function(){
+						var cur_attribute_name = attribute_dialog.find("input[name=cur_attribute_name]").val();
+						var cur_attribute_value = attribute_dialog.find("input[name=cur_attribute_value]").val();
+						if (cur_attribute_name == "" || cur_attribute_value == "") {
+							alert("Please provide both a name and a value for this attribute.");
+							return;
+						}
+						var new_attribute = [{
+							key: null,
+							values: [
+								cur_attribute_name,
+								cur_attribute_value
+							]
+						}];
+						attributes_table.pgrid_add(new_attribute);
+						$(this).dialog('close');
 					}
 				},
-				{
-					type: 'button',
-					text: 'Remove Attribute',
-					extra_class: 'picon picon-list-remove',
-					click: function(e, rows){
-						rows.pgrid_delete();
-						update_attributes();
-					}
+				close: function(){
+					update_attributes();
 				}
-			],
-			pgrid_view_height: "300px"
+			});
+
+			var update_attributes = function(){
+				attribute_dialog.find("input[name=cur_attribute_name]").val("");
+				attribute_dialog.find("input[name=cur_attribute_value]").val("");
+				attributes.val(JSON.stringify(attributes_table.pgrid_get_all_rows().pgrid_export_rows()));
+			};
+
+			update_attributes();
+
+			$("#p_muid_widget_tabs").tabs();
 		});
-
-		// Attribute Dialog
-		attribute_dialog.dialog({
-			bgiframe: true,
-			autoOpen: false,
-			modal: true,
-			width: 500,
-			buttons: {
-				"Done": function(){
-					var cur_attribute_name = attribute_dialog.find("input[name=cur_attribute_name]").val();
-					var cur_attribute_value = attribute_dialog.find("input[name=cur_attribute_value]").val();
-					if (cur_attribute_name == "" || cur_attribute_value == "") {
-						alert("Please provide both a name and a value for this attribute.");
-						return;
-					}
-					var new_attribute = [{
-						key: null,
-						values: [
-							cur_attribute_name,
-							cur_attribute_value
-						]
-					}];
-					attributes_table.pgrid_add(new_attribute);
-					$(this).dialog('close');
-				}
-			},
-			close: function(){
-				update_attributes();
-			}
-		});
-
-		var update_attributes = function(){
-			attribute_dialog.find("input[name=cur_attribute_name]").val("");
-			attribute_dialog.find("input[name=cur_attribute_value]").val("");
-			attributes.val(JSON.stringify(attributes_table.pgrid_get_all_rows().pgrid_export_rows()));
-		};
-
-		update_attributes();
-
-		$("#p_muid_widget_tabs").tabs();
-	});
-	// ]]>
-</script>
-<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_example', 'widget/save')); ?>">
+		// ]]>
+	</script>
 	<div id="p_muid_widget_tabs" style="clear: both;">
 		<ul>
 			<li><a href="#p_muid_tab_general">General</a></li>

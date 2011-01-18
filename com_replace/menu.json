@@ -1,0 +1,25 @@
+[
+	{
+		"path": "main_menu/website/replacer",
+		"text": "Replacer",
+		"depend": {
+			"children": true
+		}
+	},
+		{
+			"path": "main_menu/website/replacer/replacements",
+			"text": "Replacements",
+			"href": ["com_replace","replacement/list"],
+			"depend": {
+				"ability": "com_replace/listreplacements"
+			}
+		},
+		{
+			"path": "main_menu/website/replacer/newreplacement",
+			"text": "New Replacement",
+			"href": ["com_replace","replacement/edit"],
+			"depend": {
+				"ability": "com_replace/newreplacement"
+			}
+		}
+]

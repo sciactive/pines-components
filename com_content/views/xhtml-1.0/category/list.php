@@ -58,6 +58,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			],
 			pgrid_sort_col: 1,
 			pgrid_sort_ord: 'asc',
+			pgrid_child_prefix: "ch_",
 			pgrid_state_change: function(state) {
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
@@ -87,7 +88,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->categories as $category) { ?>
-		<tr title="<?php echo $category->guid; ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? "child {$category->parent->guid} " : ''; ?>">
+		<tr title="<?php echo $category->guid; ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? "child ch_{$category->parent->guid} " : ''; ?>">
 			<td><?php echo isset($category->parent) ? $category->array_search($category->parent->children) + 1 : '0' ; ?></td>
 			<td><?php echo htmlspecialchars($category->name); ?></td>
 			<td><?php echo htmlspecialchars($category->alias); ?></td>

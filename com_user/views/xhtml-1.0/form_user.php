@@ -360,6 +360,7 @@ $pines->com_pgrid->load();
 								],
 								pgrid_sort_col: 2,
 								pgrid_sort_ord: "asc",
+								pgrid_child_prefix: "ch_",
 								pgrid_paginate: false,
 								pgrid_view_height: "300px"
 							});
@@ -379,7 +380,7 @@ $pines->com_pgrid->load();
 								</thead>
 								<tbody>
 								<?php foreach($this->group_array_secondary as $cur_group) { ?>
-									<tr title="<?php echo $cur_group->guid; ?>" class="<?php echo $cur_group->get_children() ? 'parent ' : ''; ?><?php echo (isset($cur_group->parent) && $cur_group->parent->in_array($this->group_array_secondary)) ? "child {$cur_group->parent->guid} " : ''; ?>">
+									<tr title="<?php echo $cur_group->guid; ?>" class="<?php echo $cur_group->get_children() ? 'parent ' : ''; ?><?php echo (isset($cur_group->parent) && $cur_group->parent->in_array($this->group_array_secondary)) ? "child ch_{$cur_group->parent->guid} " : ''; ?>">
 										<td><input type="checkbox" name="groups[]" value="<?php echo $cur_group->guid; ?>" <?php echo $cur_group->in_array($this->entity->groups) ? 'checked="checked" ' : ''; ?>/></td>
 										<td><?php echo htmlspecialchars($cur_group->name); ?></td>
 										<td><?php echo htmlspecialchars($cur_group->groupname); ?></td>

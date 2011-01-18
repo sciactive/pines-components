@@ -233,6 +233,7 @@ $pines->com_ptags->load();
 							pgrid_hidden_cols: [1],
 							pgrid_sort_col: 1,
 							pgrid_sort_ord: "asc",
+							pgrid_child_prefix: "ch_",
 							pgrid_paginate: false,
 							pgrid_view_height: "300px"
 						});
@@ -252,7 +253,7 @@ $pines->com_ptags->load();
 						<?php
 						$category_guids = $this->entity->get_categories_guid();
 						foreach($this->categories as $cur_category) { ?>
-						<tr title="<?php echo $cur_category->guid; ?>" class="<?php echo $cur_category->children ? 'parent ' : ''; ?><?php echo isset($cur_category->parent) ? "child {$cur_category->parent->guid} " : ''; ?>">
+						<tr title="<?php echo $cur_category->guid; ?>" class="<?php echo $cur_category->children ? 'parent ' : ''; ?><?php echo isset($cur_category->parent) ? "child ch_{$cur_category->parent->guid} " : ''; ?>">
 							<td><?php echo isset($cur_category->parent) ? $cur_category->array_search($cur_category->parent->children) + 1 : '0' ; ?></td>
 							<td><input type="checkbox" name="categories[]" value="<?php echo $cur_category->guid; ?>" <?php echo in_array($cur_category->guid, $category_guids) ? 'checked="checked" ' : ''; ?>/></td>
 							<td><?php echo htmlspecialchars($cur_category->name); ?></td>

@@ -55,6 +55,7 @@ foreach($this->groups as $cur_group) {
 			],
 			pgrid_sort_col: 2,
 			pgrid_sort_ord: 'asc',
+			pgrid_child_prefix: "ch_",
 			pgrid_state_change: function(state) {
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
@@ -85,7 +86,7 @@ foreach($this->groups as $cur_group) {
 		if (in_array($group->guid, $parents))
 			echo "parent ";
 		if (isset($group->parent) && $group->parent->in_array($this->groups))
-			echo "child {$group->parent->guid}";
+			echo "child ch_{$group->parent->guid}";
 		?>">
 			<td><?php echo $group->guid; ?></td>
 			<td><?php echo htmlspecialchars($group->groupname); ?></td>

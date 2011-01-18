@@ -111,6 +111,7 @@ if ($this->entity->final)
 				pgrid_hidden_cols: [1],
 				pgrid_sort_col: 1,
 				pgrid_sort_ord: "asc",
+				pgrid_child_prefix: "ch_",
 				pgrid_paginate: false,
 				pgrid_view_height: "300px",
 				pgrid_multi_select: false,
@@ -356,7 +357,7 @@ if ($this->entity->final)
 			</thead>
 			<tbody>
 			<?php foreach($this->categories as $category) { ?>
-				<tr title="<?php echo $category->guid; ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? "child {$category->parent->guid} " : ''; ?>">
+				<tr title="<?php echo $category->guid; ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? "child ch_{$category->parent->guid} " : ''; ?>">
 					<td><?php echo isset($category->parent) ? $category->array_search($category->parent->children) + 1 : '0' ; ?></td>
 					<td><?php echo htmlspecialchars($category->name); ?></td>
 					<td><?php echo count($category->products); ?></td>

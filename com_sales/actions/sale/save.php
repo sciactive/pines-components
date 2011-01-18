@@ -37,9 +37,9 @@ if ($pines->config->com_sales->com_customer && $sale->status != 'invoiced' && $s
 $product_error = false;
 // Used to check products which allow only one per ticket.
 $one_per_ticket_guids = array();
-$sale->warehouse_items = false;
-$sale->warehouse_complete = false;
 if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != 'voided') {
+	$sale->warehouse_items = false;
+	$sale->warehouse_complete = false;
 	$sale->products = (array) json_decode($_REQUEST['products']);
 	if (empty($sale->products)) {
 		pines_notice('No products were selected.');

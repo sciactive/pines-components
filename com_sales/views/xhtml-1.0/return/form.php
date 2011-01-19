@@ -817,8 +817,10 @@ if ($pines->config->com_sales->autocomplete_product)
 					)
 				);
 				echo addslashes(json_encode($object)); ?>");
-				
-				<?php if (!empty($cur_payment['data'])) { ?>
+
+				payments_table.pgrid_add([table_entry], function(){
+					var new_row = $(this).data("orig_key", <?php echo (int) $key; ?>);
+					<?php if (!empty($cur_payment['data'])) { ?>
 					var data = JSON.parse("<?php
 					$data = array();
 					foreach ($cur_payment['data'] as $cur_key => $cur_value) {
@@ -828,14 +830,9 @@ if ($pines->config->com_sales->autocomplete_product)
 						'processing_type' => $cur_payment['entity']->processing_type,
 						'data' => $data
 					))); ?>");
-					payments_table.pgrid_add([table_entry], function(){
-						$(this).data("orig_key", <?php echo (int) $key; ?>).data("payment_data", data);
-					});
-				<?php } else { ?>
-					payments_table.pgrid_add([table_entry], function(){
-						$(this).data("orig_key", <?php echo (int) $key; ?>);
-					});
-				<?php } ?>
+					new_row.data("payment_data", data);
+					<?php } ?>
+				});
 			})();
 			<?php } } ?>
 

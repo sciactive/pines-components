@@ -87,26 +87,6 @@ if ($return->status != 'processed' && $return->status != 'voided') {
 			}
 			if ($cur_product_entity->serialized)
 				$cur_qty = 1;
-			if ($cur_product_entity->serialized && empty($cur_serial)) {
-				pines_notice("Product with SKU [$cur_sku] requires a serial.");
-				$product_error = true;
-			}
-			if ($cur_qty < 1) {
-				pines_notice("Product with SKU [$cur_sku] has a zero or negative quantity.");
-				$product_error = true;
-			}
-			if ($cur_product_entity->pricing_method != 'variable' && $cur_product_entity->unit_price != $cur_price) {
-				pines_notice("Product with SKU [$cur_sku] has an incorrect price.");
-				$product_error = true;
-			}
-			if (!$cur_product_entity->discountable && !empty($cur_discount)) {
-				pines_notice("Product with SKU [$cur_sku] is not discountable.");
-				$product_error = true;
-			}
-			if (!gatekeeper('com_sales/discountstock') && !empty($cur_discount)) {
-				pines_notice('You don\'t have permission to discount items.');
-				$product_error = true;
-			}
 			if (isset($return->sale)) {
 				// Search through the products from the sale and find the entry that matches.
 				// TODO: Will this cause problems with matching items that have different quantities?
@@ -141,6 +121,26 @@ if ($return->status != 'processed' && $return->status != 'voided') {
 					'return_checklists' => $cur_return_checklists,
 					'salesperson' => $cur_salesperson
 				);
+			}
+			if ($cur_product_entity->serialized && empty($cur_serial) && $cur_product['delivery'] != 'warehouse') {
+				pines_notice("Product with SKU [$cur_sku] requires a serial.");
+				$product_error = true;
+			}
+			if ($cur_qty < 1) {
+				pines_notice("Product with SKU [$cur_sku] has a zero or negative quantity.");
+				$product_error = true;
+			}
+			if ($cur_product_entity->pricing_method != 'variable' && $cur_product_entity->unit_price != $cur_price) {
+				pines_notice("Product with SKU [$cur_sku] has an incorrect price.");
+				$product_error = true;
+			}
+			if (!$cur_product_entity->discountable && !empty($cur_discount)) {
+				pines_notice("Product with SKU [$cur_sku] is not discountable.");
+				$product_error = true;
+			}
+			if (!gatekeeper('com_sales/discountstock') && !empty($cur_discount)) {
+				pines_notice('You don\'t have permission to discount items.');
+				$product_error = true;
 			}
 		}
 		unset($cur_product);

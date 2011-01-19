@@ -29,11 +29,6 @@ if (!$sale->warehouse_items) {
 }
 
 $stock_entries = (array) json_decode($_REQUEST['products'], true);
-if (!$stock_entries) {
-	pines_notice('No valid stock entries provided.');
-	$sale->print_warehouse();
-	return;
-}
 
 $guids = array();
 foreach ($stock_entries as $cur_entry) {
@@ -82,8 +77,11 @@ foreach ($stock_entries as $cur_entry) {
 		pines_notice('Stock doesn\'t match product on the sale. Item is being skipped.');
 		continue;
 	}
+	// Calculate quantity and fulfilled.
+	$quantity = $sale->products[$key]['quantity'] - (int) $sale->products[$key]['returned_quantity'];
+	$fulfilled = count($sale->products[$key]['stock_entities']) - count((array) $sale->products[$key]['returned_stock_entities']);
 	// Check the quantity.
-	if ($sale->products[$key]['quantity'] <= count($sale->products[$key]['stock_entities'])) {
+	if ($quantity <= $fulfilled) {
 		pines_notice('This product is already fulfilled. Item is being skipped.');
 		continue;
 	}
@@ -114,7 +112,10 @@ $sale->warehouse_complete = true;
 foreach ($sale->products as &$cur_product) {
 	if ($cur_product['delivery'] != 'warehouse')
 		continue;
-	if ($cur_product['quantity'] <= count($cur_product['stock_entities'])) {
+	// Calculate quantity and fulfilled.
+	$quantity = $cur_product['quantity'] - (int) $cur_product['returned_quantity'];
+	$fulfilled = count($cur_product['stock_entities']) - count((array) $cur_product['returned_stock_entities']);
+	if ($quantity <= $fulfilled) {
 		$cur_product['delivery'] = 'shipped';
 		$cur_product['was_warehouse'] = true;
 		// There are shippable items now.
@@ -130,7 +131,7 @@ if ($sale->save()) {
 		pines_notice('Fulfilled sale ['.$sale->id.']. It can now be completely shipped.');
 		redirect(pines_url('com_sales', 'stock/shipments'));
 	} else {
-		pines_notice('Partially fulfilled sale ['.$sale->id.']. Fulfilled items can now be shipped.');
+		pines_notice('Partially fulfilled sale ['.$sale->id.']. Fulfilled products can now be shipped.');
 		redirect(pines_url('com_sales', 'warehouse/fulfill'));
 	}
 } else {

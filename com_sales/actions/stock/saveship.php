@@ -75,8 +75,22 @@ if (!$entity->warehouse_items || $entity->warehouse_complete) {
 	foreach ($entity->products as $cur_product) {
 		if ($cur_product['delivery'] != 'shipped')
 			continue;
+		// Calculate included stock entries.
+		$stock_entries = $cur_product['stock_entities'];
+		$shipped_stock_entries = (array) $cur_product['shipped_entities'];
+		foreach ((array) $cur_product['returned_stock_entities'] as $cur_stock_entity) {
+			$i = $cur_stock_entity->array_search($stock_entries);
+			if (isset($i))
+				unset($stock_entries[$i]);
+			// If it's still in there, it was entered on the sale twice (fulfilled after returned once), so don't remove it from shipped.
+			if (!$cur_stock_entity->in_array($stock_entries)) {
+				$i = $cur_stock_entity->array_search($shipped_stock_entries);
+				if (isset($i))
+					unset($shipped_stock_entries[$i]);
+			}
+		}
 		// If shipped entities is less than stock entities, there are still products to ship.
-		if (count((array) $cur_product['shipped_entities']) < count($cur_product['stock_entities'])) {
+		if (count($shipped_stock_entries) < count($stock_entries)) {
 			$all_shipped = false;
 			break;
 		}

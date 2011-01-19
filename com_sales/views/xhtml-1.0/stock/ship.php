@@ -151,21 +151,36 @@ $this->note = 'Provide shipment details in this form.';
 			<?php foreach ($this->entity->products as $key => $cur_product) {
 				if ($cur_product['delivery'] != 'shipped')
 					continue;
-				if (count((array) $cur_product['shipped_entities']) >= count($cur_product['stock_entities']))
+				// Calculate included stock entries.
+				$stock_entries = $cur_product['stock_entities'];
+				$shipped_stock_entries = (array) $cur_product['shipped_entities'];
+				foreach ((array) $cur_product['returned_stock_entities'] as $cur_stock_entity) {
+					$i = $cur_stock_entity->array_search($stock_entries);
+					if (isset($i))
+						unset($stock_entries[$i]);
+					// If it's still in there, it was entered on the sale twice (fulfilled after returned once), so don't remove it from shipped.
+					if (!$cur_stock_entity->in_array($stock_entries)) {
+						$i = $cur_stock_entity->array_search($shipped_stock_entries);
+						if (isset($i))
+							unset($shipped_stock_entries[$i]);
+					}
+				}
+				// Is the product already shipped?
+				if (count($shipped_stock_entries) >= count($stock_entries))
 					continue;
 				?>
 		<div class="pf-element product">
 			<div class="key" style="display: none"><?php echo $key; ?></div>
 			<span class="pf-label"><?php echo htmlspecialchars($cur_product['entity']->name); ?> [SKU: <?php echo htmlspecialchars($cur_product['entity']->sku); ?>]</span>
-			<span class="pf-note">x <span class="ship_quantity"><?php echo htmlspecialchars($cur_product['quantity'] - count((array) $cur_product['shipped_entities'])); ?></span></span>
+			<span class="pf-note">x <span class="ship_quantity"><?php echo htmlspecialchars(count($stock_entries) - count($shipped_stock_entries)); ?></span></span>
 			<div class="pf-group">
 				<div class="pf-field">
 					<?php if (!empty($cur_product['entity']->receipt_description)) { ?>
 					<div><?php echo htmlspecialchars($cur_product['entity']->receipt_description); ?></div>
 					<?php } ?>
 					<div style="font-size: .9em;">Itemized Breakdown:</div>
-					<?php $i = 1; foreach ($cur_product['stock_entities'] as $stock_key => $cur_stock) {
-						if ($cur_stock->in_array((array) $cur_product['shipped_entities']))
+					<?php $i = 1; foreach ($stock_entries as $stock_key => $cur_stock) {
+						if ($cur_stock->in_array($shipped_stock_entries))
 							continue;
 						?>
 					<div class="ui-widget-content ui-corner-all item_box" style="float: left; font-size: .8em; padding: .4em; margin: 0 .4em .4em 0;">

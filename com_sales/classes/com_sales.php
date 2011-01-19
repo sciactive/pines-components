@@ -1252,7 +1252,8 @@ class com_sales extends component {
 				if (!isset($cur_product['entity']->guid))
 					continue;
 				if ($cur_product['delivery'] == 'warehouse') {
-					$count = $cur_product['quantity'] - count($cur_product['stock_entities']);
+					// Calculate number of warehouse items left to be fulfilled.
+					$count = ($cur_product['quantity'] - (int) $cur_product['returned_quantity']) - (count($cur_product['stock_entities']) - count((array) $cur_product['returned_stock_entities']));
 					if ($count <= 0)
 						continue;
 					for ($i = 0; $i < $count; $i++) {

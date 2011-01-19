@@ -253,7 +253,7 @@ class com_sales_return extends entity {
 				$cur_product['stock_entities'] = array();
 			} else {
 				if (isset($this->sale)) {
-					$cur_product['stock_entities'] = array_slice($cur_product['stock_entities'], 0, (int) $cur_product['quantity']);
+					$cur_product['stock_entities'] = array_slice((array) $cur_product['stock_entities'], 0, (int) $cur_product['quantity']);
 				} else {
 					for ($i = 0; $i < $cur_product['quantity']; $i++) {
 						$stock = com_sales_stock::factory();
@@ -300,6 +300,17 @@ class com_sales_return extends entity {
 				$this->sale->products[$cur_product['sale_key']]['returned_quantity'] += $cur_product['quantity'];
 			}
 			unset($cur_product);
+			if ($this->sale->warehouse_items) {
+				$this->sale->warehouse_items = false;
+				foreach ($this->sale->products as &$cur_product) {
+					// If the product's warehouse item count is greater than the returned quantity, it still needs to be fulfilled.
+					if ($cur_product['delivery'] == 'warehouse' && $cur_product['returned_quantity'] < ($cur_product['quantity'] - (count($cur_product['stock_entities']) - count((array) $cur_product['returned_stock_entities'])))) {
+						$this->sale->warehouse_items = true;
+						break;
+					}
+				}
+				unset($cur_product);
+			}
 			$return = $this->sale->save() && $return;
 		}
 

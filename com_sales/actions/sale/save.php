@@ -77,6 +77,16 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != '
 			}
 			if ($cur_product_entity->serialized)
 				$cur_qty = 1;
+			$cur_product = array(
+				'entity' => $cur_product_entity,
+				'sku' => $cur_sku,
+				'serial' => $cur_serial,
+				'delivery' => $cur_delivery,
+				'quantity' => $cur_qty,
+				'price' => $cur_price,
+				'discount' => $cur_discount,
+				'salesperson' => $cur_salesperson
+			);
 			if ($cur_product_entity->serialized && empty($cur_serial) && $cur_delivery != 'warehouse') {
 				pines_notice("Product with SKU [$cur_sku] requires a serial.");
 				$product_error = true;
@@ -113,16 +123,6 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != '
 			}
 			if ($cur_delivery == 'warehouse')
 				$sale->warehouse_items = true;
-			$cur_product = array(
-				'entity' => $cur_product_entity,
-				'sku' => $cur_sku,
-				'serial' => $cur_serial,
-				'delivery' => $cur_delivery,
-				'quantity' => $cur_qty,
-				'price' => $cur_price,
-				'discount' => $cur_discount,
-				'salesperson' => $cur_salesperson
-			);
 		}
 		unset($cur_product);
 	}

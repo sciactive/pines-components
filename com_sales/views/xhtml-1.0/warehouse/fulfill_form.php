@@ -253,9 +253,16 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 		<?php foreach ($this->entity->products as $cur_key => $cur_product) {
 			if ($cur_product['delivery'] != 'warehouse')
 				continue;
+			// Is the product returned?
+			if ((int) $cur_product['returned_quantity'] >= $cur_product['quantity'])
+				continue;
+			// Calculate quantity.
+			$quantity = $cur_product['quantity'] - (int) $cur_product['returned_quantity'];
+			// Calculate fulfilled.
+			$fulfilled = count($cur_product['stock_entities']) - count((array) $cur_product['returned_stock_entities']);
 			?>
 		<div class="pf-element product_entry <?php echo $cur_product['entity']->serialized ? 'serial' : 'nonserial'; ?>">
-			<span class="pf-label"><?php echo htmlspecialchars($cur_product['entity']->name); ?> <small>x <span class="qty"><?php echo htmlspecialchars($cur_product['quantity']); ?></span><span class="qty_left" style="display: none;"><?php echo $cur_product['quantity'] - count($cur_product['stock_entities']); ?></span> (<span class="qty_done"><?php echo count($cur_product['stock_entities']); ?></span> already fulfilled)</small></span>
+			<span class="pf-label"><?php echo htmlspecialchars($cur_product['entity']->name); ?> <small>x <span class="qty"><?php echo htmlspecialchars($quantity); ?></span><span class="qty_left" style="display: none;"><?php echo $quantity - $fulfilled; ?></span> (<span class="qty_done"><?php echo $fulfilled; ?></span> already fulfilled)</small></span>
 			<span class="pf-note">SKU: <?php echo htmlspecialchars($cur_product['entity']->sku); ?>, <?php echo $cur_product['entity']->serialized ? 'Serialized' : 'Non-Serialized'; ?></span>
 			<a href="javascript:void(0);" class="pf-field fulfill">Fulfill</a>
 			<div class="pf-group">

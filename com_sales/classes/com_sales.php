@@ -264,9 +264,9 @@ class com_sales extends component {
 		$module = new module('com_sales', 'cashcount/list', 'content');
 
 		if (!isset($start_date))
-			$start_date = strtotime('-1 week 00:00');
+			$start_date = strtotime('-1 week 00:00:00');
 		if (!isset($end_date))
-			$end_date = strtotime('23:59');
+			$end_date = strtotime('23:59:59') + 1;
 		if (!isset($location->guid))
 			$location = $_SESSION['user']->group;
 		$selector = array('|',
@@ -288,7 +288,7 @@ class com_sales extends component {
 				array('&',
 					'tag' => array('com_sales', 'cashcount'),
 					'gte' => array('p_cdate', (int) $start_date),
-					'lte' => array('p_cdate', (int) $end_date)
+					'lt' => array('p_cdate', (int) $end_date)
 				)
 			);
 		$form->start_date = $start_date;
@@ -344,7 +344,7 @@ class com_sales extends component {
 		if (isset($start_date))
 			$selector['gte'] = array('p_cdate', (int) $start_date);
 		if (isset($end_date))
-			$selector['lte'] = array('p_cdate', (int) $end_date);
+			$selector['lt'] = array('p_cdate', (int) $end_date);
 		if (!isset($location->guid))
 			$location = $_SESSION['user']->group;
 		if (!gatekeeper('com_sales/approvecountsheet'))
@@ -481,7 +481,7 @@ class com_sales extends component {
 		if (isset($start_date))
 			$selector['gte'] = array('p_cdate', (int) $start_date);
 		if (isset($end_date))
-			$selector['lte'] = array('p_cdate', (int) $end_date);
+			$selector['lt'] = array('p_cdate', (int) $end_date);
 		if (!isset($location))
 			$location = $_SESSION['user']->group;
 		if ($descendents)
@@ -515,7 +515,7 @@ class com_sales extends component {
 		if (isset($start_date))
 			$selector['gte'] = array('p_cdate', (int) $start_date);
 		if (isset($end_date))
-			$selector['lte'] = array('p_cdate', (int) $end_date);
+			$selector['lt'] = array('p_cdate', (int) $end_date);
 		if (!isset($location))
 			$location = $_SESSION['user']->group;
 		if ($descendents)
@@ -949,7 +949,7 @@ class com_sales extends component {
 		if (isset($start_date))
 			$secondary_options['gte'] = array('p_cdate', (int) $start_date);
 		if (isset($end_date))
-			$secondary_options['lte'] = array('p_cdate', (int) $end_date);
+			$secondary_options['lt'] = array('p_cdate', (int) $end_date);
 		$module->start_date = $start_date;
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));

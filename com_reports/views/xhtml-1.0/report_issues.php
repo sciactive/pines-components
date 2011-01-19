@@ -52,7 +52,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		// Timespan Defaults
 		var all_time = <?php echo $this->all_time ? 'true' : 'false'; ?>;
 		var start_date = "<?php echo $this->start_date ? addslashes(format_date($this->start_date, 'date_sort')) : ''; ?>";
-		var end_date = "<?php echo $this->end_date ? addslashes(format_date($this->end_date, 'date_sort')) : ''; ?>";
+		var end_date = "<?php echo $this->end_date ? addslashes(format_date($this->end_date - 1, 'date_sort')) : ''; ?>";
 		// Location Defaults
 		var location = "<?php echo $this->location->guid; ?>";
 		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;

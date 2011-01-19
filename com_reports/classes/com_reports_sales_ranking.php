@@ -27,8 +27,8 @@ class com_reports_sales_ranking extends entity {
 		$this->add_tag('com_reports', 'sales_ranking');
 		// Defaults.
 		$this->goals = array();
-		$this->start_date = strtotime('first day');
-		$this->end_date = strtotime('last day');
+		$this->start_date = strtotime(date('m/01/Y 00:00:00'));
+		$this->end_date = strtotime('+1 month 00:00:00', $this->start_date);
 		$this->top_location = $_SESSION['user']->group;
 		if ($id > 0) {
 			global $pines;
@@ -106,14 +106,14 @@ class com_reports_sales_ranking extends entity {
 
 		// Date setup for different weekly and monthly breakdowns.
 		if (format_date(time(), 'custom', 'w') == '1') {
-			$current_start = strtotime('00:00', time());
+			$current_start = strtotime('00:00:00', time());
 		} else {
-			$current_start = strtotime('00:00', strtotime('last Monday'));
+			$current_start = strtotime('00:00:00', strtotime('last Monday'));
 		}
 		if (format_date(time(), 'custom', 'w') == '0') {
-			$current_end = strtotime('23:59', time());
+			$current_end = strtotime('23:59:59', time()) + 1;
 		} else {
-			$current_end = strtotime('23:59', strtotime('next Sunday'));
+			$current_end = strtotime('23:59:59', strtotime('next Sunday')) + 1;
 		}
 		if ($this->end_date > time()) {
 			$days_passed = (int) format_date(time(), 'custom', 'j');
@@ -121,8 +121,8 @@ class com_reports_sales_ranking extends entity {
 		} else {
 			$days_passed = (int) format_date($this->end_date, 'custom', 'j');
 			$days_in_month = (int) format_date($this->end_date, 'custom', 't');
-			$current_start = strtotime('00:00', strtotime('last Monday', $this->end_date));
-			$current_end = strtotime('23:59', $this->end_date);
+			$current_start = strtotime('00:00:00', strtotime('last Monday', $this->end_date));
+			$current_end = strtotime('23:59:59', $this->end_date) + 1;
 		}
 		$last_start = strtotime('-1 week', $current_start);
 		$last_end = strtotime('+1 week', $last_start);
@@ -158,7 +158,7 @@ class com_reports_sales_ranking extends entity {
 						'tag' => array('com_sales', 'sale'),
 						'data' => array('status', 'paid'),
 						'gte' => array('tender_date', $this->start_date),
-						'lte' => array('tender_date', $this->end_date),
+						'lt' => array('tender_date', $this->end_date),
 						'ref' => array('user', $cur_employee)
 					)
 				);

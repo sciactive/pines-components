@@ -28,16 +28,16 @@ if (preg_match('/\d{4}-\d{2}-\d{2}/', $_REQUEST['date_start'])) {
 	$date_start = strtotime('00:00:00');
 }
 if (preg_match('/\d{4}-\d{2}-\d{2}/', $_REQUEST['date_end'])) {
-	$date_end = strtotime($_REQUEST['date_end'].' 23:59:59');
+	$date_end = strtotime($_REQUEST['date_end'].' 23:59:59') + 1;
 } else {
-	$date_end = strtotime('23:59:59');
+	$date_end = strtotime('23:59:59') + 1;
 }
 
 // Build the entity query.
 $selector = array('&',
 	'tag' => array('com_sales', 'transaction'),
 	'gte' => array('p_cdate', $date_start),
-	'lte' => array('p_cdate', $date_end)
+	'lt' => array('p_cdate', $date_end)
 );
 $or = array('|', 'ref' => array('group', $location->get_descendents(true)));
 
@@ -128,7 +128,7 @@ if (empty($tx_array)) {
 	$return = array(
 		'location' => "{$location->name} [{$location->groupname}]",
 		'date_start' => format_date($date_start, 'date_long'),
-		'date_end' => format_date($date_end, 'date_long'),
+		'date_end' => format_date($date_end - 1, 'date_long'),
 		'invoices' => $invoice_array,
 		'sales' => $sale_array,
 		'sales_user' => $sale_array_user,

@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 $this->title = 'Employee Attendance: '.($this->employee ? $this->employee->name : $this->location->name);
 if (!$this->all_time)
-	$this->note = format_date($this->start_date, 'date_short').' - '.format_date($this->end_date, 'date_short');
+	$this->note = format_date($this->start_date, 'date_short').' - '.format_date($this->end_date - 1, 'date_short');
 
 $pines->com_jstree->load();
 $pines->com_pgrid->load();
@@ -46,7 +46,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		// Timespan Defaults
 		var all_time = <?php echo $this->all_time ? 'true' : 'false'; ?>;
 		var start_date = "<?php echo $this->start_date ? addslashes(format_date($this->start_date, 'date_sort')) : ''; ?>";
-		var end_date = "<?php echo $this->end_date ? addslashes(format_date($this->end_date, 'date_sort')) : ''; ?>";
+		var end_date = "<?php echo $this->end_date ? addslashes(format_date($this->end_date - 1, 'date_sort')) : ''; ?>";
 		// Location Defaults
 		var location = "<?php echo $this->location->guid; ?>";
 		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
@@ -60,7 +60,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', title: 'Timespan', extra_class: 'picon picon-view-time-schedule', selection_optional: true, click: function(){attendance_grid.date_form();}},
 				{type: 'separator'},
 				<?php if (isset($this->employees)) { ?>
-				{type: 'button', text: 'View', extra_class: 'picon picon-user-identity', double_click: true, url: '<?php echo addslashes(pines_url('com_reports', 'reportattendance', array('employee' => '__title__', 'start_date' => format_date($this->start_date, 'date_sort'), 'end_date' => format_date($this->end_date, 'date_sort'), 'all_time' => ($this->all_time ? 'true' : 'false'), 'location' => $this->location->guid, 'descendents' => $this->descendents ? 'true' : 'false'), false)); ?>'},
+				{type: 'button', text: 'View', extra_class: 'picon picon-user-identity', double_click: true, url: '<?php echo addslashes(pines_url('com_reports', 'reportattendance', array('employee' => '__title__', 'start_date' => format_date($this->start_date, 'date_sort'), 'end_date' => format_date($this->end_date - 1, 'date_sort'), 'all_time' => ($this->all_time ? 'true' : 'false'), 'location' => $this->location->guid, 'descendents' => $this->descendents ? 'true' : 'false'), false)); ?>'},
 				{type: 'separator'},
 				<?php } else { ?>
 				{type: 'button', text: '&laquo; All Employees', extra_class: 'picon picon-system-users', selection_optional: true, click: function(){
@@ -194,7 +194,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					array('&',
 						'tag' => array('com_calendar', 'event'),
 						'gte' => array('start', $this->start_date),
-						'lte' => array('end', $this->end_date),
+						'lt' => array('end', $this->end_date),
 						'ref' => array('employee', $cur_employee)
 					)
 				);
@@ -252,8 +252,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				($entry['out'] <= $this->end_date || !isset($entry['out']))) ) {
 				if ($dates[$date_count]['date'] != format_date($entry['in'], 'date_sort')) {
 					$date_count++;
-					$dates[$date_count]['start'] = strtotime('00:00', $entry['in']);
-					$dates[$date_count]['end'] = strtotime('23:59', $entry['out']);
+					$dates[$date_count]['start'] = strtotime('00:00:00', $entry['in']);
+					$dates[$date_count]['end'] = strtotime('23:59:59', $entry['out']) + 1;
 					$dates[$date_count]['date'] = format_date($entry['in'], 'date_sort');
 					$dates[$date_count]['scheduled'] = 0;
 					$dates[$date_count]['total'] = 0;
@@ -271,7 +271,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					array('&',
 						'tag' => array('com_calendar', 'event'),
 						'gte' => array('start', $cur_date['start']),
-						'lte' => array('end', $cur_date['end']),
+						'lt' => array('end', $cur_date['end']),
 						'ref' => array('employee', $this->employee)
 					)
 				);

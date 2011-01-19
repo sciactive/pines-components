@@ -93,7 +93,7 @@ class com_reports extends component {
 		if (isset($start_date))
 			$selector['gte'] = array('p_cdate', (int) $start_date);
 		if (isset($end_date))
-			$selector['lte'] = array('p_cdate', (int) $end_date);
+			$selector['lt'] = array('p_cdate', (int) $end_date);
 		$module->start_date = $start_date;
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
@@ -134,7 +134,7 @@ class com_reports extends component {
 		if (isset($start_date))
 			$selector['gte'] = array('p_cdate', (int) $start_date);
 		if (isset($end_date))
-			$selector['lte'] = array('p_cdate', (int) $end_date);
+			$selector['lt'] = array('p_cdate', (int) $end_date);
 		$module->start_date = $start_date;
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
@@ -175,7 +175,7 @@ class com_reports extends component {
 		if (isset($start_date))
 			$selector['gte'] = array('p_cdate', (int) $start_date);
 		if (isset($end_date))
-			$selector['lte'] = array('p_cdate', (int) $end_date);
+			$selector['lt'] = array('p_cdate', (int) $end_date);
 		$module->start_date = $start_date;
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
@@ -249,7 +249,7 @@ class com_reports extends component {
 		if (isset($start_date))
 			$selector['gte'] = array('p_cdate', (int) $start_date);
 		if (isset($end_date))
-			$selector['lte'] = array('p_cdate', (int) $end_date);
+			$selector['lt'] = array('p_cdate', (int) $end_date);
 		$module->start_date = $start_date;
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
@@ -286,7 +286,7 @@ class com_reports extends component {
 		if (isset($start_date))
 			$selector['gte'] = array('p_cdate', (int) $start_date);
 		if (isset($end_date))
-			$selector['lte'] = array('p_cdate', (int) $end_date);
+			$selector['lt'] = array('p_cdate', (int) $end_date);
 		//$selector['match'] = array('payments', 'MiFi');
 		$module->start_date = $start_date;
 		$module->end_date = $end_date;
@@ -324,7 +324,7 @@ class com_reports extends component {
 		if (isset($start_date))
 			$selector['gte'] = array('p_cdate', (int) $start_date);
 		if (isset($end_date))
-			$selector['lte'] = array('p_cdate', (int) $end_date);
+			$selector['lt'] = array('p_cdate', (int) $end_date);
 		$module->start_date = $start_date;
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
@@ -370,7 +370,7 @@ class com_reports extends component {
 		if (isset($start_date))
 			$selector['gte'] = array('p_cdate', (int) $start_date);
 		if (isset($end_date))
-			$selector['lte'] = array('p_cdate', (int) $end_date);
+			$selector['lt'] = array('p_cdate', (int) $end_date);
 		$module->start_date = $start_date;
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
@@ -408,10 +408,10 @@ class com_reports extends component {
 		$selector = array('&', 'tag' => array('com_sales', 'transaction', 'sale_tx'));
 		$or = array();
 		// Datespan of the report.
-		$date_start = strtotime('00:00', $start);
-		$date_end = strtotime('23:59', $end);
+		$date_start = strtotime('00:00:00', $start);
+		$date_end = strtotime('23:59:59', $end) + 1;
 		$selector['gte'] = array('p_cdate', $date_start);
-		$selector['lte'] = array('p_cdate', $date_end);
+		$selector['lt'] = array('p_cdate', $date_end);
 		$module->date[0] = $form->date[0] = $date_start;
 		$module->date[1] = $form->date[1] = $date_end;
 		// Employee and location of the report.

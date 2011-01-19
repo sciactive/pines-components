@@ -70,7 +70,7 @@ $pines->com_jstree->load();
 	</div>
 	<div class="pf-element">
 		<span class="pf-note">End</span>
-		<input class="pf-field ui-widget-content ui-corner-all form_date" type="text" name="end_date" value="<?php echo ($this->end_date) ? format_date($this->end_date, 'date_sort') : format_date(time(), 'date_sort'); ?>" />
+		<input class="pf-field ui-widget-content ui-corner-all form_date" type="text" name="end_date" value="<?php echo ($this->end_date) ? format_date($this->end_date - 1, 'date_sort') : format_date(time(), 'date_sort'); ?>" />
 	</div>
 	<div class="pf-element">
 		<input type="hidden" name="location" />

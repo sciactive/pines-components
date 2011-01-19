@@ -27,15 +27,10 @@ class com_sales_countsheet extends entity {
 		$this->add_tag('com_sales', 'countsheet');
 		// Defaults
 		$this->status = 'pending';
-		$this->entries = array();
-		$this->matched = array();
-		$this->matched_count = array();
-		$this->matched_serials = array();
-		$this->missing = array();
-		$this->missing_count = array();
-		$this->missing_serials = array();
-		$this->potential = array();
-		$this->invalid = array();
+		$this->entries = $this->search_strings = array();
+		$this->matched = $this->missing = $this->potential = $this->invalid = array();
+		$this->matched_count = $this->missing_count = array();
+		$this->matched_serials = $this->missing_serials = array();
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));

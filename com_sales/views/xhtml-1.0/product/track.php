@@ -210,7 +210,8 @@ $pines->com_jstree->load();
 			<th>Product</th>
 			<th>Location</th>
 			<th>Transaction #</th>
-			<th>Transaction</th>
+			<th>Type</th>
+			<th>Status</th>
 			<th>Qty</th>
 			<th>Serials</th>
 		</tr>
@@ -269,6 +270,7 @@ $pines->com_jstree->load();
 			<td><?php echo htmlspecialchars($cur_transaction->product->name); ?></td>
 			<td><?php echo $groupname; ?></td>
 			<td><a href="<?php echo $link; ?>" onclick="window.open(this.href); return false;"><?php echo $cur_transaction->entity->guid; ?></a></td>
+			<td><?php echo ucwords($cur_transaction->type); ?></td>
 			<td><?php echo htmlspecialchars($cur_transaction->transaction_info); ?></td>
 			<td><?php echo htmlspecialchars($quantity); ?></td>
 			<td><?php echo htmlspecialchars($serials); ?></td>

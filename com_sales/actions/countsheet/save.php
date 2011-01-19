@@ -29,8 +29,10 @@ if ( isset($_REQUEST['id']) ) {
 	$countsheet = com_sales_countsheet::factory();
 }
 
+$countsheet->search_strings = array();
 $countsheet->entries = (array) json_decode($_REQUEST['entries']);
 foreach ($countsheet->entries as &$cur_entry) {
+	$countsheet->search_strings[] = $cur_entry->values[0];
 	$cur_entry = (object) array(
 		'code' => trim((string) $cur_entry->values[0]),
 		'qty' => (int) $cur_entry->values[1]

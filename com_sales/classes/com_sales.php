@@ -1157,7 +1157,7 @@ class com_sales extends component {
 						$cur_type = 'countsheet';
 					}
 					$module->transactions[$cur_tx->guid] = (object) array(
-						'product' => $cur_stock->product,
+						'product' => $product,
 						'type' => $cur_type,
 						'entity' => $cur_tx,
 						'transaction_info' => $tx_info,

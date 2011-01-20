@@ -27,6 +27,12 @@ class com_myentity extends component implements entity_manager_interface {
 	 */
 	private $entity_cache = array();
 	/**
+	 * A counter for the entity cache to determine the most accessed entities.
+	 * @access private
+	 * @var array
+	 */
+	private $entity_count = array();
+	/**
 	 * Sort case sensitively.
 	 * @access private
 	 * @var bool
@@ -918,6 +924,10 @@ class com_myentity extends component implements entity_manager_interface {
 	 * @access private
 	 */
 	private function pull_cache($guid, $class) {
+		// Increment the entity access count.
+		if (!isset($this->entity_count[$guid]))
+			$this->entity_count[$guid] = 0;
+		$this->entity_count[$guid]++;
 		if (isset($this->entity_cache[$guid][$class]))
 			return (clone $this->entity_cache[$guid][$class]);
 		return null;
@@ -933,12 +943,24 @@ class com_myentity extends component implements entity_manager_interface {
 		global $pines;
 		if (!isset($entity->guid))
 			return;
+		// Increment the entity access count.
+		if (!isset($this->entity_count[$entity->guid]))
+			$this->entity_count[$entity->guid] = 0;
+		$this->entity_count[$entity->guid]++;
+		// Cache the entity.
 		if ((array) $this->entity_cache[$entity->guid] === $this->entity_cache[$entity->guid]) {
 			$this->entity_cache[$entity->guid][$class] = clone $entity;
 		} else {
 			while ($pines->config->com_myentity->cache_limit && count($this->entity_cache) >= $pines->config->com_myentity->cache_limit) {
-				reset($this->entity_cache);
-				unset($this->entity_cache[key($this->entity_cache)]);
+				// Find which entity has been accessed the least.
+				asort($this->entity_count);
+				foreach ($this->entity_count as $key => $val) {
+					if (isset($this->entity_cache[$key]))
+						break;
+				}
+				// Remove it.
+				if (isset($this->entity_cache[$key]))
+					unset($this->entity_cache[$key]);
 			}
 			$this->entity_cache[$entity->guid] = array($class => (clone $entity));
 		}

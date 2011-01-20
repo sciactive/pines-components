@@ -18,6 +18,6 @@ $employee = com_hrm_employee::factory((int)$_REQUEST['employee']);
 if (!isset($employee->guid))
 	return;
 
-$employee->schedule_form();
+$pines->com_calendar->schedule_form($employee);
 
 ?>

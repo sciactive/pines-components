@@ -88,14 +88,17 @@ $pines->com_ptags->load();
 		});
 	};
 
-	<?php if (gatekeeper('com_calendar/editcalendar')) { ?>
 	// Create a new event.
-	pines.com_calendar_new_event = function(){
+	pines.com_calendar_new_event = function(start, end){
 		$.ajax({
 			url: "<?php echo addslashes(pines_url('com_calendar', 'editevent')); ?>",
 			type: "POST",
 			dataType: "html",
-			data: {"location": "<?php echo addslashes($this->location->guid); ?>"},
+			data: {
+				"location": "<?php echo addslashes($this->location->guid); ?>",
+				"start": start,
+				"end": end
+			},
 			error: function(XMLHttpRequest, textStatus){
 				pines.error("An error occured while trying to retreive the new event form:\n"+XMLHttpRequest.status+": "+textStatus);
 			},
@@ -107,6 +110,7 @@ $pines->com_ptags->load();
 					bgiframe: true,
 					autoOpen: true,
 					modal: true,
+					width: 550,
 					open: function(){
 						form.html(data+"<br />").dialog("option", "position", "center");
 					},
@@ -123,12 +127,8 @@ $pines->com_ptags->load();
 								all_day: !!form.find(":input[name=all_day]").attr('checked'),
 								start: form.find(":input[name=start]").val(),
 								end: form.find(":input[name=end]").val(),
-								time_start_hour: form.find(":input[name=time_start_hour]").val(),
-								time_start_minute: form.find(":input[name=time_start_minute]").val(),
-								time_start_ampm: form.find(":input[name=time_start_ampm]").val(),
-								time_end_hour: form.find(":input[name=time_end_hour]").val(),
-								time_end_minute: form.find(":input[name=time_end_minute]").val(),
-								time_end_ampm: form.find(":input[name=time_end_ampm]").val(),
+								time_start: form.find(":input[name=time_start]").val(),
+								time_end: form.find(":input[name=time_end]").val(),
 								location: form.find(":input[name=location]").val()
 							});
 						}
@@ -138,7 +138,7 @@ $pines->com_ptags->load();
 		});
 	};
 	// Edit an existing event.
-	pines.com_calendar_edit_event = function(event_id){
+	pines.com_calendar_edit_event = function(event_id, start, end){
 		$.ajax({
 			url: "<?php echo addslashes(pines_url('com_calendar', 'editevent')); ?>",
 			type: "POST",
@@ -155,32 +155,51 @@ $pines->com_ptags->load();
 					bgiframe: true,
 					autoOpen: true,
 					modal: true,
+					width: 550,
 					open: function(){
 						form.html(data+"<br />").dialog("option", "position", "center");
 					},
 					close: function(){
 						form.remove();
+						pines.selected_event.removeClass('ui-state-disabled');
 					},
 					buttons: {
 						"Save Event": function(){
-							form.dialog('close');
 							pines.post("<?php echo addslashes(pines_url('com_calendar', 'saveevent')); ?>",
 							{
 								id: form.find(":input[name=id]").val(),
 								employee: form.find(":input[name=employee]").val(),
 								event_label: form.find(":input[name=event_label]").val(),
+								information: form.find(":input[name=information]").val(),
 								private_event: !!form.find(":input[name=private]").attr('checked'),
 								all_day: !!form.find(":input[name=all_day]").attr('checked'),
 								start: form.find(":input[name=start]").val(),
 								end: form.find(":input[name=end]").val(),
-								time_start_hour: form.find(":input[name=time_start_hour]").val(),
-								time_start_minute: form.find(":input[name=time_start_minute]").val(),
-								time_start_ampm: form.find(":input[name=time_start_ampm]").val(),
-								time_end_hour: form.find(":input[name=time_end_hour]").val(),
-								time_end_minute: form.find(":input[name=time_end_minute]").val(),
-								time_end_ampm: form.find(":input[name=time_end_ampm]").val(),
+								time_start: form.find(":input[name=time_start]").val(),
+								time_end: form.find(":input[name=time_end]").val(),
 								location: form.find(":input[name=location]").val(),
 								employee_view: <?php echo isset($this->employee) ? 'true' : 'false'; ?>
+							});
+							form.dialog('close');
+							pines.selected_event.removeClass('ui-state-disabled');
+						},
+						"Delete Event": function(){
+							if (!confirm("Are you sure you want to delete this event?"))
+								return;
+							$.ajax({
+								url: "<?php echo addslashes(pines_url('com_calendar', 'deleteevents')); ?>",
+								type: "POST",
+								dataType: "json",
+								data: {"events": Array(form.find(":input[name=id]").val())},
+								error: function(){
+									pines.error("An error occured while trying to delete the event.");
+								},
+								success: function(data) {
+									alert('Deleted event ['+form.find(":input[name=event_label]").val()+'].');
+									$("#calendar").fullCalendar('removeEvents', form.find(":input[name=id]").val());
+									form.dialog('close');
+									pines.selected_event.removeClass('ui-state-disabled');
+								}
 							});
 						}
 					}
@@ -188,6 +207,7 @@ $pines->com_ptags->load();
 			}
 		});
 	};
+	<?php if (gatekeeper('com_calendar/editcalendar')) { ?>
 	// Create a quick work schedule for an entire location.
 	pines.com_calendar_quick_schedule = function(){
 		$.ajax({
@@ -256,12 +276,8 @@ $pines->com_ptags->load();
 							pines.post("<?php echo addslashes(pines_url('com_calendar', 'saveschedule')); ?>", {
 								employee: form.find(":input[name=employee]").val(),
 								all_day: !!form.find(":input[name=all_day]").attr('checked'),
-								time_start_hour: form.find(":input[name=time_start_hour]").val(),
-								time_start_minute: form.find(":input[name=time_start_minute]").val(),
-								time_start_ampm: form.find(":input[name=time_start_ampm]").val(),
-								time_end_hour: form.find(":input[name=time_end_hour]").val(),
-								time_end_minute: form.find(":input[name=time_end_minute]").val(),
-								time_end_ampm: form.find(":input[name=time_end_ampm]").val(),
+								time_start: form.find(":input[name=time_start]").val(),
+								time_end: form.find(":input[name=time_end]").val(),
 								dates: form.find(":input[name=dates]").val()
 							});
 						}
@@ -284,6 +300,9 @@ $pines->com_ptags->load();
 			autoOpen: false,
 			modal: true,
 			width: 400,
+			close: function(){
+				pines.selected_event.removeClass('ui-state-disabled');
+			},
 			buttons: {
 				"Update": function(){
 					var loader;
@@ -323,6 +342,7 @@ $pines->com_ptags->load();
 							alert("Successfully updated the interaction.");
 							$("#p_muid_interaction_dialog [name=review_comments]").val('');
 							interaction_dialog.dialog("close");
+							pines.selected_event.removeClass('ui-state-disabled');
 						}
 					});
 				}
@@ -342,8 +362,8 @@ $pines->com_ptags->load();
 					return;
 				}
 				$("#p_muid_interaction_dialog [name=id]").val(appointment_id);
-				$("#p_muid_interaction_customer").empty().append(data.customer);
-				$("#p_muid_interaction_type").empty().append(data.type);
+				$("#p_muid_interaction_customer").empty().append('<a href="'+data.customer_url+'" onclick="window.open(this.href); return false;">'+data.customer+'</a>');
+				$("#p_muid_interaction_type").empty().append(data.type+' - '+data.contact_info);
 				$("#p_muid_interaction_employee").empty().append(data.employee);
 				$("#p_muid_interaction_date").empty().append(data.date);
 				$("#p_muid_interaction_comments").empty().append(data.comments);
@@ -351,6 +371,7 @@ $pines->com_ptags->load();
 				$("#p_muid_interaction_dialog [name=status]").val(data.status);
 
 				interaction_dialog.dialog('open');
+				$("#p_muid_interaction_dialog [name=review_comments]").focus();
 			}
 		});
 	};

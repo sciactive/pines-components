@@ -34,6 +34,7 @@ $timezone = $_SESSION['user']->get_timezone();
 <script type='text/javascript'>
 	// <![CDATA[
 	pines(function(){
+		pines.selected_event = '';
 		var help = $.pnotify({
 			pnotify_title: "Information",
 			pnotify_text: "",
@@ -75,6 +76,7 @@ $timezone = $_SESSION['user']->get_timezone();
 			defaultView: 'agendaWeek',
 			firstDay: 1,
 			firstHour: 8,
+			selectable: true,
 			theme: true,
 			ignoreTimezone: false,
 			editable: <?php echo gatekeeper('com_calendar/editcalendar') ? 'true' : 'false'; ?>,
@@ -106,7 +108,7 @@ $timezone = $_SESSION['user']->get_timezone();
 					echo 'end: \''. format_date($cur_event->end, 'custom', 'Y-m-d H:i', $timezone) .'\', ';
 					echo 'className: \''. addslashes($cur_event->color) .'\',';
 					if ((isset($cur_event->appointment) && !gatekeeper('com_calendar/editappointments')) ||
-						!gatekeeper('com_calendar/editcalendar') ||
+						(!gatekeeper('com_calendar/editcalendar') && !$cur_event->user->is($_SESSION['user'])) ||
 						$cur_event->time_off) {
 						echo 'editable: false,';
 					} else {
@@ -118,14 +120,21 @@ $timezone = $_SESSION['user']->get_timezone();
 					echo '}';
 					$event_counter++;
 				} ?>],
+			 select: function(start, end, allDay, jsEvent, view) {
+				pines.com_calendar_new_event(start.toString(), end.toString());
+			},
 			eventClick: function(event,jsEvent,view) {
-				if (event.selected == true) {
-					event.selected = false;
-					$(this).removeClass('ui-state-disabled');
-				} else {
-					event.selected = true;
-					$(this).addClass('ui-state-disabled');
+				if (event.editable == false && event.appointment == '') {
+					alert(event.title+' is not editable.');
+					return;
 				}
+				if (event.appointment != '')
+					pines.com_calendar_edit_appointment(event.appointment);
+				else
+					pines.com_calendar_edit_event(event.id);
+				pines.selected_event = $(this);
+				pines.selected_event.addClass('ui-state-disabled');
+
 			},
 			eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
 				event.selected = false;
@@ -159,8 +168,6 @@ $timezone = $_SESSION['user']->get_timezone();
 				$("#calendar").fullCalendar('refetchEvents');
 			}
 		});
-		// Right-Click Menu.
-		$('#calendar').vscontext({menuBlock: 'vs-context-menu'});
 	});
 	// Add new events to the calendar, mostly for duplicating events.
 	pines.com_calendar_add_events = function(events) {
@@ -244,38 +251,6 @@ $timezone = $_SESSION['user']->get_timezone();
 			alert('Please select at least one event to duplicate.');
 		} else {
 			pines.com_calendar_add_events(copy_events);
-		}
-	};
-
-	// Edit Event
-	pines.com_calendar_edit_item = function() {
-		var events = $("#calendar").fullCalendar('clientEvents');
-		var edit_event;
-		var appointment;
-		var edit_count = 0;
-		// Find the selected event(s).
-		$.each(events, function(i, val) {
-			if (val.selected) {
-				appointment = val.appointment;
-				if (val.editable == false && appointment == '')
-					alert(val.title+' is not editable.');
-				else if (val.group)
-					edit_event = val.guid;
-				else
-					edit_event = val.id;
-				if (typeof edit_event != 'undefined')
-					edit_count++;
-			}
-		});
-		if (edit_count == 0) {
-			alert('Please select an event to edit.');
-		} else if (edit_count > 1) {
-			alert('You may only edit one event at a time.');
-		} else {
-			if (appointment != '')
-				pines.com_calendar_edit_appointment(appointment);
-			else
-				pines.com_calendar_edit_event(edit_event);
 		}
 	};
 
@@ -381,19 +356,4 @@ $timezone = $_SESSION['user']->get_timezone();
 	};
 	// ]]>
 </script>
-<div id="calendar">
-	<div class="vs-context-menu">
-		<ul>
-			<?php if (gatekeeper('com_calendar/managecalendar')) { ?>
-			<li class="copy"><a onclick="pines.com_calendar_copy_event();" id="menu_1">Duplicate</a></li>
-			<li class="unlink"><a onclick="pines.com_calendar_unlink_events();" id="menu_2">Unlink</a></li>
-			<?php } ?>
-			<li class="edit"><a onclick="pines.com_calendar_edit_item();" id="menu_3">Edit</a></li>
-			<?php if (gatekeeper('system/all')) { ?>
-			<li class="delete seprator"><a onclick="pines.com_calendar_delete_events();" id="menu_4">Delete</a></li>
-			<li class="clear seprator"><a onclick="pines.com_calendar_clear_calendar();" id="menu_5">Clear_All</a></li>
-			<?php } ?>
-			<li class="help"><a onclick="pines.com_calendar_calendar_help();" id="menu_6">Help</a></li>
-		</ul>
-	</div>
-</div>
+<div id="calendar"></div>

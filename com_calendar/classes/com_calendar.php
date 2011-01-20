@@ -88,6 +88,18 @@ class com_calendar extends component {
 	}
 
 	/**
+	 * Print a form to edit the work schedule for an employee.
+	 * @param com_hrm_employee $employee The employee to schedule.
+	 */
+	public function schedule_form($employee) {
+		global $pines;
+		$pines->page->override = true;
+		$module = new module('com_calendar', 'form_schedule', 'content');
+		$module->entity = $employee;
+		$pines->page->override_doc($module->render());
+	}
+
+	/**
 	 * Creates and attaches a module which shows the calendar.
 	 * @param group $location The desired location to view the schedule for.
 	 * @param bool $descendents Whether to show descendent locations.

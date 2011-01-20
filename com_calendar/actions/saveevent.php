@@ -11,47 +11,34 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_calendar/editcalendar') )
+if ( !gatekeeper())
 	punt_user(null, pines_url('com_calendar', 'editcalendar'));
 
 if (isset($_REQUEST['employee'])) {
-	if (isset($_REQUEST['start'])) {
-		$start_time = strtotime($_REQUEST['start']);
-		$end_time = strtotime($_REQUEST['end']);
-		$event_month = date('n', $start_time);
-		$event_day = date('j', $start_time);
-		$event_year = date('Y', $start_time);
-		$event_endmonth = date('n', $end_time);
-		$event_endday = date('j', $end_time);
-		$event_endyear = date('Y', $end_time);
-	} else {
-		// Default to the current date.
-		$event_month = date('n');
-		$event_day = date('j');
-		$event_year = date('Y');
-		$event_endmonth = date('n');
-		$event_endday = date('j');
-		$event_endyear = date('Y');
-	}
 	if (isset($_REQUEST['id'])) {
 		$event = com_calendar_event::factory((int) $_REQUEST['id']);
 		if (!isset($event->guid)) {
 			pines_error('The calendar was altered while editing the event.');
-			$pines->com_calendar->show_calendar();
+			redirect(pines_url('com_calendar', 'editcalendar', array('location' => $location->guid, 'employee' => $employee->guid)));
 			return;
 		}
 		if (isset($event->appointment) && !gatekeeper('com_calendar/editappointments')) {
 			pines_error('You cannot edit appointments.');
-			$pines->com_calendar->show_calendar();
+			redirect(pines_url('com_calendar', 'editcalendar', array('location' => $location->guid, 'employee' => $employee->guid)));
 			return;
 		}
 		if ($event->time_off)
 			return;
+		if (!gatekeeper('com_calendar/editcalendar') && !$event->user->is($_SESSION['user']))
+			punt_user(null, pines_url('com_calendar', 'editcalendar'));
 	} else {
 		$event = com_calendar_event::factory();
 	}
 
 	$event->employee = com_hrm_employee::factory((int) $_REQUEST['employee']);
+	if (!gatekeeper('com_calendar/editcalendar'))
+		$event->employee = com_hrm_employee::factory((int) $_SESSION['user']->guid);
+
 	$location = $event->employee->group;
 	$event->title = $event->employee->name;
 	$event->color = $event->employee->color;
@@ -73,25 +60,23 @@ if (isset($_REQUEST['employee'])) {
 		$event->label = $_REQUEST['event_label'];
 		$event->title = $event->label .' - '. $event->title;
 	}
+	$event->information = $_REQUEST['information'];
 	$event->private = ($_REQUEST['private_event'] == 'true');
 	$event->all_day = ($_REQUEST['all_day'] == 'true');
-	$start_hour = ($_REQUEST['time_start_ampm'] == 'am') ? $_REQUEST['time_start_hour'] : $_REQUEST['time_start_hour'] + 12;
-	$end_hour = ($_REQUEST['time_end_ampm'] == 'am') ? $_REQUEST['time_end_hour'] : $_REQUEST['time_end_hour'] + 12;
+
 	// Change the timezone to enter the event with the user's timezone.
 	date_default_timezone_set($_SESSION['user']->get_timezone());
-	$event->start = mktime($event->all_day ? 0 : $start_hour,$_REQUEST['time_start_minute'],0,$event_month,$event_day,$event_year);
-	$event->end = mktime($event->all_day ? 23 : $end_hour,$event->all_day ? 59 : $_REQUEST['time_end_minute'],$event->all_day ? 59 : 0,$event_month,$event_day,$event_year);
+	if (isset($_REQUEST['start'])) {
+		$event->start = strtotime($_REQUEST['start'].$_REQUEST['time_start']);
+		$event->end = strtotime($_REQUEST['end'].$_REQUEST['time_end']);
+	} else {
+		// Default to the current date.
+		$event->start = time();
+		$event->end = time();
+	}
 	// If the start and end dates are the same, push the end date ahead one day.
 	if ($event->start >= $event->end)
 		$event->end = strtotime('+1 day', $event->start);
-
-	if ($event->all_day) {
-		$days = ceil(($event->end - $event->start) / 86400);
-		$event->scheduled = isset($event->employee->workday_length) ? $event->employee->workday_length : $pines->config->com_calendar->workday_length;
-		$event->scheduled *= 3600 * $days;
-	} else {
-		$event->scheduled = $event->end - $event->start;
-	}
 
 	$event->ac->other = 1;
 

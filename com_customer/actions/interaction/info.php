@@ -23,8 +23,10 @@ if (!isset($interaction->guid))
 $json_struct = (object) array(
 	'guid'				=> (int) $interaction->guid,
 	'customer'			=> (string) $interaction->customer->name,
+	'customer_url'		=> pines_url('com_customer', 'customer/edit', array('id' =>$interaction->customer->guid)),
 	'employee'			=> (string) $interaction->employee->name,
 	'type'				=> (string) $interaction->type,
+	'contact_info'		=> ($interaction->type == 'Email') ? htmlspecialchars($interaction->customer->email) : format_phone($interaction->customer->phone_cell),
 	'date'				=> format_date($interaction->action_date, 'full_sort'),
 	'status'			=> (string) $interaction->status,
 	'comments'			=> (string) $interaction->comments,

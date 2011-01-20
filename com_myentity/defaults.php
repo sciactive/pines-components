@@ -19,9 +19,15 @@ return array(
 		'value' => false,
 	),
 	array(
+		'name' => 'cache_threshold',
+		'cname' => 'Cache Threshold',
+		'description' => 'Cache entities after they\'re accessed this many times.',
+		'value' => 4,
+	),
+	array(
 		'name' => 'cache_limit',
 		'cname' => 'Cache Limit',
-		'description' => 'The number of recently retrieved entities to cache. If you are running out of memory, try lowering this value. 0 means unlimited.',
+		'description' => 'The number of recently retrieved entities to cache. If you\'re running out of memory, try lowering this value. 0 means unlimited.',
 		'value' => 50,
 	),
 );

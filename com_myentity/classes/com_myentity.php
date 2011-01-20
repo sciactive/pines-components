@@ -947,6 +947,9 @@ class com_myentity extends component implements entity_manager_interface {
 		if (!isset($this->entity_count[$entity->guid]))
 			$this->entity_count[$entity->guid] = 0;
 		$this->entity_count[$entity->guid]++;
+		// Check the threshold.
+		if ($this->entity_count[$entity->guid] < $pines->config->com_myentity->cache_threshold)
+			return;
 		// Cache the entity.
 		if ((array) $this->entity_cache[$entity->guid] === $this->entity_cache[$entity->guid]) {
 			$this->entity_cache[$entity->guid][$class] = clone $entity;

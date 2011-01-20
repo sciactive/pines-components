@@ -22,14 +22,16 @@ class entity extends p_base implements entity_interface {
 	 * The GUID of the entity.
 	 *
 	 * @var int
+	 * @access private
 	 */
-	public $guid = null;
+	private $guid = null;
 	/**
 	 * Array of the entity's tags.
 	 *
 	 * @var array
+	 * @access private
 	 */
-	public $tags = array();
+	private $tags = array();
 	/**
 	 * The array used to store each variable assigned to an entity.
 	 *
@@ -54,6 +56,20 @@ class entity extends p_base implements entity_interface {
 	 * @access protected
 	 */
 	protected $entity_cache = array();
+	/**
+	 * Whether this instance is a sleeping reference.
+	 *
+	 * @var bool
+	 * @access private
+	 */
+	private $is_a_sleeping_reference = false;
+	/**
+	 * The reference to use to wake.
+	 *
+	 * @var array
+	 * @access private
+	 */
+	private $sleeping_reference = false;
 
 	public function __construct() {
 		$args = func_get_args();
@@ -77,6 +93,23 @@ class entity extends p_base implements entity_interface {
 	}
 
 	/**
+	 * Create a new sleeping reference instance.
+	 *
+	 * Sleeping references won't retrieve their data from the database until it
+	 * is actually used.
+	 *
+	 * @param array $reference The Pines Entity Reference to use to wake.
+	 * @return entity The new instance.
+	 */
+	public static function factory_reference($reference) {
+		global $pines;
+		$class = $reference[2];
+		$entity = call_user_func(array($class, 'factory'));
+		$entity->reference_sleep($reference);
+		return $entity;
+	}
+
+	/**
 	 * Retrieve a variable.
 	 *
 	 * You do not need to explicitly call this method. It is called by PHP when
@@ -87,6 +120,10 @@ class entity extends p_base implements entity_interface {
 	 */
 	public function &__get($name) {
 		global $pines;
+		if ($this->is_a_sleeping_reference)
+			$this->reference_wake();
+		if ($name === 'guid' || $name === 'tags')
+			return $this->$name;
 		// Unserialize.
 		if (isset($this->sdata[$name])) {
 			$this->data[$name] = unserialize($this->sdata[$name]);
@@ -119,6 +156,10 @@ class entity extends p_base implements entity_interface {
 	 * @todo Check that a referenced entity has not been deleted.
 	 */
 	public function __isset($name) {
+		if ($this->is_a_sleeping_reference)
+			$this->reference_wake();
+		if ($name === 'guid' || $name === 'tags')
+			return isset($this->$name);
 		// Unserialize.
 		if (isset($this->sdata[$name])) {
 			$this->data[$name] = unserialize($this->sdata[$name]);
@@ -138,6 +179,10 @@ class entity extends p_base implements entity_interface {
 	 * @return mixed The value of the variable.
 	 */
 	public function __set($name, $value) {
+		if ($this->is_a_sleeping_reference)
+			$this->reference_wake();
+		if ($name === 'guid' || $name === 'tags')
+			return ($this->$name = $value);
 		// Delete any serialized value.
 		if (isset($this->sdata[$name]))
 			unset($this->sdata[$name]);
@@ -171,6 +216,16 @@ class entity extends p_base implements entity_interface {
 	 * @param string $name The name of the variable.
 	 */
 	public function __unset($name) {
+		if ($this->is_a_sleeping_reference)
+			$this->reference_wake();
+		if ($name === 'guid') {
+			unset($this->$name);
+			return;
+		}
+		if ($name === 'tags') {
+			$this->$name = array();
+			return;
+		}
 		if (isset($this->entity_cache[$name]))
 			unset($this->entity_cache[$name]);
 		unset($this->data[$name]);
@@ -178,6 +233,8 @@ class entity extends p_base implements entity_interface {
 	}
 
 	public function add_tag() {
+		if ($this->is_a_sleeping_reference)
+			$this->reference_wake();
 		$tag_array = func_get_args();
 		if ((array) $tag_array[0] === $tag_array[0])
 			$tag_array = $tag_array[0];
@@ -188,6 +245,8 @@ class entity extends p_base implements entity_interface {
 	}
 
 	public function array_search($array, $strict = false) {
+		if ($this->is_a_sleeping_reference)
+			$this->reference_wake();
 		if ((array) $array !== $array)
 			return false;
 		foreach ($array as $key => $cur_entity) {
@@ -198,6 +257,8 @@ class entity extends p_base implements entity_interface {
 	}
 
 	public function clear_cache() {
+		if ($this->is_a_sleeping_reference)
+			$this->reference_wake();
 		// Convert entities in arrays.
 		foreach ($this->data as &$value) {
 			if ((array) $value === $value)
@@ -220,6 +281,8 @@ class entity extends p_base implements entity_interface {
 
 	public function delete() {
 		global $pines;
+		if ($this->is_a_sleeping_reference)
+			$this->reference_wake();
 		return $pines->entity_manager->delete_entity($this);
 	}
 
@@ -231,6 +294,8 @@ class entity extends p_base implements entity_interface {
 	 * @access private
 	 */
 	private function entity_to_reference(&$item, $key) {
+		if ($this->is_a_sleeping_reference)
+			$this->reference_wake();
 		if ((is_a($item, 'entity') || is_a($item, 'hook_override')) && isset($item->guid) && is_callable(array($item, 'to_reference'))) {
 			// This is an entity, so we should put it in the entity cache.
 			if (!isset($this->entity_cache["reference_guid: {$item->guid}"]))
@@ -241,7 +306,9 @@ class entity extends p_base implements entity_interface {
 	}
 
 	public function equals(&$object) {
-		if (!is_a($object, 'entity') || is_a($item, 'hook_override'))
+		if ($this->is_a_sleeping_reference)
+			$this->reference_wake();
+		if (!(is_a($object, 'entity') || is_a($object, 'hook_override')))
 			return false;
 		if (isset($this->guid) || isset($object->guid)) {
 			if ($this->guid != $object->guid)
@@ -255,6 +322,8 @@ class entity extends p_base implements entity_interface {
 	}
 
 	public function get_data() {
+		if ($this->is_a_sleeping_reference)
+			$this->reference_wake();
 		// Convert any entities to references.
 		return array_map(array($this, 'get_data_reference'), $this->data);
 	}
@@ -266,6 +335,8 @@ class entity extends p_base implements entity_interface {
 	 * @return mixed The resulting item.
 	 */
 	private function get_data_reference($item) {
+		if ($this->is_a_sleeping_reference)
+			$this->reference_wake();
 		if ((is_a($item, 'entity') || is_a($item, 'hook_override')) && isset($item->guid) && is_callable(array($item, 'to_reference'))) {
 			// Convert entities to references.
 			return $item->to_reference();
@@ -278,10 +349,14 @@ class entity extends p_base implements entity_interface {
 	}
 
 	public function get_sdata() {
+		if ($this->is_a_sleeping_reference)
+			$this->reference_wake();
 		return $this->sdata;
 	}
 
 	public function has_tag() {
+		if ($this->is_a_sleeping_reference)
+			$this->reference_wake();
 		$tag_array = func_get_args();
 		if ((array) $tag_array[0] === $tag_array[0])
 			$tag_array = $tag_array[0];
@@ -293,6 +368,8 @@ class entity extends p_base implements entity_interface {
 	}
 
 	public function in_array($array, $strict = false) {
+		if ($this->is_a_sleeping_reference)
+			$this->reference_wake();
 		if ((array) $array !== $array)
 			return false;
 		foreach ($array as $cur_entity) {
@@ -303,6 +380,8 @@ class entity extends p_base implements entity_interface {
 	}
 
 	public function is(&$object) {
+		if ($this->is_a_sleeping_reference)
+			$this->reference_wake();
 		if (!(is_a($object, 'entity') || is_a($object, 'hook_override')))
 			return false;
 		if (isset($this->guid) || isset($object->guid)) {
@@ -315,6 +394,8 @@ class entity extends p_base implements entity_interface {
 	}
 
 	public function put_data($data, $sdata = array()) {
+		if ($this->is_a_sleeping_reference)
+			$this->reference_wake();
 		if ((array) $data !== $data)
 			$data = array();
 		// Erase the entity cache.
@@ -342,6 +423,15 @@ class entity extends p_base implements entity_interface {
 	}
 
 	/**
+	 * Set up a sleeping reference.
+	 * @param array $reference The reference to use to wake.
+	 */
+	public function reference_sleep($reference) {
+		$this->is_a_sleeping_reference = true;
+		$this->sleeping_reference = $reference;
+	}
+
+	/**
 	 * Check if an item is a reference, and if it is, convert it to an entity.
 	 *
 	 * This function will recurse into deeper arrays.
@@ -352,10 +442,12 @@ class entity extends p_base implements entity_interface {
 	 */
 	private function reference_to_entity(&$item, $key) {
 		global $pines;
+		if ($this->is_a_sleeping_reference)
+			$this->reference_wake();
 		if ((array) $item === $item) {
 			if ($item[0] === 'pines_entity_reference') {
 				if (!isset($this->entity_cache["reference_guid: {$item[1]}"]))
-					$this->entity_cache["reference_guid: {$item[1]}"] = $pines->entity_manager->get_entity(array('class' => $item[2]), array('guid' => $item[1]));
+					$this->entity_cache["reference_guid: {$item[1]}"] = call_user_func(array($item[2], 'factory_reference'), $item);
 				$item = $this->entity_cache["reference_guid: {$item[1]}"];
 			} else {
 				array_walk($item, array($this, 'reference_to_entity'));
@@ -363,7 +455,26 @@ class entity extends p_base implements entity_interface {
 		}
 	}
 
+	/**
+	 * Wake from a sleeping reference.
+	 */
+	private function reference_wake() {
+		global $pines;
+		if (!$this->is_a_sleeping_reference)
+			return;
+		$entity = $pines->entity_manager->get_entity(array('class' => $this->sleeping_reference[2]), array('&', 'guid' => $this->sleeping_reference[1]));
+		$this->is_a_sleeping_reference = false;
+		$this->sleeping_reference = null;
+		if (!isset($entity))
+			return;
+		$this->guid = $entity->guid;
+		$this->tags = $entity->tags;
+		$this->put_data($entity->get_data(), $entity->get_sdata());
+	}
+
 	public function refresh() {
+		if ($this->is_a_sleeping_reference)
+			$this->reference_wake();
 		if (!isset($this->guid))
 			return false;
 		global $pines;
@@ -376,6 +487,8 @@ class entity extends p_base implements entity_interface {
 	}
 
 	public function remove_tag() {
+		if ($this->is_a_sleeping_reference)
+			$this->reference_wake();
 		$tag_array = func_get_args();
 		if ((array) $tag_array[0] === $tag_array[0])
 			$tag_array = $tag_array[0];
@@ -391,10 +504,14 @@ class entity extends p_base implements entity_interface {
 
 	public function save() {
 		global $pines;
+		if ($this->is_a_sleeping_reference)
+			$this->reference_wake();
 		return $pines->entity_manager->save_entity($this);
 	}
 
 	public function to_reference() {
+		if ($this->is_a_sleeping_reference)
+			$this->reference_wake();
 		return array('pines_entity_reference', $this->guid, get_class($this));
 	}
 }

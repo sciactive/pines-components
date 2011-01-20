@@ -937,6 +937,7 @@ class com_myentity extends component implements entity_manager_interface {
 	 * Push an entity onto the cache.
 	 *
 	 * @param entity &$entity The entity to push onto the cache.
+	 * @param string $class The class of the entity.
 	 * @access private
 	 */
 	private function push_cache(&$entity, $class) {

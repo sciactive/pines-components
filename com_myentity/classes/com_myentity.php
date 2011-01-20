@@ -113,7 +113,8 @@ class com_myentity extends component implements entity_manager_interface {
 			return false;
 		}
 		// Removed any cached versions of this entity.
-		$this->clean_cache($guid);
+		if ($pines->config->com_myentity->cache)
+			$this->clean_cache($guid);
 		return true;
 	}
 
@@ -328,8 +329,7 @@ class com_myentity extends component implements entity_manager_interface {
 		$count = $ocount = 0;
 
 		// Check if the requested entity is cached.
-		/*
-		if (is_int($selectors[1]['guid'])) {
+		if ($pines->config->com_myentity->cache && is_int($selectors[1]['guid'])) {
 			// Only safe to use the cache option with no other selectors than a GUID and tags.
 			if (
 					count($selectors) == 1 &&
@@ -344,7 +344,6 @@ class com_myentity extends component implements entity_manager_interface {
 					return array($entity);
 			}
 		}
-		*/
 
 		$query_parts = array();
 		foreach ($selectors as &$cur_selector) {
@@ -618,14 +617,19 @@ class com_myentity extends component implements entity_manager_interface {
 			}
 			unset($cur_selector);
 			if ($pass_all) {
-				//$entity = $this->pull_cache($guid, $class);
-				//if (!isset($entity) || $data['p_mdate'] > $entity->p_mdate) {
-				$entity = call_user_func(array($class, 'factory'));
-				$entity->guid = $guid;
-				$entity->tags = explode(',', substr($tags, 1, -1));
-				$entity->put_data($data, $sdata);
-				//$this->push_cache($entity);
-				//}
+				if ($pines->config->com_myentity->cache) {
+					$entity = $this->pull_cache($guid, $class);
+				} else {
+					$entity = null;
+				}
+				if (!isset($entity) || $data['p_mdate'] > $entity->p_mdate) {
+					$entity = call_user_func(array($class, 'factory'));
+					$entity->guid = $guid;
+					$entity->tags = explode(',', substr($tags, 1, -1));
+					$entity->put_data($data, $sdata);
+					if ($pines->config->com_myentity->cache)
+						$this->push_cache($entity, $class);
+				}
 				$entities[] = $entity;
 				$count++;
 				if ($options['limit'] && $count >= $options['limit'])
@@ -925,16 +929,20 @@ class com_myentity extends component implements entity_manager_interface {
 	 * @param entity &$entity The entity to push onto the cache.
 	 * @access private
 	 */
-	private function push_cache(&$entity) {
-		$class = get_class($entity);
-		// Replace hook override in the class name.
-		if (strpos($class, 'hook_override_') === 0)
-			$class = substr($class, 14);
+	private function push_cache(&$entity, $class) {
+		global $pines;
+		if (!isset($entity->guid))
+			return;
 		if ((array) $this->entity_cache[$entity->guid] === $this->entity_cache[$entity->guid]) {
 			$this->entity_cache[$entity->guid][$class] = clone $entity;
 		} else {
+			while ($pines->config->com_myentity->cache_limit && count($this->entity_cache) >= $pines->config->com_myentity->cache_limit) {
+				reset($this->entity_cache);
+				unset($this->entity_cache[key($this->entity_cache)]);
+			}
 			$this->entity_cache[$entity->guid] = array($class => (clone $entity));
 		}
+		$this->entity_cache[$entity->guid][$class]->clear_cache();
 	}
 
 	public function rename_uid($old_name, $new_name) {
@@ -1004,7 +1012,8 @@ class com_myentity extends component implements entity_manager_interface {
 			}
 		} else {
 			// Removed any cached versions of this entity.
-			//$this->clean_cache($entity->guid);
+			if ($pines->config->com_myentity->cache)
+				$this->clean_cache($entity->guid);
 			$query = sprintf("UPDATE `%scom_myentity_entities` SET `tags`='%s', `varlist`='%s', `cdate`=%F, `mdate`=%F WHERE `guid`=%u;",
 				$pines->config->com_mysql->prefix,
 				mysql_real_escape_string(','.implode(',', $entity->tags).',', $pines->com_mysql->link),
@@ -1049,7 +1058,13 @@ class com_myentity extends component implements entity_manager_interface {
 			}
 		}
 		// Cache the entity.
-		//$this->push_cache($entity);
+		if ($pines->config->com_myentity->cache) {
+			$class = get_class($entity);
+			// Replace hook override in the class name.
+			if (strpos($class, 'hook_override_') === 0)
+				$class = substr($class, 14);
+			$this->push_cache($entity, $class);
+		}
 		return true;
 	}
 

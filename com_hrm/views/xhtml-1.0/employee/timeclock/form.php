@@ -46,7 +46,7 @@ $this->title = "Edit Timeclock for {$this->entity->user->name}";
 				url: "<?php echo addslashes(pines_url('system', 'date_format')); ?>",
 				type: "POST",
 				dataType: "text",
-				data: {"timestamp": timestamp, "timezone": timezone, "type": "full_med"},
+				data: {"timestamp": timestamp, "timezone": timezone, "type": "custom", "format": "d M Y h:i:s A T"},
 				error: function(){
 					elem.html("Couldn't format.");
 				},
@@ -215,7 +215,7 @@ $this->title = "Edit Timeclock for {$this->entity->user->name}";
 	<div class="pf-element pf-full-width entry">
 		<div class="ui-helper-clearfix ui-widget-content ui-corner-all">
 			<button class="ui-state-default ui-corner-all">Delete</button>
-			<span class="pf-label time" style="width: auto;"><span class="time_in"><?php echo format_date($entry['in'], 'full_med', '', $this->entity->user->get_timezone(true)); ?></span> - <span class="time_out"><?php echo format_date($entry['out'], 'full_med', '', $this->entity->user->get_timezone(true)); ?></span></span>
+			<span class="pf-label time" style="width: auto;"><span class="time_in"><?php echo format_date($entry['in'], 'custom', 'd M Y h:i:s A T', $this->entity->user->get_timezone(true)); ?></span> - <span class="time_out"><?php echo format_date($entry['out'], 'custom', 'd M Y h:i:s A T', $this->entity->user->get_timezone(true)); ?></span></span>
 			<span class="pf-label comments" style="width: auto; clear: left;"><?php echo htmlspecialchars($entry['comments']); ?></span>
 			<span class="pf-note">Timestamps: <span class="timestamp_in"><?php echo htmlspecialchars($entry['in']); ?></span> - <span class="timestamp_out"><?php echo htmlspecialchars($entry['out']); ?></span></span><br class="pf-clearing" />
 			<span class="pf-label ui-state-error ui-corner-all error" style="width: auto; display: none;">Overlaps with the next entry!</span>

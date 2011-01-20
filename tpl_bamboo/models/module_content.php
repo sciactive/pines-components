@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 <div class="post">
 	<?php if ($this->show_title && (!empty($this->title) || !empty($this->note))) { ?>
 	<?php if (!empty($this->title)) { ?>
-	<h2 class="title"><a href="#"><?php echo $this->title; ?></a></h2>
+	<h2 class="title"><?php echo $this->title; ?></h2>
 	<?php } if (!empty($this->note)) { ?>
 	<p class="meta"><?php echo $this->note; ?></p>
 	<?php }

@@ -58,8 +58,25 @@ $pines->com_jstree->load();
 				{type: 'button', text: 'Receive', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'stock/receive')); ?>'},
 				<?php } if (gatekeeper('com_sales/managestock')) { ?>
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', multi_select: true, double_click: true, url: '<?php echo addslashes(pines_url('com_sales', 'stock/edit', array('id' => '__title__'))); ?>', delimiter: ','},
-				<?php } if (gatekeeper('com_sales/managestock')) { ?>
 				{type: 'button', text: 'Transfer', extra_class: 'picon picon-go-jump', multi_select: true, url: '<?php echo addslashes(pines_url('com_sales', 'stock/transfer', array('id' => '__title__'))); ?>', delimiter: ','},
+				{type: 'separator'},
+				{type: 'button', text: 'Last Transaction', extra_class: 'picon picon-view-history', multi_select: true, click: function(e, rows){
+					rows.each(function(){
+						var cur_row = $(this);
+						$.ajax({
+							url: "<?php echo addslashes(pines_url('com_sales', 'stock/lasttransaction')); ?>",
+							type: "POST",
+							dataType: "text",
+							data: {"id": cur_row.pgrid_export_rows()[0].key},
+							error: function(XMLHttpRequest, textStatus){
+								pines.error("An error occured while trying to lookup last transaction:\n"+XMLHttpRequest.status+": "+textStatus);
+							},
+							success: function(data){
+								cur_row.pgrid_set_value(<?php echo $this->removed ? 7 : 8; ?>, data);
+							}
+						});
+					});
+				}},
 				<?php } ?>
 				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
@@ -139,7 +156,9 @@ $pines->com_jstree->load();
 			<?php } ?>
 			<th>Cost</th>
 			<th>Available</th>
+			<?php if (gatekeeper('com_sales/managestock')) { ?>
 			<th>Last Transaction</th>
+			<?php } ?>
 		</tr>
 	</thead>
 	<tbody>
@@ -154,8 +173,13 @@ $pines->com_jstree->load();
 			<?php } ?>
 			<td><?php echo isset($stock->cost) ? '$'.number_format($stock->cost, 2) : ''; ?></td>
 			<td><?php echo $stock->available ? 'Yes' : 'No'; ?></td>
-			<td><?php echo htmlspecialchars($stock->last_reason()); ?></td>
+			<?php if (gatekeeper('com_sales/managestock')) { ?>
+			<td></td>
+			<?php } ?>
 		</tr>
 	<?php } ?>
 	</tbody>
 </table>
+<?php if (gatekeeper('com_sales/managestock')) { ?>
+<small>Note: Last transaction is database intensive, so it is not loaded. Select rows and click the toolbar button to load it.</small>
+<?php } ?>

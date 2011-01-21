@@ -176,7 +176,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			<select class="ui-widget-content ui-corner-all form_input" name="employee"></select>
 			<label><input class="pf-field" type="checkbox" name="private" value="ON" <?php echo ($this->entity->private) ? 'checked="checked" ' : ''; ?>/>Private</label>
 		</div>
-		<div class="pf-element location_tree" style="padding-bottom: 1em; width: 90%;"></div>
+		<div class="pf-element location_tree" style="padding-bottom: 1em; width: 90%; max-height: 75px;"></div>
 		<?php } else { ?>
 		<input type="hidden" name="employee" value="<?php echo $_SESSION['user']->guid; ?>" />
 		<input type="hidden" name="private" value="ON" checked="checked" />

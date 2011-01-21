@@ -27,6 +27,10 @@ if ($interaction->status == 'closed'){
 	$pines->page->override_doc('"closed"');
 	return;
 }
+if (empty($_REQUEST['review_comments'])){
+	$pines->page->override_doc('"comments"');
+	return;
+}
 
 $interaction->status = $_REQUEST['status'];
 if (!empty($_REQUEST['review_comments']))

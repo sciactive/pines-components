@@ -3,13 +3,9 @@
  * Lists all calendar events and allows users to manipulate them.
  *
  * Built upon:
- *
  * FullCalendar Created by Adam Shaw
  * http://arshaw.com/fullcalendar/
  *
- * Very Simple Context Menu Plugin by Intekhab A Rizvi
- * http://intekhabrizvi.wordpress.com/
- * 
  * @package Pines
  * @subpackage com_calendar
  * @license http://www.gnu.org/licenses/agpl-3.0.html

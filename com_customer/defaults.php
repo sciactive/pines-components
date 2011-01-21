@@ -223,11 +223,11 @@ return array(
 	array(
 		'name' => 'follow_ups',
 		'cname' => 'Follow-Up Schedule',
-		'description' => 'Dates after a sale to follow up with a customer. Uses this format: "Symbol:# days" (or weeks, months, years, a combination of several, etc.).',
+		'description' => 'Dates after a sale to follow up with a customer. Uses this format: "Symbol|Timespan|Description".',
 		'value' => array(
-			'➂:3 days',
-			'➄:5 days',
-			'➆:7 days',
+			'➂|3 days|Is the customer happy with their product? Do they have any questions or issues which we can help fix? You can also remind them of your referral program.',
+			'➆|7 days|Is the customer happy with their purchase? Do they have any questions or issues with their product? You can also remind them of your referral program.',
+			'➀➃|2 weeks|This is the customer\'s last day to return. Remind them that today is the last day they can return/exchange their product. Ask them how they like their purchase, if there are any problems with the product and remind them of your referral program.',
 		),
 		'peruser' => true,
 	),

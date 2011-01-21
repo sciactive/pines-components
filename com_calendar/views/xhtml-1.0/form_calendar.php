@@ -31,8 +31,7 @@ $pines->com_ptags->load();
 	#p_muid_interaction_dialog ul {
 		font-size: 0.8em;
 		list-style-type: disc;
-		margin: 0;
-		padding: 0;
+		padding-left: 10px;
 	}
 	/* ]]> */
 </style>
@@ -123,6 +122,7 @@ $pines->com_ptags->load();
 							pines.post("<?php echo addslashes(pines_url('com_calendar', 'saveevent')); ?>", {
 								employee: form.find(":input[name=employee]").val(),
 								event_label: form.find(":input[name=event_label]").val(),
+								information: form.find(":input[name=information]").val(),
 								private_event: !!form.find(":input[name=private]").attr('checked'),
 								all_day: !!form.find(":input[name=all_day]").attr('checked'),
 								start: form.find(":input[name=start]").val(),
@@ -138,7 +138,7 @@ $pines->com_ptags->load();
 		});
 	};
 	// Edit an existing event.
-	pines.com_calendar_edit_event = function(event_id, start, end){
+	pines.com_calendar_edit_event = function(event_id){
 		$.ajax({
 			url: "<?php echo addslashes(pines_url('com_calendar', 'editevent')); ?>",
 			type: "POST",
@@ -338,11 +338,15 @@ $pines->com_ptags->load();
 							} else if (data == 'closed') {
 								alert("This interaction is already closed.");
 								return;
+							} else if (data == 'comments') {
+								alert("You must provide information in the comments section.");
+								return;
 							}
 							alert("Successfully updated the interaction.");
 							$("#p_muid_interaction_dialog [name=review_comments]").val('');
 							interaction_dialog.dialog("close");
 							pines.selected_event.removeClass('ui-state-disabled');
+							window.location.reload();
 						}
 					});
 				}
@@ -419,12 +423,8 @@ $pines->com_ptags->load();
 			<span class="pf-field" id="p_muid_interaction_date"></span>
 		</div>
 		<div class="pf-element pf-full-width">
-			<span class="pf-label">Comments</span>
-			<span class="pf-field pf-full-width" id="p_muid_interaction_comments"></span>
-		</div>
-		<div class="pf-element pf-full-width">
-			<span class="pf-label">Review Comments</span>
-			<span class="pf-field pf-full-width">
+			<span class="pf-full-width" id="p_muid_interaction_comments"></span>
+			<span class="pf-full-width">
 				<ul id="p_muid_interaction_notes"></ul>
 			</span>
 		</div>

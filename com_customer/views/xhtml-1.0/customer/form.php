@@ -24,8 +24,7 @@ $pines->com_customer->load_company_select();
 	#p_muid_interaction_dialog ul {
 		font-size: 0.8em;
 		list-style-type: disc;
-		margin: 0;
-		padding: 0;
+		padding-left: 10px;
 	}
 	/* ]]> */
 </style>
@@ -351,6 +350,9 @@ $pines->com_customer->load_company_select();
 								return;
 							} else if (data == 'closed') {
 								alert("This interaction is already closed.");
+								return;
+							} else if (data == 'comments') {
+								alert("You must provide information in the comments section.");
 								return;
 							}
 							alert("Successfully updated the interaction.");
@@ -806,7 +808,8 @@ $pines->com_customer->load_company_select();
 						<thead>
 							<tr>
 								<th>ID</th>
-								<th>Date</th>
+								<th>Created</th>
+								<th>Appointment</th>
 								<th>Employee</th>
 								<th>Interaction</th>
 								<th>Status</th>
@@ -817,6 +820,7 @@ $pines->com_customer->load_company_select();
 							<?php foreach ($this->interactions as $cur_interaction) { ?>
 							<tr title="<?php echo $cur_interaction->guid; ?>">
 								<td><?php echo $cur_interaction->guid; ?></td>
+								<td><?php echo format_date($cur_interaction->p_cdate, 'full_sort'); ?></td>
 								<td><?php echo format_date($cur_interaction->action_date, 'full_sort'); ?></td>
 								<td><?php echo htmlspecialchars($cur_interaction->employee->name); ?></td>
 								<td><?php echo htmlspecialchars($cur_interaction->type); ?></td>
@@ -1009,12 +1013,8 @@ $pines->com_customer->load_company_select();
 						<span class="pf-field" id="p_muid_interaction_date"></span>
 					</div>
 					<div class="pf-element pf-full-width">
-						<span class="pf-label">Comments</span>
-						<span class="pf-field pf-full-width" id="p_muid_interaction_comments"></span>
-					</div>
-					<div class="pf-element pf-full-width">
-						<span class="pf-label">Review Comments</span>
-						<span class="pf-field pf-full-width">
+						<span class="pf-full-width" id="p_muid_interaction_comments"></span>
+						<span class="pf-full-width">
 							<ul id="p_muid_interaction_notes"></ul>
 						</span>
 					</div>

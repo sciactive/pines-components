@@ -254,7 +254,7 @@ class com_customer_customer extends user {
 		if (!isset($employee->guid))
 			return false;
 		foreach ($pines->config->com_customer->follow_ups as $cur_follow_up) {
-			$cur_follow_up = explode(':', $cur_follow_up);
+			$cur_follow_up = explode('|', $cur_follow_up);
 			$interaction = com_customer_interaction::factory();
 			$interaction->customer = $this;
 			$interaction->employee = $employee;
@@ -263,8 +263,7 @@ class com_customer_customer extends user {
 			$interaction->action_date = strtotime('+'.$cur_follow_up[1]);
 			$interaction->type = 'Follow-Up';
 			$interaction->status = 'open';
-			$interaction->comments = 'Follow-up with this customer to ensure that they are happy.';
-
+			$interaction->comments = $cur_follow_up[2];
 			if ($pines->config->com_customer->com_calendar) {
 				// Create the interaction calendar event.
 				$event = com_calendar_event::factory();

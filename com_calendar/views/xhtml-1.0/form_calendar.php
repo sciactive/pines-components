@@ -14,6 +14,8 @@ $this->title = 'Actions';
 $pines->com_pgrid->load();
 $pines->com_jstree->load();
 $pines->com_ptags->load();
+if ($pines->config->com_calendar->com_customer)
+	$pines->com_customer->load_customer_select();
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
@@ -44,6 +46,17 @@ $pines->com_ptags->load();
 				pines.post("<?php echo addslashes(pines_url('com_calendar', 'editcalendar')); ?>", { "location": '<?php echo addslashes($this->location->guid); ?>', "employee": $(this).val() });
 			change_counter++;
 		}).change();
+		<?php if ($pines->config->com_calendar->com_customer) { ?>
+		$("#p_muid_new_interaction [name=interaction_date]").datepicker({
+			dateFormat: "yy-mm-dd",
+			changeMonth: true,
+			changeYear: true,
+			showOtherMonths: true,
+			selectOtherMonths: true
+		});
+
+		$("#p_muid_customer").customerselect();
+		<?php } ?>
 	});
 
 	// Change the location / division within the company.
@@ -131,6 +144,10 @@ $pines->com_ptags->load();
 								time_end: form.find(":input[name=time_end]").val(),
 								location: form.find(":input[name=location]").val()
 							});
+						},
+						"✪": function(){
+							form.dialog('close');
+							pines.com_calendar_new_appointment();
 						}
 					}
 				});
@@ -290,6 +307,69 @@ $pines->com_ptags->load();
 		<?php } ?>
 	};
 	<?php } ?>
+	<?php if ($pines->config->com_calendar->com_customer) { ?>
+	// Create an appointment.
+	pines.com_calendar_new_appointment = function(){
+		var interaction_dialog = $("#p_muid_new_interaction");
+
+		// Interaction Dialog
+		interaction_dialog.dialog({
+			bgiframe: true,
+			autoOpen: false,
+			modal: true,
+			width: 402,
+			buttons: {
+				"Create": function(){
+					var loader;
+					$.ajax({
+						url: "<?php echo addslashes(pines_url('com_customer', 'interaction/add')); ?>",
+						type: "POST",
+						dataType: "json",
+						data: {
+							customer: $("#p_muid_new_interaction [name=customer]").val(),
+							employee: $("#p_muid_new_interaction [name=employee]").val(),
+							date: $("#p_muid_new_interaction [name=interaction_date]").val(),
+							time_ampm: $("#p_muid_new_interaction [name=interaction_ampm]").val(),
+							time_hour: $("#p_muid_new_interaction [name=interaction_hour]").val(),
+							time_minute: $("#p_muid_new_interaction [name=interaction_minute]").val(),
+							type: $("#p_muid_new_interaction [name=interaction_type]").val(),
+							status: $("#p_muid_new_interaction [name=interaction_status]").val(),
+							comments: $("#p_muid_new_interaction [name=interaction_comments]").val()
+						},
+						beforeSend: function(){
+							loader = $.pnotify({
+								pnotify_title: 'Saving',
+								pnotify_text: 'Creating customer interaction...',
+								pnotify_notice_icon: 'picon picon-throbber',
+								pnotify_nonblock: true,
+								pnotify_hide: false,
+								pnotify_history: false
+							});
+						},
+						complete: function(){
+							loader.pnotify_remove();
+						},
+						error: function(XMLHttpRequest, textStatus){
+							pines.error("An error occured:\n"+XMLHttpRequest.status+": "+textStatus);
+						},
+						success: function(data){
+							if (!data) {
+								alert("Could not create the appointment.");
+								return;
+							}
+							alert("Successfully created the appointment.");
+							$("#p_muid_new_interaction [name=customer]").val('');
+							$("#p_muid_new_interaction [name=interaction_comments]").val('');
+							interaction_dialog.dialog("close");
+						}
+					});
+				}
+			}
+		});
+
+		interaction_dialog.dialog('open');
+	};
+
 	// Edit an appointment.
 	pines.com_calendar_edit_appointment = function(appointment_id){
 		var interaction_dialog = $("#p_muid_interaction_dialog");
@@ -379,11 +459,13 @@ $pines->com_ptags->load();
 			}
 		});
 	};
+	<?php } ?>
 	// ]]>
 </script>
 <?php if (gatekeeper('com_calendar/editcalendar')) { ?>
 <div style="margin-bottom: 1em; text-align: center;" id="p_muid_actions">
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_calendar_select_location();" title="Select Location"><span class="p_muid_btn picon picon-applications-internet"></span></button>
+	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_calendar_new_appointment();" title="New Appointment"><span class="p_muid_btn picon picon-appointment-new"></span></button>
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_calendar_new_event();" title="New Event"><span class="p_muid_btn picon picon-resource-calendar-insert"></span></button>
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_calendar_quick_schedule();" title="Quick Schedule"><span class="p_muid_btn picon picon-view-calendar-workweek"></span></button>
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_calendar_new_schedule();" title="Personal Schedule" <?php echo !isset($this->employee) ? 'disabled="disabled"' : '';?>><span class="p_muid_btn picon picon-list-resource-add"></span></button>
@@ -403,7 +485,7 @@ $pines->com_ptags->load();
 		} ?>
 	</select>
 </div>
-<?php } ?>
+<?php } if ($pines->config->com_calendar->com_customer) { ?>
 <div id="p_muid_interaction_dialog" title="Process Customer Interaction" style="display: none;">
 	<div class="pf-form">
 		<div class="pf-element">
@@ -445,3 +527,86 @@ $pines->com_ptags->load();
 	</div>
 	<br class="pf-clearing" />
 </div>
+<div id="p_muid_new_interaction" title="Create a Customer Appointment" style="display: none;">
+	<div class="pf-form">
+		<div class="pf-element">
+			<label><span class="pf-label">Customer</span>
+				<input class="ui-widget-content ui-corner-all" type="text" id="p_muid_customer" name="customer" size="22" value="" /></label>
+		</div>
+		<?php if (gatekeeper('com_customer/manageinteractions')) { ?>
+		<div class="pf-element">
+			<label><span class="pf-label">Employee</span>
+				<select class="ui-widget-content ui-corner-all" name="employee">
+				<?php foreach ($pines->com_hrm->get_employees() as $cur_employee) {
+					$selected = $_SESSION['user']->is($cur_employee) ? ' selected="selected"' : '';
+					echo '<option value="'.$cur_employee->guid.'"'.$selected.'>'.htmlspecialchars($cur_employee->name).'</option>"';
+				} ?>
+			</select></label>
+		</div>
+		<?php } else { ?>
+		<div class="pf-element">
+			<label><span class="pf-label">Employee</span>
+				<?php echo htmlspecialchars($_SESSION['user']->name); ?></label>
+		</div>
+		<input type="hidden" name="employee" value="<?php echo $_SESSION['user']->guid; ?>" />
+		<?php } ?>
+		<div class="pf-element">
+			<label><span class="pf-label">Interaction Type</span>
+				<select class="ui-widget-content ui-corner-all" name="interaction_type">
+					<?php foreach ($pines->config->com_customer->interaction_types as $cur_type) {
+						$cur_type = explode(':', $cur_type);
+						echo '<option value="'.htmlspecialchars($cur_type[1]).'">'.htmlspecialchars($cur_type[1]).'</option>';
+					} ?>
+				</select></label>
+		</div>
+		<div class="pf-element">
+			<label><span class="pf-label">Date</span>
+				<input class="ui-widget-content ui-corner-all" type="text" size="22" name="interaction_date" value="<?php echo format_date(time(), 'date_sort'); ?>" /></label>
+		</div>
+		<div class="pf-element pf-full-width">
+			<?php
+			$time_hour = format_date(time(), 'custom', 'H');
+			$time_minute = format_date(time(), 'custom', 'i');
+			?>
+			<span class="pf-label">Time</span>
+			<select class="ui-widget-content ui-corner-all" name="interaction_hour">
+				<option value="1" <?php echo ($time_hour == '1' || $time_hour == '13') ? 'selected="selected"' : ''; ?>>1</option>
+				<option value="2" <?php echo ($time_hour == '2' || $time_hour == '14') ? 'selected="selected"' : ''; ?>>2</option>
+				<option value="3" <?php echo ($time_hour == '3' || $time_hour == '15') ? 'selected="selected"' : ''; ?>>3</option>
+				<option value="4" <?php echo ($time_hour == '4' || $time_hour == '16') ? 'selected="selected"' : ''; ?>>4</option>
+				<option value="5" <?php echo ($time_hour == '5' || $time_hour == '17') ? 'selected="selected"' : ''; ?>>5</option>
+				<option value="6" <?php echo ($time_hour == '6' || $time_hour == '18') ? 'selected="selected"' : ''; ?>>6</option>
+				<option value="7" <?php echo ($time_hour == '7' || $time_hour == '19') ? 'selected="selected"' : ''; ?>>7</option>
+				<option value="8" <?php echo ($time_hour == '8' || $time_hour == '20') ? 'selected="selected"' : ''; ?>>8</option>
+				<option value="9" <?php echo ($time_hour == '9' || $time_hour == '21') ? 'selected="selected"' : ''; ?>>9</option>
+				<option value="10" <?php echo ($time_hour == '10' || $time_hour == '22') ? 'selected="selected"' : ''; ?>>10</option>
+				<option value="11" <?php echo ($time_hour == '11' || $time_hour == '23') ? 'selected="selected"' : ''; ?>>11</option>
+				<option value="0" <?php echo ($time_hour == '0' || $time_hour == '12') ? 'selected="selected"' : ''; ?>>12</option>
+			</select> :
+			<select class="ui-widget-content ui-corner-all" name="interaction_minute">
+				<option value="0" <?php echo ($time_minute >= '0' && $time_minute < '15') ? 'selected="selected"' : ''; ?>>00</option>
+				<option value="15" <?php echo ($time_minute >= '15' && $time_minute < '30') ? 'selected="selected"' : ''; ?>>15</option>
+				<option value="30" <?php echo ($time_minute >= '30' && $time_minute < '45') ? 'selected="selected"' : ''; ?>>30</option>
+				<option value="45" <?php echo ($time_minute >= '45' && $time_minute < '60') ? 'selected="selected"' : ''; ?>>45</option>
+			</select>
+			<select class="ui-widget-content ui-corner-all" name="interaction_ampm">
+				<option value="am" selected="selected">AM</option>
+				<option value="pm" <?php echo ($time_hour >= 12) ? 'selected="selected"' : ''; ?>>PM</option>
+			</select>
+		</div>
+		<div class="pf-element">
+			<label>
+				<span class="pf-label">Status</span>
+				<select class="ui-widget-content ui-corner-all" name="interaction_status">
+					<option value="open">Open</option>
+					<option value="closed">Closed</option>
+				</select>
+			</label>
+		</div>
+		<div class="pf-element pf-full-width">
+			<textarea class="ui-widget-content ui-corner-all" rows="3" cols="40" name="interaction_comments"></textarea>
+		</div>
+	</div>
+	<br class="pf-clearing" />
+</div>
+<?php } ?>

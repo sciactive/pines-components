@@ -16,9 +16,9 @@ if ( !gatekeeper('com_customer/newinteraction') )
 
 $pines->page->override = true;
 
-$customer = com_customer_customer::factory((int) $_REQUEST['customer']);
+$customer = com_customer_customer::factory(intval($_REQUEST['customer']));
 if (!isset($customer->guid))
-	$customer = com_customer_company::factory((int) $_REQUEST['customer']);
+	$customer = com_customer_company::factory(intval($_REQUEST['customer']));
 
 if (!isset($customer->guid)) {
 	$pines->page->override_doc('false');

@@ -13,6 +13,13 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
+		'name' => 'com_customer',
+		'cname' => 'CRM Integration',
+		'description' => 'Integrate with com_customer.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'edit_appointments',
 		'cname' => 'Edit Appointments',
 		'description' => 'Appointment events can be edited.',

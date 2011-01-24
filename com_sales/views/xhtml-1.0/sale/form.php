@@ -587,7 +587,7 @@ if ($pines->config->com_sales->autocomplete_product)
 							alert("Please select a salesperson using the dropdown menu.");
 							return;
 						}
-						row.pgrid_set_value(10, salesperson);
+						row.pgrid_set_value(11, salesperson);
 						row.pgrid_deselect_rows();
 						salesperson_dialog.dialog('close');
 						update_products();

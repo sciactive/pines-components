@@ -1184,7 +1184,7 @@ class com_sales_sale extends entity {
 				// Copy the stock array so we can manipulate it by reference.
 				$stock_entities = $cur_product['stock_entities'];
 				foreach ($stock_entities as &$cur_stock) {
-					if (empty($cur_stock))
+					if (!isset($cur_stock->guid))
 						continue;
 					$last_tx = $pines->entity_manager->get_entity(
 							array('reverse' => true, 'class' => com_sales_stock),

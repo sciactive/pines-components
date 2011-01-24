@@ -25,10 +25,9 @@ return array(
 		'component' => 'com_jquery&com_pnotify&com_jstree&com_ptags&com_hrm'
 	),
 	'abilities' => array(
-		array('editcalendar', 'Edit Calendar', 'User can edit the group calendar.'),
-		array('viewcalendar', 'View Calendar', 'User can view the group calendar.'),
-		array('managecalendar', 'Manage Calendar', 'User can view private events and schedules for other employee.'),
-		array('editappointments', 'Edit Appointments', 'User can edit the appointments.')
+		array('viewcalendar', 'View Calendar', 'User can view the calendar.'),
+		array('editcalendar', 'Edit Calendar', 'User can edit their personal calendar.'),
+		array('managecalendar', 'Manage Calendar', 'User can view private events and manage schedules for other employee.')
 	),
 );
 

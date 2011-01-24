@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_calendar/editcalendar') )
+if ( !gatekeeper('com_calendar/managecalendar') )
 	punt_user(null, pines_url('com_calendar', 'editcalendar'));
 
 if (isset($_REQUEST['employee'])) {	

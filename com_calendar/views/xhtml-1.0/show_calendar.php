@@ -75,7 +75,7 @@ $timezone = $_SESSION['user']->get_timezone();
 			selectable: true,
 			theme: true,
 			ignoreTimezone: false,
-			editable: <?php echo gatekeeper('com_calendar/editcalendar') ? 'true' : 'false'; ?>,
+			editable: <?php echo gatekeeper('com_calendar/managecalendar') ? 'true' : 'false'; ?>,
 			events: [<?php
 				// Read in all existing events.
 				$event_counter = 0;
@@ -103,9 +103,7 @@ $timezone = $_SESSION['user']->get_timezone();
 					echo 'start: \''. format_date($cur_event->start, 'custom', 'Y-m-d H:i', $timezone) .'\', ';
 					echo 'end: \''. format_date($cur_event->end, 'custom', 'Y-m-d H:i', $timezone) .'\', ';
 					echo 'className: \''. addslashes($cur_event->color) .'\',';
-					if ((isset($cur_event->appointment) && !gatekeeper('com_calendar/editappointments')) ||
-						(!gatekeeper('com_calendar/editcalendar') && !$cur_event->user->is($_SESSION['user'])) ||
-						$cur_event->time_off) {
+					if ((!gatekeeper('com_calendar/managecalendar') && !$cur_event->user->is($_SESSION['user'])) || $cur_event->time_off) {
 						echo 'editable: false,';
 					} else {
 						echo 'editable: true,';
@@ -214,8 +212,10 @@ $timezone = $_SESSION['user']->get_timezone();
 			error: function(){
 				pines.error("An error occured while trying to save the calendar.");
 			},
-			success: function(){
-				if (refresh)
+			success: function(data){
+				if (data)
+					alert(data);
+				if (refresh || data)
 					pines.get('<?php echo pines_url('com_calendar', 'editcalendar', array('location' => $this->location->guid, 'employee' => $this->employee->guid)); ?>');
 			}
 		});

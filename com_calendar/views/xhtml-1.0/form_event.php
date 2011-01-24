@@ -71,7 +71,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			selectOtherMonths: true
 		});
 
-		<?php if (gatekeeper('com_calendar/editcalendar')) { ?>
+		<?php if (gatekeeper('com_calendar/managecalendar')) { ?>
 		// Location Tree
 		var location = $("#p_muid_form [name=location]");
 		$("#p_muid_form .location_tree")
@@ -171,7 +171,7 @@ defined('P_RUN') or die('Direct access prohibited');
 		<div class="pf-element pf-full-width">
 			<textarea class="ui-widget-content ui-corner-all" rows="2" cols="18" name="information"><?php echo htmlspecialchars($this->entity->information); ?></textarea>
 		</div>
-		<?php if (gatekeeper('com_calendar/editcalendar')) { ?>
+		<?php if (gatekeeper('com_calendar/managecalendar')) { ?>
 		<div class="pf-element">
 			<select class="ui-widget-content ui-corner-all form_input" name="employee"></select>
 			<label><input class="pf-field" type="checkbox" name="private" value="ON" <?php echo ($this->entity->private) ? 'checked="checked" ' : ''; ?>/>Private</label>

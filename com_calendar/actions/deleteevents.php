@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper() )
+if ( !gatekeeper('com_calendar/editcalendar') )
 	punt_user(null, pines_url('com_calendar', 'editcalendar'));
 
 $pines->page->override = true;
@@ -38,7 +38,7 @@ foreach ($list as $cur_id) {
 			if (isset($cur_event->appointment))
 				continue;
 			if ( !isset($cur_event->guid) || !$cur_event->delete() ||
-				(!gatekeeper('com_calendar/editcalendar') && !$cur_event->user->is($_SESSION['user'])) )
+				(!gatekeeper('com_calendar/managecalendar') && !$cur_event->user->is($_SESSION['user'])) )
 				$failed_removes[] = $cur_id;
 		}
 	}

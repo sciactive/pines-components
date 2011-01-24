@@ -11,11 +11,13 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_calendar/editcalendar') )
+if (!gatekeeper('com_calendar/editcalendar') && !gatekeeper('com_calendar/managecalendar'))
 	punt_user(null, pines_url('com_calendar', 'editcalendar'));
+$edit_others = gatekeeper('com_calendar/managecalendar') ? true : false;
 
 $pines->page->override = true;
 
+$errors = false;
 if (isset($_REQUEST['events'])) {
 	$events = explode(',', $_REQUEST['events']);
 
@@ -24,6 +26,8 @@ if (isset($_REQUEST['events'])) {
 		if (!empty($cur_event)) {
 			$event_details = explode('|', $cur_event);
 			$event = com_calendar_event::factory((int) $event_details[0]);
+			if (!$edit_others && !$event->user->is($_SESSION['user']))
+				continue;
 
 			if (isset($event->employee->guid) && !$event->time_off && !isset($event->appointment))
 				$event->color = $event->employee->color;
@@ -42,6 +46,20 @@ if (isset($_REQUEST['events'])) {
 				}
 			} else {
 				if (isset($event->appointment->guid)) {
+					$existing_appt = $pines->entity_manager->get_entity(
+						array('class' => com_customer_interaction),
+						array('&',
+							'data' => array('status', 'open'),
+							'ref' => array('customer', $event->appointment->customer),
+							'gte' => array('action_date', $event->start),
+							'lte' => array('action_date', $event->end)
+						),
+						array('!&', 'data' => array('guid', $event->appointment->guid))
+					);
+					if (isset($existing_appt->guid) && $event->appointment->guid != $existing_appt->guid) {
+						$errors = $event->appointment->customer->name.' is already scheduled for an appointment during this timeslot.';
+						continue;
+					}
 					$event->appointment->action_date = $event->start;
 					$event->appointment->save();
 				}
@@ -51,5 +69,6 @@ if (isset($_REQUEST['events'])) {
 		}
 	}
 }
+$pines->page->override_doc($errors);
 
 ?>

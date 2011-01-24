@@ -297,7 +297,10 @@ $pines->com_customer->load_company_select();
 							pines.error("An error occured:\n"+XMLHttpRequest.status+": "+textStatus);
 						},
 						success: function(data){
-							if (!data) {
+							if (data == 'conflict') {
+								alert("This customer already has an appointment during this timeslot.");
+								return;
+							} else if (!data) {
 								alert("Could not log the customer interaction.");
 								return;
 							}
@@ -820,8 +823,8 @@ $pines->com_customer->load_company_select();
 							<?php foreach ($this->interactions as $cur_interaction) { ?>
 							<tr title="<?php echo $cur_interaction->guid; ?>">
 								<td><?php echo $cur_interaction->guid; ?></td>
-								<td><?php echo format_date($cur_interaction->p_cdate, 'full_sort'); ?></td>
-								<td><?php echo format_date($cur_interaction->action_date, 'full_sort'); ?></td>
+								<td><?php echo format_date($cur_interaction->p_cdate, 'full_short'); ?></td>
+								<td><?php echo format_date($cur_interaction->action_date, 'full_short'); ?></td>
 								<td><?php echo htmlspecialchars($cur_interaction->employee->name); ?></td>
 								<td><?php echo htmlspecialchars($cur_interaction->type); ?></td>
 								<td><?php echo ucwords($cur_interaction->status); ?></td>

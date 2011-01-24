@@ -35,6 +35,33 @@ if ($pines->config->com_calendar->com_customer)
 		list-style-type: disc;
 		padding-left: 10px;
 	}
+	.calendar_form .combobox {
+		position: relative;
+	}
+	.calendar_form .combobox input {
+		padding-right: 32px;
+	}
+	.calendar_form .combobox a {
+		display: block;
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		margin-top: -8px;
+	}
+	.ui-autocomplete {
+		max-height: 200px;
+		overflow-y: auto;
+		/* prevent horizontal scrollbar */
+		overflow-x: hidden;
+		/* add padding to account for vertical scrollbar */
+		padding-right: 20px;
+	}
+	/* IE 6 doesn't support max-height
+	 * we use height instead, but this forces the menu to always be this tall
+	 */
+	* html .ui-autocomplete {
+		height: 200px;
+	}
 	/* ]]> */
 </style>
 <script type='text/javascript'>
@@ -46,6 +73,24 @@ if ($pines->config->com_calendar->com_customer)
 				pines.post("<?php echo addslashes(pines_url('com_calendar', 'editcalendar')); ?>", { "location": '<?php echo addslashes($this->location->guid); ?>', "employee": $(this).val() });
 			change_counter++;
 		}).change();
+
+		$(".combobox", ".calendar_form").each(function(){
+			var box = $(this);
+			var autobox = box.children("input").autocomplete({
+				minLength: 0,
+				source: $.map(box.children("select").children(), function(elem){
+					return $(elem).attr("value");
+				})
+			});
+			box.children("a").hover(function(){
+				$(this).addClass("ui-icon-circle-triangle-s").removeClass("ui-icon-triangle-1-s");
+			}, function(){
+				$(this).addClass("ui-icon-triangle-1-s").removeClass("ui-icon-circle-triangle-s");
+			}).click(function(){
+				autobox.focus().autocomplete("search", "");
+			});
+		});
+
 		<?php if ($pines->config->com_calendar->com_customer) { ?>
 		$("#p_muid_new_interaction [name=interaction_date]").datepicker({
 			dateFormat: "yy-mm-dd",
@@ -145,7 +190,7 @@ if ($pines->config->com_calendar->com_customer)
 								location: form.find(":input[name=location]").val()
 							});
 						},
-						"✪": function(){
+						"Cust. Appt.": function(){
 							form.dialog('close');
 							pines.com_calendar_new_appointment();
 						}
@@ -224,7 +269,7 @@ if ($pines->config->com_calendar->com_customer)
 			}
 		});
 	};
-	<?php if (gatekeeper('com_calendar/editcalendar')) { ?>
+	<?php if (gatekeeper('com_calendar/managecalendar')) { ?>
 	// Create a quick work schedule for an entire location.
 	pines.com_calendar_quick_schedule = function(){
 		$.ajax({
@@ -356,6 +401,9 @@ if ($pines->config->com_calendar->com_customer)
 							if (!data) {
 								alert("Could not create the appointment.");
 								return;
+							} else if (data == 'conflict') {
+								alert("This customer already has an appointment during this timeslot.");
+								return;
 							}
 							alert("Successfully created the appointment.");
 							$("#p_muid_new_interaction [name=customer]").val('');
@@ -462,7 +510,7 @@ if ($pines->config->com_calendar->com_customer)
 	<?php } ?>
 	// ]]>
 </script>
-<?php if (gatekeeper('com_calendar/editcalendar')) { ?>
+<?php if (gatekeeper('com_calendar/managecalendar')) { ?>
 <div style="margin-bottom: 1em; text-align: center;" id="p_muid_actions">
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_calendar_select_location();" title="Select Location"><span class="p_muid_btn picon picon-applications-internet"></span></button>
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_calendar_new_appointment();" title="New Appointment"><span class="p_muid_btn picon picon-appointment-new"></span></button>
@@ -470,7 +518,6 @@ if ($pines->config->com_calendar->com_customer)
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_calendar_quick_schedule();" title="Quick Schedule"><span class="p_muid_btn picon picon-view-calendar-workweek"></span></button>
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_calendar_new_schedule();" title="Personal Schedule" <?php echo !isset($this->employee) ? 'disabled="disabled"' : '';?>><span class="p_muid_btn picon picon-list-resource-add"></span></button>
 </div>
-<?php } if (gatekeeper('com_calendar/editcalendar') || gatekeeper('com_calendar/managecalendar')) { ?>
 <div style="margin-bottom: 1em;">
 	<select class="ui-widget-content ui-corner-all" id="p_muid_employee" name="employee" style="width: 100%;">
 		<option value="all"><?php echo $this->location->name; ?></option>

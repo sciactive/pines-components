@@ -11,9 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper() )
+if ( !gatekeeper('com_calendar/editcalendar') && !gatekeeper('com_calendar/managecalendar'))
 	punt_user(null, pines_url('com_calendar', 'editevent'));
-
 
 $event = com_calendar_event::factory((int)$_REQUEST['id']);
 if (!isset($event->guid)) {
@@ -25,7 +24,9 @@ if (!isset($event->guid)) {
 			$event->all_day = true;
 	}
 } else {
-	if (!gatekeeper('com_calendar/editcalendar') && !$event->employee->is($_SESSION['user'])) {
+	//var_dump($event);
+	//exit;
+	if (!gatekeeper('com_calendar/managecalendar') && !$event->employee->is($_SESSION['user'])) {
 		pines_error('You cannot only edit your own events.');
 		$pines->com_calendar->show_calendar();
 		return;
@@ -34,7 +35,7 @@ if (!isset($event->guid)) {
 	date_default_timezone_set($_SESSION['user']->get_timezone());
 }
 
-if (isset($event->appointment) && !gatekeeper('com_calendar/editappointments')) {
+if (isset($event->appointment)) {
 	pines_error('You cannot edit appointments.');
 	$pines->com_calendar->show_calendar();
 	return;

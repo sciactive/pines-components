@@ -4,7 +4,7 @@
 		"text": "Calendar",
 		"href": ["com_calendar","editcalendar"],
 		"depend": {
-			"ability": "com_calendar/editcalendar|com_calendar/viewcalendar"
+			"ability": "com_calendar/managecalendar|com_calendar/editcalendar|com_calendar/viewcalendar"
 		}
 	}
 ]

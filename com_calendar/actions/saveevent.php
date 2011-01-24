@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper())
+if ( !gatekeeper('com_calendar/editcalendar'))
 	punt_user(null, pines_url('com_calendar', 'editcalendar'));
 
 if (isset($_REQUEST['employee'])) {
@@ -22,21 +22,21 @@ if (isset($_REQUEST['employee'])) {
 			redirect(pines_url('com_calendar', 'editcalendar', array('location' => $location->guid, 'employee' => $employee->guid)));
 			return;
 		}
-		if (isset($event->appointment) && !gatekeeper('com_calendar/editappointments')) {
+		if (isset($event->appointment)) {
 			pines_error('You cannot edit appointments.');
 			redirect(pines_url('com_calendar', 'editcalendar', array('location' => $location->guid, 'employee' => $employee->guid)));
 			return;
 		}
 		if ($event->time_off)
 			return;
-		if (!gatekeeper('com_calendar/editcalendar') && !$event->user->is($_SESSION['user']))
+		if (!gatekeeper('com_calendar/managecalendar') && !$event->user->is($_SESSION['user']))
 			punt_user(null, pines_url('com_calendar', 'editcalendar'));
 	} else {
 		$event = com_calendar_event::factory();
 	}
 
 	$event->employee = com_hrm_employee::factory((int) $_REQUEST['employee']);
-	if (!gatekeeper('com_calendar/editcalendar'))
+	if (!gatekeeper('com_calendar/managecalendar'))
 		$event->employee = com_hrm_employee::factory((int) $_SESSION['user']->guid);
 
 	$location = $event->employee->group;

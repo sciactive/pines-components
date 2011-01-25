@@ -71,7 +71,7 @@ $pines->com_jstree->load();
 	<script type="text/javascript">
 		// <![CDATA[
 		pines(function(){
-			$(".p_muid_option_accordian").accordion({
+			$(".p_muid_option_accordian", "#p_muid_form").accordion({
 				autoHeight: false,
 				collapsible: true,
 				active: false,

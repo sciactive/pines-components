@@ -125,6 +125,7 @@ class com_sales_sale extends entity {
 			// Call the payment processing for approval.
 			$pines->com_sales->call_payment_process(array(
 				'action' => 'approve',
+				'type' => 'charge',
 				'name' => $cur_payment['entity']->processing_type,
 				'payment' => &$cur_payment,
 				'ticket' => &$this

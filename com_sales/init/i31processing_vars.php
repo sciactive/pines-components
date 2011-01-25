@@ -29,6 +29,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * associative entries:
  *
  * - "action" - The processing which is being requested.
+ * - "type" - When approving payments, will be "charge" or "return".
  * - "name" - The name of the type being called.
  * - "payment" - The sale's/return's payment entry. This holds information about the payment.
  * - "ticket" - The sale/return entity.

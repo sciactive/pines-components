@@ -697,7 +697,7 @@ if ($pines->config->com_sales->autocomplete_product)
 							autoOpen: true,
 							modal: true,
 							open: function(){
-								form.html(data+"<br />");
+								form.html('<form method="post" action="">'+data+"</form><br />");
 								form.find("form").submit(function(){
 									form.dialog('option', 'buttons').Done();
 									return false;
@@ -758,14 +758,17 @@ if ($pines->config->com_sales->autocomplete_product)
 				$("<div title=\"Payment Amount\" />").each(function(){
 					var amount_dialog = $(this);
 					// A button for the current amount due.
+					var cur_amount = $("#p_muid_amount_due").html();
+					if (parseFloat(cur_amount) <= 0 && parseFloat($("#p_muid_change").html()) > 0)
+						cur_amount = "-"+$("#p_muid_change").html();
 					amount_dialog.append($("<button />").addClass("ui-state-default ui-corner-all").hover(function(){
 						$(this).addClass("ui-state-hover");
 					}, function(){
 						$(this).removeClass("ui-state-hover");
-					}).html($("#p_muid_amount_due").html()).css({"float": "left", "clear": "both", "min-height": "60px", "width": "100%", "text-align": "center", "margin": "2px"})
+					}).html(cur_amount).css({"float": "left", "clear": "both", "min-height": "60px", "width": "100%", "text-align": "center", "margin": "2px"})
 					.click(function(){
 						amount_dialog.dialog("close");
-						callback(round_to_dec($("#p_muid_amount_due").html(), true));
+						callback(round_to_dec(parseFloat(cur_amount), true));
 					}));
 					// Buttons for common amounts.
 					$.each(["1", "5", "10", "20", "50", "60", "80", "100"], function(){
@@ -1233,6 +1236,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					<tbody>
 					</tbody>
 				</table>
+				<small>A payment with a negative amount means the customer will be charged to cover return fees. (Ex -5.00 means a $5.00 charge.)</small>
 			</div>
 			<input type="hidden" id="p_muid_payments" name="payments" size="24" />
 		</div>

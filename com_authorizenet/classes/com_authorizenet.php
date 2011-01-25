@@ -87,7 +87,7 @@ class com_authorizenet extends component {
 			case 'approve':
 				$array['payment']['status'] = 'approved';
 				if ($array['payment']['data']['card_swiped'] == 'ON') {
-					if ($array['ticket']->has_tag('return')) {
+					if ($array['type'] == 'return') {
 						if (
 								(empty($array['payment']['data']['name_last']) || empty($array['payment']['data']['card_number']))
 								&&
@@ -120,7 +120,7 @@ class com_authorizenet extends component {
 				//$state = $args['payment']['data']['state'];
 				//$zip = $args['payment']['data']['zip'];
 				$card_code = $array['payment']['data']['cid'];
-				$invoice_num = $array['ticket']->id;
+				$invoice_num = ($array['ticket']->has_tag('sale') ? 'SA' : 'RE').$array['ticket']->id;
 				$transaction_name = $pines->config->com_authorizenet->trans_name;
 
 				$post_values = array(

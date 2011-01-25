@@ -127,16 +127,26 @@ class com_sales_return extends entity {
 				$return = false;
 				continue;
 			}
+			// If the amount is negative, we are charging money.
+			$type = $cur_payment['amount'] < 0 ? 'charge' : 'return';
+			// If we're charging, the amount needs to be turned positive.
+			if ($type == 'charge')
+				$cur_payment['amount'] = $cur_payment['amount'] * -1;
 			// Call the payment processing for approval.
 			$pines->com_sales->call_payment_process(array(
 				'action' => 'approve',
+				'type' => $type,
 				'name' => $cur_payment['entity']->processing_type,
 				'payment' => &$cur_payment,
 				'ticket' => &$this
 			));
+			// Now turn it back negative.
+			if ($type == 'charge')
+				$cur_payment['amount'] = $cur_payment['amount'] * -1;
 			if (!in_array($cur_payment['status'], array('approved', 'declined')))
 				$return = false;
 		}
+		unset($cur_payment);
 		return $return;
 	}
 
@@ -167,7 +177,8 @@ class com_sales_return extends entity {
 		$this->payments = (array) $sale->payments;
 		$payment_total = 0;
 		//$sale->returned_total is updated when return is processed.
-		$sale_total = $sale->total - (float) $sale->returned_total;
+		//$sale_total = $sale->total - (float) $sale->returned_total;
+		$this->total();
 		foreach ($this->payments as $key => &$cur_payment) {
 			// Get rid of non-tendered payments.
 			if ($cur_payment['status'] != 'tendered') {
@@ -186,13 +197,14 @@ class com_sales_return extends entity {
 			}
 			*/
 			// If we have enough returned already, we don't need any more.
-			if ($payment_total >= $sale_total) {
+			if ($payment_total >= $this->total) {
 				unset($this->payments[$key]);
 				continue;
 			}
 			// Reduce the amount to however much is left to return the sale
 			// total.
-			$cur_payment['amount'] -= ($payment_total + $cur_payment['amount']) - $sale_total;
+			if ($cur_payment['entity']->allow_return)
+				$cur_payment['amount'] -= ($payment_total + $cur_payment['amount']) - $this->total;
 			$payment_total += $cur_payment['amount'];
 			// Return payments are now pending.
 			$cur_payment['status'] = 'pending';
@@ -581,13 +593,21 @@ class com_sales_return extends entity {
 				$return = false;
 				continue;
 			}
+			// If the amount is negative, we are charging money.
+			$action = $cur_payment['amount'] < 0 ? 'tender' : 'return';
+			// If we're charging, the amount needs to be turned positive.
+			if ($action == 'tender')
+				$cur_payment['amount'] = $cur_payment['amount'] * -1;
 			// Call the payment processing.
 			$pines->com_sales->call_payment_process(array(
-				'action' => 'return',
+				'action' => $action,
 				'name' => $cur_payment['entity']->processing_type,
 				'payment' => &$cur_payment,
 				'ticket' => &$this
 			));
+			// Now turn it back negative.
+			if ($action == 'tender')
+				$cur_payment['amount'] = $cur_payment['amount'] * -1;
 			// If the payment went through, record it, if it didn't and it
 			// wasn't declined, consider it a failure.
 			if ($cur_payment['status'] == 'tendered') {
@@ -598,8 +618,13 @@ class com_sales_return extends entity {
 					$this->sale->returned_total += (float) $cur_payment['amount'];
 				// Make a transaction entry.
 				$tx = com_sales_tx::factory('payment_tx');
-				$tx->type = 'payment_returned';
-				$tx->amount = (float) $cur_payment['amount'];
+				if ($action == 'tender') {
+					$tx->type = 'payment_received';
+					$tx->amount = (float) $cur_payment['amount'] * -1;
+				} else {
+					$tx->type = 'payment_returned';
+					$tx->amount = (float) $cur_payment['amount'];
+				}
 				$tx->ref = $cur_payment['entity'];
 
 				// Make sure we have a GUID before saving the tx.
@@ -613,6 +638,7 @@ class com_sales_return extends entity {
 					$return = false;
 			}
 		}
+		unset($cur_payment);
 		$amount_due = $total - $amount_tendered;
 		if ($amount_due < 0.00)
 			$amount_due = 0.00;
@@ -665,7 +691,7 @@ class com_sales_return extends entity {
 			$discount = $cur_product['discount'];
 			$cur_return_fee = 0.00;
 			// Return fee needs to be calculated before discount.
-			foreach ($cur_product['entity']->return_checklists as $cur_checklist) {
+			foreach ((array) $cur_product['entity']->return_checklists as $cur_checklist) {
 				if (!$cur_checklist->enabled)
 					continue;
 				foreach ($cur_checklist->conditions as $cur_condition) {

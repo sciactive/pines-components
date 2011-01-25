@@ -23,34 +23,6 @@ defined('P_RUN') or die('Direct access prohibited');
 	#p_muid_form .form_input {
 		width: 170px;
 	}
-	#p_muid_form .combobox {
-		position: relative;
-	}
-	#p_muid_form .combobox input {
-		padding-right: 32px;
-	}
-	#p_muid_form .combobox a {
-		display: block;
-		position: absolute;
-		right: 8px;
-		top: 50%;
-		margin-top: -8px;
-	}
-	.ui-autocomplete {
-		max-height: 200px;
-		overflow-y: auto;
-		/* prevent horizontal scrollbar */
-		overflow-x: hidden;
-		/* add padding to account for vertical scrollbar */
-		padding-right: 20px;
-	}
-	/* IE 6 doesn't support max-height
-	 * we use height instead, but this forces the menu to always be this tall
-	 */
-	* html .ui-autocomplete {
-		height: 200px;
-	}
-
 	/* ]]> */
 </style>
 <script type='text/javascript'>
@@ -144,7 +116,7 @@ defined('P_RUN') or die('Direct access prohibited');
 				$("#p_muid_end").val($(this).val());
 		}).change();
 
-		$(".combobox", "#p_muid_form").each(function(){
+		$(".combobox", ".calendar_form").each(function(){
 			var box = $(this);
 			var autobox = box.children("input").autocomplete({
 				minLength: 0,
@@ -163,7 +135,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	});
 // ]]>
 </script>
-<div class="pf-form" id="p_muid_form">
+<div class="pf-form calendar_form" id="p_muid_form">
 	<div style="float: left;">
 		<div class="pf-element">
 			<input class="ui-widget-content ui-corner-all form_input" type="text" id="p_muid_event_label" name="event_label" value="<?php echo (isset($this->entity->label)) ? htmlspecialchars($this->entity->label) : 'Label'; ?>" onfocus="if(this.value==this.defaultValue)this.value=''" onblur="if(this.value=='')this.value=this.defaultValue" />

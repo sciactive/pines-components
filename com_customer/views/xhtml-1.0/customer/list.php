@@ -16,9 +16,39 @@ $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_customer/customer/list'];
 ?>
+<style type="text/css">
+	/* <![CDATA[ */
+	#p_muid_interaction_dialog .combobox {
+		position: relative;
+	}
+	#p_muid_interaction_dialog .combobox input {
+		padding-right: 32px;
+	}
+	#p_muid_interaction_dialog .combobox a {
+		display: block;
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		margin-top: -8px;
+	}
+	.ui-autocomplete {
+		max-height: 200px;
+		overflow-y: auto;
+		/* prevent horizontal scrollbar */
+		overflow-x: hidden;
+		/* add padding to account for vertical scrollbar */
+		padding-right: 20px;
+	}
+	/* IE 6 doesn't support max-height
+	 * we use height instead, but this forces the menu to always be this tall
+	 */
+	* html .ui-autocomplete {
+		height: 200px;
+	}
+	/* ]]> */
+</style>
 <script type="text/javascript">
 	// <![CDATA[
-
 	pines(function(){
 		// Customer search function for the pgrid toolbar.
 		var customer_search_box;
@@ -100,9 +130,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 							customer: customer_id,
 							employee: $("#p_muid_interaction_dialog [name=employee]").val(),
 							date: $("#p_muid_interaction_dialog [name=interaction_date]").val(),
-							time_ampm: $("#p_muid_interaction_dialog [name=interaction_ampm]").val(),
-							time_hour: $("#p_muid_interaction_dialog [name=interaction_hour]").val(),
-							time_minute: $("#p_muid_interaction_dialog [name=interaction_minute]").val(),
+							time: $("#p_muid_interaction_dialog [name=interaction_time]").val(),
 							type: $("#p_muid_interaction_dialog [name=interaction_type]").val(),
 							status: $("#p_muid_interaction_dialog [name=interaction_status]").val(),
 							comments: $("#p_muid_interaction_dialog [name=interaction_comments]").val()
@@ -202,8 +230,24 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			showOtherMonths: true,
 			selectOtherMonths: true
 		});
-	});
 
+		$(".combobox", "#p_muid_interaction_dialog").each(function(){
+			var box = $(this);
+			var autobox = box.children("input").autocomplete({
+				minLength: 0,
+				source: $.map(box.children("select").children(), function(elem){
+					return $(elem).attr("value");
+				})
+			});
+			box.children("a").hover(function(){
+				$(this).addClass("ui-icon-circle-triangle-s").removeClass("ui-icon-triangle-1-s");
+			}, function(){
+				$(this).addClass("ui-icon-triangle-1-s").removeClass("ui-icon-circle-triangle-s");
+			}).click(function(){
+				autobox.focus().autocomplete("search", "");
+			});
+		});
+	});
 	// ]]>
 </script>
 <table id="p_muid_grid">
@@ -275,35 +319,37 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<input class="ui-widget-content ui-corner-all" type="text" size="22" name="interaction_date" value="<?php echo format_date(time(), 'date_sort'); ?>" /></label>
 		</div>
 		<div class="pf-element pf-full-width">
-			<?php
-			$time_hour = format_date(time(), 'custom', 'H');
-			$time_minute = format_date(time(), 'custom', 'i');
-			?>
 			<span class="pf-label">Time</span>
-			<select class="ui-widget-content ui-corner-all" name="interaction_hour">
-				<option value="1" <?php echo ($time_hour == '1' || $time_hour == '13') ? 'selected="selected"' : ''; ?>>1</option>
-				<option value="2" <?php echo ($time_hour == '2' || $time_hour == '14') ? 'selected="selected"' : ''; ?>>2</option>
-				<option value="3" <?php echo ($time_hour == '3' || $time_hour == '15') ? 'selected="selected"' : ''; ?>>3</option>
-				<option value="4" <?php echo ($time_hour == '4' || $time_hour == '16') ? 'selected="selected"' : ''; ?>>4</option>
-				<option value="5" <?php echo ($time_hour == '5' || $time_hour == '17') ? 'selected="selected"' : ''; ?>>5</option>
-				<option value="6" <?php echo ($time_hour == '6' || $time_hour == '18') ? 'selected="selected"' : ''; ?>>6</option>
-				<option value="7" <?php echo ($time_hour == '7' || $time_hour == '19') ? 'selected="selected"' : ''; ?>>7</option>
-				<option value="8" <?php echo ($time_hour == '8' || $time_hour == '20') ? 'selected="selected"' : ''; ?>>8</option>
-				<option value="9" <?php echo ($time_hour == '9' || $time_hour == '21') ? 'selected="selected"' : ''; ?>>9</option>
-				<option value="10" <?php echo ($time_hour == '10' || $time_hour == '22') ? 'selected="selected"' : ''; ?>>10</option>
-				<option value="11" <?php echo ($time_hour == '11' || $time_hour == '23') ? 'selected="selected"' : ''; ?>>11</option>
-				<option value="0" <?php echo ($time_hour == '0' || $time_hour == '12') ? 'selected="selected"' : ''; ?>>12</option>
-			</select> :
-			<select class="ui-widget-content ui-corner-all" name="interaction_minute">
-				<option value="0" <?php echo ($time_minute >= '0' && $time_minute < '15') ? 'selected="selected"' : ''; ?>>00</option>
-				<option value="15" <?php echo ($time_minute >= '15' && $time_minute < '30') ? 'selected="selected"' : ''; ?>>15</option>
-				<option value="30" <?php echo ($time_minute >= '30' && $time_minute < '45') ? 'selected="selected"' : ''; ?>>30</option>
-				<option value="45" <?php echo ($time_minute >= '45' && $time_minute < '60') ? 'selected="selected"' : ''; ?>>45</option>
-			</select>
-			<select class="ui-widget-content ui-corner-all" name="interaction_ampm">
-				<option value="am" selected="selected">AM</option>
-				<option value="pm" <?php echo ($time_hour >= 12) ? 'selected="selected"' : ''; ?>>PM</option>
-			</select>
+			<span class="combobox">
+				<input class="ui-widget-content ui-corner-all" type="text" name="interaction_time" size="18" value="<?php echo format_date(time(), 'time_short'); ?>" />
+				<a href="javascript:void(0);" class="ui-icon ui-icon-triangle-1-s"></a>
+				<select style="display: none;">
+					<option value="12:00 AM">12:00 AM</option>
+					<option value="1:00 AM">1:00 AM</option>
+					<option value="2:00 AM">2:00 AM</option>
+					<option value="3:00 AM">3:00 AM</option>
+					<option value="4:00 AM">4:00 AM</option>
+					<option value="5:00 AM">5:00 AM</option>
+					<option value="6:00 AM">6:00 AM</option>
+					<option value="7:00 AM">7:00 AM</option>
+					<option value="8:00 AM">8:00 AM</option>
+					<option value="9:00 AM">9:00 AM</option>
+					<option value="10:00 AM">10:00 AM</option>
+					<option value="11:00 AM">11:00 AM</option>
+					<option value="12:00 PM">12:00 PM</option>
+					<option value="1:00 PM">1:00 PM</option>
+					<option value="2:00 PM">2:00 PM</option>
+					<option value="3:00 PM">3:00 PM</option>
+					<option value="4:00 PM">4:00 PM</option>
+					<option value="5:00 PM">5:00 PM</option>
+					<option value="6:00 PM">6:00 PM</option>
+					<option value="7:00 PM">7:00 PM</option>
+					<option value="8:00 PM">8:00 PM</option>
+					<option value="9:00 PM">9:00 PM</option>
+					<option value="10:00 PM">10:00 PM</option>
+					<option value="11:00 PM">11:00 PM</option>
+				</select>
+			</span>
 		</div>
 		<div class="pf-element">
 			<label>

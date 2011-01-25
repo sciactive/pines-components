@@ -261,7 +261,7 @@ class com_customer_customer extends user {
 			// Change the timezone to enter the event with the user's timezone.
 			date_default_timezone_set($employee->get_timezone());
 			$interaction->action_date = strtotime('+'.$cur_follow_up[1]);
-			$interaction->type = 'Follow-Up';
+			$interaction->type = 'Follow-Up '.$cur_follow_up[0];
 			$interaction->status = 'open';
 			$interaction->comments = $cur_follow_up[2];
 			if ($pines->config->com_customer->com_calendar) {
@@ -272,7 +272,7 @@ class com_customer_customer extends user {
 				$event->label = $interaction->type;
 				$event->title = $cur_follow_up[0].' '.$this->name;
 				$event->private = true;
-				$event->all_day = true;
+				$event->all_day = false;
 				$event->start = $interaction->action_date;
 				$event->end = strtotime('+1 hour', $interaction->action_date);
 				$event->color = 'greenyellow';

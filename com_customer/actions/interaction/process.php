@@ -34,7 +34,7 @@ if (empty($_REQUEST['review_comments'])){
 
 $interaction->status = $_REQUEST['status'];
 if (!empty($_REQUEST['review_comments']))
-	$interaction->review_comments[] = $_SESSION['user']->name.': '.$_REQUEST['review_comments'];
+	$interaction->review_comments[] = $_SESSION['user']->name.' '.format_date(time(), 'custom', 'n/j/y g:iA').': '.$_REQUEST['review_comments'].'('.ucwords($interaction->status).')';
 if ($pines->config->com_customer->com_calendar) {
 	switch ($interaction->status) {
 		case 'open':

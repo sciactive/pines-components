@@ -76,7 +76,7 @@ if (isset($_REQUEST['employee'])) {
 	}
 	// If the start and end dates are the same, push the end date ahead one day.
 	if ($event->start >= $event->end)
-		$event->end = strtotime('+1 day', $event->start);
+		$event->end = strtotime(format_date($event->start, 'date_short').' 11:59 PM');
 
 	$event->ac->other = 1;
 

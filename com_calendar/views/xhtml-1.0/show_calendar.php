@@ -86,6 +86,8 @@ $timezone = $_SESSION['user']->get_timezone();
 						if (isset($cur_event->employee->guid) && !$cur_event->employee->is($_SESSION['user']))
 							continue;
 					}
+					if (!isset($cur_event->user->guid))
+						continue;
 					if ($event_counter > 0)
 						echo ',';
 					echo '{';

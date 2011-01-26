@@ -131,7 +131,7 @@ if ($return->status != 'processed' && $return->status != 'voided') {
 				pines_notice("Product with SKU [$cur_sku] has a zero or negative quantity.");
 				$product_error = true;
 			}
-			if ($cur_product_entity->pricing_method != 'variable' && $cur_product_entity->unit_price != $cur_price) {
+			if ($cur_product_entity->pricing_method != 'variable' && $cur_product_entity->unit_price != $cur_price && (!isset($return->sale) || $cur_product['price'] != $cur_old_product['price'])) {
 				pines_notice("Product with SKU [$cur_sku] has an incorrect price.");
 				$product_error = true;
 			}

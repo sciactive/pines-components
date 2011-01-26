@@ -527,7 +527,7 @@ if ($pines->config->com_calendar->com_customer)
 			if (!isset($cur_employee->group))
 				continue;
 			$cur_select = (isset($this->employee->group) && $this->employee->is($cur_employee)) ? 'selected="selected"' : '';
-			if ($this->location->guid == $cur_employee->group->guid)
+			if ( $this->location->guid == $cur_employee->group->guid || ($this->descendents && $cur_employee->is_descendent($this->location)) )
 				echo '<option value="'.$cur_employee->guid.'" '.$cur_select.'>'.htmlspecialchars($cur_employee->name).'</option>';
 		} ?>
 	</select>
@@ -584,9 +584,10 @@ if ($pines->config->com_calendar->com_customer)
 		<div class="pf-element">
 			<label><span class="pf-label">Employee</span>
 				<select class="ui-widget-content ui-corner-all" name="employee">
-				<?php foreach ($pines->com_hrm->get_employees() as $cur_employee) {
+				<?php foreach ($this->employees as $cur_employee) {
 					$selected = $_SESSION['user']->is($cur_employee) ? ' selected="selected"' : '';
-					echo '<option value="'.$cur_employee->guid.'"'.$selected.'>'.htmlspecialchars($cur_employee->name).'</option>"';
+					if ($cur_employee->in_group($this->location) || $cur_employee->is_descendent($this->location))
+						echo '<option value="'.$cur_employee->guid.'"'.$selected.'>'.htmlspecialchars($cur_employee->name).'</option>"';
 				} ?>
 			</select></label>
 		</div>

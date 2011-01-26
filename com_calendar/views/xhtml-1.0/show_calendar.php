@@ -104,13 +104,25 @@ $timezone = $_SESSION['user']->get_timezone();
 					echo 'title: \''. addslashes($cur_event->title) .'\', ';
 					echo 'start: \''. format_date($cur_event->start, 'custom', 'Y-m-d H:i', $timezone) .'\', ';
 					echo 'end: \''. format_date($cur_event->end, 'custom', 'Y-m-d H:i', $timezone) .'\', ';
-					echo 'className: \''. addslashes($cur_event->color) .'\',';
 					if ((!gatekeeper('com_calendar/managecalendar') && !$cur_event->user->is($_SESSION['user'])) || $cur_event->time_off) {
 						echo 'editable: false,';
 					} else {
 						echo 'editable: true,';
 					}
-					echo (isset($cur_event->appointment->guid)) ? 'appointment: '.$cur_event->appointment->guid.',' : 'appointment: \'\',';
+					if (isset($cur_event->appointment->guid)) {
+						echo 'appointment: '.$cur_event->appointment->guid.',';
+						if ($cur_event->appointment->status == 'open') {
+							if ($cur_event->appointment->action_date < strtotime('-7 days'))
+								echo 'className: \'red\',';
+							elseif ($cur_event->appointment->action_date < strtotime('-3 days'))
+								echo 'className: \'yellow\',';
+							else
+								echo 'className: \'greenyellow\',';
+						}
+					} else {
+						echo 'appointment: \'\',';
+						echo 'className: \''. addslashes($cur_event->color) .'\',';
+					}
 					echo ($cur_event->all_day) ? 'allDay: true,' : 'allDay: false,';
 					echo (!empty($cur_event->information)) ? 'info: '.json_encode($cur_event->information) : 'info: \'\'';
 					echo '}';

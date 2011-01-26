@@ -447,6 +447,13 @@ table.fc-header {
 	border-color: whitesmoke;
 	color: black;
 	}
+.yellow,
+.fc-agenda .myclass .fc-event-time,
+.yellow a {
+	background-color: yellow;
+	border-color: yellow;
+	color: black;
+	}
 
 /* Horizontal Events
 ------------------------------------------------------------------------*/

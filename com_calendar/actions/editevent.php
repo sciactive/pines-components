@@ -18,8 +18,8 @@ $event = com_calendar_event::factory((int)$_REQUEST['id']);
 if (!isset($event->guid)) {
 	$event = com_calendar_event::factory();
 	if (!empty($_REQUEST['start'])) {
-		$event->start = strtotime($_REQUEST['start']);
-		$event->end = strtotime($_REQUEST['end']);
+		$event->start = strtotime(preg_replace('/\(.*/', '', $_REQUEST['start']));
+		$event->end = strtotime(preg_replace('/\(.*/', '', $_REQUEST['end']));
 		if ($event->start == $event->end)
 			$event->all_day = true;
 	}

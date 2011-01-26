@@ -40,6 +40,7 @@ foreach ($shifts as $cur_shift) {
 	$event->employee = $employee;
 	$event->title = $employee->name;
 	$event->color = $employee->color;
+	$event->information = 'Scheduled shift';
 	$shift_month = date('n', strtotime($shift_date));
 	$shift_day = date('j', strtotime($shift_date));
 	$shift_year = date('Y', strtotime($shift_date));
@@ -51,7 +52,7 @@ foreach ($shifts as $cur_shift) {
 	if (!$event->save()) {
 		$failed_entries .= (empty($failed_entries) ? '' : ', ').$cur_date;
 	} else {
-		$event->group = $location;
+		$event->group = $employee->group;
 		$event->save();
 	}
 

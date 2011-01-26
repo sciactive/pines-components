@@ -128,7 +128,6 @@ class com_calendar extends component {
 			unset($selector['ref']);
 			$selector['ref'][] = array('employee', $employee);
 			$form->employee = $calendar->employee = $employee;
-			$location = $employee->group;
 			$ancestors = $location->get_descendents(true);
 		}
 

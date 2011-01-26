@@ -70,7 +70,13 @@ if ($pines->config->com_calendar->com_customer)
 		var change_counter = 0;
 		$("#p_muid_employee").change(function(){
 			if (change_counter > 0)
-				pines.post("<?php echo addslashes(pines_url('com_calendar', 'editcalendar')); ?>", { "location": '<?php echo addslashes($this->location->guid); ?>', "employee": $(this).val() });
+				pines.post("<?php echo addslashes(pines_url('com_calendar', 'editcalendar')); ?>",
+				{
+					"location": '<?php echo addslashes($this->location->guid); ?>',
+					"employee": $(this).val(),
+					"descendents": <?php echo $this->descendents ? 'true' : 'false'; ?>
+				});
+
 			change_counter++;
 		}).change();
 
@@ -111,7 +117,10 @@ if ($pines->config->com_calendar->com_customer)
 			url: "<?php echo addslashes(pines_url('com_calendar', 'locationselect')); ?>",
 			type: "POST",
 			dataType: "html",
-			data: {"location": "<?php echo addslashes($this->location->guid); ?>", "descendents": descendents},
+			data: {
+				"location": "<?php echo addslashes($this->location->guid); ?>",
+				"descendents": descendents
+			},
 			error: function(XMLHttpRequest, textStatus){
 				pines.error("An error occured while trying to retreive the company schedule form:\n"+XMLHttpRequest.status+": "+textStatus);
 			},
@@ -133,7 +142,7 @@ if ($pines->config->com_calendar->com_customer)
 						"View Schedule": function(){
 							form.dialog('close');
 							var schedule_location = form.find(":input[name=location]").val();
-							var descendents = form.find(":input[name=descendents]").attr('checked');
+							descendents = form.find(":input[name=descendents]").attr('checked');
 							pines.post("<?php echo addslashes(pines_url('com_calendar', 'editcalendar')); ?>", {
 								"location": schedule_location,
 								"descendents": descendents
@@ -207,7 +216,7 @@ if ($pines->config->com_calendar->com_customer)
 			url: "<?php echo addslashes(pines_url('com_calendar', 'editevent')); ?>",
 			type: "POST",
 			dataType: "html",
-			data: {id: event_id},
+			data: {"id": event_id},
 			error: function(XMLHttpRequest, textStatus){
 				pines.error("An error occured while trying to retreive the event form:\n"+XMLHttpRequest.status+": "+textStatus);
 			},
@@ -586,7 +595,7 @@ if ($pines->config->com_calendar->com_customer)
 				<select class="ui-widget-content ui-corner-all" name="employee">
 				<?php foreach ($this->employees as $cur_employee) {
 					$selected = $_SESSION['user']->is($cur_employee) ? ' selected="selected"' : '';
-					if ($cur_employee->in_group($this->location) || $cur_employee->is_descendent($this->location))
+					if ($cur_employee->in_group($this->location) || ($this->descendents && $cur_employee->is_descendent($this->location)))
 						echo '<option value="'.$cur_employee->guid.'"'.$selected.'>'.htmlspecialchars($cur_employee->name).'</option>"';
 				} ?>
 			</select></label>

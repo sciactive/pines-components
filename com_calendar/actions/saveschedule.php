@@ -37,6 +37,7 @@ if (isset($_REQUEST['employee'])) {
 		$event->employee = $employee;
 		$event->title = $employee->name;
 		$event->color = $employee->color;
+		$event->information = 'Scheduled shift';
 		$event_month = date('n', strtotime($cur_date));
 		$event_day = date('j', strtotime($cur_date));
 		$event_year = date('Y', strtotime($cur_date));

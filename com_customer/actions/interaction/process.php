@@ -27,14 +27,14 @@ if ($interaction->status == 'closed'){
 	$pines->page->override_doc('"closed"');
 	return;
 }
-if (empty($_REQUEST['review_comments'])){
+$comments = trim($_REQUEST['review_comments']);
+if (empty($comments)) {
 	$pines->page->override_doc('"comments"');
 	return;
 }
 
 $interaction->status = $_REQUEST['status'];
-if (!empty($_REQUEST['review_comments']))
-	$interaction->review_comments[] = $_SESSION['user']->name.' '.format_date(time(), 'custom', 'n/j/y g:iA').': '.$_REQUEST['review_comments'].'('.ucwords($interaction->status).')';
+$interaction->review_comments[] = $_SESSION['user']->name.' '.format_date(time(), 'custom', 'n/j/y g:iA').': '.$comments.'('.ucwords($interaction->status).')';
 if ($pines->config->com_customer->com_calendar) {
 	switch ($interaction->status) {
 		case 'open':

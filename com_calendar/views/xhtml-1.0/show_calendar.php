@@ -119,6 +119,7 @@ $timezone = $_SESSION['user']->get_timezone();
 							else
 								echo 'className: \'greenyellow\',';
 						}
+						echo 'className: \''. addslashes($cur_event->color) .'\',';
 					} else {
 						echo 'appointment: \'\',';
 						echo 'className: \''. addslashes($cur_event->color) .'\',';

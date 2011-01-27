@@ -112,14 +112,15 @@ $timezone = $_SESSION['user']->get_timezone();
 					if (isset($cur_event->appointment->guid)) {
 						echo 'appointment: '.$cur_event->appointment->guid.',';
 						if ($cur_event->appointment->status == 'open') {
-							if ($cur_event->appointment->action_date < strtotime('-7 days'))
+							if ($cur_event->appointment->action_date < strtotime('-3 days'))
 								echo 'className: \'red\',';
-							elseif ($cur_event->appointment->action_date < strtotime('-3 days'))
+							elseif ($cur_event->appointment->action_date < strtotime('-1 hour'))
 								echo 'className: \'yellow\',';
 							else
 								echo 'className: \'greenyellow\',';
+						} else {
+							echo 'className: \''. addslashes($cur_event->color) .'\',';
 						}
-						echo 'className: \''. addslashes($cur_event->color) .'\',';
 					} else {
 						echo 'appointment: \'\',';
 						echo 'className: \''. addslashes($cur_event->color) .'\',';

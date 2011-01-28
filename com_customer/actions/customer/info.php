@@ -18,9 +18,8 @@ $pines->page->override = true;
 
 $customer = com_customer_customer::factory((int) $_REQUEST['id']);
 
-if (!isset($customer->guid)) {
-	$pines->page->override_doc();
-}
+if (!isset($customer->guid))
+	return;
 
 $json_struct = (object) array(
 	'guid'			=> (int) $customer->guid,

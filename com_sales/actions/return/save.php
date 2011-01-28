@@ -94,8 +94,9 @@ if ($return->status != 'processed' && $return->status != 'voided') {
 				// Is that a problem? It only happens with unserialized items.
 				$found = false;
 				foreach ($old_products as $old_key => $cur_old_product) {
-					if ($cur_product_entity->is($cur_old_product['entity']) && $cur_sku == $cur_old_product['sku'] && $cur_serial == $cur_old_product['serial'] && $cur_qty <= $cur_old_product['quantity']) {
+					if ($cur_product_entity->is($cur_old_product['entity']) && $cur_serial == $cur_old_product['serial'] && $cur_qty <= $cur_old_product['quantity']) {
 						$cur_product = $cur_old_product;
+						$cur_product['sku'] = $cur_sku;
 						$cur_product['quantity'] = $cur_qty;
 						$cur_product['price'] = $cur_price;
 						$cur_product['discount'] = $cur_discount;

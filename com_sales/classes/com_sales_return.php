@@ -390,9 +390,7 @@ class com_sales_return extends entity {
 		foreach ($products as $key => &$cur_product) {
 			// Add the original sale key to all product entries.
 			$cur_product['sale_key'] = $key;
-		}
-		unset($cur_product);
-		foreach ($products as $key => &$cur_product) {
+			// Is it already returned?
 			$cur_product['quantity'] -= (int) $cur_product['returned_quantity'];
 			if ($cur_product['quantity'] <= 0) {
 				unset($products[$key]);

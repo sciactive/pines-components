@@ -108,6 +108,7 @@ if ($return->status != 'processed' && $return->status != 'voided') {
 				}
 				if (!$found) {
 					pines_notice("Product with SKU [$cur_sku] was not found on original sale. Has it already been returned?");
+					unset($return->products[$key]);
 					$product_error = true;
 					continue;
 				}

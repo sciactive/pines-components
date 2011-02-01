@@ -196,7 +196,9 @@ if ($pines->config->com_calendar->com_customer)
 								end: form.find(":input[name=end]").val(),
 								time_start: form.find(":input[name=time_start]").val(),
 								time_end: form.find(":input[name=time_end]").val(),
-								location: form.find(":input[name=location]").val()
+								location: form.find(":input[name=location]").val(),
+								descendents: <?php echo $this->descendents ? 'true' : 'false'; ?>,
+								employee_view: <?php echo isset($this->employee) ? 'true' : 'false'; ?>
 							});
 						},
 						"Cust. Appt.": function(){
@@ -251,6 +253,7 @@ if ($pines->config->com_calendar->com_customer)
 								time_start: form.find(":input[name=time_start]").val(),
 								time_end: form.find(":input[name=time_end]").val(),
 								location: form.find(":input[name=location]").val(),
+								descendents: <?php echo $this->descendents ? 'true' : 'false'; ?>,
 								employee_view: <?php echo isset($this->employee) ? 'true' : 'false'; ?>
 							});
 							form.dialog('close');
@@ -504,6 +507,12 @@ if ($pines->config->com_calendar->com_customer)
 				}
 				$("#p_muid_interaction_dialog [name=id]").val(appointment_id);
 				$("#p_muid_interaction_customer").empty().append('<a href="'+data.customer_url+'" onclick="window.open(this.href); return false;">'+data.customer+'</a>');
+				if (data.sale_url != '') {
+					$("#p_muid_interaction_sale").empty().append(data.sale_url);
+					$("#p_muid_sale_info").show();
+				} else {
+					$("#p_muid_sale_info").hide();
+				}
 				$("#p_muid_interaction_type").empty().append(data.type+' - '+data.contact_info);
 				$("#p_muid_interaction_employee").empty().append(data.employee);
 				$("#p_muid_interaction_date").empty().append(data.date);
@@ -547,6 +556,10 @@ if ($pines->config->com_calendar->com_customer)
 		<div class="pf-element">
 			<span class="pf-label">Customer</span>
 			<span class="pf-field" id="p_muid_interaction_customer"></span>
+		</div>
+		<div class="pf-element" id="p_muid_sale_info" style="display: none">
+			<span class="pf-label">Sale</span>
+			<span class="pf-field" id="p_muid_interaction_sale"></span>
 		</div>
 		<div class="pf-element">
 			<span class="pf-label">Employee</span>

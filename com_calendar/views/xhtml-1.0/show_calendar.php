@@ -153,7 +153,7 @@ $timezone = $_SESSION['user']->get_timezone();
 			},
 			eventDragStop: function(event, jsEvent, ui, view) {
 				var events = $("#calendar").fullCalendar('clientEvents');
-				jQuery.each(events, function(i, val) {
+				$.each(events, function(i, val) {
 					val.selected = false;
 				});
 				$("#calendar").fullCalendar('refetchEvents');
@@ -172,7 +172,7 @@ $timezone = $_SESSION['user']->get_timezone();
 			viewDisplay: function(view) {
 				// Deselect all events when changing the calendar timespan.
 				var events = $("#calendar").fullCalendar('clientEvents');
-				jQuery.each(events, function(i, val) {
+				$.each(events, function(i, val) {
 					val.selected = false;
 				});
 				$("#calendar").fullCalendar('refetchEvents');
@@ -201,7 +201,7 @@ $timezone = $_SESSION['user']->get_timezone();
 		var events_dump = '';
 		//var events_array = new Array();
 		//var event_count = 0;
-		jQuery.each(events, function(i, val) {
+		$.each(events, function(i, val) {
 			if (val.group) {
 				events_dump += val.guid.toString() +'|'+ val.id.toString() +'|';
 				//events_array[0] = val.guid.toString();

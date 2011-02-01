@@ -93,5 +93,5 @@ if (isset($_REQUEST['employee'])) {
 } else {
 	$employee = null;
 }
-redirect(pines_url('com_calendar', 'editcalendar', array('location' => $location->guid, 'employee' => $employee->guid)));
+redirect(pines_url('com_calendar', 'editcalendar', array('location' => $location->guid, 'employee' => $employee->guid, 'descendents' => $_REQUEST['descendents'])));
 ?>

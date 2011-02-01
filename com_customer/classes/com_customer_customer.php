@@ -245,10 +245,12 @@ class com_customer_customer extends user {
 
 	/**
 	 * Schedule follow-up interactions for a customer.
+	 * 
 	 * @param user $employee The employee expected to follow-up.
+	 * @param com_sales_sale $sale The sale to follow-up on.
 	 * @return bool Whether or not the follow-ups were scheduled.
 	 */
-	public function schedule_follow_up($employee = null) {
+	public function schedule_follow_up($employee = null, $sale = null) {
 		global $pines;
 
 		if (!isset($employee->guid))
@@ -258,6 +260,8 @@ class com_customer_customer extends user {
 			$interaction = com_customer_interaction::factory();
 			$interaction->customer = $this;
 			$interaction->employee = $employee;
+			if (isset($sale->guid))
+				$interaction->sale = $sale;
 			// Change the timezone to enter the event with the user's timezone.
 			date_default_timezone_set($employee->get_timezone());
 			$interaction->action_date = strtotime('+'.$cur_follow_up[1]);

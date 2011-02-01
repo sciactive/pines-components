@@ -906,17 +906,7 @@ $pines->com_customer->load_company_select();
 									<td>$<?php echo number_format($cur_sale->subtotal, 2); ?></td>
 									<td>$<?php echo number_format($cur_sale->taxes, 2); ?></td>
 									<td>$<?php echo number_format($cur_sale->total, 2); ?></td>
-									<td><?php switch ($cur_sale->status) {
-										case 'invoiced':
-											echo 'Invoiced';
-											break;
-										case 'paid':
-											echo 'Paid';
-											break;
-										default:
-											echo 'Unrecognized';
-											break;
-									} ?></td>
+									<td><?php echo ucwords($cur_sale->status); ?></td>
 									<td><?php echo htmlspecialchars($cur_sale->group->name); ?></td>
 								</tr>
 								<?php } ?>

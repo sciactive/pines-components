@@ -48,6 +48,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'follow_up',
+		'cname' => 'Follow-Up Appointments',
+		'description' => 'Automatically create follow-up appointments when sales are completed.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'negpoints',
 		'cname' => 'Allow Negative Points',
 		'description' => 'Allow customer\'s points to drop below zero.',

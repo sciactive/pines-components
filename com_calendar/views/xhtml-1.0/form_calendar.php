@@ -508,7 +508,7 @@ if ($pines->config->com_calendar->com_customer)
 				$("#p_muid_interaction_dialog [name=id]").val(appointment_id);
 				$("#p_muid_interaction_customer").empty().append('<a href="'+data.customer_url+'" onclick="window.open(this.href); return false;">'+data.customer+'</a>');
 				if (data.sale_url != '') {
-					$("#p_muid_interaction_sale").empty().append(data.sale_url);
+					$("#p_muid_interaction_sale").empty().append('<a href="'+data.sale_url+'" onclick="window.open(this.href); return false;">'+data.sale+'</a>');
 					$("#p_muid_sale_info").show();
 				} else {
 					$("#p_muid_sale_info").hide();

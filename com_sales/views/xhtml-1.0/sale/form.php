@@ -394,7 +394,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					serial_box.val("");
 					return;
 				}
-				products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'in-store', 1, data.unit_price, "", "", "", data.salesperson]}], function(){
+				products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'in-store', 1, data.unit_price, "", "", "", "", data.salesperson]}], function(){
 					var cur_row = $(this);
 					cur_row.data("product", data);
 				});

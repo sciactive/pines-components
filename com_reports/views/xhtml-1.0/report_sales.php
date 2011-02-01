@@ -50,12 +50,12 @@ foreach ($this->transactions as $cur_tx) {
 				continue;
 			switch ($cur_tx->type) {
 				case 'paid':
-					$date_array[$date_str][$timespan][3] += (float) $cur_tx->ticket->total;
-					$total[$date_str][3] += (float) $cur_tx->ticket->total;
+					$date_array[$date_str][$timespan][3] += (float) $cur_tx->ticket->subtotal;
+					$total[$date_str][3] += (float) $cur_tx->ticket->subtotal;
 					break;
 				case 'returned':
-					$date_array[$date_str][$timespan][3] -= (float) $cur_tx->ticket->total;
-					$total[$date_str][3] -= (float) $cur_tx->ticket->total;
+					$date_array[$date_str][$timespan][3] -= (float) $cur_tx->ticket->subtotal;
+					$total[$date_str][3] -= (float) $cur_tx->ticket->subtotal;
 					break;
 			}
 		}

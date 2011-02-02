@@ -250,6 +250,14 @@
 				}
 			},
 			{
+				"path": "main_menu/business/0_pos/setup/disabledproducts",
+				"text": "Disabled Products",
+				"href": ["com_sales","product/list",{"enabled":"false"}],
+				"depend": {
+					"ability": "com_sales/listproducts"
+				}
+			},
+			{
 				"path": "main_menu/business/0_pos/setup/manufacturers",
 				"text": "Manufacturers",
 				"href": ["com_sales","manufacturer/list"],

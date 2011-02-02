@@ -453,16 +453,23 @@ class com_sales extends component {
 
 	/**
 	 * Creates and attaches a module which lists products.
+	 * 
+	 * @param bool $enabled Show enabled products if true, disabled if false.
 	 */
-	public function list_products() {
+	public function list_products($enabled = true) {
 		global $pines;
 
 		$module = new module('com_sales', 'product/list', 'content');
 
-		$module->products = $pines->entity_manager->get_entities(array('class' => com_sales_product), array('&', 'tag' => array('com_sales', 'product')));
+		$module->enabled = $enabled;
+		if ($enabled) {
+			$module->products = $pines->entity_manager->get_entities(array('class' => com_sales_product), array('&', 'tag' => array('com_sales', 'product'), 'data' => array('enabled', true)));
+		} else {
+			$module->products = $pines->entity_manager->get_entities(array('class' => com_sales_product), array('&', 'tag' => array('com_sales', 'product')), array('!&', 'data' => array('enabled', true)));
+		}
 
 		if ( empty($module->products) )
-			pines_notice('There are no products.');
+			pines_notice('There are no'.($enabled ? ' enabled' : ' disabled').' products.');
 	}
 
 	/**

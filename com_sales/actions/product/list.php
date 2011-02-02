@@ -14,5 +14,5 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_sales/listproducts') )
 	punt_user(null, pines_url('com_sales', 'product/list'));
 
-$pines->com_sales->list_products();
+$pines->com_sales->list_products($_REQUEST['enabled'] != 'false');
 ?>

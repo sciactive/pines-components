@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Products';
+$this->title = $this->enabled ? 'Products' : 'Disabled Products';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/product/list'];
@@ -65,7 +65,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<tr>
 			<th>SKU</th>
 			<th>Name</th>
-			<th>Enabled</th>
 			<th>Manufacturer</th>
 			<th>Manufacturer SKU</th>
 			<th>Pricing Method</th>
@@ -86,7 +85,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<tr title="<?php echo $product->guid; ?>">
 			<td><?php echo htmlspecialchars($product->sku); ?></td>
 			<td><?php echo htmlspecialchars($product->name); ?></td>
-			<td><?php echo ($product->enabled ? 'Yes' : 'No'); ?></td>
 			<td><?php echo htmlspecialchars($product->manufacturer->name); ?></td>
 			<td><?php echo htmlspecialchars($product->manufacturer_sku); ?></td>
 			<td><?php echo htmlspecialchars($product->pricing_method); ?></td>

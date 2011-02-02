@@ -421,6 +421,7 @@ if ($pines->config->com_calendar->com_customer)
 							$("#p_muid_new_interaction [name=customer]").val('');
 							$("#p_muid_new_interaction [name=interaction_comments]").val('');
 							interaction_dialog.dialog("close");
+							window.location.reload();
 						}
 					});
 				}

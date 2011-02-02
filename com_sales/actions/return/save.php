@@ -97,7 +97,8 @@ if ($return->status != 'processed' && $return->status != 'voided') {
 					if ($cur_product_entity->is($cur_old_product['entity']) && $cur_serial == $cur_old_product['serial'] && $cur_qty <= $cur_old_product['quantity']) {
 						$cur_product = $cur_old_product;
 						$cur_product['sku'] = $cur_sku;
-						$cur_product['quantity'] = $cur_qty;
+						if (gatekeeper('com_sales/newreturnpartial'))
+							$cur_product['quantity'] = $cur_qty;
 						$cur_product['price'] = $cur_price;
 						$cur_product['discount'] = $cur_discount;
 						$cur_product['return_checklists'] = $cur_return_checklists;
@@ -147,6 +148,10 @@ if ($return->status != 'processed' && $return->status != 'voided') {
 			}
 		}
 		unset($cur_product);
+		if (isset($return->sale) && !gatekeeper('com_sales/newreturnpartial') && count($old_products) > 0) {
+			pines_notice('You don\'t have permission to return only part of a sale.');
+			$product_error = true;
+		}
 	}
 }
 // Used for payment error checking.

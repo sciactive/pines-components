@@ -48,6 +48,7 @@ return array(
 		array('listreturns', 'List Returns', 'User can see returns.'),
 		array('newreturn', 'Create Returns', 'User can create new returns, without an attached sale.'),
 		array('newreturnwsale', 'Create Sale Returns', 'User can create new returns, with an attached sale.'),
+		array('newreturnpartial', 'Create Partial Returns', 'User can return part of a sale.'),
 		array('editreturn', 'Edit Returns', 'User can edit current returns.'),
 		array('deletereturn', 'Delete Returns', 'User can delete current returns.'),
 		array('listmanufacturers', 'List Manufacturers', 'User can see manufacturers.'),

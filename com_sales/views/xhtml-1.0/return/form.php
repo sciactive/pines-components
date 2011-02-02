@@ -219,7 +219,7 @@ if ($pines->config->com_sales->autocomplete_product)
 							.dialog("open");
 						}
 					},
-					<?php } ?>
+					<?php } if (!isset($this->entity->sale->guid) || gatekeeper('com_sales/newreturnpartial')) { ?>
 					{
 						type: 'button',
 						text: 'Qty',
@@ -241,6 +241,7 @@ if ($pines->config->com_sales->autocomplete_product)
 							}
 						}
 					},
+					<?php } ?>
 					{
 						type: 'button',
 						text: 'Price',
@@ -308,6 +309,7 @@ if ($pines->config->com_sales->autocomplete_product)
 							checklist_form(rows);
 						}
 					},
+					<?php if (!isset($this->entity->sale->guid) || gatekeeper('com_sales/newreturnpartial')) { ?>
 					{type: 'separator'},
 					{
 						type: 'button',
@@ -318,7 +320,9 @@ if ($pines->config->com_sales->autocomplete_product)
 							rows.pgrid_delete();
 							update_products();
 						}
-					}
+					},
+					<?php } ?>
+					{}
 				]
 			});
 			var add_product = function(data){

@@ -168,22 +168,32 @@ class com_user extends component implements user_manager_interface {
 		return (in_array($ability, $abilities) || in_array('system/all', $abilities));
 	}
 
-	public function get_groups() {
+	public function get_groups($all = false) {
 		global $pines;
+
+		$tags = array('com_user', 'group');
+		if (!$all)
+			$tags[] = 'enabled';
+
 		return $pines->entity_manager->get_entities(
 				array('class' => group),
 				array('&',
-					'tag' => array('com_user', 'group', 'enabled')
+					'tag' => $tags
 				)
 			);
 	}
 
-	public function get_users() {
+	public function get_users($all = false) {
 		global $pines;
+
+		$tags = array('com_user', 'user');
+		if (!$all)
+			$tags[] = 'enabled';
+
 		return $pines->entity_manager->get_entities(
 				array('class' => user),
 				array('&',
-					'tag' => array('com_user', 'user', 'enabled')
+					'tag' => $tags
 				)
 			);
 	}

@@ -65,6 +65,14 @@ class user extends able_object implements user_interface {
 		return true;
 	}
 
+	public function disable() {
+		$this->remove_tag('enabled');
+	}
+
+	public function enable() {
+		$this->add_tag('enabled');
+	}
+
 	public function save() {
 		if (!isset($this->username))
 			return false;

@@ -90,6 +90,14 @@ class group extends able_object implements group_interface {
 		return true;
 	}
 
+	public function disable() {
+		$this->remove_tag('enabled');
+	}
+
+	public function enable() {
+		$this->add_tag('enabled');
+	}
+
 	public function save() {
 		if (!isset($this->groupname))
 			return false;

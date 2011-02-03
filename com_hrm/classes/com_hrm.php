@@ -52,7 +52,7 @@ class com_hrm extends component {
 	 */
 	public function get_employees($employed = true) {
 		global $pines;
-		$users = $pines->user_manager->get_users();
+		$users = $pines->user_manager->get_users(true);
 		$employees = array();
 		// Filter out users who aren't employees.
 		foreach ($users as $key => &$cur_user) {

@@ -20,12 +20,14 @@ foreach ($list as $cur_item) {
     if (isset($cur_entity->guid)) {
 		if ($_REQUEST['reason'] == 'rehired') {
 			$action = 'Rehired';
+			$cur_entity->enable();
 			$cur_entity->hire_date = strtotime($_REQUEST['date']);
 			$cur_entity->employment_history[] = array($cur_entity->hire_date, 'Rehired');
 			unset($cur_entity->terminated);
 			unset($cur_entity->terminated_date);
 		} else {
 			$action = 'Terminated';
+			$cur_entity->disable();
 			$cur_entity->terminated = $_REQUEST['reason'];
 			$cur_entity->terminated_date = strtotime($_REQUEST['date']);
 			$cur_entity->employment_history[] = array($cur_entity->terminated_date, 'Terminated - '.$cur_entity->terminated);

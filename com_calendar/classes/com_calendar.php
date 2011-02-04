@@ -102,10 +102,12 @@ class com_calendar extends component {
 	/**
 	 * Creates and attaches a module which shows the calendar.
 	 * @param group $location The desired location to view the schedule for.
+	 * @param user $employee The employee location to view the schedule for.
 	 * @param bool $descendents Whether to show descendent locations.
+	 * @param string $filter Which type of events to show.
 	 * @param com_hrm_employee $employee The desired employee to view the schedule for.
 	 */
-	public function show_calendar($location = null, $employee = null, $descendents = false) {
+	public function show_calendar($location = null, $employee = null, $descendents = false, $filter = 'all') {
 		global $pines;
 
 		if (!isset($location) || !isset($location->guid)) {
@@ -118,36 +120,51 @@ class com_calendar extends component {
 		$calendar = new module('com_calendar', 'show_calendar', 'content');
 		$form = new module('com_calendar', 'form_calendar', 'right');
 
+		//Retrieve all private events
 		$selector = array('&', 'tag' => array('com_calendar', 'event'));
+		if ($filter == 'shifts') {
+			$selector['isset'] = array('scheduled');
+		} elseif ($filter == 'appointments') {
+			$selector['isset'] = array('appointment');
+		}
 		if ($descendents)
 			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
 		else
 			$or = array('|', 'ref' => array('group', $location));
 		$ancestors = array();
 		if (isset($employee->guid)) {
-			unset($selector['ref']);
-			$selector['ref'][] = array('employee', $employee);
+			$or = array('|', 'isset' => array('group'));
+			$selector['ref'] = array('employee', $employee);
 			$form->employee = $calendar->employee = $employee;
 			$ancestors = $location->get_descendents(true);
 		}
 
-		// Should work like this, we need to have the employee's group update upon saving it to a user.
 		$form->employees = $pines->com_hrm->get_employees();
 		$calendar->location = $form->location = $location;
 		$form->descendents = $descendents;
-		$calendar->events = $pines->entity_manager->get_entities(array('class' => com_calendar_event), $selector, $or);
-		// Retrieve all events
+		$form->filter = $filter;
+		if ($filter == 'events') {
+			$calendar->events = $pines->entity_manager->get_entities(
+					array('class' => com_calendar_event),
+					$selector,
+					$or,
+					array('!&', 'isset' => array(array('scheduled'), array('appointment')))
+				);
+		} else {
+			$calendar->events = $pines->entity_manager->get_entities(array('class' => com_calendar_event), $selector, $or);
+		}
+		// Retrieve all public events
 		while (isset($location->parent->guid)) {
 			$ancestors[] = $location->parent;
 			$location = $location->parent;
 		}
 		if (!empty($ancestors)) {
+			unset($selector['ref']);
+			$selector['data'] = array('private', false);
 			$calendar->events = array_merge($calendar->events,
 				$pines->entity_manager->get_entities(
 					array('class' => com_calendar_event),
-					array('&',
-						'tag' => array('com_calendar', 'event'),
-						'data' => array('private', false)),
+					$selector,
 					array('!&', 'isset' => array('employee')),
 					array('|', 'ref' => array('group', $ancestors))
 				)

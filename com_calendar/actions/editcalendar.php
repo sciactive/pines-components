@@ -23,7 +23,8 @@ if (!isset($employee->guid))
 	$employee = null;
 
 $descendents = ($_REQUEST['descendents'] == 'true');
+$filter = isset($_REQUEST['filter']) ? $_REQUEST['filter'] : 'all';
 
-$pines->com_calendar->show_calendar($location, $employee, $descendents);
+$pines->com_calendar->show_calendar($location, $employee, $descendents, $filter);
 
 ?>

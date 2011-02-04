@@ -35,6 +35,9 @@ if ($pines->config->com_calendar->com_customer)
 		list-style-type: disc;
 		padding-left: 10px;
 	}
+	#p_muid_filter .ui-button-text-only .ui-button-text {
+		padding: 0.2em;
+	}
 	.calendar_form .combobox {
 		position: relative;
 	}
@@ -74,7 +77,8 @@ if ($pines->config->com_calendar->com_customer)
 				{
 					"location": '<?php echo addslashes($this->location->guid); ?>',
 					"employee": $(this).val(),
-					"descendents": <?php echo $this->descendents ? 'true' : 'false'; ?>
+					"descendents": <?php echo $this->descendents ? 'true' : 'false'; ?>,
+					"filter": '<?php echo $this->filter; ?>'
 				});
 
 			change_counter++;
@@ -97,6 +101,14 @@ if ($pines->config->com_calendar->com_customer)
 			});
 		});
 
+		$("#p_muid_filter").buttonset().delegate("input", "click", function() {
+			pines.get("<?php echo addslashes(pines_url('com_calendar', 'editcalendar')); ?>", {
+				employee: <?php echo isset($this->employee) ? $this->employee->guid : 'null'; ?>,
+				location: <?php echo $this->location->guid; ?>,
+				descendents: <?php echo $this->descendents ? 'true' : 'false'; ?>,
+				filter: $(this).val()
+			});
+		});
 		<?php if ($pines->config->com_calendar->com_customer) { ?>
 		$("#p_muid_new_interaction [name=interaction_date]").datepicker({
 			dateFormat: "yy-mm-dd",
@@ -145,7 +157,8 @@ if ($pines->config->com_calendar->com_customer)
 							descendents = form.find(":input[name=descendents]").attr('checked');
 							pines.post("<?php echo addslashes(pines_url('com_calendar', 'editcalendar')); ?>", {
 								"location": schedule_location,
-								"descendents": descendents
+								"descendents": descendents,
+								"filter": '<?php echo $this->filter; ?>'
 							});
 						}
 					}
@@ -529,15 +542,21 @@ if ($pines->config->com_calendar->com_customer)
 	<?php } ?>
 	// ]]>
 </script>
+<div id="p_muid_filter" style="padding: 0; margin: 0;">
+	<input type="radio" name="filter" id="p_muid_filter_rad1" value="all" <?php echo ($this->filter == 'all') ? 'checked="checked"' : ''; ?>/><label for="p_muid_filter_rad1" title="Show all calendar events.">all</label>
+	<input type="radio" name="filter" id="p_muid_filter_rad2" value="shifts" <?php echo ($this->filter == 'shifts') ? 'checked="checked"' : ''; ?>/><label for="p_muid_filter_rad2" title="Show scheduled employee shifts.">shifts</label>
+	<input type="radio" name="filter" id="p_muid_filter_rad3" value="appointments" <?php echo ($this->filter == 'appointments') ? 'checked="checked"' : ''; ?>/><label for="p_muid_filter_rad3" title="Show customer appointments.">appts</label>
+	<input type="radio" name="filter" id="p_muid_filter_rad4" value="events" <?php echo ($this->filter == 'events') ? 'checked="checked"' : ''; ?>/><label for="p_muid_filter_rad4" title="Show calendar events.">events</label>
+</div>
 <?php if (gatekeeper('com_calendar/managecalendar')) { ?>
-<div style="margin-bottom: 1em; text-align: center;" id="p_muid_actions">
+<div style="margin: 0.75em 0; text-align: center;" id="p_muid_actions">
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_calendar_select_location();" title="Select Location"><span class="p_muid_btn picon picon-applications-internet"></span></button>
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_calendar_new_appointment();" title="New Appointment"><span class="p_muid_btn picon picon-appointment-new"></span></button>
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_calendar_new_event();" title="New Event"><span class="p_muid_btn picon picon-resource-calendar-insert"></span></button>
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_calendar_quick_schedule();" title="Quick Schedule"><span class="p_muid_btn picon picon-view-calendar-workweek"></span></button>
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_calendar_new_schedule();" title="Personal Schedule" <?php echo !isset($this->employee) ? 'disabled="disabled"' : '';?>><span class="p_muid_btn picon picon-list-resource-add"></span></button>
 </div>
-<div style="margin-bottom: 1em;">
+<div>
 	<select class="ui-widget-content ui-corner-all" id="p_muid_employee" name="employee" style="width: 100%;">
 		<option value="all"><?php echo $this->location->name; ?></option>
 		<?php

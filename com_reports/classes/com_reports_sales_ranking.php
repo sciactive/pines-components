@@ -164,10 +164,10 @@ class com_reports_sales_ranking extends entity {
 				);
 			foreach ($mtd_sales as &$cur_mtd_sale) {
 				if ($cur_mtd_sale->tender_date >= $current_start && $cur_mtd_sale->tender_date <= $current_end)
-						$module->rankings[$cur_employee->guid]['current'] += ($cur_mtd_sale->total - $cur_mtd_sale->returned_total);
+						$module->rankings[$cur_employee->guid]['current'] += ($cur_mtd_sale->subtotal - $cur_mtd_sale->returned_total);
 				elseif ($cur_mtd_sale->tender_date >= $last_start && $cur_mtd_sale->tender_date <= $last_end)
-						$module->rankings[$cur_employee->guid]['last'] += ($cur_mtd_sale->total - $cur_mtd_sale->returned_total);
-				$module->rankings[$cur_employee->guid]['mtd'] += ($cur_mtd_sale->total - $cur_mtd_sale->returned_total);
+						$module->rankings[$cur_employee->guid]['last'] += ($cur_mtd_sale->subtotal - $cur_mtd_sale->returned_total);
+				$module->rankings[$cur_employee->guid]['mtd'] += ($cur_mtd_sale->subtotal - $cur_mtd_sale->returned_total);
 			}
 			unset($cur_mtd_sale, $mtd_sales);
 			

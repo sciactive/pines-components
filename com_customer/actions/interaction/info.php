@@ -47,6 +47,7 @@ $json_struct = (object) array(
 	'employee'			=> (string) $interaction->employee->name,
 	'type'				=> (string) $interaction->type,
 	'contact_info'		=> $contact_info,
+	'created_date'		=> format_date($interaction->p_cdate, 'full_sort'),
 	'date'				=> format_date($interaction->action_date, 'full_sort'),
 	'status'			=> (string) $interaction->status,
 	'comments'			=> (string) $interaction->comments,

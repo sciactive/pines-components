@@ -529,6 +529,7 @@ if ($pines->config->com_calendar->com_customer)
 				}
 				$("#p_muid_interaction_type").empty().append(data.type+' - '+data.contact_info);
 				$("#p_muid_interaction_employee").empty().append(data.employee);
+				$("#p_muid_interaction_created_date").empty().append(data.created_date);
 				$("#p_muid_interaction_date").empty().append(data.date);
 				$("#p_muid_interaction_comments").empty().append(data.comments);
 				$("#p_muid_interaction_notes").empty().append((data.review_comments.length > 0) ? "<li>"+data.review_comments.join("</li><li>")+"</li>" : "");
@@ -588,6 +589,10 @@ if ($pines->config->com_calendar->com_customer)
 		<div class="pf-element">
 			<span class="pf-label">Interaction Type</span>
 			<span class="pf-field" id="p_muid_interaction_type"></span>
+		</div>
+		<div class="pf-element">
+			<span class="pf-label">Created</span>
+			<span class="pf-field" id="p_muid_interaction_created_date"></span>
 		</div>
 		<div class="pf-element">
 			<span class="pf-label">Date</span>

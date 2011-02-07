@@ -107,8 +107,10 @@ class com_reports extends component {
 		$module->location = $location;
 		$module->descendents = $descendents;
 		$selector['tag'] = array('com_sales', 'sale');
+		$selector['data'] = array('status', 'paid');
 		$sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
 		$selector['tag'] = array('com_sales', 'return');
+		$selector['data'] = array('status', 'processed');
 		$returns = $pines->entity_manager->get_entities(array('class' => com_sales_return), $selector, $or);
 		$module->invoices = array_merge($sales, $returns);
 
@@ -343,8 +345,10 @@ class com_reports extends component {
 				unset($module->employees[$key]);
 		}
 		$selector['tag'] = array('com_sales', 'sale');
+		$selector['data'] = array('status', 'paid');
 		$sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
 		$selector['tag'] = array('com_sales', 'return');
+		$selector['data'] = array('status', 'processed');
 		$returns = $pines->entity_manager->get_entities(array('class' => com_sales_return), $selector, $or);
 		$module->invoices = array_merge($sales, $returns);
 
@@ -416,7 +420,7 @@ class com_reports extends component {
 		$module->date[1] = $form->date[1] = $date_end;
 		// Employee and location of the report.
 		if (isset($employee->guid)) {
-			$selector['ref'] = array('user', $employee);
+			$selector['ref'] = array('products', $employee);
 			$module->employee = $form->employee = $employee;
 			$module->title = 'Sales Report for '.$employee->name;
 		} elseif (isset($location->guid)) {
@@ -433,7 +437,13 @@ class com_reports extends component {
 		$module->location = $form->location = $location->guid;
 		$form->employees = $pines->com_hrm->get_employees();
 		$form->descendents = $descendents;
-		$module->transactions = $pines->entity_manager->get_entities(array('class' => com_sales_tx), $selector, $or);
+		$selector['tag'] = array('com_sales', 'sale');
+		$selector['data'] = array('status', 'paid');
+		$sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
+		$selector['tag'] = array('com_sales', 'return');
+		$selector['data'] = array('status', 'processed');
+		$returns = $pines->entity_manager->get_entities(array('class' => com_sales_return), $selector, $or);
+		$module->invoices = array_merge($sales, $returns);
 	}
 }
 

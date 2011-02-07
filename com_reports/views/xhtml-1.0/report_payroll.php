@@ -164,34 +164,49 @@ $pines->com_pgrid->load();
 		<tbody>
 			<?php
 			foreach ($this->invoices as $cur_invoice) {
-				if ($cur_sale->status == 'voided')
-					continue;
-				if (!isset($totals[$cur_invoice->user->guid])){
-					$totals[$cur_invoice->user->guid] = array(
-						'employee' => $cur_invoice->user,
-						'qty_sold' => 0,
-						'qty_returned' => 0,
-						'total_sold' => 0,
-						'total_returned' => 0,
-						'scheduled' => 0,
-						'clocked' => 0,
-						'variance' => 0,
-						'commission' => 0
-					);
-				}
 				if ($cur_invoice->has_tag('sale')) {
-					$totals[$cur_invoice->user->guid]['qty_sold']++;
-					$totals[$cur_invoice->user->guid]['total_sold'] += $cur_invoice->total;
-					foreach ($cur_invoice->user->commissions as $cur_commission) {
-						if ($cur_commission['ticket']->guid == $cur_invoice->guid)
-							$totals[$cur_invoice->user->guid]['commission'] += $cur_commission['amount'];
+					foreach ($cur_invoice->products as $cur_product) {
+						if (!isset($totals[$cur_product['salesperson']->guid])){
+							$totals[$cur_product['salesperson']->guid] = array(
+								'employee' => $cur_product['salesperson'],
+								'qty_sold' => 0,
+								'qty_returned' => 0,
+								'total_sold' => 0,
+								'total_returned' => 0,
+								'scheduled' => 0,
+								'clocked' => 0,
+								'variance' => 0,
+								'commission' => 0
+							);
+						}
+						$totals[$cur_product['salesperson']->guid]['qty_sold']++;
+						$totals[$cur_product['salesperson']->guid]['total_sold'] += $cur_product['line_total'];
+						foreach ($cur_product['salesperson']->commissions as $cur_commission) {
+							if ($cur_commission['ticket']->guid == $cur_invoice->guid)
+								$totals[$cur_product['salesperson']->guid]['commission'] += $cur_commission['amount'];
+						}
 					}
 				} elseif ($cur_invoice->has_tag('return')) {
-					$totals[$cur_invoice->user->guid]['qty_returned']++;
-					$totals[$cur_invoice->user->guid]['total_returned'] += $cur_invoice->total;
-					foreach ($cur_invoice->user->commissions as $cur_commission) {
-						if ($cur_commission['ticket']->guid == $cur_invoice->guid)
-							$totals[$cur_invoice->user->guid]['commission'] -= $cur_commission['amount'];
+					foreach ($cur_invoice->products as $cur_product) {
+						if (!isset($totals[$cur_product['salesperson']->guid])){
+							$totals[$cur_product['salesperson']->guid] = array(
+								'employee' => $cur_product['salesperson'],
+								'qty_sold' => 0,
+								'qty_returned' => 0,
+								'total_sold' => 0,
+								'total_returned' => 0,
+								'scheduled' => 0,
+								'clocked' => 0,
+								'variance' => 0,
+								'commission' => 0
+							);
+						}
+						$totals[$cur_product['salesperson']->guid]['qty_returned']++;
+						$totals[$cur_product['salesperson']->guid]['total_returned'] += $cur_product['line_total'];
+						foreach ($cur_product['salesperson']->commissions as $cur_commission) {
+							if ($cur_commission['ticket']->guid == $cur_invoice->guid)
+								$totals[$cur_product['salesperson']->guid]['commission'] -= $cur_commission['amount'];
+						}
 					}
 				}
 			}

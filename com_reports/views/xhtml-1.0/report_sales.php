@@ -22,15 +22,15 @@ $days = $total_seconds/(24*60*60);
 
 $date_array = array();
 $total = array();
-foreach ($this->transactions as $cur_tx) {
-	$event_month = format_date($cur_tx->p_cdate, 'custom', 'n');
-	$event_day = format_date($cur_tx->p_cdate, 'custom', 'j');
-	$event_year = format_date($cur_tx->p_cdate, 'custom', 'Y');
+foreach ($this->invoices as $cur_invoice) {
+	$event_month = format_date($cur_invoice->p_cdate, 'custom', 'n');
+	$event_day = format_date($cur_invoice->p_cdate, 'custom', 'j');
+	$event_year = format_date($cur_invoice->p_cdate, 'custom', 'Y');
 	// This is used to identify daily sales, divided into timespan totals.
-	$date_str = format_date($cur_tx->p_cdate, 'date_sort');
-	$sale_time = format_date($cur_tx->p_cdate, 'custom', 'H');
+	$date_str = format_date($cur_invoice->p_cdate, 'date_sort');
+	$sale_time = format_date($cur_invoice->p_cdate, 'custom', 'H');
 	if (!$total[$date_str]) {
-		$total[$date_str][0] = $cur_tx->p_cdate;
+		$total[$date_str][0] = $cur_invoice->p_cdate;
 		$total[$date_str][1] = mktime(0,1,1,$event_month,$event_day,$event_year);
 		$total[$date_str][2] = mktime(0,1,1,$event_month,$event_day,$event_year);
 		$total[$date_str][3] = 0;
@@ -39,24 +39,26 @@ foreach ($this->transactions as $cur_tx) {
 	foreach ($pines->config->com_reports->timespans as $timespan) {
 		$span = explode('-', $timespan);
 		if (!$date_array[$date_str][$timespan]) {
-			$date_array[$date_str][$timespan][0] = $cur_tx->p_cdate;
+			$date_array[$date_str][$timespan][0] = $cur_invoice->p_cdate;
 			$date_array[$date_str][$timespan][1] = mktime($span[0],0,0,$event_month,$event_day,$event_year);
 			$date_array[$date_str][$timespan][2] = mktime($span[1],0,0,$event_month,$event_day,$event_year);
 			$date_array[$date_str][$timespan][3] = 0;
 		}
 		if ( ($sale_time >= $span[0]) && ($sale_time < $span[1]) ) {
-			// Skip voided sales.
-			if ($cur_tx->ticket->status == 'voided')
-				continue;
-			switch ($cur_tx->type) {
-				case 'paid':
-					$date_array[$date_str][$timespan][3] += (float) $cur_tx->ticket->subtotal;
-					$total[$date_str][3] += (float) $cur_tx->ticket->subtotal;
-					break;
-				case 'returned':
-					$date_array[$date_str][$timespan][3] -= (float) $cur_tx->ticket->subtotal;
-					$total[$date_str][3] -= (float) $cur_tx->ticket->subtotal;
-					break;
+			if ($cur_invoice->has_tag('sale')) {
+				foreach ($cur_invoice->products as $cur_product) {
+					if (isset($this->employee->guid) && !$cur_product['salesperson']->is($this->employee))
+						continue;
+					$date_array[$date_str][$timespan][3] += (float) $cur_product['line_total'];
+					$total[$date_str][3] += (float) $cur_product['line_total'];
+				}
+			} elseif ($cur_invoice->has_tag('return')) {
+				foreach ($cur_invoice->products as $cur_product) {
+					if (isset($this->employee->guid) && !$cur_product['salesperson']->is($this->employee))
+						continue;
+					$date_array[$date_str][$timespan][3] -= (float) $cur_product['line_total'];
+					$total[$date_str][3] -= (float) $cur_product['line_total'];
+				}
 			}
 		}
 		$span_count++;

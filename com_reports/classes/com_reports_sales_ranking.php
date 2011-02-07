@@ -159,18 +159,48 @@ class com_reports_sales_ranking extends entity {
 						'data' => array('status', 'paid'),
 						'gte' => array('tender_date', $this->start_date),
 						'lt' => array('tender_date', $this->end_date),
-						'ref' => array('user', $cur_employee)
+						'ref' => array('products', $cur_employee)
 					)
 				);
+
 			foreach ($mtd_sales as &$cur_mtd_sale) {
-				if ($cur_mtd_sale->tender_date >= $current_start && $cur_mtd_sale->tender_date <= $current_end)
-						$module->rankings[$cur_employee->guid]['current'] += ($cur_mtd_sale->subtotal - $cur_mtd_sale->returned_total);
-				elseif ($cur_mtd_sale->tender_date >= $last_start && $cur_mtd_sale->tender_date <= $last_end)
-						$module->rankings[$cur_employee->guid]['last'] += ($cur_mtd_sale->subtotal - $cur_mtd_sale->returned_total);
-				$module->rankings[$cur_employee->guid]['mtd'] += ($cur_mtd_sale->subtotal - $cur_mtd_sale->returned_total);
+				foreach ($cur_mtd_sale->products as $cur_product) {
+					if (!$cur_product['salesperson']->is($cur_employee))
+						continue;
+					if ($cur_mtd_sale->tender_date >= $current_start && $cur_mtd_sale->tender_date <= $current_end)
+						$module->rankings[$cur_employee->guid]['current'] += $cur_product['line_total'];
+					elseif ($cur_mtd_sale->tender_date >= $last_start && $cur_mtd_sale->tender_date <= $last_end)
+						$module->rankings[$cur_employee->guid]['last'] += $cur_product['line_total'];
+
+					$module->rankings[$cur_employee->guid]['mtd'] += $cur_product['line_total'];
+				}
 			}
 			unset($cur_mtd_sale, $mtd_sales);
-			
+
+			$mtd_returns = $pines->entity_manager->get_entities(
+					array('class' => com_sales_return),
+					array('&',
+						'tag' => array('com_sales', 'return'),
+						'data' => array('status', 'processed'),
+						'gte' => array('tender_date', $this->start_date),
+						'lt' => array('tender_date', $this->end_date),
+						'ref' => array('products', $cur_employee)
+					)
+				);
+
+			foreach ($mtd_returns as &$cur_mtd_return) {
+				foreach ($cur_mtd_return->products as $cur_product) {
+					if (!$cur_product['salesperson']->is($cur_employee))
+						continue;
+					if ($cur_mtd_return->tender_date >= $current_start && $cur_mtd_return->tender_date <= $current_end)
+						$module->rankings[$cur_employee->guid]['current'] -= $cur_product['line_total'];
+					elseif ($cur_mtd_return->tender_date >= $last_start && $cur_mtd_return->tender_date <= $last_end)
+						$module->rankings[$cur_employee->guid]['last'] -= $cur_product['line_total'];
+					$module->rankings[$cur_employee->guid]['mtd'] -= $cur_product['line_total'];
+				}
+			}
+			unset($cur_mtd_return, $mtd_returns);
+
 			$module->rankings[$cur_employee->guid]['trend'] = ($module->rankings[$cur_employee->guid]['mtd'] / $days_passed) * $days_in_month;
 
 			if ($module->rankings[$cur_employee->guid]['goal'] == 0) {

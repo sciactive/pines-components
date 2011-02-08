@@ -202,6 +202,7 @@ $pines->com_pgrid->load();
 								'profit' => 0,
 								'commission' => 0
 							);
+							$commissions[$cur_product['salesperson']->guid] = $cur_product['salesperson']->commissions;
 						}
 						$totals[$cur_product['salesperson']->guid]['qty_sold']++;
 						$totals[$cur_product['salesperson']->guid]['qty_net']++;
@@ -209,9 +210,11 @@ $pines->com_pgrid->load();
 						$totals[$cur_product['salesperson']->guid]['total_net'] += $cur_product['line_total'];
 						foreach ($cur_product['stock_entities'] as $cur_stock)
 							$totals[$cur_product['salesperson']->guid]['cost'] += $cur_stock->cost;
-						foreach ($cur_product['salesperson']->commissions as $cur_commission) {
-							if ($cur_commission['ticket']->guid == $cur_invoice->guid)
+						foreach ($commissions[$cur_product['salesperson']->guid] as $key => $cur_commission) {
+							if ($cur_commission['ticket']->guid == $cur_invoice->guid) {
 								$totals[$cur_product['salesperson']->guid]['commission'] += $cur_commission['amount'];
+								unset($commissions[$cur_product['salesperson']->guid][$key]);
+							}
 						}
 					}
 				} elseif ($cur_invoice->has_tag('return')) {
@@ -230,14 +233,17 @@ $pines->com_pgrid->load();
 								'profit' => 0,
 								'commission' => 0
 							);
+							$commissions[$cur_product['salesperson']->guid] = $cur_product['salesperson']->commissions;
 						}
 						$totals[$cur_product['salesperson']->guid]['qty_returned']++;
 						$totals[$cur_product['salesperson']->guid]['qty_net']--;
 						$totals[$cur_product['salesperson']->guid]['total_returned'] += $cur_product['line_total'];
 						$totals[$cur_product['salesperson']->guid]['total_net'] -= $cur_product['line_total'];
-						foreach ($cur_product['salesperson']->commissions as $cur_commission) {
-							if ($cur_commission['ticket']->guid == $cur_invoice->guid)
-								$totals[$cur_product['salesperson']->guid]['commission'] -= $cur_commission['amount'];
+						foreach ($commissions[$cur_product['salesperson']->guid] as $key => $cur_commission) {
+							if ($cur_commission['ticket']->guid == $cur_invoice->guid) {
+								$totals[$cur_product['salesperson']->guid]['commission'] += $cur_commission['amount'];
+								unset($commissions[$cur_product['salesperson']->guid][$key]);
+							}
 						}
 					}
 				}

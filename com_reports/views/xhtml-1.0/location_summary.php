@@ -221,7 +221,7 @@ $pines->com_pgrid->load();
 					$totals[$cur_invoice->group->guid]['total_net'] -= $cur_invoice->subtotal;
 					foreach ($cur_invoice->user->commissions as $cur_commission) {
 						if ($cur_commission['ticket']->guid == $cur_invoice->guid)
-							$totals[$cur_invoice->group->guid]['commission'] -= $cur_commission['amount'];
+							$totals[$cur_invoice->group->guid]['commission'] += $cur_commission['amount'];
 					}
 				}
 			}

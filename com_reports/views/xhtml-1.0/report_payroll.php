@@ -163,6 +163,7 @@ $pines->com_pgrid->load();
 		</thead>
 		<tbody>
 			<?php
+			$counted = array();
 			foreach ($this->invoices as $cur_invoice) {
 				if ($cur_invoice->has_tag('sale')) {
 					foreach ($cur_invoice->products as $cur_product) {
@@ -180,7 +181,10 @@ $pines->com_pgrid->load();
 							);
 							$commissions[$cur_product['salesperson']->guid] = $cur_product['salesperson']->commissions;
 						}
-						$totals[$cur_product['salesperson']->guid]['qty_sold']++;
+						if (!in_array($cur_invoice->guid, $counted)) {
+							$totals[$cur_product['salesperson']->guid]['qty_sold']++;
+							$counted[] = $cur_invoice->guid;
+						}
 						$totals[$cur_product['salesperson']->guid]['total_sold'] += $cur_product['line_total'];
 						foreach ($commissions[$cur_product['salesperson']->guid] as $key => $cur_commission) {
 							if ($cur_commission['ticket']->guid == $cur_invoice->guid) {
@@ -205,7 +209,10 @@ $pines->com_pgrid->load();
 							);
 							$commissions[$cur_product['salesperson']->guid] = $cur_product['salesperson']->commissions;
 						}
-						$totals[$cur_product['salesperson']->guid]['qty_returned']++;
+						if (!in_array($cur_invoice->guid, $counted)) {
+							$totals[$cur_product['salesperson']->guid]['qty_returned']++;
+							$counted[] = $cur_invoice->guid;
+						}
 						$totals[$cur_product['salesperson']->guid]['total_returned'] += $cur_product['line_total'];
 						foreach ($commissions[$cur_product['salesperson']->guid] as $key => $cur_commission) {
 							if ($cur_commission['ticket']->guid == $cur_invoice->guid) {

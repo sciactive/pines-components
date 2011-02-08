@@ -183,6 +183,7 @@ $pines->com_pgrid->load();
 		</thead>
 		<tbody>
 			<?php
+			$counted = array();
 			foreach ($this->invoices as $cur_invoice) {
 				if ($cur_invoice->status == 'voided')
 					continue;
@@ -204,8 +205,11 @@ $pines->com_pgrid->load();
 							);
 							$commissions[$cur_product['salesperson']->guid] = $cur_product['salesperson']->commissions;
 						}
-						$totals[$cur_product['salesperson']->guid]['qty_sold']++;
-						$totals[$cur_product['salesperson']->guid]['qty_net']++;
+						if (!in_array($cur_invoice->guid, $counted)) {
+							$totals[$cur_product['salesperson']->guid]['qty_sold']++;
+							$totals[$cur_product['salesperson']->guid]['qty_net']++;
+							$counted[] = $cur_invoice->guid;
+						}
 						$totals[$cur_product['salesperson']->guid]['total_sold'] += $cur_product['line_total'];
 						$totals[$cur_product['salesperson']->guid]['total_net'] += $cur_product['line_total'];
 						foreach ($cur_product['stock_entities'] as $cur_stock)
@@ -235,8 +239,11 @@ $pines->com_pgrid->load();
 							);
 							$commissions[$cur_product['salesperson']->guid] = $cur_product['salesperson']->commissions;
 						}
-						$totals[$cur_product['salesperson']->guid]['qty_returned']++;
-						$totals[$cur_product['salesperson']->guid]['qty_net']--;
+						if (!in_array($cur_invoice->guid, $counted)) {
+							$totals[$cur_product['salesperson']->guid]['qty_returned']++;
+							$totals[$cur_product['salesperson']->guid]['qty_net']--;
+							$counted[] = $cur_invoice->guid;
+						}
 						$totals[$cur_product['salesperson']->guid]['total_returned'] += $cur_product['line_total'];
 						$totals[$cur_product['salesperson']->guid]['total_net'] -= $cur_product['line_total'];
 						foreach ($commissions[$cur_product['salesperson']->guid] as $key => $cur_commission) {

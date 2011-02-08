@@ -200,6 +200,7 @@ $pines->com_pgrid->load();
 						'profit' => 0,
 						'commission' => 0
 					);
+					$commissions = array();
 				}
 				if ($cur_invoice->has_tag('sale')) {
 					$totals[$cur_invoice->group->guid]['qty_sold']++;
@@ -210,18 +211,26 @@ $pines->com_pgrid->load();
 						foreach ($cur_item['stock_entities'] as $cur_stock)
 							$totals[$cur_invoice->group->guid]['cost'] += $cur_stock->cost;
 					}
-					foreach ($cur_invoice->user->commissions as $cur_commission) {
-						if ($cur_commission['ticket']->guid == $cur_invoice->guid)
-							$totals[$cur_invoice->group->guid]['commission'] += $cur_commission['amount'];
+					foreach ($cur_invoice->products as $cur_product) {
+						foreach ($cur_product['salesperson']->commissions as $cur_commission) {
+							if (!in_array($cur_commission, $commissions) && $cur_commission['ticket']->guid == $cur_invoice->guid) {
+								$totals[$cur_invoice->group->guid]['commission'] += $cur_commission['amount'];
+								$commissions[] = $cur_commission;
+							}
+						}
 					}
 				} elseif ($cur_invoice->has_tag('return')) {
 					$totals[$cur_invoice->group->guid]['qty_returned']++;
 					$totals[$cur_invoice->group->guid]['qty_net']--;
 					$totals[$cur_invoice->group->guid]['total_returned'] += $cur_invoice->subtotal;
 					$totals[$cur_invoice->group->guid]['total_net'] -= $cur_invoice->subtotal;
-					foreach ($cur_invoice->user->commissions as $cur_commission) {
-						if ($cur_commission['ticket']->guid == $cur_invoice->guid)
-							$totals[$cur_invoice->group->guid]['commission'] += $cur_commission['amount'];
+					foreach ($cur_invoice->products as $cur_product) {
+						foreach ($cur_product['salesperson']->commissions as $cur_commission) {
+							if (!in_array($cur_commission, $commissions) && $cur_commission['ticket']->guid == $cur_invoice->guid) {
+								$totals[$cur_invoice->group->guid]['commission'] += $cur_commission['amount'];
+								$commissions[] = $cur_commission;
+							}
+						}
 					}
 				}
 			}

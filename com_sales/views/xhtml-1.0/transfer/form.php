@@ -96,6 +96,29 @@ if ($this->entity->final)
 					{type: 'separator'},
 					{
 						type: 'button',
+						text: 'Quantity',
+						extra_class: 'picon picon-document-multiple',
+						confirm: false,
+						double_click: true,
+						multi_select: false,
+						click: function(e, rows){
+							var data = products_table.pgrid_get_selected_rows().data("product");
+							if (!data) {
+								alert("Please select a product.");
+								return;
+							}
+							var qty = prompt("Please enter a quantity:", 1);
+							while ((isNaN(parseInt(qty)) || parseInt(qty) != qty) && qty != null)
+								qty = prompt("Please enter a quantity:", 1);
+							if (qty != null) {
+								for (i=0; i<qty-1; i++)
+									add_product(data);
+								products_table.pgrid_get_selected_rows().pgrid_deselect_rows();
+							}
+						}
+					},
+					{
+						type: 'button',
 						text: 'Remove',
 						extra_class: 'picon picon-edit-delete',
 						click: function(e, rows){

@@ -203,7 +203,7 @@ class com_sales_return extends entity {
 			}
 			// Reduce the amount to however much is left to return the sale
 			// total.
-			if ($cur_payment['entity']->allow_return)
+			if ($cur_payment['entity']->allow_return && (($payment_total + $cur_payment['amount']) - $this->total > 0))
 				$cur_payment['amount'] -= ($payment_total + $cur_payment['amount']) - $this->total;
 			$payment_total += $cur_payment['amount'];
 			// Return payments are now pending.

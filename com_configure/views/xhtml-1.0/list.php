@@ -156,7 +156,7 @@ $this->title = 'Configure Components';
 			<?php } ?>
 			<div class="license">License: <?php echo (substr($cur_component->info->license, 0, 4) == 'http') ? '<a href="'.htmlspecialchars($cur_component->info->license).'" onclick="window.open(this.href); return false;">'.htmlspecialchars($cur_component->info->license).'</a>' : htmlspecialchars($cur_component->info->license); ?></div>
 			<div class="license">Website: <?php echo (substr($cur_component->info->website, 0, 4) == 'http') ? '<a href="'.htmlspecialchars($cur_component->info->website).'" onclick="window.open(this.href); return false;">'.htmlspecialchars($cur_component->info->website).'</a>' : htmlspecialchars($cur_component->info->website); ?></div>
-			<div class="description"><?php echo htmlspecialchars($cur_component->info->description); ?></div>
+			<div class="description"><?php echo str_replace("\n", '<br />', htmlspecialchars($cur_component->info->description)); ?></div>
 		</div>
 		<?php } ?>
 	</div>

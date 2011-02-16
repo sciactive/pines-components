@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = "Switch User";
+$this->title = 'Switch User';
 ?>
 <style type="text/css">
 	/* <![CDATA[ */

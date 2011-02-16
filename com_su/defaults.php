@@ -1,6 +1,6 @@
 <?php
 /**
- * com_su' configuration defaults.
+ * com_su's configuration defaults.
  *
  * @package Pines
  * @subpackage com_su

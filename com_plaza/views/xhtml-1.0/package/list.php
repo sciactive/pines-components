@@ -193,7 +193,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				info_dialog.find(".services").hide();
 			}
 			info_dialog.find(".short_description").text(data.short_description);
-			info_dialog.find(".description").text(data.description);
+			info_dialog.find(".description").text(data.description.replace("\n", "<br />"));
 			var depend = "None";
 			if (data.depend != null && data.depend != [] && !$.isEmptyObject(data.depend)) {
 				depend = "";

@@ -1,6 +1,6 @@
 <?php
 /**
- * Display a form to select a timespan.
+ * Display a form to swap inventory on a sale.
  * 
  * @package Pines
  * @subpackage com_sales

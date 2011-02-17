@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_sales/swapsale') )
-	punt_user(null, pines_url('com_sales', 'sale/swap', array('id' => $_REQUEST['id'])));
+	punt_user(null, pines_url('com_sales', 'sale/swap', array('id' => $_REQUEST['id'], 'swap_item' => $_REQUEST['swap_item'], 'serial' => $_REQUEST['serial'])));
 
 $entity = com_sales_sale::factory((int) $_REQUEST['id']);
 

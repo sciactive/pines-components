@@ -546,6 +546,24 @@ class com_sales_return extends entity {
 	}
 
 	/**
+	 * Print a form to swap salespeople.
+	 *
+	 * Uses a page override to only print the form.
+	 *
+	 * @return module The form's module.
+	 */
+	public function salesrep_form() {
+		global $pines;
+		$pines->page->override = true;
+
+		$module = new module('com_sales', 'forms/salesrep', 'content');
+		$module->entity = $this;
+
+		$pines->page->override_doc($module->render());
+		return $module;
+	}
+
+	/**
 	 * Save the return.
 	 * @return bool True on success, false on failure.
 	 */
@@ -556,6 +574,80 @@ class com_sales_return extends entity {
 		if (!isset($this->id))
 			$this->id = $pines->entity_manager->new_uid('com_sales_return');
 		return parent::save();
+	}
+
+	/**
+	 * Swap a salesperson on an item in the return.
+	 *
+	 * @param int $key The key (index) of the product.
+	 * @param user $new_salesrep The new salesperson for the item.
+	 * @return bool True on success, false on failure.
+	 */
+	public function swap_salesrep($key, $new_salesrep = null) {
+		global $pines;
+		// Make sure this return has been processed.
+		if ($this->status != 'processed') {
+			pines_notice('This return isn\'t complete, items cannot be swapped.');
+			return false;
+		}
+
+		if (!isset($this->products[$key])) {
+			pines_notice('This item cannot be swapped, because it is not on the return.');
+			return false;
+		}
+
+		$old_salesrep = $this->products[$key]['salesperson'];
+		if (isset($old_salesrep)) {
+			foreach ($old_salesrep->commissions as &$cur_commission) {
+				if ($this->is($cur_commission['ticket']) && $this->products[$key]['entity']->is($cur_commission['product'])) {
+					$cur_commission['note'] .= " Credited/Swapped to {$new_salesrep->name} [{$new_salesrep->username}].";
+					break;
+				}
+			}
+			// Add a positive amount to offset the negative from the return.
+			$old_salesrep->commissions[] = array(
+				'date' => time(),
+				'amount' => $this->products[$key]['commission'] * $this->products[$key]['quantity'],
+				'ticket' => $this,
+				'product' => $this->products[$key]['entity'],
+				'note' => "Credited/Swapped to {$new_salesrep->name} [{$new_salesrep->username}]. This entry offsets the original."
+			);
+			unset($cur_commission);
+
+			$old_salesrep->save();
+		}
+
+		$this->products[$key]['salesperson'] = $new_salesrep;
+		$this->products[$key]['commission'] = 0;
+		if (!$this->products[$key]['entity']->commissions)
+			return true;
+		foreach ($this->products[$key]['entity']->commissions as $cur_commission) {
+			if (!$new_salesrep->in_group($cur_commission['group']))
+				continue;
+			// Calculate commission.
+			switch ($cur_commission['type']) {
+				case 'spiff':
+					$this->products[$key]['commission'] += (float) $cur_commission['amount'];
+					break;
+				case 'percent_price':
+					$this->products[$key]['commission'] += $this->discount_price($this->products[$key]['price'], $this->products[$key]['discount']) * ( ((float) $cur_commission['amount']) / 100 );
+					break;
+			}
+		}
+		if ($this->products[$key]['commission'] == 0)
+			return true;
+		// Add the commission to the user.
+		if ((array) $new_salesrep->commissions !== $new_salesrep->commissions)
+			$new_salesrep->commissions = array();
+		$new_salesrep->commissions[] = array(
+			'date' => time(),
+			'amount' => $this->products[$key]['commission'] * $this->products[$key]['quantity'] * -1,
+			'ticket' => $this,
+			'product' => $this->products[$key]['entity'],
+			'note' => "Credited/Swapped from {$old_salesrep->name} [{$old_salesrep->username}]."
+		);
+
+		return $new_salesrep->save();
 	}
 
 	/**

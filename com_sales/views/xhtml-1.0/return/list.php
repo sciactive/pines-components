@@ -13,6 +13,8 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Returns';
 $pines->com_pgrid->load();
 $pines->com_jstree->load();
+if (gatekeeper('com_sales/swapsalesrep'))
+	$pines->com_hrm->load_employee_select();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/return/list'];
 ?>
@@ -53,6 +55,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', url: '<?php echo addslashes(pines_url('com_sales', 'return/edit', array('id' => '__title__'))); ?>'},
 				<?php } ?>
 				{type: 'button', text: 'Receipt', extra_class: 'picon picon-document-print-preview', double_click: true, url: '<?php echo addslashes(pines_url('com_sales', 'return/receipt', array('id' => '__title__'))); ?>'},
+				<?php if (gatekeeper('com_sales/swapsalesrep')) { ?>
+				{type: 'button', title: 'Change Salesperson', extra_class: 'picon picon-edit-find-user', click: function(e, row){
+					return_grid.salesrep_form(row.pgrid_get_value(1), row.attr("title"));
+				}},
+				<?php } ?>
 				{type: 'separator'},
 				<?php if (gatekeeper('com_sales/deletereturn')) { ?>
 				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_sales', 'return/delete', array('id' => '__title__'))); ?>', delimiter: ','},
@@ -154,6 +161,71 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 									descendents = false;
 								form.dialog('close');
 								submit_search();
+							}
+						}
+					});
+				}
+			});
+		};
+		return_grid.salesrep_form = function(return_id, guid){
+			$.ajax({
+				url: "<?php echo addslashes(pines_url('com_sales', 'forms/salesrep')); ?>",
+				type: "POST",
+				dataType: "html",
+				data: {
+					"id": guid,
+					"type": "return"
+				},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured while trying to retrieve the salesrep form:\n"+XMLHttpRequest.status+": "+textStatus);
+				},
+				success: function(data){
+					if (data == "")
+						return;
+					var form = $("<div title=\"Swap Salesperson [Return: "+return_id+"]\" />").html(data+"<br />");
+					form.dialog({
+						bgiframe: true,
+						autoOpen: true,
+						width: 425,
+						modal: true,
+						open: function() {
+							$(".salesperson_box", form).employeeselect();
+						},
+						close: function(){
+							form.remove();
+						},
+						buttons: {
+							"Update": function(){
+								var swap_item = form.find(":input:checked[name=swap_item]").val();
+								var salesperson = form.find(":input[name=salesperson]").val();
+								if (swap_item == "") {
+									alert("Please specify the item(s) you want to swap.");
+								} else if (salesperson == "") {
+									alert("Please specify the new salesperson.");
+								} else {
+									form.dialog('close');
+									// Submit the salesperson swap request.
+									$.ajax({
+										url: "<?php echo addslashes(pines_url('com_sales', 'swapsalesrep')); ?>",
+										type: "POST",
+										dataType: "html",
+										data: {
+											"id": guid,
+											"type": "return",
+											"swap_item": swap_item,
+											"salesperson": salesperson
+										},
+										error: function(XMLHttpRequest, textStatus){
+											pines.error("An error occured while trying to swap the salesperson:\n"+XMLHttpRequest.status+": "+textStatus);
+										},
+										success: function(data){
+											if (data == "false")
+												alert("Could not change the salesperson.");
+											else
+												alert("Successfully changed the salesperson.");
+										}
+									});
+								}
 							}
 						}
 					});

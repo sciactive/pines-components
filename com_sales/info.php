@@ -25,7 +25,7 @@ return array(
 		'component' => 'com_barcode&com_jquery&com_pgrid&com_pnotify&com_ptags&com_jstree'
 	),
 	'recommend' => array(
-		'component' => 'com_customer'
+		'component' => 'com_customer&com_hrm'
 	),
 	'abilities' => array(
 		array('manager', 'Manager', 'User is a manager. This lets the user approve payments.'),
@@ -44,6 +44,7 @@ return array(
 		array('voidownsale', 'Void Own Sales', 'User can void their own sales, returning any stock to inventory.'),
 		array('voidsale', 'Void Sales', 'User can void any sales, returning any stock to inventory.'),
 		array('swapsale', 'Swap Items', 'User can swap items for sales.'),
+		array('swapsalesrep', 'Swap Salespeople', 'User can swap salespeople on completed sales/returns.'),
 		array('deletesale', 'Delete Sales', 'User can delete current sales.'),
 		array('listreturns', 'List Returns', 'User can see returns.'),
 		array('newreturn', 'Create Returns', 'User can create new returns, without an attached sale.'),

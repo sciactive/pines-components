@@ -19,7 +19,7 @@ if ( isset($_REQUEST['id']) ) {
 		pines_error('Requested customer id is not accessible.');
 		return;
 	}
-	if ( !empty($_REQUEST['password']) )
+	if ( (!in_array('account', $pines->config->com_customer->critical_fields_customer) || gatekeeper('com_customer/editcritical')) && !empty($_REQUEST['password']) )
 		$customer->password($_REQUEST['password']);
 } else {
 	if ( !gatekeeper('com_customer/newcustomer') )
@@ -29,44 +29,56 @@ if ( isset($_REQUEST['id']) ) {
 }
 
 // General
-$customer->name_first = $pines->com_customer->title_case($_REQUEST['name_first']);
-$customer->name_middle = $pines->com_customer->title_case($_REQUEST['name_middle']);
-$customer->name_last = $pines->com_customer->title_case($_REQUEST['name_last']);
-$customer->name = "{$customer->name_first} {$customer->name_last}";
-if ($pines->config->com_customer->ssn_field)
-	$customer->ssn = preg_replace('/\D/', '', $_REQUEST['ssn']);
-$customer->dob = strtotime($_REQUEST['dob']);
-$customer->email = $_REQUEST['email'];
-$customer->company = null;
-if (preg_match('/^\d+/', $_REQUEST['company'])) {
-	$customer->company = com_customer_company::factory(intval($_REQUEST['company']));
-	if (!isset($customer->company->guid))
-		$customer->company = null;
+if (!in_array('name', $pines->config->com_customer->critical_fields_customer) || gatekeeper('com_customer/editcritical') || !isset($customer->name)) {
+	$customer->name_first = $pines->com_customer->title_case($_REQUEST['name_first']);
+	$customer->name_middle = $pines->com_customer->title_case($_REQUEST['name_middle']);
+	$customer->name_last = $pines->com_customer->title_case($_REQUEST['name_last']);
+	$customer->name = "{$customer->name_first} {$customer->name_last}";
 }
-$customer->job_title = $_REQUEST['job_title'];
+if ($pines->config->com_customer->ssn_field && (!in_array('ssn', $pines->config->com_customer->critical_fields_customer) || gatekeeper('com_customer/editcritical') || !isset($customer->ssn)))
+	$customer->ssn = preg_replace('/\D/', '', $_REQUEST['ssn']);
+if (!in_array('dob', $pines->config->com_customer->critical_fields_customer) || gatekeeper('com_customer/editcritical') || !isset($customer->dob))
+	$customer->dob = strtotime($_REQUEST['dob']);
+if (!in_array('email', $pines->config->com_customer->critical_fields_customer) || gatekeeper('com_customer/editcritical') || !isset($customer->email))
+	$customer->email = $_REQUEST['email'];
+if (!in_array('company', $pines->config->com_customer->critical_fields_customer) || gatekeeper('com_customer/editcritical') || (!isset($customer->company) || !isset($customer->job_title))) {
+	$customer->company = null;
+	if (preg_match('/^\d+/', $_REQUEST['company'])) {
+		$customer->company = com_customer_company::factory(intval($_REQUEST['company']));
+		if (!isset($customer->company->guid))
+			$customer->company = null;
+	}
+	$customer->job_title = $_REQUEST['job_title'];
+}
+
 $customer->phone_cell = preg_replace('/\D/', '', $_REQUEST['phone_cell']);
 $customer->phone_work = preg_replace('/\D/', '', $_REQUEST['phone_work']);
 $customer->phone_home = preg_replace('/\D/', '', $_REQUEST['phone_home']);
 $customer->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
 $customer->timezone = $_REQUEST['timezone'];
 $customer->referrer = $_REQUEST['referrer'];
-$customer->description = $_REQUEST['description'];
+if (!in_array('description', $pines->config->com_customer->critical_fields_customer) || gatekeeper('com_customer/editcritical') || !isset($customer->description))
+	$customer->description = $_REQUEST['description'];
 
 // Account
-$customer->username = $_REQUEST['username'];
-if (empty($_REQUEST['username']))
-	$customer->username = uniqid('user');
-if ($_REQUEST['enabled'] == 'ON') {
-	$customer->add_tag('enabled');
-} else {
-	$customer->remove_tag('enabled');
+if (!in_array('account', $pines->config->com_customer->critical_fields_customer) || gatekeeper('com_customer/editcritical') || !isset($customer->username)) {
+	$customer->username = $_REQUEST['username'];
+	if (empty($_REQUEST['username']))
+		$customer->username = uniqid('user');
+	if ($_REQUEST['enabled'] == 'ON') {
+		$customer->add_tag('enabled');
+	} else {
+		$customer->remove_tag('enabled');
+	}
 }
-if ($_REQUEST['member'] == 'ON') {
-	$customer->make_member();
-} else {
-	$customer->member = false;
+if (!in_array('membership', $pines->config->com_customer->critical_fields_customer) || gatekeeper('com_customer/editcritical') || !isset($customer->member)) {
+	if ($_REQUEST['member'] == 'ON') {
+		$customer->make_member();
+	} else {
+		$customer->member = false;
+	}
+	$customer->member_exp = strtotime($_REQUEST['member_exp']);
 }
-$customer->member_exp = strtotime($_REQUEST['member_exp']);
 if ($pines->config->com_customer->adjustpoints && gatekeeper('com_customer/adjustpoints'))
 	$customer->adjust_points((int) $_REQUEST['adjust_points']);
 

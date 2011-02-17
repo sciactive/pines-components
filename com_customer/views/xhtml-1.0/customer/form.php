@@ -448,7 +448,7 @@ $pines->com_customer->load_company_select();
 				<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
 			</div>
 			<?php } ?>
-			<?php if (in_array('name', $pines->config->com_customer->shown_fields_customer)) { ?>
+			<?php if (in_array('name', $pines->config->com_customer->shown_fields_customer) && (!in_array('name', $pines->config->com_customer->critical_fields_customer) || gatekeeper('com_customer/editcritical') || !isset($this->entity->name))) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">First Name</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name_first" size="24" value="<?php echo htmlspecialchars($this->entity->name_first); ?>" /></label>
@@ -461,13 +461,13 @@ $pines->com_customer->load_company_select();
 				<label><span class="pf-label">Last Name</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name_last" size="24" value="<?php echo htmlspecialchars($this->entity->name_last); ?>" /></label>
 			</div>
-			<?php } if (in_array('ssn', $pines->config->com_customer->shown_fields_customer)) { ?>
+			<?php } if (in_array('ssn', $pines->config->com_customer->shown_fields_customer) && (!in_array('ssn', $pines->config->com_customer->critical_fields_customer) || gatekeeper('com_customer/editcritical') || !isset($this->entity->ssn))) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">SSN</span>
 					<span class="pf-note">Without dashes.</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="ssn" size="24" value="<?php echo htmlspecialchars($this->entity->ssn); ?>" /></label>
 			</div>
-			<?php } if (in_array('dob', $pines->config->com_customer->shown_fields_customer)) { ?>
+			<?php } if (in_array('dob', $pines->config->com_customer->shown_fields_customer) && (!in_array('dob', $pines->config->com_customer->critical_fields_customer) || gatekeeper('com_customer/editcritical') || !isset($this->entity->dob))) { ?>
 			<div class="pf-element">
 				<script type="text/javascript">
 					// <![CDATA[
@@ -485,12 +485,12 @@ $pines->com_customer->load_company_select();
 				<label><span class="pf-label">Date of Birth</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="dob" size="24" value="<?php echo $this->entity->dob ? format_date($this->entity->dob, 'date_sort') : ''; ?>" /></label>
 			</div>
-			<?php } if (in_array('email', $pines->config->com_customer->shown_fields_customer)) { ?>
+			<?php } if (in_array('email', $pines->config->com_customer->shown_fields_customer) && (!in_array('email', $pines->config->com_customer->critical_fields_customer) || gatekeeper('com_customer/editcritical') || !isset($this->entity->email))) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Email</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="email" size="24" value="<?php echo htmlspecialchars($this->entity->email); ?>" /></label>
 			</div>
-			<?php } if (in_array('company', $pines->config->com_customer->shown_fields_customer)) { ?>
+			<?php } if (in_array('company', $pines->config->com_customer->shown_fields_customer) && (!in_array('company', $pines->config->com_customer->critical_fields_customer) || gatekeeper('com_customer/editcritical') || !isset($this->entity->company))) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Company</span>
 					<span class="pf-note">Enter part of a company name, email, or phone # to search.</span>
@@ -544,7 +544,7 @@ $pines->com_customer->load_company_select();
 						<?php } ?>
 					</select></label>
 			</div>
-			<?php } if (in_array('description', $pines->config->com_customer->shown_fields_customer)) { ?>
+			<?php } if (in_array('description', $pines->config->com_customer->shown_fields_customer) && (!in_array('description', $pines->config->com_customer->critical_fields_customer) || gatekeeper('com_customer/editcritical') || !isset($this->entity->description))) { ?>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Description</span><br />
 				<textarea rows="3" cols="35" class="pf-field peditor" style="width: 100%;" name="description"><?php echo $this->entity->description; ?></textarea>
@@ -553,6 +553,7 @@ $pines->com_customer->load_company_select();
 			<br class="pf-clearing" />
 		</div>
 		<div id="p_muid_tab_account">
+			<?php if (!in_array('account', $pines->config->com_customer->critical_fields_customer) || gatekeeper('com_customer/editcritical') || !isset($this->entity->username)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Username</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="username" size="24" value="<?php echo htmlspecialchars($this->entity->username); ?>" /></label>
@@ -571,7 +572,7 @@ $pines->com_customer->load_company_select();
 					} ?>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="password" size="24" /></label>
 			</div>
-			<?php } if (in_array('points', $pines->config->com_customer->shown_fields_customer)) { ?>
+			<?php } } if (in_array('points', $pines->config->com_customer->shown_fields_customer) && (!in_array('points', $pines->config->com_customer->critical_fields_customer) || gatekeeper('com_customer/editcritical'))) { ?>
 			<div class="pf-element pf-heading">
 				<h1>Points</h1>
 			</div>
@@ -595,7 +596,7 @@ $pines->com_customer->load_company_select();
 					<span class="pf-note">Use a negative value to subtract points.</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="adjust_points" size="24" value="0" /></label>
 			</div>
-			<?php } } if (in_array('membership', $pines->config->com_customer->shown_fields_customer)) { ?>
+			<?php } } if (in_array('membership', $pines->config->com_customer->shown_fields_customer) && (!in_array('membership', $pines->config->com_customer->critical_fields_customer) || gatekeeper('com_customer/editcritical'))) { ?>
 			<div class="pf-element pf-heading">
 				<h1>Membership</h1>
 			</div>

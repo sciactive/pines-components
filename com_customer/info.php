@@ -41,6 +41,7 @@ return array(
 		array('newinteraction', 'Create Interactions', 'User can create new interaction records.'),
 		array('editinteraction', 'Edit Interactions', 'User can edit interaction records.'),
 		array('manageinteractions', 'Manage Interactions', 'User can manage interaction records for other users.'),
+		array('editcritical', 'Edit Critical Info', 'User can edit critical information such as SSN and DOB.'),
 		array('adjustpoints', 'Adjust Points', 'User can adjust customer\'s points.'),
 		array('resetpoints', 'Reset Points', 'User can reset customer\'s points. (Including peak and total.)')
 	),

@@ -198,6 +198,26 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'critical_fields_customer',
+		'cname' => 'Critical Fields',
+		'description' => 'These fields are considered to be critical, and should be restricted. Only users with the extra ability can edit them once created.',
+		'value' => array(
+			'SSN' => 'ssn',
+			'DOB' => 'dob',
+		),
+		'options' => array(
+			'Name' => 'name',
+			'SSN' => 'ssn',
+			'DOB' => 'dob',
+			'Email' => 'email',
+			'Company' => 'company',
+			'Account' => 'account',
+			'Description' => 'description',
+			'Membership' => 'membership'
+		),
+		'peruser' => true,
+	),
+	array(
 		'name' => 'referrer_values',
 		'cname' => 'Referrer Values',
 		'description' => 'These options will be available for "How Did You Hear About Us".',

@@ -40,6 +40,9 @@ $pines->com_pgrid->load();
 	.void td {
 		font-style: italic;
 	}
+	#p_muid_grid .total {
+		text-align: right;
+	}
 	/* ]]> */
 </style>
 <script type="text/javascript">
@@ -208,9 +211,9 @@ $pines->com_pgrid->load();
 				<td><?php echo htmlspecialchars($cur_invoice->group->name); ?></td>
 				<td><?php echo htmlspecialchars($cur_invoice->customer->name); ?></td>
 				<td><?php echo htmlspecialchars($cur_invoice->user->name); ?></td>
-				<td>$<?php echo number_format($cur_invoice->subtotal, 2); ?></td>
-				<td>$<?php echo number_format($total_cost, 2); ?></td>
-				<td>$<?php echo number_format(((int) $cur_invoice->subtotal - $total_cost), 2); ?></td>
+				<td class="total">$<?php echo number_format($cur_invoice->subtotal, 2, '.', ''); ?></td>
+				<td class="total">$<?php echo number_format($total_cost, 2, '.', ''); ?></td>
+				<td class="total">$<?php echo number_format(((int) $cur_invoice->subtotal - $total_cost), 2, '.', ''); ?></td>
 				<td><?php echo ucwords($cur_invoice->status); ?></td>
 			</tr>
 			<?php } ?>

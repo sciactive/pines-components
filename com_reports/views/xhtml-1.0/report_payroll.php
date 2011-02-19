@@ -18,6 +18,13 @@ $pines->icons->load();
 $pines->com_jstree->load();
 $pines->com_pgrid->load();
 ?>
+<style type="text/css">
+	/* <![CDATA[ */
+	#p_muid_grid .total {
+		text-align: right;
+	}
+	/* ]]> */
+</style>
 <script type="text/javascript">
 	// <![CDATA[
 	var p_muid_notice;
@@ -257,12 +264,12 @@ $pines->com_pgrid->load();
 				<td><?php echo $cur_total['employee']->name; ?></td>
 				<td><?php echo $cur_total['qty_sold']; ?></td>
 				<td><?php echo $cur_total['qty_returned']; ?></td>
-				<td>$<?php echo number_format($cur_total['total_sold'], 2); ?></td>
-				<td>$<?php echo number_format($cur_total['total_returned'], 2); ?></td>
+				<td class="total">$<?php echo number_format($cur_total['total_sold'], 2, '.', ''); ?></td>
+				<td class="total">$<?php echo number_format($cur_total['total_returned'], 2, '.', ''); ?></td>
 				<td><?php echo round($cur_total['scheduled'] / 3600, 2); ?> hours</td>
 				<td><?php echo round($cur_total['clocked'] / 3600, 2); ?> hours</td>
 				<td><span<?php echo ($cur_total['variance'] < 0 ) ? ' style="color: red;"' : ''; ?>><?php echo round($cur_total['variance'] / 3600, 2); ?> hours</span></td>
-				<td>$<?php echo number_format($cur_total['commission'], 2); ?></td>
+				<td class="total">$<?php echo number_format($cur_total['commission'], 2, '.', ''); ?></td>
 			</tr>
 			<?php } ?>
 		</tbody>

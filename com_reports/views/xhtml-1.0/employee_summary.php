@@ -34,6 +34,9 @@ $pines->com_pgrid->load();
 	#p_muid_grid th {
 		text-align: center;
 	}
+	#p_muid_grid .total {
+		text-align: right;
+	}
 	/* ]]> */
 </style>
 <script type="text/javascript">
@@ -263,13 +266,13 @@ $pines->com_pgrid->load();
 				<td><?php echo $cur_total['qty_sold']; ?></td>
 				<td><?php echo $cur_total['qty_returned']; ?></td>
 				<td><?php echo $cur_total['qty_net']; ?></td>
-				<td>$<?php echo number_format($cur_total['total_sold'], 2); ?></td>
-				<td>$<?php echo number_format($cur_total['total_returned'], 2); ?></td>
-				<td>$<?php echo number_format($cur_total['total_net'], 2); ?></td>
-				<td>$<?php echo number_format($cur_total['adjustment'], 2); ?></td>
-				<td>$<?php echo number_format($cur_total['cost'], 2); ?></td>
-				<td>$<?php echo number_format($cur_total['profit'], 2); ?></td>
-				<td>$<?php echo number_format($cur_total['commission'], 2); ?></td>
+				<td class="total">$<?php echo number_format($cur_total['total_sold'], 2, '.', ''); ?></td>
+				<td class="total">$<?php echo number_format($cur_total['total_returned'], 2, '.', ''); ?></td>
+				<td class="total">$<?php echo number_format($cur_total['total_net'], 2, '.', ''); ?></td>
+				<td class="total">$<?php echo number_format($cur_total['adjustment'], 2, '.', ''); ?></td>
+				<td class="total">$<?php echo number_format($cur_total['cost'], 2, '.', ''); ?></td>
+				<td class="total">$<?php echo number_format($cur_total['profit'], 2, '.', ''); ?></td>
+				<td class="total">$<?php echo number_format($cur_total['commission'], 2, '.', ''); ?></td>
 			</tr>
 			<?php } ?>
 		</tbody>

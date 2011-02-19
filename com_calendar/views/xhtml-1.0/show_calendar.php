@@ -104,7 +104,7 @@ $timezone = $_SESSION['user']->get_timezone();
 					echo 'title: \''. addslashes($cur_event->title) .'\', ';
 					echo 'start: \''. format_date($cur_event->start, 'custom', 'Y-m-d H:i', $timezone) .'\', ';
 					echo 'end: \''. format_date($cur_event->end, 'custom', 'Y-m-d H:i', $timezone) .'\', ';
-					if ((!gatekeeper('com_calendar/managecalendar') && !$cur_event->user->is($_SESSION['user'])) || $cur_event->time_off) {
+					if ((!gatekeeper('com_calendar/managecalendar') && (!$cur_event->user->is($_SESSION['user']) || $cur_event->appointment)) || $cur_event->time_off) {
 						echo 'editable: false,';
 					} else {
 						echo 'editable: true,';

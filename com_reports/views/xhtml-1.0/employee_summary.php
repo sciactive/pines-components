@@ -186,7 +186,6 @@ $pines->com_pgrid->load();
 		</thead>
 		<tbody>
 			<?php
-			$counted = array();
 			foreach ($this->invoices as $cur_invoice) {
 				if ($cur_invoice->status == 'voided')
 					continue;
@@ -204,20 +203,21 @@ $pines->com_pgrid->load();
 								'adjustment' => 0,
 								'cost' => 0,
 								'profit' => 0,
-								'commission' => 0
+								'commission' => 0,
+								'counted' => array()
 							);
 							$commissions[$cur_product['salesperson']->guid] = $cur_product['salesperson']->commissions;
 						}
-						if (!in_array($cur_invoice->guid, $counted)) {
+						if (!in_array($cur_invoice->guid, $totals[$cur_product['salesperson']->guid]['counted'])) {
 							$totals[$cur_product['salesperson']->guid]['qty_sold']++;
 							$totals[$cur_product['salesperson']->guid]['qty_net']++;
-							$counted[] = $cur_invoice->guid;
+							$totals[$cur_product['salesperson']->guid]['counted'][] = $cur_invoice->guid;
 						}
 						$totals[$cur_product['salesperson']->guid]['total_sold'] += $cur_product['line_total'];
 						$totals[$cur_product['salesperson']->guid]['total_net'] += $cur_product['line_total'];
 						foreach ($cur_product['stock_entities'] as $cur_stock)
 							$totals[$cur_product['salesperson']->guid]['cost'] += $cur_stock->cost;
-						foreach ($commissions[$cur_product['salesperson']->guid] as $key => $cur_commission) {
+						foreach ((array) $commissions[$cur_product['salesperson']->guid] as $key => $cur_commission) {
 							if ($cur_commission['ticket']->guid == $cur_invoice->guid) {
 								$totals[$cur_product['salesperson']->guid]['commission'] += $cur_commission['amount'];
 								unset($commissions[$cur_product['salesperson']->guid][$key]);
@@ -238,18 +238,19 @@ $pines->com_pgrid->load();
 								'adjustment' => 0,
 								'cost' => 0,
 								'profit' => 0,
-								'commission' => 0
+								'commission' => 0,
+								'counted' => array()
 							);
 							$commissions[$cur_product['salesperson']->guid] = $cur_product['salesperson']->commissions;
 						}
-						if (!in_array($cur_invoice->guid, $counted)) {
+						if (!in_array($cur_invoice->guid, $totals[$cur_product['salesperson']->guid]['counted'])) {
 							$totals[$cur_product['salesperson']->guid]['qty_returned']++;
 							$totals[$cur_product['salesperson']->guid]['qty_net']--;
-							$counted[] = $cur_invoice->guid;
+							$totals[$cur_product['salesperson']->guid]['counted'][] = $cur_invoice->guid;
 						}
 						$totals[$cur_product['salesperson']->guid]['total_returned'] += $cur_product['line_total'];
 						$totals[$cur_product['salesperson']->guid]['total_net'] -= $cur_product['line_total'];
-						foreach ($commissions[$cur_product['salesperson']->guid] as $key => $cur_commission) {
+						foreach ((array) $commissions[$cur_product['salesperson']->guid] as $key => $cur_commission) {
 							if ($cur_commission['ticket']->guid == $cur_invoice->guid) {
 								$totals[$cur_product['salesperson']->guid]['commission'] += $cur_commission['amount'];
 								unset($commissions[$cur_product['salesperson']->guid][$key]);

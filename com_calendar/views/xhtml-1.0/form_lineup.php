@@ -41,7 +41,7 @@ defined('P_RUN') or die('Direct access prohibited');
 		<select class="ui-widget-content ui-corner-all form_select" name="employee">
 			<?php // Load employees for this location.
 			foreach ($this->employees as $cur_employee) {
-				if (!$cur_employee->in_group($this->location) && !$cur_employee->is_descendent($this->location))
+				if (!$cur_employee->in_group($this->location))
 					continue;
 				echo '<option value="'.$cur_employee->guid.'">'.htmlspecialchars($cur_employee->name).'</option>"';
 			} ?>

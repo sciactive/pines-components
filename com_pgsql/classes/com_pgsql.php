@@ -1,9 +1,9 @@
 <?php
 /**
- * com_mysql class.
+ * com_pgsql class.
  *
  * @package Pines
- * @subpackage com_mysql
+ * @subpackage com_pgsql
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -12,14 +12,14 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * com_mysql main class.
+ * com_pgsql main class.
  *
- * Connect to and disconnect from a MySQL database.
+ * Connect to and disconnect from a PostgreSQL database.
  *
  * @package Pines
- * @subpackage com_mysql
+ * @subpackage com_pgsql
  */
-class com_mysql extends component {
+class com_pgsql extends component {
 	/**
 	 * Whether this instance is currently connected to a database.
 	 *
@@ -27,7 +27,7 @@ class com_mysql extends component {
 	 */
 	public $connected = false;
 	/**
-	 * The MySQL link identifier for this instance.
+	 * The PostgreSQL link identifier for this instance.
 	 *
 	 * @var mixed
 	 */
@@ -38,7 +38,7 @@ class com_mysql extends component {
 	 * @param string $user
 	 * @param string $password
 	 * @param string $database
-	 * @uses com_mysql::connect()
+	 * @uses com_pgsql::connect()
 	 */
 	public function __construct($host = null, $user = null, $password = null, $database = null) {
 		$this->connect($host, $user, $password, $database);
@@ -52,7 +52,7 @@ class com_mysql extends component {
 	}
 
 	/**
-	 * Connect to a MySQL database.
+	 * Connect to a PostgreSQL database.
 	 *
 	 * If the host is not specified, all the parameters will be filled with
 	 * their defaults. If the host is specified, none of the parameters are
@@ -65,43 +65,32 @@ class com_mysql extends component {
 	 * @param string $user The username to connect to.
 	 * @param string $password The password to connect to.
 	 * @param string $database The database to connect to.
-	 * @return bool Whether this instance is connected to a MySQL database after the method has run.
+	 * @return bool Whether this instance is connected to a PostgreSQL database after the method has run.
 	 */
 	public function connect($host = null, $user = null, $password = null, $database = null) {
 		global $pines;
 		// If we're setting up the DB, don't try to connect.
-		if ($pines->request_component == 'com_mysql' && $pines->request_action == 'setup')
+		if ($pines->request_component == 'com_pgsql' && $pines->request_action == 'setup')
 			return false;
 		// If something changes the host, it could reveal the user and password.
 		if (!isset($host)) {
-			$host = $pines->config->com_mysql->host;
-			if (!isset($user)) $user = $pines->config->com_mysql->user;
-			if (!isset($password)) $password = $pines->config->com_mysql->password;
-			if (!isset($database)) $database = $pines->config->com_mysql->database;
+			$host = $pines->config->com_pgsql->host;
+			if (!isset($user)) $user = $pines->config->com_pgsql->user;
+			if (!isset($password)) $password = $pines->config->com_pgsql->password;
+			if (!isset($database)) $database = $pines->config->com_pgsql->database;
 		}
 		// Connecting, selecting database
 		if (!$this->connected) {
-			if ( $this->link = @mysql_connect($host, $user, $password) ) {
-				if ( @mysql_select_db($database, $this->link) ) {
-					$this->connected = true;
-				} else {
-					$this->connected = false;
-					if (!isset($_SESSION['user']) && $host == 'localhost' && $user == 'pines' && $password == 'password' && $database == 'pines') {
-						if ($pines->request_component != 'com_mysql')
-							redirect(pines_url('com_mysql', 'setup'));
-					} else {
-						if (function_exists('pines_error'))
-							pines_error('Could not select database: ' . mysql_error());
-					}
-				}
+			if ( $this->link = @pg_connect('host=\''.addslashes($host).'\' dbname=\''.addslashes($database).'\' user=\''.addslashes($user).'\' password=\''.addslashes($password).'\'') ) {
+				$this->connected = true;
 			} else {
 				$this->connected = false;
 				if (!isset($_SESSION['user']) && $host == 'localhost' && $user == 'pines' && $password == 'password' && $database == 'pines') {
-					if ($pines->request_component != 'com_mysql')
-						redirect(pines_url('com_mysql', 'setup'));
+					if ($pines->request_component != 'com_pgsql')
+						redirect(pines_url('com_pgsql', 'setup'));
 				} else {
 					if (function_exists('pines_error'))
-						pines_error('Could not connect: ' . mysql_error());
+						pines_error('Could not connect: ' . pg_last_error());
 				}
 			}
 		}
@@ -109,13 +98,13 @@ class com_mysql extends component {
 	}
 
 	/**
-	 * Disconnect from a MySQL database.
+	 * Disconnect from a PostgreSQL database.
 	 *
-	 * @return bool Whether this instance is connected to a MySQL database after the method has run.
+	 * @return bool Whether this instance is connected to a PostgreSQL database after the method has run.
 	 */
 	public function disconnect() {
 		if ($this->connected) {
-			mysql_close($this->link);
+			pg_close($this->link);
 			$this->connected = false;
 		}
 		return $this->connected;

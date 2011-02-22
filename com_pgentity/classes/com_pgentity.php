@@ -69,10 +69,16 @@ class com_pgentity extends component implements entity_manager_interface {
 	private function create_tables() {
 		global $pines;
 		// Create the entity table.
-		$query = sprintf("CREATE TABLE \"%scom_pgentity_entities\" ( guid bigserial NOT NULL, tags text[], varlist text[], cdate numeric(18,6) NOT NULL, mdate numeric(18,6) NOT NULL, PRIMARY KEY (guid) ) WITH ( OIDS=FALSE ); ALTER TABLE \"%scom_pgentity_entities\" OWNER TO \"%s\";",
+		$query = sprintf("CREATE SEQUENCE \"%scom_pgentity_entities_guid_seq\";",
+			$pines->config->com_pgsql->prefix);
+		$query .= sprintf(" CREATE TABLE \"%scom_pgentity_entities\" ( guid bigint NOT NULL DEFAULT nextval('%scom_pgentity_entities_guid_seq'), tags text[], varlist text[], cdate numeric(18,6) NOT NULL, mdate numeric(18,6) NOT NULL, PRIMARY KEY (guid) ) WITH ( OIDS=FALSE ); ALTER TABLE \"%scom_pgentity_entities\" OWNER TO \"%s\";",
+			$pines->config->com_pgsql->prefix,
 			$pines->config->com_pgsql->prefix,
 			$pines->config->com_pgsql->prefix,
 			pg_escape_string($pines->com_pgsql->link, $pines->config->com_pgsql->user));
+		$query .= sprintf(" ALTER SEQUENCE \"%scom_pgentity_entities_guid_seq\" OWNED BY \"%scom_pgentity_entities\".guid;",
+			$pines->config->com_pgsql->prefix,
+			$pines->config->com_pgsql->prefix);
 		if ( !(pg_query($pines->com_pgsql->link, $query)) ) {
 			if (function_exists('pines_error'))
 				pines_error('Query failed: ' . pg_last_error());
@@ -875,6 +881,15 @@ class com_pgentity extends component implements entity_manager_interface {
 				}
 			}
 		}
+		// Update the GUID sequence.
+		$query = sprintf("SELECT setval('%scom_pgentity_entities_guid_seq', (SELECT max(\"guid\") FROM \"%scom_pgentity_entities\"));",
+			$pines->config->com_pgsql->prefix,
+			$pines->config->com_pgsql->prefix);
+		if ( !(pg_query($pines->com_pgsql->link, $query)) ) {
+			if (function_exists('pines_error'))
+				pines_error('Query failed: ' . pg_last_error());
+			return false;
+		}
 		return true;
 	}
 
@@ -882,7 +897,15 @@ class com_pgentity extends component implements entity_manager_interface {
 		if (!$name)
 			return null;
 		global $pines;
-		$query = sprintf("BEGIN; SELECT FOR UPDATE \"cur_uid\" FROM \"%scom_pgentity_uids\" WHERE \"name\"='%s';",
+		$query = sprintf("BEGIN;",
+			$pines->config->com_pgsql->prefix,
+			pg_escape_string($pines->com_pgsql->link, $name));
+		if ( !(@pg_query($pines->com_pgsql->link, $query)) ) {
+			if (function_exists('pines_error'))
+				pines_error('Query failed: ' . pg_last_error());
+			return null;
+		}
+		$query = sprintf("SELECT \"cur_uid\" FROM \"%scom_pgentity_uids\" WHERE \"name\"='%s' FOR UPDATE;",
 			$pines->config->com_pgsql->prefix,
 			pg_escape_string($pines->com_pgsql->link, $name));
 		if ( !($result = @pg_query($pines->com_pgsql->link, $query)) ) {
@@ -898,7 +921,7 @@ class com_pgentity extends component implements entity_manager_interface {
 			$query = sprintf("INSERT INTO \"%scom_pgentity_uids\" (\"name\", \"cur_uid\") VALUES ('%s', {$cur_uid});",
 				$pines->config->com_pgsql->prefix,
 				pg_escape_string($pines->com_pgsql->link, $name));
-			if ( !(pg_query($pines->com_pgsql->link, $query)) ) {
+			if ( !(@pg_query($pines->com_pgsql->link, $query)) ) {
 				if (function_exists('pines_error'))
 					pines_error('Query failed: ' . pg_last_error());
 				return null;
@@ -908,14 +931,14 @@ class com_pgentity extends component implements entity_manager_interface {
 			$query = sprintf("UPDATE \"%scom_pgentity_uids\" SET \"cur_uid\"={$cur_uid} WHERE \"name\"='%s';",
 				$pines->config->com_pgsql->prefix,
 				pg_escape_string($pines->com_pgsql->link, $name));
-			if ( !(pg_query($pines->com_pgsql->link, $query)) ) {
+			if ( !(@pg_query($pines->com_pgsql->link, $query)) ) {
 				if (function_exists('pines_error'))
 					pines_error('Query failed: ' . pg_last_error());
 				return null;
 			}
 		}
 		$query = 'COMMIT;';
-		if ( !(pg_query($pines->com_pgsql->link, $query)) ) {
+		if ( !(@pg_query($pines->com_pgsql->link, $query)) ) {
 			if (function_exists('pines_error'))
 				pines_error('Query failed: ' . pg_last_error());
 			return null;

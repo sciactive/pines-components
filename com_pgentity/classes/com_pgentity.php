@@ -869,7 +869,7 @@ class com_pgentity extends component implements entity_manager_interface {
 								$guid,
 								pg_escape_string($pines->com_pgsql->link, $name),
 								pg_escape_string($pines->com_pgsql->link, $value),
-								pg_escape_string($pines->com_pgsql->link, '{'.implode($references[1], ',').'}'));
+								pg_escape_string($pines->com_pgsql->link, '{'.implode(',', $references[1]).'}'));
 						}
 						$query = substr($query, 0, -1).';';
 						if ( !(pg_query($pines->com_pgsql->link, $query)) ) {
@@ -940,7 +940,7 @@ class com_pgentity extends component implements entity_manager_interface {
 						$guid,
 						pg_escape_string($pines->com_pgsql->link, $name),
 						pg_escape_string($pines->com_pgsql->link, $value),
-						pg_escape_string($pines->com_pgsql->link, '{'.implode($references[1], ',').'}'));
+						pg_escape_string($pines->com_pgsql->link, '{'.implode(',', $references[1]).'}'));
 				}
 				$query = substr($query, 0, -1).';';
 				if ( !(pg_query($pines->com_pgsql->link, $query)) ) {
@@ -1137,7 +1137,7 @@ class com_pgentity extends component implements entity_manager_interface {
 					$new_id,
 					pg_escape_string($pines->com_pgsql->link, $name),
 					pg_escape_string($pines->com_pgsql->link, $svalue),
-					pg_escape_string($pines->com_pgsql->link, '{'.implode($references[1], ',').'}'));
+					pg_escape_string($pines->com_pgsql->link, '{'.implode(',', $references[1]).'}'));
 			}
 			foreach ($sdata as $name => $value) {
 				preg_match_all('/a:3:\{i:0;s:22:"pines_entity_reference";i:1;i:(\d+);/', $value, $references, PREG_PATTERN_ORDER);
@@ -1145,7 +1145,7 @@ class com_pgentity extends component implements entity_manager_interface {
 					$new_id,
 					pg_escape_string($pines->com_pgsql->link, $name),
 					pg_escape_string($pines->com_pgsql->link, $value),
-					pg_escape_string($pines->com_pgsql->link, '{'.implode($references[1], ',').'}'));
+					pg_escape_string($pines->com_pgsql->link, '{'.implode(',', $references[1]).'}'));
 			}
 			$query = sprintf("INSERT INTO \"%scom_pgentity_data\" (\"guid\", \"name\", \"value\", \"references\") VALUES %s;",
 				$pines->config->com_pgsql->prefix,
@@ -1188,7 +1188,7 @@ class com_pgentity extends component implements entity_manager_interface {
 					(int) $entity->guid,
 					pg_escape_string($pines->com_pgsql->link, $name),
 					pg_escape_string($pines->com_pgsql->link, $svalue),
-					pg_escape_string($pines->com_pgsql->link, '{'.implode($references[1], ',').'}'));
+					pg_escape_string($pines->com_pgsql->link, '{'.implode(',', $references[1]).'}'));
 			}
 			foreach ($sdata as $name => $value) {
 				preg_match_all('/a:3:\{i:0;s:22:"pines_entity_reference";i:1;i:(\d+);/', $value, $references, PREG_PATTERN_ORDER);
@@ -1196,7 +1196,7 @@ class com_pgentity extends component implements entity_manager_interface {
 					(int) $entity->guid,
 					pg_escape_string($pines->com_pgsql->link, $name),
 					pg_escape_string($pines->com_pgsql->link, $value),
-					pg_escape_string($pines->com_pgsql->link, '{'.implode($references[1], ',').'}'));
+					pg_escape_string($pines->com_pgsql->link, '{'.implode(',', $references[1]).'}'));
 			}
 			$query = sprintf("INSERT INTO \"%scom_pgentity_data\" (\"guid\", \"name\", \"value\", \"references\") VALUES %s;",
 				$pines->config->com_pgsql->prefix,

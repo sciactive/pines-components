@@ -963,22 +963,26 @@ class com_sales extends component {
 		$module->location = $location;
 		$module->descendents = $descendents;
 		$module->stock = $module->transactions = array();
-		if (isset($module->serial))
+		if (isset($serial) || isset($sku))
 			$module->stock = $pines->entity_manager->get_entities(array('class' => com_sales_stock), $selector);
 
 		foreach ($module->stock as $cur_stock) {
 			// Grab all of the requested transactions for any stock items matching the given product code.
 			$invoices = $returns = $swaps = $transfers = $pos = $countsheets = array();
 			if ($module->types['invoice']) {
+				$current_ref = $or['ref'];
+				$or['ref'] = array('products', $cur_stock);
 				$invoices = $pines->entity_manager->get_entities(
 					array('class' => com_sales_sale, 'skip_ac' => true),
 					$secondary_options,
 					$or,
-					array('|', 'ref' => array('products', $cur_stock)),
 					array('&', 'tag' => array('com_sales', 'sale'))
 				);
+				$or['ref'] = $current_ref;
 			}
 			if ($module->types['return']) {
+				$current_ref = $or['ref'];
+				$or['ref'] = array('products', $cur_stock);
 				$returns = $pines->entity_manager->get_entities(
 					array('class' => com_sales_return, 'skip_ac' => true),
 					$secondary_options,
@@ -986,18 +990,21 @@ class com_sales extends component {
 					array('|', 'ref' => array('products', $cur_stock)),
 					array('&', 'tag' => array('com_sales', 'return'))
 				);
+				$or['ref'] = $current_ref;
 			}
 			if ($module->types['swap']) {
+				$current_ref = $or['ref'];
+				$or['ref'] = array('item', $cur_stock);
 				$swaps = $pines->entity_manager->get_entities(
 					array('class' => com_sales_tx, 'skip_ac' => true),
 					$secondary_options,
 					$or,
 					array('&',
-						'tag' => array('com_sales', 'sale_tx'),
-						'data' => array('type', 'swap'),
+						'tag' => array('com_sales', 'sale_tx', 'swap'),
 						'ref' => array('item', $cur_stock)
 					)
 				);
+				$or['ref'] = $current_ref;
 			}
 			if ($module->types['countsheet']) {
 				$countsheets = $pines->entity_manager->get_entities(
@@ -1047,7 +1054,7 @@ class com_sales extends component {
 						$tx_info = ucwords($cur_tx->status);
 						$cur_type = 'return';
 					} elseif ($cur_tx->has_tag('swap')) {
-						$tx_info = ucwords($cur_tx->status);
+						$tx_info = ucwords(str_replace('_', ' ', $cur_tx->type));
 						$cur_type = 'swap';
 					} elseif ($cur_tx->has_tag('transfer')) {
 						$tx_info = ($this->entity->finished) ? 'Received' : (empty($this->entity->received) ? 'Not Received' : 'Partially Received');
@@ -1061,110 +1068,6 @@ class com_sales extends component {
 					}
 					$module->transactions[$cur_tx->guid] = (object) array(
 						'product' => $cur_stock->product,
-						'type' => $cur_type,
-						'entity' => $cur_tx,
-						'transaction_info' => $tx_info,
-						'qty' => 1,
-						'serials' => array($cur_stock->serial)
-					);
-				}
-			}
-		}
-		if (!isset($module->serial) && empty($module->stock)) {
-			// Grab all of the requested transactions for any stock items matching the given product code.
-			$invoices = $returns = $swaps = $transfers = $pos = $countsheets = array();
-			if ($module->types['invoice']) {
-				$invoices = $pines->entity_manager->get_entities(
-					array('class' => com_sales_sale, 'skip_ac' => true),
-					$secondary_options,
-					$or,
-					array('|', 'ref' => array('products', $product)),
-					array('&', 'tag' => array('com_sales', 'sale'))
-				);
-			}
-			if ($module->types['return']) {
-				$returns = $pines->entity_manager->get_entities(
-					array('class' => com_sales_return, 'skip_ac' => true),
-					$secondary_options,
-					$or,
-					array('|', 'ref' => array('products', $product)),
-					array('&', 'tag' => array('com_sales', 'return'))
-				);
-			}
-			if ($module->types['swap']) {
-				$swaps = $pines->entity_manager->get_entities(
-					array('class' => com_sales_tx, 'skip_ac' => true),
-					$secondary_options,
-					$or,
-					array('&',
-						'tag' => array('com_sales', 'sale_tx'),
-						'data' => array('type', 'swap'),
-						'ref' => array('item', $product)
-					)
-				);
-			}
-			if ($module->types['countsheet']) {
-				$countsheets = $pines->entity_manager->get_entities(
-					array('class' => com_sales_countsheet, 'skip_ac' => true),
-					$secondary_options,
-					$or,
-					array('&',
-						'tag' => array('com_sales', 'countsheet'),
-						'array' => array('search_strings', $countsheet_code)
-					)
-				);
-			}
-			$or['ref'][0] = 'destination';
-			if ($module->types['transfer']) {
-				$transfers = $pines->entity_manager->get_entities(
-					array('class' => com_sales_transfer, 'skip_ac' => true),
-					$secondary_options,
-					$or,
-					array('&',
-						'tag' => array('com_sales', 'transfer'),
-						'ref' => array('products', $product)
-					)
-				);
-			}
-			if ($module->types['po']) {
-				$pos = $pines->entity_manager->get_entities(
-					array('class' => com_sales_po, 'skip_ac' => true),
-					$secondary_options,
-					$or,
-					array('&',
-						'tag' => array('com_sales', 'po'),
-						'ref' => array('products', $product)
-					)
-				);
-			}
-			foreach (array_merge($invoices, $returns, $swaps, $transfers, $pos, $countsheets) as $cur_tx) {
-				if (isset($module->transactions[$cur_tx->guid])) {
-					$module->transactions[$cur_tx->guid]->qty++;
-					if (!in_array($cur_stock->serial, $module->transactions[$cur_tx->guid]->serials))
-						$module->transactions[$cur_tx->guid]->serials[] = $cur_stock->serial;
-				} else {
-					$cur_type = '';
-					if ($cur_tx->has_tag('sale')) {
-						$tx_info = ucwords($cur_tx->status);
-						$cur_type = 'sale';
-					} elseif ($cur_tx->has_tag('return')) {
-						$tx_info = ucwords($cur_tx->status);
-						$cur_type = 'return';
-					} elseif ($cur_tx->has_tag('swap')) {
-						$tx_info = ucwords($cur_tx->status);
-						$cur_type = 'swap';
-					} elseif ($cur_tx->has_tag('transfer')) {
-						$tx_info = ($this->entity->finished) ? 'Received' : (empty($this->entity->received) ? 'Not Received' : 'Partially Received');
-						$cur_type = 'transfer';
-					} elseif ($cur_tx->has_tag('po')) {
-						$tx_info = ($this->entity->finished) ? 'Received' : (empty($this->entity->received) ? 'Not Received' : 'Partially Received');
-						$cur_type = 'po';
-					} elseif ($cur_tx->has_tag('countsheet')) {
-						$tx_info = ucwords($cur_tx->status);
-						$cur_type = 'countsheet';
-					}
-					$module->transactions[$cur_tx->guid] = (object) array(
-						'product' => $product,
 						'type' => $cur_type,
 						'entity' => $cur_tx,
 						'transaction_info' => $tx_info,

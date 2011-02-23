@@ -224,13 +224,13 @@ $pines->com_jstree->load();
 				$link = pines_url('com_sales', 'sale/receipt', array('id' => $cur_transaction->entity->guid));
 				$groupname = htmlspecialchars("{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]");
 				$quantity = count($cur_transaction->entity->products);
-				$serials = '';
+				$serials = implode(', ', $cur_transaction->serials);
 				break;
 			case 'return':
 				$link = pines_url('com_sales', 'return/receipt', array('id' => $cur_transaction->entity->guid));
 				$groupname = htmlspecialchars("{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]");
 				$quantity = count($cur_transaction->entity->products);
-				$serials = '';
+				$serials = implode(', ', $cur_transaction->serials);
 				break;
 			case 'swap':
 				$link = pines_url('com_sales', 'sale/receipt', array('id' => $cur_transaction->entity->ticket->guid));

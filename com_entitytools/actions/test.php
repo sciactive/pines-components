@@ -628,7 +628,7 @@ $passed_all = $passed_all || $found_match;
 $found_match = false;
 $entity_result = $pines->entity_manager->get_entities(
 		array(),
-		array('|', 'match' => array(array('test_value', '/\d/'), array('test_match' => '/,,/')))
+		array('|', 'match' => array(array('test_value', '/\d/'), array('test_match', '/,,/')))
 	);
 foreach ($entity_result as $cur_entity) {
 	if ($entity_test->is($cur_entity)) {
@@ -662,7 +662,7 @@ $test->tests['match_data_i'][2] = 'Retrieving entity by regex + data inclusively
 $found_match = false;
 $entity_result = $pines->entity_manager->get_entities(
 		array(),
-		array('|', 'gte' => array(array('test_number', 30), array('pickles' => 100)))
+		array('|', 'gte' => array(array('test_number', 30), array('pickles', 100)))
 	);
 foreach ($entity_result as $cur_entity) {
 	if ($entity_test->is($cur_entity)) {

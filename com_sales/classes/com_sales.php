@@ -1311,7 +1311,7 @@ class com_sales extends component {
 					)
 				);
 			foreach ($stock as $cur_stock) {
-				if (!$cur_stock->location->in_array($cur_product['locations']))
+				if (isset($cur_stock->location->guid) && !$cur_stock->location->in_array($cur_product['locations']))
 					$cur_product['locations'][] = $cur_stock->location;
 			}
 		}

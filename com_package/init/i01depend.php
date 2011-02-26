@@ -36,7 +36,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * @param string $value The value to check.
  * @return bool The result of the package check.
  */
-function com_package_check_package($value) {
+function com_package__check_package($value) {
 	global $pines;
 	if (
 			strpos($value, '&') !== false ||
@@ -45,7 +45,7 @@ function com_package_check_package($value) {
 			strpos($value, '(') !== false ||
 			strpos($value, ')') !== false
 		)
-		return $this->simple_parse($value, 'com_package_check_package');
+		return $this->simple_parse($value, 'com_package__check_package');
 	$package_name = preg_replace('/([a-z0-9_-]+)([<>=]{1,2})(.+)/S', '$1', $value);
 	$package = com_package_package::factory($package_name);
 	if (!isset($package) || !$package->is_installed())
@@ -58,6 +58,6 @@ function com_package_check_package($value) {
 	return true;
 }
 
-$pines->depend->checkers['package'] = 'com_package_check_package';
+$pines->depend->checkers['package'] = 'com_package__check_package';
 
 ?>

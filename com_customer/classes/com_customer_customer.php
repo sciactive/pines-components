@@ -39,9 +39,9 @@ class com_customer_customer extends user {
 		if ($id > 0 || (string) $id === $id) {
 			global $pines;
 			if ((int) $id === $id) {
-				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
+				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => array('com_user', 'user', 'com_customer', 'customer')));
 			} else {
-				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'tag' => $this->tags, 'data' => array('username', $id)));
+				$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'tag' => array('com_user', 'user', 'com_customer', 'customer'), 'data' => array('username', $id)));
 			}
 			if (isset($entity)) {
 				$this->guid = $entity->guid;

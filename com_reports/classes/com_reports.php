@@ -233,13 +233,50 @@ class com_reports extends component {
 	}
 
 	/**
+	 * Creates and attaches a module which reports calendar events.
+	 *
+	 * @param int $start_date The start date of the report.
+	 * @param int $end_date The end date of the report.
+	 * @param group $location The group to report on.
+	 * @param bool $descendents Whether to show descendent locations.
+	 * @return module The calendar report module.
+	 */
+	function report_calendar($start_date = null, $end_date = null, $location = null, $descendents = false) {
+		global $pines;
+
+		$module = new module('com_reports', 'report_calendar', 'content');
+
+		$selector = array('&', 'tag' => array('com_calendar', 'event'));
+		// Datespan of the report.
+		if (isset($start_date))
+			$selector['gte'] = array('start', (int) $start_date);
+		if (isset($end_date))
+			$selector['lt'] = array('end', (int) $end_date);
+		$module->start_date = $start_date;
+		$module->end_date = $end_date;
+		$module->all_time = (!isset($start_date) && !isset($end_date));
+		// Location of the report.
+		if (!isset($location->guid))
+			$location = $_SESSION['user']->group;
+		if ($descendents)
+			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		else
+			$or = array('|', 'ref' => array('group', $location));
+		$module->location = $location;
+		$module->descendents = $descendents;
+		$module->events = $pines->entity_manager->get_entities(array('class' => com_calendar_event), $selector, $or);
+
+		return $module;
+	}
+
+	/**
 	 * Creates and attaches a module which reports employee issues.
 	 *
 	 * @param int $start_date The start date of the report.
 	 * @param int $end_date The end date of the report.
 	 * @param group $location The group to report on.
 	 * @param bool $descendents Whether to show descendent locations.
-	 * @return module The attendance report module.
+	 * @return module The issues report module.
 	 */
 	function report_issues($start_date = null, $end_date = null, $location = null, $descendents = false) {
 		global $pines;

@@ -26,6 +26,7 @@ return array(
 	),
 	'abilities' => array(
 		array('reportattendance', 'Report Attendance', 'User can see attendance reports.'),
+		array('reportcalendar', 'Report Calendar', 'User can see calendar reports.'),
 		array('reportpayroll', 'Report Payroll', 'User can see payroll reports.'),
 		array('reportissues', 'Report Issues', 'User can see employee issue reports.'),
 		array('reportmifi', 'Report MiFi', 'User can see MiFi reports.'),

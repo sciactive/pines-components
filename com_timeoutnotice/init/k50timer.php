@@ -11,7 +11,11 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( gatekeeper() && ($pines->request_component != 'com_timeoutnotice' || $pines->request_action != 'check') )
-	$_SESSION['com_timeoutnotice__last_access'] = time();
+if ( gatekeeper() ) {
+	if ($pines->request_component != 'com_timeoutnotice' || $pines->request_action != 'check')
+		$_SESSION['com_timeoutnotice__last_access'] = time();
+	// This stores any custom config value.
+	$_SESSION['com_timeoutnotice__timeout'] = $pines->config->com_timeoutnotice->timeout;
+}
 
 ?>

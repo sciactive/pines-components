@@ -1,7 +1,7 @@
 /*
- * jQuery Pines Grid (pgrid) Plugin 1.0.0
+ * jQuery Pines Grid (pgrid) Plugin 1.0.1
  *
- * Copyright (c) 2010 Hunter Perrin
+ * Copyright (c) 2010-2011 Hunter Perrin
  *
  * Licensed (along with all of Pines) under the GNU Affero GPL:
  *	  http://www.gnu.org/licenses/agpl.html
@@ -276,7 +276,7 @@
 		// Iterate and gridify each matched element.
 		this.filter("table").not(".ui-pgrid-table").each(function() {
 			var pgrid = $(this);
-			pgrid.pgrid_version = "1.0.0";
+			pgrid.pgrid_version = "1.0.1";
 
 			pgrid.extend(pgrid, opts);
 
@@ -1040,14 +1040,20 @@
 									if (!val.confirm(e, selected_rows))
 										return false;
 								} else {
+									var text = "";
+									if (typeof val.text != "undefined") {
+										text = " \""+val.text+"\"";
+									} else if (typeof val.title != "undefined") {
+										text = " \""+val.title+"\"";
+									}
 									if (val.return_all_rows) {
-										if (!confirm("Are you sure you want to perform the operation \""+val.text+"\" on all items?"))
+										if (!confirm("Are you sure you want to perform the operation"+text+" on all items?"))
 											return false;
 									} else if (selected_rows.length === 0) {
-										if (!confirm("Are you sure you want to perform the operation \""+val.text+"\"?"))
+										if (!confirm("Are you sure you want to perform the operation"+text+"?"))
 											return false;
 									} else {
-										if (!confirm("Are you sure you want to perform the operation \""+val.text+"\" on the "+selected_rows.length+" currently selected item(s)?"))
+										if (!confirm("Are you sure you want to perform the operation"+text+" on the "+selected_rows.length+" currently selected item(s)?"))
 											return false;
 									}
 								}
@@ -1074,7 +1080,7 @@
 										// Turn each cell into a CSV cell.
 										$(this).children().not(".ui-pgrid-table-expander").each(function(){
 											var cur_cell = $(this);
-											row_data += "\""+cur_cell.contents().text().replace("\"", "\"\"")+"\"";
+											row_data += '"'+cur_cell.contents().text().replace(/"/g, '""')+'"';
 											// Add a comma, if there is another cell.
 											if (cur_cell.next())
 												row_data += ",";

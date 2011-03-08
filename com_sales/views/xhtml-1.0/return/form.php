@@ -700,6 +700,7 @@ if ($pines->config->com_sales->autocomplete_product)
 							bgiframe: true,
 							autoOpen: true,
 							modal: true,
+							width: 640,
 							open: function(){
 								form.html('<form method="post" action="">'+data+"</form><br />");
 								form.find("form").submit(function(){

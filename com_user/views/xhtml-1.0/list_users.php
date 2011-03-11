@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = $this->enabled ? 'Users' : 'Disabled Users';
+$this->title = ($this->enabled ? '' : 'Disabled ').'Users';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_user/list_users'];
@@ -34,7 +34,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<?php if (gatekeeper('com_user/deleteuser')) { ?>
 				{type: 'button', text: 'Delete', extra_class: 'picon picon-list-remove-user', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_user', 'deleteuser', array('id' => '__title__'))); ?>', delimiter: ','},
 				{type: 'separator'},
+				<?php } if ($this->enabled) { ?>
+				{type: 'button', text: 'Disabled', extra_class: 'picon picon-vcs-removed', selection_optional: true, url: '<?php echo addslashes(pines_url('com_user', 'listusers', array('enabled' => 'false'))); ?>'},
+				<?php } else { ?>
+				{type: 'button', text: 'Enabled', extra_class: 'picon picon-vcs-normal', selection_optional: true, url: '<?php echo addslashes(pines_url('com_user', 'listusers')); ?>'},
 				<?php } ?>
+				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},

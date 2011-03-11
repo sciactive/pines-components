@@ -149,6 +149,14 @@ class com_authorizenet extends component {
 					'x_state'			=> '', //$state,
 					'x_zip'				=> '' //$zip
 				);
+
+				// If the card is a merchant card and not an online account.
+				if ($pines->config->com_authorizenet->merchant_type == 'retail') {
+					$post_values['x_cpversion'] = '1.0';
+					$post_values['x_market_type'] = '2';
+					$post_values['x_device_type'] = '5';
+					$post_values['x_response_format'] = '1';
+				}
 				if ($array['payment']['data']['card_swiped'] != 'ON')
 					$post_values['x_card_code'] = $card_code;
 				$post_string = '';
@@ -182,7 +190,12 @@ class com_authorizenet extends component {
 					'card_exp_year'		=> $array['payment']['data']['card_exp_year'],
 					'card_swiped'		=> $array['payment']['data']['card_swiped']
 				);
-				switch ($response_array[0]) {
+				if ($pines->config->com_authorizenet->merchant_type == 'retail') {
+					$response_code = $response_array[1];
+				} else {
+					$response_code = $response_array[0];
+				}
+				switch ($response_code) {
 					case 1:
 						$array['payment']['status'] = 'tendered';
 						$array['payment']['label'] = $this->card_type($array['payment']['data']['card_number']) . ' ' . substr($array['payment']['data']['card_number'], -4);

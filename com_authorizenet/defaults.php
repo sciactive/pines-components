@@ -41,6 +41,17 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'merchant_type',
+		'cname' => 'Merchant Type',
+		'description' => 'The merchant type of the Authorize.Net account.',
+		'value' => 'online',
+		'options' => array(
+			'Online' => 'online',
+			'Retail' => 'retail'
+		),
+		'peruser' => true,
+	),
+	array(
 		'name' => 'test_mode',
 		'cname' => 'Test Mode',
 		'description' => 'Enabling this will prevent payments from actually being processed.',

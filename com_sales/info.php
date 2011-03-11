@@ -106,7 +106,8 @@ return array(
 		array('deletecountsheet', 'Delete Countsheets', 'User can delete current countsheets.'),
 		array('printcountsheet', 'Print Countsheets', 'User can print countsheets.'),
 		array('approvecountsheet', 'Approve Countsheets', 'User can approve countsheets.'),
-		array('assigncountsheet', 'Assign Countsheets', 'User can assign countsheets.')
+		array('assigncountsheet', 'Assign Countsheets', 'User can assign countsheets.'),
+		array('overrideowner', 'Override Owner', 'User can override users/locations for sales/returns.')
 	),
 );
 

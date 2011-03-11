@@ -53,8 +53,7 @@ $pines->com_jstree->load();
 				<?php if (!$this->removed) { ?>
 				{type: 'button', title: 'Location', extra_class: 'picon picon-applications-internet', selection_optional: true, click: function(){stock_grid.location_form();}},
 				{type: 'separator'},
-				<?php } ?>
-				<?php if (gatekeeper('com_sales/receive')) { ?>
+				<?php } if (gatekeeper('com_sales/receive')) { ?>
 				{type: 'button', text: 'Receive', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'stock/receive')); ?>'},
 				<?php } if (gatekeeper('com_sales/managestock')) { ?>
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', multi_select: true, double_click: true, url: '<?php echo addslashes(pines_url('com_sales', 'stock/edit', array('id' => '__title__'))); ?>', delimiter: ','},
@@ -77,6 +76,12 @@ $pines->com_jstree->load();
 						});
 					});
 				}},
+				<?php } ?>
+				{type: 'separator'},
+				<?php if (!$this->removed) { ?>
+				{type: 'button', text: 'Removed', extra_class: 'picon picon-vcs-removed', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'stock/list', array('removed' => 'true'))); ?>'},
+				<?php } else { ?>
+				{type: 'button', text: 'Current', extra_class: 'picon picon-vcs-normal', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'stock/list')); ?>'},
 				<?php } ?>
 				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},

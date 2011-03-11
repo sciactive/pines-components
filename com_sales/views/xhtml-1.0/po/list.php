@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Purchase Orders';
+$this->title = ($this->finished ? 'Completed ' : '').'Purchase Orders';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/po/list'];
@@ -29,16 +29,19 @@ $errors = array();
 				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'po/edit')); ?>'},
 				<?php } if (gatekeeper('com_sales/editpo')) { ?>
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo addslashes(pines_url('com_sales', 'po/edit', array('id' => '__title__'))); ?>'},
-				<?php } if (gatekeeper('com_sales/completepo')) { ?>
 				{type: 'separator'},
+				<?php } if (gatekeeper('com_sales/completepo') && !$this->finished) { ?>
 				{type: 'button', text: 'Complete', title: 'Mark it complete even with missing items.', extra_class: 'picon picon-checkbox', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_sales', 'po/complete', array('id' => '__title__'))); ?>', delimiter: ','},
-				<?php } ?>
-				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
-				<?php if (gatekeeper('com_sales/deletepo')) { ?>
+				<?php } if (gatekeeper('com_sales/deletepo')) { ?>
 				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_sales', 'po/delete', array('id' => '__title__'))); ?>', delimiter: ','},
 				{type: 'separator'},
+				<?php } if (!$this->finished) { ?>
+				{type: 'button', text: 'Completed', extra_class: 'picon picon-vcs-removed', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'po/list', array('finished' => 'true'))); ?>'},
+				<?php } else { ?>
+				{type: 'button', text: 'Pending', extra_class: 'picon picon-vcs-normal', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'po/list')); ?>'},
 				<?php } ?>
+				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},

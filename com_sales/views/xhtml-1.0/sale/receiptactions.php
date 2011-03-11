@@ -23,12 +23,12 @@ $sale = $this->entity->has_tag('sale');
 	// <![CDATA[
 	pines(function(){
 		$("#p_muid_email").click(function(){
-			pines.get("<?php echo pines_url('com_sales', $sale ? 'sale/sendreceipt' : 'return/sendreceipt', array('id' => $this->entity->guid)); ?>");
+			pines.get("<?php echo addslashes(pines_url('com_sales', $sale ? 'sale/sendreceipt' : 'return/sendreceipt', array('id' => $this->entity->guid))); ?>");
 		});
 		<?php if ($pines->config->com_sales->receipt_printer) { ?>
 		$("#p_muid_print").click(function(){
 			// Use window.location so an AJAX wrapper won't try to wrap this.
-			window.location = "<?php echo pines_url('com_sales', $sale ? 'sale/printreceipt' : 'return/printreceipt', array('id' => $this->entity->guid)); ?>";
+			window.location = "<?php echo addslashes(pines_url('com_sales', $sale ? 'sale/printreceipt' : 'return/printreceipt', array('id' => $this->entity->guid))); ?>";
 		});
 		<?php if ($pines->config->com_sales->auto_receipt_printer && $this->auto_print_ok) { ?>
 		$("#p_muid_print").click();

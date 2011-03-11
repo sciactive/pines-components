@@ -53,14 +53,6 @@
 					"ability": "com_sales/listcashcounts"
 				}
 			},
-			{
-				"path": "main_menu/business/0_pos/sales/oldcashcounts",
-				"text": "Old Cash Counts",
-				"href": ["com_sales","cashcount/list",{"old":"true"}],
-				"depend": {
-					"ability": "com_sales/listcashcounts"
-				}
-			},
 		{
 			"path": "main_menu/business/0_pos/returns",
 			"text": "Returns",
@@ -116,33 +108,17 @@
 				}
 			},
 			{
-				"path": "main_menu/business/0_pos/inventory/pendingshipments",
-				"text": "Pending Shipments",
+				"path": "main_menu/business/0_pos/inventory/shipments",
+				"text": "Shipments",
 				"href": ["com_sales","stock/shipments"],
 				"depend": {
 					"ability": "com_sales/managestock"
 				}
 			},
 			{
-				"path": "main_menu/business/0_pos/inventory/completeshipments",
-				"text": "Complete Shipments",
-				"href": ["com_sales","stock/shipments",{"removed":"true"}],
-				"depend": {
-					"ability": "com_sales/managestock"
-				}
-			},
-			{
-				"path": "main_menu/business/0_pos/inventory/currentinventory",
-				"text": "Current Inventory",
+				"path": "main_menu/business/0_pos/inventory/inventory",
+				"text": "Inventory",
 				"href": ["com_sales","stock/list"],
-				"depend": {
-					"ability": "com_sales/managestock"
-				}
-			},
-			{
-				"path": "main_menu/business/0_pos/inventory/removedinventory",
-				"text": "Removed Inventory",
-				"href": ["com_sales","stock/list",{"removed":"true"}],
 				"depend": {
 					"ability": "com_sales/managestock"
 				}
@@ -167,14 +143,6 @@
 				"path": "main_menu/business/0_pos/inventory/transfers",
 				"text": "Transfers",
 				"href": ["com_sales","transfer/list"],
-				"depend": {
-					"ability": "com_sales/managestock"
-				}
-			},
-			{
-				"path": "main_menu/business/0_pos/inventory/completedtransfers",
-				"text": "Completed Transfers",
-				"href": ["com_sales","transfer/list",{"finished":"true"}],
 				"depend": {
 					"ability": "com_sales/managestock"
 				}
@@ -211,14 +179,6 @@
 				}
 			},
 			{
-				"path": "main_menu/business/0_pos/ordering/completedpurchaseorders",
-				"text": "Completed POs",
-				"href": ["com_sales","po/list",{"finished":"true"}],
-				"depend": {
-					"ability": "com_sales/listpos"
-				}
-			},
-			{
 				"path": "main_menu/business/0_pos/ordering/newpo",
 				"text": "New PO",
 				"href": ["com_sales","po/edit"],
@@ -245,14 +205,6 @@
 				"path": "main_menu/business/0_pos/setup/products",
 				"text": "Products",
 				"href": ["com_sales","product/list"],
-				"depend": {
-					"ability": "com_sales/listproducts"
-				}
-			},
-			{
-				"path": "main_menu/business/0_pos/setup/disabledproducts",
-				"text": "Disabled Products",
-				"href": ["com_sales","product/list",{"enabled":"false"}],
 				"depend": {
 					"ability": "com_sales/listproducts"
 				}

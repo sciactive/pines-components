@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = $this->enabled ? 'Products' : 'Disabled Products';
+$this->title = ($this->enabled ? '' : 'Disabled ').'Products';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/product/list'];
@@ -34,7 +34,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<?php if (gatekeeper('com_sales/deleteproduct')) { ?>
 				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_sales', 'product/delete', array('id' => '__title__'))); ?>', delimiter: ','},
 				{type: 'separator'},
+				<?php } if ($this->enabled) { ?>
+				{type: 'button', text: 'Disabled', extra_class: 'picon picon-vcs-removed', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'product/list', array('enabled' => 'false'))); ?>'},
+				<?php } else { ?>
+				{type: 'button', text: 'Enabled', extra_class: 'picon picon-vcs-normal', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'product/list')); ?>'},
 				<?php } ?>
+				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
@@ -65,38 +70,49 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<tr>
 			<th>SKU</th>
 			<th>Name</th>
+			<th>Price</th>
+			<th>Cost(s)</th>
+			<th>Vendor(s)</th>
 			<th>Manufacturer</th>
 			<th>Manufacturer SKU</th>
-			<th>Pricing Method</th>
-			<th>Unit Price</th>
-			<th>Margin</th>
-			<th>Tax Exempt</th>
+			<th>Stock Type</th>
 			<th>Serialized</th>
 			<th>Discountable</th>
-			<?php if ($pines->config->com_sales->com_customer) { ?>
-			<th>Require Customer</th>
-			<?php } ?>
-			<th>Non-Refundable</th>
 			<th>Additional Barcodes</th>
 		</tr>
 	</thead>
 	<tbody>
-	<?php foreach($this->products as $product) { ?>
+	<?php foreach($this->products as $product) {
+		$costs = $vendors = array();
+		foreach($product->vendors as $cur_vendor) {
+			$vendors[] = $cur_vendor['entity']->name;
+			$costs[] = '$'.$pines->com_sales->round($cur_vendor['cost'], true);
+		}
+	?>
 		<tr title="<?php echo $product->guid; ?>">
 			<td><?php echo htmlspecialchars($product->sku); ?></td>
 			<td><?php echo htmlspecialchars($product->name); ?></td>
+			<td style="text-align: right;">$<?php echo htmlspecialchars($pines->com_sales->round($product->unit_price, true)); ?></td>
+			<td style="text-align: right;"><?php echo htmlspecialchars(implode(', ', $costs)); ?></td>
+			<td><?php echo htmlspecialchars(implode(', ', $vendors)); ?></td>
 			<td><?php echo htmlspecialchars($product->manufacturer->name); ?></td>
 			<td><?php echo htmlspecialchars($product->manufacturer_sku); ?></td>
-			<td><?php echo htmlspecialchars($product->pricing_method); ?></td>
-			<td>$<?php echo htmlspecialchars($product->unit_price); ?></td>
-			<td><?php echo htmlspecialchars($product->margin); ?>%</td>
-			<td><?php echo ($product->tax_exempt ? 'Yes' : 'No'); ?></td>
+			<td><?php switch ($product->stock_type) {
+				case 'non_stocked':
+					echo 'Non Stocked';
+					break;
+				case 'stock_optional':
+					echo 'Stock Optional';
+					break;
+				case 'regular_stock':
+					echo 'Regular Stock';
+					break;
+				default:
+					echo 'Unrecognized';
+					break;
+			} ?></td>
 			<td><?php echo ($product->serialized ? 'Yes' : 'No'); ?></td>
 			<td><?php echo ($product->discountable ? 'Yes' : 'No'); ?></td>
-			<?php if ($pines->config->com_sales->com_customer) { ?>
-			<td><?php echo ($product->require_customer ? 'Yes' : 'No'); ?></td>
-			<?php } ?>
-			<td><?php echo ($product->non_refundable ? 'Yes' : 'No'); ?></td>
 			<td><?php echo htmlspecialchars(implode(', ', $product->additional_barcodes)); ?></td>
 		</tr>
 	<?php } ?>

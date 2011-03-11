@@ -255,9 +255,9 @@ class com_sales extends component {
 	 * @param int $end_date The end date of cash counts to show.
 	 * @param group $location The location to show cash counts for.
 	 * @param bool $descendents Whether to show descendent locations.
-	 * @param bool $old Whether to show old cash counts instead.
+	 * @param bool $finished Whether to show finished cash counts instead.
 	 */
-	public function list_cashcounts($start_date = null, $end_date = null, $location = null, $descendents = false, $old = false) {
+	public function list_cashcounts($start_date = null, $end_date = null, $location = null, $descendents = false, $finished = false) {
 		global $pines;
 
 		$form = new module('com_sales', 'cashcount/listform', 'right');
@@ -275,7 +275,7 @@ class com_sales extends component {
 				array('status', 'pending')
 			)
 		);
-		if ($old)
+		if ($finished)
 			$selector[0] = '!&';
 		if ($descendents)
 			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
@@ -295,7 +295,7 @@ class com_sales extends component {
 		$form->end_date = $end_date;
 		$form->location = $location->guid;
 		$form->descendents = $descendents;
-		$form->old = $module->old = $old;
+		$form->finished = $module->finished = $finished;
 
 		// Remind the user to do a cash count if one is assigned to their location.
 		if ($_SESSION['user']) {
@@ -431,6 +431,7 @@ class com_sales extends component {
 					'data' => array('finished', $finished)
 				)
 			);
+		$module->finished = $finished;
 
 		if ( empty($module->pos) ) {
 			pines_notice('There are no POs.');
@@ -674,6 +675,7 @@ class com_sales extends component {
 
 		$module = new module('com_sales', 'transfer/list', 'content');
 
+		$module->finished = $finished;
 		if ($just_pending_shipment) {
 			if (isset($_SESSION['user']->group)) {
 				$module->transfers = $pines->entity_manager->get_entities(
@@ -755,7 +757,26 @@ class com_sales extends component {
 		$pines->page->override_doc($module->render());
 		return $module;
 	}
-	
+
+	/**
+	 * Print a form to override users/locations.
+	 *
+	 * Uses a page override to only print the form.
+	 *
+	 * @param mixed $entity The entity to edit.
+	 * @return module The form's module.
+	 */
+	public function override_form($entity = null) {
+		global $pines;
+		$pines->page->override = true;
+
+		$module = new module('com_sales', 'forms/overrideowner', 'content');
+		$module->entity = $entity;
+
+		$pines->page->override_doc($module->render());
+		return $module;
+	}
+
 	/**
 	 * Process an instant approval payment.
 	 *

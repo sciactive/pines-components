@@ -67,6 +67,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', title: 'Change Salesperson', extra_class: 'picon picon-edit-find-user', click: function(e, row){
 					sale_grid.salesrep_form(row.pgrid_get_value(1), row.attr("title"));
 				}},
+				<?php } if (gatekeeper('com_sales/overrideowner')) { ?>
+				{type: 'button', title: 'Override Owner', extra_class: 'picon picon-resource-group', click: function(e, row){
+					sale_grid.owner_form($(row).attr("title"));
+				}},
 				<?php } ?>
 				{type: 'separator'},
 				<?php if (gatekeeper('com_sales/deletesale')) { ?>
@@ -169,6 +173,68 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 									descendents = false;
 								form.dialog('close');
 								submit_search();
+							}
+						}
+					});
+				}
+			});
+		};
+		sale_grid.owner_form = function(sale_id){
+			$.ajax({
+				url: "<?php echo addslashes(pines_url('com_sales', 'forms/overrideowner')); ?>",
+				type: "POST",
+				dataType: "html",
+				data: {"id": sale_id},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured while trying to retreive the override form:\n"+XMLHttpRequest.status+": "+textStatus);
+				},
+				success: function(data){
+					if (data == "")
+						return;
+					var form = $("<div title=\"Override Sale\" />");
+					form.dialog({
+						bgiframe: true,
+						autoOpen: true,
+						width: 425,
+						modal: true,
+						open: function(){
+							form.html(data+"<br />");
+							$(".salesperson_box", form).employeeselect();
+						},
+						close: function(){
+							form.remove();
+						},
+						buttons: {
+							"Override": function(){
+								form.dialog('close');
+								// Submit the override request.
+								$.ajax({
+									url: "<?php echo addslashes(pines_url('com_sales', 'overrideowner')); ?>",
+									type: "POST",
+									dataType: "html",
+									data: {
+										"id": sale_id,
+										"location": form.find(":input[name=location]").val(),
+										"user": form.find(":input[name=user]").val()
+									},
+									error: function(XMLHttpRequest, textStatus){
+										pines.error("An error occured while trying to override the sale:\n"+XMLHttpRequest.status+": "+textStatus);
+									},
+									success: function(data){
+										if (data == "false")
+											alert("Could not override the sale.");
+										else {
+											alert("The sale has been overridden.");
+											pines.get(submit_url, {
+												"location": location,
+												"descendents": descendents,
+												"all_time": all_time,
+												"start_date": start_date,
+												"end_date": end_date
+											});
+										}
+									}
+								});
 							}
 						}
 					});

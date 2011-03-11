@@ -10,9 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Cash Counts';
-if ($this->old)
-	$this->title = 'Prior Cash Counts';
+$this->title = ($this->finished ? 'Prior ' : '').'Cash Counts';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/cashcount/list'];
@@ -84,8 +82,8 @@ $pines->com_jstree->load();
 			pgrid_toolbar_contents: [
 				<?php if (gatekeeper('com_sales/newcashcount')) { ?>
 				{type: 'button', text: 'Cash-In', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'cashcount/edit')); ?>'},
-				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo addslashes(pines_url('com_sales', 'cashcount/edit', array('id' => '__title__'))); ?>'},
 				<?php } if (gatekeeper('com_sales/editcashcount')) { ?>
+				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo addslashes(pines_url('com_sales', 'cashcount/edit', array('id' => '__title__'))); ?>'},
 				{type: 'button', text: 'Cash-Out', extra_class: 'picon picon-view-bank', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'cashcount/cashout', array('id' => '__title__'))); ?>'},
 				<?php } if (gatekeeper('com_sales/skimcashcount')) { ?>
 				{type: 'button', text: 'Skim', extra_class: 'picon picon-list-remove', url: '<?php echo addslashes(pines_url('com_sales', 'cashcount/skim', array('id' => '__title__'))); ?>'},
@@ -104,7 +102,12 @@ $pines->com_jstree->load();
 				<?php if (gatekeeper('com_sales/deletecashcount')) { ?>
 				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_sales', 'cashcount/delete', array('id' => '__title__'))); ?>', delimiter: ','},
 				{type: 'separator'},
+				<?php } if (!$this->finished) { ?>
+				{type: 'button', text: 'Prior', extra_class: 'picon picon-vcs-removed', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'cashcount/list', array('finished' => 'true'))); ?>'},
+				<?php } else { ?>
+				{type: 'button', text: 'Current', extra_class: 'picon picon-vcs-normal', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'cashcount/list')); ?>'},
 				<?php } ?>
+				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},

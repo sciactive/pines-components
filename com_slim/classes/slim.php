@@ -9,6 +9,7 @@
  * @copyright SciActive.com
  * @link http://sciactive.com/
  */
+defined('P_RUN') or die('Direct access prohibited');
 
 /**
  * Slim archiving class.

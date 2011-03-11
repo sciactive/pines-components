@@ -23,25 +23,23 @@ $this->note = "Version {$pines->info->version}";
 	// ]]>
 </script>
 <p>
-<?php echo htmlspecialchars($pines->info->name); ?> is a PHP application framework,
-designed to be extensible and easy to manage. It is a
-<a href="http://sciactive.com/" onclick="window.open(this.href); return false;">
-SciActive</a> project written by Hunter Perrin. It allows rapid development,
-highly customizable implementation, easy maintenance, and extreme flexibility.
-The manager installs components to add functionality. For example, if the
-manager wants to have a user management system, he can install com_user. When
-com_user takes over user management for the system, it will prompt users to log
-in and only give them permissions they have been allowed.
+<?php echo htmlspecialchars($pines->info->name); ?> is a PHP application
+framework from
+<a href="http://sciactive.com/" onclick="window.open(this.href); return false;">SciActive</a>,
+designed to be extensible and easy to use. It allows rapid development, highly
+customizable implementation, easy maintenance, and unmatched flexibility.
 </p>
 <p>
-The admin can add features using components, and change the look and feel using
-templates. The system will have a package manager, which will automatically
-install any required components. <?php echo htmlspecialchars($pines->info->name); ?>
-is designed to allow maximum flexibility for the developer, and provide enough
-tools and available libraries to make development of even very complex systems
-easy. The admin can choose whatever database system he uses, even flat files,
-and all the components which use an entity manager (the database abstraction
-layer) will work.
+New features can be added by downloading new components, and the look and feel
+can be customized by downloading new templates.
+<?php echo htmlspecialchars($pines->info->name); ?> uses a package manager
+called Pines Plaza, which automatically installs any dependencies a component
+needs. <?php echo htmlspecialchars($pines->info->name); ?> is designed to allow
+maximum flexibility for the developer, and provide more than enough tools and
+libraries to make development of even very complex systems easy.
+<?php echo htmlspecialchars($pines->info->name); ?> supports different databases
+by using a database abstraction system called an Entity Manager. Choosing the
+right database is as simple as installing a new component.
 </p>
 <p id="p_muid_buttons" style="float: right;">
 	<button type="button" onclick="window.open('http://sciactive.com/');">SciActive</button>

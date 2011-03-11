@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = (!$this->employed ? 'Past ' : '').'Employees';
+$this->title = (!$this->employed ? 'Prior ' : '').'Employees';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_hrm/employee/list'];
@@ -109,8 +109,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
-				<?php if (!$this->employed) { ?>
-					{type: 'button', text: 'Rehire', extra_class: 'picon picon-list-add-user', multi_select: true, click: function(e, rows){
+				<?php if (gatekeeper('com_hrm/addemployee')) { if (!$this->employed) { ?>
+					{type: 'button', text: 'Rehire', extra_class: 'picon picon-edit-undo', multi_select: true, click: function(e, rows){
 					rehire_id = "";
 					$.each(rows.pgrid_export_rows(), function(){
 						if (rehire_id != "")
@@ -123,7 +123,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						rehire_dialog.find("div.dialog_title").html('<h1>'+rows.length+' Employees</h1>');
 					rehire_dialog.dialog("open");
 					}},
-				<?php } elseif (gatekeeper('com_hrm/addemployee')) { ?>
+				<?php } else { ?>
 				{type: 'button', text: 'Add User(s)', extra_class: 'picon picon-list-add-user', selection_optional: true, click: function(){
 					$.ajax({
 						url: "<?php echo addslashes(pines_url('com_hrm', 'forms/userselect')); ?>",
@@ -155,7 +155,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						}
 					});
 				}},
-				<?php } if (gatekeeper('com_hrm/editemployee')) { ?>
+				<?php } } if (gatekeeper('com_hrm/editemployee')) { ?>
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-user-properties', double_click: true, url: '<?php echo addslashes(pines_url('com_hrm', 'employee/edit', array('id' => '__title__'))); ?>'},
 				<?php } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
@@ -224,6 +224,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						}
 					});
 				}},
+				<?php } ?>
+				{type: 'separator'},
+				<?php if ($this->employed) { ?>
+				{type: 'button', text: 'Prior', extra_class: 'picon picon-vcs-removed', selection_optional: true, url: '<?php echo addslashes(pines_url('com_hrm', 'employee/list', array('employed' => 'false'))); ?>'},
+				<?php } else { ?>
+				{type: 'button', text: 'Current', extra_class: 'picon picon-vcs-normal', selection_optional: true, url: '<?php echo addslashes(pines_url('com_hrm', 'employee/list')); ?>'},
 				<?php } ?>
 				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},

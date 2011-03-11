@@ -232,7 +232,7 @@ $timezone = $_SESSION['user']->get_timezone();
 				if (data)
 					alert(data);
 				if (refresh || data)
-					pines.get('<?php echo pines_url('com_calendar', 'editcalendar', array('location' => $this->location->guid, 'employee' => $this->employee->guid)); ?>');
+					pines.get('<?php echo addslashes(pines_url('com_calendar', 'editcalendar', array('location' => $this->location->guid, 'employee' => $this->employee->guid))); ?>');
 			}
 		});
 	};

@@ -1,13 +1,13 @@
 [
 	{
-		"path": "main_menu/business/reports",
+		"path": "main_menu/reports",
 		"text": "Reports",
 		"depend": {
 			"children": true
 		}
 	},
 		{
-			"path": "main_menu/business/reports/sales",
+			"path": "main_menu/reports/sales",
 			"text": "Sales",
 			"depend": {
 				"children": true,
@@ -15,7 +15,7 @@
 			}
 		},
 			{
-				"path": "main_menu/business/reports/sales/salesinvoices",
+				"path": "main_menu/reports/sales/salesinvoices",
 				"text": "Invoice Summary",
 				"href": ["com_reports","invoicesummary"],
 				"depend": {
@@ -23,7 +23,7 @@
 				}
 			},
 			{
-				"path": "main_menu/business/reports/sales/salesemployees",
+				"path": "main_menu/reports/sales/salesemployees",
 				"text": "Employee Summary",
 				"href": ["com_reports","employeesummary"],
 				"depend": {
@@ -32,7 +32,7 @@
 				}
 			},
 			{
-				"path": "main_menu/business/reports/sales/saleslocations",
+				"path": "main_menu/reports/sales/saleslocations",
 				"text": "Location Summary",
 				"href": ["com_reports","locationsummary"],
 				"depend": {
@@ -40,7 +40,7 @@
 				}
 			},
 			{
-				"path": "main_menu/business/reports/sales/salestotals",
+				"path": "main_menu/reports/sales/salestotals",
 				"text": "Sales Totals",
 				"href": ["com_reports","reportsales"],
 				"depend": {
@@ -48,7 +48,7 @@
 				}
 			},
 			{
-				"path": "main_menu/business/reports/sales/salesrankings",
+				"path": "main_menu/reports/sales/salesrankings",
 				"text": "Sales Rankings",
 				"href": ["com_reports","salesrankings"],
 				"depend": {
@@ -56,7 +56,7 @@
 				}
 			},
 			{
-				"path": "main_menu/business/reports/sales/productdetails",
+				"path": "main_menu/reports/sales/productdetails",
 				"text": "Product Details",
 				"href": ["com_reports","reportproducts"],
 				"depend": {
@@ -64,14 +64,7 @@
 				}
 			},
 		{
-			"path": "main_menu/business/reports/inventory",
-			"text": "Inventory",
-			"depend": {
-				"children": true
-			}
-		},
-		{
-			"path": "main_menu/business/reports/hrm",
+			"path": "main_menu/reports/hrm",
 			"text": "HRM",
 			"depend": {
 				"children": true,
@@ -79,7 +72,7 @@
 			}
 		},
 			{
-				"path": "main_menu/business/reports/hrm/time_attendance",
+				"path": "main_menu/reports/hrm/time_attendance",
 				"text": "Time & Attendance",
 				"href": ["com_reports","reportattendance"],
 				"depend": {
@@ -88,7 +81,7 @@
 				}
 			},
 			{
-				"path": "main_menu/business/reports/hrm/payroll",
+				"path": "main_menu/reports/hrm/payroll",
 				"text": "Payroll",
 				"href": ["com_reports","reportpayroll"],
 				"depend": {
@@ -97,7 +90,7 @@
 				}
 			},
 			{
-				"path": "main_menu/business/reports/hrm/calendar",
+				"path": "main_menu/reports/hrm/calendar",
 				"text": "Calendar",
 				"href": ["com_reports","reportcalendar"],
 				"depend": {
@@ -106,7 +99,7 @@
 				}
 			},
 			{
-				"path": "main_menu/business/reports/hrm/issues",
+				"path": "main_menu/reports/hrm/issues",
 				"text": "Employee Issues",
 				"href": ["com_reports","reportissues"],
 				"depend": {
@@ -114,7 +107,7 @@
 				}
 			},
 			{
-				"path": "main_menu/business/reports/hrm/warboard",
+				"path": "main_menu/reports/hrm/warboard",
 				"text": "Warboard",
 				"href": ["com_reports","warboard"],
 				"depend": {
@@ -122,7 +115,7 @@
 				}
 			},
 			{
-				"path": "main_menu/business/reports/hrm/fullwarboard",
+				"path": "main_menu/reports/hrm/fullwarboard",
 				"text": "Full Warboard",
 				"href": ["com_reports","warboard",{"template":"tpl_print"}],
 				"target": "_blank",
@@ -131,7 +124,7 @@
 				}
 			},
 			{
-				"path": "main_menu/business/reports/hrm/editwarboard",
+				"path": "main_menu/reports/hrm/editwarboard",
 				"text": "Edit Warboard",
 				"href": ["com_reports","editwarboard"],
 				"depend": {
@@ -139,12 +132,29 @@
 				}
 			},
 		{
-			"path": "main_menu/business/reports/mifi",
+			"path": "main_menu/reports/mifi",
 			"text": "MiFi",
-			"href": ["com_reports","reportmifi"],
 			"depend": {
-				"component": "com_mifi",
-				"ability": "com_reports/reportmifi"
+				"children": true,
+				"component": "com_mifi"
 			}
-		}
+		},
+			{
+				"path": "main_menu/reports/mifi/mifi",
+				"text": "Sales",
+				"href": ["com_reports","reportmifi"],
+				"depend": {
+					"component": "com_mifi",
+					"ability": "com_reports/reportmifi"
+				}
+			},
+			{
+				"path": "main_menu/reports/mifi/available",
+				"text": "Available Financing",
+				"href": ["com_reports","reportmifiavailable"],
+				"depend": {
+					"component": "com_mifi",
+					"ability": "com_reports/reportmifi"
+				}
+			}
 ]

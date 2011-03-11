@@ -18,40 +18,6 @@ $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_reports/report_mifi'];
 
-$pay_grades = array(
-	'1' => 'E1 Private',
-	'2' => 'E2 Private',
-	'3' => 'E3 Private 1st class',
-	'4' => 'E4 Specialist',
-	'5' => 'E4 Corporal',
-	'6' => 'E5 Sergeant',
-	'7' => 'E6 Staff Sergeant',
-	'8' => 'E7 Sergeant 1st Class',
-	'9' => 'E8 Master Sergeant',
-	'10' => 'E8 First Sergeant',
-	'11' => 'E9 Sergeant Major',
-	'12' => 'E9 Command Sergeant Major',
-	'13' => 'E9 Sergeant Major of the Army',
-	'14' => 'O1 Second Lieutenant',
-	'16' => 'O2 First Lieutenant',
-	'18' => 'O3 Captain',
-	'20' => 'O4 Major',
-	'21' => 'O5 Lt. Colonel',
-	'22' => 'O6 Colonel',
-	'23' => 'O7 Brigadier General',
-	'24' => 'O8 Major General',
-	'25' => 'O9 Lt. General',
-	'26' => 'O10 General',
-	'27' => 'W1 Warrent Officer',
-	'28' => 'W2 Chief Warrant Officer',
-	'29' => 'W3 Chief Warrant Officer',
-	'30' => 'W4 Chief Warrant Officer',
-	'31' => 'W5 Chief Warrant Officer',
-	'15' => 'O1E Second Lieutenant',
-	'17' => 'O2E First Lieutenant',
-	'19' => 'O3E Captain'
-);
-
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
@@ -224,8 +190,7 @@ $pay_grades = array(
 				<th>Contract</th>
 				<th>Rank</th>
 				<th>ETS Date</th>
-				<th>Faxsheet</th>
-				<th>Credit</th>
+				<th>Credit Score</th>
 				<th>Comments</th>
 			</tr>
 		</thead>
@@ -233,9 +198,9 @@ $pay_grades = array(
 			<?php
 			foreach ($this->sales as $cur_sale) {
 				$contract = $pines->entity_manager->get_entity(
-						array('class' => com_mifi_application),
+						array('class' => com_mifi_contract),
 						array('&',
-							'tag' => array('com_mifi', 'application'),
+							'tag' => array('com_mifi', 'contract'),
 							'ref' => array(
 								array('customer', $cur_sale->customer),
 								array('sale', $cur_sale)
@@ -243,25 +208,21 @@ $pay_grades = array(
 						)
 					);
 				$contract_link = pines_url('com_mifi', 'viewoffer', array('id' => $contract->guid));
-				$faxsheet = $pines->entity_manager->get_entity(array('class' => com_faxsheet_sheet), array('&', 'tag' => array('com_faxsheet', 'faxsheet'), 'ref' => array('customer', $cur_sale->customer)));
-				$sheet_link = pines_url('com_faxsheet', 'editsst', array('id' => $faxsheet->guid));
-				$return_status = ($cur_sale->returned_total > 0) ? ' (Returned)' : '';
 			?>
 			<tr title="<?php echo $cur_sale->guid; ?>">
 				<td><?php echo htmlspecialchars($cur_sale->id); ?></td>
 				<td><?php echo format_date($cur_sale->p_cdate, 'date_sort'); ?></td>
 				<td><?php echo htmlspecialchars($cur_sale->group->name); ?></td>
-				<td><?php echo htmlspecialchars(ucwords($cur_sale->status).$return_status); ?></td>
+				<td><?php echo htmlspecialchars(ucwords($cur_sale->status)); ?></td>
 				<td><?php echo htmlspecialchars($cur_sale->user->name); ?></td>
-				<td><a href="<?php echo pines_url('com_customer', 'customer/edit', array('id' => $cur_sale->customer->guid)); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_sale->customer->name); ?></a></td>
-				<td>$<?php echo htmlspecialchars($cur_sale->subtotal); ?></td>
-				<td>$<?php echo htmlspecialchars($cur_sale->taxes); ?></td>
-				<td>$<?php echo htmlspecialchars($cur_sale->total); ?></td>
-				<td><?php echo isset($contract->guid) ? '<a href="'.htmlspecialchars($contract_link).'" onclick="window.open(this.href); return false;">'.htmlspecialchars($contract->app_id).'</a>' : 'No'; ?></td>
-				<td><?php echo isset($contract->guid) ? $pay_grades[$contract->militaryPayGrade] : 'NA'; ?></td>
+				<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_sale->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_sale->customer->name); ?></a></td>
+				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_sale->subtotal, 2, '.', '')); ?></td>
+				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_sale->taxes, 2, '.', '')); ?></td>
+				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_sale->total, 2, '.', '')); ?></td>
+				<td style="text-align: right;"><?php echo isset($contract->guid) ? '<a href="'.htmlspecialchars($contract_link).'" onclick="window.open(this.href); return false;">#'.htmlspecialchars($contract->contract_id).'</a>' : 'No'; ?></td>
+				<td><?php echo isset($contract->guid) ? $pines->com_mifi->ranks[$contract->militaryPayGrade] : 'NA'; ?></td>
 				<td><?php echo isset($contract->guid) ? format_date($contract->ets_date, 'date_sort') : 'NA'; ?></td>
-				<td><?php echo isset($faxsheet->guid) ? '<a href="'.htmlspecialchars($sheet_link).'" onclick="window.open(this.href); return false;">'.$faxsheet->guid.'</a>' : 'No'; ?></td>
-				<td><?php echo isset($contract->guid) ? htmlspecialchars($contract->credit_score) : 'NA'; ?></td>
+				<td style="text-align: right;"><?php echo isset($contract->guid) ? htmlspecialchars($contract->credit_score) : 'NA'; ?></td>
 				<td><?php echo htmlspecialchars($cur_sale->comments); ?></td>
 			</tr>
 			<?php } ?>

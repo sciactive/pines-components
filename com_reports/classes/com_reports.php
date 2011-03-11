@@ -345,6 +345,44 @@ class com_reports extends component {
 	}
 
 	/**
+	 * Creates and attaches a module which shows customers with MiFi Financing.
+	 *
+	 * @return module The MiFi report module.
+	 */
+	function report_mifi_available() {
+		global $pines;
+
+		$module = new module('com_reports', 'report_mifi_available', 'content');
+		$selector = array('&',
+			'tag' => array('com_mifi', 'contract'),
+			'strict' => array('status', 'tendered')
+		);
+
+		// Select any MiFi applications with existing financing approved
+		$module->applications = $pines->entity_manager->get_entities(
+				array('class' => com_mifi_application, 'skip_ac' => true),
+				array('&',
+					'tag' => array('com_mifi', 'application'),
+					'gt' => array('approval_amount', 0)
+				)
+			);
+		$selector['gte'] = array('p_cdate', strtotime('-30 days'));
+		$groups = $_SESSION['user']->group->get_descendents(true);
+		foreach ($module->applications as $key => &$cur_app) {
+			$selector['ref'] = array('application', $cur_app);
+			$available = $pines->entity_manager->get_entity(
+					array('class' => com_mifi_contract, 'skip_ac' => true),
+					array('!&', 'ref' => array('group', $groups)),
+					$selector
+				);
+			//var_dump($available->customer_info);
+			if (isset($available->guid))
+				unset($module->applications[$key]);
+		}
+		return $module;
+	}
+
+	/**
 	 * Creates and attaches a module which reports employee payroll information.
 	 *
 	 * @param int $start_date The start date of the report.

@@ -69,6 +69,11 @@ class com_pgsql extends component {
 	 */
 	public function connect($host = null, $user = null, $password = null, $database = null) {
 		global $pines;
+		// Check that the PostgreSQL extension is installed.
+		if (!is_callable('pg_connect')) {
+			pines_error('PostgreSQL PHP extension is not available. It probably has not been installed. Please install and configure it in order to use PostgreSQL.');
+			return false;
+		}
 		// If we're setting up the DB, don't try to connect.
 		if ($pines->request_component == 'com_pgsql' && $pines->request_action == 'setup')
 			return false;

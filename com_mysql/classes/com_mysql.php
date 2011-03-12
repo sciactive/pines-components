@@ -69,6 +69,11 @@ class com_mysql extends component {
 	 */
 	public function connect($host = null, $user = null, $password = null, $database = null) {
 		global $pines;
+		// Check that the MySQL extension is installed.
+		if (!is_callable('mysql_connect')) {
+			pines_error('MySQL PHP extension is not available. It probably has not been installed. Please install and configure it in order to use MySQL.');
+			return false;
+		}
 		// If we're setting up the DB, don't try to connect.
 		if ($pines->request_component == 'com_mysql' && $pines->request_action == 'setup')
 			return false;

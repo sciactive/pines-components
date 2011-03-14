@@ -76,7 +76,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<tbody>
 			<?php foreach ($this->applications as $cur_available) { ?>
 			<tr title="<?php echo $cur_available->guid; ?>">
-				<td style="text-align: right;"><a href="<?php echo htmlspecialchars(pines_url('com_mifi', 'viewoffer', array('id' => $cur_available->guid))); ?>" onclick="window.open(this.href); return false;">#<?php echo htmlspecialchars($cur_available->app_id); ?></a></td>
+				<td style="text-align: right;"><a href="<?php echo htmlspecialchars(pines_url('com_mifi', 'viewoffer', array('id' => $cur_available->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_available->app_id); ?></a></td>
 				<td><?php echo format_date($cur_available->p_cdate, 'date_sort'); ?></td>
 				<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_available->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_available->customer->name); ?></a></td>
 				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_available->approval_amount, 2, '.', '')); ?></td>

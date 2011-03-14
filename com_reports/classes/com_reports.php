@@ -359,26 +359,17 @@ class com_reports extends component {
 		);
 
 		// Select any MiFi applications with existing financing approved
+		$groups = $_SESSION['user']->group->get_descendents(true);
 		$module->applications = $pines->entity_manager->get_entities(
 				array('class' => com_mifi_application, 'skip_ac' => true),
 				array('&',
 					'tag' => array('com_mifi', 'application'),
-					'gt' => array('approval_amount', 0)
-				)
+					'gte' => array('approval_amount', 1500),
+					'lte' => array('p_cdate', strtotime('-30 days'))
+				),
+				array('|', 'ref' => array('group', $groups))
 			);
-		$selector['gte'] = array('p_cdate', strtotime('-30 days'));
-		$groups = $_SESSION['user']->group->get_descendents(true);
-		foreach ($module->applications as $key => &$cur_app) {
-			$selector['ref'] = array('application', $cur_app);
-			$available = $pines->entity_manager->get_entity(
-					array('class' => com_mifi_contract, 'skip_ac' => true),
-					array('!&', 'ref' => array('group', $groups)),
-					$selector
-				);
-			//var_dump($available->customer_info);
-			if (isset($available->guid))
-				unset($module->applications[$key]);
-		}
+
 		return $module;
 	}
 

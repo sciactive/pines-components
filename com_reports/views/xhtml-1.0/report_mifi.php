@@ -222,7 +222,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_sale->subtotal, 2, '.', '')); ?></td>
 				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_sale->taxes, 2, '.', '')); ?></td>
 				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_sale->total, 2, '.', '')); ?></td>
-				<td style="text-align: right;"><?php echo isset($contract->guid) ? '<a href="'.htmlspecialchars($contract_link).'" onclick="window.open(this.href); return false;">#'.htmlspecialchars($contract->contract_id).'</a>' : 'No'; ?></td>
+				<td style="text-align: right;"><?php echo isset($contract->guid) ? '<a href="'.htmlspecialchars($contract_link).'" onclick="window.open(this.href); return false;">'.htmlspecialchars($contract->contract_id).'</a>' : 'No'; ?></td>
 				<td><?php echo isset($contract->guid) ? $pines->com_mifi->companies[$contract->company]['name'] : 'NA'; ?></td>
 				<td><?php echo isset($contract->guid) ? $pines->com_mifi->ranks[$contract->militaryPayGrade] : 'NA'; ?></td>
 				<td><?php echo isset($contract->guid) ? format_date($contract->ets_date, 'date_sort') : 'NA'; ?></td>

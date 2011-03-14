@@ -21,7 +21,8 @@ return array(
 	'description' => 'Provides a PIN based security measure to both prevent unauthorized use of accounts and securely allow users to switch accounts quickly.',
 	'depend' => array(
 		'pines' => '<2',
-		'service' => 'user_manager'
+		'service' => 'user_manager',
+		'component' => 'com_pform'
 	),
 );
 

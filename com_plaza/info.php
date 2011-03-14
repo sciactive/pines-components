@@ -21,7 +21,7 @@ return array(
 	'description' => 'Find, install, and manage packages.',
 	'depend' => array(
 		'pines' => '<2',
-		'component' => 'com_jquery&com_pgrid&com_package'
+		'component' => 'com_jquery&com_pgrid&com_package&com_pform'
 	),
 	'abilities' => array(
 		array('listpackages', 'List Packages', 'User can see packages.'),

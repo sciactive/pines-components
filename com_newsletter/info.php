@@ -22,7 +22,7 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'entity_manager&editor&uploader',
-		'component' => 'com_mailer&com_jquery&com_pgrid&com_jstree'
+		'component' => 'com_mailer&com_jquery&com_pgrid&com_jstree&com_pform'
 	),
 	'abilities' => array(
 		array('listmail', 'List Mail', 'Let users view the mailbox.'),

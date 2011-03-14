@@ -22,6 +22,7 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'configurator',
+		'component' => 'com_pform',
 		'function' => 'mysql_connect'
 	),
 );

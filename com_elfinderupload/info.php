@@ -22,7 +22,7 @@ return array(
 	'description' => 'A standard file upload widget using the elFinder jQuery plugin.',
 	'depend' => array(
 		'pines' => '<2',
-		'component' => 'com_elfinder&com_jquery'
+		'component' => 'com_elfinder&com_jquery&com_pform'
 	),
 );
 

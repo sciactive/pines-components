@@ -22,7 +22,7 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'entity_manager&uploader',
-		'component' => 'com_customer&com_jquery&com_pgrid&com_pnotify'
+		'component' => 'com_customer&com_jquery&com_pgrid&com_pnotify&com_pform'
 	),
 	'abilities' => array(
 		array('listfloors', 'List Floors', 'User can see floors.'),

@@ -22,7 +22,7 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'entity_manager&editor',
-		'component' => 'com_jquery&com_pgrid'
+		'component' => 'com_jquery&com_pgrid&com_pform'
 	),
 	'abilities' => array(
 		array('listwidgets', 'List Widgets', 'User can see widgets.'),

@@ -22,7 +22,7 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'class' => 'Imagick',
-		'component' => 'com_jquery'
+		'component' => 'com_jquery&com_pform'
 	),
 );
 

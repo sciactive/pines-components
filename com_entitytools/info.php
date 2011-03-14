@@ -22,7 +22,7 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'entity_manager',
-		'component' => 'com_jquery'
+		'component' => 'com_jquery&com_pform'
 	),
 	'abilities' => array(
 		array('test', 'Test/Benchmark', 'User can test and benchmark the entity manager.'),

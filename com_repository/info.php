@@ -22,7 +22,7 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'user_manager',
-		'component' => 'com_slim&com_jquery&com_pgrid',
+		'component' => 'com_slim&com_jquery&com_pgrid&com_pform',
 		'function' => 'openssl_pkey_new'
 	),
 	'abilities' => array(

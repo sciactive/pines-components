@@ -22,7 +22,7 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'user_manager',
-		'component' => 'com_jquery&com_pnotify'
+		'component' => 'com_jquery&com_pnotify&com_pform'
 	),
 	'abilities' => array(
 		array('nopassword', 'Switch Without Password', 'User can switch to any other user without providing a password.')

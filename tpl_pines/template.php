@@ -46,11 +46,6 @@ if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 || strp
 	<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
 	<link rel="icon" type="image/vnd.microsoft.icon" href="<?php echo htmlspecialchars($pines->config->location); ?>favicon.ico" />
 
-	<link href="<?php echo htmlspecialchars($pines->config->location); ?>system/css/pform.css" media="all" rel="stylesheet" type="text/css" />
-	<!--[if lt IE 8]>
-	<link href="<?php echo htmlspecialchars($pines->config->location); ?>system/css/pform-ie-lt-8.css" media="all" rel="stylesheet" type="text/css" />
-	<![endif]-->
-
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/pines.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/print.css" media="print" rel="stylesheet" type="text/css" />
 
@@ -58,7 +53,7 @@ if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 || strp
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/dropdown/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/dropdown/themes/jqueryui/jqueryui.css" media="all" rel="stylesheet" type="text/css" />
 
-	<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->rela_location); ?>system/js/js.php"></script>
+	<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->rela_location); ?>system/includes/js.php"></script>
 	<?php if ($pines->config->tpl_pines->menu_delay) { ?>
 	<script type="text/javascript">// <![CDATA[
 		pines.tpl_pines_menu_delay = true;

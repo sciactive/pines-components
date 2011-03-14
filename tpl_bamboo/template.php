@@ -31,11 +31,6 @@ Released   : 20090820
 		<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
 		<link rel="icon" type="image/vnd.microsoft.icon" href="<?php echo htmlspecialchars($pines->config->location); ?>favicon.ico" />
 
-		<link href="<?php echo htmlspecialchars($pines->config->location); ?>system/css/pform.css" media="all" rel="stylesheet" type="text/css" />
-		<!--[if lt IE 8]>
-		<link href="<?php echo htmlspecialchars($pines->config->location); ?>system/css/pform-ie-lt-8.css" media="all" rel="stylesheet" type="text/css" />
-		<![endif]-->
-
 		<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/style.css" media="all" rel="stylesheet" type="text/css" />
 
 		<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/dropdown/dropdown.css" media="all" rel="stylesheet" type="text/css" />
@@ -43,7 +38,7 @@ Released   : 20090820
 		<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/dropdown/dropdown.vertical.rtl.css" media="all" rel="stylesheet" type="text/css" />
 		<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/dropdown/themes/default/default.ultimate.css" media="all" rel="stylesheet" type="text/css" />
 
-		<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->rela_location); ?>system/js/js.php"></script>
+		<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->rela_location); ?>system/includes/js.php"></script>
 
 		<?php echo $pines->page->render_modules('head', 'module_head'); ?>
 

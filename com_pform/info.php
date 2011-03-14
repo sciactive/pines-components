@@ -1,9 +1,9 @@
 <?php
 /**
- * com_tinymce's information.
+ * com_pform's information.
  *
  * @package Pines
- * @subpackage com_tinymce
+ * @subpackage com_pform
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -12,20 +12,15 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 return array(
-	'name' => 'TinyMCE',
+	'name' => 'Pines Form',
 	'author' => 'SciActive',
 	'version' => '1.0.0',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
-	'services' => array('editor'),
-	'short_description' => 'TinyMCE editor widget',
-	'description' => 'TinyMCE based editor widget.',
+	'short_description' => 'Pines Form CSS styling',
+	'description' => 'A standards compliant, clean, sensible CSS form styling system.',
 	'depend' => array(
-		'pines' => '<2',
-		'component' => 'com_jquery&com_pform'
-	),
-	'recommend' => array(
-		'component' => 'com_elfinder'
+		'pines' => '<2'
 	),
 );
 

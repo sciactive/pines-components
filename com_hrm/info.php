@@ -22,7 +22,7 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'user_manager&entity_manager&editor',
-		'component' => 'com_jquery&com_pgrid&com_pnotify'
+		'component' => 'com_jquery&com_pgrid&com_pnotify&com_pform'
 	),
 	'recommend' => array(
 		'component' => 'com_modules&com_calendar'

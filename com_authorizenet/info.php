@@ -21,7 +21,7 @@ return array(
 	'description' => 'Processes credit transactions through the Authorize.Net payment gateway.',
 	'depend' => array(
 		'pines' => '<2',
-		'component' => 'com_sales&com_jquery'
+		'component' => 'com_sales&com_jquery&com_pform'
 	),
 );
 

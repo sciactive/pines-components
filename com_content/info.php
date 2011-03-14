@@ -22,7 +22,7 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'user_manager&entity_manager&editor',
-		'component' => 'com_jquery&com_pgrid&com_ptags'
+		'component' => 'com_jquery&com_pgrid&com_ptags&com_pform'
 	),
 	'abilities' => array(
 		array('listpages', 'List Pages', 'User can see pages.'),

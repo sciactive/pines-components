@@ -163,7 +163,7 @@
 				"href": ["com_reports","reportmifiavailable"],
 				"depend": {
 					"component": "com_mifi",
-					"ability": "com_reports/reportmifi"
+					"ability": "com_reports/reportmifiavailable|com_reports/reportmifiavailable"
 				}
 			}
 ]

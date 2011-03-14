@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_reports/reportmifi') )
+if ( !gatekeeper('com_reports/reportmifi') && !gatekeeper('com_reports/reportmifiavailable') )
 	punt_user(null, pines_url('com_reports', 'reportmifiavailable'));
 
 $pines->com_reports->report_mifi_available();

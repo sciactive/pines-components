@@ -22,14 +22,15 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'icons',
-		'component' => 'com_jquery&com_pgrid&com_jstree&(com_hrm|com_sales|com_mifi)'
+		'component' => 'com_jquery&com_pgrid&com_jstree&(com_hrm|com_sales|com_calendar|com_mifi)'
 	),
 	'abilities' => array(
 		array('reportattendance', 'Report Attendance', 'User can see attendance reports.'),
 		array('reportcalendar', 'Report Calendar', 'User can see calendar reports.'),
 		array('reportpayroll', 'Report Payroll', 'User can see payroll reports.'),
 		array('reportissues', 'Report Issues', 'User can see employee issue reports.'),
-		array('reportmifi', 'Report MiFi', 'User can see MiFi reports.'),
+		array('reportmifi', 'Report MiFi', 'User can see all MiFi reports.'),
+		array('reportmifiavailable', 'Report Available MiFi', 'User can see available MiFi reports.'),
 		array('reportproducts', 'Report Products', 'User can see product detail reports.'),
 		array('reportsales', 'Report Sales', 'User can see sales reports.'),
 		array('summarizeemployees', 'Employee Summaries', 'User can see employee summary reports.'),

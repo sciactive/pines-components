@@ -192,6 +192,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<th>Rank</th>
 				<th>ETS Date</th>
 				<th>Credit Score</th>
+				<th>Faxsheet</th>
 				<th>SST Verified</th>
 				<th>Comments</th>
 			</tr>
@@ -226,6 +227,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<td><?php echo isset($contract->guid) ? $pines->com_mifi->ranks[$contract->militaryPayGrade] : 'NA'; ?></td>
 				<td><?php echo isset($contract->guid) ? format_date($contract->ets_date, 'date_sort') : 'NA'; ?></td>
 				<td style="text-align: right;"><?php echo isset($contract->guid) ? htmlspecialchars($contract->credit_score) : 'NA'; ?></td>
+				<td><?php echo ($contract->approved_faxsheet) ? 'Approved' : (isset($contract->faxsheet_request) ? 'Requested' : 'None'); ?></td>
 				<td><?php echo ($contract->verified_sst) ? 'Yes' : 'No'; ?></td>
 				<td><?php echo htmlspecialchars($cur_sale->comments); ?></td>
 			</tr>

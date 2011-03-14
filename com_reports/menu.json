@@ -140,9 +140,18 @@
 			}
 		},
 			{
-				"path": "main_menu/reports/mifi/mifi",
+				"path": "main_menu/reports/mifi/sales",
 				"text": "Sales",
 				"href": ["com_reports","reportmifi"],
+				"depend": {
+					"component": "com_mifi",
+					"ability": "com_reports/reportmifi"
+				}
+			},
+			{
+				"path": "main_menu/reports/mifi/contracts",
+				"text": "Contracts",
+				"href": ["com_reports","reportmificontracts"],
 				"depend": {
 					"component": "com_mifi",
 					"ability": "com_reports/reportmifi"

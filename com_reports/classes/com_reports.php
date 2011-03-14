@@ -383,6 +383,47 @@ class com_reports extends component {
 	}
 
 	/**
+	 * Creates and attaches a module which reports MiFi Contracts.
+	 *
+	 * @param int $start_date The start date of the report.
+	 * @param int $end_date The end date of the report.
+	 * @param group $location The group to report on.
+	 * @param bool $descendents Whether to show descendent locations.
+	 * @return module The MiFi report module.
+	 */
+	function report_mifi_contracts($start_date = null, $end_date = null, $location = null, $descendents = false) {
+		global $pines;
+
+		$module = new module('com_reports', 'report_mifi_contracts', 'content');
+
+		$selector = array('&',
+				'tag' => array('com_mifi', 'contract'),
+				'strict' => array('status', 'tendered')
+			);
+		// Datespan of the report.
+		if (isset($start_date))
+			$selector['gte'] = array('p_cdate', (int) $start_date);
+		if (isset($end_date))
+			$selector['lt'] = array('p_cdate', (int) $end_date);
+		//$selector['match'] = array('payments', 'MiFi');
+		$module->start_date = $start_date;
+		$module->end_date = $end_date;
+		$module->all_time = (!isset($start_date) && !isset($end_date));
+		// Location of the report.
+		if (!isset($location->guid))
+			$location = $_SESSION['user']->group;
+		if ($descendents)
+			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		else
+			$or = array('|', 'ref' => array('group', $location));
+		$module->location = $location;
+		$module->descendents = $descendents;
+		$module->contracts = $pines->entity_manager->get_entities(array('class' => com_mifi_contract), $selector, $or);
+
+		return $module;
+	}
+
+	/**
 	 * Creates and attaches a module which reports employee payroll information.
 	 *
 	 * @param int $start_date The start date of the report.

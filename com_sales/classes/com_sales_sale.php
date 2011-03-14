@@ -322,7 +322,7 @@ class com_sales_sale extends entity {
 		// TODO: Allow more customization for email subject/content.
 		$subject = 'Receipt for ' . $this->customer->name;
 		$content = "<style type=\"text/css\">/* <![CDATA[ */\n";
-		$content .= file_get_contents('system/css/pform.css');
+		$content .= file_get_contents('components/com_pform/includes/pform.css');
 		$content .= "\n/* ]]> */</style>";
 		$content .= $module->render();
 

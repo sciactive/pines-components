@@ -14,7 +14,8 @@ $this->title = 'Login';
 ?>
 <form class="pf-form com_timeoutnotice_login_form" method="post" action="<?php echo htmlspecialchars(pines_url()); ?>">
 	<div class="pf-element">
-		Your session has timed out. Please login again to continue.
+		Your session has timed out.<br />
+		Please login again to continue, or <a href="javascript:void(0)" class="already_loggedin">did you already login</a>?
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Username</span>

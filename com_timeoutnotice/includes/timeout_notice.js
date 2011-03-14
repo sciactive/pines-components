@@ -50,7 +50,9 @@ pines(function(){
 						}
 					}
 				});
-				login_dialog.find(".com_timeoutnotice_login_form").submit(function(){
+				login_dialog.find(".already_loggedin").click(function(){
+					login_dialog.dialog("close").remove();
+				}).end().find(".com_timeoutnotice_login_form").submit(function(){
 					login_dialog.dialog("option", "buttons").Login();
 					return false;
 				}).find("input").keydown(function(e){
@@ -114,7 +116,9 @@ pines(function(){
 								pnotify_title: "Session Timeout",
 								pnotify_text: "Your session is about to expire. <a href=\"javascript:void(0)\" class=\"extend_session\">Click here to stay logged in.</a>",
 								pnotify_notice_icon: "picon picon-user-away",
-								pnotify_hide: false
+								pnotify_hide: false,
+								pnotify_history: false,
+								pnotify_mouse_reset: false
 							});
 							session_notice.find("a.extend_session").click(function(){
 								$.ajax({

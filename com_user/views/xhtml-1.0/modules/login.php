@@ -70,7 +70,7 @@ if (empty($this->title))
 						return true;
 					});
 
-					var pass_reenter = $("#p_muid_pass_reenter");
+					var pass_reenter = $("#p_muid_register_form");
 					var submit_btn = $("[name=submit]", "#p_muid_form");
 					$("[name=login_register]", "#p_muid_form").change(function(){
 						if ($(this).val() == "register") {
@@ -102,9 +102,12 @@ if (empty($this->title))
 			<?php echo ($this->style == 'small') ? '<br />' : ''; ?>
 			<label><input class="pf-field" type="radio" name="login_register" value="register" /> I'm new.</label>
 		</div>
-		<div class="pf-element" id="p_muid_pass_reenter" style="display: none;">
-			<label><span class="pf-label">Re-enter Password</span>
-				<input class="pf-field ui-widget-content ui-corner-all" type="password" name="password2" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
+		<br class="pf-clearing" />
+		<div id="p_muid_register_form" style="display: none;">
+			<div class="pf-element">
+				<label><span class="pf-label">Re-enter Password</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="password" name="password2" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
+			</div>
 		</div>
 		<?php } ?>
 		<div class="pf-element<?php echo ($this->style == 'small') ? '' : ' pf-buttons'; ?>">

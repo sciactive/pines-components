@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$this->title = 'MiFi Report ['.$this->location->name.']';
+$this->title = 'MiFi Sales ['.$this->location->name.']';
 $pines->icons->load();
 $pines->com_jstree->load();
 $pines->com_pgrid->load();
@@ -188,9 +188,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<th>Taxes</th>
 				<th>Total</th>
 				<th>Contract</th>
+				<th>Company</th>
 				<th>Rank</th>
 				<th>ETS Date</th>
 				<th>Credit Score</th>
+				<th>SST Verified</th>
 				<th>Comments</th>
 			</tr>
 		</thead>
@@ -220,9 +222,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_sale->taxes, 2, '.', '')); ?></td>
 				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_sale->total, 2, '.', '')); ?></td>
 				<td style="text-align: right;"><?php echo isset($contract->guid) ? '<a href="'.htmlspecialchars($contract_link).'" onclick="window.open(this.href); return false;">#'.htmlspecialchars($contract->contract_id).'</a>' : 'No'; ?></td>
+				<td><?php echo isset($contract->guid) ? $pines->com_mifi->companies[$contract->company]['name'] : 'NA'; ?></td>
 				<td><?php echo isset($contract->guid) ? $pines->com_mifi->ranks[$contract->militaryPayGrade] : 'NA'; ?></td>
 				<td><?php echo isset($contract->guid) ? format_date($contract->ets_date, 'date_sort') : 'NA'; ?></td>
 				<td style="text-align: right;"><?php echo isset($contract->guid) ? htmlspecialchars($contract->credit_score) : 'NA'; ?></td>
+				<td><?php echo ($contract->verified_sst) ? 'Yes' : 'No'; ?></td>
 				<td><?php echo htmlspecialchars($cur_sale->comments); ?></td>
 			</tr>
 			<?php } ?>

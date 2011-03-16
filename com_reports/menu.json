@@ -149,6 +149,15 @@
 				}
 			},
 			{
+				"path": "main_menu/reports/mifi/salesverbose",
+				"text": "Applications",
+				"href": ["com_reports","reportmifi",{"verbose":"true"}],
+				"depend": {
+					"component": "com_mifi",
+					"ability": "com_reports/reportmifi"
+				}
+			},
+			{
 				"path": "main_menu/reports/mifi/contracts",
 				"text": "Contracts",
 				"href": ["com_reports","reportmificontracts"],

@@ -49,7 +49,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				"descendents": descendents,
 				"all_time": all_time,
 				"start_date": start_date,
-				"end_date": end_date
+				"end_date": end_date,
+				"verbose": verbose
 			});
 		};
 
@@ -60,6 +61,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		// Location Defaults
 		var location = "<?php echo $this->location->guid; ?>";
 		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
+		var verbose = <?php echo $this->verbose ? 'true' : 'false'; ?>;
 
 		var state_xhr;
 		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
@@ -137,7 +139,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				url: "<?php echo addslashes(pines_url('com_reports', 'locationselect')); ?>",
 				type: "POST",
 				dataType: "html",
-				data: {"location": location, "descendents": descendents},
+				data: {
+					"location": location,
+					"descendents": descendents,
+					"verbose": verbose
+				},
 				error: function(XMLHttpRequest, textStatus){
 					pines.error("An error occured while trying to retreive the location form:\n"+XMLHttpRequest.status+": "+textStatus);
 				},
@@ -195,6 +201,68 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<th>Faxsheet</th>
 				<th>SST Verified</th>
 				<th>Comments</th>
+				<?php if ($this->verbose) { ?>
+				<th>APR</th>
+				<th>Finance Charge</th>
+				<th># of Payments</th>
+				<th>Amount of Payments</th>
+				<th>Email</th>
+				<th>Birth Date</th>
+				<th>SSN</th>
+				<th>Active Status</th>
+				<th>Branch</th>
+				<th>BAH</th>
+				<th>Time in Reserves</th>
+				<th>Break in Service</th>
+				<th>Pay Entry Base Date</th>
+				<th>Country</th>
+				<th>Address</th>
+				<th>City</th>
+				<th>State</th>
+				<th>Zip</th>
+				<th>Phone</th>
+				<th>Cell Phone</th>
+				<th>HOR Address</th>
+				<th>HOR City</th>
+				<th>HOR State</th>
+				<th>HOR Zip</th>
+				<th>HOR Phone</th>
+				<th>Housing Type</th>
+				<th>Housing Payment</th>
+				<th>Child Support</th>
+				<th>Advance Pay</th>
+				<th>Advance Pay Remaining</th>
+				<th>Secure Email</th>
+				<th>Brigade</th>
+				<th>Battalion</th>
+				<th>Company</th>
+				<th>Platoon</th>
+				<th>Supervisor</th>
+				<th>Supervisor Rank</th>
+				<th>Supervisor Phone</th>
+				<th>Unit Phone</th>
+				<th>Unit Address</th>
+				<th>Unit City</th>
+				<th>Unit State</th>
+				<th>Unit Zip</th>
+				<th>Reference 1</th>
+				<th>Reference 1 Name</th>
+				<th>Reference 1 Phone</th>
+				<th>Reference 1 Address</th>
+				<th>Reference 1 City</th>
+				<th>Reference 1 State</th>
+				<th>Reference 1 Zip</th>
+				<th>Reference 2</th>
+				<th>Reference 2 Name</th>
+				<th>Reference 2 Phone</th>
+				<th>Reference 2 Address</th>
+				<th>Reference 2 City</th>
+				<th>Reference 2 State</th>
+				<th>Reference 2 Zip</th>
+				<th>Bank Account Type</th>
+				<th>Bank Account Number</th>
+				<th>Bank Routing Number</th>
+				<?php } ?>
 			</tr>
 		</thead>
 		<tbody>
@@ -229,7 +297,69 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<td style="text-align: right;"><?php echo isset($contract->guid) ? htmlspecialchars($contract->credit_score) : 'NA'; ?></td>
 				<td><?php echo ($contract->approved_faxsheet) ? 'Approved' : (isset($contract->faxsheet_request) ? 'Requested' : 'None'); ?></td>
 				<td><?php echo ($contract->verified_sst) ? 'Yes' : 'No'; ?></td>
-				<td><?php echo htmlspecialchars($cur_sale->comments); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->comments); ?></td>
+				<?php if ($this->verbose) { ?>
+				<td><?php echo htmlspecialchars(($contract->apr * 100).'%'); ?></td>
+				<td>$<?php echo htmlspecialchars($contract->finance_charge); ?></td>
+				<td><?php echo htmlspecialchars($contract->term); ?></td>
+				<td>$<?php echo htmlspecialchars($contract->total_of_payments); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->civilian_email); ?></td>
+				<td><?php echo format_date($contract->application->customer_info['birth_date']); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->customer_info['ssn']); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->active_status); ?></td>
+				<td><?php echo htmlspecialchars($pines->com_mifi->branches[$contract->application->branch]); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->bahReceived); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->timeInReserves ? 'Yes' : 'No'); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->breakInService ? 'Yes' : 'No'); ?></td>
+				<td><?php echo format_date($contract->application->entry_base_date); ?></td>
+				<td><?php echo $contract->application->country == '1' ? 'US' : 'Other'; ?></td>
+				<td><?php echo htmlspecialchars($contract->application->address1.' '.$contract->application->address2); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->city); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->state); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->zip); ?></td>
+				<td><?php echo format_phone($contract->application->phone); ?></td>
+				<td><?php echo format_phone($contract->application->cellPhone); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->hor_address1.' '.$contract->application->hor_address2); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->hor_city); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->hor_state); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->hor_zip); ?></td>
+				<td><?php echo format_phone($contract->application->hor_phone); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->housingType); ?></td>
+				<td>$<?php echo htmlspecialchars($contract->application->housingPayment); ?></td>
+				<td>$<?php echo htmlspecialchars($contract->application->childSupport); ?></td>
+				<td>$<?php echo htmlspecialchars($contract->application->advancePay); ?></td>
+				<td>$<?php echo htmlspecialchars($contract->application->advancePayBalance); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->email_secure); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->unit_brigade); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->unit_battalion); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->unit_company); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->unit_platoon); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->supervisor_name); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->supervisor_paygrade); ?></td>
+				<td><?php echo format_phone($contract->application->supervisor_phone); ?></td>
+				<td><?php echo format_phone($contract->application->unit_phone); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->unit_address); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->unit_city); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->unit_state); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->unit_zip); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->references[0]['relationship']); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->references[0]['name_first'].' '.$contract->application->references[0]['name_last']); ?></td>
+				<td><?php echo format_phone($contract->application->references[0]['phone']); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->references[0]['address']); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->references[0]['city']); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->references[0]['state']); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->references[0]['zip']); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->references[1]['relationship']); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->references[1]['name_first'].' '.$contract->application->references[0]['name_last']); ?></td>
+				<td><?php echo format_phone($contract->application->references[1]['phone']); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->references[1]['address']); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->references[1]['city']); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->references[1]['state']); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->references[1]['zip']); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->bank_account_type); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->bank_account_number); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->bank_routing_number); ?></td>
+				<?php } ?>
 			</tr>
 			<?php } ?>
 		</tbody>

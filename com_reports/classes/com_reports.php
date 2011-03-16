@@ -309,13 +309,14 @@ class com_reports extends component {
 	/**
 	 * Creates and attaches a module which reports MiFi Sales.
 	 *
+	 * @param int $verbose Whether to show extraneous application information.
 	 * @param int $start_date The start date of the report.
 	 * @param int $end_date The end date of the report.
 	 * @param group $location The group to report on.
 	 * @param bool $descendents Whether to show descendent locations.
 	 * @return module The MiFi report module.
 	 */
-	function report_mifi($start_date = null, $end_date = null, $location = null, $descendents = false) {
+	function report_mifi($verbose = false, $start_date = null, $end_date = null, $location = null, $descendents = false) {
 		global $pines;
 
 		$module = new module('com_reports', 'report_mifi', 'content');
@@ -330,6 +331,7 @@ class com_reports extends component {
 		$module->start_date = $start_date;
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
+		$module->verbose = $verbose;
 		// Location of the report.
 		if (!isset($location->guid))
 			$location = $_SESSION['user']->group;

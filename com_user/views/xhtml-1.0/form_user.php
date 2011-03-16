@@ -14,10 +14,72 @@ $this->title = (!isset($this->entity->guid)) ? 'Editing New User' : 'Editing ['.
 $this->note = 'Provide user details in this form.';
 $pines->com_pgrid->load();
 //$pines->com_jstree->load();
+if ($pines->config->com_user->check_username)
+	$pines->icons->load();
 ?>
+<?php if ($pines->config->com_user->check_username) { ?>
+<style type="text/css">
+	/* <![CDATA[ */
+	#p_muid_username_loading {
+		background-position: left;
+		background-repeat: no-repeat;
+		padding-left: 16px;
+		display: none;
+	}
+	#p_muid_username_message {
+		background-position: left;
+		background-repeat: no-repeat;
+		padding-left: 20px;
+		line-height: 16px;
+	}
+	/* ]]> */
+</style>
+<?php } ?>
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
+		<?php if ($pines->config->com_user->check_username) { ?>
+		// Check usernames.
+		$("[name=username]", "#p_muid_form").change(function(){
+			var username = $(this);
+			var id = "<?php echo $this->entity->guid; ?>";
+			$.ajax({
+				url: "<?php echo addslashes(pines_url('com_user', 'checkusername')); ?>",
+				type: "POST",
+				dataType: "json",
+				data: {"id": id, "username": username.val()},
+				beforeSend: function(){
+					$("#p_muid_username_loading").show();
+					username.removeClass("ui-state-error");
+					$("#p_muid_username_message").removeClass("picon-task-complete").removeClass("picon-task-attempt").html("");
+				},
+				complete: function(){
+					$("#p_muid_username_loading").hide();
+				},
+				error: function(){
+					username.addClass("ui-state-error");
+					$("#p_muid_username_message").addClass("picon-task-attempt").html("Error checking username. Please check your internet connection.");
+				},
+				success: function(data){
+					if (!data) {
+						username.addClass("ui-state-error");
+						$("#p_muid_username_message").addClass("picon-task-attempt").html("Error checking username.");
+						return;
+					}
+					if (data.result) {
+						username.removeClass("ui-state-error");
+						$("#p_muid_username_message").addClass("picon-task-complete").html(data.message);
+						return;
+					}
+					username.addClass("ui-state-error");
+					$("#p_muid_username_message").addClass("picon-task-attempt").html(data.message);
+				}
+			});
+		}).blur(function(){
+			$(this).change();
+		});
+		<?php } ?>
+
 		var password = $("#p_muid_form [name=password]");
 		var password2 = $("#p_muid_form [name=password2]");
 		$("#p_muid_form").submit(function(){
@@ -231,7 +293,14 @@ $pines->com_pgrid->load();
 			<?php if ($this->display_username) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Username</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="username" size="24" value="<?php echo htmlspecialchars($this->entity->username); ?>" /></label>
+					<span class="pf-group" style="display: block;">
+						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="username" size="24" value="<?php echo htmlspecialchars($this->entity->username); ?>" />
+						<?php if ($pines->config->com_user->check_username) { ?>
+						<span class="pf-field picon picon-throbber loader" id="p_muid_username_loading" style="display: none;">&nbsp;</span>
+						<span class="pf-field picon" id="p_muid_username_message"></span>
+						<?php } ?>
+					</span>
+				</label>
 			</div>
 			<?php } ?>
 			<div class="pf-element">

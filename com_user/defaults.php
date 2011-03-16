@@ -33,6 +33,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'check_username',
+		'cname' => 'Check Usernames',
+		'description' => 'Notify immediately if a requested username is available. (This can technically be used to determine if a user exists on the system.)',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'reg_fields',
 		'cname' => 'Visible Registration Fields',
 		'description' => 'These fields will be available for the user to fill in when they register.',

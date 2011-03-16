@@ -12,7 +12,28 @@
 defined('P_RUN') or die('Direct access prohibited');
 if (empty($this->title))
 	$this->title = "Login to {$pines->config->system_name}";
+$this->check_username = ($pines->config->com_user->allow_registration && $pines->config->com_user->check_username);
+if ($this->check_username)
+	$pines->icons->load();
 ?>
+<?php if ($this->check_username) { ?>
+<style type="text/css">
+	/* <![CDATA[ */
+	#p_muid_username_loading {
+		background-position: left;
+		background-repeat: no-repeat;
+		padding-left: 16px;
+		display: none;
+	}
+	#p_muid_username_message {
+		background-position: left;
+		background-repeat: no-repeat;
+		padding-left: 20px;
+		line-height: 16px;
+	}
+	/* ]]> */
+</style>
+<?php } ?>
 <?php if ($this->sawasc || ($this->style != 'compact' && $this->style != 'small')) { ?>
 <script type="text/javascript">
 	// <![CDATA[
@@ -47,7 +68,18 @@ if (empty($this->title))
 	<form class="pf-form" method="post" action="<?php echo htmlspecialchars(pines_url()); ?>">
 		<div class="pf-element">
 			<label><span class="pf-label">Username</span>
-				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="username" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
+				<?php if ($this->style != 'small') { ?>
+				<span class="pf-group" style="display: block;">
+				<?php } ?>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="username" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" />
+					<?php if ($this->check_username) { echo ($this->style == 'compact') ? '<br class="pf-clearing" />' : ''; ?>
+					<span class="pf-field picon picon-throbber loader" id="p_muid_username_loading" style="display: none;">&nbsp;</span>
+					<span class="pf-field picon" id="p_muid_username_message" style="display: none;"></span>
+					<?php } ?>
+				<?php if ($this->style != 'small') { ?>
+				</span>
+				<?php } ?>
+			</label>
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Password</span>
@@ -60,6 +92,7 @@ if (empty($this->title))
 				// <![CDATA[
 				pines(function(){
 					var new_account = false;
+					var username = $("[name=username]", "#p_muid_form");
 					var password = $("[name=password]", "#p_muid_form");
 					var password2 = $("[name=password2]", "#p_muid_form");
 					$("#p_muid_form").submit(function(){
@@ -70,6 +103,55 @@ if (empty($this->title))
 						return true;
 					});
 
+					<?php if ($this->check_username) { ?>
+					// Check usernames.
+					var un_loading = $("#p_muid_username_loading");
+					var un_message = $("#p_muid_username_message");
+					username.change(function(){
+						if (!new_account) {
+							un_loading.hide();
+							username.removeClass("ui-state-error");
+							un_message.removeClass("picon-task-complete").removeClass("picon-task-attempt").html("").hide();
+							return;
+						}
+						var id = "<?php echo $this->entity->guid; ?>";
+						$.ajax({
+							url: "<?php echo addslashes(pines_url('com_user', 'checkusername')); ?>",
+							type: "POST",
+							dataType: "json",
+							data: {"id": id, "username": username.val()},
+							beforeSend: function(){
+								un_loading.show();
+								username.removeClass("ui-state-error");
+								un_message.removeClass("picon-task-complete").removeClass("picon-task-attempt").html("").hide();
+							},
+							complete: function(){
+								un_loading.hide();
+							},
+							error: function(){
+								username.addClass("ui-state-error");
+								un_message.addClass("picon-task-attempt").html("Error checking username. Please check your internet connection.").show();
+							},
+							success: function(data){
+								if (!data) {
+									username.addClass("ui-state-error");
+									un_message.addClass("picon-task-attempt").html("Error checking username.").show();
+									return;
+								}
+								if (data.result) {
+									username.removeClass("ui-state-error");
+									un_message.addClass("picon-task-complete").html(data.message).show();
+									return;
+								}
+								username.addClass("ui-state-error");
+								un_message.addClass("picon-task-attempt").html(data.message).show();
+							}
+						});
+					}).blur(function(){
+						username.change();
+					});
+					<?php } ?>
+
 					var pass_reenter = $("#p_muid_register_form");
 					var submit_btn = $("[name=submit]", "#p_muid_form");
 					$("[name=login_register]", "#p_muid_form").change(function(){
@@ -78,12 +160,14 @@ if (empty($this->title))
 								new_account = true;
 								pass_reenter.slideDown();
 								submit_btn.val("Sign Up");
+								username.change();
 							}
 						} else {
 							if ($(this).is(":checked")) {
 								new_account = false;
 								pass_reenter.slideUp();
 								submit_btn.val("Login");
+								username.change();
 							}
 						}
 					}).change();
@@ -91,6 +175,7 @@ if (empty($this->title))
 						new_account = false;
 						pass_reenter.slideUp();
 						submit_btn.val("Login");
+						username.change();
 					});
 				});
 				// ]]>

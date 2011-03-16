@@ -41,6 +41,6 @@ if (isset($test->guid) && (!isset($id) || $id <= 0 || $test->guid != $id)) {
 	return;
 }
 
-$pines->page->override_doc(json_encode(array('result' => true, 'message' => (isset($id) ? 'Username is valid.' : 'Username is <b>available</b>!'))));
+$pines->page->override_doc(json_encode(array('result' => true, 'message' => (isset($id) ? 'Username is valid.' : 'Username is available!'))));
 
 ?>

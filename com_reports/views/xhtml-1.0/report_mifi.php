@@ -18,6 +18,18 @@ $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_reports/report_mifi'];
 
+$reference_types = array(
+	'FA'	=> 'Father',
+	'FR'	=> 'Friend',
+	'MA'	=> 'Mother',
+	'NB'	=> 'Neighbor',
+	'REL'	=> 'Relative',
+	'SP'	=> 'Spouse'
+);
+$account_types = array(
+	'C' => 'Checking',
+	'S' => 'Savings'
+);
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
@@ -214,7 +226,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<th>BAH</th>
 				<th>Time in Reserves</th>
 				<th>Break in Service</th>
-				<th>Pay Entry Base Date</th>
+				<th>PEB Date</th>
 				<th>Country</th>
 				<th>Address</th>
 				<th>City</th>
@@ -304,14 +316,14 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<td><?php echo htmlspecialchars($contract->term); ?></td>
 				<td>$<?php echo htmlspecialchars(number_format($contract->total_of_payments, 2, '.', '')); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->email); ?></td>
-				<td><?php echo format_date($contract->application->customer_info['birth_date']); ?></td>
+				<td><?php echo format_date($contract->application->customer_info['birth_date'], 'date_sort'); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->customer_info['ssn']); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->active_status); ?></td>
 				<td><?php echo htmlspecialchars($pines->com_mifi->branches[$contract->application->branch]); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->bahReceived); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->timeInReserves ? 'Yes' : 'No'); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->breakInService ? 'Yes' : 'No'); ?></td>
-				<td><?php echo format_date($contract->application->entry_base_date); ?></td>
+				<td><?php echo format_date($contract->application->entry_base_date, 'date_sort'); ?></td>
 				<td><?php echo $contract->application->country == '1' ? 'US' : 'Other'; ?></td>
 				<td><?php echo htmlspecialchars($contract->application->address1.' '.$contract->application->address2); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->city); ?></td>
@@ -342,21 +354,21 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<td><?php echo htmlspecialchars($contract->application->unit_city); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->unit_state); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->unit_zip); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->references[0]['relationship']); ?></td>
+				<td><?php echo $reference_types[$contract->application->references[0]['relationship']]; ?></td>
 				<td><?php echo htmlspecialchars($contract->application->references[0]['name_first'].' '.$contract->application->references[0]['name_last']); ?></td>
 				<td><?php echo format_phone($contract->application->references[0]['phone']); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->references[0]['address']); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->references[0]['city']); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->references[0]['state']); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->references[0]['zip']); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->references[1]['relationship']); ?></td>
+				<td><?php echo $reference_types[$contract->application->references[1]['relationship']]; ?></td>
 				<td><?php echo htmlspecialchars($contract->application->references[1]['name_first'].' '.$contract->application->references[0]['name_last']); ?></td>
 				<td><?php echo format_phone($contract->application->references[1]['phone']); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->references[1]['address']); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->references[1]['city']); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->references[1]['state']); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->references[1]['zip']); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->bank_account_type); ?></td>
+				<td><?php echo $account_types[$contract->application->bank_account_type]; ?></td>
 				<td><?php echo htmlspecialchars($contract->application->bank_account_number); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->bank_routing_number); ?></td>
 				<?php } ?>

@@ -303,7 +303,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<td>$<?php echo htmlspecialchars($contract->finance_charge); ?></td>
 				<td><?php echo htmlspecialchars($contract->term); ?></td>
 				<td>$<?php echo htmlspecialchars($contract->total_of_payments); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->civilian_email); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->email); ?></td>
 				<td><?php echo format_date($contract->application->customer_info['birth_date']); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->customer_info['ssn']); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->active_status); ?></td>
@@ -335,7 +335,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<td><?php echo htmlspecialchars($contract->application->unit_company); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->unit_platoon); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->supervisor_name); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->supervisor_paygrade); ?></td>
+				<td><?php echo $pines->com_mifi->ranks[$contract->application->supervisor_paygrade]; ?></td>
 				<td><?php echo format_phone($contract->application->supervisor_phone); ?></td>
 				<td><?php echo format_phone($contract->application->unit_phone); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->unit_address); ?></td>

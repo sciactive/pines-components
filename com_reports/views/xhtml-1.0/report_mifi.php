@@ -300,9 +300,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<td><?php echo htmlspecialchars($contract->application->comments); ?></td>
 				<?php if ($this->verbose) { ?>
 				<td><?php echo htmlspecialchars(($contract->apr * 100).'%'); ?></td>
-				<td>$<?php echo htmlspecialchars($contract->finance_charge); ?></td>
+				<td>$<?php echo htmlspecialchars(number_format($contract->finance_charge, 2, '.', '')); ?></td>
 				<td><?php echo htmlspecialchars($contract->term); ?></td>
-				<td>$<?php echo htmlspecialchars($contract->total_of_payments); ?></td>
+				<td>$<?php echo htmlspecialchars(number_format($contract->total_of_payments, 2, '.', '')); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->email); ?></td>
 				<td><?php echo format_date($contract->application->customer_info['birth_date']); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->customer_info['ssn']); ?></td>

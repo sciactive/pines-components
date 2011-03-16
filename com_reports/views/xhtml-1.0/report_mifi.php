@@ -319,16 +319,16 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<td><?php echo htmlspecialchars($contract->application->zip); ?></td>
 				<td><?php echo format_phone($contract->application->phone); ?></td>
 				<td><?php echo format_phone($contract->application->cellPhone); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->hor_address1.' '.$contract->application->hor_address2); ?></td>
+				<td><?php echo htmlspecialchars($contract->application->hor_address.' '.$contract->application->hor_address2); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->hor_city); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->hor_state); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->hor_zip); ?></td>
 				<td><?php echo format_phone($contract->application->hor_phone); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->housingType); ?></td>
-				<td>$<?php echo htmlspecialchars($contract->application->housingPayment); ?></td>
-				<td>$<?php echo htmlspecialchars($contract->application->childSupport); ?></td>
-				<td>$<?php echo htmlspecialchars($contract->application->advancePay); ?></td>
-				<td>$<?php echo htmlspecialchars($contract->application->advancePayBalance); ?></td>
+				<td>$<?php echo htmlspecialchars(number_format($contract->application->housingPayment, 2, '.', '')); ?></td>
+				<td>$<?php echo htmlspecialchars(number_format($contract->application->childSupport, 2, '.', '')); ?></td>
+				<td>$<?php echo htmlspecialchars(number_format($contract->application->advancePay, 2, '.', '')); ?></td>
+				<td>$<?php echo htmlspecialchars(number_format($contract->application->advancePayBalance, 2, '.', '')); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->email_secure); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->unit_brigade); ?></td>
 				<td><?php echo htmlspecialchars($contract->application->unit_battalion); ?></td>

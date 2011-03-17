@@ -15,7 +15,7 @@ if ( !gatekeeper('com_calendar/editcalendar'))
 	punt_user(null, pines_url('com_calendar', 'editcalendar'));
 
 if (isset($_REQUEST['employee'])) {
-	if (isset($_REQUEST['id'])) {
+	if (!empty($_REQUEST['id'])) {
 		$event = com_calendar_event::factory((int) $_REQUEST['id']);
 		if (!isset($event->guid)) {
 			pines_error('The calendar was altered while editing the event.');

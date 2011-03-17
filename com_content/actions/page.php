@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if (isset($_REQUEST['id'])) {
+if (!empty($_REQUEST['id'])) {
 	$entity = com_content_page::factory((int) $_REQUEST['id']);
 } else {
 	$entity = $pines->entity_manager->get_entity(

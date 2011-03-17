@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_sales/warehouse') )
 	punt_user(null, pines_url('com_sales', 'warehouse/fulfill', array('id' => $_REQUEST['id'])));
 
-if (isset($_REQUEST['id'])) {
+if (!empty($_REQUEST['id'])) {
 	$entity = com_sales_sale::factory((int) $_REQUEST['id']);
 	if (!isset($entity->guid)) {
 		pines_notice('The given ID could not be found.');

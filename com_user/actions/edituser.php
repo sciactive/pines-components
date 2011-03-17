@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if (isset($_REQUEST['id'])) {
+if (!empty($_REQUEST['id'])) {
 	if ( !gatekeeper('com_user/edituser') && (!gatekeeper('com_user/self') || ($_REQUEST['id'] != $_SESSION['user_id'])) )
 		punt_user(null, pines_url('com_user', 'listusers'));
 } else {

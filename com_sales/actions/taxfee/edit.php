@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if (isset($_REQUEST['id'])) {
+if (!empty($_REQUEST['id'])) {
 	if ( !gatekeeper('com_sales/edittaxfee') )
 		punt_user(null, pines_url('com_sales', 'taxfee/edit', array('id' => $_REQUEST['id'])));
 } else {

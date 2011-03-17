@@ -244,7 +244,7 @@ class com_user extends component implements user_manager_interface {
 	}
 
 	public function login($user) {
-		if ( isset($user->guid) && $user->has_tag('enabled') && $this->gatekeeper('com_user/login', $user) ) {
+		if ( isset($user->guid) && $user->has_tag('com_user', 'user', 'enabled') && $this->gatekeeper('com_user/login', $user) ) {
 			// Destroy session data.
 			$this->logout();
 			$_SESSION['user_id'] = $user->guid;

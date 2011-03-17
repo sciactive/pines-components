@@ -309,68 +309,68 @@ $account_types = array(
 				<td style="text-align: right;"><?php echo isset($contract->guid) ? htmlspecialchars($contract->credit_score) : 'NA'; ?></td>
 				<td><?php echo ($contract->approved_faxsheet) ? 'Approved' : (isset($contract->faxsheet_request) ? 'Requested' : 'None'); ?></td>
 				<td><?php echo ($contract->verified_sst) ? 'Yes' : 'No'; ?></td>
-				<td><?php echo htmlspecialchars($contract->application->comments); ?></td>
+				<td><?php echo htmlspecialchars($contract->comments); ?></td>
 				<?php if ($this->verbose) { ?>
 				<td><?php echo htmlspecialchars(($contract->apr * 100).'%'); ?></td>
 				<td>$<?php echo htmlspecialchars(number_format($contract->finance_charge, 2, '.', '')); ?></td>
 				<td><?php echo htmlspecialchars($contract->term); ?></td>
 				<td>$<?php echo htmlspecialchars(number_format($contract->total_of_payments, 2, '.', '')); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->email); ?></td>
-				<td><?php echo format_date($contract->application->customer_info['birth_date'], 'date_sort'); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->customer_info['ssn']); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->active_status); ?></td>
-				<td><?php echo htmlspecialchars($pines->com_mifi->branches[$contract->application->branch]); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->bahReceived); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->timeInReserves ? 'Yes' : 'No'); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->breakInService ? 'Yes' : 'No'); ?></td>
-				<td><?php echo format_date($contract->application->entry_base_date, 'date_sort'); ?></td>
-				<td><?php echo $contract->application->country == '1' ? 'US' : 'Other'; ?></td>
-				<td><?php echo htmlspecialchars($contract->application->address1.' '.$contract->application->address2); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->city); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->state); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->zip); ?></td>
-				<td><?php echo format_phone($contract->application->phone); ?></td>
-				<td><?php echo format_phone($contract->application->cellPhone); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->hor_address.' '.$contract->application->hor_address2); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->hor_city); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->hor_state); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->hor_zip); ?></td>
-				<td><?php echo format_phone($contract->application->hor_phone); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->housingType); ?></td>
-				<td>$<?php echo htmlspecialchars(number_format($contract->application->housingPayment, 2, '.', '')); ?></td>
-				<td>$<?php echo htmlspecialchars(number_format($contract->application->childSupport, 2, '.', '')); ?></td>
-				<td>$<?php echo htmlspecialchars(number_format($contract->application->advancePay, 2, '.', '')); ?></td>
-				<td>$<?php echo htmlspecialchars(number_format($contract->application->advancePayBalance, 2, '.', '')); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->email_secure); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->unit_brigade); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->unit_battalion); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->unit_company); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->unit_platoon); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->supervisor_name); ?></td>
-				<td><?php echo $pines->com_mifi->ranks[$contract->application->supervisor_paygrade]; ?></td>
-				<td><?php echo format_phone($contract->application->supervisor_phone); ?></td>
-				<td><?php echo format_phone($contract->application->unit_phone); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->unit_address); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->unit_city); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->unit_state); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->unit_zip); ?></td>
-				<td><?php echo $reference_types[$contract->application->references[0]['relationship']]; ?></td>
-				<td><?php echo htmlspecialchars($contract->application->references[0]['name_first'].' '.$contract->application->references[0]['name_last']); ?></td>
-				<td><?php echo format_phone($contract->application->references[0]['phone']); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->references[0]['address']); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->references[0]['city']); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->references[0]['state']); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->references[0]['zip']); ?></td>
-				<td><?php echo $reference_types[$contract->application->references[1]['relationship']]; ?></td>
-				<td><?php echo htmlspecialchars($contract->application->references[1]['name_first'].' '.$contract->application->references[0]['name_last']); ?></td>
-				<td><?php echo format_phone($contract->application->references[1]['phone']); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->references[1]['address']); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->references[1]['city']); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->references[1]['state']); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->references[1]['zip']); ?></td>
-				<td><?php echo $account_types[$contract->application->bank_account_type]; ?></td>
-				<td><?php echo htmlspecialchars($contract->application->bank_account_number); ?></td>
-				<td><?php echo htmlspecialchars($contract->application->bank_routing_number); ?></td>
+				<td><?php echo htmlspecialchars($contract->email); ?></td>
+				<td><?php echo format_date($contract->customer_info['birth_date'], 'date_sort'); ?></td>
+				<td><?php echo htmlspecialchars($contract->customer_info['ssn']); ?></td>
+				<td><?php echo htmlspecialchars($contract->active_status); ?></td>
+				<td><?php echo htmlspecialchars($pines->com_mifi->branches[$contract->branch]); ?></td>
+				<td><?php echo htmlspecialchars($contract->bahReceived); ?></td>
+				<td><?php echo htmlspecialchars($contract->timeInReserves ? 'Yes' : 'No'); ?></td>
+				<td><?php echo htmlspecialchars($contract->breakInService ? 'Yes' : 'No'); ?></td>
+				<td><?php echo format_date($contract->entry_base_date, 'date_sort'); ?></td>
+				<td><?php echo $contract->country == '1' ? 'US' : 'Other'; ?></td>
+				<td><?php echo htmlspecialchars($contract->address1.' '.$contract->address2); ?></td>
+				<td><?php echo htmlspecialchars($contract->city); ?></td>
+				<td><?php echo htmlspecialchars($contract->state); ?></td>
+				<td><?php echo htmlspecialchars($contract->zip); ?></td>
+				<td><?php echo format_phone($contract->phone); ?></td>
+				<td><?php echo format_phone($contract->cellPhone); ?></td>
+				<td><?php echo htmlspecialchars($contract->hor_address.' '.$contract->hor_address2); ?></td>
+				<td><?php echo htmlspecialchars($contract->hor_city); ?></td>
+				<td><?php echo htmlspecialchars($contract->hor_state); ?></td>
+				<td><?php echo htmlspecialchars($contract->hor_zip); ?></td>
+				<td><?php echo format_phone($contract->hor_phone); ?></td>
+				<td><?php echo htmlspecialchars($contract->housingType); ?></td>
+				<td>$<?php echo htmlspecialchars(number_format((float) $contract->housingPayment, 2, '.', '')); ?></td>
+				<td>$<?php echo htmlspecialchars(number_format((float) $contract->childSupport, 2, '.', '')); ?></td>
+				<td>$<?php echo htmlspecialchars(number_format((float) $contract->advancePay, 2, '.', '')); ?></td>
+				<td>$<?php echo htmlspecialchars(number_format((float) $contract->advancePayBalance, 2, '.', '')); ?></td>
+				<td><?php echo htmlspecialchars($contract->email_secure); ?></td>
+				<td><?php echo htmlspecialchars($contract->unit_brigade); ?></td>
+				<td><?php echo htmlspecialchars($contract->unit_battalion); ?></td>
+				<td><?php echo htmlspecialchars($contract->unit_company); ?></td>
+				<td><?php echo htmlspecialchars($contract->unit_platoon); ?></td>
+				<td><?php echo htmlspecialchars($contract->supervisor_name); ?></td>
+				<td><?php echo $pines->com_mifi->ranks[$contract->supervisor_paygrade]; ?></td>
+				<td><?php echo format_phone($contract->supervisor_phone); ?></td>
+				<td><?php echo format_phone($contract->unit_phone); ?></td>
+				<td><?php echo htmlspecialchars($contract->unit_address); ?></td>
+				<td><?php echo htmlspecialchars($contract->unit_city); ?></td>
+				<td><?php echo htmlspecialchars($contract->unit_state); ?></td>
+				<td><?php echo htmlspecialchars($contract->unit_zip); ?></td>
+				<td><?php echo $reference_types[$contract->references[0]['relationship']]; ?></td>
+				<td><?php echo htmlspecialchars($contract->references[0]['name_first'].' '.$contract->references[0]['name_last']); ?></td>
+				<td><?php echo format_phone($contract->references[0]['phone']); ?></td>
+				<td><?php echo htmlspecialchars($contract->references[0]['address']); ?></td>
+				<td><?php echo htmlspecialchars($contract->references[0]['city']); ?></td>
+				<td><?php echo htmlspecialchars($contract->references[0]['state']); ?></td>
+				<td><?php echo htmlspecialchars($contract->references[0]['zip']); ?></td>
+				<td><?php echo $reference_types[$contract->references[1]['relationship']]; ?></td>
+				<td><?php echo htmlspecialchars($contract->references[1]['name_first'].' '.$contract->references[0]['name_last']); ?></td>
+				<td><?php echo format_phone($contract->references[1]['phone']); ?></td>
+				<td><?php echo htmlspecialchars($contract->references[1]['address']); ?></td>
+				<td><?php echo htmlspecialchars($contract->references[1]['city']); ?></td>
+				<td><?php echo htmlspecialchars($contract->references[1]['state']); ?></td>
+				<td><?php echo htmlspecialchars($contract->references[1]['zip']); ?></td>
+				<td><?php echo $account_types[$contract->bank_account_type]; ?></td>
+				<td><?php echo htmlspecialchars($contract->bank_account_number); ?></td>
+				<td><?php echo htmlspecialchars($contract->bank_routing_number); ?></td>
 				<?php } ?>
 			</tr>
 			<?php } ?>

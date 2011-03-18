@@ -40,6 +40,23 @@ if (!isset($user->guid)) {
 $entity->group = $location;
 $entity->user = $user;
 
+// Change the entity's transactions too.
+$transactions = $pines->entity_manager->get_entities(
+		array('class' => com_sales_tx),
+		array('&', 'tag' => array('com_sales', 'transaction')),
+		array('|',
+			'ref' => array(
+				array('ticket', $entity),
+				array('ref', $entity)
+			)
+		)
+	);
+foreach ($transactions as $cur_tx) {
+	$cur_tx->group = $location;
+	$cur_tx->user = $user;
+	$cur_tx->save();
+}
+
 if ($entity->save()) {
 	pines_notice("[{$entity->guid}] has been overridden.");
 	$pines->page->override_doc('true');

@@ -327,7 +327,8 @@ class com_reports extends component {
 			$selector['gte'] = array('p_cdate', (int) $start_date);
 		if (isset($end_date))
 			$selector['lt'] = array('p_cdate', (int) $end_date);
-		//$selector['match'] = array('payments', 'MiFi');
+		$selector['strict'] = array('status', 'paid');
+		//$selector['match'] = array('payments', 'MiFi Finance');
 		$module->start_date = $start_date;
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
@@ -342,7 +343,15 @@ class com_reports extends component {
 		$module->location = $location;
 		$module->descendents = $descendents;
 		$module->sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
-
+		// Make sure this sale is not attached to any returns.
+		foreach ($module->sales as $key => &$cur_sale) {
+			$return = $pines->entity_manager->get_entity(
+				array('class' => com_sales_return, 'skip_ac' => true),
+				array('&', 'tag' => array('com_sales', 'return'), 'ref' => array('sale', $cur_sale))
+			);
+			if (isset($return->guid))
+				unset($module->sales[$key]);
+		}
 		return $module;
 	}
 

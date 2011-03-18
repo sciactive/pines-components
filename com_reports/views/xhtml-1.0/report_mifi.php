@@ -198,10 +198,10 @@ $account_types = array(
 			<tr>
 				<th>Sale ID</th>
 				<th>Date</th>
-				<th>Location</th>
+				<th>Loc</th>
 				<th>Status</th>
-				<th>Employee</th>
-				<th>Customer</th>
+				<th>Emp</th>
+				<th>Cust</th>
 				<th>Subtotal</th>
 				<th>Taxes</th>
 				<th>Total</th>
@@ -217,63 +217,64 @@ $account_types = array(
 				<th>APR</th>
 				<th>Finance Charge</th>
 				<th># of Payments</th>
-				<th>Amount of Payments</th>
+				<th>Amt of Pmts</th>
+				<th>1st Pmt</th>
 				<th>Email</th>
 				<th>Birth Date</th>
 				<th>SSN</th>
 				<th>Active Status</th>
 				<th>Branch</th>
 				<th>BAH</th>
-				<th>Time in Reserves</th>
-				<th>Break in Service</th>
+				<th>Time in Rsrv</th>
+				<th>Brk in Srvc</th>
 				<th>PEB Date</th>
 				<th>Country</th>
-				<th>Address</th>
+				<th>Addr</th>
 				<th>City</th>
 				<th>State</th>
 				<th>Zip</th>
 				<th>Phone</th>
-				<th>Cell Phone</th>
-				<th>HOR Address</th>
+				<th>Cell</th>
+				<th>HOR Addr</th>
 				<th>HOR City</th>
 				<th>HOR State</th>
 				<th>HOR Zip</th>
 				<th>HOR Phone</th>
 				<th>Housing Type</th>
-				<th>Housing Payment</th>
+				<th>Housing Pmt</th>
 				<th>Child Support</th>
-				<th>Advance Pay</th>
-				<th>Advance Pay Remaining</th>
+				<th>Adv Pay</th>
+				<th>Adv Pay Rmn</th>
 				<th>Secure Email</th>
 				<th>Brigade</th>
 				<th>Battalion</th>
 				<th>Company</th>
 				<th>Platoon</th>
 				<th>Supervisor</th>
-				<th>Supervisor Rank</th>
-				<th>Supervisor Phone</th>
+				<th>Sup Rank</th>
+				<th>Sup Phone</th>
 				<th>Unit Phone</th>
-				<th>Unit Address</th>
+				<th>Unit Addr</th>
 				<th>Unit City</th>
 				<th>Unit State</th>
 				<th>Unit Zip</th>
-				<th>Reference 1</th>
-				<th>Reference 1 Name</th>
-				<th>Reference 1 Phone</th>
-				<th>Reference 1 Address</th>
-				<th>Reference 1 City</th>
-				<th>Reference 1 State</th>
-				<th>Reference 1 Zip</th>
-				<th>Reference 2</th>
-				<th>Reference 2 Name</th>
-				<th>Reference 2 Phone</th>
-				<th>Reference 2 Address</th>
-				<th>Reference 2 City</th>
-				<th>Reference 2 State</th>
-				<th>Reference 2 Zip</th>
-				<th>Bank Account Type</th>
-				<th>Bank Account Number</th>
-				<th>Bank Routing Number</th>
+				<th>Ref1</th>
+				<th>Ref1 Name</th>
+				<th>Ref1 Phone</th>
+				<th>Ref1 Addr</th>
+				<th>Ref1 City</th>
+				<th>Ref1 State</th>
+				<th>Ref1 Zip</th>
+				<th>Ref2</th>
+				<th>Ref2 Name</th>
+				<th>Ref2 Phone</th>
+				<th>Ref2 Addr</th>
+				<th>Ref2 City</th>
+				<th>Ref2 State</th>
+				<th>Ref2 Zip</th>
+				<th>Bank Acc Type</th>
+				<th>Bank Acc #</th>
+				<th>Bank Rt #</th>
 				<?php } ?>
 			</tr>
 		</thead>
@@ -284,12 +285,11 @@ $account_types = array(
 						array('class' => com_mifi_contract),
 						array('&',
 							'tag' => array('com_mifi', 'contract'),
-							'ref' => array(
-								array('customer', $cur_sale->customer),
-								array('sale', $cur_sale)
-							)
+							'ref' => array('sale', $cur_sale)
 						)
 					);
+				if (!isset($contract->guid))
+					continue;
 				$contract_link = pines_url('com_mifi', 'viewoffer', array('id' => $contract->guid));
 			?>
 			<tr title="<?php echo $cur_sale->guid; ?>">
@@ -302,11 +302,11 @@ $account_types = array(
 				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_sale->subtotal, 2, '.', '')); ?></td>
 				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_sale->taxes, 2, '.', '')); ?></td>
 				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_sale->total, 2, '.', '')); ?></td>
-				<td style="text-align: right;"><?php echo isset($contract->guid) ? '<a href="'.htmlspecialchars($contract_link).'" onclick="window.open(this.href); return false;">'.htmlspecialchars($contract->contract_id).'</a>' : 'No'; ?></td>
-				<td><?php echo isset($contract->guid) ? $pines->com_mifi->companies[$contract->company]['name'] : 'NA'; ?></td>
-				<td><?php echo isset($contract->guid) ? $pines->com_mifi->ranks[$contract->militaryPayGrade] : 'NA'; ?></td>
-				<td><?php echo isset($contract->guid) ? format_date($contract->ets_date, 'date_sort') : 'NA'; ?></td>
-				<td style="text-align: right;"><?php echo isset($contract->guid) ? htmlspecialchars($contract->credit_score) : 'NA'; ?></td>
+				<td style="text-align: right;"><a href="<?php echo htmlspecialchars($contract_link); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($contract->contract_id); ?></a></td>
+				<td><?php echo $pines->com_mifi->companies[$contract->company]['name']; ?></td>
+				<td><?php echo $pines->com_mifi->ranks[$contract->militaryPayGrade]; ?></td>
+				<td><?php echo format_date($contract->ets_date, 'date_sort'); ?></td>
+				<td style="text-align: right;"><?php echo htmlspecialchars($contract->credit_score); ?></td>
 				<td><?php echo ($contract->approved_faxsheet) ? 'Approved' : (isset($contract->faxsheet_request) ? 'Requested' : 'None'); ?></td>
 				<td><?php echo ($contract->verified_sst) ? 'Yes' : 'No'; ?></td>
 				<td><?php echo htmlspecialchars($contract->comments); ?></td>
@@ -315,6 +315,7 @@ $account_types = array(
 				<td>$<?php echo htmlspecialchars(number_format($contract->finance_charge, 2, '.', '')); ?></td>
 				<td><?php echo htmlspecialchars($contract->term); ?></td>
 				<td>$<?php echo htmlspecialchars(number_format($contract->total_of_payments, 2, '.', '')); ?></td>
+				<td><?php echo isset($contract->first_payment_date) ? format_date($contract->first_payment_date, 'date_sort') : ''; ?></td>
 				<td><?php echo htmlspecialchars($contract->email); ?></td>
 				<td><?php echo format_date($contract->customer_info['birth_date'], 'date_sort'); ?></td>
 				<td><?php echo htmlspecialchars($contract->customer_info['ssn']); ?></td>

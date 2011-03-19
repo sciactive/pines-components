@@ -57,6 +57,12 @@ if (!preg_match($pines->config->com_user->valid_regex, $user->username)) {
 	pines_notice($pines->config->com_user->valid_regex_notice);
 	return;
 }
+$test = $pines->entity_manager->get_entity(array('class' => user, 'skip_ac' => true), array('&', 'tag' => array('com_user', 'user'), 'strict' => array('email', $user->email)));
+if (isset($test) && !$user->is($test)) {
+	$user->print_form();
+	pines_notice('There is already a user with that email address. Please use a different email.');
+	return;
+}
 if (empty($user->password) && !$pines->config->com_user->pw_empty) {
 	$user->register();
 	pines_notice('Please specify a password.');

@@ -130,6 +130,14 @@ if (!preg_match($pines->config->com_user->valid_regex, $group->groupname)) {
 	pines_notice($pines->config->com_user->valid_regex_notice);
 	return;
 }
+if (!empty($group->email)) {
+	$test = $pines->entity_manager->get_entity(array('class' => group, 'skip_ac' => true), array('&', 'tag' => array('com_user', 'group'), 'strict' => array('email', $group->email)));
+	if (isset($test) && !$group->is($test)) {
+		$group->print_form();
+		pines_notice('There is already a group with that email address. Please use a different email.');
+		return;
+	}
+}
 if (isset($group->parent) && !isset($group->parent->guid)) {
 	$group->print_form();
 	pines_notice('Parent group is not valid.');

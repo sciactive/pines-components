@@ -166,6 +166,12 @@ if (isset($test->guid) && !$user->is($test)) {
 	pines_notice('There is already a user with that username. Please choose a different username.');
 	return;
 }
+$test = $pines->entity_manager->get_entity(array('class' => user, 'skip_ac' => true), array('&', 'tag' => array('com_user', 'user'), 'strict' => array('email', $user->email)));
+if (isset($test) && !$user->is($test)) {
+	$user->print_form();
+	pines_notice('There is already a user with that email address. Please use a different email.');
+	return;
+}
 if (array_diff(str_split($user->username), str_split($pines->config->com_user->valid_chars))) {
 	$user->print_form();
 	pines_notice($pines->config->com_user->valid_chars_notice);

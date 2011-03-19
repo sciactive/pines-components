@@ -133,7 +133,7 @@ if (empty($customer->ssn)) {
 		pines_notice('The SSN must be a 9 digit number.');
 		return;
 	}
-	$test = $pines->entity_manager->get_entity(array('class' => com_customer_customer, 'skip_ac' => true), array('&', 'tag' => array('com_customer', 'customer'), 'data' => array('ssn', $customer->ssn)));
+	$test = $pines->entity_manager->get_entity(array('class' => com_customer_customer, 'skip_ac' => true), array('&', 'tag' => array('com_customer', 'customer'), 'strict' => array('ssn', $customer->ssn)));
 	if (isset($test) && !$customer->is($test)) {
 		$customer->print_form();
 		pines_notice("The customer {$test->name} already has this SSN.");

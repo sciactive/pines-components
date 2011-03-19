@@ -230,6 +230,12 @@ if (isset($test->guid) && !$customer->is($test)) {
 	pines_notice('There is already a user with that username. Please choose a different username.');
 	return;
 }
+$test = $pines->entity_manager->get_entity(array('class' => user, 'skip_ac' => true), array('&', 'tag' => array('com_user', 'user'), 'strict' => array('email', $customer->email)));
+if (isset($test) && !$customer->is($test)) {
+	$customer->print_form();
+	pines_notice('There is already a user with that email address. Please use a different email.');
+	return;
+}
 if (empty($customer->password) && !$pines->config->com_user->pw_empty) {
 	$customer->print_form();
 	pines_notice('Please specify a password.');

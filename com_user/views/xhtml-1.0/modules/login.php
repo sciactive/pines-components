@@ -153,19 +153,22 @@ if ($this->check_username)
 					<?php } ?>
 
 					var pass_reenter = $("#p_muid_register_form");
+					var recovery = $("#p_muid_recovery");
 					var submit_btn = $("[name=submit]", "#p_muid_form");
 					$("[name=login_register]", "#p_muid_form").change(function(){
 						if ($(this).val() == "register") {
 							if ($(this).is(":checked")) {
 								new_account = true;
-								pass_reenter.slideDown();
+								pass_reenter.slideDown("fast");
+								recovery.slideUp("fast");
 								submit_btn.val("Sign Up");
 								username.change();
 							}
 						} else {
 							if ($(this).is(":checked")) {
 								new_account = false;
-								pass_reenter.slideUp();
+								pass_reenter.slideUp("fast");
+								recovery.slideDown("fast");
 								submit_btn.val("Login");
 								username.change();
 							}
@@ -173,7 +176,8 @@ if ($this->check_username)
 					}).change();
 					$(":reset", "#p_muid_form").click(function(){
 						new_account = false;
-						pass_reenter.slideUp();
+						pass_reenter.slideUp("fast");
+						recovery.slideUp("fast");
 						submit_btn.val("Login");
 						username.change();
 					});
@@ -193,6 +197,11 @@ if ($this->check_username)
 				<label><span class="pf-label">Re-enter Password</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="password" name="password2" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
 			</div>
+		</div>
+		<?php } if (!$this->hide_recovery && $pines->config->com_user->pw_recovery) { ?>
+		<div class="pf-element" id="p_muid_recovery">
+			<span class="pf-label" style="height: 1px;">&nbsp;</span>
+			<a class="pf-field" href="<?php echo htmlspecialchars(pines_url('com_user', 'recover')); ?>">I can't access my account.</a>
 		</div>
 		<?php } ?>
 		<div class="pf-element<?php echo ($this->style == 'small') ? '' : ' pf-buttons'; ?>">

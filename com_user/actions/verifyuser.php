@@ -19,7 +19,7 @@ if (!isset($user->guid)) {
 	return;
 }
 
-if ($_REQUEST['secret'] != $user->secret) {
+if (!isset($user->secret) || $_REQUEST['secret'] != $user->secret) {
 	pines_notice('The secret code given does not match this user.');
 	$pines->user_manager->print_login();
 	return;

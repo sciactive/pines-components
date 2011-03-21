@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if (!$pines->config->com_user->check_username)
-	return;
+	return 'error_404';
 
 $pines->page->override = true;
 

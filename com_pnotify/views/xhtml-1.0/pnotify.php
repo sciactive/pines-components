@@ -30,7 +30,7 @@ $pines->icons->load();
 				return $.pnotify(options);
 			};
 			pines.error = function(message, title){
-				var options = $.extend({pnotify_title: title ? title : "Error", pnotify_text: String(message), pnotify_type: "error"}, pines.pnotify_notice_defaults);
+				var options = $.extend({pnotify_title: title ? title : "Error", pnotify_text: String(message), pnotify_type: "error", pnotify_hide: false}, pines.pnotify_notice_defaults);
 				return $.pnotify(options);
 			};
 		}

@@ -118,7 +118,11 @@ if (isset($pines->com_elfinder))
 			// Location of TinyMCE script
 			script_url : '<?php echo htmlspecialchars($pines->config->rela_location); ?>components/com_tinymce/includes/tiny_mce/tiny_mce.js',
 			// General options
-			theme : "simple",
+			theme : "advanced",
+			theme_advanced_buttons1 : "newdocument,|,bold,italic,underline,strikethrough,|,undo,redo,|,bullist,numlist",
+			theme_advanced_buttons2 : "",
+			theme_advanced_buttons3 : "",
+			theme_advanced_buttons4 : "",
 			<?php switch ($pines->config->com_tinymce->skin) {
 				case 'default':
 				default:

@@ -211,7 +211,6 @@ $account_types = array(
 				<th>ETS Date</th>
 				<th>Credit Score</th>
 				<th>Faxsheet</th>
-				<th>SST Verified</th>
 				<th>Comments</th>
 				<?php if ($this->verbose) { ?>
 				<th>APR</th>
@@ -305,11 +304,10 @@ $account_types = array(
 				<td style="text-align: right;"><a href="<?php echo htmlspecialchars($contract_link); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($contract->contract_id); ?></a></td>
 				<td><?php echo $pines->com_mifi->companies[$contract->company]['name']; ?></td>
 				<td><?php echo $pines->com_mifi->ranks[$contract->militaryPayGrade]; ?></td>
-				<td><?php echo format_date($contract->ets_date, 'date_sort'); ?></td>
+				<td><?php echo $contract->indefiniteETS ? 'Indefinite' : format_date($contract->ets_date, 'date_sort'); ?></td>
 				<td style="text-align: right;"><?php echo htmlspecialchars($contract->credit_score); ?></td>
 				<td><?php echo ($contract->approved_faxsheet) ? 'Approved' : (isset($contract->faxsheet_request) ? 'Requested' : 'None'); ?></td>
 				<td><?php echo ($contract->verified_sst) ? 'Yes' : 'No'; ?></td>
-				<td><?php echo htmlspecialchars($contract->comments); ?></td>
 				<?php if ($this->verbose) { ?>
 				<td><?php echo htmlspecialchars(($contract->apr * 100).'%'); ?></td>
 				<td>$<?php echo htmlspecialchars(number_format($contract->finance_charge, 2, '.', '')); ?></td>

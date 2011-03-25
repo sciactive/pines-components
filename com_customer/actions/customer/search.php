@@ -20,6 +20,13 @@ $query = $_REQUEST['q'];
 
 if (empty($query)) {
 	$customers = array();
+} elseif ($query == '*') {
+	$customers = (array) $pines->entity_manager->get_entities(
+			array('class' => com_customer_customer),
+			array('&',
+				'tag' => array('com_customer', 'customer')
+			)
+		);
 } else {
 	$num_query = preg_replace('/\D/', '', $query);
 	$r_query = '/'.preg_quote($query).'/i';

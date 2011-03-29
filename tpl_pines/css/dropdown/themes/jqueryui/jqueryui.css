@@ -42,6 +42,7 @@ ul.dropdown ul {
 	width: auto;
 	margin: 0;
 	padding: 0;
+	top: 99%; /* 100% causes hover bug in ff */
 }
 
 ul.dropdown ul li {

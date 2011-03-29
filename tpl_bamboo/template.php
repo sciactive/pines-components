@@ -56,10 +56,10 @@ Released   : 20090820
 			pines(function(){
 				<?php
 				if ( $error ) { foreach ($error as $cur_item) {
-					echo 'pines.error("'.addslashes(htmlspecialchars($cur_item))."\", \"Error\");\n";
+					echo 'pines.error('.json_encode($cur_item).", \"Error\");\n";
 				} }
 				if ( $notice ) { foreach ($notice as $cur_item) {
-					echo 'pines.notice("'.addslashes(htmlspecialchars($cur_item))."\", \"Notice\");\n";
+					echo 'pines.notice('.json_encode($cur_item).", \"Notice\");\n";
 				} }
 				?>
 			});

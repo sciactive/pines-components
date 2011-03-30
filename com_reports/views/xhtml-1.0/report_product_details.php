@@ -179,23 +179,22 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			foreach ($this->transactions as $cur_tx) {
 				if (empty($cur_tx->products))
 					continue;
+				
 				if ($cur_tx->has_tag('return')) {
 					$class = 'class="p_muid_return"';
 					$tx_type = 'RETURN';
 				} else {
-					$class = '';
-					if ($cur_tx->status == 'voided')
-						$tx_type = 'VOID';
-					elseif ($cur_tx->status == 'invoiced')
-						$tx_type = 'INVOICE';
-					else
-						$tx_type = 'SALE';
+					$tx_type = 'SALE';
 				}
-				foreach ($cur_tx->products as $cur_item) { ?>
+				foreach ($cur_tx->products as $cur_item) {
+					if (!$pines->config->com_reports->all_product_details &&
+						!empty($cur_item['returned_stock_entities']))
+						continue;
+				?>
 				<tr <?php echo $class; ?>>
 					<td><?php echo $tx_type.$cur_tx->id; ?></td>
 					<td><?php echo format_date($cur_tx->p_cdate); ?></td>
-					<td><?php echo $tx_type; //htmlspecialchars($cur_tx->status); ?></td>
+					<td><?php echo strtoupper($cur_tx->status); ?></td>
 					<td><?php echo htmlspecialchars($cur_item['delivery']); ?></td>
 					<td><?php echo htmlspecialchars($cur_tx->group->name); ?></td>
 					<td><?php echo htmlspecialchars($cur_tx->user->name); ?></td>

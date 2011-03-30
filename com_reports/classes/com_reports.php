@@ -505,9 +505,16 @@ class com_reports extends component {
 			$or = array('|', 'ref' => array('group', $location));
 		$module->location = $location;
 		$module->descendents = $descendents;
-		$transactions = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
-		$selector['tag'] = array('com_sales', 'return');
-		$module->transactions = array_merge($transactions, $pines->entity_manager->get_entities(array('class' => com_sales_return), $selector, $or));
+		
+		if (!$pines->config->com_reports->all_product_details) {
+			$selector['strict'] = array('status', 'paid');
+			$module->transactions = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
+		} else {
+			unset($selector['strict']);
+			$module->transactions = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
+			$selector['tag'] = array('com_sales', 'return');
+			$module->transactions = array_merge($module->transactions, $pines->entity_manager->get_entities(array('class' => com_sales_return), $selector, $or));
+		}
 	}
 
 	/**

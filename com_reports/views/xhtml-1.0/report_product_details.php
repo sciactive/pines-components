@@ -187,14 +187,22 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					$tx_type = 'SALE';
 				}
 				foreach ($cur_tx->products as $cur_item) {
-					if (!$pines->config->com_reports->all_product_details &&
-						!empty($cur_item['returned_quantity']))
-						continue;
+					if ($tx_type == 'SALE')
+						$class = '';
+					$cur_status = strtoupper($cur_tx->status);
+					if (!empty($cur_item['returned_quantity'])) {
+						if ($pines->config->com_reports->all_product_details) {
+							$class = 'class="p_muid_return"';
+							$cur_status = 'RETURNED';
+						} else {
+							continue;
+						}
+					}
 				?>
 				<tr <?php echo $class; ?>>
 					<td><?php echo $tx_type.$cur_tx->id; ?></td>
 					<td><?php echo format_date($cur_tx->p_cdate); ?></td>
-					<td><?php echo strtoupper($cur_tx->status); ?></td>
+					<td><?php echo $cur_status; ?></td>
 					<td><?php echo htmlspecialchars($cur_item['delivery']); ?></td>
 					<td><?php echo htmlspecialchars($cur_tx->group->name); ?></td>
 					<td><?php echo htmlspecialchars($cur_tx->user->name); ?></td>

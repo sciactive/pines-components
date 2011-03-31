@@ -179,7 +179,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			foreach ($this->transactions as $cur_tx) {
 				if (empty($cur_tx->products))
 					continue;
-				
+
 				if ($cur_tx->has_tag('return')) {
 					$class = 'class="p_muid_return"';
 					$tx_type = 'RETURN';
@@ -188,7 +188,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				}
 				foreach ($cur_tx->products as $cur_item) {
 					if (!$pines->config->com_reports->all_product_details &&
-						!empty($cur_item['returned_stock_entities']))
+						!empty($cur_item['returned_quantity']))
 						continue;
 				?>
 				<tr <?php echo $class; ?>>

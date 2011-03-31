@@ -107,10 +107,10 @@ class com_reports extends component {
 		$module->location = $location;
 		$module->descendents = $descendents;
 		$selector['tag'] = array('com_sales', 'sale');
-		$selector['data'] = array('status', 'paid');
+		$selector['strict'] = array('status', 'paid');
 		$sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
 		$selector['tag'] = array('com_sales', 'return');
-		$selector['data'] = array('status', 'processed');
+		$selector['strict'] = array('status', 'processed');
 		$returns = $pines->entity_manager->get_entities(array('class' => com_sales_return), $selector, $or);
 		$module->invoices = array_merge($sales, $returns);
 
@@ -191,8 +191,10 @@ class com_reports extends component {
 		$module->location = $location;
 		$module->descendents = $descendents;
 		$selector['tag'] = array('com_sales', 'sale');
+		$selector['strict'] = array('status', 'paid');
 		$sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
 		$selector['tag'] = array('com_sales', 'return');
+		$selector['strict'] = array('status', 'processed');
 		$returns = $pines->entity_manager->get_entities(array('class' => com_sales_return), $selector, $or);
 		$module->invoices = array_merge($sales, $returns);
 

@@ -563,7 +563,7 @@ class com_reports extends component {
 			$or = array('|', 'ref' => array('group', $location));
 		$module->location = $form->location = $location->guid;
 		$form->employees = $pines->com_hrm->get_employees();
-		$form->descendents = $descendents;
+		$module->descendents = $form->descendents = $descendents;
 		$selector['tag'] = array('com_sales', 'sale');
 		$selector['data'] = array('status', 'paid');
 		$sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);

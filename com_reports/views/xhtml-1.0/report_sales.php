@@ -148,10 +148,11 @@ foreach ($this->invoices as $cur_invoice) {
 					view_changes++;
 				} else {
 					alert('Loading Relevant Sales');
-					pines.post("<?php echo addslashes(pines_url('com_reports', 'reportsales')); ?>", {
+					pines.get("<?php echo addslashes(pines_url('com_reports', 'reportsales')); ?>", {
 						start: view.start.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1'),
 						end: view.end.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1'),
 						location: "<?php echo $this->all ? 'all' : addslashes($this->location); ?>",
+						descendents: "<?php echo $this->descendents ? 'ON' : 'false'; ?>",
 						employee: "<?php echo $this->employee->guid; ?>"
 					});
 				}

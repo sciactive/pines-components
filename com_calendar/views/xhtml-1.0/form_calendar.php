@@ -75,10 +75,13 @@ if ($pines->config->com_calendar->com_customer)
 			if (change_counter > 0)
 				pines.post("<?php echo addslashes(pines_url('com_calendar', 'editcalendar')); ?>",
 				{
+					"view_type": <?php echo json_encode($this->view_type); ?>,
+					"start": '<?php echo format_date($this->date[0], 'date_short'); ?>',
+					"end": '<?php echo format_date($this->date[1], 'date_short'); ?>',
 					"location": '<?php echo addslashes($this->location->guid); ?>',
 					"employee": $(this).val(),
 					"descendents": <?php echo $this->descendents ? 'true' : 'false'; ?>,
-					"filter": '<?php echo $this->filter; ?>'
+					"filter": <?php echo json_encode($this->filter); ?>
 				});
 
 			change_counter++;
@@ -103,8 +106,11 @@ if ($pines->config->com_calendar->com_customer)
 
 		$("#p_muid_filter").buttonset().delegate("input", "click", function() {
 			pines.get("<?php echo addslashes(pines_url('com_calendar', 'editcalendar')); ?>", {
-				employee: <?php echo isset($this->employee) ? $this->employee->guid : 'null'; ?>,
+				view_type: <?php echo json_encode($this->view_type); ?>,
+				start: '<?php echo format_date($this->date[0], 'date_short'); ?>',
+				end: '<?php echo format_date($this->date[1], 'date_short'); ?>',
 				location: <?php echo $this->location->guid; ?>,
+				employee: <?php echo isset($this->employee) ? $this->employee->guid : 'null'; ?>,
 				descendents: <?php echo $this->descendents ? 'true' : 'false'; ?>,
 				filter: $(this).val()
 			});
@@ -156,9 +162,12 @@ if ($pines->config->com_calendar->com_customer)
 							var schedule_location = form.find(":input[name=location]").val();
 							descendents = form.find(":input[name=descendents]").attr('checked');
 							pines.post("<?php echo addslashes(pines_url('com_calendar', 'editcalendar')); ?>", {
+								"view_type": <?php echo json_encode($this->view_type); ?>,
+								"start": '<?php echo format_date($this->date[0], 'date_short'); ?>',
+								"end": '<?php echo format_date($this->date[1], 'date_short'); ?>',
 								"location": schedule_location,
 								"descendents": descendents,
-								"filter": '<?php echo $this->filter; ?>'
+								"filter": <?php echo json_encode($this->filter); ?>
 							});
 						}
 					}
@@ -211,7 +220,10 @@ if ($pines->config->com_calendar->com_customer)
 								time_end: form.find(":input[name=time_end]").val(),
 								location: form.find(":input[name=location]").val(),
 								descendents: <?php echo $this->descendents ? 'true' : 'false'; ?>,
-								employee_view: <?php echo isset($this->employee) ? 'true' : 'false'; ?>
+								employee_view: <?php echo isset($this->employee) ? 'true' : 'false'; ?>,
+								view_type: <?php echo json_encode($this->view_type); ?>,
+								calendar_start: '<?php echo format_date($this->date[0], 'date_short'); ?>',
+								calendar_end: '<?php echo format_date($this->date[1], 'date_short'); ?>'
 							});
 						},
 						"Cust. Appt.": function(){
@@ -267,7 +279,10 @@ if ($pines->config->com_calendar->com_customer)
 								time_end: form.find(":input[name=time_end]").val(),
 								location: form.find(":input[name=location]").val(),
 								descendents: <?php echo $this->descendents ? 'true' : 'false'; ?>,
-								employee_view: <?php echo isset($this->employee) ? 'true' : 'false'; ?>
+								employee_view: <?php echo isset($this->employee) ? 'true' : 'false'; ?>,
+								view_type: <?php echo json_encode($this->view_type); ?>,
+								calendar_start: '<?php echo format_date($this->date[0], 'date_short'); ?>',
+								calendar_end: '<?php echo format_date($this->date[1], 'date_short'); ?>'
 							});
 							form.dialog('close');
 							pines.selected_event.removeClass('ui-state-disabled');

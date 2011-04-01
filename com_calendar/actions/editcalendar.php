@@ -14,6 +14,20 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_calendar/viewcalendar') && !gatekeeper('com_calendar/editcalendar') )
 	punt_user(null, pines_url('com_calendar', 'editcalendar'));
 
+if (!empty($_REQUEST['view_type'])) {
+	$view_type = $_REQUEST['view_type'];
+} else {
+	$view_type = 'agendaWeek';
+}
+
+if (!empty($_REQUEST['start'])) {
+	$start = strtotime($_REQUEST['start']);
+	$end = strtotime($_REQUEST['end']);
+} else {
+	$start = strtotime('next monday', time() - 604800);
+	$end = time();
+}
+
 $location = group::factory((int) $_REQUEST['location']);
 if (!isset($location->guid))
 	$location = null;
@@ -23,8 +37,8 @@ if (!isset($employee->guid))
 	$employee = null;
 
 $descendents = ($_REQUEST['descendents'] == 'true');
-$filter = isset($_REQUEST['filter']) ? $_REQUEST['filter'] : 'all';
+$filter = !empty($_REQUEST['filter']) ? $_REQUEST['filter'] : 'all';
 
-$pines->com_calendar->show_calendar($location, $employee, $descendents, $filter);
+$pines->com_calendar->show_calendar($view_type, $start, $end, $location, $employee, $descendents, $filter);
 
 ?>

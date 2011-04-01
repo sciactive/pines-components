@@ -30,6 +30,7 @@ $timezone = $_SESSION['user']->get_timezone();
 <script type='text/javascript'>
 	// <![CDATA[
 	pines(function(){
+		var view_changes = 0;
 		pines.selected_event = '';
 		var help = $.pnotify({
 			pnotify_title: "Information",
@@ -59,7 +60,7 @@ $timezone = $_SESSION['user']->get_timezone();
 		});
 
 		// Create the calendar object.
-		$('#calendar').fullCalendar({
+		$('#p_muid_calendar').fullCalendar({
 			header: {
 				left: 'prev,next today',
 				center: 'title',
@@ -69,7 +70,7 @@ $timezone = $_SESSION['user']->get_timezone();
 				agenda: .5,
 				'': 0.85
 			},
-			defaultView: 'agendaWeek',
+			defaultView: <?php echo json_encode($this->view_type); ?>,
 			firstDay: 1,
 			firstHour: 8,
 			selectable: true,
@@ -148,15 +149,15 @@ $timezone = $_SESSION['user']->get_timezone();
 			},
 			eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
 				event.selected = false;
-				$("#calendar").fullCalendar('refetchEvents');
+				$("#p_muid_calendar").fullCalendar('refetchEvents');
 				pines.com_calendar_save_calendar();
 			},
 			eventDragStop: function(event, jsEvent, ui, view) {
-				var events = $("#calendar").fullCalendar('clientEvents');
+				var events = $("#p_muid_calendar").fullCalendar('clientEvents');
 				$.each(events, function(i, val) {
 					val.selected = false;
 				});
-				$("#calendar").fullCalendar('refetchEvents');
+				$("#p_muid_calendar").fullCalendar('refetchEvents');
 			},
 			eventResize: function(event,dayDelta,minuteDelta,revertFunc,jsEvent,ui,view) {
 				event.selected = false;
@@ -170,14 +171,25 @@ $timezone = $_SESSION['user']->get_timezone();
 				help.pnotify_remove(); help.pnotify({ pnotify_text: "" });
 			},
 			viewDisplay: function(view) {
-				// Deselect all events when changing the calendar timespan.
-				var events = $("#calendar").fullCalendar('clientEvents');
-				$.each(events, function(i, val) {
-					val.selected = false;
-				});
-				$("#calendar").fullCalendar('refetchEvents');
+				// The first couple of times this fires it is loading the initial calendar.
+				if (view_changes < 2) {
+					view_changes++;
+				} else {
+					alert('Loading Relevant Events');
+					pines.get("<?php echo addslashes(pines_url('com_calendar', 'editcalendar')); ?>", {
+						view_type: view.name,
+						start: view.start.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1'),
+						end: view.end.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1'),
+						location: "<?php echo $this->location->guid; ?>",
+						employee: "<?php echo $this->employee->guid; ?>",
+						descendents: <?php echo $this->descendents ? 'true' : 'false'; ?>,
+						filter: <?php echo json_encode($this->filter); ?>
+					});
+				}
 			}
 		});
+		var current_date = $.fullCalendar.parseDate(<?php echo (int) $this->date[0]; ?>);
+		$('#p_muid_calendar').fullCalendar('gotoDate', current_date);
 	});
 	// Add new events to the calendar, mostly for duplicating events.
 	pines.com_calendar_add_events = function(events) {
@@ -190,14 +202,24 @@ $timezone = $_SESSION['user']->get_timezone();
 				pines.error("An error occured while trying to add events to the calendar.");
 			},
 			success: function(){
-				pines.get("<?php echo addslashes(pines_url('com_calendar', 'editcalendar', array('location' => $this->location->guid, 'employee' => $this->employee->guid))); ?>");
+				pines.get("<?php echo addslashes(pines_url('com_calendar', 'editcalendar',
+					array(
+						'view_type' => $this->view_type,
+						'start' => format_date($this->date[0], 'date_short'),
+						'end' => format_date($this->date[1], 'date_short'),
+						'location' => $this->location->guid,
+						'employee' => $this->employee->guid,
+						'descendents' => $this->descendents,
+						'filter' => $this->filter
+					)
+				)); ?>");
 			}
 		});
 	};
 
 	// Save all of the calendar events by exporting the data to their entities.
 	pines.com_calendar_save_calendar = function(refresh) {
-		var events = $("#calendar").fullCalendar('clientEvents');
+		var events = $("#p_muid_calendar").fullCalendar('clientEvents');
 		var events_dump = '';
 		//var events_array = new Array();
 		//var event_count = 0;
@@ -231,8 +253,19 @@ $timezone = $_SESSION['user']->get_timezone();
 			success: function(data){
 				if (data)
 					alert(data);
-				if (refresh || data)
-					pines.get('<?php echo addslashes(pines_url('com_calendar', 'editcalendar', array('location' => $this->location->guid, 'employee' => $this->employee->guid))); ?>');
+				if (refresh || data) {
+					pines.get('<?php echo addslashes(pines_url('com_calendar', 'editcalendar',
+						array(
+							'view_type' => $this->view_type,
+							'start' => $this->start,
+							'end' => $this->end,
+							'location' => $this->location->guid,
+							'employee' => $this->employee->guid,
+							'descendents' => $this->descendents,
+							'filter' => $this->filter
+						)
+					)); ?>');
+				}
 			}
 		});
 	};
@@ -244,7 +277,7 @@ $timezone = $_SESSION['user']->get_timezone();
 
 	// Duplicate Event(s)
 	pines.com_calendar_copy_event = function() {
-		var events = $("#calendar").fullCalendar('clientEvents');
+		var events = $("#p_muid_calendar").fullCalendar('clientEvents');
 		var copy_events = new Array();
 		var copy_count = 0;
 		// Find the selected event(s).
@@ -268,7 +301,7 @@ $timezone = $_SESSION['user']->get_timezone();
 
 	// Delete Event(s)
 	pines.com_calendar_delete_events = function() {
-		var events = $("#calendar").fullCalendar('clientEvents');
+		var events = $("#p_muid_calendar").fullCalendar('clientEvents');
 		var remove_events = new Array();
 		var event_guids = new Array();
 		var remove_count = 0;
@@ -304,7 +337,7 @@ $timezone = $_SESSION['user']->get_timezone();
 					$.each(remove_events, function(r, remove_event) {
 						if (data && data.indexOf(remove_event) != -1)
 							return;
-						$("#calendar").fullCalendar('removeEvents', remove_event);
+						$("#p_muid_calendar").fullCalendar('removeEvents', remove_event);
 					});
 					if (data)
 						pines.error('Some events could not be deleted.');
@@ -319,7 +352,7 @@ $timezone = $_SESSION['user']->get_timezone();
 	pines.com_calendar_clear_calendar = function() {
 		if (confirm('Clear the entire calendar? This will remove all events for this location/employee.')) {
 
-			var events = $("#calendar").fullCalendar('clientEvents');
+			var events = $("#p_muid_calendar").fullCalendar('clientEvents');
 			var event_guids = new Array();
 			// Find the selected event(s).
 			$.each(events, function(i, val) {
@@ -338,7 +371,7 @@ $timezone = $_SESSION['user']->get_timezone();
 					pines.error("An error occured while trying to delete events from the calendar.");
 				},
 				success: function(data) {
-					$("#calendar").fullCalendar('removeEvents');
+					$("#p_muid_calendar").fullCalendar('removeEvents');
 					if (data)
 						pines.error('Some events could not be deleted.');
 					else
@@ -351,7 +384,7 @@ $timezone = $_SESSION['user']->get_timezone();
 
 	// Unlink Event(s)
 	pines.com_calendar_unlink_events = function() {
-		var events = $("#calendar").fullCalendar('clientEvents');
+		var events = $("#p_muid_calendar").fullCalendar('clientEvents');
 		var unlink_count = 0;
 		// Find the selected event(s).
 		$.each(events, function(i, val) {
@@ -368,4 +401,4 @@ $timezone = $_SESSION['user']->get_timezone();
 	};
 	// ]]>
 </script>
-<div id="calendar"></div>
+<div id="p_muid_calendar"></div>

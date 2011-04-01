@@ -101,13 +101,15 @@ class com_calendar extends component {
 
 	/**
 	 * Creates and attaches a module which shows the calendar.
+	 * @param string $view_type The view frame of the calendar.
+	 * @param int $start The start date of the calendar.
+	 * @param int $end The end date of the calendar.
 	 * @param group $location The desired location to view the schedule for.
-	 * @param user $employee The employee location to view the schedule for.
+	 * @param com_hrm_employee $employee The desired employee to view the schedule for.
 	 * @param bool $descendents Whether to show descendent locations.
 	 * @param string $filter Which type of events to show.
-	 * @param com_hrm_employee $employee The desired employee to view the schedule for.
 	 */
-	public function show_calendar($location = null, $employee = null, $descendents = false, $filter = 'all') {
+	public function show_calendar($view_type, $start, $end, $location = null, $employee = null, $descendents = false, $filter = 'all') {
 		global $pines;
 
 		if (!isset($location) || !isset($location->guid)) {
@@ -120,8 +122,16 @@ class com_calendar extends component {
 		$calendar = new module('com_calendar', 'show_calendar', 'content');
 		$form = new module('com_calendar', 'form_calendar', 'right');
 
-		//Retrieve all private events
 		$selector = array('&', 'tag' => array('com_calendar', 'event'));
+		// Datespan of the calendar.
+		$date_start = strtotime('00:00:00', $start);
+		$date_end = strtotime('23:59:59', $end) + 1;
+		$selector['gte'] = array('start', $date_start);
+		$selector['lt'] = array('end', $date_end);
+		$calendar->view_type = $form->view_type = $view_type;
+		$calendar->date[0] = $form->date[0] = $date_start;
+		$calendar->date[1] = $form->date[1] = $date_end;
+		// Filters for the calendar event types.
 		if ($filter == 'shifts') {
 			$selector['isset'] = array('scheduled');
 		} elseif ($filter == 'appointments') {
@@ -141,8 +151,9 @@ class com_calendar extends component {
 
 		$form->employees = $pines->com_hrm->get_employees();
 		$calendar->location = $form->location = $location;
-		$form->descendents = $descendents;
-		$form->filter = $filter;
+		$calendar->descendents = $form->descendents = $descendents;
+		$calendar->filter = $form->filter = $filter;
+		//Retrieve all private events
 		if ($filter == 'events') {
 			$calendar->events = $pines->entity_manager->get_entities(
 					array('class' => com_calendar_event),

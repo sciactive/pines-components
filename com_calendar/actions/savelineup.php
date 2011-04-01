@@ -52,6 +52,10 @@ foreach ($shifts as $cur_shift) {
 	if (!$event->save()) {
 		$failed_entries .= (empty($failed_entries) ? '' : ', ').$cur_date;
 	} else {
+		if (!isset($first_date) || $event->start < $first_date)
+			$first_date = $event->start;
+		if (!isset($last_date) || $event->end > $last_date)
+			$last_date = $event->end;
 		$event->group = $employee->group;
 		$event->save();
 	}
@@ -63,6 +67,14 @@ if (empty($failed_entries)) {
 	pines_error('Could not schedule work for the following dates: '.$failed_entries);
 }
 
-redirect(pines_url('com_calendar', 'editcalendar', array('location' => $location->guid)));
+$total_time = $last_date - $first_date;
+if ($total_time <= 86400) {
+	$view_type = 'agendaDay';
+} elseif ($total_time <= 604800) {
+	$view_type = 'agendaWeek';
+} else {
+	$view_type = 'month';
+}
+redirect(pines_url('com_calendar', 'editcalendar', array('view_type' => $view_type, 'start' => format_date($first_date), 'end' => format_date($last_date), 'location' => $location->guid)));
 
 ?>

@@ -2,7 +2,7 @@
 	{
 		"path": "main_menu/accessories/packager",
 		"text": "Packager",
-		"href": ["com_packager","listpackages"],
+		"href": ["com_packager","package/list"],
 		"depend": {
 			"ability": "com_packager/listpackages"
 		}

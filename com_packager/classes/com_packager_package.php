@@ -29,6 +29,7 @@ class com_packager_package extends entity {
 		$this->type = 'component';
 		$this->meta = array();
 		$this->additional_files = array();
+		$this->exclude_files = array();
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
@@ -108,8 +109,23 @@ class com_packager_package extends entity {
 		$arc = new slim;
 		$arc->file_integrity = true;
 		$arc->preserve_mode = true;
+		// Use these to turn off compression.
 		//$arc->compression = '';
 		//$arc->header_compression = false;
+
+		// Filename prefix.
+		$prefix = ($this->type == 'component' || $this->type == 'template') ? "{$this->component}/" : '';
+
+		// Make a regex to exclude files.
+		$re_files = array();
+		foreach ((array) $this->exclude_files as $cur_file) {
+			// Append a $ to only match the whole string if it's a file.
+			$re_files[] = preg_quote($prefix.$cur_file, '/').(substr($cur_file, -1) == '/' ? '' : '$');
+		}
+		if ($re_files)
+			$re_exclude = '/^('.implode('|', $re_files).')/';
+
+		// Build the archive.
 		switch ($this->type) {
 			case 'component':
 			case 'template':
@@ -132,7 +148,7 @@ class com_packager_package extends entity {
 					'conflict' => $info->conflict
 				);
 				$arc->working_directory = $this->type == 'template' ? 'templates/' : 'components/';
-				$arc->add_directory($component);
+				$arc->add_directory($component, true, true, $re_exclude);
 				break;
 			case 'system':
 				$info = $pines->info;
@@ -152,10 +168,11 @@ class com_packager_package extends entity {
 					'recommend' => $info->recommend,
 					'conflict' => $info->conflict
 				);
-				$arc->add_directory('', true, true, '/^(components\/com_.*|templates\/tpl_.*|media\/.*)$/');
-				$arc->add_directory('media/images');
-				$arc->add_directory('media/logos');
-				$arc->add_file('media/index.html');
+				$arc->add_directory('', true, true, '/^(components\/com_|templates\/tpl_|media\/'.($re_files ? '|'.implode('|', $re_files) : '').')/');
+				$arc->add_directory('media/images/', true, true, $re_exclude);
+				$arc->add_directory('media/logos/', true, true, $re_exclude);
+				if (!isset($re_exclude) || !preg_match($re_exclude, 'media/index.html'))
+					$arc->add_file('media/index.html');
 				break;
 			case 'meta':
 				$arc->ext = array(
@@ -172,18 +189,61 @@ class com_packager_package extends entity {
 					'recommend' => $this->meta['recommend'],
 					'conflict' => $this->meta['conflict']
 				);
-				foreach ((array) $this->additional_files as $cur_file) {
-					if (!file_exists($cur_file))
-						continue;
-					if (is_dir($cur_file)) {
-						$arc->add_directory($cur_file);
-					} else {
-						$arc->add_file($cur_file);
-					}
-				}
 				break;
 			default:
 				return false;
+		}
+
+		// Add additional files.
+		foreach ((array) $this->additional_files as $cur_file) {
+			if (!file_exists($arc->working_directory.$prefix.$cur_file))
+				continue;
+			if (is_dir($arc->working_directory.$prefix.$cur_file)) {
+				$arc->add_directory($prefix.$cur_file, true, true, $re_exclude);
+			} else {
+				if (!isset($re_exclude) || !preg_match($re_exclude, $prefix.$cur_file))
+					$arc->add_file($prefix.$cur_file);
+			}
+		}
+
+		// Include icon and screenshots in a directory called "_MEDIA".
+		$arc->add_entry(array(
+			'type' => 'dir',
+			'path' => '_MEDIA'
+		));
+		if (!empty($this->icon)) {
+			$file = $pines->uploader->real($this->icon);
+			if (file_exists($file))
+				$data = file_get_contents($file);
+			if (!empty($data)) {
+				$name = basename($file);
+				$arc->add_entry(array(
+					'type' => 'file',
+					'path' => "_MEDIA/$name",
+					'data' => $data
+				));
+				$arc->ext['icon'] = $name;
+			}
+		}
+		if (!empty($this->screenshots)) {
+			$arc->ext['screens'] = array();
+			foreach ($this->screenshots as $cur_screen) {
+				$file = $pines->uploader->real($cur_screen['file']);
+				if (file_exists($file))
+					$data = file_get_contents($file);
+				if (!empty($data)) {
+					$name = basename($file);
+					$arc->add_entry(array(
+						'type' => 'file',
+						'path' => "_MEDIA/$name",
+						'data' => $data
+					));
+					$arc->ext['screens'][] = array(
+						'alt' => $cur_screen['alt'],
+						'file' => $name
+					);
+				}
+			}
 		}
 
 		return $arc->write($filename);
@@ -195,7 +255,7 @@ class com_packager_package extends entity {
 	 */
 	public function print_form() {
 		global $pines;
-		$module = new module('com_packager', 'form_package', 'content');
+		$module = new module('com_packager', 'package/form', 'content');
 		$module->entity = $this;
 		$module->components = $pines->all_components;
 

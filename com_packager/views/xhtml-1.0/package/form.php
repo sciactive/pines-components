@@ -172,10 +172,11 @@ $pines->com_ptags->load();
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_packager', 'savepackage')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_packager', 'package/save')); ?>">
 	<div id="p_muid_package_tabs" style="clear: both;">
 		<ul>
 			<li><a href="#p_muid_tab_general">General</a></li>
+			<li><a href="#p_muid_tab_files">Files</a></li>
 			<li><a href="#p_muid_tab_images">Images</a></li>
 		</ul>
 		<div id="p_muid_tab_general">
@@ -265,40 +266,6 @@ $pines->com_ptags->load();
 				</div>
 			</div>
 			<div class="package_type meta">
-				<script type="text/javascript">
-					// <![CDATA[
-					pines(function(){
-						pines.com_packager_add_file = function(message){
-							$("#p_muid_form [name=additional_files]").ptags_add(message);
-							$("#p_muid_additional").val("");
-						};
-
-						$( "#p_muid_additional").autocomplete({
-							source: function(request, response){
-								$.ajax({
-									type: "POST",
-									url: "<?php echo addslashes(pines_url('com_packager', 'glob')); ?>",
-									dataType: "json",
-									data: {"q": request.term},
-									success: function(data){
-										response(data);
-									}
-								});
-							},
-							minLength: 0
-						});
-
-						$("#p_muid_additional").keydown(function(e){
-							if (e.keyCode == '13') {
-								e.preventDefault();
-								pines.com_packager_add_file($(this).val());
-							}
-						});
-
-						$("#p_muid_form [name=additional_files]").ptags({ptags_input_box: false, ptags_editable: false});
-					});
-					// ]]>
-				</script>
 				<div class="pf-element pf-heading">
 					<h1>Meta Package Options</h1>
 				</div>
@@ -398,21 +365,6 @@ $pines->com_ptags->load();
 						</div>
 					</div>
 				</div>
-				<div class="pf-element pf-heading">
-					<p>Additional Files/Folders</p>
-				</div>
-				<div class="pf-element">
-					<span class="pf-label">Search: </span>
-					<input class="pf-field ui-widget-content ui-corner-all" id="p_muid_additional" type="text" size="24" />
-					<button class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" onclick="pines.com_packager_add_file($('#p_muid_additional').val());">Add</button>
-				</div>
-				<div class="pf-element">
-					<div class="pf-group">
-						<div class="pf-field">
-							<input type="hidden" class="pf-field ui-widget-content ui-corner-all" name="additional_files" value="<?php echo htmlspecialchars(implode(',', (array) $this->entity->additional_files)); ?>" />
-						</div>
-					</div>
-				</div>
 				<div class="condition_dialog" style="display: none;" title="Add a Condition">
 					<div class="pf-form">
 						<div class="pf-element">
@@ -450,6 +402,92 @@ $pines->com_ptags->load();
 					<span class="pf-note">Leave this blank to use the default filename scheme, "name-version".</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="filename" size="24" value="<?php echo htmlspecialchars($this->entity->filename); ?>" />
 				</label>
+			</div>
+			<br class="pf-clearing" />
+		</div>
+		<div id="p_muid_tab_files">
+			<script type="text/javascript">
+				// <![CDATA[
+				pines(function(){
+					$("#p_muid_additional, #p_muid_exclude").autocomplete({
+						source: function(request, response){
+							var type = $("#p_muid_form input[name=type]:checked").val();
+							var component = $("#p_muid_form [name=pkg_component]").val();
+							var template = $("#p_muid_form [name=pkg_template]").val();
+							$.ajax({
+								type: "POST",
+								url: "<?php echo addslashes(pines_url('com_packager', 'glob')); ?>",
+								dataType: "json",
+								data: {"q": request.term, "type": type, "pkg_component": component, "pkg_template": template},
+								success: function(data){
+									response(data);
+								}
+							});
+						},
+						minLength: 0
+					});
+
+					$("[name=additional_files], [name=exclude_files]", "#p_muid_form").ptags({ptags_input_box: false, ptags_editable: false});
+
+					// Additional files.
+					pines.com_packager_add_file = function(message){
+						$("#p_muid_form [name=additional_files]").ptags_add(message);
+						$("#p_muid_additional").val("");
+					};
+
+					$("#p_muid_additional").keydown(function(e){
+						if (e.keyCode == '13') {
+							e.preventDefault();
+							pines.com_packager_add_file($(this).val());
+						}
+					});
+
+					// Exclude files.
+					pines.com_packager_exc_file = function(message){
+						$("#p_muid_form [name=exclude_files]").ptags_add(message);
+						$("#p_muid_exclude").val("");
+					};
+
+					$("#p_muid_exclude").keydown(function(e){
+						if (e.keyCode == '13') {
+							e.preventDefault();
+							pines.com_packager_exc_file($(this).val());
+						}
+					});
+				});
+				// ]]>
+			</script>
+			<div class="pf-element pf-heading">
+				<h1>Include Files/Folders</h1>
+				<p>Component and template packages already include all files in their folder and can't include others. System packages already include default system files. Folders must end with a forward slash.</p>
+			</div>
+			<div class="pf-element">
+				<span class="pf-label">Search: </span>
+				<input class="pf-field ui-widget-content ui-corner-all" id="p_muid_additional" type="text" size="24" />
+				<button class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" onclick="pines.com_packager_add_file($('#p_muid_additional').val());">Add</button>
+			</div>
+			<div class="pf-element">
+				<div class="pf-group">
+					<div class="pf-field">
+						<input type="hidden" class="pf-field ui-widget-content ui-corner-all" name="additional_files" value="<?php echo htmlspecialchars(implode(',', (array) $this->entity->additional_files)); ?>" />
+					</div>
+				</div>
+			</div>
+			<div class="pf-element pf-heading">
+				<h1>Exclude Files/Folders</h1>
+				<p>System packages already exclude all components and templates, and all but the "images" and "logos" folders in "media". Folders must end with a forward slash.</p>
+			</div>
+			<div class="pf-element">
+				<span class="pf-label">Search: </span>
+				<input class="pf-field ui-widget-content ui-corner-all" id="p_muid_exclude" type="text" size="24" />
+				<button class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" onclick="pines.com_packager_exc_file($('#p_muid_exclude').val());">Add</button>
+			</div>
+			<div class="pf-element">
+				<div class="pf-group">
+					<div class="pf-field">
+						<input type="hidden" class="pf-field ui-widget-content ui-corner-all" name="exclude_files" value="<?php echo htmlspecialchars(implode(',', (array) $this->entity->exclude_files)); ?>" />
+					</div>
+				</div>
 			</div>
 			<br class="pf-clearing" />
 		</div>
@@ -569,6 +607,6 @@ $pines->com_ptags->load();
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_packager', 'listpackages')); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_packager', 'package/list')); ?>');" value="Cancel" />
 	</div>
 </form>

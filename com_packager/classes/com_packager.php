@@ -24,7 +24,7 @@ class com_packager extends component {
 	function list_packages() {
 		global $pines;
 
-		$module = new module('com_packager', 'list_packages', 'content');
+		$module = new module('com_packager', 'package/list', 'content');
 
 		$module->packages = $pines->entity_manager->get_entities(array('class' => com_packager_package), array('&', 'tag' => array('com_packager', 'package')));
 

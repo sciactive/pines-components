@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_packager/deletepackage') )
-	punt_user(null, pines_url('com_packager', 'listpackages'));
+	punt_user(null, pines_url('com_packager', 'package/list'));
 
 $list = explode(',', $_REQUEST['id']);
 foreach ($list as $cur_package) {
@@ -26,6 +26,6 @@ if (empty($failed_deletes)) {
 	pines_error('Could not delete packages with given IDs: '.$failed_deletes);
 }
 
-redirect(pines_url('com_packager', 'listpackages'));
+redirect(pines_url('com_packager', 'package/list'));
 
 ?>

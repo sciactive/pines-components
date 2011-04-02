@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_packager/editpackage') )
-		punt_user(null, pines_url('com_packager', 'listpackages'));
+		punt_user(null, pines_url('com_packager', 'package/list'));
 	$package = com_packager_package::factory((int) $_REQUEST['id']);
 	if (!isset($package->guid)) {
 		pines_error('Requested package id is not accessible.');
@@ -21,7 +21,7 @@ if ( isset($_REQUEST['id']) ) {
 	}
 } else {
 	if ( !gatekeeper('com_packager/newpackage') )
-		punt_user(null, pines_url('com_packager', 'listpackages'));
+		punt_user(null, pines_url('com_packager', 'package/list'));
 	$package = com_packager_package::factory();
 }
 
@@ -69,11 +69,6 @@ switch ($package->type) {
 					break;
 			}
 		}
-		$package->additional_files = explode(',', $_REQUEST['additional_files']);
-		foreach ($package->additional_files as &$cur_file) {
-			$cur_file = clean_filename($cur_file);
-		}
-		unset($cur_file);
 		break;
 	default:
 		$package->type = 'component';
@@ -82,6 +77,22 @@ switch ($package->type) {
 		break;
 }
 $package->filename = $_REQUEST['filename'];
+
+// Files
+$package->additional_files = explode(',', $_REQUEST['additional_files']);
+foreach ($package->additional_files as $key => &$cur_file) {
+	$cur_file = clean_filename($cur_file);
+	if (empty($cur_file))
+		unset($package->additional_files[$key]);
+}
+unset($cur_file);
+$package->exclude_files = explode(',', $_REQUEST['exclude_files']);
+foreach ($package->exclude_files as $key => &$cur_file) {
+	$cur_file = clean_filename($cur_file);
+	if (empty($cur_file))
+		unset($package->exclude_files[$key]);
+}
+unset($cur_file);
 
 // Images
 $package->screenshots = (array) json_decode($_REQUEST['screenshots'], true);
@@ -121,9 +132,9 @@ if (isset($test) && $test->guid != $_REQUEST['id']) {
 foreach ($package->screenshots as $cur_screen) {
 	// Check the size of the images.
 	$filesize = (float) filesize($pines->uploader->real($cur_screen['file'])) / 1024;
-	if ($filesize > 800) {
+	if ($filesize > 1024) {
 		$package->print_form();
-		pines_notice(basename($cur_screen['file']).' is '.number_format($filesize).'KB. The maximum screenshot size is 800KB.');
+		pines_notice(basename($cur_screen['file']).' is '.number_format($filesize).'KB. The maximum screenshot size is 1024KB.');
 		return;
 	}
 }
@@ -137,6 +148,6 @@ if ($package->save()) {
 	pines_error('Error saving package. Do you have permission?');
 }
 
-redirect(pines_url('com_packager', 'listpackages'));
+redirect(pines_url('com_packager', 'package/list'));
 
 ?>

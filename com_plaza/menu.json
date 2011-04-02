@@ -29,5 +29,13 @@
 			"depend": {
 				"ability": "com_plaza/editpackages"
 			}
+		},
+		{
+			"path": "main_menu/system/pinesplaza/softwaresources",
+			"text": "Software Sources",
+			"href": ["com_plaza","repository/list"],
+			"depend": {
+				"ability": "com_plaza/editrepositories"
+			}
 		}
 ]

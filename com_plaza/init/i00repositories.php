@@ -18,6 +18,7 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 function com_plaza__get_repositories() {
 	static $repos = array();
+	static $perm_warning_shown = false;
 	if (!empty($repos))
 		return $repos;
 	$authorities = glob('components/com_plaza/includes/cache/certs/authorities/*.pem');
@@ -34,12 +35,14 @@ function com_plaza__get_repositories() {
 		$data = openssl_x509_parse($cert_r);
 		$repos[] = array(
 			'url' => $data['subject']['CN'],
-			'cert' => $cur_cert
+			'cert' => $cur_cert,
+			'data' => $data
 		);
 		openssl_x509_free($cert_r);
 	}
-	if (is_writable('components/com_plaza/includes/cache/certs/authorities/')) {
+	if (!$perm_warning_shown && is_writable('components/com_plaza/includes/cache/certs/authorities/')) {
 		$module = new module('com_plaza', 'bad_permissions', 'content');
+		$perm_warning_shown = true;
 	}
 	return $repos;
 }

@@ -25,7 +25,8 @@ return array(
 	),
 	'abilities' => array(
 		array('listpackages', 'List Packages', 'User can see packages.'),
-		array('editpackages', 'Edit Packages', 'User can install/upgrade/remove packages.')
+		array('editpackages', 'Edit Packages', 'User can install/upgrade/remove packages.'),
+		array('editrepositories', 'Edit Sources', 'User can change software sources (repositories).')
 	),
 );
 

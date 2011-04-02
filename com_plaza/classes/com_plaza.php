@@ -641,6 +641,14 @@ class com_plaza extends component {
 	}
 
 	/**
+	 * Creates and attaches a module which lists repositories.
+	 */
+	public function list_repositories() {
+		$module = new module('com_plaza', 'repository/list', 'content');
+		$module->repositories = com_plaza__get_repositories();
+	}
+
+	/**
 	 * Creates and attaches a module which lists repository packages.
 	 *
 	 * @param string $service Only list packages that provide this service.

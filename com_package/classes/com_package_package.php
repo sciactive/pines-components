@@ -218,7 +218,7 @@ class com_package_package extends p_base {
 			case 'component':
 			case 'template':
 				$this->slim->working_directory = $this->info['type'] == 'template' ? 'templates/' : 'components/';
-				if (!$this->slim->extract())
+				if (!$this->slim->extract('', true, '/^_MEDIA\//'))
 					return false;
 				$pines->components[] = $this->name;
 				$pines->all_components[] = $this->name;
@@ -233,7 +233,7 @@ class com_package_package extends p_base {
 							return false;
 					}
 				}
-				if (!$this->slim->extract())
+				if (!$this->slim->extract('', true, '/^_MEDIA\//'))
 					return false;
 				if (!file_put_contents("components/com_package/includes/cache/sys_{$this->name}.php", "<?php\ndefined('P_RUN') or die('Direct access prohibited');\nreturn ".var_export($this->info, true).";\n?>"))
 					return false;
@@ -243,7 +243,7 @@ class com_package_package extends p_base {
 				foreach ((array) $this->slim->get_current_files() as $cur_file) {
 					$this->info['files'][] = $cur_file['path'];
 				}
-				if ($this->info['files'] && !$this->slim->extract())
+				if ($this->info['files'] && !$this->slim->extract('', true, '/^_MEDIA\//'))
 					return false;
 				if (!file_put_contents("components/com_package/includes/cache/met_{$this->name}.php", "<?php\ndefined('P_RUN') or die('Direct access prohibited');\nreturn ".var_export($this->info, true).";\n?>"))
 					return false;

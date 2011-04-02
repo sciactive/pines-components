@@ -63,7 +63,7 @@ if (in_array($package->ext['type'], array('component', 'template'))) {
 		return;
 	}
 	foreach ($files as $cur_file) {
-		if (strpos($cur_file['path'], $component) !== 0) {
+		if (strpos($cur_file['path'], $component) !== 0 && strpos($cur_file['path'], '_MEDIA/') !== 0) {
 			pines_notice('Component/template package contains outside files.');
 			redirect(pines_url('com_repository', 'listpackages'));
 			return;

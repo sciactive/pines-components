@@ -20,13 +20,6 @@ return array(
 		'peruser' => true,
 	),
 	array(
-		'name' => 'all_product_details',
-		'cname' => 'All Product Details',
-		'description' => 'Show voided, invoiced, and returned sales in addition to tendered sales.',
-		'value' => true,
-		'peruser' => true,
-	),
-	array(
 		'name' => 'timespans',
 		'cname' => 'Report Timespans',
 		'description' => 'Hours separated by dashes, using 24-hour time format.',

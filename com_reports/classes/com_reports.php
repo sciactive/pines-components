@@ -482,12 +482,24 @@ class com_reports extends component {
 	 * @param int $end_date The end date of the report.
 	 * @param group $location The location to report sales for.
 	 * @param bool $descendents Whether to show descendent locations.
+	 * @param bool $types The types of transactions to show.
 	 * @return module The product details report module.
 	 */
-	function report_product_details($start_date = null, $end_date = null, $location = null, $descendents = false) {
+	function report_product_details($start_date = null, $end_date = null, $location = null, $descendents = false, $types = null) {
 		global $pines;
 
 		$module = new module('com_reports', 'report_product_details', 'content');
+		if (isset($types)) {
+			$module->types = $types;
+		} else {
+			$module->types = array(
+				'sold' => true,
+				'invoiced' => true,
+				'returned' => true,
+				'voided' => true,
+				'return' => true
+			);
+		}
 
 		$selector = array('&', 'tag' => array('com_sales', 'sale'));
 		// Datespan of the report.
@@ -507,14 +519,11 @@ class com_reports extends component {
 			$or = array('|', 'ref' => array('group', $location));
 		$module->location = $location;
 		$module->descendents = $descendents;
-		
-		if (!$pines->config->com_reports->all_product_details) {
-			$selector['strict'] = array('status', 'paid');
-			$module->transactions = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
-		} else {
-			unset($selector['strict']);
-			$module->transactions = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
+		$module->transactions = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
+
+		if ($module->types['return']) {
 			$selector['tag'] = array('com_sales', 'return');
+			$selector['strict'] = array('status', 'processed');
 			$module->transactions = array_merge($module->transactions, $pines->entity_manager->get_entities(array('class' => com_sales_return), $selector, $or));
 		}
 	}

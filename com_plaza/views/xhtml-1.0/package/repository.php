@@ -16,6 +16,8 @@ if (isset($this->service))
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_plaza/package/repository'];
+if (isset($pines->com_fancybox))
+	$pines->com_fancybox->load();
 ?>
 <style type="text/css">
 	/* <![CDATA[ */
@@ -266,12 +268,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			},
 			"Remove": buttons_installed.Remove
 		};
-		var info_dialog = $("#p_muid_info").dialog({
-			modal: true,
-			autoOpen: false,
-			width: "600px"
-		});
 
+		var info_dialog;
 		package_grid.delegate("tbody tr", "click", function(){
 			var cur_row = $(this);
 			var name = cur_row.pgrid_get_value(2);
@@ -279,71 +277,26 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			var installed = (cur_row.pgrid_get_value(5) != "");
 			var upgradable = (cur_row.pgrid_get_value(7) == "Yes");
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_plaza', 'package/infojson')); ?>",
+				url: "<?php echo addslashes(pines_url('com_plaza', 'package/infodialog')); ?>",
 				type: "POST",
-				dataType: "json",
+				dataType: "html",
 				data: {"name": name, "local": "false", "publisher": publisher},
 				error: function(XMLHttpRequest, textStatus){
 					pines.error("An error occured while trying to retrieve info:\n"+XMLHttpRequest.status+": "+textStatus);
 				},
 				success: function(data){
-					if (typeof data != "object") {
+					if (!data) {
 						pines.error("The server returned an unexpected value.");
 						return;
 					}
-					load_info(data, name, (installed ? (upgradable ? buttons_upgradable : buttons_installed) : buttons_new));
+					info_dialog = $("<div title=\"Package Info for "+name+"\" />").appendTo("body").html(data).dialog({
+						modal: true,
+						width: "600px",
+						buttons: (installed ? (upgradable ? buttons_upgradable : buttons_installed) : buttons_new)
+					});
 				}
 			});
 		});
-
-		var load_info = function(data, name, buttons) {
-			info_dialog.dialog("option", "buttons", buttons);
-			info_dialog.find(".package").text(name);
-			info_dialog.find(".name").text(data.name);
-			info_dialog.find(".author").text(data.author);
-			info_dialog.find(".version .text").text(data.version);
-			if (data.license != null && data.license.indexOf("http://") == 0)
-				info_dialog.find(".license .pf-field").html("<a href=\""+data.license+"\" onclick=\"window.open(this.href); return false;\">"+data.license+"</a>");
-			else
-				info_dialog.find(".license .pf-field").text(data.license);
-			if (data.website != null && data.website.indexOf("http://") == 0)
-				info_dialog.find(".website .pf-field").html("<a href=\""+data.website+"\" onclick=\"window.open(this.href); return false;\">"+data.website+"</a>");
-			else
-				info_dialog.find(".website .pf-field").text(data.website);
-			if (data.services && data.services.length) {
-				info_dialog.find(".services").show();
-				info_dialog.find(".services .pf-field").text(data.services.join(", "));
-			} else {
-				info_dialog.find(".services").hide();
-			}
-			info_dialog.find(".short_description").text(data.short_description);
-			info_dialog.find(".description").text(data.description.replace("\n", "<br />"));
-			var depend = "None";
-			if (data.depend != null && data.depend != [] && !$.isEmptyObject(data.depend)) {
-				depend = "";
-				$.each(data.depend, function(i, value){
-					depend += "<span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><div class=\"pf-field\">"+value+"</div></div>";
-				});
-			}
-			info_dialog.find(".depend").hide().html(depend);
-			var conflict = "None";
-			if (data.conflict != null && data.conflict != [] && !$.isEmptyObject(data.conflict)) {
-				conflict = "";
-				$.each(data.conflict, function(i, value){
-					conflict += "<span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><div class=\"pf-field\">"+value+"</div></div>";
-				});
-			}
-			info_dialog.find(".conflict").hide().html(conflict);
-			var recommend = "None";
-			if (data.recommend != null && data.recommend != [] && !$.isEmptyObject(data.recommend)) {
-				recommend = "";
-				$.each(data.recommend, function(i, value){
-					recommend += "<span class=\"pf-label\">"+i+"</span><div class=\"pf-group\"><div class=\"pf-field\">"+value+"</div></div>";
-				});
-			}
-			info_dialog.find(".recommend").hide().html(recommend);
-			info_dialog.dialog("option", "title", "Package Info for '"+name+"'").dialog("open");
-		}
 	});
 	// ]]>
 </script>
@@ -392,45 +345,4 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<?php } ?>
 		</tbody>
 	</table>
-	<div id="p_muid_info" style="display: none;">
-		<div class="pf-form">
-			<div class="pf-element pf-heading">
-				<h1><span class="name"></span><span class="package" style="float: right;"></span></h1>
-				<p>
-					<span>By <span class="author"></span></span>
-					<span class="version">Version <span class="text"></span></span>
-				</p>
-			</div>
-			<div class="pf-element pf-full-width short_description"></div>
-			<div class="pf-element services">
-				<span class="pf-label">Provides Services</span>
-				<span class="pf-field"></span>
-			</div>
-			<div class="pf-element license">
-				<span class="pf-label">License</span>
-				<span class="pf-field"></span>
-			</div>
-			<div class="pf-element website">
-				<span class="pf-label">Website</span>
-				<span class="pf-field"></span>
-			</div>
-			<div class="pf-element description"></div>
-			<div class="pf-element">
-				<a href="javascript:void(0);" onclick="$(this).nextAll('div').slideToggle();">See What This Package Depends On</a>
-				<br />
-				<div class="depend" style="display: none; padding-left: 10px;"></div>
-			</div>
-			<div class="pf-element">
-				<a href="javascript:void(0);" onclick="$(this).nextAll('div').slideToggle();">See What This Package Conflicts With</a>
-				<br />
-				<div class="conflict" style="display: none; padding-left: 10px;"></div>
-			</div>
-			<div class="pf-element">
-				<a href="javascript:void(0);" onclick="$(this).nextAll('div').slideToggle();">See What This Package Recommends</a>
-				<br />
-				<div class="recommend" style="display: none; padding-left: 10px;"></div>
-			</div>
-		</div>
-		<br />
-	</div>
 </div>

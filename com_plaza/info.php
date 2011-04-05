@@ -23,6 +23,9 @@ return array(
 		'pines' => '<2',
 		'component' => 'com_jquery&com_pgrid&com_package&com_pform'
 	),
+	'recommend' => array(
+		'component' => 'com_fancybox'
+	),
 	'abilities' => array(
 		array('listpackages', 'List Packages', 'User can see packages.'),
 		array('editpackages', 'Edit Packages', 'User can install/upgrade/remove packages.'),

@@ -784,6 +784,76 @@ class com_plaza extends component {
 	}
 
 	/**
+	 * Download a package's media file from the repository, or get its URL.
+	 *
+	 * @param array $package The package array.
+	 * @param string $media The media file to download.
+	 * @param bool $return_url Return the URL instead of downloading file data.
+	 * @return array|string An array of the content type and the file contents, or the URL, or null on error.
+	 */
+	public function package_get_media($package, $media, $return_url = false) {
+		global $pines;
+		// Figure out which repository it's in.
+		foreach (com_plaza__get_repositories() as $cur_repository) {
+			$index = $this->get_index($cur_repository['url'], $package['publisher']);
+			if (isset($index['packages'][$package['package']]) && $index['packages'][$package['package']]['version'] == $package['version']) {
+				if (!isset($package['publisher']))
+					$package['publisher'] = $index['packages'][$package['package']]['publisher'];
+				if (!isset($package['md5']))
+					$package['md5'] = $index['packages'][$package['package']]['md5'];
+				$repository = $cur_repository;
+				break;
+			}
+		}
+		if (!isset($repository))
+			return null;
+		// Download it.
+		$cur_url = $repository['url'] . (strpos($repository['url'], '?') === false ? '?' : '&') . 'option=com_repository&action=getmedia&pub='.urlencode($package['publisher']).'&p='.urlencode($package['package']).'&v='.urlencode($package['version']).'&m='.urlencode($media);
+		if ($return_url)
+			return $cur_url;
+		switch ($this->fetch) {
+			case 'pecl':
+				$hr = new HttpRequest($cur_url, HTTP_METH_GET, array('redirect' => 2));
+				try {
+					$hr->send();
+				} catch (Exception $e) {
+					$return = false;
+					continue;
+				}
+				$data = $hr->getResponseBody();
+				$type = $hr->getResponseHeader('Content-Type');
+				break;
+			case 'curl':
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, $cur_url);
+				curl_setopt($ch, CURLOPT_HEADER, 1);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				list($headers, $data) = explode("\r\n\r\n", curl_exec($ch), 2);
+				foreach (explode("\r\n", $headers) as $cur_header) {
+					list($name, $value) = explode(': ', $cur_header, 2);
+					if ($name == 'Content-Type') {
+						$type = $value;
+						break;
+					}
+				}
+				file_put_contents($file, $data);
+				curl_close($ch);
+				break;
+			case 'fopen':
+				$data = file_get_contents($cur_url);
+				foreach ($http_response_header as $cur_header) {
+					list($name, $value) = explode(': ', $cur_header, 2);
+					if ($name == 'Content-Type') {
+						$type = $value;
+						break;
+					}
+				}
+				break;
+		}
+		return array('content-type' => $type, 'data' => $data);
+	}
+
+	/**
 	 * Install a package.
 	 *
 	 * @param array $package The package array.

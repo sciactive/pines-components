@@ -43,7 +43,10 @@ if (
 
 // Check that the files aren't dangerous.
 $files = $package->get_current_files();
+// Also check for a _MEDIA dir.
+$has_media = false;
 foreach ($files as $cur_file) {
+	$has_media = $has_media || $cur_file['path'] == '_MEDIA/';
 	if (!is_clean_filename($cur_file['path'])) {
 		pines_notice('Package contains dangerous files.');
 		redirect(pines_url('com_repository', 'listpackages'));
@@ -71,8 +74,14 @@ if (in_array($package->ext['type'], array('component', 'template'))) {
 	}
 }
 
+if ($package->ext['screens'] && count($package->ext['screens']) > 10) {
+	pines_notice('Maximum 10 screen shots allowed.');
+	redirect(pines_url('com_repository', 'listpackages'));
+	return;
+}
+
 // Move package into repository.
-$dir = $pines->config->com_repository->repository_path.$_SESSION['user']->guid.'/';
+$dir = clean_filename($pines->config->com_repository->repository_path.$_SESSION['user']->guid.'/'.$package->ext['package'].'/'.$package->ext['version'].'/');
 $filename = $dir.clean_filename("{$package->ext['package']}-{$package->ext['version']}.slm");
 $sig_filename = $dir.clean_filename("{$package->ext['package']}-{$package->ext['version']}.sig");
 if (file_exists($sig_filename) && !unlink($sig_filename)) {
@@ -81,10 +90,45 @@ if (file_exists($sig_filename) && !unlink($sig_filename)) {
 	return;
 }
 
-if (!file_exists($dir) && !mkdir($dir)) {
+if (!file_exists($dir) && !mkdir($dir, 0700, true)) {
 	pines_error('Error creating user directory.');
 	redirect(pines_url('com_repository', 'listpackages'));
 	return;
+}
+
+if ($has_media) {
+	// Extract the media directory.
+	$package->working_directory = $dir;
+	$package->extract('_MEDIA/', true, '/^_MEDIA\/.*\//');
+	$media = glob("{$dir}/_MEDIA/*");
+	foreach ($media as $cur_media) {
+		if (!chmod($cur_media, 0600)) {
+			unlink($cur_media);
+			continue;
+		}
+		if (filesize($cur_media) > 307200) {
+			// Max size 300KB.
+			pines_notice('Max media filesize is 300KB. Please remove media bigger than 300KB.');
+			unlink($cur_media);
+			redirect(pines_url('com_repository', 'listpackages'));
+			return;
+		}
+		$image = new Imagick;
+		if (!$image->readImage($cur_media)) {
+			pines_notice('Couldn\'t read media "'.basename($cur_media).'". Please only upload images only.');
+			unlink($cur_media);
+			redirect(pines_url('com_repository', 'listpackages'));
+			return;
+		}
+	}
+	if (count($media) >= 11) {
+		pines_notice('Maximum of 11 media files allowed. 10 screenshots and 1 icon.');
+		foreach ($media as $cur_media) {
+			unlink($cur_media);
+		}
+		redirect(pines_url('com_repository', 'listpackages'));
+		return;
+	}
 }
 
 if (!move_uploaded_file($_FILES['package']['tmp_name'], $filename)) {

@@ -73,6 +73,19 @@ $this->note = 'All new packages are signed against this certificate.';
 		After the key is verified to not be readable, you should regenerate your
 		certificate in case it was compromised in transit during the check.
 	</div>
+	<?php if ($pines->config->com_repository->public_cert) { ?>
+	<div class="pf-element pf-heading">
+		<h1>Public URL</h1>
+	</div>
+	<div class="pf-element pf-full-width">
+		Using this URL, a user can easily add your repository as a trusted
+		software source. If your certificate is self signed, however, the user
+		will need to add your certificate as a trusted authority.
+		<div class="pf-group">
+			<a class="pf-field" href="<?php echo htmlspecialchars(pines_url('com_repository', 'publiccert', array(), true)); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars(pines_url('com_repository', 'publiccert', array(), true)); ?></a>
+		</div>
+	</div>
+	<?php } ?>
 	<div class="pf-element pf-heading">
 		<h1>Certificate</h1>
 	</div>

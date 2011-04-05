@@ -69,7 +69,7 @@ class com_repository extends component {
 		// Build an index for the directory.
 		$dir = $pines->config->com_repository->repository_path.$user->guid.'/';
 		$index = array();
-		$packages = glob($dir.'*.slm');
+		$packages = glob($dir.'*/*/*.slm');
 		foreach ($packages as $cur_package) {
 			if (!$slim->read($cur_package))
 				continue;
@@ -90,6 +90,8 @@ class com_repository extends component {
 				'depend' => $slim->ext['depend'],
 				'recommend' => $slim->ext['recommend'],
 				'conflict' => $slim->ext['conflict'],
+				'icon' => $slim->ext['icon'],
+				'screens' => $slim->ext['screens'],
 				'md5' => md5_file($cur_package)
 			);
 		}
@@ -142,7 +144,7 @@ class com_repository extends component {
 
 		// Go through packages, signing them.
 		$return = 0;
-		$package_files = glob($dir.'*/*.slm');
+		$package_files = glob($dir.'*/*/*/*.slm');
 		foreach ($package_files as $cur_package_file) {
 			$cur_sig_file = substr($cur_package_file, 0, -3) . 'sig';
 			if (file_exists($cur_sig_file))

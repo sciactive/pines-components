@@ -18,6 +18,12 @@ return array(
 		'description' => 'The relative path of the directory containing the repository. Does not have to be web accessible. End this path with a slash!',
 		'value' => $pines->config->upload_location.'repository/',
 	),
+	array(
+		'name' => 'public_cert',
+		'cname' => 'Public Certificate',
+		'description' => 'Set this to true to allow easier public access to your repository.',
+		'value' => true,
+	),
 );
 
 ?>

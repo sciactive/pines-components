@@ -24,8 +24,8 @@ $user = user::factory($publisher);
 if (!isset($user->guid))
 	return 'error_404';
 
-$file = clean_filename("{$pines->config->com_repository->repository_path}{$user->guid}/{$package}-{$version}.slm");
-$sigfile = clean_filename("{$pines->config->com_repository->repository_path}{$user->guid}/{$package}-{$version}.sig");
+$file = clean_filename("{$pines->config->com_repository->repository_path}{$user->guid}/{$package}/{$version}/{$package}-{$version}.slm");
+$sigfile = clean_filename("{$pines->config->com_repository->repository_path}{$user->guid}/{$package}/{$version}/{$package}-{$version}.sig");
 if (!file_exists($file) || !file_exists($sigfile))
 	return 'error_404';
 

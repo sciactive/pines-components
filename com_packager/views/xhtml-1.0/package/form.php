@@ -495,15 +495,24 @@ $pines->com_ptags->load();
 			<script type="text/javascript">
 				// <![CDATA[
 				pines(function(){
+					var image_count = 0;
+
 					var update_images = function(){
 						var images = [];
+						image_count = 0;
 						$("li", "#p_muid_sortable").each(function(){
 							var cur_entry = $(this);
 							images.push({
 								"file": cur_entry.find("img").attr("src"),
 								"alt": cur_entry.find("p").html()
 							});
+							image_count++;
 						});
+						$("#p_muid_screenshot_count").html(image_count);
+						if (image_count >= 10)
+							$("#p_muid_max_screenshots").show();
+						else
+							$("#p_muid_max_screenshots").hide();
 						$("input[name=screenshots]", "#p_muid_tab_images").val(JSON.stringify(images));
 					};
 					update_images();
@@ -576,7 +585,10 @@ $pines->com_ptags->load();
 			</div>
 			<div class="pf-element">
 				<span class="pf-label">Add a Screenshot</span>
-				<input class="pf-field ui-widget-content ui-corner-all puploader" id="p_muid_screen_upload" type="text" value="" />
+				<div class="pf-group">
+					<input class="pf-field ui-widget-content ui-corner-all puploader" id="p_muid_screen_upload" type="text" value="" />
+					<div class="pf-field" id="p_muid_max_screenshots" style="display: none;">You currently have <span id="p_muid_screenshot_count">0</span> screenshots. If you add more than 10, most repositories will reject the package.</div>
+				</div>
 			</div>
 			<div class="pf-element pf-full-width">
 				<div class="pf-note">

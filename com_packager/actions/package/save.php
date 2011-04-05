@@ -132,9 +132,9 @@ if (isset($test) && $test->guid != $_REQUEST['id']) {
 foreach ($package->screenshots as $cur_screen) {
 	// Check the size of the images.
 	$filesize = (float) filesize($pines->uploader->real($cur_screen['file'])) / 1024;
-	if ($filesize > 1024) {
+	if ($filesize > 300) {
 		$package->print_form();
-		pines_notice(basename($cur_screen['file']).' is '.number_format($filesize).'KB. The maximum screenshot size is 1024KB.');
+		pines_notice(basename($cur_screen['file']).' is '.number_format($filesize).'KB. The maximum screenshot size is 300KB.');
 		return;
 	}
 }

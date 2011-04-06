@@ -64,8 +64,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<th>ID</th>
 				<th>Date</th>
 				<th>Customer</th>
+				<th>Phone</th>
 				<th>Max Approval</th>
+				<?php if (gatekeeper('com_mifi/overrideapp')) { ?>
 				<th>Online Approval</th>
+				<?php } ?>
 				<th>Location</th>
 				<th>Employee</th>
 				<th>Rank</th>
@@ -79,8 +82,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<td style="text-align: right;"><a href="<?php echo htmlspecialchars(pines_url('com_mifi', 'viewoffer', array('id' => $cur_available->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_available->app_id); ?></a></td>
 				<td><?php echo format_date($cur_available->p_cdate, 'date_sort'); ?></td>
 				<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_available->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_available->customer->name); ?></a></td>
+				<td><?php echo !empty($cur_available->cellPhone) ? format_phone($cur_available->cellPhone) : format_phone($cur_available->hor_phone); ?></td>
 				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_available->approval_amount, 2, '.', '')); ?></td>
+				<?php if (gatekeeper('com_mifi/overrideapp')) { ?>
 				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_available->web_approval_amount, 2, '.', '')); ?></td>
+				<?php } ?>
 				<td><?php echo htmlspecialchars($cur_available->group->name); ?></td>
 				<td><?php echo htmlspecialchars($cur_available->user->name); ?></td>
 				<td><?php echo $pines->com_mifi->ranks[$cur_available->militaryPayGrade]; ?></td>

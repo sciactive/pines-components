@@ -11,6 +11,9 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
+if (!$pines->config->com_customer->com_calendar)
+	return;
+
 /**
  * Cancel any customer follow-ups for a canceled/voided sale.
  *
@@ -52,19 +55,28 @@ function com_customer__check_sale(&$arguments, $name, &$object) {
 
 	if (!is_object($object) || !$pines->config->com_customer->follow_up)
 		return;
-	if ( !$object->followed_up && isset($object->customer->guid) && !$object->user->is($object->customer) &&
-		($object->status == 'paid' && (!$object->warehouse_items || $object->warehouse_complete)) ) {
-			$totals = array();
-			foreach($object->products as $cur_product) {
-				if (!isset($totals[$cur_product['salesperson']->guid]))
-					$totals[$cur_product['salesperson']->guid] = 0;
-				$totals[$cur_product['salesperson']->guid] += ($cur_product['quantity']*$cur_product['price']);
-			}
-			$sales_rep = com_hrm_employee::factory((int) array_search(max($totals), $totals));
-			if (isset($sales_rep->guid)) {
-				$object->customer->schedule_follow_up($sales_rep, $object);
-				$object->followed_up = true;
-			}
+	if (!$object->followed_up && isset($object->customer->guid) &&
+		!$object->user->is($object->customer) && $object->status == 'paid') {
+		$totals = array();
+		foreach($object->products as $cur_product) {
+			if ($cur_product['returned_quantity'] >= $cur_product['quantity'])
+				continue;
+			if (!isset($totals[$cur_product['salesperson']->guid]))
+				$totals[$cur_product['salesperson']->guid] = 0;
+			$totals[$cur_product['salesperson']->guid] += ($cur_product['quantity'] * $cur_product['price']);
+		}
+		if (empty($totals))
+			return;
+		$sales_rep = com_hrm_employee::factory((int) array_search(max($totals), $totals));
+		if (!isset($sales_rep->guid))
+			return;
+		if (!$object->warehouse_items || $object->warehouse_complete) {
+			$object->customer->schedule_follow_up($sales_rep, $object);
+			$object->followed_up = true;
+		} elseif (!$object->wh_followed_up) {
+			$object->customer->schedule_follow_up($sales_rep, $object, true);
+			$object->wh_followed_up = true;
+		}
 	}
 	if ($object->status == 'voided')
 		com_customer__cancel_appointments($object);
@@ -84,7 +96,9 @@ function com_customer__check_return(&$arguments, $name, &$object) {
 
 	if (!is_object($object) || !$pines->config->com_customer->follow_up)
 		return;
-	if ( $object->status == 'processed' && isset($object->sale->guid) && $object->sale->followed_up )
+	// Add a check here for return->products == return->sale->products ???
+	if ( $object->status == 'processed' && isset($object->sale->guid) &&
+		($object->sale->followed_up || $object->sale->wh_followed_up) )
 		com_customer__cancel_appointments($object->sale);
 }
 

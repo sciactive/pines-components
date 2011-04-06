@@ -259,6 +259,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'wh_follow_up',
+		'cname' => 'Warehouse Follow-Up',
+		'description' => 'The date after a warehouse sale to follow up on shipping information. Uses this format: "Symbol|Timespan|Description".',
+		'value' => '➄|5 days|This is a warehouse follow-up, make sure to check with the Inventory Department and then let the customer know the shipping status.',
+		'peruser' => true,
+	),
+	array(
 		'name' => 'global_customers',
 		'cname' => 'Globalize Customers',
 		'description' => 'Ensure that every user can access all customers by setting the "other" access control to read.',

@@ -248,39 +248,39 @@ class com_customer_customer extends user {
 	 * 
 	 * @param user $employee The employee expected to follow-up.
 	 * @param com_sales_sale $sale The sale to follow-up on.
+	 * @param bool $warehouse Whether or not it is a warehouse shipping followup.
 	 * @return bool Whether or not the follow-ups were scheduled.
 	 */
-	public function schedule_follow_up($employee = null, $sale = null) {
+	public function schedule_follow_up($employee = null, $sale = null, $warehouse = false) {
 		global $pines;
 
-		if (!isset($employee->guid))
+		if (!$pines->config->com_customer->com_calendar || !isset($employee->guid))
 			return false;
-		foreach ($pines->config->com_customer->follow_ups as $cur_follow_up) {
-			$cur_follow_up = explode('|', $cur_follow_up);
+		// Change the timezone to enter the event with the user's timezone.
+		date_default_timezone_set($employee->get_timezone());
+		if ($warehouse) {
+			$wh_follow_up = explode('|', $pines->config->com_customer->wh_follow_up);
 			$interaction = com_customer_interaction::factory();
 			$interaction->customer = $this;
 			$interaction->employee = $employee;
 			if (isset($sale->guid))
 				$interaction->sale = $sale;
-			// Change the timezone to enter the event with the user's timezone.
-			date_default_timezone_set($employee->get_timezone());
-			$interaction->action_date = strtotime('+'.$cur_follow_up[1]);
-			$interaction->type = 'Follow-Up '.$cur_follow_up[0];
+			$interaction->action_date = strtotime('-1 day +'.$wh_follow_up[1]);
+			$interaction->type = 'Follow-Up '.$wh_follow_up[0];
 			$interaction->status = 'open';
-			$interaction->comments = $cur_follow_up[2];
+			$interaction->comments = $wh_follow_up[2];
 			if ($pines->config->com_customer->com_calendar) {
 				// Create the interaction calendar event.
 				$event = com_calendar_event::factory();
 				$event->employee = $employee;
 				$event->appointment = true;
 				$event->label = $interaction->type;
-				$event->title = $cur_follow_up[0].' '.$this->name;
+				$event->title = $wh_follow_up[0].' '.$this->name;
 				$event->private = true;
 				$event->all_day = false;
 				$event->start = $interaction->action_date;
 				$event->end = strtotime('+1 hour', $interaction->action_date);
 				$event->color = 'greenyellow';
-				$event->information = $interaction->comments;
 				$event->information = $employee->name." (".ucwords($interaction->status).") \n".$interaction->comments;
 				$event->ac->other = 2;
 				if (!$event->save())
@@ -295,6 +295,45 @@ class com_customer_customer extends user {
 			$event->appointment = $interaction;
 			$event->group = $employee->group;
 			$event->save();
+		} else {
+			foreach ($pines->config->com_customer->follow_ups as $cur_follow_up) {
+				$cur_follow_up = explode('|', $cur_follow_up);
+				$interaction = com_customer_interaction::factory();
+				$interaction->customer = $this;
+				$interaction->employee = $employee;
+				if (isset($sale->guid))
+					$interaction->sale = $sale;
+				$interaction->action_date = strtotime('-1 day +'.$cur_follow_up[1]);
+				$interaction->type = 'Follow-Up '.$cur_follow_up[0];
+				$interaction->status = 'open';
+				$interaction->comments = $cur_follow_up[2];
+				if ($pines->config->com_customer->com_calendar) {
+					// Create the interaction calendar event.
+					$event = com_calendar_event::factory();
+					$event->employee = $employee;
+					$event->appointment = true;
+					$event->label = $interaction->type;
+					$event->title = $cur_follow_up[0].' '.$this->name;
+					$event->private = true;
+					$event->all_day = false;
+					$event->start = $interaction->action_date;
+					$event->end = strtotime('+1 hour', $interaction->action_date);
+					$event->color = 'greenyellow';
+					$event->information = $employee->name." (".ucwords($interaction->status).") \n".$interaction->comments;
+					$event->ac->other = 2;
+					if (!$event->save())
+						return false;
+
+					$interaction->event = $event;
+				}
+
+				$interaction->ac->other = 2;
+				if (!$interaction->save())
+					return false;
+				$event->appointment = $interaction;
+				$event->group = $employee->group;
+				$event->save();
+			}
 		}
 		return true;
 	}

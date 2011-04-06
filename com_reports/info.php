@@ -33,6 +33,7 @@ return array(
 		array('reportmifiavailable', 'Report Available MiFi', 'User can see available MiFi reports.'),
 		array('reportproducts', 'Report Products', 'User can see product detail reports.'),
 		array('reportsales', 'Report Sales', 'User can see sales reports.'),
+		array('reportwarehouse', 'Report Warehouse Items', 'User can see warehouse items reports.'),
 		array('summarizeemployees', 'Employee Summaries', 'User can see employee summary reports.'),
 		array('summarizeinvoices', 'Invoice Summaries', 'User can see invoice summary reports.'),
 		array('summarizelocations', 'Location Summaries', 'User can see location summary reports.'),

@@ -63,6 +63,14 @@
 					"ability": "com_reports/reportproducts"
 				}
 			},
+			{
+				"path": "main_menu/reports/sales/warehouse",
+				"text": "Warehouse Items",
+				"href": ["com_reports","reportwarehouse"],
+				"depend": {
+					"ability": "com_reports/reportwarehouse"
+				}
+			},
 		{
 			"path": "main_menu/reports/hrm",
 			"text": "HRM",

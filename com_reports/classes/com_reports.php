@@ -581,6 +581,41 @@ class com_reports extends component {
 		$returns = $pines->entity_manager->get_entities(array('class' => com_sales_return), $selector, $or);
 		$module->invoices = array_merge($sales, $returns);
 	}
+
+	/**
+	 * Creates and attaches a module which reports warehouse items.
+	 *
+	 * @param int $start_date The start date of the report.
+	 * @param int $end_date The end date of the report.
+	 * @param group $location The location to report sales for.
+	 * @param bool $descendents Whether to show descendent locations.
+	 * @return module The product details report module.
+	 */
+	function report_warehouse($start_date = null, $end_date = null, $location = null, $descendents = false) {
+		global $pines;
+
+		$module = new module('com_reports', 'report_warehouse', 'content');
+		
+		$selector = array('&', 'tag' => array('com_sales', 'sale'), 'strict' => array('status', 'paid'));
+		// Datespan of the report.
+		if (isset($start_date))
+			$selector['gte'] = array('p_cdate', (int) $start_date);
+		if (isset($end_date))
+			$selector['lt'] = array('p_cdate', (int) $end_date);
+		$module->start_date = $start_date;
+		$module->end_date = $end_date;
+		$module->all_time = (!isset($start_date) && !isset($end_date));
+		// Location of the report.
+		if (!isset($location->guid))
+			$location = $_SESSION['user']->group;
+		if ($descendents)
+			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		else
+			$or = array('|', 'ref' => array('group', $location));
+		$module->location = $location;
+		$module->descendents = $descendents;
+		$module->transactions = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
+	}
 }
 
 ?>

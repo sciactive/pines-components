@@ -38,10 +38,11 @@ class com_pgsql extends component {
 	 * @param string $user
 	 * @param string $password
 	 * @param string $database
+	 * @param string $connection_type
 	 * @uses com_pgsql::connect()
 	 */
-	public function __construct($host = null, $user = null, $password = null, $database = null) {
-		$this->connect($host, $user, $password, $database);
+	public function __construct($host = null, $user = null, $password = null, $database = null, $connection_type = null) {
+		$this->connect($host, $user, $password, $database, $connection_type);
 	}
 
 	/**
@@ -61,13 +62,14 @@ class com_pgsql extends component {
 	 * possible for a component to do this, but it most likely would not be
 	 * accidental.
 	 *
-	 * @param string $host The host to connect to.
+	 * @param string $host The host to connect to. Use a blank string if connecting via Unix socket.
 	 * @param string $user The username to connect to.
 	 * @param string $password The password to connect to.
 	 * @param string $database The database to connect to.
+	 * @param string $connection_type The connection type to attempt. (host or socket)
 	 * @return bool Whether this instance is connected to a PostgreSQL database after the method has run.
 	 */
-	public function connect($host = null, $user = null, $password = null, $database = null) {
+	public function connect($host = null, $user = null, $password = null, $database = null, $connection_type = null) {
 		global $pines;
 		// Check that the PostgreSQL extension is installed.
 		if (!is_callable('pg_connect')) {
@@ -80,22 +82,34 @@ class com_pgsql extends component {
 		// If something changes the host, it could reveal the user and password.
 		if (!isset($host)) {
 			$host = $pines->config->com_pgsql->host;
+			$connection_type = $pines->config->com_pgsql->connection_type;
 			if (!isset($user)) $user = $pines->config->com_pgsql->user;
 			if (!isset($password)) $password = $pines->config->com_pgsql->password;
 			if (!isset($database)) $database = $pines->config->com_pgsql->database;
 		}
 		// Connecting, selecting database
 		if (!$this->connected) {
-			if ( $this->link = @pg_connect('host=\''.addslashes($host).'\' dbname=\''.addslashes($database).'\' user=\''.addslashes($user).'\' password=\''.addslashes($password).'\'') ) {
+			if ($connection_type == 'host') {
+				$connect_string = 'host=\''.addslashes($host).'\' dbname=\''.addslashes($database).'\' user=\''.addslashes($user).'\' password=\''.addslashes($password).'\' connect_timeout=5';
+			} else {
+				$connect_string = 'dbname=\''.addslashes($database).'\' user=\''.addslashes($user).'\' password=\''.addslashes($password).'\' connect_timeout=5';
+			}
+			if ($pines->config->com_pgsql->allow_persistent) {
+				$this->link = @pg_connect($connect_string);
+			} else {
+				$this->link = pg_connect($connect_string.' options=\''.addslashes(rand()).'\'', PGSQL_CONNECT_FORCE_NEW);
+			}
+			if ($this->link) {
 				$this->connected = true;
+				pines_notice(pg_connection_busy($this->link));
 			} else {
 				$this->connected = false;
-				if (!isset($_SESSION['user']) && $host == 'localhost' && $user == 'pines' && $password == 'password' && $database == 'pines') {
+				if (!isset($_SESSION['user']) && $host == 'localhost' && $user == 'pines' && $password == 'password' && $database == 'pines' && $connection_type == 'host') {
 					if ($pines->request_component != 'com_pgsql')
 						redirect(pines_url('com_pgsql', 'setup'));
 				} else {
 					if (function_exists('pines_error'))
-						pines_error('Could not connect: ' . pg_last_error());
+						@pines_error('Could not connect: ' . pg_last_error());
 				}
 			}
 		}

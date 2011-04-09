@@ -34,6 +34,87 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'image_format',
+		'cname' => 'Default Image Format',
+		'description' => 'The default image type/format for product images.',
+		'value' => 'jpg',
+		'options' => array(
+			'jpg',
+			'png',
+			'gif',
+			'bmp'
+		),
+		'peruser' => true,
+	),
+	array(
+		'name' => 'image_formats',
+		'cname' => 'Acceptable Image Formats',
+		'description' => 'The image types/formats that are acceptable to use for product images.',
+		'value' => array(
+			'jpg',
+			'png',
+			'gif'
+		),
+		'options' => array(
+			'jpg',
+			'png',
+			'gif',
+			'bmp'
+		),
+		'peruser' => true,
+	),
+	array(
+		'name' => 'image_max_width',
+		'cname' => 'Image Max Width',
+		'description' => 'The maximum width of the product images.',
+		'value' => 640,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'image_padding',
+		'cname' => 'Image Padding',
+		'description' => 'Place padding around the product images.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'image_padding_color',
+		'cname' => 'Image Padding Color',
+		'description' => 'The color of the image padding on the product images.',
+		'value' => 'white',
+		'options' => array(
+			'white',
+			'black'
+		),
+		'peruser' => true,
+	),
+	array(
+		'name' => 'image_quality',
+		'cname' => 'Image Quality',
+		'description' => 'The picture quality of the product images.',
+		'value' => 'high',
+		'options' => array(
+			'low',
+			'medium',
+			'high'
+		),
+		'peruser' => true,
+	),
+	array(
+		'name' => 'thumbnail_size',
+		'cname' => 'Thumbnail Size',
+		'description' => 'The width and height of the product image thumbnails.',
+		'value' => array('width' => 240, 'height' => 200),
+		'peruser' => true,
+	),
+	array(
+		'name' => 'thumbnail_folder',
+		'cname' => 'Thumbnail Folder',
+		'description' => 'The folder used to store product image thumbnails.',
+		'value' => 'thumbs',
+		'peruser' => true,
+	),
+	array(
 		'name' => 'remove_stock',
 		'cname' => 'Remove Stock',
 		'description' => 'When (in the sale process) to take stock out of inventory.',

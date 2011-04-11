@@ -29,7 +29,12 @@ if ($pines->config->com_hrm->com_calendar)
 	$employee->color = $_REQUEST['color'];
 $employee->phone_ext = preg_replace('/\D/', '', $_REQUEST['phone_ext']);
 $employee->workday_length = $_REQUEST['workday_length'] != '' ?  (int) $_REQUEST['workday_length'] : null;
-
+$employee->pay_type = $_REQUEST['pay_type'];
+if ($employee->pay_type == 'commission') {
+	$employee->pay_rate = 0.0;
+} else {
+	$employee->pay_rate = (float) $_REQUEST['pay_rate'];
+}
 // Attributes
 $employee->employee_attributes = (array) json_decode($_REQUEST['attributes']);
 foreach ($employee->employee_attributes as &$cur_attribute) {

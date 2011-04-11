@@ -29,6 +29,7 @@ class com_hrm_employee extends user {
 		$this->commissions = array();
 		$this->hire_date = time();
 		$this->employment_history = array();
+		$this->pay_type = 'hourly';
 		$this->timeclock = com_hrm_timeclock::factory();
 		$this->timeclock->user = $this;
 		$this->timeclock->group = $this->group;

@@ -15,6 +15,16 @@ $this->note = 'Provide employee account details in this form.';
 $pines->editor->load();
 $pines->com_pgrid->load();
 ?>
+<style type="text/css">
+	/* <![CDATA[ */
+	#p_muid_rate {
+		padding-left: 25px;
+	}
+	#p_muid_rate .label {
+		font-size: 0.8em;
+	}
+	/* ]]> */
+</style>
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
@@ -95,6 +105,19 @@ $pines->com_pgrid->load();
 
 		update_attributes();
 
+		$("#p_muid_form [name=pay_type]").change(function(){
+			var pay_type = $(this);
+			if (pay_type.val() == "hourly" || pay_type.val() == "hourly_commission" || pay_type.val() == "commission_draw") {
+				$("#p_muid_rate .label").empty().append("/Hour");
+				$("#p_muid_rate").show();
+			} else if (pay_type.val() == "salary" || pay_type.val() == "salary_commission") {
+				$("#p_muid_rate .label").empty().append("/Year");
+				$("#p_muid_rate").show();
+			} else {
+				$("#p_muid_rate").hide();
+			}
+		}).change();
+
 		$("#p_muid_employee_tabs").tabs();
 	});
 	// ]]>
@@ -169,6 +192,20 @@ $pines->com_pgrid->load();
 			<div class="pf-element">
 				<label><span class="pf-label">Phone Extension</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="phone_ext" size="5" value="<?php echo htmlspecialchars($this->entity->phone_ext); ?>" /></label>
+			</div>
+			<div class="pf-element">
+				<span class="pf-label">Compensation</span>
+				<span class="pf-field" style="display: inline-block;">
+					<select class="ui-widget-content ui-corner-all" name="pay_type">
+						<option value="hourly" <?php echo ($this->entity->pay_type == 'hourly') ? 'selected="selected"' : ''; ?>>Hourly</option>
+						<option value="commission" <?php echo ($this->entity->pay_type == 'commission') ? 'selected="selected"' : ''; ?>>Commission</option>
+						<option value="hourly_commission" <?php echo ($this->entity->pay_type == 'hourly_commission') ? 'selected="selected"' : ''; ?>>Hourly + Commission</option>
+						<option value="commission_draw" <?php echo ($this->entity->pay_type == 'commission_draw') ? 'selected="selected"' : ''; ?>>Commission vs Draw</option>
+						<option value="salary" <?php echo ($this->entity->pay_type == 'salary') ? 'selected="selected"' : ''; ?>>Salary</option>
+						<option value="salary_commission" <?php echo ($this->entity->pay_type == 'salary_commission') ? 'selected="selected"' : ''; ?>>Salary + Commission</option>
+					</select>
+					<label id="p_muid_rate">$<input class="ui-widget-content ui-corner-all" type="text" name="pay_rate" size="8" value="<?php echo htmlspecialchars($this->entity->pay_rate); ?>" /><span class="label"></span></label>
+				</span>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Hours in Full Workday</span>

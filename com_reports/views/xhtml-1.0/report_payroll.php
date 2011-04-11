@@ -20,8 +20,12 @@ $pines->com_pgrid->load();
 ?>
 <style type="text/css">
 	/* <![CDATA[ */
+	#p_muid_grid .amount {
+		text-align: right;
+	}
 	#p_muid_grid .total {
 		text-align: right;
+		font-weight: bold;
 	}
 	/* ]]> */
 </style>
@@ -166,6 +170,7 @@ $pines->com_pgrid->load();
 				<th>Worked</th>
 				<th>Variance</th>
 				<th>Commission</th>
+				<th>Total Pay</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -184,7 +189,8 @@ $pines->com_pgrid->load();
 								'scheduled' => 0,
 								'clocked' => 0,
 								'variance' => 0,
-								'commission' => 0
+								'commission' => 0,
+								'total_pay' => 0
 							);
 							$commissions[$cur_product['salesperson']->guid] = $cur_product['salesperson']->commissions;
 						}
@@ -193,7 +199,7 @@ $pines->com_pgrid->load();
 							$counted[] = $cur_invoice->guid;
 						}
 						$totals[$cur_product['salesperson']->guid]['total_sold'] += $cur_product['line_total'];
-						foreach ($commissions[$cur_product['salesperson']->guid] as $key => $cur_commission) {
+						foreach ((array) $commissions[$cur_product['salesperson']->guid] as $key => $cur_commission) {
 							if ($cur_commission['ticket']->guid == $cur_invoice->guid) {
 								$totals[$cur_product['salesperson']->guid]['commission'] += $cur_commission['amount'];
 								unset($commissions[$cur_product['salesperson']->guid][$key]);
@@ -212,7 +218,8 @@ $pines->com_pgrid->load();
 								'scheduled' => 0,
 								'clocked' => 0,
 								'variance' => 0,
-								'commission' => 0
+								'commission' => 0,
+								'total_pay' => 0
 							);
 							$commissions[$cur_product['salesperson']->guid] = $cur_product['salesperson']->commissions;
 						}
@@ -221,7 +228,7 @@ $pines->com_pgrid->load();
 							$counted[] = $cur_invoice->guid;
 						}
 						$totals[$cur_product['salesperson']->guid]['total_returned'] += $cur_product['line_total'];
-						foreach ($commissions[$cur_product['salesperson']->guid] as $key => $cur_commission) {
+						foreach ((array) $commissions[$cur_product['salesperson']->guid] as $key => $cur_commission) {
 							if ($cur_commission['ticket']->guid == $cur_invoice->guid) {
 								$totals[$cur_product['salesperson']->guid]['commission'] += $cur_commission['amount'];
 								unset($commissions[$cur_product['salesperson']->guid][$key]);
@@ -241,7 +248,8 @@ $pines->com_pgrid->load();
 						'scheduled' => 0,
 						'clocked' => 0,
 						'variance' => 0,
-						'commission' => 0
+						'commission' => 0,
+						'total_pay' => 0
 					);
 				}
 				$schedule = $pines->entity_manager->get_entities(
@@ -257,6 +265,29 @@ $pines->com_pgrid->load();
 					$totals[$cur_employee->guid]['scheduled'] += $cur_schedule->scheduled;
 				$totals[$cur_employee->guid]['clocked'] = $cur_employee->timeclock->sum($this->start_date, $this->end_date);
 				$totals[$cur_employee->guid]['variance'] = ($totals[$cur_employee->guid]['clocked'] - $totals[$cur_employee->guid]['scheduled']);
+				// Calculate the total pay for this employee.
+				switch ($cur_employee->pay_type) {
+					case 'hourly':
+						$totals[$cur_employee->guid]['total_pay'] = ($totals[$cur_employee->guid]['clocked']/3600) * $cur_employee->pay_rate;
+						break;
+					case 'commission':
+						$totals[$cur_employee->guid]['total_pay'] = $totals[$cur_employee->guid]['commission'];
+						break;
+					case 'hourly_commission':
+						$totals[$cur_employee->guid]['total_pay'] = (($totals[$cur_employee->guid]['clocked']/3600) * $cur_employee->pay_rate) + $totals[$cur_employee->guid]['commission'];
+						break;
+					case 'commission_draw':
+						$totals[$cur_employee->guid]['total_pay'] = max(($totals[$cur_employee->guid]['clocked']/3600) * $cur_employee->pay_rate, $totals[$cur_employee->guid]['commission']);
+						break;
+					case 'salary':
+						$days_worked = isset($this->start_date) ? ceil(($this->end_date-$this->start_date)/86400) : ceil((time()-$cur_employee->p_cdate)/86400);
+						$totals[$cur_employee->guid]['total_pay'] = ($cur_employee->pay_rate/365)*($days_worked);
+						break;
+					case 'salary_commission':
+						$days_worked = isset($this->start_date) ? ceil(($this->end_date-$this->start_date)/86400) : ceil((time()-$cur_employee->p_cdate)/86400);
+						$totals[$cur_employee->guid]['total_pay'] = (($cur_employee->pay_rate/365)*($days_worked)) + $totals[$cur_employee->guid]['commission'];
+						break;
+				}
 			}
 			foreach ($totals as $cur_total) {
 			?>
@@ -264,12 +295,13 @@ $pines->com_pgrid->load();
 				<td><?php echo $cur_total['employee']->name; ?></td>
 				<td><?php echo $cur_total['qty_sold']; ?></td>
 				<td><?php echo $cur_total['qty_returned']; ?></td>
-				<td class="total">$<?php echo number_format($cur_total['total_sold'], 2, '.', ''); ?></td>
-				<td class="total">$<?php echo number_format($cur_total['total_returned'], 2, '.', ''); ?></td>
+				<td class="amount">$<?php echo number_format($cur_total['total_sold'], 2, '.', ''); ?></td>
+				<td class="amount">$<?php echo number_format($cur_total['total_returned'], 2, '.', ''); ?></td>
 				<td><?php echo round($cur_total['scheduled'] / 3600, 2); ?> hours</td>
 				<td><?php echo round($cur_total['clocked'] / 3600, 2); ?> hours</td>
 				<td><span<?php echo ($cur_total['variance'] < 0 ) ? ' style="color: red;"' : ''; ?>><?php echo round($cur_total['variance'] / 3600, 2); ?> hours</span></td>
-				<td class="total">$<?php echo number_format($cur_total['commission'], 2, '.', ''); ?></td>
+				<td class="amount">$<?php echo number_format($cur_total['commission'], 2, '.', ''); ?></td>
+				<td class="total">$<?php echo number_format($cur_total['total_pay'], 2, '.', ''); ?></td>
 			</tr>
 			<?php } ?>
 		</tbody>

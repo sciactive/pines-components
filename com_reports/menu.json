@@ -180,7 +180,16 @@
 				"href": ["com_reports","reportmifiavailable"],
 				"depend": {
 					"component": "com_mifi",
-					"ability": "com_reports/reportmifiavailable|com_reports/reportmifiavailable"
+					"ability": "com_reports/reportmifi|com_reports/reportmifiavailable"
+				}
+			},
+			{
+				"path": "main_menu/reports/mifi/faxsheets",
+				"text": "Faxsheets",
+				"href": ["com_reports","reportmififaxsheets"],
+				"depend": {
+					"component": "com_mifi",
+					"ability": "com_reports/reportmifi"
 				}
 			}
 ]

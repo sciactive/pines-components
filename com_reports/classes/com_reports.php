@@ -366,10 +366,6 @@ class com_reports extends component {
 		global $pines;
 
 		$module = new module('com_reports', 'report_mifi_available', 'content');
-		$selector = array('&',
-			'tag' => array('com_mifi', 'contract'),
-			'strict' => array('status', 'tendered')
-		);
 
 		// Select any MiFi applications with existing financing approved
 		$groups = $_SESSION['user']->group->get_descendents(true);
@@ -423,6 +419,29 @@ class com_reports extends component {
 		$module->location = $location;
 		$module->descendents = $descendents;
 		$module->contracts = $pines->entity_manager->get_entities(array('class' => com_mifi_contract), $selector, $or);
+
+		return $module;
+	}
+
+	/**
+	 * Creates and attaches a module which shows customers with MiFi Faxsheets.
+	 *
+	 * @return module The MiFi report module.
+	 */
+	function report_mifi_faxsheets() {
+		global $pines;
+
+		$module = new module('com_reports', 'report_mifi_faxsheets', 'content');
+
+		// Select any MiFi contracts with faxsheets requests.
+		$groups = $_SESSION['user']->group->get_descendents(true);
+		$module->contracts = $pines->entity_manager->get_entities(
+				array('class' => com_mifi_contract, 'skip_ac' => true),
+				array('&',
+					'tag' => array('com_mifi', 'contract'),
+					'isset' => array('faxsheet_request')
+				)
+			);
 
 		return $module;
 	}

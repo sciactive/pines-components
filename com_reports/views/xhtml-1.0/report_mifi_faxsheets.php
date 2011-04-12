@@ -76,7 +76,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<tr title="<?php echo $cur_contract->guid; ?>">
 				<td style="text-align: right;"><a href="<?php echo htmlspecialchars(pines_url('com_mifi', 'contract/view', array('id' => $cur_contract->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_contract->contract_id); ?></a></td>
 				<td><?php echo format_date($cur_contract->p_cdate, 'date_sort'); ?></td>
-				<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_app->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_contract->customer->name); ?></a></td>
+				<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_contract->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_contract->customer->name); ?></a></td>
 				<td><?php echo $cur_contract->customer_info['ssn']; ?></td>
 				<td><?php echo htmlspecialchars($cur_contract->faxsheet_request['primary']); ?></td>
 				<td><?php echo htmlspecialchars($cur_contract->faxsheet_request['secondary']); ?></td>

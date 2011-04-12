@@ -23,6 +23,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	#p_muid_grid a {
 		text-decoration: underline;
 	}
+	#p_muid_grid .amount {
+		text-align: right;
+	}
 	/* ]]> */
 </style>
 <script type="text/javascript">
@@ -69,6 +72,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<th>Secondary</th>
 				<th>Password</th>
 				<th>Approved</th>
+				<th>New</th>
+				<th>Existing</th>
+				<th>Total</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -81,7 +87,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<td><?php echo htmlspecialchars($cur_contract->faxsheet_request['primary']); ?></td>
 				<td><?php echo htmlspecialchars($cur_contract->faxsheet_request['secondary']); ?></td>
 				<td><?php echo htmlspecialchars($cur_contract->faxsheet_request['password']); ?></td>
-				<td><?php echo $cur_contract->approved_faxsheet ? htmlspecialchars("Yes (by {$cur_contract->approved_faxsheet_user->name} [{$cur_contract->approved_faxsheet_user->username}])") : 'No'; ?></td>
+				<td><?php echo $cur_contract->approved_faxsheet ? htmlspecialchars("Yes ({$cur_contract->approved_faxsheet_user->name})") : 'No'; ?></td>
+				<td class="amount"><?php echo isset($cur_contract->firstnet) ? addslashes('$'.number_format($cur_contract->firstnet['new'], 2)) : '-'; ?></td>
+				<td class="amount"><?php echo isset($cur_contract->firstnet) ? addslashes('$'.number_format($cur_contract->firstnet['existing'], 2)) : '-'; ?></td>
+				<td class="amount"><?php echo isset($cur_contract->firstnet) ? $number_format(ceil($cur_contract->firstnet['total'] * 100) / 100, 2) : '-'; ?></td>
 			</tr>
 			<?php } ?>
 		</tbody>

@@ -78,7 +78,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			</tr>
 		</thead>
 		<tbody>
-			<?php foreach ($this->contracts as $cur_contract) { ?>
+			<?php foreach ($this->contracts as $cur_contract) {
+			$firstnet = $pines->com_mifi->verify_firstnet($cur_contract->firstnet_allot, $cur_contract->total_monthly_allotment); ?>
 			<tr title="<?php echo $cur_contract->guid; ?>">
 				<td style="text-align: right;"><a href="<?php echo htmlspecialchars(pines_url('com_mifi', 'contract/view', array('id' => $cur_contract->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_contract->contract_id); ?></a></td>
 				<td><?php echo format_date($cur_contract->p_cdate, 'date_sort'); ?></td>
@@ -88,9 +89,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<td><?php echo htmlspecialchars($cur_contract->faxsheet_request['secondary']); ?></td>
 				<td><?php echo htmlspecialchars($cur_contract->faxsheet_request['password']); ?></td>
 				<td><?php echo $cur_contract->approved_faxsheet ? htmlspecialchars("Yes ({$cur_contract->approved_faxsheet_user->name})") : 'No'; ?></td>
-				<td class="amount"><?php echo isset($cur_contract->firstnet) ? addslashes('$'.number_format($cur_contract->firstnet['new'], 2)) : '-'; ?></td>
-				<td class="amount"><?php echo isset($cur_contract->firstnet) ? addslashes('$'.number_format($cur_contract->firstnet['existing'], 2)) : '-'; ?></td>
-				<td class="amount"><?php echo isset($cur_contract->firstnet) ? $number_format(ceil($cur_contract->firstnet['total'] * 100) / 100, 2) : '-'; ?></td>
+				<td class="amount"><?php echo addslashes('$'.number_format($firstnet['new'], 2)); ?></td>
+				<td class="amount"><?php echo addslashes('$'.number_format($firstnet['existing'], 2)); ?></td>
+				<td class="amount">$<?php echo number_format(ceil($firstnet['total'] * 100) / 100, 2); ?></td>
 			</tr>
 			<?php } ?>
 		</tbody>

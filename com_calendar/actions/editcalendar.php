@@ -25,7 +25,7 @@ if (!empty($_REQUEST['start'])) {
 	$end = strtotime($_REQUEST['end']);
 } else {
 	$start = strtotime('next monday', time() - 604800);
-	$end = time();
+	$end = strtotime('next monday');
 }
 
 $location = group::factory((int) $_REQUEST['location']);

@@ -77,6 +77,7 @@ $errors = array();
 			<th>Shipper</th>
 			<th>ETA</th>
 			<th>Committed</th>
+			<th>Comments</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -89,6 +90,7 @@ $errors = array();
 			<td><?php echo htmlspecialchars($po->shipper->name); ?></td>
 			<td><?php echo ($po->eta ? format_date($po->eta, 'date_sort') : ''); ?></td>
 			<td><?php echo $po->final ? 'Yes' : 'No'; ?></td>
+			<td><?php echo htmlspecialchars($po->comments); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

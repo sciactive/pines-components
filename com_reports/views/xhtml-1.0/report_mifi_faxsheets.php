@@ -90,7 +90,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<td><?php echo htmlspecialchars($cur_contract->faxsheet_request['password']); ?></td>
 				<td class="amount"><?php echo addslashes('$'.number_format($firstnet['new'], 2)); ?></td>
 				<td class="amount"><?php echo addslashes('$'.number_format($firstnet['existing'], 2)); ?></td>
-				<td class="amount">$<?php echo number_format(ceil($firstnet['total'] * 100) / 100, 2); ?></td>
+				<td class="amount"><?php echo addslashes('$'.number_format($firstnet['total'], 2)) ?></td>
 				<td><?php echo $cur_contract->approved_faxsheet ? htmlspecialchars("Yes ({$cur_contract->approved_faxsheet_user->name})") : 'No'; ?></td>
 			</tr>
 			<?php } ?>

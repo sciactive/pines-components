@@ -23,6 +23,9 @@ $pines->com_pgrid->load();
 	#p_muid_grid .amount {
 		text-align: right;
 	}
+	#p_muid_grid .negative {
+		color: red;
+	}
 	#p_muid_grid .total {
 		text-align: right;
 		font-weight: bold;
@@ -170,6 +173,7 @@ $pines->com_pgrid->load();
 				<th>Worked</th>
 				<th>Variance</th>
 				<th>Commission</th>
+				<th>Penalties</th>
 				<th>Total Pay</th>
 			</tr>
 		</thead>
@@ -190,6 +194,7 @@ $pines->com_pgrid->load();
 								'clocked' => 0,
 								'variance' => 0,
 								'commission' => 0,
+								'penalties' => 0,
 								'total_pay' => 0
 							);
 							$commissions[$cur_product['salesperson']->guid] = $cur_product['salesperson']->commissions;
@@ -219,6 +224,7 @@ $pines->com_pgrid->load();
 								'clocked' => 0,
 								'variance' => 0,
 								'commission' => 0,
+								'penalties' => 0,
 								'total_pay' => 0
 							);
 							$commissions[$cur_product['salesperson']->guid] = $cur_product['salesperson']->commissions;
@@ -249,6 +255,7 @@ $pines->com_pgrid->load();
 						'clocked' => 0,
 						'variance' => 0,
 						'commission' => 0,
+						'penalties' => 0,
 						'total_pay' => 0
 					);
 				}
@@ -263,6 +270,19 @@ $pines->com_pgrid->load();
 				);
 				foreach ($schedule as $cur_schedule)
 					$totals[$cur_employee->guid]['scheduled'] += $cur_schedule->scheduled;
+
+				$issues = $pines->entity_manager->get_entities(
+					array('class' => com_hrm_issue),
+					array('&',
+						'tag' => array('com_hrm', 'issue'),
+						'gte' => array('date', $this->start_date),
+						'lte' => array('date', $this->end_date),
+						'ref' => array('employee', $cur_employee)
+					)
+				);
+				foreach ($issues as $cur_issue)
+					$totals[$cur_employee->guid]['penalties'] += $cur_issue->issue_type->penalty*$cur_issue->quantity;
+
 				$totals[$cur_employee->guid]['clocked'] = $cur_employee->timeclock->sum($this->start_date, $this->end_date);
 				$totals[$cur_employee->guid]['variance'] = ($totals[$cur_employee->guid]['clocked'] - $totals[$cur_employee->guid]['scheduled']);
 				// Calculate the total pay for this employee.
@@ -288,6 +308,7 @@ $pines->com_pgrid->load();
 						$totals[$cur_employee->guid]['total_pay'] = (($cur_employee->pay_rate/365)*($days_worked)) + $totals[$cur_employee->guid]['commission'];
 						break;
 				}
+				$totals[$cur_employee->guid]['total_pay'] -= $totals[$cur_employee->guid]['penalties'];
 			}
 			foreach ($totals as $cur_total) {
 			?>
@@ -299,9 +320,10 @@ $pines->com_pgrid->load();
 				<td class="amount">$<?php echo number_format($cur_total['total_returned'], 2, '.', ''); ?></td>
 				<td><?php echo round($cur_total['scheduled'] / 3600, 2); ?> hours</td>
 				<td><?php echo round($cur_total['clocked'] / 3600, 2); ?> hours</td>
-				<td><span<?php echo ($cur_total['variance'] < 0 ) ? ' style="color: red;"' : ''; ?>><?php echo round($cur_total['variance'] / 3600, 2); ?> hours</span></td>
+				<td><span<?php echo ($cur_total['variance'] < 0 ) ? ' class="negative;"' : ''; ?>><?php echo round($cur_total['variance'] / 3600, 2); ?> hours</span></td>
 				<td class="amount">$<?php echo number_format($cur_total['commission'], 2, '.', ''); ?></td>
-				<td class="total">$<?php echo number_format($cur_total['total_pay'], 2, '.', ''); ?></td>
+				<td class="amount"><span<?php echo ($cur_total['penalties'] > 0 ) ? ' class="negative"' : ''; ?>>$<?php echo number_format($cur_total['penalties'], 2, '.', ''); ?></span></td>
+				<td class="total"><span<?php echo ($cur_total['total_pay'] < 0 ) ? ' class="negative"' : ''; ?>>$<?php echo number_format($cur_total['total_pay'], 2, '.', ''); ?></span></td>
 			</tr>
 			<?php } ?>
 		</tbody>

@@ -14,6 +14,9 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
+
+pines_session();
+
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */

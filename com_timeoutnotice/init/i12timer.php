@@ -12,6 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( gatekeeper() ) {
+	pines_session();
 	// Check for a custom config value.
 	$calc_timeout = isset($_SESSION['com_timeoutnotice__timeout']) ? $_SESSION['com_timeoutnotice__timeout'] : $pines->config->com_timeoutnotice->timeout;
 	if ( isset($_SESSION['com_timeoutnotice__last_access']) && (time() - $_SESSION['com_timeoutnotice__last_access'] >= $calc_timeout) ) {

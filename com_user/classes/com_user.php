@@ -34,6 +34,7 @@ class com_user extends component implements user_manager_interface {
 	public function check_permissions(&$entity, $type = 1) {
 		if ((object) $entity !== $entity)
 			return false;
+		pines_session();
 		if ((object) $_SESSION['user'] !== $_SESSION['user'])
 			return true;
 		if (function_exists('gatekeeper') && gatekeeper('system/all'))
@@ -59,6 +60,7 @@ class com_user extends component implements user_manager_interface {
 
 	public function fill_session() {
 		global $pines;
+		pines_session('write');
 		if ((object) $_SESSION['user'] === $_SESSION['user']) {
 			$tmp_user = $pines->entity_manager->get_entity(
 					array('class' => user),
@@ -70,6 +72,7 @@ class com_user extends component implements user_manager_interface {
 			if (!isset($tmp_user)) {
 				$_SESSION['user']->clear_cache();
 				date_default_timezone_set($_SESSION['user_timezone']);
+				pines_session('close');
 				return;
 			}
 			unset($_SESSION['user']);
@@ -118,6 +121,7 @@ class com_user extends component implements user_manager_interface {
 			}
 		}
 		$_SESSION['user'] = $tmp_user;
+		pines_session('close');
 	}
 
 	/**
@@ -128,6 +132,7 @@ class com_user extends component implements user_manager_interface {
 	 */
 	public function gatekeeper($ability = null, $user = null) {
 		if ( !isset($user) ) {
+			pines_session();
 			// If the user is logged in, their abilities are already set up. We
 			// just need to add them to the user's.
 			if ( (object) $_SESSION['user'] === $_SESSION['user'] ) {
@@ -247,8 +252,10 @@ class com_user extends component implements user_manager_interface {
 		if ( isset($user->guid) && $user->has_tag('com_user', 'user', 'enabled') && $this->gatekeeper('com_user/login', $user) ) {
 			// Destroy session data.
 			$this->logout();
+			pines_session('write');
 			$_SESSION['user_id'] = $user->guid;
 			$this->fill_session();
+			pines_session('close');
 			return true;
 		} else {
 			return false;
@@ -256,14 +263,12 @@ class com_user extends component implements user_manager_interface {
 	}
 
 	public function logout() {
+		pines_session('write');
 		unset($_SESSION['user_id']);
 		unset($_SESSION['user']);
 		// We're changing users, so clear the gatekeeper cache.
 		$this->gatekeeper_cache = array();
-		@session_unset();
-		@session_destroy();
-		// Start a new session.
-		@session_start();
+		pines_session('destroy');
 	}
 
 	public function print_login($position = 'content', $url = null) {
@@ -275,13 +280,16 @@ class com_user extends component implements user_manager_interface {
 			} else {
 				$module->sawasc = true;
 				// Check that a challenge block was created within 10 minutes.
+				pines_session();
 				if (!isset($_SESSION['sawasc']['ServerCB']) || $_SESSION['sawasc']['timestamp'] < time() - 600) {
 					// If not, generate one.
+					pines_session('write');
 					$_SESSION['sawasc'] = array(
 						'ServerCB' => uniqid('', true),
 						'timestamp' => time(),
 						'algo' => $pines->config->com_user->sawasc_hash
 					);
+					pines_session('close');
 				}
 			}
 		}
@@ -301,6 +309,7 @@ class com_user extends component implements user_manager_interface {
 				($pines->request_component == $pines->config->default_component && $pines->request_action == 'default')
 			)
 			$query_part['default'] = '1';
+		pines_session();
 		if (!isset($message))
 			$message = isset($_SESSION['user']) ? 'You don\'t have necessary permission.' : 'Please log in first.';
 		if (!empty($message))

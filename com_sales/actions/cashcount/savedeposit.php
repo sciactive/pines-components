@@ -45,9 +45,12 @@ if ($deposit->save()) {
 		return;
 	}
 	pines_notice('Completed Deposit ['.$deposit->guid.']');
+	pines_session();
 	if (isset($_SESSION['user']->group->com_sales_task_cashcount_deposit)) {
+		pines_session('write');
 		unset($_SESSION['user']->group->com_sales_task_cashcount_deposit);
 		$_SESSION['user']->group->save();
+		pines_session('close');
 	}
 } else {
 	$deposit->cashcount = $cashcount;

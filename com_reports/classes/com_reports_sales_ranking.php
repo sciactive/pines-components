@@ -29,6 +29,7 @@ class com_reports_sales_ranking extends entity {
 		$this->goals = array();
 		$this->start_date = strtotime(date('m/01/Y 00:00:00'));
 		$this->end_date = strtotime('+1 month 00:00:00', $this->start_date);
+		pines_session();
 		$this->top_location = $_SESSION['user']->group;
 		if ($id > 0) {
 			global $pines;

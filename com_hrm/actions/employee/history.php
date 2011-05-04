@@ -11,6 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
+pines_session();
 if (gatekeeper('com_hrm/listemployees') && !empty($_REQUEST['id'])) {
 	$entity = com_hrm_employee::factory((int) $_REQUEST['id']);
 	$entity->print_history();

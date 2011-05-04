@@ -15,6 +15,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Company Schedule [' . (isset($this->employee) ? $this->employee->name  : $this->location->name) . ']';
+pines_session();
 $timezone = $_SESSION['user']->get_timezone();
 ?>
 <style type="text/css" >

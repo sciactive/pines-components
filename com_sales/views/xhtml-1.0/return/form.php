@@ -10,6 +10,9 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
+
+pines_session();
+
 if (!isset($this->entity->guid)) {
 	$this->title = 'New Return';
 } elseif ($this->entity->status == 'quoted') {

@@ -28,6 +28,7 @@ class com_sales_po extends entity {
 		// Defaults.
 		$this->products = array();
 		$this->finished = false;
+		pines_session();
 		$this->destination = $_SESSION['user']->group;
 		if ($id > 0) {
 			global $pines;

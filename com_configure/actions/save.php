@@ -125,12 +125,16 @@ if (!$component->save_config()) {
 pines_notice("Config saved for {$component->name}.");
 
 if ($_REQUEST['peruser']) {
+	pines_session('write');
 	if ($_SESSION['user'])
 		$_SESSION['user']->refresh();
+	pines_session('close');
 	redirect(pines_url('com_configure', 'list', array('peruser' => 1, 'type' => $component->type, 'id' => $component->user->guid)));
 } elseif ($_REQUEST['percondition']) {
+	pines_session('write');
 	if ($_SESSION['user'])
 		$_SESSION['user']->refresh();
+	pines_session('close');
 	redirect(pines_url('com_configure', 'list', array('percondition' => 1, 'id' => $component->user->guid)));
 } else {
 	redirect(pines_url('com_configure', 'list'));

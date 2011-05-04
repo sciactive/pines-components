@@ -18,6 +18,7 @@ if (!gatekeeper('com_customer/editinteraction'))
 
 $pines->page->override = true;
 
+pines_session();
 if ((!gatekeeper('com_customer/manageinteractions') && !$interaction->employee->is($_SESSION['user'])) ||
 	!isset($interaction->guid)) {
 	$pines->page->override_doc('false');

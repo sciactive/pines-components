@@ -14,6 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 if (!$pines->config->com_user->allow_registration)
 	punt_user('User registration not allowed.');
 
+pines_session();
 if (empty($_SESSION['com_user__tmpusername']) || empty($_SESSION['com_user__tmpusername'])) {
 	pines_notice('Username and password could not be recalled.');
 	return;
@@ -92,8 +93,10 @@ if ($pines->config->com_user->create_admin) {
 
 if ($user->save()) {
 	pines_log('Registered user ['.$user->username.']');
+	pines_session('write');
 	unset($_SESSION['com_user__tmpusername']);
 	unset($_SESSION['com_user__tmppassword']);
+	pines_session('close');
 	if ($pines->config->com_user->confirm_email) {
 		// Send the verification email.
 		$link = '<a href="'.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'secret' => $user->secret, 'url' => $_REQUEST['url']), true)).'">'.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'secret' => $user->secret, 'url' => $_REQUEST['url']), true)).'</a>';

@@ -71,8 +71,10 @@ if ($return->status != 'processed' && $return->status != 'voided') {
 			if ($pines->config->com_sales->per_item_salesperson)
 				$cur_salesperson = user::factory(intval($cur_product->values[10]));
 			// Default to the return's user.
-			if (!isset($cur_salesperson->guid))
+			if (!isset($cur_salesperson->guid)) {
+				pines_session();
 				$cur_salesperson = $return->user->guid ? $return->user : $_SESSION['user'];
+			}
 			if (!isset($cur_product_entity->guid)) {
 				pines_error("Product with id [$cur_product->key] and entered SKU [$cur_sku] was not found.");
 				unset($return->products[$key]);

@@ -16,6 +16,7 @@ if ( !gatekeeper('com_calendar/editcalendar') )
 
 $pines->page->override = true;
 
+pines_session();
 $list = array_map('intval', (array) $_REQUEST['events']);
 $failed_removes = array();
 foreach ($list as $cur_id) {

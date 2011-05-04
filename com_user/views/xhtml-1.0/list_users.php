@@ -12,6 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = ($this->enabled ? '' : 'Disabled ').'Users';
 $pines->com_pgrid->load();
+pines_session();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_user/list_users'];
 ?>

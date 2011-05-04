@@ -13,6 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Software Sources';
 $this->note = 'These repositories are where Pines looks for new and updated software.';
 $pines->com_pgrid->load();
+pines_session();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_plaza/repository/list'];
 ?>

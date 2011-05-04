@@ -59,8 +59,10 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != '
 			if ($pines->config->com_sales->per_item_salesperson)
 				$cur_salesperson = user::factory(intval($cur_product->values[10]));
 			// Default to the sale's user.
-			if (!isset($cur_salesperson->guid))
+			if (!isset($cur_salesperson->guid)) {
+				pines_session();
 				$cur_salesperson = $sale->user->guid ? $sale->user : $_SESSION['user'];
+			}
 			if ($cur_delivery == 'shipped' && !$sale->has_tag('shipping_shipped'))
 				$sale->add_tag('shipping_pending');
 			if (!isset($cur_product_entity->guid)) {

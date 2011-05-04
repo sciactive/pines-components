@@ -24,6 +24,7 @@ if ($this->removed) {
 }
 
 $pines->com_pgrid->load();
+pines_session();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/stock/list'];
 $pines->com_jstree->load();

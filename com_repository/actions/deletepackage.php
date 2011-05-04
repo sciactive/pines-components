@@ -24,6 +24,7 @@ if (empty($publisher) || empty($package) || empty($version))
 $user = user::factory($publisher);
 if (!isset($user->guid))
 	return;
+pines_session();
 if (!gatekeeper('com_repository/deleteallpackage') && !$user->is($_SESSION['user']))
 	return;
 

@@ -34,6 +34,7 @@ foreach ($products_json as $key => $cur_product) {
 	);
 }
 
+pines_session();
 if (gatekeeper('com_sales/receivelocation') && isset($_REQUEST['location'])) {
 	$location = group::factory((int) $_REQUEST['location']);
 	if (!isset($location->guid)) {

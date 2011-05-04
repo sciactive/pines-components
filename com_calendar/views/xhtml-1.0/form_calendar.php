@@ -10,6 +10,9 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
+
+pines_session();
+
 $this->title = 'Actions';
 $pines->com_pgrid->load();
 $pines->com_jstree->load();

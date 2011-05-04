@@ -17,6 +17,7 @@ if ( !gatekeeper('com_hrm/clock') && !gatekeeper('com_hrm/manageclock') )
 $pines->page->override = true;
 
 if ($_REQUEST['id'] == 'self') {
+	pines_session();
 	$employee = com_hrm_employee::factory($_SESSION['user']->guid);
 	if ($pines->config->com_hrm->timeclock_verify_pin && !empty($_SESSION['user']->pin) && $_REQUEST['pin'] != $_SESSION['user']->pin) {
 		$pines->page->override_doc(json_encode('pin'));

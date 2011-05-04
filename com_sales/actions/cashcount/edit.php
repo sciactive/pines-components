@@ -21,6 +21,7 @@ if (!empty($_REQUEST['id'])) {
 
 $entity = com_sales_cashcount::factory((int) $_REQUEST['id']);
 
+pines_session();
 $pending_count = false;
 // Ensure that only one cashcount is done at a time per assignment/location.
 if ($_SESSION['user']->group->com_sales_task_cashcount) {

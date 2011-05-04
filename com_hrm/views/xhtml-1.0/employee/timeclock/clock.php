@@ -13,12 +13,15 @@ defined('P_RUN') or die('Direct access prohibited');
 if (empty($this->title))
 	$this->title = 'Timeclock';
 
+pines_session();
 if (!isset($this->entity)) {
 	if (!isset($_SESSION['user'])) {
 		$this->detach();
 		return;
 	}
+	pines_session('write');
 	$_SESSION['user']->refresh();
+	pines_session('close');
 	$user = com_hrm_employee::factory($_SESSION['user']->guid);
 	$this->entity = $user->timeclock;
 }

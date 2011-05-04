@@ -12,6 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 // Show some info if the user is still logged in.
+pines_session();
 if (is_object($_SESSION['user'])) {
 	if ($_REQUEST['default'] == '1') {
 		$module = new module('com_user', 'default_denied', 'content');

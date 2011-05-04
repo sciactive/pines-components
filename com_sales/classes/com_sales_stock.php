@@ -115,6 +115,7 @@ class com_sales_stock extends entity {
 		if ($this->location)
 			$old_location = $this->location;
 		// TODO: Copy location to group (optional) to allow easier access control.
+		pines_session();
 		$this->location = ($location ? $location : $_SESSION['user']->group);
 		$tx->type = 'received';
 		$tx->reason = $reason;

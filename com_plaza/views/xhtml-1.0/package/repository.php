@@ -14,6 +14,7 @@ $this->title = 'Available Software';
 if (isset($this->service))
 	$this->title .= ' that Provides Service \''.htmlspecialchars($this->service).'\'';
 $pines->com_pgrid->load();
+pines_session();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_plaza/package/repository'];
 if (isset($pines->com_fancybox))

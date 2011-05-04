@@ -10,6 +10,9 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
+
+pines_session();
+
 $this->title = 'Sales Total Report';
 $pines->com_jstree->load();
 ?>

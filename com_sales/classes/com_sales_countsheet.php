@@ -73,8 +73,10 @@ class com_sales_countsheet extends entity {
 	public function print_form() {
 		global $pines;
 
-		if (!isset($this->group->guid))
+		if (!isset($this->group->guid)) {
+			pines_session();
 			$this->group = $_SESSION['user']->group;
+		}
 		$this->run_count();
 
 		$module = new module('com_sales', 'countsheet/form', 'content');

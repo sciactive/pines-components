@@ -64,6 +64,7 @@ class com_reports extends component {
 
 		$module = new module('com_reports', 'location_selector', 'content');
 		if (!isset($location)) {
+			pines_session();
 			$module->location = $_SESSION['user']->group->guid;
 		} else {
 			$module->location = $location;
@@ -98,8 +99,10 @@ class com_reports extends component {
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
 		// Location of the report.
-		if (!isset($location->guid))
+		if (!isset($location->guid)) {
+			pines_session();
 			$location = $_SESSION['user']->group;
+		}
 		if ($descendents)
 			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
 		else
@@ -141,8 +144,10 @@ class com_reports extends component {
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
 		// Location of the report.
-		if (!isset($location->guid))
+		if (!isset($location->guid)) {
+			pines_session();
 			$location = $_SESSION['user']->group;
+		}
 		if ($descendents)
 			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
 		else
@@ -182,8 +187,10 @@ class com_reports extends component {
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
 		// Location of the report.
-		if (!isset($location->guid))
+		if (!isset($location->guid)) {
+			pines_session();
 			$location = $_SESSION['user']->group;
+		}
 		if ($descendents)
 			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
 		else
@@ -216,8 +223,10 @@ class com_reports extends component {
 
 		$module = new module('com_reports', 'report_attendance', 'content');
 		// Location of the report.
-		if (!isset($location->guid))
+		if (!isset($location->guid)) {
+			pines_session();
 			$location = $_SESSION['user']->group;
+		}
 		if (!isset($employee)) {
 			$module->employees = $pines->com_hrm->get_employees(true);
 			foreach ($module->employees as $key => &$cur_employee) {
@@ -258,8 +267,10 @@ class com_reports extends component {
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
 		// Location of the report.
-		if (!isset($location->guid))
+		if (!isset($location->guid)) {
+			pines_session();
 			$location = $_SESSION['user']->group;
+		}
 		if ($descendents)
 			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
 		else
@@ -295,8 +306,10 @@ class com_reports extends component {
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
 		// Location of the report.
-		if (!isset($location->guid))
+		if (!isset($location->guid)) {
+			pines_session();
 			$location = $_SESSION['user']->group;
+		}
 		if ($descendents)
 			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
 		else
@@ -336,8 +349,10 @@ class com_reports extends component {
 		$module->all_time = (!isset($start_date) && !isset($end_date));
 		$module->verbose = $verbose;
 		// Location of the report.
-		if (!isset($location->guid))
+		if (!isset($location->guid)) {
+			pines_session();
 			$location = $_SESSION['user']->group;
+		}
 		if ($descendents)
 			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
 		else
@@ -368,6 +383,7 @@ class com_reports extends component {
 		$module = new module('com_reports', 'report_mifi_available', 'content');
 
 		// Select any MiFi applications with existing financing approved
+		pines_session();
 		$groups = $_SESSION['user']->group->get_descendents(true);
 		$module->applications = $pines->entity_manager->get_entities(
 				array('class' => com_mifi_application, 'skip_ac' => true),
@@ -410,8 +426,10 @@ class com_reports extends component {
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
 		// Location of the report.
-		if (!isset($location->guid))
+		if (!isset($location->guid)) {
+			pines_session();
 			$location = $_SESSION['user']->group;
+		}
 		if ($descendents)
 			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
 		else
@@ -434,6 +452,7 @@ class com_reports extends component {
 		$module = new module('com_reports', 'report_mifi_faxsheets', 'content');
 
 		// Select any MiFi contracts with faxsheets requests.
+		pines_session();
 		$groups = $_SESSION['user']->group->get_descendents(true);
 		$module->contracts = $pines->entity_manager->get_entities(
 				array('class' => com_mifi_contract, 'skip_ac' => true),
@@ -470,8 +489,10 @@ class com_reports extends component {
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
 		// Location of the report.
-		if (!isset($location->guid))
+		if (!isset($location->guid)) {
+			pines_session();
 			$location = $_SESSION['user']->group;
+		}
 		if ($descendents)
 			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
 		else
@@ -530,8 +551,10 @@ class com_reports extends component {
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
 		// Location of the report.
-		if (!isset($location->guid))
+		if (!isset($location->guid)) {
+			pines_session();
 			$location = $_SESSION['user']->group;
+		}
 		if ($descendents)
 			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
 		else
@@ -581,6 +604,7 @@ class com_reports extends component {
 		} elseif (isset($location->guid)) {
 			$module->title = 'Sales Report for '.$location->name;
 		} else {
+			pines_session();
 			$location = $_SESSION['user']->group;
 			$module->all = true;
 			$module->title = 'Sales Report for All Locations';
@@ -625,8 +649,10 @@ class com_reports extends component {
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
 		// Location of the report.
-		if (!isset($location->guid))
+		if (!isset($location->guid)) {
+			pines_session();
 			$location = $_SESSION['user']->group;
+		}
 		if ($descendents)
 			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
 		else

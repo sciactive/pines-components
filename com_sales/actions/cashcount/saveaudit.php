@@ -46,9 +46,12 @@ if ($audit->save()) {
 		return;
 	}
 	pines_notice('Completed Audit ['.$audit->guid.']');
+	pines_session();
 	if (isset($_SESSION['user']->group->com_sales_task_cashcount_audit)) {
+		pines_session('write');
 		unset($_SESSION['user']->group->com_sales_task_cashcount_audit);
 		$_SESSION['user']->group->save();
+		pines_session('close');
 	}
 } else {
 	$audit->cashcount = $cashcount;

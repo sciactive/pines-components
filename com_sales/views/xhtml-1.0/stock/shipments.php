@@ -15,6 +15,7 @@ if (isset($this->location))
 	$this->title .= " at {$this->location->name} [{$this->location->groupname}]";
 $this->note = $this->descendents ? 'Including Descendent Locations' : '';
 $pines->com_pgrid->load();
+pines_session();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/stock/shipments'];
 $pines->com_jstree->load();

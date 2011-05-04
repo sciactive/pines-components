@@ -14,6 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_hrm/clock') )
 	punt_user(null, pines_url('com_hrm', 'timeoff/request'));
 
+pines_session();
 $rto = com_hrm_rto::factory((int)$_REQUEST['id']);
 if (!isset($rto->guid) || !$rto->user->is($_SESSION['user']))
 	$rto = com_hrm_rto::factory();

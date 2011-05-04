@@ -41,9 +41,12 @@ foreach ($cashcount->currency as $key => $cur_currency) {
 if ($_REQUEST['save'] == 'commit') {
 	$cashcount->final = true;
 	// Complete the cashcount assignment if one exists for this group.
+	pines_session();
 	if (isset($_SESSION['user']->group->com_sales_task_cashcount)) {
+		pines_session('write');
 		unset($_SESSION['user']->group->com_sales_task_cashcount);
 		$_SESSION['user']->group->save();
+		pines_session('close');
 	}
 }
 

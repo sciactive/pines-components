@@ -34,14 +34,17 @@ if ( $pines->config->com_user->allow_registration && $_REQUEST['login_register']
 		return;
 	}
 	$user = user::factory();
+	pines_session('write');
 	$_SESSION['com_user__tmpusername'] = $_REQUEST['username'];
 	$_SESSION['com_user__tmppassword'] = $_REQUEST['password'];
+	pines_session('close');
 	$reg_module = $user->print_register();
 	if ( !empty($_REQUEST['url']) )
 		$reg_module->url = $_REQUEST['url'];
 	return;
 }
 
+pines_session();
 if ( gatekeeper() && $_REQUEST['username'] == $_SESSION['user']->username ) {
 	pines_notice('You are already logged in.');
 	redirect(pines_url());
@@ -60,13 +63,16 @@ if (!isset($user->guid)) {
 	return;
 }
 if ($pines->config->com_user->sawasc && $pines->config->com_user->pw_method != 'salt') {
+	pines_session('write');
 	if (!$user->check_sawasc($_REQUEST['ClientHash'], $_SESSION['sawasc']['ServerCB'], $_SESSION['sawasc']['algo'])) {
 		unset($_SESSION['sawasc']);
+		pines_session('close');
 		pines_notice('Incorrect username/password.');
 		$pines->user_manager->print_login();
 		return;
 	}
 	unset($_SESSION['sawasc']);
+	pines_session('close');
 } else {
 	if (!$user->check_password($_REQUEST['password'])) {
 		pines_notice('Incorrect username/password.');

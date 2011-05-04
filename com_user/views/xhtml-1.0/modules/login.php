@@ -50,7 +50,7 @@ if ($this->check_username)
 				return true;
 			var password_box = $("input[name=password]", "#p_muid_form");
 			var password = password_box.val();
-			var ClientComb = "<?php echo addslashes($_SESSION['sawasc']['ServerCB']); ?>" + md5(password+'7d5bc9dc81c200444e53d1d10ecc420a');
+			var ClientComb = "<?php pines_session(); echo addslashes($_SESSION['sawasc']['ServerCB']); ?>" + md5(password+'7d5bc9dc81c200444e53d1d10ecc420a');
 			<?php if ($_SESSION['sawasc']['algo'] == 'whirlpool') { ?>
 			var ClientHash = Whirlpool(ClientComb).toLowerCase();
 			<?php } else { ?>

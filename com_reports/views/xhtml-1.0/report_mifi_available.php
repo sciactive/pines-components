@@ -15,6 +15,7 @@ $this->title = 'Available Financing for MiFi Customers';
 $pines->icons->load();
 $pines->com_jstree->load();
 $pines->com_pgrid->load();
+pines_session();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_reports/report_mifi_avialable'];
 ?>

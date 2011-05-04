@@ -341,6 +341,7 @@ class com_sales_sale extends entity {
 	 */
 	public function get_stock() {
 		global $pines;
+		pines_session();
 		// Go through each product, and find corresponding stock entries.
 		foreach ($this->products as &$cur_product) {
 			// Find the stock entry.
@@ -1188,6 +1189,7 @@ class com_sales_sale extends entity {
 					'data' => array('enabled', true)
 				)
 			);
+		pines_session();
 		foreach ($tax_fees as $key => $cur_tax_fee) {
 			foreach($cur_tax_fee->locations as $cur_location) {
 				// If we're in one of its groups, don't remove it.

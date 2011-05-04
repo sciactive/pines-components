@@ -13,6 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 $pines->page->override = true;
 
+pines_session();
 if (isset($_SESSION['com_timeoutnotice__last_access'])) {
 	// Print the amount of time remaining in seconds.
 	$pines->page->override_doc(json_encode($pines->config->com_timeoutnotice->timeout - (time() - $_SESSION['com_timeoutnotice__last_access'])));

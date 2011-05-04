@@ -19,6 +19,7 @@ if (!empty($_REQUEST['id'])) {
 		punt_user(null, pines_url('com_sales', 'countsheet/edit'));
 }
 
+pines_session();
 $entity = com_sales_countsheet::factory((int) $_REQUEST['id']);
 // Ensure that only one countsheet is done at a time per assignment/location.
 if ($_SESSION['user']->group->com_sales_task_countsheet) {

@@ -10,6 +10,9 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
+
+pines_session();
+
 $this->title = 'Receive Inventory';
 if (!gatekeeper('com_sales/receivelocation'))
 	$this->note = 'Only use this form to receive inventory into your <strong>current</strong> location ('.(!isset($_SESSION['user']->group) ? 'No Location' : $_SESSION['user']->group->name).').';

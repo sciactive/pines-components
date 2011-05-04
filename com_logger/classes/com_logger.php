@@ -50,6 +50,7 @@ class com_logger extends component implements log_manager_interface {
 	public function log($message, $level = 'info') {
 		global $pines;
 		$date = date('c');
+		pines_session();
 		$user = is_object($_SESSION['user']) ? $_SESSION['user']->username.' ('.$_SESSION['user_id'].')' : $_SERVER['REMOTE_ADDR'];
 		$location = $pines->component.', '.$pines->action;
 		switch ($level) {

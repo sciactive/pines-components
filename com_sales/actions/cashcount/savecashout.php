@@ -25,6 +25,7 @@ if ($cashcount->cashed_out) {
 
 $cashcount->cashed_out = true;
 $cashcount->cashed_out_date = time();
+pines_session();
 $cashcount->cashed_out_user = $_SESSION['user'];
 $cashcount->comments = $_REQUEST['comments'];
 $cashcount->total_out = 0;

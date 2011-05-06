@@ -70,6 +70,12 @@ class entity extends p_base implements entity_interface {
 	 * @access private
 	 */
 	private $sleeping_reference = false;
+	/**
+	 * Whether to use "skip_ac" when accessing entity references.
+	 * 
+	 * @var bool
+	 */
+	public $p_use_skip_ac = false;
 
 	public function __construct() {
 		$args = func_get_args();
@@ -133,7 +139,7 @@ class entity extends p_base implements entity_interface {
 		if (isset($this->entity_cache[$name])) {
 			if ($this->entity_cache[$name] === 0) {
 				// The entity hasn't been loaded yet, so load it now.
-				$this->entity_cache[$name] = $pines->entity_manager->get_entity(array('class' => $this->data[$name][2]), array('&', 'guid' => $this->data[$name][1]));
+				$this->entity_cache[$name] = $pines->entity_manager->get_entity(array('class' => $this->data[$name][2], 'skip_ac' => (bool) $this->p_use_skip_ac), array('&', 'guid' => $this->data[$name][1]));
 			}
 			return $this->entity_cache[$name];
 		}

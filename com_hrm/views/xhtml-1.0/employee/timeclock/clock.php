@@ -13,7 +13,6 @@ defined('P_RUN') or die('Direct access prohibited');
 if (empty($this->title))
 	$this->title = 'Timeclock';
 
-pines_session();
 if (!isset($this->entity)) {
 	if (!isset($_SESSION['user'])) {
 		$this->detach();

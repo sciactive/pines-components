@@ -14,7 +14,6 @@ $this->title = 'Packages';
 if (isset($this->user))
 	$this->title .= ' from Publisher '.htmlspecialchars($this->user->username);
 $pines->com_pgrid->load();
-pines_session();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_repository/list_packages'];
 

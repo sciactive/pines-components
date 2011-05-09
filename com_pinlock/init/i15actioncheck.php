@@ -11,7 +11,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-pines_session();
 if (!isset($_SESSION['user']) || empty($_SESSION['user']->pin))
 	return;
 

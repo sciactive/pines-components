@@ -30,7 +30,6 @@ class com_sales_transfer extends entity {
 		$this->products = array();
 		$this->shipped = false;
 		$this->finished = false;
-		pines_session();
 		$this->origin = $_SESSION['user']->group;
 		$this->destination = null;
 		if ($id > 0) {

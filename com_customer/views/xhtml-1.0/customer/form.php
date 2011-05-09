@@ -10,9 +10,6 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-
-pines_session();
-
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Customer' : 'Editing ['.htmlspecialchars($this->entity->name).']';
 $this->note = 'Provide customer profile details in this form.';
 $pines->editor->load();

@@ -17,7 +17,6 @@ if ( empty($_REQUEST['username']) ) {
 	$pines->page->override_doc('false');
 	return;
 }
-pines_session();
 if ( gatekeeper() && $_REQUEST['username'] == $_SESSION['user']->username ) {
 	$pines->page->override_doc('true');
 	return;

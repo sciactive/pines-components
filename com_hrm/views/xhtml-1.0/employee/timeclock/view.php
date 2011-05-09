@@ -12,7 +12,6 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = "Employee Timeclock for {$this->entity->user->name}";
 $pines->com_pgrid->load();
-pines_session();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_hrm/employee/timeclock/view'];
 ?>

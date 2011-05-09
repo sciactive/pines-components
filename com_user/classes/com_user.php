@@ -34,7 +34,6 @@ class com_user extends component implements user_manager_interface {
 	public function check_permissions(&$entity, $type = 1) {
 		if ((object) $entity !== $entity)
 			return false;
-		pines_session();
 		if ((object) $_SESSION['user'] !== $_SESSION['user'])
 			return true;
 		if (function_exists('gatekeeper') && gatekeeper('system/all'))
@@ -132,7 +131,6 @@ class com_user extends component implements user_manager_interface {
 	 */
 	public function gatekeeper($ability = null, $user = null) {
 		if ( !isset($user) ) {
-			pines_session();
 			// If the user is logged in, their abilities are already set up. We
 			// just need to add them to the user's.
 			if ( (object) $_SESSION['user'] === $_SESSION['user'] ) {
@@ -280,7 +278,6 @@ class com_user extends component implements user_manager_interface {
 			} else {
 				$module->sawasc = true;
 				// Check that a challenge block was created within 10 minutes.
-				pines_session();
 				if (!isset($_SESSION['sawasc']['ServerCB']) || $_SESSION['sawasc']['timestamp'] < time() - 600) {
 					// If not, generate one.
 					pines_session('write');
@@ -309,7 +306,6 @@ class com_user extends component implements user_manager_interface {
 				($pines->request_component == $pines->config->default_component && $pines->request_action == 'default')
 			)
 			$query_part['default'] = '1';
-		pines_session();
 		if (!isset($message))
 			$message = isset($_SESSION['user']) ? 'You don\'t have necessary permission.' : 'Please log in first.';
 		if (!empty($message))

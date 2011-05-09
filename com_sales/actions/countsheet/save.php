@@ -57,7 +57,6 @@ if ($_REQUEST['save'] == 'commit') {
 	// Run the count.
 	$countsheet->run_count();
 	$countsheet->final = true;
-	pines_session();
 	if (isset($_SESSION['user']->group->com_sales_task_countsheet)) {
 		pines_session('write');
 		unset($_SESSION['user']->group->com_sales_task_countsheet);

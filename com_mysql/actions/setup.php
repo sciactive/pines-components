@@ -11,7 +11,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-pines_session();
 if (isset($_SESSION['user']) || $pines->config->com_mysql->host != 'localhost' || $pines->config->com_mysql->user != 'pines' || $pines->config->com_mysql->password != 'password' || $pines->config->com_mysql->database != 'pines' || $pines->config->com_mysql->prefix != 'pin_')
 	return;
 

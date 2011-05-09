@@ -14,7 +14,6 @@ defined('P_RUN') or die('Direct access prohibited');
 if (!$pines->config->com_user->allow_registration)
 	punt_user('User registration not allowed.');
 
-pines_session();
 if (empty($_SESSION['com_user__tmpusername']) || empty($_SESSION['com_user__tmpusername'])) {
 	pines_notice('Username and password could not be recalled.');
 	return;

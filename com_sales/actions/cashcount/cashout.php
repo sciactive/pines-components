@@ -14,7 +14,6 @@ defined('P_RUN') or die('Direct access prohibited');
 if ( !gatekeeper('com_sales/editcashcount') )
 	punt_user(null, pines_url('com_sales', 'cashcount/cashout', array('id' => $_REQUEST['id'])));
 
-pines_session();
 // Default to the current cash count that is still open for this location.
 if (!isset($_REQUEST['id']) || empty($_REQUEST['id'])) {
 	$existing_counts = $pines->entity_manager->get_entities(

@@ -15,7 +15,6 @@ $pines->com_pgrid->load();
 $pines->com_jstree->load();
 if (gatekeeper('com_sales/swapsalesrep'))
 	$pines->com_hrm->load_employee_select();
-pines_session();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/sale/list'];
 ?>

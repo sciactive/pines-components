@@ -44,7 +44,6 @@ if ( $pines->config->com_user->allow_registration && $_REQUEST['login_register']
 	return;
 }
 
-pines_session();
 if ( gatekeeper() && $_REQUEST['username'] == $_SESSION['user']->username ) {
 	pines_notice('You are already logged in.');
 	redirect(pines_url());

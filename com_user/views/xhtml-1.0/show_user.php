@@ -13,5 +13,5 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->show_title = false;
 ?>
 <div class="ui-helper-clearfix">
-	<div style="float: right; clear: right; margin-right: 150px;">Logged in as <?php pines_session(); echo htmlspecialchars("{$_SESSION['user']->name} [{$_SESSION['user']->username}]"); ?>.</div>
+	<div style="float: right; clear: right; margin-right: 150px;">Logged in as <?php echo htmlspecialchars("{$_SESSION['user']->name} [{$_SESSION['user']->username}]"); ?>.</div>
 </div>

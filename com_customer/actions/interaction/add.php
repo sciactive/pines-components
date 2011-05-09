@@ -35,7 +35,6 @@ $interaction = com_customer_interaction::factory();
 $interaction->customer = $customer;
 $interaction->employee = $employee;
 // Change the timezone to enter the event with the user's timezone.
-pines_session();
 date_default_timezone_set($_SESSION['user']->get_timezone());
 $interaction->action_date = strtotime($_REQUEST['date'].$_REQUEST['time']);
 $interaction->type = $_REQUEST['type'];

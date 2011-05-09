@@ -81,7 +81,6 @@ if ($package->ext['screens'] && count($package->ext['screens']) > 10) {
 }
 
 // Move package into repository.
-pines_session();
 $dir = clean_filename($pines->config->com_repository->repository_path.$_SESSION['user']->guid.'/'.$package->ext['package'].'/'.$package->ext['version'].'/');
 $filename = $dir.clean_filename("{$package->ext['package']}-{$package->ext['version']}.slm");
 $sig_filename = $dir.clean_filename("{$package->ext['package']}-{$package->ext['version']}.sig");

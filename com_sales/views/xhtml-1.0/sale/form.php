@@ -11,8 +11,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-pines_session();
-
 if (!isset($this->entity->guid)) {
 	$this->title = 'New Sale';
 } elseif ($this->entity->status == 'quoted') {

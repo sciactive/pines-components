@@ -38,7 +38,6 @@ if (isset($pines->entity_manager) && $pines->config->com_configure->percondition
 	unset($cur_condition, $conditions);
 }
 
-pines_session();
 if (isset($_SESSION['user']) && $pines->config->com_configure->peruser) {
 	if ((array) $_SESSION['user']->groups === $_SESSION['user']->groups) {
 		foreach ($_SESSION['user']->groups as &$cur_group) {

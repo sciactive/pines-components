@@ -39,7 +39,6 @@ $opts = array(
 );
 
 if (!gatekeeper('com_elfinder/finder')) {
-	pines_session();
 	$opts['root'] .= $pines->config->com_elfinder->own_root . $_SESSION['user']->guid . '/';
 	$opts['URL'] .= $pines->config->com_elfinder->own_root . $_SESSION['user']->guid . '/';
 	$opts['rootAlias'] = $pines->config->com_elfinder->own_root_alias;

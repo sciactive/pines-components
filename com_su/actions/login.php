@@ -15,7 +15,6 @@ if ( empty($_REQUEST['username']) && empty($_REQUEST['pin']) ) {
 	$pines->user_manager->print_login();
 	return;
 }
-pines_session();
 if ( gatekeeper() && $_REQUEST['username'] == $_SESSION['user']->username ) {
 	pines_notice('Already logged in!');
 	return;

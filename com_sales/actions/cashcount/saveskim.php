@@ -46,7 +46,6 @@ if ($skim->save()) {
 		return;
 	}
 	pines_notice('Completed Skim ['.$skim->guid.']');
-	pines_session();
 	if (isset($_SESSION['user']->group->com_sales_task_cashcount_skim)) {
 		pines_session('write');
 		unset($_SESSION['user']->group->com_sales_task_cashcount_skim);

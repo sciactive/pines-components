@@ -56,7 +56,6 @@ class com_calendar extends component {
 		global $pines;
 		$pines->page->override = true;
 
-		pines_session();
 		if (!isset($location->guid))
 			$location = $_SESSION['user']->group;
 
@@ -78,7 +77,6 @@ class com_calendar extends component {
 		global $pines;
 		$pines->page->override = true;
 
-		pines_session();
 		if (!isset($location))
 			$location = $_SESSION['user']->group->guid;
 		$module = new module('com_calendar', 'form_location');
@@ -115,7 +113,6 @@ class com_calendar extends component {
 		global $pines;
 
 		if (!isset($location) || !isset($location->guid)) {
-			pines_session();
 			$location = $_SESSION['user']->group;
 			if (!isset($employee->guid))
 				$employee = $_SESSION['user'];

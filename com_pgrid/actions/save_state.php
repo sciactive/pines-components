@@ -16,7 +16,6 @@ if (!gatekeeper())
 
 $cur_state = $_REQUEST['state'];
 $cur_view = $_REQUEST['view'];
-pines_session();
 if (isset($_SESSION['user'])) {
 	pines_session('write');
 	if ((array) $_SESSION['user']->pgrid_saved_states !== $_SESSION['user']->pgrid_saved_states)

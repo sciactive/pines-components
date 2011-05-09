@@ -42,10 +42,8 @@ foreach ($importants as $cur_important) {
 $warboard->important = array_slice($warboard->important, 0, $warboard->columns-1);
 
 $warboard->hq = group::factory((int) $_REQUEST['hq']);
-if (!isset($warboard->hq->guid)) {
-	pines_session();
+if (!isset($warboard->hq->guid))
 	$warboard->hq = $_SESSION['user']->group;
-}
 
 $warboard->ac = (object) array(
 	'user' => 3,

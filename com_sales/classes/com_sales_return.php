@@ -760,7 +760,6 @@ class com_sales_return extends entity {
 					'data' => array('enabled', true)
 				)
 			);
-		pines_session();
 		foreach ($tax_fees as $key => $cur_tax_fee) {
 			foreach($cur_tax_fee->locations as $cur_location) {
 				// If we're in one of its groups, don't remove it.

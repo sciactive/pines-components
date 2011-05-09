@@ -21,7 +21,6 @@ $errors = false;
 if (isset($_REQUEST['events'])) {
 	$events = explode(',', $_REQUEST['events']);
 
-	pines_session();
 	date_default_timezone_set($_SESSION['user']->get_timezone());
 	foreach ($events as $cur_event) {
 		if (!empty($cur_event)) {

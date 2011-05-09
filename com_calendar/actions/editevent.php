@@ -24,7 +24,6 @@ if (!isset($event->guid)) {
 			$event->all_day = true;
 	}
 } else {
-	pines_session();
 	if (!gatekeeper('com_calendar/managecalendar') && !$event->employee->is($_SESSION['user'])) {
 		pines_error('You cannot only edit your own events.');
 		$pines->com_calendar->show_calendar();

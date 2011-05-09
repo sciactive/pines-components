@@ -26,7 +26,6 @@ foreach ($list as $cur_item) {
     if (isset($cur_entity->guid)) {
 		$issue = com_hrm_issue::factory();
 		$issue->employee = $cur_entity;
-		pines_session();
 		$issue->location = $cur_entity->group->guid ? $cur_entity->group : $_SESSION['user']->group;
 		$issue->date = strtotime($_REQUEST['date']);
 		$issue->quantity = $_REQUEST['quantity'];

@@ -31,7 +31,6 @@ class com_reports_warboard extends entity {
 		$this->positions = array();
 		$this->locations = array();
 		$this->important = array();
-		pines_session();
 		$this->hq = $_SESSION['user']->group;
 		if ($id > 0) {
 			global $pines;

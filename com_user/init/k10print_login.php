@@ -11,7 +11,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-pines_session();
 if (!isset($_SESSION['user']) && $pines->config->com_user->print_login != 'null')
 	$pines->user_manager->print_login($pines->config->com_user->print_login);
 

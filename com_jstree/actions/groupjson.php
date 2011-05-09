@@ -13,7 +13,6 @@ defined('P_RUN') or die('Direct access prohibited');
 
 $pines->page->override = true;
 
-pines_session();
 if (isset($_SESSION['user']->group)) {
 	$my_group = clone $_SESSION['user']->group;
 	$locations = $my_group->get_descendents();

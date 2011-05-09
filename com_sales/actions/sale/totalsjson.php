@@ -18,10 +18,8 @@ $pines->page->override = true;
 
 // Format the location.
 $location = group::factory((int) $_REQUEST['location']);
-if (!isset($location->guid)) {
-	pines_session();
+if (!isset($location->guid))
 	$location = $_SESSION['user']->group;
-}
 
 // Format the date.
 if (preg_match('/\d{4}-\d{2}-\d{2}/', $_REQUEST['date_start'])) {

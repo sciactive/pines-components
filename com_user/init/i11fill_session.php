@@ -11,7 +11,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-pines_session();
 if ( isset($_SESSION['user_id']) )
 	$pines->user_manager->fill_session();
 

@@ -29,7 +29,6 @@ if (isset($_REQUEST['employee'])) {
 		}
 		if ($event->time_off)
 			return;
-		pines_session();
 		if (!gatekeeper('com_calendar/managecalendar') && !$event->user->is($_SESSION['user']))
 			punt_user(null, pines_url('com_calendar', 'editcalendar'));
 	} else {
@@ -37,10 +36,8 @@ if (isset($_REQUEST['employee'])) {
 	}
 
 	$event->employee = com_hrm_employee::factory((int) $_REQUEST['employee']);
-	if (!gatekeeper('com_calendar/managecalendar')) {
-		pines_session();
+	if (!gatekeeper('com_calendar/managecalendar'))
 		$event->employee = com_hrm_employee::factory((int) $_SESSION['user']->guid);
-	}
 
 	$location = $event->employee->group;
 	$event->title = $event->employee->name;

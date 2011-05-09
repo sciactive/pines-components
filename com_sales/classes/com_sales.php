@@ -267,10 +267,8 @@ class com_sales extends component {
 			$start_date = strtotime('-1 week 00:00:00');
 		if (!isset($end_date))
 			$end_date = strtotime('23:59:59') + 1;
-		if (!isset($location->guid)) {
-			pines_session();
+		if (!isset($location->guid))
 			$location = $_SESSION['user']->group;
-		}
 		$selector = array('|',
 			'data' => array(
 				array('status', 'info_requested'),
@@ -300,7 +298,6 @@ class com_sales extends component {
 		$form->finished = $module->finished = $finished;
 
 		// Remind the user to do a cash count if one is assigned to their location.
-		pines_session();
 		if ($_SESSION['user']) {
 			pines_session('write');
 			$_SESSION['user']->refresh();
@@ -350,10 +347,8 @@ class com_sales extends component {
 			$selector['gte'] = array('p_cdate', (int) $start_date);
 		if (isset($end_date))
 			$selector['lt'] = array('p_cdate', (int) $end_date);
-		if (!isset($location->guid)) {
-			pines_session();
+		if (!isset($location->guid))
 			$location = $_SESSION['user']->group;
-		}
 		if (!gatekeeper('com_sales/approvecountsheet'))
 			$approved_selector = array('!&', 'data' => array('status', 'approved'));
 		else
@@ -370,7 +365,6 @@ class com_sales extends component {
 		$module->descendents = $descendents;
 
 		// Remind the user to do a countsheet if one is assigned to their location.
-		pines_session();
 		if ($_SESSION['user']) {
 			pines_session('write');
 			$_SESSION['user']->refresh();
@@ -500,10 +494,8 @@ class com_sales extends component {
 			$selector['gte'] = array('p_cdate', (int) $start_date);
 		if (isset($end_date))
 			$selector['lt'] = array('p_cdate', (int) $end_date);
-		if (!isset($location)) {
-			pines_session();
+		if (!isset($location))
 			$location = $_SESSION['user']->group;
-		}
 		if ($descendents)
 			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
 		else
@@ -536,10 +528,8 @@ class com_sales extends component {
 			$selector['gte'] = array('p_cdate', (int) $start_date);
 		if (isset($end_date))
 			$selector['lt'] = array('p_cdate', (int) $end_date);
-		if (!isset($location)) {
-			pines_session();
+		if (!isset($location))
 			$location = $_SESSION['user']->group;
-		}
 		if ($descendents)
 			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
 		else
@@ -572,10 +562,8 @@ class com_sales extends component {
 			// Second selector doesn't work when it's just an empty array.
 			$selector2 = array('&', 'tag' => 'shipping_shipped');
 		} else {
-			if (!isset($location)) {
-				pines_session();
+			if (!isset($location))
 				$location = $_SESSION['user']->group;
-			}
 			if ($descendents)
 				$selector2 = array('|', 'ref' => array('group', $location->get_descendents(true)));
 			else
@@ -636,7 +624,6 @@ class com_sales extends component {
 		$show_empty = false;
 		if ($removed) {
 			$module->removed = true;
-			pines_session();
 			$module->location = $_SESSION['user']->group;
 			$module->stock = $pines->entity_manager->get_entities(
 					array('class' => com_sales_stock),
@@ -651,7 +638,6 @@ class com_sales extends component {
 				$or = array('|', 'ref' => array('location', $location));
 			if (!isset($location)) {
 				$show_empty = true;
-				pines_session();
 				$module->location = $_SESSION['user']->group;
 				$module->stock = array();
 			} else {
@@ -695,7 +681,6 @@ class com_sales extends component {
 
 		$module->finished = $finished;
 		if ($just_pending_shipment) {
-			pines_session();
 			if (isset($_SESSION['user']->group)) {
 				$module->transfers = $pines->entity_manager->get_entities(
 						array('class' => com_sales_transfer),
@@ -767,7 +752,6 @@ class com_sales extends component {
 
 		$module = new module('com_sales', 'forms/location_selector', 'content');
 		if (!isset($location)) {
-			pines_session();
 			$module->location = $_SESSION['user']->group->guid;
 		} else {
 			$module->location = $location;
@@ -875,7 +859,6 @@ class com_sales extends component {
 		$selector_transfer = array('&', 'tag' => array('com_sales', 'transfer'), 'data' => array(array('final', true), array('finished', false), array('shipped', true)));
 		
 		$module = new module('com_sales', 'stock/formreceive', 'content');
-		pines_session();
 		if (!gatekeeper('com_sales/receivelocation')) {
 			$selector_po['ref'] = array('destination', $_SESSION['user']->group);
 			$selector_transfer['ref'] = array('destination', $_SESSION['user']->group);
@@ -988,10 +971,8 @@ class com_sales extends component {
 		}
 		// Secondary options specify the criteria to search the transactions.
 		$secondary_options = array('&');
-		if (!isset($location->guid)) {
-			pines_session();
+		if (!isset($location->guid))
 			$location = $_SESSION['user']->group;
-		}
 		if ($descendents)
 			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
 		else

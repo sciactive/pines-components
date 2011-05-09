@@ -23,7 +23,6 @@ if (!isset($entity->guid)) {
 }
 
 // If they don't have com_sales/voidsale, then they only have com_sales/voidownsale.
-pines_session();
 if ( !gatekeeper('com_sales/voidsale') && !$_SESSION['user']->is($entity->user) ) {
 	pines_notice('You can only void your own sales.');
 } else {

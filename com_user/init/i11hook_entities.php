@@ -109,7 +109,6 @@ function com_user__check_permissions_save(&$array) {
  * @param array &$array An array of either an entity or another array of entities.
  */
 function com_user__add_access(&$array) {
-	pines_session();
 	if ((object) $_SESSION['user'] === $_SESSION['user'] &&
 		!isset($array[0]->guid) &&
 		!$array[0]->has_tag('com_user', 'user') &&

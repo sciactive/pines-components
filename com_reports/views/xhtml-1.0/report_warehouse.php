@@ -172,7 +172,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			if (empty($cur_tx->products))
 				continue;
 			foreach ($cur_tx->products as $cur_item) {
-				if (!empty($cur_item['serial']) || $cur_item['delivery'] != 'warehouse')
+				if (!empty($cur_item['serial']) || $cur_item['delivery'] != 'warehouse' || !empty($cur_item['returned_quantity']))
 					continue;
 			?>
 			<tr>

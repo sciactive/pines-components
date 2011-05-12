@@ -75,6 +75,19 @@ class com_hrm extends component {
 	}
 
 	/**
+	 * Creates and attaches a module which lists employement applications.
+	 */
+	public function list_applications() {
+		global $pines;
+
+		$module = new module('com_hrm', 'application/list', 'content');
+		$module->applications = $pines->entity_manager->get_entities(array('class' => com_hrm_application), array('&', 'tag' => array('com_hrm', 'application')));
+
+		if ( empty($module->applications) )
+			pines_notice('There are no matching applications.');
+	}
+
+	/**
 	 * Creates and attaches a module which lists employees.
 	 * 
 	 * @param bool $employed List currently employed or past employees.

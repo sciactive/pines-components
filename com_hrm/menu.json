@@ -29,5 +29,13 @@
 			"depend": {
 				"ability": "com_hrm/viewownhistory"
 			}
+		},
+		{
+			"path": "main_menu/business/hrm/applications",
+			"text": "Applications",
+			"href": ["com_hrm","application/list"],
+			"depend": {
+				"ability": "com_hrm/listapplications"
+			}
 		}
 ]

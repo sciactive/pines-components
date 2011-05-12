@@ -33,6 +33,8 @@ return array(
 		array('editemployee', 'Edit Employees', 'User can edit current employees.'),
 		array('showssn', 'Show SSN', 'User can see and edit Social Security Numbers.'),
 		array('removeemployee', 'Remove Employees', 'User can remove current employees.'),
+		array('listapplications', 'List Employees', 'User can see employment applications.'),
+		array('editapplication', 'Edit Employees', 'User can edit employment applications.'),
 		array('listissuetypes', 'List Issue Types', 'User can see employee issue types.'),
 		array('editissuetypes', 'Edit Issue Types', 'User can edit employee issue types.'),
 		array('deleteissuetype', 'Delete Issue Types', 'User can delete employee issue types.'),

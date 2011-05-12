@@ -151,6 +151,12 @@ return array(
 		),
 	),
 	array(
+		'name' => 'referral_codes',
+		'cname' => 'Enable Referral Codes',
+		'description' => 'Enable users to enter referral codes.',
+		'value' => false,
+	),
+	array(
 		'name' => 'conditional_groups',
 		'cname' => 'Conditional Groups',
 		'description' => 'Allow groups to only provide abilities if conditions are met.',

@@ -333,6 +333,12 @@ if ($pines->config->com_user->check_username)
 				<label><span class="pf-label">Fax</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="fax" size="24" value="<?php echo format_phone($this->entity->fax); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
+			<?php if ($pines->config->com_user->referral_codes) { ?>
+			<div class="pf-element">
+				<label><span class="pf-label">Referral Code</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="referral_code" size="24" value="<?php echo htmlspecialchars($this->entity->referral_code); ?>" /></label>
+			</div>
+			<?php } ?>
 			<div class="pf-element">
 				<label>
 					<span class="pf-label">Timezone</span>

@@ -24,6 +24,8 @@ $user->grant('com_user/login');
 
 $user->username = $_SESSION['com_user__tmpusername'];
 $user->password($_SESSION['com_user__tmppassword']);
+if ($pines->config->com_user->referral_codes)
+	$user->referral_code = $_SESSION['com_user__tmpreferral_code'];
 $user->name_first = $_REQUEST['name_first'];
 $user->name_middle = $_REQUEST['name_middle'];
 $user->name_last = $_REQUEST['name_last'];
@@ -95,6 +97,7 @@ if ($user->save()) {
 	pines_session('write');
 	unset($_SESSION['com_user__tmpusername']);
 	unset($_SESSION['com_user__tmppassword']);
+	unset($_SESSION['com_user__tmpreferral_code']);
 	pines_session('close');
 	if ($pines->config->com_user->confirm_email) {
 		// Send the verification email.

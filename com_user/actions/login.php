@@ -37,6 +37,7 @@ if ( $pines->config->com_user->allow_registration && $_REQUEST['login_register']
 	pines_session('write');
 	$_SESSION['com_user__tmpusername'] = $_REQUEST['username'];
 	$_SESSION['com_user__tmppassword'] = $_REQUEST['password'];
+	$_SESSION['com_user__tmpreferral_code'] = $_REQUEST['referral_code'];
 	pines_session('close');
 	$reg_module = $user->print_register();
 	if ( !empty($_REQUEST['url']) )

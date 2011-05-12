@@ -197,6 +197,13 @@ if ($this->check_username)
 				<label><span class="pf-label">Re-enter Password</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="password" name="password2" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
 			</div>
+			<?php if ($pines->config->com_user->referral_codes) { ?>
+			<div class="pf-element">
+				<label><span class="pf-label">Referral Code</span>
+					<span class="pf-note">Optional</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="referral_code" size="<?php echo ($this->style == 'small') ? '10' : '24'; ?>" /></label>
+			</div>
+			<?php } ?>
 		</div>
 		<?php } if (!$this->hide_recovery && $pines->config->com_user->pw_recovery) { ?>
 		<div class="pf-element" id="p_muid_recovery">

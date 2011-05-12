@@ -43,6 +43,8 @@ if (gatekeeper('com_user/enabling')) {
 $user->email = $_REQUEST['email'];
 $user->phone = preg_replace('/\D/', '', $_REQUEST['phone']);
 $user->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
+if ($pines->config->com_user->referral_codes)
+	$user->referral_code = $_REQUEST['referral_code'];
 $user->timezone = $_REQUEST['timezone'];
 
 // Location

@@ -72,7 +72,6 @@ $timezone = $_SESSION['user']->get_timezone();
 			},
 			defaultView: <?php echo json_encode($this->view_type); ?>,
 			firstDay: 1,
-			firstHour: 8,
 			selectable: true,
 			theme: true,
 			ignoreTimezone: false,
@@ -91,6 +90,9 @@ $timezone = $_SESSION['user']->get_timezone();
 						continue;
 					if ($event_counter > 0)
 						echo ',';
+					$cur_start = format_date($cur_event->start, 'custom', 'G');
+					if (!$cur_event->all_day && ($cur_start < $min_start || !isset($min_start)))
+						$min_start = $cur_start;
 					echo '{';
 					if ($cur_event->event_id != 0) {
 						echo 'group: true,';
@@ -131,7 +133,9 @@ $timezone = $_SESSION['user']->get_timezone();
 					echo '}';
 					$event_counter++;
 				} ?>],
-			 select: function(start, end, allDay, jsEvent, view) {
+			firstHour: <?php echo isset($min_start) ? $min_start : 8; ?>,
+			minTime: <?php echo isset($min_start) ? $min_start : 8; ?>,
+			select: function(start, end, allDay, jsEvent, view) {
 				pines.com_calendar_new_event(start.toString(), end.toString());
 			},
 			eventClick: function(event,jsEvent,view) {

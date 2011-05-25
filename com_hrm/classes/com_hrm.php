@@ -88,6 +88,23 @@ class com_hrm extends component {
 	}
 
 	/**
+	 * Creates and attaches a module which lists employee bonuses.
+	 *
+	 * @return module The list module.
+	 */
+	public function list_bonuses() {
+		global $pines;
+
+		$module = new module('com_hrm', 'bonus/list', 'content');
+		$module->bonuses = $pines->entity_manager->get_entities(array('class' => com_hrm_bonus), array('&', 'tag' => array('com_hrm', 'bonus')));
+
+		if ( empty($module->bonuses) )
+			pines_notice('There are no employee bonuses.');
+
+		return $module;
+	}
+
+	/**
 	 * Creates and attaches a module which lists employees.
 	 * 
 	 * @param bool $employed List currently employed or past employees.
@@ -101,6 +118,8 @@ class com_hrm extends component {
 
 		if ( empty($module->employees) )
 			pines_notice('There are no matching employees.');
+
+		return $module;
 	}
 
 	/**

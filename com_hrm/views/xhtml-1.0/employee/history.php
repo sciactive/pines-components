@@ -53,7 +53,7 @@ $pines->com_pgrid->load();
 		};
 		$("#p_muid_sales, #p_muid_returns").pgrid(cur_defaults);
 		<?php } ?>
-		$("#p_muid_history, #p_muid_issues").pgrid({
+		$("#p_muid_history, #p_muid_issues, #p_muid_paystubs").pgrid({
 			pgrid_sort_col: 1,
 			pgrid_sort_ord: 'asc',
 			pgrid_toolbar: false,
@@ -254,6 +254,37 @@ $pines->com_pgrid->load();
 					<td><?php echo htmlspecialchars($cur_return->group->name); ?></td>
 				</tr>
 			<?php } ?>
+			</tbody>
+		</table>
+	</div>
+	<?php } if (!empty($this->paystubs)) { ?>
+	<h3 class="ui-helper-clearfix"><a href="#">Paystubs</a></h3>
+	<div>
+		<table id="p_muid_paystubs">
+			<thead>
+				<tr>
+					<th>From</th>
+					<th>To</th>
+					<th>Amount</th>
+					<th>Penalties</th>
+					<th>Bonuses</th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php
+			foreach ($this->paystubs as $cur_paystub) {
+				foreach ($cur_paystub->payroll as $cur_payment) {
+					if ($cur_payment['employee']->guid != $this->entity->guid)
+						continue; ?>
+				<tr title="<?php echo $cur_paystub->guid; ?>">
+					<td><?php echo format_date($cur_paystub->start); ?></td>
+					<td><?php echo format_date($cur_paystub->end); ?></td>
+					<td>$<?php echo number_format($cur_payment['total_pay'], 2, '.', ''); ?></td>
+					<td>$<?php echo number_format($cur_payment['penalties'], 2, '.', ''); ?></td>
+					<td>$<?php echo number_format($cur_payment['bonuses'], 2, '.', ''); ?></td>
+				</tr>
+			<?php }
+			} ?>
 			</tbody>
 		</table>
 	</div>

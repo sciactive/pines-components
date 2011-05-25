@@ -13,6 +13,13 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
+		'name' => 'com_reports',
+		'cname' => 'Reports Integration',
+		'description' => 'Integrate with com_reports.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'com_calendar',
 		'cname' => 'Calendar Integration',
 		'description' => 'Integrate with com_calendar.',
@@ -53,6 +60,24 @@ return array(
 		'description' => 'Verify the user\'s PIN when they clock in or out.',
 		'value' => true,
 		'peruser' => true,
+	),
+	array(
+		'name' => 'pay_start',
+		'cname' => 'Payroll Start',
+		'description' => 'This is first payday logged in the system, and each payday will be based upon this date and the period.',
+		'value' => '5/6/2011',
+		'peruser' => true,
+	),
+	array(
+		'name' => 'pay_period',
+		'cname' => 'Payroll Period',
+		'description' => 'This is how often payday occurs at the company.',
+		'value' => '604800',
+		'options' => array(
+			'1 Week' => '604800',
+			'2 Weeks' => '1209600',
+			'1 Month' => '2419200',
+		)
 	),
 	array(
 		'name' => 'termination_reasons',

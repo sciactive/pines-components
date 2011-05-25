@@ -19,11 +19,43 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	// <![CDATA[
 
 	pines(function(){
-		<?php if (gatekeeper('com_hrm/fileissue')) { ?>
-		var issue_id;
+		var employees;
+		<?php if (gatekeeper('com_hrm/editbonuses')) { ?>
+		var bonus_dialog = $("#p_muid_bonus_dialog");
+
+		$("#p_muid_bonus_dialog [name=effective_date]").datepicker({
+			dateFormat: "yy-mm-dd",
+			changeMonth: true,
+			changeYear: true,
+			showOtherMonths: true,
+			selectOtherMonths: true
+		});
+
+		bonus_dialog.find("form").submit(function(){
+			bonus_dialog.dialog('option', 'buttons').Done();
+			return false;
+		});
+		bonus_dialog.dialog({
+			bgiframe: true,
+			autoOpen: false,
+			modal: true,
+			buttons: {
+				"Grant Bonus": function(){
+					pines.post("<?php echo addslashes(pines_url('com_hrm', 'bonus/add')); ?>", {
+						employees: employees,
+						name: bonus_dialog.find("#p_muid_bonus_dialog [name=name]").val(),
+						date: $("#p_muid_bonus_dialog [name=effective_date]").val(),
+						amount: $("#p_muid_bonus_dialog [name=amount]").val(),
+						comments: $("#p_muid_bonus_dialog [name=comments]").val()
+					});
+					bonus_dialog.dialog("close");
+				}
+			}
+		});
+		<?php } if (gatekeeper('com_hrm/fileissue')) { ?>
 		var issue_dialog = $("#p_muid_issue_dialog");
 
-		$("[name=effective_date]").datepicker({
+		$("#p_muid_issue_dialog [name=effective_date]").datepicker({
 			dateFormat: "yy-mm-dd",
 			changeMonth: true,
 			changeYear: true,
@@ -42,7 +74,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			buttons: {
 				"File Issue": function(){
 					pines.post("<?php echo addslashes(pines_url('com_hrm', 'issue/file')); ?>", {
-						items: issue_id,
+						items: employees,
 						issue_type: issue_dialog.find(":input[name=issue_type]").val(),
 						date: $("#p_muid_issue_dialog [name=effective_date]").val(),
 						quantity: $("#p_muid_issue_dialog [name=quantity]").val(),
@@ -53,7 +85,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			}
 		});
 		<?php } if ($this->employed) { ?>
-		var terminate_id;
 		var terminate_dialog = $("#p_muid_terminate_dialog");
 
 		terminate_dialog.find("form").submit(function(){
@@ -68,7 +99,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				"Terminate": function(){
 					var dispose_as = terminate_dialog.find(":input[name=reason]").val();
 					pines.post("<?php echo addslashes(pines_url('com_hrm', 'employee/terminate')); ?>", {
-						items: terminate_id,
+						items: employees,
 						date: $("#p_muid_terminate_dialog [name=effective_date]").val(),
 						reason: dispose_as,
 						employed: '<?php echo $this->employed ? 'true' : 'false'; ?>'
@@ -79,7 +110,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		});
 
 		<?php } else { ?>
-		var rehire_id;
 		var rehire_dialog = $("#p_muid_rehire_dialog");
 
 		rehire_dialog.find("form").submit(function(){
@@ -93,7 +123,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			buttons: {
 				"Rehire": function(){
 					pines.post("<?php echo addslashes(pines_url('com_hrm', 'employee/terminate')); ?>", {
-						items: rehire_id,
+						items: employees,
 						date: $("#p_muid_rehire_dialog [name=effective_date]").val(),
 						reason: 'rehired',
 						employed: '<?php echo $this->employed ? 'true' : 'false'; ?>'
@@ -111,11 +141,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			pgrid_toolbar_contents: [
 				<?php if (gatekeeper('com_hrm/addemployee')) { if (!$this->employed) { ?>
 					{type: 'button', text: 'Rehire', extra_class: 'picon picon-edit-undo', multi_select: true, click: function(e, rows){
-					rehire_id = "";
+					employees = "";
 					$.each(rows.pgrid_export_rows(), function(){
-						if (rehire_id != "")
-							rehire_id += ",";
-						rehire_id += this.key;
+						if (employees != "")
+							employees += ",";
+						employees += this.key;
 					});
 					if (rows.length == 1)
 						rehire_dialog.find("div.dialog_title").html('<h1>'+rows.pgrid_get_value(3)+'</h1>');
@@ -161,17 +191,27 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
 				{type: 'button', text: 'History', extra_class: 'picon picon-folder-html', url: '<?php echo addslashes(pines_url('com_hrm', 'employee/history', array('id' => '__title__'))); ?>'},
-				<?php if (gatekeeper('com_hrm/fileissue')) {
-				//mail-meeting-request-reply
-				//im-ban-user
-				//view-form-action
-				?>
-				{type: 'button', text: 'File Issue', extra_class: 'picon picon-task-attention', multi_select: true, click: function(e, rows){
-					issue_id = "";
+				<?php if (gatekeeper('com_hrm/editbonuses')) { ?>
+				{type: 'button', title: 'Bonus', extra_class: 'picon picon-get-hot-new-stuff', multi_select: true, click: function(e, rows){
+					employees = "";
 					$.each(rows.pgrid_export_rows(), function(){
-						if (issue_id != "")
-							issue_id += ",";
-						issue_id += this.key;
+						if (employees != "")
+							employees += ",";
+						employees += this.key;
+					});
+					if (rows.length == 1)
+						bonus_dialog.find("div.dialog_title").html('<h1>'+rows.pgrid_get_value(3)+'</h1>');
+					else
+						bonus_dialog.find("div.dialog_title").html('<h1>'+rows.length+' Employees</h1>');
+					bonus_dialog.dialog("open");
+				}},
+				<?php } if (gatekeeper('com_hrm/fileissue')) { ?>
+				{type: 'button', title: 'File Issue', extra_class: 'picon picon-task-attention', multi_select: true, click: function(e, rows){
+					employees = "";
+					$.each(rows.pgrid_export_rows(), function(){
+						if (employees != "")
+							employees += ",";
+						employees += this.key;
 					});
 					if (rows.length == 1)
 						issue_dialog.find("div.dialog_title").html('<h1>'+rows.pgrid_get_value(3)+'</h1>');
@@ -181,11 +221,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				}},
 				<?php } if (gatekeeper('com_hrm/removeemployee') && $this->employed) { ?>
 				{type: 'button', text: 'Terminate', extra_class: 'picon picon-list-remove-user', multi_select: true, click: function(e, rows){
-					terminate_id = "";
+					employees = "";
 					$.each(rows.pgrid_export_rows(), function(){
-						if (terminate_id != "")
-							terminate_id += ",";
-						terminate_id += this.key;
+						if (employees != "")
+							employees += ",";
+						employees += this.key;
 					});
 					if (rows.length == 1)
 						terminate_dialog.find("div.dialog_title").html('<h1>'+rows.pgrid_get_value(3)+'</h1>');
@@ -193,6 +233,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						terminate_dialog.find("div.dialog_title").html('<h1>'+rows.length+' Employees</h1>');
 					terminate_dialog.dialog("open");
 				}},
+				<?php } if (gatekeeper('com_hrm/editbonuses')) { ?>
+				{type: 'button', text: 'Bonuses', extra_class: 'picon picon-story-editor', selection_optional: true, url: '<?php echo addslashes(pines_url('com_hrm', 'bonus/list')); ?>'},
 				<?php } if (gatekeeper('com_hrm/editissuetypes')) { ?>
 				{type: 'button', text: 'Issue Types', extra_class: 'picon picon-story-editor', selection_optional: true, url: '<?php echo addslashes(pines_url('com_hrm', 'issue/list')); ?>'},
 				<?php } if (gatekeeper('com_hrm/managerto')) { ?>
@@ -277,7 +319,30 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<?php } ?>
 	</tbody>
 </table>
-<?php if (gatekeeper('com_hrm/fileissue')) { ?>
+<?php if (gatekeeper('com_hrm/editbonuses')) { ?>
+<div id="p_muid_bonus_dialog" title="Grant Employee Bonus" style="display: none;">
+	<form class="pf-form" method="post" action="">
+		<div class="pf-element pf-heading dialog_title"></div>
+		<div class="pf-element">
+			<label><span class="pf-label">Description</span>
+				<input class="ui-widget-content ui-corner-all" type="text" size="24" name="name" value="" /></label>
+		</div>
+		<div class="pf-element">
+			<label><span class="pf-label">Date</span>
+				<input class="ui-widget-content ui-corner-all" type="text" size="24" name="effective_date" value="<?php echo format_date(time(), 'date_sort'); ?>" /></label>
+		</div>
+		<div class="pf-element">
+			<label><span class="pf-label">Amount</span>
+				$ <input class="ui-widget-content ui-corner-all" type="text" size="5" name="amount" value="" /></label>
+		</div>
+		<div class="pf-element">
+			<label><span class="pf-label">Comments</span>
+				<input class="ui-widget-content ui-corner-all" type="text" size="24" name="comments" value="" /></label>
+		</div>
+	</form>
+	<br />
+</div>
+<?php } if (gatekeeper('com_hrm/fileissue')) { ?>
 <div id="p_muid_issue_dialog" title="File Employee Issue" style="display: none;">
 	<form class="pf-form" method="post" action="">
 		<div class="pf-element pf-heading dialog_title"></div>

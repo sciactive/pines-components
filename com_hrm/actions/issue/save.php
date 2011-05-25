@@ -24,7 +24,7 @@ if (isset($_REQUEST['id']) && (int) $_REQUEST['id'] != 0) {
 	$issue_type = com_hrm_issue_type::factory();
 }
 $issue_type->name = $_REQUEST['name'];
-$issue_type->penalty = $_REQUEST['penalty'];
+$issue_type->penalty = (float) $_REQUEST['penalty'];
 $issue_type->description = $_REQUEST['description'];
 
 if (empty($issue_type->name)) {

@@ -38,8 +38,7 @@ $product_error = false;
 // Used to check products which allow only one per ticket.
 $one_per_ticket_guids = array();
 if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != 'voided') {
-	$sale->warehouse_items = false;
-	$sale->warehouse_complete = false;
+	$sale->warehouse = false;
 	$sale->products = (array) json_decode($_REQUEST['products']);
 	if (empty($sale->products)) {
 		pines_notice('No products were selected.');
@@ -122,7 +121,7 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != '
 				}
 			}
 			if ($cur_delivery == 'warehouse')
-				$sale->warehouse_items = true;
+				$sale->warehouse = true;
 		}
 		unset($cur_product);
 	}

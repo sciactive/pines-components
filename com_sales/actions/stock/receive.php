@@ -88,6 +88,47 @@ foreach ($products as $cur_product) {
 		$stock->receive($status, $origin, $location);
 		$stock->save();
 
+		if ($status == 'received_po') {
+			// Check for warehouse items being assigned the incoming stock.
+			$wh_sales = $pines->entity_manager->get_entities(
+					array('class' => com_sales_sale),
+					array('&',
+						'tag' => array('com_sales', 'sale'),
+						'ref' => array(
+							array('products', $origin),
+							array('products', $cur_product_entity)
+						)
+					),
+					array('|',
+						'strict' => array(
+							array('status', 'invoiced'),
+							array('status', 'paid')
+						)
+					)
+				);
+			foreach ($wh_sales as $cur_sale) {
+				foreach ($cur_sale->products as &$cur_sale_product) {
+					if ($cur_sale_product['delivery'] != 'warehouse' || !$cur_product_entity->is($cur_sale_product['entity']))
+						continue;
+					if (!isset($cur_sale_product['po']) || !$origin->is($cur_sale_product['po']))
+						continue;
+					// Have they already all been assigned?
+					if ((count($cur_sale_product['stock_entities']) - count($cur_sale_product['returned_stock_entities'])) >= $cur_sale_product['quantity'])
+						continue;
+					// Assign this stock to the warehouse order.
+					$cur_sale_product['stock_entities'][] = $stock;
+					if ($cur_product_entity->serialized)
+						$cur_sale_product['serial'] = $stock->serial;
+					$change = true;
+				}
+				unset($cur_sale_product);
+				if (!$cur_sale->save()) {
+					pines_log("Couldn't assign incoming stock on PO {$origin->po_number} to the warehouse order {$cur_sale->id}.", 'error');
+					pines_error("Couldn't assign incoming stock on PO {$origin->po_number} to the warehouse order {$cur_sale->id}.");
+				}
+			}
+		}
+
 		$module->success[] = array($stock, $origin);
 	}
 }

@@ -1103,19 +1103,16 @@ class com_sales extends component {
 			}
 		}
 	}
-
+	
 	/**
-	 * List warehouse sales that need to be fulfilled.
+	 * List assigned warehouse items.
+	 * 
+	 * Fulfilled items are either shipped out to the cutomer, or waiting at the
+	 * store to be picked up. When they are delivered/picked up they become
+	 * complete.
 	 */
-	public function warehouse_fulfill() {
+	public function warehouse_assigned() {
 		global $pines;
-
-		// Warehouse group.
-		$warehouse = group::factory($pines->config->com_sales->warehouse_group);
-		if (!isset($warehouse->guid)) {
-			pines_error('Warehouse group is not configured correctly.');
-			return;
-		}
 
 		// Get sales with warehouse items.
 		$sales = (array) $pines->entity_manager->get_entities(
@@ -1123,8 +1120,8 @@ class com_sales extends component {
 				array('&',
 					'tag' => array('com_sales', 'sale'),
 					'data' => array(
-						array('warehouse_items', true),
-						array('warehouse_complete', false)
+						array('warehouse', true),
+						array('warehouse_assigned', true)
 					)
 				),
 				array('|',
@@ -1135,30 +1132,19 @@ class com_sales extends component {
 				)
 			);
 
-		$module = new module('com_sales', 'warehouse/fulfill', 'content');
+		$module = new module('com_sales', 'warehouse/assigned', 'content');
 		$module->sales = $sales;
 	}
 
 	/**
-	 * List warehouse items that need to be ordered.
+	 * List pending warehouse items.
+	 * 
+	 * By default, shows items that need to be ordered.
+	 * 
+	 * @param bool $ordered Whether to show ordered products instead.
 	 */
-	public function warehouse_pending() {
+	public function warehouse_pending($ordered = false) {
 		global $pines;
-
-		// Warehouse group.
-		$warehouse = group::factory($pines->config->com_sales->warehouse_group);
-		if (!isset($warehouse->guid)) {
-			pines_error('Warehouse group is not configured correctly.');
-			return;
-		}
-
-		$module = new module('com_sales', 'warehouse/ordering', 'content');
-		// How many items were found in the warehouse stock.
-		$module->in_stock = 0;
-		// How many items were found on incoming POs.
-		$module->in_pos = 0;
-		// How many items were found on incoming transfers.
-		$module->in_transfers = 0;
 
 		// Get sales with warehouse items.
 		$sales = (array) $pines->entity_manager->get_entities(
@@ -1166,8 +1152,8 @@ class com_sales extends component {
 				array('&',
 					'tag' => array('com_sales', 'sale'),
 					'data' => array(
-						array('warehouse_items', true),
-						array('warehouse_complete', false)
+						array('warehouse', true),
+						array('warehouse_pending', true)
 					)
 				),
 				array('|',
@@ -1178,169 +1164,37 @@ class com_sales extends component {
 				)
 			);
 
-		// Find all the warehouse items.
-		$products = array();
-		$products_unique = array();
-		$products_sales = array();
-		foreach ($sales as $cur_sale) {
-			foreach ($cur_sale->products as $cur_product) {
-				if (!isset($cur_product['entity']->guid))
-					continue;
-				if ($cur_product['delivery'] == 'warehouse') {
-					// Calculate number of warehouse items left to be fulfilled.
-					$count = ($cur_product['quantity'] - (int) $cur_product['returned_quantity']) - (count($cur_product['stock_entities']) - count((array) $cur_product['returned_stock_entities']));
-					if ($count <= 0)
-						continue;
-					for ($i = 0; $i < $count; $i++) {
-						$products[] = $cur_product['entity'];
-					}
-					if (!$cur_product['entity']->in_array($products_unique))
-						$products_unique[] = $cur_product['entity'];
-					// Remember what sales each product is in.
-					if (!is_array($products_sales[$cur_product['entity']->guid]))
-						$products_sales[$cur_product['entity']->guid] = array();
-					if (!$cur_sale->in_array($products_sales[$cur_product['entity']->guid]))
-						$products_sales[$cur_product['entity']->guid][] = $cur_sale;
-				}
-			}
-		}
-		unset($sales);
+		$module = new module('com_sales', 'warehouse/pending', 'content');
+		$module->sales = $sales;
+		$module->ordered = $ordered;
+	}
 
-		// Find warehouse stock. If the item is in warehouse stock, it
-		// doesn't need to be ordered.
-		if ($products) {
-			$warehouse_stock = (array) $pines->entity_manager->get_entities(
-					array('class' => com_sales_stock),
-					array('&',
-						'tag' => array('com_sales', 'stock'),
-						'data' => array('available', true),
-						'ref' => array('location', $warehouse)
-					),
-					array('|',
-						'ref' => array('product', $products_unique)
+	/**
+	 * List shipped warehouse items.
+	 */
+	public function warehouse_shipped() {
+		global $pines;
+
+		// Get sales with warehouse items.
+		$sales = (array) $pines->entity_manager->get_entities(
+				array('class' => com_sales_sale),
+				array('&',
+					'tag' => array('com_sales', 'sale'),
+					'data' => array(
+						array('warehouse', true),
+						array('warehouse_shipped', true)
 					)
-				);
-			foreach ($warehouse_stock as $cur_stock) {
-				// Search for it and remove it.
-				$index = $cur_stock->product->array_search($products);
-				if ($index !== false) {
-					unset($products[$index]);
-					$module->in_stock++;
-				}
-				// Stop after all products.
-				if (!$products)
-					break;
-			}
-			unset($warehouse_stock);
-		}
-
-		// Find PO products. If the item is in a PO, it doesn't need to be
-		// ordered.
-		if ($products) {
-			$pos = (array) $pines->entity_manager->get_entities(
-					array('class' => com_sales_po),
-					array('&',
-						'tag' => array('com_sales', 'po'),
-						'data' => array(array('final', true), array('finished', false)),
-						'ref' => array('destination', $warehouse)
-					),
-					array('|',
-						'ref' => array('pending_products', $products_unique)
+				),
+				array('|',
+					'data' => array(
+						array('status', 'invoiced'),
+						array('status', 'paid')
 					)
-				);
-			foreach ($pos as $cur_po) {
-				foreach ($cur_po->products as $cur_product) {
-					if (!$cur_product['entity']->in_array($products))
-						continue;
-					// Skip if they've all been received.
-					$quantity = (int) $cur_product['quantity'] - (int) $cur_product['received'];
-					if (!$quantity)
-						continue;
-					for ($i = 0; $i < $quantity; $i++) {
-						// Search for it and remove it.
-						$index = $cur_product['entity']->array_search($products);
-						if ($index !== false) {
-							unset($products[$index]);
-							$module->in_pos++;
-						}
-						// Stop after all products.
-						if (!$products)
-							break;
-					}
-				}
-			}
-			unset($pos);
-		}
-
-		// Find transfer products. If the item is in a transfer, it doesn't need
-		// to be ordered.
-		if ($products) {
-			$transfers = (array) $pines->entity_manager->get_entities(
-					array('class' => com_sales_transfer),
-					array('&',
-						'tag' => array('com_sales', 'transfer'),
-						'data' => array(array('final', true), array('shipped', true), array('finished', false)),
-						'ref' => array('destination', $warehouse)
-					),
-					array('|',
-						'ref' => array('pending_products', $products_unique)
-					)
-				);
-			foreach ($transfers as $cur_transfer) {
-				foreach ($cur_transfer->stock as $cur_stock) {
-					// If it's already received, move on.
-					if ($cur_stock->in_array((array) $cur_transfer->received))
-						continue;
-					// Search for it and remove it.
-					$index = $cur_stock->product->array_search($products);
-					if ($index !== false) {
-						unset($products[$index]);
-						$module->in_transfers++;
-					}
-					// Stop after all products.
-					if (!$products)
-						break;
-				}
-			}
-			unset($transfers);
-		}
-
-		// Build a pending products array.
-		$module->products = array();
-		foreach ($products as $cur_product) {
-			if (isset($module->products[$cur_product->guid])) {
-				$module->products[$cur_product->guid]['quantity']++;
-				continue;
-			}
-			$module->products[$cur_product->guid] = array(
-				'entity' => $cur_product,
-				'quantity' => 1,
-				'sales' => $products_sales[$cur_product->guid],
-				'locations' => array()
+				)
 			);
-		}
-		unset($products, $products_unique);
 
-		// Find items in current inventory.
-		foreach ($module->products as &$cur_product) {
-			$stock = (array) $pines->entity_manager->get_entities(
-					array('class' => com_sales_stock),
-					array('&',
-						'tag' => array('com_sales', 'stock'),
-						'data' => array('available', true),
-						'isset' => 'location',
-						'ref' => array('product', $cur_product['entity'])
-					),
-					array('!&',
-						'ref' => array('location', $warehouse)
-					)
-				);
-			foreach ($stock as $cur_stock) {
-				if (isset($cur_stock->location->guid) && !$cur_stock->location->in_array($cur_product['locations']))
-					$cur_product['locations'][] = $cur_stock->location;
-			}
-		}
-		unset($cur_product);
+		$module = new module('com_sales', 'warehouse/shipped', 'content');
+		$module->sales = $sales;
 	}
 
 	/**

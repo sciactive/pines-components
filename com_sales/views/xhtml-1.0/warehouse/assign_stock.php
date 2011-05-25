@@ -1,6 +1,6 @@
 <?php
 /**
- * Provides a form for the user to fulfill a warehouse order.
+ * Provides a form for the user to assign stock to warehouse orders.
  *
  * @package Pines
  * @subpackage com_sales
@@ -10,31 +10,23 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Fulfilling Sale ['.htmlspecialchars($this->entity->id).']';
+$this->title = 'Assign Stock';
 $this->note = 'Provide stock selection in this form.';
-$pines->uploader->load();
 $pines->com_jstree->load();
 $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 ?>
-<form class="pf-form" method="post" action="<?php echo htmlspecialchars(pines_url('com_sales', 'warehouse/save')); ?>">
-	<?php if (isset($this->entity->guid)) { ?>
-	<div class="date_info" style="float: right; text-align: right;">
-		<?php if (isset($this->entity->user)) { ?>
-		<div>User: <span class="date"><?php echo htmlspecialchars("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
-		<div>Group: <span class="date"><?php echo htmlspecialchars("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
-		<?php } ?>
-		<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
-		<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
-	</div>
-	<?php } ?>
+<form class="pf-form" id="p_muid_form" method="post" action="<?php echo htmlspecialchars(pines_url('com_sales', 'warehouse/assignstocksave')); ?>">
 	<style type="text/css">
 		/* <![CDATA[ */
-		#p_muid_products .entry {
+		#p_muid_form .products .entry {
 			padding: .4em;
 			float: left;
 			margin: 0 .4em .4em 0;
 		}
-		#p_muid_products .entry a.remove {
+		#p_muid_form .products .entry > div {
+			margin-right: 2em;
+		}
+		#p_muid_form .products .entry a.remove {
 			padding: .2em;
 			float: right;
 		}
@@ -45,17 +37,17 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 		pines(function(){
 			var current_item;
 			
-			$("#p_muid_products").delegate("div.serial a.fulfill", "click", function(){
+			$("#p_muid_form").delegate(".products div.serial a.assign", "click", function(){
 				current_item = $(this).closest("div.serial");
 				serial_dialog.dialog("open");
-			}).delegate("div.nonserial a.fulfill", "click", function(){
+			}).delegate(".products div.nonserial a.assign", "click", function(){
 				current_item = $(this).closest("div.nonserial");
 				quantity_box.val(current_item.find(".qty_left").text());
 				location_dialog.dialog("open");
-			}).delegate(".entry a.remove", "hover", function(){
+			}).delegate(".products .entry a.remove", "hover", function(){
 				$(this).toggleClass("ui-state-hover");
 				refresh_entries();
-			}).delegate(".entry a.remove", "click", function(){
+			}).delegate(".products .entry a.remove", "click", function(){
 				$(this).closest(".entry").remove();
 				refresh_entries();
 			});
@@ -105,20 +97,22 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 
 			var refresh_entries = function(){
 				var entries = [];
-				$("#p_muid_products").children(".product_entry").each(function(){
+				$("#p_muid_form .products").children(".product_entry").each(function(){
 					var cur_product = $(this);
 					var cur_entries = cur_product.find(".entries .entry");
+					var sale = cur_product.children(".sale").text();
 					var key = cur_product.children(".key").text();
 					// Update the quantity left.
 					var qty_left = parseInt(cur_product.find(".qty").text()) - (parseInt(cur_product.find(".qty_done").text()) + cur_entries.length);
 					cur_product.find(".qty_left").html(qty_left);
 					if (qty_left < 1)
-						cur_product.find(".fulfill").hide();
+						cur_product.find(".assign").hide();
 					else
-						cur_product.find(".fulfill").show();
+						cur_product.find(".assign").show();
 					cur_entries.each(function(){
 						var cur_entry = $(this);
 						entries.push({
+							"sale": sale,
 							"key": key,
 							"location": cur_entry.find(".location").text(),
 							"product": cur_entry.find(".product").text(),
@@ -126,7 +120,7 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 						});
 					})
 				});
-				$("#p_muid_products_input").val(JSON.stringify(entries));
+				$("#p_muid_items").val(JSON.stringify(entries));
 			};
 			refresh_entries();
 
@@ -180,7 +174,7 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 						}
 						var qty_left = parseInt(current_item.find(".qty_left").text());
 						if (quantity > qty_left) {
-							alert("Given quantity is too high. Only "+qty_left+" left to be fulfilled.");
+							alert("Given quantity is too high. Only "+qty_left+" left to be assigned.");
 							return;
 						}
 						add_entry("", location.val(), quantity);
@@ -235,22 +229,18 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 		});
 		// ]]>
 	</script>
-	<div class="pf-element">
-		<span class="pf-label">Ship To</span>
-		<div class="pf-group">
-			<div class="pf-field">
-				<div><strong><?php echo htmlspecialchars($this->entity->shipping_address->name); ?></strong></div>
-				<?php if ($this->entity->shipping_address->address_type == 'us') { if (!empty($this->entity->shipping_address->address_1)) { ?>
-				<div><?php echo htmlspecialchars($this->entity->shipping_address->address_1.' '.$this->entity->shipping_address->address_2); ?></div>
-				<div><?php echo htmlspecialchars($this->entity->shipping_address->city); ?>, <?php echo htmlspecialchars($this->entity->shipping_address->state); ?> <?php echo htmlspecialchars($this->entity->shipping_address->zip); ?></div>
-				<?php } } else {?>
-				<pre><?php echo htmlspecialchars($this->entity->shipping_address->address_international); ?></pre>
-				<?php } ?>
-			</div>
-		</div>
+	<?php foreach ($this->items as $cur_item) { ?>
+	<div class="pf-element pf-heading">
+		<h1>Sale <?php echo htmlspecialchars($cur_item['sale']->id); ?></h1>
+		<p>
+			<div style="float: left; clear: left; padding-right: 2em;">Tendered: <?php echo format_date($cur_item['sale']->tender_date, 'full_long'); ?>.</div>
+			<div style="float: left; padding-right: 2em;">Location: <?php echo htmlspecialchars("{$cur_item['sale']->group->name} [{$cur_item['sale']->group->groupname}]"); ?>.</div>
+			<div style="float: left; padding-right: 2em;">Salesperson: <?php echo htmlspecialchars("{$cur_item['sale']->user->name} [{$cur_item['sale']->user->username}]"); ?>.</div>
+			<div style="float: left;">Customer: <?php echo htmlspecialchars("{$cur_item['sale']->customer->guid}: {$cur_item['sale']->customer->name}"); ?>.</div>
+		</p>
 	</div>
-	<div id="p_muid_products">
-		<?php foreach ($this->entity->products as $cur_key => $cur_product) {
+	<div class="ui-helper-clearfix products">
+		<?php foreach ($cur_item['products'] as $cur_key => $cur_product) {
 			if ($cur_product['delivery'] != 'warehouse')
 				continue;
 			// Is the product returned?
@@ -258,25 +248,24 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 				continue;
 			// Calculate quantity.
 			$quantity = $cur_product['quantity'] - (int) $cur_product['returned_quantity'];
-			// Calculate fulfilled.
-			$fulfilled = count($cur_product['stock_entities']) - count((array) $cur_product['returned_stock_entities']);
+			// Calculate assigned.
+			$assigned = count($cur_product['stock_entities']) - count((array) $cur_product['returned_stock_entities']);
 			?>
-		<div class="pf-element product_entry <?php echo $cur_product['entity']->serialized ? 'serial' : 'nonserial'; ?>">
-			<span class="pf-label"><?php echo htmlspecialchars($cur_product['entity']->name); ?> <small>x <span class="qty"><?php echo htmlspecialchars($quantity); ?></span><span class="qty_left" style="display: none;"><?php echo $quantity - $fulfilled; ?></span> (<span class="qty_done"><?php echo $fulfilled; ?></span> already fulfilled)</small></span>
-			<span class="pf-note">SKU: <?php echo htmlspecialchars($cur_product['entity']->sku); ?>, <?php echo $cur_product['entity']->serialized ? 'Serialized' : 'Non-Serialized'; ?></span>
-			<a href="javascript:void(0);" class="pf-field fulfill">Fulfill</a>
-			<div class="pf-group">
-				<div class="pf-field">
-					<div class="entries"></div>
-					<br class="pf-clearing" />
-				</div>
-			</div>
+		<div class="pf-element pf-full-width product_entry <?php echo $cur_product['entity']->serialized ? 'serial' : 'nonserial'; ?>">
+			<span class="pf-label">
+				<?php echo htmlspecialchars($cur_product['entity']->name); ?> <small>x <span class="qty"><?php echo htmlspecialchars($quantity); ?></span><span class="qty_left" style="display: none;"><?php echo $quantity - $assigned; ?></span> (<span class="qty_done"><?php echo $assigned; ?></span> already assigned)</small>
+				<span class="pf-note">SKU: <?php echo htmlspecialchars($cur_product['entity']->sku); ?>, <?php echo $cur_product['entity']->serialized ? 'Serialized' : 'Non-Serialized'; ?></span>
+			</span>
+			<a href="javascript:void(0);" class="pf-field assign">Assign</a>
+			<div class="pf-field pf-full-width ui-helper-clearfix entries"></div>
+			<br class="pf-clearing" />
 			<div class="product" style="display: none;"><?php echo htmlspecialchars($cur_product['entity']->guid); ?></div>
+			<div class="sale" style="display: none;"><?php echo htmlspecialchars($cur_item['sale']->guid); ?></div>
 			<div class="key" style="display: none;"><?php echo htmlspecialchars($cur_key); ?></div>
 		</div>
 		<?php } ?>
-		<input type="hidden" name="products" id="p_muid_products_input" value="[]" />
 	</div>
+	<?php } ?>
 	<div id="p_muid_serial_dialog" title="Provide Serial" style="display: none;">
 		<div class="pf-form">
 			<div class="pf-element">
@@ -303,10 +292,8 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 		<br />
 	</div>
 	<div class="pf-element pf-buttons">
-		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
-		<?php } ?>
+		<input type="hidden" name="items" id="p_muid_items" value="[]" />
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'warehouse/fulfill')); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'warehouse/pending')); ?>');" value="Cancel" />
 	</div>
 </form>

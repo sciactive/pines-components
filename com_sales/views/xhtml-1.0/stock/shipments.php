@@ -124,6 +124,7 @@ $pines->com_jstree->load();
 		<tr>
 			<th>Type</th>
 			<th>ID/Number</th>
+			<th>Tendered</th>
 			<?php if (!$this->removed) { ?>
 			<th>Location</th>
 			<?php } ?>
@@ -138,10 +139,11 @@ $pines->com_jstree->load();
 		<tr title="<?php echo $sale->guid; ?>">
 			<td>Sale</td>
 			<td><?php echo htmlspecialchars($sale->id); ?></td>
+			<td><?php echo format_date($sale->tender_date, 'full_sort'); ?></td>
 			<?php if (!$this->removed) { ?>
 			<td><?php echo htmlspecialchars("{$sale->group->name} [{$sale->group->groupname}]"); ?></td>
 			<?php } ?>
-			<td><?php echo htmlspecialchars("{$sale->shipping_address->name} (Customer: {$sale->customer->name})"); ?></td>
+			<td><?php echo htmlspecialchars("{$sale->shipping_address->name} ({$sale->customer->guid}: {$sale->customer->name})"); ?></td>
 			<td><?php echo htmlspecialchars($sale->shipper->name); ?></td>
 			<td><?php echo htmlspecialchars(isset($sale->tracking_numbers) ? implode(', ', $sale->tracking_numbers) : ''); ?></td>
 			<td><?php echo isset($sale->eta) ? format_date($sale->eta, 'date_sort') : '' ; ?></td>

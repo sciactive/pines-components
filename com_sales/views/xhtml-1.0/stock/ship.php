@@ -137,19 +137,24 @@ $this->note = 'Provide shipment details in this form.';
 			?>
 	<div class="pf-element pf-heading">
 		<h1>Sale #<?php echo htmlspecialchars($this->entity->id); ?> Packing List</h1>
-		<?php if (!$this->entity->warehouse_complete) { ?>
-		<p>There are still unfulfilled warehouse items on this sale. <a href="<?php echo htmlspecialchars(pines_url('com_sales', 'warehouse/fulfill', array('id' => $this->entity->guid))); ?>" onclick="window.open(this.href); return false;">Fulfill them.</a></p>
+		<?php if ($this->entity->warehouse_pending) { ?>
+		<p><strong>There are still unassigned warehouse items on this sale. It can only be partially shipped.</strong></p>
 		<?php } ?>
 		<p>
 			<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/receipt', array('id' => $this->entity->guid))); ?>" onclick="window.open(this.href); return false;">Receipt</a>
 			<?php if (gatekeeper('com_sales/editsale')) { ?>
 			<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/edit', array('id' => $this->entity->guid))); ?>" onclick="window.open(this.href); return false;">Edit</a>
+			<?php } if (!empty($this->entity->comments)) { ?>
+			<a href="javascript:void(0);" onclick="$(this).parent().next().slideToggle(); return false;">Comments</a>
 			<?php } ?>
+		</p>
+		<p style="display: none;">
+			<small><?php echo str_replace("\n", '<br />', htmlspecialchars($this->entity->comments)); ?></small>
 		</p>
 	</div>
 	<div id="p_muid_packing_list">
 			<?php foreach ($this->entity->products as $key => $cur_product) {
-				if ($cur_product['delivery'] != 'shipped')
+				if (!in_array($cur_product['delivery'], array('shipped', 'warehouse')))
 					continue;
 				// Calculate included stock entries.
 				$stock_entries = $cur_product['stock_entities'];

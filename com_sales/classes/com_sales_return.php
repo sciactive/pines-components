@@ -312,12 +312,12 @@ class com_sales_return extends entity {
 				$this->sale->products[$cur_product['sale_key']]['returned_quantity'] += $cur_product['quantity'];
 			}
 			unset($cur_product);
-			if ($this->sale->warehouse_items) {
-				$this->sale->warehouse_items = false;
+			if ($this->sale->warehouse) {
+				$this->sale->warehouse = false;
 				foreach ($this->sale->products as &$cur_product) {
 					// If the product's warehouse item count is greater than the returned quantity, it still needs to be fulfilled.
 					if ($cur_product['delivery'] == 'warehouse' && $cur_product['returned_quantity'] < ($cur_product['quantity'] - (count($cur_product['stock_entities']) - count((array) $cur_product['returned_stock_entities'])))) {
-						$this->sale->warehouse_items = true;
+						$this->sale->warehouse = true;
 						break;
 					}
 				}

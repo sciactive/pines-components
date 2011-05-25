@@ -40,6 +40,21 @@ class com_reports extends component {
 	}
 
 	/**
+	 * Creates and attaches a module which lists company paystubs.
+	 *
+	 * @return module The payroll list module.
+	 */
+	function list_paystubs() {
+		global $pines;
+
+		$module = new module('com_reports', 'list_paystubs', 'content');
+		$module->paystubs = $pines->entity_manager->get_entities(array('class' => com_reports_paystub), array('&', 'tag' => array('com_reports', 'paystub')));
+
+		if ( empty($module->paystubs) )
+			pines_notice('There are no completed paystubs to view.');
+	}
+
+	/**
 	 * Creates and attaches a module which lists sales rankings.
 	 *
 	 * @return module The sales report module.
@@ -449,46 +464,74 @@ class com_reports extends component {
 	/**
 	 * Creates and attaches a module which reports employee payroll information.
 	 *
-	 * @param int $start_date The start date of the report.
-	 * @param int $end_date The end date of the report.
+	 * @param bool $entire_company Whether or not to show the entire company.
 	 * @param group $location The group to report on.
 	 * @param bool $descendents Whether to show descendent locations.
-	 * @return module The employee summary module.
+	 * @return module The employee payroll module.
 	 */
-	function report_payroll($start_date = null, $end_date = null, $location = null, $descendents = false) {
+	function report_payroll($entire_company = true, $location = null, $descendents = false) {
 		global $pines;
 
-		$module = new module('com_reports', 'report_payroll', 'content');
+		$pay_start = strtotime($pines->config->com_hrm->pay_start);
+		$pay_period = $pines->config->com_hrm->pay_period;
+		$total_time = (strtotime('0:00:00') - $pay_start)/$pay_period;
+		// Start date is 1 day after the last pay period.
+		$start_date = $pay_start + (floor($total_time) * $pay_period) + 86400;
+		if (floor($total_time) == $total_time)
+			$start_date = strtotime('-1 week', $start_date);
+		// End date is at the end of the last day of the pay period.
+		$end_date = $pay_start + (ceil($total_time) * $pay_period) + 86399;
 
-		$selector = array('&');
-		// Datespan of the report.
-		if (isset($start_date))
-			$selector['gte'] = array('p_cdate', (int) $start_date);
-		if (isset($end_date))
-			$selector['lt'] = array('p_cdate', (int) $end_date);
+		$paystub = $pines->entity_manager->get_entity(array('class' => com_reports_paystub),
+				array('&',
+					'tag' => array('com_reports', 'paystub'),
+					'gte' => array('end', (int) $start_date)
+				)
+			);
+		if (isset($paystub->guid))
+			return $paystub->show($entire_company, $location, $descendents);
+
+		$module = new module('com_reports', 'report_payroll', 'content');
 		$module->start_date = $start_date;
 		$module->end_date = $end_date;
-		$module->all_time = (!isset($start_date) && !isset($end_date));
-		// Location of the report.
-		if (!isset($location->guid))
-			$location = $_SESSION['user']->group;
-		if ($descendents)
-			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
-		else
-			$or = array('|', 'ref' => array('group', $location));
-		$module->location = $location;
-		$module->descendents = $descendents;
+		$module->entire_company = $entire_company;
 		$module->employees = $pines->com_hrm->get_employees(true);
-		foreach ($module->employees as $key => &$cur_employee) {
-			if (!($cur_employee->in_group($location) || ($descendents && $cur_employee->is_descendent($location))))
-				unset($module->employees[$key]);
+		$or = array();
+		if (!$module->entire_company) {
+			// Location of the report.
+			if (!isset($location->guid))
+				$location = $_SESSION['user']->group;
+			if ($descendents)
+				$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+			else
+				$or = array('|', 'ref' => array('group', $location));
+			$module->location = $location;
+			$module->descendents = $descendents;
+			foreach ($module->employees as $key => &$cur_employee) {
+				if (!($cur_employee->in_group($location) || ($descendents && $cur_employee->is_descendent($location))))
+					unset($module->employees[$key]);
+			}
 		}
-		$selector['tag'] = array('com_sales', 'sale');
-		$selector['data'] = array('status', 'paid');
-		$sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
-		$selector['tag'] = array('com_sales', 'return');
-		$selector['data'] = array('status', 'processed');
-		$returns = $pines->entity_manager->get_entities(array('class' => com_sales_return), $selector, $or);
+		// Sales
+		$selector = array('&',
+				'tag' => array('com_sales', 'sale'),
+				'data' => array('status', 'paid'),
+				'gte' => array('p_cdate', (int) $module->start_date),
+				'lt' => array('p_cdate', (int) $module->end_date)
+			);
+		if (!empty($or))
+			$selector = array_merge($selector, $or);
+		$sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector);
+		// Returns
+		$selector = array('&',
+				'tag' => array('com_sales', 'return'),
+				'data' => array('status', 'processed'),
+				'gte' => array('p_cdate', (int) $module->start_date),
+				'lt' => array('p_cdate', (int) $module->end_date)
+			);
+		if (!empty($or))
+			$selector = array_merge($selector, $or);
+		$returns = $pines->entity_manager->get_entities(array('class' => com_sales_return), $selector);
 		$module->invoices = array_merge($sales, $returns);
 
 		return $module;

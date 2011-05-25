@@ -91,7 +91,7 @@
 			{
 				"path": "main_menu/reports/hrm/payroll",
 				"text": "Payroll",
-				"href": ["com_reports","reportpayroll"],
+				"href": ["com_reports","listpaystubs"],
 				"depend": {
 					"component": "com_calendar",
 					"ability": "com_reports/reportpayroll"

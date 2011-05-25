@@ -11,9 +11,13 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$this->title = 'Payroll Report ['.$this->location->name.']';
+$this->title = 'Payroll Report';
+if (isset($this->location))
+	$this->title .= ' ['.htmlspecialchars($this->location->name).']';
+$this->title .= ' ('.format_date($this->start_date, 'date_short').' - '.format_date($this->end_date, 'date_short').')';
+
 if ($this->descendents)
-	$this->note = 'Including locations beneath '.$this->location->name;
+	$this->note = 'Including locations beneath '.htmlspecialchars($this->location->name);
 $pines->icons->load();
 $pines->com_jstree->load();
 $pines->com_pgrid->load();
@@ -37,22 +41,21 @@ $pines->com_pgrid->load();
 	var p_muid_notice;
 
 	pines(function(){
+		entire_company = function(){
+			// Submit the form with all of the fields.
+			pines.get("<?php echo addslashes(pines_url('com_reports', 'reportpayroll')); ?>", {
+				"entire_company": true
+			});
+		};
 		search_employees = function(){
 			// Submit the form with all of the fields.
 			pines.get("<?php echo addslashes(pines_url('com_reports', 'reportpayroll')); ?>", {
 				"location": location,
-				"descendents": descendents,
-				"all_time": all_time,
-				"start_date": start_date,
-				"end_date": end_date
+				"descendents": descendents
 			});
 		};
 
-		// Timespan Defaults
-		var all_time = <?php echo $this->all_time ? 'true' : 'false'; ?>;
-		var start_date = "<?php echo $this->start_date ? addslashes(format_date($this->start_date, 'date_sort')) : ''; ?>";
-		var end_date = "<?php echo $this->end_date ? addslashes(format_date($this->end_date - 1, 'date_sort')) : ''; ?>";
-		// Location Defaults
+		// Payroll report settings
 		var location = "<?php echo $this->location->guid; ?>";
 		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
 
@@ -62,8 +65,12 @@ $pines->com_pgrid->load();
 			pgrid_sort_col: 1,
 			pgrid_sort_ord: 'asc',
 			pgrid_toolbar_contents: [
+				<?php if ($this->entire_company) { ?>
+				{type: 'button', title: 'Finalize', extra_class: 'picon picon-document-save', selection_optional: true, confirm: true, click: function(){pines.finalize();}},
+				<?php } else { ?>
+				{type: 'button', title: 'Entire Company', extra_class: 'picon picon-view-process-all', selection_optional: true, click: function(){entire_company();}},
+				<?php } ?>
 				{type: 'button', title: 'Location', extra_class: 'picon picon-applications-internet', selection_optional: true, click: function(){employees_grid.location_form();}},
-				{type: 'button', title: 'Timespan', extra_class: 'picon picon-view-time-schedule', selection_optional: true, click: function(){employees_grid.date_form();}},
 				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
@@ -76,48 +83,6 @@ $pines->com_pgrid->load();
 				}}
 			]
 		});
-
-		employees_grid.date_form = function(){
-			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_reports', 'dateselect')); ?>",
-				type: "POST",
-				dataType: "html",
-				data: {"all_time": all_time, "start_date": start_date, "end_date": end_date},
-				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retreive the date form:\n"+XMLHttpRequest.status+": "+textStatus);
-				},
-				success: function(data){
-					if (data == "")
-						return;
-					var form = $("<div title=\"Date Selector\" />");
-					form.dialog({
-						bgiframe: true,
-						autoOpen: true,
-						height: 315,
-						modal: true,
-						open: function(){
-							form.html(data);
-						},
-						close: function(){
-							form.remove();
-						},
-						buttons: {
-							"Done": function(){
-								if (form.find(":input[name=timespan_saver]").val() == "alltime") {
-									all_time = true;
-								} else {
-									all_time = false;
-									start_date = form.find(":input[name=start_date]").val();
-									end_date = form.find(":input[name=end_date]").val();
-								}
-								form.dialog('close');
-								search_employees();
-							}
-						}
-					});
-				}
-			});
-		};
 		employees_grid.location_form = function(){
 			$.ajax({
 				url: "<?php echo addslashes(pines_url('com_reports', 'locationselect')); ?>",
@@ -165,6 +130,8 @@ $pines->com_pgrid->load();
 		<thead>
 			<tr>
 				<th>Employee</th>
+				<th>Location</th>
+				<th>Pay Type</th>
 				<th># Sold</th>
 				<th># Ref</th>
 				<th>$ Sold</th>
@@ -174,12 +141,13 @@ $pines->com_pgrid->load();
 				<th>Variance</th>
 				<th>Commission</th>
 				<th>Penalties</th>
+				<th>Bonuses</th>
 				<th>Total Pay</th>
 			</tr>
 		</thead>
 		<tbody>
 			<?php
-			$counted = array();
+			$counted = $total_store = array();
 			foreach ($this->invoices as $cur_invoice) {
 				if ($cur_invoice->has_tag('sale')) {
 					foreach ($cur_invoice->products as $cur_product) {
@@ -195,6 +163,7 @@ $pines->com_pgrid->load();
 								'variance' => 0,
 								'commission' => 0,
 								'penalties' => 0,
+								'bonuses' => 0,
 								'total_pay' => 0
 							);
 							$commissions[$cur_product['salesperson']->guid] = $cur_product['salesperson']->commissions;
@@ -225,6 +194,7 @@ $pines->com_pgrid->load();
 								'variance' => 0,
 								'commission' => 0,
 								'penalties' => 0,
+								'bonuses' => 0,
 								'total_pay' => 0
 							);
 							$commissions[$cur_product['salesperson']->guid] = $cur_product['salesperson']->commissions;
@@ -256,6 +226,7 @@ $pines->com_pgrid->load();
 						'variance' => 0,
 						'commission' => 0,
 						'penalties' => 0,
+						'bonuses' => 0,
 						'total_pay' => 0
 					);
 				}
@@ -283,6 +254,18 @@ $pines->com_pgrid->load();
 				foreach ($issues as $cur_issue)
 					$totals[$cur_employee->guid]['penalties'] += $cur_issue->issue_type->penalty*$cur_issue->quantity;
 
+				$bonuses = $pines->entity_manager->get_entities(
+					array('class' => com_hrm_bonus),
+					array('&',
+						'tag' => array('com_hrm', 'bonus'),
+						'gte' => array('date', $this->start_date),
+						'lte' => array('date', $this->end_date),
+						'ref' => array('employee', $cur_employee)
+					)
+				);
+				foreach ($bonuses as $cur_bonus)
+					$totals[$cur_employee->guid]['bonuses'] += $cur_bonus->amount;
+
 				$totals[$cur_employee->guid]['clocked'] = $cur_employee->timeclock->sum($this->start_date, $this->end_date);
 				$totals[$cur_employee->guid]['variance'] = ($totals[$cur_employee->guid]['clocked'] - $totals[$cur_employee->guid]['scheduled']);
 				// Calculate the total pay for this employee.
@@ -309,13 +292,16 @@ $pines->com_pgrid->load();
 						break;
 				}
 				$totals[$cur_employee->guid]['total_pay'] -= $totals[$cur_employee->guid]['penalties'];
+				$totals[$cur_employee->guid]['total_pay'] += $totals[$cur_employee->guid]['bonuses'];
 			}
 			foreach ($totals as $cur_total) {
 			?>
 			<tr title="<?php echo $cur_total['employee']->guid; ?>">
-				<td><?php echo $cur_total['employee']->name; ?></td>
-				<td><?php echo $cur_total['qty_sold']; ?></td>
-				<td><?php echo $cur_total['qty_returned']; ?></td>
+				<td><?php echo htmlspecialchars($cur_total['employee']->name); ?></td>
+				<td><?php echo htmlspecialchars($cur_total['employee']->group->name); ?></td>
+				<td><?php echo htmlspecialchars($cur_total['employee']->pay_type); ?></td>
+				<td><?php echo htmlspecialchars($cur_total['qty_sold']); ?></td>
+				<td><?php echo htmlspecialchars($cur_total['qty_returned']); ?></td>
 				<td class="amount">$<?php echo number_format($cur_total['total_sold'], 2, '.', ''); ?></td>
 				<td class="amount">$<?php echo number_format($cur_total['total_returned'], 2, '.', ''); ?></td>
 				<td><?php echo round($cur_total['scheduled'] / 3600, 2); ?> hours</td>
@@ -323,9 +309,26 @@ $pines->com_pgrid->load();
 				<td><span<?php echo ($cur_total['variance'] < 0 ) ? ' class="negative;"' : ''; ?>><?php echo round($cur_total['variance'] / 3600, 2); ?> hours</span></td>
 				<td class="amount">$<?php echo number_format($cur_total['commission'], 2, '.', ''); ?></td>
 				<td class="amount"><span<?php echo ($cur_total['penalties'] > 0 ) ? ' class="negative"' : ''; ?>>$<?php echo number_format($cur_total['penalties'], 2, '.', ''); ?></span></td>
+				<td class="amount"><span>$<?php echo number_format($cur_total['bonuses'], 2, '.', ''); ?></span></td>
 				<td class="total"><span<?php echo ($cur_total['total_pay'] < 0 ) ? ' class="negative"' : ''; ?>>$<?php echo number_format($cur_total['total_pay'], 2, '.', ''); ?></span></td>
 			</tr>
 			<?php } ?>
 		</tbody>
 	</table>
+	<script type="text/javascript">
+		// <![CDATA[
+		pines(function(){
+			var rows = $("#p_muid_grid").pgrid_get_all_rows();
+			var totals = JSON.stringify(rows.pgrid_export_rows());
+			pines.finalize = function() {
+				// Finalize the paystub.
+				pines.get("<?php echo addslashes(pines_url('com_reports', 'savepaystub')); ?>", {
+					"start": '<?php echo format_date($this->start_date); ?>',
+					"end": '<?php echo format_date($this->end_date); ?>',
+					"totals": totals
+				});
+			};
+		});
+		// ]]>
+	</script>
 </div>

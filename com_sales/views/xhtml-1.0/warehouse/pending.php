@@ -102,6 +102,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>Product</th>
 			<th>Quantity</th>
 			<th>Sale ID</th>
+			<th>Sale Location</th>
 			<th>Customer</th>
 			<th>PO</th>
 		</tr>
@@ -121,6 +122,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'product/edit', array('id' => $cur_product['entity']->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars("{$cur_product['entity']->sku} : {$cur_product['entity']->name}"); ?></a></td>
 			<td><?php echo htmlspecialchars($cur_product['quantity'] - (count($cur_product['stock_entities']) - $cur_product['returned_stock_entities'])); ?></td>
 			<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/receipt', array('id' => $sale->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($sale->id); ?></a></td>
+			<td><?php echo htmlspecialchars("{$sale->group->name} [{$sale->group->groupname}]"); ?></td>
 			<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $sale->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars("{$sale->customer->guid}: {$sale->customer->name}"); ?></a></td>
 			<?php if (isset($cur_product['po'])) { ?>
 			<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'po/edit', array('id' => $cur_product['po']->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_product['po']->po_number); ?></a></td>

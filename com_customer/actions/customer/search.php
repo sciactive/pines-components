@@ -88,6 +88,7 @@ foreach ($customers as $key => &$cur_customer) {
 		'phone_work'	=> format_phone($cur_customer->phone_work),
 		'phone_cell'	=> format_phone($cur_customer->phone_cell),
 		'fax'			=> format_phone($cur_customer->fax),
+		'cdate'			=> format_date($cur_customer->p_cdate),
 		'enabled'		=> (bool) $cur_customer->has_tag('enabled'),
 		'member'		=> (bool) $cur_customer->member,
 		'valid_member'	=> (bool) $cur_customer->valid_member(),

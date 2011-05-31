@@ -2,6 +2,7 @@
 	Document   : jquery.pgrid.touch.css
 	Created on : Jun 11, 2010, 5:33:30 PM
 	Author     : Hunter Perrin
+	Version    : 1.0.0
 	Description:
 		Touch friendly styling for Pines Grid jQuery plugin.
 */
@@ -207,6 +208,9 @@
 	border-style: solid;
 	padding: 4px 2px;
 	text-align: left;
+}
+.ui-pgrid-table tbody tr.ui-state-default a, .ui-pgrid-table tbody tr.ui-state-default a:link, .ui-pgrid-table tbody tr.ui-state-default a:visited {
+	text-decoration: underline;
 }
 .ui-pgrid-table tbody td.ui-pgrid-table-expander, .ui-pgrid-table thead th.ui-pgrid-table-expander {
 	min-width: 24px;

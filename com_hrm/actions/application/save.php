@@ -116,6 +116,6 @@ if ($application->save()) {
 	pines_error('Error saving employement application. Do you have permission?');
 }
 
-redirect(pines_url('com_hrm', 'application/list'));
+pines_redirect(pines_url('com_hrm', 'application/list'));
 
 ?>

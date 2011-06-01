@@ -58,6 +58,6 @@ if ($employee->save()) {
 	pines_error('Error saving employee. Do you have permission?');
 }
 
-redirect(pines_url('com_hrm', 'employee/list'));
+pines_redirect(pines_url('com_hrm', 'employee/list'));
 
 ?>

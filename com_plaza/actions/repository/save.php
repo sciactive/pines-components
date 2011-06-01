@@ -17,7 +17,7 @@ if ( !gatekeeper('com_plaza/editrepositories') )
 $filename = basename(clean_filename($_REQUEST['filename']), '.pem');
 if (empty($filename)) {
 	pines_notice('Please specifiy a filename.');
-	redirect(pines_url('com_plaza', 'repository/new'));
+	pines_redirect(pines_url('com_plaza', 'repository/new'));
 	return;
 }
 $filename .= '.pem';
@@ -26,7 +26,7 @@ $path = "components/com_plaza/includes/cache/certs/repositories/{$filename}";
 if (!empty($_REQUEST['cert_url'])) {
 	if (!($cert = file_get_contents($_REQUEST['cert_url']))) {
 		pines_notice('Couldn\'t retrieve certificate. Please provide the full text instead. You can get it by going to the URL in your browser.');
-		redirect(pines_url('com_plaza', 'repository/new'));
+		pines_redirect(pines_url('com_plaza', 'repository/new'));
 		return;
 	}
 } else {
@@ -35,33 +35,33 @@ if (!empty($_REQUEST['cert_url'])) {
 
 if (file_exists($path)) {
 	pines_notice('Filename already exists.');
-	redirect(pines_url('com_plaza', 'repository/new'));
+	pines_redirect(pines_url('com_plaza', 'repository/new'));
 	return;
 }
 if (empty($cert)) {
 	pines_notice('Please provide a certificate.');
-	redirect(pines_url('com_plaza', 'repository/new'));
+	pines_redirect(pines_url('com_plaza', 'repository/new'));
 	return;
 }
 if (!($cert_r = openssl_x509_read($cert))) {
 	pines_notice('Repository certificate is malformed.');
-	redirect(pines_url('com_plaza', 'repository/new'));
+	pines_redirect(pines_url('com_plaza', 'repository/new'));
 	return;
 }
 $authorities = glob('components/com_plaza/includes/cache/certs/authorities/*.pem');
 if (!openssl_x509_checkpurpose($cert_r, X509_PURPOSE_ANY, $authorities)) {
 	pines_notice('Repository certificate is not trusted by any approved authority.');
-	redirect(pines_url('com_plaza', 'repository/new'));
+	pines_redirect(pines_url('com_plaza', 'repository/new'));
 	return;
 }
 if (!file_put_contents($path, $cert)) {
 	pines_error('Couldn\'t save certificate file.');
-	redirect(pines_url('com_plaza', 'repository/new'));
+	pines_redirect(pines_url('com_plaza', 'repository/new'));
 	return;
 }
 $data = openssl_x509_parse($cert_r);
 pines_notice("Added repository \"{$data['subject']['OU']}\" from \"{$data['subject']['O']}\".");
 
-redirect(pines_url('com_plaza', 'repository/list'));
+pines_redirect(pines_url('com_plaza', 'repository/list'));
 
 ?>

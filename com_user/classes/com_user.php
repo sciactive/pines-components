@@ -311,9 +311,9 @@ class com_user extends component implements user_manager_interface {
 		if (!empty($message))
 			pines_notice($message);
 		if ($query_part) {
-			redirect(pines_url('com_user', 'exit', $query_part));
+			pines_redirect(pines_url('com_user', 'exit', $query_part));
 		} else {
-			redirect(pines_url('com_user', 'exit'));
+			pines_redirect(pines_url('com_user', 'exit'));
 		}
 		exit($message);
 	}

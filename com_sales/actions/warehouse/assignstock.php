@@ -41,7 +41,7 @@ foreach (explode(',', $_REQUEST['id']) as $cur_id) {
 
 if (!$items) {
 	pines_notice('No items were selected.');
-	redirect(pines_url('com_sales', 'warehouse/pending'));
+	pines_redirect(pines_url('com_sales', 'warehouse/pending'));
 	return;
 }
 

@@ -89,6 +89,6 @@ if ($module->save()) {
 	pines_error('Error saving module. Do you have permission?');
 }
 
-redirect(pines_url('com_modules', 'module/list'));
+pines_redirect(pines_url('com_modules', 'module/list'));
 
 ?>

@@ -240,7 +240,7 @@ if (!isset($return->status) || $return->status == 'quoted') {
 
 if ($return->save()) {
 	pines_notice('Saved return ['.$return->id.']');
-	redirect(pines_url('com_sales', 'return/receipt', array('id' => $return->guid)));
+	pines_redirect(pines_url('com_sales', 'return/receipt', array('id' => $return->guid)));
 } else {
 	$return->print_form();
 	pines_error('Error saving return. Do you have permission?');

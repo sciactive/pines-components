@@ -212,12 +212,12 @@ if ($user->save()) {
 
 if (gatekeeper('com_user/listusers')) {
 	if ($user->has_tag('enabled')) {
-		redirect(pines_url('com_user', 'listusers'));
+		pines_redirect(pines_url('com_user', 'listusers'));
 	} else {
-		redirect(pines_url('com_user', 'listusers', array('enabled' => 'false')));
+		pines_redirect(pines_url('com_user', 'listusers', array('enabled' => 'false')));
 	}
 } else {
-	redirect(pines_url());
+	pines_redirect(pines_url());
 }
 
 ?>

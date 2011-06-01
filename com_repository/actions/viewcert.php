@@ -17,18 +17,18 @@ if ( !gatekeeper('com_repository/gencert') )
 $cert = "{$pines->config->com_repository->repository_path}private/cert.pem";
 if (!file_exists($cert)) {
 	pines_notice('Repository certificate has not been generated yet.');
-	redirect(pines_url('com_repository', 'gencert'));
+	pines_redirect(pines_url('com_repository', 'gencert'));
 	return;
 }
 $cert = file_get_contents($cert);
 if (!$cert) {
 	pines_notice('Repository certificate is blank.');
-	redirect(pines_url('com_repository', 'gencert'));
+	pines_redirect(pines_url('com_repository', 'gencert'));
 	return;
 }
 if (!($cert_r = openssl_x509_read($cert))) {
 	pines_notice('Repository certificate is malformed.');
-	redirect(pines_url('com_repository', 'gencert'));
+	pines_redirect(pines_url('com_repository', 'gencert'));
 	return;
 }
 

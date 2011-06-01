@@ -69,7 +69,7 @@ if (isset($_REQUEST['host'])) {
 				'prefix' => $prefix,
 			));
 			$conf->save_config();
-			redirect(pines_url());
+			pines_redirect(pines_url());
 			@mysql_close($can_connect);
 		} else {
 			pines_error('Can\'t connect to host: '.pg_last_error());

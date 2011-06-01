@@ -75,6 +75,6 @@ if ($company->save()) {
 	pines_error('Error saving company. Do you have permission?');
 }
 
-redirect(pines_url('com_customer', 'company/list'));
+pines_redirect(pines_url('com_customer', 'company/list'));
 
 ?>

@@ -75,6 +75,6 @@ if ($total_time <= 86400) {
 } else {
 	$view_type = 'month';
 }
-redirect(pines_url('com_calendar', 'editcalendar', array('view_type' => $view_type, 'start' => format_date($first_date), 'end' => format_date($last_date), 'location' => $location->guid)));
+pines_redirect(pines_url('com_calendar', 'editcalendar', array('view_type' => $view_type, 'start' => format_date($first_date), 'end' => format_date($last_date), 'location' => $location->guid)));
 
 ?>

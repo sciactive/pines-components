@@ -46,6 +46,6 @@ if ($successful)
 	pines_notice('Orders marked as '.($_REQUEST['ordered'] == 'true' ? 'ordered.' : 'not ordered.'));
 
 // Go back to the same page.
-redirect(pines_url('com_sales', 'warehouse/pending', array('ordered' => ($_REQUEST['ordered'] == 'true' ? 'false' : 'true'))));
+pines_redirect(pines_url('com_sales', 'warehouse/pending', array('ordered' => ($_REQUEST['ordered'] == 'true' ? 'false' : 'true'))));
 
 ?>

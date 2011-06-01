@@ -47,7 +47,7 @@ if ( $pines->config->com_user->allow_registration && $_REQUEST['login_register']
 
 if ( gatekeeper() && $_REQUEST['username'] == $_SESSION['user']->username ) {
 	pines_notice('You are already logged in.');
-	redirect(pines_url());
+	pines_redirect(pines_url());
 	return;
 }
 // Check that a challenge block was created within 10 minutes.
@@ -90,10 +90,10 @@ if (!$pines->user_manager->login($user)) {
 
 // Login was successful.
 if ( !empty($_REQUEST['url']) ) {
-	redirect(urldecode($_REQUEST['url']));
+	pines_redirect(urldecode($_REQUEST['url']));
 	return;
 }
 // Load the default component.
-redirect(pines_url());
+pines_redirect(pines_url());
 
 ?>

@@ -43,6 +43,6 @@ if (empty($failed_bonuses)) {
     pines_error("Employees with given IDs were not granted bonuses : $failed_bonuses");
 }
 
-redirect(pines_url('com_hrm', 'employee/list'));
+pines_redirect(pines_url('com_hrm', 'employee/list'));
 
 ?>

@@ -46,6 +46,6 @@ foreach (explode(',', $_REQUEST['id']) as $cur_id) {
 if ($success)
 	pines_notice('Detached PO from selected items.');
 
-redirect(pines_url('com_sales', 'warehouse/pending', array('ordered' => ($ordered ? 'true' : 'false'))));
+pines_redirect(pines_url('com_sales', 'warehouse/pending', array('ordered' => ($ordered ? 'true' : 'false'))));
 
 ?>

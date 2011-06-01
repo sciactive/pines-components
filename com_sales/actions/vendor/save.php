@@ -75,6 +75,6 @@ if ($vendor->save()) {
 	pines_error('Error saving vendor. Do you have permission?');
 }
 
-redirect(pines_url('com_sales', 'vendor/list'));
+pines_redirect(pines_url('com_sales', 'vendor/list'));
 
 ?>

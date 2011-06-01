@@ -36,7 +36,7 @@ foreach (explode(',', $_REQUEST['id']) as $cur_id) {
 
 if (!$products) {
 	pines_notice('No products were selected.');
-	redirect(pines_url('com_sales', 'warehouse/pending'));
+	pines_redirect(pines_url('com_sales', 'warehouse/pending'));
 	return;
 }
 
@@ -51,7 +51,7 @@ $pos = $pines->entity_manager->get_entities(
 
 if (!$pos) {
 	pines_notice('Couldn\'t find a PO with all the selected items.');
-	redirect(pines_url('com_sales', 'warehouse/pending'));
+	pines_redirect(pines_url('com_sales', 'warehouse/pending'));
 	return;
 }
 
@@ -59,13 +59,13 @@ if (!$pos) {
 $po = com_sales_po::factory((int) $_REQUEST['po']);
 if (!isset($po->guid)) {
 	pines_notice('Specified PO could not be found.');
-	redirect(pines_url('com_sales', 'warehouse/pending'));
+	pines_redirect(pines_url('com_sales', 'warehouse/pending'));
 	return;
 }
 
 if (!$po->in_array($pos)) {
 	pines_notice('Specified PO does not contain all the specified items.');
-	redirect(pines_url('com_sales', 'warehouse/pending'));
+	pines_redirect(pines_url('com_sales', 'warehouse/pending'));
 	return;
 }
 
@@ -96,6 +96,6 @@ foreach (explode(',', $_REQUEST['id']) as $cur_id) {
 if ($success)
 	pines_notice('Attached PO to selected items.');
 
-redirect(pines_url('com_sales', 'warehouse/pending', array('ordered' => ($ordered ? 'true' : 'false'))));
+pines_redirect(pines_url('com_sales', 'warehouse/pending', array('ordered' => ($ordered ? 'true' : 'false'))));
 
 ?>

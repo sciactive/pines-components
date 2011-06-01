@@ -78,6 +78,6 @@ if ($transfer->save()) {
 	pines_error('Error saving transfer. Do you have permission?');
 }
 
-redirect(pines_url('com_sales', 'transfer/list'));
+pines_redirect(pines_url('com_sales', 'transfer/list'));
 
 ?>

@@ -67,6 +67,6 @@ if ($replacement->save()) {
 	pines_error('Error saving replacement. Do you have permission?');
 }
 
-redirect(pines_url('com_replace', 'replacement/list'));
+pines_redirect(pines_url('com_replace', 'replacement/list'));
 
 ?>

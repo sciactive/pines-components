@@ -142,7 +142,7 @@ if ($user->save()) {
 		$pines->user_manager->login($user);
 		$note = new module('com_user', 'note_welcome', 'content');
 		if ( !empty($_REQUEST['url']) ) {
-			redirect(urldecode($_REQUEST['url']));
+			pines_redirect(urldecode($_REQUEST['url']));
 			return;
 		}
 	}

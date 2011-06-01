@@ -92,7 +92,7 @@ class com_pgsql extends component {
 				$this->connected = false;
 				if (!isset($_SESSION['user']) && $host == 'localhost' && $user == 'pines' && $password == 'password' && $database == 'pines') {
 					if ($pines->request_component != 'com_pgsql')
-						redirect(pines_url('com_pgsql', 'setup'));
+						pines_redirect(pines_url('com_pgsql', 'setup'));
 				} else {
 					if (function_exists('pines_error'))
 						pines_error('Could not connect: ' . pg_last_error());

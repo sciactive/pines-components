@@ -33,12 +33,12 @@ $bonus->comments = $_REQUEST['comments'];
 
 if (empty($bonus->name)) {
 	pines_notice('Please provide a name for the bonus.');
-	redirect(pines_url('com_hrm', 'bonus/list'));
+	pines_redirect(pines_url('com_hrm', 'bonus/list'));
 	return;
 }
 if (empty($bonus->amount)) {
 	pines_notice('Please provide an amount for the bonus.');
-	redirect(pines_url('com_hrm', 'bonus/list'));
+	pines_redirect(pines_url('com_hrm', 'bonus/list'));
 	return;
 }
 
@@ -48,6 +48,6 @@ if ($bonus->save()) {
 	pines_error('Error saving bonus. Do you have permission?');
 }
 
-redirect(pines_url('com_hrm', 'bonus/list'));
+pines_redirect(pines_url('com_hrm', 'bonus/list'));
 
 ?>

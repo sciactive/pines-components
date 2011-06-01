@@ -20,5 +20,5 @@ if ($pines->com_plaza->reload_packages()) {
 	pines_error('Error reloading package list. Not all indices could be fetched.');
 }
 
-redirect(pines_url('com_plaza', 'package/repository'));
+pines_redirect(pines_url('com_plaza', 'package/repository'));
 ?>

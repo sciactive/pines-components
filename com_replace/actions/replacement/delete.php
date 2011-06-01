@@ -26,6 +26,6 @@ if (empty($failed_deletes)) {
 	pines_error('Could not delete replacements with given IDs: '.$failed_deletes);
 }
 
-redirect(pines_url('com_replace', 'replacement/list'));
+pines_redirect(pines_url('com_replace', 'replacement/list'));
 
 ?>

@@ -17,7 +17,7 @@ if ( !gatekeeper('com_hrm/fileissue') )
 $list = explode(',', $_REQUEST['items']);
 $issue_type = com_hrm_issue_type::factory((int) $_REQUEST['issue_type']);
 if (!isset($issue_type->guid)) {
-	redirect(pines_url('com_hrm', 'employee/list'));
+	pines_redirect(pines_url('com_hrm', 'employee/list'));
 	return;
 }
 
@@ -50,6 +50,6 @@ if (empty($failed_disposals)) {
     pines_error("Employee(s) with given ID(s) were not filed with issues : $failed_disposals");
 }
 
-redirect(pines_url('com_hrm', 'employee/list'));
+pines_redirect(pines_url('com_hrm', 'employee/list'));
 
 ?>

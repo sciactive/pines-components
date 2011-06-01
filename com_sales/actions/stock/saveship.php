@@ -76,9 +76,9 @@ if ($entity->save()) {
 }
 
 if ($entity->has_tag('shipping_pending')) {
-	redirect(pines_url('com_sales', 'stock/shipments'));
+	pines_redirect(pines_url('com_sales', 'stock/shipments'));
 } else {
-	redirect(pines_url('com_sales', 'stock/shipments', array('removed' => 'true')));
+	pines_redirect(pines_url('com_sales', 'stock/shipments', array('removed' => 'true')));
 }
 
 ?>

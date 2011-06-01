@@ -20,6 +20,6 @@ if (file_put_contents($pines->config->com_logger->path, '') !== false) {
 	pines_error('Error writing to log file.');
 }
 
-redirect(pines_url('com_logger', 'view'));
+pines_redirect(pines_url('com_logger', 'view'));
 
 ?>

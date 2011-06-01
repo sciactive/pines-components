@@ -86,6 +86,6 @@ if ($payment_type->save()) {
 	pines_error('Error saving payment type. Do you have permission?');
 }
 
-redirect(pines_url('com_sales', 'paymenttype/list'));
+pines_redirect(pines_url('com_sales', 'paymenttype/list'));
 
 ?>

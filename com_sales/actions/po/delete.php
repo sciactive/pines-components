@@ -27,6 +27,6 @@ if (empty($failed_deletes)) {
 	pines_notice('Note that POs cannot be deleted after items have been received on them.');
 }
 
-redirect(pines_url('com_sales', 'po/list'));
+pines_redirect(pines_url('com_sales', 'po/list'));
 
 ?>

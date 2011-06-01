@@ -61,6 +61,6 @@ if ($return_checklist->save()) {
 	pines_error('Error saving return checklist. Do you have permission?');
 }
 
-redirect(pines_url('com_sales', 'returnchecklist/list'));
+pines_redirect(pines_url('com_sales', 'returnchecklist/list'));
 
 ?>

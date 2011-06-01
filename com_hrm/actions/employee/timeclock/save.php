@@ -38,6 +38,6 @@ if ($employee->timeclock->save() && $employee->save()) {
 	pines_error('Error saving timeclock. Do you have permission?');
 }
 
-redirect(pines_url('com_hrm', 'employee/timeclock/list'));
+pines_redirect(pines_url('com_hrm', 'employee/timeclock/list'));
 
 ?>

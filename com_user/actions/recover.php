@@ -84,7 +84,7 @@ $content = str_replace($search, $replace, $pines->config->com_user->pw_recovery_
 $mail = com_mailer_mail::factory($pines->config->com_user->email_from_address, $user->email, $subject, $content);
 if ($mail->send()) {
 	pines_notice('We have sent an email to your registered email address. Please check your email to continue with account recovery.');
-	redirect(pines_url());
+	pines_redirect(pines_url());
 	return;
 } else {
 	pines_error('Couldn\'t send recovery email.');

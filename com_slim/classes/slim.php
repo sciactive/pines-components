@@ -21,7 +21,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * @package Pines
  * @subpackage com_slim
  */
-class slim extends p_base {
+class slim {
 	/**
 	 * Slim file format version.
 	 */

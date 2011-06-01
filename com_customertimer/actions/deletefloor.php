@@ -26,6 +26,6 @@ if (empty($failed_deletes)) {
 	pines_error('Could not delete floors with given IDs: '.$failed_deletes);
 }
 
-redirect(pines_url('com_customertimer', 'listfloors'));
+pines_redirect(pines_url('com_customertimer', 'listfloors'));
 
 ?>

@@ -26,6 +26,6 @@ if (empty($failed_deletes)) {
 	pines_error('Could not delete vendors with given IDs: '.$failed_deletes);
 }
 
-redirect(pines_url('com_sales', 'vendor/list'));
+pines_redirect(pines_url('com_sales', 'vendor/list'));
 
 ?>

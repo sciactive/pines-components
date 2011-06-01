@@ -17,7 +17,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * @package Pines
  * @subpackage com_configure
  */
-class configurator_component extends p_base implements configurator_component_interface {
+class configurator_component implements configurator_component_interface {
 	/**
 	 * The configuration defaults.
 	 * @var array

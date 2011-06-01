@@ -245,7 +245,7 @@ if (!isset($sale->status) || $sale->status == 'quoted') {
 
 if ($sale->save()) {
 	pines_notice('Saved sale ['.$sale->id.']');
-	redirect(pines_url('com_sales', 'sale/receipt', array('id' => $sale->guid, 'autoprint' => 'ok')));
+	pines_redirect(pines_url('com_sales', 'sale/receipt', array('id' => $sale->guid, 'autoprint' => 'ok')));
 } else {
 	$sale->print_form();
 	pines_error('Error saving sale. Do you have permission?');

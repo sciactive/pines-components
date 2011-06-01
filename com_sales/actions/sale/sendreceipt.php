@@ -25,6 +25,6 @@ if (isset($sale->guid)) {
 	pines_notice('Cannot send a receipt for the specified invoice.');
 }
 
-redirect(pines_url('com_sales', 'sale/receipt', array('id' => $_REQUEST['id'])));
+pines_redirect(pines_url('com_sales', 'sale/receipt', array('id' => $_REQUEST['id'])));
 
 ?>

@@ -40,6 +40,6 @@ if (!file_exists($file)) {
 	}
 }
 
-redirect(pines_url('com_repository', 'listpackages'));
+pines_redirect(pines_url('com_repository', 'listpackages'));
 
 ?>

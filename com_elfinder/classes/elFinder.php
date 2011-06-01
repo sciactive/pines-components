@@ -20,7 +20,7 @@ setlocale(LC_ALL, 'en_US.UTF8');
  * @package Pines
  * @subpackage com_elfinder
  */
-interface elFinderILogger extends p_base_interface {
+interface elFinderILogger {
 	public function log($cmd, $ok, $context, $err='', $errorData = array());
 }
 
@@ -32,7 +32,7 @@ interface elFinderILogger extends p_base_interface {
  * @package Pines
  * @subpackage com_elfinder
  */
-class elFinder extends p_base {
+class elFinder {
 	
 	/**
 	 * object options

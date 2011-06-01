@@ -28,6 +28,6 @@ if (empty($failed_deletes)) {
 	pines_notice('Note that cash counts cannot be deleted after items have been received on them.');
 }
 
-redirect(pines_url('com_sales', 'cashcount/list'));
+pines_redirect(pines_url('com_sales', 'cashcount/list'));
 
 ?>

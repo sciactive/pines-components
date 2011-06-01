@@ -85,6 +85,6 @@ foreach ($items as $cur_item) {
 if ($success)
 	pines_notice('Assigned stock to selected orders.');
 
-redirect(pines_url('com_sales', 'warehouse/assigned'));
+pines_redirect(pines_url('com_sales', 'warehouse/assigned'));
 
 ?>

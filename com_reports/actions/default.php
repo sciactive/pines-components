@@ -11,6 +11,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-action('com_reports', 'reportsales');
+pines_action('com_reports', 'reportsales');
 
 ?>

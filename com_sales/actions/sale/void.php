@@ -18,7 +18,7 @@ $entity = com_sales_sale::factory((int) $_REQUEST['id']);
 
 if (!isset($entity->guid)) {
 	pines_notice('The given ID could not be found.');
-	redirect(pines_url('com_sales', 'sale/list'));
+	pines_redirect(pines_url('com_sales', 'sale/list'));
 	return;
 }
 
@@ -35,6 +35,6 @@ if ( !gatekeeper('com_sales/voidsale') && !$_SESSION['user']->is($entity->user) 
 	}
 }
 
-redirect(pines_url('com_sales', 'sale/receipt', array('id' => $entity->guid)));
+pines_redirect(pines_url('com_sales', 'sale/receipt', array('id' => $entity->guid)));
 
 ?>

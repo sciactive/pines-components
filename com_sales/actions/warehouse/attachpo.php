@@ -41,7 +41,7 @@ foreach (explode(',', $_REQUEST['id']) as $cur_id) {
 
 if (!$products) {
 	pines_notice('No products were selected.');
-	redirect(pines_url('com_sales', 'warehouse/pending'));
+	pines_redirect(pines_url('com_sales', 'warehouse/pending'));
 	return;
 }
 
@@ -56,7 +56,7 @@ $pos = $pines->entity_manager->get_entities(
 
 if (!$pos) {
 	pines_notice('Couldn\'t find a PO with all the selected items.');
-	redirect(pines_url('com_sales', 'warehouse/pending'));
+	pines_redirect(pines_url('com_sales', 'warehouse/pending'));
 	return;
 }
 

@@ -30,6 +30,6 @@ switch ($pines->com_repository->sign_packages((string) $_REQUEST['password'])) {
 		break;
 }
 
-redirect(pines_url('com_repository', 'listpackages', array('all' => 'true')));
+pines_redirect(pines_url('com_repository', 'listpackages', array('all' => 'true')));
 
 ?>

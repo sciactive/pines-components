@@ -44,6 +44,6 @@ if ($ranking->save()) {
 	return;
 }
 
-redirect(pines_url('com_reports', 'salesrankings'));
+pines_redirect(pines_url('com_reports', 'salesrankings'));
 
 ?>

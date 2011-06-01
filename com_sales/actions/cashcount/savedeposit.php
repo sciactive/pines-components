@@ -58,6 +58,6 @@ if ($deposit->save()) {
 	return;
 }
 
-redirect(pines_url('com_sales', 'cashcount/list'));
+pines_redirect(pines_url('com_sales', 'cashcount/list'));
 
 ?>

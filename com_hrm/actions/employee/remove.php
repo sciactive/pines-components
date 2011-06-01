@@ -27,6 +27,6 @@ if (empty($failed_removes)) {
 	pines_error('Could not remove employees with given IDs: '.$failed_removes);
 }
 
-redirect(pines_url('com_hrm', 'employee/list'));
+pines_redirect(pines_url('com_hrm', 'employee/list'));
 
 ?>

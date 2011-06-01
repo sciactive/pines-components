@@ -11,6 +11,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-action('com_customertimer', 'listfloors');
+pines_action('com_customertimer', 'listfloors');
 
 ?>

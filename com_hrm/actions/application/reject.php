@@ -30,6 +30,6 @@ if (empty($failed_adds)) {
 	pines_error('Could not reject the applicants with the following application IDs: '.$failed_adds);
 }
 
-redirect(pines_url('com_hrm', 'application/list'));
+pines_redirect(pines_url('com_hrm', 'application/list'));
 
 ?>

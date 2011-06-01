@@ -17,7 +17,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * @package Pines
  * @subpackage com_myentity
  */
-class entity extends p_base implements entity_interface {
+class entity implements entity_interface {
 	/**
 	 * The GUID of the entity.
 	 *

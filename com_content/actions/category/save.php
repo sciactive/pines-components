@@ -132,6 +132,6 @@ if ($category->save()) {
 	pines_error('Error saving category. Do you have permission?');
 }
 
-redirect(pines_url('com_content', 'category/list'));
+pines_redirect(pines_url('com_content', 'category/list'));
 
 ?>

@@ -286,9 +286,9 @@ class slim {
 				}
 				break;
 			default:
-				if ($whence == SEEK_CUR){
+				if ($whence == SEEK_CUR) {
 					return fseek($handle, $this->stream_offset + $offset);
-				} else if (isset($whence)) {
+				} elseif (isset($whence)) {
 					return fseek($handle, $offset, $whence);
 				} else {
 					return fseek($handle, $offset);

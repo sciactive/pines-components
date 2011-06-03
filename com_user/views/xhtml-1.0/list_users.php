@@ -76,6 +76,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>Primary Group</th>
 			<th>Groups</th>
 			<th>Inherit Abilities</th>
+			<?php if ($pines->config->com_user->referral_codes) { ?>
+			<th>Referral Code</th>
+			<?php } ?>
 		</tr>
 	</thead>
 	<tbody>
@@ -99,6 +102,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			}
 			?></td>
 			<td><?php echo $user->inherit_abilities ? 'Yes' : 'No'; ?></td>
+			<?php if ($pines->config->com_user->referral_codes) { ?>
+			<td><?php echo htmlspecialchars($user->referral_code); ?></td>
+			<?php } ?>
 		</tr>
 	<?php } ?>
 	</tbody>

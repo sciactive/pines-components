@@ -104,7 +104,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 								this.enabled ? "Yes" : "No",
 								this.member ? (this.valid_member ? "Yes" : "Expired") : "No",
 								this.member_exp,
-								this.points
+								this.points,
+								this.referral
 							]
 						});
 					});
@@ -268,10 +269,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>Member</th>
 			<th>Expiration</th>
 			<th>Points</th>
+			<th>Referral Code</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr>
+			<td>-</td>
 			<td>-</td>
 			<td>-</td>
 			<td>-</td>

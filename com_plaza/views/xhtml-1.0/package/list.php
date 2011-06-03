@@ -166,7 +166,7 @@ if (isset($pines->com_fancybox))
 						pines.error("The server returned an unexpected value.");
 						return;
 					}
-					info_dialog = $("<div title=\"Package Info for "+name+"\" />").appendTo("body").html(data).dialog({
+					info_dialog = $("<div title=\"Package Info for "+name+"\"></div>").appendTo("body").html(data).dialog({
 						modal: true,
 						width: "600px",
 						buttons: buttons_installed

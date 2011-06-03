@@ -117,7 +117,7 @@ $account_types = array(
 				success: function(data){
 					if (data == "")
 						return;
-					var form = $("<div title=\"Date Selector\" />");
+					var form = $("<div title=\"Date Selector\"></div>");
 					form.dialog({
 						bgiframe: true,
 						autoOpen: true,
@@ -162,7 +162,7 @@ $account_types = array(
 				success: function(data){
 					if (data == "")
 						return;
-					var form = $("<div title=\"Location Selector\" />");
+					var form = $("<div title=\"Location Selector\"></div>");
 					form.dialog({
 						bgiframe: true,
 						autoOpen: true,

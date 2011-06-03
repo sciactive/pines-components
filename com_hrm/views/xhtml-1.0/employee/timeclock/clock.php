@@ -101,7 +101,7 @@ if (!isset($this->entity->user->guid) || !isset($this->entity)) {
 
 			$("#p_muid_button").click(function(){
 				<?php if ($pines->config->com_hrm->timeclock_verify_pin && !empty($_SESSION['user']->pin)) { ?>
-				var dialog = $("<div />", {
+				var dialog = $("<div></div>", {
 					"title": "Please Verify Your PIN",
 					"html": '<div class="pf-form"><div class="pf-element"><label><span class="pf-label">PIN</span><input type="password" class="pf-field ui-widget-content ui-corner-all" /></label></div></div><br />'
 				}).dialog({
@@ -146,7 +146,7 @@ if (!isset($this->entity->user->guid) || !isset($this->entity)) {
 				success: function(data){
 					if (data == "")
 						return;
-					p_muid_rto_form = $("<div title=\"Time Off Request for "+"<?php echo htmlspecialchars($_SESSION['user']->name); ?>"+"\" />");
+					p_muid_rto_form = $("<div title=\"Time Off Request for "+"<?php echo htmlspecialchars($_SESSION['user']->name); ?>"+"\"></div>");
 					p_muid_rto_form.dialog({
 						bgiframe: true,
 						autoOpen: true,

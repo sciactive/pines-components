@@ -103,7 +103,7 @@ $yellow_status = $pines->config->com_reports->rank_level_yellow;
 				success: function(data){
 					if (data == "")
 						return;
-					var form = $("<div title=\"Date Selector\" />");
+					var form = $("<div title=\"Date Selector\"></div>");
 					form.dialog({
 						bgiframe: true,
 						autoOpen: true,
@@ -144,7 +144,7 @@ $yellow_status = $pines->config->com_reports->rank_level_yellow;
 				success: function(data){
 					if (data == "")
 						return;
-					var form = $("<div title=\"Location Selector\" />");
+					var form = $("<div title=\"Location Selector\"></div>");
 					form.dialog({
 						bgiframe: true,
 						autoOpen: true,

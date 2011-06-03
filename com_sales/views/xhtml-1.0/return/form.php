@@ -696,7 +696,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					success: function(data){
 						if (data == "")
 							return;
-						var form = $("<div title=\"Data for "+row.pgrid_get_value(1)+" Payment\" />");
+						var form = $("<div title=\"Data for "+row.pgrid_get_value(1)+" Payment\"></div>");
 						form.dialog({
 							bgiframe: true,
 							autoOpen: true,
@@ -761,7 +761,7 @@ if ($pines->config->com_sales->autocomplete_product)
 
 			var get_amount = function(callback){
 				// TODO: Minimums, maximums
-				$("<div title=\"Payment Amount\" />").each(function(){
+				$("<div title=\"Payment Amount\"></div>").each(function(){
 					var amount_dialog = $(this);
 					// A button for the current amount due.
 					var cur_amount = $("#p_muid_amount_due").html();

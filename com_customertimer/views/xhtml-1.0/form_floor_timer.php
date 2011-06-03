@@ -204,9 +204,9 @@ $pines->com_customer->load_customer_select();
 		};
 		var insert_customer = function(station, customer){
 			// Insert a customer into the station.
-			station.element.addClass("filled").children("span.ui-button-text").append($("<span />", {
+			station.element.addClass("filled").children("span.ui-button-text").append($("<span></span>", {
 				"class": "points_remain"
-			})).append($("<span />", {
+			})).append($("<span></span>", {
 				"class": "name"
 			}));
 			update_customer(station, customer);
@@ -279,7 +279,7 @@ $pines->com_customer->load_customer_select();
 		// Make each station's element.
 		$.each(stations, function(station_id, station){
 			station.id = station_id;
-			station.element = $("<div />", {
+			station.element = $("<div></div>", {
 				"class": "station",
 				"css": {
 					"left": (station.left*100)+"%",

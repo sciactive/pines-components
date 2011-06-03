@@ -99,7 +99,7 @@ if (isset($pines->com_elfinder))
 			<?php if (isset($pines->com_elfinder)) { ?>
 			// Use elFinder as the file browser.
 			file_browser_callback : function(field_name, url, type, win){
-				$("<div />").appendTo("body").elfinder({
+				$("<div></div>").appendTo("body").elfinder({
 					url: "<?php echo addslashes(pines_url("com_elfinder", "connector")); ?>",
 					dialog: {"width": 900, "modal": true, "zIndex": 400000, "title": "Choose "+type},
 					height: <?php echo (int) $pines->config->com_elfinder->default_height; ?>,

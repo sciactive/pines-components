@@ -118,7 +118,7 @@ $pines->com_jstree->load();
 				success: function(data){
 					if (data == "")
 						return;
-					var form = $("<div title=\"Location Selector\" />");
+					var form = $("<div title=\"Location Selector\"></div>");
 					form.dialog({
 						bgiframe: true,
 						autoOpen: true,

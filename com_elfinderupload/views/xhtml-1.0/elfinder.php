@@ -21,7 +21,7 @@ defined('P_RUN') or die('Direct access prohibited');
 				if (finder_open)
 					return;
 				finder_open = true;
-				$("<div />").appendTo("body").elfinder({
+				$("<div></div>").appendTo("body").elfinder({
 					url: "<?php echo addslashes(pines_url('com_elfinder', 'connector')); ?>",
 					dialog: {"width": 900, "modal": true, "zIndex": 400000, "title": "Choose File", "close": function(){
 						finder_open = false;

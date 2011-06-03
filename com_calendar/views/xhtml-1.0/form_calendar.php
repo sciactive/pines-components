@@ -145,7 +145,7 @@ if ($pines->config->com_calendar->com_customer)
 			success: function(data){
 				if (data == "")
 					return;
-				var form = $("<div title=\"Choose Location\" />");
+				var form = $("<div title=\"Choose Location\"></div>");
 				form.dialog({
 					bgiframe: true,
 					autoOpen: true,
@@ -193,7 +193,7 @@ if ($pines->config->com_calendar->com_customer)
 			success: function(data){
 				if (data == "")
 					return;
-				var form = $("<div title=\"Add a New Event\" />");
+				var form = $("<div title=\"Add a New Event\"></div>");
 				form.dialog({
 					bgiframe: true,
 					autoOpen: true,
@@ -250,7 +250,7 @@ if ($pines->config->com_calendar->com_customer)
 			success: function(data){
 				if (data == "")
 					return;
-				var form = $("<div title=\"Editing Event ["+event_id+"]\" />");
+				var form = $("<div title=\"Editing Event ["+event_id+"]\"></div>");
 				form.dialog({
 					bgiframe: true,
 					autoOpen: true,
@@ -325,7 +325,7 @@ if ($pines->config->com_calendar->com_customer)
 			success: function(data){
 				if (data == "")
 					return;
-				var form = $("<div title=\"Quick schedule for <?php echo $this->location->name; ?>\" />");
+				var form = $("<div title=\"Quick schedule for <?php echo $this->location->name; ?>\"></div>");
 				form.dialog({
 					bgiframe: true,
 					autoOpen: true,
@@ -363,7 +363,7 @@ if ($pines->config->com_calendar->com_customer)
 			success: function(data){
 				if (data == "")
 					return;
-				var form = $("<div title=\"Schedule work for <?php echo $this->employee->name; ?>\" />");
+				var form = $("<div title=\"Schedule work for <?php echo $this->employee->name; ?>\"></div>");
 				form.dialog({
 					bgiframe: true,
 					autoOpen: true,

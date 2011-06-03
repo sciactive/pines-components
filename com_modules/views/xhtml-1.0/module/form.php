@@ -82,7 +82,7 @@ $pines->com_pgrid->load();
 							success: function(data){
 								if (data == "")
 									return;
-								var form = $("<div title=\"Module Options\" />");
+								var form = $("<div title=\"Module Options\"></div>");
 								form.dialog({
 									bgiframe: true,
 									autoOpen: true,

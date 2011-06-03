@@ -37,13 +37,13 @@ if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 || strp
 	echo json_encode($return);
 	return;
 }
+header('Content-Type: text/html');
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"<?php echo in_array('font', $pines->config->tpl_pines->fancy_style) ? ' id="fancy_font"' : ''; ?>>
+<!DOCTYPE html>
+<html <?php echo in_array('font', $pines->config->tpl_pines->fancy_style) ? ' id="fancy_font"' : ''; ?>>
 <head>
+	<meta charset="utf-8" />
 	<title><?php echo htmlspecialchars($pines->page->get_title()); ?></title>
-	<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
 	<link rel="icon" type="image/vnd.microsoft.icon" href="<?php echo htmlspecialchars($pines->config->location); ?>favicon.ico" />
 
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/pines.css" media="all" rel="stylesheet" type="text/css" />

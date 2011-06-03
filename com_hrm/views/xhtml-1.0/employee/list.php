@@ -165,7 +165,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						success: function(data){
 							if (data == "")
 								return;
-							var form = $("<div title=\"Select User(s)\" />");
+							var form = $("<div title=\"Select User(s)\"></div>");
 							form.html(data+"<br />");
 							form.dialog({
 								bgiframe: true,
@@ -250,7 +250,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						success: function(data){
 							if (data == "")
 								return;
-							var form = $("<div title=\"Pending Requests for Time Off\" />");
+							var form = $("<div title=\"Pending Requests for Time Off\"></div>");
 							form.dialog({
 								bgiframe: true,
 								autoOpen: true,

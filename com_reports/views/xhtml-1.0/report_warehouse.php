@@ -78,7 +78,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				success: function(data){
 					if (data == "")
 						return;
-					var form = $("<div title=\"Date Selector\" />");
+					var form = $("<div title=\"Date Selector\"></div>");
 					form.dialog({
 						bgiframe: true,
 						autoOpen: true,
@@ -119,7 +119,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				success: function(data){
 					if (data == "")
 						return;
-					var form = $("<div title=\"Location Selector\" />");
+					var form = $("<div title=\"Location Selector\"></div>");
 					form.dialog({
 						bgiframe: true,
 						autoOpen: true,

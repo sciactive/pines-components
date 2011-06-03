@@ -12,8 +12,9 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
+header('Content-Type: text/html');
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <!--
 Design by Free CSS Templates
 http://www.freecsstemplates.org
@@ -25,10 +26,10 @@ Version    : 1.0
 Released   : 20090820
 
 -->
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 	<head>
+		<meta charset="utf-8" />
 		<title><?php echo htmlspecialchars($pines->page->get_title()); ?></title>
-		<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
 		<link rel="icon" type="image/vnd.microsoft.icon" href="<?php echo htmlspecialchars($pines->config->location); ?>favicon.ico" />
 
 		<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/style.css" media="all" rel="stylesheet" type="text/css" />

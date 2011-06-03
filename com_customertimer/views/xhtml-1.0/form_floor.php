@@ -64,7 +64,7 @@ $pines->uploader->load();
 		var update_layout = function(){
 			remove_station_elements();
 			$.each(stations, function(station_id, station){
-				station.element = $("<div />", {
+				station.element = $("<div></div>", {
 					"class": "station",
 					"css": {
 						"left": (station.left*100)+"%",
@@ -72,7 +72,7 @@ $pines->uploader->load();
 						"width": (station.width*100)+"%",
 						"height": (station.height*100)+"%"
 					},
-					"html": $("<span />", {
+					"html": $("<span></span>", {
 						"class": "station_id",
 						"html": station_id
 					}),
@@ -129,9 +129,9 @@ $pines->uploader->load();
 		});
 		// Import a station object.
 		$("#p_muid_floor_tabs .station_layout_import").button().click(function(){
-			$("<div />", {
+			$("<div></div>", {
 				"title": "Station Layout Import",
-				"html": $("<textarea />", {
+				"html": $("<textarea></textarea>", {
 					"css": {
 						"width": "100%",
 						"height": "440px"
@@ -168,9 +168,9 @@ $pines->uploader->load();
 				if (this.element)
 					delete this.element;
 			});
-			$("<div />", {
+			$("<div></div>", {
 				"title": "Station Layout Export",
-				"html": $("<textarea />", {
+				"html": $("<textarea></textarea>", {
 					"css": {
 						"width": "100%",
 						"height": "440px"

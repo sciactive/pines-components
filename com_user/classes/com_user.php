@@ -134,7 +134,7 @@ class com_user extends component implements user_manager_interface {
 			// If the user is logged in, their abilities are already set up. We
 			// just need to add them to the user's.
 			if ( (object) $_SESSION['user'] === $_SESSION['user'] ) {
-				if ( !isset($ability) )
+				if ( !isset($ability) || empty($ability) )
 					return true;
 				$user =& $_SESSION['user'];
 				// Check the cache to see if we've already checked this user.

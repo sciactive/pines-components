@@ -20,7 +20,7 @@ if (!isset($entity->guid))
 
 if (!isset($entity->guid)) {
 	pines_error('Requested sale id is not accessible.');
-	$pines->com_sales->list_sales();
+	pines_redirect(pines_url('com_sales', 'sale/list'));
 	return;
 }
 

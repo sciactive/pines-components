@@ -137,6 +137,24 @@ class com_sales_sale extends entity {
 	}
 
 	/**
+	 * Print a form to change products.
+	 *
+	 * Uses a page override to only print the form.
+	 *
+	 * @return module The form's module.
+	 */
+	public function change_product_form() {
+		global $pines;
+		$pines->page->override = true;
+
+		$module = new module('com_sales', 'forms/change_product', 'content');
+		$module->entity = $this;
+
+		$pines->page->override_doc($module->render());
+		return $module;
+	}
+
+	/**
 	 * Complete the sale.
 	 *
 	 * This process creates payment transaction entries for each payment and any

@@ -1,18 +1,18 @@
 <?php
 /**
- * Provide a form for swapping inventory.
+ * Provide a form for changing a product.
  *
  * @package Pines
  * @subpackage com_sales
  * @license http://www.gnu.org/licenses/agpl-3.0.html
- * @author Zak Huber <zak@sciactive.com>
+ * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/swapsale') )
-	punt_user(null, pines_url('com_sales', 'forms/swap'));
+if ( !gatekeeper('com_sales/changeproduct') )
+	punt_user(null, pines_url('com_sales', 'forms/changeproduct'));
 
 $sale = com_sales_sale::factory((int) $_REQUEST['id']);
 if (!isset($sale->guid)) {
@@ -21,6 +21,6 @@ if (!isset($sale->guid)) {
 	return;
 }
 
-$sale->swap_form();
+$sale->change_product_form();
 
 ?>

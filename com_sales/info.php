@@ -36,6 +36,7 @@ return array(
 		array('shipstock', 'Ship Stock', 'User can ship stock on an existing transfer.'),
 		array('managestock', 'Manage Stock', 'User can transfer, ship, and adjust stock.'),
 		array('warehouse', 'Warehouse Sales', 'User can fulfill warehouse sales.'),
+		array('changeproduct', 'Change Products', 'User can change products on unfulfilled warehouse sales.'),
 		array('totalsales', 'Total Sales', 'User can see sales totals.'),
 		array('totalothersales', 'Total Other Sales', 'User can see sales totals of other locations.'),
 		array('listsales', 'List Sales', 'User can see sales.'),

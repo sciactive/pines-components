@@ -146,6 +146,7 @@ if ($sale->status != 'paid' && $sale->status != 'voided') {
 		$cur_status = $cur_payment->values[2];
 		$data = $cur_payment->data;
 		$orig_key = $cur_payment->orig_key;
+		// TODO: Will this work on brand new sales? IE, one payment is info_request, and the other is approved, then they try to submit again.
 		if (in_array($cur_status, array('approved', 'declined', 'tendered', 'voided')))
 			continue;
 		if (!isset($cur_payment_type_entity->guid)) {

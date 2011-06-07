@@ -13,8 +13,10 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Sales';
 $pines->com_pgrid->load();
 $pines->com_jstree->load();
-if (gatekeeper('com_sales/swapsalesrep'))
+if ($pines->config->com_sales->per_item_salesperson && gatekeeper('com_sales/swapsalesrep'))
 	$pines->com_hrm->load_employee_select();
+if ($pines->config->com_sales->autocomplete_product)
+	$pines->com_sales->load_product_select();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/sale/list'];
 ?>
@@ -61,9 +63,13 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', text: 'Swap', extra_class: 'picon picon-document-swap', click: function(e, row){
 					sale_grid.swap_form($(row).attr("title"));
 				}},
+				<?php } if (gatekeeper('com_sales/changeproduct')) { ?>
+				{type: 'button', text: 'Change', title: 'Change products on warehouse sales.', extra_class: 'picon picon-package-x-generic', click: function(e, row){
+					sale_grid.change_form(row.pgrid_get_value(1), row.attr("title"));
+				}},
 				<?php } if (gatekeeper('com_sales/voidsale') || gatekeeper('com_sales/voidownsale')) { ?>
 				{type: 'button', text: 'Void', extra_class: 'picon picon-edit-delete-shred', confirm: true, url: '<?php echo addslashes(pines_url('com_sales', 'sale/void', array('id' => '__title__'))); ?>'},
-				<?php } if (gatekeeper('com_sales/swapsalesrep')) { ?>
+				<?php } if ($pines->config->com_sales->per_item_salesperson && gatekeeper('com_sales/swapsalesrep')) { ?>
 				{type: 'button', title: 'Change Salesperson', extra_class: 'picon picon-edit-find-user', click: function(e, row){
 					sale_grid.salesrep_form(row.pgrid_get_value(1), row.attr("title"));
 				}},
@@ -346,6 +352,55 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 										"id": sale_id,
 										"swap_item": swap_item,
 										"new_serial": new_serial.trim()
+									});
+								}
+							}
+						}
+					});
+				}
+			});
+		};
+		sale_grid.change_form = function(sale_id, guid){
+			if (!confirm("Are you sure you want to change a product on this sale? Doing so may have some serious consenquences. Product actions and commissions are not considered when changing products. Any difference in price and any discounts are also ignored. Customer required and one per invoice restrictions are also ignored. Only continue if you are fully aware of the results of changing a product."))
+				return;
+			$.ajax({
+				url: "<?php echo addslashes(pines_url('com_sales', 'forms/changeproduct')); ?>",
+				type: "POST",
+				dataType: "html",
+				data: {"id": guid},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured while trying to retrieve the change product form:\n"+XMLHttpRequest.status+": "+textStatus);
+				},
+				success: function(data){
+					if (data == "")
+						return;
+					var form = $("<div title=\"Change Product [Sale: "+sale_id+"]\"></div>").html(data+"<br />");
+					form.dialog({
+						bgiframe: true,
+						autoOpen: true,
+						width: 425,
+						modal: true,
+						open: function() {
+							$(".product_box", form).productselect();
+						},
+						close: function(){
+							form.remove();
+						},
+						buttons: {
+							"Change Product": function(){
+								var product = form.find(":input[name=product]:checked").val();
+								var new_product = form.find(":input[name=new_product]").val();
+								if (product == "") {
+									alert('Please specify the product you want to change.');
+								} else if (new_product == "") {
+									alert('Please specify the new product.');
+								} else {
+									form.dialog('close');
+									// Submit the product change request.
+									pines.post("<?php echo addslashes(pines_url('com_sales', 'sale/changeproduct')); ?>", {
+										"id": guid,
+										"product": product,
+										"new_product": new_product
 									});
 								}
 							}

@@ -388,7 +388,7 @@ class com_pgentity extends component implements entity_manager_interface {
 				) {
 				$entity = $this->pull_cache($selectors[1]['guid'], $class);
 				if (isset($entity) && (!isset($selectors[1]['tag']) || $entity->has_tag($selectors[1]['tag']))) {
-					$entity->p_use_skip_ac = (bool) $options['skip_ac'];
+					$entity->_p_use_skip_ac = (bool) $options['skip_ac'];
 					return array($entity);
 				}
 			}
@@ -765,7 +765,7 @@ class com_pgentity extends component implements entity_manager_interface {
 					if ($pines->config->com_pgentity->cache)
 						$this->push_cache($entity, $class);
 				}
-				$entity->p_use_skip_ac = (bool) $options['skip_ac'];
+				$entity->_p_use_skip_ac = (bool) $options['skip_ac'];
 				$entities[] = $entity;
 				$count++;
 				if ($options['limit'] && $count >= $options['limit'])

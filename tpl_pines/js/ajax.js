@@ -6,6 +6,7 @@ pines(function(){
 	pos_top = $("#top"),
 	page_title = $("#page_title"),
 	pos_pre_content = $("#pre_content"),
+	pos_breadcrumbs = $("#breadcrumbs"),
 	pos_content_top_left = $("#content_top_left"),
 	pos_content_top_right = $("#content_top_right"),
 	pos_content = $("#content"),
@@ -72,6 +73,7 @@ pines(function(){
 				pos_top.html(data.pos_top);
 				page_title.after(data.pos_header).after(data.pos_header_right);
 				pos_pre_content.html(data.pos_pre_content);
+				pos_breadcrumbs.html(data.pos_breadcrumbs);
 				pos_content_top_left.html(data.pos_content_top_left);
 				pos_content_top_right.html(data.pos_content_top_right);
 				pos_content.html(data.pos_content);
@@ -120,27 +122,40 @@ pines(function(){
 		load_page_ajax(url, "POST", data);
 		return false;
 	});
-	pines.get = function(url, params){
+	pines.get = function(url, params, target){
+		if (!target || target == "_self") {
+			if (params) {
+				params.tpl_pines_ajax = 1;
+			} else
+				params = {tpl_pines_ajax: 1};
+		}
 		if (params) {
-			params.tpl_pines_ajax = 1;
-		} else
-			params = {tpl_pines_ajax: 1};
-		url += (url.indexOf("?") == -1) ? "?" : "&";
-		var parray = [];
-		for (var i in params) {
-			if (params.hasOwnProperty(i)) {
-				if (encodeURIComponent)
-					parray.push(encodeURIComponent(i)+"="+encodeURIComponent(params[i]));
-				else
-					parray.push(escape(i)+"="+escape(params[i]));
+			url += (url.indexOf("?") == -1) ? "?" : "&";
+			var parray = [];
+			for (var i in params) {
+				if (params.hasOwnProperty(i)) {
+					if (encodeURIComponent)
+						parray.push(encodeURIComponent(i)+"="+encodeURIComponent(params[i]));
+					else
+						parray.push(escape(i)+"="+escape(params[i]));
+				}
 			}
+			url += parray.join("&");
 		}
-		url += parray.join("&");
-		if (url.indexOf(pines.rela_location) != 0) {
-			window.location = url;
-			return;
-		}
-		load_page_ajax(url, "GET");
+		if (!target || target == "_self") {
+			if (url.indexOf(pines.rela_location) != 0) {
+				window.location = url;
+				return;
+			}
+			load_page_ajax(url, "GET");
+		} else if (target == "_top")
+			window.top.location = url;
+		else if (target == "_parent")
+			window.parent.location = url;
+		else if (target == "_blank")
+			window.open(url);
+		else
+			window.open(url, target);
 	};
 	// TODO: Handle pines.post through Ajax.
 

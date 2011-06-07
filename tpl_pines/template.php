@@ -13,7 +13,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 // Experimental AJAX code.
-if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 || strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)) {
+if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)) {
 	$return = array(
 		'notices' => $pines->page->get_notice(),
 		'errors' => $pines->page->get_error(),
@@ -23,6 +23,7 @@ if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 || strp
 		'pos_header' => $pines->page->render_modules('header', 'module_header'),
 		'pos_header_right' => $pines->page->render_modules('header_right', 'module_header_right'),
 		'pos_pre_content' => $pines->page->render_modules('pre_content', 'module_header'),
+		'pos_breadcrumbs' => $pines->page->render_modules('breadcrumbs'),
 		'pos_content_top_left' => $pines->page->render_modules('content_top_left'),
 		'pos_content_top_right' => $pines->page->render_modules('content_top_right'),
 		'pos_content' => $pines->page->render_modules('content', 'module_content'),

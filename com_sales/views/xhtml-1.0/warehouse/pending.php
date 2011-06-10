@@ -105,6 +105,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>Sale Location</th>
 			<th>Customer</th>
 			<th>PO</th>
+			<th>Vendors</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -129,6 +130,21 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<?php } else { ?>
 			<td>None Attached</td>
 			<?php } ?>
+			<td>
+				<?php
+				$vendors = array(); 
+				foreach ($cur_product['entity']->vendors as $cur_vendor) {
+					$cur_string = '';
+					if (!empty($cur_vendor['link']))
+						$cur_string .= '<a href="'.htmlspecialchars($cur_vendor['link']).'" onclick="window.open(this.href); return false;">';
+					$cur_string .= htmlspecialchars($cur_vendor['entity']->name);
+					if (!empty($cur_vendor['link']))
+						$cur_string .= '</a>';
+					$vendors[] = $cur_string;
+				}
+				echo implode(', ', $vendors);
+				?>
+			</td>
 		</tr>
 	<?php } } ?>
 	</tbody>

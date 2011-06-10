@@ -232,6 +232,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>Modified</th>
 			<th>Committed</th>
 			<th>Status</th>
+			<th>Reviewed By</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -260,6 +261,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					echo 'Unrecognized';
 					break;
 			} ?></td>
+			<td><?php echo $countsheet->review_user->guid ? htmlspecialchars("{$countsheet->review_user->name} [{$countsheet->review_user->username}]") : '' ; ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

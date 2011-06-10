@@ -339,6 +339,9 @@ if ($this->entity->final) {
 							<th>SKU</th>
 							<th>Product</th>
 							<th>Quantity</th>
+							<?php if ($this->entity->final) { ?>
+							<th>Received</th>
+							<?php } ?>
 							<th>Unit Cost</th>
 							<th>Line Total</th>
 						</tr>
@@ -346,6 +349,7 @@ if ($this->entity->final) {
 					<tbody>
 						<?php
 						$missing_products = array();
+						$all_received = (array) $this->entity->received;
 						foreach ($this->entity->products as $cur_product) {
 							if (!isset($cur_product['entity']))
 								continue;
@@ -356,6 +360,22 @@ if ($this->entity->final) {
 							<td><?php echo htmlspecialchars($cur_product['entity']->sku); ?></td>
 							<td><?php echo htmlspecialchars($cur_product['entity']->name); ?></td>
 							<td><?php echo htmlspecialchars($cur_product['quantity']); ?></td>
+							<?php if ($this->entity->final) { ?>
+							<td>
+								<?php
+								$rec_qty = 0;
+								foreach ($all_received as $key => $cur_received) {
+									if ($rec_qty >= $cur_product['quantity'])
+										break;
+									if ($cur_product['entity']->is($cur_received->product)) {
+										$rec_qty++;
+										unset($all_received[$key]);
+									}
+								}
+								echo (int) $rec_qty;
+								?>
+							</td>
+							<?php } ?>
 							<td><?php echo htmlspecialchars($cur_product['cost']); ?></td>
 							<td><?php echo $pines->com_sales->round((int) $cur_product['quantity'] * (float) $cur_product['cost']); ?></td>
 						</tr>

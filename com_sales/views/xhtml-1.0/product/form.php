@@ -56,6 +56,7 @@ $pines->com_ptags->load();
 			var vendors_table = $("#p_muid_vendors_table");
 			var available_vendors_table = $("#p_muid_available_vendors_table");
 			var vendor_dialog = $("#p_muid_vendor_dialog");
+			var cur_vendor = null;
 
 			vendors_table.pgrid({
 				pgrid_paginate: false,
@@ -67,6 +68,21 @@ $pines->com_ptags->load();
 						extra_class: 'picon picon-list-add',
 						selection_optional: true,
 						click: function(){
+							cur_vendor = null;
+							vendor_dialog.dialog('open');
+						}
+					},
+					{
+						type: 'button',
+						text: 'Edit Vendor',
+						extra_class: 'picon picon-document-edit',
+						double_click: true,
+						click: function(e, rows){
+							cur_vendor = rows;
+							available_vendors_table.pgrid_get_all_rows().filter('[title='+cur_vendor.attr('title')+']').pgrid_select_rows();
+							vendor_dialog.find("input[name=cur_vendor_sku]").val(cur_vendor.pgrid_get_value(2));
+							vendor_dialog.find("input[name=cur_vendor_cost]").val(cur_vendor.pgrid_get_value(3));
+							vendor_dialog.find("input[name=cur_vendor_link]").val(cur_vendor.pgrid_get_value(4).replace(/.*?>(.*)?<.*/i, '$1'));
 							vendor_dialog.dialog('open');
 						}
 					},
@@ -101,8 +117,8 @@ $pines->com_ptags->load();
 						var cur_vendor_sku = $("#p_muid_cur_vendor_sku").val();
 						var cur_vendor_cost = $("#p_muid_cur_vendor_cost").val();
 						var cur_vendor_link = $("#p_muid_cur_vendor_link").val();
-						var cur_vendor = available_vendors_table.pgrid_get_selected_rows().pgrid_export_rows();
-						if (!cur_vendor[0]) {
+						var cur_vendor_entity = available_vendors_table.pgrid_get_selected_rows().pgrid_export_rows();
+						if (!cur_vendor_entity[0]) {
 							alert("Please select a vendor.");
 							return;
 						}
@@ -110,20 +126,30 @@ $pines->com_ptags->load();
 							alert("Please provide both a SKU and a cost for this vendor.");
 							return;
 						}
-						var new_vendor = [{
-							key: cur_vendor[0].key,
-							values: [
-								cur_vendor[0].values[0],
-								cur_vendor_sku,
-								cur_vendor_cost,
-								'<a href="'+cur_vendor_link+'" onclick="window.open(this.href); return false;">'+cur_vendor_link+'</a>'
-							]
-						}];
-						vendors_table.pgrid_add(new_vendor);
+						cur_vendor_link = '<a href="'+cur_vendor_link+'" onclick="window.open(this.href); return false;">'+cur_vendor_link+'</a>';
+						if (cur_vendor == null) {
+							var new_vendor = [{
+								key: cur_vendor_entity[0].key,
+								values: [
+									cur_vendor_entity[0].values[0],
+									cur_vendor_sku,
+									cur_vendor_cost,
+									cur_vendor_link
+								]
+							}];
+							vendors_table.pgrid_add(new_vendor);
+						} else {
+							cur_vendor.attr('title', cur_vendor_entity[0].key);
+							cur_vendor.pgrid_set_value(1, cur_vendor_entity[0].values[0]);
+							cur_vendor.pgrid_set_value(2, cur_vendor_sku);
+							cur_vendor.pgrid_set_value(3, cur_vendor_cost);
+							cur_vendor.pgrid_set_value(4, cur_vendor_link);
+						}
 						$(this).dialog('close');
 					}
 				},
 				close: function(){
+					cur_vendor = null;
 					update_vendors();
 				}
 			});

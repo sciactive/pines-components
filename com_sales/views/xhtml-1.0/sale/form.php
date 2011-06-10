@@ -280,7 +280,7 @@ if ($pines->config->com_sales->autocomplete_product)
 						click: function(e, rows){
 							var product = rows.data("product");
 							if (product.pricing_method != "variable") {
-								alert("The selected product does not allow variable pricing.")
+								alert("The selected product does not allow variable pricing.");
 								return;
 							}
 							var price = rows.pgrid_get_value(6);

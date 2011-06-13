@@ -63,7 +63,6 @@ if ($pines->config->com_sales->autocomplete_product)
 			$("#p_muid_shipment_table").pgrid({
 				pgrid_paginate: false,
 				pgrid_view_height: '350px',
-				pgrid_filtering: false,
 				pgrid_sort_col: 3,
 				pgrid_toolbar: true,
 				pgrid_toolbar_contents : [

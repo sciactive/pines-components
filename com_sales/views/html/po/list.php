@@ -76,7 +76,7 @@ $errors = array();
 			<th>Destination</th>
 			<th>Shipper</th>
 			<th>ETA</th>
-			<th>Committed</th>
+			<th>Status</th>
 			<th>Comments</th>
 		</tr>
 	</thead>
@@ -89,7 +89,7 @@ $errors = array();
 			<td><?php echo htmlspecialchars("{$po->destination->name} [{$po->destination->groupname}]"); ?></td>
 			<td><?php echo htmlspecialchars($po->shipper->name); ?></td>
 			<td><?php echo ($po->eta ? format_date($po->eta, 'date_sort') : ''); ?></td>
-			<td><?php echo $po->final ? 'Yes' : 'No'; ?></td>
+			<td><?php echo $po->final ? ($po->finished ? 'Received' : (empty($po->received) ? 'Not Received' : 'Partially Received')) : 'Not Committed'; ?></td>
 			<td><?php echo htmlspecialchars($po->comments); ?></td>
 		</tr>
 	<?php } ?>

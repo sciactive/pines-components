@@ -22,6 +22,7 @@ if (!isset($employee->guid)) {
 // General
 if ($pines->config->com_hrm->ssn_field && gatekeeper('com_hrm/showssn'))
 	$employee->ssn = preg_replace('/\D/', '', $_REQUEST['ssn']);
+$employee->new_hire = ($_REQUEST['new_hire'] == 'ON');
 $employee->hire_date = strtotime($_REQUEST['hire_date']);
 $employee->job_title = $_REQUEST['job_title'];
 $employee->description = $_REQUEST['description'];

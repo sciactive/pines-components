@@ -154,6 +154,10 @@ $pines->com_pgrid->load();
 			</div>
 			<?php } ?>
 			<div class="pf-element">
+				<label><span class="pf-label">New Hire</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="checkbox" name="new_hire" value="ON" <?php echo $this->entity->new_hire ? 'checked="checked" ' : ''; ?>/></label>
+			</div>
+			<div class="pf-element">
 				<label><span class="pf-label">Hire Date</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="hire_date" value="<?php echo empty($this->entity->hire_date) ? '' : format_date($this->entity->hire_date, 'date_sort'); ?>" /></label>
 			</div>

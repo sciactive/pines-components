@@ -101,7 +101,7 @@ $this->title = htmlspecialchars($this->entity->company_name).' Warboard';
 						$location_count[$cur_location->guid]++;
 						$empty = false;
 						?>
-					<tr <?php echo ($cur_employee->hire_date > strtotime('2 weeks ago')) ? 'class="newhire"' : ''; ?>>
+					<tr <?php echo ($cur_employee->new_hire) ? 'class="newhire"' : ''; ?>>
 						<td style="width: 25%;"><?php echo format_date($cur_employee->hire_date, 'custom', 'n/j/y'); ?></td>
 						<td style="width: 50%;"><?php echo htmlspecialchars($cur_employee->name); ?></td>
 						<td style="width: 25%;"><?php echo format_phone($cur_employee->phone); ?></td>

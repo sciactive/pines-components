@@ -35,6 +35,8 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 	}
 	.p_muid_grid .total td {
 		border-top-width: .2em;
+		background-color: lightblue;
+		color: black;
 	}
 	.p_muid_grid .total td.rank, .p_muid_grid .total td.ui-pgrid-table-expander {
 		background-color: gray;
@@ -113,6 +115,7 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 			</thead>
 			<tbody>
 				<?php
+				$totals = array('current' => 0.00, 'last' => 0.00, 'mtd' => 0.00, 'goal' => 0.00, 'trend' => 0.00);
 				foreach($cur_location_rankings as $cur_rank) {
 					// Skip locations with no goal.
 					if ($cur_rank['goal'] <= 0)
@@ -125,6 +128,11 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					} elseif ($cur_rank['pct'] < $yellow_status) {
 						$class = 'red';
 					}
+					$totals['current'] += $cur_rank['current'];
+					$totals['last'] += $cur_rank['last'];
+					$totals['mtd'] += $cur_rank['mtd'];
+					$totals['goal'] += $cur_rank['goal'];
+					$totals['trend'] += $cur_rank['trend'];
 				?>
 				<tr title="<?php echo $cur_rank['entity']->guid; ?>" class="<?php echo $class; ?>">
 					<td><?php echo htmlspecialchars($cur_rank['rank']); ?></td>
@@ -134,8 +142,8 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['last'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['mtd'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['goal'] * $multiplier, 2)); ?></td>
-					<td class="right_justify"><?php echo $prefix.round($cur_rank['trend'] * $multiplier, 2); ?></td>
-					<td class="right_justify"><?php echo round($cur_rank['pct'], 2); ?>%</td>
+					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['trend'] * $multiplier, 2)); ?></td>
+					<td class="right_justify"><?php echo htmlspecialchars(round($cur_rank['pct'], 2)); ?>%</td>
 					<?php if ($key == count($this->locations)-1) { ?>
 					<td style="text-align: center;"><?php
 					if ($cur_rank['pct'] >= 100) {
@@ -156,13 +164,33 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<td style="text-align: center;"><?php echo '$'.sprintf('%01.2f', ($cur_rank['child_count'] > 0 ? $cur_rank['child_total'] / $cur_rank['child_count'] : 0)); ?></td>
 					<?php } ?>
 				</tr>
+				<?php } if ($key == count($this->locations)-1) {
+					$totals['pct'] = ($totals['goal'] > 0 ? $totals['trend'] / $totals['goal'] : 0);
+					if ($totals['pct'] >= $green_status) {
+						$class = 'green';
+					} elseif ($totals['pct'] >= $yellow_status) {
+						$class = 'yellow';
+					} elseif ($totals['pct'] < $yellow_status) {
+						$class = 'red';
+					} ?>
+				<tr class="total <?php echo $class; ?>">
+					<td class="rank"><span style="display: none;">9999999</span></td>
+					<td colspan="2">Total</td>
+					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($totals['current'] * $multiplier, 2)); ?></td>
+					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($totals['last'] * $multiplier, 2)); ?></td>
+					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($totals['mtd'] * $multiplier, 2)); ?></td>
+					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($totals['goal'] * $multiplier, 2)); ?></td>
+					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($totals['trend'] * $multiplier, 2)); ?></td>
+					<td class="right_justify"><?php echo htmlspecialchars(round($totals['pct'], 2)); ?>%</td>
+					<td colspan="2"></td>
+				</tr>
 				<?php } ?>
 			</tbody>
 		</table>
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-full-width">
-		<table class="p_muid_grid" title="Employee Ranking">
+		<table class="p_muid_grid" title="Employee Rankings">
 			<thead>
 				<tr>
 					<th style="width: 5%;">Rank</th>
@@ -200,8 +228,8 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['last'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['mtd'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['goal'] * $multiplier, 2)); ?></td>
-					<td class="right_justify"><?php echo $prefix.round($cur_rank['trend'] * $multiplier, 2); ?></td>
-					<td class="right_justify"><?php echo round($cur_rank['pct'], 2); ?>%</td>
+					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['trend'] * $multiplier, 2)); ?></td>
+					<td class="right_justify"><?php echo htmlspecialchars(round($cur_rank['pct'], 2)); ?>%</td>
 					<td class="right_justify">
 						<?php switch ($cur_rank['rank']) {
 							case 1:
@@ -233,7 +261,7 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 		</table>
 	</div>
 	<div class="pf-element pf-full-width">
-		<table class="p_muid_grid" title="New Hire Ranking">
+		<table class="p_muid_grid" title="New Hire Rankings">
 			<thead>
 				<tr>
 					<th style="width: 5%;">Rank</th>
@@ -271,8 +299,8 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['last'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['mtd'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['goal'] * $multiplier, 2)); ?></td>
-					<td class="right_justify"><?php echo $prefix.round($cur_rank['trend'] * $multiplier, 2); ?></td>
-					<td class="right_justify"><?php echo round($cur_rank['pct'], 2); ?>%</td>
+					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['trend'] * $multiplier, 2)); ?></td>
+					<td class="right_justify"><?php echo htmlspecialchars(round($cur_rank['pct'], 2)); ?>%</td>
 					<td class="right_justify">
 						<?php switch ($cur_rank['rank']) {
 							case 1:

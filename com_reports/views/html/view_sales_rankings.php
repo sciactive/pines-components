@@ -59,36 +59,38 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-		$(".p_muid_grid").pgrid({
-			pgrid_toolbar: true,
-			pgrid_toolbar_contents: [
-				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
-				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
-				{type: 'separator'},
-				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
-						filename: 'sales_rankings',
-						content: rows
-					});
-				}}
-			],
-			pgrid_sortable: true,
-			pgrid_sort_col: 1,
-			pgrid_sort_ord: 'asc',
-			pgrid_paginate: false,
-			pgrid_view_height: 'auto',
-			pgrid_resize: false
+		$(".p_muid_grid").each(function(){
+			var cur_grid = $(this);
+			cur_grid.pgrid({
+				pgrid_toolbar: true,
+				pgrid_toolbar_contents: [
+					{type: 'label', label: cur_grid.attr("title")},
+					{type: 'separator'},
+					{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
+					{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
+					{type: 'separator'},
+					{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
+						pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+							filename: 'sales_rankings',
+							content: rows
+						});
+					}}
+				],
+				pgrid_sortable: true,
+				pgrid_sort_col: 1,
+				pgrid_sort_ord: 'asc',
+				pgrid_paginate: false,
+				pgrid_view_height: 'auto',
+				pgrid_resize: false
+			});
 		});
 	});
 	// ]]>
 </script>
 <div class="pf-form">
 	<?php foreach ($this->locations as $key => $cur_location_rankings) { // TODO: Make this more customizeable. ?>
-	<div class="pf-element pf-heading">
-		<h1><?php echo $key == count($this->locations)-1 ? 'Location' : 'District'; ?> Rankings</h1>
-	</div>
 	<div class="pf-element pf-full-width">
-		<table class="p_muid_grid">
+		<table class="p_muid_grid" title="<?php echo $key == count($this->locations)-1 ? 'Location' : 'District'; ?> Rankings">
 			<thead>
 				<tr>
 					<th style="width: 5%;">Rank</th>
@@ -104,6 +106,8 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<th style="width: 35%;">Top Rep $</th>
 					<th style="width: 35%;">Mngr Bonus</th>
 					<?php } else { ?>
+					<th style="width: 35%;">Stores</th>
+					<th style="width: 35%;">Avg</th>
 					<?php } ?>
 				</tr>
 			</thead>
@@ -148,6 +152,8 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					}
 					?></td>
 					<?php } else { ?>
+					<td style="text-align: center;"><?php echo (int) $cur_rank['child_count']; ?></td>
+					<td style="text-align: center;"><?php echo '$'.sprintf('%01.2f', ($cur_rank['child_count'] > 0 ? $cur_rank['child_total'] / $cur_rank['child_count'] : 0)); ?></td>
 					<?php } ?>
 				</tr>
 				<?php } ?>
@@ -155,11 +161,8 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 		</table>
 	</div>
 	<?php } ?>
-	<div class="pf-element pf-heading">
-		<h1>Employee Ranking</h1>
-	</div>
 	<div class="pf-element pf-full-width">
-		<table class="p_muid_grid">
+		<table class="p_muid_grid" title="Employee Ranking">
 			<thead>
 				<tr>
 					<th style="width: 5%;">Rank</th>
@@ -192,7 +195,7 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 				<tr title="<?php echo $cur_rank['entity']->guid; ?>" class="<?php echo $class; ?>">
 					<td><?php echo htmlspecialchars($cur_rank['rank']); ?></td>
 					<td><?php echo htmlspecialchars($cur_rank['entity']->name); ?></td>
-					<td><?php echo htmlspecialchars("{$cur_rank['entity']->group->name} ({$cur_rank['entity']->group->parent->name})"); ?></td>
+					<td><?php echo htmlspecialchars("{$cur_rank['entity']->group->name} (".preg_replace('/\s.*/', '', $cur_rank['entity']->group->parent->name).')'); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['current'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['last'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['mtd'] * $multiplier, 2)); ?></td>
@@ -229,11 +232,8 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 			</tbody>
 		</table>
 	</div>
-	<div class="pf-element pf-heading">
-		<h1>New Hire Ranking</h1>
-	</div>
 	<div class="pf-element pf-full-width">
-		<table class="p_muid_grid">
+		<table class="p_muid_grid" title="New Hire Ranking">
 			<thead>
 				<tr>
 					<th style="width: 5%;">Rank</th>

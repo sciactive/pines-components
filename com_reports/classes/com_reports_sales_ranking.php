@@ -154,7 +154,9 @@ class com_reports_sales_ranking extends entity {
 				'mtd' => 0.00,
 				'trend' => 0.00,
 				'pct' => 0.00,
-				'goal' => (isset($this->sales_goals[$cur_location->guid]) ? $this->sales_goals[$cur_location->guid] : 0.00)
+				'goal' => (isset($this->sales_goals[$cur_location->guid]) ? $this->sales_goals[$cur_location->guid] : 0.00),
+				'child_count' => 0,
+				'child_total' => 0.00
 			);
 		}
 
@@ -252,6 +254,11 @@ class com_reports_sales_ranking extends entity {
 				$cur_rank['pct'] = $cur_rank['trend'] / $cur_rank['goal'] * 100;
 			else
 				$cur_rank['pct'] = 0;
+			// Keep a total and average for parent locations.
+			if (isset($ranking_location[$cur_rank['entity']->parent->guid])) {
+				$ranking_location[$cur_rank['entity']->parent->guid]['child_count']++;
+				$ranking_location[$cur_rank['entity']->parent->guid]['child_total'] += $cur_rank['mtd'];
+			}
 		}
 		unset($cur_rank);
 

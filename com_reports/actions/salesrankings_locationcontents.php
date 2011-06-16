@@ -59,6 +59,9 @@ foreach ($users as $cur_user) {
 	// Skip users who aren't employees.
 	if (!$cur_user->employee)
 		continue;
+	// Mark all the parents.
+	$json_data[$cur_user->group->guid]['parent'] = true;
+	// Add the user.
 	$json_data[$cur_user->guid] = array(
 		'guid' => $cur_user->guid,
 		'type' => 'employee',

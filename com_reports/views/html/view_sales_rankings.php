@@ -110,6 +110,9 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 			<tbody>
 				<?php
 				foreach($cur_location_rankings as $cur_rank) {
+					// Skip locations with no goal.
+					if ($cur_rank['goal'] <= 0)
+						continue;
 					// Locations are "in the green", "yellow" or "red".
 					if ($cur_rank['pct'] >= $green_status) {
 						$class = 'green';
@@ -174,6 +177,9 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 			<tbody>
 				<?php
 				foreach($this->employees as $cur_rank) {
+					// Skip employees with no goal.
+					if ($cur_rank['goal'] <= 0)
+						continue;
 					// Employees are "in the green", "yellow" or "red".
 					if ($cur_rank['pct'] >= $green_status) {
 						$class = 'green';
@@ -245,6 +251,9 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 			<tbody>
 				<?php
 				foreach($this->new_hires as $cur_rank) {
+					// Skip employees with no goal.
+					if ($cur_rank['goal'] <= 0)
+						continue;
 					// Employees are "in the green", "yellow" or "red".
 					if ($cur_rank['pct'] >= $green_status) {
 						$class = 'green';

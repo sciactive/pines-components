@@ -165,7 +165,7 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<?php } ?>
 				</tr>
 				<?php } if ($key == count($this->locations)-1) {
-					$totals['pct'] = ($totals['goal'] > 0 ? $totals['trend'] / $totals['goal'] : 0);
+					$totals['pct'] = ($totals['goal'] > 0 ? $totals['trend'] / $totals['goal'] * 100 : 0);
 					if ($totals['pct'] >= $green_status) {
 						$class = 'green';
 					} elseif ($totals['pct'] >= $yellow_status) {

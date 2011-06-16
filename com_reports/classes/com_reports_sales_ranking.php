@@ -264,7 +264,7 @@ class com_reports_sales_ranking extends entity {
 				$module->new_hires[] = $cur_rank;
 			else
 				$module->employees[] = $cur_rank;
-			if ($cur_rank['entity']->job_title == 'Managers' && isset($ranking_location[$cur_rank['entity']->group->guid]))
+			if (preg_match('/(manager|^dmt?$)/', $cur_rank['entity']->job_title) && isset($ranking_location[$cur_rank['entity']->group->guid]))
 				$ranking_location[$cur_rank['entity']->group->guid]['manager'] = $cur_rank['entity'];
 		}
 		$module->locations[] = array();

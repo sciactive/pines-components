@@ -28,10 +28,15 @@ if ( isset($_REQUEST['id']) ) {
 $ranking->name = $_REQUEST['ranking_name'];
 $ranking->start_date = strtotime('00:00:00', strtotime($_REQUEST['start']));
 $ranking->end_date = strtotime('23:59:59', strtotime($_REQUEST['end'])) + 1;
-$ranking->goals = array_map('floatval', $_REQUEST['goals']);
+$ranking->only_below = ($_REQUEST['only_below'] == 'ON');
 $ranking->top_location = group::factory((int) $_REQUEST['top_location']);
 if (!isset($ranking->top_location->guid))
 	$ranking->top_location = $_SESSION['user']->group;
+$sales_goals = (array) json_decode($_REQUEST['sales_goals'], true);
+$ranking->sales_goals = array();
+foreach ($sales_goals as $key => $cur_goal) {
+	$ranking->sales_goals[(int) $key] = (float) $cur_goal;
+}
 
 if ($pines->config->com_reports->global_sales_rankings)
 	$ranking->ac->other = 1;

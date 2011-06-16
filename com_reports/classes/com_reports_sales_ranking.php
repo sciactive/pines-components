@@ -26,10 +26,11 @@ class com_reports_sales_ranking extends entity {
 		parent::__construct();
 		$this->add_tag('com_reports', 'sales_ranking');
 		// Defaults.
-		$this->goals = array();
 		$this->start_date = strtotime(date('m/01/Y 00:00:00'));
 		$this->end_date = strtotime('+1 month 00:00:00', $this->start_date);
 		$this->top_location = $_SESSION['user']->group;
+		$this->only_below = true;
+		$this->sales_goals = array();
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
@@ -74,7 +75,6 @@ class com_reports_sales_ranking extends entity {
 		
 		$module = new module('com_reports', 'form_sales_ranking', 'content');
 		$module->entity = $this;
-		$module->employees = $pines->com_hrm->get_employees();
 
 		return $module;
 	}
@@ -82,27 +82,32 @@ class com_reports_sales_ranking extends entity {
 	/**
 	 * Creates and attaches a module which reports sales rankings.
 	 * 
-	 * @param group $location The location to list the rankings for.
-	 * @param bool $descendents Whether to show descendent locations.
 	 * @return module The sales ranking report module.
 	 */
-	function rank($location = null, $descendents = false) {
+	function rank() {
 		global $pines;
-
-		if (!isset($location->guid))
-			$location = $this->top_location;
 
 		$module = new module('com_reports', 'view_sales_rankings', 'content');
 		$module->entity = $this;
-		$module->location = $location;
-		$module->descendents = $descendents;
 		$module->rankings = array();
-		$employees = $pines->com_hrm->get_employees();
 
-		foreach ($employees as $key => $value) {
-			if ( !$value->in_group($location) && (!$descendents || !$value->is_descendent($location)) )
-				unset($employees[$key]);
+		// Get employees and locations.
+		$group = $this->top_location;
+		$locations = (array) $group->get_descendents();
+		$users = (array) $group->get_users(true);
+		$employees = array();
+		foreach ($users as $cur_user) {
+			// Skip users who only have secondary groups.
+			if (!isset($cur_user->group->guid) || !($cur_user->group->is($group) || $cur_user->group->in_array($locations)))
+				continue;
+			// Skip users who aren't employees.
+			if (!$cur_user->employee)
+				continue;
+			$employees[] = com_hrm_employee::factory($cur_user->guid);
 		}
+		unset($users);
+		if (!$this->only_below)
+			$locations[] = $group;
 
 		// Date setup for different weekly and monthly breakdowns.
 		if (format_date(time(), 'custom', 'w') == '1') {
@@ -117,119 +122,190 @@ class com_reports_sales_ranking extends entity {
 		}
 		if ($this->end_date > time()) {
 			$days_passed = (int) format_date(time(), 'custom', 'j');
-			$days_in_month = (int) format_date(time(), 'custom', 't');
+			$days_total = (int) format_date(time(), 'custom', 't');
 		} else {
 			$days_passed = (int) format_date($this->end_date, 'custom', 'j');
-			$days_in_month = (int) format_date($this->end_date, 'custom', 't');
+			$days_total = (int) format_date($this->end_date, 'custom', 't');
 			$current_start = strtotime('00:00:00', strtotime('last Monday', $this->end_date));
 			$current_end = strtotime('23:59:59', $this->end_date) + 1;
 		}
 		$last_start = strtotime('-1 week', $current_start);
 		$last_end = strtotime('+1 week', $last_start);
-		
-		// Calculate the rankings for all of the employees.
-		$module->total = array(
-			'current' => 0,
-			'last' => 0,
-			'mtd' => 0,
-			'goal' => 0,
-			'trend' => 0,
-			'pct' => 0
-		);
-		foreach ($employees as $cur_employee) {
-			// Exclude employees with no sales goals.
-			if ($this->goals[$cur_employee->guid] == 0)
-				continue;
 
-			$module->rankings[$cur_employee->guid] = array(
-				'employee' => $cur_employee,
-				'current' => 0,
-				'last' => 0,
-				'mtd' => 0,
-				'trend' => 0,
-				'pct' => 0,
-				'goal' => $this->goals[$cur_employee->guid]
+		// Build an array to hold total data.
+		$ranking_employee = array();
+		foreach ($employees as $cur_employee) {
+			$ranking_employee[$cur_employee->guid] = array(
+				'entity' => $cur_employee,
+				'current' => 0.00,
+				'last' => 0.00,
+				'mtd' => 0.00,
+				'trend' => 0.00,
+				'pct' => 0.00,
+				'goal' => (isset($this->sales_goals[$cur_employee->guid]) ? $this->sales_goals[$cur_employee->guid] : 0.00)
+			);
+		}
+		$ranking_location = array();
+		foreach ($locations as $cur_location) {
+			$ranking_location[$cur_location->guid] = array(
+				'entity' => $cur_location,
+				'current' => 0.00,
+				'last' => 0.00,
+				'mtd' => 0.00,
+				'trend' => 0.00,
+				'pct' => 0.00,
+				'goal' => (isset($this->sales_goals[$cur_location->guid]) ? $this->sales_goals[$cur_location->guid] : 0.00)
+			);
+		}
+
+		// Get all the sales and returns in the given time period.
+		$sales = $pines->entity_manager->get_entities(
+				array('class' => com_sales_sale),
+				array('&',
+					'tag' => array('com_sales', 'sale'),
+					'strict' => array('status', 'paid'),
+					'gte' => array('tender_date', $this->start_date),
+					'lt' => array('tender_date', $this->end_date)
+				)
+			);
+		$returns = $pines->entity_manager->get_entities(
+				array('class' => com_sales_return),
+				array('&',
+					'tag' => array('com_sales', 'return'),
+					'strict' => array('status', 'processed'),
+					'gte' => array('tender_date', $this->start_date),
+					'lt' => array('tender_date', $this->end_date)
+				)
 			);
 
-			// Get the employee's sales totals for the entire sales period.
-			$mtd_sales = $pines->entity_manager->get_entities(
-					array('class' => com_sales_sale),
-					array('&',
-						'tag' => array('com_sales', 'sale'),
-						'data' => array('status', 'paid'),
-						'gte' => array('tender_date', $this->start_date),
-						'lt' => array('tender_date', $this->end_date),
-						'ref' => array('products', $cur_employee)
-					)
-				);
-
-			foreach ($mtd_sales as &$cur_mtd_sale) {
-				foreach ($cur_mtd_sale->products as $cur_product) {
-					if (!$cur_product['salesperson']->is($cur_employee))
-						continue;
-					if ($cur_mtd_sale->tender_date >= $current_start && $cur_mtd_sale->tender_date <= $current_end)
-						$module->rankings[$cur_employee->guid]['current'] += $cur_product['line_total'];
-					elseif ($cur_mtd_sale->tender_date >= $last_start && $cur_mtd_sale->tender_date <= $last_end)
-						$module->rankings[$cur_employee->guid]['last'] += $cur_product['line_total'];
-
-					$module->rankings[$cur_employee->guid]['mtd'] += $cur_product['line_total'];
+		// Total all the sales and returns by employee and location.
+		foreach ($sales as $cur_sale) {
+			foreach ($cur_sale->products as $cur_product) {
+				if (!isset($cur_product['salesperson']))
+					continue;
+				if (isset($ranking_employee[$cur_product['salesperson']->guid])) {
+					$ranking_employee[$cur_product['salesperson']->guid]['mtd'] += $cur_product['line_total'];
+					if ($cur_sale->tender_date >= $current_start && $cur_sale->tender_date <= $current_end)
+						$ranking_employee[$cur_product['salesperson']->guid]['current'] += $cur_product['line_total'];
+					elseif ($cur_sale->tender_date >= $last_start && $cur_sale->tender_date <= $last_end)
+						$ranking_employee[$cur_product['salesperson']->guid]['last'] += $cur_product['line_total'];
+				}
+				$parent = $cur_product['salesperson']->group;
+				while (isset($parent->guid)) {
+					if (isset($ranking_location[$parent->guid])) {
+						$ranking_location[$parent->guid]['mtd'] += $cur_product['line_total'];
+						if ($cur_sale->tender_date >= $current_start && $cur_sale->tender_date <= $current_end)
+							$ranking_location[$parent->guid]['current'] += $cur_product['line_total'];
+						elseif ($cur_sale->tender_date >= $last_start && $cur_sale->tender_date <= $last_end)
+							$ranking_location[$parent->guid]['last'] += $cur_product['line_total'];
+					}
+					$parent = $parent->parent;
 				}
 			}
-			unset($cur_mtd_sale, $mtd_sales);
-
-			$mtd_returns = $pines->entity_manager->get_entities(
-					array('class' => com_sales_return),
-					array('&',
-						'tag' => array('com_sales', 'return'),
-						'data' => array('status', 'processed'),
-						'gte' => array('tender_date', $this->start_date),
-						'lt' => array('tender_date', $this->end_date),
-						'ref' => array('products', $cur_employee)
-					)
-				);
-
-			foreach ($mtd_returns as &$cur_mtd_return) {
-				foreach ($cur_mtd_return->products as $cur_product) {
-					if (!$cur_product['salesperson']->is($cur_employee))
-						continue;
-					if ($cur_mtd_return->tender_date >= $current_start && $cur_mtd_return->tender_date <= $current_end)
-						$module->rankings[$cur_employee->guid]['current'] -= $cur_product['line_total'];
-					elseif ($cur_mtd_return->tender_date >= $last_start && $cur_mtd_return->tender_date <= $last_end)
-						$module->rankings[$cur_employee->guid]['last'] -= $cur_product['line_total'];
-					$module->rankings[$cur_employee->guid]['mtd'] -= $cur_product['line_total'];
+		}
+		foreach ($returns as $cur_return) {
+			foreach ($cur_return->products as $cur_product) {
+				if (!isset($cur_product['salesperson']))
+					continue;
+				if (isset($ranking_employee[$cur_product['salesperson']->guid])) {
+					$ranking_employee[$cur_product['salesperson']->guid]['mtd'] -= $cur_product['line_total'];
+					if ($cur_return->tender_date >= $current_start && $cur_return->tender_date <= $current_end)
+						$ranking_employee[$cur_product['salesperson']->guid]['current'] -= $cur_product['line_total'];
+					elseif ($cur_return->tender_date >= $last_start && $cur_return->tender_date <= $last_end)
+						$ranking_employee[$cur_product['salesperson']->guid]['last'] -= $cur_product['line_total'];
+				}
+				$parent = $cur_product['salesperson']->group;
+				while (isset($parent->guid)) {
+					if (isset($ranking_location[$parent->guid])) {
+						$ranking_location[$parent->guid]['mtd'] -= $cur_product['line_total'];
+						if ($cur_return->tender_date >= $current_start && $cur_return->tender_date <= $current_end)
+							$ranking_location[$parent->guid]['current'] -= $cur_product['line_total'];
+						elseif ($cur_return->tender_date >= $last_start && $cur_return->tender_date <= $last_end)
+							$ranking_location[$parent->guid]['last'] -= $cur_product['line_total'];
+					}
+					$parent = $parent->parent;
 				}
 			}
-			unset($cur_mtd_return, $mtd_returns);
+		}
 
-			$module->rankings[$cur_employee->guid]['trend'] = ($module->rankings[$cur_employee->guid]['mtd'] / $days_passed) * $days_in_month;
+//var_dump($days_passed, $days_total);
+		// Calculate trend and percent goal.
+		foreach ($ranking_employee as &$cur_rank) {
+			if ($days_passed > 0)
+				$cur_rank['trend'] = ($cur_rank['mtd'] / $days_passed) * $days_total;
+			else
+				$cur_rank['trend'] = 0;
 
-			if ($module->rankings[$cur_employee->guid]['goal'] == 0) {
-				unset($module->rankings[$cur_employee->guid]);
-			} else {
-				$module->rankings[$cur_employee->guid]['pct'] = $module->rankings[$cur_employee->guid]['trend'] / $module->rankings[$cur_employee->guid]['goal'] * 100;
-				// Update totals for the entire company location(s).
-				$module->total['current'] += $module->rankings[$cur_employee->guid]['current'];
-				$module->total['last'] += $module->rankings[$cur_employee->guid]['last'];
-				$module->total['mtd'] += $module->rankings[$cur_employee->guid]['mtd'];
-				$module->total['trend'] += $module->rankings[$cur_employee->guid]['trend'];
-				$module->total['goal'] += $module->rankings[$cur_employee->guid]['goal'];
+			if ($cur_rank['goal'] > 0)
+				$cur_rank['pct'] = $cur_rank['trend'] / $cur_rank['goal'] * 100;
+			else
+				$cur_rank['pct'] = 0;
+		}
+		unset($cur_rank);
+		foreach ($ranking_location as &$cur_rank) {
+			if ($days_passed > 0)
+				$cur_rank['trend'] = ($cur_rank['mtd'] / $days_passed) * $days_total;
+			else
+				$cur_rank['trend'] = 0;
+
+			if ($cur_rank['goal'] > 0)
+				$cur_rank['pct'] = $cur_rank['trend'] / $cur_rank['goal'] * 100;
+			else
+				$cur_rank['pct'] = 0;
+		}
+		unset($cur_rank);
+
+		// Separate employees by new hires, and locations into tiers.
+		// Determine district and location managers.
+		$module->new_hires = array();
+		$module->employees = array();
+		foreach ($ranking_employee as $cur_rank) {
+			if ($cur_rank['entity']->new_hire)
+				$module->new_hires[] = $cur_rank;
+			else
+				$module->employees[] = $cur_rank;
+			if ($cur_rank['entity']->job_title == 'Managers' && isset($ranking_location[$cur_rank['entity']->group->guid]))
+				$ranking_location[$cur_rank['entity']->group->guid]['manager'] = $cur_rank['entity'];
+		}
+		$module->locations[] = array();
+		foreach ($ranking_location as $cur_rank) {
+			$parent_count = 0;
+			$parent = $cur_rank['entity']->parent;
+			while (isset($parent->guid) && $parent->in_array($locations)) {
+				$parent_count++;
+				$parent = $parent->parent;
 			}
+			if (!$module->locations[$parent_count])
+				$module->locations[$parent_count] = array();
+			$module->locations[$parent_count][] = $cur_rank;
 		}
-		// Account for employees potentially having $0 as a goal.
-		if ($module->total['goal'] > 0) {
-			$module->total['pct'] = $module->total['trend'] / $module->total['goal'] * 100;
-		} else {
-			$module->total['pct'] = 100;
-		}
-		// Sort and rank the employees by their trend percentage.
-		usort($module->rankings, array($this, 'sort_ranks'));
+		ksort($module->locations);
+
+		// Sort and rank by trend percentage.
+		usort($module->new_hires, array($this, 'sort_ranks'));
 		$rank = 1;
-		foreach ($module->rankings as &$cur_rank) {
+		foreach ($module->new_hires as &$cur_rank) {
 			$cur_rank['rank'] = $rank;
 			$rank++;
 		}
 		unset($cur_rank);
-		
+		usort($module->employees, array($this, 'sort_ranks'));
+		$rank = 1;
+		foreach ($module->employees as &$cur_rank) {
+			$cur_rank['rank'] = $rank;
+			$rank++;
+		}
+		unset($cur_rank);
+		foreach ($module->locations as &$cur_location) {
+			usort($cur_location, array($this, 'sort_ranks'));
+			$rank = 1;
+			foreach ($cur_location as &$cur_rank) {
+				$cur_rank['rank'] = $rank;
+				$rank++;
+			}
+			unset($cur_rank);
+		}
+
 		return $module;
 	}
 

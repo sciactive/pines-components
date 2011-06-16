@@ -17,13 +17,10 @@ if ( !gatekeeper('com_reports/viewsalesranking') )
 $entity = com_reports_sales_ranking::factory((int) $_REQUEST['id']);
 if (!isset($entity->guid)) {
 	pines_error('Requested Sales Rankings id is not accessible.');
-	$pines->com_reports->list_sales_rankings();
+	pines_redirect(pines_url('com_reports', 'salesrankings'));
 	return;
 }
 
-$location = group::factory((int) $_REQUEST['location']);
-$descendents = ($_REQUEST['descendents'] == 'true');
-
-$entity->rank($location, $descendents);
+$entity->rank();
 
 ?>

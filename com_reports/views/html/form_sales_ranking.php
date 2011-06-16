@@ -13,10 +13,12 @@ defined('P_RUN') or die('Direct access prohibited');
 
 $this->title = isset($this->entity->guid) ? 'Editing Sales Ranking ['.$this->entity->guid.']' : 'New Sales Ranking';
 $pines->com_jstree->load();
+$pines->com_pgrid->load();
 ?>
 <script type='text/javascript'>
 	// <![CDATA[
 	pines(function(){
+		var top_location = "<?php echo (int) $this->entity->top_location->guid; ?>";
 		$("#p_muid_form [name=start], #p_muid_form [name=end]").datepicker({
 			dateFormat: "yy-mm-dd",
 			changeMonth: true,
@@ -25,10 +27,12 @@ $pines->com_jstree->load();
 			selectOtherMonths: true
 		});
 		// Location Tree
-		var top_location = $("#p_muid_form [name=top_location]");
+		var top_location_input = $("#p_muid_form [name=top_location]");
 		$("#p_muid_form .location_tree")
 		.bind("select_node.jstree", function(e, data){
-			top_location.val(data.inst.get_selected().attr("id").replace("p_muid_", ""));
+			top_location = data.inst.get_selected().attr("id").replace("p_muid_", "");
+			top_location_input.val(top_location);
+			change_location(top_location);
 		})
 		.bind("before.jstree", function (e, data){
 			if (data.func == "parse_json" && "args" in data && 0 in data.args && "attr" in data.args[0] && "id" in data.args[0].attr)
@@ -49,51 +53,135 @@ $pines->com_jstree->load();
 			},
 			"ui" : {
 				"select_limit" : 1,
-				"initially_select" : ["<?php echo (int) $this->entity->top_location->guid; ?>"]
+				"initially_select" : [top_location]
 			}
 		});
-		
-		// Location Tree
-		var location = $("#p_muid_form [name=location]");
-		$("#p_muid_form .goals_tree")
-		.bind("select_node.jstree", function(e, data){
-			var selected_id = data.inst.get_selected().attr("id").replace("p_muid_", "");
-			location.val(selected_id);
-			<?php foreach ($this->employees as $cur_employee) { ?>
-			if (selected_id == "<?php echo $cur_employee->group->guid; ?>")
-				$("#p_muid_form .goal_<?php echo $cur_employee->guid; ?>").show();
-			else
-				$("#p_muid_form .goal_<?php echo $cur_employee->guid; ?>").hide();
-			<?php } ?>
-		})
-		.bind("before.jstree", function (e, data){
-			if (data.func == "parse_json" && "args" in data && 0 in data.args && "attr" in data.args[0] && "id" in data.args[0].attr)
-				data.args[0].attr.id = "p_muid_"+data.args[0].attr.id;
-		})
-		.bind("loaded.jstree", function(e, data){
-			var path = data.inst.get_path("#"+data.inst.get_settings().ui.initially_select, true);
-			if (!path.length) return;
-			data.inst.open_node("#"+path.join(", #"), false, true);
-		})
-		.jstree({
-			"plugins" : [ "themes", "json_data", "ui" ],
-			"json_data" : {
-				"ajax" : {
-					"dataType" : "json",
-					"url" : "<?php echo addslashes(pines_url('com_jstree', 'groupjson')); ?>"
+
+		var goal_box;
+		// Sales Goals Grid
+		var goal_grid = $("#p_muid_sales_goals").pgrid({
+			pgrid_view_height: "300px",
+			pgrid_paginate: false,
+			pgrid_sort_col: 1,
+			pgrid_sort_ord: 'asc',
+			pgrid_toolbar: true,
+			pgrid_toolbar_contents: [
+				{
+					type: 'text',
+					title: 'Enter a Sales Goal',
+					load: function(textbox){
+						goal_box = textbox;
+						textbox.keydown(function(e){
+							if (e.keyCode == 13)
+								update_goal(textbox.val());
+						});
+					}
+				},
+				{
+					type: 'button',
+					text: 'Update Goal',
+					extra_class: 'picon picon-dialog-ok-apply',
+					multi_select: true,
+					click: function(){
+						update_goal(goal_box.val());
+					}
+				},
+				{type: 'separator'},
+				{type: 'button', text: 'Expand', title: 'Expand All', extra_class: 'picon picon-arrow-down', selection_optional: true, return_all_rows: true, click: function(e, rows){
+					rows.pgrid_expand_rows();
+				}},
+				{type: 'button', text: 'Collapse', title: 'Collapse All', extra_class: 'picon picon-arrow-right', selection_optional: true, return_all_rows: true, click: function(e, rows){
+					rows.pgrid_collapse_rows();
+				}},
+				{type: 'separator'},
+				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
+				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
+				{type: 'separator'},
+				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
+					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+						filename: 'sales ranking',
+						content: rows
+					});
+				}}
+			]
+		});
+
+		var change_location = function(new_location){
+			var loader;
+			$.ajax({
+				url: "<?php echo addslashes(pines_url('com_reports', 'salesrankings_locationcontents')); ?>",
+				type: "GET",
+				dataType: "json",
+				data: {"id": new_location},
+				beforeSend: function(){
+					loader = $.pnotify({
+						pnotify_title: 'Loading',
+						pnotify_text: 'Loading location...',
+						pnotify_notice_icon: 'picon picon-throbber',
+						pnotify_nonblock: true,
+						pnotify_hide: false,
+						pnotify_history: false
+					});
+					goal_grid.pgrid_get_all_rows().pgrid_delete();
+				},
+				complete: function(){
+					loader.pnotify_remove();
+				},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured:\n"+XMLHttpRequest.status+": "+textStatus);
+				},
+				success: function(data){
+					if (!data) {
+						alert("Nothing was found in this location.");
+						return;
+					}
+					var struct = [];
+					$.each(data, function(){
+						struct.push({
+							"key": this.guid,
+							"classes": (this.parent ? "parent" : "")+(this.child ? " child "+this.parent_id : ""),
+							"values": [
+								this.name,
+								this.type == "location" ? "Location" : (this.type == "employee" ? "Employee" : "Unknown"),
+								"0.00"
+							]
+						});
+					});
+					goal_grid.pgrid_add(struct);
+					load_grid();
+					save_grid();
 				}
-			},
-			"ui" : {
-				"select_limit" : 1,
-				"initially_select" : ["p_muid_<?php echo (int) $this->entity->top_location->guid; ?>"]
-			}
-		});
+			});
+		};
+
+		var update_goal = function(new_goal){
+			var new_value = parseFloat(new_goal);
+			new_value = isNaN(new_value) ? "0.00" : String(new_value.toFixed(2));
+			goal_grid.pgrid_get_selected_rows().pgrid_set_value(3, new_value);
+			save_grid();
+		};
+
+		var save_grid = function(){
+			var sales_goals = {};
+			goal_grid.pgrid_get_all_rows().each(function(){
+				var cur_row = $(this);
+				sales_goals[cur_row.attr("title")] = cur_row.pgrid_get_value(3);
+			});
+			$("#p_muid_form input[name=sales_goals]").val(JSON.stringify(sales_goals));
+		};
 		
-		pines.com_reports_update_goals = function () {
-			<?php foreach ($this->employees as $cur_employee) { ?>
-			if (location.val() == "<?php echo $cur_employee->group->guid; ?>")
-				$("#p_muid_form [name=goals[<?php echo $cur_employee->guid; ?>]]").val($("#p_muid_form [name=goals_updater]").val());
-			<?php } ?>
+		var load_grid = function(){
+			var sales_json = $("#p_muid_form input[name=sales_goals]").val();
+			if (!sales_json || sales_json == "")
+				return;
+			var sales_goals = JSON.parse(sales_json);
+			if (!sales_goals)
+				return;
+			goal_grid.pgrid_get_all_rows().each(function(){
+				var cur_row = $(this);
+				if (typeof sales_goals[cur_row.attr("title")] != "undefined")
+					cur_row.pgrid_set_value(3, String(parseFloat(sales_goals[cur_row.attr("title")]).toFixed(2)));
+			});
 		}
 	});
 	// ]]>
@@ -108,36 +196,46 @@ $pines->com_jstree->load();
 		<h1>Timespan and Highest Company Division</h1>
 	</div>
 	<div class="pf-element">
-		<div style="float: left;">
-			<span class="pf-label">Start Date
-			<input class="ui-widget-content ui-corner-all" type="text" name="start" value="<?php echo ($this->entity->start_date) ? format_date($this->entity->start_date, 'date_sort') : format_date(time(), 'date_sort'); ?>" style="text-align: center;" /></span><br />
-			<span class="pf-label">End Date
-			<input class="ui-widget-content ui-corner-all" type="text" name="end" value="<?php echo ($this->entity->end_date) ? format_date($this->entity->end_date - 1, 'date_sort') : format_date(time(), 'date_sort'); ?>" style="text-align: center;" /></span>
+		<label><span class="pf-label">Start Date</span>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="start" value="<?php echo ($this->entity->start_date) ? format_date($this->entity->start_date, 'date_sort') : format_date(time(), 'date_sort'); ?>" style="text-align: center;" /></label>
+	</div>
+	<div class="pf-element">
+		<label><span class="pf-label">End Date</span>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="end" value="<?php echo ($this->entity->end_date) ? format_date($this->entity->end_date - 1, 'date_sort') : format_date(time(), 'date_sort'); ?>" style="text-align: center;" /></label>
+	</div>
+	<div class="pf-element">
+		<span class="pf-label">Division</span>
+		<div class="pf-group">
+			<div class="pf-field">
+				<label><input type="checkbox" name="only_below" value="ON"<?php echo $this->entity->only_below ? ' checked="checked"' : ''; ?> /> Only show locations <em>below</em> the selected location.</label>
+			</div>
+			<div class="pf-field">
+				<div class="location_tree"></div>
+			</div>
 		</div>
-		<div class="location_tree" style="padding: 15px 0 0 50px; float: right;"></div>
 	</div>
 	<div class="pf-element pf-heading">
 		<h1>Sales Goals</h1>
 	</div>
-	<div class="pf-element goals_tree"></div>
-	<div class="pf-element">
-		<div class="pf-element pf-group" style="margin-left: 15px;">
-			$<input class="pf-field ui-widget-content ui-corner-all" type="text" name="goals_updater" value="<?php echo isset($this->entity->goals[$cur_employee->guid]) ? htmlspecialchars($this->entity->goals[$cur_employee->guid]) : htmlspecialchars($pines->config->com_reports->default_goal); ?>" size="5" style="color: cornflowerblue;" />
-			<input class="ui-corner-all ui-state-default" type="button" value="Update Entire Group" onclick="pines.com_reports_update_goals();" />
-		</div>
-		<?php foreach ($this->employees as $cur_employee) { ?>
-		<div class="pf-element pf-group goal_<?php echo $cur_employee->guid; ?>" style="margin-left: 15px;">
-			$<input class="pf-field ui-widget-content ui-corner-all" type="text" name="goals[<?php echo $cur_employee->guid; ?>]" value="<?php echo isset($this->entity->goals[$cur_employee->guid]) ? htmlspecialchars($this->entity->goals[$cur_employee->guid]) : htmlspecialchars($pines->config->com_reports->default_goal); ?>" size="5" />
-			<span><?php echo htmlspecialchars($cur_employee->name); ?></span>
-		</div>
-		<?php } ?>
+	<div class="pf-element pf-full-width">
+		<table id="p_muid_sales_goals">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Type</th>
+					<th>Dollar Goal</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if (isset($this->entity->guid)) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
 		<input type="hidden" name="top_location" />
-		<input type="hidden" name="location" />
+		<input type="hidden" name="sales_goals" value="<?php echo htmlspecialchars(json_encode((array) @array_combine(array_map('strval', array_keys($this->entity->sales_goals)), array_map('strval', $this->entity->sales_goals)))); ?>" />
 		<input class="ui-corner-all ui-state-default" type="submit" value="Save" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_reports', 'salesrankings')); ?>');" value="Cancel" />
 	</div>

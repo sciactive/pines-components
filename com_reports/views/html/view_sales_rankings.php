@@ -135,14 +135,14 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<?php if ($key == count($this->locations)-1) { ?>
 					<td style="text-align: center;"><?php
 					if ($cur_rank['pct'] >= 100) {
-						echo '$'.( ($cur_rank['trend'] * $multiplier) * (4 * min(1.5, $cur_rank['pct'] / 100)) + (($cur_rank['goal'] * $multiplier) >= 80 ? 80 : 0) );
+						echo '$'.round( ($cur_rank['trend'] * $multiplier) * (4 * min(1.5, $cur_rank['pct'] / 100)) + (($cur_rank['goal'] * $multiplier) >= 80 ? 80 : 0), 2);
 					} else {
 						echo '$0';
 					}
 					?></td>
 					<td style="text-align: center;"><?php
 					if ($cur_rank['pct'] >= 100) {
-						echo '$'.( ($cur_rank['trend'] * $multiplier) * (15 * min(1.5, $cur_rank['pct'] / 100)) + (($cur_rank['goal'] * $multiplier) >= 80 ? 1000 : 0) );
+						echo '$'.round( ($cur_rank['trend'] * $multiplier) * (15 * min(1.5, $cur_rank['pct'] / 100)) + (($cur_rank['goal'] * $multiplier) >= 80 ? 1000 : 0), 2);
 					} else {
 						echo '$0';
 					}

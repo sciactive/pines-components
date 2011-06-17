@@ -105,8 +105,8 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<th style="width: 10%;">Trend</th>
 					<th style="width: 10%;">Trend %</th>
 					<?php if ($key == count($this->locations)-1) { ?>
-					<th style="width: 35%;">Top Rep $</th>
-					<th style="width: 35%;">Mngr Bonus</th>
+					<th style="width: 35%;">Top Rep</th>
+					<th style="width: 35%;">Mgr Bns</th>
 					<?php } else { ?>
 					<th style="width: 35%;">Stores</th>
 					<th style="width: 35%;">Avg</th>
@@ -147,14 +147,14 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<?php if ($key == count($this->locations)-1) { ?>
 					<td style="text-align: center;"><?php
 					if ($cur_rank['pct'] >= 100) {
-						echo '$'.sprintf('%01.2f', ($cur_rank['trend'] * $multiplier) * (4 * min(1.5, $cur_rank['pct'] / 100)) + (($cur_rank['goal'] * $multiplier) >= 80 ? 80 : 0) );
+						echo '$'.sprintf('%01f', ($cur_rank['trend'] * $multiplier) * (4 * min(1.5, $cur_rank['pct'] / 100)) + (($cur_rank['goal'] * $multiplier) >= 80 ? 80 : 0) );
 					} else {
 						echo '$0';
 					}
 					?></td>
 					<td style="text-align: center;"><?php
 					if ($cur_rank['pct'] >= 100) {
-						echo '$'.sprintf('%01.2f', ($cur_rank['trend'] * $multiplier) * (15 * min(1.5, $cur_rank['pct'] / 100)) + (($cur_rank['goal'] * $multiplier) >= 80 ? 1000 : 0) );
+						echo '$'.sprintf('%01f', ($cur_rank['trend'] * $multiplier) * (15 * min(1.5, $cur_rank['pct'] / 100)) + (($cur_rank['goal'] * $multiplier) >= 80 ? 1000 : 0) );
 					} else {
 						echo '$0';
 					}

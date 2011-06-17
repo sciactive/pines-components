@@ -291,6 +291,8 @@ class com_reports_sales_ranking extends entity {
 		usort($module->new_hires, array($this, 'sort_ranks'));
 		$rank = 1;
 		foreach ($module->new_hires as &$cur_rank) {
+			if ($cur_rank['goal'] <= 0)
+				continue;
 			$cur_rank['rank'] = $rank;
 			$rank++;
 		}
@@ -298,6 +300,8 @@ class com_reports_sales_ranking extends entity {
 		usort($module->employees, array($this, 'sort_ranks'));
 		$rank = 1;
 		foreach ($module->employees as &$cur_rank) {
+			if ($cur_rank['goal'] <= 0)
+				continue;
 			$cur_rank['rank'] = $rank;
 			$rank++;
 		}
@@ -306,6 +310,8 @@ class com_reports_sales_ranking extends entity {
 			usort($cur_location, array($this, 'sort_ranks'));
 			$rank = 1;
 			foreach ($cur_location as &$cur_rank) {
+				if ($cur_rank['goal'] <= 0)
+					continue;
 				$cur_rank['rank'] = $rank;
 				$rank++;
 			}

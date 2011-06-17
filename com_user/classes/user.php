@@ -138,7 +138,7 @@ class user extends able_object implements user_interface {
 	}
 	
 	public function add_group($group) {
-		if ( !$group->in_array($this->groups) ) {
+		if ( !$group->in_array((array) $this->groups) ) {
 			$this->groups[] = $group;
 			return $this->groups;
 		} else {
@@ -198,8 +198,8 @@ class user extends able_object implements user_interface {
 	}
 
 	public function del_group($group) {
-		if ( $group->in_array($this->groups) ) {
-			foreach ($this->groups as $key => $cur_group) {
+		if ( $group->in_array((array) $this->groups) ) {
+			foreach ((array) $this->groups as $key => $cur_group) {
 				if ($group->is($cur_group))
 					unset($this->groups[$key]);
 			}
@@ -214,7 +214,7 @@ class user extends able_object implements user_interface {
 			$group = group::factory((int) $group);
 		if (!isset($group->guid))
 			return false;
-		return ($group->in_array($this->groups) || $group->is($this->group));
+		return ($group->in_array((array) $this->groups) || $group->is($this->group));
 	}
 
 	public function is_descendent($group = null) {
@@ -223,9 +223,9 @@ class user extends able_object implements user_interface {
 		if (!isset($group->guid))
 			return false;
 		// Check to see if the user is in a descendent group of the given group.
-		if (isset($this->group) && $this->group->is_descendent($group))
+		if (isset($this->group->guid) && $this->group->is_descendent($group))
 			return true;
-		foreach ($this->groups as $cur_group) {
+		foreach ((array) $this->groups as $cur_group) {
 			if ($cur_group->is_descendent($group))
 				return true;
 		}
@@ -260,9 +260,9 @@ class user extends able_object implements user_interface {
 		global $pines;
 		if (!empty($this->timezone))
 			return $return_date_time_zone_object ? new DateTimeZone($this->timezone) : $this->timezone;
-		if (isset($this->group) && !empty($this->group->timezone))
+		if (isset($this->group->guid) && !empty($this->group->timezone))
 			return $return_date_time_zone_object ? new DateTimeZone($this->group->timezone) : $this->group->timezone;
-		foreach($this->groups as $cur_group) {
+		foreach((array) $this->groups as $cur_group) {
 			if (!empty($cur_group->timezone))
 				return $return_date_time_zone_object ? new DateTimeZone($cur_group->timezone) : $cur_group->timezone;
 		}

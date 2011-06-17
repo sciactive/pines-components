@@ -1,8 +1,6 @@
 <?php
-
-// TODO: Delete this file. Pretty sure it's unused now.
-
-/* Jaxl (Jabber XMPP Library)
+/**
+ * Jaxl (Jabber XMPP Library)
  *
  * Copyright (c) 2009-2010, Abhinav Singh <me@abhinavsingh.com>.
  * All rights reserved.
@@ -35,30 +33,50 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @package jaxl
+ * @subpackage xep
+ * @author Abhinav Singh <me@abhinavsingh.com>
+ * @copyright Abhinav Singh
+ * @link http://code.google.com/p/jaxl
  */
 
-    /*******************************/
-    /**** DONOT edit this file *****/
-    /*******************************/
-    define('JAXL_INI_PATH', 'jaxl.ini');
-    
-    /* Run Jaxl, Wroom Wroom */
-    if(file_exists(JAXL_INI_PATH)) require_once JAXL_INI_PATH;  
-    else die("Missing ini file...");
-    
-    if($jaxl->mode == "cli") {
-        try {
-            if($jaxl->connect()) {
-                while($jaxl->stream) {
-                    $jaxl->getXML();
-                }
-            }
+    /**
+     * XEP-0115 : Entity Capabilities
+    */
+    class JAXL0115 {
+        
+        public static $ns = 'http://jabber.org/protocol/caps';
+
+        public static function init($jaxl) {
+            $jaxl->features[] = self::$ns;
+
+            JAXLXml::addTag('presence', 'cXmlns', '//presence/c/@xmlns');
+            JAXLXml::addTag('presence', 'cHash', '//presence/c/@hash');
+            JAXLXml::addTag('presence', 'cNode', '//presence/c/@node');
+            JAXLXml::addTag('presence', 'cVer', '//presence/c/@ver');
+            
+            JAXLXml::addTag('iq', 'queryNode', '//iq/query/@node');
         }
-        catch(Exception $e) {
-            die($e->getMessage);
+        
+        public static function getCaps($jaxl, $features=false) {
+            $payload = '<c';
+            $payload .= ' xmlns="'.self::$ns.'"';
+            $payload .= ' hash="sha1"';
+            $payload .= ' node="http://code.google.com/p/jaxl"';
+            $payload .= ' ver="'.self::getVerificationString($jaxl, $features).'"';
+            $payload .= '/>';
+            return $payload;
         }
+        
+        public static function getVerificationString($jaxl, $features) {
+            asort($features);
+            $S = $jaxl->category.'/'.$jaxl->type.'/'.$jaxl->lang.'/'.$jaxl->getName().'<';
+            foreach($features as $feature) $S .= $feature.'<';
+            $ver = base64_encode(sha1($S, true));
+            return $ver;
+        }
+        
     }
     
-    /* Exit Jaxl after we are done */   
-    exit;
 ?>

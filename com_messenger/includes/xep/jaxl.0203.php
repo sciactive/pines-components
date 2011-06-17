@@ -1,8 +1,6 @@
 <?php
-
-// TODO: Delete this file. Pretty sure it's unused now.
-
-/* Jaxl (Jabber XMPP Library)
+/**
+ * Jaxl (Jabber XMPP Library)
  *
  * Copyright (c) 2009-2010, Abhinav Singh <me@abhinavsingh.com>.
  * All rights reserved.
@@ -35,30 +33,35 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @package jaxl
+ * @subpackage xep
+ * @author Abhinav Singh <me@abhinavsingh.com>
+ * @copyright Abhinav Singh
+ * @link http://code.google.com/p/jaxl
  */
-
-    /*******************************/
-    /**** DONOT edit this file *****/
-    /*******************************/
-    define('JAXL_INI_PATH', 'jaxl.ini');
     
-    /* Run Jaxl, Wroom Wroom */
-    if(file_exists(JAXL_INI_PATH)) require_once JAXL_INI_PATH;  
-    else die("Missing ini file...");
-    
-    if($jaxl->mode == "cli") {
-        try {
-            if($jaxl->connect()) {
-                while($jaxl->stream) {
-                    $jaxl->getXML();
-                }
-            }
-        }
-        catch(Exception $e) {
-            die($e->getMessage);
-        }
+    /**
+     * XEP-0203 : Delayed Delivery
+    */
+    class JAXL0203 {
+        
+        public static $ns = 'urn:xmpp:delay';
+                
+        public static function init($jaxl) {
+            // add message specific tag maps
+            JAXLXml::addTag('message', 'offline', '//message/delay/@xmlns');
+            JAXLXml::addTag('message', 'delayFrom', '//message/delay/@from');
+            JAXLXml::addTag('message', 'delayStamp', '//message/delay/@stamp');
+            JAXLXml::addTag('message', 'delayDesc', '//message/delay');
+            
+            // add presence specific tag maps
+            JAXLXml::addTag('presence', 'offline', '//message/delay/@xmlns');
+            JAXLXml::addTag('presence', 'delayFrom', '//message/delay/@from');
+            JAXLXml::addTag('presence', 'delayStamp', '//message/delay/@stamp');
+            JAXLXml::addTag('presence', 'delayDesc', '//message/delay');
+        }   
+        
     }
     
-    /* Exit Jaxl after we are done */   
-    exit;
 ?>

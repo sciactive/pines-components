@@ -3,7 +3,7 @@ function call_user_func(cb) {
     if(typeof cb === 'string') func = (typeof this[cb] === 'function') ? this[cb] : func = (new Function(null, 'return ' + cb))();
     else if(cb instanceof Array) func = ( typeof cb[0] == 'string' ) ? eval(cb[0]+"['"+cb[1]+"']") : func = cb[0][cb[1]];
     else if (typeof cb === 'function') func = cb;
-    if(typeof func != 'function') throw new Error(func + ' is not a valid function');   
+    if(typeof func != 'function') throw new Error(func + ' is not a valid function');
     var parameters = Array.prototype.slice.call(arguments, 1);
     return (typeof cb[0] === 'string') ? func.apply(eval(cb[0]), parameters) : (typeof cb[0] !== 'object') ? func.apply(null, parameters) : func.apply(cb[0], parameters);
 }
@@ -49,10 +49,10 @@ var jaxl = {
         }
         else {
             diff = jaxl.now-jaxl.lastPoll;
-            
+
             if(diff < jaxl.pollRate) {
                 var xhr = function() { jaxl.xhrPayload(obj); };
-                
+
                 // TO-DO: Use a queue instead
                 setTimeout(xhr, jaxl.pollRate);
             }
@@ -63,7 +63,7 @@ var jaxl = {
     },
     xhrPayload: function(obj) {
         if((jaxl.polling != 0 || !jaxl.connected || jaxl.disconnecting) && obj['jaxl'] == 'ping') return false;
-        
+
         $.ajax({
             type: 'POST',
             url: jaxl.pollUrl,
@@ -86,7 +86,7 @@ var jaxl = {
     },
     handlePayload: function(payload) {
         if(payload.length == 0) { jaxl.ping(); }
-        else { 
+        else {
             for(key in payload) {
                 if(key == null) { jaxl.ping(); }
                 else if(payload[key].jaxl == 'jaxl') { jaxl.xhrPayload(payload[key]); }

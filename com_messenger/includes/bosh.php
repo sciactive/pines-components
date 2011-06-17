@@ -1,68 +1,61 @@
 <?php
-/*
- * Example bosh chat application using Jaxl library
- * Read more: http://bit.ly/aMozMy
- */
+/**
+ * Sample browser based one-to-one chat application using Jaxl library
+ * Usage: Symlink or copy whole Jaxl library folder inside your web folder
+ *        Edit "BOSHCHAT_POLL_URL" and "BOSHCHAT_ADMIN_JID" below to suit your environment
+ *        Run this app file from the browser e.g. http://path/to/jaxl/app/boshchat.php
+ *        View /var/log/jaxl.log for debug info
+ *
+ * Read more: http://jaxl.net/example/boshchat.php
+*/
 
 // Ajax poll url
 define('BOSHCHAT_POLL_URL', htmlspecialchars($pines->config->location).'components/com_messenger/includes/jaxl.php');
 
-// User who will receive the message
-define('BOSHCHAT_ADMIN_JID', $_REQUEST['recipient']);
 
 if(isset($_REQUEST['jaxl'])) { // Valid bosh request
 	// Initialize Jaxl Library
-	$jaxl = new JAXL();
+	@require_once 'core/jaxl.class.php';
+	$jaxl = new JAXL(array(
+		'domain'=>'localhost',
+		'port'=>5222,
+		'boshHost'=>'localhost',
+		'authType'=>'DIGEST-MD5',
+		'logLevel'=>4
+	));
+
+	// User who will receive the message
+	define('BOSHCHAT_ADMIN_JID', $_REQUEST['recipient']);
 
 	// Include required XEP's
-	jaxl_require(array(
+	$jaxl->requires(array(
 		'JAXL0115', // Entity Capabilities
 		'JAXL0085', // Chat State Notification
 		'JAXL0092', // Software Version
 		'JAXL0203', // Delayed Delivery
 		'JAXL0202', // Entity Time
 		'JAXL0206'  // XMPP over Bosh
-	), $jaxl);
+	));
 
 	// Sample Bosh chat application class
 	class boshchat {
 
-		public static function doAuth($mechanism) {
-			global $jaxl;
-			$jaxl->auth("DIGEST-MD5");
-		}
-
-		public static function postAuth() {
-			global $jaxl;
-			$response = array('jaxl' => 'connected', 'jid' => $jaxl->jid);
+		public static function postAuth($payload, $jaxl) {
+			$response = array('jaxl'=>'connected', 'jid'=>$jaxl->jid);
 			$jaxl->JAXL0206('out', $response);
 		}
 
-		public static function handleRosterList($payload) {
-			global $jaxl;
-
-			$roster = array();
-			if(is_array($payload['queryItemJid'])) {
-				foreach($payload['queryItemJid'] as $key => $jid) {
-					$roster[$jid]['group'] = $payload['queryItemGrp'][$key];
-					$roster[$jid]['subscription'] = $payload['queryItemSub'][$key];
-					$roster[$jid]['name'] = $payload['queryItemName'][$key];
-				}
-			}
-
-			$response = array('jaxl' => 'rosterList', 'roster' => $roster);
+		public static function postRosterUpdate($payload, $jaxl) {
+			$response = array('jaxl'=>'rosterList', 'roster'=>$jaxl->roster);
 			$jaxl->JAXL0206('out', $response);
 		}
 
-		public static function postDisconnect() {
-			global $jaxl;
+		public static function postDisconnect($payload, $jaxl) {
 			$response = array('jaxl'=>'disconnected');
 			$jaxl->JAXL0206('out', $response);
 		}
 
-		public static function getMessage($payloads) {
-			global $jaxl;
-
+		public static function getMessage($payloads, $jaxl) {
 			$html = '';
 			foreach($payloads as $payload) {
 				// reject offline message
@@ -82,16 +75,14 @@ if(isset($_REQUEST['jaxl'])) { // Valid bosh request
 			}
 
 			if($html != '') {
-				$response = array('jaxl' => 'message', 'message' => urlencode($html));
+				$response = array('jaxl'=>'message', 'message'=>urlencode($html));
 				$jaxl->JAXL0206('out', $response);
 			}
 
 			return $payloads;
 		}
 
-		public static function getPresence($payloads) {
-			global $jaxl;
-
+		public static function getPresence($payloads, $jaxl) {
 			$html = '';
 			foreach($payloads as $payload) {
 				if($payload['type'] == '' || in_array($payload['type'], array('available', 'unavailable'))) {
@@ -104,48 +95,52 @@ if(isset($_REQUEST['jaxl'])) { // Valid bosh request
 			}
 
 			if($html != '') {
-				$response = array('jaxl' => 'presence', 'presence' => urlencode($html));
+				$response = array('jaxl'=>'presence', 'presence'=>urlencode($html));
 				$jaxl->JAXL0206('out', $response);
 			}
 
 			return $payloads;
 		}
 
-		public static function postEmptyBody($body) {
-			global $jaxl;
-			$response = array('jaxl' => 'pinged');
+		public static function postEmptyBody($body, $jaxl) {
+			$response = array('jaxl'=>'pinged');
 			$jaxl->JAXL0206('out', $response);
 		}
 
-		public static function postAuthFailure() {
-			global $jaxl;
-			$response = array('jaxl' => 'authFailed');
+		public static function postAuthFailure($payload, $jaxl) {
+			$response = array('jaxl'=>'authFailed');
 			$jaxl->JAXL0206('out', $response);
+		}
+
+		public static function postCurlErr($payload, $jaxl) {
+			if($_REQUEST['jaxl'] == 'disconnect') self::postDisconnect($payload, $jaxl);
+			else $jaxl->JAXL0206('out', array('jaxl'=>'curlError', 'code'=>$payload['errno'], 'msg'=>$payload['errmsg']));
 		}
 
 	}
 
 	// Add callbacks on various event handlers
-	JAXLPlugin::add('jaxl_post_auth_failure', array('boshchat', 'postAuthFailure'));
-	JAXLPlugin::add('jaxl_post_auth', array('boshchat', 'postAuth'));
-	JAXLPlugin::add('jaxl_post_disconnect', array('boshchat', 'postDisconnect'));
-	JAXLPlugin::add('jaxl_get_auth_mech', array('boshchat', 'doAuth'));
-	JAXLPlugin::add('jaxl_get_empty_body', array('boshchat', 'postEmptyBody'));
-	JAXLPlugin::add('jaxl_get_message', array('boshchat', 'getMessage'));
-	JAXLPlugin::add('jaxl_get_presence', array('boshchat', 'getPresence'));
+	$jaxl->addPlugin('jaxl_post_auth_failure', array('boshchat', 'postAuthFailure'));
+	$jaxl->addPlugin('jaxl_post_auth', array('boshchat', 'postAuth'));
+	$jaxl->addPlugin('jaxl_post_disconnect', array('boshchat', 'postDisconnect'));
+	$jaxl->addPlugin('jaxl_get_empty_body', array('boshchat', 'postEmptyBody'));
+	$jaxl->addPlugin('jaxl_get_bosh_curl_error', array('boshchat', 'postCurlErr'));
+	$jaxl->addPlugin('jaxl_get_message', array('boshchat', 'getMessage'));
+	$jaxl->addPlugin('jaxl_get_presence', array('boshchat', 'getPresence'));
+	$jaxl->addPlugin('jaxl_post_roster_update', array('boshchat', 'postRosterUpdate'));
 
 	// Handle incoming bosh request
-	switch($jaxl->action) {
+	switch($_REQUEST['jaxl']) {
 		case 'connect':
 			$jaxl->user = $_POST['user'];
 			$jaxl->pass = $_POST['pass'];
-			$jaxl->JAXL0206('startStream', $jaxl->host, $jaxl->port, $jaxl->domain);
+			$jaxl->startCore('bosh');
 			break;
 		case 'disconnect':
 			$jaxl->JAXL0206('endStream');
 			break;
 		case 'getRosterList':
-			$jaxl->getRosterList(array('boshchat', 'handleRosterList'));
+			$jaxl->getRosterList();
 			break;
 		case 'setStatus':
 			$jaxl->setStatus(FALSE, FALSE, FALSE, TRUE);
@@ -160,13 +155,13 @@ if(isset($_REQUEST['jaxl'])) { // Valid bosh request
 			$jaxl->JAXL0206('jaxl', $_REQUEST['xml']);
 			break;
 		default:
-			$response = array('jaxl' => '400', 'desc' => $jaxl->action." not implemented");
+			$response = array('jaxl'=>'400', 'desc'=>$_REQUEST['jaxl']." not implemented");
 			$jaxl->JAXL0206('out', $response);
 			break;
 	}
 }
-if(!isset($_REQUEST['jaxl'])) { // Serve application UI if $_REQUEST['jaxl'] is not set
-
+if(!isset($_REQUEST['jaxl'])) {
+	// Serve application UI if $_REQUEST['jaxl'] is not set
 }
 
 ?>

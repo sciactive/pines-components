@@ -1,8 +1,6 @@
 <?php
-
-// TODO: Delete this file. Pretty sure it's unused now.
-
-/* Jaxl (Jabber XMPP Library)
+/**
+ * Jaxl (Jabber XMPP Library)
  *
  * Copyright (c) 2009-2010, Abhinav Singh <me@abhinavsingh.com>.
  * All rights reserved.
@@ -35,30 +33,35 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @package jaxl
+ * @subpackage xep
+ * @author Abhinav Singh <me@abhinavsingh.com>
+ * @copyright Abhinav Singh
+ * @link http://code.google.com/p/jaxl
  */
 
-    /*******************************/
-    /**** DONOT edit this file *****/
-    /*******************************/
-    define('JAXL_INI_PATH', 'jaxl.ini');
-    
-    /* Run Jaxl, Wroom Wroom */
-    if(file_exists(JAXL_INI_PATH)) require_once JAXL_INI_PATH;  
-    else die("Missing ini file...");
-    
-    if($jaxl->mode == "cli") {
-        try {
-            if($jaxl->connect()) {
-                while($jaxl->stream) {
-                    $jaxl->getXML();
-                }
-            }
+    /**
+     * XEP-0107 : User Mood
+    */
+    class JAXL0107 {
+
+        public static $ns = 'http://jabber.org/protocol/mood';
+
+        public static function init($jaxl) {
+            // requires PEP XEP
+            $jaxl->requires('JAXL0163');
+
+            // update feature list
+            $jaxl->features[] = self::$ns;
+
+            JAXLXml::addTag('message', 'mood', '//message/event/items/item/mood/@xmlns');
         }
-        catch(Exception $e) {
-            die($e->getMessage);
+
+        public static function publishMood($jaxl, $from, $item) {
+            return JAXL0163::publishItem($jaxl, $from, self::$ns, $item);
         }
+
     }
-    
-    /* Exit Jaxl after we are done */   
-    exit;
+
 ?>

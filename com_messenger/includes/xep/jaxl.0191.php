@@ -1,8 +1,6 @@
 <?php
-
-// TODO: Delete this file. Pretty sure it's unused now.
-
-/* Jaxl (Jabber XMPP Library)
+/**
+ * Jaxl (Jabber XMPP Library)
  *
  * Copyright (c) 2009-2010, Abhinav Singh <me@abhinavsingh.com>.
  * All rights reserved.
@@ -35,30 +33,53 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @package jaxl
+ * @subpackage xep
+ * @author Abhinav Singh <me@abhinavsingh.com>
+ * @copyright Abhinav Singh
+ * @link http://code.google.com/p/jaxl
  */
+	
+	/**
+	 * XEP 0191 - Simple Communication Blocking
+	*/
+	class JAXL0191 {
 
-    /*******************************/
-    /**** DONOT edit this file *****/
-    /*******************************/
-    define('JAXL_INI_PATH', 'jaxl.ini');
-    
-    /* Run Jaxl, Wroom Wroom */
-    if(file_exists(JAXL_INI_PATH)) require_once JAXL_INI_PATH;  
-    else die("Missing ini file...");
-    
-    if($jaxl->mode == "cli") {
-        try {
-            if($jaxl->connect()) {
-                while($jaxl->stream) {
-                    $jaxl->getXML();
-                }
-            }
+        public static $ns = 'urn:xmpp:blocking';
+
+        public static function init($jaxl) {
+            $jaxl->features[] = self::$ns;
         }
-        catch(Exception $e) {
-            die($e->getMessage);
+
+        public static function getBlockList($jaxl, $callback) {
+            $payload = '<blocklist xmlns="'.self::$ns.'"/>';
+            return XMPPSend::iq($jaxl, 'get', $payload, false, false, $callback);
         }
-    }
-    
-    /* Exit Jaxl after we are done */   
-    exit;
+
+        public static function blockContact($jaxl, $jid, $callback) {
+            $payload = '<block xmlns="'.self::$ns.'">';
+            if(!is_array($jid)) $jid = array($jid);
+            foreach($jid as $item)
+                $payload .= '<item jid="'.$item.'"/>';
+            $payload .= '</block>';
+            return XMPPSend::iq($jaxl, 'set', $payload, false, false, $callback);
+        }
+
+        public static function unblockContact($jaxl, $jid, $callback) {
+            $payload = '<unblock xmlns="'.self::$ns.'">';
+            if(!is_array($jid)) $jid = array($jid);
+            foreach($jid as $item)
+                $payload .= '<item jid="'.$item.'"/>';
+            $payload .= '</unblock>';
+            return XMPPSend::iq($jaxl, 'set', $payload, false, false, $callback);
+        }
+
+        public static function unblockAll($jaxl, $callback) {
+            $payload = '<unblock xmlns="'.self::$ns.'"/>';
+            return XMPPSend::iq($jaxl, 'set', $payload, false, false, $callback);
+        }
+
+	}
+	
 ?>

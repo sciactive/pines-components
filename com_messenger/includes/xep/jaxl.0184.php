@@ -1,8 +1,6 @@
 <?php
-
-// TODO: Delete this file. Pretty sure it's unused now.
-
-/* Jaxl (Jabber XMPP Library)
+/**
+ * Jaxl (Jabber XMPP Library)
  *
  * Copyright (c) 2009-2010, Abhinav Singh <me@abhinavsingh.com>.
  * All rights reserved.
@@ -35,30 +33,47 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @package jaxl
+ * @subpackage xep
+ * @author Abhinav Singh <me@abhinavsingh.com>
+ * @copyright Abhinav Singh
+ * @link http://code.google.com/p/jaxl
  */
+	
+	/**
+	 * XEP-0184 Message Receipts
+	*/
+	class JAXL0184 {
+		
+		public static $ns = 'urn:xmpp:receipts';
+		
+		public static function init($jaxl) {
+			$jaxl->features[] = self::$ns;
+            
+            JAXLXml::addTag('message', 'request', '//message/request/@xmlns');
+			JAXLXml::addTag('message', 'received', '//message/received/@xmlns');
+			JAXLXml::addTag('message', 'receivedId', '//message/received/@id');
 
-    /*******************************/
-    /**** DONOT edit this file *****/
-    /*******************************/
-    define('JAXL_INI_PATH', 'jaxl.ini');
-    
-    /* Run Jaxl, Wroom Wroom */
-    if(file_exists(JAXL_INI_PATH)) require_once JAXL_INI_PATH;  
-    else die("Missing ini file...");
-    
-    if($jaxl->mode == "cli") {
-        try {
-            if($jaxl->connect()) {
-                while($jaxl->stream) {
-                    $jaxl->getXML();
-                }
-            }
-        }
-        catch(Exception $e) {
-            die($e->getMessage);
-        }
-    }
-    
-    /* Exit Jaxl after we are done */   
-    exit;
+			$jaxl->addPlugin('jaxl_get_message', array('JAXL0184', 'handleMessage'));
+		}
+		
+		public static function requestReceipt() {
+			$payload = '<request xmlns="'.self::$ns.'"/>';
+			return $payload;
+		}
+		
+		public static function handleMessage($payloads, $jaxl) {
+			foreach($payloads as $payload) {
+				if($payload['request'] == self::$ns) {
+					$child = array();
+					$child['payload'] = '<received xmlns="'.self::$ns.'" id="'.$payload['id'].'"/>';
+					XMPPSend::message($jaxl, $payload['from'], $payload['to'], $child, false, false);
+				}
+			}
+			return $payloads;
+		}
+		
+	}
+	
 ?>

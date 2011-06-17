@@ -1,8 +1,6 @@
 <?php
-
-// TODO: Delete this file. Pretty sure it's unused now.
-
-/* Jaxl (Jabber XMPP Library)
+/**
+ * Jaxl (Jabber XMPP Library)
  *
  * Copyright (c) 2009-2010, Abhinav Singh <me@abhinavsingh.com>.
  * All rights reserved.
@@ -35,30 +33,47 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @package jaxl
+ * @subpackage xep
+ * @author Abhinav Singh <me@abhinavsingh.com>
+ * @copyright Abhinav Singh
+ * @link http://code.google.com/p/jaxl
  */
+    
+    /**
+     * XEP-0202 : Entity Time
+    */  
+    class JAXL0202 {
+        
+        public static $ns = 'urn:xmpp:time';
+        
+        public static function init($jaxl) {
+            $jaxl->features[] = self::$ns;
+            
+            JAXLXml::addTag('iq', 'time', '//iq/time/@xmlns');
+            JAXLXml::addTag('iq', 'timeTZO', '//iq/time/tzo');
+            JAXLXml::addTag('iq', 'timeUTC', '//iq/time/utc');
 
-    /*******************************/
-    /**** DONOT edit this file *****/
-    /*******************************/
-    define('JAXL_INI_PATH', 'jaxl.ini');
-    
-    /* Run Jaxl, Wroom Wroom */
-    if(file_exists(JAXL_INI_PATH)) require_once JAXL_INI_PATH;  
-    else die("Missing ini file...");
-    
-    if($jaxl->mode == "cli") {
-        try {
-            if($jaxl->connect()) {
-                while($jaxl->stream) {
-                    $jaxl->getXML();
-                }
+            $jaxl->addPlugin('jaxl_get_iq_get', array('JAXL0202', 'handleIq'));
+        }
+        
+        public static function getEntityTime($jaxl, $to, $from, $callback) {
+            $payload = '<time xmlns="'.self::$ns.'"/>';
+            return XMPPSend::iq($jaxl, 'get', $payload, $to, $from, $callback);
+        }
+        
+        public static function handleIq($payload, $jaxl) {
+            if(@$payload['time'] == self::$ns) {
+                $entityTime = '<time xmlns="'.self::$ns.'">';
+                $entityTime .= '<tzo>'.date('P').'</tzo>';
+                $entityTime .= '<utc>'.date('Y-m-d').'T'.date('H:i:s').'Z</utc>';
+                $entityTime .= '</time>';
+                return XMPPSend::iq($jaxl, 'result', $entityTime, $payload['from'], $payload['to'], false, $payload['id']);
             }
+            return $payload;
         }
-        catch(Exception $e) {
-            die($e->getMessage);
-        }
+        
     }
     
-    /* Exit Jaxl after we are done */   
-    exit;
 ?>

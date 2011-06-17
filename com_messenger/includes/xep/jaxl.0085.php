@@ -1,8 +1,6 @@
 <?php
-
-// TODO: Delete this file. Pretty sure it's unused now.
-
-/* Jaxl (Jabber XMPP Library)
+/**
+ * Jaxl (Jabber XMPP Library)
  *
  * Copyright (c) 2009-2010, Abhinav Singh <me@abhinavsingh.com>.
  * All rights reserved.
@@ -35,30 +33,52 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @package jaxl
+ * @subpackage xep
+ * @author Abhinav Singh <me@abhinavsingh.com>
+ * @copyright Abhinav Singh
+ * @link http://code.google.com/p/jaxl
  */
 
-    /*******************************/
-    /**** DONOT edit this file *****/
-    /*******************************/
-    define('JAXL_INI_PATH', 'jaxl.ini');
-    
-    /* Run Jaxl, Wroom Wroom */
-    if(file_exists(JAXL_INI_PATH)) require_once JAXL_INI_PATH;  
-    else die("Missing ini file...");
-    
-    if($jaxl->mode == "cli") {
-        try {
-            if($jaxl->connect()) {
-                while($jaxl->stream) {
-                    $jaxl->getXML();
+    /**
+     * XEP-0085: Chat State Notifications
+     * 
+     * Adds 5 chat state a.k.a 'composing', 'paused', 'active', 'inactive', 'gone'
+    */
+    class JAXL0085 {
+
+        public static $ns = 'http://jabber.org/protocol/chatstates';        
+        public static $chatStates = array('composing', 'active', 'inactive', 'paused', 'gone');
+        
+        public static function init($jaxl) {
+            $jaxl->features[] = self::$ns;
+            
+            JAXLXml::addTag('message', 'composing', '//message/composing/@xmlns');
+            JAXLXml::addTag('message', 'active', '//message/active/@xmlns');
+            JAXLXml::addTag('message', 'inactive', '//message/inactive/@xmlns');
+            JAXLXml::addTag('message', 'paused', '//message/paused/@xmlns');
+            JAXLXml::addTag('message', 'gone', '//message/gone/@xmlns');
+            $jaxl->addPlugin('jaxl_get_message', array('JAXL0085', 'getMessage'));
+        }
+        
+        public static function getMessage($payloads, $jaxl) {
+            foreach($payloads as $key => $payload) {
+                $payload['chatState'] = false;
+                
+                foreach(self::$chatStates as $state) {
+                    if(isset($payload[$state]) && $payload[$state] == self::$ns) {
+                        $payload['chatState'] = $state;
+                    }
+                    unset($payload[$state]);
                 }
+                
+                $payloads[$key] = $payload;
             }
+            
+            return $payloads;
         }
-        catch(Exception $e) {
-            die($e->getMessage);
-        }
+        
     }
     
-    /* Exit Jaxl after we are done */   
-    exit;
 ?>

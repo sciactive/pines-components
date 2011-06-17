@@ -1,8 +1,6 @@
 <?php
-
-// TODO: Delete this file. Pretty sure it's unused now.
-
-/* Jaxl (Jabber XMPP Library)
+/**
+ * Jaxl (Jabber XMPP Library)
  *
  * Copyright (c) 2009-2010, Abhinav Singh <me@abhinavsingh.com>.
  * All rights reserved.
@@ -35,30 +33,49 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @package jaxl
+ * @subpackage xep
+ * @author Abhinav Singh <me@abhinavsingh.com>
+ * @copyright Abhinav Singh
+ * @link http://code.google.com/p/jaxl
  */
+    
+    /**
+     * XEP-0092: Software Version
+    */
+    class JAXL0092 {
+        
+        public static $ns = 'jabber:iq:version';
 
-    /*******************************/
-    /**** DONOT edit this file *****/
-    /*******************************/
-    define('JAXL_INI_PATH', 'jaxl.ini');
-    
-    /* Run Jaxl, Wroom Wroom */
-    if(file_exists(JAXL_INI_PATH)) require_once JAXL_INI_PATH;  
-    else die("Missing ini file...");
-    
-    if($jaxl->mode == "cli") {
-        try {
-            if($jaxl->connect()) {
-                while($jaxl->stream) {
-                    $jaxl->getXML();
-                }
+        public static function init($jaxl) {
+            $jaxl->features[] = self::$ns;
+            
+            JAXLXml::addTag('iq', 'softwareName', '//iq/query[@xmlns="'.self::$ns.'"]/name');
+            JAXLXml::addTag('iq', 'softwareVersion', '//iq/query[@xmlns="'.self::$ns.'"]/version');
+            JAXLXml::addTag('iq', 'softwareOS', '//iq/query[@xmlns="'.self::$ns.'"]/os');
+            
+            $jaxl->addPlugin('jaxl_get_iq_get', array('JAXL0092', 'getIq'));
+        }
+        
+        public static function getIq($arr, $jaxl) {
+            if($arr['queryXmlns'] == self::$ns) {
+                $payload = '<query xmlns="'.self::$ns.'">';
+                $payload .= '<name>'.$jaxl->getName().'</name>';
+                $payload .= '<version>'.$jaxl->getVersion().'</version>';
+                $payload .= '<os>'.PHP_OS.'</os>';
+                $payload .= '</query>';
+                
+                return XMPPSend::iq($jaxl, 'result', $payload, $arr['from'], $arr['to'], false, $arr['id']);
             }
+            return $arr;
         }
-        catch(Exception $e) {
-            die($e->getMessage);
+        
+        public static function getVersion($jaxl, $fromJid, $toJid, $callback) {
+            $payload = '<query xmlns="'.self::$ns.'">';
+            return XMPPSend::iq($jaxl, 'get', $payload, $fromJid, $toJid, $callback);
         }
+        
     }
-    
-    /* Exit Jaxl after we are done */   
-    exit;
+
 ?>

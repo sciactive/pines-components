@@ -1,8 +1,6 @@
 <?php
-
-// TODO: Delete this file. Pretty sure it's unused now.
-
-/* Jaxl (Jabber XMPP Library)
+/**
+ * Jaxl (Jabber XMPP Library)
  *
  * Copyright (c) 2009-2010, Abhinav Singh <me@abhinavsingh.com>.
  * All rights reserved.
@@ -35,30 +33,39 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @package jaxl
+ * @subpackage xep
+ * @author Abhinav Singh <me@abhinavsingh.com>
+ * @copyright Abhinav Singh
+ * @link http://code.google.com/p/jaxl
  */
 
-    /*******************************/
-    /**** DONOT edit this file *****/
-    /*******************************/
-    define('JAXL_INI_PATH', 'jaxl.ini');
-    
-    /* Run Jaxl, Wroom Wroom */
-    if(file_exists(JAXL_INI_PATH)) require_once JAXL_INI_PATH;  
-    else die("Missing ini file...");
-    
-    if($jaxl->mode == "cli") {
-        try {
-            if($jaxl->connect()) {
-                while($jaxl->stream) {
-                    $jaxl->getXML();
-                }
-            }
+    /**
+     * XEP-0049: Private XML Storage
+    */
+    class JAXL0049 {
+        
+        public static $ns = 'jabber:iq:private';
+        
+        public static function init($jaxl) {
+            $jaxl->features[] = self::$ns;
         }
-        catch(Exception $e) {
-            die($e->getMessage);
+
+        public static function storeXML($jaxl, $xml, $callback) {
+            $payload = '<query xmlns="'.self::$ns.'">';
+            $payload .= $xml;
+            $payload .= '</query>';
+            return XMPPSend::iq($jaxl, 'set', $payload, false, false, $callback);
         }
+
+        public static function getXML($jaxl, $xml, $callback) {
+            $payload = '<query xmlns="'.self::$ns.'">';
+            $payload .= $xml;
+            $payload .= '</query>';
+            return XMPPSend::iq($jaxl, 'get', $payload, false, false, $callback);
+        }
+
     }
-    
-    /* Exit Jaxl after we are done */   
-    exit;
+
 ?>

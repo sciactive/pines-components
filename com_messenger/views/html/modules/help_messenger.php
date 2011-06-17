@@ -71,7 +71,7 @@ $chat_log = $_SESSION['chats'];
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-		jaxl.pollUrl = "<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/jaxl.php";
+		jaxl.pollUrl = "<?php echo htmlspecialchars($pines->config->location); ?>components/com_messenger/includes/bosh.php";
 		boshchat = {
 			payloadHandler: function(payload) {
 				if(payload.jaxl == 'authFailed')

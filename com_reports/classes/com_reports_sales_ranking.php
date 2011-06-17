@@ -211,18 +211,18 @@ class com_reports_sales_ranking extends entity {
 					continue;
 				if (isset($ranking_employee[$cur_product['salesperson']->guid])) {
 					$ranking_employee[$cur_product['salesperson']->guid]['mtd'] -= $cur_product['line_total'];
-					if ($cur_return->tender_date >= $current_start && $cur_return->tender_date <= $current_end)
+					if ($cur_return->process_date >= $current_start && $cur_return->process_date <= $current_end)
 						$ranking_employee[$cur_product['salesperson']->guid]['current'] -= $cur_product['line_total'];
-					elseif ($cur_return->tender_date >= $last_start && $cur_return->tender_date <= $last_end)
+					elseif ($cur_return->process_date >= $last_start && $cur_return->process_date <= $last_end)
 						$ranking_employee[$cur_product['salesperson']->guid]['last'] -= $cur_product['line_total'];
 				}
 				$parent = $cur_product['salesperson']->group;
 				while (isset($parent->guid)) {
 					if (isset($ranking_location[$parent->guid])) {
 						$ranking_location[$parent->guid]['mtd'] -= $cur_product['line_total'];
-						if ($cur_return->tender_date >= $current_start && $cur_return->tender_date <= $current_end)
+						if ($cur_return->process_date >= $current_start && $cur_return->process_date <= $current_end)
 							$ranking_location[$parent->guid]['current'] -= $cur_product['line_total'];
-						elseif ($cur_return->tender_date >= $last_start && $cur_return->tender_date <= $last_end)
+						elseif ($cur_return->process_date >= $last_start && $cur_return->process_date <= $last_end)
 							$ranking_location[$parent->guid]['last'] -= $cur_product['line_total'];
 					}
 					$parent = $parent->parent;

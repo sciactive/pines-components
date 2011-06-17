@@ -137,7 +137,7 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 				<tr title="<?php echo $cur_rank['entity']->guid; ?>" class="<?php echo $class; ?>">
 					<td><?php echo htmlspecialchars($cur_rank['rank']); ?></td>
 					<td><?php echo htmlspecialchars($cur_rank['entity']->name); ?></td>
-					<td><?php echo htmlspecialchars($cur_rank['manager']->name); ?></td>
+					<td><?php echo isset($cur_rank['manager']->guid) ? htmlspecialchars($cur_rank['manager']->name) : 'OPEN'; ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['current'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['last'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['mtd'] * $multiplier, 2)); ?></td>
@@ -161,7 +161,7 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					?></td>
 					<?php } else { ?>
 					<td style="text-align: center;"><?php echo (int) $cur_rank['child_count']; ?></td>
-					<td style="text-align: center;"><?php echo '$'.sprintf('%01.2f', ($cur_rank['child_count'] > 0 ? $cur_rank['child_total'] / $cur_rank['child_count'] : 0)); ?></td>
+					<td style="text-align: center;"><?php echo $prefix.htmlspecialchars(round($cur_rank['child_count'] > 0 ? $cur_rank['trend'] / $cur_rank['child_count'] * $multiplier : 0, 2)); ?></td>
 					<?php } ?>
 				</tr>
 				<?php } if ($key == count($this->locations)-1) {

@@ -175,8 +175,8 @@ class com_reports_sales_ranking extends entity {
 				array('&',
 					'tag' => array('com_sales', 'return'),
 					'strict' => array('status', 'processed'),
-					'gte' => array('tender_date', $this->start_date),
-					'lt' => array('tender_date', $this->end_date)
+					'gte' => array('process_date', $this->start_date),
+					'lt' => array('process_date', $this->end_date)
 				)
 			);
 
@@ -257,7 +257,6 @@ class com_reports_sales_ranking extends entity {
 			// Keep a total and average for parent locations.
 			if (isset($ranking_location[$cur_rank['entity']->parent->guid])) {
 				$ranking_location[$cur_rank['entity']->parent->guid]['child_count']++;
-				$ranking_location[$cur_rank['entity']->parent->guid]['child_total'] += $cur_rank['mtd'];
 			}
 		}
 		unset($cur_rank);

@@ -1,0 +1,10 @@
+[
+	{
+		"path": "main_menu/accessories/esps",
+		"text": "ESPs",
+		"href": ["com_esp","list"],
+		"depend": {
+			"ability": "com_esp/list"
+		}
+	}
+]

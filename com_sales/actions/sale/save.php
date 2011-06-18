@@ -54,6 +54,7 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != '
 			$cur_qty = (int) $cur_product->values[4];
 			$cur_price = (float) $cur_product->values[5];
 			$cur_discount = $cur_product->values[6];
+			$cur_esp = $cur_product->values[9];
 			$cur_salesperson = null;
 			if ($pines->config->com_sales->per_item_salesperson)
 				$cur_salesperson = user::factory(intval($cur_product->values[10]));
@@ -86,6 +87,8 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != '
 				'discount' => $cur_discount,
 				'salesperson' => $cur_salesperson
 			);
+			if ($pines->config->com_sales->com_esp)
+				$cur_product['esp'] = $cur_esp;
 			if ($cur_product_entity->serialized && empty($cur_serial) && $cur_delivery != 'warehouse') {
 				pines_notice("Product with SKU [$cur_sku] requires a serial.");
 				$product_error = true;

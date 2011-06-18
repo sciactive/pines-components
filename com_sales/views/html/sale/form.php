@@ -31,6 +31,11 @@ if ($pines->config->com_sales->per_item_salesperson)
 if ($pines->config->com_sales->autocomplete_product)
 	$pines->com_sales->load_product_select();
 // TODO: After a sale is invoiced, don't calculate totals, just show what's saved.
+if ($pines->config->com_sales->com_esp) {
+	$esp_product = com_sales_product::factory((int) $pines->config->com_esp->esp_product);
+	if (!isset($esp_product->guid))
+		$esp_product = null;
+}
 ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/save')); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
@@ -51,7 +56,9 @@ if ($pines->config->com_sales->autocomplete_product)
 			var products_table = $("#p_muid_products_table");
 			var payments_table = $("#p_muid_payments_table");
 			var payments = $("#p_muid_payments");
-			<?php if ($pines->config->com_sales->com_customer) { ?>
+			<?php if ($pines->config->com_sales->com_esp) { ?>
+			var esp_rate = <?php echo (float) $pines->config->com_esp->esp_rate; ?>;
+			<?php } if ($pines->config->com_sales->com_customer) { ?>
 			var require_customer = false;
 			<?php } ?>
 
@@ -332,12 +339,87 @@ if ($pines->config->com_sales->autocomplete_product)
 					},
 					<?php } ?>
 					{type: 'separator'},
+					<?php if ($pines->config->com_sales->com_esp) { ?>
+					{
+						type: 'button',
+						text: 'ESP',
+						extra_class: 'picon picon-security-high',
+						multi_select: false,
+						click: function(e, rows){
+							// Add an ESP item to the product table.
+							$.each(rows, function(){
+								var esp_id = '<?php echo uniqid(); ?>';
+								var insured_item = $(this);
+								var insured_guid = insured_item.attr('title');
+								if (insured_item.pgrid_get_value(10) != '') {
+									alert('There is already an ESP for this item');
+									return;
+								} else if (insured_guid == <?php echo $esp_product->guid; ?>) {
+									alert('This item is an ESP, it does not need to be insured');
+									return;
+								}
+								var esp_price = (insured_item.pgrid_get_value(6) * esp_rate).toFixed(2).replace(/\d\.\d{2}/, '9.99');
+								var product_data = {
+									"guid": "<?php echo $esp_product->guid; ?>",
+									"name": "<?php echo $esp_product->name; ?>",
+									"sku": "<?php echo $esp_product->sku; ?>",
+									"stock_type": "<?php echo $esp_product->stock_type; ?>",
+									"pricing_method": "<?php echo $esp_product->pricing_method; ?>",
+									"unit_price": esp_price,
+									"margin": "<?php echo $esp_product->margin; ?>",
+									"floor": "<?php echo $esp_product->floor; ?>",
+									"ceiling": "<?php echo $esp_product->ceiling; ?>",
+									"tax_exempt": "<?php echo $esp_product->tax_exempt; ?>",
+									"return_checklists": "<?php echo array(); ?>",
+									"serialized": "<?php echo $esp_product->serialized; ?>",
+									"discountable": "<?php echo $esp_product->discountable; ?>",
+									"require_customer": "<?php echo $esp_product->require_customer; ?>",
+									"one_per_ticket": "<?php echo $esp_product->one_per_ticket; ?>",
+									"non_refundable": "<?php echo $esp_product->non_refundable; ?>",
+									"fees_percent": 0,
+									"fees_flat": 0,
+									"esp": esp_id
+								}
+								add_product(product_data);
+								insured_item.pgrid_set_value(10, esp_id);
+							});
+							update_products();
+						}
+					},
+					<?php } ?>
 					{
 						type: 'button',
 						text: 'Remove',
 						extra_class: 'picon picon-edit-delete',
 						multi_select: true,
 						click: function(e, rows){
+							<?php if ($pines->config->com_sales->com_esp) { ?>
+							// Find any deserted ESP/ESP IDs
+							var deserted = [];
+							$.each(rows, function(){
+								var cur_id = $(this).pgrid_get_value(10);
+								var deserter = $.inArray(cur_id, deserted);
+								if (deserter != -1)
+									deserted.remove(deserter);
+								else
+									deserted.push(cur_id);
+							});
+							// Remove any deserted ESP/ESP IDs
+							if (deserted.length > 0) {
+								$.each(products_table.pgrid_get_all_rows(), function(){
+									var cur_item = $(this);
+									if ($.inArray(cur_item.pgrid_get_value(10), deserted) != -1) {
+										if (cur_item.attr('title') == '<?php echo $esp_product->guid; ?>') {
+											// An insured item has been removed
+											cur_item.pgrid_delete();
+										} else {
+											// An ESP has been removed
+											cur_item.pgrid_set_value(10, '');
+										}
+									}
+								});
+							}
+							<?php } ?>
 							rows.pgrid_delete();
 							update_products();
 						}
@@ -367,7 +449,7 @@ if ($pines->config->com_sales->autocomplete_product)
 								alert("Please provide a serial number.");
 								return;
 							}
-							products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'in-store', 1, data.unit_price, "", "", "", "", data.salesperson]}], function(){
+							products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'in-store', 1, data.unit_price, "", "", "", data.esp, data.salesperson]}], function(){
 								var cur_row = $(this);
 								cur_row.data("product", data);
 							});
@@ -375,7 +457,7 @@ if ($pines->config->com_sales->autocomplete_product)
 							serial_dialog.dialog("close");
 						},
 						"Warehouse Item": function(){
-							products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'warehouse', 1, data.unit_price, "", "", "", "", data.salesperson]}], function(){
+							products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'warehouse', 1, data.unit_price, "", "", "", data.esp, data.salesperson]}], function(){
 								var cur_row = $(this);
 								cur_row.data("product", data);
 							});
@@ -395,7 +477,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					serial_box.val("");
 					return;
 				}
-				products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'in-store', 1, data.unit_price, "", "", "", "", data.salesperson]}], function(){
+				products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'in-store', 1, data.unit_price, "", "", "", data.esp, data.salesperson]}], function(){
 					var cur_row = $(this);
 					cur_row.data("product", data);
 				});
@@ -830,10 +912,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					close: function(){$(this).remove();}
 				});
 			};
-			<?php } ?>
-
-			
-			<?php if (!empty($this->entity->payments)) { foreach ($this->entity->payments as $key => $cur_payment) { ?>
+			<?php } if (!empty($this->entity->payments)) { foreach ($this->entity->payments as $key => $cur_payment) { ?>
 			(function(){
 				var table_entry = JSON.parse("<?php
 				$object = (object) array(
@@ -1129,7 +1208,11 @@ if ($pines->config->com_sales->autocomplete_product)
 					<th>Discount</th>
 					<th>Line Total</th>
 					<th>Fees</th>
+					<?php if ($pines->config->com_sales->com_esp) { ?>
+					<th>ESP</th>
+					<?php } else { ?>
 					<th>Unused</th>
+					<?php } ?>
 					<th>Salesperson</th>
 				</tr>
 			</thead>
@@ -1148,7 +1231,11 @@ if ($pines->config->com_sales->autocomplete_product)
 					<td><?php echo htmlspecialchars($cur_product['discount']); ?></td>
 					<td><?php echo htmlspecialchars($cur_product['line_total']); ?></td>
 					<td><?php echo htmlspecialchars($cur_product['fees']); ?></td>
+					<?php if ($pines->config->com_sales->com_esp) { ?>
+					<td><?php echo htmlspecialchars($cur_product['esp']); ?></td>
+					<?php } else { ?>
 					<td>NA</td>
+					<?php } ?>
 					<td><?php echo htmlspecialchars($cur_product['salesperson']->guid.': '.$cur_product['salesperson']->name); ?></td>
 				</tr>
 				<?php } ?>

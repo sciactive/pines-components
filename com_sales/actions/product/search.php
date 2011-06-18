@@ -42,7 +42,7 @@ if (isset($product)) {
 			$fees_flat[] = array('name' => $cur_tax_fee->name, 'rate' => $cur_tax_fee->rate);
 		}
 	}
-	
+
 	$json_struct = (object) array(
 		'guid' => $product->guid,
 		'name' => $product->name,

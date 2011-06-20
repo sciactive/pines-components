@@ -162,7 +162,7 @@ class com_reports_sales_ranking extends entity {
 
 		// Get all the sales and returns in the given time period.
 		$sales = $pines->entity_manager->get_entities(
-				array('class' => com_sales_sale),
+				array('class' => com_sales_sale, 'skip_ac' => true),
 				array('&',
 					'tag' => array('com_sales', 'sale'),
 					'strict' => array('status', 'paid'),
@@ -171,7 +171,7 @@ class com_reports_sales_ranking extends entity {
 				)
 			);
 		$returns = $pines->entity_manager->get_entities(
-				array('class' => com_sales_return),
+				array('class' => com_sales_return, 'skip_ac' => true),
 				array('&',
 					'tag' => array('com_sales', 'return'),
 					'strict' => array('status', 'processed'),

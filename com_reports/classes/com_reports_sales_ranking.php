@@ -289,6 +289,7 @@ class com_reports_sales_ranking extends entity {
 
 		// Sort and rank by trend percentage.
 		usort($module->new_hires, array($this, 'sort_ranks'));
+		$module->new_hires = array_values($module->new_hires);
 		$rank = 1;
 		foreach ($module->new_hires as &$cur_rank) {
 			if ($cur_rank['goal'] <= 0)
@@ -298,6 +299,7 @@ class com_reports_sales_ranking extends entity {
 		}
 		unset($cur_rank);
 		usort($module->employees, array($this, 'sort_ranks'));
+		$module->employees = array_values($module->employees);
 		$rank = 1;
 		foreach ($module->employees as &$cur_rank) {
 			if ($cur_rank['goal'] <= 0)

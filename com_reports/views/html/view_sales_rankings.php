@@ -96,8 +96,8 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 			<thead>
 				<tr>
 					<th style="width: 5%;">Rank</th>
-					<th style="width: 35%;">Location</th>
-					<th style="width: 35%;">Manager</th>
+					<th style="width: 25%;">Location</th>
+					<th style="width: 25%;">Manager</th>
 					<th style="width: 10%;">Current</th>
 					<th style="width: 10%;">Last</th>
 					<th style="width: 10%;">MTD</th>
@@ -105,11 +105,11 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<th style="width: 10%;">Trend</th>
 					<th style="width: 10%;">Trend %</th>
 					<?php if ($key == count($this->locations)-1) { ?>
-					<th style="width: 35%;">Top Rep</th>
-					<th style="width: 35%;">Mgr Bns</th>
+					<th style="width: 25%;">Leader</th>
+					<th style="width: 25%;">Mgr</th>
 					<?php } else { ?>
-					<th style="width: 35%;">Stores</th>
-					<th style="width: 35%;">Avg</th>
+					<th style="width: 25%;">Stores</th>
+					<th style="width: 25%;">Avg</th>
 					<?php } ?>
 				</tr>
 			</thead>
@@ -194,20 +194,21 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 			<thead>
 				<tr>
 					<th style="width: 5%;">Rank</th>
-					<th style="width: 35%;">Employee</th>
-					<th style="width: 35%;">Location</th>
+					<th style="width: 25%;">Employee</th>
+					<th style="width: 25%;">Location</th>
 					<th style="width: 10%;">Current</th>
 					<th style="width: 10%;">Last</th>
 					<th style="width: 10%;">MTD</th>
 					<th style="width: 10%;">Goal</th>
 					<th style="width: 10%;">Trend</th>
 					<th style="width: 10%;">Trend %</th>
-					<th style="width: 35%;">Prizes</th>
+					<th style="width: 25%;">Lead</th>
+					<th style="width: 25%;">Prize</th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php
-				foreach($this->employees as $cur_rank) {
+				foreach($this->employees as $key => $cur_rank) {
 					// Skip employees with no goal.
 					if ($cur_rank['goal'] <= 0)
 						continue;
@@ -230,28 +231,29 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['goal'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['trend'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo htmlspecialchars(round($cur_rank['pct'], 2)); ?>%</td>
+					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round(($cur_rank['mtd'] - $this->employees[$key+1]['mtd']) * $multiplier, 2)); ?></td>
 					<td class="right_justify">
 						<?php switch ($cur_rank['rank']) {
 							case 1:
-								echo '1st - $550';
+								echo '$550';
 								break;
 							case 2:
-								echo '2nd - $500';
+								echo '$500';
 								break;
 							case 3:
-								echo '3rd - $375';
+								echo '$375';
 								break;
 							case 4:
-								echo '4th - $350';
+								echo '$350';
 								break;
 							case 5:
-								echo '5th - $325';
+								echo '$325';
 								break;
 							case 6:
-								echo '6th - $300';
+								echo '$300';
 								break;
 							case 7:
-								echo '7th - $275';
+								echo '$275';
 								break;
 						} ?>
 					</td>
@@ -265,20 +267,21 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 			<thead>
 				<tr>
 					<th style="width: 5%;">Rank</th>
-					<th style="width: 35%;">Employee</th>
-					<th style="width: 35%;">Location</th>
+					<th style="width: 25%;">Employee</th>
+					<th style="width: 25%;">Location</th>
 					<th style="width: 10%;">Current</th>
 					<th style="width: 10%;">Last</th>
 					<th style="width: 10%;">MTD</th>
 					<th style="width: 10%;">Goal</th>
 					<th style="width: 10%;">Trend</th>
 					<th style="width: 10%;">Trend %</th>
-					<th style="width: 35%;">Prizes</th>
+					<th style="width: 25%;">Lead</th>
+					<th style="width: 25%;">Prize</th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php
-				foreach($this->new_hires as $cur_rank) {
+				foreach($this->new_hires as $key => $cur_rank) {
 					// Skip employees with no goal.
 					if ($cur_rank['goal'] <= 0)
 						continue;
@@ -301,16 +304,17 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['goal'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['trend'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo htmlspecialchars(round($cur_rank['pct'], 2)); ?>%</td>
+					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round(($cur_rank['mtd'] - $this->new_hires[$key+1]['mtd']) * $multiplier, 2)); ?></td>
 					<td class="right_justify">
 						<?php switch ($cur_rank['rank']) {
 							case 1:
-								echo '1st - $200';
+								echo '$200';
 								break;
 							case 2:
-								echo '2nd - $150';
+								echo '$150';
 								break;
 							case 3:
-								echo '3rd - $100';
+								echo '$100';
 								break;
 						} ?>
 					</td>

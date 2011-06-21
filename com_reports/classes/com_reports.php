@@ -456,6 +456,9 @@ class com_reports extends component {
 					'tag' => array('com_mifi', 'contract'),
 					'isset' => array('faxsheet_request'),
 					'strict' => array('status', 'tendered')
+				),
+				array('!&',
+					'strict' => array('archived', true)
 				)
 			);
 

@@ -77,6 +77,7 @@ $errors = array();
 			<th>Shipper</th>
 			<th>ETA</th>
 			<th>Status</th>
+			<th>Products</th>
 			<th>Comments</th>
 		</tr>
 	</thead>
@@ -90,6 +91,13 @@ $errors = array();
 			<td><?php echo htmlspecialchars($po->shipper->name); ?></td>
 			<td><?php echo ($po->eta ? format_date($po->eta, 'date_sort') : ''); ?></td>
 			<td><?php echo $po->final ? ($po->finished ? 'Received' : (empty($po->received) ? 'Not Received' : 'Partially Received')) : 'Not Committed'; ?></td>
+			<td><?php
+			$names = array();
+			foreach ((array) $po->products as $cur_product) {
+				$names[] = htmlspecialchars("{$cur_product['entity']->name} [{$cur_product['entity']->sku}]");
+			}
+			echo implode(', ', $names);
+			?></td>
 			<td><?php echo htmlspecialchars($po->comments); ?></td>
 		</tr>
 	<?php } ?>

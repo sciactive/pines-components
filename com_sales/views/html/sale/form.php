@@ -354,7 +354,7 @@ if ($pines->config->com_sales->com_esp) {
 								if (insured_item.pgrid_get_value(10) != '') {
 									alert('There is already an ESP for this item');
 									return;
-								} else if (insured_guid == <?php echo $esp_product->guid; ?>) {
+								} else if (insured_guid == <?php echo (int) $esp_product->guid; ?>) {
 									alert('This item is an ESP, it does not need to be insured');
 									return;
 								}

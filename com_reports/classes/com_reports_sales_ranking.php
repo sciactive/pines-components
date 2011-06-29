@@ -317,7 +317,7 @@ class com_reports_sales_ranking extends entity {
 		ksort($module->locations);
 
 		// Sort and rank by trend percentage.
-		usort($module->new_hires, array($this, 'sort_ranks'));
+		usort($module->new_hires, array($this, 'sort_mtd'));
 		$module->new_hires = array_values($module->new_hires);
 		$rank = 1;
 		foreach ($module->new_hires as &$cur_rank) {
@@ -364,6 +364,22 @@ class com_reports_sales_ranking extends entity {
 		if ($a['pct'] > $b['pct'])
 			return -1;
 		if ($a['pct'] < $b['pct'])
+			return 1;
+		return 0;
+	}
+
+	/**
+	 * Sort by the MTD value.
+	 *
+	 * @param array $a The first entry.
+	 * @param array $b The second entry.
+	 * @return int The sort order.
+	 * @access private
+	 */
+	private function sort_mtd($a, $b) {
+		if ($a['mtd'] > $b['mtd'])
+			return -1;
+		if ($a['mtd'] < $b['mtd'])
 			return 1;
 		return 0;
 	}

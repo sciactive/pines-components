@@ -204,6 +204,10 @@ $pines->com_pgrid->load();
 			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="end" value="<?php echo ($this->entity->end_date) ? format_date($this->entity->end_date - 1, 'date_sort') : format_date(time(), 'date_sort'); ?>" style="text-align: center;" /></label>
 	</div>
 	<div class="pf-element">
+		<span class="pf-label">New Hire Goals</span>
+		<label><input type="checkbox" class="pf-field" name="calc_nh_goals" value="ON"<?php echo $this->entity->calc_nh_goals ? ' checked="checked"' : ''; ?> /> Calculate new hire goals using training completion date.</label>
+	</div>
+	<div class="pf-element">
 		<span class="pf-label">Division</span>
 		<div class="pf-group">
 			<div class="pf-field">

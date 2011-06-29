@@ -29,6 +29,7 @@ class com_reports_sales_ranking extends entity {
 		$this->start_date = strtotime(date('m/01/Y 00:00:00'));
 		$this->end_date = strtotime('+1 month 00:00:00', $this->start_date);
 		$this->top_location = $_SESSION['user']->group;
+		$this->calc_nh_goals = true;
 		$this->only_below = true;
 		$this->sales_goals = array();
 		if ($id > 0) {
@@ -158,6 +159,34 @@ class com_reports_sales_ranking extends entity {
 				'child_count' => 0,
 				'child_total' => 0.00
 			);
+		}
+		
+		// Recalculate new hire goals.
+		if ($this->calc_nh_goals) {
+			$nh_time = time();
+			if ($current_end < $nh_time)
+				$nh_time = $current_end;
+			foreach ($ranking_employee as &$cur_rank) {
+				if (!$cur_rank['entity']->new_hire)
+					continue;
+				if (!isset($cur_rank['entity']->training_completion_date)) {
+					$cur_rank['goal'] = 0;
+					continue;
+				}
+				$weeks_worked = ceil(($nh_time - $cur_rank['entity']->training_completion_date) / (60*60*24*7));
+				if ($weeks_worked > 5) {
+					$cur_rank['goal'] = 20000;
+				} else {
+					$goal_array = array(
+						1 => 3000,
+						2 => 7000,
+						3 => 12000,
+						4 => 17000
+					);
+					$cur_rank['goal'] = $goal_array[$weeks_worked];
+				}
+			}
+			unset($cur_rank);
 		}
 
 		// Get all the sales and returns in the given time period.

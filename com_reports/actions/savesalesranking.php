@@ -28,6 +28,7 @@ if ( isset($_REQUEST['id']) ) {
 $ranking->name = $_REQUEST['ranking_name'];
 $ranking->start_date = strtotime('00:00:00', strtotime($_REQUEST['start']));
 $ranking->end_date = strtotime('23:59:59', strtotime($_REQUEST['end'])) + 1;
+$ranking->calc_nh_goals = ($_REQUEST['calc_nh_goals'] == 'ON');
 $ranking->only_below = ($_REQUEST['only_below'] == 'ON');
 $ranking->top_location = group::factory((int) $_REQUEST['top_location']);
 if (!isset($ranking->top_location->guid))

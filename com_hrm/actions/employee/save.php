@@ -23,8 +23,9 @@ if (!isset($employee->guid)) {
 if ($pines->config->com_hrm->ssn_field && gatekeeper('com_hrm/showssn'))
 	$employee->ssn = preg_replace('/\D/', '', $_REQUEST['ssn']);
 $employee->new_hire = ($_REQUEST['new_hire'] == 'ON');
-$employee->hire_date = strtotime($_REQUEST['hire_date']);
+$employee->hire_date = empty($_REQUEST['hire_date']) ? null : strtotime($_REQUEST['hire_date']);
 $employee->job_title = $_REQUEST['job_title'];
+$employee->training_completion_date = empty($_REQUEST['training_completion_date']) ? null : strtotime($_REQUEST['training_completion_date']);
 $employee->description = $_REQUEST['description'];
 if ($pines->config->com_hrm->com_calendar)
 	$employee->color = $_REQUEST['color'];

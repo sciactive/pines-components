@@ -28,7 +28,7 @@ $pines->com_pgrid->load();
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-		$("#p_muid_form [name=hire_date]").datepicker({
+		$("#p_muid_form [name=hire_date], #p_muid_form [name=training_completion_date]").datepicker({
 			dateFormat: "yy-mm-dd",
 			changeMonth: true,
 			changeYear: true,
@@ -168,6 +168,10 @@ $pines->com_pgrid->load();
 						<option value="<?php echo htmlspecialchars($cur_dept[0]); ?>" <?php echo ($this->entity->job_title == $cur_dept[0]) ? 'selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_dept[0]); ?></option>
 						<?php } ?>
 					</select></label>
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Training Completion Date</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="training_completion_date" value="<?php echo empty($this->entity->training_completion_date) ? '' : format_date($this->entity->training_completion_date, 'date_sort'); ?>" /></label>
 			</div>
 			<?php if ($pines->config->com_hrm->com_calendar) { ?>
 			<div class="pf-element">

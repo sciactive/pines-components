@@ -174,7 +174,7 @@ class com_reports_sales_ranking extends entity {
 					continue;
 				}
 				$weeks_worked = ceil(($nh_time - $cur_rank['entity']->training_completion_date) / (60*60*24*7));
-				if ($weeks_worked > 5) {
+				if ($weeks_worked >= 5) {
 					$cur_rank['goal'] = 20000;
 				} else {
 					$goal_array = array(

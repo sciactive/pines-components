@@ -166,6 +166,24 @@
 				}
 			},
 			{
+				"path": "main_menu/reports/mifi/employeeapptotals",
+				"text": "Employee App Totals",
+				"href": ["com_reports","reportmifiemployeeapptotals"],
+				"depend": {
+					"component": "com_mifi",
+					"ability": "com_reports/reportmifiemployeeapptotals"
+				}
+			},
+			{
+				"path": "main_menu/reports/mifi/locationapptotals",
+				"text": "Location App Totals",
+				"href": ["com_reports","reportmifilocationapptotals"],
+				"depend": {
+					"component": "com_mifi",
+					"ability": "com_reports/reportmifilocationapptotals"
+				}
+			},
+			{
 				"path": "main_menu/reports/mifi/contracts",
 				"text": "Contracts",
 				"href": ["com_reports","reportmificontracts"],

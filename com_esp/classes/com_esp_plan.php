@@ -84,18 +84,6 @@ class com_esp_plan extends entity {
 		return $module;
 	}
 
-	private function print_pdf_tools() {
-		$pdf = com_pdf_displays::factory();
-		$pdf->pdf_file = 'ESP.pdf';
-		$pdf->load_editors();
-		$pdf->displays = json_decode('{"customer":[{"page":1,"left":0.267973856209,"top":0.376543209877,"width":0.607843137255,"height":0.0271604938272,"overflow":true,"bold":false,"italic":false,"fontfamily":"Times","fontsize":12,"fontcolor":"black","addspacing":false,"border":false,"letterspacing":"normal","wordspacing":"normal","textalign":"left","textdecoration":"none","texttransform":"none","direction":"ltr"},{"page":2,"left":0.254901960784,"top":0.773382716049,"width":0.330065359477,"height":0.0259259259259,"overflow":true,"bold":false,"italic":false,"fontfamily":"Times","fontsize":12,"fontcolor":"black","addspacing":false,"border":false,"letterspacing":"normal","wordspacing":"normal","textalign":"left","textdecoration":"none","texttransform":"none","direction":"ltr"}],"date":[{"page":2,"left":0.699346405229,"top":0.71412345679,"width":0.173202614379,"height":0.0259259259259,"overflow":true,"bold":false,"italic":false,"fontfamily":"Times","fontsize":12,"fontcolor":"black","addspacing":false,"border":false,"letterspacing":"normal","wordspacing":"normal","textalign":"left","textdecoration":"none","texttransform":"none","direction":"ltr"}],"ssn":[{"page":1,"left":0.179738562092,"top":0.412049379356,"width":0.700980392157,"height":0.0259259259259,"overflow":true,"bold":false,"italic":false,"fontfamily":"Times","fontsize":15,"fontcolor":"black","addspacing":true,"border":false,"letterspacing":"normal","wordspacing":"normal","textalign":"left","textdecoration":"none","texttransform":"none","direction":"ltr"}],"phone_day":[{"page":1,"left":0.423202614379,"top":0.455555555556,"width":0.459150326797,"height":0.0271604938272,"overflow":true,"bold":false,"italic":false,"fontfamily":"Times","fontsize":12,"fontcolor":"black","addspacing":false,"border":false,"letterspacing":"normal","wordspacing":"normal","textalign":"left","textdecoration":"none","texttransform":"none","direction":"ltr"}],"service_branch":[{"page":2,"left":0.55,"top":0.375555555556,"width":0.330065359477,"height":0.0296296296296,"overflow":true,"bold":false,"italic":false,"fontfamily":"Times","fontsize":12,"fontcolor":"black","addspacing":false,"border":false,"letterspacing":"normal","wordspacing":"normal","textalign":"left","textdecoration":"none","texttransform":"none","direction":"ltr"}],"service_rank":[{"page":2,"left":0.55,"top":0.403185185185,"width":0.330065359477,"height":0.0296296296296,"overflow":true,"bold":false,"italic":false,"fontfamily":"Times","fontsize":12,"fontcolor":"black","addspacing":false,"border":false,"letterspacing":"normal","wordspacing":"normal","textalign":"left","textdecoration":"none","texttransform":"none","direction":"ltr"}],"service_end_date":[{"page":2,"left":0.55,"top":0.432345679012,"width":0.330065359477,"height":0.0296296296296,"overflow":true,"bold":false,"italic":false,"fontfamily":"Times","fontsize":12,"fontcolor":"black","addspacing":false,"border":false,"letterspacing":"normal","wordspacing":"normal","textalign":"left","textdecoration":"none","texttransform":"none","direction":"ltr"}],"new_payment":[{"page":2,"left":0.171568627451,"top":0.227160493827,"width":0.12091503268,"height":0.0320987654321,"overflow":true,"bold":false,"italic":false,"fontfamily":"Times","fontsize":12,"fontcolor":"black","addspacing":false,"border":false,"letterspacing":"normal","wordspacing":"normal","textalign":"left","textdecoration":"none","texttransform":"none","direction":"ltr"}]}');
-		foreach ($pdf->displays as $key => $val) {
-			$name = "com_esp_$key";
-			$displays->$name = $val;
-		}
-		$pdf->displays = $displays;
-	}
-
 	/**
 	 * Save the esp.
 	 * @return bool True on success, false on failure.
@@ -104,8 +92,8 @@ class com_esp_plan extends entity {
 		if (!isset($this->customer->guid))
 			return false;
 		global $pines;
-		if (!isset($this->plan_id))
-			$this->plan_id = $pines->entity_manager->new_uid('com_esp_plan_id');
+		if (!isset($this->id))
+			$this->id = $pines->entity_manager->new_uid('com_esp_plan_id');
 		return parent::save();
 	}
 

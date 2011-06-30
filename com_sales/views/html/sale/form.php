@@ -346,6 +346,7 @@ if ($pines->config->com_sales->com_esp) {
 						extra_class: 'picon picon-security-high',
 						multi_select: false,
 						click: function(e, rows){
+							<?php if (isset($esp_product->guid)) { ?>
 							// Add an ESP item to the product table.
 							$.each(rows, function(){
 								var esp_id = '<?php echo uniqid(); ?>';
@@ -359,33 +360,61 @@ if ($pines->config->com_sales->com_esp) {
 									return;
 								}
 								var esp_price = (insured_item.pgrid_get_value(6) * esp_rate).toFixed(2).replace(/\d\.\d{2}/, '9.99');
-								var product_data = {
-									"guid": "<?php echo $esp_product->guid; ?>",
-									"name": "<?php echo $esp_product->name; ?>",
-									"sku": "<?php echo $esp_product->sku; ?>",
-									"stock_type": "<?php echo $esp_product->stock_type; ?>",
-									"pricing_method": "<?php echo $esp_product->pricing_method; ?>",
-									"unit_price": esp_price,
-									"margin": "<?php echo $esp_product->margin; ?>",
-									"floor": "<?php echo $esp_product->floor; ?>",
-									"ceiling": "<?php echo $esp_product->ceiling; ?>",
-									"tax_exempt": "<?php echo $esp_product->tax_exempt; ?>",
-									"return_checklists": "<?php echo array(); ?>",
-									"serialized": "<?php echo $esp_product->serialized; ?>",
-									"discountable": "<?php echo $esp_product->discountable; ?>",
-									"require_customer": "<?php echo $esp_product->require_customer; ?>",
-									"one_per_ticket": "<?php echo $esp_product->one_per_ticket; ?>",
-									"non_refundable": "<?php echo $esp_product->non_refundable; ?>",
-									"fees_percent": 0,
-									"fees_flat": 0,
-									"esp": esp_id
+								<?php
+								$fees_percent = array();
+								$fees_flat = array();
+								foreach ((array) $esp_product->additional_tax_fees as $cur_tax_fee) {
+									if (!$cur_tax_fee->enabled)
+										continue;
+									if ($cur_tax_fee->type == 'percentage') {
+										$fees_percent[] = array('name' => $cur_tax_fee->name, 'rate' => $cur_tax_fee->rate);
+									} elseif ($cur_tax_fee->type == 'flat_rate') {
+										$fees_flat[] = array('name' => $cur_tax_fee->name, 'rate' => $cur_tax_fee->rate);
+									}
 								}
-								add_product(product_data);
-								insured_item.pgrid_set_value(10, esp_id);
+
+								$json_struct = (object) array(
+									'guid' => $esp_product->guid,
+									'name' => $esp_product->name,
+									'sku' => $esp_product->sku,
+									'stock_type' => $esp_product->stock_type,
+									'pricing_method' => $esp_product->pricing_method,
+									'unit_price' => $esp_product->unit_price,
+									'margin' => $esp_product->margin,
+									'floor' => $esp_product->floor,
+									'ceiling' => $esp_product->ceiling,
+									'tax_exempt' => $esp_product->tax_exempt,
+									'return_checklists' => array(),
+									'serialized' => $esp_product->serialized,
+									'discountable' => $esp_product->discountable,
+									'require_customer' => $esp_product->require_customer,
+									'one_per_ticket' => $esp_product->one_per_ticket,
+									'non_refundable' => $esp_product->non_refundable,
+									'fees_percent' => $fees_percent,
+									'fees_flat' => $fees_flat
+								);
+
+								foreach ((array) $esp_product->return_checklists as $cur_return_checklist) {
+									if (!$cur_return_checklist->enabled)
+										continue;
+									$json_struct->return_checklists[] = array('guid' => $cur_return_checklist->guid, 'label' => $cur_return_checklist->label, 'conditions' => (array) $cur_return_checklist->conditions);
+								}
+								?>
+								var product_data = <?php echo json_encode($json_struct); ?>;
+								product_data.unit_price = esp_price;
+								product_data.esp = esp_id;
+								add_product(product_data, function(){
+									insured_item.pgrid_set_value(10, esp_id);
+									update_products();
+								});
 							});
 							update_products();
+							<?php } else { ?>
+							alert("No ESP product was found.");
+							<?php } ?>
 						}
 					},
+					{type: 'separator'},
 					<?php } ?>
 					{
 						type: 'button',
@@ -426,7 +455,7 @@ if ($pines->config->com_sales->com_esp) {
 					}
 				]
 			});
-			var add_product = function(data){
+			var add_product = function(data, success){
 				if (data.one_per_ticket) {
 					var cur_products = products_table.pgrid_get_all_rows().pgrid_export_rows();
 					var pass = true;
@@ -455,6 +484,8 @@ if ($pines->config->com_sales->com_esp) {
 							});
 							update_products();
 							serial_dialog.dialog("close");
+							if (success)
+								success();
 						},
 						"Warehouse Item": function(){
 							products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'warehouse', 1, data.unit_price, "", "", "", data.esp, data.salesperson]}], function(){
@@ -463,6 +494,8 @@ if ($pines->config->com_sales->com_esp) {
 							});
 							update_products();
 							serial_dialog.dialog("close");
+							if (success)
+								success();
 						}
 					};
 					if (data.stock_type == "stock_optional") {
@@ -482,6 +515,8 @@ if ($pines->config->com_sales->com_esp) {
 					cur_row.data("product", data);
 				});
 				update_products();
+				if (success)
+					success();
 			};
 			// Delivery Dialog
 			var delivery_select = $("#p_muid_delivery_select").children("div").buttonset().end()

@@ -326,7 +326,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					{}
 				]
 			});
-			var add_product = function(data){
+			var add_product = function(data, success){
 				var serial = "";
 				data.salesperson = "<?php echo addslashes($_SESSION['user']->guid.': '.$_SESSION['user']->name);?>";
 				if (data.serialized) {
@@ -343,6 +343,8 @@ if ($pines->config->com_sales->autocomplete_product)
 							});
 							update_products();
 							serial_dialog.dialog("close");
+							if (success)
+								success();
 						}
 					};
 					serial_dialog.dialog("option", "title", "Provide Serial for "+data.name)
@@ -356,6 +358,8 @@ if ($pines->config->com_sales->autocomplete_product)
 					cur_row.data("product", data);
 				});
 				update_products();
+				if (success)
+					success();
 			};
 			var serial_dialog = $("#p_muid_serial_dialog").dialog({
 				bgiframe: true,

@@ -23,7 +23,7 @@ return array(
 		'name' => 'esp_product',
 		'cname' => 'ESP Product',
 		'description' => 'The guid of the Extended Service Plan product entity',
-		'value' => 6139,
+		'value' => 0,
 		'peruser' => true,
 	),
 	array(
@@ -36,7 +36,7 @@ return array(
 	array(
 		'name' => 'esp_term',
 		'cname' => 'ESP Coverage Term',
-		'description' => 'The length of time that Extended Service Plans provide coverage for.',
+		'description' => 'The length of time, in years, that Extended Service Plans provide coverage for.',
 		'value' => 2,
 		'peruser' => true,
 	),

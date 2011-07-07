@@ -29,7 +29,7 @@ if (!isset($entity->guid) || !$entity->ready())
 // Page title.
 $pines->page->title_pre("$entity->name - ");
 
-if ($entity->show_breadcrumbs) {
+if ($entity->get_option('show_breadcrumbs')) {
 	$module = new module('com_content', 'breadcrumb', 'breadcrumbs');
 	$module->entity = $entity;
 }

@@ -189,7 +189,11 @@ $pines->com_ptags->load();
 			<div class="pf-element">
 				<label><span class="pf-label">Show on Front Page</span>
 					<span class="pf-note">Use this to show the full content.</span>
-					<input class="pf-field" type="checkbox" name="show_front_page" value="ON"<?php echo $this->entity->show_front_page ? ' checked="checked"' : ''; ?> /></label>
+					<select class="pf-field ui-widget-content ui-corner-all" name="show_front_page">
+						<option value="null">Use Default</option>
+						<option value="true"<?php echo $this->entity->show_front_page === true ? ' selected="selected"' : ''; ?>>Yes</option>
+						<option value="false"<?php echo $this->entity->show_front_page === false ? ' selected="selected"' : ''; ?>>No</option>
+					</select></label>
 			</div>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Tags</span>
@@ -348,15 +352,38 @@ $pines->com_ptags->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Show Title</span>
-					<input class="pf-field" type="checkbox" name="show_title" value="ON"<?php echo $this->entity->show_title ? ' checked="checked"' : ''; ?> /></label>
+					<select class="pf-field ui-widget-content ui-corner-all" name="show_title">
+						<option value="null">Use Default</option>
+						<option value="true"<?php echo $this->entity->show_title === true ? ' selected="selected"' : ''; ?>>Yes</option>
+						<option value="false"<?php echo $this->entity->show_title === false ? ' selected="selected"' : ''; ?>>No</option>
+					</select></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Show Author Info</span>
-					<input class="pf-field" type="checkbox" name="show_author_info" value="ON"<?php echo $this->entity->show_author_info ? ' checked="checked"' : ''; ?> /></label>
+					<select class="pf-field ui-widget-content ui-corner-all" name="show_author_info">
+						<option value="null">Use Default</option>
+						<option value="true"<?php echo $this->entity->show_author_info === true ? ' selected="selected"' : ''; ?>>Yes</option>
+						<option value="false"<?php echo $this->entity->show_author_info === false ? ' selected="selected"' : ''; ?>>No</option>
+					</select></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Show Intro on Page</span>
-					<input class="pf-field" type="checkbox" name="show_intro" value="ON"<?php echo $this->entity->show_intro ? ' checked="checked"' : ''; ?> /></label>
+					<select class="pf-field ui-widget-content ui-corner-all" name="show_intro">
+						<option value="null">Use Default</option>
+						<option value="true"<?php echo $this->entity->show_intro === true ? ' selected="selected"' : ''; ?>>Yes</option>
+						<option value="false"<?php echo $this->entity->show_intro === false ? ' selected="selected"' : ''; ?>>No</option>
+					</select></label>
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Show Breadcrumbs</span>
+					<select class="pf-field ui-widget-content ui-corner-all" name="show_breadcrumbs">
+						<option value="null">Use Default</option>
+						<option value="true"<?php echo $this->entity->show_breadcrumbs === true ? ' selected="selected"' : ''; ?>>Yes</option>
+						<option value="false"<?php echo $this->entity->show_breadcrumbs === false ? ' selected="selected"' : ''; ?>>No</option>
+					</select></label>
+			</div>
+			<div class="pf-element pf-heading">
+				<h1>Menu</h1>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Show Menu</span>
@@ -365,10 +392,6 @@ $pines->com_ptags->load();
 			<div class="pf-element">
 				<label><span class="pf-label">Menu Position</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_menu_position" name="menu_position" size="24" value="<?php echo htmlspecialchars($this->entity->menu_position); ?>" /></label>
-			</div>
-			<div class="pf-element">
-				<label><span class="pf-label">Show Breadcrumbs</span>
-					<input class="pf-field" type="checkbox" name="show_breadcrumbs" value="ON"<?php echo $this->entity->show_breadcrumbs ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<br class="pf-clearing" />
 		</div>

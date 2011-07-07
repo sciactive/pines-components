@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * An page category.
+ * A category.
  *
  * @package Pines
  * @subpackage com_content
@@ -31,7 +31,6 @@ class com_content_category extends entity {
 		$this->children = array();
 		$this->pages = array();
 		$this->menu_position = 'left';
-		$this->show_breadcrumbs = true;
 		$this->conditions = array();
 		if ($id > 0) {
 			global $pines;
@@ -81,6 +80,19 @@ class com_content_category extends entity {
 			return false;
 		pines_log("Deleted category {$this->name} [{$this->alias}].", 'notice');
 		return true;
+	}
+
+	/**
+	 * Get an option if it's set, the default otherwise.
+	 * @param string $name The name of the option.
+	 * @return mixed The value.
+	 */
+	public function get_option($name) {
+		if (isset($this->$name))
+			return $this->$name;
+		global $pines;
+		$config_name = "def_cat_$name";
+		return $pines->config->com_content->$config_name;
 	}
 
 	/**

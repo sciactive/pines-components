@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * An page.
+ * A page.
  *
  * @package Pines
  * @subpackage com_content
@@ -29,8 +29,6 @@ class com_content_page extends entity {
 		$this->enabled = true;
 		$this->content_tags = array();
 		$this->conditions = array();
-		$this->show_title = true;
-		$this->show_breadcrumbs = true;
 		$this->publish_end = null;
 		if ($id > 0) {
 			global $pines;
@@ -88,6 +86,19 @@ class com_content_page extends entity {
 		global $pines;
 		$categories = (array) $pines->entity_manager->get_entities(array('class' => com_content_category), array('&', 'tag' => array('com_content', 'category'), 'ref' => array('pages', $this)));
 		return $categories;
+	}
+
+	/**
+	 * Get an option if it's set, the default otherwise.
+	 * @param string $name The name of the option.
+	 * @return mixed The value.
+	 */
+	public function get_option($name) {
+		if (isset($this->$name))
+			return $this->$name;
+		global $pines;
+		$config_name = "def_page_$name";
+		return $pines->config->com_content->$config_name;
 	}
 
 	/**

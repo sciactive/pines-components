@@ -29,11 +29,10 @@ if ( isset($_REQUEST['id']) ) {
 $category->name = $_REQUEST['name'];
 $category->alias = preg_replace('/[^\w\d-.]/', '', $_REQUEST['alias']);
 $category->enabled = ($_REQUEST['enabled'] == 'ON');
-$category->show_title = ($_REQUEST['show_title'] == 'ON');
 $category->show_menu = ($_REQUEST['show_menu'] == 'ON');
 $category->menu_position = $_REQUEST['menu_position'];
-$category->show_pages_in_menu = ($_REQUEST['show_pages_in_menu'] == 'ON');
-$category->show_breadcrumbs = ($_REQUEST['show_breadcrumbs'] == 'ON');
+$category->show_pages_in_menu = ($_REQUEST['show_pages_in_menu'] == 'null' ? null : ($_REQUEST['show_pages_in_menu'] == 'true'));
+$category->link_menu = ($_REQUEST['link_menu'] == 'null' ? null : ($_REQUEST['link_menu'] == 'true'));
 $category->pages = array();
 $pages = (array) json_decode($_REQUEST['pages']);
 foreach ($pages as $cur_page_guid) {
@@ -44,6 +43,11 @@ foreach ($pages as $cur_page_guid) {
 	}
 	$category->pages[] = $cur_page;
 }
+
+// Page
+$category->show_title = ($_REQUEST['show_title'] == 'null' ? null : ($_REQUEST['show_title'] == 'true'));
+$category->show_breadcrumbs = ($_REQUEST['show_breadcrumbs'] == 'null' ? null : ($_REQUEST['show_breadcrumbs'] == 'true'));
+$category->intro = $_REQUEST['intro'];
 
 // Conditions
 $conditions = (array) json_decode($_REQUEST['conditions']);

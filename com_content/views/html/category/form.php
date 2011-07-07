@@ -12,6 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Category' : 'Editing ['.htmlspecialchars($this->entity->name).']';
 $this->note = 'Provide category details in this form.';
+$pines->editor->load();
 $pines->com_pgrid->load();
 ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_content', 'category/save')); ?>">
@@ -163,6 +164,7 @@ $pines->com_pgrid->load();
 	<div id="p_muid_category_tabs" style="clear: both;">
 		<ul>
 			<li><a href="#p_muid_tab_general">General</a></li>
+			<li><a href="#p_muid_tab_page">Page</a></li>
 			<li><a href="#p_muid_tab_conditions">Conditions</a></li>
 		</ul>
 		<div id="p_muid_tab_general">
@@ -213,11 +215,8 @@ $pines->com_pgrid->load();
 					<input class="pf-field" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
-				<label><span class="pf-label">Show Title</span>
-					<input class="pf-field" type="checkbox" name="show_title" value="ON"<?php echo $this->entity->show_title ? ' checked="checked"' : ''; ?> /></label>
-			</div>
-			<div class="pf-element">
 				<label><span class="pf-label">Show Menu</span>
+					<span class="pf-note">Show this category as a menu.</span>
 					<input class="pf-field" type="checkbox" name="show_menu" value="ON"<?php echo $this->entity->show_menu ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
@@ -226,11 +225,21 @@ $pines->com_pgrid->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Show Pages in Menu</span>
-					<input class="pf-field" type="checkbox" name="show_pages_in_menu" value="ON"<?php echo $this->entity->show_pages_in_menu ? ' checked="checked"' : ''; ?> /></label>
+					<span class="pf-note">Show the pages in this category in the menu.</span>
+					<select class="pf-field ui-widget-content ui-corner-all" name="show_pages_in_menu">
+						<option value="null">Use Default</option>
+						<option value="true"<?php echo $this->entity->show_pages_in_menu === true ? ' selected="selected"' : ''; ?>>Yes</option>
+						<option value="false"<?php echo $this->entity->show_pages_in_menu === false ? ' selected="selected"' : ''; ?>>No</option>
+					</select></label>
 			</div>
 			<div class="pf-element">
-				<label><span class="pf-label">Show Breadcrumbs</span>
-					<input class="pf-field" type="checkbox" name="show_breadcrumbs" value="ON"<?php echo $this->entity->show_breadcrumbs ? ' checked="checked"' : ''; ?> /></label>
+				<label><span class="pf-label">Link Menu</span>
+					<span class="pf-note">Link the menu item and breadcrumbs to the category's page.</span>
+					<select class="pf-field ui-widget-content ui-corner-all" name="link_menu">
+						<option value="null">Use Default</option>
+						<option value="true"<?php echo $this->entity->link_menu === true ? ' selected="selected"' : ''; ?>>Yes</option>
+						<option value="false"<?php echo $this->entity->link_menu === false ? ' selected="selected"' : ''; ?>>No</option>
+					</select></label>
 			</div>
 			<div class="pf-element">
 				<label>
@@ -282,6 +291,32 @@ $pines->com_pgrid->load();
 					<?php } ?>
 				</div>
 				<input type="hidden" name="pages" id="p_muid_pages_input" value="" />
+			</div>
+			<br class="pf-clearing" />
+		</div>
+		<div id="p_muid_tab_page">
+			<div class="pf-element">
+				<label><span class="pf-label">Show Title</span>
+					<select class="pf-field ui-widget-content ui-corner-all" name="show_title">
+						<option value="null">Use Default</option>
+						<option value="true"<?php echo $this->entity->show_title === true ? ' selected="selected"' : ''; ?>>Yes</option>
+						<option value="false"<?php echo $this->entity->show_title === false ? ' selected="selected"' : ''; ?>>No</option>
+					</select></label>
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Show Breadcrumbs</span>
+					<span class="pf-note">Show breadcrumb links on the category's page.</span>
+					<select class="pf-field ui-widget-content ui-corner-all" name="show_breadcrumbs">
+						<option value="null">Use Default</option>
+						<option value="true"<?php echo $this->entity->show_breadcrumbs === true ? ' selected="selected"' : ''; ?>>Yes</option>
+						<option value="false"<?php echo $this->entity->show_breadcrumbs === false ? ' selected="selected"' : ''; ?>>No</option>
+					</select></label>
+			</div>
+			<div class="pf-element pf-heading">
+				<h1>Intro</h1>
+			</div>
+			<div class="pf-element pf-full-width">
+				<textarea rows="8" cols="35" class="peditor" style="width: 100%;" name="intro"><?php echo $this->entity->intro; ?></textarea>
 			</div>
 			<br class="pf-clearing" />
 		</div>

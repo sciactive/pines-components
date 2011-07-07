@@ -29,7 +29,7 @@ if ( isset($_REQUEST['id']) ) {
 $page->name = $_REQUEST['name'];
 $page->alias = preg_replace('/[^\w\d-.]/', '', $_REQUEST['alias']);
 $page->enabled = ($_REQUEST['enabled'] == 'ON');
-$page->show_front_page = ($_REQUEST['show_front_page'] == 'ON');
+$page->show_front_page = ($_REQUEST['show_front_page'] == 'null' ? null : ($_REQUEST['show_front_page'] == 'true'));
 $page->content_tags = explode(',', $_REQUEST['content_tags']);
 // TODO: Use an HTML filter here.
 $page->intro = $_REQUEST['intro'];
@@ -54,12 +54,12 @@ if (!empty($_REQUEST['publish_end']))
 	$page->publish_end = strtotime($_REQUEST['publish_end']);
 else
 	$page->publish_end = null;
-$page->show_author_info = ($_REQUEST['show_author_info'] == 'ON');
-$page->show_intro = ($_REQUEST['show_intro'] == 'ON');
-$page->show_title = ($_REQUEST['show_title'] == 'ON');
+$page->show_title = ($_REQUEST['show_title'] == 'null' ? null : ($_REQUEST['show_title'] == 'true'));
+$page->show_author_info = ($_REQUEST['show_author_info'] == 'null' ? null : ($_REQUEST['show_author_info'] == 'true'));
+$page->show_intro = ($_REQUEST['show_intro'] == 'null' ? null : ($_REQUEST['show_intro'] == 'true'));
+$page->show_breadcrumbs = ($_REQUEST['show_breadcrumbs'] == 'null' ? null : ($_REQUEST['show_breadcrumbs'] == 'true'));
 $page->show_menu = ($_REQUEST['show_menu'] == 'ON');
 $page->menu_position = $_REQUEST['menu_position'];
-$page->show_breadcrumbs = ($_REQUEST['show_breadcrumbs'] == 'ON');
 
 if (empty($page->name)) {
 	$page->print_form();

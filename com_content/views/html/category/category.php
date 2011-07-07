@@ -14,8 +14,18 @@ defined('P_RUN') or die('Direct access prohibited');
 if (!isset($this->entity))
 	$this->entity = com_content_category::factory((int) $this->id);
 
-if ($this->entity->show_title)
+if ($this->entity->get_option('show_title'))
 	$this->title = htmlspecialchars($this->entity->name);
+
+$this->show_title = $this->entity->get_option('show_title');
+
+if (!empty($this->entity->intro)) {
+	if ($pines->config->com_content->wrap_pages)
+		echo '<div style="position: relative;">';
+	echo format_content($this->entity->intro);
+	if ($pines->config->com_content->wrap_pages)
+		echo '</div>';
+}
 
 $page_total = 0;
 foreach ($this->entity->pages as $cur_page) {
@@ -31,7 +41,7 @@ foreach ($this->entity->pages as $cur_page) {
 		break;
 }
 
-if (!$this->entity->show_title || !$this->show_title || (empty($this->title) && empty($this->note)))
+if (empty($this->title) && empty($this->note) && empty($this->entity->intro))
 	$this->detach();
 
 ?>

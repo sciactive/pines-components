@@ -14,10 +14,10 @@ defined('P_RUN') or die('Direct access prohibited');
 if (!isset($this->entity))
 	$this->entity = com_content_page::factory((int) $this->id);
 
-if ($this->entity->show_title)
+if ($this->entity->get_option('show_title'))
 	$this->title = '<a href="'.htmlspecialchars(pines_url('com_content', 'page', array('a' => $this->entity->alias))).'">'.htmlspecialchars($this->entity->name).'</a>';
 
-if ($this->entity->show_author_info)
+if ($this->entity->get_option('show_author_info'))
 	$this->note = htmlspecialchars('Posted by '.$this->entity->user->name.' on '.format_date($this->entity->p_cdate, 'date_short'));
 
 if ($pines->config->com_content->wrap_pages)

@@ -12,16 +12,24 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 $time = time();
+if ($pines->config->com_content->def_page_show_front_page) {
+	$selector = array('!|',
+			'strict' => array('show_front_page', false),
+			'isset' => 'show_front_page'
+		);
+} else {
+	$selector = array('&',
+			'strict' => array('show_front_page', true)
+		);
+}
 $pages = $pines->entity_manager->get_entities(
 		array('class' => com_content_page),
 		array('&',
 			'tag' => array('com_content', 'page'),
-			'data' => array(
-				array('enabled', true),
-				array('show_front_page', true)
-			),
+			'data' => array('enabled', true),
 			'lte' => array('publish_begin', $time)
 		),
+		$selector,
 		array('|',
 			'data' => array('publish_end', null),
 			'gt' => array('publish_end', $time)

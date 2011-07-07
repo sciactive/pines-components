@@ -19,9 +19,10 @@ $pines->com_pgrid->load();
 		// <![CDATA[
 		pines(function(){
 			// Strings
-			var strings = $("#p_muid_form input[name=strings]");
+			var strings = $("#p_muid_form [name=strings]");
 			var strings_table = $("#p_muid_form .strings_table");
 			var string_dialog = $("#p_muid_form .string_dialog");
+			var cur_string = null;
 
 			strings_table.pgrid({
 				pgrid_paginate: false,
@@ -33,13 +34,41 @@ $pines->com_pgrid->load();
 						extra_class: 'picon picon-list-add',
 						selection_optional: true,
 						click: function(){
+							cur_string = null;
 							string_dialog.dialog('open');
 						}
 					},
 					{
 						type: 'button',
-						text: 'Remove String',
+						text: 'Edit String',
 						extra_class: 'picon picon-list-remove',
+						double_click: true,
+						click: function(e, rows){
+							cur_string = rows;
+							string_dialog.find("input[name=cur_string_search]").val(rows.pgrid_get_value(2));
+							string_dialog.find("input[name=cur_string_replace]").val(rows.pgrid_get_value(3));
+							string_dialog.dialog('open');
+						}
+					},
+					{type: 'button', text: 'Move Up', extra_class: 'picon picon-arrow-up', click: function(e, row){
+						if (!row.prev().length)
+							return;
+						row.prev().pgrid_set_value(1, parseInt(row.prev().pgrid_get_value(1))+1);
+						row.pgrid_set_value(1, parseInt(row.pgrid_get_value(1))-1);
+						update_strings();
+					}},
+					{type: 'button', text: 'Move Down', extra_class: 'picon picon-arrow-down', click: function(e, row){
+						if (!row.next().length)
+							return;
+						row.next().pgrid_set_value(1, parseInt(row.next().pgrid_get_value(1))-1);
+						row.pgrid_set_value(1, parseInt(row.pgrid_get_value(1))+1);
+						update_strings();
+					}},
+					{type: 'separator'},
+					{
+						type: 'button',
+						text: 'Remove String',
+						extra_class: 'picon picon-edit-delete',
 						click: function(e, rows){
 							rows.pgrid_delete();
 							update_strings();
@@ -59,18 +88,39 @@ $pines->com_pgrid->load();
 					"Done": function(){
 						var cur_string_search = string_dialog.find("input[name=cur_string_search]").val();
 						var cur_string_replace = string_dialog.find("input[name=cur_string_replace]").val();
-						if (cur_string_search == "" || cur_string_replace == "") {
-							alert("Please provide both a name and a value for this string.");
+						if (cur_string_search == "") {
+							alert("Please provide a string.");
 							return;
 						}
-						var new_string = [{
-							key: null,
-							values: [
-								cur_string_search,
-								cur_string_replace
-							]
-						}];
-						strings_table.pgrid_add(new_string);
+						if (cur_string == null) {
+							// Is this a duplicate?
+							var dupe = false;
+							// Get the next index.
+							var index = 0;
+							strings_table.pgrid_get_all_rows().each(function(){
+								if (parseInt($(this).pgrid_get_value(1)) == index)
+									index++;
+								if (dupe) return;
+								if ($(this).pgrid_get_value(2) == cur_string_search && $(this).pgrid_get_value(3) == cur_string_replace)
+									dupe = true;
+							});
+							if (dupe) {
+								pines.notice('There is already a string just like this.');
+								return;
+							}
+							var new_string = [{
+								key: null,
+								values: [
+									index,
+									cur_string_search,
+									cur_string_replace
+								]
+							}];
+							strings_table.pgrid_add(new_string);
+						} else {
+							cur_string.pgrid_set_value(2, cur_string_search);
+							cur_string.pgrid_set_value(3, cur_string_replace);
+						}
 						$(this).dialog('close');
 					}
 				},
@@ -80,6 +130,10 @@ $pines->com_pgrid->load();
 			});
 
 			var update_strings = function(){
+				strings_table.pgrid_import_state({pgrid_sort_col: 1, pgrid_sort_ord: 'asc'});
+				strings_table.pgrid_get_all_rows().each(function(i){
+					$(this).pgrid_set_value(1, i);
+				});
 				string_dialog.find("input[name=cur_string_search]").val("");
 				string_dialog.find("input[name=cur_string_replace]").val("");
 				strings.val(JSON.stringify(strings_table.pgrid_get_all_rows().pgrid_export_rows()));
@@ -226,13 +280,15 @@ $pines->com_pgrid->load();
 				<table class="strings_table">
 					<thead>
 						<tr>
+							<th>Order</th>
 							<th>Search</th>
 							<th>Replace</th>
 						</tr>
 					</thead>
 					<tbody>
-						<?php foreach ($this->entity->strings as $cur_string) { ?>
+						<?php foreach ($this->entity->strings as $key => $cur_string) { ?>
 						<tr>
+							<td><?php echo htmlspecialchars($key); ?></td>
 							<td><?php echo htmlspecialchars($cur_string['search']); ?></td>
 							<td><?php echo htmlspecialchars($cur_string['replace']); ?></td>
 						</tr>
@@ -241,7 +297,7 @@ $pines->com_pgrid->load();
 				</table>
 				<input type="hidden" name="strings" />
 			</div>
-			<div class="string_dialog" title="Add an String" style="display: none;">
+			<div class="string_dialog" title="Add a String" style="display: none;">
 				<div class="pf-form">
 					<div class="pf-element">
 						<label>

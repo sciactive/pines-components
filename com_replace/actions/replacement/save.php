@@ -31,8 +31,8 @@ $replacement->enabled = ($_REQUEST['enabled'] == 'ON');
 $replacement->strings = (array) json_decode($_REQUEST['strings']);
 foreach ($replacement->strings as &$cur_string) {
 	$array = array(
-		'search' => $cur_string->values[0],
-		'replace' => $cur_string->values[1]
+		'search' => $cur_string->values[1],
+		'replace' => $cur_string->values[2]
 	);
 	$cur_string = $array;
 }

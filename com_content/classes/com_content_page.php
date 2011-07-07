@@ -59,6 +59,27 @@ class com_content_page extends entity {
 	 * @return bool True on success, false on failure.
 	 */
 	public function delete() {
+		global $pines;
+		// Remove page from categories.
+		$cats = $pines->entity_manager->get_entities(
+				array('class' => com_content_category, 'skip_ac' => true),
+				array('&',
+					'tag' => array('com_content', 'category'),
+					'ref' => array('pages', $this)
+				)
+			);
+		foreach ($cats as &$cur_cat) {
+			while (($key = $this->array_search($cur_cat->pages)) !== false) {
+				unset($cur_cat->pages[$key]);
+				$cur_cat->pages = array_values($cur_cat->pages);
+			}
+			if (!$cur_cat->save()) {
+				pines_error("Couldn't remove page from category, {$cur_cat->name}.");
+				pines_log("Couldn't remove page from category, {$cur_cat->name}.", 'error');
+				return false;
+			}
+		}
+		unset($cur_cat);
 		if (!parent::delete())
 			return false;
 		pines_log("Deleted page $this->name.", 'notice');

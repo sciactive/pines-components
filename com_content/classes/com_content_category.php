@@ -65,6 +65,7 @@ class com_content_category extends entity {
 			$i = $this->array_search($this->parent->children);
 			unset($this->parent->children[$i]);
 			if (!$this->parent->save()) {
+				pines_error("Couldn't remove category from parent {$this->parent->name}.");
 				pines_log("Couldn't remove category from parent {$this->parent->name}.", 'error');
 				return false;
 			}
@@ -72,6 +73,7 @@ class com_content_category extends entity {
 		}
 		foreach ($this->children as $cur_child) {
 			if (!$cur_child->delete()) {
+				pines_error("Failed to delete child category {$cur_child->name}.");
 				pines_log("Failed to delete child category {$cur_child->name}.", 'error');
 				return false;
 			}

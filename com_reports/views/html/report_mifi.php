@@ -196,49 +196,54 @@ $account_types = array(
 	<table id="p_muid_grid">
 		<thead>
 			<tr>
-				<th>Sale ID</th>
-				<th>Date</th>
-				<th>Loc</th>
-				<th>Status</th>
-				<th>Emp</th>
-				<th>Cust</th>
-				<th>Subtotal</th>
-				<th>Taxes</th>
-				<th>Total</th>
-				<th>Contract</th>
-				<th>Company</th>
-				<th>Rank</th>
-				<th>ETS Date</th>
-				<th>Credit Score</th>
-				<th>Faxsheet</th>
-				<th>Comments</th>
 				<?php if ($this->verbose) { ?>
-				<th>APR</th>
-				<th>Finance Charge</th>
-				<th># of Payments</th>
-				<th>Amt of Pmts</th>
-				<th>1st Pmt</th>
-				<th>Email</th>
+				<th>Contract</th>
+				<th>Last</th>
+				<th>First</th>
+				<th>Middle</th>
 				<th>Birth Date</th>
 				<th>SSN</th>
+				<th>Email</th>
+				<th>Home Phone</th>
+				<th>Cell</th>
+				<th>Work Phone</th>
+				<th>Other Phone</th>
+				<th>Addr</th>
+				<th>City</th>
+				<th>State</th>
+				<th>Zip</th>
+				<th>Fixed/Adjustable/Simple</th>
+				<th>Interest Method</th>
+				<?php } ?>
+				<th>Origination Date</th>
+				<th>Interest Paid Thru Date</th>
+				<?php if( $this->verbose){?>
+				<th>First Due Date</th>
+				<th>Orig Loan Term</th>	
+				<th>Maturity Date</th>
+				<?php } ?>
+				<th>Loan Amount</th>
+				<?php if( $this->verbose){?>
+				<th>Payment Amount</th>
+				<th>Interest</th>
+				<th>Late Fee Amount</th>
+				<th>Grace Days Till Late Charge</th>
+				<th>NSF Fee</th>
 				<th>Active Status</th>
-				<th>Branch</th>
+				<?php } ?>
+				<th>ETS Date</th>
+				<?php if($this->verbose){?>
+				<th>Branch</th>	
 				<th>BAH</th>
 				<th>Time in Rsrv</th>
 				<th>Brk in Srvc</th>
 				<th>PEB Date</th>
 				<th>Country</th>
-				<th>Addr</th>
-				<th>City</th>
-				<th>State</th>
-				<th>Zip</th>
-				<th>Phone</th>
-				<th>Cell</th>
 				<th>HOR Addr</th>
 				<th>HOR City</th>
 				<th>HOR State</th>
 				<th>HOR Zip</th>
-				<th>HOR Phone</th>
+				<th>HOR phone</th>
 				<th>Housing Type</th>
 				<th>Housing Pmt</th>
 				<th>Child Support</th>
@@ -257,6 +262,7 @@ $account_types = array(
 				<th>Unit City</th>
 				<th>Unit State</th>
 				<th>Unit Zip</th>
+				<th>Finance Charge</th>
 				<th>Ref1</th>
 				<th>Ref1 Name</th>
 				<th>Ref1 Phone</th>
@@ -275,6 +281,18 @@ $account_types = array(
 				<th>Bank Acc #</th>
 				<th>Bank Rt #</th>
 				<?php } ?>
+				<th>Sale ID</th>
+				<th>Loc</th>
+				<th>Status</th>
+				<th>Emp</th>
+				<th>Subtotal</th>
+				<th>Taxes</th>
+				<th>Total</th>				
+				<th>Company</th>
+				<th>Rank</th>
+				<th>Credit Score</th>
+				<th>Faxsheet</th>
+				<th>Comments</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -289,47 +307,51 @@ $account_types = array(
 					);
 				if (!isset($contract->guid))
 					continue;
-				$contract_link = pines_url('com_mifi', 'viewoffer', array('id' => $contract->guid));
 			?>
 			<tr title="<?php echo $cur_sale->guid; ?>">
-				<td><?php echo htmlspecialchars($cur_sale->id); ?></td>
-				<td><?php echo format_date($cur_sale->p_cdate, 'date_sort'); ?></td>
-				<td><?php echo htmlspecialchars($cur_sale->group->name); ?></td>
-				<td><?php echo htmlspecialchars(ucwords($cur_sale->status)); ?></td>
-				<td><?php echo htmlspecialchars($cur_sale->user->name); ?></td>
-				<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_sale->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_sale->customer->name); ?></a></td>
-				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_sale->subtotal, 2, '.', '')); ?></td>
-				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_sale->taxes, 2, '.', '')); ?></td>
-				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_sale->total, 2, '.', '')); ?></td>
-				<td style="text-align: right;"><a href="<?php echo htmlspecialchars($contract_link); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($contract->contract_id); ?></a></td>
-				<td><?php echo $pines->com_mifi->companies[$contract->company]['name']; ?></td>
-				<td><?php echo $pines->com_mifi->ranks[$contract->militaryPayGrade]; ?></td>
-				<td><?php echo $contract->indefiniteETS ? 'Indefinite' : format_date($contract->ets_date, 'date_sort'); ?></td>
-				<td style="text-align: right;"><?php echo htmlspecialchars($contract->credit_score); ?></td>
-				<td><?php echo ($contract->approved_faxsheet) ? 'Approved' : (isset($contract->faxsheet_request) ? 'Requested' : 'None'); ?></td>
-				<td><?php echo ($contract->verified_sst) ? 'Yes' : 'No'; ?></td>
 				<?php if ($this->verbose) { ?>
-				<td><?php echo htmlspecialchars(($contract->apr * 100).'%'); ?></td>
-				<td>$<?php echo htmlspecialchars(number_format($contract->finance_charge, 2, '.', '')); ?></td>
-				<td><?php echo htmlspecialchars($contract->term); ?></td>
-				<td>$<?php echo htmlspecialchars(number_format($contract->total_of_payments, 2, '.', '')); ?></td>
-				<td><?php echo isset($contract->first_payment_date) ? format_date($contract->first_payment_date, 'date_sort') : ''; ?></td>
-				<td><?php echo htmlspecialchars($contract->email); ?></td>
+				<td style="text-align: right;"><a href="<?php echo htmlspecialchars(pines_url('com_mifi', 'viewoffer', array('id' => $contract->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($contract->contract_id); ?></a></td>
+				<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_sale->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($contract->customer_info['lname']); ?></a></td>
+				<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_sale->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($contract->customer_info['fname']); ?></a></td>
+				<td><?php echo htmlspecialchars($contract->customer_info['initial']); ?></td>
 				<td><?php echo format_date($contract->customer_info['birth_date'], 'date_sort'); ?></td>
 				<td><?php echo htmlspecialchars($contract->customer_info['ssn']); ?></td>
+				<td><?php echo htmlspecialchars($contract->email); ?></td>
+				<td><?php echo format_phone($contract->phone); ?></td>
+				<td><?php echo format_phone($contract->cellPhone); ?></td>
+				<td><?php echo format_phone($contract->unit_phone); ?></td>
+				<td><?php echo format_phone($contract->hor_phone); ?></td>
+				<td><?php echo htmlspecialchars($contract->address1.' '.$contract->address2); ?></td>
+				<td><?php echo htmlspecialchars($contract->city); ?></td>
+				<td><?php echo htmlspecialchars($contract->state); ?></td>
+				<td><?php echo htmlspecialchars($contract->zip); ?></td>
+				<td>fixed</td>
+				<td>360/360</td>
+				<?php } ?>
+				<td><?php echo format_date($cur_sale->p_cdate, 'date_sort'); ?></td>
+				<td></td>
+				<?php if ($this->verbose) { ?>
+				<td><?php echo isset($contract->first_payment_date) ? format_date($contract->first_payment_date, 'date_sort') : ''; ?></td>
+				<td><?php echo htmlspecialchars($contract->term); ?></td>
+				<td></td>
+				<?php } ?>
+				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_sale->total, 2, '.', '')); ?></td>
+				<?php if ($this->verbose){ ?>
+				<td>$<?php echo htmlspecialchars(number_format($contract->total_of_payments, 2, '.', '')); ?></td>
+				<td><?php echo htmlspecialchars(($contract->apr * 100).'%'); ?></td>
+				<td>$10</td>
+				<td>10</td>
+				<td>$15</td>
 				<td><?php echo htmlspecialchars($contract->active_status); ?></td>
+				<?php } ?>
+				<td><?php echo $contract->indefiniteETS ? 'Indefinite' : format_date($contract->ets_date, 'date_sort'); ?></td>
+				<?php if ($this->verbose){?>
 				<td><?php echo htmlspecialchars($pines->com_mifi->branches[$contract->branch]); ?></td>
 				<td><?php echo htmlspecialchars($contract->bahReceived); ?></td>
 				<td><?php echo htmlspecialchars($contract->timeInReserves ? 'Yes' : 'No'); ?></td>
 				<td><?php echo htmlspecialchars($contract->breakInService ? 'Yes' : 'No'); ?></td>
 				<td><?php echo format_date($contract->entry_base_date, 'date_sort'); ?></td>
 				<td><?php echo $contract->country == '1' ? 'US' : 'Other'; ?></td>
-				<td><?php echo htmlspecialchars($contract->address1.' '.$contract->address2); ?></td>
-				<td><?php echo htmlspecialchars($contract->city); ?></td>
-				<td><?php echo htmlspecialchars($contract->state); ?></td>
-				<td><?php echo htmlspecialchars($contract->zip); ?></td>
-				<td><?php echo format_phone($contract->phone); ?></td>
-				<td><?php echo format_phone($contract->cellPhone); ?></td>
 				<td><?php echo htmlspecialchars($contract->hor_address.' '.$contract->hor_address2); ?></td>
 				<td><?php echo htmlspecialchars($contract->hor_city); ?></td>
 				<td><?php echo htmlspecialchars($contract->hor_state); ?></td>
@@ -353,6 +375,7 @@ $account_types = array(
 				<td><?php echo htmlspecialchars($contract->unit_city); ?></td>
 				<td><?php echo htmlspecialchars($contract->unit_state); ?></td>
 				<td><?php echo htmlspecialchars($contract->unit_zip); ?></td>
+				<td>$<?php echo htmlspecialchars(number_format($contract->finance_charge, 2, '.', '')); ?></td>
 				<td><?php echo $reference_types[$contract->references[0]['relationship']]; ?></td>
 				<td><?php echo htmlspecialchars($contract->references[0]['name_first'].' '.$contract->references[0]['name_last']); ?></td>
 				<td><?php echo format_phone($contract->references[0]['phone']); ?></td>
@@ -371,6 +394,18 @@ $account_types = array(
 				<td><?php echo htmlspecialchars($contract->bank_account_number); ?></td>
 				<td><?php echo htmlspecialchars($contract->bank_routing_number); ?></td>
 				<?php } ?>
+				<td><?php echo htmlspecialchars($cur_sale->id); ?></td>			
+				<td><a href="<?php echo htmlspecialchars(pines_url('com_user', 'editgroup', array('id' => $cur_sale->group->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_sale->group->name); ?></a></td>
+				<td><?php echo htmlspecialchars(ucwords($cur_sale->status)); ?></td>
+				<td><a href="<?php echo htmlspecialchars(pines_url('com_user', 'edituser', array('id' => $cur_sale->user->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_sale->user->name); ?></a></td>
+				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_sale->subtotal, 2, '.', '')); ?></td>
+				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_sale->taxes, 2, '.', '')); ?></td>
+				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_sale->total, 2, '.', '')); ?></td>
+				<td><?php echo $pines->com_mifi->companies[$contract->company]['name']; ?></td>
+				<td><?php echo $pines->com_mifi->ranks[$contract->militaryPayGrade]; ?></td>
+				<td style="text-align: right;"><?php echo htmlspecialchars($contract->credit_score); ?></td>
+				<td><?php echo ($contract->approved_faxsheet) ? 'Approved' : (isset($contract->faxsheet_request) ? 'Requested' : 'None'); ?></td>
+				<td><?php echo ($contract->verified_sst) ? 'Yes' : 'No'; ?></td>
 			</tr>
 			<?php } ?>
 		</tbody>

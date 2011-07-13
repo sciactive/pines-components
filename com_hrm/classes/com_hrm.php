@@ -52,15 +52,21 @@ class com_hrm extends component {
 	 */
 	public function get_employees($employed = true) {
 		global $pines;
-		$users = $pines->user_manager->get_users(true);
-		$employees = array();
-		// Filter out users who aren't employees.
-		foreach ($users as $key => &$cur_user) {
-			if ($cur_user->employee && ($employed xor $cur_user->terminated))
-				$employees[] = com_hrm_employee::factory($cur_user->guid);
-			unset($users[$key]);
-		}
-		unset($cur_user);
+
+		$selector = array('&',
+				'tag' => array('com_user', 'user'),
+				'data' => array(
+					array('employee', true)
+				)
+			);
+		if (!$employed)
+			$selector['data'][] = array('terminated', true);
+
+		$employees = (array) $pines->entity_manager->get_entities(
+				array('class' => com_hrm_employee),
+				$selector
+			);
+
 		return $employees;
 	}
 

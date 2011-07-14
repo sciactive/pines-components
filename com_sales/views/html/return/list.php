@@ -327,7 +327,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo htmlspecialchars(ucwords($return->status)); ?></td>
 			<td><?php echo isset($return->user->guid) ? htmlspecialchars("{$return->user->name} [{$return->user->username}]") : ''; ?></td>
 			<?php if ($pines->config->com_sales->com_customer) { ?>
-			<td><?php echo $return->customer->guid ? htmlspecialchars("{$return->customer->guid}: \"{$return->customer->name}\"") : ''; ?></td>
+			<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $return->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo $return->customer->guid ? htmlspecialchars("{$return->customer->guid}: \"{$return->customer->name}\"") : ''; ?></a></td>
 			<?php } ?>
 			<td><?php
 			$number = 0;

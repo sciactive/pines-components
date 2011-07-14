@@ -85,7 +85,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<?php foreach($this->products as $product) {
 		$costs = $vendors = array();
 		foreach($product->vendors as $cur_vendor) {
-			$vendors[] = $cur_vendor['entity']->name;
+			$vendors[] = '<a href="'.htmlspecialchars(pines_url('com_sales','vendor/edit',array('id'=> $cur_vendor['entity']->guid))).'" onclick="window.open(this.href); return false;">'.htmlspecialchars($cur_vendor['entity']->name).'</a>';
 			$costs[] = '$'.$pines->com_sales->round($cur_vendor['cost'], true);
 		}
 	?>
@@ -94,8 +94,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo htmlspecialchars($product->name); ?></td>
 			<td style="text-align: right;">$<?php echo htmlspecialchars($pines->com_sales->round($product->unit_price, true)); ?></td>
 			<td style="text-align: right;"><?php echo htmlspecialchars(implode(', ', $costs)); ?></td>
-			<td><?php echo htmlspecialchars(implode(', ', $vendors)); ?></td>
-			<td><?php echo htmlspecialchars($product->manufacturer->name); ?></td>
+			<td><?php echo implode(', ', $vendors); ?></td>
+			<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'manufacturer/edit', array('id' => $product->manufacturer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($product->manufacturer->name); ?></a></td>
 			<td><?php echo htmlspecialchars($product->manufacturer_sku); ?></td>
 			<td><?php switch ($product->stock_type) {
 				case 'non_stocked':

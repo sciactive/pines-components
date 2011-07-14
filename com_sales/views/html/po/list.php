@@ -86,9 +86,9 @@ $errors = array();
 		<tr title="<?php echo $po->guid; ?>">
 			<td><?php echo htmlspecialchars($po->po_number); ?></td>
 			<td><?php echo htmlspecialchars($po->reference_number); ?></td>
-			<td><?php echo htmlspecialchars($po->vendor->name); ?></td>
+			<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'vendor/edit', array('id' => $po->vendor->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($po->vendor->name); ?></a></td>
 			<td><?php echo htmlspecialchars("{$po->destination->name} [{$po->destination->groupname}]"); ?></td>
-			<td><?php echo htmlspecialchars($po->shipper->name); ?></td>
+			<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'shipper/edit', array('id' => $po->shipper->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($po->shipper->name); ?></a></td>
 			<td><?php echo ($po->eta ? format_date($po->eta, 'date_sort') : ''); ?></td>
 			<td><?php echo $po->final ? ($po->finished ? 'Received' : (empty($po->received) ? 'Not Received' : 'Partially Received')) : 'Not Committed'; ?></td>
 			<td><?php

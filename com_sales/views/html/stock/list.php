@@ -170,9 +170,9 @@ $pines->com_jstree->load();
 	<?php foreach($this->stock as $stock) { ?>
 		<tr title="<?php echo $stock->guid; ?>">
 			<td><?php echo htmlspecialchars($stock->product->sku); ?></td>
-			<td><?php echo htmlspecialchars($stock->product->name); ?></td>
+			<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'product/edit', array('id' => $stock->product->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($stock->product->name); ?></a></td>
 			<td><?php echo htmlspecialchars($stock->serial); ?></td>
-			<td><?php echo htmlspecialchars($stock->vendor->name); ?></td>
+			<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'vendor/edit', array('id' => $stock->vendor->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($stock->vendor->name); ?></a></td>
 			<?php if (!$this->removed) { ?>
 			<td><?php echo htmlspecialchars("{$stock->location->name} [{$stock->location->groupname}]"); ?></td>
 			<?php } ?>

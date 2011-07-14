@@ -901,13 +901,13 @@ $pines->com_customer->load_company_select();
 								<?php foreach ($this->sales as $cur_sale) {
 								$item_count = count($cur_sale->products); ?>
 								<tr title="<?php echo $cur_sale->guid; ?>">
-									<td><a href="<?php echo pines_url('com_sales', 'sale/receipt', array('id' => $cur_sale->guid)); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_sale->id); ?></a></td>
+									<td><?php echo htmlspecialchars($cur_sale->id); ?> (<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/receipt', array('id' => $cur_sale->guid))); ?>" onclick="window.open(this.href); return false;">Receipt</a>|<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/edit', array('id' => $cur_sale->guid))); ?>" onclick="window.open(this.href); return false;">Edit</a>)</td>
 									<td><?php echo format_date($cur_sale->p_cdate); ?></td>
-									<td><a href="<?php echo pines_url('com_sales', 'sale/receipt', array('id' => $cur_sale->guid)); ?>" onclick="window.open(this.href); return false;"><?php echo ($item_count == 1) ? htmlspecialchars($cur_sale->products[0]['entity']->name . ' x ' . $cur_sale->products[0]['quantity']) : $item_count.' products'; ?></a></td>
+									<td><?php echo ($item_count == 1) ? htmlspecialchars($cur_sale->products[0]['entity']->name . ' x ' . $cur_sale->products[0]['quantity']) : $item_count.' products'; ?></td>
 									<td>$<?php echo number_format($cur_sale->subtotal, 2); ?></td>
 									<td>$<?php echo number_format($cur_sale->taxes, 2); ?></td>
 									<td>$<?php echo number_format($cur_sale->total, 2); ?></td>
-									<td><?php echo ucwords($cur_sale->status); ?></td>
+									<td><?php echo htmlspecialchars(ucwords($cur_sale->status)); ?></td>
 									<td><?php echo htmlspecialchars($cur_sale->group->name); ?></td>
 								</tr>
 								<?php } ?>
@@ -936,9 +936,9 @@ $pines->com_customer->load_company_select();
 								<?php foreach ($this->returns as $cur_return) {
 								$item_count = count($cur_return->products); ?>
 								<tr title="<?php echo $cur_return->guid; ?>">
-									<td><a href="<?php echo pines_url('com_sales', 'return/receipt', array('id' => $cur_return->guid)); ?>" target="receipt"><?php echo htmlspecialchars($cur_return->id); ?></a></td>
+									<td><?php echo htmlspecialchars($cur_return->id); ?> (<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'return/receipt', array('id' => $cur_return->guid))); ?>" target="receipt">Receipt</a>|<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'return/edit', array('id' => $cur_return->guid))); ?>" target="receipt">Edit</a>)</td>
 									<td><?php echo format_date($cur_return->p_cdate); ?></td>
-									<td><a href="<?php echo pines_url('com_sales', 'return/receipt', array('id' => $cur_return->guid)); ?>" target="receipt"><?php echo ($item_count == 1) ? htmlspecialchars($cur_return->products[0]['entity']->name) : $item_count.' items'; ?></a></td>
+									<td><?php echo ($item_count == 1) ? htmlspecialchars($cur_return->products[0]['entity']->name) : $item_count.' items'; ?></td>
 									<td>$<?php echo number_format($cur_return->subtotal, 2); ?></td>
 									<td>$<?php echo number_format($cur_return->taxes, 2); ?></td>
 									<td>$<?php echo number_format($cur_return->total, 2); ?></td>

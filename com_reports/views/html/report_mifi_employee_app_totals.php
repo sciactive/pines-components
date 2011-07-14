@@ -201,7 +201,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<tbody>
 			<?php foreach ($this->sales_totals as $key => $value) { ?>
 			<tr title="<?php echo (int) $key;?>">
-				<td><?php echo htmlspecialchars($value['name']); ?></td>
+				<td><a href="<?php echo htmlspecialchars(pines_url('com_user', 'edituser', array('id' => $value['user_guid']))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($value['name']); ?></a></td>
 				<td><?php echo htmlspecialchars($value['type']); ?></td>
 				<td><?php echo isset($value['active']) ? htmlspecialchars($value['active']) : '0'; ?></td>
 				<td><?php echo isset($value['active_reserve']) ? htmlspecialchars($value['active_reserve']) : '0'; ?></td>

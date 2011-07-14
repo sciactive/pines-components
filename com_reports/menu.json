@@ -150,7 +150,7 @@
 			{
 				"path": "main_menu/reports/mifi/sales",
 				"text": "Sales",
-				"href": ["com_reports","reportmifi"],
+				"href": ["com_reports","reportmifisales"],
 				"depend": {
 					"component": "com_mifi",
 					"ability": "com_reports/reportmifi"

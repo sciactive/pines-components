@@ -208,9 +208,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			?>
 		<tr title="<?php echo $cur_employee->guid; ?>">
 			<td><?php echo htmlspecialchars($cur_employee->name); ?></td>
-			<td><?php echo $scheduled; ?> hours</td>
-			<td><?php echo $clocked; ?> hours</td>
-			<td><span<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo $variance; ?> hours</span></td>
+			<td><?php echo (float) $scheduled; ?> hours</td>
+			<td><?php echo (float) $clocked; ?> hours</td>
+			<td><span<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo (float) $variance; ?> hours</span></td>
 		</tr>
 			<?php
 			$total_group['scheduled'] += $totals[$total_count]['scheduled'];
@@ -223,9 +223,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		?>
 		<tr class="ui-state-highlight total">
 			<td>Total</td>
-			<td><?php echo $scheduled; ?> hours</td>
-			<td><?php echo $clocked; ?> hours</td>
-			<td><span<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo $variance; ?> hours</span></td>
+			<td><?php echo (float) $scheduled; ?> hours</td>
+			<td><?php echo (float) $clocked; ?> hours</td>
+			<td><span<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo (float) $variance; ?> hours</span></td>
 		</tr>
 	</tbody>
 </table>
@@ -314,8 +314,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<td>Total</td>
 				<td></td>
 				<td></td>
-				<td><?php echo ($total_hours > 0) ? $total_hours.'hours ' : ''; echo ($total_mins > 0) ? $total_mins.'min' : ''; ?></td>
-				<td><span<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo $variance; ?> hours</span></td>
+				<td><?php echo ($total_hours > 0) ? ((float) $total_hours).'hours ' : ''; echo ($total_mins > 0) ? ((float) $total_mins).'min' : ''; ?></td>
+				<td><span<?php if ($variance < 0) echo ' style="color: red;"'; ?>><?php echo (float) $variance; ?> hours</span></td>
 			</tr>
 		<?php $clock_count++; } ?>
 	</tbody>

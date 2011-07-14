@@ -1,23 +1,35 @@
 <?php
 /**
- * Shows a list of active MiFi contracts.
+ * Shows a list of all sales and relevant MiFi info.
  *
  * @package Pines
  * @subpackage com_reports
  * @license http://www.gnu.org/licenses/agpl-3.0.html
- * @author Hunter Perrin <hunter@sciactive.com>
+ * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$this->title = 'Active MiFi Contracts ['.$this->location->name.']';
+$this->title = 'MiFi Sales ['.$this->location->name.']';
 $pines->icons->load();
 $pines->com_jstree->load();
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_reports/report_mifi_contracts'];
+	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_reports/report_mifi'];
 
+$reference_types = array(
+	'FA'	=> 'Father',
+	'FR'	=> 'Friend',
+	'MA'	=> 'Mother',
+	'NB'	=> 'Neighbor',
+	'REL'	=> 'Relative',
+	'SP'	=> 'Spouse'
+);
+$account_types = array(
+	'C' => 'Checking',
+	'S' => 'Savings'
+);
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
@@ -44,12 +56,13 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	pines(function(){
 		var search_mifi = function(){
 			// Submit the form with all of the fields.
-			pines.get("<?php echo addslashes(pines_url('com_reports', 'reportmificontracts')); ?>", {
+			pines.get("<?php echo addslashes(pines_url('com_reports', 'reportmifisales')); ?>", {
 				"location": location,
 				"descendents": descendents,
 				"all_time": all_time,
 				"start_date": start_date,
-				"end_date": end_date
+				"end_date": end_date,
+				"verbose": verbose
 			});
 		};
 
@@ -60,6 +73,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		// Location Defaults
 		var location = "<?php echo $this->location->guid; ?>";
 		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
+		var verbose = <?php echo $this->verbose ? 'true' : 'false'; ?>;
 
 		var state_xhr;
 		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
@@ -68,17 +82,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			pgrid_toolbar_contents: [
 				{type: 'button', title: 'Location', extra_class: 'picon picon-applications-internet', selection_optional: true, click: function(){mifi_grid.location_form();}},
 				{type: 'button', title: 'Timespan', extra_class: 'picon picon-view-time-schedule', selection_optional: true, click: function(){mifi_grid.date_form();}},
-				{type: 'separator'},
-				{type: 'button', title: 'Printer Friendly', extra_class: 'picon picon-document-print', selection_optional: true, click: function(){
-						pines.get("<?php echo addslashes(pines_url('com_reports', 'reportmificontracts')); ?>", {
-							"location": location,
-							"descendents": descendents,
-							"all_time": all_time,
-							"start_date": start_date,
-							"end_date": end_date,
-							"template": "tpl_print"
-						}, "_blank");
-				}},
 				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
@@ -95,7 +98,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_reports/report_mifi_contracts", state: cur_state});
+				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_reports/report_mifi", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
@@ -148,7 +151,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				url: "<?php echo addslashes(pines_url('com_reports', 'locationselect')); ?>",
 				type: "POST",
 				dataType: "html",
-				data: {"location": location, "descendents": descendents},
+				data: {
+					"location": location,
+					"descendents": descendents,
+					"verbose": verbose
+				},
 				error: function(XMLHttpRequest, textStatus){
 					pines.error("An error occured while trying to retreive the location form:\n"+XMLHttpRequest.status+": "+textStatus);
 				},
@@ -189,41 +196,54 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<table id="p_muid_grid">
 		<thead>
 			<tr>
-				<th>ID</th>
-				<th>Date</th>
-				<th>Location</th>
-				<th>Employee</th>
+				<th> Date</th>
+				<th>Loc</th>
+				<th>Status</th>
+				<th>Emp</th>
 				<th>Customer</th>
-				<th>Principal</th>
-				<th>APR</th>
-				<th>Term</th>
-				<th>Company</th>
+				<th>Subtotal</th>
+				<th>Taxes</th>
+				<th>Total</th>
 				<th>Rank</th>
 				<th>ETS Date</th>
 				<th>Credit Score</th>
-				<th>SST Verified</th>
+				<th>Company</th>
 				<th>Contract</th>
+				<th>Faxsheet</th>
+				<th>Comments</th>
 			</tr>
 		</thead>
 		<tbody>
-		<?php foreach ($this->contracts as $cur_contract) { ?>
-			<tr title="<?php echo $cur_contract->guid; ?>">
-				<td>#<?php echo htmlspecialchars($cur_contract->contract_id); ?></td>
-				<td><?php echo format_date($cur_contract->p_cdate, 'date_sort'); ?></td>
-				<td><?php echo htmlspecialchars($cur_contract->group->name); ?></td>
-				<td><?php echo htmlspecialchars($cur_contract->user->name); ?></td>
-				<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_contract->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_contract->customer->name); ?></a></td>
-				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_contract->principal, 2, '.', '')); ?></td>
-				<td style="text-align: right;"><?php echo htmlspecialchars(number_format($cur_contract->apr * 100, 2, '.', '')); ?>%</td>
-				<td style="text-align: right;"><?php echo htmlspecialchars($cur_contract->term); ?></td>
-				<td><?php echo htmlspecialchars($pines->com_mifi->companies[$cur_contract->company]['name']); ?></td>
-				<td><?php echo htmlspecialchars($pines->com_mifi->ranks[$cur_contract->militaryPayGrade]); ?></td>
-				<td><?php echo format_date($cur_contract->ets_date, 'date_sort'); ?></td>
-				<td style="text-align: right;"><?php echo isset($cur_contract->credit_score) ? htmlspecialchars($cur_contract->credit_score) : 'NA'; ?></td>
-				<td><?php echo ($cur_contract->verified_sst) ? 'Yes' : 'No'; ?></td>
-				<td><?php echo $cur_contract->verified_sst ? '<a href="'.htmlspecialchars(pines_url('com_mifi', 'contract/view', array('id' => $cur_contract->guid))).'" onclick="window.open(this.href); return false;">Download</a>' : 'NA'; ?></td>
+			<?php
+			foreach ($this->sales as $cur_sale) {
+				$contract = $pines->entity_manager->get_entity(
+						array('class' => com_mifi_contract),
+						array('&',
+							'tag' => array('com_mifi', 'contract'),
+							'ref' => array('sale', $cur_sale)
+						)
+					);
+				if (!isset($contract->guid))
+					continue;
+			?>
+			<tr title="<?php echo $cur_sale->guid; ?>">
+				<td><?php echo format_date($cur_sale->p_cdate, 'date_sort'); ?></td>
+				<td><a href="<?php echo htmlspecialchars(pines_url('com_user', 'editgroup', array('id' => $cur_sale->group->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_sale->group->name); ?></a></td>
+				<td><?php echo htmlspecialchars(ucwords($cur_sale->status)); ?></td>
+				<td><a href="<?php echo htmlspecialchars(pines_url('com_user', 'edituser', array('id' => $cur_sale->user->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_sale->user->name); ?></a></td>
+				<td><a href="<?php echo htmlspecialchars(pines_url('com_customer','customer/edit',array('id'=> $cur_sale->customer->guid)));?>" onclick="window.open(this.href);return false;"><?php echo htmlspecialchars($cur_sale->user->name);?></a></td>
+				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_sale->subtotal, 2, '.', '')); ?></td>
+				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_sale->taxes, 2, '.', '')); ?></td>
+				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_sale->total, 2, '.', '')); ?></td>
+				<td><?php echo $pines->com_mifi->ranks[$contract->militaryPayGrade]; ?></td>
+				<td><?php echo $contract->indefiniteETS ? 'Indefinite' : format_date($contract->ets_date, 'date_sort'); ?></td>
+				<td style="text-align: right;"><?php echo htmlspecialchars($contract->credit_score); ?></td>
+				<td><?php echo $pines->com_mifi->companies[$contract->company]['name']; ?></td>
+				<td style="text-align: right;"><a href="<?php echo htmlspecialchars(pines_url('com_mifi', 'viewoffer', array('id' => $contract->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($contract->contract_id); ?></a></td>
+				<td><?php echo ($contract->approved_faxsheet) ? 'Approved' : (isset($contract->faxsheet_request) ? 'Requested' : 'None'); ?></td>
+				<td><?php echo ($contract->verified_sst) ? 'Yes' : 'No'; ?></td>						
 			</tr>
-		<?php } ?>
+			<?php } ?>
 		</tbody>
 	</table>
 </div>

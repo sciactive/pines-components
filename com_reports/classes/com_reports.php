@@ -374,6 +374,54 @@ class com_reports extends component {
 	}
 
 	/**
+	 * Creates and attaches a module which reports MiFi Sales.
+	 *
+	 * @param int $start_date The start date of the report.
+	 * @param int $end_date The end date of the report.
+	 * @param group $location The group to report on.
+	 * @param bool $descendents Whether to show descendent locations.
+	 * @return module The MiFi report module.
+	 */
+	function report_mifi_sales($start_date = null, $end_date = null, $location = null, $descendents = false) {
+		global $pines;
+
+		$module = new module('com_reports', 'report_mifi_sales', 'content');
+
+		$selector = array('&', 'tag' => array('com_sales', 'sale'));
+		// Datespan of the report.
+		if (isset($start_date))
+			$selector['gte'] = array('p_cdate', (int) $start_date);
+		if (isset($end_date))
+			$selector['lt'] = array('p_cdate', (int) $end_date);
+		$selector['strict'] = array('status', 'paid');
+		//$selector['match'] = array('payments', 'MiFi Finance');
+		$module->start_date = $start_date;
+		$module->end_date = $end_date;
+		$module->all_time = (!isset($start_date) && !isset($end_date));
+		// Location of the report.
+		if (!isset($location->guid))
+			$location = $_SESSION['user']->group;
+		if ($descendents)
+			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		else
+			$or = array('|', 'ref' => array('group', $location));
+		$module->location = $location;
+		$module->descendents = $descendents;
+		$module->sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
+		// Make sure this sale is not attached to any returns.
+		foreach ($module->sales as $key => &$cur_sale) {
+			$return = $pines->entity_manager->get_entity(
+					array('class' => com_sales_return, 'skip_ac' => true),
+					array('&', 'tag' => array('com_sales', 'return'), 'ref' => array('sale', $cur_sale))
+				);
+			if (isset($return->guid))
+				unset($module->sales[$key]);
+		}
+		unset($cur_sale);
+		return $module;
+	}
+
+	/**
 	 * Creates and attaches a module which reports MiFi Sales per user/employee.
 	 *
 	 * //param int $verbose Whether to show extraneous application information.
@@ -445,7 +493,8 @@ class com_reports extends component {
 				$module->sales_totals[$cur_sale->user->guid] = array(
 					'name' => $cur_sale->user->name,
 					'type' => $cur_sale->user->employee ? 'Employee' : ($cur_sale->user->has_tag('customer') ? 'Customer' : 'User'),
-					'sales' => 0
+					'sales' => 0,
+					'user_guid' => $cur_sale->user->guid
 				);
 
 				/*
@@ -540,7 +589,8 @@ class com_reports extends component {
 			if (!isset($module->location_total[$cur_sale->group->guid])) {
 				$module->location_total[$cur_sale->group->guid] = array(
 					'name' => $cur_sale->group->name,
-					'sales' => 0
+					'sales' => 0,
+					'location_guid' => $cur_sale->group->guid
 				);
 			}
 			$module->location_total[$cur_sale->group->guid]['sales']++;

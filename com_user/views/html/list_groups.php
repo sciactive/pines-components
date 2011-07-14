@@ -115,9 +115,9 @@ foreach($this->groups as $cur_group) {
 			if ($count < 15) {
 				$user_list = '';
 				foreach ($user_array as $cur_user) {
-					$user_list .= (empty($user_list) ? '' : ', ').$cur_user->username;
+					$user_list .= (empty($user_list) ? '' : ', ').'<a href="'.htmlspecialchars(pines_url('com_user', 'edituser', array('id' => $cur_user->guid))).'" onclick="window.open(this.href); return false;">'.htmlspecialchars($cur_user->username).'</a>';
 				}
-				echo htmlspecialchars($user_list);
+				echo $user_list;
 			} elseif ($count === 51) {
 				echo 'Over 50 users';
 			} else {

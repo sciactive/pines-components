@@ -89,14 +89,14 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo htmlspecialchars($user->name); ?></td>
 			<td><?php echo htmlspecialchars($user->email); ?></td>
 			<td><?php echo htmlspecialchars($user->get_timezone()).(empty($user->timezone) ? ' (I)' : ' (A)'); ?></td>
-			<td><?php echo htmlspecialchars($user->group->groupname); ?></td>
+			<td><a href="<?php echo htmlspecialchars(pines_url('com_user', 'editgroup', array('id' => $user->group->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($user->group->groupname); ?></a></td>
 			<td><?php
 			if (count($user->groups) < 15) {
 				$group_list = '';
 				foreach ($user->groups as $cur_group) {
-					$group_list .= (empty($group_list) ? '' : ', ').$cur_group->groupname;
+					$group_list .= (empty($group_list) ? '' : ', ').'<a href="'.htmlspecialchars(pines_url('com_user', 'editgroup', array('id' => $cur_group->guid))).'" onclick="window.open(this.href); return false;">'.htmlspecialchars($cur_group->groupname).'</a>';
 				}
-				echo htmlspecialchars($group_list);
+				echo $group_list;
 			} else {
 				echo count($user->groups).' groups';
 			}

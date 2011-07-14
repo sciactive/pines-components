@@ -217,7 +217,7 @@ $pines->com_pgrid->load();
 				<tr title="<?php echo $cur_sale->guid; ?>">
 					<td><?php echo htmlspecialchars($cur_sale->id); ?></td>
 					<td><?php echo format_date($cur_sale->p_cdate); ?></td>
-					<td><?php echo htmlspecialchars($cur_sale->customer->name); ?></td>
+					<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_sale->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_sale->customer->name); ?></a></td>
 					<td><?php echo htmlspecialchars($cur_sale->products[0]['entity']->name); ?></td>
 					<td>$<?php echo htmlspecialchars($cur_sale->total); ?></td>
 					<td><?php echo htmlspecialchars(ucwords($cur_sale->status)); ?></td>
@@ -247,7 +247,7 @@ $pines->com_pgrid->load();
 				<tr title="<?php echo $cur_return->guid; ?>">
 					<td><?php echo htmlspecialchars($cur_return->id); ?></td>
 					<td><?php echo format_date($cur_return->p_cdate); ?></td>
-					<td><?php echo htmlspecialchars($cur_return->customer->name); ?></td>
+					<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_return->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_return->customer->name); ?></a></td>
 					<td><?php echo htmlspecialchars($cur_return->products[0]['entity']->name); ?></td>
 					<td>$<?php echo htmlspecialchars($cur_return->total); ?></td>
 					<td><?php echo htmlspecialchars(ucwords($cur_return->status)); ?></td>

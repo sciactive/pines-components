@@ -196,6 +196,7 @@ $account_types = array(
 	<table id="p_muid_grid">
 		<thead>
 			<tr>
+				<th>Sale</th>
 				<th>Date</th>
 				<th>Loc</th>
 				<th>Status</th>
@@ -227,6 +228,7 @@ $account_types = array(
 					continue;
 			?>
 			<tr title="<?php echo $cur_sale->guid; ?>">
+				<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/receipt', array('id' => $cur_sale->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_sale->id); ?></a></td>
 				<td><?php echo format_date($cur_sale->p_cdate, 'date_sort'); ?></td>
 				<td><a href="<?php echo htmlspecialchars(pines_url('com_user', 'editgroup', array('id' => $cur_sale->group->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_sale->group->name); ?></a></td>
 				<td><?php echo htmlspecialchars(ucwords($cur_sale->status)); ?></td>

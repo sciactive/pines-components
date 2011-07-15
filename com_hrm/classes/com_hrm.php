@@ -55,16 +55,18 @@ class com_hrm extends component {
 
 		$selector = array('&',
 				'tag' => array('com_user', 'user'),
-				'data' => array(
-					array('employee', true)
-				)
+				'data' => array('employee', true)
 			);
-		if (!$employed)
-			$selector['data'][] = array('terminated', true);
+		if ($employed)
+			$selector2 = array('!&', 'data' => array('terminated', true));
+		else
+			$selector2 = array('&', 'data' => array('terminated', true));
+		
 
 		$employees = (array) $pines->entity_manager->get_entities(
 				array('class' => com_hrm_employee),
-				$selector
+				$selector,
+				$selector2
 			);
 
 		return $employees;

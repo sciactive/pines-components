@@ -52,13 +52,18 @@ class com_hrm_timeclock extends entity {
 		return $entity;
 	}
 
-	public function add($time_in, $time_out, $comment = '') {
+	public function add($time_in, $time_out, $comment = '', $extras = array()) {
 		// Check that this time doesn't conflict with any other times.
 		foreach ($this->timeclock as $cur_entry) {
 			if ($time_in < $cur_entry['out'] && $time_out > $cur_entry['in'])
 				return false;
 		}
-		$this->timeclock[] = array('in' => (int) $time_in, 'out' => (int) $time_out, 'comment' => (string) $comment);
+		$this->timeclock[] = array(
+			'in' => (int) $time_in,
+			'out' => (int) $time_out,
+			'comment' => (string) $comment,
+			'extras' => $extras
+		);
 		return true;
 	}
 	
@@ -66,6 +71,8 @@ class com_hrm_timeclock extends entity {
 		if (isset($this->time_in))
 			return false;
 		$this->time_in = time();
+		$this->ip_in = $_SERVER['REMOTE_ADDR'];
+		$this->ua_in = $_SERVER['HTTP_USER_AGENT'];
 		return true;
 	}
 	
@@ -75,7 +82,14 @@ class com_hrm_timeclock extends entity {
 		$time_in = $this->time_in;
 		$time_out = time();
 		unset($this->time_in);
-		return $this->add($time_in, $time_out, $comment);
+		return $this->add($time_in, $time_out, $comment,
+				array(
+					'ip_in' => $this->ip_in,
+					'ip_out' => $_SERVER['REMOTE_ADDR'],
+					'ua_in' => $this->ua_in,
+					'ua_out' => $_SERVER['HTTP_USER_AGENT']
+				)
+			);
 	}
 	
 	public function clocked_in_time() {

@@ -88,7 +88,8 @@ $this->title = "Edit Timeclock for {$this->entity->user->name}";
 				entries[entries.length] = {
 					"in": parseInt($(".timestamp_in", this).text()),
 					"out": parseInt($(".timestamp_out", this).text()),
-					"comments": $(".comments", this).text()
+					"comments": $(".comments", this).text(),
+					"extras": $(".extras", this).text()
 				};
 			});
 			$("input[name=clock]", "#p_muid_form").val(JSON.stringify(entries));
@@ -220,6 +221,7 @@ $this->title = "Edit Timeclock for {$this->entity->user->name}";
 			<span class="pf-note">Timestamps: <span class="timestamp_in"><?php echo htmlspecialchars($entry['in']); ?></span> - <span class="timestamp_out"><?php echo htmlspecialchars($entry['out']); ?></span></span><br class="pf-clearing" />
 			<span class="pf-label ui-state-error ui-corner-all error" style="width: auto; display: none;">Overlaps with the next entry!</span>
 		</div>
+		<div class="extras" style="display: none;"><?php echo htmlspecialchars(json_encode($entry['extras'])); ?></div>
 	</div>
 	<?php } ?>
 	<div id="p_muid_timeclock_entry_template" class="pf-element pf-full-width" style="display: none;">
@@ -230,6 +232,7 @@ $this->title = "Edit Timeclock for {$this->entity->user->name}";
 			<span class="pf-note">Timestamp: <span class="timestamp_in"></span> - <span class="timestamp_out"></span></span><br class="pf-clearing" />
 			<span class="pf-label ui-state-error ui-corner-all error" style="width: auto; display: none;">Overlaps with the next entry!</span>
 		</div>
+		<div class="extras" style="display: none;">[]</div>
 	</div>
 	<button class="add-button ui-state-default ui-corner-all">Add</button>
 	<form method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_hrm', 'employee/timeclock/save')); ?>">

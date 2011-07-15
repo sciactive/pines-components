@@ -45,6 +45,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>Time Out</th>
 			<th>Time</th>
 			<th>Comments</th>
+			<th>IP In</th>
+			<th>IP Out</th>
+			<th>User Agent In</th>
+			<th>User Agent Out</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -68,6 +72,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				echo htmlspecialchars($string);
 			?></td>
 			<td><?php echo htmlspecialchars($entry['comments']); ?></td>
+			<td><?php echo htmlspecialchars($entry['extras']['ip_in']); ?></td>
+			<td><?php echo htmlspecialchars($entry['extras']['ip_out']); ?></td>
+			<td><?php echo htmlspecialchars($entry['extras']['ua_in']); ?></td>
+			<td><?php echo htmlspecialchars($entry['extras']['ua_out']); ?></td>
 		</tr>
 		<?php } ?>
 		<?php if ($this->entity->clocked_in_time()) { ?>
@@ -90,6 +98,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				echo htmlspecialchars($string);
 			?></td>
 			<td><strong>Currently clocked in.</strong></td>
+			<td><?php echo htmlspecialchars($this->entity->ip_in); ?></td>
+			<td></td>
+			<td><?php echo htmlspecialchars($this->entity->ua_in); ?></td>
+			<td></td>
 		</tr>
 		<?php } ?>
 	</tbody>

@@ -28,7 +28,8 @@ foreach($clock as $cur_entry) {
 	$employee->timeclock->timeclock[] = array(
 		'in' => (int) $cur_entry->in,
 		'out' => (int) $cur_entry->out,
-		'comments' => $cur_entry->comments
+		'comments' => $cur_entry->comments,
+		'extras' => (array) json_decode($cur_entry->extras, true)
 	);
 }
 

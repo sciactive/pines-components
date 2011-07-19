@@ -277,7 +277,7 @@ $pines->com_ptags->load();
 				</div>
 				<div class="pf-element">
 					<label>
-						<span class="pf-label">Canonical Name</span>
+						<span class="pf-label">Title (Common Name)</span>
 						<span class="pf-note">The name the user will see.</span>
 						<input class="pf-field ui-widget-content ui-corner-all" type="text" name="meta_name" size="24" value="<?php echo htmlspecialchars($this->entity->meta['name']); ?>" />
 					</label>

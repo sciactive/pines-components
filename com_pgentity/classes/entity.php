@@ -517,7 +517,7 @@ class entity implements entity_interface {
 
 	public function to_reference() {
 		if ($this->is_a_sleeping_reference)
-			$this->reference_wake();
+			return $this->sleeping_reference;
 		return array('pines_entity_reference', $this->guid, get_class($this));
 	}
 }

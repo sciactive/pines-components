@@ -916,6 +916,11 @@ class com_sales_sale extends entity {
 				$this->add_tag('shipping_shipped');
 			}
 		}
+		
+		if (empty($this->products)) {
+			pines_log("Sale {$this->id} has no products. Cannot be saved.", 'error');
+			return false;
+		}
 		return parent::save();
 	}
 

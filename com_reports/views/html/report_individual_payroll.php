@@ -50,7 +50,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	</div>
 	<div class="pf-element" style="padding-bottom: .4em;">
 		<strong class="pf-label">Pay Period:</strong>
-		<span class="pf-field"><?php echo format_date($this->start_date, 'date_sort').'&nbsp;nbsp;-&nbsp;&nbsp;'.format_date($this->end_date, 'date_sort'); ?></span>
+		<span class="pf-field"><?php echo format_date($this->start_date, 'date_sort').'&nbsp&nbsp - &nbsp&nbsp'.format_date($this->end_date, 'date_sort'); ?></span>
 	</div>
 	<div class="pf-element" style="padding-bottom: .4em;">
 		<strong class="pf-label">Employee:</strong>
@@ -86,15 +86,15 @@ defined('P_RUN') or die('Direct access prohibited');
 					if($cur_sale->product-commission != null)
 						$commission = $cur_sale->product->commission;
 					else
-						$commission = $cur_sale->total * 0.06;
-					$total_sales += $cur_sale->total;
+						$commission = $cur_sale->subtotal * 0.06;
+					$total_sales += $cur_sale->subtotal;
 					$commission_total += round($commission, 2);
 					?>
 				<tr>
 					<td><?php echo htmlspecialchars($cur_sale->id); ?></td>
 					<td><?php echo htmlspecialchars($cur_sale->customer->name); ?></td>
 					<td><?php echo format_date($cur_sale->p_cdate); ?></td>
-					<td class="right_text"><?php echo htmlspecialchars($cur_sale->total); ?></td>
+					<td class="right_text"><?php echo number_format($cur_sale->subtotal, 2, '.', ''); ?></td>
 					<td class="right_text">$</td>
 					<td class="right_text">$<?php echo number_format($commission, 2, '.', '');?></td>
 				</tr>

@@ -324,7 +324,7 @@ class com_reports extends component {
 		if (isset($end_date))
 			$selector['lt'] = array('p_cdate', (int) $end_date);
 		$module->start_date = $start_date;
-		$module->end_date = $end_date;
+		$module->end_date = $end_date -1;
 		$module->all_time = (!isset($start_date) && !isset($end_date));		
 		$and= array('&', 'ref' => array('user', $module->employee));
 		$selector['tag'] = array('com_sales', 'sale');
@@ -937,21 +937,21 @@ class com_reports extends component {
 		foreach ($module->sales as $cur_sale) {
 			$guid = $cur_sale->user->guid;	
 			if (empty($saletotals[$guid])) {
-				$saletotals[$guid] = $cur_sale->total;
+				$saletotals[$guid] = $cur_sale->subtotal;
 				$numbersales[$guid] = 1;
 				$total_num_sales++;
 				if ($cur_sale->products->commission)
 					$commission_array[$guid] = number_format($cur_sale->products->commission, 2, '.', '');
 				else
-					$commission_array[$guid] = number_format(($cur_sale->total * 0.06), 2, '.', '');
+					$commission_array[$guid] = number_format(($cur_sale->subtotal * 0.06), 2, '.', '');
 			} else {
-				$saletotals[$guid] += $cur_sale->total;
+				$saletotals[$guid] += $cur_sale->subtotal;
 				$numbersales[$guid]++;
 				$total_num_sales++;
 				if ($cur_sale->products->commission)
 					$commission_array[$guid] += number_format($cur_sale->products->commission, 2, '.', '');
 				else
-					$commission_array[$guid] += number_format(($cur_sale->total * 0.06), 2, '.', '');
+					$commission_array[$guid] += number_format(($cur_sale->subtotal * 0.06), 2, '.', '');
 			}			
 		}
 		$module->group_num_sales = $total_num_sales;
@@ -1005,7 +1005,7 @@ class com_reports extends component {
 			// Figure out if they have any overtime.
 			if ($cur_employee['hour_total'] > $weeks_hours) {
 				$cur_employee['reghours'] = $cur_employee['entity']->pay_rate * $weeks_hours;
-				$cur_employee['overtimehours'] = ($cur_employee['hour_total'] - $weeks_hours) * ($cur_employee['entity']->hourly_rate * 1.5);
+				$cur_employee['overtimehours'] = ($cur_employee['hour_total'] - $weeks_hours) * ($cur_employee['entity']->pay_rate * 1.5);
 			} else {
 				$cur_employee['reghours'] = ($cur_employee['entity']->pay_rate * $cur_employee['hour_total']);
 				$cur_employee['overtimehours'] = 0;

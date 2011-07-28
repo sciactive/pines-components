@@ -201,7 +201,7 @@ $pines->com_pgrid->load();
 				<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? '$'.number_format($cur_employee['hour_pay_total'], 2, '.', '') : '-'; ?></td>
 				<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? '$'.number_format($cur_employee['commission'], 2, '.','') : '-'; ?></td>
 				<td></td>
-				<td style="text-align: center;"><?php echo ($cur_employee['commission_status'] != 'salary' && $cur_employee['weekly'] != 0) ? htmlspecialchars($cur_employee['weekly']) : '-'; ?></td>
+				<td style="text-align: center;"><?php echo ($cur_employee['commission_status'] != 'salary' && $cur_employee['weekly'] != 0) ? number_format($cur_employee['weekly'], 2, '.', '') : '-'; ?></td>
 				<td></td>
 				<td>$<?php echo number_format($cur_employee['pay_total'],2,'.','');?></td>
 				<td></td>

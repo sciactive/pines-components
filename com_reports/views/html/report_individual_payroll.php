@@ -127,29 +127,29 @@ defined('P_RUN') or die('Direct access prohibited');
 					?>
 				<tr>
 					<td class="right_text">Regular</td>
-					<td class="right_text"><?php echo htmlspecialchars($this->reg_hours); ?></td>
-					<td class="right_text"><?php echo htmlspecialchars($this->reg_hours * $this->employee->pay_rate); ?></td>
+					<td class="right_text"><?php echo number_format($this->reg_hours, 2, '.', ''); ?></td>
+					<td class="right_text"><?php echo number_format(($this->reg_hours * $this->employee->pay_rate), 2, '.', ''); ?></td>
 				</tr>
 				<tr>
 					<td class="right_text">Overtime</td>
-					<td class="right_text"><?php echo htmlspecialchars($this->overtime); ?></td>
-					<td class="right_text"><?php echo htmlspecialchars($this->overtime * $this->employee->pay_rate * 1.5); ?></td>
+					<td class="right_text"><?php echo number_format($this->overtime, 2, '.',''); ?></td>
+					<td class="right_text"><?php echo number_format(($this->overtime * $this->employee->pay_rate * 1.5), 2, '.', ''); ?></td>
 				</tr>
 				<tr>
 					<td><strong>Total Hourly</strong></td>
-					<td class="right_text"><?php echo htmlspecialchars($this->overtime + $this->reg_hours);?></td>
-					<td class="right_text"><?php echo htmlspecialchars($pay);?></td>
+					<td class="right_text"><?php echo number_format(($this->overtime + $this->reg_hours), 2, '.','');?></td>
+					<td class="right_text"><?php echo number_format($pay, 2, '.', '');?></td>
 				</tr>
 				<?php } else { ?>
 				<tr>
 					<td>Salary</td>
 					<td class="right_text"></td>
-					<td class="right_text"><?php echo htmlspecialchars($this->salary); ?></td>
+					<td class="right_text"><?php echo number_format($this->salary, 2, '.', ''); ?></td>
 				</tr>
 				<tr>
 					<td ><strong>Total</strong></td>
 					<td class="right_text"></td>
-					<td class="right_text"><?php echo htmlspecialchars($this->salary); ?></td>
+					<td class="right_text"><?php echo number_format($this->salary, 2, '.', ''); ?></td>
 				</tr>
 				<?php } ?>
 			</tbody>
@@ -208,7 +208,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			?>
 			<hr style="clear: both;" />
 			<div class="right_text">
-				<span>Gross Pay: <?php echo htmlspecialchars($this->total_pay);?></span>
+				<span>Gross Pay: <?php echo number_format($this->total_pay, 2, '.', '');?></span>
 			</div>
 		</div>
 	</div>

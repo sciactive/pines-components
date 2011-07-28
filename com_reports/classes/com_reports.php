@@ -851,6 +851,7 @@ class com_reports extends component {
 	function report_payroll_summary($start_date = null, $end_date = null, $location = null, $descendents = false) {
 		global $pines;
 
+	
 		$module = new module('com_reports', 'report_payroll_summary', 'content');
 
 		$selector = array('&',
@@ -1027,7 +1028,7 @@ class com_reports extends component {
 			else
 				$cur_employee['total_rate'] = $cur_employee['pay_total'] / $cur_employee['clocked'];
 			// Does computations for salaried employee variables.
-			if ($cur_employee['entity']->pay_type != 'hourly') {
+			if ($cur_employee['entity']->pay_type == 'salary') {
 				$cur_employee['commission_status'] = 'salary';
 				if (isset($start_date)) {
 					$ratio = (($end_date - $start_date) / 86400) / 360;
@@ -1060,10 +1061,16 @@ class com_reports extends component {
 			$module->group_pay_total += round($cur_employee['pay_total'], 2);	
 		}
 		unset($cur_empoloyee);
-		$module->group_percent_rate = $group_percent_rate / $pay_rate['people'];
-		$module->pay_rate_total = $pay_rate['rate'] / $pay_rate['people'];
-		$module->commission_percent = $commission_percent['commission'] / $pay_rate['people'];
 
+		if($pay_rate['people']!= 0) {
+			$module->group_percent_rate = $group_percent_rate / $pay_rate['people'];
+			$module->pay_rate_total = $pay_rate['rate'] / $pay_rate['people'];
+			$module->commission_percent = $commission_percent['commission'] / $pay_rate['people'];
+		} else {
+			$pay_rate = 0;
+			$module->pay_rate_total = 0;
+			$module->group_percent_rate = 0;
+		}
 		// Get total sales.
 		$module->group_sales = 0;
 		foreach ($saletotals as $value) {

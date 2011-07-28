@@ -309,9 +309,10 @@ class com_reports extends component {
 		$module->total_pay = $totalpay;
 		$module->salary = $salary;
 		$module->commission=$commission;
-		if($toatlhours > 40){
-			$module->reg_hours = 40;
-			$module->overtime = 40 - $totalhours;
+		$time_diff_weeks_hours = (($end_date - $start_date)*(1/604800))*40;
+		if((string)$totalhours > (string)$time_diff_weeks_hours){
+			$module->reg_hours = $time_diff_weeks_hours;
+			$module->overtime = $totalhours - $time_diff_weeks_hours;
 		}else{
 			$module->reg_hours = $totalhours;
 			$module->overtime = 0;

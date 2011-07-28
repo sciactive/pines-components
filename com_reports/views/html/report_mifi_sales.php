@@ -212,6 +212,8 @@ $account_types = array(
 				<th>Contract</th>
 				<th>Faxsheet</th>
 				<th>Comments</th>
+				<th>Other Sales</th>
+				<th>Returns</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -226,6 +228,35 @@ $account_types = array(
 					);
 				if (!isset($contract->guid))
 					continue;
+
+				// Find other sales to this customer and add up the total.
+				$other_sales = $pines->entity_manager->get_entities(
+						array('class' => com_sales_sale),
+						array('&',
+							'tag' => array('com_sales', 'sale'),
+							'ref' => array('customer', $cur_sale->customer)
+						),
+						array('!&',
+							'guid' => $cur_sale->guid
+						)
+					);
+				$other = 0;
+				foreach ($other_sales as $cur_other) {
+					$other += $cur_other->total;
+				}
+
+				// Find returns to this customer and add up the total.
+				$returns = $pines->entity_manager->get_entities(
+						array('class'=> com_sales_sale),
+						array('&',
+							'tag' => array('com_sales', 'return'),
+							'ref' => array('customer', $cur_sale->customer)
+						)
+					);
+				$return = 0;
+				foreach ($returns as $cur_return) {
+					$return += $cur_return->total;
+				}
 			?>
 			<tr title="<?php echo $cur_sale->guid; ?>">
 				<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/receipt', array('id' => $cur_sale->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_sale->id); ?></a></td>
@@ -243,7 +274,9 @@ $account_types = array(
 				<td><?php echo $pines->com_mifi->companies[$contract->company]['name']; ?></td>
 				<td style="text-align: right;"><a href="<?php echo htmlspecialchars(pines_url('com_mifi', 'viewoffer', array('id' => $contract->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($contract->contract_id); ?></a></td>
 				<td><?php echo ($contract->approved_faxsheet) ? 'Approved' : (isset($contract->faxsheet_request) ? 'Requested' : 'None'); ?></td>
-				<td><?php echo ($contract->verified_sst) ? 'Yes' : 'No'; ?></td>						
+				<td><?php echo ($contract->verified_sst) ? 'Yes' : 'No'; ?></td>
+				<td>$<?php echo htmlspecialchars($other); ?></td>
+				<td>$<?php echo htmlspecialchars($return); ?></td>
 			</tr>
 			<?php } ?>
 		</tbody>

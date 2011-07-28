@@ -64,6 +64,7 @@ defined('P_RUN') or die('Direct access prohibited');
 		<strong class="pf-label">Supervisor:</strong>
 		<span class="pf-field"></span>
 	</div>
+	<?php if ($this->employee->pay_type == 'commission_draw') { ?>
 	<div class="pf-element pf-full-width">
 		<h3 style="text-align: center;">Sales</h3>
 		<table class="item_list">
@@ -97,7 +98,7 @@ defined('P_RUN') or die('Direct access prohibited');
 					<td class="right_text">$</td>
 					<td class="right_text">$<?php echo number_format($commission, 2, '.', '');?></td>
 				</tr>
-				<?php }  ?>
+				<?php } ?>
 				<tr>
 					<td><strong>Total</strong></td>
 					<td></td>
@@ -109,6 +110,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			</tbody>
 		</table>
 	</div>
+	<?php } ?>
 	<div class="pf-element pf-full-width">
 		<h3 style="text-align: center;">Hourly</h3>
 		<table class="item_list">
@@ -194,11 +196,13 @@ defined('P_RUN') or die('Direct access prohibited');
 	<div class="pf-element pf-full-width">
 		<div style="float: right; clear: right;">
 			<?php
-			if ($this->employee->pay_type != 'salary') {
+			if ($this->employee->pay_type == 'commission_draw') {
 				if ($this->commission > $pay)
 					echo '<div><strong>COMMISSION</strong></div>';
 				else
 					echo '<div><strong>DRAW</strong></div>';
+			} elseif ($this->employee->pay_type == 'hourly'){
+				echo '<div><strong>HOURLY</strong></div';
 			} else
 				echo '<div><strong>SALARY</strong></div>';
 			?>

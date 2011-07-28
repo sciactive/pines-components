@@ -1013,15 +1013,20 @@ class com_reports extends component {
 			// Add together their total pay for this time period and determine
 			// if they're draw or commission.
 			$cur_employee['hour_pay_total'] = $cur_employee['reghours'] + $cur_employee['overtimehours'];
-			if ($cur_employee['hour_pay_total'] > $cur_employee['commission']) {
+			if (($cur_employee['hour_pay_total'] > $cur_employee['commission']) && $cur_employee['entity']->pay_type == 'commission_draw') {
 				$cur_employee['commission_status'] = 'draw';
 				$cur_employee['weekly'] = $cur_employee['hour_pay_total'] - $cur_employee['commission'];
 				$cur_employee['pay_total'] = $cur_employee['hour_pay_total'];
-			} else {
+			} elseif ($cur_employee['entity']->pay_type == 'commission_draw') {
 				$cur_employee['commission_status'] = 'commission';
 				$cur_employee['weekly'] = 0;
 				$cur_employee['pay_total'] = $cur_employee['commission'];	
+			} else {
+				$cur_employee['pay_total'] = $cur_employee['hour_pay_total'] = $cur_employee['reghours'] + $cur_employee['overtimehours'];
+				$cur_employee['commission_status'] = 'hourly';
+				$cur_employee['commission'] = 0;
 			}
+
 			// Ensures no 0 amount for the total_rate.
 			if ($cur_employee['clocked'] == 0)
 				$cur_employee['total_rate'] = $cur_employee['pay_total'];
@@ -1045,7 +1050,7 @@ class com_reports extends component {
 			// total amount on draw.
 			if ($cur_employee['commssion_status'] == 'draw')
 				$commission_percent['draw']++;
-			elseif ($cur_employee['commission_status'] != 'salary')
+			elseif (($cur_employee['commission_status'] != 'salary') && ($cur_employee['commission_status'] != 'hourly'))
 				$commission_percent['commission']++;
 			// Determine the totals for the totals entry line of the report.
 			if ($cur_employee['commission_status'] != 'salary') {

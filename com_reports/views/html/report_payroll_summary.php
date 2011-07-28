@@ -182,7 +182,7 @@ $pines->com_pgrid->load();
 			$commission_total[0] = $commission_total[1]=0;
 			foreach ($this->employees as $cur_employee) {
 				// Print out each employee's row of information.
-				if ($cur_employee['commission_status'] != 'salary' && $cur_employee['sales_total'] != 0) {
+				if ($cur_employee['commission_status'] == 'commission_draw' && $cur_employee['sales_total'] != 0) {
 					$commission_total[0] += ($cur_employee['commission'] / $cur_employee['sales_total']) * 100;
 					$commission_total[1]++;
 				}
@@ -191,7 +191,7 @@ $pines->com_pgrid->load();
 				<td><a href="<?php echo htmlspecialchars(pines_url('com_user', 'edituser', array('id' => $cur_employee['entity']->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_employee['entity']->name); ?></a></td>
 				<td><?php echo htmlspecialchars(strtoupper($cur_employee['commission_status']));?></td>
 				<td><?php echo $cur_employee['commission_status'] != 'salary' ? 'N/A' : number_format($cur_employee['salary_pay_period'], 2, '.', ''); ?></td>
-				<td style="text-align: center;"><?php echo ($cur_employee['commission_status'] != 'salary' && $cur_employee['sales_total'] != 0) ? number_format(((($cur_employee['commission'])/$cur_employee['sales_total'])*100),2,'.','') : '6.00'; ?></td>
+				<td style="text-align: center;"><?php echo ($cur_employee['commission_status'] != 'salary' && $cur_employee['sales_total'] != 0 && $cur_employee['commission_status'] != 'hourly') ? number_format((($cur_employee['commission'] / $cur_employee['sales_total']) * 100), 2, '.', '') : '-'; ?></td>
 				<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? htmlspecialchars($cur_employee['number_sales']) : '-'; ?></td>
 				<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? '$'.number_format($cur_employee['sales_total'], 2, '.', '') : '-'; ?></td>
 				<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? number_format($cur_employee['entity']->pay_rate, 2, '.', '') : '-'; ?></td>

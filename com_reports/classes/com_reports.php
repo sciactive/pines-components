@@ -287,6 +287,62 @@ class com_reports extends component {
 	}
 
 	/**
+	 * Creates and attaches a module which reports an employee's payroll.
+	 *
+	 * @param int $start_date The start date of the report.
+	 * @param int $end_date The end date of the report.
+	 * @param entity $employee The enitity of the employee
+	 * @param long $payperhour this is passed in from report_payroll_summary
+	 * @param long $totalhours this is the total amount of hours work
+	 * @param long $totalpay this is the total they're being paid for the time period
+	 * @param long $hours hours worked
+	 * @param long $salary this is the pay for the time period of salaried employees
+ 	 * @param long $commission this is the total commission
+	 * @return module the payroll summary module.
+	 */
+	function report_individual_payroll($start_date = null, $end_date = null,  $employee = null, $payperhour = null, $totalhours =null, $totalpay = null,$salary = null, $commission=null) {
+		global $pines;
+		$module = new module('com_reports', 'report_individual_payroll', 'content');
+		$module->employee = $employee;
+		$module->pay_per_hour = $payperhour;
+		$module->total_hours = $totalhours;
+		$module->total_pay = $totalpay;
+		$module->salary = $salary;
+		$module->commission=$commission;
+		if($toatlhours > 40){
+			$module->reg_hours = 40;
+			$module->overtime = 40 - $totalhours;
+		}else{
+			$module->reg_hours = $totalhours;
+			$module->overtime = 0;
+		}
+
+		$selector = array('&');
+		// Datespan of the report.
+		if (isset($start_date))
+			$selector['gte'] = array('p_cdate', (int) $start_date);
+		if (isset($end_date))
+			$selector['lt'] = array('p_cdate', (int) $end_date);
+		$module->start_date = $start_date;
+		$module->end_date = $end_date;
+		$module->all_time = (!isset($start_date) && !isset($end_date));		
+		$and= array('&', 'ref' => array('user', $module->employee));
+		$selector['tag'] = array('com_sales', 'sale');
+		$module->sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $and);
+		$selector['tag'] = array('com_sales', 'return');
+		// Make sure this sale is not attached to any returns.
+		foreach ($module->sales as $key => &$cur_sale) {
+			$return = $pines->entity_manager->get_entity(
+					array('class' => com_sales_return, 'skip_ac' => true),
+					array('&', 'tag' => array('com_sales', 'return'), 'ref' => array('sale', $cur_sale))
+				);
+			if (isset($return->guid))
+				unset($module->sales[$key]);
+		}
+		unset($cur_sale);
+		return $module;
+	}
+	/**
 	 * Creates and attaches a module which reports employee issues.
 	 *
 	 * @param int $start_date The start date of the report.
@@ -775,6 +831,244 @@ class com_reports extends component {
 			$selector = array_merge($selector, $or);
 		$returns = $pines->entity_manager->get_entities(array('class' => com_sales_return), $selector);
 		$module->invoices = array_merge($sales, $returns);
+
+		return $module;
+	}
+
+	/**
+	 * Creates and attaches a module which summarizes employee payroll.
+	 * 
+	 * Hourly employees pay is totaled for the hourly pay and then their commission pay.
+	 * If their commission is greater than their hourly they get a status of commission.
+	 * If their hourly is more they get a draw status.
+	 *
+	 * @param int $start_date The start date of the report.
+	 * @param int $end_date The end date of the report.
+	 * @param group $location The group to report on.
+	 * @param bool $descendents Whether to show descendent locations.
+	 * @return module the invoice summary module.
+	 */
+	function report_payroll_summary($start_date = null, $end_date = null, $location = null, $descendents = false) {
+		global $pines;
+
+		$module = new module('com_reports', 'report_payroll_summary', 'content');
+
+		$selector = array('&',
+				'tag' => array('com_sales', 'sale')
+			);
+
+		// Datespan of the report.
+		if (isset($start_date))
+			$selector['gte'] = array('p_cdate', (int) $start_date);
+		if (isset($end_date))
+			$selector['lt'] = array('p_cdate', (int) $end_date);
+		$module->start_date = $start_date;
+		$module->end_date = $end_date;
+		$module->all_time = (!isset($start_date) && !isset($end_date));
+
+		// Location of the report.
+		if (!isset($location->guid))
+			$location = $_SESSION['user']->group;
+		if ($descendents)
+			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		else
+			$or = array('|', 'ref' => array('group', $location));
+		$module->location = $location;
+		$module->descendents = $descendents;
+
+		$module->sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
+		// Make sure this sale is not attached to any returns.
+		foreach ($module->sales as $key => &$cur_sale) {
+			$return = $pines->entity_manager->get_entity(
+					array('class' => com_sales_return, 'skip_ac' => true),
+					array('&', 'tag' => array('com_sales', 'return'), 'ref' => array('sale', $cur_sale))
+				);
+			if (isset($return->guid))
+				unset($module->sales[$key]);
+		}
+		unset($cur_sale);
+
+		// Find employees in the location or its descendents.
+		$employees = $pines->com_hrm->get_employees(true);
+		$module->employees = array();
+		foreach ($employees as $key => &$cur_employee) {
+			if (!($cur_employee->in_group($location) || ($descendents && $cur_employee->is_descendent($location))))
+				continue;
+			$module->employees[] = array('entity' => $cur_employee);
+		}
+		unset($cur_empoloyee);
+
+		// Calculate time totals based on scheduled vs clocked hours.
+		$totals = array();
+		$total_group['scheduled'] = $total_group['clocked'] = $time_punch = $total_count = 0;
+		foreach ($module->employees as &$cur_employee) {
+			$totals[$total_count]['scheduled'] = $totals[$total_count]['clocked'] = 0;
+			$schedule = $pines->entity_manager->get_entities(
+					array('class' => com_calendar_event),
+					array('&',
+						'tag' => array('com_calendar', 'event'),
+						'gte' => array('start', $this->start_date),
+						'lt' => array('end', $this->end_date),
+						'ref' => array('employee', $cur_employee['entity'])
+					)
+				);
+			foreach ($schedule as $cur_schedule)
+				$totals[$total_count]['scheduled'] += $cur_schedule->scheduled;
+			$totals[$total_count]['clocked'] = $cur_employee['entity']->timeclock->sum($this->start_date, $this->end_date);
+
+			$cur_employee['scheduled'] = round($totals[$total_count]['scheduled'] / 3600, 2);
+			$cur_employee['clocked'] = round($totals[$total_count]['clocked'] / 3600, 2);
+			$cur_employee['variance'] = round(($totals[$total_count]['clocked'] - $totals[$total_count]['scheduled']) / 3600, 2);
+		
+			$total_group['scheduled'] += $totals[$total_count]['scheduled'];
+			$total_group['clocked'] += $totals[$total_count]['clocked'];
+			$total_count++;
+		}
+		unset($cur_empoloyee);
+		$module->total_scheduled = $total_group['scheduled'];
+		$module->total_clocked = $total_group['clocked'];
+
+		// Determine each employee's sale totals.
+		$saletotals = array();
+		$numbersales= array();
+		$commission_array = array();
+		$total_num_sales = 0;
+		foreach ($module->sales as $cur_sale) {
+			$guid = $cur_sale->user->guid;	
+			if (empty($saletotals[$guid])) {
+				$saletotals[$guid] = $cur_sale->total;
+				$numbersales[$guid] = 1;
+				$total_num_sales++;
+				if ($cur_sale->products->commission)
+					$commission_array[$guid] = number_format($cur_sale->products->commission, 2, '.', '');
+				else
+					$commission_array[$guid] = number_format(($cur_sale->total * 0.06), 2, '.', '');
+			} else {
+				$saletotals[$guid] += $cur_sale->total;
+				$numbersales[$guid]++;
+				$total_num_sales++;
+				if ($cur_sale->products->commission)
+					$commission_array[$guid] += number_format($cur_sale->products->commission, 2, '.', '');
+				else
+					$commission_array[$guid] += number_format(($cur_sale->total * 0.06), 2, '.', '');
+			}			
+		}
+		$module->group_num_sales = $total_num_sales;
+
+		// Determine each store's sales totals.
+		$module->group_sales_total = 0;
+		foreach ($module->employees as &$cur_employee) {
+			if (array_key_exists($cur_employee['entity']->guid, $saletotals)) {
+				$cur_employee['sales_total'] = $saletotals[$cur_employee['entity']->guid];
+				if ($cur_employee['entity']->pay_type != 'salary')
+					$module->group_sales_total += $saletotals[$cur_employee['entity']->guid];
+				$cur_employee['number_sales'] = $numbersales[$cur_employee['entity']->guid];
+			} else {
+				$cur_employee['sales_total'] = 0;
+				$cur_employee['number_sales'] = 0;
+			}
+		}
+		unset($cur_empoloyee);
+
+		// More computing variables to use in view.
+		$commission_percent = array(
+			'draw' => 0,
+			'commission' => 0
+		);
+		$module->group_salary_total = 0;
+		$pay_rate = array(
+			'rate' => 0,
+			'people' => 0
+		);
+		$module->group_hours = 0;
+		$module->commission_total = 0;
+		$module->group_reg_hours = 0;
+		$module->group_overtime_hours = 0;
+		$module->group_weekly_total = 0;
+		$module->group_pay_total = 0;
+		$group_percent_rate = 0;
+
+		foreach ($module->employees as &$cur_employee) {
+			// Determines what the employees commision is for this time period
+			// otherwise it get the default 6% commission.
+			if (array_key_exists($cur_employee['entity']->guid, $commission_array))
+				$cur_employee['commission'] = $commission_array[$cur_employee['entity']->guid];
+			else
+				$cur_employee['commission'] = 0.06 * $cur_employee['sales_total'];
+			// Figure out what the time frame is the employee has worked in weeks.
+			$time_diff_weeks = ($module->end_date - $module->start_date) / 604800;
+			// Get the amount of hours for that amount of weeks, which won't be overtime hours.
+			$weeks_hours = $time_diff_weeks * 40;
+			// Get the amount of hours worked.
+			$cur_employee['hour_total'] = $cur_employee['clocked'];
+			// Figure out if they have any overtime.
+			if ($cur_employee['hour_total'] > $weeks_hours) {
+				$cur_employee['reghours'] = $cur_employee['entity']->pay_rate * $weeks_hours;
+				$cur_employee['overtimehours'] = ($cur_employee['hour_total'] - $weeks_hours) * ($cur_employee['entity']->hourly_rate * 1.5);
+			} else {
+				$cur_employee['reghours'] = ($cur_employee['entity']->pay_rate * $cur_employee['hour_total']);
+				$cur_employee['overtimehours'] = 0;
+			}
+			// Add together their total pay for this time period and determine
+			// if they're draw or commission.
+			$cur_employee['hour_pay_total'] = $cur_employee['reghours'] + $cur_employee['overtimehours'];
+			if ($cur_employee['hour_pay_total'] > $cur_employee['commission']) {
+				$cur_employee['commission_status'] = 'draw';
+				$cur_employee['weekly'] = $cur_employee['hour_pay_total'] - $cur_employee['commission'];
+				$cur_employee['pay_total'] = $cur_employee['hour_pay_total'];
+			} else {
+				$cur_employee['commission_status'] = 'commission';
+				$cur_employee['weekly'] = 0;
+				$cur_employee['pay_total'] = $cur_employee['commission'];	
+			}
+			// Ensures no 0 amount for the total_rate.
+			if ($cur_employee['clocked'] == 0)
+				$cur_employee['total_rate'] = $cur_employee['pay_total'];
+			else
+				$cur_employee['total_rate'] = $cur_employee['pay_total'] / $cur_employee['clocked'];
+			// Does computations for salaried employee variables.
+			if ($cur_employee['entity']->pay_type != 'hourly') {
+				$cur_employee['commission_status'] = 'salary';
+				if (isset($start_date)) {
+					$ratio = (($end_date - $start_date) / 86400) / 360;
+					$cur_employee['salary_pay_period'] = $cur_employee['entity']->pay_rate * $ratio;
+					$module->group_salary_total += round($cur_employee['salary_pay_period'], 2);
+					$cur_employee['pay_total'] = $cur_employee['salary_pay_period'];
+				} else {
+					$cur_employee['salary_pay_period'] = $cur_employee['entity']->pay_rate;
+					$module->group_salary_total += round($cur_employee['salary_pay_period'], 2);
+					$cur_employee['pay_total'] = $cur_employee['salary_pay_period'];
+				}
+			}	
+			// Add the total amount of hourly employees on commission and the
+			// total amount on draw.
+			if ($cur_employee['commssion_status'] == 'draw')
+				$commission_percent['draw']++;
+			elseif ($cur_employee['commission_status'] != 'salary')
+				$commission_percent['commission']++;
+			// Determine the totals for the totals entry line of the report.
+			if ($cur_employee['commission_status'] != 'salary') {
+				$pay_rate['rate'] += $cur_employee['entity']->pay_rate;
+				$pay_rate['people']++;
+				$module->group_hours += $cur_employee['clocked'];
+				$module->commission_total += $cur_employee['commission'];
+				$module->group_reg_hours += $cur_employee['reghours'];
+				$module->group_overtime_hours += $cur_employee['overtimehours'];
+				$module->group_weekly_total += $cur_employee['weekly'];
+				$group_percent_rate += $cur_employee['total_rate'];
+			}
+			$module->group_pay_total += round($cur_employee['pay_total'], 2);	
+		}
+		unset($cur_empoloyee);
+		$module->group_percent_rate = $group_percent_rate / $pay_rate['people'];
+		$module->pay_rate_total = $pay_rate['rate'] / $pay_rate['people'];
+		$module->commission_percent = $commission_percent['commission'] / $pay_rate['people'];
+
+		// Get total sales.
+		$module->group_sales = 0;
+		foreach ($saletotals as $value) {
+			$module->group_sales += $value;
+		}
 
 		return $module;
 	}

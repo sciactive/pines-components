@@ -89,6 +89,14 @@
 				}
 			},
 			{
+				"path": "main_menu/reports/hrm/reportpayrollsummary",
+				"text": "Report Payroll Summary",
+				"href": ["com_reports","reportpayrollsummary"],
+				"depend": {
+					"ability": "com_reports/reportpayroll"
+				}
+			},
+			{
 				"path": "main_menu/reports/hrm/payroll",
 				"text": "Payroll",
 				"href": ["com_reports","listpaystubs"],

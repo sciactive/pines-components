@@ -40,7 +40,11 @@ defined('P_RUN') or die('Direct access prohibited');
 		<div><img style="margin: 0;" src="<?php echo is_callable(array($this->employee->group, 'get_logo')) ? htmlspecialchars($this->employee->group->get_logo(true)) : ''; ?>" alt="<?php echo htmlspecialchars($pines->config->page_title); ?>" /></div>
 		<div><?php
 		if ($this->employee->pay_type != 'salary') {
-			echo '<strong>Pay Per Hour:</strong> '.number_format(($this->total_pay / $this->total_hours), 2, '.', '');
+			if($this->total_hours == 0)
+				$pay_rate = 0;
+			else
+				$pay_rate = $this->total_pay / $this->total_hours;
+			echo '<strong>Pay Per Hour:</strong> '.number_format(($pay_rate), 2, '.', '');
 		}
 		?></div>
 	</div>
@@ -73,8 +77,8 @@ defined('P_RUN') or die('Direct access prohibited');
 					<th>Invoice #</th>
 					<th>Name</th>
 					<th>Sale Date</th>
-					<th class="right_text">InStore $</th>
-					<th class="right_text">SPIFF</th>
+					<th class="right_text">Sale Amount$</th>
+					<th class="right_text"></th>
 					<th class="right_text">Commission</th>
 				</tr>
 			</thead>
@@ -94,8 +98,8 @@ defined('P_RUN') or die('Direct access prohibited');
 					<td><?php echo htmlspecialchars($cur_sale->id); ?></td>
 					<td><?php echo htmlspecialchars($cur_sale->customer->name); ?></td>
 					<td><?php echo format_date($cur_sale->p_cdate); ?></td>
-					<td class="right_text"><?php echo number_format($cur_sale->subtotal, 2, '.', ''); ?></td>
-					<td class="right_text">$</td>
+					<td class="right_text">$<?php echo number_format($cur_sale->subtotal, 2, '.', ''); ?></td>
+					<td></td>
 					<td class="right_text">$<?php echo number_format($commission, 2, '.', '');?></td>
 				</tr>
 				<?php } ?>
@@ -103,9 +107,9 @@ defined('P_RUN') or die('Direct access prohibited');
 					<td><strong>Total</strong></td>
 					<td></td>
 					<td></td>
-					<td class="right_text"><strong><?php echo number_format($total_sales, 2, '.', '');?></strong></td>
+					<td class="right_text"><strong>$<?php echo number_format($total_sales, 2, '.', '');?></strong></td>
 					<td class="right_text"></td>
-					<td class="right_text"><strong><?php echo number_format($commission_total, 2, '.', '');?></strong></td>
+					<td class="right_text"><strong>$<?php echo number_format($commission_total, 2, '.', '');?></strong></td>
 				</tr>
 			</tbody>
 		</table>
@@ -128,28 +132,28 @@ defined('P_RUN') or die('Direct access prohibited');
 				<tr>
 					<td class="right_text">Regular</td>
 					<td class="right_text"><?php echo number_format($this->reg_hours, 2, '.', ''); ?></td>
-					<td class="right_text"><?php echo number_format(($this->reg_hours * $this->employee->pay_rate), 2, '.', ''); ?></td>
+					<td class="right_text">$<?php echo number_format(($this->reg_hours * $this->employee->pay_rate), 2, '.', ''); ?></td>
 				</tr>
 				<tr>
 					<td class="right_text">Overtime</td>
 					<td class="right_text"><?php echo number_format($this->overtime, 2, '.',''); ?></td>
-					<td class="right_text"><?php echo number_format(($this->overtime * $this->employee->pay_rate * 1.5), 2, '.', ''); ?></td>
+					<td class="right_text">$<?php echo number_format(($this->overtime * $this->employee->pay_rate * 1.5), 2, '.', ''); ?></td>
 				</tr>
 				<tr>
 					<td><strong>Total Hourly</strong></td>
 					<td class="right_text"><?php echo number_format(($this->overtime + $this->reg_hours), 2, '.','');?></td>
-					<td class="right_text"><?php echo number_format($pay, 2, '.', '');?></td>
+					<td class="right_text">$<?php echo number_format($pay, 2, '.', '');?></td>
 				</tr>
 				<?php } else { ?>
 				<tr>
 					<td>Salary</td>
 					<td class="right_text"></td>
-					<td class="right_text"><?php echo number_format($this->salary, 2, '.', ''); ?></td>
+					<td class="right_text">$<?php echo number_format($this->salary, 2, '.', ''); ?></td>
 				</tr>
 				<tr>
 					<td ><strong>Total</strong></td>
 					<td class="right_text"></td>
-					<td class="right_text"><?php echo number_format($this->salary, 2, '.', ''); ?></td>
+					<td class="right_text">$<?php echo number_format($this->salary, 2, '.', ''); ?></td>
 				</tr>
 				<?php } ?>
 			</tbody>
@@ -208,7 +212,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			?>
 			<hr style="clear: both;" />
 			<div class="right_text">
-				<span>Gross Pay: <?php echo number_format($this->total_pay, 2, '.', '');?></span>
+				<span>Gross Pay: $<?php echo number_format($this->total_pay, 2, '.', '');?></span>
 			</div>
 		</div>
 	</div>

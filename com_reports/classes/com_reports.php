@@ -916,8 +916,7 @@ class com_reports extends component {
 				);
 			foreach ($schedule as $cur_schedule)
 				$totals[$total_count]['scheduled'] += $cur_schedule->scheduled;
-			$totals[$total_count]['clocked'] = $cur_employee['entity']->timeclock->sum($this->start_date, $this->end_date);
-
+			$totals[$total_count]['clocked'] = $cur_employee['entity']->timeclock->sum($start_date, $end_date);
 			$cur_employee['scheduled'] = round($totals[$total_count]['scheduled'] / 3600, 2);
 			$cur_employee['clocked'] = round($totals[$total_count]['clocked'] / 3600, 2);
 			$cur_employee['variance'] = round(($totals[$total_count]['clocked'] - $totals[$total_count]['scheduled']) / 3600, 2);

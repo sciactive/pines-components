@@ -850,6 +850,8 @@ class com_sales_sale extends entity {
 	 */
 	public function save() {
 		global $pines;
+		// Temporary sale corruption debugging.
+		$products_copy = serialize($this->products);
 		if (!isset($this->status))
 			$this->status = 'quoted';
 		if (!isset($this->id))
@@ -921,7 +923,19 @@ class com_sales_sale extends entity {
 			pines_log("Sale {$this->id} has no products. Cannot be saved.", 'error');
 			return false;
 		}
-		return parent::save();
+		if (parent::save()) {
+			// Temporary sale corruption debugging.
+			$check_sale = com_sales_sale::factory($this->guid);
+			if (!$check_sale->products || empty($check_sale->products)) {
+				pines_log("Sale corruption occurred! Sale {$this->id}.", 'error');
+				pines_error('Sale corruption occurred! Please notify SST!');
+				$mail = com_mailer_mail::factory('hunter@sciactive.com', 'hunter@sciactive.com', 'Sale corruption occurred!', "Sale corruption occurred on sale $this->id.\n\nCopy of the sale's products array:\n\n$products_copy");
+				$mail->send();
+				return false;
+			}
+		} else {
+			return false;
+		}
 	}
 
 	/**

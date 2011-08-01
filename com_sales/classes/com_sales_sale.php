@@ -933,6 +933,7 @@ class com_sales_sale extends entity {
 				$mail->send();
 				return false;
 			}
+			return true;
 		} else {
 			return false;
 		}

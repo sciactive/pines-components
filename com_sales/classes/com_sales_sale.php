@@ -929,7 +929,7 @@ class com_sales_sale extends entity {
 			if (!$check_sale->products || empty($check_sale->products)) {
 				pines_log("Sale corruption occurred! Sale {$this->id}.", 'error');
 				pines_error('Sale corruption occurred! Please notify SST!');
-				$mail = com_mailer_mail::factory('hunter@sciactive.com', 'hunter@sciactive.com', 'Sale corruption occurred!', "Sale corruption occurred on sale $this->id.\n\nCopy of the sale's products array:\n\n$products_copy");
+				$mail = com_mailer_mail::factory('hunter@sciactive.com', 'hunter@sciactive.com', 'Sale corruption occurred!', "Sale corruption occurred on sale $this->id.\n\nCopy of the sale's products array:\n\n$products_copy\n\n And a debug backtrace:\n\n".var_export(debug_backtrace(), true));
 				$mail->send();
 				return false;
 			}

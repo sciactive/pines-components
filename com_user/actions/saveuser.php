@@ -40,7 +40,19 @@ if (gatekeeper('com_user/enabling')) {
 	else
 		$user->remove_tag('enabled');
 }
-$user->email = $_REQUEST['email'];
+// Only send an email if they don't have the ability to edit all users.
+if ($pines->config->com_user->confirm_email && !gatekeeper('com_user/edituser')) {
+	if ($user->email != $_REQUEST['email']) {
+		$user->new_email_address = $_REQUEST['email'];
+		$user->new_email_secret = uniqid('', true);
+		// Save the old email in case the verification link is clicked.
+		// TODO: Code a way to prevent the cancel email from being overwritten for a time.
+		$user->cancel_email_address = $user->email;
+		$user->cancel_email_secret = uniqid('', true);
+	}
+} else {
+	$user->email = $_REQUEST['email'];
+}
 $user->phone = preg_replace('/\D/', '', $_REQUEST['phone']);
 $user->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
 if ($pines->config->com_user->referral_codes)
@@ -206,6 +218,63 @@ if (gatekeeper('com_user/assignpin') && !empty($user->pin)) {
 if ($user->save()) {
 	pines_notice('Saved user ['.$user->username.']');
 	pines_log('Saved user ['.$user->username.']');
+	if ($pines->config->com_user->confirm_email && !gatekeeper('com_user/edituser') && $user->email != $_REQUEST['email']) {
+		// Send the verification email.
+		$link = '<a href="'.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'type' => 'change', 'secret' => $user->new_email_secret), true)).'">'.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'type' => 'change', 'secret' => $user->new_email_secret), true)).'</a>';
+		$link2 = '<a href="'.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'type' => 'cancelchange', 'secret' => $user->cancel_email_secret), true)).'">'.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'type' => 'cancelchange', 'secret' => $user->cancel_email_secret), true)).'</a>';
+		$search = array(
+			'{page_title}',
+			'{site_name}',
+			'{site_address}',
+			'{link}',
+			'{username}',
+			'{name}',
+			'{email}',
+			'{phone}',
+			'{fax}',
+			'{timezone}',
+			'{address}'
+		);
+		$replace = array(
+			$pines->config->page_title,
+			$pines->config->system_name,
+			$pines->config->full_location,
+			$link,
+			htmlspecialchars($user->username),
+			htmlspecialchars($user->name),
+			htmlspecialchars($user->new_email_address),
+			format_phone($user->phone),
+			format_phone($user->fax),
+			htmlspecialchars($user->timezone),
+			htmlspecialchars($user->address_type == 'US' ? "{$user->address_1} {$user->address_2}\n{$user->city}, {$user->state} {$user->zip}" : $user->address_international)
+		);
+		// Have to have a new array because the second link is different.
+		$replace2 = array(
+			$pines->config->page_title,
+			$pines->config->system_name,
+			$pines->config->full_location,
+			$link2,
+			htmlspecialchars($user->username),
+			htmlspecialchars($user->name),
+			htmlspecialchars($user->new_email_address),
+			format_phone($user->phone),
+			format_phone($user->fax),
+			htmlspecialchars($user->timezone),
+			htmlspecialchars($user->address_type == 'US' ? "{$user->address_1} {$user->address_2}\n{$user->city}, {$user->state} {$user->zip}" : $user->address_international)
+		);
+		// Two emails, first goes to the new address for verification.
+		// Second goes to the old email address to cancel the change.
+		$subject = str_replace($search, $replace, $pines->config->com_user->email_subject_change);
+		$subject2 = str_replace($search, $replace2, $pines->config->com_user->email_subject_cancel_change);
+		$content = str_replace($search, $replace, $pines->config->com_user->email_content_change);
+		$content2 = str_replace($search, $replace2, $pines->config->com_user->email_content_cancel_change);
+		$mail = com_mailer_mail::factory($pines->config->com_user->email_from_address, $user->new_email_address, $subject, $content);
+		$mail2 = com_mailer_mail::factory($pines->config->com_user->email_from_address, $user->email, $subject2, $content2);
+		if ($mail->send() && $mail2->send())
+			pines_notice('A confirmation has been sent to your new email address. Please click the link provided to verify your address.');
+		else
+			pines_error('Couldn\'t send confirmation email.');
+	}
 } else {
 	pines_error('Error saving user. Do you have permission?');
 }

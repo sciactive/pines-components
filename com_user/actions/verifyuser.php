@@ -19,23 +19,55 @@ if (!isset($user->guid)) {
 	return;
 }
 
-if (!isset($user->secret) || $_REQUEST['secret'] != $user->secret) {
-	pines_notice('The secret code given does not match this user.');
-	$pines->user_manager->print_login();
-	return;
+switch ($_REQUEST['type']) {
+	case 'register':
+	default:
+		// Verify new user's email address.
+		if (!isset($user->secret) || $_REQUEST['secret'] != $user->secret)
+			punt_user('The secret code given does not match this user.');
+
+		$user->enable();
+		unset($user->secret);
+		break;
+	case 'change':
+		// Email address change.
+		if (!isset($user->new_email_secret) || $_REQUEST['secret'] != $user->new_email_secret)
+			punt_user('The secret code given does not match this user.');
+
+		$user->email = $user->new_email_address;
+		unset($user->new_email_address, $user->new_email_secret);
+		break;
+	case 'cancelchange':
+		// Cancel an email address change.
+		if (!isset($user->cancel_email_secret) || $_REQUEST['secret'] != $user->cancel_email_secret)
+			punt_user('The secret code given does not match this user.');
+
+		$user->email = $user->cancel_email_address;
+		unset($user->new_email_address, $user->new_email_secret, $user->cancel_email_address, $user->cancel_email_secret);
+		break;
 }
 
-$user->add_tag('enabled');
-unset($user->secret);
-
 if ($user->save()) {
-	pines_log('Validated user ['.$user->username.']');
-	$pines->user_manager->login($user);
-	$notice = new module('com_user', 'note_welcome', 'content');
-	if ( !empty($_REQUEST['url']) ) {
-		pines_notice('Thank you. Your account has been verified.');
-		pines_redirect(urldecode($_REQUEST['url']));
-		return;
+	switch ($_REQUEST['type']) {
+		case 'register':
+		default:
+			pines_log('Validated user ['.$user->username.']');
+			$pines->user_manager->login($user);
+			$notice = new module('com_user', 'note_welcome', 'content');
+			if ( !empty($_REQUEST['url']) ) {
+				pines_notice('Thank you. Your account has been verified.');
+				pines_redirect(urldecode($_REQUEST['url']));
+				return;
+			}
+			break;
+		case 'change':
+			pines_notice('Thank you. Your new email address has been verified.');
+			pines_redirect(pines_url());
+			break;
+		case 'cancelchange':
+			pines_notice('The email address change has been canceled.');
+			pines_redirect(pines_url());
+			break;
 	}
 } else {
 	pines_error('Error saving user.');

@@ -78,10 +78,10 @@ $user->groups = (array) $pines->entity_manager->get_entities(array('class' => gr
 
 if ($pines->config->com_user->confirm_email) {
 	// The user will be enabled after confirming their e-mail address.
-	$user->remove_tag('enabled');
+	$user->disable();
 	$user->secret = uniqid('', true);
 } else {
-	$user->add_tag('enabled');
+	$user->enable();
 }
 
 // If create_admin is true and there are no other users, grant "system/all".
@@ -101,7 +101,7 @@ if ($user->save()) {
 	pines_session('close');
 	if ($pines->config->com_user->confirm_email) {
 		// Send the verification email.
-		$link = '<a href="'.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'secret' => $user->secret, 'url' => $_REQUEST['url']), true)).'">'.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'secret' => $user->secret, 'url' => $_REQUEST['url']), true)).'</a>';
+		$link = '<a href="'.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'type' => 'register', 'secret' => $user->secret, 'url' => $_REQUEST['url']), true)).'">'.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'type' => 'register', 'secret' => $user->secret, 'url' => $_REQUEST['url']), true)).'</a>';
 		$search = array(
 			'{page_title}',
 			'{site_name}',

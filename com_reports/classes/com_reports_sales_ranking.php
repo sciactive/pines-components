@@ -1,4 +1,5 @@
 <?php
+
 /**
  * com_reports_sales_ranking class.
  *
@@ -73,7 +74,7 @@ class com_reports_sales_ranking extends entity {
 	 */
 	public function print_form() {
 		global $pines;
-		
+
 		$module = new module('com_reports', 'form_sales_ranking', 'content');
 		$module->entity = $this;
 
@@ -111,27 +112,25 @@ class com_reports_sales_ranking extends entity {
 			$locations[] = $group;
 
 		// Date setup for different weekly and monthly breakdowns.
-		if (format_date(time(), 'custom', 'w') == '1') {
-			$current_start = strtotime('00:00:00', time());
-		} else {
-			$current_start = strtotime('00:00:00', strtotime('last Monday'));
-		}
-		if (format_date(time(), 'custom', 'w') == '0') {
-			$current_end = strtotime('23:59:59', time()) + 1;
-		} else {
-			$current_end = strtotime('23:59:59', strtotime('next Sunday')) + 1;
-		}
+		$secperday = 60 * 60 * 24;
 		if ($this->end_date > time()) {
-			$days_passed = (int) format_date(time(), 'custom', 'j');
-			$days_total = (int) format_date(time(), 'custom', 't');
+			$days_passed = round((time() - $this->start_date) / $secperday);
+			$days_total = round(($this->end_date - $this->start_date) / $secperday);
+			if (format_date(time(), 'custom', 'w') == '1')
+				$current_start = strtotime('00:00:00', time());
+			else
+				$current_start = strtotime('00:00:00', strtotime('last Monday'));
+			if (format_date(time(), 'custom', 'w') == '0')
+				$current_end = strtotime('23:59:59', time()) + 1;
+			else
+				$current_end = strtotime('23:59:59', strtotime('next Sunday')) + 1;
 		} else {
-			$days_passed = (int) format_date($this->end_date, 'custom', 'j');
-			$days_total = (int) format_date($this->end_date, 'custom', 't');
+			$days_passed = $days_total = round(($this->end_date - $this->start_date) / $secperday);
 			$current_start = strtotime('00:00:00', strtotime('last Monday', $this->end_date));
 			$current_end = strtotime('23:59:59', $this->end_date) + 1;
 		}
 		$last_start = strtotime('-1 week', $current_start);
-		$last_end = strtotime('+1 week', $last_start);
+		$last_end = $current_start;
 
 		// Build an array to hold total data.
 		$ranking_employee = array();
@@ -160,7 +159,7 @@ class com_reports_sales_ranking extends entity {
 				'child_total' => 0.00
 			);
 		}
-		
+
 		// Recalculate new hire goals.
 		if ($this->calc_nh_goals) {
 			$nh_time = time();
@@ -173,7 +172,7 @@ class com_reports_sales_ranking extends entity {
 					$cur_rank['goal'] = 0;
 					continue;
 				}
-				$weeks_worked = ceil(($nh_time - $cur_rank['entity']->training_completion_date) / (60*60*24*7));
+				$weeks_worked = ceil(($nh_time - $cur_rank['entity']->training_completion_date) / (60 * 60 * 24 * 7));
 				if ($weeks_worked >= 5) {
 					$cur_rank['goal'] = 20000;
 				} else {
@@ -259,7 +258,6 @@ class com_reports_sales_ranking extends entity {
 			}
 		}
 
-//var_dump($days_passed, $days_total);
 		// Calculate trend and percent goal.
 		foreach ($ranking_employee as &$cur_rank) {
 			if ($days_passed > 0)

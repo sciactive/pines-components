@@ -354,10 +354,10 @@ class com_plaza extends component {
 				} while ($changed);
 				break;
 		}
-		
+
 		// Restore the default checkers.
 		$pines->depend->checkers = $old_checkers;
-		
+
 		// Filter duplicates.
 		$this->add_package = array_unique($this->add_package);
 		$this->add_service = array_unique($this->add_service);
@@ -426,7 +426,7 @@ class com_plaza extends component {
 				}
 			} while ($return['possible'] && $changed);
 		}
-		
+
 		if ($return['possible']) {
 			// Check if the same package is in both install and remove.
 			if (array_intersect((array) $return['install'], (array) $return['remove']))
@@ -630,6 +630,7 @@ class com_plaza extends component {
 
 	/**
 	 * Creates and attaches a module which lists packages.
+	 * @return module The module.
 	 */
 	public function list_packages() {
 		global $pines;
@@ -638,20 +639,26 @@ class com_plaza extends component {
 		$module = new module('com_plaza', 'package/list', 'content');
 
 		$module->db = $pines->com_package->db;
+
+		return $module;
 	}
 
 	/**
 	 * Creates and attaches a module which lists repositories.
+	 * @return module The module.
 	 */
 	public function list_repositories() {
 		$module = new module('com_plaza', 'repository/list', 'content');
 		$module->repositories = com_plaza__get_repositories();
+
+		return $module;
 	}
 
 	/**
 	 * Creates and attaches a module which lists repository packages.
 	 *
 	 * @param string $service Only list packages that provide this service.
+	 * @return module The module.
 	 */
 	public function list_repository($service = null) {
 		global $pines;
@@ -666,6 +673,8 @@ class com_plaza extends component {
 			$this->reload_packages();
 			$module->index = $this->get_index();
 		}
+
+		return $module;
 	}
 
 	/**

@@ -20,6 +20,7 @@ defined('P_RUN') or die('Direct access prohibited');
 class com_replace extends component {
 	/**
 	 * Creates and attaches a module which lists replacements.
+	 * @return module The module.
 	 */
 	public function list_replacements() {
 		global $pines;
@@ -30,6 +31,8 @@ class com_replace extends component {
 
 		if ( empty($module->replacements) )
 			pines_notice('There are no replacements.');
+
+		return $module;
 	}
 
 	/**

@@ -48,6 +48,8 @@ class com_esp extends component {
 
 		if ( empty($module->plans) )
 			pines_notice('There are no ESPs.');
+
+		return $module;
 	}
 }
 

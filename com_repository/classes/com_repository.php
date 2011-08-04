@@ -44,6 +44,7 @@ class com_repository extends component {
 	 * Creates and attaches a module which lists packages.
 	 *
 	 * @param user $user Only list packages for this user.
+	 * @return module The module.
 	 */
 	public function list_packages($user = null) {
 		$module = new module('com_repository', 'list_packages', 'content');
@@ -53,6 +54,8 @@ class com_repository extends component {
 
 		if ( empty($module->index) )
 			pines_notice('No indexed packages found.');
+
+		return $module;
 	}
 
 	/**

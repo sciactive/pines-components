@@ -23,6 +23,7 @@ defined('P_RUN') or die('Direct access prohibited');
 class com_modules extends component {
 	/**
 	 * Creates and attaches a module which lists modules.
+	 * @return module The module.
 	 */
 	public function list_modules() {
 		global $pines;
@@ -33,6 +34,8 @@ class com_modules extends component {
 
 		if ( empty($module->modules) )
 			pines_notice('There are no modules.');
+
+		return $module;
 	}
 
 	/**

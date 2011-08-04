@@ -22,6 +22,7 @@ defined('P_RUN') or die('Direct access prohibited');
 class com_content extends component {
 	/**
 	 * Creates and attaches a module which lists categories.
+	 * @return module The module.
 	 */
 	public function list_categories() {
 		global $pines;
@@ -32,12 +33,15 @@ class com_content extends component {
 
 		if ( empty($module->categories) )
 			pines_notice('No categories found.');
+
+		return $module;
 	}
 
 	/**
 	 * Creates and attaches a module which lists pages.
 	 *
 	 * @param com_content_category $category The category to list pages from. If null, all pages will be listed.
+	 * @return module The module.
 	 */
 	public function list_pages($category = null) {
 		global $pines;
@@ -53,6 +57,8 @@ class com_content extends component {
 
 		if ( empty($module->pages) )
 			pines_notice('No pages found.');
+
+		return $module;
 	}
 }
 

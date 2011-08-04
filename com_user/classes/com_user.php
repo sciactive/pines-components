@@ -49,7 +49,7 @@ class com_user extends component implements user_manager_interface {
 		} else {
 			$ac = (object) array('user' => 3, 'group' => 3, 'other' => 0);
 		}
-		
+
 		if (is_callable(array($entity->user, 'is')) && $entity->user->is($_SESSION['user']))
 			return ($ac->user >= $type);
 		if (is_callable(array($entity->group, 'is')) && ($entity->group->is($_SESSION['user']->group) || $entity->group->in_array($_SESSION['user']->groups) || $entity->group->in_array($_SESSION['descendents'])) )
@@ -210,6 +210,7 @@ class com_user extends component implements user_manager_interface {
 	 * Creates and attaches a module which lists groups.
 	 * 
 	 * @param bool $enabled Show enabled groups if true, disabled if false.
+	 * @return module The module.
 	 */
 	public function list_groups($enabled = true) {
 		global $pines;
@@ -224,12 +225,15 @@ class com_user extends component implements user_manager_interface {
 
 		if ( empty($module->groups) )
 			pines_notice('There are no'.($enabled ? ' enabled' : ' disabled').' groups.');
+
+		return $module;
 	}
 
 	/**
 	 * Creates and attaches a module which lists users.
 	 * 
 	 * @param bool $enabled Show enabled users if true, disabled if false.
+	 * @return module The module.
 	 */
 	public function list_users($enabled = true) {
 		global $pines;
@@ -244,6 +248,8 @@ class com_user extends component implements user_manager_interface {
 
 		if ( empty($module->users) )
 			pines_notice('There are no'.($enabled ? ' enabled' : ' disabled').' users.');
+
+		return $module;
 	}
 
 	public function login($user) {

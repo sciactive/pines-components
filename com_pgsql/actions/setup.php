@@ -41,7 +41,7 @@ if (isset($_REQUEST['host'])) {
 			}
 			// Create the database.
 			if ($pass)
-				$pass = $pass && @pg_query($link, 'CREATE DATABASE "'.pg_escape_string($link, $database).'" WITH OWNER = "'.pg_escape_string($link, $user).'" ENCODING = \'UTF8\' TABLESPACE = pg_default LC_COLLATE = \'en_US.utf8\' LC_CTYPE = \'en_US.utf8\' CONNECTION LIMIT = -1;');
+				$pass = $pass && @pg_query($link, 'CREATE DATABASE "'.pg_escape_string($link, $database).'" WITH OWNER = "'.pg_escape_string($link, $user).'" ENCODING = \'UTF8\' TABLESPACE = pg_default LC_COLLATE = \'en_US.UTF-8\' LC_CTYPE = \'en_US.UTF-8\' CONNECTION LIMIT = -1;');
 			// Grant priveleges to use it.
 			if ($pass)
 				$pass = $pass && @pg_query($link, 'GRANT ALL ON DATABASE "'.pg_escape_string($link, $database).'" TO "'.pg_escape_string($link, $user).'";');

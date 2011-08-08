@@ -79,7 +79,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		</thead>
 		<tbody>
 			<?php foreach ($this->contracts as $cur_contract) {
-			$firstnet = $pines->com_mifi->verify_firstnet($cur_contract->firstnet_allot, $cur_contract->total_monthly_allotment); ?>
+			$firstnet = $pines->com_mifi->verify_firstnet($cur_contract->application->firstnet(), $cur_contract->total_monthly_allotment); ?>
 			<tr title="<?php echo $cur_contract->guid; ?>">
 				<td style="text-align: right;"><a href="<?php echo htmlspecialchars(pines_url('com_mifi', 'contract/view', array('id' => $cur_contract->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_contract->contract_id); ?></a></td>
 				<td><?php echo format_date($cur_contract->p_cdate, 'date_sort'); ?></td>

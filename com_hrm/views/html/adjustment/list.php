@@ -1,16 +1,16 @@
 <?php
 /**
- * Lists employee bonuses and provides functions to manipulate them.
+ * Lists employee adjustments and provides functions to manipulate them.
  *
  * @package Pines
  * @subpackage com_hrm
  * @license http://www.gnu.org/licenses/agpl-3.0.html
- * @author Zak Huber <zak@sciactive.com>
+ * @author Kirk Johnson <kirk@sciactive.com>
  * @copyright SciActive.com
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Employee Bonuses';
+$this->title = 'Employee Adjustments';
 $pines->com_pgrid->load();
 $pines->com_hrm->load_employee_select();
 ?>
@@ -18,10 +18,10 @@ $pines->com_hrm->load_employee_select();
 	// <![CDATA[
 
 	pines(function(){
-		var bonus_id;
-		var bonus_dialog = $("#p_muid_bonus_dialog");
+		var adjustment_id;
+		var adjustment_dialog = $("#p_muid_adjustment_dialog");
 
-		$("#p_muid_bonus_dialog [name=effective_date]").datepicker({
+		$("#p_muid_adjustment_dialog [name=effective_date]").datepicker({
 			dateFormat: "yy-mm-dd",
 			changeMonth: true,
 			changeYear: true,
@@ -29,25 +29,26 @@ $pines->com_hrm->load_employee_select();
 			selectOtherMonths: true
 		});
 
-		bonus_dialog.find("form").submit(function(){
-			bonus_dialog.dialog('option', 'buttons').Save();
+		adjustment_dialog.find("form").submit(function(){
+			adjustment_dialog.dialog('option', 'buttons').Save();
 			return false;
 		});
-		bonus_dialog.dialog({
+		adjustment_dialog.dialog({
+			bgiframe: true,
 			autoOpen: false,
 			modal: true,
 			width: 300,
 			buttons: {
 				'Save': function(){
-					pines.post("<?php echo addslashes(pines_url('com_hrm', 'bonus/save')); ?>", {
-						id: bonus_id,
-						name: $("#p_muid_bonus_dialog [name=name]").val(),
-						employee: $("#p_muid_bonus_dialog [name=employee]").val(),
-						date: $("#p_muid_bonus_dialog [name=effective_date]").val(),
-						amount: $("#p_muid_bonus_dialog [name=amount]").val(),
-						comments: $("#p_muid_bonus_dialog [name=comments]").val()
+					pines.post("<?php echo addslashes(pines_url('com_hrm', 'adjustment/save')); ?>", {
+						id: adjustment_id,
+						name: $("#p_muid_adjustment_dialog [name=name]").val(),
+						employee: $("#p_muid_adjustment_dialog [name=employee]").val(),
+						date: $("#p_muid_adjustment_dialog [name=effective_date]").val(),
+						amount: $("#p_muid_adjustment_dialog [name=amount]").val(),
+						comments: $("#p_muid_adjustment_dialog [name=comments]").val()
 					});
-					bonus_dialog.dialog("close");
+					adjustment_dialog.dialog("close");
 				}
 			}
 		});
@@ -57,26 +58,26 @@ $pines->com_hrm->load_employee_select();
 			pgrid_toolbar_contents: [
 				<?php if (gatekeeper('com_hrm/listemployees')) { ?>
 				{type: 'button', text: '&laquo; Employees', extra_class: 'picon picon-system-users', selection_optional: true, url: '<?php echo addslashes(pines_url('com_hrm', 'employee/list')); ?>'},
-				<?php } if (gatekeeper('com_hrm/editbonus')) { ?>
+				<?php } if (gatekeeper('com_hrm/editadjustment')) { ?>
 				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, click: function(){
-					bonus_id = 0;
-					$("#p_muid_bonus_dialog [name=effective_date]").val("<?php echo addslashes(format_date(time(), 'date_sort')); ?>");
-					$("#p_muid_bonus_dialog [name=name]").val("");
-					$("#p_muid_bonus_dialog [name=employee]").val("");
-					$("#p_muid_bonus_dialog [name=amount]").val("");
-					$("#p_muid_bonus_dialog [name=comments]").val("");
-					bonus_dialog.dialog("open");
+					adjustment_id = 0;
+					$("#p_muid_adjustment_dialog [name=effective_date]").val("<?php echo addslashes(format_date(time(), 'date_sort')); ?>");
+					$("#p_muid_adjustment_dialog [name=name]").val("");
+					$("#p_muid_adjustment_dialog [name=employee]").val("");
+					$("#p_muid_adjustment_dialog [name=amount]").val("");
+					$("#p_muid_adjustment_dialog [name=comments]").val("");
+					adjustment_dialog.dialog("open");
 				}},
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, click: function(e, row){
-					bonus_id = row.attr("title");
-					$("#p_muid_bonus_dialog [name=effective_date]").val(row.pgrid_get_value(1));
-					$("#p_muid_bonus_dialog [name=name]").val(row.pgrid_get_value(2));
-					$("#p_muid_bonus_dialog [name=employee]").val(row.pgrid_get_value(3));
-					$("#p_muid_bonus_dialog [name=amount]").val(row.pgrid_get_value(4).replace('$',''));
-					$("#p_muid_bonus_dialog [name=comments]").val(row.pgrid_get_value(5));
-					bonus_dialog.dialog("open");
+					adjustment_id = row.attr("title");
+					$("#p_muid_adjustment_dialog [name=effective_date]").val(row.pgrid_get_value(1));
+					$("#p_muid_adjustment_dialog [name=name]").val(row.pgrid_get_value(2));
+					$("#p_muid_adjustment_dialog [name=employee]").val(row.pgrid_get_value(3));
+					$("#p_muid_adjustment_dialog [name=amount]").val(row.pgrid_get_value(4).replace('$',''));
+					$("#p_muid_adjustment_dialog [name=comments]").val(row.pgrid_get_value(5));
+					adjustment_dialog.dialog("open");
 				}},
-				{type: 'button', text: 'Remove', extra_class: 'picon picon-document-close', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_hrm', 'bonus/delete', array('id' => '__title__'))); ?>'},
+				{type: 'button', text: 'Remove', extra_class: 'picon picon-document-close', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_hrm', 'adjustment/delete', array('id' => '__title__'))); ?>'},
 				{type: 'separator'},
 				<?php } ?>
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
@@ -84,7 +85,7 @@ $pines->com_hrm->load_employee_select();
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
 					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
-						filename: 'employee_bonuses',
+						filename: 'employee_adjustments',
 						content: rows
 					});
 				}}
@@ -93,7 +94,7 @@ $pines->com_hrm->load_employee_select();
 			pgrid_sort_ord: 'asc'
 		};
 		$("#p_muid_grid").pgrid(cur_defaults);
-		$("#p_muid_bonus_dialog [name=employee]").employeeselect();
+		$("#p_muid_adjustment_dialog [name=employee]").employeeselect();
 	});
 
 	// ]]>
@@ -109,25 +110,25 @@ $pines->com_hrm->load_employee_select();
 		</tr>
 	</thead>
 	<tbody>
-	<?php foreach($this->bonuses as $cur_bonus) { ?>
-		<tr title="<?php echo $cur_bonus->guid; ?>">
-			<td><?php echo format_date($cur_bonus->date); ?></td>
-			<td><?php echo htmlspecialchars($cur_bonus->name); ?></td>
-			<td><?php echo htmlspecialchars($cur_bonus->employee->guid.': '.$cur_bonus->employee->name); ?></td>
-			<td>$<?php echo number_format($cur_bonus->amount, 2, '.', ''); ?></td>
-			<td><?php echo htmlspecialchars($cur_bonus->comments); ?></td>
+	<?php foreach($this->adjustments as $cur_adjustment) { ?>
+		<tr title="<?php echo $cur_adjustment->guid; ?>">
+			<td><?php echo format_date($cur_adjustment->date); ?></td>
+			<td><?php echo htmlspecialchars($cur_adjustment->name); ?></td>
+			<td><?php echo htmlspecialchars($cur_adjustment->employee->guid.': '.$cur_adjustment->employee->name); ?></td>
+			<td>$<?php echo number_format($cur_adjustment->amount, 2, '.', ''); ?></td>
+			<td><?php echo htmlspecialchars($cur_adjustment->comments); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>
 </table>
-<div id="p_muid_bonus_dialog" title="Employee Bonus" style="display: none;">
+<div id="p_muid_adjustment_dialog" title="Employee Adjustment" style="display: none;">
 	<form class="pf-form" method="post" action="">
 		<div class="pf-element">
 			<label><span class="pf-label">Employee</span>
 				<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="employee" /></label>
 		</div>
 		<div class="pf-element">
-			<label><span class="pf-label">Bonus</span>
+			<label><span class="pf-label">Adjustment</span>
 				<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="name" /></label>
 		</div>
 		<div class="pf-element">

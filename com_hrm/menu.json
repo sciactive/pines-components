@@ -31,6 +31,22 @@
 			}
 		},
 		{
+			"path": "main_menu/business/hrm/bonuses",
+			"text": "Bonuses",
+			"href": ["com_hrm","bonus/list"],
+			"depend": {
+				"ability": "com_hrm/listbonuses"
+			}
+		},
+		{
+			"path": "main_menu/business/hrm/adjustments",
+			"text": "Adjustments",
+			"href": ["com_hrm","adjustment/list"],
+			"depend": {
+				"ability": "com_hrm/listadjustments"
+			}
+		},
+		{
 			"path": "main_menu/business/hrm/applications",
 			"text": "Applications",
 			"href": ["com_hrm","application/list"],

@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_hrm/editbonuses') )
+if ( !gatekeeper('com_hrm/editbonus') )
 	punt_user(null, pines_url('com_hrm', 'bonus/add', array('employees' => $_REQUEST['employees'], 'issue_type' => $_REQUEST['issue_type'], 'date' => $_REQUEST['date'])));
 
 $list = explode(',', $_REQUEST['employees']);
@@ -38,7 +38,7 @@ foreach ($list as $cur_employee) {
     unset($cur_entity);
 }
 if (empty($failed_bonuses)) {
-    pines_notice("Employee Bonuses were successfully granted.");
+    pines_notice("Employee bonuses were successfully granted.");
 } else {
     pines_error("Employees with given IDs were not granted bonuses : $failed_bonuses");
 }

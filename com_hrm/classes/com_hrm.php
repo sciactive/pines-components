@@ -61,7 +61,7 @@ class com_hrm extends component {
 			$selector2 = array('!&', 'data' => array('terminated', true));
 		else
 			$selector2 = array('&', 'data' => array('terminated', true));
-		
+
 
 		$employees = (array) $pines->entity_manager->get_entities(
 				array('class' => com_hrm_employee),
@@ -81,9 +81,26 @@ class com_hrm extends component {
 		global $pines;
 		return $pines->entity_manager->get_entities(array('class' => com_hrm_issue_type), array('&', 'tag' => array('com_hrm', 'issue_type')));
 	}
+	/**
+	 * Creates and attaches a module which lists employee payroll adjustments.
+	 *
+	 * @return module The list module.
+	 */
+	public function list_adjustments() {
+		global $pines;
+
+		$module = new module('com_hrm', 'adjustment/list', 'content');
+		$module->adjustments = $pines->entity_manager->get_entities(array('class' => com_hrm_bonus), array('&', 'tag' => array('com_hrm', 'adjustment')));
+
+		if ( empty($module->adjustments) )
+			pines_notice('There are no employee adjustments.');
+
+		return $module;
+	}
 
 	/**
 	 * Creates and attaches a module which lists employement applications.
+	 * @return module The module.
 	 */
 	public function list_applications() {
 		global $pines;
@@ -93,6 +110,8 @@ class com_hrm extends component {
 
 		if ( empty($module->applications) )
 			pines_notice('There are no matching applications.');
+
+		return $module;
 	}
 
 	/**
@@ -120,7 +139,7 @@ class com_hrm extends component {
 	 */
 	public function list_employees($employed = true) {
 		$module = new module('com_hrm', 'employee/list', 'content');
-		
+
 		$module->employees = $this->get_employees($employed);
 		$module->employed = $employed;
 
@@ -132,6 +151,7 @@ class com_hrm extends component {
 
 	/**
 	 * Creates and attaches a module which lists issue types.
+	 * @return module The module.
 	 */
 	public function list_issue_types() {
 		global $pines;
@@ -141,10 +161,13 @@ class com_hrm extends component {
 
 		if ( empty($module->types) )
 			pines_notice('There are no issue types.');
+
+		return $module;
 	}
 
 	/**
 	 * Creates and attaches a module which lists employees' timeclocks.
+	 * @return module The module.
 	 */
 	public function list_timeclocks() {
 		$module = new module('com_hrm', 'employee/timeclock/list', 'content');
@@ -153,6 +176,8 @@ class com_hrm extends component {
 
 		if ( empty($module->employees) )
 			pines_notice('There are no employees.');
+
+		return $module;
 	}
 
 	/**
@@ -170,6 +195,7 @@ class com_hrm extends component {
 
 	/**
 	 * Creates and attaches a module which lists all pending time off requests.
+	 * @return module The module.
 	 */
 	public function review_timeoff() {
 		global $pines;
@@ -177,6 +203,8 @@ class com_hrm extends component {
 		$module = new module('com_hrm', 'timeoff/review', 'content');
 		$module->requests = $pines->entity_manager->get_entities(array('class' => com_hrm_rto), array('&', 'tag' => array('com_hrm', 'rto'), 'data' => array('status', 'pending')));
 		$pines->page->override_doc($module->render());
+
+		return $module;
 	}
 
 	/**

@@ -20,7 +20,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 
 	pines(function(){
 		var employees;
-		<?php if (gatekeeper('com_hrm/editbonuses')) { ?>
+		<?php if (gatekeeper('com_hrm/editbonus')) { ?>
 		var bonus_dialog = $("#p_muid_bonus_dialog");
 
 		$("#p_muid_bonus_dialog [name=effective_date]").datepicker({
@@ -43,12 +43,44 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				"Grant Bonus": function(){
 					pines.post("<?php echo addslashes(pines_url('com_hrm', 'bonus/add')); ?>", {
 						employees: employees,
-						name: bonus_dialog.find("#p_muid_bonus_dialog [name=name]").val(),
-						date: $("#p_muid_bonus_dialog [name=effective_date]").val(),
-						amount: $("#p_muid_bonus_dialog [name=amount]").val(),
-						comments: $("#p_muid_bonus_dialog [name=comments]").val()
+						name: bonus_dialog.find("[name=name]").val(),
+						date: bonus_dialog.find("[name=effective_date]").val(),
+						amount: bonus_dialog.find("[name=amount]").val(),
+						comments: bonus_dialog.find("[name=comments]").val()
 					});
 					bonus_dialog.dialog("close");
+				}
+			}
+		});
+		<?php } if (gatekeeper('com_hrm/editadjustment')) { ?>
+		var adjustment_dialog = $("#p_muid_adjustment_dialog");
+
+		$("#p_muid_adjustment_dialog [name=effective_date]").datepicker({
+			dateFormat: "yy-mm-dd",
+			changeMonth: true,
+			changeYear: true,
+			showOtherMonths: true,
+			selectOtherMonths: true
+		});
+
+		adjustment_dialog.find("form").submit(function(){
+			adjustment_dialog.dialog('option', 'buttons').Done();
+			return false;
+		});
+		adjustment_dialog.dialog({
+			bgiframe: true,
+			autoOpen: false,
+			modal: true,
+			buttons: {
+				"Grant Adjustment": function(){
+					pines.post("<?php echo addslashes(pines_url('com_hrm', 'adjustment/add')); ?>", {
+						employees: employees,
+						name: adjustment_dialog.find("[name=name]").val(),
+						date: adjustment_dialog.find("[name=effective_date]").val(),
+						amount: adjustment_dialog.find("[name=amount]").val(),
+						comments: adjustment_dialog.find("[name=comments]").val()
+					});
+					adjustment_dialog.dialog("close");
 				}
 			}
 		});
@@ -191,7 +223,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
 				{type: 'button', text: 'History', extra_class: 'picon picon-folder-html', url: '<?php echo addslashes(pines_url('com_hrm', 'employee/history', array('id' => '__title__'))); ?>'},
-				<?php if (gatekeeper('com_hrm/editbonuses')) { ?>
+				<?php if (gatekeeper('com_hrm/editbonus')) { ?>
 				{type: 'button', title: 'Bonus', extra_class: 'picon picon-get-hot-new-stuff', multi_select: true, click: function(e, rows){
 					employees = "";
 					$.each(rows.pgrid_export_rows(), function(){
@@ -204,6 +236,20 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					else
 						bonus_dialog.find("div.dialog_title").html('<h1>'+rows.length+' Employees</h1>');
 					bonus_dialog.dialog("open");
+				}},
+				<?php } if (gatekeeper('com_hrm/editadjustment')) { ?>
+				{type: 'button', title: 'Adjustment', extra_class: 'picon picon-accessories-calculator', multi_select: true, click: function(e, rows){
+					employees = "";
+					$.each(rows.pgrid_export_rows(), function(){
+						if (employees != "")
+							employees += ",";
+						employees += this.key;
+					});
+					if (rows.length == 1)
+						adjustment_dialog.find("div.dialog_title").html('<h1>'+rows.pgrid_get_value(3)+'</h1>');
+					else
+						adjustment_dialog.find("div.dialog_title").html('<h1>'+rows.length+' Employees</h1>');
+					adjustment_dialog.dialog("open");
 				}},
 				<?php } if (gatekeeper('com_hrm/fileissue')) { ?>
 				{type: 'button', title: 'File Issue', extra_class: 'picon picon-task-attention', multi_select: true, click: function(e, rows){
@@ -233,8 +279,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						terminate_dialog.find("div.dialog_title").html('<h1>'+rows.length+' Employees</h1>');
 					terminate_dialog.dialog("open");
 				}},
-				<?php } if (gatekeeper('com_hrm/editbonuses')) { ?>
+				<?php } if (gatekeeper('com_hrm/editbonus')) { ?>
 				{type: 'button', text: 'Bonuses', extra_class: 'picon picon-story-editor', selection_optional: true, url: '<?php echo addslashes(pines_url('com_hrm', 'bonus/list')); ?>'},
+				<?php } if (gatekeeper('com_hrm/editadjustment')) { ?>
+				{type: 'button', text: 'Adjustments', extra_class: 'picon picon-story-editor', selection_optional: true, url: '<?php echo addslashes(pines_url('com_hrm', 'adjustment/list')); ?>'},
 				<?php } if (gatekeeper('com_hrm/editissuetypes')) { ?>
 				{type: 'button', text: 'Issue Types', extra_class: 'picon picon-story-editor', selection_optional: true, url: '<?php echo addslashes(pines_url('com_hrm', 'issue/list')); ?>'},
 				<?php } if (gatekeeper('com_hrm/managerto')) { ?>
@@ -319,8 +367,31 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<?php } ?>
 	</tbody>
 </table>
-<?php if (gatekeeper('com_hrm/editbonuses')) { ?>
+<?php if (gatekeeper('com_hrm/editbonus')) { ?>
 <div id="p_muid_bonus_dialog" title="Grant Employee Bonus" style="display: none;">
+	<form class="pf-form" method="post" action="">
+		<div class="pf-element pf-heading dialog_title"></div>
+		<div class="pf-element">
+			<label><span class="pf-label">Description</span>
+				<input class="ui-widget-content ui-corner-all" type="text" size="24" name="name" value="" /></label>
+		</div>
+		<div class="pf-element">
+			<label><span class="pf-label">Date</span>
+				<input class="ui-widget-content ui-corner-all" type="text" size="24" name="effective_date" value="<?php echo format_date(time(), 'date_sort'); ?>" /></label>
+		</div>
+		<div class="pf-element">
+			<label><span class="pf-label">Amount</span>
+				$ <input class="ui-widget-content ui-corner-all" type="text" size="5" name="amount" value="" /></label>
+		</div>
+		<div class="pf-element">
+			<label><span class="pf-label">Comments</span>
+				<input class="ui-widget-content ui-corner-all" type="text" size="24" name="comments" value="" /></label>
+		</div>
+	</form>
+	<br />
+</div>
+<?php } if (gatekeeper('com_hrm/editadjustment')) { ?>
+<div id="p_muid_adjustment_dialog" title="Grant Employee Adjustment" style="display: none;">
 	<form class="pf-form" method="post" action="">
 		<div class="pf-element pf-heading dialog_title"></div>
 		<div class="pf-element">

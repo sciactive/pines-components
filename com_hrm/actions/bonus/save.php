@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_hrm/editbonuses') )
+if ( !gatekeeper('com_hrm/editbonus') )
 	punt_user(null, pines_url('com_hrm', 'bonus/list'));
 
 if (isset($_REQUEST['id']) && (int) $_REQUEST['id'] != 0) {

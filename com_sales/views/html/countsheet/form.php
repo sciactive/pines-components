@@ -38,45 +38,35 @@ $pines->com_pgrid->load();
 			pgrid_paginate: false
 		});
 		<?php } else { ?>
-		var code_box;
+		var code_box = $("#p_muid_code");
+		code_box.change(function(){
+			var codes = code_box.val().split("\n");
+			code_box.val("");
+			$.each(codes, function(i, code){
+				if (!code || code.match(/^\s*$/))
+					return;
+				var item_count = 0;
+				entries_table.pgrid_get_all_rows().each(function(){
+					// Check each entry, increment Qty if it already exists.
+					var cur_row = $(this);
+					if (code == cur_row.pgrid_get_value(1)) {
+						item_count = parseInt(cur_row.pgrid_get_value(2))+1;
+						if (!isNaN(item_count))
+							cur_row.pgrid_set_value(2, item_count);
+					}
+				});
+				if (item_count == 0) {
+					entry_counter++;
+					entries_table.pgrid_add([{key: entry_counter, values: [code, 1]}]);
+				}
+			});
+			update_entries();
+		});
 		entries_table.pgrid({
 			pgrid_view_height: "360px",
 			pgrid_paginate: false,
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents : [
-				{
-					type: 'text',
-					label: 'Code: ',
-					load: function(textbox){
-						textbox.keydown(function(e){
-							if (e.keyCode == 13) {
-								var code = textbox.val();
-								if (code == "") {
-									alert("Please enter a product code.");
-									return;
-								}
-								textbox.val("");
-								var item_count = 0;
-								entries_table.pgrid_get_all_rows().each(function(){
-									// Check each entry, increment Qty if it already exists.
-									var cur_row = $(this);
-									if (code == cur_row.pgrid_get_value(1)) {
-										item_count = parseInt(cur_row.pgrid_get_value(2))+1;
-										if (!isNaN(item_count))
-											cur_row.pgrid_set_value(2, item_count);
-									}
-								});
-								if (item_count == 0) {
-									entry_counter++;
-									entries_table.pgrid_add([{key: entry_counter, values: [code, 1]}]);
-								}
-								update_entries();
-							}
-						});
-						code_box = textbox;
-					}
-				},
-				{type: 'separator'},
 				{
 					type: 'button',
 					text: 'Quantity',
@@ -217,6 +207,10 @@ $pines->com_pgrid->load();
 	<?php } ?>
 	<div class="pf-element pf-heading">
 		<h1>Entries</h1>
+	</div>
+	<div class="pf-element">
+		<label><span class="pf-label">Code(s)</span>
+			<textarea class="pf-field ui-widget-content ui-corner-all" rows="1" cols="26" name="code" id="p_muid_code"></textarea></label>
 	</div>
 	<div class="pf-element pf-full-width">
 		<table id="p_muid_entries_table">

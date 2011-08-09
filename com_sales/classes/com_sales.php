@@ -26,6 +26,12 @@ class com_sales extends component {
 	 * @var bool $js_loaded_product
 	 */
 	private $js_loaded_product = false;
+	/**
+	 * Cache of products for code search.
+	 * @access private
+	 * @var array $product_cache
+	 */
+	private $product_cache = array();
 
 	/**
 	 * Calls the first payment process which matches the given arguments.
@@ -125,22 +131,53 @@ class com_sales extends component {
 	 */
 	public function get_product_by_code($code) {
 		global $pines;
+		if (isset($this->product_cache[$code])) {
+			// Check if the cached one is old.
+			$tmp_product = $pines->entity_manager->get_entity(
+					array('class' => com_sales_product),
+					array('&',
+						'guid' => array($this->product_cache[$code]->guid),
+						'gt' => array('p_mdate', $this->product_cache[$code]->p_mdate)
+					)
+				);
+			if (isset($tmp_product)) {
+				// Make sure the code still matches.
+				if ($tmp_product->sku != $code && !in_array($code, $tmp_product->additional_barcodes)) {
+					// The code doesn't match, so unset the cache and continue on.
+					unset($this->product_cache[$code]);
+				} else {
+					// The code matches, so update the cache.
+					$this->product_cache[$code] = $tmp_product;
+					return $this->product_cache[$code];
+				}
+			} else {
+				// The product hasn't been changed since it was retrieved.
+				$this->product_cache[$code]->clear_cache();
+				return $this->product_cache[$code];
+			}
+		}
+		// Check for a SKU match first.
 		$product = $pines->entity_manager->get_entity(
 				array('class' => com_sales_product),
 				array('&',
 					'tag' => array('com_sales', 'product'),
-					'data' => array('sku', $code)
+					'strict' => array('sku', $code)
 				)
 			);
-		if (isset($product))
-			return $product;
-		return $pines->entity_manager->get_entity(
-				array('class' => com_sales_product),
-				array('&',
-					'tag' => array('com_sales', 'product'),
-					'array' => array('additional_barcodes', $code)
-				)
-			);
+		if (!isset($product->guid)) {
+			// If that didn't match, check for an additional barcode.
+			$product = $pines->entity_manager->get_entity(
+					array('class' => com_sales_product),
+					array('&',
+						'tag' => array('com_sales', 'product'),
+						'array' => array('additional_barcodes', $code)
+					)
+				);
+		}
+		// Cache it.
+		if (isset($product->guid))
+			$this->product_cache[$code] = $product;
+		return $product;
 	}
 
 	/**

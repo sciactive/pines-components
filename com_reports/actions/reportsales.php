@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_reports/reportsales') )
 	punt_user(null, pines_url('com_reports', 'reportsales'));
-	
+
 if ( isset($_REQUEST['start']) ) {
 	$start = strtotime($_REQUEST['start']);
 	$end = strtotime($_REQUEST['end']);

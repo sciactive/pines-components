@@ -1,6 +1,6 @@
 <?php
 /**
- * Report and individual payroll.
+ * Show a payroll summary.
  *
  * @package Pines
  * @subpackage com_reports
@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_reports/reportpayroll') )
-	punt_user(null, pines_url('com_reports', 'reportpayrollsummary'));
+	punt_user(null, pines_url('com_reports', 'reportpayrollhourly', $_REQUEST));
 
 if (!empty($_REQUEST['start_date'])) {
 	$start_date = $_REQUEST['start_date'];
@@ -38,13 +38,6 @@ if (!empty($_REQUEST['location']))
 	$location = group::factory((int) $_REQUEST['location']);
 $descendents = ($_REQUEST['descendents'] == 'true');
 
-$emp = com_hrm_employee::factory((int) $_REQUEST['id']);
-$hours = $_REQUEST['hours'];
-$payperhour = $_REQUEST['payperhour'];
-$salary = $_REQUEST['salary'];
-$total = $_REQUEST['total'];
-$commission = str_replace('$', '', $_REQUEST['commission']);
-
-$pines->com_reports->report_individual_payroll($start_date, $end_date, $emp, $payperhour, $hours, $total, $salary, $commission);
+$pines->com_reports->report_payroll_hourly($start_date, $end_date, $location, $descendents);
 
 ?>

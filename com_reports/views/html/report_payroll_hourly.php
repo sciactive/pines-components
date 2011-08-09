@@ -1,6 +1,10 @@
 <?php
 /**
- * Shows a list of payrolls.
+ * A list of hourly payroll.
+ * 
+ * Shows a list of payroll, as hourly it does not report anyone as commission vs
+ * draw. Employees commissions are totaled but not added to their pay. That's
+ * left for a different report.
  *
  * @package Pines
  * @subpackage com_reports
@@ -11,7 +15,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-$this->title = 'Payroll Summary ['.htmlspecialchars($this->location->name).']';
+$this->title = 'Payroll Summary Hourly ['.htmlspecialchars($this->location->name).']';
 if ($this->descendents)
 	$this->note = 'Including locations beneath '.htmlspecialchars($this->location->name);
 $pines->icons->load();
@@ -24,7 +28,7 @@ $pines->com_pgrid->load();
 	pines(function(){
 		search_invoices = function(){
 			// Submit the form with all of the fields.
-			pines.get("<?php echo addslashes(pines_url('com_reports', 'reportpayrollsummary')); ?>", {
+			pines.get("<?php echo addslashes(pines_url('com_reports', 'reportpayrollhourly')); ?>", {
 				"location": location,
 				"descendents": descendents,
 				"all_time": all_time,
@@ -50,8 +54,8 @@ $pines->com_pgrid->load();
 				{type: 'button', title: 'Location', extra_class: 'picon picon-applications-internet', selection_optional: true, click: function(){payroll_grid.location_form();}},
 				{type: 'button', title: 'Timespan', extra_class: 'picon picon-view-time-schedule', selection_optional: true, click: function(){payroll_grid.date_form();}},
 				{type: 'separator'},
-				{type: 'button', text: 'Individual', extra_class: 'picon picon-document-print-preview', double_click: true, target: '_blank', url: '<?php echo addslashes(pines_url('com_reports', 'reportpayrollindividual', array('id' => '__title__', 'salary' => '__col_3__', 'commission' => '__col_12__', 'payperhour' => '__col_22__', 'total' => '__col_18__', 'overtime' => '__col_10__', 'reghours' => '__col_9__', 'adjustment' => '__col_17__', 'hours' => '__col_8__', 'end_date' => format_date($this->end_date - 1, 'date_sort'), 'start_date' => format_date($this->start_date, 'date_sort'), 'template' => 'tpl_print'))); ?>'},
-				{type: 'button', text: 'Multiple', extra_class: 'picon picon-document-print-preview', multi_select: true, target: '_blank', url: '<?php echo addslashes(pines_url('com_reports', 'reportpayrollmultiple', array('id' => '__title__', 'salary' => '__col_3__', 'commission' => '__col_12__', 'payperhour' => '__col_22__', 'total' => '__col_18__', 'overtime' => '__col_10__', 'reghours' => '__col_9__', 'adjustment' => '__col_17__', 'hours' => '__col_8__', 'end_date' => format_date($this->end_date - 1, 'date_sort'), 'start_date' => format_date($this->start_date, 'date_sort'), 'template' => 'tpl_print'))); ?>', delimiter: ";"},
+				{type: 'button', text: 'Individual', extra_class: 'picon picon-document-print-preview', double_click: true, target: '_blank', url: '<?php echo addslashes(pines_url('com_reports', 'reportpayrollindividual', array('id' => '__title__', 'salary' => '__col_3__', 'commission' => '__col_12__', 'payperhour' => '__col_22__', 'total' => '__col_18__', 'hours' => '__col_8__', 'end_date' => format_date($this->end_date - 1, 'date_sort'), 'start_date' => format_date($this->start_date, 'date_sort'), 'template' => 'tpl_print', 'hourreport' => 'true'))); ?>'},
+				{type: 'button', text: 'Multiple', extra_class: 'picon picon-document-print-preview', multi_select: true, target: '_blank', url: '<?php echo addslashes(pines_url('com_reports', 'reportpayrollmultiple', array('id' => '__title__', 'salary' => '__col_3__', 'commission' => '__col_12__', 'payperhour' => '__col_22__', 'total' => '__col_18__', 'hours' => '__col_8__', 'end_date' => format_date($this->end_date - 1, 'date_sort'), 'start_date' => format_date($this->start_date, 'date_sort'), 'template' => 'tpl_print', 'hourreport' => 'true'))); ?>', delimiter: ";"},
 				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
@@ -204,13 +208,13 @@ $pines->com_pgrid->load();
 				<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? '$'.number_format($cur_employee['hour_pay_total'], 2, '.', '') : '-'; ?></td>
 				<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? '$'.number_format($cur_employee['commission'], 2, '.', '') : '-'; ?></td>
 				<td style="text-align: center;">$<?php echo number_format($cur_employee['bonus'], 2, '.', '');?></td>
-				<td style="text-align: center;"><?php echo ($cur_employee['commission_status'] != 'salary' && $cur_employee['weekly'] != 0) ? number_format($cur_employee['weekly'], 2, '.', '') : '-'; ?></td>
+				<td style="text-align: center;"><?php echo ($cur_employee['commission_status'] != 'salary' && $cur_employee['weekly'] != 0) ? '$'.number_format($cur_employee['weekly'], 2, '.', '') : '-'; ?></td>
 				<td style="text-align: center;">$<?php echo number_format($cur_employee['bonus'], 2, '.', '');?></td>
 				<td style="text-align: center;">$<?php echo number_format($cur_employee['pay_total'], 2, '.', '');?></td>
 				<td style="text-align: center;">$<?php echo number_format($cur_employee['adjustments'], 2, '.', '');?></td>
 				<td><?php echo "$".number_format($cur_employee['total_with_reimburse'], 2, '.', '');?></td>
 				<td></td>
-				<td><a href="<?php echo htmlspecialchars(pines_url('com_user', 'editgroup', array('id' => $cur_employee['entity']->group->guid)));?>" onclick="window.open(this.href);return false;"><?php echo htmlspecialchars($cur_employee['entity']->group->name);?></a></td>
+				<td><a href="<?php echo htmlspecialchars(pines_url('com_user', 'editgroup', array('id' => $cur_employee['entity']->group->guid)));?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_employee['entity']->group->name);?></a></td>
 				<td><?php echo htmlspecialchars($cur_employee->job_title)?></td>
 				<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? number_format($cur_employee['total_rate'], 2, '.', '') : '-'; ?></td>
 			</tr>

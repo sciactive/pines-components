@@ -1,6 +1,6 @@
 <?php
 /**
- * Show a payroll summary.
+ * Report and individual payroll.
  *
  * @package Pines
  * @subpackage com_reports
@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_reports/reportpayroll') )
-	punt_user(null, pines_url('com_reports', 'reportpayrollsummary', $_REQUEST));
+	punt_user(null, pines_url('com_reports', 'reportpayrollindividual', $_REQUEST));
 
 if (!empty($_REQUEST['start_date'])) {
 	$start_date = $_REQUEST['start_date'];
@@ -38,6 +38,17 @@ if (!empty($_REQUEST['location']))
 	$location = group::factory((int) $_REQUEST['location']);
 $descendents = ($_REQUEST['descendents'] == 'true');
 
-$pines->com_reports->report_payroll_summary($start_date, $end_date, $location, $descendents);
+$emp = com_hrm_employee::factory((int) $_REQUEST['id']);
+$hours = $_REQUEST['hours'];
+$payperhour = $_REQUEST['payperhour'];
+$salary = $_REQUEST['salary'];
+$total = $_REQUEST['total'];
+$commission = str_replace('$', '', $_REQUEST['commission']);
+$hourreport = $_REQUEST['hourreport'];
+$adjustment = (float) str_replace('$', '', $_REQUEST['adjustment']);
+$reghours = (float) str_replace('$', '', $_REQUEST['reghours']);
+$overtime = (float) str_replace('$', '', $_REQUEST['overtime']);
+
+$pines->com_reports->report_payroll_individual($start_date, $end_date, $emp, $payperhour, $hours, $total, $salary, $commission, $hourreport, $adjustment, $reghours, $overtime);
 
 ?>

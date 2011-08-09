@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_reports/reportpayroll') )
-	punt_user(null, pines_url('com_reports', 'reportpayrollsummary'));
+	punt_user(null, pines_url('com_reports', 'reportpayrollmultiple', $_REQUEST));
 
 if (!empty($_REQUEST['start_date'])) {
 	$start_date = $_REQUEST['start_date'];
@@ -40,10 +40,10 @@ $descendents = ($_REQUEST['descendents'] == 'true');
 
 $ids = (array) explode(';', $_REQUEST['id']);
 $hours_array = (array) explode(';', $_REQUEST['hours']);
-$total_array = (array) explode(';',$_REQUEST['total']);
+$total_array = (array) explode(';', $_REQUEST['total']);
 $payperhour_array = (array) explode(';', $_REQUEST['payperhour']);
 $commission_array = (array) explode(';', $_REQUEST['commission']);
-$salary_array = (array) explode(';',$_REQUEST['salary']);
+$salary_array = (array) explode(';', $_REQUEST['salary']);
 $emp = com_hrm_employee::factory((int) $_REQUEST['id']);
 $module = new module('com_reports', 'report_multiple_payroll', 'content');
 $module->pages = array();
@@ -53,9 +53,9 @@ foreach ($ids as $key => $id) {
 	$total = $total_array[$key];
 	$payperhour = $payperhour_array[$key];
 	$commission = $commission_array[$key];
-	$commission = str_replace('$','',$commission);
+	$commission = str_replace('$', '', $commission);
 	$salary = $salary_array[$key];
-	$cur_module = $pines->com_reports->report_individual_payroll($start_date, $end_date, $emp, $payperhour, $hours, $total, $salary, $commission);
+	$cur_module = $pines->com_reports->report_payroll_individual($start_date, $end_date, $emp, $payperhour, $hours, $total, $salary, $commission);
 	$cur_module->detach();
 	$module->pages[] = $cur_module->render();
 	unset($cur_module);

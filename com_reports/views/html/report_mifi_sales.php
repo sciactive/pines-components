@@ -264,7 +264,7 @@ $account_types = array(
 				<td><a href="<?php echo htmlspecialchars(pines_url('com_user', 'editgroup', array('id' => $cur_sale->group->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_sale->group->name); ?></a></td>
 				<td><?php echo htmlspecialchars(ucwords($cur_sale->status)); ?></td>
 				<td><a href="<?php echo htmlspecialchars(pines_url('com_user', 'edituser', array('id' => $cur_sale->user->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_sale->user->name); ?></a></td>
-				<td><a href="<?php echo htmlspecialchars(pines_url('com_customer','customer/edit',array('id'=> $cur_sale->customer->guid)));?>" onclick="window.open(this.href);return false;"><?php echo htmlspecialchars($cur_sale->customer->name);?></a></td>
+				<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id'=> $cur_sale->customer->guid)));?>" onclick="window.open(this.href);return false;"><?php echo htmlspecialchars($cur_sale->customer->name);?></a></td>
 				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_sale->subtotal, 2, '.', '')); ?></td>
 				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_sale->taxes, 2, '.', '')); ?></td>
 				<td style="text-align: right;">$<?php echo htmlspecialchars(number_format($cur_sale->total, 2, '.', '')); ?></td>

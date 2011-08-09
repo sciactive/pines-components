@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_reports/reportpayroll') )
-	punt_user(null, pines_url('com_reports', 'reportpayroll'));
+	punt_user(null, pines_url('com_reports', 'reportpayroll', $_REQUEST));
 
 $entire_company = ($_REQUEST['entire_company'] == 'true');
 

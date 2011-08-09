@@ -219,7 +219,7 @@ $account_types = array(
 				<th>Interest Paid Thru Date</th>
 				<?php if( $this->verbose){?>
 				<th>First Due Date</th>
-				<th>Orig Loan Term</th>	
+				<th>Orig Loan Term</th>
 				<th>Maturity Date</th>
 				<?php } ?>
 				<th>Loan Amount</th>
@@ -233,7 +233,7 @@ $account_types = array(
 				<?php } ?>
 				<th>ETS Date</th>
 				<?php if($this->verbose){?>
-				<th>Branch</th>	
+				<th>Branch</th>
 				<th>BAH</th>
 				<th>Time in Rsrv</th>
 				<th>Brk in Srvc</th>
@@ -287,7 +287,7 @@ $account_types = array(
 				<th>Emp</th>
 				<th>Subtotal</th>
 				<th>Taxes</th>
-				<th>Total</th>				
+				<th>Total</th>
 				<th>Company</th>
 				<th>Rank</th>
 				<th>Credit Score</th>
@@ -394,7 +394,7 @@ $account_types = array(
 				<td><?php echo htmlspecialchars($contract->bank_account_number); ?></td>
 				<td><?php echo htmlspecialchars($contract->bank_routing_number); ?></td>
 				<?php } ?>
-				<td><?php echo htmlspecialchars($cur_sale->id); ?></td>			
+				<td><?php echo htmlspecialchars($cur_sale->id); ?></td>
 				<td><a href="<?php echo htmlspecialchars(pines_url('com_user', 'editgroup', array('id' => $cur_sale->group->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_sale->group->name); ?></a></td>
 				<td><?php echo htmlspecialchars(ucwords($cur_sale->status)); ?></td>
 				<td><a href="<?php echo htmlspecialchars(pines_url('com_user', 'edituser', array('id' => $cur_sale->user->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_sale->user->name); ?></a></td>

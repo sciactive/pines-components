@@ -169,7 +169,7 @@ $pines->com_pgrid->load();
 			});
 			$("#p_muid_form input[name=sales_goals]").val(JSON.stringify(sales_goals));
 		};
-		
+
 		var load_grid = function(){
 			var sales_json = $("#p_muid_form input[name=sales_goals]").val();
 			if (!sales_json || sales_json == "")
@@ -191,7 +191,7 @@ $pines->com_pgrid->load();
 		<label><span class="pf-label">Ranking Name</span>
 			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="ranking_name" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
 	</div>
-	
+
 	<div class="pf-element pf-heading">
 		<h1>Timespan and Highest Company Division</h1>
 	</div>

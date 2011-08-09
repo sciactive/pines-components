@@ -31,8 +31,8 @@ foreach ($this->invoices as $cur_invoice) {
 	$sale_time = format_date($cur_invoice->p_cdate, 'custom', 'H');
 	if (!$total[$date_str]) {
 		$total[$date_str][0] = $cur_invoice->p_cdate;
-		$total[$date_str][1] = mktime(0,1,1,$event_month,$event_day,$event_year);
-		$total[$date_str][2] = mktime(0,1,1,$event_month,$event_day,$event_year);
+		$total[$date_str][1] = mktime(0, 1, 1, $event_month, $event_day, $event_year);
+		$total[$date_str][2] = mktime(0, 1, 1, $event_month, $event_day, $event_year);
 		$total[$date_str][3] = 0;
 	}
 	// NOTE: Sales made outside of the specified timespans will be excluded!
@@ -40,8 +40,8 @@ foreach ($this->invoices as $cur_invoice) {
 		$span = explode('-', $timespan);
 		if (!$date_array[$date_str][$timespan]) {
 			$date_array[$date_str][$timespan][0] = $cur_invoice->p_cdate;
-			$date_array[$date_str][$timespan][1] = mktime($span[0],0,0,$event_month,$event_day,$event_year);
-			$date_array[$date_str][$timespan][2] = mktime($span[1],0,0,$event_month,$event_day,$event_year);
+			$date_array[$date_str][$timespan][1] = mktime($span[0], 0, 0, $event_month, $event_day, $event_year);
+			$date_array[$date_str][$timespan][2] = mktime($span[1], 0, 0, $event_month, $event_day, $event_year);
 			$date_array[$date_str][$timespan][3] = 0;
 		}
 		if ( ($sale_time >= $span[0]) && ($sale_time < $span[1]) ) {

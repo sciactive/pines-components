@@ -97,6 +97,14 @@
 				}
 			},
 			{
+				"path": "main_menu/reports/hrm/reportpayrollhourly",
+				"text": "Report Payroll Hourly",
+				"href": ["com_reports","reportpayrollhourly"],
+				"depend": {
+					"ability": "com_reports/reportpayroll"
+				}
+			},
+			{
 				"path": "main_menu/reports/hrm/payroll",
 				"text": "Payroll",
 				"href": ["com_reports","listpaystubs"],

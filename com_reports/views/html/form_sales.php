@@ -62,7 +62,7 @@ $pines->com_jstree->load();
 				"initially_select" : ["<?php echo (int) $this->location; ?>"]
 			}
 		});
-	
+
 		// This function reloads the employees when switching between locations.
 		var update_employees = function(group_id){
 			var employee = $("#p_muid_form [name=employee]");

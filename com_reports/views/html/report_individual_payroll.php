@@ -40,11 +40,7 @@ defined('P_RUN') or die('Direct access prohibited');
 		<div><img style="margin: 0;" src="<?php echo is_callable(array($this->employee->group, 'get_logo')) ? htmlspecialchars($this->employee->group->get_logo(true)) : ''; ?>" alt="<?php echo htmlspecialchars($pines->config->page_title); ?>" /></div>
 		<div><?php
 		if ($this->employee->pay_type != 'salary') {
-			if($this->total_hours == 0)
-				$pay_rate = 0;
-			else
-				$pay_rate = $this->total_pay / $this->total_hours;
-			echo '<strong>Pay Per Hour:</strong> '.number_format(($pay_rate), 2, '.', '');
+			echo "<strong>Pay Per Hour: $".number_format($this->pay_per_hour, 2, '.', '')."</strong>";
 		}
 		?></div>
 	</div>
@@ -68,7 +64,7 @@ defined('P_RUN') or die('Direct access prohibited');
 		<strong class="pf-label">Supervisor:</strong>
 		<span class="pf-field"></span>
 	</div>
-	<?php if ($this->employee->pay_type == 'commission_draw') { ?>
+	<?php if ($this->employee->pay_type == 'commission_draw' || $this->hourreport) { ?>
 	<div class="pf-element pf-full-width">
 		<h3 style="text-align: center;">Sales</h3>
 		<table class="item_list">
@@ -83,10 +79,10 @@ defined('P_RUN') or die('Direct access prohibited');
 				</tr>
 			</thead>
 			<tbody>
-				<?php 
+				<?php
 				$total_sales = 0;
 				$commission_total=0;
-				foreach ($this->sales as $cur_sale) { 
+				foreach ($this->sales as $cur_sale) {
 					if($cur_sale->product-commission != null)
 						$commission = $cur_sale->product->commission;
 					else
@@ -103,6 +99,11 @@ defined('P_RUN') or die('Direct access prohibited');
 					<td class="right_text">$<?php echo number_format($commission, 2, '.', '');?></td>
 				</tr>
 				<?php } ?>
+				<?php
+					// If this is an hour report don't report the total of
+					// commission because they aren't being paid for the
+					// commissions on this paycheck.
+					if (!$this->hourreport) { ?>
 				<tr>
 					<td><strong>Total</strong></td>
 					<td></td>
@@ -111,6 +112,16 @@ defined('P_RUN') or die('Direct access prohibited');
 					<td class="right_text"></td>
 					<td class="right_text"><strong>$<?php echo number_format($commission_total, 2, '.', '');?></strong></td>
 				</tr>
+				<?php } if ($this->hourreport) { ?>
+				<tr>
+					<td><strong>total (Commissions not included on this check):</strong></td>
+					<td></td>
+					<td></td>
+					<td class="right_text"></td>
+					<td></td>
+					<td class="right_text">$<?php echo number_format($commission_total, 2, '.', ''); ?></td>
+				</tr>
+				<?php }?>
 			</tbody>
 		</table>
 	</div>
@@ -136,12 +147,12 @@ defined('P_RUN') or die('Direct access prohibited');
 				</tr>
 				<tr>
 					<td class="right_text">Overtime</td>
-					<td class="right_text"><?php echo number_format($this->overtime, 2, '.',''); ?></td>
+					<td class="right_text"><?php echo number_format($this->overtime, 2, '.', ''); ?></td>
 					<td class="right_text">$<?php echo number_format(($this->overtime * $this->employee->pay_rate * 1.5), 2, '.', ''); ?></td>
 				</tr>
 				<tr>
 					<td><strong>Total Hourly</strong></td>
-					<td class="right_text"><?php echo number_format(($this->overtime + $this->reg_hours), 2, '.','');?></td>
+					<td class="right_text"><?php echo number_format(($this->overtime + $this->reg_hours), 2, '.', '');?></td>
 					<td class="right_text">$<?php echo number_format($pay, 2, '.', '');?></td>
 				</tr>
 				<?php } else { ?>
@@ -159,6 +170,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			</tbody>
 		</table>
 	</div>
+	<?php if (!$this->hourreport) { ?>
 	<div class="pf-element pf-full-width">
 		<h3 style="text-align: center;">Bonuses</h3>
 		<table class="item_list">
@@ -170,14 +182,22 @@ defined('P_RUN') or die('Direct access prohibited');
 				</tr>
 			</thead>
 			<tbody>
+				<?php foreach($this->bonuses as $cur_bonus) { ?>
 				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
+					<td><?php echo htmlspecialchars($cur_bonus->name);?></td>
+					<td><?php echo htmlspecialchars($cur_bonus->comments);?></td>
+					<td class="right_text">$<?php echo number_format($cur_bonus->amount, 2, '.', ''); ?></td>
+				</tr>
+				<?php } ?>
+				<tr>
+					<td><strong>Total</strong></td>
+					<td><strong></strong></td>
+					<td class="right_text">$<?php echo number_format($this->bonus_total, 2, '.', '');?></td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
+	<?php } ?>
 	<div class="pf-element pf-full-width">
 		<h3 style="text-align: center;">Reimbursement/Drawback/Deduction</h3>
 		<table class="item_list">
@@ -189,30 +209,53 @@ defined('P_RUN') or die('Direct access prohibited');
 				</tr>
 			</thead>
 			<tbody>
+				<?php foreach ($this->adjustments as $cur_adjustments) { ?>
 				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
+					<td><?php echo htmlspecialchars($cur_adjustments->name);?></td>
+					<td><?php echo htmlspecialchars($cur_adjustments->comments);?></td>
+					<td class="right_text">$<?php echo number_format($cur_adjustments->amount, 2, '.', ''); ?></td>
 				</tr>
+				<? } if (!$this->hourreport) { ?>
+				<tr>
+					<td>Already Paid Adjustment</td>
+					<td>Deducted amount for time already paid</td>
+					<td class="right_text">$<?php echo number_format($this->adjust, 2, '.', ''); ?></td>
+				</tr>
+				<tr>
+					<td><strong>Total</strong></td>
+					<td></td>
+					<td class="right_text">$<?php echo number_format(($this->adjustment_total + $this->adjust), 2, '.', '');?></td>
+				</tr>
+				<?php } else { ?>
+				<tr>
+					<td><strong>Total</strong></td>
+					<td></td>
+					<td class="right_text">$<?php echo number_format($this->adjustment_total, 2, '.', '');?></td>
+				</tr>
+				<?php } ?>
 			</tbody>
 		</table>
 	</div>
 	<div class="pf-element pf-full-width">
 		<div style="float: right; clear: right;">
 			<?php
-			if ($this->employee->pay_type == 'commission_draw') {
-				if ($this->commission > $pay)
-					echo '<div><strong>COMMISSION</strong></div>';
-				else
-					echo '<div><strong>DRAW</strong></div>';
-			} elseif ($this->employee->pay_type == 'hourly'){
-				echo '<div><strong>HOURLY</strong></div';
-			} else
-				echo '<div><strong>SALARY</strong></div>';
+			if (!$this->hourreport) {
+				if ($this->employee->pay_type == 'commission_draw') {
+					if ($this->commission > $pay)
+						echo '<div><strong>COMMISSION</strong></div>';
+					else
+						echo '<div><strong>DRAW</strong></div>';
+				} elseif ($this->employee->pay_type == 'hourly') {
+					echo '<div><strong>HOURLY</strong></div';
+				} else
+					echo '<div><strong>SALARY</strong></div>';
+			} else {
+				echo '<div><strong>Total</strong></div>';
+			}
 			?>
 			<hr style="clear: both;" />
 			<div class="right_text">
-				<span>Gross Pay: $<?php echo number_format($this->total_pay, 2, '.', '');?></span>
+				<span>Gross Pay: <?php echo htmlspecialchars($this->total_pay);?></span>
 			</div>
 		</div>
 	</div>

@@ -68,7 +68,7 @@ class com_reports_paystub extends entity {
 	 */
 	public function print_form() {
 		global $pines;
-		
+
 		$module = new module('com_reports', 'form_paystub', 'content');
 		$module->entity = $this;
 		$module->employees = $pines->com_hrm->get_employees();

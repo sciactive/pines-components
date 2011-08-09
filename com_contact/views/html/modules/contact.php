@@ -44,14 +44,14 @@ $this->title = 'Contact Us';
 		<label>
 			<span class="pf-label">Phone</span>
 			<span class="pf-note">Enter your phone number.</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="author_phone" size="24" value="<?php echo format_phone($_SESSION['user']->phone); ?>"  onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" />
+			<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="author_phone" size="24" value="<?php echo format_phone($_SESSION['user']->phone); ?>"  onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" />
 		</label>
 	</div>
 	<div class="pf-element">
 		<label>
 			<span class="pf-label">E-mail</span>
 			<span class="pf-note">Enter your e-mail address.</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="author_email" size="24" value="<?php echo htmlspecialchars($_SESSION['user']->email); ?>" />
+			<input class="pf-field ui-widget-content ui-corner-all" type="email" name="author_email" size="24" value="<?php echo htmlspecialchars($_SESSION['user']->email); ?>" />
 		</label>
 	</div>
 	<div class="pf-element">

@@ -100,11 +100,11 @@ $this->title = (!isset($this->entity->guid)) ? 'Apply for Employment' : 'Editing
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Email</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="email" size="24" value="<?php echo htmlspecialchars($this->entity->email); ?>" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="email" name="email" size="24" value="<?php echo htmlspecialchars($this->entity->email); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Phone</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="phone" size="24" value="<?php echo format_phone($this->entity->phone); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="phone" size="24" value="<?php echo format_phone($this->entity->phone); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 	</div>
 	<?php if ($pines->config->com_hrm->ssn_field) { ?>
 	<div class="pf-element">
@@ -272,7 +272,7 @@ $this->title = (!isset($this->entity->guid)) ? 'Apply for Employment' : 'Editing
 				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="employer_position[]" size="24" value="<?php echo htmlspecialchars($cur_employer['position']); ?>" />
 				<br class="pf-clearing" />
 				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="employer_company[]" size="25" value="<?php echo htmlspecialchars($cur_employer['company']); ?>" />
-				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="employer_phone[]" size="24" value="<?php echo format_phone($cur_employer['phone']); ?>" />
+				<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="employer_phone[]" size="24" value="<?php echo format_phone($cur_employer['phone']); ?>" />
 				<br class="pf-clearing" />
 				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="employer_reason[]" size="55" value="<?php echo htmlspecialchars($cur_employer['reason']); ?>" />
 				<br class="pf-clearing" />
@@ -289,7 +289,7 @@ $this->title = (!isset($this->entity->guid)) ? 'Apply for Employment' : 'Editing
 				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="tmp_employer_position[]" size="24" value="Position Title" />
 				<br class="pf-clearing" />
 				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="tmp_employer_company[]" size="25" value="Company Name" />
-				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="tmp_employer_phone[]" size="24" value="Phone Number" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" />
+				<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="tmp_employer_phone[]" size="24" value="Phone Number" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" />
 				<br class="pf-clearing" />
 				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="tmp_employer_reason[]" size="55" value="Reason for Leaving" />
 				<br class="pf-clearing" />
@@ -302,17 +302,17 @@ $this->title = (!isset($this->entity->guid)) ? 'Apply for Employment' : 'Editing
 	</div>
 	<div class="pf-element pf-full-width p_muid_clear">
 		<input class="pf-field ui-widget-content ui-corner-all" type="text" name="reference_name[]" size="30" value="<?php echo $this->entity->references[0]['name']; ?>" />
-		<input class="pf-field ui-widget-content ui-corner-all" type="text" name="reference_phone[]" size="24" value="<?php echo $this->entity->references[0]['phone']; ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" />
+		<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="reference_phone[]" size="24" value="<?php echo $this->entity->references[0]['phone']; ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" />
 		<input class="pf-field ui-widget-content ui-corner-all" type="text" name="reference_occupation[]" size="24" value="<?php echo $this->entity->references[0]['occupation']; ?>" />
 	</div>
 	<div class="pf-element pf-full-width p_muid_clear">
 		<input class="pf-field ui-widget-content ui-corner-all" type="text" name="reference_name[]" size="30" value="<?php echo $this->entity->references[1]['name']; ?>" />
-		<input class="pf-field ui-widget-content ui-corner-all" type="text" name="reference_phone[]" size="24" value="<?php echo $this->entity->references[1]['phone']; ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" />
+		<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="reference_phone[]" size="24" value="<?php echo $this->entity->references[1]['phone']; ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" />
 		<input class="pf-field ui-widget-content ui-corner-all" type="text" name="reference_occupation[]" size="24" value="<?php echo $this->entity->references[1]['occupation']; ?>" />
 	</div>
 	<div class="pf-element pf-full-width p_muid_clear">
 		<input class="pf-field ui-widget-content ui-corner-all" type="text" name="reference_name[]" size="30" value="<?php echo $this->entity->references[2]['name']; ?>" />
-		<input class="pf-field ui-widget-content ui-corner-all" type="text" name="reference_phone[]" size="24" value="<?php echo $this->entity->references[2]['phone']; ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" />
+		<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="reference_phone[]" size="24" value="<?php echo $this->entity->references[2]['phone']; ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" />
 		<input class="pf-field ui-widget-content ui-corner-all" type="text" name="reference_occupation[]" size="24" value="<?php echo $this->entity->references[2]['occupation']; ?>" />
 	</div>
 	<?php if (isset($this->entity->resume)) { ?>

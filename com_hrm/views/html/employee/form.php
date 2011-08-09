@@ -199,7 +199,7 @@ $pines->com_pgrid->load();
 			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Phone Extension</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="phone_ext" size="5" value="<?php echo htmlspecialchars($this->entity->phone_ext); ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="number" name="phone_ext" size="5" value="<?php echo htmlspecialchars($this->entity->phone_ext); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<span class="pf-label">Compensation</span>

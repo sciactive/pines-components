@@ -526,7 +526,7 @@ $pines->com_ptags->load();
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Link</span>
-							<input type="text" class="pf-field ui-widget-content ui-corner-all" name="cur_vendor_link" size="20" id="p_muid_cur_vendor_link" /></label>
+							<input type="url" class="pf-field ui-widget-content ui-corner-all" name="cur_vendor_link" size="20" id="p_muid_cur_vendor_link" /></label>
 					</div>
 				</div>
 				<br />

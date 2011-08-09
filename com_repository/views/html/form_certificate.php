@@ -46,7 +46,7 @@ $this->note = 'All packages will be signed against this new certificate. Any cur
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Email Address</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="emailAddress" size="24" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="email" name="emailAddress" size="24" /></label>
 	</div>
 	<div class="pf-element pf-heading">
 		<h1>Security Options</h1>

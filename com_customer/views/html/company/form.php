@@ -138,20 +138,20 @@ $this->note = 'Provide company profile details in this form.';
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Email</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="email" size="24" value="<?php echo htmlspecialchars($this->entity->email); ?>" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="email" name="email" size="24" value="<?php echo htmlspecialchars($this->entity->email); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Phone Number</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="phone" size="24" value="<?php echo format_phone($this->entity->phone); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="phone" size="24" value="<?php echo format_phone($this->entity->phone); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Fax</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="fax" size="24" value="<?php echo format_phone($this->entity->fax); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="fax" size="24" value="<?php echo format_phone($this->entity->fax); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Website</span>
 			<span class="pf-note">ex: http://www.website.com</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="website" size="24" value="<?php echo htmlspecialchars($this->entity->website); ?>" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="url" name="website" size="24" value="<?php echo htmlspecialchars($this->entity->website); ?>" /></label>
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>

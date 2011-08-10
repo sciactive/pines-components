@@ -173,12 +173,11 @@ class com_sales_countsheet extends entity {
 		// Work on a copy.
 		$entries = unserialize(serialize($this->entries));
 		// Find entries based on location and serial.
-		foreach ($entries as $key => &$cur_entry) {
-			// If there are more than one, it's not a serial.
-			if ($cur_entry->qty > 1 || $cur_entry->qty <= 0)
+		foreach ($entries as &$cur_entry) {
+			if ($cur_entry->qty <= 0)
 				continue;
-			$stock = $pines->entity_manager->get_entity(
-					array('class' => com_sales_stock),
+			$stock = (array) $pines->entity_manager->get_entities(
+					array('class' => com_sales_stock, 'limit' => $cur_entry->qty),
 					$and_selector,
 					$not_selector,
 					array('&',
@@ -186,20 +185,20 @@ class com_sales_countsheet extends entity {
 						'ref' => array('location', $this->group)
 					)
 				);
-			if (isset($stock)) {
+			foreach ($stock as $cur_stock) {
 				// If the product isn't serialized, something's wrong, don't save it.
-				if (!$stock->product->serialized)
+				if (!$cur_stock->product->serialized)
 					continue;
-				$this->matched[] = $stock;
-				$this->matched_count[$stock->product->guid]++;
-				$this->matched_serials[$stock->product->guid][] = $stock->serial;
-				$not_selector['guid'][] = $stock->guid;
-				unset($entries[$key]);
+				$this->matched[] = $cur_stock;
+				$this->matched_count[$cur_stock->product->guid]++;
+				$this->matched_serials[$cur_stock->product->guid][] = $cur_stock->serial;
+				$not_selector['guid'][] = $cur_stock->guid;
+				$cur_entry->qty--;
 			}
 		}
 		unset($cur_entry);
 		// Find entries based on location and SKU/barcode.
-		foreach ($entries as $key => &$cur_entry) {
+		foreach ($entries as &$cur_entry) {
 			if ($cur_entry->qty <= 0)
 				continue;
 			$product = $pines->com_sales->get_product_by_code($cur_entry->code);
@@ -233,12 +232,12 @@ class com_sales_countsheet extends entity {
 		}
 		unset($cur_entry);
 		// Find entries based on serial.
-		foreach ($entries as $key => &$cur_entry) {
+		foreach ($entries as &$cur_entry) {
 			// If there are more than one, it's not a serial.
-			if ($cur_entry->qty > 1 || $cur_entry->qty <= 0)
+			if ($cur_entry->qty <= 0)
 				continue;
-			$stock = $pines->entity_manager->get_entity(
-					array('class' => com_sales_stock),
+			$stock = (array) $pines->entity_manager->get_entities(
+					array('class' => com_sales_stock, 'limit' => 5),
 					$and_selector,
 					$not_selector,
 					array('&',
@@ -248,22 +247,22 @@ class com_sales_countsheet extends entity {
 						'ref' => array('location', $this->group)
 					)
 				);
-			if ($stock) {
+			foreach ($stock as $cur_stock) {
 				// If the product isn't serialized, something's wrong, don't save it.
-				if (!$stock->product->serialized)
+				if (!$cur_stock->product->serialized)
 					continue;
-				if (!$stock->in_array($this->potential[$cur_entry->code]['entries'])) {
+				if (!$cur_stock->in_array($this->potential[$cur_entry->code]['entries'])) {
 					$this->potential[$cur_entry->code]['name'] = $cur_entry->code;
 					// Entries, since it's in another location.
-					$this->potential[$cur_entry->code]['entries'][] = $stock;
+					$this->potential[$cur_entry->code]['entries'][] = $cur_stock;
 				}
 				$this->potential[$cur_entry->code]['count']++;
-				unset($entries[$key]);
+				$cur_entry->qty--;
 			}
 		}
 		unset($cur_entry);
 		// Find entries based on SKU/barcode.
-		foreach ($entries as $key => &$cur_entry) {
+		foreach ($entries as &$cur_entry) {
 			if ($cur_entry->qty <= 0)
 				continue;
 			$product = $pines->com_sales->get_product_by_code($cur_entry->code);
@@ -292,7 +291,7 @@ class com_sales_countsheet extends entity {
 		}
 		unset($cur_entry);
 		// Check for duplicates.
-		foreach ($entries as $key => &$cur_entry) {
+		foreach ($entries as &$cur_entry) {
 			if ($cur_entry->qty <= 0)
 				continue;
 			$found = false;

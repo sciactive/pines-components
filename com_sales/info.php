@@ -52,6 +52,8 @@ return array(
 		array('newreturnwsale', 'Create Sale Returns', 'User can create new returns, with an attached sale.'),
 		array('newreturnpartial', 'Create Partial Returns', 'User can return part of a sale.'),
 		array('editreturn', 'Edit Returns', 'User can edit current returns.'),
+		//array('voidownreturn', 'Void Own Returns', 'User can void their own returns, removing any stock from inventory.'),
+		//array('voidreturn', 'Void Returns', 'User can void any returns, removing any stock from inventory.'),
 		array('deletereturn', 'Delete Returns', 'User can delete current returns.'),
 		array('listmanufacturers', 'List Manufacturers', 'User can see manufacturers.'),
 		array('newmanufacturer', 'Create Manufacturers', 'User can create new manufacturers.'),
@@ -106,6 +108,7 @@ return array(
 		array('editcountsheet', 'Edit Countsheets', 'User can edit current countsheets.'),
 		array('deletecountsheet', 'Delete Countsheets', 'User can delete current countsheets.'),
 		array('printcountsheet', 'Print Countsheets', 'User can print countsheets.'),
+		array('uncommitcountsheet', 'Uncommit Countsheets', 'User can uncommit countsheets.'),
 		array('approvecountsheet', 'Approve Countsheets', 'User can approve countsheets.'),
 		array('assigncountsheet', 'Assign Countsheets', 'User can assign countsheets.'),
 		array('overrideowner', 'Override Owner', 'User can override users/locations for sales/returns.')

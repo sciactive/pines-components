@@ -113,7 +113,54 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				}},
 				<?php } ?>
 				{type: 'separator'},
-				<?php if (gatekeeper('com_sales/deletecountsheet')) { ?>
+				<?php if (gatekeeper('com_sales/uncommitcountsheet')) { ?>
+				{type: 'button', text: 'Uncommit', extra_class: 'picon picon-edit-undo', confirm: true, multi_select: true, click: function(e, rows){
+					rows.each(function(){
+						var loader, row = $(this);
+						$.ajax({
+							url: "<?php echo addslashes(pines_url('com_sales', 'countsheet/uncommit')); ?>",
+							type: "POST",
+							dataType: "json",
+							data: {"id": row.attr("title")},
+							beforeSend: function(){
+								loader = $.pnotify({
+									pnotify_title: 'Uncommit Countsheet',
+									pnotify_text: 'Uncommitting countsheet...',
+									pnotify_notice_icon: 'picon picon-throbber',
+									pnotify_nonblock: true,
+									pnotify_hide: false,
+									pnotify_history: false
+								});
+							},
+							error: function(XMLHttpRequest, textStatus){
+								loader.pnotify_remove();
+								pines.error("An error occured while trying to uncommit the countsheet:\n"+XMLHttpRequest.status+": "+textStatus);
+							},
+							success: function(data){
+								if (!data)
+									return;
+								if (!data[0]) {
+									loader.pnotify({
+										pnotify_type: 'error',
+										pnotify_text: data[1],
+										pnotify_hide: true,
+										pnotify_history: true
+									});
+									return;
+								}
+								loader.pnotify({
+									pnotify_notice_icon: 'picon picon-task-complete',
+									pnotify_text: data[1],
+									pnotify_hide: true,
+									pnotify_history: true
+								});
+								row.pgrid_set_value(6, 'No');
+							}
+						})
+					});
+				}},
+				{type: 'separator'},
+				<?php } if (gatekeeper('com_sales/deletecountsheet')) { ?>
 				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_sales', 'countsheet/delete', array('id' => '__title__'))); ?>', delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>

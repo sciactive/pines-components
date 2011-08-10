@@ -318,7 +318,7 @@ class com_reports extends component {
 		$module->total_pay = $totalpay;
 		$module->salary = $salary;
 		$module->commission = $commission;
-		$module->adjust = $adjust;
+		$module->adjust = 0;
 		if ($hourreport == 'true')
 			$module->hourreport = true;
 		else
@@ -399,6 +399,32 @@ class com_reports extends component {
 				);
 			if (isset($return->guid))
 				unset($module->sales[$key]);
+		}
+		// If this is a summary report we need the amount adjustment amount 
+		// of what we've already paid them.
+		if(!$module->hourreport){
+			
+			if($module->employee->pay_type == 'salary'){
+				$module->adjust = (-1 * (1814400 / 31536000)) * $employee->pay_rate;
+			}else{
+				$week = ($module->employee->timeclock->sum($start_date, ($start_date + 604800))/3600);
+				if ($week > 40)
+					$module->adjust += (40 * $module->employee->pay_rate) + ($module->employee->pay_rate * 1.5 * ($week -40));
+				else
+					$module->adjust += $week * $module->employee->pay_rate;
+				$week = ($module->employee->timeclock->sum(($start_date +604800), ($start_date + 1209600))/3600);
+				if ($week > 40)
+					$module->adjust += (40 * $module->employee->pay_rate) + ($module->employee->pay_rate * 1.5 * ($week -40));
+				else
+					$module->adjust += $week * $module->employee->pay_rate;
+				$week = ($module->employee->timeclock->sum(($start_date +1209600), ($start_date + 1814400))/3600);
+				if ($week > 40)
+					$module->adjust += (40 * $module->employee->pay_rate) + ($module->employee->pay_rate * 1.5 * ($week -40));
+				else
+					$module->adjust += $week * $module->employee->pay_rate;
+				
+				$module->adjust = $module->adjust * -1;
+			}
 		}
 		unset($cur_sale);
 		return $module;
@@ -1110,7 +1136,9 @@ class com_reports extends component {
 			if ($cur_employee['entity']->pay_type == 'salary') {
 				$cur_employee['commission_status'] = 'salary';
 				if (isset($start_date)) {
-					$ratio = (($end_date - $start_date) / 86400) / 360;
+					// Creates a ratio of the days in this schedule to be 
+					// multiplied by their pay rate.
+					$ratio = (($end_date - $start_date) / 31104000);
 					$cur_employee['salary_pay_period'] = $cur_employee['entity']->pay_rate * $ratio;
 					$module->group_salary_total += round($cur_employee['salary_pay_period'], 2);
 					$cur_employee['pay_total'] = $cur_employee['salary_pay_period'];
@@ -1367,45 +1395,49 @@ class com_reports extends component {
 			// Determine the amount of pay for each week of the time period this month
 			$cur_employee['reghours'] = 0;
 			$cur_employee['overtimehours'] = 0;
-			$week = $cur_employee['entity']->timeclock->sum($start_date, ($end_date - 1814400))/3600;
+
+			// Calculate the employees total hours in the first week.
+			$week = $cur_employee['entity']->timeclock->sum($start_date, strtotime('+1 week', $start_date))/3600;
 			if ($week > 40) {
 				$cur_employee['reghours'] += (40 * $cur_employee['entity']->pay_rate);
 				$cur_employee['overtimehours'] += ($cur_employee['entity']->pay_rate * 1.5 * ($week-40));
 			} else
-				$cur_employee['reghours'] = $week * $cur_employee['entity']->pay_rate;
-			$week = $cur_employee['entity']->timeclock->sum(($start_date + 604800), ($end_date - 1209600))/3600;
+				$cur_employee['reghours'] += $week * $cur_employee['entity']->pay_rate;
+			// Calculate the employees total hours in the second week.
+			$week = $cur_employee['entity']->timeclock->sum(strtotime('+1 week', $start_date), strtotime('+2 weeks', $start_date))/3600;
 			if ($week > 40) {
 				$cur_employee['reghours'] += (40 * $cur_employee['entity']->pay_rate);
 				$cur_employee['overtimehours'] += ($cur_employee['entity']->pay_rate * 1.5 * ($week-40));
 			} else
-				$cur_employee['reghours'] = $week * $cur_employee['entity']->pay_rate;
-			$week = $cur_employee['entity']->timeclock->sum(($start_date + 1209600), ($end_date - 604800))/3600;
+				$cur_employee['reghours'] += $week * $cur_employee['entity']->pay_rate;
+			// Calculate the employees total hours in the third week.
+			$week = $cur_employee['entity']->timeclock->sum(strtotime('+2 weeks', $start_date), strtotime('+3 weeks', $start_date))/3600;
 			if ($week > 40) {
 				$cur_employee['reghours'] += (40 * $cur_employee['entity']->pay_rate);
 				$cur_employee['overtimehours'] += ($cur_employee['entity']->pay_rate * 1.5 * ($week-40));
 			} else
-				$cur_employee['reghours'] = $week * $cur_employee['entity']->pay_rate;
-			//this will be the amount we take out because we've already paid them this much.
+				$cur_employee['reghours'] += $week * $cur_employee['entity']->pay_rate;
+			// This will be the amount we take out because we've already paid them this much.
 			$adjust = -1 * ($cur_employee['reghours']+$cur_employee['overtimehours']);
-			$week = $cur_employee['entity']->timeclock->sum(($start_date + 1814400), $end_date)/3600;
-			if($week > 40){
+			// Calculate the employees total hours in the last week (or more).
+			$week = $cur_employee['entity']->timeclock->sum(strtotime('+3 weeks', $start_date), $end_date)/3600;
+			if ($week > 40) {
 				$cur_employee['reghours'] += (40 * $cur_employee['entity']->pay_rate);
 				$cur_employee['overtimehours'] += ($cur_employee['entity']->pay_rate * 1.5 * ($week-40));
-			}else
+			} else
 				$cur_employee['reghours'] += $week * $cur_employee['entity']->pay_rate;
 
-			//add to the adjustments for hourly and commissions
-			if(!$cur_employee['adjustments'])
+			// Add to the adjustments for hourly and commissions.
+			if (!$cur_employee['adjustments'])
 				$cur_employee['adjustments'] = 0;
-			if($cur_employee['entity']->pay_type != 'salary')
+			if ($cur_employee['entity']->pay_type != 'salary')
 				$cur_employee['adjustments'] += $adjust;
 			else {
-				// Take away 3/4 of the pay for salaried employees so their
+				// Take away the first 3 weeks of the pay for salaried employees so their
 				// total pay reflects this week's pay.
 				// Determines the portion of salary that they've already been
 				// paid that needs to be deducted.
-				$ratio = -1 * (($end_date - $start_date - 604800) / 31536000);
-				$adjust = $ratio * $cur_employee['entity']->pay_rate;
+				$adjust = (-1 * (1814400 / 31536000)) * $cur_employee['entity']->pay_rate;
 				$cur_employee['adjustments'] += $adjust;
 			}
 
@@ -1444,7 +1476,9 @@ class com_reports extends component {
 			if ($cur_employee['entity']->pay_type == 'salary') {
 				$cur_employee['commission_status'] = 'salary';
 				if (isset($start_date)) {
-					$ratio = (($end_date - $start_date) / 86400) / 360;
+					// Creates a ratio of the days in this schedule to be 
+					// multiplied by their pay rate.
+					$ratio = (($end_date - $start_date ) / 31536000) ;
 					$cur_employee['salary_pay_period'] = $cur_employee['entity']->pay_rate * $ratio;
 					$module->group_salary_total += round($cur_employee['salary_pay_period'], 2);
 					$cur_employee['pay_total'] = $cur_employee['salary_pay_period'];

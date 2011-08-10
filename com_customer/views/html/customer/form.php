@@ -771,7 +771,7 @@ $pines->com_customer->load_company_select();
 						<?php } ?>
 					</tbody>
 				</table>
-				<input type="hidden" id="p_muid_addresses" name="addresses" size="24" />
+				<input type="hidden" id="p_muid_addresses" name="addresses" />
 			</div>
 			<div id="p_muid_address_dialog" title="Add an Address">
 				<div class="pf-form">

@@ -438,7 +438,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					</tbody>
 				</table>
 			</div>
-			<input type="hidden" id="p_muid_products" name="products" size="24" />
+			<input type="hidden" id="p_muid_products" name="products" />
 		</div>
 	</div>
 	<div style="width: 49%; float: left;">

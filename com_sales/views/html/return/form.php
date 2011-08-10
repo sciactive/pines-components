@@ -1176,7 +1176,7 @@ if ($pines->config->com_sales->autocomplete_product)
 				<?php } ?>
 			</tbody>
 		</table>
-		<input type="hidden" id="p_muid_products" name="products" size="24" />
+		<input type="hidden" id="p_muid_products" name="products" />
 	</div>
 	<div id="p_muid_serial_dialog" title="Provide Serial" style="display: none;">
 		<div class="pf-form">
@@ -1248,7 +1248,7 @@ if ($pines->config->com_sales->autocomplete_product)
 				</table>
 				<small>A payment with a negative amount means the customer will be charged to cover return fees. (Ex -5.00 means a $5.00 charge.)</small>
 			</div>
-			<input type="hidden" id="p_muid_payments" name="payments" size="24" />
+			<input type="hidden" id="p_muid_payments" name="payments" />
 		</div>
 	</div>
 	<div class="pf-element pf-full-width">

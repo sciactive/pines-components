@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 ?>
 <?php if (!gatekeeper('com_sales/manager')) { ?>
-<form class="pf-form" method="post" action="">
+<form class="pf-form" method="post" action="" autocomplete="off">
 	<div class="pf-element pf-heading">
 		<h1>Manager Login</h1>
 	</div>

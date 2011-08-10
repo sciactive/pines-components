@@ -487,7 +487,7 @@ $pines->com_ptags->load();
 							</tbody>
 						</table>
 					</div>
-					<input type="hidden" id="p_muid_vendors" name="vendors" size="24" />
+					<input type="hidden" id="p_muid_vendors" name="vendors" />
 				</div>
 				<span id="p_muid_vendors_hidden" class="pf-field" style="display: none;">Vendors cannot be selected for non stocked items.</span>
 			</div>

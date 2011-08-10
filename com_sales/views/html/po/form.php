@@ -427,7 +427,7 @@ if ($this->entity->final) {
 					</tbody>
 				</table>
 			</div>
-			<input type="hidden" id="p_muid_products" name="products" size="24" <?php echo $read_only; ?> />
+			<input type="hidden" id="p_muid_products" name="products" <?php echo $read_only; ?> />
 		</div>
 	</div>
 	<div class="pf-element pf-full-width">

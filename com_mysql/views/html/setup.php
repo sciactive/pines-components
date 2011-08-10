@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Database Setup';
 ?>
-<form class="pf-form" method="post" action="<?php echo htmlspecialchars(pines_url('com_mysql', 'setup')); ?>">
+<form class="pf-form" method="post" action="<?php echo htmlspecialchars(pines_url('com_mysql', 'setup')); ?>" autocomplete="off">
 	<div class="pf-element">
 		You have successfully installed the <?php echo htmlspecialchars($pines->info->com_mysql->name); ?> in <?php echo htmlspecialchars("{$pines->info->name} {$pines->info->version}"); ?>. Now you need to configure a database to use.
 		The user and database can be created for you by filling out the "Automatic Setup" section below.

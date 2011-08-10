@@ -451,7 +451,7 @@ if ($this->entity->final)
 					</tbody>
 				</table>
 			</div>
-			<input type="hidden" id="p_muid_products" name="products" size="24" />
+			<input type="hidden" id="p_muid_products" name="products" />
 		</div>
 	</div>
 	<?php if (!empty($this->entity->received)) { ?>

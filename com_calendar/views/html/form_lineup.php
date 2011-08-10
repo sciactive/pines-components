@@ -62,7 +62,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	</div>
 	<br class="pf-clearing" />
 	<div class="pf-group">
-		<input type="hidden" name="location" size="24" value="<?php echo $this->location->guid; ?>" />
-		<input type="hidden" name="shifts" size="24" value="" />
+		<input type="hidden" name="location" value="<?php echo $this->location->guid; ?>" />
+		<input type="hidden" name="shifts" value="" />
 	</div>
 </form>

@@ -270,7 +270,7 @@ if ($pines->config->com_user->check_username)
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_user', 'saveuser')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_user', 'saveuser')); ?>" autocomplete="off">
 	<div id="p_muid_tabs" style="clear: both;">
 		<ul>
 			<li><a href="#p_muid_tab_general">General</a></li>
@@ -610,7 +610,7 @@ if ($pines->config->com_user->check_username)
 						<?php } ?>
 					</tbody>
 				</table>
-				<input type="hidden" id="p_muid_addresses" name="addresses" size="24" />
+				<input type="hidden" id="p_muid_addresses" name="addresses" />
 			</div>
 			<div id="p_muid_address_dialog" title="Add an Address" style="display: none;">
 				<div class="pf-form">

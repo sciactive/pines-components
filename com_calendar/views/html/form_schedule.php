@@ -109,7 +109,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	</div>
 	<br class="pf-clearing" />
 	<div class="pf-group">
-		<input type="hidden" name="dates" size="24" value="" />
+		<input type="hidden" name="dates" value="" />
 	</div>
 	<?php if (isset($this->entity->guid)) { ?>
 	<input type="hidden" name="employee" value="<?php echo $this->entity->guid; ?>" />

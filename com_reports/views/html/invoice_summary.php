@@ -209,7 +209,7 @@ $pines->com_pgrid->load();
 				<td><?php echo ucwords($type); ?></td>
 				<td><?php echo format_date($cur_invoice->p_cdate, 'full_sort'); ?></td>
 				<td><?php echo htmlspecialchars($cur_invoice->group->name); ?></td>
-				<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_invoice->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_invoice->customer->name); ?></a></td>
+				<td><?php echo htmlspecialchars((int) $cur_invoice->customer->guid); ?>: <a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_invoice->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_invoice->customer->name); ?></a></td>
 				<td><?php echo htmlspecialchars($cur_invoice->user->name); ?></td>
 				<td class="total">$<?php echo number_format($cur_invoice->subtotal, 2, '.', ''); ?></td>
 				<td class="total">$<?php echo number_format($total_cost, 2, '.', ''); ?></td>

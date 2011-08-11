@@ -41,7 +41,7 @@ return array(
 		'component' => 'com_jquery'
 	),
 	'recommend' => array(
-		'component' => 'com_pnotify'
+		'component' => 'com_pnotify&com_uasniffer'
 	),
 );
 

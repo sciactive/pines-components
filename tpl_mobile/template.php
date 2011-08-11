@@ -13,6 +13,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 header('Content-Type: text/html');
+
+$menu = $pines->page->render_modules('main_menu', 'module_head');
 ?>
 <!DOCTYPE html>
 <html>
@@ -66,7 +68,9 @@ header('Content-Type: text/html');
 		</h1>
 		<?php echo $pines->page->render_modules('header', 'module_header'); ?>
 		<?php echo $pines->page->render_modules('header_right', 'module_header'); ?>
+		<?php if (!empty($menu)) { ?>
 		<div><button id="menu_link" type="button" class="ui-state-default">Main Menu</button></div>
+		<?php } ?>
 	</div>
 	<div id="pre_content"><?php echo $pines->page->render_modules('pre_content', 'module_header'); ?></div>
 	<div id="breadcrumbs"><?php echo $pines->page->render_modules('breadcrumbs', 'module_header'); ?></div>
@@ -84,9 +88,11 @@ header('Content-Type: text/html');
 	</div>
 	<div id="bottom"><?php echo $pines->page->render_modules('bottom', 'module_header'); ?></div>
 </div>
-<div id="menu">
+<?php if (!empty($menu)) { ?>
+<div id="menu" style="display: none;">
 	<div><button id="menu_back" type="button" class="ui-state-default">Return to Page</button></div>
 	<?php echo $pines->page->render_modules('main_menu', 'module_head'); ?>
 </div>
+<?php } ?>
 </body>
 </html>

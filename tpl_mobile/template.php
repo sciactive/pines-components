@@ -22,7 +22,7 @@ $menu = $pines->page->render_modules('main_menu', 'module_head');
 	<meta charset="utf-8" />
 	<title><?php echo htmlspecialchars($pines->page->get_title()); ?></title>
 	<meta name="HandheldFriendly" content="true" />
-	<meta name="viewport" content="width=device-width, height=device-height, user-scalable=no" />
+	<meta name="viewport" content="width=320, initial-scale=1, maximum-scale=1, user-scalable=no" />
 	<link rel="icon" type="image/vnd.microsoft.icon" href="<?php echo htmlspecialchars($pines->config->location); ?>favicon.ico" />
 
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/pines.css" media="all" rel="stylesheet" type="text/css" />

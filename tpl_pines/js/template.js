@@ -1,5 +1,6 @@
 pines(function(){
-	$.pnotify.defaults.pnotify_opacity = .9;
+	if ($.pnotify)
+		$.pnotify.defaults.pnotify_opacity = .9;
 
 	// Get the loaded page ready. (Styling, etc.)
 	// This needs to be called after Ajax page loads.

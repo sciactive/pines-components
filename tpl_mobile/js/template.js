@@ -1,6 +1,7 @@
 pines(function(){
 	$.pnotify.defaults.pnotify_opacity = 1;
 	$.pnotify.defaults.pnotify_nonblock = false;
+	$.fn.pgrid.defaults.pgrid_stateful_height = false;
 
 	// Menu link.
 	$("#menu_link, #menu_back").button().click(function(){

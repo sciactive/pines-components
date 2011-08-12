@@ -1105,16 +1105,12 @@ class com_reports extends component {
 				$cur_employee['commission'] = $commission_array[$cur_employee['entity']->guid];
 			else
 				$cur_employee['commission'] = 0.06 * $cur_employee['sales_total'];
-			// Figure out what the time frame is the employee has worked in weeks.
-			$time_diff_weeks = ($module->end_date - $module->start_date) / 604800;
-			// Get the amount of hours for that amount of weeks, which won't be overtime hours.
-			$weeks_hours = $time_diff_weeks * 40;
 			// Get the amount of hours worked.
 			$cur_employee['hour_total'] = $cur_employee['clocked'];
 			// Figure out if they have any overtime.
-			if ($cur_employee['hour_total'] > $weeks_hours) {
-				$cur_employee['reghours'] = $cur_employee['entity']->pay_rate * $weeks_hours;
-				$cur_employee['overtimehours'] = ($cur_employee['hour_total'] - $weeks_hours) * ($cur_employee['entity']->pay_rate * 1.5);
+			if ($cur_employee['hour_total'] > 40) {
+				$cur_employee['reghours'] = $cur_employee['entity']->pay_rate * 40;
+				$cur_employee['overtimehours'] = ($cur_employee['hour_total'] - 40) * ($cur_employee['entity']->pay_rate * 1.5);
 			} else {
 				$cur_employee['reghours'] = ($cur_employee['entity']->pay_rate * $cur_employee['hour_total']);
 				$cur_employee['overtimehours'] = 0;
@@ -1136,10 +1132,10 @@ class com_reports extends component {
 			if ($cur_employee['entity']->pay_type == 'salary') {
 				$cur_employee['commission_status'] = 'salary';
 				if (isset($start_date)) {
-					// Creates a ratio of the days in this schedule to be 
-					// multiplied by their pay rate.
-					$ratio = (($end_date - $start_date) / 31104000);
-					$cur_employee['salary_pay_period'] = $cur_employee['entity']->pay_rate * $ratio;
+					// Figure out the amount of days in this pay period
+					$days = (int)(($end_date - $start_date) / 86400);
+					// Multiply by the amount of pay per day.
+					$cur_employee['salary_pay_period'] = $days * ($cur_employee['entity']->pay_rate / 365);
 					$module->group_salary_total += round($cur_employee['salary_pay_period'], 2);
 					$cur_employee['pay_total'] = $cur_employee['salary_pay_period'];
 				} else {

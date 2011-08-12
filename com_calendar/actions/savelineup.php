@@ -70,11 +70,30 @@ if (empty($failed_entries)) {
 $total_time = $last_date - $first_date;
 if ($total_time <= 86400) {
 	$view_type = 'agendaDay';
+	// Make query of entities include the whole day.
+	$last_date = strtotime('23:59:59', $last_date) + 1;
 } elseif ($total_time <= 604800) {
 	$view_type = 'agendaWeek';
+
+	// This changes the end date of the entities query to be the beginning of the week.
+	if ((int) date('N', $last_date) < 7)
+		$last_date = strtotime('next sunday', $last_date);
+	$last_date = strtotime('23:59:59', $last_date) + 1;
+
+	// This changes the beginning date to be the first of the week.
+	if ((int) date('N', $first_date) > 1)
+		$first_date = strtotime('last monday', $first_date);
+	$first_date = strtotime('00:00:00', $first_date);
 } else {
 	$view_type = 'month';
+
+	// This includes the query of entities to the beginning of the month.
+	$first_date = strtotime('1st', $first_date);
+
+	// This makes sure to include to the end of the month.
+	$last_date = strtotime('+1 month', strtotime('1st', $last_date));
 }
-pines_redirect(pines_url('com_calendar', 'editcalendar', array('view_type' => $view_type, 'start' => format_date($first_date), 'end' => format_date($last_date), 'location' => $location->guid)));
+
+pines_redirect(pines_url('com_calendar', 'editcalendar', array('view_type' => $view_type, 'start' => format_date($first_date, 'date_short'), 'end' => format_date($last_date, 'date_short'), 'location' => $location->guid)));
 
 ?>

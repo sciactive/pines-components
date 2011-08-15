@@ -91,7 +91,8 @@ class com_reports_sales_ranking extends entity {
 
 		$module = new module('com_reports', 'view_sales_rankings', 'content');
 		$module->entity = $this;
-		$module->rankings = array();
+		if ($this->final)
+			return $module;
 
 		// Get employees and locations.
 		$group = $this->top_location;
@@ -137,6 +138,8 @@ class com_reports_sales_ranking extends entity {
 		foreach ($employees as $cur_employee) {
 			$ranking_employee[$cur_employee->guid] = array(
 				'entity' => $cur_employee,
+				'location' => $cur_employee->group,
+				'district' => $cur_employee->group->parent,
 				'current' => 0.00,
 				'last' => 0.00,
 				'mtd' => 0.00,
@@ -149,6 +152,7 @@ class com_reports_sales_ranking extends entity {
 		foreach ($locations as $cur_location) {
 			$ranking_location[$cur_location->guid] = array(
 				'entity' => $cur_location,
+				'location' => $cur_location->parent,
 				'current' => 0.00,
 				'last' => 0.00,
 				'mtd' => 0.00,
@@ -290,17 +294,17 @@ class com_reports_sales_ranking extends entity {
 
 		// Separate employees by new hires, and locations into tiers.
 		// Determine district and location managers.
-		$module->new_hires = array();
-		$module->employees = array();
+		$this->new_hires = array();
+		$this->employees = array();
 		foreach ($ranking_employee as $cur_rank) {
 			if ($cur_rank['entity']->new_hire)
-				$module->new_hires[] = $cur_rank;
+				$this->new_hires[] = $cur_rank;
 			else
-				$module->employees[] = $cur_rank;
+				$this->employees[] = $cur_rank;
 			if (preg_match('/(manager|^dmt?$)/i', $cur_rank['entity']->job_title) && isset($ranking_location[$cur_rank['entity']->group->guid]))
 				$ranking_location[$cur_rank['entity']->group->guid]['manager'] = $cur_rank['entity'];
 		}
-		$module->locations[] = array();
+		$this->locations = array();
 		foreach ($ranking_location as $cur_rank) {
 			$parent_count = 0;
 			$parent = $cur_rank['entity']->parent;
@@ -308,35 +312,35 @@ class com_reports_sales_ranking extends entity {
 				$parent_count++;
 				$parent = $parent->parent;
 			}
-			if (!$module->locations[$parent_count])
-				$module->locations[$parent_count] = array();
-			$module->locations[$parent_count][] = $cur_rank;
+			if (!$this->locations[$parent_count])
+				$this->locations[$parent_count] = array();
+			$this->locations[$parent_count][] = $cur_rank;
 		}
-		ksort($module->locations);
+		ksort($this->locations);
 
-		// Sort and rank by trend percentage.
-		usort($module->new_hires, array($this, 'sort_mtd'));
-		$module->new_hires = array_values($module->new_hires);
+		// Sort and rank by trend.
+		usort($this->new_hires, array($this, 'sort_mtd'));
+		$this->new_hires = array_values($this->new_hires);
 		$rank = 1;
-		foreach ($module->new_hires as &$cur_rank) {
+		foreach ($this->new_hires as &$cur_rank) {
 			if ($cur_rank['goal'] <= 0)
 				continue;
 			$cur_rank['rank'] = $rank;
 			$rank++;
 		}
 		unset($cur_rank);
-		usort($module->employees, array($this, 'sort_ranks'));
-		$module->employees = array_values($module->employees);
+		usort($this->employees, array($this, 'sort_mtd'));
+		$this->employees = array_values($this->employees);
 		$rank = 1;
-		foreach ($module->employees as &$cur_rank) {
+		foreach ($this->employees as &$cur_rank) {
 			if ($cur_rank['goal'] <= 0)
 				continue;
 			$cur_rank['rank'] = $rank;
 			$rank++;
 		}
 		unset($cur_rank);
-		foreach ($module->locations as &$cur_location) {
-			usort($cur_location, array($this, 'sort_ranks'));
+		foreach ($this->locations as &$cur_location) {
+			usort($cur_location, array($this, 'sort_mtd'));
 			$rank = 1;
 			foreach ($cur_location as &$cur_rank) {
 				if ($cur_rank['goal'] <= 0)
@@ -348,22 +352,6 @@ class com_reports_sales_ranking extends entity {
 		}
 
 		return $module;
-	}
-
-	/**
-	 * Sort by the trend percentage.
-	 *
-	 * @param array $a The first entry.
-	 * @param array $b The second entry.
-	 * @return int The sort order.
-	 * @access private
-	 */
-	private function sort_ranks($a, $b) {
-		if ($a['pct'] > $b['pct'])
-			return -1;
-		if ($a['pct'] < $b['pct'])
-			return 1;
-		return 0;
 	}
 
 	/**

@@ -30,6 +30,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', text: 'View', extra_class: 'picon picon-document-preview', double_click: true, url: '<?php echo addslashes(pines_url('com_reports', 'viewsalesranking', array('id' => '__title__'))); ?>'},
 				<?php } if (gatekeeper('com_reports/editsalesranking')) { ?>
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', url: '<?php echo addslashes(pines_url('com_reports', 'editsalesranking', array('id' => '__title__'))); ?>'},
+				{type: 'separator'},
+				{type: 'button', text: 'Finalize', extra_class: 'picon picon-task-complete', url: '<?php echo addslashes(pines_url('com_reports', 'finalizesalesranking', array('id' => '__title__'))); ?>'},
 				<?php } ?>
 				{type: 'separator'},
 				<?php if (gatekeeper('com_reports/newsalesranking')) { ?>
@@ -71,6 +73,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>Name</th>
 			<th>Start</th>
 			<th>End</th>
+			<th>Finalized</th>
 			<th>Highest Division</th>
 			<th>Created by</th>
 		</tr>
@@ -82,6 +85,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo htmlspecialchars($cur_ranking->name); ?></td>
 			<td><?php echo format_date($cur_ranking->start_date, 'date_sort'); ?></td>
 			<td><?php echo format_date($cur_ranking->end_date - 1, 'date_sort'); ?></td>
+			<td><?php echo $cur_ranking->final ? 'Yes' : 'No'; ?></td>
 			<td><?php echo htmlspecialchars($cur_ranking->top_location->name); ?></td>
 			<td><?php echo htmlspecialchars($cur_ranking->user->name); ?></td>
 		</tr>

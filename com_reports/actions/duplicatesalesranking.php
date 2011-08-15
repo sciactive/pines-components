@@ -1,6 +1,6 @@
 <?php
 /**
- * Provide a form to edit a sales ranking.
+ * Duplicate a sales ranking.
  *
  * @package Pines
  * @subpackage com_reports
@@ -25,15 +25,18 @@ $dupe = com_reports_sales_ranking::factory();
 $dupe->name = $entity->name;
 $dupe->start_date = $entity->start_date;
 $dupe->end_date = $entity->end_date;
-$dupe->goals = $entity->goals;
+$dupe->calc_nh_goals = $entity->calc_nh_goals;
+$dupe->only_below = $entity->only_below;
 $dupe->top_location = $entity->top_location;
-// Save the duplicated event.
-if ($dupe->save()) {
-	pines_notice('Duplicated Ranking ['.$dupe->name.']');
-} else {
-	pines_error('Error duplicating Sales Ranking. Do you have permission?');
-}
+$dupe->sales_goals = $entity->sales_goals;
+$dupe->ac = $entity->ac;
 
-$pines->com_reports->list_sales_rankings();
+// Save the duplicated event.
+if ($dupe->save())
+	pines_notice('Duplicated Ranking ['.$dupe->name.']');
+else
+	pines_error('Error duplicating Sales Ranking. Do you have permission?');
+
+pines_redirect(pines_url('com_reports', 'salesrankings'));
 
 ?>

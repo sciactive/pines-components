@@ -19,6 +19,11 @@ if ( isset($_REQUEST['id']) ) {
 		pines_error('Requested Sales Rankings id is not accessible.');
 		return;
 	}
+	if ($ranking->final) {
+		pines_notice('This sales ranking has been finalized.');
+		pines_redirect(pines_url('com_reports', 'salesrankings'));
+		return;
+	}
 } else {
 	if ( !gatekeeper('com_reports/newsalesranking') )
 		punt_user(null, pines_url('com_reports', 'salesrankings'));

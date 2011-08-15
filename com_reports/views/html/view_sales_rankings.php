@@ -11,6 +11,10 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Sales Rankings: '.$this->entity->name.' ('.format_date($this->entity->start_date, 'date_sort').' - '.format_date($this->entity->end_date - 1, 'date_sort').')';
+if ($this->entity->final)
+	$this->note = 'Finalized on '.format_date($this->entity->final_date, 'full_long');
+else
+	$this->note = 'Current as of '.format_date(time(), 'full_long');
 $pines->com_jstree->load();
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
@@ -90,9 +94,9 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 	// ]]>
 </script>
 <div class="pf-form">
-	<?php foreach ($this->locations as $key => $cur_location_rankings) { // TODO: Make this more customizeable. ?>
+	<?php foreach ($this->entity->locations as $key => $cur_location_rankings) { // TODO: Make this more customizeable. ?>
 	<div class="pf-element pf-full-width">
-		<table class="p_muid_grid" title="<?php echo $key == count($this->locations)-1 ? 'Location' : 'District'; ?> Rankings">
+		<table class="p_muid_grid" title="<?php echo $key == count($this->entity->locations)-1 ? 'Location' : 'District'; ?> Rankings">
 			<thead>
 				<tr>
 					<th style="width: 5%;">Rank</th>
@@ -104,7 +108,7 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<th style="width: 10%;">Goal</th>
 					<th style="width: 10%;">Trend</th>
 					<th style="width: 10%;">Trend %</th>
-					<?php if ($key == count($this->locations)-1) { ?>
+					<?php if ($key == count($this->entity->locations)-1) { ?>
 					<th style="width: 25%;">Leader</th>
 					<th style="width: 25%;">Mgr</th>
 					<?php } else { ?>
@@ -144,7 +148,7 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['goal'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['trend'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo htmlspecialchars(round($cur_rank['pct'], 2)); ?>%</td>
-					<?php if ($key == count($this->locations)-1) { ?>
+					<?php if ($key == count($this->entity->locations)-1) { ?>
 					<td style="text-align: center;"><?php
 					if ($cur_rank['pct'] >= 100) {
 						echo '$'.sprintf('%01.0f', ($cur_rank['trend'] * $multiplier) * (4 * min(1.5, $cur_rank['pct'] / 100)) + (($cur_rank['goal'] * $multiplier) >= 80 ? 80 : 0) );
@@ -164,7 +168,7 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<td style="text-align: center;"><?php echo $prefix.htmlspecialchars(round($cur_rank['child_count'] > 0 ? $cur_rank['trend'] / $cur_rank['child_count'] * $multiplier : 0, 2)); ?></td>
 					<?php } ?>
 				</tr>
-				<?php } if ($key == count($this->locations)-1) {
+				<?php } if ($key == count($this->entity->locations)-1) {
 					$totals['pct'] = ($totals['goal'] > 0 ? $totals['trend'] / $totals['goal'] * 100 : 0);
 					if ($totals['pct'] >= $green_status) {
 						$class = 'green';
@@ -208,7 +212,7 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 			</thead>
 			<tbody>
 				<?php
-				foreach($this->employees as $key => $cur_rank) {
+				foreach($this->entity->employees as $key => $cur_rank) {
 					// Skip employees with no goal.
 					if ($cur_rank['goal'] <= 0)
 						continue;
@@ -224,14 +228,14 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 				<tr title="<?php echo $cur_rank['entity']->guid; ?>" class="<?php echo $class; ?>">
 					<td><?php echo htmlspecialchars($cur_rank['rank']); ?></td>
 					<td><?php echo htmlspecialchars($cur_rank['entity']->name); ?></td>
-					<td><?php echo htmlspecialchars("{$cur_rank['entity']->group->name} (".preg_replace('/\s.*/', '', $cur_rank['entity']->group->parent->name).')'); ?></td>
+					<td><?php echo htmlspecialchars("{$cur_rank['location']->name} (".preg_replace('/\s.*/', '', $cur_rank['district']->name).')'); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['current'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['last'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['mtd'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['goal'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['trend'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo htmlspecialchars(round($cur_rank['pct'], 2)); ?>%</td>
-					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round(($cur_rank['mtd'] - $this->employees[$key+1]['mtd']) * $multiplier, 2)); ?></td>
+					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round(($cur_rank['mtd'] - $this->entity->employees[$key+1]['mtd']) * $multiplier, 2)); ?></td>
 					<td class="right_justify">
 						<?php switch ($cur_rank['rank']) {
 							case 1:
@@ -281,7 +285,7 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 			</thead>
 			<tbody>
 				<?php
-				foreach($this->new_hires as $key => $cur_rank) {
+				foreach($this->entity->new_hires as $key => $cur_rank) {
 					// Skip employees with no goal.
 					if ($cur_rank['goal'] <= 0)
 						continue;
@@ -297,14 +301,14 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 				<tr title="<?php echo $cur_rank['entity']->guid; ?>" class="<?php echo $class; ?>">
 					<td><?php echo htmlspecialchars($cur_rank['rank']); ?></td>
 					<td><?php echo htmlspecialchars($cur_rank['entity']->name); ?></td>
-					<td><?php echo htmlspecialchars($cur_rank['entity']->group->name); ?></td>
+					<td><?php echo htmlspecialchars("{$cur_rank['location']->name} (".preg_replace('/\s.*/', '', $cur_rank['district']->name).')'); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['current'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['last'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['mtd'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['goal'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['trend'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo htmlspecialchars(round($cur_rank['pct'], 2)); ?>%</td>
-					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round(($cur_rank['mtd'] - $this->new_hires[$key+1]['mtd']) * $multiplier, 2)); ?></td>
+					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round(($cur_rank['mtd'] - $this->entity->new_hires[$key+1]['mtd']) * $multiplier, 2)); ?></td>
 					<td class="right_justify">
 						<?php switch ($cur_rank['rank']) {
 							case 1:

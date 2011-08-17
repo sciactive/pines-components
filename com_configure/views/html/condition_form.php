@@ -156,12 +156,20 @@ $pines->com_pgrid->load();
 				<span class="pf-label">Detected Types</span>
 				<span class="pf-note">These types were detected on this system.</span>
 				<div class="pf-group">
-					<div class="pf-field"><em><?php echo htmlspecialchars(implode(', ', array_keys($pines->depend->checkers))); ?></em></div>
+					<div class="pf-field"><em><?php
+					$checker_links = array();
+					foreach (array_keys($pines->depend->checkers) as $cur_checker) {
+						$checker_html = htmlspecialchars($cur_checker);
+						$checker_js = addslashes($cur_checker);
+						$checker_links[] = "<a href=\"javascript:void(0);\" onclick=\"\$('#p_muid_cur_condition_type').val('$checker_js');\">$checker_html</a>";
+					}
+					echo implode(', ', $checker_links);
+					?></em></div>
 				</div>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Type</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_condition_type" size="24" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_condition_type" id="p_muid_cur_condition_type" size="24" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Value</span>

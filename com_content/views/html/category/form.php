@@ -318,6 +318,91 @@ $pines->com_pgrid->load();
 			<div class="pf-element pf-full-width">
 				<textarea rows="8" cols="35" class="peditor" style="width: 100%;" name="intro"><?php echo $this->entity->intro; ?></textarea>
 			</div>
+			<div class="pf-element pf-heading">
+				<h1>Page Variants</h1>
+			</div>
+			<script type="text/javascript">
+				// <![CDATA[
+				pines(function(){
+					$("#p_muid_variant_template").change(function(){
+						var cur_template = $(this).val();
+						$("option", "#p_muid_variant_variant").hide().filter("."+cur_template).show();
+					}).change();
+					$("#p_muid_variant_button").click(function(){
+						var cur_template = $("#p_muid_variant_template").val();
+						if ($("."+cur_template, "#p_muid_variants").length) {
+							alert("There is already a variant set for this template. You must remove it before setting a new variant.");
+							return;
+						}
+						var cur_template_name = $("option:selected", "#p_muid_variant_template").text();
+						var cur_variant = $("#p_muid_variant_variant").val();
+						var new_html = '<div class="pf-element pf-full-width '+cur_template+'">\
+							<button class="pf-field ui-state-default ui-corner-all remove" style="float: right;" type="button">Remove</button>\
+							<span class="pf-label">'+cur_template_name+'</span>\
+							<span class="pf-field">'+cur_variant+'</span>\
+							<input type="hidden" name="variants[]" value="'+cur_template+'::'+cur_variant+'" />\
+						</div>';
+						$("#p_muid_variants").append(new_html).find(":button").button();
+					});
+					$("#p_muid_variants").delegate(".remove", "click", function(){
+						$(this).closest(".pf-element").remove();
+					}).find(":button").button();
+				});
+				// ]]>
+			</script>
+			<div class="pf-element">
+				<span class="pf-label">Add a Variant</span>
+				<?php
+				$variants = array();
+				foreach ($pines->components as $cur_template) {
+					if (strpos($cur_template, 'tpl_') !== 0)
+						continue;
+					$cur_template = clean_filename($cur_template);
+					// Is there even a variant option?
+					if (!isset($pines->config->$cur_template->variant))
+						continue;
+					// Find the defaults file.
+					if (!file_exists("templates/$cur_template/defaults.php"))
+						continue;
+					/**
+					 * Get the template defaults to list all the variants.
+					 */
+					$template_options = (array) include("templates/$cur_template/defaults.php");
+					foreach ($template_options as $cur_option) {
+						if ($cur_option['name'] != 'variant')
+							continue;
+						$variants[$cur_template] = $cur_option['options'];
+						break;
+					}
+				}
+				if (empty($variants)) {
+				?>
+				<span class="pf-field">None of the enabled templates have any page variants.</span>
+				<?php } else { ?>
+				<select class="pf-field ui-widget-content ui-corner-all" id="p_muid_variant_template">
+					<?php foreach ($variants as $cur_template => $cur_variants) { ?>
+					<option value="<?php echo htmlspecialchars($cur_template); ?>"<?php echo $cur_template == $pines->current_template ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars("{$pines->info->$cur_template->name} ($cur_template)"); ?></option>
+					<?php } ?>
+				</select>
+				<select class="pf-field ui-widget-content ui-corner-all" id="p_muid_variant_variant">
+					<?php foreach ($variants as $cur_template => $cur_variants) {
+						foreach ($cur_variants as $cur_description => $cur_variant) { ?>
+					<option class="<?php echo htmlspecialchars($cur_template); ?>" value="<?php echo htmlspecialchars($cur_variant); ?>"><?php echo htmlspecialchars($cur_description); ?></option>
+					<?php } } ?>
+				</select>
+				<button class="pf-field ui-state-default ui-corner-all" type="button" id="p_muid_variant_button">Add</button>
+				<?php } ?>
+			</div>
+			<div id="p_muid_variants">
+				<?php foreach ((array) $this->entity->variants as $cur_template => $cur_variant) { ?>
+				<div class="pf-element pf-full-width <?php echo htmlspecialchars($cur_template); ?>">
+					<button class="pf-field ui-state-default ui-corner-all remove" style="float: right;" type="button">Remove</button>
+					<span class="pf-label"><?php echo htmlspecialchars("{$pines->info->$cur_template->name} ($cur_template)"); ?></span>
+					<span class="pf-field"><?php echo htmlspecialchars($cur_variant); ?></span>
+					<input type="hidden" name="variants[]" value="<?php echo htmlspecialchars("{$cur_template}::{$cur_variant}"); ?>" />
+				</div>
+				<?php } ?>
+			</div>
 			<br class="pf-clearing" />
 		</div>
 		<div id="p_muid_tab_conditions">

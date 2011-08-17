@@ -21,6 +21,43 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class com_content extends component {
 	/**
+	 * Check that a page variant is valid for a template.
+	 * 
+	 * @param string $variant The variant to check.
+	 * @param string $template The template to use for the check. If left null, the current template is used.
+	 * @return bool Whether the variant is valid for the specified template.
+	 */
+	public function is_variant_valid($variant, $template = null) {
+		global $pines;
+		if (isset($template))
+			$cur_template = clean_filename($template);
+		else
+			$cur_template = clean_filename($pines->current_template);
+		// Is there even a variant option?
+		if (!isset($pines->config->$cur_template->variant))
+			return false;
+		// Find the defaults file.
+		if (file_exists("templates/$cur_template/defaults.php"))
+			$file = "templates/$cur_template/defaults.php";
+		elseif (file_exists("templates/.$cur_template/defaults.php"))
+			$file = "templates/.$cur_template/defaults.php";
+		else
+			return false;
+		/**
+		 * Get the template defaults to determine if the variant is valid.
+		 */
+		$template_options = (array) include($file);
+		$variant_valid = false;
+		foreach ($template_options as $cur_option) {
+			if ($cur_option['name'] != 'variant')
+				continue;
+			$variant_valid = in_array($variant, $cur_option['options']);
+			break;
+		}
+		return $variant_valid;
+	}
+
+	/**
 	 * Creates and attaches a module which lists categories.
 	 * @return module The module.
 	 */

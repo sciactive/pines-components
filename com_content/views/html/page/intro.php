@@ -26,4 +26,12 @@ echo format_content($this->entity->intro);
 if ($pines->config->com_content->wrap_pages)
 	echo '</div>';
 
+if ($this->entity->get_option('show_content_in_list')) {
+	if ($pines->config->com_content->wrap_pages)
+		echo '<div style="position: relative;">';
+	echo format_content($this->entity->content);
+	if ($pines->config->com_content->wrap_pages)
+		echo '</div>';
+}
+
 ?>

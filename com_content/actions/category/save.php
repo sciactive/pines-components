@@ -48,6 +48,15 @@ foreach ($pages as $cur_page_guid) {
 $category->show_title = ($_REQUEST['show_title'] == 'null' ? null : ($_REQUEST['show_title'] == 'true'));
 $category->show_breadcrumbs = ($_REQUEST['show_breadcrumbs'] == 'null' ? null : ($_REQUEST['show_breadcrumbs'] == 'true'));
 $category->intro = $_REQUEST['intro'];
+$category->variants = array();
+foreach ($_REQUEST['variants'] as $cur_variant_entry) {
+	list ($cur_template, $cur_variant) = explode('::', $cur_variant_entry, 2);
+	if (!$pines->com_content->is_variant_valid($cur_variant, $cur_template)) {
+		pines_notice("The variant \"$cur_variant\" is not a valid variant of the template \"$cur_template\". It is being skipped.");
+		continue;
+	}
+	$category->variants[$cur_template] = $cur_variant;
+}
 
 // Conditions
 $conditions = (array) json_decode($_REQUEST['conditions']);

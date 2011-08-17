@@ -26,6 +26,18 @@ if (!empty($_REQUEST['id'])) {
 if (!isset($entity->guid) || !$entity->ready())
 	return 'error_404';
 
+// Set the default variant for pages.
+if ($pines->config->com_content->page_variant && $pines->com_content->is_variant_valid($pines->config->com_content->page_variant)) {
+	$cur_template = $pines->current_template;
+	$pines->config->$cur_template->variant = $pines->config->com_content->page_variant;
+}
+
+// Check for and set the variant for the current template.
+if (isset($entity->variants[$pines->current_template]) && $pines->com_content->is_variant_valid($entity->variants[$pines->current_template])) {
+	$cur_template = $pines->current_template;
+	$pines->config->$cur_template->variant = $entity->variants[$pines->current_template];
+}
+
 // Page title.
 $pines->page->title_pre("$entity->name - ");
 

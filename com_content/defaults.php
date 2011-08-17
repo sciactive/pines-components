@@ -13,10 +13,38 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
+		'name' => 'front_page_variant',
+		'cname' => 'Front Page Variant',
+		'description' => "The page variant to use on the front page. See your template's configuration for the available variants. Leave blank for no change.\nNot all templates have page variants.",
+		'value' => '',
+		'peruser' => true,
+	),
+	array(
+		'name' => 'front_page_full_pages',
+		'cname' => 'Show Full Pages on Front Page',
+		'description' => 'Show the full content of pages on the front page.',
+		'value' => false,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'cat_variant',
+		'cname' => 'Category Variant',
+		'description' => "The page variant to use as a default on categies. Category specific settings will override this.",
+		'value' => '',
+		'peruser' => true,
+	),
+	array(
 		'name' => 'show_cat_menus',
 		'cname' => 'Show Category Menus',
 		'description' => 'Show categories configured in the menu.',
 		'value' => true,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'page_variant',
+		'cname' => 'Page Variant',
+		'description' => "The page variant to use as a default on pages. Page specific settings will override this.",
+		'value' => '',
 		'peruser' => true,
 	),
 	array(
@@ -111,6 +139,13 @@ return array(
 	array(
 		'name' => 'def_page_show_author_info',
 		'cname' => 'Defaults: Pages: Show Author Info',
+		'description' => '',
+		'value' => false,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'def_page_show_content_in_list',
+		'cname' => 'Defaults: Pages: Show Full Content in List',
 		'description' => '',
 		'value' => false,
 		'peruser' => true,

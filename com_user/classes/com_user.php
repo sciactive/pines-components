@@ -31,6 +31,32 @@ class com_user extends component implements user_manager_interface {
 	 */
 	private $gatekeeper_cache = array();
 
+	/**
+	 * Activate the SAWASC system.
+	 * @return bool True if SAWASC could be activated, false otherwise.
+	 */
+	public function activate_sawasc() {
+		global $pines;
+		if (!$pines->config->com_user->sawasc)
+			return false;
+		if ($pines->config->com_user->pw_method == 'salt') {
+			pines_notice('SAWASC is not compatible with the Salt password storage method.');
+			return false;
+		}
+		// Check that a challenge block was created within 10 minutes.
+		if (!isset($_SESSION['sawasc']['ServerCB']) || $_SESSION['sawasc']['timestamp'] < time() - 600) {
+			// If not, generate one.
+			pines_session('write');
+			$_SESSION['sawasc'] = array(
+				'ServerCB' => uniqid('', true),
+				'timestamp' => time(),
+				'algo' => $pines->config->com_user->sawasc_hash
+			);
+			pines_session('close');
+		}
+		return true;
+	}
+
 	public function check_permissions(&$entity, $type = 1) {
 		if ((object) $entity !== $entity)
 			return false;
@@ -278,24 +304,6 @@ class com_user extends component implements user_manager_interface {
 	public function print_login($position = 'content', $url = null) {
 		global $pines;
 		$module = new module('com_user', 'modules/login', $position);
-		if ($pines->config->com_user->sawasc) {
-			if ($pines->config->com_user->pw_method == 'salt') {
-				pines_notice('SAWASC is not compatible with the Salt password storage method.');
-			} else {
-				$module->sawasc = true;
-				// Check that a challenge block was created within 10 minutes.
-				if (!isset($_SESSION['sawasc']['ServerCB']) || $_SESSION['sawasc']['timestamp'] < time() - 600) {
-					// If not, generate one.
-					pines_session('write');
-					$_SESSION['sawasc'] = array(
-						'ServerCB' => uniqid('', true),
-						'timestamp' => time(),
-						'algo' => $pines->config->com_user->sawasc_hash
-					);
-					pines_session('close');
-				}
-			}
-		}
 		$module->url = $url;
 		if (isset($_REQUEST['url']))
 			$module->url = $_REQUEST['url'];

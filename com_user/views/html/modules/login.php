@@ -15,6 +15,10 @@ if (empty($this->title))
 $this->check_username = ($pines->config->com_user->allow_registration && $pines->config->com_user->check_username);
 if ($this->check_username)
 	$pines->icons->load();
+
+// Activate SAWASC support.
+$this->sawasc = $pines->com_user->activate_sawasc();
+
 ?>
 <?php if ($this->check_username) { ?>
 <style type="text/css">
@@ -216,7 +220,7 @@ if ($this->check_username)
 			<input type="hidden" name="action" value="login" />
 			<?php if ($this->sawasc) { ?>
 			<input type="hidden" name="ClientHash" value="" />
-			<?php } if ( isset($this->url) ) { ?>
+			<?php } if ( !empty($this->url) ) { ?>
 			<input type="hidden" name="url" value="<?php echo htmlspecialchars($this->url); ?>" />
 			<?php } ?>
 			<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Login" />

@@ -30,4 +30,9 @@ defined('P_RUN') or die('Direct access prohibited');
 			<span class="pf-note">Hide the password recovery link. (Only appears when password recovery is on.)</span>
 			<input class="pf-field" type="checkbox" name="hide_recovery" value="true" /></label>
 	</div>
+	<div class="pf-element">
+		<label><span class="pf-label">URL</span>
+			<span class="pf-note">URL to which to redirect the user after they log in.</span>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="url" size="24" value="" /></label>
+	</div>
 </div>

@@ -15,6 +15,19 @@ pines_session();
 
 return array(
 	array(
+		'name' => 'variant',
+		'cname' => 'Page Variant/Layout',
+		'description' => 'The layout of the page. On two column layouts, the sidebars are combined into one. On full page, the sidebars are not available.',
+		'value' => 'default',
+		'options' => array(
+			'default (Three columns.)' => 'default',
+			'twocol-sideleft (Two columns, left sidebar.)' => 'twocol-sideleft',
+			'twocol-sideright (Two columns, right sidebar.)' => 'twocol-sideright',
+			'full-page (Full page.)' => 'full-page',
+		),
+		'peruser' => true,
+	),
+	array(
 		'name' => 'fancy_style',
 		'cname' => 'Fancy Styling',
 		'description' => 'Use fancier styling.',

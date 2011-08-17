@@ -113,10 +113,19 @@ header('Content-Type: text/html');
 	</div>
 	<div id="pre_content" class="ez-box"><?php echo $pines->page->render_modules('pre_content', 'module_header'); ?></div>
 	<div id="column_container" class="ez-wr">
+		<?php if (in_array($pines->config->tpl_pines->variant, array('default', 'twocol-sideleft'))) { ?>
 		<div id="left_color" class="ui-state-default ui-state-disabled"></div>
-		<div id="left" class="ez-fl ez-negmr"><?php echo $pines->page->render_modules('left', 'module_left'); ?>&nbsp;</div>
-		<div id="right" class="ez-fr ez-negml"><?php echo $pines->page->render_modules('right', 'module_right'); ?>&nbsp;</div>
-		<div id="content_container" class="ez-last ez-oh">
+		<div id="left" class="ez-fl ez-negmr">
+			<?php echo $pines->page->render_modules('left', 'module_left'); ?>
+			<?php if ($pines->config->tpl_pines->variant == 'twocol-sideleft') { echo $pines->page->render_modules('right', 'module_left'); } ?>&nbsp;
+		</div>
+		<?php } if (in_array($pines->config->tpl_pines->variant, array('default', 'twocol-sideright'))) { ?>
+		<div id="right" class="ez-fr ez-negml">
+			<?php if ($pines->config->tpl_pines->variant == 'twocol-sideright') { echo $pines->page->render_modules('left', 'module_right'); } ?>
+			<?php echo $pines->page->render_modules('right', 'module_right'); ?>&nbsp;
+		</div>
+		<?php } ?>
+		<div id="content_container" class="<?php echo $pines->config->tpl_pines->variant == 'full-page' ? '' : 'ez-last ez-oh'; ?>">
 			<div id="breadcrumbs" class="ez-box"><?php echo $pines->page->render_modules('breadcrumbs', 'module_header'); ?></div>
 			<div class="ez-wr">
 				<div id="content_top_left" class="ez-fl ez-negmr ez-50"><?php echo $pines->page->render_modules('content_top_left'); ?></div>

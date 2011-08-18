@@ -359,8 +359,14 @@ if ($pines->config->com_sales->com_esp) {
 									alert('This item is an ESP, it does not need to be insured');
 									return;
 								}
+								<?php if ($pines->config->com_esp->round_up) { ?>
 								var esp_price = (insured_item.pgrid_get_value(6) * esp_rate).toFixed(2).replace(/\d\.\d{2}/, '9.99');
-								<?php
+								<?php } else { ?>
+								var esp_price = (insured_item.pgrid_get_value(6) * esp_rate).toFixed(2);
+								<?php } if ($pines->config->com_esp->esp_max > 0) { ?>
+								esp_price = parseFloat(esp_price);
+								esp_price = Math.min(esp_price, <?php echo json_encode((float) $pines->config->com_esp->esp_max); ?>).toFixed(2);
+								<?php }
 								$fees_percent = array();
 								$fees_flat = array();
 								foreach ((array) $esp_product->additional_tax_fees as $cur_tax_fee) {
@@ -1276,7 +1282,7 @@ if ($pines->config->com_sales->com_esp) {
 				<?php } ?>
 			</tbody>
 		</table>
-		<input type="hidden" id="p_muid_products" name="products" size="24" />
+		<input type="hidden" id="p_muid_products" name="products" />
 	</div>
 	<div id="p_muid_delivery_dialog" title="Select Delivery Type" style="display: none;">
 		<div id="p_muid_delivery_select">
@@ -1358,7 +1364,7 @@ if ($pines->config->com_sales->com_esp) {
 					</tbody>
 				</table>
 			</div>
-			<input type="hidden" id="p_muid_payments" name="payments" size="24" />
+			<input type="hidden" id="p_muid_payments" name="payments" />
 		</div>
 	</div>
 	<div class="pf-element pf-full-width">

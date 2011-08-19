@@ -477,7 +477,8 @@ $pines->com_customer->load_company_select();
 							changeMonth: true,
 							changeYear: true,
 							showOtherMonths: true,
-							selectOtherMonths: true
+							selectOtherMonths: true,
+							yearRange: '-100:+0'
 						});
 					});
 					// ]]>

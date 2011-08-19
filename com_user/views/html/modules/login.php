@@ -236,7 +236,7 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 	pines(function(){
 		var notice = $.pnotify({
 			pnotify_title: "<?php echo addslashes($this->title); ?>",
-			pnotify_text: $("#p_muid_form").detach().show(),
+			pnotify_text: $("#p_muid_form").detach().show().append("<br style=\"clear: both;\" />"),
 			pnotify_notice_icon: '',
 			pnotify_width: 'auto',
 			pnotify_hide: false,

@@ -77,32 +77,32 @@ $pines->com_pgrid->load();
 							success: function(data){
 								if (data == "")
 									return;
-								var form = $("<div title=\"Module Options\"></div>");
+								pines.pause();
+								var form = $("<div title=\"Module Options\"></div>")
+								.html('<form method="post" action="">'+data+"</form><br />");
+								form.find("form").submit(function(){
+									form.dialog('option', 'buttons').Done();
+									return false;
+								});
+								var cur_data = options_table.pgrid_get_all_rows();
+								if (cur_data.length) {
+									cur_data.each(function(){
+										var cur_row = $(this);
+										var name = cur_row.pgrid_get_value(1);
+										var value = cur_row.pgrid_get_value(2);
+										form.find(":input:not(:radio, :checkbox)[name="+name+"]").val(value);
+										form.find(":input:radio[name="+name+"][value="+value+"]").attr("checked", "checked");
+										if (value == "")
+											form.find(":input:checkbox[name="+name+"]").removeAttr("checked");
+										else
+											form.find(":input:checkbox[name="+name+"][value="+value+"]").attr("checked", "checked");
+									});
+								}
 								form.dialog({
 									bgiframe: true,
 									autoOpen: true,
 									modal: true,
-									open: function(){
-										form.html('<form method="post" action="">'+data+"</form><br />");
-										form.find("form").submit(function(){
-											form.dialog('option', 'buttons').Done();
-											return false;
-										});
-										var cur_data = options_table.pgrid_get_all_rows();
-										if (cur_data.length) {
-											cur_data.each(function(){
-												var cur_row = $(this);
-												var name = cur_row.pgrid_get_value(1);
-												var value = cur_row.pgrid_get_value(2);
-												form.find(":input:not(:radio, :checkbox)[name="+name+"]").val(value);
-												form.find(":input:radio[name="+name+"][value="+value+"]").attr("checked", "checked");
-												if (value == "")
-													form.find(":input:checkbox[name="+name+"]").removeAttr("checked");
-												else
-													form.find(":input:checkbox[name="+name+"][value="+value+"]").attr("checked", "checked");
-											});
-										}
-									},
+									width: "auto",
 									close: function(){
 										form.remove();
 									},
@@ -128,6 +128,7 @@ $pines->com_pgrid->load();
 										}
 									}
 								});
+								pines.play();
 							}
 						});
 					}

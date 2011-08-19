@@ -25,6 +25,9 @@ return array(
 		'service' => 'entity_manager&uploader&icons',
 		'component' => 'com_mailer&com_jquery&com_pgrid&com_pnotify&com_pform' //&com_jstree
 	),
+	'recommend' => array(
+		'component' => 'com_modules'
+	),
 	'abilities' => array(
 		array('login', 'Login', 'User can login to the system.'),
 		array('self', 'Change Info', 'User can change his own information. Email address changes may be subject to confirmation.'),

@@ -19,13 +19,6 @@ return array(
 		'value' => true,
 	),
 	array(
-		'name' => 'print_login',
-		'cname' => 'Print Login',
-		'description' => 'Print a login page in this position, if the user is not logged in. Set to "null" to not print a login page.',
-		'value' => 'null',
-		'peruser' => true,
-	),
-	array(
 		'name' => 'allow_registration',
 		'cname' => 'Allow User Registration',
 		'description' => 'Allow users to register.',
@@ -202,13 +195,6 @@ return array(
 		'cname' => 'Highest Assignable Secondary Group Parent',
 		'description' => 'The GUID of the group above the highest groups allowed to be assigned as secondary groups. Zero means all groups, and -1 means no groups.',
 		'value' => 0,
-		'peruser' => true,
-	),
-	array(
-		'name' => 'show_cur_user',
-		'cname' => 'Show Current User',
-		'description' => 'Display the name of the current user in the page header.',
-		'value' => true,
 		'peruser' => true,
 	),
 	array(

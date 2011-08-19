@@ -49,8 +49,6 @@ class com_modules extends component {
 		global $pines;
 		$return = array();
 		foreach ($pines->components as $cur_component) {
-			if (!isset($pines->$cur_component))
-				continue;
 			$folder = (strpos($cur_component, 'tpl_') === 0) ? 'templates' : 'components';
 			if (!file_exists("$folder/$cur_component/modules.php"))
 				continue;

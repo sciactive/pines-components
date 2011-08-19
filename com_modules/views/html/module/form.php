@@ -31,11 +31,6 @@ $pines->com_pgrid->load();
 		margin-top: -8px;
 	}
 
-	#p_muid_form .component_modules {
-		float: none;
-		display: inline-block;
-		vertical-align: top;
-	}
 	#p_muid_form .component_modules .form {
 		display: none;
 	}
@@ -322,12 +317,18 @@ $pines->com_pgrid->load();
 				<h1>Module Type</h1>
 			</div>
 			<br class="pf-clearing" />
-			<?php foreach ($this->modules as $cur_component => $cur_modules) { ?>
-			<div class="pf-element component_modules">
-				<strong class="pf-label"><?php echo htmlspecialchars($pines->info->$cur_component->name); ?></strong>
-				<?php foreach ($cur_modules as $cur_modname => $cur_module) { ?>
-				<br /><label><input class="pf-field" type="radio" name="type" value="<?php echo htmlspecialchars("$cur_component/$cur_modname"); ?>"<?php echo ($this->entity->type == "$cur_component/$cur_modname") ? ' checked="checked"': ''; ?> /> <span class="form"><?php echo htmlspecialchars($cur_module['form']); ?></span><?php echo htmlspecialchars($cur_module['cname']); ?></label>
-				<?php } ?>
+			<?php $i=0; foreach ($this->modules as $cur_component => $cur_modules) { $i++; ?>
+			<div class="pf-element pf-full-width component_modules">
+				<div style="padding: .5em;" class="ui-helper-clearfix<?php echo ($i % 2) ? '' : ' ui-widget-content'; ?>">
+					<strong class="pf-label"><?php echo htmlspecialchars($pines->info->$cur_component->name); ?></strong>
+					<div class="pf-group">
+						<?php foreach ($cur_modules as $cur_modname => $cur_module) { ?>
+						<div class="pf-field">
+							<label><input type="radio" name="type" value="<?php echo htmlspecialchars("$cur_component/$cur_modname"); ?>"<?php echo ($this->entity->type == "$cur_component/$cur_modname") ? ' checked="checked"': ''; ?> /> <span class="form"><?php echo htmlspecialchars($cur_module['form']); ?></span><?php echo htmlspecialchars($cur_module['cname']); ?></label>
+						</div>
+						<?php } ?>
+					</div>
+				</div>
 			</div>
 			<?php } ?>
 			<br class="pf-clearing" />

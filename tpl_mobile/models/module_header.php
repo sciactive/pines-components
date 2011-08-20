@@ -22,7 +22,7 @@ defined('P_RUN') or die('Direct access prohibited');
 		<?php } ?>
 	</div>
 	<?php } ?>
-	<div class="module_content">
+	<div class="module_content ui-helper-reset ui-helper-clearfix">
 		<?php echo $this->content; ?>
 	</div>
 </div>

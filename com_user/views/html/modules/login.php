@@ -163,16 +163,16 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 						if ($(this).val() == "register") {
 							if ($(this).is(":checked")) {
 								new_account = true;
-								pass_reenter.slideDown("fast");
-								recovery.slideUp("fast");
+								pass_reenter.show();
+								recovery.hide();
 								submit_btn.val("Sign Up");
 								username.change();
 							}
 						} else {
 							if ($(this).is(":checked")) {
 								new_account = false;
-								pass_reenter.slideUp("fast");
-								recovery.slideDown("fast");
+								pass_reenter.hide();
+								recovery.show();
 								submit_btn.val("Login");
 								username.change();
 							}
@@ -180,8 +180,8 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 					}).change();
 					$(":reset", "#p_muid_form").click(function(){
 						new_account = false;
-						pass_reenter.slideUp("fast");
-						recovery.slideUp("fast");
+						pass_reenter.hide();
+						recovery.hide();
 						submit_btn.val("Login");
 						username.change();
 					});
@@ -195,7 +195,6 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 			<?php echo ($this->style == 'small') ? '<br />' : ''; ?>
 			<label><input class="pf-field" type="radio" name="login_register" value="register" /> I'm new.</label>
 		</div>
-		<br class="pf-clearing" />
 		<div id="p_muid_register_form" style="display: none;">
 			<div class="pf-element">
 				<label><span class="pf-label">Re-enter Password</span>

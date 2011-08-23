@@ -172,6 +172,27 @@ return array(
 		),
 	),
 	array(
+		'name' => 'login_menu',
+		'cname' => 'Show Login in Menu',
+		'description' => 'Show a login button in the menu.',
+		'value' => false,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'login_menu_path',
+		'cname' => 'Login Menu Path',
+		'description' => 'The path of the login button in the menu.',
+		'value' => 'main_menu/~login',
+		'peruser' => true,
+	),
+	array(
+		'name' => 'login_menu_text',
+		'cname' => 'Login Menu Text',
+		'description' => 'The text of the login button in the menu.',
+		'value' => 'Login',
+		'peruser' => true,
+	),
+	array(
 		'name' => 'referral_codes',
 		'cname' => 'Enable Referral Codes',
 		'description' => 'Enable users to enter referral codes.',

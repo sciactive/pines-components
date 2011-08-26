@@ -31,7 +31,7 @@ $pines->com_pgrid->load();
 					{
 						type: 'button',
 						text: 'Add String',
-						extra_class: 'picon picon-list-add',
+						extra_class: 'picon picon-edit-text-frame-update',
 						selection_optional: true,
 						click: function(){
 							cur_string = null;
@@ -41,12 +41,16 @@ $pines->com_pgrid->load();
 					{
 						type: 'button',
 						text: 'Edit String',
-						extra_class: 'picon picon-list-remove',
+						extra_class: 'picon picon-edit-rename',
 						double_click: true,
 						click: function(e, rows){
 							cur_string = rows;
-							string_dialog.find("input[name=cur_string_search]").val(rows.pgrid_get_value(2));
-							string_dialog.find("input[name=cur_string_replace]").val(rows.pgrid_get_value(3));
+							string_dialog.find("[name=cur_string_search]").val(rows.pgrid_get_value(2));
+							string_dialog.find("[name=cur_string_replace]").val(rows.pgrid_get_value(3));
+							if (rows.pgrid_get_value(4) == "Yes")
+								string_dialog.find("[name=cur_string_macros]").attr("checked", true);
+							else
+								string_dialog.find("[name=cur_string_macros]").removeAttr("checked");
 							string_dialog.dialog('open');
 						}
 					},
@@ -86,8 +90,9 @@ $pines->com_pgrid->load();
 				width: 500,
 				buttons: {
 					"Done": function(){
-						var cur_string_search = string_dialog.find("input[name=cur_string_search]").val();
-						var cur_string_replace = string_dialog.find("input[name=cur_string_replace]").val();
+						var cur_string_search = string_dialog.find("[name=cur_string_search]").val();
+						var cur_string_replace = string_dialog.find("[name=cur_string_replace]").val();
+						var cur_string_macros = string_dialog.find("[name=cur_string_macros]").is(":checked");
 						if (cur_string_search == "") {
 							alert("Please provide a string.");
 							return;
@@ -98,10 +103,11 @@ $pines->com_pgrid->load();
 							// Get the next index.
 							var index = 0;
 							strings_table.pgrid_get_all_rows().each(function(){
-								if (parseInt($(this).pgrid_get_value(1)) == index)
+								var cur_row = $(this);
+								if (parseInt(cur_row.pgrid_get_value(1)) == index)
 									index++;
 								if (dupe) return;
-								if ($(this).pgrid_get_value(2) == cur_string_search && $(this).pgrid_get_value(3) == cur_string_replace)
+								if (cur_row.pgrid_get_value(2) == cur_string_search && cur_row.pgrid_get_value(3) == cur_string_replace && cur_row.pgrid_get_value(4) == (cur_string_macros ? "Yes" : "No"))
 									dupe = true;
 							});
 							if (dupe) {
@@ -113,13 +119,15 @@ $pines->com_pgrid->load();
 								values: [
 									index,
 									cur_string_search,
-									cur_string_replace
+									cur_string_replace,
+									(cur_string_macros ? "Yes" : "No")
 								]
 							}];
 							strings_table.pgrid_add(new_string);
 						} else {
 							cur_string.pgrid_set_value(2, cur_string_search);
 							cur_string.pgrid_set_value(3, cur_string_replace);
+							cur_string.pgrid_set_value(4, (cur_string_macros ? "Yes" : "No"));
 						}
 						$(this).dialog('close');
 					}
@@ -134,8 +142,9 @@ $pines->com_pgrid->load();
 				strings_table.pgrid_get_all_rows().each(function(i){
 					$(this).pgrid_set_value(1, i);
 				});
-				string_dialog.find("input[name=cur_string_search]").val("");
-				string_dialog.find("input[name=cur_string_replace]").val("");
+				string_dialog.find("[name=cur_string_search]").val("");
+				string_dialog.find("[name=cur_string_replace]").val("");
+				string_dialog.find("[name=cur_string_macros]").removeAttr("checked");
 				strings.val(JSON.stringify(strings_table.pgrid_get_all_rows().pgrid_export_rows()));
 			};
 
@@ -283,6 +292,7 @@ $pines->com_pgrid->load();
 							<th>Order</th>
 							<th>Search</th>
 							<th>Replace</th>
+							<th>Use Macros</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -291,6 +301,7 @@ $pines->com_pgrid->load();
 							<td><?php echo htmlspecialchars($key); ?></td>
 							<td><?php echo htmlspecialchars($cur_string['search']); ?></td>
 							<td><?php echo htmlspecialchars($cur_string['replace']); ?></td>
+							<td><?php echo $cur_string['macros'] ? 'Yes' : 'No'; ?></td>
 						</tr>
 						<?php } ?>
 					</tbody>
@@ -302,14 +313,94 @@ $pines->com_pgrid->load();
 					<div class="pf-element">
 						<label>
 							<span class="pf-label">Search For</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_string_search" size="24" />
+							<textarea class="pf-field ui-widget-content ui-corner-all" name="cur_string_search" rows="3" cols="24"></textarea>
 						</label>
 					</div>
 					<div class="pf-element">
 						<label>
 							<span class="pf-label">Replace With</span>
-							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_string_replace" size="24" />
+							<textarea class="pf-field ui-widget-content ui-corner-all" name="cur_string_replace" rows="3" cols="24"></textarea>
 						</label>
+					</div>
+					<div class="pf-element">
+						<label><span class="pf-label">Use Macros</span>
+							<span class="pf-note"><a href="javascript:void(0);" onclick="$(this).closest('.pf-element').nextAll('.macro_dialog').dialog({'modal': false, 'width': 600})">Explain Macros</a></span>
+							<input class="pf-field" type="checkbox" name="cur_string_macros" value="ON" /></label>
+					</div>
+					<div title="Macros" class="macro_dialog" style="display: none;">
+						Macros let you replace a string with a value that can
+						change. To use them, insert the desired macro string
+						into the "Replace With" value where you would like the
+						macro to appear.
+						<table style="width: 100%; margin: 1em;">
+							<thead>
+								<tr>
+									<th>Macro String</th>
+									<th>Is Replaced With</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>#username#</td>
+									<td>The current user's username.</td>
+								</tr>
+								<tr>
+									<td>#name#</td>
+									<td>The current user's full name.</td>
+								</tr>
+								<tr>
+									<td>#first_name#</td>
+									<td>The current user's first name.</td>
+								</tr>
+								<tr>
+									<td>#last_name#</td>
+									<td>The current user's last name.</td>
+								</tr>
+								<tr>
+									<td>#email#</td>
+									<td>The current user's email</td>
+								</tr>
+								<tr>
+									<td>#date_short#</td>
+									<td>The date. (Short)</td>
+								</tr>
+								<tr>
+									<td>#date_med#</td>
+									<td>The date. (Medium)</td>
+								</tr>
+								<tr>
+									<td>#date_long#</td>
+									<td>The date. (Long)</td>
+								</tr>
+								<tr>
+									<td>#time_short#</td>
+									<td>The time of day. (Short)</td>
+								</tr>
+								<tr>
+									<td>#time_med#</td>
+									<td>The time of day. (Medium)</td>
+								</tr>
+								<tr>
+									<td>#time_long#</td>
+									<td>The time of day. (Long)</td>
+								</tr>
+								<tr>
+									<td>#system_name#</td>
+									<td>The system name.</td>
+								</tr>
+								<tr>
+									<td>#page_title#</td>
+									<td>The page title.</td>
+								</tr>
+								<tr>
+									<td>#full_page_title#</td>
+									<td>The full title of the HTML page.</td>
+								</tr>
+							</tbody>
+						</table>
+						Care should be taken when using values from the current
+						user, because they will be empty when no user is logged
+						in.
 					</div>
 				</div>
 				<br style="clear: both; height: 1px;" />

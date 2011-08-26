@@ -79,6 +79,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>Serialized</th>
 			<th>Discountable</th>
 			<th>Additional Barcodes</th>
+			<th>Images</th>
+			<th>Receipt Description</th>
+			<?php if ($pines->config->com_sales->com_storefront) { ?>
+			<th>Shown in Storefront</th>
+			<th>Featured</th>
+			<?php } ?>
 		</tr>
 	</thead>
 	<tbody>
@@ -114,6 +120,34 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo ($product->serialized ? 'Yes' : 'No'); ?></td>
 			<td><?php echo ($product->discountable ? 'Yes' : 'No'); ?></td>
 			<td><?php echo htmlspecialchars(implode(', ', $product->additional_barcodes)); ?></td>
+			<td><?php
+			$images = array();
+			if (isset($product->thumbnail)) {
+				if (file_exists($pines->uploader->real($product->thumbnail)))
+					$images[] = 'Thumbnail';
+				else
+					$images[] = 'Thumbnail - Broken';
+			}
+			$image_desc = array();
+			foreach ((array) $product->images as $cur_image) {
+				$image_desc[0] = 'Images';
+				if (empty($cur_image['alt']))
+					$image_desc[1] = 'Missing Desc';
+				if (!file_exists($pines->uploader->real($cur_image['file'])))
+					$image_desc[2] = 'Broken';
+			}
+			if ($image_desc)
+				$images[] = implode(' - ', $image_desc);
+			if ($images)
+				echo implode(', ', $images);
+			else
+				echo 'None';
+			?></td>
+			<td><?php echo htmlspecialchars($product->receipt_description); ?></td>
+			<?php if ($pines->config->com_sales->com_storefront) { ?>
+			<td><?php echo ($product->show_in_storefront ? 'Yes' : 'No'); ?></td>
+			<td><?php echo ($product->featured ? 'Yes' : 'No'); ?></td>
+			<?php } ?>
 		</tr>
 	<?php } ?>
 	</tbody>

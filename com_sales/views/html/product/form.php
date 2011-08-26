@@ -829,8 +829,7 @@ $pines->com_ptags->load();
 			</div>
 			<br class="pf-clearing" />
 		</div>
-		<?php } ?>
-		<?php if ($pines->config->com_sales->com_storefront) { ?>
+		<?php } if ($pines->config->com_sales->com_storefront) { ?>
 		<style type="text/css" >
 			/* <![CDATA[ */
 			#p_muid_tab_storefront .combobox {
@@ -893,7 +892,7 @@ $pines->com_ptags->load();
 		</script>
 		<div id="p_muid_tab_storefront">
 			<div class="pf-element">
-				<label><span class="pf-label">Show in Storefront</span>
+				<label><span class="pf-label">Shown in Storefront</span>
 					<input class="pf-field" type="checkbox" name="show_in_storefront" value="ON"<?php echo $this->entity->show_in_storefront ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">

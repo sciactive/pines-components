@@ -16,7 +16,7 @@ return array(
 		'name' => 'trans_name',
 		'cname' => 'Transaction Name',
 		'description' => 'The name that will appear on customers\' records.',
-		'value' => $pines->config->page_title,
+		'value' => $pines->config->system_name,
 		'peruser' => true,
 	),
 	array(

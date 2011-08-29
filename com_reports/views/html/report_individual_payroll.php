@@ -37,7 +37,7 @@ defined('P_RUN') or die('Direct access prohibited');
 		<h1>Payroll Report</h1>
 	</div>
 	<div class="pf-element" style="float: right; clear: right;">
-		<div><img style="margin: 0;" src="<?php echo is_callable(array($this->employee->group, 'get_logo')) ? htmlspecialchars($this->employee->group->get_logo(true)) : ''; ?>" alt="<?php echo htmlspecialchars($pines->config->page_title); ?>" /></div>
+		<div><img style="margin: 0;" src="<?php echo is_callable(array($this->employee->group, 'get_logo')) ? htmlspecialchars($this->employee->group->get_logo(true)) : ''; ?>" alt="<?php echo htmlspecialchars($pines->config->system_name); ?>" /></div>
 		<div><?php
 		if ($this->employee->pay_type != 'salary') {
 			echo "<strong>Pay Per Hour: $".number_format($this->pay_per_hour, 2, '.', '')."</strong>";

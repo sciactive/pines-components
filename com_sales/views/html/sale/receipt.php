@@ -102,7 +102,7 @@ switch ($this->entity->status) {
 	$doc_id = ($sale ? 'SA' : 'RE') . $this->entity->id;
 	?>
 	<div class="left_side">
-		<span><img src="<?php echo htmlspecialchars($group_logo); ?>" alt="<?php echo htmlspecialchars($pines->config->page_title); ?>" /></span>
+		<span><img src="<?php echo htmlspecialchars($group_logo); ?>" alt="<?php echo htmlspecialchars($pines->config->system_name); ?>" /></span>
 	</div>
 	<div class="right_side barcode">
 		<h1><?php echo htmlspecialchars($this->doc_title); ?></h1>

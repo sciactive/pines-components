@@ -147,6 +147,10 @@ class entity implements entity_interface {
 		if ((array) $this->data[$name] === $this->data[$name]) {
 			// But, if it's an array, check all the values for entity references, and change them.
 			array_walk($this->data[$name], array($this, 'reference_to_entity'));
+		} elseif ((object) $this->data[$name] === $this->data[$name]) {
+			foreach ($this->data[$name] as &$cur_property)
+				$this->reference_to_entity($cur_property, null);
+			unset($cur_property);
 		}
 		return $this->data[$name];
 	}
@@ -349,6 +353,10 @@ class entity implements entity_interface {
 		} elseif ((array) $item === $item) {
 			// Recurse into lower arrays.
 			return array_map(array($this, 'get_data_reference'), $item);
+		} elseif ((object) $item === $item) {
+			foreach ($item as &$cur_property)
+				$cur_property = $this->get_data_reference($cur_property);
+			unset($cur_property);
 		}
 		// Not an entity or array, just return it.
 		return $item;
@@ -458,24 +466,31 @@ class entity implements entity_interface {
 			} else {
 				array_walk($item, array($this, 'reference_to_entity'));
 			}
+		} elseif ((object) $item === $item) {
+			foreach ($item as &$cur_property)
+				$this->reference_to_entity($cur_property, null);
+			unset($cur_property);
 		}
 	}
 
 	/**
 	 * Wake from a sleeping reference.
+	 * 
+	 * @return bool True on success, false on failure.
 	 */
 	private function reference_wake() {
 		global $pines;
 		if (!$this->is_a_sleeping_reference)
-			return;
+			return true;
 		$entity = $pines->entity_manager->get_entity(array('class' => $this->sleeping_reference[2]), array('&', 'guid' => $this->sleeping_reference[1]));
+		if (!isset($entity))
+			return false;
 		$this->is_a_sleeping_reference = false;
 		$this->sleeping_reference = null;
-		if (!isset($entity))
-			return;
 		$this->guid = $entity->guid;
 		$this->tags = $entity->tags;
 		$this->put_data($entity->get_data(), $entity->get_sdata());
+		return true;
 	}
 
 	public function refresh() {

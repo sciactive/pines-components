@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 if (isset($pines->com_elfinder))
 	$pines->com_elfinder->load();
-$content_css = array_merge(array(htmlspecialchars($pines->config->location . $pines->template->editor_css)), $pines->com_tinymce->get_css());
+$content_css = array_merge(array(htmlspecialchars($pines->config->location . $pines->template->editor_css)), $pines->editor->get_css());
 ?>
 <script type="text/javascript">
 	// <![CDATA[

@@ -21,6 +21,30 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class com_content extends component {
 	/**
+	 * A cache of the custom CSS files array.
+	 * @access private
+	 * @var mixed
+	 */
+	private $custom_css;
+
+	/**
+	 * Get an array of custom CSS files to use.
+	 * @return type 
+	 */
+	public function get_custom_css() {
+		if (!isset($this->custom_css)) {
+			global $pines;
+			foreach ((array) $pines->config->com_content->custom_css as $cur_glob) {
+				if (strtolower(substr($cur_glob, -4)) != '.css')
+					$cur_glob .= '.css';
+				$this->custom_css = array_merge((array) $this->custom_css, glob($cur_glob));
+			}
+			$this->custom_css = array_unique($this->custom_css);
+		}
+		return $this->custom_css;
+	}
+
+	/**
 	 * Check that a page variant is valid for a template.
 	 * 
 	 * @param string $variant The variant to check.
@@ -96,6 +120,17 @@ class com_content extends component {
 			pines_notice('No pages found.');
 
 		return $module;
+	}
+
+	/**
+	 * Load the custom CSS files into the page head.
+	 */
+	public function load_custom_css() {
+		static $loaded = false;
+		if ($loaded)
+			return;
+		$module = new module('com_content', 'custom_css', 'head');
+		$loaded = true;
 	}
 }
 

@@ -159,17 +159,17 @@ $pines->com_ptags->load();
 				</script>
 				<label>
 					<span class="pf-label">Name</span>
-					<div class="pf-group pf-full-width">
+					<span style="display: block;" class="pf-group pf-full-width">
 						<input class="pf-field ui-widget-content ui-corner-all" style="width: 100%;" type="text" name="name" value="<?php echo htmlspecialchars($this->entity->name); ?>" />
-					</div>
+					</span>
 				</label>
 			</div>
 			<div class="pf-element pf-full-width">
 				<label>
 					<span class="pf-label">Alias</span>
-					<div class="pf-group pf-full-width">
+					<span style="display: block;" class="pf-group pf-full-width">
 						<input class="pf-field ui-widget-content ui-corner-all" style="width: 100%;" type="text" name="alias" value="<?php echo htmlspecialchars($this->entity->alias); ?>" onkeyup="this.value=this.value.replace(/[^\w\d-.]/g, '_');" />
-					</div>
+					</span>
 				</label>
 			</div>
 			<?php if (isset($this->entity->guid)) { ?>
@@ -470,6 +470,7 @@ $pines->com_ptags->load();
 				?>
 				<span class="pf-field">None of the enabled templates have any page variants.</span>
 				<?php } else { ?>
+				<br />
 				<select class="pf-field ui-widget-content ui-corner-all" id="p_muid_variant_template">
 					<?php foreach ($variants as $cur_template => $cur_variants) { ?>
 					<option value="<?php echo htmlspecialchars($cur_template); ?>"<?php echo $cur_template == $pines->current_template ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars("{$pines->info->$cur_template->name} ($cur_template)"); ?></option>

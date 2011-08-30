@@ -141,6 +141,7 @@ class com_content_page extends entity {
 		if (!$this->ready())
 			return null;
 		global $pines;
+		$pines->com_content->load_custom_css();
 		$module = new module('com_content', 'page/intro', 'content');
 		$module->entity = $this;
 
@@ -162,6 +163,10 @@ class com_content_page extends entity {
 					'data' => array('enabled', true)
 				)
 			);
+		if (isset($pines->editor)) {
+			foreach ($pines->com_content->get_custom_css() as $cur_file)
+				$pines->editor->add_css($cur_file);
+		}
 
 		return $module;
 	}
@@ -174,6 +179,7 @@ class com_content_page extends entity {
 		if (!$this->ready())
 			return null;
 		global $pines;
+		$pines->com_content->load_custom_css();
 		$module = new module('com_content', 'page/page', 'content');
 		$module->entity = $this;
 

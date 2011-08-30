@@ -88,6 +88,15 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'custom_css',
+		'cname' => 'Custom Stylesheets',
+		'description' => 'Any stylesheets that match these patterns will be included when a content page is printed. (If it isn\'t there already, ".css" will be appended to the end of each pattern.)',
+		'value' => array(
+			'media/css/*.css'
+		),
+		'peruser' => true,
+	),
+	array(
 		'name' => 'replace_static',
 		'cname' => 'Replace Paths',
 		'description' => 'Replace paths to the upload URL (like image sources) with static path. This applies to all components that print formatted content. It only applies when a static path is set.',

@@ -26,6 +26,24 @@ class com_tinymce extends component implements editor_interface {
 	 * @var bool $js_loaded
 	 */
 	private $js_loaded = false;
+	/**
+	 * The CSS files to load.
+	 * @access private
+	 * @var array $css_files
+	 */
+	private $css_files = array();
+
+	public function add_css($url) {
+		$this->css_files[] = clean_filename($url);
+	}
+
+	/**
+	 * Get the CSS file array.
+	 * @return array The CSS file array.
+	 */
+	public function get_css() {
+		return $this->css_files;
+	}
 
 	public function load() {
 		if (!$this->js_loaded) {

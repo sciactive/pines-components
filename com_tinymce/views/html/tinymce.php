@@ -12,6 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 if (isset($pines->com_elfinder))
 	$pines->com_elfinder->load();
+$content_css = array_merge(array(htmlspecialchars($pines->config->location . $pines->template->editor_css)), $pines->com_tinymce->get_css());
 ?>
 <script type="text/javascript">
 	// <![CDATA[
@@ -112,7 +113,7 @@ if (isset($pines->com_elfinder))
 			relative_urls: false,
 			<?php } ?>
 			// Template's editor CSS
-			content_css : "<?php echo htmlspecialchars($pines->config->location . $pines->template->editor_css); ?>"
+			content_css : "<?php echo htmlspecialchars(implode(',', $content_css)); ?>"
 		});
 		$("textarea.peditor-simple").tinymce({
 			// Location of TinyMCE script
@@ -146,7 +147,7 @@ if (isset($pines->com_elfinder))
 					break;
 			} ?>
 			// Template's editor CSS
-			content_css : "<?php echo htmlspecialchars($pines->config->location . $pines->template->editor_css); ?>"
+			content_css : "<?php echo htmlspecialchars(implode(',', $content_css)); ?>"
 		});
 	});
 	// ]]>

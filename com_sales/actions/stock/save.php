@@ -204,6 +204,6 @@ foreach ($entities as $stock) {
 	}
 }
 
-redirect(pines_url('com_sales', 'stock/list'));
+pines_redirect(pines_url('com_sales', 'stock/list'));
 
 ?>

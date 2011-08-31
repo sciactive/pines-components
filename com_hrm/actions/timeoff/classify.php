@@ -39,6 +39,6 @@ if (empty($failed_updates)) {
 	pines_error('Could not update requests with given IDs: '.$failed_updates);
 }
 
-redirect(pines_url('com_hrm', 'employee/list'));
+pines_redirect(pines_url('com_hrm', 'employee/list'));
 
 ?>

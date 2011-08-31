@@ -50,6 +50,20 @@ class com_pgentity extends component implements entity_manager_interface {
 	 * @var string
 	 */
 	private $sort_property;
+	/**
+	 * Whether to use PL/Perl.
+	 * @access private
+	 * @var string
+	 */
+	private $use_plperl;
+
+	/**
+	 * Load the entity manager.
+	 */
+	public function __construct() {
+		global $pines;
+		$this->use_plperl = $pines->config->com_pgentity->use_plperl;
+	}
 
 	/**
 	 * Remove all copies of an entity from the cache.
@@ -395,8 +409,10 @@ class com_pgentity extends component implements entity_manager_interface {
 					)
 				) {
 				$entity = $this->pull_cache($selectors[1]['guid'], $class);
-				if (isset($entity) && (!isset($selectors[1]['tag']) || $entity->has_tag($selectors[1]['tag'])))
+				if (isset($entity) && (!isset($selectors[1]['tag']) || $entity->has_tag($selectors[1]['tag']))) {
+					$entity->_p_use_skip_ac = (bool) $options['skip_ac'];
 					return array($entity);
+				}
 			}
 		}
 
@@ -493,25 +509,34 @@ class com_pgentity extends component implements entity_manager_interface {
 							}
 							break;
 						case 'match':
-							if ($cur_value[0] == 'p_cdate') {
-								if ( $cur_query )
-									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."cdate"='.((float) $cur_value[1]);
-								break;
-							} elseif($cur_value[0] == 'p_mdate') {
-								if ( $cur_query )
-									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."mdate"='.((float) $cur_value[1]);
-								break;
+							if ($this->use_plperl) {
+								if ($cur_value[0] == 'p_cdate') {
+									if ( $cur_query )
+										$cur_query .= $type_is_or ? ' OR ' : ' AND ';
+									$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."cdate"='.((float) $cur_value[1]);
+									break;
+								} elseif($cur_value[0] == 'p_mdate') {
+									if ( $cur_query )
+										$cur_query .= $type_is_or ? ' OR ' : ' AND ';
+									$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."mdate"='.((float) $cur_value[1]);
+									break;
+								} else {
+									if ( $cur_query )
+										$cur_query .= ($type_is_or ? ' OR ' : ' AND ');
+									$lastslashpos = strrpos($cur_value[1], '/');
+									$regex = substr($cur_value[1], 1, $lastslashpos - 1);
+									$mods = substr($cur_value[1], $lastslashpos + 1);
+									if (!$mods)
+										$mods = '';
+									$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."guid" IN (SELECT "guid" FROM "'.$pines->config->com_pgsql->prefix.'com_pgentity_data" WHERE "name"=\''.pg_escape_string($pines->com_pgsql->link, $cur_value[0]).'\' AND "compare_string" IS NOT NULL AND '.$pines->config->com_pgsql->prefix.'match_perl("compare_string", E\''.pg_escape_string($pines->com_pgsql->link, $regex).'\', \''.pg_escape_string($pines->com_pgsql->link, $mods).'\'))';
+								}
 							} else {
-								if ( $cur_query )
-									$cur_query .= ($type_is_or ? ' OR ' : ' AND ');
-								$lastslashpos = strrpos($cur_value[1], '/');
-								$regex = substr($cur_value[1], 1, $lastslashpos - 1);
-								$mods = substr($cur_value[1], $lastslashpos + 1);
-								if (!$mods)
-									$mods = '';
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."guid" IN (SELECT "guid" FROM "'.$pines->config->com_pgsql->prefix.'com_pgentity_data" WHERE "name"=\''.pg_escape_string($pines->com_pgsql->link, $cur_value[0]).'\' AND "compare_string" IS NOT NULL AND '.$pines->config->com_pgsql->prefix.'match_perl("compare_string", E\''.pg_escape_string($pines->com_pgsql->link, $regex).'\', \''.pg_escape_string($pines->com_pgsql->link, $mods).'\'))';
+								if (!$type_is_not) {
+									if ( $cur_query )
+										$cur_query .= $type_is_or ? ' OR ' : ' AND ';
+									$cur_query .= '\'{'.pg_escape_string($pines->com_pgsql->link, $cur_value[0]).'}\' <@ e."varlist"';
+								}
+								break;
 							}
 							break;
 						case 'data':
@@ -792,6 +817,7 @@ class com_pgentity extends component implements entity_manager_interface {
 					if ($pines->config->com_pgentity->cache)
 						$this->push_cache($entity, $class);
 				}
+				$entity->_p_use_skip_ac = (bool) $options['skip_ac'];
 				$entities[] = $entity;
 				$count++;
 				if ($options['limit'] && $count >= $options['limit'])

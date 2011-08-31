@@ -38,8 +38,7 @@ $product_error = false;
 // Used to check products which allow only one per ticket.
 $one_per_ticket_guids = array();
 if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != 'voided') {
-	$sale->warehouse_items = false;
-	$sale->warehouse_complete = false;
+	$sale->warehouse = false;
 	$sale->products = (array) json_decode($_REQUEST['products']);
 	if (empty($sale->products)) {
 		pines_notice('No products were selected.');
@@ -55,6 +54,7 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != '
 			$cur_qty = (int) $cur_product->values[4];
 			$cur_price = (float) $cur_product->values[5];
 			$cur_discount = $cur_product->values[6];
+			$cur_esp = $cur_product->values[9];
 			$cur_salesperson = null;
 			if ($pines->config->com_sales->per_item_salesperson)
 				$cur_salesperson = user::factory(intval($cur_product->values[10]));
@@ -87,6 +87,8 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != '
 				'discount' => $cur_discount,
 				'salesperson' => $cur_salesperson
 			);
+			if ($pines->config->com_sales->com_esp)
+				$cur_product['esp'] = $cur_esp;
 			if ($cur_product_entity->serialized && empty($cur_serial) && $cur_delivery != 'warehouse') {
 				pines_notice("Product with SKU [$cur_sku] requires a serial.");
 				$product_error = true;
@@ -122,7 +124,7 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != '
 				}
 			}
 			if ($cur_delivery == 'warehouse')
-				$sale->warehouse_items = true;
+				$sale->warehouse = true;
 		}
 		unset($cur_product);
 	}
@@ -147,6 +149,7 @@ if ($sale->status != 'paid' && $sale->status != 'voided') {
 		$cur_status = $cur_payment->values[2];
 		$data = $cur_payment->data;
 		$orig_key = $cur_payment->orig_key;
+		// TODO: Will this work on brand new sales? IE, one payment is info_request, and the other is approved, then they try to submit again.
 		if (in_array($cur_status, array('approved', 'declined', 'tendered', 'voided')))
 			continue;
 		if (!isset($cur_payment_type_entity->guid)) {
@@ -246,7 +249,7 @@ if (!isset($sale->status) || $sale->status == 'quoted') {
 
 if ($sale->save()) {
 	pines_notice('Saved sale ['.$sale->id.']');
-	redirect(pines_url('com_sales', 'sale/receipt', array('id' => $sale->guid, 'autoprint' => 'ok')));
+	pines_redirect(pines_url('com_sales', 'sale/receipt', array('id' => $sale->guid, 'autoprint' => 'ok')));
 } else {
 	$sale->print_form();
 	pines_error('Error saving sale. Do you have permission?');

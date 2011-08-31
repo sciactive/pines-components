@@ -13,7 +13,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 // Experimental AJAX code.
-if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 || strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)) {
+if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)) {
 	$return = array(
 		'notices' => $pines->page->get_notice(),
 		'errors' => $pines->page->get_error(),
@@ -23,6 +23,7 @@ if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 || strp
 		'pos_header' => $pines->page->render_modules('header', 'module_header'),
 		'pos_header_right' => $pines->page->render_modules('header_right', 'module_header_right'),
 		'pos_pre_content' => $pines->page->render_modules('pre_content', 'module_header'),
+		'pos_breadcrumbs' => $pines->page->render_modules('breadcrumbs'),
 		'pos_content_top_left' => $pines->page->render_modules('content_top_left'),
 		'pos_content_top_right' => $pines->page->render_modules('content_top_right'),
 		'pos_content' => $pines->page->render_modules('content', 'module_content'),
@@ -37,13 +38,13 @@ if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 || strp
 	echo json_encode($return);
 	return;
 }
+header('Content-Type: text/html');
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"<?php echo in_array('font', $pines->config->tpl_pines->fancy_style) ? ' id="fancy_font"' : ''; ?>>
+<!DOCTYPE html>
+<html <?php echo in_array('font', $pines->config->tpl_pines->fancy_style) ? ' id="fancy_font"' : ''; ?>>
 <head>
+	<meta charset="utf-8" />
 	<title><?php echo htmlspecialchars($pines->page->get_title()); ?></title>
-	<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
 	<link rel="icon" type="image/vnd.microsoft.icon" href="<?php echo htmlspecialchars($pines->config->location); ?>favicon.ico" />
 
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/pines.css" media="all" rel="stylesheet" type="text/css" />
@@ -112,10 +113,19 @@ if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 || strp
 	</div>
 	<div id="pre_content" class="ez-box"><?php echo $pines->page->render_modules('pre_content', 'module_header'); ?></div>
 	<div id="column_container" class="ez-wr">
+		<?php if (in_array($pines->config->tpl_pines->variant, array('default', 'twocol-sideleft'))) { ?>
 		<div id="left_color" class="ui-state-default ui-state-disabled"></div>
-		<div id="left" class="ez-fl ez-negmr"><?php echo $pines->page->render_modules('left', 'module_left'); ?>&nbsp;</div>
-		<div id="right" class="ez-fr ez-negml"><?php echo $pines->page->render_modules('right', 'module_right'); ?>&nbsp;</div>
-		<div id="content_container" class="ez-last ez-oh">
+		<div id="left" class="ez-fl ez-negmr">
+			<?php echo $pines->page->render_modules('left', 'module_left'); ?>
+			<?php if ($pines->config->tpl_pines->variant == 'twocol-sideleft') { echo $pines->page->render_modules('right', 'module_left'); } ?>&nbsp;
+		</div>
+		<?php } if (in_array($pines->config->tpl_pines->variant, array('default', 'twocol-sideright'))) { ?>
+		<div id="right" class="ez-fr ez-negml">
+			<?php if ($pines->config->tpl_pines->variant == 'twocol-sideright') { echo $pines->page->render_modules('left', 'module_right'); } ?>
+			<?php echo $pines->page->render_modules('right', 'module_right'); ?>&nbsp;
+		</div>
+		<?php } ?>
+		<div id="content_container" class="<?php echo $pines->config->tpl_pines->variant == 'full-page' ? '' : 'ez-last ez-oh'; ?>">
 			<div id="breadcrumbs" class="ez-box"><?php echo $pines->page->render_modules('breadcrumbs', 'module_header'); ?></div>
 			<div class="ez-wr">
 				<div id="content_top_left" class="ez-fl ez-negmr ez-50"><?php echo $pines->page->render_modules('content_top_left'); ?></div>

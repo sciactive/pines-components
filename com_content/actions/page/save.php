@@ -29,7 +29,7 @@ if ( isset($_REQUEST['id']) ) {
 $page->name = $_REQUEST['name'];
 $page->alias = preg_replace('/[^\w\d-.]/', '', $_REQUEST['alias']);
 $page->enabled = ($_REQUEST['enabled'] == 'ON');
-$page->show_front_page = ($_REQUEST['show_front_page'] == 'ON');
+$page->show_front_page = ($_REQUEST['show_front_page'] == 'null' ? null : ($_REQUEST['show_front_page'] == 'true'));
 $page->content_tags = explode(',', $_REQUEST['content_tags']);
 // TODO: Use an HTML filter here.
 $page->intro = $_REQUEST['intro'];
@@ -54,12 +54,22 @@ if (!empty($_REQUEST['publish_end']))
 	$page->publish_end = strtotime($_REQUEST['publish_end']);
 else
 	$page->publish_end = null;
-$page->show_author_info = ($_REQUEST['show_author_info'] == 'ON');
-$page->show_intro = ($_REQUEST['show_intro'] == 'ON');
-$page->show_title = ($_REQUEST['show_title'] == 'ON');
+$page->show_title = ($_REQUEST['show_title'] == 'null' ? null : ($_REQUEST['show_title'] == 'true'));
+$page->show_author_info = ($_REQUEST['show_author_info'] == 'null' ? null : ($_REQUEST['show_author_info'] == 'true'));
+$page->show_content_in_list = ($_REQUEST['show_content_in_list'] == 'null' ? null : ($_REQUEST['show_content_in_list'] == 'true'));
+$page->show_intro = ($_REQUEST['show_intro'] == 'null' ? null : ($_REQUEST['show_intro'] == 'true'));
+$page->show_breadcrumbs = ($_REQUEST['show_breadcrumbs'] == 'null' ? null : ($_REQUEST['show_breadcrumbs'] == 'true'));
 $page->show_menu = ($_REQUEST['show_menu'] == 'ON');
 $page->menu_position = $_REQUEST['menu_position'];
-$page->show_breadcrumbs = ($_REQUEST['show_breadcrumbs'] == 'ON');
+$page->variants = array();
+foreach ($_REQUEST['variants'] as $cur_variant_entry) {
+	list ($cur_template, $cur_variant) = explode('::', $cur_variant_entry, 2);
+	if (!$pines->com_content->is_variant_valid($cur_variant, $cur_template)) {
+		pines_notice("The variant \"$cur_variant\" is not a valid variant of the template \"$cur_template\". It is being skipped.");
+		continue;
+	}
+	$page->variants[$cur_template] = $cur_variant;
+}
 
 if (empty($page->name)) {
 	$page->print_form();
@@ -105,6 +115,6 @@ if ($page->save()) {
 	pines_error('Error saving page. Do you have permission?');
 }
 
-redirect(pines_url('com_content', 'page/list'));
+pines_redirect(pines_url('com_content', 'page/list'));
 
 ?>

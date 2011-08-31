@@ -29,11 +29,10 @@ if ( isset($_REQUEST['id']) ) {
 $category->name = $_REQUEST['name'];
 $category->alias = preg_replace('/[^\w\d-.]/', '', $_REQUEST['alias']);
 $category->enabled = ($_REQUEST['enabled'] == 'ON');
-$category->show_title = ($_REQUEST['show_title'] == 'ON');
 $category->show_menu = ($_REQUEST['show_menu'] == 'ON');
 $category->menu_position = $_REQUEST['menu_position'];
-$category->show_pages_in_menu = ($_REQUEST['show_pages_in_menu'] == 'ON');
-$category->show_breadcrumbs = ($_REQUEST['show_breadcrumbs'] == 'ON');
+$category->show_pages_in_menu = ($_REQUEST['show_pages_in_menu'] == 'null' ? null : ($_REQUEST['show_pages_in_menu'] == 'true'));
+$category->link_menu = ($_REQUEST['link_menu'] == 'null' ? null : ($_REQUEST['link_menu'] == 'true'));
 $category->pages = array();
 $pages = (array) json_decode($_REQUEST['pages']);
 foreach ($pages as $cur_page_guid) {
@@ -43,6 +42,20 @@ foreach ($pages as $cur_page_guid) {
 		continue;
 	}
 	$category->pages[] = $cur_page;
+}
+
+// Page
+$category->show_title = ($_REQUEST['show_title'] == 'null' ? null : ($_REQUEST['show_title'] == 'true'));
+$category->show_breadcrumbs = ($_REQUEST['show_breadcrumbs'] == 'null' ? null : ($_REQUEST['show_breadcrumbs'] == 'true'));
+$category->intro = $_REQUEST['intro'];
+$category->variants = array();
+foreach ($_REQUEST['variants'] as $cur_variant_entry) {
+	list ($cur_template, $cur_variant) = explode('::', $cur_variant_entry, 2);
+	if (!$pines->com_content->is_variant_valid($cur_variant, $cur_template)) {
+		pines_notice("The variant \"$cur_variant\" is not a valid variant of the template \"$cur_template\". It is being skipped.");
+		continue;
+	}
+	$category->variants[$cur_template] = $cur_variant;
 }
 
 // Conditions
@@ -132,6 +145,6 @@ if ($category->save()) {
 	pines_error('Error saving category. Do you have permission?');
 }
 
-redirect(pines_url('com_content', 'category/list'));
+pines_redirect(pines_url('com_content', 'category/list'));
 
 ?>

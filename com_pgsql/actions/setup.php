@@ -15,6 +15,7 @@ if (isset($_SESSION['user']) || $pines->config->com_pgsql->host != 'localhost' |
 	return;
 
 // Get the provided or default info.
+$connection_type = isset($_REQUEST['connection_type']) ? $_REQUEST['connection_type'] : $pines->config->com_pgsql->connection_type;
 $host = isset($_REQUEST['host']) ? $_REQUEST['host'] : $pines->config->com_pgsql->host;
 $user = isset($_REQUEST['user']) ? $_REQUEST['user'] : $pines->config->com_pgsql->user;
 $password = $_REQUEST['password'];
@@ -28,10 +29,16 @@ if (isset($_REQUEST['host'])) {
 	$pass = true;
 	if (!empty($_REQUEST['setup_user'])) {
 		// Can the user connect already?
-		$can_connect = @pg_connect('host=\''.addslashes($host).'\' user=\''.addslashes($user).'\' password=\''.addslashes($password).'\'');
+		if ($connection_type == 'host') {
+			$can_connect = @pg_connect('host=\''.addslashes($host).'\' user=\''.addslashes($user).'\' password=\''.addslashes($password).'\'');
+			$connect_string = 'host=\''.addslashes($host).'\' user=\''.addslashes($setup_user).'\' password=\''.addslashes($setup_password).'\'';
+		} else {
+			$can_connect = @pg_connect('user=\''.addslashes($user).'\' password=\''.addslashes($password).'\'');
+			$connect_string = 'user=\''.addslashes($setup_user).'\' password=\''.addslashes($setup_password).'\'';
+		}
 		if ($can_connect)
 			@pg_close($can_connect);
-		if ($link = @pg_connect('host=\''.addslashes($host).'\' user=\''.addslashes($setup_user).'\' password=\''.addslashes($setup_password).'\'')) {
+		if ($link = @pg_connect($connect_string)) {
 			// Create the user/database.
 			if ($pass && !$can_connect) {
 				// Create the user.
@@ -41,7 +48,7 @@ if (isset($_REQUEST['host'])) {
 			}
 			// Create the database.
 			if ($pass)
-				$pass = $pass && @pg_query($link, 'CREATE DATABASE "'.pg_escape_string($link, $database).'" WITH OWNER = "'.pg_escape_string($link, $user).'" ENCODING = \'UTF8\' TABLESPACE = pg_default LC_COLLATE = \'en_US.utf8\' LC_CTYPE = \'en_US.utf8\' CONNECTION LIMIT = -1;');
+				$pass = $pass && @pg_query($link, 'CREATE DATABASE "'.pg_escape_string($link, $database).'" WITH OWNER = "'.pg_escape_string($link, $user).'" ENCODING = \'UTF8\' TABLESPACE = pg_default LC_COLLATE = \'en_US.UTF-8\' LC_CTYPE = \'en_US.UTF-8\' CONNECTION LIMIT = -1;');
 			// Grant priveleges to use it.
 			if ($pass)
 				$pass = $pass && @pg_query($link, 'GRANT ALL ON DATABASE "'.pg_escape_string($link, $database).'" TO "'.pg_escape_string($link, $user).'";');
@@ -57,11 +64,15 @@ if (isset($_REQUEST['host'])) {
 	}
 	if ($pass) {
 		// Can the user connect?
-		$can_connect = @pg_connect('host=\''.addslashes($host).'\' dbname=\''.addslashes($database).'\' user=\''.addslashes($user).'\' password=\''.addslashes($password).'\'');
+		if ($connection_type == 'host')
+			$can_connect = @pg_connect('host=\''.addslashes($host).'\' dbname=\''.addslashes($database).'\' user=\''.addslashes($user).'\' password=\''.addslashes($password).'\'');
+		else
+			$can_connect = @pg_connect('dbname=\''.addslashes($database).'\' user=\''.addslashes($user).'\' password=\''.addslashes($password).'\'');
 		if ($can_connect) {
 			// User can select the DB, so save the config.
 			$conf = configurator_component::factory('com_pgsql');
 			$conf->set_config(array(
+				'connection_type' => $connection_type,
 				'host' => $host,
 				'user' => $user,
 				'password' => $password,
@@ -69,8 +80,8 @@ if (isset($_REQUEST['host'])) {
 				'prefix' => $prefix,
 			));
 			$conf->save_config();
-			redirect(pines_url());
-			@mysql_close($can_connect);
+			pines_redirect(pines_url());
+			@pg_close($can_connect);
 		} else {
 			pines_error('Can\'t connect to host: '.pg_last_error());
 		}
@@ -79,6 +90,7 @@ if (isset($_REQUEST['host'])) {
 
 // Print out the setup form.
 $module = new module('com_pgsql', 'setup', 'content');
+$module->connection_type = $connection_type;
 $module->host = $host;
 $module->user = $user;
 $module->password = $password;

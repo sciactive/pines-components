@@ -17,12 +17,12 @@ if ( !gatekeeper('com_sales/editcategory') )
 $entity = com_sales_category::factory((int) $_REQUEST['id']);
 if (!isset($entity->guid)) {
 	pines_error('Requested category id is not accessible.');
-	redirect(pines_url('com_sales', 'category/list'));
+	pines_redirect(pines_url('com_sales', 'category/list'));
 	return;
 }
 if (!isset($entity->parent->guid)) {
 	pines_error('Requested category has no parent.');
-	redirect(pines_url('com_sales', 'category/list'));
+	pines_redirect(pines_url('com_sales', 'category/list'));
 	return;
 }
 
@@ -32,7 +32,7 @@ if ($key !== false) {
 		case 'up':
 			if (!isset($entity->parent->children[$key - 1])) {
 				pines_notice('Category is already first under its parent.');
-				redirect(pines_url('com_sales', 'category/list'));
+				pines_redirect(pines_url('com_sales', 'category/list'));
 				return;
 			} else {
 				$replace = $entity->parent->children[$key - 1];
@@ -44,7 +44,7 @@ if ($key !== false) {
 		default:
 			if (!isset($entity->parent->children[$key + 1])) {
 				pines_notice('Category is already last under its parent.');
-				redirect(pines_url('com_sales', 'category/list'));
+				pines_redirect(pines_url('com_sales', 'category/list'));
 				return;
 			} else {
 				$replace = $entity->parent->children[$key + 1];
@@ -57,6 +57,6 @@ if ($key !== false) {
 		pines_error('Couldn\'t save new order in parent category. Do you have permission?');
 }
 
-redirect(pines_url('com_sales', 'category/list'));
+pines_redirect(pines_url('com_sales', 'category/list'));
 
 ?>

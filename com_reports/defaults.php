@@ -32,10 +32,17 @@ return array(
 		'peruser' => true,
 	),
 	array(
-		'name' => 'default_goal',
-		'cname' => 'Default Sales Goal',
-		'description' => 'The dollar value of the default sales goal for monthly rankings.',
-		'value' => 500.00,
+		'name' => 'use_points',
+		'cname' => 'Use Points in Rankings',
+		'description' => 'Use "points" in rankings instead of dollar amounts.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'point_multiplier',
+		'cname' => 'Point Multiplier',
+		'description' => 'The value by which to multiply the dollar amount to convert to points.',
+		'value' => .001,
 		'peruser' => true,
 	),
 	array(

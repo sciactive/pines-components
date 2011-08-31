@@ -89,24 +89,21 @@ class com_pgsql extends component {
 		}
 		// Connecting, selecting database
 		if (!$this->connected) {
-			if ($connection_type == 'host') {
+			if ($connection_type == 'host')
 				$connect_string = 'host=\''.addslashes($host).'\' dbname=\''.addslashes($database).'\' user=\''.addslashes($user).'\' password=\''.addslashes($password).'\' connect_timeout=5';
-			} else {
+			else
 				$connect_string = 'dbname=\''.addslashes($database).'\' user=\''.addslashes($user).'\' password=\''.addslashes($password).'\' connect_timeout=5';
-			}
-			if ($pines->config->com_pgsql->allow_persistent) {
-				$this->link = @pg_connect($connect_string);
-			} else {
-				$this->link = pg_connect($connect_string.' options=\''.addslashes(rand()).'\'', PGSQL_CONNECT_FORCE_NEW);
-			}
+			if ($pines->config->com_pgsql->allow_persistent)
+				$this->link = @pg_connect($connect_string.' options=\'-c enable_hashjoin=off -c enable_mergejoin=off\'');
+			else
+				$this->link = @pg_connect($connect_string.' options=\'-c enable_hashjoin=off -c enable_mergejoin=off\'', PGSQL_CONNECT_FORCE_NEW); // Don't think this is necessary, but if put in options, will guarantee connection is new. " -c timezone='.round(rand(10001000, 10009999)).'"
 			if ($this->link) {
 				$this->connected = true;
-				pines_notice(pg_connection_busy($this->link));
 			} else {
 				$this->connected = false;
 				if (!isset($_SESSION['user']) && $host == 'localhost' && $user == 'pines' && $password == 'password' && $database == 'pines' && $connection_type == 'host') {
 					if ($pines->request_component != 'com_pgsql')
-						redirect(pines_url('com_pgsql', 'setup'));
+						pines_redirect(pines_url('com_pgsql', 'setup'));
 				} else {
 					if (function_exists('pines_error'))
 						@pines_error('Could not connect: ' . pg_last_error());

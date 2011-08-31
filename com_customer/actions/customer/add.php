@@ -31,6 +31,6 @@ if (empty($failed_adds)) {
 	pines_error('Could not add users with given IDs: '.$failed_adds);
 }
 
-redirect(pines_url('com_customer', 'customer/list'));
+pines_redirect(pines_url('com_customer', 'customer/list'));
 
 ?>

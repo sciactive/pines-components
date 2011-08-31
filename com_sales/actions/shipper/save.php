@@ -59,6 +59,6 @@ if ($shipper->save()) {
 	pines_error('Error saving shipper. Do you have permission?');
 }
 
-redirect(pines_url('com_sales', 'shipper/list'));
+pines_redirect(pines_url('com_sales', 'shipper/list'));
 
 ?>

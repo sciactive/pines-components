@@ -93,7 +93,7 @@ class com_mysql extends component {
 					$this->connected = false;
 					if (!isset($_SESSION['user']) && $host == 'localhost' && $user == 'pines' && $password == 'password' && $database == 'pines') {
 						if ($pines->request_component != 'com_mysql')
-							redirect(pines_url('com_mysql', 'setup'));
+							pines_redirect(pines_url('com_mysql', 'setup'));
 					} else {
 						if (function_exists('pines_error'))
 							pines_error('Could not select database: ' . mysql_error());
@@ -103,7 +103,7 @@ class com_mysql extends component {
 				$this->connected = false;
 				if (!isset($_SESSION['user']) && $host == 'localhost' && $user == 'pines' && $password == 'password' && $database == 'pines') {
 					if ($pines->request_component != 'com_mysql')
-						redirect(pines_url('com_mysql', 'setup'));
+						pines_redirect(pines_url('com_mysql', 'setup'));
 				} else {
 					if (function_exists('pines_error'))
 						pines_error('Could not connect: ' . mysql_error());

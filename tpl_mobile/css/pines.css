@@ -1,0 +1,184 @@
+/* ----------- Globals ----------- */
+* {
+	margin: 0;
+	padding: 0;
+}
+html {
+	font-family: Verdana,Arial,sans-serif;
+	font-size: 11px;
+}
+ul, ol {
+	margin: 11px 0;
+	padding-left: 40px;
+}
+h1, h2, h3 {
+	margin:.8em 0 .2em 0;
+	padding:0;
+}
+p {
+	margin:.4em 0 .8em 0;
+	padding:0;
+}
+img {
+	margin:10px 0 5px;
+}
+#content .module {
+	margin: .4em 0 .6em;
+}
+#content .module .module_title {
+	margin-bottom: .5em;
+}
+/* General styles */
+body {
+	border: none !important;
+	background-image: none !important;
+	text-align: left;
+}
+/* Header styles */
+#header {
+	border-top: 0 !important;
+	border-left: 0 !important;
+	border-right: 0 !important;
+	background-position: left top !important;
+}
+#page_title {
+	margin: 0 10px;
+	padding: 0;
+}
+#page_title a {
+	text-decoration: none;
+}
+#page_title img {
+	margin: 0;
+	padding: 0;
+	border: none 0;
+	vertical-align: middle;
+}
+#page_title span {
+	padding: 14px 0;
+	display: block;
+}
+#header .module .module_content, #footer .module .module_content {
+	font-weight: normal;
+}
+/* Menu styles */
+#menu_link, #menu_back {
+	width: 100%;
+	margin: 0 !important;
+}
+#menu_link, #menu_back, ul.menu li a {
+	padding: .5em 0;
+}
+ul.menu {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	list-style: none outside none;
+}
+ul.menu li {
+	width: 100%;
+	display: block;
+	vertical-align: middle;
+	list-style: none outside none;
+}
+ul.menu li ul {
+	display: none;
+	padding-left: .4em;
+}
+ul.menu li a {
+	display: block;
+	margin: 0;
+	text-decoration: none;
+	text-align: left;
+}
+ul.menu li a.expander {
+	width: 15%;
+	float: right;
+}
+ul.menu li a.expander + a {
+	margin-right: 15%;
+}
+/* Footer styles */
+#footer {
+	border-left: 0 !important;
+	border-right: 0 !important;
+	border-top-width: 3px !important;
+	border-bottom-width: 3px !important;
+	background-image: none !important;
+	font-weight: normal;
+}
+#copyright {
+	text-align: center;
+	padding: .4em;
+	margin: 0;
+}
+/* Content styles */
+.module {
+	padding: .4em 0;
+}
+.module.ui-widget-content {
+	border-left: none;
+	border-right: none;
+}
+.module .module_title {
+	padding: .2em .4em;
+}
+.module .module_title h2 {
+	margin: 0;
+	font-size: 1.3em;
+}
+.module .module_title p {
+	margin: 0;
+	font-size: .9em;
+	font-weight: normal;
+}
+.module .module_content {
+	padding: .2em 0 0;
+}
+/* ----------- Styled Inputs ----------- */
+input.ui-state-default,
+input.ui-widget-content,
+select.ui-widget-content,
+textarea.ui-widget-content {
+	padding: .4em .1em;
+}
+/* ----------- Pines Form ----------- */
+.pf-form div.pf-element.pf-full-width .pf-full-width {
+	padding-right: .2em; /* Keep padded inputs from pushing out of their box. */
+}
+.pf-form div.pf-element .pf-label, .pf-form div.pf-element .pf-note {
+	float: none !important;
+	width: auto !important;
+	display: block !important;
+	margin-bottom: .1em !important;
+}
+.pf-form div.pf-element .pf-group {
+	margin-left: 0 !important;
+	display: block;
+}
+.pf-form div.pf-element .pf-field.pf-full-width {
+	margin-left: 0 !important;
+}
+.pf-form div.pf-buttons {
+	padding-left: 0 !important;
+}
+/* ----------- jQuery UI ----------- */
+.ui-tabs .ui-tabs-panel, .ui-dialog .ui-dialog-content {
+	padding: .5em 0 !important;
+}
+.ui-dialog {
+	width: auto !important;
+	left: 0 !important;
+	top: 0 !important;
+}
+/* ----------- Pines Grid ----------- */
+.ui-pgrid-table-viewport {
+	height: auto !important;
+}
+.ui-pgrid-table-container {
+	position: static !important;
+	overflow: visible !important;
+}
+.ui-pgrid-table {
+	white-space: normal !important;
+}

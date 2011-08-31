@@ -58,8 +58,10 @@ if ($_REQUEST['save'] == 'commit') {
 	$countsheet->run_count();
 	$countsheet->final = true;
 	if (isset($_SESSION['user']->group->com_sales_task_countsheet)) {
+		pines_session('write');
 		unset($_SESSION['user']->group->com_sales_task_countsheet);
 		$_SESSION['user']->group->save();
+		pines_session('close');
 	}
 	// Automatically decline the countsheet if it's missing items.
 	if ($pines->config->com_sales->decline_countsheets && !empty($countsheet->missing))
@@ -83,6 +85,6 @@ if ($countsheet->save()) {
 	return;
 }
 
-redirect(pines_url('com_sales', 'countsheet/list'));
+pines_redirect(pines_url('com_sales', 'countsheet/list'));
 
 ?>

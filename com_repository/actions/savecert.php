@@ -54,7 +54,7 @@ while (($e = openssl_error_string()) !== false) {
 
 if (empty($csrout) || empty($certout) || empty($pkeyout)) {
 	pines_error('Error occurred generating certificate. Check the log for more details.');
-	action('com_repository', 'gencert');
+	pines_action('com_repository', 'gencert');
 	return;
 }
 
@@ -62,12 +62,12 @@ if (empty($csrout) || empty($certout) || empty($pkeyout)) {
 $dir = "{$pines->config->com_repository->repository_path}private/";
 if (!file_exists($dir) && !mkdir($dir, 0700)) {
 	pines_error('Could not create private path in repository.');
-	action('com_repository', 'gencert');
+	pines_action('com_repository', 'gencert');
 	return;
 }
 if (!chmod($dir, 0700)) {
 	pines_error('Could not set mode on private path.');
-	action('com_repository', 'gencert');
+	pines_action('com_repository', 'gencert');
 	return;
 }
 
@@ -80,31 +80,31 @@ EOF;
 // Write htaccess file.
 if (!file_put_contents("{$dir}.htaccess", $htaccess)) {
 	pines_error('Could not write htaccess file.');
-	action('com_repository', 'gencert');
+	pines_action('com_repository', 'gencert');
 	return;
 }
 
 // Write private key.
 if (!file_put_contents("{$dir}cert.key", $pkeyout) || !chmod("{$dir}cert.key", 0700)) {
 	pines_error('Could not write private key.');
-	action('com_repository', 'gencert');
+	pines_action('com_repository', 'gencert');
 	return;
 }
 // Write cert.
 if (!file_put_contents("{$dir}cert.pem", $certout) || !chmod("{$dir}cert.pem", 0700)) {
 	pines_error('Could not write cert.');
-	action('com_repository', 'gencert');
+	pines_action('com_repository', 'gencert');
 	return;
 }
 // Write CSR.
 if (!file_put_contents("{$dir}cert.csr", $csrout) || !chmod("{$dir}cert.csr", 0700)) {
 	pines_error('Could not write CSR.');
-	action('com_repository', 'gencert');
+	pines_action('com_repository', 'gencert');
 	return;
 }
 
 pines_notice('Generated certificate successfully.');
 
-redirect(pines_url('com_repository', 'viewcert'));
+pines_redirect(pines_url('com_repository', 'viewcert'));
 
 ?>

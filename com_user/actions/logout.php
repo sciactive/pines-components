@@ -13,6 +13,6 @@ defined('P_RUN') or die('Direct access prohibited');
 
 $pines->user_manager->logout();
 pines_notice('You have been logged out.');
-redirect(pines_url());
+pines_redirect(pines_url());
 
 ?>

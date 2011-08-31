@@ -20,6 +20,7 @@ defined('P_RUN') or die('Direct access prohibited');
 class com_packager extends component {
 	/**
 	 * Creates and attaches a module which lists packages.
+	 * @return module The module.
 	 */
 	function list_packages() {
 		global $pines;
@@ -28,10 +29,10 @@ class com_packager extends component {
 
 		$module->packages = $pines->entity_manager->get_entities(array('class' => com_packager_package), array('&', 'tag' => array('com_packager', 'package')));
 
-		if ( empty($module->packages) ) {
-			//$module->detach();
+		if ( empty($module->packages) )
 			pines_notice('There are no packages.');
-		}
+
+		return $module;
 	}
 }
 

@@ -17,6 +17,11 @@ return array(
 		'view' => 'modules/login',
 		'form' => 'modules/login_form',
 	),
+	'current_user' => array(
+		'cname' => 'Current User Display',
+		'view' => 'modules/current_user',
+		'form' => 'modules/current_user_form',
+	),
 );
 
 ?>

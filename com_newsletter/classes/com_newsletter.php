@@ -53,6 +53,7 @@ class com_newsletter extends component {
 
 	/**
 	 * Provides a list of mailings.
+	 * @return module The module.
 	 */
 	function list_mails() {
 		global $pines;
@@ -64,6 +65,8 @@ class com_newsletter extends component {
 			//$module->detach();
 			pines_notice('There are no mails.');
 		}
+
+		return $module;
 	}
 }
 

@@ -19,6 +19,6 @@ if ( !gatekeeper() ) {
 	return;
 }
 
-action('com_user', 'listusers');
+pines_action('com_user', 'listusers');
 
 ?>

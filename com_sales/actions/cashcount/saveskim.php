@@ -47,8 +47,10 @@ if ($skim->save()) {
 	}
 	pines_notice('Completed Skim ['.$skim->guid.']');
 	if (isset($_SESSION['user']->group->com_sales_task_cashcount_skim)) {
+		pines_session('write');
 		unset($_SESSION['user']->group->com_sales_task_cashcount_skim);
 		$_SESSION['user']->group->save();
+		pines_session('close');
 	}
 } else {
 	$skim->cashcount = $cashcount;
@@ -57,6 +59,6 @@ if ($skim->save()) {
 	return;
 }
 
-redirect(pines_url('com_sales', 'cashcount/list'));
+pines_redirect(pines_url('com_sales', 'cashcount/list'));
 
 ?>

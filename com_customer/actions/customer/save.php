@@ -251,6 +251,6 @@ if ($customer->save()) {
 	pines_error('Error saving customer. Do you have permission?');
 }
 
-redirect(pines_url('com_customer', 'customer/list'));
+pines_redirect(pines_url('com_customer', 'customer/list'));
 
 ?>

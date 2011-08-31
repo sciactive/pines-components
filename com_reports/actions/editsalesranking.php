@@ -21,6 +21,12 @@ if (!empty($_REQUEST['id'])) {
 
 $entity = com_reports_sales_ranking::factory((int) $_REQUEST['id']);
 
+if ($entity->final) {
+	pines_notice('This sales ranking has been finalized.');
+	pines_redirect(pines_url('com_reports', 'salesrankings'));
+	return;
+}
+
 $entity->print_form();
 
 ?>

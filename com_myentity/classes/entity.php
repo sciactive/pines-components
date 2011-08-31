@@ -17,7 +17,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * @package Pines
  * @subpackage com_myentity
  */
-class entity extends p_base implements entity_interface {
+class entity implements entity_interface {
 	/**
 	 * The GUID of the entity.
 	 *
@@ -70,6 +70,12 @@ class entity extends p_base implements entity_interface {
 	 * @access private
 	 */
 	private $sleeping_reference = false;
+	/**
+	 * Whether to use "skip_ac" when accessing entity references.
+	 *
+	 * @var bool
+	 */
+	public $_p_use_skip_ac = false;
 
 	public function __construct() {
 		$args = func_get_args();
@@ -133,7 +139,7 @@ class entity extends p_base implements entity_interface {
 		if (isset($this->entity_cache[$name])) {
 			if ($this->entity_cache[$name] === 0) {
 				// The entity hasn't been loaded yet, so load it now.
-				$this->entity_cache[$name] = $pines->entity_manager->get_entity(array('class' => $this->data[$name][2]), array('&', 'guid' => $this->data[$name][1]));
+				$this->entity_cache[$name] = $pines->entity_manager->get_entity(array('class' => $this->data[$name][2], 'skip_ac' => (bool) $this->_p_use_skip_ac), array('&', 'guid' => $this->data[$name][1]));
 			}
 			return $this->entity_cache[$name];
 		}
@@ -141,6 +147,10 @@ class entity extends p_base implements entity_interface {
 		if ((array) $this->data[$name] === $this->data[$name]) {
 			// But, if it's an array, check all the values for entity references, and change them.
 			array_walk($this->data[$name], array($this, 'reference_to_entity'));
+		} elseif ((object) $this->data[$name] === $this->data[$name]) {
+			foreach ($this->data[$name] as &$cur_property)
+				$this->reference_to_entity($cur_property, null);
+			unset($cur_property);
 		}
 		return $this->data[$name];
 	}
@@ -343,6 +353,10 @@ class entity extends p_base implements entity_interface {
 		} elseif ((array) $item === $item) {
 			// Recurse into lower arrays.
 			return array_map(array($this, 'get_data_reference'), $item);
+		} elseif ((object) $item === $item) {
+			foreach ($item as &$cur_property)
+				$cur_property = $this->get_data_reference($cur_property);
+			unset($cur_property);
 		}
 		// Not an entity or array, just return it.
 		return $item;
@@ -452,24 +466,31 @@ class entity extends p_base implements entity_interface {
 			} else {
 				array_walk($item, array($this, 'reference_to_entity'));
 			}
+		} elseif ((object) $item === $item) {
+			foreach ($item as &$cur_property)
+				$this->reference_to_entity($cur_property, null);
+			unset($cur_property);
 		}
 	}
 
 	/**
 	 * Wake from a sleeping reference.
+	 * 
+	 * @return bool True on success, false on failure.
 	 */
 	private function reference_wake() {
 		global $pines;
 		if (!$this->is_a_sleeping_reference)
-			return;
+			return true;
 		$entity = $pines->entity_manager->get_entity(array('class' => $this->sleeping_reference[2]), array('&', 'guid' => $this->sleeping_reference[1]));
+		if (!isset($entity))
+			return false;
 		$this->is_a_sleeping_reference = false;
 		$this->sleeping_reference = null;
-		if (!isset($entity))
-			return;
 		$this->guid = $entity->guid;
 		$this->tags = $entity->tags;
 		$this->put_data($entity->get_data(), $entity->get_sdata());
+		return true;
 	}
 
 	public function refresh() {
@@ -511,7 +532,7 @@ class entity extends p_base implements entity_interface {
 
 	public function to_reference() {
 		if ($this->is_a_sleeping_reference)
-			$this->reference_wake();
+			return $this->sleeping_reference;
 		return array('pines_entity_reference', $this->guid, get_class($this));
 	}
 }

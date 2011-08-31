@@ -89,9 +89,25 @@
 				}
 			},
 			{
+				"path": "main_menu/reports/hrm/reportpayrollsummary",
+				"text": "Report Payroll Summary",
+				"href": ["com_reports","reportpayrollsummary"],
+				"depend": {
+					"ability": "com_reports/reportpayroll"
+				}
+			},
+			{
+				"path": "main_menu/reports/hrm/reportpayrollhourly",
+				"text": "Report Payroll Hourly",
+				"href": ["com_reports","reportpayrollhourly"],
+				"depend": {
+					"ability": "com_reports/reportpayroll"
+				}
+			},
+			{
 				"path": "main_menu/reports/hrm/payroll",
 				"text": "Payroll",
-				"href": ["com_reports","reportpayroll"],
+				"href": ["com_reports","listpaystubs"],
 				"depend": {
 					"component": "com_calendar",
 					"ability": "com_reports/reportpayroll"
@@ -150,7 +166,7 @@
 			{
 				"path": "main_menu/reports/mifi/sales",
 				"text": "Sales",
-				"href": ["com_reports","reportmifi"],
+				"href": ["com_reports","reportmifisales"],
 				"depend": {
 					"component": "com_mifi",
 					"ability": "com_reports/reportmifi"
@@ -163,6 +179,24 @@
 				"depend": {
 					"component": "com_mifi",
 					"ability": "com_reports/reportmifi"
+				}
+			},
+			{
+				"path": "main_menu/reports/mifi/employeeapptotals",
+				"text": "Employee App Totals",
+				"href": ["com_reports","reportmifiemployeeapptotals"],
+				"depend": {
+					"component": "com_mifi",
+					"ability": "com_reports/reportmifiemployeeapptotals"
+				}
+			},
+			{
+				"path": "main_menu/reports/mifi/locationapptotals",
+				"text": "Location App Totals",
+				"href": ["com_reports","reportmifilocationapptotals"],
+				"depend": {
+					"component": "com_mifi",
+					"ability": "com_reports/reportmifilocationapptotals"
 				}
 			},
 			{
@@ -180,7 +214,16 @@
 				"href": ["com_reports","reportmifiavailable"],
 				"depend": {
 					"component": "com_mifi",
-					"ability": "com_reports/reportmifiavailable|com_reports/reportmifiavailable"
+					"ability": "com_reports/reportmifi|com_reports/reportmifiavailable"
+				}
+			},
+			{
+				"path": "main_menu/reports/mifi/faxsheets",
+				"text": "Faxsheets",
+				"href": ["com_reports","reportmififaxsheets"],
+				"depend": {
+					"component": "com_mifi",
+					"ability": "com_reports/reportmifi"
 				}
 			}
 ]

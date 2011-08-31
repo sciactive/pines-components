@@ -15,7 +15,7 @@ if ( isset($_REQUEST['id']) ) {
 	if ( !gatekeeper('com_sales/editpo') )
 		punt_user(null, pines_url('com_sales', 'po/list'));
 	$po = com_sales_po::factory((int) $_REQUEST['id']);
-	if (!isset($po->guid) || $po->final) {
+	if (!isset($po->guid)) {
 		pines_error('Requested PO id is not accessible.');
 		return;
 	}
@@ -25,73 +25,76 @@ if ( isset($_REQUEST['id']) ) {
 	$po = com_sales_po::factory();
 }
 
-// General
-$po->po_number = $_REQUEST['po_number'];
-$po->reference_number = $_REQUEST['reference_number'];
-$po->comments = $_REQUEST['comments'];
-// Vendor can't be changed after items have been received.
-if (empty($po->received)) {
-	$po->vendor = com_sales_vendor::factory((int) $_REQUEST['vendor']);
-	if (!isset($po->vendor->guid))
-		$po->vendor = null;
-}
-// Destination can't be changed after items have been received.
-if (empty($po->received)) {
-	$po->destination = group::factory((int) $_REQUEST['destination']);
-	if (!isset($po->destination->guid))
-		$po->destination = null;
-}
-$po->shipper = com_sales_shipper::factory((int) $_REQUEST['shipper']);
-if (!isset($po->shipper->guid))
-	$po->shipper = null;
-$po->eta = strtotime($_REQUEST['eta']);
-
-// Products
-// Products can't be changed after items have been received.
-if (empty($po->received)) {
-	$po->products = (array) json_decode($_REQUEST['products']);
-	foreach ($po->products as &$cur_product) {
-		$cur_product = array(
-			'entity' => com_sales_product::factory((int) $cur_product->key),
-			'quantity' => (int) $cur_product->values[2],
-			'cost' => (float) $cur_product->values[3]
-		);
-		if (!isset($cur_product['entity']->guid))
-			$cur_product['entity'] = null;
+if (!$po->final) {
+	// General
+	$po->po_number = $_REQUEST['po_number'];
+	$po->reference_number = $_REQUEST['reference_number'];
+	// Vendor can't be changed after items have been received.
+	if (empty($po->received)) {
+		$po->vendor = com_sales_vendor::factory((int) $_REQUEST['vendor']);
+		if (!isset($po->vendor->guid))
+			$po->vendor = null;
 	}
-	unset($cur_product);
-}
+	// Destination can't be changed after items have been received.
+	if (empty($po->received)) {
+		$po->destination = group::factory((int) $_REQUEST['destination']);
+		if (!isset($po->destination->guid))
+			$po->destination = null;
+	}
+	$po->shipper = com_sales_shipper::factory((int) $_REQUEST['shipper']);
+	if (!isset($po->shipper->guid))
+		$po->shipper = null;
+	$po->eta = strtotime($_REQUEST['eta']);
 
-if (empty($po->po_number)) {
-	$po->po_number = 'PO';
-	if (isset($po->destination))
-		$po->po_number .= strtoupper($po->destination->name);
-	$po->po_number .= '-'.$pines->entity_manager->new_uid('com_sales_po');
-}
-$test = $pines->entity_manager->get_entity(array('class' => com_sales_po, 'skip_ac' => true), array('&', 'tag' => array('com_sales', 'po'), 'data' => array('po_number', $po->po_number)));
-if (isset($test) && $test->guid != $_REQUEST['id']) {
-	$po->print_form();
-	pines_notice('There is already a PO with that number. Please enter a different number.');
-	return;
-}
-if (!isset($po->vendor)) {
-	$po->print_form();
-	pines_error('Specified vendor is not valid.');
-	return;
-}
-if (!isset($po->shipper)) {
-	$po->print_form();
-	pines_error('Specified shipper is not valid.');
-	return;
-}
+	// Products
+	// Products can't be changed after items have been received.
+	if (empty($po->received)) {
+		$po->products = (array) json_decode($_REQUEST['products']);
+		foreach ($po->products as &$cur_product) {
+			$cur_product = array(
+				'entity' => com_sales_product::factory((int) $cur_product->key),
+				'quantity' => (int) $cur_product->values[2],
+				'cost' => (float) $cur_product->values[3]
+			);
+			if (!isset($cur_product['entity']->guid))
+				$cur_product['entity'] = null;
+		}
+		unset($cur_product);
+	}
 
-$po->ac->other = 2;
+	if (empty($po->po_number)) {
+		$po->po_number = 'PO';
+		if (isset($po->destination))
+			$po->po_number .= strtoupper($po->destination->name);
+		$po->po_number .= '-'.$pines->entity_manager->new_uid('com_sales_po');
+	}
+	$test = $pines->entity_manager->get_entity(array('class' => com_sales_po, 'skip_ac' => true), array('&', 'tag' => array('com_sales', 'po'), 'data' => array('po_number', $po->po_number)));
+	if (isset($test) && $test->guid != $_REQUEST['id']) {
+		$po->print_form();
+		pines_notice('There is already a PO with that number. Please enter a different number.');
+		return;
+	}
+	if (!isset($po->vendor)) {
+		$po->print_form();
+		pines_error('Specified vendor is not valid.');
+		return;
+	}
+	if (!isset($po->shipper)) {
+		$po->print_form();
+		pines_error('Specified shipper is not valid.');
+		return;
+	}
 
-if ($_REQUEST['save'] == 'commit')
-	$po->final = true;
+	$po->ac->other = 2;
+
+	if ($_REQUEST['save'] == 'commit')
+		$po->final = true;
+}
+// Only comments can be cahnged after it is commited.
+$po->comments = $_REQUEST['comments'];
 
 if ($po->save()) {
-	if ($po->final) {
+	if ($_REQUEST['save'] == 'commit') {
 		pines_notice('Committed PO ['.$po->po_number.']');
 	} else {
 		pines_notice('Saved PO ['.$po->po_number.']');
@@ -100,6 +103,6 @@ if ($po->save()) {
 	pines_error('Error saving PO. Do you have permission?');
 }
 
-redirect(pines_url('com_sales', 'po/list'));
+pines_redirect(pines_url('com_sales', 'po/list'));
 
 ?>

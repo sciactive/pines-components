@@ -22,7 +22,7 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'user_manager&entity_manager&editor',
-		'component' => 'com_jquery&com_pgrid&com_pnotify&com_pform'
+		'component' => 'com_jquery&com_pgrid&com_pnotify&com_pform&com_user'
 	),
 	'recommend' => array(
 		'component' => 'com_modules&com_calendar'
@@ -33,6 +33,14 @@ return array(
 		array('editemployee', 'Edit Employees', 'User can edit current employees.'),
 		array('showssn', 'Show SSN', 'User can see and edit Social Security Numbers.'),
 		array('removeemployee', 'Remove Employees', 'User can remove current employees.'),
+		array('listapplications', 'List Applications', 'User can see employment applications.'),
+		array('editapplication', 'Edit Applications', 'User can edit employment applications.'),
+		array('listadjustments', 'List Adjustments', 'User can see employee adjustments.'),
+		array('editadjustment', 'Edit Adjustments', 'User can edit employee adjustments.'),
+		array('deleteadjustment', 'Delete Adjustments', 'User can delete employee adjustments.'),
+		array('listbonuses', 'List Bonuses', 'User can see employee bonuses.'),
+		array('editbonus', 'Edit Bonuses', 'User can edit employee bonuses.'),
+		array('deletebonus', 'Delete Bonuses', 'User can delete employee bonuses.'),
 		array('listissuetypes', 'List Issue Types', 'User can see employee issue types.'),
 		array('editissuetypes', 'Edit Issue Types', 'User can edit employee issue types.'),
 		array('deleteissuetype', 'Delete Issue Types', 'User can delete employee issue types.'),

@@ -50,6 +50,6 @@ if (empty($failed_disposals)) {
     pines_error("Employee(s) with given ID(s) were not $action : $failed_disposals");
 }
 
-redirect(pines_url('com_hrm', 'employee/list', array('employed' => $_REQUEST['employed'])));
+pines_redirect(pines_url('com_hrm', 'employee/list', array('employed' => $_REQUEST['employed'])));
 
 ?>

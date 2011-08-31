@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * An page.
+ * A page.
  *
  * @package Pines
  * @subpackage com_content
@@ -29,9 +29,8 @@ class com_content_page extends entity {
 		$this->enabled = true;
 		$this->content_tags = array();
 		$this->conditions = array();
-		$this->show_title = true;
-		$this->show_breadcrumbs = true;
 		$this->publish_end = null;
+		$this->variants = array();
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
@@ -61,6 +60,27 @@ class com_content_page extends entity {
 	 * @return bool True on success, false on failure.
 	 */
 	public function delete() {
+		global $pines;
+		// Remove page from categories.
+		$cats = $pines->entity_manager->get_entities(
+				array('class' => com_content_category, 'skip_ac' => true),
+				array('&',
+					'tag' => array('com_content', 'category'),
+					'ref' => array('pages', $this)
+				)
+			);
+		foreach ($cats as &$cur_cat) {
+			while (($key = $this->array_search($cur_cat->pages)) !== false) {
+				unset($cur_cat->pages[$key]);
+				$cur_cat->pages = array_values($cur_cat->pages);
+			}
+			if (!$cur_cat->save()) {
+				pines_error("Couldn't remove page from category, {$cur_cat->name}.");
+				pines_log("Couldn't remove page from category, {$cur_cat->name}.", 'error');
+				return false;
+			}
+		}
+		unset($cur_cat);
 		if (!parent::delete())
 			return false;
 		pines_log("Deleted page $this->name.", 'notice');
@@ -91,6 +111,19 @@ class com_content_page extends entity {
 	}
 
 	/**
+	 * Get an option if it's set, the default otherwise.
+	 * @param string $name The name of the option.
+	 * @return mixed The value.
+	 */
+	public function get_option($name) {
+		if (isset($this->$name))
+			return $this->$name;
+		global $pines;
+		$config_name = "def_page_$name";
+		return $pines->config->com_content->$config_name;
+	}
+
+	/**
 	 * Save the page.
 	 * @return bool True on success, false on failure.
 	 */
@@ -108,6 +141,7 @@ class com_content_page extends entity {
 		if (!$this->ready())
 			return null;
 		global $pines;
+		$pines->com_content->load_custom_css();
 		$module = new module('com_content', 'page/intro', 'content');
 		$module->entity = $this;
 
@@ -129,6 +163,10 @@ class com_content_page extends entity {
 					'data' => array('enabled', true)
 				)
 			);
+		if (isset($pines->editor)) {
+			foreach ($pines->com_content->get_custom_css() as $cur_file)
+				$pines->editor->add_css($cur_file);
+		}
 
 		return $module;
 	}
@@ -141,6 +179,7 @@ class com_content_page extends entity {
 		if (!$this->ready())
 			return null;
 		global $pines;
+		$pines->com_content->load_custom_css();
 		$module = new module('com_content', 'page/page', 'content');
 		$module->entity = $this;
 

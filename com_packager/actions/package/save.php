@@ -148,6 +148,6 @@ if ($package->save()) {
 	pines_error('Error saving package. Do you have permission?');
 }
 
-redirect(pines_url('com_packager', 'package/list'));
+pines_redirect(pines_url('com_packager', 'package/list'));
 
 ?>

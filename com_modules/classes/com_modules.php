@@ -23,6 +23,7 @@ defined('P_RUN') or die('Direct access prohibited');
 class com_modules extends component {
 	/**
 	 * Creates and attaches a module which lists modules.
+	 * @return module The module.
 	 */
 	public function list_modules() {
 		global $pines;
@@ -33,6 +34,8 @@ class com_modules extends component {
 
 		if ( empty($module->modules) )
 			pines_notice('There are no modules.');
+
+		return $module;
 	}
 
 	/**
@@ -46,8 +49,6 @@ class com_modules extends component {
 		global $pines;
 		$return = array();
 		foreach ($pines->components as $cur_component) {
-			if (!isset($pines->$cur_component))
-				continue;
 			$folder = (strpos($cur_component, 'tpl_') === 0) ? 'templates' : 'components';
 			if (!file_exists("$folder/$cur_component/modules.php"))
 				continue;

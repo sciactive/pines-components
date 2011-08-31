@@ -155,22 +155,6 @@
 			}
 		},
 			{
-				"path": "main_menu/business/0_pos/ordering/pendingorders",
-				"text": "Pending Warehouse Orders",
-				"href": ["com_sales","warehouse/ordering"],
-				"depend": {
-					"ability": "com_sales/warehouse"
-				}
-			},
-			{
-				"path": "main_menu/business/0_pos/ordering/fulfillorders",
-				"text": "Fulfill Warehouse Orders",
-				"href": ["com_sales","warehouse/fulfill"],
-				"depend": {
-					"ability": "com_sales/warehouse"
-				}
-			},
-			{
 				"path": "main_menu/business/0_pos/ordering/purchaseorders",
 				"text": "Purchase Orders",
 				"href": ["com_sales","po/list"],
@@ -184,6 +168,30 @@
 				"href": ["com_sales","po/edit"],
 				"depend": {
 					"ability": "com_sales/newpo"
+				}
+			},
+			{
+				"path": "main_menu/business/0_pos/ordering/pendingorders",
+				"text": "Pending Orders",
+				"href": ["com_sales","warehouse/pending"],
+				"depend": {
+					"ability": "com_sales/warehouse"
+				}
+			},
+			{
+				"path": "main_menu/business/0_pos/ordering/assignedorders",
+				"text": "Assigned Orders",
+				"href": ["com_sales","warehouse/assigned"],
+				"depend": {
+					"ability": "com_sales/warehouse"
+				}
+			},
+			{
+				"path": "main_menu/business/0_pos/ordering/shippedorders",
+				"text": "Shipped Orders",
+				"href": ["com_sales","warehouse/shipped"],
+				"depend": {
+					"ability": "com_sales/warehouse"
 				}
 			},
 		{

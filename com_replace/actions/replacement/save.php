@@ -31,8 +31,9 @@ $replacement->enabled = ($_REQUEST['enabled'] == 'ON');
 $replacement->strings = (array) json_decode($_REQUEST['strings']);
 foreach ($replacement->strings as &$cur_string) {
 	$array = array(
-		'search' => $cur_string->values[0],
-		'replace' => $cur_string->values[1]
+		'search' => $cur_string->values[1],
+		'replace' => $cur_string->values[2],
+		'macros' => ($cur_string->values[3] == 'Yes' ? true : false)
 	);
 	$cur_string = $array;
 }
@@ -67,6 +68,6 @@ if ($replacement->save()) {
 	pines_error('Error saving replacement. Do you have permission?');
 }
 
-redirect(pines_url('com_replace', 'replacement/list'));
+pines_redirect(pines_url('com_replace', 'replacement/list'));
 
 ?>

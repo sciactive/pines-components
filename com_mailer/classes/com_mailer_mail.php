@@ -21,7 +21,7 @@
  * @package Pines
  * @subpackage com_mailer
  */
-class com_mailer_mail extends p_base {
+class com_mailer_mail {
 	/**
 	 * The sender's email address.
 	 *

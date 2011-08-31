@@ -21,7 +21,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * following values:
  *
  * - "name" - The name of your type. Ex: 'com_giftcard/giftcard'
- * - "cname" - The canonical name of your action. Ex: 'Gift Card'
+ * - "cname" - The common name of your action. Ex: 'Gift Card'
  * - "description" - A description of the action. Ex: 'Deduct the payment from a gift card.'
  * - "callback" - Callback to your function. Ex: array($pines->com_giftcard, 'process_giftcard')
  *
@@ -89,7 +89,7 @@ $pines->config->com_sales->processing_types = array();
  *   for. Out of "received", "adjusted", "sold", "voided", and "returned".
  * - "name" - The name of your action (not a Pines action).
  *   Ex: 'com_gamephear/create_gamephear_account'
- * - "cname" - The canonical name of your action. Ex: 'Create GamePhear Account'
+ * - "cname" - The common name of your action. Ex: 'Create GamePhear Account'
  * - "description" - A description of the action.
  *   Ex: 'Creates a GamePhear account for the customer.'
  * - "callback" - Callback to your function.

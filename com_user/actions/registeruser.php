@@ -24,6 +24,8 @@ $user->grant('com_user/login');
 
 $user->username = $_SESSION['com_user__tmpusername'];
 $user->password($_SESSION['com_user__tmppassword']);
+if ($pines->config->com_user->referral_codes)
+	$user->referral_code = $_SESSION['com_user__tmpreferral_code'];
 $user->name_first = $_REQUEST['name_first'];
 $user->name_middle = $_REQUEST['name_middle'];
 $user->name_last = $_REQUEST['name_last'];
@@ -76,10 +78,10 @@ $user->groups = (array) $pines->entity_manager->get_entities(array('class' => gr
 
 if ($pines->config->com_user->confirm_email) {
 	// The user will be enabled after confirming their e-mail address.
-	$user->remove_tag('enabled');
+	$user->disable();
 	$user->secret = uniqid('', true);
 } else {
-	$user->add_tag('enabled');
+	$user->enable();
 }
 
 // If create_admin is true and there are no other users, grant "system/all".
@@ -92,11 +94,14 @@ if ($pines->config->com_user->create_admin) {
 
 if ($user->save()) {
 	pines_log('Registered user ['.$user->username.']');
+	pines_session('write');
 	unset($_SESSION['com_user__tmpusername']);
 	unset($_SESSION['com_user__tmppassword']);
+	unset($_SESSION['com_user__tmpreferral_code']);
+	pines_session('close');
 	if ($pines->config->com_user->confirm_email) {
 		// Send the verification email.
-		$link = '<a href="'.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'secret' => $user->secret, 'url' => $_REQUEST['url']), true)).'">'.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'secret' => $user->secret, 'url' => $_REQUEST['url']), true)).'</a>';
+		$link = '<a href="'.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'type' => 'register', 'secret' => $user->secret, 'url' => $_REQUEST['url']), true)).'">'.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'type' => 'register', 'secret' => $user->secret, 'url' => $_REQUEST['url']), true)).'</a>';
 		$search = array(
 			'{page_title}',
 			'{site_name}',
@@ -137,7 +142,7 @@ if ($user->save()) {
 		$pines->user_manager->login($user);
 		$note = new module('com_user', 'note_welcome', 'content');
 		if ( !empty($_REQUEST['url']) ) {
-			redirect(urldecode($_REQUEST['url']));
+			pines_redirect(urldecode($_REQUEST['url']));
 			return;
 		}
 	}

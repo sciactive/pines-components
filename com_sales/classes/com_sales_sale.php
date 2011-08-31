@@ -137,6 +137,24 @@ class com_sales_sale extends entity {
 	}
 
 	/**
+	 * Print a form to change products.
+	 *
+	 * Uses a page override to only print the form.
+	 *
+	 * @return module The form's module.
+	 */
+	public function change_product_form() {
+		global $pines;
+		$pines->page->override = true;
+
+		$module = new module('com_sales', 'forms/change_product', 'content');
+		$module->entity = $this;
+
+		$pines->page->override_doc($module->render());
+		return $module;
+	}
+
+	/**
 	 * Complete the sale.
 	 *
 	 * This process creates payment transaction entries for each payment and any
@@ -583,32 +601,6 @@ class com_sales_sale extends entity {
 	}
 
 	/**
-	 * Print a form to fulfill the sale's warehouse items.
-	 * @return module The form's module.
-	 */
-	public function print_warehouse() {
-		global $pines;
-
-		// Make sure this is a warehouse sale.
-		$warehouse_found = false;
-		foreach ($this->products as $cur_product) {
-			if ($cur_product['delivery'] == 'warehouse') {
-				$warehouse_found = true;
-				break;
-			}
-		}
-		if (!$warehouse_found) {
-			pines_notice('This sale has no warehouse items.');
-			return;
-		}
-
-		$module = new module('com_sales', 'warehouse/fulfill_form', 'content');
-		$module->entity = $this;
-
-		return $module;
-	}
-
-	/**
 	 * Format a barcode for the receipt printer.
 	 *
 	 * @param string $text The barcode text.
@@ -858,11 +850,93 @@ class com_sales_sale extends entity {
 	 */
 	public function save() {
 		global $pines;
+		// Temporary sale corruption debugging.
+		$products_copy = serialize($this->products);
 		if (!isset($this->status))
 			$this->status = 'quoted';
 		if (!isset($this->id))
 			$this->id = $pines->entity_manager->new_uid('com_sales_sale');
-		return parent::save();
+
+		// Set special warehouse vars.
+		if ($this->warehouse) {
+			$this->warehouse_pending = $this->warehouse_assigned = $this->warehouse_shipped = false;
+			foreach ($this->products as $cur_product) {
+				if ($cur_product['delivery'] != 'warehouse')
+					continue;
+				// Check that all stock entities have been assigned.
+				if (count($cur_product['stock_entities']) < ($cur_product['quantity'] + $cur_product['returned_quantity'])) {
+					$this->warehouse_pending = true;
+					continue;
+				}
+				// Check where the stock entities are.
+				foreach ($cur_product['stock_entities'] as $cur_stock) {
+					if ($cur_stock->in_array($cur_product['returned_stock_entities']) || $cur_stock->in_array((array) $cur_product['shipped_entities']))
+						continue;
+					// It's not with the customer, so not delivered.
+					$this->warehouse_assigned = true;
+					// There is stock that needs to be shipped.
+					$this->add_tag('shipping_pending');
+				}
+				foreach ((array) $cur_product['shipped_entities'] as $cur_stock_entity) {
+					if (!$cur_stock_entity->in_array((array) $cur_product['returned_stock_entities'])) {
+						$this->warehouse_shipped = true;
+						break;
+					}
+				}
+			}
+		}
+
+		// Check all products are shipped.
+		if ($this->has_tag('shipping_pending')) {
+			$all_shipped = true;
+			foreach ($this->products as $cur_product) {
+				if (!in_array($cur_product['delivery'], array('shipped', 'warehouse')))
+					continue;
+				// Calculate included stock entries.
+				$stock_entries = $cur_product['stock_entities'];
+				$shipped_stock_entries = (array) $cur_product['shipped_entities'];
+				foreach ((array) $cur_product['returned_stock_entities'] as $cur_stock_entity) {
+					$i = $cur_stock_entity->array_search($stock_entries);
+					if (isset($i))
+						unset($stock_entries[$i]);
+					// If it's still in there, it was entered on the sale twice (fulfilled after returned once), so don't remove it from shipped.
+					if (!$cur_stock_entity->in_array($stock_entries)) {
+						$i = $cur_stock_entity->array_search($shipped_stock_entries);
+						if (isset($i))
+							unset($shipped_stock_entries[$i]);
+					}
+				}
+				// If shipped entities is less than quantity, there are still products to ship.
+				if (count($shipped_stock_entries) < $cur_product['quantity']) {
+					$all_shipped = false;
+					break;
+				}
+			}
+			if ($all_shipped) {
+				// All shipped, so mark the sale.
+				$this->remove_tag('shipping_pending');
+				$this->add_tag('shipping_shipped');
+			}
+		}
+		
+		if (empty($this->products)) {
+			pines_log("Sale {$this->id} has no products. Cannot be saved.", 'error');
+			return false;
+		}
+		if (parent::save()) {
+			// Temporary sale corruption debugging.
+			$check_sale = com_sales_sale::factory($this->guid);
+			if (!$check_sale->products || empty($check_sale->products)) {
+				pines_log("Sale corruption occurred! Sale {$this->id}.", 'error');
+				pines_error('Sale corruption occurred! Please notify SST!');
+				$mail = com_mailer_mail::factory('hunter@sciactive.com', 'hunter@sciactive.com', 'Sale corruption occurred!', "Sale corruption occurred on sale $this->id.\n\nCopy of the sale's products array:\n\n$products_copy\n\n And a debug backtrace:\n\n".var_export(debug_backtrace(), true));
+				$mail->send();
+				return false;
+			}
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**

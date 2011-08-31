@@ -218,9 +218,9 @@ if ($group->save()) {
 }
 
 if ($group->has_tag('enabled')) {
-	redirect(pines_url('com_user', 'listgroups'));
+	pines_redirect(pines_url('com_user', 'listgroups'));
 } else {
-	redirect(pines_url('com_user', 'listgroups', array('enabled' => 'false')));
+	pines_redirect(pines_url('com_user', 'listgroups', array('enabled' => 'false')));
 }
 
 ?>

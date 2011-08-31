@@ -27,6 +27,6 @@ if (empty($failed_completes)) {
 	pines_error('Could not complete POs with given IDs: '.$failed_completes);
 }
 
-redirect(pines_url('com_sales', 'po/list'));
+pines_redirect(pines_url('com_sales', 'po/list'));
 
 ?>

@@ -77,13 +77,15 @@ if ($pines->config->com_content->show_cat_menus) {
 		foreach ($category->children as $cur_category) {
 			if (!isset($cur_category) || !$cur_category->ready())
 				continue;
-			$pines->menu->menu_arrays[] = array(
+			$cat_menu = array(
 				'path' => "{$path}/cat_{$cur_category->guid}",
-				'text' => $cur_category->name,
-				'href' => array('com_content', 'category', array('a' => $cur_category->alias))
+				'text' => $cur_category->name
 			);
+			if ($cur_category->get_option('link_menu'))
+				$cat_menu['href'] = array('com_content', 'category', array('a' => $cur_category->alias));
+			$pines->menu->menu_arrays[] = $cat_menu;
 
-			if ($cur_category->show_pages_in_menu) {
+			if ($cur_category->get_option('show_pages_in_menu')) {
 				foreach ($cur_category->pages as $cur_page) {
 					if (!isset($cur_page) || !$cur_page->ready())
 						continue;
@@ -114,16 +116,18 @@ if ($pines->config->com_content->show_cat_menus) {
 		} else {
 			// It's part of another menu.
 			$menu_position = $cur_category->menu_position;
-			$pines->menu->menu_arrays[] = array(
+			$cat_menu = array(
 				'path' => $menu_position,
-				'text' => $cur_category->name,
-				'href' => array('com_content', 'category', array('a' => $cur_category->alias))
+				'text' => $cur_category->name
 			);
+			if ($cur_category->get_option('link_menu'))
+				$cat_menu['href'] = array('com_content', 'category', array('a' => $cur_category->alias));
+			$pines->menu->menu_arrays[] = $cat_menu;
 		}
 		if ($cur_category->children)
 			com_content__category_menu($cur_category, $menu_position);
 
-		if ($cur_category->show_pages_in_menu) {
+		if ($cur_category->get_option('show_pages_in_menu')) {
 			foreach ($cur_category->pages as $cur_page) {
 				if (!isset($cur_page) || !$cur_page->ready())
 					continue;

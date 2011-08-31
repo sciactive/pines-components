@@ -26,6 +26,12 @@ class com_sales extends component {
 	 * @var bool $js_loaded_product
 	 */
 	private $js_loaded_product = false;
+	/**
+	 * Cache of products for code search.
+	 * @access private
+	 * @var array $product_cache
+	 */
+	private $product_cache = array();
 
 	/**
 	 * Calls the first payment process which matches the given arguments.
@@ -125,22 +131,53 @@ class com_sales extends component {
 	 */
 	public function get_product_by_code($code) {
 		global $pines;
+		if (isset($this->product_cache[$code])) {
+			// Check if the cached one is old.
+			$tmp_product = $pines->entity_manager->get_entity(
+					array('class' => com_sales_product),
+					array('&',
+						'guid' => array($this->product_cache[$code]->guid),
+						'gt' => array('p_mdate', $this->product_cache[$code]->p_mdate)
+					)
+				);
+			if (isset($tmp_product)) {
+				// Make sure the code still matches.
+				if ($tmp_product->sku != $code && !in_array($code, $tmp_product->additional_barcodes)) {
+					// The code doesn't match, so unset the cache and continue on.
+					unset($this->product_cache[$code]);
+				} else {
+					// The code matches, so update the cache.
+					$this->product_cache[$code] = $tmp_product;
+					return $this->product_cache[$code];
+				}
+			} else {
+				// The product hasn't been changed since it was retrieved.
+				$this->product_cache[$code]->clear_cache();
+				return $this->product_cache[$code];
+			}
+		}
+		// Check for a SKU match first.
 		$product = $pines->entity_manager->get_entity(
 				array('class' => com_sales_product),
 				array('&',
 					'tag' => array('com_sales', 'product'),
-					'data' => array('sku', $code)
+					'strict' => array('sku', $code)
 				)
 			);
-		if (isset($product))
-			return $product;
-		return $pines->entity_manager->get_entity(
-				array('class' => com_sales_product),
-				array('&',
-					'tag' => array('com_sales', 'product'),
-					'array' => array('additional_barcodes', $code)
-				)
-			);
+		if (!isset($product->guid)) {
+			// If that didn't match, check for an additional barcode.
+			$product = $pines->entity_manager->get_entity(
+					array('class' => com_sales_product),
+					array('&',
+						'tag' => array('com_sales', 'product'),
+						'array' => array('additional_barcodes', $code)
+					)
+				);
+		}
+		// Cache it.
+		if (isset($product->guid))
+			$this->product_cache[$code] = $product;
+		return $product;
 	}
 
 	/**
@@ -256,6 +293,7 @@ class com_sales extends component {
 	 * @param group $location The location to show cash counts for.
 	 * @param bool $descendents Whether to show descendent locations.
 	 * @param bool $finished Whether to show finished cash counts instead.
+	 * @return module The module.
 	 */
 	public function list_cashcounts($start_date = null, $end_date = null, $location = null, $descendents = false, $finished = false) {
 		global $pines;
@@ -299,7 +337,9 @@ class com_sales extends component {
 
 		// Remind the user to do a cash count if one is assigned to their location.
 		if ($_SESSION['user']) {
+			pines_session('write');
 			$_SESSION['user']->refresh();
+			pines_session('close');
 			if ($_SESSION['user']->group->com_sales_task_cashcount)
 				$this->inform('Assignment', 'Cash Drawer Count', 'Please perform a count of the cash in your location\'s drawer. Corporate is awaiting a cash count submission.', pines_url('com_sales', 'cashcount/edit'));
 			if ($_SESSION['user']->group->com_sales_task_cashcount_audit)
@@ -312,10 +352,13 @@ class com_sales extends component {
 
 		if ( empty($module->counts) )
 			pines_notice('No cash counts found.');
+
+		return $module;
 	}
 
 	/**
 	 * Creates and attaches a module which lists categories.
+	 * @return module The module.
 	 */
 	public function list_categories() {
 		global $pines;
@@ -326,14 +369,17 @@ class com_sales extends component {
 
 		if ( empty($module->categories) )
 			pines_notice('No categories found.');
+
+		return $module;
 	}
-	
+
 	/**
 	 * Creates and attaches a module which lists countsheets.
 	 * @param int $start_date The start date of countsheets to show.
 	 * @param int $end_date The end date of countsheets to show.
 	 * @param group $location The location to show countsheets for.
 	 * @param bool $descendents Whether to show descendent locations.
+	 * @return module The module.
 	 */
 	public function list_countsheets($start_date = null, $end_date = null, $location = null, $descendents = false) {
 		global $pines;
@@ -364,17 +410,22 @@ class com_sales extends component {
 
 		// Remind the user to do a countsheet if one is assigned to their location.
 		if ($_SESSION['user']) {
+			pines_session('write');
 			$_SESSION['user']->refresh();
+			pines_session('close');
 			if ($_SESSION['user']->group->com_sales_task_countsheet)
 				$this->inform('Reminder', 'Inventory Countsheet', 'Please fill out a countsheet for your location when you are not busy. Corporate is awaiting the submission of an inventory count.', pines_url('com_sales', 'countsheet/edit'));
 		}
-	
+
 		if ( empty($module->countsheets) )
 			pines_notice('There are no countsheets.');
+
+		return $module;
 	}
 
 	/**
 	 * Creates and attaches a module which lists manufacturers.
+	 * @return module The module.
 	 */
 	public function list_manufacturers() {
 		global $pines;
@@ -385,10 +436,13 @@ class com_sales extends component {
 
 		if ( empty($module->manufacturers) )
 			pines_notice('There are no manufacturers.');
+
+		return $module;
 	}
 
 	/**
 	 * Creates and attaches a module which lists payment types.
+	 * @return module The module.
 	 */
 	public function list_payment_types() {
 		global $pines;
@@ -399,10 +453,13 @@ class com_sales extends component {
 
 		if ( empty($module->payment_types) )
 			pines_notice('There are no payment types.');
+
+		return $module;
 	}
 
 	/**
 	 * Creates and attaches a module which lists return checklists.
+	 * @return module The module.
 	 */
 	public function list_return_checklists() {
 		global $pines;
@@ -413,11 +470,14 @@ class com_sales extends component {
 
 		if ( empty($module->return_checklists) )
 			pines_notice('There are no return checklists.');
+
+		return $module;
 	}
 
 	/**
 	 * Creates and attaches a module which lists pos.
 	 * @param bool $finished Show finished POs instead of pending ones.
+	 * @return module The module.
 	 */
 	public function list_pos($finished = false) {
 		global $pines;
@@ -435,7 +495,7 @@ class com_sales extends component {
 
 		if ( empty($module->pos) ) {
 			pines_notice('There are no POs.');
-			return;
+			return $module;
 		}
 
 		// Check the purchase orders to see if any have not been received on time.
@@ -450,12 +510,15 @@ class com_sales extends component {
 			$head = 'Purchase Orders';
 			$this->inform($type, $head, implode("\n", $errors));
 		}
+
+		return $module;
 	}
 
 	/**
 	 * Creates and attaches a module which lists products.
 	 * 
 	 * @param bool $enabled Show enabled products if true, disabled if false.
+	 * @return module The module.
 	 */
 	public function list_products($enabled = true) {
 		global $pines;
@@ -471,6 +534,8 @@ class com_sales extends component {
 
 		if ( empty($module->products) )
 			pines_notice('There are no'.($enabled ? ' enabled' : ' disabled').' products.');
+
+		return $module;
 	}
 
 	/**
@@ -479,6 +544,7 @@ class com_sales extends component {
 	 * @param int $end_date The end date of returns to show.
 	 * @param group $location The location to show returns for.
 	 * @param bool $descendents Whether to show descendent locations.
+	 * @return module The module.
 	 */
 	public function list_returns($start_date = null, $end_date = null, $location = null, $descendents = false) {
 		global $pines;
@@ -505,6 +571,8 @@ class com_sales extends component {
 
 		if ( empty($module->returns) )
 			pines_notice('No returns found.');
+
+		return $module;
 	}
 
 	/**
@@ -513,6 +581,7 @@ class com_sales extends component {
 	 * @param int $end_date The end date of sales to show.
 	 * @param group $location The location to show sales for.
 	 * @param bool $descendents Whether to show descendent locations.
+	 * @return module The module.
 	 */
 	public function list_sales($start_date = null, $end_date = null, $location = null, $descendents = false) {
 		global $pines;
@@ -539,6 +608,8 @@ class com_sales extends component {
 
 		if ( empty($module->sales) )
 			pines_notice('No sales found.');
+
+		return $module;
 	}
 
 	/**
@@ -547,6 +618,7 @@ class com_sales extends component {
 	 * @param bool $removed Whether to show shipments that have been sent.
 	 * @param group $location The location to show shipments for.
 	 * @param bool $descendents Whether to show descendent locations.
+	 * @return module The module.
 	 */
 	public function list_shipments($removed = false, $location = null, $descendents = false) {
 		global $pines;
@@ -589,10 +661,13 @@ class com_sales extends component {
 				$selector,
 				$selector2
 			);
+
+		return $module;
 	}
 
 	/**
 	 * Creates and attaches a module which lists shippers.
+	 * @return module The module.
 	 */
 	public function list_shippers() {
 		global $pines;
@@ -603,6 +678,8 @@ class com_sales extends component {
 
 		if ( empty($module->shippers) )
 			pines_notice('There are no shippers.');
+
+		return $module;
 	}
 
 	/**
@@ -611,6 +688,7 @@ class com_sales extends component {
 	 * @param bool $removed Whether to show stock that is no longer physically in inventory.
 	 * @param group $location The location to show stock for.
 	 * @param bool $descendents Whether to show descendent locations.
+	 * @return module The module.
 	 */
 	public function list_stock($removed = false, $location = null, $descendents = false) {
 		global $pines;
@@ -649,10 +727,13 @@ class com_sales extends component {
 
 		if ( empty($module->stock) && !$show_empty )
 			pines_notice('No stock found.');
+
+		return $module;
 	}
 
 	/**
 	 * Creates and attaches a module which lists taxes/fees.
+	 * @return module The module.
 	 */
 	public function list_tax_fees() {
 		global $pines;
@@ -663,12 +744,15 @@ class com_sales extends component {
 
 		if ( empty($module->tax_fees) )
 			pines_notice('There are no taxes/fees.');
+
+		return $module;
 	}
 
 	/**
 	 * Creates and attaches a module which lists transfers.
 	 * @param bool $finished Show finished POs instead of pending ones.
 	 * @param bool $just_pending_shipment Only show transfers waiting to be shipped. (At the user's current location, or below.)
+	 * @return module The module.
 	 */
 	public function list_transfers($finished = false, $just_pending_shipment = false) {
 		global $pines;
@@ -706,10 +790,13 @@ class com_sales extends component {
 
 		if ( empty($module->transfers) )
 			pines_notice('There are no transfers.');
+
+		return $module;
 	}
 
 	/**
 	 * Creates and attaches a module which lists vendors.
+	 * @return module The module.
 	 */
 	public function list_vendors() {
 		global $pines;
@@ -720,6 +807,8 @@ class com_sales extends component {
 
 		if ( empty($module->vendors) )
 			pines_notice('There are no vendors.');
+
+		return $module;
 	}
 
 	/**
@@ -734,7 +823,7 @@ class com_sales extends component {
 			$this->js_loaded_product = true;
 		}
 	}
-	
+
 	/**
 	 * Print a form to select a location.
 	 *
@@ -846,14 +935,14 @@ class com_sales extends component {
 	/**
 	 * Creates and attaches a module containing a form for receiving inventory.
 	 *
-	 * @return module|null The new module on success, nothing on failure.
+	 * @return module The module.
 	 */
 	public function print_receive_form() {
 		global $pines;
 
 		$selector_po = array('&', 'tag' => array('com_sales', 'po'), 'data' => array(array('final', true), array('finished', false)));
 		$selector_transfer = array('&', 'tag' => array('com_sales', 'transfer'), 'data' => array(array('final', true), array('finished', false), array('shipped', true)));
-		
+
 		$module = new module('com_sales', 'stock/formreceive', 'content');
 		if (!gatekeeper('com_sales/receivelocation')) {
 			$selector_po['ref'] = array('destination', $_SESSION['user']->group);
@@ -893,7 +982,7 @@ class com_sales extends component {
 	/**
 	 * Creates and attaches a module containing a sales total page.
 	 *
-	 * @return module|null The new module on success, nothing on failure.
+	 * @return module The module.
 	 */
 	public function print_sales_total() {
 		global $pines;
@@ -936,6 +1025,7 @@ class com_sales extends component {
 	 * @param int $end_date The ending date to search for products within.
 	 * @param group $location The location to search for products in.
 	 * @param bool $descendents Whether to show descendent locations.
+	 * @return module The module.
 	 */
 	public function track_product($serial = null, $sku = null, $start_date = null, $end_date = null, $location = null, $descendents = false, $types = null) {
 		global $pines;
@@ -1098,20 +1188,21 @@ class com_sales extends component {
 				}
 			}
 		}
+
+		return $module;
 	}
 
 	/**
-	 * List warehouse sales that need to be fulfilled.
+	 * List assigned warehouse items.
+	 * 
+	 * Fulfilled items are either shipped out to the cutomer, or waiting at the
+	 * store to be picked up. When they are delivered/picked up they become
+	 * complete.
+	 * 
+	 * @return module The module.
 	 */
-	public function warehouse_fulfill() {
+	public function warehouse_assigned() {
 		global $pines;
-
-		// Warehouse group.
-		$warehouse = group::factory($pines->config->com_sales->warehouse_group);
-		if (!isset($warehouse->guid)) {
-			pines_error('Warehouse group is not configured correctly.');
-			return;
-		}
 
 		// Get sales with warehouse items.
 		$sales = (array) $pines->entity_manager->get_entities(
@@ -1119,8 +1210,8 @@ class com_sales extends component {
 				array('&',
 					'tag' => array('com_sales', 'sale'),
 					'data' => array(
-						array('warehouse_items', true),
-						array('warehouse_complete', false)
+						array('warehouse', true),
+						array('warehouse_assigned', true)
 					)
 				),
 				array('|',
@@ -1131,30 +1222,22 @@ class com_sales extends component {
 				)
 			);
 
-		$module = new module('com_sales', 'warehouse/fulfill', 'content');
+		$module = new module('com_sales', 'warehouse/assigned', 'content');
 		$module->sales = $sales;
+
+		return $module;
 	}
 
 	/**
-	 * List warehouse items that need to be ordered.
+	 * List pending warehouse items.
+	 * 
+	 * By default, shows items that need to be ordered.
+	 * 
+	 * @param bool $ordered Whether to show ordered products instead.
+	 * @return module The list's module.
 	 */
-	public function warehouse_pending() {
+	public function warehouse_pending($ordered = false) {
 		global $pines;
-
-		// Warehouse group.
-		$warehouse = group::factory($pines->config->com_sales->warehouse_group);
-		if (!isset($warehouse->guid)) {
-			pines_error('Warehouse group is not configured correctly.');
-			return;
-		}
-
-		$module = new module('com_sales', 'warehouse/ordering', 'content');
-		// How many items were found in the warehouse stock.
-		$module->in_stock = 0;
-		// How many items were found on incoming POs.
-		$module->in_pos = 0;
-		// How many items were found on incoming transfers.
-		$module->in_transfers = 0;
 
 		// Get sales with warehouse items.
 		$sales = (array) $pines->entity_manager->get_entities(
@@ -1162,8 +1245,8 @@ class com_sales extends component {
 				array('&',
 					'tag' => array('com_sales', 'sale'),
 					'data' => array(
-						array('warehouse_items', true),
-						array('warehouse_complete', false)
+						array('warehouse', true),
+						array('warehouse_pending', true)
 					)
 				),
 				array('|',
@@ -1174,169 +1257,42 @@ class com_sales extends component {
 				)
 			);
 
-		// Find all the warehouse items.
-		$products = array();
-		$products_unique = array();
-		$products_sales = array();
-		foreach ($sales as $cur_sale) {
-			foreach ($cur_sale->products as $cur_product) {
-				if (!isset($cur_product['entity']->guid))
-					continue;
-				if ($cur_product['delivery'] == 'warehouse') {
-					// Calculate number of warehouse items left to be fulfilled.
-					$count = ($cur_product['quantity'] - (int) $cur_product['returned_quantity']) - (count($cur_product['stock_entities']) - count((array) $cur_product['returned_stock_entities']));
-					if ($count <= 0)
-						continue;
-					for ($i = 0; $i < $count; $i++) {
-						$products[] = $cur_product['entity'];
-					}
-					if (!$cur_product['entity']->in_array($products_unique))
-						$products_unique[] = $cur_product['entity'];
-					// Remember what sales each product is in.
-					if (!is_array($products_sales[$cur_product['entity']->guid]))
-						$products_sales[$cur_product['entity']->guid] = array();
-					if (!$cur_sale->in_array($products_sales[$cur_product['entity']->guid]))
-						$products_sales[$cur_product['entity']->guid][] = $cur_sale;
-				}
-			}
-		}
-		unset($sales);
+		$module = new module('com_sales', 'warehouse/pending', 'content');
+		$module->sales = $sales;
+		$module->ordered = $ordered;
 
-		// Find warehouse stock. If the item is in warehouse stock, it
-		// doesn't need to be ordered.
-		if ($products) {
-			$warehouse_stock = (array) $pines->entity_manager->get_entities(
-					array('class' => com_sales_stock),
-					array('&',
-						'tag' => array('com_sales', 'stock'),
-						'data' => array('available', true),
-						'ref' => array('location', $warehouse)
-					),
-					array('|',
-						'ref' => array('product', $products_unique)
+		return $module;
+	}
+
+	/**
+	 * List shipped warehouse items.
+	 * @return module The module.
+	 */
+	public function warehouse_shipped() {
+		global $pines;
+
+		// Get sales with warehouse items.
+		$sales = (array) $pines->entity_manager->get_entities(
+				array('class' => com_sales_sale),
+				array('&',
+					'tag' => array('com_sales', 'sale'),
+					'data' => array(
+						array('warehouse', true),
+						array('warehouse_shipped', true)
 					)
-				);
-			foreach ($warehouse_stock as $cur_stock) {
-				// Search for it and remove it.
-				$index = $cur_stock->product->array_search($products);
-				if ($index !== false) {
-					unset($products[$index]);
-					$module->in_stock++;
-				}
-				// Stop after all products.
-				if (!$products)
-					break;
-			}
-			unset($warehouse_stock);
-		}
-
-		// Find PO products. If the item is in a PO, it doesn't need to be
-		// ordered.
-		if ($products) {
-			$pos = (array) $pines->entity_manager->get_entities(
-					array('class' => com_sales_po),
-					array('&',
-						'tag' => array('com_sales', 'po'),
-						'data' => array(array('final', true), array('finished', false)),
-						'ref' => array('destination', $warehouse)
-					),
-					array('|',
-						'ref' => array('pending_products', $products_unique)
+				),
+				array('|',
+					'data' => array(
+						array('status', 'invoiced'),
+						array('status', 'paid')
 					)
-				);
-			foreach ($pos as $cur_po) {
-				foreach ($cur_po->products as $cur_product) {
-					if (!$cur_product['entity']->in_array($products))
-						continue;
-					// Skip if they've all been received.
-					$quantity = (int) $cur_product['quantity'] - (int) $cur_product['received'];
-					if (!$quantity)
-						continue;
-					for ($i = 0; $i < $quantity; $i++) {
-						// Search for it and remove it.
-						$index = $cur_product['entity']->array_search($products);
-						if ($index !== false) {
-							unset($products[$index]);
-							$module->in_pos++;
-						}
-						// Stop after all products.
-						if (!$products)
-							break;
-					}
-				}
-			}
-			unset($pos);
-		}
-
-		// Find transfer products. If the item is in a transfer, it doesn't need
-		// to be ordered.
-		if ($products) {
-			$transfers = (array) $pines->entity_manager->get_entities(
-					array('class' => com_sales_transfer),
-					array('&',
-						'tag' => array('com_sales', 'transfer'),
-						'data' => array(array('final', true), array('shipped', true), array('finished', false)),
-						'ref' => array('destination', $warehouse)
-					),
-					array('|',
-						'ref' => array('pending_products', $products_unique)
-					)
-				);
-			foreach ($transfers as $cur_transfer) {
-				foreach ($cur_transfer->stock as $cur_stock) {
-					// If it's already received, move on.
-					if ($cur_stock->in_array((array) $cur_transfer->received))
-						continue;
-					// Search for it and remove it.
-					$index = $cur_stock->product->array_search($products);
-					if ($index !== false) {
-						unset($products[$index]);
-						$module->in_transfers++;
-					}
-					// Stop after all products.
-					if (!$products)
-						break;
-				}
-			}
-			unset($transfers);
-		}
-
-		// Build a pending products array.
-		$module->products = array();
-		foreach ($products as $cur_product) {
-			if (isset($module->products[$cur_product->guid])) {
-				$module->products[$cur_product->guid]['quantity']++;
-				continue;
-			}
-			$module->products[$cur_product->guid] = array(
-				'entity' => $cur_product,
-				'quantity' => 1,
-				'sales' => $products_sales[$cur_product->guid],
-				'locations' => array()
+				)
 			);
-		}
-		unset($products, $products_unique);
 
-		// Find items in current inventory.
-		foreach ($module->products as &$cur_product) {
-			$stock = (array) $pines->entity_manager->get_entities(
-					array('class' => com_sales_stock),
-					array('&',
-						'tag' => array('com_sales', 'stock'),
-						'data' => array('available', true),
-						'isset' => 'location',
-						'ref' => array('product', $cur_product['entity'])
-					),
-					array('!&',
-						'ref' => array('location', $warehouse)
-					)
-				);
-			foreach ($stock as $cur_stock) {
-				if (isset($cur_stock->location->guid) && !$cur_stock->location->in_array($cur_product['locations']))
-					$cur_product['locations'][] = $cur_stock->location;
-			}
-		}
-		unset($cur_product);
+		$module = new module('com_sales', 'warehouse/shipped', 'content');
+		$module->sales = $sales;
+
+		return $module;
 	}
 
 	/**

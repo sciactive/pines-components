@@ -22,6 +22,7 @@ if (!isset($countsheet->guid)) {
 
 $countsheet->status = $_REQUEST['status'];
 $countsheet->review_comments = $_REQUEST['review_comments'];
+$countsheet->review_user = $_SESSION['user'];
 
 if (!$countsheet->final && $countsheet->status == 'approved') {
 	pines_notice('You cannot approve a countsheet until it has been committed.');
@@ -45,6 +46,6 @@ if ($countsheet->save()) {
 	pines_error('Error saving countsheet. Do you have permission?');
 }
 
-redirect(pines_url('com_sales', 'countsheet/list'));
+pines_redirect(pines_url('com_sales', 'countsheet/list'));
 
 ?>

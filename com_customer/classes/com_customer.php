@@ -35,16 +35,20 @@ class com_customer extends component {
 
 	/**
 	 * Creates and attaches a module which lists companies.
+	 * @return module The module.
 	 */
 	function list_companies() {
 		$module = new module('com_customer', 'company/list', 'content');
+		return $module;
 	}
 	
 	/**
 	 * Creates and attaches a module which lists customers.
+	 * @return module The module.
 	 */
 	function list_customers() {
 		$module = new module('com_customer', 'customer/list', 'content');
+		return $module;
 	}
 
 	/**

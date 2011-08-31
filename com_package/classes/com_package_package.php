@@ -17,7 +17,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * @package Pines
  * @subpackage com_package
  */
-class com_package_package extends p_base {
+class com_package_package {
 	/**
 	 * The name of the package.
 	 * @var string

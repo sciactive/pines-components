@@ -56,7 +56,7 @@ return array(
 		'name' => 'allow_persistent',
 		'cname' => 'Allow Persistent Connections',
 		'description' => 'Allow connections to persist, if that is how PHP is configured.',
-		'value' => false,
+		'value' => true,
 	),
 );
 

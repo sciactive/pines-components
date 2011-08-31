@@ -27,6 +27,6 @@ if (empty($failed_removes)) {
 	pines_error('Could not remove customers with given IDs: '.$failed_removes);
 }
 
-redirect(pines_url('com_customer', 'customer/list'));
+pines_redirect(pines_url('com_customer', 'customer/list'));
 
 ?>

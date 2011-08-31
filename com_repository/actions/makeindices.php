@@ -16,10 +16,10 @@ if ( !gatekeeper('com_repository/makeindices') &&  !gatekeeper('com_repository/m
 
 if ($_REQUEST['all'] == 'true' && gatekeeper('com_repository/makeallindices')) {
 	$pines->com_repository->make_index_main();
-	redirect(pines_url('com_repository', 'listpackages', array('all' => 'true')));
+	pines_redirect(pines_url('com_repository', 'listpackages', array('all' => 'true')));
 } else {
 	$pines->com_repository->make_index($_SESSION['user']);
-	redirect(pines_url('com_repository', 'listpackages'));
+	pines_redirect(pines_url('com_repository', 'listpackages'));
 }
 
 ?>

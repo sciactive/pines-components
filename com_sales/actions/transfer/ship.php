@@ -43,7 +43,7 @@ foreach ($entity->products as $cur_product) {
 		$guids[] = $stock->guid;
 	} else {
 		pines_notice("The product [{$cur_product->name}] is not available in the inventory for {$entity->origin->name}. (Or not enough are available.)");
-		redirect(pines_url('com_sales', 'transfer/list'));
+		pines_redirect(pines_url('com_sales', 'transfer/list'));
 		return;
 	}
 }

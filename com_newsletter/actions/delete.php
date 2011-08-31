@@ -28,6 +28,6 @@ if (empty($failed_deletes)) {
 	pines_error('Could not delete mails with given IDs: '.$failed_deletes);
 }
 
-redirect(pines_url('com_newsletter', 'list'));
+pines_redirect(pines_url('com_newsletter', 'list'));
 
 ?>

@@ -125,7 +125,7 @@ class com_calendar extends component {
 		$selector = array('&', 'tag' => array('com_calendar', 'event'));
 		// Datespan of the calendar.
 		$date_start = strtotime('00:00:00', $start);
-		$date_end = strtotime('23:59:59', $end) + 1;
+		$date_end = strtotime('00:00:00', $end) + 1;
 		$selector['gte'] = array('start', $date_start);
 		$selector['lt'] = array('end', $date_end);
 		$calendar->view_type = $form->view_type = $view_type;

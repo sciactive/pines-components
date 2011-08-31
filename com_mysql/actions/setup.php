@@ -74,7 +74,7 @@ if (isset($_REQUEST['host'])) {
 					'prefix' => $prefix,
 				));
 				$conf->save_config();
-				redirect(pines_url());
+				pines_redirect(pines_url());
 			} else {
 				pines_error('Can\'t select database: '.mysql_error());
 			}

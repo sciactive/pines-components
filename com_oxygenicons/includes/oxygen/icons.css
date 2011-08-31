@@ -13,7 +13,6 @@
 .picon-32.picon-application-x-executable-script {background-image:url("32/mimetypes/application-x-executable-script.png")}
 .picon-32.picon-application-x-php {background-image:url("32/mimetypes/application-x-php.png")}
 .picon-32.picon-application-x-shellscript {background-image:url("32/mimetypes/application-x-shellscript.png")}
-.picon-32.picon-application-x-shockwave-flash {background-image:url("32/mimetypes/application-x-shockwave-flash.png")}
 .picon-32.picon-application-x-trash {background-image:url("32/mimetypes/application-x-trash.png")}
 .picon-32.picon-application-x-zerosize {background-image:url("32/mimetypes/application-x-zerosize.png")}
 .picon-32.picon-application-xhtml_xml {background-image:url("32/mimetypes/application-xhtml+xml.png")}
@@ -212,6 +211,7 @@
 .picon-32.picon-folder-grey {background-image:url("32/places/folder-grey.png")}
 .picon-32.picon-folder-html {background-image:url("32/places/folder-html.png")}
 .picon-32.picon-folder-image {background-image:url("32/places/folder-image.png")}
+.picon-32.picon-folder-image-people {background-image:url("32/places/folder-image-people.png")}
 .picon-32.picon-folder-important {background-image:url("32/places/folder-important.png")}
 .picon-32.picon-folder-locked {background-image:url("32/places/folder-locked.png")}
 .picon-32.picon-folder-new {background-image:url("32/actions/folder-new.png")}
@@ -228,6 +228,18 @@
 .picon-32.picon-folder-violet {background-image:url("32/places/folder-violet.png")}
 .picon-32.picon-folder-yellow {background-image:url("32/places/folder-yellow.png")}
 .picon-32.picon-fork {background-image:url("32/actions/fork.png")}
+.picon-32.picon-games-achievements {background-image:url("32/actions/games-achievements.png")}
+.picon-32.picon-games-config-background {background-image:url("32/actions/games-config-background.png")}
+.picon-32.picon-games-config-board {background-image:url("32/actions/games-config-board.png")}
+.picon-32.picon-games-config-custom {background-image:url("32/actions/games-config-custom.png")}
+.picon-32.picon-games-config-options {background-image:url("32/actions/games-config-options.png")}
+.picon-32.picon-games-config-theme {background-image:url("32/actions/games-config-theme.png")}
+.picon-32.picon-games-config-tiles {background-image:url("32/actions/games-config-tiles.png")}
+.picon-32.picon-games-difficult {background-image:url("32/actions/games-difficult.png")}
+.picon-32.picon-games-endturn {background-image:url("32/actions/games-endturn.png")}
+.picon-32.picon-games-highscores {background-image:url("32/actions/games-highscores.png")}
+.picon-32.picon-games-hint {background-image:url("32/actions/games-hint.png")}
+.picon-32.picon-games-solve {background-image:url("32/actions/games-solve.png")}
 .picon-32.picon-get-hot-new-stuff {background-image:url("32/actions/get-hot-new-stuff.png")}
 .picon-32.picon-go-bottom {background-image:url("32/actions/go-bottom.png")}
 .picon-32.picon-go-down {background-image:url("32/actions/go-down.png")}
@@ -252,6 +264,8 @@
 .picon-32.picon-help-browser {background-image:url("32/apps/help-browser.png")}
 .picon-32.picon-help-contents {background-image:url("32/actions/help-contents.png")}
 .picon-32.picon-help-contextual {background-image:url("32/actions/help-contextual.png")}
+.picon-32.picon-help-donate {background-image:url("32/actions/help-donate.png")}
+.picon-32.picon-help-feedback {background-image:url("32/actions/help-feedback.png")}
 .picon-32.picon-help-hint {background-image:url("32/actions/help-hint.png")}
 .picon-32.picon-im-ban-kick-user {background-image:url("32/actions/im-ban-kick-user.png")}
 .picon-32.picon-im-ban-user {background-image:url("32/actions/im-ban-user.png")}
@@ -264,7 +278,6 @@
 .picon-32.picon-image-loading {background-image:url("32/status/image-loading.png")}
 .picon-32.picon-image-missing {background-image:url("32/status/image-missing.png")}
 .picon-32.picon-image-svg_xml {background-image:url("32/mimetypes/image-svg+xml.png")}
-.picon-32.picon-image-svg_xml-compressed {background-image:url("32/mimetypes/image-svg+xml-compressed.png")}
 .picon-32.picon-image-x-generic {background-image:url("32/mimetypes/image-x-generic.png")}
 .picon-32.picon-inode-directory {background-image:url("32/mimetypes/inode-directory.png")}
 .picon-32.picon-input-gaming {background-image:url("32/devices/input-gaming.png")}
@@ -346,8 +359,10 @@
 .picon-32.picon-meeting-observer {background-image:url("32/status/meeting-observer.png")}
 .picon-32.picon-meeting-organizer {background-image:url("32/status/meeting-organizer.png")}
 .picon-32.picon-meeting-participant {background-image:url("32/status/meeting-participant.png")}
+.picon-32.picon-meeting-participant-no-response {background-image:url("32/actions/meeting-participant-no-response.png")}
 .picon-32.picon-meeting-participant-optional {background-image:url("32/status/meeting-participant-optional.png")}
 .picon-32.picon-meeting-participant-reply {background-image:url("32/status/meeting-participant-reply.png")}
+.picon-32.picon-meeting-participant-request-response {background-image:url("32/actions/meeting-participant-request-response.png")}
 .picon-32.picon-merge {background-image:url("32/actions/merge.png")}
 .picon-32.picon-message {background-image:url("32/mimetypes/message.png")}
 .picon-32.picon-message-news {background-image:url("32/mimetypes/message-news.png")}
@@ -560,6 +575,7 @@
 .picon-32.picon-vcs-added {background-image:url("32/emblems/vcs-added.png")}
 .picon-32.picon-vcs-conflicting {background-image:url("32/emblems/vcs-conflicting.png")}
 .picon-32.picon-vcs-locally-modified {background-image:url("32/emblems/vcs-locally-modified.png")}
+.picon-32.picon-vcs-locally-modified-unstaged {background-image:url("32/emblems/vcs-locally-modified-unstaged.png")}
 .picon-32.picon-vcs-normal {background-image:url("32/emblems/vcs-normal.png")}
 .picon-32.picon-vcs-removed {background-image:url("32/emblems/vcs-removed.png")}
 .picon-32.picon-vcs-update-required {background-image:url("32/emblems/vcs-update-required.png")}
@@ -722,6 +738,7 @@
 .picon-32.picon-zoom-in {background-image:url("32/actions/zoom-in.png")}
 .picon-32.picon-zoom-original {background-image:url("32/actions/zoom-original.png")}
 .picon-32.picon-zoom-out {background-image:url("32/actions/zoom-out.png")}
+.picon-32.picon-zoom-select {background-image:url("32/actions/zoom-select.png")}
 .picon-accessories-calculator {background-image:url("16/apps/accessories-calculator.png")}
 .picon-accessories-character-map {background-image:url("16/apps/accessories-character-map.png")}
 .picon-accessories-dictionary {background-image:url("16/apps/accessories-dictionary.png")}
@@ -734,12 +751,12 @@
 .picon-application-pdf {background-image:url("16/mimetypes/application-pdf.png")}
 .picon-application-rss_xml {background-image:url("16/mimetypes/application-rss+xml.png")}
 .picon-application-rtf {background-image:url("16/mimetypes/application-rtf.png")}
+.picon-application-x-compress {background-image:url("16/mimetypes/application-x-compress.png")}
 .picon-application-x-desktop {background-image:url("16/mimetypes/application-x-desktop.png")}
 .picon-application-x-executable {background-image:url("16/mimetypes/application-x-executable.png")}
 .picon-application-x-executable-script {background-image:url("16/mimetypes/application-x-executable-script.png")}
 .picon-application-x-php {background-image:url("16/mimetypes/application-x-php.png")}
 .picon-application-x-shellscript {background-image:url("16/mimetypes/application-x-shellscript.png")}
-.picon-application-x-shockwave-flash {background-image:url("16/mimetypes/application-x-shockwave-flash.png")}
 .picon-application-x-trash {background-image:url("16/mimetypes/application-x-trash.png")}
 .picon-application-x-zerosize {background-image:url("16/mimetypes/application-x-zerosize.png")}
 .picon-application-xhtml_xml {background-image:url("16/mimetypes/application-xhtml+xml.png")}
@@ -941,6 +958,7 @@
 .picon-folder-grey {background-image:url("16/places/folder-grey.png")}
 .picon-folder-html {background-image:url("16/places/folder-html.png")}
 .picon-folder-image {background-image:url("16/places/folder-image.png")}
+.picon-folder-image-people {background-image:url("16/places/folder-image-people.png")}
 .picon-folder-important {background-image:url("16/places/folder-important.png")}
 .picon-folder-locked {background-image:url("16/places/folder-locked.png")}
 .picon-folder-new {background-image:url("16/actions/folder-new.png")}
@@ -957,6 +975,18 @@
 .picon-folder-violet {background-image:url("16/places/folder-violet.png")}
 .picon-folder-yellow {background-image:url("16/places/folder-yellow.png")}
 .picon-fork {background-image:url("16/actions/fork.png")}
+.picon-games-achievements {background-image:url("16/actions/games-achievements.png")}
+.picon-games-config-background {background-image:url("16/actions/games-config-background.png")}
+.picon-games-config-board {background-image:url("16/actions/games-config-board.png")}
+.picon-games-config-custom {background-image:url("16/actions/games-config-custom.png")}
+.picon-games-config-options {background-image:url("16/actions/games-config-options.png")}
+.picon-games-config-theme {background-image:url("16/actions/games-config-theme.png")}
+.picon-games-config-tiles {background-image:url("16/actions/games-config-tiles.png")}
+.picon-games-difficult {background-image:url("16/actions/games-difficult.png")}
+.picon-games-endturn {background-image:url("16/actions/games-endturn.png")}
+.picon-games-highscores {background-image:url("16/actions/games-highscores.png")}
+.picon-games-hint {background-image:url("16/actions/games-hint.png")}
+.picon-games-solve {background-image:url("16/actions/games-solve.png")}
 .picon-get-hot-new-stuff {background-image:url("16/actions/get-hot-new-stuff.png")}
 .picon-go-bottom {background-image:url("16/actions/go-bottom.png")}
 .picon-go-down {background-image:url("16/actions/go-down.png")}
@@ -982,6 +1012,8 @@
 .picon-help-browser {background-image:url("16/apps/help-browser.png")}
 .picon-help-contents {background-image:url("16/actions/help-contents.png")}
 .picon-help-contextual {background-image:url("16/actions/help-contextual.png")}
+.picon-help-donate {background-image:url("16/actions/help-donate.png")}
+.picon-help-feedback {background-image:url("16/actions/help-feedback.png")}
 .picon-help-hint {background-image:url("16/actions/help-hint.png")}
 .picon-im-ban-kick-user {background-image:url("16/actions/im-ban-kick-user.png")}
 .picon-im-ban-user {background-image:url("16/actions/im-ban-user.png")}
@@ -994,7 +1026,6 @@
 .picon-image-loading {background-image:url("16/status/image-loading.png")}
 .picon-image-missing {background-image:url("16/status/image-missing.png")}
 .picon-image-svg_xml {background-image:url("16/mimetypes/image-svg+xml.png")}
-.picon-image-svg_xml-compressed {background-image:url("16/mimetypes/image-svg+xml-compressed.png")}
 .picon-image-x-generic {background-image:url("16/mimetypes/image-x-generic.png")}
 .picon-inode-directory {background-image:url("16/mimetypes/inode-directory.png")}
 .picon-input-gaming {background-image:url("16/devices/input-gaming.png")}
@@ -1078,8 +1109,10 @@
 .picon-meeting-observer {background-image:url("16/status/meeting-observer.png")}
 .picon-meeting-organizer {background-image:url("16/status/meeting-organizer.png")}
 .picon-meeting-participant {background-image:url("16/status/meeting-participant.png")}
+.picon-meeting-participant-no-response {background-image:url("16/actions/meeting-participant-no-response.png")}
 .picon-meeting-participant-optional {background-image:url("16/status/meeting-participant-optional.png")}
 .picon-meeting-participant-reply {background-image:url("16/status/meeting-participant-reply.png")}
+.picon-meeting-participant-request-response {background-image:url("16/actions/meeting-participant-request-response.png")}
 .picon-message {background-image:url("16/mimetypes/message.png")}
 .picon-message-news {background-image:url("16/mimetypes/message-news.png")}
 .picon-milestone {background-image:url("16/actions/milestone.png")}
@@ -1292,6 +1325,7 @@
 .picon-vcs-added {background-image:url("16/emblems/vcs-added.png")}
 .picon-vcs-conflicting {background-image:url("16/emblems/vcs-conflicting.png")}
 .picon-vcs-locally-modified {background-image:url("16/emblems/vcs-locally-modified.png")}
+.picon-vcs-locally-modified-unstaged {background-image:url("16/emblems/vcs-locally-modified-unstaged.png")}
 .picon-vcs-normal {background-image:url("16/emblems/vcs-normal.png")}
 .picon-vcs-removed {background-image:url("16/emblems/vcs-removed.png")}
 .picon-vcs-update-required {background-image:url("16/emblems/vcs-update-required.png")}
@@ -1434,3 +1468,4 @@
 .picon-zoom-in {background-image:url("16/actions/zoom-in.png")}
 .picon-zoom-original {background-image:url("16/actions/zoom-original.png")}
 .picon-zoom-out {background-image:url("16/actions/zoom-out.png")}
+.picon-zoom-select {background-image:url("16/actions/zoom-select.png")}

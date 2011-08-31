@@ -13,6 +13,12 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
+		'name' => 'use_plperl',
+		'cname' => 'Use PL/Perl Functions',
+		'description' => 'This speeds up regular expression matching a lot, but requires the Perl Procedural Language to be installed on your Postgres server.',
+		'value' => true,
+	),
+	array(
 		'name' => 'cache',
 		'cname' => 'Cache Entities',
 		'description' => 'Cache recently retrieved entities to speed up database queries.',

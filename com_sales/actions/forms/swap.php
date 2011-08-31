@@ -17,7 +17,7 @@ if ( !gatekeeper('com_sales/swapsale') )
 $sale = com_sales_sale::factory((int) $_REQUEST['id']);
 if (!isset($sale->guid)) {
 	pines_error('Requested sale id is not accessible.');
-	$pines->com_sales->list_sales();
+	pines_redirect(pines_url('com_sales', 'sale/list'));
 	return;
 }
 

@@ -17,7 +17,7 @@ return array(
 	'version' => '1.0.0',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
-	'short_description' => 'Configurable about dialog',
+	'short_description' => 'Configurable about page',
 	'description' => 'Displays configurable information about Pines and your installation.',
 	'depend' => array(
 		'pines' => '<2'

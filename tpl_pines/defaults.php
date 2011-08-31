@@ -11,7 +11,22 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
+pines_session();
+
 return array(
+	array(
+		'name' => 'variant',
+		'cname' => 'Page Variant/Layout',
+		'description' => 'The layout of the page. On two column layouts, the sidebars are combined into one. On full page, the sidebars are not available.',
+		'value' => 'default',
+		'options' => array(
+			'default (Three columns.)' => 'default',
+			'twocol-sideleft (Two columns, left sidebar.)' => 'twocol-sideleft',
+			'twocol-sideright (Two columns, right sidebar.)' => 'twocol-sideright',
+			'full-page (Full page.)' => 'full-page',
+		),
+		'peruser' => true,
+	),
 	array(
 		'name' => 'fancy_style',
 		'cname' => 'Fancy Styling',
@@ -34,7 +49,7 @@ return array(
 		'name' => 'header_image',
 		'cname' => 'Header Image',
 		'description' => 'The header image to use.',
-		'value' => isset($_SESSION['user']->group) ? $_SESSION['user']->group->get_logo() : $pines->config->location.$pines->config->upload_location.'logos/default_logo.png',
+		'value' => (isset($_SESSION['user']->group) && is_callable(array($_SESSION['user']->group, 'get_logo'))) ? $_SESSION['user']->group->get_logo() : $pines->config->location.$pines->config->upload_location.'logos/default_logo.png',
 		'peruser' => true,
 	),
 	array(

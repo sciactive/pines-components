@@ -22,7 +22,7 @@ class tpl_bamboo extends template {
 	 * The template format.
 	 * @var string $format
 	 */
-	public $format = 'xhtml-1.0-strict-desktop';
+	public $format = 'html-desktop-5';
 	/**
 	 * The editor CSS location, relative to Pines' directory.
 	 * @var string $editor_css

@@ -20,6 +20,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'com_esp',
+		'cname' => 'ESP Integration',
+		'description' => 'Integrate with com_esp.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'com_hrm',
 		'cname' => 'HRM Integration',
 		'description' => 'Integrate with com_hrm.',

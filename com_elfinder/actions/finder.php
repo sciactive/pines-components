@@ -15,5 +15,6 @@ if ( !gatekeeper('com_elfinder/finder') && !gatekeeper('com_elfinder/finderself'
 	punt_user(null, pines_url('com_elfinder', 'finder'));
 
 $module = new module('com_elfinder', 'finder', 'content');
+$module->ckeditor = ($_REQUEST['ckeditor'] == 'true');
 
 ?>

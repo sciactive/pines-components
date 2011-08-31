@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * An page category.
+ * A category.
  *
  * @package Pines
  * @subpackage com_content
@@ -31,8 +31,8 @@ class com_content_category extends entity {
 		$this->children = array();
 		$this->pages = array();
 		$this->menu_position = 'left';
-		$this->show_breadcrumbs = true;
 		$this->conditions = array();
+		$this->variants = array();
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
@@ -66,6 +66,7 @@ class com_content_category extends entity {
 			$i = $this->array_search($this->parent->children);
 			unset($this->parent->children[$i]);
 			if (!$this->parent->save()) {
+				pines_error("Couldn't remove category from parent {$this->parent->name}.");
 				pines_log("Couldn't remove category from parent {$this->parent->name}.", 'error');
 				return false;
 			}
@@ -73,6 +74,7 @@ class com_content_category extends entity {
 		}
 		foreach ($this->children as $cur_child) {
 			if (!$cur_child->delete()) {
+				pines_error("Failed to delete child category {$cur_child->name}.");
 				pines_log("Failed to delete child category {$cur_child->name}.", 'error');
 				return false;
 			}
@@ -81,6 +83,19 @@ class com_content_category extends entity {
 			return false;
 		pines_log("Deleted category {$this->name} [{$this->alias}].", 'notice');
 		return true;
+	}
+
+	/**
+	 * Get an option if it's set, the default otherwise.
+	 * @param string $name The name of the option.
+	 * @return mixed The value.
+	 */
+	public function get_option($name) {
+		if (isset($this->$name))
+			return $this->$name;
+		global $pines;
+		$config_name = "def_cat_$name";
+		return $pines->config->com_content->$config_name;
 	}
 
 	/**

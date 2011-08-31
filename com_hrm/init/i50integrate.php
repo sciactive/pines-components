@@ -17,4 +17,7 @@ if ($pines->config->com_hrm->com_sales && !$pines->depend->check('component', 'c
 if ($pines->config->com_hrm->com_calendar && !$pines->depend->check('component', 'com_calendar'))
 	$pines->config->com_hrm->com_calendar = false;
 
+if ($pines->config->com_hrm->com_reports && !$pines->depend->check('component', 'com_reports'))
+	$pines->config->com_hrm->com_reports = false;
+
 ?>

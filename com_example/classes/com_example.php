@@ -20,6 +20,7 @@ defined('P_RUN') or die('Direct access prohibited');
 class com_example extends component {
 	/**
 	 * Creates and attaches a module which lists widgets.
+	 * @return module The module.
 	 */
 	public function list_widgets() {
 		global $pines;
@@ -30,6 +31,8 @@ class com_example extends component {
 
 		if ( empty($module->widgets) )
 			pines_notice('There are no widgets.');
+
+		return $module;
 	}
 
 	/**

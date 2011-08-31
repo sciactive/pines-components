@@ -20,5 +20,5 @@ if ($pines->com_plaza->clear_cache()) {
 	pines_error('Error clearing cache.');
 }
 
-action('com_plaza', 'reload');
+pines_action('com_plaza', 'reload');
 ?>

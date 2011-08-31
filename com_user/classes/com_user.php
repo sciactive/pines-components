@@ -31,6 +31,32 @@ class com_user extends component implements user_manager_interface {
 	 */
 	private $gatekeeper_cache = array();
 
+	/**
+	 * Activate the SAWASC system.
+	 * @return bool True if SAWASC could be activated, false otherwise.
+	 */
+	public function activate_sawasc() {
+		global $pines;
+		if (!$pines->config->com_user->sawasc)
+			return false;
+		if ($pines->config->com_user->pw_method == 'salt') {
+			pines_notice('SAWASC is not compatible with the Salt password storage method.');
+			return false;
+		}
+		// Check that a challenge block was created within 10 minutes.
+		if (!isset($_SESSION['sawasc']['ServerCB']) || $_SESSION['sawasc']['timestamp'] < time() - 600) {
+			// If not, generate one.
+			pines_session('write');
+			$_SESSION['sawasc'] = array(
+				'ServerCB' => uniqid('', true),
+				'timestamp' => time(),
+				'algo' => $pines->config->com_user->sawasc_hash
+			);
+			pines_session('close');
+		}
+		return true;
+	}
+
 	public function check_permissions(&$entity, $type = 1) {
 		if ((object) $entity !== $entity)
 			return false;
@@ -49,7 +75,7 @@ class com_user extends component implements user_manager_interface {
 		} else {
 			$ac = (object) array('user' => 3, 'group' => 3, 'other' => 0);
 		}
-		
+
 		if (is_callable(array($entity->user, 'is')) && $entity->user->is($_SESSION['user']))
 			return ($ac->user >= $type);
 		if (is_callable(array($entity->group, 'is')) && ($entity->group->is($_SESSION['user']->group) || $entity->group->in_array($_SESSION['user']->groups) || $entity->group->in_array($_SESSION['descendents'])) )
@@ -59,6 +85,7 @@ class com_user extends component implements user_manager_interface {
 
 	public function fill_session() {
 		global $pines;
+		pines_session('write');
 		if ((object) $_SESSION['user'] === $_SESSION['user']) {
 			$tmp_user = $pines->entity_manager->get_entity(
 					array('class' => user),
@@ -70,6 +97,7 @@ class com_user extends component implements user_manager_interface {
 			if (!isset($tmp_user)) {
 				$_SESSION['user']->clear_cache();
 				date_default_timezone_set($_SESSION['user_timezone']);
+				pines_session('close');
 				return;
 			}
 			unset($_SESSION['user']);
@@ -118,6 +146,7 @@ class com_user extends component implements user_manager_interface {
 			}
 		}
 		$_SESSION['user'] = $tmp_user;
+		pines_session('close');
 	}
 
 	/**
@@ -131,7 +160,7 @@ class com_user extends component implements user_manager_interface {
 			// If the user is logged in, their abilities are already set up. We
 			// just need to add them to the user's.
 			if ( (object) $_SESSION['user'] === $_SESSION['user'] ) {
-				if ( !isset($ability) )
+				if ( !isset($ability) || empty($ability) )
 					return true;
 				$user =& $_SESSION['user'];
 				// Check the cache to see if we've already checked this user.
@@ -207,6 +236,7 @@ class com_user extends component implements user_manager_interface {
 	 * Creates and attaches a module which lists groups.
 	 * 
 	 * @param bool $enabled Show enabled groups if true, disabled if false.
+	 * @return module The module.
 	 */
 	public function list_groups($enabled = true) {
 		global $pines;
@@ -221,12 +251,15 @@ class com_user extends component implements user_manager_interface {
 
 		if ( empty($module->groups) )
 			pines_notice('There are no'.($enabled ? ' enabled' : ' disabled').' groups.');
+
+		return $module;
 	}
 
 	/**
 	 * Creates and attaches a module which lists users.
 	 * 
 	 * @param bool $enabled Show enabled users if true, disabled if false.
+	 * @return module The module.
 	 */
 	public function list_users($enabled = true) {
 		global $pines;
@@ -241,14 +274,18 @@ class com_user extends component implements user_manager_interface {
 
 		if ( empty($module->users) )
 			pines_notice('There are no'.($enabled ? ' enabled' : ' disabled').' users.');
+
+		return $module;
 	}
 
 	public function login($user) {
 		if ( isset($user->guid) && $user->has_tag('com_user', 'user', 'enabled') && $this->gatekeeper('com_user/login', $user) ) {
 			// Destroy session data.
 			$this->logout();
+			pines_session('write');
 			$_SESSION['user_id'] = $user->guid;
 			$this->fill_session();
+			pines_session('close');
 			return true;
 		} else {
 			return false;
@@ -256,35 +293,17 @@ class com_user extends component implements user_manager_interface {
 	}
 
 	public function logout() {
+		pines_session('write');
 		unset($_SESSION['user_id']);
 		unset($_SESSION['user']);
 		// We're changing users, so clear the gatekeeper cache.
 		$this->gatekeeper_cache = array();
-		@session_unset();
-		@session_destroy();
-		// Start a new session.
-		@session_start();
+		pines_session('destroy');
 	}
 
 	public function print_login($position = 'content', $url = null) {
 		global $pines;
 		$module = new module('com_user', 'modules/login', $position);
-		if ($pines->config->com_user->sawasc) {
-			if ($pines->config->com_user->pw_method == 'salt') {
-				pines_notice('SAWASC is not compatible with the Salt password storage method.');
-			} else {
-				$module->sawasc = true;
-				// Check that a challenge block was created within 10 minutes.
-				if (!isset($_SESSION['sawasc']['ServerCB']) || $_SESSION['sawasc']['timestamp'] < time() - 600) {
-					// If not, generate one.
-					$_SESSION['sawasc'] = array(
-						'ServerCB' => uniqid('', true),
-						'timestamp' => time(),
-						'algo' => $pines->config->com_user->sawasc_hash
-					);
-				}
-			}
-		}
 		$module->url = $url;
 		if (isset($_REQUEST['url']))
 			$module->url = $_REQUEST['url'];
@@ -306,9 +325,9 @@ class com_user extends component implements user_manager_interface {
 		if (!empty($message))
 			pines_notice($message);
 		if ($query_part) {
-			redirect(pines_url('com_user', 'exit', $query_part));
+			pines_redirect(pines_url('com_user', 'exit', $query_part));
 		} else {
-			redirect(pines_url('com_user', 'exit'));
+			pines_redirect(pines_url('com_user', 'exit'));
 		}
 		exit($message);
 	}

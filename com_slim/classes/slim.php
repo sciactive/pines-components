@@ -21,7 +21,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * @package Pines
  * @subpackage com_slim
  */
-class slim extends p_base {
+class slim {
 	/**
 	 * Slim file format version.
 	 */
@@ -286,9 +286,9 @@ class slim extends p_base {
 				}
 				break;
 			default:
-				if ($whence == SEEK_CUR){
+				if ($whence == SEEK_CUR) {
 					return fseek($handle, $this->stream_offset + $offset);
-				} else if (isset($whence)) {
+				} elseif (isset($whence)) {
 					return fseek($handle, $offset, $whence);
 				} else {
 					return fseek($handle, $offset);

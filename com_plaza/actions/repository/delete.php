@@ -27,6 +27,6 @@ if (empty($failed_deletes)) {
 	pines_error('Could not delete repositorys: '.$failed_deletes);
 }
 
-redirect(pines_url('com_plaza', 'repository/list'));
+pines_redirect(pines_url('com_plaza', 'repository/list'));
 
 ?>

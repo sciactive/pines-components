@@ -45,6 +45,6 @@ if ($cashcount->save()) {
 	pines_error('Error saving Cash Count. Do you have permission?');
 }
 
-redirect(pines_url('com_sales', 'cashcount/list'));
+pines_redirect(pines_url('com_sales', 'cashcount/list'));
 
 ?>

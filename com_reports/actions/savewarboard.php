@@ -59,6 +59,6 @@ if ($warboard->save()) {
 	return;
 }
 
-redirect(pines_url('com_reports', 'warboard'));
+pines_redirect(pines_url('com_reports', 'warboard'));
 
 ?>

@@ -19,12 +19,12 @@ if (isset($_REQUEST['employee'])) {
 		$event = com_calendar_event::factory((int) $_REQUEST['id']);
 		if (!isset($event->guid)) {
 			pines_error('The calendar was altered while editing the event.');
-			redirect(pines_url('com_calendar', 'editcalendar', array('location' => $location->guid, 'employee' => $employee->guid)));
+			pines_redirect(pines_url('com_calendar', 'editcalendar', array('location' => $location->guid, 'employee' => $employee->guid)));
 			return;
 		}
 		if (isset($event->appointment)) {
 			pines_error('You cannot edit appointments.');
-			redirect(pines_url('com_calendar', 'editcalendar', array('location' => $location->guid, 'employee' => $employee->guid)));
+			pines_redirect(pines_url('com_calendar', 'editcalendar', array('location' => $location->guid, 'employee' => $employee->guid)));
 			return;
 		}
 		if ($event->time_off)
@@ -94,7 +94,7 @@ if (isset($_REQUEST['employee'])) {
 	$employee = null;
 }
 
-redirect(pines_url('com_calendar', 'editcalendar',
+pines_redirect(pines_url('com_calendar', 'editcalendar',
 	array(
 		'view_type' => $_REQUEST['view_type'],
 		'start' => $_REQUEST['calendar_start'],

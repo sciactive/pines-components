@@ -1,5 +1,5 @@
 /*
- * jQuery Pines Grid (pgrid) Plugin 1.0.1
+ * jQuery Pines Grid (pgrid) Plugin 1.1.1
  *
  * Copyright (c) 2010-2011 Hunter Perrin
  *
@@ -15,30 +15,23 @@
 			if (!this.pines_grid)
 				return;
 			var pgrid = this.pines_grid;
-			var new_rows = false;
+			var new_html = "";
 			$.each(rows, function(){
 				var cur_row = this;
-				var jq_row = $("<tr />").attr("title", String(cur_row.key)).addClass(cur_row.classes ? cur_row.classes : "").each(function(){
-					var this_row = $(this);
-					if (!cur_row.values)
-						return;
-					$.each(cur_row.values, function(){
-						this_row.append($("<td>"+String(this)+"</td>"));
-					});
-				});
-				pgrid.children("tbody").append(jq_row);
-				// Gather all the rows.
-				if (new_rows)
-					new_rows = new_rows.add(jq_row);
-				else
-					new_rows = jq_row;
+				new_html += "<tr"+(typeof cur_row.key != "undefined" ? " title=\""+String(cur_row.key)+"\"" : "")+(typeof cur_row.classes != "undefined" ? " class=\""+String(cur_row.classes)+"\"" : "")+">";
+				new_html += "<td>"+cur_row.values.join("</td><td>")+"</td></tr>";
 			});
+			// Detach the grid from the DOM.
+			var tbody = pgrid.children("tbody").detach();
+			var new_rows = $(new_html).appendTo(tbody);
 			// The rows need to be initialized after they've all been added, for child indentation.
 			pgrid.init_rows(new_rows);
 
-			pgrid.do_col_hiding(true);
-			pgrid.do_sort(false, true);
-			pgrid.do_filter(false, true);
+			pgrid.do_col_hiding(true, new_rows);
+			pgrid.do_sort(false, true, tbody);
+			pgrid.do_filter(false, true, tbody);
+			// Reattach the grid.
+			pgrid.append(tbody);
 			pgrid.paginate(true);
 			pgrid.update_selected();
 
@@ -276,7 +269,7 @@
 		// Iterate and gridify each matched element.
 		this.filter("table").not(".ui-pgrid-table").each(function() {
 			var pgrid = $(this);
-			pgrid.pgrid_version = "1.0.1";
+			pgrid.pgrid_version = "1.1.0";
 
 			pgrid.extend(pgrid, opts);
 
@@ -332,15 +325,17 @@
 
 			// Export the current state of the grid.
 			pgrid.export_state = function() {
-				return {
+				var state = {
 					pgrid_page: pgrid.pgrid_page,
 					pgrid_perpage: pgrid.pgrid_perpage,
 					pgrid_filter: pgrid.pgrid_filter,
 					pgrid_hidden_cols: pgrid.pgrid_hidden_cols.slice(),
 					pgrid_sort_col: pgrid.pgrid_sort_col,
-					pgrid_sort_ord: pgrid.pgrid_sort_ord,
-					pgrid_view_height: pgrid.pgrid_table_viewport.height()+"px"
+					pgrid_sort_ord: pgrid.pgrid_sort_ord
 				};
+				if (pgrid.pgrid_stateful_height)
+					state.pgrid_view_height = pgrid.pgrid_table_viewport.css("height");
+				return state;
 			};
 
 			// Return the grid to a provided state.
@@ -357,7 +352,7 @@
 					pgrid.pgrid_sort_col = state.pgrid_sort_col;
 				if (typeof state.pgrid_sort_ord == "string")
 					pgrid.pgrid_sort_ord = (state.pgrid_sort_ord != "desc" ? "asc" : "desc");
-				if (typeof state.pgrid_view_height == "string")
+				if (pgrid.pgrid_stateful_height && typeof state.pgrid_view_height == "string")
 					pgrid.pgrid_table_viewport.css("height", state.pgrid_view_height);
 				// Filter need to come first, because pagination ignores disabled records.
 				pgrid.do_filter(pgrid.pgrid_filter);
@@ -549,7 +544,7 @@
 					pgrid.footer_input.fadeTo(1000, .7).fadeTo(1000, .8, pgrid.animate_filter);
 			};
 
-			pgrid.do_filter = function(filter, loading) {
+			pgrid.do_filter = function(filter, loading, tbody) {
 				// Filter if filtering is allowed, or if this is an initial filter.
 				if (pgrid.pgrid_filtering || loading) {
 					if (pgrid.footer_input) {
@@ -564,7 +559,9 @@
 						var filter_arr = pgrid.pgrid_filter.toLowerCase().split(" ");
 						// Find any rows that might match using a simple DOM search.
 						var cur_index = 0;
-						var rows = pgrid.children("tbody").children();
+						if (!tbody)
+							tbody = pgrid.children("tbody");
+						var rows = tbody.children();
 						pgrid.filter_timer = window.setInterval(function(){
 							var cur_row, cur_row_dom, cur_text, i;
 							// This loop does 25 rows at a time.
@@ -649,7 +646,7 @@
 				});
 			};
 
-			pgrid.do_sort = function(column_class, loading) {
+			pgrid.do_sort = function(column_class, loading, tbody) {
 				if (pgrid.pgrid_sortable) {
 					if (column_class) {
 						// If the column class is like "col_1", filter it to an int.
@@ -681,8 +678,16 @@
 					else
 						headers.filter(":nth-child("+(pgrid.pgrid_sort_col+1)+")").children(".ui-icon").addClass("ui-pgrid-table-header-sorted-asc ui-icon-triangle-1-s");
 
+					// Detach the grid from the DOM.
+					var reattach = false;
+					if (!tbody) {
+						tbody = pgrid.children("tbody").detach();
+						reattach = true;
+					}
+
 					// Get all the rows.
-					var all_rows = pgrid.children("tbody").children();
+					var all_rows = tbody.children();
+					// Remove styling from current sorted rows.
 					all_rows.children(".ui-pgrid-table-cell-sorted").removeClass("ui-pgrid-table-cell-sorted");
 					// Stylize the currently sorted column.
 					all_rows.children(":nth-child("+(pgrid.pgrid_sort_col+1)+")").addClass("ui-pgrid-table-cell-sorted");
@@ -734,8 +739,13 @@
 					if (pgrid.pgrid_sort_ord == "desc")
 						rows.reverse();
 					// Insert the rows into the tbody in the correct order.
+					var jq_rows = $(rows);
+					tbody.append(jq_rows);
 					// Place children under their parents, starting with top level parents.
-					pgrid.place_children($(rows).appendTo(pgrid.children("tbody")).filter(".parent").not(".child"));
+					pgrid.place_children(jq_rows.filter(".parent").not(".child"));
+					// Reattach the grid.
+					if (reattach)
+						pgrid.append(tbody);
 					// Paginate, since we changed the order, but only if we're not loading, to speed up initialization.
 					if (!loading)
 						pgrid.paginate();
@@ -766,9 +776,10 @@
 					pgrid.footer.children(".ui-pgrid-footer-count-container").find("span.ui-pgrid-footer-count-total").html(pgrid.children("tbody").children().not(".ui-helper-hidden").length);
 			};
 
-			pgrid.do_col_hiding = function(loading) {
+			pgrid.do_col_hiding = function(loading, b_rows) {
 				var h_rows = pgrid.children("thead").children();
-				var b_rows = pgrid.children("tbody").children();
+				if (!b_rows)
+					b_rows = pgrid.children("tbody").children();
 				if (!loading) {
 					// First unhide all hidden columns.
 					h_rows.children(":hidden").each(function(){
@@ -866,6 +877,8 @@
 					else
 						cur_row.addClass("ui-pgrid-table-row-selected ui-state-active");
 					pgrid.update_selected();
+					if (pgrid.pgrid_click)
+						pgrid.pgrid_click(e, pgrid.children("tbody").children(".ui-pgrid-table-row-selected"));
 				}).delegate("tr", "dblclick", function(e){
 					if ($(e.target).hasClass("ui-pgrid-table-expander")) return;
 					$(this).addClass("ui-pgrid-table-row-selected ui-state-active");
@@ -1162,6 +1175,15 @@
 						pgrid.toolbar.append(wrapper);
 						if (val.load)
 							val.load(cur_text);
+					} else if (val.type == "label") {
+						var label = $("<div>"+val.label+"</div>").addClass("ui-pgrid-toolbar-label");
+						if (val.extra_class)
+							label.addClass(val.extra_class);
+						if (typeof val.title != "undefined")
+							label.attr("title", val.title);
+						pgrid.toolbar.append(label);
+						if (val.load)
+							val.load(label);
 					} else if (val.type == "separator") {
 						pgrid.toolbar.append(
 							$("<div />").addClass("ui-pgrid-toolbar-sep ui-state-default").append(
@@ -1369,7 +1391,9 @@
 		pgrid_select: true,
 		// Allow selecting multiple records.
 		pgrid_multi_select: true,
-		// Double click action.
+		// Click action. It is passed the click event and the currently selected rows.
+		pgrid_click: null,
+		// Double click action. It is passed the click event and the currently selected rows.
 		pgrid_double_click: null,
 		// Paginate the grid.
 		pgrid_paginate: true,
@@ -1402,6 +1426,8 @@
 		// Allow the table to be resized. (Only height.)
 		pgrid_resize: true,
 		// State change. Gets called whenever the user changes the state of the grid. The state from export_state() will be passed.
-		pgrid_state_change: null
+		pgrid_state_change: null,
+		// Let the height be exported and imported with state.
+		pgrid_stateful_height: true
 	};
 })(jQuery);

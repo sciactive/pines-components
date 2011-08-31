@@ -26,6 +26,6 @@ if (empty($failed_deletes)) {
 	pines_error('Could not delete categories with given IDs: '.$failed_deletes."\n\nThey may have already been deleted.");
 }
 
-redirect(pines_url('com_sales', 'category/list'));
+pines_redirect(pines_url('com_sales', 'category/list'));
 
 ?>

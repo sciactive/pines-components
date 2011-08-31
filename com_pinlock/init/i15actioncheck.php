@@ -26,7 +26,9 @@ if ($_POST['com_pinlock_continue'] == 'true') {
 	if ($_POST['pin'] == $_SESSION['user']->pin) {
 		$_POST = unserialize($_SESSION[$com_pinlock__sessionid]['post']);
 		$_GET = unserialize($_SESSION[$com_pinlock__sessionid]['get']);
+		pines_session('write');
 		unset($_SESSION[$com_pinlock__sessionid]);
+		pines_session('close');
 		return;
 	}
 	if ($pines->config->com_pinlock->allow_switch) {
@@ -64,11 +66,13 @@ if ($_POST['com_pinlock_continue'] == 'true') {
 	unset($com_pinlock__sessionid);
 } else {
 	$pines->com_pinlock->sessionid = 'com_pinlock'.rand(0, 1000000000);
+	pines_session('write');
 	$_SESSION['com_pinlock__attempts'] = 0;
 	$_SESSION[$pines->com_pinlock->sessionid] = array(
 		'post' => serialize($_POST),
 		'get' => serialize($_GET)
 	);
+	pines_session('close');
 }
 $pines->com_pinlock->component = $com_pinlock__request_component;
 $pines->com_pinlock->action = $com_pinlock__request_action;

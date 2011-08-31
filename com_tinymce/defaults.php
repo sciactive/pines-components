@@ -43,21 +43,21 @@ return array(
 		'name' => 'custom_plugins',
 		'cname' => 'Custom Plugins',
 		'description' => 'The plugins to use when custom features is enabled.',
-		'value' => 'pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,advlist',
+		'value' => 'autolink,lists,spellchecker,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template',
 		'peruser' => true,
 	),
 	array(
 		'name' => 'custom_bar_1',
 		'cname' => 'Custom Toolbar 1',
 		'description' => 'The button layout for the first toolbar when custom features is enabled.',
-		'value' => 'newdocument,|,undo,redo,|,styleselect,formatselect,fontselect,fontsizeselect,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull',
+		'value' => 'save,newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,fontselect,fontsizeselect',
 		'peruser' => true,
 	),
 	array(
 		'name' => 'custom_bar_2',
 		'cname' => 'Custom Toolbar 2',
 		'description' => 'The button layout for the second toolbar when custom features is enabled.',
-		'value' => 'cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor',
+		'value' => 'cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor',
 		'peruser' => true,
 	),
 	array(
@@ -71,7 +71,7 @@ return array(
 		'name' => 'custom_bar_4',
 		'cname' => 'Custom Toolbar 4',
 		'description' => 'The button layout for the fourth toolbar when custom features is enabled.',
-		'value' => 'insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,attribs,|,visualchars,nonbreaking,template,pagebreak',
+		'value' => 'insertlayer,moveforward,movebackward,absolute,|,styleprops,spellchecker,|,cite,abbr,acronym,del,ins,attribs,|,visualchars,nonbreaking,template,blockquote,pagebreak,|,insertfile,insertimage',
 		'peruser' => true,
 	),
 );

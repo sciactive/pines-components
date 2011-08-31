@@ -26,10 +26,22 @@ if (!empty($_REQUEST['id'])) {
 if (!isset($entity->guid) || !$entity->ready())
 	return 'error_404';
 
+// Set the default variant for categories.
+if ($pines->config->com_content->cat_variant && $pines->com_content->is_variant_valid($pines->config->com_content->cat_variant)) {
+	$cur_template = $pines->current_template;
+	$pines->config->$cur_template->variant = $pines->config->com_content->cat_variant;
+}
+
+// Check for and set the variant for the current template.
+if (isset($entity->variants[$pines->current_template]) && $pines->com_content->is_variant_valid($entity->variants[$pines->current_template])) {
+	$cur_template = $pines->current_template;
+	$pines->config->$cur_template->variant = $entity->variants[$pines->current_template];
+}
+
 // Page title.
 $pines->page->title_pre("$entity->name - ");
 
-if ($entity->show_breadcrumbs) {
+if ($entity->get_option('show_breadcrumbs')) {
 	$module = new module('com_content', 'breadcrumb', 'breadcrumbs');
 	$module->entity = $entity;
 }

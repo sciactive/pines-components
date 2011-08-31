@@ -23,6 +23,7 @@ defined('P_RUN') or die('Direct access prohibited');
 class com_customertimer extends component {
 	/**
 	 * Creates and attaches a module which lists floors.
+	 * @return module The module.
 	 */
 	public function list_floors() {
 		global $pines;
@@ -33,6 +34,8 @@ class com_customertimer extends component {
 
 		if ( empty($module->floors) )
 			pines_notice('There are no floors.');
+
+		return $module;
 	}
 
 	/* Keeping this to use some code later.

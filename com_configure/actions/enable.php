@@ -16,12 +16,12 @@ if ( !gatekeeper('com_configure/edit') )
 
 if ($pines->configurator->enable_component($_REQUEST['component'])) {
 	pines_notice("Component {$_REQUEST['component']} successfully enabled.");
-	redirect(pines_url('com_configure', 'list'));
+	pines_redirect(pines_url('com_configure', 'list'));
 	exit;
 } else {
 	pines_error('Couldn\'t enable component '.$_REQUEST['component'].'.');
 }
 
-redirect(pines_url('com_configure', 'list'));
+pines_redirect(pines_url('com_configure', 'list'));
 
 ?>

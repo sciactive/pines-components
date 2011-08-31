@@ -35,7 +35,8 @@ if (empty($query)) {
 		'match' => array(
 			array('name', $r_query),
 			array('username', $r_query),
-			array('email', $r_query)
+			array('email', $r_query),
+			array('referral_code', $r_query)
 		)
 	);
 	if ($num_query != '') {
@@ -88,11 +89,13 @@ foreach ($customers as $key => &$cur_customer) {
 		'phone_work'	=> format_phone($cur_customer->phone_work),
 		'phone_cell'	=> format_phone($cur_customer->phone_cell),
 		'fax'			=> format_phone($cur_customer->fax),
+		'cdate'			=> format_date($cur_customer->p_cdate),
 		'enabled'		=> (bool) $cur_customer->has_tag('enabled'),
 		'member'		=> (bool) $cur_customer->member,
 		'valid_member'	=> (bool) $cur_customer->valid_member(),
 		'member_exp'	=> $cur_customer->member_exp ? format_date($cur_customer->member_exp) : '',
-		'points'		=> (int) $cur_customer->points
+		'points'		=> (int) $cur_customer->points,
+		'referral'		=> $cur_customer->referral_code
 	);
 	$cur_customer = $json_struct;
 }

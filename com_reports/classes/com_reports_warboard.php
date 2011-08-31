@@ -87,6 +87,7 @@ class com_reports_warboard extends entity {
 
 	/**
 	 * Show the company warboard.
+	 * @return module The module.
 	 */
 	public function show() {
 		global $pines;
@@ -108,6 +109,8 @@ class com_reports_warboard extends entity {
 		}
 		*/
 		$pines->entity_manager->sort($this->important, 'name');
+
+		return $module;
 	}
 }
 

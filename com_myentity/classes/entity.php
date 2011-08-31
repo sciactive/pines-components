@@ -347,7 +347,7 @@ class entity implements entity_interface {
 	private function get_data_reference($item) {
 		if ($this->is_a_sleeping_reference)
 			$this->reference_wake();
-		if ((is_a($item, 'entity') || is_a($item, 'hook_override')) && isset($item->guid) && is_callable(array($item, 'to_reference'))) {
+		if ((is_a($item, 'entity') || is_a($item, 'hook_override')) && is_callable(array($item, 'to_reference'))) {
 			// Convert entities to references.
 			return $item->to_reference();
 		} elseif ((array) $item === $item) {
@@ -533,6 +533,8 @@ class entity implements entity_interface {
 	public function to_reference() {
 		if ($this->is_a_sleeping_reference)
 			return $this->sleeping_reference;
+		if (!isset($this->guid))
+			return $this;
 		return array('pines_entity_reference', $this->guid, get_class($this));
 	}
 }

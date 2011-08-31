@@ -44,4 +44,9 @@ if (isset($this->style))
 	echo ' style="'.htmlspecialchars((string) $this->style, ENT_COMPAT, '', false).'"';
 if (isset($this->title))
 	echo ' title="'.htmlspecialchars((string) $this->title, ENT_COMPAT, '', false).'"';
+
+// Extra Attributes
+if (isset($this->allowTransparency))
+	echo ' allowTransparency="'.htmlspecialchars((string) $this->allowTransparency, ENT_COMPAT, '', false).'"';
+
 ?>><?php echo $this->icontent; ?></iframe>

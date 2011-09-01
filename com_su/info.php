@@ -25,6 +25,7 @@ return array(
 		'component' => 'com_jquery&com_pnotify&com_pform'
 	),
 	'abilities' => array(
+		array('switch', 'User Switcher', 'User can see and use the user switcher.'),
 		array('nopassword', 'Switch Without Password', 'User can switch to any other user without providing a password.')
 	),
 );

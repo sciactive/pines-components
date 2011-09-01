@@ -11,6 +11,9 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
+if ( !gatekeeper('com_su/switch') )
+	punt_user(null, pines_url());
+
 if ( empty($_REQUEST['username']) && empty($_REQUEST['pin']) ) {
 	$pines->user_manager->print_login();
 	return;

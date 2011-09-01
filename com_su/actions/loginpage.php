@@ -11,10 +11,10 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper() )
-	punt_user(null, pines_url());
-
 $pines->page->override = true;
+
+if ( !gatekeeper('com_su/switch') )
+	return;
 
 $login = new module('com_su', 'login');
 $login->hide_password = gatekeeper('com_su/nopassword');

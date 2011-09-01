@@ -11,6 +11,9 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
+if (!gatekeeper('com_su/switch'))
+	return;
+
 $module = new module('com_su', 'load_js', 'head');
 unset ($module);
 

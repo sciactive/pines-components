@@ -148,18 +148,24 @@ class com_pgentity extends component implements entity_manager_interface {
 				pines_error('Query failed: ' . pg_last_error());
 			return false;
 		}
-		// Create the perl_match function.
-		$query = sprintf('CREATE PROCEDURAL LANGUAGE plperl; CREATE OR REPLACE FUNCTION %smatch_perl( TEXT, TEXT, TEXT ) RETURNS BOOL AS $code$ my ($str, $pattern, $mods) = @_; if ($pattern eq \'\') { return true; } my $vname = "/$pattern/$mods"; if (! defined $_SHARED{$vname}) { if ($mods eq \'\') { $_SHARED{$vname} = qr/($pattern)/o; } else { $_SHARED{$vname} = qr/(?$mods)($pattern)/o; } } if ($str =~ $_SHARED{$vname}) { return true; } else { return false; } $code$ LANGUAGE plperl IMMUTABLE STRICT COST 10000;',
-			$pines->config->com_pgsql->prefix);
-		if ( !(pg_query($pines->com_pgsql->link, $query)) ) {
-			if (function_exists('pines_error'))
-				pines_error('Query failed: ' . pg_last_error());
-			return false;
-		}
 		if ( !(@pg_query($pines->com_pgsql->link, 'COMMIT;')) ) {
 			if (function_exists('pines_error'))
 				pines_error('Query failed: ' . pg_last_error());
 			return false;
+		}
+		// Create the perl_match function. It's separated into two calls so
+		// Postgres will ignore the error if plperl already exists.
+		$query = sprintf('CREATE PROCEDURAL LANGUAGE plperl;',
+			$pines->config->com_pgsql->prefix);
+		if ( !(pg_query($pines->com_pgsql->link, $query)) ) {
+			if (function_exists('pines_error'))
+				pines_error('Query failed: ' . pg_last_error());
+		}
+		$query = sprintf('CREATE OR REPLACE FUNCTION %smatch_perl( TEXT, TEXT, TEXT ) RETURNS BOOL AS $code$ my ($str, $pattern, $mods) = @_; if ($pattern eq \'\') { return true; } my $vname = "/$pattern/$mods"; if (! defined $_SHARED{$vname}) { if ($mods eq \'\') { $_SHARED{$vname} = qr/($pattern)/o; } else { $_SHARED{$vname} = qr/(?$mods)($pattern)/o; } } if ($str =~ $_SHARED{$vname}) { return true; } else { return false; } $code$ LANGUAGE plperl IMMUTABLE STRICT COST 10000;',
+			$pines->config->com_pgsql->prefix);
+		if ( !(pg_query($pines->com_pgsql->link, $query)) ) {
+			if (function_exists('pines_error'))
+				pines_error("Couldn't create Perl Matching function. You should turn off PL/Perl Functions in com_pgentity's functions.\n\nQuery failed: " . pg_last_error());
 		}
 		return true;
 	}

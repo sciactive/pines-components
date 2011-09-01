@@ -461,7 +461,7 @@ class com_pgentity extends component implements entity_manager_interface {
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
 								$cur_query .= '('.($type_is_not ? 'NOT ' : '' ).'\'{'.pg_escape_string($pines->com_pgsql->link, $cur_var).'}\' <@ e."varlist"';
 								if ($type_is_not)
-									$cur_query .= ' OR e."guid" IN (SELECT "guid" FROM pin_com_pgentity_data WHERE "name"=\''.pg_escape_string($pines->com_pgsql->link, $cur_var).'\' AND "value"=\'N;\')';
+									$cur_query .= ' OR e."guid" IN (SELECT "guid" FROM "'.$pines->config->com_pgsql->prefix.'com_pgentity_data" WHERE "name"=\''.pg_escape_string($pines->com_pgsql->link, $cur_var).'\' AND "value"=\'N;\')';
 								$cur_query .= ')';
 							}
 							break;

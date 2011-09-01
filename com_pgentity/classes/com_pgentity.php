@@ -664,7 +664,7 @@ class com_pgentity extends component implements entity_manager_interface {
 				$options['reverse'] ? 'e."guid" DESC' : 'e."guid"');
 		}
 
-		$time = microtime(true);
+		//$time = microtime(true);
 		if ( !(@pg_send_query($pines->com_pgsql->link, $query)) ) {
 			if (function_exists('pines_error'))
 				pines_error('Query failed: ' . pg_last_error());
@@ -689,7 +689,7 @@ class com_pgentity extends component implements entity_manager_interface {
 				return null;
 			}
 		}
-		$pines->log_manager->log("Query: (".(microtime(true) - $time)."s): $query", 'notice');
+		//$pines->log_manager->log("Query: (".(microtime(true) - $time)."s): $query", 'notice');
 
 		$row = pg_fetch_row($result);
 		while ($row) {

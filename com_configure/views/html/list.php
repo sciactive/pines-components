@@ -14,14 +14,14 @@ $this->title = 'Configure Components';
 ?>
 <style type="text/css">
 	/* <![CDATA[ */
+	#p_muid_form {
+		padding: 1em 2em;
+	}
 	#p_muid_form .user_picker {
 		padding: 0 2em;
 	}
 	#p_muid_form .user_picker > h3 {
 		margin-bottom: .5em !important;
-	}
-	#p_muid_form .component_list {
-		padding: 1em 2em;
 	}
 	#p_muid_form .component_list > h3 {
 		margin-top: .5em !important;

@@ -305,8 +305,8 @@ class com_reports extends component {
 	 * @param float $commission This is the total commission.
 	 * @param bool $hourreport This is a boolean variable that says weather the report will generate an individual hourly report or as commission vs draw statuses included.
 	 * @param string $adjust This is the value of adjust total which is passed in sometimes.
-	 * @param
-	 * @param
+	 * @param float $reghourpay The amount of pay for regular hours.
+	 * @param float $overtimehourpay The amount of pay for overtime hours.
 	 * @return module The payroll summary module.
 	 */
 	function report_payroll_individual($start_date = null, $end_date = null,  $employee = null, $payperhour = null, $totalhours =null, $totalpay = null, $salary = null, $commission = null, $hourreport = false, $adjust = null, $reghourpay = null, $overtimehourpay = null) {

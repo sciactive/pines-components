@@ -18,7 +18,7 @@ $this->title = 'Configure Components';
 		padding: 1em 2em;
 	}
 	#p_muid_form .user_picker {
-		padding: 0 2em;
+		padding: 0 0 1em;
 	}
 	#p_muid_form .user_picker > h3 {
 		margin-bottom: .5em !important;
@@ -49,6 +49,10 @@ $this->title = 'Configure Components';
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
+		$(".component_list", "#p_muid_form").accordion({autoHeight: false})
+		.find(".buttons").buttonset()
+		.find("input").button();
+
 		pines.com_configure_go = function(url){
 			var peruser = <?php echo $this->per_user || $this->per_condition ? 'true' : 'false'; ?>;
 			if (peruser) {
@@ -65,10 +69,6 @@ $this->title = 'Configure Components';
 			} else
 				pines.get(url);
 		};
-
-		$(".component_list", "#p_muid_form").accordion({autoHeight: false})
-		.find(".buttons").buttonset()
-		.find("input").button();
 	});
 	// ]]>
 </script>

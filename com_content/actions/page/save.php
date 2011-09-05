@@ -35,6 +35,12 @@ $page->content_tags = explode(',', $_REQUEST['content_tags']);
 $page->intro = $_REQUEST['intro'];
 $page->content = $_REQUEST['content'];
 
+// Page Head
+if ($pines->config->com_content->custom_head && gatekeeper('com_content/editpagehead')) {
+	$page->enable_custom_head = ($_REQUEST['enable_custom_head'] == 'ON');
+	$page->custom_head = $_REQUEST['custom_head'];
+}
+
 // Conditions
 $conditions = (array) json_decode($_REQUEST['conditions']);
 $page->conditions = array();

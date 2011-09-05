@@ -88,6 +88,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'custom_head',
+		'cname' => 'Custom Head Code',
+		'description' => 'Allow custom code to be placed in the head tag of the page. This introduces security vulnerabilities, so be careful!',
+		'value' => false,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'custom_css',
 		'cname' => 'Custom Stylesheets',
 		'description' => 'Any stylesheets that match these patterns will be included when a content page is printed. (If it isn\'t there already, ".css" will be appended to the end of each pattern.)',

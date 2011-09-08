@@ -63,6 +63,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', text: 'Attach PO', extra_class: 'picon picon-mail-attachment', multi_select: true, confirm: true, url: '<?php echo addslashes(pines_url('com_sales', 'warehouse/attachpo', array('id' => '__title__'))); ?>', delimiter: ','},
 				{type: 'button', text: 'Detach PO', extra_class: 'picon picon-list-remove', multi_select: true, confirm: true, url: '<?php echo addslashes(pines_url('com_sales', 'warehouse/detachpo', array('id' => '__title__'))); ?>', delimiter: ','},
 				{type: 'button', text: 'Assign Stock', extra_class: 'picon picon-document-import', multi_select: true, confirm: true, url: '<?php echo addslashes(pines_url('com_sales', 'warehouse/assignstock', array('id' => '__title__'))); ?>', delimiter: ','},
+				{type: 'button', title: 'Flag', extra_class: 'picon picon-flag-red', multi_select: true, url: '<?php echo addslashes(pines_url('com_sales', 'warehouse/flag', array('id' => '__title__'))); ?>', delimiter: ','},
 				{type: 'separator'},
 				<?php if (!$this->ordered) { ?>
 				{type: 'button', text: 'Ordered', extra_class: 'picon picon-vcs-removed', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'warehouse/pending', array('ordered' => 'true'))); ?>'},
@@ -106,6 +107,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>Customer</th>
 			<th>PO</th>
 			<th>Vendors</th>
+			<th>Flag Comments</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -117,26 +119,35 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			// Have they already all been assigned?
 			if (count($cur_product['stock_entities']) >= ($cur_product['quantity'] + $cur_product['returned_quantity']))
 				continue;
+			$styles = array();
+			if (isset($cur_product['flag_bgcolor']))
+				$styles[] = 'background-color: '.htmlspecialchars($cur_product['flag_bgcolor']).';';
+			if (isset($cur_product['flag_textcolor']))
+				$styles[] = 'color: '.htmlspecialchars($cur_product['flag_textcolor']).';';
+			if ($styles)
+				$style = ' style="'.implode (' ', $styles).'"';
+			else
+				$style = '';
 		?>
 		<tr title="<?php echo $sale->guid.'_'.$key; ?>">
-			<td><?php echo format_date($sale->tender_date, 'full_sort'); ?></td>
-			<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'product/edit', array('id' => $cur_product['entity']->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars("{$cur_product['entity']->sku} : {$cur_product['entity']->name}"); ?></a></td>
-			<td><?php echo htmlspecialchars($cur_product['quantity'] - (count($cur_product['stock_entities']) - $cur_product['returned_stock_entities'])); ?></td>
-			<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/receipt', array('id' => $sale->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($sale->id); ?></a></td>
-			<td><?php echo htmlspecialchars("{$sale->group->name} [{$sale->group->groupname}]"); ?></td>
-			<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $sale->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars("{$sale->customer->guid}: {$sale->customer->name}"); ?></a></td>
+			<td<?php echo $style; ?>><?php echo format_date($sale->tender_date, 'full_sort'); ?></td>
+			<td<?php echo $style; ?>><a<?php echo $style; ?> href="<?php echo htmlspecialchars(pines_url('com_sales', 'product/edit', array('id' => $cur_product['entity']->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars("{$cur_product['entity']->sku} : {$cur_product['entity']->name}"); ?></a></td>
+			<td<?php echo $style; ?>><?php echo htmlspecialchars($cur_product['quantity'] - (count($cur_product['stock_entities']) - $cur_product['returned_stock_entities'])); ?></td>
+			<td<?php echo $style; ?>><a<?php echo $style; ?> href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/receipt', array('id' => $sale->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($sale->id); ?></a></td>
+			<td<?php echo $style; ?>><?php echo htmlspecialchars("{$sale->group->name} [{$sale->group->groupname}]"); ?></td>
+			<td<?php echo $style; ?>><a<?php echo $style; ?> href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $sale->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars("{$sale->customer->guid}: {$sale->customer->name}"); ?></a></td>
 			<?php if (isset($cur_product['po'])) { ?>
-			<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'po/edit', array('id' => $cur_product['po']->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_product['po']->po_number); ?></a></td>
+			<td<?php echo $style; ?>><a<?php echo $style; ?> href="<?php echo htmlspecialchars(pines_url('com_sales', 'po/edit', array('id' => $cur_product['po']->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_product['po']->po_number); ?></a></td>
 			<?php } else { ?>
-			<td>None Attached</td>
+			<td<?php echo $style; ?>>None Attached</td>
 			<?php } ?>
-			<td>
+			<td<?php echo $style; ?>>
 				<?php
 				$vendors = array(); 
 				foreach ($cur_product['entity']->vendors as $cur_vendor) {
 					$cur_string = '';
 					if (!empty($cur_vendor['link']))
-						$cur_string .= '<a href="'.htmlspecialchars($cur_vendor['link']).'" onclick="window.open(this.href); return false;">';
+						$cur_string .= '<a'.$style.' href="'.htmlspecialchars($cur_vendor['link']).'" onclick="window.open(this.href); return false;">';
 					$cur_string .= htmlspecialchars($cur_vendor['entity']->name);
 					if (!empty($cur_vendor['link']))
 						$cur_string .= '</a>';
@@ -145,6 +156,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				echo implode(', ', $vendors);
 				?>
 			</td>
+			<td<?php echo $style; ?>><?php echo htmlspecialchars($cur_product['flag_comments']); ?></td>
 		</tr>
 	<?php } } ?>
 	</tbody>

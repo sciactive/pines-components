@@ -121,6 +121,7 @@ $pines->uploader->load();
 		</div>
 		<br />
 	</fieldset>
+	<br />
 	<div class="pf-element pf-full-width">
 		<label><span class="pf-label">Terms</span>
 			<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="terms"><?php echo $this->entity->terms; ?></textarea></span></label>

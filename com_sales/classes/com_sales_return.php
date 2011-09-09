@@ -732,8 +732,8 @@ class com_sales_return extends entity {
 		$amount_due = $total - $amount_tendered;
 		if ($amount_due < 0.00)
 			$amount_due = 0.00;
-		$this->amount_tendered = $amount_tendered;
-		$this->amount_due = $amount_due;
+		$this->amount_tendered = (float) $pines->com_sales->round($amount_tendered);
+		$this->amount_due = (float) $pines->com_sales->round($amount_due);
 		if (isset($this->sale))
 			$return = $this->sale->save() && $return;
 		return ($this->save() && $return);

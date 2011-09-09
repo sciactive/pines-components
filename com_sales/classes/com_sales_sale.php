@@ -1235,9 +1235,9 @@ class com_sales_sale extends entity {
 			$change = abs($amount_due);
 			$amount_due = 0.00;
 		}
-		$this->amount_tendered = $amount_tendered;
-		$this->amount_due = $amount_due;
-		$this->change = $change;
+		$this->amount_tendered = (float) $pines->com_sales->round($amount_tendered);
+		$this->amount_due = (float) $pines->com_sales->round($amount_due);
+		$this->change = (float) $pines->com_sales->round($change);
 		return ($this->save() && $return);
 	}
 

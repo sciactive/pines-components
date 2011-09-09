@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Skim from Cash Count ['.$this->entity->cashcount->guid.'] at '.$this->entity->cashcount->group->name;
+$this->title = 'Skim from Cash Count ['.$this->entity->cashcount->guid.'] at '.htmlspecialchars($this->entity->cashcount->group->name);
 $this->note = 'Count the cash as you take it out of the drawer.';
 ?>
 <style type="text/css" >

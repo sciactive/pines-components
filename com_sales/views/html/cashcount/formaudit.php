@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Auditing Cash Count ['.$this->entity->cashcount->guid.'] for '.$this->entity->cashcount->group->name;
+$this->title = 'Auditing Cash Count ['.$this->entity->cashcount->guid.'] for '.htmlspecialchars($this->entity->cashcount->group->name);
 $this->note = 'Count all of the cash currently present in the drawer.';
 ?>
 <style type="text/css" >

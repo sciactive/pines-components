@@ -12,7 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Reviewing Cash Count ['.$this->entity->guid.']';
 if (isset($this->entity->guid))
-	$this->note = 'Created by ' . $this->entity->user->name . ' on ' . date('Y-m-d', $this->entity->p_cdate) . ' - Last Modified on ' . date('Y-m-d', $this->entity->p_mdate);
+	$this->note = 'Created by ' . htmlspecialchars($this->entity->user->name) . ' on ' . format_date($this->entity->p_cdate, 'date_short') . ' - Last Modified on ' . format_date($this->entity->p_mdate, 'date_short');
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/cashcount/formreview'];

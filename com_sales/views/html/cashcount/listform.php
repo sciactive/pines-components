@@ -10,7 +10,7 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Location & Date';
+$this->title = 'Location &amp; Date';
 $pines->com_jstree->load();
 ?>
 <style type="text/css" >

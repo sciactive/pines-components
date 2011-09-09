@@ -137,17 +137,27 @@ class entity implements entity_interface {
 		}
 		// Check for an entity first.
 		if (isset($this->entity_cache[$name])) {
-			if ($this->entity_cache[$name] === 0) {
-				// The entity hasn't been loaded yet, so load it now.
-				$this->entity_cache[$name] = $pines->entity_manager->get_entity(array('class' => $this->data[$name][2], 'skip_ac' => (bool) $this->_p_use_skip_ac), array('&', 'guid' => $this->data[$name][1]));
+			if ($this->data[$name][0] == 'pines_entity_reference') {
+				if ($this->entity_cache[$name] === 0) {
+					// The entity hasn't been loaded yet, so load it now.
+					$class = $this->data[$name][2];
+					$this->entity_cache[$name] = $class::factory_reference($this->data[$name]);
+					$this->entity_cache[$name]->_p_use_skip_ac = (bool) $this->_p_use_skip_ac;
+				}
+				return $this->entity_cache[$name];
+			} else {
+				if (function_exists('pines_error'))
+					pines_error("Corrupted entity data found on entity with GUID {$this->guid}.");
+				if (function_exists('pines_log'))
+					pines_log("Corrupted entity data found on entity with GUID {$this->guid}.", 'fatal');
 			}
-			return $this->entity_cache[$name];
 		}
 		// If it's not an entity, return the regular value.
 		if ((array) $this->data[$name] === $this->data[$name]) {
 			// But, if it's an array, check all the values for entity references, and change them.
 			array_walk($this->data[$name], array($this, 'reference_to_entity'));
-		} elseif ((object) $this->data[$name] === $this->data[$name]) {
+		} elseif ((object) $this->data[$name] === $this->data[$name] && !(((is_a($this->data[$name], 'entity') || is_a($this->data[$name], 'hook_override'))) && is_callable(array($this->data[$name], 'to_reference')))) {
+			// Only do this for non-entity objects.	
 			foreach ($this->data[$name] as &$cur_property)
 				$this->reference_to_entity($cur_property, null);
 			unset($cur_property);
@@ -196,12 +206,17 @@ class entity implements entity_interface {
 		// Delete any serialized value.
 		if (isset($this->sdata[$name]))
 			unset($this->sdata[$name]);
-		if ((is_a($value, 'entity') || is_a($value, 'hook_override')) && isset($value->guid)) {
-			// This is an entity, so we don't want to store it in our data array.
-			$this->entity_cache[$name] = $value;
+		if ((is_a($value, 'entity') || is_a($value, 'hook_override')) && is_callable(array($value, 'to_reference'))) {
 			// Store a reference to the entity (its GUID and the class it was loaded as).
 			// We don't want to manipulate $value itself, because it could be a variable that the program is still using.
 			$save_value = $value->to_reference();
+			// If to_reference returns an array, the GUID of the entity is set
+			// or it's a sleeping reference, so this is an entity and we don't
+			// store it in the data array.
+			if ((array) $save_value === $save_value)
+				$this->entity_cache[$name] = $value;
+			elseif (isset($this->entity_cache[$name]))
+				unset($this->entity_cache[$name]);
 			$this->data[$name] = $save_value;
 			return $value;
 		} else {
@@ -371,11 +386,13 @@ class entity implements entity_interface {
 	public function has_tag() {
 		if ($this->is_a_sleeping_reference)
 			$this->reference_wake();
+		if ((array) $this->tags !== $this->tags)
+			return false;
 		$tag_array = func_get_args();
 		if ((array) $tag_array[0] === $tag_array[0])
 			$tag_array = $tag_array[0];
 		foreach ($tag_array as $tag) {
-			if ( (array) $this->tags !== $this->tags || !in_array($tag, $this->tags) )
+			if ( !in_array($tag, $this->tags) )
 				return false;
 		}
 		return true;
@@ -400,6 +417,8 @@ class entity implements entity_interface {
 			return false;
 		if (isset($this->guid) || isset($object->guid)) {
 			return ($this->guid == $object->guid);
+		} elseif (!is_callable(array($object, 'get_data'))) {
+			return false;
 		} else {
 			$ob_data = $object->get_data();
 			$my_data = $this->get_data();
@@ -466,7 +485,8 @@ class entity implements entity_interface {
 			} else {
 				array_walk($item, array($this, 'reference_to_entity'));
 			}
-		} elseif ((object) $item === $item) {
+		} elseif ((object) $item === $item && !(((is_a($item, 'entity') || is_a($item, 'hook_override'))) && is_callable(array($item, 'to_reference')))) {
+			// Only do this for non-entity objects.	
 			foreach ($item as &$cur_property)
 				$this->reference_to_entity($cur_property, null);
 			unset($cur_property);
@@ -482,7 +502,7 @@ class entity implements entity_interface {
 		global $pines;
 		if (!$this->is_a_sleeping_reference)
 			return true;
-		$entity = $pines->entity_manager->get_entity(array('class' => $this->sleeping_reference[2]), array('&', 'guid' => $this->sleeping_reference[1]));
+		$entity = $pines->entity_manager->get_entity(array('class' => $this->sleeping_reference[2], 'skip_ac' => (bool) $this->_p_use_skip_ac), array('&', 'guid' => $this->sleeping_reference[1]));
 		if (!isset($entity))
 			return false;
 		$this->is_a_sleeping_reference = false;

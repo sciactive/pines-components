@@ -33,6 +33,7 @@ $category->enabled = ($_REQUEST['enabled'] == 'ON');
 if ($pines->config->com_sales->com_storefront) {
 	$category->alias = preg_replace('/[^\w\d-.]/', '', $_REQUEST['alias']);
 	$category->show_title = ($_REQUEST['show_title'] == 'ON');
+	$category->show_breadcrumbs = ($_REQUEST['show_breadcrumbs'] == 'ON');
 	$category->show_menu = ($_REQUEST['show_menu'] == 'ON');
 	$category->menu_position = $_REQUEST['menu_position'];
 	$category->show_children = ($_REQUEST['show_children'] == 'ON');

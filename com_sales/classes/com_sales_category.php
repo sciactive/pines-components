@@ -31,6 +31,7 @@ class com_sales_category extends entity {
 		$this->children = array();
 		$this->products = array();
 		$this->show_title = true;
+		$this->show_breadcrumbs = true;
 		$this->show_products = true;
 		$this->menu_position = 'left';
 		$this->specs = array();

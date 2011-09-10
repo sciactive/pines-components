@@ -294,6 +294,10 @@ if ($pines->config->com_sales->com_storefront) {
 					<input class="pf-field" type="checkbox" name="show_title" value="ON"<?php echo $this->entity->show_title ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
+				<label><span class="pf-label">Show Breadcrumbs</span>
+					<input class="pf-field" type="checkbox" name="show_breadcrumbs" value="ON"<?php echo $this->entity->show_breadcrumbs ? ' checked="checked"' : ''; ?> /></label>
+			</div>
+			<div class="pf-element">
 				<label><span class="pf-label">Show Menu</span>
 					<input class="pf-field" type="checkbox" name="show_menu" value="ON"<?php echo $this->entity->show_menu ? ' checked="checked"' : ''; ?> /></label>
 			</div>

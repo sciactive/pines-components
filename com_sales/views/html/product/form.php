@@ -183,6 +183,14 @@ $pines->com_ptags->load();
 			<?php } ?>
 		</ul>
 		<div id="p_muid_tab_general">
+			<div class="pf-element pf-full-width">
+				<label>
+					<span class="pf-label">Name</span>
+					<span style="display: block;" class="pf-group pf-full-width">
+						<input class="pf-field ui-widget-content ui-corner-all" style="width: 100%;" type="text" name="name" value="<?php echo htmlspecialchars($this->entity->name); ?>" />
+					</span>
+				</label>
+			</div>
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
 				<?php if (isset($this->entity->user)) { ?>
@@ -193,14 +201,6 @@ $pines->com_ptags->load();
 				<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
 			</div>
 			<?php } ?>
-			<div class="pf-element pf-full-width">
-				<label>
-					<span class="pf-label">Name</span>
-					<span style="display: block;" class="pf-group pf-full-width">
-						<input class="pf-field ui-widget-content ui-corner-all" style="width: 100%;" type="text" name="name" value="<?php echo htmlspecialchars($this->entity->name); ?>" />
-					</span>
-				</label>
-			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>
 					<input class="pf-field" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>

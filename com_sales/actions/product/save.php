@@ -120,6 +120,7 @@ if ($pines->config->com_sales->com_hrm) {
 
 // Storefront
 if ($pines->config->com_sales->com_storefront) {
+	$product->alias = preg_replace('/[^\w\d-.]/', '', $_REQUEST['alias']);
 	$product->show_in_storefront = ($_REQUEST['show_in_storefront'] == 'ON');
 	$product->featured = ($_REQUEST['featured'] == 'ON');
 	$product->featured_image = $_REQUEST['featured_image'];

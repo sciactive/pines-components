@@ -25,13 +25,20 @@ if ( isset($_REQUEST['id']) ) {
 	$category = com_sales_category::factory();
 }
 
+// General
 $category->name = $_REQUEST['name'];
 $category->enabled = ($_REQUEST['enabled'] == 'ON');
+
+// Storefront
 if ($pines->config->com_sales->com_storefront) {
+	$category->alias = preg_replace('/[^\w\d-.]/', '', $_REQUEST['alias']);
 	$category->show_menu = ($_REQUEST['show_menu'] == 'ON');
 	$category->menu_position = $_REQUEST['menu_position'];
 	$category->show_children = ($_REQUEST['show_children'] == 'ON');
-	$category->show_description = ($_REQUEST['show_description'] == 'ON');
+	$category->show_page = ($_REQUEST['show_page'] == 'null' ? null : com_content_page::factory((int) $_REQUEST['show_page']));
+	if (!isset($category->show_page->guid))
+		$category->show_page = null;
+	$category->show_products = ($_REQUEST['show_products'] == 'ON');
 	$category->description = $_REQUEST['description'];
 	$category->specs = array();
 	$specs = (array) json_decode($_REQUEST['specs']);

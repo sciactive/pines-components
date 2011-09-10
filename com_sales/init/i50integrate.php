@@ -23,7 +23,7 @@ if ($pines->config->com_sales->com_hrm && !$pines->depend->check('component', 'c
 if ($pines->config->com_sales->per_item_salesperson && !$pines->config->com_sales->com_hrm)
 	$pines->config->com_sales->per_item_salesperson = false;
 
-if ($pines->config->com_sales->com_storefront && !$pines->depend->check('component', 'com_storefront'))
+if ($pines->config->com_sales->com_storefront && !$pines->depend->check('component', 'com_storefront&com_content'))
 	$pines->config->com_sales->com_storefront = false;
 
 ?>

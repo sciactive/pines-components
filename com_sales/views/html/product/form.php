@@ -193,9 +193,13 @@ $pines->com_ptags->load();
 				<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
 			</div>
 			<?php } ?>
-			<div class="pf-element">
-				<label><span class="pf-label">Name</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
+			<div class="pf-element pf-full-width">
+				<label>
+					<span class="pf-label">Name</span>
+					<span style="display: block;" class="pf-group pf-full-width">
+						<input class="pf-field ui-widget-content ui-corner-all" style="width: 100%;" type="text" name="name" value="<?php echo htmlspecialchars($this->entity->name); ?>" />
+					</span>
+				</label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>
@@ -250,10 +254,10 @@ $pines->com_ptags->load();
 								}},
 								{type: 'separator'},
 								{type: 'button', text: 'All', title: 'Check All', extra_class: 'picon picon-checkbox', selection_optional: true, return_all_rows: true, click: function(e, rows){
-									$("input", rows).attr("checked", "true");
+									$("input", rows).attr("checked", "true").change();
 								}},
 								{type: 'button', text: 'None', title: 'Check None', extra_class: 'picon picon-dialog-cancel', selection_optional: true, return_all_rows: true, click: function(e, rows){
-									$("input", rows).removeAttr("checked");
+									$("input", rows).removeAttr("checked").change();
 								}}
 							],
 							pgrid_hidden_cols: [1],
@@ -830,7 +834,7 @@ $pines->com_ptags->load();
 			<br class="pf-clearing" />
 		</div>
 		<?php } if ($pines->config->com_sales->com_storefront) { ?>
-		<style type="text/css" >
+		<style type="text/css">
 			/* <![CDATA[ */
 			#p_muid_tab_storefront .combobox {
 				position: relative;
@@ -852,7 +856,7 @@ $pines->com_ptags->load();
 			pines(function(){
 				var category_grid = $("#p_muid_category_grid");
 				var show_specs = function(){
-					$("> div.spec", "#p_muid_tab_specs").hide();
+					$("div.spec", "#p_muid_tab_storefront").hide();
 					category_grid.find(":checkbox:checked").each(function(){
 						var guid = $(this).val();
 						var cur_spec;
@@ -894,6 +898,30 @@ $pines->com_ptags->load();
 			<div class="pf-element">
 				<label><span class="pf-label">Shown in Storefront</span>
 					<input class="pf-field" type="checkbox" name="show_in_storefront" value="ON"<?php echo $this->entity->show_in_storefront ? ' checked="checked"' : ''; ?> /></label>
+			</div>
+			<div class="pf-element pf-full-width">
+				<script type="text/javascript">
+					// <![CDATA[
+					pines(function(){
+						var alias = $("#p_muid_form [name=alias]");
+						$("#p_muid_form [name=name]").change(function(){
+							if (alias.val() == "")
+								alias.val($(this).val().replace(/[^\w\d\s-.]/g, '').replace(/\s/g, '-').toLowerCase());
+						}).blur(function(){
+							$(this).change();
+						}).focus(function(){
+							if (alias.val() == $(this).val().replace(/[^\w\d\s-.]/g, '').replace(/\s/g, '-').toLowerCase())
+								alias.val("");
+						});
+					});
+					// ]]>
+				</script>
+				<label>
+					<span class="pf-label">Alias</span>
+					<span style="display: block;" class="pf-group pf-full-width">
+						<input class="pf-field ui-widget-content ui-corner-all" style="width: 100%;" type="text" name="alias" value="<?php echo htmlspecialchars($this->entity->alias); ?>" onkeyup="this.value=this.value.replace(/[^\w\d-.]/g, '_');" />
+					</span>
+				</label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Featured Item</span>
@@ -960,6 +988,9 @@ $pines->com_ptags->load();
 					<?php } } ?>
 				</div>
 				<?php } ?>
+				<div class="pf-element">
+					Add this product to any category with specs to see them here.
+				</div>
 			</fieldset>
 			<br class="pf-clearing" />
 		</div>

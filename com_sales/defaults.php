@@ -36,7 +36,7 @@ return array(
 	array(
 		'name' => 'com_storefront',
 		'cname' => 'Storefront Integration',
-		'description' => 'Integrate with com_storefront.',
+		'description' => 'Integrate with com_storefront. Requires com_content as well.',
 		'value' => true,
 		'peruser' => true,
 	),

@@ -176,8 +176,7 @@ switch ($this->entity->status) {
 			<?php } ?>
 		</div>
 	</div>
-	<?php } ?>
-	<?php if ($pines->config->com_sales->com_customer && isset($this->entity->customer)) { ?>
+	<?php } if ($pines->config->com_sales->com_customer && isset($this->entity->customer)) { ?>
 	<div class="left_side customer">
 		<div class="aligner">
 			<span>Bill To:</span>
@@ -221,7 +220,30 @@ switch ($this->entity->status) {
 				<tr>
 					<td><?php echo htmlspecialchars($cur_product['entity']->sku); ?></td>
 					<td><?php echo htmlspecialchars($cur_product['entity']->name); ?></td>
-					<td><?php echo htmlspecialchars($cur_product['serial']); ?></td>
+					<td><?php
+					$text = array();
+					if (isset($cur_product['serial']))
+						$text[] = $cur_product['serial'];
+					if ($sale && $cur_product['delivery'] == 'warehouse') {
+						$fulfilled = 0;
+						$shipped = 0;
+						foreach ($cur_product['stock_entities'] as $cur_stock) {
+							if (!isset($cur_stock->guid) || $cur_stock->in_array((array) $cur_product['returned_stock_entities']))
+								continue;
+							$fulfilled++;
+							if ($cur_stock->in_array((array) $cur_product['shipped_entities']))
+								$shipped++;
+						}
+						if ($fulfilled) {
+							$left = $cur_product['quantity'] - $shipped;
+							if ($left)
+								$text[] = "($left to ship)";
+						} else {
+							$text[] = '(Pending)';
+						}
+					}
+					echo htmlspecialchars(implode(' ', $text));
+					?></td>
 					<td class="right_text"><?php echo htmlspecialchars($cur_product['quantity']); ?></td>
 					<td class="right_text">$<?php echo $pines->com_sales->round($cur_product['price'], true); ?><?php echo empty($cur_product['discount']) ? '' : htmlspecialchars(" - {$cur_product['discount']}"); ?></td>
 					<?php if (!$sale) { ?>

@@ -156,6 +156,7 @@ if ($pines->config->com_sales->com_esp) {
 									alert("Please enter a product code.");
 									return;
 								}
+								textbox.autocomplete("close");
 								textbox.val("");
 								var loader;
 								$.ajax({
@@ -189,7 +190,10 @@ if ($pines->config->com_sales->com_esp) {
 								});
 							};
 							<?php if ($pines->config->com_sales->autocomplete_product) { ?>
-							textbox.productselect({select: function(event, ui){select(ui.item.value); return false;}});
+							textbox.productselect({
+								open: function(){if (textbox.val() == "") textbox.autocomplete("close");},
+								select: function(event, ui){select(ui.item.value); return false;}
+							});
 							<?php } ?>
 							textbox.keydown(function(e){
 								if (e.keyCode == 13)
@@ -349,16 +353,21 @@ if ($pines->config->com_sales->com_esp) {
 							<?php if (isset($esp_product->guid)) { ?>
 							// Add an ESP item to the product table.
 							$.each(rows, function(){
-								var esp_id = '<?php echo uniqid(); ?>';
+								// Generate a random hex ID.
+								var esp_id = "", hex = "abcdef0123456789";
+								while (esp_id.length<13)
+									esp_id += hex.charAt(Math.floor(Math.random() * hex.length));
+
 								var insured_item = $(this);
-								var insured_guid = insured_item.attr('title');
-								if (insured_item.pgrid_get_value(10) != '') {
+								var insured_guid = insured_item.attr("title");
+								if (insured_guid == "<?php echo (int) $esp_product->guid; ?>") {
+									alert('This item is an ESP. It does not need to be insured');
+									return;
+								} else if (insured_item.pgrid_get_value(10) != '') {
 									alert('There is already an ESP for this item');
 									return;
-								} else if (insured_guid == <?php echo (int) $esp_product->guid; ?>) {
-									alert('This item is an ESP, it does not need to be insured');
-									return;
 								}
+
 								<?php if ($pines->config->com_esp->round_up) { ?>
 								var esp_price = (insured_item.pgrid_get_value(6) * esp_rate).toFixed(2).replace(/\d\.\d{2}/, '9.99');
 								<?php } else { ?>
@@ -435,12 +444,12 @@ if ($pines->config->com_sales->com_esp) {
 								var cur_id = $(this).pgrid_get_value(10);
 								var deserter = $.inArray(cur_id, deserted);
 								if (deserter != -1)
-									deserted.remove(deserter);
+									deserted.splice(deserter, 1);
 								else
 									deserted.push(cur_id);
 							});
 							// Remove any deserted ESP/ESP IDs
-							if (deserted.length > 0) {
+							if (deserted.length) {
 								$.each(products_table.pgrid_get_all_rows(), function(){
 									var cur_item = $(this);
 									if ($.inArray(cur_item.pgrid_get_value(10), deserted) != -1) {

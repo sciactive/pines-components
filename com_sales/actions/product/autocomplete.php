@@ -21,25 +21,52 @@ $query = $_REQUEST['q'];
 if (empty($query)) {
 	$products = array();
 } else {
-	$num_query = preg_replace('/\D/', '', $query);
-	$r_query = '/'.preg_quote($query).'/i';
-	$r_num_query = '/'.preg_quote($num_query).'/';
-	$selector = array('|',
-		'match' => array(
-			array('name', $r_query),
-			array('sku', $r_query)
-		)
-	);
-	if ($num_query != '') {
-		$selector['match'][] = array('name', $r_num_query);
-		$selector['match'][] = array('sku', $r_num_query);
-	}
-	$products = (array) $pines->entity_manager->get_entities(
-			array('class' => com_sales_product),
-			array('&', 'tag' => array('com_sales', 'product')),
-			array('!&', 'data' => array('autocomplete_hide', true)),
-			$selector
+	$selector = array('&',
+			'tag' => array('com_sales', 'product'),
+			'strict' => array(
+				array('enabled', true)
+			)
 		);
+	$notselector = array('!&',
+			'strict' => array(
+				array('autocomplete_hide', true)
+			)
+		);
+	$or = array('|');
+	$query = explode(' ', $query);
+	foreach ($query as $key => $subquery) {
+		if (strpos($subquery, ':') === false)
+			continue;
+		list($option, $value) = explode(':', $subquery, 2);
+		switch ($option) {
+			case 'enabled':
+				$selector['strict'][0][1] = ($value == 'true');
+				break;
+			case 'serialized':
+				$selector['strict'][] = array('serialized', ($value == 'true'));
+				break;
+			case 'storefront':
+				$selector['strict'][] = array('show_in_storefront', ($value == 'true'));
+				break;
+			case 'featured':
+				$selector['strict'][] = array('featured', ($value == 'true'));
+				break;
+			default:
+				continue 2;
+		}
+		unset($query[$key]);
+	}
+	if ($query) {
+		$r_query = '/'.preg_quote(implode(' ', $query)).'/i';
+		if (!$or['match'])
+			$or['match'] = array();
+		$or['match'][] = array('name', $r_query);
+		$or['match'][] = array('sku', $r_query);
+	}
+	if ($or != array('|'))
+		$products = (array) $pines->entity_manager->get_entities(array('class' => com_sales_product), $selector, $notselector, $or);
+	else
+		$products = (array) $pines->entity_manager->get_entities(array('class' => com_sales_product), $selector, $notselector);
 }
 
 foreach ($products as $key => &$cur_product) {

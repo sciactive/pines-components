@@ -147,6 +147,7 @@ if ($pines->config->com_sales->autocomplete_product)
 									alert("Please enter a product code.");
 									return;
 								}
+								textbox.autocomplete("close");
 								textbox.val("");
 								var loader;
 								$.ajax({
@@ -180,7 +181,10 @@ if ($pines->config->com_sales->autocomplete_product)
 								});
 							};
 							<?php if ($pines->config->com_sales->autocomplete_product) { ?>
-							textbox.productselect({select: function(event, ui){select(ui.item.value); return false;}});
+							textbox.productselect({
+								open: function(){if (textbox.val() == "") textbox.autocomplete("close");},
+								select: function(event, ui){select(ui.item.value); return false;}
+							});
 							<?php } ?>
 							textbox.keydown(function(e){
 								if (e.keyCode == 13)

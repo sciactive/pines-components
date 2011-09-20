@@ -36,7 +36,7 @@ all.each(function(){
 							"label": item.name+"<small style=\"display: block; float: right;\">$"+item.unit_price+"</small>",
 							"value": item.sku,
 							"desc": 
-								(item.short_description ? "<em>"+item.short_description+"</em>" : "")
+								(item.receipt_description ? "<em>"+item.receipt_description+"</em>" : "")
 						};
 					}));
 				}

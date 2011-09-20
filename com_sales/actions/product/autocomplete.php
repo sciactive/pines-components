@@ -71,11 +71,11 @@ if (empty($query)) {
 
 foreach ($products as $key => &$cur_product) {
 	$json_struct = (object) array(
-		'guid'				=> $cur_product->guid,
-		'name'				=> $cur_product->name,
-		'sku'				=> $cur_product->sku,
-		'short_description'	=> $cur_product->short_description,
-		'unit_price'		=> $cur_product->unit_price
+		'guid'					=> $cur_product->guid,
+		'name'					=> $cur_product->name,
+		'sku'					=> $cur_product->sku,
+		'receipt_description'	=> $cur_product->receipt_description,
+		'unit_price'			=> $cur_product->unit_price
 	);
 	$cur_product = $json_struct;
 }

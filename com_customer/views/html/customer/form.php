@@ -18,7 +18,7 @@ $pines->com_customer->load_company_select();
 ?>
 <style type="text/css">
 	/* <![CDATA[ */
-	#p_muid_interactions a, #p_muid_sales a, #p_muid_returns a {
+	#p_muid_interactions a, #p_muid_sales a {
 		text-decoration: underline;
 	}
 	#p_muid_interaction_dialog ul {
@@ -274,15 +274,16 @@ $pines->com_customer->load_company_select();
 			pgrid_sort_ord: 'desc'
 		});
 
-		$("#p_muid_sales, #p_muid_returns").pgrid({
+		$("#p_muid_sales").pgrid({
 			pgrid_toolbar: false,
 			pgrid_footer: false,
 			pgrid_view_height: 'auto',
 			pgrid_sort_col: 2,
-			pgrid_sort_ord: 'desc'
+			pgrid_sort_ord: 'desc',
+			pgrid_child_prefix: 'ch_'
 		});
 
-		$("#p_muid_acc_interaction, #p_muid_acc_sale, #p_muid_acc_return").accordion({autoHeight: false, collapsible: true});
+		$("#p_muid_acc_interaction, #p_muid_acc_sale").accordion({autoHeight: false, collapsible: true});
 
 		new_interaction.dialog({
 			bgiframe: true,
@@ -881,9 +882,16 @@ $pines->com_customer->load_company_select();
 				</div>
 			</div>
 			<?php if ($this->com_sales) { ?>
-				<?php if (!empty($this->sales)) { ?>
+				<?php if (!empty($this->sales) || !empty($this->returns)) {
+					// Gather all the sales with returns.
+					$returned_sales = array();
+					foreach ((array) $this->returns as $cur_return) {
+						if (isset($cur_return->sale->guid))
+							$returned_sales[] = $cur_return->sale->guid;
+					}
+					?>
 				<div id="p_muid_acc_sale">
-					<h3 class="ui-helper-clearfix"><a href="#">Purchases</a></h3>
+					<h3 class="ui-helper-clearfix"><a href="#">Purchases and Returns</a></h3>
 					<div>
 						<table id="p_muid_sales">
 							<thead>
@@ -899,10 +907,10 @@ $pines->com_customer->load_company_select();
 								</tr>
 							</thead>
 							<tbody>
-								<?php foreach ($this->sales as $cur_sale) {
+								<?php foreach ((array) $this->sales as $cur_sale) {
 								$item_count = count($cur_sale->products); ?>
-								<tr title="<?php echo $cur_sale->guid; ?>">
-									<td><?php echo htmlspecialchars($cur_sale->id); ?> (<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/receipt', array('id' => $cur_sale->guid))); ?>" onclick="window.open(this.href); return false;">Receipt</a>|<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/edit', array('id' => $cur_sale->guid))); ?>" onclick="window.open(this.href); return false;">Edit</a>)</td>
+								<tr title="<?php echo $cur_sale->guid; ?>"<?php echo in_array($cur_sale->guid, $returned_sales) ? ' class="parent"' : ''; ?>>
+									<td>Sale <?php echo htmlspecialchars($cur_sale->id); ?> (<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/receipt', array('id' => $cur_sale->guid))); ?>" onclick="window.open(this.href); return false;">Receipt</a>|<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/edit', array('id' => $cur_sale->guid))); ?>" onclick="window.open(this.href); return false;">Edit</a>)</td>
 									<td><?php echo format_date($cur_sale->p_cdate); ?></td>
 									<td><?php echo ($item_count == 1) ? htmlspecialchars($cur_sale->products[0]['entity']->name . ' x ' . $cur_sale->products[0]['quantity']) : $item_count.' products'; ?></td>
 									<td>$<?php echo number_format($cur_sale->subtotal, 2); ?></td>
@@ -911,33 +919,10 @@ $pines->com_customer->load_company_select();
 									<td><?php echo htmlspecialchars(ucwords($cur_sale->status)); ?></td>
 									<td><?php echo htmlspecialchars($cur_sale->group->name); ?></td>
 								</tr>
-								<?php } ?>
-							</tbody>
-						</table>
-					</div>
-				</div>
-				<?php } if (!empty($this->returns)) { ?>
-				<div id="p_muid_acc_return">
-					<h3 class="ui-helper-clearfix"><a href="#">Returns</a></h3>
-					<div>
-						<table id="p_muid_returns">
-							<thead>
-								<tr>
-									<th>ID</th>
-									<th>Date</th>
-									<th>Item(s)</th>
-									<th>Subtotal</th>
-									<th>Tax</th>
-									<th>Total</th>
-									<th>Status</th>
-									<th>Location</th>
-								</tr>
-							</thead>
-							<tbody>
-								<?php foreach ($this->returns as $cur_return) {
+								<?php } foreach ((array) $this->returns as $cur_return) {
 								$item_count = count($cur_return->products); ?>
-								<tr title="<?php echo $cur_return->guid; ?>">
-									<td><?php echo htmlspecialchars($cur_return->id); ?> (<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'return/receipt', array('id' => $cur_return->guid))); ?>" target="receipt">Receipt</a>|<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'return/edit', array('id' => $cur_return->guid))); ?>" target="receipt">Edit</a>)</td>
+								<tr title="<?php echo $cur_return->guid; ?>"<?php echo (isset($cur_return->sale->guid) && $cur_return->sale->in_array((array) $this->sales)) ? ' class="child ch_'.((int) $cur_return->sale->guid).'"' : ''; ?>>
+									<td>Return <?php echo htmlspecialchars($cur_return->id); ?> (<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'return/receipt', array('id' => $cur_return->guid))); ?>" target="receipt">Receipt</a>|<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'return/edit', array('id' => $cur_return->guid))); ?>" target="receipt">Edit</a>)</td>
 									<td><?php echo format_date($cur_return->p_cdate); ?></td>
 									<td><?php echo ($item_count == 1) ? htmlspecialchars($cur_return->products[0]['entity']->name) : $item_count.' items'; ?></td>
 									<td>$<?php echo number_format($cur_return->subtotal, 2); ?></td>
@@ -1054,9 +1039,9 @@ $pines->com_customer->load_company_select();
 					</div>
 					<div class="pf-element pf-full-width">
 						<span class="pf-full-width" id="p_muid_interaction_comments"></span>
-						<span class="pf-full-width">
+						<div class="pf-full-width">
 							<ul id="p_muid_interaction_notes"></ul>
-						</span>
+						</div>
 					</div>
 					<div class="pf-element pf-full-width">
 						<textarea class="ui-widget-content ui-corner-all" rows="3" cols="40" name="review_comments"></textarea>

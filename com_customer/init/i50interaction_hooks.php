@@ -55,7 +55,7 @@ function com_customer__check_sale(&$arguments, $name, &$object) {
 
 	if (!is_object($object) || !$pines->config->com_customer->follow_up)
 		return;
-	$websale = isset($object->user->guid) ? $object->user->is($object->customer) : $_SESSION['user']->is($object->customer);
+	$websale = isset($object->user->guid) ? $object->user->is($object->customer) : (isset($_SESSION['user']->guid) ? $_SESSION['user']->is($object->customer) : true);
 	if (!$object->followed_up && isset($object->customer->guid) && !$websale && $object->status == 'paid') {
 		$totals = array();
 		foreach($object->products as $cur_product) {

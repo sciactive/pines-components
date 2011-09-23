@@ -14,11 +14,12 @@ if (empty($this->title))
 	$this->title = 'Timeclock';
 
 if (!isset($this->entity)) {
-	if (!isset($_SESSION['user'])) {
+	pines_session('write');
+	if (!isset($_SESSION['user']->guid)) {
+		pines_session('close');
 		$this->detach();
 		return;
 	}
-	pines_session('write');
 	$_SESSION['user']->refresh();
 	pines_session('close');
 	$user = com_hrm_employee::factory($_SESSION['user']->guid);

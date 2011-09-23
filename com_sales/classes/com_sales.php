@@ -706,15 +706,15 @@ class com_sales extends component {
 				);
 		} else {
 			$module->removed = false;
-			if ($descendents)
-				$or = array('|', 'ref' => array('location', $location->get_descendents(true)));
-			else
-				$or = array('|', 'ref' => array('location', $location));
 			if (!isset($location)) {
 				$show_empty = true;
 				$module->location = $_SESSION['user']->group;
 				$module->stock = array();
 			} else {
+				if ($descendents)
+					$or = array('|', 'ref' => array('location', $location->get_descendents(true)));
+				else
+					$or = array('|', 'ref' => array('location', $location));
 				$module->location = $location;
 				$module->stock = $pines->entity_manager->get_entities(
 					array('class' => com_sales_stock),

@@ -115,7 +115,7 @@ if ($has_media) {
 		}
 		$image = new Imagick;
 		if (!$image->readImage($cur_media)) {
-			pines_notice('Couldn\'t read media "'.basename($cur_media).'". Please only upload images only.');
+			pines_notice('Couldn\'t read media "'.basename($cur_media).'". Please only upload images.');
 			unlink($cur_media);
 			pines_redirect(pines_url('com_repository', 'listpackages'));
 			return;

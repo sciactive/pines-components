@@ -38,7 +38,7 @@ if ($pines->config->com_user->check_username)
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-		<?php if ($pines->config->com_user->check_username) { ?>
+		<?php if ($this->display_username && $pines->config->com_user->check_username) { ?>
 		// Check usernames.
 		$("[name=username]", "#p_muid_form").change(function(){
 			var username = $(this);
@@ -90,182 +90,6 @@ if ($pines->config->com_user->check_username)
 			return true;
 		});
 
-		// Addresses
-		var addresses = $("#p_muid_addresses");
-		var addresses_table = $("#p_muid_addresses_table");
-		var address_dialog = $("#p_muid_address_dialog");
-
-		addresses_table.pgrid({
-			pgrid_paginate: false,
-			pgrid_toolbar: true,
-			pgrid_toolbar_contents : [
-				{
-					type: 'button',
-					text: 'Add Address',
-					extra_class: 'picon picon-list-add',
-					selection_optional: true,
-					click: function(){
-						address_dialog.dialog('open');
-					}
-				},
-				{
-					type: 'button',
-					text: 'Remove Address',
-					extra_class: 'picon picon-list-remove',
-					click: function(e, rows){
-						rows.pgrid_delete();
-						update_address();
-					}
-				}
-			],
-			pgrid_view_height: "300px"
-		});
-
-		// Address Dialog
-		address_dialog.dialog({
-			bgiframe: true,
-			autoOpen: false,
-			modal: true,
-			width: 600,
-			buttons: {
-				"Done": function(){
-					var cur_address_type = $("#p_muid_cur_address_type").val();
-					var cur_address_addr1 = $("#p_muid_cur_address_addr1").val();
-					var cur_address_addr2 = $("#p_muid_cur_address_addr2").val();
-					var cur_address_city = $("#p_muid_cur_address_city").val();
-					var cur_address_state = $("#p_muid_cur_address_state").val();
-					var cur_address_zip = $("#p_muid_cur_address_zip").val();
-					if (cur_address_type == "" || cur_address_addr1 == "") {
-						alert("Please provide a name and a street address.");
-						return;
-					}
-					var new_address = [{
-						key: null,
-						values: [
-							cur_address_type,
-							cur_address_addr1,
-							cur_address_addr2,
-							cur_address_city,
-							cur_address_state,
-							cur_address_zip
-						]
-					}];
-					addresses_table.pgrid_add(new_address);
-					$(this).dialog('close');
-				}
-			},
-			close: function(){
-				update_addresses();
-			}
-		});
-
-		var update_addresses = function(){
-			$("#p_muid_cur_address_type, #p_muid_cur_address_addr1, #p_muid_cur_address_addr2, #p_muid_cur_address_city, #p_muid_cur_address_state, #p_muid_cur_address_zip").val("");
-			addresses.val(JSON.stringify(addresses_table.pgrid_get_all_rows().pgrid_export_rows()));
-		};
-
-		update_addresses();
-
-		// Attributes
-		var attributes = $("#p_muid_tab_attributes input[name=attributes]");
-		var attributes_table = $("#p_muid_tab_attributes .attributes_table");
-		var attribute_dialog = $("#p_muid_tab_attributes .attribute_dialog");
-
-		attributes_table.pgrid({
-			pgrid_paginate: false,
-			pgrid_toolbar: true,
-			pgrid_toolbar_contents : [
-				{
-					type: 'button',
-					text: 'Add Attribute',
-					extra_class: 'picon picon-list-add',
-					selection_optional: true,
-					click: function(){
-						attribute_dialog.dialog('open');
-					}
-				},
-				{
-					type: 'button',
-					text: 'Remove Attribute',
-					extra_class: 'picon picon-list-remove',
-					click: function(e, rows){
-						rows.pgrid_delete();
-						update_attributes();
-					}
-				}
-			],
-			pgrid_view_height: "300px"
-		});
-
-		// Attribute Dialog
-		attribute_dialog.dialog({
-			bgiframe: true,
-			autoOpen: false,
-			modal: true,
-			width: 500,
-			buttons: {
-				"Done": function(){
-					var cur_attribute_name = $("#p_muid_cur_attribute_name").val();
-					var cur_attribute_value = $("#p_muid_cur_attribute_value").val();
-					if (cur_attribute_name == "" || cur_attribute_value == "") {
-						alert("Please provide both a name and a value for this attribute.");
-						return;
-					}
-					var new_attribute = [{
-						key: null,
-						values: [
-							cur_attribute_name,
-							cur_attribute_value
-						]
-					}];
-					attributes_table.pgrid_add(new_attribute);
-					$(this).dialog('close');
-				}
-			},
-			close: function(){
-				update_attributes();
-			}
-		});
-
-		var update_attributes = function(){
-			$("#p_muid_cur_attribute_name").val("");
-			$("#p_muid_cur_attribute_value").val("");
-			attributes.val(JSON.stringify(attributes_table.pgrid_get_all_rows().pgrid_export_rows()));
-		};
-
-		update_attributes();
-
-		<?php /*
-		// Group Tree
-		var location = $("#p_muid_form [name=group]");
-		$("#p_muid_form .location_tree")
-		.bind("select_node.jstree", function(e, data){
-			location.val(data.inst.get_selected().attr("id").replace("p_muid_", ""));
-		})
-		.bind("before.jstree", function (e, data){
-			if (data.func == "parse_json" && "args" in data && 0 in data.args && "attr" in data.args[0] && "id" in data.args[0].attr)
-				data.args[0].attr.id = "p_muid_"+data.args[0].attr.id;
-		})
-		.bind("loaded.jstree", function(e, data){
-			var path = data.inst.get_path("#"+data.inst.get_settings().ui.initially_select, true);
-			if (!path.length) return;
-			data.inst.open_node("#"+path.join(", #"), false, true);
-		})
-		.jstree({
-			"plugins" : [ "themes", "json_data", "ui" ],
-			"json_data" : {
-				"ajax" : {
-					"dataType" : "json",
-					"url" : "<?php echo addslashes(pines_url('com_jstree', 'groupjson')); ?>"
-				}
-			},
-			"ui" : {
-				"select_limit" : 1,
-				"initially_select" : ["<?php echo (int) $this->entity->group->guid; ?>"]
-			}
-		});
-		*/ ?>
-
 		$("#p_muid_tabs").tabs();
 	});
 	// ]]>
@@ -276,12 +100,13 @@ if ($pines->config->com_user->check_username)
 			<li><a href="#p_muid_tab_general">General</a></li>
 			<?php if ( $this->display_groups ) { ?>
 			<li><a href="#p_muid_tab_groups">Groups</a></li>
-			<?php } ?>
+			<?php } if (in_array('address', $pines->config->com_user->user_fields) || in_array('additional_addresses', $pines->config->com_user->user_fields)) { ?>
 			<li><a href="#p_muid_tab_location">Address</a></li>
-			<?php if ( $this->display_abilities ) { ?>
+			<?php } if ( $this->display_abilities ) { ?>
 			<li><a href="#p_muid_tab_abilities">Abilities</a></li>
-			<?php } ?>
+			<?php } if (in_array('attributes', $pines->config->com_user->user_fields)) { ?>
 			<li><a href="#p_muid_tab_attributes">Attributes</a></li>
+			<?php } ?>
 		</ul>
 		<div id="p_muid_tab_general">
 			<?php if (isset($this->entity->guid)) { ?>
@@ -289,8 +114,7 @@ if ($pines->config->com_user->check_username)
 				<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
 				<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
 			</div>
-			<?php } ?>
-			<?php if ($this->display_username) { ?>
+			<?php } if ($this->display_username) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Username</span>
 					<span class="pf-group" style="display: block;">
@@ -302,7 +126,7 @@ if ($pines->config->com_user->check_username)
 					</span>
 				</label>
 			</div>
-			<?php } ?>
+			<?php } if (in_array('name', $pines->config->com_user->user_fields)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">First Name</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name_first" size="24" value="<?php echo htmlspecialchars($this->entity->name_first); ?>" /></label>
@@ -315,30 +139,32 @@ if ($pines->config->com_user->check_username)
 				<label><span class="pf-label">Last Name</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name_last" size="24" value="<?php echo htmlspecialchars($this->entity->name_last); ?>" /></label>
 			</div>
-			<?php if ($this->display_enable) { ?>
+			<?php } if ($this->display_enable) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>
 					<input class="pf-field" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->has_tag('enabled') ? ' checked="checked"' : ''; ?> /></label>
 			</div>
-			<?php } ?>
+			<?php } if (in_array('email', $pines->config->com_user->user_fields)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Email</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="email" name="email" size="24" value="<?php echo htmlspecialchars($this->entity->email); ?>" /></label>
 			</div>
+			<?php } if (in_array('phone', $pines->config->com_user->user_fields)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Phone</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="phone" size="24" value="<?php echo format_phone($this->entity->phone); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
+			<?php } if (in_array('fax', $pines->config->com_user->user_fields)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Fax</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="fax" size="24" value="<?php echo format_phone($this->entity->fax); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
-			<?php if ($pines->config->com_user->referral_codes) { ?>
+			<?php } if ($pines->config->com_user->referral_codes) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Referral Code</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="referral_code" size="24" value="<?php echo htmlspecialchars($this->entity->referral_code); ?>" /></label>
 			</div>
-			<?php } ?>
+			<?php } if (in_array('timezone', $pines->config->com_user->user_fields)) { ?>
 			<div class="pf-element">
 				<label>
 					<span class="pf-label">Timezone</span>
@@ -354,6 +180,7 @@ if ($pines->config->com_user->check_username)
 					</select>
 				</label>
 			</div>
+			<?php } ?>
 			<div class="pf-element">
 				<label><span class="pf-label"><?php if (isset($this->entity->guid)) echo 'Update '; ?>Password</span>
 					<?php if (!isset($this->entity->guid)) {
@@ -367,7 +194,7 @@ if ($pines->config->com_user->check_username)
 				<label><span class="pf-label">Repeat Password</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="password" name="password2" size="24" /></label>
 			</div>
-			<?php if ( $this->display_pin ) { ?>
+			<?php if ($this->display_pin && in_array('pin', $pines->config->com_user->user_fields)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">PIN code</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="password" name="pin" size="5" value="<?php echo htmlspecialchars($this->entity->pin); ?>" <?php echo $pines->config->com_user->max_pin_length > 0 ? "maxlength=\"{$pines->config->com_user->max_pin_length}\"" : ''; ?>/></label>
@@ -395,18 +222,7 @@ if ($pines->config->com_user->check_username)
 						</select>
 					</label>
 				</div>
-				<?php /*
-				<div class="pf-element">
-					<span class="pf-label">Primary Group</span>
-					<div class="pf-group">
-						<span class="pf-field"><input type="checkbox" name="no_primary_group" value="ON"<?php echo !isset($this->entity->group) ? ' checked="checked"' : ''; ?> /> No Primary Group</span>
-						<div class="pf-field location_tree ui-widget-content ui-corner-all" style="height: 180px; width: 200px; overflow: auto;"></div>
-					</div>
-					<input type="hidden" name="group" />
-				</div>
-				 */ ?>
-				<?php } ?>
-				<?php if (empty($this->group_array_secondary)) { ?>
+				<?php } if (empty($this->group_array_secondary)) { ?>
 				<div class="pf-element">
 					<span>There are no secondary groups to display.</span>
 				</div>
@@ -469,11 +285,14 @@ if ($pines->config->com_user->check_username)
 				<?php } ?>
 			<br class="pf-clearing" />
 		</div>
-		<?php } ?>
+		<?php } if (in_array('address', $pines->config->com_user->user_fields) || in_array('additional_addresses', $pines->config->com_user->user_fields)) { ?>
 		<div id="p_muid_tab_location">
+			<?php if (in_array('address', $pines->config->com_user->user_fields)) {
+				if (in_array('additional_addresses', $pines->config->com_user->user_fields)) { ?>
 			<div class="pf-element pf-heading">
 				<h1>Main Address</h1>
 			</div>
+			<?php } ?>
 			<div class="pf-element">
 				<script type="text/javascript">
 					// <![CDATA[
@@ -582,9 +401,93 @@ if ($pines->config->com_user->check_username)
 						<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo $this->entity->address_international; ?></textarea></span></label>
 				</div>
 			</div>
+			<?php } if (in_array('additional_addresses', $pines->config->com_user->user_fields)) {
+				if (in_array('address', $pines->config->com_user->user_fields)) { ?>
 			<div class="pf-element pf-heading">
 				<h1>Additional Addresses</h1>
 			</div>
+			<?php } ?>
+			<script type="text/javascript">
+				// <![CDATA[
+				pines(function(){
+					// Addresses
+					var addresses = $("#p_muid_addresses");
+					var addresses_table = $("#p_muid_addresses_table");
+					var address_dialog = $("#p_muid_address_dialog");
+
+					addresses_table.pgrid({
+						pgrid_paginate: false,
+						pgrid_toolbar: true,
+						pgrid_toolbar_contents : [
+							{
+								type: 'button',
+								text: 'Add Address',
+								extra_class: 'picon picon-list-add',
+								selection_optional: true,
+								click: function(){
+									address_dialog.dialog('open');
+								}
+							},
+							{
+								type: 'button',
+								text: 'Remove Address',
+								extra_class: 'picon picon-list-remove',
+								click: function(e, rows){
+									rows.pgrid_delete();
+									update_address();
+								}
+							}
+						],
+						pgrid_view_height: "300px"
+					});
+
+					// Address Dialog
+					address_dialog.dialog({
+						bgiframe: true,
+						autoOpen: false,
+						modal: true,
+						width: 600,
+						buttons: {
+							"Done": function(){
+								var cur_address_type = $("#p_muid_cur_address_type").val();
+								var cur_address_addr1 = $("#p_muid_cur_address_addr1").val();
+								var cur_address_addr2 = $("#p_muid_cur_address_addr2").val();
+								var cur_address_city = $("#p_muid_cur_address_city").val();
+								var cur_address_state = $("#p_muid_cur_address_state").val();
+								var cur_address_zip = $("#p_muid_cur_address_zip").val();
+								if (cur_address_type == "" || cur_address_addr1 == "") {
+									alert("Please provide a name and a street address.");
+									return;
+								}
+								var new_address = [{
+									key: null,
+									values: [
+										cur_address_type,
+										cur_address_addr1,
+										cur_address_addr2,
+										cur_address_city,
+										cur_address_state,
+										cur_address_zip
+									]
+								}];
+								addresses_table.pgrid_add(new_address);
+								$(this).dialog('close');
+							}
+						},
+						close: function(){
+							update_addresses();
+						}
+					});
+
+					var update_addresses = function(){
+						$("#p_muid_cur_address_type, #p_muid_cur_address_addr1, #p_muid_cur_address_addr2, #p_muid_cur_address_city, #p_muid_cur_address_state, #p_muid_cur_address_zip").val("");
+						addresses.val(JSON.stringify(addresses_table.pgrid_get_all_rows().pgrid_export_rows()));
+					};
+
+					update_addresses();
+				});
+				// ]]>
+			</script>
 			<div class="pf-element pf-full-width">
 				<table id="p_muid_addresses_table">
 					<thead>
@@ -635,9 +538,10 @@ if ($pines->config->com_user->check_username)
 				</div>
 				<br class="pf-clearing" />
 			</div>
+			<?php } ?>
 			<br class="pf-clearing" />
 		</div>
-		<?php if ( $this->display_abilities ) { ?>
+		<?php } if ( $this->display_abilities ) { ?>
 		<div id="p_muid_tab_abilities">
 			<script type="text/javascript">
 				// <![CDATA[
@@ -699,8 +603,82 @@ if ($pines->config->com_user->check_username)
 			<?php } ?>
 			<br class="pf-clearing" />
 		</div>
-		<?php } ?>
+		<?php } if (in_array('attributes', $pines->config->com_user->user_fields)) { ?>
 		<div id="p_muid_tab_attributes">
+			<script type="text/javascript">
+				// <![CDATA[
+				pines(function(){
+					// Attributes
+					var attributes = $("#p_muid_tab_attributes input[name=attributes]");
+					var attributes_table = $("#p_muid_tab_attributes .attributes_table");
+					var attribute_dialog = $("#p_muid_tab_attributes .attribute_dialog");
+
+					attributes_table.pgrid({
+						pgrid_paginate: false,
+						pgrid_toolbar: true,
+						pgrid_toolbar_contents : [
+							{
+								type: 'button',
+								text: 'Add Attribute',
+								extra_class: 'picon picon-list-add',
+								selection_optional: true,
+								click: function(){
+									attribute_dialog.dialog('open');
+								}
+							},
+							{
+								type: 'button',
+								text: 'Remove Attribute',
+								extra_class: 'picon picon-list-remove',
+								click: function(e, rows){
+									rows.pgrid_delete();
+									update_attributes();
+								}
+							}
+						],
+						pgrid_view_height: "300px"
+					});
+
+					// Attribute Dialog
+					attribute_dialog.dialog({
+						bgiframe: true,
+						autoOpen: false,
+						modal: true,
+						width: 500,
+						buttons: {
+							"Done": function(){
+								var cur_attribute_name = $("#p_muid_cur_attribute_name").val();
+								var cur_attribute_value = $("#p_muid_cur_attribute_value").val();
+								if (cur_attribute_name == "" || cur_attribute_value == "") {
+									alert("Please provide both a name and a value for this attribute.");
+									return;
+								}
+								var new_attribute = [{
+									key: null,
+									values: [
+										cur_attribute_name,
+										cur_attribute_value
+									]
+								}];
+								attributes_table.pgrid_add(new_attribute);
+								$(this).dialog('close');
+							}
+						},
+						close: function(){
+							update_attributes();
+						}
+					});
+
+					var update_attributes = function(){
+						$("#p_muid_cur_attribute_name").val("");
+						$("#p_muid_cur_attribute_value").val("");
+						attributes.val(JSON.stringify(attributes_table.pgrid_get_all_rows().pgrid_export_rows()));
+					};
+
+					update_attributes();
+				});
+				// ]]>
+			</script>
 			<div class="pf-element pf-full-width">
 				<table class="attributes_table">
 					<thead>
@@ -729,6 +707,7 @@ if ($pines->config->com_user->check_username)
 			</div>
 			<br class="pf-clearing" />
 		</div>
+		<?php } ?>
 	</div>
 
 	<div class="pf-element pf-buttons">

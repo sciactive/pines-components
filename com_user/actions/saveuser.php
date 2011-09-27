@@ -30,70 +30,83 @@ if ( isset($_REQUEST['id']) ) {
 
 if (gatekeeper('com_user/usernames'))
 	$user->username = $_REQUEST['username'];
-$user->name_first = $_REQUEST['name_first'];
-$user->name_middle = $_REQUEST['name_middle'];
-$user->name_last = $_REQUEST['name_last'];
-$user->name = $user->name_first.(!empty($user->name_middle) ? ' '.$user->name_middle : '').(!empty($user->name_last) ? ' '.$user->name_last : '');
+if (in_array('name', $pines->config->com_user->user_fields)) {
+	$user->name_first = $_REQUEST['name_first'];
+	$user->name_middle = $_REQUEST['name_middle'];
+	$user->name_last = $_REQUEST['name_last'];
+	$user->name = $user->name_first.(!empty($user->name_middle) ? ' '.$user->name_middle : '').(!empty($user->name_last) ? ' '.$user->name_last : '');
+}
 if (gatekeeper('com_user/enabling')) {
 	if ($_REQUEST['enabled'] == 'ON')
 		$user->add_tag('enabled');
 	else
 		$user->remove_tag('enabled');
 }
-// Only send an email if they don't have the ability to edit all users.
-if ($pines->config->com_user->confirm_email && !gatekeeper('com_user/edituser')) {
-	if ($user->email != $_REQUEST['email']) {
-		$user->new_email_address = $_REQUEST['email'];
-		$user->new_email_secret = uniqid('', true);
-		// Save the old email in case the verification link is clicked.
-		// TODO: Code a way to prevent the cancel email from being overwritten for a time.
-		$user->cancel_email_address = $user->email;
-		$user->cancel_email_secret = uniqid('', true);
+if (in_array('email', $pines->config->com_user->user_fields)) {
+	// Only send an email if they don't have the ability to edit all users.
+	if ($pines->config->com_user->confirm_email && !gatekeeper('com_user/edituser')) {
+		if ($user->email != $_REQUEST['email']) {
+			$user->new_email_address = $_REQUEST['email'];
+			$user->new_email_secret = uniqid('', true);
+			// Save the old email in case the verification link is clicked.
+			// TODO: Code a way to prevent the cancel email from being overwritten for a time.
+			$user->cancel_email_address = $user->email;
+			$user->cancel_email_secret = uniqid('', true);
+		}
+	} else {
+		$user->email = $_REQUEST['email'];
 	}
-} else {
-	$user->email = $_REQUEST['email'];
 }
-$user->phone = preg_replace('/\D/', '', $_REQUEST['phone']);
-$user->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
+if (in_array('phone', $pines->config->com_user->user_fields))
+	$user->phone = preg_replace('/\D/', '', $_REQUEST['phone']);
+if (in_array('fax', $pines->config->com_user->user_fields))
+	$user->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
 if ($pines->config->com_user->referral_codes)
 	$user->referral_code = $_REQUEST['referral_code'];
-$user->timezone = $_REQUEST['timezone'];
+if (in_array('timezone', $pines->config->com_user->user_fields))
+	$user->timezone = $_REQUEST['timezone'];
 
 // Location
-$user->address_type = $_REQUEST['address_type'];
-$user->address_1 = $_REQUEST['address_1'];
-$user->address_2 = $_REQUEST['address_2'];
-$user->city = $_REQUEST['city'];
-$user->state = $_REQUEST['state'];
-$user->zip = $_REQUEST['zip'];
-$user->address_international = $_REQUEST['address_international'];
-$user->addresses = (array) json_decode($_REQUEST['addresses']);
-foreach ($user->addresses as &$cur_address) {
-	$array = array(
-		'type' => $cur_address->values[0],
-		'address_1' => $cur_address->values[1],
-		'address_2' => $cur_address->values[2],
-		'city' => $cur_address->values[3],
-		'state' => $cur_address->values[4],
-		'zip' => $cur_address->values[5]
-	);
-	$cur_address = $array;
+if (in_array('address', $pines->config->com_user->user_fields)) {
+	$user->address_type = $_REQUEST['address_type'];
+	$user->address_1 = $_REQUEST['address_1'];
+	$user->address_2 = $_REQUEST['address_2'];
+	$user->city = $_REQUEST['city'];
+	$user->state = $_REQUEST['state'];
+	$user->zip = $_REQUEST['zip'];
+	$user->address_international = $_REQUEST['address_international'];
 }
-unset($cur_address);
+if (in_array('additional_addresses', $pines->config->com_user->user_fields)) {
+	$user->addresses = (array) json_decode($_REQUEST['addresses']);
+	foreach ($user->addresses as &$cur_address) {
+		$array = array(
+			'type' => $cur_address->values[0],
+			'address_1' => $cur_address->values[1],
+			'address_2' => $cur_address->values[2],
+			'city' => $cur_address->values[3],
+			'state' => $cur_address->values[4],
+			'zip' => $cur_address->values[5]
+		);
+		$cur_address = $array;
+	}
+	unset($cur_address);
+}
 
-if (gatekeeper('com_user/assignpin'))
+if (in_array('pin', $pines->config->com_user->user_fields) && gatekeeper('com_user/assignpin'))
 	$user->pin = $_REQUEST['pin'];
 
 // Attributes
-$user->attributes = (array) json_decode($_REQUEST['attributes']);
-foreach ($user->attributes as &$cur_attribute) {
-	$array = array(
-		'name' => $cur_attribute->values[0],
-		'value' => $cur_attribute->values[1]
-	);
-	$cur_attribute = $array;
+if (in_array('attributes', $pines->config->com_user->user_fields)) {
+	$user->attributes = (array) json_decode($_REQUEST['attributes']);
+	foreach ($user->attributes as &$cur_attribute) {
+		$array = array(
+			'name' => $cur_attribute->values[0],
+			'value' => $cur_attribute->values[1]
+		);
+		$cur_attribute = $array;
+	}
+	unset($cur_attribute);
 }
-unset($cur_attribute);
 
 // Go through a list of all groups, and assign them if they're selected.
 // Groups that the user does not have access to will not be received from the
@@ -180,11 +193,13 @@ if (isset($test->guid) && !$user->is($test)) {
 	pines_notice('There is already a user with that username. Please choose a different username.');
 	return;
 }
-$test = $pines->entity_manager->get_entity(array('class' => user, 'skip_ac' => true), array('&', 'tag' => array('com_user', 'user'), 'strict' => array('email', $user->email)));
-if (isset($test) && !$user->is($test)) {
-	$user->print_form();
-	pines_notice('There is already a user with that email address. Please use a different email.');
-	return;
+if (in_array('email', $pines->config->com_user->user_fields)) {
+	$test = $pines->entity_manager->get_entity(array('class' => user, 'skip_ac' => true), array('&', 'tag' => array('com_user', 'user'), 'strict' => array('email', $user->email)));
+	if (isset($test) && !$user->is($test)) {
+		$user->print_form();
+		pines_notice('There is already a user with that email address. Please use a different email.');
+		return;
+	}
 }
 if (array_diff(str_split($user->username), str_split($pines->config->com_user->valid_chars))) {
 	$user->print_form();
@@ -201,7 +216,7 @@ if (empty($user->password) && !$pines->config->com_user->pw_empty) {
 	pines_notice('Please specify a password.');
 	return;
 }
-if (gatekeeper('com_user/assignpin') && !empty($user->pin)) {
+if (in_array('pin', $pines->config->com_user->user_fields) && gatekeeper('com_user/assignpin') && !empty($user->pin)) {
 	$test = $pines->entity_manager->get_entity(array('class' => user), array('&', 'tag' => array('com_user', 'user'), 'data' => array('pin', $user->pin)));
 	if (isset($test) && !$user->is($test)) {
 		$user->print_form();
@@ -218,7 +233,7 @@ if (gatekeeper('com_user/assignpin') && !empty($user->pin)) {
 if ($user->save()) {
 	pines_notice('Saved user ['.$user->username.']');
 	pines_log('Saved user ['.$user->username.']');
-	if ($pines->config->com_user->confirm_email && !gatekeeper('com_user/edituser') && $user->email != $_REQUEST['email']) {
+	if ($pines->config->com_user->confirm_email && in_array('email', $pines->config->com_user->user_fields) && !gatekeeper('com_user/edituser') && $user->email != $_REQUEST['email']) {
 		// Send the verification email.
 		$link = '<a href="'.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'type' => 'change', 'secret' => $user->new_email_secret), true)).'">'.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'type' => 'change', 'secret' => $user->new_email_secret), true)).'</a>';
 		$link2 = '<a href="'.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'type' => 'cancelchange', 'secret' => $user->cancel_email_secret), true)).'">'.htmlspecialchars(pines_url('com_user', 'verifyuser', array('id' => $user->guid, 'type' => 'cancelchange', 'secret' => $user->cancel_email_secret), true)).'</a>';

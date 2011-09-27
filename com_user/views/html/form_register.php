@@ -29,10 +29,10 @@ $this->note = 'Please fill in your account details.';
 			<?php } ?>
 		</ul>
 		<div id="p_muid_tab_general">
-			<div style="float: right;">* Required Field</div>
+			<div style="float: right;"><span class="pf-required">*</span> Required Field</div>
 			<?php if (in_array('name', $pines->config->com_user->reg_fields)) { ?>
 			<div class="pf-element">
-				<label><span class="pf-label">First Name *</span>
+				<label><span class="pf-label">First Name <span class="pf-required">*</span></span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name_first" size="24" value="<?php echo htmlspecialchars($this->entity->name_first); ?>" /></label>
 			</div>
 			<div class="pf-element">
@@ -43,26 +43,22 @@ $this->note = 'Please fill in your account details.';
 				<label><span class="pf-label">Last Name</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name_last" size="24" value="<?php echo htmlspecialchars($this->entity->name_last); ?>" /></label>
 			</div>
-			<?php }
-			if (in_array('email', $pines->config->com_user->reg_fields)) { ?>
+			<?php } if (in_array('email', $pines->config->com_user->reg_fields)) { ?>
 			<div class="pf-element">
-				<label><span class="pf-label">Email *</span>
+				<label><span class="pf-label">Email <span class="pf-required">*</span></span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="email" name="email" size="24" value="<?php echo htmlspecialchars($this->entity->email); ?>" /></label>
 			</div>
-			<?php }
-			if (in_array('phone', $pines->config->com_user->reg_fields)) { ?>
+			<?php } if (in_array('phone', $pines->config->com_user->reg_fields)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Phone</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="phone" size="24" value="<?php echo format_phone($this->entity->phone); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
-			<?php }
-			if (in_array('fax', $pines->config->com_user->reg_fields)) { ?>
+			<?php } if (in_array('fax', $pines->config->com_user->reg_fields)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Fax</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="fax" size="24" value="<?php echo format_phone($this->entity->fax); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
-			<?php }
-			if (in_array('timezone', $pines->config->com_user->reg_fields)) { ?>
+			<?php } if (in_array('timezone', $pines->config->com_user->reg_fields)) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">Timezone</span>
 					<span class="pf-note">This overrides the primary group's timezone.</span>

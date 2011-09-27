@@ -70,9 +70,13 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<tr>
 			<th>GUID</th>
 			<th>Username</th>
+			<?php if (in_array('name', $pines->config->com_user->user_fields)) { ?>
 			<th>Real Name</th>
+			<?php } if (in_array('email', $pines->config->com_user->user_fields)) { ?>
 			<th>Email</th>
+			<?php } if (in_array('timezone', $pines->config->com_user->user_fields)) { ?>
 			<th>Timezone</th>
+			<?php } ?>
 			<th>Primary Group</th>
 			<th>Groups</th>
 			<th>Inherit Abilities</th>
@@ -86,9 +90,13 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<tr title="<?php echo $user->guid; ?>">
 			<td><?php echo $user->guid; ?></td>
 			<td><?php echo htmlspecialchars($user->username); ?></td>
+			<?php if (in_array('name', $pines->config->com_user->user_fields)) { ?>
 			<td><?php echo htmlspecialchars($user->name); ?></td>
+			<?php } if (in_array('email', $pines->config->com_user->user_fields)) { ?>
 			<td><?php echo htmlspecialchars($user->email); ?></td>
+			<?php } if (in_array('timezone', $pines->config->com_user->user_fields)) { ?>
 			<td><?php echo htmlspecialchars($user->get_timezone()).(empty($user->timezone) ? ' (I)' : ' (A)'); ?></td>
+			<?php } ?>
 			<td><a href="<?php echo htmlspecialchars(pines_url('com_user', 'editgroup', array('id' => $user->group->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($user->group->groupname); ?></a></td>
 			<td><?php
 			if (count($user->groups) < 15) {
@@ -109,4 +117,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<?php } ?>
 	</tbody>
 </table>
+<?php if (in_array('timezone', $pines->config->com_user->user_fields)) { ?>
 <small>Note: Under timezones (I) means inherited and (A) means assigned.</small>
+<?php } ?>

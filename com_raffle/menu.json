@@ -1,0 +1,25 @@
+[
+	{
+		"path": "main_menu/accessories/raffle",
+		"text": "Raffle",
+		"depend": {
+			"children": true
+		}
+	},
+		{
+			"path": "main_menu/accessories/raffle/raffles",
+			"text": "Raffles",
+			"href": ["com_raffle","raffle/list"],
+			"depend": {
+				"ability": "com_raffle/listraffles"
+			}
+		},
+		{
+			"path": "main_menu/accessories/raffle/newraffle",
+			"text": "New Raffle",
+			"href": ["com_raffle","raffle/edit"],
+			"depend": {
+				"ability": "com_raffle/newraffle"
+			}
+		}
+]

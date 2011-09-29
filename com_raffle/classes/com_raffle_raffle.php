@@ -136,7 +136,7 @@ class com_raffle_raffle extends entity {
 		if (!$this->public || $this->complete)
 			return null;
 		global $pines;
-		$module = new module('com_raffle', 'raffle', 'content');
+		$module = new module('com_raffle', 'enter', 'content');
 		$module->entity = $this;
 
 		return $module;

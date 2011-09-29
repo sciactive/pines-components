@@ -224,7 +224,7 @@ switch ($this->entity->status) {
 					$text = array();
 					if (isset($cur_product['serial']))
 						$text[] = $cur_product['serial'];
-					if ($sale && $cur_product['delivery'] == 'warehouse') {
+					if (!$this->hide_warehouse_status && $sale && $cur_product['delivery'] == 'warehouse') {
 						$fulfilled = 0;
 						$shipped = 0;
 						foreach ($cur_product['stock_entities'] as $cur_stock) {

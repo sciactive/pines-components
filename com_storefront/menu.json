@@ -1,0 +1,10 @@
+[
+	{
+		"path": "main_menu/business/0_pos/inventory/verifystock",
+		"text": "Verify Storefront Inventory",
+		"href": ["com_storefront","verifystock"],
+		"depend": {
+			"ability": "com_sales/editproduct"
+		}
+	}
+]

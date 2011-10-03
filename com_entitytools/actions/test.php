@@ -79,7 +79,7 @@ $test->time_start = $entity_start_time;
 
 // Retrieving entity by GUID...
 $entity_result = $pines->entity_manager->get_entity($entity_test->guid);
-$test->tests['by_guid'][0] = $entity_test->is($entity_result);
+$test->tests['by_guid'][0] = isset($entity_test->guid) && $entity_test->is($entity_result);
 $test->tests['by_guid'][1] = microtime(true);
 $test->tests['by_guid'][2] = 'Retrieving entity by GUID...';
 

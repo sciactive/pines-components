@@ -184,9 +184,20 @@ $pines->com_pgrid->load();
 				<th>Customer</th>
 				<th>Employee</th>
 				<th>Total</th>
-				<th>Cost</th>
-				<th>Profit</th>
+				<?php /* <th>Cost</th>
+				<th>Profit</th> */ ?>
 				<th>Status</th>
+				<?php
+				$payment_types = $pines->entity_manager->get_entities(
+						array('class' => com_sales_payment_type),
+						array('&',
+							'tag' => array('com_sales', 'payment_type'),
+							'data' => array('enabled', true)
+						)
+					);
+				foreach ($payment_types as $cur_payment_type) { 
+					echo '<th>'.$cur_payment_type->name.'</th>';
+				} ?>
 			</tr>
 		</thead>
 		<tbody>
@@ -204,17 +215,29 @@ $pines->com_pgrid->load();
 						$total_cost += $cur_stock->cost;
 				}
 			?>
-			<tr title="<?php echo $cur_invoice->employee->guid; ?>" class="<?php echo $type; ?>">
+			<tr title="<?php echo (int) $cur_invoice->customer->guid; ?>" class="<?php echo $type; ?>">
 				<td><?php echo htmlspecialchars($cur_invoice->id); ?></td>
 				<td><?php echo ucwords($type); ?></td>
 				<td><?php echo format_date($cur_invoice->p_cdate, 'full_sort'); ?></td>
 				<td><?php echo htmlspecialchars($cur_invoice->group->name); ?></td>
-				<td><?php echo htmlspecialchars((int) $cur_invoice->customer->guid); ?>: <a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_invoice->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_invoice->customer->name); ?></a></td>
+				<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_invoice->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_invoice->customer->name); ?></a></td>
 				<td><?php echo htmlspecialchars($cur_invoice->user->name); ?></td>
 				<td class="total">$<?php echo number_format($cur_invoice->subtotal, 2, '.', ''); ?></td>
-				<td class="total">$<?php echo number_format($total_cost, 2, '.', ''); ?></td>
-				<td class="total">$<?php echo number_format(((int) $cur_invoice->subtotal - $total_cost), 2, '.', ''); ?></td>
+				<?php /* <td class="total">$<?php echo number_format($total_cost, 2, '.', ''); ?></td>
+				<td class="total">$<?php echo number_format(($cur_invoice->subtotal - $total_cost), 2, '.', ''); ?></td> */ ?>
 				<td><?php echo ucwords($cur_invoice->status); ?></td>
+				<?php
+				foreach ($payment_types as $cur_payment_type) { 
+					echo '<td>$';
+					$pmt_total = 0;
+					foreach ($cur_invoice->payments as $cur_payment) {
+						if ($cur_payment_type->is($cur_payment['entity']))
+							$pmt_total += $cur_payment['amount'];
+					}
+					echo number_format($pmt_total, 2, '.', '');
+					echo '</td>';
+				}
+				?>
 			</tr>
 			<?php } ?>
 		</tbody>

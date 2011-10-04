@@ -339,8 +339,12 @@ class com_reports_sales_ranking extends entity {
 			$rank++;
 		}
 		unset($cur_rank);
-		foreach ($this->locations as &$cur_location) {
-			usort($cur_location, array($this, 'sort_mtd'));
+		$count = count($this->locations);
+		foreach ($this->locations as $key => &$cur_location) {
+			if ($key == $count - 1)
+				usort($cur_location, array($this, 'sort_mtd'));
+			else
+				usort($cur_location, array($this, 'sort_avg'));
 			$rank = 1;
 			foreach ($cur_location as &$cur_rank) {
 				if ($cur_rank['goal'] <= 0)
@@ -352,6 +356,24 @@ class com_reports_sales_ranking extends entity {
 		}
 
 		return $module;
+	}
+
+	/**
+	 * Sort by the Avg value.
+	 *
+	 * @param array $a The first entry.
+	 * @param array $b The second entry.
+	 * @return int The sort order.
+	 * @access private
+	 */
+	private function sort_avg($a, $b) {
+		$a_avg = round($a['child_count'] > 0 ? $a['trend'] / $a['child_count'] : 0, 2);
+		$b_avg = round($b['child_count'] > 0 ? $b['trend'] / $b['child_count'] : 0, 2);
+		if ($a_avg > $b_avg)
+			return -1;
+		if ($a_avg < $b_avg)
+			return 1;
+		return 0;
 	}
 
 	/**

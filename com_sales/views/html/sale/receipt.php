@@ -311,20 +311,20 @@ switch ($this->entity->status) {
 	<?php
 	switch ($this->entity->status) {
 		case 'quoted':
-			$label = $pines->config->com_sales->quote_note_label;
-			$text = $pines->config->com_sales->quote_note_text;
+			$label = (string) $pines->config->com_sales->quote_note_label;
+			$text = (string) $pines->config->com_sales->quote_note_text;
 			break;
 		case 'invoiced':
-			$label = $pines->config->com_sales->invoice_note_label;
-			$text = $pines->config->com_sales->invoice_note_text;
+			$label = (string) $pines->config->com_sales->invoice_note_label;
+			$text = (string) $pines->config->com_sales->invoice_note_text;
 			break;
 		case 'paid':
-			$label = $pines->config->com_sales->receipt_note_label;
-			$text = $pines->config->com_sales->receipt_note_text;
+			$label = (string) $pines->config->com_sales->receipt_note_label;
+			$text = (string) $pines->config->com_sales->receipt_note_text;
 			break;
 		case 'processed':
-			$label = $pines->config->com_sales->return_note_label;
-			$text = $pines->config->com_sales->return_note_text;
+			$label = (string) $pines->config->com_sales->return_note_label;
+			$text = (string) $pines->config->com_sales->return_note_text;
 			break;
 	}
 	if (!empty($text)) {

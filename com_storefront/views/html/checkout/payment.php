@@ -62,6 +62,7 @@ $this->title = 'Payment Options';
 	</script>
 	<?php } ?>
 	<form id="p_muid_form" method="POST" action="<?php echo htmlspecialchars(pines_url('com_storefront', 'checkout/paymentsave')); ?>">
+		<br class="pf-clearing" />
 		<?php
 		$pines->com_sales->call_payment_process(array(
 			'action' => 'request_cust',

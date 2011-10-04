@@ -72,6 +72,8 @@
 .picon-32.picon-bookmark-toolbar {background-image:url("32/actions/bookmark-toolbar.png")}
 .picon-32.picon-bookmarks {background-image:url("32/places/bookmarks.png")}
 .picon-32.picon-bookmarks-organize {background-image:url("32/actions/bookmarks-organize.png")}
+.picon-32.picon-call-start {background-image:url("32/actions/call-start.png")}
+.picon-32.picon-call-stop {background-image:url("32/actions/call-stop.png")}
 .picon-32.picon-camera-photo {background-image:url("32/devices/camera-photo.png")}
 .picon-32.picon-camera-web {background-image:url("32/devices/camera-web.png")}
 .picon-32.picon-certificate-server {background-image:url("32/places/certificate-server.png")}
@@ -199,6 +201,7 @@
 .picon-32.picon-flag-red {background-image:url("32/actions/flag-red.png")}
 .picon-32.picon-flag-yellow {background-image:url("32/actions/flag-yellow.png")}
 .picon-32.picon-folder {background-image:url("32/places/folder.png")}
+.picon-32.picon-folder-black {background-image:url("32/places/folder-black.png")}
 .picon-32.picon-folder-blue {background-image:url("32/places/folder-blue.png")}
 .picon-32.picon-folder-bookmark {background-image:url("32/places/folder-bookmark.png")}
 .picon-32.picon-folder-brown {background-image:url("32/places/folder-brown.png")}
@@ -214,6 +217,7 @@
 .picon-32.picon-folder-image-people {background-image:url("32/places/folder-image-people.png")}
 .picon-32.picon-folder-important {background-image:url("32/places/folder-important.png")}
 .picon-32.picon-folder-locked {background-image:url("32/places/folder-locked.png")}
+.picon-32.picon-folder-network {background-image:url("32/places/folder-network.png")}
 .picon-32.picon-folder-new {background-image:url("32/actions/folder-new.png")}
 .picon-32.picon-folder-open {background-image:url("32/status/folder-open.png")}
 .picon-32.picon-folder-orange {background-image:url("32/places/folder-orange.png")}
@@ -292,6 +296,10 @@
 .picon-32.picon-internet-mail {background-image:url("32/apps/internet-mail.png")}
 .picon-32.picon-internet-telephony {background-image:url("32/apps/internet-telephony.png")}
 .picon-32.picon-internet-web-browser {background-image:url("32/apps/internet-web-browser.png")}
+.picon-32.picon-irc-operator {background-image:url("32/actions/irc-operator.png")}
+.picon-32.picon-irc-remove-operator {background-image:url("32/actions/irc-remove-operator.png")}
+.picon-32.picon-irc-unvoice {background-image:url("32/actions/irc-unvoice.png")}
+.picon-32.picon-irc-voice {background-image:url("32/actions/irc-voice.png")}
 .picon-32.picon-journal-new {background-image:url("32/actions/journal-new.png")}
 .picon-32.picon-layer-visible-off {background-image:url("32/actions/layer-visible-off.png")}
 .picon-32.picon-layer-visible-on {background-image:url("32/actions/layer-visible-on.png")}
@@ -698,6 +706,8 @@
 .picon-32.picon-view-time-schedule-edit {background-image:url("32/actions/view-time-schedule-edit.png")}
 .picon-32.picon-view-time-schedule-insert {background-image:url("32/actions/view-time-schedule-insert.png")}
 .picon-32.picon-view-web-browser-dom-tree {background-image:url("32/actions/view-web-browser-dom-tree.png")}
+.picon-32.picon-wallet-closed {background-image:url("32/status/wallet-closed.png")}
+.picon-32.picon-wallet-open {background-image:url("32/status/wallet-open.png")}
 .picon-32.picon-weather-clear {background-image:url("32/status/weather-clear.png")}
 .picon-32.picon-weather-clear-night {background-image:url("32/status/weather-clear-night.png")}
 .picon-32.picon-weather-clouds {background-image:url("32/status/weather-clouds.png")}
@@ -816,6 +826,8 @@
 .picon-bookmark-toolbar {background-image:url("16/actions/bookmark-toolbar.png")}
 .picon-bookmarks {background-image:url("16/places/bookmarks.png")}
 .picon-bookmarks-organize {background-image:url("16/actions/bookmarks-organize.png")}
+.picon-call-start {background-image:url("16/actions/call-start.png")}
+.picon-call-stop {background-image:url("16/actions/call-stop.png")}
 .picon-camera-photo {background-image:url("16/devices/camera-photo.png")}
 .picon-camera-web {background-image:url("16/devices/camera-web.png")}
 .picon-certificate-server {background-image:url("16/places/certificate-server.png")}
@@ -938,6 +950,8 @@
 .picon-face-wink {background-image:url("16/emotes/face-wink.png")}
 .picon-favorites {background-image:url("16/places/favorites.png")}
 .picon-feed-subscribe {background-image:url("16/actions/feed-subscribe.png")}
+.picon-file-zoom-in {background-image:url("16/special/file-zoom-in.png")}
+.picon-file-zoom-out {background-image:url("16/special/file-zoom-out.png")}
 .picon-fill-color {background-image:url("16/actions/fill-color.png")}
 .picon-flag {background-image:url("16/actions/flag.png")}
 .picon-flag-black {background-image:url("16/actions/flag-black.png")}
@@ -946,6 +960,7 @@
 .picon-flag-red {background-image:url("16/actions/flag-red.png")}
 .picon-flag-yellow {background-image:url("16/actions/flag-yellow.png")}
 .picon-folder {background-image:url("16/places/folder.png")}
+.picon-folder-black {background-image:url("16/places/folder-black.png")}
 .picon-folder-blue {background-image:url("16/places/folder-blue.png")}
 .picon-folder-bookmark {background-image:url("16/places/folder-bookmark.png")}
 .picon-folder-brown {background-image:url("16/places/folder-brown.png")}
@@ -961,6 +976,7 @@
 .picon-folder-image-people {background-image:url("16/places/folder-image-people.png")}
 .picon-folder-important {background-image:url("16/places/folder-important.png")}
 .picon-folder-locked {background-image:url("16/places/folder-locked.png")}
+.picon-folder-network {background-image:url("16/places/folder-network.png")}
 .picon-folder-new {background-image:url("16/actions/folder-new.png")}
 .picon-folder-open {background-image:url("16/status/folder-open.png")}
 .picon-folder-orange {background-image:url("16/places/folder-orange.png")}
@@ -1027,6 +1043,8 @@
 .picon-image-missing {background-image:url("16/status/image-missing.png")}
 .picon-image-svg_xml {background-image:url("16/mimetypes/image-svg+xml.png")}
 .picon-image-x-generic {background-image:url("16/mimetypes/image-x-generic.png")}
+.picon-image-zoom-in {background-image:url("16/special/image-zoom-in.png")}
+.picon-image-zoom-out {background-image:url("16/special/image-zoom-out.png")}
 .picon-inode-directory {background-image:url("16/mimetypes/inode-directory.png")}
 .picon-input-gaming {background-image:url("16/devices/input-gaming.png")}
 .picon-input-keyboard {background-image:url("16/devices/input-keyboard.png")}
@@ -1042,6 +1060,10 @@
 .picon-internet-mail {background-image:url("16/apps/internet-mail.png")}
 .picon-internet-telephony {background-image:url("16/apps/internet-telephony.png")}
 .picon-internet-web-browser {background-image:url("16/apps/internet-web-browser.png")}
+.picon-irc-operator {background-image:url("16/actions/irc-operator.png")}
+.picon-irc-remove-operator {background-image:url("16/actions/irc-remove-operator.png")}
+.picon-irc-unvoice {background-image:url("16/actions/irc-unvoice.png")}
+.picon-irc-voice {background-image:url("16/actions/irc-voice.png")}
 .picon-layer-visible-off {background-image:url("16/actions/layer-visible-off.png")}
 .picon-layer-visible-on {background-image:url("16/actions/layer-visible-on.png")}
 .picon-list-add {background-image:url("16/actions/list-add.png")}
@@ -1057,6 +1079,7 @@
 .picon-mail-folder-sent {background-image:url("16/places/mail-folder-sent.png")}
 .picon-mail-forward {background-image:url("16/actions/mail-forward.png")}
 .picon-mail-forwarded {background-image:url("16/actions/mail-forwarded.png")}
+.picon-mail-forwarded-replied {background-image:url("16/actions/mail-forwarded-replied.png")}
 .picon-mail-invitation {background-image:url("16/actions/mail-invitation.png")}
 .picon-mail-mark-important {background-image:url("16/actions/mail-mark-important.png")}
 .picon-mail-mark-junk {background-image:url("16/actions/mail-mark-junk.png")}
@@ -1429,6 +1452,8 @@
 .picon-view-time-schedule-edit {background-image:url("16/actions/view-time-schedule-edit.png")}
 .picon-view-time-schedule-insert {background-image:url("16/actions/view-time-schedule-insert.png")}
 .picon-view-web-browser-dom-tree {background-image:url("16/actions/view-web-browser-dom-tree.png")}
+.picon-wallet-closed {background-image:url("16/status/wallet-closed.png")}
+.picon-wallet-open {background-image:url("16/status/wallet-open.png")}
 .picon-weather-clear {background-image:url("16/status/weather-clear.png")}
 .picon-weather-clear-night {background-image:url("16/status/weather-clear-night.png")}
 .picon-weather-clouds {background-image:url("16/status/weather-clouds.png")}

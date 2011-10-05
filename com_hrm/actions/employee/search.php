@@ -15,6 +15,7 @@ if ( !gatekeeper('com_hrm/listemployees') )
 	punt_user(null, pines_url('com_hrm', 'employee/search', $_REQUEST));
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 $query = strtolower($_REQUEST['q']);
 

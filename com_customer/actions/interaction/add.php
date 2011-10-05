@@ -15,6 +15,7 @@ if ( !gatekeeper('com_customer/newinteraction') )
 	punt_user(null, pines_url('com_customer', 'interaction/add'));
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 $customer = com_customer_customer::factory(intval($_REQUEST['customer']));
 if (!isset($customer->guid))

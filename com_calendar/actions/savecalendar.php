@@ -16,6 +16,7 @@ if (!gatekeeper('com_calendar/editcalendar') && !gatekeeper('com_calendar/manage
 $edit_others = gatekeeper('com_calendar/managecalendar') ? true : false;
 
 $pines->page->override = true;
+header('Content-Type: text/plain');
 
 $errors = false;
 if (isset($_REQUEST['events'])) {

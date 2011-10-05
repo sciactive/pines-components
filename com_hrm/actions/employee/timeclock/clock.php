@@ -15,6 +15,7 @@ if ( !gatekeeper('com_hrm/clock') && !gatekeeper('com_hrm/manageclock') )
 	punt_user(null, pines_url('com_hrm', 'employee/timeclock/clock', $_REQUEST));
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 if ($_REQUEST['id'] == 'self') {
 	$employee = com_hrm_employee::factory($_SESSION['user']->guid);

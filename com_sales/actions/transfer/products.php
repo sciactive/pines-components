@@ -15,6 +15,7 @@ if ( !gatekeeper('com_sales/managestock') && !gatekeeper('com_sales/receive'))
 	punt_user(null, pines_url('com_sales', 'transfer/products', $_REQUEST));
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 $transfer = com_sales_transfer::factory((int) $_REQUEST['id']);
 if (!isset($transfer->guid))

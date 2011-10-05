@@ -15,6 +15,7 @@ if ( !gatekeeper('com_customer/viewhistory') )
 	punt_user(null, pines_url('com_customer', 'interaction/info', $_REQUEST));
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 $interaction = com_customer_interaction::factory((int) $_REQUEST['id']);
 if (!isset($interaction->guid))

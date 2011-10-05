@@ -15,6 +15,7 @@ if ( !gatekeeper('com_sales/searchproducts'))
 	punt_user(null, pines_url('com_sales', 'product/search', $_REQUEST));
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 $code = $_REQUEST['code'];
 

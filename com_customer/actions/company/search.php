@@ -15,6 +15,7 @@ if ( !gatekeeper('com_customer/listcompanies') )
 	punt_user(null, pines_url('com_customer', 'company/search', $_REQUEST));
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 $query = strtolower($_REQUEST['q']);
 

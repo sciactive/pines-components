@@ -15,6 +15,7 @@ if ( !gatekeeper('com_packager/newpackage') || !gatekeeper('com_packager/editpac
 	punt_user(null, pines_url('com_packager', 'glob'));
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 switch ($_REQUEST['type']) {
 	case 'component':

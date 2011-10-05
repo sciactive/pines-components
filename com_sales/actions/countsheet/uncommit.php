@@ -15,6 +15,7 @@ if ( !gatekeeper('com_sales/uncommitcountsheet') )
 	punt_user(null, pines_url('com_sales', 'countsheet/list'));
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 $countsheet = com_sales_countsheet::factory((int) $_REQUEST['id']);
 if (!isset($countsheet->guid)) {

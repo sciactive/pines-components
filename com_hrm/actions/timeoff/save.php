@@ -15,6 +15,7 @@ if ( !gatekeeper('com_hrm/clock') )
 	punt_user(null, pines_url('com_hrm', 'timeoff/save'));
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 if (isset($_REQUEST['employee'])) {	
 	if ($_REQUEST['start'] != 'Date') {

@@ -14,6 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 // TODO: Gatekeeper checks?
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 $category = com_content_category::factory((int) $_REQUEST['id']);
 

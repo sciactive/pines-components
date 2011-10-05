@@ -15,6 +15,7 @@ if ( !gatekeeper('com_hrm/resolveissue') )
 	punt_user(null, pines_url('com_hrm', 'employee/list'));
 
 $pines->page->override = true;
+header('Content-Type: text/plain');
 
 $issue = com_hrm_issue::factory((int) $_REQUEST['id']);
 if (!isset($issue->guid) || !isset($issue->employee->guid)) {

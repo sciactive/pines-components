@@ -15,6 +15,7 @@ if ( !gatekeeper('com_sales/totalsales') )
 	punt_user(null, pines_url('com_sales', 'sale/totalsjson', $_REQUEST));
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 // Format the location.
 $location = group::factory((int) $_REQUEST['location']);

@@ -15,6 +15,7 @@ if ( !gatekeeper('com_customer/listcustomers') )
 	punt_user(null, pines_url('com_customer', 'customer/info', $_REQUEST));
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 $customer = com_customer_customer::factory((int) $_REQUEST['id']);
 

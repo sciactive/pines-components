@@ -12,6 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 if ( empty($_REQUEST['username']) ) {
 	$pines->page->override_doc('false');

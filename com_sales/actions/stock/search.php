@@ -15,6 +15,7 @@ if ( !gatekeeper('com_sales/seestock'))
 	punt_user(null, pines_url('com_sales', 'stock/search', $_REQUEST));
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 $product = com_sales_product::factory((int) $_REQUEST['product']);
 $serial = $_REQUEST['serial'];

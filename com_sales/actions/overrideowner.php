@@ -15,6 +15,7 @@ if ( !gatekeeper('com_sales/overrideowner') )
 	punt_user(null, pines_url('com_sales', 'sale/overrideowner'));
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 $entity = com_sales_sale::factory((int) $_REQUEST['id']);
 if (!isset($entity->guid))

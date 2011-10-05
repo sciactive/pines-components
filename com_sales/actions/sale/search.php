@@ -15,6 +15,7 @@ if ( !gatekeeper('com_sales/listsales') )
 	punt_user(null, pines_url('com_sales', 'sales/search', $_REQUEST));
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 $sales = array();
 // This array will be customized, and used to search for sales entities.

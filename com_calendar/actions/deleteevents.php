@@ -15,6 +15,7 @@ if ( !gatekeeper('com_calendar/editcalendar') )
 	punt_user(null, pines_url('com_calendar', 'editcalendar'));
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 $list = array_map('intval', (array) $_REQUEST['events']);
 $failed_removes = array();

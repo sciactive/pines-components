@@ -12,6 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 $pines->page->override_doc(json_encode($pines->com_storefront->remove_from_cart((int) $_REQUEST['id'])));
 
 ?>

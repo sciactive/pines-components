@@ -15,6 +15,7 @@ if ( !gatekeeper('com_sales/searchproducts') )
 	punt_user(null, pines_url('com_sales', 'product/autocomplete', $_REQUEST));
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 $query = $_REQUEST['q'];
 

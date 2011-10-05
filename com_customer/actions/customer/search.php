@@ -15,6 +15,7 @@ if ( !gatekeeper('com_customer/listcustomers') )
 	punt_user(null, pines_url('com_customer', 'customer/search', $_REQUEST));
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 $query = $_REQUEST['q'];
 

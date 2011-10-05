@@ -12,6 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 $close = ($_REQUEST['close'] == 'true') ? true : false;
 $xmpp_id = $_REQUEST['xmpp_id'];

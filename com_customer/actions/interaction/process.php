@@ -17,6 +17,7 @@ if (!gatekeeper('com_customer/editinteraction'))
 	punt_user(null, pines_url('com_customer', 'interaction/process', array('id' => $_REQUEST['id'])));
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 if ((!gatekeeper('com_customer/manageinteractions') && !$interaction->employee->is($_SESSION['user'])) ||
 	!isset($interaction->guid)) {

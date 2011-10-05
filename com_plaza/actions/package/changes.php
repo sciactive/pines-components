@@ -15,6 +15,7 @@ if ( !gatekeeper('com_plaza/editpackages') )
 	punt_user(null, pines_url('com_plaza', 'package/list'));
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 if ($_REQUEST['local'] == 'true') {
 	$package = $pines->com_package->db['packages'][$_REQUEST['name']];
 	$package['package'] = $_REQUEST['name'];

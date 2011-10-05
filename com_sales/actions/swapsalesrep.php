@@ -15,6 +15,7 @@ if ( !gatekeeper('com_sales/swapsalesrep') )
 	punt_user(null, pines_url('com_sales', 'sale/list'));
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 if ($_REQUEST['type'] == 'sale') {
 	$entity = com_sales_sale::factory((int) $_REQUEST['id']);

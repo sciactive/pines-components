@@ -15,6 +15,7 @@ if (!$pines->config->com_user->check_username)
 	return 'error_404';
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 if (!empty($_REQUEST['id']))
 	$id = intval($_REQUEST['id']);

@@ -15,6 +15,7 @@ if ( !gatekeeper('com_customertimer/timefloor') )
 	punt_user(null, pines_url('com_customertimer', 'status'));
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 $floor = com_customertimer_floor::factory((int) $_REQUEST['floor']);
 $return = array();

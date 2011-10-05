@@ -12,6 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 if (isset($_SESSION['com_timeoutnotice__last_access'])) {
 	// Print the amount of time remaining in seconds.

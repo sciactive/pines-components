@@ -15,6 +15,7 @@ if ( !gatekeeper('com_sales/listproducts') && !gatekeeper('com_sales/newsale') &
 	punt_user(null, pines_url('com_sales', 'category/products', $_REQUEST));
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 $category = com_sales_category::factory((int) $_REQUEST['id']);
 

@@ -15,6 +15,7 @@ if ( !gatekeeper('com_entitytools/test') )
 	punt_user(null, pines_url('com_entitytools', 'benchmark'));
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 set_time_limit(3600);
 

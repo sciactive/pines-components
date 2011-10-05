@@ -15,6 +15,7 @@ if ( !gatekeeper('com_reports/editsalesranking') )
 	punt_user(null, pines_url('com_reports', 'salesrankings'));
 
 $pines->page->override = true;
+header('Content-Type: application/json');
 
 $group = group::factory((int) $_REQUEST['id']);
 if (!isset($group->guid))

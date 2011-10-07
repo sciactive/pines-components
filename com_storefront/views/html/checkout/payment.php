@@ -14,7 +14,12 @@ $this->title = 'Payment Options';
 ?>
 <script type="text/javascript">
 	// <![CDATA[
-	pines(function(){$("#p_muid_submit").button()});
+	pines(function(){
+		var buttons = $(":button, :submit, :reset", "#p_muid_form .pf-buttons").click(function(){
+			buttons.attr("disabled", "disabled").addClass("ui-state-disabled");
+		});
+		$("#p_muid_submit").button()
+	});
 	// ]]>
 </script>
 <div class="pf-form">

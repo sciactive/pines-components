@@ -135,7 +135,12 @@ $this->title = 'Review Your Order';
 	<div class="pf-element pf-buttons">
 		<script type="text/javascript">
 			// <![CDATA[
-			pines(function(){$("#p_muid_submit").button()});
+			pines(function(){
+				var buttons = $(":button, :submit, :reset", "#p_muid_review .pf-buttons").click(function(){
+					buttons.attr("disabled", "disabled").addClass("ui-state-disabled");
+				});
+				$("#p_muid_submit").button()
+			});
 			// ]]>
 		</script>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" id="p_muid_submit" type="submit" value="<?php echo htmlspecialchars($pines->config->com_storefront->complete_order_text); ?>" />

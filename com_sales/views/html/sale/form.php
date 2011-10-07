@@ -1545,7 +1545,7 @@ if ($pines->config->com_sales->com_esp) {
 		<script type="text/javascript">
 			// <![CDATA[
 			pines(function(){
-				var buttons = $("#p_muid_form .pf-buttons :button").click(function(){
+				var buttons = $(":button, :submit, :reset", "#p_muid_form .pf-buttons").click(function(){
 					buttons.attr("disabled", "disabled").addClass("ui-state-disabled");
 				});
 			});

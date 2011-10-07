@@ -113,7 +113,8 @@ $content_css = array_merge(array(htmlspecialchars($pines->config->location . $pi
 			relative_urls: false,
 			<?php } ?>
 			// Template's editor CSS
-			content_css : "<?php echo htmlspecialchars(implode(',', $content_css)); ?>"
+			content_css : "<?php echo htmlspecialchars(implode(',', $content_css)); ?>",
+			preformatted : <?php echo $pines->config->com_tinymce->preformatted ? 'true' : 'false'; ?>
 		});
 		$("textarea.peditor-simple").tinymce({
 			// Location of TinyMCE script
@@ -147,7 +148,8 @@ $content_css = array_merge(array(htmlspecialchars($pines->config->location . $pi
 					break;
 			} ?>
 			// Template's editor CSS
-			content_css : "<?php echo htmlspecialchars(implode(',', $content_css)); ?>"
+			content_css : "<?php echo htmlspecialchars(implode(',', $content_css)); ?>",
+			preformatted : <?php echo $pines->config->com_tinymce->preformatted ? 'true' : 'false'; ?>
 		});
 	});
 	// ]]>

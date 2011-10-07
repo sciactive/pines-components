@@ -74,6 +74,13 @@ return array(
 		'value' => 'insertlayer,moveforward,movebackward,absolute,|,styleprops,spellchecker,|,cite,abbr,acronym,del,ins,attribs,|,visualchars,nonbreaking,template,blockquote,pagebreak,|,insertfile,insertimage',
 		'peruser' => true,
 	),
+	array(
+		'name' => 'preformatted',
+		'cname' => 'Preformatted',
+		'description' => 'Preserve whitespace like tabs and spaces.',
+		'value' => false,
+		'peruser' => true,
+	),
 );
 
 ?>

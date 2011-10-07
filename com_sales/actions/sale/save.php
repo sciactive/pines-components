@@ -229,7 +229,7 @@ if ($pines->config->com_sales->global_sales)
 if ($_REQUEST['process'] == 'invoice' && $sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != 'voided' && $pines->config->com_sales->allow_invoicing) {
 	if (!$sale->invoice()) {
 		$sale->print_form();
-		pines_error('There was an error while invoicing the sale. Please check that all information is correct and resubmit.');
+		pines_error('There was a problem while invoicing the sale. Please check that all information is correct and resubmit.');
 		return;
 	}
 }
@@ -237,12 +237,17 @@ if ($_REQUEST['process'] == 'invoice' && $sale->status != 'invoiced' && $sale->s
 if ($_REQUEST['process'] == 'tender' && $sale->status != 'paid' && $sale->status != 'voided') {
 	if (!$sale->complete()) {
 		$sale->print_form();
-		pines_error('There was an error while completing the sale. It has not been completed yet. Please check that all information is correct and resubmit.');
+		pines_error('There was a problem while completing the sale. It has not been completed yet. Please check that all information is correct and resubmit.');
 		return;
 	}
 }
 
 if (!isset($sale->status) || $sale->status == 'quoted') {
+	if ($sale->status == 'quoted' && !$pines->config->com_sales->allow_quoting) {
+		$sale->print_form();
+		pines_notice('Quoting sales is not allowed.');
+		return;
+	}
 	$sale->status = 'quoted';
 	$sale->total();
 }

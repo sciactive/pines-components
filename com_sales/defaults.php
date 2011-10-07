@@ -152,6 +152,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'allow_quoting',
+		'cname' => 'Allow Quoting',
+		'description' => 'Sales may be quoted instead of being immediately tendered or invoiced. (Some sales may default to quoted if there is a problem during tendering.)',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'allow_invoicing',
 		'cname' => 'Allow Invoicing',
 		'description' => 'Sales may be invoiced instead of being immediately tendered.',

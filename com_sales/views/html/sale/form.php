@@ -1542,6 +1542,15 @@ if ($pines->config->com_sales->com_esp) {
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-buttons">
+		<script type="text/javascript">
+			// <![CDATA[
+			pines(function(){
+				var buttons = $("#p_muid_form .pf-buttons :button").click(function(){
+					buttons.attr("disabled", "disabled").addClass("ui-state-disabled");
+				});
+			});
+			// ]]>
+		</script>
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
@@ -1556,9 +1565,9 @@ if ($pines->config->com_sales->com_esp) {
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Invoice" onclick="$('#p_muid_sale_process_type').val('invoice'); pines.com_sales_run_submit();" />
 		<?php } ?>
 
-		<?php if ($this->entity->status != 'voided' && $this->entity->status != 'paid' && $this->entity->status != 'invoiced' && $this->entity->status != 'quoted') { ?>
+		<?php if ($this->entity->status != 'voided' && $this->entity->status != 'paid' && $this->entity->status != 'invoiced' && $this->entity->status != 'quoted') { if ($pines->config->com_sales->allow_quoting) { ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Quote" onclick="$('#p_muid_sale_process_type').val('quote'); pines.com_sales_run_submit();" />
-		<?php } else { ?>
+		<?php } } else { ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Save" onclick="$('#p_muid_sale_process_type').val('save'); pines.com_sales_run_submit();" />
 		<?php } ?>
 

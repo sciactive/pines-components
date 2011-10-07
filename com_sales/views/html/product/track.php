@@ -278,29 +278,32 @@ $pines->com_jstree->load();
 	<?php } ?>
 	</tbody>
 </table>
-<div id="p_muid_types_dialog" title="Transaction Types" style="display: none;" class="pf-form">
-	<div class="pf-element pf-full-width">
-		<span class="pf-label">Invoices</span>
-		<input class="pf-field" type="checkbox" name="types_invoice" value="ON"<?php echo $this->types['invoice'] ? ' checked="checked"' : ''; ?> />
+<div id="p_muid_types_dialog" title="Transaction Types" style="display: none;">
+	<div class="pf-form">
+		<div class="pf-element pf-full-width">
+			<label><span class="pf-label">Invoices</span>
+				<input class="pf-field" type="checkbox" name="types_invoice" value="ON"<?php echo $this->types['invoice'] ? ' checked="checked"' : ''; ?> /></label>
+		</div>
+		<div class="pf-element pf-full-width">
+			<label><span class="pf-label">Returns</span>
+				<input class="pf-field" type="checkbox" name="types_return" value="ON"<?php echo $this->types['return'] ? ' checked="checked"' : ''; ?> /></label>
+		</div>
+		<div class="pf-element pf-full-width">
+			<label><span class="pf-label">Swaps</span>
+				<input class="pf-field" type="checkbox" name="types_swap" value="ON"<?php echo $this->types['swap'] ? ' checked="checked"' : ''; ?> /></label>
+		</div>
+		<div class="pf-element pf-full-width">
+			<label><span class="pf-label">Transfers</span>
+				<input class="pf-field" type="checkbox" name="types_transfer" value="ON"<?php echo $this->types['transfer'] ? ' checked="checked"' : ''; ?> /></label>
+		</div>
+		<div class="pf-element pf-full-width">
+			<label><span class="pf-label">POs</span>
+				<input class="pf-field" type="checkbox" name="types_po" value="ON"<?php echo $this->types['po'] ? ' checked="checked"' : ''; ?> /></label>
+		</div>
+		<div class="pf-element pf-full-width">
+			<label><span class="pf-label">Countsheets</span>
+				<input class="pf-field" type="checkbox" name="types_countsheet" value="ON"<?php echo $this->types['countsheet'] ? ' checked="checked"' : ''; ?> /></label>
+		</div>
 	</div>
-	<div class="pf-element pf-full-width">
-		<span class="pf-label">Returns</span>
-		<input class="pf-field" type="checkbox" name="types_return" value="ON"<?php echo $this->types['return'] ? ' checked="checked"' : ''; ?> />
-	</div>
-	<div class="pf-element pf-full-width">
-		<span class="pf-label">Swaps</span>
-		<input class="pf-field" type="checkbox" name="types_swap" value="ON"<?php echo $this->types['swap'] ? ' checked="checked"' : ''; ?> />
-	</div>
-	<div class="pf-element pf-full-width">
-		<span class="pf-label">Transfers</span>
-		<input class="pf-field" type="checkbox" name="types_transfer" value="ON"<?php echo $this->types['transfer'] ? ' checked="checked"' : ''; ?> />
-	</div>
-	<div class="pf-element pf-full-width">
-		<span class="pf-label">POs</span>
-		<input class="pf-field" type="checkbox" name="types_po" value="ON"<?php echo $this->types['po'] ? ' checked="checked"' : ''; ?> />
-	</div>
-	<div class="pf-element pf-full-width">
-		<span class="pf-label">Countsheets</span>
-		<input class="pf-field" type="checkbox" name="types_countsheet" value="ON"<?php echo $this->types['countsheet'] ? ' checked="checked"' : ''; ?> />
-	</div>
+	<br />
 </div>

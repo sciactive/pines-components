@@ -248,25 +248,28 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		} ?>
 	</tbody>
 </table>
-<div id="p_muid_types_dialog" title="Transaction Types" style="display: none;" class="pf-form">
-	<div class="pf-element pf-full-width">
-		<span class="pf-label">Net Sales</span>
-		<input class="pf-field" type="checkbox" name="types_sold" value="ON"<?php echo $this->types['sold'] ? ' checked="checked"' : ''; ?> />
+<div id="p_muid_types_dialog" title="Transaction Types" style="display: none;">
+	<div class="pf-form">
+		<div class="pf-element pf-full-width">
+			<label><span class="pf-label">Net Sales</span>
+				<input class="pf-field" type="checkbox" name="types_sold" value="ON"<?php echo $this->types['sold'] ? ' checked="checked"' : ''; ?> /></label>
+		</div>
+		<div class="pf-element pf-full-width">
+			<label><span class="pf-label">Returned Sales</span>
+				<input class="pf-field" type="checkbox" name="types_returned" value="ON"<?php echo $this->types['returned'] ? ' checked="checked"' : ''; ?> /></label>
+		</div>
+		<div class="pf-element pf-full-width">
+			<label><span class="pf-label">Invoices</span>
+				<input class="pf-field" type="checkbox" name="types_invoiced" value="ON"<?php echo $this->types['invoiced'] ? ' checked="checked"' : ''; ?> /></label>
+		</div>
+		<div class="pf-element pf-full-width">
+			<label><span class="pf-label">Voids</span>
+				<input class="pf-field" type="checkbox" name="types_voided" value="ON"<?php echo $this->types['voided'] ? ' checked="checked"' : ''; ?> /></label>
+		</div>
+		<div class="pf-element pf-full-width">
+			<label><span class="pf-label">Returns</span>
+				<input class="pf-field" type="checkbox" name="types_return" value="ON"<?php echo $this->types['return'] ? ' checked="checked"' : ''; ?> /></label>
+		</div>
 	</div>
-	<div class="pf-element pf-full-width">
-		<span class="pf-label">Returned Sales</span>
-		<input class="pf-field" type="checkbox" name="types_returned" value="ON"<?php echo $this->types['returned'] ? ' checked="checked"' : ''; ?> />
-	</div>
-	<div class="pf-element pf-full-width">
-		<span class="pf-label">Invoices</span>
-		<input class="pf-field" type="checkbox" name="types_invoiced" value="ON"<?php echo $this->types['invoiced'] ? ' checked="checked"' : ''; ?> />
-	</div>
-	<div class="pf-element pf-full-width">
-		<span class="pf-label">Voids</span>
-		<input class="pf-field" type="checkbox" name="types_voided" value="ON"<?php echo $this->types['voided'] ? ' checked="checked"' : ''; ?> />
-	</div>
-	<div class="pf-element pf-full-width">
-		<span class="pf-label">Returns</span>
-		<input class="pf-field" type="checkbox" name="types_return" value="ON"<?php echo $this->types['return'] ? ' checked="checked"' : ''; ?> />
-	</div>
+	<br />
 </div>

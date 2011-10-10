@@ -11,7 +11,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if (!$pines->uploader->check($this->file)) {
+if ($pines->config->com_nivoslider->check_files && !$pines->uploader->check($this->file)) {
 	echo 'Unsafe file detected.';
 	return;
 }
@@ -56,31 +56,48 @@ if (isset($this->manualAdvance))
 if (isset($this->captionOpacity))
 	$options->captionOpacity = (float) $this->captionOpacity;
 
+if (empty($this->theme))
+	$this->theme = 'none';
+
 ?>
-<script type="text/javascript">
-	// <![CDATA[
-	<?php if ($this->include_basic_style == 'true') { ?>
-	pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_nivoslider/includes/basic_style/slider.css");
-	<?php } ?>
-	pines(function(){
-		$('#p_muid_slider').nivoSlider(<?php echo json_encode($options); ?>);
-	});
-	// ]]>
-</script>
-<div id="p_muid_slider" class="<?php echo htmlspecialchars($this->class); ?>" style="<?php echo htmlspecialchars((isset($this->width) ? "width: $this->width; " : '').(isset($this->height) ? "height: $this->height;" : '')); ?>">
-	<?php
-	foreach ($images as $cur_image) {
-		if (empty($cur_image))
-			continue;
-		$image_html = '';
-		$parts = explode(';', $cur_image, 4);
-		$image_html .= '<img alt="" src="'.htmlspecialchars($dir.$parts[0]);
-		if (!empty($parts[1]))
-			$image_html .= '" title="'.htmlspecialchars($parts[1]);
-		$image_html .= '" />';
-		if (!empty($parts[2]) || !empty($parts[3]))
-			$image_html = '<a'.(empty($parts[2]) ? '' : ' href="'.htmlspecialchars($parts[2]).'"').(empty($parts[3]) ? '' : ' onclick="'.htmlspecialchars($parts[3]).'"').'>'.$image_html.'</a>';
-		echo $image_html;
-	}
-	?>
+<div class="slider-wrapper theme-<?php echo htmlspecialchars($this->theme); ?>">
+	<div class="ribbon"></div>
+	<script type="text/javascript">
+		// <![CDATA[
+		pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_nivoslider/includes/themes/<?php echo htmlspecialchars(clean_filename($this->theme)); ?>/<?php echo htmlspecialchars(clean_filename($this->theme)); ?>.css");
+		pines(function(){
+			$('#p_muid_slider').nivoSlider(<?php echo json_encode($options); ?>);
+		});
+		// ]]>
+	</script>
+	<div id="p_muid_slider" class="nivoSlider <?php echo htmlspecialchars($this->class); ?>" style="<?php echo htmlspecialchars((isset($this->width) ? "width: $this->width; " : '').(isset($this->height) ? "height: $this->height;" : '')); ?>">
+		<?php
+		$captions = array();
+		foreach ($images as $cur_image) {
+			if (empty($cur_image))
+				continue;
+			$image_html = '';
+			$parts = explode('|', $cur_image, 4);
+			$image_html .= '<img alt="" src="'.htmlspecialchars($dir.$parts[0]);
+			if (!empty($parts[1])) {
+				if (!$pines->config->com_nivoslider->allow_html_captions || strpos($parts[1], '<') === false)
+					$image_html .= '" title="'.htmlspecialchars($parts[1]);
+				else {
+					$unique = uniqid('p_muid_');
+					$captions[$unique] = $parts[1];
+					$image_html .= '" title="#'.htmlspecialchars($unique);
+				}
+			}
+			$image_html .= '" />';
+			if (!empty($parts[2]) || !empty($parts[3]))
+				$image_html = '<a'.(empty($parts[2]) ? '' : ' href="'.htmlspecialchars($parts[2]).'"').(empty($parts[3]) ? '' : ' onclick="'.htmlspecialchars($parts[3]).'"').'>'.$image_html.'</a>';
+			echo $image_html;
+		}
+		?>
+	</div>
+	<?php if ($captions) { foreach ($captions as $key => $cur_caption) { ?>
+	<div id="<?php echo htmlspecialchars($key); ?>" class="nivo-html-caption">
+		<?php echo $cur_caption; ?>
+	</div>
+	<?php } } ?>
 </div>

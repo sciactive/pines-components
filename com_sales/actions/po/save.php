@@ -85,8 +85,6 @@ if (!$po->final) {
 		return;
 	}
 
-	$po->ac->other = 2;
-
 	if ($_REQUEST['save'] == 'commit')
 		$po->final = true;
 }

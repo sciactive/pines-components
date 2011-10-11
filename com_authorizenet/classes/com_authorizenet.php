@@ -106,8 +106,11 @@ class com_authorizenet extends component {
 						empty($array['payment']['data']['card_number']) ||
 						empty($array['payment']['data']['card_exp_month']) ||
 						empty($array['payment']['data']['card_exp_year']) ||
-						empty($array['payment']['data']['cid']))
+						empty($array['payment']['data']['cid'])) {
+						if ($array['type'] == 'return')
+							pines_notice('Please swipe or enter the card used in the original transaction.');
 						$array['payment']['status'] = 'info_requested';
+					}
 				}
 				break;
 			case 'tender':
@@ -293,8 +296,8 @@ class com_authorizenet extends component {
 				break;
 			case 'return':
 				$amt = $pines->com_sales->round((float) $array['payment']['amount'], true);
-				$card_num = isset($array['payment']['com_authorizenet_credit_info']['card_number']) ? $array['payment']['com_authorizenet_credit_info']['card_number'] : $array['payment']['data']['card_number'];
-				$exp_date = isset($array['payment']['com_authorizenet_credit_info']['card_exp_month']) ? $array['payment']['com_authorizenet_credit_info']['card_exp_month'].$array['payment']['com_authorizenet_credit_info']['card_exp_year'] : $array['payment']['data']['card_exp_month'].$array['payment']['data']['card_exp_year'];
+				$card_num = !empty($array['payment']['data']['card_number']) ? $array['payment']['data']['card_number'] : $array['payment']['com_authorizenet_credit_info']['card_number'];
+				$exp_date = !empty($array['payment']['data']['card_exp_month']) ? $array['payment']['data']['card_exp_month'].$array['payment']['data']['card_exp_year'] : $array['payment']['com_authorizenet_credit_info']['card_exp_month'].$array['payment']['com_authorizenet_credit_info']['card_exp_year'];
 				$transaction_id = $array['payment']['com_authorizenet_credit_info']['transaction_id'];
 				$transaction_name = 'RETURN: '.$pines->config->com_authorizenet->trans_name;
 
@@ -340,10 +343,12 @@ class com_authorizenet extends component {
 				switch ($response_array[0]) {
 					case 1:
 						$array['payment']['status'] = 'tendered';
+						$array['payment']['label'] = $this->card_type($array['payment']['data']['card_number']) . ' ' . substr($array['payment']['data']['card_number'], -4);
 						break;
 					case 2:
 						pines_notice('Payment refund was declined.');
 						$array['payment']['status'] = 'declined';
+						$array['payment']['label'] = $this->card_type($array['payment']['data']['card_number']) . ' ' . substr($array['payment']['data']['card_number'], -4);
 						break;
 					case 3:
 						if ($response_array[2] == 54) {

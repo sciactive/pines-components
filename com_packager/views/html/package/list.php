@@ -26,6 +26,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			pgrid_toolbar_contents: [
 				<?php if (gatekeeper('com_packager/newpackage')) { ?>
 				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_packager', 'package/edit')); ?>'},
+				{type: 'button', text: 'Package(s) Wizard', extra_class: 'picon picon-tools-wizard', selection_optional: true, url: '<?php echo addslashes(pines_url('com_packager', 'package/wizard')); ?>'},
 				<?php } if (gatekeeper('com_packager/editpackage')) { ?>
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo addslashes(pines_url('com_packager', 'package/edit', array('id' => '__title__'))); ?>'},
 				<?php } if (gatekeeper('com_packager/makepackage')) { ?>

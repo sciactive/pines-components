@@ -22,7 +22,7 @@ class com_packager extends component {
 	 * Creates and attaches a module which lists packages.
 	 * @return module The module.
 	 */
-	function list_packages() {
+	public function list_packages() {
 		global $pines;
 
 		$module = new module('com_packager', 'package/list', 'content');
@@ -33,6 +33,30 @@ class com_packager extends component {
 			pines_notice('There are no packages.');
 
 		return $module;
+	}
+
+	/**
+	 * Creates a package wizard.
+	 */
+	public function package_wizard() {
+		global $pines;
+		$module = new module('com_packager', 'package/wizard', 'content');
+		$module->components = array();
+		foreach ($pines->all_components as $cur_component) {
+			$conf = configurator_component::factory($cur_component);
+			$info = clone $conf->info;
+			$info->type = substr($cur_component, 0, 4) == 'tpl_' ? 'template' : 'component';
+			$info->disabled = $conf->is_disabled();
+			if (!is_null($pines->entity_manager->get_entity(
+					array('class' => com_packager_package),
+					array('&',
+						'tag' => array('com_packager', 'package'),
+						'strict' => array('name', $cur_component)
+					)
+				)))
+				$info->already_exists = true;
+			$module->components[$cur_component] = $info;
+		}
 	}
 }
 

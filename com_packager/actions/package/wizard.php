@@ -1,6 +1,6 @@
 <?php
 /**
- * List packages.
+ * Provide a wizard to create packages.
  *
  * @package Pines
  * @subpackage com_packager
@@ -11,9 +11,9 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_packager/listpackages') )
-	punt_user(null, pines_url('com_packager', 'package/list'));
+if ( !gatekeeper('com_packager/newpackage') )
+	punt_user(null, pines_url('com_packager', 'package/wizard'));
 
-$pines->com_packager->list_packages();
+$pines->com_packager->package_wizard();
 
 ?>

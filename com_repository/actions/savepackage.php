@@ -84,8 +84,14 @@ if ($package->ext['screens'] && count($package->ext['screens']) > 10) {
 $dir = clean_filename($pines->config->com_repository->repository_path.$_SESSION['user']->guid.'/'.$package->ext['package'].'/'.$package->ext['version'].'/');
 $filename = $dir.clean_filename("{$package->ext['package']}-{$package->ext['version']}.slm");
 $sig_filename = $dir.clean_filename("{$package->ext['package']}-{$package->ext['version']}.sig");
+$md5_filename = $dir.clean_filename("{$package->ext['package']}-{$package->ext['version']}.md5");
 if (file_exists($sig_filename) && !unlink($sig_filename)) {
 	pines_error('Old signature file couldn\'t be removed.');
+	pines_redirect(pines_url('com_repository', 'listpackages'));
+	return;
+}
+if (file_exists($md5_filename) && !unlink($md5_filename)) {
+	pines_error('Old MD5 file couldn\'t be removed.');
 	pines_redirect(pines_url('com_repository', 'listpackages'));
 	return;
 }
@@ -131,8 +137,19 @@ if ($has_media) {
 	}
 }
 
+$md5 = md5_file($_FILES['package']['tmp_name']);
+if (!$md5) {
+	pines_error('Couldn\'t create MD5 sum for package.');
+	pines_redirect(pines_url('com_repository', 'listpackages'));
+	return;
+}
 if (!move_uploaded_file($_FILES['package']['tmp_name'], $filename)) {
 	pines_error('Error moving package into repository.');
+	pines_redirect(pines_url('com_repository', 'listpackages'));
+	return;
+}
+if (!file_put_contents($md5_filename, $md5)) {
+	pines_error('Error writing MD5 sum to file.');
 	pines_redirect(pines_url('com_repository', 'listpackages'));
 	return;
 }

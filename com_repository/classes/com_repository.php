@@ -78,6 +78,12 @@ class com_repository extends component {
 				continue;
 			if (isset($index[$slim->ext['package']]) && version_compare($slim->ext['version'], $index[$slim->ext['package']]['version']) == -1)
 				continue;
+			$md5_file = substr($cur_package, 0, -3) . 'md5';
+			if (!file_exists($md5_file))
+				continue;
+			$md5 = file_get_contents($md5_file);
+			if (!$md5)
+				continue;
 			$index[$slim->ext['package']] = array(
 				'publisher' => $user->username,
 				'package' => $slim->ext['package'],
@@ -95,7 +101,7 @@ class com_repository extends component {
 				'conflict' => $slim->ext['conflict'],
 				'icon' => $slim->ext['icon'],
 				'screens' => $slim->ext['screens'],
-				'md5' => md5_file($cur_package)
+				'md5' => $md5
 			);
 		}
 		if (!file_put_contents($dir.'index.tmp', json_encode($index)))

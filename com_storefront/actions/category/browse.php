@@ -39,14 +39,19 @@ if ($category->show_breadcrumbs) {
 
 $module = new module('com_storefront', 'category/browse', 'content');
 $module->entity = $category;
-if (isset($category->show_page->guid)) {
+foreach ((array) $category->show_pages as $cur_page) {
+	if (!isset($cur_page->guid))
+		continue;
+	$page_module = $cur_page->print_page();
+	if (!$page_module)
+		continue;
+	$page_module->detach();
+	$module->show_page_modules[] = $page_module;
 	// Check for and set the variant for the current template.
-	if (isset($category->show_page->variants[$pines->current_template]) && $pines->com_content->is_variant_valid($category->show_page->variants[$pines->current_template])) {
+	if (isset($cur_page->variants[$pines->current_template]) && $pines->com_content->is_variant_valid($cur_page->variants[$pines->current_template])) {
 		$cur_template = $pines->current_template;
-		$pines->config->$cur_template->variant = $category->show_page->variants[$pines->current_template];
+		$pines->config->$cur_template->variant = $cur_page->variants[$pines->current_template];
 	}
-	$module->show_page_module = $category->show_page->print_page();
-	$module->show_page_module->detach();
 }
 $module->page = isset($_REQUEST['page']) ? (int) $_REQUEST['page'] : 1;
 $module->products_per_page = $pines->config->com_storefront->products_per_page;

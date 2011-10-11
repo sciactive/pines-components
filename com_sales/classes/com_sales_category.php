@@ -33,6 +33,7 @@ class com_sales_category extends entity {
 		$this->show_title = true;
 		$this->show_breadcrumbs = true;
 		$this->show_products = true;
+		$this->show_pages = array();
 		$this->menu_position = 'left';
 		$this->specs = array();
 		if ($id > 0) {

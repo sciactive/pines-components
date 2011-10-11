@@ -27,8 +27,8 @@ if ($this->entity->show_products)
 	}
 	/* ]]> */
 </style>
-<?php if (isset($this->entity->show_page->guid)) {
-	echo $this->show_page_module->render();
+<?php foreach ((array) $this->show_page_modules as $cur_module) {
+	echo $cur_module->render();
 } if ($this->entity->show_children) { ?>
 <div id="p_muid_children">
 	In this category:

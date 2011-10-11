@@ -311,14 +311,37 @@ if ($pines->config->com_sales->com_storefront) {
 					<input class="pf-field" type="checkbox" name="show_children" value="ON"<?php echo $this->entity->show_children ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
-				<label><span class="pf-label">Show a Page</span>
-					<span class="pf-note">Show a content page when browsing this category.</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="show_page">
-						<option value="null"<?php echo !isset($this->entity->show_page->guid) ? ' selected="selected"' : ''; ?>>-- Don't show a page. --</option>
+				<script type="text/javascript">
+					// <[CDATA[
+					pines(function(){
+						$("#p_muid_add_show_page").click(function(){
+							var guid = $("#p_muid_show_page_selector").val();
+							var name = $("#p_muid_show_page_selector option:selected").html();
+
+							$("<div class=\"pf-field ui-widget-content\">"+name+"<input type=\"hidden\" name=\"show_pages[]\" value=\""+guid+"\" /> <a href=\"javascript:void(0);\" class=\"remove_page\" style=\"float: right;\"><small>X</small></a></div>").appendTo($("#p_muid_show_pages"));
+						});
+						
+						$("#p_muid_show_pages").delegate("a.remove_page", "click", function(){
+							$(this).closest("div.pf-field").remove();
+						}).sortable();
+					});
+					// ]]>
+				</script>
+				<label><span class="pf-label">Show Pages</span>
+					<span class="pf-note">Show content page(s) when browsing this category. You can use page conditions to control which page is shown.</span>
+					<select class="pf-field ui-widget-content ui-corner-all" id="p_muid_show_page_selector">
 						<?php foreach ($pages as $cur_page) { ?>
-						<option value="<?php echo $cur_page->guid; ?>"<?php echo $this->entity->show_page->guid == $cur_page->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_page->name); ?></option>
+						<option value="<?php echo $cur_page->guid; ?>"><?php echo htmlspecialchars($cur_page->name); ?></option>
 						<?php } ?>
 					</select></label>
+				<button class="pf-field ui-state-default ui-corner-all" id="p_muid_add_show_page" type="button">Add</button>
+				<div class="pf-group" id="p_muid_show_pages" style="margin-top: .5em; padding: .2em;">
+					<?php foreach ((array) $this->entity->show_pages as $cur_show_page) {
+						if (!isset($cur_show_page->guid))
+							continue; ?>
+					<div class="pf-field ui-widget-content"><?php echo htmlspecialchars($cur_show_page->name); ?><input type="hidden" name="show_pages[]" value="<?php echo htmlspecialchars($cur_show_page->guid); ?>" /> <a href="javascript:void(0);" class="remove_page" style="float: right;"><small>X</small></a></div>
+					<?php } ?>
+				</div>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Show Products</span>

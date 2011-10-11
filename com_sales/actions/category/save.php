@@ -37,9 +37,12 @@ if ($pines->config->com_sales->com_storefront) {
 	$category->show_menu = ($_REQUEST['show_menu'] == 'ON');
 	$category->menu_position = $_REQUEST['menu_position'];
 	$category->show_children = ($_REQUEST['show_children'] == 'ON');
-	$category->show_page = ($_REQUEST['show_page'] == 'null' ? null : com_content_page::factory((int) $_REQUEST['show_page']));
-	if (!isset($category->show_page->guid))
-		$category->show_page = null;
+	$category->show_pages = array();
+	foreach ((array) $_REQUEST['show_pages'] as $cur_page_guid) {
+		$cur_page = com_content_page::factory((int) $cur_page_guid);
+		if (isset($cur_page->guid))
+			$category->show_pages[] = $cur_page;
+	}
 	$category->show_products = ($_REQUEST['show_products'] == 'ON');
 	$category->description = $_REQUEST['description'];
 	$category->specs = array();

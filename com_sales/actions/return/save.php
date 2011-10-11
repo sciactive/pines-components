@@ -202,10 +202,27 @@ if ($return->status != 'processed' && $return->status != 'voided') {
 			$orig_payments[$orig_key]['amount'] = $cur_amount;
 			$orig_payments[$orig_key]['status'] = $cur_status;
 			$orig_payments[$orig_key]['data'] = $data_array;
-			$return->payments[] = $orig_payments[$orig_key];
+			if (isset($return->payments[$orig_key])) {
+				$move_payment = $return->payments[$orig_key];
+				$return->payments[$orig_key] = $orig_payments[$orig_key];
+				// This probably should use a big random key, but if this
+				// happens, that means there's something worse wrong. This
+				// should never happen. (But as with every strange programming
+				// anomaly, I'm sure it will one day.)
+				$return->payments[] = $move_payment;
+			} else {
+				$return->payments[$orig_key] = $orig_payments[$orig_key];
+			}
 			unset($orig_payments[$orig_key]);
 		} else {
-			$return->payments[] = array(
+			// The big random key is to separate new return payments from
+			// payments on the original sale. This lets us save the orig_key on
+			// the return form, even though the return may not be saved to the
+			// database yet.
+			do {
+				$big_random_key = rand(1000000, 9999999);
+			} while (isset($return->payments[$big_random_key]));
+			$return->payments[$big_random_key] = array(
 				'entity' => $cur_payment_type_entity,
 				'type' => $cur_type,
 				'amount' => $cur_amount,

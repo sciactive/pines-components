@@ -735,7 +735,8 @@ if ($pines->config->com_sales->autocomplete_product)
 									var olddata = row.data("payment_data");
 									var newdata = {processing_type: payment_data.processing_type, data: form.find("form :input").serializeArray()};
 									if (olddata && olddata.data)
-										newdata.data = $.extend({}, olddata.data, newdata.data);
+										newdata.data = $.merge(newdata.data, olddata.data);
+									newdata.data = $.makeArray(newdata.data);
 									row.data("payment_data", newdata);
 									update_payments();
 									form.dialog('close');
@@ -837,18 +838,18 @@ if ($pines->config->com_sales->autocomplete_product)
 
 				payments_table.pgrid_add([table_entry], function(){
 					var new_row = $(this).data("orig_key", <?php echo (int) $key; ?>);
-					<?php if (!empty($cur_payment['data'])) { ?>
 					var data = JSON.parse("<?php
 					$data = array();
-					foreach ($cur_payment['data'] as $cur_key => $cur_value) {
-						$data[] = (object) array('name' => $cur_key, 'value' => $cur_value);
+					if (!empty($cur_payment['data'])) { 
+						foreach ($cur_payment['data'] as $cur_key => $cur_value) {
+							$data[] = (object) array('name' => $cur_key, 'value' => $cur_value);
+						}
 					}
 					echo addslashes(json_encode((object) array(
 						'processing_type' => $cur_payment['entity']->processing_type,
 						'data' => $data
 					))); ?>");
 					new_row.data("payment_data", data);
-					<?php } ?>
 				});
 			})();
 			<?php } } ?>

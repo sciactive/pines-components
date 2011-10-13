@@ -161,7 +161,7 @@ class com_pgentity extends component implements entity_manager_interface {
 			if (function_exists('pines_error'))
 				pines_error('Query failed: ' . pg_last_error());
 		}
-		$query = sprintf('CREATE OR REPLACE FUNCTION %smatch_perl( TEXT, TEXT, TEXT ) RETURNS BOOL AS $code$ my ($str, $pattern, $mods) = @_; if ($pattern eq \'\') { return true; } my $vname = "/$pattern/$mods"; if (! defined $_SHARED{$vname}) { if ($mods eq \'\') { $_SHARED{$vname} = qr/($pattern)/o; } else { $_SHARED{$vname} = qr/(?$mods)($pattern)/o; } } if ($str =~ $_SHARED{$vname}) { return true; } else { return false; } $code$ LANGUAGE plperl IMMUTABLE STRICT COST 10000;',
+		$query = sprintf('CREATE OR REPLACE FUNCTION %smatch_perl( TEXT, TEXT, TEXT ) RETURNS BOOL AS $code$ my ($str, $pattern, $mods) = @_; if ($pattern eq \'\') { return true; } if ($mods eq \'\') { if ($str =~ /($pattern)/) { return true; } else { return false; } } else { if ($str =~ /(?$mods)($pattern)/) { return true; } else { return false; } } $code$ LANGUAGE plperl IMMUTABLE STRICT COST 10000;',
 			$pines->config->com_pgsql->prefix);
 		if ( !(pg_query($pines->com_pgsql->link, $query)) ) {
 			if (function_exists('pines_error'))
@@ -694,9 +694,7 @@ class com_pgentity extends component implements entity_manager_interface {
 		$row = pg_fetch_row($result);
 		while ($row) {
 			$guid = (int) $row[0];
-			// Don't bother getting the tags unless we're at/past the offset.
-			if ($ocount >= $options['offset'])
-				$tags = $row[1];
+			$tags = $row[1];
 			$data = array('p_cdate' => (float) $row[2], 'p_mdate' => (float) $row[3]);
 			// Serialized data.
 			$sdata = array();
@@ -704,20 +702,14 @@ class com_pgentity extends component implements entity_manager_interface {
 				// This do will keep going and adding the data until the
 				// next entity is reached. $row will end on the next entity.
 				do {
-					// Only remember this entity's data if we're at/past the offset.
-					if ($ocount >= $options['offset'])
-						$sdata[$row[4]] = $row[5];
+					$sdata[$row[4]] = $row[5];
 					$row = pg_fetch_row($result);
 				} while ((int) $row[0] === $guid);
 			} else {
 				// Make sure that $row is incremented :)
 				$row = pg_fetch_row($result);
 			}
-			if ($ocount < $options['offset']) {
-				$ocount++;
-				continue;
-			}
-			// Recheck all conditions.
+			// Check all conditions.
 			$pass_all = true;
 			foreach ($selectors as &$cur_selector) {
 				$pass = false;
@@ -729,75 +721,63 @@ class com_pgentity extends component implements entity_manager_interface {
 						$pass = !$type_is_or;
 						continue;
 					}
-					// Check if it doesn't pass any for &, check if it
-					// passes any for |.
-					foreach ($value as $cur_value) {
-						if ($key === 'ref' && isset($sdata[$cur_value[0]])) {
-							// If possible, do a quick entity reference check
-							// instead of unserializing all the data.
-							if ((array) $cur_value[1] === $cur_value[1]) {
-								foreach ($cur_value[1] as $cur_entity) {
-									if ((object) $cur_entity === $cur_entity) {
-										$pass = ((strpos($sdata[$cur_value[0]], "a:3:{i:0;s:22:\"pines_entity_reference\";i:1;i:{$cur_entity->guid};") !== false) xor $type_is_not);
-										if (!($type_is_or xor $pass))
-											break;
-									} else {
-										$pass = ((strpos($sdata[$cur_value[0]], "a:3:{i:0;s:22:\"pines_entity_reference\";i:1;i:{$cur_entity};") !== false) xor $type_is_not);
-										if (!($type_is_or xor $pass))
-											break;
-									}
-								}
-							} elseif ((object) $cur_value[1] === $cur_value[1]) {
-								$pass = ((strpos($sdata[$cur_value[0]], "a:3:{i:0;s:22:\"pines_entity_reference\";i:1;i:{$cur_value[1]->guid};") !== false) xor $type_is_not);
+					if ($key === 'ref') {
+						// Handled by the query.
+						$pass = true;
+					} elseif ($key === 'guid' || $key === 'tag') {
+						// Handled by the query.
+						$pass = true;
+					} elseif ($key === 'isset') {
+						// Handled by the query.
+						$pass = true;
+					} elseif ($key === 'match' && $this->use_plperl) {
+						// Handled by the query.
+						$pass = true;
+					} elseif ($key === 'strict') {
+						// Handled by the query.
+						$pass = true;
+					} else {
+						// Check if it doesn't pass any for &, check if it
+						// passes any for |.
+						foreach ($value as $cur_value) {
+							if ($key === 'data' && ($cur_value[1] === true || $cur_value[1] === false || $cur_value[1] === 1 || $cur_value[1] === 0 || $cur_value[1] === -1 || $cur_value[1] === array())) {
+								// Handled by the query.
+								$pass = true;
 							} else {
-								$pass = ((strpos($sdata[$cur_value[0]], "a:3:{i:0;s:22:\"pines_entity_reference\";i:1;i:{$cur_value[1]};") !== false) xor $type_is_not);
+								// Unserialize the data for this variable.
+								if (isset($sdata[$cur_value[0]])) {
+									$data[$cur_value[0]] = unserialize($sdata[$cur_value[0]]);
+									unset($sdata[$cur_value[0]]);
+								}
+								switch ($key) {
+									case 'data':
+										// If we get here, it's not one of those simple data values above.
+										$pass = (($data[$cur_value[0]] == $cur_value[1]) xor $type_is_not);
+										break;
+									case 'array':
+										$pass = (((array) $data[$cur_value[0]] === $data[$cur_value[0]] && in_array($cur_value[1], $data[$cur_value[0]])) xor $type_is_not);
+										break;
+									case 'match':
+										// If we get here, plperl functions are off.
+										$pass = ((isset($data[$cur_value[0]]) && preg_match($cur_value[1], $data[$cur_value[0]])) xor $type_is_not);
+										break;
+									case 'gt':
+										$pass = (($data[$cur_value[0]] > $cur_value[1]) xor $type_is_not);
+										break;
+									case 'gte':
+										$pass = (($data[$cur_value[0]] >= $cur_value[1]) xor $type_is_not);
+										break;
+									case 'lt':
+										$pass = (($data[$cur_value[0]] < $cur_value[1]) xor $type_is_not);
+										break;
+									case 'lte':
+										$pass = (($data[$cur_value[0]] <= $cur_value[1]) xor $type_is_not);
+										break;
+								}
 							}
-						} else {
-							// Unserialize the data for this variable.
-							if (isset($sdata[$cur_value[0]])) {
-								$data[$cur_value[0]] = unserialize($sdata[$cur_value[0]]);
-								unset($sdata[$cur_value[0]]);
-							}
-							switch ($key) {
-								case 'guid':
-								case 'tag':
-									// These are handled by the query.
-									$pass = true;
-									break;
-								case 'isset':
-									$pass = (isset($data[$cur_value[0]]) xor $type_is_not);
-									break;
-								case 'data':
-									$pass = (($data[$cur_value[0]] == $cur_value[1]) xor $type_is_not);
-									break;
-								case 'strict':
-									$pass = (($data[$cur_value[0]] === $cur_value[1]) xor $type_is_not);
-									break;
-								case 'array':
-									$pass = (((array) $data[$cur_value[0]] === $data[$cur_value[0]] && in_array($cur_value[1], $data[$cur_value[0]])) xor $type_is_not);
-									break;
-								case 'match':
-									$pass = ((isset($data[$cur_value[0]]) && preg_match($cur_value[1], $data[$cur_value[0]])) xor $type_is_not);
-									break;
-								case 'gt':
-									$pass = (($data[$cur_value[0]] > $cur_value[1]) xor $type_is_not);
-									break;
-								case 'gte':
-									$pass = (($data[$cur_value[0]] >= $cur_value[1]) xor $type_is_not);
-									break;
-								case 'lt':
-									$pass = (($data[$cur_value[0]] < $cur_value[1]) xor $type_is_not);
-									break;
-								case 'lte':
-									$pass = (($data[$cur_value[0]] <= $cur_value[1]) xor $type_is_not);
-									break;
-								case 'ref':
-									$pass = ((isset($data[$cur_value[0]]) && (array) $data[$cur_value[0]] === $data[$cur_value[0]] && $this->entity_reference_search($data[$cur_value[0]], $cur_value[1])) xor $type_is_not);
-									break;
-							}
+							if (!($type_is_or xor $pass))
+								break;
 						}
-						if (!($type_is_or xor $pass))
-							break;
 					}
 					if (!($type_is_or xor $pass))
 						break;
@@ -810,11 +790,16 @@ class com_pgentity extends component implements entity_manager_interface {
 			}
 			unset($cur_selector);
 			if ($pass_all) {
-				if ($pines->config->com_pgentity->cache) {
-					$entity = $this->pull_cache($guid, $class);
-				} else {
-					$entity = null;
+				if ($ocount < $options['offset']) {
+					// We must be sure this entity is actually a match before
+					// incrementing the offset.
+					$ocount++;
+					continue;
 				}
+				if ($pines->config->com_pgentity->cache)
+					$entity = $this->pull_cache($guid, $class);
+				else
+					$entity = null;
 				if (!isset($entity) || $data['p_mdate'] > $entity->p_mdate) {
 					$entity = call_user_func(array($class, 'factory'));
 					$entity->guid = $guid;

@@ -507,9 +507,7 @@ class com_myentity extends component implements entity_manager_interface {
 		$row = mysql_fetch_row($result);
 		while ($row) {
 			$guid = (int) $row[0];
-			// Don't bother getting the tags unless we're at/past the offset.
-			if ($ocount >= $options['offset'])
-				$tags = $row[1];
+			$tags = $row[1];
 			$data = array('p_cdate' => (float) $row[2], 'p_mdate' => (float) $row[3]);
 			// Serialized data.
 			$sdata = array();
@@ -517,20 +515,14 @@ class com_myentity extends component implements entity_manager_interface {
 				// This do will keep going and adding the data until the
 				// next entity is reached. $row will end on the next entity.
 				do {
-					// Only remember this entity's data if we're at/past the offset.
-					if ($ocount >= $options['offset'])
-						$sdata[$row[4]] = $row[5];
+					$sdata[$row[4]] = $row[5];
 					$row = mysql_fetch_row($result);
 				} while ((int) $row[0] === $guid);
 			} else {
 				// Make sure that $row is incremented :)
 				$row = mysql_fetch_row($result);
 			}
-			if ($ocount < $options['offset']) {
-				$ocount++;
-				continue;
-			}
-			// Recheck all conditions.
+			// Check all conditions.
 			$pass_all = true;
 			foreach ($selectors as &$cur_selector) {
 				$pass = false;
@@ -623,11 +615,16 @@ class com_myentity extends component implements entity_manager_interface {
 			}
 			unset($cur_selector);
 			if ($pass_all) {
-				if ($pines->config->com_myentity->cache) {
-					$entity = $this->pull_cache($guid, $class);
-				} else {
-					$entity = null;
+				if ($ocount < $options['offset']) {
+					// We must be sure this entity is actually a match before
+					// incrementing the offset.
+					$ocount++;
+					continue;
 				}
+				if ($pines->config->com_myentity->cache)
+					$entity = $this->pull_cache($guid, $class);
+				else
+					$entity = null;
 				if (!isset($entity) || $data['p_mdate'] > $entity->p_mdate) {
 					$entity = call_user_func(array($class, 'factory'));
 					$entity->guid = $guid;

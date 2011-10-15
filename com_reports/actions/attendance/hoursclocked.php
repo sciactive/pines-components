@@ -11,8 +11,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_reports/reportattendance') )
-	punt_user(null, pines_url('com_reports', 'reportattendance'));
+if ( !gatekeeper('com_reports/attendance') )
+	punt_user(null, pines_url('com_reports', 'attendance/hoursclocked', $_GET));
 
 if (!empty($_REQUEST['start_date'])) {
 	$start_date = $_REQUEST['start_date'];
@@ -39,6 +39,6 @@ $employee = empty($_REQUEST['employee']) ? null : com_hrm_employee::factory((int
 $location = empty($_REQUEST['location']) ? null : group::factory((int) $_REQUEST['location']);
 $descendents = ($_REQUEST['descendents'] == 'true');
 
-$pines->com_reports->report_attendance($start_date, $end_date, $location, $employee, $descendents);
+$pines->com_reports->hours_clocked($start_date, $end_date, $location, $employee, $descendents);
 
 ?>

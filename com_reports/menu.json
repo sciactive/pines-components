@@ -82,12 +82,28 @@
 			{
 				"path": "main_menu/reports/hrm/time_attendance",
 				"text": "Time & Attendance",
-				"href": ["com_reports","reportattendance"],
 				"depend": {
-					"component": "com_calendar",
-					"ability": "com_reports/reportattendance"
+					"children": true
 				}
 			},
+				{
+					"path": "main_menu/reports/hrm/time_attendance/dailyattendance",
+					"text": "Daily Attendance",
+					"href": ["com_reports","attendance/dailyattendance"],
+					"depend": {
+						"component": "com_calendar",
+						"ability": "com_reports/attendance"
+					}
+				},
+				{
+					"path": "main_menu/reports/hrm/time_attendance/hoursclocked",
+					"text": "Hours Clocked",
+					"href": ["com_reports","attendance/hoursclocked"],
+					"depend": {
+						"component": "com_calendar",
+						"ability": "com_reports/attendance"
+					}
+				},
 			{
 				"path": "main_menu/reports/hrm/reportpayrollsummary",
 				"text": "Report Payroll Summary",

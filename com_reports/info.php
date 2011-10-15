@@ -25,7 +25,7 @@ return array(
 		'component' => 'com_jquery&com_pgrid&com_jstree&com_pform&(com_hrm|com_sales|com_calendar)'
 	),
 	'abilities' => array(
-		array('reportattendance', 'Report Attendance', 'User can see attendance reports.'),
+		array('attendance', 'Report Attendance', 'User can see attendance reports.'),
 		array('reportcalendar', 'Report Calendar', 'User can see calendar reports.'),
 		array('reportpayroll', 'Report Payroll', 'User can see payroll reports.'),
 		array('editpayroll', 'Edit Payroll', 'User can edit and finalize company paystubs.'),

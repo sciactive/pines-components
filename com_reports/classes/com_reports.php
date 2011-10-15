@@ -221,7 +221,108 @@ class com_reports extends component {
 	}
 
 	/**
-	 * Creates and attaches a module which reports sales.
+	 * Creates and attaches a module which reports employee daily attendance.
+	 *
+	 * @param int $date The date of the report.
+	 * @param group $location The group to report on.
+	 * @param bool $descendents Whether to show descendent locations.
+	 * @return module The attendance report module.
+	 */
+	function daily_attendance($date, $location = null, $descendents = false) {
+		global $pines;
+
+		// Location of the report.
+		if (!isset($location->guid))
+			$location = $_SESSION['user']->group;
+
+		$module = new module('com_reports', 'attendance/daily_attendance', 'content');
+		$module->date = $date;
+		$module->location = $location;
+		$module->descendents = $descendents;
+		$module->attendance = array();
+		// Only one day is in the date range, and it's in the current timezone.
+		$start_date = strtotime('00:00:00', $date);
+		$end_date = strtotime('23:59:59', $date) + 1;
+		$employees = $pines->com_hrm->get_employees(true);
+		foreach ($employees as $key => &$cur_employee) {
+			if (!($cur_employee->in_group($location) || ($descendents && $cur_employee->is_descendent($location))))
+				continue;
+			$cur_array = array(
+				'employee' => $cur_employee,
+				'clocked_in' => null,
+				'clocked_out' => null,
+				'clocked_total' => 0,
+				'clocked_ips' => array(),
+				'scheduled_in' => null,
+				'scheduled_out' => null,
+				'scheduled_total' => 0,
+			);
+			// Did the employee clock in?
+			foreach($cur_employee->timeclock->timeclock as $key => $entry) {
+				// Ignore if it's not even in our time range.
+				if ($entry['out'] < $start_date || $entry['in'] >= $end_date)
+					continue;
+				// Ignore any part of the clockin outside our time range.
+				$in = $entry['in'];
+				if ($in < $start_date)
+					$in = $start_date;
+				$out = $entry['out'];
+				if ($out > $end_date)
+					$out = $end_date;
+				$time = $out - $in;
+				if (!isset($cur_array['clocked_in']) || $cur_array['clocked_in'] > $in)
+					$cur_array['clocked_in'] = $in;
+				if (!isset($cur_array['clocked_out']) || $cur_array['clocked_out'] < $out)
+					$cur_array['clocked_out'] = $out;
+				$cur_array['clocked_total'] += $time;
+				// IPs aren't always on all clockins.
+				if (isset($entry['extras']['ip_in']) && !in_array($entry['extras']['ip_in'], $cur_array['clocked_ips']))
+					$cur_array['clocked_ips'][] = $entry['extras']['ip_in'];
+				if (isset($entry['extras']['ip_out']) && !in_array($entry['extras']['ip_out'], $cur_array['clocked_ips']))
+					$cur_array['clocked_ips'][] = $entry['extras']['ip_out'];
+			}
+			// Get their scheduled time.
+			$schedule = $pines->entity_manager->get_entities(
+					array('class' => com_calendar_event),
+					array('&',
+						'tag' => array('com_calendar', 'event'),
+						'lt' => array('start', $end_date),
+						'gte' => array('end', $start_date),
+						'ref' => array('employee', $cur_employee)
+					)
+				);
+			foreach($schedule as $cur_schedule) {
+				// Ignore any part of the clockin outside our time range.
+				$in = $cur_schedule->start;
+				if ($in < $start_date)
+					$in = $start_date;
+				$out = $cur_schedule->end;
+				if ($out > $end_date)
+					$out = $end_date;
+				$time = $out - $in;
+
+				// Compare scheduled time with our calculated time.
+				$diff = ($cur_schedule->end - $cur_schedule->start) - (int) $cur_schedule->scheduled;
+				// And subtract the difference from ours.
+				$time -= $diff;
+
+				if (!isset($cur_array['scheduled_in']) || $cur_array['scheduled_in'] > $in)
+					$cur_array['scheduled_in'] = $in;
+				if (!isset($cur_array['scheduled_out']) || $cur_array['scheduled_out'] < $out)
+					$cur_array['scheduled_out'] = $out;
+				$cur_array['scheduled_total'] += $time;
+			}
+			// Only add them if they were clocked or scheduled.
+			if ($cur_array['clocked_total'] || $cur_array['scheduled_total'])
+				$module->attendance[] = $cur_array;
+		}
+		unset($cur_employee);
+
+		return $module;
+	}
+
+	/**
+	 * Creates and attaches a module which reports hours clocked.
 	 *
 	 * @param int $start_date The start date of the report.
 	 * @param int $end_date The end date of the report.
@@ -230,27 +331,100 @@ class com_reports extends component {
 	 * @param bool $descendents Whether to show descendent locations.
 	 * @return module The attendance report module.
 	 */
-	function report_attendance($start_date = null, $end_date = null, $location = null, $employee = null, $descendents = false) {
+	function hours_clocked($start_date = null, $end_date = null, $location = null, $employee = null, $descendents = false) {
 		global $pines;
 
-		$module = new module('com_reports', 'report_attendance', 'content');
 		// Location of the report.
 		if (!isset($location->guid))
 			$location = $_SESSION['user']->group;
-		if (!isset($employee)) {
-			$module->employees = $pines->com_hrm->get_employees(true);
-			foreach ($module->employees as $key => &$cur_employee) {
-				if (!($cur_employee->in_group($location) || ($descendents && $cur_employee->is_descendent($location))))
-					unset($module->employees[$key]);
-			}
-		} else {
-			$module->employee = $employee;
-		}
+
+		$module = new module('com_reports', 'attendance/hours_clocked', 'content');
 		$module->start_date = $start_date;
 		$module->end_date = $end_date;
 		$module->all_time = (!isset($start_date) && !isset($end_date));
 		$module->location = $location;
 		$module->descendents = $descendents;
+		if (!isset($employee)) {
+			$employees = $pines->com_hrm->get_employees(true);
+			$module->employees = array();
+			$totals = array();
+			$total_group['scheduled'] = $total_group['clocked'] = $time_punch = $total_count = 0;
+			foreach ($employees as $key => &$cur_employee) {
+				if (!($cur_employee->in_group($location) || ($descendents && $cur_employee->is_descendent($location))))
+					continue;
+				$totals[$total_count]['scheduled'] = $totals[$total_count]['clocked'] = 0;
+				$schedule = $pines->entity_manager->get_entities(
+						array('class' => com_calendar_event),
+						array('&',
+							'tag' => array('com_calendar', 'event'),
+							'gte' => array('start', $start_date),
+							'lt' => array('end', $end_date),
+							'ref' => array('employee', $cur_employee)
+						)
+					);
+				foreach ($schedule as $cur_schedule)
+					$totals[$total_count]['scheduled'] += $cur_schedule->scheduled;
+				$totals[$total_count]['clocked'] = $cur_employee->timeclock->sum($start_date, $end_date);
+
+				$module->employees[] = array(
+					'employee' => $cur_employee,
+					'scheduled' => round($totals[$total_count]['scheduled'] / 3600, 2),
+					'clocked' => round($totals[$total_count]['clocked'] / 3600, 2),
+					'variance' => round(($totals[$total_count]['clocked'] - $totals[$total_count]['scheduled']) / 3600, 2),
+				);
+				$total_group['scheduled'] += $totals[$total_count]['scheduled'];
+				$total_group['clocked'] += $totals[$total_count]['clocked'];
+				$total_count++;
+			}
+			unset($cur_employee);
+			$module->totals = array(
+				'scheduled' => round($total_group['scheduled'] / 3600, 2),
+				'clocked' => round($total_group['clocked'] / 3600, 2),
+				'variance' => round(($total_group['clocked'] - $total_group['scheduled']) / 3600, 2),
+			);
+		} else {
+			$module->clocks = $module->dates = array();
+			$clock_count = $date_count = 0;
+			foreach($employee->timeclock->timeclock as $key => $entry) {
+				if ( $module->all_time || ($entry['in'] >= $start_date && ($entry['out'] <= $end_date || !isset($entry['out']))) ) {
+					if ($module->dates[$date_count]['date'] != format_date($entry['in'], 'date_sort')) {
+						$date_count++;
+						$module->dates[$date_count]['start'] = strtotime('00:00:00', $entry['in']);
+						$module->dates[$date_count]['end'] = strtotime('23:59:59', $entry['out']) + 1;
+						$module->dates[$date_count]['date'] = format_date($entry['in'], 'date_sort');
+						$module->dates[$date_count]['scheduled'] = 0;
+						$module->dates[$date_count]['total'] = 0;
+					}
+					$clock_count++;
+					$module->clocks[$clock_count] = $entry;
+					$module->clocks[$clock_count]['date'] = $date_count;
+					$module->dates[$date_count]['total'] += $module->clocks[$clock_count]['total'] = $employee->timeclock->sum($entry['in'], isset($entry['out']) ? $entry['out'] : time());
+				}
+			}
+			foreach ($module->dates as &$cur_date) {
+				$scheduled = $pines->entity_manager->get_entities(
+						array('class' => com_calendar_event),
+						array('&',
+							'tag' => array('com_calendar', 'event'),
+							'gte' => array('start', $cur_date['start']),
+							'lt' => array('end', $cur_date['end']),
+							'ref' => array('employee', $employee)
+						)
+					);
+				foreach ($scheduled as $cur_schedule) {
+					if (!isset($cur_date['sched_start']) || $cur_date['sched_start'] > $cur_schedule->start)
+						$cur_date['sched_start'] = $cur_schedule->start;
+					if (!isset($cur_date['sched_end']) || $cur_date['sched_end'] < $cur_schedule->end)
+						$cur_date['sched_end'] = $cur_schedule->end;
+					$cur_date['scheduled'] += $cur_schedule->scheduled;
+				}
+				$cur_date['total_hours'] = floor($cur_date['total'] / 3600);
+				$cur_date['total_mins'] = round(($cur_date['total'] / 60) - ($cur_date['total_hours'] * 60));
+				$cur_date['variance'] = round(($cur_date['total'] - $cur_date['scheduled']) / 3600, 2);
+			}
+			unset($cur_date);
+			$module->employee = $employee;
+		}
 
 		return $module;
 	}
@@ -402,11 +576,11 @@ class com_reports extends component {
 		}
 		// If this is a summary report we need the amount adjustment amount 
 		// of what we've already paid them.
-		if(!$module->hourreport){
-			
-			if($module->employee->pay_type == 'salary'){
+		if (!$module->hourreport) {
+
+			if($module->employee->pay_type == 'salary') {
 				$module->adjust = (-1 * (1814400 / 31536000)) * $employee->pay_rate;
-			}else{
+			} else {
 				$week = ($module->employee->timeclock->sum($start_date, ($start_date + 604800))/3600);
 				if ($week > 40)
 					$module->adjust += (40 * $module->employee->pay_rate) + ($module->employee->pay_rate * 1.5 * ($week -40));
@@ -422,7 +596,7 @@ class com_reports extends component {
 					$module->adjust += (40 * $module->employee->pay_rate) + ($module->employee->pay_rate * 1.5 * ($week -40));
 				else
 					$module->adjust += $week * $module->employee->pay_rate;
-				
+
 				$module->adjust = $module->adjust * -1;
 			}
 		}

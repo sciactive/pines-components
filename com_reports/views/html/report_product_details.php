@@ -212,13 +212,13 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 
 			if ($cur_tx->has_tag('return')) {
 				$class = 'class="p_muid_return"';
-				$tx_type = 'RETURN';
+				$tx_type = 'RE';
 			} else {
-				$tx_type = 'SALE';
+				$tx_type = 'SA';
 			}
 
 			foreach ($cur_tx->products as $cur_item) {
-				if ($tx_type == 'SALE')
+				if ($tx_type == 'SA')
 					$class = '';
 				$cur_status = strtoupper($cur_tx->status);
 				if (!empty($cur_item['returned_quantity'])) {
@@ -231,7 +231,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				}
 			?>
 			<tr <?php echo $class; ?>>
-				<td><?php echo $tx_type.$cur_tx->id; ?></td>
+				<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', ($tx_type == 'SA' ? 'sale/receipt' : 'return/receipt'), array('id' => $cur_tx->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($tx_type.$cur_tx->id); ?></a></td>
 				<td><?php echo format_date($cur_tx->p_cdate); ?></td>
 				<td><?php echo $cur_status; ?></td>
 				<td><?php echo htmlspecialchars($cur_item['delivery']); ?></td>

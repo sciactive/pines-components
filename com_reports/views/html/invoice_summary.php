@@ -216,7 +216,7 @@ $pines->com_pgrid->load();
 				}
 			?>
 			<tr title="<?php echo (int) $cur_invoice->customer->guid; ?>" class="<?php echo $type; ?>">
-				<td><?php echo htmlspecialchars($cur_invoice->id); ?></td>
+				<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', ($cur_invoice->has_tag('return') ? 'return/receipt' : 'sale/receipt'), array('id' => $cur_invoice->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_invoice->id); ?></a></td>
 				<td><?php echo ucwords($type); ?></td>
 				<td><?php echo format_date($cur_invoice->p_cdate, 'full_sort'); ?></td>
 				<td><?php echo htmlspecialchars($cur_invoice->group->name); ?></td>

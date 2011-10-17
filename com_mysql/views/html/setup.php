@@ -49,7 +49,7 @@ $this->title = 'Database Setup';
 	</div>
 	<div class="pf-element pf-heading">
 		<h1>Automatic Setup</h1>
-		<p>The user and/or database can be created for you by providing a priveleged user's credentials below. Leave blank to skip this option.</p>
+		<p>The user and/or database can be created for you by providing a privileged user's credentials below. Leave blank to skip this option.</p>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Setup User</span>

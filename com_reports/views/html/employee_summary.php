@@ -259,7 +259,7 @@ $pines->com_pgrid->load();
 					}
 				}
 			}
-			foreach ($totals as $cur_total) {
+			foreach ((array) $totals as $cur_total) {
 				$cur_total['profit'] = ($cur_total['total_sold']-$cur_total['total_returned'])-$cur_total['cost'];
 			?>
 			<tr title="<?php echo $cur_total['employee']->guid; ?>">

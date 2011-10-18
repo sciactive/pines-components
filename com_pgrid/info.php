@@ -24,6 +24,9 @@ return array(
 		'service' => 'icons',
 		'component' => 'com_jquery'
 	),
+	'abilities' => array(
+		array('clearallstates', 'Clear All States', 'Clear all users\' pgrid states.')
+	),
 );
 
 ?>

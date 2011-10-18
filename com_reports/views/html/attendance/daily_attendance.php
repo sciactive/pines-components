@@ -32,7 +32,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		};
 
 		// Date Defaults
-		var date = "<?php echo $this->start_date ? addslashes(format_date($this->date, 'date_sort')) : ''; ?>";
+		var date = "<?php echo $this->date ? addslashes(format_date($this->date, 'date_sort')) : ''; ?>";
 		// Location Defaults
 		var location = "<?php echo $this->location->guid; ?>";
 		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
@@ -55,7 +55,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				}}
 			],
 			pgrid_hidden_cols: [1],
-			pgrid_sortable: false,
+			pgrid_sort_col: 3,
 			pgrid_state_change: function(state) {
 				if (typeof state_xhr == "object")
 					state_xhr.abort();

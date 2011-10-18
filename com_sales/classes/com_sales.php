@@ -1234,21 +1234,39 @@ class com_sales extends component {
 	 * By default, shows items that need to be ordered.
 	 * 
 	 * @param bool $ordered Whether to show ordered products instead.
+	 * @param int $start_date The start date of orders to show.
+	 * @param int $end_date The end date of orders to show.
+	 * @param group $location The location to show orders for.
+	 * @param bool $descendents Whether to show descendent locations.
 	 * @return module The list's module.
 	 */
-	public function warehouse_pending($ordered = false) {
+	public function warehouse_pending($ordered = false, $start_date = null, $end_date = null, $location = null, $descendents = false) {
 		global $pines;
 
+		$module = new module('com_sales', 'warehouse/pending', 'content');
+
 		// Get sales with warehouse items.
-		$sales = (array) $pines->entity_manager->get_entities(
+		$selector = array('&',
+				'tag' => array('com_sales', 'sale'),
+				'data' => array(
+					array('warehouse', true),
+					array('warehouse_pending', true)
+				)
+			);
+		if (isset($start_date))
+			$selector['gte'] = array('p_cdate', (int) $start_date);
+		if (isset($end_date))
+			$selector['lt'] = array('p_cdate', (int) $end_date);
+		if (!isset($location))
+			$location = $_SESSION['user']->group;
+		if ($descendents)
+			$or = array('|', 'ref' => array('group', $location->get_descendents(true)));
+		else
+			$or = array('|', 'ref' => array('group', $location));
+		$module->sales = (array) $pines->entity_manager->get_entities(
 				array('class' => com_sales_sale),
-				array('&',
-					'tag' => array('com_sales', 'sale'),
-					'data' => array(
-						array('warehouse', true),
-						array('warehouse_pending', true)
-					)
-				),
+				$selector,
+				$or,
 				array('|',
 					'data' => array(
 						array('status', 'invoiced'),
@@ -1256,10 +1274,12 @@ class com_sales extends component {
 					)
 				)
 			);
-
-		$module = new module('com_sales', 'warehouse/pending', 'content');
-		$module->sales = $sales;
 		$module->ordered = $ordered;
+		$module->start_date = $start_date;
+		$module->end_date = $end_date;
+		$module->all_time = (!isset($start_date) && !isset($end_date));
+		$module->location = $location;
+		$module->descendents = $descendents;
 
 		return $module;
 	}

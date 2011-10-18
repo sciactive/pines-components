@@ -11,7 +11,25 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = ($this->ordered ? 'Ordered' : 'New').' Pending Warehouse Orders';
+if (isset($this->location)) {
+	$this->title .= htmlspecialchars(" at {$this->location->name} [{$this->location->groupname}]");
+	if ($this->descendents)
+		$this->title .= ' and Below';
+}
+if ($this->all_time) {
+	$this->note = 'All time included.';
+} elseif (isset($this->start_date) || isset($this->end_date)) {
+	if (isset($this->start_date))
+		$this->note = format_date($this->start_date, 'date_short').' - ';
+	else
+		$this->note = 'Up to and including ';
+	if (isset($this->end_date))
+		$this->note .= format_date($this->end_date - 1, 'date_short').'.';
+	else
+		$this->note .= ' and beyond.';
+}
 $pines->com_pgrid->load();
+$pines->com_jstree->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/warehouse/pending'];
 ?>
@@ -19,11 +37,34 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	// <![CDATA[
 
 	pines(function(){
+		var submit_url = "<?php echo addslashes(pines_url('com_sales', 'warehouse/pending', array('ordered' => ($this->ordered ? 'true' : 'false')))); ?>";
+		var submit_search = function(){
+			// Submit the form with all of the fields.
+			pines.get(submit_url, {
+				"location": location,
+				"descendents": descendents,
+				"all_time": all_time,
+				"start_date": start_date,
+				"end_date": end_date
+			});
+		};
+
+		// Timespan Defaults
+		var all_time = <?php echo $this->all_time ? 'true' : 'false'; ?>;
+		var start_date = "<?php echo $this->start_date ? addslashes(format_date($this->start_date, 'date_sort')) : ''; ?>";
+		var end_date = "<?php echo $this->end_date ? addslashes(format_date($this->end_date - 1, 'date_sort')) : ''; ?>";
+		// Location Defaults
+		var location = "<?php echo $this->location->guid; ?>";
+		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
+
 		var state_xhr;
 		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
+				{type: 'button', title: 'Location', extra_class: 'picon picon-applications-internet', selection_optional: true, click: function(){pending_grid.location_form();}},
+				{type: 'button', title: 'Timespan', extra_class: 'picon picon-view-time-schedule', selection_optional: true, click: function(){pending_grid.date_form();}},
+				{type: 'separator'},
 				{type: 'button', text: 'Guide', title: 'See information about where current stock is available.', extra_class: 'picon picon-view-calendar-tasks', double_click: true, click: function(e, rows){
 					var loader;
 					$.ajax({
@@ -66,9 +107,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', title: 'Flag', extra_class: 'picon picon-flag-red', multi_select: true, url: '<?php echo addslashes(pines_url('com_sales', 'warehouse/flag', array('id' => '__title__'))); ?>', delimiter: ','},
 				{type: 'separator'},
 				<?php if (!$this->ordered) { ?>
-				{type: 'button', text: 'Ordered', extra_class: 'picon picon-vcs-removed', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'warehouse/pending', array('ordered' => 'true'))); ?>'},
+				{type: 'button', text: 'Ordered', extra_class: 'picon picon-vcs-removed', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'warehouse/pending', array('ordered' => 'true', 'location' => $this->location->guid, 'descendents' => ($this->descendents ? 'true' : 'false'), 'all_time' => ($this->all_time ? 'true' : 'false'), 'start_date' => ($this->start_date ? addslashes(format_date($this->start_date, 'date_sort')) : ''), 'end_date' => ($this->end_date ? addslashes(format_date($this->end_date - 1, 'date_sort')) : '')))); ?>'},
 				<?php } else { ?>
-				{type: 'button', text: 'New Orders', extra_class: 'picon picon-vcs-normal', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'warehouse/pending')); ?>'},
+				{type: 'button', text: 'New Orders', extra_class: 'picon picon-vcs-normal', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'warehouse/pending', array('location' => $this->location->guid, 'descendents' => ($this->descendents ? 'true' : 'false'), 'all_time' => ($this->all_time ? 'true' : 'false'), 'start_date' => ($this->start_date ? addslashes(format_date($this->start_date, 'date_sort')) : ''), 'end_date' => ($this->end_date ? addslashes(format_date($this->end_date - 1, 'date_sort')) : '')))); ?>'},
 				<?php } ?>
 				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
@@ -91,7 +132,88 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
-		$("#p_muid_grid").pgrid(cur_options);
+		var pending_grid = $("#p_muid_grid").pgrid(cur_options);
+
+		pending_grid.date_form = function(){
+			$.ajax({
+				url: "<?php echo addslashes(pines_url('com_sales', 'forms/dateselect')); ?>",
+				type: "POST",
+				dataType: "html",
+				data: {"all_time": all_time, "start_date": start_date, "end_date": end_date},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured while trying to retreive the date form:\n"+XMLHttpRequest.status+": "+textStatus);
+				},
+				success: function(data){
+					if (data == "")
+						return;
+					var form = $("<div title=\"Date Selector\"></div>");
+					form.dialog({
+						bgiframe: true,
+						autoOpen: true,
+						height: 315,
+						modal: true,
+						open: function(){
+							form.html(data);
+						},
+						close: function(){
+							form.remove();
+						},
+						buttons: {
+							"Update": function(){
+								if (form.find(":input[name=timespan_saver]").val() == "alltime") {
+									all_time = true;
+								} else {
+									all_time = false;
+									start_date = form.find(":input[name=start_date]").val();
+									end_date = form.find(":input[name=end_date]").val();
+								}
+								form.dialog('close');
+								submit_search();
+							}
+						}
+					});
+				}
+			});
+		};
+		pending_grid.location_form = function(){
+			$.ajax({
+				url: "<?php echo addslashes(pines_url('com_sales', 'forms/locationselect')); ?>",
+				type: "POST",
+				dataType: "html",
+				data: {"location": location, "descendents": descendents},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured while trying to retreive the location form:\n"+XMLHttpRequest.status+": "+textStatus);
+				},
+				success: function(data){
+					if (data == "")
+						return;
+					var form = $("<div title=\"Location Selector\"></div>");
+					form.dialog({
+						bgiframe: true,
+						autoOpen: true,
+						height: 250,
+						modal: true,
+						open: function(){
+							form.html(data);
+						},
+						close: function(){
+							form.remove();
+						},
+						buttons: {
+							"Update": function(){
+								location = form.find(":input[name=location]").val();
+								if (form.find(":input[name=descendents]").attr('checked'))
+									descendents = true;
+								else
+									descendents = false;
+								form.dialog('close');
+								submit_search();
+							}
+						}
+					});
+				}
+			});
+		};
 	});
 
 	// ]]>

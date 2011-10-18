@@ -19,7 +19,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	/* ]]> */
 </style>
 <script type='text/javascript'>
-// <![CDATA[
+	// <![CDATA[
 	pines(function(){
 
 		// Location Tree
@@ -57,7 +57,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			}
 		});
 	});
-// ]]>
+	// ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="">
 	<div class="pf-element">

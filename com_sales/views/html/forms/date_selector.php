@@ -23,7 +23,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	/* ]]> */
 </style>
 <script type='text/javascript'>
-// <![CDATA[
+	// <![CDATA[
 	pines(function(){
 		$("#p_muid_start_date").datepicker({
 			dateFormat: "yy-mm-dd",
@@ -45,17 +45,17 @@ defined('P_RUN') or die('Direct access prohibited');
 			var all_time = $(this);
 			if (all_time.is(":checked") && all_time.val() == "timespan") {
 				timespan.removeClass("ui-priority-secondary");
-				$("#p_muid_form .form_input").removeAttr("disabled");
+				$("#p_muid_form .form_date").removeAttr("disabled");
 				$("#p_muid_form [name=timespan_saver]").val('timespan');
 			} else if (all_time.is(":checked") && all_time.val() == "alltime") {
 				timespan.addClass("ui-priority-secondary");
-				$("#p_muid_form .form_input").attr("disabled", "disabled");
+				$("#p_muid_form .form_date").attr("disabled", "disabled");
 				$("#p_muid_form [name=timespan_saver]").val('alltime');
 			}
 		}).change();
 
 	});
-// ]]>
+	// ]]>
 </script>
 <form class="pf-form" id="p_muid_form" action="">
 	<div class="pf-element">

@@ -400,7 +400,7 @@ class com_myentity extends component implements entity_manager_interface {
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
 								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`cdate`='.((float) $cur_value[1]);
 								break;
-							} elseif($cur_value[0] == 'p_mdate') {
+							} elseif ($cur_value[0] == 'p_mdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
 								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`mdate`='.((float) $cur_value[1]);
@@ -412,7 +412,7 @@ class com_myentity extends component implements entity_manager_interface {
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
 								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`cdate`>'.((float) $cur_value[1]);
 								break;
-							} elseif($cur_value[0] == 'p_mdate') {
+							} elseif ($cur_value[0] == 'p_mdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
 								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`mdate`>'.((float) $cur_value[1]);
@@ -424,7 +424,7 @@ class com_myentity extends component implements entity_manager_interface {
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
 								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`cdate`>='.((float) $cur_value[1]);
 								break;
-							} elseif($cur_value[0] == 'p_mdate') {
+							} elseif ($cur_value[0] == 'p_mdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
 								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`mdate`>='.((float) $cur_value[1]);
@@ -436,7 +436,7 @@ class com_myentity extends component implements entity_manager_interface {
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
 								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`cdate`<'.((float) $cur_value[1]);
 								break;
-							} elseif($cur_value[0] == 'p_mdate') {
+							} elseif ($cur_value[0] == 'p_mdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
 								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`mdate`<'.((float) $cur_value[1]);
@@ -448,7 +448,7 @@ class com_myentity extends component implements entity_manager_interface {
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
 								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`cdate`<='.((float) $cur_value[1]);
 								break;
-							} elseif($cur_value[0] == 'p_mdate') {
+							} elseif ($cur_value[0] == 'p_mdate') {
 								if ( $cur_query )
 									$cur_query .= $type_is_or ? ' OR ' : ' AND ';
 								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e.`mdate`<='.((float) $cur_value[1]);
@@ -1001,7 +1001,7 @@ class com_myentity extends component implements entity_manager_interface {
 		if ( !isset($entity->guid) ) {
 			$query = sprintf("INSERT INTO `%scom_myentity_entities` (`tags`, `varlist`, `cdate`, `mdate`) VALUES ('%s', '%s', %F, %F);",
 				$pines->config->com_mysql->prefix,
-				mysql_real_escape_string(','.implode(',', $entity->tags).',', $pines->com_mysql->link),
+				mysql_real_escape_string(','.implode(',', array_diff($entity->tags, array(''))).',', $pines->com_mysql->link),
 				mysql_real_escape_string(','.implode(',', $varlist).',', $pines->com_mysql->link),
 				(float) $data['p_cdate'],
 				(float) $data['p_mdate']);
@@ -1040,7 +1040,7 @@ class com_myentity extends component implements entity_manager_interface {
 				$this->clean_cache($entity->guid);
 			$query = sprintf("UPDATE `%scom_myentity_entities` SET `tags`='%s', `varlist`='%s', `cdate`=%F, `mdate`=%F WHERE `guid`=%u;",
 				$pines->config->com_mysql->prefix,
-				mysql_real_escape_string(','.implode(',', $entity->tags).',', $pines->com_mysql->link),
+				mysql_real_escape_string(','.implode(',', array_diff($entity->tags, array(''))).',', $pines->com_mysql->link),
 				mysql_real_escape_string(','.implode(',', $varlist).',', $pines->com_mysql->link),
 				(float) $data['p_cdate'],
 				(float) $data['p_mdate'],

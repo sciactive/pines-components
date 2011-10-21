@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * Check for the skip access control option.
  *
- * @param array &$array An array of either an entity or another array of entities.
+ * @param array &$array An array of arguments. (The options array and the selectors.)
  * @param mixed $name Unused.
  * @param mixed &$object Unused.
  * @param mixed &$function Unused.

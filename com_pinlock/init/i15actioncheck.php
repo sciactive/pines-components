@@ -29,6 +29,8 @@ if ($_POST['com_pinlock_continue'] == 'true') {
 		pines_session('write');
 		unset($_SESSION[$com_pinlock__sessionid]);
 		pines_session('close');
+		$_REQUEST = array_merge((array) $_POST, (array) $_GET);
+		unset($com_pinlock__request_component, $com_pinlock__request_action, $com_pinlock__sessionid);
 		return;
 	}
 	if ($pines->config->com_pinlock->allow_switch) {
@@ -56,7 +58,9 @@ if ($_POST['com_pinlock_continue'] == 'true') {
 		unset($com_pinlock__users);
 	}
 	$pines->com_pinlock->sessionid = $com_pinlock__sessionid;
+	pines_session('write');
 	$_SESSION['com_pinlock__attempts']++;
+	pines_session('close');
 	if ($_SESSION['com_pinlock__attempts'] >= $pines->config->com_pinlock->max_tries) {
 		pines_log('Maximum failed login attempts reached.', 'warning');
 		$pines->user_manager->logout();

@@ -9,7 +9,7 @@
  * @copyright SciActive.com
  * @link http://sciactive.com/
  */
-/* @var $pines pines */
+/* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'Apply for Employment' : 'Editing ['.htmlspecialchars($this->entity->name).']';
 ?>

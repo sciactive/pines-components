@@ -9,7 +9,7 @@
  * @copyright SciActive.com
  * @link http://sciactive.com/
  */
-/* @var $pines pines */
+/* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Reviewing Countsheet ['.htmlspecialchars($this->entity->guid).'] at '.htmlspecialchars($this->entity->group->name);
 $this->note = 'Created by '.htmlspecialchars($this->entity->user->name).' on '.format_date($this->entity->p_cdate, 'full_long').'.';

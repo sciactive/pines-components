@@ -9,7 +9,7 @@
  * @copyright SciActive.com
  * @link http://sciactive.com/
  */
-/* @var $pines pines */
+/* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 $pages = $pines->entity_manager->get_entities(array('class' => com_content_page), array('&', 'tag' => array('com_content', 'page')));
 $pines->entity_manager->sort($pages, 'name');

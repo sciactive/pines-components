@@ -9,7 +9,7 @@
  * @copyright SciActive.com
  * @link http://sciactive.com/
  */
-/* @var $pines pines */
+/* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = "Editing Configuration for {$this->entity->info->name} {$this->entity->info->version} ({$this->entity->name})";
 if ($this->entity->per_user) {

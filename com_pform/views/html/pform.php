@@ -9,7 +9,7 @@
  * @copyright SciActive.com
  * @link http://sciactive.com/
  */
-/* @var $pines pines */
+/* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 /*
 <link href="<?php echo htmlspecialchars($pines->config->location); ?>components/com_pform/includes/pform.css" media="all" rel="stylesheet" type="text/css" />

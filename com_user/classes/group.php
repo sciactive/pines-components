@@ -16,6 +16,19 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * @package Pines
  * @subpackage com_user
+ * @property int $guid The GUID of the group.
+ * @property string $groupname The group's groupname.
+ * @property string $name The group's name.
+ * @property string $email The group's email address.
+ * @property string $phone The group's telephone number.
+ * @property string $address_type The group's address type. "us" or "international".
+ * @property string $address_1 The group's address line 1 for US addresses.
+ * @property string $address_2 The group's address line 2 for US addresses.
+ * @property string $city The group's city for US addresses.
+ * @property string $state The group's state abbreviation for US addresses.
+ * @property string $zip The group's ZIP code for US addresses.
+ * @property string $address_international The group's full address for international addresses.
+ * @property group $parent The group's parent.
  */
 class group extends able_object implements group_interface {
 	public function __construct($id = 0) {

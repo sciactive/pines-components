@@ -13,6 +13,7 @@
  * @copyright SciActive.com
  * @link http://sciactive.com/
  */
+/* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Company Schedule [' . (isset($this->employee) ? $this->employee->name  : $this->location->name) . ']';
 $timezone = $_SESSION['user']->get_timezone();

@@ -9,6 +9,7 @@
  * @copyright SciActive.com
  * @link http://sciactive.com/
  */
+/* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Software Sources';
 $this->note = 'These repositories are where Pines looks for new and updated software.';

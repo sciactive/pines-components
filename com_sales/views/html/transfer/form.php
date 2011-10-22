@@ -9,6 +9,7 @@
  * @copyright SciActive.com
  * @link http://sciactive.com/
  */
+/* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Transfer' : (($this->entity->final) ? 'Viewing ' : 'Editing ').' Transfer ['.htmlspecialchars($this->entity->guid).']';
 $this->note = 'Use this form to transfer inventory to another location.';

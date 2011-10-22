@@ -9,6 +9,7 @@
  * @copyright SciActive.com
  * @link http://sciactive.com/
  */
+/* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Customer Login/Logout';
 $this->note = 'Please enter your info, or scan your barcode to login or logout.';

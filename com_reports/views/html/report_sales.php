@@ -14,6 +14,7 @@
  * @copyright SciActive.com
  * @link http://sciactive.com/
  */
+/* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 
 // Convert the timespan into the number of days that it covers.

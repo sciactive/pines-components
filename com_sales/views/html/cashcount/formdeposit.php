@@ -9,6 +9,7 @@
  * @copyright SciActive.com
  * @link http://sciactive.com/
  */
+/* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Deposit from Cash Count ['.$this->entity->cashcount->guid.'] at '.htmlspecialchars($this->entity->cashcount->group->name);
 $this->note = 'Count the cash as you put it into the drawer.';

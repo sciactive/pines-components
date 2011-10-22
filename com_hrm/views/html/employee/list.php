@@ -9,6 +9,7 @@
  * @copyright SciActive.com
  * @link http://sciactive.com/
  */
+/* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!$this->employed ? 'Prior ' : '').'Employees';
 $pines->com_pgrid->load();

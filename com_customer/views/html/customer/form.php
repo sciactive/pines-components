@@ -9,6 +9,7 @@
  * @copyright SciActive.com
  * @link http://sciactive.com/
  */
+/* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Customer' : 'Editing ['.htmlspecialchars($this->entity->name).']';
 $this->note = 'Provide customer profile details in this form.';

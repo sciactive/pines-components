@@ -9,6 +9,7 @@
  * @copyright SciActive.com
  * @link http://sciactive.com/
  */
+/* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Package' : 'Editing ['.htmlspecialchars($this->entity->name).']';
 $this->note = 'Provide package details in this form.';

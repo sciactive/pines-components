@@ -43,16 +43,17 @@
  *
  * Style defaults to 2 + 4 + (32, 64, or 128, depending on configuration).
  *
+ * Built using the Barcode Render Class for PHP Created by Karim Mribti
+ * http://www.mribti.com/barcode/
+ *
  * @package Pines
  * @subpackage com_barcode
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Zak Huber <zak@sciactive.com>
  * @copyright SciActive.com
  * @link http://sciactive.com/
- *
- * Built using the Barcode Render Class for PHP Created by Karim Mribti
- * http://www.mribti.com/barcode/
  */
+/* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 
 $pines->page->override = true;

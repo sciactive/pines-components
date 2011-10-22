@@ -9,6 +9,7 @@
  * @copyright SciActive.com
  * @link http://sciactive.com/
  */
+/* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = ($this->enabled ? '' : 'Disabled ').'Users';
 $pines->com_pgrid->load();

@@ -9,6 +9,7 @@
  * @copyright SciActive.com
  * @link http://sciactive.com/
  */
+/* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Editing Shipment ['.htmlspecialchars($this->entity->guid).']';
 $this->note = 'Provide shipment details in this form.';

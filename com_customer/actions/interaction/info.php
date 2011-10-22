@@ -1,6 +1,6 @@
 <?php
 /**
- * Retreive customer interaction information, returning JSON.
+ * Retrieve customer interaction information, returning JSON.
  *
  * @package Pines
  * @subpackage com_customer

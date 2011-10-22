@@ -72,7 +72,7 @@ $pines->com_pgrid->load();
 							dataType: "html",
 							data: {"type": type},
 							error: function(XMLHttpRequest, textStatus){
-								pines.error("An error occured while trying to retreive the form:\n"+XMLHttpRequest.status+": "+textStatus);
+								pines.error("An error occured while trying to retrieve the form:\n"+XMLHttpRequest.status+": "+textStatus);
 							},
 							success: function(data){
 								if (data == "")

@@ -845,7 +845,7 @@ if ($pines->config->com_sales->com_esp) {
 					dataType: "html",
 					data: {"name": payment_data.processing_type, "id": $("#p_muid_form [name=id]").val(), "customer": $("#p_muid_customer").val(), "type": "sale"},
 					error: function(XMLHttpRequest, textStatus){
-						pines.error("An error occured while trying to retreive the data form:\n"+XMLHttpRequest.status+": "+textStatus);
+						pines.error("An error occured while trying to retrieve the data form:\n"+XMLHttpRequest.status+": "+textStatus);
 					},
 					success: function(data){
 						if (data == "")

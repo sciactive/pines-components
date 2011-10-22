@@ -142,7 +142,7 @@ if (!isset($this->entity->user->guid) || !isset($this->entity)) {
 				dataType: "html",
 				data: {id: rto_id},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retreive the time off form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the time off form:\n"+XMLHttpRequest.status+": "+textStatus);
 				},
 				success: function(data){
 					if (data == "")

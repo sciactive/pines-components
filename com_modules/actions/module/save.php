@@ -71,7 +71,7 @@ if (!file_exists("components/$component/modules.php")) {
 	return;
 }
 /**
- * Retreive module list.
+ * Retrieve module list.
  */
 $modules = include("components/$component/modules.php");
 if (empty($modules[$modname])) {

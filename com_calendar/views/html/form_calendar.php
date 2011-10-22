@@ -140,7 +140,7 @@ if ($pines->config->com_calendar->com_customer)
 				"descendents": descendents
 			},
 			error: function(XMLHttpRequest, textStatus){
-				pines.error("An error occured while trying to retreive the company schedule form:\n"+XMLHttpRequest.status+": "+textStatus);
+				pines.error("An error occured while trying to retrieve the company schedule form:\n"+XMLHttpRequest.status+": "+textStatus);
 			},
 			success: function(data){
 				if (data == "")
@@ -188,7 +188,7 @@ if ($pines->config->com_calendar->com_customer)
 				"end": end
 			},
 			error: function(XMLHttpRequest, textStatus){
-				pines.error("An error occured while trying to retreive the new event form:\n"+XMLHttpRequest.status+": "+textStatus);
+				pines.error("An error occured while trying to retrieve the new event form:\n"+XMLHttpRequest.status+": "+textStatus);
 			},
 			success: function(data){
 				if (data == "")
@@ -245,7 +245,7 @@ if ($pines->config->com_calendar->com_customer)
 			dataType: "html",
 			data: {"id": event_id},
 			error: function(XMLHttpRequest, textStatus){
-				pines.error("An error occured while trying to retreive the event form:\n"+XMLHttpRequest.status+": "+textStatus);
+				pines.error("An error occured while trying to retrieve the event form:\n"+XMLHttpRequest.status+": "+textStatus);
 			},
 			success: function(data){
 				if (data == "")
@@ -358,7 +358,7 @@ if ($pines->config->com_calendar->com_customer)
 			dataType: "html",
 			data: {"employee": "<?php echo addslashes($this->employee->guid); ?>"},
 			error: function(XMLHttpRequest, textStatus){
-				pines.error("An error occured while trying to retreive the schedule form:\n"+XMLHttpRequest.status+": "+textStatus);
+				pines.error("An error occured while trying to retrieve the schedule form:\n"+XMLHttpRequest.status+": "+textStatus);
 			},
 			success: function(data){
 				if (data == "")

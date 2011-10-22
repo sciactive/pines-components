@@ -293,7 +293,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						type: "POST",
 						dataType: "html",
 						error: function(XMLHttpRequest, textStatus){
-							pines.error("An error occured while trying to retreive the time off form:\n"+XMLHttpRequest.status+": "+textStatus);
+							pines.error("An error occured while trying to retrieve the time off form:\n"+XMLHttpRequest.status+": "+textStatus);
 						},
 						success: function(data){
 							if (data == "")

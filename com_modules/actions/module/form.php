@@ -19,7 +19,7 @@ $pines->page->override = true;
 list($component, $modname) = explode('/', $_REQUEST['type'], 2);
 $component = clean_filename($component);
 /**
- * Retreive module list.
+ * Retrieve module list.
  */
 $modules = include("components/$component/modules.php");
 $form = $modules[$modname]['form'];

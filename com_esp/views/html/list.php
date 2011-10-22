@@ -222,6 +222,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<thead>
 		<tr>
 			<th>ID</th>
+			<th>Plan</th>
 			<th>Card ID</th>
 			<th>Customer</th>
 			<th>Item</th>
@@ -237,6 +238,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<?php foreach ($this->plans as $plan) { ?>
 		<tr title="<?php echo $plan->guid; ?>">
 			<td>ESP<?php echo htmlspecialchars($plan->id); ?></td>
+			<td><?php echo htmlspecialchars($plan->card->product->name); ?></td>
 			<td><?php echo htmlspecialchars($plan->card->serial); ?></td>
 			<td><?php echo htmlspecialchars($plan->customer->name); ?></td>
 			<td><?php echo htmlspecialchars($plan->item->product->name); ?></td>

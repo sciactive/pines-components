@@ -1,6 +1,6 @@
 <?php
 /**
- * Search transfers, returning JSON.
+ * Get a transfer's remaining products, returning JSON.
  *
  * @package Pines
  * @subpackage com_sales

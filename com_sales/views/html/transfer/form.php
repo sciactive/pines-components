@@ -250,6 +250,41 @@ if ($this->entity->final)
 				products.val(JSON.stringify(all_rows));
 			};
 
+			<?php if (!empty($this->entity->received)) { ?>
+			$("#p_muid_received_table").pgrid({
+				pgrid_toolbar: true,
+				pgrid_toolbar_contents: [
+					{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
+					{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
+					{type: 'separator'},
+					{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
+						pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+							filename: 'PO <?php echo htmlspecialchars($this->entity->po_number); ?> - Received',
+							content: rows
+						});
+					}}
+				],
+				pgrid_paginate: false,
+				pgrid_view_height: "250px"
+			});
+			$("#p_muid_missing_table").pgrid({
+				pgrid_toolbar: true,
+				pgrid_toolbar_contents: [
+					{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
+					{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
+					{type: 'separator'},
+					{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
+						pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+							filename: 'PO <?php echo htmlspecialchars($this->entity->po_number); ?> - Not Received',
+							content: rows
+						});
+					}}
+				],
+				pgrid_paginate: false,
+				pgrid_view_height: "250px"
+			});
+			<?php } ?>
+
 			// Location Tree
 			var origin = $("#p_muid_form [name=origin]");
 			var destination = $("#p_muid_form [name=destination]");
@@ -457,42 +492,68 @@ if ($this->entity->final)
 	</div>
 	<?php if (!empty($this->entity->received)) { ?>
 		<div class="pf-element pf-full-width">
-			<span class="pf-label">Received Inventory</span>
-			<?php
-			$received = array();
-			foreach ($this->entity->received as $cur_entity) {
-				if (!isset($received[$cur_entity->product->guid]))
-					$received[$cur_entity->product->guid] = array('entity' => $cur_entity->product, 'serials' => array());
-				if (isset($missing_products[$cur_entity->product->guid])) {
-					$missing_products[$cur_entity->product->guid]['quantity']--;
-					if (!$missing_products[$cur_entity->product->guid]['quantity'])
-						unset($missing_products[$cur_entity->product->guid]);
-				}
-				$received[$cur_entity->product->guid]['serials'][] = isset($cur_entity->serial) ? $cur_entity->serial : '';
-			}
-			?>
-			<?php foreach ($received as $cur_entry) { ?>
-			<div class="pf-field pf-full-width ui-widget-content ui-corner-all" style="margin-bottom: 5px; padding: .5em;">
-				SKU: <?php echo htmlspecialchars($cur_entry['entity']->sku); ?><br />
-				Product: <?php echo htmlspecialchars($cur_entry['entity']->name); ?><br />
-				Quantity: <?php echo count($cur_entry['serials']); ?>
-				<?php if ($cur_entry['entity']->serialized) { ?>
-				<br />
-				Serials: <?php echo htmlspecialchars(implode(', ', $cur_entry['serials'])); ?>
-				<?php } ?>
+			<span class="pf-label">Received</span>
+			<div class="pf-group">
+				<div class="pf-field">
+					<table id="p_muid_received_table">
+						<thead>
+							<tr>
+								<th>SKU</th>
+								<th>Product</th>
+								<th>Serial</th>
+								<th>User</th>
+								<th>Location</th>
+								<th>Time</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php
+							foreach ($this->entity->received as $cur_entity) {
+								if (isset($missing_products[$cur_entity->product->guid])) {
+									$missing_products[$cur_entity->product->guid]['quantity']--;
+									if (!$missing_products[$cur_entity->product->guid]['quantity'])
+										unset($missing_products[$cur_entity->product->guid]);
+								}
+							?>
+							<tr>
+								<td><?php echo htmlspecialchars($cur_entity->product->sku); ?></td>
+								<td><?php echo htmlspecialchars($cur_entity->product->name); ?></td>
+								<td><?php echo htmlspecialchars($cur_entity->serial); ?></td>
+								<td><?php echo htmlspecialchars("{$cur_entity->user->name} [{$cur_entity->user->username}]"); ?></td>
+								<td><?php echo htmlspecialchars("{$cur_entity->group->name} [{$cur_entity->group->groupname}]"); ?></td>
+								<td><?php echo format_date($cur_entity->p_cdate, 'full_sort'); ?></td>
+							</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				</div>
 			</div>
-			<?php } ?>
 		</div>
 		<?php if (!empty($missing_products)) { ?>
 		<div class="pf-element pf-full-width">
-			<span class="pf-label">Missing Inventory</span>
-			<?php foreach ($missing_products as $cur_entry) { ?>
-			<div class="pf-field pf-full-width ui-widget-content ui-corner-all" style="margin-bottom: 5px; padding: .5em;">
-				SKU: <?php echo htmlspecialchars($cur_entry['entity']->sku); ?><br />
-				Product: <?php echo htmlspecialchars($cur_entry['entity']->name); ?><br />
-				Quantity: <?php echo htmlspecialchars($cur_entry['quantity']); ?>
+			<span class="pf-label">Not Received</span>
+			<div class="pf-group">
+				<div class="pf-field">
+					<table id="p_muid_missing_table">
+						<thead>
+							<tr>
+								<th>SKU</th>
+								<th>Product</th>
+								<th>Quantity</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php foreach ($missing_products as $cur_entry) { ?>
+							<tr>
+								<td><?php echo htmlspecialchars($cur_entry['entity']->sku); ?></td>
+								<td><?php echo htmlspecialchars($cur_entry['entity']->name); ?></td>
+								<td><?php echo htmlspecialchars($cur_entry['quantity']); ?></td>
+							</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				</div>
 			</div>
-			<?php } ?>
 		</div>
 		<?php } ?>
 	<?php } ?>

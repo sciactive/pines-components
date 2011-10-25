@@ -76,6 +76,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>Shipped</th>
 			<th>Shipper</th>
 			<th>ETA</th>
+			<th>Status</th>
+			<th>Products</th>
+			<th>Comments</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -88,6 +91,15 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo $transfer->shipped ? format_date($transfer->shipped_date, 'full_sort') : 'No'; ?></td>
 			<td><?php echo htmlspecialchars($transfer->shipper->name); ?></td>
 			<td><?php echo $transfer->eta ? format_date($transfer->eta, 'date_sort') : 'None'; ?></td>
+			<td><?php echo $transfer->final ? ($transfer->finished ? 'Received' : (empty($transfer->received) ? 'Not Received' : 'Partially Received')) : 'Not Committed'; ?></td>
+			<td><?php
+			$names = array();
+			foreach ((array) $transfer->products as $cur_product) {
+				$names[] = htmlspecialchars("{$cur_product->name} [{$cur_product->sku}]");
+			}
+			echo implode(', ', $names);
+			?></td>
+			<td><?php echo htmlspecialchars($transfer->comments); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

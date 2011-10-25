@@ -1,6 +1,6 @@
 <?php
 /**
- * Search POs, returning JSON.
+ * Get a PO's remaining products, returning JSON.
  *
  * @package Pines
  * @subpackage com_sales
@@ -22,14 +22,19 @@ $po = com_sales_po::factory((int) $_REQUEST['id']);
 if (!isset($po->guid))
 	return;
 
+// Unlike transfers, we can't just use pending_products here. POs don't store
+// the quantities in there.
 $products = $po->products;
 foreach ($products as $key => &$cur_product) {
+	// If we've received all of them, move on.
+	if ($cur_product['received'] >= $cur_product['quantity'])
+		continue;
 	$json_struct = (object) array(
 		'guid'			=> $cur_product['entity']->guid,
 		'name'			=> $cur_product['entity']->name,
 		'sku'			=> $cur_product['entity']->sku,
 		'serialized'	=> $cur_product['entity']->serialized,
-		'quantity'		=> $cur_product['quantity']
+		'quantity'		=> ($cur_product['quantity'] - $cur_product['received'])
 	);
 	$cur_product = $json_struct;
 }

@@ -63,7 +63,7 @@ if ($pines->config->com_sales->autocomplete_product)
 
 			$("#p_muid_shipment_table").pgrid({
 				pgrid_paginate: false,
-				pgrid_view_height: '350px',
+				pgrid_view_height: '250px',
 				pgrid_sort_col: 3,
 				pgrid_toolbar: true,
 				pgrid_toolbar_contents : [
@@ -78,7 +78,12 @@ if ($pines->config->com_sales->autocomplete_product)
 							$.each(rows, function(){
 								var loader;
 								var url;
-								if ($(this).pgrid_get_value(1) == "PO")
+								var cur_row = $(this);
+								if (cur_row.hasClass('pending_receiving')) {
+									if (!confirm('It looks like you\'ve already selected this shipment for receiving. Are you sure you want to add it again?'))
+										return;
+								}
+								if (cur_row.pgrid_get_value(1) == "PO")
 									url = "<?php echo addslashes(pines_url('com_sales', 'po/products')); ?>";
 								else
 									url = "<?php echo addslashes(pines_url('com_sales', 'transfer/products')); ?>";
@@ -105,9 +110,10 @@ if ($pines->config->com_sales->autocomplete_product)
 									},
 									success: function(data){
 										if (!data) {
-											alert("No shipment was found for "+$(this).pgrid_get_value(1)+".");
+											alert("No shipment was found for "+cur_row.pgrid_get_value(1)+".");
 											return;
 										}
+										cur_row.addClass('pending_receiving ui-state-highlight');
 										$.each(data, function(){
 											for (var i = 0; i < this.quantity; i++)
 												pines.com_sales_add_product(this);
@@ -420,73 +426,90 @@ if ($pines->config->com_sales->autocomplete_product)
 		</table>
 		<br class="pf-clearing" />
 	</div>
-	<div style="width: 49%; float: right;">
-		<div class="pf-element pf-heading">
-			<h1>Products to be Received</h1>
-		</div>
-		<div class="pf-element pf-full-width">
-			<div class="pf-field">
-				<table id="p_muid_products_table">
-					<thead>
-						<tr>
-							<th>Product Code</th>
-							<th>Serial</th>
-							<th>Quantity</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr><td>-</td><td>-</td><td>-</td></tr>
-					</tbody>
-				</table>
-			</div>
-			<input type="hidden" id="p_muid_products" name="products" />
+	<div class="pf-element pf-heading">
+		<h1>Pending Shipments</h1>
+	</div>
+	<div class="pf-element pf-full-width">
+		<div class="pf-field">
+			<table id="p_muid_shipment_table">
+				<thead>
+					<tr>
+						<th>Type</th>
+						<th>Number</th>
+						<th>ETA</th>
+						<th>Reference Number</th>
+						<th>Destination</th>
+						<th>Origin/Vendor</th>
+						<th>Shipper</th>
+						<th>Status</th>
+						<th>Products</th>
+						<th>Comments</th>
+					</tr>
+				</thead>
+				<tbody>
+				<?php foreach($this->pos as $cur_shipment) { ?>
+					<tr title="<?php echo $cur_shipment->guid; ?>">
+						<td>PO</td>
+						<td><?php echo htmlspecialchars($cur_shipment->po_number); ?></td>
+						<td><?php echo ($cur_shipment->eta ? format_date($cur_shipment->eta, 'date_sort') : ''); ?></td>
+						<td><?php echo htmlspecialchars($cur_shipment->reference_number); ?></td>
+						<td><?php echo htmlspecialchars("{$cur_shipment->destination->name} [{$cur_shipment->destination->groupname}]"); ?></td>
+						<td><?php echo htmlspecialchars($cur_shipment->vendor->name); ?></td>
+						<td><?php echo htmlspecialchars($cur_shipment->shipper->name); ?></td>
+						<td><?php echo $cur_shipment->final ? ($cur_shipment->finished ? 'Received' : (empty($cur_shipment->received) ? 'Not Received' : 'Partially Received')) : 'Not Committed'; ?></td>
+						<td><?php
+						$names = array();
+						foreach ((array) $cur_shipment->products as $cur_product) {
+							$names[] = htmlspecialchars("{$cur_product['entity']->name} [{$cur_product['entity']->sku}]");
+						}
+						echo implode(', ', $names);
+						?></td>
+						<td><?php echo htmlspecialchars($cur_shipment->comments); ?></td>
+					</tr>
+				<?php } ?>
+				<?php foreach($this->transfers as $cur_shipment) { ?>
+					<tr title="<?php echo $cur_shipment->guid; ?>">
+						<td>Transfer</td>
+						<td><?php echo htmlspecialchars($cur_shipment->guid); ?></td>
+						<td><?php echo ($cur_shipment->eta ? format_date($cur_shipment->eta, 'date_sort') : ''); ?></td>
+						<td><?php echo htmlspecialchars($cur_shipment->reference_number); ?></td>
+						<td><?php echo htmlspecialchars("{$cur_shipment->destination->name} [{$cur_shipment->destination->groupname}]"); ?></td>
+						<td><?php echo htmlspecialchars($cur_shipment->origin->name); ?></td>
+						<td><?php echo htmlspecialchars($cur_shipment->shipper->name); ?></td>
+						<td><?php echo $cur_shipment->final ? ($cur_shipment->finished ? 'Received' : (empty($cur_shipment->received) ? 'Not Received' : 'Partially Received')) : 'Not Committed'; ?></td>
+						<td><?php
+						$names = array();
+						foreach ((array) $cur_shipment->products as $cur_product) {
+							$names[] = htmlspecialchars("{$cur_product->name} [{$cur_product->sku}]");
+						}
+						echo implode(', ', $names);
+						?></td>
+						<td><?php echo htmlspecialchars($cur_shipment->comments); ?></td>
+					</tr>
+				<?php } ?>
+				</tbody>
+			</table>
 		</div>
 	</div>
-	<div style="width: 49%; float: left;">
-		<div class="pf-element pf-heading">
-			<h1>Pending Shipments</h1>
+	<div class="pf-element pf-heading">
+		<h1>Products to be Received</h1>
+	</div>
+	<div class="pf-element pf-full-width">
+		<div class="pf-field">
+			<table id="p_muid_products_table">
+				<thead>
+					<tr>
+						<th>Product Code</th>
+						<th>Serial</th>
+						<th>Quantity</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr><td>-</td><td>-</td><td>-</td></tr>
+				</tbody>
+			</table>
 		</div>
-		<div class="pf-element pf-full-width">
-			<div class="pf-field">
-				<table id="p_muid_shipment_table">
-					<thead>
-						<tr>
-							<th>Type</th>
-							<th>Number</th>
-							<th>ETA</th>
-							<th>Reference Number</th>
-							<th>Destination</th>
-							<th>Origin/Vendor</th>
-							<th>Shipper</th>
-						</tr>
-					</thead>
-					<tbody>
-					<?php foreach($this->pos as $cur_shipment) { ?>
-						<tr title="<?php echo $cur_shipment->guid; ?>">
-							<td>PO</td>
-							<td><?php echo htmlspecialchars($cur_shipment->po_number); ?></td>
-							<td><?php echo ($cur_shipment->eta ? format_date($cur_shipment->eta, 'date_sort') : ''); ?></td>
-							<td><?php echo htmlspecialchars($cur_shipment->reference_number); ?></td>
-							<td><?php echo htmlspecialchars("{$cur_shipment->destination->name} [{$cur_shipment->destination->groupname}]"); ?></td>
-							<td><?php echo htmlspecialchars($cur_shipment->vendor->name); ?></td>
-							<td><?php echo htmlspecialchars($cur_shipment->shipper->name); ?></td>
-						</tr>
-					<?php } ?>
-					<?php foreach($this->transfers as $cur_shipment) { ?>
-						<tr title="<?php echo $cur_shipment->guid; ?>">
-							<td>Transfer</td>
-							<td><?php echo htmlspecialchars($cur_shipment->guid); ?></td>
-							<td><?php echo ($cur_shipment->eta ? format_date($cur_shipment->eta, 'date_sort') : ''); ?></td>
-							<td><?php echo htmlspecialchars($cur_shipment->reference_number); ?></td>
-							<td><?php echo htmlspecialchars("{$cur_shipment->destination->name} [{$cur_shipment->destination->groupname}]"); ?></td>
-							<td><?php echo htmlspecialchars($cur_shipment->origin->name); ?></td>
-							<td><?php echo htmlspecialchars($cur_shipment->shipper->name); ?></td>
-						</tr>
-					<?php } ?>
-					</tbody>
-				</table>
-			</div>
-		</div>
+		<input type="hidden" id="p_muid_products" name="products" />
 	</div>
 	<div class="pf-element pf-buttons">
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" onclick="if (confirm('Are all of the product serials correct?')) $('#p_muid_form').submit();" value="Submit" />

@@ -21,10 +21,13 @@ if (gatekeeper())
  * @param array &$array An array of arguments.
  */
 function com_storefront__catch_login_page(&$array) {
-	if ($array[0] == 'content' && $array[1] == pines_url('com_storefront', 'checkout/shipping')) {
-		global $pines;
-		// Load the steps module.
-		$pines->com_storefront->checkout_step('1');
+	if ((!isset($array[0]) || $array[0] == 'content')) {
+		$url = pines_url('com_storefront', 'checkout/shipping');
+		if ($array[1] == $url || $_REQUEST['url'] == $url) {
+			global $pines;
+			// Load the steps module.
+			$pines->com_storefront->checkout_step('1');
+		}
 	}
 }
 

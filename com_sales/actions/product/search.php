@@ -63,13 +63,34 @@ if (isset($product)) {
 		'one_per_ticket' => $product->one_per_ticket,
 		'non_refundable' => $product->non_refundable,
 		'fees_percent' => $fees_percent,
-		'fees_flat' => $fees_flat
+		'fees_flat' => $fees_flat,
+		'serials' => array()
 	);
 
 	foreach ((array) $product->return_checklists as $cur_return_checklist) {
 		if (!$cur_return_checklist->enabled)
 			continue;
 		$json_struct->return_checklists[] = array('guid' => $cur_return_checklist->guid, 'label' => $cur_return_checklist->label, 'conditions' => (array) $cur_return_checklist->conditions);
+	}
+
+	// Look up serials in the user's current location to allow them to choose.
+	if ($product->serialized && $pines->config->com_sales->add_product_show_serials) {
+		$selector = array('&',
+				'tag' => array('com_sales', 'stock'),
+				'data' => array('available', true),
+				'ref' => array(
+					array('product', $product)
+				)
+			);
+		if (isset($_SESSION['user']->group->guid))
+			$selector['ref'][] = array('location', $_SESSION['user']->group);
+		$stock_entries = $pines->entity_manager->get_entities(
+				array('class' => com_sales_stock, 'limit' => $pines->config->com_sales->add_product_show_serials),
+				$selector
+			);
+		foreach ($stock_entries as $cur_stock) {
+			$json_struct->serials[] = htmlspecialchars($cur_stock->serial);
+		}
 	}
 
 	$product = $json_struct;

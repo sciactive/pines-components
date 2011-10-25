@@ -524,6 +524,10 @@ if ($pines->config->com_sales->com_esp) {
 					.dialog("option", "buttons", buttons)
 					.dialog("open");
 					serial_box.val("");
+					if (data.serials.length) {
+						var serial_list = $("#p_muid_available_serials").show().find(".serials").empty();
+						serial_list.append("<a href=\"javascript:void(0);\" class=\"serial\">"+data.serials.join("</a> | <a href=\"javascript:void(0);\" class=\"serial\">")+"</a>");
+					}
 					return;
 				}
 				products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'in-store', 1, data.unit_price, "", "", "", data.esp, data.salesperson]}], function(){
@@ -580,13 +584,17 @@ if ($pines->config->com_sales->com_esp) {
 					$("#p_muid_product_code_box").focus();
 				}
 			});
-			var serial_dialog = $("#p_muid_serial_dialog").dialog({
+			var serial_dialog = $("#p_muid_serial_dialog").delegate(".serials a.serial", "click", function(){
+				$("#p_muid_serial_number").val($(this).html());
+				serial_dialog.dialog("option", "buttons").Done();
+			}).dialog({
 				bgiframe: true,
 				autoOpen: false,
 				width: 450,
 				modal: true,
 				close: function(){
 					$("#p_muid_product_code_box").focus();
+					$("#p_muid_available_serials").hide();
 					serial_box.val("");
 				},
 				open: function(){
@@ -1317,6 +1325,13 @@ if ($pines->config->com_sales->com_esp) {
 			<div class="pf-element">
 				<label><span class="pf-label">Serial Number</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_serial_number" name="serial_number" size="24" value="" /></label>
+			</div>
+			<div class="pf-element" id="p_muid_available_serials" style="display: none;">
+				<span class="pf-label">Some Available</span>
+				<span class="pf-note">At your location.</span>
+				<div class="pf-group">
+					<div class="pf-field serials"></div>
+				</div>
 			</div>
 			<div class="pf-element" id="p_muid_serial_dialog_warehouse">
 				<strong>Or</strong> you can make this item a warehouse item.

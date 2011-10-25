@@ -106,6 +106,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'add_product_show_serials',
+		'cname' => 'Show Serials when Adding Products',
+		'description' => 'When adding a serialized product to a sale, show this many available serials to the user to pick from. (Enter 0 to disable.)',
+		'value' => 3,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'currency_symbol',
 		'cname' => 'Currency Symbol',
 		'description' => 'The currency symbol to use. (E.g. $, ¥, €, Rp)',

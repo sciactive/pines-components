@@ -76,9 +76,9 @@ $this->title = 'Review Your Order';
 					<th>SKU</th>
 					<th>Item</th>
 					<th>Description</th>
-					<th>Qty</th>
-					<th>Price</th>
-					<th>Total</th>
+					<th class="right_text">Qty</th>
+					<th class="right_text">Price</th>
+					<th class="right_text">Total</th>
 				</tr>
 			</thead>
 			<tbody>

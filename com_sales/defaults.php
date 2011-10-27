@@ -113,6 +113,18 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'delivery_dialog',
+		'cname' => 'Delivery Dialog when Adding Products',
+		'description' => 'Show the delivery selection dialog when adding products to a sale.',
+		'value' => 'none',
+		'options' => array(
+			'Only for Non Serialized Products' => 'only-non-serialized',
+			'For All Products' => 'all',
+			'Don\'t Show for Any Products' => 'none',
+		),
+		'peruser' => true,
+	),
+	array(
 		'name' => 'currency_symbol',
 		'cname' => 'Currency Symbol',
 		'description' => 'The currency symbol to use. (E.g. $, ¥, €, Rp)',

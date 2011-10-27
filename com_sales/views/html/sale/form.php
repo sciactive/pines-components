@@ -472,6 +472,7 @@ if ($pines->config->com_sales->com_esp) {
 				]
 			});
 			var add_product = function(data, success){
+				var cur_row, del_dia = "<?php echo addslashes($pines->config->com_sales->delivery_dialog); ?>";
 				if (data.one_per_ticket) {
 					var cur_products = products_table.pgrid_get_all_rows().pgrid_export_rows();
 					var pass = true;
@@ -484,6 +485,15 @@ if ($pines->config->com_sales->com_esp) {
 					if (!pass)
 						return;
 				}
+				var show_del_dia = function(){
+					if (data.stock_type != "non_stocked" && ((del_dia == "only-non-serialized" && !data.serialized) || del_dia == "all")) {
+						products_table.pgrid_get_selected_rows().pgrid_deselect_rows();
+						cur_row.pgrid_select_rows();
+						delivery_select.find("input[value=in-store]").attr("checked", "true");
+						delivery_select.find("input").button("refresh");
+						delivery_dialog.dialog("open");
+					}
+				};
 				data.salesperson = "<?php echo addslashes($_SESSION['user']->guid.': '.$_SESSION['user']->name);?>";
 				var serial = "";
 				if (data.serialized) {
@@ -495,17 +505,18 @@ if ($pines->config->com_sales->com_esp) {
 								return;
 							}
 							products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'in-store', 1, data.unit_price, "", "", "", data.esp, data.salesperson]}], function(){
-								var cur_row = $(this);
+								cur_row = $(this);
 								cur_row.data("product", data);
 							});
 							update_products();
 							serial_dialog.dialog("close");
+							show_del_dia();
 							if (success)
 								success();
 						},
 						"Warehouse Item": function(){
 							products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'warehouse', 1, data.unit_price, "", "", "", data.esp, data.salesperson]}], function(){
-								var cur_row = $(this);
+								cur_row = $(this);
 								cur_row.data("product", data);
 							});
 							update_products();
@@ -531,10 +542,11 @@ if ($pines->config->com_sales->com_esp) {
 					return;
 				}
 				products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'in-store', 1, data.unit_price, "", "", "", data.esp, data.salesperson]}], function(){
-					var cur_row = $(this);
+					cur_row = $(this);
 					cur_row.data("product", data);
 				});
 				update_products();
+				show_del_dia();
 				if (success)
 					success();
 			};

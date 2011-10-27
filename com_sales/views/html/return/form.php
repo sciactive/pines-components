@@ -43,7 +43,6 @@ if ($pines->config->com_sales->autocomplete_product)
 	<?php } ?>
 	<script type="text/javascript">
 		// <![CDATA[
-
 		pines(function(){
 			var products = $("#p_muid_products");
 			var products_table = $("#p_muid_products_table");
@@ -1014,6 +1013,22 @@ if ($pines->config->com_sales->autocomplete_product)
 					$("#p_muid_overpaid").hide();
 			};
 
+			pines.com_sales_run_check = function(use_drawer){
+				if (require_customer && !$("#p_muid_customer").val().match(/^\d+/)) {
+					alert("One of the products on this return requires a customer. Please select a customer before continuing.");
+					return;
+				}
+				var product_val = products.val();
+				if (product_val == '[]') {
+					alert("Please select at least one product first.");
+					return;
+				}
+				if (use_drawer)
+					pines.com_sales_run_drawer();
+				else
+					pines.com_sales_run_submit();
+			};
+
 			<?php if ($pines->config->com_sales->cash_drawer) { ?>
 			pines.com_sales_run_drawer = function(){
 				if (!check_return_total()) return false;
@@ -1072,6 +1087,7 @@ if ($pines->config->com_sales->autocomplete_product)
 
 			pines.com_sales_run_submit = function(){
 				if (!check_return_total()) return false;
+				$(":button, :submit, :reset", "#p_muid_form .pf-buttons").attr("disabled", "disabled").addClass("ui-state-disabled");
 				$("#p_muid_form").submit();
 			};
 
@@ -1305,13 +1321,13 @@ if ($pines->config->com_sales->autocomplete_product)
 		<input type="hidden" id="p_muid_return_process_type" name="process" value="quote" />
 
 		<?php if ($this->entity->status != 'voided' && $this->entity->status != 'processed') { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Process" onclick="$('#p_muid_return_process_type').val('process'); pines.com_sales_run_drawer();" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Process" onclick="$('#p_muid_return_process_type').val('process'); pines.com_sales_run_check(true);" />
 		<?php } ?>
 
 		<?php if ($this->entity->status != 'voided' && $this->entity->status != 'processed' && $this->entity->status != 'quoted') { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Quote" onclick="$('#p_muid_return_process_type').val('quote'); pines.com_sales_run_submit();" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Quote" onclick="$('#p_muid_return_process_type').val('quote'); pines.com_sales_run_check();" />
 		<?php } else { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Save" onclick="$('#p_muid_return_process_type').val('save'); pines.com_sales_run_submit();" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Save" onclick="$('#p_muid_return_process_type').val('save'); pines.com_sales_run_check();" />
 		<?php } ?>
 
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'return/list')); ?>');" value="Cancel" />

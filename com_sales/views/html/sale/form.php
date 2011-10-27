@@ -1,6 +1,30 @@
 <?php
 /**
  * Provides a form for the user to edit a sale.
+ * 
+ * This file contains probably the most unholy and confusing heap of JavaScript
+ * in all of Pines. I highly suggest you don't attempt to customize it.
+ * 
+ * But if you choose to battle with this JS, I can't stop you. It's dangerous to
+ * go alone! Take this.
+ * 
+ *       ooo
+ *     ooooooo
+ *     ooooooo
+ *     ooooooo
+ *     ooooooo
+ *     ooooooo
+ *     ooooooo
+ *     ooooooo
+ *     ooooooo
+ *     ooooooo
+ *     ooooooo
+ *     ooooooo
+ * 888888888888888
+ * 88  OOOOOOO  88
+ *     8888888
+ *     OOOOOOO
+ *     8888888
  *
  * @package Pines
  * @subpackage com_sales
@@ -51,7 +75,6 @@ if ($pines->config->com_sales->com_esp) {
 	<?php } ?>
 	<script type="text/javascript">
 		// <![CDATA[
-
 		pines(function(){
 			var products = $("#p_muid_products");
 			var products_table = $("#p_muid_products_table");
@@ -1153,6 +1176,69 @@ if ($pines->config->com_sales->com_esp) {
 				payments.val(JSON.stringify(submit_val));
 			};
 
+			pines.com_sales_run_check = function(use_drawer){
+				if (require_customer && !$("#p_muid_customer").val().match(/^\d+/)) {
+					alert("One of the products on this sale requires a customer. Please select a customer before continuing.");
+					return;
+				}
+				var product_val = products.val();
+				if (product_val == '[]') {
+					alert("Please select at least one product first.");
+					return;
+				}
+				<?php if (!$this->entity->removed_stock) { ?>
+				var modal = $("<div title=\"Verifying Current Inventory\"><span class=\"picon-32 picon-throbber\" style=\"display: block; float: left; height: 32px; width: 32px;\">&nbsp;</span>Your current inventory is being checked for the selected products. This should only take a few moments.</div>");
+				$.ajax({
+					url: "<?php echo addslashes(pines_url('com_sales', 'sale/checkproducts')); ?>",
+					type: "POST",
+					dataType: "json",
+					data: {"products": product_val},
+					beforeSend: function(){
+						modal.dialog({
+							modal: true,
+							width: 500,
+							autoOpen: true,
+							closeOnEscape: false,
+							resizable: false,
+							open: function(){
+								$(".ui-dialog-titlebar-close", modal.closest('.ui-widget')).hide();
+							},
+							close: function(){
+								modal.dialog("open");
+							}
+						});
+					},
+					complete: function(){
+						modal.dialog("option", "close", null).dialog("close").remove();
+					},
+					error: function(XMLHttpRequest, textStatus){
+						pines.error("An error occured while trying to check products:\n"+XMLHttpRequest.status+": "+textStatus);
+					},
+					success: function(data){
+						if (!data) {
+							pines.error("An error occured while trying to check products.");
+							return;
+						}
+						if (!data.result) {
+							$.each(data.messages, function(){
+								alert(this);
+							});
+							return;
+						}
+						if (use_drawer)
+							pines.com_sales_run_drawer();
+						else
+							pines.com_sales_run_submit();
+					}
+				});
+				<?php } else { ?>
+				if (use_drawer)
+					pines.com_sales_run_drawer();
+				else
+					pines.com_sales_run_submit();
+				<?php } ?>
+			};
+
 			<?php if ($pines->config->com_sales->cash_drawer) { ?>
 			pines.com_sales_run_drawer = function(){
 				var keep_checking = function(status){
@@ -1214,6 +1300,7 @@ if ($pines->config->com_sales->com_esp) {
 			<?php } ?>
 
 			pines.com_sales_run_submit = function(){
+				$(":button, :submit, :reset", "#p_muid_form .pf-buttons").attr("disabled", "disabled").addClass("ui-state-disabled");
 				$("#p_muid_form").submit();
 			};
 
@@ -1574,15 +1661,6 @@ if ($pines->config->com_sales->com_esp) {
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-buttons">
-		<script type="text/javascript">
-			// <![CDATA[
-			pines(function(){
-				var buttons = $(":button, :submit, :reset", "#p_muid_form .pf-buttons").click(function(){
-					buttons.attr("disabled", "disabled").addClass("ui-state-disabled");
-				});
-			});
-			// ]]>
-		</script>
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
 		<?php } ?>
@@ -1590,17 +1668,17 @@ if ($pines->config->com_sales->com_esp) {
 		<input type="hidden" id="p_muid_sale_process_type" name="process" value="quote" />
 
 		<?php if ($this->entity->status != 'voided' && $this->entity->status != 'paid') { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Tender" onclick="$('#p_muid_sale_process_type').val('tender'); pines.com_sales_run_drawer();" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Tender" onclick="$('#p_muid_sale_process_type').val('tender'); pines.com_sales_run_check(true);" />
 		<?php } ?>
 
 		<?php if ( $pines->config->com_sales->allow_invoicing && ($this->entity->status != 'voided' && $this->entity->status != 'paid' && $this->entity->status != 'invoiced') ) { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Invoice" onclick="$('#p_muid_sale_process_type').val('invoice'); pines.com_sales_run_submit();" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Invoice" onclick="$('#p_muid_sale_process_type').val('invoice'); pines.com_sales_run_check();" />
 		<?php } ?>
 
 		<?php if ($this->entity->status != 'voided' && $this->entity->status != 'paid' && $this->entity->status != 'invoiced' && $this->entity->status != 'quoted') { if ($pines->config->com_sales->allow_quoting) { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Quote" onclick="$('#p_muid_sale_process_type').val('quote'); pines.com_sales_run_submit();" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Quote" onclick="$('#p_muid_sale_process_type').val('quote'); pines.com_sales_run_check();" />
 		<?php } } else { ?>
-		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Save" onclick="$('#p_muid_sale_process_type').val('save'); pines.com_sales_run_submit();" />
+		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="button" value="Save" onclick="$('#p_muid_sale_process_type').val('save'); pines.com_sales_run_check();" />
 		<?php } ?>
 
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'sale/list')); ?>');" value="Cancel" />

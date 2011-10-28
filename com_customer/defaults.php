@@ -28,6 +28,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'customer_search_limit',
+		'cname' => 'Customer Search Limit',
+		'description' => 'Limit the customer search to this many results.',
+		'value' => 20,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'new_users',
 		'cname' => 'Add New Users',
 		'description' => 'Make all new users customers as well.',

@@ -31,6 +31,7 @@ return array(
 	'abilities' => array(
 		array('defaultgroups', 'Edit Default Groups', 'User can set default customer groups.'),
 		array('listcustomers', 'List Customers', 'User can see customers.'),
+		array('listallcustomers', 'List All Customers', 'User can see all customers using the * search string.'),
 		array('newcustomer', 'Create Customers', 'User can create new customers.'),
 		array('editcustomer', 'Edit Customers', 'User can edit current customers.'),
 		array('deletecustomer', 'Delete Customers', 'User can delete current customers.'),

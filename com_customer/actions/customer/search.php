@@ -18,20 +18,23 @@ if ( !gatekeeper('com_customer/listcustomers') )
 $pines->page->override = true;
 header('Content-Type: application/json');
 
-$query = $_REQUEST['q'];
+$query = trim($_REQUEST['q']);
 
 if (empty($query)) {
 	$customers = array();
 } elseif ($query == '*') {
-	$customers = (array) $pines->entity_manager->get_entities(
-			array('class' => com_customer_customer),
-			array('&',
-				'tag' => array('com_customer', 'customer')
-			)
-		);
+	if (!gatekeeper('com_customer/listallcustomers'))
+		$customers = array();
+	else
+		$customers = (array) $pines->entity_manager->get_entities(
+				array('class' => com_customer_customer),
+				array('&',
+					'tag' => array('com_customer', 'customer')
+				)
+			);
 } else {
 	$num_query = preg_replace('/\D/', '', $query);
-	$r_query = '/'.preg_quote($query).'/i';
+	$r_query = '/'.str_replace(' ', '.*', preg_quote($query)).'/i';
 	$r_num_query = '/'.preg_quote($num_query).'/';
 	$selector = array('|',
 		'match' => array(
@@ -48,28 +51,32 @@ if (empty($query)) {
 		$selector['match'][] = array('fax', $r_num_query);
 	}
 	$customers = (array) $pines->entity_manager->get_entities(
-			array('class' => com_customer_customer),
+			array('class' => com_customer_customer, 'limit' => $pines->config->com_customer->customer_search_limit),
 			array('&', 'tag' => array('com_customer', 'customer')),
 			$selector
 		);
-	$companies = $pines->entity_manager->get_entities(
-			array('class' => com_customer_company),
-			array('&',
-				'tag' => array('com_customer', 'company'),
-				'match' => array('name', $r_query)
-			)
-		);
-	if ($companies) {
-		$comp_customers = (array) $pines->entity_manager->get_entities(
-				array('class' => com_customer_customer),
+	$count_customers = count($customers);
+	// Only bother searching companies if the limit hasn't been reached.
+	if ($pines->config->com_customer->customer_search_limit - $count_customers) {
+		$companies = $pines->entity_manager->get_entities(
+				array('class' => com_customer_company),
 				array('&',
-					'tag' => array('com_customer', 'customer'),
-					'ref' => array('company', $companies)
+					'tag' => array('com_customer', 'company'),
+					'match' => array('name', $r_query)
 				)
 			);
-		foreach ($comp_customers as &$cur_customer) {
-			if (!$cur_customer->in_array($customers))
-				$customers[] = $cur_customer;
+		if ($companies) {
+			$comp_customers = (array) $pines->entity_manager->get_entities(
+					array('class' => com_customer_customer, 'limit' => ($pines->config->com_customer->customer_search_limit - $count_customers)),
+					array('&',
+						'tag' => array('com_customer', 'customer'),
+						'ref' => array('company', $companies)
+					)
+				);
+			foreach ($comp_customers as &$cur_customer) {
+				if (!$cur_customer->in_array($customers))
+					$customers[] = $cur_customer;
+			}
 		}
 	}
 }

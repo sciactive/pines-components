@@ -174,11 +174,15 @@ class com_reports_sales_ranking extends entity {
 				if (!$cur_rank['entity']->new_hire)
 					continue;
 				if (!isset($cur_rank['entity']->training_completion_date)) {
-					$cur_rank['goal'] = 0;
+					// Set goal to false if they have no training completion date.
+					$cur_rank['goal'] = false;
 					continue;
 				}
 				$weeks_worked = ceil(($nh_time - $cur_rank['entity']->training_completion_date) / (60 * 60 * 24 * 7));
-				if ($weeks_worked >= 5) {
+				if ($weeks_worked < 0) {
+					// Also set it to false if training completion date is in the future.
+					$cur_rank['goal'] = false;
+				} elseif ($weeks_worked >= 5) {
 					$cur_rank['goal'] = 20000;
 				} else {
 					$goal_array = array(
@@ -324,7 +328,7 @@ class com_reports_sales_ranking extends entity {
 		$this->new_hires = array_values($this->new_hires);
 		$rank = 1;
 		foreach ($this->new_hires as &$cur_rank) {
-			if ($cur_rank['goal'] <= 0)
+			if ($cur_rank['goal'] !== false && $cur_rank['goal'] <= 0)
 				continue;
 			$cur_rank['rank'] = $rank;
 			$rank++;
@@ -334,7 +338,7 @@ class com_reports_sales_ranking extends entity {
 		$this->employees = array_values($this->employees);
 		$rank = 1;
 		foreach ($this->employees as &$cur_rank) {
-			if ($cur_rank['goal'] <= 0)
+			if ($cur_rank['goal'] !== false && $cur_rank['goal'] <= 0)
 				continue;
 			$cur_rank['rank'] = $rank;
 			$rank++;
@@ -348,7 +352,7 @@ class com_reports_sales_ranking extends entity {
 				usort($cur_location, array($this, 'sort_avg'));
 			$rank = 1;
 			foreach ($cur_location as &$cur_rank) {
-				if ($cur_rank['goal'] <= 0)
+				if ($cur_rank['goal'] !== false && $cur_rank['goal'] <= 0)
 					continue;
 				$cur_rank['rank'] = $rank;
 				$rank++;

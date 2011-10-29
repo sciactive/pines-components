@@ -61,6 +61,10 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 		background-color: red;
 		color: black;
 	}
+	.p_muid_grid .white td {
+		background-color: white;
+		color: black;
+	}
 	/* ]]> */
 </style>
 <script type="text/javascript">
@@ -287,11 +291,14 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 			<tbody>
 				<?php
 				foreach($this->entity->new_hires as $key => $cur_rank) {
-					// Skip employees with no goal.
-					if ($cur_rank['goal'] <= 0)
-						continue;
 					// Employees are "in the green", "yellow" or "red".
-					if ($cur_rank['pct'] >= $green_status) {
+					if ($cur_rank['goal'] === false) {
+						// Employees with a false goal haven't completed training yet.
+						$class = 'white';
+					} elseif ($cur_rank['goal'] <= 0) {
+						// Skip employees with no goal.
+						continue;
+					} elseif ($cur_rank['pct'] >= $green_status) {
 						$class = 'green';
 					} elseif ($cur_rank['pct'] >= $yellow_status) {
 						$class = 'yellow';

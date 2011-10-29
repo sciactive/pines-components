@@ -128,48 +128,46 @@ $pines->com_pgrid->load();
 	});
 	// ]]>
 </script>
-<div class="pf-element pf-full-width">
-	<table id="p_muid_grid">
-		<thead>
-			<tr>
-				<th>Employee</th>
-				<th>Location</th>
-				<th>Pay Type</th>
-				<th># Sold</th>
-				<th># Ref</th>
-				<th>$ Sold</th>
-				<th>$ Ref</th>
-				<th>Scheduled</th>
-				<th>Worked</th>
-				<th>Variance</th>
-				<th>Commission</th>
-				<th>Penalties</th>
-				<th>Bonuses</th>
-				<th>Total Pay</th>
-			</tr>
-		</thead>
-		<tbody>
-			<?php foreach ($this->entity->payroll as $cur_payment) {
-				if (!$this->entire_company && ($cur_payment['location']->guid != $this->location->guid))
-					continue;
-			?>
-			<tr title="<?php echo $cur_payment['employee']->guid; ?>">
-				<td><?php echo htmlspecialchars($cur_payment['employee']->name); ?></td>
-				<td><?php echo htmlspecialchars($cur_payment['location']->name); ?></td>
-				<td><?php echo htmlspecialchars($cur_payment['pay_type']); ?></td>
-				<td><?php echo htmlspecialchars($cur_payment['qty_sold']); ?></td>
-				<td><?php echo htmlspecialchars($cur_payment['qty_returned']); ?></td>
-				<td class="amount">$<?php echo number_format($cur_payment['total_sold'], 2, '.', ''); ?></td>
-				<td class="amount">$<?php echo number_format($cur_payment['total_returned'], 2, '.', ''); ?></td>
-				<td><?php echo round($cur_payment['scheduled'] / 3600, 2); ?> hours</td>
-				<td><?php echo round($cur_payment['clocked'] / 3600, 2); ?> hours</td>
-				<td><span<?php echo ($cur_payment['variance'] < 0 ) ? ' class="negative;"' : ''; ?>><?php echo round($cur_payment['variance'] / 3600, 2); ?> hours</span></td>
-				<td class="amount">$<?php echo number_format($cur_payment['commission'], 2, '.', ''); ?></td>
-				<td class="amount"><span<?php echo ($cur_payment['penalties'] > 0 ) ? ' class="negative"' : ''; ?>>$<?php echo number_format($cur_payment['penalties'], 2, '.', ''); ?></span></td>
-				<td class="amount"><span<?php echo ($cur_payment['bonuses'] < 0 ) ? ' class="negative"' : ''; ?>>$<?php echo number_format($cur_payment['bonuses'], 2, '.', ''); ?></span></td>
-				<td class="total"><span<?php echo ($cur_payment['total_pay'] < 0 ) ? ' class="negative"' : ''; ?>>$<?php echo number_format($cur_payment['total_pay'], 2, '.', ''); ?></span></td>
-			</tr>
-			<?php } ?>
-		</tbody>
-	</table>
-</div>
+<table id="p_muid_grid">
+	<thead>
+		<tr>
+			<th>Employee</th>
+			<th>Location</th>
+			<th>Pay Type</th>
+			<th># Sold</th>
+			<th># Ref</th>
+			<th>$ Sold</th>
+			<th>$ Ref</th>
+			<th>Scheduled</th>
+			<th>Worked</th>
+			<th>Variance</th>
+			<th>Commission</th>
+			<th>Penalties</th>
+			<th>Bonuses</th>
+			<th>Total Pay</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php foreach ($this->entity->payroll as $cur_payment) {
+			if (!$this->entire_company && ($cur_payment['location']->guid != $this->location->guid))
+				continue;
+		?>
+		<tr title="<?php echo $cur_payment['employee']->guid; ?>">
+			<td><?php echo htmlspecialchars($cur_payment['employee']->name); ?></td>
+			<td><?php echo htmlspecialchars($cur_payment['location']->name); ?></td>
+			<td><?php echo htmlspecialchars($cur_payment['pay_type']); ?></td>
+			<td><?php echo htmlspecialchars($cur_payment['qty_sold']); ?></td>
+			<td><?php echo htmlspecialchars($cur_payment['qty_returned']); ?></td>
+			<td class="amount">$<?php echo number_format($cur_payment['total_sold'], 2, '.', ''); ?></td>
+			<td class="amount">$<?php echo number_format($cur_payment['total_returned'], 2, '.', ''); ?></td>
+			<td><?php echo round($cur_payment['scheduled'] / 3600, 2); ?> hours</td>
+			<td><?php echo round($cur_payment['clocked'] / 3600, 2); ?> hours</td>
+			<td><span<?php echo ($cur_payment['variance'] < 0 ) ? ' class="negative;"' : ''; ?>><?php echo round($cur_payment['variance'] / 3600, 2); ?> hours</span></td>
+			<td class="amount">$<?php echo number_format($cur_payment['commission'], 2, '.', ''); ?></td>
+			<td class="amount"><span<?php echo ($cur_payment['penalties'] > 0 ) ? ' class="negative"' : ''; ?>>$<?php echo number_format($cur_payment['penalties'], 2, '.', ''); ?></span></td>
+			<td class="amount"><span<?php echo ($cur_payment['bonuses'] < 0 ) ? ' class="negative"' : ''; ?>>$<?php echo number_format($cur_payment['bonuses'], 2, '.', ''); ?></span></td>
+			<td class="total"><span<?php echo ($cur_payment['total_pay'] < 0 ) ? ' class="negative"' : ''; ?>>$<?php echo number_format($cur_payment['total_pay'], 2, '.', ''); ?></span></td>
+		</tr>
+		<?php } ?>
+	</tbody>
+</table>

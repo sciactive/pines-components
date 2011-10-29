@@ -153,99 +153,97 @@ $pines->com_pgrid->load();
 	});
 	// ]]>
 </script>
-<div class="pf-element pf-full-width">
-	<table id="p_muid_grid">
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>Pay Type</th>
-				<th>Salary</th>
-				<th>Comm Rate</th>
-				<th># of Sales</th>
-				<th>Sale Amount</th>
-				<th>Hourly Rate</th>
-				<th>Hours Worked</th>
-				<th>Reg Hourly</th>
-				<th>Overtime $</th>
-				<th>Hourly Total</th>
-				<th>Commission</th>
-				<th>Bonus</th>
-				<th>Weekly Draw</th>
-				<th>Net Bonus</th>
-				<th>Total</th>
-				<th>Reimbursements</th>
-				<th>Total Pay</th>
-				<th>Manager</th>
-				<th>Location</th>
-				<th>Position</th>
-				<th>Hourly Rate</th>
-			</tr>
-		</thead>
-		<tbody>
-			<?php
-			$commission_total = array();
-			$commission_total[0] = $commission_total[1]=0;
-			foreach ($this->employees as $cur_employee) {
-				// Print out each employee's row of information.
-				if ($cur_employee['entity']->pay_type == 'commission_draw' ) {
-					if($cur_employee['sale_total'] == 0)
-						$commission_total[0] += 6.0;
-					else
-						$commission_total[0] += ($cur_employee['commission'] / $cur_employee['sales_total']) * 100;
-					$commission_total[1]++;
-				}
-				?>
-			<tr title="<?php echo $cur_employee['entity']->guid;?>" >
-				<td><a href="<?php echo htmlspecialchars(pines_url('com_user', 'edituser', array('id' => $cur_employee['entity']->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_employee['entity']->name); ?></a></td>
-				<td><?php echo htmlspecialchars(strtoupper($cur_employee['commission_status']));?></td>
-				<td><?php echo $cur_employee['commission_status'] != 'salary' ? 'N/A' : number_format($cur_employee['salary_pay_period'], 2, '.', ''); ?></td>
-				<td style="text-align: center;"><?php echo ($cur_employee['commission_status'] != 'salary' && $cur_employee['sales_total'] != 0 && $cur_employee['commission_status'] != 'hourly') ? number_format((($cur_employee['commission'] / $cur_employee['sales_total']) * 100), 2, '.', '') : '-'; ?></td>
-				<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? htmlspecialchars($cur_employee['number_sales']) : '-'; ?></td>
-				<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? '$'.number_format($cur_employee['sales_total'], 2, '.', '') : '-'; ?></td>
-				<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? number_format($cur_employee['entity']->pay_rate, 2, '.', '') : '-'; ?></td>
-				<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? htmlspecialchars($cur_employee['hour_total']) : '-'; ?></td>
-				<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? '$'.number_format($cur_employee['reghours'], 2, '.', '') : '-'; ?></td>
-				<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? '$'.number_format($cur_employee['overtimehours'], 2, '.', '') : '-'; ?></td>
-				<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? '$'.number_format($cur_employee['hour_pay_total'], 2, '.', '') : '-'; ?></td>
-				<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? '$'.number_format($cur_employee['commission'], 2, '.', '') : '-'; ?></td>
-				<td style="text-align: center;">$<?php echo number_format($cur_employee['bonus'], 2, '.', '');?></td>
-				<td style="text-align: center;"><?php echo ($cur_employee['commission_status'] != 'salary' && $cur_employee['weekly'] != 0) ? '$'.number_format($cur_employee['weekly'], 2, '.', '') : '-'; ?></td>
-				<td style="text-align: center;">$<?php echo number_format($cur_employee['bonus'], 2, '.', '');?></td>
-				<td style="text-align: center;">$<?php echo number_format($cur_employee['pay_total'], 2, '.', '');?></td>
-				<td style="text-align: center;">$<?php echo number_format($cur_employee['adjustments'], 2, '.', '');?></td>
-				<td><?php echo "$".number_format($cur_employee['total_with_reimburse'], 2, '.', '');?></td>
-				<td></td>
-				<td><a href="<?php echo htmlspecialchars(pines_url('com_user', 'editgroup', array('id' => $cur_employee['entity']->group->guid)));?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_employee['entity']->group->name);?></a></td>
-				<td><?php echo htmlspecialchars($cur_employee->job_title)?></td>
-				<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? number_format($cur_employee['total_rate'], 2, '.', '') : '-'; ?></td>
-			</tr>
-			<?php }
-			 // Now printing out the totals row.
+<table id="p_muid_grid">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Pay Type</th>
+			<th>Salary</th>
+			<th>Comm Rate</th>
+			<th># of Sales</th>
+			<th>Sale Amount</th>
+			<th>Hourly Rate</th>
+			<th>Hours Worked</th>
+			<th>Reg Hourly</th>
+			<th>Overtime $</th>
+			<th>Hourly Total</th>
+			<th>Commission</th>
+			<th>Bonus</th>
+			<th>Weekly Draw</th>
+			<th>Net Bonus</th>
+			<th>Total</th>
+			<th>Reimbursements</th>
+			<th>Total Pay</th>
+			<th>Manager</th>
+			<th>Location</th>
+			<th>Position</th>
+			<th>Hourly Rate</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php
+		$commission_total = array();
+		$commission_total[0] = $commission_total[1]=0;
+		foreach ($this->employees as $cur_employee) {
+			// Print out each employee's row of information.
+			if ($cur_employee['entity']->pay_type == 'commission_draw' ) {
+				if($cur_employee['sale_total'] == 0)
+					$commission_total[0] += 6.0;
+				else
+					$commission_total[0] += ($cur_employee['commission'] / $cur_employee['sales_total']) * 100;
+				$commission_total[1]++;
+			}
 			?>
-			<tr>
-				<td style="font-weight: bold; text-align: center;">Totals</td>
-				<td style="font-weight: bold; text-align: center;"><?php echo number_format($this->commission_percent * 100, 2, '.', '').'%';?></td>
-				<td style="font-weight: bold; text-align: center;"><?php echo '$'.number_format($this->group_salary_total, 2, '.', ''); ?></td>
-				<td style="font-weight: bold; text-align: center;"><?php echo $commission_total[1] != 0 ? number_format($commission_total[0] / $commission_total[1], 2, '.', '') : '0.00'; ?></td>
-				<td style="font-weight: bold; text-align: center;"><?php echo htmlspecialchars($this->group_num_sales); ?></td>
-				<td style="font-weight: bold; text-align: center;"><?php echo '$'.number_format($this->group_sales_total, 2, '.', ''); ?></td>
-				<td style="font-weight: bold; text-align: center;"><?php echo number_format($this->pay_rate_total, 2, '.', ''); ?></td>
-				<td style="font-weight: bold; text-align: center;"><?php echo number_format($this->group_hours, 2, '.', ''); ?></td>
-				<td style="font-weight: bold; text-align: center;"><?php echo '$'.number_format($this->group_reg_hours, 2, '.', ''); ?></td>
-				<td style="font-weight: bold; text-align: center;"><?php echo '$'.number_format($this->group_overtime_hours, 2, '.', ''); ?></td>
-				<td style="font-weight: bold; text-align: center;"><?php echo '$'.number_format($this->group_overtime_hours + $this->group_reg_hours, 2, '.', ''); ?></td>
-				<td style="font-weight: bold; text-align: center;"><?php echo '$'.number_format($this->commission_total, 2, '.', ''); ?></td>
-				<td style="font-weight: bold; text-align: center;"><?php echo '$'.number_format($this->group_bonus, 2, '.', ''); ?></td>
-				<td style="font-weight: bold; text-align: center;"><?php echo '$'.number_format($this->group_weekly_total, 2, '.', ''); ?></td>
-				<td style="font-weight: bold; text-align: center;"><?php echo '$'.number_format($this->group_bonus, 2, '.', ''); ?></td>
-				<td style="font-weight: bold; text-align: center;"><?php echo '$'.number_format($this->group_pay_total, 2, '.', ''); ?></td>
-				<td style="font-weight: bold; text-align: center;"><?php echo '$'.number_format($this->group_adjustments, 2, '.', ''); ?></td>
-				<td style="font-weight: bold; text-align: center;"><?php echo '$'.number_format($this->group_pay_total_with_reimburse, 2, '.', ''); ?></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td style="font-weight: bold; text-align: center;"><?php echo number_format($this->group_percent_rate, 2, '.', ''); ?></td>
-			</tr>
-		</tbody>
-	</table>
-</div>
+		<tr title="<?php echo $cur_employee['entity']->guid;?>" >
+			<td><a href="<?php echo htmlspecialchars(pines_url('com_user', 'edituser', array('id' => $cur_employee['entity']->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_employee['entity']->name); ?></a></td>
+			<td><?php echo htmlspecialchars(strtoupper($cur_employee['commission_status']));?></td>
+			<td><?php echo $cur_employee['commission_status'] != 'salary' ? 'N/A' : number_format($cur_employee['salary_pay_period'], 2, '.', ''); ?></td>
+			<td style="text-align: center;"><?php echo ($cur_employee['commission_status'] != 'salary' && $cur_employee['sales_total'] != 0 && $cur_employee['commission_status'] != 'hourly') ? number_format((($cur_employee['commission'] / $cur_employee['sales_total']) * 100), 2, '.', '') : '-'; ?></td>
+			<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? htmlspecialchars($cur_employee['number_sales']) : '-'; ?></td>
+			<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? '$'.number_format($cur_employee['sales_total'], 2, '.', '') : '-'; ?></td>
+			<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? number_format($cur_employee['entity']->pay_rate, 2, '.', '') : '-'; ?></td>
+			<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? htmlspecialchars($cur_employee['hour_total']) : '-'; ?></td>
+			<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? '$'.number_format($cur_employee['reghours'], 2, '.', '') : '-'; ?></td>
+			<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? '$'.number_format($cur_employee['overtimehours'], 2, '.', '') : '-'; ?></td>
+			<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? '$'.number_format($cur_employee['hour_pay_total'], 2, '.', '') : '-'; ?></td>
+			<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? '$'.number_format($cur_employee['commission'], 2, '.', '') : '-'; ?></td>
+			<td style="text-align: center;">$<?php echo number_format($cur_employee['bonus'], 2, '.', '');?></td>
+			<td style="text-align: center;"><?php echo ($cur_employee['commission_status'] != 'salary' && $cur_employee['weekly'] != 0) ? '$'.number_format($cur_employee['weekly'], 2, '.', '') : '-'; ?></td>
+			<td style="text-align: center;">$<?php echo number_format($cur_employee['bonus'], 2, '.', '');?></td>
+			<td style="text-align: center;">$<?php echo number_format($cur_employee['pay_total'], 2, '.', '');?></td>
+			<td style="text-align: center;">$<?php echo number_format($cur_employee['adjustments'], 2, '.', '');?></td>
+			<td><?php echo "$".number_format($cur_employee['total_with_reimburse'], 2, '.', '');?></td>
+			<td></td>
+			<td><a href="<?php echo htmlspecialchars(pines_url('com_user', 'editgroup', array('id' => $cur_employee['entity']->group->guid)));?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_employee['entity']->group->name);?></a></td>
+			<td><?php echo htmlspecialchars($cur_employee->job_title)?></td>
+			<td style="text-align: center;"><?php echo $cur_employee['commission_status'] != 'salary' ? number_format($cur_employee['total_rate'], 2, '.', '') : '-'; ?></td>
+		</tr>
+		<?php }
+		 // Now printing out the totals row.
+		?>
+		<tr>
+			<td style="font-weight: bold; text-align: center;">Totals</td>
+			<td style="font-weight: bold; text-align: center;"><?php echo number_format($this->commission_percent * 100, 2, '.', '').'%';?></td>
+			<td style="font-weight: bold; text-align: center;"><?php echo '$'.number_format($this->group_salary_total, 2, '.', ''); ?></td>
+			<td style="font-weight: bold; text-align: center;"><?php echo $commission_total[1] != 0 ? number_format($commission_total[0] / $commission_total[1], 2, '.', '') : '0.00'; ?></td>
+			<td style="font-weight: bold; text-align: center;"><?php echo htmlspecialchars($this->group_num_sales); ?></td>
+			<td style="font-weight: bold; text-align: center;"><?php echo '$'.number_format($this->group_sales_total, 2, '.', ''); ?></td>
+			<td style="font-weight: bold; text-align: center;"><?php echo number_format($this->pay_rate_total, 2, '.', ''); ?></td>
+			<td style="font-weight: bold; text-align: center;"><?php echo number_format($this->group_hours, 2, '.', ''); ?></td>
+			<td style="font-weight: bold; text-align: center;"><?php echo '$'.number_format($this->group_reg_hours, 2, '.', ''); ?></td>
+			<td style="font-weight: bold; text-align: center;"><?php echo '$'.number_format($this->group_overtime_hours, 2, '.', ''); ?></td>
+			<td style="font-weight: bold; text-align: center;"><?php echo '$'.number_format($this->group_overtime_hours + $this->group_reg_hours, 2, '.', ''); ?></td>
+			<td style="font-weight: bold; text-align: center;"><?php echo '$'.number_format($this->commission_total, 2, '.', ''); ?></td>
+			<td style="font-weight: bold; text-align: center;"><?php echo '$'.number_format($this->group_bonus, 2, '.', ''); ?></td>
+			<td style="font-weight: bold; text-align: center;"><?php echo '$'.number_format($this->group_weekly_total, 2, '.', ''); ?></td>
+			<td style="font-weight: bold; text-align: center;"><?php echo '$'.number_format($this->group_bonus, 2, '.', ''); ?></td>
+			<td style="font-weight: bold; text-align: center;"><?php echo '$'.number_format($this->group_pay_total, 2, '.', ''); ?></td>
+			<td style="font-weight: bold; text-align: center;"><?php echo '$'.number_format($this->group_adjustments, 2, '.', ''); ?></td>
+			<td style="font-weight: bold; text-align: center;"><?php echo '$'.number_format($this->group_pay_total_with_reimburse, 2, '.', ''); ?></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td style="font-weight: bold; text-align: center;"><?php echo number_format($this->group_percent_rate, 2, '.', ''); ?></td>
+		</tr>
+	</tbody>
+</table>

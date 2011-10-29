@@ -168,93 +168,91 @@ $pines->com_pgrid->load();
 	});
 	// ]]>
 </script>
-<div class="pf-element pf-full-width">
-	<table id="p_muid_grid">
-		<thead>
-			<tr>
-				<th>Location</th>
-				<th># Sold</th>
-				<th># Ref</th>
-				<th># Net</th>
-				<th>$ Sold</th>
-				<th>$ Ref</th>
-				<th>$ Net</th>
-				<th>Adjustment</th>
-				<th>Cost</th>
-				<th>Profit</th>
-				<th>Commission</th>
-			</tr>
-		</thead>
-		<tbody>
-			<?php
-			foreach ($this->invoices as $cur_invoice) {
-				if ($cur_sale->status == 'voided')
-					continue;
-				if (!isset($totals[$cur_invoice->group->guid])){
-					$totals[$cur_invoice->group->guid] = array(
-						'location' => $cur_invoice->group,
-						'qty_sold' => 0,
-						'qty_returned' => 0,
-						'qty_net' => 0,
-						'total_sold' => 0,
-						'total_returned' => 0,
-						'total_net' => 0,
-						'adjustment' => 0,
-						'cost' => 0,
-						'profit' => 0,
-						'commission' => 0
-					);
-					$commissions = array();
+<table id="p_muid_grid">
+	<thead>
+		<tr>
+			<th>Location</th>
+			<th># Sold</th>
+			<th># Ref</th>
+			<th># Net</th>
+			<th>$ Sold</th>
+			<th>$ Ref</th>
+			<th>$ Net</th>
+			<th>Adjustment</th>
+			<th>Cost</th>
+			<th>Profit</th>
+			<th>Commission</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php
+		foreach ($this->invoices as $cur_invoice) {
+			if ($cur_sale->status == 'voided')
+				continue;
+			if (!isset($totals[$cur_invoice->group->guid])){
+				$totals[$cur_invoice->group->guid] = array(
+					'location' => $cur_invoice->group,
+					'qty_sold' => 0,
+					'qty_returned' => 0,
+					'qty_net' => 0,
+					'total_sold' => 0,
+					'total_returned' => 0,
+					'total_net' => 0,
+					'adjustment' => 0,
+					'cost' => 0,
+					'profit' => 0,
+					'commission' => 0
+				);
+				$commissions = array();
+			}
+			if ($cur_invoice->has_tag('sale')) {
+				$totals[$cur_invoice->group->guid]['qty_sold']++;
+				$totals[$cur_invoice->group->guid]['qty_net']++;
+				$totals[$cur_invoice->group->guid]['total_sold'] += $cur_invoice->subtotal;
+				$totals[$cur_invoice->group->guid]['total_net'] += $cur_invoice->subtotal;
+				foreach ($cur_invoice->products as $cur_item) {
+					foreach ($cur_item['stock_entities'] as $cur_stock)
+						$totals[$cur_invoice->group->guid]['cost'] += $cur_stock->cost;
 				}
-				if ($cur_invoice->has_tag('sale')) {
-					$totals[$cur_invoice->group->guid]['qty_sold']++;
-					$totals[$cur_invoice->group->guid]['qty_net']++;
-					$totals[$cur_invoice->group->guid]['total_sold'] += $cur_invoice->subtotal;
-					$totals[$cur_invoice->group->guid]['total_net'] += $cur_invoice->subtotal;
-					foreach ($cur_invoice->products as $cur_item) {
-						foreach ($cur_item['stock_entities'] as $cur_stock)
-							$totals[$cur_invoice->group->guid]['cost'] += $cur_stock->cost;
-					}
-					foreach ($cur_invoice->products as $cur_product) {
-						foreach ($cur_product['salesperson']->commissions as $cur_commission) {
-							if (!in_array($cur_commission, $commissions) && $cur_commission['ticket']->guid == $cur_invoice->guid) {
-								$totals[$cur_invoice->group->guid]['commission'] += $cur_commission['amount'];
-								$commissions[] = $cur_commission;
-							}
+				foreach ($cur_invoice->products as $cur_product) {
+					foreach ($cur_product['salesperson']->commissions as $cur_commission) {
+						if (!in_array($cur_commission, $commissions) && $cur_commission['ticket']->guid == $cur_invoice->guid) {
+							$totals[$cur_invoice->group->guid]['commission'] += $cur_commission['amount'];
+							$commissions[] = $cur_commission;
 						}
 					}
-				} elseif ($cur_invoice->has_tag('return')) {
-					$totals[$cur_invoice->group->guid]['qty_returned']++;
-					$totals[$cur_invoice->group->guid]['qty_net']--;
-					$totals[$cur_invoice->group->guid]['total_returned'] += $cur_invoice->subtotal;
-					$totals[$cur_invoice->group->guid]['total_net'] -= $cur_invoice->subtotal;
-					foreach ($cur_invoice->products as $cur_product) {
-						foreach ($cur_product['salesperson']->commissions as $cur_commission) {
-							if (!in_array($cur_commission, $commissions) && $cur_commission['ticket']->guid == $cur_invoice->guid) {
-								$totals[$cur_invoice->group->guid]['commission'] += $cur_commission['amount'];
-								$commissions[] = $cur_commission;
-							}
+				}
+			} elseif ($cur_invoice->has_tag('return')) {
+				$totals[$cur_invoice->group->guid]['qty_returned']++;
+				$totals[$cur_invoice->group->guid]['qty_net']--;
+				$totals[$cur_invoice->group->guid]['total_returned'] += $cur_invoice->subtotal;
+				$totals[$cur_invoice->group->guid]['total_net'] -= $cur_invoice->subtotal;
+				foreach ($cur_invoice->products as $cur_product) {
+					foreach ($cur_product['salesperson']->commissions as $cur_commission) {
+						if (!in_array($cur_commission, $commissions) && $cur_commission['ticket']->guid == $cur_invoice->guid) {
+							$totals[$cur_invoice->group->guid]['commission'] += $cur_commission['amount'];
+							$commissions[] = $cur_commission;
 						}
 					}
 				}
 			}
-			foreach ($totals as $cur_total) {
-				$cur_total['profit'] = ($cur_total['total_sold']-$cur_total['total_returned'])-$cur_total['cost'];
-			?>
-			<tr title="<?php echo $cur_total['location']->guid; ?>">
-				<td><?php echo $cur_total['location']->name; ?></td>
-				<td><?php echo $cur_total['qty_sold']; ?></td>
-				<td><?php echo $cur_total['qty_returned']; ?></td>
-				<td><?php echo $cur_total['qty_net']; ?></td>
-				<td class="total">$<?php echo number_format($cur_total['total_sold'], 2, '.', ''); ?></td>
-				<td class="total">$<?php echo number_format($cur_total['total_returned'], 2, '.', ''); ?></td>
-				<td class="total">$<?php echo number_format($cur_total['total_net'], 2, '.', ''); ?></td>
-				<td class="total">$<?php echo number_format($cur_total['adjustment'], 2, '.', ''); ?></td>
-				<td class="total">$<?php echo number_format($cur_total['cost'], 2, '.', ''); ?></td>
-				<td class="total">$<?php echo number_format($cur_total['profit'], 2, '.', ''); ?></td>
-				<td class="total">$<?php echo number_format($cur_total['commission'], 2, '.', ''); ?></td>
-			</tr>
-			<?php } ?>
-		</tbody>
-	</table>
-</div>
+		}
+		foreach ($totals as $cur_total) {
+			$cur_total['profit'] = ($cur_total['total_sold']-$cur_total['total_returned'])-$cur_total['cost'];
+		?>
+		<tr title="<?php echo $cur_total['location']->guid; ?>">
+			<td><?php echo $cur_total['location']->name; ?></td>
+			<td><?php echo $cur_total['qty_sold']; ?></td>
+			<td><?php echo $cur_total['qty_returned']; ?></td>
+			<td><?php echo $cur_total['qty_net']; ?></td>
+			<td class="total">$<?php echo number_format($cur_total['total_sold'], 2, '.', ''); ?></td>
+			<td class="total">$<?php echo number_format($cur_total['total_returned'], 2, '.', ''); ?></td>
+			<td class="total">$<?php echo number_format($cur_total['total_net'], 2, '.', ''); ?></td>
+			<td class="total">$<?php echo number_format($cur_total['adjustment'], 2, '.', ''); ?></td>
+			<td class="total">$<?php echo number_format($cur_total['cost'], 2, '.', ''); ?></td>
+			<td class="total">$<?php echo number_format($cur_total['profit'], 2, '.', ''); ?></td>
+			<td class="total">$<?php echo number_format($cur_total['commission'], 2, '.', ''); ?></td>
+		</tr>
+		<?php } ?>
+	</tbody>
+</table>

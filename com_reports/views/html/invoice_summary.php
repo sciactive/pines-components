@@ -174,73 +174,71 @@ $pines->com_pgrid->load();
 	});
 	// ]]>
 </script>
-<div class="pf-element pf-full-width">
-	<table id="p_muid_grid">
-		<thead>
-			<tr>
-				<th>ID</th>
-				<th>Type</th>
-				<th>Date</th>
-				<th>Location</th>
-				<th>Customer</th>
-				<th>Employee</th>
-				<th>Total</th>
-				<?php /* <th>Cost</th>
-				<th>Profit</th> */ ?>
-				<th>Status</th>
-				<?php
-				$payment_types = $pines->entity_manager->get_entities(
-						array('class' => com_sales_payment_type),
-						array('&',
-							'tag' => array('com_sales', 'payment_type'),
-							'data' => array('enabled', true)
-						)
-					);
-				foreach ($payment_types as $cur_payment_type) { 
-					echo '<th>'.$cur_payment_type->name.'</th>';
-				} ?>
-			</tr>
-		</thead>
-		<tbody>
+<table id="p_muid_grid">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>Type</th>
+			<th>Date</th>
+			<th>Location</th>
+			<th>Customer</th>
+			<th>Employee</th>
+			<th>Total</th>
+			<?php /* <th>Cost</th>
+			<th>Profit</th> */ ?>
+			<th>Status</th>
 			<?php
-			foreach ($this->invoices as $cur_invoice) {
-				if ($cur_invoice->status == 'voided')
-					$type = 'void';
-				elseif ($cur_invoice->has_tag('return'))
-					$type = 'return';
-				else
-					$type = 'sale';
-				$total_cost = 0;
-				foreach ($cur_invoice->products as $cur_item) {
-					foreach ($cur_item['stock_entities'] as $cur_stock)
-						$total_cost += $cur_stock->cost;
+			$payment_types = $pines->entity_manager->get_entities(
+					array('class' => com_sales_payment_type),
+					array('&',
+						'tag' => array('com_sales', 'payment_type'),
+						'data' => array('enabled', true)
+					)
+				);
+			foreach ($payment_types as $cur_payment_type) { 
+				echo '<th>'.$cur_payment_type->name.'</th>';
+			} ?>
+		</tr>
+	</thead>
+	<tbody>
+		<?php
+		foreach ($this->invoices as $cur_invoice) {
+			if ($cur_invoice->status == 'voided')
+				$type = 'void';
+			elseif ($cur_invoice->has_tag('return'))
+				$type = 'return';
+			else
+				$type = 'sale';
+			$total_cost = 0;
+			foreach ($cur_invoice->products as $cur_item) {
+				foreach ($cur_item['stock_entities'] as $cur_stock)
+					$total_cost += $cur_stock->cost;
+			}
+		?>
+		<tr title="<?php echo (int) $cur_invoice->customer->guid; ?>" class="<?php echo $type; ?>">
+			<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', ($cur_invoice->has_tag('return') ? 'return/receipt' : 'sale/receipt'), array('id' => $cur_invoice->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_invoice->id); ?></a></td>
+			<td><?php echo ucwords($type); ?></td>
+			<td><?php echo format_date($cur_invoice->p_cdate, 'full_sort'); ?></td>
+			<td><?php echo htmlspecialchars($cur_invoice->group->name); ?></td>
+			<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_invoice->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_invoice->customer->name); ?></a></td>
+			<td><?php echo htmlspecialchars($cur_invoice->user->name); ?></td>
+			<td class="total">$<?php echo number_format($cur_invoice->subtotal, 2, '.', ''); ?></td>
+			<?php /* <td class="total">$<?php echo number_format($total_cost, 2, '.', ''); ?></td>
+			<td class="total">$<?php echo number_format(($cur_invoice->subtotal - $total_cost), 2, '.', ''); ?></td> */ ?>
+			<td><?php echo ucwords($cur_invoice->status); ?></td>
+			<?php
+			foreach ($payment_types as $cur_payment_type) { 
+				echo '<td>$';
+				$pmt_total = 0;
+				foreach ($cur_invoice->payments as $cur_payment) {
+					if ($cur_payment_type->is($cur_payment['entity']))
+						$pmt_total += $cur_payment['amount'];
 				}
+				echo number_format($pmt_total, 2, '.', '');
+				echo '</td>';
+			}
 			?>
-			<tr title="<?php echo (int) $cur_invoice->customer->guid; ?>" class="<?php echo $type; ?>">
-				<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', ($cur_invoice->has_tag('return') ? 'return/receipt' : 'sale/receipt'), array('id' => $cur_invoice->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_invoice->id); ?></a></td>
-				<td><?php echo ucwords($type); ?></td>
-				<td><?php echo format_date($cur_invoice->p_cdate, 'full_sort'); ?></td>
-				<td><?php echo htmlspecialchars($cur_invoice->group->name); ?></td>
-				<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_invoice->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_invoice->customer->name); ?></a></td>
-				<td><?php echo htmlspecialchars($cur_invoice->user->name); ?></td>
-				<td class="total">$<?php echo number_format($cur_invoice->subtotal, 2, '.', ''); ?></td>
-				<?php /* <td class="total">$<?php echo number_format($total_cost, 2, '.', ''); ?></td>
-				<td class="total">$<?php echo number_format(($cur_invoice->subtotal - $total_cost), 2, '.', ''); ?></td> */ ?>
-				<td><?php echo ucwords($cur_invoice->status); ?></td>
-				<?php
-				foreach ($payment_types as $cur_payment_type) { 
-					echo '<td>$';
-					$pmt_total = 0;
-					foreach ($cur_invoice->payments as $cur_payment) {
-						if ($cur_payment_type->is($cur_payment['entity']))
-							$pmt_total += $cur_payment['amount'];
-					}
-					echo number_format($pmt_total, 2, '.', '');
-					echo '</td>';
-				}
-				?>
-			</tr>
-			<?php } ?>
-		</tbody>
-	</table>
-</div>
+		</tr>
+		<?php } ?>
+	</tbody>
+</table>

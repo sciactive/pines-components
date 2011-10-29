@@ -215,41 +215,39 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	});
 	// ]]>
 </script>
-<div class="pf-element pf-full-width">
-	<table id="p_muid_grid">
-		<thead>
-			<tr>
-				<th>Event</th>
-				<th>Start</th>
-				<th>End</th>
-				<th>Location</th>
-				<th>Employee</th>
-				<th>Type</th>
-				<th>Status</th>
-				<th>Created by</th>
-			</tr>
-		</thead>
-		<tbody>
-			<?php foreach ($this->events as $cur_event) {
-				if ($cur_event->appointment)
-					$cur_event_type = 'Appointment';
-				elseif ($cur_event->scheduled)
-					$cur_event_type = 'Shift';
-				else
-					$cur_event_type = 'Event';
-				$info = json_encode(str_replace('\'', '', $cur_event->information));
-			?>
-			<tr title='<?php echo $cur_event->guid; ?>' onmouseover='p_muid_notice.com_reports_issue_update("<?php echo $cur_event->title; ?>", <?php echo $info; ?>);'>
-				<td><?php echo htmlspecialchars($cur_event->title); ?></td>
-				<td><?php echo format_date($cur_event->start); ?></td>
-				<td><?php echo format_date($cur_event->end); ?></td>
-				<td><?php echo htmlspecialchars($cur_event->group->name); ?></td>
-				<td><?php echo htmlspecialchars($cur_event->employee->name); ?></td>
-				<td><?php echo htmlspecialchars($cur_event_type); ?></td>
-				<td><?php echo ucwords($cur_event->appointment->status); ?></td>
-				<td><?php echo htmlspecialchars($cur_event->user->name); ?></td>
-			</tr>
-			<?php } ?>
-		</tbody>
-	</table>
-</div>
+<table id="p_muid_grid">
+	<thead>
+		<tr>
+			<th>Event</th>
+			<th>Start</th>
+			<th>End</th>
+			<th>Location</th>
+			<th>Employee</th>
+			<th>Type</th>
+			<th>Status</th>
+			<th>Created by</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php foreach ($this->events as $cur_event) {
+			if ($cur_event->appointment)
+				$cur_event_type = 'Appointment';
+			elseif ($cur_event->scheduled)
+				$cur_event_type = 'Shift';
+			else
+				$cur_event_type = 'Event';
+			$info = json_encode(str_replace('\'', '', $cur_event->information));
+		?>
+		<tr title='<?php echo $cur_event->guid; ?>' onmouseover='p_muid_notice.com_reports_issue_update("<?php echo $cur_event->title; ?>", <?php echo $info; ?>);'>
+			<td><?php echo htmlspecialchars($cur_event->title); ?></td>
+			<td><?php echo format_date($cur_event->start); ?></td>
+			<td><?php echo format_date($cur_event->end); ?></td>
+			<td><?php echo htmlspecialchars($cur_event->group->name); ?></td>
+			<td><?php echo htmlspecialchars($cur_event->employee->name); ?></td>
+			<td><?php echo htmlspecialchars($cur_event_type); ?></td>
+			<td><?php echo ucwords($cur_event->appointment->status); ?></td>
+			<td><?php echo htmlspecialchars($cur_event->user->name); ?></td>
+		</tr>
+		<?php } ?>
+	</tbody>
+</table>

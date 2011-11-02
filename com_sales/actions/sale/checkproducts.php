@@ -43,6 +43,10 @@ foreach ($products as $key => $cur_product) {
 		$messages[] = htmlspecialchars("The product on line {$key} can't be found.");
 		continue;
 	}
+	if ($product->stock_type == 'non_stocked') {
+		// This product isn't stocked, so skip it. If it's stock optional, it should be warehoused.
+		continue;
+	}
 	$delivery = $cur_product->values[3];
 	if ($delivery == 'warehouse') {
 		// This is a warehouse sale, so skip it.

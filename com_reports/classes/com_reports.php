@@ -258,16 +258,22 @@ class com_reports extends component {
 				'scheduled_out' => null,
 				'scheduled_total' => 0,
 			);
-			// Did the employee clock in?
-			foreach($cur_employee->timeclock->timeclock as $key => $entry) {
-				// Ignore if it's not even in our time range.
-				if ($entry['out'] < $start_date || $entry['in'] >= $end_date)
-					continue;
+			// Get all the employee clock-ins in our time range.
+			$entries = $pines->entity_manager->get_entities(
+					array('class' => com_hrm_timeclock_entry),
+					array('&',
+						'tag' => array('com_hrm', 'timeclock_entry'),
+						'ref' => array('user', $cur_employee),
+						'lt' => array('in', $end_date),
+						'gt' => array('out', $start_date)
+					)
+				);
+			foreach($entries as $entry) {
 				// Ignore any part of the clockin outside our time range.
-				$in = $entry['in'];
+				$in = $entry->in;
 				if ($in < $start_date)
 					$in = $start_date;
-				$out = $entry['out'];
+				$out = $entry->out;
 				if ($out > $end_date)
 					$out = $end_date;
 				$time = $out - $in;
@@ -277,10 +283,10 @@ class com_reports extends component {
 					$cur_array['clocked_out'] = $out;
 				$cur_array['clocked_total'] += $time;
 				// IPs aren't always on all clockins.
-				if (isset($entry['extras']['ip_in']) && !in_array($entry['extras']['ip_in'], $cur_array['clocked_ips']))
-					$cur_array['clocked_ips'][] = $entry['extras']['ip_in'];
-				if (isset($entry['extras']['ip_out']) && !in_array($entry['extras']['ip_out'], $cur_array['clocked_ips']))
-					$cur_array['clocked_ips'][] = $entry['extras']['ip_out'];
+				if (isset($entry->extras['ip_in']) && !in_array($entry->extras['ip_in'], $cur_array['clocked_ips']))
+					$cur_array['clocked_ips'][] = $entry->extras['ip_in'];
+				if (isset($entry->extras['ip_out']) && !in_array($entry->extras['ip_out'], $cur_array['clocked_ips']))
+					$cur_array['clocked_ips'][] = $entry->extras['ip_out'];
 			}
 			// Get their scheduled time.
 			$schedule = $pines->entity_manager->get_entities(

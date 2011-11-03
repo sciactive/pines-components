@@ -27,7 +27,6 @@ class com_hrm_timeclock extends entity {
 		parent::__construct();
 		$this->add_tag('com_hrm', 'timeclock');
 		// Defaults.
-		$this->timeclock = array();
 		$this->ac = (object) array('user' => 3, 'group' => 3, 'other' => 2);
 		if ($id > 0) {
 			global $pines;
@@ -54,18 +53,33 @@ class com_hrm_timeclock extends entity {
 	}
 
 	public function add($time_in, $time_out, $comment = '', $extras = array()) {
+		global $pines;
 		// Check that this time doesn't conflict with any other times.
-		foreach ($this->timeclock as $cur_entry) {
-			if ($time_in < $cur_entry['out'] && $time_out > $cur_entry['in'])
-				return false;
-		}
-		$this->timeclock[] = array(
-			'in' => (int) $time_in,
-			'out' => (int) $time_out,
-			'comment' => (string) $comment,
-			'extras' => $extras
-		);
-		return true;
+		$check = $pines->entity_manager->get_entity(
+				array('class' => com_hrm_timeclock_entry),
+				array('&',
+					'tag' => array('com_hrm', 'timeclock_entry'),
+					'ref' => array('user', $this->user)
+				),
+				array('!|',
+					'lt' => array('in', $time_in),
+					'gt' => array('out', $time_in),
+					'lt' => array('in', $time_out),
+					'gt' => array('out', $time_out)
+				)
+			);
+		if (isset($check->guid))
+			return false;
+		$entity = com_hrm_timeclock_entry::factory();
+		$entity->in = (int) $time_in;
+		$entity->out = (int) $time_out;
+		$entity->comment = (string) $comment;
+		$entity->extras = (array) $extras;
+		if (!$entity->save())
+			return false;
+		$entity->user = $this->user;
+		$entity->group = $this->group;
+		return $entity->save();
 	}
 	
 	public function clock_in() {
@@ -110,28 +124,65 @@ class com_hrm_timeclock extends entity {
 
 	/**
 	 * Print a form to edit the employee's timeclock.
+	 *
+	 * @param int $time_start Unix time stamp of start time.
+	 * @param int $time_end Unix time stamp of end time.
 	 * @return module The form's module.
 	 */
-	public function print_timeclock() {
+	public function print_timeclock($time_start, $time_end) {
+		global $pines;
 		$module = new module('com_hrm', 'employee/timeclock/form', 'content');
 		$module->entity = $this;
+		$module->time_start = (int) $time_start;
+		$module->time_end = (int) $time_end;
+		// Get the matching entries.
+		$module->entries = $pines->entity_manager->get_entities(
+				array('class' => com_hrm_timeclock_entry),
+				array('&',
+					'tag' => array('com_hrm', 'timeclock_entry'),
+					'ref' => array('user', $this->user),
+					'lt' => array('in', $time_end),
+					'gt' => array('out', $time_start)
+				)
+			);
 
 		return $module;
 	}
 
 	/**
 	 * Print a module to see the employee's timeclock.
+	 *
+	 * @param int $time_start Unix time stamp of start time.
+	 * @param int $time_end Unix time stamp of end time.
 	 * @return module The module.
 	 */
-	public function print_timeclock_view() {
+	public function print_timeclock_view($time_start = null, $time_end = null) {
+		global $pines;
 		$module = new module('com_hrm', 'employee/timeclock/view', 'content');
 		$module->entity = $this;
+		$module->time_start = $time_start;
+		$module->time_end = $time_end;
+		// Get the matching entries.
+		$selector = array('&',
+				'tag' => array('com_hrm', 'timeclock_entry'),
+				'ref' => array('user', $this->user)
+			);
+		if (isset($time_start) && isset($time_end)) {
+			$selector['lt'] = array('in', $time_end);
+			$selector['gt'] = array('out', $time_start);
+		}
+		$module->entries = $pines->entity_manager->get_entities(
+				array('class' => com_hrm_timeclock_entry),
+				$selector
+			);
 
 		return $module;
 	}
 
 	/**
 	 * Calculate the time the employee has worked between two given times.
+	 * 
+	 * Leave both times null to sum all time.
 	 *
 	 * @param int $time_start Unix time stamp of start time.
 	 * @param int $time_end Unix time stamp of end time.
@@ -139,19 +190,30 @@ class com_hrm_timeclock extends entity {
 	 * @return int Number of seconds worked.
 	 */
 	public function sum($time_start = null, $time_end = null, $include_new = true) {
-		if ((array) $this->timeclock !== $this->timeclock)
-			return 0;
+		global $pines;
+		$selector = array('&',
+				'tag' => array('com_hrm', 'timeclock_entry'),
+				'ref' => array('user', $this->user)
+			);
+		if (isset($time_start) && isset($time_end)) {
+			$selector['lt'] = array('in', $time_end);
+			$selector['gt'] = array('out', $time_start);
+		}
+		$entries = $pines->entity_manager->get_entities(
+				array('class' => com_hrm_timeclock_entry),
+				$selector
+			);
 		$time = 0;
-		foreach ($this->timeclock as $cur_entry) {
-			if (($cur_entry['in'] >= $time_start && $cur_entry['out'] <= $time_end) || (!isset($time_start) && !isset($time_end))) {
+		foreach ($entries as $cur_entry) {
+			if (($cur_entry->in >= $time_start && $cur_entry->out <= $time_end) || (!isset($time_start) && !isset($time_end))) {
 				// The whole entry counts.
-				$time += $cur_entry['out'] - $cur_entry['in'];
-			} elseif ($cur_entry['in'] >= $time_start && $cur_entry['in'] < $time_end) {
+				$time += $cur_entry->out - $cur_entry->in;
+			} elseif ($cur_entry->in >= $time_start && $cur_entry->in < $time_end) {
 				// The beginning of the entry counts.
-				$time += $time_end - $cur_entry['in'];
-			} elseif ($cur_entry['out'] > $time_start && $cur_entry['out'] <= $time_end) {
+				$time += $time_end - $cur_entry->in;
+			} elseif ($cur_entry->out > $time_start && $cur_entry->out <= $time_end) {
 				// The end of the entry counts.
-				$time += $cur_entry['out'] - $time_start;
+				$time += $cur_entry->out - $time_start;
 			}
 		}
 		if ($include_new && isset($this->time_in) && ($this->time_in < $time_end || !isset($time_end))) {

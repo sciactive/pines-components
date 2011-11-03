@@ -21,9 +21,19 @@ if (!isset($employee->guid)) {
 	return;
 }
 
-if ( empty($employee->timeclock->timeclock) )
-	pines_notice("No timeclock data is stored for employee [{$employee->name}].");
+// Calculate times in the employee's timezone.
+$cur_timezone = date_default_timezone_get();
+date_default_timezone_set($employee->get_timezone());
+if (empty($_REQUEST['time_start']))
+	$time_start = strtotime('last monday');
+else
+	$time_start = strtotime($_REQUEST['time_start']);
+if (empty($_REQUEST['time_end']))
+	$time_end = strtotime('this monday');
+else
+	$time_end = strtotime($_REQUEST['time_end']);
+date_default_timezone_set($cur_timezone);
 
-$employee->timeclock->print_timeclock();
+$employee->timeclock->print_timeclock($time_start, $time_end);
 
 ?>

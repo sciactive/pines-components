@@ -53,12 +53,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		</tr>
 	</thead>
 	<tbody>
-		<?php foreach($this->entity->timeclock as $key => $entry) { ?>
+		<?php foreach($this->entries as $key => $entry) { ?>
 		<tr title="<?php echo htmlspecialchars($key); ?>">
-			<td><?php echo format_date($entry['in'], 'custom', 'Y-m-d H:i:s T', $this->entity->user->get_timezone(true)); ?></td>
-			<td><?php echo format_date($entry['out'], 'custom', 'Y-m-d H:i:s T', $this->entity->user->get_timezone(true)); ?></td>
+			<td><?php echo format_date($entry->in, 'custom', 'Y-m-d H:i:s T', $this->entity->user->get_timezone(true)); ?></td>
+			<td><?php echo format_date($entry->out, 'custom', 'Y-m-d H:i:s T', $this->entity->user->get_timezone(true)); ?></td>
 			<td><?php
-				$seconds = $entry['out'] - $entry['in'];
+				$seconds = $entry->out - $entry->in;
 				$days = floor($seconds / 86400);
 				$seconds %= 86400;
 				$hours = floor($seconds / 3600);
@@ -72,11 +72,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				$string .= sprintf('%d', $hours).':'.sprintf('%02d', $minutes).':'.sprintf('%02d', $seconds);
 				echo htmlspecialchars($string);
 			?></td>
-			<td><?php echo htmlspecialchars($entry['comments']); ?></td>
-			<td><?php echo htmlspecialchars($entry['extras']['ip_in']); ?></td>
-			<td><?php echo htmlspecialchars($entry['extras']['ip_out']); ?></td>
-			<td><?php echo htmlspecialchars($entry['extras']['ua_in']); ?></td>
-			<td><?php echo htmlspecialchars($entry['extras']['ua_out']); ?></td>
+			<td><?php echo htmlspecialchars($entry->comments); ?></td>
+			<td><?php echo htmlspecialchars($entry->extras['ip_in']); ?></td>
+			<td><?php echo htmlspecialchars($entry->extras['ip_out']); ?></td>
+			<td><?php echo htmlspecialchars($entry->extras['ua_in']); ?></td>
+			<td><?php echo htmlspecialchars($entry->extras['ua_out']); ?></td>
 		</tr>
 		<?php } ?>
 		<?php if ($this->entity->clocked_in_time()) { ?>

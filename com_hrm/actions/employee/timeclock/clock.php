@@ -36,12 +36,12 @@ if (!isset($employee->guid)) {
 }
 
 if ($employee->timeclock->clocked_in_time()) {
-	$employee->timeclock->clock_out($_REQUEST['comment']);
+	$success = $employee->timeclock->clock_out($_REQUEST['comment']);
 } else {
-	$employee->timeclock->clock_in();
+	$success = $employee->timeclock->clock_in();
 }
 
-if (!$employee->timeclock->save() || !$employee->save()) {
+if (!$success || !$employee->save()) {
 	$pines->page->override_doc('false');
 	return;
 }

@@ -24,12 +24,15 @@ if (!isset($employee->guid)) {
 // Calculate times in the employee's timezone.
 $cur_timezone = date_default_timezone_get();
 date_default_timezone_set($employee->get_timezone());
-if (empty($_REQUEST['time_start']))
-	$time_start = strtotime('last monday');
-else
+if (empty($_REQUEST['time_start'])) {
+	if (date('w') == '1')
+		$time_start = strtotime('Today 12:00 AM');
+	else
+		$time_start = strtotime('last monday 12:00 AM');
+} else
 	$time_start = strtotime($_REQUEST['time_start']);
 if (empty($_REQUEST['time_end']))
-	$time_end = strtotime('this monday');
+	$time_end = strtotime('+1 week', $time_start);
 else
 	$time_end = strtotime($_REQUEST['time_end']);
 date_default_timezone_set($cur_timezone);

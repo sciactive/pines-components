@@ -18,7 +18,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 ?>
 <script type="text/javascript">
 	// <![CDATA[
-
 	pines(function(){
 		var state_xhr;
 		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
@@ -64,8 +63,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 									pines.error("There was an error saving the change to the database.");
 									return;
 								}
-								cur_row.pgrid_set_value(3, data ? 'In' : 'Out');
-								//cur_row.pgrid_set_value(4, data[1].time);
+								cur_row.pgrid_set_value(4, data ? 'In' : 'Out');
+								//cur_row.pgrid_set_value(5, data[1].time);
 							}
 						});
 					});
@@ -94,30 +93,43 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var cur_options = $.extend(cur_defaults, cur_state);
 		$("#p_muid_grid").pgrid(cur_options);
 	});
-
 	// ]]>
 </script>
 <table id="p_muid_grid">
 	<thead>
 		<tr>
-			<th>ID</th>
+			<th>GUID</th>
 			<th>Name</th>
+			<th>Location</th>
 			<th>Status</th>
 			<th>Time In</th>
-			<th>Time Today</th>
-			<th>Time Sum</th>
+			<th>Time Today *</th>
+			<th>Time This Week *</th>
 		</tr>
 	</thead>
 	<tbody>
-	<?php foreach($this->employees as $employee) { ?>
+	<?php foreach($this->employees as $employee) {
+		// Calculate times in the employee's timezone.
+		$employee_timezone = $employee->get_timezone();
+		$cur_timezone = date_default_timezone_get();
+		date_default_timezone_set($employee_timezone);
+		$today_start = strtotime('Today 12:00 AM');
+		if (date('w') == '1')
+			$week_start = strtotime('Today 12:00 AM');
+		else
+			$week_start = strtotime('last monday 12:00 AM');
+		date_default_timezone_set($cur_timezone);
+		?>
 		<tr title="<?php echo $employee->guid; ?>">
 			<td><?php echo $employee->guid; ?></td>
 			<td><?php echo htmlspecialchars($employee->name); ?></td>
+			<td><?php echo htmlspecialchars($employee->group->name); ?></td>
 			<td><?php echo $employee->timeclock->clocked_in_time() ? 'In' : 'Out'; ?></td>
-			<td><?php echo $employee->timeclock->clocked_in_time() ? format_date($employee->timeclock->clocked_in_time(), 'full_sort', '', $employee->get_timezone(true)) : ''; ?></td>
-			<td><?php echo round($employee->timeclock->sum(strtotime('Today 12:00 AM'), time()) / (60 * 60), 2).' hours'; ?></td>
-			<td><?php echo round($employee->timeclock->sum() / (60 * 60), 2).' hours'; ?></td>
+			<td><?php echo $employee->timeclock->clocked_in_time() ? format_date($employee->timeclock->clocked_in_time(), 'full_sort', '', $employee_timezone) : ''; ?></td>
+			<td><?php echo round($employee->timeclock->sum($today_start, time()) / (60 * 60), 2).' hours'; ?></td>
+			<td><?php echo round($employee->timeclock->sum($week_start, time()) / (60 * 60), 2).' hours'; ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>
 </table>
+<small>* Today and this week are calculated with regard to the employee's timezone. Week starts on Monday.</small>

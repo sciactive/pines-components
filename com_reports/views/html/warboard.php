@@ -70,7 +70,7 @@ $this->title = htmlspecialchars($this->entity->company_name).' Warboard';
 		<tr>
 		<?php } ?>
 			<td>
-				<table class="location" id="location_<?php echo $cur_location->guid; ?>">
+				<table class="location" id="location_<?php echo (int) $cur_location->guid ?>">
 					<tr class="label">
 						<td colspan="2">
 							<strong><?php
@@ -127,7 +127,7 @@ $this->title = htmlspecialchars($this->entity->company_name).' Warboard';
 		<?php $count++; } ?>
 	</tr>
 	<tr>
-		<td colspan="<?php echo $this->entity->columns; ?>"><strong>Important Numbers</strong></td>
+		<td colspan="<?php echo htmlspecialchars($this->entity->columns); ?>"><strong>Important Numbers</strong></td>
 	</tr>
 	<tr>
 		<td>
@@ -156,7 +156,7 @@ $this->title = htmlspecialchars($this->entity->company_name).' Warboard';
 			$pines->entity_manager->sort($employees, 'job_title');
 		?>
 		<td colspan="<?php echo floor(($this->entity->columns - 1)/count($this->entity->important)); ?>">
-			<table class="important" id="important_<?php echo $cur_important->guid; ?>">
+			<table class="important" id="important_<?php echo (int) $cur_important->guid ?>">
 				<tr>
 					<td colspan="4" class="label"><strong><?php echo htmlspecialchars($cur_important->name); ?></strong></td>
 				</tr>
@@ -185,14 +185,14 @@ $this->title = htmlspecialchars($this->entity->company_name).' Warboard';
 foreach ($this->entity->locations as $cur_location) {
 	$add_rows = $location_rows - $location_count[$cur_location->guid];
 	for ($i=0; $i < $add_rows; $i++) { ?>
-		$("#location_<?php echo $cur_location->guid; ?>").append('<tr class="empty"><td style="width: 25%;">&nbsp;</td><td style="width: 50%;">&nbsp;</td><td style="width: 25%;">&nbsp;</td></tr>');
+		$("#location_<?php echo (int) $cur_location->guid ?>").append('<tr class="empty"><td style="width: 25%;">&nbsp;</td><td style="width: 50%;">&nbsp;</td><td style="width: 25%;">&nbsp;</td></tr>');
 <?php
 	}
 }
 foreach ($this->entity->important as $cur_important) {
 	$add_rows = $important_rows - $important_count[$cur_important->guid];
 	for ($i=0; $i < $add_rows; $i++) { ?>
-		$("#important_<?php echo $cur_important->guid; ?>").append('<tr class="empty"><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>');
+		$("#important_<?php echo (int) $cur_important->guid ?>").append('<tr class="empty"><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>');
 <?php } } ?>
 		return;
 	});

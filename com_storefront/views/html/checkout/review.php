@@ -131,7 +131,7 @@ $this->title = 'Review Your Order';
 	<?php } } ?>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Order Comments</span>
-		<textarea class="pf-field ui-widget-content ui-corner-all" rows="1" cols="35" name="comments"><?php echo $this->entity->comments; ?></textarea>
+		<textarea class="pf-field ui-widget-content ui-corner-all" rows="1" cols="35" name="comments"><?php echo htmlspecialchars($this->entity->comments); ?></textarea>
 	</div>
 	<div class="pf-element pf-buttons">
 		<script type="text/javascript">

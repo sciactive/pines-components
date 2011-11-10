@@ -169,7 +169,7 @@ if ($pines->config->com_sales->autocomplete_product)
 										loader.pnotify_remove();
 									},
 									error: function(XMLHttpRequest, textStatus){
-										pines.error("An error occured while trying to lookup the product code:\n"+XMLHttpRequest.status+": "+textStatus);
+										pines.error("An error occured while trying to lookup the product code:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 									},
 									success: function(data){
 										if (!data) {
@@ -205,7 +205,7 @@ if ($pines->config->com_sales->autocomplete_product)
 								return;
 							}
 							var serial = rows.pgrid_get_value(3);
-							serial_box.val(serial);
+							serial_box.val(pines.unsafe(serial));
 							var buttons = {
 								"Done": function(){
 									serial = serial_box.val();
@@ -213,7 +213,7 @@ if ($pines->config->com_sales->autocomplete_product)
 										alert("Please provide a serial number.");
 										return;
 									}
-									rows.pgrid_set_value(3, serial);
+									rows.pgrid_set_value(3, pines.safe(serial));
 									update_products();
 									serial_dialog.dialog("close");
 								}
@@ -289,7 +289,7 @@ if ($pines->config->com_sales->autocomplete_product)
 								discount = prompt("Enter an amount($#.##) or a percent (#.##%) to discount each unit:", discount);
 							} while ((!discount.match(/^(\$-?\d+(\.\d+)?)|(-?\d+(\.\d+)?%)$/)) && discount != null);
 							if (discount != null) {
-								rows.pgrid_set_value(7, discount);
+								rows.pgrid_set_value(7, pines.safe(discount));
 								update_products();
 							}
 						}
@@ -341,7 +341,7 @@ if ($pines->config->com_sales->autocomplete_product)
 								alert("Please provide a serial number.");
 								return;
 							}
-							products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, '', 1, data.unit_price, "", "", "", "", data.salesperson]}], function(){
+							products_table.pgrid_add([{key: data.guid, values: [pines.safe(data.sku), pines.safe(data.name), pines.safe(serial), '', 1, pines.safe(data.unit_price), "", "", "", "", pines.safe(data.salesperson)]}], function(){
 								var cur_row = $(this);
 								cur_row.data("product", data);
 							});
@@ -357,7 +357,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					serial_box.val("");
 					return;
 				}
-				products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, "", 1, data.unit_price, "", "", "", "", data.salesperson]}], function(){
+				products_table.pgrid_add([{key: data.guid, values: [pines.safe(data.sku), pines.safe(data.name), pines.safe(serial), "", 1, pines.safe(data.unit_price), "", "", "", "", pines.safe(data.salesperson)]}], function(){
 					var cur_row = $(this);
 					cur_row.data("product", data);
 				});
@@ -434,7 +434,7 @@ if ($pines->config->com_sales->autocomplete_product)
 								loader.pnotify_remove();
 							},
 							error: function(XMLHttpRequest, textStatus){
-								pines.error("An error occured while trying to lookup the products:\n"+XMLHttpRequest.status+": "+textStatus);
+								pines.error("An error occured while trying to lookup the products:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 							},
 							success: function(data){
 								if (!data || !data[0]) {
@@ -443,7 +443,7 @@ if ($pines->config->com_sales->autocomplete_product)
 								}
 								$.each(data, function(){
 									var product = this;
-									category_products_grid.pgrid_add([{key: this.guid, values: [this.name, this.sku]}], function(){
+									category_products_grid.pgrid_add([{key: this.guid, values: [pines.safe(this.name), pines.safe(this.sku)]}], function(){
 										$(this).data("product", product);
 									});
 								});
@@ -509,26 +509,26 @@ if ($pines->config->com_sales->autocomplete_product)
 					return;
 				}
 				$.each(product.return_checklists, function(i, cur_checklist){
-					checklist_form.append('<div class="pf-element pf-heading"><h1>'+cur_checklist.label+'</h1></div>');
+					checklist_form.append('<div class="pf-element pf-heading"><h1>'+pines.safe(cur_checklist.label)+'</h1></div>');
 					$.each(cur_checklist.conditions, function(i, cur_condition){
-						var cur_element = $('<div class="pf-element pf-full-width condition"><span class="pf-label">'+cur_condition.condition+'</span></div>');
+						var cur_element = $('<div class="pf-element pf-full-width condition"><span class="pf-label">'+pines.safe(cur_condition.condition)+'</span></div>');
 						// Make checkboxes.
 						if (cur_condition.always)
 							cur_element.append('<span class="pf-field">Always Charged</span>')
 						else
-							cur_element.append('<input class="pf-field" type="checkbox" name="'+cur_condition.condition+'" value="ON"'+((checklists["G"+cur_checklist.guid] && checklists["G"+cur_checklist.guid]["C"+cur_condition.condition]) ? ' checked="checked"' : '')+' />')
+							cur_element.append('<input class="pf-field" type="checkbox" name="'+pines.safe(cur_condition.condition)+'" value="ON"'+((checklists["G"+cur_checklist.guid] && checklists["G"+cur_checklist.guid]["C"+cur_condition.condition]) ? ' checked="checked"' : '')+' />')
 						var amount;
 						// Calculate return fee.
 						switch (cur_condition.type) {
 							case "flat_rate":
 							default:
-								amount = "$"+cur_condition.amount+" x "+qty+" ($"+round_to_dec(cur_condition.amount * qty, true)+")";
+								amount = "$"+pines.safe(cur_condition.amount)+" x "+pines.safe(qty)+" ($"+pines.safe(round_to_dec(cur_condition.amount * qty, true))+")";
 								break;
 							case "percentage":
-								amount = cur_condition.amount+"% ($"+round_to_dec(round_to_dec(price * (cur_condition.amount / 100)) * qty, true)+")";
+								amount = pines.safe(cur_condition.amount)+"% ($"+pines.safe(round_to_dec(round_to_dec(price * (cur_condition.amount / 100)) * qty, true))+")";
 								break;
 						}
-						cur_element.append('<div style="float: right;">'+amount+'</div>').data("guid", cur_checklist.guid).appendTo(checklist_form);
+						cur_element.append('<div style="float: right;">'+pines.safe(amount)+'</div>').data("guid", cur_checklist.guid).appendTo(checklist_form);
 					});
 				});
 				checklist_dialog.dialog("option", "buttons", {
@@ -574,7 +574,7 @@ if ($pines->config->com_sales->autocomplete_product)
 							alert("Please select a salesperson using the dropdown menu.");
 							return;
 						}
-						row.pgrid_set_value(11, salesperson);
+						row.pgrid_set_value(11, pines.safe(salesperson));
 						row.pgrid_deselect_rows();
 						salesperson_dialog.dialog('close');
 						update_products();
@@ -611,7 +611,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					dataType: "json",
 					data: {"code": cur_guid, "useguid": true},
 					error: function(XMLHttpRequest, textStatus){
-						pines.error("An error occured while trying to lookup a product:\n"+XMLHttpRequest.status+": "+textStatus);
+						pines.error("An error occured while trying to lookup a product:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 					},
 					success: function(data){
 						if (!data) {
@@ -663,7 +663,7 @@ if ($pines->config->com_sales->autocomplete_product)
 										alert("Payments cannot be changed if they have been approved, declined, or tendered.");
 										return;
 									}
-									cur_row.pgrid_set_value(2, amount);
+									cur_row.pgrid_set_value(2, pines.safe(amount));
 								});
 								update_payments();
 							});
@@ -699,12 +699,12 @@ if ($pines->config->com_sales->autocomplete_product)
 					dataType: "html",
 					data: {"name": payment_data.processing_type, "id": $("#p_muid_form [name=id]").val(), "customer": $("#p_muid_customer").val(), "type": "return", "sale_id": $("#p_muid_form [name=sale_id]").val()},
 					error: function(XMLHttpRequest, textStatus){
-						pines.error("An error occured while trying to retrieve the data form:\n"+XMLHttpRequest.status+": "+textStatus);
+						pines.error("An error occured while trying to retrieve the data form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 					},
 					success: function(data){
 						if (data == "")
 							return;
-						var form = $("<div title=\"Data for "+row.pgrid_get_value(1)+" Payment\"></div>");
+						var form = $("<div title=\"Data for "+pines.safe(row.pgrid_get_value(1))+" Payment\"></div>");
 						form.dialog({
 							bgiframe: true,
 							autoOpen: true,
@@ -756,8 +756,8 @@ if ($pines->config->com_sales->autocomplete_product)
 				// TODO: Minimums, maximums
 				get_amount(function(amount){
 					payments_table.pgrid_add([{key: payment_type.guid, values: [
-						payment_type.name,
-						amount,
+						pines.safe(payment_type.name),
+						pines.safe(amount),
 						"pending"
 					]}], function(){
 						var row = $(this);
@@ -955,9 +955,9 @@ if ($pines->config->com_sales->autocomplete_product)
 					item_fees += round_to_dec(cur_item_fees);
 					subtotal += round_to_dec(line_total);
 					return_fees += round_to_dec(cur_return_fee);
-					cur_row.pgrid_set_value(8, round_to_dec(line_total, true));
-					cur_row.pgrid_set_value(9, round_to_dec(cur_item_fees, true));
-					cur_row.pgrid_set_value(10, round_to_dec(cur_return_fee, true));
+					cur_row.pgrid_set_value(8, pines.safe(round_to_dec(line_total, true)));
+					cur_row.pgrid_set_value(9, pines.safe(round_to_dec(cur_item_fees, true)));
+					cur_row.pgrid_set_value(10, pines.safe(round_to_dec(cur_return_fee, true)));
 					var cur_row_export = cur_row.pgrid_export_rows()[0];
 					cur_row_export.return_checklists = checklists;
 					row_export.push(cur_row_export);
@@ -1127,7 +1127,7 @@ if ($pines->config->com_sales->autocomplete_product)
 			</thead>
 			<tbody>
 			<?php foreach($this->categories as $category) { ?>
-				<tr title="<?php echo $category->guid; ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? "child ch_{$category->parent->guid} " : ''; ?>">
+				<tr title="<?php echo (int) $category->guid; ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? htmlspecialchars("child ch_{$category->parent->guid} ") : ''; ?>">
 					<td><?php echo isset($category->parent) ? $category->array_search($category->parent->children) + 1 : '0' ; ?></td>
 					<td><?php echo htmlspecialchars($category->name); ?></td>
 					<td><?php echo count($category->products); ?></td>
@@ -1176,14 +1176,14 @@ if ($pines->config->com_sales->autocomplete_product)
 							continue;
 						$cur_id = uniqid();
 						?>
-				<tr id="p_muid_tr_<?php echo $cur_id; ?>" title="<?php echo $cur_product['entity']->guid; ?>">
+				<tr id="p_muid_tr_<?php echo htmlspecialchars($cur_id); ?>" title="<?php echo (int) $cur_product['entity']->guid; ?>">
 					<td><?php echo htmlspecialchars($cur_product['entity']->sku); ?></td>
 					<td><?php echo htmlspecialchars($cur_product['entity']->name); ?></td>
 					<td><?php echo htmlspecialchars($cur_product['serial']); ?></td>
 					<td>NA<script type="text/javascript">
 						// <![CDATA[
 						pines(function(){
-							$("#p_muid_tr_<?php echo $cur_id; ?>").data("return_checklists", JSON.parse("<?php echo addslashes(json_encode((array) $cur_product['return_checklists'])); ?>"));
+							$("#p_muid_tr_<?php echo htmlspecialchars($cur_id); ?>").data("return_checklists", JSON.parse("<?php echo addslashes(json_encode((array) $cur_product['return_checklists'])); ?>"));
 						});
 						// ]]>
 					</script></td>
@@ -1248,7 +1248,7 @@ if ($pines->config->com_sales->autocomplete_product)
 		<div class="pf-note">
 			<div style="text-align: left;">
 				<?php foreach ($this->payment_types as $cur_payment_type) { ?>
-				<button id="p_muid_payment_<?php echo $cur_payment_type->guid; ?>" class="ui-state-default ui-corner-all payment-button" type="button" style="margin-bottom: 2px;" value="<?php echo htmlspecialchars(json_encode((object) array('guid' => $cur_payment_type->guid, 'name' => $cur_payment_type->name, 'minimum' => $cur_payment_type->minimum, 'maximum' => $cur_payment_type->maximum, 'processing_type' => $cur_payment_type->processing_type))); ?>">
+				<button id="p_muid_payment_<?php echo (int) $cur_payment_type->guid; ?>" class="ui-state-default ui-corner-all payment-button" type="button" style="margin-bottom: 2px;" value="<?php echo htmlspecialchars(json_encode((object) array('guid' => $cur_payment_type->guid, 'name' => $cur_payment_type->name, 'minimum' => $cur_payment_type->minimum, 'maximum' => $cur_payment_type->maximum, 'processing_type' => $cur_payment_type->processing_type))); ?>">
 					<span class="picon picon-32 picon-view-financial-payment-mode" style="display: block; padding-top: 32px; min-width: 50px; background-repeat: no-repeat; background-position: top center;"><?php echo htmlspecialchars($cur_payment_type->name); ?></span>
 				</button>
 				<?php } ?>
@@ -1295,7 +1295,7 @@ if ($pines->config->com_sales->autocomplete_product)
 	</div>
 	<div id="p_muid_comments_dialog" title="Comments" style="display: none;">
 		<div class="pf-element pf-full-width">
-			<textarea class="pf-field pf-full-width ui-widget-content ui-corner-all" style="width: 96%; height: 100%;" rows="3" cols="35" id="p_muid_comments" name="comments"><?php echo $this->entity->comments; ?></textarea>
+			<textarea class="pf-field pf-full-width ui-widget-content ui-corner-all" style="width: 96%; height: 100%;" rows="3" cols="35" id="p_muid_comments" name="comments"><?php echo htmlspecialchars($this->entity->comments); ?></textarea>
 		</div>
 	</div>
 	<?php if (isset($this->entity->sale->guid)) { ?>
@@ -1303,7 +1303,7 @@ if ($pines->config->com_sales->autocomplete_product)
 		<span class="pf-label">Attached Sale</span>
 		<span class="pf-note">This return is attached to a sale.</span>
 		<span class="pf-field">
-			Sale #<?php echo $this->entity->sale->id; ?>:
+			Sale #<?php echo htmlspecialchars($this->entity->sale->id); ?>:
 			<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/receipt', array('id' => $this->entity->sale->guid))); ?>" onclick="window.open(this.href); return false;">Receipt</a>
 			<?php if (gatekeeper('com_sales/editsale')) { ?>
 			<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/edit', array('id' => $this->entity->sale->guid))); ?>" onclick="window.open(this.href); return false;">Edit</a>
@@ -1313,9 +1313,9 @@ if ($pines->config->com_sales->autocomplete_product)
 	<?php } ?>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } elseif ( isset($this->entity->sale->guid) ) { ?>
-		<input type="hidden" name="sale_id" value="<?php echo $this->entity->sale->guid; ?>" />
+		<input type="hidden" name="sale_id" value="<?php echo (int) $this->entity->sale->guid; ?>" />
 		<?php } ?>
 
 		<input type="hidden" id="p_muid_return_process_type" name="process" value="quote" />

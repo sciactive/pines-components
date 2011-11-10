@@ -32,11 +32,11 @@ all.each(function(){
 					}
 					response($.map(data, function(item) {
 						return {
-							"id": item.guid,
-							"label": item.name,
+							"id": pines.safe(item.guid),
+							"label": pines.safe(item.name),
 							"value": item.guid+": "+item.name,
-							"desc": "<em><pre>"+(item.email ? " "+item.email : "")+
-								(item.location_name ? " "+item.location_name : "")+"</pre></em>"
+							"desc": "<em><pre>"+(item.email ? " "+pines.safe(item.email) : "")+
+								(item.location_name ? " "+pines.safe(item.location_name) : "")+"</pre></em>"
 						};
 					}));
 				}

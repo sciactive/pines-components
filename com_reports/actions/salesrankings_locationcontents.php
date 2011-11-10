@@ -30,7 +30,7 @@ $json_data = array(
 	$group->guid => array(
 		'guid' => $group->guid,
 		'type' => 'location',
-		'name' => htmlspecialchars($group->name),
+		'name' => $group->name,
 		'parent' => ($descendents || $users)
 	)
 );
@@ -40,7 +40,7 @@ foreach ($descendents as $cur_group) {
 	$json_data[$cur_group->guid] = array(
 		'guid' => $cur_group->guid,
 		'type' => 'location',
-		'name' => htmlspecialchars($cur_group->name),
+		'name' => $cur_group->name,
 		'parent' => false,
 		'parent_id' => (isset($cur_group->parent->guid) ? $cur_group->parent->guid : ''),
 		'child' => isset($cur_group->parent->guid)
@@ -67,7 +67,7 @@ foreach ($users as $cur_user) {
 	$json_data[$cur_user->guid] = array(
 		'guid' => $cur_user->guid,
 		'type' => 'employee',
-		'name' => htmlspecialchars($cur_user->name),
+		'name' => $cur_user->name,
 		'parent' => false,
 		'parent_id' => $cur_user->group->guid,
 		'child' => true

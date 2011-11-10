@@ -13,7 +13,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = ($this->removed ? 'Completed ' : 'Pending ').'Shipments';
 if (isset($this->location))
-	$this->title .= " at {$this->location->name} [{$this->location->groupname}]";
+	$this->title .= htmlspecialchars(" at {$this->location->name} [{$this->location->groupname}]");
 $this->note = $this->descendents ? 'Including Descendent Locations' : '';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
@@ -34,7 +34,7 @@ $pines->com_jstree->load();
 		};
 
 		// Location Defaults
-		var location = "<?php echo $this->location->guid; ?>";
+		var location = "<?php echo (int) $this->location->guid ?>";
 		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
 
 		var state_xhr;
@@ -84,7 +84,7 @@ $pines->com_jstree->load();
 				dataType: "html",
 				data: {"location": location, "descendents": descendents},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the location form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the location form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == "")
@@ -137,7 +137,7 @@ $pines->com_jstree->load();
 	</thead>
 	<tbody>
 	<?php foreach($this->sales as $sale) { ?>
-		<tr title="<?php echo $sale->guid; ?>">
+		<tr title="<?php echo (int) $sale->guid ?>">
 			<td>Sale</td>
 			<td><?php echo htmlspecialchars($sale->id); ?></td>
 			<td><?php echo format_date($sale->tender_date, 'full_sort'); ?></td>

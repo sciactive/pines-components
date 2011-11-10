@@ -132,10 +132,10 @@ $pines->icons->load();
 				var qty = parseInt(product.find("> div.qty").text());
 
 				var price = unit_price * qty;
-				product.find("> div.price").html("$"+round_to_dec(price));
+				product.find("> div.price").html(pines.safe("$"+round_to_dec(price)));
 				subtotal += price;
 			});
-			$("div.subtotal", "#com_storefront_cart_controls").html("$"+round_to_dec(subtotal));
+			$("div.subtotal", "#com_storefront_cart_controls").html(pines.safe("$"+round_to_dec(subtotal)));
 		};
 		check_products();
 
@@ -148,7 +148,7 @@ $pines->icons->load();
 				dataType: "json",
 				data: {option: "com_storefront", action: "cart/remove", id: guid},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to remove the product from your cart:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to remove the product from your cart:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (!data) {
@@ -189,12 +189,12 @@ $pines->icons->load();
 				input.remove();
 				if (new_val < 1)
 					new_val = 1;
-				qty.html(new_val).show();
+				qty.html(pines.safe(new_val)).show();
 				pines.com_storefront_adjust_quantity(parseInt(qty.siblings("div.guid").text()), old_val, new_val);
 			})
 			.keyup(function(){
 				var input = $(this);
-				qty.html(input.val()+"_");
+				qty.html(pines.safe(input.val())+"_");
 				input.css("width", qty.width());
 			}).keyup()
 			.insertAfter(qty)
@@ -212,7 +212,7 @@ $pines->icons->load();
 				dataType: "json",
 				data: {option: "com_storefront", action: "cart/empty"},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to empty your cart:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to empty your cart:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (!data) {
@@ -238,7 +238,7 @@ $pines->icons->load();
 				dataType: "json",
 				data: {option: "com_storefront", action: "cart/qty", id: guid, qty: new_qty},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to adjust quantity:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to adjust quantity:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 					qty.html(old_qty);
 				},
 				success: function(data){
@@ -265,7 +265,7 @@ $pines->icons->load();
 				dataType: "json",
 				data: {option: "com_storefront", action: "cart/add", id: guid},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to add the product to your cart:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to add the product to your cart:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (!data || data == "one_per") {
@@ -284,10 +284,10 @@ $pines->icons->load();
 						product_elem
 						.removeClass("template")
 						.addClass("product guid_"+guid)
-						.find("div.guid").html(guid).end()
-						.find("div.unit_price").html(unit_price).end()
-						.find("div.name").html(name).end()
-						.find("div.price").html("$"+round_to_dec(unit_price)).end()
+						.find("div.guid").html(pines.safe(guid)).end()
+						.find("div.unit_price").html(pines.safe(unit_price)).end()
+						.find("div.name").html(pines.safe(name)).end()
+						.find("div.price").html(pines.safe("$"+round_to_dec(unit_price))).end()
 						.appendTo("#com_storefront_cart")
 						.fadeIn();
 					}

@@ -82,8 +82,8 @@ $pines->com_pgrid->load();
 						double_click: true,
 						click: function(e, rows){
 							cur_condition = rows;
-							condition_dialog.find("input[name=cur_condition_type]").val(rows.pgrid_get_value(1));
-							condition_dialog.find("input[name=cur_condition_value]").val(rows.pgrid_get_value(2));
+							condition_dialog.find("input[name=cur_condition_type]").val(pines.unsafe(rows.pgrid_get_value(1)));
+							condition_dialog.find("input[name=cur_condition_value]").val(pines.unsafe(rows.pgrid_get_value(2)));
 							condition_dialog.dialog('open');
 						}
 					},
@@ -129,14 +129,14 @@ $pines->com_pgrid->load();
 							var new_condition = [{
 								key: null,
 								values: [
-									cur_condition_type,
-									cur_condition_value
+									pines.safe(cur_condition_type),
+									pines.safe(cur_condition_value)
 								]
 							}];
 							conditions_table.pgrid_add(new_condition);
 						} else {
-							cur_condition.pgrid_set_value(1, cur_condition_type);
-							cur_condition.pgrid_set_value(2, cur_condition_value);
+							cur_condition.pgrid_set_value(1, pines.safe(cur_condition_type));
+							cur_condition.pgrid_set_value(2, pines.safe(cur_condition_value));
 						}
 						$(this).dialog('close');
 					}
@@ -259,7 +259,7 @@ $pines->com_pgrid->load();
 								if ($category->is($entity))
 									continue;
 								?>
-								<option value="<?php echo $category->guid; ?>"<?php echo $category->is($entity->parent) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars("{$prefix} {$category->name}"); ?></option>
+								<option value="<?php echo (int) $category->guid; ?>"<?php echo $category->is($entity->parent) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars("{$prefix} {$category->name}"); ?></option>
 								<?php
 								if ($category->children)
 									com_content__category_form_children($category, $entity, "{$prefix}->");
@@ -269,7 +269,7 @@ $pines->com_pgrid->load();
 							if ($category->is($this->entity))
 								continue;
 							?>
-							<option value="<?php echo $category->guid; ?>"<?php echo $category->is($this->entity->parent) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($category->name); ?></option>
+							<option value="<?php echo (int) $category->guid; ?>"<?php echo $category->is($this->entity->parent) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($category->name); ?></option>
 							<?php
 							if ($category->children)
 								com_content__category_form_children($category, $this->entity);
@@ -317,7 +317,7 @@ $pines->com_pgrid->load();
 				<h1>Intro</h1>
 			</div>
 			<div class="pf-element pf-full-width">
-				<textarea rows="8" cols="35" class="peditor" style="width: 100%;" name="intro"><?php echo $this->entity->intro; ?></textarea>
+				<textarea rows="8" cols="35" class="peditor" style="width: 100%;" name="intro"><?php echo htmlspecialchars($this->entity->intro); ?></textarea>
 			</div>
 			<div class="pf-element pf-heading">
 				<h1>Page Variants</h1>
@@ -337,11 +337,11 @@ $pines->com_pgrid->load();
 						}
 						var cur_template_name = $("option:selected", "#p_muid_variant_template").text();
 						var cur_variant = $("#p_muid_variant_variant").val();
-						var new_html = '<div class="pf-element pf-full-width '+cur_template+'">\
+						var new_html = '<div class="pf-element pf-full-width '+pines.safe(cur_template)+'">\
 							<button class="pf-field ui-state-default ui-corner-all remove" style="float: right;" type="button">Remove</button>\
-							<span class="pf-label">'+cur_template_name+'</span>\
-							<span class="pf-field">'+cur_variant+'</span>\
-							<input type="hidden" name="variants[]" value="'+cur_template+'::'+cur_variant+'" />\
+							<span class="pf-label">'+pines.safe(cur_template_name)+'</span>\
+							<span class="pf-field">'+pines.safe(cur_variant)+'</span>\
+							<input type="hidden" name="variants[]" value="'+pines.safe(cur_template)+'::'+pines.safe(cur_variant)+'" />\
 						</div>';
 						$("#p_muid_variants").append(new_html).find(":button").button();
 					});
@@ -464,7 +464,7 @@ $pines->com_pgrid->load();
 	<div class="pf-element pf-buttons">
 		<br />
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_content', 'category/list')); ?>');" value="Cancel" />

@@ -202,7 +202,7 @@ if ($pines->config->com_sales->com_esp) {
 										loader.pnotify_remove();
 									},
 									error: function(XMLHttpRequest, textStatus){
-										pines.error("An error occured while trying to lookup the product code:\n"+XMLHttpRequest.status+": "+textStatus);
+										pines.error("An error occured while trying to lookup the product code:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 									},
 									success: function(data){
 										if (!data) {
@@ -242,7 +242,7 @@ if ($pines->config->com_sales->com_esp) {
 								return;
 							}
 							var serial = rows.pgrid_get_value(3);
-							serial_box.val(serial);
+							serial_box.val(pines.unsafe(serial));
 							var buttons = {
 								"Done": function(){
 									serial = serial_box.val();
@@ -250,7 +250,7 @@ if ($pines->config->com_sales->com_esp) {
 										alert("Please provide a serial number.");
 										return;
 									}
-									rows.pgrid_set_value(3, serial);
+									rows.pgrid_set_value(3, pines.safe(serial));
 									update_products();
 									serial_dialog.dialog("close");
 								}
@@ -350,7 +350,7 @@ if ($pines->config->com_sales->com_esp) {
 								discount = prompt("Enter an amount($#.##) or a percent (#.##%) to discount each unit:", discount);
 							} while ((!discount.match(/^(\$-?\d+(\.\d+)?)|(-?\d+(\.\d+)?%)$/)) && discount != null);
 							if (discount != null) {
-								rows.pgrid_set_value(7, discount);
+								rows.pgrid_set_value(7, pines.safe(discount));
 								update_products();
 							}
 						}
@@ -464,7 +464,7 @@ if ($pines->config->com_sales->com_esp) {
 								product_data.unit_price = esp_price;
 								product_data.esp = esp_id;
 								add_product(product_data, function(){
-									insured_item.pgrid_set_value(10, esp_id);
+									insured_item.pgrid_set_value(10, pines.safe(esp_id));
 									update_products();
 								});
 							});
@@ -498,13 +498,12 @@ if ($pines->config->com_sales->com_esp) {
 								$.each(products_table.pgrid_get_all_rows(), function(){
 									var cur_item = $(this);
 									if ($.inArray(cur_item.pgrid_get_value(10), deserted) != -1) {
-										if (cur_item.attr('title') == '<?php echo $esp_product->guid; ?>') {
+										if (cur_item.attr('title') == '<?php echo (int) $esp_product->guid; ?>')
 											// An insured item has been removed
 											cur_item.pgrid_delete();
-										} else {
+										else
 											// An ESP has been removed
-											cur_item.pgrid_set_value(10, '');
-										}
+											cur_item.pgrid_set_value(10, "");
 									}
 								});
 							}
@@ -548,7 +547,7 @@ if ($pines->config->com_sales->com_esp) {
 								alert("Please provide a serial number.");
 								return;
 							}
-							products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'in-store', 1, data.unit_price, "", "", "", data.esp, data.salesperson]}], function(){
+							products_table.pgrid_add([{key: data.guid, values: [pines.safe(data.sku), pines.safe(data.name), pines.safe(serial), 'in-store', 1, pines.safe(data.unit_price), "", "", "", pines.safe(data.esp), pines.safe(data.salesperson)]}], function(){
 								cur_row = $(this);
 								cur_row.data("product", data);
 							});
@@ -559,7 +558,7 @@ if ($pines->config->com_sales->com_esp) {
 								success();
 						},
 						"Warehouse Item": function(){
-							products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'warehouse', 1, data.unit_price, "", "", "", data.esp, data.salesperson]}], function(){
+							products_table.pgrid_add([{key: data.guid, values: [pines.safe(data.sku), pines.safe(data.name), pines.safe(serial), 'warehouse', 1, pines.safe(data.unit_price), "", "", "", pines.safe(data.esp), pines.safe(data.salesperson)]}], function(){
 								cur_row = $(this);
 								cur_row.data("product", data);
 							});
@@ -575,17 +574,17 @@ if ($pines->config->com_sales->com_esp) {
 						buttons = {"Done": buttons.Done};
 						$("#p_muid_serial_dialog_warehouse").hide();
 					}
-					serial_dialog.dialog("option", "title", "Provide Serial for "+data.name)
+					serial_dialog.dialog("option", "title", "Provide Serial for "+pines.safe(data.name))
 					.dialog("option", "buttons", buttons)
 					.dialog("open");
 					serial_box.val("");
 					if (data.serials.length) {
 						var serial_list = $("#p_muid_available_serials").show().find(".serials").empty();
-						serial_list.append("<a href=\"javascript:void(0);\" class=\"serial\">"+data.serials.join("</a> | <a href=\"javascript:void(0);\" class=\"serial\">")+"</a>");
+						serial_list.append("<a href=\"javascript:void(0);\" class=\"serial\">"+$.map(data.serials, pines.safe).join("</a> | <a href=\"javascript:void(0);\" class=\"serial\">")+"</a>");
 					}
 					return;
 				}
-				products_table.pgrid_add([{key: data.guid, values: [data.sku, data.name, serial, 'in-store', 1, data.unit_price, "", "", "", data.esp, data.salesperson]}], function(){
+				products_table.pgrid_add([{key: data.guid, values: [pines.safe(data.sku), pines.safe(data.name), pines.safe(serial), 'in-store', 1, pines.safe(data.unit_price), "", "", "", pines.safe(data.esp), pines.safe(data.salesperson)]}], function(){
 					cur_row = $(this);
 					cur_row.data("product", data);
 				});
@@ -610,7 +609,7 @@ if ($pines->config->com_sales->com_esp) {
 							return;
 						}
 						cur_row.pgrid_set_value(3, "");
-						cur_row.pgrid_set_value(4, delivery);
+						cur_row.pgrid_set_value(4, pines.safe(delivery));
 					});
 				} else {
 					rows.each(function(){
@@ -624,8 +623,8 @@ if ($pines->config->com_sales->com_esp) {
 									return;
 							}
 						}
-						cur_row.pgrid_set_value(3, serial);
-						cur_row.pgrid_set_value(4, delivery);
+						cur_row.pgrid_set_value(3, pines.safe(serial));
+						cur_row.pgrid_set_value(4, pines.safe(delivery));
 					});
 				}
 				update_products();
@@ -713,7 +712,7 @@ if ($pines->config->com_sales->com_esp) {
 								loader.pnotify_remove();
 							},
 							error: function(XMLHttpRequest, textStatus){
-								pines.error("An error occured while trying to lookup the products:\n"+XMLHttpRequest.status+": "+textStatus);
+								pines.error("An error occured while trying to lookup the products:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 							},
 							success: function(data){
 								if (!data || !data[0]) {
@@ -722,7 +721,7 @@ if ($pines->config->com_sales->com_esp) {
 								}
 								$.each(data, function(){
 									var product = this;
-									category_products_grid.pgrid_add([{key: this.guid, values: [this.name, this.sku]}], function(){
+									category_products_grid.pgrid_add([{key: this.guid, values: [pines.safe(this.name), pines.safe(this.sku)]}], function(){
 										$(this).data("product", product);
 									});
 								});
@@ -785,7 +784,7 @@ if ($pines->config->com_sales->com_esp) {
 							alert("Please select a salesperson using the dropdown menu.");
 							return;
 						}
-						row.pgrid_set_value(11, salesperson);
+						row.pgrid_set_value(11, pines.safe(salesperson));
 						row.pgrid_deselect_rows();
 						salesperson_dialog.dialog('close');
 						update_products();
@@ -822,7 +821,7 @@ if ($pines->config->com_sales->com_esp) {
 					dataType: "json",
 					data: {"code": cur_guid, "useguid": true},
 					error: function(XMLHttpRequest, textStatus){
-						pines.error("An error occured while trying to lookup a product:\n"+XMLHttpRequest.status+": "+textStatus);
+						pines.error("An error occured while trying to lookup a product:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 					},
 					success: function(data){
 						if (!data) {
@@ -874,7 +873,7 @@ if ($pines->config->com_sales->com_esp) {
 										alert("Payments cannot be changed if they have been approved, declined, or tendered.");
 										return;
 									}
-									cur_row.pgrid_set_value(2, amount);
+									cur_row.pgrid_set_value(2, pines.safe(amount));
 								});
 								update_payments();
 							});
@@ -910,12 +909,12 @@ if ($pines->config->com_sales->com_esp) {
 					dataType: "html",
 					data: {"name": payment_data.processing_type, "id": $("#p_muid_form [name=id]").val(), "customer": $("#p_muid_customer").val(), "type": "sale"},
 					error: function(XMLHttpRequest, textStatus){
-						pines.error("An error occured while trying to retrieve the data form:\n"+XMLHttpRequest.status+": "+textStatus);
+						pines.error("An error occured while trying to retrieve the data form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 					},
 					success: function(data){
 						if (data == "")
 							return;
-						var form = $("<div title=\"Data for "+row.pgrid_get_value(1)+" Payment\"></div>");
+						var form = $("<div title=\"Data for "+pines.safe(row.pgrid_get_value(1))+" Payment\"></div>");
 						form.dialog({
 							bgiframe: true,
 							autoOpen: true,
@@ -967,8 +966,8 @@ if ($pines->config->com_sales->com_esp) {
 				// TODO: Minimums, maximums
 				get_amount(function(amount){
 					payments_table.pgrid_add([{key: payment_type.guid, values: [
-						payment_type.name,
-						amount,
+						pines.safe(payment_type.name),
+						pines.safe(amount),
 						"pending"
 					]}], function(){
 						var row = $(this);
@@ -1149,8 +1148,8 @@ if ($pines->config->com_sales->com_esp) {
 					});
 					item_fees += round_to_dec(cur_item_fees);
 					subtotal += round_to_dec(line_total);
-					cur_row.pgrid_set_value(8, round_to_dec(line_total, true));
-					cur_row.pgrid_set_value(9, round_to_dec(cur_item_fees, true));
+					cur_row.pgrid_set_value(8, pines.safe(round_to_dec(line_total, true)));
+					cur_row.pgrid_set_value(9, pines.safe(round_to_dec(cur_item_fees, true)));
 				});
 				$("#p_muid_subtotal").html(round_to_dec(subtotal, true));
 				$("#p_muid_item_fees").html(round_to_dec(item_fees, true));
@@ -1233,7 +1232,7 @@ if ($pines->config->com_sales->com_esp) {
 						modal.dialog("option", "close", null).dialog("close").remove();
 					},
 					error: function(XMLHttpRequest, textStatus){
-						pines.error("An error occured while trying to check products:\n"+XMLHttpRequest.status+": "+textStatus);
+						pines.error("An error occured while trying to check products:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 					},
 					success: function(data){
 						if (!data) {
@@ -1352,7 +1351,7 @@ if ($pines->config->com_sales->com_esp) {
 			</thead>
 			<tbody>
 			<?php foreach($this->categories as $category) { ?>
-				<tr title="<?php echo $category->guid; ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? "child ch_{$category->parent->guid} " : ''; ?>">
+				<tr title="<?php echo (int) $category->guid; ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? htmlspecialchars("child ch_{$category->parent->guid} ") : ''; ?>">
 					<td><?php echo isset($category->parent) ? $category->array_search($category->parent->children) + 1 : '0' ; ?></td>
 					<td><?php echo htmlspecialchars($category->name); ?></td>
 					<td><?php echo count($category->products); ?></td>
@@ -1404,7 +1403,7 @@ if ($pines->config->com_sales->com_esp) {
 						if (!isset($cur_product['entity']))
 							continue;
 						?>
-				<tr title="<?php echo $cur_product['entity']->guid; ?>">
+				<tr title="<?php echo (int) $cur_product['entity']->guid; ?>">
 					<td><?php echo htmlspecialchars($cur_product['entity']->sku); ?></td>
 					<td><?php echo htmlspecialchars($cur_product['entity']->name); ?></td>
 					<td><?php echo htmlspecialchars($cur_product['serial']); ?></td>
@@ -1492,7 +1491,7 @@ if ($pines->config->com_sales->com_esp) {
 		<div class="pf-note">
 			<div style="text-align: left;">
 				<?php foreach ($this->payment_types as $cur_payment_type) { ?>
-				<button id="p_muid_payment_<?php echo $cur_payment_type->guid; ?>" class="ui-state-default ui-corner-all payment-button" type="button" style="margin-bottom: 2px;" value="<?php echo htmlspecialchars(json_encode((object) array('guid' => $cur_payment_type->guid, 'name' => $cur_payment_type->name, 'minimum' => $cur_payment_type->minimum, 'maximum' => $cur_payment_type->maximum, 'processing_type' => $cur_payment_type->processing_type))); ?>">
+				<button id="p_muid_payment_<?php echo (int) $cur_payment_type->guid; ?>" class="ui-state-default ui-corner-all payment-button" type="button" style="margin-bottom: 2px;" value="<?php echo htmlspecialchars(json_encode((object) array('guid' => $cur_payment_type->guid, 'name' => $cur_payment_type->name, 'minimum' => $cur_payment_type->minimum, 'maximum' => $cur_payment_type->maximum, 'processing_type' => $cur_payment_type->processing_type))); ?>">
 					<span class="picon picon-32 picon-view-financial-payment-mode" style="display: block; padding-top: 32px; min-width: 50px; background-repeat: no-repeat; background-position: top center;"><?php echo htmlspecialchars($cur_payment_type->name); ?></span>
 				</button>
 				<?php } ?>
@@ -1653,7 +1652,7 @@ if ($pines->config->com_sales->com_esp) {
 			<div id="p_muid_address_international" style="display: none;">
 				<div class="pf-element pf-full-width">
 					<label><span class="pf-label">Address</span>
-						<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="shipping_address_international"><?php echo $this->entity->shipping_address->address_international; ?></textarea></span></label>
+						<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="shipping_address_international"><?php echo htmlspecialchars($this->entity->shipping_address->address_international); ?></textarea></span></label>
 				</div>
 			</div>
 		</div>
@@ -1661,7 +1660,7 @@ if ($pines->config->com_sales->com_esp) {
 	</div>
 	<div id="p_muid_comments_dialog" title="Comments" style="display: none;">
 		<div class="pf-element pf-full-width">
-			<textarea class="pf-field pf-full-width ui-widget-content ui-corner-all" style="width: 96%; height: 100%;" rows="3" cols="35" id="p_muid_comments" name="comments"><?php echo $this->entity->comments; ?></textarea>
+			<textarea class="pf-field pf-full-width ui-widget-content ui-corner-all" style="width: 96%; height: 100%;" rows="3" cols="35" id="p_muid_comments" name="comments"><?php echo htmlspecialchars($this->entity->comments); ?></textarea>
 		</div>
 	</div>
 	<?php if (!empty($this->returns)) { ?>
@@ -1683,7 +1682,7 @@ if ($pines->config->com_sales->com_esp) {
 	<?php } ?>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
 
 		<input type="hidden" id="p_muid_sale_process_type" name="process" value="quote" />

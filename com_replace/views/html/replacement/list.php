@@ -71,7 +71,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->replacements as $replacement) { ?>
-		<tr title="<?php echo $replacement->guid; ?>">
+		<tr title="<?php echo (int) $replacement->guid ?>">
 			<td><?php echo htmlspecialchars($replacement->name); ?></td>
 			<td><?php echo ($replacement->enabled ? 'Yes' : 'No'); ?></td>
 			<td><?php echo count($replacement->strings); ?></td>

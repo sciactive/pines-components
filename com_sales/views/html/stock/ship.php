@@ -11,7 +11,7 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Editing Shipment ['.htmlspecialchars($this->entity->guid).']';
+$this->title = 'Editing Shipment ['.((int) $this->entity->guid).']';
 $this->note = 'Provide shipment details in this form.';
 ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'stock/saveship')); ?>">
@@ -101,7 +101,7 @@ $this->note = 'Provide shipment details in this form.';
 			<select class="pf-field ui-widget-content ui-corner-all" name="shipper">
 				<option value="null">-- None --</option>
 				<?php foreach ($this->shippers as $cur_shipper) { ?>
-				<option value="<?php echo $cur_shipper->guid; ?>"<?php echo $this->entity->shipper->guid == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_shipper->name); ?></option>
+				<option value="<?php echo (int) $cur_shipper->guid ?>"<?php echo $this->entity->shipper->guid == $cur_shipper->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_shipper->name); ?></option>
 				<?php } ?>
 			</select></label>
 	</div>
@@ -176,7 +176,7 @@ $this->note = 'Provide shipment details in this form.';
 					continue;
 				?>
 		<div class="pf-element product">
-			<div class="key" style="display: none"><?php echo $key; ?></div>
+			<div class="key" style="display: none"><?php echo htmlspecialchars($key); ?></div>
 			<span class="pf-label"><?php echo htmlspecialchars($cur_product['entity']->name); ?> [SKU: <?php echo htmlspecialchars($cur_product['entity']->sku); ?>]</span>
 			<span class="pf-note">x <span class="ship_quantity"><?php echo htmlspecialchars(count($stock_entries) - count($shipped_stock_entries)); ?></span></span>
 			<div class="pf-group">
@@ -190,7 +190,7 @@ $this->note = 'Provide shipment details in this form.';
 							continue;
 						?>
 					<div class="ui-widget-content ui-corner-all item_box" style="float: left; font-size: .8em; padding: .4em; margin: 0 .4em .4em 0;">
-						<div class="key" style="display: none"><?php echo $stock_key; ?></div>
+						<div class="key" style="display: none"><?php echo htmlspecialchars($stock_key); ?></div>
 						<div class="ui-widget-content ui-corner-all number_box" style="font-weight: bold; float: right;">#<?php echo $i; ?></div>
 						<div>Shipped From: <?php echo htmlspecialchars($cur_stock->location->name); ?></div>
 						<?php if ($cur_product['entity']->serialized) { ?>
@@ -208,8 +208,8 @@ $this->note = 'Provide shipment details in this form.';
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="type" value="<?php echo $this->type; ?>" />
-		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<input type="hidden" name="type" value="<?php echo htmlspecialchars($this->type); ?>" />
+		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Save" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'stock/shipments')); ?>');" value="Cancel" />

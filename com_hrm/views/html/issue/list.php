@@ -55,9 +55,9 @@ $pines->com_pgrid->load();
 				}},
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, click: function(e, row){
 					issue_id = row.attr("title");
-					$("#p_muid_issue_dialog [name=name]").val(row.pgrid_get_value(1));
-					$("#p_muid_issue_dialog [name=description]").val(row.pgrid_get_value(3));
-					$("#p_muid_issue_dialog [name=penalty]").val(row.pgrid_get_value(2).replace('$',''));
+					$("#p_muid_issue_dialog [name=name]").val(pines.unsafe(row.pgrid_get_value(1)));
+					$("#p_muid_issue_dialog [name=description]").val(pines.unsafe(row.pgrid_get_value(3)));
+					$("#p_muid_issue_dialog [name=penalty]").val(pines.unsafe(row.pgrid_get_value(2)).replace('$',''));
 					issue_dialog.dialog("open");
 				}},
 				{type: 'button', text: 'Remove', extra_class: 'picon picon-document-close', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_hrm', 'issue/delete', array('id' => '__title__'))); ?>'},
@@ -91,7 +91,7 @@ $pines->com_pgrid->load();
 	</thead>
 	<tbody>
 	<?php foreach($this->types as $type) { ?>
-		<tr title="<?php echo $type->guid; ?>">
+		<tr title="<?php echo (int) $type->guid ?>">
 			<td><?php echo htmlspecialchars($type->name); ?></td>
 			<td>$<?php echo htmlspecialchars($type->penalty); ?></td>
 			<td><?php echo htmlspecialchars($type->description); ?></td>

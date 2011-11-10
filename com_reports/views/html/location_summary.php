@@ -12,9 +12,9 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 
-$this->title = 'Location Summary ['.$this->location->name.']';
+$this->title = 'Location Summary ['.htmlspecialchars($this->location->name).']';
 if ($this->descendents)
-	$this->note = 'Including locations beneath '.$this->location->name;
+	$this->note = 'Including locations beneath '.htmlspecialchars($this->location->name);
 $pines->icons->load();
 $pines->com_jstree->load();
 $pines->com_pgrid->load();
@@ -61,7 +61,7 @@ $pines->com_pgrid->load();
 		var start_date = "<?php echo $this->start_date ? addslashes(format_date($this->start_date, 'date_sort')) : ''; ?>";
 		var end_date = "<?php echo $this->end_date ? addslashes(format_date($this->end_date - 1, 'date_sort')) : ''; ?>";
 		// Location Defaults
-		var location = "<?php echo $this->location->guid; ?>";
+		var location = "<?php echo (int) $this->location->guid ?>";
 		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
 
 		var locations_grid = $("#p_muid_grid").pgrid({
@@ -92,7 +92,7 @@ $pines->com_pgrid->load();
 				dataType: "html",
 				data: {"all_time": all_time, "start_date": start_date, "end_date": end_date},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the date form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the date form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == "")
@@ -133,7 +133,7 @@ $pines->com_pgrid->load();
 				dataType: "html",
 				data: {"location": location, "descendents": descendents},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the location form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the location form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == "")
@@ -240,11 +240,11 @@ $pines->com_pgrid->load();
 		foreach ($totals as $cur_total) {
 			$cur_total['profit'] = ($cur_total['total_sold']-$cur_total['total_returned'])-$cur_total['cost'];
 		?>
-		<tr title="<?php echo $cur_total['location']->guid; ?>">
-			<td><?php echo $cur_total['location']->name; ?></td>
-			<td><?php echo $cur_total['qty_sold']; ?></td>
-			<td><?php echo $cur_total['qty_returned']; ?></td>
-			<td><?php echo $cur_total['qty_net']; ?></td>
+		<tr title="<?php echo (int) $cur_total['location']->guid ?>">
+			<td><?php echo htmlspecialchars($cur_total['location']->name); ?></td>
+			<td><?php echo htmlspecialchars($cur_total['qty_sold']); ?></td>
+			<td><?php echo htmlspecialchars($cur_total['qty_returned']); ?></td>
+			<td><?php echo htmlspecialchars($cur_total['qty_net']); ?></td>
 			<td class="total">$<?php echo number_format($cur_total['total_sold'], 2, '.', ''); ?></td>
 			<td class="total">$<?php echo number_format($cur_total['total_returned'], 2, '.', ''); ?></td>
 			<td class="total">$<?php echo number_format($cur_total['total_net'], 2, '.', ''); ?></td>

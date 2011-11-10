@@ -77,7 +77,7 @@ $module_types = $pines->com_modules->module_types();
 	<?php foreach($this->modules as $module) {
 		list ($component, $name) = explode('/', $module->type, 2);
 		?>
-		<tr title="<?php echo $module->guid; ?>">
+		<tr title="<?php echo (int) $module->guid ?>">
 			<td><?php echo htmlspecialchars($module->name); ?></td>
 			<td><?php echo htmlspecialchars($module->position); ?></td>
 			<td><?php echo htmlspecialchars($module->order); ?></td>

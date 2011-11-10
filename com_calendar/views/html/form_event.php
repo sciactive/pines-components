@@ -95,8 +95,8 @@ defined('P_RUN') or die('Direct access prohibited');
 				if (!isset($cur_employee->group))
 					continue;
 				$cur_select = (isset($this->entity->employee->group) && $this->entity->employee->is($cur_employee)) ? 'selected=\"selected\"' : ''; ?>
-				if (group_id == <?php echo $cur_employee->group->guid; ?>)
-					employee.append("<option value=\"<?php echo $cur_employee->guid; ?>\" <?php echo $cur_select; ?>><?php echo htmlspecialchars($cur_employee->name); ?></option>");
+				if (group_id == <?php echo (int) $cur_employee->group->guid; ?>)
+					employee.append("<option value=\"<?php echo (int) $cur_employee->guid; ?>\" <?php echo $cur_select; ?>><?php echo htmlspecialchars($cur_employee->name); ?></option>");
 			<?php } ?>
 		};
 		<?php } ?>
@@ -151,7 +151,7 @@ defined('P_RUN') or die('Direct access prohibited');
 		</div>
 		<div class="pf-element location_tree" style="padding-bottom: 1em; width: 90%; max-height: 75px;"></div>
 		<?php } else { ?>
-		<input type="hidden" name="employee" value="<?php echo $_SESSION['user']->guid; ?>" />
+		<input type="hidden" name="employee" value="<?php echo (int) $_SESSION['user']->guid; ?>" />
 		<input type="hidden" name="private" value="ON" checked="checked" />
 		<?php } ?>
 	</div>
@@ -240,6 +240,6 @@ defined('P_RUN') or die('Direct access prohibited');
 	</div>
 	<input type="hidden" name="location" value="<?php echo htmlspecialchars($this->location); ?>" />
 	<?php if (isset($this->entity->guid)) { ?>
-	<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+	<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 	<?php } ?>
 </div>

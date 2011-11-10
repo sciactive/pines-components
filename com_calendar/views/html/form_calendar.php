@@ -74,8 +74,7 @@ if ($pines->config->com_calendar->com_customer)
 		var change_counter = 0;
 		$("#p_muid_employee").change(function(){
 			if (change_counter > 0)
-				pines.post("<?php echo addslashes(pines_url('com_calendar', 'editcalendar')); ?>",
-				{
+				pines.post("<?php echo addslashes(pines_url('com_calendar', 'editcalendar')); ?>", {
 					"view_type": <?php echo json_encode($this->view_type); ?>,
 					"start": '<?php echo format_date($this->date[0], 'date_short'); ?>',
 					"end": '<?php echo format_date($this->date[1], 'date_short'); ?>',
@@ -84,7 +83,6 @@ if ($pines->config->com_calendar->com_customer)
 					"descendents": <?php echo $this->descendents ? 'true' : 'false'; ?>,
 					"filter": <?php echo json_encode($this->filter); ?>
 				});
-
 			change_counter++;
 		}).change();
 
@@ -110,8 +108,8 @@ if ($pines->config->com_calendar->com_customer)
 				view_type: <?php echo json_encode($this->view_type); ?>,
 				start: '<?php echo format_date($this->date[0], 'date_short'); ?>',
 				end: '<?php echo format_date($this->date[1], 'date_short'); ?>',
-				location: <?php echo $this->location->guid; ?>,
-				employee: <?php echo isset($this->employee) ? $this->employee->guid : 'null'; ?>,
+				location: <?php echo (int) $this->location->guid; ?>,
+				employee: <?php echo isset($this->employee) ? (int) $this->employee->guid : 'null'; ?>,
 				descendents: <?php echo $this->descendents ? 'true' : 'false'; ?>,
 				filter: $(this).val()
 			});
@@ -141,7 +139,7 @@ if ($pines->config->com_calendar->com_customer)
 				"descendents": descendents
 			},
 			error: function(XMLHttpRequest, textStatus){
-				pines.error("An error occured while trying to retrieve the company schedule form:\n"+XMLHttpRequest.status+": "+textStatus);
+				pines.error("An error occured while trying to retrieve the company schedule form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 			},
 			success: function(data){
 				if (data == "")
@@ -189,7 +187,7 @@ if ($pines->config->com_calendar->com_customer)
 				"end": end
 			},
 			error: function(XMLHttpRequest, textStatus){
-				pines.error("An error occured while trying to retrieve the new event form:\n"+XMLHttpRequest.status+": "+textStatus);
+				pines.error("An error occured while trying to retrieve the new event form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 			},
 			success: function(data){
 				if (data == "")
@@ -246,12 +244,12 @@ if ($pines->config->com_calendar->com_customer)
 			dataType: "html",
 			data: {"id": event_id},
 			error: function(XMLHttpRequest, textStatus){
-				pines.error("An error occured while trying to retrieve the event form:\n"+XMLHttpRequest.status+": "+textStatus);
+				pines.error("An error occured while trying to retrieve the event form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 			},
 			success: function(data){
 				if (data == "")
 					return;
-				var form = $("<div title=\"Editing Event ["+event_id+"]\"></div>");
+				var form = $("<div title=\"Editing Event ["+pines.safe(event_id)+"]\"></div>");
 				form.dialog({
 					bgiframe: true,
 					autoOpen: true,
@@ -266,8 +264,7 @@ if ($pines->config->com_calendar->com_customer)
 					},
 					buttons: {
 						"Save Event": function(){
-							pines.post("<?php echo addslashes(pines_url('com_calendar', 'saveevent')); ?>",
-							{
+							pines.post("<?php echo addslashes(pines_url('com_calendar', 'saveevent')); ?>", {
 								id: form.find(":input[name=id]").val(),
 								employee: form.find(":input[name=employee]").val(),
 								event_label: form.find(":input[name=event_label]").val(),
@@ -321,12 +318,12 @@ if ($pines->config->com_calendar->com_customer)
 			dataType: "html",
 			data: {"location": "<?php echo addslashes($this->location->guid); ?>"},
 			error: function(XMLHttpRequest, textStatus){
-				pines.error("An error occured while trying to retrieve the quick schedule form:\n"+XMLHttpRequest.status+": "+textStatus);
+				pines.error("An error occured while trying to retrieve the quick schedule form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 			},
 			success: function(data){
 				if (data == "")
 					return;
-				var form = $("<div title=\"Quick schedule for <?php echo $this->location->name; ?>\"></div>");
+				var form = $("<div title=\"Quick schedule for <?php echo htmlspecialchars($this->location->name); ?>\"></div>");
 				form.dialog({
 					bgiframe: true,
 					autoOpen: true,
@@ -359,12 +356,12 @@ if ($pines->config->com_calendar->com_customer)
 			dataType: "html",
 			data: {"employee": "<?php echo addslashes($this->employee->guid); ?>"},
 			error: function(XMLHttpRequest, textStatus){
-				pines.error("An error occured while trying to retrieve the schedule form:\n"+XMLHttpRequest.status+": "+textStatus);
+				pines.error("An error occured while trying to retrieve the schedule form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 			},
 			success: function(data){
 				if (data == "")
 					return;
-				var form = $("<div title=\"Schedule work for <?php echo $this->employee->name; ?>\"></div>");
+				var form = $("<div title=\"Schedule work for <?php echo htmlspecialchars($this->employee->name); ?>\"></div>");
 				form.dialog({
 					bgiframe: true,
 					autoOpen: true,
@@ -436,7 +433,7 @@ if ($pines->config->com_calendar->com_customer)
 							loader.pnotify_remove();
 						},
 						error: function(XMLHttpRequest, textStatus){
-							pines.error("An error occured:\n"+XMLHttpRequest.status+": "+textStatus);
+							pines.error("An error occured:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 						},
 						success: function(data){
 							if (!data) {
@@ -499,7 +496,7 @@ if ($pines->config->com_calendar->com_customer)
 							loader.pnotify_remove();
 						},
 						error: function(XMLHttpRequest, textStatus){
-							pines.error("An error occured:\n"+XMLHttpRequest.status+": "+textStatus);
+							pines.error("An error occured:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 						},
 						success: function(data){
 							if (!data) {
@@ -528,7 +525,7 @@ if ($pines->config->com_calendar->com_customer)
 			dataType: "json",
 			data: {id: appointment_id},
 			error: function(XMLHttpRequest, textStatus){
-				pines.error("An error occured:\n"+XMLHttpRequest.status+": "+textStatus);
+				pines.error("An error occured:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 			},
 			success: function(data){
 				if (!data) {
@@ -536,19 +533,19 @@ if ($pines->config->com_calendar->com_customer)
 					return;
 				}
 				$("#p_muid_interaction_dialog [name=id]").val(appointment_id);
-				$("#p_muid_interaction_customer").empty().append('<a href="'+data.customer_url+'" onclick="window.open(this.href); return false;">'+data.customer+'</a>');
+				$("#p_muid_interaction_customer").empty().append('<a href="'+pines.safe(data.customer_url)+'" onclick="window.open(this.href); return false;">'+pines.safe(data.customer)+'</a>');
 				if (data.sale_url != '') {
-					$("#p_muid_interaction_sale").empty().append('<a href="'+data.sale_url+'" onclick="window.open(this.href); return false;">'+data.sale+'</a>');
+					$("#p_muid_interaction_sale").empty().append('<a href="'+pines.safe(data.sale_url)+'" onclick="window.open(this.href); return false;">'+pines.safe(data.sale)+'</a>');
 					$("#p_muid_sale_info").show();
 				} else {
 					$("#p_muid_sale_info").hide();
 				}
-				$("#p_muid_interaction_type").empty().append(data.type+' - '+data.contact_info);
-				$("#p_muid_interaction_employee").empty().append(data.employee);
-				$("#p_muid_interaction_created_date").empty().append(data.created_date);
-				$("#p_muid_interaction_date").empty().append(data.date);
-				$("#p_muid_interaction_comments").empty().append(data.comments);
-				$("#p_muid_interaction_notes").empty().append((data.review_comments.length > 0) ? "<li>"+data.review_comments.join("</li><li>")+"</li>" : "");
+				$("#p_muid_interaction_type").empty().append(pines.safe(data.type)+' - '+pines.safe(data.contact_info));
+				$("#p_muid_interaction_employee").empty().append(pines.safe(data.employee));
+				$("#p_muid_interaction_created_date").empty().append(pines.safe(data.created_date));
+				$("#p_muid_interaction_date").empty().append(pines.safe(data.date));
+				$("#p_muid_interaction_comments").empty().append(pines.safe(data.comments));
+				$("#p_muid_interaction_notes").empty().append((data.review_comments.length > 0) ? "<li>"+$.map(data.review_comments, pines.safe).join("</li><li>")+"</li>" : "");
 				$("#p_muid_interaction_dialog [name=status]").val(data.status);
 
 				interaction_dialog.dialog('open');
@@ -575,7 +572,7 @@ if ($pines->config->com_calendar->com_customer)
 </div>
 <div>
 	<select class="ui-widget-content ui-corner-all" id="p_muid_employee" name="employee" style="width: 100%;">
-		<option value="all"><?php echo $this->location->name; ?></option>
+		<option value="all"><?php echo htmlspecialchars($this->location->name); ?></option>
 		<?php
 		// Load employees for this location.
 		foreach ($this->employees as $cur_employee) {
@@ -583,7 +580,7 @@ if ($pines->config->com_calendar->com_customer)
 				continue;
 			$cur_select = (isset($this->employee->group) && $this->employee->is($cur_employee)) ? 'selected="selected"' : '';
 			if ( $this->location->guid == $cur_employee->group->guid || ($this->descendents && $cur_employee->is_descendent($this->location)) )
-				echo '<option value="'.$cur_employee->guid.'" '.$cur_select.'>'.htmlspecialchars($cur_employee->name).'</option>';
+				echo '<option value="'.((int) $cur_employee->guid).'" '.$cur_select.'>'.htmlspecialchars($cur_employee->name).'</option>';
 		} ?>
 	</select>
 </div>
@@ -616,9 +613,9 @@ if ($pines->config->com_calendar->com_customer)
 		</div>
 		<div class="pf-element pf-full-width">
 			<span class="pf-full-width" id="p_muid_interaction_comments"></span>
-			<span class="pf-full-width">
+			<div class="pf-full-width">
 				<ul id="p_muid_interaction_notes"></ul>
-			</span>
+			</div>
 		</div>
 		<div class="pf-element pf-full-width">
 			<textarea class="ui-widget-content ui-corner-all" rows="3" cols="40" name="review_comments"></textarea>
@@ -650,7 +647,7 @@ if ($pines->config->com_calendar->com_customer)
 				<?php foreach ($this->employees as $cur_employee) {
 					$selected = $_SESSION['user']->is($cur_employee) ? ' selected="selected"' : '';
 					if ($cur_employee->in_group($this->location) || ($this->descendents && $cur_employee->is_descendent($this->location)))
-						echo '<option value="'.$cur_employee->guid.'"'.$selected.'>'.htmlspecialchars($cur_employee->name).'</option>"';
+						echo '<option value="'.((int) $cur_employee->guid).'"'.$selected.'>'.htmlspecialchars($cur_employee->name).'</option>"';
 				} ?>
 			</select></label>
 		</div>
@@ -659,7 +656,7 @@ if ($pines->config->com_calendar->com_customer)
 			<label><span class="pf-label">Employee</span>
 				<?php echo htmlspecialchars($_SESSION['user']->name); ?></label>
 		</div>
-		<input type="hidden" name="employee" value="<?php echo $_SESSION['user']->guid; ?>" />
+		<input type="hidden" name="employee" value="<?php echo (int) $_SESSION['user']->guid; ?>" />
 		<?php } ?>
 		<div class="pf-element">
 			<label><span class="pf-label">Interaction Type</span>

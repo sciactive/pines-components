@@ -46,10 +46,10 @@ $pines->com_pgrid->load();
 					double_click: true,
 					click: function(e, rows){
 						cur_contestant = rows;
-						contestant_dialog.find("input[name=cur_contestant_first_name]").val(rows.pgrid_get_value(1));
-						contestant_dialog.find("input[name=cur_contestant_last_name]").val(rows.pgrid_get_value(2));
-						contestant_dialog.find("input[name=cur_contestant_email]").val(rows.pgrid_get_value(3));
-						contestant_dialog.find("input[name=cur_contestant_phone]").val(rows.pgrid_get_value(4));
+						contestant_dialog.find("input[name=cur_contestant_first_name]").val(pines.unsafe(rows.pgrid_get_value(1)));
+						contestant_dialog.find("input[name=cur_contestant_last_name]").val(pines.unsafe(rows.pgrid_get_value(2)));
+						contestant_dialog.find("input[name=cur_contestant_email]").val(pines.unsafe(rows.pgrid_get_value(3)));
+						contestant_dialog.find("input[name=cur_contestant_phone]").val(pines.unsafe(rows.pgrid_get_value(4)));
 						contestant_dialog.dialog('open');
 					}
 				},
@@ -86,18 +86,18 @@ $pines->com_pgrid->load();
 						var new_contestant = [{
 							key: null,
 							values: [
-								cur_contestant_first_name,
-								cur_contestant_last_name,
-								cur_contestant_email,
-								cur_contestant_phone
+								pines.safe(cur_contestant_first_name),
+								pines.safe(cur_contestant_last_name),
+								pines.safe(cur_contestant_email),
+								pines.safe(cur_contestant_phone)
 							]
 						}];
 						contestants_table.pgrid_add(new_contestant);
 					} else {
-						cur_contestant.pgrid_set_value(1, cur_contestant_first_name);
-						cur_contestant.pgrid_set_value(2, cur_contestant_last_name);
-						cur_contestant.pgrid_set_value(3, cur_contestant_email);
-						cur_contestant.pgrid_set_value(4, cur_contestant_phone);
+						cur_contestant.pgrid_set_value(1, pines.safe(cur_contestant_first_name));
+						cur_contestant.pgrid_set_value(2, pines.safe(cur_contestant_last_name));
+						cur_contestant.pgrid_set_value(3, pines.safe(cur_contestant_email));
+						cur_contestant.pgrid_set_value(4, pines.safe(cur_contestant_phone));
 					}
 					$(this).dialog('close');
 				}
@@ -247,7 +247,7 @@ $pines->com_pgrid->load();
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_raffle', 'raffle/list')); ?>');" value="Cancel" />

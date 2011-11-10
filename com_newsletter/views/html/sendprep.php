@@ -11,7 +11,7 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = "Sending {$this->mail->name}";
+$this->title = 'Sending '.htmlspecialchars($this->mail->name);
 $pines->com_jstree->load();
 ?>
 <script type='text/javascript'>

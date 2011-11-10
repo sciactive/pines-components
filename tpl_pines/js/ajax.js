@@ -56,7 +56,7 @@ pines(function(){
 				loader.pnotify_remove();
 			},
 			error: function(xhr, textStatus){
-				pines.error("An error occured while communicating with the server:\n\n"+xhr.status+": "+textStatus);
+				pines.error("An error occured while communicating with the server:\n\n"+pines.safe(xhr.status)+": "+pines.safe(textStatus));
 			},
 			success: function(data){
 				if (window.location != url) {
@@ -85,10 +85,10 @@ pines(function(){
 				pos_footer.html(data.pos_footer);
 				pos_bottom.html(data.pos_bottom);
 				$.each(data.errors, function(){
-					pines.error(this, "Error");
+					pines.error(pines.safe(this), "Error");
 				});
 				$.each(data.notices, function(){
-					pines.notice(this, "Notice");
+					pines.notice(pines.safe(this), "Notice");
 				});
 				pines.tpl_pines_page_ready();
 				// Now run DOM ready scripts.

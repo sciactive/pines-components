@@ -40,7 +40,7 @@ foreach ($products as $key => $cur_product) {
 	$product = com_sales_product::factory($guid);
 	if (!isset($product)) {
 		$success = false;
-		$messages[] = htmlspecialchars("The product on line {$key} can't be found.");
+		$messages[] = "The product on line {$key} can't be found.";
 		continue;
 	}
 	if ($product->stock_type == 'non_stocked') {

@@ -27,7 +27,7 @@ $pines->com_pgrid->load();
 						$("#p_muid_po").val("");
 						return;
 					}
-					$("#p_muid_selected").html("PO "+rows.pgrid_get_value(1)+" is selected.");
+					$("#p_muid_selected").html("PO "+pines.safe(rows.pgrid_get_value(1))+" is selected.");
 					$("#p_muid_po").val(rows.attr("title"));
 				}
 			});
@@ -57,7 +57,7 @@ $pines->com_pgrid->load();
 			</thead>
 			<tbody>
 				<?php foreach ($this->pos as $cur_po) { ?>
-				<tr title="<?php echo $cur_po->guid; ?>">
+				<tr title="<?php echo (int) $cur_po->guid; ?>">
 					<td><?php echo htmlspecialchars($cur_po->po_number); ?></td>
 					<td><?php echo htmlspecialchars($cur_po->reference_number); ?></td>
 					<td><?php echo htmlspecialchars("{$cur_po->destination->name} [{$cur_po->destination->groupname}]"); ?></td>
@@ -73,7 +73,7 @@ $pines->com_pgrid->load();
 		<input type="hidden" name="po" id="p_muid_po" value="" />
 	</div>
 	<div class="pf-element pf-buttons">
-		<input type="hidden" name="id" value="<?php echo $this->id; ?>" />
+		<input type="hidden" name="id" value="<?php echo htmlspecialchars($this->id); ?>" />
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'warehouse/pending')); ?>');" value="Cancel" />
 	</div>

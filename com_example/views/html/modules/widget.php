@@ -13,6 +13,8 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 $this->entity = com_example_widget::factory((int) $this->id);
+// This would normally be escaped with htmlspecialchars(), but in this case, we
+// want to allow HTML in the title.
 $this->title = $this->entity->name;
 ?>
 <div>

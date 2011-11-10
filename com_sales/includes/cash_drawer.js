@@ -51,7 +51,7 @@ pines(function(){
 				drawer_message = "Close the cash drawer when you are finished in order to continue.";
 			dialog.find("p.dialog_text").html(
 				drawer_opened_properly ?
-					"<span style=\"font-size: 2em;\">"+drawer_message+"</span>" :
+					"<span style=\"font-size: 2em;\">"+pines.safe(drawer_message)+"</span>" :
 					"<span style=\"font-size: 2em; color: red;\">The cash drawer has been opened without authorization. Close the cash drawer immediately. Corporate has been notified and the incident has been logged.</span>"
 			);
 			if (!drawer_opened_properly) {

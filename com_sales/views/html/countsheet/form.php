@@ -58,7 +58,7 @@ $pines->com_pgrid->load();
 				});
 				if (item_count == 0) {
 					entry_counter++;
-					entries_table.pgrid_add([{key: entry_counter, values: [code, 1]}]);
+					entries_table.pgrid_add([{key: entry_counter, values: [pines.safe(code), 1]}]);
 				}
 			});
 			update_entries();
@@ -95,7 +95,7 @@ $pines->com_pgrid->load();
 								loader.pnotify_remove();
 							},
 							error: function(XMLHttpRequest, textStatus){
-								pines.error("An error occured while trying to lookup the product code:\n"+XMLHttpRequest.status+": "+textStatus);
+								pines.error("An error occured while trying to lookup the product code:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 							},
 							success: function(data){
 								if (!data) {
@@ -108,7 +108,7 @@ $pines->com_pgrid->load();
 								if (qty == null)
 									qty = rows.pgrid_get_value(2);
 								// Update the quantity of the item.
-								rows.pgrid_set_value(2, qty);
+								rows.pgrid_set_value(2, pines.safe(qty));
 								update_entries();
 							}
 						});
@@ -235,11 +235,11 @@ $pines->com_pgrid->load();
 		<h1>Comments</h1>
 	</div>
 	<div class="pf-element pf-full-width">
-		<div class="pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="comments"><?php echo $this->entity->comments; ?></textarea></div>
+		<div class="pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="comments"><?php echo htmlspecialchars($this->entity->comments); ?></textarea></div>
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } if (!$this->entity->final) { ?>
 		<input type="hidden" name="entries" value="" />
 		<input type="hidden" id="p_muid_save" name="save" value="" />

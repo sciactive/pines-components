@@ -89,10 +89,10 @@ $pines->com_pgrid->load();
 				</thead>
 				<tbody>
 				<?php foreach($this->groups as $cur_group) { ?>
-					<tr title="<?php echo $cur_group->guid; ?>">
-						<td class="location_label"><input type="checkbox" name="locations[]" value="<?php echo $cur_group->guid; ?>" <?php echo $cur_group->in_array($this->entity->locations) ? 'checked="checked" ' : ''; ?>/></td>
-						<td class="important_label"><input type="checkbox" name="important[]" value="<?php echo $cur_group->guid; ?>" <?php echo $cur_group->in_array($this->entity->important) ? 'checked="checked" ' : ''; ?>/></td>
-						<td class="hq_label"><input type="radio" name="hq" value="<?php echo $cur_group->guid; ?>" <?php echo $cur_group->is($this->entity->hq) ? 'checked="checked" ' : ''; ?>/></td>
+					<tr title="<?php echo (int) $cur_group->guid ?>">
+						<td class="location_label"><input type="checkbox" name="locations[]" value="<?php echo (int) $cur_group->guid ?>" <?php echo $cur_group->in_array($this->entity->locations) ? 'checked="checked" ' : ''; ?>/></td>
+						<td class="important_label"><input type="checkbox" name="important[]" value="<?php echo (int) $cur_group->guid ?>" <?php echo $cur_group->in_array($this->entity->important) ? 'checked="checked" ' : ''; ?>/></td>
+						<td class="hq_label"><input type="radio" name="hq" value="<?php echo (int) $cur_group->guid ?>" <?php echo $cur_group->is($this->entity->hq) ? 'checked="checked" ' : ''; ?>/></td>
 						<td><?php echo htmlspecialchars($cur_group->name); ?></td>
 						<td><?php echo htmlspecialchars($cur_group->parent->name); ?></td>
 					</tr>
@@ -102,7 +102,7 @@ $pines->com_pgrid->load();
 		</div>
 	</div>
 	<div class="pf-element">
-		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid ?>" />
 		<input class="ui-corner-all ui-state-default" type="submit" value="Save" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_reports', 'warboard')); ?>');" value="Cancel" />
 	</div>

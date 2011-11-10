@@ -15,7 +15,7 @@ pines(function(){
 		},
 		error: function(XMLHttpRequest, textStatus){
 			notice.pnotify_remove();
-			pines.error("An error occured while trying to load login page:\n"+XMLHttpRequest.status+": "+textStatus);
+			pines.error("An error occured while trying to load login page:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 		},
 		success: function(data){
 			notice.pnotify({

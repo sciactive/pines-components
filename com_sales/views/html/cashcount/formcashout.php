@@ -11,9 +11,9 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Cash-Out of Cash Count ['.htmlspecialchars($this->entity->guid).']';
+$this->title = 'Cash-Out of Cash Count ['.((int) $this->entity->guid).']';
 if (isset($this->entity->guid))
-	$this->note = 'Created by ' . htmlspecialchars($this->entity->user->name) . ' on ' . format_date($this->entity->p_cdate, 'date_short') . ' - Last Modified on ' . format_date($this->entity->p_mdate, 'date_short');
+	$this->note = 'Created by ' . htmlspecialchars($this->entity->user->name) . ' on ' . htmlspecialchars(format_date($this->entity->p_cdate, 'date_short')) . ' - Last Modified on ' . htmlspecialchars(format_date($this->entity->p_mdate, 'date_short'));
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
@@ -79,7 +79,7 @@ if (isset($this->entity->guid))
 					total_count += subtotal;
 				cur_entry.removeClass("added removed");
 			});
-			$("#p_muid_total_cashcount").html(cash_symbol+total_count.toFixed(2));
+			$("#p_muid_total_cashcount").html(pines.safe(cash_symbol+total_count.toFixed(2)));
 		};
 
 		$("button.clear_btn", "#p_muid_form").click(function(){
@@ -182,11 +182,11 @@ if (isset($this->entity->guid))
 		<h1>Comments</h1>
 	</div>
 	<div class="pf-element pf-full-width">
-		<div class="pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="comments" <?php echo $this->entity->cashed_out ? 'readonly="readonly"' : ''; ?>><?php echo $this->entity->comments; ?></textarea></div>
+		<div class="pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="comments" <?php echo $this->entity->cashed_out ? 'readonly="readonly"' : ''; ?>><?php echo htmlspecialchars($this->entity->comments); ?></textarea></div>
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid ?>" />
 		<?php } if (!$this->entity->cashed_out) { ?>
 		<input type="hidden" id="p_muid_save" name="save" value="" />
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Cash Out" />

@@ -78,7 +78,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->shippers as $shipper) { ?>
-		<tr title="<?php echo $shipper->guid; ?>">
+		<tr title="<?php echo (int) $shipper->guid ?>">
 			<td><?php echo htmlspecialchars($shipper->name); ?></td>
 			<td><?php echo htmlspecialchars($shipper->email); ?></td>
 			<td><?php echo htmlspecialchars($shipper->address_1); ?></td>

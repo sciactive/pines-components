@@ -68,7 +68,7 @@ $pines->com_pgrid->load();
 		</thead>
 		<tbody>
 		<?php foreach($this->items as $cur_item) { ?>
-			<tr title="<?php echo $cur_item->guid; ?>">
+			<tr title="<?php echo (int) $cur_item->guid ?>">
 				<td><?php echo htmlspecialchars($cur_item->sku); ?></td>
 				<td><?php echo htmlspecialchars($cur_item->name); ?></td>
 				<td><?php echo ($cur_item->enabled ? 'Yes' : 'No'); ?></td>
@@ -98,7 +98,7 @@ $pines->com_pgrid->load();
 		</thead>
 		<tbody>
 		<?php foreach($this->image_descs as $cur_item) { ?>
-			<tr title="<?php echo $cur_item->guid; ?>">
+			<tr title="<?php echo (int) $cur_item->guid ?>">
 				<td><?php echo htmlspecialchars($cur_item->sku); ?></td>
 				<td><?php echo htmlspecialchars($cur_item->name); ?></td>
 				<td><?php echo ($cur_item->enabled ? 'Yes' : 'No'); ?></td>

@@ -12,8 +12,8 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 
-$this->title = 'Daily Attendance: '.$this->location->name;
-$this->note = format_date($this->date, 'date_short');
+$this->title = 'Daily Attendance: '.htmlspecialchars($this->location->name);
+$this->note = htmlspecialchars(format_date($this->date, 'date_short'));
 
 $pines->com_jstree->load();
 $pines->com_pgrid->load();
@@ -35,7 +35,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		// Date Defaults
 		var date = "<?php echo $this->date ? addslashes(format_date($this->date, 'date_sort')) : ''; ?>";
 		// Location Defaults
-		var location = "<?php echo $this->location->guid; ?>";
+		var location = "<?php echo (int) $this->location->guid; ?>";
 		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
 
 		var state_xhr;
@@ -90,7 +90,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				dataType: "html",
 				data: {"location": location, "descendents": descendents},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the location form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the location form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == "")
@@ -144,7 +144,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 		<?php foreach($this->attendance as $cur_attendance) { $timezone = $cur_attendance['employee']->get_timezone(); ?>
-		<tr title="<?php echo $cur_attendance['employee']->guid; ?>">
+		<tr title="<?php echo (int) $cur_attendance['employee']->guid; ?>">
 			<td><?php echo format_date($this->date, 'date_sort'); ?></td>
 			<td><?php echo htmlspecialchars($cur_attendance['employee']->name); ?></td>
 			<td><?php echo htmlspecialchars($cur_attendance['employee']->group->name); ?></td>

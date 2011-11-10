@@ -127,7 +127,7 @@ $chat_log = $_SESSION['chats'];
 			},
 			appendMessage: function(message, new_message) {
 				var chat_box = $('#p_muid_chat .read');
-				chat_box.append(message.replace(/@.*?</, '<'))
+				chat_box.append(pines.safe(message.replace(/@.*?</, '<')));
 				if (new_message)
 					chat_box.animate({ scrollTop: $('#p_muid_chat .read').prop('scrollHeight') }, 300).effect('highlight');
 			},
@@ -147,7 +147,7 @@ $chat_log = $_SESSION['chats'];
 		// Connect and login to the xmpp server.
 		obj = new Object;
 		// TODO create xmpp users and passwords for users when they are created.
-		obj['user'] = '<?php echo $xmpp_user; ?>';
+		obj['user'] = '<?php echo htmlspecialchars($xmpp_user); ?>';
 		obj['pass'] = 'password';
 
 		jaxl.connect(obj);
@@ -169,7 +169,7 @@ $chat_log = $_SESSION['chats'];
 				$(this).val('');
 
 				var recipient = '<?php echo htmlspecialchars($pines->config->com_messenger->xmpp_support_user); ?>'+'@<?php echo htmlspecialchars($pines->config->com_messenger->xmpp_server); ?>';
-				boshchat.appendMessage(boshchat.prepareMessage('<?php echo $xmpp_user; ?>', message), true);
+				boshchat.appendMessage(boshchat.prepareMessage('<?php echo htmlspecialchars(addslashes($xmpp_user)); ?>', message), true);
 
 				obj = new Object;
 				obj['recipient'] = recipient;
@@ -194,7 +194,7 @@ $chat_log = $_SESSION['chats'];
 			foreach ($chat_log as $cur_chat) {
 				$jabber_id = key($chat_log);
 				foreach ($cur_chat as $cur_msg) { ?>
-					boshchat.appendMessage('<?php echo $cur_msg; ?>');
+					boshchat.appendMessage('<?php echo htmlspecialchars(addslashes($cur_msg)); ?>');
 			<?php }
 			} ?>
 			$('#p_muid_chat .read').animate({ scrollTop: $('#p_muid_chat .read').prop('scrollHeight') }, 300);

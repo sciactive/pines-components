@@ -33,20 +33,20 @@ have bugs.</p>
 	<?php
 	if (!$cur_test[0] && isset($cur_test[3])) {
 		?>
-		<div id="p_muid<?php echo $key; ?>_details" title="Details" style="display: none;">
+		<div id="p_muid_<?php echo htmlspecialchars($key); ?>_details" title="Details" style="display: none;">
 			<pre style="width: 100%; height: 100%; overflow: auto;"><?php var_dump($cur_test[3]); ?></pre>
 		</div>
 		<script type="text/javascript">
 			// <![CDATA[
 			pines(function(){
-				var dialog = $("#p_muid<?php echo $key; ?>_details")
+				var dialog = $("#p_muid_<?php echo htmlspecialchars($key); ?>_details")
 				.dialog({
 					modal: true,
 					width: 800,
 					height: 600,
 					autoOpen: false
 				});
-				$("#p_muid_<?php echo $key; ?>").click(function(){
+				$("#p_muid_<?php echo htmlspecialchars($key); ?>").click(function(){
 					dialog.dialog("open");
 					return false;
 				});
@@ -58,6 +58,6 @@ have bugs.</p>
 	$last_time = $cur_test[1];
 	} ?>
 	</ol>
-	The test is now complete. Test time was <?php echo $total_time; ?>s.
+	The test is now complete. Test time was <?php echo htmlspecialchars($total_time); ?>s.
 </div>
 <?php } ?>

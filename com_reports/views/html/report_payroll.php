@@ -15,7 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Payroll Report';
 if (isset($this->location))
 	$this->title .= ' ['.htmlspecialchars($this->location->name).']';
-$this->title .= ' ('.format_date($this->start_date, 'date_short').' - '.format_date($this->end_date, 'date_short').')';
+$this->title .= ' ('.htmlspecialchars(format_date($this->start_date, 'date_short')).' - '.htmlspecialchars(format_date($this->end_date, 'date_short')).')';
 
 if ($this->descendents)
 	$this->note = 'Including locations beneath '.htmlspecialchars($this->location->name);
@@ -57,7 +57,7 @@ $pines->com_pgrid->load();
 		};
 
 		// Payroll report settings
-		var location = "<?php echo $this->location->guid; ?>";
+		var location = "<?php echo (int) $this->location->guid ?>";
 		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
 
 		var employees_grid = $("#p_muid_grid").pgrid({
@@ -91,7 +91,7 @@ $pines->com_pgrid->load();
 				dataType: "html",
 				data: {"location": location, "descendents": descendents},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the location form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the location form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == "")
@@ -296,7 +296,7 @@ $pines->com_pgrid->load();
 		}
 		foreach ($totals as $cur_total) {
 		?>
-		<tr title="<?php echo $cur_total['employee']->guid; ?>">
+		<tr title="<?php echo (int) $cur_total['employee']->guid ?>">
 			<td><?php echo htmlspecialchars($cur_total['employee']->name); ?></td>
 			<td><?php echo htmlspecialchars($cur_total['employee']->group->name); ?></td>
 			<td><?php echo htmlspecialchars($cur_total['employee']->pay_type); ?></td>

@@ -43,7 +43,7 @@ $this->note = 'You can now set a new password for your user account.';
 	</div>
 	<div class="pf-element pf-buttons">
 		<input type="hidden" name="form" value="true" />
-		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid ?>" />
 		<input type="hidden" name="secret" value="<?php echo htmlspecialchars($this->secret); ?>" />
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url()); ?>');" value="Cancel" />

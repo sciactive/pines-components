@@ -17,8 +17,8 @@ defined('P_RUN') or die('Direct access prohibited');
 	pines(function(){
 		var display_editor_window;
 		var current_holder;
-		var pdf_file = "<?php echo addslashes($this->entity->pdf_file); ?>";
-		var pages = <?php echo $this->entity->pdf_pages; ?>;
+		var pdf_file = "<?php echo htmlspecialchars($this->entity->pdf_file); ?>";
+		var pages = <?php echo json_encode($this->entity->pdf_pages); ?>;
 		var display_jsons = JSON.parse("<?php echo addslashes(json_encode($this->entity->displays)); ?>");
 
 		var open_display_editor = function(holder) {
@@ -36,7 +36,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			};
 		};
 
-		var update_json = function(new_json) {
+		var update_json = function(new_json){
 			current_holder.val(new_json);
 		};
 

@@ -154,7 +154,7 @@ foreach ($this->invoices as $cur_invoice) {
 						end: view.end.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1'),
 						location: "<?php echo $this->all ? 'all' : addslashes($this->location); ?>",
 						descendents: "<?php echo $this->descendents ? 'ON' : 'false'; ?>",
-						employee: "<?php echo $this->employee->guid; ?>"
+						employee: "<?php echo (int) $this->employee->guid ?>"
 					});
 				}
 			}

@@ -11,6 +11,6 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = "About {$pines->config->system_name}";
+$this->title = htmlspecialchars("About {$pines->config->system_name}");
 ?>
 <p><?php echo htmlspecialchars($pines->config->com_about->description, ENT_COMPAT, '', false); ?></p>

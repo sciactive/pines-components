@@ -80,7 +80,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					loader.pnotify_remove();
 				},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (!data) {
@@ -152,7 +152,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 							loader.pnotify_remove();
 						},
 						error: function(XMLHttpRequest, textStatus){
-							pines.error("An error occured:\n"+XMLHttpRequest.status+": "+textStatus);
+							pines.error("An error occured:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 						},
 						success: function(data){
 							if (!data) {
@@ -310,7 +310,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<label><span class="pf-label">Employee</span>
 				<?php echo htmlspecialchars($_SESSION['user']->name); ?></label>
 		</div>
-		<input type="hidden" name="employee" value="<?php echo $_SESSION['user']->guid; ?>" />
+		<input type="hidden" name="employee" value="<?php echo (int) $_SESSION['user']->guid ?>" />
 		<?php } ?>
 		<div class="pf-element">
 			<label><span class="pf-label">Interaction Type</span>

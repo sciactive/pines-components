@@ -246,7 +246,7 @@ $pines->uploader->load();
 			</div>
 			<div class="pf-element">
 				<span class="pf-label">Description</span>
-				<textarea class="pf-field ui-widget-content ui-corner-all" rows="3" cols="35" name="description"><?php echo $this->entity->description; ?></textarea>
+				<textarea class="pf-field ui-widget-content ui-corner-all" rows="3" cols="35" name="description"><?php echo htmlspecialchars($this->entity->description); ?></textarea>
 			</div>
 			<div class="pf-element">
 				<script type="text/javascript">
@@ -260,7 +260,7 @@ $pines->uploader->load();
 				</script>
 				<label><span class="pf-label">Background</span>
 					<span class="pf-note">See the Station Layout tab to preview the background.</span>
-					<input class="pf-field ui-widget-content ui-corner-all puploader" type="text" name="background" value="<?php echo $this->entity->background; ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all puploader" type="text" name="background" value="<?php echo htmlspecialchars($this->entity->background); ?>" /></label>
 			</div>
 			<?php /* <div class="pf-element pf-full-width">
 				<span class="pf-label">Background Preview</span>
@@ -299,7 +299,7 @@ $pines->uploader->load();
 	<br />
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_customertimer', 'listfloors')); ?>');" value="Cancel" />

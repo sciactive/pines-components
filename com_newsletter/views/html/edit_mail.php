@@ -39,7 +39,7 @@ $pines->uploader->load();
 		<h1>Message</h1>
 	</div>
 	<div class="pf-element pf-full-width">
-		<div class="pf-full-width"><textarea rows="3" cols="35" class="ui-widget-content ui-corner-all peditor" name="data" style="width: 100%;"><?php echo $this->entity->message; ?></textarea></div>
+		<div class="pf-full-width"><textarea rows="3" cols="35" class="ui-widget-content ui-corner-all peditor" name="data" style="width: 100%;"><?php echo htmlspecialchars($this->entity->message); ?></textarea></div>
 	</div>
 	<div class="pf-element pf-heading">
 		<h1>Attachments</h1>
@@ -60,7 +60,7 @@ $pines->uploader->load();
 	</div>
 	<div class="pf-element pf-buttons">
 		<input type="hidden" name="update" value="yes" />
-		<input type="hidden" name="mail_id" value="<?php echo $this->entity->guid; ?>" />
+		<input type="hidden" name="mail_id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Save Mail" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url($this->close_option, $this->close_action)); ?>');" value="Close" /> <small>(Closing will lose any unsaved changes!)</small>
 	</div>

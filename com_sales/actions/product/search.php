@@ -89,7 +89,7 @@ if (isset($product)) {
 				$selector
 			);
 		foreach ($stock_entries as $cur_stock) {
-			$json_struct->serials[] = htmlspecialchars($cur_stock->serial);
+			$json_struct->serials[] = $cur_stock->serial;
 		}
 	}
 

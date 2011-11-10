@@ -32,13 +32,13 @@ all.each(function(){
 					}
 					response($.map(data, function(item) {
 						return {
-							"id": item.guid,
-							"label": item.name,
+							"id": pines.safe(item.guid),
+							"label": pines.safe(item.name),
 							"value": item.guid+": "+item.name,
-							"desc": "<em><pre>"+(item.email ? " "+item.email : "")+
-								(item.phone_cell ? " "+item.phone_cell :
-								(item.phone_home ? " "+item.phone_home :
-								(item.phone_work ? " "+item.phone_work : "")))+"</pre></em>"
+							"desc": "<em><pre>"+(item.email ? " "+pines.safe(item.email) : "")+
+								(item.phone_cell ? " "+pines.safe(item.phone_cell) :
+								(item.phone_home ? " "+pines.safe(item.phone_home) :
+								(item.phone_work ? " "+pines.safe(item.phone_work) : "")))+"</pre></em>"
 						};
 					}));
 				}

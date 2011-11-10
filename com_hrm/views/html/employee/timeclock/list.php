@@ -52,7 +52,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 								loader.pnotify_remove();
 							},
 							error: function(XMLHttpRequest, textStatus){
-								pines.error("An error occured while communicating with the server:\n"+XMLHttpRequest.status+": "+textStatus);
+								pines.error("An error occured while communicating with the server:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 							},
 							success: function(data){
 								if (data === undefined) {
@@ -64,7 +64,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 									return;
 								}
 								cur_row.pgrid_set_value(4, data ? 'In' : 'Out');
-								//cur_row.pgrid_set_value(5, data[1].time);
+								//cur_row.pgrid_set_value(5, pines.safe(data[1].time));
 							}
 						});
 					});
@@ -120,8 +120,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$week_start = strtotime('last monday 12:00 AM');
 		date_default_timezone_set($cur_timezone);
 		?>
-		<tr title="<?php echo $employee->guid; ?>">
-			<td><?php echo $employee->guid; ?></td>
+		<tr title="<?php echo (int) $employee->guid ?>">
+			<td><?php echo (int) $employee->guid ?></td>
 			<td><?php echo htmlspecialchars($employee->name); ?></td>
 			<td><?php echo htmlspecialchars($employee->group->name); ?></td>
 			<td><?php echo $employee->timeclock->clocked_in_time() ? 'In' : 'Out'; ?></td>

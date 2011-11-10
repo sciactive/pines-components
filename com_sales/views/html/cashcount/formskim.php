@@ -11,7 +11,7 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Skim from Cash Count ['.$this->entity->cashcount->guid.'] at '.htmlspecialchars($this->entity->cashcount->group->name);
+$this->title = 'Skim from Cash Count ['.((int) $this->entity->cashcount->guid).'] at '.htmlspecialchars($this->entity->cashcount->group->name);
 $this->note = 'Count the cash as you take it out of the drawer.';
 ?>
 <style type="text/css" >
@@ -78,7 +78,7 @@ $this->note = 'Count the cash as you take it out of the drawer.';
 					total_count += subtotal;
 				cur_entry.removeClass("added removed");
 			});
-			$("#p_muid_total_skim").html(cash_symbol+total_count.toFixed(2));
+			$("#p_muid_total_skim").html(pines.safe(cash_symbol+total_count.toFixed(2)));
 		};
 
 		$("button.clear_btn", "#p_muid_form").click(function(){
@@ -142,10 +142,10 @@ $this->note = 'Count the cash as you take it out of the drawer.';
 		<h1>Comments</h1>
 	</div>
 	<div class="pf-element pf-full-width">
-		<div class="pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="comments"><?php echo $this->entity->comments; ?></textarea></div>
+		<div class="pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="comments"><?php echo htmlspecialchars($this->entity->comments); ?></textarea></div>
 	</div>
 	<div class="pf-element pf-buttons">
-		<input type="hidden" name="id" value="<?php echo $this->entity->cashcount->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo (int) $this->entity->cashcount->guid ?>" />
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all submit_button" type="button" value="Finish Skim" onclick="pines.com_sales_verify();" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'cashcount/list')); ?>');" value="Cancel" />
 	</div>

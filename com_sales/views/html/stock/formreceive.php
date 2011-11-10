@@ -13,7 +13,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Receive Inventory';
 if (!gatekeeper('com_sales/receivelocation'))
-	$this->note = 'Only use this form to receive inventory into your <strong>current</strong> location ('.(!isset($_SESSION['user']->group) ? 'No Location' : $_SESSION['user']->group->name).').';
+	$this->note = 'Only use this form to receive inventory into your <strong>current</strong> location ('.(!isset($_SESSION['user']->group) ? 'No Location' : htmlspecialchars($_SESSION['user']->group->name)).').';
 $pines->com_pgrid->load();
 $pines->com_jstree->load();
 if ($pines->config->com_sales->autocomplete_product)
@@ -49,7 +49,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					if (match)
 						return;
 				}
-				products_table.pgrid_add([{values: [data.sku, serial, 1]}], function(){
+				products_table.pgrid_add([{values: [pines.safe(data.sku), pines.safe(serial), 1]}], function(){
 					var cur_row = $(this);
 					cur_row.data("product", data);
 				});
@@ -106,7 +106,7 @@ if ($pines->config->com_sales->autocomplete_product)
 										loader.pnotify_remove();
 									},
 									error: function(XMLHttpRequest, textStatus){
-										pines.error("An error occured while trying to lookup the shipment:\n"+XMLHttpRequest.status+": "+textStatus);
+										pines.error("An error occured while trying to lookup the shipment:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 									},
 									success: function(data){
 										if (!data) {
@@ -174,7 +174,7 @@ if ($pines->config->com_sales->autocomplete_product)
 										loader.pnotify_remove();
 									},
 									error: function(XMLHttpRequest, textStatus){
-										pines.error("An error occured while trying to lookup the product code:\n"+XMLHttpRequest.status+": "+textStatus);
+										pines.error("An error occured while trying to lookup the product code:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 									},
 									success: function(data){
 										if (!data) {
@@ -211,7 +211,7 @@ if ($pines->config->com_sales->autocomplete_product)
 								serial = prompt("This item is serialized. Please provide the serial:", serial);
 							} while (!serial && serial != null);
 							if (serial != null) {
-								rows.pgrid_set_value(2, serial);
+								rows.pgrid_set_value(2, pines.safe(serial));
 								pines.com_sales_update_products();
 							}
 						}
@@ -282,7 +282,7 @@ if ($pines->config->com_sales->autocomplete_product)
 							loader.pnotify_remove();
 						},
 						error: function(XMLHttpRequest, textStatus){
-							pines.error("An error occured while trying to lookup the product code:\n"+XMLHttpRequest.status+": "+textStatus);
+							pines.error("An error occured while trying to lookup the product code:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 						},
 						success: function(data){
 							if (!data || !data[0]) {
@@ -291,7 +291,7 @@ if ($pines->config->com_sales->autocomplete_product)
 							}
 							$.each(data, function(){
 								var product = this;
-								category_products_grid.pgrid_add([{key: this.guid, values: [this.name, this.sku]}], function(){
+								category_products_grid.pgrid_add([{key: this.guid, values: [pines.safe(this.name), pines.safe(this.sku)]}], function(){
 									$(this).data("product", product);
 								});
 							});
@@ -402,7 +402,7 @@ if ($pines->config->com_sales->autocomplete_product)
 			</thead>
 			<tbody>
 			<?php foreach($this->categories as $category) { ?>
-				<tr title="<?php echo $category->guid; ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? "child ch_{$category->parent->guid} " : ''; ?>">
+				<tr title="<?php echo (int) $category->guid ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? htmlspecialchars("child ch_{$category->parent->guid} ") : ''; ?>">
 					<td><?php echo isset($category->parent) ? $category->array_search($category->parent->children) + 1 : '0' ; ?></td>
 					<td><?php echo htmlspecialchars($category->name); ?></td>
 					<td><?php echo count($category->products); ?></td>
@@ -448,7 +448,7 @@ if ($pines->config->com_sales->autocomplete_product)
 				</thead>
 				<tbody>
 				<?php foreach($this->pos as $cur_shipment) { ?>
-					<tr title="<?php echo $cur_shipment->guid; ?>">
+					<tr title="<?php echo (int) $cur_shipment->guid ?>">
 						<td>PO</td>
 						<td><?php echo htmlspecialchars($cur_shipment->po_number); ?></td>
 						<td><?php echo ($cur_shipment->eta ? format_date($cur_shipment->eta, 'date_sort') : ''); ?></td>
@@ -468,7 +468,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					</tr>
 				<?php } ?>
 				<?php foreach($this->transfers as $cur_shipment) { ?>
-					<tr title="<?php echo $cur_shipment->guid; ?>">
+					<tr title="<?php echo (int) $cur_shipment->guid ?>">
 						<td>Transfer</td>
 						<td><?php echo htmlspecialchars($cur_shipment->guid); ?></td>
 						<td><?php echo ($cur_shipment->eta ? format_date($cur_shipment->eta, 'date_sort') : ''); ?></td>

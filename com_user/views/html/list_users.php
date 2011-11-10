@@ -88,8 +88,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->users as $user) { ?>
-		<tr title="<?php echo $user->guid; ?>">
-			<td><?php echo $user->guid; ?></td>
+		<tr title="<?php echo (int) $user->guid ?>">
+			<td><?php echo (int) $user->guid ?></td>
 			<td><?php echo htmlspecialchars($user->username); ?></td>
 			<?php if (in_array('name', $pines->config->com_user->user_fields)) { ?>
 			<td><?php echo htmlspecialchars($user->name); ?></td>

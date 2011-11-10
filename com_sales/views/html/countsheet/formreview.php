@@ -11,10 +11,10 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Reviewing Countsheet ['.htmlspecialchars($this->entity->guid).'] at '.htmlspecialchars($this->entity->group->name);
-$this->note = 'Created by '.htmlspecialchars($this->entity->user->name).' on '.format_date($this->entity->p_cdate, 'full_long').'.';
+$this->title = 'Reviewing Countsheet ['.((int) $this->entity->guid).'] at '.htmlspecialchars($this->entity->group->name);
+$this->note = 'Created by '.htmlspecialchars($this->entity->user->name).' on '.htmlspecialchars(format_date($this->entity->p_cdate, 'full_long')).'.';
 if (isset($this->entity->run_count_date))
-	$this->note .= ' Run on '.format_date($this->entity->run_count_date, 'full_long').'.';
+	$this->note .= ' Run on '.htmlspecialchars(format_date($this->entity->run_count_date, 'full_long')).'.';
 $pines->com_pgrid->load();
 ?>
 <script type="text/javascript">
@@ -251,12 +251,12 @@ $pines->com_pgrid->load();
 	<div class="pf-element pf-full-width">
 		<label>
 			<span class="pf-label">Review Comments</span>
-			<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="review_comments"><?php echo $this->entity->review_comments; ?></textarea></span>
+			<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="review_comments"><?php echo htmlspecialchars($this->entity->review_comments); ?></textarea></span>
 		</label>
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid ?>" />
 		<?php } ?>
 		<input name="approve" class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'countsheet/list')); ?>');" value="Cancel" />

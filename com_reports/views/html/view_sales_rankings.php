@@ -11,11 +11,11 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Sales Rankings: '.$this->entity->name.' ('.format_date($this->entity->start_date, 'date_sort').' - '.format_date($this->entity->end_date - 1, 'date_sort').')';
+$this->title = 'Sales Rankings: '.htmlspecialchars($this->entity->name).' ('.htmlspecialchars(format_date($this->entity->start_date, 'date_sort')).' - '.htmlspecialchars(format_date($this->entity->end_date - 1, 'date_sort')).')';
 if ($this->entity->final)
-	$this->note = 'Finalized on '.format_date($this->entity->final_date, 'full_long');
+	$this->note = 'Finalized on '.htmlspecialchars(format_date($this->entity->final_date, 'full_long'));
 else
-	$this->note = 'Current as of '.format_date(time(), 'full_long');
+	$this->note = 'Current as of '.htmlspecialchars(format_date(time(), 'full_long'));
 $pines->com_jstree->load();
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
@@ -143,7 +143,7 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					$totals['goal'] += $cur_rank['goal'];
 					$totals['trend'] += $cur_rank['trend'];
 				?>
-				<tr title="<?php echo $cur_rank['entity']->guid; ?>" class="<?php echo $class; ?>">
+				<tr title="<?php echo (int) $cur_rank['entity']->guid ?>" class="<?php echo $class; ?>">
 					<td><?php echo htmlspecialchars($cur_rank['rank']); ?></td>
 					<td><?php echo htmlspecialchars($cur_rank['entity']->name); ?></td>
 					<td><?php echo isset($cur_rank['manager']->guid) ? htmlspecialchars($cur_rank['manager']->name) : 'OPEN'; ?></td>
@@ -230,7 +230,7 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 						$class = 'red';
 					}
 				?>
-				<tr title="<?php echo $cur_rank['entity']->guid; ?>" class="<?php echo $class; ?>">
+				<tr title="<?php echo (int) $cur_rank['entity']->guid ?>" class="<?php echo $class; ?>">
 					<td><?php echo htmlspecialchars($cur_rank['rank']); ?></td>
 					<td><?php echo htmlspecialchars($cur_rank['entity']->name); ?></td>
 					<td><?php echo htmlspecialchars("{$cur_rank['location']->name} (".preg_replace('/\s.*/', '', $cur_rank['district']->name).')'); ?></td>
@@ -306,7 +306,7 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 						$class = 'red';
 					}
 				?>
-				<tr title="<?php echo $cur_rank['entity']->guid; ?>" class="<?php echo $class; ?>">
+				<tr title="<?php echo (int) $cur_rank['entity']->guid ?>" class="<?php echo $class; ?>">
 					<td><?php echo htmlspecialchars($cur_rank['rank']); ?></td>
 					<td><?php echo htmlspecialchars($cur_rank['entity']->name); ?></td>
 					<td><?php echo htmlspecialchars("{$cur_rank['location']->name} (".preg_replace('/\s.*/', '', $cur_rank['district']->name).')'); ?></td>

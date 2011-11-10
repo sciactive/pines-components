@@ -45,7 +45,7 @@ if ($_COOKIE['com_uasniffer_switch'] == 'true')
 			}
 			$("#p_muid_links").delegate("a", "click", function(){
 				var cookie = values();
-				document.cookie = 'com_uasniffer_switch='+cookie[0]+'; expires='+cookie[1]+'; path=<?php echo $pines->config->rela_location; ?>';
+				document.cookie = 'com_uasniffer_switch='+cookie[0]+'; expires='+cookie[1]+'; path=<?php echo htmlspecialchars($pines->config->rela_location); ?>';
 				location.reload(true);
 			});
 		});

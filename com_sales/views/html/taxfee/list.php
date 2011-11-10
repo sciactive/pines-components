@@ -73,7 +73,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->tax_fees as $tax_fee) { ?>
-		<tr title="<?php echo $tax_fee->guid; ?>">
+		<tr title="<?php echo (int) $tax_fee->guid ?>">
 			<td><?php echo htmlspecialchars($tax_fee->name); ?></td>
 			<td><?php echo $tax_fee->enabled ? 'Yes' : 'No'; ?></td>
 			<td><?php echo $tax_fee->type == 'percentage' ? 'Percentage' : 'Flat Rate'; ?></td>

@@ -62,7 +62,7 @@ $pines->com_jstree->load();
 		var start_date = "<?php echo $this->start_date ? addslashes(format_date($this->start_date, 'date_sort')) : ''; ?>";
 		var end_date = "<?php echo $this->end_date ? addslashes(format_date($this->end_date - 1, 'date_sort')) : ''; ?>";
 		// Location Defaults
-		var location = "<?php echo $this->location->guid; ?>";
+		var location = "<?php echo (int) $this->location->guid ?>";
 		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
 
 		var state_xhr;
@@ -76,7 +76,7 @@ $pines->com_jstree->load();
 				{type: 'separator'},
 				{type: 'text', label: 'SKU: ', load: function(textbox){
 					// Display the current sku being searched.
-					textbox.val("<?php echo htmlspecialchars($this->sku); ?>");
+					textbox.val("<?php echo addslashes($this->sku); ?>");
 					textbox.keydown(function(e){
 						if (e.keyCode == 13)
 							submit_search();
@@ -86,7 +86,7 @@ $pines->com_jstree->load();
 				{type: 'separator'},
 				{type: 'text', label: 'Serial #: ', load: function(textbox){
 					// Display the current serial being searched.
-					textbox.val("<?php echo htmlspecialchars($this->serial); ?>");
+					textbox.val("<?php echo addslashes($this->serial); ?>");
 					textbox.keydown(function(e){
 						if (e.keyCode == 13)
 							submit_search();
@@ -115,7 +115,7 @@ $pines->com_jstree->load();
 				dataType: "html",
 				data: {"all_time": all_time, "start_date": start_date, "end_date": end_date},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the date form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the date form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == "")
@@ -155,7 +155,7 @@ $pines->com_jstree->load();
 				dataType: "html",
 				data: {"location": location, "descendents": descendents},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the location form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the location form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == "")
@@ -223,54 +223,54 @@ $pines->com_jstree->load();
 		switch ($cur_transaction->type) {
 			case 'sale':
 				$link = pines_url('com_sales', 'sale/receipt', array('id' => $cur_transaction->entity->guid));
-				$groupname = htmlspecialchars("{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]");
+				$groupname = "{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]";
 				$quantity = count($cur_transaction->entity->products);
 				$serials = implode(', ', $cur_transaction->serials);
 				break;
 			case 'return':
 				$link = pines_url('com_sales', 'return/receipt', array('id' => $cur_transaction->entity->guid));
-				$groupname = htmlspecialchars("{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]");
+				$groupname = "{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]";
 				$quantity = count($cur_transaction->entity->products);
 				$serials = implode(', ', $cur_transaction->serials);
 				break;
 			case 'swap':
 				$link = pines_url('com_sales', 'sale/receipt', array('id' => $cur_transaction->entity->ticket->guid));
-				$groupname = htmlspecialchars("{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]");
+				$groupname = "{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]";
 				$quantity = $cur_transaction->qty;
 				$serials = implode(', ', $cur_transaction->serials);
 				break;
 			case 'countsheet':
 				$link = pines_url('com_sales', 'countsheet/approve', array('id' => $cur_transaction->entity->guid));
-				$groupname = htmlspecialchars("{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]");
+				$groupname = "{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]";
 				$quantity = count($cur_transaction->entity->products);
 				$serials = '';
 				break;
 			case 'transfer':
 				$link = pines_url('com_sales', 'transfer/edit', array('id' => $cur_transaction->entity->guid));
-				$groupname = htmlspecialchars("{$cur_transaction->entity->destination->name} [{$cur_transaction->entity->destination->groupname}]");
+				$groupname = "{$cur_transaction->entity->destination->name} [{$cur_transaction->entity->destination->groupname}]";
 				$quantity = $cur_transaction->qty;
 				$serials = implode(', ', $cur_transaction->serials);
 				break;
 			case 'po':
 				$link = pines_url('com_sales', 'po/edit', array('id' => $cur_transaction->entity->guid));
-				$groupname = htmlspecialchars("{$cur_transaction->entity->destination->name} [{$cur_transaction->entity->destination->groupname}]");
+				$groupname = "{$cur_transaction->entity->destination->name} [{$cur_transaction->entity->destination->groupname}]";
 				$quantity = $cur_transaction->qty;
 				$serials = implode(', ', $cur_transaction->serials);
 				break;
 			default:
 				$link = '';
-				$groupname = htmlspecialchars("{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]");
+				$groupname = "{$cur_transaction->entity->group->name} [{$cur_transaction->entity->group->groupname}]";
 				$quantity = '';
 				$serials = '';
 				break;
 		}
 	?>
-		<tr title="<?php echo $cur_transaction->entity->guid; ?>">
+		<tr title="<?php echo (int) $cur_transaction->entity->guid ?>">
 			<td><?php echo format_date($cur_transaction->entity->p_cdate); ?></td>
 			<td><?php echo htmlspecialchars($cur_transaction->product->sku); ?></td>
 			<td><?php echo htmlspecialchars($cur_transaction->product->name); ?></td>
-			<td><?php echo $groupname; ?></td>
-			<td><a href="<?php echo $link; ?>" onclick="window.open(this.href); return false;"><?php echo $cur_transaction->entity->guid; ?></a></td>
+			<td><?php echo htmlspecialchars($groupname); ?></td>
+			<td><a href="<?php echo htmlspecialchars($link); ?>" onclick="window.open(this.href); return false;"><?php echo (int) $cur_transaction->entity->guid ?></a></td>
 			<td><?php echo ucwords($cur_transaction->type); ?></td>
 			<td><?php echo htmlspecialchars($cur_transaction->transaction_info); ?></td>
 			<td><?php echo htmlspecialchars($quantity); ?></td>

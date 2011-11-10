@@ -12,9 +12,9 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 
-$this->title = 'Calendar Events ['.$this->location->name.']';
+$this->title = 'Calendar Events ['.htmlspecialchars($this->location->name).']';
 if ($this->descendents)
-	$this->note = 'Including locations beneath '.$this->location->name;
+	$this->note = 'Including locations beneath '.htmlspecialchars($this->location->name);
 $pines->icons->load();
 $pines->com_jstree->load();
 $pines->com_pgrid->load();
@@ -57,7 +57,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var start_date = "<?php echo $this->start_date ? addslashes(format_date($this->start_date, 'date_sort')) : ''; ?>";
 		var end_date = "<?php echo $this->end_date ? addslashes(format_date($this->end_date - 1, 'date_sort')) : ''; ?>";
 		// Location Defaults
-		var location = "<?php echo $this->location->guid; ?>";
+		var location = "<?php echo (int) $this->location->guid ?>";
 		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
 
 		var state_xhr;
@@ -97,7 +97,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				dataType: "html",
 				data: {"all_time": all_time, "start_date": start_date, "end_date": end_date},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the date form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the date form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == "")
@@ -138,7 +138,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				dataType: "html",
 				data: {"location": location, "descendents": descendents},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the location form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the location form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == "")
@@ -206,7 +206,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			if (info == null) {
 				info = '';
 			} else {
-				p_muid_notice.pnotify({ pnotify_title: title, pnotify_text: info });
+				p_muid_notice.pnotify({ pnotify_title: pines.safe(title), pnotify_text: pines.safe(info) });
 				p_muid_notice.pnotify_display();
 				if (!p_muid_notice.is(":visible"))
 					p_muid_notice.pnotify_display();
@@ -236,9 +236,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				$cur_event_type = 'Shift';
 			else
 				$cur_event_type = 'Event';
-			$info = json_encode(str_replace('\'', '', $cur_event->information));
+			$info = str_replace('\'', '', $cur_event->information);
 		?>
-		<tr title='<?php echo $cur_event->guid; ?>' onmouseover='p_muid_notice.com_reports_issue_update("<?php echo $cur_event->title; ?>", <?php echo $info; ?>);'>
+		<tr title="<?php echo (int) $cur_event->guid ?>" onmouseover="p_muid_notice.com_reports_issue_update(<?php echo htmlspecialchars(json_encode($cur_event->title)); ?>, <?php echo htmlspecialchars(json_encode($info)); ?>);">
 			<td><?php echo htmlspecialchars($cur_event->title); ?></td>
 			<td><?php echo format_date($cur_event->start); ?></td>
 			<td><?php echo format_date($cur_event->end); ?></td>

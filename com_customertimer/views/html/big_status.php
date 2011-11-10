@@ -66,7 +66,7 @@ $this->title = 'Customer Timer Status';
 					setTimeout(update_status, 30000);
 				},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to refresh the status:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to refresh the status:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					switch (data) {

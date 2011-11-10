@@ -52,8 +52,8 @@ $pines->com_ptags->load();
 						double_click: true,
 						click: function(e, rows){
 							cur_condition = rows;
-							condition_dialog.find("input[name=cur_condition_type]").val(rows.pgrid_get_value(1));
-							condition_dialog.find("input[name=cur_condition_value]").val(rows.pgrid_get_value(2));
+							condition_dialog.find("input[name=cur_condition_type]").val(pines.unsafe(rows.pgrid_get_value(1)));
+							condition_dialog.find("input[name=cur_condition_value]").val(pines.unsafe(rows.pgrid_get_value(2)));
 							condition_dialog.dialog('open');
 						}
 					},
@@ -99,14 +99,14 @@ $pines->com_ptags->load();
 							var new_condition = [{
 								key: null,
 								values: [
-									cur_condition_type,
-									cur_condition_value
+									pines.safe(cur_condition_type),
+									pines.safe(cur_condition_value)
 								]
 							}];
 							conditions_table.pgrid_add(new_condition);
 						} else {
-							cur_condition.pgrid_set_value(1, cur_condition_type);
-							cur_condition.pgrid_set_value(2, cur_condition_value);
+							cur_condition.pgrid_set_value(1, pines.safe(cur_condition_type));
+							cur_condition.pgrid_set_value(2, pines.safe(cur_condition_value));
 						}
 						$(this).dialog('close');
 					}
@@ -214,13 +214,13 @@ $pines->com_ptags->load();
 				<h1>Intro</h1>
 			</div>
 			<div class="pf-element pf-full-width">
-				<textarea rows="3" cols="35" class="peditor" style="width: 100%;" name="intro"><?php echo $this->entity->intro; ?></textarea>
+				<textarea rows="3" cols="35" class="peditor" style="width: 100%;" name="intro"><?php echo htmlspecialchars($this->entity->intro); ?></textarea>
 			</div>
 			<div class="pf-element pf-heading">
 				<h1>Content</h1>
 			</div>
 			<div class="pf-element pf-full-width">
-				<textarea rows="8" cols="35" class="peditor" style="width: 100%; height: 500px;" name="content"><?php echo $this->entity->content; ?></textarea>
+				<textarea rows="8" cols="35" class="peditor" style="width: 100%; height: 500px;" name="content"><?php echo htmlspecialchars($this->entity->content); ?></textarea>
 			</div>
 			<br class="pf-clearing" />
 		</div>
@@ -243,7 +243,7 @@ $pines->com_ptags->load();
 			<div class="pf-element pf-full-width">
 				<label><span class="pf-label">Custom Head Code</span>
 					<span class="pf-note"><a href="javascript:void(0);" onclick="$('#p_muid_custom_head_help').dialog({width: 800, height: 600, modal: false})">Read Me First</a></span>
-					<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="custom_head"><?php echo $this->entity->custom_head; ?></textarea></span></label>
+					<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="custom_head"><?php echo htmlspecialchars($this->entity->custom_head); ?></textarea></span></label>
 			</div>
 			<div id="p_muid_custom_head_help" title="Custom Head Code" style="display: none;">
 				<style type="text/css">
@@ -521,9 +521,9 @@ $pines->com_ptags->load();
 					<?php
 					$category_guids = $this->entity->get_categories_guid();
 					foreach($this->categories as $cur_category) { ?>
-						<tr title="<?php echo $cur_category->guid; ?>" class="<?php echo $cur_category->children ? 'parent ' : ''; ?><?php echo isset($cur_category->parent) ? "child ch_{$cur_category->parent->guid} " : ''; ?>">
+						<tr title="<?php echo (int) $cur_category->guid; ?>" class="<?php echo $cur_category->children ? 'parent ' : ''; ?><?php echo isset($cur_category->parent) ? htmlspecialchars("child ch_{$cur_category->parent->guid} ") : ''; ?>">
 							<td><?php echo isset($cur_category->parent) ? $cur_category->array_search($cur_category->parent->children) + 1 : '0' ; ?></td>
-							<td><input type="checkbox" name="categories[]" value="<?php echo $cur_category->guid; ?>" <?php echo in_array($cur_category->guid, $category_guids) ? 'checked="checked" ' : ''; ?>/></td>
+							<td><input type="checkbox" name="categories[]" value="<?php echo (int) $cur_category->guid; ?>" <?php echo in_array($cur_category->guid, $category_guids) ? 'checked="checked" ' : ''; ?>/></td>
 							<td><?php echo htmlspecialchars($cur_category->name); ?></td>
 							<td><?php echo count($cur_category->pages); ?></td>
 						</tr>
@@ -681,11 +681,11 @@ $pines->com_ptags->load();
 						}
 						var cur_template_name = $("option:selected", "#p_muid_variant_template").text();
 						var cur_variant = $("#p_muid_variant_variant").val();
-						var new_html = '<div class="pf-element pf-full-width '+cur_template+'">\
+						var new_html = '<div class="pf-element pf-full-width '+pines.safe(cur_template)+'">\
 							<button class="pf-field ui-state-default ui-corner-all remove" style="float: right;" type="button">Remove</button>\
-							<span class="pf-label">'+cur_template_name+'</span>\
-							<span class="pf-field">'+cur_variant+'</span>\
-							<input type="hidden" name="variants[]" value="'+cur_template+'::'+cur_variant+'" />\
+							<span class="pf-label">'+pines.safe(cur_template_name)+'</span>\
+							<span class="pf-field">'+pines.safe(cur_variant)+'</span>\
+							<input type="hidden" name="variants[]" value="'+pines.safe(cur_template)+'::'+pines.safe(cur_variant)+'" />\
 						</div>';
 						$("#p_muid_variants").append(new_html).find(":button").button();
 					});
@@ -755,7 +755,7 @@ $pines->com_ptags->load();
 	<div class="pf-element pf-buttons">
 		<br />
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_content', 'page/list')); ?>');" value="Cancel" />

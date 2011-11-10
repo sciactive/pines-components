@@ -90,9 +90,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						if (selected_ids != "")
 							selected_ids += ",";
 						selected_ids += $(this).attr('title');
-						list += '<li>'+$(this).pgrid_get_value(2) + '</li>';
+						list += '<li>'+pines.safe($(this).pgrid_get_value(2))+'</li>';
 					});
-					list = list + '</ul>';
+					list += '</ul>';
 					hire_dialog.find("div.dialog_info").html(list);
 					hire_dialog.dialog("open");
 					}},
@@ -103,9 +103,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						if (selected_ids != "")
 							selected_ids += ",";
 						selected_ids += $(this).attr('title');
-						list += '<li>'+$(this).pgrid_get_value(2) + '</li>';
+						list += '<li>'+pines.safe($(this).pgrid_get_value(2))+'</li>';
 					});
-					list = list + '</ul>';
+					list += '</ul>';
 					reject_dialog.find("div.dialog_info").html(list);
 					reject_dialog.dialog("open");
 					}},
@@ -149,7 +149,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->applications as $cur_application) { ?>
-		<tr title="<?php echo $cur_application->guid; ?>">
+		<tr title="<?php echo (int) $cur_application->guid ?>">
 			<td><?php echo format_date($cur_application->p_cdate); ?></td>
 			<td><?php echo htmlspecialchars($cur_application->name); ?></td>
 			<td><?php echo htmlspecialchars($cur_application->position); ?></td>

@@ -14,5 +14,5 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Fortune';
 ?>
 <div>
-	<?php echo $this->fortune; ?>
+	<?php echo htmlspecialchars($this->fortune); ?>
 </div>

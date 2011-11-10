@@ -83,8 +83,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->transfers as $transfer) { ?>
-		<tr title="<?php echo $transfer->guid; ?>">
-			<td><?php echo $transfer->guid; ?></td>
+		<tr title="<?php echo (int) $transfer->guid ?>">
+			<td><?php echo (int) $transfer->guid ?></td>
 			<td><?php echo htmlspecialchars($transfer->reference_number); ?></td>
 			<td><?php echo htmlspecialchars("{$transfer->origin->name} [{$transfer->origin->groupname}]"); ?></td>
 			<td><?php echo htmlspecialchars("{$transfer->destination->name} [{$transfer->destination->groupname}]"); ?></td>

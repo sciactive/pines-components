@@ -46,7 +46,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			},
 			"ui" : {
 				"select_limit" : 1,
-				"initially_select" : ["<?php echo $this->entity->group->guid; ?>"]
+				"initially_select" : ["<?php echo (int) $this->entity->group->guid ?>"]
 			}
 		});
 	});

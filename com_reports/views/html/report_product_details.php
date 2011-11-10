@@ -12,9 +12,9 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 
-$this->title = 'Product Details Report ['.$this->location->name.']';
+$this->title = 'Product Details Report ['.htmlspecialchars($this->location->name).']';
 if (!$this->all_time)
-	$this->note = format_date($this->start_date, 'date_short').' - '.format_date($this->end_date - 1, 'date_short');
+	$this->note = htmlspecialchars(format_date($this->start_date, 'date_short')).' - '.htmlspecialchars(format_date($this->end_date - 1, 'date_short'));
 
 $pines->icons->load();
 $pines->com_jstree->load();
@@ -60,7 +60,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var start_date = "<?php echo $this->start_date ? addslashes(format_date($this->start_date, 'date_sort')) : ''; ?>";
 		var end_date = "<?php echo $this->end_date ? addslashes(format_date($this->end_date - 1, 'date_sort')) : ''; ?>";
 		// Location Defaults
-		var location = "<?php echo $this->location->guid; ?>";
+		var location = "<?php echo (int) $this->location->guid ?>";
 		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
 
 		var cur_defaults = {
@@ -94,7 +94,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				dataType: "html",
 				data: {"all_time": all_time, "start_date": start_date, "end_date": end_date},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the date form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the date form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == "")
@@ -135,7 +135,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				dataType: "html",
 				data: {"location": location, "descendents": descendents},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the location form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the location form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == "")
@@ -234,7 +234,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<tr <?php echo $class; ?>>
 				<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', ($tx_type == 'SA' ? 'sale/receipt' : 'return/receipt'), array('id' => $cur_tx->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($tx_type.$cur_tx->id); ?></a></td>
 				<td><?php echo format_date($cur_tx->p_cdate); ?></td>
-				<td><?php echo $cur_status; ?></td>
+				<td><?php echo htmlspecialchars($cur_status); ?></td>
 				<td><?php echo htmlspecialchars($cur_item['delivery']); ?></td>
 				<td><?php echo htmlspecialchars($cur_tx->group->name); ?></td>
 				<td><?php echo htmlspecialchars($cur_item['salesperson']->name); ?></td>

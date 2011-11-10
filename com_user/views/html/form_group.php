@@ -68,8 +68,8 @@ $pines->uploader->load();
 					var new_attribute = [{
 						key: null,
 						values: [
-							cur_attribute_name,
-							cur_attribute_value
+							pines.safe(cur_attribute_name),
+							pines.safe(cur_attribute_value)
 						]
 					}];
 					attributes_table.pgrid_add(new_attribute);
@@ -117,8 +117,8 @@ $pines->uploader->load();
 					double_click: true,
 					click: function(e, rows){
 						cur_condition = rows;
-						condition_dialog.find("input[name=cur_condition_type]").val(rows.pgrid_get_value(1));
-						condition_dialog.find("input[name=cur_condition_value]").val(rows.pgrid_get_value(2));
+						condition_dialog.find("input[name=cur_condition_type]").val(pines.unsafe(rows.pgrid_get_value(1)));
+						condition_dialog.find("input[name=cur_condition_value]").val(pines.unsafe(rows.pgrid_get_value(2)));
 						condition_dialog.dialog('open');
 					}
 				},
@@ -164,14 +164,14 @@ $pines->uploader->load();
 						var new_condition = [{
 							key: null,
 							values: [
-								cur_condition_type,
-								cur_condition_value
+								pines.safe(cur_condition_type),
+								pines.safe(cur_condition_value)
 							]
 						}];
 						conditions_table.pgrid_add(new_condition);
 					} else {
-						cur_condition.pgrid_set_value(1, cur_condition_type);
-						cur_condition.pgrid_set_value(2, cur_condition_value);
+						cur_condition.pgrid_set_value(1, pines.safe(cur_condition_type));
+						cur_condition.pgrid_set_value(2, pines.safe(cur_condition_value));
 					}
 					$(this).dialog('close');
 				}
@@ -302,7 +302,7 @@ $pines->uploader->load();
 						<?php
 						$pines->user_manager->group_sort($this->group_array, 'name');
 						foreach ($this->group_array as $cur_group) {
-							?><option value="<?php echo $cur_group->guid; ?>"<?php echo $cur_group->is($this->entity->parent) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars(str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"); ?></option><?php
+							?><option value="<?php echo (int) $cur_group->guid; ?>"<?php echo $cur_group->is($this->entity->parent) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars(str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"); ?></option><?php
 						} ?>
 					</select>
 				</label>
@@ -454,7 +454,7 @@ $pines->uploader->load();
 			<div id="p_muid_address_international" style="display: none;">
 				<div class="pf-element pf-full-width">
 					<label><span class="pf-label">Address</span>
-						<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo $this->entity->address_international; ?></textarea></span></label>
+						<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo htmlspecialchars($this->entity->address_international); ?></textarea></span></label>
 				</div>
 			</div>
 			<br class="pf-clearing" />
@@ -605,7 +605,7 @@ $pines->uploader->load();
 	<div class="pf-element pf-buttons">
 		<br />
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_user', 'listgroups')); ?>');" value="Cancel" />

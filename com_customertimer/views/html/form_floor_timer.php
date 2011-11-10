@@ -89,7 +89,7 @@ $pines->com_customer->load_customer_select();
 	pines(function(){
 		var station_layout = $("#p_muid_station_layout");
 		var station_floor = $("#p_muid_station_floor");
-		var floor_id = "<?php echo $this->entity->guid; ?>";
+		var floor_id = "<?php echo (int) $this->entity->guid; ?>";
 		var sel_station;
 
 		var stations = JSON.parse("<?php echo addslashes(json_encode($this->entity->stations)); ?>");
@@ -110,7 +110,7 @@ $pines->com_customer->load_customer_select();
 							data: {"id": customer, "floor": floor_id, "station": sel_station.id},
 							dataType: "json",
 							error: function(XMLHttpRequest, textStatus){
-								pines.error("An error occured while trying to log the user in:\n"+XMLHttpRequest.status+": "+textStatus);
+								pines.error("An error occured while trying to log the user in:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 							},
 							success: function(data){
 								if (!data) {
@@ -141,7 +141,7 @@ $pines->com_customer->load_customer_select();
 						data: {"id": sel_station.customer.guid, "floor": floor_id, "station": sel_station.id},
 						dataType: "json",
 						error: function(XMLHttpRequest, textStatus){
-							pines.error("An error occured while trying to log the user out:\n"+XMLHttpRequest.status+": "+textStatus);
+							pines.error("An error occured while trying to log the user out:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 						},
 						success: function(data){
 							if (!data) {
@@ -182,14 +182,14 @@ $pines->com_customer->load_customer_select();
 			// A dialog for managing a customer in a station.
 			sel_station = station;
 			var login_time = new Date(station.customer.login_time * 1000);
-			$("#p_muid_customer_action_customer_id").html(station.customer.guid);
-			$("#p_muid_customer_action_login_time").html(login_time.toLocaleString());
-			$("#p_muid_customer_action_points").html(station.customer.points);
-			$("#p_muid_customer_action_ses_minutes").html(station.customer.ses_minutes);
-			$("#p_muid_customer_action_ses_points").html(station.customer.ses_points);
-			$("#p_muid_customer_action_other_minutes").html(station.customer.other_minutes);
-			$("#p_muid_customer_action_other_points").html(station.customer.other_points);
-			$("#p_muid_customer_action_points_remain").html(station.customer.points_remain);
+			$("#p_muid_customer_action_customer_id").html(pines.safe(station.customer.guid));
+			$("#p_muid_customer_action_login_time").html(pines.safe(login_time.toLocaleString()));
+			$("#p_muid_customer_action_points").html(pines.safe(station.customer.points));
+			$("#p_muid_customer_action_ses_minutes").html(pines.safe(station.customer.ses_minutes));
+			$("#p_muid_customer_action_ses_points").html(pines.safe(station.customer.ses_points));
+			$("#p_muid_customer_action_other_minutes").html(pines.safe(station.customer.other_minutes));
+			$("#p_muid_customer_action_other_points").html(pines.safe(station.customer.other_points));
+			$("#p_muid_customer_action_points_remain").html(pines.safe(station.customer.points_remain));
 			$("#p_muid_customer_action_status").html(
 				station.customer.points_remain < 0 ?
 					"Overdrawn" :
@@ -200,7 +200,7 @@ $pines->com_customer->load_customer_select();
 							"OK"
 			);
 			$("#p_muid_customer_action")
-			.dialog("option", "title", "Station "+station.id+": "+station.customer.name)
+			.dialog("option", "title", "Station "+pines.safe(station.id)+": "+pines.safe(station.customer.name))
 			.dialog("open");
 		};
 		var insert_customer = function(station, customer){
@@ -221,8 +221,8 @@ $pines->com_customer->load_customer_select();
 		var update_customer = function(station, customer){
 			// Update the customer's info.
 			station.customer = customer;
-			$(".name", station.element).html(customer.name);
-			$(".points_remain", station.element).html(customer.points_remain);
+			$(".name", station.element).html(pines.safe(customer.name));
+			$(".points_remain", station.element).html(pines.safe(customer.points_remain));
 			if (customer.points_remain <= <?php echo (int) $pines->config->com_customertimer->level_critical; ?>) {
 				if (station.element.hasClass("ok"))
 					station.element.removeClass("ok");
@@ -320,7 +320,7 @@ $pines->com_customer->load_customer_select();
 					updating = false;
 				},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to refresh the status:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to refresh the status:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					worst_status = "ok";

@@ -71,7 +71,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->return_checklists as $return_checklist) { ?>
-		<tr title="<?php echo $return_checklist->guid; ?>">
+		<tr title="<?php echo (int) $return_checklist->guid ?>">
 			<td><?php echo htmlspecialchars($return_checklist->name); ?></td>
 			<td><?php echo $return_checklist->enabled ? 'Yes' : 'No'; ?></td>
 			<td><?php echo count($return_checklist->conditions); ?></td>

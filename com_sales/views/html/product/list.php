@@ -96,7 +96,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			$costs[] = '$'.$pines->com_sales->round($cur_vendor['cost'], true);
 		}
 	?>
-		<tr title="<?php echo $product->guid; ?>">
+		<tr title="<?php echo (int) $product->guid ?>">
 			<td><?php echo htmlspecialchars($product->sku); ?></td>
 			<td><?php echo htmlspecialchars($product->name); ?></td>
 			<td style="text-align: right;">$<?php echo htmlspecialchars($pines->com_sales->round($product->unit_price, true)); ?></td>

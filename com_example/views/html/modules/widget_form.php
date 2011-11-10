@@ -19,7 +19,7 @@ $pines->entity_manager->sort($widgets, 'name');
 		<label><span class="pf-label">Widget</span>
 			<select class="pf-field ui-widget-content ui-corner-all" name="id">
 				<?php foreach ($widgets as $cur_widget) { ?>
-				<option value="<?php echo $cur_widget->guid; ?>"><?php echo htmlspecialchars($cur_widget->name); ?></option>
+				<option value="<?php echo (int) $cur_widget->guid ?>"><?php echo htmlspecialchars($cur_widget->name); ?></option>
 				<?php } ?>
 			</select></label>
 	</div>

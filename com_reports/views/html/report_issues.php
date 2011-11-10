@@ -12,7 +12,7 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 
-$this->title = 'Employee Issues ['.$this->location->name.']';
+$this->title = 'Employee Issues ['.htmlspecialchars($this->location->name).']';
 $pines->icons->load();
 $pines->com_jstree->load();
 $pines->com_pgrid->load();
@@ -55,7 +55,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var start_date = "<?php echo $this->start_date ? addslashes(format_date($this->start_date, 'date_sort')) : ''; ?>";
 		var end_date = "<?php echo $this->end_date ? addslashes(format_date($this->end_date - 1, 'date_sort')) : ''; ?>";
 		// Location Defaults
-		var location = "<?php echo $this->location->guid; ?>";
+		var location = "<?php echo (int) $this->location->guid ?>";
 		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
 
 		var state_xhr;
@@ -98,7 +98,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				dataType: "html",
 				data: {"all_time": all_time, "start_date": start_date, "end_date": end_date},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the date form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the date form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == "")
@@ -139,7 +139,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				dataType: "html",
 				data: {"location": location, "descendents": descendents},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the location form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the location form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == "")
@@ -230,7 +230,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				dataType: "html",
 				data: {"id": id, "status": status, "comments": comments},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to process this issue:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to process this issue:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == 'Error') {
@@ -261,7 +261,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 		<?php foreach ($this->issues as $cur_issue) { ?>
-		<tr title="<?php echo $cur_issue->employee->guid; ?>" onmouseover="p_muid_notice.com_reports_issue_update('&lt;ul&gt;&lt;li&gt;<?php echo htmlspecialchars(implode($cur_issue->comments, '</li><li>')); ?>&lt;/li&gt;&lt;/ul&gt;');">
+		<tr title="<?php echo (int) $cur_issue->employee->guid ?>" onmouseover="p_muid_notice.com_reports_issue_update('&lt;ul&gt;&lt;li&gt;'+<?php echo htmlspecialchars(json_encode(implode(array_map('htmlspecialchars', $cur_issue->comments), '</li><li>')), ENT_QUOTES); ?>+'&lt;/li&gt;&lt;/ul&gt;');">
 			<td><?php echo format_date($cur_issue->date, 'date_sort'); ?></td>
 			<td><?php echo htmlspecialchars($cur_issue->location->name); ?></td>
 			<td><?php echo htmlspecialchars($cur_issue->employee->name); ?></td>
@@ -273,11 +273,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><div class="p_muid_issue_actions">
 				<?php if (gatekeeper('com_hrm/resolveissue')) {
 					if ($cur_issue->status != 'resolved') { ?>
-					<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_reports_process_issue('<?php echo $cur_issue->guid; ?>', 'resolved');" title="Resolve"><span class="p_muid_btn picon picon-flag-yellow"></span></button>
+					<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_reports_process_issue('<?php echo (int) $cur_issue->guid ?>', 'resolved');" title="Resolve"><span class="p_muid_btn picon picon-flag-yellow"></span></button>
 					<?php } else { ?>
-					<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_reports_process_issue('<?php echo $cur_issue->guid; ?>', 'unresolved');" title="Unresolved"><span class="p_muid_btn picon picon-flag-red"></span></button>
+					<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_reports_process_issue('<?php echo (int) $cur_issue->guid ?>', 'unresolved');" title="Unresolved"><span class="p_muid_btn picon picon-flag-red"></span></button>
 					<?php } ?>
-					<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_reports_process_issue('<?php echo $cur_issue->guid; ?>', 'delete');" title="Remove"><span class="p_muid_btn picon picon-edit-delete"></span></button>
+					<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_reports_process_issue('<?php echo (int) $cur_issue->guid ?>', 'delete');" title="Remove"><span class="p_muid_btn picon picon-edit-delete"></span></button>
 				<?php } ?>
 				</div></td>
 		</tr>

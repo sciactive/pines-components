@@ -81,9 +81,9 @@ $pines->com_ptags->load();
 						click: function(e, rows){
 							cur_vendor = rows;
 							available_vendors_table.pgrid_get_all_rows().filter('[title='+cur_vendor.attr('title')+']').pgrid_select_rows();
-							vendor_dialog.find("input[name=cur_vendor_sku]").val(cur_vendor.pgrid_get_value(2));
-							vendor_dialog.find("input[name=cur_vendor_cost]").val(cur_vendor.pgrid_get_value(3));
-							vendor_dialog.find("input[name=cur_vendor_link]").val(cur_vendor.pgrid_get_value(4).replace(/.*?>(.*)?<.*/i, '$1'));
+							vendor_dialog.find("input[name=cur_vendor_sku]").val(pines.unsafe(cur_vendor.pgrid_get_value(2)));
+							vendor_dialog.find("input[name=cur_vendor_cost]").val(pines.unsafe(cur_vendor.pgrid_get_value(3)));
+							vendor_dialog.find("input[name=cur_vendor_link]").val(pines.unsafe(cur_vendor.pgrid_get_value(4).replace(/.*?>(.*)?<.*/i, '$1')));
 							vendor_dialog.dialog('open');
 						}
 					},
@@ -127,23 +127,23 @@ $pines->com_ptags->load();
 							alert("Please provide both a SKU and a cost for this vendor.");
 							return;
 						}
-						cur_vendor_link = '<a href="'+cur_vendor_link+'" onclick="window.open(this.href); return false;">'+cur_vendor_link+'</a>';
+						cur_vendor_link = '<a href="'+pines.safe(cur_vendor_link)+'" onclick="window.open(this.href); return false;">'+pines.safe(cur_vendor_link)+'</a>';
 						if (cur_vendor == null) {
 							var new_vendor = [{
 								key: cur_vendor_entity[0].key,
 								values: [
-									cur_vendor_entity[0].values[0],
-									cur_vendor_sku,
-									cur_vendor_cost,
+									pines.safe(cur_vendor_entity[0].values[0]),
+									pines.safe(cur_vendor_sku),
+									pines.safe(cur_vendor_cost),
 									cur_vendor_link
 								]
 							}];
 							vendors_table.pgrid_add(new_vendor);
 						} else {
 							cur_vendor.attr('title', cur_vendor_entity[0].key);
-							cur_vendor.pgrid_set_value(1, cur_vendor_entity[0].values[0]);
-							cur_vendor.pgrid_set_value(2, cur_vendor_sku);
-							cur_vendor.pgrid_set_value(3, cur_vendor_cost);
+							cur_vendor.pgrid_set_value(1, pines.safe(cur_vendor_entity[0].values[0]));
+							cur_vendor.pgrid_set_value(2, pines.safe(cur_vendor_sku));
+							cur_vendor.pgrid_set_value(3, pines.safe(cur_vendor_cost));
 							cur_vendor.pgrid_set_value(4, cur_vendor_link);
 						}
 						$(this).dialog('close');
@@ -215,7 +215,7 @@ $pines->com_ptags->load();
 					<select class="pf-field ui-widget-content ui-corner-all" name="manufacturer">
 						<option value="null">-- None --</option>
 						<?php foreach ($this->manufacturers as $cur_manufacturer) { ?>
-						<option value="<?php echo $cur_manufacturer->guid; ?>"<?php echo $this->entity->manufacturer->guid == $cur_manufacturer->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_manufacturer->name); ?></option>
+						<option value="<?php echo (int) $cur_manufacturer->guid; ?>"<?php echo $this->entity->manufacturer->guid == $cur_manufacturer->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_manufacturer->name); ?></option>
 						<?php } ?>
 					</select></label>
 			</div>
@@ -226,15 +226,15 @@ $pines->com_ptags->load();
 			<div class="pf-element pf-full-width">
 				<label><span class="pf-label">Receipt Description</span>
 					<span class="pf-note">A short description to be shown on receipts.</span>
-					<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="receipt_description"><?php echo $this->entity->receipt_description; ?></textarea></span></label>
+					<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="receipt_description"><?php echo htmlspecialchars($this->entity->receipt_description); ?></textarea></span></label>
 			</div>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Short Description</span><br />
-				<textarea rows="3" cols="35" class="peditor-simple" style="width: 100%;" name="short_description"><?php echo $this->entity->short_description; ?></textarea>
+				<textarea rows="3" cols="35" class="peditor-simple" style="width: 100%;" name="short_description"><?php echo htmlspecialchars($this->entity->short_description); ?></textarea>
 			</div>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Description</span><br />
-				<textarea rows="9" cols="35" class="peditor" style="width: 100%; height: 400px;" name="description"><?php echo $this->entity->description; ?></textarea>
+				<textarea rows="9" cols="35" class="peditor" style="width: 100%; height: 400px;" name="description"><?php echo htmlspecialchars($this->entity->description); ?></textarea>
 			</div>
 			<br class="pf-clearing" />
 		</div>
@@ -284,9 +284,9 @@ $pines->com_ptags->load();
 						<?php
 						$category_guids = $this->entity->get_categories_guid();
 						foreach($this->categories as $cur_category) { ?>
-						<tr title="<?php echo $cur_category->guid; ?>" class="<?php echo $cur_category->children ? 'parent ' : ''; ?><?php echo isset($cur_category->parent) ? "child ch_{$cur_category->parent->guid} " : ''; ?>">
+						<tr title="<?php echo (int) $cur_category->guid; ?>" class="<?php echo $cur_category->children ? 'parent ' : ''; ?><?php echo isset($cur_category->parent) ? htmlspecialchars("child ch_{$cur_category->parent->guid} ") : ''; ?>">
 							<td><?php echo isset($cur_category->parent) ? $cur_category->array_search($cur_category->parent->children) + 1 : '0' ; ?></td>
-							<td><input type="checkbox" name="categories[]" value="<?php echo $cur_category->guid; ?>" <?php echo in_array($cur_category->guid, $category_guids) ? 'checked="checked" ' : ''; ?>/></td>
+							<td><input type="checkbox" name="categories[]" value="<?php echo (int) $cur_category->guid; ?>" <?php echo in_array($cur_category->guid, $category_guids) ? 'checked="checked" ' : ''; ?>/></td>
 							<td><?php echo htmlspecialchars($cur_category->name); ?></td>
 							<td><?php echo count($cur_category->products); ?></td>
 						</tr>
@@ -317,7 +317,7 @@ $pines->com_ptags->load();
 					
 					var add_image = function(image){
 						last_image = image;
-						$("<li class=\"ui-state-default ui-corner-all\"><img alt=\""+image.replace(/.*\//, '')+"\" src=\""+image+"\" /><p>Click to edit description...</p></li>").appendTo($("#p_muid_sortable"));
+						$("<li class=\"ui-state-default ui-corner-all\"><img alt=\""+pines.safe(image.replace(/.*\//, ''))+"\" src=\""+pines.safe(image)+"\" /><p>Click to edit description...</p></li>").appendTo($("#p_muid_sortable"));
 						update_images();
 					};
 					var auto_add = function(){
@@ -360,9 +360,9 @@ $pines->com_ptags->load();
 					.delegate("li p", "click", function(){
 						var cur_alt = $(this);
 						var desc = cur_alt.text();
-						$("<textarea cols=\"4\" rows=\"3\" style=\"width: 100%\" class=\"ui-widget-content ui-corner-all\">"+desc+"</textarea>")
+						$("<textarea cols=\"4\" rows=\"3\" style=\"width: 100%\" class=\"ui-widget-content ui-corner-all\">"+pines.safe(desc)+"</textarea>")
 						.blur(function(){
-							cur_alt.insertAfter(this).html($(this).remove().val());
+							cur_alt.insertAfter(this).html(pines.safe($(this).remove().val()));
 							update_images();
 						})
 						.insertAfter(cur_alt)
@@ -482,7 +482,7 @@ $pines->com_ptags->load();
 							</thead>
 							<tbody>
 								<?php if (is_array($this->entity->vendors)) { foreach ($this->entity->vendors as $cur_vendor) { ?>
-								<tr title="<?php echo $cur_vendor['entity']->guid; ?>">
+								<tr title="<?php echo (int) $cur_vendor['entity']->guid; ?>">
 									<td><?php echo htmlspecialchars($cur_vendor['entity']->name); ?></td>
 									<td><?php echo htmlspecialchars($cur_vendor['sku']); ?></td>
 									<td><?php echo htmlspecialchars($cur_vendor['cost']); ?></td>
@@ -510,7 +510,7 @@ $pines->com_ptags->load();
 						</thead>
 						<tbody>
 							<?php foreach ($this->vendors as $cur_vendor) { ?>
-							<tr title="<?php echo $cur_vendor->guid; ?>">
+							<tr title="<?php echo (int) $cur_vendor->guid; ?>">
 								<td><?php echo htmlspecialchars($cur_vendor->name); ?></td>
 								<td><?php echo htmlspecialchars($cur_vendor->email); ?></td>
 								<td><?php echo format_phone($cur_vendor->phone_work); ?></td>
@@ -599,7 +599,7 @@ $pines->com_ptags->load();
 					<span class="pf-note">Hold Ctrl (Command on Mac) to select multiple.</span>
 					<select class="pf-field ui-widget-content ui-corner-all" name="additional_tax_fees[]" size="6" multiple="multiple">
 						<?php foreach ($this->tax_fees as $cur_tax_fee) { ?>
-						<option value="<?php echo $cur_tax_fee->guid; ?>"<?php echo ($cur_tax_fee->in_array($this->entity->additional_tax_fees)) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_tax_fee->name); ?></option>
+						<option value="<?php echo (int) $cur_tax_fee->guid; ?>"<?php echo ($cur_tax_fee->in_array($this->entity->additional_tax_fees)) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_tax_fee->name); ?></option>
 						<?php } ?>
 					</select></label>
 			</div>
@@ -609,7 +609,7 @@ $pines->com_ptags->load();
 					<span class="pf-note">Hold Ctrl (Command on Mac) to select multiple.</span>
 					<select class="pf-field ui-widget-content ui-corner-all" name="return_checklists[]" size="6" multiple="multiple">
 						<?php foreach ($this->return_checklists as $cur_return_checklist) { ?>
-						<option value="<?php echo $cur_return_checklist->guid; ?>"<?php echo ($cur_return_checklist->in_array($this->entity->return_checklists)) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_return_checklist->name); ?></option>
+						<option value="<?php echo (int) $cur_return_checklist->guid; ?>"<?php echo ($cur_return_checklist->in_array($this->entity->return_checklists)) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_return_checklist->name); ?></option>
 						<?php } ?>
 					</select></label>
 			</div>
@@ -713,9 +713,9 @@ $pines->com_ptags->load();
 							double_click: true,
 							click: function(e, rows){
 								cur_commission = rows;
-								commission_dialog.find("select[name=cur_commission_group]").val(rows.pgrid_get_value(1));
-								commission_dialog.find("select[name=cur_commission_type]").val(rows.pgrid_get_value(2));
-								commission_dialog.find("input[name=cur_commission_amount]").val(rows.pgrid_get_value(3));
+								commission_dialog.find("select[name=cur_commission_group]").val(pines.unsafe(rows.pgrid_get_value(1)));
+								commission_dialog.find("select[name=cur_commission_type]").val(pines.unsafe(rows.pgrid_get_value(2)));
+								commission_dialog.find("input[name=cur_commission_amount]").val(pines.unsafe(rows.pgrid_get_value(3)));
 								commission_dialog.dialog('open');
 							}
 						},
@@ -751,16 +751,16 @@ $pines->com_ptags->load();
 								var new_commission = [{
 									key: null,
 									values: [
-										cur_commission_group,
-										cur_commission_type,
-										cur_commission_amount
+										pines.safe(cur_commission_group),
+										pines.safe(cur_commission_type),
+										pines.safe(cur_commission_amount)
 									]
 								}];
 								commissions_table.pgrid_add(new_commission);
 							} else {
-								cur_commission.pgrid_set_value(1, cur_commission_group);
-								cur_commission.pgrid_set_value(2, cur_commission_type);
-								cur_commission.pgrid_set_value(3, cur_commission_amount);
+								cur_commission.pgrid_set_value(1, pines.safe(cur_commission_group));
+								cur_commission.pgrid_set_value(2, pines.safe(cur_commission_type));
+								cur_commission.pgrid_set_value(3, pines.safe(cur_commission_amount));
 							}
 							$(this).dialog('close');
 						}
@@ -941,9 +941,9 @@ $pines->com_ptags->load();
 			<fieldset class="pf-group">
 				<legend>Category Specs</legend>
 				<?php foreach($this->categories as $cur_category) { ?>
-				<div class="spec" id="p_muid_specs_<?php echo $cur_category->guid; ?>"<?php echo in_array($cur_category->guid, $category_guids) ? '' : ' style="display: none;"'; ?>>
+				<div class="spec" id="p_muid_specs_<?php echo (int) $cur_category->guid; ?>"<?php echo in_array($cur_category->guid, $category_guids) ? '' : ' style="display: none;"'; ?>>
 					<?php if (isset($cur_category->parent)) { ?>
-					<div class="parent" style="display: none;"><?php echo $cur_category->parent->guid; ?></div>
+					<div class="parent" style="display: none;"><?php echo (int) $cur_category->parent->guid; ?></div>
 					<?php } ?>
 					<?php if (!empty($cur_category->specs)) { ?>
 					<div class="pf-element pf-heading">
@@ -1000,7 +1000,7 @@ $pines->com_ptags->load();
 	<div class="pf-element pf-buttons">
 		<br />
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'product/list')); ?>');" value="Cancel" />

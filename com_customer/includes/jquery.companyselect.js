@@ -32,12 +32,12 @@ all.each(function(){
 					}
 					response($.map(data, function(item) {
 						return {
-							"id": item.guid,
-							"label": item.name,
+							"id": pines.safe(item.guid),
+							"label": pines.safe(item.name),
 							"value": item.guid+": "+item.name,
-							"desc": "<em><pre>"+(item.email ? " "+item.email : "")+
-								(item.phone ? " "+item.phone : "")+
-								(item.website ? " "+item.website : "")+"</pre></em>"
+							"desc": "<em><pre>"+(item.email ? " "+pines.safe(item.email) : "")+
+								(item.phone ? " "+pines.safe(item.phone) : "")+
+								(item.website ? " "+pines.safe(item.website) : "")+"</pre></em>"
 						};
 					}));
 				}

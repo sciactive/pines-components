@@ -26,12 +26,12 @@ if (!isset($interaction->sale->guid)) {
 	$sale_title = '';
 	$sale_url = '';
 } else {
-	$sale_title = (count($interaction->sale->products) == 1) ? htmlspecialchars($interaction->sale->products[0]['entity']->name) : count($interaction->sale->products).' items';
+	$sale_title = (count($interaction->sale->products) == 1) ? $interaction->sale->products[0]['entity']->name : count($interaction->sale->products).' items';
 	$sale_url = pines_url('com_sales', 'sale/receipt', array('id' => $interaction->sale->guid));
 }
 
 if ($interaction->type == 'Email'){
-	$contact_info = htmlspecialchars($interaction->customer->email);
+	$contact_info = $interaction->customer->email;
 } elseif (!empty($interaction->customer->phone_cell)) {
 	$contact_info = format_phone($interaction->customer->phone_cell);
 } elseif (!empty($interaction->customer->phone_home)) {

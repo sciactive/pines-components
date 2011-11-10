@@ -41,7 +41,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var start_date = "<?php echo $this->start_date ? addslashes(format_date($this->start_date, 'date_sort')) : ''; ?>";
 		var end_date = "<?php echo $this->end_date ? addslashes(format_date($this->end_date - 1, 'date_sort')) : ''; ?>";
 		// Location Defaults
-		var location = "<?php echo $this->location->guid; ?>";
+		var location = "<?php echo (int) $this->location->guid ?>";
 		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
 
 		var state_xhr;
@@ -113,7 +113,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				dataType: "html",
 				data: {"all_time": all_time, "start_date": start_date, "end_date": end_date},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the date form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the date form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == "")
@@ -154,7 +154,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				dataType: "html",
 				data: {"location": location, "descendents": descendents},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the location form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the location form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == "")
@@ -193,7 +193,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				dataType: "html",
 				data: {"id": sale_id},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the override form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the override form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == "")
@@ -225,7 +225,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 										"user": form.find(":input[name=user]").val()
 									},
 									error: function(XMLHttpRequest, textStatus){
-										pines.error("An error occured while trying to override the sale:\n"+XMLHttpRequest.status+": "+textStatus);
+										pines.error("An error occured while trying to override the sale:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 									},
 									success: function(data){
 										if (data == "false")
@@ -258,18 +258,19 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					"type": "sale"
 				},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the salesrep form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the salesrep form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == "")
 						return;
-					var form = $("<div title=\"Swap Salesperson [Sale: "+sale_id+"]\"></div>").html(data+"<br />");
+					var form = $("<div title=\"Swap Salesperson [Sale: "+pines.safe(sale_id)+"]\"></div>");
 					form.dialog({
 						bgiframe: true,
 						autoOpen: true,
 						width: 425,
 						modal: true,
 						open: function() {
+							form.html(data+"<br />");
 							$(".salesperson_box", form).employeeselect();
 						},
 						close: function(){
@@ -297,7 +298,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 											"salesperson": salesperson
 										},
 										error: function(XMLHttpRequest, textStatus){
-											pines.error("An error occured while trying to swap the salesperson:\n"+XMLHttpRequest.status+": "+textStatus);
+											pines.error("An error occured while trying to swap the salesperson:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 										},
 										success: function(data){
 											if (data == "false")
@@ -320,12 +321,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				dataType: "html",
 				data: {"id": sale_id},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the swap form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the swap form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == "")
 						return;
-					var form = $("<div title=\"Swap Item [Sale: "+sale_id+"]\"></div>");
+					var form = $("<div title=\"Swap Item [Sale: "+pines.safe(sale_id)+"]\"></div>");
 					form.dialog({
 						bgiframe: true,
 						autoOpen: true,
@@ -370,18 +371,19 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				dataType: "html",
 				data: {"id": guid},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the change product form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the change product form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == "")
 						return;
-					var form = $("<div title=\"Change Product [Sale: "+sale_id+"]\"></div>").html(data+"<br />");
+					var form = $("<div title=\"Change Product [Sale: "+pines.safe(sale_id)+"]\"></div>");
 					form.dialog({
 						bgiframe: true,
 						autoOpen: true,
 						width: 425,
 						modal: true,
 						open: function() {
+							form.html(data+"<br />");
 							$(".product_box", form).productselect();
 						},
 						close: function(){
@@ -434,7 +436,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->sales as $sale) { ?>
-		<tr title="<?php echo $sale->guid; ?>">
+		<tr title="<?php echo (int) $sale->guid ?>">
 			<td><?php echo htmlspecialchars($sale->id); ?></td>
 			<td><?php echo format_date($sale->p_cdate); ?></td>
 			<td><?php echo htmlspecialchars(ucwords($sale->status)); ?></td>

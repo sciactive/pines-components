@@ -15,7 +15,7 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Company Schedule [' . (isset($this->employee) ? $this->employee->name  : $this->location->name) . ']';
+$this->title = 'Company Schedule [' . htmlspecialchars(isset($this->employee) ? $this->employee->name  : $this->location->name) . ']';
 $timezone = $_SESSION['user']->get_timezone();
 ?>
 <style type="text/css" >
@@ -169,7 +169,7 @@ $timezone = $_SESSION['user']->get_timezone();
 				pines.com_calendar_save_calendar();
 			},
 			eventMouseover: function(event,jsEvent,view) {
-				help.pnotify({ pnotify_title: event.title, pnotify_text: event.info });
+				help.pnotify({ pnotify_title: pines.safe(event.title), pnotify_text: pines.safe(event.info) });
 				help.pnotify_display();
 			},
 			eventMouseout: function(event,jsEvent,view) {
@@ -185,8 +185,8 @@ $timezone = $_SESSION['user']->get_timezone();
 						view_type: view.name,
 						start: view.start.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1'),
 						end: view.end.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1'),
-						location: "<?php echo $this->location->guid; ?>",
-						employee: "<?php echo $this->employee->guid; ?>",
+						location: "<?php echo (int) $this->location->guid ?>",
+						employee: "<?php echo (int) $this->employee->guid ?>",
 						descendents: <?php echo $this->descendents ? 'true' : 'false'; ?>,
 						filter: <?php echo json_encode($this->filter); ?>
 					});

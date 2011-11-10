@@ -85,8 +85,8 @@ $pines->com_pgrid->load();
 					var new_attribute = [{
 						key: null,
 						values: [
-							cur_attribute_name,
-							cur_attribute_value
+							pines.safe(cur_attribute_name),
+							pines.safe(cur_attribute_value)
 						]
 					}];
 					attributes_table.pgrid_add(new_attribute);
@@ -224,7 +224,7 @@ $pines->com_pgrid->load();
 			</div>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Description</span><br />
-				<textarea rows="3" cols="35" class="pf-field peditor" style="width: 100%;" name="description"><?php echo $this->entity->description; ?></textarea>
+				<textarea rows="3" cols="35" class="pf-field peditor" style="width: 100%;" name="description"><?php echo htmlspecialchars($this->entity->description); ?></textarea>
 			</div>
 			<br class="pf-clearing" />
 		</div>
@@ -332,7 +332,7 @@ $pines->com_pgrid->load();
 	<div class="pf-element pf-buttons">
 		<br />
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_hrm', 'employee/list', array('employed' => isset($this->entity->terminated) ? 'false' : 'true'))); ?>');" value="Cancel" />

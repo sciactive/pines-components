@@ -16,10 +16,11 @@ pines(function(){
 			},
 			error: function(XMLHttpRequest, textStatus){
 				notice.pnotify_remove();
-				pines.error("An error occured while trying to load login page:\n"+XMLHttpRequest.status+": "+textStatus);
+				pines.error("An error occured while trying to load login page:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 			},
 			success: function(data){
 				notice.pnotify_remove();
+				pines.pause();
 				var login_dialog = $("<div />").html(data+"<br />").dialog({
 					modal: true,
 					resizable: false,
@@ -37,7 +38,7 @@ pines(function(){
 								dataType: "json",
 								data: login_dialog.find(".com_timeoutnotice_login_form").serialize(),
 								error: function(XMLHttpRequest, textStatus){
-									pines.error("An error occured while trying to login:\n"+XMLHttpRequest.status+": "+textStatus);
+									pines.error("An error occured while trying to login:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 								},
 								success: function(data){
 									if (!data) {
@@ -50,6 +51,7 @@ pines(function(){
 						}
 					}
 				});
+				pines.play();
 				login_dialog.find(".already_loggedin").click(function(){
 					login_dialog.dialog("close").remove();
 				}).end().find(".com_timeoutnotice_login_form").submit(function(){
@@ -126,7 +128,7 @@ pines(function(){
 									type: "GET",
 									dataType: "json",
 									error: function(XMLHttpRequest, textStatus){
-										pines.error("An error occured while trying to extend your session:\n"+XMLHttpRequest.status+": "+textStatus);
+										pines.error("An error occured while trying to extend your session:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 									},
 									success: function(data){
 										session_notice.pnotify_remove();

@@ -11,7 +11,7 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = "Welcome to {$pines->config->system_name}";
+$this->title = 'Welcome to '.htmlspecialchars($pines->config->system_name);
 $this->note = 'You are now registered and logged in.';
 ?>
 <div>

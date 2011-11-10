@@ -74,7 +74,7 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 						loader.pnotify_remove();
 					},
 					error: function(XMLHttpRequest, textStatus){
-						pines.error("An error occured while trying to lookup the stock:\n"+XMLHttpRequest.status+": "+textStatus);
+						pines.error("An error occured while trying to lookup the stock:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 					},
 					success: function(data){
 						if (!data) {
@@ -89,7 +89,7 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 							alert("Only "+data.length+" items were found that matched your query.");
 						var entries = current_item.find(".entries");
 						$.each(data, function(i, entry){
-							entries.append("<div class=\"ui-widget-content ui-corner-all entry\"><a href=\"javascript:void(0);\" class=\"remove ui-state-default ui-corner-all\">X</a><div>Location: "+entry.location_name+"</div><span class=\"location\" style=\"display: none\">"+entry.location+"</span><span class=\"product\" style=\"display: none\">"+entry.product+"</span><div"+(entry.serial ? "" : " style=\"display: none\"")+">Serial: <span class=\"serial\">"+(entry.serial ? entry.serial : "")+"</span></div></div>");
+							entries.append("<div class=\"ui-widget-content ui-corner-all entry\"><a href=\"javascript:void(0);\" class=\"remove ui-state-default ui-corner-all\">X</a><div>Location: "+pines.safe(entry.location_name)+"</div><span class=\"location\" style=\"display: none\">"+pines.safe(entry.location)+"</span><span class=\"product\" style=\"display: none\">"+pines.safe(entry.product)+"</span><div"+(entry.serial ? "" : " style=\"display: none\"")+">Serial: <span class=\"serial\">"+(entry.serial ? pines.safe(entry.serial) : "")+"</span></div></div>");
 						});
 						refresh_entries();
 					}

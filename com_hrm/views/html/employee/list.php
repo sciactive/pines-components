@@ -181,9 +181,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						employees += this.key;
 					});
 					if (rows.length == 1)
-						rehire_dialog.find("div.dialog_title").html('<h1>'+rows.pgrid_get_value(3)+'</h1>');
+						rehire_dialog.find("div.dialog_title").html('<h1>'+pines.safe(rows.pgrid_get_value(3))+'</h1>');
 					else
-						rehire_dialog.find("div.dialog_title").html('<h1>'+rows.length+' Employees</h1>');
+						rehire_dialog.find("div.dialog_title").html('<h1>'+pines.safe(rows.length)+' Employees</h1>');
 					rehire_dialog.dialog("open");
 					}},
 				<?php } else { ?>
@@ -193,7 +193,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						type: "POST",
 						dataType: "html",
 						error: function(XMLHttpRequest, textStatus){
-							pines.error("An error occured while trying to retrieve the user select form:\n"+XMLHttpRequest.status+": "+textStatus);
+							pines.error("An error occured while trying to retrieve the user select form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 						},
 						success: function(data){
 							if (data == "")
@@ -233,9 +233,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						employees += this.key;
 					});
 					if (rows.length == 1)
-						bonus_dialog.find("div.dialog_title").html('<h1>'+rows.pgrid_get_value(3)+'</h1>');
+						bonus_dialog.find("div.dialog_title").html('<h1>'+pines.safe(rows.pgrid_get_value(3))+'</h1>');
 					else
-						bonus_dialog.find("div.dialog_title").html('<h1>'+rows.length+' Employees</h1>');
+						bonus_dialog.find("div.dialog_title").html('<h1>'+pines.safe(rows.length)+' Employees</h1>');
 					bonus_dialog.dialog("open");
 				}},
 				<?php } if (gatekeeper('com_hrm/editadjustment')) { ?>
@@ -247,9 +247,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						employees += this.key;
 					});
 					if (rows.length == 1)
-						adjustment_dialog.find("div.dialog_title").html('<h1>'+rows.pgrid_get_value(3)+'</h1>');
+						adjustment_dialog.find("div.dialog_title").html('<h1>'+pines.safe(rows.pgrid_get_value(3))+'</h1>');
 					else
-						adjustment_dialog.find("div.dialog_title").html('<h1>'+rows.length+' Employees</h1>');
+						adjustment_dialog.find("div.dialog_title").html('<h1>'+pines.safe(rows.length)+' Employees</h1>');
 					adjustment_dialog.dialog("open");
 				}},
 				<?php } if (gatekeeper('com_hrm/fileissue')) { ?>
@@ -261,9 +261,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						employees += this.key;
 					});
 					if (rows.length == 1)
-						issue_dialog.find("div.dialog_title").html('<h1>'+rows.pgrid_get_value(3)+'</h1>');
+						issue_dialog.find("div.dialog_title").html('<h1>'+pines.safe(rows.pgrid_get_value(3))+'</h1>');
 					else
-						issue_dialog.find("div.dialog_title").html('<h1>'+rows.length+' Employees</h1>');
+						issue_dialog.find("div.dialog_title").html('<h1>'+pines.safe(rows.length)+' Employees</h1>');
 					issue_dialog.dialog("open");
 				}},
 				<?php } if (gatekeeper('com_hrm/removeemployee') && $this->employed) { ?>
@@ -275,9 +275,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						employees += this.key;
 					});
 					if (rows.length == 1)
-						terminate_dialog.find("div.dialog_title").html('<h1>'+rows.pgrid_get_value(3)+'</h1>');
+						terminate_dialog.find("div.dialog_title").html('<h1>'+pines.safe(rows.pgrid_get_value(3))+'</h1>');
 					else
-						terminate_dialog.find("div.dialog_title").html('<h1>'+rows.length+' Employees</h1>');
+						terminate_dialog.find("div.dialog_title").html('<h1>'+pines.safe(rows.length)+' Employees</h1>');
 					terminate_dialog.dialog("open");
 				}},
 				<?php } if (gatekeeper('com_hrm/editbonus')) { ?>
@@ -294,7 +294,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						type: "POST",
 						dataType: "html",
 						error: function(XMLHttpRequest, textStatus){
-							pines.error("An error occured while trying to retrieve the time off form:\n"+XMLHttpRequest.status+": "+textStatus);
+							pines.error("An error occured while trying to retrieve the time off form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 						},
 						success: function(data){
 							if (data == "")
@@ -359,8 +359,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->employees as $employee) { ?>
-		<tr title="<?php echo $employee->guid; ?>">
-			<td><?php echo $employee->guid; ?></td>
+		<tr title="<?php echo (int) $employee->guid ?>">
+			<td><?php echo (int) $employee->guid ?></td>
 			<td><?php echo htmlspecialchars($employee->username); ?></td>
 			<td><?php echo htmlspecialchars($employee->name); ?></td>
 			<td><?php echo htmlspecialchars($employee->email); ?></td>

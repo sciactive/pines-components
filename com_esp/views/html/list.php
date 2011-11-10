@@ -122,9 +122,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						disposal_id += this.key;
 					});
 					if (rows.length == 1)
-						disposal_dialog.find("div.disposal_title").html('<h1>['+rows.pgrid_get_value(1)+']</h1>');
+						disposal_dialog.find("div.disposal_title").html('<h1>['+pines.safe(rows.pgrid_get_value(1))+']</h1>');
 					else
-						disposal_dialog.find("div.disposal_title").html('<h1>'+rows.length+' ESPs</h1>');
+						disposal_dialog.find("div.disposal_title").html('<h1>'+pines.safe(rows.length)+' ESPs</h1>');
 					disposal_dialog.dialog("open");
 				}},
 				<?php } if (gatekeeper('com_esp/printplan')) { ?>
@@ -174,12 +174,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				dataType: "html",
 				data: {"id": esp_id},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the swap form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the swap form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == "")
 						return;
-					var form = $("<div title=\"Swap Item [ESP: "+esp_id+"]\"></div>");
+					var form = $("<div title=\"Swap Item [ESP: "+pines.safe(esp_id)+"]\"></div>");
 					form.dialog({
 						bgiframe: true,
 						autoOpen: true,
@@ -237,7 +237,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach ($this->plans as $plan) { ?>
-		<tr title="<?php echo $plan->guid; ?>">
+		<tr title="<?php echo (int) $plan->guid ?>">
 			<td>ESP<?php echo htmlspecialchars($plan->id); ?></td>
 			<td><?php echo htmlspecialchars($plan->card->product->name); ?></td>
 			<td><?php echo htmlspecialchars($plan->card->serial); ?></td>

@@ -82,11 +82,11 @@ $this->title = 'Payment Options';
 		<?php if ($this->review_form) { ?>
 		<div class="pf-element pf-full-width">
 			<span class="pf-label">Order Comments</span>
-			<textarea class="pf-field ui-widget-content ui-corner-all" rows="1" cols="35" name="comments"><?php echo $this->entity->comments; ?></textarea>
+			<textarea class="pf-field ui-widget-content ui-corner-all" rows="1" cols="35" name="comments"><?php echo htmlspecialchars($this->entity->comments); ?></textarea>
 		</div>
 		<?php } ?>
 		<div class="pf-element pf-buttons">
-			<input type="hidden" name="com_storefront_payment_id" value="<?php echo $cur_payment_type->guid; ?>" />
+			<input type="hidden" name="com_storefront_payment_id" value="<?php echo (int) $cur_payment_type->guid ?>" />
 			<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" id="p_muid_submit" type="submit" value="<?php echo $this->review_form ? htmlspecialchars($pines->config->com_storefront->complete_order_text) : 'Continue'; ?>" />
 		</div>
 	</form>
@@ -101,7 +101,7 @@ $this->title = 'Payment Options';
 					dataType: "html",
 					data: {"name": payment_data.processing_type},
 					error: function(XMLHttpRequest, textStatus){
-						pines.error("An error occured while trying to retrieve the data form:\n"+XMLHttpRequest.status+": "+textStatus);
+						pines.error("An error occured while trying to retrieve the data form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 					},
 					success: function(data){
 						if (data == null)
@@ -146,7 +146,7 @@ $this->title = 'Payment Options';
 		<?php if ($this->review_form) { ?>
 		<div class="pf-element pf-full-width">
 			<span class="pf-label">Order Comments</span>
-			<textarea class="pf-field ui-widget-content ui-corner-all" rows="1" cols="35" name="comments"><?php echo $this->entity->comments; ?></textarea>
+			<textarea class="pf-field ui-widget-content ui-corner-all" rows="1" cols="35" name="comments"><?php echo htmlspecialchars($this->entity->comments); ?></textarea>
 		</div>
 		<?php } ?>
 		<div class="pf-element pf-buttons">

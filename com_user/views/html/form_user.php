@@ -43,7 +43,7 @@ if ($pines->config->com_user->check_username)
 		// Check usernames.
 		$("[name=username]", "#p_muid_form").change(function(){
 			var username = $(this);
-			var id = "<?php echo $this->entity->guid; ?>";
+			var id = "<?php echo (int) $this->entity->guid ?>";
 			$.ajax({
 				url: "<?php echo addslashes(pines_url('com_user', 'checkusername')); ?>",
 				type: "POST",
@@ -69,11 +69,11 @@ if ($pines->config->com_user->check_username)
 					}
 					if (data.result) {
 						username.removeClass("ui-state-error");
-						$("#p_muid_username_message").addClass("picon-task-complete").html(data.message);
+						$("#p_muid_username_message").addClass("picon-task-complete").html(pines.safe(data.message));
 						return;
 					}
 					username.addClass("ui-state-error");
-					$("#p_muid_username_message").addClass("picon-task-attempt").html(data.message);
+					$("#p_muid_username_message").addClass("picon-task-attempt").html(pines.safe(data.message));
 				}
 			});
 		}).blur(function(){
@@ -218,7 +218,7 @@ if ($pines->config->com_user->check_username)
 							<?php
 							$pines->user_manager->group_sort($this->group_array_primary, 'name');
 							foreach ($this->group_array_primary as $cur_group) {
-								?><option value="<?php echo $cur_group->guid; ?>"<?php echo $cur_group->is($this->entity->group) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars(str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"); ?></option><?php
+								?><option value="<?php echo (int) $cur_group->guid ?>"<?php echo $cur_group->is($this->entity->group) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars(str_repeat('->', $cur_group->get_level())." {$cur_group->name} [{$cur_group->groupname}]"); ?></option><?php
 							} ?>
 						</select>
 					</label>
@@ -272,8 +272,8 @@ if ($pines->config->com_user->check_username)
 								</thead>
 								<tbody>
 								<?php foreach($this->group_array_secondary as $cur_group) { ?>
-									<tr title="<?php echo $cur_group->guid; ?>" class="<?php echo $cur_group->get_children() ? 'parent ' : ''; ?><?php echo (isset($cur_group->parent) && $cur_group->parent->in_array($this->group_array_secondary)) ? "child ch_{$cur_group->parent->guid} " : ''; ?>">
-										<td><input type="checkbox" name="groups[]" value="<?php echo $cur_group->guid; ?>" <?php echo $cur_group->in_array($this->entity->groups) ? 'checked="checked" ' : ''; ?>/></td>
+									<tr title="<?php echo (int) $cur_group->guid ?>" class="<?php echo $cur_group->get_children() ? 'parent ' : ''; ?><?php echo (isset($cur_group->parent) && $cur_group->parent->in_array($this->group_array_secondary)) ? htmlspecialchars("child ch_{$cur_group->parent->guid} ") : ''; ?>">
+										<td><input type="checkbox" name="groups[]" value="<?php echo (int) $cur_group->guid ?>" <?php echo $cur_group->in_array($this->entity->groups) ? 'checked="checked" ' : ''; ?>/></td>
 										<td><?php echo htmlspecialchars($cur_group->name); ?></td>
 										<td><?php echo htmlspecialchars($cur_group->groupname); ?></td>
 									</tr>
@@ -399,7 +399,7 @@ if ($pines->config->com_user->check_username)
 			<div id="p_muid_address_international" style="display: none;">
 				<div class="pf-element pf-full-width">
 					<label><span class="pf-label">Address</span>
-						<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo $this->entity->address_international; ?></textarea></span></label>
+						<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo htmlspecialchars($this->entity->address_international); ?></textarea></span></label>
 				</div>
 			</div>
 			<?php } if (in_array('additional_addresses', $pines->config->com_user->user_fields)) {
@@ -463,12 +463,12 @@ if ($pines->config->com_user->check_username)
 								var new_address = [{
 									key: null,
 									values: [
-										cur_address_type,
-										cur_address_addr1,
-										cur_address_addr2,
-										cur_address_city,
-										cur_address_state,
-										cur_address_zip
+										pines.safe(cur_address_type),
+										pines.safe(cur_address_addr1),
+										pines.safe(cur_address_addr2),
+										pines.safe(cur_address_city),
+										pines.safe(cur_address_state),
+										pines.safe(cur_address_zip)
 									]
 								}];
 								addresses_table.pgrid_add(new_address);
@@ -657,8 +657,8 @@ if ($pines->config->com_user->check_username)
 								var new_attribute = [{
 									key: null,
 									values: [
-										cur_attribute_name,
-										cur_attribute_value
+										pines.safe(cur_attribute_name),
+										pines.safe(cur_attribute_value)
 									]
 								}];
 								attributes_table.pgrid_add(new_attribute);
@@ -714,7 +714,7 @@ if ($pines->config->com_user->check_username)
 	<div class="pf-element pf-buttons">
 		<br />
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
 		<?php if (gatekeeper('com_user/listusers')) { ?>

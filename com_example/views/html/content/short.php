@@ -11,6 +11,6 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = $this->position;
+$this->title = htmlspecialchars($this->position);
 ?>
 <span>Phasellus vel arcu eu dui semper rhoncus non non metus.</span>

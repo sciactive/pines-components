@@ -84,7 +84,7 @@ $errors = array();
 	</thead>
 	<tbody>
 	<?php foreach($this->pos as $po) { ?>
-		<tr title="<?php echo $po->guid; ?>">
+		<tr title="<?php echo (int) $po->guid ?>">
 			<td><?php echo htmlspecialchars($po->po_number); ?></td>
 			<td><?php echo htmlspecialchars($po->reference_number); ?></td>
 			<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'vendor/edit', array('id' => $po->vendor->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($po->vendor->name); ?></a></td>

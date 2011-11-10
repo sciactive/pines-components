@@ -88,13 +88,13 @@ foreach($this->groups as $cur_group) {
 	</thead>
 	<tbody>
 	<?php foreach($this->groups as $group) { ?>
-		<tr title="<?php echo $group->guid; ?>" class="<?php
+		<tr title="<?php echo (int) $group->guid ?>" class="<?php
 		if (in_array($group->guid, $parents))
 			echo "parent ";
 		if (isset($group->parent) && $group->parent->in_array($this->groups))
-			echo "child ch_{$group->parent->guid}";
+			echo htmlspecialchars("child ch_{$group->parent->guid}");
 		?>">
-			<td><?php echo $group->guid; ?></td>
+			<td><?php echo (int) $group->guid ?></td>
 			<td><?php echo htmlspecialchars($group->groupname); ?></td>
 			<td><?php echo htmlspecialchars($group->name); ?></td>
 			<td><?php echo htmlspecialchars($group->email); ?></td>

@@ -12,7 +12,7 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 if (empty($this->title))
-	$this->title = "Login to {$pines->config->system_name}";
+	$this->title = 'Login to '.htmlspecialchars($pines->config->system_name);
 $this->check_username = ($pines->config->com_user->allow_registration && $pines->config->com_user->check_username);
 if ($this->check_username)
 	$pines->icons->load();
@@ -119,7 +119,7 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 							un_message.removeClass("picon-task-complete").removeClass("picon-task-attempt").html("").hide();
 							return;
 						}
-						var id = "<?php echo $this->entity->guid; ?>";
+						var id = "<?php echo (int) $this->entity->guid ?>";
 						$.ajax({
 							url: "<?php echo addslashes(pines_url('com_user', 'checkusername')); ?>",
 							type: "POST",
@@ -145,11 +145,11 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 								}
 								if (data.result) {
 									username.removeClass("ui-state-error");
-									un_message.addClass("picon-task-complete").html(data.message).show();
+									un_message.addClass("picon-task-complete").html(pines.safe(data.message)).show();
 									return;
 								}
 								username.addClass("ui-state-error");
-								un_message.addClass("picon-task-attempt").html(data.message).show();
+								un_message.addClass("picon-task-attempt").html(pines.safe(data.message)).show();
 							}
 						});
 					}).blur(function(){
@@ -235,7 +235,7 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 	// <![CDATA[
 	pines(function(){
 		var notice = $.pnotify({
-			pnotify_title: "<?php echo addslashes($this->title); ?>",
+			pnotify_title: <?php echo json_encode($this->title); ?>,
 			pnotify_text: $("#p_muid_form").detach().show().append("<br style=\"clear: both;\" />"),
 			pnotify_notice_icon: '',
 			pnotify_width: 'auto',

@@ -37,7 +37,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var start_date = "<?php echo $this->start_date ? addslashes(format_date($this->start_date, 'date_sort')) : ''; ?>";
 		var end_date = "<?php echo $this->end_date ? addslashes(format_date($this->end_date - 1, 'date_sort')) : ''; ?>";
 		// Location Defaults
-		var location = "<?php echo $this->location->guid; ?>";
+		var location = "<?php echo (int) $this->location->guid ?>";
 		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
 
 		// Group Tree
@@ -135,7 +135,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 							},
 							error: function(XMLHttpRequest, textStatus){
 								loader.pnotify_remove();
-								pines.error("An error occured while trying to uncommit the countsheet:\n"+XMLHttpRequest.status+": "+textStatus);
+								pines.error("An error occured while trying to uncommit the countsheet:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 							},
 							success: function(data){
 								if (!data)
@@ -143,7 +143,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 								if (!data[0]) {
 									loader.pnotify({
 										pnotify_type: 'error',
-										pnotify_text: data[1],
+										pnotify_text: pines.safe(data[1]),
 										pnotify_hide: true,
 										pnotify_history: true
 									});
@@ -151,7 +151,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 								}
 								loader.pnotify({
 									pnotify_notice_icon: 'picon picon-task-complete',
-									pnotify_text: data[1],
+									pnotify_text: pines.safe(data[1]),
 									pnotify_hide: true,
 									pnotify_history: true
 								});
@@ -194,7 +194,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				dataType: "html",
 				data: {"all_time": all_time, "start_date": start_date, "end_date": end_date},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the date form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the date form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == "")
@@ -235,7 +235,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				dataType: "html",
 				data: {"location": location, "descendents": descendents},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the location form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the location form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == "")
@@ -285,8 +285,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->countsheets as $countsheet) { ?>
-		<tr title="<?php echo $countsheet->guid; ?>">
-			<td><?php echo $countsheet->guid; ?></td>
+		<tr title="<?php echo (int) $countsheet->guid ?>">
+			<td><?php echo (int) $countsheet->guid ?></td>
 			<td><?php echo htmlspecialchars($countsheet->group->name); ?></td>
 			<td><?php echo htmlspecialchars($countsheet->user->name); ?></td>
 			<td><?php echo format_date($countsheet->p_cdate); ?></td>

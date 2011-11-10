@@ -21,7 +21,7 @@ $this->show_title = false;
 	/* ]]> */
 </style>
 <div id="p_muid_pages">
-	<? foreach ($this->pages as $cur_page) { ?>
+	<?php foreach ($this->pages as $cur_page) { ?>
 	<div class="page">
 	<?php echo $cur_page; ?>
 	</div>

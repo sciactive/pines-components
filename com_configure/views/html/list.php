@@ -82,12 +82,12 @@ $this->title = 'Configure Components';
 				<option value="null">-- Pick a User/Group --</option>
 				<optgroup label="Groups">
 					<?php foreach ($this->groups as $cur_group) { ?>
-					<option value="<?php echo $cur_group->guid; ?>group"<?php echo $cur_group->is($this->user) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars("$cur_group->name [$cur_group->groupname]"); ?></option>
+					<option value="<?php echo (int) $cur_group->guid ?>group"<?php echo $cur_group->is($this->user) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars("$cur_group->name [$cur_group->groupname]"); ?></option>
 					<?php } ?>
 				</optgroup>
 				<optgroup label="Users">
 					<?php foreach ($this->users as $cur_user) { ?>
-					<option value="<?php echo $cur_user->guid; ?>user"<?php echo $cur_user->is($this->user) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars("$cur_user->name [$cur_user->username]"); ?></option>
+					<option value="<?php echo (int) $cur_user->guid ?>user"<?php echo $cur_user->is($this->user) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars("$cur_user->name [$cur_user->username]"); ?></option>
 					<?php } ?>
 				</optgroup>
 			</select>
@@ -108,7 +108,7 @@ $this->title = 'Configure Components';
 			<select class="ui-widget-content ui-corner-all" id="p_muid_user_select" name="user_select">
 				<option value="null">-- Pick a Condition --</option>
 				<?php foreach ($this->conditions as $cur_condition) { ?>
-				<option value="<?php echo $cur_condition->guid; ?>"<?php echo $cur_condition->is($this->user) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_condition->name); ?></option>
+				<option value="<?php echo (int) $cur_condition->guid ?>"<?php echo $cur_condition->is($this->user) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_condition->name); ?></option>
 				<?php } ?>
 			</select>
 			<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_configure_go('<?php echo htmlspecialchars(pines_url('com_configure', 'list')); ?>')">Refresh</button>

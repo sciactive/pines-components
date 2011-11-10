@@ -11,8 +11,8 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = "About {$pines->info->name}";
-$this->note = "Version {$pines->info->version}";
+$this->title = htmlspecialchars("About {$pines->info->name}");
+$this->note = htmlspecialchars("Version {$pines->info->version}");
 ?>
 <script type="text/javascript">
 	// <![CDATA[

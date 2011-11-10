@@ -110,12 +110,12 @@ $pines->com_customer->load_company_select();
 					var new_address = [{
 						key: null,
 						values: [
-							cur_address_type,
-							cur_address_addr1,
-							cur_address_addr2,
-							cur_address_city,
-							cur_address_state,
-							cur_address_zip
+							pines.safe(cur_address_type),
+							pines.safe(cur_address_addr1),
+							pines.safe(cur_address_addr2),
+							pines.safe(cur_address_city),
+							pines.safe(cur_address_state),
+							pines.safe(cur_address_zip)
 						]
 					}];
 					addresses_table.pgrid_add(new_address);
@@ -183,8 +183,8 @@ $pines->com_customer->load_company_select();
 					var new_attribute = [{
 						key: null,
 						values: [
-							cur_attribute_name,
-							cur_attribute_value
+							pines.safe(cur_attribute_name),
+							pines.safe(cur_attribute_value)
 						]
 					}];
 					attributes_table.pgrid_add(new_attribute);
@@ -238,19 +238,19 @@ $pines->com_customer->load_company_select();
 							loader.pnotify_remove();
 						},
 						error: function(XMLHttpRequest, textStatus){
-							pines.error("An error occured:\n"+XMLHttpRequest.status+": "+textStatus);
+							pines.error("An error occured:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 						},
 						success: function(data){
 							if (!data) {
 								alert("No entry was found that matched the selected interaction.");
 								return;
 							}
-							$("#p_muid_interaction_customer").empty().append(data.customer);
-							$("#p_muid_interaction_type").empty().append(data.type);
-							$("#p_muid_interaction_employee").empty().append(data.employee);
-							$("#p_muid_interaction_date").empty().append(data.date);
-							$("#p_muid_interaction_comments").empty().append(data.comments);
-							$("#p_muid_interaction_notes").empty().append((data.review_comments.length > 0) ? "<li>"+data.review_comments.join("</li><li>")+"</li>" : "");
+							$("#p_muid_interaction_customer").empty().append(pines.safe(data.customer));
+							$("#p_muid_interaction_type").empty().append(pines.safe(data.type));
+							$("#p_muid_interaction_employee").empty().append(pines.safe(data.employee));
+							$("#p_muid_interaction_date").empty().append(pines.safe(data.date));
+							$("#p_muid_interaction_comments").empty().append(pines.safe(data.comments));
+							$("#p_muid_interaction_notes").empty().append((data.review_comments.length > 0) ? "<li>"+$.map(data.review_comments, pines.safe).join("</li><li>")+"</li>" : "");
 							$("#p_muid_interaction_dialog [name=status]").val(data.status);
 
 							interaction_dialog.dialog('open');
@@ -264,7 +264,7 @@ $pines->com_customer->load_company_select();
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
 					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
-						filename: 'customer_interaction_<?php echo $this->entity->guid; ?>',
+						filename: 'customer_interaction_<?php echo (int) $this->entity->guid; ?>',
 						content: rows
 					});
 				}}
@@ -299,7 +299,7 @@ $pines->com_customer->load_company_select();
 						type: "POST",
 						dataType: "json",
 						data: {
-							customer: <?php echo $this->entity->guid; ?>,
+							customer: <?php echo (int) $this->entity->guid; ?>,
 							employee: $("#p_muid_new_interaction [name=employee]").val(),
 							date: $("#p_muid_new_interaction [name=interaction_date]").val(),
 							time: $("#p_muid_new_interaction [name=interaction_time]").val(),
@@ -321,7 +321,7 @@ $pines->com_customer->load_company_select();
 							loader.pnotify_remove();
 						},
 						error: function(XMLHttpRequest, textStatus){
-							pines.error("An error occured:\n"+XMLHttpRequest.status+": "+textStatus);
+							pines.error("An error occured:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 						},
 						success: function(data){
 							if (data == 'conflict') {
@@ -372,7 +372,7 @@ $pines->com_customer->load_company_select();
 							loader.pnotify_remove();
 						},
 						error: function(XMLHttpRequest, textStatus){
-							pines.error("An error occured:\n"+XMLHttpRequest.status+": "+textStatus);
+							pines.error("An error occured:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 						},
 						success: function(data){
 							if (!data) {
@@ -550,7 +550,7 @@ $pines->com_customer->load_company_select();
 			<?php } if (in_array('description', $pines->config->com_customer->shown_fields_customer) && (!in_array('description', $pines->config->com_customer->critical_fields_customer) || gatekeeper('com_customer/editcritical') || !isset($this->entity->description))) { ?>
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Description</span><br />
-				<textarea rows="3" cols="35" class="pf-field peditor" style="width: 100%;" name="description"><?php echo $this->entity->description; ?></textarea>
+				<textarea rows="3" cols="35" class="pf-field peditor" style="width: 100%;" name="description"><?php echo htmlspecialchars($this->entity->description); ?></textarea>
 			</div>
 			<?php } ?>
 			<br class="pf-clearing" />
@@ -743,7 +743,7 @@ $pines->com_customer->load_company_select();
 			<div id="p_muid_address_international" style="display: none;">
 				<div class="pf-element pf-full-width">
 					<label><span class="pf-label">Address</span>
-						<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo $this->entity->address_international; ?></textarea></span></label>
+						<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="address_international"><?php echo htmlspecialchars($this->entity->address_international); ?></textarea></span></label>
 				</div>
 			</div>
 			<div class="pf-element pf-heading">
@@ -868,8 +868,8 @@ $pines->com_customer->load_company_select();
 						</thead>
 						<tbody>
 							<?php foreach ($this->interactions as $cur_interaction) { ?>
-							<tr title="<?php echo $cur_interaction->guid; ?>">
-								<td><?php echo $cur_interaction->guid; ?></td>
+							<tr title="<?php echo (int) $cur_interaction->guid; ?>">
+								<td><?php echo (int) $cur_interaction->guid; ?></td>
 								<td><?php echo format_date($cur_interaction->p_cdate, 'full_sort'); ?></td>
 								<td><?php echo format_date($cur_interaction->action_date, 'full_sort'); ?></td>
 								<td><?php echo htmlspecialchars($cur_interaction->employee->name); ?></td>
@@ -910,7 +910,7 @@ $pines->com_customer->load_company_select();
 							<tbody>
 								<?php foreach ((array) $this->sales as $cur_sale) {
 								$item_count = count($cur_sale->products); ?>
-								<tr title="<?php echo $cur_sale->guid; ?>"<?php echo in_array($cur_sale->guid, $returned_sales) ? ' class="parent"' : ''; ?>>
+								<tr title="<?php echo (int) $cur_sale->guid; ?>"<?php echo in_array($cur_sale->guid, $returned_sales) ? ' class="parent"' : ''; ?>>
 									<td>Sale <?php echo htmlspecialchars($cur_sale->id); ?> (<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/receipt', array('id' => $cur_sale->guid))); ?>" onclick="window.open(this.href); return false;">Receipt</a>|<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/edit', array('id' => $cur_sale->guid))); ?>" onclick="window.open(this.href); return false;">Edit</a>)</td>
 									<td><?php echo format_date($cur_sale->p_cdate); ?></td>
 									<td><?php echo ($item_count == 1) ? htmlspecialchars($cur_sale->products[0]['entity']->name . ' x ' . $cur_sale->products[0]['quantity']) : $item_count.' products'; ?></td>
@@ -922,7 +922,7 @@ $pines->com_customer->load_company_select();
 								</tr>
 								<?php } foreach ((array) $this->returns as $cur_return) {
 								$item_count = count($cur_return->products); ?>
-								<tr title="<?php echo $cur_return->guid; ?>"<?php echo (isset($cur_return->sale->guid) && $cur_return->sale->in_array((array) $this->sales)) ? ' class="child ch_'.((int) $cur_return->sale->guid).'"' : ''; ?>>
+								<tr title="<?php echo (int) $cur_return->guid; ?>"<?php echo (isset($cur_return->sale->guid) && $cur_return->sale->in_array((array) $this->sales)) ? htmlspecialchars(" class=\"child ch_{$cur_return->sale->guid}\"") : ''; ?>>
 									<td>Return <?php echo htmlspecialchars($cur_return->id); ?> (<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'return/receipt', array('id' => $cur_return->guid))); ?>" target="receipt">Receipt</a>|<a href="<?php echo htmlspecialchars(pines_url('com_sales', 'return/edit', array('id' => $cur_return->guid))); ?>" target="receipt">Edit</a>)</td>
 									<td><?php echo format_date($cur_return->p_cdate); ?></td>
 									<td><?php echo ($item_count == 1) ? htmlspecialchars($cur_return->products[0]['entity']->name) : $item_count.' items'; ?></td>
@@ -948,7 +948,7 @@ $pines->com_customer->load_company_select();
 							<select class="ui-widget-content ui-corner-all" name="employee">
 							<?php foreach ($pines->com_hrm->get_employees() as $cur_employee) {
 								$selected = $_SESSION['user']->is($cur_employee) ? ' selected="selected"' : '';
-								echo '<option value="'.$cur_employee->guid.'"'.$selected.'>'.htmlspecialchars($cur_employee->name).'</option>"';
+								echo '<option value="'.((int) $cur_employee->guid).'"'.$selected.'>'.htmlspecialchars($cur_employee->name).'</option>"';
 							} ?>
 						</select></label>
 					</div>
@@ -957,7 +957,7 @@ $pines->com_customer->load_company_select();
 						<label><span class="pf-label">Employee</span>
 							<?php echo htmlspecialchars($_SESSION['user']->name); ?></label>
 					</div>
-					<input type="hidden" name="employee" value="<?php echo $_SESSION['user']->guid; ?>" />
+					<input type="hidden" name="employee" value="<?php echo (int) $_SESSION['user']->guid; ?>" />
 					<?php } ?>
 					<div class="pf-element">
 						<label><span class="pf-label">Interaction Type</span>
@@ -1066,7 +1066,7 @@ $pines->com_customer->load_company_select();
 	<div class="pf-element pf-buttons">
 		<br />
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_customer', 'customer/list')); ?>');" value="Cancel" />

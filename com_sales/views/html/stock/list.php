@@ -43,7 +43,7 @@ $pines->com_jstree->load();
 		};
 
 		// Location Defaults
-		var location = "<?php echo $this->location->guid; ?>";
+		var location = "<?php echo (int) $this->location->guid ?>";
 		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
 
 		var state_xhr;
@@ -69,7 +69,7 @@ $pines->com_jstree->load();
 							dataType: "text",
 							data: {"id": cur_row.pgrid_export_rows()[0].key},
 							error: function(XMLHttpRequest, textStatus){
-								pines.error("An error occured while trying to lookup last transaction:\n"+XMLHttpRequest.status+": "+textStatus);
+								pines.error("An error occured while trying to lookup last transaction:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 							},
 							success: function(data){
 								cur_row.pgrid_set_value(<?php echo $this->removed ? 7 : 8; ?>, data);
@@ -114,7 +114,7 @@ $pines->com_jstree->load();
 				dataType: "html",
 				data: {"location": location, "descendents": descendents},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the location form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the location form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == "")
@@ -169,7 +169,7 @@ $pines->com_jstree->load();
 	</thead>
 	<tbody>
 	<?php foreach($this->stock as $stock) { ?>
-		<tr title="<?php echo $stock->guid; ?>">
+		<tr title="<?php echo (int) $stock->guid ?>">
 			<td><?php echo htmlspecialchars($stock->product->sku); ?></td>
 			<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'product/edit', array('id' => $stock->product->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($stock->product->name); ?></a></td>
 			<td><?php echo htmlspecialchars($stock->serial); ?></td>

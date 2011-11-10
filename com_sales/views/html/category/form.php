@@ -92,12 +92,12 @@ if ($pines->config->com_sales->com_storefront) {
 								return;
 							}
 							cur_spec = rows;
-							spec_dialog.find("input[name=cur_spec_order]").val(rows.pgrid_get_value(1));
-							spec_dialog.find("input[name=cur_spec_name]").val(rows.pgrid_get_value(2));
-							spec_dialog.find("select[name=cur_spec_type]").val(rows.pgrid_get_value(3)).change();
+							spec_dialog.find("input[name=cur_spec_order]").val(pines.unsafe(rows.pgrid_get_value(1)));
+							spec_dialog.find("input[name=cur_spec_name]").val(pines.unsafe(rows.pgrid_get_value(2)));
+							spec_dialog.find("select[name=cur_spec_type]").val(pines.unsafe(rows.pgrid_get_value(3))).change();
 							spec_dialog.find("input[name=cur_spec_show_filter]").attr("checked", rows.pgrid_get_value(4) == "Yes");
 							spec_dialog.find("input[name=cur_spec_restricted]").attr("checked", rows.pgrid_get_value(5) == "Yes");
-							spec_dialog.find("input[name=cur_spec_options]").val(rows.pgrid_get_value(6));
+							spec_dialog.find("input[name=cur_spec_options]").val(pines.unsafe(rows.pgrid_get_value(6)));
 							spec_dialog.dialog('open');
 						}
 					},
@@ -140,22 +140,22 @@ if ($pines->config->com_sales->com_storefront) {
 							var new_spec = [{
 								key: null,
 								values: [
-									cur_spec_order,
-									cur_spec_name,
-									cur_spec_type,
+									pines.safe(cur_spec_order),
+									pines.safe(cur_spec_name),
+									pines.safe(cur_spec_type),
 									(cur_spec_type == "heading") ? '' : (cur_spec_show_filter ? 'Yes' : 'No'),
 									(cur_spec_type == "bool" || cur_spec_type == "heading") ? '' : (cur_spec_restricted ? 'Yes' : 'No'),
-									(cur_spec_type == "bool" || cur_spec_type == "heading") ? '' : cur_spec_options
+									(cur_spec_type == "bool" || cur_spec_type == "heading") ? '' : pines.safe(cur_spec_options)
 								]
 							}];
 							specs_table.pgrid_add(new_spec);
 						} else {
-							cur_spec.pgrid_set_value(1, cur_spec_order);
-							cur_spec.pgrid_set_value(2, cur_spec_name);
-							cur_spec.pgrid_set_value(3, cur_spec_type);
+							cur_spec.pgrid_set_value(1, pines.safe(cur_spec_order));
+							cur_spec.pgrid_set_value(2, pines.safe(cur_spec_name));
+							cur_spec.pgrid_set_value(3, pines.safe(cur_spec_type));
 							cur_spec.pgrid_set_value(4, (cur_spec_type == "heading") ? '' : (cur_spec_show_filter ? 'Yes' : 'No'));
 							cur_spec.pgrid_set_value(5, (cur_spec_type == "bool" || cur_spec_type == "heading") ? '' : (cur_spec_restricted ? 'Yes' : 'No'));
-							cur_spec.pgrid_set_value(6, (cur_spec_type == "bool" || cur_spec_type == "heading") ? '' : cur_spec_options);
+							cur_spec.pgrid_set_value(6, (cur_spec_type == "bool" || cur_spec_type == "heading") ? '' : pines.safe(cur_spec_options));
 						}
 						$(this).dialog('close');
 					}
@@ -233,7 +233,7 @@ if ($pines->config->com_sales->com_storefront) {
 								if ($category->is($entity))
 									continue;
 								?>
-								<option value="<?php echo $category->guid; ?>"<?php echo $category->is($entity->parent) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars("{$prefix} {$category->name}"); ?></option>
+								<option value="<?php echo (int) $category->guid; ?>"<?php echo $category->is($entity->parent) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars("{$prefix} {$category->name}"); ?></option>
 								<?php
 								if ($category->children)
 									com_sales__category_form_children($category, $entity, "{$prefix}->");
@@ -243,7 +243,7 @@ if ($pines->config->com_sales->com_storefront) {
 							if ($category->is($this->entity))
 								continue;
 							?>
-							<option value="<?php echo $category->guid; ?>"<?php echo $category->is($this->entity->parent) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($category->name); ?></option>
+							<option value="<?php echo (int) $category->guid; ?>"<?php echo $category->is($this->entity->parent) ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($category->name); ?></option>
 							<?php
 							if ($category->children)
 								com_sales__category_form_children($category, $this->entity);
@@ -319,7 +319,7 @@ if ($pines->config->com_sales->com_storefront) {
 							var guid = $("#p_muid_show_page_selector").val();
 							var name = $("#p_muid_show_page_selector option:selected").html();
 
-							$("<div class=\"pf-field ui-widget-content\">"+name+"<input type=\"hidden\" name=\"show_pages[]\" value=\""+guid+"\" /> <a href=\"javascript:void(0);\" class=\"remove_page\" style=\"float: right;\"><small>X</small></a></div>").appendTo($("#p_muid_show_pages"));
+							$("<div class=\"pf-field ui-widget-content\">"+pines.safe(name)+"<input type=\"hidden\" name=\"show_pages[]\" value=\""+pines.safe(guid)+"\" /> <a href=\"javascript:void(0);\" class=\"remove_page\" style=\"float: right;\"><small>X</small></a></div>").appendTo($("#p_muid_show_pages"));
 						});
 						
 						$("#p_muid_show_pages").delegate("a.remove_page", "click", function(){
@@ -332,7 +332,7 @@ if ($pines->config->com_sales->com_storefront) {
 					<span class="pf-note">Show content page(s) when browsing this category. You can use page conditions to control which page is shown.</span>
 					<select class="pf-field ui-widget-content ui-corner-all" id="p_muid_show_page_selector">
 						<?php foreach ($pages as $cur_page) { ?>
-						<option value="<?php echo $cur_page->guid; ?>"><?php echo htmlspecialchars($cur_page->name); ?></option>
+						<option value="<?php echo (int) $cur_page->guid; ?>"><?php echo htmlspecialchars($cur_page->name); ?></option>
 						<?php } ?>
 					</select></label>
 				<button class="pf-field ui-state-default ui-corner-all" id="p_muid_add_show_page" type="button">Add</button>
@@ -465,7 +465,7 @@ if ($pines->config->com_sales->com_storefront) {
 	<div class="pf-element pf-buttons">
 		<br />
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'category/list')); ?>');" value="Cancel" />

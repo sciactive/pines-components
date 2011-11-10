@@ -265,7 +265,7 @@ $pines->com_jstree->load();
 						<?php
 						$pines->entity_manager->sort($this->vendors, 'name');
 						foreach ($this->vendors as $cur_vendor) { ?>
-						<option value="<?php echo $cur_vendor->guid; ?>"<?php echo $this->entity->vendor->guid == $cur_vendor->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_vendor->name); ?></option>
+						<option value="<?php echo (int) $cur_vendor->guid; ?>"<?php echo $this->entity->vendor->guid == $cur_vendor->guid ? ' selected="selected"' : ''; ?>><?php echo htmlspecialchars($cur_vendor->name); ?></option>
 						<?php } ?>
 					</select>
 				</label>
@@ -307,14 +307,14 @@ $pines->com_jstree->load();
 	<br class="pf-clearing" />
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } elseif ( is_array($this->entities) ) {
 			$guids = array();
 			foreach ($this->entities as $cur_entity) {
 				$guids[] = $cur_entity->guid;
 			}
 			?>
-		<input type="hidden" name="id" value="<?php echo implode(',', $guids); ?>" />
+		<input type="hidden" name="id" value="<?php echo htmlspecialchars(implode(',', $guids)); ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" name="submit" value="Submit" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_sales', 'stock/list')); ?>');" value="Cancel" />

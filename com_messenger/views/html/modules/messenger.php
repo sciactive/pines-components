@@ -200,7 +200,7 @@ unset($cur_user);
 			},
 			appendMessage: function(jid, message, new_message) {
 				var chat_box = $('#p_muid_tab_'+jid+' .read');
-				chat_box.append(message.replace(/@.*?</, '<'));
+				chat_box.append(pines.safe(message.replace(/@.*?</, '<')));
 				if (new_message)
 					chat_box.animate({ scrollTop: chat_box.prop('scrollHeight') }, 300).effect('highlight');
 			},
@@ -225,8 +225,8 @@ unset($cur_user);
 		// Connect and login to the xmpp server.
 		obj = new Object;
 		// TODO create xmpp users and passwords for users when they are created.
-		obj['user'] = '<?php echo $xmpp_user; ?>';
-		obj['pass'] = 'password'; //'<?php echo $_SESSION['user']->password; ?>';
+		obj['user'] = '<?php echo htmlspecialchars($xmpp_user); ?>';
+		obj['pass'] = 'password'; //'<?php // echo htmlspecialchars($_SESSION['user']->password); ?>';
 
 		jaxl.connect(obj);
 
@@ -267,11 +267,11 @@ unset($cur_user);
 		<?php if (!empty($chat_log)) {
 			foreach ($chat_log as $cur_chat) {
 				$jabber_id = key($chat_log); ?>
-				pines.com_messenger_chat('<?php echo $jabber_id; ?>', '<?php echo $jabber_id; ?>');
+				pines.com_messenger_chat('<?php echo htmlspecialchars(addslashes($jabber_id)); ?>', '<?php echo htmlspecialchars(addslashes($jabber_id)); ?>');
 			<?php foreach ($cur_chat as $cur_msg) { ?>
-				boshchat.appendMessage('<?php echo $jabber_id; ?>', '<?php echo $cur_msg; ?>');
+				boshchat.appendMessage('<?php echo htmlspecialchars(addslashes($jabber_id)); ?>', '<?php echo htmlspecialchars(addslashes($cur_msg)); ?>');
 			<?php } ?>
-				$('#p_muid_tab_<?php echo $jabber_id; ?> .read').animate({ scrollTop: $('#p_muid_tab_<?php echo $jabber_id; ?> .read').prop('scrollHeight') }, 300);
+				$('#p_muid_tab_<?php echo htmlspecialchars(addslashes($jabber_id)); ?> .read').animate({ scrollTop: $('#p_muid_tab_<?php echo htmlspecialchars(addslashes($jabber_id)); ?> .read').prop('scrollHeight') }, 300);
 			<?php }
 		} ?>
 	});
@@ -286,7 +286,7 @@ unset($cur_user);
 			<div class="pf-element">
 				<ul>
 					<?php foreach ($users as $cur_user) { ?>
-					<li><a href="#" onclick="pines.com_messenger_chat('<?php echo $cur_user->name_first; ?>', '<?php echo $cur_user->username; ?>');"><?php echo htmlspecialchars($cur_user->name); ?></a></li>
+					<li><a href="#" onclick="pines.com_messenger_chat('<?php echo htmlspecialchars(addslashes($cur_user->name_first); ?>', '<?php echo htmlspecialchars(addslashes($cur_user->username)); ?>');"><?php echo htmlspecialchars($cur_user->name); ?></a></li>
 					<?php } ?>
 				</ul>
 			</div>

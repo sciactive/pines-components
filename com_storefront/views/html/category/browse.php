@@ -60,7 +60,7 @@ if ($this->entity->show_products)
 		<?php if ($this->page - 1 >= 1) { ?>
 			<a href="<?php echo htmlspecialchars(pines_url('com_storefront', 'category/browse', array('a' => $this->entity->alias, 'page' => $this->page - 1, 'sort' => $this->sort))); ?>"><?php echo $this->page - 1; ?></a>&nbsp;
 		<?php } ?>
-		<span class="ui-state-default" style="border: none;"><?php echo $this->page; ?></span>
+		<span class="ui-state-default" style="border: none;"><?php echo htmlspecialchars($this->page); ?></span>
 		<?php if ($this->page + 1 <= $pages) { ?>
 			&nbsp;<a href="<?php echo htmlspecialchars(pines_url('com_storefront', 'category/browse', array('a' => $this->entity->alias, 'page' => $this->page + 1, 'sort' => $this->sort))); ?>"><?php echo $this->page + 1; ?></a>
 		<?php } ?>

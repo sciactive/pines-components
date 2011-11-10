@@ -73,7 +73,7 @@ $pines->com_pgrid->load();
 							dataType: "html",
 							data: {"type": type},
 							error: function(XMLHttpRequest, textStatus){
-								pines.error("An error occured while trying to retrieve the form:\n"+XMLHttpRequest.status+": "+textStatus);
+								pines.error("An error occured while trying to retrieve the form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 							},
 							success: function(data){
 								if (data == "")
@@ -90,7 +90,7 @@ $pines->com_pgrid->load();
 									cur_data.each(function(){
 										var cur_row = $(this);
 										var name = cur_row.pgrid_get_value(1);
-										var value = cur_row.pgrid_get_value(2);
+										var value = pines.unsafe(cur_row.pgrid_get_value(2));
 										form.find(":input:not(:radio, :checkbox)[name="+name+"]").val(value);
 										form.find(":input:radio[name="+name+"][value="+value+"]").attr("checked", "checked");
 										if (value == "")
@@ -119,8 +119,8 @@ $pines->com_pgrid->load();
 													cur_value = "";
 												options_table.pgrid_add([{
 													values: [
-														cur_input.attr("name"),
-														cur_value
+														pines.safe(cur_input.attr("name")),
+														pines.safe(cur_value)
 													]
 												}]);
 											});
@@ -172,8 +172,8 @@ $pines->com_pgrid->load();
 					double_click: true,
 					click: function(e, rows){
 						cur_condition = rows;
-						condition_dialog.find("input[name=cur_condition_type]").val(rows.pgrid_get_value(1));
-						condition_dialog.find("input[name=cur_condition_value]").val(rows.pgrid_get_value(2));
+						condition_dialog.find("input[name=cur_condition_type]").val(pines.unsafe(rows.pgrid_get_value(1)));
+						condition_dialog.find("input[name=cur_condition_value]").val(pines.unsafe(rows.pgrid_get_value(2)));
 						condition_dialog.dialog('open');
 					}
 				},
@@ -219,14 +219,14 @@ $pines->com_pgrid->load();
 						var new_condition = [{
 							key: null,
 							values: [
-								cur_condition_type,
-								cur_condition_value
+								pines.safe(cur_condition_type),
+								pines.safe(cur_condition_value)
 							]
 						}];
 						conditions_table.pgrid_add(new_condition);
 					} else {
-						cur_condition.pgrid_set_value(1, cur_condition_type);
-						cur_condition.pgrid_set_value(2, cur_condition_value);
+						cur_condition.pgrid_set_value(1, pines.safe(cur_condition_type));
+						cur_condition.pgrid_set_value(2, pines.safe(cur_condition_value));
 					}
 					$(this).dialog('close');
 				}
@@ -436,7 +436,7 @@ $pines->com_pgrid->load();
 	<br />
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_modules', 'module/list')); ?>');" value="Cancel" />

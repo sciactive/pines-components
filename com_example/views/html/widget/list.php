@@ -70,7 +70,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	</thead>
 	<tbody>
 	<?php foreach($this->widgets as $widget) { ?>
-		<tr title="<?php echo $widget->guid; ?>">
+		<tr title="<?php echo (int) $widget->guid ?>">
 			<td><?php echo htmlspecialchars($widget->name); ?></td>
 			<td><?php echo ($widget->enabled ? 'Yes' : 'No'); ?></td>
 		</tr>

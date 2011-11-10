@@ -26,7 +26,7 @@ $pines->entity_manager->sort($products, 'name');
 			<select class="pf-field ui-widget-content ui-corner-all" name="id">
 				<option value="random">-- Random --</option>
 				<?php foreach ($products as $cur_product) { ?>
-				<option value="<?php echo $cur_product->guid; ?>"><?php echo htmlspecialchars($cur_product->name); ?></option>
+				<option value="<?php echo (int) $cur_product->guid; ?>"><?php echo htmlspecialchars($cur_product->name); ?></option>
 				<?php } ?>
 			</select></label>
 	</div>

@@ -12,7 +12,7 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 
-$this->title = isset($this->entity->guid) ? 'Editing Sales Ranking ['.$this->entity->guid.']' : 'New Sales Ranking';
+$this->title = isset($this->entity->guid) ? 'Editing Sales Ranking ['.((int) $this->entity->guid).']' : 'New Sales Ranking';
 $pines->com_jstree->load();
 $pines->com_pgrid->load();
 ?>
@@ -63,6 +63,7 @@ $pines->com_pgrid->load();
 		var goal_grid = $("#p_muid_sales_goals").pgrid({
 			pgrid_view_height: "300px",
 			pgrid_paginate: false,
+			pgrid_child_prefix: "ch_",
 			pgrid_sort_col: 1,
 			pgrid_sort_ord: 'asc',
 			pgrid_toolbar: true,
@@ -129,7 +130,7 @@ $pines->com_pgrid->load();
 					loader.pnotify_remove();
 				},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (!data) {
@@ -140,9 +141,9 @@ $pines->com_pgrid->load();
 					$.each(data, function(){
 						struct.push({
 							"key": this.guid,
-							"classes": (this.parent ? "parent" : "")+(this.child ? " child "+this.parent_id : ""),
+							"classes": (this.parent ? "parent" : "")+(this.child ? " child ch_"+pines.safe(this.parent_id) : ""),
 							"values": [
-								this.name,
+								pines.safe(this.name),
 								this.type == "location" ? "Location" : (this.type == "employee" ? "Employee" : "Unknown"),
 								"0.00"
 							]
@@ -158,7 +159,7 @@ $pines->com_pgrid->load();
 		var update_goal = function(new_goal){
 			var new_value = parseFloat(new_goal);
 			new_value = isNaN(new_value) ? "0.00" : String(new_value.toFixed(2));
-			goal_grid.pgrid_get_selected_rows().pgrid_set_value(3, new_value);
+			goal_grid.pgrid_get_selected_rows().pgrid_set_value(3, pines.safe(new_value));
 			save_grid();
 		};
 
@@ -237,7 +238,7 @@ $pines->com_pgrid->load();
 	</div>
 	<div class="pf-element pf-buttons">
 		<?php if (isset($this->entity->guid)) { ?>
-		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid ?>" />
 		<?php } ?>
 		<input type="hidden" name="top_location" />
 		<input type="hidden" name="sales_goals" value="<?php echo htmlspecialchars(json_encode((array) @array_combine(array_map('strval', array_keys($this->entity->sales_goals)), array_map('strval', $this->entity->sales_goals)))); ?>" />

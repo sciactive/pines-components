@@ -88,9 +88,9 @@ $pines->com_ptags->load();
 					double_click: true,
 					click: function(e, rows){
 						cur_condition = rows;
-						condition_dialog.find("select[name=cur_condition_class]").val(rows.pgrid_get_value(1));
-						condition_dialog.find("input[name=cur_condition_type]").val(rows.pgrid_get_value(2));
-						condition_dialog.find("input[name=cur_condition_value]").val(rows.pgrid_get_value(3));
+						condition_dialog.find("select[name=cur_condition_class]").val(pines.unsafe(rows.pgrid_get_value(1)));
+						condition_dialog.find("input[name=cur_condition_type]").val(pines.unsafe(rows.pgrid_get_value(2)));
+						condition_dialog.find("input[name=cur_condition_value]").val(pines.unsafe(rows.pgrid_get_value(3)));
 						condition_dialog.dialog('open');
 					}
 				},
@@ -141,16 +141,16 @@ $pines->com_ptags->load();
 						var new_condition = [{
 							key: null,
 							values: [
-								cur_condition_class,
-								cur_condition_type,
-								cur_condition_value
+								pines.safe(cur_condition_class),
+								pines.safe(cur_condition_type),
+								pines.safe(cur_condition_value)
 							]
 						}];
 						conditions_table.pgrid_add(new_condition);
 					} else {
-						cur_condition.pgrid_set_value(1, cur_condition_class);
-						cur_condition.pgrid_set_value(2, cur_condition_type);
-						cur_condition.pgrid_set_value(3, cur_condition_value);
+						cur_condition.pgrid_set_value(1, pines.safe(cur_condition_class));
+						cur_condition.pgrid_set_value(2, pines.safe(cur_condition_type));
+						cur_condition.pgrid_set_value(3, pines.safe(cur_condition_value));
 					}
 					$(this).dialog('close');
 				}
@@ -248,7 +248,7 @@ $pines->com_ptags->load();
 								if (substr($cur_component, 0, 4) != 'tpl_')
 									continue;
 								?>
-							<option value="<?php echo $cur_component; ?>"<?php echo (($this->entity->component == $cur_component) ? ' selected="selected"' : ''); ?>><?php echo "{$pines->info->$cur_component->name} [{$cur_component}]"; ?></option>
+							<option value="<?php echo htmlspecialchars($cur_component); ?>"<?php echo (($this->entity->component == $cur_component) ? ' selected="selected"' : ''); ?>><?php echo "{$pines->info->$cur_component->name} [{$cur_component}]"; ?></option>
 							<?php } ?>
 						</select>
 					</label>
@@ -319,7 +319,7 @@ $pines->com_ptags->load();
 				<div class="pf-element pf-full-width">
 					<label>
 						<span class="pf-label">Description</span>
-						<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="meta_description"><?php echo $this->entity->meta['description']; ?></textarea></span>
+						<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="meta_description"><?php echo htmlspecialchars($this->entity->meta['description']); ?></textarea></span>
 					</label>
 				</div>
 				<div class="pf-element pf-full-width">
@@ -519,7 +519,7 @@ $pines->com_ptags->load();
 					update_images();
 
 					var add_image = function(image){
-						$("<li class=\"ui-state-default ui-corner-all\"><img alt=\""+image.replace(/.*\//, '')+"\" src=\""+image+"\" /><p>Click to edit description...</p></li>").appendTo($("#p_muid_sortable"));
+						$("<li class=\"ui-state-default ui-corner-all\"><img alt=\""+pines.safe(image.replace(/.*\//, ''))+"\" src=\""+pines.safe(image)+"\" /><p>Click to edit description...</p></li>").appendTo($("#p_muid_sortable"));
 						update_images();
 					};
 
@@ -531,9 +531,9 @@ $pines->com_ptags->load();
 					.delegate("li p", "click", function(){
 						var cur_alt = $(this);
 						var desc = cur_alt.text();
-						$("<textarea cols=\"4\" rows=\"3\" style=\"width: 100%\" class=\"ui-widget-content ui-corner-all\">"+desc+"</textarea>")
+						$("<textarea cols=\"4\" rows=\"3\" style=\"width: 100%\" class=\"ui-widget-content ui-corner-all\">"+pines.safe(desc)+"</textarea>")
 						.blur(function(){
-							cur_alt.insertAfter(this).html($(this).remove().val());
+							cur_alt.insertAfter(this).html(pines.safe($(this).remove().val()));
 							update_images();
 						})
 						.insertAfter(cur_alt)
@@ -617,7 +617,7 @@ $pines->com_ptags->load();
 	<br />
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
-		<input type="hidden" name="id" value="<?php echo $this->entity->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_packager', 'package/list')); ?>');" value="Cancel" />

@@ -83,7 +83,7 @@ if (isset($pines->com_fancybox))
 						info_dialog.dialog("enable");
 					},
 					error: function(XMLHttpRequest, textStatus){
-						pines.error("An error occured while trying to calculate changes:\n"+XMLHttpRequest.status+": "+textStatus);
+						pines.error("An error occured while trying to calculate changes:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 					},
 					success: function(data){
 						if (!data) {
@@ -110,15 +110,15 @@ if (isset($pines->com_fancybox))
 									info_dialog.dialog("enable");
 								},
 								error: function(XMLHttpRequest, textStatus){
-									pines.error("An error occured while trying to perform action:\n"+XMLHttpRequest.status+": "+textStatus);
+									pines.error("An error occured while trying to perform action:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 								},
 								success: function(data){
 									info_dialog.dialog("close");
 									if (data) {
-										pines.notice("Successfully installed the package '"+name+"'.");
+										pines.notice("Successfully installed the package '"+pines.safe(name)+"'.");
 										location.reload(true);
 									} else
-										pines.notice("The package '"+name+"' could not be installed.");
+										pines.notice("The package '"+pines.safe(name)+"' could not be installed.");
 								}
 							});
 						});
@@ -143,15 +143,15 @@ if (isset($pines->com_fancybox))
 						info_dialog.dialog("enable");
 					},
 					error: function(XMLHttpRequest, textStatus){
-						pines.error("An error occured while trying to perform action:\n"+XMLHttpRequest.status+": "+textStatus);
+						pines.error("An error occured while trying to perform action:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 					},
 					success: function(data){
 						info_dialog.dialog("close");
 						if (data) {
-							pines.notice("Successfully reinstalled the package '"+name+"'.");
+							pines.notice("Successfully reinstalled the package '"+pines.safe(name)+"'.");
 							location.reload(true);
 						} else
-							pines.notice("The package '"+name+"' could not be reinstalled. Is the same version still in the repository?");
+							pines.notice("The package '"+pines.safe(name)+"' could not be reinstalled. Is the same version still in the repository?");
 					}
 				});
 			},
@@ -168,7 +168,7 @@ if (isset($pines->com_fancybox))
 						info_dialog.dialog("enable");
 					},
 					error: function(XMLHttpRequest, textStatus){
-						pines.error("An error occured while trying to calculate changes:\n"+XMLHttpRequest.status+": "+textStatus);
+						pines.error("An error occured while trying to calculate changes:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 					},
 					success: function(data){
 						if (!data) {
@@ -195,15 +195,15 @@ if (isset($pines->com_fancybox))
 									info_dialog.dialog("enable");
 								},
 								error: function(XMLHttpRequest, textStatus){
-									pines.error("An error occured while trying to perform action:\n"+XMLHttpRequest.status+": "+textStatus);
+									pines.error("An error occured while trying to perform action:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 								},
 								success: function(data){
 									info_dialog.dialog("close");
 									if (data) {
-										pines.notice("Successfully removed the package '"+name+"'.");
+										pines.notice("Successfully removed the package '"+pines.safe(name)+"'.");
 										location.reload(true);
 									} else
-										pines.notice("The package '"+name+"' could not be removed.");
+										pines.notice("The package '"+pines.safe(name)+"' could not be removed.");
 								}
 							});
 						});
@@ -225,7 +225,7 @@ if (isset($pines->com_fancybox))
 						info_dialog.dialog("enable");
 					},
 					error: function(XMLHttpRequest, textStatus){
-						pines.error("An error occured while trying to calculate changes:\n"+XMLHttpRequest.status+": "+textStatus);
+						pines.error("An error occured while trying to calculate changes:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 					},
 					success: function(data){
 						if (!data) {
@@ -252,15 +252,15 @@ if (isset($pines->com_fancybox))
 									info_dialog.dialog("enable");
 								},
 								error: function(XMLHttpRequest, textStatus){
-									pines.error("An error occured while trying to perform action:\n"+XMLHttpRequest.status+": "+textStatus);
+									pines.error("An error occured while trying to perform action:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 								},
 								success: function(data){
 									info_dialog.dialog("close");
 									if (data) {
-										pines.notice("Successfully upgraded the package '"+name+"'.");
+										pines.notice("Successfully upgraded the package '"+pines.safe(name)+"'.");
 										location.reload(true);
 									} else
-										pines.notice("The package '"+name+"' could not be upgraded.");
+										pines.notice("The package '"+pines.safe(name)+"' could not be upgraded.");
 								}
 							});
 						});
@@ -283,18 +283,20 @@ if (isset($pines->com_fancybox))
 				dataType: "html",
 				data: {"name": name, "local": "false", "publisher": publisher},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve info:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve info:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (!data) {
 						pines.error("The server returned an unexpected value.");
 						return;
 					}
-					info_dialog = $("<div title=\"Package Info for "+name+"\"></div>").appendTo("body").html(data).dialog({
+					pines.pause();
+					info_dialog = $("<div title=\"Package Info for "+pines.safe(name)+"\"></div>").html(data).dialog({
 						modal: true,
 						width: "600px",
 						buttons: (installed ? (upgradable ? buttons_upgradable : buttons_installed) : buttons_new)
 					});
+					pines.play();
 				}
 			});
 		});

@@ -84,10 +84,10 @@ header('Content-Type: text/html');
 			pines(function(){
 				<?php
 				if ( $error ) { foreach ($error as $cur_item) {
-					echo 'pines.error('.json_encode($cur_item).", \"Error\");\n";
+					echo 'pines.error('.json_encode(htmlspecialchars($cur_item)).", \"Error\");\n";
 				} }
 				if ( $notice ) { foreach ($notice as $cur_item) {
-					echo 'pines.notice('.json_encode($cur_item).", \"Notice\");\n";
+					echo 'pines.notice('.json_encode(htmlspecialchars($cur_item)).", \"Notice\");\n";
 				} }
 				?>
 			});

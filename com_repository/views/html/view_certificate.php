@@ -96,10 +96,10 @@ $this->note = 'All new packages are signed against this certificate.';
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Certificate</span>
 		<span class="pf-note">Full repository certificate text.</span>
-		<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" readonly="readonly" style="width: 100%;" rows="8" cols="35"><?php echo $this->cert; ?></textarea></span>
+		<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" readonly="readonly" style="width: 100%;" rows="8" cols="35"><?php echo htmlspecialchars($this->cert); ?></textarea></span>
 	</div>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Certificate Details</span>
-		<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" readonly="readonly" style="width: 100%;" rows="16" cols="35"><?php echo print_r($this->data, true); ?></textarea></span>
+		<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" readonly="readonly" style="width: 100%;" rows="16" cols="35"><?php echo htmlspecialchars(print_r($this->data, true)); ?></textarea></span>
 	</div>
 </div>

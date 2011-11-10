@@ -72,7 +72,7 @@ if (!isset($this->entity->user->guid) || !isset($this->entity)) {
 						loader.pnotify_remove();
 					},
 					error: function(XMLHttpRequest, textStatus){
-						pines.error("An error occured while communicating with the server:\n"+XMLHttpRequest.status+": "+textStatus);
+						pines.error("An error occured while communicating with the server:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 					},
 					success: function(data){
 						if (data === undefined) {
@@ -143,12 +143,12 @@ if (!isset($this->entity->user->guid) || !isset($this->entity)) {
 				dataType: "html",
 				data: {id: rto_id},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the time off form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the time off form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == "")
 						return;
-					p_muid_rto_form = $("<div title=\"Time Off Request for "+"<?php echo htmlspecialchars($_SESSION['user']->name); ?>"+"\"></div>");
+					p_muid_rto_form = $("<div title=\"Time Off Request for <?php echo htmlspecialchars($_SESSION['user']->name); ?>\"></div>");
 					p_muid_rto_form.dialog({
 						bgiframe: true,
 						autoOpen: true,
@@ -177,7 +177,7 @@ if (!isset($this->entity->user->guid) || !isset($this->entity)) {
 										time_end: p_muid_rto_form.find(":input[name=time_end]").val()
 									},
 									error: function(XMLHttpRequest, textStatus){
-										pines.error("An error occured while trying to submit the time off request:\n"+XMLHttpRequest.status+": "+textStatus);
+										pines.error("An error occured while trying to submit the time off request:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 									},
 									success: function(successful){
 										if (!successful) {

@@ -24,7 +24,7 @@ $pines->icons->load();
 		if (!window._alert) {
 			window._alert = window.alert;
 			window.alert = function(message) {
-				$.pnotify({pnotify_title: "Alert", pnotify_text: String(message), pnotify_nonblock: true});
+				$.pnotify({pnotify_title: "Alert", pnotify_text: pines.safe(message), pnotify_nonblock: true});
 			};
 			pines.notice = function(message, title){
 				var options = $.extend({pnotify_title: title ? title : "Notice", pnotify_text: String(message)}, pines.pnotify_notice_defaults);

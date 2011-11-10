@@ -71,11 +71,11 @@ $pines->com_hrm->load_employee_select();
 				}},
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, click: function(e, row){
 					adjustment_id = row.attr("title");
-					$("#p_muid_adjustment_dialog [name=effective_date]").val(row.pgrid_get_value(1));
-					$("#p_muid_adjustment_dialog [name=name]").val(row.pgrid_get_value(2));
-					$("#p_muid_adjustment_dialog [name=employee]").val(row.pgrid_get_value(3));
-					$("#p_muid_adjustment_dialog [name=amount]").val(row.pgrid_get_value(4).replace('$',''));
-					$("#p_muid_adjustment_dialog [name=comments]").val(row.pgrid_get_value(5));
+					$("#p_muid_adjustment_dialog [name=effective_date]").val(pines.unsafe(row.pgrid_get_value(1)));
+					$("#p_muid_adjustment_dialog [name=name]").val(pines.unsafe(row.pgrid_get_value(2)));
+					$("#p_muid_adjustment_dialog [name=employee]").val(pines.unsafe(row.pgrid_get_value(3)));
+					$("#p_muid_adjustment_dialog [name=amount]").val(pines.unsafe(row.pgrid_get_value(4)).replace('$',''));
+					$("#p_muid_adjustment_dialog [name=comments]").val(pines.unsafe(row.pgrid_get_value(5)));
 					adjustment_dialog.dialog("open");
 				}},
 				{type: 'button', text: 'Remove', extra_class: 'picon picon-document-close', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_hrm', 'adjustment/delete', array('id' => '__title__'))); ?>'},
@@ -112,7 +112,7 @@ $pines->com_hrm->load_employee_select();
 	</thead>
 	<tbody>
 	<?php foreach($this->adjustments as $cur_adjustment) { ?>
-		<tr title="<?php echo $cur_adjustment->guid; ?>">
+		<tr title="<?php echo (int) $cur_adjustment->guid ?>">
 			<td><?php echo format_date($cur_adjustment->date); ?></td>
 			<td><?php echo htmlspecialchars($cur_adjustment->name); ?></td>
 			<td><?php echo htmlspecialchars($cur_adjustment->employee->guid.': '.$cur_adjustment->employee->name); ?></td>

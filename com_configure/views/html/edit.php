@@ -11,13 +11,12 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = "Editing Configuration for {$this->entity->info->name} {$this->entity->info->version} ({$this->entity->name})";
+$this->title = htmlspecialchars("Editing Configuration for {$this->entity->info->name} {$this->entity->info->version} ({$this->entity->name})");
 if ($this->entity->per_user) {
-	if ($this->entity->user->is_com_configure_condition) {
-		$this->note = "For conditional configuration {$this->entity->user->name}.";
-	} else {
-		$this->note = "For {$this->entity->type} {$this->entity->user->name} [{$this->entity->user->username}{$this->entity->user->groupname}].";
-	}
+	if ($this->entity->user->is_com_configure_condition)
+		$this->note = htmlspecialchars("For conditional configuration {$this->entity->user->name}.");
+	else
+		$this->note = htmlspecialchars("For {$this->entity->type} {$this->entity->user->name} [{$this->entity->user->username}{$this->entity->user->groupname}].");
 }
 $pines->com_ptags->load();
 ?>
@@ -78,7 +77,7 @@ $pines->com_ptags->load();
 					<?php } elseif (is_float($cur_var['value'][0])) { ?>
 					<input class="pf-field ui-widget-content ui-corner-all p_muid_do_tags" type="text" name="opt_float_<?php echo htmlspecialchars($cur_var['name']); ?>" value="<?php echo htmlspecialchars(implode(';;', $cur_value)); ?>" />
 					<?php } elseif (is_string($cur_var['value'][0])) { ?>
-					<div class="pf-field"><textarea rows="3" cols="35" class="ui-widget-content ui-corner-all p_muid_do_tags" style="width: 100%;" name="opt_string_<?php echo htmlspecialchars($cur_var['name']); ?>"><?php echo implode(';;', $cur_value); ?></textarea></div>
+					<div class="pf-field"><textarea rows="3" cols="35" class="ui-widget-content ui-corner-all p_muid_do_tags" style="width: 100%;" name="opt_string_<?php echo htmlspecialchars($cur_var['name']); ?>"><?php echo htmlspecialchars(implode(';;', $cur_value)); ?></textarea></div>
 					<?php } ?>
 				</div>
 			<?php } else { ?>
@@ -89,9 +88,9 @@ $pines->com_ptags->load();
 				<?php } elseif (is_float($cur_var['value'])) { ?>
 				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="opt_float_<?php echo htmlspecialchars($cur_var['name']); ?>" value="<?php echo htmlspecialchars($cur_value); ?>" />
 				<?php } elseif (is_string($cur_var['value'])) { ?>
-				<div class="pf-field pf-full-width"><textarea rows="3" cols="35" class="ui-widget-content ui-corner-all" style="width: 100%;" name="opt_string_<?php echo htmlspecialchars($cur_var['name']); ?>"><?php echo $cur_value; ?></textarea></div>
+				<div class="pf-field pf-full-width"><textarea rows="3" cols="35" class="ui-widget-content ui-corner-all" style="width: 100%;" name="opt_string_<?php echo htmlspecialchars($cur_var['name']); ?>"><?php echo htmlspecialchars($cur_value); ?></textarea></div>
 				<?php } else { ?>
-				<div class="pf-field pf-full-width"><textarea rows="3" cols="35" class="ui-widget-content ui-corner-all" style="width: 100%;" name="opt_serial_<?php echo htmlspecialchars($cur_var['name']); ?>"><?php echo serialize($cur_value); ?></textarea></div>
+				<div class="pf-field pf-full-width"><textarea rows="3" cols="35" class="ui-widget-content ui-corner-all" style="width: 100%;" name="opt_serial_<?php echo htmlspecialchars($cur_var['name']); ?>"><?php echo htmlspecialchars(serialize($cur_value)); ?></textarea></div>
 				<?php } ?>
 			<?php } ?>
 		</div>
@@ -114,7 +113,7 @@ $pines->com_ptags->load();
 		<?php if ($this->entity->per_user) { ?>
 		<input type="hidden" name="<?php echo $this->entity->user->is_com_configure_condition ? 'percondition' : 'peruser'; ?>" value="1" />
 		<input type="hidden" name="type" value="<?php echo htmlspecialchars($this->entity->type); ?>" />
-		<input type="hidden" name="id" value="<?php echo $this->entity->user->guid; ?>" />
+		<input type="hidden" name="id" value="<?php echo (int) $this->entity->user->guid; ?>" />
 		<?php } ?>
 		<input type="hidden" name="component" value="<?php echo htmlspecialchars($this->entity->name); ?>" />
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Save" name="save" />

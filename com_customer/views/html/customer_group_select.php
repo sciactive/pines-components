@@ -63,9 +63,9 @@ $pines->com_pgrid->load();
 					</thead>
 					<tbody>
 					<?php foreach($this->groups as $cur_group) { ?>
-						<tr title="<?php echo $cur_group->guid; ?>" class="<?php echo $cur_group->get_children() ? 'parent ' : ''; ?><?php echo (isset($cur_group->parent) && $cur_group->parent->in_array($this->groups)) ? "child ch_{$cur_group->parent->guid} " : ''; ?>">
-							<td><input type="radio" name="group" value="<?php echo $cur_group->guid; ?>" <?php echo $cur_group->default_customer_primary ? 'checked="checked" ' : ''; ?>/></td>
-							<td><input type="checkbox" name="groups[]" value="<?php echo $cur_group->guid; ?>" <?php echo $cur_group->default_customer_secondary ? 'checked="checked" ' : ''; ?>/></td>
+						<tr title="<?php echo (int) $cur_group->guid; ?>" class="<?php echo $cur_group->get_children() ? 'parent ' : ''; ?><?php echo (isset($cur_group->parent) && $cur_group->parent->in_array($this->groups)) ? htmlspecialchars("child ch_{$cur_group->parent->guid} ") : ''; ?>">
+							<td><input type="radio" name="group" value="<?php echo (int) $cur_group->guid; ?>" <?php echo $cur_group->default_customer_primary ? 'checked="checked" ' : ''; ?>/></td>
+							<td><input type="checkbox" name="groups[]" value="<?php echo (int) $cur_group->guid; ?>" <?php echo $cur_group->default_customer_secondary ? 'checked="checked" ' : ''; ?>/></td>
 							<td><?php echo htmlspecialchars($cur_group->name); ?></td>
 							<td><?php echo htmlspecialchars($cur_group->groupname); ?></td>
 						</tr>

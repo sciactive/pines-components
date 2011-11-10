@@ -44,7 +44,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			foreach ($this->employees as $cur_employee) {
 				if (!$cur_employee->in_group($this->location))
 					continue;
-				echo '<option value="'.$cur_employee->guid.'">'.htmlspecialchars($cur_employee->name).'</option>"';
+				echo '<option value="'.((int) $cur_employee->guid).'">'.htmlspecialchars($cur_employee->name).'</option>"';
 			} ?>
 		</select>
 	</div>
@@ -54,7 +54,7 @@ defined('P_RUN') or die('Direct access prohibited');
 				$shift = explode('-', $cur_shift);
 				$shift_start = format_date(strtotime($shift[0]), 'time_short');
 				$shift_end = format_date(strtotime($shift[1]), 'time_short'); ?>
-				<option value="<?php echo $cur_shift; ?>"><?php echo $shift_start.' - '.$shift_end; ?></option>
+				<option value="<?php echo htmlspecialchars($cur_shift); ?>"><?php echo $shift_start.' - '.$shift_end; ?></option>
 			<?php } ?>
 		</select>
 	</div>
@@ -63,7 +63,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	</div>
 	<br class="pf-clearing" />
 	<div class="pf-group">
-		<input type="hidden" name="location" value="<?php echo $this->location->guid; ?>" />
+		<input type="hidden" name="location" value="<?php echo (int) $this->location->guid; ?>" />
 		<input type="hidden" name="shifts" value="" />
 	</div>
 </form>

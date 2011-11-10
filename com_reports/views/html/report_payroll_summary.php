@@ -39,7 +39,7 @@ $pines->com_pgrid->load();
 		var start_date = "<?php echo $this->start_date ? addslashes(format_date($this->start_date, 'date_sort')) : ''; ?>";
 		var end_date = "<?php echo $this->end_date ? addslashes(format_date($this->end_date - 1, 'date_sort')) : ''; ?>";
 		// Location Defaults
-		var location = "<?php echo $this->location->guid; ?>";
+		var location = "<?php echo (int) $this->location->guid ?>";
 		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
 
 		var payroll_grid = $("#p_muid_grid").pgrid({
@@ -73,7 +73,7 @@ $pines->com_pgrid->load();
 				dataType: "html",
 				data: {"all_time": all_time, "start_date": start_date, "end_date": end_date},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the date form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the date form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == "")
@@ -114,7 +114,7 @@ $pines->com_pgrid->load();
 				dataType: "html",
 				data: {"location": location, "descendents": descendents},
 				error: function(XMLHttpRequest, textStatus){
-					pines.error("An error occured while trying to retrieve the location form:\n"+XMLHttpRequest.status+": "+textStatus);
+					pines.error("An error occured while trying to retrieve the location form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 				},
 				success: function(data){
 					if (data == "")
@@ -190,7 +190,7 @@ $pines->com_pgrid->load();
 				$commission_total[1]++;
 			}
 			?>
-		<tr title="<?php echo $cur_employee['entity']->guid;?>" >
+		<tr title="<?php echo (int) $cur_employee['entity']->guid?>" >
 			<td><a href="<?php echo htmlspecialchars(pines_url('com_user', 'edituser', array('id' => $cur_employee['entity']->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_employee['entity']->name); ?></a></td>
 			<td><?php echo htmlspecialchars(strtoupper($cur_employee['commission_status']));?></td>
 			<td><?php echo $cur_employee['commission_status'] != 'salary' ? 'N/A' : number_format($cur_employee['salary_pay_period'], 2, '.', ''); ?></td>

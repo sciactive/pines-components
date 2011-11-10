@@ -62,17 +62,17 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						struct.push({
 							"key": this.guid,
 							"values": [
-								this.guid,
-								this.name,
+								pines.safe(this.guid),
+								pines.safe(this.name),
 								this.address_type == 'us' ? 'US' : 'Intl',
-								this.address,
-								this.city,
-								this.state,
-								this.zip,
-								this.email,
-								this.phone,
-								this.fax,
-								this.website
+								pines.safe(this.address),
+								pines.safe(this.city),
+								pines.safe(this.state),
+								pines.safe(this.zip),
+								pines.safe(this.email),
+								pines.safe(this.phone),
+								pines.safe(this.fax),
+								pines.safe(this.website)
 							]
 						});
 					});

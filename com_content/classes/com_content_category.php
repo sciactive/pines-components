@@ -26,6 +26,16 @@ class com_content_category extends entity {
 	public function __construct($id = 0) {
 		parent::__construct();
 		$this->add_tag('com_content', 'category');
+		if ($id > 0) {
+			global $pines;
+			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
+			if (isset($entity)) {
+				$this->guid = $entity->guid;
+				$this->tags = $entity->tags;
+				$this->put_data($entity->get_data(), $entity->get_sdata());
+				return;
+			}
+		}
 		// Defaults
 		$this->enabled = true;
 		$this->parent = null;
@@ -34,15 +44,6 @@ class com_content_category extends entity {
 		$this->menu_position = 'left';
 		$this->conditions = array();
 		$this->variants = array();
-		if ($id > 0) {
-			global $pines;
-			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
-			if (!isset($entity))
-				return;
-			$this->guid = $entity->guid;
-			$this->tags = $entity->tags;
-			$this->put_data($entity->get_data(), $entity->get_sdata());
-		}
 	}
 
 	/**

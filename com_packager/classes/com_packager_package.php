@@ -26,20 +26,21 @@ class com_packager_package extends entity {
 	public function __construct($id = 0) {
 		parent::__construct();
 		$this->add_tag('com_packager', 'package');
+		if ($id > 0) {
+			global $pines;
+			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
+			if (isset($entity)) {
+				$this->guid = $entity->guid;
+				$this->tags = $entity->tags;
+				$this->put_data($entity->get_data(), $entity->get_sdata());
+				return;
+			}
+		}
 		// Defaults.
 		$this->type = 'component';
 		$this->meta = array();
 		$this->additional_files = array();
 		$this->exclude_files = array();
-		if ($id > 0) {
-			global $pines;
-			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
-			if (!isset($entity))
-				return;
-			$this->guid = $entity->guid;
-			$this->tags = $entity->tags;
-			$this->put_data($entity->get_data(), $entity->get_sdata());
-		}
 	}
 
 	/**

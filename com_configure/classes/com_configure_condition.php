@@ -26,20 +26,21 @@ class com_configure_condition extends entity {
 	public function __construct($id = 0) {
 		parent::__construct();
 		$this->add_tag('com_configure', 'condition');
+		if ($id > 0) {
+			global $pines;
+			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
+			if (isset($entity)) {
+				$this->guid = $entity->guid;
+				$this->tags = $entity->tags;
+				$this->put_data($entity->get_data(), $entity->get_sdata());
+				return;
+			}
+		}
 		// Defaults.
 		$this->conditions = array();
 		$this->sys_config = array();
 		$this->com_config = array();
 		$this->is_com_configure_condition = true;
-		if ($id > 0) {
-			global $pines;
-			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
-			if (!isset($entity))
-				return;
-			$this->guid = $entity->guid;
-			$this->tags = $entity->tags;
-			$this->put_data($entity->get_data(), $entity->get_sdata());
-		}
 	}
 
 	/**

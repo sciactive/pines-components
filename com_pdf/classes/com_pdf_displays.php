@@ -31,6 +31,16 @@ class com_pdf_displays extends entity {
 		global $pines;
 		parent::__construct();
 		$this->add_tag('com_pdf', 'displays');
+		if ($id > 0) {
+			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
+			if (isset($entity)) {
+				$this->guid = $entity->guid;
+				$this->tags = $entity->tags;
+				$this->put_data($entity->get_data(), $entity->get_sdata());
+				return;
+			}
+		}
+		// Defaults.
 		$this->displays = array();
 		$this->pdf_file = 'blank.pdf';
 		$this->pdf_dl_filename = 'blank.pdf';
@@ -40,14 +50,6 @@ class com_pdf_displays extends entity {
 		$this->pdf_creator = 'Pines';
 		$this->pdf_subject = '';
 		$this->pdf_keywords = '';
-		if ($id > 0) {
-			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
-			if (!isset($entity))
-				return;
-			$this->guid = $entity->guid;
-			$this->tags = $entity->tags;
-			$this->put_data($entity->get_data(), $entity->get_sdata());
-		}
 	}
 
 	/**

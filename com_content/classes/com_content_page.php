@@ -26,21 +26,22 @@ class com_content_page extends entity {
 	public function __construct($id = 0) {
 		parent::__construct();
 		$this->add_tag('com_content', 'page');
+		if ($id > 0) {
+			global $pines;
+			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
+			if (isset($entity)) {
+				$this->guid = $entity->guid;
+				$this->tags = $entity->tags;
+				$this->put_data($entity->get_data(), $entity->get_sdata());
+				return;
+			}
+		}
 		// Defaults.
 		$this->enabled = true;
 		$this->content_tags = array();
 		$this->conditions = array();
 		$this->publish_end = null;
 		$this->variants = array();
-		if ($id > 0) {
-			global $pines;
-			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
-			if (!isset($entity))
-				return;
-			$this->guid = $entity->guid;
-			$this->tags = $entity->tags;
-			$this->put_data($entity->get_data(), $entity->get_sdata());
-		}
 	}
 
 	/**

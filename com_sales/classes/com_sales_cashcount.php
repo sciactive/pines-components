@@ -27,23 +27,23 @@ class com_sales_cashcount extends entity {
 		parent::__construct();
 		global $pines;
 		$this->add_tag('com_sales', 'cashcount');
+		if ($id > 0) {
+			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
+			if (isset($entity)) {
+				$this->guid = $entity->guid;
+				$this->tags = $entity->tags;
+				$this->put_data($entity->get_data(), $entity->get_sdata());
+				return;
+			}
+		}
 		// Defaults
 		$this->status = 'pending';
 		$this->audits = $this->deposits = $this->skims = $this->count = $this->count_out = array();
 		$this->currency_symbol = $pines->config->com_sales->currency_symbol;
-		if ($id > 0) {
-			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
-			if (!isset($entity))
-				return;
-			$this->guid = $entity->guid;
-			$this->tags = $entity->tags;
-			$this->put_data($entity->get_data(), $entity->get_sdata());
-		} else {
-			// Create a currency array.
-			foreach ($pines->config->com_sales->currency_denominations as $cur_currency) {
-				$key = str_replace('.', '_', $cur_currency);
-				$this->currency[$key] = $cur_currency;
-			}
+		// Create a currency array.
+		foreach ($pines->config->com_sales->currency_denominations as $cur_currency) {
+			$key = str_replace('.', '_', $cur_currency);
+			$this->currency[$key] = $cur_currency;
 		}
 	}
 

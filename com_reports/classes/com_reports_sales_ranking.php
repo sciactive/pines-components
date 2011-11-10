@@ -27,6 +27,16 @@ class com_reports_sales_ranking extends entity {
 	public function __construct($id = 0) {
 		parent::__construct();
 		$this->add_tag('com_reports', 'sales_ranking');
+		if ($id > 0) {
+			global $pines;
+			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
+			if (isset($entity)) {
+				$this->guid = $entity->guid;
+				$this->tags = $entity->tags;
+				$this->put_data($entity->get_data(), $entity->get_sdata());
+				return;
+			}
+		}
 		// Defaults.
 		$this->start_date = strtotime(date('m/01/Y 00:00:00'));
 		$this->end_date = strtotime('+1 month 00:00:00', $this->start_date);
@@ -34,15 +44,6 @@ class com_reports_sales_ranking extends entity {
 		$this->calc_nh_goals = true;
 		$this->only_below = true;
 		$this->sales_goals = array();
-		if ($id > 0) {
-			global $pines;
-			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
-			if (!isset($entity))
-				return;
-			$this->guid = $entity->guid;
-			$this->tags = $entity->tags;
-			$this->put_data($entity->get_data(), $entity->get_sdata());
-		}
 	}
 
 	/**

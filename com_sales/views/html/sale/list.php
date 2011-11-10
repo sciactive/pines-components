@@ -118,15 +118,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				success: function(data){
 					if (data == "")
 						return;
-					var form = $("<div title=\"Date Selector\"></div>");
-					form.dialog({
+					pines.pause();
+					var form = $("<div title=\"Date Selector\"></div>").html(data+"<br />").dialog({
 						bgiframe: true,
 						autoOpen: true,
-						height: 315,
 						modal: true,
-						open: function(){
-							form.html(data);
-						},
 						close: function(){
 							form.remove();
 						},
@@ -144,6 +140,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 							}
 						}
 					});
+					pines.play();
 				}
 			});
 		};
@@ -159,15 +156,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				success: function(data){
 					if (data == "")
 						return;
-					var form = $("<div title=\"Location Selector\"></div>");
-					form.dialog({
+					pines.pause();
+					var form = $("<div title=\"Location Selector\"></div>").html(data+"<br />").dialog({
 						bgiframe: true,
 						autoOpen: true,
-						height: 250,
 						modal: true,
-						open: function(){
-							form.html(data);
-						},
 						close: function(){
 							form.remove();
 						},
@@ -183,6 +176,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 							}
 						}
 					});
+					pines.play();
 				}
 			});
 		};
@@ -198,14 +192,14 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				success: function(data){
 					if (data == "")
 						return;
-					var form = $("<div title=\"Override Sale\"></div>");
+					pines.pause();
+					var form = $("<div title=\"Override Sale\"></div>").html(data+"<br />");
 					form.dialog({
 						bgiframe: true,
 						autoOpen: true,
 						width: 425,
 						modal: true,
 						open: function(){
-							form.html(data+"<br />");
 							$(".salesperson_box", form).employeeselect();
 						},
 						close: function(){
@@ -245,6 +239,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 							}
 						}
 					});
+					pines.play();
 				}
 			});
 		};
@@ -263,14 +258,14 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				success: function(data){
 					if (data == "")
 						return;
-					var form = $("<div title=\"Swap Salesperson [Sale: "+pines.safe(sale_id)+"]\"></div>");
+					pines.pause();
+					var form = $("<div title=\"Swap Salesperson [Sale: "+pines.safe(sale_id)+"]\"></div>").html(data+"<br />");
 					form.dialog({
 						bgiframe: true,
 						autoOpen: true,
 						width: 425,
 						modal: true,
 						open: function() {
-							form.html(data+"<br />");
 							$(".salesperson_box", form).employeeselect();
 						},
 						close: function(){
@@ -311,6 +306,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 							}
 						}
 					});
+					pines.play();
 				}
 			});
 		};
@@ -326,16 +322,13 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				success: function(data){
 					if (data == "")
 						return;
-					var form = $("<div title=\"Swap Item [Sale: "+pines.safe(sale_id)+"]\"></div>");
+					pines.pause();
+					var form = $("<div title=\"Swap Item [Sale: "+pines.safe(sale_id)+"]\"></div>").html(data+"<br />");
 					form.dialog({
 						bgiframe: true,
 						autoOpen: true,
-						height: 400,
 						width: 425,
 						modal: true,
-						open: function(){
-							form.html(data);
-						},
 						close: function(){
 							form.remove();
 						},
@@ -359,11 +352,17 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 							}
 						}
 					});
+					pines.play();
 				}
 			});
 		};
 		sale_grid.change_form = function(sale_id, guid){
-			if (!confirm("Are you sure you want to change a product on this sale? Doing so may have some serious consenquences. Product actions and commissions are not considered when changing products. Any difference in price and any discounts are also ignored. Customer required and one per invoice restrictions are also ignored. Only continue if you are fully aware of the results of changing a product."))
+			if (!confirm("\
+Are you sure you want to change a product on this sale? Doing so may have some\n\
+serious consenquences. Product actions and commissions are not considered when\n\
+changing products. Any difference in price and any discounts are also ignored.\n\
+\"Customer Required\" and \"One Per Invoice\" restrictions are also ignored.\n\
+Only continue if you are fully aware of the results of changing a product."))
 				return;
 			$.ajax({
 				url: "<?php echo addslashes(pines_url('com_sales', 'forms/changeproduct')); ?>",
@@ -376,14 +375,14 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				success: function(data){
 					if (data == "")
 						return;
-					var form = $("<div title=\"Change Product [Sale: "+pines.safe(sale_id)+"]\"></div>");
+					pines.pause();
+					var form = $("<div title=\"Change Product [Sale: "+pines.safe(sale_id)+"]\"></div>").html(data+"<br />");
 					form.dialog({
 						bgiframe: true,
 						autoOpen: true,
 						width: 425,
 						modal: true,
 						open: function() {
-							form.html(data+"<br />");
 							$(".product_box", form).productselect();
 						},
 						close: function(){
@@ -409,6 +408,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 							}
 						}
 					});
+					pines.play();
 				}
 			});
 		};

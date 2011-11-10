@@ -148,14 +148,11 @@ if (!isset($this->entity->user->guid) || !isset($this->entity)) {
 				success: function(data){
 					if (data == "")
 						return;
-					p_muid_rto_form = $("<div title=\"Time Off Request for <?php echo htmlspecialchars($_SESSION['user']->name); ?>\"></div>");
-					p_muid_rto_form.dialog({
+					pines.pause();
+					p_muid_rto_form = $("<div title=\"Time Off Request for <?php echo htmlspecialchars($_SESSION['user']->name); ?>\"></div>").html(data+"<br />").dialog({
 						bgiframe: true,
 						autoOpen: true,
 						modal: true,
-						open: function(){
-							p_muid_rto_form.html(data+"<br />").dialog("option", "position", "center");
-						},
 						close: function(){
 							p_muid_rto_form.remove();
 						},
@@ -190,6 +187,7 @@ if (!isset($this->entity->user->guid) || !isset($this->entity)) {
 							}
 						}
 					});
+					pines.play();
 				}
 			});
 		};

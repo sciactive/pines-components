@@ -78,15 +78,11 @@ $pines->com_pgrid->load();
 				success: function(data){
 					if (data == "")
 						return;
-					var form = $("<div title=\"Date Selector\"></div>");
-					form.dialog({
+					pines.pause();
+					var form = $("<div title=\"Date Selector\"></div>").html(data+"<br />").dialog({
 						bgiframe: true,
 						autoOpen: true,
-						height: 315,
 						modal: true,
-						open: function(){
-							form.html(data);
-						},
 						close: function(){
 							form.remove();
 						},
@@ -104,6 +100,7 @@ $pines->com_pgrid->load();
 							}
 						}
 					});
+					pines.play();
 				}
 			});
 		};
@@ -119,15 +116,11 @@ $pines->com_pgrid->load();
 				success: function(data){
 					if (data == "")
 						return;
-					var form = $("<div title=\"Location Selector\"></div>");
-					form.dialog({
+					pines.pause();
+					var form = $("<div title=\"Location Selector\"></div>").html(data+"<br />").dialog({
 						bgiframe: true,
 						autoOpen: true,
-						height: 250,
 						modal: true,
-						open: function(){
-							form.html(data);
-						},
 						close: function(){
 							form.remove();
 						},
@@ -143,6 +136,7 @@ $pines->com_pgrid->load();
 							}
 						}
 					});
+					pines.play();
 				}
 			});
 		};

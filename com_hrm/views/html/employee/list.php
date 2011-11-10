@@ -198,9 +198,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						success: function(data){
 							if (data == "")
 								return;
-							var form = $("<div title=\"Select User(s)\"></div>");
-							form.html(data+"<br />");
-							form.dialog({
+							pines.pause();
+							var form = $("<div title=\"Select User(s)\"></div>").html(data+"<br />").dialog({
 								bgiframe: true,
 								autoOpen: true,
 								modal: true,
@@ -215,6 +214,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 									}
 								}
 							});
+							pines.play();
 						}
 					});
 				}},
@@ -299,19 +299,19 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						success: function(data){
 							if (data == "")
 								return;
-							var form = $("<div title=\"Pending Requests for Time Off\"></div>");
-							form.dialog({
+							pines.pause();
+							var form = $("<div title=\"Pending Requests for Time Off\"></div>").html(data+"<br />").dialog({
 								bgiframe: true,
 								autoOpen: true,
 								modal: true,
 								width: 700,
-								open: function(){
-									form.html(data+"<br />").dialog("option", "position", "center");
-								},
 								close: function(){
 									form.remove();
 								}
 							});
+							pines.play();
+							// Need to center again because of PGrid.
+							form.dialog("option", "position", "center");
 						}
 					});
 				}},

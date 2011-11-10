@@ -144,14 +144,11 @@ if ($pines->config->com_calendar->com_customer)
 			success: function(data){
 				if (data == "")
 					return;
-				var form = $("<div title=\"Choose Location\"></div>");
-				form.dialog({
+				pines.pause();
+				var form = $("<div title=\"Choose Location\"></div>").html(data+"<br />").dialog({
 					bgiframe: true,
 					autoOpen: true,
 					modal: true,
-					open: function(){
-						form.html(data+"<br />").dialog("option", "position", "center");
-					},
 					close: function(){
 						form.remove();
 					},
@@ -171,6 +168,7 @@ if ($pines->config->com_calendar->com_customer)
 						}
 					}
 				});
+				pines.play();
 			}
 		});
 	};
@@ -192,15 +190,12 @@ if ($pines->config->com_calendar->com_customer)
 			success: function(data){
 				if (data == "")
 					return;
-				var form = $("<div title=\"Add a New Event\"></div>");
-				form.dialog({
+				pines.pause();
+				var form = $("<div title=\"Add a New Event\"></div>").html(data+"<br />").dialog({
 					bgiframe: true,
 					autoOpen: true,
 					modal: true,
 					width: 550,
-					open: function(){
-						form.html(data+"<br />").dialog("option", "position", "center");
-					},
 					close: function(){
 						form.remove();
 					},
@@ -233,6 +228,7 @@ if ($pines->config->com_calendar->com_customer)
 						}
 					}
 				});
+				pines.play();
 			}
 		});
 	};
@@ -249,15 +245,12 @@ if ($pines->config->com_calendar->com_customer)
 			success: function(data){
 				if (data == "")
 					return;
-				var form = $("<div title=\"Editing Event ["+pines.safe(event_id)+"]\"></div>");
-				form.dialog({
+				pines.pause();
+				var form = $("<div title=\"Editing Event ["+pines.safe(event_id)+"]\"></div>").html(data+"<br />").dialog({
 					bgiframe: true,
 					autoOpen: true,
 					modal: true,
 					width: 550,
-					open: function(){
-						form.html(data+"<br />").dialog("option", "position", "center");
-					},
 					close: function(){
 						form.remove();
 						pines.selected_event.removeClass('ui-state-disabled');
@@ -306,6 +299,7 @@ if ($pines->config->com_calendar->com_customer)
 						}
 					}
 				});
+				pines.play();
 			}
 		});
 	};
@@ -323,14 +317,11 @@ if ($pines->config->com_calendar->com_customer)
 			success: function(data){
 				if (data == "")
 					return;
-				var form = $("<div title=\"Quick schedule for <?php echo htmlspecialchars($this->location->name); ?>\"></div>");
-				form.dialog({
+				pines.pause();
+				var form = $("<div title=\"Quick Schedule for <?php echo htmlspecialchars($this->location->name); ?>\"></div>").html(data+"<br />").dialog({
 					bgiframe: true,
 					autoOpen: true,
 					modal: true,
-					open: function(){
-						form.html(data+"<br />").dialog("option", "position", "center");
-					},
 					close: function(){
 						form.remove();
 					},
@@ -344,6 +335,7 @@ if ($pines->config->com_calendar->com_customer)
 						}
 					}
 				});
+				pines.play();
 			}
 		});
 	};
@@ -361,14 +353,11 @@ if ($pines->config->com_calendar->com_customer)
 			success: function(data){
 				if (data == "")
 					return;
-				var form = $("<div title=\"Schedule work for <?php echo htmlspecialchars($this->employee->name); ?>\"></div>");
-				form.dialog({
+				pines.pause();
+				var form = $("<div title=\"Schedule Work for <?php echo htmlspecialchars($this->employee->name); ?>\"></div>").html(data+"<br />").dialog({
 					bgiframe: true,
 					autoOpen: true,
 					modal: true,
-					open: function(){
-						form.html(data+"<br />").dialog("option", "position", "center");
-					},
 					close: function(){
 						form.remove();
 					},
@@ -385,6 +374,9 @@ if ($pines->config->com_calendar->com_customer)
 						}
 					}
 				});
+				pines.play();
+				// Have to position again because of datepicker.
+				form.dialog("option", "position", "center");
 			}
 		});
 		<?php } else { ?>

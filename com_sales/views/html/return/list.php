@@ -104,15 +104,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				success: function(data){
 					if (data == "")
 						return;
-					var form = $("<div title=\"Date Selector\"></div>");
-					form.dialog({
+					pines.pause();
+					var form = $("<div title=\"Date Selector\"></div>").html(data+"<br />").dialog({
 						bgiframe: true,
 						autoOpen: true,
-						height: 315,
 						modal: true,
-						open: function(){
-							form.html(data);
-						},
 						close: function(){
 							form.remove();
 						},
@@ -130,6 +126,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 							}
 						}
 					});
+					pines.play();
 				}
 			});
 		};
@@ -145,15 +142,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				success: function(data){
 					if (data == "")
 						return;
-					var form = $("<div title=\"Location Selector\"></div>");
-					form.dialog({
+					pines.pause();
+					var form = $("<div title=\"Location Selector\"></div>").html(data+"<br />").dialog({
 						bgiframe: true,
 						autoOpen: true,
-						height: 250,
 						modal: true,
-						open: function(){
-							form.html(data);
-						},
 						close: function(){
 							form.remove();
 						},
@@ -169,6 +162,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 							}
 						}
 					});
+					pines.play();
 				}
 			});
 		};
@@ -184,14 +178,14 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				success: function(data){
 					if (data == "")
 						return;
-					var form = $("<div title=\"Override Return\"></div>");
+					pines.pause();
+					var form = $("<div title=\"Override Return\"></div>").html(data+"<br />");
 					form.dialog({
 						bgiframe: true,
 						autoOpen: true,
 						width: 425,
 						modal: true,
 						open: function(){
-							form.html(data+"<br />");
 							$(".salesperson_box", form).employeeselect();
 						},
 						close: function(){
@@ -231,6 +225,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 							}
 						}
 					});
+					pines.play();
 				}
 			});
 		};
@@ -249,14 +244,14 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				success: function(data){
 					if (data == "")
 						return;
-					var form = $("<div title=\"Swap Salesperson [Return: "+pines.safe(return_id)+"]\"></div>");
+					pines.pause();
+					var form = $("<div title=\"Swap Salesperson [Return: "+pines.safe(return_id)+"]\"></div>").html(data+"<br />");
 					form.dialog({
 						bgiframe: true,
 						autoOpen: true,
 						width: 425,
 						modal: true,
-						open: function() {
-							form.html(data+"<br />");
+						open: function(){
 							$(".salesperson_box", form).employeeselect();
 						},
 						close: function(){
@@ -297,6 +292,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 							}
 						}
 					});
+					pines.play();
 				}
 			});
 		};

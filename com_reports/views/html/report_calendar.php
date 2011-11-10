@@ -102,15 +102,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				success: function(data){
 					if (data == "")
 						return;
-					var form = $("<div title=\"Date Selector\"></div>");
-					form.dialog({
+					pines.pause();
+					var form = $("<div title=\"Date Selector\"></div>").html(data+"<br />").dialog({
 						bgiframe: true,
 						autoOpen: true,
-						height: 315,
 						modal: true,
-						open: function(){
-							form.html(data);
-						},
 						close: function(){
 							form.remove();
 						},
@@ -128,6 +124,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 							}
 						}
 					});
+					pines.play();
 				}
 			});
 		};
@@ -143,15 +140,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				success: function(data){
 					if (data == "")
 						return;
-					var form = $("<div title=\"Location Selector\"></div>");
-					form.dialog({
+					pines.pause();
+					var form = $("<div title=\"Location Selector\"></div>").html(data+"<br />").dialog({
 						bgiframe: true,
 						autoOpen: true,
-						height: 250,
 						modal: true,
-						open: function(){
-							form.html(data);
-						},
 						close: function(){
 							form.remove();
 						},
@@ -167,6 +160,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 							}
 						}
 					});
+					pines.play();
 				}
 			});
 		};

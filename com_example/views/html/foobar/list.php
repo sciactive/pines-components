@@ -1,6 +1,6 @@
 <?php
 /**
- * Lists widgets and provides functions to manipulate them.
+ * Lists foobars and provides functions to manipulate them.
  *
  * @package Pines
  * @subpackage com_example
@@ -11,10 +11,10 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Widgets';
+$this->title = 'Foobars';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_example/list_widgets']);
+	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_example/list_foobars']);
 ?>
 <script type="text/javascript">
 	// <![CDATA[
@@ -25,15 +25,15 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
-				<?php if (gatekeeper('com_example/newwidget')) { ?>
-				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: <?php echo json_encode(pines_url('com_example', 'widget/edit')); ?>},
-				<?php } if (gatekeeper('com_example/editwidget')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: <?php echo json_encode(pines_url('com_example', 'widget/edit', array('id' => '__title__'))); ?>},
+				<?php if (gatekeeper('com_example/newfoobar')) { ?>
+				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: <?php echo json_encode(pines_url('com_example', 'foobar/edit')); ?>},
+				<?php } if (gatekeeper('com_example/editfoobar')) { ?>
+				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: <?php echo json_encode(pines_url('com_example', 'foobar/edit', array('id' => '__title__'))); ?>},
 				<?php } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
-				<?php if (gatekeeper('com_example/deletewidget')) { ?>
-				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: <?php echo json_encode(pines_url('com_example', 'widget/delete', array('id' => '__title__'))); ?>, delimiter: ','},
+				<?php if (gatekeeper('com_example/deletefoobar')) { ?>
+				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: <?php echo json_encode(pines_url('com_example', 'foobar/delete', array('id' => '__title__'))); ?>, delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
@@ -41,7 +41,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
 					pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
-						filename: 'widgets',
+						filename: 'foobars',
 						content: rows
 					});
 				}}
@@ -52,7 +52,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post(<?php echo json_encode(pines_url('com_pgrid', 'save_state')); ?>, {view: "com_example/list_widgets", state: cur_state});
+				state_xhr = $.post(<?php echo json_encode(pines_url('com_pgrid', 'save_state')); ?>, {view: "com_example/list_foobars", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
@@ -69,10 +69,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		</tr>
 	</thead>
 	<tbody>
-	<?php foreach($this->widgets as $widget) { ?>
-		<tr title="<?php echo (int) $widget->guid ?>">
-			<td><?php echo htmlspecialchars($widget->name); ?></td>
-			<td><?php echo ($widget->enabled ? 'Yes' : 'No'); ?></td>
+	<?php foreach($this->foobars as $foobar) { ?>
+		<tr title="<?php echo (int) $foobar->guid ?>">
+			<td><?php echo htmlspecialchars($foobar->name); ?></td>
+			<td><?php echo ($foobar->enabled ? 'Yes' : 'No'); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

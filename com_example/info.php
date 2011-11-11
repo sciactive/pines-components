@@ -26,10 +26,10 @@ return array(
 		'component' => 'com_jquery&com_pgrid&com_pform'
 	),
 	'abilities' => array(
-		array('listwidgets', 'List Widgets', 'User can see widgets.'),
-		array('newwidget', 'Create Widgets', 'User can create new widgets.'),
-		array('editwidget', 'Edit Widgets', 'User can edit current widgets.'),
-		array('deletewidget', 'Delete Widgets', 'User can delete current widgets.'),
+		array('listfoobars', 'List Foobars', 'User can see foobars.'),
+		array('newfoobar', 'Create Foobars', 'User can create new foobars.'),
+		array('editfoobar', 'Edit Foobars', 'User can edit current foobars.'),
+		array('deletefoobar', 'Delete Foobars', 'User can delete current foobars.'),
 		array('content', 'Example Content', 'User can view example content.')
 	),
 );

@@ -14,9 +14,9 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
-		'name' => 'global_widgets',
-		'cname' => 'Globalize Widgets',
-		'description' => 'Ensure that every user can access all widgets by setting the "other" access control to read.',
+		'name' => 'global_foobars',
+		'cname' => 'Globalize Foobars',
+		'description' => 'Ensure that every user can access all foobars by setting the "other" access control to read.',
 		'value' => true,
 		'peruser' => true,
 	),

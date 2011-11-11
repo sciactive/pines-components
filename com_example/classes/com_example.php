@@ -20,18 +20,23 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class com_example extends component {
 	/**
-	 * Creates and attaches a module which lists widgets.
+	 * Creates and attaches a module which lists foobars.
 	 * @return module The module.
 	 */
-	public function list_widgets() {
+	public function list_foobars() {
 		global $pines;
 
-		$module = new module('com_example', 'widget/list', 'content');
+		$module = new module('com_example', 'foobar/list', 'content');
 
-		$module->widgets = $pines->entity_manager->get_entities(array('class' => com_example_widget), array('&', 'tag' => array('com_example', 'widget')));
+		$module->foobars = $pines->entity_manager->get_entities(
+				array('class' => com_example_foobar),
+				array('&',
+					'tag' => array('com_example', 'foobar')
+				)
+			);
 
-		if ( empty($module->widgets) )
-			pines_notice('There are no widgets.');
+		if ( empty($module->foobars) )
+			pines_notice('No foobars found.');
 
 		return $module;
 	}

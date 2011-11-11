@@ -20,9 +20,9 @@ return array(
 		'type' => 'module',
 	),
 	'example2' => array(
-		'cname' => 'Widget Module',
-		'view' => 'modules/widget',
-		'form' => 'modules/widget_form',
+		'cname' => 'Foobar Module',
+		'view' => 'modules/foobar',
+		'form' => 'modules/foobar_form',
 		// No type means it works as both regular and inline.
 	),
 	'iexample' => array(

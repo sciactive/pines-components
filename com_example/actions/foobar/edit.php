@@ -1,6 +1,6 @@
 <?php
 /**
- * Provide a form to edit a widget.
+ * Provide a form to edit a foobar.
  *
  * @package Pines
  * @subpackage com_example
@@ -13,14 +13,14 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if (!empty($_REQUEST['id'])) {
-	if ( !gatekeeper('com_example/editwidget') )
-		punt_user(null, pines_url('com_example', 'widget/edit', array('id' => $_REQUEST['id'])));
+	if ( !gatekeeper('com_example/editfoobar') )
+		punt_user(null, pines_url('com_example', 'foobar/edit', array('id' => $_REQUEST['id'])));
 } else {
-	if ( !gatekeeper('com_example/newwidget') )
-		punt_user(null, pines_url('com_example', 'widget/edit'));
+	if ( !gatekeeper('com_example/newfoobar') )
+		punt_user(null, pines_url('com_example', 'foobar/edit'));
 }
 
-$entity = com_example_widget::factory((int) $_REQUEST['id']);
+$entity = com_example_foobar::factory((int) $_REQUEST['id']);
 $entity->print_form();
 
 ?>

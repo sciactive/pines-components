@@ -1,6 +1,6 @@
 <?php
 /**
- * Provides a form for the user to edit a widget.
+ * Provides a form for the user to edit a foobar.
  *
  * @package Pines
  * @subpackage com_example
@@ -11,12 +11,12 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = (!isset($this->entity->guid)) ? 'Editing New Widget' : 'Editing ['.htmlspecialchars($this->entity->name).']';
-$this->note = 'Provide widget details in this form.';
+$this->title = (!isset($this->entity->guid)) ? 'Editing New Foobar' : 'Editing ['.htmlspecialchars($this->entity->name).']';
+$this->note = 'Provide foobar details in this form.';
 $pines->editor->load();
 $pines->com_pgrid->load();
 ?>
-<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_example', 'widget/save')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_example', 'foobar/save')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
 		pines(function(){
@@ -89,11 +89,11 @@ $pines->com_pgrid->load();
 
 			update_attributes();
 
-			$("#p_muid_widget_tabs").tabs();
+			$("#p_muid_foobar_tabs").tabs();
 		});
 		// ]]>
 	</script>
-	<div id="p_muid_widget_tabs" style="clear: both;">
+	<div id="p_muid_foobar_tabs" style="clear: both;">
 		<ul>
 			<li><a href="#p_muid_tab_general">General</a></li>
 			<li><a href="#p_muid_tab_attributes">Attributes</a></li>
@@ -173,6 +173,6 @@ $pines->com_pgrid->load();
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
-		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_example', 'widget/list')); ?>');" value="Cancel" />
+		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_example', 'foobar/list')); ?>');" value="Cancel" />
 	</div>
 </form>

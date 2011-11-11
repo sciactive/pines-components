@@ -7,19 +7,19 @@
 		}
 	},
 		{
-			"path": "main_menu/other/example/widgets",
-			"text": "Widgets",
-			"href": ["com_example","widget/list"],
+			"path": "main_menu/other/example/foobars",
+			"text": "Foobars",
+			"href": ["com_example","foobar/list"],
 			"depend": {
-				"ability": "com_example/listwidgets"
+				"ability": "com_example/listfoobars"
 			}
 		},
 		{
-			"path": "main_menu/other/example/newwidget",
-			"text": "New Widget",
-			"href": ["com_example","widget/edit"],
+			"path": "main_menu/other/example/newfoobar",
+			"text": "New Foobar",
+			"href": ["com_example","foobar/edit"],
 			"depend": {
-				"ability": "com_example/newwidget"
+				"ability": "com_example/newfoobar"
 			}
 		},
 		{

@@ -1,6 +1,6 @@
 <?php
 /**
- * com_example_widget class.
+ * com_example_foobar class.
  *
  * @package Pines
  * @subpackage com_example
@@ -13,19 +13,19 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * A widget.
+ * A foobar.
  *
  * @package Pines
  * @subpackage com_example
  */
-class com_example_widget extends entity {
+class com_example_foobar extends entity {
 	/**
-	 * Load a widget.
-	 * @param int $id The ID of the widget to load, 0 for a new widget.
+	 * Load a foobar.
+	 * @param int $id The ID of the foobar to load, 0 for a new foobar.
 	 */
 	public function __construct($id = 0) {
 		parent::__construct();
-		$this->add_tag('com_example', 'widget');
+		$this->add_tag('com_example', 'foobar');
 		if ($id > 0) {
 			global $pines;
 			$entity = $pines->entity_manager->get_entity(array('class' => get_class($this)), array('&', 'guid' => $id, 'tag' => $this->tags));
@@ -43,7 +43,7 @@ class com_example_widget extends entity {
 
 	/**
 	 * Create a new instance.
-	 * @return com_example_widget The new instance.
+	 * @return com_example_foobar The new instance.
 	 */
 	public static function factory() {
 		global $pines;
@@ -55,18 +55,18 @@ class com_example_widget extends entity {
 	}
 
 	/**
-	 * Delete the widget.
+	 * Delete the foobar.
 	 * @return bool True on success, false on failure.
 	 */
 	public function delete() {
 		if (!parent::delete())
 			return false;
-		pines_log("Deleted widget $this->name.", 'notice');
+		pines_log("Deleted foobar $this->name.", 'notice');
 		return true;
 	}
 
 	/**
-	 * Save the widget.
+	 * Save the foobar.
 	 * @return bool True on success, false on failure.
 	 */
 	public function save() {
@@ -76,12 +76,12 @@ class com_example_widget extends entity {
 	}
 
 	/**
-	 * Print a form to edit the widget.
+	 * Print a form to edit the foobar.
 	 * @return module The form's module.
 	 */
 	public function print_form() {
 		global $pines;
-		$module = new module('com_example', 'widget/form', 'content');
+		$module = new module('com_example', 'foobar/form', 'content');
 		$module->entity = $this;
 
 		return $module;

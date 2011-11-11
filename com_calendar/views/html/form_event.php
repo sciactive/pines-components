@@ -139,14 +139,23 @@ defined('P_RUN') or die('Direct access prohibited');
 <div class="pf-form calendar_form" id="p_muid_form">
 	<div style="float: left;">
 		<div class="pf-element">
-			<input class="ui-widget-content ui-corner-all form_input" type="text" id="p_muid_event_label" name="event_label" value="<?php echo (isset($this->entity->label)) ? htmlspecialchars($this->entity->label) : 'Label'; ?>" onfocus="if(this.value==this.defaultValue)this.value=''" onblur="if(this.value=='')this.value=this.defaultValue" />
+			<label>
+				<span class="pf-label">Label</span><br />
+				<input class="ui-widget-content ui-corner-all form_input" type="text" id="p_muid_event_label" name="event_label" value="<?php echo htmlspecialchars($this->entity->label); ?>" />
+			</label>
 		</div>
 		<div class="pf-element pf-full-width">
-			<textarea class="ui-widget-content ui-corner-all" rows="2" cols="18" name="information"><?php echo htmlspecialchars($this->entity->information); ?></textarea>
+			<label>
+				<span class="pf-label">Info</span><br />
+				<textarea class="ui-widget-content ui-corner-all" rows="2" cols="18" name="information"><?php echo htmlspecialchars($this->entity->information); ?></textarea>
+			</label>
 		</div>
 		<?php if (gatekeeper('com_calendar/managecalendar')) { ?>
 		<div class="pf-element">
-			<select class="ui-widget-content ui-corner-all form_input" name="employee"></select>
+			<label>
+				<span class="pf-label">Employee</span><br />
+				<select class="ui-widget-content ui-corner-all form_input" name="employee"></select>
+			</label>
 			<label><input class="pf-field" type="checkbox" name="private" value="ON" <?php echo ($this->entity->private) ? 'checked="checked" ' : ''; ?>/>Private</label>
 		</div>
 		<div class="pf-element location_tree" style="padding-bottom: 1em; width: 90%; max-height: 75px;"></div>
@@ -165,7 +174,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	?>
 	<div style="float: right;">
 		<div class="pf-element">
-			<span class="pf-note">Start</span>
+			<span class="pf-label">Start</span>
 			<label><input class="pf-field" type="checkbox" name="all_day" value="ON" <?php echo ($this->entity->all_day) ? 'checked="checked" ' : ''; ?>/>All Day</label>
 		</div>
 		<div class="pf-element pf-full-width">
@@ -202,7 +211,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			</span>
 		</div>
 		<div class="pf-element">
-			<span class="pf-note">End</span>
+			<span class="pf-label">End</span>
 		</div>
 		<div class="pf-element pf-full-width">
 			<input class="ui-widget-content ui-corner-all form_center" type="text" size="10" id="p_muid_end" name="end" value="<?php echo empty($end_date) ? format_date(time(), 'date_sort') : htmlspecialchars($end_date); ?>" />

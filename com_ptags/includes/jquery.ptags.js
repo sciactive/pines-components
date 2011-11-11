@@ -1,10 +1,12 @@
 /*
- * jQuery Pines Tags (ptags) Plugin 1.1.0
+ * jQuery Pines Tags (ptags) Plugin 1.1.1
  *
- * Copyright (c) 2009-2010 Hunter Perrin
+ * Copyright (c) 2009-2011 Hunter Perrin
  *
- * Licensed (along with all of Pines) under the GNU Affero GPL:
- *	  http://www.gnu.org/licenses/agpl.html
+ * Triple license under the GPL, LGPL, and MPL:
+ *	  http://www.gnu.org/licenses/gpl.html
+ *	  http://www.gnu.org/licenses/lgpl.html
+ *	  http://www.mozilla.org/MPL/MPL-1.1.html
  */
 
 (function($) {
@@ -57,13 +59,13 @@
 		var all_elements = this;
 		all_elements.each(function() {
 			var ptags = $(this);
-			ptags.ptags_version = "1.1.0";
-
+			ptags.ptags_version = "1.1.1";
+			
 			// Check for the ptags class. If it has it, we've already transformed this element.
 			if (ptags.hasClass("ui-ptags-tag-box")) return true;
 			// Add the ptags class.
 			ptags.addClass("ui-ptags-tag-box");
-
+			
 			ptags.extend(ptags, opts);
 
 			ptags.ptags_widget = $("<span />");
@@ -168,7 +170,7 @@
 			ptags.wrapAll(ptags.ptags_container);
 			// Update the container.
 			ptags.ptags_container = ptags.parent();
-
+			
 			if (ptags.ptags_input_box) {
 				var input_box = $(ptags.get(0)).clone().val("").keydown(function(e){
 					if (e.keyCode == 13 && !e.shiftKey) {

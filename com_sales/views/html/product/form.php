@@ -359,22 +359,26 @@ $pines->com_ptags->load();
 					$("#p_muid_sortable")
 					.delegate("li p", "click", function(){
 						var cur_alt = $(this);
-						var desc = cur_alt.text();
-						$("<textarea cols=\"4\" rows=\"3\" style=\"width: 100%\" class=\"ui-widget-content ui-corner-all\">"+pines.safe(desc)+"</textarea>")
-						.blur(function(){
+						var desc = cur_alt.html();
+						var ta = $("<textarea cols=\"4\" rows=\"3\" style=\"width: 100%\" class=\"ui-widget-content ui-corner-all\">"+pines.safe(desc)+"</textarea>")
+						.insertAfter(cur_alt)
+						.focusout(function(){
 							cur_alt.insertAfter(this).html(pines.safe($(this).remove().val()));
 							update_images();
-						})
-						.insertAfter(cur_alt)
-						.focus()
-						.select();
+						});
 						cur_alt.detach();
+						setTimeout(function(){
+							ta.focus().select();
+						}, 1);
 					})
 					.sortable({
 						placeholder: 'ui-state-highlight',
+						distance: 20,
 						update: function(){update_images();}
 					})
-					.draggable();
+					.draggable({
+						distance: 20
+					});
 					$("#p_muid_image_trash").droppable({
 						drop: function(e, ui){
 							ui.draggable.hide("explode", {}, 500, function(){

@@ -79,10 +79,10 @@ defined('P_RUN') or die('Direct access prohibited');
 	function getPos() {
 		var elem = $("#p_muid_drag_me");
 		var parent = elem.parent();
-		left = parseFloat(elem.css("left").replace("px", "")) / parent.width();
-		top = parseFloat(elem.css("top").replace("px", "")) / parent.height();
-		width = parseFloat(elem.width()) / parent.width();
-		height = parseFloat(elem.height()) / parent.height();
+		var left = parseFloat(elem.css("left").replace("px", "")) / parent.width();
+		var top = parseFloat(elem.css("top").replace("px", "")) / parent.height();
+		var width = parseFloat(elem.width()) / parent.width();
+		var height = parseFloat(elem.height()) / parent.height();
 		$("#p_muid_x").val(left);
 		$("#p_muid_y").val(top);
 		$("#p_muid_width").val(width);
@@ -97,7 +97,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 		previewimg.attr("src", "about:blank");
 		if (null !== dindex) {
-			previewimg.attr("src", <?php echo json_encode(pines_url('com_pdf', 'image', array('file' => '#file#', 'page' => '#page#'))); ?>.replace("#file#", file).replace("#page#", displays[dindex].page)).load(function(){
+			previewimg.attr("src", <?php echo json_encode(pines_url('com_pdf', 'image', array('file' => '__file__', 'page' => '__page__'))); ?>.replace("__file__", file).replace("__page__", displays[dindex].page)).load(function(){
 				elem.css("left", (displays[dindex].left * parent.width())+"px");
 				elem.css("top", (displays[dindex].top * parent.height())+"px");
 

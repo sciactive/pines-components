@@ -105,9 +105,9 @@ $timezone = $_SESSION['user']->get_timezone();
 						echo 'id: '. $cur_event->guid .', ';
 						echo '_id: '. $cur_event->guid .', ';
 					}
-					echo 'title: \''. addslashes($cur_event->title) .'\', ';
-					echo 'start: \''. format_date($cur_event->start, 'custom', 'Y-m-d H:i', $timezone) .'\', ';
-					echo 'end: \''. format_date($cur_event->end, 'custom', 'Y-m-d H:i', $timezone) .'\', ';
+					echo 'title: '. json_encode($cur_event->title) .', ';
+					echo 'start: '. json_encode(format_date($cur_event->start, 'custom', 'Y-m-d H:i', $timezone)) .', ';
+					echo 'end: '. json_encode(format_date($cur_event->end, 'custom', 'Y-m-d H:i', $timezone)) .', ';
 					if ((!gatekeeper('com_calendar/managecalendar') && (!$cur_event->user->is($_SESSION['user']) || $cur_event->appointment)) || $cur_event->time_off) {
 						echo 'editable: false,';
 					} else {
@@ -123,11 +123,11 @@ $timezone = $_SESSION['user']->get_timezone();
 							else
 								echo 'className: \'greenyellow\',';
 						} else {
-							echo 'className: \''. addslashes($cur_event->color) .'\',';
+							echo 'className: '. json_encode((string) $cur_event->color) .',';
 						}
 					} else {
 						echo 'appointment: \'\',';
-						echo 'className: \''. addslashes($cur_event->color) .'\',';
+						echo 'className: '. json_encode((string) $cur_event->color) .',';
 					}
 					echo ($cur_event->all_day) ? 'allDay: true,' : 'allDay: false,';
 					echo (!empty($cur_event->information)) ? 'info: '.json_encode($cur_event->information) : 'info: \'\'';
@@ -181,7 +181,7 @@ $timezone = $_SESSION['user']->get_timezone();
 					view_changes++;
 				} else {
 					alert('Loading Relevant Events');
-					pines.get("<?php echo addslashes(pines_url('com_calendar', 'editcalendar')); ?>", {
+					pines.get(<?php echo json_encode(pines_url('com_calendar', 'editcalendar')); ?>, {
 						view_type: view.name,
 						start: view.start.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1'),
 						end: view.end.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1'),
@@ -199,7 +199,7 @@ $timezone = $_SESSION['user']->get_timezone();
 	// Add new events to the calendar, mostly for duplicating events.
 	pines.com_calendar_add_events = function(events) {
 		$.ajax({
-			url: "<?php echo addslashes(pines_url('com_calendar', 'addevents')); ?>",
+			url: <?php echo json_encode(pines_url('com_calendar', 'addevents')); ?>,
 			type: "POST",
 			dataType: "html",
 			data: {"events": events},
@@ -207,7 +207,7 @@ $timezone = $_SESSION['user']->get_timezone();
 				pines.error("An error occured while trying to add events to the calendar.");
 			},
 			success: function(){
-				pines.get("<?php echo addslashes(pines_url('com_calendar', 'editcalendar',
+				pines.get(<?php echo json_encode(pines_url('com_calendar', 'editcalendar',
 					array(
 						'view_type' => $this->view_type,
 						'start' => format_date($this->date[0], 'date_short'),
@@ -217,7 +217,7 @@ $timezone = $_SESSION['user']->get_timezone();
 						'descendents' => $this->descendents,
 						'filter' => $this->filter
 					)
-				)); ?>");
+				)); ?>);
 			}
 		});
 	};
@@ -248,7 +248,7 @@ $timezone = $_SESSION['user']->get_timezone();
 			//event_count++;
 		});
 		$.ajax({
-			url: "<?php echo addslashes(pines_url('com_calendar', 'savecalendar')); ?>",
+			url: <?php echo json_encode(pines_url('com_calendar', 'savecalendar')); ?>,
 			type: "POST",
 			dataType: "html",
 			data: {"events": events_dump},
@@ -259,7 +259,7 @@ $timezone = $_SESSION['user']->get_timezone();
 				if (data)
 					alert(data);
 				if (refresh || data) {
-					pines.get('<?php echo addslashes(pines_url('com_calendar', 'editcalendar',
+					pines.get(<?php echo json_encode(pines_url('com_calendar', 'editcalendar',
 						array(
 							'view_type' => $this->view_type,
 							'start' => $this->start,
@@ -269,7 +269,7 @@ $timezone = $_SESSION['user']->get_timezone();
 							'descendents' => $this->descendents,
 							'filter' => $this->filter
 						)
-					)); ?>');
+					)); ?>);
 				}
 			}
 		});
@@ -331,7 +331,7 @@ $timezone = $_SESSION['user']->get_timezone();
 			alert('Please select at least one event to delete.');
 		} else {
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_calendar', 'deleteevents')); ?>",
+				url: <?php echo json_encode(pines_url('com_calendar', 'deleteevents')); ?>,
 				type: "POST",
 				dataType: "json",
 				data: {"events": event_guids},
@@ -368,7 +368,7 @@ $timezone = $_SESSION['user']->get_timezone();
 			});
 
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_calendar', 'deleteevents')); ?>",
+				url: <?php echo json_encode(pines_url('com_calendar', 'deleteevents')); ?>,
 				type: "POST",
 				dataType: "json",
 				data: {"events": event_guids},

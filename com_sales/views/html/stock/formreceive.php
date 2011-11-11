@@ -84,9 +84,9 @@ if ($pines->config->com_sales->autocomplete_product)
 										return;
 								}
 								if (cur_row.pgrid_get_value(1) == "PO")
-									url = "<?php echo addslashes(pines_url('com_sales', 'po/products')); ?>";
+									url = <?php echo json_encode(pines_url('com_sales', 'po/products')); ?>;
 								else
-									url = "<?php echo addslashes(pines_url('com_sales', 'transfer/products')); ?>";
+									url = <?php echo json_encode(pines_url('com_sales', 'transfer/products')); ?>;
 								$.ajax({
 									url: url,
 									type: "POST",
@@ -156,7 +156,7 @@ if ($pines->config->com_sales->autocomplete_product)
 								textbox.val("");
 								var loader;
 								$.ajax({
-									url: "<?php echo addslashes(pines_url('com_sales', 'product/search')); ?>",
+									url: <?php echo json_encode(pines_url('com_sales', 'product/search')); ?>,
 									type: "POST",
 									dataType: "json",
 									data: {"code": code},
@@ -264,7 +264,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					category_products_grid.pgrid_get_all_rows().pgrid_delete();
 					var loader;
 					$.ajax({
-						url: "<?php echo addslashes(pines_url('com_sales', 'category/products')); ?>",
+						url: <?php echo json_encode(pines_url('com_sales', 'category/products')); ?>,
 						type: "POST",
 						dataType: "json",
 						data: {"id": $(row).attr("title")},
@@ -372,7 +372,7 @@ if ($pines->config->com_sales->autocomplete_product)
 				"json_data" : {
 					"ajax" : {
 						"dataType" : "json",
-						"url" : "<?php echo addslashes(pines_url('com_jstree', 'groupjson')); ?>"
+						"url" : <?php echo json_encode(pines_url('com_jstree', 'groupjson')); ?>
 					}
 				},
 				"ui" : {

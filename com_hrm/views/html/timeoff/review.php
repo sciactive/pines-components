@@ -12,19 +12,19 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_hrm/timeoff/review'];
+	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_hrm/timeoff/review']);
 ?>
 <script type="text/javascript">
 	// <![CDATA[
 
 	pines(function(){
 		var state_xhr;
-		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
+		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
 		var cur_defaults = {
 			pgrid_view_height: "175px",
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
-				{type: 'button', text: 'Approve', extra_class: 'picon picon-checkbox', multi_select: true, url: '<?php echo addslashes(pines_url('com_hrm', 'timeoff/classify', array('id' => '__title__', 'status' => 'approved'))); ?>', delimiter: ',', confirm: function(e, rows){
+				{type: 'button', text: 'Approve', extra_class: 'picon picon-checkbox', multi_select: true, url: <?php echo json_encode(pines_url('com_hrm', 'timeoff/classify', array('id' => '__title__', 'status' => 'approved'))); ?>, delimiter: ',', confirm: function(e, rows){
 					var approved = true;
 					$.each(rows, function(){
 						if (!approved) return;
@@ -35,13 +35,13 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						approved = confirm('At least one employee is scheduled for a time which they are requesting off. Are you sure you want to approve time off during a time the employee is scheduled?');
 					return approved;
 				}},
-				{type: 'button', text: 'Decline', extra_class: 'picon picon-dialog-error', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_hrm', 'timeoff/classify', array('id' => '__title__', 'status' => 'declined'))); ?>', delimiter: ','},
+				{type: 'button', text: 'Decline', extra_class: 'picon picon-dialog-error', confirm: true, multi_select: true, url: <?php echo json_encode(pines_url('com_hrm', 'timeoff/classify', array('id' => '__title__', 'status' => 'declined'))); ?>, delimiter: ','},
 				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
 						filename: 'timeoff_requests',
 						content: rows
 					});
@@ -53,7 +53,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_hrm/timeoff/review", state: cur_state});
+				state_xhr = $.post(<?php echo json_encode(pines_url('com_pgrid', 'save_state')); ?>, {view: "com_hrm/timeoff/review", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);

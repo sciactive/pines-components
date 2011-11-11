@@ -108,7 +108,7 @@ $chat_log = $_SESSION['chats'];
 					jaxl.ping();
 
 					$.ajax({
-						url: "<?php echo addslashes(pines_url('com_messenger', 'messenger')); ?>",
+						url: <?php echo json_encode(pines_url('com_messenger', 'messenger')); ?>,
 						type: "POST",
 						dataType: "json",
 						data: {
@@ -169,7 +169,7 @@ $chat_log = $_SESSION['chats'];
 				$(this).val('');
 
 				var recipient = '<?php echo htmlspecialchars($pines->config->com_messenger->xmpp_support_user); ?>'+'@<?php echo htmlspecialchars($pines->config->com_messenger->xmpp_server); ?>';
-				boshchat.appendMessage(boshchat.prepareMessage('<?php echo htmlspecialchars(addslashes($xmpp_user)); ?>', message), true);
+				boshchat.appendMessage(boshchat.prepareMessage(<?php echo json_encode($xmpp_user); ?>, message), true);
 
 				obj = new Object;
 				obj['recipient'] = recipient;
@@ -178,7 +178,7 @@ $chat_log = $_SESSION['chats'];
 				jaxl.sendPayload(obj);
 
 				$.ajax({
-					url: "<?php echo addslashes(pines_url('com_messenger', 'messenger')); ?>",
+					url: <?php echo json_encode(pines_url('com_messenger', 'messenger')); ?>,
 					type: "POST",
 					dataType: "json",
 					data: {
@@ -194,7 +194,7 @@ $chat_log = $_SESSION['chats'];
 			foreach ($chat_log as $cur_chat) {
 				$jabber_id = key($chat_log);
 				foreach ($cur_chat as $cur_msg) { ?>
-					boshchat.appendMessage('<?php echo htmlspecialchars(addslashes($cur_msg)); ?>');
+					boshchat.appendMessage(<?php echo json_encode(htmlspecialchars($cur_msg)); ?>);
 			<?php }
 			} ?>
 			$('#p_muid_chat .read').animate({ scrollTop: $('#p_muid_chat .read').prop('scrollHeight') }, 300);

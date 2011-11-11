@@ -115,10 +115,10 @@ foreach ($this->invoices as $cur_invoice) {
 						echo '{';
 						echo 'id: 0,';
 						echo '_id: 0,';
-						echo 'title: \'$'.addslashes($cur_item[3]).'\',';
-						echo 'start: '. addslashes($cur_item[1]) .',';
-						echo 'end: '. addslashes($cur_item[2]) .',';
-						echo 'className: \''.addslashes($class).'\',';
+						echo 'title: '.json_encode('$'.$cur_item[3]).',';
+						echo 'start: '. json_encode($cur_item[1]) .',';
+						echo 'end: '. json_encode($cur_item[2]) .',';
+						echo 'className: '.json_encode($class).',';
 						echo 'allDay: false,';
 						echo '}';
 						$event_counter++;
@@ -131,9 +131,9 @@ foreach ($this->invoices as $cur_invoice) {
 					echo '{';
 					echo 'id: 0,';
 					echo '_id: 0,';
-					echo 'title: \'$'. addslashes($cur_total[3]) .'\',';
-					echo 'start: '. addslashes($cur_total[1]) .',';
-					echo 'end: '. addslashes($cur_total[2]) .',';
+					echo 'title: '. json_encode('$'.$cur_total[3]) .',';
+					echo 'start: '. json_encode($cur_total[1]) .',';
+					echo 'end: '. json_encode($cur_total[2]) .',';
 					echo 'className: \'mint_total\',';
 					echo 'allDay: true,';
 					echo '}';
@@ -149,10 +149,10 @@ foreach ($this->invoices as $cur_invoice) {
 					view_changes++;
 				} else {
 					alert('Loading Relevant Sales');
-					pines.get("<?php echo addslashes(pines_url('com_reports', 'reportsales')); ?>", {
+					pines.get(<?php echo json_encode(pines_url('com_reports', 'reportsales')); ?>, {
 						start: view.start.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1'),
 						end: view.end.toString().replace(/[A-Za-z]+\s([A-Za-z\s\d]+)\s\d{2}\:.*/, '$1'),
-						location: "<?php echo $this->all ? 'all' : addslashes($this->location); ?>",
+						location: <?php echo $this->all ? '"all"' : json_encode($this->location); ?>,
 						descendents: "<?php echo $this->descendents ? 'ON' : 'false'; ?>",
 						employee: "<?php echo (int) $this->employee->guid ?>"
 					});

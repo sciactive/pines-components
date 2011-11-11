@@ -19,7 +19,7 @@ else
 $pines->com_jstree->load();
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_reports/rank_sales'];
+	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_reports/rank_sales']);
 
 // Status levels for in the green, yellow and red classifications.
 $green_status = $pines->config->com_reports->rank_level_green;
@@ -81,7 +81,7 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 					{type: 'separator'},
 					{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-						pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+						pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
 							filename: 'sales_rankings',
 							content: rows
 						});

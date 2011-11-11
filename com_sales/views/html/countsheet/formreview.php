@@ -38,7 +38,7 @@ $pines->com_pgrid->load();
 	});
 	// ]]>
 </script>
-<form class="pf-form" method="post" id="p_muid_form" action="<?php echo addslashes(pines_url('com_sales', 'countsheet/savestatus')); ?>">
+<form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'countsheet/savestatus')); ?>">
 	<?php if ($this->entity->missing) { ?>
 	<div id="p_muid_acc_missing">
 		<h3 class="ui-helper-clearfix"><a href="#" style="color: red;">Missing Items</a></h3>

@@ -38,14 +38,14 @@ $pines->com_datetimepicker->load();
 	pines(function(){
 		var cur_entry;
 		var new_entry;
-		var timezone = "<?php echo addslashes($this->entity->user->get_timezone()); ?>";
+		var timezone = <?php echo json_encode($this->entity->user->get_timezone()); ?>;
 		var date_time_dialog = $("#p_muid_date_time_dialog");
 		var add_time_dialog = $("#p_muid_add_time_dialog");
 
 		var format_time = function(elem, timestamp) {
 			elem.html("Formatting...");
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('system', 'date_format')); ?>",
+				url: <?php echo json_encode(pines_url('system', 'date_format')); ?>,
 				type: "POST",
 				dataType: "text",
 				data: {"timestamp": timestamp, "timezone": timezone, "type": "custom", "format": "d M Y <\\s\\t\\r\\o\\n\\g>h:i:s A</\\s\\t\\r\\o\\n\\g> T"},
@@ -60,7 +60,7 @@ $pines->com_datetimepicker->load();
 		var format_time_range = function(elem, start_timestamp, end_timestamp) {
 			elem.html("Formatting...");
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('system', 'date_range_format')); ?>",
+				url: <?php echo json_encode(pines_url('system', 'date_range_format')); ?>,
 				type: "POST",
 				dataType: "text",
 				data: {"start_timestamp": start_timestamp, "end_timestamp": end_timestamp, "timezone": timezone},
@@ -154,7 +154,7 @@ $pines->com_datetimepicker->load();
 			buttons: {
 				"Done": function(){
 					$.ajax({
-						url: "<?php echo addslashes(pines_url('system', 'date_get_timestamp')); ?>",
+						url: <?php echo json_encode(pines_url('system', 'date_get_timestamp')); ?>,
 						type: "POST",
 						dataType: "text",
 						data: {"date": $("#p_muid_cur_time_in").val(), "timezone": timezone},
@@ -164,7 +164,7 @@ $pines->com_datetimepicker->load();
 						},
 						success: function(data_in){
 							$.ajax({
-								url: "<?php echo addslashes(pines_url('system', 'date_get_timestamp')); ?>",
+								url: <?php echo json_encode(pines_url('system', 'date_get_timestamp')); ?>,
 								type: "POST",
 								dataType: "text",
 								data: {"date": $("#p_muid_cur_time_out").val(), "timezone": timezone},
@@ -198,7 +198,7 @@ $pines->com_datetimepicker->load();
 			buttons: {
 				"Done": function(){
 					$.ajax({
-						url: "<?php echo addslashes(pines_url('system', 'date_get_timestamp')); ?>",
+						url: <?php echo json_encode(pines_url('system', 'date_get_timestamp')); ?>,
 						type: "POST",
 						dataType: "text",
 						data: {"date": $("#p_muid_new_time_in").val(), "timezone": timezone},
@@ -208,7 +208,7 @@ $pines->com_datetimepicker->load();
 						},
 						success: function(data_in){
 							$.ajax({
-								url: "<?php echo addslashes(pines_url('system', 'date_get_timestamp')); ?>",
+								url: <?php echo json_encode(pines_url('system', 'date_get_timestamp')); ?>,
 								type: "POST",
 								dataType: "text",
 								data: {"date": $("#p_muid_new_time_out").val(), "timezone": timezone},
@@ -259,12 +259,12 @@ $pines->com_datetimepicker->load();
 			autoOpen: false,
 			modal: true,
 			open: function(){
-				$("#p_muid_time_start").val("<?php echo addslashes(format_date($this->time_start, 'custom', 'Y-m-d h:i:s A', $this->entity->user->get_timezone())); ?>");
-				$("#p_muid_time_end").val("<?php echo addslashes(format_date($this->time_end, 'custom', 'Y-m-d h:i:s A', $this->entity->user->get_timezone())); ?>");
+				$("#p_muid_time_start").val(<?php echo json_encode(format_date($this->time_start, 'custom', 'Y-m-d h:i:s A', $this->entity->user->get_timezone())); ?>);
+				$("#p_muid_time_end").val(<?php echo json_encode(format_date($this->time_end, 'custom', 'Y-m-d h:i:s A', $this->entity->user->get_timezone())); ?>);
 			},
 			buttons: {
 				"Go": function(){
-					pines.get("<?php echo addslashes(pines_url('com_hrm', 'employee/timeclock/edit', array('id' => $this->entity->user->guid))); ?>", {
+					pines.get(<?php echo json_encode(pines_url('com_hrm', 'employee/timeclock/edit', array('id' => $this->entity->user->guid))); ?>, {
 						"time_start": $("#p_muid_time_start").val(),
 						"time_end": $("#p_muid_time_end").val()
 					});

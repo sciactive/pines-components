@@ -49,7 +49,7 @@ $pines->com_pgrid->load();
 			"json_data" : {
 				"ajax" : {
 					"dataType" : "json",
-					"url" : "<?php echo addslashes(pines_url('com_jstree', 'groupjson')); ?>"
+					"url" : <?php echo json_encode(pines_url('com_jstree', 'groupjson')); ?>
 				}
 			},
 			"ui" : {
@@ -100,7 +100,7 @@ $pines->com_pgrid->load();
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
 						filename: 'sales ranking',
 						content: rows
 					});
@@ -111,7 +111,7 @@ $pines->com_pgrid->load();
 		var change_location = function(new_location){
 			var loader;
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_reports', 'salesrankings_locationcontents')); ?>",
+				url: <?php echo json_encode(pines_url('com_reports', 'salesrankings_locationcontents')); ?>,
 				type: "GET",
 				dataType: "json",
 				data: {"id": new_location},

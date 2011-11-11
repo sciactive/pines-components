@@ -220,7 +220,7 @@ $pines->com_customer->load_company_select();
 					interaction_id = row.attr('title');
 					var loader;
 					$.ajax({
-						url: "<?php echo addslashes(pines_url('com_customer', 'interaction/info')); ?>",
+						url: <?php echo json_encode(pines_url('com_customer', 'interaction/info')); ?>,
 						type: "POST",
 						dataType: "json",
 						data: {"id": interaction_id},
@@ -263,7 +263,7 @@ $pines->com_customer->load_company_select();
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
 						filename: 'customer_interaction_<?php echo (int) $this->entity->guid; ?>',
 						content: rows
 					});
@@ -295,7 +295,7 @@ $pines->com_customer->load_company_select();
 				"Log Interaction": function(){
 					var loader;
 					$.ajax({
-						url: "<?php echo addslashes(pines_url('com_customer', 'interaction/add')); ?>",
+						url: <?php echo json_encode(pines_url('com_customer', 'interaction/add')); ?>,
 						type: "POST",
 						dataType: "json",
 						data: {
@@ -350,7 +350,7 @@ $pines->com_customer->load_company_select();
 				"Update": function(){
 					var loader;
 					$.ajax({
-						url: "<?php echo addslashes(pines_url('com_customer', 'interaction/process')); ?>",
+						url: <?php echo json_encode(pines_url('com_customer', 'interaction/process')); ?>,
 						type: "POST",
 						dataType: "json",
 						data: {

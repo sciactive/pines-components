@@ -56,7 +56,7 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 			var add_entry = function(serial, location, quantity){
 				var loader;
 				$.ajax({
-					url: "<?php echo addslashes(pines_url('com_sales', 'stock/search')); ?>",
+					url: <?php echo json_encode(pines_url('com_sales', 'stock/search')); ?>,
 					type: "POST",
 					dataType: "json",
 					data: {"product": current_item.children(".product").text(), "serial": serial, "location": location, "quantity": quantity},
@@ -219,7 +219,7 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 				"json_data" : {
 					"ajax" : {
 						"dataType" : "json",
-						"url" : "<?php echo addslashes(pines_url('com_jstree', 'groupjson')); ?>"
+						"url" : <?php echo json_encode(pines_url('com_jstree', 'groupjson')); ?>
 					}
 				},
 				"ui" : {

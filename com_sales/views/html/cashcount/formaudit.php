@@ -55,7 +55,7 @@ $this->note = 'Count all of the cash currently present in the drawer.';
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-		var cash_symbol = "<?php echo addslashes($this->entity->cashcount->currency_symbol); ?>";
+		var cash_symbol = <?php echo json_encode($this->entity->cashcount->currency_symbol); ?>;
 
 		// Update the cash count as money is counted.
 		$("#p_muid_form .entry").change(function(){

@@ -45,7 +45,7 @@ $pines->com_pgrid->load();
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
 						filename: 'sale_history',
 						content: rows
 					});
@@ -115,7 +115,7 @@ $pines->com_pgrid->load();
 					comments = '';
 			}
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_hrm', 'issue/process')); ?>",
+				url: <?php echo json_encode(pines_url('com_hrm', 'issue/process')); ?>,
 				type: "POST",
 				dataType: "html",
 				data: {"id": id, "status": status, "comments": comments},

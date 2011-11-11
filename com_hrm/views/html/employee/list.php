@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!$this->employed ? 'Prior ' : '').'Employees';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_hrm/employee/list'];
+	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_hrm/employee/list']);
 ?>
 <script type="text/javascript">
 	// <![CDATA[
@@ -42,7 +42,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			modal: true,
 			buttons: {
 				"Grant Bonus": function(){
-					pines.post("<?php echo addslashes(pines_url('com_hrm', 'bonus/add')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('com_hrm', 'bonus/add')); ?>, {
 						employees: employees,
 						name: bonus_dialog.find("[name=name]").val(),
 						date: bonus_dialog.find("[name=effective_date]").val(),
@@ -74,7 +74,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			modal: true,
 			buttons: {
 				"Grant Adjustment": function(){
-					pines.post("<?php echo addslashes(pines_url('com_hrm', 'adjustment/add')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('com_hrm', 'adjustment/add')); ?>, {
 						employees: employees,
 						name: adjustment_dialog.find("[name=name]").val(),
 						date: adjustment_dialog.find("[name=effective_date]").val(),
@@ -106,7 +106,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			modal: true,
 			buttons: {
 				"File Issue": function(){
-					pines.post("<?php echo addslashes(pines_url('com_hrm', 'issue/file')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('com_hrm', 'issue/file')); ?>, {
 						items: employees,
 						issue_type: issue_dialog.find(":input[name=issue_type]").val(),
 						date: $("#p_muid_issue_dialog [name=effective_date]").val(),
@@ -131,7 +131,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			buttons: {
 				"Terminate": function(){
 					var dispose_as = terminate_dialog.find(":input[name=reason]").val();
-					pines.post("<?php echo addslashes(pines_url('com_hrm', 'employee/terminate')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('com_hrm', 'employee/terminate')); ?>, {
 						items: employees,
 						date: $("#p_muid_terminate_dialog [name=effective_date]").val(),
 						reason: dispose_as,
@@ -155,7 +155,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			modal: true,
 			buttons: {
 				"Rehire": function(){
-					pines.post("<?php echo addslashes(pines_url('com_hrm', 'employee/terminate')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('com_hrm', 'employee/terminate')); ?>, {
 						items: employees,
 						date: $("#p_muid_rehire_dialog [name=effective_date]").val(),
 						reason: 'rehired',
@@ -168,7 +168,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<?php } ?>
 
 		var state_xhr;
-		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
+		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
@@ -189,7 +189,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<?php } else { ?>
 				{type: 'button', text: 'Add User(s)', extra_class: 'picon picon-list-add-user', selection_optional: true, click: function(){
 					$.ajax({
-						url: "<?php echo addslashes(pines_url('com_hrm', 'forms/userselect')); ?>",
+						url: <?php echo json_encode(pines_url('com_hrm', 'forms/userselect')); ?>,
 						type: "POST",
 						dataType: "html",
 						error: function(XMLHttpRequest, textStatus){
@@ -210,7 +210,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 									"Make Employee": function(){
 										form.dialog('close');
 										var users = form.find(":input[name=users]").val();
-										pines.post("<?php echo addslashes(pines_url('com_hrm', 'employee/add')); ?>", { "id": users });
+										pines.post(<?php echo json_encode(pines_url('com_hrm', 'employee/add')); ?>, { "id": users });
 									}
 								}
 							});
@@ -219,11 +219,11 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					});
 				}},
 				<?php } } if (gatekeeper('com_hrm/editemployee')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'picon picon-user-properties', double_click: true, url: '<?php echo addslashes(pines_url('com_hrm', 'employee/edit', array('id' => '__title__'))); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'picon picon-user-properties', double_click: true, url: <?php echo json_encode(pines_url('com_hrm', 'employee/edit', array('id' => '__title__'))); ?>},
 				<?php } ?>
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
-				{type: 'button', text: 'History', extra_class: 'picon picon-folder-html', url: '<?php echo addslashes(pines_url('com_hrm', 'employee/history', array('id' => '__title__'))); ?>'},
+				{type: 'button', text: 'History', extra_class: 'picon picon-folder-html', url: <?php echo json_encode(pines_url('com_hrm', 'employee/history', array('id' => '__title__'))); ?>},
 				<?php if (gatekeeper('com_hrm/editbonus')) { ?>
 				{type: 'button', title: 'Bonus', extra_class: 'picon picon-get-hot-new-stuff', multi_select: true, click: function(e, rows){
 					employees = "";
@@ -281,16 +281,16 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					terminate_dialog.dialog("open");
 				}},
 				<?php } if (gatekeeper('com_hrm/editbonus')) { ?>
-				{type: 'button', text: 'Bonuses', extra_class: 'picon picon-story-editor', selection_optional: true, url: '<?php echo addslashes(pines_url('com_hrm', 'bonus/list')); ?>'},
+				{type: 'button', text: 'Bonuses', extra_class: 'picon picon-story-editor', selection_optional: true, url: <?php echo json_encode(pines_url('com_hrm', 'bonus/list')); ?>},
 				<?php } if (gatekeeper('com_hrm/editadjustment')) { ?>
-				{type: 'button', text: 'Adjustments', extra_class: 'picon picon-story-editor', selection_optional: true, url: '<?php echo addslashes(pines_url('com_hrm', 'adjustment/list')); ?>'},
+				{type: 'button', text: 'Adjustments', extra_class: 'picon picon-story-editor', selection_optional: true, url: <?php echo json_encode(pines_url('com_hrm', 'adjustment/list')); ?>},
 				<?php } if (gatekeeper('com_hrm/editissuetypes')) { ?>
-				{type: 'button', text: 'Issue Types', extra_class: 'picon picon-story-editor', selection_optional: true, url: '<?php echo addslashes(pines_url('com_hrm', 'issue/list')); ?>'},
+				{type: 'button', text: 'Issue Types', extra_class: 'picon picon-story-editor', selection_optional: true, url: <?php echo json_encode(pines_url('com_hrm', 'issue/list')); ?>},
 				<?php } if (gatekeeper('com_hrm/managerto')) { ?>
 				{type: 'button', title: 'Time Off Requests', extra_class: 'picon picon-view-calendar-upcoming-events', selection_optional: true, click: function(e){
 					// Show and approve the requested time off.
 					$.ajax({
-						url: "<?php echo addslashes(pines_url('com_hrm', 'timeoff/review')); ?>",
+						url: <?php echo json_encode(pines_url('com_hrm', 'timeoff/review')); ?>,
 						type: "POST",
 						dataType: "html",
 						error: function(XMLHttpRequest, textStatus){
@@ -318,16 +318,16 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<?php } ?>
 				{type: 'separator'},
 				<?php if ($this->employed) { ?>
-				{type: 'button', text: 'Prior', extra_class: 'picon picon-vcs-removed', selection_optional: true, url: '<?php echo addslashes(pines_url('com_hrm', 'employee/list', array('employed' => 'false'))); ?>'},
+				{type: 'button', text: 'Prior', extra_class: 'picon picon-vcs-removed', selection_optional: true, url: <?php echo json_encode(pines_url('com_hrm', 'employee/list', array('employed' => 'false'))); ?>},
 				<?php } else { ?>
-				{type: 'button', text: 'Current', extra_class: 'picon picon-vcs-normal', selection_optional: true, url: '<?php echo addslashes(pines_url('com_hrm', 'employee/list')); ?>'},
+				{type: 'button', text: 'Current', extra_class: 'picon picon-vcs-normal', selection_optional: true, url: <?php echo json_encode(pines_url('com_hrm', 'employee/list')); ?>},
 				<?php } ?>
 				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
 						filename: 'employees',
 						content: rows
 					});
@@ -339,7 +339,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_hrm/employee/list", state: cur_state});
+				state_xhr = $.post(<?php echo json_encode(pines_url('com_pgrid', 'save_state')); ?>, {view: "com_hrm/employee/list", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);

@@ -143,7 +143,7 @@ $pines->icons->load();
 			var product = $(this).closest("div.product");
 			var guid = parseInt(product.children("div.guid").text());
 			$.ajax({
-				url: "<?php echo addslashes(pines_url()); ?>",
+				url: <?php echo json_encode(pines_url()); ?>,
 				type: "POST",
 				dataType: "json",
 				data: {option: "com_storefront", action: "cart/remove", id: guid},
@@ -207,7 +207,7 @@ $pines->icons->load();
 			if (!confirm("Are you sure you want to remove all items from your cart?"))
 				return;
 			$.ajax({
-				url: "<?php echo addslashes(pines_url()); ?>",
+				url: <?php echo json_encode(pines_url()); ?>,
 				type: "POST",
 				dataType: "json",
 				data: {option: "com_storefront", action: "cart/empty"},
@@ -233,7 +233,7 @@ $pines->icons->load();
 			var qty = $("> div.product.guid_"+guid+" div.qty", "#com_storefront_cart");
 			if (!qty.length) return;
 			$.ajax({
-				url: "<?php echo addslashes(pines_url()); ?>",
+				url: <?php echo json_encode(pines_url()); ?>,
 				type: "POST",
 				dataType: "json",
 				data: {option: "com_storefront", action: "cart/qty", id: guid, qty: new_qty},
@@ -260,7 +260,7 @@ $pines->icons->load();
 			if (isNaN(guid))
 				return false;
 			$.ajax({
-				url: "<?php echo addslashes(pines_url()); ?>",
+				url: <?php echo json_encode(pines_url()); ?>,
 				type: "POST",
 				dataType: "json",
 				data: {option: "com_storefront", action: "cart/add", id: guid},

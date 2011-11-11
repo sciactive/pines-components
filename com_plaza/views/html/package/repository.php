@@ -16,7 +16,7 @@ if (isset($this->service))
 	$this->title .= ' that Provides Service \''.htmlspecialchars($this->service).'\'';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_plaza/package/repository'];
+	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_plaza/package/repository']);
 if (isset($pines->com_fancybox))
 	$pines->com_fancybox->load();
 ?>
@@ -39,20 +39,20 @@ if (isset($pines->com_fancybox))
 	// <![CDATA[
 	pines(function(){
 		var state_xhr;
-		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
+		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				<?php if (isset($this->service)) { ?>
-				{type: 'button', text: 'All Packages', extra_class: 'picon picon-arrow-left-double', selection_optional: true, url: '<?php echo addslashes(pines_url('com_plaza', 'package/repository')); ?>'},
+				{type: 'button', text: 'All Packages', extra_class: 'picon picon-arrow-left-double', selection_optional: true, url: <?php echo json_encode(pines_url('com_plaza', 'package/repository')); ?>},
 				<?php } ?>
-				{type: 'button', text: 'Reload', extra_class: 'picon picon-view-refresh', selection_optional: true, url: '<?php echo addslashes(pines_url('com_plaza', 'reload')); ?>'},
+				{type: 'button', text: 'Reload', extra_class: 'picon picon-view-refresh', selection_optional: true, url: <?php echo json_encode(pines_url('com_plaza', 'reload')); ?>},
 				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
 						filename: 'packages',
 						content: rows
 					});
@@ -64,7 +64,7 @@ if (isset($pines->com_fancybox))
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_plaza/package/repository", state: cur_state});
+				state_xhr = $.post(<?php echo json_encode(pines_url('com_pgrid', 'save_state')); ?>, {view: "com_plaza/package/repository", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
@@ -74,7 +74,7 @@ if (isset($pines->com_fancybox))
 				var name = $(".package", this).text();
 				pines.com_plaza.ajax_show();
 				$.ajax({
-					url: "<?php echo addslashes(pines_url('com_plaza', 'package/changes')); ?>",
+					url: <?php echo json_encode(pines_url('com_plaza', 'package/changes')); ?>,
 					type: "POST",
 					dataType: "json",
 					data: {"name": name, "do": "install"},
@@ -101,7 +101,7 @@ if (isset($pines->com_fancybox))
 							info_dialog.dialog("disable");
 							pines.com_plaza.ajax_show();
 							$.ajax({
-								url: "<?php echo addslashes(pines_url('com_plaza', 'package/do')); ?>",
+								url: <?php echo json_encode(pines_url('com_plaza', 'package/do')); ?>,
 								type: "POST",
 								dataType: "json",
 								data: {"name": name, "do": "install"},
@@ -134,7 +134,7 @@ if (isset($pines->com_fancybox))
 				info_dialog.dialog("disable");
 				pines.com_plaza.ajax_show();
 				$.ajax({
-					url: "<?php echo addslashes(pines_url('com_plaza', 'package/do')); ?>",
+					url: <?php echo json_encode(pines_url('com_plaza', 'package/do')); ?>,
 					type: "POST",
 					dataType: "json",
 					data: {"name": name, "local": "true", "do": "reinstall"},
@@ -159,7 +159,7 @@ if (isset($pines->com_fancybox))
 				var name = $(".package", this).text();
 				pines.com_plaza.ajax_show();
 				$.ajax({
-					url: "<?php echo addslashes(pines_url('com_plaza', 'package/changes')); ?>",
+					url: <?php echo json_encode(pines_url('com_plaza', 'package/changes')); ?>,
 					type: "POST",
 					dataType: "json",
 					data: {"name": name, "local": "true", "do": "remove"},
@@ -186,7 +186,7 @@ if (isset($pines->com_fancybox))
 							info_dialog.dialog("disable");
 							pines.com_plaza.ajax_show();
 							$.ajax({
-								url: "<?php echo addslashes(pines_url('com_plaza', 'package/do')); ?>",
+								url: <?php echo json_encode(pines_url('com_plaza', 'package/do')); ?>,
 								type: "POST",
 								dataType: "json",
 								data: {"name": name, "local": "true", "do": "remove"},
@@ -216,7 +216,7 @@ if (isset($pines->com_fancybox))
 				var name = $(".package", this).text();
 				pines.com_plaza.ajax_show();
 				$.ajax({
-					url: "<?php echo addslashes(pines_url('com_plaza', 'package/changes')); ?>",
+					url: <?php echo json_encode(pines_url('com_plaza', 'package/changes')); ?>,
 					type: "POST",
 					dataType: "json",
 					data: {"name": name, "do": "upgrade"},
@@ -243,7 +243,7 @@ if (isset($pines->com_fancybox))
 							info_dialog.dialog("disable");
 							pines.com_plaza.ajax_show();
 							$.ajax({
-								url: "<?php echo addslashes(pines_url('com_plaza', 'package/do')); ?>",
+								url: <?php echo json_encode(pines_url('com_plaza', 'package/do')); ?>,
 								type: "POST",
 								dataType: "json",
 								data: {"name": name, "do": "upgrade"},
@@ -278,7 +278,7 @@ if (isset($pines->com_fancybox))
 			var installed = (cur_row.pgrid_get_value(5) != "");
 			var upgradable = (cur_row.pgrid_get_value(7) == "Yes");
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_plaza', 'package/infodialog')); ?>",
+				url: <?php echo json_encode(pines_url('com_plaza', 'package/infodialog')); ?>,
 				type: "POST",
 				dataType: "html",
 				data: {"name": name, "local": "false", "publisher": publisher},

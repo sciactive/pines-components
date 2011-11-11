@@ -18,7 +18,7 @@ defined('P_RUN') or die('Direct access prohibited');
 		ajax_box: null,
 		ajax_show: function(){
 			if (!pines.com_plaza.ajax_box)
-				pines.com_plaza.ajax_box = $("<div style=\"display: none; position: absolute; top: 0; left: 0; right: 0; z-index: 2000; text-align: center;\"><img src=\"<?php echo htmlspecialchars(addslashes($pines->config->location)); ?>components/com_plaza/includes/ajax-loader.gif\" alt=\"\" /></div>").prependTo("body");
+				pines.com_plaza.ajax_box = $("<div style=\"display: none; position: absolute; top: 0; left: 0; right: 0; z-index: 2000; text-align: center;\"><img src=\"<?php echo addslashes(htmlspecialchars($pines->config->location)); ?>components/com_plaza/includes/ajax-loader.gif\" alt=\"\" /></div>").prependTo("body");
 			pines.com_plaza.ajax_box.show();
 		},
 		ajax_hide: function(){
@@ -32,7 +32,7 @@ defined('P_RUN') or die('Direct access prohibited');
 				.append("<p>Click on a service to see the available packages that provide it.</p>")
 				.find("li").each(function(){
 					var service = $(this);
-					service.wrap($("<a href=\""+("<?php echo htmlspecialchars(addslashes(pines_url('com_plaza', 'package/repository', array('service' => '__service__')))); ?>".replace("__service__", service.text()))+"\"></a>"));
+					service.wrap($("<a href=\""+pines.safe(<?php echo json_encode(pines_url('com_plaza', 'package/repository', array('service' => '__service__'))); ?>).replace("__service__", service.text())+"\"></a>"));
 				}).end()
 				.dialog({
 					modal: true,

@@ -14,13 +14,13 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Employee Timeclock for '.htmlspecialchars($this->entity->user->name);
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_hrm/employee/timeclock/view'];
+	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_hrm/employee/timeclock/view']);
 ?>
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
 		var state_xhr;
-		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
+		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
 		var cur_defaults = {
 			pgrid_toolbar: false,
 			pgrid_select: false,
@@ -31,7 +31,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_hrm/employee/timeclock/view", state: cur_state});
+				state_xhr = $.post(<?php echo json_encode(pines_url('com_pgrid', 'save_state')); ?>, {view: "com_hrm/employee/timeclock/view", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);

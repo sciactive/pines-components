@@ -15,7 +15,7 @@ $this->title = 'Customers';
 $this->note = 'Begin by searching for a customer.';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_customer/customer/list'];
+	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_customer/customer/list']);
 ?>
 <style type="text/css">
 	/* <![CDATA[ */
@@ -61,7 +61,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			}
 			var loader;
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_customer', 'customer/search')); ?>",
+				url: <?php echo json_encode(pines_url('com_customer', 'customer/search')); ?>,
 				type: "POST",
 				dataType: "json",
 				data: {"q": search_string},
@@ -126,7 +126,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				"Log Interaction": function(){
 					var loader;
 					$.ajax({
-						url: "<?php echo addslashes(pines_url('com_customer', 'interaction/add')); ?>",
+						url: <?php echo json_encode(pines_url('com_customer', 'interaction/add')); ?>,
 						type: "POST",
 						dataType: "json",
 						data: {
@@ -169,7 +169,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		});
 
 		var state_xhr;
-		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
+		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
@@ -184,10 +184,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', extra_class: 'picon picon-system-search', selection_optional: true, pass_csv_with_headers: true, click: submit_search},
 				{type: 'separator'},
 				<?php if (gatekeeper('com_customer/newcustomer')) { ?>
-				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_customer', 'customer/edit')); ?>'},
+				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: <?php echo json_encode(pines_url('com_customer', 'customer/edit')); ?>},
 				<?php } if (gatekeeper('com_customer/editcustomer')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo addslashes(pines_url('com_customer', 'customer/edit', array('id' => '__title__'))); ?>'},
-				{type: 'button', text: 'Edit as User', extra_class: 'picon picon-user-properties', url: '<?php echo addslashes(pines_url('com_user', 'edituser', array('id' => '__title__'))); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: <?php echo json_encode(pines_url('com_customer', 'customer/edit', array('id' => '__title__'))); ?>},
+				{type: 'button', text: 'Edit as User', extra_class: 'picon picon-user-properties', url: <?php echo json_encode(pines_url('com_user', 'edituser', array('id' => '__title__'))); ?>},
 				<?php } if (gatekeeper('com_customer/newinteraction')) { ?>
 				{type: 'button', title: 'Add New Interaction', extra_class: 'picon picon-meeting-participant-optional', click: function(e, row){
 					customer_id = row.attr('title');
@@ -197,17 +197,17 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				//{type: 'button', text: 'E-Mail', extra_class: 'picon picon-mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
 				{type: 'separator'},
 				<?php if ($pines->config->com_customer->resetpoints && gatekeeper('com_customer/resetpoints')) { ?>
-				{type: 'button', title: 'Reset the Customer\'s Points', extra_class: 'picon picon-edit-clear', multi_select: true, url: '<?php echo addslashes(pines_url('com_customer', 'customer/resetpoints', array('id' => '__title__'))); ?>', delimiter: ','},
+				{type: 'button', title: 'Reset the Customer\'s Points', extra_class: 'picon picon-edit-clear', multi_select: true, url: <?php echo json_encode(pines_url('com_customer', 'customer/resetpoints', array('id' => '__title__'))); ?>, delimiter: ','},
 				<?php } if (gatekeeper('com_customer/deletecustomer')) { ?>
-				{type: 'button', title: 'Remove as Customer', extra_class: 'picon picon-list-remove', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_customer', 'customer/remove', array('id' => '__title__'))); ?>', delimiter: ','},
-				{type: 'button', title: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_customer', 'customer/delete', array('id' => '__title__'))); ?>', delimiter: ','},
+				{type: 'button', title: 'Remove as Customer', extra_class: 'picon picon-list-remove', confirm: true, multi_select: true, url: <?php echo json_encode(pines_url('com_customer', 'customer/remove', array('id' => '__title__'))); ?>, delimiter: ','},
+				{type: 'button', title: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: <?php echo json_encode(pines_url('com_customer', 'customer/delete', array('id' => '__title__'))); ?>, delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
 						filename: 'customers',
 						content: rows
 					});
@@ -219,7 +219,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_customer/customer/list", state: cur_state});
+				state_xhr = $.post(<?php echo json_encode(pines_url('com_pgrid', 'save_state')); ?>, {view: "com_customer/customer/list", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);

@@ -19,12 +19,12 @@ if ($pines->config->com_sales->per_item_salesperson && gatekeeper('com_sales/swa
 if ($pines->config->com_sales->autocomplete_product)
 	$pines->com_sales->load_product_select();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/sale/list'];
+	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_sales/sale/list']);
 ?>
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-		var submit_url = "<?php echo addslashes(pines_url('com_sales', 'sale/list')); ?>";
+		var submit_url = <?php echo json_encode(pines_url('com_sales', 'sale/list')); ?>;
 		var submit_search = function(){
 			// Submit the form with all of the fields.
 			pines.get(submit_url, {
@@ -38,14 +38,14 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 
 		// Timespan Defaults
 		var all_time = <?php echo $this->all_time ? 'true' : 'false'; ?>;
-		var start_date = "<?php echo $this->start_date ? addslashes(format_date($this->start_date, 'date_sort')) : ''; ?>";
-		var end_date = "<?php echo $this->end_date ? addslashes(format_date($this->end_date - 1, 'date_sort')) : ''; ?>";
+		var start_date = <?php echo $this->start_date ? json_encode(format_date($this->start_date, 'date_sort')) : '""'; ?>;
+		var end_date = <?php echo $this->end_date ? json_encode(format_date($this->end_date - 1, 'date_sort')) : '""'; ?>;
 		// Location Defaults
 		var location = "<?php echo (int) $this->location->guid ?>";
 		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
 
 		var state_xhr;
-		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
+		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
@@ -53,13 +53,13 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', title: 'Timespan', extra_class: 'picon picon-view-time-schedule', selection_optional: true, click: function(){sale_grid.date_form();}},
 				{type: 'separator'},
 				<?php if (gatekeeper('com_sales/newsale')) { ?>
-				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'sale/edit')); ?>'},
+				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, url: <?php echo json_encode(pines_url('com_sales', 'sale/edit')); ?>},
 				<?php } if (gatekeeper('com_sales/editsale')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', url: '<?php echo addslashes(pines_url('com_sales', 'sale/edit', array('id' => '__title__'))); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', url: <?php echo json_encode(pines_url('com_sales', 'sale/edit', array('id' => '__title__'))); ?>},
 				<?php } ?>
-				{type: 'button', text: 'Receipt', extra_class: 'picon picon-document-print-preview', double_click: true, url: '<?php echo addslashes(pines_url('com_sales', 'sale/receipt', array('id' => '__title__'))); ?>'},
+				{type: 'button', text: 'Receipt', extra_class: 'picon picon-document-print-preview', double_click: true, url: <?php echo json_encode(pines_url('com_sales', 'sale/receipt', array('id' => '__title__'))); ?>},
 				<?php if (gatekeeper('com_sales/newreturnwsale')) { ?>
-				{type: 'button', text: 'Return', extra_class: 'picon picon-edit-undo', url: '<?php echo addslashes(pines_url('com_sales', 'sale/return', array('id' => '__title__'))); ?>'},
+				{type: 'button', text: 'Return', extra_class: 'picon picon-edit-undo', url: <?php echo json_encode(pines_url('com_sales', 'sale/return', array('id' => '__title__'))); ?>},
 				<?php } if (gatekeeper('com_sales/swapsale')) { ?>
 				{type: 'button', text: 'Swap', extra_class: 'picon picon-document-swap', click: function(e, row){
 					sale_grid.swap_form($(row).attr("title"));
@@ -69,7 +69,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					sale_grid.change_form(row.pgrid_get_value(1), row.attr("title"));
 				}},
 				<?php } if (gatekeeper('com_sales/voidsale') || gatekeeper('com_sales/voidownsale')) { ?>
-				{type: 'button', text: 'Void', extra_class: 'picon picon-edit-delete-shred', confirm: true, url: '<?php echo addslashes(pines_url('com_sales', 'sale/void', array('id' => '__title__'))); ?>'},
+				{type: 'button', text: 'Void', extra_class: 'picon picon-edit-delete-shred', confirm: true, url: <?php echo json_encode(pines_url('com_sales', 'sale/void', array('id' => '__title__'))); ?>},
 				<?php } if ($pines->config->com_sales->per_item_salesperson && gatekeeper('com_sales/swapsalesrep')) { ?>
 				{type: 'button', title: 'Change Salesperson', extra_class: 'picon picon-edit-find-user', click: function(e, row){
 					sale_grid.salesrep_form(row.pgrid_get_value(1), row.attr("title"));
@@ -81,14 +81,14 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<?php } ?>
 				{type: 'separator'},
 				<?php if (gatekeeper('com_sales/deletesale')) { ?>
-				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_sales', 'sale/delete', array('id' => '__title__'))); ?>', delimiter: ','},
+				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: <?php echo json_encode(pines_url('com_sales', 'sale/delete', array('id' => '__title__'))); ?>, delimiter: ','},
 				{type: 'separator'},
 				<?php } ?>
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
 						filename: 'sales',
 						content: rows
 					});
@@ -100,7 +100,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_sales/sale/list", state: cur_state});
+				state_xhr = $.post(<?php echo json_encode(pines_url('com_pgrid', 'save_state')); ?>, {view: "com_sales/sale/list", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
@@ -108,7 +108,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 
 		sale_grid.date_form = function(){
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_sales', 'forms/dateselect')); ?>",
+				url: <?php echo json_encode(pines_url('com_sales', 'forms/dateselect')); ?>,
 				type: "POST",
 				dataType: "html",
 				data: {"all_time": all_time, "start_date": start_date, "end_date": end_date},
@@ -146,7 +146,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		};
 		sale_grid.location_form = function(){
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_sales', 'forms/locationselect')); ?>",
+				url: <?php echo json_encode(pines_url('com_sales', 'forms/locationselect')); ?>,
 				type: "POST",
 				dataType: "html",
 				data: {"location": location, "descendents": descendents},
@@ -182,7 +182,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		};
 		sale_grid.owner_form = function(sale_id){
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_sales', 'forms/overrideowner')); ?>",
+				url: <?php echo json_encode(pines_url('com_sales', 'forms/overrideowner')); ?>,
 				type: "POST",
 				dataType: "html",
 				data: {"id": sale_id},
@@ -210,7 +210,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 								form.dialog('close');
 								// Submit the override request.
 								$.ajax({
-									url: "<?php echo addslashes(pines_url('com_sales', 'overrideowner')); ?>",
+									url: <?php echo json_encode(pines_url('com_sales', 'overrideowner')); ?>,
 									type: "POST",
 									dataType: "html",
 									data: {
@@ -245,7 +245,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		};
 		sale_grid.salesrep_form = function(sale_id, guid){
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_sales', 'forms/salesrep')); ?>",
+				url: <?php echo json_encode(pines_url('com_sales', 'forms/salesrep')); ?>,
 				type: "POST",
 				dataType: "html",
 				data: {
@@ -283,7 +283,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 									form.dialog('close');
 									// Submit the salesperson swap request.
 									$.ajax({
-										url: "<?php echo addslashes(pines_url('com_sales', 'swapsalesrep')); ?>",
+										url: <?php echo json_encode(pines_url('com_sales', 'swapsalesrep')); ?>,
 										type: "POST",
 										dataType: "html",
 										data: {
@@ -312,7 +312,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		};
 		sale_grid.swap_form = function(sale_id){
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_sales', 'forms/swap')); ?>",
+				url: <?php echo json_encode(pines_url('com_sales', 'forms/swap')); ?>,
 				type: "POST",
 				dataType: "html",
 				data: {"id": sale_id},
@@ -343,7 +343,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 								} else {
 									form.dialog('close');
 									// Submit the swap request.
-									pines.post("<?php echo addslashes(pines_url('com_sales', 'sale/swap')); ?>", {
+									pines.post(<?php echo json_encode(pines_url('com_sales', 'sale/swap')); ?>, {
 										"id": sale_id,
 										"swap_item": swap_item,
 										"new_serial": new_serial.trim()
@@ -365,7 +365,7 @@ changing products. Any difference in price and any discounts are also ignored.\n
 Only continue if you are fully aware of the results of changing a product."))
 				return;
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_sales', 'forms/changeproduct')); ?>",
+				url: <?php echo json_encode(pines_url('com_sales', 'forms/changeproduct')); ?>,
 				type: "POST",
 				dataType: "html",
 				data: {"id": guid},
@@ -399,7 +399,7 @@ Only continue if you are fully aware of the results of changing a product."))
 								} else {
 									form.dialog('close');
 									// Submit the product change request.
-									pines.post("<?php echo addslashes(pines_url('com_sales', 'sale/changeproduct')); ?>", {
+									pines.post(<?php echo json_encode(pines_url('com_sales', 'sale/changeproduct')); ?>, {
 										"id": guid,
 										"product": product,
 										"new_product": new_product

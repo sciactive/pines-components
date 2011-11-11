@@ -37,7 +37,7 @@ $pines->com_jstree->load();
 			"json_data" : {
 				"ajax" : {
 					"dataType" : "json",
-					"url" : "<?php echo addslashes(pines_url('com_jstree', 'groupjson')); ?>"
+					"url" : <?php echo json_encode(pines_url('com_jstree', 'groupjson')); ?>
 				}
 			},
 			"ui" : {

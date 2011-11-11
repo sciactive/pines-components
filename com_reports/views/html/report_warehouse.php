@@ -20,14 +20,14 @@ $pines->icons->load();
 $pines->com_jstree->load();
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_reports/report_warehouse'];
+	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_reports/report_warehouse']);
 ?>
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
 		pines.search_details = function(){
 			// Submit the form with all of the fields.
-			pines.get("<?php echo addslashes(pines_url('com_reports', 'reportwarehouse')); ?>", {
+			pines.get(<?php echo json_encode(pines_url('com_reports', 'reportwarehouse')); ?>, {
 				"location": location,
 				"descendents": descendents,
 				"all_time": all_time,
@@ -38,8 +38,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 
 		// Timespan Defaults
 		var all_time = <?php echo $this->all_time ? 'true' : 'false'; ?>;
-		var start_date = "<?php echo $this->start_date ? addslashes(format_date($this->start_date, 'date_sort')) : ''; ?>";
-		var end_date = "<?php echo $this->end_date ? addslashes(format_date($this->end_date - 1, 'date_sort')) : ''; ?>";
+		var start_date = <?php echo $this->start_date ? json_encode(format_date($this->start_date, 'date_sort')) : '""'; ?>;
+		var end_date = <?php echo $this->end_date ? json_encode(format_date($this->end_date - 1, 'date_sort')) : '""'; ?>;
 		// Location Defaults
 		var location = "<?php echo (int) $this->location->guid ?>";
 		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
@@ -54,7 +54,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
 						filename: 'warehouse_items',
 						content: rows
 					});
@@ -69,7 +69,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 
 		warehouse_grid.date_form = function(){
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_reports', 'dateselect')); ?>",
+				url: <?php echo json_encode(pines_url('com_reports', 'dateselect')); ?>,
 				type: "POST",
 				dataType: "html",
 				data: {"all_time": all_time, "start_date": start_date, "end_date": end_date},
@@ -107,7 +107,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		};
 		warehouse_grid.location_form = function(){
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_reports', 'locationselect')); ?>",
+				url: <?php echo json_encode(pines_url('com_reports', 'locationselect')); ?>,
 				type: "POST",
 				dataType: "html",
 				data: {"location": location, "descendents": descendents},

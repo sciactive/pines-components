@@ -45,7 +45,7 @@ if ($pines->config->com_user->check_username)
 			var username = $(this);
 			var id = "<?php echo (int) $this->entity->guid ?>";
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_user', 'checkusername')); ?>",
+				url: <?php echo json_encode(pines_url('com_user', 'checkusername')); ?>,
 				type: "POST",
 				dataType: "json",
 				data: {"id": id, "username": username.val()},

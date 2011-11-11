@@ -55,7 +55,7 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 				return true;
 			var password_box = $("input[name=password]", "#p_muid_form");
 			var password = password_box.val();
-			var ClientComb = "<?php echo addslashes($_SESSION['sawasc']['ServerCB']); ?>" + md5(password+'7d5bc9dc81c200444e53d1d10ecc420a');
+			var ClientComb = <?php echo json_encode($_SESSION['sawasc']['ServerCB']); ?> + md5(password+'7d5bc9dc81c200444e53d1d10ecc420a');
 			<?php if ($_SESSION['sawasc']['algo'] == 'whirlpool') { ?>
 			var ClientHash = Whirlpool(ClientComb).toLowerCase();
 			<?php } else { ?>
@@ -121,7 +121,7 @@ $this->sawasc = $pines->com_user->activate_sawasc();
 						}
 						var id = "<?php echo (int) $this->entity->guid ?>";
 						$.ajax({
-							url: "<?php echo addslashes(pines_url('com_user', 'checkusername')); ?>",
+							url: <?php echo json_encode(pines_url('com_user', 'checkusername')); ?>,
 							type: "POST",
 							dataType: "json",
 							data: {"id": id, "username": username.val()},

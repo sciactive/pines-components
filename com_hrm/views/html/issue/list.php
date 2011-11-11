@@ -32,7 +32,7 @@ $pines->com_pgrid->load();
 			width: 300,
 			buttons: {
 				'Save': function(){
-					pines.post("<?php echo addslashes(pines_url('com_hrm', 'issue/save')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('com_hrm', 'issue/save')); ?>, {
 						id: issue_id,
 						penalty: $("#p_muid_issue_dialog [name=penalty]").val(),
 						name: $("#p_muid_issue_dialog [name=name]").val(),
@@ -47,7 +47,7 @@ $pines->com_pgrid->load();
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				<?php if (gatekeeper('com_hrm/listemployees')) { ?>
-				{type: 'button', text: '&laquo; Employees', extra_class: 'picon picon-system-users', selection_optional: true, url: '<?php echo addslashes(pines_url('com_hrm', 'employee/list')); ?>'},
+				{type: 'button', text: '&laquo; Employees', extra_class: 'picon picon-system-users', selection_optional: true, url: <?php echo json_encode(pines_url('com_hrm', 'employee/list')); ?>},
 				<?php } if (gatekeeper('com_hrm/editissuetypes')) { ?>
 				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, click: function(e, rows){
 					issue_id = 0;
@@ -60,14 +60,14 @@ $pines->com_pgrid->load();
 					$("#p_muid_issue_dialog [name=penalty]").val(pines.unsafe(row.pgrid_get_value(2)).replace('$',''));
 					issue_dialog.dialog("open");
 				}},
-				{type: 'button', text: 'Remove', extra_class: 'picon picon-document-close', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_hrm', 'issue/delete', array('id' => '__title__'))); ?>'},
+				{type: 'button', text: 'Remove', extra_class: 'picon picon-document-close', confirm: true, multi_select: true, url: <?php echo json_encode(pines_url('com_hrm', 'issue/delete', array('id' => '__title__'))); ?>},
 				{type: 'separator'},
 				<?php } ?>
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
 						filename: 'issue types',
 						content: rows
 					});

@@ -25,7 +25,7 @@ $pines->com_pgrid->load();
 	pines(function(){
 		search_invoices = function(){
 			// Submit the form with all of the fields.
-			pines.get("<?php echo addslashes(pines_url('com_reports', 'reportpayrollsummary')); ?>", {
+			pines.get(<?php echo json_encode(pines_url('com_reports', 'reportpayrollsummary')); ?>, {
 				"location": location,
 				"descendents": descendents,
 				"all_time": all_time,
@@ -36,8 +36,8 @@ $pines->com_pgrid->load();
 
 		// Timespan Defaults
 		var all_time = <?php echo $this->all_time ? 'true' : 'false'; ?>;
-		var start_date = "<?php echo $this->start_date ? addslashes(format_date($this->start_date, 'date_sort')) : ''; ?>";
-		var end_date = "<?php echo $this->end_date ? addslashes(format_date($this->end_date - 1, 'date_sort')) : ''; ?>";
+		var start_date = <?php echo $this->start_date ? json_encode(format_date($this->start_date, 'date_sort')) : '""'; ?>;
+		var end_date = <?php echo $this->end_date ? json_encode(format_date($this->end_date - 1, 'date_sort')) : '""'; ?>;
 		// Location Defaults
 		var location = "<?php echo (int) $this->location->guid ?>";
 		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
@@ -51,14 +51,14 @@ $pines->com_pgrid->load();
 				{type: 'button', title: 'Location', extra_class: 'picon picon-applications-internet', selection_optional: true, click: function(){payroll_grid.location_form();}},
 				{type: 'button', title: 'Timespan', extra_class: 'picon picon-view-time-schedule', selection_optional: true, click: function(){payroll_grid.date_form();}},
 				{type: 'separator'},
-				{type: 'button', text: 'Individual', extra_class: 'picon picon-document-print-preview', double_click: true, target: '_blank', url: '<?php echo addslashes(pines_url('com_reports', 'reportpayrollindividual', array('id' => '__title__', 'salary' => '__col_3__', 'commission' => '__col_12__', 'payperhour' => '__col_22__', 'total' => '__col_18__', 'overtime' => '__col_10__', 'reghours' => '__col_9__', 'adjustment' => '__col_17__', 'hours' => '__col_8__', 'end_date' => format_date($this->end_date - 1, 'date_sort'), 'start_date' => format_date($this->start_date, 'date_sort'), 'template' => 'tpl_print'))); ?>'},
-				{type: 'button', text: 'Multiple', extra_class: 'picon picon-document-print-preview', multi_select: true, target: '_blank', url: '<?php echo addslashes(pines_url('com_reports', 'reportpayrollmultiple', array('id' => '__title__', 'salary' => '__col_3__', 'commission' => '__col_12__', 'payperhour' => '__col_22__', 'total' => '__col_18__', 'overtime' => '__col_10__', 'reghours' => '__col_9__', 'adjustment' => '__col_17__', 'hours' => '__col_8__', 'end_date' => format_date($this->end_date - 1, 'date_sort'), 'start_date' => format_date($this->start_date, 'date_sort'), 'template' => 'tpl_print'))); ?>', delimiter: ";"},
+				{type: 'button', text: 'Individual', extra_class: 'picon picon-document-print-preview', double_click: true, target: '_blank', url: <?php echo json_encode(pines_url('com_reports', 'reportpayrollindividual', array('id' => '__title__', 'salary' => '__col_3__', 'commission' => '__col_12__', 'payperhour' => '__col_22__', 'total' => '__col_18__', 'overtime' => '__col_10__', 'reghours' => '__col_9__', 'adjustment' => '__col_17__', 'hours' => '__col_8__', 'end_date' => format_date($this->end_date - 1, 'date_sort'), 'start_date' => format_date($this->start_date, 'date_sort'), 'template' => 'tpl_print'))); ?>},
+				{type: 'button', text: 'Multiple', extra_class: 'picon picon-document-print-preview', multi_select: true, target: '_blank', url: <?php echo json_encode(pines_url('com_reports', 'reportpayrollmultiple', array('id' => '__title__', 'salary' => '__col_3__', 'commission' => '__col_12__', 'payperhour' => '__col_22__', 'total' => '__col_18__', 'overtime' => '__col_10__', 'reghours' => '__col_9__', 'adjustment' => '__col_17__', 'hours' => '__col_8__', 'end_date' => format_date($this->end_date - 1, 'date_sort'), 'start_date' => format_date($this->start_date, 'date_sort'), 'template' => 'tpl_print'))); ?>, delimiter: ";"},
 				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
 						filename: 'invoice_summary',
 						content: rows
 					});
@@ -68,7 +68,7 @@ $pines->com_pgrid->load();
 
 		payroll_grid.date_form = function(){
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_reports', 'dateselect')); ?>",
+				url: <?php echo json_encode(pines_url('com_reports', 'dateselect')); ?>,
 				type: "POST",
 				dataType: "html",
 				data: {"all_time": all_time, "start_date": start_date, "end_date": end_date},
@@ -106,7 +106,7 @@ $pines->com_pgrid->load();
 		};
 		payroll_grid.location_form = function(){
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_reports', 'locationselect')); ?>",
+				url: <?php echo json_encode(pines_url('com_reports', 'locationselect')); ?>,
 				type: "POST",
 				dataType: "html",
 				data: {"location": location, "descendents": descendents},

@@ -18,14 +18,14 @@ $this->note = htmlspecialchars(format_date($this->date, 'date_short'));
 $pines->com_jstree->load();
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_reports/attendance/daily_attendance'];
+	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_reports/attendance/daily_attendance']);
 ?>
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
 		pines.search_attendance = function(){
 			// Submit the form with all of the fields.
-			pines.get("<?php echo addslashes(pines_url('com_reports', 'attendance/dailyattendance')); ?>", {
+			pines.get(<?php echo json_encode(pines_url('com_reports', 'attendance/dailyattendance')); ?>, {
 				"location": location,
 				"descendents": descendents,
 				"date": date
@@ -33,13 +33,13 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		};
 
 		// Date Defaults
-		var date = "<?php echo $this->date ? addslashes(format_date($this->date, 'date_sort')) : ''; ?>";
+		var date = <?php echo $this->date ? json_encode(format_date($this->date, 'date_sort')) : '""'; ?>;
 		// Location Defaults
 		var location = "<?php echo (int) $this->location->guid; ?>";
 		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
 
 		var state_xhr;
-		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
+		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
@@ -49,7 +49,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
 						filename: 'time_attendance',
 						content: rows
 					});
@@ -61,7 +61,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_reports/attendance/daily_attendance", state: cur_state});
+				state_xhr = $.post(<?php echo json_encode(pines_url('com_pgrid', 'save_state')); ?>, {view: "com_reports/attendance/daily_attendance", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
@@ -85,7 +85,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		};
 		attendance_grid.location_form = function(){
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_reports', 'locationselect')); ?>",
+				url: <?php echo json_encode(pines_url('com_reports', 'locationselect')); ?>,
 				type: "POST",
 				dataType: "html",
 				data: {"location": location, "descendents": descendents},

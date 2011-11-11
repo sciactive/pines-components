@@ -50,7 +50,7 @@ $pines->com_jstree->load();
 				"json_data" : {
 					"ajax" : {
 						"dataType" : "json",
-						"url" : "<?php echo addslashes(pines_url('com_jstree', 'groupjson')); ?>"
+						"url" : <?php echo json_encode(pines_url('com_jstree', 'groupjson')); ?>
 					}
 				},
 				"ui" : {
@@ -70,7 +70,7 @@ $pines->com_jstree->load();
 				<?php } ?>
 
 				$.ajax({
-					url: "<?php echo addslashes(pines_url('com_sales', 'sale/totalsjson')); ?>",
+					url: <?php echo json_encode(pines_url('com_sales', 'sale/totalsjson')); ?>,
 					type: "POST",
 					dataType: "json",
 					data: {"location": location, "date_start": date_start.val(), "date_end": date_end.val()},

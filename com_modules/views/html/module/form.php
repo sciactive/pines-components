@@ -68,7 +68,7 @@ $pines->com_pgrid->load();
 						}
 						type = type.val();
 						$.ajax({
-							url: "<?php echo addslashes(pines_url('com_modules', 'module/form')); ?>",
+							url: <?php echo json_encode(pines_url('com_modules', 'module/form')); ?>,
 							type: "POST",
 							dataType: "html",
 							data: {"type": type},
@@ -412,8 +412,8 @@ $pines->com_pgrid->load();
 							$checker_links = array();
 							foreach (array_keys($pines->depend->checkers) as $cur_checker) {
 								$checker_html = htmlspecialchars($cur_checker);
-								$checker_js = addslashes($cur_checker);
-								$checker_links[] = "<a href=\"javascript:void(0);\" onclick=\"\$('#p_muid_cur_condition_type').val('$checker_js');\">$checker_html</a>";
+								$checker_js = htmlspecialchars(json_encode($cur_checker));
+								$checker_links[] = "<a href=\"javascript:void(0);\" onclick=\"\$('#p_muid_cur_condition_type').val($checker_js);\">$checker_html</a>";
 							}
 							echo implode(', ', $checker_links);
 							?></em></div>

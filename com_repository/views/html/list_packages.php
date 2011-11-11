@@ -16,7 +16,7 @@ if (isset($this->user))
 	$this->title .= ' from Publisher '.htmlspecialchars($this->user->username);
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_repository/list_packages'];
+	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_repository/list_packages']);
 
 ?>
 <script type="text/javascript">
@@ -24,26 +24,26 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 
 	pines(function(){
 		var state_xhr;
-		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
+		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				<?php if (gatekeeper('com_repository/makeallindices')) { ?>
-				{type: 'button', text: 'Refresh Repository', extra_class: 'picon picon-view-refresh', selection_optional: true, url: '<?php echo addslashes(pines_url('com_repository', 'makeindices', array('all' => 'true'))); ?>'},
+				{type: 'button', text: 'Refresh Repository', extra_class: 'picon picon-view-refresh', selection_optional: true, url: <?php echo json_encode(pines_url('com_repository', 'makeindices', array('all' => 'true'))); ?>},
 				<?php } if (gatekeeper('com_repository/makeindices')) { ?>
-				{type: 'button', text: 'Refresh My Index', extra_class: 'picon picon-view-refresh', selection_optional: true, url: '<?php echo addslashes(pines_url('com_repository', 'makeindices')); ?>'},
+				{type: 'button', text: 'Refresh My Index', extra_class: 'picon picon-view-refresh', selection_optional: true, url: <?php echo json_encode(pines_url('com_repository', 'makeindices')); ?>},
 				<?php } if (gatekeeper('com_repository/newpackage')) { ?>
-				{type: 'button', text: 'Upload Package', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_repository', 'uploadpackage')); ?>'},
+				{type: 'button', text: 'Upload Package', extra_class: 'picon picon-document-new', selection_optional: true, url: <?php echo json_encode(pines_url('com_repository', 'uploadpackage')); ?>},
 				<?php } if (gatekeeper('com_repository/deletepackage') || gatekeeper('com_repository/deleteallpackage')) { ?>
 				{type: 'separator'},
-				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, url: '<?php echo addslashes(pines_url('com_repository', 'deletepackage', array('pub' => '__col_2__', 'p' => '__title__', 'v' => '__col_5__'))); ?>', delimiter: ','},
+				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, url: <?php echo json_encode(pines_url('com_repository', 'deletepackage', array('pub' => '__col_2__', 'p' => '__title__', 'v' => '__col_5__'))); ?>, delimiter: ','},
 				<?php } ?>
 				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
 						filename: 'packages',
 						content: rows
 					});
@@ -55,7 +55,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_repository/list_packages", state: cur_state});
+				state_xhr = $.post(<?php echo json_encode(pines_url('com_pgrid', 'save_state')); ?>, {view: "com_repository/list_packages", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);

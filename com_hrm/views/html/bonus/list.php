@@ -40,7 +40,7 @@ $pines->com_hrm->load_employee_select();
 			width: 300,
 			buttons: {
 				'Save': function(){
-					pines.post("<?php echo addslashes(pines_url('com_hrm', 'bonus/save')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('com_hrm', 'bonus/save')); ?>, {
 						id: bonus_id,
 						name: $("#p_muid_bonus_dialog [name=name]").val(),
 						employee: $("#p_muid_bonus_dialog [name=employee]").val(),
@@ -57,11 +57,11 @@ $pines->com_hrm->load_employee_select();
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				<?php if (gatekeeper('com_hrm/listemployees')) { ?>
-				{type: 'button', text: '&laquo; Employees', extra_class: 'picon picon-system-users', selection_optional: true, url: '<?php echo addslashes(pines_url('com_hrm', 'employee/list')); ?>'},
+				{type: 'button', text: '&laquo; Employees', extra_class: 'picon picon-system-users', selection_optional: true, url: <?php echo json_encode(pines_url('com_hrm', 'employee/list')); ?>},
 				<?php } if (gatekeeper('com_hrm/editbonus')) { ?>
 				{type: 'button', text: 'New', extra_class: 'picon picon-document-new', selection_optional: true, click: function(){
 					bonus_id = 0;
-					$("#p_muid_bonus_dialog [name=effective_date]").val("<?php echo addslashes(format_date(time(), 'date_sort')); ?>");
+					$("#p_muid_bonus_dialog [name=effective_date]").val(<?php echo json_encode(format_date(time(), 'date_sort')); ?>);
 					$("#p_muid_bonus_dialog [name=name]").val("");
 					$("#p_muid_bonus_dialog [name=employee]").val("");
 					$("#p_muid_bonus_dialog [name=amount]").val("");
@@ -77,14 +77,14 @@ $pines->com_hrm->load_employee_select();
 					$("#p_muid_bonus_dialog [name=comments]").val(pines.unsafe(row.pgrid_get_value(5)));
 					bonus_dialog.dialog("open");
 				}},
-				{type: 'button', text: 'Remove', extra_class: 'picon picon-document-close', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_hrm', 'bonus/delete', array('id' => '__title__'))); ?>'},
+				{type: 'button', text: 'Remove', extra_class: 'picon picon-document-close', confirm: true, multi_select: true, url: <?php echo json_encode(pines_url('com_hrm', 'bonus/delete', array('id' => '__title__'))); ?>},
 				{type: 'separator'},
 				<?php } ?>
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
 						filename: 'employee_bonuses',
 						content: rows
 					});

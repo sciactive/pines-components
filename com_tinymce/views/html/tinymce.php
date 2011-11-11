@@ -84,12 +84,12 @@ $content_css = array_merge(array(htmlspecialchars($pines->config->location . $pi
 					break;
 				case 'custom':
 					?>
-					plugins : "<?php echo addslashes($pines->config->com_tinymce->custom_plugins); ?>",
+					plugins : <?php echo json_encode($pines->config->com_tinymce->custom_plugins); ?>,
 					// Theme options
-					theme_advanced_buttons1 : "<?php echo addslashes($pines->config->com_tinymce->custom_bar_1); ?>",
-					theme_advanced_buttons2 : "<?php echo addslashes($pines->config->com_tinymce->custom_bar_2); ?>",
-					theme_advanced_buttons3 : "<?php echo addslashes($pines->config->com_tinymce->custom_bar_3); ?>",
-					theme_advanced_buttons4 : "<?php echo addslashes($pines->config->com_tinymce->custom_bar_4); ?>",
+					theme_advanced_buttons1 : <?php echo json_encode($pines->config->com_tinymce->custom_bar_1); ?>,
+					theme_advanced_buttons2 : <?php echo json_encode($pines->config->com_tinymce->custom_bar_2); ?>,
+					theme_advanced_buttons3 : <?php echo json_encode($pines->config->com_tinymce->custom_bar_3); ?>,
+					theme_advanced_buttons4 : <?php echo json_encode($pines->config->com_tinymce->custom_bar_4); ?>,
 					<?php
 					break;
 			} ?>
@@ -102,7 +102,7 @@ $content_css = array_merge(array(htmlspecialchars($pines->config->location . $pi
 			// Use elFinder as the file browser.
 			file_browser_callback : function(field_name, url, type, win){
 				$("<div></div>").appendTo("body").elfinder({
-					url: "<?php echo addslashes(pines_url("com_elfinder", "connector")); ?>",
+					url: <?php echo json_encode(pines_url("com_elfinder", "connector")); ?>,
 					dialog: {"width": 900, "modal": true, "zIndex": 400000, "title": "Choose "+type},
 					height: <?php echo (int) $pines->config->com_elfinder->default_height; ?>,
 					closeOnEditorCallback: true,

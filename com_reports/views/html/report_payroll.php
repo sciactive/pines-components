@@ -44,13 +44,13 @@ $pines->com_pgrid->load();
 	pines(function(){
 		entire_company = function(){
 			// Submit the form with all of the fields.
-			pines.get("<?php echo addslashes(pines_url('com_reports', 'reportpayroll')); ?>", {
+			pines.get(<?php echo json_encode(pines_url('com_reports', 'reportpayroll')); ?>, {
 				"entire_company": true
 			});
 		};
 		search_employees = function(){
 			// Submit the form with all of the fields.
-			pines.get("<?php echo addslashes(pines_url('com_reports', 'reportpayroll')); ?>", {
+			pines.get(<?php echo json_encode(pines_url('com_reports', 'reportpayroll')); ?>, {
 				"location": location,
 				"descendents": descendents
 			});
@@ -77,7 +77,7 @@ $pines->com_pgrid->load();
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
 						filename: 'payroll_report',
 						content: rows
 					});
@@ -86,7 +86,7 @@ $pines->com_pgrid->load();
 		});
 		employees_grid.location_form = function(){
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_reports', 'locationselect')); ?>",
+				url: <?php echo json_encode(pines_url('com_reports', 'locationselect')); ?>,
 				type: "POST",
 				dataType: "html",
 				data: {"location": location, "descendents": descendents},
@@ -319,7 +319,7 @@ $pines->com_pgrid->load();
 		var totals = JSON.stringify(rows.pgrid_export_rows());
 		pines.finalize = function() {
 			// Finalize the paystub.
-			pines.get("<?php echo addslashes(pines_url('com_reports', 'savepaystub')); ?>", {
+			pines.get(<?php echo json_encode(pines_url('com_reports', 'savepaystub')); ?>, {
 				"start": '<?php echo format_date($this->start_date); ?>',
 				"end": '<?php echo format_date($this->end_date); ?>',
 				"totals": totals

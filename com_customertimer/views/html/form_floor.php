@@ -50,7 +50,7 @@ $pines->uploader->load();
 		var station_floor = $("#p_muid_floor_tabs .station_layout .station_floor");
 		var station_input = $("#p_muid_floor_tabs input[name=stations]");
 
-		var stations = JSON.parse("<?php echo addslashes(json_encode($this->entity->stations, JSON_FORCE_OBJECT)); ?>");
+		var stations = <?php echo json_encode($this->entity->stations, JSON_FORCE_OBJECT); ?>;
 
 		// Remove all the DOM elements.
 		var remove_station_elements = function(){

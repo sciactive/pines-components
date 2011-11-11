@@ -74,11 +74,11 @@ if ($pines->config->com_calendar->com_customer)
 		var change_counter = 0;
 		$("#p_muid_employee").change(function(){
 			if (change_counter > 0)
-				pines.post("<?php echo addslashes(pines_url('com_calendar', 'editcalendar')); ?>", {
+				pines.post(<?php echo json_encode(pines_url('com_calendar', 'editcalendar')); ?>, {
 					"view_type": <?php echo json_encode($this->view_type); ?>,
 					"start": '<?php echo format_date($this->date[0], 'date_short'); ?>',
 					"end": '<?php echo format_date($this->date[1], 'date_short'); ?>',
-					"location": '<?php echo addslashes($this->location->guid); ?>',
+					"location": <?php echo json_encode((string) $this->location->guid); ?>,
 					"employee": $(this).val(),
 					"descendents": <?php echo $this->descendents ? 'true' : 'false'; ?>,
 					"filter": <?php echo json_encode($this->filter); ?>
@@ -104,7 +104,7 @@ if ($pines->config->com_calendar->com_customer)
 		});
 
 		$("#p_muid_filter").buttonset().delegate("input", "click", function() {
-			pines.get("<?php echo addslashes(pines_url('com_calendar', 'editcalendar')); ?>", {
+			pines.get(<?php echo json_encode(pines_url('com_calendar', 'editcalendar')); ?>, {
 				view_type: <?php echo json_encode($this->view_type); ?>,
 				start: '<?php echo format_date($this->date[0], 'date_short'); ?>',
 				end: '<?php echo format_date($this->date[1], 'date_short'); ?>',
@@ -131,11 +131,11 @@ if ($pines->config->com_calendar->com_customer)
 	pines.com_calendar_select_location = function(){
 		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
 		$.ajax({
-			url: "<?php echo addslashes(pines_url('com_calendar', 'locationselect')); ?>",
+			url: <?php echo json_encode(pines_url('com_calendar', 'locationselect')); ?>,
 			type: "POST",
 			dataType: "html",
 			data: {
-				"location": "<?php echo addslashes($this->location->guid); ?>",
+				"location": <?php echo json_encode((string) $this->location->guid); ?>,
 				"descendents": descendents
 			},
 			error: function(XMLHttpRequest, textStatus){
@@ -157,7 +157,7 @@ if ($pines->config->com_calendar->com_customer)
 							form.dialog('close');
 							var schedule_location = form.find(":input[name=location]").val();
 							descendents = form.find(":input[name=descendents]").attr('checked');
-							pines.post("<?php echo addslashes(pines_url('com_calendar', 'editcalendar')); ?>", {
+							pines.post(<?php echo json_encode(pines_url('com_calendar', 'editcalendar')); ?>, {
 								"view_type": <?php echo json_encode($this->view_type); ?>,
 								"start": '<?php echo format_date($this->date[0], 'date_short'); ?>',
 								"end": '<?php echo format_date($this->date[1], 'date_short'); ?>',
@@ -176,11 +176,11 @@ if ($pines->config->com_calendar->com_customer)
 	// Create a new event.
 	pines.com_calendar_new_event = function(start, end){
 		$.ajax({
-			url: "<?php echo addslashes(pines_url('com_calendar', 'editevent')); ?>",
+			url: <?php echo json_encode(pines_url('com_calendar', 'editevent')); ?>,
 			type: "POST",
 			dataType: "html",
 			data: {
-				"location": "<?php echo addslashes($this->location->guid); ?>",
+				"location": <?php echo json_encode((string) $this->location->guid); ?>,
 				"start": start,
 				"end": end
 			},
@@ -202,7 +202,7 @@ if ($pines->config->com_calendar->com_customer)
 					buttons: {
 						"Add Event": function(){
 							form.dialog('close');
-							pines.post("<?php echo addslashes(pines_url('com_calendar', 'saveevent')); ?>", {
+							pines.post(<?php echo json_encode(pines_url('com_calendar', 'saveevent')); ?>, {
 								employee: form.find(":input[name=employee]").val(),
 								event_label: form.find(":input[name=event_label]").val(),
 								information: form.find(":input[name=information]").val(),
@@ -235,7 +235,7 @@ if ($pines->config->com_calendar->com_customer)
 	// Edit an existing event.
 	pines.com_calendar_edit_event = function(event_id){
 		$.ajax({
-			url: "<?php echo addslashes(pines_url('com_calendar', 'editevent')); ?>",
+			url: <?php echo json_encode(pines_url('com_calendar', 'editevent')); ?>,
 			type: "POST",
 			dataType: "html",
 			data: {"id": event_id},
@@ -257,7 +257,7 @@ if ($pines->config->com_calendar->com_customer)
 					},
 					buttons: {
 						"Save Event": function(){
-							pines.post("<?php echo addslashes(pines_url('com_calendar', 'saveevent')); ?>", {
+							pines.post(<?php echo json_encode(pines_url('com_calendar', 'saveevent')); ?>, {
 								id: form.find(":input[name=id]").val(),
 								employee: form.find(":input[name=employee]").val(),
 								event_label: form.find(":input[name=event_label]").val(),
@@ -282,7 +282,7 @@ if ($pines->config->com_calendar->com_customer)
 							if (!confirm("Are you sure you want to delete this event?"))
 								return;
 							$.ajax({
-								url: "<?php echo addslashes(pines_url('com_calendar', 'deleteevents')); ?>",
+								url: <?php echo json_encode(pines_url('com_calendar', 'deleteevents')); ?>,
 								type: "POST",
 								dataType: "json",
 								data: {"events": Array(form.find(":input[name=id]").val())},
@@ -307,10 +307,10 @@ if ($pines->config->com_calendar->com_customer)
 	// Create a quick work schedule for an entire location.
 	pines.com_calendar_quick_schedule = function(){
 		$.ajax({
-			url: "<?php echo addslashes(pines_url('com_calendar', 'editlineup')); ?>",
+			url: <?php echo json_encode(pines_url('com_calendar', 'editlineup')); ?>,
 			type: "POST",
 			dataType: "html",
-			data: {"location": "<?php echo addslashes($this->location->guid); ?>"},
+			data: {"location": <?php echo json_encode((string) $this->location->guid); ?>},
 			error: function(XMLHttpRequest, textStatus){
 				pines.error("An error occured while trying to retrieve the quick schedule form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 			},
@@ -328,7 +328,7 @@ if ($pines->config->com_calendar->com_customer)
 					buttons: {
 						"Add to Schedule": function(){
 							form.dialog('close');
-							pines.post("<?php echo addslashes(pines_url('com_calendar', 'savelineup')); ?>", {
+							pines.post(<?php echo json_encode(pines_url('com_calendar', 'savelineup')); ?>, {
 								location: form.find(":input[name=location]").val(),
 								shifts: form.find(":input[name=shifts]").val()
 							});
@@ -343,10 +343,10 @@ if ($pines->config->com_calendar->com_customer)
 	pines.com_calendar_new_schedule = function(){
 		<?php if (isset($this->employee)) { ?>
 		$.ajax({
-			url: "<?php echo addslashes(pines_url('com_calendar', 'editschedule')); ?>",
+			url: <?php echo json_encode(pines_url('com_calendar', 'editschedule')); ?>,
 			type: "POST",
 			dataType: "html",
-			data: {"employee": "<?php echo addslashes($this->employee->guid); ?>"},
+			data: {"employee": <?php echo json_encode((string) $this->employee->guid); ?>},
 			error: function(XMLHttpRequest, textStatus){
 				pines.error("An error occured while trying to retrieve the schedule form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 			},
@@ -364,7 +364,7 @@ if ($pines->config->com_calendar->com_customer)
 					buttons: {
 						"Add to Schedule": function(){
 							form.dialog('close');
-							pines.post("<?php echo addslashes(pines_url('com_calendar', 'saveschedule')); ?>", {
+							pines.post(<?php echo json_encode(pines_url('com_calendar', 'saveschedule')); ?>, {
 								employee: form.find(":input[name=employee]").val(),
 								all_day: !!form.find(":input[name=all_day]").attr('checked'),
 								time_start: form.find(":input[name=time_start]").val(),
@@ -399,7 +399,7 @@ if ($pines->config->com_calendar->com_customer)
 				"Create": function(){
 					var loader;
 					$.ajax({
-						url: "<?php echo addslashes(pines_url('com_customer', 'interaction/add')); ?>",
+						url: <?php echo json_encode(pines_url('com_customer', 'interaction/add')); ?>,
 						type: "POST",
 						dataType: "json",
 						data: {
@@ -466,7 +466,7 @@ if ($pines->config->com_calendar->com_customer)
 				"Update": function(){
 					var loader;
 					$.ajax({
-						url: "<?php echo addslashes(pines_url('com_customer', 'interaction/process')); ?>",
+						url: <?php echo json_encode(pines_url('com_customer', 'interaction/process')); ?>,
 						type: "POST",
 						dataType: "json",
 						data: {
@@ -512,7 +512,7 @@ if ($pines->config->com_calendar->com_customer)
 			}
 		});
 		$.ajax({
-			url: "<?php echo addslashes(pines_url('com_customer', 'interaction/info')); ?>",
+			url: <?php echo json_encode(pines_url('com_customer', 'interaction/info')); ?>,
 			type: "POST",
 			dataType: "json",
 			data: {id: appointment_id},

@@ -59,7 +59,7 @@ $this->title = 'Customer Timer Status';
 
 		var update_status = function(){
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_customertimer', 'bigstatus_json')); ?>",
+				url: <?php echo json_encode(pines_url('com_customertimer', 'bigstatus_json')); ?>,
 				type: "GET",
 				dataType: "json",
 				complete: function(){

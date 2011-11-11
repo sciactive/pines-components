@@ -54,7 +54,7 @@ if (!isset($this->entity->user->guid) || !isset($this->entity)) {
 			var do_clock = function(pin){
 				var loader;
 				$.ajax({
-					url: "<?php echo addslashes(pines_url('com_hrm', 'employee/timeclock/clock')); ?>",
+					url: <?php echo json_encode(pines_url('com_hrm', 'employee/timeclock/clock')); ?>,
 					type: "POST",
 					dataType: "json",
 					data: {"id": "self", "pin": pin, "comments": $("#p_muid_comments").val()},
@@ -138,7 +138,7 @@ if (!isset($this->entity->user->guid) || !isset($this->entity)) {
 			if (rto_id > 0)
 				p_muid_rto_form.remove();
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_hrm', 'timeoff/request')); ?>",
+				url: <?php echo json_encode(pines_url('com_hrm', 'timeoff/request')); ?>,
 				type: "POST",
 				dataType: "html",
 				data: {id: rto_id},
@@ -160,7 +160,7 @@ if (!isset($this->entity->user->guid) || !isset($this->entity)) {
 							"Submit Request": function(){
 								p_muid_rto_form.dialog('close');
 								$.ajax({
-									url: "<?php echo addslashes(pines_url('com_hrm', 'timeoff/save')); ?>",
+									url: <?php echo json_encode(pines_url('com_hrm', 'timeoff/save')); ?>,
 									type: "POST",
 									dataType: "json",
 									data: {

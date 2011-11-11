@@ -92,7 +92,7 @@ $pines->com_customer->load_customer_select();
 		var floor_id = "<?php echo (int) $this->entity->guid; ?>";
 		var sel_station;
 
-		var stations = JSON.parse("<?php echo addslashes(json_encode($this->entity->stations)); ?>");
+		var stations = <?php echo json_encode($this->entity->stations); ?>;
 
 		$("#p_muid_customer_search").dialog({
 			"width": "500px",
@@ -105,7 +105,7 @@ $pines->com_customer->load_customer_select();
 					var customer = parseInt($("#p_muid_customer").val().replace(/\D.*/, ""));
 					if (!isNaN(customer) && customer != 0) {
 						$.ajax({
-							url: "<?php echo addslashes(pines_url('com_customertimer', 'login_json')); ?>",
+							url: <?php echo json_encode(pines_url('com_customertimer', 'login_json')); ?>,
 							type: "POST",
 							data: {"id": customer, "floor": floor_id, "station": sel_station.id},
 							dataType: "json",
@@ -136,7 +136,7 @@ $pines->com_customer->load_customer_select();
 			"buttons": {
 				"Logout": function(){
 					$.ajax({
-						url: "<?php echo addslashes(pines_url('com_customertimer', 'logout_json')); ?>",
+						url: <?php echo json_encode(pines_url('com_customertimer', 'logout_json')); ?>,
 						type: "POST",
 						data: {"id": sel_station.customer.guid, "floor": floor_id, "station": sel_station.id},
 						dataType: "json",
@@ -155,12 +155,12 @@ $pines->com_customer->load_customer_select();
 					$(this).dialog("close");
 				},
 				"Edit Customer": function(){
-					pines.get("<?php echo addslashes(pines_url('com_customer', 'customer/edit')); ?>", {
+					pines.get(<?php echo json_encode(pines_url('com_customer', 'customer/edit')); ?>, {
 						"id": sel_station.customer.guid
 					});
 				},
 				"Purchase Minutes": function(){
-					pines.post("<?php echo addslashes(pines_url('com_customertimer', 'newsale')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('com_customertimer', 'newsale')); ?>, {
 						"customer": sel_station.customer.guid
 					});
 				}
@@ -312,7 +312,7 @@ $pines->com_customer->load_customer_select();
 			updating = true;
 			// Grab the status for all customers.
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_customertimer', 'status_json')); ?>",
+				url: <?php echo json_encode(pines_url('com_customertimer', 'status_json')); ?>,
 				type: "GET",
 				data: {"floor": floor_id},
 				dataType: "json",

@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = ($this->finished ? 'Prior ' : '').'Cash Counts';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/cashcount/list'];
+	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_sales/cashcount/list']);
 $pines->com_jstree->load();
 ?>
 <script type="text/javascript">
@@ -40,7 +40,7 @@ $pines->com_jstree->load();
 			"json_data" : {
 				"ajax" : {
 					"dataType" : "json",
-					"url" : "<?php echo addslashes(pines_url('com_jstree', 'groupjson')); ?>"
+					"url" : <?php echo json_encode(pines_url('com_jstree', 'groupjson')); ?>
 				}
 			},
 			"ui" : {
@@ -66,7 +66,7 @@ $pines->com_jstree->load();
 					if (assign_to == "") {
 						alert("Please select a group");
 					} else {
-						pines.post("<?php echo addslashes(pines_url('com_sales', 'cashcount/assign')); ?>", {
+						pines.post(<?php echo json_encode(pines_url('com_sales', 'cashcount/assign')); ?>, {
 							count_type: assign_type,
 							location: assign_to
 						});
@@ -77,23 +77,23 @@ $pines->com_jstree->load();
 		});
 
 		var state_xhr;
-		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
+		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
 				<?php if (gatekeeper('com_sales/newcashcount')) { ?>
-				{type: 'button', text: 'Cash-In', extra_class: 'picon picon-document-new', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'cashcount/edit')); ?>'},
+				{type: 'button', text: 'Cash-In', extra_class: 'picon picon-document-new', selection_optional: true, url: <?php echo json_encode(pines_url('com_sales', 'cashcount/edit')); ?>},
 				<?php } if (gatekeeper('com_sales/editcashcount')) { ?>
-				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: '<?php echo addslashes(pines_url('com_sales', 'cashcount/edit', array('id' => '__title__'))); ?>'},
-				{type: 'button', text: 'Cash-Out', extra_class: 'picon picon-view-bank', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'cashcount/cashout', array('id' => '__title__'))); ?>'},
+				{type: 'button', text: 'Edit', extra_class: 'picon picon-document-edit', double_click: true, url: <?php echo json_encode(pines_url('com_sales', 'cashcount/edit', array('id' => '__title__'))); ?>},
+				{type: 'button', text: 'Cash-Out', extra_class: 'picon picon-view-bank', selection_optional: true, url: <?php echo json_encode(pines_url('com_sales', 'cashcount/cashout', array('id' => '__title__'))); ?>},
 				<?php } if (gatekeeper('com_sales/skimcashcount')) { ?>
-				{type: 'button', text: 'Skim', extra_class: 'picon picon-list-remove', url: '<?php echo addslashes(pines_url('com_sales', 'cashcount/skim', array('id' => '__title__'))); ?>'},
+				{type: 'button', text: 'Skim', extra_class: 'picon picon-list-remove', url: <?php echo json_encode(pines_url('com_sales', 'cashcount/skim', array('id' => '__title__'))); ?>},
 				<?php } if (gatekeeper('com_sales/depositcashcount')) { ?>
-				{type: 'button', text: 'Deposit', extra_class: 'picon picon-list-add', url: '<?php echo addslashes(pines_url('com_sales', 'cashcount/deposit', array('id' => '__title__'))); ?>'},
+				{type: 'button', text: 'Deposit', extra_class: 'picon picon-list-add', url: <?php echo json_encode(pines_url('com_sales', 'cashcount/deposit', array('id' => '__title__'))); ?>},
 				<?php } if (gatekeeper('com_sales/auditcashcount')) { ?>
-				{type: 'button', text: 'Audit', extra_class: 'picon picon-document-edit-verify', url: '<?php echo addslashes(pines_url('com_sales', 'cashcount/audit', array('id' => '__title__'))); ?>'},
+				{type: 'button', text: 'Audit', extra_class: 'picon picon-document-edit-verify', url: <?php echo json_encode(pines_url('com_sales', 'cashcount/audit', array('id' => '__title__'))); ?>},
 				<?php } if (gatekeeper('com_sales/approvecashcount')) { ?>
-				{type: 'button', text: 'Review', extra_class: 'picon picon-checkbox', url: '<?php echo addslashes(pines_url('com_sales', 'cashcount/approve', array('id' => '__title__'))); ?>'},
+				{type: 'button', text: 'Review', extra_class: 'picon picon-checkbox', url: <?php echo json_encode(pines_url('com_sales', 'cashcount/approve', array('id' => '__title__'))); ?>},
 				<?php } if (gatekeeper('com_sales/assigncashcount')) { ?>
 				{type: 'button', text: 'Assign', extra_class: 'picon picon-view-task-add', selection_optional: true, click: function(e, rows){
 					assign_dialog.dialog("open");
@@ -101,19 +101,19 @@ $pines->com_jstree->load();
 				<?php } ?>
 				{type: 'separator'},
 				<?php if (gatekeeper('com_sales/deletecashcount')) { ?>
-				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_sales', 'cashcount/delete', array('id' => '__title__'))); ?>', delimiter: ','},
+				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: <?php echo json_encode(pines_url('com_sales', 'cashcount/delete', array('id' => '__title__'))); ?>, delimiter: ','},
 				{type: 'separator'},
 				<?php } if (!$this->finished) { ?>
-				{type: 'button', text: 'Prior', extra_class: 'picon picon-vcs-removed', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'cashcount/list', array('finished' => 'true'))); ?>'},
+				{type: 'button', text: 'Prior', extra_class: 'picon picon-vcs-removed', selection_optional: true, url: <?php echo json_encode(pines_url('com_sales', 'cashcount/list', array('finished' => 'true'))); ?>},
 				<?php } else { ?>
-				{type: 'button', text: 'Current', extra_class: 'picon picon-vcs-normal', selection_optional: true, url: '<?php echo addslashes(pines_url('com_sales', 'cashcount/list')); ?>'},
+				{type: 'button', text: 'Current', extra_class: 'picon picon-vcs-normal', selection_optional: true, url: <?php echo json_encode(pines_url('com_sales', 'cashcount/list')); ?>},
 				<?php } ?>
 				{type: 'separator'},
 				{type: 'button', title: 'Select All', extra_class: 'picon picon-document-multiple', select_all: true},
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
 						filename: 'cash_counts',
 						content: rows
 					});
@@ -125,7 +125,7 @@ $pines->com_jstree->load();
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_sales/cashcount/list", state: cur_state});
+				state_xhr = $.post(<?php echo json_encode(pines_url('com_pgrid', 'save_state')); ?>, {view: "com_sales/cashcount/list", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);

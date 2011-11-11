@@ -15,7 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Extended Service Plans';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_esp/list'];
+	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_esp/list']);
 ?>
 <script type="text/javascript">
 	// <![CDATA[
@@ -24,7 +24,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var dispo_counter = 0;
 		var disposal_id;
 		var disposal_dialog = $("#p_muid_disposal_dialog");
-		var disposition = "<?php echo addslashes($this->show); ?>";
+		var disposition = <?php echo json_encode($this->show); ?>;
 		var disposition_dialog = $("#p_muid_disposition_dialog");
 		var disposed = disposition_dialog.find("div.disposed");
 
@@ -39,7 +39,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			buttons: {
 				"Done": function(){
 					var dispose_as = disposal_dialog.find(":input[name=dispose]").val();
-					pines.post("<?php echo addslashes(pines_url('com_esp', 'dispose')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('com_esp', 'dispose')); ?>, {
 						items: disposal_id,
 						dispose: dispose_as
 					});
@@ -86,7 +86,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						});
 					}
 					cur_options.pgrid_state_change(plan_grid.pgrid_export_state());
-					pines.post("<?php echo addslashes(pines_url('com_esp', 'list')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('com_esp', 'list')); ?>, {
 						show: disposition
 					});
 					disposition_dialog.dialog("close");
@@ -95,7 +95,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		});
 
 		var state_xhr;
-		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
+		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
@@ -104,7 +104,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					click: function(e, row){
 						var comments = prompt("Please give a description of the claim filed:");
 						if (comments != null) {
-							pines.post("<?php echo addslashes(pines_url('com_esp', 'claim')); ?>", {
+							pines.post(<?php echo json_encode(pines_url('com_esp', 'claim')); ?>, {
 								id: row.pgrid_export_rows()[0].key,
 								comments: comments
 							});
@@ -112,7 +112,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					}
 				},
 				<?php } ?>
-				{type: 'button', text: 'History', extra_class: 'picon picon-story-editor', url: '<?php echo addslashes(pines_url('com_esp', 'history', array('id' => '__title__'))); ?>'},
+				{type: 'button', text: 'History', extra_class: 'picon picon-story-editor', url: <?php echo json_encode(pines_url('com_esp', 'history', array('id' => '__title__'))); ?>},
 				<?php if (gatekeeper('com_esp/disposeplans')) { ?>
 				{type: 'button', text: 'Dispose', extra_class: 'picon picon-document-properties', multi_select: true, click: function(e, rows){
 					disposal_id = "";
@@ -128,7 +128,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					disposal_dialog.dialog("open");
 				}},
 				<?php } if (gatekeeper('com_esp/printplan')) { ?>
-				{type: 'button', text: 'Print', extra_class: 'picon picon-document-print', url: '<?php echo addslashes(pines_url('com_esp', 'print', array('id' => '__title__'))); ?>', delimiter: ','},
+				{type: 'button', text: 'Print', extra_class: 'picon picon-document-print', url: <?php echo json_encode(pines_url('com_esp', 'print', array('id' => '__title__'))); ?>, delimiter: ','},
 				<?php } if (gatekeeper('com_sales/swapsale')) { ?>
 				{type: 'button', text: 'Swap', extra_class: 'picon picon-document-swap', click: function(e, row){
 					plan_grid.swap_form($(row).attr("title"));
@@ -136,7 +136,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				<?php } ?>
 				{type: 'separator'},
 				<?php if (gatekeeper('com_esp/deleteplan')) { ?>
-				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: '<?php echo addslashes(pines_url('com_esp', 'delete', array('id' => '__title__'))); ?>', delimiter: ','},
+				{type: 'button', text: 'Delete', extra_class: 'picon picon-edit-delete', confirm: true, multi_select: true, url: <?php echo json_encode(pines_url('com_esp', 'delete', array('id' => '__title__'))); ?>, delimiter: ','},
 				{type: 'separator'},
 				<?php } if (gatekeeper('com_esp/filterplans')) { ?>
 				{type: 'button', text: 'Filter', extra_class: 'picon picon-view-filter', selection_optional: true, click: function(){
@@ -147,7 +147,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
 						filename: 'ESPs',
 						content: rows
 					});
@@ -160,7 +160,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 					state_xhr.abort();
 				state.disposition = disposition;
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_esp/list_plans", state: cur_state});
+				state_xhr = $.post(<?php echo json_encode(pines_url('com_pgrid', 'save_state')); ?>, {view: "com_esp/list_plans", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
@@ -169,7 +169,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 
 		plan_grid.swap_form = function(esp_id){
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_esp', 'swapform')); ?>",
+				url: <?php echo json_encode(pines_url('com_esp', 'swapform')); ?>,
 				type: "POST",
 				dataType: "html",
 				data: {"id": esp_id},
@@ -199,7 +199,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 								} else {
 									form.dialog('close');
 									// Submit the swap request.
-									pines.post("<?php echo addslashes(pines_url('com_esp', 'swap')); ?>", {
+									pines.post(<?php echo json_encode(pines_url('com_esp', 'swap')); ?>, {
 										"id": esp_id,
 										"swap_item": swap_item,
 										"new_serial": new_serial.trim()

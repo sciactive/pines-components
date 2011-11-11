@@ -110,10 +110,10 @@ if ($pines->config->com_sales->com_esp) {
 					$drawer_kickers[] = $cur_payment_type->guid;
 			}
 ?>
-			var taxes_percent = JSON.parse("<?php echo addslashes(json_encode($taxes_percent)) ?>");
-			var taxes_flat = JSON.parse("<?php echo addslashes(json_encode($taxes_flat)) ?>");
-			var drawer_kickers = JSON.parse("<?php echo addslashes(json_encode($drawer_kickers)); ?>");
-			var status = JSON.parse("<?php echo addslashes(json_encode($this->entity->status)); ?>");
+			var taxes_percent = <?php echo json_encode($taxes_percent); ?>;
+			var taxes_flat = <?php echo json_encode($taxes_flat); ?>;
+			var drawer_kickers = <?php echo json_encode($drawer_kickers); ?>;
+			var status = <?php echo json_encode($this->entity->status); ?>;
 
 			var round_to_dec = function(value, as_string){
 				var rnd = Math.pow(10, dec);
@@ -184,7 +184,7 @@ if ($pines->config->com_sales->com_esp) {
 								textbox.val("");
 								var loader;
 								$.ajax({
-									url: "<?php echo addslashes(pines_url('com_sales', 'product/search')); ?>",
+									url: <?php echo json_encode(pines_url('com_sales', 'product/search')); ?>,
 									type: "POST",
 									dataType: "json",
 									data: {"code": code},
@@ -515,7 +515,7 @@ if ($pines->config->com_sales->com_esp) {
 				]
 			});
 			var add_product = function(data, success){
-				var cur_row, del_dia = "<?php echo addslashes($pines->config->com_sales->delivery_dialog); ?>";
+				var cur_row, del_dia = <?php echo json_encode($pines->config->com_sales->delivery_dialog); ?>;
 				if (data.one_per_ticket) {
 					var cur_products = products_table.pgrid_get_all_rows().pgrid_export_rows();
 					var pass = true;
@@ -537,7 +537,7 @@ if ($pines->config->com_sales->com_esp) {
 						delivery_dialog.dialog("open");
 					}
 				};
-				data.salesperson = "<?php echo addslashes($_SESSION['user']->guid.': '.$_SESSION['user']->name);?>";
+				data.salesperson = <?php echo json_encode($_SESSION['user']->guid.': '.$_SESSION['user']->name); ?>;
 				var serial = "";
 				if (data.serialized) {
 					var buttons = {
@@ -694,7 +694,7 @@ if ($pines->config->com_sales->com_esp) {
 						category_products_grid.pgrid_get_all_rows().pgrid_delete();
 						var loader;
 						$.ajax({
-							url: "<?php echo addslashes(pines_url('com_sales', 'category/products')); ?>",
+							url: <?php echo json_encode(pines_url('com_sales', 'category/products')); ?>,
 							type: "POST",
 							dataType: "json",
 							data: {"id": row.attr("title")},
@@ -779,7 +779,7 @@ if ($pines->config->com_sales->com_esp) {
 					'Done': function(){
 						var salesperson = $("#p_muid_salesperson").val();
 						if (salesperson == "") {
-							salesperson = "<?php echo addslashes($_SESSION['user']->guid.': '.$_SESSION['user']->name);?>";
+							salesperson = <?php echo json_encode($_SESSION['user']->guid.': '.$_SESSION['user']->name); ?>;
 						} else if (!salesperson.match(/^\d+: .+$/)) {
 							alert("Please select a salesperson using the dropdown menu.");
 							return;
@@ -815,7 +815,7 @@ if ($pines->config->com_sales->com_esp) {
 				var cur_export = cur_row.pgrid_export_rows();
 				var cur_guid = cur_export[0].key;
 				$.ajax({
-					url: "<?php echo addslashes(pines_url('com_sales', 'product/search')); ?>",
+					url: <?php echo json_encode(pines_url('com_sales', 'product/search')); ?>,
 					type: "POST",
 					async: false,
 					dataType: "json",
@@ -904,7 +904,7 @@ if ($pines->config->com_sales->com_esp) {
 			payments_table.data_form = function(row){
 				var payment_data = row.data("payment_data");
 				$.ajax({
-					url: "<?php echo addslashes(pines_url('com_sales', 'forms/payment')); ?>",
+					url: <?php echo json_encode(pines_url('com_sales', 'forms/payment')); ?>,
 					type: "POST",
 					dataType: "html",
 					data: {"name": payment_data.processing_type, "id": $("#p_muid_form [name=id]").val(), "customer": $("#p_muid_customer").val(), "type": "sale"},
@@ -1029,7 +1029,7 @@ if ($pines->config->com_sales->com_esp) {
 			};
 			<?php } if (!empty($this->entity->payments)) { foreach ($this->entity->payments as $key => $cur_payment) { ?>
 			(function(){
-				var table_entry = JSON.parse("<?php
+				var table_entry = <?php
 				$object = (object) array(
 					'key' => $cur_payment['entity']->guid,
 					'values' => array(
@@ -1038,24 +1038,24 @@ if ($pines->config->com_sales->com_esp) {
 						$cur_payment['status']
 					)
 				);
-				echo addslashes(json_encode($object)); ?>");
+				echo json_encode($object); ?>;
 
 				payments_table.pgrid_add([table_entry], function(){
 					var new_row = $(this);
 					<?php if (isset($this->entity->guid)) { // Only save original key if the sale is already in the database. ?>
 					new_row.data("orig_key", <?php echo (int) $key; ?>);
 					<?php } ?>
-					var data = JSON.parse("<?php
+					var data = <?php
 					$data = array();
 					if (!empty($cur_payment['data'])) { 
 						foreach ($cur_payment['data'] as $cur_key => $cur_value) {
 							$data[] = (object) array('name' => $cur_key, 'value' => $cur_value);
 						}
 					}
-					echo addslashes(json_encode((object) array(
+					echo json_encode((object) array(
 						'processing_type' => $cur_payment['entity']->processing_type,
 						'data' => $data
-					))); ?>");
+					)); ?>;
 					new_row.data("payment_data", data);
 				});
 			})();
@@ -1209,7 +1209,7 @@ if ($pines->config->com_sales->com_esp) {
 				<?php if (!$this->entity->removed_stock) { ?>
 				var modal = $("<div title=\"Verifying Current Inventory\"><span class=\"picon-32 picon-throbber\" style=\"display: block; float: left; height: 32px; width: 32px;\">&nbsp;</span>Your current inventory is being checked for the selected products. This should only take a few moments.</div>");
 				$.ajax({
-					url: "<?php echo addslashes(pines_url('com_sales', 'sale/checkproducts')); ?>",
+					url: <?php echo json_encode(pines_url('com_sales', 'sale/checkproducts')); ?>,
 					type: "POST",
 					dataType: "json",
 					data: {"products": product_val},

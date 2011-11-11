@@ -81,7 +81,7 @@ defined('P_RUN') or die('Direct access prohibited');
 		}).delegate("div.product", "mouseleave", function(){
 			$(this).removeClass("ui-state-default ui-state-active");
 		}).delegate("div.product", "click", function(){
-			pines.get("<?php echo addslashes(pines_url('com_storefront', 'product', array('a' => '__alias__'))); ?>".replace("__alias__", $(this).children("div.product_alias").text()));
+			pines.get(<?php echo json_encode(pines_url('com_storefront', 'product', array('a' => '__alias__'))); ?>.replace("__alias__", $(this).children("div.product_alias").text()));
 		}).delegate("button.add_cart", "click", function(e){
 			var button = $(this);
 			var product = button.closest("div.product");

@@ -32,7 +32,7 @@ if ($this->entity->final) {
 			var cur_vendor = <?php echo ($this->entity->vendor ? (int) $this->entity->vendor->guid : 'null'); ?>;
 			// Number of decimal places to round to.
 			var dec = <?php echo (int) $pines->config->com_sales->dec; ?>;
-			var all_products = JSON.parse("<?php
+			var all_products = <?php
 			$products = array();
 			foreach ($this->products as $cur_product) {
 				$cur_vendor_guids = array();
@@ -54,8 +54,8 @@ if ($this->entity->final) {
 				);
 				array_push($products, $export_product);
 			}
-			echo addslashes(json_encode($products));
-			?>");
+			echo json_encode($products);
+			?>;
 
 			var round_to_dec = function(value){
 				var rnd = Math.pow(10, dec);
@@ -181,7 +181,7 @@ if ($this->entity->final) {
 					{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 					{type: 'separator'},
 					{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-						pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+						pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
 							filename: 'PO <?php echo htmlspecialchars($this->entity->po_number); ?>',
 							content: rows
 						});
@@ -196,7 +196,7 @@ if ($this->entity->final) {
 					{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 					{type: 'separator'},
 					{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-						pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+						pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
 							filename: 'PO <?php echo htmlspecialchars($this->entity->po_number); ?> - Received',
 							content: rows
 						});
@@ -212,7 +212,7 @@ if ($this->entity->final) {
 					{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 					{type: 'separator'},
 					{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-						pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+						pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
 							filename: 'PO <?php echo htmlspecialchars($this->entity->po_number); ?> - Not Received',
 							content: rows
 						});
@@ -287,7 +287,7 @@ if ($this->entity->final) {
 				"json_data" : {
 					"ajax" : {
 						"dataType" : "json",
-						"url" : "<?php echo addslashes(pines_url('com_jstree', 'groupjson')); ?>"
+						"url" : <?php echo json_encode(pines_url('com_jstree', 'groupjson')); ?>
 					}
 				},
 				"ui" : {

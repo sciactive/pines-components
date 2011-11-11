@@ -442,8 +442,8 @@ $pines->com_pgrid->load();
 							$checker_links = array();
 							foreach (array_keys($pines->depend->checkers) as $cur_checker) {
 								$checker_html = htmlspecialchars($cur_checker);
-								$checker_js = addslashes($cur_checker);
-								$checker_links[] = "<a href=\"javascript:void(0);\" onclick=\"\$('#p_muid_cur_condition_type').val('$checker_js');\">$checker_html</a>";
+								$checker_js = htmlspecialchars(json_encode($cur_checker));
+								$checker_links[] = "<a href=\"javascript:void(0);\" onclick=\"\$('#p_muid_cur_condition_type').val($checker_js);\">$checker_html</a>";
 							}
 							echo implode(', ', $checker_links);
 							?></em></div>

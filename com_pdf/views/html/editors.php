@@ -19,12 +19,12 @@ defined('P_RUN') or die('Direct access prohibited');
 		var current_holder;
 		var pdf_file = "<?php echo htmlspecialchars($this->entity->pdf_file); ?>";
 		var pages = <?php echo json_encode($this->entity->pdf_pages); ?>;
-		var display_jsons = JSON.parse("<?php echo addslashes(json_encode($this->entity->displays)); ?>");
+		var display_jsons = <?php echo json_encode($this->entity->displays); ?>;
 
 		var open_display_editor = function(holder) {
 			current_holder = holder;
 			if (display_editor_window) display_editor_window.close();
-			display_editor_window = window.open("<?php echo addslashes(pines_url('com_pdf', 'editor')); ?>", "display_editor", "directories=no,location=no,menubar=no,scrollbars=yes,status=yes,toolbar=no");
+			display_editor_window = window.open(<?php echo json_encode(pines_url('com_pdf', 'editor')); ?>, "display_editor", "directories=no,location=no,menubar=no,scrollbars=yes,status=yes,toolbar=no");
 			display_editor_window.onload = function(){
 				display_editor_window.current_json = holder.val();
 				display_editor_window.pdf_file = pdf_file;

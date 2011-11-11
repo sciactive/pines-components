@@ -52,7 +52,7 @@ $this->title = 'Payment Options';
 		// <![CDATA[
 		pines(function(){
 			var form = $("#p_muid_form");
-			var data = JSON.parse("<?php echo addslashes(json_encode($this->payment->data)); ?>");
+			var data = <?php echo json_encode($this->payment->data); ?>;
 			if (data) {
 				$.each(data, function(i, val){
 					form.find(":input:not(:radio, :checkbox)[name="+i+"]").val(val);
@@ -96,7 +96,7 @@ $this->title = 'Payment Options';
 		pines(function(){
 			var get_form = function(payment_data){
 				$.ajax({
-					url: "<?php echo addslashes(pines_url('com_storefront', 'checkout/paymentform')); ?>",
+					url: <?php echo json_encode(pines_url('com_storefront', 'checkout/paymentform')); ?>,
 					type: "POST",
 					dataType: "html",
 					data: {"name": payment_data.processing_type},

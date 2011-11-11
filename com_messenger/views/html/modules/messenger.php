@@ -130,7 +130,7 @@ unset($cur_user);
 		$('#p_muid_chat').tabs('remove', tab_index);
 
 		$.ajax({
-			url: "<?php echo addslashes(pines_url('com_messenger', 'messenger')); ?>",
+			url: <?php echo json_encode(pines_url('com_messenger', 'messenger')); ?>,
 			type: "POST",
 			dataType: "json",
 			data: {
@@ -181,7 +181,7 @@ unset($cur_user);
 					jaxl.ping();
 
 					$.ajax({
-						url: "<?php echo addslashes(pines_url('com_messenger', 'messenger')); ?>",
+						url: <?php echo json_encode(pines_url('com_messenger', 'messenger')); ?>,
 						type: "POST",
 						dataType: "json",
 						data: {
@@ -252,7 +252,7 @@ unset($cur_user);
 				jaxl.sendPayload(obj);
 
 				$.ajax({
-					url: "<?php echo addslashes(pines_url('com_messenger', 'messenger')); ?>",
+					url: <?php echo json_encode(pines_url('com_messenger', 'messenger')); ?>,
 					type: "POST",
 					dataType: "json",
 					data: {
@@ -267,11 +267,11 @@ unset($cur_user);
 		<?php if (!empty($chat_log)) {
 			foreach ($chat_log as $cur_chat) {
 				$jabber_id = key($chat_log); ?>
-				pines.com_messenger_chat('<?php echo htmlspecialchars(addslashes($jabber_id)); ?>', '<?php echo htmlspecialchars(addslashes($jabber_id)); ?>');
+				pines.com_messenger_chat(<?php echo json_encode(htmlspecialchars($jabber_id)); ?>, <?php echo json_encode(htmlspecialchars($jabber_id)); ?>);
 			<?php foreach ($cur_chat as $cur_msg) { ?>
-				boshchat.appendMessage('<?php echo htmlspecialchars(addslashes($jabber_id)); ?>', '<?php echo htmlspecialchars(addslashes($cur_msg)); ?>');
+				boshchat.appendMessage(<?php echo json_encode(htmlspecialchars($jabber_id)); ?>, <?php echo json_encode(htmlspecialchars($cur_msg)); ?>);
 			<?php } ?>
-				$('#p_muid_tab_<?php echo htmlspecialchars(addslashes($jabber_id)); ?> .read').animate({ scrollTop: $('#p_muid_tab_<?php echo htmlspecialchars(addslashes($jabber_id)); ?> .read').prop('scrollHeight') }, 300);
+				$('#p_muid_tab_<?php echo addslashes(htmlspecialchars($jabber_id)); ?> .read').animate({ scrollTop: $('#p_muid_tab_<?php echo addslashes(htmlspecialchars($jabber_id)); ?> .read').prop('scrollHeight') }, 300);
 			<?php }
 		} ?>
 	});
@@ -286,7 +286,7 @@ unset($cur_user);
 			<div class="pf-element">
 				<ul>
 					<?php foreach ($users as $cur_user) { ?>
-					<li><a href="#" onclick="pines.com_messenger_chat('<?php echo htmlspecialchars(addslashes($cur_user->name_first); ?>', '<?php echo htmlspecialchars(addslashes($cur_user->username)); ?>');"><?php echo htmlspecialchars($cur_user->name); ?></a></li>
+					<li><a href="#" onclick="pines.com_messenger_chat(<?php echo json_encode(htmlspecialchars($cur_user->name_first)); ?>, <?php echo json_encode(htmlspecialchars($cur_user->username)); ?>);"><?php echo htmlspecialchars($cur_user->name); ?></a></li>
 					<?php } ?>
 				</ul>
 			</div>

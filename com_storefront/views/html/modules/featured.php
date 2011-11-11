@@ -58,7 +58,7 @@ if (empty($this->title))
 		// <![CDATA[
 		pines(function(){
 			$("button.add_cart", "#p_muid_product").click(function(){
-				pines.com_storefront_add_to_cart(<?php echo (int) $this->entity->guid; ?>, "<?php echo addslashes($this->entity->name); ?>", <?php echo (float) $this->entity->unit_price; ?>, $("#p_muid_product"));
+				pines.com_storefront_add_to_cart(<?php echo (int) $this->entity->guid; ?>, <?php echo json_encode($this->entity->name); ?>, <?php echo (float) $this->entity->unit_price; ?>, $("#p_muid_product"));
 			});
 		});
 		// ]]>

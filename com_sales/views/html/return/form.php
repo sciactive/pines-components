@@ -76,10 +76,10 @@ if ($pines->config->com_sales->autocomplete_product)
 					$drawer_kickers[] = $cur_payment_type->guid;
 			}
 ?>
-			var taxes_percent = JSON.parse("<?php echo addslashes(json_encode($taxes_percent)) ?>");
-			var taxes_flat = JSON.parse("<?php echo addslashes(json_encode($taxes_flat)) ?>");
-			var drawer_kickers = JSON.parse("<?php echo addslashes(json_encode($drawer_kickers)); ?>");
-			var status = JSON.parse("<?php echo addslashes(json_encode($this->entity->status)); ?>");
+			var taxes_percent = <?php echo json_encode($taxes_percent); ?>;
+			var taxes_flat = <?php echo json_encode($taxes_flat); ?>;
+			var drawer_kickers = <?php echo json_encode($drawer_kickers); ?>;
+			var status = <?php echo json_encode($this->entity->status); ?>;
 
 			var round_to_dec = function(value, as_string){
 				var rnd = Math.pow(10, dec);
@@ -151,7 +151,7 @@ if ($pines->config->com_sales->autocomplete_product)
 								textbox.val("");
 								var loader;
 								$.ajax({
-									url: "<?php echo addslashes(pines_url('com_sales', 'product/search')); ?>",
+									url: <?php echo json_encode(pines_url('com_sales', 'product/search')); ?>,
 									type: "POST",
 									dataType: "json",
 									data: {"code": code},
@@ -332,7 +332,7 @@ if ($pines->config->com_sales->autocomplete_product)
 			});
 			var add_product = function(data, success){
 				var serial = "";
-				data.salesperson = "<?php echo addslashes($_SESSION['user']->guid.': '.$_SESSION['user']->name);?>";
+				data.salesperson = <?php echo json_encode($_SESSION['user']->guid.': '.$_SESSION['user']->name); ?>;
 				if (data.serialized) {
 					var buttons = {
 						"Done": function(){
@@ -416,7 +416,7 @@ if ($pines->config->com_sales->autocomplete_product)
 						category_products_grid.pgrid_get_all_rows().pgrid_delete();
 						var loader;
 						$.ajax({
-							url: "<?php echo addslashes(pines_url('com_sales', 'category/products')); ?>",
+							url: <?php echo json_encode(pines_url('com_sales', 'category/products')); ?>,
 							type: "POST",
 							dataType: "json",
 							data: {"id": row.attr("title")},
@@ -569,7 +569,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					'Done': function(){
 						var salesperson = $("#p_muid_salesperson").val();
 						if (salesperson == "") {
-							salesperson = "<?php echo addslashes($_SESSION['user']->guid.': '.$_SESSION['user']->name);?>";
+							salesperson = <?php echo json_encode($_SESSION['user']->guid.': '.$_SESSION['user']->name); ?>;
 						} else if (!salesperson.match(/^\d+: .+$/)) {
 							alert("Please select a salesperson using the dropdown menu.");
 							return;
@@ -605,7 +605,7 @@ if ($pines->config->com_sales->autocomplete_product)
 				var cur_export = cur_row.pgrid_export_rows();
 				var cur_guid = cur_export[0].key;
 				$.ajax({
-					url: "<?php echo addslashes(pines_url('com_sales', 'product/search')); ?>",
+					url: <?php echo json_encode(pines_url('com_sales', 'product/search')); ?>,
 					type: "POST",
 					async: false,
 					dataType: "json",
@@ -694,7 +694,7 @@ if ($pines->config->com_sales->autocomplete_product)
 			payments_table.data_form = function(row){
 				var payment_data = row.data("payment_data");
 				$.ajax({
-					url: "<?php echo addslashes(pines_url('com_sales', 'forms/payment')); ?>",
+					url: <?php echo json_encode(pines_url('com_sales', 'forms/payment')); ?>,
 					type: "POST",
 					dataType: "html",
 					data: {"name": payment_data.processing_type, "id": $("#p_muid_form [name=id]").val(), "customer": $("#p_muid_customer").val(), "type": "return", "sale_id": $("#p_muid_form [name=sale_id]").val()},
@@ -825,7 +825,7 @@ if ($pines->config->com_sales->autocomplete_product)
 			
 			<?php if (!empty($this->entity->payments)) { foreach ($this->entity->payments as $key => $cur_payment) { ?>
 			(function(){
-				var table_entry = JSON.parse("<?php
+				var table_entry = <?php
 				$object = (object) array(
 					'key' => $cur_payment['entity']->guid,
 					'values' => array(
@@ -834,21 +834,21 @@ if ($pines->config->com_sales->autocomplete_product)
 						$cur_payment['status']
 					)
 				);
-				echo addslashes(json_encode($object)); ?>");
+				echo json_encode($object); ?>;
 
 				payments_table.pgrid_add([table_entry], function(){
 					var new_row = $(this).data("orig_key", <?php echo (int) $key; ?>);
-					var data = JSON.parse("<?php
+					var data = <?php
 					$data = array();
 					if (!empty($cur_payment['data'])) { 
 						foreach ($cur_payment['data'] as $cur_key => $cur_value) {
 							$data[] = (object) array('name' => $cur_key, 'value' => $cur_value);
 						}
 					}
-					echo addslashes(json_encode((object) array(
+					echo json_encode((object) array(
 						'processing_type' => $cur_payment['entity']->processing_type,
 						'data' => $data
-					))); ?>");
+					)); ?>;
 					new_row.data("payment_data", data);
 				});
 			})();
@@ -1183,7 +1183,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					<td>NA<script type="text/javascript">
 						// <![CDATA[
 						pines(function(){
-							$("#p_muid_tr_<?php echo htmlspecialchars($cur_id); ?>").data("return_checklists", JSON.parse("<?php echo addslashes(json_encode((array) $cur_product['return_checklists'])); ?>"));
+							$("#p_muid_tr_<?php echo htmlspecialchars($cur_id); ?>").data("return_checklists", <?php echo json_encode((array) $cur_product['return_checklists']); ?>);
 						});
 						// ]]>
 					</script></td>

@@ -44,14 +44,14 @@ $pines->com_pgrid->load();
 	pines(function(){
 		entire_company = function(){
 			// Submit the form with all of the fields.
-			pines.get("<?php echo addslashes(pines_url('com_reports', 'reportpayroll')); ?>", {
+			pines.get(<?php echo json_encode(pines_url('com_reports', 'reportpayroll')); ?>, {
 				"id": paystub,
 				"entire_company": true
 			});
 		};
 		search_employees = function(){
 			// Submit the form with all of the fields.
-			pines.get("<?php echo addslashes(pines_url('com_reports', 'reportpayroll')); ?>", {
+			pines.get(<?php echo json_encode(pines_url('com_reports', 'reportpayroll')); ?>, {
 				"id": paystub,
 				"location": location,
 				"descendents": descendents
@@ -69,7 +69,7 @@ $pines->com_pgrid->load();
 			pgrid_sort_col: 1,
 			pgrid_sort_ord: 'asc',
 			pgrid_toolbar_contents: [
-				{type: 'button', text: 'Paystubs', extra_class: 'picon picon-edit-clear-locationbar-ltr', selection_optional: true, url: '<?php echo addslashes(pines_url('com_reports', 'listpaystubs')); ?>'},
+				{type: 'button', text: 'Paystubs', extra_class: 'picon picon-edit-clear-locationbar-ltr', selection_optional: true, url: <?php echo json_encode(pines_url('com_reports', 'listpaystubs')); ?>},
 				<?php if (!$this->entire_company) { ?>
 				{type: 'button', title: 'Entire Company', extra_class: 'picon picon-view-process-all', selection_optional: true, click: function(){entire_company();}},
 				<?php } ?>
@@ -79,7 +79,7 @@ $pines->com_pgrid->load();
 				{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-					pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+					pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
 						filename: 'payroll_report',
 						content: rows
 					});
@@ -88,7 +88,7 @@ $pines->com_pgrid->load();
 		});
 		employees_grid.location_form = function(){
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_reports', 'locationselect')); ?>",
+				url: <?php echo json_encode(pines_url('com_reports', 'locationselect')); ?>,
 				type: "POST",
 				dataType: "html",
 				data: {"location": location, "descendents": descendents},

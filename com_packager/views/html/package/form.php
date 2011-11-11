@@ -417,7 +417,7 @@ $pines->com_ptags->load();
 							var template = $("#p_muid_form [name=pkg_template]").val();
 							$.ajax({
 								type: "POST",
-								url: "<?php echo addslashes(pines_url('com_packager', 'glob')); ?>",
+								url: <?php echo json_encode(pines_url('com_packager', 'glob')); ?>,
 								dataType: "json",
 								data: {"q": request.term, "type": type, "pkg_component": component, "pkg_template": template},
 								success: function(data){

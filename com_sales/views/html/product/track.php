@@ -15,7 +15,7 @@ $this->title = 'Stock Tracking';
 $this->note = count($this->transactions).' transaction(s) for '.count($this->stock).' item(s) found.';
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
-	$this->pgrid_state = $_SESSION['user']->pgrid_saved_states['com_sales/product/track'];
+	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_sales/product/track']);
 $pines->com_jstree->load();
 ?>
 <style type="text/css" >
@@ -28,7 +28,7 @@ $pines->com_jstree->load();
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-		var submit_url = "<?php echo addslashes(pines_url('com_sales', 'product/track')); ?>";
+		var submit_url = <?php echo json_encode(pines_url('com_sales', 'product/track')); ?>;
 		var submit_search = function(){
 			if ($("#p_muid_types_dialog [name=types_invoice]").attr('checked'))
 				types.push('invoice');
@@ -59,14 +59,14 @@ $pines->com_jstree->load();
 		var types = new Array();
 		// Timespan Defaults
 		var all_time = <?php echo $this->all_time ? 'true' : 'false'; ?>;
-		var start_date = "<?php echo $this->start_date ? addslashes(format_date($this->start_date, 'date_sort')) : ''; ?>";
-		var end_date = "<?php echo $this->end_date ? addslashes(format_date($this->end_date - 1, 'date_sort')) : ''; ?>";
+		var start_date = <?php echo $this->start_date ? json_encode(format_date($this->start_date, 'date_sort')) : '""'; ?>;
+		var end_date = <?php echo $this->end_date ? json_encode(format_date($this->end_date - 1, 'date_sort')) : '""'; ?>;
 		// Location Defaults
 		var location = "<?php echo (int) $this->location->guid ?>";
 		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
 
 		var state_xhr;
-		var cur_state = JSON.parse("<?php echo (isset($this->pgrid_state) ? addslashes($this->pgrid_state) : '{}');?>");
+		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents : [
@@ -76,7 +76,7 @@ $pines->com_jstree->load();
 				{type: 'separator'},
 				{type: 'text', label: 'SKU: ', load: function(textbox){
 					// Display the current sku being searched.
-					textbox.val("<?php echo addslashes($this->sku); ?>");
+					textbox.val(<?php echo json_encode($this->sku); ?>);
 					textbox.keydown(function(e){
 						if (e.keyCode == 13)
 							submit_search();
@@ -86,7 +86,7 @@ $pines->com_jstree->load();
 				{type: 'separator'},
 				{type: 'text', label: 'Serial #: ', load: function(textbox){
 					// Display the current serial being searched.
-					textbox.val("<?php echo addslashes($this->serial); ?>");
+					textbox.val(<?php echo json_encode($this->serial); ?>);
 					textbox.keydown(function(e){
 						if (e.keyCode == 13)
 							submit_search();
@@ -102,7 +102,7 @@ $pines->com_jstree->load();
 				if (typeof state_xhr == "object")
 					state_xhr.abort();
 				cur_state = JSON.stringify(state);
-				state_xhr = $.post("<?php echo addslashes(pines_url('com_pgrid', 'save_state')); ?>", {view: "com_sales/product/track", state: cur_state});
+				state_xhr = $.post(<?php echo json_encode(pines_url('com_pgrid', 'save_state')); ?>, {view: "com_sales/product/track", state: cur_state});
 			}
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
@@ -110,7 +110,7 @@ $pines->com_jstree->load();
 
 		history_grid.date_form = function(){
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_sales', 'forms/dateselect')); ?>",
+				url: <?php echo json_encode(pines_url('com_sales', 'forms/dateselect')); ?>,
 				type: "POST",
 				dataType: "html",
 				data: {"all_time": all_time, "start_date": start_date, "end_date": end_date},
@@ -147,7 +147,7 @@ $pines->com_jstree->load();
 		};
 		history_grid.location_form = function(){
 			$.ajax({
-				url: "<?php echo addslashes(pines_url('com_sales', 'forms/locationselect')); ?>",
+				url: <?php echo json_encode(pines_url('com_sales', 'forms/locationselect')); ?>,
 				type: "POST",
 				dataType: "html",
 				data: {"location": location, "descendents": descendents},

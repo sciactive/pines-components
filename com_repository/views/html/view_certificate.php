@@ -20,7 +20,7 @@ $this->note = 'All new packages are signed against this certificate.';
 		pines(function(){
 			$.ajax({
 				type: "GET",
-				url: "<?php echo addslashes("{$pines->config->location}{$pines->config->com_repository->repository_path}private/cert.key"); ?>",
+				url: <?php echo json_encode("{$pines->config->location}{$pines->config->com_repository->repository_path}private/cert.key"); ?>,
 				complete: function(){
 					$("#p_muid_key_loading").hide();
 				},

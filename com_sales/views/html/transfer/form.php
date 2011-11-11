@@ -56,7 +56,7 @@ if ($this->entity->final)
 								textbox.val("");
 								var loader;
 								$.ajax({
-									url: "<?php echo addslashes(pines_url('com_sales', 'product/search')); ?>",
+									url: <?php echo json_encode(pines_url('com_sales', 'product/search')); ?>,
 									type: "POST",
 									dataType: "json",
 									data: {"code": code},
@@ -162,7 +162,7 @@ if ($this->entity->final)
 						category_products_grid.pgrid_get_all_rows().pgrid_delete();
 						var loader;
 						$.ajax({
-							url: "<?php echo addslashes(pines_url('com_sales', 'category/products')); ?>",
+							url: <?php echo json_encode(pines_url('com_sales', 'category/products')); ?>,
 							type: "POST",
 							dataType: "json",
 							data: {"id": row.attr("title")},
@@ -258,7 +258,7 @@ if ($this->entity->final)
 					{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 					{type: 'separator'},
 					{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-						pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+						pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
 							filename: 'PO <?php echo htmlspecialchars($this->entity->po_number); ?> - Received',
 							content: rows
 						});
@@ -274,7 +274,7 @@ if ($this->entity->final)
 					{type: 'button', title: 'Select None', extra_class: 'picon picon-document-close', select_none: true},
 					{type: 'separator'},
 					{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
-						pines.post("<?php echo addslashes(pines_url('system', 'csv')); ?>", {
+						pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
 							filename: 'PO <?php echo htmlspecialchars($this->entity->po_number); ?> - Not Received',
 							content: rows
 						});
@@ -306,7 +306,7 @@ if ($this->entity->final)
 				"json_data" : {
 					"ajax" : {
 						"dataType" : "json",
-						"url" : "<?php echo addslashes(pines_url('com_jstree', 'groupjson')); ?>"
+						"url" : <?php echo json_encode(pines_url('com_jstree', 'groupjson')); ?>
 					}
 				},
 				"ui" : {
@@ -332,7 +332,7 @@ if ($this->entity->final)
 				"json_data" : {
 					"ajax" : {
 						"dataType" : "json",
-						"url" : "<?php echo addslashes(pines_url('com_jstree', 'groupjson')); ?>"
+						"url" : <?php echo json_encode(pines_url('com_jstree', 'groupjson')); ?>
 					}
 				},
 				"ui" : {

@@ -127,7 +127,7 @@ class com_sales extends component {
 	 * barcodes are checked until a match is found. If no product is found, null
 	 * is returned.
 	 *
-	 * @param int $code The product's code.
+	 * @param mixed $code The product's code.
 	 * @return com_sales_product|null The product if it is found, null if it isn't.
 	 */
 	public function get_product_by_code($code) {

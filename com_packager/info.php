@@ -23,7 +23,8 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'entity_manager&uploader&editor&configurator',
-		'component' => 'com_slim&com_jquery&com_pgrid&com_ptags&com_pform'
+		'component' => 'com_slim&com_jquery&com_pgrid&com_ptags&com_pform',
+		'package' => 'com_packager-data'
 	),
 	'abilities' => array(
 		array('listpackages', 'List Packages', 'User can see packages.'),

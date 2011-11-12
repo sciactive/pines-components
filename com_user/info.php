@@ -24,7 +24,8 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'service' => 'entity_manager&uploader&icons',
-		'component' => 'com_mailer&com_jquery&com_pgrid&com_pnotify&com_pform' //&com_jstree
+		'component' => 'com_mailer&com_jquery&com_pgrid&com_pnotify&com_pform', //&com_jstree
+		'package' => 'com_user-data'
 	),
 	'recommend' => array(
 		'component' => 'com_modules'

@@ -23,7 +23,8 @@ return array(
 	'depend' => array(
 		'pines' => '<2',
 		'class' => 'Imagick',
-		'component' => 'com_jquery&com_pform'
+		'component' => 'com_jquery&com_pform',
+		'package' => 'com_pdf-data'
 	),
 );
 

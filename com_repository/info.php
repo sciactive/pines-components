@@ -24,6 +24,7 @@ return array(
 		'pines' => '<2',
 		'service' => 'user_manager',
 		'component' => 'com_slim&com_jquery&com_pgrid&com_pform',
+		'package' => 'com_repository-data',
 		'class' => 'Imagick',
 		'function' => 'openssl_pkey_new'
 	),

@@ -55,7 +55,7 @@ switch ($do) {
 			if ($changes['install']) {
 				foreach ($changes['install'] as $key => $cur_package_name) {
 					$cur_package = $index['packages'][$cur_package_name];
-					if (!$pines->com_plaza->package_install($cur_package)) {
+					if (!$pines->com_plaza->package_install($cur_package, true)) {
 						$passed = false;
 					} else {
 						unset($changes['install'][$key]);
@@ -65,7 +65,7 @@ switch ($do) {
 			if ($changes['remove']) {
 				foreach ($changes['remove'] as $key => $cur_package_name) {
 					$cur_package = $pines->com_package->db['packages'][$cur_package_name];
-					if (!$pines->com_plaza->package_remove($cur_package)) {
+					if (!$pines->com_plaza->package_remove($cur_package, true)) {
 						$passed = false;
 					} else {
 						unset($changes['remove'][$key]);
@@ -91,7 +91,7 @@ switch ($do) {
 			if ($changes['install']) {
 				foreach ($changes['install'] as $key => $cur_package_name) {
 					$cur_package = $index['packages'][$cur_package_name];
-					if (!$pines->com_plaza->package_install($cur_package)) {
+					if (!$pines->com_plaza->package_install($cur_package, true)) {
 						$passed = false;
 					} else {
 						unset($changes['install'][$key]);
@@ -101,7 +101,7 @@ switch ($do) {
 			if ($changes['remove']) {
 				foreach ($changes['remove'] as $key => $cur_package_name) {
 					$cur_package = $pines->com_package->db['packages'][$cur_package_name];
-					if (!$pines->com_plaza->package_remove($cur_package)) {
+					if (!$pines->com_plaza->package_remove($cur_package, true)) {
 						$passed = false;
 					} else {
 						unset($changes['remove'][$key]);

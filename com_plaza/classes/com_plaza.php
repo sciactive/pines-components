@@ -868,9 +868,10 @@ class com_plaza extends component {
 	 * Install a package.
 	 *
 	 * @param array $package The package array.
+	 * @param bool $skip_package_checks Whether to skip the package related dependency checks. If a package depends on another package, you must set this to install both.
 	 * @return bool True on success, false on failure.
 	 */
-	public function package_install($package) {
+	public function package_install($package, $skip_package_checks = false) {
 		$file = "components/com_plaza/includes/cache/packages/{$package['package']}-{$package['version']}.slm";
 		if (!file_exists($file))
 			return false;
@@ -882,10 +883,10 @@ class com_plaza extends component {
 		if (!$pack->is_installable())
 			return false;
 		// Check its dependencies, etc.
-		if (!$pack->is_ready())
+		if (!$pack->is_ready($skip_package_checks))
 			return false;
 		// Install it.
-		if (!$pack->install())
+		if (!$pack->install(false, $skip_package_checks))
 			return false;
 		return true;
 	}
@@ -907,12 +908,15 @@ class com_plaza extends component {
 	 * Remove a package.
 	 *
 	 * @param array $package The package array.
+	 * @param bool $skip_package_checks Whether to skip the package related dependency checks. If a package depends on another package, you must set this to remove both.
 	 * @return bool True on success, false on failure.
 	 */
-	public function package_remove($package) {
+	public function package_remove($package, $skip_package_checks = false) {
 		// Check that it won't disrupt other packages.
 		$changes = $this->calculate_changes($package, 'remove');
-		if (!$changes['possible'] || $changes['install'] || $changes['remove'] || $changes['service'])
+		if (!$changes['possible'])
+			return false;
+		if (!$skip_package_checks && ($changes['install'] || $changes['remove'] || $changes['service']))
 			return false;
 		// Load the package.
 		$pack = com_package_package::factory($package['package']);

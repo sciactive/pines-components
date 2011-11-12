@@ -130,9 +130,10 @@ class com_package_package {
 
 	/**
 	 * Check whether the package is ready to install/upgrade.
+	 * @param bool $skip_package_checks Whether to skip the package related dependency checks. If a package depends on another package, you must set this to install both.
 	 * @return bool True or false.
 	 */
-	public function is_ready() {
+	public function is_ready($skip_package_checks = false) {
 		global $pines;
 		// Check if a newer version is installed.
 		if (
@@ -145,7 +146,7 @@ class com_package_package {
 			)
 			return false;
 		// Check if any services this component provides are already provided.
-		if ($this->info['type'] == 'component' && isset($this->info['services'])) {
+		if (!$skip_package_checks && $this->info['type'] == 'component' && isset($this->info['services'])) {
 			foreach ($this->info['services'] as $cur_service) {
 				// If the service is provided, it may just be because this
 				// package is already installed. Check if the component is the
@@ -157,6 +158,8 @@ class com_package_package {
 		// Check that all dependencies are met.
 		if (isset($this->info['depend'])) {
 			foreach ($this->info['depend'] as $cur_type => $cur_value) {
+				if ($skip_package_checks && in_array($cur_type, array('component', 'package', 'service')))
+					continue;
 				if (!$pines->depend->check($cur_type, $cur_value))
 					return false;
 			}
@@ -164,6 +167,8 @@ class com_package_package {
 		// Check that no conflicts exists.
 		if (isset($this->info['conflict'])) {
 			foreach ($this->info['conflict'] as $cur_type => $cur_value) {
+				if ($skip_package_checks && in_array($cur_type, array('component', 'package', 'service')))
+					continue;
 				if ($pines->depend->check($cur_type, $cur_value))
 					return false;
 			}
@@ -184,13 +189,14 @@ class com_package_package {
 	/**
 	 * Install/upgrade the package.
 	 * @param bool $force Install the package even if there is a newer version already installed, services are already provided, or the dependencies aren't met.
+	 * @param bool $skip_package_checks Whether to skip the package related dependency checks. If a package depends on another package, you must set this to install both.
 	 * @return bool True on success, false on failure.
 	 */
-	public function install($force = false) {
+	public function install($force = false, $skip_package_checks = false) {
 		global $pines;
 		if (!$this->is_installable())
 			return false;
-		if (!$this->is_ready()) {
+		if (!$this->is_ready($skip_package_checks)) {
 			if (!$force)
 				return false;
 			pines_log("Forced package installation requested for package \"{$this->name}\". A newer version is installed, services are already provided, or the dependencies aren't met.", 'warning');

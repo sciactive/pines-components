@@ -31,13 +31,38 @@ if (!$package->read($_FILES['package']['tmp_name'])) {
 
 // Check that the package is valid.
 if (
-		empty($package->ext['package']) || preg_match('/[^a-z0-9_-]/', $package->ext['package']) ||
-		!in_array($package->ext['type'], array('component', 'template', 'system', 'meta')) ||
+		empty($package->ext['package']) ||
 		empty($package->ext['name']) ||
 		empty($package->ext['author']) ||
 		empty($package->ext['version'])
 	) {
-	pines_notice('Package is not valid.');
+	pines_notice('Package is not valid. Name, author, and version are all required.');
+	pines_redirect(pines_url('com_repository', 'listpackages'));
+	return;
+}
+
+if (preg_match('/[^a-z0-9_-]/', $package->ext['package'])) {
+	pines_notice('Package names can only contain lowercase letters, numbers, underscore, and dash.');
+	pines_redirect(pines_url('com_repository', 'listpackages'));
+	return;
+}
+
+if (preg_match('/(^[_-]|[_-]$)/', $package->ext['package'])) {
+	pines_notice('Package names must begin with a letter or number.');
+	pines_redirect(pines_url('com_repository', 'listpackages'));
+	return;
+}
+
+if (!in_array($package->ext['type'], array('component', 'template', 'system', 'meta'))) {
+	pines_notice('Only component, template, system, and meta package types are accepted.');
+	pines_redirect(pines_url('com_repository', 'listpackages'));
+	return;
+}
+
+// Check the existing packages for name collisions.
+$cur_index = $pines->com_repository->get_index();
+if (array_key_exists($package->ext['package'], $cur_index) && $cur_index[$package->ext['package']]['publisher'] != $_SESSION['user']->username) {
+	pines_notice('A component by that name already exists in the repository.');
 	pines_redirect(pines_url('com_repository', 'listpackages'));
 	return;
 }

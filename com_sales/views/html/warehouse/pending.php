@@ -251,7 +251,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				$style = '';
 		?>
 		<tr title="<?php echo $sale->guid.'_'.$key; ?>">
-			<td<?php echo $style; ?>><?php echo format_date($sale->tender_date, 'date_sort'); ?></td>
+			<td<?php echo $style; ?>><?php echo htmlspecialchars(format_date($sale->tender_date, 'date_sort')); ?></td>
 			<td<?php echo $style; ?>><a<?php echo $style; ?> href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/receipt', array('id' => $sale->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($sale->id); ?></a></td>
 			<td<?php echo $style; ?>><?php echo htmlspecialchars($sale->group->name); ?></td>
 			<td<?php echo $style; ?>><?php echo htmlspecialchars($cur_product['salesperson']->name); ?></td>

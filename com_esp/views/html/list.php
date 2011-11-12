@@ -241,10 +241,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo htmlspecialchars($plan->customer->name); ?></td>
 			<td><?php echo htmlspecialchars($plan->item->product->name); ?></td>
 			<td><?php echo htmlspecialchars($plan->item->serial); ?></td>
-			<td><?php echo format_date($plan->expiration_date, 'date_sort'); ?></td>
+			<td><?php echo htmlspecialchars(format_date($plan->expiration_date, 'date_sort')); ?></td>
 			<td><?php echo htmlspecialchars($plan->sale->id); ?></td>
-			<td><?php echo format_date($plan->sale->tender_date, 'date_sort'); ?></td>
-			<td><?php echo ucwords($plan->status); ?></td>
+			<td><?php echo htmlspecialchars(format_date($plan->sale->tender_date, 'date_sort')); ?></td>
+			<td><?php echo htmlspecialchars(ucwords($plan->status)); ?></td>
 			<td><?php echo htmlspecialchars($plan->unique_id); ?></td>
 		</tr>
 	<?php } ?>

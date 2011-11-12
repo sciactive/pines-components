@@ -84,8 +84,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<tr title="<?php echo (int) $cur_ranking->guid ?>">
 			<td><?php echo (int) $cur_ranking->guid ?></td>
 			<td><?php echo htmlspecialchars($cur_ranking->name); ?></td>
-			<td><?php echo format_date($cur_ranking->start_date, 'date_sort'); ?></td>
-			<td><?php echo format_date($cur_ranking->end_date - 1, 'date_sort'); ?></td>
+			<td><?php echo htmlspecialchars(format_date($cur_ranking->start_date, 'date_sort')); ?></td>
+			<td><?php echo htmlspecialchars(format_date($cur_ranking->end_date - 1, 'date_sort')); ?></td>
 			<td><?php echo $cur_ranking->final ? 'Yes' : 'No'; ?></td>
 			<td><?php echo htmlspecialchars($cur_ranking->top_location->name); ?></td>
 			<td><?php echo htmlspecialchars($cur_ranking->user->name); ?></td>

@@ -79,7 +79,7 @@ $this->title = htmlspecialchars($this->entity->company_name).' Warboard';
 								echo ', ' . htmlspecialchars($cur_location->state);
 							?></strong>
 						</td>
-						<td><?php echo format_phone($cur_location->phone); ?></td>
+						<td><?php echo htmlspecialchars(format_phone($cur_location->phone)); ?></td>
 					</tr>
 					<tr class="heading">
 						<td colspan="3">District</td>
@@ -103,9 +103,9 @@ $this->title = htmlspecialchars($this->entity->company_name).' Warboard';
 						$empty = false;
 						?>
 					<tr <?php echo ($cur_employee->new_hire) ? 'class="newhire"' : ''; ?>>
-						<td style="width: 25%;"><?php echo format_date($cur_employee->hire_date, 'custom', 'n/j/y'); ?></td>
+						<td style="width: 25%;"><?php echo htmlspecialchars(format_date($cur_employee->hire_date, 'custom', 'n/j/y')); ?></td>
 						<td style="width: 50%;"><?php echo htmlspecialchars($cur_employee->name); ?></td>
-						<td style="width: 25%;"><?php echo format_phone($cur_employee->phone); ?></td>
+						<td style="width: 25%;"><?php echo htmlspecialchars(format_phone($cur_employee->phone)); ?></td>
 					</tr>
 						<?php
 					}
@@ -136,10 +136,10 @@ $this->title = htmlspecialchars($this->entity->company_name).' Warboard';
 					<td class="label"><strong><?php echo htmlspecialchars($this->entity->hq->name); ?></strong></td>
 				</tr>
 				<tr>
-					<td><?php echo format_phone($this->entity->hq->phone); ?></td>
+					<td><?php echo htmlspecialchars(format_phone($this->entity->hq->phone)); ?></td>
 				</tr>
 				<tr>
-					<td>FAX: <?php echo format_phone($this->entity->hq->fax); ?></td>
+					<td>FAX: <?php echo htmlspecialchars(format_phone($this->entity->hq->fax)); ?></td>
 				</tr>
 				<tr>
 					<td><?php echo htmlspecialchars($this->entity->hq->address_1); ?></td>
@@ -169,8 +169,8 @@ $this->title = htmlspecialchars($this->entity->company_name).' Warboard';
 				<tr>
 					<td><?php echo htmlspecialchars($cur_employee->name); ?></td>
 					<td><?php echo htmlspecialchars($cur_employee->job_title); ?></td>
-					<td><?php echo format_phone($cur_employee->phone); ?></td>
-					<td><?php echo !empty($cur_employee->phone_ext) ? 'ext '.$cur_employee->phone_ext : ''; ?></td>
+					<td><?php echo htmlspecialchars(format_phone($cur_employee->phone)); ?></td>
+					<td><?php echo !empty($cur_employee->phone_ext) ? 'ext '.htmlspecialchars($cur_employee->phone_ext) : ''; ?></td>
 				</tr>
 				<?php } ?>
 			</table>

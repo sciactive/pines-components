@@ -85,8 +85,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo htmlspecialchars($manufacturer->city); ?></td>
 			<td><?php echo htmlspecialchars($manufacturer->state); ?></td>
 			<td><?php echo htmlspecialchars($manufacturer->zip); ?></td>
-			<td><?php echo format_phone($manufacturer->phone_work); ?></td>
-			<td><?php echo format_phone($manufacturer->fax); ?></td>
+			<td><?php echo htmlspecialchars(format_phone($manufacturer->phone_work)); ?></td>
+			<td><?php echo htmlspecialchars(format_phone($manufacturer->fax)); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

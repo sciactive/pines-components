@@ -41,17 +41,17 @@ defined('P_RUN') or die('Direct access prohibited');
 		<div><img style="margin: 0;" src="<?php echo is_callable(array($this->employee->group, 'get_logo')) ? htmlspecialchars($this->employee->group->get_logo(true)) : ''; ?>" alt="<?php echo htmlspecialchars($pines->config->system_name); ?>" /></div>
 		<div><?php
 		if ($this->employee->pay_type != 'salary') {
-			echo "<strong>Pay Per Hour: $".number_format($this->pay_per_hour, 2, '.', '')."</strong>";
+			echo "<strong>Pay Per Hour: $".htmlspecialchars(number_format($this->pay_per_hour, 2, '.', ''))."</strong>";
 		}
 		?></div>
 	</div>
 	<div class="pf-element" style="padding-bottom: .4em;">
 		<strong class="pf-label">Pay Date:</strong>
-		<span class="pf-field"><?php echo format_date(time(), 'date_sort'); ?></span>
+		<span class="pf-field"><?php echo htmlspecialchars(format_date(time(), 'date_sort')); ?></span>
 	</div>
 	<div class="pf-element" style="padding-bottom: .4em;">
 		<strong class="pf-label">Pay Period:</strong>
-		<span class="pf-field"><?php echo format_date($this->start_date, 'date_sort').'&nbsp&nbsp - &nbsp&nbsp'.format_date($this->end_date, 'date_sort'); ?></span>
+		<span class="pf-field"><?php echo htmlspecialchars(format_date($this->start_date, 'date_sort')).'&nbsp&nbsp - &nbsp&nbsp'.htmlspecialchars(format_date($this->end_date, 'date_sort')); ?></span>
 	</div>
 	<div class="pf-element" style="padding-bottom: .4em;">
 		<strong class="pf-label">Employee:</strong>
@@ -94,10 +94,10 @@ defined('P_RUN') or die('Direct access prohibited');
 				<tr>
 					<td><?php echo htmlspecialchars($cur_sale->id); ?></td>
 					<td><?php echo htmlspecialchars($cur_sale->customer->name); ?></td>
-					<td><?php echo format_date($cur_sale->p_cdate); ?></td>
-					<td class="right_text">$<?php echo number_format($cur_sale->subtotal, 2, '.', ''); ?></td>
+					<td><?php echo htmlspecialchars(format_date($cur_sale->p_cdate)); ?></td>
+					<td class="right_text">$<?php echo htmlspecialchars(number_format($cur_sale->subtotal, 2, '.', '')); ?></td>
 					<td></td>
-					<td class="right_text">$<?php echo number_format($commission, 2, '.', '');?></td>
+					<td class="right_text">$<?php echo htmlspecialchars(number_format($commission, 2, '.', '')); ?></td>
 				</tr>
 				<?php } ?>
 				<?php
@@ -109,9 +109,9 @@ defined('P_RUN') or die('Direct access prohibited');
 					<td><strong>Total</strong></td>
 					<td></td>
 					<td></td>
-					<td class="right_text"><strong>$<?php echo number_format($total_sales, 2, '.', '');?></strong></td>
+					<td class="right_text"><strong>$<?php echo htmlspecialchars(number_format($total_sales, 2, '.', '')); ?></strong></td>
 					<td class="right_text"></td>
-					<td class="right_text"><strong>$<?php echo number_format($commission_total, 2, '.', '');?></strong></td>
+					<td class="right_text"><strong>$<?php echo htmlspecialchars(number_format($commission_total, 2, '.', '')); ?></strong></td>
 				</tr>
 				<?php } if ($this->hourreport) { ?>
 				<tr>
@@ -120,7 +120,7 @@ defined('P_RUN') or die('Direct access prohibited');
 					<td></td>
 					<td class="right_text"></td>
 					<td></td>
-					<td class="right_text">$<?php echo number_format($commission_total, 2, '.', ''); ?></td>
+					<td class="right_text">$<?php echo htmlspecialchars(number_format($commission_total, 2, '.', '')); ?></td>
 				</tr>
 				<?php }?>
 			</tbody>
@@ -143,29 +143,29 @@ defined('P_RUN') or die('Direct access prohibited');
 					?>
 				<tr>
 					<td class="right_text">Regular</td>
-					<td class="right_text"><?php echo number_format($this->reg_hours, 2, '.', ''); ?></td>
-					<td class="right_text">$<?php echo number_format(($this->reg_hours * $this->employee->pay_rate), 2, '.', ''); ?></td>
+					<td class="right_text"><?php echo htmlspecialchars(number_format($this->reg_hours, 2, '.', '')); ?></td>
+					<td class="right_text">$<?php echo htmlspecialchars(number_format(($this->reg_hours * $this->employee->pay_rate), 2, '.', '')); ?></td>
 				</tr>
 				<tr>
 					<td class="right_text">Overtime</td>
-					<td class="right_text"><?php echo number_format($this->overtime, 2, '.', ''); ?></td>
-					<td class="right_text">$<?php echo number_format(($this->overtime * $this->employee->pay_rate * 1.5), 2, '.', ''); ?></td>
+					<td class="right_text"><?php echo htmlspecialchars(number_format($this->overtime, 2, '.', '')); ?></td>
+					<td class="right_text">$<?php echo htmlspecialchars(number_format(($this->overtime * $this->employee->pay_rate * 1.5), 2, '.', '')); ?></td>
 				</tr>
 				<tr>
 					<td><strong>Total Hourly</strong></td>
-					<td class="right_text"><?php echo number_format(($this->overtime + $this->reg_hours), 2, '.', '');?></td>
-					<td class="right_text">$<?php echo number_format($pay, 2, '.', '');?></td>
+					<td class="right_text"><?php echo htmlspecialchars(number_format(($this->overtime + $this->reg_hours), 2, '.', ''));?></td>
+					<td class="right_text">$<?php echo htmlspecialchars(number_format($pay, 2, '.', ''));?></td>
 				</tr>
 				<?php } else { ?>
 				<tr>
 					<td>Salary</td>
 					<td class="right_text"></td>
-					<td class="right_text">$<?php echo number_format($this->salary, 2, '.', ''); ?></td>
+					<td class="right_text">$<?php echo htmlspecialchars(number_format($this->salary, 2, '.', '')); ?></td>
 				</tr>
 				<tr>
 					<td ><strong>Total</strong></td>
 					<td class="right_text"></td>
-					<td class="right_text">$<?php echo number_format($this->salary, 2, '.', ''); ?></td>
+					<td class="right_text">$<?php echo htmlspecialchars(number_format($this->salary, 2, '.', '')); ?></td>
 				</tr>
 				<?php } ?>
 			</tbody>
@@ -187,13 +187,13 @@ defined('P_RUN') or die('Direct access prohibited');
 				<tr>
 					<td><?php echo htmlspecialchars($cur_bonus->name);?></td>
 					<td><?php echo htmlspecialchars($cur_bonus->comments);?></td>
-					<td class="right_text">$<?php echo number_format($cur_bonus->amount, 2, '.', ''); ?></td>
+					<td class="right_text">$<?php echo htmlspecialchars(number_format($cur_bonus->amount, 2, '.', '')); ?></td>
 				</tr>
 				<?php } ?>
 				<tr>
 					<td><strong>Total</strong></td>
 					<td><strong></strong></td>
-					<td class="right_text">$<?php echo number_format($this->bonus_total, 2, '.', '');?></td>
+					<td class="right_text">$<?php echo htmlspecialchars(number_format($this->bonus_total, 2, '.', '')); ?></td>
 				</tr>
 			</tbody>
 		</table>
@@ -214,24 +214,24 @@ defined('P_RUN') or die('Direct access prohibited');
 				<tr>
 					<td><?php echo htmlspecialchars($cur_adjustments->name);?></td>
 					<td><?php echo htmlspecialchars($cur_adjustments->comments);?></td>
-					<td class="right_text">$<?php echo number_format($cur_adjustments->amount, 2, '.', ''); ?></td>
+					<td class="right_text">$<?php echo htmlspecialchars(number_format($cur_adjustments->amount, 2, '.', '')); ?></td>
 				</tr>
-				<? } if (!$this->hourreport) { ?>
+				<?php } if (!$this->hourreport) { ?>
 				<tr>
 					<td>Already Paid Adjustment</td>
 					<td>Deducted amount for time already paid</td>
-					<td class="right_text">$<?php echo number_format($this->adjust, 2, '.', ''); ?></td>
+					<td class="right_text">$<?php echo htmlspecialchars(number_format($this->adjust, 2, '.', '')); ?></td>
 				</tr>
 				<tr>
 					<td><strong>Total</strong></td>
 					<td></td>
-					<td class="right_text">$<?php echo number_format(($this->adjustment_total + $this->adjust), 2, '.', '');?></td>
+					<td class="right_text">$<?php echo htmlspecialchars(number_format(($this->adjustment_total + $this->adjust), 2, '.', '')); ?></td>
 				</tr>
 				<?php } else { ?>
 				<tr>
 					<td><strong>Total</strong></td>
 					<td></td>
-					<td class="right_text">$<?php echo number_format($this->adjustment_total, 2, '.', '');?></td>
+					<td class="right_text">$<?php echo htmlspecialchars(number_format($this->adjustment_total, 2, '.', '')); ?></td>
 				</tr>
 				<?php } ?>
 			</tbody>

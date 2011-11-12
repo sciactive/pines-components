@@ -88,9 +88,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo htmlspecialchars($transfer->reference_number); ?></td>
 			<td><?php echo htmlspecialchars("{$transfer->origin->name} [{$transfer->origin->groupname}]"); ?></td>
 			<td><?php echo htmlspecialchars("{$transfer->destination->name} [{$transfer->destination->groupname}]"); ?></td>
-			<td><?php echo $transfer->shipped ? format_date($transfer->shipped_date, 'full_sort') : 'No'; ?></td>
+			<td><?php echo $transfer->shipped ? htmlspecialchars(format_date($transfer->shipped_date, 'full_sort')) : 'No'; ?></td>
 			<td><?php echo htmlspecialchars($transfer->shipper->name); ?></td>
-			<td><?php echo $transfer->eta ? format_date($transfer->eta, 'date_sort') : 'None'; ?></td>
+			<td><?php echo $transfer->eta ? htmlspecialchars(format_date($transfer->eta, 'date_sort')) : 'None'; ?></td>
 			<td><?php echo $transfer->final ? ($transfer->finished ? 'Received' : (empty($transfer->received) ? 'Not Received' : 'Partially Received')) : 'Not Committed'; ?></td>
 			<td><?php
 			$names = array();

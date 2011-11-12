@@ -142,17 +142,17 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 		<?php foreach($this->attendance as $cur_attendance) { $timezone = $cur_attendance['employee']->get_timezone(); ?>
 		<tr title="<?php echo (int) $cur_attendance['employee']->guid; ?>">
-			<td><?php echo format_date($this->date, 'date_sort'); ?></td>
+			<td><?php echo htmlspecialchars(format_date($this->date, 'date_sort')); ?></td>
 			<td><?php echo htmlspecialchars($cur_attendance['employee']->name); ?></td>
 			<td><?php echo htmlspecialchars($cur_attendance['employee']->group->name); ?></td>
-			<td><?php if ($cur_attendance['scheduled_in']) echo format_date($cur_attendance['scheduled_in'], 'time_short', '', $timezone); ?></td>
-			<td><?php if ($cur_attendance['scheduled_out']) echo format_date($cur_attendance['scheduled_out'], 'time_short', '', $timezone); ?></td>
-			<td><?php if ($cur_attendance['clocked_in']) echo format_date($cur_attendance['clocked_in'], 'time_short', '', $timezone); ?></td>
-			<td><?php if ($cur_attendance['clocked_out']) echo format_date($cur_attendance['clocked_out'], 'time_short', '', $timezone); ?></td>
-			<td><?php if ($cur_attendance['scheduled_in'] && $cur_attendance['clocked_in']) echo format_date_range($cur_attendance['scheduled_in'], $cur_attendance['clocked_in'], '#minutes# minutes', $timezone); ?></td>
-			<td><?php if ($cur_attendance['scheduled_out'] && $cur_attendance['clocked_out']) echo format_date_range($cur_attendance['scheduled_out'], $cur_attendance['clocked_out'], '#minutes# minutes', $timezone); ?></td>
-			<td><?php if ($cur_attendance['scheduled_total']) echo format_date_range(0, $cur_attendance['scheduled_total'], '{#hours# hours}{#hour# hour} {#minutes# minutes}{#minute# minute}', $timezone); ?></td>
-			<td><?php if ($cur_attendance['clocked_total']) echo format_date_range(0, $cur_attendance['clocked_total'], '{#hours# hours}{#hour# hour} {#minutes# minutes}{#minute# minute}', $timezone); ?></td>
+			<td><?php if ($cur_attendance['scheduled_in']) echo htmlspecialchars(format_date($cur_attendance['scheduled_in'], 'time_short', '', $timezone)); ?></td>
+			<td><?php if ($cur_attendance['scheduled_out']) echo htmlspecialchars(format_date($cur_attendance['scheduled_out'], 'time_short', '', $timezone)); ?></td>
+			<td><?php if ($cur_attendance['clocked_in']) echo htmlspecialchars(format_date($cur_attendance['clocked_in'], 'time_short', '', $timezone)); ?></td>
+			<td><?php if ($cur_attendance['clocked_out']) echo htmlspecialchars(format_date($cur_attendance['clocked_out'], 'time_short', '', $timezone)); ?></td>
+			<td><?php if ($cur_attendance['scheduled_in'] && $cur_attendance['clocked_in']) echo htmlspecialchars(format_date_range($cur_attendance['scheduled_in'], $cur_attendance['clocked_in'], '#minutes# minutes', $timezone)); ?></td>
+			<td><?php if ($cur_attendance['scheduled_out'] && $cur_attendance['clocked_out']) echo htmlspecialchars(format_date_range($cur_attendance['scheduled_out'], $cur_attendance['clocked_out'], '#minutes# minutes', $timezone)); ?></td>
+			<td><?php if ($cur_attendance['scheduled_total']) echo htmlspecialchars(format_date_range(0, $cur_attendance['scheduled_total'], '{#hours# hours}{#hour# hour} {#minutes# minutes}{#minute# minute}', $timezone)); ?></td>
+			<td><?php if ($cur_attendance['clocked_total']) echo htmlspecialchars(format_date_range(0, $cur_attendance['clocked_total'], '{#hours# hours}{#hour# hour} {#minutes# minutes}{#minute# minute}', $timezone)); ?></td>
 			<td><?php echo htmlspecialchars(implode(', ', $cur_attendance['clocked_ips'])); ?></td>
 		</tr>
 		<?php } ?>
@@ -187,7 +187,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<div class="timespan">
 			<div class="pf-element">
 				<label><span class="pf-label">Pick a Date</span>
-					<input class="pf-field ui-widget-content ui-corner-all form_date" type="text" id="p_muid_date" name="date" value="<?php echo isset($this->date) ? format_date($this->date, 'date_sort') : ''; ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all form_date" type="text" id="p_muid_date" name="date" value="<?php echo isset($this->date) ? htmlspecialchars(format_date($this->date, 'date_sort')) : ''; ?>" /></label>
 			</div>
 		</div>
 	</div>

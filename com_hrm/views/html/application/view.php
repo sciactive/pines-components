@@ -35,7 +35,7 @@ $this->title = 'Employment Application ['.htmlspecialchars($this->entity->name).
 		<?php foreach ($this->entity->notes as $cur_note) { ?>
 		<div class="pf-element pf-full-width">
 			<span class="pf-label"><?php echo htmlspecialchars($cur_note['user']->name); ?></span>
-			<span class="pf-note"><?php echo format_date($cur_note['date']); ?></span>
+			<span class="pf-note"><?php echo htmlspecialchars(format_date($cur_note['date'])); ?></span>
 			<span class="pf-field"><?php echo htmlspecialchars($cur_note['note']); ?></span>
 		</div>
 		<?php }
@@ -57,7 +57,7 @@ $this->title = 'Employment Application ['.htmlspecialchars($this->entity->name).
 		<div class="pf-element">
 			<span class="pf-label">Phone:</span>
 			<span class="pf-field">
-				<?php echo format_phone($this->entity->phone); ?>
+				<?php echo htmlspecialchars(format_phone($this->entity->phone)); ?>
 			</span>
 		</div>
 		<div class="pf-element">
@@ -90,7 +90,7 @@ $this->title = 'Employment Application ['.htmlspecialchars($this->entity->name).
 		</div>
 		<div class="pf-element">
 			<span class="pf-label">Timeline:</span>
-			<span class="pf-field"><?php echo format_date($cur_employer['start'], 'date_short').' - '.format_date($cur_employer['end'], 'date_short'); ?></span>
+			<span class="pf-field"><?php echo htmlspecialchars(format_date($cur_employer['start'], 'date_short')).' - '.htmlspecialchars(format_date($cur_employer['end'], 'date_short')); ?></span>
 		</div>
 		<div class="pf-element">
 			<span class="pf-label">Company:</span>
@@ -98,7 +98,7 @@ $this->title = 'Employment Application ['.htmlspecialchars($this->entity->name).
 		</div>
 		<div class="pf-element">
 			<span class="pf-label">Phone:</span>
-			<span class="pf-field"><?php echo format_phone($cur_employer['phone']); ?></span>
+			<span class="pf-field"><?php echo htmlspecialchars(format_phone($cur_employer['phone'])); ?></span>
 		</div>
 		<div class="pf-element">
 			<span class="pf-label">Reason for Leaving:</span>
@@ -117,7 +117,7 @@ $this->title = 'Employment Application ['.htmlspecialchars($this->entity->name).
 		</div>
 		<div class="pf-element">
 			<span class="pf-label">Phone:</span>
-			<span class="pf-field"><?php echo format_phone($cur_reference['phone']); ?></span>
+			<span class="pf-field"><?php echo htmlspecialchars(format_phone($cur_reference['phone'])); ?></span>
 		</div>
 		<div class="pf-element">
 			<span class="pf-label">Company:</span>

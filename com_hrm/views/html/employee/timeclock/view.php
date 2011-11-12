@@ -55,8 +55,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 		<?php foreach($this->entries as $key => $entry) { ?>
 		<tr title="<?php echo htmlspecialchars($key); ?>">
-			<td><?php echo format_date($entry->in, 'custom', 'Y-m-d H:i:s T', $this->entity->user->get_timezone(true)); ?></td>
-			<td><?php echo format_date($entry->out, 'custom', 'Y-m-d H:i:s T', $this->entity->user->get_timezone(true)); ?></td>
+			<td><?php echo htmlspecialchars(format_date($entry->in, 'custom', 'Y-m-d H:i:s T', $this->entity->user->get_timezone(true))); ?></td>
+			<td><?php echo htmlspecialchars(format_date($entry->out, 'custom', 'Y-m-d H:i:s T', $this->entity->user->get_timezone(true))); ?></td>
 			<td><?php
 				$seconds = $entry->out - $entry->in;
 				$days = floor($seconds / 86400);
@@ -81,7 +81,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<?php } ?>
 		<?php if ($this->entity->clocked_in_time()) { ?>
 		<tr title="<?php echo htmlspecialchars($key); ?>">
-			<td><?php echo format_date($this->entity->clocked_in_time(), 'full_sort', '', $this->entity->user->get_timezone(true)); ?></td>
+			<td><?php echo htmlspecialchars(format_date($this->entity->clocked_in_time(), 'full_sort', '', $this->entity->user->get_timezone(true))); ?></td>
 			<td></td>
 			<td><?php
 				$seconds = time() - $this->entity->clocked_in_time();

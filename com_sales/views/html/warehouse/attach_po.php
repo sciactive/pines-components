@@ -62,7 +62,7 @@ $pines->com_pgrid->load();
 					<td><?php echo htmlspecialchars($cur_po->reference_number); ?></td>
 					<td><?php echo htmlspecialchars("{$cur_po->destination->name} [{$cur_po->destination->groupname}]"); ?></td>
 					<td><?php echo htmlspecialchars($cur_po->shipper->name); ?></td>
-					<td><?php echo format_date($cur_po->eta, 'date_sort'); ?></td>
+					<td><?php echo htmlspecialchars(format_date($cur_po->eta, 'date_sort')); ?></td>
 				</tr>
 				<?php } ?>
 			</tbody>

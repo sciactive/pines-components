@@ -438,7 +438,7 @@ Only continue if you are fully aware of the results of changing a product."))
 	<?php foreach($this->sales as $sale) { ?>
 		<tr title="<?php echo (int) $sale->guid ?>">
 			<td><?php echo htmlspecialchars($sale->id); ?></td>
-			<td><?php echo format_date($sale->p_cdate); ?></td>
+			<td><?php echo htmlspecialchars(format_date($sale->p_cdate)); ?></td>
 			<td><?php echo htmlspecialchars(ucwords($sale->status)); ?></td>
 			<td><?php echo isset($sale->user->guid) ? htmlspecialchars("{$sale->user->name} [{$sale->user->username}]") : ''; ?></td>
 			<?php if ($pines->config->com_sales->com_customer) { ?>
@@ -450,12 +450,12 @@ Only continue if you are fully aware of the results of changing a product."))
 				$number += (int) $cur_product['quantity'];
 			}
 			echo $number; ?></td>
-			<td><?php echo isset($sale->subtotal) ? '$'.number_format($sale->subtotal, 2) : ''; ?></td>
-			<td><?php echo isset($sale->item_fees) ? '$'.number_format($sale->item_fees, 2) : ''; ?></td>
-			<td><?php echo isset($sale->taxes) ? '$'.number_format($sale->taxes, 2) : ''; ?></td>
-			<td><?php echo isset($sale->total) ? '$'.number_format($sale->total, 2) : ''; ?></td>
-			<td><?php echo isset($sale->amount_tendered) ? '$'.number_format($sale->amount_tendered, 2) : ''; ?></td>
-			<td><?php echo isset($sale->change) ? '$'.number_format($sale->change, 2) : ''; ?></td>
+			<td><?php echo isset($sale->subtotal) ? '$'.htmlspecialchars(number_format($sale->subtotal, 2)) : ''; ?></td>
+			<td><?php echo isset($sale->item_fees) ? '$'.htmlspecialchars(number_format($sale->item_fees, 2)) : ''; ?></td>
+			<td><?php echo isset($sale->taxes) ? '$'.htmlspecialchars(number_format($sale->taxes, 2)) : ''; ?></td>
+			<td><?php echo isset($sale->total) ? '$'.htmlspecialchars(number_format($sale->total, 2)) : ''; ?></td>
+			<td><?php echo isset($sale->amount_tendered) ? '$'.htmlspecialchars(number_format($sale->amount_tendered, 2)) : ''; ?></td>
+			<td><?php echo isset($sale->change) ? '$'.htmlspecialchars(number_format($sale->change, 2)) : ''; ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

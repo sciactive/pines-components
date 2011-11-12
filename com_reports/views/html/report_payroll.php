@@ -320,8 +320,8 @@ $pines->com_pgrid->load();
 		pines.finalize = function() {
 			// Finalize the paystub.
 			pines.get(<?php echo json_encode(pines_url('com_reports', 'savepaystub')); ?>, {
-				"start": '<?php echo format_date($this->start_date); ?>',
-				"end": '<?php echo format_date($this->end_date); ?>',
+				"start": <?php echo json_encode(format_date($this->start_date)); ?>,
+				"end": <?php echo json_encode(format_date($this->end_date)); ?>,
 				"totals": totals
 			});
 		};

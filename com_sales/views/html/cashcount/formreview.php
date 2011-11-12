@@ -99,7 +99,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		</thead>
 		<tbody>
 			<tr onmouseover="p_muid_notice.com_sales_update(<?php echo htmlspecialchars(json_encode($this->entity->comments)); ?>);">
-				<td><?php echo format_date($this->entity->p_cdate); ?></td>
+				<td><?php echo htmlspecialchars(format_date($this->entity->p_cdate)); ?></td>
 				<td>Cash-In</td>
 				<td><?php echo htmlspecialchars($this->entity->user->name); ?></td>
 				<?php foreach ($this->entity->count as $cur_float_count) { ?>
@@ -111,7 +111,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			</tr>
 			<?php foreach ($this->entity->audits as $cur_audit) { ?>
 			<tr onmouseover="p_muid_notice.com_sales_update(<?php echo htmlspecialchars(json_encode($cur_audit->comments)); ?>);" <?php echo (($cur_audit->till_total - $cur_audit->total) != 0) ? 'class="ui-state-error"' : ''; ?>>
-				<td><?php echo format_date($cur_audit->p_cdate); ?></td>
+				<td><?php echo htmlspecialchars(format_date($cur_audit->p_cdate)); ?></td>
 				<td>Audit</td>
 				<td><?php echo htmlspecialchars($cur_audit->user->name); ?></td>
 				<?php foreach ($cur_audit->count as $cur_audit_count) { ?>
@@ -123,7 +123,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			</tr>
 			<?php } foreach ($this->entity->skims as $cur_skim) { ?>
 			<tr onmouseover="p_muid_notice.com_sales_update(<?php echo htmlspecialchars(json_encode($cur_skim->comments)); ?>);">
-				<td><?php echo format_date($cur_skim->p_cdate); ?></td>
+				<td><?php echo htmlspecialchars(format_date($cur_skim->p_cdate)); ?></td>
 				<td>Skim</td>
 				<td><?php echo htmlspecialchars($cur_skim->user->name); ?></td>
 				<?php foreach ($cur_skim->count as $cur_skim_count) { ?>
@@ -135,7 +135,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			</tr>
 			<?php } foreach ($this->entity->deposits as $cur_deposit) { ?>
 			<tr onmouseover="p_muid_notice.com_sales_update(<?php echo htmlspecialchars(json_encode($cur_deposit->comments)); ?>);" <?php echo ($cur_deposit->status == 'flagged') ? 'class="ui-state-error"' : ''; ?>>
-				<td><?php echo format_date($cur_deposit->p_cdate); ?></td>
+				<td><?php echo htmlspecialchars(format_date($cur_deposit->p_cdate)); ?></td>
 				<td>Deposit</td>
 				<td><?php echo htmlspecialchars($cur_deposit->user->name); ?></td>
 				<?php foreach ($cur_deposit->count as $cur_deposit_count) { ?>
@@ -148,7 +148,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<?php } ?>
 			<?php if ($this->entity->cashed_out) { ?>
 			<tr onmouseover="p_muid_notice.com_sales_update(<?php echo htmlspecialchars(json_encode($this->entity->comments)); ?>);">
-				<td><?php echo format_date($this->entity->cashed_out_date); ?></td>
+				<td><?php echo htmlspecialchars(format_date($this->entity->cashed_out_date)); ?></td>
 				<td>Cash-Out</td>
 				<td><?php echo htmlspecialchars($this->entity->cashed_out_user->name); ?></td>
 				<?php foreach ($this->entity->count_out as $cur_out_count) { ?>
@@ -160,7 +160,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			</tr>
 			<?php } else { ?>
 			<tr onmouseover="p_muid_notice.com_sales_update(<?php echo htmlspecialchars(json_encode($this->entity->comments)); ?>);">
-				<td><?php echo format_date(time()); ?></td>
+				<td><?php echo htmlspecialchars(format_date(time())); ?></td>
 				<td>Current</td>
 				<td></td>
 				<?php foreach ($this->entity->count as $cur_count) { ?>

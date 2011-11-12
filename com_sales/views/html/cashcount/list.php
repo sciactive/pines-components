@@ -152,7 +152,7 @@ $pines->com_jstree->load();
 		<tr title="<?php echo (int) $cur_count->guid ?>">
 			<td><?php echo (int) $cur_count->guid ?></td>
 			<td><?php echo htmlspecialchars($cur_count->group->name); ?></td>
-			<td><?php echo format_date($cur_count->p_cdate); ?></td>
+			<td><?php echo htmlspecialchars(format_date($cur_count->p_cdate)); ?></td>
 			<td><?php echo $cur_count->final ? 'Yes' : 'No'; ?></td>
 			<td><?php echo $cur_count->cashed_out ? 'Yes' : 'No'; ?></td>
 			<td style="text-align: right;"><?php echo count($cur_count->audits); ?></td>

@@ -195,7 +195,7 @@ if (!isset($this->entity->user->guid) || !isset($this->entity)) {
 	</script>
 	<div class="pf-element">
 		<span class="pf-label"><?php echo htmlspecialchars($this->entity->user->name); ?></span>
-		<span class="pf-note"><span>Status: </span><span id="p_muid_status"><?php echo $this->entity->clocked_in_time() ? 'Clocked in since '.format_date($this->entity->clocked_in_time(), 'full_short').'.' : 'Clocked out.'; ?></span></span>
+		<span class="pf-note"><span>Status: </span><span id="p_muid_status"><?php echo $this->entity->clocked_in_time() ? 'Clocked in since '.htmlspecialchars(format_date($this->entity->clocked_in_time(), 'full_short')).'.' : 'Clocked out.'; ?></span></span>
 	</div>
 	<div class="pf-element" id="p_muid_comments" style="display: <?php echo $this->entity->clocked_in_time() ? 'block' : 'none'; ?>;">
 		<label><span class="pf-label">Comments</span>

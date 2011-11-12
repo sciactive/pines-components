@@ -76,8 +76,8 @@ if ($pines->config->com_calendar->com_customer)
 			if (change_counter > 0)
 				pines.post(<?php echo json_encode(pines_url('com_calendar', 'editcalendar')); ?>, {
 					"view_type": <?php echo json_encode($this->view_type); ?>,
-					"start": '<?php echo format_date($this->date[0], 'date_short'); ?>',
-					"end": '<?php echo format_date($this->date[1], 'date_short'); ?>',
+					"start": <?php echo json_encode(format_date($this->date[0], 'date_short')); ?>,
+					"end": <?php echo json_encode(format_date($this->date[1], 'date_short')); ?>,
 					"location": <?php echo json_encode((string) $this->location->guid); ?>,
 					"employee": $(this).val(),
 					"descendents": <?php echo $this->descendents ? 'true' : 'false'; ?>,
@@ -106,8 +106,8 @@ if ($pines->config->com_calendar->com_customer)
 		$("#p_muid_filter").buttonset().delegate("input", "click", function() {
 			pines.get(<?php echo json_encode(pines_url('com_calendar', 'editcalendar')); ?>, {
 				view_type: <?php echo json_encode($this->view_type); ?>,
-				start: '<?php echo format_date($this->date[0], 'date_short'); ?>',
-				end: '<?php echo format_date($this->date[1], 'date_short'); ?>',
+				start: <?php echo json_encode(format_date($this->date[0], 'date_short')); ?>,
+				end: <?php echo json_encode(format_date($this->date[1], 'date_short')); ?>,
 				location: <?php echo (int) $this->location->guid; ?>,
 				employee: <?php echo isset($this->employee) ? (int) $this->employee->guid : 'null'; ?>,
 				descendents: <?php echo $this->descendents ? 'true' : 'false'; ?>,
@@ -159,8 +159,8 @@ if ($pines->config->com_calendar->com_customer)
 							descendents = form.find(":input[name=descendents]").attr('checked');
 							pines.post(<?php echo json_encode(pines_url('com_calendar', 'editcalendar')); ?>, {
 								"view_type": <?php echo json_encode($this->view_type); ?>,
-								"start": '<?php echo format_date($this->date[0], 'date_short'); ?>',
-								"end": '<?php echo format_date($this->date[1], 'date_short'); ?>',
+								"start": <?php echo json_encode(format_date($this->date[0], 'date_short')); ?>,
+								"end": <?php echo json_encode(format_date($this->date[1], 'date_short')); ?>,
 								"location": schedule_location,
 								"descendents": descendents,
 								"filter": <?php echo json_encode($this->filter); ?>
@@ -216,8 +216,8 @@ if ($pines->config->com_calendar->com_customer)
 								descendents: <?php echo $this->descendents ? 'true' : 'false'; ?>,
 								employee_view: <?php echo isset($this->employee) ? 'true' : 'false'; ?>,
 								view_type: <?php echo json_encode($this->view_type); ?>,
-								calendar_start: '<?php echo format_date($this->date[0], 'date_short'); ?>',
-								calendar_end: '<?php echo format_date($this->date[1], 'date_short'); ?>'
+								calendar_start: <?php echo json_encode(format_date($this->date[0], 'date_short')); ?>,
+								calendar_end: <?php echo json_encode(format_date($this->date[1], 'date_short')); ?>
 							});
 						},
 						"Cust. Appt.": function(){
@@ -272,8 +272,8 @@ if ($pines->config->com_calendar->com_customer)
 								descendents: <?php echo $this->descendents ? 'true' : 'false'; ?>,
 								employee_view: <?php echo isset($this->employee) ? 'true' : 'false'; ?>,
 								view_type: <?php echo json_encode($this->view_type); ?>,
-								calendar_start: '<?php echo format_date($this->date[0], 'date_short'); ?>',
-								calendar_end: '<?php echo format_date($this->date[1], 'date_short'); ?>'
+								calendar_start: <?php echo json_encode(format_date($this->date[0], 'date_short')); ?>,
+								calendar_end: <?php echo json_encode(format_date($this->date[1], 'date_short')); ?>
 							});
 							form.dialog('close');
 							pines.selected_event.removeClass('ui-state-disabled');
@@ -661,7 +661,7 @@ if ($pines->config->com_calendar->com_customer)
 		</div>
 		<div class="pf-element">
 			<label><span class="pf-label">Date</span>
-				<input class="ui-widget-content ui-corner-all" type="text" size="22" name="interaction_date" value="<?php echo format_date(time(), 'date_sort'); ?>" /></label>
+				<input class="ui-widget-content ui-corner-all" type="text" size="22" name="interaction_date" value="<?php echo htmlspecialchars(format_date(time(), 'date_sort')); ?>" /></label>
 		</div>
 		<div class="pf-element pf-full-width">
 			<span class="pf-label">Time</span>

@@ -283,8 +283,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo (int) $countsheet->guid ?></td>
 			<td><?php echo htmlspecialchars($countsheet->group->name); ?></td>
 			<td><?php echo htmlspecialchars($countsheet->user->name); ?></td>
-			<td><?php echo format_date($countsheet->p_cdate); ?></td>
-			<td><?php echo format_date($countsheet->p_mdate); ?></td>
+			<td><?php echo htmlspecialchars(format_date($countsheet->p_cdate)); ?></td>
+			<td><?php echo htmlspecialchars(format_date($countsheet->p_mdate)); ?></td>
 			<td><?php echo $countsheet->final ? 'Yes' : 'No'; ?></td>
 			<td><?php switch ($countsheet->status) {
 				case 'approved':

@@ -178,9 +178,9 @@ defined('P_RUN') or die('Direct access prohibited');
 			<label><input class="pf-field" type="checkbox" name="all_day" value="ON" <?php echo ($this->entity->all_day) ? 'checked="checked" ' : ''; ?>/>All Day</label>
 		</div>
 		<div class="pf-element pf-full-width">
-			<input class="ui-widget-content ui-corner-all form_center" type="text" size="10" id="p_muid_start" name="start" value="<?php echo empty($start_date) ? format_date(time(), 'date_sort') : htmlspecialchars($start_date); ?>" />
+			<input class="ui-widget-content ui-corner-all form_center" type="text" size="10" id="p_muid_start" name="start" value="<?php echo empty($start_date) ? htmlspecialchars(format_date(time(), 'date_sort')) : htmlspecialchars($start_date); ?>" />
 			<span class="combobox">
-				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="time_start" size="8" value="<?php echo empty($start_time) ? format_date(time(), 'time_short') : htmlspecialchars($start_time); ?>" />
+				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="time_start" size="8" value="<?php echo empty($start_time) ? htmlspecialchars(format_date(time(), 'time_short')) : htmlspecialchars($start_time); ?>" />
 				<a href="javascript:void(0);" class="ui-icon ui-icon-triangle-1-s"></a>
 				<select style="display: none;">
 					<option value="12:00 AM">12:00 AM</option>
@@ -214,9 +214,9 @@ defined('P_RUN') or die('Direct access prohibited');
 			<span class="pf-label">End</span>
 		</div>
 		<div class="pf-element pf-full-width">
-			<input class="ui-widget-content ui-corner-all form_center" type="text" size="10" id="p_muid_end" name="end" value="<?php echo empty($end_date) ? format_date(time(), 'date_sort') : htmlspecialchars($end_date); ?>" />
+			<input class="ui-widget-content ui-corner-all form_center" type="text" size="10" id="p_muid_end" name="end" value="<?php echo empty($end_date) ? htmlspecialchars(format_date(time(), 'date_sort')) : htmlspecialchars($end_date); ?>" />
 			<span class="combobox">
-				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="time_end" size="8" value="<?php echo empty($end_time) ? format_date(time(), 'time_short') : htmlspecialchars($end_time); ?>" />
+				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="time_end" size="8" value="<?php echo empty($end_time) ? htmlspecialchars(format_date(time(), 'time_short')) : htmlspecialchars($end_time); ?>" />
 				<a href="javascript:void(0);" class="ui-icon ui-icon-triangle-1-s"></a>
 				<select style="display: none;">
 					<option value="12:00 AM">12:00 AM</option>

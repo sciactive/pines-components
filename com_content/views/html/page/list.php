@@ -84,10 +84,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo htmlspecialchars($page->alias); ?></td>
 			<td><?php echo ($page->enabled ? 'Yes' : 'No'); ?></td>
 			<td><?php echo (isset($page->show_front_page) ? ($page->show_front_page ? 'Yes' : 'No') : 'Use Default'); ?></td>
-			<td><?php echo format_date($page->p_cdate); ?></td>
-			<td><?php echo format_date($page->p_mdate); ?></td>
-			<td><?php echo format_date($page->publish_begin); ?></td>
-			<td><?php echo isset($page->publish_end) ? format_date($page->publish_end) : ''; ?></td>
+			<td><?php echo htmlspecialchars(format_date($page->p_cdate)); ?></td>
+			<td><?php echo htmlspecialchars(format_date($page->p_mdate)); ?></td>
+			<td><?php echo htmlspecialchars(format_date($page->publish_begin)); ?></td>
+			<td><?php echo isset($page->publish_end) ? htmlspecialchars(format_date($page->publish_end)) : ''; ?></td>
 			<td><?php echo htmlspecialchars(implode(', ', $page->content_tags)); ?></td>
 		</tr>
 	<?php } ?>

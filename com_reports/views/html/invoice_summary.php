@@ -212,13 +212,13 @@ $pines->com_pgrid->load();
 		<tr title="<?php echo (int) $cur_invoice->customer->guid; ?>" class="<?php echo $type; ?>">
 			<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', ($cur_invoice->has_tag('return') ? 'return/receipt' : 'sale/receipt'), array('id' => $cur_invoice->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_invoice->id); ?></a></td>
 			<td><?php echo ucwords($type); ?></td>
-			<td><?php echo format_date($cur_invoice->p_cdate, 'full_sort'); ?></td>
+			<td><?php echo htmlspecialchars(format_date($cur_invoice->p_cdate, 'full_sort')); ?></td>
 			<td><?php echo htmlspecialchars($cur_invoice->group->name); ?></td>
 			<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_invoice->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_invoice->customer->name); ?></a></td>
 			<td><?php echo htmlspecialchars($cur_invoice->user->name); ?></td>
-			<td class="total">$<?php echo number_format($cur_invoice->subtotal, 2, '.', ''); ?></td>
-			<?php /* <td class="total">$<?php echo number_format($total_cost, 2, '.', ''); ?></td>
-			<td class="total">$<?php echo number_format(($cur_invoice->subtotal - $total_cost), 2, '.', ''); ?></td> */ ?>
+			<td class="total">$<?php echo htmlspecialchars(number_format($cur_invoice->subtotal, 2, '.', '')); ?></td>
+			<?php /* <td class="total">$<?php echo htmlspecialchars(number_format($total_cost, 2, '.', '')); ?></td>
+			<td class="total">$<?php echo htmlspecialchars(number_format(($cur_invoice->subtotal - $total_cost), 2, '.', '')); ?></td> */ ?>
 			<td><?php echo ucwords($cur_invoice->status); ?></td>
 			<?php
 			foreach ($payment_types as $cur_payment_type) { 
@@ -228,7 +228,7 @@ $pines->com_pgrid->load();
 					if ($cur_payment_type->is($cur_payment['entity']))
 						$pmt_total += $cur_payment['amount'];
 				}
-				echo number_format($pmt_total, 2, '.', '');
+				echo htmlspecialchars(number_format($pmt_total, 2, '.', ''));
 				echo '</td>';
 			}
 			?>

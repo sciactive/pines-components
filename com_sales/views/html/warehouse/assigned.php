@@ -83,7 +83,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		?>
 		<tr title="<?php echo (int) $cur_stock->guid; ?>">
 			<td><?php echo (int) $sale->guid; ?></td>
-			<td><?php echo format_date($sale->tender_date, 'full_sort'); ?></td>
+			<td><?php echo htmlspecialchars(format_date($sale->tender_date, 'full_sort')); ?></td>
 			<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'product/edit', array('id' => $cur_product['entity']->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars("{$cur_product['entity']->sku} : {$cur_product['entity']->name}"); ?></a></td>
 			<td><?php echo htmlspecialchars($cur_stock->serial); ?></td>
 			<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/receipt', array('id' => $sale->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($sale->id); ?></a></td>

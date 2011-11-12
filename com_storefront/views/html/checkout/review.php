@@ -62,7 +62,7 @@ $this->title = 'Review Your Order';
 				<?php } } else {?>
 				<?php echo str_replace("\n", '<br />', htmlspecialchars($this->entity->customer->address_international)); ?><br />
 				<?php } ?>
-				<?php echo format_phone($this->entity->customer->phone); ?>
+				<?php echo htmlspecialchars(format_phone($this->entity->customer->phone)); ?>
 			</div>
 		</div>
 	</div>

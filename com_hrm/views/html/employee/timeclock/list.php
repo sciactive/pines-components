@@ -125,7 +125,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo htmlspecialchars($employee->name); ?></td>
 			<td><?php echo htmlspecialchars($employee->group->name); ?></td>
 			<td><?php echo $employee->timeclock->clocked_in_time() ? 'In' : 'Out'; ?></td>
-			<td><?php echo $employee->timeclock->clocked_in_time() ? format_date($employee->timeclock->clocked_in_time(), 'full_sort', '', $employee_timezone) : ''; ?></td>
+			<td><?php echo $employee->timeclock->clocked_in_time() ? htmlspecialchars(format_date($employee->timeclock->clocked_in_time(), 'full_sort', '', $employee_timezone)) : ''; ?></td>
 			<td><?php echo round($employee->timeclock->sum($today_start, time()) / (60 * 60), 2).' hours'; ?></td>
 			<td><?php echo round($employee->timeclock->sum($week_start, time()) / (60 * 60), 2).' hours'; ?></td>
 		</tr>

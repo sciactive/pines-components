@@ -234,7 +234,7 @@ $warehouse = group::factory($pines->config->com_sales->warehouse_group);
 	<div class="pf-element pf-heading">
 		<h1>Sale <?php echo htmlspecialchars($cur_item['sale']->id); ?></h1>
 		<p>
-			<div style="float: left; clear: left; padding-right: 2em;">Tendered: <?php echo format_date($cur_item['sale']->tender_date, 'full_long'); ?>.</div>
+			<div style="float: left; clear: left; padding-right: 2em;">Tendered: <?php echo htmlspecialchars(format_date($cur_item['sale']->tender_date, 'full_long')); ?>.</div>
 			<div style="float: left; padding-right: 2em;">Location: <?php echo htmlspecialchars("{$cur_item['sale']->group->name} [{$cur_item['sale']->group->groupname}]"); ?>.</div>
 			<div style="float: left; padding-right: 2em;">Salesperson: <?php echo htmlspecialchars("{$cur_item['sale']->user->name} [{$cur_item['sale']->user->username}]"); ?>.</div>
 			<div style="float: left;">Customer: <?php echo htmlspecialchars("{$cur_item['sale']->customer->guid}: {$cur_item['sale']->customer->name}"); ?>.</div>

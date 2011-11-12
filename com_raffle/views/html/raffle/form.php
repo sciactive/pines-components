@@ -136,8 +136,8 @@ $pines->com_pgrid->load();
 		<div>User: <span class="date"><?php echo htmlspecialchars("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
 		<div>Group: <span class="date"><?php echo htmlspecialchars("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
 		<?php } ?>
-		<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
-		<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
+		<div>Created: <span class="date"><?php echo htmlspecialchars(format_date($this->entity->p_cdate, 'full_short')); ?></span></div>
+		<div>Modified: <span class="date"><?php echo htmlspecialchars(format_date($this->entity->p_mdate, 'full_short')); ?></span></div>
 	</div>
 	<?php } ?>
 	<div class="pf-element">
@@ -184,7 +184,7 @@ $pines->com_pgrid->load();
 					<td><?php echo htmlspecialchars($cur_contestant['first_name']); ?></td>
 					<td><?php echo htmlspecialchars($cur_contestant['last_name']); ?></td>
 					<td><?php echo htmlspecialchars($cur_contestant['email']); ?></td>
-					<td><?php echo format_phone($cur_contestant['phone']); ?></td>
+					<td><?php echo htmlspecialchars(format_phone($cur_contestant['phone'])); ?></td>
 				</tr>
 				<?php } ?>
 			</tbody>
@@ -239,7 +239,7 @@ $pines->com_pgrid->load();
 					<td><?php echo htmlspecialchars($cur_contestant['first_name']); ?></td>
 					<td><?php echo htmlspecialchars($cur_contestant['last_name']); ?></td>
 					<td><?php echo htmlspecialchars($cur_contestant['email']); ?></td>
-					<td><?php echo format_phone($cur_contestant['phone']); ?></td>
+					<td><?php echo htmlspecialchars(format_phone($cur_contestant['phone'])); ?></td>
 				</tr>
 				<?php } ?>
 			</tbody>

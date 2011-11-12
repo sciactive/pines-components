@@ -53,7 +53,7 @@ function com_raffle__ordinal($number) {
 		<legend><?php echo ($this->entity->places > 1 ? com_raffle__ordinal($cur_place).' Place - ' : '') . '<strong>'.htmlspecialchars("{$cur_winner['first_name']} {$cur_winner['last_name']}").'</strong>'; ?></legend>
 		<div class="pf-element pf-full-width" style="text-align: center;">
 			<div style="float: right; text-align: left; width: 48%;">
-				<?php echo format_phone($cur_winner['phone']); ?>
+				<?php echo htmlspecialchars(format_phone($cur_winner['phone'])); ?>
 			</div>
 			<div style="float: left; text-align: right; width: 48%;">
 				<a href="mailto:<?php echo htmlspecialchars($cur_winner['email']); ?>"><?php echo htmlspecialchars($cur_winner['email']); ?></a>

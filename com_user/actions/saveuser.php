@@ -259,8 +259,8 @@ if ($user->save()) {
 			htmlspecialchars($user->username),
 			htmlspecialchars($user->name),
 			htmlspecialchars($user->new_email_address),
-			format_phone($user->phone),
-			format_phone($user->fax),
+			htmlspecialchars(format_phone($user->phone)),
+			htmlspecialchars(format_phone($user->fax)),
 			htmlspecialchars($user->timezone),
 			htmlspecialchars($user->address_type == 'US' ? "{$user->address_1} {$user->address_2}\n{$user->city}, {$user->state} {$user->zip}" : $user->address_international)
 		);
@@ -273,8 +273,8 @@ if ($user->save()) {
 			htmlspecialchars($user->username),
 			htmlspecialchars($user->name),
 			htmlspecialchars($user->new_email_address),
-			format_phone($user->phone),
-			format_phone($user->fax),
+			htmlspecialchars(format_phone($user->phone)),
+			htmlspecialchars(format_phone($user->fax)),
 			htmlspecialchars($user->timezone),
 			htmlspecialchars($user->address_type == 'US' ? "{$user->address_1} {$user->address_2}\n{$user->city}, {$user->state} {$user->zip}" : $user->address_international)
 		);

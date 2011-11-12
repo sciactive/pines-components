@@ -54,7 +54,7 @@ defined('P_RUN') or die('Direct access prohibited');
 				$shift = explode('-', $cur_shift);
 				$shift_start = format_date(strtotime($shift[0]), 'time_short');
 				$shift_end = format_date(strtotime($shift[1]), 'time_short'); ?>
-				<option value="<?php echo htmlspecialchars($cur_shift); ?>"><?php echo $shift_start.' - '.$shift_end; ?></option>
+				<option value="<?php echo htmlspecialchars($cur_shift); ?>"><?php echo htmlspecialchars($shift_start).' - '.htmlspecialchars($shift_end); ?></option>
 			<?php } ?>
 		</select>
 	</div>

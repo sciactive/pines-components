@@ -80,7 +80,7 @@ foreach ($this->entity->products as $cur_product) {
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">ETA</span>
-		<span class="pf-field"><?php echo format_date($this->entity->eta, 'date_med'); ?></span>
+		<span class="pf-field"><?php echo htmlspecialchars(format_date($this->entity->eta, 'date_med')); ?></span>
 	</div>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Products</span>

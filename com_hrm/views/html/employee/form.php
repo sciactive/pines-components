@@ -135,8 +135,8 @@ $pines->com_pgrid->load();
 		<div id="p_muid_tab_general">
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
-				<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
-				<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
+				<div>Created: <span class="date"><?php echo htmlspecialchars(format_date($this->entity->p_cdate, 'full_short')); ?></span></div>
+				<div>Modified: <span class="date"><?php echo htmlspecialchars(format_date($this->entity->p_mdate, 'full_short')); ?></span></div>
 			</div>
 			<?php } ?>
 			<div class="pf-element">
@@ -160,7 +160,7 @@ $pines->com_pgrid->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Hire Date</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="hire_date" value="<?php echo empty($this->entity->hire_date) ? '' : format_date($this->entity->hire_date, 'date_sort'); ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="hire_date" value="<?php echo empty($this->entity->hire_date) ? '' : htmlspecialchars(format_date($this->entity->hire_date, 'date_sort')); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Job Title</span>
@@ -172,7 +172,7 @@ $pines->com_pgrid->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Training Completion Date</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="training_completion_date" value="<?php echo empty($this->entity->training_completion_date) ? '' : format_date($this->entity->training_completion_date, 'date_sort'); ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="training_completion_date" value="<?php echo empty($this->entity->training_completion_date) ? '' : htmlspecialchars(format_date($this->entity->training_completion_date, 'date_sort')); ?>" /></label>
 			</div>
 			<?php if ($pines->config->com_hrm->com_calendar) { ?>
 			<div class="pf-element">
@@ -307,7 +307,7 @@ $pines->com_pgrid->load();
 					<tbody>
 						<?php foreach ($this->entity->commissions as $cur_commission) { ?>
 						<tr>
-							<td><?php echo format_date($cur_commission['date']); ?></td>
+							<td><?php echo htmlspecialchars(format_date($cur_commission['date'])); ?></td>
 							<td style="text-align: right;"><?php echo isset($cur_commission['amount']) ? number_format($cur_commission['amount'], 2) : ''; ?></td>
 							<td><?php
 							if (!isset($cur_commission['ticket']->guid)) {

@@ -83,7 +83,7 @@ $this->title = 'Stock Location Guide';
 		<?php if ($this->pos) { ?>
 		<div class="pf-group">
 			<?php foreach ($this->pos as $cur_po) { ?>
-			<div class="pf-field"><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'po/edit', array('id' => $cur_po->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_po->po_number); ?></a> (Shipper: <?php echo htmlspecialchars($cur_po->shipper->name); ?>, ETA: <?php echo format_date($cur_po->eta, 'date_med'); ?><?php if (!empty($cur_po->reference_number)) { echo ', Ref #: '.htmlspecialchars($cur_po->reference_number); } ?>)</div>
+			<div class="pf-field"><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'po/edit', array('id' => $cur_po->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_po->po_number); ?></a> (Shipper: <?php echo htmlspecialchars($cur_po->shipper->name); ?>, ETA: <?php echo htmlspecialchars(format_date($cur_po->eta, 'date_med')); ?><?php if (!empty($cur_po->reference_number)) { echo ', Ref #: '.htmlspecialchars($cur_po->reference_number); } ?>)</div>
 			<?php } ?>
 		</div>
 		<?php } else { ?>
@@ -96,7 +96,7 @@ $this->title = 'Stock Location Guide';
 		<?php if ($this->transfers) { ?>
 		<div class="pf-group">
 			<?php foreach ($this->transfers as $cur_transfer) { ?>
-			<div class="pf-field"><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'transfer/edit', array('id' => $cur_transfer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_transfer->guid); ?></a> (Shipper: <?php echo htmlspecialchars($cur_transfer->shipper->name); ?>, ETA: <?php echo format_date($cur_transfer->eta, 'date_med'); ?>, Origin: <?php echo htmlspecialchars("{$cur_transfer->origin->name} [{$cur_transfer->origin->groupname}]"); ?><?php if (!empty($cur_transfer->reference_number)) { echo ', Ref #: '.htmlspecialchars($cur_transfer->reference_number); } ?>)</div>
+			<div class="pf-field"><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'transfer/edit', array('id' => $cur_transfer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_transfer->guid); ?></a> (Shipper: <?php echo htmlspecialchars($cur_transfer->shipper->name); ?>, ETA: <?php echo htmlspecialchars(format_date($cur_transfer->eta, 'date_med')); ?>, Origin: <?php echo htmlspecialchars("{$cur_transfer->origin->name} [{$cur_transfer->origin->groupname}]"); ?><?php if (!empty($cur_transfer->reference_number)) { echo ', Ref #: '.htmlspecialchars($cur_transfer->reference_number); } ?>)</div>
 			<?php } ?>
 		</div>
 		<?php } else { ?>

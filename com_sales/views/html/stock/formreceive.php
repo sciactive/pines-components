@@ -451,7 +451,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					<tr title="<?php echo (int) $cur_shipment->guid ?>">
 						<td>PO</td>
 						<td><?php echo htmlspecialchars($cur_shipment->po_number); ?></td>
-						<td><?php echo ($cur_shipment->eta ? format_date($cur_shipment->eta, 'date_sort') : ''); ?></td>
+						<td><?php echo ($cur_shipment->eta ? htmlspecialchars(format_date($cur_shipment->eta, 'date_sort')) : ''); ?></td>
 						<td><?php echo htmlspecialchars($cur_shipment->reference_number); ?></td>
 						<td><?php echo htmlspecialchars("{$cur_shipment->destination->name} [{$cur_shipment->destination->groupname}]"); ?></td>
 						<td><?php echo htmlspecialchars($cur_shipment->vendor->name); ?></td>
@@ -471,7 +471,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					<tr title="<?php echo (int) $cur_shipment->guid ?>">
 						<td>Transfer</td>
 						<td><?php echo htmlspecialchars($cur_shipment->guid); ?></td>
-						<td><?php echo ($cur_shipment->eta ? format_date($cur_shipment->eta, 'date_sort') : ''); ?></td>
+						<td><?php echo ($cur_shipment->eta ? htmlspecialchars(format_date($cur_shipment->eta, 'date_sort')) : ''); ?></td>
 						<td><?php echo htmlspecialchars($cur_shipment->reference_number); ?></td>
 						<td><?php echo htmlspecialchars("{$cur_shipment->destination->name} [{$cur_shipment->destination->groupname}]"); ?></td>
 						<td><?php echo htmlspecialchars($cur_shipment->origin->name); ?></td>

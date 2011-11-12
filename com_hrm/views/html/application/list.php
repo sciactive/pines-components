@@ -150,10 +150,10 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->applications as $cur_application) { ?>
 		<tr title="<?php echo (int) $cur_application->guid ?>">
-			<td><?php echo format_date($cur_application->p_cdate); ?></td>
+			<td><?php echo htmlspecialchars(format_date($cur_application->p_cdate)); ?></td>
 			<td><?php echo htmlspecialchars($cur_application->name); ?></td>
 			<td><?php echo htmlspecialchars($cur_application->position); ?></td>
-			<td><?php echo ucwords($cur_application->status); ?></td>
+			<td><?php echo htmlspecialchars(ucwords($cur_application->status)); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>
@@ -163,7 +163,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		<div class="pf-element">
 			<div class="pf-element dialog_info"></div>
 			<label><span class="pf-label">Effective Date</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="effective_date" value="<?php echo format_date(time(), 'date_sort'); ?>" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="effective_date" value="<?php echo htmlspecialchars(format_date(time(), 'date_sort')); ?>" /></label>
 		</div>
 	</form>
 	<br />

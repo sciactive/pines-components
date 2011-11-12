@@ -76,7 +76,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo htmlspecialchars($repository['data']['subject']['OU']); ?></td>
 			<td><?php echo htmlspecialchars($repository['data']['subject']['O']); ?></td>
 			<td><a href="<?php echo htmlspecialchars($repository['url']); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($repository['url']); ?></a></td>
-			<td><?php echo format_date(intval($repository['data']['validFrom_time_t']), 'date_med').' to '.format_date(intval($repository['data']['validTo_time_t']), 'date_med'); ?></td>
+			<td><?php echo htmlspecialchars(format_date(intval($repository['data']['validFrom_time_t']), 'date_med')).' to '.htmlspecialchars(format_date(intval($repository['data']['validTo_time_t']), 'date_med')); ?></td>
 			<td><?php echo htmlspecialchars("{$repository['data']['subject']['L']}, {$repository['data']['subject']['ST']}, {$repository['data']['subject']['C']}"); ?></td>
 			<td><a href="mailto:<?php echo htmlspecialchars($repository['data']['subject']['emailAddress']); ?>"><?php echo htmlspecialchars($repository['data']['subject']['emailAddress']); ?></a></td>
 			<td><?php echo htmlspecialchars(basename($repository['cert'])); ?></td>

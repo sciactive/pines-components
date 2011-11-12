@@ -260,12 +260,12 @@ $pines->com_jstree->load();
 		}
 	?>
 		<tr title="<?php echo (int) $cur_transaction->entity->guid ?>">
-			<td><?php echo format_date($cur_transaction->entity->p_cdate); ?></td>
+			<td><?php echo htmlspecialchars(format_date($cur_transaction->entity->p_cdate)); ?></td>
 			<td><?php echo htmlspecialchars($cur_transaction->product->sku); ?></td>
 			<td><?php echo htmlspecialchars($cur_transaction->product->name); ?></td>
 			<td><?php echo htmlspecialchars($groupname); ?></td>
 			<td><a href="<?php echo htmlspecialchars($link); ?>" onclick="window.open(this.href); return false;"><?php echo (int) $cur_transaction->entity->guid ?></a></td>
-			<td><?php echo ucwords($cur_transaction->type); ?></td>
+			<td><?php echo htmlspecialchars(ucwords($cur_transaction->type)); ?></td>
 			<td><?php echo htmlspecialchars($cur_transaction->transaction_info); ?></td>
 			<td><?php echo htmlspecialchars($quantity); ?></td>
 			<td><?php echo htmlspecialchars($serials); ?></td>

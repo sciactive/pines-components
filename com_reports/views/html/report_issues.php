@@ -256,7 +256,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 		<?php foreach ($this->issues as $cur_issue) { ?>
 		<tr title="<?php echo (int) $cur_issue->employee->guid ?>" onmouseover="p_muid_notice.com_reports_issue_update('&lt;ul&gt;&lt;li&gt;'+<?php echo htmlspecialchars(json_encode(implode(array_map('htmlspecialchars', $cur_issue->comments), '</li><li>')), ENT_QUOTES); ?>+'&lt;/li&gt;&lt;/ul&gt;');">
-			<td><?php echo format_date($cur_issue->date, 'date_sort'); ?></td>
+			<td><?php echo htmlspecialchars(format_date($cur_issue->date, 'date_sort')); ?></td>
 			<td><?php echo htmlspecialchars($cur_issue->location->name); ?></td>
 			<td><?php echo htmlspecialchars($cur_issue->employee->name); ?></td>
 			<td><?php echo htmlspecialchars($cur_issue->issue_type->name); ?></td>

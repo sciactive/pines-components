@@ -199,11 +199,11 @@ $pines->com_pgrid->load();
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Start Date</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="start" value="<?php echo ($this->entity->start_date) ? format_date($this->entity->start_date, 'date_sort') : format_date(time(), 'date_sort'); ?>" style="text-align: center;" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="start" value="<?php echo ($this->entity->start_date) ? htmlspecialchars(format_date($this->entity->start_date, 'date_sort')) : htmlspecialchars(format_date(time(), 'date_sort')); ?>" style="text-align: center;" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">End Date</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="end" value="<?php echo ($this->entity->end_date) ? format_date($this->entity->end_date - 1, 'date_sort') : format_date(time(), 'date_sort'); ?>" style="text-align: center;" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="end" value="<?php echo ($this->entity->end_date) ? htmlspecialchars(format_date($this->entity->end_date - 1, 'date_sort')) : htmlspecialchars(format_date(time(), 'date_sort')); ?>" style="text-align: center;" /></label>
 	</div>
 	<div class="pf-element">
 		<span class="pf-label">New Hire Goals</span>

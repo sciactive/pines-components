@@ -91,11 +91,11 @@ $pines->com_jstree->load();
 	</div>
 	<div class="pf-element" style="padding-bottom: 0px;">
 		<span class="pf-note">Start</span>
-		<input class="ui-widget-content ui-corner-all form_date" type="text" name="start" value="<?php echo ($this->date[0]) ? format_date($this->date[0], 'date_sort') : format_date(time(), 'date_sort'); ?>" />
+		<input class="ui-widget-content ui-corner-all form_date" type="text" name="start" value="<?php echo ($this->date[0]) ? htmlspecialchars(format_date($this->date[0], 'date_sort')) : htmlspecialchars(format_date(time(), 'date_sort')); ?>" />
 	</div>
 	<div class="pf-element">
 		<span class="pf-note">End</span>
-		<input class="ui-widget-content ui-corner-all form_date" type="text" name="end" value="<?php echo ($this->date[1]) ? format_date($this->date[1] - 1, 'date_sort') : format_date(time(), 'date_sort'); ?>" />
+		<input class="ui-widget-content ui-corner-all form_date" type="text" name="end" value="<?php echo ($this->date[1]) ? htmlspecialchars(format_date($this->date[1] - 1, 'date_sort')) : htmlspecialchars(format_date(time(), 'date_sort')); ?>" />
 	</div>
 	<div class="pf-element">
 		<input type="hidden" name="location" value="<?php echo htmlspecialchars($this->location); ?>" />

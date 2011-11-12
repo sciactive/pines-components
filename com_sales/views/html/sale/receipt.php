@@ -120,7 +120,7 @@ switch ($this->entity->status) {
 			<?php } else { ?>
 			<span><?php echo htmlspecialchars($sales_group->address_international); ?></span>
 			<?php } ?>
-			<span><?php echo format_phone($sales_group->phone); ?></span>
+			<span><?php echo htmlspecialchars(format_phone($sales_group->phone)); ?></span>
 		</div>
 	</div>
 	<?php } ?>
@@ -136,24 +136,24 @@ switch ($this->entity->status) {
 			<span><?php echo htmlspecialchars($this->entity->id); ?></span>
 			<?php switch($this->entity->status) {
 				case 'invoiced':
-					echo '<span>'.format_date($this->entity->invoice_date, 'date_short').'</span>';
-					echo '<span>'.format_date($this->entity->invoice_date, 'time_short').'</span>';
+					echo '<span>'.htmlspecialchars(format_date($this->entity->invoice_date, 'date_short')).'</span>';
+					echo '<span>'.htmlspecialchars(format_date($this->entity->invoice_date, 'time_short')).'</span>';
 					break;
 				case 'paid':
-					echo '<span>'.format_date($this->entity->tender_date, 'date_short').'</span>';
-					echo '<span>'.format_date($this->entity->tender_date, 'time_short').'</span>';
+					echo '<span>'.htmlspecialchars(format_date($this->entity->tender_date, 'date_short')).'</span>';
+					echo '<span>'.htmlspecialchars(format_date($this->entity->tender_date, 'time_short')).'</span>';
 					break;
 				case 'processed':
-					echo '<span>'.format_date($this->entity->process_date, 'date_short').'</span>';
-					echo '<span>'.format_date($this->entity->process_date, 'time_short').'</span>';
+					echo '<span>'.htmlspecialchars(format_date($this->entity->process_date, 'date_short')).'</span>';
+					echo '<span>'.htmlspecialchars(format_date($this->entity->process_date, 'time_short')).'</span>';
 					break;
 				case 'voided':
-					echo '<span>'.format_date($this->entity->void_date, 'date_short').'</span>';
-					echo '<span>'.format_date($this->entity->void_date, 'time_short').'</span>';
+					echo '<span>'.htmlspecialchars(format_date($this->entity->void_date, 'date_short')).'</span>';
+					echo '<span>'.htmlspecialchars(format_date($this->entity->void_date, 'time_short')).'</span>';
 					break;
 				default:
-					echo '<span>'.format_date($this->entity->p_cdate, 'date_short').'</span>';
-					echo '<span>'.format_date($this->entity->p_cdate, 'time_short').'</span>';
+					echo '<span>'.htmlspecialchars(format_date($this->entity->p_cdate, 'date_short')).'</span>';
+					echo '<span>'.htmlspecialchars(format_date($this->entity->p_cdate, 'time_short')).'</span>';
 					break;
 			} ?>
 			<?php if (!$sale && isset($this->entity->sale)) { ?><span><?php echo htmlspecialchars($this->entity->sale->id); ?></span><?php } ?>

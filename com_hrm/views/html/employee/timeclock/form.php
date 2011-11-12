@@ -300,12 +300,12 @@ $pines->com_datetimepicker->load();
 			<div class="ui-helper-clearfix ui-widget-content ui-corner-all">
 				<button class="ui-state-default ui-corner-all">Delete</button>
 				<span class="pf-label time" style="width: auto; font-family: monospace;">
-					<span class="time_in"><?php echo format_date($entry->in, 'custom', 'd M Y <\s\t\r\o\n\g>h:i:s A</\s\t\r\o\n\g> T', $this->entity->user->get_timezone(true)); ?></span>
+					<span class="time_in"><?php echo htmlspecialchars(format_date($entry->in, 'custom', 'd M Y <\s\t\r\o\n\g>h:i:s A</\s\t\r\o\n\g> T', $this->entity->user->get_timezone(true))); ?></span>
 					-
-					<span class="time_out"><?php echo format_date($entry->out, 'custom', 'd M Y <\s\t\r\o\n\g>h:i:s A</\s\t\r\o\n\g> T', $this->entity->user->get_timezone(true)); ?></span>
+					<span class="time_out"><?php echo htmlspecialchars(format_date($entry->out, 'custom', 'd M Y <\s\t\r\o\n\g>h:i:s A</\s\t\r\o\n\g> T', $this->entity->user->get_timezone(true))); ?></span>
 				</span>
 				<span class="pf-label time_range" style="width: auto; float: right; margin-right: 1em;">
-					<span class="time_range"><?php echo format_date_range($entry->in, $entry->out, null, $this->entity->user->get_timezone(true)); ?></span>
+					<span class="time_range"><?php echo htmlspecialchars(format_date_range($entry->in, $entry->out, null, $this->entity->user->get_timezone(true))); ?></span>
 				</span>
 				<span class="pf-label comments" style="width: auto; clear: left;"><?php echo htmlspecialchars($entry->comments); ?></span>
 				<span class="pf-note" style="width: auto;">Timestamps: <span class="timestamp_in"><?php echo htmlspecialchars($entry->in); ?></span> - <span class="timestamp_out"><?php echo htmlspecialchars($entry->out); ?></span></span><br class="pf-clearing" />

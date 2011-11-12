@@ -234,12 +234,12 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		?>
 		<tr title="<?php echo (int) $cur_event->guid ?>" onmouseover="p_muid_notice.com_reports_issue_update(<?php echo htmlspecialchars(json_encode($cur_event->title)); ?>, <?php echo htmlspecialchars(json_encode($info)); ?>);">
 			<td><?php echo htmlspecialchars($cur_event->title); ?></td>
-			<td><?php echo format_date($cur_event->start); ?></td>
-			<td><?php echo format_date($cur_event->end); ?></td>
+			<td><?php echo htmlspecialchars(format_date($cur_event->start)); ?></td>
+			<td><?php echo htmlspecialchars(format_date($cur_event->end)); ?></td>
 			<td><?php echo htmlspecialchars($cur_event->group->name); ?></td>
 			<td><?php echo htmlspecialchars($cur_event->employee->name); ?></td>
 			<td><?php echo htmlspecialchars($cur_event_type); ?></td>
-			<td><?php echo ucwords($cur_event->appointment->status); ?></td>
+			<td><?php echo htmlspecialchars(ucwords($cur_event->appointment->status)); ?></td>
 			<td><?php echo htmlspecialchars($cur_event->user->name); ?></td>
 		</tr>
 		<?php } ?>

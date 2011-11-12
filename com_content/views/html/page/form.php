@@ -181,8 +181,8 @@ $pines->com_ptags->load();
 				<div>User: <span class="date"><?php echo htmlspecialchars("{$this->entity->user->name} [{$this->entity->user->username}]"); ?></span></div>
 				<div>Group: <span class="date"><?php echo htmlspecialchars("{$this->entity->group->name} [{$this->entity->group->groupname}]"); ?></span></div>
 				<?php } ?>
-				<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
-				<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
+				<div>Created: <span class="date"><?php echo htmlspecialchars(format_date($this->entity->p_cdate, 'full_short')); ?></span></div>
+				<div>Modified: <span class="date"><?php echo htmlspecialchars(format_date($this->entity->p_mdate, 'full_short')); ?></span></div>
 			</div>
 			<?php } ?>
 			<div class="pf-element">
@@ -594,19 +594,19 @@ $pines->com_ptags->load();
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Override Created Date</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="p_cdate" value="<?php echo $this->entity->p_cdate ? format_date($this->entity->p_cdate, 'full_med') : ''; ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="p_cdate" value="<?php echo $this->entity->p_cdate ? htmlspecialchars(format_date($this->entity->p_cdate, 'full_med')) : ''; ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Override Modified Date</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="p_mdate" value="<?php echo $this->entity->p_mdate ? format_date($this->entity->p_mdate, 'full_med') : ''; ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="p_mdate" value="<?php echo $this->entity->p_mdate ? htmlspecialchars(format_date($this->entity->p_mdate, 'full_med')) : ''; ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Begin Publish Date</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="publish_begin" value="<?php echo $this->entity->publish_begin ? format_date($this->entity->publish_begin, 'full_med') : format_date(time(), 'full_med'); ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="publish_begin" value="<?php echo $this->entity->publish_begin ? htmlspecialchars(format_date($this->entity->publish_begin, 'full_med')) : htmlspecialchars(format_date(time(), 'full_med')); ?>" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">End Publish Date</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="publish_end" value="<?php echo $this->entity->publish_end ? format_date($this->entity->publish_end, 'full_med') : ''; ?>" /></label>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="publish_end" value="<?php echo $this->entity->publish_end ? htmlspecialchars(format_date($this->entity->publish_end, 'full_med')) : ''; ?>" /></label>
 			</div>
 			<div class="pf-element pf-heading">
 				<h1>Options</h1>

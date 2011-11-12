@@ -172,8 +172,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			?>
 			<tr title="<?php echo htmlspecialchars((int) $cur_tx->customer->guid); ?>">
 				<td><a href="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/receipt', array('id' => $cur_tx->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_tx->id); ?></a></td>
-				<td><?php echo format_date($cur_tx->p_cdate); ?></td>
-				<td><?php echo ucwords($cur_tx->status); ?></td>
+				<td><?php echo htmlspecialchars(format_date($cur_tx->p_cdate)); ?></td>
+				<td><?php echo htmlspecialchars(ucwords($cur_tx->status)); ?></td>
 				<td><?php echo htmlspecialchars($cur_item['delivery']); ?></td>
 				<td><?php echo htmlspecialchars($cur_tx->group->name); ?></td>
 				<td><?php echo htmlspecialchars($cur_tx->user->name); ?></td>

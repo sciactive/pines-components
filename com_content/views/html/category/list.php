@@ -90,15 +90,15 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	<tbody>
 	<?php foreach($this->categories as $category) { ?>
 		<tr title="<?php echo (int) $category->guid ?>" class="<?php echo $category->children ? 'parent ' : ''; ?><?php echo isset($category->parent) ? htmlspecialchars("child ch_{$category->parent->guid} ") : ''; ?>">
-			<td><?php echo isset($category->parent) ? $category->array_search($category->parent->children) + 1 : '0' ; ?></td>
+			<td><?php echo isset($category->parent) ? htmlspecialchars($category->array_search($category->parent->children) + 1) : '0' ; ?></td>
 			<td><?php echo htmlspecialchars($category->name); ?></td>
 			<td><?php echo htmlspecialchars($category->alias); ?></td>
 			<td><?php echo ($category->enabled ? 'Yes' : 'No'); ?></td>
 			<td><?php echo count($category->pages); ?></td>
 			<td><?php echo ($category->show_menu ? 'Yes' : 'No'); ?></td>
 			<td><?php echo $category->show_menu ? htmlspecialchars($category->menu_position) : ''; ?></td>
-			<td><?php echo format_date($category->p_cdate); ?></td>
-			<td><?php echo format_date($category->p_mdate); ?></td>
+			<td><?php echo htmlspecialchars(format_date($category->p_cdate)); ?></td>
+			<td><?php echo htmlspecialchars(format_date($category->p_mdate)); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

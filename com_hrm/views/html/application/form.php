@@ -73,8 +73,8 @@ $this->title = (!isset($this->entity->guid)) ? 'Apply for Employment' : 'Editing
 <form class="pf-form" method="post" id="p_muid_form" enctype="multipart/form-data" action="<?php echo htmlspecialchars(pines_url('com_hrm', 'application/save')); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
-		<div>Created: <span class="date"><?php echo format_date($this->entity->p_cdate, 'full_short'); ?></span></div>
-		<div>Modified: <span class="date"><?php echo format_date($this->entity->p_mdate, 'full_short'); ?></span></div>
+		<div>Created: <span class="date"><?php echo htmlspecialchars(format_date($this->entity->p_cdate, 'full_short')); ?></span></div>
+		<div>Modified: <span class="date"><?php echo htmlspecialchars(format_date($this->entity->p_mdate, 'full_short')); ?></span></div>
 	</div>
 	<?php } ?>
 	<div class="pf-element">
@@ -104,7 +104,7 @@ $this->title = (!isset($this->entity->guid)) ? 'Apply for Employment' : 'Editing
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Phone</span>
-			<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="phone" size="24" value="<?php echo format_phone($this->entity->phone); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+			<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="phone" size="24" value="<?php echo htmlspecialchars(format_phone($this->entity->phone)); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 	</div>
 	<?php if ($pines->config->com_hrm->ssn_field) { ?>
 	<div class="pf-element">
@@ -267,12 +267,12 @@ $this->title = (!isset($this->entity->guid)) ? 'Apply for Employment' : 'Editing
 		<div class="pf-element p_muid_clear">
 			<span class="pf-label"><button class="ui-state-default ui-corner-all" type="button" onclick="$(this).parent().parent().remove();"><span class="amt_btn picon picon-list-remove"></span> Remove</button></span>
 			<div class="pf-group">
-				<input class="pf-field ui-widget-content ui-corner-all p_muid_date" type="text" name="employer_start[]" size="10" value="<?php echo format_date($cur_employer['start'], 'date_short'); ?>" />
-				<input class="pf-field ui-widget-content ui-corner-all p_muid_date" type="text" name="employer_end[]" size="10" value="<?php echo format_date($cur_employer['end'], 'date_short'); ?>" style="margin: 0px;" />
+				<input class="pf-field ui-widget-content ui-corner-all p_muid_date" type="text" name="employer_start[]" size="10" value="<?php echo htmlspecialchars(format_date($cur_employer['start'], 'date_short')); ?>" />
+				<input class="pf-field ui-widget-content ui-corner-all p_muid_date" type="text" name="employer_end[]" size="10" value="<?php echo htmlspecialchars(format_date($cur_employer['end'], 'date_short')); ?>" style="margin: 0px;" />
 				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="employer_position[]" size="24" value="<?php echo htmlspecialchars($cur_employer['position']); ?>" />
 				<br class="pf-clearing" />
 				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="employer_company[]" size="25" value="<?php echo htmlspecialchars($cur_employer['company']); ?>" />
-				<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="employer_phone[]" size="24" value="<?php echo format_phone($cur_employer['phone']); ?>" />
+				<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="employer_phone[]" size="24" value="<?php echo htmlspecialchars(format_phone($cur_employer['phone'])); ?>" />
 				<br class="pf-clearing" />
 				<input class="pf-field ui-widget-content ui-corner-all" type="text" name="employer_reason[]" size="55" value="<?php echo htmlspecialchars($cur_employer['reason']); ?>" />
 				<br class="pf-clearing" />

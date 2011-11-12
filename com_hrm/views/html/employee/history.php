@@ -150,7 +150,7 @@ $pines->com_pgrid->load();
 			<tbody>
 				<?php foreach ($this->entity->employment_history as $cur_history) { ?>
 				<tr>
-					<td><?php echo format_date($cur_history[0], 'date_long'); ?></td>
+					<td><?php echo htmlspecialchars(format_date($cur_history[0], 'date_long')); ?></td>
 					<td><?php echo htmlspecialchars($cur_history[1]); ?></td>
 				</tr>
 				<?php } ?>
@@ -177,7 +177,7 @@ $pines->com_pgrid->load();
 			<tbody>
 				<?php foreach ($this->issues as $cur_issue) { ?>
 				<tr onmouseover="p_muid_notice.com_hrm_issue_update('&lt;ul&gt;&lt;li&gt;'+<?php echo htmlspecialchars(json_encode(implode(array_map('htmlspecialchars', $cur_issue->comments), '</li><li>')), ENT_QUOTES); ?>+'&lt;/li&gt;&lt;/ul&gt;');">
-					<td><?php echo format_date($cur_issue->date, 'date_short'); ?></td>
+					<td><?php echo htmlspecialchars(format_date($cur_issue->date, 'date_short')); ?></td>
 					<td><?php echo htmlspecialchars($cur_issue->issue_type->name); ?></td>
 					<td>x<?php echo htmlspecialchars($cur_issue->quantity); ?></td>
 					<td>$<?php echo round($cur_issue->issue_type->penalty*$cur_issue->quantity, 2); ?></td>
@@ -217,7 +217,7 @@ $pines->com_pgrid->load();
 			<?php foreach ($this->sales as $cur_sale) { ?>
 				<tr title="<?php echo (int) $cur_sale->guid ?>">
 					<td><?php echo htmlspecialchars($cur_sale->id); ?></td>
-					<td><?php echo format_date($cur_sale->p_cdate); ?></td>
+					<td><?php echo htmlspecialchars(format_date($cur_sale->p_cdate)); ?></td>
 					<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_sale->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_sale->customer->name); ?></a></td>
 					<td><?php echo htmlspecialchars($cur_sale->products[0]['entity']->name); ?></td>
 					<td>$<?php echo htmlspecialchars($cur_sale->total); ?></td>
@@ -247,7 +247,7 @@ $pines->com_pgrid->load();
 			<?php foreach ($this->returns as $cur_return) { ?>
 				<tr title="<?php echo (int) $cur_return->guid ?>">
 					<td><?php echo htmlspecialchars($cur_return->id); ?></td>
-					<td><?php echo format_date($cur_return->p_cdate); ?></td>
+					<td><?php echo htmlspecialchars(format_date($cur_return->p_cdate)); ?></td>
 					<td><a href="<?php echo htmlspecialchars(pines_url('com_customer', 'customer/edit', array('id' => $cur_return->customer->guid))); ?>" onclick="window.open(this.href); return false;"><?php echo htmlspecialchars($cur_return->customer->name); ?></a></td>
 					<td><?php echo htmlspecialchars($cur_return->products[0]['entity']->name); ?></td>
 					<td>$<?php echo htmlspecialchars($cur_return->total); ?></td>
@@ -278,11 +278,11 @@ $pines->com_pgrid->load();
 					if ($cur_payment['employee']->guid != $this->entity->guid)
 						continue; ?>
 				<tr title="<?php echo (int) $cur_paystub->guid ?>">
-					<td><?php echo format_date($cur_paystub->start); ?></td>
-					<td><?php echo format_date($cur_paystub->end); ?></td>
-					<td>$<?php echo number_format($cur_payment['total_pay'], 2, '.', ''); ?></td>
-					<td>$<?php echo number_format($cur_payment['penalties'], 2, '.', ''); ?></td>
-					<td>$<?php echo number_format($cur_payment['bonuses'], 2, '.', ''); ?></td>
+					<td><?php echo htmlspecialchars(format_date($cur_paystub->start)); ?></td>
+					<td><?php echo htmlspecialchars(format_date($cur_paystub->end)); ?></td>
+					<td>$<?php echo htmlspecialchars(number_format($cur_payment['total_pay'], 2, '.', '')); ?></td>
+					<td>$<?php echo htmlspecialchars(number_format($cur_payment['penalties'], 2, '.', '')); ?></td>
+					<td>$<?php echo htmlspecialchars(number_format($cur_payment['bonuses'], 2, '.', '')); ?></td>
 				</tr>
 			<?php }
 			} ?>

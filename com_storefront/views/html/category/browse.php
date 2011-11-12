@@ -91,6 +91,10 @@ if ($this->entity->show_products)
 </div>
 <?php $header = ob_get_clean(); echo $header; ?>
 <div id="p_muid_products" style="clear: both;">
-	<?php include(__DIR__.'/templates/'.clean_filename($pines->config->com_storefront->category_template).'.php'); ?>
+	<?php
+	/**
+	 * Include the category template.
+	 */
+	include(__DIR__.'/templates/'.clean_filename($pines->config->com_storefront->category_template).'.php'); ?>
 </div>
 <?php echo $header; } ?>

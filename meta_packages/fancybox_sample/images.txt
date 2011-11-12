@@ -1,0 +1,4 @@
+Flower1.jpg;Flower1_t.jpg
+Greenest.jpg;Greenest_t.jpg;Isn't it green?
+PatitoVerde.jpg;PatitoVerde_t.jpg;No ducks were harmed in the making of this image.
+Windmill.jpg;Windmill_t.jpg

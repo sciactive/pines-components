@@ -1,0 +1,7 @@
+orion-nebula.jpg|The Orion Nebula.|http://en.wikipedia.org/wiki/Orion_Nebula
+buzz-aldrin-boot.jpg||http://en.wikipedia.org/wiki/Buzz_Aldrin
+pinwheel-galaxy.jpg
+saturn.jpg|Saturn has <strong>rings</strong>.
+white.jpg|This is pure white. <span style="color: red;">Don't click it.</span>||alert('You\'re not allowed to click there.');
+black.jpg|This is pure black. <span style="color: red; font-size: 1.3em;">Don't click it either.</span>||alert('You\'re not allowed to click there.');
+gray.jpg|This is pure gray. Click to search in a new window.|http://www.google.com/search?q=gray|window.open(this.href); return false;

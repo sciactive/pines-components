@@ -181,6 +181,7 @@ class com_plaza extends component {
 
 		// Override the default checkers.
 		$old_checkers = $pines->depend->checkers;
+		$pines->depend->checkers['package'] = array($this, 'check_package');
 		$pines->depend->checkers['component'] = array($this, 'check_component');
 		$pines->depend->checkers['service'] = array($this, 'check_service');
 

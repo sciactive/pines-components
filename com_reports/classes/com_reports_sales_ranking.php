@@ -230,7 +230,7 @@ class com_reports_sales_ranking extends entity {
 					elseif ($cur_sale->tender_date >= $last_start && $cur_sale->tender_date <= $last_end)
 						$ranking_employee[$cur_product['salesperson']->guid]['last'] += $cur_product['line_total'];
 				}
-				$parent = $cur_product['salesperson']->group;
+				$parent = $cur_sale->group;
 				while (isset($parent->guid)) {
 					if (isset($ranking_location[$parent->guid])) {
 						$ranking_location[$parent->guid]['mtd'] += $cur_product['line_total'];
@@ -254,7 +254,7 @@ class com_reports_sales_ranking extends entity {
 					elseif ($cur_return->process_date >= $last_start && $cur_return->process_date <= $last_end)
 						$ranking_employee[$cur_product['salesperson']->guid]['last'] -= $cur_product['line_total'];
 				}
-				$parent = $cur_product['salesperson']->group;
+				$parent = $cur_return->group;
 				while (isset($parent->guid)) {
 					if (isset($ranking_location[$parent->guid])) {
 						$ranking_location[$parent->guid]['mtd'] -= $cur_product['line_total'];

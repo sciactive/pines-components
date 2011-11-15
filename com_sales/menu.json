@@ -175,7 +175,7 @@
 				"text": "Pending Orders",
 				"href": ["com_sales","warehouse/pending"],
 				"depend": {
-					"ability": "com_sales/warehouse"
+					"ability": "com_sales/warehouse|com_sales/viewwarehouse"
 				}
 			},
 			{

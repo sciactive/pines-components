@@ -99,7 +99,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						}
 					});
 				}},
-				<?php if (!$this->ordered) { ?>
+				<?php if (gatekeeper('com_sales/warehouse')) { if (!$this->ordered) { ?>
 				{type: 'button', text: 'Mark Ordered', extra_class: 'picon picon-task-complete', multi_select: true, confirm: true, url: <?php echo json_encode(pines_url('com_sales', 'warehouse/markordered', array('id' => '__title__', 'ordered' => 'true'))); ?>, delimiter: ','},
 				<?php } else { ?>
 				{type: 'button', text: 'Mark Not Ordered', extra_class: 'picon picon-task-attempt', multi_select: true, confirm: true, url: <?php echo json_encode(pines_url('com_sales', 'warehouse/markordered', array('id' => '__title__', 'ordered' => 'false'))); ?>, delimiter: ','},
@@ -108,6 +108,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				{type: 'button', text: 'Detach PO', extra_class: 'picon picon-list-remove', multi_select: true, confirm: true, url: <?php echo json_encode(pines_url('com_sales', 'warehouse/detachpo', array('id' => '__title__'))); ?>, delimiter: ','},
 				{type: 'button', text: 'Assign Stock', extra_class: 'picon picon-document-import', multi_select: true, confirm: true, url: <?php echo json_encode(pines_url('com_sales', 'warehouse/assignstock', array('id' => '__title__'))); ?>, delimiter: ','},
 				{type: 'button', title: 'Flag', extra_class: 'picon picon-flag-red', multi_select: true, url: <?php echo json_encode(pines_url('com_sales', 'warehouse/flag', array('id' => '__title__'))); ?>, delimiter: ','},
+				<?php } ?>
 				{type: 'separator'},
 				<?php if (!$this->ordered) { ?>
 				{type: 'button', text: 'Ordered', extra_class: 'picon picon-vcs-removed', selection_optional: true, url: <?php echo json_encode(pines_url('com_sales', 'warehouse/pending', array('ordered' => 'true', 'location' => $this->location->guid, 'descendents' => ($this->descendents ? 'true' : 'false'), 'all_time' => ($this->all_time ? 'true' : 'false'), 'start_date' => ($this->start_date ? format_date($this->start_date, 'date_sort') : ''), 'end_date' => ($this->end_date ? format_date($this->end_date - 1, 'date_sort') : '')))); ?>},

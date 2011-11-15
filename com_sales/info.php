@@ -15,7 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'POS',
 	'author' => 'SciActive',
-	'version' => '1.0.0',
+	'version' => '1.0.1',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Point of Sales system',
@@ -37,6 +37,7 @@ return array(
 		array('shipstock', 'Ship Stock', 'User can ship stock on an existing transfer.'),
 		array('managestock', 'Manage Stock', 'User can transfer, ship, and adjust stock.'),
 		array('warehouse', 'Warehouse Sales', 'User can fulfill warehouse sales.'),
+		array('viewwarehouse', 'View Warehouse Sales', 'User can view pending warehouse sales.'),
 		array('changeproduct', 'Change Products', 'User can change products on unfulfilled warehouse sales.'),
 		array('totalsales', 'Total Sales', 'User can see sales totals.'),
 		array('totalothersales', 'Total Other Sales', 'User can see sales totals of other locations.'),

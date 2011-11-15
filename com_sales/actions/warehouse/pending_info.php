@@ -12,7 +12,7 @@
 /* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/warehouse') )
+if ( !gatekeeper('com_sales/viewwarehouse') && !gatekeeper('com_sales/warehouse') )
 	punt_user(null, pines_url('com_sales', 'warehouse/pending_info'));
 
 $pines->page->override = true;
@@ -41,7 +41,7 @@ $module = new module('com_sales', 'warehouse/pending_info');
 
 // Find warehouse stock.
 $module->warehouse = $pines->entity_manager->get_entities(
-		array('class' => com_sales_stock),
+		array('class' => com_sales_stock, 'skip_ac' => true),
 		array('&',
 			'tag' => array('com_sales', 'stock'),
 			'data' => array('available', true),
@@ -54,7 +54,7 @@ $module->warehouse = $pines->entity_manager->get_entities(
 
 // Find PO products.
 $module->pos = (array) $pines->entity_manager->get_entities(
-		array('class' => com_sales_po),
+		array('class' => com_sales_po, 'skip_ac' => true),
 		array('&',
 			'tag' => array('com_sales', 'po'),
 			'data' => array(array('final', true), array('finished', false)),
@@ -67,7 +67,7 @@ $module->pos = (array) $pines->entity_manager->get_entities(
 
 // Find transfer products.
 $module->transfers = (array) $pines->entity_manager->get_entities(
-		array('class' => com_sales_transfer),
+		array('class' => com_sales_transfer, 'skip_ac' => true),
 		array('&',
 			'tag' => array('com_sales', 'transfer'),
 			'data' => array(array('final', true), array('shipped', true), array('finished', false)),
@@ -80,7 +80,7 @@ $module->transfers = (array) $pines->entity_manager->get_entities(
 
 // Find item in current inventory.
 $stock = (array) $pines->entity_manager->get_entities(
-		array('class' => com_sales_stock),
+		array('class' => com_sales_stock, 'skip_ac' => true),
 		array('&',
 			'tag' => array('com_sales', 'stock'),
 			'data' => array('available', true),

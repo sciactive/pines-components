@@ -12,7 +12,7 @@
 /* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( !gatekeeper('com_sales/warehouse') )
+if ( !gatekeeper('com_sales/viewwarehouse') && !gatekeeper('com_sales/warehouse') )
 	punt_user(null, pines_url('com_sales', 'warehouse/pending'));
 
 if (!empty($_REQUEST['start_date'])) {

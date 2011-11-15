@@ -216,6 +216,13 @@ div.headline {
 	margin: 0;
 	width:894px;
 }
+#footer-line {
+	background: url('../images/footer-line.png') no-repeat;
+	width:967px;
+	height:2px;
+	line-height:0;
+	margin: 0 auto 4px;
+}
 
 /* Inputs */
 input.ui-state-default {

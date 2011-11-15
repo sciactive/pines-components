@@ -108,6 +108,7 @@ header('Content-Type: text/html');
 			<p class="copyright"><?php echo htmlspecialchars($pines->config->copyright_notice, ENT_COMPAT, '', false); ?></p>
 		</div>
 	</div>
+	<div id="footer-line">&nbsp;</div>
 	<div id="bottom"><?php echo $pines->page->render_modules('bottom'); ?></div>
 </body>
 </html>

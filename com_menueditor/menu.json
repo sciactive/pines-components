@@ -1,0 +1,25 @@
+[
+	{
+		"path": "main_menu/website/menueditor",
+		"text": "Menu Editor",
+		"depend": {
+			"children": true
+		}
+	},
+		{
+			"path": "main_menu/website/menueditor/entries",
+			"text": "Entries",
+			"href": ["com_menueditor","entry/list"],
+			"depend": {
+				"ability": "com_menueditor/listentries"
+			}
+		},
+		{
+			"path": "main_menu/website/menueditor/newentry",
+			"text": "New Entry",
+			"href": ["com_menueditor","entry/edit"],
+			"depend": {
+				"ability": "com_menueditor/newentry"
+			}
+		}
+]

@@ -147,6 +147,10 @@ $pines->com_pgrid->load();
 				<span class="pf-label">Username</span>
 				<span class="pf-field"><?php echo htmlspecialchars($this->entity->username); ?></span>
 			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Nickname</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" size="24" name="nickname" value="<?php echo $this->entity->nickname; ?>" /></label>
+			</div>
 			<?php if ($pines->config->com_hrm->ssn_field && gatekeeper('com_hrm/showssn')) { ?>
 			<div class="pf-element">
 				<label><span class="pf-label">SSN</span>

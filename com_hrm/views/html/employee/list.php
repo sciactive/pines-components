@@ -354,7 +354,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>ID</th>
 			<th>Username</th>
 			<th>Real Name</th>
+			<th>Nickname</th>
 			<th>Email</th>
+			<th>Hire Date</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -363,7 +365,9 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo (int) $employee->guid ?></td>
 			<td><?php echo htmlspecialchars($employee->username); ?></td>
 			<td><?php echo htmlspecialchars($employee->name); ?></td>
+			<td><?php echo htmlspecialchars($employee->nickname); ?></td>
 			<td><?php echo htmlspecialchars($employee->email); ?></td>
+			<td><?php echo empty($employee->hire_date) ? '' : htmlspecialchars(format_date($employee->hire_date, 'date_sort')); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

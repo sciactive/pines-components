@@ -137,7 +137,40 @@ class com_reports_sales_ranking extends entity {
 
 		// Build an array to hold total data.
 		$ranking_employee = array();
+		$module->mifi_checks = $pines->depend->check('component', 'com_mifi');
 		foreach ($employees as $cur_employee) {
+			// Get all apps for the employee.
+			if ($module->mifi_checks) {
+				$current_apps = $pines->entity_manager->get_entities(
+						array('class' => com_mifi_application, 'skip_ac' => true),
+						array('&',
+							'tag' => array('com_mifi', 'application'),
+							'gte' => array('p_cdate', $current_start),
+							'lt' => array('p_cdate', $current_end),
+							'ref' => array('user', $cur_employee)
+						)
+					);
+				$last_apps = $pines->entity_manager->get_entities(
+						array('class' => com_mifi_application, 'skip_ac' => true),
+						array('&',
+							'tag' => array('com_mifi', 'application'),
+							'gte' => array('p_cdate', $last_start),
+							'lt' => array('p_cdate', $last_end),
+							'ref' => array('user', $cur_employee)
+						)
+					);
+				$mtd_apps = $pines->entity_manager->get_entities(
+						array('class' => com_mifi_application, 'skip_ac' => true),
+						array('&',
+							'tag' => array('com_mifi', 'application'),
+							'gte' => array('p_cdate', $this->start_date),
+							'lt' => array('p_cdate', $this->end_date),
+							'ref' => array('user', $cur_employee)
+						)
+					);
+			} else {
+				$current_apps = $last_apps = $mtd_apps = array();
+			}
 			$ranking_employee[$cur_employee->guid] = array(
 				'entity' => $cur_employee,
 				'location' => $cur_employee->group,
@@ -145,25 +178,66 @@ class com_reports_sales_ranking extends entity {
 				'current' => 0.00,
 				'last' => 0.00,
 				'mtd' => 0.00,
+				'current_apps' => count($current_apps),
+				'last_apps' => count($last_apps),
+				'mtd_apps' => count($mtd_apps),
 				'trend' => 0.00,
 				'pct' => 0.00,
 				'goal' => (isset($this->sales_goals[$cur_employee->guid]) ? $this->sales_goals[$cur_employee->guid] : 0.00)
 			);
+			unset($current_apps, $last_apps, $mtd_apps);
 		}
 		$ranking_location = array();
 		foreach ($locations as $cur_location) {
+			// Get all apps for the location.
+			if ($module->mifi_checks) {
+				$groups = $cur_location->get_descendents(true);
+				$current_apps = $pines->entity_manager->get_entities(
+						array('class' => com_mifi_application, 'skip_ac' => true),
+						array('&',
+							'tag' => array('com_mifi', 'application'),
+							'gte' => array('p_cdate', $current_start),
+							'lt' => array('p_cdate', $current_end),
+							'ref' => array('group', $groups)
+						)
+					);
+				$last_apps = $pines->entity_manager->get_entities(
+						array('class' => com_mifi_application, 'skip_ac' => true),
+						array('&',
+							'tag' => array('com_mifi', 'application'),
+							'gte' => array('p_cdate', $last_start),
+							'lt' => array('p_cdate', $last_end),
+							'ref' => array('group', $groups)
+						)
+					);
+				$mtd_apps = $pines->entity_manager->get_entities(
+						array('class' => com_mifi_application, 'skip_ac' => true),
+						array('&',
+							'tag' => array('com_mifi', 'application'),
+							'gte' => array('p_cdate', $this->start_date),
+							'lt' => array('p_cdate', $this->end_date),
+							'ref' => array('group', $groups)
+						)
+					);
+			} else {
+				$current_apps = $last_apps = $mtd_apps = array();
+			}
 			$ranking_location[$cur_location->guid] = array(
 				'entity' => $cur_location,
 				'location' => $cur_location->parent,
 				'current' => 0.00,
 				'last' => 0.00,
 				'mtd' => 0.00,
+				'current_apps' => count($current_apps),
+				'last_apps' => count($last_apps),
+				'mtd_apps' => count($mtd_apps),
 				'trend' => 0.00,
 				'pct' => 0.00,
 				'goal' => (isset($this->sales_goals[$cur_location->guid]) ? $this->sales_goals[$cur_location->guid] : 0.00),
 				'child_count' => 0,
 				'child_total' => 0.00
 			);
+			unset($current_apps, $last_apps, $mtd_apps);
 		}
 
 		// Recalculate new hire goals.

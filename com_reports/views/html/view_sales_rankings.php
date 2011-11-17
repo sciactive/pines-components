@@ -104,15 +104,15 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 		<table class="p_muid_grid" title="<?php echo $key == count($this->entity->locations)-1 ? 'Location' : 'District'; ?> Rankings">
 			<thead>
 				<tr>
-					<th style="width: 5%;">Rank</th>
+					<th style="width: 3%;">#</th>
 					<th style="width: 25%;">Location</th>
 					<th style="width: 25%;">Manager</th>
-					<th style="width: 10%;">Current</th>
-					<th style="width: 10%;">Last</th>
-					<th style="width: 10%;">MTD</th>
-					<th style="width: 10%;">Goal</th>
-					<th style="width: 10%;">Trend</th>
-					<th style="width: 10%;">Trend %</th>
+					<th style="width: 6%;">This</th>
+					<th style="width: 6%;">Last</th>
+					<th style="width: 6%;">MTD</th>
+					<th style="width: 6%;">Goal</th>
+					<th style="width: 6%;">Trend</th>
+					<th style="width: 6%;">Tr %</th>
 					<?php if ($key == count($this->entity->locations)-1) { ?>
 					<th style="width: 25%;">Leader</th>
 					<th style="width: 25%;">Mgr</th>
@@ -147,12 +147,12 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<td><?php echo htmlspecialchars($cur_rank['rank']); ?></td>
 					<td><?php echo htmlspecialchars($cur_rank['entity']->name); ?></td>
 					<td><?php echo isset($cur_rank['manager']->guid) ? htmlspecialchars($cur_rank['manager']->name) : 'OPEN'; ?></td>
-					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['current'] * $multiplier, 2)); ?></td>
-					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['last'] * $multiplier, 2)); ?></td>
-					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['mtd'] * $multiplier, 2)); ?></td>
+					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['current'] * $multiplier, 2)); if ($this->mifi_checks) echo '/'.htmlspecialchars($cur_rank['current_apps']); ?></td>
+					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['last'] * $multiplier, 2)); if ($this->mifi_checks) echo '/'.htmlspecialchars($cur_rank['last_apps']); ?></td>
+					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['mtd'] * $multiplier, 2)); if ($this->mifi_checks) echo '/'.htmlspecialchars($cur_rank['mtd_apps']); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['goal'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['trend'] * $multiplier, 2)); ?></td>
-					<td class="right_justify"><?php echo htmlspecialchars(round($cur_rank['pct'], 2)); ?>%</td>
+					<td class="right_justify"><?php echo htmlspecialchars(round($cur_rank['pct'], 0)); ?>%</td>
 					<?php if ($key == count($this->entity->locations)-1) { ?>
 					<td style="text-align: center;"><?php
 					if ($cur_rank['pct'] >= 100) {
@@ -190,7 +190,7 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($totals['mtd'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($totals['goal'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($totals['trend'] * $multiplier, 2)); ?></td>
-					<td class="right_justify"><?php echo htmlspecialchars(round($totals['pct'], 2)); ?>%</td>
+					<td class="right_justify"><?php echo htmlspecialchars(round($totals['pct'], 0)); ?>%</td>
 					<td colspan="2"></td>
 				</tr>
 				<?php } ?>
@@ -202,15 +202,15 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 		<table class="p_muid_grid" title="Employee Rankings">
 			<thead>
 				<tr>
-					<th style="width: 5%;">Rank</th>
+					<th style="width: 3%;">#</th>
 					<th style="width: 25%;">Employee</th>
 					<th style="width: 25%;">Location</th>
-					<th style="width: 10%;">Current</th>
-					<th style="width: 10%;">Last</th>
-					<th style="width: 10%;">MTD</th>
-					<th style="width: 10%;">Goal</th>
-					<th style="width: 10%;">Trend</th>
-					<th style="width: 10%;">Trend %</th>
+					<th style="width: 6%;">This</th>
+					<th style="width: 6%;">Last</th>
+					<th style="width: 6%;">MTD</th>
+					<th style="width: 6%;">Goal</th>
+					<th style="width: 6%;">Trend</th>
+					<th style="width: 6%;">Tr %</th>
 					<th style="width: 25%;">Lead</th>
 					<th style="width: 25%;">Prize</th>
 				</tr>
@@ -232,14 +232,14 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 				?>
 				<tr title="<?php echo (int) $cur_rank['entity']->guid ?>" class="<?php echo $class; ?>">
 					<td><?php echo htmlspecialchars($cur_rank['rank']); ?></td>
-					<td><?php echo htmlspecialchars($cur_rank['entity']->name); ?></td>
+					<td><?php echo htmlspecialchars(empty($cur_rank['entity']->nickname) ? $cur_rank['entity']->name : $cur_rank['entity']->nickname); ?></td>
 					<td><?php echo htmlspecialchars("{$cur_rank['location']->name} (".preg_replace('/\s.*/', '', $cur_rank['district']->name).')'); ?></td>
-					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['current'] * $multiplier, 2)); ?></td>
-					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['last'] * $multiplier, 2)); ?></td>
-					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['mtd'] * $multiplier, 2)); ?></td>
+					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['current'] * $multiplier, 2)); if ($this->mifi_checks) echo '/'.htmlspecialchars($cur_rank['current_apps']); ?></td>
+					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['last'] * $multiplier, 2)); if ($this->mifi_checks) echo '/'.htmlspecialchars($cur_rank['last_apps']); ?></td>
+					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['mtd'] * $multiplier, 2)); if ($this->mifi_checks) echo '/'.htmlspecialchars($cur_rank['mtd_apps']); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['goal'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['trend'] * $multiplier, 2)); ?></td>
-					<td class="right_justify"><?php echo htmlspecialchars(round($cur_rank['pct'], 2)); ?>%</td>
+					<td class="right_justify"><?php echo htmlspecialchars(round($cur_rank['pct'], 0)); ?>%</td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round(($cur_rank['mtd'] - $this->entity->employees[$key+1]['mtd']) * $multiplier, 2)); ?></td>
 					<td class="right_justify">
 						<?php switch ($cur_rank['rank']) {
@@ -275,15 +275,15 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 		<table class="p_muid_grid" title="New Hire Rankings">
 			<thead>
 				<tr>
-					<th style="width: 5%;">Rank</th>
+					<th style="width: 3%;">#</th>
 					<th style="width: 25%;">Employee</th>
 					<th style="width: 25%;">Location</th>
-					<th style="width: 10%;">Current</th>
-					<th style="width: 10%;">Last</th>
-					<th style="width: 10%;">MTD</th>
-					<th style="width: 10%;">Goal</th>
-					<th style="width: 10%;">Trend</th>
-					<th style="width: 10%;">Trend %</th>
+					<th style="width: 6%;">This</th>
+					<th style="width: 6%;">Last</th>
+					<th style="width: 6%;">MTD</th>
+					<th style="width: 6%;">Goal</th>
+					<th style="width: 6%;">Trend</th>
+					<th style="width: 6%;">Tr %</th>
 					<th style="width: 25%;">Lead</th>
 					<th style="width: 25%;">Prize</th>
 				</tr>
@@ -308,14 +308,14 @@ $multiplier = $pines->config->com_reports->use_points ? $pines->config->com_repo
 				?>
 				<tr title="<?php echo (int) $cur_rank['entity']->guid ?>" class="<?php echo $class; ?>">
 					<td><?php echo htmlspecialchars($cur_rank['rank']); ?></td>
-					<td><?php echo htmlspecialchars($cur_rank['entity']->name); ?></td>
+					<td><?php echo htmlspecialchars(empty($cur_rank['entity']->nickname) ? $cur_rank['entity']->name : $cur_rank['entity']->nickname); ?></td>
 					<td><?php echo htmlspecialchars("{$cur_rank['location']->name} (".preg_replace('/\s.*/', '', $cur_rank['district']->name).')'); ?></td>
-					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['current'] * $multiplier, 2)); ?></td>
-					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['last'] * $multiplier, 2)); ?></td>
-					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['mtd'] * $multiplier, 2)); ?></td>
+					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['current'] * $multiplier, 2)); if ($this->mifi_checks) echo '/'.htmlspecialchars($cur_rank['current_apps']); ?></td>
+					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['last'] * $multiplier, 2)); if ($this->mifi_checks) echo '/'.htmlspecialchars($cur_rank['last_apps']); ?></td>
+					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['mtd'] * $multiplier, 2)); if ($this->mifi_checks) echo '/'.htmlspecialchars($cur_rank['mtd_apps']); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['goal'] * $multiplier, 2)); ?></td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round($cur_rank['trend'] * $multiplier, 2)); ?></td>
-					<td class="right_justify"><?php echo htmlspecialchars(round($cur_rank['pct'], 2)); ?>%</td>
+					<td class="right_justify"><?php echo htmlspecialchars(round($cur_rank['pct'], 0)); ?>%</td>
 					<td class="right_justify"><?php echo $prefix.htmlspecialchars(round(($cur_rank['mtd'] - $this->entity->new_hires[$key+1]['mtd']) * $multiplier, 2)); ?></td>
 					<td class="right_justify">
 						<?php switch ($cur_rank['rank']) {

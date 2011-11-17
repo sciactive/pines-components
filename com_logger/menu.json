@@ -15,6 +15,14 @@
 			}
 		},
 		{
+			"path": "main_menu/system/logs/rawlog",
+			"text": "Raw Log",
+			"href": ["com_logger","rawlog"],
+			"depend": {
+				"ability": "com_logger/view"
+			}
+		},
+		{
 			"path": "main_menu/system/logs/clear",
 			"text": "Clear",
 			"href": ["com_logger","clear"],

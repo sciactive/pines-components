@@ -1,11 +1,11 @@
 <?php
 /**
- * Display the log.
+ * Display the raw log.
  *
  * @package Pines
  * @subpackage com_logger
  * @license http://www.gnu.org/licenses/agpl-3.0.html
- * @author Angela Murrell <angela@sciactive.com>
+ * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
  * @link http://sciactive.com/
  */
@@ -13,9 +13,9 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ( !gatekeeper('com_logger/view') )
-	punt_user(null, pines_url('com_logger', 'view'));
+	punt_user(null, pines_url('com_logger', 'rawlog'));
 
-$view = new module('com_logger', 'view', 'content');
+$view = new module('com_logger', 'rawlog', 'content');
 if (file_exists($pines->config->com_logger->path)) {
 	if (($view->log = file_get_contents($pines->config->com_logger->path)) === false)
 		pines_error('Error reading log file '.$pines->config->com_logger->path);

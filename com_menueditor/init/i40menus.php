@@ -20,6 +20,8 @@ $entries = (array) $pines->entity_manager->get_entities(
 		)
 	);
 
+$pines->entity_manager->sort($entries, 'sort_order');
+
 foreach ($entries as $cur_entry)
 	$pines->menu->menu_arrays[] = $cur_entry->menu_array();
 

@@ -39,6 +39,7 @@ if ($_REQUEST['top_menu'] == '--new--') {
 // Information
 $entry->name = $_REQUEST['name'];
 $entry->text = $_REQUEST['text'];
+$entry->sort_order = $_REQUEST['sort_order'];
 $entry->enabled = ($_REQUEST['enabled'] == 'ON');
 $entry->sort = ($_REQUEST['sort'] == 'ON');
 $entry->link = $_REQUEST['link'];

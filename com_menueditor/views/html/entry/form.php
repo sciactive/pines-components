@@ -33,7 +33,7 @@ foreach ($this->captured_menu_arrays as $cur_entry) {
 	$cur_menus[0] = (object) array(
 		'data' => $cur_path.' ['.$cur_entry['text'].']',
 		'attr' => (object) array(
-			'id' => 'p_muid_menu_'.$cur_entry['path']
+			'id' => 'p_muid_'.md5($cur_entry['path'])
 		),
 		'metadata' => (object) $cur_entry
 	);
@@ -128,9 +128,8 @@ unset($cur_child);
 			location_container.empty();
 			$("<div></div>").appendTo(location_container).bind("select_node.jstree", function(e, data){
 				var cur_item = data.inst.get_selected();
-				location.val(cur_item.attr("id").replace("p_muid_menu_", ""));
 				var data = cur_item.data();
-				console.log(data);
+				location.val(data.path);
 				if (typeof data.path != "undefined")
 					sel_path.show().find(".text").html(pines.safe(data.path));
 				else
@@ -177,7 +176,7 @@ unset($cur_child);
 				},
 				"ui" : {
 					"select_limit" : 1,
-					"initially_select" : [<?php echo json_encode('p_muid_menu_'.$this->entity->location); ?>]
+					"initially_select" : [<?php echo json_encode('p_muid_'.md5($this->entity->location)); ?>]
 				}
 			});
 		}).change();
@@ -364,6 +363,11 @@ unset($cur_child);
 		<label><span class="pf-label">Text</span>
 			<span class="pf-note">This is the text that will appear on the menu entry.</span>
 			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="text" size="24" value="<?php echo htmlspecialchars($this->entity->text); ?>" /></label>
+	</div>
+	<div class="pf-element">
+		<label><span class="pf-label">Sort Order</span>
+			<span class="pf-note">Menu entries created by this system will be sorted using this value.</span>
+			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="sort_order" size="24" value="<?php echo htmlspecialchars($this->entity->sort_order); ?>" /></label>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Enabled</span>

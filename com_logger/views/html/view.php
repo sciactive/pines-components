@@ -15,9 +15,78 @@ $this->title = 'Displaying Log View of File: '.htmlspecialchars($pines->config->
 $this->note = $this->all_time ? 'Showing all time.' : 'Showing '.htmlspecialchars(format_date($this->start_date, 'date_short')).' - '.htmlspecialchars(format_date($this->end_date - 1, 'date_short')).'.';
 preg_match_all('/^(\d{4}-\d{2}-\d{2}T[\d:-]+): ([a-z]+): (com_\w+)?, ([^:]+)?: ([\d.]+)?(.*?)? ?\(?(\d+)?\)?: (.*)$/mi', $this->log, $matches, PREG_SET_ORDER);
 $pines->icons->load();
+$pines->com_jstree->load();
 $pines->com_pgrid->load();
 if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 	$this->pgrid_state = (object) json_decode($_SESSION['user']->pgrid_saved_states['com_logger/view']);
+
+// Remember users that we've already pulled from the database.
+$users = array();
+// Go through the matches array and get rid of entries that don't belong.
+foreach ($matches as $key => &$cur_match) {
+	// Check date.
+	$cur_match['timestamp'] = strtotime($cur_match[1]);
+	if (!$this->all_time && ($cur_match['timestamp'] < $this->start_date || $cur_match['timestamp'] >= $this->end_date)) {
+		unset($matches[$key]);
+		continue;
+	}
+	// If we're not checking a location, we're done.
+	if (!isset($this->location->guid))
+		continue;
+	// If the entry didn't have a user, it doesn't belong.
+	if (empty($cur_match[7])) {
+		unset($matches[$key]);
+		continue;
+	}
+	// Get the user that the entry belongs to.
+	if (!array_key_exists($cur_match[7], $users)) {
+		$user = user::factory((int) $cur_match[7]);
+		$users[$cur_match[7]] = $user;
+	} else {
+		$user = $users[$cur_match[7]];
+	}
+	// Check if we actually found a valid user.
+	if (!isset($user->guid)) {
+		unset($matches[$key]);
+		continue;
+	}
+	// Now check if the user belongs to the location we're checking, or, if we're checking descendents too, check if they are a descendent.
+	if (!$user->in_group($this->location) && (!$this->descendents || !$user->is_descendent($this->location))) {
+		unset($matches[$key]);
+		continue;
+	}
+}
+unset($cur_match);
+
+$debugs = array();
+$infos = array();
+$notices = array();
+$warnings = array();
+$errors = array();
+$fatals = array();
+foreach ($matches as $match) {
+	switch ($match[2]){
+		case "debug":
+			$debugs[] = $match[2];
+			break;
+		case "info":
+			$infos[] = $match[2];
+			break;
+		case "notice":
+			$notices[] = $match[2];
+			break;
+		case "warning":
+			$warnings[] = $match[2];
+			break;
+		case "error":
+			$errors[] = $match[2];
+			break;
+		case "fatal":
+			$fatals[] = $match[2];
+			break;
+	}
+}
+
 ?>
 <script type="text/javascript">
 	// <![CDATA[
@@ -25,6 +94,8 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		search_logs = function(){
 			// Submit the form with all of the fields.
 			pines.get(<?php echo json_encode(pines_url('com_logger', 'view')); ?>, {
+				"location": location,
+				"descendents": descendents,
 				"all_time": all_time,
 				"start_date": start_date,
 				"end_date": end_date
@@ -34,12 +105,16 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var all_time = <?php echo $this->all_time ? 'true' : 'false'; ?>;
 		var start_date = <?php echo $this->start_date ? json_encode(format_date($this->start_date, 'date_sort')) : '""'; ?>;
 		var end_date = <?php echo $this->end_date ? json_encode(format_date($this->end_date - 1, 'date_sort')) : '""'; ?>;
+		// Location Defaults
+		var location = "<?php echo (int) $this->location->guid; ?>";
+		var descendents = <?php echo $this->descendents ? 'true' : 'false'; ?>;
 		// Grid
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
+				{type: 'button', title: 'Location', extra_class: 'picon picon-applications-internet', selection_optional: true, click: function(){log_grid.location_form();}},
 				{type: 'button', title: 'Timespan', extra_class: 'picon picon-view-time-schedule', selection_optional: true, click: function(){log_grid.date_form();}},
 				{type: 'button', text: 'Reset', extra_class: 'picon picon-view-refresh', selection_optional: true, click: function(e){
 					log_grid.pgrid_import_state({pgrid_filter: ""});
@@ -124,40 +199,47 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 				}
 			});
 		};
+		log_grid.location_form = function(){
+			$.ajax({
+				url: <?php echo json_encode(pines_url('com_logger', 'locationselect')); ?>,
+				type: "POST",
+				dataType: "html",
+				data: {"location": location, "descendents": descendents},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured while trying to retrieve the location form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
+				},
+				success: function(data){
+					if (data == "")
+						return;
+					pines.pause();
+					var form = $("<div title=\"Location Selector\"></div>").html(data+"<br />").dialog({
+						bgiframe: true,
+						autoOpen: true,
+						modal: true,
+						close: function(){
+							form.remove();
+						},
+						buttons: {
+							"Done": function(){
+								location = form.find(":input[name=location]").val();
+								if (form.find(":input[name=descendents]").attr('checked'))
+									descendents = true;
+								else
+									descendents = false;
+								form.dialog('close');
+								search_logs();
+							}
+						}
+					});
+					pines.play();
+				}
+			});
+		};
 	});
 	// ]]>
 </script>
 
-<?php 
-	$debugs = array();
-	$infos = array();
-	$notices = array();
-	$warnings = array();
-	$errors = array();
-	$fatals = array();
-	foreach($matches as $match) {
-		switch ($match[2]){
-			case "debug":
-				$debugs[] = $match[2];
-				break;
-			case "info":
-				$infos[] = $match[2];
-				break;
-			case "notice":
-				$notices[] = $match[2];
-				break;
-			case "warning":
-				$warnings[] = $match[2];
-				break;
-			case "error":
-				$errors[] = $match[2];
-				break;
-			case "fatal":
-				$fatals[] = $match[2];
-				break;
-		}
-	}
-?>
+
 <div class="pf-form">
 	<div class="pf-element pf-heading">
 		<h1>Total Log Entries: <strong><?php echo count($matches); ?></strong></h1></span>
@@ -190,42 +272,38 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		</tr>
 	</thead>
 	<tbody>
-	<?php foreach($matches as $match) {
-		$timestamp = strtotime($match[1]);
-		if (!$this->all_time && !($timestamp >= $this->start_date && $timestamp < $this->end_date))
-			continue;
-		?>
+	<?php foreach($matches as $cur_match) { ?>
 		<tr class="p_muid_normal">
-			<td><?php echo htmlspecialchars(format_date($timestamp)); ?></td>
+			<td><?php echo htmlspecialchars(format_date($cur_match['timestamp'])); ?></td>
 			<td><?php
-				switch ($match[2]){
+				switch ($cur_match[2]){
 					case "debug":
-						echo '<span class="picon-help-hint" style="display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">'.htmlspecialchars($match[2]).'</span>';
+						echo '<span class="picon-help-hint" style="display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">'.htmlspecialchars($cur_match[2]).'</span>';
 						break;
 					case "info":
-						echo '<span class="picon-dialog-information" style="display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">'.htmlspecialchars($match[2]).'</span>';
+						echo '<span class="picon-dialog-information" style="display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">'.htmlspecialchars($cur_match[2]).'</span>';
 						break;
 					case "notice":
-						echo '<span class="picon-view-pim-notes" style="display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">'.htmlspecialchars($match[2]).'</span>';
+						echo '<span class="picon-view-pim-notes" style="display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">'.htmlspecialchars($cur_match[2]).'</span>';
 						break;
 					case "warning":
-						echo '<span class="picon-dialog-warning" style="display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">'.htmlspecialchars($match[2]).'</span>';
+						echo '<span class="picon-dialog-warning" style="display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">'.htmlspecialchars($cur_match[2]).'</span>';
 						break;
 					case "error":
-						echo '<span class="picon-dialog-error" style="display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">'.htmlspecialchars($match[2]).'</span>';
+						echo '<span class="picon-dialog-error" style="display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">'.htmlspecialchars($cur_match[2]).'</span>';
 						break;
 					case "fatal":
-						echo '<span class="picon-script-error" style="display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">'.htmlspecialchars($match[2]).'</span>';
+						echo '<span class="picon-script-error" style="display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">'.htmlspecialchars($cur_match[2]).'</span>';
 						break;
 				}
 			?></td>
-			<td><?php echo htmlspecialchars($match[3]); ?></td>
-			<td><?php echo htmlspecialchars($match[4]); ?></td>
-			<td><?php echo htmlspecialchars($match[5]); ?></td>
-			<td><?php echo htmlspecialchars($match[6]); ?></td>
-			<td><?php echo htmlspecialchars($match[7]); ?></td>
-			<td><?php echo htmlspecialchars($match[8]); ?></td>
-			<td><?php echo htmlspecialchars('p_muid_'.$match[2]); ?></td>
+			<td><?php echo htmlspecialchars($cur_match[3]); ?></td>
+			<td><?php echo htmlspecialchars($cur_match[4]); ?></td>
+			<td><?php echo htmlspecialchars($cur_match[5]); ?></td>
+			<td><?php echo htmlspecialchars($cur_match[6]); ?></td>
+			<td><?php echo htmlspecialchars($cur_match[7]); ?></td>
+			<td><?php echo htmlspecialchars($cur_match[8]); ?></td>
+			<td><?php echo htmlspecialchars('p_muid_'.$cur_match[2]); ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

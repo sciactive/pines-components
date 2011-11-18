@@ -116,6 +116,29 @@ class com_logger extends component implements log_manager_interface {
 	}
 	
 	/**
+	 * Print a form to select a location.
+	 *
+	 * @param int $location The currently set location to search in.
+	 * @param bool $descendents Whether to show descendent locations.
+	 * @return module The form's module.
+	 */
+	public function location_select_form($location = null, $descendents = false) {
+		global $pines;
+		$pines->page->override = true;
+
+		$module = new module('com_logger', 'location_selector', 'content');
+		if (!isset($location)) {
+			$module->location = $_SESSION['user']->group->guid;
+		} else {
+			$module->location = $location;
+		}
+		$module->descendents = $descendents;
+
+		$pines->page->override_doc($module->render());
+		return $module;
+	}
+	
+	/**
 	 * Creates and attaches a module which summarizes employee totals.
 	 *
 	 * @param int $start_date The start date of the report.

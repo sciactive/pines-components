@@ -45,7 +45,18 @@ if ($_REQUEST['all_time'] == 'true') {
 	$end_date = null;
 	$view->all_time = true;
 }
+if (!empty($_REQUEST['location'])) {
+	$location = group::factory((int) $_REQUEST['location']);
+	if (!isset($location->guid))
+		$location = null;
+} else {
+	$location = null;
+}
+$descendents = ($_REQUEST['descendents'] == 'true');
 
 $view->start_date = $start_date;
 $view->end_date = $end_date;
+$view->location = $location;
+$view->descendents = $descendents;
+
 ?>

@@ -38,6 +38,7 @@ class com_menueditor_entry extends entity {
 		}
 		// Defaults.
 		$this->enabled = true;
+		$this->top_menu = 'main_menu';
 	}
 
 	/**

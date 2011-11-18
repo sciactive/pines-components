@@ -66,6 +66,36 @@ class com_menueditor_entry extends entity {
 	}
 
 	/**
+	 * Build and return a menu array to go in the menu service.
+	 * @return array The menu entry array.
+	 */
+	public function menu_array() {
+		if (isset($this->top_menu)) {
+			$array = array(
+				'path' => $this->location.'/'.$this->name,
+				'text' => $this->text
+			);
+		} else {
+			$array = array(
+				'path' => $this->name,
+				'text' => $this->text,
+				'position' => $this->position
+			);
+		}
+		if ($this->sort)
+			$array['sort'] = true;
+		if (!empty($this->link))
+			$array['href'] = $this->link;
+		if (!empty($this->onclick))
+			$array['onclick'] = $this->onclick;
+		$depend = $this->conditions;
+		if ($this->children)
+			$depend['children'] = true;
+		$array['depend'] = $depend;
+		return $array;
+	}
+
+	/**
 	 * Save the entry.
 	 * @return bool True on success, false on failure.
 	 */

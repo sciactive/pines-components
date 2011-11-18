@@ -18,7 +18,6 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 ?>
 <script type="text/javascript">
 	// <![CDATA[
-
 	pines(function(){
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
@@ -58,21 +57,26 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var cur_options = $.extend(cur_defaults, cur_state);
 		$("#p_muid_grid").pgrid(cur_options);
 	});
-
 	// ]]>
 </script>
 <table id="p_muid_grid">
 	<thead>
 		<tr>
 			<th>Name</th>
+			<th>Text</th>
 			<th>Enabled</th>
+			<th>Location</th>
+			<th>Link</th>
 		</tr>
 	</thead>
 	<tbody>
 	<?php foreach($this->entries as $entry) { ?>
 		<tr title="<?php echo (int) $entry->guid ?>">
 			<td><?php echo htmlspecialchars($entry->name); ?></td>
+			<td><?php echo htmlspecialchars($entry->text); ?></td>
 			<td><?php echo ($entry->enabled ? 'Yes' : 'No'); ?></td>
+			<td><?php echo htmlspecialchars($entry->location); ?></td>
+			<td><?php echo empty($entry->link) ? '' : '<a href="'.htmlspecialchars($entry->link).'" onclick="window.open(this.href); return false;">'.  htmlspecialchars($entry->link).'</a>'; ?></td>
 		</tr>
 	<?php } ?>
 	</tbody>

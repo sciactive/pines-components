@@ -93,6 +93,52 @@ class com_logger extends component implements log_manager_interface {
 		}
 		return false;
 	}
+	
+	/**
+	 * Print a form to select date timespan.
+	 *
+	 * @param bool $all_time Currently searching all records or a timespan.
+	 * @param string $start The current starting date of the timespan.
+	 * @param string $end The current ending date of the timespan.
+	 * @return module The form's module.
+	 */
+	public function date_select_form($all_time = false, $start = null, $end = null) {
+		global $pines;
+		$pines->page->override = true;
+
+		$module = new module('com_logger', 'date_selector', 'content');
+		$module->all_time = $all_time;
+		$module->start_date = $start;
+		$module->end_date = $end;
+
+		$pines->page->override_doc($module->render());
+		return $module;
+	}
+	
+	/**
+	 * Creates and attaches a module which summarizes employee totals.
+	 *
+	 * @param int $start_date The start date of the report.
+	 * @param int $end_date The end date of the report.
+	 * @return module the log view module.
+	 */
+	function logs($start_date = null, $end_date = null) {
+		global $pines;
+
+		$module = new module('com_logger', 'logs', 'content');
+
+		$selector = array('&');
+		// Datespan of the report.
+		if (isset($start_date))
+			$selector['gte'] = array('p_cdate', (int) $start_date);
+		if (isset($end_date))
+			$selector['lt'] = array('p_cdate', (int) $end_date);
+		$module->start_date = $start_date;
+		$module->end_date = $end_date;
+		$module->all_time = (!isset($start_date) && !isset($end_date));
+		
+		return $module;
+	}
 }
 
 ?>

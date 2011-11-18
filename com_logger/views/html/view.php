@@ -12,6 +12,7 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Displaying Log View of File: '.htmlspecialchars($pines->config->com_logger->path);
+$this->note = $this->all_time ? 'Showing all time.' : 'Showing '.htmlspecialchars(format_date($this->start_date, 'date_short')).' - '.htmlspecialchars(format_date($this->end_date - 1, 'date_short')).'.';
 preg_match_all('/^(\d{4}-\d{2}-\d{2}T[\d:-]+): ([a-z]+): (com_\w+)?, ([^:]+)?: ([\d.]+)?(.*?)? ?\(?(\d+)?\)?: (.*)$/mi', $this->log, $matches, PREG_SET_ORDER);
 $pines->icons->load();
 $pines->com_pgrid->load();
@@ -21,30 +22,44 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
+		search_logs = function(){
+			// Submit the form with all of the fields.
+			pines.get(<?php echo json_encode(pines_url('com_logger', 'view')); ?>, {
+				"all_time": all_time,
+				"start_date": start_date,
+				"end_date": end_date
+			});
+		};
+		// Timespan Defaults
+		var all_time = <?php echo $this->all_time ? 'true' : 'false'; ?>;
+		var start_date = <?php echo $this->start_date ? json_encode(format_date($this->start_date, 'date_sort')) : '""'; ?>;
+		var end_date = <?php echo $this->end_date ? json_encode(format_date($this->end_date - 1, 'date_sort')) : '""'; ?>;
+		// Grid
 		var state_xhr;
 		var cur_state = <?php echo (isset($this->pgrid_state) ? json_encode($this->pgrid_state) : '{}');?>;
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
-				{type: 'button', text: 'Reload', title: 'Reload', extra_class: 'picon picon-view-refresh', selection_optional: true, click: function(e){
+				{type: 'button', title: 'Timespan', extra_class: 'picon picon-view-time-schedule', selection_optional: true, click: function(){log_grid.date_form();}},
+				{type: 'button', text: 'Reset', extra_class: 'picon picon-view-refresh', selection_optional: true, click: function(e){
 					log_grid.pgrid_import_state({pgrid_filter: ""});
 				}},
-				{type: 'button', text: 'Debug', title: 'Debug', extra_class: 'picon picon-help-hint', selection_optional: true, click: function(e){
+				{type: 'button', text: 'Debug', extra_class: 'picon picon-help-hint', selection_optional: true, click: function(e){
 					log_grid.pgrid_import_state({pgrid_filter: "p_muid_debug"});
 				}},
-				{type: 'button', text: 'Info', title: 'Info', extra_class: 'picon picon-dialog-information', selection_optional: true, click: function(e){
+				{type: 'button', text: 'Info', extra_class: 'picon picon-dialog-information', selection_optional: true, click: function(e){
 					log_grid.pgrid_import_state({pgrid_filter: "p_muid_info"});
 				}},
-				{type: 'button', text: 'Notice', title: 'Notice', extra_class: 'picon picon-view-pim-notes', selection_optional: true, click: function(e){
+				{type: 'button', text: 'Notice', extra_class: 'picon picon-view-pim-notes', selection_optional: true, click: function(e){
 					log_grid.pgrid_import_state({pgrid_filter: "p_muid_notice"});
 				}},
-				{type: 'button', text: 'Error', title: 'Error', extra_class: 'picon picon-dialog-error', selection_optional: true, click: function(e){
+				{type: 'button', text: 'Error', extra_class: 'picon picon-dialog-error', selection_optional: true, click: function(e){
 					log_grid.pgrid_import_state({pgrid_filter: "p_muid_error"});
 				}},
-				{type: 'button', text: 'Warning', title: 'Warning', extra_class: 'picon picon-dialog-warning', selection_optional: true, click: function(e){
+				{type: 'button', text: 'Warning', extra_class: 'picon picon-dialog-warning', selection_optional: true, click: function(e){
 					log_grid.pgrid_import_state({pgrid_filter: "p_muid_warning"});
 				}},
-				{type: 'button', text: 'Fatal', title: 'Fatal', extra_class: 'picon picon-script-error', selection_optional: true, click: function(e){
+				{type: 'button', text: 'Fatal', extra_class: 'picon picon-script-error', selection_optional: true, click: function(e){
 					log_grid.pgrid_import_state({pgrid_filter: "p_muid_fatal"});
 				}},
 				{type: 'separator'},
@@ -70,6 +85,45 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		};
 		var cur_options = $.extend(cur_defaults, cur_state);
 		var log_grid = $("#p_muid_grid").pgrid(cur_options);
+		
+		log_grid.date_form = function(){
+			$.ajax({
+				url: <?php echo json_encode(pines_url('com_logger', 'dateselect')); ?>,
+				type: "POST",
+				dataType: "html",
+				data: {"all_time": all_time, "start_date": start_date, "end_date": end_date},
+				error: function(XMLHttpRequest, textStatus){
+					pines.error("An error occured while trying to retrieve the date form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
+				},
+				success: function(data){
+					if (data == "")
+						return;
+					pines.pause();
+					var form = $("<div title=\"Date Selector\"></div>").html(data+"<br />").dialog({
+						bgiframe: true,
+						autoOpen: true,
+						modal: true,
+						close: function(){
+							form.remove();
+						},
+						buttons: {
+							"Done": function(){
+								if (form.find(":input[name=timespan_saver]").val() == "alltime") {
+									all_time = true;
+								} else {
+									all_time = false;
+									start_date = form.find(":input[name=start_date]").val();
+									end_date = form.find(":input[name=end_date]").val();
+								}
+								form.dialog('close');
+								search_logs();
+							}
+						}
+					});
+					pines.play();
+				}
+			});
+		};
 	});
 	// ]]>
 </script>
@@ -136,9 +190,13 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		</tr>
 	</thead>
 	<tbody>
-	<?php foreach($matches as $match) { ?>
+	<?php foreach($matches as $match) {
+		$timestamp = strtotime($match[1]);
+		if (!$this->all_time && !($timestamp >= $this->start_date && $timestamp < $this->end_date))
+			continue;
+		?>
 		<tr class="p_muid_normal">
-			<td><?php echo htmlspecialchars(format_date(strtotime($match[1]))); ?></td>
+			<td><?php echo htmlspecialchars(format_date($timestamp)); ?></td>
 			<td><?php
 				switch ($match[2]){
 					case "debug":

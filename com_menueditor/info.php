@@ -29,7 +29,8 @@ return array(
 		array('listentries', 'List Entries', 'User can see menu entries.'),
 		array('newentry', 'Create Entries', 'User can create new entries.'),
 		array('editentry', 'Edit Entries', 'User can edit current entries.'),
-		array('deleteentry', 'Delete Entries', 'User can delete current entries.')
+		array('deleteentry', 'Delete Entries', 'User can delete current entries.'),
+		array('jsentry', 'Edit Entry JavaScript', 'User can edit the onclick JavaScript value of entries.')
 	),
 );
 

@@ -38,6 +38,7 @@ class com_menueditor_entry extends entity {
 		}
 		// Defaults.
 		$this->enabled = true;
+		$this->top_menu = 'main_menu';
 	}
 
 	/**
@@ -62,6 +63,36 @@ class com_menueditor_entry extends entity {
 			return false;
 		pines_log("Deleted menu entry $this->name.", 'notice');
 		return true;
+	}
+
+	/**
+	 * Build and return a menu array to go in the menu service.
+	 * @return array The menu entry array.
+	 */
+	public function menu_array() {
+		if (isset($this->top_menu)) {
+			$array = array(
+				'path' => $this->location.'/'.$this->name,
+				'text' => $this->text
+			);
+		} else {
+			$array = array(
+				'path' => $this->name,
+				'text' => $this->text,
+				'position' => $this->position
+			);
+		}
+		if ($this->sort)
+			$array['sort'] = true;
+		if (!empty($this->link))
+			$array['href'] = $this->link;
+		if (!empty($this->onclick))
+			$array['onclick'] = $this->onclick;
+		$depend = $this->conditions;
+		if ($this->children)
+			$depend['children'] = true;
+		$array['depend'] = $depend;
+		return $array;
 	}
 
 	/**

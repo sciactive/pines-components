@@ -206,7 +206,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 						echo '<span class="picon-dialog-information" style="display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">'.htmlspecialchars($match[2]).'</span>';
 						break;
 					case "notice":
-						echo '<span class="picon-view-pim-notess" style="display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">'.htmlspecialchars($match[2]).'</span>';
+						echo '<span class="picon-view-pim-notes" style="display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">'.htmlspecialchars($match[2]).'</span>';
 						break;
 					case "warning":
 						echo '<span class="picon-dialog-warning" style="display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">'.htmlspecialchars($match[2]).'</span>';

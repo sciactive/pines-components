@@ -81,6 +81,11 @@ all.each(function(){
 						});
 						values.enabled = (values.enabled == "ON");
 						values.conditions = JSON.parse(values.conditions);
+						if (values.top_menu == "--new--") {
+							delete values.top_menu;
+							delete values.location;
+						} else
+							delete values.position;
 						add_entry(values, cur_entry);
 						menu_dialog.dialog("close").remove();
 					}
@@ -109,8 +114,18 @@ all.each(function(){
 		.append("<div class=\"ui-menu-editor-entry-name\">"+pines.safe(values.text)+" ["+pines.safe(values.name)+"]</div>")
 		.append("<div class=\"ui-menu-editor-entry-path\">"+(values.location ? pines.safe(values.location+"/") : "")+pines.safe(values.name)+"</div>")
 		.append("<div class=\"ui-menu-editor-entry-values\" style=\"display: none;\">"+pines.safe(JSON.stringify(values))+"</div>");
-		update_entries();
+		if (update_entries) // This prevents calling while adding the original entries.
+			update_entries();
 	};
+	// Add all the original entries.
+	var cur_entries = input.val();
+	if (cur_entries && cur_entries != "")
+		cur_entries = JSON.parse(cur_entries);
+	if (cur_entries && cur_entries.length)
+		$.each(cur_entries, function(i, val){
+			add_entry(val);
+		});
+
 	var update_entries = function(){
 		var cur_entries = entries.children(".ui-menu-editor-entry");
 		if (cur_entries.length)

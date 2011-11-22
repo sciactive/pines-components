@@ -31,6 +31,8 @@ if (!empty($_REQUEST['values'])) {
 		if (in_array($key, array('top_menu', 'position', 'location', 'name', 'text', 'sort_order', 'enabled', 'sort', 'onclick', 'children', 'conditions')))
 			$entity->$key = $cur_value;
 	}
+	if (isset($entity->position))
+		unset($entity->top_menu);
 }
 
 $module = $entity->print_form(true);

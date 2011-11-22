@@ -40,6 +40,47 @@ class com_menueditor extends component {
 	}
 
 	/**
+	 * Add menu entries from the menu editor to the menu system.
+	 * @param array $entries_array An array of entries from the menu editor.
+	 * @param array $override_values An optional array of values that will override values from the entries. Should be in key => value format.
+	 * @return array The menu arrays that were added to $pines->menu->menu_arrays.
+	 */
+	public function add_entries($entries_array, $override_values = array()) {
+		global $pines;
+		$return = array();
+		foreach ($entries_array as $cur_entry) {
+			$cur_entry = array_merge($cur_entry, $override_values);
+			if (!$cur_entry['enabled'])
+				continue;
+			if (isset($cur_entry['top_menu'])) {
+				$array = array(
+					'path' => $cur_entry['location'].'/'.$cur_entry['name'],
+					'text' => $cur_entry['text']
+				);
+			} else {
+				$array = array(
+					'path' => $cur_entry['name'],
+					'text' => $cur_entry['text'],
+					'position' => $cur_entry['position']
+				);
+			}
+			if ($cur_entry['sort'])
+				$array['sort'] = true;
+			if (!empty($cur_entry['link']))
+				$array['href'] = $cur_entry['link'];
+			if (!empty($cur_entry['onclick']))
+				$array['onclick'] = $cur_entry['onclick'];
+			$depend = $cur_entry['conditions'];
+			if ($cur_entry['children'])
+				$depend['children'] = true;
+			$array['depend'] = $depend;
+			$pines->menu->menu_arrays[] = $array;
+			$return[] = $array;
+		}
+		return $return;
+	}
+
+	/**
 	 * Verify the entries provided by the user when using the editor.
 	 * 
 	 * If the entries don't check out in any way this will return false and
@@ -105,29 +146,6 @@ class com_menueditor extends component {
 			pines_notice('No entries found.');
 
 		return $module;
-	}
-
-	/**
-	 * Creates and attaches example modules in various positions.
-	 */
-	public function print_content() {
-		$module = new module('com_menueditor', 'content/short', 'content_top_left');
-		$module = new module('com_menueditor', 'content/short', 'content_top_right');
-		$module = new module('com_menueditor', 'content/medium', 'pre_content');
-		$module = new module('com_menueditor', 'content/title', 'breadcrumbs');
-		$module = new module('com_menueditor', 'content/long', 'content');
-		$module = new module('com_menueditor', 'content/medium', 'post_content');
-		$module = new module('com_menueditor', 'content/short', 'content_bottom_left');
-		$module = new module('com_menueditor', 'content/short', 'content_bottom_right');
-		$module = new module('com_menueditor', 'content/short', 'left');
-		$module = new module('com_menueditor', 'content/short', 'right');
-		//$module = new module('com_menueditor', 'content/medium', 'left');
-		$module = new module('com_menueditor', 'content/medium', 'right');
-		$module = new module('com_menueditor', 'content/short', 'top');
-		$module = new module('com_menueditor', 'content/short', 'header');
-		$module = new module('com_menueditor', 'content/short', 'header_right');
-		$module = new module('com_menueditor', 'content/medium', 'footer');
-		$module = new module('com_menueditor', 'content/short', 'bottom');
 	}
 }
 

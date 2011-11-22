@@ -22,7 +22,7 @@ return array(
 	'description' => 'A menu editor that allows you to edit menu entries. It also lets other components provide user managed menu entries for any of their items.',
 	'depend' => array(
 		'pines' => '<2',
-		'service' => 'entity_manager',
+		'service' => 'entity_manager&icons',
 		'component' => 'com_jquery&com_pgrid&com_pform&com_jstree'
 	),
 	'abilities' => array(

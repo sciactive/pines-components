@@ -1,0 +1,26 @@
+.ui-menu-editor {
+	padding: .5em;
+}
+.ui-menu-editor .ui-menu-editor-toolbar {
+	padding: .5em;
+	margin-bottom: .5em;
+	text-align: right;
+}
+.ui-menu-editor .ui-menu-editor-entries {
+	padding: .5em;
+}
+.ui-menu-editor .ui-menu-editor-entry, .ui-menu-editor .ui-menu-editor-placeholder {
+	height: 3em;
+	padding: .5em;
+	margin-bottom: .5em;
+}
+.ui-menu-editor .ui-menu-editor-entry-name {
+	font-weight: bold;
+}
+.ui-menu-editor .ui-menu-editor-entry-path {
+	font-size: .8em;
+}
+.ui-menu-editor .ui-menu-editor-entry button {
+	float: right;
+	margin-left: .5em;
+}

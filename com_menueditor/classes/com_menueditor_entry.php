@@ -107,14 +107,20 @@ class com_menueditor_entry extends entity {
 
 	/**
 	 * Print a form to edit the entry.
+	 * 
+	 * @param bool $override_page Whether to override the page with the output of the module. (This is needed because the menu arrays aren't available until after the kill scripts.)
 	 * @return module The form's module.
 	 */
-	public function print_form() {
+	public function print_form($override_page = false) {
 		global $pines;
 		$module = new module('com_menueditor', 'entry/form', 'content');
 		$module->entity = $this;
 		// Set up a hook to capture the menu entries before they get destroyed.
-		$pines->hook->add_callback('$pines->menu->render', -1, array($this, 'capture_menu'));
+		if ($override_page)
+			$callback = array($this, 'capture_menu_override');
+		else
+			$callback = array($this, 'capture_menu');
+		$pines->hook->add_callback('$pines->menu->render', -1, $callback);
 		$this->cur_module = $module;
 
 		return $module;
@@ -126,6 +132,18 @@ class com_menueditor_entry extends entity {
 	public function capture_menu() {
 		global $pines;
 		$this->cur_module->captured_menu_arrays = $pines->menu->menu_arrays;
+	}
+
+	/**
+	 * Capture the menu entries before they are destroyed.
+	 * 
+	 * Then override the page.
+	 */
+	public function capture_menu_override() {
+		global $pines;
+		$this->cur_module->captured_menu_arrays = $pines->menu->menu_arrays;
+		$pines->page->override = true;
+		$pines->page->override_doc($this->cur_module->render());
 	}
 }
 

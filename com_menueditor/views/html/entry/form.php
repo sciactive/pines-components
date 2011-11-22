@@ -13,7 +13,6 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Entry' : 'Editing ['.htmlspecialchars($this->entity->name).']';
 $this->note = 'Provide entry details in this form.';
-$pines->editor->load();
 $pines->com_pgrid->load();
 $pines->com_jstree->load();
 
@@ -354,34 +353,40 @@ unset($cur_child);
 			</select>
 		</span>
 	</div>
+	<?php if (!in_array('name', (array) $this->disabled_fields)) { ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Name</span>
-			<span class="pf-note">This is what will make its path. It also determines its position if the location is sorted alphanumerically.</span>
+			<span class="pf-note">This is what will make its path. It also determines its position alphanumerically if the location is sorted.</span>
 			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="name" size="24" value="<?php echo htmlspecialchars($this->entity->name); ?>" /></label>
 	</div>
+	<?php } if (!in_array('text', (array) $this->disabled_fields)) { ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Text</span>
 			<span class="pf-note">This is the text that will appear on the menu entry.</span>
 			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="text" size="24" value="<?php echo htmlspecialchars($this->entity->text); ?>" /></label>
 	</div>
+	<?php } if (!in_array('sort_order', (array) $this->disabled_fields)) { ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Sort Order</span>
-			<span class="pf-note">Menu entries created by this system will be sorted using this value.</span>
+			<span class="pf-note">Menu entries created by this system will be sorted using this value. However, if they are placed in a sorted parent, they will use the name.</span>
 			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="sort_order" size="24" value="<?php echo htmlspecialchars($this->entity->sort_order); ?>" /></label>
 	</div>
+	<?php } if (!in_array('enabled', (array) $this->disabled_fields)) { ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Enabled</span>
 			<input class="pf-field" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 	</div>
+	<?php } if (!in_array('sort', (array) $this->disabled_fields)) { ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Sort Children</span>
 			<input class="pf-field" type="checkbox" name="sort" value="ON"<?php echo $this->entity->sort ? ' checked="checked"' : ''; ?> /></label>
 	</div>
+	<?php } if (!in_array('link', (array) $this->disabled_fields)) { ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Link</span>
 			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="link" size="24" value="<?php echo htmlspecialchars($this->entity->link); ?>" /></label>
 	</div>
-	<?php if (gatekeeper('com_menueditor/jsentry')) { ?>
+	<?php } if (!in_array('text', (array) $this->disabled_fields) && gatekeeper('com_menueditor/jsentry')) { ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Onclick JavaScript</span>
 			<input class="pf-field ui-widget-content ui-corner-all" type="text" name="onclick" size="24" value="<?php echo htmlspecialchars($this->entity->onclick); ?>" /></label>
@@ -391,11 +396,13 @@ unset($cur_child);
 		<h1>Menu Entry Conditions</h1>
 		<p>Users will only see this entry if these conditions are met.</p>
 	</div>
+	<?php if (!in_array('children', (array) $this->disabled_fields)) { ?>
 	<div class="pf-element">
 		<label><span class="pf-label">Require Children</span>
 			<span class="pf-note">Only show the menu entry if it has children.</span>
 			<input class="pf-field" type="checkbox" name="children" value="ON"<?php echo $this->entity->children ? ' checked="checked"' : ''; ?> /></label>
 	</div>
+	<?php } if (!in_array('conditions', (array) $this->disabled_fields)) { ?>
 	<div class="pf-element pf-full-width">
 		<table class="conditions_table">
 			<thead>
@@ -443,6 +450,7 @@ unset($cur_child);
 		</div>
 		<br style="clear: both; height: 1px;" />
 	</div>
+	<?php } if (!$this->dialog) { ?>
 	<div class="pf-element pf-buttons">
 		<?php if ( isset($this->entity->guid) ) { ?>
 		<input type="hidden" name="id" value="<?php echo (int) $this->entity->guid; ?>" />
@@ -450,4 +458,5 @@ unset($cur_child);
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="pines.get('<?php echo htmlspecialchars(pines_url('com_menueditor', 'entry/list')); ?>');" value="Cancel" />
 	</div>
+	<?php } ?>
 </form>

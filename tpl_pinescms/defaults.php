@@ -16,8 +16,8 @@ return array(
 	array(
 		'name' => 'variant',
 		'cname' => 'Page Variant/Layout',
-		'description' => 'The layout of the page. On two column layouts, the sidebars are combined into one. On full page, the sidebars are not available.',
-		'value' => 'framework',
+		'description' => 'The version of the page.',
+		'value' => 'cms',
 		'options' => array(
 			'Pines CMS (cms)' => 'cms',
 			'Pines Framework (framework)' => 'framework',

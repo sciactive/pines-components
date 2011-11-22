@@ -44,6 +44,10 @@ ul.dropdown ul {
 	padding: 0;
 	top: 99%; /* 100% causes hover bug in ff */
 }
+ul.dropdown-vertical ul {
+	top: 1px;
+	left: 99%;
+}
 
 ul.dropdown ul li {
 	font-weight: normal;

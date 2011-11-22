@@ -29,7 +29,7 @@ if (!isset($package) || !in_array($do, array('install', 'upgrade', 'remove', 're
 	return;
 
 // Download the package.
-if (($do == 'install' || $do == 'reinstall') && !$pines->com_plaza->package_download($package))
+if (($do == 'install' || $do == 'reinstall' || $do == 'upgrade') && !$pines->com_plaza->package_download($package))
 	return;
 
 if ($do != 'reinstall') {

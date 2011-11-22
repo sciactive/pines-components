@@ -81,8 +81,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>Alias</th>
 			<th>Enabled</th>
 			<th>Pages</th>
-			<th>Show Menu</th>
-			<th>Menu Position</th>
+			<th>Menu Entries</th>
 			<th>Created</th>
 			<th>Modified</th>
 		</tr>
@@ -95,8 +94,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo htmlspecialchars($category->alias); ?></td>
 			<td><?php echo ($category->enabled ? 'Yes' : 'No'); ?></td>
 			<td><?php echo count($category->pages); ?></td>
-			<td><?php echo ($category->show_menu ? 'Yes' : 'No'); ?></td>
-			<td><?php echo $category->show_menu ? htmlspecialchars($category->menu_position) : ''; ?></td>
+			<td><?php echo count($category->com_menueditor_entries); ?></td>
 			<td><?php echo htmlspecialchars(format_date($category->p_cdate)); ?></td>
 			<td><?php echo htmlspecialchars(format_date($category->p_mdate)); ?></td>
 		</tr>

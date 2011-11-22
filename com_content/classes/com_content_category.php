@@ -41,7 +41,7 @@ class com_content_category extends entity {
 		$this->parent = null;
 		$this->children = array();
 		$this->pages = array();
-		$this->menu_position = 'left';
+		$this->com_menueditor_entries = array();
 		$this->conditions = array();
 		$this->variants = array();
 	}

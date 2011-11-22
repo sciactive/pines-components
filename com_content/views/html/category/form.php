@@ -15,20 +15,29 @@ $this->title = (!isset($this->entity->guid)) ? 'Editing New Category' : 'Editing
 $this->note = 'Provide category details in this form.';
 $pines->editor->load();
 $pines->com_pgrid->load();
+$pines->com_menueditor->load_editor();
 ?>
+<style type="text/css">
+	/* <![CDATA[ */
+	#p_muid_pages .page {
+		cursor: default;
+	}
+	/* ]]> */
+</style>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_content', 'category/save')); ?>">
-	<style type="text/css">
-		/* <![CDATA[ */
-		#p_muid_pages .page {
-			cursor: default;
-		}
-		/* ]]> */
-	</style>
 	<script type="text/javascript">
 		// <![CDATA[
 		pines(function(){
-			$("#p_muid_menu_position").autocomplete({
-				source: <?php echo json_encode($pines->info->template->positions); ?>
+			$("#p_muid_menu_entries").menueditor({
+				disabled_fields: ['link'],
+				defaults: {
+					name: function(){
+						return $("input[name=alias]", "#p_muid_form").val();
+					},
+					text: function(){
+						return $("input[name=name]", "#p_muid_form").val();
+					}
+				}
 			});
 
 			// Updating pages.
@@ -165,6 +174,7 @@ $pines->com_pgrid->load();
 	<div id="p_muid_category_tabs" style="clear: both;">
 		<ul>
 			<li><a href="#p_muid_tab_general">General</a></li>
+			<li><a href="#p_muid_tab_menu">Menu</a></li>
 			<li><a href="#p_muid_tab_page">Page</a></li>
 			<li><a href="#p_muid_tab_conditions">Conditions</a></li>
 		</ul>
@@ -188,17 +198,17 @@ $pines->com_pgrid->load();
 				</script>
 				<label>
 					<span class="pf-label">Name</span>
-					<div class="pf-group pf-full-width">
+					<span style="display: block;" class="pf-group pf-full-width">
 						<input class="pf-field ui-widget-content ui-corner-all" style="width: 100%;" type="text" name="name" value="<?php echo htmlspecialchars($this->entity->name); ?>" />
-					</div>
+					</span>
 				</label>
 			</div>
 			<div class="pf-element pf-full-width">
 				<label>
 					<span class="pf-label">Alias</span>
-					<div class="pf-group pf-full-width">
+					<span style="display: block;" class="pf-group pf-full-width">
 						<input class="pf-field ui-widget-content ui-corner-all" style="width: 100%;" type="text" name="alias" value="<?php echo htmlspecialchars($this->entity->alias); ?>" onkeyup="this.value=this.value.replace(/[^\w\d-.]/g, '_');" />
-					</div>
+					</span>
 				</label>
 			</div>
 			<?php if (isset($this->entity->guid)) { ?>
@@ -214,24 +224,6 @@ $pines->com_pgrid->load();
 			<div class="pf-element">
 				<label><span class="pf-label">Enabled</span>
 					<input class="pf-field" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
-			</div>
-			<div class="pf-element">
-				<label><span class="pf-label">Show Menu</span>
-					<span class="pf-note">Show this category as a menu.</span>
-					<input class="pf-field" type="checkbox" name="show_menu" value="ON"<?php echo $this->entity->show_menu ? ' checked="checked"' : ''; ?> /></label>
-			</div>
-			<div class="pf-element">
-				<label><span class="pf-label">Menu Position</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_menu_position" name="menu_position" size="24" value="<?php echo htmlspecialchars($this->entity->menu_position); ?>" /></label>
-			</div>
-			<div class="pf-element">
-				<label><span class="pf-label">Show Pages in Menu</span>
-					<span class="pf-note">Show the pages in this category in the menu.</span>
-					<select class="pf-field ui-widget-content ui-corner-all" name="show_pages_in_menu">
-						<option value="null">Use Default</option>
-						<option value="true"<?php echo $this->entity->show_pages_in_menu === true ? ' selected="selected"' : ''; ?>>Yes</option>
-						<option value="false"<?php echo $this->entity->show_pages_in_menu === false ? ' selected="selected"' : ''; ?>>No</option>
-					</select></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Link Menu</span>
@@ -292,6 +284,25 @@ $pines->com_pgrid->load();
 					<?php } ?>
 				</div>
 				<input type="hidden" name="pages" id="p_muid_pages_input" value="" />
+			</div>
+			<br class="pf-clearing" />
+		</div>
+		<div id="p_muid_tab_menu">
+			<div class="pf-element pf-full-width">
+				<span class="pf-label">Menu Entries</span>
+				<span class="pf-note">It isn't necessary to add the same conditions on menu entries. They will only appear if the Category Conditions are met.</span>
+				<div class="pf-group">
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="com_menueditor_entries" id="p_muid_menu_entries" size="24" value="<?php echo htmlspecialchars(json_encode($this->entity->com_menueditor_entries)); ?>" />
+				</div>
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Show Pages in Menu</span>
+					<span class="pf-note">Show the pages in this category in the menu.</span>
+					<select class="pf-field ui-widget-content ui-corner-all" name="show_pages_in_menu">
+						<option value="null">Use Default</option>
+						<option value="true"<?php echo $this->entity->show_pages_in_menu === true ? ' selected="selected"' : ''; ?>>Yes</option>
+						<option value="false"<?php echo $this->entity->show_pages_in_menu === false ? ' selected="selected"' : ''; ?>>No</option>
+					</select></label>
 			</div>
 			<br class="pf-clearing" />
 		</div>

@@ -45,6 +45,9 @@ foreach ($pages as $cur_page_guid) {
 	$category->pages[] = $cur_page;
 }
 
+// Menu
+$category->com_menueditor_entries = json_decode($_REQUEST['com_menueditor_entries'], true);
+
 // Page
 $category->show_title = ($_REQUEST['show_title'] == 'null' ? null : ($_REQUEST['show_title'] == 'true'));
 $category->show_breadcrumbs = ($_REQUEST['show_breadcrumbs'] == 'null' ? null : ($_REQUEST['show_breadcrumbs'] == 'true'));
@@ -85,6 +88,11 @@ $test = $pines->entity_manager->get_entity(array('class' => com_content_category
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$category->print_form();
 	pines_notice('There is already an category with that alias. Please choose a different alias.');
+	return;
+}
+
+if (!$pines->com_menueditor->check_entries($category->com_menueditor_entries)) {
+	$category->print_form();
 	return;
 }
 

@@ -42,6 +42,9 @@ if ($pines->config->com_content->custom_head && gatekeeper('com_content/editpage
 	$page->custom_head = $_REQUEST['custom_head'];
 }
 
+// Menu
+$page->com_menueditor_entries = json_decode($_REQUEST['com_menueditor_entries'], true);
+
 // Conditions
 $conditions = (array) json_decode($_REQUEST['conditions']);
 $page->conditions = array();
@@ -66,8 +69,6 @@ $page->show_author_info = ($_REQUEST['show_author_info'] == 'null' ? null : ($_R
 $page->show_content_in_list = ($_REQUEST['show_content_in_list'] == 'null' ? null : ($_REQUEST['show_content_in_list'] == 'true'));
 $page->show_intro = ($_REQUEST['show_intro'] == 'null' ? null : ($_REQUEST['show_intro'] == 'true'));
 $page->show_breadcrumbs = ($_REQUEST['show_breadcrumbs'] == 'null' ? null : ($_REQUEST['show_breadcrumbs'] == 'true'));
-$page->show_menu = ($_REQUEST['show_menu'] == 'ON');
-$page->menu_position = $_REQUEST['menu_position'];
 $page->variants = array();
 foreach ($_REQUEST['variants'] as $cur_variant_entry) {
 	list ($cur_template, $cur_variant) = explode('::', $cur_variant_entry, 2);
@@ -93,6 +94,11 @@ $test = $pines->entity_manager->get_entity(array('class' => com_content_page, 's
 if (isset($test) && $test->guid != $_REQUEST['id']) {
 	$page->print_form();
 	pines_notice('There is already an page with that alias. Please choose a different alias.');
+	return;
+}
+
+if (!$pines->com_menueditor->check_entries($page->com_menueditor_entries)) {
+	$page->print_form();
 	return;
 }
 

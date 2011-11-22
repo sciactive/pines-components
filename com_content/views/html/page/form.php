@@ -16,13 +16,22 @@ $this->note = 'Provide page details in this form.';
 $pines->editor->load();
 $pines->com_pgrid->load();
 $pines->com_ptags->load();
+$pines->com_menueditor->load_editor();
 ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_content', 'page/save')); ?>">
 	<script type="text/javascript">
 		// <![CDATA[
 		pines(function(){
-			$("#p_muid_menu_position").autocomplete({
-				source: <?php echo json_encode($pines->info->template->positions); ?>
+			$("#p_muid_menu_entries").menueditor({
+				disabled_fields: ['link'],
+				defaults: {
+					name: function(){
+						return $("input[name=alias]", "#p_muid_form").val();
+					},
+					text: function(){
+						return $("input[name=name]", "#p_muid_form").val();
+					}
+				}
 			});
 
 			// Conditions
@@ -138,6 +147,7 @@ $pines->com_ptags->load();
 			<?php if ($pines->config->com_content->custom_head && gatekeeper('com_content/editpagehead')) { ?>
 			<li><a href="#p_muid_tab_head">Page Head</a></li>
 			<?php } ?>
+			<li><a href="#p_muid_tab_menu">Menu</a></li>
 			<li><a href="#p_muid_tab_categories">Categories</a></li>
 			<li><a href="#p_muid_tab_conditions">Conditions</a></li>
 			<li><a href="#p_muid_tab_advanced">Advanced</a></li>
@@ -475,6 +485,16 @@ $pines->com_ptags->load();
 			<br class="pf-clearing" />
 		</div>
 		<?php } ?>
+		<div id="p_muid_tab_menu">
+			<div class="pf-element pf-full-width">
+				<span class="pf-label">Menu Entries</span>
+				<span class="pf-note">It isn't necessary to add the same conditions on menu entries. They will only appear if the Page Conditions are met.</span>
+				<div class="pf-group">
+					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="com_menueditor_entries" id="p_muid_menu_entries" size="24" value="<?php echo htmlspecialchars(json_encode($this->entity->com_menueditor_entries)); ?>" />
+				</div>
+			</div>
+			<br class="pf-clearing" />
+		</div>
 		<div id="p_muid_tab_categories">
 			<div class="pf-element pf-full-width">
 				<script type="text/javascript">
@@ -651,17 +671,6 @@ $pines->com_ptags->load();
 						<option value="true"<?php echo $this->entity->show_breadcrumbs === true ? ' selected="selected"' : ''; ?>>Yes</option>
 						<option value="false"<?php echo $this->entity->show_breadcrumbs === false ? ' selected="selected"' : ''; ?>>No</option>
 					</select></label>
-			</div>
-			<div class="pf-element pf-heading">
-				<h1>Menu</h1>
-			</div>
-			<div class="pf-element">
-				<label><span class="pf-label">Show Menu</span>
-					<input class="pf-field" type="checkbox" name="show_menu" value="ON"<?php echo $this->entity->show_menu ? ' checked="checked"' : ''; ?> /></label>
-			</div>
-			<div class="pf-element">
-				<label><span class="pf-label">Menu Position</span>
-					<input class="pf-field ui-widget-content ui-corner-all" type="text" id="p_muid_menu_position" name="menu_position" size="24" value="<?php echo htmlspecialchars($this->entity->menu_position); ?>" /></label>
 			</div>
 			<div class="pf-element pf-heading">
 				<h1>Page Variants</h1>

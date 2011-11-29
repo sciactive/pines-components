@@ -11,8 +11,9 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$this->title = 'Displaying Log View of File: '.htmlspecialchars($pines->config->com_logger->path);
+$this->title = 'Log Files View';
 $this->note = $this->all_time ? 'Showing all time.' : 'Showing '.htmlspecialchars(format_date($this->start_date, 'date_short')).' - '.htmlspecialchars(format_date($this->end_date - 1, 'date_short')).'.';
+// This regex breaks apart the log entries into each part.
 preg_match_all('/^(\d{4}-\d{2}-\d{2}T[\d:-]+): ([a-z]+): (com_\w+)?, ([^:]+)?: ([\d.]+)?(.*?)? ?\(?(\d+)?\)?: (.*)$/mi', $this->log, $matches, PREG_SET_ORDER);
 $pines->icons->load();
 $pines->com_jstree->load();
@@ -58,30 +59,26 @@ foreach ($matches as $key => &$cur_match) {
 }
 unset($cur_match);
 
-$debugs = array();
-$infos = array();
-$notices = array();
-$warnings = array();
-$errors = array();
-$fatals = array();
+// Count each type of log entry.
+$debugs = $infos = $notices = $warnings = $errors = $fatals = array();
 foreach ($matches as $match) {
 	switch ($match[2]){
-		case "debug":
+		case 'debug':
 			$debugs[] = $match[2];
 			break;
-		case "info":
+		case 'info':
 			$infos[] = $match[2];
 			break;
-		case "notice":
+		case 'notice':
 			$notices[] = $match[2];
 			break;
-		case "warning":
+		case 'warning':
 			$warnings[] = $match[2];
 			break;
-		case "error":
+		case 'error':
 			$errors[] = $match[2];
 			break;
-		case "fatal":
+		case 'fatal':
 			$fatals[] = $match[2];
 			break;
 	}
@@ -91,7 +88,7 @@ foreach ($matches as $match) {
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-		search_logs = function(){
+		var search_logs = function(){
 			// Submit the form with all of the fields.
 			pines.get(<?php echo json_encode(pines_url('com_logger', 'view')); ?>, {
 				"location": location,
@@ -143,7 +140,7 @@ foreach ($matches as $match) {
 				{type: 'separator'},
 				{type: 'button', title: 'Make a Spreadsheet', extra_class: 'picon picon-x-office-spreadsheet', multi_select: true, pass_csv_with_headers: true, click: function(e, rows){
 					pines.post(<?php echo json_encode(pines_url('system', 'csv')); ?>, {
-						filename: 'requests',
+						filename: 'log entries',
 						content: rows
 					});
 				}}
@@ -238,22 +235,20 @@ foreach ($matches as $match) {
 	});
 	// ]]>
 </script>
-
-
 <div class="pf-form">
 	<div class="pf-element pf-heading">
-		<h1>Total Log Entries: <strong><?php echo count($matches); ?></strong></h1></span>
+		<h1>Total Log Entries: <strong><?php echo count($matches); ?></strong></h1>
 	</div>
 	<div class="pf-element pf-full-width">
-		<div class="pf-label" style="width:180px;padding-right:100px;">
-			<span><span class="picon picon-help-hint" style="padding-left:16px;background-repeat:no-repeat;line-height:16px;"> Total Debug Entries: <strong><span style="float:right;"><?php echo count($debugs); ?></span></strong></span><br/>
-			<span><span class="picon picon-dialog-information" style="padding-left:18px;background-repeat:no-repeat;line-height:16px;"> Total Info Entries: <strong><span style="float:right;"><?php echo count($infos); ?></span></strong></span><br/>
-			<span><span class="picon picon-view-pim-notes" style="padding-left:18px;background-repeat:no-repeat;line-height:16px;"> Total Notice Entries: <strong><span style="float:right;"><?php echo count($notices); ?></span></strong></span><br/><br/>
+		<div style="width: 200px; padding-right: 100px; float: left;">
+			<span class="picon picon-help-hint" style="padding-left: 16px; background-repeat: no-repeat; line-height: 16px;"> Total Debug Entries: <strong><span style="float: right;"><?php echo count($debugs); ?></span></strong></span><br/>
+			<span class="picon picon-dialog-information" style="padding-left: 18px; background-repeat: no-repeat; line-height: 16px;"> Total Info Entries: <strong><span style="float: right;"><?php echo count($infos); ?></span></strong></span><br/>
+			<span class="picon picon-view-pim-notes" style="padding-left: 18px; background-repeat: no-repeat; line-height: 16px;"> Total Notice Entries: <strong><span style="float: right;"><?php echo count($notices); ?></span></strong></span><br/><br/>
 		</div>
-		<div class="pf-group" style="width:315px;">
-			<span><span class="picon picon-dialog-warning" style="padding-left:18px;background-repeat:no-repeat;line-height:16px;"> Total Warning Entries</span>: <strong><span style="float:right;"><?php echo count($warnings); ?></span></strong></span><br/>
-			<span><span class="picon picon-dialog-error" style="padding-left:18px;background-repeat:no-repeat;line-height:16px;"> Total Error Entries: <strong><span style="float:right;"><?php echo count($errors); ?></span></strong></span><br/>
-			<span><span class="picon picon-script-error" style="padding-left:18px;background-repeat:no-repeat;line-height:16px;"> Total Fatal Entries: <strong><span style="float:right;"><?php echo count($fatals); ?></span></strong></span><br/><br/>
+		<div style="width: 200px; float: left;">
+			<span class="picon picon-dialog-warning" style="padding-left: 18px; background-repeat: no-repeat; line-height: 16px;"> Total Warning Entries: <strong><span style="float: right;"><?php echo count($warnings); ?></span></strong></span><br/>
+			<span class="picon picon-dialog-error" style="padding-left: 18px; background-repeat: no-repeat; line-height: 16px;"> Total Error Entries: <strong><span style="float: right;"><?php echo count($errors); ?></span></strong></span><br/>
+			<span class="picon picon-script-error" style="padding-left: 18px; background-repeat: no-repeat; line-height: 16px;"> Total Fatal Entries: <strong><span style="float: right;"><?php echo count($fatals); ?></span></strong></span><br/><br/>
 		</div>
 	</div>
 </div>
@@ -273,30 +268,33 @@ foreach ($matches as $match) {
 	</thead>
 	<tbody>
 	<?php foreach($matches as $cur_match) { ?>
-		<tr class="p_muid_normal">
+		<tr>
 			<td><?php echo htmlspecialchars(format_date($cur_match['timestamp'])); ?></td>
 			<td><?php
-				switch ($cur_match[2]){
-					case "debug":
-						echo '<span class="picon-help-hint" style="display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">'.htmlspecialchars($cur_match[2]).'</span>';
-						break;
-					case "info":
-						echo '<span class="picon-dialog-information" style="display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">'.htmlspecialchars($cur_match[2]).'</span>';
-						break;
-					case "notice":
-						echo '<span class="picon-view-pim-notes" style="display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">'.htmlspecialchars($cur_match[2]).'</span>';
-						break;
-					case "warning":
-						echo '<span class="picon-dialog-warning" style="display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">'.htmlspecialchars($cur_match[2]).'</span>';
-						break;
-					case "error":
-						echo '<span class="picon-dialog-error" style="display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">'.htmlspecialchars($cur_match[2]).'</span>';
-						break;
-					case "fatal":
-						echo '<span class="picon-script-error" style="display:inline-block;line-height:16px;padding-left:18px; background-repeat:no-repeat;">'.htmlspecialchars($cur_match[2]).'</span>';
-						break;
-				}
-			?></td>
+			switch ($cur_match[2]) {
+				case 'debug':
+					$class = 'picon-help-hint';
+					break;
+				case 'info':
+					$class = 'picon-dialog-information';
+					break;
+				case 'notice':
+					$class = 'picon-view-pim-notes';
+					break;
+				case 'warning':
+					$class = 'picon-dialog-warning';
+					break;
+				case 'error':
+					$class = 'picon-dialog-error';
+					break;
+				case 'fatal':
+					$class = 'picon-script-error';
+					break;
+				default:
+					$class = '';
+					break;
+			}
+			?><span class="<?php echo $class; ?>" style="display: inline-block; line-height: 16px; padding-left: 18px; background-repeat: no-repeat;"><?php echo htmlspecialchars($cur_match[2]); ?></span></td>
 			<td><?php echo htmlspecialchars($cur_match[3]); ?></td>
 			<td><?php echo htmlspecialchars($cur_match[4]); ?></td>
 			<td><?php echo htmlspecialchars($cur_match[5]); ?></td>

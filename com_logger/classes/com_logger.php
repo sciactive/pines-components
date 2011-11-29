@@ -80,6 +80,38 @@ class com_logger extends component implements log_manager_interface {
 	}
 
 	/**
+	 * Concatenate all log files.
+	 * @return string The concatenated text from all log files.
+	 */
+	public function cat_logs() {
+		global $pines;
+
+		// Get all log files' paths.
+		$files = glob($pines->config->com_logger->read_pattern, GLOB_MARK);
+
+		// Now go through and concatenate each file.
+		$log_data = '';
+		if ($pines->config->com_logger->read_include_path && !in_array($pines->config->com_logger->path, $files)) {
+			$log_data .= file_get_contents($pines->config->com_logger->path);
+			if (substr($log_data, -1) != "\n")
+				$log_data .= "\n";
+		}
+		foreach ($files as $cur_file) {
+			if ($cur_file == '.' || $cur_file == '..')
+				continue;
+			// This will work for regular files and gzip encoded files.
+			if (!($r = gzopen($cur_file, 'r')))
+				return false;
+			do {
+				$log_data .= gzread($r, 8192);
+			} while (!gzeof($r));
+		}
+
+		// All done.
+		return $log_data;
+	}
+
+	/**
 	 * Write log(s) to the media.
 	 *
 	 * @param string $logs Log message(s).
@@ -93,7 +125,7 @@ class com_logger extends component implements log_manager_interface {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Print a form to select date timespan.
 	 *
@@ -114,7 +146,7 @@ class com_logger extends component implements log_manager_interface {
 		$pines->page->override_doc($module->render());
 		return $module;
 	}
-	
+
 	/**
 	 * Print a form to select a location.
 	 *
@@ -135,31 +167,6 @@ class com_logger extends component implements log_manager_interface {
 		$module->descendents = $descendents;
 
 		$pines->page->override_doc($module->render());
-		return $module;
-	}
-	
-	/**
-	 * Creates and attaches a module which summarizes employee totals.
-	 *
-	 * @param int $start_date The start date of the report.
-	 * @param int $end_date The end date of the report.
-	 * @return module the log view module.
-	 */
-	function logs($start_date = null, $end_date = null) {
-		global $pines;
-
-		$module = new module('com_logger', 'logs', 'content');
-
-		$selector = array('&');
-		// Datespan of the report.
-		if (isset($start_date))
-			$selector['gte'] = array('p_cdate', (int) $start_date);
-		if (isset($end_date))
-			$selector['lt'] = array('p_cdate', (int) $end_date);
-		$module->start_date = $start_date;
-		$module->end_date = $end_date;
-		$module->all_time = (!isset($start_date) && !isset($end_date));
-		
 		return $module;
 	}
 }

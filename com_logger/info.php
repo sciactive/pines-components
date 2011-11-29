@@ -15,14 +15,15 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'Logger',
 	'author' => 'SciActive',
-	'version' => '1.0.0',
+	'version' => '1.0.1',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'services' => array('log_manager'),
 	'short_description' => 'System log manager',
 	'description' => 'Provides a method for components to log their activity.',
 	'depend' => array(
-		'pines' => '<2'
+		'pines' => '<2',
+		'component' => 'com_jquery&com_pgrid&com_jstree&com_pform'
 	),
 	'abilities' => array(
 		array('view', 'View Log', 'Let the user view the Pines log.'),

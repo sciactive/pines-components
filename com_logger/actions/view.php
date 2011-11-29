@@ -16,12 +16,12 @@ if ( !gatekeeper('com_logger/view') )
 	punt_user(null, pines_url('com_logger', 'view'));
 
 $view = new module('com_logger', 'view', 'content');
-if (file_exists($pines->config->com_logger->path)) {
-	if (($view->log = file_get_contents($pines->config->com_logger->path)) === false)
-		pines_error('Error reading log file '.$pines->config->com_logger->path);
-} else {
+// Check that the log file exists.
+if (!file_exists($pines->config->com_logger->path))
 	pines_error('Log file '.$pines->config->com_logger->path.' does not exist!');
-}
+// Get all the logs.
+if (($view->log = $pines->log_manager->cat_logs()) === false)
+	pines_error('Error reading log files.');
 if (empty($view->log)) $view->log = 'Log file is empty.';
 
 if (!empty($_REQUEST['start_date'])) {

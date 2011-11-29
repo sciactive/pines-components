@@ -24,36 +24,68 @@ $content_css = array_merge(array(htmlspecialchars($pines->config->location . $pi
 	pines.loadjs("<?php echo htmlspecialchars($pines->config->location); ?>components/com_ckeditor/includes/ckeditor/adapters/jquery.js");
 
 	pines(function(){
+		// Stop CKEditor from adding new lines and indents to HTML source.
+		CKEDITOR.on('instanceReady', function(ev){
+			var writer = ev.editor.dataProcessor.writer;
+			writer.selfClosingEnd = ' />';
+			writer.indentationChars = '';
+			writer.lineBreakChars = '';
+			<?php /* This is another, less robust, way of fixing the line break problem.
+			var tags = ['p', 'ol', 'ul', 'li', 'div', 'form', 'table', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'hr', 'script', 'noscript'];
+			for (var i in tags) {
+				writer.setRules(tags[i], {
+					indent: false,
+					breakBeforeOpen: false,
+					breakAfterOpen: false,
+					breakBeforeClose: false,
+					breakAfterClose: false
+				});
+			}
+			*/ ?>
+		});
+		// Convert textareas.
 		$("textarea.peditor").ckeditor(function(){}, {
-			toolbar : '<?php echo htmlspecialchars($pines->config->com_ckeditor->toolbar); ?>',
-			contentsCss : <?php echo json_encode($content_css); ?>,
-			coreStyles_bold	: { element : 'strong' },
-			coreStyles_italic : { element : 'em' },
+			contentsCss: <?php echo json_encode($content_css); ?>,
+			coreStyles_bold: {element: 'strong'},
+			coreStyles_italic: {element: 'em'},
+			pasteFromWordPromptCleanup: true,
+			uiColor: <?php echo json_encode($pines->config->com_ckeditor->ui_color); ?>,
+			startupMode: <?php echo json_encode($pines->config->com_ckeditor->default_mode); ?>,
+			startupOutlineBlocks: <?php echo json_encode($pines->config->com_ckeditor->show_blocks); ?>,
 			<?php if (isset($pines->com_elfinder)) { ?>
-			filebrowserBrowseUrl : <?php echo json_encode(pines_url('com_elfinder', 'finder', array('ckeditor' => 'true', 'template' => 'tpl_print'))); ?>,
+			filebrowserBrowseUrl: <?php echo json_encode(pines_url('com_elfinder', 'finder', array('ckeditor' => 'true', 'template' => 'tpl_print'))); ?>,
+			<?php } if ($pines->config->com_ckeditor->auto_scayt) { ?>
+			scayt_autoStartup: true,
+			<?php } else { ?>
+			disableNativeSpellChecker: false,
 			<?php } ?>
-			extraPlugins : 'autogrow,stylesheetparser',
-			removePlugins : 'resize',
-			<?php if ($pines->config->com_ckeditor->auto_scayt) { ?>
-			scayt_autoStartup : true,
-			<?php } ?>
-			pasteFromWordPromptCleanup : true
+			toolbar: <?php echo json_encode($pines->config->com_ckeditor->toolbar); ?>,
+			extraPlugins: 'autogrow,stylesheetparser',
+			removePlugins: 'resize',
+			baseHref: pines.rela_location,
+			autoGrow_minHeight: 200,
+			autoGrow_maxHeight: 600,
+			autoGrow_onStartup: true
 		});
 		$("textarea.peditor-simple").ckeditor(function(){}, {
-			toolbar : 'Basic',
-			contentsCss : <?php echo json_encode($content_css); ?>,
-			coreStyles_bold	: { element : 'strong' },
-			coreStyles_italic : { element : 'em' },
+			contentsCss: <?php echo json_encode($content_css); ?>,
+			coreStyles_bold: {element: 'strong'},
+			coreStyles_italic: {element: 'em'},
+			pasteFromWordPromptCleanup: true,
+			uiColor: <?php echo json_encode($pines->config->com_ckeditor->ui_color); ?>,
+			startupMode: <?php echo json_encode($pines->config->com_ckeditor->default_mode); ?>,
+			startupOutlineBlocks: <?php echo json_encode($pines->config->com_ckeditor->show_blocks); ?>,
 			<?php if (isset($pines->com_elfinder)) { ?>
-			filebrowserBrowseUrl : <?php echo json_encode(pines_url('com_elfinder', 'finder', array('ckeditor' => 'true', 'template' => 'tpl_print'))); ?>,
+			filebrowserBrowseUrl: <?php echo json_encode(pines_url('com_elfinder', 'finder', array('ckeditor' => 'true', 'template' => 'tpl_print'))); ?>,
+			<?php } if ($pines->config->com_ckeditor->auto_scayt) { ?>
+			scayt_autoStartup: true,
+			<?php } else { ?>
+			disableNativeSpellChecker: false,
 			<?php } ?>
-			extraPlugins : 'stylesheetparser',
-			<?php if ($pines->config->com_ckeditor->auto_scayt) { ?>
-			scayt_autoStartup : true,
-			<?php } ?>
-			pasteFromWordPromptCleanup : true,
-			//resize_dir : 'vertical',
-			toolbarCanCollapse : false
+			toolbar: 'Basic',
+			extraPlugins: 'stylesheetparser',
+			baseHref: pines.rela_location,
+			toolbarCanCollapse: false
 		});
 	});
 	// ]]>

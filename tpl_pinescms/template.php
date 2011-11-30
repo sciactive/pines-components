@@ -94,10 +94,10 @@ header('Content-Type: text/html');
 					<?php } else { ?>
 					<area shape="rect" coords="0,0,139,139" href="http://pinescms.org" alt="Pines CMS" />
 					<?php } ?>
-					<area shape="rect" coords="164,0,303,139" href="http://pines.sourceforge.net/pnotify/" alt="Pines Notify" />
-					<area shape="rect" coords="328,0,467,139" href="http://pines.sourceforge.net/pgrid/" alt="Pines Grid" />
-					<area shape="rect" coords="492,0,631,139" href="http://pines.sourceforge.net/ptags/" alt="Pines Tags" />
-					<area shape="rect" coords="653,0,793,139" href="http://pines.sourceforge.net/pform/" alt="Pines Form" />
+					<area shape="rect" coords="164,0,303,139" href="http://pinesframework.org/pnotify/" target="_blank" alt="Pines Notify" />
+					<area shape="rect" coords="328,0,467,139" href="http://pinesframework.org/pgrid/" target="_blank" alt="Pines Grid" />
+					<area shape="rect" coords="492,0,631,139" href="http://pinesframework.org/ptags/" target="_blank" alt="Pines Tags" />
+					<area shape="rect" coords="653,0,793,139" href="http://pinesframework.org/pform/" target="_blank" alt="Pines Form" />
 				</map>
 			</div>
 		</div>

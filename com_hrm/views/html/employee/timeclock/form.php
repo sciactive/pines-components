@@ -17,19 +17,38 @@ $pines->com_datetimepicker->load();
 <style type="text/css">
 	/* <![CDATA[ */
 	#p_muid_timeclock_edit .entry > div {
-		padding: 3px;
+		padding: .5em;
 	}
 	#p_muid_timeclock_edit .entry button {
 		float: right;
-		margin: 3px;
 	}
 	#p_muid_timeclock_edit .entry .time {
 		cursor: pointer;
+		width: auto;
+		font-family: monospace;
+	}
+	#p_muid_timeclock_edit .entry:hover .time {
+		text-decoration: underline;
+	}
+	#p_muid_timeclock_edit .entry .time_range {
+		width: auto;
+		float: right;
+		margin-right: 1em;
+	}
+	#p_muid_timeclock_edit .entry .timestamps {
+		width: auto;
+		float: right;
+		clear: right;
+		margin-right: 1em;
+	}
+	#p_muid_timeclock_edit .entry .comments {
+		width: auto;
+		clear: left;
+		margin-top: .5em;
 	}
 
 	#p_muid_timeclock_edit button.add-button {
-		float: right;
-		margin: 3px;
+		float: left;
 	}
 	/* ]]> */
 </style>
@@ -135,7 +154,7 @@ $pines->com_datetimepicker->load();
 		});
 
 		$("#p_muid_timeclock_edit button.add-button").click(function(){
-			new_entry = $("#p_muid_timeclock_entry_template").clone(true).removeAttr("id").addClass("entry").insertBefore(this);
+			new_entry = $("#p_muid_timeclock_entry_template").clone(true).removeAttr("id").addClass("entry").children().addClass("ui-state-highlight").end().insertBefore(this);
 			new_entry.find(".timestamp_in, .timestamp_out").html(Math.floor(new Date().getTime() / 1000));
 			format_time(new_entry.find(".time_in, .time_out"), new_entry.find(".timestamp_in").text());
 			format_time_range(new_entry.find(".time_range"), new_entry.find(".timestamp_in").text(), new_entry.find(".timestamp_out").text());
@@ -174,9 +193,9 @@ $pines->com_datetimepicker->load();
 								},
 								success: function(data_out){
 									date_time_dialog.dialog('close');
-									cur_entry.find(".comments").html($("#p_muid_cur_comments").val());
-									cur_entry.find(".timestamp_in").html(data_in);
-									cur_entry.find(".timestamp_out").html(data_out);
+									cur_entry.find(".comments").html(pines.safe($("#p_muid_cur_comments").val()));
+									cur_entry.find(".timestamp_in").html(pines.safe(data_in));
+									cur_entry.find(".timestamp_out").html(pines.safe(data_out));
 									format_time(cur_entry.find(".time_in"), data_in);
 									format_time(cur_entry.find(".time_out"), data_out);
 									format_time_range(cur_entry.find(".time_range"), data_in, data_out);
@@ -251,6 +270,8 @@ $pines->com_datetimepicker->load();
 			stepHour: 1,
 			stepMinute: 1,
 			stepSecond: 1
+		}).keydown(function(){
+			$(this).datepicker("hide");
 		});
 		$.datepicker._doKeyPress = _doKeyPress;
 
@@ -278,6 +299,7 @@ $pines->com_datetimepicker->load();
 		});
 
 		save_to_form();
+		clean_up();
 	});
 	// ]]>
 </script>
@@ -299,16 +321,17 @@ $pines->com_datetimepicker->load();
 		<div class="pf-element pf-full-width entry">
 			<div class="ui-helper-clearfix ui-widget-content ui-corner-all">
 				<button class="ui-state-default ui-corner-all">Delete</button>
-				<span class="pf-label time" style="width: auto; font-family: monospace;">
-					<span class="time_in"><?php echo htmlspecialchars(format_date($entry->in, 'custom', 'd M Y <\s\t\r\o\n\g>h:i:s A</\s\t\r\o\n\g> T', $this->entity->user->get_timezone(true))); ?></span>
-					-
-					<span class="time_out"><?php echo htmlspecialchars(format_date($entry->out, 'custom', 'd M Y <\s\t\r\o\n\g>h:i:s A</\s\t\r\o\n\g> T', $this->entity->user->get_timezone(true))); ?></span>
+				<span class="time">
+					In:&nbsp;&nbsp;<span class="time_in"><?php echo format_date($entry->in, 'custom', 'd M Y <\s\t\r\o\n\g>h:i:s A</\s\t\r\o\n\g> T', $this->entity->user->get_timezone(true)); ?></span>
+					<br />
+					Out:&nbsp;<span class="time_out"><?php echo format_date($entry->out, 'custom', 'd M Y <\s\t\r\o\n\g>h:i:s A</\s\t\r\o\n\g> T', $this->entity->user->get_timezone(true)); ?></span>
 				</span>
-				<span class="pf-label time_range" style="width: auto; float: right; margin-right: 1em;">
+				<span class="pf-label time_range">
 					<span class="time_range"><?php echo htmlspecialchars(format_date_range($entry->in, $entry->out, null, $this->entity->user->get_timezone(true))); ?></span>
 				</span>
-				<span class="pf-label comments" style="width: auto; clear: left;"><?php echo htmlspecialchars($entry->comments); ?></span>
-				<span class="pf-note" style="width: auto;">Timestamps: <span class="timestamp_in"><?php echo htmlspecialchars($entry->in); ?></span> - <span class="timestamp_out"><?php echo htmlspecialchars($entry->out); ?></span></span><br class="pf-clearing" />
+				<span class="pf-note timestamps">Timestamps: <span class="timestamp_in"><?php echo htmlspecialchars($entry->in); ?></span> - <span class="timestamp_out"><?php echo htmlspecialchars($entry->out); ?></span></span>
+				<span class="pf-label comments"><?php echo htmlspecialchars($entry->comments); ?></span>
+				<br class="pf-clearing" />
 				<span class="pf-label ui-state-error ui-corner-all error" style="width: auto; display: none;">Overlaps with the next entry!</span>
 			</div>
 			<div class="guid" style="display: none;"><?php echo htmlspecialchars(json_encode($entry->guid)); ?></div>
@@ -318,16 +341,17 @@ $pines->com_datetimepicker->load();
 		<div id="p_muid_timeclock_entry_template" class="pf-element pf-full-width" style="display: none;">
 			<div class="ui-helper-clearfix ui-widget-content ui-corner-all">
 				<button class="ui-state-default ui-corner-all">Delete</button>
-				<span class="pf-label time" style="width: auto; font-family: monospace;">
-					<span class="time_in"></span>
-					-
-					<span class="time_out"></span>
+				<span class="pf-label time">
+					In&nbsp;&nbsp;<span class="time_in"></span>
+					<br />
+					Out&nbsp;<span class="time_out"></span>
 				</span>
-				<span class="pf-label time_range" style="width: auto; float: right; margin-right: 1em;">
+				<span class="pf-label time_range">
 					<span class="time_range"></span>
 				</span>
-				<span class="pf-label comments" style="width: auto; clear: left;"></span>
-				<span class="pf-note" style="width: auto;">Timestamp: <span class="timestamp_in"></span> - <span class="timestamp_out"></span></span><br class="pf-clearing" />
+				<span class="pf-note timestamps">Timestamp: <span class="timestamp_in"></span> - <span class="timestamp_out"></span></span>
+				<span class="pf-label comments"></span>
+				<br class="pf-clearing" />
 				<span class="pf-label ui-state-error ui-corner-all error" style="width: auto; display: none;">Overlaps with the next entry!</span>
 			</div>
 			<div class="extras" style="display: none;">[]</div>

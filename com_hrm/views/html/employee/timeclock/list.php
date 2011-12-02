@@ -24,7 +24,30 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		var cur_defaults = {
 			pgrid_toolbar: true,
 			pgrid_toolbar_contents: [
-				{type: 'button', text: 'View', extra_class: 'picon picon-view-time-schedule', double_click: true, url: <?php echo json_encode(pines_url('com_hrm', 'employee/timeclock/view', array('id' => '__title__'))); ?>},
+				{type: 'button', text: 'Report', extra_class: 'picon picon-view-time-schedule-calculus', multi_select: true, double_click: true, click: function(e, rows){
+					var employee_ids = [];
+					rows.each(function(){
+						employee_ids.push($(this).pgrid_get_value(1));
+					});
+					var dialog = $("#p_muid_report_dialog").clone().removeAttr("id")
+					.find("[name=employees]").val(employee_ids.join(",")).end()
+					.dialog({
+						width: 600,
+						modal: true,
+						buttons: {
+							"Run Report": function(){
+								dialog.find("form").submit();
+							}
+						}
+					}).find("[name=date_start], [name=date_end]").datepicker({
+						dateFormat: "yy-mm-dd",
+						changeMonth: true,
+						changeYear: true,
+						showOtherMonths: true,
+						selectOtherMonths: true
+					}).end();
+				}},
+				{type: 'button', text: 'View Full History', extra_class: 'picon picon-view-time-schedule', url: <?php echo json_encode(pines_url('com_hrm', 'employee/timeclock/view', array('id' => '__title__'))); ?>},
 				<?php if (gatekeeper('com_hrm/manageclock')) { ?>
 				{type: 'button', text: 'Edit', extra_class: 'picon picon-view-time-schedule-edit', url: <?php echo json_encode(pines_url('com_hrm', 'employee/timeclock/edit', array('id' => '__title__'))); ?>},
 				<?php } if (gatekeeper('com_hrm/clock') || gatekeeper('com_hrm/manageclock')) { ?>
@@ -108,17 +131,15 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 		</tr>
 	</thead>
 	<tbody>
-	<?php foreach($this->employees as $employee) {
+	<?php $cur_timezone = date_default_timezone_get(); foreach($this->employees as $employee) {
 		// Calculate times in the employee's timezone.
 		$employee_timezone = $employee->get_timezone();
-		$cur_timezone = date_default_timezone_get();
 		date_default_timezone_set($employee_timezone);
 		$today_start = strtotime('Today 12:00 AM');
 		if (date('w') == '1')
 			$week_start = strtotime('Today 12:00 AM');
 		else
 			$week_start = strtotime('last monday 12:00 AM');
-		date_default_timezone_set($cur_timezone);
 		?>
 		<tr title="<?php echo (int) $employee->guid ?>">
 			<td><?php echo (int) $employee->guid ?></td>
@@ -129,7 +150,41 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo round($employee->timeclock->sum($today_start, time()) / (60 * 60), 2).' hours'; ?></td>
 			<td><?php echo round($employee->timeclock->sum($week_start, time()) / (60 * 60), 2).' hours'; ?></td>
 		</tr>
-	<?php } ?>
+	<?php } date_default_timezone_set($cur_timezone); ?>
 	</tbody>
 </table>
 <small>* Today and this week are calculated with regard to the employee's timezone. Week starts on Monday.</small>
+<div title="Hours Clocked Report" id="p_muid_report_dialog" style="display: none;">
+	<form class="pf-form" method="post" action="<?php echo htmlspecialchars(pines_url('com_hrm', 'employee/timeclock/report')); ?>">
+		<?php
+		// Calculate the start of last week.
+		if (date('w') == '1')
+			$week_end = strtotime('Today 12:00 AM');
+		else
+			$week_end = strtotime('last monday 12:00 AM');
+		$week_start = strtotime('-1 week', $week_end);
+		?>
+		<div class="pf-element">
+			<label><span class="pf-label">Start Date</span>
+				<input class="pf-field ui-widget-content ui-corner-all" name="date_start" type="text" size="24" value="<?php echo htmlspecialchars(format_date($week_start, 'custom', 'Y-m-d')); ?>" /></label>
+		</div>
+		<div class="pf-element">
+			<label><span class="pf-label">End Date</span>
+				<input class="pf-field ui-widget-content ui-corner-all" name="date_end" type="text" size="24" value="<?php echo htmlspecialchars(format_date($week_end - 1, 'custom', 'Y-m-d')); ?>" /></label>
+		</div>
+		<div class="pf-element">
+			<span class="pf-label">Local Timezones</span>
+			<label><input class="pf-field" type="checkbox" checked="checked" name="local_timezones" value="ON" /> Calculate dates using the employee's timezone.</label>
+		</div>
+		<div class="pf-element">
+			<span class="pf-label">Paginate</span>
+			<label><input class="pf-field" type="checkbox" checked="checked" name="paginate" value="ON" /> Paginate report so each user is on a separate page.</label>
+		</div>
+		<div class="pf-element">
+			<span class="pf-label">Show Details</span>
+			<label><input class="pf-field" type="checkbox" checked="checked" name="show_details" value="ON" /> Show comments and clock in/out details.</label>
+		</div>
+		<input type="hidden" name="employees" value="" />
+	</form>
+	<br />
+</div>

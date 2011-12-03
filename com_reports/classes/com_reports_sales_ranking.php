@@ -145,17 +145,29 @@ class com_reports_sales_ranking extends entity {
 						array('class' => com_mifi_application, 'skip_ac' => true),
 						array('&',
 							'tag' => array('com_mifi', 'application'),
-							'gte' => array('p_cdate', $current_start),
-							'lt' => array('p_cdate', $current_end),
-							'ref' => array('user', $cur_employee)
+							'gte' => array(
+								array('p_cdate', $current_start),
+								array('p_cdate', $this->start_date)
+							),
+							'lt' => array(
+								array('p_cdate', $current_end),
+								array('p_cdate', $this->end_date)
+							),
+							'ref' => array('user', $cur_employee),
 						)
 					);
 				$last_apps = $pines->entity_manager->get_entities(
 						array('class' => com_mifi_application, 'skip_ac' => true),
 						array('&',
 							'tag' => array('com_mifi', 'application'),
-							'gte' => array('p_cdate', $last_start),
-							'lt' => array('p_cdate', $last_end),
+							'gte' => array(
+								array('p_cdate', $last_start),
+								array('p_cdate', $this->start_date)
+							),
+							'lt' => array(
+								array('p_cdate', $last_end),
+								array('p_cdate', $this->end_date)
+							),
 							'ref' => array('user', $cur_employee)
 						)
 					);
@@ -196,8 +208,16 @@ class com_reports_sales_ranking extends entity {
 						array('class' => com_mifi_application, 'skip_ac' => true),
 						array('&',
 							'tag' => array('com_mifi', 'application'),
-							'gte' => array('p_cdate', $current_start),
-							'lt' => array('p_cdate', $current_end),
+							'gte' => array(
+								array('p_cdate', $current_start),
+								array('p_cdate', $this->start_date)
+							),
+							'lt' => array(
+								array('p_cdate', $current_end),
+								array('p_cdate', $this->end_date)
+							)
+						),
+						array('|',
 							'ref' => array('group', $groups)
 						)
 					);
@@ -205,8 +225,16 @@ class com_reports_sales_ranking extends entity {
 						array('class' => com_mifi_application, 'skip_ac' => true),
 						array('&',
 							'tag' => array('com_mifi', 'application'),
-							'gte' => array('p_cdate', $last_start),
-							'lt' => array('p_cdate', $last_end),
+							'gte' => array(
+								array('p_cdate', $last_start),
+								array('p_cdate', $this->start_date)
+							),
+							'lt' => array(
+								array('p_cdate', $last_end),
+								array('p_cdate', $this->end_date)
+							)
+						),
+						array('|',
 							'ref' => array('group', $groups)
 						)
 					);
@@ -215,7 +243,9 @@ class com_reports_sales_ranking extends entity {
 						array('&',
 							'tag' => array('com_mifi', 'application'),
 							'gte' => array('p_cdate', $this->start_date),
-							'lt' => array('p_cdate', $this->end_date),
+							'lt' => array('p_cdate', $this->end_date)
+						),
+						array('|',
 							'ref' => array('group', $groups)
 						)
 					);

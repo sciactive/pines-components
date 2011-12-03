@@ -37,6 +37,12 @@ return array(
 		'description' => 'The number of recently retrieved entities to cache. If you\'re running out of memory, try lowering this value. 0 means unlimited.',
 		'value' => 50,
 	),
+	array(
+		'name' => 'log_query_on_error',
+		'cname' => 'Log Query on Error',
+		'description' => 'If a query causes an error, log the entire query. (Due to potential security risks, this is off by default.)',
+		'value' => false,
+	),
 );
 
 ?>

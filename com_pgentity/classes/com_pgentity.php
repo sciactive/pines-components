@@ -535,7 +535,7 @@ class com_pgentity extends component implements entity_manager_interface {
 									$mods = substr($cur_value[1], $lastslashpos + 1);
 									if (!$mods)
 										$mods = '';
-									$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."guid" IN (SELECT "guid" FROM "'.$pines->config->com_pgsql->prefix.'com_pgentity_data" WHERE "name"=\''.pg_escape_string($pines->com_pgsql->link, $cur_value[0]).'\' AND "compare_string" IS NOT NULL AND '.$pines->config->com_pgsql->prefix.'match_perl("compare_string", E\''.pg_escape_string($pines->com_pgsql->link, $regex).'\', \''.pg_escape_string($pines->com_pgsql->link, $mods).'\'))';
+									$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."guid" IN (SELECT "guid" FROM "'.$pines->config->com_pgsql->prefix.'com_pgentity_data" WHERE "name"=\''.pg_escape_string($pines->com_pgsql->link, $cur_value[0]).'\' AND "compare_string" IS NOT NULL AND '.$pines->config->com_pgsql->prefix.'match_perl("compare_string", \''.pg_escape_string($pines->com_pgsql->link, $regex).'\', \''.pg_escape_string($pines->com_pgsql->link, $mods).'\'))';
 								}
 							} else {
 								if (!$type_is_not) {
@@ -669,11 +669,15 @@ class com_pgentity extends component implements entity_manager_interface {
 		if ( !(@pg_send_query($pines->com_pgsql->link, $query)) ) {
 			if (function_exists('pines_error'))
 				pines_error('Query failed: ' . pg_last_error());
+			if ($pines->config->com_pgentity->log_query_on_error && function_exists('pines_log'))
+				pines_log('Failed query: '.str_replace("\n", '\n', $query), 'error');
 			return null;
 		}
 		if ( !($result = @pg_get_result($pines->com_pgsql->link)) ) {
 			if (function_exists('pines_error'))
 				pines_error('Query failed: ' . pg_last_error());
+			if ($pines->config->com_pgentity->log_query_on_error && function_exists('pines_log'))
+				pines_log('Failed query: '.str_replace("\n", '\n', $query), 'error');
 			return null;
 		}
 		if ($error = pg_result_error_field($result, PGSQL_DIAG_SQLSTATE)) {
@@ -682,11 +686,15 @@ class com_pgentity extends component implements entity_manager_interface {
 				if ( !($result = @pg_query($pines->com_pgsql->link, $query)) ) {
 					if (function_exists('pines_error'))
 						pines_error('Query failed: ' . pg_last_error());
+					if ($pines->config->com_pgentity->log_query_on_error && function_exists('pines_log'))
+						pines_log('Failed query: '.str_replace("\n", '\n', $query), 'error');
 					return null;
 				}
 			} else {
 				if (function_exists('pines_error'))
 					pines_error('Query failed: ' . pg_last_error());
+				if ($pines->config->com_pgentity->log_query_on_error && function_exists('pines_log'))
+					pines_log('Failed query: '.str_replace("\n", '\n', $query), 'error');
 				return null;
 			}
 		}

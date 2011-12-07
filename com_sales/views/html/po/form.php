@@ -400,7 +400,7 @@ if ($this->entity->final) {
 								continue;
 							if (!isset($missing_products[$cur_product['entity']->guid]))
 								$missing_products[$cur_product['entity']->guid] = array('entity' => $cur_product['entity'], 'quantity' => $cur_product['quantity']);
-						?>
+							?>
 						<tr title="<?php echo (int) $cur_product['entity']->guid; ?>">
 							<td><?php echo htmlspecialchars($cur_product['entity']->sku); ?></td>
 							<td><?php echo htmlspecialchars($cur_product['entity']->name); ?></td>

@@ -78,8 +78,8 @@ class com_sales_po extends entity {
 		if (!isset($this->po_number) || !$this->products)
 			return false;
 		if (!$this->finished) {
+			$this->pending = array();
 			$this->pending_products = array();
-			$this->pending_serials = array();
 			foreach ($this->products as &$cur_product) {
 				$cur_product['received'] = 0;
 				// Count how many of this product has been received.
@@ -90,6 +90,9 @@ class com_sales_po extends entity {
 				// If we've received all of them, move on.
 				if ($cur_product['received'] >= $cur_product['quantity'])
 					continue;
+				$cur_pending = $cur_product;
+				$cur_pending['quantity'] -= $cur_product['received'];
+				$this->pending[] = $cur_pending;
 				$this->pending_products[] = $cur_product['entity'];
 			}
 			unset($cur_product);
@@ -117,7 +120,7 @@ class com_sales_po extends entity {
 					'data' => array('enabled', true)
 				)
 			);
-		
+
 		return $module;
 	}
 }

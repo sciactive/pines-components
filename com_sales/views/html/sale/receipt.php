@@ -236,12 +236,13 @@ switch ($this->entity->status) {
 								$shipped++;
 						}
 						if ($fulfilled) {
-							$left = $cur_product['quantity'] - $shipped;
+							$left = $fulfilled - $shipped;
 							if ($left)
 								$text[] = "($left to ship)";
-						} else {
-							$text[] = '(Pending)';
 						}
+						$unfulfilled = $cur_product['quantity'] - $fulfilled;
+							if ($unfulfilled)
+								$text[] = "($unfulfilled to fulfill)";
 					}
 					echo htmlspecialchars(implode(' ', $text));
 					?></td>
@@ -308,8 +309,7 @@ switch ($this->entity->status) {
 			<span class="pf-field comments"><?php echo htmlspecialchars($this->entity->comments); ?></span>
 		</div>
 	</div>
-	<?php } ?>
-	<?php
+	<?php }
 	switch ($this->entity->status) {
 		case 'quoted':
 			$label = (string) $pines->config->com_sales->quote_note_label;
@@ -327,9 +327,11 @@ switch ($this->entity->status) {
 			$label = (string) $pines->config->com_sales->return_note_label;
 			$text = (string) $pines->config->com_sales->return_note_text;
 			break;
+		default:
+			$label = null;
+			$text = null;
 	}
-	if (!empty($text)) {
-	?>
+	if (!empty($text)) { ?>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label"><?php echo htmlspecialchars($label); ?></span>
 		<br />

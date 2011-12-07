@@ -64,7 +64,7 @@ foreach ($items as $cur_item) {
 		pines_notice('Couldn\'t find matching available stock, skipping this item...');
 		continue;
 	}
-	// Removed the stock.
+	// Remove the stock.
 	if (!($stock->remove('sold_pending_shipping', $cur_sale, $stock->location) && $stock->save())) {
 		pines_notice('Stock could not be removed, skipping this item...');
 		continue;

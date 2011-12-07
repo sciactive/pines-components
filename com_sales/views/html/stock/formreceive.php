@@ -197,7 +197,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					{type: 'separator'},
 					{
 						type: 'button',
-						title: 'Serial',
+						text: 'Serial',
 						extra_class: 'picon picon-view-barcode',
 						double_click: true,
 						click: function(e, rows){
@@ -218,7 +218,7 @@ if ($pines->config->com_sales->autocomplete_product)
 					},
 					{
 						type: 'button',
-						title: 'Quantity',
+						text: 'Qty',
 						extra_class: 'picon picon-document-multiple',
 						double_click: true,
 						click: function(e, rows){

@@ -92,7 +92,7 @@ foreach ($products as $cur_product) {
 		if ($status == 'received_po') {
 			// Check for warehouse items being assigned the incoming stock.
 			$wh_sales = $pines->entity_manager->get_entities(
-					array('class' => com_sales_sale),
+					array('class' => com_sales_sale, 'skip_ac' => true),
 					array('&',
 						'tag' => array('com_sales', 'sale'),
 						'ref' => array(
@@ -107,6 +107,7 @@ foreach ($products as $cur_product) {
 						)
 					)
 				);
+			$changed = false;
 			foreach ($wh_sales as $cur_sale) {
 				foreach ($cur_sale->products as &$cur_sale_product) {
 					if ($cur_sale_product['delivery'] != 'warehouse' || !$cur_product_entity->is($cur_sale_product['entity']))
@@ -120,12 +121,24 @@ foreach ($products as $cur_product) {
 					$cur_sale_product['stock_entities'][] = $stock;
 					if ($cur_product_entity->serialized)
 						$cur_sale_product['serial'] = $stock->serial;
-					$change = true;
+					// Break out so we don't assign two.
+					$changed = true;
+					break;
 				}
 				unset($cur_sale_product);
-				if (!$cur_sale->save()) {
-					pines_log("Couldn't assign incoming stock on PO {$origin->po_number} to the warehouse order {$cur_sale->id}.", 'error');
-					pines_error("Couldn't assign incoming stock on PO {$origin->po_number} to the warehouse order {$cur_sale->id}.");
+				if ($changed) {
+					// The stock is now attached to a sale, so it's not available anymore.
+					pines_log("Setting stock entry $stock->guid to unavailable. It is being assigned to a warehouse order on sale $cur_sale->id.", 'info');
+					if (!($stock->remove('sold_pending_shipping', $cur_sale, $stock->location) && $stock->save())) {
+						pines_notice("Stock entry $stock->guid could not be removed, and it belongs on sale $cur_sale->id.");
+					} else {
+						if (!$cur_sale->save()) {
+							pines_log("Couldn't assign incoming stock on PO {$origin->po_number} to the warehouse order {$cur_sale->id}.", 'error');
+							pines_error("Couldn't assign incoming stock on PO {$origin->po_number} to the warehouse order {$cur_sale->id}.");
+						}
+					}
+					// We found the right sale and updated it, so break out now.
+					break;
 				}
 			}
 		}

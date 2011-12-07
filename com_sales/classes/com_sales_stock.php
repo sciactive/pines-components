@@ -93,9 +93,12 @@ class com_sales_stock extends entity {
 	 *
 	 * This process creates a transaction entity. It adds itself to the
 	 * receiving entity's "received" var if $update_received is true. It updates
-	 * the location of the stock entry, and sets the status to "available".
+	 * the location of the stock entry, and sets the available variable to true.
 	 *
 	 * If $location is not set, the current user's primary group is used.
+	 * 
+	 * This does not necessarily save the entity, so be sure to save it if
+	 * needed.
 	 *
 	 * @param string $reason The reason for the stock receipt. Such as "received_po".
 	 * @param entity &$on_entity The entity which the product is to be received on.
@@ -121,6 +124,21 @@ class com_sales_stock extends entity {
 		$this->location = ($location ? $location : $_SESSION['user']->group);
 		$tx->type = 'received';
 		$tx->reason = $reason;
+		if (isset($on_entity) && $on_entity->has_tag('po')) {
+			// If it's being received on a PO, it needs the cost from it.
+			if (!$on_entity->pending && $on_entity->save() && !$on_entity->pending) {
+				// If it doesn't have a pending array, it's not expecting products.
+				pines_log("Receiving stock on a PO that is not expecting products. (PO: $on_entity->po_number)", 'warning');
+			} else {
+				// Find this product.
+				foreach ($on_entity->pending as $cur_pending) {
+					if (!$this->product->is($cur_pending['entity']))
+						continue;
+					$this->cost = (float) $cur_pending['cost'];
+					break;
+				}
+			}
+		}
 		if (!isset($this->guid))
 			$return = $this->save() && $return;
 
@@ -150,6 +168,9 @@ class com_sales_stock extends entity {
 	 *
 	 * If $location is not set, it becomes null, meaning the stock is no longer
 	 * located within the company.
+	 * 
+	 * This does not necessarily save the entity, so be sure to save it if
+	 * needed.
 	 *
 	 * @param string $reason The reason for the stock removal. Such as "sold_at_store".
 	 * @param entity &$on_entity The entity which the product is to be removed by.
@@ -170,7 +191,7 @@ class com_sales_stock extends entity {
 		$this->available = false;
 		if ($this->location)
 			$old_location = $this->location;
-		// TODO: Copy location to GID (optional) to allow easier access control.
+		// TODO: Copy location to group (optional) to allow easier access control.
 		$this->location = $location;
 		$tx->type = 'removed';
 		$tx->reason = $reason;

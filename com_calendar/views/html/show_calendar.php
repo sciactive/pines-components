@@ -15,8 +15,19 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
+if (isset($this->employee->guid)) {
+	$subject = $this->employee;
+} else {
+	$subject = $this->location;
+}
+if (!isset($subject)) {
+	echo 'No calendar storage available. You must be logged in and able to have a calendar.';
+	return;
+}
+
 $this->title = 'Company Schedule [' . htmlspecialchars(isset($this->employee) ? $this->employee->name  : $this->location->name) . ']';
-$timezone = $_SESSION['user']->get_timezone();
+$this->note = 'Timezone: '.htmlspecialchars($this->timezone);
+
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */
@@ -76,7 +87,7 @@ $timezone = $_SESSION['user']->get_timezone();
 			selectable: true,
 			theme: true,
 			ignoreTimezone: false,
-			editable: <?php echo gatekeeper('com_calendar/managecalendar') ? 'true' : 'false'; ?>,
+			editable: <?php echo json_encode(gatekeeper('com_calendar/managecalendar')); ?>,
 			events: [<?php
 				// Read in all existing events.
 				$event_counter = 0;
@@ -91,30 +102,31 @@ $timezone = $_SESSION['user']->get_timezone();
 						continue;
 					if ($event_counter > 0)
 						echo ',';
-					$cur_start = format_date($cur_event->start, 'custom', 'G');
+					// Get the start hour of the first event.
+					$cur_start = format_date($cur_event->start, 'custom', 'G', $this->timezone);
 					if (!$cur_event->all_day && ($cur_start < $min_start || !isset($min_start)))
 						$min_start = $cur_start;
 					echo '{';
 					if ($cur_event->event_id != 0) {
 						echo 'group: true,';
-						echo 'id: '. $cur_event->event_id .', ';
-						echo '_id: '. $cur_event->event_id .', ';
-						echo 'guid: '. $cur_event->guid .', ';
+						echo 'id: '. json_encode($cur_event->event_id) .', ';
+						echo '_id: '. json_encode($cur_event->event_id) .', ';
+						echo 'guid: '. json_encode($cur_event->guid) .', ';
 					} else {
 						echo 'group: false,';
-						echo 'id: '. $cur_event->guid .', ';
-						echo '_id: '. $cur_event->guid .', ';
+						echo 'id: '. json_encode($cur_event->guid) .', ';
+						echo '_id: '. json_encode($cur_event->guid) .', ';
 					}
 					echo 'title: '. json_encode($cur_event->title) .', ';
-					echo 'start: '. json_encode(format_date($cur_event->start, 'custom', 'Y-m-d H:i', $timezone)) .', ';
-					echo 'end: '. json_encode(format_date($cur_event->end, 'custom', 'Y-m-d H:i', $timezone)) .', ';
+					echo 'start: '. json_encode(format_date($cur_event->start, 'custom', 'Y-m-d H:i', $this->timezone)) .', ';
+					echo 'end: '. json_encode(format_date($cur_event->end, 'custom', 'Y-m-d H:i', $this->timezone)) .', ';
 					if ((!gatekeeper('com_calendar/managecalendar') && (!$cur_event->user->is($_SESSION['user']) || $cur_event->appointment)) || $cur_event->time_off) {
 						echo 'editable: false,';
 					} else {
 						echo 'editable: true,';
 					}
 					if (isset($cur_event->appointment->guid)) {
-						echo 'appointment: '.$cur_event->appointment->guid.',';
+						echo 'appointment: '.json_encode($cur_event->appointment->guid).',';
 						if ($cur_event->appointment->status == 'open') {
 							if ($cur_event->appointment->action_date < strtotime('-3 days'))
 								echo 'className: \'red\',';
@@ -135,7 +147,6 @@ $timezone = $_SESSION['user']->get_timezone();
 					$event_counter++;
 				} ?>],
 			firstHour: <?php echo isset($min_start) ? $min_start : 8; ?>,
-			minTime: <?php echo isset($min_start) ? $min_start : 8; ?>,
 			select: function(start, end, allDay, jsEvent, view) {
 				pines.com_calendar_new_event(start.toString(), end.toString());
 			},
@@ -193,7 +204,7 @@ $timezone = $_SESSION['user']->get_timezone();
 				}
 			}
 		});
-		var current_date = $.fullCalendar.parseDate(<?php echo (int) $this->date[0]; ?>);
+		var current_date = $.fullCalendar.parseDate(<?php echo strtotime(format_date((int) $this->date[0], 'custom', 'Y-m-d', $this->timezone)); ?>);
 		$('#p_muid_calendar').fullCalendar('gotoDate', current_date);
 	});
 	// Add new events to the calendar, mostly for duplicating events.
@@ -207,17 +218,15 @@ $timezone = $_SESSION['user']->get_timezone();
 				pines.error("An error occured while trying to add events to the calendar.");
 			},
 			success: function(){
-				pines.get(<?php echo json_encode(pines_url('com_calendar', 'editcalendar',
-					array(
-						'view_type' => $this->view_type,
-						'start' => format_date($this->date[0], 'date_short'),
-						'end' => format_date($this->date[1], 'date_short'),
-						'location' => $this->location->guid,
-						'employee' => $this->employee->guid,
-						'descendents' => $this->descendents,
-						'filter' => $this->filter
-					)
-				)); ?>);
+				pines.get(<?php echo json_encode(pines_url('com_calendar', 'editcalendar', array(
+					'view_type' => $this->view_type,
+					'start' => format_date($this->date[0], 'date_sort', '', $this->timezone),
+					'end' => format_date($this->date[1], 'date_sort', '', $this->timezone),
+					'location' => $this->location->guid,
+					'employee' => $this->employee->guid,
+					'descendents' => $this->descendents,
+					'filter' => $this->filter
+				))); ?>);
 			}
 		});
 	};
@@ -251,7 +260,7 @@ $timezone = $_SESSION['user']->get_timezone();
 			url: <?php echo json_encode(pines_url('com_calendar', 'savecalendar')); ?>,
 			type: "POST",
 			dataType: "html",
-			data: {"events": events_dump},
+			data: {"events": events_dump, "timezone": <?php echo json_encode($this->timezone); ?>},
 			error: function(){
 				pines.error("An error occured while trying to save the calendar.");
 			},
@@ -259,17 +268,15 @@ $timezone = $_SESSION['user']->get_timezone();
 				if (data)
 					alert(data);
 				if (refresh || data) {
-					pines.get(<?php echo json_encode(pines_url('com_calendar', 'editcalendar',
-						array(
-							'view_type' => $this->view_type,
-							'start' => $this->start,
-							'end' => $this->end,
-							'location' => $this->location->guid,
-							'employee' => $this->employee->guid,
-							'descendents' => $this->descendents,
-							'filter' => $this->filter
-						)
-					)); ?>);
+					pines.get(<?php echo json_encode(pines_url('com_calendar', 'editcalendar', array(
+						'view_type' => $this->view_type,
+						'start' => format_date($this->date[0], 'date_sort', '', $this->timezone),
+						'end' => format_date($this->date[1], 'date_sort', '', $this->timezone),
+						'location' => $this->location->guid,
+						'employee' => $this->employee->guid,
+						'descendents' => $this->descendents,
+						'filter' => $this->filter
+					))); ?>);
 				}
 			}
 		});

@@ -19,11 +19,14 @@ $edit_others = gatekeeper('com_calendar/managecalendar') ? true : false;
 $pines->page->override = true;
 header('Content-Type: text/plain');
 
+// Run the action in the given timezone.
+$cur_timezone = date_default_timezone_get();
+date_default_timezone_set($_REQUEST['timezone']);
+
 $errors = false;
 if (isset($_REQUEST['events'])) {
 	$events = explode(',', $_REQUEST['events']);
 
-	date_default_timezone_set($_SESSION['user']->get_timezone());
 	foreach ($events as $cur_event) {
 		if (!empty($cur_event)) {
 			$event_details = explode('|', $cur_event);
@@ -49,15 +52,17 @@ if (isset($_REQUEST['events'])) {
 			} else {
 				if (isset($event->appointment->guid)) {
 					$existing_appt = $pines->entity_manager->get_entity(
-						array('class' => com_customer_interaction),
-						array('&',
-							'data' => array('status', 'open'),
-							'ref' => array('customer', $event->appointment->customer),
-							'gte' => array('action_date', $event->start),
-							'lte' => array('action_date', $event->end)
-						),
-						array('!&', 'data' => array('guid', $event->appointment->guid))
-					);
+							array('class' => com_customer_interaction),
+							array('&',
+								'status' => array('status', 'open'),
+								'ref' => array('customer', $event->appointment->customer),
+								'gte' => array('action_date', $event->start),
+								'lte' => array('action_date', $event->end)
+							),
+							array('!&',
+								'guid' => $event->appointment->guid
+							)
+						);
 					if (isset($existing_appt->guid) && $event->appointment->guid != $existing_appt->guid) {
 						$errors = $event->appointment->customer->name.' is already scheduled for an appointment during this timeslot.';
 						continue;
@@ -72,5 +77,7 @@ if (isset($_REQUEST['events'])) {
 	}
 }
 $pines->page->override_doc($errors);
+
+date_default_timezone_set($cur_timezone);
 
 ?>

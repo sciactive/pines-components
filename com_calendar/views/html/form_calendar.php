@@ -74,13 +74,13 @@ if ($pines->config->com_calendar->com_customer)
 		var change_counter = 0;
 		$("#p_muid_employee").change(function(){
 			if (change_counter > 0)
-				pines.post(<?php echo json_encode(pines_url('com_calendar', 'editcalendar')); ?>, {
+				pines.get(<?php echo json_encode(pines_url('com_calendar', 'editcalendar')); ?>, {
 					"view_type": <?php echo json_encode($this->view_type); ?>,
-					"start": <?php echo json_encode(format_date($this->date[0], 'date_short')); ?>,
-					"end": <?php echo json_encode(format_date($this->date[1], 'date_short')); ?>,
+					"start": <?php echo json_encode(format_date($this->date[0], 'date_sort', '', $this->timezone)); ?>,
+					"end": <?php echo json_encode(format_date($this->date[1], 'date_sort', '', $this->timezone)); ?>,
 					"location": <?php echo json_encode((string) $this->location->guid); ?>,
 					"employee": $(this).val(),
-					"descendents": <?php echo $this->descendents ? 'true' : 'false'; ?>,
+					"descendents": <?php echo $this->descendents ? '"true"' : '"false"'; ?>,
 					"filter": <?php echo json_encode($this->filter); ?>
 				});
 			change_counter++;
@@ -106,11 +106,11 @@ if ($pines->config->com_calendar->com_customer)
 		$("#p_muid_filter").buttonset().delegate("input", "click", function() {
 			pines.get(<?php echo json_encode(pines_url('com_calendar', 'editcalendar')); ?>, {
 				view_type: <?php echo json_encode($this->view_type); ?>,
-				start: <?php echo json_encode(format_date($this->date[0], 'date_short')); ?>,
-				end: <?php echo json_encode(format_date($this->date[1], 'date_short')); ?>,
-				location: <?php echo (int) $this->location->guid; ?>,
-				employee: <?php echo isset($this->employee) ? (int) $this->employee->guid : 'null'; ?>,
-				descendents: <?php echo $this->descendents ? 'true' : 'false'; ?>,
+				start: <?php echo json_encode(format_date($this->date[0], 'date_sort', '', $this->timezone)); ?>,
+				end: <?php echo json_encode(format_date($this->date[1], 'date_sort', '', $this->timezone)); ?>,
+				location: <?php echo json_encode((string) $this->location->guid); ?>,
+				employee: <?php echo json_encode((string) $this->employee->guid); ?>,
+				descendents: <?php echo $this->descendents ? '"true"' : '"false"'; ?>,
 				filter: $(this).val()
 			});
 		});
@@ -136,7 +136,7 @@ if ($pines->config->com_calendar->com_customer)
 			dataType: "html",
 			data: {
 				"location": <?php echo json_encode((string) $this->location->guid); ?>,
-				"descendents": descendents
+				"descendents": descendents ? "true" : "false"
 			},
 			error: function(XMLHttpRequest, textStatus){
 				pines.error("An error occured while trying to retrieve the company schedule form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
@@ -157,12 +157,12 @@ if ($pines->config->com_calendar->com_customer)
 							form.dialog('close');
 							var schedule_location = form.find(":input[name=location]").val();
 							descendents = form.find(":input[name=descendents]").attr('checked');
-							pines.post(<?php echo json_encode(pines_url('com_calendar', 'editcalendar')); ?>, {
+							pines.get(<?php echo json_encode(pines_url('com_calendar', 'editcalendar')); ?>, {
 								"view_type": <?php echo json_encode($this->view_type); ?>,
-								"start": <?php echo json_encode(format_date($this->date[0], 'date_short')); ?>,
-								"end": <?php echo json_encode(format_date($this->date[1], 'date_short')); ?>,
+								"start": <?php echo json_encode(format_date($this->date[0], 'date_sort', '', $this->timezone)); ?>,
+								"end": <?php echo json_encode(format_date($this->date[1], 'date_sort', '', $this->timezone)); ?>,
 								"location": schedule_location,
-								"descendents": descendents,
+								"descendents": descendents ? "true" : "false",
 								"filter": <?php echo json_encode($this->filter); ?>
 							});
 						}
@@ -182,7 +182,8 @@ if ($pines->config->com_calendar->com_customer)
 			data: {
 				"location": <?php echo json_encode((string) $this->location->guid); ?>,
 				"start": start,
-				"end": end
+				"end": end,
+				"timezone": <?php echo json_encode($this->timezone); ?>
 			},
 			error: function(XMLHttpRequest, textStatus){
 				pines.error("An error occured while trying to retrieve the new event form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
@@ -213,11 +214,12 @@ if ($pines->config->com_calendar->com_customer)
 								time_start: form.find(":input[name=time_start]").val(),
 								time_end: form.find(":input[name=time_end]").val(),
 								location: form.find(":input[name=location]").val(),
-								descendents: <?php echo $this->descendents ? 'true' : 'false'; ?>,
-								employee_view: <?php echo isset($this->employee) ? 'true' : 'false'; ?>,
+								descendents: <?php echo $this->descendents ? '"true"' : '"false"'; ?>,
+								employee_view: <?php echo isset($this->employee) ? '"true"' : '"false"'; ?>,
 								view_type: <?php echo json_encode($this->view_type); ?>,
-								calendar_start: <?php echo json_encode(format_date($this->date[0], 'date_short')); ?>,
-								calendar_end: <?php echo json_encode(format_date($this->date[1], 'date_short')); ?>
+								calendar_start: <?php echo json_encode(format_date($this->date[0], 'date_sort', '', $this->timezone)); ?>,
+								calendar_end: <?php echo json_encode(format_date($this->date[1], 'date_sort', '', $this->timezone)); ?>,
+								timezone: form.find(":input[name=timezone]").val()
 							});
 						},
 						"Cust. Appt.": function(){
@@ -238,7 +240,7 @@ if ($pines->config->com_calendar->com_customer)
 			url: <?php echo json_encode(pines_url('com_calendar', 'editevent')); ?>,
 			type: "POST",
 			dataType: "html",
-			data: {"id": event_id},
+			data: {"id": event_id, "timezone": <?php echo json_encode($this->timezone); ?>},
 			error: function(XMLHttpRequest, textStatus){
 				pines.error("An error occured while trying to retrieve the event form:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 			},
@@ -269,11 +271,12 @@ if ($pines->config->com_calendar->com_customer)
 								time_start: form.find(":input[name=time_start]").val(),
 								time_end: form.find(":input[name=time_end]").val(),
 								location: form.find(":input[name=location]").val(),
-								descendents: <?php echo $this->descendents ? 'true' : 'false'; ?>,
-								employee_view: <?php echo isset($this->employee) ? 'true' : 'false'; ?>,
+								descendents: <?php echo $this->descendents ? '"true"' : '"false"'; ?>,
+								employee_view: <?php echo isset($this->employee) ? '"true"' : '"false"'; ?>,
 								view_type: <?php echo json_encode($this->view_type); ?>,
-								calendar_start: <?php echo json_encode(format_date($this->date[0], 'date_short')); ?>,
-								calendar_end: <?php echo json_encode(format_date($this->date[1], 'date_short')); ?>
+								calendar_start: <?php echo json_encode(format_date($this->date[0], 'date_sort', '', $this->timezone)); ?>,
+								calendar_end: <?php echo json_encode(format_date($this->date[1], 'date_sort', '', $this->timezone)); ?>,
+								timezone: form.find(":input[name=timezone]").val()
 							});
 							form.dialog('close');
 							pines.selected_event.removeClass('ui-state-disabled');
@@ -290,8 +293,9 @@ if ($pines->config->com_calendar->com_customer)
 									pines.error("An error occured while trying to delete the event.");
 								},
 								success: function(data) {
-									alert('Deleted event ['+form.find(":input[name=event_label]").val()+'].');
-									$("#calendar").fullCalendar('removeEvents', form.find(":input[name=id]").val());
+									if (data)
+										pines.error("Couldn't delete "+pines.safe(data));
+									$(<?php echo json_encode("#{$this->cal_muid}_calendar"); ?>).fullCalendar('removeEvents', form.find(":input[name=id]").val());
 									form.dialog('close');
 									pines.selected_event.removeClass('ui-state-disabled');
 								}
@@ -409,7 +413,8 @@ if ($pines->config->com_calendar->com_customer)
 							time: $("#p_muid_new_interaction [name=interaction_time]").val(),
 							type: $("#p_muid_new_interaction [name=interaction_type]").val(),
 							status: $("#p_muid_new_interaction [name=interaction_status]").val(),
-							comments: $("#p_muid_new_interaction [name=interaction_comments]").val()
+							comments: $("#p_muid_new_interaction [name=interaction_comments]").val(),
+							timezone: <?php echo json_encode($this->timezone); ?>
 						},
 						beforeSend: function(){
 							loader = $.pnotify({
@@ -515,7 +520,7 @@ if ($pines->config->com_calendar->com_customer)
 			url: <?php echo json_encode(pines_url('com_customer', 'interaction/info')); ?>,
 			type: "POST",
 			dataType: "json",
-			data: {id: appointment_id},
+			data: {id: appointment_id, timezone: <?php echo json_encode($this->timezone); ?>},
 			error: function(XMLHttpRequest, textStatus){
 				pines.error("An error occured:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
 			},
@@ -695,6 +700,9 @@ if ($pines->config->com_calendar->com_customer)
 					<option value="11:00 PM">11:00 PM</option>
 				</select>
 			</span>
+		</div>
+		<div class="pf-element">
+			<small>Using timezone: <?php echo htmlspecialchars($this->timezone); ?></small>
 		</div>
 		<div class="pf-element">
 			<label>

@@ -16,33 +16,47 @@ if ( !gatekeeper('com_calendar/editcalendar') && !gatekeeper('com_calendar/manag
 	punt_user(null, pines_url('com_calendar', 'editevent'));
 
 $event = com_calendar_event::factory((int)$_REQUEST['id']);
+
+// Use the correct timezone.
+if (!empty($_REQUEST['timezone'])) {
+	$timezone = $_REQUEST['timezone'];
+} elseif (isset($event->user->guid)) {
+	$timezone = $event->user->get_timezone;
+} else {
+	$timezone = $_SESSION['user']->get_timezone();
+}
+$cur_timezone = date_default_timezone_get();
+date_default_timezone_set($timezone);
+
 if (!isset($event->guid)) {
 	$event = com_calendar_event::factory();
 	if (!empty($_REQUEST['start'])) {
-		$event->start = strtotime(preg_replace('/\(.*/', '', $_REQUEST['start']));
-		$event->end = strtotime(preg_replace('/\(.*/', '', $_REQUEST['end']));
+		// Fix the stupid time string that has the wrong timezone on it. I hate JavaScript's Date object.
+		$event->start = strtotime(preg_replace('/ ?(\w{3,4}-\d{4})? ?(\(\w+\))?$/', '', $_REQUEST['start']));
+		$event->end = strtotime(preg_replace('/ ?(\w{3,4}-\d{4})? ?(\(\w+\))?$/', '', $_REQUEST['end']));
 		if ($event->start == $event->end)
 			$event->all_day = true;
 	}
 } else {
 	if (!gatekeeper('com_calendar/managecalendar') && !$event->employee->is($_SESSION['user'])) {
 		pines_error('You cannot only edit your own events.');
-		$pines->com_calendar->show_calendar();
+		pines_redirect(pines_url('com_calendar', 'editcalendar'));
+		date_default_timezone_set($cur_timezone);
 		return;
 	}
-	// Change the timezone to enter the event with the user's timezone.
-	date_default_timezone_set($_SESSION['user']->get_timezone());
 }
 
 if (isset($event->appointment)) {
 	pines_error('You cannot edit appointments.');
-	$pines->com_calendar->show_calendar();
+	pines_redirect(pines_url('com_calendar', 'editcalendar'));
 	return;
 }
 
 if (isset($_REQUEST['location']))
 	$location = group::factory((int)$_REQUEST['location']);
 
-$event->print_form($location);
+date_default_timezone_set($cur_timezone);
+
+$event->print_form($location, $timezone);
 
 ?>

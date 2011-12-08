@@ -18,6 +18,13 @@ if ( !gatekeeper('com_customer/viewhistory') )
 $pines->page->override = true;
 header('Content-Type: application/json');
 
+// Change the timezone to the supplied timezone or user's timezone.
+$cur_timezone = date_default_timezone_get();
+if (!empty($_REQUEST['timezone']))
+	date_default_timezone_set($_REQUEST['timezone']);
+else
+	date_default_timezone_set($_SESSION['user']->get_timezone());
+
 $interaction = com_customer_interaction::factory((int) $_REQUEST['id']);
 if (!isset($interaction->guid))
 	$pines->page->override_doc();
@@ -30,7 +37,7 @@ if (!isset($interaction->sale->guid)) {
 	$sale_url = pines_url('com_sales', 'sale/receipt', array('id' => $interaction->sale->guid));
 }
 
-if ($interaction->type == 'Email'){
+if ($interaction->type == 'Email') {
 	$contact_info = $interaction->customer->email;
 } elseif (!empty($interaction->customer->phone_cell)) {
 	$contact_info = format_phone($interaction->customer->phone_cell);
@@ -57,5 +64,7 @@ $json_struct = (object) array(
 );
 
 $pines->page->override_doc(json_encode($json_struct));
+
+date_default_timezone_set($cur_timezone);
 
 ?>

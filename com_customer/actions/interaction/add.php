@@ -36,8 +36,12 @@ if (!isset($employee)) {
 $interaction = com_customer_interaction::factory();
 $interaction->customer = $customer;
 $interaction->employee = $employee;
-// Change the timezone to enter the event with the user's timezone.
-date_default_timezone_set($_SESSION['user']->get_timezone());
+// Change the timezone to enter the event with the supplied timezone or user's timezone.
+$cur_timezone = date_default_timezone_get();
+if (!empty($_REQUEST['timezone']))
+	date_default_timezone_set($_REQUEST['timezone']);
+else
+	date_default_timezone_set($_SESSION['user']->get_timezone());
 $interaction->action_date = strtotime($_REQUEST['date'].$_REQUEST['time']);
 $interaction->type = $_REQUEST['type'];
 $interaction->status = $_REQUEST['status'];
@@ -54,6 +58,7 @@ $existing_appt = $pines->entity_manager->get_entity(
 );
 if (isset($existing_appt->guid) && $interaction->guid != $existing_appt->guid) {
 	$pines->page->override_doc('"conflict"');
+	date_default_timezone_set($cur_timezone);
 	return;
 }
 
@@ -89,6 +94,7 @@ if ($pines->config->com_customer->com_calendar) {
 	$event->ac->other = 2;
 	if (!$event->save()) {
 		$pines->page->override_doc('false');
+		date_default_timezone_set($cur_timezone);
 		return;
 	}
 
@@ -107,5 +113,7 @@ if ($interaction->save()) {
 } else {
 	$pines->page->override_doc('false');
 }
+
+date_default_timezone_set($cur_timezone);
 
 ?>

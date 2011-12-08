@@ -38,6 +38,9 @@ defined('P_RUN') or die('Direct access prohibited');
 // ]]>
 </script>
 <form class="pf-form" method="post" id="p_muid_lineup" action="<?php echo htmlspecialchars(pines_url('com_calendar', 'savelineup')); ?>">
+	<div class="pf-element">
+		<small>Dates and times are calculated using each employee's timezone.</small>
+	</div>
 	<div class="pf-element pf-full-width">
 		<select class="ui-widget-content ui-corner-all form_select" name="employee">
 			<?php // Load employees for this location.
@@ -61,9 +64,6 @@ defined('P_RUN') or die('Direct access prohibited');
 	<div class="pf-element pf-full-width">
 		<span id="p_muid_calendar"></span>
 	</div>
-	<br class="pf-clearing" />
-	<div class="pf-group">
-		<input type="hidden" name="location" value="<?php echo (int) $this->location->guid; ?>" />
-		<input type="hidden" name="shifts" value="" />
-	</div>
+	<input type="hidden" name="location" value="<?php echo (int) $this->location->guid; ?>" />
+	<input type="hidden" name="shifts" value="" />
 </form>

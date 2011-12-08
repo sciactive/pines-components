@@ -79,13 +79,23 @@ class com_calendar_event extends entity {
 	/**
 	 * Print a form to edit the event.
 	 * @param group $location The location to create the event for.
+	 * @param string $timezone The timezone to edit the event in.
 	 */
-	public function print_form($location = null) {
+	public function print_form($location = null, $timezone = null) {
 		global $pines;
 		$pines->page->override = true;
 
+		if (empty($timezone)) {
+			if (isset($this->user->guid)) {
+				$timezone = $this->user->get_timezone;
+			} else {
+				$timezone = $_SESSION['user']->get_timezone();
+			}
+		}
+
 		$module = new module('com_calendar', 'form_event', 'content');
 		$module->entity = $this;
+		$module->timezone = $timezone;
 		// Should work like this, we need to have the employee's group update upon saving it to a user.
 		$module->employees = $pines->com_hrm->get_employees();
 		$event_location = $this->group->guid;

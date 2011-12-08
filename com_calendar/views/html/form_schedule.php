@@ -51,6 +51,13 @@ defined('P_RUN') or die('Direct access prohibited');
 </script>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_calendar', 'saveschedule')); ?>">
 	<div class="pf-element">
+		<small>Dates and times are calculated using the employee's timezone.
+			<?php if (isset($this->entity->guid)) { ?>
+			(<?php echo htmlspecialchars($this->entity->get_timezone()); ?>)
+			<?php } ?>
+		</small>
+	</div>
+	<div class="pf-element">
 		<label><input class="pf-field" type="checkbox" name="all_day" value="ON" />All Day</label>
 	</div>
 	<div class="pf-element">
@@ -108,10 +115,7 @@ defined('P_RUN') or die('Direct access prohibited');
 	<div class="pf-element pf-full-width">
 		<span id="p_muid_calendar"></span>
 	</div>
-	<br class="pf-clearing" />
-	<div class="pf-group">
-		<input type="hidden" name="dates" value="" />
-	</div>
+	<input type="hidden" name="dates" value="" />
 	<?php if (isset($this->entity->guid)) { ?>
 	<input type="hidden" name="employee" value="<?php echo (int) $this->entity->guid ?>" />
 	<?php } ?>

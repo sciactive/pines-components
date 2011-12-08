@@ -19,18 +19,20 @@ if (isset($_REQUEST['employee'])) {
 	$employee = com_hrm_employee::factory((int) $_REQUEST['employee']);
 	if (!isset($employee->guid)) {
 		pines_error('The specified employee for this schedule does not exist.');
-		$pines->com_calendar->show_calendar();
+		pines_redirect(pines_url('com_calendar', 'editcalendar'));
 		return;
 	}
 	
 	if (empty($_REQUEST['dates'])) {
 		pines_notice('No dates were specified to schedule work for.');
-		$pines->com_calendar->show_calendar(null, null, $employee);
+		pines_redirect(pines_url('com_calendar', 'editcalendar', array('employee' => $_REQUEST['employee'])));
 		return;
 	}
 	$dates = explode(',', $_REQUEST['dates']);
 	$all_day = ($_REQUEST['all_day'] == 'true');
 	$location = $employee->group;
+	// Enter schedule in employee's timezone.
+	$cur_timezone = date_default_timezone_get();
 	date_default_timezone_set($employee->get_timezone());
 	foreach ($dates as $cur_date) {
 		$event = com_calendar_event::factory();
@@ -68,6 +70,7 @@ if (isset($_REQUEST['employee'])) {
 			$event->save();
 		}
 	}
+	date_default_timezone_set($cur_timezone);
 
 	if (empty($failed_removes)) {
 		pines_notice('Work schedule entered for '.$employee->name);

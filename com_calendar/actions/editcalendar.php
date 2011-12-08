@@ -21,14 +21,6 @@ if (!empty($_REQUEST['view_type'])) {
 	$view_type = 'agendaWeek';
 }
 
-if (!empty($_REQUEST['start'])) {
-	$start = strtotime($_REQUEST['start']);
-	$end = strtotime($_REQUEST['end']);
-} else {
-	$start = strtotime('next monday', time() - 604800);
-	$end = strtotime('next monday');
-}
-
 $location = group::factory((int) $_REQUEST['location']);
 if (!isset($location->guid))
 	$location = null;
@@ -36,10 +28,37 @@ if (!isset($location->guid))
 $employee = com_hrm_employee::factory((int) $_REQUEST['employee']);
 if (!isset($employee->guid))
 	$employee = null;
+if (!isset($employee) && !isset($location))
+	$employee = $_SESSION['user'];
+
+// Get the timezone.
+if (isset($employee->guid))
+	$timezone = $employee->get_timezone();
+else {
+	$parent = $location;
+	do {
+		$timezone = $parent->timezone;
+		$parent = $parent->parent;
+	} while(empty($timezone) && isset($parent->guid));
+}
+if (empty($timezone))
+	$timezone = $pines->config->timezone;
+
+// Calculate using correct timezone.
+$cur_timezone = date_default_timezone_get();
+date_default_timezone_set($timezone);
+if (!empty($_REQUEST['start'])) {
+	$start = strtotime($_REQUEST['start']);
+	$end = strtotime($_REQUEST['end']);
+} else {
+	$start = strtotime('-1 week', strtotime('next monday'));
+	$end = strtotime('next monday');
+}
+date_default_timezone_set($cur_timezone);
 
 $descendents = ($_REQUEST['descendents'] == 'true');
 $filter = !empty($_REQUEST['filter']) ? $_REQUEST['filter'] : 'all';
 
-$pines->com_calendar->show_calendar($view_type, $start, $end, $location, $employee, $descendents, $filter);
+$pines->com_calendar->show_calendar($view_type, $start, $end, $timezone, $location, $employee, $descendents, $filter);
 
 ?>

@@ -20,21 +20,25 @@ if (isset($_REQUEST['employee'])) {
 		$event = com_calendar_event::factory((int) $_REQUEST['id']);
 		if (!isset($event->guid)) {
 			pines_error('The calendar was altered while editing the event.');
-			pines_redirect(pines_url('com_calendar', 'editcalendar', array('location' => $location->guid, 'employee' => $employee->guid)));
+			pines_redirect(pines_url('com_calendar', 'editcalendar', array('employee' => $_REQUEST['employee'])));
 			return;
 		}
 		if (isset($event->appointment)) {
 			pines_error('You cannot edit appointments.');
-			pines_redirect(pines_url('com_calendar', 'editcalendar', array('location' => $location->guid, 'employee' => $employee->guid)));
+			pines_redirect(pines_url('com_calendar', 'editcalendar', array('employee' => $_REQUEST['employee'])));
 			return;
 		}
 		if ($event->time_off)
 			return;
-		if (!gatekeeper('com_calendar/managecalendar') && !$event->user->is($_SESSION['user']))
+		if (!gatekeeper('com_calendar/managecalendar') && !($event->user->guid && $event->user->is($_SESSION['user'])))
 			punt_user(null, pines_url('com_calendar', 'editcalendar'));
 	} else {
 		$event = com_calendar_event::factory();
 	}
+
+	// Use requested timezone.
+	$cur_timezone = date_default_timezone_get();
+	date_default_timezone_set($_REQUEST['timezone']);
 
 	$event->employee = com_hrm_employee::factory((int) $_REQUEST['employee']);
 	if (!gatekeeper('com_calendar/managecalendar'))
@@ -49,7 +53,8 @@ if (isset($_REQUEST['employee'])) {
 		$location = group::factory((int) $_REQUEST['location']);
 		if (!isset($location->guid)) {
 			pines_error('The specified location for this event does not exist.');
-			$pines->com_calendar->show_calendar();
+			pines_redirect(pines_url('com_calendar', 'editcalendar', array('employee' => $_REQUEST['employee'])));
+			date_default_timezone_set($cur_timezone);
 			return;
 		}
 		$event_details = explode(':', $_REQUEST['employee']);
@@ -65,8 +70,6 @@ if (isset($_REQUEST['employee'])) {
 	$event->private = ($_REQUEST['private_event'] == 'true');
 	$event->all_day = ($_REQUEST['all_day'] == 'true');
 
-	// Change the timezone to enter the event with the user's timezone.
-	date_default_timezone_set($_SESSION['user']->get_timezone());
 	if (isset($_REQUEST['start'])) {
 		$event->start = strtotime($_REQUEST['start'].$_REQUEST['time_start']);
 		$event->end = strtotime($_REQUEST['end'].$_REQUEST['time_end']);
@@ -77,7 +80,7 @@ if (isset($_REQUEST['employee'])) {
 	}
 	// If the start and end dates are the same, push the end date ahead one day.
 	if ($event->start >= $event->end)
-		$event->end = strtotime(format_date($event->start, 'date_short').' 11:59 PM');
+		$event->end = strtotime(format_date($event->start, 'date_sort').' 11:59 PM');
 
 	$event->ac->other = 1;
 
@@ -91,19 +94,19 @@ if (isset($_REQUEST['employee'])) {
 	}
 	// Go back to the employee's calendar.
 	$employee = ($_REQUEST['employee_view'] == 'true') ? $event->employee : null;
+
+	date_default_timezone_set($cur_timezone);
 } else {
 	$employee = null;
 }
 
-pines_redirect(pines_url('com_calendar', 'editcalendar',
-	array(
-		'view_type' => $_REQUEST['view_type'],
-		'start' => $_REQUEST['calendar_start'],
-		'end' => $_REQUEST['calendar_end'],
-		'location' => $location->guid,
-		'employee' => $employee->guid,
-		'descendents' => $_REQUEST['descendents'])
-	)
-);
+pines_redirect(pines_url('com_calendar', 'editcalendar', array(
+	'view_type' => $_REQUEST['view_type'],
+	'start' => $_REQUEST['calendar_start'],
+	'end' => $_REQUEST['calendar_end'],
+	'location' => $location->guid,
+	'employee' => $employee->guid,
+	'descendents' => $_REQUEST['descendents'])
+));
 
 ?>

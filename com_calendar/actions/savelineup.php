@@ -18,10 +18,11 @@ if ( !gatekeeper('com_calendar/managecalendar') )
 $location = group::factory((int) $_REQUEST['location']);
 if (!isset($location->guid)) {
 	pines_error('The specified location does not exist.');
-	$pines->com_calendar->show_calendar();
+	pines_redirect(pines_url('com_calendar', 'editcalendar'));
 	return;
 }
 $shifts = explode(',', $_REQUEST['shifts']);
+$cur_timezone = date_default_timezone_get();
 foreach ($shifts as $cur_shift) {
 	$shift_info = explode('|', $cur_shift);
 	$shift_date = $shift_info[0];
@@ -31,10 +32,11 @@ foreach ($shifts as $cur_shift) {
 	$employee = com_hrm_employee::factory((int) $shift_info[2]);
 
 	if (!isset($employee->guid)) {
-		pines_error('The specified employee ['.$shift_info[0].'] does not exist.');
+		pines_error('The specified employee ['.$shift_info[2].'] does not exist.');
 		continue;
 	}
 
+	// Enter schedule in employee's timezone.
 	date_default_timezone_set($employee->get_timezone());
 	$event = com_calendar_event::factory();
 	$event->all_day = false;
@@ -45,13 +47,13 @@ foreach ($shifts as $cur_shift) {
 	$shift_month = date('n', strtotime($shift_date));
 	$shift_day = date('j', strtotime($shift_date));
 	$shift_year = date('Y', strtotime($shift_date));
-	$event->start = mktime((int)$shift_start[0],(int)$shift_start[1],0,$shift_month,$shift_day,$shift_year);
-	$event->end = mktime((int)$shift_end[0],(int)$shift_end[1],0,$shift_month,$shift_day,$shift_year);
+	$event->start = mktime((int) $shift_start[0], (int) $shift_start[1], 0, $shift_month, $shift_day, $shift_year);
+	$event->end = mktime((int) $shift_end[0], (int) $shift_end[1], 0, $shift_month, $shift_day, $shift_year);
 	$event->scheduled = $event->end - $event->start;
 	$event->ac->other = 1;
 
 	if (!$event->save()) {
-		$failed_entries .= (empty($failed_entries) ? '' : ', ').$cur_date;
+		$failed_entries .= (empty($failed_entries) ? '' : ', ').$cur_shift;
 	} else {
 		if (!isset($first_date) || $event->start < $first_date)
 			$first_date = $event->start;
@@ -60,13 +62,23 @@ foreach ($shifts as $cur_shift) {
 		$event->group = $employee->group;
 		$event->save();
 	}
-
 }
+
 if (empty($failed_entries)) {
 	pines_notice('Work lineup entered for '.$location->name);
 } else {
-	pines_error('Could not schedule work for the following dates: '.$failed_entries);
+	pines_error('Could not schedule work for the following shifts: '.$failed_entries);
 }
+
+// Find time range in the location timezone.
+$parent = $location;
+do {
+	$timezone = $parent->timezone;
+	$parent = $parent->parent;
+} while(empty($timezone) && isset($parent->guid));
+if (empty($timezone))
+	$timezone = $pines->config->timezone;
+date_default_timezone_set($timezone);
 
 $total_time = $last_date - $first_date;
 if ($total_time <= 86400) {
@@ -94,7 +106,8 @@ if ($total_time <= 86400) {
 	// This makes sure to include to the end of the month.
 	$last_date = strtotime('+1 month', strtotime('1st', $last_date));
 }
+date_default_timezone_set($cur_timezone);
 
-pines_redirect(pines_url('com_calendar', 'editcalendar', array('view_type' => $view_type, 'start' => format_date($first_date, 'date_short'), 'end' => format_date($last_date, 'date_short'), 'location' => $location->guid)));
+pines_redirect(pines_url('com_calendar', 'editcalendar', array('view_type' => $view_type, 'start' => format_date($first_date, 'date_sort', '', $timezone), 'end' => format_date($last_date, 'date_sort', '', $timezone), 'location' => $location->guid)));
 
 ?>

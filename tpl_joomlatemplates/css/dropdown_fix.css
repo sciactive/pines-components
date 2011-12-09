@@ -1,0 +1,6 @@
+ul.dropdown ul, ul.dropdown ul li, ul.dropdown ul li a {
+	float: none !important;
+}
+ul.dropdown ul li a {
+	text-align: left !important;
+}

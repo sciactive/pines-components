@@ -1,0 +1,122 @@
+@charset "UTF-8";
+
+/** 
+* jQuery UI Friendly CSS Drop-Down Menu Theme
+*
+* @file		default.css
+* @name		Default
+* @version		0.1
+* @type		transitional
+* @browsers	Windows: IE5+, Opera7+, Firefox1+
+*				Mac OS: Safari2+, Firefox2+
+*
+* @link		http://www.lwis.net/
+* @copyright	2008 Live Web Institute. All Rights Reserved.
+*
+* Module Classes: *.dir {} *.on {} *.open {} li.hover {} li.first {} li.last {}
+* Expected directory tag - li
+*
+*/
+
+/*-------------------------------------------------/
+* @section		Base Drop-Down Styling
+* @structure	ul (unordered list)
+*				ul li (list item)
+*				ul li a (links)
+*				/*\.class|(li|a):hover/
+* @level sep	ul
+*/
+
+
+ul.dropdown li a {
+	display: block;
+	padding: .7em .9em;
+	text-decoration: none;
+}
+
+
+/* -- level mark -- */
+
+ul.dropdown ul {
+	min-width: 10em;
+	width: auto;
+	margin: 0;
+	padding: 0;
+	top: 99%; /* 100% causes hover bug in ff */
+}
+ul.dropdown-vertical ul {
+	top: 1px;
+	left: 99%;
+}
+
+ul.dropdown ul li {
+	font-weight: normal;
+	white-space: nowrap;
+}
+
+
+
+/*-------------------------------------------------/
+* @section		Support Class `dir`
+* @level sep	ul, .class
+*/
+
+
+ul.dropdown li {
+	position: relative;
+}
+ul.dropdown li span.ui-icon {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	width: 14px;
+	height: 14px;
+}
+ul.dropdown *.dir {
+	padding-right: 20px;
+	background-image: url(images/nav-arrow-down.png);
+	background-position: 100% 50%;
+	background-repeat: no-repeat;
+}
+ul.dropdown *.dir:hover {
+	background-image: url(images/nav-arrow-down-white.png);
+}
+
+
+/* -- Components override -- */
+
+ul.dropdown-horizontal ul *.dir {
+	padding-right: 15px;
+	background-image: url(images/nav-arrow-right.png);
+	background-position: 100% 50%;
+	background-repeat: no-repeat;
+}
+ul.dropdown-horizontal ul *.dir:hover {
+	background-image: url(images/nav-arrow-right-white.png);
+}
+
+ul.dropdown-upward *.dir {
+	background-image: url(images/nav-arrow-top.png);
+}
+ul.dropdown-upward *.dir:hover {
+	background-image: url(images/nav-arrow-top-white.png);
+}
+
+ul.dropdown-vertical *.dir,
+ul.dropdown-upward ul *.dir {
+	background-image: url(images/nav-arrow-right.png);
+}
+ul.dropdown-vertical *.dir:hover,
+ul.dropdown-upward ul *.dir:hover {
+	background-image: url(images/nav-arrow-right-white.png);
+}
+
+ul.dropdown-vertical-rtl *.dir {
+	padding-right: 10px;
+	padding-left: 15px;
+	background-image: url(images/nav-arrow-left.png);
+	background-position: 0 50%;
+}
+ul.dropdown-vertical-rtl *.dir:hover {
+	background-image: url(images/nav-arrow-left-white.png);
+}

@@ -9,6 +9,8 @@
  * @copyright SciActive.com
  * @link http://sciactive.com/
  */
+/* @var $pines pines */
+defined('P_RUN') or die('Direct access prohibited');
 
 /**
  * Creates and sends emails.
@@ -73,9 +75,9 @@ class com_mailer_mail {
 	 * @param string $subject The message subject.
 	 * @param string $message The message text.
 	 */
-	function __construct($sender, $recipient, $subject, $message) {
+	public function __construct($sender, $recipient, $subject, $message) {
 		global $pines;
-		// validate incoming parameters
+		// Validate incoming parameters.
 		if (!preg_match('/^.+@.+$/',$sender))
 			pines_error('Invalid value for email sender.');
 		if (!preg_match('/^.+@.+$/',$recipient))
@@ -91,11 +93,7 @@ class com_mailer_mail {
 		// Define some default MIME headers
 		$this->headers['MIME-Version'] = '1.0';
 		$this->headers['Content-Type'] = 'multipart/mixed;boundary="MIME_BOUNDRY"';
-		$this->headers['From'] = $this->sender;
-		$this->headers['Return-Path'] = $this->sender;
-		$this->headers['Reply-To'] = $this->sender;
 		//$this->headers['X-Mailer'] = 'PHP5';
-		$this->headers['X-Sender'] = $this->sender;
 		$this->headers['X-Priority'] = '3';
 		$this->headers['User-Agent'] = "{$pines->info->name} {$pines->info->version}";
 		// Define some default MIME types
@@ -158,48 +156,53 @@ class com_mailer_mail {
 	/**
 	 * Create text part of the message.
 	 *
+	 * @access private
 	 * @return string The text.
 	 */
-	function buildTextPart() {
-		return "--MIME_BOUNDRY\nContent-Type: {$this->text_mime_type}; charset=iso-8859-1\nContent-Transfer-Encoding: 7bit\n\n\n{$this->message}\n\n";
+	private function buildTextPart() {
+		return "--MIME_BOUNDRY\nContent-Type: {$this->text_mime_type}; charset=utf-8\nContent-Transfer-Encoding: 7bit\n\n\n{$this->message}\n\n";
 	}
 
 	/**
 	 * Create attachments part of the message.
 	 *
+	 * @access private
 	 * @return string The attachment section.
 	 */
-	function buildAttachmentPart() {
+	private function buildAttachmentPart() {
 		if (count($this->attachments) > 0) {
-			$attachmentPart = '';
-			foreach($this->attachments as $attachment) {
-				$fileStr = file_get_contents($attachment);
-				$fileStr = chunk_split(base64_encode($fileStr));
-				$attachmentPart .= "--MIME_BOUNDRY\nContent-Type: ".$this->getMimeType($attachment)."; name=".basename($attachment)."\nContent-disposition: attachment\nContent-Transfer-Encoding: base64\n\n{$fileStr}\n\n";
+			$attachment_part = '';
+			foreach ($this->attachments as $attachment) {
+				$file_str = chunk_split(base64_encode(file_get_contents($attachment)));
+				$attachment_part .= "--MIME_BOUNDRY\nContent-Type: ".$this->getMimeType($attachment)."; name=".basename($attachment)."\nContent-disposition: attachment\nContent-Transfer-Encoding: base64\n\n{$file_str}\n\n";
 			}
-			return $attachmentPart;
+			return $attachment_part;
 		}
 	}
 
 	/**
-	 * Create message MIME headers.
+	 * Create message headers.
 	 *
-	 * @return string The MIME headers.
+	 * @access private
+	 * @param array $required_headers Any headers that should append/replace the defined headers.
+	 * @return string The headers.
 	 */
-	function buildHeaders() {
-		foreach($this->headers as $name=>$value) {
+	private function buildHeaders($required_headers = array()) {
+		$build_headers = array_merge($this->headers, $required_headers);
+		$headers = array();
+		foreach ($build_headers as $name => $value) {
 			$headers[] = "{$name}: {$value}";
 		}
-		return implode("\n",$headers)."\nThis is a multi-part message in MIME format.\n";
+		return implode("\n", $headers)."\nThis is a multi-part message in MIME format.\n";
 	}
 
 	/**
-	 * Add new MIME header.
+	 * Add new header.
 	 *
 	 * @param string $name The header's name.
 	 * @param string $value The header's value.
 	 */
-	function addHeader($name, $value) {
+	public function addHeader($name, $value) {
 		$this->headers[$name] = $value;
 	}
 
@@ -209,7 +212,7 @@ class com_mailer_mail {
 	 * @param string $attachment The attachment filename.
 	 * @return bool True on success, false on failure.
 	 */
-	function addAttachment($attachment) {
+	public function addAttachment($attachment) {
 		if (!file_exists($attachment)) {
 			pines_error('Invalid attachment.');
 			return false;
@@ -224,13 +227,13 @@ class com_mailer_mail {
 	 * @param string $attachment The attachment filename.
 	 * @return mixed MIME type on success, null on failure.
 	 */
-	function getMimeType($attachment) {
-		$attachment = explode('.',basename($attachment));
-		if (!isset($this->mimeTypes[strtolower($attachment[count($attachment)-1])])) {
+	public function getMimeType($attachment) {
+		$attachment = explode('.', basename($attachment));
+		if (!isset($this->mimeTypes[strtolower($attachment[count($attachment) - 1])])) {
 			pines_error('MIME Type not found.');
 			return null;
 		}
-		return $this->mimeTypes[strtolower($attachment[count($attachment)-1])];
+		return $this->mimeTypes[strtolower($attachment[count($attachment) - 1])];
 	}
 
 	/**
@@ -238,16 +241,60 @@ class com_mailer_mail {
 	 *
 	 * @return bool True on success, false on failure.
 	 */
-	function send() {
-		$to = $this->recipient;
-		$subject = $this->subject;
-		$headers = $this->buildHeaders();
+	public function send() {
+		global $pines;
+		// First verify values.
+		if (!preg_match('/^.+@.+$/', $this->sender))
+			return false;
+		if (!preg_match('/^.+@.+$/', $this->recipient))
+			return false;
+		if (!$this->subject || strlen($this->subject) > 255)
+			return false;
+
+		// Headers that must be in the sent message.
+		$required_headers = array();
+
+		// Are we in testing mode?
+		if ($pines->config->com_mailer->testing_mode) {
+			// If the testing email is empty, just return true.
+			if (empty($pines->config->com_mailer->testing_email))
+				return true;
+			// The testing email isn't empty, so replace stuff now.
+			// Save the original to, cc, and bcc in additional headers.
+			$required_headers['X-Testing-Original-To'] = $this->recipient;
+			foreach ($this->headers as $name => $value) {
+				switch (strtolower($name)) {
+					case 'cc':
+						$this->headers['X-Testing-Original-Cc'] = $value;
+						$required_headers[$name] = '';
+						break;
+					case 'bcc':
+						$this->headers['X-Testing-Original-Bcc'] = $value;
+						$required_headers[$name] = '';
+						break;
+				}
+			}
+			$to = $pines->config->com_mailer->testing_email;
+			$subject = '*Test* '.$this->subject;
+		} else {
+			$to = $this->recipient;
+			$subject = $this->subject;
+		}
+		// Add from headers.
+		$required_headers['From'] = $this->sender;
+		$required_headers['Return-Path'] = $this->sender;
+		$required_headers['Reply-To'] = $this->sender;
+		$required_headers['X-Sender'] = $this->sender;
+		$headers = $this->buildHeaders($required_headers);
 		$message = $this->buildTextPart().$this->buildAttachmentPart()."--MIME_BOUNDRY--\n";
-		if (!mail($to, $subject, $message, $headers, '-femail@example.com')) {
+
+		// Now send the mail.
+		if (!mail($to, $subject, $message, $headers, $pines->config->com_mailer->additional_parameters)) {
 			pines_error('Error sending email.');
 			return false;
 		}
 		return true;
 	}
 }
+
 ?>

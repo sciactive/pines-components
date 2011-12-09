@@ -1,0 +1,106 @@
+/* Custom Event Colors */
+.fc-event.aqua .fc-event-head {
+	background-color: aqua;
+	border-color: aqua;
+	color: black;
+}
+.fc-event.blue .fc-event-head {
+	background-color: blue;
+	border-color: blue;
+	color: white;
+}
+.fc-event.blueviolet .fc-event-head {
+	background-color: blueviolet;
+	border-color: blueviolet;
+	color: white;
+}
+.fc-event.brown .fc-event-head {
+	background-color: sienna;
+	border-color: sienna;
+	color: white;
+}
+.fc-event.cornflowerblue .fc-event-head {
+	background-color: cornflowerblue;
+	border-color: cornflowerblue;
+	color: white;
+}
+.fc-event.darkcyan .fc-event-head {
+	background-color: darkcyan;
+	border-color: darkcyan;
+	color: white;
+}
+.fc-event.darkorange .fc-event-head {
+	background-color: darkorange;
+	border-color: darkorange;
+	color: black;
+}
+.fc-event.gainsboro .fc-event-head {
+	background-color: gainsboro;
+	border-color: gainsboro;
+	color: black;
+}
+.fc-event.gold .fc-event-head {
+	background-color: gold;
+	border-color: gold;
+	color: black;
+}
+.fc-event.gray .fc-event-head {
+	background-color: gray;
+	border-color: gray;
+	color: black;
+}
+.fc-event.greenyellow .fc-event-head {
+	background-color: greenyellow;
+	border-color: greenyellow;
+	color: black;
+}
+.fc-event.hotpink .fc-event-head {
+	background-color: hotpink;
+	border-color: hotpink;
+	color: black;
+}
+.fc-event.lightpink .fc-event-head {
+	background-color: lightpink;
+	border-color: lightpink;
+	color: black;
+}
+.fc-event.olive .fc-event-head {
+	background-color: olivedrab;
+	border-color: olivedrab;
+	color: white;
+}
+.fc-event.orchid .fc-event-head {
+	background-color: mediumorchid;
+	border-color: mediumorchid;
+	color: black;
+}
+.fc-event.peru .fc-event-head {
+	background-color: peru;
+	border-color: peru;
+	color: black;
+}
+.fc-event.purple .fc-event-head {
+	background-color: mediumpurple;
+	border-color: mediumpurple;
+	color: black;
+}
+.fc-event.red .fc-event-head {
+	background-color: red;
+	border-color: red;
+	color: white;
+}
+.fc-event.vanilla .fc-event-head {
+	background-color: cornsilk;
+	border-color: cornsilk;
+	color: black;
+}
+.fc-event.white .fc-event-head {
+	background-color: whitesmoke;
+	border-color: whitesmoke;
+	color: black;
+}
+.fc-event.yellow .fc-event-head {
+	background-color: yellow;
+	border-color: yellow;
+	color: black;
+}

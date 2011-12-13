@@ -71,12 +71,21 @@ function com_customer__check_sale(&$arguments, $name, &$object) {
 		$sales_rep = com_hrm_employee::factory((int) array_search(max($totals), $totals));
 		if (!isset($sales_rep->guid))
 			return;
-		if (!$object->warehouse_items || $object->warehouse_complete) {
-			$object->customer->schedule_follow_up($sales_rep, $object);
-			$object->followed_up = true;
-		} elseif (!$object->wh_followed_up) {
-			$object->customer->schedule_follow_up($sales_rep, $object, true);
-			$object->wh_followed_up = true;
+		// Check to see that the customer is actually saved using the customer class.
+		if (isset($object->customer->guid) && !(is_a($object->customer, 'com_customer_customer') || is_a($object->customer, 'hook_override_com_customer_customer'))) {
+			// Customer was saved as a different class. Try to load the customer using the customer class.
+			$customer = com_customer_customer::factory($object->customer->guid);
+			if (isset($customer->guid))
+				$object->customer = $customer;
+		}
+		if (is_callable(array($object->customer, 'schedule_follow_up'))) {
+			if (!$object->warehouse_items || $object->warehouse_complete) {
+				$object->customer->schedule_follow_up($sales_rep, $object);
+				$object->followed_up = true;
+			} elseif (!$object->wh_followed_up) {
+				$object->customer->schedule_follow_up($sales_rep, $object, true);
+				$object->wh_followed_up = true;
+			}
 		}
 	}
 	if ($object->status == 'voided')

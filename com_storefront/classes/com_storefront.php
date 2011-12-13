@@ -107,7 +107,11 @@ class com_storefront extends component {
 			$sale = com_sales_sale::factory();
 			$sale->add_tag('com_storefront');
 			$sale->status = 'quoted';
-			$sale->customer = $_SESSION['user'];
+			$sale->customer = com_customer_customer::factory($_SESSION['user']->guid);
+			if (!isset($sale->customer->guid)) {
+				pines_error('Error while loading your customer account. Please try again in a minute or two.');
+				return false;
+			}
 			if ($pines->config->com_sales->global_sales)
 				$sale->ac->other = 1;
 		}

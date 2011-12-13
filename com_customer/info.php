@@ -15,7 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'CRM',
 	'author' => 'SciActive',
-	'version' => '1.0.2',
+	'version' => '1.0.3',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Customer relationship manager',

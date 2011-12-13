@@ -32,8 +32,8 @@ if (!isset($event->guid)) {
 	$event = com_calendar_event::factory();
 	if (!empty($_REQUEST['start'])) {
 		// Fix the stupid time string that has the wrong timezone on it. I hate JavaScript's Date object.
-		$event->start = strtotime(preg_replace('/ ?(\w{3,4}-\d{4})? ?(\(\w+\))?$/', '', $_REQUEST['start']));
-		$event->end = strtotime(preg_replace('/ ?(\w{3,4}-\d{4})? ?(\(\w+\))?$/', '', $_REQUEST['end']));
+		$event->start = strtotime(preg_replace('/ ?(\w{3,4}-\d{4})? ?(\([^)]+\))?$/', '', $_REQUEST['start']));
+		$event->end = strtotime(preg_replace('/ ?(\w{3,4}-\d{4})? ?(\([^)]+\))?$/', '', $_REQUEST['end']));
 		if ($event->start == $event->end)
 			$event->all_day = true;
 	}

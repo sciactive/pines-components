@@ -326,6 +326,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'global_specials',
+		'cname' => 'Globalize Specials',
+		'description' => 'Ensure that every user can access all specials by setting the "other" access control to read.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'global_manufacturers',
 		'cname' => 'Globalize Manufacturers',
 		'description' => 'Ensure that every user can access all manufacturers by setting the "other" access control to read.',

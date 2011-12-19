@@ -684,6 +684,30 @@ class com_sales extends component {
 	}
 
 	/**
+	 * Creates and attaches a module which lists specials.
+	 * 
+	 * @param bool $enabled Show enabled specials if true, disabled if false.
+	 * @return module The module.
+	 */
+	public function list_specials($enabled = true) {
+		global $pines;
+
+		$module = new module('com_sales', 'special/list', 'content');
+
+		$module->enabled = $enabled;
+		if ($enabled) {
+			$module->specials = $pines->entity_manager->get_entities(array('class' => com_sales_special), array('&', 'tag' => array('com_sales', 'special'), 'data' => array('enabled', true)));
+		} else {
+			$module->specials = $pines->entity_manager->get_entities(array('class' => com_sales_special), array('&', 'tag' => array('com_sales', 'special')), array('!&', 'data' => array('enabled', true)));
+		}
+
+		if ( empty($module->specials) )
+			pines_notice('There are no'.($enabled ? ' enabled' : ' disabled').' specials.');
+
+		return $module;
+	}
+
+	/**
 	 * Creates and attaches a module which lists stock.
 	 *
 	 * @param bool $removed Whether to show stock that is no longer physically in inventory.

@@ -39,6 +39,9 @@ class com_sales_special extends entity {
 		// Defaults.
 		$this->enabled = true;
 		$this->per_ticket = 1;
+		$this->conditions = array();
+		$this->discounts = array();
+		$this->requirements = array();
 	}
 
 	/**
@@ -62,6 +65,38 @@ class com_sales_special extends entity {
 		if (!parent::delete())
 			return false;
 		pines_log("Deleted special $this->name.", 'notice');
+		return true;
+	}
+
+	/**
+	 * Determine if this special is eligible.
+	 *
+	 * This funcition checks all conditions and requirements that can be checked
+	 * without a sale.
+	 *
+	 * @return bool True if the special is eligible, false otherwise.
+	 */
+	public function eligible() {
+		if (!$this->enabled)
+			return false;
+		global $pines;
+		// Check that all conditions are met.
+		foreach ((array) $this->conditions as $cur_type => $cur_value) {
+			if (!$pines->depend->check($cur_type, $cur_value))
+				return false;
+		}
+		foreach ((array) $this->requirements as $cur_requirement) {
+			switch ($cur_requirement['type']) {
+				case 'date_lt':
+					if (time() >= $cur_requirement['value'])
+						return false;
+					break;
+				case 'date_gt':
+					if (time() < $cur_requirement['value'])
+						return false;
+					break;
+			}
+		}
 		return true;
 	}
 

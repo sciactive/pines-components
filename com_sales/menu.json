@@ -202,6 +202,14 @@
 			}
 		},
 			{
+				"path": "main_menu/business/0_pos/setup/specials",
+				"text": "Specials",
+				"href": ["com_sales","special/list"],
+				"depend": {
+					"ability": "com_sales/listspecials"
+				}
+			},
+			{
 				"path": "main_menu/business/0_pos/setup/categories",
 				"text": "Categories",
 				"href": ["com_sales","category/list"],
@@ -263,14 +271,6 @@
 				"href": ["com_sales","taxfee/list"],
 				"depend": {
 					"ability": "com_sales/listtaxfees"
-				}
-			},
-			{
-				"path": "main_menu/business/0_pos/setup/specials",
-				"text": "Specials",
-				"href": ["com_sales","special/list"],
-				"depend": {
-					"ability": "com_sales/listspecials"
 				}
 			}
 ]

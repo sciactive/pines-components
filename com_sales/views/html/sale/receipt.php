@@ -74,16 +74,16 @@ switch ($this->entity->status) {
 		text-align: right;
 		width: 65px;
 	}
-	#p_muid_item_list {
+	.p_muid_item_list {
 		text-align: left;
 		border-bottom: 1px solid black;
 		border-collapse: collapse;
 	}
-	#p_muid_item_list th {
+	.p_muid_item_list th {
 		border-bottom: 1px solid black;
 		padding: 2px;
 	}
-	#p_muid_item_list tr td p {
+	.p_muid_item_list tr td p {
 		margin: 0;
 	}
 	#p_muid_receipt .receipt_note, #p_muid_receipt .comments {
@@ -199,7 +199,7 @@ switch ($this->entity->status) {
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-full-width left_side">
-		<table id="p_muid_item_list" style="width: 100%; margin: 0;">
+		<table class="p_muid_item_list" style="width: 100%; margin: 0;">
 			<thead>
 				<tr>
 					<th>SKU</th>
@@ -257,6 +257,26 @@ switch ($this->entity->status) {
 			</tbody>
 		</table>
 	</div>
+	<?php if ($this->entity->specials) { ?>
+	<div class="pf-element pf-full-width left_side">
+		<table class="p_muid_item_list" style="width: 100%; margin: 0;">
+			<thead>
+				<tr>
+					<th>Specials</th>
+					<th class="right_text">Discount</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ($this->entity->specials as $cur_special) { ?>
+				<tr>
+					<td><?php echo htmlspecialchars($cur_special['name']); ?></td>
+					<td class="right_text">$<?php echo $pines->com_sales->round($cur_special['discount'], true); ?></td>
+				</tr>
+				<?php } ?>
+			</tbody>
+		</table>
+	</div>
+	<?php } ?>
 	<div class="pf-element pf-full-width">
 		<?php if (is_array($this->entity->payments) && ($this->entity->status == 'paid' || $this->entity->status == 'processed' || $this->entity->status == 'voided')) { ?>
 		<div class="left_side">
@@ -285,6 +305,7 @@ switch ($this->entity->status) {
 			<hr style="clear: both;" />
 			<div class="right_text">
 				<span>Subtotal:</span>
+				<?php if ($this->entity->total_specials > 0) { ?><span>Specials:</span><?php } ?>
 				<?php if ($this->entity->item_fees > 0) { ?><span>Item Fees:</span><?php } ?>
 				<span>Tax:</span>
 				<?php if ($this->entity->return_fees > 0) { ?><span>Return Fees:</span><?php } ?>
@@ -293,6 +314,7 @@ switch ($this->entity->status) {
 			</div>
 			<div class="data_col right_text">
 				<span>$<?php echo $pines->com_sales->round($this->entity->subtotal, true); ?></span>
+				<?php if ($this->entity->total_specials > 0) { ?><span>- $<?php echo $pines->com_sales->round($this->entity->total_specials, true); ?></span><?php } ?>
 				<?php if ($this->entity->item_fees > 0) { ?><span>$<?php echo $pines->com_sales->round($this->entity->item_fees, true); ?></span><?php } ?>
 				<span>$<?php echo $pines->com_sales->round($this->entity->taxes, true); ?></span>
 				<?php if ($this->entity->return_fees > 0) { ?><span>($<?php echo $pines->com_sales->round($this->entity->return_fees, true); ?>)</span><?php } ?>

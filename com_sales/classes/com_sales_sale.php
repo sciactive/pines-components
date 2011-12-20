@@ -570,6 +570,27 @@ class com_sales_sale extends entity {
 					'data' => array('enabled', true)
 				)
 			);
+		// Find eligible specials.
+		if (!isset($this->elig_specials)) {
+			$specials = (array) $pines->entity_manager->get_entities(
+					array('class' => com_sales_special),
+					array('&',
+						'tag' => array('com_sales', 'special'),
+						'data' => array(
+							array('enabled', true),
+							array('apply_to_all', true)
+						)
+					)
+				);
+			$module->specials = array();
+			foreach ($specials as $cur_special) {
+				if (!$cur_special->eligible())
+					continue;
+				$module->specials[] = $cur_special;
+			}
+		} else {
+			$module->specials = $this->elig_specials;
+		}
 		if (isset($this->guid)) {
 			$module->returns = (array) $pines->entity_manager->get_entities(
 					array('class' => com_sales_return),
@@ -661,6 +682,7 @@ class com_sales_sale extends entity {
 	/**
 	 * Generate receipt code for the receipt printer from the sale.
 	 *
+	 * @todo Add a section for specials.
 	 * @param int $width Width in number of characters for font 1.
 	 * @param int $width2 Width in number of characters for font 2.
 	 * @return string The receipt code.
@@ -1229,12 +1251,55 @@ class com_sales_sale extends entity {
 	}
 
 	/**
+	 * Count how many of a product are on a sale.
+	 * 
+	 * @param com_sales_product|int $product The product entity or GUID.
+	 * @return int|bool The product count, or false on error.
+	 */
+	public function product_count($product) {
+		$count = 0;
+		if (is_object($product))
+			$product = $product->guid;
+		if (!isset($product))
+			return false;
+		$product = (int) $product;
+		foreach ($this->products as $cur_product) {
+			if ($cur_product['entity']->guid === $product)
+				$count += $cur_product['quantity'];
+		}
+		return $count;
+	}
+
+	/**
+	 * Get the total of a product on a sale.
+	 * 
+	 * Adds the line total of all lines which include the product.
+	 * 
+	 * @param com_sales_product|int $product The product entity or GUID.
+	 * @return int|bool The total, or false on error.
+	 */
+	public function product_total($product) {
+		$total = 0;
+		if (is_object($product))
+			$product = $product->guid;
+		if (!isset($product))
+			return false;
+		$product = (int) $product;
+		foreach ($this->products as $cur_product) {
+			if ($cur_product['entity']->guid === $product)
+				$total += $cur_product['line_total'];
+		}
+		return $total;
+	}
+
+	/**
 	 * Calculate and set the sale's totals.
 	 *
 	 * This process adds "line_total" and "fees" to each product on the sale,
-	 * and adds "subtotal", "item_fees", "taxes", and "total" to the sale
-	 * itself.
+	 * and adds "specials", "subtotal", "total_specials", "item_fees", "taxes",
+	 * and "total" to the sale itself.
 	 *
+	 * @todo Specials' per ticket restriction.
 	 * @return bool True on success, false on failure.
 	 */
 	public function total() {
@@ -1258,7 +1323,28 @@ class com_sales_sale extends entity {
 			// We're not in any of its groups, so remove it.
 			unset($tax_fees[$key]);
 		}
+		// Once we get eligible specials, don't get them again.
+		if (!isset($this->elig_specials)) {
+			// Find eligible specials.
+			$specials = (array) $pines->entity_manager->get_entities(
+					array('class' => com_sales_special),
+					array('&',
+						'tag' => array('com_sales', 'special'),
+						'data' => array(
+							array('enabled', true),
+							array('apply_to_all', true)
+						)
+					)
+				);
+			$this->elig_specials = array();
+			foreach ($specials as $cur_special) {
+				if (!$cur_special->eligible())
+					continue;
+				$this->elig_specials[] = $cur_special;
+			}
+		}
 		$subtotal = 0.00;
+		$this->specials = array();
 		$taxes = 0.00;
 		$item_fees = 0.00;
 		$total = 0.00;
@@ -1316,11 +1402,76 @@ class com_sales_sale extends entity {
 		}
 		unset($cur_product);
 		$this->subtotal = (float) $pines->com_sales->round($subtotal);
+
+		// Now that we know the subtotal, we can use it for specials.
+		$total_specials = 0.00;
+		foreach (array_merge($this->elig_specials, $this->added_specials) as $cur_special) {
+			$apply_special = true;
+			foreach ($cur_special->requirements as $cur_req) {
+				if (!$apply_special)
+					continue;
+				switch ($cur_req['type']) {
+					case "subtotal_eq":
+						if ($pines->com_sales->round($this->subtotal, true) != $pines->com_sales->round($cur_req['value'], true))
+							$apply_special = false;
+						break;
+					case "subtotal_lt":
+						if ($pines->com_sales->round($this->subtotal) >= $pines->com_sales->round($cur_req['value']))
+							$apply_special = false;
+						break;
+					case "subtotal_gt":
+						if ($pines->com_sales->round($this->subtotal) <= $pines->com_sales->round($cur_req['value']))
+							$apply_special = false;
+						break;
+					case "has_product":
+						if (!$this->product_count($cur_req['value']))
+							$apply_special = false;
+						break;
+					case "has_not_product":
+						if ($this->product_count($cur_req['value']))
+							$apply_special = false;
+						break;
+				}
+			}
+			if (!$apply_special)
+				continue;
+			// The special works, now calculate its value.
+			$discount = 0.00;
+			foreach ($cur_special->discounts as $cur_dis) {
+				switch ($cur_dis['type']) {
+					case "order_amount":
+						$discount += $cur_dis['value'];
+						break;
+					case "order_percent":
+						$discount += $this->subtotal * ($cur_dis['value'] / 100);
+						break;
+					case "product_amount":
+						$qty = $this->product_count($cur_dis['qualifier']);
+						$discount += $qty * $cur_dis['value'];
+						break;
+					case "product_percent":
+						$prod_total = $this->product_total($cur_dis['qualifier']);
+						$discount += $prod_total * ($cur_dis['value'] / 100);
+						break;
+				}
+			}
+			$discount = (float) $pines->com_sales->round($discount);
+			if ($discount <= 0)
+				continue;
+			$this->specials[] = array(
+				"entity" => $cur_special,
+				"name" => $cur_special->name,
+				"discount" => $discount
+			);
+			$total_specials += $discount;
+		}
+		// Update the specials input box.
+		$this->total_specials = (float) $pines->com_sales->round($total_specials);
 		$this->item_fees = (float) $pines->com_sales->round($item_fees);
 		$this->taxes = (float) $pines->com_sales->round($taxes);
 		// The total can now be calculated.
-		$total = $this->subtotal + $this->item_fees + $this->taxes;
-		$this->total = (float) $pines->com_sales->round($total);
+		$total = ($this->subtotal - $this->total_specials) + $this->item_fees + $this->taxes;
+		$this->total = (float) $total;
 		return true;
 	}
 

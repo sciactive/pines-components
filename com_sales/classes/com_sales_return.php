@@ -17,6 +17,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * @package Pines
  * @subpackage com_sales
+ * @todo Returning specials.
  */
 class com_sales_return extends entity {
 	/**

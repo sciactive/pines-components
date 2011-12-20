@@ -45,7 +45,7 @@ foreach ($discounts as $cur_discount) {
 		case 'order_percent':
 			$special->discounts[] = array(
 				'type' => $type,
-				'value' => $value
+				'value' => (float) $value
 			);
 			break;
 		case 'product_amount':
@@ -95,9 +95,9 @@ foreach ($requirements as $cur_requirement) {
 	$type = $cur_requirement->values[0];
 	$value = $cur_requirement->values[1];
 	switch ($type) {
-		case 'total_eq':
-		case 'total_lt':
-		case 'total_gt':
+		case 'subtotal_eq':
+		case 'subtotal_lt':
+		case 'subtotal_gt':
 			$special->requirements[] = array(
 				'type' => $type,
 				'value' => (float) $value

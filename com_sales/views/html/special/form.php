@@ -19,25 +19,25 @@ if ($pines->config->com_sales->com_customer)
 	$pines->com_customer->load_customer_select();
 $pines->com_sales->load_product_select();
 
-$categories = $pines->entity_manager->get_entities(
-		array('class' => com_sales_category),
-		array('&',
-			'tag' => array('com_sales', 'category'),
-			'strict' => array('enabled', true)
-		)
-	);
-$pines->entity_manager->hsort($categories, 'name', 'parent');
-
-$specials = $pines->entity_manager->get_entities(
-		array('class' => com_sales_special),
-		array('&',
-			'tag' => array('com_sales', 'special')
-		),
-		array('&!',
-			'guid' => array($this->entity->guid)
-		)
-	);
-$pines->entity_manager->sort($specials, 'name');
+//$categories = $pines->entity_manager->get_entities(
+//		array('class' => com_sales_category),
+//		array('&',
+//			'tag' => array('com_sales', 'category'),
+//			'strict' => array('enabled', true)
+//		)
+//	);
+//$pines->entity_manager->hsort($categories, 'name', 'parent');
+//
+//$specials = $pines->entity_manager->get_entities(
+//		array('class' => com_sales_special),
+//		array('&',
+//			'tag' => array('com_sales', 'special')
+//		),
+//		array('&!',
+//			'guid' => array($this->entity->guid)
+//		)
+//	);
+//$pines->entity_manager->sort($specials, 'name');
 ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'special/save')); ?>">
 	<script type="text/javascript">
@@ -345,7 +345,7 @@ $pines->entity_manager->sort($specials, 'name');
 			}).change();
 
 			var update_requirements = function(){
-				requirement_dialog.find("select[name=cur_requirement_type]").val("total_eq").change();
+				requirement_dialog.find("select[name=cur_requirement_type]").val("subtotal_eq").change();
 				requirement_dialog.find("#p_muid_req_forms :input").val("");
 				requirements.val(JSON.stringify(requirements_table.pgrid_get_all_rows().pgrid_export_rows()));
 			};
@@ -412,7 +412,7 @@ $pines->entity_manager->sort($specials, 'name');
 						<?php if (isset($this->entity->discounts)) foreach ($this->entity->discounts as $cur_value) { ?>
 						<tr>
 							<td><?php echo htmlspecialchars($cur_value['type']); ?></td>
-							<td><?php echo htmlspecialchars($cur_value['qualifier']->guid); ?></td>
+							<td><?php echo htmlspecialchars($cur_value['qualifier']->sku); ?></td>
 							<td><?php echo htmlspecialchars($cur_value['value']); ?></td>
 						</tr>
 						<?php } ?>
@@ -427,10 +427,10 @@ $pines->entity_manager->sort($specials, 'name');
 							<select class="pf-field ui-widget-content ui-corner-all" name="cur_discount_type" id="p_muid_cur_discount_type">
 								<option value="order_amount">Whole Order (Amount)</option>
 								<option value="order_percent">Whole Order (Percent)</option>
-								<option value="product_amount">Specific Product (Amount)</option>
+								<option value="product_amount">Specific Product (Amount) (x Qty)</option>
 								<option value="product_percent">Specific Product (Percent)</option>
-								<option value="category_amount">Products from Category (Amount)</option>
-								<option value="category_percent">Products from Category (Percent)</option>
+								<?php /* <option value="category_amount">Products from Category (Amount) (x Qty)</option>
+								<option value="category_percent">Products from Category (Percent)</option> */ ?>
 							</select></label>
 					</div>
 					<div id="p_muid_dis_forms">
@@ -440,7 +440,7 @@ $pines->entity_manager->sort($specials, 'name');
 									<input class="pf-field ui-widget-content ui-corner-all p_muid_product_select" type="text" size="24" /></label>
 							</div>
 						</div>
-						<div class="dis_form category_amount category_percent">
+						<?php /* <div class="dis_form category_amount category_percent">
 							<div class="pf-element">
 								<label><span class="pf-label">Category</span>
 									<select class="pf-field ui-widget-content ui-corner-all">
@@ -456,7 +456,7 @@ $pines->entity_manager->sort($specials, 'name');
 										<?php } ?>
 									</select></label>
 							</div>
-						</div>
+						</div> */ ?>
 					</div>
 					<div class="pf-element">
 						<label><span class="pf-label">Value</span>
@@ -544,14 +544,14 @@ $pines->entity_manager->sort($specials, 'name');
 								case 'has_not_product':
 									echo htmlspecialchars($cur_value['value']->sku);
 									break;
-								case 'has_category':
+								/* case 'has_category':
 								case 'has_not_category':
 									echo htmlspecialchars($cur_value['value']->guid);
 									break;
 								case 'has_special':
 								case 'has_not_special':
 									echo ($cur_value['value'] == 'any') ? 'any' : htmlspecialchars($cur_value['value']->guid);
-									break;
+									break; */
 								case 'date_lt':
 								case 'date_gt':
 									echo htmlspecialchars(format_date($cur_value['value'], 'custom', 'Y-m-d'));
@@ -571,21 +571,21 @@ $pines->entity_manager->sort($specials, 'name');
 					<div class="pf-element">
 						<label><span class="pf-label">Type</span>
 							<select class="pf-field ui-widget-content ui-corner-all" name="cur_requirement_type" id="p_muid_cur_requirement_type">
-								<option value="total_eq">Sale Total Equals</option>
-								<option value="total_lt">Sale Total Less Than</option>
-								<option value="total_gt">Sale Total Greater Than</option>
+								<option value="subtotal_eq">Sale Subtotal Equals</option>
+								<option value="subtotal_lt">Sale Subtotal Less Than</option>
+								<option value="subtotal_gt">Sale Subtotal Greater Than</option>
 								<option value="has_product">Sale Has Product</option>
 								<option value="has_not_product">Sale Doesn't Have Product</option>
-								<option value="has_category">Sale Has Category</option>
+								<?php /* <option value="has_category">Sale Has Category</option>
 								<option value="has_not_category">Sale Doesn't Have Category</option>
 								<option value="has_special">Sale Has Special</option>
-								<option value="has_not_special">Sale Doesn't Have Special</option>
+								<option value="has_not_special">Sale Doesn't Have Special</option> */ ?>
 								<option value="date_lt">Before Date</option>
 								<option value="date_gt">After Date</option>
 							</select></label>
 					</div>
 					<div id="p_muid_req_forms">
-						<div class="req_form total_eq total_gt total_lt">
+						<div class="req_form subtotal_eq subtotal_gt subtotal_lt">
 							<div class="pf-element">
 								<label><span class="pf-label">Value</span>
 									<span class="pf-field">$<input class="ui-widget-content ui-corner-all" type="text" size="24" /></span></label>
@@ -597,7 +597,7 @@ $pines->entity_manager->sort($specials, 'name');
 									<input class="pf-field ui-widget-content ui-corner-all p_muid_product_select" type="text" size="24" /></label>
 							</div>
 						</div>
-						<div class="req_form has_category has_not_category">
+						<?php /* <div class="req_form has_category has_not_category">
 							<div class="pf-element">
 								<label><span class="pf-label">Category</span>
 									<select class="pf-field ui-widget-content ui-corner-all">
@@ -624,7 +624,7 @@ $pines->entity_manager->sort($specials, 'name');
 										<?php } ?>
 									</select></label>
 							</div>
-						</div>
+						</div> */ ?>
 						<div class="req_form date_lt date_gt">
 							<div class="pf-element">
 								<label><span class="pf-label">Date</span>

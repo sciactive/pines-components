@@ -62,6 +62,22 @@ if ($pines->config->com_sales->com_esp) {
 		$esp_product = null;
 }
 ?>
+<style type="text/css">
+	/* <![CDATA[ */
+	#p_muid_specials .special {
+		float: left;
+		margin-top: .5em;
+		margin-left: .5em;
+		padding: .2em;
+	}
+	#p_muid_specials .special_name {
+		font-weight: bold;
+	}
+	#p_muid_specials .special_discount {
+		text-align: right;
+	}
+	/* ]]> */
+</style>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'sale/save')); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
@@ -109,10 +125,43 @@ if ($pines->config->com_sales->com_esp) {
 				if ($cur_payment_type->kick_drawer)
 					$drawer_kickers[] = $cur_payment_type->guid;
 			}
+			$specials = array();
+			foreach ($this->specials as $cur_special) {
+				$discounts = array();
+				foreach ($cur_special->discounts as $cur_discount) {
+					if (isset($cur_discount['qualifier']))
+						$discounts[] = array(
+							'type' => $cur_discount['type'],
+							'qualifier' => $cur_discount['qualifier']->guid,
+							'value' => $cur_discount['value']
+						);
+					else
+						$discounts[] = $cur_discount;
+				}
+				$requirements = array();
+				foreach ($cur_special->requirements as $cur_requirement) {
+					if (is_object($cur_requirement['value']))
+						$requirements[] = array(
+							'type' => $cur_requirement['type'],
+							'value' => $cur_requirement['value']->guid
+						);
+					else
+						$requirements[] = $cur_requirement;
+				}
+				$specials[] = array(
+					'guid' => $cur_special->guid,
+					'name' => $cur_special->name,
+					'per_ticket' => $cur_special->per_ticket,
+					'discounts' => $discounts,
+					'requirements' => $requirements,
+				);
+			}
 ?>
 			var taxes_percent = <?php echo json_encode($taxes_percent); ?>;
 			var taxes_flat = <?php echo json_encode($taxes_flat); ?>;
 			var drawer_kickers = <?php echo json_encode($drawer_kickers); ?>;
+			var elig_specials = <?php echo json_encode($specials); ?>;
+			var added_specials = [];
 			var status = <?php echo json_encode($this->entity->status); ?>;
 
 			var round_to_dec = function(value, as_string){
@@ -1061,6 +1110,65 @@ if ($pines->config->com_sales->com_esp) {
 			})();
 			<?php } } ?>
 
+			$("#p_muid_special_code").click(function(){
+				$("<div title=\"Enter a Special Code\"><input class=\"special_code ui-widget-content ui-corner-all\" type=\"text\" size=\"24\" /></div>").dialog({
+					modal: true,
+					autoOpen: true,
+					buttons: {
+						"Continue": function(){
+							var code = $(this).find("input.special_code").val();
+							if (code == "") {
+								alert("Please enter a special code.");
+								return;
+							}
+							$.ajax({
+								url: <?php echo json_encode(pines_url('com_sales', 'special/search')); ?>,
+								type: "POST",
+								dataType: "json",
+								data: {"code": code},
+								error: function(XMLHttpRequest, textStatus){
+									pines.error("An error occured while trying to look up special:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
+								},
+								success: function(data){
+									if (!data) {
+										alert("The special code you entered either doesn't exist or is ineligible.");
+										return;
+									}
+									added_specials.push(data);
+									update_products();
+								}
+							});
+							$(this).dialog("close").remove();
+						}
+					}
+				}).find("input.special_code").keypress(function(e){
+					if (e.keyCode == 13) {
+						var dialog = $(this).parent();
+						dialog.dialog("option", "buttons").Continue.call(dialog);
+					}
+				});
+			});
+			$("#p_muid_special_remove").click(function(){
+				if (!added_specials.length) {
+					alert("There are no entered special codes to remove.");
+					return;
+				}
+				var form = $("<div title=\"Remove a Special Code\"></div>");
+				$.each(added_specials, function(i, cur_special){
+					form.append($("<button type=\"button\">"+pines.safe(cur_special.name)+"</button>").button({
+						icons: {primary: "ui-icon-circle-minus"}
+					}).click(function(){
+						added_specials.splice(i, 1);
+						update_products();
+						form.dialog("close").remove();
+					}));
+				});
+				form.dialog({
+					modal: true,
+					autoOpen: true
+				});
+			});
+
 			$("#p_muid_comments_dialog").dialog({
 				bgiframe: true,
 				autoOpen: false,
@@ -1093,6 +1201,7 @@ if ($pines->config->com_sales->com_esp) {
 				if (!rows)
 					return;
 				var subtotal = 0;
+				var specials = [];
 				var taxes = 0;
 				var item_fees = 0;
 				var total = 0;
@@ -1152,9 +1261,85 @@ if ($pines->config->com_sales->com_esp) {
 					cur_row.pgrid_set_value(9, pines.safe(round_to_dec(cur_item_fees, true)));
 				});
 				$("#p_muid_subtotal").html(round_to_dec(subtotal, true));
+				// Now that we know the subtotal, we can use it for specials.
+				var total_specials = 0.00;
+				$.each($.merge($.merge([], elig_specials), added_specials), function(i, cur_special){
+					var apply_special = true;
+					$.each(cur_special.requirements, function(i, cur_req){
+						if (!apply_special)
+							return;
+						switch (cur_req.type) {
+							case "subtotal_eq":
+								if (round_to_dec(subtotal, true) != round_to_dec(cur_req.value, true))
+									apply_special = false;
+								break;
+							case "subtotal_lt":
+								if (round_to_dec(subtotal) >= round_to_dec(cur_req.value))
+									apply_special = false;
+								break;
+							case "subtotal_gt":
+								if (round_to_dec(subtotal) <= round_to_dec(cur_req.value))
+									apply_special = false;
+								break;
+							case "has_product":
+								if (!rows.filter("[title="+cur_req.value+"]").length)
+									apply_special = false;
+								break;
+							case "has_not_product":
+								if (rows.filter("[title="+cur_req.value+"]").length)
+									apply_special = false;
+								break;
+						}
+					});
+					if (!apply_special)
+						return;
+					// The special works, now calculate its value.
+					var discount = 0.00;
+					$.each(cur_special.discounts, function(i, cur_dis){
+						switch (cur_dis.type) {
+							case "order_amount":
+								discount += cur_dis.value;
+								break;
+							case "order_percent":
+								discount += subtotal * (cur_dis.value / 100);
+								break;
+							case "product_amount":
+								var qty = 0;
+								rows.filter("[title="+cur_dis.qualifier+"]").each(function(){
+									qty += parseInt($(this).pgrid_get_value(5));
+								});
+								discount += qty * cur_dis.value;
+								break;
+							case "product_percent":
+								var prod_total = 0;
+								rows.filter("[title="+cur_dis.qualifier+"]").each(function(){
+									prod_total += parseFloat($(this).pgrid_get_value(8));
+								});
+								discount += prod_total * (cur_dis.value / 100);
+								break;
+						}
+					});
+					discount = round_to_dec(discount);
+					if (discount <= 0)
+						return;
+					specials.push($.extend({"discount": discount}, cur_special));
+					total_specials += discount;
+				});
+				// Now add all the specials to the specials section.
+				var special_box = $("#p_muid_specials").empty();
+				$.each(specials, function(i, cur_special){
+					special_box.append("<div class=\"special ui-widget-content ui-corner-all\"><div class=\"special_name\">"+pines.safe(cur_special.name)+"</div><div class=\"special_discount\">$"+round_to_dec(cur_special.discount, true)+"</div></div>");
+				});
+				// Update the specials input box.
+				$("#p_muid_specials_input").val(JSON.stringify(added_specials));
+				$("#p_muid_specials_total").html(round_to_dec(total_specials, true));
+				if (round_to_dec(total_specials) > 0)
+					$("#p_muid_specials_total_container").show();
+				else
+					$("#p_muid_specials_total_container").hide();
 				$("#p_muid_item_fees").html(round_to_dec(item_fees, true));
 				$("#p_muid_taxes").html(round_to_dec(taxes, true));
-				total = round_to_dec(subtotal) + round_to_dec(item_fees) + round_to_dec(taxes);
+				total = (round_to_dec(subtotal) - round_to_dec(total_specials)) + round_to_dec(item_fees) + round_to_dec(taxes);
 				$("#p_muid_total").html(round_to_dec(total, true));
 
 				// Update the products input element.
@@ -1473,10 +1658,24 @@ if ($pines->config->com_sales->com_esp) {
 	</div>
 	<?php } ?>
 	<div class="pf-element pf-full-width">
+		<span class="pf-label">Specials</span>
+		<span class="pf-field">
+			<a href="javascript:void(0);" id="p_muid_special_code">Enter a Special Code</a>
+			|
+			<a href="javascript:void(0);" id="p_muid_special_remove">Remove a Special Code</a>
+		</span>
+		<br class="pf-clearing" />
+		<div id="p_muid_specials"></div>
+		<input type="hidden" name="specials" value="" id="p_muid_specials_input" />
+	</div>
+	<div class="pf-element pf-full-width">
 		<span class="pf-label">Ticket Totals</span>
 		<div class="pf-group">
 			<div class="pf-field" style="float: right; font-size: 1.2em; text-align: right;">
 				<span class="pf-label">Subtotal</span><span class="pf-field" id="p_muid_subtotal">0.00</span><br />
+				<div id="p_muid_specials_total_container" style="display: none;">
+					<span class="pf-label">Specials</span><span class="pf-field">-<span id="p_muid_specials_total">0.00</span></span><br />
+				</div>
 				<span class="pf-label">Item Fees</span><span class="pf-field" id="p_muid_item_fees">0.00</span><br />
 				<span class="pf-label">Tax</span><span class="pf-field" id="p_muid_taxes">0.00</span><br />
 				<hr /><br />

@@ -91,6 +91,7 @@ return array(
 		array('newcategory', 'Create Categories', 'User can create new categories.'),
 		array('editcategory', 'Edit Categories', 'User can edit current categories.'),
 		array('deletecategory', 'Delete Categories', 'User can delete current categories.'),
+		array('searchspecials', 'Search Specials', 'User can search specials. Needed for adding specials to sales.'),
 		array('listspecials', 'List Specials', 'User can see specials.'),
 		array('newspecial', 'Create Specials', 'User can create new specials.'),
 		array('editspecial', 'Edit Specials', 'User can edit current specials.'),

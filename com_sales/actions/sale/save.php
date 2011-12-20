@@ -129,6 +129,21 @@ if ($sale->status != 'invoiced' && $sale->status != 'paid' && $sale->status != '
 		}
 		unset($cur_product);
 	}
+	// Added specials are those added by the rep that don't necessarily apply to all sales.
+	$added_specials = (array) json_decode($_REQUEST['specials']);
+	$sale->added_specials = array();
+	foreach ($added_specials as $cur_special_json) {
+		$cur_special = com_sales_special::factory((int) $cur_special_json->guid);
+		if (!isset($cur_special->guid)) {
+			pines_notice("The special, {$cur_special_json->name}, was not found.");
+			continue;
+		}
+		if (!$cur_special->eligible()) {
+			pines_notice("The special, {$cur_special_json->name}, is not eligible.");
+			continue;
+		}
+		$sale->added_specials[] = $cur_special;
+	}
 }
 // Used for payment error checking.
 $payment_error = false;

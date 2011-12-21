@@ -62,6 +62,7 @@ if (isset($special)) {
 		'guid' => $special->guid,
 		'name' => $special->name,
 		'per_ticket' => $special->per_ticket,
+		'before_tax' => $special->before_tax,
 		'discounts' => $discounts,
 		'requirements' => $requirements,
 	);

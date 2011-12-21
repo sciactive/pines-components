@@ -1348,6 +1348,9 @@ class com_sales_sale extends entity {
 		$taxes = 0.00;
 		$item_fees = 0.00;
 		$total = 0.00;
+		// How many times to apply a flat tax.
+		$tax_qty = 0;
+		$taxable_subtotal = 0.00;
 		// Go through each product, calculating its line total and fees.
 		foreach ($this->products as &$cur_product) {
 			$price = (float) $cur_product['price'];
@@ -1376,14 +1379,8 @@ class com_sales_sale extends entity {
 			$line_total = $price * $qty;
 			$cur_item_fees = 0.00;
 			if (!$cur_product['entity']->tax_exempt) {
-				// Add location taxes.
-				foreach ($tax_fees as $cur_tax_fee) {
-					if ($cur_tax_fee->type == 'percentage') {
-						$taxes += ($cur_tax_fee->rate / 100) * $line_total;
-					} elseif ($cur_tax_fee->type == 'flat_rate') {
-						$taxes += $cur_tax_fee->rate * $qty;
-					}
-				}
+				$taxable_subtotal += (float) $pines->com_sales->round($line_total);
+				$tax_qty += $qty;
 			}
 			if (is_array($cur_product['entity']->additional_tax_fees)) {
 				// Add item fees.
@@ -1404,6 +1401,7 @@ class com_sales_sale extends entity {
 		$this->subtotal = (float) $pines->com_sales->round($subtotal);
 
 		// Now that we know the subtotal, we can use it for specials.
+		$total_before_tax_specials = 0.00;
 		$total_specials = 0.00;
 		foreach (array_merge($this->elig_specials, $this->added_specials) as $cur_special) {
 			$apply_special = true;
@@ -1461,9 +1459,19 @@ class com_sales_sale extends entity {
 			$this->specials[] = array(
 				"entity" => $cur_special,
 				"name" => $cur_special->name,
+				"before_tax" => $cur_special->before_tax,
 				"discount" => $discount
 			);
+			if ($cur_special->before_tax)
+				$total_before_tax_specials += $discount;
 			$total_specials += $discount;
+		}
+		// Add location taxes.
+		foreach ($tax_fees as $cur_tax_fee) {
+			if ($cur_tax_fee->type == 'percentage')
+				$taxes += ($cur_tax_fee->rate / 100) * ($taxable_subtotal - $total_before_tax_specials);
+			elseif ($cur_tax_fee->type == 'flat_rate')
+				$taxes += $cur_tax_fee->rate * $tax_qty;
 		}
 		// Update the specials input box.
 		$this->total_specials = (float) $pines->com_sales->round($total_specials);

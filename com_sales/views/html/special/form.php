@@ -387,6 +387,12 @@ $pines->com_sales->load_product_select();
 					<input class="pf-field" type="checkbox" name="enabled" value="ON"<?php echo $this->entity->enabled ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
+				<label><span class="pf-label">Before Tax</span>
+					<span class="pf-note">Apply this special before tax.</span>
+					<span class="pf-note">Flat taxes still apply to all items on the sale.</span>
+					<input class="pf-field" type="checkbox" name="before_tax" value="ON"<?php echo $this->entity->before_tax ? ' checked="checked"' : ''; ?> /></label>
+			</div>
+			<div class="pf-element">
 				<label><span class="pf-label">Apply to All Eligible Sales</span>
 					<input class="pf-field" type="checkbox" name="apply_to_all" value="ON"<?php echo $this->entity->apply_to_all ? ' checked="checked"' : ''; ?> /></label>
 			</div>

@@ -152,6 +152,7 @@ if ($pines->config->com_sales->com_esp) {
 					'guid' => $cur_special->guid,
 					'name' => $cur_special->name,
 					'per_ticket' => $cur_special->per_ticket,
+					'before_tax' => $cur_special->before_tax,
 					'discounts' => $discounts,
 					'requirements' => $requirements,
 				);
@@ -1205,6 +1206,9 @@ if ($pines->config->com_sales->com_esp) {
 				var taxes = 0;
 				var item_fees = 0;
 				var total = 0;
+				// How many times to apply a flat tax.
+				var tax_qty = 0;
+				var taxable_subtotal = 0;
 				<?php if ($pines->config->com_sales->com_customer) { ?>
 				require_customer = false;
 				<?php } ?>
@@ -1242,12 +1246,8 @@ if ($pines->config->com_sales->com_esp) {
 					}
 					var line_total = price * qty;
 					if (!product.tax_exempt) {
-						$.each(taxes_percent, function(){
-							taxes += (this.rate / 100) * line_total;
-						});
-						$.each(taxes_flat, function(){
-							taxes += this.rate * qty;
-						});
+						taxable_subtotal += round_to_dec(line_total);
+						tax_qty += qty;
 					}
 					$.each(product.fees_percent, function(){
 						cur_item_fees += (this.rate / 100) * line_total;
@@ -1262,7 +1262,8 @@ if ($pines->config->com_sales->com_esp) {
 				});
 				$("#p_muid_subtotal").html(round_to_dec(subtotal, true));
 				// Now that we know the subtotal, we can use it for specials.
-				var total_specials = 0.00;
+				var total_before_tax_specials = 0;
+				var total_specials = 0;
 				$.each($.merge($.merge([], elig_specials), added_specials), function(i, cur_special){
 					var apply_special = true;
 					$.each(cur_special.requirements, function(i, cur_req){
@@ -1294,7 +1295,7 @@ if ($pines->config->com_sales->com_esp) {
 					if (!apply_special)
 						return;
 					// The special works, now calculate its value.
-					var discount = 0.00;
+					var discount = 0;
 					$.each(cur_special.discounts, function(i, cur_dis){
 						switch (cur_dis.type) {
 							case "order_amount":
@@ -1323,12 +1324,20 @@ if ($pines->config->com_sales->com_esp) {
 					if (discount <= 0)
 						return;
 					specials.push($.extend({"discount": discount}, cur_special));
+					if (cur_special.before_tax)
+						total_before_tax_specials += discount;
 					total_specials += discount;
+				});
+				$.each(taxes_percent, function(){
+					taxes += (this.rate / 100) * (taxable_subtotal - total_before_tax_specials);
+				});
+				$.each(taxes_flat, function(){
+					taxes += this.rate * tax_qty;
 				});
 				// Now add all the specials to the specials section.
 				var special_box = $("#p_muid_specials").empty();
 				$.each(specials, function(i, cur_special){
-					special_box.append("<div class=\"special ui-widget-content ui-corner-all\"><div class=\"special_name\">"+pines.safe(cur_special.name)+"</div><div class=\"special_discount\">$"+round_to_dec(cur_special.discount, true)+"</div></div>");
+					special_box.append("<div class=\"special ui-widget-content ui-corner-all\"><div class=\"special_name\">"+pines.safe(cur_special.name)+"</div><div class=\"special_discount\">"+(cur_special.before_tax ? "<small>(before tax)</small> " : "")+"$"+round_to_dec(cur_special.discount, true)+"</div></div>");
 				});
 				// Update the specials input box.
 				$("#p_muid_specials_input").val(JSON.stringify(added_specials));

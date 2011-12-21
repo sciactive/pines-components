@@ -263,13 +263,15 @@ switch ($this->entity->status) {
 			<thead>
 				<tr>
 					<th>Specials</th>
+					<th>Applied</th>
 					<th class="right_text">Discount</th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php foreach ($this->entity->specials as $cur_special) { ?>
 				<tr>
-					<td><?php echo htmlspecialchars($cur_special['name']); ?></td>
+					<td style="width: 80%;"><?php echo htmlspecialchars($cur_special['name']); ?></td>
+					<td style="white-space: pre;"><?php echo $cur_special['before_tax'] ? 'Before Tax' : 'After Tax'; ?></td>
 					<td class="right_text">$<?php echo $pines->com_sales->round($cur_special['discount'], true); ?></td>
 				</tr>
 				<?php } ?>

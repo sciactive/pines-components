@@ -559,13 +559,14 @@ if ($pines->config->com_calendar->com_customer)
 	<input type="radio" name="filter" id="p_muid_filter_rad3" value="appointments" <?php echo ($this->filter == 'appointments') ? 'checked="checked"' : ''; ?>/><label for="p_muid_filter_rad3" title="Show customer appointments.">appts</label>
 	<input type="radio" name="filter" id="p_muid_filter_rad4" value="events" <?php echo ($this->filter == 'events') ? 'checked="checked"' : ''; ?>/><label for="p_muid_filter_rad4" title="Show calendar events.">events</label>
 </div>
-<?php if (gatekeeper('com_calendar/managecalendar')) { ?>
 <div style="margin: 0.75em 0; text-align: center;" id="p_muid_actions">
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_calendar_select_location();" title="Select Location"><span class="p_muid_btn picon picon-applications-internet"></span></button>
+	<?php if (gatekeeper('com_calendar/managecalendar')) { ?>
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_calendar_new_appointment();" title="New Appointment"><span class="p_muid_btn picon picon-appointment-new"></span></button>
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_calendar_new_event();" title="New Event"><span class="p_muid_btn picon picon-resource-calendar-insert"></span></button>
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_calendar_quick_schedule();" title="Quick Schedule"><span class="p_muid_btn picon picon-view-calendar-workweek"></span></button>
 	<button class="ui-state-default ui-corner-all" type="button" onclick="pines.com_calendar_new_schedule();" title="Personal Schedule" <?php echo !isset($this->employee) ? 'disabled="disabled"' : '';?>><span class="p_muid_btn picon picon-list-resource-add"></span></button>
+	<?php } ?>
 </div>
 <div>
 	<select class="ui-widget-content ui-corner-all" id="p_muid_employee" name="employee" style="width: 100%;">
@@ -581,7 +582,7 @@ if ($pines->config->com_calendar->com_customer)
 		} ?>
 	</select>
 </div>
-<?php } if ($pines->config->com_calendar->com_customer) { ?>
+<?php if ($pines->config->com_calendar->com_customer) { ?>
 <div id="p_muid_interaction_dialog" title="Process Customer Interaction" style="display: none;">
 	<div class="pf-form">
 		<div class="pf-element">

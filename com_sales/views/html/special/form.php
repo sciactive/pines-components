@@ -27,17 +27,17 @@ $pines->com_sales->load_product_select();
 //		)
 //	);
 //$pines->entity_manager->hsort($categories, 'name', 'parent');
-//
-//$specials = $pines->entity_manager->get_entities(
-//		array('class' => com_sales_special),
-//		array('&',
-//			'tag' => array('com_sales', 'special')
-//		),
-//		array('&!',
-//			'guid' => array($this->entity->guid)
-//		)
-//	);
-//$pines->entity_manager->sort($specials, 'name');
+
+$specials = $pines->entity_manager->get_entities(
+		array('class' => com_sales_special),
+		array('&',
+			'tag' => array('com_sales', 'special')
+		),
+		array('!&',
+			'guid' => array($this->entity->guid)
+		)
+	);
+$pines->entity_manager->sort($specials, 'name');
 ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'special/save')); ?>">
 	<script type="text/javascript">
@@ -435,12 +435,14 @@ $pines->com_sales->load_product_select();
 								<option value="order_percent">Whole Order (Percent)</option>
 								<option value="product_amount">Specific Product (Amount) (x Qty)</option>
 								<option value="product_percent">Specific Product (Percent)</option>
+								<option value="item_amount">One Product (Amount)</option>
+								<option value="item_percent">One Product (Percent)</option>
 								<?php /* <option value="category_amount">Products from Category (Amount) (x Qty)</option>
 								<option value="category_percent">Products from Category (Percent)</option> */ ?>
 							</select></label>
 					</div>
 					<div id="p_muid_dis_forms">
-						<div class="dis_form product_amount product_percent">
+						<div class="dis_form product_amount product_percent item_amount item_percent">
 							<div class="pf-element">
 								<label><span class="pf-label">Product</span>
 									<input class="pf-field ui-widget-content ui-corner-all p_muid_product_select" type="text" size="24" /></label>
@@ -553,11 +555,11 @@ $pines->com_sales->load_product_select();
 								/* case 'has_category':
 								case 'has_not_category':
 									echo htmlspecialchars($cur_value['value']->guid);
-									break;
+									break; */
 								case 'has_special':
 								case 'has_not_special':
-									echo ($cur_value['value'] == 'any') ? 'any' : htmlspecialchars($cur_value['value']->guid);
-									break; */
+									echo ($cur_value['value'] === 'any') ? 'any' : htmlspecialchars($cur_value['value']->guid);
+									break;
 								case 'date_lt':
 								case 'date_gt':
 									echo htmlspecialchars(format_date($cur_value['value'], 'custom', 'Y-m-d'));
@@ -583,9 +585,9 @@ $pines->com_sales->load_product_select();
 								<option value="has_product">Sale Has Product</option>
 								<option value="has_not_product">Sale Doesn't Have Product</option>
 								<?php /* <option value="has_category">Sale Has Category</option>
-								<option value="has_not_category">Sale Doesn't Have Category</option>
+								<option value="has_not_category">Sale Doesn't Have Category</option> */ ?>
 								<option value="has_special">Sale Has Special</option>
-								<option value="has_not_special">Sale Doesn't Have Special</option> */ ?>
+								<option value="has_not_special">Sale Doesn't Have Special</option>
 								<option value="date_lt">Before Date</option>
 								<option value="date_gt">After Date</option>
 							</select></label>
@@ -619,7 +621,7 @@ $pines->com_sales->load_product_select();
 										<?php } ?>
 									</select></label>
 							</div>
-						</div>
+						</div> */ ?>
 						<div class="req_form has_special has_not_special">
 							<div class="pf-element">
 								<label><span class="pf-label">Special</span>
@@ -630,7 +632,7 @@ $pines->com_sales->load_product_select();
 										<?php } ?>
 									</select></label>
 							</div>
-						</div> */ ?>
+						</div>
 						<div class="req_form date_lt date_gt">
 							<div class="pf-element">
 								<label><span class="pf-label">Date</span>

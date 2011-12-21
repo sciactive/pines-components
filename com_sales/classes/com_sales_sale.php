@@ -1403,7 +1403,8 @@ class com_sales_sale extends entity {
 		// Now that we know the subtotal, we can use it for specials.
 		$total_before_tax_specials = 0.00;
 		$total_specials = 0.00;
-		foreach (array_merge($this->elig_specials, $this->added_specials) as $cur_special) {
+		// First build an array of specials that match and their discounts.
+		foreach (array_merge($this->added_specials, $this->elig_specials) as $cur_special) {
 			$apply_special = true;
 			foreach ($cur_special->requirements as $cur_req) {
 				if (!$apply_special)
@@ -1451,6 +1452,26 @@ class com_sales_sale extends entity {
 						$prod_total = $this->product_total($cur_dis['qualifier']);
 						$discount += $prod_total * ($cur_dis['value'] / 100);
 						break;
+					case "item_amount":
+						if (!$this->product_count($cur_dis['qualifier']))
+							break;
+						$discount += $cur_dis['value'];
+						break;
+					case "item_percent":
+						if (!$this->product_count($cur_dis['qualifier']))
+							break;
+						$found_product = null;
+						foreach ($this->products as $cur_product) {
+							if ($cur_product['entity']->is($cur_dis['qualifier'])) {
+								$found_product = $cur_product;
+								break;
+							}
+						}
+						if (!$found_product)
+							break;
+						$prod_price = (float) $found_product['price'];
+						$discount += $prod_price * ($cur_dis['value'] / 100);
+						break;
 				}
 			}
 			$discount = (float) $pines->com_sales->round($discount);
@@ -1462,9 +1483,52 @@ class com_sales_sale extends entity {
 				"before_tax" => $cur_special->before_tax,
 				"discount" => $discount
 			);
-			if ($cur_special->before_tax)
-				$total_before_tax_specials += $discount;
-			$total_specials += $discount;
+		}
+		// Now remove specials with other special requirements.
+		foreach ($this->specials as $key => $cur_special) {
+			$apply_special = true;
+			foreach ($cur_special['entity']->requirements as $cur_req) {
+				if (!$apply_special)
+					continue;
+				switch ($cur_req['type']) {
+					case "has_special":
+						$matching = 0;
+						if ($cur_req['value'] === 'any') {
+							// Have to subtract this special.
+							$matching = count($this->specials) - 1;
+						} else {
+							foreach ($this->specials as $cur_test) {
+								if ($cur_test['entity']->is($cur_req['value']))
+									$matching++;
+							}
+						}
+						if (!$matching)
+							$apply_special = false;
+						break;
+					case "has_not_special":
+						$matching = 0;
+						if ($cur_req['value'] === 'any') {
+							// Have to subtract this special.
+							$matching = count($this->specials) - 1;
+						} else {
+							foreach ($this->specials as $cur_test) {
+								if ($cur_test['entity']->is($cur_req['value']))
+									$matching++;
+							}
+						}
+						if ($matching)
+							$apply_special = false;
+						break;
+				}
+			}
+			if (!$apply_special) {
+				unset($this->specials[$key]);
+				continue;
+			}
+			// Add up the total discounts.
+			if ($cur_special['before_tax'])
+				$total_before_tax_specials += $cur_special['discount'];
+			$total_specials += $cur_special['discount'];
 		}
 		// Add location taxes.
 		foreach ($tax_fees as $cur_tax_fee) {

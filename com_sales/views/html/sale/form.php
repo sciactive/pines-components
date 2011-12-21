@@ -1295,7 +1295,8 @@ if ($pines->config->com_sales->com_esp) {
 				// Now that we know the subtotal, we can use it for specials.
 				var total_before_tax_specials = 0;
 				var total_specials = 0;
-				$.each($.merge($.merge([], elig_specials), added_specials), function(i, cur_special){
+				// First build an array of specials that match and their discounts.
+				$.each($.merge($.merge([], added_specials), elig_specials), function(i, cur_special){
 					var apply_special = true;
 					$.each(cur_special.requirements, function(i, cur_req){
 						if (!apply_special)
@@ -1349,15 +1350,67 @@ if ($pines->config->com_sales->com_esp) {
 								});
 								discount += prod_total * (cur_dis.value / 100);
 								break;
+							case "item_amount":
+								if (!rows.filter("[title="+cur_dis.qualifier+"]").length);
+									break;
+								discount += cur_dis.value;
+								break;
+							case "item_percent":
+								var prod = rows.filter("[title="+cur_dis.qualifier+"]").eq(0);
+								if (!prod.length)
+									break;
+								var prod_price = parseFloat(prod.pgrid_get_value(6));
+								discount += prod_price * (cur_dis.value / 100);
+								break;
 						}
 					});
 					discount = round_to_dec(discount);
 					if (discount <= 0)
 						return;
 					specials.push($.extend({"discount": discount}, cur_special));
+				});
+				// Now remove specials with other special requirements.
+				specials = $.grep(specials, function(cur_special){
+					var apply_special = true;
+					$.each(cur_special.requirements, function(i, cur_req){
+						if (!apply_special)
+							return;
+						switch (cur_req.type) {
+							case "has_special":
+								var matching;
+								if (cur_req.value == 'any') {
+									// Have to subtract this special.
+									matching = specials.length - 1;
+								} else {
+									matching = $.grep(specials, function(cur_test){
+										return (cur_req.value == cur_test.guid);
+									}).length;
+								}
+								if (!matching)
+									apply_special = false;
+								break;
+							case "has_not_special":
+								var matching;
+								if (cur_req.value == 'any') {
+									// Have to subtract this special.
+									matching = specials.length - 1;
+								} else {
+									matching = $.grep(specials, function(cur_test){
+										return (cur_req.value == cur_test.guid);
+									}).length;
+								}
+								if (matching)
+									apply_special = false;
+								break;
+						}
+					});
+					if (!apply_special)
+						return false;
+					// Add up the total discounts.
 					if (cur_special.before_tax)
-						total_before_tax_specials += discount;
-					total_specials += discount;
+						total_before_tax_specials += cur_special.discount;
+					total_specials += cur_special.discount;
+					return true;
 				});
 				$.each(taxes_percent, function(){
 					taxes += (this.rate / 100) * (taxable_subtotal - total_before_tax_specials);

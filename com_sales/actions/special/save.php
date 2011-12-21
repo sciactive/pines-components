@@ -51,6 +51,8 @@ foreach ($discounts as $cur_discount) {
 			break;
 		case 'product_amount':
 		case 'product_percent':
+		case 'item_amount':
+		case 'item_percent':
 			$product = $pines->com_sales->get_product_by_code($qualifier);
 			if (!isset($product->guid)) {
 				pines_notice("Couldn't find product with code $qualifier.");
@@ -59,7 +61,7 @@ foreach ($discounts as $cur_discount) {
 			$special->discounts[] = array(
 				'type' => $type,
 				'qualifier' => $product,
-				'value' => $value
+				'value' => (float) $value
 			);
 			break;
 		case 'category_amount':
@@ -72,7 +74,7 @@ foreach ($discounts as $cur_discount) {
 			$special->discounts[] = array(
 				'type' => $type,
 				'qualifier' => $category,
-				'value' => $value
+				'value' => (float) $value
 			);
 			break;
 	}

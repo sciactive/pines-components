@@ -857,7 +857,7 @@ class com_sales_return extends entity {
 		$total_before_tax_specials = 0.00;
 		$total_specials = 0.00;
 		foreach ((array) $this->specials as $cur_special) {
-			if ($cur_special['entity']->before_tax)
+			if ($cur_special['before_tax'])
 				$total_before_tax_specials += $cur_special['discount'];
 			$total_specials += $cur_special['discount'];
 		}

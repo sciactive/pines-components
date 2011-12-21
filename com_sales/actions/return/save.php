@@ -29,7 +29,10 @@ if ( isset($_REQUEST['id']) ) {
 		return;
 	}
 	$return = com_sales_return::factory();
-	$return->attach_sale($sale);
+	if (!$return->attach_sale($sale)) {
+		pines_error('Requested sale couldn\'t be attached.');
+		return;
+	}
 } else {
 	if ( !gatekeeper('com_sales/newreturn') )
 		punt_user(null, pines_url('com_sales', 'return/list'));
@@ -46,7 +49,8 @@ if ($pines->config->com_sales->com_customer && $return->status != 'processed' &&
 }
 // Used for product error checking.
 $product_error = false;
-if ($return->status != 'processed' && $return->status != 'voided') {
+// If the return has specials, don't let the user edit the products.
+if ($return->status != 'processed' && $return->status != 'voided' && !$return->specials) {
 	$return->products = (array) json_decode($_REQUEST['products']);
 	if (empty($return->products)) {
 		pines_notice('No products were selected.');

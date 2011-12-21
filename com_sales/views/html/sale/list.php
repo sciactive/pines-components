@@ -427,6 +427,7 @@ Only continue if you are fully aware of the results of changing a product."))
 			<?php } ?>
 			<th>Products</th>
 			<th>Subtotal</th>
+			<th>Specials</th>
 			<th>Item Fees</th>
 			<th>Tax</th>
 			<th>Total</th>
@@ -451,6 +452,7 @@ Only continue if you are fully aware of the results of changing a product."))
 			}
 			echo $number; ?></td>
 			<td><?php echo isset($sale->subtotal) ? '$'.htmlspecialchars(number_format($sale->subtotal, 2)) : ''; ?></td>
+			<td><?php echo isset($sale->total_specials) ? '$'.htmlspecialchars(number_format($sale->total_specials, 2)) : ''; ?></td>
 			<td><?php echo isset($sale->item_fees) ? '$'.htmlspecialchars(number_format($sale->item_fees, 2)) : ''; ?></td>
 			<td><?php echo isset($sale->taxes) ? '$'.htmlspecialchars(number_format($sale->taxes, 2)) : ''; ?></td>
 			<td><?php echo isset($sale->total) ? '$'.htmlspecialchars(number_format($sale->total, 2)) : ''; ?></td>

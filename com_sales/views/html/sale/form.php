@@ -125,7 +125,7 @@ if ($pines->config->com_sales->com_esp) {
 				if ($cur_payment_type->kick_drawer)
 					$drawer_kickers[] = $cur_payment_type->guid;
 			}
-			$specials = array();
+			$elig_specials = array();
 			foreach ($this->specials as $cur_special) {
 				$discounts = array();
 				foreach ($cur_special->discounts as $cur_discount) {
@@ -148,7 +148,39 @@ if ($pines->config->com_sales->com_esp) {
 					else
 						$requirements[] = $cur_requirement;
 				}
-				$specials[] = array(
+				$elig_specials[] = array(
+					'guid' => $cur_special->guid,
+					'name' => $cur_special->name,
+					'per_ticket' => $cur_special->per_ticket,
+					'before_tax' => $cur_special->before_tax,
+					'discounts' => $discounts,
+					'requirements' => $requirements,
+				);
+			}
+			$added_specials = array();
+			foreach ((array) $this->entity->added_specials as $cur_special) {
+				$discounts = array();
+				foreach ($cur_special->discounts as $cur_discount) {
+					if (isset($cur_discount['qualifier']))
+						$discounts[] = array(
+							'type' => $cur_discount['type'],
+							'qualifier' => $cur_discount['qualifier']->guid,
+							'value' => $cur_discount['value']
+						);
+					else
+						$discounts[] = $cur_discount;
+				}
+				$requirements = array();
+				foreach ($cur_special->requirements as $cur_requirement) {
+					if (is_object($cur_requirement['value']))
+						$requirements[] = array(
+							'type' => $cur_requirement['type'],
+							'value' => $cur_requirement['value']->guid
+						);
+					else
+						$requirements[] = $cur_requirement;
+				}
+				$added_specials[] = array(
 					'guid' => $cur_special->guid,
 					'name' => $cur_special->name,
 					'per_ticket' => $cur_special->per_ticket,
@@ -161,8 +193,8 @@ if ($pines->config->com_sales->com_esp) {
 			var taxes_percent = <?php echo json_encode($taxes_percent); ?>;
 			var taxes_flat = <?php echo json_encode($taxes_flat); ?>;
 			var drawer_kickers = <?php echo json_encode($drawer_kickers); ?>;
-			var elig_specials = <?php echo json_encode($specials); ?>;
-			var added_specials = [];
+			var elig_specials = <?php echo json_encode($elig_specials); ?>;
+			var added_specials = <?php echo json_encode($added_specials); ?>;
 			var status = <?php echo json_encode($this->entity->status); ?>;
 
 			var round_to_dec = function(value, as_string){
@@ -842,8 +874,66 @@ if ($pines->config->com_sales->com_esp) {
 				});
 				salesperson_dialog.dialog('open');
 			};
-			<?php }
-			} ?>
+			<?php } ?>
+			$("#p_muid_special_code").click(function(){
+				$("<div title=\"Enter a Special Code\"><input class=\"special_code ui-widget-content ui-corner-all\" type=\"text\" size=\"24\" /></div>").dialog({
+					modal: true,
+					autoOpen: true,
+					buttons: {
+						"Continue": function(){
+							var code = $(this).find("input.special_code").val();
+							if (code == "") {
+								alert("Please enter a special code.");
+								return;
+							}
+							$.ajax({
+								url: <?php echo json_encode(pines_url('com_sales', 'special/search')); ?>,
+								type: "POST",
+								dataType: "json",
+								data: {"code": code},
+								error: function(XMLHttpRequest, textStatus){
+									pines.error("An error occured while trying to look up special:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
+								},
+								success: function(data){
+									if (!data) {
+										alert("The special code you entered either doesn't exist or is ineligible.");
+										return;
+									}
+									added_specials.push(data);
+									update_products();
+								}
+							});
+							$(this).dialog("close").remove();
+						}
+					}
+				}).find("input.special_code").keypress(function(e){
+					if (e.keyCode == 13) {
+						var dialog = $(this).parent();
+						dialog.dialog("option", "buttons").Continue.call(dialog);
+					}
+				});
+			});
+			$("#p_muid_special_remove").click(function(){
+				if (!added_specials.length) {
+					alert("There are no entered special codes to remove.");
+					return;
+				}
+				var form = $("<div title=\"Remove a Special Code\"></div>");
+				$.each(added_specials, function(i, cur_special){
+					form.append($("<button type=\"button\">"+pines.safe(cur_special.name)+"</button>").button({
+						icons: {primary: "ui-icon-circle-minus"}
+					}).click(function(){
+						added_specials.splice(i, 1);
+						update_products();
+						form.dialog("close").remove();
+					}));
+				});
+				form.dialog({
+					modal: true,
+					autoOpen: true
+				});
+			});
+			<?php } ?>
 
 			<?php if (!$pines->config->com_sales->per_item_salesperson) { ?>
 			products_table.pgrid_import_state({pgrid_hidden_cols: [10, 11]});
@@ -1110,65 +1200,6 @@ if ($pines->config->com_sales->com_esp) {
 				});
 			})();
 			<?php } } ?>
-
-			$("#p_muid_special_code").click(function(){
-				$("<div title=\"Enter a Special Code\"><input class=\"special_code ui-widget-content ui-corner-all\" type=\"text\" size=\"24\" /></div>").dialog({
-					modal: true,
-					autoOpen: true,
-					buttons: {
-						"Continue": function(){
-							var code = $(this).find("input.special_code").val();
-							if (code == "") {
-								alert("Please enter a special code.");
-								return;
-							}
-							$.ajax({
-								url: <?php echo json_encode(pines_url('com_sales', 'special/search')); ?>,
-								type: "POST",
-								dataType: "json",
-								data: {"code": code},
-								error: function(XMLHttpRequest, textStatus){
-									pines.error("An error occured while trying to look up special:\n"+pines.safe(XMLHttpRequest.status)+": "+pines.safe(textStatus));
-								},
-								success: function(data){
-									if (!data) {
-										alert("The special code you entered either doesn't exist or is ineligible.");
-										return;
-									}
-									added_specials.push(data);
-									update_products();
-								}
-							});
-							$(this).dialog("close").remove();
-						}
-					}
-				}).find("input.special_code").keypress(function(e){
-					if (e.keyCode == 13) {
-						var dialog = $(this).parent();
-						dialog.dialog("option", "buttons").Continue.call(dialog);
-					}
-				});
-			});
-			$("#p_muid_special_remove").click(function(){
-				if (!added_specials.length) {
-					alert("There are no entered special codes to remove.");
-					return;
-				}
-				var form = $("<div title=\"Remove a Special Code\"></div>");
-				$.each(added_specials, function(i, cur_special){
-					form.append($("<button type=\"button\">"+pines.safe(cur_special.name)+"</button>").button({
-						icons: {primary: "ui-icon-circle-minus"}
-					}).click(function(){
-						added_specials.splice(i, 1);
-						update_products();
-						form.dialog("close").remove();
-					}));
-				});
-				form.dialog({
-					modal: true,
-					autoOpen: true
-				});
-			});
 
 			$("#p_muid_comments_dialog").dialog({
 				bgiframe: true,
@@ -1668,11 +1699,13 @@ if ($pines->config->com_sales->com_esp) {
 	<?php } ?>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Specials</span>
+		<?php if ($this->entity->status != 'invoiced' && $this->entity->status != 'paid' && $this->entity->status != 'voided') { ?>
 		<span class="pf-field">
 			<a href="javascript:void(0);" id="p_muid_special_code">Enter a Special Code</a>
 			|
 			<a href="javascript:void(0);" id="p_muid_special_remove">Remove a Special Code</a>
 		</span>
+		<?php } ?>
 		<br class="pf-clearing" />
 		<div id="p_muid_specials"></div>
 		<input type="hidden" name="specials" value="" id="p_muid_specials_input" />
@@ -1683,7 +1716,7 @@ if ($pines->config->com_sales->com_esp) {
 			<div class="pf-field" style="float: right; font-size: 1.2em; text-align: right;">
 				<span class="pf-label">Subtotal</span><span class="pf-field" id="p_muid_subtotal">0.00</span><br />
 				<div id="p_muid_specials_total_container" style="display: none;">
-					<span class="pf-label">Specials</span><span class="pf-field">-<span id="p_muid_specials_total">0.00</span></span><br />
+					<span class="pf-label">Specials</span><span class="pf-field">(<span id="p_muid_specials_total">0.00</span>)</span><br />
 				</div>
 				<span class="pf-label">Item Fees</span><span class="pf-field" id="p_muid_item_fees">0.00</span><br />
 				<span class="pf-label">Tax</span><span class="pf-field" id="p_muid_taxes">0.00</span><br />

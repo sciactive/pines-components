@@ -1473,7 +1473,6 @@ class com_sales_sale extends entity {
 			elseif ($cur_tax_fee->type == 'flat_rate')
 				$taxes += $cur_tax_fee->rate * $tax_qty;
 		}
-		// Update the specials input box.
 		$this->total_specials = (float) $pines->com_sales->round($total_specials);
 		$this->item_fees = (float) $pines->com_sales->round($item_fees);
 		$this->taxes = (float) $pines->com_sales->round($taxes);

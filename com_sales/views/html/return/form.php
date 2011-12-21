@@ -29,7 +29,25 @@ if ($pines->config->com_sales->per_item_salesperson)
 	$pines->com_hrm->load_employee_select();
 if ($pines->config->com_sales->autocomplete_product)
 	$pines->com_sales->load_product_select();
-?>
+
+if ($this->entity->specials) { ?>
+<style type="text/css">
+	/* <![CDATA[ */
+	#p_muid_specials .special {
+		float: left;
+		margin-top: .5em;
+		margin-left: .5em;
+		padding: .2em;
+	}
+	#p_muid_specials .special_name {
+		font-weight: bold;
+	}
+	#p_muid_specials .special_discount {
+		text-align: right;
+	}
+	/* ]]> */
+</style>
+<?php } ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_sales', 'return/save')); ?>">
 	<?php if (isset($this->entity->guid)) { ?>
 	<div class="date_info" style="float: right; text-align: right;">
@@ -75,10 +93,20 @@ if ($pines->config->com_sales->autocomplete_product)
 				if ($cur_payment_type->kick_drawer)
 					$drawer_kickers[] = $cur_payment_type->guid;
 			}
+			$added_specials = array();
+			foreach ((array) $this->entity->specials as $cur_special) {
+				$added_specials[] = array(
+					'name' => $cur_special['name'],
+					'before_tax' => $cur_special['before_tax'],
+					'discount' => $cur_special['discount']
+				);
+			}
 ?>
 			var taxes_percent = <?php echo json_encode($taxes_percent); ?>;
 			var taxes_flat = <?php echo json_encode($taxes_flat); ?>;
 			var drawer_kickers = <?php echo json_encode($drawer_kickers); ?>;
+			// Unlike on the sale form, this includes all associated specials.
+			var added_specials = <?php echo json_encode($added_specials); ?>;
 			var status = <?php echo json_encode($this->entity->status); ?>;
 
 			var round_to_dec = function(value, as_string){
@@ -112,7 +140,7 @@ if ($pines->config->com_sales->autocomplete_product)
 			$("#p_muid_salesperson").employeeselect();
 			<?php } ?>
 
-			<?php if ($this->entity->status == 'processed' || $this->entity->status == 'voided') { ?>
+			<?php if ($this->entity->status == 'processed' || $this->entity->status == 'voided' || $this->entity->specials) { ?>
 			products_table.pgrid({
 				pgrid_view_height: "160px",
 				pgrid_hidden_cols: [4],
@@ -875,9 +903,13 @@ if ($pines->config->com_sales->autocomplete_product)
 				if (!rows)
 					return;
 				var subtotal = 0;
+				var specials = [];
 				var taxes = 0;
 				var item_fees = 0;
 				var total = 0;
+				// How many times to apply a flat tax.
+				var tax_qty = 0;
+				var taxable_subtotal = 0;
 				var row_export = [];
 				var return_fees = 0;
 				<?php if ($pines->config->com_sales->com_customer) { ?>
@@ -939,12 +971,8 @@ if ($pines->config->com_sales->autocomplete_product)
 					}
 					var line_total = price * qty;
 					if (!product.tax_exempt) {
-						$.each(taxes_percent, function(){
-							taxes += (this.rate / 100) * line_total;
-						});
-						$.each(taxes_flat, function(){
-							taxes += this.rate * qty;
-						});
+						taxable_subtotal += round_to_dec(line_total);
+						tax_qty += qty;
 					}
 					$.each(product.fees_percent, function(){
 						cur_item_fees += (this.rate / 100) * line_total;
@@ -963,10 +991,35 @@ if ($pines->config->com_sales->autocomplete_product)
 					row_export.push(cur_row_export);
 				});
 				$("#p_muid_subtotal").html(round_to_dec(subtotal, true));
+				// Now that we know the subtotal, we can use it for specials.
+				var total_before_tax_specials = 0;
+				var total_specials = 0;
+				$.each(added_specials, function(i, cur_special){
+					specials.push(cur_special);
+					if (cur_special.before_tax)
+						total_before_tax_specials += cur_special.discount;
+					total_specials += cur_special.discount;
+				});
+				$.each(taxes_percent, function(){
+					taxes += (this.rate / 100) * (taxable_subtotal - total_before_tax_specials);
+				});
+				$.each(taxes_flat, function(){
+					taxes += this.rate * tax_qty;
+				});
+				// Now add all the specials to the specials section.
+				var special_box = $("#p_muid_specials").empty();
+				$.each(specials, function(i, cur_special){
+					special_box.append("<div class=\"special ui-widget-content ui-corner-all\"><div class=\"special_name\">"+pines.safe(cur_special.name)+"</div><div class=\"special_discount\">"+(cur_special.before_tax ? "<small>(before tax)</small> " : "")+"$"+round_to_dec(cur_special.discount, true)+"</div></div>");
+				});
+				$("#p_muid_specials_total").html(round_to_dec(total_specials, true));
+				if (round_to_dec(total_specials) > 0)
+					$("#p_muid_specials_total_container").show();
+				else
+					$("#p_muid_specials_total_container").hide();
 				$("#p_muid_item_fees").html(round_to_dec(item_fees, true));
 				$("#p_muid_return_fees").html(round_to_dec(return_fees, true));
 				$("#p_muid_taxes").html(round_to_dec(taxes, true));
-				total = round_to_dec(subtotal) + round_to_dec(item_fees) + round_to_dec(taxes) - round_to_dec(return_fees);
+				total = (round_to_dec(subtotal) - round_to_dec(total_specials)) + round_to_dec(item_fees) + round_to_dec(taxes) - round_to_dec(return_fees);
 				$("#p_muid_total").html(round_to_dec(total, true));
 
 				// Update the products input element.
@@ -1227,12 +1280,22 @@ if ($pines->config->com_sales->autocomplete_product)
 		</div>
 		<br />
 	</div>
+	<?php } if ($this->entity->specials) { ?>
+	<div class="pf-element pf-full-width">
+		<span class="pf-label">Specials</span>
+		<span class="pf-field">Because the sale has specials, you cannot change the products on this return.</span>
+		<br class="pf-clearing" />
+		<div id="p_muid_specials"></div>
+	</div>
 	<?php } ?>
 	<div class="pf-element pf-full-width">
 		<span class="pf-label">Return Totals</span>
 		<div class="pf-group">
 			<div class="pf-field" style="float: right; font-size: 1.2em; text-align: right;">
 				<span class="pf-label">Subtotal</span><span class="pf-field" id="p_muid_subtotal">0.00</span><br />
+				<div id="p_muid_specials_total_container" style="display: none;">
+					<span class="pf-label">Specials</span><span class="pf-field">(<span id="p_muid_specials_total">0.00</span>)</span><br />
+				</div>
 				<span class="pf-label">Item Fees</span><span class="pf-field" id="p_muid_item_fees">0.00</span><br />
 				<span class="pf-label">Tax</span><span class="pf-field" id="p_muid_taxes">0.00</span><br />
 				<span class="pf-label">Return Fees</span><span class="pf-field">(<span id="p_muid_return_fees">0.00</span>)</span><br />

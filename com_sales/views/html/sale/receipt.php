@@ -226,23 +226,28 @@ switch ($this->entity->status) {
 					if (isset($cur_product['serial']))
 						$text[] = $cur_product['serial'];
 					if (!$this->hide_warehouse_status && $sale && $cur_product['delivery'] == 'warehouse') {
-						$fulfilled = 0;
-						$shipped = 0;
-						foreach ($cur_product['stock_entities'] as $cur_stock) {
-							if (!isset($cur_stock->guid) || $cur_stock->in_array((array) $cur_product['returned_stock_entities']))
-								continue;
-							$fulfilled++;
-							if ($cur_stock->in_array((array) $cur_product['shipped_entities']))
-								$shipped++;
+						$quantity = $cur_product['quantity'] - (int) $cur_product['returned_quantity'];
+						if ($this->entity->status == 'quoted') {
+							$text[] = "({$quantity} warehouse)";
+						} else {
+							$fulfilled = 0;
+							$shipped = 0;
+							foreach ((array) $cur_product['stock_entities'] as $cur_stock) {
+								if (!isset($cur_stock->guid) || $cur_stock->in_array((array) $cur_product['returned_stock_entities']))
+									continue;
+								$fulfilled++;
+								if ($cur_stock->in_array((array) $cur_product['shipped_entities']))
+									$shipped++;
+							}
+							if ($fulfilled) {
+								$left = $fulfilled - $shipped;
+								if ($left)
+									$text[] = "($left to ship)";
+							}
+							$unfulfilled = $quantity - $fulfilled;
+								if ($unfulfilled)
+									$text[] = "($unfulfilled to fulfill)";
 						}
-						if ($fulfilled) {
-							$left = $fulfilled - $shipped;
-							if ($left)
-								$text[] = "($left to ship)";
-						}
-						$unfulfilled = $cur_product['quantity'] - $fulfilled;
-							if ($unfulfilled)
-								$text[] = "($unfulfilled to fulfill)";
 					}
 					echo htmlspecialchars(implode(' ', $text));
 					?></td>
@@ -316,7 +321,7 @@ switch ($this->entity->status) {
 			</div>
 			<div class="data_col right_text">
 				<span>$<?php echo $pines->com_sales->round($this->entity->subtotal, true); ?></span>
-				<?php if ($this->entity->total_specials > 0) { ?><span>- $<?php echo $pines->com_sales->round($this->entity->total_specials, true); ?></span><?php } ?>
+				<?php if ($this->entity->total_specials > 0) { ?><span>($<?php echo $pines->com_sales->round($this->entity->total_specials, true); ?>)</span><?php } ?>
 				<?php if ($this->entity->item_fees > 0) { ?><span>$<?php echo $pines->com_sales->round($this->entity->item_fees, true); ?></span><?php } ?>
 				<span>$<?php echo $pines->com_sales->round($this->entity->taxes, true); ?></span>
 				<?php if ($this->entity->return_fees > 0) { ?><span>($<?php echo $pines->com_sales->round($this->entity->return_fees, true); ?>)</span><?php } ?>

@@ -177,6 +177,7 @@ class com_sales_return extends entity {
 			unset($this->sale);
 			return false;
 		}
+		$this->specials = (array) $sale->specials;
 		$this->payments = (array) $sale->payments;
 		$payment_total = 0;
 		//$sale->returned_total is updated when return is processed.
@@ -776,6 +777,9 @@ class com_sales_return extends entity {
 		$taxes = 0.00;
 		$item_fees = 0.00;
 		$total = 0.00;
+		// How many times to apply a flat tax.
+		$tax_qty = 0;
+		$taxable_subtotal = 0.00;
 		$return_fees = 0.00;
 		// Go through each product, calculating its line total and fees.
 		foreach ($this->products as &$cur_product) {
@@ -826,14 +830,8 @@ class com_sales_return extends entity {
 			$line_total = $price * $qty;
 			$cur_item_fees = 0.00;
 			if (!$cur_product['entity']->tax_exempt) {
-				// Add location taxes.
-				foreach ($tax_fees as $cur_tax_fee) {
-					if ($cur_tax_fee->type == 'percentage') {
-						$taxes += ($cur_tax_fee->rate / 100) * $line_total;
-					} elseif ($cur_tax_fee->type == 'flat_rate') {
-						$taxes += $cur_tax_fee->rate * $qty;
-					}
-				}
+				$taxable_subtotal += (float) $pines->com_sales->round($line_total);
+				$tax_qty += $qty;
 			}
 			if (is_array($cur_product['entity']->additional_tax_fees)) {
 				// Add item fees.
@@ -854,12 +852,29 @@ class com_sales_return extends entity {
 		}
 		unset($cur_product);
 		$this->subtotal = (float) $pines->com_sales->round($subtotal);
+
+		// Now that we know the subtotal, we can use it for specials.
+		$total_before_tax_specials = 0.00;
+		$total_specials = 0.00;
+		foreach ((array) $this->specials as $cur_special) {
+			if ($cur_special['entity']->before_tax)
+				$total_before_tax_specials += $cur_special['discount'];
+			$total_specials += $cur_special['discount'];
+		}
+		// Add location taxes.
+		foreach ($tax_fees as $cur_tax_fee) {
+			if ($cur_tax_fee->type == 'percentage')
+				$taxes += ($cur_tax_fee->rate / 100) * ($taxable_subtotal - $total_before_tax_specials);
+			elseif ($cur_tax_fee->type == 'flat_rate')
+				$taxes += $cur_tax_fee->rate * $tax_qty;
+		}
+		$this->total_specials = (float) $pines->com_sales->round($total_specials);
 		$this->item_fees = (float) $pines->com_sales->round($item_fees);
 		$this->taxes = (float) $pines->com_sales->round($taxes);
 		$this->return_fees = (float) $pines->com_sales->round($return_fees);
 		// The total can now be calculated.
-		$total = $this->subtotal + $this->item_fees + $this->taxes - $this->return_fees;
-		$this->total = (float) $pines->com_sales->round($total);
+		$total = ($this->subtotal - $this->total_specials) + $this->item_fees + $this->taxes - $this->return_fees;
+		$this->total = (float) $total;
 		return true;
 	}
 }

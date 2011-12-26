@@ -275,7 +275,7 @@ switch ($this->entity->status) {
 			<tbody>
 				<?php foreach ($this->entity->specials as $cur_special) { ?>
 				<tr>
-					<td style="width: 80%;"><?php echo htmlspecialchars($cur_special['name']); ?></td>
+					<td style="width: 80%;"><?php echo htmlspecialchars(($cur_special['entity']->hide_code ? '' : "{$cur_special['code']} - ").$cur_special['name']); ?></td>
 					<td style="white-space: pre;"><?php echo $cur_special['before_tax'] ? 'Before Tax' : 'After Tax'; ?></td>
 					<td class="right_text">$<?php echo $pines->com_sales->round($cur_special['discount'], true); ?></td>
 				</tr>

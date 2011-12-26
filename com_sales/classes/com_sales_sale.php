@@ -682,7 +682,6 @@ class com_sales_sale extends entity {
 	/**
 	 * Generate receipt code for the receipt printer from the sale.
 	 *
-	 * @todo Add a section for specials.
 	 * @param int $width Width in number of characters for font 1.
 	 * @param int $width2 Width in number of characters for font 2.
 	 * @return string The receipt code.
@@ -756,7 +755,32 @@ class com_sales_sale extends entity {
 		}
 		$lines[] = '';
 		$lines[] = "Total Items: $total_items";
+		if ($this->specials) {
+			$lines[] = '';
+			$lines[] = 'Specials';
+			// Print the before tax note.
+			foreach ($this->specials as $cur_special) {
+				if ($cur_special['before_tax']) {
+					$lines[] = '     * - Before Tax';
+					break;
+				}
+			}
+			$lines[] = '';
+			foreach ($this->specials as $cur_special) {
+				$line = $cur_special['entity']->hide_code ? '' : $cur_special['code'];
+				$line_total = '($'.$pines->com_sales->round($cur_special['discount'], true).')';
+				$line .= str_repeat(' ', ($width - strlen($line) - strlen($line_total))).$line_total;
+				$line2 = "   {$cur_special['name']}";
+				if ($cur_special['before_tax'])
+					$line2 .= '*';
+				$lines[] = $line;
+				$lines[] = $line2;
+			}
+			$lines[] = '';
+		}
 		$lines[] = sprintf('%'.($width - 10).'s', 'Subtotal:').sprintf('%10s', '$'.$pines->com_sales->round($this->subtotal, true));
+		if (!empty($this->total_specials))
+			$lines[] = sprintf('%'.($width - 10).'s', 'Specials:').sprintf('%10s', '($'.$pines->com_sales->round($this->total_specials, true).')');
 		if (!empty($this->item_fees))
 			$lines[] = sprintf('%'.($width - 10).'s', 'Item Fees:').sprintf('%10s', '$'.$pines->com_sales->round($this->item_fees, true));
 		$lines[] = sprintf('%'.($width - 10).'s', 'Tax:').sprintf('%10s', '$'.$pines->com_sales->round($this->taxes, true));
@@ -1298,8 +1322,11 @@ class com_sales_sale extends entity {
 	 * This process adds "line_total" and "fees" to each product on the sale,
 	 * and adds "specials", "subtotal", "total_specials", "item_fees", "taxes",
 	 * and "total" to the sale itself.
+	 * 
+	 * -- Important Note --
+	 * This function must remain functionally identical to the update_products()
+	 * JavaScript function in the sale form view.
 	 *
-	 * @todo Specials' per ticket restriction.
 	 * @return bool True on success, false on failure.
 	 */
 	public function total() {
@@ -1477,8 +1504,19 @@ class com_sales_sale extends entity {
 			$discount = (float) $pines->com_sales->round($discount);
 			if ($discount <= 0)
 				continue;
+			// Check a number restriction.
+			if ($cur_special->per_ticket != 0) {
+				$matching = 0;
+				foreach ($this->specials as $cur_test) {
+					if ($cur_special->is($cur_test['entity']))
+						$matching++;
+				}
+				if ($matching >= $cur_special->per_ticket)
+					continue;
+			}
 			$this->specials[] = array(
 				"entity" => $cur_special,
+				"code" => $cur_special->code,
 				"name" => $cur_special->name,
 				"before_tax" => $cur_special->before_tax,
 				"discount" => $discount

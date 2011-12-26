@@ -1228,6 +1228,11 @@ if ($pines->config->com_sales->com_esp) {
 				$(this).append($("#p_muid_comments_dialog").hide()).append($("#p_muid_shipping_dialog").hide());
 			});
 
+			/*
+			 * -- Important Note --
+			 * This function must remain functionally identical to the total()
+			 * PHP function in the com_sales_sale class.
+			 */
 			var update_products = function(){
 				var rows = products_table.pgrid_get_all_rows();
 				if (!rows)
@@ -1367,6 +1372,14 @@ if ($pines->config->com_sales->com_esp) {
 					discount = round_to_dec(discount);
 					if (discount <= 0)
 						return;
+					// Check a number restriction.
+					if (cur_special.per_ticket != 0) {
+						var matching = $.grep(specials, function(cur_test){
+							return (cur_special.guid == cur_test.guid);
+						}).length;
+						if (matching >= cur_special.per_ticket)
+							return;
+					}
 					specials.push($.extend({"discount": discount}, cur_special));
 				});
 				// Now remove specials with other special requirements.
@@ -1412,6 +1425,7 @@ if ($pines->config->com_sales->com_esp) {
 					total_specials += cur_special.discount;
 					return true;
 				});
+				// Add location taxes.
 				$.each(taxes_percent, function(){
 					taxes += (this.rate / 100) * (taxable_subtotal - total_before_tax_specials);
 				});

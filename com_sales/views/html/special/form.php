@@ -397,6 +397,10 @@ $pines->entity_manager->sort($specials, 'name');
 					<input class="pf-field" type="checkbox" name="apply_to_all" value="ON"<?php echo $this->entity->apply_to_all ? ' checked="checked"' : ''; ?> /></label>
 			</div>
 			<div class="pf-element">
+				<label><span class="pf-label">Hide Code on Receipt</span>
+					<input class="pf-field" type="checkbox" name="hide_code" value="ON"<?php echo $this->entity->hide_code ? ' checked="checked"' : ''; ?> /></label>
+			</div>
+			<div class="pf-element">
 				<label><span class="pf-label">Quantity per Ticket</span>
 					<span class="pf-note">Enter 0 (zero) for unlimited.</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="text" name="per_ticket" size="24" value="<?php echo htmlspecialchars($this->entity->per_ticket); ?>" onchange="this.value=this.value.replace(/\D/g, '');" /></label>

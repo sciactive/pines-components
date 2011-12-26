@@ -32,6 +32,7 @@ $special->name = $_REQUEST['name'];
 $special->enabled = ($_REQUEST['enabled'] == 'ON');
 $special->before_tax = ($_REQUEST['before_tax'] == 'ON');
 $special->apply_to_all = ($_REQUEST['apply_to_all'] == 'ON');
+$special->hide_code = ($_REQUEST['hide_code'] == 'ON');
 $special->per_ticket = (int) $_REQUEST['per_ticket'];
 $discounts = (array) json_decode($_REQUEST['discounts']);
 $special->discounts = array();

@@ -17,7 +17,6 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * @package Pines
  * @subpackage com_sales
- * @todo Returning specials.
  */
 class com_sales_return extends entity {
 	/**
@@ -403,7 +402,6 @@ class com_sales_return extends entity {
 			// Remove products that have already been returned.
 			if (is_array($cur_product['stock_entities'])) {
 				foreach ($cur_product['stock_entities'] as $stock_key => &$cur_stock) {
-					// TODO: Update $cur_product['returned_stock_entities'] when return is processed.
 					if ($cur_stock->in_array($cur_product['returned_stock_entities']))
 						unset($cur_product['stock_entities'][$stock_key]);
 				}

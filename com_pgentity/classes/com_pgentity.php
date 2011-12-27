@@ -376,7 +376,7 @@ class com_pgentity extends component implements entity_manager_interface {
 				// This do will keep going and adding the data until the
 				// next entity is reached. $row will end on the next entity.
 				do {
-					echo "\t{$row['dname']}=".json_encode($row['dvalue'])."\n";
+					echo "\t{$row['dname']}=".json_encode((substr($row['dvalue'], 0, 1) === '~' ? stripcslashes(substr($row['dvalue'], 1)) : $row['dvalue']))."\n";
 					$row = pg_fetch_assoc($result);
 				} while ((int) $row['guid'] === $guid);
 			} else {
@@ -512,7 +512,7 @@ class com_pgentity extends component implements entity_manager_interface {
 									$svalue = serialize($cur_value[1]->to_reference());
 								else
 									$svalue = serialize($cur_value[1]);
-								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."guid" IN (SELECT "guid" FROM "'.$pines->config->com_pgsql->prefix.'com_pgentity_data" WHERE "name"=\''.pg_escape_string($pines->com_pgsql->link, $cur_value[0]).'\' AND "value"=\''.pg_escape_string($pines->com_pgsql->link, $svalue).'\')';
+								$cur_query .= ($type_is_not ? 'NOT ' : '' ).'e."guid" IN (SELECT "guid" FROM "'.$pines->config->com_pgsql->prefix.'com_pgentity_data" WHERE "name"=\''.pg_escape_string($pines->com_pgsql->link, $cur_value[0]).'\' AND "value"=\''.pg_escape_string($pines->com_pgsql->link, (strpos($svalue, "\0") !== false ? '~'.addcslashes($svalue, chr(0).'\\') : $svalue)).'\')';
 							}
 							break;
 						case 'match':
@@ -711,7 +711,7 @@ class com_pgentity extends component implements entity_manager_interface {
 				// This do will keep going and adding the data until the
 				// next entity is reached. $row will end on the next entity.
 				do {
-					$sdata[$row[4]] = $row[5];
+					$sdata[$row[4]] = (substr($row[5], 0, 1) === '~' ? stripcslashes(substr($row[5], 1)) : $row[5]);
 					$row = pg_fetch_row($result);
 				} while ((int) $row[0] === $guid);
 			} else {
@@ -975,7 +975,7 @@ class com_pgentity extends component implements entity_manager_interface {
 							$query .= sprintf("(%u, '%s', '%s', '%s', %s, %s, %s, %s, %s, %s); ",
 								$guid,
 								pg_escape_string($pines->com_pgsql->link, $name),
-								pg_escape_string($pines->com_pgsql->link, $value),
+								pg_escape_string($pines->com_pgsql->link, (strpos($value, "\0") !== false ? '~'.addcslashes($value, chr(0).'\\') : $value)),
 								pg_escape_string($pines->com_pgsql->link, '{'.implode(',', $references[1]).'}'),
 								$uvalue == true ? 'TRUE' : 'FALSE',
 								$uvalue == 1 ? 'TRUE' : 'FALSE',
@@ -1054,7 +1054,7 @@ class com_pgentity extends component implements entity_manager_interface {
 					$query .= sprintf("(%u, '%s', '%s', '%s', %s, %s, %s, %s, %s, %s); ",
 						$guid,
 						pg_escape_string($pines->com_pgsql->link, $name),
-						pg_escape_string($pines->com_pgsql->link, $value),
+						pg_escape_string($pines->com_pgsql->link, (strpos($value, "\0") !== false ? '~'.addcslashes($value, chr(0).'\\') : $value)),
 						pg_escape_string($pines->com_pgsql->link, '{'.implode(',', $references[1]).'}'),
 						$uvalue == true ? 'TRUE' : 'FALSE',
 						$uvalue == 1 ? 'TRUE' : 'FALSE',
@@ -1261,7 +1261,7 @@ class com_pgentity extends component implements entity_manager_interface {
 					$pines->config->com_pgsql->prefix,
 					$new_id,
 					pg_escape_string($pines->com_pgsql->link, $name),
-					pg_escape_string($pines->com_pgsql->link, $svalue),
+					pg_escape_string($pines->com_pgsql->link, (strpos($svalue, "\0") !== false ? '~'.addcslashes($svalue, chr(0).'\\') : $svalue)),
 					pg_escape_string($pines->com_pgsql->link, '{'.implode(',', $references[1]).'}'),
 					$value == true ? 'TRUE' : 'FALSE',
 					$value == 1 ? 'TRUE' : 'FALSE',
@@ -1277,7 +1277,7 @@ class com_pgentity extends component implements entity_manager_interface {
 					$pines->config->com_pgsql->prefix,
 					$new_id,
 					pg_escape_string($pines->com_pgsql->link, $name),
-					pg_escape_string($pines->com_pgsql->link, $value),
+					pg_escape_string($pines->com_pgsql->link, (strpos($value, "\0") !== false ? '~'.addcslashes($value, chr(0).'\\') : $value)),
 					pg_escape_string($pines->com_pgsql->link, '{'.implode(',', $references[1]).'}'),
 					$uvalue == true ? 'TRUE' : 'FALSE',
 					$uvalue == 1 ? 'TRUE' : 'FALSE',
@@ -1325,7 +1325,7 @@ class com_pgentity extends component implements entity_manager_interface {
 					$pines->config->com_pgsql->prefix,
 					(int) $entity->guid,
 					pg_escape_string($pines->com_pgsql->link, $name),
-					pg_escape_string($pines->com_pgsql->link, $svalue),
+					pg_escape_string($pines->com_pgsql->link, (strpos($svalue, "\0") !== false ? '~'.addcslashes($svalue, chr(0).'\\') : $svalue)),
 					pg_escape_string($pines->com_pgsql->link, '{'.implode(',', $references[1]).'}'),
 					$value == true ? 'TRUE' : 'FALSE',
 					$value == 1 ? 'TRUE' : 'FALSE',
@@ -1341,7 +1341,7 @@ class com_pgentity extends component implements entity_manager_interface {
 					$pines->config->com_pgsql->prefix,
 					(int) $entity->guid,
 					pg_escape_string($pines->com_pgsql->link, $name),
-					pg_escape_string($pines->com_pgsql->link, $value),
+					pg_escape_string($pines->com_pgsql->link, (strpos($value, "\0") !== false ? '~'.addcslashes($value, chr(0).'\\') : $value)),
 					pg_escape_string($pines->com_pgsql->link, '{'.implode(',', $references[1]).'}'),
 					$uvalue == true ? 'TRUE' : 'FALSE',
 					$uvalue == 1 ? 'TRUE' : 'FALSE',

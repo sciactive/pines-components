@@ -311,6 +311,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<?php } ?>
 			<th>Products</th>
 			<th>Subtotal</th>
+			<th>Specials</th>
 			<th>Item Fees</th>
 			<th>Tax</th>
 			<th>Total</th>
@@ -334,6 +335,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			}
 			echo $number; ?></td>
 			<td><?php echo isset($return->subtotal) ? '$'.htmlspecialchars(number_format($return->subtotal, 2)) : ''; ?></td>
+			<td><?php echo isset($return->total_specials) ? '$'.htmlspecialchars(number_format($return->total_specials, 2)) : ''; ?></td>
 			<td><?php echo isset($return->item_fees) ? '$'.htmlspecialchars(number_format($return->item_fees, 2)) : ''; ?></td>
 			<td><?php echo isset($return->taxes) ? '$'.htmlspecialchars(number_format($return->taxes, 2)) : ''; ?></td>
 			<td><?php echo isset($return->total) ? '$'.htmlspecialchars(number_format($return->total, 2)) : ''; ?></td>

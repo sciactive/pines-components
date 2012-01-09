@@ -1339,7 +1339,25 @@ if ($pines->config->com_sales->com_esp) {
 								discount += cur_dis.value;
 								break;
 							case "order_percent":
-								discount += subtotal * (cur_dis.value / 100);
+								rows.each(function(){
+									var cur_row = $(this);
+									var product = cur_row.data("product");
+									var qty = parseInt(cur_row.pgrid_get_value(5));
+									var cur_discount = cur_row.pgrid_get_value(7);
+									// Calculate the price of the item after discount, then apply specials.
+									var price = parseFloat(cur_row.pgrid_get_value(6));
+									if (product.discountable && cur_discount != "") {
+										if (cur_discount.match(/^\$-?\d+(\.\d+)?$/)) {
+											cur_discount = parseFloat(cur_discount.replace(/[^0-9.-]/, ''));
+											price = price - cur_discount;
+										} else if (cur_discount.match(/^-?\d+(\.\d+)?%$/)) {
+											cur_discount = parseFloat(cur_discount.replace(/[^0-9.-]/, ''));
+											price = price - (price * (cur_discount / 100));
+										}
+									}
+									var cur_special_amount = round_to_dec(price * (cur_dis.value / 100));
+									discount += cur_special_amount * qty;
+								});
 								break;
 							case "product_amount":
 								var qty = 0;
@@ -1349,11 +1367,25 @@ if ($pines->config->com_sales->com_esp) {
 								discount += qty * cur_dis.value;
 								break;
 							case "product_percent":
-								var prod_total = 0;
 								rows.filter("[title="+cur_dis.qualifier+"]").each(function(){
-									prod_total += parseFloat($(this).pgrid_get_value(8));
+									var cur_row = $(this);
+									var product = cur_row.data("product");
+									var qty = parseInt(cur_row.pgrid_get_value(5));
+									var cur_discount = cur_row.pgrid_get_value(7);
+									// Calculate the price of the item after discount, then apply specials.
+									var price = parseFloat(cur_row.pgrid_get_value(6));
+									if (product.discountable && cur_discount != "") {
+										if (cur_discount.match(/^\$-?\d+(\.\d+)?$/)) {
+											cur_discount = parseFloat(cur_discount.replace(/[^0-9.-]/, ''));
+											price = price - cur_discount;
+										} else if (cur_discount.match(/^-?\d+(\.\d+)?%$/)) {
+											cur_discount = parseFloat(cur_discount.replace(/[^0-9.-]/, ''));
+											price = price - (price * (cur_discount / 100));
+										}
+									}
+									var cur_special_amount = round_to_dec(price * (cur_dis.value / 100));
+									discount += cur_special_amount * qty;
 								});
-								discount += prod_total * (cur_dis.value / 100);
 								break;
 							case "item_amount":
 								if (!rows.filter("[title="+cur_dis.qualifier+"]").length);
@@ -1361,11 +1393,23 @@ if ($pines->config->com_sales->com_esp) {
 								discount += cur_dis.value;
 								break;
 							case "item_percent":
-								var prod = rows.filter("[title="+cur_dis.qualifier+"]").eq(0);
-								if (!prod.length)
+								var cur_row = rows.filter("[title="+cur_dis.qualifier+"]").eq(0);
+								if (!cur_row.length)
 									break;
-								var prod_price = parseFloat(prod.pgrid_get_value(6));
-								discount += prod_price * (cur_dis.value / 100);
+								// Calculate the special amount for the first item and add it.
+								var product = cur_row.data("product");
+								var cur_discount = cur_row.pgrid_get_value(7);
+								var price = parseFloat(cur_row.pgrid_get_value(6));
+								if (cur_row.discountable && cur_discount != "") {
+									if (cur_discount.match(/^\$-?\d+(\.\d+)?$/)) {
+										cur_discount = parseFloat(cur_discount.replace(/[^0-9.-]/, ''));
+										price = price - cur_discount;
+									} else if (cur_discount.match(/^-?\d+(\.\d+)?%$/)) {
+										cur_discount = parseFloat(cur_discount.replace(/[^0-9.-]/, ''));
+										price = price - (price * (cur_discount / 100));
+									}
+								}
+								discount += round_to_dec(price * (cur_dis.value / 100));
 								break;
 						}
 					});

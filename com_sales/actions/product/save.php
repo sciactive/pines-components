@@ -113,7 +113,7 @@ if ($pines->config->com_sales->com_hrm) {
 			'type' => $cur_commission->values[1],
 			'amount' => (float) $cur_commission->values[2]
 		);
-		if (!isset($cur_commission['group']->guid) || !in_array($cur_commission['type'], array('spiff', 'percent_price')))
+		if (!isset($cur_commission['group']->guid) || !in_array($cur_commission['type'], array('spiff', 'percent_price', 'percent_line_total')))
 			unset($product->commissions[$key]);
 	}
 	unset($cur_commission);

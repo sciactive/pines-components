@@ -741,7 +741,7 @@ $pines->com_ptags->load();
 					bgiframe: true,
 					autoOpen: false,
 					modal: true,
-					width: 500,
+					width: 600,
 					buttons: {
 						"Done": function(){
 							var cur_commission_group = commission_dialog.find("select[name=cur_commission_group]").val();
@@ -824,7 +824,8 @@ $pines->com_ptags->load();
 							<span class="pf-label">Type</span>
 							<select class="pf-field ui-widget-content ui-corner-all" name="cur_commission_type">
 								<option value="spiff">Spiff (Fixed Amount)</option>
-								<option value="percent_price">% Price (Before Tax)</option>
+								<option value="percent_price">% Price (Before Tax, After Specials)</option>
+								<option value="percent_line_total">% Line Total (Before Tax, Before Specials)</option>
 							</select>
 						</label>
 					</div>

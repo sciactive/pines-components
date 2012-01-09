@@ -76,10 +76,16 @@ class com_sales_sale extends entity {
 				// Calculate commission.
 				switch ($cur_commission['type']) {
 					case 'spiff':
-						$cur_product['commission'] += (float) $cur_commission['amount'];
+						// Add a spiff per product sold.
+						$cur_product['commission'] += $pines->com_sales->round((float) $cur_commission['amount'] * $cur_product['quantity']);
 						break;
 					case 'percent_price':
-						$cur_product['commission'] += $this->discount_price($cur_product['price'], $cur_product['discount']) * ( ((float) $cur_commission['amount']) / 100 );
+						// Add a percentage of the amount sold - specials.
+						$cur_product['commission'] += $pines->com_sales->round(($cur_product['line_total'] - (float) $cur_product['specials_total']) * ( ((float) $cur_commission['amount']) / 100 ));
+						break;
+					case 'percent_line_total':
+						// Add a percentage of the amount sold.
+						$cur_product['commission'] += $pines->com_sales->round($cur_product['line_total'] * ( ((float) $cur_commission['amount']) / 100 ));
 						break;
 				}
 			}
@@ -90,7 +96,7 @@ class com_sales_sale extends entity {
 				$cur_product['salesperson']->commissions = array();
 			$cur_product['salesperson']->commissions[] = array(
 				'date' => time(),
-				'amount' => $cur_product['commission'] * $cur_product['quantity'],
+				'amount' => $cur_product['commission'],
 				'ticket' => $this,
 				'product' => $cur_product['entity']
 			);
@@ -513,6 +519,7 @@ class com_sales_sale extends entity {
 					'price' => $cur_product['price'],
 					'discount' => $cur_product['discount'],
 					'line_total' => $cur_product['line_total'],
+					'specials_total' => $cur_product['specials_total'],
 					'fees' => $cur_product['fees'],
 					'salesperson' => $cur_product['salesperson']
 				), $i);
@@ -531,6 +538,7 @@ class com_sales_sale extends entity {
 					'price' => $cur_product['price'],
 					'discount' => $cur_product['discount'],
 					'line_total' => $cur_product['line_total'],
+					'specials_total' => $cur_product['specials_total'],
 					'fees' => $cur_product['fees'],
 					'salesperson' => $cur_product['salesperson']
 				));
@@ -612,8 +620,6 @@ class com_sales_sale extends entity {
 	 * @return module The receipt's module.
 	 */
 	public function print_receipt($auto_print_ok = false) {
-		global $pines;
-
 		$module = new module('com_sales', 'sale/receipt', 'content');
 		$module->entity = $this;
 		$actions = new module('com_sales', 'sale/receiptactions', 'right');
@@ -1122,7 +1128,7 @@ class com_sales_sale extends entity {
 	 * @return bool True on success, false on failure.
 	 */
 	public function swap_salesrep($key, $new_salesrep = null) {
-		global $pines;
+		//global $pines;
 		// Make sure this sale has been invoiced or tendered.
 		if ($this->status != 'invoiced' && $this->status != 'paid') {
 			// Make sure this sale has not been voided.
@@ -1295,6 +1301,66 @@ class com_sales_sale extends entity {
 	}
 
 	/**
+	 * Apply a special to a product/products and get the sum of the discounts.
+	 * 
+	 * @param string $id A unique ID to keep track of specials applied to a product.
+	 * @param string $discount The discount amount to apply.
+	 * @param com_sales_product|int $product The product or GUID to apply the discount to.
+	 * @param bool $only_one_item Only apply this special to the first item of this product.
+	 * @return float The total specials added to products.
+	 */
+	private function product_special($id, $discount, $product = null, $only_one_item = false) {
+		global $pines;
+		$total = 0;
+		if (isset($product)) {
+			if (is_object($product))
+				$product = $product->guid;
+			if (!isset($product))
+				return 0.00;
+			$product = (int) $product;
+		}
+		foreach ($this->products as &$cur_product) {
+			if (isset($product) && $cur_product['entity']->guid !== $product)
+				continue;
+			$cur_price = (float) $cur_product['price'];
+			$cur_qty = (int) $cur_product['quantity'];
+			$cur_discount = $cur_product['discount'];
+			if ($cur_product['entity']->discountable && $cur_discount != "")
+				$cur_price = $this->discount_price($cur_price, $cur_discount);
+			// Calculate the special price for an individual item.
+			// This will calculate the percentage value for a percentage or just the amount for a flat discount.
+			$cur_special = (float) $pines->com_sales->round($cur_price - $this->discount_price($cur_price, $discount));
+			if ($cur_special <= 0)
+				continue;
+			// Now calculate the total special for this line.
+			if (!$only_one_item)
+				$cur_special *= $cur_qty;
+			if (!$cur_product['specials'])
+				$cur_product['specials'] = array();
+			$cur_product['specials'][$id] = $cur_special;
+			$total += $cur_special;
+			if ($only_one_item)
+				break;
+		}
+		unset($cur_product);
+		// Return the total of all specials newly applied to products.
+		return $total;
+	}
+
+	/**
+	 * Remove a special from a product/products.
+	 * 
+	 * @param string $id A unique ID to keep track of specials applied to a product.
+	 */
+	private function product_special_remove($id) {
+		foreach ($this->products as &$cur_product) {
+			if (isset($cur_product['specials'][$id]))
+				unset($cur_product['specials'][$id]);
+		}
+		unset($cur_product);
+	}
+
+	/**
 	 * Get the total of a product on a sale.
 	 * 
 	 * Adds the line total of all lines which include the product.
@@ -1383,6 +1449,8 @@ class com_sales_sale extends entity {
 			$price = (float) $cur_product['price'];
 			$qty = (int) $cur_product['quantity'];
 			$discount = $cur_product['discount'];
+			// Reset the specials array.
+			$cur_product['specials'] = array();
 			if ($cur_product['entity']->discountable && $discount != "") {
 				$discount_price = $this->discount_price($price, $discount);
 				// Check that the discount doesn't lower the item's price below the floor.
@@ -1463,47 +1531,67 @@ class com_sales_sale extends entity {
 				continue;
 			// The special works, now calculate its value.
 			$discount = 0.00;
+			// This unique ID is used to keep track of the specials applied to a sale.
+			$id = uniqid();
 			foreach ($cur_special->discounts as $cur_dis) {
 				switch ($cur_dis['type']) {
 					case "order_amount":
 						$discount += $cur_dis['value'];
 						break;
 					case "order_percent":
-						$discount += $this->subtotal * ($cur_dis['value'] / 100);
+						// Old way. Doesn't save product discount totals.
+						//$discount += $this->subtotal * ($cur_dis['value'] / 100);
+						// New way.
+						$discount += $this->product_special($id, "{$cur_dis['value']}%");
 						break;
 					case "product_amount":
-						$qty = $this->product_count($cur_dis['qualifier']);
-						$discount += $qty * $cur_dis['value'];
+						// Old way. Doesn't save product discount totals.
+						//$qty = $this->product_count($cur_dis['qualifier']);
+						//$discount += $qty * $cur_dis['value'];
+						// New way.
+						$discount += $this->product_special($id, "\${$cur_dis['value']}", $cur_dis['qualifier']);
 						break;
 					case "product_percent":
-						$prod_total = $this->product_total($cur_dis['qualifier']);
-						$discount += $prod_total * ($cur_dis['value'] / 100);
+						// Old way. Doesn't save product discount totals.
+						//$prod_total = $this->product_total($cur_dis['qualifier']);
+						//$discount += $prod_total * ($cur_dis['value'] / 100);
+						// New way.
+						$discount += $this->product_special($id, "{$cur_dis['value']}%", $cur_dis['qualifier']);
 						break;
 					case "item_amount":
-						if (!$this->product_count($cur_dis['qualifier']))
-							break;
-						$discount += $cur_dis['value'];
+						// Old way. Doesn't save product discount totals.
+						//if (!$this->product_count($cur_dis['qualifier']))
+						//	break;
+						//$discount += $cur_dis['value'];
+						// New way.
+						$discount += $this->product_special($id, "\${$cur_dis['value']}", $cur_dis['qualifier'], true);
 						break;
 					case "item_percent":
-						if (!$this->product_count($cur_dis['qualifier']))
-							break;
-						$found_product = null;
-						foreach ($this->products as $cur_product) {
-							if ($cur_product['entity']->is($cur_dis['qualifier'])) {
-								$found_product = $cur_product;
-								break;
-							}
-						}
-						if (!$found_product)
-							break;
-						$prod_price = (float) $found_product['price'];
-						$discount += $prod_price * ($cur_dis['value'] / 100);
+						// Old way. Doesn't save product discount totals.
+						//if (!$this->product_count($cur_dis['qualifier']))
+						//	break;
+						//$found_product = null;
+						//foreach ($this->products as $cur_product) {
+						//	if ($cur_product['entity']->is($cur_dis['qualifier'])) {
+						//		$found_product = $cur_product;
+						//		break;
+						//	}
+						//}
+						//if (!$found_product)
+						//	break;
+						//$prod_price = (float) $found_product['price'];
+						//$discount += $prod_price * ($cur_dis['value'] / 100);
+						// New way.
+						$discount += $this->product_special($id, "{$cur_dis['value']}%", $cur_dis['qualifier'], true);
 						break;
 				}
 			}
 			$discount = (float) $pines->com_sales->round($discount);
-			if ($discount <= 0)
+			if ($discount <= 0) {
+				// Remove the special amounts saved on products.
+				$this->product_special_remove($id);
 				continue;
+			}
 			// Check a number restriction.
 			if ($cur_special->per_ticket != 0) {
 				$matching = 0;
@@ -1511,11 +1599,15 @@ class com_sales_sale extends entity {
 					if ($cur_special->is($cur_test['entity']))
 						$matching++;
 				}
-				if ($matching >= $cur_special->per_ticket)
+				if ($matching >= $cur_special->per_ticket) {
+					// Remove the special amounts saved on products.
+					$this->product_special_remove($id);
 					continue;
+				}
 			}
 			$this->specials[] = array(
 				"entity" => $cur_special,
+				"id" => $id,
 				"code" => $cur_special->code,
 				"name" => $cur_special->name,
 				"before_tax" => $cur_special->before_tax,
@@ -1560,6 +1652,8 @@ class com_sales_sale extends entity {
 				}
 			}
 			if (!$apply_special) {
+				// Remove the special amounts saved on products.
+				$this->product_special_remove($cur_special['id']);
 				unset($this->specials[$key]);
 				continue;
 			}
@@ -1568,6 +1662,13 @@ class com_sales_sale extends entity {
 				$total_before_tax_specials += $cur_special['discount'];
 			$total_specials += $cur_special['discount'];
 		}
+		// Now total the specials for each product.
+		foreach ($this->products as &$cur_product) {
+			$cur_product['specials_total'] = 0.00;
+			foreach ((array) $cur_product['specials'] as $cur_special_amount)
+				$cur_product['specials_total'] += $cur_special_amount;
+		}
+		unset($cur_product);
 		// Add location taxes.
 		foreach ($tax_fees as $cur_tax_fee) {
 			if ($cur_tax_fee->type == 'percentage')

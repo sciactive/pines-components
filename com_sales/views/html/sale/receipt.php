@@ -256,7 +256,7 @@ switch ($this->entity->status) {
 					<?php if (!$sale) { ?>
 					<td class="right_text">$<?php echo $pines->com_sales->round($cur_product['return_fee'], true); ?></td>
 					<?php } ?>
-					<td class="right_text">$<?php echo $pines->com_sales->round($cur_product['line_total'] - $cur_product['return_fee'], true); ?></td>
+					<td class="right_text">$<?php echo $pines->com_sales->round($cur_product['line_total'] - (float) $cur_product['return_fee'], true); ?></td>
 				</tr>
 				<?php } } ?>
 			</tbody>

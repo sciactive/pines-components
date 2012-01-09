@@ -75,10 +75,16 @@ class com_sales_return extends entity {
 				// Calculate commission.
 				switch ($cur_commission['type']) {
 					case 'spiff':
-						$cur_product['commission'] += (float) $cur_commission['amount'];
+						// Add a spiff per product sold.
+						$cur_product['commission'] += $pines->com_sales->round((float) $cur_commission['amount'] * $cur_product['quantity']);
 						break;
 					case 'percent_price':
-						$cur_product['commission'] += $this->discount_price($cur_product['price'], $cur_product['discount']) * ( ((float) $cur_commission['amount']) / 100 );
+						// Add a percentage of the amount sold - specials.
+						$cur_product['commission'] += $pines->com_sales->round(($cur_product['line_total'] - (float) $cur_product['specials_total']) * ( ((float) $cur_commission['amount']) / 100 ));
+						break;
+					case 'percent_line_total':
+						// Add a percentage of the amount sold.
+						$cur_product['commission'] += $pines->com_sales->round($cur_product['line_total'] * ( ((float) $cur_commission['amount']) / 100 ));
 						break;
 				}
 			}
@@ -89,7 +95,7 @@ class com_sales_return extends entity {
 				$cur_product['salesperson']->commissions = array();
 			$cur_product['salesperson']->commissions[] = array(
 				'date' => time(),
-				'amount' => ($cur_product['commission'] * $cur_product['quantity']) * -1,
+				'amount' => $cur_product['commission'] * -1,
 				'ticket' => $this,
 				'product' => $cur_product['entity']
 			);
@@ -433,6 +439,7 @@ class com_sales_return extends entity {
 					'price' => $cur_product['price'],
 					'discount' => $cur_product['discount'],
 					'line_total' => $cur_product['line_total'],
+					'specials_total' => $cur_product['specials_total'],
 					'fees' => $cur_product['fees']
 				), $i);
 			}
@@ -449,6 +456,7 @@ class com_sales_return extends entity {
 					'price' => $cur_product['price'],
 					'discount' => $cur_product['discount'],
 					'line_total' => $cur_product['line_total'],
+					'specials_total' => $cur_product['specials_total'],
 					'fees' => $cur_product['fees']
 				));
 			}

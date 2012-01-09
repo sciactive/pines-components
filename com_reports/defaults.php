@@ -25,6 +25,7 @@ return array(
 		'cname' => 'Report Timespans',
 		'description' => 'Hours separated by dashes, using 24-hour time format.',
 		'value' => array(
+			'0-10',
 			'10-13',
 			'13-16',
 			'16-19',

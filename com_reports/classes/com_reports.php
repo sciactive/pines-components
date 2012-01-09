@@ -245,7 +245,7 @@ class com_reports extends component {
 		$start_date = strtotime('00:00:00', $date);
 		$end_date = strtotime('23:59:59', $date) + 1;
 		$employees = $pines->com_hrm->get_employees(true);
-		foreach ($employees as $key => &$cur_employee) {
+		foreach ($employees as &$cur_employee) {
 			if (!($cur_employee->in_group($location) || ($descendents && $cur_employee->is_descendent($location))))
 				continue;
 			$cur_array = array(
@@ -858,7 +858,7 @@ class com_reports extends component {
 				if (isset($cur_product['commission']))
 					$commission_array[$guid] += round($cur_product['commission'], 2);
 				else
-					$commission_array[$guid] += round($cur_product['line_total'] * 0.06, 2);
+					$commission_array[$guid] += round(($cur_product['line_total'] - (float) $cur_product['specials_total']) * 0.06, 2);
 			}
 		}
 		$module->group_num_sales = $total_num_sales;
@@ -879,10 +879,6 @@ class com_reports extends component {
 		unset($cur_empoloyee);
 
 		// More computing variables to use in view.
-		$commission_percent = array(
-			'draw' => 0,
-			'commission' => 0
-		);
 		$module->group_salary_total = 0;
 		$pay_rate = array(
 			'rate' => 0,
@@ -1403,7 +1399,7 @@ class com_reports extends component {
 		$head = new module('com_reports', 'show_calendar_head', 'head');
 		$module = new module('com_reports', 'report_sales', 'content');
 
-		$selector = array('&', 'tag' => array('com_sales', 'transaction', 'sale_tx'));
+		$selector = array('&', 'tag' => array('com_sales'));
 		$or = array();
 		// Datespan of the report.
 		$date_start = strtotime('00:00:00', $start);
@@ -1432,12 +1428,71 @@ class com_reports extends component {
 		$form->employees = $pines->com_hrm->get_employees();
 		$module->descendents = $form->descendents = $descendents;
 		$selector['tag'] = array('com_sales', 'sale');
-		$selector['data'] = array('status', 'paid');
+		$selector['strict'] = array('status', 'paid');
 		$sales = $pines->entity_manager->get_entities(array('class' => com_sales_sale), $selector, $or);
 		$selector['tag'] = array('com_sales', 'return');
-		$selector['data'] = array('status', 'processed');
+		$selector['strict'] = array('status', 'processed');
 		$returns = $pines->entity_manager->get_entities(array('class' => com_sales_return), $selector, $or);
-		$module->invoices = array_merge($sales, $returns);
+		$invoices = array_merge($sales, $returns);
+
+		// Convert the timespan into the number of days that it covers.
+		$total_seconds = $module->date[1]-$module->date[0];
+		$module->days = round($total_seconds/(24*60*60));
+
+		$module->date_array = array();
+		$module->total = array();
+		foreach ($invoices as $cur_invoice) {
+			$event_month = format_date($cur_invoice->p_cdate, 'custom', 'n');
+			$event_day = format_date($cur_invoice->p_cdate, 'custom', 'j');
+			$event_year = format_date($cur_invoice->p_cdate, 'custom', 'Y');
+			// This is used to identify daily sales, divided into timespan totals.
+			$date_str = format_date($cur_invoice->p_cdate, 'date_sort');
+			$sale_time = format_date($cur_invoice->p_cdate, 'custom', 'H');
+			if (!$module->total[$date_str]) {
+				$module->total[$date_str][0] = $cur_invoice->p_cdate;
+				$module->total[$date_str][1] = mktime(0, 0, 0, $event_month, $event_day, $event_year);
+				$module->total[$date_str][2] = mktime(0, 0, 0, $event_month, $event_day, $event_year);
+				$module->total[$date_str][3] = 0;
+			}
+			// NOTE: Sales made outside of the specified timespans will be excluded!
+			foreach ($pines->config->com_reports->timespans as $timespan) {
+				$span = explode('-', $timespan);
+				if (!$module->date_array[$date_str][$timespan]) {
+					$module->date_array[$date_str][$timespan][0] = $cur_invoice->p_cdate;
+					$module->date_array[$date_str][$timespan][1] = mktime($span[0], 0, 0, $event_month, $event_day, $event_year);
+					$module->date_array[$date_str][$timespan][2] = mktime($span[1], 0, 0, $event_month, $event_day, $event_year);
+					$module->date_array[$date_str][$timespan][3] = 0;
+				}
+				if ( ($sale_time >= $span[0]) && ($sale_time < $span[1]) ) {
+					if ($cur_invoice->has_tag('sale')) {
+						if (isset($module->employee->guid)) {
+							foreach ($cur_invoice->products as $cur_product) {
+								if (!$cur_product['salesperson']->is($module->employee))
+									continue;
+								$module->date_array[$date_str][$timespan][3] += $pines->com_sales->round((float) $cur_product['line_total'] - (float) $cur_product['specials_total']);
+								$module->total[$date_str][3] += $pines->com_sales->round((float) $cur_product['line_total'] - (float) $cur_product['specials_total']);
+							}
+						} else {
+							$module->date_array[$date_str][$timespan][3] += ($cur_invoice->subtotal - $cur_invoice->total_specials);
+							$module->total[$date_str][3] += ($cur_invoice->subtotal - $cur_invoice->total_specials);
+						}
+					} elseif ($cur_invoice->has_tag('return')) {
+						if (isset($module->employee->guid)) {
+							foreach ($cur_invoice->products as $cur_product) {
+								if (!$cur_product['salesperson']->is($module->employee))
+									continue;
+								$module->date_array[$date_str][$timespan][3] -= $pines->com_sales->round((float) $cur_product['line_total'] - (float) $cur_product['specials_total']);
+								$module->total[$date_str][3] -= $pines->com_sales->round((float) $cur_product['line_total'] - (float) $cur_product['specials_total']);
+							}
+						} else {
+							$module->date_array[$date_str][$timespan][3] -= ($cur_invoice->subtotal - $cur_invoice->total_specials);
+							$module->total[$date_str][3] -= ($cur_invoice->subtotal - $cur_invoice->total_specials);
+						}
+					}
+				}
+				$span_count++;
+			}
+		}
 
 		return $module;
 	}

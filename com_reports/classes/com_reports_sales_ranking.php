@@ -75,8 +75,6 @@ class com_reports_sales_ranking extends entity {
 	 * @return module The form's module.
 	 */
 	public function print_form() {
-		global $pines;
-
 		$module = new module('com_reports', 'form_sales_ranking', 'content');
 		$module->entity = $this;
 
@@ -328,20 +326,20 @@ class com_reports_sales_ranking extends entity {
 				if (!isset($cur_product['salesperson']))
 					continue;
 				if (isset($ranking_employee[$cur_product['salesperson']->guid])) {
-					$ranking_employee[$cur_product['salesperson']->guid]['mtd'] += $cur_product['line_total'];
+					$ranking_employee[$cur_product['salesperson']->guid]['mtd'] += ($cur_product['line_total'] - (float) $cur_product['specials_total']);
 					if ($cur_sale->tender_date >= $current_start && $cur_sale->tender_date <= $current_end)
-						$ranking_employee[$cur_product['salesperson']->guid]['current'] += $cur_product['line_total'];
+						$ranking_employee[$cur_product['salesperson']->guid]['current'] += ($cur_product['line_total'] - (float) $cur_product['specials_total']);
 					elseif ($cur_sale->tender_date >= $last_start && $cur_sale->tender_date <= $last_end)
-						$ranking_employee[$cur_product['salesperson']->guid]['last'] += $cur_product['line_total'];
+						$ranking_employee[$cur_product['salesperson']->guid]['last'] += ($cur_product['line_total'] - (float) $cur_product['specials_total']);
 				}
 				$parent = $cur_sale->group;
 				while (isset($parent->guid)) {
 					if (isset($ranking_location[$parent->guid])) {
-						$ranking_location[$parent->guid]['mtd'] += $cur_product['line_total'];
+						$ranking_location[$parent->guid]['mtd'] += ($cur_product['line_total'] - (float) $cur_product['specials_total']);
 						if ($cur_sale->tender_date >= $current_start && $cur_sale->tender_date <= $current_end)
-							$ranking_location[$parent->guid]['current'] += $cur_product['line_total'];
+							$ranking_location[$parent->guid]['current'] += ($cur_product['line_total'] - (float) $cur_product['specials_total']);
 						elseif ($cur_sale->tender_date >= $last_start && $cur_sale->tender_date <= $last_end)
-							$ranking_location[$parent->guid]['last'] += $cur_product['line_total'];
+							$ranking_location[$parent->guid]['last'] += ($cur_product['line_total'] - (float) $cur_product['specials_total']);
 					}
 					$parent = $parent->parent;
 				}
@@ -352,20 +350,20 @@ class com_reports_sales_ranking extends entity {
 				if (!isset($cur_product['salesperson']))
 					continue;
 				if (isset($ranking_employee[$cur_product['salesperson']->guid])) {
-					$ranking_employee[$cur_product['salesperson']->guid]['mtd'] -= $cur_product['line_total'];
+					$ranking_employee[$cur_product['salesperson']->guid]['mtd'] -= ($cur_product['line_total'] - (float) $cur_product['specials_total']);
 					if ($cur_return->process_date >= $current_start && $cur_return->process_date <= $current_end)
-						$ranking_employee[$cur_product['salesperson']->guid]['current'] -= $cur_product['line_total'];
+						$ranking_employee[$cur_product['salesperson']->guid]['current'] -= ($cur_product['line_total'] - (float) $cur_product['specials_total']);
 					elseif ($cur_return->process_date >= $last_start && $cur_return->process_date <= $last_end)
-						$ranking_employee[$cur_product['salesperson']->guid]['last'] -= $cur_product['line_total'];
+						$ranking_employee[$cur_product['salesperson']->guid]['last'] -= ($cur_product['line_total'] - (float) $cur_product['specials_total']);
 				}
 				$parent = $cur_return->group;
 				while (isset($parent->guid)) {
 					if (isset($ranking_location[$parent->guid])) {
-						$ranking_location[$parent->guid]['mtd'] -= $cur_product['line_total'];
+						$ranking_location[$parent->guid]['mtd'] -= ($cur_product['line_total'] - (float) $cur_product['specials_total']);
 						if ($cur_return->process_date >= $current_start && $cur_return->process_date <= $current_end)
-							$ranking_location[$parent->guid]['current'] -= $cur_product['line_total'];
+							$ranking_location[$parent->guid]['current'] -= ($cur_product['line_total'] - (float) $cur_product['specials_total']);
 						elseif ($cur_return->process_date >= $last_start && $cur_return->process_date <= $last_end)
-							$ranking_location[$parent->guid]['last'] -= $cur_product['line_total'];
+							$ranking_location[$parent->guid]['last'] -= ($cur_product['line_total'] - (float) $cur_product['specials_total']);
 					}
 					$parent = $parent->parent;
 				}

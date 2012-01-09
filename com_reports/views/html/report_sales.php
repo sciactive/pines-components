@@ -17,54 +17,10 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 
-// Convert the timespan into the number of days that it covers.
-$total_seconds = $this->date[1]-$this->date[0];
-$days = $total_seconds/(24*60*60);
+$this->note = 'Totals are reported without taxes, item fees, or return fees.';
+if (isset($this->employee->guid))
+	$this->note .= ' Any flat rate specials which applied to an entire ticket are not included in these totals.';
 
-$date_array = array();
-$total = array();
-foreach ($this->invoices as $cur_invoice) {
-	$event_month = format_date($cur_invoice->p_cdate, 'custom', 'n');
-	$event_day = format_date($cur_invoice->p_cdate, 'custom', 'j');
-	$event_year = format_date($cur_invoice->p_cdate, 'custom', 'Y');
-	// This is used to identify daily sales, divided into timespan totals.
-	$date_str = format_date($cur_invoice->p_cdate, 'date_sort');
-	$sale_time = format_date($cur_invoice->p_cdate, 'custom', 'H');
-	if (!$total[$date_str]) {
-		$total[$date_str][0] = $cur_invoice->p_cdate;
-		$total[$date_str][1] = mktime(0, 1, 1, $event_month, $event_day, $event_year);
-		$total[$date_str][2] = mktime(0, 1, 1, $event_month, $event_day, $event_year);
-		$total[$date_str][3] = 0;
-	}
-	// NOTE: Sales made outside of the specified timespans will be excluded!
-	foreach ($pines->config->com_reports->timespans as $timespan) {
-		$span = explode('-', $timespan);
-		if (!$date_array[$date_str][$timespan]) {
-			$date_array[$date_str][$timespan][0] = $cur_invoice->p_cdate;
-			$date_array[$date_str][$timespan][1] = mktime($span[0], 0, 0, $event_month, $event_day, $event_year);
-			$date_array[$date_str][$timespan][2] = mktime($span[1], 0, 0, $event_month, $event_day, $event_year);
-			$date_array[$date_str][$timespan][3] = 0;
-		}
-		if ( ($sale_time >= $span[0]) && ($sale_time < $span[1]) ) {
-			if ($cur_invoice->has_tag('sale')) {
-				foreach ($cur_invoice->products as $cur_product) {
-					if (isset($this->employee->guid) && !$cur_product['salesperson']->is($this->employee))
-						continue;
-					$date_array[$date_str][$timespan][3] += (float) $cur_product['line_total'];
-					$total[$date_str][3] += (float) $cur_product['line_total'];
-				}
-			} elseif ($cur_invoice->has_tag('return')) {
-				foreach ($cur_invoice->products as $cur_product) {
-					if (isset($this->employee->guid) && !$cur_product['salesperson']->is($this->employee))
-						continue;
-					$date_array[$date_str][$timespan][3] -= (float) $cur_product['line_total'];
-					$total[$date_str][3] -= (float) $cur_product['line_total'];
-				}
-			}
-		}
-		$span_count++;
-	}
-}
 ?>
 <script type='text/javascript'>
 	// <![CDATA[
@@ -88,17 +44,18 @@ foreach ($this->invoices as $cur_invoice) {
 			},
 			<?php
 				// Depending on the amount of days being reviewed, show a month, week or day calendar.
-				if ($days == 0 || $days > 8) {
+				if ($this->days == 0 || $this->days > 8) {
 					echo 'defaultView: \'month\',';
 					$class = 'mint_month';
-				} else if ($days <= 2) {
+				} elseif ($this->days <= 2) {
 					echo 'defaultView: \'agendaDay\',';
 					$class = 'mint';
-				} else if ($days <= 8) {
+				} elseif ($this->days <= 8) {
 					echo 'defaultView: \'agendaWeek\',';
 					$class = 'mint';
 				}
 			?>
+			weekMode: 'liquid',
 			allDayText: 'Total',
 			firstDay: 1,
 			firstHour: 10,
@@ -107,15 +64,30 @@ foreach ($this->invoices as $cur_invoice) {
 			events: [
 				<?php
 				$event_counter = 0;
+				// Total sales for each entire day.
+				foreach ($this->total as $cur_total) {
+					if ($event_counter > 0)
+						echo ',';
+					echo '{';
+					echo 'id: 0,';
+					echo '_id: 0,';
+					echo 'title: '. json_encode('$'.$pines->com_sales->round($cur_total[3], true)).',';
+					echo 'start: '. json_encode($cur_total[1]) .',';
+					echo 'end: '. json_encode($cur_total[2]) .',';
+					echo 'className: \'mint_total\',';
+					echo 'allDay: true,';
+					echo '}';
+					$event_counter++;
+				}
 				// Timespan totals (10am-1pm, 7pm-12pm, etc).
-				foreach ($date_array as $item) {
+				foreach ($this->date_array as $item) {
 					foreach ($item as $cur_item) {
 						if ($event_counter > 0)
 							echo ',';
 						echo '{';
 						echo 'id: 0,';
 						echo '_id: 0,';
-						echo 'title: '.json_encode('$'.$cur_item[3]).',';
+						echo 'title: '.json_encode('$'.$pines->com_sales->round($cur_item[3], true)).',';
 						echo 'start: '. json_encode($cur_item[1]) .',';
 						echo 'end: '. json_encode($cur_item[2]) .',';
 						echo 'className: '.json_encode($class).',';
@@ -124,23 +96,6 @@ foreach ($this->invoices as $cur_invoice) {
 						$event_counter++;
 					}
 				}
-				// Total sales for each entire day.
-				foreach ($total as $cur_total) {
-					if ($event_counter > 0)
-						echo ',';
-					echo '{';
-					echo 'id: 0,';
-					echo '_id: 0,';
-					echo 'title: '. json_encode('$'.$cur_total[3]) .',';
-					echo 'start: '. json_encode($cur_total[1]) .',';
-					echo 'end: '. json_encode($cur_total[2]) .',';
-					echo 'className: \'mint_total\',';
-					echo 'allDay: true,';
-					echo '}';
-					$event_counter++;
-				}
-				unset($date_array);
-				unset($total);
 				?>
 			],
 			viewDisplay: function(view) {

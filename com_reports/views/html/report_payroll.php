@@ -169,7 +169,7 @@ $pines->com_pgrid->load();
 						$totals[$cur_product['salesperson']->guid]['qty_sold']++;
 						$counted[] = $cur_invoice->guid;
 					}
-					$totals[$cur_product['salesperson']->guid]['total_sold'] += $cur_product['line_total'];
+					$totals[$cur_product['salesperson']->guid]['total_sold'] += ($cur_product['line_total'] - (float) $cur_product['specials_total']);
 					foreach ((array) $commissions[$cur_product['salesperson']->guid] as $key => $cur_commission) {
 						if ($cur_commission['ticket']->guid == $cur_invoice->guid) {
 							$totals[$cur_product['salesperson']->guid]['commission'] += $cur_commission['amount'];
@@ -200,7 +200,7 @@ $pines->com_pgrid->load();
 						$totals[$cur_product['salesperson']->guid]['qty_returned']++;
 						$counted[] = $cur_invoice->guid;
 					}
-					$totals[$cur_product['salesperson']->guid]['total_returned'] += $cur_product['line_total'];
+					$totals[$cur_product['salesperson']->guid]['total_returned'] += ($cur_product['line_total'] - (float) $cur_product['specials_total']);
 					foreach ((array) $commissions[$cur_product['salesperson']->guid] as $key => $cur_commission) {
 						if ($cur_commission['ticket']->guid == $cur_invoice->guid) {
 							$totals[$cur_product['salesperson']->guid]['commission'] += $cur_commission['amount'];
@@ -249,7 +249,7 @@ $pines->com_pgrid->load();
 				)
 			);
 			foreach ($issues as $cur_issue)
-				$totals[$cur_employee->guid]['penalties'] += $cur_issue->issue_type->penalty*$cur_issue->quantity;
+				$totals[$cur_employee->guid]['penalties'] += $cur_issue->issue_type->penalty * $cur_issue->quantity;
 
 			$bonuses = $pines->entity_manager->get_entities(
 				array('class' => com_hrm_bonus),

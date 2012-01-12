@@ -29,6 +29,11 @@ if ( isset($_REQUEST['id']) ) {
 // General
 $category->name = $_REQUEST['name'];
 $category->alias = preg_replace('/[^\w\d-.]/', '', $_REQUEST['alias']);
+$category->title_use_name = ($_REQUEST['title_use_name'] == 'ON');
+$category->title = $_REQUEST['title'];
+$category->title_position = ($_REQUEST['title_position'] == 'null' ? null : $_REQUEST['title_position']);
+if (isset($category->title_position) && !in_array($category->title_position, array('prepend', 'append', 'replace')))
+	$category->title_position = null;
 $category->enabled = ($_REQUEST['enabled'] == 'ON');
 $category->show_menu = ($_REQUEST['show_menu'] == 'ON');
 $category->menu_position = $_REQUEST['menu_position'];

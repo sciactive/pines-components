@@ -38,6 +38,7 @@ class com_content_page extends entity {
 		}
 		// Defaults.
 		$this->enabled = true;
+		$this->title_use_name = true;
 		$this->content_tags = array();
 		$this->com_menueditor_entries = array();
 		$this->conditions = array();

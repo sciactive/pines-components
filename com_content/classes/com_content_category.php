@@ -38,6 +38,7 @@ class com_content_category extends entity {
 		}
 		// Defaults
 		$this->enabled = true;
+		$this->title_use_name = true;
 		$this->parent = null;
 		$this->children = array();
 		$this->pages = array();

@@ -29,6 +29,11 @@ if ( isset($_REQUEST['id']) ) {
 // General
 $page->name = $_REQUEST['name'];
 $page->alias = preg_replace('/[^\w\d-.]/', '', $_REQUEST['alias']);
+$page->title_use_name = ($_REQUEST['title_use_name'] == 'ON');
+$page->title = $_REQUEST['title'];
+$page->title_position = ($_REQUEST['title_position'] == 'null' ? null : $_REQUEST['title_position']);
+if (isset($page->title_position) && !in_array($page->title_position, array('prepend', 'append', 'replace')))
+	$page->title_position = null;
 $page->enabled = ($_REQUEST['enabled'] == 'ON');
 $page->show_front_page = ($_REQUEST['show_front_page'] == 'null' ? null : ($_REQUEST['show_front_page'] == 'true'));
 // TODO: Show these tags on pages and let the user search pages by tags.

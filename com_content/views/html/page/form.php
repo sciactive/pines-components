@@ -185,6 +185,35 @@ $pines->com_menueditor->load_editor();
 					</span>
 				</label>
 			</div>
+			<div class="pf-element pf-full-width">
+				<script type="text/javascript">
+					// <![CDATA[
+					pines(function(){
+						$("#p_muid_use_name").change(function(){
+							if ($(this).is(":checked"))
+								$("#p_muid_title").attr("disabled", "disabled").addClass("ui-state-disabled");
+							else
+								$("#p_muid_title").removeAttr("disabled").removeClass("ui-state-disabled");
+						}).change();
+					});
+					// ]]>
+				</script>
+				<span class="pf-label">Page Title</span>
+				<div class="pf-group pf-full-width">
+					<label><input class="pf-field" type="checkbox" id="p_muid_use_name" name="title_use_name" value="ON"<?php echo $this->entity->title_use_name ? ' checked="checked"' : ''; ?> /> Use name as title.</label><br />
+					<input class="pf-field ui-widget-content ui-corner-all" style="width: 100%;" type="text" id="p_muid_title" name="title" value="<?php echo htmlspecialchars($this->entity->title); ?>" /><br />
+					
+				</div>
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Title Position</span>
+					<select class="pf-field ui-widget-content ui-corner-all" name="title_position">
+						<option value="null">Use Default</option>
+						<option value="prepend"<?php echo $this->entity->title_position === 'prepend' ? ' selected="selected"' : ''; ?>>Prepend to Site Title</option>
+						<option value="append"<?php echo $this->entity->title_position === 'append' ? ' selected="selected"' : ''; ?>>Append to Site Title</option>
+						<option value="replace"<?php echo $this->entity->title_position === 'replace' ? ' selected="selected"' : ''; ?>>Replace Site Title</option>
+					</select></label>
+			</div>
 			<?php if (isset($this->entity->guid)) { ?>
 			<div class="date_info" style="float: right; text-align: right;">
 				<?php if (isset($this->entity->user)) { ?>

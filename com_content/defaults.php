@@ -126,6 +126,18 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'def_cat_title_position',
+		'cname' => 'Defaults: Categories: Title Position',
+		'description' => '',
+		'value' => 'prepend',
+		'options' => array(
+			'Prepend to Site Title' => 'prepend',
+			'Append to Site Title' => 'append',
+			'Replace Site Title' => 'replace',
+		),
+		'peruser' => true,
+	),
+	array(
 		'name' => 'def_cat_show_pages_in_menu',
 		'cname' => 'Defaults: Categories: Show Pages in Menu',
 		'description' => '',
@@ -151,6 +163,18 @@ return array(
 		'cname' => 'Defaults: Categories: Show Breadcrumbs',
 		'description' => '',
 		'value' => true,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'def_page_title_position',
+		'cname' => 'Defaults: Pages: Title Position',
+		'description' => '',
+		'value' => 'prepend',
+		'options' => array(
+			'Prepend to Site Title' => 'prepend',
+			'Append to Site Title' => 'append',
+			'Replace Site Title' => 'replace',
+		),
 		'peruser' => true,
 	),
 	array(

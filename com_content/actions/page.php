@@ -40,7 +40,21 @@ if (isset($entity->variants[$pines->current_template]) && $pines->com_content->i
 }
 
 // Page title.
-$pines->page->title_pre("$entity->name - ");
+if ($entity->title_use_name || !isset($entity->title))
+	$title = $entity->name;
+else
+	$title = $entity->title;
+switch ($entity->get_option('title_position')) {
+	case 'prepend':
+		$pines->page->title_pre("$title - ");
+		break;
+	case 'append':
+		$pines->page->title(" - $title");
+		break;
+	case 'replace':
+		$pines->page->title_set($title);
+		break;
+}
 
 // Meta tags.
 if ($entity->meta_tags) {

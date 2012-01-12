@@ -29,6 +29,10 @@ class com_imodules extends component {
 	 *
 	 * <pre>
 	 * [com_component/type attribute="value" second="second value"]inline content[/com_component/type]
+	 * or
+	 * [com_component/type attribute='value' second='second value']inline content[/com_component/type]
+	 * or
+	 * [com_component/type attribute=`value` second=`second value`]inline content[/com_component/type]
 	 * </pre>
 	 *
 	 * Without attributes:
@@ -86,8 +90,8 @@ class com_imodules extends component {
 			// Read the attributes.
 			$attrs = ($short ? $matches[2][0] : $matches[4][0]);
 			$attr_matches = array();
-			if (preg_match_all('/(\w+)="(.*?)"/', $attrs, $attr_matches))
-				$attrs = array_combine($attr_matches[1], $attr_matches[2]);
+			if (preg_match_all('/(\w+)=("|\'|`)(.*?)\2/', $attrs, $attr_matches))
+				$attrs = array_combine($attr_matches[1], $attr_matches[3]);
 			else
 				$attrs = array();
 			$icontent = ($short ? '' : $matches[5][0]);

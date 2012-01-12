@@ -13,7 +13,16 @@
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = (!isset($this->entity->guid)) ? 'Editing New Module' : 'Editing ['.htmlspecialchars($this->entity->name).']';
 $this->note = 'Provide module details in this form.';
+// Get the HTML for the system editor.
+$no_editor_modules = $pines->page->modules['head'];
 $pines->editor->load();
+$with_editor_modules = $pines->page->modules['head'];
+$editor_modules = array_diff_key($with_editor_modules, $no_editor_modules);
+$editor_html = '';
+foreach ($editor_modules as $cur_module) {
+	$editor_html .= $cur_module->render();
+}
+
 $pines->com_pgrid->load();
 ?>
 <style type="text/css" >
@@ -54,19 +63,23 @@ $pines->com_pgrid->load();
 					extra_class: 'picon picon-list-add',
 					selection_optional: true,
 					click: function(){
-						var type = $(".component_modules [name=type]:checked");
-						if (!type.length) {
+						var type_elem = $(".component_modules [name=type]:checked", "#p_muid_form");
+						if (!type_elem.length) {
 							alert("Please select a module type.");
 							return;
 						}
-						var form = type.siblings(".form").text();
+						if (typeof type_elem.data("module_form") != "undefined") {
+							type_elem.data("module_form").dialog("open");
+							return;
+						}
+						var form = type_elem.siblings(".form").text();
 						if (form == "") {
 							alert("The selected module type has no options.")
 							options_table.pgrid_get_all_rows().pgrid_delete();
 							update_options();
 							return;
 						}
-						type = type.val();
+						var type = type_elem.val();
 						$.ajax({
 							url: <?php echo json_encode(pines_url('com_modules', 'module/form')); ?>,
 							type: "POST",
@@ -85,27 +98,26 @@ $pines->com_pgrid->load();
 									form.dialog('option', 'buttons').Done();
 									return false;
 								});
-								var cur_data = options_table.pgrid_get_all_rows();
-								if (cur_data.length) {
-									cur_data.each(function(){
-										var cur_row = $(this);
-										var name = cur_row.pgrid_get_value(1);
-										var value = pines.unsafe(cur_row.pgrid_get_value(2));
-										form.find(":input:not(:radio, :checkbox)[name="+name+"]").val(value);
-										form.find(":input:radio[name="+name+"][value="+value+"]").attr("checked", "checked");
-										if (value == "")
-											form.find(":input:checkbox[name="+name+"]").removeAttr("checked");
-										else
-											form.find(":input:checkbox[name="+name+"][value="+value+"]").attr("checked", "checked");
-									});
-								}
 								form.dialog({
 									bgiframe: true,
 									autoOpen: true,
 									modal: true,
 									width: "auto",
-									close: function(){
-										form.remove();
+									open: function(){
+										var cur_data = options_table.pgrid_get_all_rows();
+										if (cur_data.length) {
+											cur_data.each(function(){
+												var cur_row = $(this);
+												var name = cur_row.pgrid_get_value(1);
+												var value = pines.unsafe(cur_row.pgrid_get_value(2));
+												form.find(":input:not(:radio, :checkbox)[name="+name+"]").val(value).change();
+												form.find(":input:radio[name="+name+"][value="+value+"]").attr("checked", "checked").change();
+												if (value == "")
+													form.find(":input:checkbox[name="+name+"]").removeAttr("checked").change();
+												else
+													form.find(":input:checkbox[name="+name+"][value="+value+"]").attr("checked", "checked").change();
+											});
+										}
 									},
 									buttons: {
 										"Done": function(){
@@ -129,6 +141,9 @@ $pines->com_pgrid->load();
 										}
 									}
 								});
+								if (form.find("textarea.peditor, textarea.peditor_simple").length)
+									$("head").append(<?php echo json_encode($editor_html); ?>);
+								type_elem.data("module_form", form);
 								pines.play();
 							}
 						});
@@ -140,7 +155,39 @@ $pines->com_pgrid->load();
 
 		var update_options = function(){
 			options.val(JSON.stringify(options_table.pgrid_get_all_rows().pgrid_export_rows()));
+			var type_elem = $(".component_modules [name=type]:checked", "#p_muid_form");
+			if (!type_elem.length) {
+				$("#p_muid_inline_format").html("No module type is selected.");
+			} else {
+				var inline = "";
+				var type = type_elem.val();
+				var cur_data = options_table.pgrid_get_all_rows();
+				if (cur_data.length) {
+					inline = "["+type;
+					var icontent = false;
+					cur_data.each(function(){
+						var cur_row = $(this), name = cur_row.pgrid_get_value(1), value = pines.unsafe(cur_row.pgrid_get_value(2)), delin = '"';
+						if (value.match(/"/)) {
+							delin = "'";
+							if (value.match(/'/))
+								delin = "`";
+						}
+						if (name == "icontent")
+							icontent = value;
+						else
+							inline += " "+name+"="+delin+value+delin;
+					});
+					if (icontent)
+						inline += "]"+icontent+"[/"+type+"]";
+					else
+						inline += " /]";
+				} else {
+					inline = "["+type+" /]";
+				}
+				$("#p_muid_inline_format").text(inline);
+			}
 		};
+		$(".component_modules [name=type]").change(function(){update_options();});
 
 		update_options();
 
@@ -375,6 +422,13 @@ $pines->com_pgrid->load();
 					</div>
 				</div>
 				<br style="clear: both; height: 1px;" />
+			</div>
+			<div class="pf-element pf-heading">
+				<h1>Inline Module Format</h1>
+				<p>This is the text you would use to place this module inline with content. (As long as this module type allows inline use and com_imodules is installed.)</p>
+			</div>
+			<div class="pf-element pf-full-width">
+				<div id="p_muid_inline_format" class="ui-widget-content ui-state-highlight" style="padding: 1em; font-family: monospace; font-size: .9em; white-space: pre-wrap;"></div>
 			</div>
 			<br class="pf-clearing" />
 		</div>

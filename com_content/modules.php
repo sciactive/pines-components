@@ -23,6 +23,11 @@ return array(
 		'view' => 'category/category',
 		'form' => 'modules/category_form',
 	),
+	'content' => array(
+		'cname' => 'Custom Content (HTML)',
+		'view' => 'modules/custom',
+		'form' => 'modules/custom_form',
+	),
 );
 
 ?>

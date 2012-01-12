@@ -103,6 +103,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'wrap_content',
+		'cname' => 'Wrap Content',
+		'description' => 'Wrap custom content modules in a relative positioned div, so absolute positioned content will appear correctly.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'show_tags_in_lists',
 		'cname' => 'Show Tags in Lists',
 		'description' => 'Show content tags on lists, like category pages.',

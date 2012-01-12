@@ -15,6 +15,12 @@ defined('P_RUN') or die('Direct access prohibited');
 if (!isset($this->entity))
 	$this->entity = com_content_category::factory((int) $this->id);
 
+// Custom head code.
+if ($this->entity->enable_custom_head && $pines->config->com_content->custom_head) {
+	$head = new module('system', 'null', 'head');
+	$head->content($this->entity->custom_head);
+}
+
 if ($this->entity->get_option('show_title'))
 	$this->title = htmlspecialchars($this->entity->name);
 

@@ -19,7 +19,7 @@ if (!empty($_REQUEST['id'])) {
 			array('class' => com_content_category),
 			array('&',
 				'tag' => array('com_content', 'category'),
-				'data' => array('alias', $_REQUEST['a'])
+				'strict' => array('alias', $_REQUEST['a'])
 			)
 		);
 }
@@ -41,6 +41,12 @@ if (isset($entity->variants[$pines->current_template]) && $pines->com_content->i
 
 // Page title.
 $pines->page->title_pre("$entity->name - ");
+
+// Meta tags.
+if ($entity->meta_tags) {
+	$module = new module('com_content', 'meta_tags', 'head');
+	$module->entity = $entity;
+}
 
 if ($entity->get_option('show_breadcrumbs')) {
 	$module = new module('com_content', 'breadcrumb', 'breadcrumbs');

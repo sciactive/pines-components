@@ -31,13 +31,23 @@ $page->name = $_REQUEST['name'];
 $page->alias = preg_replace('/[^\w\d-.]/', '', $_REQUEST['alias']);
 $page->enabled = ($_REQUEST['enabled'] == 'ON');
 $page->show_front_page = ($_REQUEST['show_front_page'] == 'null' ? null : ($_REQUEST['show_front_page'] == 'true'));
+// TODO: Show these tags on pages and let the user search pages by tags.
 $page->content_tags = explode(',', $_REQUEST['content_tags']);
 // TODO: Use an HTML filter here.
 $page->intro = $_REQUEST['intro'];
 $page->content = $_REQUEST['content'];
 
 // Page Head
-if ($pines->config->com_content->custom_head && gatekeeper('com_content/editpagehead')) {
+if (gatekeeper('com_content/editmeta')) {
+	$meta_tags = (array) json_decode($_REQUEST['meta_tags']);
+	$page->meta_tags = array();
+	foreach ($meta_tags as $cur_meta_tag) {
+		if (!isset($cur_meta_tag->values[0], $cur_meta_tag->values[1]))
+			continue;
+		$page->meta_tags[] = array('name' => $cur_meta_tag->values[0], 'content' => $cur_meta_tag->values[1]);
+	}
+}
+if ($pines->config->com_content->custom_head && gatekeeper('com_content/edithead')) {
 	$page->enable_custom_head = ($_REQUEST['enable_custom_head'] == 'ON');
 	$page->custom_head = $_REQUEST['custom_head'];
 }

@@ -174,6 +174,9 @@ $pines->com_menueditor->load_editor();
 	<div id="p_muid_category_tabs" style="clear: both;">
 		<ul>
 			<li><a href="#p_muid_tab_general">General</a></li>
+			<?php if (($pines->config->com_content->custom_head && gatekeeper('com_content/edithead')) || gatekeeper('com_content/editmeta')) { ?>
+			<li><a href="#p_muid_tab_head">Page Head</a></li>
+			<?php } ?>
 			<li><a href="#p_muid_tab_menu">Menu</a></li>
 			<li><a href="#p_muid_tab_page">Page</a></li>
 			<li><a href="#p_muid_tab_conditions">Conditions</a></li>
@@ -287,6 +290,407 @@ $pines->com_menueditor->load_editor();
 			</div>
 			<br class="pf-clearing" />
 		</div>
+		<?php if (($pines->config->com_content->custom_head && gatekeeper('com_content/edithead')) || gatekeeper('com_content/editmeta')) { ?>
+		<div id="p_muid_tab_head">
+			<?php if (gatekeeper('com_content/editmeta')) { ?>
+			<div class="pf-element pf-heading">
+				<h1>Meta Tags</h1>
+			</div>
+			<script type="text/javascript">
+				// <![CDATA[
+				pines(function(){
+					// Meta Tags
+					var meta_tags = $("#p_muid_form [name=meta_tags]");
+					var meta_tags_table = $("#p_muid_form .meta_tags_table");
+					var meta_tag_dialog = $("#p_muid_form .meta_tag_dialog");
+					var cur_meta_tag = null;
+
+					meta_tags_table.pgrid({
+						pgrid_paginate: false,
+						pgrid_toolbar: true,
+						pgrid_toolbar_contents : [
+							{
+								type: 'button',
+								text: 'Add Meta Tag',
+								extra_class: 'picon picon-document-new',
+								selection_optional: true,
+								click: function(){
+									cur_meta_tag = null;
+									meta_tag_dialog.dialog('open');
+								}
+							},
+							{
+								type: 'button',
+								text: 'Edit Meta Tag',
+								extra_class: 'picon picon-document-edit',
+								double_click: true,
+								click: function(e, rows){
+									cur_meta_tag = rows;
+									meta_tag_dialog.find("input[name=cur_meta_tag_name]").val(pines.unsafe(rows.pgrid_get_value(1)));
+									meta_tag_dialog.find("input[name=cur_meta_tag_value]").val(pines.unsafe(rows.pgrid_get_value(2)));
+									meta_tag_dialog.dialog('open');
+								}
+							},
+							{
+								type: 'button',
+								text: 'Remove Meta Tag',
+								extra_class: 'picon picon-edit-delete',
+								click: function(e, rows){
+									rows.pgrid_delete();
+									update_meta_tags();
+								}
+							}
+						],
+						pgrid_view_height: "200px"
+					});
+
+					// Meta Tag Dialog
+					meta_tag_dialog.dialog({
+						bgiframe: true,
+						autoOpen: false,
+						modal: true,
+						width: 500,
+						buttons: {
+							"Done": function(){
+								var cur_meta_tag_name = meta_tag_dialog.find("input[name=cur_meta_tag_name]").val();
+								var cur_meta_tag_value = meta_tag_dialog.find("input[name=cur_meta_tag_value]").val();
+								if (cur_meta_tag_name == "") {
+									alert("Please provide a name for this meta_tag.");
+									return;
+								}
+								if (cur_meta_tag == null) {
+									var new_meta_tag = [{
+										key: null,
+										values: [
+											pines.safe(cur_meta_tag_name),
+											pines.safe(cur_meta_tag_value)
+										]
+									}];
+									meta_tags_table.pgrid_add(new_meta_tag);
+								} else {
+									cur_meta_tag.pgrid_set_value(1, pines.safe(cur_meta_tag_name));
+									cur_meta_tag.pgrid_set_value(2, pines.safe(cur_meta_tag_value));
+								}
+								$(this).dialog('close');
+							}
+						},
+						close: function(){
+							update_meta_tags();
+						}
+					});
+
+					var update_meta_tags = function(){
+						meta_tag_dialog.find("input[name=cur_meta_tag_name]").val("");
+						meta_tag_dialog.find("input[name=cur_meta_tag_value]").val("");
+						meta_tags.val(JSON.stringify(meta_tags_table.pgrid_get_all_rows().pgrid_export_rows()));
+					};
+
+					update_meta_tags();
+
+					meta_tag_dialog.find("input[name=cur_meta_tag_name]").autocomplete({
+						"source": <?php echo (string) json_encode(array('description', 'author', 'keywords', 'robots', 'rating', 'distribution')); ?>
+					});
+				});
+				// ]]>
+			</script>
+			<div class="pf-element pf-full-width">
+				<table class="meta_tags_table">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Content</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php if (isset($this->entity->meta_tags)) foreach ($this->entity->meta_tags as $cur_value) { ?>
+						<tr>
+							<td><?php echo htmlspecialchars($cur_value['name']); ?></td>
+							<td><?php echo htmlspecialchars($cur_value['content']); ?></td>
+						</tr>
+						<?php } ?>
+					</tbody>
+				</table>
+				<input type="hidden" name="meta_tags" />
+			</div>
+			<div class="meta_tag_dialog" style="display: none;" title="Add a Meta Tag">
+				<div class="pf-form">
+					<div class="pf-element">
+						<span class="pf-label">Common Meta Tags</span>
+						<span class="pf-note">These tags are commonly used on pages.</span>
+						<div class="pf-group">
+							<div class="pf-field"><em><?php
+							$name_links = array();
+							foreach (array('description', 'keywords', 'robots', 'rating', 'distribution') as $cur_name) {
+								$name_html = htmlspecialchars($cur_name);
+								$name_js = htmlspecialchars(json_encode($cur_name));
+								$name_links[] = "<a href=\"javascript:void(0);\" onclick=\"\$('#p_muid_cur_meta_tag_name').val($name_js);\">$name_html</a>";
+							}
+							echo implode(', ', $name_links);
+							?></em></div>
+						</div>
+					</div>
+					<div class="pf-element">
+						<label><span class="pf-label">Name</span>
+							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_meta_tag_name" id="p_muid_cur_meta_tag_name" size="24" /></label>
+					</div>
+					<div class="pf-element">
+						<label><span class="pf-label">Value</span>
+							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_meta_tag_value" size="24" /></label>
+					</div>
+				</div>
+				<br style="clear: both; height: 1px;" />
+			</div>
+			<?php } if ($pines->config->com_content->custom_head && gatekeeper('com_content/edithead')) { ?>
+			<div class="pf-element pf-heading">
+				<h1>Custom Head Code</h1>
+			</div>
+			<div class="pf-element">
+				The page head can contain extra CSS and JavaScript files, which
+				can improve the page, but also can introduce security
+				vulnerabilities. Please be very careful when putting custom code
+				into the page head. Custom head code will be loaded when the
+				category's page is shown.
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Enable Custom Head Code</span>
+					<input class="pf-field" type="checkbox" name="enable_custom_head" value="ON"<?php echo $this->entity->enable_custom_head ? ' checked="checked"' : ''; ?> /></label>
+			</div>
+			<div class="pf-element pf-full-width">
+				<label><span class="pf-label">Custom Head Code</span>
+					<span class="pf-note"><a href="javascript:void(0);" onclick="$('#p_muid_custom_head_help').dialog({width: 800, height: 600, modal: false})">Read Me First</a></span>
+					<span class="pf-field pf-full-width"><textarea class="ui-widget-content ui-corner-all" style="width: 100%;" rows="3" cols="35" name="custom_head"><?php echo htmlspecialchars($this->entity->custom_head); ?></textarea></span></label>
+			</div>
+			<div id="p_muid_custom_head_help" title="Custom Head Code" style="display: none;">
+				<style type="text/css">
+					/* <![CDATA[ */
+					#p_muid_custom_head_help .code_block {
+						background: #F6F6F6;
+						border: 1px solid #DDDDDD;
+						font-size: .9em;
+					}
+					#p_muid_custom_head_help .highlight {
+						padding: 1em;
+					}
+					<?php /* pygmentize -S manni -f html | sed s/^/\\t\\t\\t\\t\\t\#p_muid_custom_head_help\ / */ ?>
+					#p_muid_custom_head_help .hll { background-color: #ffffcc }
+					#p_muid_custom_head_help .c { color: #0099FF; font-style: italic } /* Comment */
+					#p_muid_custom_head_help .err { color: #AA0000; background-color: #FFAAAA } /* Error */
+					#p_muid_custom_head_help .k { color: #006699; font-weight: bold } /* Keyword */
+					#p_muid_custom_head_help .o { color: #555555 } /* Operator */
+					#p_muid_custom_head_help .cm { color: #0099FF; font-style: italic } /* Comment.Multiline */
+					#p_muid_custom_head_help .cp { color: #009999 } /* Comment.Preproc */
+					#p_muid_custom_head_help .c1 { color: #0099FF; font-style: italic } /* Comment.Single */
+					#p_muid_custom_head_help .cs { color: #0099FF; font-weight: bold; font-style: italic } /* Comment.Special */
+					#p_muid_custom_head_help .gd { background-color: #FFCCCC; border: 1px solid #CC0000 } /* Generic.Deleted */
+					#p_muid_custom_head_help .ge { font-style: italic } /* Generic.Emph */
+					#p_muid_custom_head_help .gr { color: #FF0000 } /* Generic.Error */
+					#p_muid_custom_head_help .gh { color: #003300; font-weight: bold } /* Generic.Heading */
+					#p_muid_custom_head_help .gi { background-color: #CCFFCC; border: 1px solid #00CC00 } /* Generic.Inserted */
+					#p_muid_custom_head_help .go { color: #AAAAAA } /* Generic.Output */
+					#p_muid_custom_head_help .gp { color: #000099; font-weight: bold } /* Generic.Prompt */
+					#p_muid_custom_head_help .gs { font-weight: bold } /* Generic.Strong */
+					#p_muid_custom_head_help .gu { color: #003300; font-weight: bold } /* Generic.Subheading */
+					#p_muid_custom_head_help .gt { color: #99CC66 } /* Generic.Traceback */
+					#p_muid_custom_head_help .kc { color: #006699; font-weight: bold } /* Keyword.Constant */
+					#p_muid_custom_head_help .kd { color: #006699; font-weight: bold } /* Keyword.Declaration */
+					#p_muid_custom_head_help .kn { color: #006699; font-weight: bold } /* Keyword.Namespace */
+					#p_muid_custom_head_help .kp { color: #006699 } /* Keyword.Pseudo */
+					#p_muid_custom_head_help .kr { color: #006699; font-weight: bold } /* Keyword.Reserved */
+					#p_muid_custom_head_help .kt { color: #007788; font-weight: bold } /* Keyword.Type */
+					#p_muid_custom_head_help .m { color: #FF6600 } /* Literal.Number */
+					#p_muid_custom_head_help .s { color: #CC3300 } /* Literal.String */
+					#p_muid_custom_head_help .na { color: #330099 } /* Name.Attribute */
+					#p_muid_custom_head_help .nb { color: #336666 } /* Name.Builtin */
+					#p_muid_custom_head_help .nc { color: #00AA88; font-weight: bold } /* Name.Class */
+					#p_muid_custom_head_help .no { color: #336600 } /* Name.Constant */
+					#p_muid_custom_head_help .nd { color: #9999FF } /* Name.Decorator */
+					#p_muid_custom_head_help .ni { color: #999999; font-weight: bold } /* Name.Entity */
+					#p_muid_custom_head_help .ne { color: #CC0000; font-weight: bold } /* Name.Exception */
+					#p_muid_custom_head_help .nf { color: #CC00FF } /* Name.Function */
+					#p_muid_custom_head_help .nl { color: #9999FF } /* Name.Label */
+					#p_muid_custom_head_help .nn { color: #00CCFF; font-weight: bold } /* Name.Namespace */
+					#p_muid_custom_head_help .nt { color: #330099; font-weight: bold } /* Name.Tag */
+					#p_muid_custom_head_help .nv { color: #003333 } /* Name.Variable */
+					#p_muid_custom_head_help .ow { color: #000000; font-weight: bold } /* Operator.Word */
+					#p_muid_custom_head_help .w { color: #bbbbbb } /* Text.Whitespace */
+					#p_muid_custom_head_help .mf { color: #FF6600 } /* Literal.Number.Float */
+					#p_muid_custom_head_help .mh { color: #FF6600 } /* Literal.Number.Hex */
+					#p_muid_custom_head_help .mi { color: #FF6600 } /* Literal.Number.Integer */
+					#p_muid_custom_head_help .mo { color: #FF6600 } /* Literal.Number.Oct */
+					#p_muid_custom_head_help .sb { color: #CC3300 } /* Literal.String.Backtick */
+					#p_muid_custom_head_help .sc { color: #CC3300 } /* Literal.String.Char */
+					#p_muid_custom_head_help .sd { color: #CC3300; font-style: italic } /* Literal.String.Doc */
+					#p_muid_custom_head_help .s2 { color: #CC3300 } /* Literal.String.Double */
+					#p_muid_custom_head_help .se { color: #CC3300; font-weight: bold } /* Literal.String.Escape */
+					#p_muid_custom_head_help .sh { color: #CC3300 } /* Literal.String.Heredoc */
+					#p_muid_custom_head_help .si { color: #AA0000 } /* Literal.String.Interpol */
+					#p_muid_custom_head_help .sx { color: #CC3300 } /* Literal.String.Other */
+					#p_muid_custom_head_help .sr { color: #33AAAA } /* Literal.String.Regex */
+					#p_muid_custom_head_help .s1 { color: #CC3300 } /* Literal.String.Single */
+					#p_muid_custom_head_help .ss { color: #FFCC33 } /* Literal.String.Symbol */
+					#p_muid_custom_head_help .bp { color: #336666 } /* Name.Builtin.Pseudo */
+					#p_muid_custom_head_help .vc { color: #003333 } /* Name.Variable.Class */
+					#p_muid_custom_head_help .vg { color: #003333 } /* Name.Variable.Global */
+					#p_muid_custom_head_help .vi { color: #003333 } /* Name.Variable.Instance */
+					#p_muid_custom_head_help .il { color: #FF6600 } /* Literal.Number.Integer.Long */
+					/* ]]> */
+				</style>
+				<div class="pf-form">
+					<div class="pf-element">
+						When adding CSS and JavaScript files, you should use the
+						Pines JavaScript object. This allows your code to load
+						in Ajax enabled installations.
+					</div>
+					<fieldset class="pf-group">
+						<legend>Adding CSS</legend>
+						<div class="pf-element pf-full-width">
+							Adding a CSS file on this server (relative to this Pines installation).
+							<div class="code_block ui-corner-all">
+							<?php
+/* pygmentize -l html -f html -o /dev/stdout pygments.html
+<script type="text/javascript">
+	// <![CDATA[
+	pines.loadcss(pines.rela_location+"path/to/css/file.css");
+	// ]]>
+</script>
+*/
+							?>
+							<div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span>
+	<span class="c1">// &lt;![CDATA[</span>
+	<span class="nx">pines</span><span class="p">.</span><span class="nx">loadcss</span><span class="p">(</span><span class="nx">pines</span><span class="p">.</span><span class="nx">rela_location</span><span class="o">+</span><span class="s2">&quot;path/to/css/file.css&quot;</span><span class="p">);</span>
+	<span class="c1">// ]]&gt;</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+							</div>
+						</div>
+						<div class="pf-element pf-full-width">
+							Adding a CSS file on a different server.
+							<div class="code_block ui-corner-all">
+							<?php
+/* pygmentize -l html -f html -o /dev/stdout pygments.html
+<script type="text/javascript">
+	// <![CDATA[
+	pines.loadcss("http://example.com/path/to/css/file.css");
+	// ]]>
+</script>
+*/
+							?>
+							<div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span>
+	<span class="c1">// &lt;![CDATA[</span>
+	<span class="nx">pines</span><span class="p">.</span><span class="nx">loadcss</span><span class="p">(</span><span class="s2">&quot;http://example.com/path/to/css/file.css&quot;</span><span class="p">);</span>
+	<span class="c1">// ]]&gt;</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+							</div>
+						</div>
+					</fieldset>
+					<br />
+					<fieldset class="pf-group">
+						<legend>Adding JavaScript</legend>
+						<div class="pf-element pf-full-width">
+							Adding a JavaScript file on this server (relative to this Pines installation).
+							<div class="code_block ui-corner-all">
+							<?php
+/* pygmentize -l html -f html -o /dev/stdout pygments.html
+<script type="text/javascript">
+	// <![CDATA[
+	pines.loadjs(pines.rela_location+"path/to/js/file.js");
+	// ]]>
+</script>
+*/
+							?>
+							<div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span>
+	<span class="c1">// &lt;![CDATA[</span>
+	<span class="nx">pines</span><span class="p">.</span><span class="nx">loadjs</span><span class="p">(</span><span class="nx">pines</span><span class="p">.</span><span class="nx">rela_location</span><span class="o">+</span><span class="s2">&quot;path/to/js/file.js&quot;</span><span class="p">);</span>
+	<span class="c1">// ]]&gt;</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+							</div>
+						</div>
+						<div class="pf-element pf-full-width">
+							Adding a JavaScript file on a different server.
+							<div class="code_block ui-corner-all">
+							<?php
+/* pygmentize -l html -f html -o /dev/stdout pygments.html
+<script type="text/javascript">
+	// <![CDATA[
+	pines.loadjs("http://example.com/path/to/js/file.js");
+	// ]]>
+</script>
+*/
+							?>
+							<div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span>
+	<span class="c1">// &lt;![CDATA[</span>
+	<span class="nx">pines</span><span class="p">.</span><span class="nx">loadjs</span><span class="p">(</span><span class="s2">&quot;http://example.com/path/to/js/file.js&quot;</span><span class="p">);</span>
+	<span class="c1">// ]]&gt;</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+							</div>
+						</div>
+						<div class="pf-element pf-full-width">
+							Adding JavaScript to be loaded in turn with files.
+							<div class="code_block ui-corner-all">
+							<?php
+/* pygmentize -l html -f html -o /dev/stdout pygments.html
+<script type="text/javascript">
+	// <![CDATA[
+	pines.load(function(){
+		// This code will run before all files have
+		// been loaded and before the page is ready.
+		... code ...
+	});
+	// ]]>
+</script>
+*/
+							?>
+							<div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span>
+	<span class="c1">// &lt;![CDATA[</span>
+	<span class="nx">pines</span><span class="p">.</span><span class="nx">load</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+		<span class="c1">// This code will run before all files have</span>
+		<span class="c1">// been loaded and before the page is ready.</span>
+		<span class="p">...</span> <span class="nx">code</span> <span class="p">...</span>
+	<span class="p">});</span>
+	<span class="c1">// ]]&gt;</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+							</div>
+						</div>
+						<div class="pf-element pf-full-width">
+							Adding JavaScript to be loaded when the page (DOM) is ready.
+							<div class="code_block ui-corner-all">
+							<?php
+/* pygmentize -l html -f html -o /dev/stdout pygments.html
+<script type="text/javascript">
+	// <![CDATA[
+	pines(function(){
+		// This code will run after all files have 
+		// been loaded and after the page is ready.
+		... code ...
+	});
+	// ]]>
+</script>
+*/
+							?>
+							<div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span>
+	<span class="c1">// &lt;![CDATA[</span>
+	<span class="nx">pines</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+		<span class="c1">// This code will run after all files have </span>
+		<span class="c1">// been loaded and after the page is ready.</span>
+		<span class="p">...</span> <span class="nx">code</span> <span class="p">...</span>
+	<span class="p">});</span>
+	<span class="c1">// ]]&gt;</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+				<br />
+			</div>
+			<?php } ?>
+			<br class="pf-clearing" />
+		</div>
+		<?php } ?>
 		<div id="p_muid_tab_menu">
 			<div class="pf-element pf-full-width">
 				<span class="pf-label">Menu Entries</span>

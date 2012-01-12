@@ -22,10 +22,10 @@ if ($this->entity->enable_custom_head && $pines->config->com_content->custom_hea
 }
 
 if ($this->entity->get_option('show_title'))
-	$this->title = htmlspecialchars($this->entity->name);
+	$this->title = '<span class="page_title">'.htmlspecialchars($this->entity->name).'</span>';
 
 if ($this->entity->get_option('show_author_info'))
-	$this->note = htmlspecialchars('Posted by '.$this->entity->user->name.' on '.format_date($this->entity->p_cdate, 'date_short'));
+	$this->note = '<span class="page_info"><span class="page_posted_by_text">Posted by </span><span class="page_author">'.htmlspecialchars($this->entity->user->name).'</span><span class="page_posted_on_text"> on </span><span class="page_date">'.htmlspecialchars(format_date($this->entity->p_cdate, 'date_short')).'</span></span>';
 
 if ($this->entity->get_option('show_intro')) {
 	if ($pines->config->com_content->wrap_pages)

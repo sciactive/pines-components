@@ -45,6 +45,21 @@ foreach ($pages as $cur_page_guid) {
 	$category->pages[] = $cur_page;
 }
 
+// Page Head
+if (gatekeeper('com_content/editmeta')) {
+	$meta_tags = (array) json_decode($_REQUEST['meta_tags']);
+	$category->meta_tags = array();
+	foreach ($meta_tags as $cur_meta_tag) {
+		if (!isset($cur_meta_tag->values[0], $cur_meta_tag->values[1]))
+			continue;
+		$category->meta_tags[] = array('name' => $cur_meta_tag->values[0], 'content' => $cur_meta_tag->values[1]);
+	}
+}
+if ($pines->config->com_content->custom_head && gatekeeper('com_content/edithead')) {
+	$category->enable_custom_head = ($_REQUEST['enable_custom_head'] == 'ON');
+	$category->custom_head = $_REQUEST['custom_head'];
+}
+
 // Menu
 $category->com_menueditor_entries = json_decode($_REQUEST['com_menueditor_entries'], true);
 

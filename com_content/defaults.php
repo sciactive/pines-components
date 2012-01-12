@@ -28,6 +28,20 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'front_page_meta_tags',
+		'cname' => 'Front Page Meta Tags',
+		'description' => 'Meta tags for the front page. The format is name:content.',
+		'value' => array('robots:all'),
+		'peruser' => true,
+	),
+	array(
+		'name' => 'global_meta_tags',
+		'cname' => 'Global Meta Tags',
+		'description' => 'Meta tags for every page. The format is name:content.',
+		'value' => array('generator:Pines CMS'),
+		'peruser' => true,
+	),
+	array(
 		'name' => 'cat_variant',
 		'cname' => 'Category Variant',
 		'description' => "The page variant to use as a default on categies. Category specific settings will override this.",

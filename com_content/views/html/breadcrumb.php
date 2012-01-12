@@ -12,6 +12,11 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 
+if (isset($this->tags)) {
+	echo '<a href="'.htmlspecialchars(pines_url()).'" class="breadcrumb_item">Home</a> <span class="breadcrumb_sep">&gt;</span> <span class="breadcrumb_item">Pages tagged '.htmlspecialchars(implode(', ', $this->tags)).'.</span>';
+	return;
+}
+
 $bc = '<span class="breadcrumb_item">'.htmlspecialchars($this->entity->name).'</span>';
 
 if ($this->entity->has_tag('page')) {

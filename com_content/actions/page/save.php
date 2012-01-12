@@ -36,8 +36,11 @@ if (isset($page->title_position) && !in_array($page->title_position, array('prep
 	$page->title_position = null;
 $page->enabled = ($_REQUEST['enabled'] == 'ON');
 $page->show_front_page = ($_REQUEST['show_front_page'] == 'null' ? null : ($_REQUEST['show_front_page'] == 'true'));
-// TODO: Show these tags on pages and let the user search pages by tags.
 $page->content_tags = explode(',', $_REQUEST['content_tags']);
+foreach ($page->content_tags as $key => $cur_tag) {
+	if ($cur_tag == '')
+		unset($page->content_tags[$key]);
+}
 // TODO: Use an HTML filter here.
 $page->intro = $_REQUEST['intro'];
 $page->content = $_REQUEST['content'];

@@ -44,7 +44,7 @@ return array(
 	array(
 		'name' => 'cat_variant',
 		'cname' => 'Category Variant',
-		'description' => "The page variant to use as a default on categies. Category specific settings will override this.",
+		'description' => "The page variant to use as a default on categies. Category specific settings will override this. (Also applies to tag search pages.)",
 		'value' => '',
 		'peruser' => true,
 	),
@@ -100,6 +100,31 @@ return array(
 		'cname' => 'Wrap Pages',
 		'description' => 'Wrap pages in a relative positioned div, so absolute positioned content will appear correctly.',
 		'value' => true,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'show_tags_in_lists',
+		'cname' => 'Show Tags in Lists',
+		'description' => 'Show content tags on lists, like category pages.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'tags_position',
+		'cname' => 'Tags Position',
+		'description' => 'Where to place the content tags on pages.',
+		'value' => 'after',
+		'options' => array(
+			'Before Content' => 'before',
+			'After Content' => 'after'
+		),
+		'peruser' => true,
+	),
+	array(
+		'name' => 'tags_text',
+		'cname' => 'Tags Text',
+		'description' => 'The text to print before the tags.',
+		'value' => 'Tags: ',
 		'peruser' => true,
 	),
 	array(

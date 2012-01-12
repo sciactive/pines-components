@@ -19,7 +19,10 @@ if (!empty($_REQUEST['id'])) {
 			array('class' => com_content_page),
 			array('&',
 				'tag' => array('com_content', 'page'),
-				'strict' => array('alias', $_REQUEST['a'])
+				'strict' => array(
+					array('alias', $_REQUEST['a']),
+					array('enabled', true)
+				)
 			)
 		);
 }

@@ -149,7 +149,7 @@ class com_content_page extends entity {
 		$module = new module('com_content', 'page/intro', 'content');
 		$module->entity = $this;
 
-		return $module;
+		return $module;	var_dump($cur_entity->content_tags);
 	}
 
 	/**

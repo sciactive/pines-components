@@ -19,36 +19,33 @@ $module = new module('system', 'null', 'content');
 $module->title = 'Entity Update';
 
 $errors = array();
-$offset = $count = $nochange = 0;
-// Grab entities, 50 at a time, and update.
-do {
-	$entities = $pines->entity_manager->get_entities(
-			array('limit' => 50, 'offset' => $offset, 'class' => com_sales_sale),
-			array('&',
-				'tag' => array('com_sales', 'sale'),
-				'data' => array('warehouse_items', true)
-			),
-			array('!&',
-				'data' => array('warehouse_complete', true)
-			)
-		);
+$count = $nochange = 0;
+// Grab entities and update.
+$entities = $pines->entity_manager->get_entities(
+		array('class' => com_sales_sale), // 'limit' => 50, 'offset' => $offset
+		array('&',
+			'tag' => array('com_sales', 'sale'),
+			'data' => array('warehouse_items', true)
+		),
+		array('!&',
+			'data' => array('warehouse_complete', true)
+		)
+	);
 
-	foreach ($entities as &$cur_entity) {
-		if ($cur_entity->warehouse_items && !$cur_entity->warehouse_complete) {
-			unset($cur_entity->warehouse_items);
-			unset($cur_entity->warehouse_complete);
-			$cur_entity->warehouse = true;
-			if ($cur_entity->save())
-				$count++;
-			else
-				$errors[] = $cur_entity->guid;
-		} else {
-			$nochange++;
-		}
+foreach ($entities as &$cur_entity) {
+	if ($cur_entity->warehouse_items && !$cur_entity->warehouse_complete) {
+		unset($cur_entity->warehouse_items);
+		unset($cur_entity->warehouse_complete);
+		$cur_entity->warehouse = true;
+		if ($cur_entity->save())
+			$count++;
+		else
+			$errors[] = $cur_entity->guid;
+	} else {
+		$nochange++;
 	}
-	unset($cur_entity);
-	$offset += 50;
-} while (!empty($entities));
+}
+unset($cur_entity);
 
 $module->content("Updated $count entities. Found $nochange entities that didn't need to be updated.");
 if ($errors)

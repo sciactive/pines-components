@@ -44,9 +44,9 @@ if (isset($entity->variants[$pines->current_template]) && $pines->com_content->i
 
 // Page title.
 if ($entity->title_use_name || !isset($entity->title))
-	$title = $entity->name;
+	$title = format_content($entity->name);
 else
-	$title = $entity->title;
+	$title = format_content($entity->title);
 switch ($entity->get_option('title_position')) {
 	case 'prepend':
 		$pines->page->title_pre("$title - ");

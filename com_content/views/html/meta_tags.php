@@ -14,5 +14,5 @@ defined('P_RUN') or die('Direct access prohibited');
 
 foreach ((array) $this->entity->meta_tags as $cur_meta_tag) { ?>
 
-<meta name="<?php echo htmlspecialchars($cur_meta_tag['name']); ?>" content="<?php echo htmlspecialchars($cur_meta_tag['content']); ?>" />
+<meta name="<?php echo htmlspecialchars($cur_meta_tag['name']); ?>" content="<?php echo htmlspecialchars(format_content($cur_meta_tag['content'])); ?>" />
 <?php } ?>

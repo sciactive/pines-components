@@ -191,6 +191,7 @@ if ($pines->config->com_sales->com_storefront) {
 			<li><a href="#p_muid_tab_general">General</a></li>
 			<?php if ($pines->config->com_sales->com_storefront) { ?>
 			<li><a href="#p_muid_tab_storefront">Storefront</a></li>
+			<li><a href="#p_muid_tab_head">Page Head</a></li>
 			<?php } ?>
 		</ul>
 		<div id="p_muid_tab_general">
@@ -454,6 +455,183 @@ if ($pines->config->com_sales->com_storefront) {
 						<div class="heading">
 							<div class="pf-element">Headings will show up in the product page in the storefront.</div>
 						</div>
+					</div>
+				</div>
+				<br style="clear: both; height: 1px;" />
+			</div>
+			<br class="pf-clearing" />
+		</div>
+		<div id="p_muid_tab_head">
+			<div class="pf-element pf-full-width">
+				<script type="text/javascript">
+					// <![CDATA[
+					pines(function(){
+						$("#p_muid_use_name").change(function(){
+							if ($(this).is(":checked"))
+								$("#p_muid_title").attr("disabled", "disabled").addClass("ui-state-disabled");
+							else
+								$("#p_muid_title").removeAttr("disabled").removeClass("ui-state-disabled");
+						}).change();
+					});
+					// ]]>
+				</script>
+				<span class="pf-label">Page Title</span>
+				<div class="pf-group pf-full-width">
+					<label><input class="pf-field" type="checkbox" id="p_muid_use_name" name="title_use_name" value="ON"<?php echo $this->entity->title_use_name ? ' checked="checked"' : ''; ?> /> Use name as title.</label><br />
+					<input class="pf-field ui-widget-content ui-corner-all" style="width: 100%;" type="text" id="p_muid_title" name="title" value="<?php echo htmlspecialchars($this->entity->title); ?>" />
+				</div>
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Title Position</span>
+					<select class="pf-field ui-widget-content ui-corner-all" name="title_position">
+						<option value="prepend"<?php echo $this->entity->title_position === 'prepend' ? ' selected="selected"' : ''; ?>>Prepend to Site Title</option>
+						<option value="append"<?php echo $this->entity->title_position === 'append' ? ' selected="selected"' : ''; ?>>Append to Site Title</option>
+						<option value="replace"<?php echo $this->entity->title_position === 'replace' ? ' selected="selected"' : ''; ?>>Replace Site Title</option>
+					</select></label>
+			</div>
+			<div class="pf-element pf-heading">
+				<h1>Meta Tags</h1>
+			</div>
+			<script type="text/javascript">
+				// <![CDATA[
+				pines(function(){
+					// Meta Tags
+					var meta_tags = $("#p_muid_form [name=meta_tags]");
+					var meta_tags_table = $("#p_muid_form .meta_tags_table");
+					var meta_tag_dialog = $("#p_muid_form .meta_tag_dialog");
+					var cur_meta_tag = null;
+
+					meta_tags_table.pgrid({
+						pgrid_paginate: false,
+						pgrid_toolbar: true,
+						pgrid_toolbar_contents : [
+							{
+								type: 'button',
+								text: 'Add Meta Tag',
+								extra_class: 'picon picon-document-new',
+								selection_optional: true,
+								click: function(){
+									cur_meta_tag = null;
+									meta_tag_dialog.dialog('open');
+								}
+							},
+							{
+								type: 'button',
+								text: 'Edit Meta Tag',
+								extra_class: 'picon picon-document-edit',
+								double_click: true,
+								click: function(e, rows){
+									cur_meta_tag = rows;
+									meta_tag_dialog.find("input[name=cur_meta_tag_name]").val(pines.unsafe(rows.pgrid_get_value(1)));
+									meta_tag_dialog.find("input[name=cur_meta_tag_value]").val(pines.unsafe(rows.pgrid_get_value(2)));
+									meta_tag_dialog.dialog('open');
+								}
+							},
+							{
+								type: 'button',
+								text: 'Remove Meta Tag',
+								extra_class: 'picon picon-edit-delete',
+								click: function(e, rows){
+									rows.pgrid_delete();
+									update_meta_tags();
+								}
+							}
+						],
+						pgrid_view_height: "200px"
+					});
+
+					// Meta Tag Dialog
+					meta_tag_dialog.dialog({
+						bgiframe: true,
+						autoOpen: false,
+						modal: true,
+						width: 500,
+						buttons: {
+							"Done": function(){
+								var cur_meta_tag_name = meta_tag_dialog.find("input[name=cur_meta_tag_name]").val();
+								var cur_meta_tag_value = meta_tag_dialog.find("input[name=cur_meta_tag_value]").val();
+								if (cur_meta_tag_name == "") {
+									alert("Please provide a name for this meta_tag.");
+									return;
+								}
+								if (cur_meta_tag == null) {
+									var new_meta_tag = [{
+										key: null,
+										values: [
+											pines.safe(cur_meta_tag_name),
+											pines.safe(cur_meta_tag_value)
+										]
+									}];
+									meta_tags_table.pgrid_add(new_meta_tag);
+								} else {
+									cur_meta_tag.pgrid_set_value(1, pines.safe(cur_meta_tag_name));
+									cur_meta_tag.pgrid_set_value(2, pines.safe(cur_meta_tag_value));
+								}
+								$(this).dialog('close');
+							}
+						},
+						close: function(){
+							update_meta_tags();
+						}
+					});
+
+					var update_meta_tags = function(){
+						meta_tag_dialog.find("input[name=cur_meta_tag_name]").val("");
+						meta_tag_dialog.find("input[name=cur_meta_tag_value]").val("");
+						meta_tags.val(JSON.stringify(meta_tags_table.pgrid_get_all_rows().pgrid_export_rows()));
+					};
+
+					update_meta_tags();
+
+					meta_tag_dialog.find("input[name=cur_meta_tag_name]").autocomplete({
+						"source": <?php echo (string) json_encode(array('description', 'author', 'keywords', 'robots', 'rating', 'distribution')); ?>
+					});
+				});
+				// ]]>
+			</script>
+			<div class="pf-element pf-full-width">
+				<table class="meta_tags_table">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Content</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php if (isset($this->entity->meta_tags)) foreach ($this->entity->meta_tags as $cur_value) { ?>
+						<tr>
+							<td><?php echo htmlspecialchars($cur_value['name']); ?></td>
+							<td><?php echo htmlspecialchars($cur_value['content']); ?></td>
+						</tr>
+						<?php } ?>
+					</tbody>
+				</table>
+				<input type="hidden" name="meta_tags" />
+			</div>
+			<div class="meta_tag_dialog" style="display: none;" title="Add a Meta Tag">
+				<div class="pf-form">
+					<div class="pf-element">
+						<span class="pf-label">Common Meta Tags</span>
+						<span class="pf-note">These tags are commonly used on pages.</span>
+						<div class="pf-group">
+							<div class="pf-field"><em><?php
+							$name_links = array();
+							foreach (array('description', 'keywords', 'robots', 'rating', 'distribution') as $cur_name) {
+								$name_html = htmlspecialchars($cur_name);
+								$name_js = htmlspecialchars(json_encode($cur_name));
+								$name_links[] = "<a href=\"javascript:void(0);\" onclick=\"\$('#p_muid_cur_meta_tag_name').val($name_js);\">$name_html</a>";
+							}
+							echo implode(', ', $name_links);
+							?></em></div>
+						</div>
+					</div>
+					<div class="pf-element">
+						<label><span class="pf-label">Name</span>
+							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_meta_tag_name" id="p_muid_cur_meta_tag_name" size="24" /></label>
+					</div>
+					<div class="pf-element">
+						<label><span class="pf-label">Content</span>
+							<input class="pf-field ui-widget-content ui-corner-all" type="text" name="cur_meta_tag_value" size="24" /></label>
 					</div>
 				</div>
 				<br style="clear: both; height: 1px;" />

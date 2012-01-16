@@ -47,6 +47,9 @@ class com_sales_product extends entity {
 		$this->additional_barcodes = array();
 		$this->actions = array();
 		$this->show_in_storefront = false;
+		$this->title_use_name = true;
+		$this->title_position = 'prepend';
+		$this->meta_tags = array();
 	}
 
 	/**

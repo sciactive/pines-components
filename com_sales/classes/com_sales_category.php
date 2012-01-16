@@ -47,6 +47,9 @@ class com_sales_category extends entity {
 		$this->show_pages = array();
 		$this->menu_position = 'left';
 		$this->specs = array();
+		$this->title_use_name = true;
+		$this->title_position = 'prepend';
+		$this->meta_tags = array();
 	}
 
 	/**

@@ -119,8 +119,8 @@ if ($pines->config->com_sales->com_hrm) {
 	unset($cur_commission);
 }
 
-// Storefront
 if ($pines->config->com_sales->com_storefront) {
+	// Storefront
 	$product->alias = preg_replace('/[^\w\d-.]/', '', $_REQUEST['alias']);
 	$product->show_in_storefront = ($_REQUEST['show_in_storefront'] == 'ON');
 	$product->featured = ($_REQUEST['featured'] == 'ON');
@@ -169,6 +169,20 @@ if ($pines->config->com_sales->com_storefront) {
 		}
 	}
 	unset($specs);
+
+	// Page Head
+	$product->title_use_name = ($_REQUEST['title_use_name'] == 'ON');
+	$product->title = $_REQUEST['title'];
+	$product->title_position = $_REQUEST['title_position'];
+	if (!in_array($product->title_position, array('prepend', 'append', 'replace')))
+		$product->title_position = 'prepend';
+	$meta_tags = (array) json_decode($_REQUEST['meta_tags']);
+	$product->meta_tags = array();
+	foreach ($meta_tags as $cur_meta_tag) {
+		if (!isset($cur_meta_tag->values[0], $cur_meta_tag->values[1]))
+			continue;
+		$product->meta_tags[] = array('name' => $cur_meta_tag->values[0], 'content' => $cur_meta_tag->values[1]);
+	}
 }
 
 if (empty($product->name)) {

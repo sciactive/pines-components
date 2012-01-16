@@ -22,21 +22,20 @@ $errors = array();
 $count = $nochange = 0;
 // Grab entities and update.
 $entities = $pines->entity_manager->get_entities(
-		array('class' => com_sales_sale), // 'limit' => 50, 'offset' => $offset
+		array('class' => entity),
 		array('&',
-			'tag' => array('com_sales', 'sale'),
-			'data' => array('warehouse_items', true)
+			'tag' => array('com_sales')
 		),
-		array('!&',
-			'data' => array('warehouse_complete', true)
+		array('|',
+			'tag' => array('category', 'product')
 		)
 	);
 
 foreach ($entities as &$cur_entity) {
-	if ($cur_entity->warehouse_items && !$cur_entity->warehouse_complete) {
-		unset($cur_entity->warehouse_items);
-		unset($cur_entity->warehouse_complete);
-		$cur_entity->warehouse = true;
+	if (!isset($cur_entity->title_use_name)) {
+		$cur_entity->title_use_name = true;
+		$cur_entity->title_position = 'prepend';
+		$cur_entity->meta_tags = array();
 		if ($cur_entity->save())
 			$count++;
 		else

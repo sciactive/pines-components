@@ -30,8 +30,8 @@ if ( isset($_REQUEST['id']) ) {
 $category->name = $_REQUEST['name'];
 $category->enabled = ($_REQUEST['enabled'] == 'ON');
 
-// Storefront
 if ($pines->config->com_sales->com_storefront) {
+	// Storefront
 	$category->alias = preg_replace('/[^\w\d-.]/', '', $_REQUEST['alias']);
 	$category->show_title = ($_REQUEST['show_title'] == 'ON');
 	$category->show_breadcrumbs = ($_REQUEST['show_breadcrumbs'] == 'ON');
@@ -94,6 +94,20 @@ if ($pines->config->com_sales->com_storefront) {
 		);
 	}
 	$pines->com_sales->sort_specs($category->specs);
+
+	// Page Head
+	$category->title_use_name = ($_REQUEST['title_use_name'] == 'ON');
+	$category->title = $_REQUEST['title'];
+	$category->title_position = $_REQUEST['title_position'];
+	if (!in_array($category->title_position, array('prepend', 'append', 'replace')))
+		$category->title_position = 'prepend';
+	$meta_tags = (array) json_decode($_REQUEST['meta_tags']);
+	$category->meta_tags = array();
+	foreach ($meta_tags as $cur_meta_tag) {
+		if (!isset($cur_meta_tag->values[0], $cur_meta_tag->values[1]))
+			continue;
+		$category->meta_tags[] = array('name' => $cur_meta_tag->values[0], 'content' => $cur_meta_tag->values[1]);
+	}
 }
 
 // Do the check now in case the parent category is saved.

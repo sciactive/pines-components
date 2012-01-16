@@ -13,9 +13,9 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if (!empty($_REQUEST['id'])) {
-	$category = com_sales_category::factory((int) $_REQUEST['id']);
+	$entity = com_sales_category::factory((int) $_REQUEST['id']);
 } else {
-	$category = $pines->entity_manager->get_entity(
+	$entity = $pines->entity_manager->get_entity(
 			array('class' => com_sales_category),
 			array('&',
 				'tag' => array('com_sales', 'category'),
@@ -27,20 +27,41 @@ if (!empty($_REQUEST['id'])) {
 		);
 }
 
-if (!isset($category->guid) || !$category->enabled)
+if (!isset($entity->guid) || !$entity->enabled)
 	return 'error_404';
 
 // Page title.
-$pines->page->title_pre("$category->name - ");
+if ($entity->title_use_name || !isset($entity->title))
+	$title = format_content($entity->name);
+else
+	$title = format_content($entity->title);
+switch ($entity->title_position) {
+	case 'prepend':
+	default:
+		$pines->page->title_pre("$title - ");
+		break;
+	case 'append':
+		$pines->page->title(" - $title");
+		break;
+	case 'replace':
+		$pines->page->title_set($title);
+		break;
+}
 
-if ($category->show_breadcrumbs) {
+// Meta tags.
+if ($entity->meta_tags) {
+	$module = new module('com_storefront', 'meta_tags', 'head');
+	$module->entity = $entity;
+}
+
+if ($entity->show_breadcrumbs) {
 	$module = new module('com_storefront', 'breadcrumb', 'breadcrumbs');
-	$module->entity = $category;
+	$module->entity = $entity;
 }
 
 $module = new module('com_storefront', 'category/browse', 'content');
-$module->entity = $category;
-foreach ((array) $category->show_pages as $cur_page) {
+$module->entity = $entity;
+foreach ((array) $entity->show_pages as $cur_page) {
 	if (!isset($cur_page->guid))
 		continue;
 	$page_module = $cur_page->print_page();
@@ -58,7 +79,7 @@ $module->page = isset($_REQUEST['page']) ? (int) $_REQUEST['page'] : 1;
 $module->products_per_page = $pines->config->com_storefront->products_per_page;
 switch ($_REQUEST['sort']) {
 	case 'name':
-	default;
+	default:
 		$module->sort = 'name';
 		$module->sort_var = 'name';
 		$module->sort_reverse = false;

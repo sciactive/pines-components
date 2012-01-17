@@ -13,7 +13,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if ($this->entity->show_title)
-	$this->title = htmlspecialchars($this->entity->name);
+	$this->title = empty($this->entity->replace_title) ? htmlspecialchars($this->entity->name) : htmlspecialchars($this->entity->replace_title);
 
 // Get the products in this category.
 if ($this->entity->show_products)
@@ -42,8 +42,14 @@ if ($this->entity->show_products)
 		<?php } ?>
 	</ul>
 </div>
-<?php } if ($this->entity->show_products) { ob_start(); ?>
-<div class="p_muid_paginate">
+<?php } if ($this->entity->show_products) {
+	if (!$products) { ?>
+<div class="com_storefront_no_products">
+	No matching products were found.
+</div>
+<?php } else {
+		ob_start(); ?>
+<div class="p_muid_paginate com_storefront_paginate">
 	<?php if ($pages != 1) { ?>
 	<div style="float: left; margin-right: 1em;">
 		<?php if ($this->page - 1 >= 1) { if ($this->page - 1 != 1) { ?>
@@ -90,11 +96,11 @@ if ($this->entity->show_products)
 	</div>
 </div>
 <?php $header = ob_get_clean(); echo $header; ?>
-<div id="p_muid_products" style="clear: both;">
+<div id="p_muid_products" class="com_storefront_products" style="clear: both;">
 	<?php
 	/**
 	 * Include the category template.
 	 */
 	include(__DIR__.'/templates/'.clean_filename($pines->config->com_storefront->category_template).'.php'); ?>
 </div>
-<?php echo $header; } ?>
+<?php echo $header; } } ?>

@@ -70,6 +70,27 @@ class com_sales_product extends entity {
 	 * @return bool True on success, false on failure.
 	 */
 	public function delete() {
+		global $pines;
+		// Remove product from categories.
+		$cats = $pines->entity_manager->get_entities(
+				array('class' => com_sales_category, 'skip_ac' => true),
+				array('&',
+					'tag' => array('com_sales', 'category'),
+					'ref' => array('products', $this)
+				)
+			);
+		foreach ($cats as &$cur_cat) {
+			while (($key = $this->array_search($cur_cat->products)) !== false) {
+				unset($cur_cat->products[$key]);
+				$cur_cat->products = array_values($cur_cat->products);
+			}
+			if (!$cur_cat->save()) {
+				pines_error("Couldn't remove product from category, {$cur_cat->name}.");
+				pines_log("Couldn't remove product from category, {$cur_cat->name}.", 'error');
+				return false;
+			}
+		}
+		unset($cur_cat);
 		if (!parent::delete())
 			return false;
 		pines_log("Deleted product $this->name.", 'notice');

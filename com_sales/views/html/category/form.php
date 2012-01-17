@@ -291,6 +291,15 @@ if ($pines->config->com_sales->com_storefront) {
 					</span>
 				</label>
 			</div>
+			<div class="pf-element pf-full-width">
+				<label>
+					<span class="pf-label">Replace Title</span>
+					<span class="pf-note">If this is not empty, it will be used, instead of the name, as the title above the content.</span>
+					<span style="display: block;" class="pf-group pf-full-width">
+						<input class="pf-field ui-widget-content ui-corner-all" style="width: 100%;" type="text" name="replace_title" value="<?php echo htmlspecialchars($this->entity->replace_title); ?>" />
+					</span>
+				</label>
+			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Show Title</span>
 					<input class="pf-field" type="checkbox" name="show_title" value="ON"<?php echo $this->entity->show_title ? ' checked="checked"' : ''; ?> /></label>

@@ -272,8 +272,12 @@ $pines->uploader->load();
 					<input class="pf-field ui-widget-content ui-corner-all" type="email" name="email" size="24" value="<?php echo htmlspecialchars($this->entity->email); ?>" /></label>
 			</div>
 			<div class="pf-element">
-				<label><span class="pf-label">Phone</span>
+				<label><span class="pf-label">Phone 1</span>
 					<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="phone" size="24" value="<?php echo htmlspecialchars(format_phone($this->entity->phone)); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
+			</div>
+			<div class="pf-element">
+				<label><span class="pf-label">Phone 2</span>
+					<input class="pf-field ui-widget-content ui-corner-all" type="tel" name="phone2" size="24" value="<?php echo htmlspecialchars(format_phone($this->entity->phone2)); ?>" onkeyup="this.value=this.value.replace(/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/, '($1$2$3) $4$5$6-$7$8$9$10 x$11').replace(/\D*$/, '');" /></label>
 			</div>
 			<div class="pf-element">
 				<label><span class="pf-label">Fax</span>

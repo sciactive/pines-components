@@ -37,6 +37,7 @@ if (gatekeeper('com_user/enabling')) {
 }
 $group->email = $_REQUEST['email'];
 $group->phone = preg_replace('/\D/', '', $_REQUEST['phone']);
+$group->phone2 = preg_replace('/\D/', '', $_REQUEST['phone2']);
 $group->fax = preg_replace('/\D/', '', $_REQUEST['fax']);
 $group->timezone = $_REQUEST['timezone'];
 if (gatekeeper('com_user/defaultgroups')) {

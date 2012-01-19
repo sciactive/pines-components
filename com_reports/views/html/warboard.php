@@ -81,6 +81,12 @@ $this->title = htmlspecialchars($this->entity->company_name).' Warboard';
 						</td>
 						<td><?php echo htmlspecialchars(format_phone($cur_location->phone)); ?></td>
 					</tr>
+					<?php if ($pines->config->com_reports->warboard_phone2_show) { ?>
+					<tr class="label">
+						<td colspan="2" style="text-align: right;"><?php echo htmlspecialchars($pines->config->com_reports->warboard_phone2_label); ?>&nbsp;</td>
+						<td><?php echo htmlspecialchars(format_phone($cur_location->phone2)); ?></td>
+					</tr>
+					<?php } ?>
 					<tr class="heading">
 						<td colspan="3">District</td>
 					</tr>
@@ -138,6 +144,11 @@ $this->title = htmlspecialchars($this->entity->company_name).' Warboard';
 				<tr>
 					<td><?php echo htmlspecialchars(format_phone($this->entity->hq->phone)); ?></td>
 				</tr>
+				<?php if ($pines->config->com_reports->warboard_phone2_show) { ?>
+				<tr>
+					<td><?php echo htmlspecialchars(rtrim($pines->config->com_reports->warboard_phone2_label, ': ')); ?>: <?php echo htmlspecialchars(format_phone($this->entity->hq->phone2)); ?></td>
+				</tr>
+				<?php } ?>
 				<tr>
 					<td>FAX: <?php echo htmlspecialchars(format_phone($this->entity->hq->fax)); ?></td>
 				</tr>

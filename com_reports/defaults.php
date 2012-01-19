@@ -68,6 +68,20 @@ return array(
 		'value' => true,
 		'peruser' => true,
 	),
+	array(
+		'name' => 'warboard_phone2_show',
+		'cname' => 'Show Phone2 on Warboard',
+		'description' => 'Show the second phone number of groups on the company warboard.',
+		'value' => true,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'warboard_phone2_label',
+		'cname' => 'Phone2 Label on Warboard',
+		'description' => 'The label for the second phone number on the company warboard.',
+		'value' => 'Landline',
+		'peruser' => true,
+	),
 );
 
 ?>

@@ -1,0 +1,10 @@
+[
+	{
+		"path": "main_menu/accessories/notes",
+		"text": "Notes",
+		"href": ["com_notes","thread/list"],
+		"depend": {
+			"ability": "com_notes/listthreads"
+		}
+	}
+]

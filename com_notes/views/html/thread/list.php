@@ -67,6 +67,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<th>Attached Entity</th>
 			<th>Hidden</th>
 			<th>Privacy</th>
+			<th>Notes</th>
 			<th>Original Poster</th>
 			<th>Original Note</th>
 			<th>Latest Poster</th>
@@ -81,6 +82,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			<td><?php echo htmlspecialchars($thread->entities[0]->guid.': '.implode(', ', $thread->entities[0]->tags)); ?></td>
 			<td><?php echo ($thread->hidden ? 'Yes' : 'No'); ?></td>
 			<td><?php echo ($thread->ac->other ? 'everyone' : ($thread->ac->group ? 'my-group' : 'only-me')); ?></td>
+			<td><?php echo htmlspecialchars(count($thread->notes)); ?></td>
 			<td><?php echo htmlspecialchars("{$thread->user->name} [{$thread->user->username}]"); ?></td>
 			<td><?php $first_note = reset($thread->notes); echo htmlspecialchars(strlen($first_note['text']) > 100 ? substr($first_note['text'], 0, 100).'...' : $first_note['text']); ?></td>
 			<td><?php $last_note = end($thread->notes); echo htmlspecialchars("{$last_note['user']->name} [{$last_note['user']->username}]"); ?></td>

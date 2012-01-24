@@ -21,6 +21,22 @@ if (!isset($thread->guid)) {
 }
 
 $thread->hidden = ($_REQUEST['hidden'] == 'ON');
+switch ($_REQUEST['privacy']) {
+	case 'only-me':
+		$thread->ac = (object) array('user' => 3, 'group' => 0, 'other' => 0);
+		break;
+	case 'my-group':
+		$thread->ac = (object) array('user' => 3, 'group' => 2, 'other' => 0);
+		break;
+	case 'everyone':
+	default:
+		$thread->ac = (object) array('user' => 3, 'group' => 2, 'other' => 2);
+		break;
+}
+foreach ((array) $_REQUEST['delete_note'] as $cur_key) {
+	if (isset($thread->notes[$cur_key]))
+		unset($thread->notes[$cur_key]);
+}
 
 if ($thread->save()) {
 	pines_notice('Saved thread ['.$thread->guid.']');

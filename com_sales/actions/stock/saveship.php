@@ -76,10 +76,11 @@ if ($entity->save()) {
 	pines_error('Error saving shipment. Do you have permission?');
 }
 
-if ($entity->has_tag('shipping_pending')) {
-	pines_redirect(pines_url('com_sales', 'stock/shipments'));
-} else {
-	pines_redirect(pines_url('com_sales', 'stock/shipments', array('removed' => 'true')));
+switch ($type) {
+	case 'sale':
+	default:
+		pines_redirect(pines_url('com_sales', 'sale/receipt', array('id' => $entity->guid)));
+		break;
 }
 
 ?>

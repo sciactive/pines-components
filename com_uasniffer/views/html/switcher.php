@@ -19,11 +19,9 @@ if (!isset($this->desktop_text))
 if (!isset($this->center))
 	$this->center = true;
 
-if ($pines->depend->check('browser', 'mobile'))
-	$is_mobile = true;
+$is_mobile = $pines->depend->check('browser', 'mobile-real');
 
-if ($_COOKIE['com_uasniffer_switch'] == 'true')
-	$switched = true;
+$switched = ($_COOKIE['com_uasniffer_switch'] == 'true');
 
 ?>
 <div id="p_muid_links"<?php echo ($this->center ? ' style="text-align: center;"' : ''); ?>>

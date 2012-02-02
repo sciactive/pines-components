@@ -170,13 +170,9 @@ input,textarea{
 /*------------------------------------*\
 	$MAIN
 \*------------------------------------*/
-html{
-	overflow-y:scroll; /* Force scrollbars 100% of the time */
+html{ /* (Modified for Pines) */
 	font-size:100%; /* Use 16px as per informationarchitects.jp/en/100e2r/ and wilsonminer.com/posts/2008/oct/20/relative-readability/ */
 	line-height:1.5; /* A safe default for type of any size. */
-	/* You should always specify a colour and background, override these in your own stylesheet if desired. */
-	background-color:#fff;
-	color:#333;
 }
 body{
 	min-height:100%;

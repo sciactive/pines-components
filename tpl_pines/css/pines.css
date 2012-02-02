@@ -115,6 +115,10 @@ body {
 #main_menu ul.dropdown > li:last-child > a.ui-widget-header {
 	border-right-style: solid;
 }
+/* Current Page */
+#main_menu ul.dropdown > li.current_page, #main_menu ul.dropdown > li.current_page_parent {
+	
+}
 /* Footer styles */
 #footer {
 	border-left: 0 !important;

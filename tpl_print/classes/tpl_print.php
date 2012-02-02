@@ -58,7 +58,7 @@ class tpl_print extends template {
 	 * @return string The menu's HTML.
 	 */
 	public function sub_menu($menu) {
-		$return = '<li class="ui-state-default"><a'.
+		$return = '<li class="ui-state-default'.($menu[0]['current_page'] ? ' current_page' : '').($menu[0]['current_page_parent'] ? ' current_page_parent' : '').'"><a'.
 			(count($menu) > 1 ? ' class="dir" href="' : ' href="').
 			(isset($menu[0]['href']) ? htmlspecialchars($menu[0]['href']) : 'javascript:void(0);').
 			(isset($menu[0]['onclick']) ? "\" onclick=\"{$menu[0]['onclick']}\">" : '">').

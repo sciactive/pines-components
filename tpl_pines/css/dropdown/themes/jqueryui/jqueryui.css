@@ -65,12 +65,21 @@ ul.dropdown ul li {
 ul.dropdown li {
 	position: relative;
 }
-ul.dropdown li span.ui-icon {
+ul.dropdown li span.ui-icon-triangle-1-se {
 	position: absolute;
 	bottom: 0;
 	right: 0;
 	width: 14px;
 	height: 14px;
+}
+ul.dropdown li span.ui-icon-triangle-1-s {
+	position: absolute;
+	top: 0;
+	left: 50%;
+	width: 14px;
+	height: 8px;
+	margin-left: -7px;
+	background-position: -64px -22px;
 }
 ul.dropdown *.dir {
 	padding-right: 20px;

@@ -21,18 +21,20 @@ header('Content-Type: text/html');
 	<meta charset="utf-8" />
 	<title><?php echo htmlspecialchars($pines->page->get_title()); ?></title>
 	<link rel="icon" type="image/vnd.microsoft.icon" href="<?php echo htmlspecialchars($pines->config->location); ?>favicon.ico" />
+	<link href="http://fonts.googleapis.com/css?family=EB+Garamond" rel="stylesheet" type="text/css" />
+	<link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css" />
 
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/tpl_pinescms/css/dropdown/dropdown.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/tpl_pinescms/css/dropdown/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/tpl_pinescms/css/dropdown/default.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/tpl_pinescms/css/dropdown/default.ultimate.css" media="all" rel="stylesheet" type="text/css" />
-	
-	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/tpl_pinescms/css/style.css" media="all" rel="stylesheet" type="text/css" />
 
 	<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->rela_location); ?>system/includes/js.php"></script>
 	<script type="text/javascript" src="<?php echo htmlspecialchars($pines->config->location); ?>templates/tpl_pinescms/js/template.js"></script>
 
 	<?php echo $pines->page->render_modules('head', 'module_head'); ?>
+	
+	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/tpl_pinescms/css/style.css" media="all" rel="stylesheet" type="text/css" />
 </head>
 <body>
 	<div id="top"><?php
@@ -63,8 +65,8 @@ header('Content-Type: text/html');
 		</div>
 
 		<div id="pines_header">
-			<a href="<?php echo htmlspecialchars(pines_url()); ?>">
-				<img id="logo" src="<?php echo htmlspecialchars($pines->config->location); ?>templates/tpl_pinescms/images/logo.png" alt="<?php echo htmlspecialchars($pines->config->page_title); ?>" />
+			<a id="logo" href="<?php echo htmlspecialchars(pines_url()); ?>">
+				<img src="<?php echo htmlspecialchars($pines->config->location); ?>templates/tpl_pinescms/images/logo.png" alt="<?php echo htmlspecialchars($pines->config->page_title); ?>" />
 			</a>
 			<div id="header_right">
 				<img src="<?php echo htmlspecialchars($pines->config->location); ?>templates/tpl_pinescms/images/intro-<?php echo htmlspecialchars($pines->config->tpl_pinescms->variant); ?>-1-0.png" alt="Introducing Pines version 1.0" />

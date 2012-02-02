@@ -72,28 +72,24 @@ class tpl_pines extends template {
 	 * 
 	 * @param array &$menu The menu.
 	 * @param bool $header_style Whether the menu buttons should use a header style.
+	 * @param bool $top_level Whether this menu is a top-level menu.
 	 * @return string The menu's HTML.
 	 */
-	public function sub_menu(&$menu, $header_style = false) {
+	public function sub_menu(&$menu, $header_style = false, $top_level = true) {
 		$count = count($menu);
-		// TODO: Remove target attribute. It's not XHTML 1.0 Strict.
-		$return = '<li><a class="'.($header_style ? 'ui-widget-header' : 'ui-state-default').'" href="'.
+		$return = '<li><a class="'.($header_style ? 'ui-widget-header' : 'ui-state-default').($menu[0]['current_page'] ? ($top_level ? '' : ' ui-priority-primary') : '').($menu[0]['current_page_parent'] ? ($top_level ? '' : ' ui-priority-primary') : '').'" href="'.
 			(isset($menu[0]['href']) ? htmlspecialchars($menu[0]['href']) : 'javascript:void(0);').'"'.
 			(isset($menu[0]['onclick']) ? " onclick=\"{$menu[0]['onclick']}\"" : '').
 			(isset($menu[0]['target']) ? " target=\"{$menu[0]['target']}\"" : '')
 			.'>'.
+			($top_level && ($menu[0]['current_page'] || $menu[0]['current_page_parent']) ? '<span class="ui-icon ui-icon-triangle-1-s"></span>' : '').
 			htmlspecialchars($menu[0]['text']).
 			($count > 1 ? '<span class="ui-icon ui-icon-triangle-1-se"></span>' : '').'</a>';
-		//$return = '<li class="ui-state-default"><a'.
-		//	(count($menu) > 1 ? ' class="dir" href="' : ' href="').
-		//	(isset($menu[0]['href']) ? $menu[0]['href'] : '#').
-		//	(isset($menu[0]['onclick']) ? "\" onclick=\"{$menu[0]['onclick']}\">" : '">').
-		//	htmlspecialchars($menu[0]['text']).'</a>';
 		if ($count > 1) {
 			$return .= '<ul>';
 			foreach ($menu as $key => &$value) {
 				if ((int) $key === $key) continue;
-				$return .= $this->sub_menu($value);
+				$return .= $this->sub_menu($value, false, false);
 			}
 			$return .= '</ul>';
 		}

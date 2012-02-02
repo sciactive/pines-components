@@ -3,21 +3,28 @@
 body {
 	background: #b4b4b4 url('../images/body-bg.png') repeat-x;
 	margin:0;
-	font-family: "Goudy Old Style","Palatino Linotype",Palatino,Sylfaen,serif;
+	font-family: 'Droid Sans', sans-serif;
 	color: #3a3a3a;
 }
 body, body .ui-widget {
-	font-size: 15px;
+	font-size: 17px;
 }
 h1, h2, h3 {
+	font-family: "EB Garamond","Goudy Old Style","Palatino Linotype",Palatino,Sylfaen,serif;
 	font-weight: normal;
 	color: #868686;
+	margin: 1em 0 .4em;
 }
-a {
+a,a:link,a:visited {
 	color:#0462a5 !important;
+	text-decoration: none;
 }
 a:hover {
-	color:#27af1e !important;
+	/*color:#27af1e !important;*/
+	text-decoration: underline;
+}
+a:visited {
+	opacity: .8;
 }
 
 /* Navigation set up */
@@ -92,6 +99,7 @@ ul.dropdown a, ul.dropdown span, ul.dropdown .dir {
 	background: #fff !important;
 }
 /* This ensures that all hovered A tags take these properties */
+ul.dropdown li.current_page > a, ul.dropdown li.current_page > span, ul.dropdown li.current_page > .dir,
 ul.dropdown a:hover, ul.dropdown span:hover, ul.dropdown .dir:hover {
 	background: #0462a5 !important;
 	border-bottom: none !important;
@@ -123,11 +131,13 @@ ul.main_menu li ul li > a.dir {
 	background:url('../images/nav-bullet.png') no-repeat 90% 50% !important;
 }
 /* This affects all LIS submenu hover */
+ul.main_menu li ul > li.current_page,
 ul.main_menu li ul > li:hover {
 	background: #fff repeat-x !important;
 	
 }
 /* This affects all DIRs giving them a bullet that are in the submenu HOVER */
+ul.main_menu li ul li.current_page > a.dir,
 ul.main_menu li ul li > a.dir:hover {
 	background:#0462a5 url('../images/nav-bullet.png') no-repeat 90% 50% !important;
 	border-bottom:none !important;
@@ -144,6 +154,9 @@ ul.main_menu li ul li > a.dir:hover {
 
 /* Logo Section */
 #logo {
+	text-decoration: none;
+}
+#logo img {
 	margin: -30px 0 0 10px;
 	border:none;
 }
@@ -163,7 +176,8 @@ ul.main_menu li ul li > a.dir:hover {
 	margin: 0 auto;
 }
 #breadcrumbs .module {
-	padding: 8px 8px 0;
+	padding: 8px 16px 0;
+	font-size: .7em;
 }
 
 /* Content */
@@ -209,8 +223,7 @@ div.headline {
 }
 #pines_footer p.copyright {
 	color:#797979;
-	font-family:Verdana, Geneva, sans-serif;
-	font-size:10px;
+	font-size:14px;
 	text-align:center;
 	height:46px;
 	margin: 0;

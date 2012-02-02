@@ -1,0 +1,41 @@
+/*------------------------------------*\
+	CENTRED-NAV.INUIT.CSS
+\*------------------------------------*/
+
+
+
+
+
+/*
+centred-nav.inuit.css is an inuit.css igloo
+igloos are CSS plugins which extend the inuit.css framework
+They are released under the Apache License, Version 2.0 -- http://www.apache.org/licenses/LICENSE-2.0
+
+@inuitcss
+inuitcss.com
+*/
+
+
+
+
+
+/*------------------------------------*\
+	CENTRED NAV
+\*------------------------------------*/
+/*
+http://csswizardry.com/2011/01/create-a-centred-horizontal-navigation/
+Add a class of centred/centered to create a centred nav.
+*/
+#nav.centred,
+#nav.centered{
+	text-align:center;
+}
+#nav.centred li,
+#nav.centered li{
+	display:inline;
+	float:none;
+}
+#nav.centred a,
+#nav.centered a{
+	display:inline-block;
+}

@@ -1,0 +1,59 @@
+/*------------------------------------*\
+	IE6.INUIT.CSS
+\*------------------------------------*/
+
+
+
+
+
+/*
+ie6.inuit.css is an inuit.css igloo
+igloos are CSS plugins which extend the inuit.css framework
+They are released under the Apache License, Version 2.0 -- http://www.apache.org/licenses/LICENSE-2.0
+
+@inuitcss
+inuitcss.com
+*/
+
+
+
+
+
+/*------------------------------------*\
+	IE6 GRIDS
+\*------------------------------------*/
+/*
+Make the grid system work in IE6 by adding class="grid" AS WELL as the grid number you wish to use, e.g. class="grid-4 grid"
+*/
+
+.grid{
+	float:left;
+	margin:0 20px 0 0;
+}
+.grids .grid{
+	display:inline;
+	margin:0 0 0 20px;
+}
+
+
+
+
+
+/*------------------------------------*\
+	PRINT
+\*------------------------------------*/
+/*
+Good ol’ fashioned paper...
+*/
+
+
+
+
+
+@media print{
+.grid{
+	width:auto;
+	float:none;
+	clear:both;
+}
+}

@@ -28,6 +28,13 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'grid_columns',
+		'cname' => 'Total Grid Columns',
+		'description' => 'You must put the total number of columns in your grid layout here. This is used by other components to style their content.',
+		'value' => 12,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'always_load',
 		'cname' => 'Always Load',
 		'description' => 'Always load Inuit CSS. (Even if no part of the page says it needs it.) HIGHLY RECOMMENDED!',

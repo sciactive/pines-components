@@ -40,6 +40,7 @@ if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 && strp
 	return;
 }
 header('Content-Type: text/html');
+$pines->com_inuitcss->load();
 ?>
 <!DOCTYPE html>
 <html <?php echo in_array('font', $pines->config->tpl_pines->fancy_style) ? ' id="fancy_font"' : ''; ?>>
@@ -47,6 +48,7 @@ header('Content-Type: text/html');
 	<meta charset="utf-8" />
 	<title><?php echo htmlspecialchars($pines->page->get_title()); ?></title>
 	<link rel="icon" type="image/vnd.microsoft.icon" href="<?php echo htmlspecialchars($pines->config->location); ?>favicon.ico" />
+	<meta name="HandheldFriendly" content="true" />
 
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/pines.css" media="all" rel="stylesheet" type="text/css" />
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/print.css" media="print" rel="stylesheet" type="text/css" />
@@ -73,8 +75,7 @@ header('Content-Type: text/html');
 	<?php echo $pines->page->render_modules('head', 'module_head'); ?>
 </head>
 <body class="ui-widget ui-widget-content<?php echo in_array('shadows', $pines->config->tpl_pines->fancy_style) ? ' shadows' : ''; ?>">
-<div class="ez-mr">
-	<div id="top" class="ez-box"><?php
+	<div id="top"><?php
 		echo $pines->page->render_modules('top', 'module_header');
 		$error = $pines->page->get_error();
 		$notice = $pines->page->get_notice();
@@ -96,55 +97,77 @@ header('Content-Type: text/html');
 		<?php
 		}
 	?></div>
-	<div id="header" class="ez-box ui-widget-header">
-		<h1 id="page_title">
-			<a href="<?php echo htmlspecialchars($pines->config->full_location); ?>">
-				<?php if ($pines->config->tpl_pines->use_header_image) { ?>
-				<img src="<?php echo htmlspecialchars($pines->config->tpl_pines->header_image); ?>" alt="<?php echo htmlspecialchars($pines->config->page_title); ?>" />
-				<?php } else { ?>
-				<span><?php echo htmlspecialchars($pines->config->page_title); ?></span>
-				<?php } ?>
-			</a>
-		</h1>
-		<?php echo $pines->page->render_modules('header', 'module_header'); ?>
-		<?php echo $pines->page->render_modules('header_right', 'module_header_right'); ?>
-		<div class="menuwrap ui-widget-content">
-			<div id="main_menu"<?php echo $pines->config->tpl_pines->center_menu ? ' class="centered"' : ''; ?>><?php echo $pines->page->render_modules('main_menu', 'module_head'); ?></div>
-		</div>
-	</div>
-	<div id="pre_content" class="ez-box"><?php echo $pines->page->render_modules('pre_content', 'module_header'); ?></div>
-	<div id="column_container" class="ez-wr">
-		<?php if (in_array($pines->config->tpl_pines->variant, array('default', 'twocol-sideleft'))) { ?>
-		<div id="left_color" class="ui-state-default ui-state-disabled"></div>
-		<div id="left" class="ez-fl ez-negmr">
-			<?php echo $pines->page->render_modules('left', 'module_left'); ?>
-			<?php if ($pines->config->tpl_pines->variant == 'twocol-sideleft') { echo $pines->page->render_modules('right', 'module_left'); } ?>&nbsp;
-		</div>
-		<?php } if (in_array($pines->config->tpl_pines->variant, array('default', 'twocol-sideright'))) { ?>
-		<div id="right" class="ez-fr ez-negml">
-			<?php if ($pines->config->tpl_pines->variant == 'twocol-sideright') { echo $pines->page->render_modules('left', 'module_right'); } ?>
-			<?php echo $pines->page->render_modules('right', 'module_right'); ?>&nbsp;
-		</div>
-		<?php } ?>
-		<div id="content_container" class="<?php echo $pines->config->tpl_pines->variant == 'full-page' ? '' : 'ez-last ez-oh'; ?>">
-			<div id="breadcrumbs" class="ez-box"><?php echo $pines->page->render_modules('breadcrumbs', 'module_header'); ?></div>
-			<div class="ez-wr">
-				<div id="content_top_left" class="ez-fl ez-negmr ez-50"><?php echo $pines->page->render_modules('content_top_left'); ?></div>
-				<div id="content_top_right" class="ez-last ez-oh"><?php echo $pines->page->render_modules('content_top_right'); ?></div>
+	<div id="header" class="ui-widget-header">
+		<div class="grids centered">
+			<div class="grid-4 centered-first">
+				<div id="page_title">
+					<a href="<?php echo htmlspecialchars($pines->config->full_location); ?>">
+						<?php if ($pines->config->tpl_pines->use_header_image) { ?>
+						<img src="<?php echo htmlspecialchars($pines->config->tpl_pines->header_image); ?>" alt="<?php echo htmlspecialchars($pines->config->page_title); ?>" />
+						<?php } else { ?>
+						<span><?php echo htmlspecialchars($pines->config->page_title); ?></span>
+						<?php } ?>
+					</a>
+				</div>
 			</div>
-			<div id="content" class="ez-box"><?php echo $pines->page->render_modules('content', 'module_content'); ?></div>
-			<div class="ez-wr">
-				<div id="content_bottom_left" class="ez-fl ez-negmr ez-50"><?php echo $pines->page->render_modules('content_bottom_left'); ?></div>
-				<div id="content_bottom_right" class="ez-last ez-oh"><?php echo $pines->page->render_modules('content_bottom_right'); ?></div>
+			<div id="header_position" class="grid-4">
+				<?php echo $pines->page->render_modules('header', 'module_header'); ?>
+			</div>
+			<div id="header_right" class="grid-4">
+				<?php echo $pines->page->render_modules('header_right', 'module_header_right'); ?>
+			</div>
+		</div>
+		<div class="grids centered">
+			<div class="grid-12 centered-first" class="menuwrap ui-widget-content">
+				<div id="main_menu"<?php echo $pines->config->tpl_pines->center_menu ? ' class="centered"' : ''; ?>><?php echo $pines->page->render_modules('main_menu', 'module_head'); ?></div>
 			</div>
 		</div>
 	</div>
-	<div id="post_content" class="ez-box"><?php echo $pines->page->render_modules('post_content', 'module_header'); ?></div>
-	<div id="footer" class="ez-box ui-widget-header">
-		<div class="modules"><?php echo $pines->page->render_modules('footer', 'module_header'); ?></div>
-		<p id="copyright"><?php echo htmlspecialchars($pines->config->copyright_notice, ENT_COMPAT, '', false); ?></p>
+	<div class="grids centered">
+		<div id="pre_content" class="grid-12 centered-first"><?php echo $pines->page->render_modules('pre_content', 'module_header'); ?></div>
 	</div>
-	<div id="bottom" class="ez-box"><?php echo $pines->page->render_modules('bottom', 'module_header'); ?></div>
-</div>
+	<div id="column_container">
+		<div class="grids centered">
+			<?php if (in_array($pines->config->tpl_pines->variant, array('default', 'twocol-sideleft'))) { ?>
+			<div id="left_color" class="grid-2 centered-first ui-state-default ui-state-disabled">&nbsp;</div>
+			<div id="left" class="grid-2 centered-first">
+				<?php echo $pines->page->render_modules('left', 'module_left'); ?>
+				<?php if ($pines->config->tpl_pines->variant == 'twocol-sideleft') { echo $pines->page->render_modules('right', 'module_left'); } ?>&nbsp;
+			</div>
+			<?php } ?>
+			<div class="<?php echo $pines->config->tpl_pines->variant == 'full-page' ? 'grid-12' : ($pines->config->tpl_pines->variant == 'default' ? 'grid-8' : 'grid-10'); ?>">
+				<div id="content_container">
+					<div id="breadcrumbs"><?php echo $pines->page->render_modules('breadcrumbs', 'module_header'); ?></div>
+					<div class="grids">
+						<div id="content_top_left" class="grid-6"><?php echo $pines->page->render_modules('content_top_left'); ?></div>
+						<div id="content_top_right" class="grid-6"><?php echo $pines->page->render_modules('content_top_right'); ?></div>
+					</div>
+					<div id="content"><?php echo $pines->page->render_modules('content', 'module_content'); ?></div>
+					<div class="grids">
+						<div id="content_bottom_left" class="grid-6"><?php echo $pines->page->render_modules('content_bottom_left'); ?></div>
+						<div id="content_bottom_right" class="grid-6"><?php echo $pines->page->render_modules('content_bottom_right'); ?></div>
+					</div>
+				</div>
+			</div>
+			<?php if (in_array($pines->config->tpl_pines->variant, array('default', 'twocol-sideright'))) { ?>
+			<div id="right" class="grid-2">
+				<?php if ($pines->config->tpl_pines->variant == 'twocol-sideright') { echo $pines->page->render_modules('left', 'module_right'); } ?>
+				<?php echo $pines->page->render_modules('right', 'module_right'); ?>&nbsp;
+			</div>
+			<?php } ?>
+		</div>
+	</div>
+	<div class="grids centered">
+		<div id="post_content" class="grid-12 centered-first"><?php echo $pines->page->render_modules('post_content', 'module_header'); ?></div>
+	</div>
+	<div id="footer" class="ui-widget-header">
+		<div class="grids centered">
+			<div class="grid-12 centered-first">
+				<div id="footer_position"><?php echo $pines->page->render_modules('footer', 'module_header'); ?></div>
+				<p id="copyright"><?php echo htmlspecialchars($pines->config->copyright_notice, ENT_COMPAT, '', false); ?></p>
+			</div>
+		</div>
+	</div>
+	<div id="bottom"><?php echo $pines->page->render_modules('bottom', 'module_header'); ?></div>
 </body>
 </html>

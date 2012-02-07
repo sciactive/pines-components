@@ -1,42 +1,28 @@
-/* ----------- Globals ----------- */
-* {
-	margin: 0;
-	padding: 0;
-}
+/* Globals */
 html {
 	font-family: Verdana,Arial,sans-serif;
 	font-size: 10px;
 }
-ul, ol {
-	margin: 11px 0;
-	padding-left: 40px;
-}
-h1, h2, h3 {
-	margin:.8em 0 .2em 0;
-	padding:0;
-}
-p {
-	margin:.4em 0 .8em 0;
-	padding:0;
-}
-img {
-	margin:10px 0 5px;
-}
-/* ----------- EZ-CSS ----------- */
-/* 2009 - 2010 (c) | ez-css.org
- * ez-min.css :: version 1.3 :: 03132010
- */
-body{text-align:center}.ez-mw{margin-right:auto;margin-left:auto;text-align:left;position:relative;z-index:1;text-align:left;overflow:hidden}.ez-wr{clear:left}.ez-wr:after,.ez-box:after{content:".";display:block;height:0;clear:both;visibility:hidden}.ez-wr,.ez-box,.ez-last{display:inline-block;min-height:0}/* \*/* html .ez-wr,* html .ez-box,* html .ez-last{height:1%}.ez-wr,.ez-box,.ez-last{display:block}/* */.ez-oh{overflow:hidden}* html .ez-oh{overflow:visible}.ez-oa{overflow:auto}.ez-dt{display:table}.ez-it{display:inline-table}.ez-tc{display:table-cell}.ez-ib{display:inline-block}.ez-fl{float:left}* html .ez-fl{margin-right:-3px}.ez-fr{float:right}* html .ez-fr{margin-left:-3px}.ez-25{width:25%}.ez-33{width:33.33%}.ez-50{width:50%}.ez-66{width:66.66%}.ez-75{width:75%}.ez-negmr{margin-right:-1px}* html .ez-negmr{margin-right:-4px}* html .ez-negmx,.ez-negmx{margin-right:-1px}.ez-negml{margin-left:-1px}* html .ez-negml{margin-left:-4px}
-/* Column Size */
-#left, #right, #left_color {
-	width: 190px;
+body {
+	background-image: none !important;
+	text-align: left;
 }
 /* Margins */
+body .centered {
+	margin-left: auto;
+	margin-right: auto;
+}
+body .centered .centered-first {
+	margin-left: 0;
+}
 #column_container {
 	padding-top: 8px;
 }
+#column_container > .grids {
+	position: relative;
+}
 #column_container .module {
-	margin: .4em .4em .6em;
+	margin: .4em 0 .6em;
 }
 #column_container .module .module_title {
 	margin-bottom: .5em;
@@ -51,11 +37,6 @@ body{text-align:center}.ez-mw{margin-right:auto;margin-left:auto;text-align:left
 	border: 0 !important;
 	background-image: none !important;
 }
-/* General styles */
-body {
-	background-image: none !important;
-	text-align: left;
-}
 /* Header styles */
 #header {
 	border-top: 0 !important;
@@ -64,7 +45,7 @@ body {
 	background-position: left top !important;
 }
 #page_title {
-	margin: 0 25px;
+	margin: 0 .4em;
 	float: left;
 	padding: 0;
 }
@@ -100,7 +81,7 @@ body {
 	border-right: none !important;
 }
 #main_menu {
-	margin-left: 35px;
+	margin-left: .4em;
 }
 #main_menu.centered {
 	display: table;
@@ -173,15 +154,16 @@ body {
 }
 .module .module_content {
 	padding: 0 .4em;
+	overflow: hidden;
 }
-/* ----------- Styled Inputs ----------- */
+/* Styled Inputs */
 input.ui-state-default,
 input.ui-widget-content,
 select.ui-widget-content,
 textarea.ui-widget-content {
 	padding: 0.4em .8em;
 }
-/* ----------- Fancy Styling ----------- */
+/* Fancy Styling */
 #fancy_font {
 	font-size: 11px;
 }
@@ -210,11 +192,85 @@ body.shadows textarea.ui-widget-content {
 	-moz-box-shadow: inset 0 0 .4em #CCC;
 	-webkit-box-shadow: inset 0 0 .4em #CCC;
 }
-/* ----------- Pines Form ----------- */
+/* Pines Form */
 .pf-form div.pf-element.pf-full-width .pf-full-width {
 	padding-right: 1.6em; /* Keep padded inputs from pushing out of their box. */
 }
-/* ----------- Menus ----------- */
+/* Menus */
 #left ul.dropdown.dropdown-vertical, #right ul.dropdown.dropdown-vertical {
 	width: 100%;
+}
+
+/* Mobile CSS */
+@media (max-width: 720px){
+	#main_menu {
+		margin-left: 0;
+	}
+	body .grids [class^="grid-"] {
+		margin: 0;
+	}
+	/* Menus */
+	body ul.dropdown {
+		width: 100%;
+		float: none;
+	}
+	body ul.dropdown li {
+		float: none;
+		border-bottom-style: solid;
+		border-bottom-width: 1px;
+	}
+	body ul.dropdown li a {
+		position: relative;
+		width: 80%;
+		padding: .7em 0;
+		line-height: 15px;
+	}
+	body ul.dropdown li:before {
+		content: "::";
+		line-height: 15px;
+		display: block;
+		float: right;
+		width: 15%;
+		background: #EEE;
+		color: black;
+		text-align: center;
+		padding: .7em 0;
+	}
+	body ul.dropdown a ul {
+		display: none;
+	}
+	body ul.dropdown li:hover > ul {
+		position: static;
+		min-width: inherit;
+		display: block;
+		visibility: visible;
+		z-index: 0;
+		padding: .4em;
+	}
+	/* Modules */
+	body .module, body .module .module_content {
+		padding: 0;
+		border-left: none 0;
+		border-right: none 0;
+	}
+	/* Pines Form */
+	body .pf-form div.pf-element.pf-full-width .pf-full-width {
+		padding-right: .2em; /* Keep padded inputs from pushing out of their box. */
+	}
+	body .pf-form div.pf-element .pf-label, .pf-form div.pf-element .pf-note {
+		float: none !important;
+		width: auto !important;
+		display: block !important;
+		margin-bottom: .1em !important;
+	}
+	body .pf-form div.pf-element .pf-group {
+		margin-left: 0 !important;
+		display: block;
+	}
+	body .pf-form div.pf-element .pf-field.pf-full-width {
+		margin-left: 0 !important;
+	}
+	body .pf-form div.pf-buttons {
+		padding-left: 0 !important;
+	}
 }

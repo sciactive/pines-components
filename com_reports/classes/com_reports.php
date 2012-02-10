@@ -263,9 +263,9 @@ class com_reports extends component {
 					array('class' => com_hrm_timeclock_entry),
 					array('&',
 						'tag' => array('com_hrm', 'timeclock_entry'),
-						'ref' => array('user', $cur_employee),
 						'lt' => array('in', $end_date),
-						'gt' => array('out', $start_date)
+						'gte' => array('out', $start_date),
+						'ref' => array('user', $cur_employee)
 					)
 				);
 			foreach($entries as $entry) {
@@ -293,6 +293,7 @@ class com_reports extends component {
 					array('class' => com_calendar_event),
 					array('&',
 						'tag' => array('com_calendar', 'event'),
+						'isset' => array('scheduled'),
 						'lt' => array('start', $end_date),
 						'gte' => array('end', $start_date),
 						'ref' => array('employee', $cur_employee)
@@ -364,6 +365,7 @@ class com_reports extends component {
 						array('class' => com_calendar_event),
 						array('&',
 							'tag' => array('com_calendar', 'event'),
+							'isset' => array('scheduled'),
 							'gte' => array('start', $start_date),
 							'lt' => array('end', $end_date),
 							'ref' => array('employee', $cur_employee)
@@ -413,6 +415,7 @@ class com_reports extends component {
 						array('class' => com_calendar_event),
 						array('&',
 							'tag' => array('com_calendar', 'event'),
+							'isset' => array('scheduled'),
 							'gte' => array('start', $cur_date['start']),
 							'lt' => array('end', $cur_date['end']),
 							'ref' => array('employee', $employee)
@@ -807,6 +810,7 @@ class com_reports extends component {
 					array('class' => com_calendar_event),
 					array('&',
 						'tag' => array('com_calendar', 'event'),
+						'isset' => array('scheduled'),
 						'gte' => array('start', $start_date),
 						'lt' => array('end', $end_date),
 						'ref' => array('employee', $cur_employee['entity'])
@@ -1050,6 +1054,7 @@ class com_reports extends component {
 					array('class' => com_calendar_event),
 					array('&',
 						'tag' => array('com_calendar', 'event'),
+						'isset' => array('scheduled'),
 						'gte' => array('start', (int) $start_date),
 						'lt' => array('end', (int) $end_date),
 						'ref' => array('employee', $cur_employee['entity'])

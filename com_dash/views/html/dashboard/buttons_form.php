@@ -74,7 +74,7 @@ $this->title = 'Edit Buttons';
 				connectToSortable: "#p_muid_cur_buttons"
 			});
 			$("#p_muid_add_buttons").droppable({
-				accept: "#p_muid_cur_buttons .button",
+				accept: "#p_muid_cur_buttons .button, #p_muid_cur_buttons .separator",
 				hoverClass: "ui-state-highlight",
 				drop: function(e, ui){
 					ui.draggable.remove();

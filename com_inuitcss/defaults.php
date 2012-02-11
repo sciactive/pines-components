@@ -21,6 +21,8 @@ return array(
 		'options' => array(
 			'Fixed, 12 cols, 75px width, 20px gutters, 1140px total' => 'grid_12-75-20-fixed.inuit.css',
 			'Fluid, 12 cols, 75px width, 20px gutters, 1140px total' => 'grid_12-75-20-fluid.inuit.css',
+			'Fixed, 12 cols, 200px width, 12px gutters, 2544px total' => 'grid_12-200-12-fixed.inuit.css',
+			'Fluid, 12 cols, 200px width, 12px gutters, 2544px total' => 'grid_12-200-12-fluid.inuit.css',
 			'Fixed, 16 cols, 40px width, 20px gutters, 960px total' => 'grid_16-40-20-fixed.inuit.css',
 			'Fluid, 16 cols, 40px width, 20px gutters, 960px total' => 'grid_16-40-20-fluid.inuit.css',
 			'Custom ' => 'grid_custom.inuit.css'

@@ -1,0 +1,59 @@
+/*
+Page container
+*/
+.wrapper{
+	width:2532px;
+	margin:0 auto;
+	padding:0 6px;
+}
+
+/*------------------------------------*\
+	GRIDS
+\*------------------------------------*/
+/*
+Most frameworks rely on class="end" or similar to remove the margin from the last column in a row of grids. We don't want to do that so we use a combination of margin- and negative margin-left. It's clever...
+We also allow you to use grid items as stand alone columns or in a series of columns. To use a series just wrap them all in <div class="grids">...</div>
+*/
+.grids{
+	width:2544px;
+	clear:both;
+	margin:0 0 0 -12px;
+	list-style:none; /* So we can make grids out of lists. */
+}
+
+/*
+Here we are using an attribute selector to detect the string 'grid-' in an element's class.
+This works by assuming that anything we call grid- we also want to be a grid item. It means less code and less for you to remember!
+
+Ensure any grid item's FIRST class is a grid- class. e.g.
+VALID: class="grid-4 text-centre"
+INVALID: class="left grid-4"
+*/
+[class^="grid-"]{
+	float:left;
+	margin:0 12px 0 0;
+}
+.grids [class^="grid-"]{
+	margin:0 0 0 12px;
+}
+
+/*
+Allow nested grids:
+*/
+[class^="grid-"] .grids{
+	width:auto;
+	margin:0 -12px;
+}
+
+.grid-1{ width:200px }
+.grid-2{ width:412px }
+.grid-3{ width:624px }
+.grid-4{ width:836px }
+.grid-5{ width:1048px }
+.grid-6{ width:1260px }
+.grid-7{ width:1472px }
+.grid-8{ width:1684px }
+.grid-9{ width:1896px }
+.grid-10{ width:2108px }
+.grid-11{ width:2320px }
+.grid-12{ width:2532px; margin:0; }

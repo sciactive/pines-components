@@ -1,0 +1,10 @@
+[
+	{
+		"path": "main_menu/~account/dashboard",
+		"text": "Dashboard",
+		"href": ["com_dash"],
+		"depend": {
+			"ability": "com_dash/dash"
+		}
+	}
+]

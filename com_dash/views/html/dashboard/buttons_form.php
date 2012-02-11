@@ -18,6 +18,7 @@ $this->title = 'Edit Buttons';
 		/* <[CDATA[ */
 		#p_muid_form .buttons {
 			padding: .5em .25em 0;
+			min-height: 20px;
 		}
 		#p_muid_form .button_well .placeholder {
 			display: inline-block;
@@ -40,7 +41,7 @@ $this->title = 'Edit Buttons';
 		}
 		#p_muid_form .button_well .separator {
 			display: inline-block;
-			margin: 0 .25em .5;
+			margin: 0 .25em .5em;
 			width: 10px;
 			padding: .2em 0;
 		}
@@ -85,7 +86,7 @@ $this->title = 'Edit Buttons';
 	</script>
 	<div class="pf-element pf-full-width">
 		<div id="p_muid_cur_buttons" class="buttons button_well ui-widget-content ui-corner-all">
-			<?php foreach ($this->current_buttons as $cur_button) {
+			<?php foreach ((array) $this->current_buttons as $cur_button) {
 				if ($cur_button == 'separator') { ?>
 			<div class="separator ui-widget-content"><span>&nbsp;</span></div>
 				<?php } else {
@@ -108,7 +109,7 @@ $this->title = 'Edit Buttons';
 		Drag buttons from the following list to add to your dashboard. Drag them back to the list to remove them. You can also reorganize your current buttons.
 	</div>
 	<div id="p_muid_add_buttons" style="max-height: 430px; overflow-y: auto; clear: both;">
-		<?php foreach ($this->buttons as $cur_component => $cur_button_list) { ?>
+		<?php foreach ((array) $this->buttons as $cur_component => $cur_button_list) { ?>
 		<div class="pf-element pf-heading">
 			<h1><?php echo htmlspecialchars($pines->info->$cur_component->name); ?></h1>
 		</div>

@@ -20,6 +20,7 @@ $pines->com_inuitcss->load();
 		#p_muid_dashboard .buttons {
 			padding: .5em .25em 0;
 			margin-bottom: .5em;
+			min-height: 20px;
 		}
 		#p_muid_dashboard .buttons .controls {
 			float: right;
@@ -47,7 +48,7 @@ $pines->com_inuitcss->load();
 		}
 		#p_muid_dashboard .buttons .separator {
 			display: inline-block;
-			margin: 0 .25em .5;
+			margin: 0 .25em .5em;
 			width: 1px;
 			padding: .2em 0;
 		}

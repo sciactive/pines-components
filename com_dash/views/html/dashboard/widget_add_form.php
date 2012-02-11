@@ -40,7 +40,7 @@ $grid_thirds = floor($pines->config->com_inuitcss->grid_columns / 3);
 		Pick widgets from the following list to add to your dashboard. You can pick multiple by holding CTRL while selecting.
 	</div>
 	<div class="ui-helper-clearfix" style="max-height: 600px; overflow-y: auto; clear: both;">
-		<?php foreach ($this->widgets as $cur_component => $cur_widget_list) { ?>
+		<?php foreach ((array) $this->widgets as $cur_component => $cur_widget_list) { ?>
 		<div class="pf-element pf-heading">
 			<h1><?php echo htmlspecialchars($pines->info->$cur_component->name); ?></h1>
 		</div>
@@ -49,7 +49,7 @@ $grid_thirds = floor($pines->config->com_inuitcss->grid_columns / 3);
 				<div class="grids">
 				<?php
 				$i = 1;
-				foreach ($cur_widget_list as $cur_name => $cur_widget) {
+				foreach ((array) $cur_widget_list as $cur_name => $cur_widget) {
 					if ($i % 3 == 1) { ?>
 				</div>
 				<div class="grids">

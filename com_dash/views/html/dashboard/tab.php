@@ -389,7 +389,7 @@ $max_columns = $pines->config->com_inuitcss->grid_columns;
 		<div class="controls">
 			<span class="edit_buttons ui-icon ui-icon-gear" title="Configure Buttons"></span>
 		</div>
-		<?php foreach ($this->tab['buttons'] as $cur_button) {
+		<?php foreach ((array) $this->tab['buttons'] as $cur_button) {
 			if ($cur_button == 'separator') { ?>
 		<div class="separator ui-widget-content"><span>&nbsp;</span></div>
 			<?php } else {
@@ -405,11 +405,11 @@ $max_columns = $pines->config->com_inuitcss->grid_columns;
 		<?php } } ?>
 	</div>
 	<div class="grids">
-		<?php foreach ($this->tab['columns'] as $cur_c_key => $cur_column) {
+		<?php foreach ((array) $this->tab['columns'] as $cur_c_key => $cur_column) {
 			$col_style = htmlspecialchars($cur_column['size'] < 1 ? floor($max_columns * $cur_column['size']) : $cur_column['size']); ?>
 		<div class="grid-<?php echo $col_style; ?> column">
 			<div class="key" style="display: none;"><?php echo htmlspecialchars($cur_c_key); ?></div>
-			<?php foreach ($cur_column['widgets'] as $cur_w_key => $cur_widget) {
+			<?php foreach ((array) $cur_column['widgets'] as $cur_w_key => $cur_widget) {
 				// Get the widget definition.
 				$cur_def = $pines->com_dash->get_widget_def($cur_widget);
 				// Check its conditions.

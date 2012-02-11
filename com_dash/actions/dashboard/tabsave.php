@@ -41,6 +41,7 @@ if (empty($_REQUEST['key'])) {
 	$tab_key = uniqid();
 	$_SESSION['user']->dashboard->tabs[$tab_key] = array(
 		'name' => $_REQUEST['name'],
+		'buttons' => array(),
 		'columns' => $columns
 	);
 } else {

@@ -4,7 +4,8 @@ pines(function(){
 	pos_head = $("head"),
 	main_menu = $("#main_menu"),
 	pos_top = $("#top"),
-	page_title = $("#page_title"),
+	pos_header = $("#header_position"),
+	pos_header_right = $("#header_right"),
 	pos_pre_content = $("#pre_content"),
 	pos_breadcrumbs = $("#breadcrumbs"),
 	pos_content_top_left = $("#content_top_left"),
@@ -15,7 +16,7 @@ pines(function(){
 	pos_post_content = $("#post_content"),
 	pos_left = $("#left"),
 	pos_right = $("#right"),
-	pos_footer = $("#footer > div.modules"),
+	pos_footer = $("#footer_position"),
 	pos_bottom = $("#bottom");
 	var load_page_ajax = function(url, type, data){
 		if (typeof data == "undefined") {
@@ -67,11 +68,11 @@ pines(function(){
 					current_hash = "";
 				// Pause DOM ready script execution.
 				pines.pause();
-				$("#header > div:not(.menuwrap)").remove();
 				pos_head.append(data.pos_head);
 				main_menu.html(data.main_menu);
 				pos_top.html(data.pos_top);
-				page_title.after(data.pos_header).after(data.pos_header_right);
+				pos_header.html(data.pos_header);
+				pos_header_right.html(data.pos_header_right);
 				pos_pre_content.html(data.pos_pre_content);
 				pos_breadcrumbs.html(data.pos_breadcrumbs);
 				pos_content_top_left.html(data.pos_content_top_left);

@@ -154,7 +154,7 @@ body .centered .centered-first {
 }
 .module .module_content {
 	padding: 0 .4em;
-	overflow: hidden;
+	overflow: visible;
 }
 /* Styled Inputs */
 input.ui-state-default,

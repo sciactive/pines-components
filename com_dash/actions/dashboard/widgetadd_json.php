@@ -30,9 +30,9 @@ foreach ($widgets as $cur_component => $cur_widget_set) {
 		// Check its conditions.
 		foreach ((array) $cur_widget['widget']['depends'] as $cur_type => $cur_value) {
 			if (!$pines->depend->check($cur_type, $cur_value)) {
-				unset($module->widgets[$cur_component][$cur_widget_name]);
-				if (!$module->widgets[$cur_component])
-					unset($module->widgets[$cur_component]);
+				unset($widgets[$cur_component][$cur_widget_name]);
+				if (!$widgets[$cur_component])
+					unset($widgets[$cur_component]);
 			}
 		}
 	}

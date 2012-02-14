@@ -305,7 +305,7 @@ $max_columns = $pines->config->com_inuitcss->grid_columns;
 					}
 					pines.pause();
 					var form = $("<div title=\"Add Widgets\"></div>")
-					.html('<form method="post" action="">'+data+"</form>");
+					.html('<form method="post" action="">'+data+"</form><br />");
 					form.find("form").submit(function(){
 						form.dialog('option', 'buttons').Done();
 						return false;

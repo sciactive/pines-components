@@ -30,9 +30,9 @@ foreach ($buttons as $cur_component => $cur_button_set) {
 		// Check its conditions.
 		foreach ((array) $cur_button['depends'] as $cur_type => $cur_value) {
 			if (!$pines->depend->check($cur_type, $cur_value)) {
-				unset($module->buttons[$cur_component][$cur_button_name]);
-				if (!$module->buttons[$cur_component])
-					unset($module->buttons[$cur_component]);
+				unset($buttons[$cur_component][$cur_button_name]);
+				if (!$buttons[$cur_component])
+					unset($buttons[$cur_component]);
 			}
 		}
 	}

@@ -18,6 +18,8 @@ if (!gatekeeper()) {
 	return;
 }
 
+$this->title = 'Current User';
+
 // Make sure options are safe.
 switch ($this->text_align) {
 	case 'left':

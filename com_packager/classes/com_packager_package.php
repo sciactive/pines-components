@@ -111,6 +111,7 @@ class com_packager_package extends entity {
 		$arc = new slim;
 		$arc->file_integrity = true;
 		$arc->preserve_mode = true;
+		$arc->follow_links = true;
 		// Use these to turn off compression.
 		//$arc->compression = '';
 		//$arc->header_compression = false;

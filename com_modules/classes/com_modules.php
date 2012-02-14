@@ -50,10 +50,11 @@ class com_modules extends component {
 		global $pines;
 		$return = array();
 		foreach ($pines->components as $cur_component) {
-			$folder = (strpos($cur_component, 'tpl_') === 0) ? 'templates' : 'components';
-			if (!file_exists("$folder/$cur_component/modules.php"))
+			if (strpos($cur_component, 'tpl_') === 0)
 				continue;
-			$modules = include("$folder/$cur_component/modules.php");
+			if (!file_exists("components/$cur_component/modules.php"))
+				continue;
+			$modules = include("components/$cur_component/modules.php");
 			if (!$modules || (array) $modules !== $modules)
 				continue;
 			foreach ($modules as $key => $cur_module) {

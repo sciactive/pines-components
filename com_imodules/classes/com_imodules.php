@@ -79,7 +79,10 @@ class com_imodules extends component {
 			}
 			$include = include("components/$component/modules.php");
 			$view = $include[$modname]['view'];
-			if (!isset($view) || (isset($include[$modname]['type']) && !preg_match('/\bimodule\b/', $include[$modname]['type']))) {
+			$view_callback = $include[$modname]['view_callback'];
+			if (!isset($view) && !isset($view_callback))
+				continue;
+			if (isset($include[$modname]['type']) && !preg_match('/\bimodule\b/', $include[$modname]['type'])) {
 				// If the module doesn't exist or isn't an imodule, skip it.
 				$offset = $matches[0][1] + strlen($matches[0][0]);
 				preg_match($pattern, $content, $matches, PREG_OFFSET_CAPTURE, $offset);
@@ -97,7 +100,13 @@ class com_imodules extends component {
 			$icontent = ($short ? '' : $matches[5][0]);
 
 			// Build a module.
-			$module = new module($component, $view);
+			if (isset($view))
+				$module = new module($component, $view);
+			else {
+				$module = call_user_func($view_callback, null, null, $attrs);
+				if (!$module)
+					continue;
+			}
 			$module->show_title = false;
 			foreach ($attrs as $name => $value) {
 				switch ($name) {

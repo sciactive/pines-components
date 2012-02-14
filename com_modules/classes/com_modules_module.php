@@ -121,10 +121,19 @@ class com_modules_module extends entity {
 			return null;
 		$include = include("components/$component/modules.php");
 		$view = $include[$modname]['view'];
-		if (!isset($view) || (isset($include[$modname]['type']) && !preg_match('/\bmodule\b/', $include[$modname]['type'])))
+		$view_callback = $include[$modname]['view_callback'];
+		if (!isset($view) && !isset($view_callback))
+			return null;
+		if (isset($include[$modname]['type']) && !preg_match('/\bmodule\b/', $include[$modname]['type']))
 			return null;
 		unset($include);
-		$module = new module($component, $view, $this->position, $this->order);
+		if (isset($view))
+			$module = new module($component, $view, $this->position, $this->order);
+		else {
+			$module = call_user_func($view_callback, $this->position, $this->order, $this->options);
+			if (!$module)
+				return null;
+		}
 		$module->title = $this->name;
 		$module->show_title = $this->show_title;
 		foreach ($this->options as $cur_option) {

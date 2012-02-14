@@ -1,9 +1,9 @@
 <?php
 /**
- * com_uasniffer's modules.
+ * com_esp's buttons.
  *
  * @package Pines
- * @subpackage com_uasniffer
+ * @subpackage com_esp
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -13,12 +13,15 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 return array(
-	'switcher' => array(
-		'cname' => 'Mobile/Desktop Site Switcher',
-		'description' => 'Switch between the mobile and desktop version of the site.',
-		'view' => 'switcher',
-		'form' => 'switcher_form',
-		'type' => 'module imodule',
+	'esps' => array(
+		'description' => 'ESP list.',
+		'text' => 'ESPs',
+		'class' => 'picon-security-high',
+		'href' => pines_url('com_esp', 'list'),
+		'default' => false,
+		'depends' => array(
+			'ability' => 'com_esp/list',
+		),
 	),
 );
 

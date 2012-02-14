@@ -15,8 +15,12 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'messenger' => array(
 		'cname' => 'Instant Messenger',
+		'description' => 'Chat with other users on the system.',
 		'view' => 'modules/messenger',
-		'type' => 'module'
+		'type' => 'module imodule widget',
+		'widget' => array(
+			'default' => false,
+		),
 	),
 );
 

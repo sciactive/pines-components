@@ -80,7 +80,6 @@ class com_example_foobar extends entity {
 	 * @return module The form's module.
 	 */
 	public function print_form() {
-		global $pines;
 		$module = new module('com_example', 'foobar/form', 'content');
 		$module->entity = $this;
 

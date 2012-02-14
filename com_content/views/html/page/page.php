@@ -15,6 +15,11 @@ defined('P_RUN') or die('Direct access prohibited');
 if (!isset($this->entity))
 	$this->entity = com_content_page::factory((int) $this->id);
 
+if (!isset($this->entity->guid)) {
+	echo 'No page is specified or the page is inaccessible.';
+	return;
+}
+
 // Custom head code.
 if ($this->entity->enable_custom_head && $pines->config->com_content->custom_head) {
 	$head = new module('system', 'null', 'head');

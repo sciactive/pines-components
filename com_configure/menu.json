@@ -17,7 +17,7 @@
 		{
 			"path": "main_menu/system/configuration/percondition",
 			"text": "Per Condition",
-			"href": ["com_configure","list",{"percondition":1}],
+			"href": ["com_configure","list",{"percondition":"true"}],
 			"depend": {
 				"ability": "com_configure/edit|com_configure/view",
 				"service": "entity_manager"
@@ -26,7 +26,7 @@
 		{
 			"path": "main_menu/system/configuration/perusergroup",
 			"text": "Per User/Group",
-			"href": ["com_configure","list",{"peruser":1}],
+			"href": ["com_configure","list",{"peruser":"true"}],
 			"depend": {
 				"ability": "com_configure/editperuser|com_configure/viewperuser",
 				"service": "user_manager"

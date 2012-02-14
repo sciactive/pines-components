@@ -1,6 +1,6 @@
 <?php
 /**
- * A foobar module.
+ * A foobar widget.
  *
  * @package Pines
  * @subpackage com_example
@@ -16,13 +16,13 @@ if (isset($this->id)) {
 	$this->entity = com_example_foobar::factory((int) $this->id);
 	$this->title = htmlspecialchars($this->entity->name);
 } else {
-	$this->title = 'Foobar Module';
+	$this->title = 'Foobar Widget';
 }
 ?>
 <div>
 	<?php
 	if (!isset($this->id))
-		echo 'This module has not been configured yet.';
+		echo 'This widget has not been configured yet.';
 	elseif (!isset($this->entity))
 		echo 'Couldn\'t access requested foobar.';
 	else

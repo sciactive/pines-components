@@ -57,7 +57,7 @@ class com_modules extends component {
 			if (!$modules || (array) $modules !== $modules)
 				continue;
 			foreach ($modules as $key => $cur_module) {
-				if (isset($cur_module['type']) && $cur_module['type'] != 'module')
+				if (isset($cur_module['type']) && !preg_match('/\bmodule\b/', $cur_module['type']))
 					unset($modules[$key]);
 			}
 			if ($modules)

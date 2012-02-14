@@ -79,7 +79,7 @@ class com_imodules extends component {
 			}
 			$include = include("components/$component/modules.php");
 			$view = $include[$modname]['view'];
-			if (!isset($view) || (isset($include[$modname]['type']) && $include[$modname]['type'] != 'imodule')) {
+			if (!isset($view) || (isset($include[$modname]['type']) && !preg_match('/\bimodule\b/', $include[$modname]['type']))) {
 				// If the module doesn't exist or isn't an imodule, skip it.
 				$offset = $matches[0][1] + strlen($matches[0][0]);
 				preg_match($pattern, $content, $matches, PREG_OFFSET_CAPTURE, $offset);

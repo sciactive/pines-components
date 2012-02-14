@@ -15,7 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'Instant Messenger',
 	'author' => 'SciActive (Component), Abhinav Singh (JAXL)',
-	'version' => '0.10.0alpha',
+	'version' => '0.10.1alpha',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'An instant messenger.',

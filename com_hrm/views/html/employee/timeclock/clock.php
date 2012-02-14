@@ -31,6 +31,8 @@ if (!isset($this->entity->user->guid) || !isset($this->entity)) {
 	$this->detach();
 	return;
 }
+
+$pines->icons->load();
 ?>
 <style type="text/css" >
 	/* <![CDATA[ */

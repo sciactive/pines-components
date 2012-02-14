@@ -121,7 +121,7 @@ class com_modules_module extends entity {
 			return null;
 		$include = include("components/$component/modules.php");
 		$view = $include[$modname]['view'];
-		if (!isset($view) || (isset($include[$modname]['type']) && $include[$modname]['type'] != 'module'))
+		if (!isset($view) || (isset($include[$modname]['type']) && !preg_match('/\bmodule\b/', $include[$modname]['type'])))
 			return null;
 		unset($include);
 		$module = new module($component, $view, $this->position, $this->order);

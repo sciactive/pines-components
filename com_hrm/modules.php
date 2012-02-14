@@ -14,8 +14,16 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	'clockin' => array(
-		'cname' => 'Employee Clockin (Ability: com_hrm/clock)',
+		'cname' => 'Employee Clockin',
+		'description' => 'Clock in to your timeclock. Requires "com_hrm/clock" ability.',
 		'view' => 'employee/timeclock/clock',
+		'type' => 'module imodule widget',
+		'widget' => array(
+			'default' => true,
+			'depends' => array(
+				'ability' => 'com_hrm/clock',
+			),
+		),
 	),
 );
 

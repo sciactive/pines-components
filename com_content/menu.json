@@ -19,7 +19,7 @@
 			"text": "New Category",
 			"href": ["com_content","category/edit"],
 			"depend": {
-				"ability": "com_content/editcategory"
+				"ability": "com_content/newcategory"
 			}
 		},
 		{
@@ -35,7 +35,7 @@
 			"text": "New Page",
 			"href": ["com_content","page/edit"],
 			"depend": {
-				"ability": "com_content/editpage"
+				"ability": "com_content/newpage"
 			}
 		}
 ]

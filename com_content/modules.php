@@ -15,18 +15,36 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'page' => array(
 		'cname' => 'Page Content',
+		'description' => 'Show the content of a page.',
 		'view' => 'page/page',
 		'form' => 'modules/page_form',
+		'type' => 'module imodule widget',
+		'widget' => array(
+			'default' => false,
+			'depends' => array(
+				'ability' => 'com_content/listpages',
+			),
+		),
 	),
 	'category' => array(
 		'cname' => 'Category Listing',
+		'description' => 'Show a listing of a category.',
 		'view' => 'category/category',
 		'form' => 'modules/category_form',
+		'type' => 'module imodule widget',
+		'widget' => array(
+			'default' => false,
+			'depends' => array(
+				'ability' => 'com_content/listcategories',
+			),
+		),
 	),
 	'content' => array(
 		'cname' => 'Custom Content (HTML)',
+		'description' => 'Show any custom HTML.',
 		'view' => 'modules/custom',
 		'form' => 'modules/custom_form',
+		'type' => 'module',
 	),
 );
 

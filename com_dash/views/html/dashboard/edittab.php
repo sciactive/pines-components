@@ -126,7 +126,7 @@ $default_column = htmlspecialchars(floor($max_columns / 3));
 			};
 			update_columns();
 
-			<?php if ( isset($this->key) ) { ?>
+			<?php if ( !empty($this->key) ) { ?>
 			$("#p_muid_delete").button().click(function(){
 				if (!confirm("Are you sure you want to delete this tab and all of its buttons, widgets, and configuration?\nThis cannot be undone."))
 					return;
@@ -168,7 +168,7 @@ $default_column = htmlspecialchars(floor($max_columns / 3));
 		// ]]>
 	</script>
 	<div class="pf-element pf-heading">
-		<?php if ( isset($this->key) ) { ?>
+		<?php if ( !empty($this->key) ) { ?>
 		<button class="ui-state-default ui-corner-all" id="p_muid_delete" type="button" style="float: right;">Delete Tab</button>
 		<?php } ?>
 		<h1>Editing <?php echo isset($this->tab) ? 'Tab ['.htmlspecialchars($this->tab['name']).']' : 'New Tab'; ?></h1>
@@ -231,11 +231,13 @@ $default_column = htmlspecialchars(floor($max_columns / 3));
 		<input type="hidden" name="columns" value="" />
 	</div>
 	<div class="pf-element pf-buttons">
-		<?php if ( isset($this->key) ) { ?>
+		<?php if ( !empty($this->key) ) { ?>
 		<input type="hidden" name="key" value="<?php echo htmlspecialchars($this->key); ?>" />
 		<?php } ?>
 		<input class="pf-button ui-state-default ui-priority-primary ui-corner-all" type="submit" value="Submit" />
+		<?php if ( !empty($this->key) ) { ?>
 		<input class="pf-button ui-state-default ui-priority-secondary ui-corner-all" type="button" onclick="p_muid_cancel();" value="Cancel" />
+		<?php } ?>
 	</div>
 	<br class="pf-clearing" />
 </form>

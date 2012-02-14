@@ -28,7 +28,21 @@ if (!$widget_entry) {
 // Get the view and make a module.
 $def = $pines->com_dash->get_widget_def($widget_entry);
 $view = $def['view'];
-$module = new module($widget_entry['component'], $view);
+$view_callback = $def['view_callback'];
+if (!isset($view) && !isset($view_callback)) {
+	header("HTTP/1.0 500 Internal Server Error");
+	return;
+}
+
+if (isset($view))
+	$module = new module($widget_entry['component'], $view);
+else {
+	$module = call_user_func($view_callback, null, null, (array) $widget_entry['options']);
+	if (!$module) {
+		header("HTTP/1.0 500 Internal Server Error");
+		return;
+	}
+}
 
 // Include the options.
 foreach ((array) $widget_entry['options'] as $cur_option) {

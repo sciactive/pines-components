@@ -15,13 +15,13 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'Dashboard',
 	'author' => 'SciActive',
-	'version' => '1.0.0beta',
+	'version' => '1.0.0beta2',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Configurable dashboard',
 	'description' => 'Provides a dashboard with quick links and widgets.',
 	'depend' => array(
-		'pines' => '<2',
+		'pines' => '>=1.0.4&<2',
 		'service' => 'entity_manager&user_manager',
 		'component' => 'com_jquery&com_pform&com_inuitcss'
 	),

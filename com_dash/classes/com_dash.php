@@ -121,10 +121,11 @@ class com_dash extends component {
 		global $pines;
 		$return = array();
 		foreach ($pines->components as $cur_component) {
-			$folder = (strpos($cur_component, 'tpl_') === 0) ? 'templates' : 'components';
-			if (!file_exists("$folder/$cur_component/modules.php"))
+			if (strpos($cur_component, 'tpl_') === 0)
 				continue;
-			$modules = include("$folder/$cur_component/modules.php");
+			if (!file_exists("components/$cur_component/modules.php"))
+				continue;
+			$modules = include("components/$cur_component/modules.php");
 			if (!$modules || (array) $modules !== $modules)
 				continue;
 			foreach ($modules as $key => $cur_module) {
@@ -148,16 +149,32 @@ class com_dash extends component {
 		global $pines;
 		$return = array();
 		foreach ($pines->components as $cur_component) {
-			$folder = (strpos($cur_component, 'tpl_') === 0) ? 'templates' : 'components';
-			if (!file_exists("$folder/$cur_component/buttons.php"))
+			if (strpos($cur_component, 'tpl_') === 0)
 				continue;
-			$buttons = include("$folder/$cur_component/buttons.php");
+			if (!file_exists("components/$cur_component/buttons.php"))
+				continue;
+			$buttons = include("components/$cur_component/buttons.php");
 			if (!$buttons || (array) $buttons !== $buttons)
 				continue;
 			if ($buttons)
 				$return[$cur_component] = $buttons;
 		}
 		return $return;
+	}
+
+	/**
+	 * Return the quick dash module.
+	 * @param string $position The module's position.
+	 * @param int $order The module's order.
+	 * @param array $options The module's options.
+	 * @return module|bool The module on success, false on failure.
+	 */
+	public function quick_dash_module($position, $order, $options) {
+		if (!gatekeeper('com_dash/dash') || !isset($_SESSION['user']->dashboard->guid))
+			return false;
+		$module = new module('com_dash', 'modules/quick_dash', $position, $order);
+		$module->entity = $_SESSION['user']->dashboard;
+		return $module;
 	}
 }
 

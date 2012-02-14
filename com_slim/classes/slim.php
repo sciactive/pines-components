@@ -168,6 +168,12 @@ class slim {
 	 */
 	public $file_integrity = false;
 	/**
+	 * Follow symlinks instead of archiving the link.
+	 *
+	 * @var bool
+	 */
+	public $follow_links = false;
+	/**
 	 * Don't extract files into parent directories.
 	 *
 	 * This causes '..' directories to be changed to '__' (two underscores).
@@ -452,7 +458,7 @@ class slim {
 		// Handle real files.
 		foreach ($this->files as $cur_file) {
 			$cur_path = $this->make_path($cur_file, false);
-			if (is_link($cur_file)) {
+			if (is_link($cur_file) && !$this->follow_links) {
 				$new_array = array(
 					'type' => 'link',
 					'path' => $cur_path,

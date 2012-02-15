@@ -23,6 +23,9 @@ defined('P_RUN') or die('Direct access prohibited');
 ?>
 <script type="text/javascript">// <![CDATA[
 pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_pform/includes/pform.css");
+<?php if ($pines->depend->check('component', 'com_bootstrap')) { ?>
+pines.loadcss("<?php echo htmlspecialchars($pines->config->location); ?>components/com_pform/includes/pform-bootstrap.css");
+<?php } ?>
 // ]]></script>
 <!--[if lt IE 8]>
 <script type="text/javascript">// <![CDATA[

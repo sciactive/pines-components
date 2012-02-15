@@ -40,7 +40,6 @@ if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 && strp
 	return;
 }
 header('Content-Type: text/html');
-$pines->com_inuitcss->load();
 ?>
 <!DOCTYPE html>
 <html <?php echo in_array('font', $pines->config->tpl_pines->fancy_style) ? ' id="fancy_font"' : ''; ?>>
@@ -51,6 +50,7 @@ $pines->com_inuitcss->load();
 	<meta name="HandheldFriendly" content="true" />
 
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/pines.css" media="all" rel="stylesheet" type="text/css" />
+	<style type="text/css">.page-width {width: auto;<?php echo $pines->config->template->width === 0 ? '' : ' max-width: '.(int) $pines->config->template->width.'px;'; ?>}</style>
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/print.css" media="print" rel="stylesheet" type="text/css" />
 
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/dropdown/dropdown.css" media="all" rel="stylesheet" type="text/css" />
@@ -98,73 +98,84 @@ $pines->com_inuitcss->load();
 		}
 	?></div>
 	<div id="header" class="ui-widget-header">
-		<div class="grids centered">
-			<div class="grid-4 centered-first">
-				<div id="page_title">
-					<a href="<?php echo htmlspecialchars($pines->config->full_location); ?>">
-						<?php if ($pines->config->tpl_pines->use_header_image) { ?>
-						<img src="<?php echo htmlspecialchars($pines->config->tpl_pines->header_image); ?>" alt="<?php echo htmlspecialchars($pines->config->page_title); ?>" />
-						<?php } else { ?>
-						<span><?php echo htmlspecialchars($pines->config->page_title); ?></span>
-						<?php } ?>
-					</a>
+		<div class="container-fluid page-width centered">
+			<div class="row-fluid">
+				<div class="span4">
+					<div id="page_title">
+						<a href="<?php echo htmlspecialchars($pines->config->full_location); ?>">
+							<?php if ($pines->config->tpl_pines->use_header_image) { ?>
+							<img src="<?php echo htmlspecialchars($pines->config->tpl_pines->header_image); ?>" alt="<?php echo htmlspecialchars($pines->config->page_title); ?>" />
+							<?php } else { ?>
+							<span><?php echo htmlspecialchars($pines->config->page_title); ?></span>
+							<?php } ?>
+						</a>
+					</div>
+				</div>
+				<div id="header_position" class="span4">
+					<?php echo $pines->page->render_modules('header', 'module_header'); ?>
+				</div>
+				<div id="header_right" class="span4">
+					<?php echo $pines->page->render_modules('header_right', 'module_header_right'); ?>
 				</div>
 			</div>
-			<div id="header_position" class="grid-4">
-				<?php echo $pines->page->render_modules('header', 'module_header'); ?>
-			</div>
-			<div id="header_right" class="grid-4">
-				<?php echo $pines->page->render_modules('header_right', 'module_header_right'); ?>
-			</div>
 		</div>
-		<div class="grids centered">
-			<div class="grid-12 centered-first" class="menuwrap ui-widget-content">
-				<div id="main_menu"<?php echo $pines->config->tpl_pines->center_menu ? ' class="centered"' : ''; ?>><?php echo $pines->page->render_modules('main_menu', 'module_head'); ?></div>
+		<div class="container-fluid page-width centered">
+			<div class="row-fluid">
+				<div class="span12" class="menuwrap ui-widget-content">
+					<div id="main_menu"<?php echo $pines->config->tpl_pines->center_menu ? ' class="centered"' : ''; ?>><?php echo $pines->page->render_modules('main_menu', 'module_head'); ?></div>
+				</div>
 			</div>
 		</div>
 	</div>
-	<div class="grids centered">
-		<div id="pre_content" class="grid-12 centered-first"><?php echo $pines->page->render_modules('pre_content', 'module_header'); ?></div>
+	<div class="container-fluid page-width centered">
+		<div class="row-fluid">
+			<div id="pre_content" class="span12"><?php echo $pines->page->render_modules('pre_content', 'module_header'); ?></div>
+		</div>
 	</div>
 	<div id="column_container">
-		<div class="grids centered">
-			<?php if (in_array($pines->config->tpl_pines->variant, array('default', 'twocol-sideleft'))) { ?>
-			<div id="left_color" class="grid-2 centered-first ui-state-default ui-state-disabled">&nbsp;</div>
-			<div id="left" class="grid-2 centered-first">
-				<?php echo $pines->page->render_modules('left', 'module_left'); ?>
-				<?php if ($pines->config->tpl_pines->variant == 'twocol-sideleft') { echo $pines->page->render_modules('right', 'module_left'); } ?>&nbsp;
-			</div>
-			<?php } ?>
-			<div class="<?php echo $pines->config->tpl_pines->variant == 'full-page' ? 'grid-12' : ($pines->config->tpl_pines->variant == 'default' ? 'grid-8' : 'grid-10'); ?>">
-				<div id="content_container">
-					<div id="breadcrumbs"><?php echo $pines->page->render_modules('breadcrumbs', 'module_header'); ?></div>
-					<div class="grids">
-						<div id="content_top_left" class="grid-6"><?php echo $pines->page->render_modules('content_top_left'); ?></div>
-						<div id="content_top_right" class="grid-6"><?php echo $pines->page->render_modules('content_top_right'); ?></div>
-					</div>
-					<div id="content"><?php echo $pines->page->render_modules('content', 'module_content'); ?></div>
-					<div class="grids">
-						<div id="content_bottom_left" class="grid-6"><?php echo $pines->page->render_modules('content_bottom_left'); ?></div>
-						<div id="content_bottom_right" class="grid-6"><?php echo $pines->page->render_modules('content_bottom_right'); ?></div>
+		<div class="container-fluid page-width centered">
+			<div class="row-fluid">
+				<?php if (in_array($pines->config->tpl_pines->variant, array('default', 'twocol-sideleft'))) { ?>
+				<div id="left" class="span2">
+					<?php echo $pines->page->render_modules('left', 'module_left'); ?>
+					<?php if ($pines->config->tpl_pines->variant == 'twocol-sideleft') { echo $pines->page->render_modules('right', 'module_left'); } ?>&nbsp;
+				</div>
+				<?php } ?>
+				<div class="<?php echo $pines->config->tpl_pines->variant == 'full-page' ? 'span12' : ($pines->config->tpl_pines->variant == 'default' ? 'span8' : 'span10'); ?>">
+					<div id="content_container">
+						<div id="breadcrumbs"><?php echo $pines->page->render_modules('breadcrumbs', 'module_header'); ?></div>
+						<div class="row-fluid">
+							<div id="content_top_left" class="span6"><?php echo $pines->page->render_modules('content_top_left'); ?></div>
+							<div id="content_top_right" class="span6"><?php echo $pines->page->render_modules('content_top_right'); ?></div>
+						</div>
+						<div id="content"><?php echo $pines->page->render_modules('content', 'module_content'); ?></div>
+						<div class="row-fluid">
+							<div id="content_bottom_left" class="span6"><?php echo $pines->page->render_modules('content_bottom_left'); ?></div>
+							<div id="content_bottom_right" class="span6"><?php echo $pines->page->render_modules('content_bottom_right'); ?></div>
+						</div>
 					</div>
 				</div>
+				<?php if (in_array($pines->config->tpl_pines->variant, array('default', 'twocol-sideright'))) { ?>
+				<div id="right" class="span2">
+					<?php if ($pines->config->tpl_pines->variant == 'twocol-sideright') { echo $pines->page->render_modules('left', 'module_right'); } ?>
+					<?php echo $pines->page->render_modules('right', 'module_right'); ?>&nbsp;
+				</div>
+				<?php } ?>
 			</div>
-			<?php if (in_array($pines->config->tpl_pines->variant, array('default', 'twocol-sideright'))) { ?>
-			<div id="right" class="grid-2">
-				<?php if ($pines->config->tpl_pines->variant == 'twocol-sideright') { echo $pines->page->render_modules('left', 'module_right'); } ?>
-				<?php echo $pines->page->render_modules('right', 'module_right'); ?>&nbsp;
-			</div>
-			<?php } ?>
 		</div>
 	</div>
-	<div class="grids centered">
-		<div id="post_content" class="grid-12 centered-first"><?php echo $pines->page->render_modules('post_content', 'module_header'); ?></div>
+	<div class="container-fluid page-width centered">
+		<div class="row-fluid">
+			<div id="post_content" class="span12"><?php echo $pines->page->render_modules('post_content', 'module_header'); ?></div>
+		</div>
 	</div>
 	<div id="footer" class="ui-widget-header">
-		<div class="grids centered">
-			<div class="grid-12 centered-first">
-				<div id="footer_position"><?php echo $pines->page->render_modules('footer', 'module_header'); ?></div>
-				<p id="copyright"><?php echo htmlspecialchars($pines->config->copyright_notice, ENT_COMPAT, '', false); ?></p>
+		<div class="container-fluid page-width centered">
+			<div class="row-fluid">
+				<div class="span12">
+					<div id="footer_position"><?php echo $pines->page->render_modules('footer', 'module_header'); ?></div>
+					<p id="copyright"><?php echo htmlspecialchars($pines->config->copyright_notice, ENT_COMPAT, '', false); ?></p>
+				</div>
 			</div>
 		</div>
 	</div>

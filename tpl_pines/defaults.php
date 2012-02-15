@@ -29,12 +29,18 @@ return array(
 		'peruser' => true,
 	),
 	array(
+		'name' => 'width',
+		'cname' => 'Width',
+		'description' => 'Width of the layout in pixels. Use 0 for fluid width.',
+		'value' => 0,
+		'peruser' => true,
+	),
+	array(
 		'name' => 'fancy_style',
 		'cname' => 'Fancy Styling',
 		'description' => 'Use fancier styling.',
-		'value' => array('font', 'shadows'),
+		'value' => array('shadows'),
 		'options' => array(
-			'Fancy fonts.' => 'font',
 			'Drop shadows.' => 'shadows'
 		),
 		'peruser' => true,

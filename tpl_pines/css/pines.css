@@ -1,41 +1,24 @@
 /* Globals */
-html {
-	font-family: Verdana,Arial,sans-serif;
-	font-size: 10px;
+body.ui-widget, body .ui-widget {
+	font-size: 13px;
 }
 body {
 	background-image: none !important;
 	text-align: left;
 }
 /* Margins */
-body .centered {
+.page-width.centered {
 	margin-left: auto;
 	margin-right: auto;
 }
-body .centered .centered-first {
-	margin-left: 0;
-}
 #column_container {
 	padding-top: 8px;
-}
-#column_container > .grids {
-	position: relative;
 }
 #column_container .module {
 	margin: .4em 0 .6em;
 }
 #column_container .module .module_title {
 	margin-bottom: .5em;
-}
-/* Left column color */
-#left_color {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	z-index: -1;
-	border: 0 !important;
-	background-image: none !important;
 }
 /* Header styles */
 #header {
@@ -96,10 +79,6 @@ body .centered .centered-first {
 #main_menu ul.dropdown > li:last-child > a.ui-widget-header {
 	border-right-style: solid;
 }
-/* Current Page */
-#main_menu ul.dropdown > li.current_page, #main_menu ul.dropdown > li.current_page_parent {
-	
-}
 /* Footer styles */
 #footer {
 	border-left: 0 !important;
@@ -142,10 +121,12 @@ body .centered .centered-first {
 .module .module_title h2 {
 	margin: 0;
 	font-size: 1.3em;
+	line-height: normal;
 }
 .module .module_title p {
 	margin: 0;
 	font-size: .9em;
+	line-height: normal;
 	font-weight: normal;
 }
 .module .module_title .module_minimize, .module .module_title .module_maximize {
@@ -156,20 +137,7 @@ body .centered .centered-first {
 	padding: 0 .4em;
 	overflow: visible;
 }
-/* Styled Inputs */
-input.ui-state-default,
-input.ui-widget-content,
-select.ui-widget-content,
-textarea.ui-widget-content {
-	padding: 0.4em .8em;
-}
 /* Fancy Styling */
-#fancy_font {
-	font-size: 11px;
-}
-#fancy_font, #fancy_font .ui-widget {
-	font-family: "Goudy Old Style","Palatino Linotype",Palatino,Sylfaen,serif;
-}
 body.shadows ul.dropdown > li ul {
 	box-shadow: 0 .4em 1em -.4em #333;
 	-moz-box-shadow: 0 .4em 1em -.4em #333;
@@ -185,17 +153,6 @@ body.shadows .module_title.ui-widget-header {
 	-moz-box-shadow: 0 .1em .4em -.3em #333;
 	-webkit-box-shadow: 0 .1em .4em -.3em #333;
 }
-body.shadows input.ui-widget-content,
-body.shadows select.ui-widget-content,
-body.shadows textarea.ui-widget-content {
-	box-shadow: inset 0 0 .4em #CCC;
-	-moz-box-shadow: inset 0 0 .4em #CCC;
-	-webkit-box-shadow: inset 0 0 .4em #CCC;
-}
-/* Pines Form */
-.pf-form div.pf-element.pf-full-width .pf-full-width {
-	padding-right: 1.6em; /* Keep padded inputs from pushing out of their box. */
-}
 /* Menus */
 #left ul.dropdown.dropdown-vertical, #right ul.dropdown.dropdown-vertical {
 	width: 100%;
@@ -205,9 +162,6 @@ body.shadows textarea.ui-widget-content {
 @media (max-width: 720px){
 	#main_menu {
 		margin-left: 0;
-	}
-	body .grids [class^="grid-"] {
-		margin: 0;
 	}
 	/* Menus */
 	body ul.dropdown {

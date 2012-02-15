@@ -31,14 +31,14 @@ if ($this->entity->show_products)
 <?php foreach ((array) $this->show_page_modules as $cur_module) {
 	echo $cur_module->render();
 } if ($this->entity->show_children) { ?>
-<div id="p_muid_children">
+<div id="p_muid_children" class="com_storefront_children">
 	In this category:
 	<ul>
 		<?php foreach ($this->entity->children as $cur_child) {
 			if (!isset($cur_child) || !$cur_child->enabled)
 				continue;
 			?>
-		<li><?php echo htmlspecialchars($cur_child->name); ?></li>
+		<li><a href="<?php echo htmlspecialchars(pines_url('com_storefront', 'category/browse', array('a' => $cur_child->alias))); ?>"><?php echo htmlspecialchars($cur_child->name); ?></a></li>
 		<?php } ?>
 	</ul>
 </div>

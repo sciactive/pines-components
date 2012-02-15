@@ -15,12 +15,16 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'cart' => array(
 		'cname' => 'Shopping Cart',
+		'description' => 'View your shopping cart.',
 		'view' => 'cart/show',
+		'type' => 'module imodule',
 	),
 	'featured' => array(
 		'cname' => 'Featured Item',
+		'description' => 'Display featured storefront items.',
 		'view' => 'modules/featured',
 		'form' => 'modules/featured_form',
+		'type' => 'module imodule',
 	),
 );
 

@@ -59,6 +59,10 @@ if ($entity->show_breadcrumbs) {
 	$module->entity = $entity;
 }
 
+// TODO: Finish the spec view.
+//$module = new module('com_storefront', 'category/specs', 'left');
+//$module->entity = $entity;
+
 $module = new module('com_storefront', 'category/browse', 'content');
 $module->entity = $entity;
 foreach ((array) $entity->show_pages as $cur_page) {

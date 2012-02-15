@@ -28,11 +28,7 @@ $this->title = 'Edit Buttons';
 		#p_muid_form .button_well a {
 			margin: 0 .25em .5em;
 		}
-		#p_muid_form .button_well a .ui-button-text {
-			margin: 0;
-			padding: .2em;
-		}
-		#p_muid_form .button_well a .ui-button-text span {
+		#p_muid_form .button_well a span {
 			display: block;
 			padding-top: 32px;
 			min-width: 50px;
@@ -58,10 +54,6 @@ $this->title = 'Edit Buttons';
 	<script type="text/javascript">
 		// <![CDATA[
 		pines(function(){
-			$(".button", "#p_muid_form").button();
-			$("#p_muid_form").on("mouseenter mouseleave focus blur", ".button", function(){
-				$(this).removeClass("ui-state-hover ui-state-focus ui-state-active");
-			});
 			$("#p_muid_separator").click(function(){
 				$("#p_muid_cur_buttons").append('<div class="separator ui-widget-content"><span>&nbsp;</span></div>');
 			});
@@ -96,7 +88,7 @@ $this->title = 'Edit Buttons';
 						if (!$pines->depend->check($cur_type, $cur_value))
 							continue 2;
 					} ?>
-			<a class="button ui-state-default ui-corner-all" title="<?php echo htmlspecialchars($cur_def['description']); ?>">
+			<a class="button btn" title="<?php echo htmlspecialchars($cur_def['description']); ?>">
 				<span class="component" style="display: none;"><?php echo htmlspecialchars($cur_button['component']); ?></span>
 				<span class="button_name" style="display: none;"><?php echo htmlspecialchars($cur_button['button']); ?></span>
 				<span class="picon picon-32 <?php echo htmlspecialchars($cur_def['class']); ?>"><?php echo htmlspecialchars($cur_def['text']); ?></span>
@@ -111,12 +103,12 @@ $this->title = 'Edit Buttons';
 	<div id="p_muid_add_buttons" style="max-height: 430px; overflow-y: auto; clear: both;">
 		<?php foreach ((array) $this->buttons as $cur_component => $cur_button_list) { ?>
 		<div class="pf-element pf-heading">
-			<h1><?php echo htmlspecialchars($pines->info->$cur_component->name); ?></h1>
+			<h3><?php echo htmlspecialchars($pines->info->$cur_component->name); ?></h3>
 		</div>
 		<div class="pf-element pf-full-width">
 			<div class="button_well">
 				<?php foreach ($cur_button_list as $cur_name => $cur_button) { ?>
-				<a class="button ui-state-default ui-corner-all" title="<?php echo htmlspecialchars($cur_button['description']); ?>">
+				<a class="button btn" title="<?php echo htmlspecialchars($cur_button['description']); ?>">
 					<span class="component" style="display: none;"><?php echo htmlspecialchars($cur_component); ?></span>
 					<span class="button_name" style="display: none;"><?php echo htmlspecialchars($cur_name); ?></span>
 					<span class="picon picon-32 <?php echo htmlspecialchars($cur_button['class']); ?>"><?php echo htmlspecialchars($cur_button['text']); ?></span>

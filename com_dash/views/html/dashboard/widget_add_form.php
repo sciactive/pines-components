@@ -12,7 +12,7 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Add Widget(s)';
-$grid_thirds = floor($pines->config->com_inuitcss->grid_columns / 3);
+$grid_thirds = floor($pines->config->com_bootstrap->grid_columns / 3);
 ?>
 <div class="pf-form" id="p_muid_form">
 	<script type="text/javascript">
@@ -42,23 +42,23 @@ $grid_thirds = floor($pines->config->com_inuitcss->grid_columns / 3);
 	<div class="ui-helper-clearfix" style="max-height: 600px; overflow-y: auto; clear: both; padding-bottom: 30px;">
 		<?php foreach ((array) $this->widgets as $cur_component => $cur_widget_list) { ?>
 		<div class="pf-element pf-heading">
-			<h1><?php echo htmlspecialchars($pines->info->$cur_component->name); ?></h1>
+			<h3><?php echo htmlspecialchars($pines->info->$cur_component->name); ?></h3>
 		</div>
 		<div class="pf-element pf-full-width">
 			<div style="padding-right: .5em;">
-				<div class="grids">
+				<div class="row-fluid">
 				<?php
 				$i = 1;
 				foreach ((array) $cur_widget_list as $cur_name => $cur_widget) {
 					if ($i % 3 == 1) { ?>
 				</div>
-				<div class="grids">
+				<div class="row-fluid">
 					<?php } ?>
-					<div class="grid-<?php echo $grid_thirds; ?>" style="margin-bottom: .5em;">
+					<div class="span<?php echo $grid_thirds; ?>" style="margin-bottom: .5em;">
 						<div class="ui-widget-content ui-corner-all widget_type" style="padding: .5em; cursor: default;">
 							<div class="component" style="display: none;"><?php echo htmlspecialchars($cur_component); ?></div>
 							<div class="widget_name" style="display: none;"><?php echo htmlspecialchars($cur_name); ?></div>
-							<h3 style="margin-top: 0;"><?php echo htmlspecialchars($cur_widget['cname']); ?></h3>
+							<h4 style="margin-top: 0;"><?php echo htmlspecialchars($cur_widget['cname']); ?></h4>
 							<p style="margin-bottom: 0;"><?php echo htmlspecialchars($cur_widget['description']); ?></p>
 						</div>
 					</div>

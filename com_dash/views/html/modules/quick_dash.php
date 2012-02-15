@@ -16,7 +16,7 @@ $pines->icons->load();
 <script type="text/javascript">
 	// <![CDATA[
 	pines(function(){
-		$("#p_muid_button button").button().one("click", function(){
+		$("#p_muid_button button").one("click", function(){
 			$.ajax({
 				url: <?php echo json_encode(pines_url('com_dash', 'quick_dash')); ?>,
 				type: "POST",
@@ -49,11 +49,7 @@ $pines->icons->load();
 </script>
 <style type="text/css" scoped="scoped">
 	/* <![CDATA[ */
-	#p_muid_button button .ui-button-text {
-		margin: 0;
-		padding: .2em;
-	}
-	#p_muid_button button .ui-button-text span {
+	#p_muid_button button span {
 		display: block;
 		padding-top: 32px;
 		min-width: 50px;
@@ -63,7 +59,7 @@ $pines->icons->load();
 	/* ]]> */
 </style>
 <div id="p_muid_button" style="text-align: center;">
-	<button class="ui-state-default ui-corner-all" title="See your dashboard in a popup dialog.">
+	<button class="btn" title="See your dashboard in a popup dialog.">
 		<span class="picon picon-32 picon-dashboard-show">Quick Dash</span>
 	</button>
 </div>

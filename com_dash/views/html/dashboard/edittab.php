@@ -12,8 +12,8 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Edit Tab';
-$pines->com_inuitcss->load();
-$max_columns = $pines->config->com_inuitcss->grid_columns;
+$pines->com_bootstrap->load();
+$max_columns = $pines->config->com_bootstrap->grid_columns;
 $default_column = htmlspecialchars(floor($max_columns / 3));
 ?>
 <form class="pf-form" method="post" id="p_muid_form" action="<?php echo htmlspecialchars(pines_url('com_dash', 'dashboard/tabsave')); ?>">
@@ -42,14 +42,14 @@ $default_column = htmlspecialchars(floor($max_columns / 3));
 					update_columns();
 				}
 			}).delegate(".grow_column", "click", function(){
-				var max_columns = pines.com_inuitcss_get_columns();
+				var max_columns = pines.com_bootstrap_get_columns();
 				// Check to make sure we aren't growing too big.
 				var total_cols = 0;
 				columns.children().each(function(){
 					// Add the column width of each column.
 					var col = $(this);
 					for (var i=1; i<=max_columns; i++) {
-						if (col.hasClass("grid-"+i)) {
+						if (col.hasClass("span"+i)) {
 							total_cols += i;
 							return;
 						}
@@ -62,7 +62,7 @@ $default_column = htmlspecialchars(floor($max_columns / 3));
 				var col = $(this).closest(".new_column"), cur_size = 1;
 				// Get the column's size.
 				for (var i=1; i<=max_columns; i++) {
-					if (col.hasClass("grid-"+i)) {
+					if (col.hasClass("span"+i)) {
 						cur_size = i;
 						break;
 					}
@@ -70,14 +70,14 @@ $default_column = htmlspecialchars(floor($max_columns / 3));
 				if (cur_size == max_columns)
 					return;
 				// Grow the column.
-				col.removeClass("grid-"+cur_size).attr("class", "grid-"+(cur_size+1)+" "+col.attr("class"));
+				col.removeClass("span"+cur_size).attr("class", "span"+(cur_size+1)+" "+col.attr("class"));
 				update_columns();
 			}).delegate(".shrink_column", "click", function(){
-				var max_columns = pines.com_inuitcss_get_columns();
+				var max_columns = pines.com_bootstrap_get_columns();
 				var col = $(this).closest(".new_column"), cur_size = 1;
 				// Get the column's size.
 				for (var i=1; i<=max_columns; i++) {
-					if (col.hasClass("grid-"+i)) {
+					if (col.hasClass("span"+i)) {
 						cur_size = i;
 						break;
 					}
@@ -85,12 +85,12 @@ $default_column = htmlspecialchars(floor($max_columns / 3));
 				if (cur_size == 1)
 					return;
 				// Shrink the column.
-				col.removeClass("grid-"+cur_size).attr("class", "grid-"+(cur_size-1)+" "+col.attr("class"));
+				col.removeClass("span"+cur_size).attr("class", "span"+(cur_size-1)+" "+col.attr("class"));
 				update_columns();
 			});
 			$("#p_muid_add_column").click(function(){
 				// Add a new column.
-				var max_columns = pines.com_inuitcss_get_columns(), all_columns = columns.children();
+				var max_columns = pines.com_bootstrap_get_columns(), all_columns = columns.children();
 				if (all_columns.length >= max_columns) {
 					alert("You have the maximum number of columns.");
 					return;
@@ -101,18 +101,18 @@ $default_column = htmlspecialchars(floor($max_columns / 3));
 			});
 			var size_columns = function(){
 				// Fit the columns into the width evenly.
-				var max_columns = pines.com_inuitcss_get_columns(), all_columns = columns.children();
+				var max_columns = pines.com_bootstrap_get_columns(), all_columns = columns.children();
 				for (var i=1; i<=max_columns; i++)
-					all_columns.removeClass("grid-"+i);
-				all_columns.attr("class", "grid-"+(Math.floor(max_columns/all_columns.length))+" "+all_columns.eq(0).attr("class"));
+					all_columns.removeClass("span"+i);
+				all_columns.attr("class", "span"+(Math.floor(max_columns/all_columns.length))+" "+all_columns.eq(0).attr("class"));
 			};
 			var update_columns = function(){
-				var col_struct = [], max_columns = pines.com_inuitcss_get_columns();
+				var col_struct = [], max_columns = pines.com_bootstrap_get_columns();
 				columns.children().each(function(){
 					var cur_col_struct = {}, col = $(this);
 					// Get the column's size.
 					for (var i=1; i<=max_columns; i++) {
-						if (col.hasClass("grid-"+i)) {
+						if (col.hasClass("span"+i)) {
 							cur_col_struct.size = i;
 							break;
 						}
@@ -171,7 +171,7 @@ $default_column = htmlspecialchars(floor($max_columns / 3));
 		<?php if ( !empty($this->key) ) { ?>
 		<button class="ui-state-default ui-corner-all" id="p_muid_delete" type="button" style="float: right;">Delete Tab</button>
 		<?php } ?>
-		<h1>Editing <?php echo isset($this->tab) ? 'Tab ['.htmlspecialchars($this->tab['name']).']' : 'New Tab'; ?></h1>
+		<h3>Editing <?php echo isset($this->tab) ? 'Tab ['.htmlspecialchars($this->tab['name']).']' : 'New Tab'; ?></h3>
 	</div>
 	<div class="pf-element">
 		<label><span class="pf-label">Name</span>
@@ -183,13 +183,13 @@ $default_column = htmlspecialchars(floor($max_columns / 3));
 			<a href="javascript:void(0);" id="p_muid_add_column">Add a Column</a>
 		</span>
 		<br /><br />
-		<div class="grids" style="margin-bottom: 1em;">
-			<div class="grid-<?php echo htmlspecialchars($max_columns); ?> new_column ui-state-highlight" style="min-height: 40px; line-height: 40px; text-align: center;">Button area.</div>
+		<div class="row-fluid" style="margin-bottom: 1em;">
+			<div class="span<?php echo htmlspecialchars($max_columns); ?> new_column ui-state-highlight" style="min-height: 40px; line-height: 40px; text-align: center;">Button area.</div>
 		</div>
-		<div class="grids" id="p_muid_cols">
+		<div class="row-fluid" id="p_muid_cols">
 			<?php if (isset($this->tab['columns'])) { foreach ($this->tab['columns'] as $cur_key => $cur_column) {
 				$col_style = htmlspecialchars($cur_column['size'] < 1 ? floor($max_columns * $cur_column['size']) : $cur_column['size']); ?>
-			<div class="grid-<?php echo $col_style; ?> new_column ui-state-highlight" id="<?php echo htmlspecialchars($cur_key); ?>">
+			<div class="span<?php echo $col_style; ?> new_column ui-state-highlight" id="<?php echo htmlspecialchars($cur_key); ?>">
 				<div style="padding: .4em;">
 					<div style="float: right;">
 						<a href="javascript:void(0);" class="remove_column">Remove</a>
@@ -199,7 +199,7 @@ $default_column = htmlspecialchars(floor($max_columns / 3));
 				</div>
 			</div>
 			<?php } } else { ?>
-			<div class="grid-<?php echo $default_column; ?> new_column ui-state-highlight">
+			<div class="span<?php echo $default_column; ?> new_column ui-state-highlight">
 				<div style="padding: .4em;">
 					<div style="float: right;">
 						<a href="javascript:void(0);" class="remove_column">Remove</a>
@@ -208,7 +208,7 @@ $default_column = htmlspecialchars(floor($max_columns / 3));
 					<div style="text-align: center; margin-top: 2em;">Drag me to reorder.</div>
 				</div>
 			</div>
-			<div class="grid-<?php echo $default_column; ?> new_column ui-state-highlight">
+			<div class="span<?php echo $default_column; ?> new_column ui-state-highlight">
 				<div style="padding: .4em;">
 					<div style="float: right;">
 						<a href="javascript:void(0);" class="remove_column">Remove</a>
@@ -217,7 +217,7 @@ $default_column = htmlspecialchars(floor($max_columns / 3));
 					<div style="text-align: center; margin-top: 2em;">Drag me to reorder.</div>
 				</div>
 			</div>
-			<div class="grid-<?php echo $default_column; ?> new_column ui-state-highlight">
+			<div class="span<?php echo $default_column; ?> new_column ui-state-highlight">
 				<div style="padding: .4em;">
 					<div style="float: right;">
 						<a href="javascript:void(0);" class="remove_column">Remove</a>

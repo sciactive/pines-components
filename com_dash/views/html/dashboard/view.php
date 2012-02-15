@@ -12,7 +12,7 @@
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
 $this->title = 'Dashboard';
-$pines->com_inuitcss->load();
+$pines->com_bootstrap->load();
 ?>
 <div id="p_muid_dashboard">
 	<style type="text/css" scoped="scoped">
@@ -35,11 +35,7 @@ $pines->com_inuitcss->load();
 		#p_muid_dashboard .buttons a {
 			margin: 0 .25em .5em;
 		}
-		#p_muid_dashboard .buttons a .ui-button-text {
-			margin: 0;
-			padding: .2em;
-		}
-		#p_muid_dashboard .buttons a .ui-button-text span {
+		#p_muid_dashboard .buttons a span {
 			display: block;
 			padding-top: 32px;
 			min-width: 50px;

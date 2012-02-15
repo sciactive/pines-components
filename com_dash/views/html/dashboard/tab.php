@@ -11,8 +11,8 @@
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');
-$pines->com_inuitcss->load();
-$max_columns = $pines->config->com_inuitcss->grid_columns;
+$pines->com_bootstrap->load();
+$max_columns = $pines->config->com_bootstrap->grid_columns;
 ?>
 <style type="text/css" scoped="scoped">
 	/* <![CDATA[ */
@@ -55,7 +55,7 @@ $max_columns = $pines->config->com_inuitcss->grid_columns;
 					return;
 				allow_update = false;
 				var struct = {};
-				$("#p_muid_tab > .grids > .column").each(function(){
+				$("#p_muid_tab > .row-fluid > .column").each(function(){
 					var column = $(this);
 					var col_key = column.children(".key").text();
 					struct[col_key] = [];
@@ -287,8 +287,7 @@ $max_columns = $pines->config->com_inuitcss->grid_columns;
 			});
 		};
 
-		$("#p_muid_tab > .buttons a").button();
-		$("#p_muid_add_widget").button().click(function(){
+		$("#p_muid_add_widget").click(function(){
 			// Add new widget(s).
 			$.ajax({
 				url: <?php echo json_encode(pines_url('com_dash', 'dashboard/widgetadd_form')); ?>,
@@ -399,15 +398,15 @@ $max_columns = $pines->config->com_inuitcss->grid_columns;
 					if (!$pines->depend->check($cur_type, $cur_value))
 						continue 2;
 				} ?>
-		<a class="ui-state-default ui-corner-all" href="<?php echo htmlspecialchars($cur_def['href']); ?>" title="<?php echo htmlspecialchars($cur_def['description']); ?>">
+		<a class="btn" href="<?php echo htmlspecialchars($cur_def['href']); ?>" title="<?php echo htmlspecialchars($cur_def['description']); ?>">
 			<span class="picon picon-32 <?php echo htmlspecialchars($cur_def['class']); ?>"><?php echo htmlspecialchars($cur_def['text']); ?></span>
 		</a>
 		<?php } } ?>
 	</div>
-	<div class="grids">
+	<div class="row-fluid">
 		<?php foreach ((array) $this->tab['columns'] as $cur_c_key => $cur_column) {
 			$col_style = htmlspecialchars($cur_column['size'] < 1 ? floor($max_columns * $cur_column['size']) : $cur_column['size']); ?>
-		<div class="grid-<?php echo $col_style; ?> column">
+		<div class="span<?php echo $col_style; ?> column">
 			<div class="key" style="display: none;"><?php echo htmlspecialchars($cur_c_key); ?></div>
 			<?php foreach ((array) $cur_column['widgets'] as $cur_w_key => $cur_widget) {
 				// Get the widget definition.
@@ -444,6 +443,6 @@ $max_columns = $pines->config->com_inuitcss->grid_columns;
 		<?php } ?>
 	</div>
 	<div class="add_widget">
-		<button id="p_muid_add_widget" class="ui-state-default ui-corner-all">Add Widgets</button>
+		<button id="p_muid_add_widget" class="btn">Add Widgets</button>
 	</div>
 </div>

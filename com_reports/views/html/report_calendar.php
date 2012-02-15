@@ -169,6 +169,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']->pgrid_saved_states))
 			pnotify_text: "",
 			pnotify_hide: false,
 			pnotify_closer: false,
+			pnotify_sticker: false,
 			pnotify_history: false,
 			pnotify_animation: "none",
 			pnotify_animate_speed: 0,

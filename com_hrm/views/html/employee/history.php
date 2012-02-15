@@ -66,6 +66,7 @@ $pines->com_pgrid->load();
 			pnotify_text: "",
 			pnotify_hide: false,
 			pnotify_closer: false,
+			pnotify_sticker: false,
 			pnotify_history: false,
 			pnotify_animate_speed: 100,
 			pnotify_notice_icon: "ui-icon ui-icon-comment",

@@ -49,6 +49,7 @@ $this->note = 'Timezone: '.htmlspecialchars($this->timezone);
 			pnotify_text: "",
 			pnotify_hide: false,
 			pnotify_closer: false,
+			pnotify_sticker: false,
 			pnotify_history: false,
 			pnotify_animation: "none",
 			pnotify_animate_speed: 0,

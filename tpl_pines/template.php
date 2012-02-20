@@ -21,7 +21,7 @@ if ($pines->config->tpl_pines->ajax && ($_REQUEST['tpl_pines_ajax'] == 1 && strp
 		'main_menu' => $pines->page->render_modules('main_menu', 'module_head'),
 		'pos_head' => $pines->page->render_modules('head', 'module_head'),
 		'pos_top' => $pines->page->render_modules('top', 'module_header'),
-		'pos_header' => $pines->page->render_modules('header', 'module_header'),
+		'pos_header' => $pines->page->render_modules('header', 'module_header').'&nbsp;',
 		'pos_header_right' => $pines->page->render_modules('header_right', 'module_header_right'),
 		'pos_pre_content' => $pines->page->render_modules('pre_content', 'module_header'),
 		'pos_breadcrumbs' => $pines->page->render_modules('breadcrumbs'),
@@ -50,7 +50,6 @@ header('Content-Type: text/html');
 	<meta name="HandheldFriendly" content="true" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/pines.css" media="all" rel="stylesheet" type="text/css" />
 	<style type="text/css">.page-width {width: auto;<?php echo $pines->config->template->width === 0 ? '' : ' max-width: '.(int) $pines->config->template->width.'px;'; ?>}</style>
 	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/print.css" media="print" rel="stylesheet" type="text/css" />
 
@@ -73,6 +72,7 @@ header('Content-Type: text/html');
 	<![endif]-->
 
 	<?php echo $pines->page->render_modules('head', 'module_head'); ?>
+	<link href="<?php echo htmlspecialchars($pines->config->location); ?>templates/<?php echo htmlspecialchars($pines->current_template); ?>/css/pines.css" media="all" rel="stylesheet" type="text/css" />
 </head>
 <body class="ui-widget ui-widget-content<?php echo in_array('shadows', $pines->config->tpl_pines->fancy_style) ? ' shadows' : ''; ?>">
 	<div id="top"><?php
@@ -110,7 +110,7 @@ header('Content-Type: text/html');
 					</div>
 				</div>
 				<div id="header_position" class="span4">
-					<?php echo $pines->page->render_modules('header', 'module_header'); ?>
+					<?php echo $pines->page->render_modules('header', 'module_header'); ?>&nbsp;
 				</div>
 				<div id="header_right" class="span4">
 					<?php echo $pines->page->render_modules('header_right', 'module_header_right'); ?>
